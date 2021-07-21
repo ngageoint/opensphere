@@ -11,6 +11,7 @@ const DataManager = goog.require('os.data.DataManager');
 const LayerNode = goog.require('os.data.LayerNode');
 const RecordField = goog.require('os.data.RecordField');
 const osFeature = goog.require('os.feature');
+const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
 const VectorLayer = goog.require('os.layer.Vector');
 const metrics = goog.require('os.metrics');
 const VectorSource = goog.require('os.source.Vector');
@@ -31,9 +32,10 @@ const {
 } = goog.require('plugin.file.kml.ui');
 const KMLLayerNode = goog.require('plugin.file.kml.ui.KMLLayerNode');
 const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
-const KMLTreeExportUI = goog.require('plugin.file.kml.ui.KMLTreeExportUI');
 const places = goog.require('plugin.places');
+const EventType = goog.require('plugin.places.EventType');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
+const PlacesUI = goog.require('plugin.places.ui.PlacesUI');
 const QuickAddPlacesUI = goog.require('plugin.places.ui.QuickAddPlacesUI');
 const {launchSavePlaces} = goog.require('plugin.places.ui.launchSavePlaces');
 
@@ -45,27 +47,6 @@ const {FolderOptions, PlacemarkOptions} = goog.requireType('plugin.file.kml.ui')
  * @type {string}
  */
 const GROUP_LABEL = places.TITLE;
-
-/**
- * Places menu event types.
- * @enum {string}
- */
-const EventType = {
-  SAVE_TO: 'places:saveToPlaces',
-  SAVE_TO_ANNOTATION: 'places:saveToAnnotation',
-  EXPORT: 'places:export',
-
-  // create/edit
-  ADD_FOLDER: 'places:addFolder',
-  ADD_ANNOTATION: 'places:addAnnotation',
-  ADD_PLACEMARK: 'places:addPlacemark',
-  EDIT_FOLDER: 'places:editFolder',
-  EDIT_PLACEMARK: 'places:editPlacemark',
-  QUICK_ADD_PLACES: 'places:quickAdd',
-  FEATURE_LIST: 'places:featureList',
-  REMOVE_PLACE: 'places:removePlace',
-  REMOVE_ALL: 'places:removeAll'
-};
 
 /**
  * Add places items to the layer menu.
@@ -543,7 +524,7 @@ const onLayerEvent_ = function(event) {
             }));
             break;
           case EventType.EXPORT:
-            KMLTreeExportUI.launchTreeExport(node, 'Export Places');
+            PlacesUI.launchExportUI(/** @type {!KMLNode} */ (node));
             break;
           case EventType.REMOVE_PLACE:
             var cmd = new KMLNodeRemove(node);
@@ -571,8 +552,7 @@ const onLayerEvent_ = function(event) {
             QuickAddPlacesUI.launch();
             break;
           case EventType.EXPORT:
-            KMLTreeExportUI.launchTreeExport(/** @type {!KMLNode} */
-                (rootNode), 'Export Places');
+            PlacesUI.launchExportUI(/** @type {!KMLNode} */ (rootNode));
             break;
           case EventType.REMOVE_ALL:
             var children = /** @type {Array<!KMLNode>} */ (node.getChildren());
@@ -772,7 +752,7 @@ const saveSpatialToPlaces = function(event, opt_annotation) {
     if (features.length === 1) {
       name = osFeature.getTitle(features[0]);
 
-      var featureGeom = features[0].getGeometry();
+      var featureGeom = features[0].get(ORIGINAL_GEOM_FIELD) || features[0].getGeometry();
       if (featureGeom) {
         geometry = featureGeom.clone();
       }
@@ -910,7 +890,6 @@ const copyNode_ = function(node) {
 
 exports = {
   GROUP_LABEL,
-  EventType,
   layerSetup,
   layerDispose,
   mapSetup,

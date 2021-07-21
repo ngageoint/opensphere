@@ -17,7 +17,7 @@ jobs:
         persist-credentials: false
 
     - name: Merge Release to Master
-      uses: robotology/gh-action-nightly-merge@v1.2.0
+      uses: robotology/gh-action-nightly-merge@v1.3.2
       with:
         stable_branch: 'release'
         development_branch: 'master'
@@ -26,3 +26,4 @@ jobs:
         user_name: 'Release to Master Merge Action'
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

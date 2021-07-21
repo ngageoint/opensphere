@@ -1,6 +1,7 @@
 goog.module('os.data.FolderNode');
 goog.module.declareLegacyNamespace();
 
+const {directiveTag: folderNodeUi} = goog.require('os.ui.node.FolderNodeUI');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 const Vector = goog.requireType('os.layer.Vector');
 
@@ -14,7 +15,7 @@ class FolderNode extends SlickTreeNode {
    */
   constructor(options) {
     super();
-    this.nodeUI = '<foldernodeui></foldernodeui>';
+    this.nodeUI = `<${folderNodeUi}></${folderNodeUi}>`;
 
     /**
      * The folder options.

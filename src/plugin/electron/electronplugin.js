@@ -4,9 +4,12 @@ goog.module.declareLegacyNamespace();
 goog.require('plugin.electron.ElectronMemoryConfigUI');
 
 const Settings = goog.require('os.config.Settings');
+const SettingsInitializerManager = goog.require('os.config.SettingsInitializerManager');
+const ExtDomainHandler = goog.require('os.net.ExtDomainHandler');
 const Request = goog.require('os.net.Request');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const {ID, SettingKey, isElectron} = goog.require('plugin.electron');
+const {initSupportMenu} = goog.require('plugin.electron.menu');
 const ElectronConfirmCertUI = goog.require('plugin.electron.ElectronConfirmCertUI');
 
 
@@ -60,7 +63,10 @@ class ElectronPlugin extends AbstractPlugin {
    */
   init() {
     if (isElectron()) {
+      // Register handler for Electron client certificate requests.
       ElectronOS.registerCertificateHandler(onCertificateRequest);
+
+      // Add memory configuration to Map > Display settings.
       os.ui.list.add('pluginMemoryConfig', '<electronmemoryconfig></electronmemoryconfig>');
 
       /**
@@ -69,6 +75,10 @@ class ElectronPlugin extends AbstractPlugin {
        */
       goog.html.SAFE_URL_PATTERN_ = /^(?:(?:https?|mailto|ftp|file):|[^:/?#]*(?:[/?#]|$))/i;
 
+      // Initialize menus.
+      initSupportMenu();
+
+      // Check for application updates.
       checkForUpdates();
     }
   }
@@ -93,6 +103,22 @@ if (isElectron()) {
 
   // Request an updated cookie list from the main process.
   ElectronOS.updateCookies();
+
+  //
+  // Load Electron's settings file (see appsettings.js in opensphere-electron).
+  //
+  // This is currently only supported in the main window.
+  //
+  if (ElectronOS.supportsUserSettings()) {
+    // Enable mixed content so http/https settings files may be loaded.
+    ExtDomainHandler.MIXED_CONTENT_ENABLED = true;
+
+    const baseSettingsFile = ElectronOS.getBaseSettingsFileUrl();
+    if (baseSettingsFile) {
+      const settingsInitializer = SettingsInitializerManager.getInstance().getSettingsInitializer();
+      settingsInitializer.setFileUri(baseSettingsFile);
+    }
+  }
 }
 
 

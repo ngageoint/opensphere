@@ -14,6 +14,7 @@ const ImageStatic = goog.require('ol.source.ImageStatic');
 const annotation = goog.require('os.annotation');
 const FeatureAnnotation = goog.require('os.annotation.FeatureAnnotation');
 const osColor = goog.require('os.color');
+const LayerNode = goog.require('os.data.LayerNode');
 const IExtent = goog.require('os.data.IExtent');
 const ISearchable = goog.require('os.data.ISearchable');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
@@ -203,6 +204,11 @@ class KMLNode extends SlickTreeNode {
      * @type {?string}
      */
     this.layerUI = null;
+
+    /**
+     * @type {?LayerNode}
+     */
+    this.layerNode = null;
   }
 
   /**
@@ -399,7 +405,15 @@ class KMLNode extends SlickTreeNode {
    * @param {os.layer.Image} image The feature
    */
   setImage(image) {
+    goog.dispose(this.layerNode);
+    this.layerNode = null;
+
     this.image_ = image;
+    if (this.image_) {
+      // Create a LayerNode that will handle the image style changes
+      this.layerNode = new LayerNode();
+      this.layerNode.setLayer(this.image_);
+    }
   }
 
   /**
@@ -934,8 +948,12 @@ class KMLNode extends SlickTreeNode {
    * @inheritDoc
    */
   getLayerUI(item) {
-    if (item && item instanceof KMLNode && item.editable && item.feature_) {
-      return item.layerUI || 'defaultlayerui';
+    if (item && item instanceof KMLNode) {
+      if (item.editable && item.feature_) {
+        return item.layerUI || 'defaultlayerui';
+      } else if (item.image_) {
+        return item.image_.getLayerUI();
+      }
     }
 
     return null;

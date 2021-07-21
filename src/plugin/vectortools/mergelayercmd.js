@@ -3,7 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const osFeature = goog.require('os.feature');
 const layer = goog.require('os.layer');
 const style = goog.require('os.style');
@@ -29,15 +29,30 @@ class MergeLayer {
    */
   constructor(sourceIds, opt_name, opt_options) {
     /**
+     * @inheritDoc
+     */
+    this.state = State.READY;
+
+    /**
+     * @inheritDoc
+     */
+    this.isAsync = false;
+
+    /**
+     * @inheritDoc
+     */
+    this.title = 'Merge layers';
+
+    /**
+     * @inheritDoc
+     */
+    this.details = null;
+
+    /**
      * @type {!Array<string>}
      * @protected
      */
     this.sourceIds = sourceIds;
-
-    /**
-     * @type {!State}
-     */
-    this.state = State.READY;
 
     this.title = 'Merge Layers';
     this.options_ = opt_options;
@@ -62,7 +77,7 @@ class MergeLayer {
     // iterate thru all the sourceIds and get each of the sources
     var sources = Array(this.sourceIds.length);
     for (var i = 0; i < this.sourceIds.length; i++) {
-      sources[i] = OSDataManager.getInstance().getSource(this.sourceIds[i]);
+      sources[i] = DataManager.getInstance().getSource(this.sourceIds[i]);
     }
     return sources;
   }
@@ -166,31 +181,5 @@ class MergeLayer {
     return true;
   }
 }
-
-/**
- * The current state of the command
- * @override
- * @type {!State}
- */
-MergeLayer.prototype.state = State.READY;
-
-
-/**
- * @inheritDoc
- */
-MergeLayer.prototype.isAsync = false;
-
-
-/**
- * @inheritDoc
- */
-MergeLayer.prototype.title = 'Merge layers';
-
-
-/**
- * @inheritDoc
- */
-MergeLayer.prototype.details = null;
-
 
 exports = MergeLayer;

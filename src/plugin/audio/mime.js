@@ -1,25 +1,39 @@
-goog.provide('plugin.audio.mime');
+goog.module('plugin.audio.mime');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Promise');
-goog.require('os.file.mime');
+const Promise = goog.require('goog.Promise');
+const mime = goog.require('os.file.mime');
+const mimeText = goog.require('os.file.mime.text');
 
+const OSFile = goog.requireType('os.file.File');
 
 /**
- * @type {string}
- * @const
+ * Priority for audio file detection. Some audio formats (like .wav) may be detected as text, so this has to run first.
+ * @type {number}
  */
-plugin.audio.mime.TYPE = 'application/audio';
+const PRIORITY = mimeText.PRIORITY - 1;
 
+/**
+ * MIME type for audio files.
+ * @type {string}
+ */
+const TYPE = 'application/audio';
 
 /**
  * @param {ArrayBuffer} buffer
- * @param {os.file.File=} opt_file
- * @return {!goog.Promise<*|undefined>}
+ * @param {OSFile=} opt_file
+ * @return {!Promise<*|undefined>}
  */
-plugin.audio.mime.detect = function(buffer, opt_file) {
-  return /** @type {!goog.Promise<*|undefined>} */ (
-    goog.Promise.resolve(opt_file && /\.(mp3|wav|ogg|m4a)$/i.test(opt_file.getFileName())));
+const detect = function(buffer, opt_file) {
+  return /** @type {!Promise<*|undefined>} */ (
+    Promise.resolve(opt_file && /\.(mp3|wav|ogg|m4a)$/i.test(opt_file.getFileName())));
 };
 
+// Some audio formats (like .wav) may be detected as text, so this has to run first.
+mime.register(TYPE, detect, PRIORITY);
 
-os.file.mime.register(plugin.audio.mime.TYPE, plugin.audio.mime.detect, 10000);
+exports = {
+  PRIORITY,
+  TYPE,
+  detect
+};

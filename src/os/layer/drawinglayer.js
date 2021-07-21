@@ -1,8 +1,7 @@
 goog.provide('os.layer.Drawing');
 
-goog.require('os.data.AreaNode');
 goog.require('os.data.DrawingLayerNode');
-goog.require('os.layer.ILayer');
+goog.require('os.layer.LayerId');
 goog.require('os.layer.Vector');
 goog.require('os.mixin.layerbase');
 goog.require('os.structs.ITreeNodeSupplier');
@@ -26,7 +25,7 @@ goog.inherits(os.layer.Drawing, os.layer.Vector);
  * @type {string}
  * @const
  */
-os.layer.Drawing.ID = 'draw';
+os.layer.Drawing.ID = os.layer.LayerId.DRAW;
 
 
 /**

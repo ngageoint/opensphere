@@ -1,10 +1,14 @@
-goog.provide('os.ui.file.ExportDialogCtrl');
-goog.provide('os.ui.file.exportDialogDirective');
-goog.require('goog.asserts');
-goog.require('os.ex.ExportOptions');
-goog.require('os.ui.Module');
-goog.require('os.ui.exportManager');
-goog.require('os.ui.window');
+goog.module('os.ui.file.ExportDialogUI');
+goog.module.declareLegacyNamespace();
+
+const {assert} = goog.require('goog.asserts');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const exportManager = goog.require('os.ui.exportManager');
+const osWindow = goog.require('os.ui.window');
+
+const ExportOptions = goog.requireType('os.ex.ExportOptions');
 
 
 /**
@@ -12,267 +16,270 @@ goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-os.ui.file.exportDialogDirective = function() {
-  return {
-    replace: true,
-    restrict: 'E',
-    templateUrl: os.ROOT + 'views/file/exportdialog.html',
-    controller: os.ui.file.ExportDialogCtrl,
-    controllerAs: 'exportdialog'
-  };
-};
+const directive = () => ({
+  replace: true,
+  restrict: 'E',
+  templateUrl: ROOT + 'views/file/exportdialog.html',
+  controller: Controller,
+  controllerAs: 'exportdialog'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'exportdialog';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('exportdialog', [os.ui.file.exportDialogDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller function for the exportdialog directive
  *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$compile} $compile
- * @constructor
- * @ngInject
  * @template T
+ * @unrestricted
  */
-os.ui.file.ExportDialogCtrl = function($scope, $element, $compile) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @protected
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$compile} $compile
+   * @ngInject
    */
-  this.scope = $scope;
+  constructor($scope, $element, $compile) {
+    /**
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
 
-  // how data items will be referenced in the UI - replace this in an extending class if the application has its own
-  // terminology (ie, 'features' or 'records')
-  $scope['itemText'] = 'item';
+    // how data items will be referenced in the UI - replace this in an extending class if the application has its own
+    // terminology (ie, 'features' or 'records')
+    $scope['itemText'] = 'item';
 
-  /**
-   * @type {?angular.JQLite}
-   * @protected
-   */
-  this.element = $element;
+    /**
+     * @type {?angular.JQLite}
+     * @protected
+     */
+    this.element = $element;
 
-  /**
-   * @type {?angular.$compile}
-   * @protected
-   */
-  this.compile = $compile;
+    /**
+     * @type {?angular.$compile}
+     * @protected
+     */
+    this.compile = $compile;
 
-  /**
-   * @type {os.ex.ExportOptions.<T>}
-   * @protected
-   */
-  this.options = /** @type {os.ex.ExportOptions.<T>} */ (this.scope['options']);
+    /**
+     * @type {ExportOptions.<T>}
+     * @protected
+     */
+    this.options = /** @type {ExportOptions.<T>} */ (this.scope['options']);
 
-  /**
-   * @type {Object.<string, os.ex.IExportMethod>}
-   */
-  this['exporters'] = {};
+    /**
+     * @type {Object.<string, os.ex.IExportMethod>}
+     */
+    this['exporters'] = {};
 
-  /**
-   * @type {string|undefined}
-   */
-  this['appName'] = undefined;
+    /**
+     * @type {string|undefined}
+     */
+    this['appName'] = undefined;
 
-  $scope['exporter'] = this.options.exporter;
-  $scope['initialExporter'] = !!$scope['exporter'];
-  if (!$scope['exporter']) {
-    var exporters = os.ui.exportManager.getExportMethods();
-    if (exporters && exporters.length > 0) {
-      $scope['exporter'] = exporters[0];
+    $scope['exporter'] = this.options.exporter;
+    $scope['initialExporter'] = !!$scope['exporter'];
+    if (!$scope['exporter']) {
+      var exporters = exportManager.getExportMethods();
+      if (exporters && exporters.length > 0) {
+        $scope['exporter'] = exporters[0];
 
-      for (var i = 0, n = exporters.length; i < n; i++) {
-        this['exporters'][exporters[i].getLabel()] = exporters[i];
+        for (var i = 0, n = exporters.length; i < n; i++) {
+          this['exporters'][exporters[i].getLabel()] = exporters[i];
+        }
       }
     }
-  }
 
-  /**
-   * @type {Object.<string, os.ex.IPersistenceMethod>}
-   */
-  this['persisters'] = {};
+    /**
+     * @type {Object.<string, os.ex.IPersistenceMethod>}
+     */
+    this['persisters'] = {};
 
-  $scope['persister'] = this.options.persister;
-  $scope['initialPersister'] = !!$scope['persister'];
-  if (!$scope['persister']) {
-    var persisters = os.ui.exportManager.getPersistenceMethods();
-    if (persisters && persisters.length > 0) {
-      $scope['persister'] = persisters[0];
+    $scope['persister'] = this.options.persister;
+    $scope['initialPersister'] = !!$scope['persister'];
+    if (!$scope['persister']) {
+      var persisters = exportManager.getPersistenceMethods();
+      if (persisters && persisters.length > 0) {
+        $scope['persister'] = persisters[0];
 
-      for (var i = 0, n = persisters.length; i < n; i++) {
-        this['persisters'][persisters[i].getLabel()] = persisters[i];
+        for (var i = 0, n = persisters.length; i < n; i++) {
+          this['persisters'][persisters[i].getLabel()] = persisters[i];
+        }
       }
     }
-  }
 
-  /**
-   * @type {boolean}
-   */
-  this['additionalOptions'] = this.options.additionalOptions || false;
+    /**
+     * @type {boolean}
+     */
+    this['additionalOptions'] = this.options.additionalOptions || false;
 
-  // add application-specific UI
-  var customContainer = this.element.find('.js-custom-ui');
-  var customOptions = this.getCustomOptions();
-  if (customOptions) {
-    customContainer.html(customOptions);
-    this.compile(customContainer.contents())(this.scope);
-  } else {
-    customContainer.remove();
-  }
+    // add application-specific UI
+    var customContainer = this.element.find('.js-custom-ui');
+    var customOptions = this.getCustomOptions();
+    if (customOptions) {
+      customContainer.html(customOptions);
+      this.compile(customContainer.contents())(this.scope);
+    } else {
+      customContainer.remove();
+    }
 
-  $scope.$emit(os.ui.WindowEventType.READY);
-  $scope.$watch('exporter', this.onExporterChange.bind(this));
-  $scope.$watch('persister', this.onPersisterChange.bind(this));
-  $scope.$on('$destroy', this.destroy.bind(this));
+    $scope.$emit(WindowEventType.READY);
+    $scope.$watch('exporter', this.onExporterChange.bind(this));
+    $scope.$watch('persister', this.onPersisterChange.bind(this));
+    $scope.$on('$destroy', this.destroy.bind(this));
 
-  // Only listen to this scope change if additional options exist
-  if (this.options.additionalOptions) {
-    $scope.$on('addexportoptions.updateitem', function(event, items) {
-      this.options.items = items || [];
-    }.bind(this));
-  }
-};
-
-
-/**
- * Clean up.
- *
- * @protected
- */
-os.ui.file.ExportDialogCtrl.prototype.destroy = function() {
-  this.scope = null;
-  this.element = null;
-  this.compile = null;
-};
-
-
-/**
- * Get the label for the exporter.
- *
- * @return {?string}
- * @export
- */
-os.ui.file.ExportDialogCtrl.prototype.getExporterLabel = function() {
-  if (this.scope && this.scope['exporter']) {
-    return this.scope['exporter'].getLabel();
-  }
-
-  return null;
-};
-
-
-/**
- * Get the options UI for the exporter.
- *
- * @return {?string}
- * @export
- */
-os.ui.file.ExportDialogCtrl.prototype.getExporterUI = function() {
-  if (this.scope && this.scope['exporter']) {
-    return this.scope['exporter'].getUI();
-  }
-
-  return null;
-};
-
-
-/**
- * Extending classes can use this to provide their own options in the form.
- *
- * @return {?string} The custom options UI as HTML
- * @protected
- */
-os.ui.file.ExportDialogCtrl.prototype.getCustomOptions = function() {
-  return null;
-};
-
-
-/**
- * Get the keys
- *
- * @param {Object} obj
- * @return {Array} The custom options UI as HTML
- * @export
- */
-os.ui.file.ExportDialogCtrl.prototype.getKeys = function(obj) {
-  return obj != null ? Object.keys(obj) : [];
-};
-
-/**
- * Handle exporter change.
- *
- * @param {os.ex.IExportMethod=} opt_new The new value
- * @param {os.ex.IExportMethod=} opt_old The old value
- * @protected
- */
-os.ui.file.ExportDialogCtrl.prototype.onExporterChange = function(opt_new, opt_old) {
-  if (opt_new) {
-    this.options.exporter = opt_new;
-
-    // remove the old export ui
-    var uiContainer = this.element.find('.js-export-ui__container');
-    uiContainer.children().remove();
-
-    // and drop in the new one
-    var ui = opt_new.getUI();
-    if (ui && this.scope) {
-      uiContainer.html(ui);
-      this.compile(uiContainer.contents())(this.scope);
+    // Only listen to this scope change if additional options exist
+    if (this.options.additionalOptions) {
+      $scope.$on('addexportoptions.updateitem', function(event, items) {
+        this.options.items = items || [];
+      }.bind(this));
     }
   }
 
-  this.options.createDescriptor = !!opt_new;
-};
+  /**
+   * Clean up.
+   *
+   * @protected
+   */
+  destroy() {
+    this.scope = null;
+    this.element = null;
+    this.compile = null;
+  }
 
+  /**
+   * Get the label for the exporter.
+   *
+   * @return {?string}
+   * @export
+   */
+  getExporterLabel() {
+    if (this.scope && this.scope['exporter']) {
+      return this.scope['exporter'].getLabel();
+    }
 
-/**
- * Handle exporter change.
- *
- * @param {os.ex.IPersistenceMethod=} opt_new The new value
- * @param {os.ex.IPersistenceMethod=} opt_old The old value
- * @protected
- */
-os.ui.file.ExportDialogCtrl.prototype.onPersisterChange = function(opt_new, opt_old) {
-  this.options.persister = opt_new;
-};
+    return null;
+  }
 
+  /**
+   * Get the options UI for the exporter.
+   *
+   * @return {?string}
+   * @export
+   */
+  getExporterUI() {
+    if (this.scope && this.scope['exporter']) {
+      return this.scope['exporter'].getUI();
+    }
 
-/**
- * Fire the cancel callback and close the window.
- *
- * @export
- */
-os.ui.file.ExportDialogCtrl.prototype.cancel = function() {
-  this.close_();
-};
+    return null;
+  }
 
+  /**
+   * Extending classes can use this to provide their own options in the form.
+   *
+   * @return {?string} The custom options UI as HTML
+   * @protected
+   */
+  getCustomOptions() {
+    return null;
+  }
 
-/**
- * Fire the confirmation callback and close the window.
- *
- * @export
- */
-os.ui.file.ExportDialogCtrl.prototype.confirm = function() {
-  goog.asserts.assert(this.options.exporter != null, 'exporter is not defined');
-  goog.asserts.assert(this.options.title != null, 'export title is null');
-  goog.asserts.assert(this.options.items.length > 0, 'no items to export');
-  goog.asserts.assert(this.options.fields.length > 0, 'no fields defined on export');
+  /**
+   * Get the keys
+   *
+   * @param {Object} obj
+   * @return {Array} The custom options UI as HTML
+   * @export
+   */
+  getKeys(obj) {
+    return obj != null ? Object.keys(obj) : [];
+  }
 
-  os.ui.exportManager.exportItems(this.options);
-  this.close_();
-};
+  /**
+   * Handle exporter change.
+   *
+   * @param {os.ex.IExportMethod=} opt_new The new value
+   * @param {os.ex.IExportMethod=} opt_old The old value
+   * @protected
+   */
+  onExporterChange(opt_new, opt_old) {
+    if (opt_new) {
+      this.options.exporter = opt_new;
 
+      // remove the old export ui
+      var uiContainer = this.element.find('.js-export-ui__container');
+      uiContainer.children().remove();
 
-/**
- * Close the window.
- *
- * @private
- */
-os.ui.file.ExportDialogCtrl.prototype.close_ = function() {
-  os.ui.window.close(this.element);
+      // and drop in the new one
+      var ui = opt_new.getUI();
+      if (ui && this.scope) {
+        uiContainer.html(ui);
+        this.compile(uiContainer.contents())(this.scope);
+      }
+    }
+
+    this.options.createDescriptor = !!opt_new;
+  }
+
+  /**
+   * Handle exporter change.
+   *
+   * @param {os.ex.IPersistenceMethod=} opt_new The new value
+   * @param {os.ex.IPersistenceMethod=} opt_old The old value
+   * @protected
+   */
+  onPersisterChange(opt_new, opt_old) {
+    this.options.persister = opt_new;
+  }
+
+  /**
+   * Fire the cancel callback and close the window.
+   *
+   * @export
+   */
+  cancel() {
+    this.close_();
+  }
+
+  /**
+   * Fire the confirmation callback and close the window.
+   *
+   * @export
+   */
+  confirm() {
+    assert(this.options.exporter != null, 'exporter is not defined');
+    assert(this.options.title != null, 'export title is null');
+    assert(this.options.items.length > 0, 'no items to export');
+    assert(this.options.fields.length > 0, 'no fields defined on export');
+
+    exportManager.exportItems(this.options);
+    this.close_();
+  }
+
+  /**
+   * Close the window.
+   *
+   * @private
+   */
+  close_() {
+    osWindow.close(this.element);
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

@@ -1,20 +1,28 @@
 goog.require('ol.Feature');
 goog.require('os.data.RecordField');
 goog.require('os.data.histo.ColorBin');
+goog.require('os.feature');
 
 
 describe('os.data.histo.ColorBin', function() {
-  var red = new ol.Feature();
-  red.set(os.data.RecordField.COLOR, '#f00');
-  var green = new ol.Feature();
-  green.set(os.data.RecordField.COLOR, '#0f0');
-  var blue = new ol.Feature();
-  blue.set(os.data.RecordField.COLOR, '#00f');
+  const Feature = goog.module.get('ol.Feature');
+  const RecordField = goog.module.get('os.data.RecordField');
+  const ColorBin = goog.module.get('os.data.histo.ColorBin');
+  const osFeature = goog.module.get('os.feature');
+
+  var red = new Feature();
+  red.set(RecordField.COLOR, '#f00');
+  var green = new Feature();
+  green.set(RecordField.COLOR, '#0f0');
+  var blue = new Feature();
+  blue.set(RecordField.COLOR, '#00f');
 
   it('should add items and increment the color counts', function() {
-    var bin = new os.data.histo.ColorBin('#ff00ff');
+    var bin = new ColorBin('#ff00ff');
     bin.setColorFunction(function(item) {
-      return /** @type {string|undefined} */ (os.feature.getColor(/** @type {!ol.Feature} */ (item)));
+      return (
+        /** @type {string|undefined} */ osFeature.getColor(/** @type {!olFeature} */ (item))
+      );
     });
 
     bin.addItem(red);
@@ -28,9 +36,11 @@ describe('os.data.histo.ColorBin', function() {
   });
 
   it('should add items and decrement the color counts', function() {
-    var bin = new os.data.histo.ColorBin('#ff00ff');
+    var bin = new ColorBin('#ff00ff');
     bin.setColorFunction(function(item) {
-      return /** @type {string|undefined} */ (os.feature.getColor(/** @type {!ol.Feature} */ (item)));
+      return (
+        /** @type {string|undefined} */ osFeature.getColor(/** @type {!olFeature} */ (item))
+      );
     });
     bin.addItem(red);
     bin.addItem(green);
@@ -48,9 +58,11 @@ describe('os.data.histo.ColorBin', function() {
   });
 
   it('should return a color if all items are the same color', function() {
-    var bin = new os.data.histo.ColorBin('#ff00ff');
+    var bin = new ColorBin('#ff00ff');
     bin.setColorFunction(function(item) {
-      return /** @type {string|undefined} */ (os.feature.getColor(/** @type {!ol.Feature} */ (item)));
+      return (
+        /** @type {string|undefined} */ osFeature.getColor(/** @type {!olFeature} */ (item))
+      );
     });
     bin.addItem(red);
 
@@ -58,9 +70,11 @@ describe('os.data.histo.ColorBin', function() {
   });
 
   it('should NOT return a color if not all items are the same color', function() {
-    var bin = new os.data.histo.ColorBin('#ff00ff');
+    var bin = new ColorBin('#ff00ff');
     bin.setColorFunction(function(item) {
-      return /** @type {string|undefined} */ (os.feature.getColor(/** @type {!ol.Feature} */ (item)));
+      return (
+        /** @type {string|undefined} */ osFeature.getColor(/** @type {!olFeature} */ (item))
+      );
     });
     bin.addItem(red);
     bin.addItem(green);
@@ -69,9 +83,11 @@ describe('os.data.histo.ColorBin', function() {
   });
 
   it('should return the base color if it has no items', function() {
-    var bin = new os.data.histo.ColorBin('#ff00ff');
+    var bin = new ColorBin('#ff00ff');
     bin.setColorFunction(function(item) {
-      return /** @type {string|undefined} */ (os.feature.getColor(/** @type {!ol.Feature} */ (item)));
+      return (
+        /** @type {string|undefined} */ osFeature.getColor(/** @type {!olFeature} */ (item))
+      );
     });
     expect(bin.getColor()).toBe('#ff00ff');
   });

@@ -161,17 +161,19 @@ class SHPDescriptor extends FileDescriptor {
   static createFromConfig(descriptor, provider, config, opt_useDefaultColor) {
     super.createFromConfig(descriptor, provider, config);
 
-    // use the ZIP file first, SHP second. the import UI uses the extracted files for easier (synchronous) processing
-    // but the ZIP should be used for parsing data with the importer. ignore the DBF if we have a zip file.
-    var file = config['zipFile'] || config['file'];
-    descriptor.setUrl(file.getUrl());
+    if (descriptor instanceof SHPDescriptor) {
+      // use the ZIP file first, SHP second. the import UI uses the extracted files for easier (synchronous) processing
+      // but the ZIP should be used for parsing data with the importer. ignore the DBF if we have a zip file.
+      var file = config['zipFile'] || config['file'];
+      descriptor.setUrl(file.getUrl());
 
-    var file2 = config['zipFile'] ? null : config['file2'];
-    if (file2) {
-      descriptor.setUrl2(file2.getUrl());
+      var file2 = config['zipFile'] ? null : config['file2'];
+      if (file2) {
+        descriptor.setUrl2(file2.getUrl());
+      }
+
+      descriptor.updateFromConfig(config);
     }
-
-    descriptor.updateFromConfig(config);
   }
 }
 

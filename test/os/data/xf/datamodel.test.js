@@ -20,6 +20,9 @@ var MOVIE_DATA = [
 ];
 
 describe('os.data.xf.DataModel', function() {
+  const googObject = goog.module.get('goog.object');
+  const DataModel = goog.module.get('os.data.xf.DataModel');
+
   var data = [];
   for (var i = 0; i <= 99; i++) {
     var val = null;
@@ -49,18 +52,18 @@ describe('os.data.xf.DataModel', function() {
       filter.dispose();
     }
 
-    filter = new os.data.xf.DataModel();
+    filter = new DataModel();
   });
 
   it('should initialize properly', function() {
     expect(filter.isEmpty()).toBe(true);
-    expect(goog.object.getCount(filter.dimensions)).toBe(0);
+    expect(googObject.getCount(filter.dimensions)).toBe(0);
   });
 
   it('should add dimensions properly', function() {
     filter.addDimension('string', dim1);
     filter.addDimension('number', dim2);
-    expect(goog.object.getCount(filter.dimensions)).toBe(2);
+    expect(googObject.getCount(filter.dimensions)).toBe(2);
   });
 
   it('should add objects with time instants to the filter', function() {

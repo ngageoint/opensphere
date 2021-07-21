@@ -1,153 +1,135 @@
-goog.provide('os.histo.IBinMethod');
+goog.module('os.histo.IBinMethod');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.IPersistable');
-
-
+const IPersistable = goog.requireType('os.IPersistable');
+const Bin = goog.requireType('os.histo.Bin');
 
 /**
  * @interface
- * @extends {os.IPersistable}
+ * @extends {IPersistable}
  * @template T,S
  */
-os.histo.IBinMethod = function() {};
+class IBinMethod {
+  /**
+   * @param {T} item
+   * @return {*} The value. Must be naturally ordered!
+   */
+  getValue(item) {}
 
+  /**
+   * @return {string}
+   */
+  getField() {}
 
-/**
- * @param {T} item
- * @return {*} The value. Must be naturally ordered!
- */
-os.histo.IBinMethod.prototype.getValue;
+  /**
+   * @param {string} field
+   */
+  setField(field) {}
 
+  /**
+   * Gets the bin key for the given value
+   * @param {*} value
+   * @return {S}
+   */
+  getBinKey(value) {}
 
-/**
- * @return {string}
- */
-os.histo.IBinMethod.prototype.getField;
+  /**
+   * Gets the bin label for the given value
+   * @param {T} item
+   * @return {string}
+   */
+  getBinLabel(item) {}
 
+  /**
+   * Gets the bin label the given key.
+   * @param {string|number} key
+   * @param {boolean=} opt_secondary
+   * @param {boolean=} opt_smallLabel
+   * @return {string}
+   */
+  getLabelForKey(key, opt_secondary, opt_smallLabel) {}
 
-/**
- * @param {string} field
- */
-os.histo.IBinMethod.prototype.setField;
+  /**
+   * Gets the bin type identifier
+   * @return {string}
+   */
+  getBinType() {}
 
+  /**
+   * Gets the value accessor function
+   * @return {?function(T, string):*}
+   */
+  getValueFunction() {}
 
-/**
- * Gets the bin key for the given value
- * @param {*} value
- * @return {S}
- */
-os.histo.IBinMethod.prototype.getBinKey;
+  /**
+   * Sets the value accessor function
+   * @param {?function(T, string):*} func
+   */
+  setValueFunction(func) {}
 
+  /**
+   * Filters the given dimension to the bin range that contains the given item
+   * @param {crossfilter.Dimension} dimension
+   * @param {T} item
+   */
+  filterDimension(dimension, item) {}
 
-/**
- * Gets the bin label for the given value
- * @param {T} item
- * @return {string}
- */
-os.histo.IBinMethod.prototype.getBinLabel;
+  /**
+   * Returns the sorting function for labels in ascending order
+   * @return {function ((Bin|null), (Bin|null)): number}
+   */
+  getSortLabelFnAsc() {}
 
+  /**
+   * Returns the sorting function for labels in descending order
+   * @return {function ((Bin|null), (Bin|null)): number}
+   */
+  getSortLabelFnDesc() {}
 
-/**
- * Gets the bin label the given key.
- * @param {string|number} key
- * @param {boolean=} opt_secondary
- * @param {boolean=} opt_smallLabel
- * @return {string}
- */
-os.histo.IBinMethod.prototype.getLabelForKey;
+  /**
+   * Returns the sorting function for counts in ascending order
+   * @return {function ((Bin|null), (Bin|null)): number}
+   */
+  getSortCountFnAsc() {}
 
+  /**
+   * Returns the sorting function for counts in descending order
+   * @return {function ((Bin|null), (Bin|null)): number}
+   */
+  getSortCountFnDesc() {}
 
-/**
- * Gets the bin type identifier
- * @return {string}
- */
-os.histo.IBinMethod.prototype.getBinType;
+  /**
+   * Exports the bin method as an XML filter
+   * @param {!Array<!Bin>} bins
+   * @return {?string}
+   */
+  exportAsFilter(bins) {}
 
+  /**
+   * @param {!Array<S>} values
+   * @return {function(S):boolean}
+   */
+  createFilter(values) {}
 
-/**
- * Gets the value accessor function
- * @return {?function(T, string):*}
- */
-os.histo.IBinMethod.prototype.getValueFunction;
+  /**
+   * @return {boolean}
+   */
+  getArrayKeys() {}
 
+  /**
+   * @param {boolean|string} value
+   */
+  setArrayKeys(value) {}
 
-/**
- * Sets the value accessor function
- * @param {?function(T, string):*} func
- */
-os.histo.IBinMethod.prototype.setValueFunction;
+  /**
+   * @return {boolean}
+   */
+  getIsDate() {}
 
+  /**
+   * @param {boolean} value
+   */
+  setIsDate(value) {}
+}
 
-/**
- * Filters the given dimension to the bin range that contains the given item
- * @param {crossfilter.Dimension} dimension
- * @param {T} item
- */
-os.histo.IBinMethod.prototype.filterDimension;
-
-
-/**
- * Returns the sorting function for labels in ascending order
- * @return {function ((os.histo.Bin|null), (os.histo.Bin|null)): number}
- */
-os.histo.IBinMethod.prototype.getSortLabelFnAsc;
-
-
-/**
- * Returns the sorting function for labels in descending order
- * @return {function ((os.histo.Bin|null), (os.histo.Bin|null)): number}
- */
-os.histo.IBinMethod.prototype.getSortLabelFnDesc;
-
-
-/**
- * Returns the sorting function for counts in ascending order
- * @return {function ((os.histo.Bin|null), (os.histo.Bin|null)): number}
- */
-os.histo.IBinMethod.prototype.getSortCountFnAsc;
-
-
-/**
- * Returns the sorting function for counts in descending order
- * @return {function ((os.histo.Bin|null), (os.histo.Bin|null)): number}
- */
-os.histo.IBinMethod.prototype.getSortCountFnDesc;
-
-
-/**
- * Exports the bin method as an XML filter
- * @param {!Array<!os.histo.Bin>} bins
- * @return {?string}
- */
-os.histo.IBinMethod.prototype.exportAsFilter;
-
-
-/**
- * @param {!Array<S>} values
- * @return {function(S):boolean}
- */
-os.histo.IBinMethod.prototype.createFilter;
-
-
-/**
- * @return {boolean}
- */
-os.histo.IBinMethod.prototype.getArrayKeys;
-
-
-/**
- * @param {boolean|string} value
- */
-os.histo.IBinMethod.prototype.setArrayKeys;
-
-
-/**
- * @return {boolean}
- */
-os.histo.IBinMethod.prototype.getIsDate;
-
-
-/**
- * @param {boolean} value
- */
-os.histo.IBinMethod.prototype.setIsDate;
+exports = IBinMethod;

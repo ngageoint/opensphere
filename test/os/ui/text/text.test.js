@@ -1,35 +1,41 @@
+goog.require('os.alert.AlertManager');
 goog.require('os.ui.text');
+goog.require('os.ui.window');
 
 describe('os.ui.text', () => {
+  const AlertManager = goog.module.get('os.alert.AlertManager');
+  const text = goog.module.get('os.ui.text');
+  const osWindow = goog.module.get('os.ui.window');
+
   it('should copy blank text', () => {
     spyOn(document, 'createElement').andCallThrough();
 
-    os.ui.text.copy('');
+    text.copy('');
 
     expect(document.createElement).not.toHaveBeenCalled();
 
     document.createElement.reset();
     expect(document.createElement).not.toHaveBeenCalled();
 
-    os.ui.text.copy('   ');
+    text.copy('   ');
 
     expect(document.createElement).not.toHaveBeenCalled();
   });
 
   it('should copy valid text', () => {
-    spyOn(os.ui.window, 'create');
+    spyOn(osWindow, 'create');
     spyOn(document, 'execCommand').andReturn(true);
-    spyOn(os.alert.AlertManager.getInstance(), 'sendAlert');
+    spyOn(AlertManager.getInstance(), 'sendAlert');
 
-    os.ui.text.copy('test');
+    text.copy('test');
 
-    expect(os.alert.AlertManager.getInstance().sendAlert).toHaveBeenCalled();
-    expect(os.ui.window.create).not.toHaveBeenCalled();
+    expect(AlertManager.getInstance().sendAlert).toHaveBeenCalled();
+    expect(osWindow.create).not.toHaveBeenCalled();
 
     document.execCommand.andReturn(false);
 
-    os.ui.text.copy('test');
+    text.copy('test');
 
-    expect(os.ui.window.create).toHaveBeenCalled();
+    expect(osWindow.create).toHaveBeenCalled();
   });
 });

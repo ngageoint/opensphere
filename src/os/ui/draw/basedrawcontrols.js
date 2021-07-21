@@ -1,22 +1,30 @@
-goog.provide('os.ui.draw.BaseDrawControlsCtrl');
-goog.provide('os.ui.draw.baseDrawControlsDirective');
+goog.module('os.ui.draw.BaseDrawControlsUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('ol.Feature');
-goog.require('os.config.Settings');
-goog.require('os.data.RecordField');
-goog.require('os.interaction.DragZoom');
-goog.require('os.metrics.Metrics');
-goog.require('os.ogc.registry');
-goog.require('os.ui.GlobalMenuEventType');
-goog.require('os.ui.Module');
-goog.require('os.ui.draw.DrawEventType');
-goog.require('os.ui.menu.draw');
-goog.require('os.ui.ol.interaction.AbstractDraw');
-goog.require('os.ui.ol.interaction.DragBox');
+const log = goog.require('goog.log');
+const {getRandomString} = goog.require('goog.string');
+const Feature = goog.require('ol.Feature');
+const {ROOT} = goog.require('os');
+const dispatcher = goog.require('os.Dispatcher');
+const Settings = goog.require('os.config.Settings');
+const RecordField = goog.require('os.data.RecordField');
+const DragZoom = goog.require('os.interaction.DragZoom');
+const Metrics = goog.require('os.metrics.Metrics');
+const {Map: MapMetrics} = goog.require('os.metrics.keys');
+const {addOGCMenuItems} = goog.require('os.ogc.registry');
+const {apply} = goog.require('os.ui');
+const GlobalMenuEventType = goog.require('os.ui.GlobalMenuEventType');
+const Module = goog.require('os.ui.Module');
+const DrawEventType = goog.require('os.ui.draw.DrawEventType');
+const draw = goog.require('os.ui.menu.draw');
+const AbstractDraw = goog.require('os.ui.ol.interaction.AbstractDraw');
+const DragBox = goog.require('os.ui.ol.interaction.DragBox');
 
-goog.requireType('os.map.IMapContainer');
+const GoogEvent = goog.requireType('goog.events.Event');
+const Logger = goog.requireType('goog.log.Logger');
+const IMapContainer = goog.requireType('os.map.IMapContainer');
+const DrawEvent = goog.requireType('os.ui.draw.DrawEvent');
+const Menu = goog.requireType('os.ui.menu.Menu');
 
 
 /**
@@ -24,390 +32,382 @@ goog.requireType('os.map.IMapContainer');
  *
  * @return {angular.Directive}
  */
-os.ui.draw.baseDrawControlsDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    scope: {
-      'menu': '=',
-      'olMap': '=',
-      'embeddedControls': '=?'
-    },
-    templateUrl: os.ROOT + 'views/draw/basedrawcontrols.html',
-    controller: os.ui.draw.BaseDrawControlsCtrl,
-    controllerAs: 'drawControls'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  scope: {
+    'menu': '=',
+    'olMap': '=',
+    'embeddedControls': '=?'
+  },
+  templateUrl: ROOT + 'views/draw/basedrawcontrols.html',
+  controller: Controller,
+  controllerAs: 'drawControls'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'draw-controls';
 
 /**
  * Add the directive to the os.ui module.
  */
-os.ui.Module.directive('drawControls', [os.ui.draw.baseDrawControlsDirective]);
-
-
+Module.directive('drawControls', [directive]);
 
 /**
  * Controller for the draw-controls directive. This version of the draw controls is designed to work with
  * the os.ui version of the OL map.
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.draw.BaseDrawControlsCtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  /**
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.element_ = $element;
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
 
-  /**
-   * @type {os.ui.ol.interaction.AbstractDraw}
-   * @protected
-   */
-  this.interaction = null;
-
-  /**
-   * The active drawing feature.
-   * @type {ol.Feature|undefined}
-   * @protected
-   */
-  this.feature = undefined;
-
-  /**
-   * @type {os.ui.menu.Menu|undefined}
-   * @protected
-   */
-  this.menu = $scope['menu'];
-
-  /**
-   * The logger
-   * @type {goog.log.Logger}
-   * @protected
-   */
-  this.log = os.ui.draw.BaseDrawControlsCtrl.LOGGER_;
-
-  /**
-   * @type {os.map.IMapContainer}
-   * @private
-   */
-  this.olMap_ = $scope['olMap'];
-
-  /**
-   * @type {string}
-   */
-  this['selectedType'] = '';
-
-  /**
-   * If the line control is supported.
-   * @type {boolean}
-   */
-  this['supportsLines'] = false;
-
-  /**
-   * If extra controls should be hidden.
-   * @type {boolean}
-   */
-  this['hideExtraControls'] = false;
-
-  /**
-   * @type {os.ui.menu.Menu|undefined}
-   */
-  this['controlMenu'] = os.ui.menu.draw.MENU;
-};
-
-
-/**
- * The logger.
- * @const
- * @type {goog.log.Logger}
- * @private
- */
-os.ui.draw.BaseDrawControlsCtrl.LOGGER_ = goog.log.getLogger('os.ui.draw.BaseDrawControlsCtrl');
-
-
-/**
- * Angular initialization lifecycle function. Sets up event listening and our controls menu.
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.$onInit = function() {
-  this.initControlMenu();
-
-  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWSTART, this.apply, false, this);
-  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd, false, this);
-  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWCANCEL, this.apply, false, this);
-
-  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWBOX, this.onDrawType, false, this);
-  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWCIRCLE, this.onDrawType, false, this);
-  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWPOLYGON, this.onDrawType, false, this);
-  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWLINE, this.onDrawType, false, this);
-
-  var selected = /** @type {string} */ (os.settings.get('drawType', os.ui.ol.interaction.DragBox.TYPE));
-  this.setSelectedControl(selected);
-};
-
-
-/**
- * Angular destruction lifecycle function. Stop event listening.
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.$onDestroy = function() {
-  os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWSTART, this.apply, false, this);
-  os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd, false, this);
-  os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWCANCEL, this.apply, false, this);
-
-  os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWBOX, this.onDrawType, false, this);
-  os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWCIRCLE, this.onDrawType, false, this);
-  os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWPOLYGON, this.onDrawType, false, this);
-  os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWLINE, this.onDrawType, false, this);
-
-  this.scope_ = null;
-  this.element_ = null;
-};
-
-
-/**
- * @return {ol.PluggableMap}
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.getMap = function() {
-  return this.olMap_ ? this.olMap_.getMap() : null;
-};
-
-
-/**
- * Get the menu to display when drawing completes.
- *
- * @return {os.ui.menu.Menu|undefined}
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.getMenu = function() {
-  return this.menu;
-};
-
-
-/**
- * Set the active drawing feature.
- *
- * @param {ol.Feature|undefined} f The feature.
- * @protected
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.setFeature = function(f) {
-  if (this.feature && this.olMap_) {
-    this.olMap_.removeFeature(this.feature, true);
-  }
-
-  this.feature = f;
-
-  if (this.feature && this.olMap_) {
-    this.olMap_.addFeature(this.feature);
-  }
-};
-
-
-/**
- * @param {string} type
- * @protected
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.setSelectedControl = function(type) {
-  if (this.interaction) {
-    this.interaction.setActive(false);
+    /**
+     * @type {AbstractDraw}
+     * @protected
+     */
     this.interaction = null;
+
+    /**
+     * The active drawing feature.
+     * @type {Feature|undefined}
+     * @protected
+     */
+    this.feature = undefined;
+
+    /**
+     * @type {Menu|undefined}
+     * @protected
+     */
+    this.menu = $scope['menu'];
+
+    /**
+     * The logger
+     * @type {Logger}
+     * @protected
+     */
+    this.log = logger;
+
+    /**
+     * @type {IMapContainer}
+     * @private
+     */
+    this.olMap_ = $scope['olMap'];
+
+    /**
+     * @type {string}
+     */
+    this['selectedType'] = '';
+
+    /**
+     * If the line control is supported.
+     * @type {boolean}
+     */
+    this['supportsLines'] = false;
+
+    /**
+     * If extra controls should be hidden.
+     * @type {boolean}
+     */
+    this['hideExtraControls'] = false;
+
+    /**
+     * @type {Menu|undefined}
+     */
+    this['controlMenu'] = draw.MENU;
   }
 
-  var map = this.getMap();
-  if (map) {
-    var interactions = map.getInteractions().getArray();
-    for (var i = 0, n = interactions.length; i < n; i++) {
-      var interaction = /** @type {os.ui.ol.interaction.AbstractDraw} */ (interactions[i]);
-      if (interaction instanceof os.ui.ol.interaction.AbstractDraw &&
-         !(interaction instanceof os.interaction.DragZoom)) {
-        var active = interaction.isType(type);
-        interaction.setActive(active);
+  /**
+   * Angular initialization lifecycle function. Sets up event listening and our controls menu.
+   */
+  $onInit() {
+    this.initControlMenu();
 
-        if (active) {
-          this.interaction = interaction;
-          break;
+    dispatcher.getInstance().listen(DrawEventType.DRAWSTART, this.apply, false, this);
+    dispatcher.getInstance().listen(DrawEventType.DRAWEND, this.onDrawEnd, false, this);
+    dispatcher.getInstance().listen(DrawEventType.DRAWCANCEL, this.apply, false, this);
+
+    dispatcher.getInstance().listen(DrawEventType.DRAWBOX, this.onDrawType, false, this);
+    dispatcher.getInstance().listen(DrawEventType.DRAWCIRCLE, this.onDrawType, false, this);
+    dispatcher.getInstance().listen(DrawEventType.DRAWPOLYGON, this.onDrawType, false, this);
+    dispatcher.getInstance().listen(DrawEventType.DRAWLINE, this.onDrawType, false, this);
+
+    var selected = /** @type {string} */ (Settings.getInstance().get('drawType', DragBox.TYPE));
+    this.setSelectedControl(selected);
+  }
+
+  /**
+   * Angular destruction lifecycle function. Stop event listening.
+   */
+  $onDestroy() {
+    dispatcher.getInstance().unlisten(DrawEventType.DRAWSTART, this.apply, false, this);
+    dispatcher.getInstance().unlisten(DrawEventType.DRAWEND, this.onDrawEnd, false, this);
+    dispatcher.getInstance().unlisten(DrawEventType.DRAWCANCEL, this.apply, false, this);
+
+    dispatcher.getInstance().unlisten(DrawEventType.DRAWBOX, this.onDrawType, false, this);
+    dispatcher.getInstance().unlisten(DrawEventType.DRAWCIRCLE, this.onDrawType, false, this);
+    dispatcher.getInstance().unlisten(DrawEventType.DRAWPOLYGON, this.onDrawType, false, this);
+    dispatcher.getInstance().unlisten(DrawEventType.DRAWLINE, this.onDrawType, false, this);
+
+    this.scope_ = null;
+    this.element_ = null;
+  }
+
+  /**
+   * @return {ol.PluggableMap}
+   */
+  getMap() {
+    return this.olMap_ ? this.olMap_.getMap() : null;
+  }
+
+  /**
+   * Get the menu to display when drawing completes.
+   *
+   * @return {Menu|undefined}
+   */
+  getMenu() {
+    return this.menu;
+  }
+
+  /**
+   * Set the active drawing feature.
+   *
+   * @param {Feature|undefined} f The feature.
+   * @protected
+   */
+  setFeature(f) {
+    if (this.feature && this.olMap_) {
+      this.olMap_.removeFeature(this.feature, true);
+    }
+
+    this.feature = f;
+
+    if (this.feature && this.olMap_) {
+      this.olMap_.addFeature(this.feature);
+    }
+  }
+
+  /**
+   * @param {string} type
+   * @protected
+   */
+  setSelectedControl(type) {
+    if (this.interaction) {
+      this.interaction.setActive(false);
+      this.interaction = null;
+    }
+
+    var map = this.getMap();
+    if (map) {
+      var interactions = map.getInteractions().getArray();
+      for (var i = 0, n = interactions.length; i < n; i++) {
+        var interaction = /** @type {AbstractDraw} */ (interactions[i]);
+        if (interaction instanceof AbstractDraw &&
+           !(interaction instanceof DragZoom)) {
+          var active = interaction.isType(type);
+          interaction.setActive(active);
+
+          if (active) {
+            this.interaction = interaction;
+            break;
+          }
         }
       }
+    } else {
+      this.listenForMapReady();
     }
-  } else {
-    this.listenForMapReady();
+
+    Settings.getInstance().set('drawType', type);
+    this['selectedType'] = type;
   }
 
-  os.settings.set('drawType', type);
-  this['selectedType'] = type;
-};
+  /**
+   * Register a listener that will be called when the map is ready.
+   *
+   * @protected
+   */
+  listenForMapReady() {
+    // implement in extending classes
+  }
 
+  /**
+   * Handle map ready event.
+   *
+   * @param {GoogEvent} event The ready event.
+   * @protected
+   */
+  onMapReady(event) {
+    this.setSelectedControl(this['selectedType']);
+  }
 
-/**
- * Register a listener that will be called when the map is ready.
- *
- * @protected
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.listenForMapReady = function() {
-  // implement in extending classes
-};
+  /**
+   * @param {*=} opt_event
+   * @protected
+   */
+  apply(opt_event) {
+    apply(this.scope_);
+  }
 
+  /**
+   * @protected
+   */
+  initControlMenu() {
+    var mi = this['controlMenu'].getRoot();
+    if (this['supportsLines']) {
+      mi.addChild({
+        label: 'Line',
+        eventType: draw.EventType.LINE,
+        tooltip: 'Draw a line on the map',
+        icons: ['<i class="fa fa-fw fa-long-arrow-right"></i> '],
+        handler: draw.handleDrawEvent,
+        sort: 40
+      });
+    }
 
-/**
- * Handle map ready event.
- *
- * @param {goog.events.Event} event The ready event.
- * @protected
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.onMapReady = function(event) {
-  this.setSelectedControl(this['selectedType']);
-};
+    if (this['hideExtraControls']) {
+      mi.removeChild('Choose Area');
+      mi.removeChild('Enter Coordinates');
+      mi.removeChild('Whole World');
+      mi.removeChild('drawMenuSeparator');
+    } else {
+      addOGCMenuItems(this['controlMenu'], 130);
+    }
+  }
 
+  /**
+   * @param {DrawEvent} event
+   * @protected
+   */
+  onDrawEnd(event) {
+    if (event.target === this.interaction) {
+      var style = this.interaction.getStyle();
+      var menu = this.getMenu();
+      var map = this.getMap();
+      if (menu && map) {
+        // stop doing stuff while the menu is up
+        $(map.getViewport()).addClass('u-pointer-events-none');
 
-/**
- * @param {*=} opt_event
- * @protected
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.apply = function(opt_event) {
-  os.ui.apply(this.scope_);
-};
+        var f = new Feature(event.properties);
+        f.setGeometry(event.geometry.clone());
+        f.setId(getRandomString());
+        f.setStyle(style);
+        f.set(RecordField.DRAWING_LAYER_NODE, false);
 
+        this.setFeature(f);
 
-/**
- * @protected
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.initControlMenu = function() {
-  var mi = this['controlMenu'].getRoot();
-  if (this['supportsLines']) {
-    mi.addChild({
-      label: 'Line',
-      eventType: os.ui.menu.draw.EventType.LINE,
-      tooltip: 'Draw a line on the map',
-      icons: ['<i class="fa fa-fw fa-long-arrow-right"></i> '],
-      handler: os.ui.menu.draw.handleDrawEvent,
-      sort: 40
+        var context = {
+          feature: f,
+          geometry: event.geometry,
+          style: style
+        };
+
+        menu.open(context, {
+          my: 'left top',
+          at: 'left+' + event.pixel[0] + ' top+' + event.pixel[1],
+          of: '#map-container'
+        });
+
+        dispatcher.getInstance().listenOnce(GlobalMenuEventType.MENU_CLOSE, this.onMenuEnd, false, this);
+        this.apply();
+      }
+    }
+  }
+
+  /**
+   * Handles menu finish
+   *
+   * @param {GoogEvent=} opt_e
+   * @protected
+   */
+  onMenuEnd(opt_e) {
+    $(this.getMap().getViewport()).removeClass('u-pointer-events-none');
+    this.setFeature(undefined);
+    if (this.interaction) {
+      this.interaction.setEnabled(false);
+    }
+    this.apply();
+  }
+
+  /**
+   * @param {GoogEvent} e
+   */
+  onDrawType(e) {
+    if (e && e.type) {
+      this.activateControl(e.type);
+    }
+  }
+
+  /**
+   * @param {string} type
+   * @export
+   */
+  activateControl(type) {
+    log.fine(this.log, 'Activating ' + type + ' control.');
+    Metrics.getInstance().updateMetric(MapMetrics.DRAW, 1);
+    Metrics.getInstance().updateMetric(MapMetrics.DRAW + '_' + type, 1);
+
+    if (this.interaction && this.interaction.getType() != type) {
+      // disable the old control so that it isn't secretly enabled the next time it comes on
+      this.interaction.setEnabled(false);
+      this.setSelectedControl(type);
+    }
+
+    if (this.interaction) {
+      this.interaction.setEnabled(!this.interaction.getEnabled());
+    }
+  }
+
+  /**
+   * @param {boolean=} opt_value
+   * @export
+   */
+  toggleMenu(opt_value) {
+    var menu = this['controlMenu'];
+
+    var target = this.element_.find('.draw-controls-group');
+    menu.open(undefined, {
+      my: 'left top+4',
+      at: 'left bottom',
+      of: target
     });
   }
 
-  if (this['hideExtraControls']) {
-    mi.removeChild('Choose Area');
-    mi.removeChild('Enter Coordinates');
-    mi.removeChild('Whole World');
-    mi.removeChild('drawMenuSeparator');
-  } else {
-    os.ogc.registry.addOGCMenuItems(this['controlMenu'], 130);
+  /**
+   * @return {boolean} whether the current interaction is enabled/active
+   * @export
+   */
+  isActive() {
+    return this.interaction ? this.interaction.getEnabled() : false;
   }
-};
-
+}
 
 /**
- * @param {os.ui.draw.DrawEvent} event
- * @protected
+ * The logger.
+ * @type {Logger}
  */
-os.ui.draw.BaseDrawControlsCtrl.prototype.onDrawEnd = function(event) {
-  if (event.target === this.interaction) {
-    var style = this.interaction.getStyle();
-    var menu = this.getMenu();
-    var map = this.getMap();
-    if (menu && map) {
-      // stop doing stuff while the menu is up
-      $(map.getViewport()).addClass('u-pointer-events-none');
+const logger = log.getLogger('os.ui.draw.BaseDrawControlsUI');
 
-      var f = new ol.Feature(event.properties);
-      f.setGeometry(event.geometry.clone());
-      f.setId(goog.string.getRandomString());
-      f.setStyle(style);
-      f.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
-
-      this.setFeature(f);
-
-      var context = {
-        feature: f,
-        geometry: event.geometry,
-        style: style
-      };
-
-      menu.open(context, {
-        my: 'left top',
-        at: 'left+' + event.pixel[0] + ' top+' + event.pixel[1],
-        of: '#map-container'
-      });
-
-      os.dispatcher.listenOnce(os.ui.GlobalMenuEventType.MENU_CLOSE, this.onMenuEnd, false, this);
-      this.apply();
-    }
-  }
-};
-
-
-/**
- * Handles menu finish
- *
- * @param {goog.events.Event=} opt_e
- * @protected
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.onMenuEnd = function(opt_e) {
-  $(this.getMap().getViewport()).removeClass('u-pointer-events-none');
-  this.setFeature(undefined);
-  if (this.interaction) {
-    this.interaction.setEnabled(false);
-  }
-  this.apply();
-};
-
-
-/**
- * @param {goog.events.Event} e
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.onDrawType = function(e) {
-  if (e && e.type) {
-    this.activateControl(e.type);
-  }
-};
-
-
-/**
- * @param {string} type
- * @export
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.activateControl = function(type) {
-  goog.log.fine(this.log, 'Activating ' + type + ' control.');
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.DRAW, 1);
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.DRAW + '_' + type, 1);
-
-  if (this.interaction && this.interaction.getType() != type) {
-    // disable the old control so that it isn't secretly enabled the next time it comes on
-    this.interaction.setEnabled(false);
-    this.setSelectedControl(type);
-  }
-
-  if (this.interaction) {
-    this.interaction.setEnabled(!this.interaction.getEnabled());
-  }
-};
-
-
-/**
- * @param {boolean=} opt_value
- * @export
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.toggleMenu = function(opt_value) {
-  var menu = this['controlMenu'];
-
-  var target = this.element_.find('.draw-controls-group');
-  menu.open(undefined, {
-    my: 'left top+4',
-    at: 'left bottom',
-    of: target
-  });
-};
-
-
-/**
- * @return {boolean} whether the current interaction is enabled/active
- * @export
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.isActive = function() {
-  return this.interaction ? this.interaction.getEnabled() : false;
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

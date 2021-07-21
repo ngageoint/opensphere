@@ -1,32 +1,36 @@
-goog.provide('os.column.ColumnMappingEvent');
-goog.require('goog.events.Event');
-goog.require('os.column.ColumnMappingEventType');
+goog.module('os.column.ColumnMappingEvent');
+goog.module.declareLegacyNamespace();
 
+const GoogEvent = goog.require('goog.events.Event');
+
+const ColumnMappingEventType = goog.requireType('os.column.ColumnMappingEventType');
 
 
 /**
  * Event representing changes to column mappings.
- *
- * @param {os.column.ColumnMappingEventType} type
- * @param {?osx.column.ColumnModel} column
- * @extends {goog.events.Event}
- * @constructor
  */
-os.column.ColumnMappingEvent = function(type, column) {
-  os.column.ColumnMappingEvent.base(this, 'constructor', type);
+class ColumnMappingEvent extends GoogEvent {
+  /**
+   * Constructor.
+   * @param {ColumnMappingEventType} type
+   * @param {?osx.column.ColumnModel} column
+   */
+  constructor(type, column) {
+    super(type);
+
+    /**
+     * @type {?osx.column.ColumnModel}
+     * @private
+     */
+    this.column_ = column;
+  }
 
   /**
-   * @type {?osx.column.ColumnModel}
-   * @private
+   * @return {?osx.column.ColumnModel}
    */
-  this.column_ = column;
-};
-goog.inherits(os.column.ColumnMappingEvent, goog.events.Event);
+  getColumn() {
+    return this.column_;
+  }
+}
 
-
-/**
- * @return {?osx.column.ColumnModel}
- */
-os.column.ColumnMappingEvent.prototype.getColumn = function() {
-  return this.column_;
-};
+exports = ColumnMappingEvent;

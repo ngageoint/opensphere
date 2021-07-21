@@ -9,16 +9,19 @@ goog.require('os.MapChange');
 goog.require('os.events.LayerConfigEvent');
 goog.require('os.events.LayerEvent');
 goog.require('os.events.PropertyChangeEvent');
+goog.require('os.filter');
 goog.require('os.filter.IFilterable');
 goog.require('os.implements');
 goog.require('os.layer');
 goog.require('os.layer.ExplicitLayerType');
 goog.require('os.layer.ILayer');
+goog.require('os.layer.LayerClass');
 goog.require('os.layer.LayerType');
 goog.require('os.layer.PropertyChange');
 goog.require('os.legend');
 goog.require('os.legend.ILegendRenderer');
 goog.require('os.net');
+goog.require('os.query.instance');
 goog.require('os.registerClass');
 goog.require('os.source');
 goog.require('os.source.ISource');
@@ -28,13 +31,12 @@ goog.require('os.style');
 goog.require('os.style.label');
 goog.require('os.ui.Icons');
 goog.require('os.ui.IconsSVG');
-goog.require('os.ui.feature.featureInfoDirective');
-goog.require('os.ui.feature.multiFeatureInfoDirective');
+goog.require('os.ui.feature.launchMultiFeatureInfo');
 goog.require('os.ui.icons');
 goog.require('os.ui.layer.vectorLayerUIDirective');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
 goog.require('os.ui.renamelayer');
-goog.require('os.ui.timeline.TimelineCtrl');
+goog.require('os.ui.timeline.TimelineUI');
 goog.require('os.ui.window');
 
 
@@ -202,9 +204,10 @@ os.implements(os.layer.Vector, os.legend.ILegendRenderer.ID);
 /**
  * Class name
  * @type {string}
+ * @deprecated Please use os.layer.LayerClass.VECTOR.
  */
-os.layer.Vector.NAME = 'os.layer.Vector';
-os.registerClass(os.layer.Vector.NAME, os.layer.Vector);
+os.layer.Vector.NAME = os.layer.LayerClass.VECTOR;
+os.registerClass(os.layer.LayerClass.VECTOR, os.layer.Vector);
 
 
 /**
@@ -430,7 +433,7 @@ os.layer.Vector.prototype.getFASet = function() {
     icons.push(os.ui.Icons.STATE);
   }
 
-  if (os.query.QueryManager.getInstance().hasEnabledEntries(this.getId())) {
+  if (os.query.instance.getQueryManager().hasEnabledEntries(this.getId())) {
     icons.push(os.ui.Icons.FILTER);
   }
 
@@ -486,7 +489,7 @@ os.layer.Vector.prototype.getIconSet = function() {
       icons.push(os.ui.Icons.STATE);
     }
 
-    if (os.query.QueryManager.getInstance().hasEnabledEntries(this.getId())) {
+    if (os.query.instance.getQueryManager().hasEnabledEntries(this.getId())) {
       icons.push(os.ui.Icons.FILTER);
     }
   }
@@ -875,7 +878,7 @@ os.layer.Vector.prototype.callAction = function(type) {
             }
           }
         }
-        os.ui.timeline.TimelineCtrl.setView();
+        os.ui.timeline.TimelineUI.Controller.setView();
         break;
       case os.action.EventType.REFRESH:
         if (source instanceof os.source.Vector && source.isRefreshEnabled()) {
@@ -1045,8 +1048,9 @@ os.layer.Vector.prototype.setFilterColumnsFn = function(value) {
  * @see {os.ui.action.IActionTarget}
  */
 os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
-  var source = /** @type {os.source.Vector} */ (this.getSource());
-  var isVector = source instanceof os.source.Vector;
+  const source = /** @type {os.source.Vector} */ (this.getSource());
+  const isVector = source instanceof os.source.Vector;
+  const onlyOneLayer = !!opt_actionArgs && goog.isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
 
   if (os.action) {
     switch (type) {
@@ -1057,7 +1061,7 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
       case os.action.EventType.FEATURE_LIST:
         return isVector;
       case os.action.EventType.RENAME:
-        return !!opt_actionArgs && goog.isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
+        return onlyOneLayer;
       case os.action.EventType.BUFFER:
       case os.action.EventType.EXPORT:
       case os.action.EventType.CLEAR_SELECTION:
@@ -1100,6 +1104,12 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
       case os.action.EventType.SAVE_LAYER:
       case os.action.EventType.SAVE_LAYER_AS:
         return isVector && source.getHasModifications();
+      case os.action.EventType.LAYER_SETTINGS:
+        const descriptor = os.dataManager.getDescriptor(source.getId());
+
+        return isVector && onlyOneLayer &&
+        os.implements(descriptor, os.data.IMappingDescriptor.ID) &&
+        /** @type {os.data.IMappingDescriptor} */ (descriptor).supportsMapping();
       default:
         // ask the source if it supports the action
         return isVector && source.getSupportsAction(type);

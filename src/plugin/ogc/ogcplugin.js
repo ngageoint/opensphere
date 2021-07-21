@@ -1,101 +1,101 @@
-goog.provide('plugin.ogc.OGCPlugin');
+goog.module('plugin.ogc.OGCPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.DataManager');
-goog.require('os.data.ProviderEntry');
-goog.require('os.ogc');
-goog.require('os.ogc.LayerType');
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.ui.ProviderImportUI');
-goog.require('os.ui.action.Action');
-goog.require('os.ui.im.ImportManager');
-goog.require('os.ui.ogc.OGCServer');
-goog.require('plugin.ogc.GeoServer');
-goog.require('plugin.ogc.OGCLayerDescriptor');
-goog.require('plugin.ogc.mime');
-goog.require('plugin.ogc.ui.GeoServerHelpUI');
-goog.require('plugin.ogc.ui.GeoserverImportForm');
-goog.require('plugin.ogc.ui.OgcServerHelpUI');
-goog.require('plugin.ogc.ui.OgcServerImportForm');
-goog.require('plugin.ogc.ui.geoserverDirective');
-goog.require('plugin.ogc.ui.ogcserverDirective');
-goog.require('plugin.ogc.wfs.QueryWFSLayerConfig');
-goog.require('plugin.ogc.wms.WMSLayerConfig');
-goog.require('plugin.ogc.wmts.WMTSLayerConfig');
-goog.require('plugin.ogc.wmts.WMTSServer');
-
+const DataManager = goog.require('os.data.DataManager');
+const ProviderEntry = goog.require('os.data.ProviderEntry');
+const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
+const net = goog.require('os.net');
+const osOgc = goog.require('os.ogc');
+const LayerType = goog.require('os.ogc.LayerType');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const ProviderImportUI = goog.require('os.ui.ProviderImportUI');
+const ImportManager = goog.require('os.ui.im.ImportManager');
+const OGCServer = goog.require('os.ui.ogc.OGCServer');
+const GeoServer = goog.require('plugin.ogc.GeoServer');
+const OGCLayerDescriptor = goog.require('plugin.ogc.OGCLayerDescriptor');
+const mime = goog.require('plugin.ogc.mime');
+const GeoServerHelpUI = goog.require('plugin.ogc.ui.GeoServerHelpUI');
+const GeoserverImportForm = goog.require('plugin.ogc.ui.GeoserverImportForm');
+const {directiveTag: geoserverImportUi} = goog.require('plugin.ogc.ui.GeoserverImportUI');
+const OgcServerHelpUI = goog.require('plugin.ogc.ui.OgcServerHelpUI');
+const OgcServerImportForm = goog.require('plugin.ogc.ui.OgcServerImportForm');
+const {directiveTag: ogcImportUi} = goog.require('plugin.ogc.ui.OgcServerImportUI');
+const QueryWFSLayerConfig = goog.require('plugin.ogc.wfs.QueryWFSLayerConfig');
+const WMSLayerConfig = goog.require('plugin.ogc.wms.WMSLayerConfig');
+const WMTSLayerConfig = goog.require('plugin.ogc.wmts.WMTSLayerConfig');
+const WMTSServer = goog.require('plugin.ogc.wmts.WMTSServer');
 
 
 /**
  * Provides WMS/WFS layer support, both separately and as a grouped layer combination.
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.ogc.OGCPlugin = function() {
-  plugin.ogc.OGCPlugin.base(this, 'constructor');
-  this.id = os.ogc.ID;
-};
-goog.inherits(plugin.ogc.OGCPlugin, os.plugin.AbstractPlugin);
+class OGCPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = osOgc.ID;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  init() {
+    var dm = DataManager.getInstance();
 
-/**
- * @inheritDoc
- */
-plugin.ogc.OGCPlugin.prototype.init = function() {
-  var dm = os.dataManager;
+    var ogc = new ProviderEntry(osOgc.ID, OGCServer, 'OGC Server',
+        'OGC Servers provide raster imagery through WMS (Web Map Service) and vector features through WFS' +
+      ' (Web Feature Service) servers');
 
-  var ogc = new os.data.ProviderEntry(os.ogc.ID, os.ui.ogc.OGCServer, 'OGC Server',
-      'OGC Servers provide raster imagery through WMS (Web Map Service) and vector features through WFS' +
-    ' (Web Feature Service) servers');
+    var geo = new ProviderEntry(mime.GEOSERVER_TYPE, GeoServer, 'GeoServer', '');
 
-  var geo = new os.data.ProviderEntry(plugin.ogc.mime.GEOSERVER_TYPE, plugin.ogc.GeoServer, 'GeoServer', '');
+    var wmts = new ProviderEntry(WMTSServer.TYPE, WMTSServer, 'WMTS Server', '');
 
-  var wmts = new os.data.ProviderEntry(plugin.ogc.wmts.WMTSServer.TYPE, plugin.ogc.wmts.WMTSServer, 'WMTS Server', '');
+    // register the ogc provider types
+    dm.registerProviderType(ogc);
+    dm.registerProviderType(geo);
+    dm.registerProviderType(wmts);
 
-  // register the ogc provider types
-  dm.registerProviderType(ogc);
-  dm.registerProviderType(geo);
-  dm.registerProviderType(wmts);
+    // register the ogc descriptor types
+    dm.registerDescriptorType(osOgc.ID, OGCLayerDescriptor);
 
-  // register the ogc descriptor types
-  dm.registerDescriptorType(os.ogc.ID, plugin.ogc.OGCLayerDescriptor);
+    // register the layer configurations
+    var lcm = LayerConfigManager.getInstance();
+    lcm.registerLayerConfig(LayerType.WMS, WMSLayerConfig);
+    lcm.registerLayerConfig(LayerType.WFS, QueryWFSLayerConfig);
+    lcm.registerLayerConfig(LayerType.WMTS, WMTSLayerConfig);
+    lcm.registerDefaultLayerConfig(LayerType.WFS, getDefaultWfsOptions);
 
-  // register the layer configurations
-  var lcm = os.layer.config.LayerConfigManager.getInstance();
-  lcm.registerLayerConfig(os.ogc.LayerType.WMS, plugin.ogc.wms.WMSLayerConfig);
-  lcm.registerLayerConfig(os.ogc.LayerType.WFS, plugin.ogc.wfs.QueryWFSLayerConfig);
-  lcm.registerLayerConfig(os.ogc.LayerType.WMTS, plugin.ogc.wmts.WMTSLayerConfig);
-  lcm.registerDefaultLayerConfig(os.ogc.LayerType.WFS, plugin.ogc.getDefaultWfsOptions);
+    // register the server forms for adding/editing servers
+    var im = ImportManager.getInstance();
+    im.registerImportUI(osOgc.ID, new ProviderImportUI(`<${ogcImportUi}></${ogcImportUi}>`));
+    im.registerServerType(osOgc.ID, {
+      type: 'ogc',
+      helpUi: OgcServerHelpUI.directiveTag,
+      formUi: OgcServerImportForm.directiveTag,
+      label: 'OGC Server'
+    });
+    im.registerImportUI(mime.GEOSERVER_TYPE,
+        new ProviderImportUI(`<${geoserverImportUi}></${geoserverImportUi}>`));
+    im.registerServerType(mime.GEOSERVER_TYPE, {
+      type: 'geoserver',
+      helpUi: GeoServerHelpUI.directiveTag,
+      formUi: GeoserverImportForm.directiveTag,
+      label: 'GeoServer'
+    });
 
-  // register the server forms for adding/editing servers
-  var im = os.ui.im.ImportManager.getInstance();
-  im.registerImportUI(os.ogc.ID, new os.ui.ProviderImportUI('<ogcserver></ogcserver>'));
-  im.registerServerType(os.ogc.ID, {
-    type: 'ogc',
-    helpUi: plugin.ogc.ui.OgcServerHelpUI.directiveTag,
-    formUi: plugin.ogc.ui.OgcServerImportForm.directiveTag,
-    label: 'OGC Server'
-  });
-  im.registerImportUI(plugin.ogc.mime.GEOSERVER_TYPE,
-      new os.ui.ProviderImportUI('<geoserver></geoserver>'));
-  im.registerServerType(plugin.ogc.mime.GEOSERVER_TYPE, {
-    type: 'geoserver',
-    helpUi: plugin.ogc.ui.GeoServerHelpUI.directiveTag,
-    formUi: plugin.ogc.ui.GeoserverImportForm.directiveTag,
-    label: 'GeoServer'
-  });
-
-  os.net.registerDefaultValidator(os.ogc.getException);
-};
-
+    net.registerDefaultValidator(osOgc.getException);
+  }
+}
 
 /**
  * Get the default opensphere WFS layer options
  *
  * @return {!Object<string, *>}
  */
-plugin.ogc.getDefaultWfsOptions = function() {
-  var options = os.ogc.getDefaultWfsOptions();
+const getDefaultWfsOptions = function() {
+  var options = osOgc.getDefaultWfsOptions();
 
   // opensphere handles this per-request based on the feature limit imposed by 2D/3D mode, so exclude it from the request
   // parameters
@@ -104,3 +104,5 @@ plugin.ogc.getDefaultWfsOptions = function() {
 
   return options;
 };
+
+exports = OGCPlugin;

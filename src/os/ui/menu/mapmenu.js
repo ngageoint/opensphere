@@ -8,7 +8,7 @@ goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
-goog.require('os.ui.window.confirmColorDirective');
+goog.require('os.ui.window.ConfirmColorUI');
 
 /**
  * @type {os.ui.menu.Menu<ol.Coordinate>|undefined}
@@ -186,7 +186,7 @@ os.ui.menu.map.showLegend = function() {
  * @private
  */
 os.ui.menu.map.clearSelection_ = function() {
-  var sources = os.osDataManager.getSources();
+  var sources = os.dataManager.getSources();
   for (var i = 0, ii = sources.length; i < ii; i++) {
     var s = sources[i];
     if (s instanceof os.source.Vector) {
@@ -201,7 +201,7 @@ os.ui.menu.map.clearSelection_ = function() {
  */
 os.ui.menu.map.changeColor_ = function() {
   var color = /** @type {string} */ (os.settings.get(os.config.DisplaySetting.BG_COLOR, '#000000'));
-  os.ui.window.launchConfirmColor(os.ui.menu.map.onColorChosen_, color);
+  os.ui.window.ConfirmColorUI.launchConfirmColor(os.ui.menu.map.onColorChosen_, color);
 };
 
 

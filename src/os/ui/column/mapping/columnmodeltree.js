@@ -1,10 +1,10 @@
-goog.provide('os.ui.column.mapping.ColumnModelTree');
-goog.provide('os.ui.column.mapping.columnModelTreeDirective');
-goog.require('os.ui.Module');
-goog.require('os.ui.column.mapping.mappingExpressionDirective');
-goog.require('os.ui.slick.SlickTreeCtrl');
-goog.require('os.ui.slick.SlickTreeNode');
-goog.require('os.ui.slick.slickTreeDirective');
+goog.module('os.ui.column.mapping.ColumnModelTreeUI');
+goog.module.declareLegacyNamespace();
+
+const Module = goog.require('os.ui.Module');
+const {directiveTag: mappingExpressionUi} = goog.require('os.ui.column.mapping.MappingExpressionUI');
+const SlickTreeCtrl = goog.require('os.ui.slick.SlickTreeCtrl');
+const slickTreeDirective = goog.require('os.ui.slick.slickTreeDirective');
 
 
 /**
@@ -12,47 +12,59 @@ goog.require('os.ui.slick.slickTreeDirective');
  *
  * @return {angular.Directive}
  */
-os.ui.column.mapping.columnModelTreeDirective = function() {
-  var conf = os.ui.slick.slickTreeDirective();
-  conf.controller = os.ui.column.mapping.ColumnModelTree;
+const directive = () => {
+  var conf = slickTreeDirective();
+  conf.controller = Controller;
   return conf;
 };
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'columnmodeltree';
 
-os.ui.Module.directive('columnmodeltree', [os.ui.column.mapping.columnModelTreeDirective]);
-
-
+/**
+ * Add the directive to the module
+ */
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the column mapping tree
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$compile} $compile
- * @extends {os.ui.slick.SlickTreeCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.column.mapping.ColumnModelTree = function($scope, $element, $compile) {
-  os.ui.column.mapping.ColumnModelTree.base(this, 'constructor', $scope, $element, $compile);
-};
-goog.inherits(os.ui.column.mapping.ColumnModelTree, os.ui.slick.SlickTreeCtrl);
+class Controller extends SlickTreeCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$compile} $compile
+   * @ngInject
+   */
+  constructor($scope, $element, $compile) {
+    super($scope, $element, $compile);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  treeFormatter(row, cell, value, columnDef, node) {
+    return `<${mappingExpressionUi} node="item"></${mappingExpressionUi}>`;
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.column.mapping.ColumnModelTree.prototype.treeFormatter = function(row, cell, value, columnDef, node) {
-  return '<mappingexpression node="item"></mappingexpression>';
-};
+  /**
+   * @inheritDoc
+   */
+  getOptions() {
+    var opts = super.getOptions();
+    opts['rowHeight'] = 30;
+    opts['enableTextSelectionOnCells'] = true;
+    return opts;
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.ui.column.mapping.ColumnModelTree.prototype.getOptions = function() {
-  var opts = os.ui.column.mapping.ColumnModelTree.base(this, 'getOptions');
-  opts['rowHeight'] = 30;
-  opts['enableTextSelectionOnCells'] = true;
-  return opts;
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

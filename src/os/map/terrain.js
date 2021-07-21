@@ -2,6 +2,7 @@ goog.module('os.map.terrain');
 goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
+const dispatcher = goog.require('os.Dispatcher');
 
 
 /**
@@ -74,7 +75,7 @@ const addTerrainProvider = (options) => {
 
     if (!providers.some((p) => p.id === options.id)) {
       providers.push(options);
-      os.dispatcher.dispatchEvent(TerrainEventType.PROVIDERS);
+      dispatcher.getInstance().dispatchEvent(TerrainEventType.PROVIDERS);
     } else {
       log.warning(logger, `Ignoring duplicate terrain provider ${options.name} with id '${options.id}'`);
     }

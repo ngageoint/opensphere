@@ -9,7 +9,6 @@ goog.require('os.config.DisplaySettings');
 goog.require('os.config.Settings');
 goog.require('os.geo');
 goog.require('os.ui.location');
-goog.require('os.ui.user.settings.LocationSetting');
 
 
 

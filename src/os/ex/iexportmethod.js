@@ -1,122 +1,108 @@
-goog.provide('os.ex.IExportMethod');
-goog.require('goog.disposable.IDisposable');
-goog.require('goog.events.Listenable');
+goog.module('os.ex.IExportMethod');
+goog.module.declareLegacyNamespace();
 
-
+const IDisposable = goog.requireType('goog.disposable.IDisposable');
+const Listenable = goog.requireType('goog.events.Listenable');
 
 /**
  * @interface
- * @extends {goog.disposable.IDisposable}
- * @extends {goog.events.Listenable}
+ * @extends {IDisposable}
+ * @extends {Listenable}
  * @template T
  */
-os.ex.IExportMethod = function() {};
+class IExportMethod {
+  /**
+   * The file extension for this export type.
+   * @return {string}
+   */
+  getExtension() {}
 
+  /**
+   * Set the item fields to export.
+   * @param {Array.<string>} fields
+   */
+  setFields(fields) {}
 
-/**
- * The file extension for this export type.
- * @return {string}
- */
-os.ex.IExportMethod.prototype.getExtension;
+  /**
+   * Set the items to export.
+   * @param {Array.<T>} items
+   */
+  setItems(items) {}
 
+  /**
+   * The human readable label/title to display for this export type (e.g. 'CSV').
+   * @return {string}
+   */
+  getLabel() {}
 
-/**
- * Set the item fields to export.
- * @param {Array.<string>} fields
- */
-os.ex.IExportMethod.prototype.setFields;
+  /**
+   * The mime type for this export type.
+   * @return {string}
+   */
+  getMimeType() {}
 
+  /**
+   * Get the name of the export method.
+   * @return {?string}
+   */
+  getName() {}
 
-/**
- * Set the items to export.
- * @param {Array.<T>} items
- */
-os.ex.IExportMethod.prototype.setItems;
+  /**
+   * Set the name of the export method.
+   * @param {string} name
+   */
+  setName(name) {}
 
+  /**
+   * If the exporter processes asynchronously.
+   * @return {boolean}
+   */
+  isAsync() {}
 
-/**
- * The human readable label/title to display for this export type (e.g. 'CSV').
- * @return {string}
- */
-os.ex.IExportMethod.prototype.getLabel;
+  /**
+   * If the export method supports exporting items from multiple data sources.
+   * @return {boolean}
+   */
+  supportsMultiple() {}
 
+  /**
+   * If the export method supports exporting time from the data source.
+   * @return {boolean}
+   */
+  supportsTime() {}
 
-/**
- * The mime type for this export type.
- * @return {string}
- */
-os.ex.IExportMethod.prototype.getMimeType;
+  /**
+   * Begins the export process.
+   */
+  process() {}
 
+  /**
+   * Cancel the export process.
+   */
+  cancel() {}
 
-/**
- * Get the name of the export method.
- * @return {?string}
- */
-os.ex.IExportMethod.prototype.getName;
+  /**
+   * The resulting exported output.
+   * @return {Object|null|string}
+   */
+  getOutput() {}
 
+  /**
+   * The export UI.
+   * @return {?string}
+   */
+  getUI() {}
 
-/**
- * Set the name of the export method.
- * @param {string} name
- */
-os.ex.IExportMethod.prototype.setName;
+  /**
+   * Resets the exporter to its default state.
+   */
+  reset() {}
 
+  /**
+   * Does this exporter include labels
+   * @return {boolean}
+   */
+  supportsLabelExport() {}
+}
 
-/**
- * If the exporter processes asynchronously.
- * @return {boolean}
- */
-os.ex.IExportMethod.prototype.isAsync;
-
-
-/**
- * If the export method supports exporting items from multiple data sources.
- * @return {boolean}
- */
-os.ex.IExportMethod.prototype.supportsMultiple;
-
-
-/**
- * If the export method supports exporting time from the data source.
- * @return {boolean}
- */
-os.ex.IExportMethod.prototype.supportsTime;
-
-
-/**
- * Begins the export process.
- */
-os.ex.IExportMethod.prototype.process;
-
-
-/**
- * Cancel the export process.
- */
-os.ex.IExportMethod.prototype.cancel;
-
-
-/**
- * The resulting exported output.
- * @return {Object|null|string}
- */
-os.ex.IExportMethod.prototype.getOutput;
-
-
-/**
- * The export UI.
- * @return {?string}
- */
-os.ex.IExportMethod.prototype.getUI;
-
-
-/**
- * Resets the exporter to its default state.
- */
-os.ex.IExportMethod.prototype.reset;
-
-
-/**
- * Does this exporter include labels
- * @return {boolean}
- */
-os.ex.IExportMethod.prototype.supportsLabelExport;
+exports = IExportMethod;

@@ -1,6 +1,7 @@
 goog.module('plugin.places');
 goog.module.declareLegacyNamespace();
 
+const {removeDuplicates} = goog.require('goog.array');
 const {getUid} = goog.require('ol');
 const Feature = goog.require('ol.Feature');
 const Geometry = goog.require('ol.geom.Geometry');
@@ -23,6 +24,7 @@ const kml = goog.require('plugin.file.kml');
 const KMLField = goog.require('plugin.file.kml.KMLField');
 const KMLTreeExporter = goog.require('plugin.file.kml.KMLTreeExporter');
 const KMLNodeAdd = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
+const {METHOD_FIELD} = goog.require('os.interpolate');
 const {getKMLRoot, updateFolder, updatePlacemark} = goog.require('plugin.file.kml.ui');
 
 const KMLLayerNode = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
@@ -88,7 +90,8 @@ const ExportFields = [
   Fields.SEMI_MINOR_UNITS,
   Fields.ORIENTATION,
   Fields.BEARING,
-  RecordField.RING_OPTIONS
+  RecordField.RING_OPTIONS,
+  METHOD_FIELD
 ];
 
 /**
@@ -114,6 +117,15 @@ const SourceFields = [
   Fields.TIME,
   Fields.ORIENTATION
 ];
+
+/**
+ * Fields that should be copied when cloning KML nodes.
+ * This should include all of the KML source fields, and the internal Places fields.
+ *
+ * @type {!Array<string>}
+ */
+const CopyableFields = ExportFields.concat(kml.SOURCE_FIELDS);
+removeDuplicates(CopyableFields);
 
 /**
  * @typedef {{
@@ -191,7 +203,7 @@ const isLayerPresent = function() {
  * @return {!ol.Feature}
  */
 const copyFeature = function(feature, opt_layerConfig) {
-  var clone = osOlFeature.clone(feature, kml.SOURCE_FIELDS);
+  var clone = osOlFeature.clone(feature, CopyableFields);
   clone.setId(getUid(clone));
 
   // copy the feature's current style to a new config and set it on the cloned feature

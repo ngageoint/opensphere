@@ -1,11 +1,11 @@
-goog.provide('os.ui.draw.EventType');
-
+goog.module('os.ui.draw.EventType');
+goog.module.declareLegacyNamespace();
 
 /**
  * This enumerates the drawing event type constants.
  * @enum {string}
  */
-os.ui.draw.EventType = {
+exports = {
   ACTIVE: 'draw.active',
   CHANGE: 'draw.change',
   COMPLETE: 'draw.complete',

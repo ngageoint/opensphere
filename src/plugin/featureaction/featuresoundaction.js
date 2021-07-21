@@ -1,18 +1,19 @@
-goog.provide('plugin.im.action.feature.SoundAction');
+goog.module('plugin.im.action.feature.SoundAction');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.feature');
-goog.require('os.fn');
-goog.require('os.im.action.AbstractImportAction');
-goog.require('os.implements');
-goog.require('os.object');
-goog.require('os.xml');
+const AudioManager = goog.require('os.audio.AudioManager');
+
+const AbstractImportAction = goog.require('os.im.action.AbstractImportAction');
+const osObject = goog.require('os.object');
+const osXml = goog.require('os.xml');
+const {directiveTag: configUi, setDefaultConfig} = goog.require('plugin.im.action.feature.ui.SoundConfigUI');
 
 
 /**
  * Tag names used for XML persistence.
  * @enum {string}
  */
-plugin.im.action.feature.SoundActionTagName = {
+const SoundActionTagName = {
   SOUND: 'sound',
   DELAY: 'playDelay'
 };
@@ -21,47 +22,120 @@ plugin.im.action.feature.SoundActionTagName = {
 /**
  * The default sound
  * @type {string}
- * @const
  */
-plugin.im.action.feature.DEFAULT_SOUND = 'Default';
-
+const DEFAULT_SOUND = 'Default';
 
 
 /**
  * Import action that sets the sound for a {@link ol.Feature}.
  *
- * @extends {os.im.action.AbstractImportAction<ol.Feature>}
- * @constructor
+ * @extends {AbstractImportAction<ol.Feature>}
+ * @unrestricted
  */
-plugin.im.action.feature.SoundAction = function() {
-  plugin.im.action.feature.SoundAction.base(this, 'constructor');
-
-  this.id = plugin.im.action.feature.SoundAction.ID;
-  this.label = plugin.im.action.feature.SoundAction.LABEL;
-  this.xmlType = plugin.im.action.feature.SoundAction.ID;
-  this.configUI = plugin.im.action.feature.SoundAction.CONFIG_UI;
-
+class SoundAction extends AbstractImportAction {
   /**
-   * The feature sound config.
-   * @type {!Object}
+   * Constructor.
    */
-  this.soundConfig = /** @type {!Object} */ (os.object.unsafeClone(
-      plugin.im.action.feature.SoundAction.DEFAULT_CONFIG));
+  constructor() {
+    super();
 
-  this['sounds'] = os.audio.AudioManager.getInstance().getSounds();
+    this.id = SoundAction.ID;
+    this.label = SoundAction.LABEL;
+    this.xmlType = SoundAction.ID;
+    this.configUI = configUi;
 
-  /**
-   * Set the default sound for the sound action.
-   */
-  var defaultSoundIndex = this['sounds'].indexOf(plugin.im.action.feature.DEFAULT_SOUND);
-  if (defaultSoundIndex > -1) {
-    this.soundConfig['sound'] = this['sounds'][defaultSoundIndex];
-  } else {
-    this.soundConfig['sound'] = this['sounds'][0] || '';
+    /**
+     * The feature sound config.
+     * @type {!Object}
+     */
+    this.soundConfig = /** @type {!Object} */ (osObject.unsafeClone(SoundAction.DEFAULT_CONFIG));
+
+    this['sounds'] = AudioManager.getInstance().getSounds();
+
+    /**
+     * Set the default sound for the sound action.
+     */
+    var defaultSoundIndex = this['sounds'].indexOf(DEFAULT_SOUND);
+    if (defaultSoundIndex > -1) {
+      this.soundConfig['sound'] = this['sounds'][defaultSoundIndex];
+    } else {
+      this.soundConfig['sound'] = this['sounds'][0] || '';
+    }
   }
-};
-goog.inherits(plugin.im.action.feature.SoundAction,
-    os.im.action.AbstractImportAction);
+
+  /**
+   * @inheritDoc
+   */
+  execute() {
+    AudioManager.getInstance().play(this.soundConfig['sound'], this.soundConfig['playDelay'] * 1000);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  persist(opt_to) {
+    opt_to = super.persist(opt_to);
+    opt_to['soundConfig'] = this.soundConfig;
+
+    return opt_to;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  restore(config) {
+    var soundConfig = /** @type {Object|undefined} */ (config['soundConfig']);
+    if (soundConfig) {
+      // create a new object in the same window context as this object
+      this.soundConfig = {};
+      osObject.merge(soundConfig, this.soundConfig);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  toXml() {
+    var element = super.toXml();
+
+    var sound = (this.soundConfig['sound']);
+    var delay = (this.soundConfig['playDelay']);
+    if (sound != null) {
+      osXml.appendElement(SoundActionTagName.SOUND,
+          element, String(sound));
+    }
+
+    if (delay != null) {
+      osXml.appendElement(SoundActionTagName.DELAY,
+          element, String(delay));
+    }
+
+    return element;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  fromXml(xml) {
+    var soundConfig = /** @type {!Object} */ (osObject.unsafeClone(
+        SoundAction.DEFAULT_CONFIG));
+
+    if (xml) {
+      var sound = osXml.getChildValue(xml, SoundActionTagName.SOUND);
+      var delay = osXml.getChildValue(xml, SoundActionTagName.DELAY);
+
+      soundConfig['sound'] = String(sound);
+      soundConfig['playDelay'] = Number(delay);
+
+      this.soundConfig = soundConfig;
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  reset() {}
+}
 
 
 /**
@@ -69,7 +143,7 @@ goog.inherits(plugin.im.action.feature.SoundAction,
  * @type {string}
  * @const
  */
-plugin.im.action.feature.SoundAction.ID = 'featureSoundAction';
+SoundAction.ID = 'featureSoundAction';
 
 
 /**
@@ -77,7 +151,7 @@ plugin.im.action.feature.SoundAction.ID = 'featureSoundAction';
  * @type {string}
  * @const
  */
-plugin.im.action.feature.SoundAction.FEATURE_ID = '_featureSoundAction';
+SoundAction.FEATURE_ID = '_featureSoundAction';
 
 
 /**
@@ -85,15 +159,7 @@ plugin.im.action.feature.SoundAction.FEATURE_ID = '_featureSoundAction';
  * @type {string}
  * @const
  */
-plugin.im.action.feature.SoundAction.LABEL = 'Set Sound';
-
-
-/**
- * Action edit UI.
- * @type {string}
- * @const
- */
-plugin.im.action.feature.SoundAction.CONFIG_UI = 'featureactionsoundconfig';
+SoundAction.LABEL = 'Set Sound';
 
 
 /**
@@ -101,88 +167,11 @@ plugin.im.action.feature.SoundAction.CONFIG_UI = 'featureactionsoundconfig';
  * @type {!Object}
  * @const
  */
-plugin.im.action.feature.SoundAction.DEFAULT_CONFIG = {
+SoundAction.DEFAULT_CONFIG = {
   'sound': '',
   'playDelay': 30
 };
+setDefaultConfig(SoundAction.DEFAULT_CONFIG);
 
 
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.SoundAction.prototype.reset = os.fn.noop;
-
-
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.SoundAction.prototype.execute = function() {
-  os.audio.AudioManager.getInstance().play(this.soundConfig['sound'], this.soundConfig['playDelay'] * 1000);
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.SoundAction.prototype.persist = function(opt_to) {
-  opt_to = plugin.im.action.feature.SoundAction.base(this, 'persist', opt_to);
-  opt_to['soundConfig'] = this.soundConfig;
-
-  return opt_to;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.SoundAction.prototype.restore = function(config) {
-  var soundConfig = /** @type {Object|undefined} */ (config['soundConfig']);
-  if (soundConfig) {
-    // create a new object in the same window context as this object
-    this.soundConfig = {};
-    os.object.merge(soundConfig, this.soundConfig);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.SoundAction.prototype.toXml = function() {
-  var element = plugin.im.action.feature.SoundAction.base(this, 'toXml');
-
-  var sound = (this.soundConfig['sound']);
-  var delay = (this.soundConfig['playDelay']);
-  if (sound != null) {
-    os.xml.appendElement(plugin.im.action.feature.SoundActionTagName.SOUND,
-        element, String(sound));
-  }
-
-  if (delay != null) {
-    os.xml.appendElement(plugin.im.action.feature.SoundActionTagName.DELAY,
-        element, String(delay));
-  }
-
-  return element;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.SoundAction.prototype.fromXml = function(xml) {
-  var soundConfig = /** @type {!Object} */ (os.object.unsafeClone(
-      plugin.im.action.feature.SoundAction.DEFAULT_CONFIG));
-
-  if (xml) {
-    var sound = os.xml.getChildValue(xml,
-        plugin.im.action.feature.SoundActionTagName.SOUND);
-    var delay = os.xml.getChildValue(xml,
-        plugin.im.action.feature.SoundActionTagName.DELAY);
-
-    soundConfig['sound'] = String(sound);
-    soundConfig['playDelay'] = Number(delay);
-
-    this.soundConfig = soundConfig;
-  }
-};
+exports = SoundAction;

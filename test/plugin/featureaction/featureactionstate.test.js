@@ -1,5 +1,9 @@
+goog.require('os.data.DataManager');
+goog.require('os.query.FilterManager');
+goog.require('os.source');
 goog.require('os.source.MockSource');
 goog.require('os.state.StateManager');
+goog.require('os.state.Versions');
 goog.require('os.state.v4.FilterAction');
 goog.require('os.test.xsd');
 goog.require('os.xml');
@@ -9,17 +13,29 @@ goog.require('plugin.im.action.feature.StyleAction');
 
 
 describe('os.state.v4.FilterAction', function() {
+  const DataManager = goog.module.get('os.data.DataManager');
+  const FilterManager = goog.module.get('os.query.FilterManager');
+  const source = goog.module.get('os.source');
+  const StateManager = goog.module.get('os.state.StateManager');
+  const Versions = goog.module.get('os.state.Versions');
+  const FilterAction = goog.module.get('os.state.v4.FilterAction');
+  const xsd = goog.module.get('os.test.xsd');
+  const xml = goog.module.get('os.xml');
+  const Entry = goog.module.get('plugin.im.action.feature.Entry');
+  const StyleAction = goog.module.get('plugin.im.action.feature.StyleAction');
+  const FeatureActionManager = goog.module.get('plugin.im.action.feature.Manager');
+
   var stateManager;
 
   beforeEach(function() {
-    stateManager = os.state.StateManager.getInstance();
-    stateManager.setVersion(os.state.Versions.V4);
+    stateManager = StateManager.getInstance();
+    stateManager.setVersion(Versions.V4);
   });
 
   xit('Should validate against the v4 XSD state', function() {
     var resultSchemas = null;
     runs(function() {
-      os.test.xsd.loadStateXsdFiles().then(function(result) {
+      xsd.loadStateXsdFiles().then(function(result) {
         resultSchemas = result;
       }, function(err) {
         throw err;
@@ -45,38 +61,38 @@ describe('os.state.v4.FilterAction', function() {
           '</PropertyIsLike>' +
           '</Or>';
 
-      var mockSource = new os.source.MockSource();
+      var mockSource = new source.MockSource();
       mockSource.setId(entryType);
 
-      var dataManager = os.data.DataManager.getInstance();
+      var dataManager = DataManager.getInstance();
       spyOn(dataManager, 'getSources').andCallFake(function() {
         return [mockSource];
       });
 
-      spyOn(os.ui.filterManager, 'hasEnabledFilters').andCallFake(function() {
+      spyOn(FilterManager.getInstance(), 'hasEnabledFilters').andCallFake(function() {
         return true;
       });
 
-      spyOn(os.ui.filterManager, 'isEnabled').andCallFake(function() {
+      spyOn(FilterManager.getInstance(), 'isEnabled').andCallFake(function() {
         return true;
       });
 
-      spyOn(os.ui.filterManager, 'getFilters').andCallFake(function() {
+      spyOn(FilterManager.getInstance(), 'getFilters').andCallFake(function() {
         return filters;
       });
 
-      var entry = new plugin.im.action.feature.Entry();
+      var entry = new Entry();
       entry.setId('testId');
       entry.setEnabled(true);
       entry.setTitle('Test Entry');
       entry.setType(entryType);
       entry.setFilter(filterXml);
-      entry.actions = [new plugin.im.action.feature.StyleAction()];
+      entry.actions = [new StyleAction()];
 
-      var iam = plugin.im.action.feature.Manager.getInstance();
+      var iam = FeatureActionManager.getInstance();
       iam.addActionEntry(entry);
 
-      var state = new os.state.v4.FilterAction();
+      var state = new FilterAction();
 
       var xmlRootDocument = stateManager.createStateObject(function() {}, 'test state', 'desc');
       var stateOptions = stateManager.createStateOptions(function() {}, 'test state', 'desc');
@@ -87,7 +103,7 @@ describe('os.state.v4.FilterAction', function() {
 
       state.saveInternal(stateOptions, rootObj);
 
-      var seralizedDoc = os.xml.serialize(stateOptions.doc);
+      var seralizedDoc = xml.serialize(stateOptions.doc);
       var xmlLintResult = xmllint.validateXML({
         xml: seralizedDoc,
         schema: resultSchemas

@@ -1,192 +1,162 @@
-goog.provide('os.hist.AbstractHistogramData');
-goog.require('os.hist.IHistogramData');
+goog.module('os.hist.AbstractHistogramData');
+goog.module.declareLegacyNamespace();
 
+const IHistogramData = goog.requireType('os.hist.IHistogramData');
+const TimeRange = goog.requireType('os.time.TimeRange');
 
+/**
+ * @type {string}
+ */
+const defaultColor = '#ffffff';
 
 /**
  * Abstract class that should be extended by all histogram data classes. It deliberately
  * does not implement the count data structure in order to allow subclasses to do so.
  *
  * @abstract
- * @implements {os.hist.IHistogramData}
- * @constructor
+ * @implements {IHistogramData}
  */
-os.hist.AbstractHistogramData = function() {
+class AbstractHistogramData {
   /**
-   * @type {string}
-   * @private
+   * Constructor.
    */
-  this.color_ = os.hist.AbstractHistogramData.DEFAULT_COLOR_;
+  constructor() {
+    /**
+     * @type {string}
+     * @private
+     */
+    this.color_ = defaultColor;
+
+    /**
+     * @type {string|undefined}
+     * @private
+     */
+    this.id_ = undefined;
+
+    /**
+     * @type {Object|undefined}
+     * @private
+     */
+    this.options_ = undefined;
+
+    /**
+     * @type {string|undefined}
+     * @private
+     */
+    this.title_ = undefined;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.visible_ = false;
+
+    /**
+     * @type {?TimeRange}
+     * @private
+     */
+    this.range_ = null;
+  }
 
   /**
-   * @type {string|undefined}
-   * @private
+   * @inheritDoc
    */
-  this.id_ = undefined;
+  getColor() {
+    return this.color_;
+  }
 
   /**
-   * @type {Object.<string, *>|undefined}
-   * @private
+   * @inheritDoc
    */
-  this.options_ = undefined;
+  setColor(value) {
+    this.color_ = value;
+  }
 
   /**
-   * @type {string|undefined}
-   * @private
+   * Get the id of the histogram.
+   *
+   * @return {string|undefined}
    */
-  this.title_ = undefined;
+  getId() {
+    return this.id_;
+  }
 
   /**
-   * @type {boolean}
-   * @private
+   * Set the id of the histogram.
+   *
+   * @param {string|undefined} value
    */
-  this.visible_ = false;
+  setId(value) {
+    this.id_ = value;
+  }
 
   /**
-   * @type {?os.time.TimeRange}
-   * @private
+   * @inheritDoc
    */
-  this.range_ = null;
-};
+  getOptions() {
+    return this.options_;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  setOptions(value) {
+    this.options_ = value;
+  }
 
-/**
- * @abstract
- * @inheritDoc
- */
-os.hist.AbstractHistogramData.prototype.getCounts = function() {};
+  /**
+   * Get the title of the histogram.
+   *
+   * @return {string|undefined}
+   */
+  getTitle() {
+    return this.title_;
+  }
 
+  /**
+   * Set the title of the histogram.
+   *
+   * @param {string|undefined} value
+   */
+  setTitle(value) {
+    this.title_ = value;
+  }
 
-/**
- * @abstract
- * @inheritDoc
- */
-os.hist.AbstractHistogramData.prototype.setCounts = function(value) {};
+  /**
+   * Get the visibility of the histogram.
+   *
+   * @return {boolean}
+   */
+  getVisible() {
+    return this.visible_;
+  }
 
+  /**
+   * Set the visibility of the histogram.
+   *
+   * @param {boolean} value
+   */
+  setVisible(value) {
+    this.visible_ = value;
+  }
 
-/**
- * @type {string}
- * @const
- * @private
- */
-os.hist.AbstractHistogramData.DEFAULT_COLOR_ = '#ffffff';
+  /**
+   * Get the full extent of the histogram
+   *
+   * @return {?TimeRange}
+   */
+  getRange() {
+    return this.range_;
+  }
 
+  /**
+   * Set the full extent of the histogram
+   *
+   * @param {?TimeRange} value
+   */
+  setRange(value) {
+    this.range_ = value;
+  }
+}
 
-/**
- * Get the color of the histogram.
- *
- * @return {string}
- */
-os.hist.AbstractHistogramData.prototype.getColor = function() {
-  return this.color_;
-};
-
-
-/**
- * Set the color of the histogram.
- *
- * @param {string} value
- */
-os.hist.AbstractHistogramData.prototype.setColor = function(value) {
-  this.color_ = value;
-};
-
-
-/**
- * Get the id of the histogram.
- *
- * @return {string|undefined}
- */
-os.hist.AbstractHistogramData.prototype.getId = function() {
-  return this.id_;
-};
-
-
-/**
- * Set the id of the histogram.
- *
- * @param {string|undefined} value
- */
-os.hist.AbstractHistogramData.prototype.setId = function(value) {
-  this.id_ = value;
-};
-
-
-/**
- * Get the options used to generate the histogram.
- *
- * @return {Object.<string, *>|undefined}
- */
-os.hist.AbstractHistogramData.prototype.getOptions = function() {
-  return this.options_;
-};
-
-
-/**
- * Set the options used to generate the histogram.
- *
- * @param {Object.<string, *>|undefined} value
- */
-os.hist.AbstractHistogramData.prototype.setOptions = function(value) {
-  this.options_ = value;
-};
-
-
-/**
- * Get the title of the histogram.
- *
- * @return {string|undefined}
- */
-os.hist.AbstractHistogramData.prototype.getTitle = function() {
-  return this.title_;
-};
-
-
-/**
- * Set the title of the histogram.
- *
- * @param {string|undefined} value
- */
-os.hist.AbstractHistogramData.prototype.setTitle = function(value) {
-  this.title_ = value;
-};
-
-
-/**
- * Get the visibility of the histogram.
- *
- * @return {boolean}
- */
-os.hist.AbstractHistogramData.prototype.getVisible = function() {
-  return this.visible_;
-};
-
-
-/**
- * Set the visibility of the histogram.
- *
- * @param {boolean} value
- */
-os.hist.AbstractHistogramData.prototype.setVisible = function(value) {
-  this.visible_ = value;
-};
-
-
-/**
- * Get the full extent of the histogram
- *
- * @return {?os.time.TimeRange}
- */
-os.hist.AbstractHistogramData.prototype.getRange = function() {
-  return this.range_;
-};
-
-
-/**
- * Set the full extent of the histogram
- *
- * @param {?os.time.TimeRange} value
- */
-os.hist.AbstractHistogramData.prototype.setRange = function(value) {
-  this.range_ = value;
-};
+exports = AbstractHistogramData;

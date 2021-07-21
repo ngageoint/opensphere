@@ -1,27 +1,49 @@
-goog.provide('os.ui.draw');
+goog.module('os.ui.draw');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.Feature');
-goog.require('ol.geom.Polygon');
-goog.require('os.interpolate');
-goog.require('os.interpolate.Method');
-goog.require('os.webgl.AltitudeMode');
+const {getRandomString} = goog.require('goog.string');
+const Feature = goog.require('ol.Feature');
+const Polygon = goog.require('ol.geom.Polygon');
+const {transformExtent} = goog.require('ol.proj');
+const RecordField = goog.require('os.data.RecordField');
+const {METHOD_FIELD} = goog.require('os.interpolate');
+const Method = goog.require('os.interpolate.Method');
+const osMap = goog.require('os.map');
+const {EPSG4326} = goog.require('os.proj');
+const AltitudeMode = goog.require('os.webgl.AltitudeMode');
+
+const Menu = goog.requireType('os.ui.menu.Menu');
+
 
 /**
  * The menu to display when drawing interaction completes.
- * @type {os.ui.menu.Menu|undefined}
+ * @type {Menu|undefined}
  */
-os.ui.draw.MENU = undefined;
+let drawMenu = undefined;
 
+/**
+ * Get the draw menu.
+ * @return {Menu|undefined}
+ */
+const getMenu = () => drawMenu;
+
+/**
+ * Set the draw menu.
+ * @param {Menu|undefined} value
+ */
+const setMenu = (value) => {
+  drawMenu = value;
+};
 
 /**
  * Build a list of features to represent the search grid that intersects with the drawn geometry
  *
- * @param {ol.Feature} feature The source feature to trace.
+ * @param {Feature} feature The source feature to trace.
  * @param {osx.ui.draw.GridOptions} options Config object for grid generation
- * @return {Array.<ol.Feature>}
+ * @return {Array<Feature>}
  */
-os.ui.draw.getGridFromFeature = function(feature, options) {
-  if (!feature || !options || !os.ui.draw.gridOptionsValid_(options)) return null;
+const getGridFromFeature = function(feature, options) {
+  if (!feature || !options || !gridOptionsValid(options)) return null;
 
   var detail = options.detail;
   var max = options.max;
@@ -60,30 +82,30 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
   }; // sort the data so the loops later are faster
 
   var prop = {}; // starting Feature properties; copied into each grid Feature
-  prop[os.interpolate.METHOD_FIELD] = os.interpolate.Method.RHUMB; // these are lat/lon boxes; always draw them RHUMB
-  prop[os.data.RecordField.ALTITUDE_MODE] = os.webgl.AltitudeMode.CLAMP_TO_GROUND; // follow terrain (if applicable)
-  prop[os.data.RecordField.DRAWING_LAYER_NODE] = false; // part of the drawing layer, but not visible in Layers mgr
-  prop[os.data.RecordField.INTERACTIVE] = false; // no hover, selection, etc
+  prop[METHOD_FIELD] = Method.RHUMB; // these are lat/lon boxes; always draw them RHUMB
+  prop[RecordField.ALTITUDE_MODE] = AltitudeMode.CLAMP_TO_GROUND; // follow terrain (if applicable)
+  prop[RecordField.DRAWING_LAYER_NODE] = false; // part of the drawing layer, but not visible in Layers mgr
+  prop[RecordField.INTERACTIVE] = false; // no hover, selection, etc
 
   // TODO research a better, faster way to create/approximate the grid
   // build detail x detail degree boxes that fit the "snapped" extent
   for (var lon = cfg.lon.n; lon < cfg.lon.x; lon += detail) {
     for (var lat = cfg.lat.n; lat < cfg.lat.x; lat += detail) {
-      var gridExtent = ol.proj.transformExtent(
+      var gridExtent = transformExtent(
           [lon, lat, lon + detail, lat + detail],
-          os.proj.EPSG4326,
-          os.map.PROJECTION);
+          EPSG4326,
+          osMap.PROJECTION);
 
       // only add this to the grid if the original polygon intersects it
       if (feature.getGeometry().intersectsExtent(gridExtent)) {
-        features.push(os.ui.draw.gridFeatureFromExtent_(gridExtent, prop, options));
+        features.push(gridFeatureFromExtent(gridExtent, prop, options));
       }
     }
   }
 
   // build a trace of the grid as a single geometry
   // var geometry = os.geo.jsts.merge(geometries);
-  // var trace = new ol.Feature(geometry);
+  // var trace = new Feature(geometry);
 
   // TODO use a repeating square image background fill (with the proper scaling factor) to visually simulate a grid
   // var scalar = detail; // if the image is sized as 1 deg x 1 deg, then multiply by "detail" to get the new size
@@ -91,37 +113,38 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
   return features;
 };
 
-
 /**
- * Helper function to make sure the grid options won't cause infinite loops, etc in
- * the getGridFromFeature() call
+ * Helper function to make sure the grid options won't cause infinite loops, etc in the getGridFromFeature() call
  * @param {osx.ui.draw.GridOptions} options The color, line thickness, etc settings for this grid
  * @return {boolean}
- * @private
  */
-os.ui.draw.gridOptionsValid_ = function(options) {
+const gridOptionsValid = function(options) {
   return (options.detail > 0.0 && options.max > 0.0);
 };
-
 
 /**
  * Build a grid feature from the extent and GridOptions
  *
- * @param {Array.<number>} extent The outer bounds of this grid
+ * @param {Array<number>} extent The outer bounds of this grid
  * @param {Object} prop The interpolation method, altitude mode, etc; copied to all grid Features
  * @param {osx.ui.draw.GridOptions} options The color, line thickness, etc settings for this grid
- * @return {ol.Feature}
- * @private
+ * @return {Feature}
  */
-os.ui.draw.gridFeatureFromExtent_ = function(extent, prop, options) {
+const gridFeatureFromExtent = function(extent, prop, options) {
   // new() is faster than doing os.feature.copyFeature(feature) from the original feature
-  var g = ol.geom.Polygon.fromExtent(extent);
-  var p = ol.obj.assign({}, prop); // make a copy
+  var g = Polygon.fromExtent(extent);
+  var p = Object.assign({}, prop); // make a copy
 
-  var f = new ol.Feature(p);
-  f.setId(goog.string.getRandomString());
+  var f = new Feature(p);
+  f.setId(getRandomString());
   f.setGeometry(g);
   f.setStyle(options.style);
 
   return f;
+};
+
+exports = {
+  getMenu,
+  setMenu,
+  getGridFromFeature
 };

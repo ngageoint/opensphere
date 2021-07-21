@@ -12,14 +12,18 @@ goog.require('os.data.FileDescriptor');
 goog.require('os.fn');
 goog.require('os.layer.ILayer');
 goog.require('os.metrics.keys');
-goog.require('os.ui.ex.ExportDirective');
+goog.require('os.ui.ex.ExportUI');
 goog.require('os.ui.featureListDirective');
+goog.require('os.ui.layer.EllipseColumnsUI');
+goog.require('os.ui.layer.compare.LayerCompareUI');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.menu.common');
 goog.require('os.ui.window');
+goog.require('os.ui.window.ConfirmTextUI');
 goog.require('os.ui.window.ConfirmUI');
+
 
 
 /**
@@ -88,6 +92,12 @@ os.ui.menu.layer.setup = function() {
         handler: os.ui.menu.layer.onSaveAs_,
         metricKey: os.metrics.Layer.SAVE_AS,
         sort: -10000 // we want this to appear right below save
+      }, {
+        label: 'Compare Layers',
+        tooltip: 'Compare two layers side-by-side',
+        icons: ['<i class="fas fa-fw fa-layer-group"></i>'],
+        beforeRender: os.ui.menu.layer.visibleIfCanCompare,
+        handler: os.ui.menu.layer.handleCompareLayers
       }, {
         label: 'Go To',
         eventType: os.action.EventType.GOTO,
@@ -223,6 +233,15 @@ os.ui.menu.layer.setup = function() {
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onFeatureList_,
         metricKey: os.metrics.Layer.FEATURE_LIST,
+        sort: os.ui.menu.layer.GroupSort.LAYER++
+      },
+      {
+        label: 'Layer Mappings...',
+        eventType: os.action.EventType.LAYER_SETTINGS,
+        tooltip: 'Add Custom Mappings to the Layer',
+        icons: ['<i class="fa fa-cog"></i>'],
+        beforeRender: os.ui.menu.layer.visibleIfSupported,
+        handler: os.ui.menu.layer.onMappings_,
         sort: os.ui.menu.layer.GroupSort.LAYER++
       }]
     }, {
@@ -423,7 +442,7 @@ os.ui.menu.layer.onSaveAs_ = function(event) {
         })
       });
 
-      os.ui.window.launchConfirmText(confirmOptions);
+      os.ui.window.ConfirmTextUI.launchConfirmText(confirmOptions);
     }
   }
 };
@@ -458,8 +477,22 @@ os.ui.menu.layer.confirmSaveAs_ = function(options, title) {
 os.ui.menu.layer.onExport_ = function(event) {
   var context = event.getContext();
   if (context) {
-    os.ui.ex.startExport(os.ui.menu.common.getSourcesFromContext(context));
+    os.ui.ex.ExportUI.startExport(os.ui.menu.common.getSourcesFromContext(context));
   }
+};
+
+
+/**
+ * Launches the window to configure layer mappings (for now only ellipse mappings)
+ * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ * @private
+ */
+os.ui.menu.layer.onMappings_ = function(event) {
+  const context = event.getContext();
+  const layers = os.ui.menu.layer.getLayersFromContext(context);
+  const layer = layers ? layers[0] : null;
+
+  os.ui.layer.EllipseColumnsUI.launchConfigureWindow(layer);
 };
 
 
@@ -573,4 +606,30 @@ os.ui.menu.layer.onIdentify_ = function(event) {
 
   identifyTimer.listen(goog.Timer.TICK, toggleOpacity);
   identifyTimer.start();
+};
+
+
+/**
+ * Enables the option when two layers are selected.
+ * @param {os.ui.menu.layer.Context} context The menu context.
+ * @this {os.ui.menu.MenuItem}
+ */
+os.ui.menu.layer.visibleIfCanCompare = function(context) {
+  const layers = os.ui.menu.layer.getLayersFromContext(context);
+  this.visible = !!layers && layers.length === 2;
+};
+
+
+/**
+ * Extract the feature from an event and launch the external link.
+ * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ */
+os.ui.menu.layer.handleCompareLayers = function(event) {
+  var layers = os.ui.menu.layer.getLayersFromContext(event.getContext());
+  if (layers && layers.length === 2) {
+    os.ui.layer.compare.LayerCompareUI.launchLayerCompare({
+      left: [layers[0]],
+      right: [layers[1]]
+    });
+  }
 };

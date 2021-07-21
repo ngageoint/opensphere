@@ -1,14 +1,17 @@
-goog.provide('os.file.mime.xmlstate');
+goog.module('os.file.mime.xmlstate');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.file.mime.xml');
+const mime = goog.require('os.file.mime');
+const xml = goog.require('os.file.mime.xml');
+
 
 /**
- * @const
  * @type {string}
  */
-os.file.mime.xmlstate.TYPE = os.file.mime.xml.TYPE + '; subtype=STATE';
+const TYPE = xml.TYPE + '; subtype=STATE';
 
-os.file.mime.register(
-    os.file.mime.xmlstate.TYPE,
-    os.file.mime.xml.createDetect(/^state$/i, /\/state\//i),
-    0, os.file.mime.xml.TYPE);
+mime.register(TYPE, xml.createDetect(/^state$/i, /\/state\//i), 0, xml.TYPE);
+
+exports = {
+  TYPE
+};

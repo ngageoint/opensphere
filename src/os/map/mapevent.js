@@ -1,11 +1,11 @@
-goog.provide('os.MapEvent');
-
+goog.module('os.MapEvent');
+goog.module.declareLegacyNamespace();
 
 /**
  * OpenSphere map events.
  * @enum {string}
  */
-os.MapEvent = {
+exports = {
   GL_REPAINT: 'map:glRepaint',
   MAP_READY: 'map:ready',
   RENDER: 'map:render',

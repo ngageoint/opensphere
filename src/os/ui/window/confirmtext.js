@@ -1,11 +1,14 @@
-goog.provide('os.ui.window.ConfirmTextCtrl');
-goog.provide('os.ui.window.confirmTextDirective');
+goog.module('os.ui.window.ConfirmTextUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.fn');
-goog.require('os.ui.Module');
-goog.require('os.ui.util.validationMessageDirective');
-goog.require('os.ui.window');
-goog.require('os.ui.window.ConfirmUI');
+goog.require('os.ui.util.ValidationMessageUI');
+
+const {ROOT} = goog.require('os');
+const fn = goog.require('os.fn');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const osWindow = goog.require('os.ui.window');
+const {directiveTag: confirmUi} = goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -13,76 +16,79 @@ goog.require('os.ui.window.ConfirmUI');
  *
  * @return {angular.Directive}
  */
-os.ui.window.confirmTextDirective = function() {
-  return {
-    restrict: 'E',
-    templateUrl: os.ROOT + 'views/window/confirmtext.html',
-    controller: os.ui.window.ConfirmTextCtrl,
-    controllerAs: 'confirmtext'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  templateUrl: ROOT + 'views/window/confirmtext.html',
+  controller: Controller,
+  controllerAs: 'confirmtext'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'confirmtext';
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('confirmtext', [os.ui.window.confirmTextDirective]);
-
-
+Module.directive('confirmtext', [directive]);
 
 /**
  * Controller for the text confirmation window.
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.window.ConfirmTextCtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  /**
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.element_ = $element;
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
 
-  $scope.$watch('confirmValue', function(newVal, oldVal) {
-    if (newVal != oldVal) {
-      $scope.$parent['confirmValue'] = newVal;
-    }
-  });
+    $scope.$watch('confirmValue', function(newVal, oldVal) {
+      if (newVal != oldVal) {
+        $scope.$parent['confirmValue'] = newVal;
+      }
+    });
 
-  $scope.$emit(os.ui.WindowEventType.READY);
-};
-
-
-/**
- * Angular initialization lifecycle function.
- */
-os.ui.window.ConfirmTextCtrl.prototype.$onInit = function() {
-  if (this.scope_.$parent['select']) {
-    this.element_.find('.js-confirm-input').select();
+    $scope.$emit(WindowEventType.READY);
   }
 
-  this.element_.find('.js-confirm-input').focus();
-};
+  /**
+   * Angular initialization lifecycle function.
+   */
+  $onInit() {
+    if (this.scope_.$parent['select']) {
+      this.element_.find('.js-confirm-input').select();
+    }
 
+    this.element_.find('.js-confirm-input').focus();
+  }
+}
 
 /**
  * Launch a dialog prompting the user to enter some text.
  *
  * @param {osx.window.ConfirmTextOptions=} opt_options The window options
  */
-os.ui.window.launchConfirmText = function(opt_options) {
+const launchConfirmText = function(opt_options) {
   var options = /** @type {!osx.window.ConfirmTextOptions} */ (opt_options || {});
   var scopeOptions = {
-    'confirmCallback': options.confirm || os.fn.noop,
-    'cancelCallback': options.cancel || os.fn.noop,
+    'confirmCallback': options.confirm || fn.noop,
+    'cancelCallback': options.cancel || fn.noop,
     'confirmValue': options.defaultValue,
     'yesText': options.yesText || 'OK',
     'yesIcon': options.yesIcon || 'fa fa-check',
@@ -94,7 +100,7 @@ os.ui.window.launchConfirmText = function(opt_options) {
     'noButtonTitle': options.noButtonTitle || '',
     'checkboxText': options.checkboxText || '',
     'checkboxClass': options.checkboxClass || '',
-    'checkboxCallback': options.checkbox || os.fn.noop,
+    'checkboxCallback': options.checkbox || fn.noop,
     'checkboxValue': !!options.checkboxValue,
 
     // confirm text options
@@ -117,6 +123,19 @@ os.ui.window.launchConfirmText = function(opt_options) {
     'show-close': windowOverrides.showClose != null ? windowOverrides.showClose : 'false'
   };
 
-  var template = '<confirm><confirmtext></confirmtext></confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  var template = `<${confirmUi}><${directiveTag}></${directiveTag}></${confirmUi}>`;
+  osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+};
+
+/**
+ * @type {function(osx.window.ConfirmTextOptions=)}
+ * @deprecated Please use os.ui.window.ConfirmTextUI.launchConfirmText.
+ */
+osWindow.launchConfirmText = launchConfirmText;
+
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launchConfirmText
 };

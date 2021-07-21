@@ -1,9 +1,9 @@
 goog.module('plugin.ogc.ui.OgcServerImportForm');
 goog.module.declareLegacyNamespace();
 
-const Module = goog.require('os.ui.Module');
-const ogcserverDirective = goog.require('plugin.ogc.ui.ogcserverDirective');
 const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const {directive: ogcServerDirective} = goog.require('plugin.ogc.ui.OgcServerImportUI');
 
 
 /**
@@ -12,7 +12,7 @@ const {ROOT} = goog.require('os');
  * @return {angular.Directive}
  */
 const directive = () => {
-  const original = ogcserverDirective();
+  const original = ogcServerDirective();
   original.templateUrl = ROOT + 'views/plugin/ogc/ui/ogcserverimportform.html';
   return original;
 };

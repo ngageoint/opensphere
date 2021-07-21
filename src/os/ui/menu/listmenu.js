@@ -4,10 +4,12 @@ goog.require('os.command.FeaturesVisibility');
 goog.require('os.feature');
 goog.require('os.fn');
 goog.require('os.instanceOf');
+goog.require('os.ui.ex.ExportUI');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.menu.feature');
+goog.require('os.ui.window.ConfirmColorUI');
 
 
 /**
@@ -207,7 +209,7 @@ os.ui.menu.list.onExport = function(event) {
   var context = event.getContext();
   if (os.instanceOf(context, os.source.Vector.NAME)) {
     var source = /** @type {!os.source.Vector} */ (context);
-    os.ui.ex.startExport([source]);
+    os.ui.ex.ExportUI.startExport([source]);
   }
 };
 
@@ -238,7 +240,7 @@ os.ui.menu.list.onColorSelected = function(event) {
       var items = source.getSelectedItems();
 
       // call the confirm window from this context so it doesn't appear in the wrong tab
-      os.ui.window.launchConfirmColor(function(color) {
+      os.ui.window.ConfirmColorUI.launchConfirmColor(function(color) {
         source.setColor(items, os.style.toRgbaString(color));
       }, os.feature.getFirstColor(items));
     }

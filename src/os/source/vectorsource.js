@@ -23,6 +23,7 @@ goog.require('os.data.DataManager');
 goog.require('os.data.RecordField');
 goog.require('os.data.event.DataEvent');
 goog.require('os.data.event.DataEventType');
+goog.require('os.data.histo');
 goog.require('os.data.histo.ColorModel');
 goog.require('os.data.histo.SourceHistogram');
 goog.require('os.events.PropertyChangeEvent');
@@ -44,12 +45,14 @@ goog.require('os.source');
 goog.require('os.source.IModifiableSource');
 goog.require('os.source.ISource');
 goog.require('os.source.PropertyChange');
+goog.require('os.source.SourceClass');
 goog.require('os.source.column');
 goog.require('os.string');
 goog.require('os.style.StyleManager');
 goog.require('os.style.label');
 goog.require('os.time.TimeRange');
 goog.require('os.time.TimelineController');
+goog.require('os.time.TimelineEventType');
 goog.require('os.time.xf.TimeModel');
 goog.require('os.ui.slick.column');
 goog.require('os.webgl');
@@ -317,13 +320,13 @@ os.source.Vector = function(opt_options) {
    * @type {!os.time.TimeRange}
    * @private
    */
-  this.displayRange_ = os.time.UNBOUNDED;
+  this.displayRange_ = os.time.TimeRange.UNBOUNDED;
 
   /**
    * @type {!os.time.TimeRange}
    * @private
    */
-  this.previousRange_ = os.time.UNBOUNDED;
+  this.previousRange_ = os.time.TimeRange.UNBOUNDED;
 
   /**
    * @type {boolean}
@@ -443,8 +446,8 @@ os.implements(os.source.Vector, os.source.IModifiableSource.ID);
  * @type {string}
  * @const
  */
-os.source.Vector.NAME = 'os.source.Vector';
-os.registerClass(os.source.Vector.NAME, os.source.Vector);
+os.source.Vector.NAME = os.source.SourceClass.VECTOR;
+os.registerClass(os.source.SourceClass.VECTOR, os.source.Vector);
 
 
 /**
@@ -1551,7 +1554,7 @@ os.source.Vector.prototype.setTimeEnabled = function(value) {
  */
 os.source.Vector.prototype.setDisplayRange = function(range, opt_update) {
   // sources must have a display range, so default to unbounded
-  range = range || os.time.UNBOUNDED;
+  range = range || os.time.TimeRange.UNBOUNDED;
 
   if (range && this.displayRange_ != range) {
     this.displayRange_ = range;
@@ -1629,7 +1632,7 @@ os.source.Vector.prototype.updateAnimationState_ = function() {
     var lastEvent = this.tlc.getLastEvent();
 
     // creating the animation overlay will update the time model
-    this.setDisplayRange(lastEvent ? lastEvent.getRange() : os.time.UNBOUNDED, false);
+    this.setDisplayRange(lastEvent ? lastEvent.getRange() : os.time.TimeRange.UNBOUNDED, false);
     this.createAnimationOverlay();
 
     // start listening to timeline events - display data is now affected by the timeline
@@ -1638,7 +1641,7 @@ os.source.Vector.prototype.updateAnimationState_ = function() {
     this.tlc.listen(os.time.TimelineEventType.STOP, this.onTimelinePlayChange_, false, this);
   } else {
     // show data for all time
-    this.setDisplayRange(os.time.UNBOUNDED);
+    this.setDisplayRange(os.time.TimeRange.UNBOUNDED);
 
     // stop listening to timeline events - displayed data is no longer affected by the timeline
     this.tlc.unlisten(os.time.TimelineEventType.SHOW, this.onTimelineShow_, false, this);
@@ -1839,7 +1842,7 @@ os.source.Vector.prototype.getFilteredFeatures = function(opt_allTime) {
     // what is useful to the user.
     var defaultAllTime = !this.timeFilterEnabled_ || this.tlc.isPlaying();
     var allTime = opt_allTime != null ? opt_allTime : defaultAllTime;
-    var range = allTime ? os.time.UNBOUNDED : this.displayRange_;
+    var range = allTime ? os.time.TimeRange.UNBOUNDED : this.displayRange_;
     var features = this.timeModel.intersection(range, true);
 
     //
@@ -1851,7 +1854,7 @@ os.source.Vector.prototype.getFilteredFeatures = function(opt_allTime) {
     // @see THIN-7810
     //
     if (allTime != defaultAllTime) {
-      range = defaultAllTime ? os.time.UNBOUNDED : this.displayRange_;
+      range = defaultAllTime ? os.time.TimeRange.UNBOUNDED : this.displayRange_;
       this.timeModel.intersection(range, true);
     }
 
@@ -2519,16 +2522,16 @@ os.source.Vector.prototype.updateAnimationOverlay = function() {
       var lookAheadFeatures25 = undefined; // features within 25% of new window
       var lookAheadFeatures50 = undefined; // features within 25-50% of new window
       var lookAheadFeatures75 = undefined; // features within 50-75% of new window
-      var lookAheadRange25 = os.time.UNBOUNDED;
-      var lookAheadRange50 = os.time.UNBOUNDED;
-      var lookAheadRange75 = os.time.UNBOUNDED;
+      var lookAheadRange25 = os.time.TimeRange.UNBOUNDED;
+      var lookAheadRange50 = os.time.TimeRange.UNBOUNDED;
+      var lookAheadRange75 = os.time.TimeRange.UNBOUNDED;
       var displayStart = this.displayRange_.getStart();
       var displayEnd = this.displayRange_.getEnd();
       var windowSize = (displayEnd - displayStart) * .25;
       var lookAhead = false;
 
       // look for features to fade in/out based on the previous window
-      if (this.tlc.getFade() && this.previousRange_ != os.time.UNBOUNDED) {
+      if (this.tlc.getFade() && this.previousRange_ != os.time.TimeRange.UNBOUNDED) {
         if (this.previousRange_.getEnd() < this.displayRange_.getEnd()) {
           // moving forward, get trailing features to fade out
           lookAheadRange25 = new os.time.TimeRange(this.displayRange_.getStart() - windowSize,

@@ -1,14 +1,13 @@
 goog.module('os.ui.search.place');
 goog.module.declareLegacyNamespace();
 
+const {getUid} = goog.require('ol');
 const Feature = goog.require('ol.Feature');
-const osObject = goog.require('os.object');
+const {unsafeClone} = goog.require('os.object');
+const {setFeatureStyle} = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const {GOOGLE_EARTH_URL, GoogleEarthIcons} = goog.require('os.ui.file.kml');
-const {getUid} = goog.require('ol');
-const {setFeatureStyle} = goog.require('os.style');
-
 
 /**
  * @type {Object}
@@ -23,12 +22,11 @@ const FEATURE_CONFIG = {
   'text': {}
 };
 
-
 /**
  * Creates a feature representing a coordinate result.
  *
  * @param {Object.<string, *>=} opt_options Feature options.
- * @return {!ol.Feature}
+ * @return {!Feature}
  */
 const createFeature = function(opt_options) {
   // grab the label off the options if it exists. we don't want it on the feature.
@@ -41,7 +39,7 @@ const createFeature = function(opt_options) {
   var feature = new Feature(opt_options);
   feature.setId(getUid(feature));
 
-  var featureConfig = osObject.unsafeClone(FEATURE_CONFIG);
+  var featureConfig = unsafeClone(FEATURE_CONFIG);
   feature.set(StyleType.FEATURE, featureConfig);
 
   // configure labels for the feature
@@ -55,6 +53,5 @@ const createFeature = function(opt_options) {
   setFeatureStyle(feature);
   return feature;
 };
-
 
 exports = {createFeature, FEATURE_CONFIG};

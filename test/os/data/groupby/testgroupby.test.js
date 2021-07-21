@@ -2,18 +2,21 @@ goog.require('os.ui.data.groupby.TagGroupBy');
 goog.require('os.ui.slick.SlickTreeNode');
 
 describe('os.ui.data.groupby.TagGroupBy', function() {
+  const TagGroupBy = goog.module.get('os.ui.data.groupby.TagGroupBy');
+  const SlickTreeNode = goog.module.get('os.ui.slick.SlickTreeNode');
+
   it('should group nodes by tag', function() {
-    var withTags = new os.ui.slick.SlickTreeNode();
+    var withTags = new SlickTreeNode();
     withTags.getTags = function() {
       return ['tag'];
     };
 
-    var withoutTags = new os.ui.slick.SlickTreeNode();
+    var withoutTags = new SlickTreeNode();
     withoutTags.getTags = function() {
       return null;
     };
 
-    var by = new os.ui.data.groupby.TagGroupBy();
+    var by = new TagGroupBy();
     by.init();
 
     expect(by.getGroupIds(withTags)).toContain('aTAG');

@@ -1,13 +1,10 @@
 goog.module('os.alert.AlertManager');
 goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventTarget');
-goog.require('goog.log');
-goog.require('goog.structs.CircularBuffer');
-goog.require('os.alert.AlertEvent');
-goog.require('os.array');
-goog.require('os.structs.EventType');
-
+const EventTarget = goog.require('goog.events.EventTarget');
+const log = goog.require('goog.log');
+const CircularBuffer = goog.require('goog.structs.CircularBuffer');
+const AlertEvent = goog.require('os.alert.AlertEvent');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertEventType = goog.require('os.alert.EventType');
 
@@ -33,22 +30,22 @@ const defaultThrottleTime_ = 500;
 /**
  * Responsible for receiving, logging and reporting alerts
  */
-class AlertManager extends goog.events.EventTarget {
+class AlertManager extends EventTarget {
   /**
    */
   constructor() {
     super();
 
     /**
-     * @type {!goog.structs.CircularBuffer.<!os.alert.AlertEvent>}
+     * @type {!CircularBuffer<!AlertEvent>}
      * @private
      */
-    this.savedAlerts_ = new goog.structs.CircularBuffer(maxSaved_);
+    this.savedAlerts_ = new CircularBuffer(maxSaved_);
 
     /**
      * Tracks the number of alerts process by any given client so the client can get all alerts even if it comes online
      * later.
-     * @type {!Object.<!string, !number>}
+     * @type {!Object<!string, !number>}
      * @private
      */
     this.processedByClientCount_ = {};
@@ -85,7 +82,7 @@ class AlertManager extends goog.events.EventTarget {
 
   /**
    * Get the global alert manager instance.
-   * @return {AlertManager}
+   * @return {!AlertManager}
    */
   static getInstance() {
     if (!instance) {
@@ -97,7 +94,7 @@ class AlertManager extends goog.events.EventTarget {
 
   /**
    * Set the global alert manager instance.
-   * @param {!AlertManager} value The AlertManager instance to set.
+   * @param {AlertManager} value The AlertManager instance to set.
    */
   static setInstance(value) {
     instance = value;
@@ -154,7 +151,7 @@ class AlertManager extends goog.events.EventTarget {
     const throttleCount = throttleMap ? throttleMap.length : undefined;
 
     // fire off the alert
-    const alertEvent = new os.alert.AlertEvent(alert, severity, opt_limit, opt_dismissDispatcher, throttleCount);
+    const alertEvent = new AlertEvent(alert, severity, opt_limit, opt_dismissDispatcher, throttleCount);
     this.savedAlerts_.add(alertEvent);
     this.dispatchEvent(alertEvent);
 
@@ -165,15 +162,15 @@ class AlertManager extends goog.events.EventTarget {
       }
       switch (severity) {
         case AlertEventSeverity.ERROR:
-          goog.log.error(opt_logger, alert);
+          log.error(opt_logger, alert);
           break;
         case AlertEventSeverity.WARNING:
-          goog.log.warning(opt_logger, alert);
+          log.warning(opt_logger, alert);
           break;
         case AlertEventSeverity.INFO:
         case AlertEventSeverity.SUCCESS:
         default:
-          goog.log.info(opt_logger, alert);
+          log.info(opt_logger, alert);
           break;
       }
     }
@@ -209,7 +206,7 @@ class AlertManager extends goog.events.EventTarget {
   /**
    * Get the alert buffer
    *
-   * @return {!goog.structs.CircularBuffer.<!os.alert.AlertEvent>} Object containing the parsed record
+   * @return {!CircularBuffer<!AlertEvent>} Object containing the parsed record
    */
   getAlerts() {
     return this.savedAlerts_;
@@ -219,14 +216,14 @@ class AlertManager extends goog.events.EventTarget {
    * Process alerts that AlertManager may have already generated before this class has initialized.
    *
    * @param {!string} clientId An arbitrary string to identify the client that is processing alerts
-   * @param {!function(os.alert.AlertEvent)} handler
+   * @param {!function(AlertEvent)} handler
    * @param {*=} opt_context
    */
   processMissedAlerts(clientId, handler, opt_context) {
     if (!this.missedAlertsProcessed_) {
       const beforeCount = this.processedByClientCount_[clientId] || 0;
-      const alerts = goog.array.slice(this.savedAlerts_.getValues(), 0, this.savedAlerts_.getCount() - beforeCount);
-      os.array.forEach(alerts, handler, opt_context);
+      const alerts = this.savedAlerts_.getValues().slice(0, this.savedAlerts_.getCount() - beforeCount);
+      alerts.forEach(handler, opt_context);
       this.processedByClientCount_[clientId] = this.savedAlerts_.getCount();
       this.missedAlertsProcessed_ = true;
     }

@@ -1,19 +1,24 @@
-goog.provide('os.hist.IHistogramProvider');
+goog.module('os.hist.IHistogramProvider');
+goog.module.declareLegacyNamespace();
 
+const IHistogramData = goog.requireType('os.hist.IHistogramData');
+const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 /**
  * @interface
  */
-os.hist.IHistogramProvider = function() {};
+class IHistogramProvider {
+  /**
+   * @param {TimelineScaleOptions} options Histogram options
+   * @return {?IHistogramData}
+   */
+  getHistogram(options) {}
+}
 
 /**
  * @type {string}
  * @const
  */
-os.hist.IHistogramProvider.ID = 'os.hist.IHistogramProvider';
+IHistogramProvider.ID = 'os.hist.IHistogramProvider';
 
-/**
- * @param {os.ui.timeline.TimelineScaleOptions} options Histogram options
- * @return {?os.hist.IHistogramData}
- */
-os.hist.IHistogramProvider.prototype.getHistogram;
+exports = IHistogramProvider;

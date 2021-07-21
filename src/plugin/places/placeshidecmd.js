@@ -18,6 +18,26 @@ class PlacesHide {
    */
   constructor() {
     /**
+     * @inheritDoc
+     */
+    this.isAsync = false;
+
+    /**
+     * @inheritDoc
+     */
+    this.title = 'Hide Places';
+
+    /**
+     * @inheritDoc
+     */
+    this.details = null;
+
+    /**
+     * @inheritDoc
+     */
+    this.state = State.READY;
+
+    /**
      * Features that visible at time of execution
      * @type {Array}
      * @private
@@ -106,30 +126,5 @@ class PlacesHide {
     return true;
   }
 }
-
-
-/**
- * @inheritDoc
- */
-PlacesHide.prototype.isAsync = false;
-
-
-/**
- * @inheritDoc
- */
-PlacesHide.prototype.title = 'Hide Places';
-
-
-/**
- * @inheritDoc
- */
-PlacesHide.prototype.details = null;
-
-
-/**
- * @inheritDoc
- */
-PlacesHide.prototype.state = State.READY;
-
 
 exports = PlacesHide;

@@ -1,73 +1,84 @@
-goog.provide('os.command.FeatureLabel');
+goog.module('os.command.FeatureLabel');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractFeatureStyle');
-goog.require('os.metrics');
-goog.require('os.style.label');
+const olArray = goog.require('ol.array');
+const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
+const metrics = goog.require('os.metrics');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const label = goog.require('os.style.label');
 
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
  * Changes the label field for a feature
  *
- * @param {string} layerId
- * @param {string} featureId
- * @param {Array<os.style.label.LabelConfig>} value
- * @param {Array<os.style.label.LabelConfig>=} opt_oldValue
- * @extends {os.command.AbstractFeatureStyle<string>}
- * @constructor
+ * @extends {AbstractFeatureStyle<string>}
  */
-os.command.FeatureLabel = function(layerId, featureId, value, opt_oldValue) {
-  os.command.FeatureLabel.base(this, 'constructor', layerId, featureId, value, opt_oldValue);
-  this.title = 'Change Feature Label';
-  this.metricKey = os.metrics.Layer.FEATURE_LABEL_COLUMN_SELECT;
+class FeatureLabel extends AbstractFeatureStyle {
+  /**
+   * Constructor.
+   * @param {string} layerId
+   * @param {string} featureId
+   * @param {Array<label.LabelConfig>} value
+   * @param {Array<label.LabelConfig>=} opt_oldValue
+   */
+  constructor(layerId, featureId, value, opt_oldValue) {
+    super(layerId, featureId, value, opt_oldValue);
+    this.title = 'Change Feature Label';
+    this.metricKey = metrics.Layer.FEATURE_LABEL_COLUMN_SELECT;
+
+    /**
+     * @type {Array<label.LabelConfig>}
+     */
+    this.value = value || [label.cloneConfig()];
+  }
 
   /**
-   * @type {Array<os.style.label.LabelConfig>}
+   * @inheritDoc
    */
-  this.value = value || [os.style.label.cloneConfig()];
-};
-goog.inherits(os.command.FeatureLabel, os.command.AbstractFeatureStyle);
-
-
-/**
- * @inheritDoc
- */
-os.command.FeatureLabel.prototype.getOldValue = function() {
-  var feature = /** @type {ol.Feature} */ (this.getFeature());
-  var config = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
-  var labelColumns = [];
-  if (config) {
-    if (Array.isArray(config)) {
-      // locate the label config in the array
-      var labelsConfig = ol.array.find(config, os.style.isLabelConfig);
-      if (labelsConfig) {
-        labelColumns = labelsConfig[os.style.StyleField.LABELS];
-      }
-    } else if (config[os.style.StyleField.LABELS]) {
-      labelColumns = config[os.style.StyleField.LABELS];
+  getOldValue() {
+    var feature = /** @type {Feature} */ (this.getFeature());
+    if (feature == null) {
+      return null;
     }
+
+    var config = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
+    var labelColumns = [];
+    if (config) {
+      if (Array.isArray(config)) {
+        // locate the label config in the array
+        var labelsConfig = olArray.find(config, osStyle.isLabelConfig);
+        if (labelsConfig) {
+          labelColumns = labelsConfig[StyleField.LABELS];
+        }
+      } else if (config[StyleField.LABELS]) {
+        labelColumns = config[StyleField.LABELS];
+      }
+    }
+    return labelColumns;
   }
-  return labelColumns;
-};
 
+  /**
+   * @inheritDoc
+   */
+  applyValue(configs, value) {
+    for (var i = 0; i < configs.length; i++) {
+      configs[i][StyleField.LABELS] = value;
+    }
 
-/**
- * @inheritDoc
- */
-os.command.FeatureLabel.prototype.applyValue = function(configs, value) {
-  for (var i = 0; i < configs.length; i++) {
-    configs[i][os.style.StyleField.LABELS] = value;
+    super.applyValue(configs, value);
   }
 
-  os.command.FeatureLabel.base(this, 'applyValue', configs, value);
-};
+  /**
+   * @inheritDoc
+   */
+  finish(configs) {
+    // label overlap will likely change, so update them
+    label.updateShown();
+    super.finish(configs);
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.command.FeatureLabel.prototype.finish = function(configs) {
-  // label overlap will likely change, so update them
-  os.style.label.updateShown();
-  os.command.FeatureLabel.base(this, 'finish', configs);
-};
+exports = FeatureLabel;

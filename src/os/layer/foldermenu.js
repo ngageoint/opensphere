@@ -4,6 +4,7 @@ goog.module.declareLegacyNamespace();
 const FolderManager = goog.require('os.layer.FolderManager');
 const FolderNode = goog.require('os.data.FolderNode');
 const layerMenu = goog.require('os.ui.menu.layer');
+const {filterFalsey} = goog.require('os.fn');
 const {FolderEventType, launchRemoveFolder, createOrEditFolder, getFolderMenuEnabled} = goog.require('os.layer.folder');
 const {getRandomString} = goog.require('goog.string');
 
@@ -33,7 +34,7 @@ const getItemsFromContext = (nodes) => {
     const depth = nodes[0].depth;
     const sameDepth = nodes.every((node) => node.depth === depth);
     if (sameDepth) {
-      options = nodes.map((node) => fm.getItem(node.getId()));
+      options = nodes.map((node) => fm.getItem(node.getId())).filter(filterFalsey);
     }
   }
 

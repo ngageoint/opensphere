@@ -1,72 +1,73 @@
-goog.provide('os.ui.capture.TimelineRenderer');
+goog.module('os.ui.capture.TimelineRenderer');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.capture.SvgRenderer');
-
+const capture = goog.require('os.capture');
+const SvgRenderer = goog.require('os.ui.capture.SvgRenderer');
 
 
 /**
- * @param {Object=} opt_options Options to configure the renderer
- * @extends {os.ui.capture.SvgRenderer}
- * @constructor
  */
-os.ui.capture.TimelineRenderer = function(opt_options) {
-  var options = opt_options || {};
-  options['selector'] = options['selector'] || 'svg.c-svg-timeline';
+class TimelineRenderer extends SvgRenderer {
+  /**
+   * Constructor.
+   * @param {Object=} opt_options Options to configure the renderer
+   */
+  constructor(opt_options) {
+    var options = opt_options || {};
+    options['selector'] = options['selector'] || 'svg.c-svg-timeline';
 
-  os.ui.capture.TimelineRenderer.base(this, 'constructor', options);
-  this.title = 'Timeline';
+    super(options);
+    this.title = 'Timeline';
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.overlay_ = options['overlay'] || false;
+  }
 
   /**
-   * @type {boolean}
-   * @private
+   * @inheritDoc
    */
-  this.overlay_ = options['overlay'] || false;
-};
-goog.inherits(os.ui.capture.TimelineRenderer, os.ui.capture.SvgRenderer);
-
-
-/**
- * @inheritDoc
- */
-os.ui.capture.TimelineRenderer.prototype.getFill = function() {
-  return window.getComputedStyle(this.getRenderElement())['fill'];
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.capture.TimelineRenderer.prototype.getPosition = function(canvas) {
-  return [0, canvas.height - this.getTimelineHeight()];
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.capture.TimelineRenderer.prototype.getHeight = function() {
-  if (!this.overlay_) {
-    return this.getTimelineHeight();
+  getFill() {
+    return window.getComputedStyle(this.getRenderElement())['fill'];
   }
 
-  return 0;
-};
+  /**
+   * @inheritDoc
+   */
+  getPosition(canvas) {
+    return [0, canvas.height - this.getTimelineHeight()];
+  }
 
-
-/**
- * Get the height of the timeline element.
- *
- * @return {number}
- * @protected
- */
-os.ui.capture.TimelineRenderer.prototype.getTimelineHeight = function() {
-  var timelineEl = this.getRenderElement();
-  if (timelineEl) {
-    var rect = timelineEl.getBoundingClientRect();
-    if (rect) {
-      return rect.height * os.capture.getPixelRatio();
+  /**
+   * @inheritDoc
+   */
+  getHeight() {
+    if (!this.overlay_) {
+      return this.getTimelineHeight();
     }
+
+    return 0;
   }
 
-  return 0;
-};
+  /**
+   * Get the height of the timeline element.
+   *
+   * @return {number}
+   * @protected
+   */
+  getTimelineHeight() {
+    var timelineEl = this.getRenderElement();
+    if (timelineEl) {
+      var rect = timelineEl.getBoundingClientRect();
+      if (rect) {
+        return rect.height * capture.getPixelRatio();
+      }
+    }
+
+    return 0;
+  }
+}
+
+exports = TimelineRenderer;

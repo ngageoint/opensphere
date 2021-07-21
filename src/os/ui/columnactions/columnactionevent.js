@@ -1,64 +1,65 @@
-goog.provide('os.ui.columnactions.ColumnActionEvent');
-goog.require('goog.events.Event');
+goog.module('os.ui.columnactions.ColumnActionEvent');
+goog.module.declareLegacyNamespace();
 
+const GoogEvent = goog.require('goog.events.Event');
+
+const IColumnActionModel = goog.requireType('os.ui.columnactions.IColumnActionModel');
 
 
 /**
- *
  * Handle a column action event
- *
- * @constructor
- * @extends {goog.events.Event}
- * @param {string} type
- * @param {!Object.<string, *>} context
- * @param {!os.ui.columnactions.IColumnActionModel} column
- * @param {?*} value
- * @param {Object=} opt_target
- *
  */
-os.ui.columnactions.ColumnActionEvent = function(type, context, column, value, opt_target) {
-  os.ui.columnactions.ColumnActionEvent.base(this, 'constructor', type, opt_target);
+class ColumnActionEvent extends GoogEvent {
+  /**
+   * Constructor.
+   * @param {string} type
+   * @param {!Object.<string, *>} context
+   * @param {!IColumnActionModel} column
+   * @param {?*} value
+   * @param {Object=} opt_target
+   */
+  constructor(type, context, column, value, opt_target) {
+    super(type, opt_target);
+
+    /**
+     * @type {!Object.<string, *>}
+     * @private
+     */
+    this.context_ = context;
+
+    /**
+     * @type {!IColumnActionModel}
+     * @private
+     */
+    this.column_ = column;
+
+    /**
+     * @type {?*}
+     * @private
+     */
+    this.value_ = value;
+  }
 
   /**
-   * @type {!Object.<string, *>}
-   * @private
+   * @return {Object.<string, *>}
    */
-  this.context_ = context;
+  getContext() {
+    return this.context_;
+  }
 
   /**
-   * @type {!os.ui.columnactions.IColumnActionModel}
-   * @private
+   * @return {IColumnActionModel}
    */
-  this.column_ = column;
+  getColumn() {
+    return this.column_;
+  }
 
   /**
-   * @type {?*}
-   * @private
+   * @return {*}
    */
-  this.value_ = value;
-};
-goog.inherits(os.ui.columnactions.ColumnActionEvent, goog.events.Event);
+  getValue() {
+    return this.value_;
+  }
+}
 
-
-/**
- * @return {Object.<string, *>}
- */
-os.ui.columnactions.ColumnActionEvent.prototype.getContext = function() {
-  return this.context_;
-};
-
-
-/**
- * @return {os.ui.columnactions.IColumnActionModel}
- */
-os.ui.columnactions.ColumnActionEvent.prototype.getColumn = function() {
-  return this.column_;
-};
-
-
-/**
- * @return {*}
- */
-os.ui.columnactions.ColumnActionEvent.prototype.getValue = function() {
-  return this.value_;
-};
+exports = ColumnActionEvent;

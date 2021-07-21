@@ -9,8 +9,13 @@
     font-size: $font-size-sm;
   }
 
-  .slick-row .slick-cell .fa {
-    font-size: $font-size-base;
+  .slick-row .slick-cell {
+    .fa,
+    .fab,
+    .far,
+    .fas {
+      font-size: $font-size-base;
+    }
   }
 
   &.no-hover {
@@ -62,7 +67,10 @@
 
 // Node Icons
 .c-node-icons {
-  i.fa {
+  i.fa,
+  i.fab,
+  i.far,
+  i.fas {
     text-align: center;
     vertical-align: middle;
   }

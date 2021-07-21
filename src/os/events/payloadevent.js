@@ -1,55 +1,60 @@
-goog.provide('os.events.PayloadEvent');
+goog.module('os.events.PayloadEvent');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Event');
+const GoogEvent = goog.require('goog.events.Event');
 
+const OLEventTarget = goog.requireType('ol.events.EventTarget');
 
 
 /**
  * An event carrying an arbitrary data payload.
  *
- * @param {string} type The event type.
- * @param {T=} opt_payload The payload.
- * @extends {goog.events.Event}
- * @constructor
  * @template T
  */
-os.events.PayloadEvent = function(type, opt_payload) {
-  os.events.PayloadEvent.base(this, 'constructor', type);
+class PayloadEvent extends GoogEvent {
+  /**
+   * Constructor.
+   * @param {string} type The event type.
+   * @param {T=} opt_payload The payload.
+   */
+  constructor(type, opt_payload) {
+    super(type);
+
+    /**
+     * The property
+     * @type {?T}
+     * @private
+     */
+    this.payload_ = opt_payload;
+  }
 
   /**
-   * The property
-   * @type {?T}
-   * @private
+   * Gets the payload.
+   *
+   * @return {?T}
    */
-  this.payload_ = opt_payload;
-};
-goog.inherits(os.events.PayloadEvent, goog.events.Event);
+  getPayload() {
+    return this.payload_;
+  }
+
+  /**
+   * Sets the payload.
+   *
+   * @param {T} value The payload to set.
+   */
+  setPayload(value) {
+    this.payload_ = value;
+  }
+}
 
 
 /**
  * Override the type so these events can be used with {@link ol.events.EventTarget.prototype.dispatchEvent}.
  *
- * @type {EventTarget|ol.events.EventTarget|undefined}
+ * @type {EventTarget|OLEventTarget|undefined}
  * @suppress {duplicate}
  */
-os.events.PayloadEvent.prototype.target;
+PayloadEvent.prototype.target;
 
 
-/**
- * Gets the payload.
- *
- * @return {?T}
- */
-os.events.PayloadEvent.prototype.getPayload = function() {
-  return this.payload_;
-};
-
-
-/**
- * Sets the payload.
- *
- * @param {T} value The payload to set.
- */
-os.events.PayloadEvent.prototype.setPayload = function(value) {
-  this.payload_ = value;
-};
+exports = PayloadEvent;

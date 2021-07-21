@@ -11,6 +11,7 @@ goog.require('os');
 goog.require('os.MapContainer');
 goog.require('os.MapEvent');
 goog.require('os.action.EventType');
+goog.require('os.auth');
 goog.require('os.bearing.BearingSettings');
 goog.require('os.buffer');
 goog.require('os.column.ColumnMappingManager');
@@ -31,7 +32,7 @@ goog.require('os.config.ServerSettings');
 goog.require('os.config.ThemeSettings');
 goog.require('os.config.UnitSettings');
 goog.require('os.control');
-goog.require('os.data.OSDataManager');
+goog.require('os.data.DataManager');
 goog.require('os.data.histo.legend');
 goog.require('os.events');
 goog.require('os.events.EventFactory');
@@ -66,6 +67,7 @@ goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.layer.config.StaticLayerConfig');
 goog.require('os.load.LoadingManager');
 goog.require('os.map');
+goog.require('os.map.instance');
 goog.require('os.map.interaction');
 goog.require('os.menu.folder');
 goog.require('os.metrics.AddDataMetrics');
@@ -88,10 +90,11 @@ goog.require('os.time');
 goog.require('os.time.TimelineController');
 goog.require('os.ui.AbstractMainCtrl');
 goog.require('os.ui.AddExportOptionsUI');
+goog.require('os.ui.TimelinePanelUI');
 goog.require('os.ui.alertsDirective');
 goog.require('os.ui.areasDirective');
 goog.require('os.ui.clear.ClearEntry');
-goog.require('os.ui.clearManager');
+goog.require('os.ui.clear.ClearManager');
 goog.require('os.ui.column.mapping.ColumnMappingSettings');
 goog.require('os.ui.columnactions.ColumnActionEvent');
 goog.require('os.ui.columnactions.ColumnActionManager');
@@ -131,12 +134,11 @@ goog.require('os.ui.ngRightClickDirective');
 goog.require('os.ui.query.cmd.QueryEntriesClear');
 goog.require('os.ui.route.RouteManager');
 goog.require('os.ui.search.NoResult');
+goog.require('os.ui.search.SearchResultsUI');
 goog.require('os.ui.search.place.CoordinateSearch');
-goog.require('os.ui.search.searchResultsDirective');
 goog.require('os.ui.slick.column');
 goog.require('os.ui.state.cmd.StateClear');
 goog.require('os.ui.state.menu');
-goog.require('os.ui.timelinePanelDirective');
 goog.require('os.ui.urlDragDropDirective');
 goog.require('os.ui.user.settings.LocationSettings');
 goog.require('os.ui.window.ConfirmUI');
@@ -251,33 +253,49 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   mm.setApplicationNode('OpenSphere', 'This window displays many of the features available in OpenSphere, and if ' +
       'you have used them.');
 
+  // create map instance and listen for it to be initialized
+  var map = os.MapContainer.getInstance();
+  map.setInteractionFunction(os.map.interaction.getInteractions);
+  map.setControlFunction(os.control.getControls);
+
+  map.listenOnce(os.MapEvent.MAP_READY, this.onMapReady_, false, this);
+
+  // set the global map container reference
+  os.map.instance.setIMapContainer(map);
+  os.map.instance.setMapContainer(map);
+  os.map.mapContainer = map;
+
   // configure default layer configs
   os.layer.config.LayerConfigManager.getInstance().registerLayerConfig(os.layer.config.StaticLayerConfig.ID,
       os.layer.config.StaticLayerConfig);
 
   // configure data manager
-  os.dataManager = os.osDataManager = os.data.OSDataManager.getInstance();
+  os.dataManager = os.data.DataManager.getInstance();
+  os.dataManager.setMapContainer(map);
 
   // configure exports
   os.ui.exportManager.registerPersistenceMethod(new os.file.persist.FilePersistence());
 
   // set state manager global reference
-  os.stateManager = os.state.StateManager.getInstance();
+  var stateManager = os.state.StateManager.getInstance();
+  os.state.instance.setStateManager(stateManager);
+  os.stateManager = stateManager;
 
   // set up clear control
-  os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('exclusionAreas', 'Exclusion Areas',
+  const clearManager = os.ui.clear.ClearManager.getInstance();
+  clearManager.addEntry(new os.ui.clear.ClearEntry('exclusionAreas', 'Exclusion Areas',
       os.command.ExclusionQueryClear, 'Clear all exclusion query areas'));
-  os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('queryEntries', 'Layer/Area/Filter query combinations',
+  clearManager.addEntry(new os.ui.clear.ClearEntry('queryEntries', 'Layer/Area/Filter query combinations',
       os.ui.query.cmd.QueryEntriesClear, 'Clears all layer/area/filter query combinations'));
-  os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('layers', 'Layers', os.command.LayerClear,
+  clearManager.addEntry(new os.ui.clear.ClearEntry('layers', 'Layers', os.command.LayerClear,
       'Clear all layers except the defaults'));
-  os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('mapPosition', 'Map Position', os.command.ClearMapPosition,
+  clearManager.addEntry(new os.ui.clear.ClearEntry('mapPosition', 'Map Position', os.command.ClearMapPosition,
       'Reset map position to the default'));
-  os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('nonQueryFeatures', 'Non-query Features',
+  clearManager.addEntry(new os.ui.clear.ClearEntry('nonQueryFeatures', 'Non-query Features',
       os.command.NonQueryClear, 'Clears features in the Drawing Layer except for query features'));
-  os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('queryAreas', 'Query Areas', os.command.QueryClear,
+  clearManager.addEntry(new os.ui.clear.ClearEntry('queryAreas', 'Query Areas', os.command.QueryClear,
       'Clear all spatial query areas'));
-  os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('states', 'States', os.ui.state.cmd.StateClear,
+  clearManager.addEntry(new os.ui.clear.ClearEntry('states', 'States', os.ui.state.cmd.StateClear,
       'Deactivate all states'));
 
   // set up search
@@ -308,32 +326,26 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   os.menu.folder.setup();
 
   // assign the spatial menu
-  os.ui.draw.MENU = os.ui.menu.spatial.MENU;
+  os.ui.draw.setMenu(os.ui.menu.spatial.MENU);
 
   // register base legend plugins
   os.data.histo.legend.registerLegendPlugin();
 
-  // create map instance and listen for it to be initialized
-  var map = os.MapContainer.getInstance();
-  map.setInteractionFunction(os.map.interaction.getInteractions);
-  map.setControlFunction(os.control.getControls);
-
-  map.listenOnce(os.MapEvent.MAP_READY, this.onMapReady_, false, this);
-
-  // set the global map container reference
-  os.map.mapContainer = os.MapContainer.getInstance();
-
   // init filter manager
-  os.filterManager = os.query.FilterManager.getInstance();
-  os.ui.filterManager = os.filterManager;
+  var filterManager = os.query.FilterManager.getInstance();
+  os.query.instance.setFilterManager(filterManager);
+  os.filterManager = os.ui.filterManager = filterManager;
 
   // init area manager
-  os.areaManager = os.query.AreaManager.getInstance();
-  os.ui.areaManager = os.areaManager;
+  var areaManager = os.query.AreaManager.getInstance();
+  os.query.instance.setAreaManager(areaManager);
+  os.areaManager = os.ui.areaManager = areaManager;
 
   // init query manager
-  os.queryManager = os.query.QueryManager.getInstance();
-  os.ui.queryManager = os.queryManager;
+  var queryManager = os.query.QueryManager.getInstance();
+  os.query.instance.setQueryManager(queryManager);
+  os.queryManager = os.ui.queryManager = queryManager;
+
   os.ui.menu.areaImport.setup();
 
   // initialize the area/filter import/file managers
@@ -427,6 +439,9 @@ os.MainCtrl.prototype.initialize = function() {
 
   // initialize the nav bars
   os.ui.navbaroptions.init();
+
+  // initialize any authentication settings
+  os.auth.initAuth();
 
   this.addControlsToHelp_();
   os.ui.help.metricsOption.addToNav();
@@ -972,7 +987,7 @@ os.MainCtrl.prototype.handleFileDrop_ = function(files) {
   var file = files[0];
 
   if (file) {
-    if (file.path && os.file.FILE_URL_ENABLED) {
+    if (file.path && os.file.isFileUrlEnabled()) {
       // running in Electron, so request the file with a file:// URL
       this.handleURLDrop_(os.file.getFileUrl(file.path));
     } else {

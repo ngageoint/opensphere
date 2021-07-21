@@ -8,20 +8,21 @@ goog.require('os.action.EventType');
 goog.require('os.array');
 goog.require('os.command.AreaToggle');
 goog.require('os.command.SequenceCommand');
-goog.require('os.data.AreaNode');
 goog.require('os.events.PayloadEvent');
 goog.require('os.feature');
 goog.require('os.fn');
 goog.require('os.interaction.Modify');
+goog.require('os.layer.ILayer');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.query.ui.mergeAreasDirective');
 goog.require('os.source.IModifiableSource');
-goog.require('os.ui.ex.AreaExportCtrl');
-goog.require('os.ui.feature.featureInfoDirective');
+goog.require('os.ui.ex.AreaExportUI');
+goog.require('os.ui.feature.launchMultiFeatureInfo');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.query');
+goog.require('os.ui.query.AreaNode');
 goog.require('os.ui.query.cmd.AreaAdd');
 goog.require('os.ui.query.cmd.AreaModify');
 goog.require('os.ui.query.cmd.AreaRemove');
@@ -51,8 +52,8 @@ os.ui.menu.SpatialMenu.prototype.open = function(context, position, opt_target) 
 
     context = context.map(function(item) {
       var feature = null;
-      if (item instanceof os.data.AreaNode) {
-        feature = /** @type {os.data.AreaNode} */ (item).getArea();
+      if (item instanceof os.ui.query.AreaNode) {
+        feature = /** @type {os.ui.query.AreaNode} */ (item).getArea();
       } else if (item instanceof os.data.DrawingFeatureNode) {
         feature = /** @type {os.data.DrawingFeatureNode} */ (item).getFeature();
       }
@@ -770,7 +771,7 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
       // I don't really have any idea why this one type doesn't operate with the menu properly without these
       event.preventDefault();
       event.stopPropagation();
-      os.ui.ex.AreaExportCtrl.start(/** @type {Array<ol.Feature>} */ (features));
+      os.ui.ex.AreaExportUI.Controller.start(/** @type {Array<ol.Feature>} */ (features));
     } else if (event.type === os.action.EventType.LOAD || event.type === os.action.EventType.EXCLUDE) {
       var areas = am.getAll();
 
@@ -824,7 +825,7 @@ os.ui.menu.spatial.getLayers = function(opt_areaId) {
     }
   }
   for (var key in set) {
-    var l = /** @type {os.filter.IFilterable} */ (os.MapContainer.getInstance().getLayer(key));
+    var l = /** @type {os.layer.ILayer} */ (os.MapContainer.getInstance().getLayer(key));
     try {
       if (l) {
         if (opt_areaId !== undefined) {

@@ -253,6 +253,11 @@
     "os": {
       "map": {
         "units": "metric"
+      },
+      "mapping": {
+        "ellipse": {
+          "allowConfiguration": false
+        }
       }
     }
   }

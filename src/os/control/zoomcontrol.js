@@ -1,36 +1,39 @@
-goog.provide('os.control.Zoom');
+goog.module('os.control.Zoom');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.control.Zoom');
-goog.require('os.interaction');
-
+const OLZoom = goog.require('ol.control.Zoom');
+const interaction = goog.require('os.interaction');
+const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
  * Overrides the OpenLayers zoom control to allow zooming in/out in WebGL.
- *
- * @param {olx.control.ZoomOptions=} opt_options Zoom options.
- * @extends {ol.control.Zoom}
- * @constructor
  */
-os.control.Zoom = function(opt_options) {
-  os.control.Zoom.base(this, 'constructor', opt_options);
-};
-goog.inherits(os.control.Zoom, ol.control.Zoom);
-
-
-/**
- * @inheritDoc
- * @suppress {accessControls}
- */
-os.control.Zoom.prototype.zoomByDelta_ = function(delta) {
-  var mapContainer = os.MapContainer.getInstance();
-  if (mapContainer.is3DEnabled()) {
-    var camera = mapContainer.getWebGLCamera();
-    if (camera) {
-      delta = os.interaction.getZoomDelta(true, delta < 0);
-      camera.zoomByDelta(delta);
-    }
-  } else {
-    os.control.Zoom.superClass_.zoomByDelta_.call(this, delta);
+class Zoom extends OLZoom {
+  /**
+   * Constructor.
+   * @param {olx.control.ZoomOptions=} opt_options Zoom options.
+   */
+  constructor(opt_options) {
+    super(opt_options);
   }
-};
+
+  /**
+   * @inheritDoc
+   * @suppress {accessControls}
+   */
+  zoomByDelta_(delta) {
+    var mapContainer = getMapContainer();
+    if (mapContainer.is3DEnabled()) {
+      var camera = mapContainer.getWebGLCamera();
+      if (camera) {
+        delta = interaction.getZoomDelta(true, delta < 0);
+        camera.zoomByDelta(delta);
+      }
+    } else {
+      super.zoomByDelta_(delta);
+    }
+  }
+}
+
+exports = Zoom;

@@ -1,8 +1,11 @@
-goog.require('os.data.CollectionManager');
 goog.require('goog.events.EventType');
+goog.require('os.data.CollectionManager');
 
 describe('os.data.CollectionManager', function() {
-  var cm = new os.data.CollectionManager();
+  const GoogEventType = goog.module.get('goog.events.EventType');
+  const CollectionManager = goog.module.get('os.data.CollectionManager');
+
+  var cm = new CollectionManager();
 
   it('should add items', function() {
     var item = {id: 'A'};
@@ -11,13 +14,13 @@ describe('os.data.CollectionManager', function() {
       count++;
     };
 
-    cm.listen(goog.events.EventType.PROPERTYCHANGE, onAdd);
+    cm.listen(GoogEventType.PROPERTYCHANGE, onAdd);
     var result = cm.add(item);
     expect(result).toBe(true);
     expect(count).toBe(1);
     expect(cm.get('A')).toBe(item);
 
-    cm.unlisten(goog.events.EventType.PROPERTYCHANGE, onAdd);
+    cm.unlisten(GoogEventType.PROPERTYCHANGE, onAdd);
   });
 
   it('should get items', function() {
@@ -45,13 +48,13 @@ describe('os.data.CollectionManager', function() {
       count++;
     };
 
-    cm.listen(goog.events.EventType.PROPERTYCHANGE, onRemove);
+    cm.listen(GoogEventType.PROPERTYCHANGE, onRemove);
     var result = cm.remove('A');
 
     expect(result).toBe(item);
     expect(cm.contains(item)).toBe(false);
+    expect(count).toBe(1);
 
-    cm.unlisten(goog.events.EventType.PROPERTYCHANGE, onRemove);
+    cm.unlisten(GoogEventType.PROPERTYCHANGE, onRemove);
   });
 });
-

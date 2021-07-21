@@ -6,7 +6,7 @@ goog.require('os.MapContainer');
 goog.require('os.config');
 goog.require('os.config.Settings');
 goog.require('os.config.storage.SettingsObjectStorage');
-goog.require('os.data.OSDataManager');
+goog.require('os.data.DataManager');
 goog.require('os.im.mapping.AltMapping');
 goog.require('os.im.mapping.BearingMapping');
 goog.require('os.im.mapping.LatMapping');
@@ -20,6 +20,7 @@ goog.require('os.im.mapping.WKTMapping');
 goog.require('os.im.mapping.time.DateMapping');
 goog.require('os.im.mapping.time.DateTimeMapping');
 goog.require('os.im.mapping.time.TimeMapping');
+goog.require('os.map.instance');
 goog.require('os.mixin');
 goog.require('os.mixin.closure');
 goog.require('os.net');
@@ -29,7 +30,9 @@ goog.require('os.net.SameDomainHandler');
 goog.require('os.query.AreaManager');
 goog.require('os.query.FilterManager');
 goog.require('os.query.QueryManager');
+goog.require('os.query.instance');
 goog.require('os.style.StyleManager');
+goog.require('os.time.replacers');
 goog.require('os.ui.config.SettingsManager');
 goog.require('os.ui.ogc.OGCDescriptor');
 goog.require('test.os.config.SettingsUtil');
@@ -88,28 +91,38 @@ beforeEach(function() {
       settings.set('maxFeatures.3d', 150000);
     }
 
-    if (!os.dataManager || !os.osDataManager) {
-      os.dataManager = os.osDataManager = os.data.OSDataManager.getInstance();
+    // This needs to be initialized before the data manager.
+    var map = os.MapContainer.getInstance();
+    os.map.instance.setMapContainer(map);
+
+    if (!os.dataManager || !os.dataManager) {
+      os.dataManager = os.data.DataManager.getInstance();
+      os.dataManager.setMapContainer(map);
       os.dataManager.registerDescriptorType(os.ogc.ID, os.ui.ogc.OGCDescriptor);
     }
 
     if (!os.areaManager) {
-      os.areaManager = os.ui.areaManager = os.query.AreaManager.getInstance();
+      var areaManager = os.query.AreaManager.getInstance();
+      os.query.instance.setAreaManager(areaManager);
+      os.areaManager = os.ui.areaManager = areaManager;
     }
 
     if (!os.filterManager) {
-      os.filterManager = os.ui.filterManager = os.query.FilterManager.getInstance();
+      var filterManager = os.query.FilterManager.getInstance();
+      os.query.instance.setFilterManager(filterManager);
+      os.filterManager = os.ui.filterManager = filterManager;
     }
 
     if (!os.queryManager) {
-      os.queryManager = os.ui.queryManager = os.query.QueryManager.getInstance();
+      var queryManager = os.query.QueryManager.getInstance();
+      os.query.instance.setQueryManager(queryManager);
+      os.queryManager = os.ui.queryManager = queryManager;
     }
 
     if (!os.styleManager) {
       os.styleManager = os.style.StyleManager.getInstance();
     }
 
-    var map = os.MapContainer.getInstance();
     if (!map.getMap()) {
       map.init();
     }
@@ -117,6 +130,8 @@ beforeEach(function() {
     if (!os.settingsManager) {
       os.settingsManager = os.ui.config.SettingsManager.getInstance();
     }
+
+    os.time.replacers.init();
   });
 });
 

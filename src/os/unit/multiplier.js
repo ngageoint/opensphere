@@ -1,87 +1,89 @@
-goog.provide('os.unit.Multiplier');
-goog.require('os.unit.IMultiplier');
+goog.module('os.unit.Multiplier');
+goog.module.declareLegacyNamespace();
 
+const IMultiplier = goog.requireType('os.unit.IMultiplier');
 
 
 /**
  * Responsible for receiving, logging and reporting alerts
  *
- * @implements {os.unit.IMultiplier}
- * @param {string} name
- * @param {number} multiplier
- * @param {boolean=} opt_isBestFitCandedate
- * @param {string=} opt_longName
- * @param {number=} opt_threshold
- * @constructor
+ * @implements {IMultiplier}
  */
-os.unit.Multiplier = function(name, multiplier, opt_isBestFitCandedate, opt_longName, opt_threshold) {
+class Multiplier {
   /**
-   * @type {string}
-   * @private
+   * Constructor.
+   * @param {string} name
+   * @param {number} multiplier
+   * @param {boolean=} opt_isBestFitCandedate
+   * @param {string=} opt_longName
+   * @param {number=} opt_threshold
    */
-  this.name_ = name;
+  constructor(name, multiplier, opt_isBestFitCandedate, opt_longName, opt_threshold) {
+    /**
+     * @type {string}
+     * @private
+     */
+    this.name_ = name;
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this.multiplier_ = multiplier;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.isBestFitCandidate_ = opt_isBestFitCandedate ? opt_isBestFitCandedate : false;
+
+    /**
+     * @type {string?}
+     * @private
+     */
+    this.longName_ = opt_longName ? opt_longName : null;
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this.threshold_ = opt_threshold ? opt_threshold : 1;
+  }
 
   /**
-   * @type {number}
-   * @private
+   * @inheritDoc
    */
-  this.multiplier_ = multiplier;
+  getName() {
+    return this.name_;
+  }
 
   /**
-   * @type {boolean}
-   * @private
+   * @inheritDoc
    */
-  this.isBestFitCandidate_ = opt_isBestFitCandedate ? opt_isBestFitCandedate : false;
+  getMultiplier() {
+    return this.multiplier_;
+  }
 
   /**
-   * @type {string?}
-   * @private
+   * @inheritDoc
    */
-  this.longName_ = opt_longName ? opt_longName : null;
+  getIsBestFitCandidate() {
+    return this.isBestFitCandidate_;
+  }
 
   /**
-   * @type {number}
-   * @private
+   * @inheritDoc
    */
-  this.threshold_ = opt_threshold ? opt_threshold : 1;
-};
+  getLongName() {
+    return this.longName_ ? this.longName_ : this.name_;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getThreshold() {
+    return this.threshold_;
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.unit.Multiplier.prototype.getName = function() {
-  return this.name_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.unit.Multiplier.prototype.getMultiplier = function() {
-  return this.multiplier_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.unit.Multiplier.prototype.getIsBestFitCandidate = function() {
-  return this.isBestFitCandidate_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.unit.Multiplier.prototype.getLongName = function() {
-  return this.longName_ ? this.longName_ : this.name_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.unit.Multiplier.prototype.getThreshold = function() {
-  return this.threshold_;
-};
+exports = Multiplier;

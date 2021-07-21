@@ -1,48 +1,27 @@
-goog.provide('os.file.mime.xml');
-goog.provide('os.file.mime.xml.Context');
-goog.provide('os.file.mime.xml.Types');
+goog.module('os.file.mime.xml');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Promise');
-goog.require('os.file.mime');
-goog.require('os.file.mime.text');
+const Promise = goog.require('goog.Promise');
+const mime = goog.require('os.file.mime');
+const text = goog.require('os.file.mime.text');
+const Types = goog.require('os.file.mime.xml.Types');
 
-
-/**
- * @typedef {{
- *  content: string,
- *  rootTag: string,
- *  rootNS: string,
- *  checkTag: string
- * }}
- */
-os.file.mime.xml.Context;
+const OSFile = goog.requireType('os.file.File');
+const Context = goog.requireType('os.file.mime.xml.Context');
 
 
 /**
- * @const
  * @type {string}
  */
-os.file.mime.xml.TYPE = 'text/xml';
-
-
-/**
- * @enum {string}
- */
-os.file.mime.xml.Types = {
-  OPEN_TAG: 'open-tag',
-  CLOSE_TAG: 'close-tag',
-  ATTRIBUTE_NAME: 'attribute-name',
-  ATTRIBUTE_VALUE: 'attribute-value'
-};
-
+const TYPE = 'text/xml';
 
 /**
  * @param {ArrayBuffer} buffer
- * @param {os.file.File=} opt_file
+ * @param {OSFile=} opt_file
  * @param {*=} opt_context
- * @return {!goog.Promise<{content: string, rootNS: string, rootTag: string}|undefined>}
+ * @return {!Promise<{content: string, rootNS: string, rootTag: string}|undefined>}
  */
-os.file.mime.xml.isXML = function(buffer, opt_file, opt_context) {
+const isXML = function(buffer, opt_file, opt_context) {
   var retVal;
 
   if (opt_context && typeof opt_context === 'string') {
@@ -51,14 +30,14 @@ os.file.mime.xml.isXML = function(buffer, opt_file, opt_context) {
     // I know this looks async. Technically it is, but because we synchronously send the
     // data to the lexer, the events fire in a synchronous manner.
 
-    var expectedTypes = [os.file.mime.xml.Types.OPEN_TAG];
+    var expectedTypes = [Types.OPEN_TAG];
 
     var namespaceKey = '';
     var namespaceIncoming = false;
 
     var listener = function(data) {
       if (expectedTypes.indexOf(data.type) > -1) {
-        if (data.type === os.file.mime.xml.Types.OPEN_TAG) {
+        if (data.type === Types.OPEN_TAG) {
           if (retVal) {
             // we're past the root tag so just stop
             lexer.off('data', listener);
@@ -71,7 +50,7 @@ os.file.mime.xml.isXML = function(buffer, opt_file, opt_context) {
               tag = data.value.substring(colon + 1);
             }
 
-            retVal = /** @type {os.file.mime.xml.Context} */ ({
+            retVal = /** @type {Context} */ ({
               content: opt_context,
               rootTag: tag,
               rootNS: '',
@@ -79,17 +58,17 @@ os.file.mime.xml.isXML = function(buffer, opt_file, opt_context) {
             });
           }
 
-          expectedTypes.push(os.file.mime.xml.Types.CLOSE_TAG);
-          expectedTypes.push(os.file.mime.xml.Types.ATTRIBUTE_NAME);
-        } else if (data.type === os.file.mime.xml.Types.ATTRIBUTE_NAME) {
+          expectedTypes.push(Types.CLOSE_TAG);
+          expectedTypes.push(Types.ATTRIBUTE_NAME);
+        } else if (data.type === Types.ATTRIBUTE_NAME) {
           expectedTypes.pop();
 
           if (data.value === 'xmlns' + namespaceKey) {
             namespaceIncoming = true;
           }
 
-          expectedTypes.push(os.file.mime.xml.Types.ATTRIBUTE_VALUE);
-        } else if (data.type === os.file.mime.xml.Types.ATTRIBUTE_VALUE) {
+          expectedTypes.push(Types.ATTRIBUTE_VALUE);
+        } else if (data.type === Types.ATTRIBUTE_VALUE) {
           expectedTypes.pop();
 
           if (namespaceIncoming) {
@@ -97,10 +76,10 @@ os.file.mime.xml.isXML = function(buffer, opt_file, opt_context) {
           }
 
           namespaceIncoming = false;
-          expectedTypes.push(os.file.mime.xml.Types.ATTRIBUTE_NAME);
-        } else if (data.type === os.file.mime.xml.Types.CLOSE_TAG) {
+          expectedTypes.push(Types.ATTRIBUTE_NAME);
+        } else if (data.type === Types.CLOSE_TAG) {
           expectedTypes.pop();
-          expectedTypes.push(os.file.mime.xml.Types.OPEN_TAG);
+          expectedTypes.push(Types.OPEN_TAG);
         }
       } else {
         // malformed nonsense
@@ -137,18 +116,18 @@ os.file.mime.xml.isXML = function(buffer, opt_file, opt_context) {
     }
   }
 
-  return goog.Promise.resolve(retVal);
+  return Promise.resolve(retVal);
 };
 
-os.file.mime.register(os.file.mime.xml.TYPE, os.file.mime.xml.isXML, 0, os.file.mime.text.TYPE);
+mime.register(TYPE, isXML, 0, text.TYPE);
 
 
 /**
  * @param {?RegExp} rootTagRegex Regular expression for testing against root tag names
  * @param {?RegExp} rootNSRegex Regular express for testing against root tag namespaces
- * @return {!function(ArrayBuffer, os.file.File, *=):!goog.Promise<*|undefined>} The detect function for registering with `os.file.mime`
+ * @return {!function(ArrayBuffer, OSFile, *=):!Promise<*|undefined>} The detect function for registering with `mime`
  */
-os.file.mime.xml.createDetect = function(rootTagRegex, rootNSRegex) {
+const createDetect = function(rootTagRegex, rootNSRegex) {
   if (!rootTagRegex && !rootNSRegex) {
     throw new Error('At least one of the [rootTagRegex, rootNSRegex] must be defined and not null');
   }
@@ -156,9 +135,9 @@ os.file.mime.xml.createDetect = function(rootTagRegex, rootNSRegex) {
   return (
     /**
      * @param {ArrayBuffer} buffer
-     * @param {os.file.File=} opt_file
+     * @param {OSFile=} opt_file
      * @param {*=} opt_context
-     * @return {!goog.Promise<*|undefined>}
+     * @return {!Promise<*|undefined>}
      */
     function(buffer, opt_file, opt_context) {
       var retVal;
@@ -168,6 +147,13 @@ os.file.mime.xml.createDetect = function(rootTagRegex, rootNSRegex) {
         retVal = opt_context;
       }
 
-      return goog.Promise.resolve(retVal);
-    });
+      return Promise.resolve(retVal);
+    }
+  );
+};
+
+exports = {
+  TYPE,
+  isXML,
+  createDetect
 };

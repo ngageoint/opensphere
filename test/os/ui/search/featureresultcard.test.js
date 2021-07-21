@@ -4,6 +4,7 @@ goog.require('ol.events');
 goog.require('ol.geom.Point');
 goog.require('os.MapContainer');
 goog.require('os.layer.Vector');
+goog.require('os.mock');
 goog.require('os.source.Vector');
 goog.require('os.style.StyleType');
 goog.require('os.ui.search.FeatureResultCardCtrl');
@@ -112,7 +113,8 @@ describe('os.ui.search.FeatureResultCardCtrl', () => {
     expect(feature.get(StyleType.HIGHLIGHT)).toBeUndefined();
 
     featureStyle = feature.getStyle()[0];
-    expect(featureStyle.getFill().getColor()).not.toBe(highlightColor);
+    expect(featureStyle.getFill()).toBeNull();
+    expect(featureStyle.getImage()).toBeDefined();
   });
 
   it('sets card highlight state', () => {

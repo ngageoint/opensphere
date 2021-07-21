@@ -3,12 +3,13 @@ goog.require('os.data.ZOrder');
 goog.require('os.layer.FolderManager');
 goog.require('os.layer.folder');
 goog.require('os.mock');
-goog.require('os.ui.window');
+goog.require('os.ui.window.ConfirmTextUI');
 
 
 describe('os.layer.FolderManager', () => {
   const FolderManager = goog.module.get('os.layer.FolderManager');
   const {createOrEditFolder} = goog.module.get('os.layer.folder');
+  const ConfirmTextUI = goog.module.get('os.ui.window.ConfirmTextUI');
 
   let folder;
 
@@ -31,7 +32,7 @@ describe('os.layer.FolderManager', () => {
     const mockLaunch = (options) => {
       calledOptions = options;
     };
-    spyOn(os.ui.window, 'launchConfirmText').andCallFake(mockLaunch);
+    spyOn(ConfirmTextUI, 'launchConfirmText').andCallFake(mockLaunch);
 
     createOrEditFolder(folder);
 

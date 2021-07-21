@@ -1,59 +1,62 @@
-goog.provide('os.command.VectorLayerIcon');
+goog.module('os.command.VectorLayerIcon');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractVectorStyle');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.metrics');
-goog.require('os.source.PropertyChange');
-goog.require('os.ui.file.kml');
-
+const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
+const DataManager = goog.require('os.data.DataManager');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const metrics = goog.require('os.metrics');
+const PropertyChange = goog.require('os.source.PropertyChange');
+const osStyle = goog.require('os.style');
+const StyleManager = goog.require('os.style.StyleManager');
+const kml = goog.require('os.ui.file.kml');
 
 
 /**
  * Configure a vector layer to display an icon.
- *
- * @param {string} layerId The layer id.
- * @param {osx.icon.Icon} icon The new icon.
- * @param {osx.icon.Icon=} opt_oldIcon The old icon.
- * @extends {os.command.AbstractVectorStyle}
- * @constructor
  */
-os.command.VectorLayerIcon = function(layerId, icon, opt_oldIcon) {
-  os.command.VectorLayerIcon.base(this, 'constructor', layerId, icon, opt_oldIcon);
-  this.title = 'Change Icon';
-  this.metricKey = os.metrics.Layer.VECTOR_ICON;
-};
-goog.inherits(os.command.VectorLayerIcon, os.command.AbstractVectorStyle);
-
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerIcon.prototype.getOldValue = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  return os.style.getConfigIcon(config) || os.ui.file.kml.getDefaultIcon();
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerIcon.prototype.applyValue = function(config, value) {
-  if (value) {
-    os.style.setConfigIcon(config, value);
+class VectorLayerIcon extends AbstractVectorStyle {
+  /**
+   * Constructor.
+   * @param {string} layerId The layer id.
+   * @param {osx.icon.Icon} icon The new icon.
+   * @param {osx.icon.Icon=} opt_oldIcon The old icon.
+   */
+  constructor(layerId, icon, opt_oldIcon) {
+    super(layerId, icon, opt_oldIcon);
+    this.title = 'Change Icon';
+    this.metricKey = metrics.Layer.VECTOR_ICON;
   }
 
-  os.command.VectorLayerIcon.base(this, 'applyValue', config, value);
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerIcon.prototype.finish = function(config) {
-  var source = os.osDataManager.getSource(this.layerId);
-  if (source) {
-    source.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.GEOMETRY_SHAPE));
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return osStyle.getConfigIcon(config) || kml.getDefaultIcon();
   }
 
-  os.command.VectorLayerIcon.base(this, 'finish', config);
-};
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    if (value) {
+      osStyle.setConfigIcon(config, value);
+    }
+
+    super.applyValue(config, value);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  finish(config) {
+    var source = DataManager.getInstance().getSource(this.layerId);
+    if (source) {
+      source.dispatchEvent(new PropertyChangeEvent(PropertyChange.GEOMETRY_SHAPE));
+    }
+
+    super.finish(config);
+  }
+}
+
+exports = VectorLayerIcon;

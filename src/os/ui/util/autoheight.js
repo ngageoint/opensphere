@@ -1,9 +1,8 @@
-goog.provide('os.ui.util.AutoHeightCtrl');
-goog.provide('os.ui.util.autoHeightDirective');
+goog.module('os.ui.util.AutoHeightUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.userAgent');
-goog.require('os.ui');
-goog.require('os.ui.Module');
+const ui = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -33,178 +32,186 @@ goog.require('os.ui.Module');
  *       visible.
  * @return {angular.Directive}
  */
-os.ui.util.autoHeightDirective = function() {
-  return {
-    restrict: 'A',
-    scope: {
-      'parent': '@',
-      'siblings': '@',
-      'height': '@autoheight',
-      'minHeight': '@minheight'
-    },
-    controller: os.ui.util.AutoHeightCtrl
-  };
-};
-
+const directive = () => ({
+  restrict: 'A',
+  scope: {
+    'parent': '@',
+    'siblings': '@',
+    'height': '@autoheight',
+    'minHeight': '@minheight'
+  },
+  controller: Controller
+});
 
 /**
- * Add the directive to the os.ui module
+ * The element tag for the directive.
+ * @type {string}
  */
-os.ui.Module.directive('autoheight', [os.ui.util.autoHeightDirective]);
-
-
+const directiveTag = 'autoheight';
 
 /**
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$injector} $injector
- * @constructor
- * @ngInject
+ * Add the directive to the ui module
  */
-os.ui.util.AutoHeightCtrl = function($scope, $element, $injector) {
+Module.directive(directiveTag, [directive]);
+
+/**
+ * @unrestricted
+ */
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$injector} $injector
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope, $element, $injector) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  /**
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.element_ = $element;
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
 
-  /**
-   * @type {number}
-   * @private
-   */
-  this.height_ = 1;
-  this.initHeight_();
+    /**
+     * @type {number}
+     * @private
+     */
+    this.height_ = 1;
+    this.initHeight_();
 
-  /**
-   * Debounce resize events over a brief period.
-   * @type {Function}
-   * @private
-   */
-  this.resizeFn_ = this.onResize_.bind(this);
+    /**
+     * Debounce resize events over a brief period.
+     * @type {Function}
+     * @private
+     */
+    this.resizeFn_ = this.onResize_.bind(this);
 
-  /**
-   * The parent element to use for determining max height.
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.parent_ = this.getParent_();
+    /**
+     * The parent element to use for determining max height.
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.parent_ = this.getParent_();
 
-  if (this.parent_) {
-    // listen for parent size changes
-    os.ui.resize(this.parent_, this.resizeFn_);
+    if (this.parent_) {
+      // listen for parent size changes
+      ui.resize(this.parent_, this.resizeFn_);
 
-    // listen for sibling resize changes
-    var siblings = /** @type {string} */ ($scope['siblings']);
-    if (siblings) {
-      os.ui.resize(this.parent_.find(siblings), this.resizeFn_);
+      // listen for sibling resize changes
+      var siblings = /** @type {string} */ ($scope['siblings']);
+      if (siblings) {
+        ui.resize(this.parent_.find(siblings), this.resizeFn_);
+      }
+
+      // there are some situations where resize won't fire on creation, particularly when using IE or when swapping DOM
+      // elements with ng-if. this will make sure it fires as soon as Angular is done manipulating the DOM.
+      ui.waitForAngular(this.onResize_.bind(this));
     }
 
-    // there are some situations where resize won't fire on creation, particularly when using IE or when swapping DOM
-    // elements with ng-if. this will make sure it fires as soon as Angular is done manipulating the DOM.
-    os.ui.waitForAngular(this.onResize_.bind(this));
+    $scope.$on('$destroy', this.onDestroy_.bind(this));
   }
 
-  $scope.$on('$destroy', this.onDestroy_.bind(this));
-};
+  /**
+   * Clean up listeners/references.
+   *
+   * @private
+   */
+  onDestroy_() {
+    if (this.parent_) {
+      ui.removeResize(this.parent_, this.resizeFn_);
 
+      var siblings = /** @type {string} */ (this.scope_['siblings']);
+      if (siblings) {
+        ui.removeResize(this.parent_.find(siblings), this.resizeFn_);
+      }
 
-/**
- * Clean up listeners/references.
- *
- * @private
- */
-os.ui.util.AutoHeightCtrl.prototype.onDestroy_ = function() {
-  if (this.parent_) {
-    os.ui.removeResize(this.parent_, this.resizeFn_);
-
-    var siblings = /** @type {string} */ (this.scope_['siblings']);
-    if (siblings) {
-      os.ui.removeResize(this.parent_.find(siblings), this.resizeFn_);
+      this.parent_ = null;
     }
 
-    this.parent_ = null;
+    this.resizeFn_ = null;
+    this.element_ = null;
+    this.scope_ = null;
   }
 
-  this.resizeFn_ = null;
-  this.element_ = null;
-  this.scope_ = null;
-};
+  /**
+   * Get the parent for the directive.
+   *
+   * @return {?angular.JQLite}
+   * @private
+   */
+  getParent_() {
+    var parent = null;
 
+    if (this.scope_ && this.element_) {
+      var immediateParent = this.element_.parent();
 
-/**
- * Get the parent for the directive.
- *
- * @return {?angular.JQLite}
- * @private
- */
-os.ui.util.AutoHeightCtrl.prototype.getParent_ = function() {
-  var parent = null;
+      var parentSelector = /** @type {string|undefined} */ (this.scope_['parent']);
+      if (parentSelector) {
+        // start searching from the parent, because we don't want to match the current element
+        parent = immediateParent.closest(parentSelector);
+      }
 
-  if (this.scope_ && this.element_) {
-    var immediateParent = this.element_.parent();
-
-    var parentSelector = /** @type {string|undefined} */ (this.scope_['parent']);
-    if (parentSelector) {
-      // start searching from the parent, because we don't want to match the current element
-      parent = immediateParent.closest(parentSelector);
+      if (!parent || !parent.length) {
+        // parent hasn't been found, use the immediate parent
+        parent = immediateParent;
+      }
     }
 
-    if (!parent || !parent.length) {
-      // parent hasn't been found, use the immediate parent
-      parent = immediateParent;
+    return parent;
+  }
+
+  /**
+   * Initialize the height multiplier from the scope.
+   *
+   * @private
+   */
+  initHeight_() {
+    if (this.scope_['height']) {
+      var height = Number(this.scope_['height'].replace(/%/, ''));
+      if (isNaN(height) || height > 100 || height <= 0) {
+        // default to 100% if the height can't be parsed, is negative, or greater than 100 because any of those
+        // are the result of an incorrect directive definition
+        height = 1;
+      } else if (height > 1 && height <= 100) {
+        // convert percents from >1 to 100 to a decimal
+        height /= 100;
+      }
+
+      this.height_ = height;
     }
   }
 
-  return parent;
-};
+  /**
+   * Handle resize events from the parent or children.
+   *
+   * @private
+   */
+  onResize_() {
+    if (this.element_ && this.parent_) {
+      var siblingHeight = 0;
+      var siblings = /** @type {string} */ (this.scope_['siblings']);
+      if (siblings) {
+        this.parent_.find(siblings).each(function(index) {
+          // include padding, borders, margin in the height calculation
+          siblingHeight += $(this).outerHeight(true);
+        });
+      }
 
-
-/**
- * Initialize the height multiplier from the scope.
- *
- * @private
- */
-os.ui.util.AutoHeightCtrl.prototype.initHeight_ = function() {
-  if (this.scope_['height']) {
-    var height = Number(this.scope_['height'].replace(/%/, ''));
-    if (isNaN(height) || height > 100 || height <= 0) {
-      // default to 100% if the height can't be parsed, is negative, or greater than 100 because any of those
-      // are the result of an incorrect directive definition
-      height = 1;
-    } else if (height > 1 && height <= 100) {
-      // convert percents from >1 to 100 to a decimal
-      height /= 100;
+      var minHeight = Number(this.scope_['minHeight']) || 0;
+      var height = Math.max((this.parent_.height() - siblingHeight) * this.height_, minHeight);
+      this.element_.css('height', height + 'px');
     }
-
-    this.height_ = height;
   }
-};
+}
 
-
-/**
- * Handle resize events from the parent or children.
- *
- * @private
- */
-os.ui.util.AutoHeightCtrl.prototype.onResize_ = function() {
-  if (this.element_ && this.parent_) {
-    var siblingHeight = 0;
-    var siblings = /** @type {string} */ (this.scope_['siblings']);
-    if (siblings) {
-      this.parent_.find(siblings).each(function(index) {
-        // include padding, borders, margin in the height calculation
-        siblingHeight += $(this).outerHeight(true);
-      });
-    }
-
-    var minHeight = Number(this.scope_['minHeight']) || 0;
-    var height = Math.max((this.parent_.height() - siblingHeight) * this.height_, minHeight);
-    this.element_.css('height', height + 'px');
-  }
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

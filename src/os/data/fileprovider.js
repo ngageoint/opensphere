@@ -1,48 +1,50 @@
-goog.provide('os.data.FileProvider');
+goog.module('os.data.FileProvider');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.data.DescriptorProvider');
-
+const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
 
 
 /**
  * Generic file-based provider
  *
  * @abstract
- * @extends {os.ui.data.DescriptorProvider<!T>}
+ * @extends {DescriptorProvider<!T>}
  * @template T
- * @constructor
  */
-os.data.FileProvider = function() {
-  os.data.FileProvider.base(this, 'constructor');
-};
-goog.inherits(os.data.FileProvider, os.ui.data.DescriptorProvider);
+class FileProvider extends DescriptorProvider {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
+  /**
+   * @inheritDoc
+   */
+  configure(config) {
+    this.setId('file');
+    this.setLabel('Files');
 
-/**
- * @inheritDoc
- */
-os.data.FileProvider.prototype.configure = function(config) {
-  this.setId('file');
-  this.setLabel('Files');
+    super.configure(config);
 
-  os.data.FileProvider.base(this, 'configure', config);
+    // this provider should not show up in the server manager
+    this.listInServers = false;
+  }
 
-  // this provider should not show up in the server manager
-  this.listInServers = false;
-};
+  /**
+   * @inheritDoc
+   */
+  getToolTip() {
+    return 'Contains all ' + this.getId().toUpperCase() + ' files that have been imported into the application.';
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getErrorMessage() {
+    return null;
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.data.FileProvider.prototype.getToolTip = function() {
-  return 'Contains all ' + this.getId().toUpperCase() + ' files that have been imported into the application.';
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.FileProvider.prototype.getErrorMessage = function() {
-  return null;
-};
+exports = FileProvider;

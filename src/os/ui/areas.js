@@ -10,7 +10,7 @@ goog.require('os.query.AreaManager');
 goog.require('os.structs.TreeNode');
 goog.require('os.ui.Module');
 goog.require('os.ui.data.groupby.TagGroupBy');
-goog.require('os.ui.ex.AreaExportCtrl');
+goog.require('os.ui.ex.AreaExportUI');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
@@ -172,7 +172,7 @@ os.ui.AreasCtrl.exportAreas = function(areas, opt_selected, opt_active) {
   var selectedAreas = opt_selected ? os.ui.AreasCtrl.formatAreas(opt_selected) : undefined;
   var activeAreas = opt_active ? os.ui.AreasCtrl.formatAreas(opt_active) : undefined;
 
-  os.ui.ex.AreaExportCtrl.start(allAreas, selectedAreas, activeAreas);
+  os.ui.ex.AreaExportUI.Controller.start(allAreas, selectedAreas, activeAreas);
 };
 
 

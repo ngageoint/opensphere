@@ -14,13 +14,13 @@ goog.require('ol.array');
 goog.require('ol.events');
 goog.require('ol.geom.GeometryCollection');
 goog.require('ol.geom.Point');
-goog.require('os.MapContainer');
 goog.require('os.action.EventType');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.feature');
 goog.require('os.geo');
 goog.require('os.interaction.Modify');
 goog.require('os.map');
+goog.require('os.map.instance');
 goog.require('os.math.Units');
 goog.require('os.ol.feature');
 goog.require('os.style');
@@ -28,9 +28,9 @@ goog.require('os.style.label');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 goog.require('os.ui.Module');
-goog.require('os.ui.datetime.AnyDateCtrl');
 goog.require('os.ui.datetime.AnyDateHelp');
 goog.require('os.ui.datetime.AnyDateType');
+goog.require('os.ui.datetime.AnyDateUI');
 goog.require('os.ui.file.kml');
 goog.require('os.ui.geo.PositionEventType');
 goog.require('os.ui.geo.positionDirective');
@@ -39,7 +39,7 @@ goog.require('os.ui.layer.labelControlsDirective');
 goog.require('os.ui.layer.vectorStyleControlsDirective');
 goog.require('os.ui.list');
 goog.require('os.ui.text.tuiEditorDirective');
-goog.require('os.ui.util.validationMessageDirective');
+goog.require('os.ui.util.ValidationMessageUI');
 goog.require('os.ui.window');
 goog.require('os.webgl.AltitudeMode');
 
@@ -374,12 +374,9 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    */
   this['altitudeModes'] = ol.obj.getValues(os.webgl.AltitudeMode);
 
-
-  if (os.map.mapContainer) {
-    var webGLRenderer = os.map.mapContainer.getWebGLRenderer();
-    if (webGLRenderer) {
-      this['altitudeModes'] = webGLRenderer.getAltitudeModes();
-    }
+  var webGLRenderer = os.map.instance.getMapContainer().getWebGLRenderer();
+  if (webGLRenderer) {
+    this['altitudeModes'] = webGLRenderer.getAltitudeModes();
   }
 
   var defaultAltMode = os.webgl.AltitudeMode.CLAMP_TO_GROUND;
@@ -560,7 +557,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   $scope.$on(os.ui.layer.LabelControlsEventType.COLUMN_CHANGE, this.onColumnChange.bind(this));
   $scope.$on('ring.update', this.onRingsChange.bind(this));
 
-  $scope.$on(os.ui.datetime.AnyDateCtrl.CHANGE, function(event, instant, start, end) {
+  $scope.$on(os.ui.datetime.AnyDateUI.Controller.CHANGE, function(event, instant, start, end) {
     event.stopPropagation();
 
     if (start || end) {
@@ -690,7 +687,7 @@ os.ui.FeatureEditCtrl.prototype.disposeInternal = function() {
 
   if (this.previewFeature) {
     if (this.previewFeature.getId() == this.tempFeatureId) {
-      os.MapContainer.getInstance().removeFeature(this.previewFeature);
+      os.map.instance.getMapContainer().removeFeature(this.previewFeature);
     }
 
     this.previewFeature = null;
@@ -887,7 +884,7 @@ os.ui.FeatureEditCtrl.prototype.onMapEnabled_ = function(event, isEnabled) {
     if (isEnabled) {
       // listen for a mouse click on the map
       if (!this.mapListenKey) {
-        var map = os.MapContainer.getInstance().getMap();
+        var map = os.map.instance.getMapContainer().getMap();
         this.mapListenKey = ol.events.listen(map, ol.MapBrowserEventType.SINGLECLICK, this.onMapClick_, this);
       }
 
@@ -946,7 +943,7 @@ os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
   if (this.previewFeature) {
     this.saveToFeature(this.previewFeature);
 
-    var osMap = os.MapContainer.getInstance();
+    var osMap = os.map.instance.getMapContainer();
     if (this.previewFeature.getId() === this.tempFeatureId && !osMap.containsFeature(this.previewFeature)) {
       osMap.addFeature(this.previewFeature);
     }
@@ -1454,6 +1451,11 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
   } else if (this.originalGeometry && (!geom || geom === this.originalGeometry)) {
     geom = this.originalGeometry.clone();
     feature.setGeometry(geom);
+
+    const method = /** @type {os.interpolate.Method} */ (geom.get(os.interpolate.METHOD_FIELD));
+    os.interpolate.beginTempInterpolation(undefined, method);
+    os.interpolate.interpolateFeature(feature);
+    os.interpolate.endTempInterpolation();
   }
 
   this.updateAltMode(feature);
@@ -1694,7 +1696,7 @@ os.ui.FeatureEditCtrl.prototype.modifyGeometry = function() {
   }
 
   if (this.previewFeature) {
-    const mc = os.MapContainer.getInstance();
+    const mc = os.map.instance.getMapContainer();
     this.interaction = new os.interaction.Modify(this.previewFeature);
     this.interaction.setOverlay(/** @type {ol.layer.Vector} */ (mc.getDrawingLayer()));
 
@@ -1787,7 +1789,7 @@ os.ui.FeatureEditCtrl.calculateXPosition = function(geom) {
   if (geom) {
     var extent = os.extent.getFunctionalExtent(geom);
     var center = ol.extent.getCenter(extent);
-    var pixel = os.MapContainer.getInstance().getMap().getPixelFromCoordinate(center);
+    var pixel = os.map.instance.getMapContainer().getMap().getPixelFromCoordinate(center);
     var width = container.width();
     return pixel[0] > width / 2 ? 50 : container.width() - 650;
   }

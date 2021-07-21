@@ -3,10 +3,10 @@ goog.provide('os.ui.navbaroptions.searchbox');
 
 goog.require('os.ui.ScaleLine');
 goog.require('os.ui.addDataButtonDirective');
-goog.require('os.ui.alert.alertButtonDirective');
-goog.require('os.ui.clear.clearButtonDirective');
+goog.require('os.ui.alert.AlertButtonUI');
+goog.require('os.ui.clear.ClearButtonUI');
 goog.require('os.ui.datePanelDirective');
-goog.require('os.ui.draw.drawControlsDirective');
+goog.require('os.ui.draw.DrawControlsUI');
 goog.require('os.ui.help');
 goog.require('os.ui.history.historyButtonDirective');
 goog.require('os.ui.layersButtonDirective');
@@ -19,7 +19,7 @@ goog.require('os.ui.navBottomDirective');
 goog.require('os.ui.navTopDirective');
 goog.require('os.ui.osNavTopDirective');
 goog.require('os.ui.saveButtonDirective');
-goog.require('os.ui.search.searchBoxDirective');
+goog.require('os.ui.search.SearchBoxUI');
 goog.require('os.ui.serversButtonDirective');
 goog.require('os.ui.settingsButtonDirective');
 goog.require('os.ui.stateButtonDirective');
@@ -57,9 +57,9 @@ os.ui.navbaroptions.init = function() {
   // Top navbar items
   os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'add-data-button', 100);
   os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'layers-button', 200);
-  os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'os-draw-controls', 300);
+  os.ui.list.add(os.ui.nav.Location.TOP_LEFT, os.ui.draw.DrawControlsUI.directiveTag, 300);
   os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'measure-button', 400);
-  os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'clear-button', 500);
+  os.ui.list.add(os.ui.nav.Location.TOP_LEFT, os.ui.clear.ClearButtonUI.directiveTag, 500);
 
   os.ui.list.add(os.ui.nav.Location.TOP_CENTER, 'date-panel', 1);
 

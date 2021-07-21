@@ -1,68 +1,66 @@
-goog.provide('os.im.action.IImportAction');
+goog.module('os.im.action.IImportAction');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.IPersistable');
-goog.require('os.IXmlPersistable');
-goog.require('os.im.action.ImportActionCallbackConfig');
+// The compiler has to process these first or @inheritDoc will not work properly on implementing classes.
+// @see https://github.com/google/closure-compiler/issues/3583
+const IPersistable = goog.require('os.IPersistable'); // eslint-disable-line opensphere/no-unused-vars
+const IXmlPersistable = goog.require('os.IXmlPersistable'); // eslint-disable-line opensphere/no-unused-vars
 
+const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
 
 
 /**
  * Interface for performing actions on imported data.
  *
- * @extends {os.IPersistable}
- * @extends {os.IXmlPersistable}
+ * @extends {IPersistable}
+ * @extends {IXmlPersistable}
  * @interface
  * @template T
  */
-os.im.action.IImportAction = function() {};
+class IImportAction {
+  /**
+   * Get the import action identifier.
+   * @return {string}
+   */
+  getId() {}
 
+  /**
+   * Get the label or title for the import action.
+   * @return {string}
+   */
+  getLabel() {}
 
-/**
- * Get the import action identifier.
- * @return {string}
- */
-os.im.action.IImportAction.prototype.getId;
+  /**
+   * Get the directive name for the import action configuration UI.
+   * @return {string|undefined}
+   */
+  getConfigUI() {}
 
+  /**
+   * If the action should be restricted to one use per entry.
+   * @return {boolean}
+   */
+  isUnique() {}
 
-/**
- * Get the label or title for the import action.
- * @return {string}
- */
-os.im.action.IImportAction.prototype.getLabel;
+  /**
+   * Execute the import action on the given items.
+   * @param {!Array<T>} items The items.
+   * @return {ImportActionCallbackConfig|undefined}
+   */
+  execute(items) {}
 
+  /**
+   * Clone the import action.
+   * @return {!IImportAction<T>} The cloned action.
+   */
+  clone() {}
 
-/**
- * Get the directive name for the import action configuration UI.
- * @return {string|undefined}
- */
-os.im.action.IImportAction.prototype.getConfigUI;
+  /**
+   * Reset the import action.
+   * @param {!Array<T>} items The items.
+   * @return {ImportActionCallbackConfig|undefined}
+   */
+  reset(items) {}
+}
 
-
-/**
- * If the action should be restricted to one use per entry.
- * @return {boolean}
- */
-os.im.action.IImportAction.prototype.isUnique;
-
-
-/**
- * Execute the import action on the given items.
- * @param {!Array<T>} items The items.
- * @return {os.im.action.ImportActionCallbackConfig|undefined}
- */
-os.im.action.IImportAction.prototype.execute;
-
-
-/**
- * Clone the import action.
- * @return {!os.im.action.IImportAction<T>} The cloned action.
- */
-os.im.action.IImportAction.prototype.clone;
-
-
-/**
- * Reset the import action.
- * @param {!Array<T>} items The items.
- * @return {os.im.action.ImportActionCallbackConfig|undefined}
- */
-os.im.action.IImportAction.prototype.reset;
+exports = IImportAction;

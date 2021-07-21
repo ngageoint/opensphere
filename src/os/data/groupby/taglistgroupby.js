@@ -1,84 +1,87 @@
-goog.provide('os.data.groupby.TagListGroupBy');
-goog.require('goog.array');
-goog.require('os.config.Settings');
-goog.require('os.ui.data.groupby.TagGroupBy');
+goog.module('os.data.groupby.TagListGroupBy');
+goog.module.declareLegacyNamespace();
 
+const googArray = goog.require('goog.array');
+const log = goog.require('goog.log');
+const Settings = goog.require('os.config.Settings');
+const TagGroupBy = goog.require('os.ui.data.groupby.TagGroupBy');
 
 
 /**
  * Groups nodes by a given list of tags
- *
- * @extends {os.ui.data.groupby.TagGroupBy}
- * @param {boolean=} opt_open Keeps groups open by default
- * @constructor
  */
-os.data.groupby.TagListGroupBy = function(opt_open) {
-  os.data.groupby.TagListGroupBy.base(this, 'constructor', opt_open);
-
+class TagListGroupBy extends TagGroupBy {
   /**
-   * @type {Array.<!string>}
-   * @private
+   * Constructor.
+   * @param {boolean=} opt_open Keeps groups open by default
    */
-  this.list_ = null;
-};
-goog.inherits(os.data.groupby.TagListGroupBy, os.ui.data.groupby.TagGroupBy);
+  constructor(opt_open) {
+    super(opt_open);
 
-
-/**
- * @inheritDoc
- */
-os.data.groupby.TagListGroupBy.prototype.init = function() {
-  os.data.groupby.TagListGroupBy.superClass_.init.call(this);
-  this.list_ = /** @type {?Array.<string>} */ (os.settings.get(['tagList']));
-
-  if (this.list_) {
-    for (var i = 0, n = this.list_.length; i < n; i++) {
-      this.list_[i] = this.list_[i] && this.list_[i].toUpperCase();
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.groupby.TagListGroupBy.prototype.getGroupIds = function(node) {
-  /**
-   * @type {Array.<string>}
-   */
-  var ids = [];
-  var tags = null;
-
-  try {
-    tags = /** @type {os.data.ISearchable} */ (node).getTags();
-
-    if (!tags) {
-      // try the parent
-      tags = /** @type {os.data.ISearchable} */ (node.getParent()).getTags();
-    }
-  } catch (e) {
+    /**
+     * @type {Array.<!string>}
+     * @private
+     */
+    this.list_ = null;
   }
 
-  if (tags && this.list_) {
-    var invalid = false;
-    for (var i = 0, n = tags.length; i < n; i++) {
-      if (tags[i]) {
-        var t = tags[i].toUpperCase();
-        if (this.list_.indexOf(t) > -1) {
-          goog.array.insert(ids, 'a' + t);
-        }
-      } else {
-        invalid = true;
+  /**
+   * @inheritDoc
+   */
+  init() {
+    super.init();
+    this.list_ = /** @type {?Array.<string>} */ (Settings.getInstance().get(['tagList']));
+
+    if (this.list_) {
+      for (var i = 0, n = this.list_.length; i < n; i++) {
+        this.list_[i] = this.list_[i] && this.list_[i].toUpperCase();
       }
     }
-    if (invalid) {
-      goog.log.fine(this.log, 'Invalid tag set for ' + node.getLabel() + ': \n' + JSON.stringify(tags));
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getGroupIds(node) {
+    /**
+     * @type {Array.<string>}
+     */
+    var ids = [];
+    var tags = null;
+
+    try {
+      tags = /** @type {os.data.ISearchable} */ (node).getTags();
+
+      if (!tags) {
+        // try the parent
+        tags = /** @type {os.data.ISearchable} */ (node.getParent()).getTags();
+      }
+    } catch (e) {
     }
-  }
 
-  if (ids.length === 0) {
-    ids.push('zNot Specified');
-  }
+    if (tags && this.list_) {
+      var invalid = false;
+      for (var i = 0, n = tags.length; i < n; i++) {
+        if (tags[i]) {
+          var t = tags[i].toUpperCase();
+          if (this.list_.indexOf(t) > -1) {
+            googArray.insert(ids, 'a' + t);
+          }
+        } else {
+          invalid = true;
+        }
+      }
+      if (invalid) {
+        log.fine(this.log, 'Invalid tag set for ' + node.getLabel() + ': \n' + JSON.stringify(tags));
+      }
+    }
 
-  return ids;
-};
+    if (ids.length === 0) {
+      ids.push('zNot Specified');
+    }
+
+    return ids;
+  }
+}
+
+exports = TagListGroupBy;

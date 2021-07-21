@@ -1,19 +1,24 @@
-goog.provide('os.ui.state.stateTitleDirective');
-goog.require('os.ui.Module');
+goog.module('os.ui.state.stateTitleDirective');
+goog.module.declareLegacyNamespace();
 
+const {getStateManager} = goog.require('os.state.instance');
+const Module = goog.require('os.ui.Module');
 
 /**
  * The statetitle directive, for validating state titles.
  *
  * @return {angular.Directive}
  */
-os.ui.state.stateTitleDirective = function() {
-  return {
-    require: 'ngModel',
-    link: os.ui.state.stateTitleLinkFn
-  };
-};
+const directive = () => ({
+  require: 'ngModel',
+  link: linkFn
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'statetitle';
 
 /**
  * Link function for the statetitle directive.
@@ -23,7 +28,7 @@ os.ui.state.stateTitleDirective = function() {
  * @param {Object} attrs Directive attributes
  * @param {!angular.NgModelController} ctrl The model controller
  */
-os.ui.state.stateTitleLinkFn = function(scope, element, attrs, ctrl) {
+const linkFn = function(scope, element, attrs, ctrl) {
   var validate = function(val) {
     // if a value is not set, the field will be marked as required
     if (!ctrl.$pristine || val) {
@@ -31,7 +36,7 @@ os.ui.state.stateTitleLinkFn = function(scope, element, attrs, ctrl) {
       // being exported to something other than the application so we don't need to check the title.
       var valid = true;
       if (scope['oldTitle'] !== val && scope['stateForm']['persister'] == null) {
-        valid = !os.stateManager.hasState(val);
+        valid = !getStateManager().hasState(val);
       }
 
       ctrl.$setValidity('title', valid);
@@ -55,4 +60,9 @@ os.ui.state.stateTitleLinkFn = function(scope, element, attrs, ctrl) {
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('statetitle', [os.ui.state.stateTitleDirective]);
+Module.directive(directiveTag, [directive]);
+
+exports = {
+  directive,
+  directiveTag
+};

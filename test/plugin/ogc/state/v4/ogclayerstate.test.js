@@ -1,17 +1,31 @@
+goog.require('goog.Uri.QueryData');
+goog.require('os');
 goog.require('os.layer.Vector');
 goog.require('os.ogc.wfs.FeatureType');
 goog.require('os.state.StateManager');
+goog.require('os.state.Versions');
 goog.require('os.state.XMLStateOptions');
+goog.require('os.state.instance');
 goog.require('os.state.v4.LayerState');
 goog.require('os.test.xsd');
 goog.require('os.xml');
 goog.require('plugin.file.kml.KMLField');
 goog.require('plugin.ogc.OGCLayerDescriptor');
 goog.require('plugin.ogc.wfs.WFSLayerConfig');
-
-
+goog.require('plugin.ogc.wms.WMSLayerConfig');
 
 describe('OGC.v4.ArcLayerState', function() {
+  const QueryData = goog.module.get('goog.Uri.QueryData');
+  const os = goog.module.get('os');
+  const FeatureType = goog.module.get('os.ogc.wfs.FeatureType');
+  const StateManager = goog.module.get('os.state.StateManager');
+  const StateVersions = goog.module.get('os.state.Versions');
+  const {setStateManager} = goog.module.get('os.state.instance');
+  const LayerState = goog.module.get('os.state.v4.LayerState');
+  const xml = goog.module.get('os.xml');
+  const OGCLayerDescriptor = goog.module.get('plugin.ogc.OGCLayerDescriptor');
+  const WMSLayerConfig = goog.module.get('plugin.ogc.wms.WMSLayerConfig');
+
   var stateManager = null;
 
   var expectPropertiesInAToBeSameInB = function(a, b, exclusions) {
@@ -41,13 +55,13 @@ describe('OGC.v4.ArcLayerState', function() {
   };
 
   beforeEach(function() {
-    os.stateManager = os.state.StateManager.getInstance();
-    stateManager = os.state.StateManager.getInstance();
-    stateManager.setVersion('v4');
+    stateManager = StateManager.getInstance();
+    setStateManager(stateManager);
+    stateManager.setVersion(StateVersions.V4);
   });
 
   it('should exist', function() {
-    expect(os.state.v4.LayerState).not.toBe(undefined);
+    expect(LayerState).not.toBe(undefined);
   });
 
   it('OGC state validates against the state.xsd', function() {
@@ -172,8 +186,8 @@ describe('OGC.v4.ArcLayerState', function() {
     var resultSchemas = null;
 
     // These options are objects at runtime, converting them back.
-    defaultOptions.params = goog.Uri.QueryData.createFromMap(defaultOptions.params.keyMap_.map_);
-    defaultOptions.featureType = new os.ogc.wfs.FeatureType(defaultOptions.featureType,
+    defaultOptions.params = QueryData.createFromMap(defaultOptions.params.keyMap_.map_);
+    defaultOptions.featureType = new FeatureType(defaultOptions.featureType,
         defaultOptions.featureType.columns_, defaultOptions.featureType.isDynamic_);
 
     // Using jasman's async test, as we need to load the xsd files
@@ -197,7 +211,7 @@ describe('OGC.v4.ArcLayerState', function() {
       // creating an empty one in the hope that any new
       // layer options that may get added will get incorporated
       // and validated.
-      var descriptor = new plugin.ogc.OGCLayerDescriptor();
+      var descriptor = new OGCLayerDescriptor();
       descriptor.setWmsEnabled(true);
       descriptor.setWfsEnabled(true);
 
@@ -207,7 +221,7 @@ describe('OGC.v4.ArcLayerState', function() {
         title: 'test'
       };
 
-      var lc = new plugin.ogc.wms.WMSLayerConfig();
+      var lc = new WMSLayerConfig();
       var layer = lc.createLayer(createLayerOptions);
 
       var descriptorOptions = descriptor.getLayerOptions();
@@ -221,7 +235,7 @@ describe('OGC.v4.ArcLayerState', function() {
       // default option is added, good to have that present in case
       // it causes an issue.
       layer.setLayerOptions(options);
-      var layerState = new os.state.v4.LayerState();
+      var layerState = new LayerState();
       var xmlRootDocument = stateManager.createStateObject(function() {}, 'test state', 'desc', defaultOptions.tags);
       var stateOptions = stateManager.createStateOptions(function() {}, 'test state', 'desc', defaultOptions.tags);
       stateOptions.doc = xmlRootDocument;
@@ -229,7 +243,7 @@ describe('OGC.v4.ArcLayerState', function() {
       xmlRootDocument.firstElementChild.appendChild(rootObj);
       var result = layerState.layerToXML(layer, stateOptions);
       rootObj.appendChild(result);
-      var seralizedDoc = os.xml.serialize(stateOptions.doc);
+      var seralizedDoc = xml.serialize(stateOptions.doc);
       var xmlLintResult = xmllint.validateXML({
         xml: seralizedDoc,
         schema: resultSchemas
@@ -240,7 +254,7 @@ describe('OGC.v4.ArcLayerState', function() {
       var mapLayersNode = xmlRootDocument.firstElementChild.querySelector('dataLayers');
       var restoredOptions = layerState.xmlToOptions(mapLayersNode.firstElementChild);
       expect(restoredOptions).toBeDefined();
-      // method does a basic value comparision with expect(a?).toBe(b?) for most of the
+      // method does a basic value comparision with expect(a?).toBe(b?) for mos1t of the
       // values defined in the orginal default optons.
       expectPropertiesInAToBeSameInB(defaultOptions, restoredOptions,
           ['id', 'color', 'baseColor', 'params', 'map_', 'featureType']);

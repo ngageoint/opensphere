@@ -1,134 +1,135 @@
-goog.provide('os.ui.column.mapping.ColumnModelNode');
-goog.require('os.ui.slick.SlickTreeNode');
+goog.module('os.ui.column.mapping.ColumnModelNode');
+goog.module.declareLegacyNamespace();
 
+const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+
+const IColumnMapping = goog.requireType('os.column.IColumnMapping');
+const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const IOGCDescriptor = goog.requireType('os.ui.ogc.IOGCDescriptor');
 
 
 /**
  * Tree node representing a column model.
- *
- * @extends {os.ui.slick.SlickTreeNode}
- * @constructor
+ * @unrestricted
  */
-os.ui.column.mapping.ColumnModelNode = function() {
-  os.ui.column.mapping.ColumnModelNode.base(this, 'constructor');
+class ColumnModelNode extends SlickTreeNode {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {?osx.column.ColumnModel}
+     * @private
+     */
+    this['model'] = null;
+
+    /**
+     * @type {?IColumnMapping}
+     * @private
+     */
+    this['mapping'] = null;
+
+    /**
+     * @type {function(): !Array<!IDataDescriptor>}
+     * @private
+     */
+    this['getFn'] = null;
+
+    /**
+     * @type {?IOGCDescriptor}
+     * @private
+     */
+    this['initialLayer'] = null;
+
+    this.setCheckboxVisible(false);
+  }
 
   /**
-   * @type {?osx.column.ColumnModel}
-   * @private
+   * Gets the column mapping associated with this node.
+   *
+   * @return {?osx.column.ColumnModel}
    */
-  this['model'] = null;
+  getColumnModel() {
+    return this['model'];
+  }
 
   /**
-   * @type {?os.column.IColumnMapping}
-   * @private
+   * Sets the column mapping on this node. This also creates
+   *
+   * @param {?osx.column.ColumnModel} value
    */
-  this['mapping'] = null;
+  setColumnModel(value) {
+    this['model'] = value;
+  }
 
   /**
-   * @type {function(): !Array.<!os.data.IDataDescriptor>}
-   * @private
+   * Get the mapping
+   *
+   * @return {?IColumnMapping}
    */
-  this['getFn'] = null;
+  getMapping() {
+    return this['mapping'];
+  }
 
   /**
-   * @type {?os.ui.ogc.IOGCDescriptor}
-   * @private
+   * Set the mapping
+   *
+   * @param {?IColumnMapping} value
    */
-  this['initialLayer'] = null;
+  setMapping(value) {
+    this['mapping'] = value;
+  }
 
-  this.setCheckboxVisible(false);
-};
-goog.inherits(os.ui.column.mapping.ColumnModelNode, os.ui.slick.SlickTreeNode);
+  /**
+   * Get the layer getter function
+   *
+   * @return {function(): !Array<!IDataDescriptor>}
+   */
+  getGetFn() {
+    return this['getFn'];
+  }
 
+  /**
+   * Set the layer getter function
+   *
+   * @param {function(): !Array<!IDataDescriptor>} value
+   */
+  setGetFn(value) {
+    this['getFn'] = value;
+  }
 
-/**
- * Gets the column mapping associated with this node.
- *
- * @return {?osx.column.ColumnModel}
- */
-os.ui.column.mapping.ColumnModelNode.prototype.getColumnModel = function() {
-  return this['model'];
-};
+  /**
+   * Get the initial layer
+   *
+   * @return {?IOGCDescriptor}
+   */
+  getInitialLayer() {
+    return this['initialLayer'];
+  }
 
+  /**
+   * Set the initial layer
+   *
+   * @param {?IOGCDescriptor} value
+   */
+  setInitialLayer(value) {
+    this['initialLayer'] = value;
+  }
 
-/**
- * Sets the column mapping on this node. This also creates
- *
- * @param {?osx.column.ColumnModel} value
- */
-os.ui.column.mapping.ColumnModelNode.prototype.setColumnModel = function(value) {
-  this['model'] = value;
-};
+  /**
+   * @inheritDoc
+   */
+  updateFrom(other) {
+    super.updateFrom(other);
 
+    const node = /** @type {ColumnModelNode} */ (other);
+    this.setColumnModel(node.getColumnModel());
+    this.setMapping(node.getMapping());
+    this.setGetFn(node.getGetFn());
+    this.setInitialLayer(node.getInitialLayer());
+  }
+}
 
-/**
- * Get the mapping
- *
- * @return {?os.column.IColumnMapping}
- */
-os.ui.column.mapping.ColumnModelNode.prototype.getMapping = function() {
-  return this['mapping'];
-};
-
-
-/**
- * Set the mapping
- *
- * @param {?os.column.IColumnMapping} value
- */
-os.ui.column.mapping.ColumnModelNode.prototype.setMapping = function(value) {
-  this['mapping'] = value;
-};
-
-
-/**
- * Get the layer getter function
- *
- * @return {function(): !Array.<!os.data.IDataDescriptor>}
- */
-os.ui.column.mapping.ColumnModelNode.prototype.getGetFn = function() {
-  return this['getFn'];
-};
-
-
-/**
- * Set the layer getter function
- *
- * @param {function(): !Array.<!os.data.IDataDescriptor>} value
- */
-os.ui.column.mapping.ColumnModelNode.prototype.setGetFn = function(value) {
-  this['getFn'] = value;
-};
-
-
-/**
- * Get the initial layer
- *
- * @return {?os.ui.ogc.IOGCDescriptor}
- */
-os.ui.column.mapping.ColumnModelNode.prototype.getInitialLayer = function() {
-  return this['initialLayer'];
-};
-
-
-/**
- * Set the initial layer
- *
- * @param {?os.ui.ogc.IOGCDescriptor} value
- */
-os.ui.column.mapping.ColumnModelNode.prototype.setInitialLayer = function(value) {
-  this['initialLayer'] = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.column.mapping.ColumnModelNode.prototype.updateFrom = function(other) {
-  os.ui.column.mapping.ColumnModelNode.superClass_.updateFrom.call(this, other);
-  var node = /** @type {os.ui.column.mapping.ColumnModelNode} */ (other);
-  this.setColumnModel(node.getColumnModel());
-  this.setMapping(node.getMapping());
-  this.setGetFn(node.getGetFn());
-  this.setInitialLayer(node.getInitialLayer());
-};
+exports = ColumnModelNode;

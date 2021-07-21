@@ -4,7 +4,7 @@ goog.provide('os.ui.datePanelDirective');
 goog.require('goog.math.RangeSet');
 goog.require('os');
 goog.require('os.ui.Module');
-goog.require('os.ui.datetime.dateControlDirective');
+goog.require('os.ui.datetime.DateControlUI');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.popover.popoverDirective');
 
@@ -117,7 +117,7 @@ os.ui.DatePanelCtrl.prototype.expand = function() {
  * @export
  */
 os.ui.DatePanelCtrl.prototype.getOffset = function() {
-  return 'UTC' + (os.time.timeOffsetLabel == 'Z' ? '+0000' : os.time.timeOffsetLabel);
+  return 'UTC' + (os.time.getTimeOffsetLabel() == 'Z' ? '+0000' : os.time.getTimeOffsetLabel());
 };
 
 

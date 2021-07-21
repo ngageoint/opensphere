@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const Module = goog.require('os.ui.Module');
 const FileImportWizard = goog.require('os.ui.im.FileImportWizard');
-const wizardDirective = goog.require('os.ui.wiz.wizardDirective');
+const {directive: wizardDirective} = goog.require('os.ui.wiz.WizardUI');
 const GeoJSONDescriptor = goog.require('plugin.file.geojson.GeoJSONDescriptor');
 const GeoJSONProvider = goog.require('plugin.file.geojson.GeoJSONProvider');
 

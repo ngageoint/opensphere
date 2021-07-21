@@ -1,11 +1,11 @@
-goog.provide('os.xsd.DataType');
-
+goog.module('os.xsd.DataType');
+goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}
  * @const
  */
-os.xsd.DataType = {
+exports = {
   DECIMAL: 'decimal',
   FLOAT: 'float',
   INTEGER: 'integer',

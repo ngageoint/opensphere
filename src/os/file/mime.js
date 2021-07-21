@@ -1,77 +1,73 @@
-goog.provide('os.file.mime');
+goog.module('os.file.mime');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Promise');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
+const Promise = goog.require('goog.Promise');
+const log = goog.require('goog.log');
+
+const Logger = goog.requireType('goog.log.Logger');
+const OSFile = goog.requireType('os.file.File');
+
 
 /**
  * @typedef {{
  *  type: !string,
- *  detect: !function(ArrayBuffer, os.file.File, *=):!goog.Promise<*|undefined>,
+ *  detect: !function(ArrayBuffer, OSFile, *=):!Promise<*|undefined>,
  *  priority: number,
- *  children: (os.file.mime.Node|undefined)
+ *  children: (Array<Node>|undefined)
  * }}
  */
-os.file.mime.Node;
-
+let Node;
 
 /**
  * The logger.
- * @type {goog.log.Logger}
- * @const
- * @private
+ * @type {Logger}
  */
-os.file.mime.LOGGER_ = goog.log.getLogger('os.file.mime');
-
+const logger = log.getLogger('os.file.mime');
 
 /**
- * @const
  * @type {string}
  */
-os.file.mime.BASE_TYPE = 'application/octet-stream';
-
+const BASE_TYPE = 'application/octet-stream';
 
 /**
- * @type {os.file.mime.Node}
- * @private
+ * @type {Node}
  */
-os.file.mime.root_ = {
-  type: os.file.mime.BASE_TYPE,
+const rootNode = {
+  type: BASE_TYPE,
   detect: function() {
-    return goog.Promise.resolve(true);
+    return Promise.resolve(true);
   },
   priority: 0
 };
 
-
 /**
  * @param {!string} mimeType The mime type to register
- * @param {function(ArrayBuffer, os.file.File, *=):*} detectFunc The detection function
+ * @param {function(ArrayBuffer, OSFile, *=):*} detectFunc The detection function
  * @param {number=} opt_priority The priority (run in ascending order). Defaults to zero.
  * @param {string=} opt_parentType The parent mime type (e.g. "text/xml" has a parent of "text/plain")
  * @return {boolean} True if successful, false otherwise
  */
-os.file.mime.register = function(mimeType, detectFunc, opt_priority, opt_parentType) {
+const register = function(mimeType, detectFunc, opt_priority, opt_parentType) {
   var msg;
   if (!mimeType) {
     msg = 'Cannot register an undefined type!';
-    goog.log.error(os.file.mime.LOGGER_, msg);
+    log.error(logger, msg);
     console.error(msg);
     return false;
   }
 
   if (!detectFunc) {
     msg = 'Cannot register an undefined detect function!';
-    goog.log.error(os.file.mime.LOGGER_, msg);
+    log.error(logger, msg);
     console.error(msg);
     return false;
   }
 
-  var parent = opt_parentType ? os.file.mime.find_(opt_parentType) : os.file.mime.root_;
+  var parent = opt_parentType ? findNode(opt_parentType) : rootNode;
 
   if (!parent) {
     msg = 'The parent type "' + opt_parentType + '" could not be found.';
-    goog.log.error(os.file.mime.LOGGER_, msg);
+    log.error(logger, msg);
     console.error(msg);
     return false;
   }
@@ -85,50 +81,47 @@ os.file.mime.register = function(mimeType, detectFunc, opt_priority, opt_parentT
   for (var i = 0, ii = parent.children.length; i < ii; i++) {
     if (parent.children[i].type === mimeType) {
       index = i;
-      goog.log.warning(os.file.mime.LOGGER_, 'The mime type "' + mimeType +
+      log.warning(logger, 'The mime type "' + mimeType +
           '" was previously registered and will be replaced');
       break;
     }
   }
 
-  parent.children[index] = /** @type {os.file.mime.Node} */ ({
+  parent.children[index] = /** @type {Node} */ ({
     type: mimeType,
     detect: detectFunc,
     priority: opt_priority || 0
   });
 
-  parent.children.sort(os.file.mime.sort_);
+  parent.children.sort(sortNodes);
   return true;
 };
-
 
 /**
  * Sort ascending
  *
- * @param {os.file.mime.Node} a
- * @param {os.file.mime.Node} b
+ * @param {Node} a
+ * @param {Node} b
  * @return {number} per typical compare functions
- * @private
  */
-os.file.mime.sort_ = function(a, b) {
+const sortNodes = function(a, b) {
   return a.priority - b.priority;
 };
 
-
 /**
  * @param {!string} type
- * @param {os.file.mime.Node=} opt_node
- * @return {os.file.mime.Node|undefined}
+ * @param {Node=} opt_node
+ * @return {Node|undefined}
  */
-os.file.mime.find_ = function(type, opt_node) {
-  opt_node = opt_node || os.file.mime.root_;
+const findNode = function(type, opt_node) {
+  opt_node = opt_node || rootNode;
   if (opt_node.type === type) {
     return opt_node;
   }
 
   if (opt_node.children) {
     for (var i = 0, ii = opt_node.children.length; i < ii; i++) {
-      var val = os.file.mime.find_(type, opt_node.children[i]);
+      var val = findNode(type, opt_node.children[i]);
       if (val) {
         return val;
       }
@@ -136,18 +129,17 @@ os.file.mime.find_ = function(type, opt_node) {
   }
 };
 
-
 /**
  * @param {!ArrayBuffer} buffer The peek bytes into the file
- * @param {!os.file.File} file The file wrapper
- * @param {os.file.mime.Node=} opt_node The current mime node
+ * @param {!OSFile} file The file wrapper
+ * @param {Node=} opt_node The current mime node
  * @param {*=} opt_context The current context from the parent node
- * @return {!goog.Promise<string|undefined>} A promise resolving to the mime type detected from the buffer/file
+ * @return {!Promise<string|undefined>} A promise resolving to the mime type detected from the buffer/file
  */
-os.file.mime.detect = function(buffer, file, opt_node, opt_context) {
-  opt_node = opt_node || os.file.mime.root_;
+const detect = function(buffer, file, opt_node, opt_context) {
+  opt_node = opt_node || rootNode;
   var promise = opt_node.detect(buffer, file, opt_context);
-  if (!(promise instanceof goog.Promise)) {
+  if (!(promise instanceof Promise)) {
     console.warn(opt_node.type, 'is not using a promise');
   }
   return promise.then(function(val) {
@@ -157,8 +149,8 @@ os.file.mime.detect = function(buffer, file, opt_node, opt_context) {
       if (opt_node.children) {
         return opt_node.children.reduce(
             /**
-             * @param {goog.Promise<string|undefined>|string|undefined} c
-             * @param {os.file.mime.Node} n
+             * @param {Promise<string|undefined>|string|undefined} c
+             * @param {Node} n
              * @return {goog.Promise<string|undefined>|string|undefined}
              */
             function(c, n) {
@@ -171,9 +163,9 @@ os.file.mime.detect = function(buffer, file, opt_node, opt_context) {
               // Except that we actually want the promise chain to stop executing once
               // the first one returns a value.
               return c.then(function(val) {
-                return val ? val : os.file.mime.detect(buffer, file, n, opt_context);
+                return val ? val : detect(buffer, file, n, opt_context);
               });
-            }, goog.Promise.resolve()).then(function(val) {
+            }, Promise.resolve()).then(function(val) {
           return val ? val : opt_node.type;
         });
       }
@@ -183,15 +175,14 @@ os.file.mime.detect = function(buffer, file, opt_node, opt_context) {
   });
 };
 
-
 /**
  * @param {string} type The type whose chain to locate
- * @param {os.file.mime.Node=} opt_node
+ * @param {Node=} opt_node
  * @param {Array<!string>=} opt_chain
  * @return {Array<!string>|undefined} The chain
  */
-os.file.mime.getTypeChain = function(type, opt_node, opt_chain) {
-  opt_node = opt_node || os.file.mime.root_;
+const getTypeChain = function(type, opt_node, opt_chain) {
+  opt_node = opt_node || rootNode;
   opt_chain = opt_chain || [];
 
   opt_chain.push(opt_node.type);
@@ -200,7 +191,7 @@ os.file.mime.getTypeChain = function(type, opt_node, opt_chain) {
     return opt_chain;
   } else if (opt_node.children) {
     for (var i = 0, n = opt_node.children.length; i < n; i++) {
-      var retVal = os.file.mime.getTypeChain(type, opt_node.children[i], opt_chain);
+      var retVal = getTypeChain(type, opt_node.children[i], opt_chain);
       if (retVal) {
         return retVal;
       }
@@ -208,4 +199,13 @@ os.file.mime.getTypeChain = function(type, opt_node, opt_chain) {
   }
 
   opt_chain.pop();
+};
+
+exports = {
+  BASE_TYPE,
+  register,
+  findNode,
+  detect,
+  getTypeChain,
+  Node
 };

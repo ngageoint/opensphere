@@ -1,35 +1,31 @@
-goog.provide('os.ui.config.SettingDefaultUICtrl');
-goog.provide('os.ui.config.settingDefaultTreeUIDirective');
-goog.require('os.ui.Module');
+goog.module('os.ui.config.SettingDefaultUI');
+goog.module.declareLegacyNamespace();
 
+const Module = goog.require('os.ui.Module');
 
 /**
  * The selected/highlighted node UI directive for filter groups
  *
  * @return {angular.Directive}
  */
-os.ui.config.settingDefaultTreeUIDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    template: '<div></div>',
-    controller: os.ui.config.SettingDefaultUICtrl,
-    controllerAs: 'settingUi'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  template: '<div></div>'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'defaultsettingui';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('defaultsettingui', [os.ui.config.settingDefaultTreeUIDirective]);
+Module.directive(directiveTag, [directive]);
 
-
-
-/**
- * Controller for selected/highlighted node UI
- *
- * @constructor
- * @ngInject
- */
-os.ui.config.SettingDefaultUICtrl = function() {};
+exports = {
+  directive,
+  directiveTag
+};

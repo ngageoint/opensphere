@@ -1,75 +1,86 @@
-goog.provide('os.filter.im.OSFilterImportCtrl');
-goog.provide('os.filter.im.osFilterImportDirective');
+goog.module('os.filter.im.OSFilterImport');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.filter.im.OSFilterImporter');
-goog.require('os.implements');
-goog.require('os.ui.Module');
-goog.require('os.ui.filter.im.FilterImportCtrl');
-
+const IFilterable = goog.require('os.filter.IFilterable');
+const OSFilterImporter = goog.require('os.filter.im.OSFilterImporter');
+const osImplements = goog.require('os.implements');
+const {getMapContainer} = goog.require('os.map.instance');
+const Module = goog.require('os.ui.Module');
+const FilterImportCtrl = goog.require('os.ui.filter.im.FilterImportCtrl');
+const filterImportDirective = goog.require('os.ui.filter.im.filterImportDirective');
 
 /**
  * The osfilterimport directive
  *
  * @return {angular.Directive}
  */
-os.filter.im.osFilterImportDirective = function() {
-  var dir = os.ui.filter.im.filterImportDirective();
-  dir.controller = os.filter.im.OSFilterImportCtrl;
+const directive = () => {
+  var dir = filterImportDirective();
+  dir.controller = Controller;
   return dir;
 };
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'osfilterimport';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('osfilterimport', [os.filter.im.osFilterImportDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller function for the filter import directive
- *
- * @param {!angular.Scope} $scope The Angular scope.
- * @param {!angular.JQLite} $element The root DOM element.
- * @param {!angular.$sce} $sce Angular SCE service.
- * @extends {os.ui.filter.im.FilterImportCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.filter.im.OSFilterImportCtrl = function($scope, $element, $sce) {
-  os.filter.im.OSFilterImportCtrl.base(this, 'constructor', $scope, $element, $sce);
-};
-goog.inherits(os.filter.im.OSFilterImportCtrl, os.ui.filter.im.FilterImportCtrl);
-
-
-/**
- * @inheritDoc
- */
-os.filter.im.OSFilterImportCtrl.prototype.getImporter = function() {
-  var layerId = /** @type {string|undefined} */ (this.scope['layerId']);
-  return new os.filter.im.OSFilterImporter(this.getParser(), layerId);
-};
-
-
-/**
- * Get the base filterable descriptors and add in the filterable layers.
- * @inheritDoc
- */
-os.filter.im.OSFilterImportCtrl.prototype.getFilterables = function() {
-  var filterables = os.filter.im.OSFilterImportCtrl.base(this, 'getFilterables');
-  var layers = os.map.mapContainer.getLayers();
-
-  if (layers) {
-    layers.forEach(function(layer) {
-      if (os.implements(layer, os.filter.IFilterable.ID)) {
-        layer = /** @type {os.filter.IFilterable} */ (layer);
-
-        if (layer.isFilterable()) {
-          filterables.unshift(layer);
-        }
-      }
-    });
+class Controller extends FilterImportCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @param {!angular.JQLite} $element The root DOM element.
+   * @param {!angular.$sce} $sce Angular SCE service.
+   * @ngInject
+   */
+  constructor($scope, $element, $sce) {
+    super($scope, $element, $sce);
   }
 
-  return filterables;
+  /**
+   * @inheritDoc
+   */
+  getImporter() {
+    var layerId = /** @type {string|undefined} */ (this.scope['layerId']);
+    return new OSFilterImporter(this.getParser(), layerId);
+  }
+
+  /**
+   * Get the base filterable descriptors and add in the filterable layers.
+   * @inheritDoc
+   */
+  getFilterables() {
+    var filterables = super.getFilterables();
+    var layers = getMapContainer().getLayers();
+
+    if (layers) {
+      layers.forEach(function(layer) {
+        if (osImplements(layer, IFilterable.ID)) {
+          layer = /** @type {IFilterable} */ (layer);
+
+          if (layer.isFilterable()) {
+            filterables.unshift(layer);
+          }
+        }
+      });
+    }
+
+    return filterables;
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

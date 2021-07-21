@@ -1,5 +1,6 @@
 goog.require('os.MapContainer');
 goog.require('os.command.LayerAdd');
+goog.require('os.command.State');
 goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.layer.config.MockTileLayerConfig');
 goog.require('os.mock');
@@ -7,50 +8,57 @@ goog.require('os.style.StyleManager');
 
 
 describe('os.command.LayerAdd', function() {
+  const MapContainer = goog.module.get('os.MapContainer');
+  const LayerAdd = goog.module.get('os.command.LayerAdd');
+  const State = goog.module.get('os.command.State');
+  const LayerConfigManager = goog.module.get('os.layer.config.LayerConfigManager');
+
+  const MockTileLayerConfig = goog.module.get('os.layer.config.MockTileLayerConfig');
+
   var testLayerId = 'test-layer';
   var testOptions = {
     'id': testLayerId,
-    'type': os.layer.config.MockTileLayerConfig.TYPE
+    'type': MockTileLayerConfig.TYPE
   };
 
   beforeEach(function() {
-    os.layerConfigManager = os.layer.config.LayerConfigManager.getInstance();
-    os.layerConfigManager.registerLayerConfig(os.layer.config.MockTileLayerConfig.TYPE,
-        os.layer.config.MockTileLayerConfig);
+    os.layerConfigManager = LayerConfigManager.getInstance();
+    LayerConfigManager.getInstance().registerLayerConfig(MockTileLayerConfig.TYPE,
+        MockTileLayerConfig);
   });
 
   it('should fail when layer options arent provided', function() {
-    var command = new os.command.LayerAdd(null);
+    var command = new LayerAdd(null);
     expect(command.execute()).toBe(false);
-    expect(command.state).toBe(os.command.State.ERROR);
+    expect(command.state).toBe(State.ERROR);
   });
 
   it('should fail when id isnt provided', function() {
-    var command = new os.command.LayerAdd({'type': os.layer.config.MockTileLayerConfig.TYPE});
+    var command = new LayerAdd({'type': MockTileLayerConfig.TYPE});
     expect(command.execute()).toBe(false);
-    expect(command.state).toBe(os.command.State.ERROR);
+    expect(command.state).toBe(State.ERROR);
   });
 
   it('should fail when type isnt provided', function() {
-    var command = new os.command.LayerAdd({'id': 'nope'});
+    var command = new LayerAdd({'id': 'nope'});
     expect(command.execute()).toBe(false);
-    expect(command.state).toBe(os.command.State.ERROR);
+    expect(command.state).toBe(State.ERROR);
   });
 
   it('should fail when type doesnt exist', function() {
-    var command = new os.command.LayerAdd({'id': 'nope', 'type': 'superNope'});
+    var command = new LayerAdd({'id': 'nope', 'type': 'superNope'});
     expect(command.execute()).toBe(false);
-    expect(command.state).toBe(os.command.State.ERROR);
+    expect(command.state).toBe(State.ERROR);
   });
 
   it('should add/remove a layer to the map', function() {
-    var command = new os.command.LayerAdd(testOptions);
+    var command = new LayerAdd(testOptions);
     expect(command.execute()).toBe(true);
-    expect(command.state).toBe(os.command.State.SUCCESS);
-    expect(os.MapContainer.getInstance().getLayer(testLayerId)).not.toBe(null);
+    expect(command.state).toBe(State.SUCCESS);
+    expect(MapContainer.getInstance().getLayer(testLayerId)).not.toBe(null);
 
     expect(command.revert()).toBe(true);
-    expect(command.state).toBe(os.command.State.READY);
-    expect(os.MapContainer.getInstance().getLayer(testLayerId)).toBe(null);
+    expect(command.state).toBe(State.READY);
+    expect(MapContainer.getInstance().getLayer(testLayerId)).toBe(null);
   });
 });

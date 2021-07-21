@@ -3,7 +3,7 @@ goog.module('plugin.cesium.sync.HeightReference');
 const RecordField = goog.require('os.data.RecordField');
 const implementz = goog.require('os.implements');
 const ISource = goog.require('os.source.ISource');
-const {AltitudeMode} = goog.require('os.webgl');
+const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');

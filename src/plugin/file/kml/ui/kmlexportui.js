@@ -97,6 +97,17 @@ class Controller {
     /**
      * @type {boolean}
      */
+    this['exportRangeRings'] = this.exporter_.getExportRangeRings();
+
+    /**
+     * @type {string}
+     */
+    this['rangeRingHelp'] = 'Range Rings are a Place style specific to this application. Enabling this option ' +
+        'will export them as polygon geometries, but they will lose data (such as labels) and no longer be editable.';
+
+    /**
+     * @type {boolean}
+     */
     this['useCenterPoint'] = this.exporter_.getUseCenterPoint();
 
     /**
@@ -116,6 +127,7 @@ class Controller {
     $scope.$watch('kmlexport.useItemIcon', this.updateExporter_.bind(this));
     $scope.$watch('kmlexport.compress', this.updateExporter_.bind(this));
     $scope.$watch('kmlexport.exportEllipses', this.updateExporter_.bind(this));
+    $scope.$watch('kmlexport.exportRangeRings', this.updateExporter_.bind(this));
     $scope.$watch('kmlexport.useCenterPoint', this.updateExporter_.bind(this));
     $scope.$on('$destroy', this.destroy_.bind(this));
 
@@ -143,6 +155,7 @@ class Controller {
       this.exporter_.setUseItemIcon(this['useItemIcon']);
       this.exporter_.setCompress(this['compress']);
       this.exporter_.setExportEllipses(this['exportEllipses']);
+      this.exporter_.setExportRangeRings(this['exportRangeRings']);
       this.exporter_.setUseCenterPoint(this['useCenterPoint']);
       if (this['icon']) {
         var kmlIcon = {// osx.icon.Icon to kml.Icon

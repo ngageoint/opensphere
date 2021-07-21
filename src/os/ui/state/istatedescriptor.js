@@ -1,57 +1,53 @@
-goog.provide('os.ui.state.IStateDescriptor');
+goog.module('os.ui.state.IStateDescriptor');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.IDataDescriptor');
-goog.require('os.data.IUrlDescriptor');
-
+const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const IUrlDescriptor = goog.requireType('os.data.IUrlDescriptor');
 
 
 /**
  * Interface for descriptors that act on states
  *
- * @extends {os.data.IDataDescriptor}
- * @extends {os.data.IUrlDescriptor}
+ * @extends {IDataDescriptor}
+ * @extends {IUrlDescriptor}
  * @interface
  */
-os.ui.state.IStateDescriptor = function() {};
+class IStateDescriptor {
+  /**
+   * Gets the state's load items
+   * @return {?Array.<string>}
+   */
+  getLoadItems() {}
 
+  /**
+   * Sets the state's load items
+   * @param {?Array.<string>} items The ID to set
+   */
+  setLoadItems(items) {}
+
+  /**
+   * Get the state file type
+   * @return {!string}
+   */
+  getStateType() {}
+
+  /**
+   * @return {string} The order:group string that specifies the order in the menu and the group it belongs to.
+   *     example: '1:Saved States'
+   */
+  getMenuGroup() {}
+
+  /**
+   * @return {string} The label of the default persister for this state descriptor. Used when saving to default
+   *     back to saving a state with the same persister as it used.
+   */
+  getDefaultPersister() {}
+}
 
 /**
  * Interface identifier
  * @const {string}
  */
-os.ui.state.IStateDescriptor.ID = 'os.ui.data.IStateDescriptor';
+IStateDescriptor.ID = 'os.ui.data.IStateDescriptor';
 
-
-/**
- * Gets the state's load items
- * @return {?Array.<string>}
- */
-os.ui.state.IStateDescriptor.prototype.getLoadItems;
-
-
-/**
- * Sets the state's load items
- * @param {?Array.<string>} items The ID to set
- */
-os.ui.state.IStateDescriptor.prototype.setLoadItems;
-
-
-/**
- * Get the state file type
- * @return {!string}
- */
-os.ui.state.IStateDescriptor.prototype.getStateType;
-
-
-/**
- * @return {string} The order:group string that specifies the order in the menu and the group it belongs to.
- *     example: '1:Saved States'
- */
-os.ui.state.IStateDescriptor.prototype.getMenuGroup;
-
-
-/**
- * @return {string} The label of the default persister for this state descriptor. Used when saving to default
- *     back to saving a state with the same persister as it used.
- */
-os.ui.state.IStateDescriptor.prototype.getDefaultPersister;
+exports = IStateDescriptor;

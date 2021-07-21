@@ -1,213 +1,213 @@
-goog.provide('os.ui.file.ui.AbstractFileImportCtrl');
+goog.module('os.ui.file.ui.AbstractFileImportCtrl');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.log');
-goog.require('os.data.DescriptorEvent');
-goog.require('os.data.DescriptorEventType');
-goog.require('os.file.FileStorage');
-goog.require('os.ui.window');
-
+const log = goog.require('goog.log');
+const dispatcher = goog.require('os.Dispatcher');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const DataManager = goog.require('os.data.DataManager');
+const DescriptorEvent = goog.require('os.data.DescriptorEvent');
+const DescriptorEventType = goog.require('os.data.DescriptorEventType');
+const {getLocalUrl, isLocal} = goog.require('os.file');
+const FileStorage = goog.require('os.file.FileStorage');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const osWindow = goog.require('os.ui.window');
 
 
 /**
  * Abstract controller for a file import UI.
  *
  * @abstract
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
  * @template CONFIG,DESCRIPTOR
+ * @unrestricted
  */
-os.ui.file.ui.AbstractFileImportCtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
+
+    /**
+     * @type {?angular.JQLite}
+     * @protected
+     */
+    this.element = $element;
+
+    /**
+     * @type {CONFIG}
+     * @protected
+     */
+    this.config = $scope['config'];
+
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.originalTitle = $scope['config']['title'];
+
+    /**
+     * The name of the form in the template
+     * @type {string}
+     * @protected
+     */
+    this.formName = 'importForm';
+
+    /**
+     * @type {log.Logger}
+     * @protected
+     */
+    this.log = logger;
+
+    $scope.$watch('config.title', this.onTitleChange.bind(this));
+    $scope.$on('$destroy', this.destroy.bind(this));
+
+    $scope.$emit(WindowEventType.READY);
+  }
+
+  /**
+   * Clean up.
+   *
    * @protected
    */
-  this.scope = $scope;
+  destroy() {
+    this.config = null;
+    this.scope = null;
+    this.element = null;
+  }
 
   /**
-   * @type {?angular.JQLite}
+   * Clean up the parser configuration, removing any references it doesn't need.
+   *
    * @protected
    */
-  this.element = $element;
+  cleanConfig() {
+    if (this.config) {
+      this.config['file'] = null;
+      this.config['descriptor'] = null;
+    }
+  }
 
   /**
-   * @type {CONFIG}
+   * Handles changes to the title field, checking if the title already exists.
+   *
+   * @param {string} newVal The new title value
    * @protected
    */
-  this.config = $scope['config'];
+  onTitleChange(newVal) {
+    if (newVal && newVal != this.originalTitle) {
+      var exists = FileStorage.getInstance().fileExists(getLocalUrl(newVal));
+      this.scope[this.formName]['title'].$setValidity('exists', !exists);
+    } else {
+      this.scope[this.formName]['title'].$setValidity('exists', true);
+    }
+  }
 
   /**
-   * @type {string}
+   * Create a descriptor for the import.
+   *
+   * @abstract
+   * @return {DESCRIPTOR}
    * @protected
    */
-  this.originalTitle = $scope['config']['title'];
+  createDescriptor() {}
 
   /**
-   * The name of the form in the template
-   * @type {string}
-   * @protected
+   * Create import command and close the window
+   *
+   * @export
    */
-  this.formName = 'importForm';
+  accept() {
+    var descriptor = this.createDescriptor();
+    var url = this.config['file'].getUrl();
+    if (url && isLocal(url)) {
+      // local file, so store it before finishing the import
+      this.storeLocal(descriptor);
+    } else {
+      // remote file, so just finish the import
+      this.finishImport(descriptor);
+    }
+
+    osWindow.close(this.element);
+  }
 
   /**
-   * @type {goog.log.Logger}
+   * Cancel file import
+   *
+   * @export
+   */
+  cancel() {
+    this.cleanConfig();
+    osWindow.close(this.element);
+  }
+
+  /**
+   * Store the local file being imported.
+   *
+   * @param {DESCRIPTOR} descriptor
    * @protected
    */
-  this.log = os.ui.file.ui.AbstractFileImportCtrl.LOGGER_;
+  storeLocal(descriptor) {
+    // store with replace enabled in case the file already exists
+    FileStorage.getInstance().storeFile(this.config['file'], true)
+        .addCallbacks(goog.partial(this.finishImport, descriptor), this.onPersistError_, this);
+  }
 
-  $scope.$watch('config.title', this.onTitleChange.bind(this));
-  $scope.$on('$destroy', this.destroy.bind(this));
+  /**
+   * Get the provider for the file.
+   *
+   * @return {os.ui.data.DescriptorProvider}
+   */
+  getProvider() {
+    return null;
+  }
 
-  $scope.$emit(os.ui.WindowEventType.READY);
-};
+  /**
+   * Import complete, so add the descriptor to the data manager and provider.
+   *
+   * @param {DESCRIPTOR} descriptor
+   * @protected
+   */
+  finishImport(descriptor) {
+    // add the descriptor to the data manager first
+    DataManager.getInstance().addDescriptor(descriptor);
 
+    // followed by the provider
+    var provider = this.getProvider();
+    if (provider) {
+      provider.addDescriptor(descriptor);
+    }
+
+    this.cleanConfig();
+
+    if (descriptor.isActive()) {
+      dispatcher.getInstance().dispatchEvent(new DescriptorEvent(
+          DescriptorEventType.USER_TOGGLED, descriptor));
+    }
+  }
+
+  /**
+   * @param {goog.db.Error} error
+   * @private
+   */
+  onPersistError_(error) {
+    var msg = 'Failed storing local file! Unable to finish import.';
+    AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.ERROR);
+    this.cleanConfig();
+  }
+}
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {log.Logger}
  */
-os.ui.file.ui.AbstractFileImportCtrl.LOGGER_ = goog.log.getLogger('os.ui.file.ui.AbstractFileImportCtrl');
+const logger = log.getLogger('os.ui.file.ui.AbstractFileImportCtrl');
 
-
-/**
- * Clean up.
- *
- * @protected
- */
-os.ui.file.ui.AbstractFileImportCtrl.prototype.destroy = function() {
-  this.config = null;
-  this.scope = null;
-  this.element = null;
-};
-
-
-/**
- * Clean up the parser configuration, removing any references it doesn't need.
- *
- * @protected
- */
-os.ui.file.ui.AbstractFileImportCtrl.prototype.cleanConfig = function() {
-  if (this.config) {
-    this.config['file'] = null;
-    this.config['descriptor'] = null;
-  }
-};
-
-
-/**
- * Handles changes to the title field, checking if the title already exists.
- *
- * @param {string} newVal The new title value
- * @protected
- */
-os.ui.file.ui.AbstractFileImportCtrl.prototype.onTitleChange = function(newVal) {
-  if (newVal && newVal != this.originalTitle) {
-    var exists = os.file.FileStorage.getInstance().fileExists(os.file.getLocalUrl(newVal));
-    this.scope[this.formName]['title'].$setValidity('exists', !exists);
-  } else {
-    this.scope[this.formName]['title'].$setValidity('exists', true);
-  }
-};
-
-
-/**
- * Create a descriptor for the import.
- *
- * @abstract
- * @return {DESCRIPTOR}
- * @protected
- */
-os.ui.file.ui.AbstractFileImportCtrl.prototype.createDescriptor = function() {};
-
-
-/**
- * Create import command and close the window
- *
- * @export
- */
-os.ui.file.ui.AbstractFileImportCtrl.prototype.accept = function() {
-  var descriptor = this.createDescriptor();
-  var url = this.config['file'].getUrl();
-  if (url && os.file.isLocal(url)) {
-    // local file, so store it before finishing the import
-    this.storeLocal(descriptor);
-  } else {
-    // remote file, so just finish the import
-    this.finishImport(descriptor);
-  }
-
-  os.ui.window.close(this.element);
-};
-
-
-/**
- * Cancel file import
- *
- * @export
- */
-os.ui.file.ui.AbstractFileImportCtrl.prototype.cancel = function() {
-  this.cleanConfig();
-  os.ui.window.close(this.element);
-};
-
-
-/**
- * Store the local file being imported.
- *
- * @param {DESCRIPTOR} descriptor
- * @protected
- */
-os.ui.file.ui.AbstractFileImportCtrl.prototype.storeLocal = function(descriptor) {
-  // store with replace enabled in case the file already exists
-  os.file.FileStorage.getInstance().storeFile(this.config['file'], true)
-      .addCallbacks(goog.partial(this.finishImport, descriptor), this.onPersistError_, this);
-};
-
-
-/**
- * Get the provider for the file.
- *
- * @return {os.ui.data.DescriptorProvider}
- */
-os.ui.file.ui.AbstractFileImportCtrl.prototype.getProvider = function() {
-  return null;
-};
-
-
-/**
- * Import complete, so add the descriptor to the data manager and provider.
- *
- * @param {DESCRIPTOR} descriptor
- * @protected
- */
-os.ui.file.ui.AbstractFileImportCtrl.prototype.finishImport = function(descriptor) {
-  // add the descriptor to the data manager first
-  os.dataManager.addDescriptor(descriptor);
-
-  // followed by the provider
-  var provider = this.getProvider();
-  if (provider) {
-    provider.addDescriptor(descriptor);
-  }
-
-  this.cleanConfig();
-
-  if (descriptor.isActive()) {
-    os.dispatcher.dispatchEvent(new os.data.DescriptorEvent(
-        os.data.DescriptorEventType.USER_TOGGLED, descriptor));
-  }
-};
-
-
-/**
- * @param {goog.db.Error} error
- * @private
- */
-os.ui.file.ui.AbstractFileImportCtrl.prototype.onPersistError_ = function(error) {
-  var msg = 'Failed storing local file! Unable to finish import.';
-  os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
-  this.cleanConfig();
-};
+exports = Controller;

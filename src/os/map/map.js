@@ -1,5 +1,3 @@
-goog.provide('os.MapChange');
-goog.provide('os.MapMode');
 goog.provide('os.map');
 
 goog.require('goog.asserts');
@@ -7,7 +5,6 @@ goog.require('ol.math');
 goog.require('ol.tilegrid');
 goog.require('os.map.IMapContainer');
 goog.require('os.ol');
-goog.require('os.proj');
 
 
 /**
@@ -15,38 +12,6 @@ goog.require('os.proj');
  * @type {os.map.IMapContainer|undefined}
  */
 os.map.mapContainer = undefined;
-
-
-/**
- * @enum {string}
- */
-os.MapChange = {
-  VIEW3D: 'map:change:view3d',
-  INIT3D: 'map:change:init3d',
-  THROTTLE: 'map:change:throttle'
-};
-
-
-/**
- * Available map modes.
- * @enum {string}
- */
-os.MapMode = {
-  AUTO: 'auto',
-  VIEW_2D: '2d',
-  VIEW_3D: '3d'
-};
-
-
-/**
- * Modes for setting the camera position when the application is launched.
- * @enum {string}
- */
-os.CameraMode = {
-  DEFAULT: 'default',
-  FIXED: 'fixed',
-  LAST: 'last'
-};
 
 
 /**
@@ -117,7 +82,7 @@ os.map.MAX_AUTO_ZOOM = 18;
  * Projection used for the map and all of its layers.
  * @type {ol.proj.Projection}
  */
-os.map.PROJECTION = ol.proj.get(os.proj.EPSG4326);
+os.map.PROJECTION = ol.proj.get('EPSG:4326');
 
 
 /**

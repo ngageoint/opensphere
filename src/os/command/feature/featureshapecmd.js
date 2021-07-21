@@ -1,55 +1,65 @@
-goog.provide('os.command.FeatureShape');
+goog.module('os.command.FeatureShape');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractFeatureStyle');
-goog.require('os.metrics');
+const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
+const metrics = goog.require('os.metrics');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
 
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
  * Changes the style of a feature
- *
- * @param {string} layerId
- * @param {string} featureId
- * @param {string} value
- * @param {string=} opt_oldValue
- * @extends {os.command.AbstractFeatureStyle}
- * @constructor
  */
-os.command.FeatureShape = function(layerId, featureId, value, opt_oldValue) {
-  os.command.FeatureShape.base(this, 'constructor', layerId, featureId, value, opt_oldValue);
-  this.title = 'Change Feature Style';
+class FeatureShape extends AbstractFeatureStyle {
+  /**
+   * Constructor.
+   * @param {string} layerId
+   * @param {string} featureId
+   * @param {string} value
+   * @param {string=} opt_oldValue
+   */
+  constructor(layerId, featureId, value, opt_oldValue) {
+    super(layerId, featureId, value, opt_oldValue);
+    this.title = 'Change Feature Style';
 
-  var type = value ? value.replace(/ /g, '_') : 'Unknown';
-  this.metricKey = os.metrics.Layer.FEATURE_SHAPE + os.metrics.SUB_DELIMITER + type;
-};
-goog.inherits(os.command.FeatureShape, os.command.AbstractFeatureStyle);
-
-
-/**
- * @inheritDoc
- */
-os.command.FeatureShape.prototype.getOldValue = function() {
-  var feature = /** @type {ol.Feature} */ (this.getFeature());
-  var shape = feature.get(os.style.StyleField.SHAPE);
-  return shape ? shape : os.style.ShapeType.POINT;
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.FeatureShape.prototype.applyValue = function(configs, value) {
-  var feature = /** @type {ol.Feature} */ (this.getFeature());
-  feature.set(os.style.StyleField.SHAPE, value);
-
-  var config = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
-  if (Array.isArray(config)) {
-    config = config[0];
+    var type = value ? value.replace(/ /g, '_') : 'Unknown';
+    this.metricKey = metrics.Layer.FEATURE_SHAPE + metrics.SUB_DELIMITER + type;
   }
-  if (value == os.style.ShapeType.NONE) {
-    config['geometry'] = os.ui.FeatureEditCtrl.HIDE_GEOMETRY;
-  } else {
-    delete config['geometry'];
+
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var feature = /** @type {Feature} */ (this.getFeature());
+    if (feature == null) {
+      return null;
+    }
+
+    var shape = feature.get(StyleField.SHAPE);
+    return shape ? shape : osStyle.ShapeType.POINT;
   }
-  os.command.FeatureShape.base(this, 'applyValue', configs, value);
-};
+
+  /**
+   * @inheritDoc
+   */
+  applyValue(configs, value) {
+    var feature = /** @type {Feature} */ (this.getFeature());
+    feature.set(StyleField.SHAPE, value);
+
+    var config = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
+    if (Array.isArray(config)) {
+      config = config[0];
+    }
+    if (value == osStyle.ShapeType.NONE) {
+      config['geometry'] = FeatureEditCtrl.HIDE_GEOMETRY;
+    } else {
+      delete config['geometry'];
+    }
+    super.applyValue(configs, value);
+  }
+}
+
+exports = FeatureShape;

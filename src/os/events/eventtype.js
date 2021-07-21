@@ -1,10 +1,11 @@
-goog.provide('os.events.EventType');
+goog.module('os.events.EventType');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @enum {string}
  */
-os.events.EventType = {
+exports = {
   CANCEL: 'cancel',
   COMPLETE: 'complete',
   ERROR: 'error',

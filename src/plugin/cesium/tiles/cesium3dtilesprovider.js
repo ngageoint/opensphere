@@ -5,6 +5,8 @@ const DataManager = goog.require('os.data.DataManager');
 const FileProvider = goog.require('os.data.FileProvider');
 const tiles = goog.require('plugin.cesium.tiles');
 
+const TilesDescriptor = goog.requireType('plugin.cesium.tiles.Descriptor');
+
 
 /**
  * The global instance.
@@ -37,10 +39,10 @@ class Provider extends FileProvider {
       var dm = DataManager.getInstance();
       for (var key in layers) {
         var id = this.getId() + BaseDescriptor.ID_DELIMITER + key;
-        var d = dm.getDescriptor(id);
+        var d = /** @type {TilesDescriptor} */ (dm.getDescriptor(id));
 
         if (!d) {
-          d = dm.createDescriptor(tiles.ID);
+          d = /** @type {TilesDescriptor} */ (dm.createDescriptor(tiles.ID));
           d.setId(id);
           dm.addDescriptor(d);
         }

@@ -1,8 +1,10 @@
 goog.require('os');
 goog.require('os.ogc.wfs.FeatureType');
 goog.require('os.state.StateManager');
+goog.require('os.state.Versions');
 goog.require('os.state.XMLStateManager');
 goog.require('os.state.XMLStateOptions');
+goog.require('os.state.instance');
 goog.require('os.state.v4.LayerState');
 goog.require('os.test.xsd');
 goog.require('os.xml');
@@ -14,6 +16,8 @@ goog.require('plugin.file.kml.KMLField');
 describe('OMAR.v4.ArcLayerState', function() {
   const os = goog.module.get('os');
   const StateManager = goog.module.get('os.state.StateManager');
+  const StateVersions = goog.module.get('os.state.Versions');
+  const {setStateManager} = goog.module.get('os.state.instance');
   const LayerState = goog.module.get('os.state.v4.LayerState');
   const xml = goog.module.get('os.xml');
   const ArcFeatureLayerConfig = goog.module.get('plugin.arc.layer.ArcFeatureLayerConfig');
@@ -368,9 +372,9 @@ describe('OMAR.v4.ArcLayerState', function() {
   };
 
   beforeEach(function() {
-    os.stateManager = StateManager.getInstance();
     stateManager = StateManager.getInstance();
-    stateManager.setVersion('v4');
+    setStateManager(stateManager);
+    stateManager.setVersion(StateVersions.V4);
   });
 
 

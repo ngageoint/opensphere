@@ -4,6 +4,8 @@ goog.require('os.ui.slick.TreeSearch');
 
 
 describe('os.ui.slick.TreeSearch', function() {
+  const MockTypeGroupBy = goog.module.get('os.ui.MockTypeGroupBy');
+
   var list = [];
 
   var node = new os.ui.slick.SlickTreeNode();
@@ -102,7 +104,7 @@ describe('os.ui.slick.TreeSearch', function() {
     var s = new os.ui.slick.TreeSearch(list, 'data', o);
 
     // group everything
-    s.beginSearch('', new os.ui.MockTypeGroupBy());
+    s.beginSearch('', new MockTypeGroupBy());
 
     expect(o.data).toBeTruthy();
     expect(o.data.length).toBe(2);
@@ -110,7 +112,7 @@ describe('os.ui.slick.TreeSearch', function() {
     expect(o.data[1].getLabel()).toBe('Large (1)');
 
     // group search results
-    s.beginSearch('be', new os.ui.MockTypeGroupBy());
+    s.beginSearch('be', new MockTypeGroupBy());
 
     expect(o.data).toBeTruthy();
     expect(o.data.length).toBe(1);
@@ -121,7 +123,7 @@ describe('os.ui.slick.TreeSearch', function() {
     var o = {};
     var s = new os.ui.slick.TreeSearch(list, 'data', o);
 
-    var tgb = new os.ui.MockTypeGroupBy();
+    var tgb = new MockTypeGroupBy();
 
     // initial state
     s.beginSearch('', tgb);

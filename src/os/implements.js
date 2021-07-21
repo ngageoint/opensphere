@@ -20,15 +20,8 @@
  *
  *   e.g.: var isFun = os.implements(myToy, os.fun.IFlyingToy.ID);
  */
-goog.provide('os.implements');
-
-
-/**
- * Prototype key to store implementations.
- * @type {string}
- * @const
- */
-os.IMPLEMENTS_KEY = 'os_impls';
+goog.module('os.implements');
+goog.module.declareLegacyNamespace();
 
 
 /**
@@ -39,19 +32,27 @@ os.IMPLEMENTS_KEY = 'os_impls';
  * @param {!string} interfaceId
  * @return {boolean} If the value implements the interface
  */
-os.implements = function(value, interfaceId) {
+const implementsFn = function(value, interfaceId) {
   if (value != null) {
     var type = goog.typeOf(value);
     if (type === 'function') {
-      os.addImplements_(/** @type {!Function} */ (value), interfaceId);
+      implementsFn.addImplements(/** @type {!Function} */ (value), interfaceId);
       return true;
     } else if (type === 'object') {
-      return os.getImplements_(/** @type {!Object} */ (value), interfaceId);
+      return implementsFn.getImplements(/** @type {!Object} */ (value), interfaceId);
     }
   }
 
   return false;
 };
+
+
+/**
+ * Prototype key to store implementations.
+ * @type {string}
+ * @private
+ */
+implementsFn.IMPLEMENTS_KEY = 'os_impls';
 
 
 /**
@@ -61,14 +62,14 @@ os.implements = function(value, interfaceId) {
  * @param {!string} interfaceId The interface id
  * @private
  */
-os.addImplements_ = function(clazz, interfaceId) {
+implementsFn.addImplements = function(clazz, interfaceId) {
   var impls;
-  if (clazz.prototype.hasOwnProperty(os.IMPLEMENTS_KEY)) {
+  if (clazz.prototype.hasOwnProperty(implementsFn.IMPLEMENTS_KEY)) {
     // property already exists directly on the prototype
-    impls = clazz.prototype[os.IMPLEMENTS_KEY];
+    impls = clazz.prototype[implementsFn.IMPLEMENTS_KEY];
   } else {
     // property doesn't exist, or is inherited from another prototype
-    impls = clazz.prototype[os.IMPLEMENTS_KEY] = [];
+    impls = clazz.prototype[implementsFn.IMPLEMENTS_KEY] = [];
   }
 
   impls.push(interfaceId);
@@ -83,12 +84,12 @@ os.addImplements_ = function(clazz, interfaceId) {
  * @return {boolean} If the instance implements the interface
  * @private
  */
-os.getImplements_ = function(inst, interfaceId) {
+implementsFn.getImplements = function(inst, interfaceId) {
   // search the prototype chain for the interface id
   var proto = Object.getPrototypeOf(inst);
   while (proto) {
-    if (proto[os.IMPLEMENTS_KEY] && proto[os.IMPLEMENTS_KEY].length &&
-        proto[os.IMPLEMENTS_KEY].indexOf(interfaceId) >= 0) {
+    if (proto[implementsFn.IMPLEMENTS_KEY] && proto[implementsFn.IMPLEMENTS_KEY].length &&
+        proto[implementsFn.IMPLEMENTS_KEY].indexOf(interfaceId) >= 0) {
       return true;
     }
 
@@ -97,3 +98,5 @@ os.getImplements_ = function(inst, interfaceId) {
 
   return false;
 };
+
+exports = implementsFn;

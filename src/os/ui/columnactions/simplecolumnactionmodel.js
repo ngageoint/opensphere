@@ -1,33 +1,37 @@
-goog.provide('os.ui.columnactions.SimpleColumnActionModel');
-goog.require('os.ui.columnactions.IColumnActionModel');
+goog.module('os.ui.columnactions.SimpleColumnActionModel');
+goog.module.declareLegacyNamespace();
 
-
+const IColumnActionModel = goog.requireType('os.ui.columnactions.IColumnActionModel');
 
 /**
- * @param {!string} field The field
- * @implements {os.ui.columnactions.IColumnActionModel}
- * @constructor
+ * @implements {IColumnActionModel}
  */
-os.ui.columnactions.SimpleColumnActionModel = function(field) {
+class SimpleColumnActionModel {
   /**
-   * @type {string}
-   * @private
+   * Constructor.
+   * @param {!string} field The field
    */
-  this.field_ = field;
-};
+  constructor(field) {
+    /**
+     * @type {string}
+     * @private
+     */
+    this.field_ = field;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getTitle() {
+    return this.field_;
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.columnactions.SimpleColumnActionModel.prototype.getTitle = function() {
-  return this.field_;
-};
+  /**
+   * @inheritDoc
+   */
+  getDataField() {
+    return this.field_;
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.ui.columnactions.SimpleColumnActionModel.prototype.getDataField = function() {
-  return this.field_;
-};
+exports = SimpleColumnActionModel;

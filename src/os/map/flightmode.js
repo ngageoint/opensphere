@@ -1,11 +1,11 @@
-goog.provide('os.map.FlightMode');
-
+goog.module('os.map.FlightMode');
+goog.module.declareLegacyNamespace();
 
 /**
  * Modes for flying to positions on the map.
  * @enum {string}
  */
-os.map.FlightMode = {
+exports = {
   BOUNCE: 'bounce',
   SMOOTH: 'smooth'
 };

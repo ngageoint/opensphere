@@ -1,11 +1,12 @@
-goog.provide('os.command.EventType');
+goog.module('os.command.EventType');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * Event types for command events
  * @enum {string}
  */
-os.command.EventType = {
+exports = {
   EXECUTED: 'executed',
   REVERTED: 'reverted',
   COMMAND_ADDED: 'command_added',

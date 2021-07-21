@@ -1,41 +1,46 @@
-goog.provide('os.command.VectorLayerLOBMultiplier');
+goog.module('os.command.VectorLayerLOBMultiplier');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractVectorLayerLOB');
-goog.require('os.metrics');
-
+const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
+const metrics = goog.require('os.metrics');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**
  * Changes the lob length multiplier column
  *
- * @param {string} layerId
- * @param {string} value
- * @param {string=} opt_oldValue
- * @extends {os.command.AbstractVectorLayerLOB<string>}
- * @constructor
+ * @extends {AbstractVectorLayerLOB<string>}
  */
-os.command.VectorLayerLOBMultiplier = function(layerId, value, opt_oldValue) {
-  os.command.VectorLayerLOBMultiplier.base(this, 'constructor', layerId, value, opt_oldValue);
-  this.title = 'Change Line of Bearing length column';
-  this.value = value || '';
-  this.metricKey = os.metrics.Layer.VECTOR_LOB_LENGTH_COLUMN;
-};
-goog.inherits(os.command.VectorLayerLOBMultiplier, os.command.AbstractVectorLayerLOB);
+class VectorLayerLOBMultiplier extends AbstractVectorLayerLOB {
+  /**
+   * Constructor.
+   * @param {string} layerId
+   * @param {string} value
+   * @param {string=} opt_oldValue
+   */
+  constructor(layerId, value, opt_oldValue) {
+    super(layerId, value, opt_oldValue);
+    this.title = 'Change Line of Bearing length column';
+    this.value = value || '';
+    this.metricKey = metrics.Layer.VECTOR_LOB_LENGTH_COLUMN;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config && config[StyleField.LOB_LENGTH_COLUMN] || '';
+  }
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerLOBMultiplier.prototype.getOldValue = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  return config && config[os.style.StyleField.LOB_LENGTH_COLUMN] || '';
-};
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    config[StyleField.LOB_LENGTH_COLUMN] = value;
+    super.applyValue(config, value);
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerLOBMultiplier.prototype.applyValue = function(config, value) {
-  config[os.style.StyleField.LOB_LENGTH_COLUMN] = value;
-  os.command.VectorLayerLOBMultiplier.base(this, 'applyValue', config, value);
-};
+exports = VectorLayerLOBMultiplier;

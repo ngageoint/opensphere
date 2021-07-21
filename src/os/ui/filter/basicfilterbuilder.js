@@ -1,5 +1,6 @@
 goog.provide('os.ui.filter.BasicFilterBuilderCtrl');
 goog.provide('os.ui.filter.basicFilterBuilderDirective');
+
 goog.require('goog.array');
 goog.require('goog.async.Delay');
 goog.require('goog.dom');
@@ -8,6 +9,7 @@ goog.require('os.filter.IFilterEntry');
 goog.require('os.ui.Module');
 goog.require('os.ui.filter.Expression');
 goog.require('os.ui.filter.basicFilterTreeDirective');
+goog.require('os.ui.slick.SlickGridEvent');
 
 
 /**

@@ -1,12 +1,11 @@
 goog.module('os.ui.file.AddServer');
 goog.module.declareLegacyNamespace();
 
-const FileParserConfig = goog.require('os.parse.FileParserConfig');
-const Module = goog.require('os.ui.Module');
-const ImportManager = goog.require('os.ui.im.ImportManager');
 const {ROOT} = goog.require('os');
-const osWindow = goog.require('os.ui.window');
+const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
+const ImportManager = goog.require('os.ui.im.ImportManager');
+const osWindow = goog.require('os.ui.window');
 
 
 /**
@@ -110,9 +109,7 @@ class Controller {
    * @export
    */
   updateUiScope(scope) {
-    const config = new FileParserConfig();
-    config.enabled = true;
-
+    const config = {'enabled': true};
     scope.config = config;
   }
 

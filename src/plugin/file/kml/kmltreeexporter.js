@@ -10,6 +10,7 @@ const GeometryCollection = goog.require('ol.geom.GeometryCollection');
 const Point = goog.require('ol.geom.Point');
 const RecordField = goog.require('os.data.RecordField');
 const osFeature = goog.require('os.feature');
+const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
 const osSource = goog.require('os.source');
 const TriState = goog.require('os.structs.TriState');
 const osStyle = goog.require('os.style');
@@ -18,6 +19,7 @@ const AbstractKMLExporter = goog.require('os.ui.file.kml.AbstractKMLExporter');
 const xml = goog.require('os.xml');
 const pluginFileKmlExport = goog.require('plugin.file.kml.export');
 
+const Geometry = goog.requireType('ol.geom.Geometry');
 const kml = goog.requireType('plugin.file.kml');
 
 
@@ -321,7 +323,7 @@ class KMLTreeExporter extends AbstractKMLExporter {
       var geomAltitudeMode;
       var featAltitudeMode = feature.get(RecordField.ALTITUDE_MODE);
 
-      geometry = feature.getGeometry();
+      geometry = /** @type {Geometry} */ (feature.get(ORIGINAL_GEOM_FIELD)) || feature.getGeometry();
       if (geometry) {
         geometry = geometry.clone().toLonLat();
         geomAltitudeMode = geometry.get(RecordField.ALTITUDE_MODE);

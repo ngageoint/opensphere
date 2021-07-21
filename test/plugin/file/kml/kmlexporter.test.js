@@ -27,7 +27,7 @@ describe('plugin.file.kml.KMLExporter', function() {
   const KMLExporter = goog.module.get('plugin.file.kml.KMLExporter');
   // the layer/source identifier for these tests
   var testId = 'plugin_file_kml_KMLExporter';
-  var delim = AbstractKMLExporter.LABEL_DELIMITER_;
+  var delim = AbstractKMLExporter.LABEL_DELIMITER;
 
   var label1 = {
     column: 'label1',

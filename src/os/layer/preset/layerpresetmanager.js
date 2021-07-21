@@ -5,9 +5,10 @@ const Debouncer = goog.require('goog.async.Debouncer');
 const Dispatcher = goog.require('os.Dispatcher');
 const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const IFilterable = goog.require('os.filter.IFilterable');
+const {getImportActionManager} = goog.require('os.im.action');
 const ILayer = goog.require('os.layer.ILayer');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const LayerEventType = goog.require('os.events.LayerEventType');
 const OsLayerPreset = goog.require('os.layer.preset');
 const OsStyle = goog.require('os.style');
@@ -26,7 +27,6 @@ const IPresetService = goog.requireType('os.layer.preset.IPresetService');
 const LayerEvent = goog.requireType('os.events.LayerEvent');
 const {EventsKey: OlEventsKey} = goog.requireType('ol');
 const OlLayer = goog.requireType('ol.layer.Layer');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
@@ -177,7 +177,7 @@ class LayerPresetManager extends Disposable {
    */
   onLayerStyleChanged_(layerId, layer, check, event) {
     // check that the style does/doesn't match the Preset. If not, set the clean over to false and stop listening
-    if (layer && event['getProperty'] && event.getProperty() == 'style') {
+    if (layer && event instanceof PropertyChangeEvent && event.getProperty() == 'style') {
       if (this.isLayerStyleDirty(layerId, layer, check, event)) {
         const meta = /** @type {!LayerPresetsMetaData} */ (this.presets_.entry(layerId)[2]);
 
@@ -204,9 +204,11 @@ class LayerPresetManager extends Disposable {
    */
   isLayerStyleDirty(layerId, layer, check, event) {
     let dirty = false;
+
+    const iam = getImportActionManager();
     const meta = /** @type {!LayerPresetsMetaData} */ (this.presets_.entry(layerId)[2]);
 
-    if (meta && meta.selected) {
+    if (iam && meta && meta.selected) {
       // check the layer configs
       const config1 = /** @type {!Object} */ (meta.selected.layerConfig);
       const config2 = /** @type {ILayer} */ (layer).persist();
@@ -229,7 +231,7 @@ class LayerPresetManager extends Disposable {
       // check the active Feature Actions if not dirty yet
       if (!dirty) {
         const ids1 = meta.selected.featureActions || [];
-        const ids2 = ImportActionManager.getInstance().getActiveActionEntryIds(layerId);
+        const ids2 = iam.getActiveActionEntryIds(layerId);
         dirty = (ids1.join('') != ids2.join(''));
       }
     }

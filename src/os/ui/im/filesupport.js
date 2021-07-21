@@ -109,7 +109,7 @@ os.ui.im.FileSupportCtrl = function($scope, $element) {
    * If file upload is supported by the application.
    * @type {boolean}
    */
-  this['supportsUpload'] = os.file.upload.uploadFile != null;
+  this['supportsUpload'] = os.file.upload.getUploadFile() != null;
 
   /**
    * Support contact details.
@@ -173,8 +173,9 @@ os.ui.im.FileSupportCtrl.prototype.cancel = function() {
  * @export
  */
 os.ui.im.FileSupportCtrl.prototype.confirm = function() {
-  if (this['choice'] === os.ui.im.FileSupportChoice.UPLOAD && os.file.upload.uploadFile != null) {
-    os.file.upload.uploadFile(this.file_).then(this.confirmCallback_, this.cancelCallback_);
+  const uploadFile = os.file.upload.getUploadFile();
+  if (this['choice'] === os.ui.im.FileSupportChoice.UPLOAD && uploadFile != null) {
+    uploadFile(this.file_).then(this.confirmCallback_, this.cancelCallback_);
   } else if (this.confirmCallback_) {
     this.confirmCallback_();
   }

@@ -21,8 +21,8 @@ const proj = goog.require('os.proj');
 const utils = goog.require('os.query.utils');
 const osString = goog.require('os.string');
 const TimelineController = goog.require('os.time.TimelineController');
-const osWindow = goog.require('os.ui.window');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+const {launchConfirmText} = goog.require('os.ui.window.ConfirmTextUI');
 const ImageryProvider = goog.require('plugin.cesium.ImageryProvider');
 
 const Deferred = goog.requireType('goog.async.Deferred');
@@ -201,7 +201,7 @@ const loadCesium = function() {
  */
 const promptForAccessToken = function() {
   return new Promise(function(resolve, reject) {
-    osWindow.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
+    launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
       confirm: (accessToken) => {
         settings.getInstance().set(SettingsKey.ACCESS_TOKEN, accessToken);
         resolve(accessToken);

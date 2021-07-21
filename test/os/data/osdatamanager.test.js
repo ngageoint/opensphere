@@ -4,66 +4,79 @@ goog.require('os.config.Settings');
 goog.require('os.config.storage.SettingsObjectStorage');
 goog.require('os.data');
 goog.require('os.data.BaseDescriptor');
+goog.require('os.data.DataManager');
 goog.require('os.data.LayerSyncDescriptor');
 goog.require('os.data.MockProvider');
-goog.require('os.data.OSDataManager');
 goog.require('os.data.ProviderEntry');
 goog.require('os.layer.Tile');
+goog.require('os.layer.Vector');
+goog.require('os.map.instance');
 goog.require('os.mock');
+goog.require('os.source.Vector');
 goog.require('test.os.config.SettingsUtil');
 
 
-describe('os.data.OSDataManager', function() {
+describe('os.data.DataManager', function() {
+  const Settings = goog.module.get('os.config.Settings');
+  const SettingsObjectStorage = goog.module.get('os.config.storage.SettingsObjectStorage');
+  const data = goog.module.get('os.data');
+  const BaseDescriptor = goog.module.get('os.data.BaseDescriptor');
+  const DataManager = goog.module.get('os.data.DataManager');
+  const ProviderEntry = goog.module.get('os.data.ProviderEntry');
+  const VectorLayer = goog.module.get('os.layer.Vector');
+  const VectorSource = goog.module.get('os.source.Vector');
+  const {getMapContainer} = goog.module.get('os.map.instance');
+
   it('should register provider types', function() {
-    var dm = os.dataManager;
-    var entry = new os.data.ProviderEntry('mock', os.data.MockProvider, 'Mock Provider', 'This is a test', '');
+    var dm = DataManager.getInstance();
+    var entry = new ProviderEntry('mock', data.MockProvider, 'Mock Provider', 'This is a test', '');
     dm.registerProviderType(entry);
     expect(dm.providerTypes_['mock']).toBe(entry);
   });
 
   it('should not register provider types with the same type', function() {
-    var dm = os.dataManager;
-    var entry = new os.data.ProviderEntry('mock', null, '', '', '');
+    var dm = DataManager.getInstance();
+    var entry = new ProviderEntry('mock', null, '', '', '');
     dm.registerProviderType(entry);
     expect(dm.providerTypes_['mock']).not.toBe(entry);
   });
 
   it('should register descriptor types', function() {
-    var dm = os.dataManager;
-    dm.registerDescriptorType('base', os.data.BaseDescriptor);
-    expect(dm.descriptorTypes_['base']).toBe(os.data.BaseDescriptor);
+    var dm = DataManager.getInstance();
+    dm.registerDescriptorType('base', BaseDescriptor);
+    expect(dm.descriptorTypes_['base']).toBe(BaseDescriptor);
   });
 
   it('should not register descriptor types with the same type', function() {
-    var dm = os.dataManager;
+    var dm = DataManager.getInstance();
     dm.registerDescriptorType('base', 'yermom');
     expect(dm.descriptorTypes_['base']).not.toBe('yermom');
   });
 
   it('should allow overrides of descriptor types', function() {
-    var dm = os.dataManager;
+    var dm = DataManager.getInstance();
     dm.registerDescriptorType('base', 'yermom', true);
     expect(dm.descriptorTypes_['base']).toBe('yermom');
 
     // change it back for the rest of the tests
-    dm.registerDescriptorType('base', os.data.BaseDescriptor, true);
+    dm.registerDescriptorType('base', BaseDescriptor, true);
   });
 
   it('should configure providers and load them', function() {
-    var dm = os.dataManager;
+    var dm = DataManager.getInstance();
 
-    var settings = new os.config.Settings();
-    settings.getStorageRegistry().addStorage(new os.config.storage.SettingsObjectStorage(['unit']));
+    var settings = new Settings();
+    settings.getStorageRegistry().addStorage(new SettingsObjectStorage(['unit']));
     test.os.config.SettingsUtil.initAndLoad(settings);
 
     runs(function() {
-      settings.set([os.data.ProviderKey.ADMIN, 'thing1', 'type'], 'mock');
-      settings.set([os.data.ProviderKey.ADMIN, 'thing1', 'test'], 'A');
-      settings.set([os.data.ProviderKey.USER, 'thing2', 'type'], 'mock');
-      settings.set([os.data.ProviderKey.USER, 'thing2', 'test'], 'B');
-      settings.set([os.data.ProviderKey.USER, 'thing2', 'enabled'], false);
-      settings.set([os.data.ProviderKey.USER, 'ufo', 'type'], 'unknown');
-      settings.set([os.data.ProviderKey.USER, 'ufo', 'probingYou'], true);
+      settings.set([data.ProviderKey.ADMIN, 'thing1', 'type'], 'mock');
+      settings.set([data.ProviderKey.ADMIN, 'thing1', 'test'], 'A');
+      settings.set([data.ProviderKey.USER, 'thing2', 'type'], 'mock');
+      settings.set([data.ProviderKey.USER, 'thing2', 'test'], 'B');
+      settings.set([data.ProviderKey.USER, 'thing2', 'enabled'], false);
+      settings.set([data.ProviderKey.USER, 'ufo', 'type'], 'unknown');
+      settings.set([data.ProviderKey.USER, 'ufo', 'probingYou'], true);
 
       dm.updateFromSettings(settings);
 
@@ -84,9 +97,9 @@ describe('os.data.OSDataManager', function() {
   });
 
   it('should find descriptors with a prefix', function() {
-    var dm = os.dataManager;
+    var dm = DataManager.getInstance();
 
-    var d = new os.data.BaseDescriptor();
+    var d = new BaseDescriptor();
     d.setId('testy');
     d.setProvider('mock');
     d.setTitle('Testy');
@@ -99,13 +112,13 @@ describe('os.data.OSDataManager', function() {
       return ['testy', 'testy#yermom'];
     };
 
-    var other = new os.data.BaseDescriptor();
+    var other = new BaseDescriptor();
     other.setId('other');
     other.setProvider('mock');
     other.setTitle('Other');
     other.setType('bogus');
 
-    var d2 = new os.data.BaseDescriptor();
+    var d2 = new BaseDescriptor();
     d2.setId('testy2');
 
     dm.addDescriptor(d);
@@ -124,11 +137,11 @@ describe('os.data.OSDataManager', function() {
   it('should get opensphere sources from layers on the map', function() {
     var layerId = 'test#layer1';
 
-    var dm = os.dataManager;
+    var dm = DataManager.getInstance();
     expect(dm.getSource(layerId)).toBeNull();
 
-    var source = new os.source.Vector();
-    var layer = new os.layer.Vector({
+    var source = new VectorSource();
+    var layer = new VectorLayer({
       source: source
     });
 
@@ -136,7 +149,7 @@ describe('os.data.OSDataManager', function() {
     source.setId(layerId);
 
     try {
-      os.MapContainer.getInstance().addLayer(layer);
+      getMapContainer().addLayer(layer);
     } catch (e) {
       // catch the unimplemented method error
     }
@@ -144,7 +157,7 @@ describe('os.data.OSDataManager', function() {
     expect(dm.getSource(layerId)).not.toBeNull();
 
     try {
-      os.MapContainer.getInstance().removeLayer(layer);
+      getMapContainer().removeLayer(layer);
     } catch (e) {
       // catch the unimplemented method error
     }
@@ -154,7 +167,7 @@ describe('os.data.OSDataManager', function() {
   });
 
   it('should save and restore descriptors which have been recently active', function() {
-    var dm = os.dataManager;
+    var dm = DataManager.getInstance();
 
     var d = dm.descriptors_['testy'];
     delete dm.descriptors_['testy2'];

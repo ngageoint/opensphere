@@ -7,7 +7,6 @@ goog.require('plugin.file.kml.ui.PlacemarkEditUI');
 const Settings = goog.require('os.config.Settings');
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
-const fn = goog.require('os.fn');
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const Request = goog.require('os.net.Request');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
@@ -73,13 +72,13 @@ class KMLPlugin extends AbstractPlugin {
 
     // try to load the first google earth icon; if it fails, set the mirror and flag
     return new Request(kml.GOOGLE_EARTH_ICON_SET[0].path).getPromise()
-        .then(fn.noop, () => {
+        .then(() => {}, () => {
           const settings = Settings.getInstance();
           const mirror = /** @type {string|null} */ (settings.get(KMLPlugin.ICON_MIRROR));
           if (mirror) {
-            kml.mirror = mirror;
+            kml.setMirror(mirror);
           }
-          kml.isGoogleMapsAccessible = false;
+          kml.setGoogleMapsAccessible(false);
         });
   }
 }

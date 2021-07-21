@@ -1,11 +1,9 @@
-goog.provide('os.ui.columnactions.ColumnActionsCtrl');
-goog.provide('os.ui.columnactions.columnActionPromptDirective');
-goog.provide('os.ui.columnactions.launchColumnActionPrompt');
+goog.module('os.ui.columnactions.ColumnActionsUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui');
-goog.require('os.ui.Module');
-goog.require('os.ui.WindowEventType');
-goog.require('os.ui.columnactions.IColumnActionModel');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const {close} = goog.require('os.ui.window');
 
 
 /**
@@ -13,123 +11,92 @@ goog.require('os.ui.columnactions.IColumnActionModel');
  *
  * @return {angular.Directive}
  */
-os.ui.columnactions.columnActionPromptDirective = function() {
-  return {
-    restrict: 'E',
-    transclude: true,
-    templateUrl: os.ROOT + 'views/columnactions/columnactionprompt.html',
-    controller: os.ui.columnactions.ColumnActionsCtrl,
-    controllerAs: 'columnActionPrompt'
-  };
-};
-
+const directive = () => ({
+  restrict: 'E',
+  transclude: true,
+  templateUrl: ROOT + 'views/columnactions/columnactionprompt.html',
+  controller: Controller,
+  controllerAs: 'columnActionPrompt'
+});
 
 /**
- * Add the directive to the os.ui module
+ * The element tag for the directive.
+ * @type {string}
  */
-os.ui.Module.directive('columnactions', [os.ui.columnactions.columnActionPromptDirective]);
+const directiveTag = 'columnactions';
 
-
+/**
+ * Add the directive to the ui module
+ */
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the File Exists! window
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.columnactions.ColumnActionsCtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
+
+    this['matched'] = this.scope_['matched'];
+  }
 
   /**
-   * @type {?angular.JQLite}
-   * @private
+   * Angular $onDestroy lifecycle hook.
    */
-  this.element_ = $element;
+  $onDestroy() {
+    this.element_ = null;
+    this.scope_ = null;
+  }
 
+  /**
+   *
+   * @param {Object} match
+   * @param {string} value
+   * @export
+   */
+  executeMatch(match, value) {
+    match.execute(value);
+  }
 
-  this['matched'] = this.scope_['matched'];
+  /**
+   *
+   * @param {Object} match
+   * @return {string}
+   * @export
+   */
+  getDescription(match) {
+    return match.getDescription();
+  }
 
+  /**
+   * Close the window.
+   *
+   * @export
+   */
+  close() {
+    close(this.element_);
+  }
+}
 
-  $scope.$on('$destroy', this.onDestroy_.bind(this));
-};
-
-
-/**
- * Clean up
- *
- * @private
- */
-os.ui.columnactions.ColumnActionsCtrl.prototype.onDestroy_ = function() {
-  this.element_ = null;
-  this.scope_ = null;
-};
-
-
-/**
- *
- * @param {Object} match
- * @param {string} value
- * @export
- */
-os.ui.columnactions.ColumnActionsCtrl.prototype.executeMatch = function(match, value) {
-  match.execute(value);
-};
-
-
-/**
- *
- * @param {Object} match
- * @return {string}
- * @export
- */
-os.ui.columnactions.ColumnActionsCtrl.prototype.getDescription = function(match) {
-  return match.getDescription();
-};
-
-
-/**
- * Close the window.
- *
- * @export
- */
-os.ui.columnactions.ColumnActionsCtrl.prototype.close = function() {
-  os.ui.window.close(this.element_);
-};
-
-
-/**
- * Launch a dialog prompting the user the file they're importing already exists and requesting action.
- *
- * @param {Array.<os.ui.columnactions.AbstractColumnAction>} matched
- * @param {*} value from the column
- * @param {os.ui.columnactions.IColumnActionModel} colDef
- */
-os.ui.columnactions.launchColumnActionPrompt = function(matched, value, colDef) {
-  var scopeOptions = {
-    'matched': matched,
-    'colDef': colDef,
-    'value': value,
-    'doneText': 'Close',
-    'doneIcon': 'fa fa-check'
-  };
-
-  var windowOptions = {
-    'label': goog.string.buildString('Select a Column Action for ', colDef.getTitle(), ' = ', value),
-    'icon': 'fa fa-action',
-    'x': 'center',
-    'y': 'center',
-    'width': '450',
-    'height': '350',
-    'modal': 'true',
-    'show-close': 'true'
-  };
-
-  var template = '<columnactions class="d-flex flex-fill"></columnactions>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

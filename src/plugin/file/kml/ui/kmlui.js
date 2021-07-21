@@ -11,6 +11,7 @@ const SequenceCommand = goog.require('os.command.SequenceCommand');
 const osFeature = goog.require('os.feature');
 const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
 const osWindow = goog.require('os.ui.window');
+const {launchConfirmText} = goog.require('os.ui.window.ConfirmTextUI');
 const KMLField = goog.require('plugin.file.kml.KMLField');
 const KMLNodeAdd = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
 const KMLNodeRemove = goog.require('plugin.file.kml.cmd.KMLNodeRemove');
@@ -171,7 +172,7 @@ const createOrEditFolder = function(options) {
       label: winLabel
     })
   });
-  osWindow.launchConfirmText(confirmOptions);
+  launchConfirmText(confirmOptions);
 };
 
 /**

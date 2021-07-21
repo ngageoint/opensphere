@@ -2,8 +2,8 @@ goog.provide('os.xt.MockHandler');
 
 goog.require('ol.array');
 goog.require('os.xt.Peer');
+goog.require('os.xt.PeerInfo');
 goog.require('os.xt.events');
-
 
 
 /**
@@ -35,7 +35,10 @@ os.xt.MockHandler.prototype.process = function(data) {
 };
 
 
-describe('os.xt.Peer', function() {
+describe('Peer', function() {
+  const Peer = goog.module.get('os.xt.Peer');
+  const PeerInfo = goog.module.get('os.xt.PeerInfo');
+
   // mock storage
   var storage = function() {
     var storageImpl = Object.defineProperties({}, new (function() {
@@ -190,14 +193,14 @@ describe('os.xt.Peer', function() {
     enforceStrictStorageAPIForIE9Compatibility(storage);
     enforceStrictStorageAPIForIE9Compatibility(window.localStorage);
     storage.clear();
-    os.xt.Peer.PING_INTERVAL = 500;
+    Peer.PING_INTERVAL = 500;
     os.xt.MockHandler.value = 0;
   });
 
   // for the purposes of this test, let's ping faster
 
   it('should have the correct default values', function() {
-    var p = new os.xt.Peer();
+    var p = new Peer();
     expect(p.getId()).not.toBe(null);
     expect(p.getGroup()).toBe('default');
     expect(p.getTitle()).not.toBe(null);
@@ -206,7 +209,7 @@ describe('os.xt.Peer', function() {
   });
 
   it('should persist itself and become the master on init with no other peers', function() {
-    var p = new os.xt.Peer(storage);
+    var p = new Peer(storage);
 
     runs(function() {
       p.setId('a');
@@ -231,19 +234,19 @@ describe('os.xt.Peer', function() {
   });
 
   it('should find all other peers in its group correctly', function() {
-    var a = new os.xt.Peer();
+    var a = new Peer();
     a.setId('a');
     a.setGroup('good');
     a.setTitle('alice');
     a.init();
 
-    var b = new os.xt.Peer();
+    var b = new Peer();
     b.setId('b');
     b.setGroup('good');
     b.setTitle('bob');
     b.init();
 
-    var e = new os.xt.Peer();
+    var e = new Peer();
     e.setId('e');
     e.setGroup('evil');
     e.setTitle('eve');
@@ -276,24 +279,26 @@ describe('os.xt.Peer', function() {
           return 45006;
         case 'c':
           return 1;
+        default:
+          return 0;
       }
     };
 
-    var a = new os.xt.Peer();
+    var a = new Peer();
     a.setId('a');
     a.setGroup('good');
     a.setTitle('a');
     a.init();
     spyOn(a, 'getLastPing_').andCallFake(mockPing);
 
-    var b = new os.xt.Peer();
+    var b = new Peer();
     b.setId('b');
     b.setGroup('good');
     b.setTitle('b');
     b.init();
     spyOn(b, 'getLastPing_').andCallFake(mockPing);
 
-    var c = new os.xt.Peer();
+    var c = new Peer();
     c.setId('c');
     c.setGroup('good');
     c.setTitle('c');
@@ -324,13 +329,13 @@ describe('os.xt.Peer', function() {
   });
 
   it('does not find peers until they are initialized', function() {
-    var a = new os.xt.Peer();
+    var a = new Peer();
     a.setId('a');
     a.setGroup('good');
     a.setTitle('alice');
     a.init();
 
-    var b = new os.xt.Peer();
+    var b = new Peer();
     b.setId('b');
     b.setGroup('good');
     b.setTitle('bob');
@@ -352,19 +357,19 @@ describe('os.xt.Peer', function() {
   });
 
   it('should find all other peers in its group with support for a given message type', function() {
-    var a = new os.xt.Peer(storage);
+    var a = new Peer(storage);
     a.setId('a');
     a.setTitle('alice');
     a.init();
     storage.setItem('xt.default.a.types', '["test1", "test2"]');
 
-    var b = new os.xt.Peer(storage);
+    var b = new Peer(storage);
     b.setId('b');
     b.setTitle('bob');
     b.init();
     storage.setItem('xt.default.b.types', '["test1"]');
 
-    var c = new os.xt.Peer(storage);
+    var c = new Peer(storage);
     c.setId('c');
     c.setTitle('charlie');
     c.init();
@@ -383,7 +388,7 @@ describe('os.xt.Peer', function() {
 
   it('should deliver messages only to handlers that support the message type', function() {
     var storage = window.localStorage;
-    var a = new os.xt.Peer(storage);
+    var a = new Peer(storage);
     a.setId('a');
     a.setTitle('a');
     var skipHandler = new os.xt.MockHandler();
@@ -411,7 +416,7 @@ describe('os.xt.Peer', function() {
   });
 
   it('should properly set the ping or keep-alive', function() {
-    var a = new os.xt.Peer(storage);
+    var a = new Peer(storage);
 
     var target = new Date().getTime() + 1000;
 
@@ -431,8 +436,8 @@ describe('os.xt.Peer', function() {
   });
 
   it('should become master when the current master is shut down properly', function() {
-    var a = new os.xt.Peer(storage);
-    var b = new os.xt.Peer(storage);
+    var a = new Peer(storage);
+    var b = new Peer(storage);
     var notified = false;
 
     runs(function() {
@@ -473,8 +478,8 @@ describe('os.xt.Peer', function() {
   });
 
   it('should become master when the current master dies an unclean death', function() {
-    var a = new os.xt.Peer(storage);
-    var b = new os.xt.Peer(storage);
+    var a = new Peer(storage);
+    var b = new Peer(storage);
     var m = null;
 
     runs(function() {
@@ -509,12 +514,12 @@ describe('os.xt.Peer', function() {
   });
 
   it('should fail gracefully if it does not support a message type', function() {
-    var a = new os.xt.Peer();
+    var a = new Peer();
     a.setId('a');
     a.setTitle('alice');
     a.init();
 
-    var b = new os.xt.Peer();
+    var b = new Peer();
     b.setId('b');
     b.setTitle('bob');
     b.init();
@@ -540,13 +545,13 @@ describe('os.xt.Peer', function() {
   it('should handle messages sent to a specific peer if a handler for the message type exists', function() {
     var storage = window.localStorage;
 
-    var a = new os.xt.Peer(storage);
+    var a = new Peer(storage);
     a.setId('a');
     a.setTitle('alice');
     a.addHandler(new os.xt.MockHandler());
     a.init();
 
-    var b = new os.xt.Peer(storage);
+    var b = new Peer(storage);
     b.setId('b');
     b.setTitle('bob');
     b.init();
@@ -582,12 +587,12 @@ describe('os.xt.Peer', function() {
 
   it('should fail gracefully if it does not support a message type on the public channel', function() {
     // suspend storage events by using actual localStorage
-    var a = new os.xt.Peer(window.localStorage);
+    var a = new Peer(window.localStorage);
     a.setId('a');
     a.setTitle('alice');
     a.init();
 
-    var b = new os.xt.Peer(window.localStorage);
+    var b = new Peer(window.localStorage);
     b.setId('b');
     b.setTitle('bob');
     b.init();
@@ -613,13 +618,13 @@ describe('os.xt.Peer', function() {
     var storage = window.localStorage;
     storage.clear();
 
-    var a = new os.xt.Peer(storage);
+    var a = new Peer(storage);
     a.setId('a');
     a.setTitle('alice');
     a.addHandler(new os.xt.MockHandler());
     a.init();
 
-    var b = new os.xt.Peer(storage);
+    var b = new Peer(storage);
     b.setId('b');
     b.setTitle('bob');
     b.init();
@@ -651,13 +656,13 @@ describe('os.xt.Peer', function() {
   });
 
   it('should handle messages on init', function() {
-    var b = new os.xt.Peer(storage);
+    var b = new Peer(storage);
     b.setId('b');
     b.setTitle('bob');
     b.init();
     b.send('test', 2);
 
-    var a = new os.xt.Peer(storage);
+    var a = new Peer(storage);
     a.setId('a');
     a.setTitle('alice');
     a.addHandler(new os.xt.MockHandler());
@@ -671,12 +676,12 @@ describe('os.xt.Peer', function() {
   });
 
   it('supports waiting for a peer by ID', function() {
-    var a = new os.xt.Peer(storage);
+    var a = new Peer(storage);
     a.setId('a');
     a.setTitle('Peer A');
     a.init();
 
-    var b = new os.xt.Peer(storage);
+    var b = new Peer(storage);
     b.setId('b');
     b.setTitle('Peer B');
 
@@ -684,7 +689,7 @@ describe('os.xt.Peer', function() {
     var deferred = null;
 
     runs(function() {
-      deferred = a.waitForPeer('b', null, os.xt.Peer.PING_INTERVAL).addCallback(bIsReady);
+      deferred = a.waitForPeer('b', null, Peer.PING_INTERVAL).addCallback(bIsReady);
       b.init();
     });
 
@@ -694,7 +699,7 @@ describe('os.xt.Peer', function() {
 
     runs(function() {
       expect(bIsReady.calls.length).toBe(1);
-      var bInfo = os.xt.PeerInfo.load(b.getGroup(), b.getId(), storage);
+      var bInfo = PeerInfo.load(b.getGroup(), b.getId(), storage);
       expect(bInfo).toBeDefined();
       expect(bInfo).not.toBeNull();
       expect(bIsReady.calls[0].args[0]).toEqual(bInfo);
@@ -704,21 +709,21 @@ describe('os.xt.Peer', function() {
   });
 
   it('supports waiting for a peer by ID and message type', function() {
-    var a = new os.xt.Peer(storage);
+    var a = new Peer(storage);
     a.setId('a');
     a.setTitle('Peer A');
     a.init();
 
-    var b = new os.xt.Peer(storage);
+    var b = new Peer(storage);
     b.setId('b');
     b.setTitle('Peer B');
 
     var bIsReady = jasmine.createSpy('bIsReady');
-    var twoPings = Date.now() + 2 * os.xt.Peer.PING_INTERVAL;
+    var twoPings = Date.now() + 2 * Peer.PING_INTERVAL;
     var deferred = null;
 
     runs(function() {
-      deferred = a.waitForPeer('b', 'messageFromA', 6 * os.xt.Peer.PING_INTERVAL).addCallback(bIsReady);
+      deferred = a.waitForPeer('b', 'messageFromA', 6 * Peer.PING_INTERVAL).addCallback(bIsReady);
       b.init();
     });
 
@@ -742,7 +747,7 @@ describe('os.xt.Peer', function() {
 
     runs(function() {
       expect(bIsReady.calls.length).toBe(1);
-      var bInfo = os.xt.PeerInfo.load(b.getGroup(), b.getId(), storage);
+      var bInfo = PeerInfo.load(b.getGroup(), b.getId(), storage);
       expect(bInfo).toBeDefined();
       expect(bInfo).not.toBeNull();
       expect(bIsReady.calls[0].args[0]).toEqual(bInfo);
@@ -752,10 +757,10 @@ describe('os.xt.Peer', function() {
   });
 
   it('calls back quickly when the peer of interest can handle the message type', function() {
-    var origPing = os.xt.Peer.PING_INTERVAL;
-    os.xt.Peer.PING_INTERVAL = 60000;
+    var origPing = Peer.PING_INTERVAL;
+    Peer.PING_INTERVAL = 60000;
 
-    var a = new os.xt.Peer(storage);
+    var a = new Peer(storage);
     a.setId('a');
     a.setTitle('Peer A');
     a.init();
@@ -763,7 +768,7 @@ describe('os.xt.Peer', function() {
     var bIsReady = jasmine.createSpy('bIsReady');
     var deferred = a.waitForPeer('b', 'messageFromA').addCallback(bIsReady);
 
-    var b = new os.xt.Peer(storage);
+    var b = new Peer(storage);
     b.setId('b');
     b.setTitle('Peer B');
     b.init();
@@ -789,18 +794,18 @@ describe('os.xt.Peer', function() {
 
     runs(function() {
       expect(bIsReady.calls.length).toBe(1);
-      var bInfo = os.xt.PeerInfo.load(b.getGroup(), b.getId(), storage);
+      var bInfo = PeerInfo.load(b.getGroup(), b.getId(), storage);
       expect(bInfo).toBeDefined();
       expect(bInfo).not.toBeNull();
       expect(bIsReady.calls[0].args[0]).toEqual(bInfo);
       a.cleanup_();
       b.cleanup_();
-      os.xt.Peer.PING_INTERVAL = origPing;
+      Peer.PING_INTERVAL = origPing;
     });
   });
 
   it('times out waiting for a peer by ID to become available', function() {
-    var a = new os.xt.Peer(storage);
+    var a = new Peer(storage);
     a.setId('a');
     a.setTitle('Peer A');
     a.init();
@@ -810,7 +815,7 @@ describe('os.xt.Peer', function() {
     var deferred = null;
 
     runs(function() {
-      deferred = a.waitForPeer('b', null, os.xt.Peer.PING_INTERVAL).addCallback(bIsReady).addErrback(timedOut);
+      deferred = a.waitForPeer('b', null, Peer.PING_INTERVAL).addCallback(bIsReady).addErrback(timedOut);
     });
 
     waitsFor(function() {
@@ -825,12 +830,12 @@ describe('os.xt.Peer', function() {
   });
 
   it('times out waiting for a peer by ID and message type', function() {
-    var a = new os.xt.Peer(storage);
+    var a = new Peer(storage);
     a.setId('a');
     a.setTitle('Peer A');
     a.init();
 
-    var b = new os.xt.Peer(storage);
+    var b = new Peer(storage);
     b.setId('b');
     b.setTitle('Peer B');
 
@@ -839,7 +844,7 @@ describe('os.xt.Peer', function() {
     var deferred = null;
 
     runs(function() {
-      deferred = a.waitForPeer('b', 'neverHandled', os.xt.Peer.PING_INTERVAL)
+      deferred = a.waitForPeer('b', 'neverHandled', Peer.PING_INTERVAL)
           .addCallback(bIsReady)
           .addErrback(timedOut);
       b.init();
@@ -858,10 +863,10 @@ describe('os.xt.Peer', function() {
   });
 
   it('times out waiting for peer when ping interval is longer than wait timeout', function() {
-    var origInterval = os.xt.Peer.PING_INTERVAL;
-    os.xt.Peer.PING_INTERVAL = 60000;
+    var origInterval = Peer.PING_INTERVAL;
+    Peer.PING_INTERVAL = 60000;
 
-    var a = new os.xt.Peer(storage);
+    var a = new Peer(storage);
     a.setId('a');
     a.setTitle('Peer A');
     a.init();
@@ -881,13 +886,13 @@ describe('os.xt.Peer', function() {
     runs(function() {
       expect(timedOut.calls.length).toBe(1);
       expect(bIsReady.calls.length).toBe(0);
-      os.xt.Peer.PING_INTERVAL = origInterval;
+      Peer.PING_INTERVAL = origInterval;
       a.cleanup_();
     });
   });
 
   it('supports waiting for multiple peers by ID', function() {
-    var a = new os.xt.Peer(storage);
+    var a = new Peer(storage);
     a.setId('a');
     a.setTitle('alice');
     a.init();
@@ -895,18 +900,18 @@ describe('os.xt.Peer', function() {
     a.waitForPeer('b').addCallback(peerIsReady);
     a.waitForPeer('c').addCallback(peerIsReady);
 
-    var b = new os.xt.Peer(storage);
+    var b = new Peer(storage);
     b.setId('b');
     b.setTitle('bob');
 
-    var c = new os.xt.Peer(storage);
+    var c = new Peer(storage);
     c.setId('c');
     c.setTitle('charlie');
 
     var start = Date.now();
 
     waitsFor(function() {
-      return Date.now() > start + os.xt.Peer.PING_INTERVAL + 100;
+      return Date.now() > start + Peer.PING_INTERVAL + 100;
     }, 'ping');
 
     runs(function() {
@@ -915,7 +920,7 @@ describe('os.xt.Peer', function() {
 
     waitsFor(function() {
       return peerIsReady.calls.length === 1;
-    }, 'peer to become available', os.xt.Peer.PING_INTERVAL);
+    }, 'peer to become available', Peer.PING_INTERVAL);
 
     runs(function() {
       expect(peerIsReady.calls.length).toBe(1);
@@ -924,7 +929,7 @@ describe('os.xt.Peer', function() {
     });
 
     waitsFor(function() {
-      return Date.now() > start + os.xt.Peer.PING_INTERVAL + 100;
+      return Date.now() > start + Peer.PING_INTERVAL + 100;
     }, 'ping');
 
     runs(function() {
@@ -947,7 +952,7 @@ describe('os.xt.Peer', function() {
   it('does not leave lingering timers running', function() {
     expect(storage.length).toBe(0);
 
-    var p = new os.xt.Peer(storage);
+    var p = new Peer(storage);
     p.setId('lingerer');
     p.setGroup('lingering');
     p.init();
@@ -961,7 +966,7 @@ describe('os.xt.Peer', function() {
       if (!start) {
         start = Date.now();
       }
-      return start + os.xt.Peer.PING_INTERVAL * 4 < Date.now();
+      return start + Peer.PING_INTERVAL * 4 < Date.now();
     }, 'three pings');
 
     runs(function() {
@@ -975,7 +980,7 @@ describe('os.xt.Peer', function() {
   it('should not explode when sending a very, very fat string via xt', function() {
     var storage = window.localStorage;
 
-    var a = new os.xt.Peer(storage);
+    var a = new Peer(storage);
     a.setId('a');
     a.setTitle('alice');
     a.addHandler(new os.xt.MockHandler());

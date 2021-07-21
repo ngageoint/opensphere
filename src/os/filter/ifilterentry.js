@@ -1,44 +1,40 @@
-goog.provide('os.filter.IFilterEntry');
-
+goog.module('os.filter.IFilterEntry');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @interface
  */
-os.filter.IFilterEntry = function() {};
+class IFilterEntry {
+  /**
+   * @return {string}
+   */
+  getTitle() {}
 
+  /**
+   * @param {string} value
+   */
+  setTitle(value) {}
 
-/**
- * @return {string}
- */
-os.filter.IFilterEntry.prototype.getTitle;
+  /**
+   * @return {?string}
+   */
+  getDescription() {}
 
+  /**
+   * @param {?string} value
+   */
+  setDescription(value) {}
 
-/**
- * @param {string} value
- */
-os.filter.IFilterEntry.prototype.setTitle;
+  /**
+   * @return {?string} The filter
+   */
+  getFilter() {}
 
+  /**
+   * @param {?string} filter
+   */
+  setFilter(filter) {}
+}
 
-/**
- * @return {?string}
- */
-os.filter.IFilterEntry.prototype.getDescription;
-
-
-/**
- * @param {?string} value
- */
-os.filter.IFilterEntry.prototype.setDescription;
-
-
-/**
- * @return {?string} The filter
- */
-os.filter.IFilterEntry.prototype.getFilter;
-
-
-/**
- * @param {?string} filter
- */
-os.filter.IFilterEntry.prototype.setFilter;
+exports = IFilterEntry;

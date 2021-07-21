@@ -5,7 +5,6 @@ goog.require('goog.async.Delay');
 goog.require('os.metrics.Metrics');
 goog.require('os.structs.ITreeNode');
 goog.require('os.ui.Module');
-goog.require('os.ui.config.SettingDefaultUICtrl');
 goog.require('os.ui.config.SettingPlugin');
 goog.require('os.ui.config.SettingsManager');
 goog.require('os.ui.config.SettingsManagerEventType');

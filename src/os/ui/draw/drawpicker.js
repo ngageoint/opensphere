@@ -1,18 +1,37 @@
-goog.provide('os.ui.draw.DrawPickerCtrl');
-goog.provide('os.ui.draw.drawPickerDirective');
+goog.module('os.ui.draw.DrawPickerUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
-goog.require('goog.events.KeyEvent');
-goog.require('goog.events.KeyHandler');
-goog.require('ol.geom.Point');
-goog.require('os');
-goog.require('os.interaction.DragBox');
-goog.require('os.interaction.DragCircle');
-goog.require('os.interaction.DrawLine');
-goog.require('os.interaction.DrawPolygon');
-goog.require('os.ogc.registry');
-goog.require('os.query');
-goog.require('os.ui.Module');
+const Disposable = goog.require('goog.Disposable');
+const dispose = goog.require('goog.dispose');
+const KeyCodes = goog.require('goog.events.KeyCodes');
+const KeyEvent = goog.require('goog.events.KeyEvent');
+const KeyHandler = goog.require('goog.events.KeyHandler');
+const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
+const events = goog.require('ol.events');
+const Point = goog.require('ol.geom.Point');
+const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
+const {ROOT} = goog.require('os');
+const {getIMapContainer} = goog.require('os.map.instance');
+const DragBox = goog.require('os.interaction.DragBox');
+const DragCircle = goog.require('os.interaction.DragCircle');
+const DrawLine = goog.require('os.interaction.DrawLine');
+const DrawPolygon = goog.require('os.interaction.DrawPolygon');
+const {addOGCMenuItems} = goog.require('os.ogc.registry');
+const {apply} = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const DrawEventType = goog.require('os.ui.draw.DrawEventType');
+const draw = goog.require('os.ui.menu.draw');
+const DragBoxInteraction = goog.require('os.ui.ol.interaction.DragBox');
+const DragCircleInteraction = goog.require('os.ui.ol.interaction.DragCircle');
+const DrawPolygonInteraction = goog.require('os.ui.ol.interaction.DrawPolygon');
+const launchChooseArea = goog.require('os.ui.query.area.launchChooseArea');
+
+const Feature = goog.requireType('ol.Feature');
+const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
+const OSMap = goog.requireType('os.Map');
+const DrawEvent = goog.requireType('os.ui.draw.DrawEvent');
+const Menu = goog.requireType('os.ui.menu.Menu');
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 
 
 /**
@@ -20,415 +39,411 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.draw.drawPickerDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'callback': '=?', // callback for draw completion
-      'point': '=?', // whether to include the point control
-      'line': '=?', // whether to include the line control
-      'menu': '=?', // whether is should be a menu view
-      'default': '@' // the default drawing control to use
-    },
-    templateUrl: os.ROOT + 'views/draw/drawpicker.html',
-    controller: os.ui.draw.DrawPickerCtrl,
-    controllerAs: 'drawPicker'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'callback': '=?', // callback for draw completion
+    'point': '=?', // whether to include the point control
+    'line': '=?', // whether to include the line control
+    'menu': '=?', // whether is should be a menu view
+    'default': '@' // the default drawing control to use
+  },
+  templateUrl: ROOT + 'views/draw/drawpicker.html',
+  controller: Controller,
+  controllerAs: 'drawPicker'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'drawpicker';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('drawpicker', [os.ui.draw.drawPickerDirective]);
-
-
+Module.directive('drawpicker', [directive]);
 
 /**
  * Controller function for the drawpicker directive
- *
- * @param {!angular.Scope} $scope The Angular scope.
- * @param {!angular.JQLite} $element The root DOM element.
- * @extends {goog.Disposable}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.draw.DrawPickerCtrl = function($scope, $element) {
-  os.ui.draw.DrawPickerCtrl.base(this, 'constructor');
-
+class Controller extends Disposable {
   /**
-   * The Angular scope.
-   * @type {?angular.Scope}
-   * @protected
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @param {!angular.JQLite} $element The root DOM element.
+   * @ngInject
    */
-  this.scope = $scope;
+  constructor($scope, $element) {
+    super();
 
-  /**
-   * The root DOM element.
-   * @type {?angular.JQLite}
-   * @protected
-   */
-  this.element = $element;
-
-  /**
-   * The map.
-   * @type {os.Map}
-   * @protected
-   */
-  this.map = /** @type {os.Map} */ (os.map.mapContainer.getMap());
-
-  /**
-   * Listener key for clicks on the map.
-   * @type {?ol.EventsKey}
-   * @protected
-   */
-  this.mapListenKey = null;
-
-  /**
-   * DragBox interaction
-   * @type {os.interaction.DragBox}
-   * @private
-   */
-  this.dragBox_ = new os.interaction.DragBox();
-  ol.events.listen(this.dragBox_, os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd_, this);
-  ol.events.listen(this.dragBox_, os.ui.draw.DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
-
-  /**
-   * DragCircle interaction
-   * @type {os.interaction.DragCircle}
-   * @private
-   */
-  this.dragCircle_ = new os.interaction.DragCircle();
-  ol.events.listen(this.dragCircle_, os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd_, this);
-  ol.events.listen(this.dragCircle_, os.ui.draw.DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
-
-  /**
-   * DrawPolygon interaction
-   * @type {os.interaction.DrawPolygon}
-   * @private
-   */
-  this.drawPolygon_ = new os.interaction.DrawPolygon();
-  ol.events.listen(this.drawPolygon_, os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd_, this);
-  ol.events.listen(this.drawPolygon_, os.ui.draw.DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
-
-  /**
-   * DrawLine interaction
-   * @type {os.interaction.DrawPolygon}
-   * @private
-   */
-  this.drawLine_ = new os.interaction.DrawLine();
-  ol.events.listen(this.drawLine_, os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd_, this);
-  ol.events.listen(this.drawLine_, os.ui.draw.DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
-
-  /**
-   * Handler for escape key events.
-   * @type {!goog.events.KeyHandler}
-   * @protected
-   */
-  this.keyHandler = new goog.events.KeyHandler(goog.dom.getDocument());
-  this.keyHandler.listen(goog.events.KeyEvent.EventType.KEY, this.onKey, false, this);
-
-  if ($scope['menu']) {
     /**
-     * The draw menu controls (if applicable).
-     * @type {os.ui.menu.Menu}
+     * The Angular scope.
+     * @type {?angular.Scope}
+     * @protected
      */
-    this.controlMenu = os.ui.menu.draw.create(this.onDrawEvent.bind(this));
-    this.initControlMenu();
+    this.scope = $scope;
+
+    /**
+     * The root DOM element.
+     * @type {?angular.JQLite}
+     * @protected
+     */
+    this.element = $element;
+
+    /**
+     * The map.
+     * @type {OSMap}
+     * @protected
+     */
+    this.map = /** @type {OSMap} */ (getIMapContainer().getMap());
+
+    /**
+     * Listener key for clicks on the map.
+     * @type {?ol.EventsKey}
+     * @protected
+     */
+    this.mapListenKey = null;
+
+    /**
+     * DragBox interaction
+     * @type {DragBox}
+     * @private
+     */
+    this.dragBox_ = new DragBox();
+    events.listen(this.dragBox_, DrawEventType.DRAWEND, this.onDrawEnd_, this);
+    events.listen(this.dragBox_, DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
+
+    /**
+     * DragCircle interaction
+     * @type {DragCircle}
+     * @private
+     */
+    this.dragCircle_ = new DragCircle();
+    events.listen(this.dragCircle_, DrawEventType.DRAWEND, this.onDrawEnd_, this);
+    events.listen(this.dragCircle_, DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
+
+    /**
+     * DrawPolygon interaction
+     * @type {DrawPolygon}
+     * @private
+     */
+    this.drawPolygon_ = new DrawPolygon();
+    events.listen(this.drawPolygon_, DrawEventType.DRAWEND, this.onDrawEnd_, this);
+    events.listen(this.drawPolygon_, DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
+
+    /**
+     * DrawLine interaction
+     * @type {DrawPolygon}
+     * @private
+     */
+    this.drawLine_ = new DrawLine();
+    events.listen(this.drawLine_, DrawEventType.DRAWEND, this.onDrawEnd_, this);
+    events.listen(this.drawLine_, DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
+
+    /**
+     * Handler for escape key events.
+     * @type {!KeyHandler}
+     * @protected
+     */
+    this.keyHandler = new KeyHandler(document);
+    this.keyHandler.listen(KeyEvent.EventType.KEY, this.onKey, false, this);
+
+    if ($scope['menu']) {
+      /**
+       * The draw menu controls (if applicable).
+       * @type {Menu}
+       */
+      this.controlMenu = draw.create(this.onDrawEvent.bind(this));
+      this.initControlMenu();
+    }
+
+    var defaultType = /** @type {string} */ ($scope['default']);
+    /**
+     * The selected drawing type.
+     * @type {?string}
+     */
+    this['selectedType'] = defaultType || DragBoxInteraction.TYPE;
+
+    /**
+     * Whether the control is currently drawing.
+     * @type {boolean}
+     */
+    this['active'] = false;
+
+    /**
+     * UID for this controller, used to unique identify the menu anchor.
+     * @type {number}
+     */
+    this['uid'] = goog.getUid(this);
+
+    this.map.addInteraction(this.dragBox_);
+    this.map.addInteraction(this.dragCircle_);
+    this.map.addInteraction(this.drawPolygon_);
+    this.map.addInteraction(this.drawLine_);
+
+    if (defaultType) {
+      // if passed a default type, initialize to it
+      this.draw(defaultType);
+    }
+
+    $scope.$on('drawpicker.cancel', this.onDrawCancel_.bind(this));
+    $scope.$on('$destroy', this.dispose.bind(this));
   }
 
-  var defaultType = /** @type {string} */ ($scope['default']);
   /**
-   * The selected drawing type.
-   * @type {?string}
+   * @inheritDoc
    */
-  this['selectedType'] = defaultType || os.ui.ol.interaction.DragBox.TYPE;
+  disposeInternal() {
+    super.disposeInternal();
+    this.disablePoint();
 
-  /**
-   * Whether the control is currently drawing.
-   * @type {boolean}
-   */
-  this['active'] = false;
+    // remove interactions
+    this.map.removeInteraction(this.dragBox_);
+    this.map.removeInteraction(this.dragCircle_);
+    this.map.removeInteraction(this.drawPolygon_);
+    this.map.removeInteraction(this.drawLine_);
+    this.dragBox_.dispose();
+    this.dragCircle_.dispose();
+    this.drawPolygon_.dispose();
+    this.drawLine_.dispose();
+    this.dragBox_ = null;
+    this.dragCircle_ = null;
+    this.drawPolygon_ = null;
+    this.drawLine_ = null;
 
-  /**
-   * UID for this controller, used to unique identify the menu anchor.
-   * @type {number}
-   */
-  this['uid'] = goog.getUid(this);
+    dispose(this.keyHandler);
 
-  this.map.addInteraction(this.dragBox_);
-  this.map.addInteraction(this.dragCircle_);
-  this.map.addInteraction(this.drawPolygon_);
-  this.map.addInteraction(this.drawLine_);
-
-  if (defaultType) {
-    // if passed a default type, initialize to it
-    this.draw(defaultType);
+    this.scope = null;
+    this.element = null;
+    this.map = null;
   }
 
-  $scope.$on('drawpicker.cancel', this.onDrawCancel_.bind(this));
-  $scope.$on('$destroy', this.dispose.bind(this));
-};
-goog.inherits(os.ui.draw.DrawPickerCtrl, goog.Disposable);
+  /**
+   * @protected
+   */
+  initControlMenu() {
+    var mi = this.controlMenu.getRoot();
+    var onDraw = this.onDrawEvent.bind(this);
 
+    // remove the enter coordinates and whole world options as they are inapplicable here
+    mi.removeChild('Whole World');
+    mi.removeChild('Enter Coordinates');
 
-/**
- * @inheritDoc
- */
-os.ui.draw.DrawPickerCtrl.prototype.disposeInternal = function() {
-  os.ui.draw.DrawPickerCtrl.base(this, 'disposeInternal');
-  this.disablePoint();
+    if (this.scope['line']) {
+      mi.addChild({
+        label: 'Line',
+        eventType: draw.EventType.LINE,
+        tooltip: 'Draw a line on the map',
+        icons: ['<i class="fa fa-fw fa-long-arrow-right"></i> '],
+        handler: onDraw,
+        sort: 40
+      });
+    }
 
-  // remove interactions
-  this.map.removeInteraction(this.dragBox_);
-  this.map.removeInteraction(this.dragCircle_);
-  this.map.removeInteraction(this.drawPolygon_);
-  this.map.removeInteraction(this.drawLine_);
-  this.dragBox_.dispose();
-  this.dragCircle_.dispose();
-  this.drawPolygon_.dispose();
-  this.drawLine_.dispose();
-  this.dragBox_ = null;
-  this.dragCircle_ = null;
-  this.drawPolygon_ = null;
-  this.drawLine_ = null;
+    // use this handler to bind on-click 'OK' to whatever 'callback' is on the this.scope OR returns null to do default 'add to areas'
+    var getCallback = function() {
+      return (this.scope['callback'] ? this.onOGCQueryFeatureChosen.bind(this) : null);
+    }.bind(this);
 
-  goog.dispose(this.keyHandler);
+    // add any configured OGC lookups (e.g. Country Borders)
+    addOGCMenuItems(this.controlMenu, 130, getCallback);
+  }
 
-  this.scope = null;
-  this.element = null;
-  this.map = null;
-};
+  /**
+   * Handle draw menu events.
+   *
+   * @param {MenuEvent} event The event.
+   */
+  onDrawEvent(event) {
+    switch (event.type) {
+      case draw.EventType.BOX:
+        this.draw(DragBoxInteraction.TYPE);
+        break;
+      case draw.EventType.CIRCLE:
+        this.draw(DragCircleInteraction.TYPE);
+        break;
+      case draw.EventType.POLYGON:
+        this.draw(DrawPolygonInteraction.TYPE);
+        break;
+      case draw.EventType.LINE:
+        this.draw(DrawLine.TYPE);
+        break;
+      case draw.EventType.CHOOSE_AREA:
+        launchChooseArea(this.onAreaChosen.bind(this));
+        break;
+      default:
+        break;
+    }
+  }
 
-
-/**
- * @protected
- */
-os.ui.draw.DrawPickerCtrl.prototype.initControlMenu = function() {
-  var mi = this.controlMenu.getRoot();
-  var onDraw = this.onDrawEvent.bind(this);
-
-  // remove the enter coordinates and whole world options as they are inapplicable here
-  mi.removeChild('Whole World');
-  mi.removeChild('Enter Coordinates');
-
-  if (this.scope['line']) {
-    mi.addChild({
-      label: 'Line',
-      eventType: os.ui.menu.draw.EventType.LINE,
-      tooltip: 'Draw a line on the map',
-      icons: ['<i class="fa fa-fw fa-long-arrow-right"></i> '],
-      handler: onDraw,
-      sort: 40
+  /**
+   * Opens the drawing menu.
+   *
+   * @export
+   */
+  toggleMenu() {
+    var target = this.element.find('.js-draw-controls' + this['uid']);
+    this.controlMenu.open(undefined, {
+      my: 'left top+4',
+      at: 'left bottom',
+      of: target
     });
   }
 
-  // use this handler to bind on-click 'OK' to whatever 'callback' is on the this.scope OR returns null to do default 'add to areas'
-  var getCallback = function() {
-    return (this.scope['callback'] ? this.onOGCQueryFeatureChosen.bind(this) : null);
-  }.bind(this);
-
-  // add any configured OGC lookups (e.g. Country Borders)
-  os.ogc.registry.addOGCMenuItems(this.controlMenu, 130, getCallback);
-};
-
-
-/**
- * Handle draw menu events.
- *
- * @param {os.ui.menu.MenuEvent} event The event.
- */
-os.ui.draw.DrawPickerCtrl.prototype.onDrawEvent = function(event) {
-  switch (event.type) {
-    case os.ui.menu.draw.EventType.BOX:
-      this.draw(os.ui.ol.interaction.DragBox.TYPE);
-      break;
-    case os.ui.menu.draw.EventType.CIRCLE:
-      this.draw(os.ui.ol.interaction.DragCircle.TYPE);
-      break;
-    case os.ui.menu.draw.EventType.POLYGON:
-      this.draw(os.ui.ol.interaction.DrawPolygon.TYPE);
-      break;
-    case os.ui.menu.draw.EventType.LINE:
-      this.draw(os.interaction.DrawLine.TYPE);
-      break;
-    case os.ui.menu.draw.EventType.CHOOSE_AREA:
-      os.ui.query.area.launchChooseArea(this.onAreaChosen.bind(this));
-      break;
-    default:
-      break;
-  }
-};
-
-
-/**
- * Opens the drawing menu.
- *
- * @export
- */
-os.ui.draw.DrawPickerCtrl.prototype.toggleMenu = function() {
-  var target = this.element.find('.js-draw-controls' + this['uid']);
-  this.controlMenu.open(undefined, {
-    my: 'left top+4',
-    at: 'left bottom',
-    of: target
-  });
-};
-
-
-/**
- * Initializes drawing with the chosen control.
- *
- * @param {string} type The drawing type to initialize.
- * @export
- */
-os.ui.draw.DrawPickerCtrl.prototype.draw = function(type) {
-  var lastType = this['selectedType'];
-  var wasActive = this['active'];
-  this.onDrawCancel_();
-
-  if (wasActive && lastType && lastType === type) {
-    // user clicked the currently active button, so treat it as toggling the controls off
-    return;
-  }
-
-  this['active'] = true;
-  this['selectedType'] = type;
-  var interaction;
-
-  if (type == 'point') {
-    // don't need an interaction for handling points
-    this.enablePoint();
-    return;
-  } else if (type == os.ui.ol.interaction.DragBox.TYPE) {
-    interaction = this.dragBox_;
-  } else if (type == os.ui.ol.interaction.DragCircle.TYPE) {
-    interaction = this.dragCircle_;
-  } else if (type == os.ui.ol.interaction.DrawPolygon.TYPE) {
-    interaction = this.drawPolygon_;
-  } else if (type == os.interaction.DrawLine.TYPE) {
-    interaction = this.drawLine_;
-  }
-
-  if (interaction) {
-    interaction.setActive(true);
-    interaction.setEnabled(true);
-  }
-};
-
-
-/**
- * Enables a listener for clicks on the map
- */
-os.ui.draw.DrawPickerCtrl.prototype.enablePoint = function() {
-  if (!this.mapListenKey) {
-    this.mapListenKey = ol.events.listen(this.map, ol.MapBrowserEventType.SINGLECLICK, this.onMapClick, this);
-  }
-};
-
-
-/**
- * Enables a listener for clicks on the map
- */
-os.ui.draw.DrawPickerCtrl.prototype.disablePoint = function() {
-  if (this.mapListenKey) {
-    ol.events.unlistenByKey(this.mapListenKey);
-    this.mapListenKey = null;
-  }
-};
-
-
-/**
- * Handles draw end events.
- *
- * @param {os.ui.draw.DrawEvent} event
- * @private
- */
-os.ui.draw.DrawPickerCtrl.prototype.onDrawEnd_ = function(event) {
-  if (event && event.geometry instanceof ol.geom.SimpleGeometry) {
-    var geometry = /** @type {ol.geom.SimpleGeometry} */ (event.geometry);
-    this.scope['callback'](geometry);
-  }
-};
-
-
-/**
- * Handles draw cancel events.
- *
- * @param {(angular.Scope.Event|os.ui.draw.DrawEvent)=} opt_event
- * @private
- */
-os.ui.draw.DrawPickerCtrl.prototype.onDrawCancel_ = function(opt_event) {
-  if (opt_event) {
-    opt_event.preventDefault();
-  }
-
-  // disable all interactions
-  this.disablePoint();
-  this.dragBox_.setActive(false);
-  this.dragBox_.setEnabled(false);
-  this.dragCircle_.setActive(false);
-  this.dragCircle_.setEnabled(false);
-  this.drawPolygon_.setActive(false);
-  this.drawPolygon_.setEnabled(false);
-  this.drawLine_.setActive(false);
-  this.drawLine_.setEnabled(false);
-
-  this['active'] = false;
-
-  os.ui.apply(this.scope);
-};
-
-
-/**
- * Handle map browser events.
- *
- * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
- * @return {boolean} 'false' to stop event propagation
- * @protected
- */
-os.ui.draw.DrawPickerCtrl.prototype.onMapClick = function(mapBrowserEvent) {
-  if (mapBrowserEvent.type == ol.MapBrowserEventType.SINGLECLICK &&
-      mapBrowserEvent.coordinate && mapBrowserEvent.coordinate.length > 1) {
-    // This UI will do everything in lon/lat
-    var point = new ol.geom.Point(mapBrowserEvent.coordinate);
-    this.scope['callback'](point);
-  }
-
-  return false;
-};
-
-
-/**
- * Handler for escape key presses.
- *
- * @param {goog.events.KeyEvent} event
- */
-os.ui.draw.DrawPickerCtrl.prototype.onKey = function(event) {
-  if (event.keyCode == goog.events.KeyCodes.ESC) {
+  /**
+   * Initializes drawing with the chosen control.
+   *
+   * @param {string} type The drawing type to initialize.
+   * @export
+   */
+  draw(type) {
+    var lastType = this['selectedType'];
+    var wasActive = this['active'];
     this.onDrawCancel_();
+
+    if (wasActive && lastType && lastType === type) {
+      // user clicked the currently active button, so treat it as toggling the controls off
+      return;
+    }
+
+    this['active'] = true;
+    this['selectedType'] = type;
+    var interaction;
+
+    if (type == 'point') {
+      // don't need an interaction for handling points
+      this.enablePoint();
+      return;
+    } else if (type == DragBoxInteraction.TYPE) {
+      interaction = this.dragBox_;
+    } else if (type == DragCircleInteraction.TYPE) {
+      interaction = this.dragCircle_;
+    } else if (type == DrawPolygonInteraction.TYPE) {
+      interaction = this.drawPolygon_;
+    } else if (type == DrawLine.TYPE) {
+      interaction = this.drawLine_;
+    }
+
+    if (interaction) {
+      interaction.setActive(true);
+      interaction.setEnabled(true);
+    }
   }
-};
 
-
-/**
- * Handler for area chosen.
- *
- * @param {ol.Feature} feature The chosen area.
- */
-os.ui.draw.DrawPickerCtrl.prototype.onAreaChosen = function(feature) {
-  var geometry = feature.getGeometry();
-  if (geometry instanceof ol.geom.SimpleGeometry) {
-    this.scope['callback'](geometry);
+  /**
+   * Enables a listener for clicks on the map
+   */
+  enablePoint() {
+    if (!this.mapListenKey) {
+      this.mapListenKey = events.listen(this.map, MapBrowserEventType.SINGLECLICK, this.onMapClick, this);
+    }
   }
-};
 
+  /**
+   * Enables a listener for clicks on the map
+   */
+  disablePoint() {
+    if (this.mapListenKey) {
+      events.unlistenByKey(this.mapListenKey);
+      this.mapListenKey = null;
+    }
+  }
 
-/**
- * Handler for ogc feature chosen.
- * @param {ol.Feature} feature The loaded ogc feature.
- */
-os.ui.draw.DrawPickerCtrl.prototype.onOGCQueryFeatureChosen = function(feature) {
-  this.onAreaChosen(feature);
+  /**
+   * Handles draw end events.
+   *
+   * @param {DrawEvent} event
+   * @private
+   */
+  onDrawEnd_(event) {
+    if (event && event.geometry instanceof SimpleGeometry) {
+      var geometry = /** @type {ol.geom.SimpleGeometry} */ (event.geometry);
+      this.scope['callback'](geometry);
+    }
+  }
+
+  /**
+   * Handles draw cancel events.
+   *
+   * @param {(angular.Scope.Event|DrawEvent)=} opt_event
+   * @private
+   */
+  onDrawCancel_(opt_event) {
+    if (opt_event) {
+      opt_event.preventDefault();
+    }
+
+    // disable all interactions
+    this.disablePoint();
+    this.dragBox_.setActive(false);
+    this.dragBox_.setEnabled(false);
+    this.dragCircle_.setActive(false);
+    this.dragCircle_.setEnabled(false);
+    this.drawPolygon_.setActive(false);
+    this.drawPolygon_.setEnabled(false);
+    this.drawLine_.setActive(false);
+    this.drawLine_.setEnabled(false);
+
+    this['active'] = false;
+
+    apply(this.scope);
+  }
+
+  /**
+   * Handle map browser events.
+   *
+   * @param {MapBrowserEvent} mapBrowserEvent Map browser event.
+   * @return {boolean} 'false' to stop event propagation
+   * @protected
+   */
+  onMapClick(mapBrowserEvent) {
+    if (mapBrowserEvent.type == MapBrowserEventType.SINGLECLICK &&
+        mapBrowserEvent.coordinate && mapBrowserEvent.coordinate.length > 1) {
+      // This UI will do everything in lon/lat
+      var point = new Point(mapBrowserEvent.coordinate);
+      this.scope['callback'](point);
+    }
+
+    return false;
+  }
+
+  /**
+   * Handler for escape key presses.
+   *
+   * @param {KeyEvent} event
+   */
+  onKey(event) {
+    if (event.keyCode == KeyCodes.ESC) {
+      this.onDrawCancel_();
+    }
+  }
+
+  /**
+   * Handler for area chosen.
+   *
+   * @param {Feature} feature The chosen area.
+   */
+  onAreaChosen(feature) {
+    var geometry = feature.getGeometry();
+    if (geometry instanceof SimpleGeometry) {
+      this.scope['callback'](geometry);
+    }
+  }
+
+  /**
+   * Handler for ogc feature chosen.
+   * @param {Feature} feature The loaded ogc feature.
+   */
+  onOGCQueryFeatureChosen(feature) {
+    this.onAreaChosen(feature);
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

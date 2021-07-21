@@ -1,82 +1,86 @@
-goog.provide('os.events.PropertyChangeEvent');
-goog.require('goog.events.Event');
-goog.require('goog.events.EventType');
+goog.module('os.events.PropertyChangeEvent');
+goog.module.declareLegacyNamespace();
 
+const GoogEvent = goog.require('goog.events.Event');
+const GoogEventType = goog.require('goog.events.EventType');
+
+const OLEventTarget = goog.requireType('ol.events.EventTarget');
 
 
 /**
  * A property change event.
- *
- * @param {string=} opt_property The property that changed
- * @param {*=} opt_newVal The new value
- * @param {*=} opt_oldVal The old value
- * @param {Object=} opt_target Reference to the object that is the target of
- *     this event. It has to implement the {@code EventTarget} interface
- *     declared at {@link http://developer.mozilla.org/en/DOM/EventTarget}.
- * @extends {goog.events.Event}
- * @constructor
  */
-os.events.PropertyChangeEvent = function(opt_property, opt_newVal, opt_oldVal, opt_target) {
-  os.events.PropertyChangeEvent.base(this, 'constructor', goog.events.EventType.PROPERTYCHANGE, opt_target);
+class PropertyChangeEvent extends GoogEvent {
+  /**
+   * Constructor.
+   * @param {string=} opt_property The property that changed
+   * @param {*=} opt_newVal The new value
+   * @param {*=} opt_oldVal The old value
+   * @param {Object=} opt_target Reference to the object that is the target of
+   *     this event. It has to implement the {@code EventTarget} interface
+   *     declared at {@link http://developer.mozilla.org/en/DOM/EventTarget}.
+   */
+  constructor(opt_property, opt_newVal, opt_oldVal, opt_target) {
+    super(GoogEventType.PROPERTYCHANGE, opt_target);
+
+    /**
+     * The property
+     * @type {?string}
+     * @private
+     */
+    this.property_ = opt_property !== undefined ? opt_property : null;
+
+    /**
+     * The new value
+     * @type {?*}
+     * @private
+     */
+    this.newVal_ = opt_newVal !== undefined ? opt_newVal : null;
+
+    /**
+     * The old value
+     * @type {?*}
+     * @private
+     */
+    this.oldVal_ = opt_oldVal !== undefined ? opt_oldVal : null;
+  }
 
   /**
-   * The property
-   * @type {?string}
-   * @private
+   * Gets the property that changed
+   *
+   * @return {?string}
    */
-  this.property_ = opt_property !== undefined ? opt_property : null;
+  getProperty() {
+    return this.property_;
+  }
 
   /**
-   * The new value
-   * @type {?*}
-   * @private
+   * Gets the new value of the property
+   *
+   * @return {?*}
    */
-  this.newVal_ = opt_newVal !== undefined ? opt_newVal : null;
+  getNewValue() {
+    return this.newVal_;
+  }
 
   /**
-   * The old value
-   * @type {?*}
-   * @private
+   * Gets the old value of the property
+   *
+   * @return {?*}
    */
-  this.oldVal_ = opt_oldVal !== undefined ? opt_oldVal : null;
-};
-goog.inherits(os.events.PropertyChangeEvent, goog.events.Event);
+  getOldValue() {
+    return this.oldVal_;
+  }
+}
 
 
 /**
  * Override the type so these events can be used with {@link ol.events.EventTarget.prototype.dispatchEvent}.
  *
- * @type {EventTarget|ol.events.EventTarget|undefined}
+ * @type {EventTarget|OLEventTarget|undefined}
  * @suppress {duplicate}
  */
-os.events.PropertyChangeEvent.prototype.target;
+PropertyChangeEvent.prototype.target;
 
 
-/**
- * Gets the property that changed
- *
- * @return {?string}
- */
-os.events.PropertyChangeEvent.prototype.getProperty = function() {
-  return this.property_;
-};
-
-
-/**
- * Gets the new value of the property
- *
- * @return {?*}
- */
-os.events.PropertyChangeEvent.prototype.getNewValue = function() {
-  return this.newVal_;
-};
-
-
-/**
- * Gets the old value of the property
- *
- * @return {?*}
- */
-os.events.PropertyChangeEvent.prototype.getOldValue = function() {
-  return this.oldVal_;
-};
+exports = PropertyChangeEvent;

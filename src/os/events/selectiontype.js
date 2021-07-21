@@ -1,23 +1,13 @@
-goog.provide('os.events.SelectionType');
+goog.module('os.events.SelectionType');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @enum {string}
  */
-os.events.SelectionType = {
+exports = {
   ADDED: 'selectedItemsAdded',
   CHANGED: 'selectedItemsChanged',
   REMOVED: 'selectedItemsRemoved',
   CLEAR: 'selectedItemsCleared'
-};
-
-
-/**
- * Test if an event type is a selection type.
- *
- * @param {?string} type The event type
- * @return {boolean}
- */
-os.events.isSelectionType = function(type) {
-  return !!type && goog.object.containsValue(os.events.SelectionType, type);
 };

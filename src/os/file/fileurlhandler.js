@@ -1,75 +1,103 @@
-goog.provide('os.file.FileUrlHandler');
-goog.require('os.ui.im.ImportEvent');
-goog.require('os.ui.im.ImportEventType');
-goog.require('os.url.AbstractUrlHandler');
+goog.module('os.file.FileUrlHandler');
+goog.module.declareLegacyNamespace();
 
+const dispatcher = goog.require('os.Dispatcher');
+const DataManager = goog.require('os.data.DataManager');
+const ImportEvent = goog.require('os.ui.im.ImportEvent');
+const ImportEventType = goog.require('os.ui.im.ImportEventType');
+const AbstractUrlHandler = goog.require('os.url.AbstractUrlHandler');
 
 
 /**
  * Handles URL parameters for files.
- *
- * @extends {os.url.AbstractUrlHandler}
- * @constructor
  */
-os.file.FileUrlHandler = function() {
-  os.file.FileUrlHandler.base(this, 'constructor');
-  this.keys = [os.file.FileUrlHandler.KEY];
-};
-goog.inherits(os.file.FileUrlHandler, os.url.AbstractUrlHandler);
-goog.addSingletonGetter(os.file.FileUrlHandler);
+class FileUrlHandler extends AbstractUrlHandler {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.keys = [FileUrlHandler.KEY];
+  }
 
+  /**
+   * Handles a file by kicking off the import process.
+   *
+   * @inheritDoc
+   */
+  handleInternal(key, value) {
+    if (key === FileUrlHandler.KEY) {
+      var d = DataManager.getInstance().getDescriptorByUrl(value);
+
+      // check if it exists
+      if (d) {
+        if (!d.isActive()) {
+          // turn it on if it's off
+          d.setActive(true);
+        }
+        // don't send another import event
+        return;
+      }
+
+      var event = new ImportEvent(ImportEventType.URL, value);
+      dispatcher.getInstance().dispatchEvent(event);
+    }
+  }
+
+  /**
+   * Unhandles a file by removing the descriptor.
+   *
+   * @inheritDoc
+   */
+  unhandleInternal(key, value) {
+    if (key === FileUrlHandler.KEY) {
+      var d = null;
+      var descriptors = DataManager.getInstance().getDescriptors();
+      for (var i = 0, ii = descriptors.length; i < ii; i++) {
+        if (descriptors[i].matchesURL(value)) {
+          d = descriptors[i];
+          break;
+        }
+      }
+
+      if (d) {
+        d.setActive(false);
+        DataManager.getInstance().removeDescriptor(d);
+      }
+    }
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!FileUrlHandler}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new FileUrlHandler();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {FileUrlHandler} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
+
+/**
+ * Global instance.
+ * @type {FileUrlHandler|undefined}
+ */
+let instance;
 
 /**
  * @type {string}
  * @const
  */
-os.file.FileUrlHandler.KEY = 'file';
+FileUrlHandler.KEY = 'file';
 
-
-/**
- * Handles a file by kicking off the import process.
- *
- * @inheritDoc
- */
-os.file.FileUrlHandler.prototype.handleInternal = function(key, value) {
-  if (key === os.file.FileUrlHandler.KEY) {
-    var d = os.dataManager.getDescriptorByUrl(value);
-
-    // check if it exists
-    if (d) {
-      if (!d.isActive()) {
-        // turn it on if it's off
-        d.setActive(true);
-      }
-      // don't send another import event
-      return;
-    }
-
-    var event = new os.ui.im.ImportEvent(os.ui.im.ImportEventType.URL, value);
-    os.dispatcher.dispatchEvent(event);
-  }
-};
-
-
-/**
- * Unhandles a file by removing the descriptor.
- *
- * @inheritDoc
- */
-os.file.FileUrlHandler.prototype.unhandleInternal = function(key, value) {
-  if (key === os.file.FileUrlHandler.KEY) {
-    var d = null;
-    var descriptors = os.dataManager.getDescriptors();
-    for (var i = 0, ii = descriptors.length; i < ii; i++) {
-      if (descriptors[i].matchesURL(value)) {
-        d = descriptors[i];
-        break;
-      }
-    }
-
-    if (d) {
-      d.setActive(false);
-      os.dataManager.removeDescriptor(d);
-    }
-  }
-};
+exports = FileUrlHandler;

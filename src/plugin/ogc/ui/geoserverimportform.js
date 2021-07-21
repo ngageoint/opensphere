@@ -1,9 +1,9 @@
 goog.module('plugin.ogc.ui.GeoserverImportForm');
 goog.module.declareLegacyNamespace();
 
-const Module = goog.require('os.ui.Module');
-const geoserverDirective = goog.require('plugin.ogc.ui.geoserverDirective');
 const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const {directive: geoserverDirective} = goog.require('plugin.ogc.ui.GeoserverImportUI');
 
 
 /**

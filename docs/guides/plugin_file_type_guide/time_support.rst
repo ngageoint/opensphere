@@ -6,8 +6,8 @@ You may have noticed that there is a little clock icon on the layer. The parent 
 .. literalinclude:: ../../../src/os/data/filedescriptor.js
   :linenos:
   :language: javascript
-  :lines: 85-101
-  :emphasize-lines: 5
+  :lines: 154-171
+  :emphasize-lines: 4
 
 That turns on time indexing on the layer. However, nothing is taking the time values from the ``<updated>`` tags in the GeoRSS entries and turning them into ``os.time.TimeInstant`` values in the proper place on the feature. Hence every feature is treated as "timeless" even though the source has time indexing enabled. This is where mappings come in.
 

@@ -24,18 +24,20 @@ goog.require('os.command.VectorLayerShowLabel');
 goog.require('os.command.VectorLayerShowRotation');
 goog.require('os.command.VectorLayerSize');
 goog.require('os.command.VectorUniqueIdCmd');
-goog.require('os.command.style');
-goog.require('os.data.OSDataManager');
+goog.require('os.command.style.ColorChangeType');
+goog.require('os.data.DataManager');
 goog.require('os.fn');
 goog.require('os.layer.preset');
 goog.require('os.layer.preset.LayerPresetManager');
 goog.require('os.layer.preset.PresetMenuButton');
+goog.require('os.map.instance');
 goog.require('os.style');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.kml');
 goog.require('os.ui.icon.IconPickerEventType');
 goog.require('os.ui.layer');
 goog.require('os.ui.layer.DefaultLayerUICtrl');
+goog.require('os.ui.layer.VectorStyleControlsEventType');
 goog.require('os.ui.layer.ellipseOptionsDirective');
 goog.require('os.ui.layer.iconStyleControlsDirective');
 goog.require('os.ui.layer.labelControlsDirective');
@@ -147,6 +149,12 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
   this['uniqueId'] = null;
 
   /**
+   * Feature Toggle
+   * @type {boolean}
+   */
+  this['allowEllipseConfig'] = os.settings.get(os.ui.layer.EllipseColumnsUI.ALLOW_ELLIPSE_CONFIG, false);
+
+  /**
    * Delay for grouping label size changes.
    * @type {goog.async.Delay}
    */
@@ -253,6 +261,11 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
     this['showRotation'] = this.getShowRotation();
     this['rotationColumn'] = this.getRotationColumn();
 
+    const layerNodes = this.getLayerNodes();
+    if (layerNodes.length == 1) {
+      this['layer'] = layerNodes[0].getLayer();
+    }
+
     this.loadPresets();
     this.updateReplaceStyle_();
 
@@ -281,10 +294,11 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
       this.scope['labelSize'] = this.getLabelSize() || os.style.label.DEFAULT_SIZE;
     }
 
-    var webGLRenderer = os.map.mapContainer.getWebGLRenderer();
+    var mapContainer = os.map.instance.getMapContainer();
+    var webGLRenderer = mapContainer.getWebGLRenderer();
     if (webGLRenderer) {
       this['altitudeModes'] = webGLRenderer.getAltitudeModes();
-      this['showAltitudeModes'] = this['altitudeModes'].length > 0 && os.map.mapContainer.is3DEnabled();
+      this['showAltitudeModes'] = this['altitudeModes'].length > 0 && mapContainer.is3DEnabled();
     }
 
     // update the shape UI
@@ -1045,7 +1059,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShape = function() {
   var shape;
 
   if (items && items.length > 0) {
-    var source = os.osDataManager.getSource(items[0].getId());
+    var source = os.dataManager.getSource(items[0].getId());
     if (source) {
       shape = source.getGeometryShape();
     }
@@ -1061,19 +1075,22 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShape = function() {
  * @return {Array<string>} The available shape options
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getShapes = function() {
-  var items = this.getLayerNodes();
-  var shapes = goog.object.getKeys(os.style.SHAPES);
+  if (this['allowEllipseConfig']) {
+    return goog.object.getKeys(os.style.SHAPES);
+  } else {
+    var items = this.getLayerNodes();
+    var shapes = goog.object.getKeys(os.style.SHAPES);
 
-  if (items && items.length > 0) {
-    for (var i = 0, n = items.length; i < n; i++) {
-      var source = os.osDataManager.getSource(items[i].getId());
-      if (source && source instanceof os.source.Vector) {
-        shapes = goog.array.filter(shapes, source.supportsShape, source);
+    if (items && items.length > 0) {
+      for (var i = 0, n = items.length; i < n; i++) {
+        var source = os.dataManager.getSource(items[i].getId());
+        if (source && source instanceof os.source.Vector) {
+          shapes = goog.array.filter(shapes, source.supportsShape, source);
+        }
       }
     }
+    return shapes;
   }
-
-  return shapes;
 };
 
 
@@ -1087,7 +1104,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getCenterShape = function() {
   var shape;
 
   if (items && items.length > 0) {
-    var source = os.osDataManager.getSource(items[0].getId());
+    var source = os.dataManager.getSource(items[0].getId());
     if (source) {
       var tempShape = source.getCenterGeometryShape();
       if (!os.style.ELLIPSE_REGEXP.test(tempShape) && !os.style.DEFAULT_REGEXP.test(tempShape)) {
@@ -1111,7 +1128,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getCenterShapes = function() {
 
   if (items && items.length > 0) {
     for (var i = 0, n = items.length; i < n; i++) {
-      var source = os.osDataManager.getSource(items[i].getId());
+      var source = os.dataManager.getSource(items[i].getId());
       if (source && source instanceof os.source.Vector) {
         shapes = goog.array.filter(shapes, source.isNotEllipseOrLOBOrDefault, source);
       }
@@ -1134,7 +1151,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getLockable = function() {
   var items = /** @type {Array} */ (this.scope['items']);
   if (items && items.length > 0) {
     for (var i = 0, n = items.length; i < n; i++) {
-      var source = os.osDataManager.getSource(items[i].getId());
+      var source = os.dataManager.getSource(items[i].getId());
       if (source && source instanceof os.source.Vector) {
         if (!source.isLockable()) {
           lockable = false;
@@ -1208,7 +1225,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLockChange = function() {
   var items = /** @type {Array} */ (this.scope['items']);
   if (items && items.length > 0) {
     for (var i = 0, n = items.length; i < n; i++) {
-      var source = os.osDataManager.getSource(items[i].getId());
+      var source = os.dataManager.getSource(items[i].getId());
       if (source && source instanceof os.source.Vector && source.isLockable()) {
         source.setLocked(this['lock']);
       }
@@ -1288,7 +1305,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getAltitudeMode = function() {
   var items = /** @type {Array} */ (this.scope['items']);
   if (items && items.length > 0) {
     for (var i = 0, n = items.length; i < n; i++) {
-      var source = os.osDataManager.getSource(items[i].getId());
+      var source = os.dataManager.getSource(items[i].getId());
       if (source && source instanceof os.source.Vector) {
         altitudeMode = source.getAltitudeMode();
         break;
@@ -1308,7 +1325,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onAltitudeModeChange = function() {
   var items = /** @type {Array} */ (this.scope['items']);
   if (items && items.length > 0) {
     for (var i = 0, n = items.length; i < n; i++) {
-      var source = os.osDataManager.getSource(items[i].getId());
+      var source = os.dataManager.getSource(items[i].getId());
       if (source && source instanceof os.source.Vector) {
         source.setAltitudeMode(this['altitudeMode']);
       }

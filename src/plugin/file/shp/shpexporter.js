@@ -12,7 +12,7 @@ const Point = goog.require('ol.geom.Point');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const osArray = goog.require('os.array');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const RecordField = goog.require('os.data.RecordField');
 const ZipExporter = goog.require('os.ex.ZipExporter');
 const osFeature = goog.require('os.feature');
@@ -176,7 +176,7 @@ class SHPExporter extends ZipExporter {
     if (feature) {
       var sourceId = feature.get(RecordField.SOURCE_ID);
       if (typeof sourceId === 'string') {
-        source = /** @type {VectorSource} */ (OSDataManager.getInstance().getSource(sourceId));
+        source = /** @type {VectorSource} */ (DataManager.getInstance().getSource(sourceId));
       }
     }
 

@@ -9,8 +9,9 @@ goog.require('os.metrics.Metrics');
 goog.require('os.time');
 goog.require('os.time.TimelineController');
 goog.require('os.ui.Module');
-goog.require('os.ui.datetime.dateTimeDirective');
+goog.require('os.ui.datetime.DateTimeUI');
 goog.require('os.ui.popover.popoverDirective');
+goog.require('os.ui.timeline.TimelineUI');
 
 
 /**
@@ -157,8 +158,8 @@ os.ui.AnimationSettingsCtrl.UNITS = [{
 os.ui.AnimationSettingsCtrl.prototype.populate = function() {
   var tlc = os.time.TimelineController.getInstance();
 
-  this.loadStart = new Date(tlc.getStart() + os.time.timeOffset);
-  this.loadEnd = new Date(tlc.getEnd() + os.time.timeOffset);
+  this.loadStart = new Date(tlc.getStart() + os.time.getTimeOffset());
+  this.loadEnd = new Date(tlc.getEnd() + os.time.getTimeOffset());
   this.scope['autoConfig'] = tlc.getAutoConfigure();
 
   // if no animation ranges are defined, the loop is equal to the loaded range
@@ -168,8 +169,8 @@ os.ui.AnimationSettingsCtrl.prototype.populate = function() {
     this.scope['loopStart'] = this.loopStart = this.loadStart;
     this.scope['loopEnd'] = this.loopEnd = this.loadEnd;
   } else {
-    this.scope['loopStart'] = this.loopStart = new Date(tlc.getLoopStart() + os.time.timeOffset);
-    this.scope['loopEnd'] = this.loopEnd = new Date(tlc.getLoopEnd() + os.time.timeOffset);
+    this.scope['loopStart'] = this.loopStart = new Date(tlc.getLoopStart() + os.time.getTimeOffset());
+    this.scope['loopEnd'] = this.loopEnd = new Date(tlc.getLoopEnd() + os.time.getTimeOffset());
   }
 
   // if the lock is used, use the original range for the window, not the current offset
@@ -231,7 +232,7 @@ os.ui.AnimationSettingsCtrl.prototype.autoConfigure = function() {
     } else if (diff >= 5 * os.time.timeline.DAY - 30 * os.time.timeline.MIN) {
       this.setTileAnimation(os.time.timeline.DAY, os.time.Duration.DAY);
     } else {
-      var offset = os.ui.timeline.TimelineCtrl.getSnap(diff / 24);
+      var offset = os.ui.timeline.TimelineUI.Controller.getSnap(diff / 24);
       var viewsize = tlc.getRange().getLength();
       if (offset < viewsize / 24) {
         offset = Math.min(diff / 2, viewsize / 24);
@@ -344,8 +345,8 @@ os.ui.AnimationSettingsCtrl.prototype.accept = function() {
 
   // if a manual range was provided, set it now
   if (!this.scope['autoLoop']) {
-    var loopStart = this.loopStart.getTime() - os.time.timeOffset;
-    var loopEnd = this.loopEnd.getTime() - os.time.timeOffset;
+    var loopStart = this.loopStart.getTime() - os.time.getTimeOffset();
+    var loopEnd = this.loopEnd.getTime() - os.time.getTimeOffset();
     if (loopStart != loopEnd) {
       // only add the range if the start/end aren't equal
       var range = new goog.math.Range(loopStart, loopEnd);
@@ -366,7 +367,8 @@ os.ui.AnimationSettingsCtrl.prototype.accept = function() {
   tlc.setCurrent(tlc.getLoopStart() + tlc.getOffset());
 
   // move the view
-  /** @type {os.ui.timeline.TimelineCtrl} */ (this.scope['timeline']).zoomToExtent([tlc.getStart(), tlc.getEnd()]);
+  const controller = /** @type {os.ui.timeline.TimelineUI.Controller} */ (this.scope['timeline']);
+  controller.zoomToExtent([tlc.getStart(), tlc.getEnd()]);
   this.cancel();
 };
 

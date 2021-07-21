@@ -4,6 +4,7 @@ goog.module.declareLegacyNamespace();
 const asserts = goog.require('goog.asserts');
 
 const buffer = goog.require('os.buffer');
+const BufferDialogUI = goog.require('os.ui.buffer.BufferDialogUI');
 const osFeature = goog.require('os.feature');
 const TriState = goog.require('os.structs.TriState');
 const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
@@ -181,7 +182,7 @@ const onLayerEvent_ = function(event) {
                 'features': features,
                 'title': bufferTitle
               };
-              buffer.launchDialog(config);
+              BufferDialogUI.launchBufferDialog(config);
             }
             break;
           case EventType.GOTO:

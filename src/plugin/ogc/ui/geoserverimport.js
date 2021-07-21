@@ -1,14 +1,15 @@
-goog.provide('plugin.ogc.ui.GeoserverImportCtrl');
-goog.provide('plugin.ogc.ui.geoserverDirective');
+goog.module('plugin.ogc.ui.GeoserverImportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os');
-goog.require('os.ui.Module');
-goog.require('os.ui.SingleUrlProviderImportCtrl');
-goog.require('os.ui.WindowEventType');
 goog.require('os.ui.singleUrlFormDirective');
-goog.require('os.ui.window');
-goog.require('plugin.ogc.GeoServer');
-goog.require('plugin.ogc.ui.GeoServerHelpUI');
+
+const os = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const SingleUrlProviderImportCtrl = goog.require('os.ui.SingleUrlProviderImportCtrl');
+const GeoServer = goog.require('plugin.ogc.GeoServer');
+const GeoServerHelpUI = goog.require('plugin.ogc.ui.GeoServerHelpUI');
+
+const OSFile = goog.requireType('os.file.File');
 
 
 /**
@@ -16,78 +17,86 @@ goog.require('plugin.ogc.ui.GeoServerHelpUI');
  *
  * @return {angular.Directive}
  */
-plugin.ogc.ui.geoserverDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: os.ROOT + 'views/forms/singleurl.html',
-    controller: plugin.ogc.ui.GeoserverImportCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  templateUrl: os.ROOT + 'views/forms/singleurl.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'geoserver';
 
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('geoserver', [plugin.ogc.ui.geoserverDirective]);
-
+Module.directive('geoserver', [directive]);
 
 
 /**
  * Controller for the geoserver import dialog
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.ui.SingleUrlProviderImportCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.ogc.ui.GeoserverImportCtrl = function($scope, $element) {
-  plugin.ogc.ui.GeoserverImportCtrl.base(this, 'constructor', $scope, $element);
-  this['helpUi'] = plugin.ogc.ui.GeoServerHelpUI.directiveTag;
+class Controller extends SingleUrlProviderImportCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
+    this['helpUi'] = GeoServerHelpUI.directiveTag;
 
-  var file = /** @type {os.file.File} */ ($scope['config']['file']);
-  // regex handles URLs of the sort /geoserver(/stuff)/ows(/otherstuff), where it keeps (/stuff) intact, but removes
-  // (/otherstuff) at the end of the URL
-  $scope['config']['url'] = file ? file.getUrl().replace(/(\/geoserver|\/.*?gs)(\/.*)(web|ows)[#?\/].*$/, '/geoserver$1ows') :
-    this.getUrl();
-  $scope['config']['type'] = 'geoserver';
-  $scope['typeName'] = 'GeoServer';
-  $scope['urlExample'] = 'http://www.example.com/geoserver/ows';
+    var file = /** @type {OSFile} */ ($scope['config']['file']);
+    // regex handles URLs of the sort /geoserver(/stuff)/ows(/otherstuff), where it keeps (/stuff) intact, but removes
+    // (/otherstuff) at the end of the URL
+    $scope['config']['url'] = file ? file.getUrl().replace(/(\/geoserver|\/.*?gs)(\/.*)(web|ows)[#?\/].*$/, '/geoserver$1ows') :
+      this.getUrl();
+    $scope['config']['type'] = 'geoserver';
+    $scope['typeName'] = 'GeoServer';
+    $scope['urlExample'] = 'http://www.example.com/geoserver/ows';
 
-  this.validateUrl();
-};
-goog.inherits(plugin.ogc.ui.GeoserverImportCtrl, os.ui.SingleUrlProviderImportCtrl);
-
-
-/**
- * @inheritDoc
- */
-plugin.ogc.ui.GeoserverImportCtrl.prototype.getDataProvider = function() {
-  var dp = new plugin.ogc.GeoServer();
-  dp.configure(this.scope['config']);
-  return dp;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.ogc.ui.GeoserverImportCtrl.prototype.getUrl = function() {
-  return this.dp ? /** @type {plugin.ogc.GeoServer} */ (this.dp).getOriginalWmsUrl() : '';
-};
-
-
-/**
- * @inheritDoc
- * @export
- */
-plugin.ogc.ui.GeoserverImportCtrl.prototype.validateUrl = function() {
-  if (/\/web\/?$/.test(this.scope['config']['url'])) {
-    this.scope['customUrlMessage'] = 'GeoServer URLs ending with \"/web\" are typically for the administration ' +
-    'interface. Consider replacing \"/web\" with \"/ows\" for the OGC service APIs.';
-  } else {
-    this.scope['customUrlMessage'] = undefined;
+    this.validateUrl();
   }
+
+  /**
+   * @inheritDoc
+   */
+  getDataProvider() {
+    var dp = new GeoServer();
+    dp.configure(this.scope['config']);
+    return dp;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getUrl() {
+    return this.dp ? /** @type {GeoServer} */ (this.dp).getOriginalWmsUrl() : '';
+  }
+
+  /**
+   * @inheritDoc
+   * @export
+   */
+  validateUrl() {
+    if (/\/web\/?$/.test(this.scope['config']['url'])) {
+      this.scope['customUrlMessage'] = 'GeoServer URLs ending with \"/web\" are typically for the administration ' +
+      'interface. Consider replacing \"/web\" with \"/ows\" for the OGC service APIs.';
+    } else {
+      this.scope['customUrlMessage'] = undefined;
+    }
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

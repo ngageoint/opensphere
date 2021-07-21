@@ -1,14 +1,21 @@
+goog.require('goog.functions');
+goog.require('goog.math.Range');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 goog.require('os.time.TimelineController');
 goog.require('os.time.xf.TimeModel');
-goog.require('goog.math.Range');
-
 
 /**
  * Tests for os.time.xf.TimeModel.
  */
 describe('os.time.xf.TimeModel', function() {
+  const functions = goog.module.get('goog.functions');
+  const Range = goog.module.get('goog.math.Range');
+  const TimeInstant = goog.module.get('os.time.TimeInstant');
+  const TimeRange = goog.module.get('os.time.TimeRange');
+  const TimelineController = goog.module.get('os.time.TimelineController');
+  const TimeModel = goog.module.get('os.time.xf.TimeModel');
+
   var getTimeFn = function(item) {
     return item.time;
   };
@@ -19,7 +26,7 @@ describe('os.time.xf.TimeModel', function() {
       filter.dispose();
     }
 
-    filter = new os.time.xf.TimeModel(getTimeFn);
+    filter = new TimeModel(getTimeFn);
   });
 
   // populate some objects with time instants/ranges for testing
@@ -29,30 +36,30 @@ describe('os.time.xf.TimeModel', function() {
   for (var i = 0; i <= 1000; i += 10) {
     var start = now + i;
     var end = start + 100;
-    instantObjects.push({id: 'instant_' + start, time: new os.time.TimeInstant(start)});
-    rangeObjects.push({id: 'range_' + start, time: new os.time.TimeRange(start, end)});
+    instantObjects.push({id: 'instant_' + start, time: new TimeInstant(start)});
+    rangeObjects.push({id: 'range_' + start, time: new TimeRange(start, end)});
   }
 
   // time ranges for the above sets of objects
-  var instantRange = new os.time.TimeRange(now, now + 1000);
-  var fullRange = new os.time.TimeRange(now, now + 1000 + 100);
+  var instantRange = new TimeRange(now, now + 1000);
+  var fullRange = new TimeRange(now, now + 1000 + 100);
 
   // total number of timed objects
   var numObjects = instantObjects.length + rangeObjects.length;
 
   var noStart = {
     id: 'noStart',
-    time: new os.time.TimeRange(-Infinity, now)
+    time: new TimeRange(-Infinity, now)
   };
 
   var noEnd = {
     id: 'noEnd',
-    time: new os.time.TimeRange(now, Infinity)
+    time: new TimeRange(now, Infinity)
   };
 
   var boundless = {
     id: 'boundless',
-    time: new os.time.TimeRange(-Infinity, Infinity)
+    time: new TimeRange(-Infinity, Infinity)
   };
 
   var timeless = {
@@ -107,51 +114,51 @@ describe('os.time.xf.TimeModel', function() {
     filter.add(rangeObjects);
 
     // first instant/range
-    var results = filter.intersection(new os.time.TimeRange(now, now));
+    var results = filter.intersection(new TimeRange(now, now));
     expect(results.length).toBe(2);
 
     // nothing
-    results = filter.intersection(new os.time.TimeRange(now - 1, now - 1));
+    results = filter.intersection(new TimeRange(now - 1, now - 1));
     expect(results.length).toBe(0);
 
     // first range
-    results = filter.intersection(new os.time.TimeRange(now + 1, now + 1));
+    results = filter.intersection(new TimeRange(now + 1, now + 1));
     expect(results.length).toBe(1);
 
     // first instant/range
-    results = filter.intersection(new os.time.TimeRange(now - 1, now + 1));
+    results = filter.intersection(new TimeRange(now - 1, now + 1));
     expect(results.length).toBe(2);
 
     // all but the last instant/range
-    results = filter.intersection(new os.time.TimeRange(now, now + 999));
+    results = filter.intersection(new TimeRange(now, now + 999));
     expect(results.length).toBe(numObjects - 2);
 
     // everything
-    results = filter.intersection(new os.time.TimeRange(now, now + 1001));
+    results = filter.intersection(new TimeRange(now, now + 1001));
     expect(results.length).toBe(numObjects);
 
     // drop 10 of the instants, still all of the ranges
-    results = filter.intersection(new os.time.TimeRange(now + 100, now + 1001));
+    results = filter.intersection(new TimeRange(now + 100, now + 1001));
     expect(results.length).toBe(numObjects - 10);
 
     // drop the first range and another instant
-    results = filter.intersection(new os.time.TimeRange(now + 101, now + 1001));
+    results = filter.intersection(new TimeRange(now + 101, now + 1001));
     expect(results.length).toBe(numObjects - 12);
 
     // everything
-    results = filter.intersection(new os.time.TimeRange(now, Infinity));
+    results = filter.intersection(new TimeRange(now, Infinity));
     expect(results.length).toBe(numObjects);
 
     // everything
-    results = filter.intersection(new os.time.TimeRange(-Infinity, Infinity));
+    results = filter.intersection(new TimeRange(-Infinity, Infinity));
     expect(results.length).toBe(numObjects);
 
     // won't match end of range
-    results = filter.intersection(new os.time.TimeRange(-Infinity, now));
+    results = filter.intersection(new TimeRange(-Infinity, now));
     expect(results.length).toBe(0);
 
     // first instant/range
-    results = filter.intersection(new os.time.TimeRange(-Infinity, now + 1));
+    results = filter.intersection(new TimeRange(-Infinity, now + 1));
     expect(results.length).toBe(2);
   });
 
@@ -176,15 +183,15 @@ describe('os.time.xf.TimeModel', function() {
     expect(filter.xf.size()).toBe(numObjects + unboundedObjects.length);
 
     // first instant/range + all unboundedObjects
-    var results = filter.intersection(new os.time.TimeRange(now, now));
+    var results = filter.intersection(new TimeRange(now, now));
     expect(results.length).toBe(unboundedObjects.length + 2);
 
     // noStart + unboundedObjects
-    results = filter.intersection(new os.time.TimeRange(-Infinity, now - 1));
+    results = filter.intersection(new TimeRange(-Infinity, now - 1));
     expect(results.length).toBe(2);
 
     // everything
-    results = filter.intersection(new os.time.TimeRange(-Infinity, Infinity));
+    results = filter.intersection(new TimeRange(-Infinity, Infinity));
     expect(results.length).toBe(numObjects + unboundedObjects.length);
   });
 
@@ -206,7 +213,7 @@ describe('os.time.xf.TimeModel', function() {
     filter.add(rangeObjects);
     filter.setFilterFunction(filterFunction);
 
-    results = filter.intersection(new os.time.TimeRange(-Infinity, Infinity));
+    results = filter.intersection(new TimeRange(-Infinity, Infinity));
     expect(results.length).toBe(numObjects / 2);
   });
 
@@ -245,7 +252,7 @@ describe('os.time.xf.TimeModel', function() {
     filter.add(instantObjects);
     expect(filter.intersection.calls.length).toBe(0);
 
-    var infiniteRange = new os.time.TimeRange(-Infinity, Infinity);
+    var infiniteRange = new TimeRange(-Infinity, Infinity);
     filter.intersection(infiniteRange);
     expect(filter.intersection.calls.length).toBe(1);
     expect(filter.lastRange).toBe(infiniteRange);
@@ -304,7 +311,7 @@ describe('os.time.xf.TimeModel', function() {
   });
 
   it('should dispose dimensions properly', function() {
-    var testXf = new os.time.xf.TimeModel(goog.functions.TRUE);
+    var testXf = new TimeModel(functions.TRUE);
     spyOn(testXf.timelessXf, 'dimension').andCallThrough();
 
     expect(testXf.defaultDimension).not.toBeNull();
@@ -321,7 +328,7 @@ describe('os.time.xf.TimeModel', function() {
     spyOn(dd, 'dispose').andCallThrough();
 
     var dimId = 'testDim';
-    testXf.addDimension(dimId, goog.functions.TRUE);
+    testXf.addDimension(dimId, functions.TRUE);
 
     // default dimension should be disposed
     expect(dd.dispose).toHaveBeenCalled();
@@ -362,9 +369,9 @@ describe('os.time.xf.TimeModel', function() {
     filter.add(timeless);
 
     // first instant/range
-    var results = filter.intersection(new os.time.TimeRange(now, now));
+    var results = filter.intersection(new TimeRange(now, now));
     expect(results.length).toBe(2);
-    results = filter.intersection(new os.time.TimeRange(now, now), includeTimeless);
+    results = filter.intersection(new TimeRange(now, now), includeTimeless);
     expect(results.length).toBe(3);
   });
 
@@ -374,7 +381,7 @@ describe('os.time.xf.TimeModel', function() {
     var includeTimeless = false;
     var includeHolds = true;
     var holdCount = 0;
-    var tlc = os.time.TimelineController.getInstance();
+    var tlc = TimelineController.getInstance();
 
     /**
      * For holds to work correctly, the main time model get time function should return null for items that are held,
@@ -409,18 +416,18 @@ describe('os.time.xf.TimeModel', function() {
 
     // Holds need to be defined in the timeline controller for the holds process
     // to work correctly.
-    var holdRange = new goog.math.Range(now, now + 20);
-    var tlc = os.time.TimelineController.getInstance();
+    var holdRange = new Range(now, now + 20);
+    var tlc = TimelineController.getInstance();
     tlc.clearHoldRanges();
     tlc.addHoldRange(holdRange);
 
     // Creating TimeModel with two gettime functions that handle holds correctly.
-    var timeModelWithHold = new os.time.xf.TimeModel(getTimeWithHoldSupportFn, getHoldTimeFn);
+    var timeModelWithHold = new TimeModel(getTimeWithHoldSupportFn, getHoldTimeFn);
     timeModelWithHold.add(instantObjects);
 
     // using the same interseciton range for each test step that
     // encompasses the hold range and a bit more.
-    var intersectionTimeRange = new os.time.TimeRange(now, now + 40);
+    var intersectionTimeRange = new TimeRange(now, now + 40);
 
     // Get all times in the intersection range without holds.
     var results = timeModelWithHold.intersection(intersectionTimeRange);

@@ -1,125 +1,124 @@
-goog.provide('os.command.VectorLayerPreset');
+goog.module('os.command.VectorLayerPreset');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractVectorStyle');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.im.action.ImportActionManager');
-goog.require('os.metrics.keys');
-goog.require('os.object');
-goog.require('os.source.PropertyChange');
-
+const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
+const State = goog.require('os.command.State');
+const DataManager = goog.require('os.data.DataManager');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const action = goog.require('os.im.action');
+const metrics = goog.require('os.metrics');
+const PropertyChange = goog.require('os.source.PropertyChange');
 
 
 /**
  * Sets a layer style preset for a layer.
- *
- * @extends {os.command.AbstractVectorStyle}
- * @param {string} layerId
- * @param {!osx.layer.Preset} preset
- * @param {osx.layer.Preset=} opt_oldPreset
- * @constructor
  */
-os.command.VectorLayerPreset = function(layerId, preset, opt_oldPreset) {
-  os.command.VectorLayerPreset.base(this, 'constructor', layerId, preset, opt_oldPreset);
-  this.title = 'Change layer preset: ' + preset.label;
-  this.metricKey = os.metrics.Layer.PRESET;
-  this.value = preset.layerConfig;
-
+class VectorLayerPreset extends AbstractVectorStyle {
   /**
-   * The preset to apply.
-   * @type {!osx.layer.Preset}
-   * @protected
+   * Constructor.
+   * @param {string} layerId
+   * @param {!osx.layer.Preset} preset
+   * @param {osx.layer.Preset=} opt_oldPreset
    */
-  this.preset = preset;
+  constructor(layerId, preset, opt_oldPreset) {
+    super(layerId, preset, opt_oldPreset);
+    this.title = 'Change layer preset: ' + preset.label;
+    this.metricKey = metrics.Layer.PRESET;
+    this.value = preset.layerConfig;
 
-  /**
-   * The old enabled feature action id's.
-   * @type {!Array<string>}
-   * @protected
-   */
-  this.oldFeatureActionIds = this.getOldFeatureActionIds();
-};
-goog.inherits(os.command.VectorLayerPreset, os.command.AbstractVectorStyle);
+    /**
+     * The preset to apply.
+     * @type {!osx.layer.Preset}
+     * @protected
+     */
+    this.preset = preset;
 
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerPreset.prototype.getOldValue = function() {
-  var layer = /** @type {os.layer.Vector} */ (this.getLayer());
-  return layer ? layer.persist() : undefined;
-};
-
-
-/**
- * Get the old feature action id's.
- * @return {!Array<string>}
- * @protected
- */
-os.command.VectorLayerPreset.prototype.getOldFeatureActionIds = function() {
-  var oldIds = [];
-  var layer = /** @type {os.layer.Vector} */ (this.getLayer());
-  if (layer) {
-    // save the old enabled feature action id's
-    var iam = os.im.action.ImportActionManager.getInstance();
-    var entries = iam.getActionEntries(layer.getId());
-    entries.reduce(os.im.action.reduceEnabled, oldIds);
+    /**
+     * The old enabled feature action id's.
+     * @type {!Array<string>}
+     * @protected
+     */
+    this.oldFeatureActionIds = this.getOldFeatureActionIds();
   }
 
-  return oldIds;
-};
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var layer = /** @type {os.layer.Vector} */ (this.getLayer());
+    return layer ? layer.persist() : undefined;
+  }
 
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerPreset.prototype.applyValue = function(config, value) {
-  var layer = this.getLayer();
-  if (layer) {
-    // apply the layer config
-    if (value) {
-      layer.restore(value);
+  /**
+   * Get the old feature action id's.
+   * @return {!Array<string>}
+   * @protected
+   */
+  getOldFeatureActionIds() {
+    var oldIds = [];
+    var layer = /** @type {os.layer.Vector} */ (this.getLayer());
+    if (layer) {
+      // save the old enabled feature action id's
+      var iam = action.getImportActionManager();
+      var entries = iam.getActionEntries(layer.getId());
+      entries.reduce(action.reduceEnabled, oldIds);
     }
 
-    this.applyFeatureActions(layer);
+    return oldIds;
   }
 
-  os.command.VectorLayerPreset.base(this, 'applyValue', config, value);
-};
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    var layer = this.getLayer();
+    if (layer) {
+      // apply the layer config
+      if (value) {
+        layer.restore(value);
+      }
 
+      this.applyFeatureActions(layer);
+    }
 
-/**
- * Update enabled feature actions.
- * @param {!os.layer.ILayer} layer The layer.
- * @protected
- */
-os.command.VectorLayerPreset.prototype.applyFeatureActions = function(layer) {
-  var iam = os.im.action.ImportActionManager.getInstance();
-  var type = layer.getId();
+    super.applyValue(config, value);
+  }
 
-  var faIds = this.state === os.command.State.EXECUTING ? this.preset.featureActions : this.oldFeatureActionIds;
-  var faIdMap = {};
-  if (faIds) {
-    faIds.forEach(function(id) {
-      faIdMap[id] = true;
+  /**
+   * Update enabled feature actions.
+   * @param {!os.layer.ILayer} layer The layer.
+   * @protected
+   */
+  applyFeatureActions(layer) {
+    var iam = action.getImportActionManager();
+    var type = layer.getId();
+
+    var faIds = this.state === State.EXECUTING ? this.preset.featureActions : this.oldFeatureActionIds;
+    var faIdMap = {};
+    if (faIds) {
+      faIds.forEach(function(id) {
+        faIdMap[id] = true;
+      });
+    }
+
+    var entries = iam.getActionEntries(type);
+    entries.forEach(function(e) {
+      action.enableFromMap(e, faIdMap);
     });
+
+    iam.processItems(type, undefined, true);
+    iam.apply();
   }
 
-  var entries = iam.getActionEntries(type);
-  entries.forEach(function(e) {
-    os.im.action.enableFromMap(e, faIdMap);
-  });
+  /**
+   * @inheritDoc
+   */
+  finish(config) {
+    // dispatch the color change event on the source for the histogram
+    var source = DataManager.getInstance().getSource(this.layerId);
+    source.dispatchEvent(new PropertyChangeEvent(PropertyChange.COLOR, this.value));
+    super.finish(config);
+  }
+}
 
-  iam.processItems(type, undefined, true);
-  iam.apply();
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerPreset.prototype.finish = function(config) {
-  // dispatch the color change event on the source for the histogram
-  var source = os.osDataManager.getSource(this.layerId);
-  source.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.COLOR, this.value));
-  os.command.VectorLayerPreset.base(this, 'finish', config);
-};
+exports = VectorLayerPreset;

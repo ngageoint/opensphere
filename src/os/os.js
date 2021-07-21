@@ -8,6 +8,8 @@ goog.require('ol.typedefs');
 goog.require('os.mixin.closure');
 goog.require('os.ol.license');
 
+goog.requireType('os.data.IDataManager');
+goog.requireType('os.data.DataManager');
 goog.requireType('os.debug.FancierWindow');
 
 
@@ -105,6 +107,13 @@ os.FILE_STORE_NAME = goog.define('os.FILE_STORE_NAME', 'files');
  * @define {string} The storage key for filters
  */
 os.FILTER_STORAGE_KEY = goog.define('os.FILTER_STORAGE_KEY', 'filters');
+
+
+/**
+ * Global data manager reference. Set this in each application with the app-specific manager reference.
+ * @type {os.data.DataManager}
+ */
+os.dataManager = null;
 
 
 /**

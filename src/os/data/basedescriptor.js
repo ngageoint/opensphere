@@ -1,166 +1,750 @@
+goog.module('os.data.BaseDescriptor');
+goog.module.declareLegacyNamespace();
 
-goog.provide('os.data.BaseDescriptor');
+const googArray = goog.require('goog.array');
+const nextTick = goog.require('goog.async.nextTick');
+const UtcDateTime = goog.require('goog.date.UtcDateTime');
+const EventTarget = goog.require('goog.events.EventTarget');
+const log = goog.require('goog.log');
+const {caseInsensitiveCompare, endsWith} = goog.require('goog.string');
+const dispatcher = goog.require('os.Dispatcher');
+const ColumnDefinition = goog.require('os.data.ColumnDefinition');
+const DataManager = goog.require('os.data.DataManager');
+const DescriptorEvent = goog.require('os.data.DescriptorEvent');
+const DescriptorEventType = goog.require('os.data.DescriptorEventType');
+const IDataDescriptor = goog.require('os.data.IDataDescriptor');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const osImplements = goog.require('os.implements');
+const Metrics = goog.require('os.metrics.Metrics');
+const keys = goog.require('os.metrics.keys');
 
-goog.require('goog.async.nextTick');
-goog.require('goog.date.UtcDateTime');
-goog.require('goog.events.Event');
-goog.require('goog.events.EventTarget');
-goog.require('os.data.ColumnDefinition');
-goog.require('os.data.DescriptorEvent');
-goog.require('os.data.IDataDescriptor');
-goog.require('os.data.ISearchable');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.implements');
-goog.require('os.metrics.Metrics');
-goog.require('os.metrics.keys');
-
+const ISearchable = goog.requireType('os.data.ISearchable');
 
 
 /**
  * The base implementation of a data descriptor
  *
- * @extends {goog.events.EventTarget}
- * @implements {os.data.IDataDescriptor}
- * @implements {os.data.ISearchable}
- * @constructor
+ * @implements {IDataDescriptor}
+ * @implements {ISearchable}
  */
-os.data.BaseDescriptor = function() {
-  os.data.BaseDescriptor.base(this, 'constructor');
-
+class BaseDescriptor extends EventTarget {
   /**
-   * @type {!string}
-   * @private
+   * Constructor.
    */
-  this.id_ = '';
+  constructor() {
+    super();
+
+    /**
+     * @type {!string}
+     * @private
+     */
+    this.id_ = '';
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.provider_ = null;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.providerType_ = null;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.title_ = null;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.explicitTitle_ = null;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.type_ = null;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.color_ = null;
+
+    /**
+     * @type {?Array<ColumnDefinition>}
+     * @private
+     */
+    this.columns_ = null;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.desc_ = null;
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this.maxDate_ = NaN;
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this.minDate_ = NaN;
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this.deleteTime_ = NaN;
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this.lastActive_ = NaN;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.active_ = false;
+
+    /**
+     * @type {boolean|undefined}
+     * @protected
+     */
+    this.tempActive = false;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.loading_ = false;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.local_ = false;
+
+    /**
+     * @type {?Array<!string>}
+     * @protected
+     */
+    this.tags = null;
+
+    /**
+     * @type {!string}
+     * @protected
+     */
+    this.descriptorType = 'base';
+
+    /**
+     * @type {os.data.IDataProvider}
+     * @protected
+     */
+    this.dataProvider = null;
+
+    /**
+     * The logger
+     * @type {goog.log.Logger}
+     */
+    this.log = logger;
+
+    /**
+     * NodeUI
+     * @type {string}
+     */
+    this.nodeUI = '';
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @inheritDoc
+   * @export
    */
-  this.provider_ = null;
+  getId() {
+    return this.id_;
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @inheritDoc
    */
-  this.providerType_ = null;
+  setId(value) {
+    this.id_ = value;
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @inheritDoc
    */
-  this.title_ = null;
+  getAliases() {
+    return [this.getId()];
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @inheritDoc
    */
-  this.explicitTitle_ = null;
+  getDescriptorType() {
+    return this.descriptorType;
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @inheritDoc
    */
-  this.type_ = null;
+  getProvider() {
+    return this.provider_;
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @inheritDoc
    */
-  this.color_ = null;
+  setProvider(value) {
+    this.provider_ = value;
+  }
 
   /**
-   * @type {?Array<os.data.ColumnDefinition>}
-   * @private
+   * @inheritDoc
    */
-  this.columns_ = null;
+  getProviderType() {
+    return this.providerType_;
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @inheritDoc
    */
-  this.desc_ = null;
+  setProviderType(value) {
+    this.providerType_ = value;
+  }
 
   /**
-   * @type {number}
-   * @private
+   * @inheritDoc
    */
-  this.maxDate_ = NaN;
+  getDataProvider() {
+    if (this.dataProvider) {
+      return this.dataProvider;
+    }
+
+    var dm = DataManager.getInstance();
+    var id = this.getId();
+
+    if (id) {
+      var ids = id.split(BaseDescriptor.ID_DELIMITER);
+
+      if (ids.length) {
+        return dm.getProvider(ids[0]);
+      }
+    }
+
+    return null;
+  }
 
   /**
-   * @type {number}
-   * @private
+   * @inheritDoc
    */
-  this.minDate_ = NaN;
+  setDataProvider(value) {
+    this.dataProvider = value;
+  }
 
   /**
-   * @type {number}
-   * @private
+   * @inheritDoc
+   * @export
    */
-  this.deleteTime_ = NaN;
+  getTitle() {
+    return this.title_;
+  }
 
   /**
-   * @type {number}
-   * @private
+   * @inheritDoc
    */
-  this.lastActive_ = NaN;
+  setTitle(value) {
+    var old = this.title_;
+    this.title_ = value;
+    this.dispatchEvent(new PropertyChangeEvent('title', value, old));
+  }
 
   /**
-   * @type {boolean}
-   * @private
+   * @inheritDoc
    */
-  this.active_ = false;
+  getExplicitTitle() {
+    return this.explicitTitle_;
+  }
 
   /**
-   * @type {boolean|undefined}
+   * @inheritDoc
+   */
+  setExplicitTitle(value) {
+    var old = this.explicitTitle_;
+    this.explicitTitle_ = value;
+    this.dispatchEvent(new PropertyChangeEvent('explicitTitle', value, old));
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getSearchType() {
+    return this.getType();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getType() {
+    return this.type_;
+  }
+
+  /**
+   * Sets the type of the descriptor
+   *
+   * @param {?string} value The type
+   */
+  setType(value) {
+    this.type_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getColumns() {
+    return this.columns_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setColumns(value) {
+    this.columns_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getColor() {
+    return this.color_;
+  }
+
+  /**
+   * Sets the color of the descriptor
+   *
+   * @param {?string} value The color
+   */
+  setColor(value) {
+    this.color_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   * @export
+   */
+  getDescription() {
+    return this.desc_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getIcons() {
+    return null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setDescription(value) {
+    this.desc_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getMaxDate() {
+    return this.maxDate_;
+  }
+
+  /**
+   * Sets the maximum date
+   *
+   * @param {number} value The maximum date
+   */
+  setMaxDate(value) {
+    this.maxDate_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getMinDate() {
+    return this.minDate_;
+  }
+
+  /**
+   * Sets the minimum date
+   *
+   * @param {number} value The minimum date
+   */
+  setMinDate(value) {
+    this.minDate_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getDeleteTime() {
+    return this.deleteTime_;
+  }
+
+  /**
+   * Sets the delete time
+   *
+   * @param {number} value The delete time
+   */
+  setDeleteTime(value) {
+    this.deleteTime_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getLastActive() {
+    return this.lastActive_;
+  }
+
+  /**
+   * There are times when we need to update the last active without actually activating the descriptor.
+   */
+  touchLastActive() {
+    this.lastActive_ = Date.now();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  isActive() {
+    return this.active_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setActive(value) {
+    if (this.isActive() !== value) {
+      this.active_ = value;
+
+      try {
+        if (this.setActiveInternal()) {
+          // if the descriptor is fully activated/deactivated, notify listeners
+          this.onDescriptorReady();
+        }
+      } catch (e) {
+        log.error(this.log, 'Error setting descriptor activation state', e);
+        this.active_ = false;
+        this.onDescriptorReady();
+      }
+
+      // fire the active event to update the UI
+      this.dispatchEvent(new PropertyChangeEvent('active', value, !value));
+    }
+  }
+
+  /**
+   * Perform internal tasks for descriptor activation/deactivation.
+   *
+   * If activation tasks are asynchronous, this function should return false and the descriptor should call
+   * {@link os.data.BaseDescriptor#onDescriptorReady} when all tasks complete, whether they succeed or fail.
+   *
+   * If these tasks are asynchronous, this function should return false
+   *
+   * @return {boolean} If the descriptor state has been finalized
    * @protected
    */
-  this.tempActive = false;
+  setActiveInternal() {
+    return true;
+  }
 
   /**
-   * @type {boolean}
-   * @private
-   */
-  this.loading_ = false;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.local_ = false;
-
-  /**
-   * @type {?Array<!string>}
+   * Fire events when all activation/deactivation tasks have completed.
+   *
    * @protected
    */
-  this.tags = null;
+  onDescriptorReady() {
+    // if the descriptor was activated, update the last active time
+    if (this.isActive()) {
+      this.lastActive_ = Date.now();
+    }
+
+    this.recordActivationMetric();
+
+    var eventType = this.isActive() ? DescriptorEventType.ACTIVATED : DescriptorEventType.DEACTIVATED;
+    this.dispatchEvent(eventType);
+    dispatcher.getInstance().dispatchEvent(new DescriptorEvent(eventType, this));
+  }
 
   /**
-   * @type {!string}
+   * Records descriptor activate/deactivate metrics.
+   *
    * @protected
    */
-  this.descriptorType = 'base';
+  recordActivationMetric() {
+    var key = this.isActive() ? keys.Descriptor.ACTIVATE : keys.Descriptor.DEACTIVATE;
+    Metrics.getInstance().updateMetric(key + '.' + this.getDescriptorType(), 1);
+  }
 
   /**
-   * @type {os.data.IDataProvider}
-   * @protected
+   * @inheritDoc
    */
-  this.dataProvider = null;
+  clearData() {
+    // intended for overriding classes to remove internal application data
+  }
 
   /**
-   * The logger
-   * @type {goog.log.Logger}
+   * @inheritDoc
    */
-  this.log = os.data.BaseDescriptor.LOGGER_;
+  isLocal() {
+    return this.local_;
+  }
 
   /**
-   * NodeUI
-   * @type {string}
+   * @inheritDoc
    */
-  this.nodeUI = '';
-};
-goog.inherits(os.data.BaseDescriptor, goog.events.EventTarget);
-os.implements(os.data.BaseDescriptor, os.data.IDataDescriptor.ID);
+  setLocal(value) {
+    this.local_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  isLoading() {
+    return this.loading_;
+  }
+
+  /**
+   * Sets the loading state
+   *
+   * @param {boolean} value
+   */
+  setLoading(value) {
+    this.loading_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getTags() {
+    return this.tags;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setTags(value) {
+    this.tags = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getSearchText() {
+    var tags = this.getTags();
+    return this.getTitle() + ' ' + this.getType() + ' ' + this.getDescription() + ' ' + this.getProvider() +
+        (tags && tags.length ? tags.join(' ') : '');
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getNodeUI() {
+    return this.nodeUI;
+  }
+
+  /**
+   * Sets the Node UI for this descriptor
+   * @param {string} value - node UI HTML
+   */
+  setNodeUI(value) {
+    this.nodeUI = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  matchesURL(url) {
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  persist(opt_obj) {
+    if (!opt_obj) {
+      opt_obj = {};
+    }
+
+    opt_obj['id'] = this.getId();
+    opt_obj['provider'] = this.getProvider();
+    opt_obj['providerType'] = this.getProviderType();
+    opt_obj['title'] = this.getTitle();
+    opt_obj['type'] = this.getType();
+    opt_obj['color'] = this.getColor();
+    opt_obj['description'] = this.getDescription();
+    opt_obj['maxDate'] = this.getMaxDate();
+    opt_obj['minDate'] = this.getMinDate();
+    opt_obj['lastActive'] = this.getLastActive();
+    opt_obj['deleteTime'] = this.getDeleteTime();
+    opt_obj['tags'] = this.getTags();
+    opt_obj['dType'] = this.getDescriptorType();
+    opt_obj['active'] = this.isActive();
+
+    if (this.columns_ && this.columns_.length > 0) {
+      try {
+        var persistColumns = [];
+        for (var i = 0, n = this.columns_.length; i < n; i++) {
+          if (!this.columns_[i]['temp']) {
+            persistColumns.push(this.columns_[i].persist());
+          }
+        }
+        opt_obj['columns'] = persistColumns;
+      } catch (e) {
+        // don't persist columns if there is an error.
+      }
+    }
+
+    return opt_obj;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  restore(from) {
+    this.setId(from['id']);
+    this.setProvider(from['provider']);
+    this.setProviderType(from['providerType']);
+    this.setTitle(from['title']);
+    this.setType(from['type']);
+    this.setColor(from['color']);
+    this.setDescription(from['description']);
+    this.setMaxDate(from['maxDate'] || NaN);
+    this.setMinDate(from['minDate'] || NaN);
+    this.lastActive_ = from['lastActive'] || NaN;
+    this.deleteTime_ = from['deleteTime'] || NaN;
+    this.setTags(from['tags']);
+    this.tempActive = from['active'];
+
+    var columns = from['columns'];
+    if (columns && columns.length > 0) {
+      try {
+        var deserializedColumns = [];
+        for (var i = 0, n = columns.length; i < n; i++) {
+          var column = new ColumnDefinition();
+          column.restore(columns[i]);
+          deserializedColumns.push(column);
+        }
+        this.setColumns(deserializedColumns);
+      } catch (e) {
+        // don't restore columns if there is an error. they'll be reloaded instead.
+      }
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getHtmlDescription() {
+    var text = 'Layer Name: ' + this.getTitle() + '<br>';
+    var provider = this.getProvider();
+    if (provider) {
+      text += 'Provider: ' + provider + '<br>';
+    }
+    var type = this.getType() || '';
+    if (endsWith(type, 's')) {
+      type = type.substring(0, type.length - 1);
+    }
+
+    if (type) {
+      text += 'Type: ' + type + '<br>';
+    }
+
+    if (!isNaN(this.getMinDate()) && !isNaN(this.getMaxDate())) {
+      var s = new UtcDateTime();
+      s.setTime(this.getMinDate());
+
+      var e = new UtcDateTime();
+      e.setTime(this.getMaxDate());
+
+      text += 'Time: ' + s.toUTCIsoString(true, true) + ' to ' + e.toUTCIsoString(true, true) + '<br>';
+    }
+
+    text += '<br>';
+
+    var desc = this.getDescription();
+    text += (desc ? desc : 'No description provided') + '<br><br>';
+    text += 'Tags: ' + (this.getTags() ? this.getTags().join(', ') : '(none)');
+    text += '<br><br>';
+    return text;
+  }
+
+  /**
+   * Updates the active state from the temporary value
+   */
+  updateActiveFromTemp() {
+    if (this.tempActive === true) {
+      // defer to the next tick, in case the descriptor is in the process of being restored and hasn't been added to the
+      // data manager yet.
+      nextTick(this.setActive.bind(this, this.tempActive));
+    }
+
+    // unset temp active. It should only run once at load.
+    this.tempActive = undefined;
+  }
+
+  /**
+   * Compares descriptors by title.
+   *
+   * @param {IDataDescriptor} a A descriptor
+   * @param {os.data.IDataDescriptor} b Another descriptor
+   * @return {number} The comparison
+   */
+  static titleCompare(a, b) {
+    return caseInsensitiveCompare(/** @type {string} */ (a.getTitle()), /** @type {string} */ (b.getTitle()));
+  }
+
+  /**
+   * Compares descriptors by title.
+   *
+   * @param {IDataDescriptor} a A descriptor
+   * @param {os.data.IDataDescriptor} b Another descriptor
+   * @return {number} The comparison
+   */
+  static lastActive(a, b) {
+    if (isNaN(a.getLastActive()) && isNaN(b.getLastActive())) {
+      return 0;
+    } else if (isNaN(a.getLastActive()) && !isNaN(b.getLastActive())) {
+      return 1;
+    } else if (!isNaN(a.getLastActive()) && isNaN(b.getLastActive())) {
+      return -1;
+    } else {
+      return googArray.defaultCompare(a.getLastActive(), b.getLastActive());
+    }
+  }
+
+  /**
+   * Compares descriptors by title.
+   *
+   * @param {IDataDescriptor} a A descriptor
+   * @param {os.data.IDataDescriptor} b Another descriptor
+   * @return {number} The comparison
+   */
+  static lastActiveReverse(a, b) {
+    return BaseDescriptor.lastActive(b, a);
+  }
+}
+osImplements(BaseDescriptor, IDataDescriptor.ID);
 
 
 /**
@@ -168,647 +752,14 @@ os.implements(os.data.BaseDescriptor, os.data.IDataDescriptor.ID);
  * @type {string}
  * @const
  */
-os.data.BaseDescriptor.ID_DELIMITER = '#';
+BaseDescriptor.ID_DELIMITER = '#';
 
 
 /**
  * Logger for os.data.BaseDescriptor
  * @type {goog.log.Logger}
- * @private
- * @const
  */
-os.data.BaseDescriptor.LOGGER_ = goog.log.getLogger('os.data.BaseDescriptor');
+const logger = log.getLogger('os.data.BaseDescriptor');
 
 
-/**
- * @inheritDoc
- * @export
- */
-os.data.BaseDescriptor.prototype.getId = function() {
-  return this.id_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.setId = function(value) {
-  this.id_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getAliases = function() {
-  return [this.getId()];
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getDescriptorType = function() {
-  return this.descriptorType;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getProvider = function() {
-  return this.provider_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.setProvider = function(value) {
-  this.provider_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getProviderType = function() {
-  return this.providerType_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.setProviderType = function(value) {
-  this.providerType_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getDataProvider = function() {
-  if (this.dataProvider) {
-    return this.dataProvider;
-  }
-
-  var dm = os.dataManager;
-  var id = this.getId();
-
-  if (id) {
-    var ids = id.split(os.data.BaseDescriptor.ID_DELIMITER);
-
-    if (ids.length) {
-      return dm.getProvider(ids[0]);
-    }
-  }
-
-  return null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.setDataProvider = function(value) {
-  this.dataProvider = value;
-};
-
-
-/**
- * @inheritDoc
- * @export
- */
-os.data.BaseDescriptor.prototype.getTitle = function() {
-  return this.title_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.setTitle = function(value) {
-  var old = this.title_;
-  this.title_ = value;
-  this.dispatchEvent(new os.events.PropertyChangeEvent('title', value, old));
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getExplicitTitle = function() {
-  return this.explicitTitle_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.setExplicitTitle = function(value) {
-  var old = this.explicitTitle_;
-  this.explicitTitle_ = value;
-  this.dispatchEvent(new os.events.PropertyChangeEvent('explicitTitle', value, old));
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getSearchType = function() {
-  return this.getType();
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getType = function() {
-  return this.type_;
-};
-
-
-/**
- * Sets the type of the descriptor
- *
- * @param {?string} value The type
- */
-os.data.BaseDescriptor.prototype.setType = function(value) {
-  this.type_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getColumns = function() {
-  return this.columns_;
-};
-
-
-/**
- * Sets the column definitions of the descriptor
- *
- * @param {?Array<os.data.ColumnDefinition>} value The column definitions
- */
-os.data.BaseDescriptor.prototype.setColumns = function(value) {
-  this.columns_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getColor = function() {
-  return this.color_;
-};
-
-
-/**
- * Sets the color of the descriptor
- *
- * @param {?string} value The color
- */
-os.data.BaseDescriptor.prototype.setColor = function(value) {
-  this.color_ = value;
-};
-
-
-/**
- * @inheritDoc
- * @export
- */
-os.data.BaseDescriptor.prototype.getDescription = function() {
-  return this.desc_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getIcons = function() {
-  return null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.setDescription = function(value) {
-  this.desc_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getMaxDate = function() {
-  return this.maxDate_;
-};
-
-
-/**
- * Sets the maximum date
- *
- * @param {number} value The maximum date
- */
-os.data.BaseDescriptor.prototype.setMaxDate = function(value) {
-  this.maxDate_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getMinDate = function() {
-  return this.minDate_;
-};
-
-
-/**
- * Sets the minimum date
- *
- * @param {number} value The minimum date
- */
-os.data.BaseDescriptor.prototype.setMinDate = function(value) {
-  this.minDate_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getDeleteTime = function() {
-  return this.deleteTime_;
-};
-
-
-/**
- * Sets the delete time
- *
- * @param {number} value The delete time
- */
-os.data.BaseDescriptor.prototype.setDeleteTime = function(value) {
-  this.deleteTime_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getLastActive = function() {
-  return this.lastActive_;
-};
-
-
-/**
- * There are times when we need to update the last active without actually activating the descriptor.
- */
-os.data.BaseDescriptor.prototype.touchLastActive = function() {
-  this.lastActive_ = Date.now();
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.isActive = function() {
-  return this.active_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.setActive = function(value) {
-  if (this.isActive() !== value) {
-    this.active_ = value;
-
-    try {
-      if (this.setActiveInternal()) {
-        // if the descriptor is fully activated/deactivated, notify listeners
-        this.onDescriptorReady();
-      }
-    } catch (e) {
-      goog.log.error(this.log, 'Error setting descriptor activation state', e);
-      this.active_ = false;
-      this.onDescriptorReady();
-    }
-
-    // fire the active event to update the UI
-    this.dispatchEvent(new os.events.PropertyChangeEvent('active', value, !value));
-  }
-};
-
-
-/**
- * Perform internal tasks for descriptor activation/deactivation.
- *
- * If activation tasks are asynchronous, this function should return false and the descriptor should call
- * {@link os.data.BaseDescriptor#onDescriptorReady} when all tasks complete, whether they succeed or fail.
- *
- * If these tasks are asynchronous, this function should return false
- *
- * @return {boolean} If the descriptor state has been finalized
- * @protected
- */
-os.data.BaseDescriptor.prototype.setActiveInternal = function() {
-  return true;
-};
-
-
-/**
- * Fire events when all activation/deactivation tasks have completed.
- *
- * @protected
- */
-os.data.BaseDescriptor.prototype.onDescriptorReady = function() {
-  // if the descriptor was activated, update the last active time
-  if (this.isActive()) {
-    this.lastActive_ = Date.now();
-  }
-
-  this.recordActivationMetric();
-
-  var eventType = this.isActive() ? os.data.DescriptorEventType.ACTIVATED : os.data.DescriptorEventType.DEACTIVATED;
-  this.dispatchEvent(eventType);
-  os.dispatcher.dispatchEvent(new os.data.DescriptorEvent(eventType, this));
-};
-
-
-/**
- * Records descriptor activate/deactivate metrics.
- *
- * @protected
- */
-os.data.BaseDescriptor.prototype.recordActivationMetric = function() {
-  var key = this.isActive() ? os.metrics.keys.Descriptor.ACTIVATE : os.metrics.keys.Descriptor.DEACTIVATE;
-  os.metrics.Metrics.getInstance().updateMetric(key + '.' + this.getDescriptorType(), 1);
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.clearData = function() {
-  // intended for overriding classes to remove internal application data
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.isLocal = function() {
-  return this.local_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.setLocal = function(value) {
-  this.local_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.isLoading = function() {
-  return this.loading_;
-};
-
-
-/**
- * Sets the loading state
- *
- * @param {boolean} value
- */
-os.data.BaseDescriptor.prototype.setLoading = function(value) {
-  this.loading_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getTags = function() {
-  return this.tags;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.setTags = function(value) {
-  this.tags = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getSearchText = function() {
-  var tags = this.getTags();
-  return this.getTitle() + ' ' + this.getType() + ' ' + this.getDescription() + ' ' + this.getProvider() +
-      (tags && tags.length ? tags.join(' ') : '');
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getNodeUI = function() {
-  return this.nodeUI;
-};
-
-
-/**
- * Sets the Node UI for this descriptor
- * @param {string} value - node UI HTML
- */
-os.data.BaseDescriptor.prototype.setNodeUI = function(value) {
-  this.nodeUI = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.matchesURL = function(url) {
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.persist = function(opt_obj) {
-  if (!opt_obj) {
-    opt_obj = {};
-  }
-
-  opt_obj['id'] = this.getId();
-  opt_obj['provider'] = this.getProvider();
-  opt_obj['providerType'] = this.getProviderType();
-  opt_obj['title'] = this.getTitle();
-  opt_obj['type'] = this.getType();
-  opt_obj['color'] = this.getColor();
-  opt_obj['description'] = this.getDescription();
-  opt_obj['maxDate'] = this.getMaxDate();
-  opt_obj['minDate'] = this.getMinDate();
-  opt_obj['lastActive'] = this.getLastActive();
-  opt_obj['deleteTime'] = this.getDeleteTime();
-  opt_obj['tags'] = this.getTags();
-  opt_obj['dType'] = this.getDescriptorType();
-  opt_obj['active'] = this.isActive();
-
-  if (this.columns_ && this.columns_.length > 0) {
-    try {
-      var persistColumns = [];
-      for (var i = 0, n = this.columns_.length; i < n; i++) {
-        if (!this.columns_[i]['temp']) {
-          persistColumns.push(this.columns_[i].persist());
-        }
-      }
-      opt_obj['columns'] = persistColumns;
-    } catch (e) {
-      // don't persist columns if there is an error.
-    }
-  }
-
-  return opt_obj;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.restore = function(from) {
-  this.setId(from['id']);
-  this.setProvider(from['provider']);
-  this.setProviderType(from['providerType']);
-  this.setTitle(from['title']);
-  this.setType(from['type']);
-  this.setColor(from['color']);
-  this.setDescription(from['description']);
-  this.setMaxDate(from['maxDate'] || NaN);
-  this.setMinDate(from['minDate'] || NaN);
-  this.lastActive_ = from['lastActive'] || NaN;
-  this.deleteTime_ = from['deleteTime'] || NaN;
-  this.setTags(from['tags']);
-  this.tempActive = from['active'];
-
-  var columns = from['columns'];
-  if (columns && columns.length > 0) {
-    try {
-      var deserializedColumns = [];
-      for (var i = 0, n = columns.length; i < n; i++) {
-        var column = new os.data.ColumnDefinition();
-        column.restore(columns[i]);
-        deserializedColumns.push(column);
-      }
-      this.setColumns(deserializedColumns);
-    } catch (e) {
-      // don't restore columns if there is an error. they'll be reloaded instead.
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.BaseDescriptor.prototype.getHtmlDescription = function() {
-  var text = 'Layer Name: ' + this.getTitle() + '<br>';
-  var provider = this.getProvider();
-  if (provider) {
-    text += 'Provider: ' + provider + '<br>';
-  }
-  var type = this.getType() || '';
-  if (goog.string.endsWith(type, 's')) {
-    type = type.substring(0, type.length - 1);
-  }
-
-  if (type) {
-    text += 'Type: ' + type + '<br>';
-  }
-
-  if (!isNaN(this.getMinDate()) && !isNaN(this.getMaxDate())) {
-    var s = new goog.date.UtcDateTime();
-    s.setTime(this.getMinDate());
-
-    var e = new goog.date.UtcDateTime();
-    e.setTime(this.getMaxDate());
-
-    text += 'Time: ' + s.toUTCIsoString(true, true) + ' to ' + e.toUTCIsoString(true, true) + '<br>';
-  }
-
-  text += '<br>';
-
-  var desc = this.getDescription();
-  text += (desc ? desc : 'No description provided') + '<br><br>';
-  text += 'Tags: ' + (this.getTags() ? this.getTags().join(', ') : '(none)');
-  text += '<br><br>';
-  return text;
-};
-
-
-/**
- * Updates the active state from the temporary value
- */
-os.data.BaseDescriptor.prototype.updateActiveFromTemp = function() {
-  if (this.tempActive === true) {
-    // defer to the next tick, in case the descriptor is in the process of being restored and hasn't been added to the
-    // data manager yet.
-    goog.async.nextTick(this.setActive.bind(this, this.tempActive));
-  }
-
-  // unset temp active. It should only run once at load.
-  this.tempActive = undefined;
-};
-
-
-/**
- * Compares descriptors by title.
- *
- * @param {os.data.IDataDescriptor} a A descriptor
- * @param {os.data.IDataDescriptor} b Another descriptor
- * @return {number} The comparison
- */
-os.data.BaseDescriptor.titleCompare = function(a, b) {
-  return goog.string.caseInsensitiveCompare(/** @type {string} */ (a.getTitle()), /** @type {string} */ (b.getTitle()));
-};
-
-
-/**
- * Compares descriptors by title.
- *
- * @param {os.data.IDataDescriptor} a A descriptor
- * @param {os.data.IDataDescriptor} b Another descriptor
- * @return {number} The comparison
- */
-os.data.BaseDescriptor.lastActive = function(a, b) {
-  if (isNaN(a.getLastActive()) && isNaN(b.getLastActive())) {
-    return 0;
-  } else if (isNaN(a.getLastActive()) && !isNaN(b.getLastActive())) {
-    return 1;
-  } else if (!isNaN(a.getLastActive()) && isNaN(b.getLastActive())) {
-    return -1;
-  } else {
-    return goog.array.defaultCompare(a.getLastActive(), b.getLastActive());
-  }
-};
-
-
-/**
- * Compares descriptors by title.
- *
- * @param {os.data.IDataDescriptor} a A descriptor
- * @param {os.data.IDataDescriptor} b Another descriptor
- * @return {number} The comparison
- */
-os.data.BaseDescriptor.lastActiveReverse = function(a, b) {
-  return os.data.BaseDescriptor.lastActive(b, a);
-};
+exports = BaseDescriptor;

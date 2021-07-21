@@ -1,14 +1,16 @@
 goog.module('os.ui.window.ConfirmUI');
 goog.module.declareLegacyNamespace();
 
+const dispose = goog.require('goog.dispose');
 const {getDocument} = goog.require('goog.dom');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
+const {ROOT} = goog.require('os');
 const {noop} = goog.require('os.fn');
 const Module = goog.require('os.ui.Module');
-const {create: createWindow, close: closeWindow} = goog.require('os.ui.window');
 const WindowEventType = goog.require('os.ui.WindowEventType');
+const {create: createWindow, close: closeWindow} = goog.require('os.ui.window');
 
 
 /**
@@ -21,16 +23,23 @@ const directive = () => ({
   replace: true,
   transclude: true,
   scope: true,
-  templateUrl: os.ROOT + 'views/window/confirm.html',
+  templateUrl: ROOT + 'views/window/confirm.html',
   controller: Controller,
   controllerAs: 'confirm'
 });
 
 
 /**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'confirm';
+
+
+/**
  * Add the directive to the os module
  */
-Module.directive('confirm', [directive]);
+Module.directive(directiveTag, [directive]);
 
 
 /**
@@ -152,7 +161,7 @@ class Controller {
    * Angular $onDestroy lifecycle hook.
    */
   $onDestroy() {
-    goog.dispose(this.keyHandler_);
+    dispose(this.keyHandler_);
 
     this.element_ = null;
     this.scope_ = null;
@@ -226,5 +235,6 @@ class Controller {
 exports = {
   Controller,
   directive,
+  directiveTag,
   launchConfirm
 };

@@ -2,6 +2,8 @@ goog.require('os.column.ColumnMapping');
 
 
 describe('os.column.ColumnMapping', function() {
+  const ColumnMapping = goog.module.get('os.column.ColumnMapping');
+
   var mappingString = '<columnMapping name="My Mapping" type="decimal" description="some description">' +
       '<column layer="https://fake.server.bits/ogc/wfsServer!!fake:layer1">layer1_column1</column>' +
       '<column layer="https://fake.server.bits/ogc/wfsServer!!fake:layer2">layer2_column5</column>' +
@@ -13,7 +15,7 @@ describe('os.column.ColumnMapping', function() {
   };
 
   it('should initialize correctly', function() {
-    var mapping = new os.column.ColumnMapping();
+    var mapping = new ColumnMapping();
     expect(mapping.getId()).not.toBe(null);
     expect(mapping.getName()).toBe(null);
     expect(mapping.getDescription()).toBe(null);
@@ -22,7 +24,7 @@ describe('os.column.ColumnMapping', function() {
   });
 
   it('should read a mapping XML string', function() {
-    var mapping = new os.column.ColumnMapping();
+    var mapping = new ColumnMapping();
     var xml = '<columnMapping name="Another Mapping" type="string" description="Another description">' +
         '<column layer="https://fake.server.bits/ogc/wfsServer!!fake:layer8">layer8_column7</column>' +
         '<column layer="https://fake.server.bits/ogc/wfsServer!!fake:layer4">layer4_column6</column>' +
@@ -46,7 +48,7 @@ describe('os.column.ColumnMapping', function() {
   });
 
   it('should write a mapping XML string', function() {
-    var mapping = new os.column.ColumnMapping();
+    var mapping = new ColumnMapping();
     var name = 'Yet Another Mapping??';
     var description = 'deeeescription';
     var valueType = 'decimal';
@@ -70,7 +72,7 @@ describe('os.column.ColumnMapping', function() {
   });
 
   it('should persist/restore to/from raw XML', function() {
-    var mapping = new os.column.ColumnMapping();
+    var mapping = new ColumnMapping();
 
     // restore from the raw string mapping
     mapping.restore(config);
@@ -93,7 +95,7 @@ describe('os.column.ColumnMapping', function() {
   });
 
   it('should add columns', function() {
-    var mapping = new os.column.ColumnMapping();
+    var mapping = new ColumnMapping();
     var layer = 'https://fake.server.bits/ogc/wfsServer!!fake:someLayer';
     var column = 'myLittleColumn';
 
@@ -106,7 +108,7 @@ describe('os.column.ColumnMapping', function() {
   });
 
   it('should remove columns', function() {
-    var mapping = new os.column.ColumnMapping();
+    var mapping = new ColumnMapping();
     var layer = 'https://fake.server.bits/ogc/wfsServer!!fake:someLayer';
     var column = 'myLittleColumn';
 
@@ -120,7 +122,7 @@ describe('os.column.ColumnMapping', function() {
   });
 
   it('should clone correctly', function() {
-    var mapping = new os.column.ColumnMapping();
+    var mapping = new ColumnMapping();
     mapping.restore(config);
 
     var clone = mapping.clone();

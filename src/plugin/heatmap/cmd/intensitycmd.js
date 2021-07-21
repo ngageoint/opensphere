@@ -16,6 +16,7 @@ class Intensity extends AbstractStyle {
   constructor(layerId, value, opt_oldValue) {
     super(layerId, value, opt_oldValue);
     this.title = 'Change heatmap intensity';
+    this.updateOldValue();
   }
 
   /**

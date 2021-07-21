@@ -9,7 +9,7 @@ goog.require('os.ui.filter');
 goog.require('os.ui.filter.advancedFilterBuilderDirective');
 goog.require('os.ui.filter.basicFilterBuilderDirective');
 goog.require('os.ui.filter.ui.GroupNode');
-goog.require('os.ui.util.validationMessageDirective');
+goog.require('os.ui.util.ValidationMessageUI');
 goog.require('os.ui.window');
 goog.require('os.ui.window.ConfirmUI');
 
@@ -354,7 +354,7 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.finish = function() {
   var filter = this['root'].writeFilter(this['title'], this['description']);
   this.entry.setFilter(filter);
 
-  var dm = os.data.OSDataManager.getInstance();
+  var dm = os.data.DataManager.getInstance();
   if (dm) {
     if (dm.getDescriptor(this.entry.getType()) == null) {
       this.entry.setTemporary(true);

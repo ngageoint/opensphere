@@ -1,109 +1,113 @@
-goog.provide('os.ui.timeline.TileAxis');
-goog.require('os.ui.timeline.BaseItem');
-goog.require('os.ui.timeline.ITimelineItem');
+goog.module('os.ui.timeline.TileAxis');
+goog.module.declareLegacyNamespace();
 
+const time = goog.require('os.time');
+const TimelineController = goog.require('os.time.TimelineController');
+const timeline = goog.require('os.ui.timeline');
+const BaseItem = goog.require('os.ui.timeline.BaseItem');
+
+const ITimelineItem = goog.requireType('os.ui.timeline.ITimelineItem');
 
 
 /**
- * @constructor
- * @extends {os.ui.timeline.BaseItem}
- * @implements {os.ui.timeline.ITimelineItem}
+ * @implements {ITimelineItem}
  */
-os.ui.timeline.TileAxis = function() {
-  os.ui.timeline.TileAxis.base(this, 'constructor');
+class TileAxis extends BaseItem {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {d3.Axis}
+     * @private
+     */
+    this.axis_ = d3.svg.axis();
+    this.setInteractive(false);
+  }
 
   /**
-   * @type {d3.Axis}
-   * @private
+   * @return {Array<Date>}
+   * @protected
    */
-  this.axis_ = d3.svg.axis();
-  this.setInteractive(false);
-};
-goog.inherits(os.ui.timeline.TileAxis, os.ui.timeline.BaseItem);
+  getTicks() {
+    var times = timeline.normalizeExtent(this.xScale.domain());
+    var dates = [new Date(times[0]), new Date(times[1])];
 
+    var xFn = /** @type {d3.ScaleFn} */ (this.xScale);
+    var pixelScale = 1 / (xFn(1) - xFn(0));
+    var px20time = Number(pixelScale.toPrecision(2)) * 20;
 
-/**
- * @return {Array<Date>}
- * @protected
- */
-os.ui.timeline.TileAxis.prototype.getTicks = function() {
-  var times = os.ui.timeline.normalizeExtent(this.xScale.domain());
-  var dates = [new Date(times[0]), new Date(times[1])];
+    var tlc = TimelineController.getInstance();
+    var duration = tlc.getDuration();
 
-  var xFn = /** @type {d3.ScaleFn} */ (this.xScale);
-  var pixelScale = 1 / (xFn(1) - xFn(0));
-  var px20time = Number(pixelScale.toPrecision(2)) * 20;
+    var begin = time.floor(dates[0], duration);
+    var last = null;
+    var ticks = [];
 
-  var tlc = os.time.TimelineController.getInstance();
-  var duration = tlc.getDuration();
+    for (var i = 0; last === null || last <= dates[1]; i++) {
+      var d = time.offset(begin, duration, i);
 
-  var begin = os.time.floor(dates[0], duration);
-  var last = null;
-  var ticks = [];
+      // stop showing ticks if they get closer than 20px
+      if (last !== null && d.getTime() - last < px20time) {
+        break;
+      }
 
-  for (var i = 0; last === null || last <= dates[1]; i++) {
-    var d = os.time.offset(begin, duration, i);
+      last = d.getTime();
 
-    // stop showing ticks if they get closer than 20px
-    if (last !== null && d.getTime() - last < px20time) {
-      break;
+      if (last >= dates[0]) {
+        ticks.push(d);
+      }
     }
 
-    last = d.getTime();
+    return ticks;
+  }
 
-    if (last >= dates[0]) {
-      ticks.push(d);
+  /**
+   * @inheritDoc
+   */
+  initSVG(container, height) {
+    if (this.xScale) {
+      this.axis_.orient('top').
+          scale(this.xScale).
+          tickSize(-height, -height).
+          tickFormat(d3.format('')).
+          tickValues(this.getTicks());
     }
+
+    var group = /** @type {d3.Selection} */ (container.append('g'));
+    group.attr('class', 'axis c-svg-timeline__tile-axis').call(this.axis_);
   }
 
-  return ticks;
-};
+  /**
+   * @inheritDoc
+   */
+  render(opt_height) {
+    if (opt_height !== undefined) {
+      this.axis_.tickSize(-opt_height, -opt_height);
+    }
 
+    this.axis_.tickValues(this.getTicks());
 
-/**
- * @inheritDoc
- */
-os.ui.timeline.TileAxis.prototype.initSVG = function(container, height) {
-  if (this.xScale) {
-    this.axis_.orient('top').
-        scale(this.xScale).
-        tickSize(-height, -height).
-        tickFormat(d3.format('')).
-        tickValues(this.getTicks());
+    var group = d3.select('.c-svg-timeline__tile-axis');
+    group.call(/** @type {Function} */ (this.axis_));
   }
 
-  var group = /** @type {d3.Selection} */ (container.append('g'));
-  group.attr('class', 'axis c-svg-timeline__tile-axis').call(this.axis_);
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.timeline.TileAxis.prototype.render = function(opt_height) {
-  if (opt_height !== undefined) {
-    this.axis_.tickSize(-opt_height, -opt_height);
+  /**
+   * @inheritDoc
+   */
+  getExtent() {
+    return timeline.normalizeExtent(this.xScale.domain());
   }
 
-  this.axis_.tickValues(this.getTicks());
+  /**
+   * @inheritDoc
+   */
+  getAvg() {
+    var times = this.getExtent();
+    return (times[1] + times[0]) / 2;
+  }
+}
 
-  var group = d3.select('.c-svg-timeline__tile-axis');
-  group.call(/** @type {Function} */ (this.axis_));
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.timeline.TileAxis.prototype.getExtent = function() {
-  return os.ui.timeline.normalizeExtent(this.xScale.domain());
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.timeline.TileAxis.prototype.getAvg = function() {
-  var times = this.getExtent();
-  return (times[1] + times[0]) / 2;
-};
+exports = TileAxis;

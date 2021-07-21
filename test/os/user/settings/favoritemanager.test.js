@@ -2,6 +2,7 @@ goog.require('os.mock');
 goog.require('os.user.settings.FavoriteManager');
 
 describe('os.user.settings.FavoriteManager', function() {
+  const FavoriteManager = goog.module.get('os.user.settings.FavoriteManager');
   var settings;
 
   beforeEach(function() {
@@ -14,62 +15,62 @@ describe('os.user.settings.FavoriteManager', function() {
   });
 
   it('should start from scratch', function() {
-    expect(os.favoriteManager.getFavorites().length).toBe(0);
+    expect(FavoriteManager.getInstance().getFavorites().length).toBe(0);
   });
 
   it('should save favorites', function() {
-    os.favoriteManager.save(os.user.settings.FavoriteType.DESCRIPTOR, '1', 'one');
-    os.favoriteManager.save(os.user.settings.FavoriteType.DESCRIPTOR, '2', 'two');
-    os.favoriteManager.save(os.user.settings.FavoriteType.DESCRIPTOR, '3', 'three');
-    expect(os.favoriteManager.getFavorites().length).toBe(3);
+    FavoriteManager.getInstance().save(os.user.settings.FavoriteType.DESCRIPTOR, '1', 'one');
+    FavoriteManager.getInstance().save(os.user.settings.FavoriteType.DESCRIPTOR, '2', 'two');
+    FavoriteManager.getInstance().save(os.user.settings.FavoriteType.DESCRIPTOR, '3', 'three');
+    expect(FavoriteManager.getInstance().getFavorites().length).toBe(3);
   });
 
   it('should not add favorites that already exist', function() {
-    os.favoriteManager.save(os.user.settings.FavoriteType.DESCRIPTOR, '3', 'three');
-    expect(os.favoriteManager.getFavorites().length).toBe(3);
+    FavoriteManager.getInstance().save(os.user.settings.FavoriteType.DESCRIPTOR, '3', 'three');
+    expect(FavoriteManager.getInstance().getFavorites().length).toBe(3);
   });
 
   it('should retrieve favorites', function() {
-    expect(os.favoriteManager.getFavorite('1') != null).toBe(true);
-    expect(os.favoriteManager.getFavorite('2') != null).toBe(true);
-    expect(os.favoriteManager.getFavorite('3') != null).toBe(true);
+    expect(FavoriteManager.getInstance().getFavorite('1') != null).toBe(true);
+    expect(FavoriteManager.getInstance().getFavorite('2') != null).toBe(true);
+    expect(FavoriteManager.getInstance().getFavorite('3') != null).toBe(true);
   });
 
   it('should remove favorites', function() {
-    os.favoriteManager.removeFavorite('3');
-    expect(os.favoriteManager.getFavorites().length).toBe(2);
+    FavoriteManager.getInstance().removeFavorite('3');
+    expect(FavoriteManager.getInstance().getFavorites().length).toBe(2);
   });
 
   // it('should add folder favorites', function() {
-  //   var key = os.favoriteManager.createFolder();
-  //   expect(os.favoriteManager.getFavorite(key) != null).toBe(true);
-  //   expect(os.favoriteManager.getFavorites().length).toBe(3);
+  //   var key = FavoriteManager.getInstance().createFolder();
+  //   expect(FavoriteManager.getInstance().getFavorite(key) != null).toBe(true);
+  //   expect(FavoriteManager.getInstance().getFavorites().length).toBe(3);
 
-  //   var nestedFolder = os.favoriteManager.createFolder(key);
+  //   var nestedFolder = FavoriteManager.getInstance().createFolder(key);
   //   waitsFor(function() {
-  //     return os.favoriteManager.getFavorite(nestedFolder) != null)
+  //     return FavoriteManager.getInstance().getFavorite(nestedFolder) != null)
   //   });
-  //   expect(os.favoriteManager.getFavorite(nestedFolder) != null).toBe(true);
-  //   expect(os.favoriteManager.getFavorites().length).toBe(3);
+  //   expect(FavoriteManager.getInstance().getFavorite(nestedFolder) != null).toBe(true);
+  //   expect(FavoriteManager.getInstance().getFavorites().length).toBe(3);
   // });
 
   // it('should retrieve folder favorites', function() {
-  //   var folders = os.favoriteManager.getFolders();
+  //   var folders = FavoriteManager.getInstance().getFolders();
   //   expect(folders.length).toBe(2);
   // });
 
   // it('should move favorites to a folder', function() {
-  //   var folder = os.favoriteManager.getFolders()[1];
-  //   os.favoriteManager.save(os.user.settings.FavoriteType.DESCRIPTOR, '1',
+  //   var folder = FavoriteManager.getInstance().getFolders()[1];
+  //   FavoriteManager.getInstance().save(os.user.settings.FavoriteType.DESCRIPTOR, '1',
   //      'one', undefined, [folder['key']]);
 
-  //   var favFolders = os.favoriteManager.getFavoriteFolders('1');
+  //   var favFolders = FavoriteManager.getInstance().getFavoriteFolders('1');
   //   expect(favFolders.length).toBe(1);
   // });
 
 
   // it('should get types of favorites', function() {
-  //   var searchFavorites = os.favoriteManager.getFavTypes(os.favoriteManager.getFavorites(),
+  //   var searchFavorites = FavoriteManager.getInstance().getFavTypes(FavoriteManager.getInstance().getFavorites(),
   //       [os.user.settings.FavoriteType.DESCRIPTOR]);
   //   expect(searchFavorites.length).toBe(2);
   // });

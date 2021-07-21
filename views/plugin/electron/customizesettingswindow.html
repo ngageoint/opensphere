@@ -1,0 +1,28 @@
+<div class="flex-fill w-100 d-flex flex-column">
+  <div class="d-flex modal-body">
+    <customizesettings changed="ctrl.changed"></customizesettings>
+  </div>
+  <div class="modal-footer justify-content-between">
+    <div>
+      <div class="font-italic" ng-if="ctrl.changed">
+        <i class="fas fa-exclamation-triangle text-warning"></i>
+        Changes will be applied when the application is restarted.
+      </div>
+    </div>
+    <div>
+      <button class="btn btn-primary" type="button"
+          ng-disabled="!ctrl.changed"
+          ng-click="ctrl.confirm()"
+          title="Restart the application to reload settings">
+        <i class="fas fa-sync"></i>
+        Restart and Apply
+      </button>
+      <button class="btn btn-secondary" type="button"
+          ng-click="ctrl.close()"
+          title="Close the window">
+        <i class="fas fa-times"></i>
+        Close
+      </button>
+    </div>
+  </div>
+</div>

@@ -60,8 +60,8 @@ class GeoJSONExporter extends AbstractExporter {
       var time = /** @type {os.time.ITime|undefined} */ (this.items[i].get(RecordField.TIME));
       if (time) {
         if (instanceOf(time, TimeRange.NAME)) {
-          this.items[i].set(GeoJSONExporter.FIELDS.START_TIME, time.getStartISOString());
-          this.items[i].set(GeoJSONExporter.FIELDS.END_TIME, time.getEndISOString());
+          this.items[i].set(GeoJSONExporter.FIELDS.START_TIME, /** @type {TimeRange} */ (time).getStartISOString());
+          this.items[i].set(GeoJSONExporter.FIELDS.END_TIME, /** @type {TimeRange} */ (time).getEndISOString());
           if (!timeRangeAdded) {
             this.fields.push(GeoJSONExporter.FIELDS.START_TIME);
             this.fields.push(GeoJSONExporter.FIELDS.END_TIME);

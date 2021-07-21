@@ -1,90 +1,99 @@
 /**
  * @fileoverview Helpers for functional programming with the opensphere/openlayers API
  */
+goog.module('os.fn');
+goog.module.declareLegacyNamespace();
 
-goog.provide('os.fn');
+const olExtent = goog.require('ol.extent');
+const GeometryType = goog.require('ol.geom.GeometryType');
+const Layer = goog.require('ol.layer.Layer');
+const UrlTile = goog.require('ol.source.UrlTile');
+const OLVectorSource = goog.require('ol.source.Vector');
+const osExtent = goog.require('os.extent');
+const osImplements = goog.require('os.implements');
+const ILayerProvider = goog.require('os.layer.ILayerProvider');
 
-goog.require('ol.extent');
-goog.require('ol.geom.GeometryType');
-goog.require('ol.layer.Layer');
-goog.require('os.extent');
+const Feature = goog.requireType('ol.Feature');
+const Geometry = goog.requireType('ol.geom.Geometry');
+const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
+const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
+const Source = goog.requireType('ol.source.Source');
+const ILayer = goog.requireType('os.layer.ILayer');
+const ITreeNode = goog.requireType('os.structs.ITreeNode');
 
 
 /**
  * @param {*} item The item
  * @return {boolean} Whether or not the item is truthy
  */
-os.fn.filterFalsey = function(item) {
+const filterFalsey = function(item) {
   return !!item;
 };
-
 
 /**
  * Reduce layers to a combined extent.
  *
  * @example
- * var extent = layers.reduce(os.fn.reduceExtentFromLayers, ol.extent.createEmpty());
+ * var extent = layers.reduce(os.fn.reduceExtentFromLayers, olExtent.createEmpty());
  *
  * @param {!ol.Extent} extent The extent
- * @param {!(os.layer.ILayer|ol.layer.Layer)} layer The layer
+ * @param {!(ILayer|Layer)} layer The layer
  * @return {!ol.Extent} The combined extent
  */
-os.fn.reduceExtentFromLayers = function(extent, layer) {
-  if (layer instanceof ol.layer.Layer) {
-    var olayer = /** @type {ol.layer.Layer} */ (layer);
+const reduceExtentFromLayers = function(extent, layer) {
+  if (layer instanceof Layer) {
+    var olayer = /** @type {Layer} */ (layer);
     var ex = olayer.getExtent();
 
     if (!ex) {
       var source = olayer.getSource();
 
-      if (source instanceof ol.source.Vector ||
-          source instanceof ol.source.UrlTile) {
-        ex = (/** @type {ol.source.Vector|ol.source.UrlTile} */ (source)).getExtent();
+      if (source instanceof OLVectorSource ||
+          source instanceof UrlTile) {
+        ex = (/** @type {OLVectorSource|UrlTile} */ (source)).getExtent();
       }
     }
 
     if (ex) {
-      ol.extent.extend(extent, ex);
+      olExtent.extend(extent, ex);
     }
   }
 
   return extent;
 };
-
 
 /**
  * @param {!ol.Extent} extent The extent
- * @param {?(ol.geom.Geometry|{geometry: ol.geom.Geometry})|undefined} geometry The geometry
+ * @param {?(Geometry|{geometry: Geometry})|undefined} geometry The geometry
  * @return {!ol.Extent} The combined extent
  */
-os.fn.reduceExtentFromGeometries = function(extent, geometry) {
+const reduceExtentFromGeometries = function(extent, geometry) {
   if (geometry) {
-    var geom = /** @type {ol.geom.Geometry} */ (
-      /** @type {ol.geom.Geometry} */ (geometry).getType ? geometry : geometry.geometry);
+    var geom = /** @type {Geometry} */ (
+      /** @type {Geometry} */ (geometry).getType ? geometry : geometry.geometry);
 
     if (geom) {
-      ol.extent.extend(extent, os.extent.getFunctionalExtent(geom));
+      olExtent.extend(extent, osExtent.getFunctionalExtent(geom));
     }
   }
 
   return extent;
 };
 
-
 /**
  * @param {!Array<number>} extent
- * @param {?ol.geom.Geometry|undefined} geometry
+ * @param {?Geometry|undefined} geometry
  * @return {!Array<number>}
  */
-os.fn.reduceAltitudeExtentFromGeometries = function(extent, geometry) {
+const reduceAltitudeExtentFromGeometries = function(extent, geometry) {
   if (geometry) {
     var type = geometry.getType();
 
-    if (type === ol.geom.GeometryType.GEOMETRY_COLLECTION) {
-      var geoms = /** @type {ol.geom.GeometryCollection} */ (geometry).getGeometriesArray();
-      extent = geoms.reduce(os.fn.reduceAltitudeExtentFromGeometries, extent);
+    if (type === GeometryType.GEOMETRY_COLLECTION) {
+      var geoms = /** @type {GeometryCollection} */ (geometry).getGeometriesArray();
+      extent = geoms.reduce(reduceAltitudeExtentFromGeometries, extent);
     } else {
-      geometry = /** @type {ol.geom.SimpleGeometry} */ (geometry);
+      geometry = /** @type {SimpleGeometry} */ (geometry);
       var flats = geometry.getFlatCoordinates();
       var stride = geometry.getStride();
 
@@ -99,43 +108,39 @@ os.fn.reduceAltitudeExtentFromGeometries = function(extent, geometry) {
   return extent;
 };
 
-
 /**
- * @param {undefined|null|ol.layer.Layer} layer The layer
- * @return {undefined|ol.source.Source} The source, if any
+ * @param {undefined|null|Layer} layer The layer
+ * @return {undefined|Source} The source, if any
  */
-os.fn.mapLayerToSource = function(layer) {
+const mapLayerToSource = function(layer) {
   return layer ? layer.getSource() : undefined;
 };
 
-
 /**
- * @param {undefined|null|ol.Feature} feature The feature
- * @return {undefined|ol.geom.Geometry} The geom
+ * @param {undefined|null|Feature} feature The feature
+ * @return {undefined|Geometry} The geom
  */
-os.fn.mapFeatureToGeometry = function(feature) {
+const mapFeatureToGeometry = function(feature) {
   return feature ? feature.getGeometry() : undefined;
 };
-
 
 /**
  * Map a tree node to a layer.
  *
- * @param {undefined|null|os.structs.ITreeNode} node The tree node.
- * @return {os.layer.ILayer|undefined} layer The layer, or undefined if not a layer node.
+ * @param {undefined|null|ITreeNode} node The tree node.
+ * @return {ILayer|undefined} layer The layer, or undefined if not a layer node.
  */
-os.fn.mapNodeToLayer = function(node) {
-  return node instanceof os.data.LayerNode ? node.getLayer() : undefined;
+const mapNodeToLayer = function(node) {
+  return osImplements(node, ILayerProvider.ID) ? /** @type {ILayerProvider} */ (node).getLayer() : undefined;
 };
-
 
 /**
  * Map tree node(s) to layers.
  *
- * @param {Array<os.structs.ITreeNode>|os.structs.ITreeNode|undefined} nodes The tree nodes.
- * @return {!Array<!os.layer.ILayer>} layers The layers.
+ * @param {Array<ITreeNode>|ITreeNode|undefined} nodes The tree nodes.
+ * @return {!Array<!ILayer>} layers The layers.
  */
-os.fn.nodesToLayers = function(nodes) {
+const nodesToLayers = function(nodes) {
   if (!nodes) {
     return [];
   }
@@ -144,15 +149,26 @@ os.fn.nodesToLayers = function(nodes) {
     nodes = [nodes];
   }
 
-  return nodes.map(os.fn.mapNodeToLayer).filter(os.fn.filterFalsey);
+  return nodes.map(mapNodeToLayer).filter(filterFalsey);
 };
-
 
 /**
  * An empty function that accepts no arguments.
  * Useful for features that offer optional callbacks.
  * @return {undefined}
  */
-os.fn.noop = function() {
+const noop = function() {
   // No Operation
+};
+
+exports = {
+  filterFalsey,
+  reduceExtentFromLayers,
+  reduceExtentFromGeometries,
+  reduceAltitudeExtentFromGeometries,
+  mapLayerToSource,
+  mapFeatureToGeometry,
+  mapNodeToLayer,
+  nodesToLayers,
+  noop
 };

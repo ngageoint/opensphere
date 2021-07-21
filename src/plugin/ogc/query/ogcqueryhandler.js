@@ -1,27 +1,30 @@
-goog.provide('plugin.ogc.query.OGCQueryHandler');
+goog.module('plugin.ogc.query.OGCQueryHandler');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.net.ParamModifier');
-goog.require('os.ogc.filter.ModifierConstants');
-goog.require('os.ogc.filter.OGCFilterFormatter');
-goog.require('os.query.QueryHandler');
-goog.require('plugin.ogc.query.OGCExclusionFormatter');
-goog.require('plugin.ogc.query.OGCSpatialFormatter');
-
+const ParamModifier = goog.require('os.net.ParamModifier');
+const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');
+const OGCFilterFormatter = goog.require('os.ogc.filter.OGCFilterFormatter');
+const QueryHandler = goog.require('os.query.QueryHandler');
+const OGCExclusionFormatter = goog.require('plugin.ogc.query.OGCExclusionFormatter');
+const OGCSpatialFormatter = goog.require('plugin.ogc.query.OGCSpatialFormatter');
 
 
 /**
- * @param {string=} opt_geomColumn
- * @constructor
- * @extends {os.query.QueryHandler}
  */
-plugin.ogc.query.OGCQueryHandler = function(opt_geomColumn) {
-  plugin.ogc.query.OGCQueryHandler.base(this, 'constructor');
+class OGCQueryHandler extends QueryHandler {
+  /**
+   * Constructor.
+   * @param {string=} opt_geomColumn
+   */
+  constructor(opt_geomColumn) {
+    super();
 
-  this.setModifier(new os.net.ParamModifier('filter', 'filter', os.ogc.filter.ModifierConstants.FILTER, ''));
-  this.setAreaFormatter(new plugin.ogc.query.OGCSpatialFormatter(opt_geomColumn));
-  this.setExclusionFormatter(new plugin.ogc.query.OGCExclusionFormatter(opt_geomColumn));
-  this.setFilterFormatter(new os.ogc.filter.OGCFilterFormatter());
-  this.spatialRequired = true;
-};
-goog.inherits(plugin.ogc.query.OGCQueryHandler, os.query.QueryHandler);
+    this.setModifier(new ParamModifier('filter', 'filter', ModifierConstants.FILTER, ''));
+    this.setAreaFormatter(new OGCSpatialFormatter(opt_geomColumn));
+    this.setExclusionFormatter(new OGCExclusionFormatter(opt_geomColumn));
+    this.setFilterFormatter(new OGCFilterFormatter());
+    this.spatialRequired = true;
+  }
+}
 
+exports = OGCQueryHandler;

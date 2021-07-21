@@ -1,8 +1,14 @@
-goog.provide('os.ui.alert.AlertBadgeCtrl');
-goog.provide('os.ui.alert.alertBadgeDirective');
-goog.require('os.alert.AlertEvent');
-goog.require('os.alert.AlertEventSeverity');
-goog.require('os.ui.Module');
+goog.module('os.ui.alert.AlertBadgeUI');
+goog.module.declareLegacyNamespace();
+
+const {ROOT} = goog.require('os');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const EventType = goog.require('os.alert.EventType');
+const {apply} = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+
+const AlertEvent = goog.requireType('os.alert.AlertEvent');
 
 
 /**
@@ -10,122 +16,128 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.alert.alertBadgeDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'reset': '='
-    },
-    templateUrl: os.ROOT + 'views/badge.html',
-    controller: os.ui.alert.AlertBadgeCtrl,
-    controllerAs: 'badge'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'reset': '='
+  },
+  templateUrl: ROOT + 'views/badge.html',
+  controller: Controller,
+  controllerAs: 'badge'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'alertbadge';
 
 /**
  * Register alertbadge directive.
  */
-os.ui.Module.directive('alertbadge', [os.ui.alert.alertBadgeDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller function for the alertbadge directive.
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.alert.AlertBadgeCtrl = function($scope) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
    */
-  this.scope = $scope;
+  constructor($scope) {
+    /**
+     * @type {?angular.Scope}
+     */
+    this.scope = $scope;
+
+    /**
+     * @type {number}
+     */
+    this['count'] = 0;
+
+    /**
+     * @type {AlertEventSeverity}
+     */
+    this['highestAlert'] = AlertEventSeverity.INFO;
+
+    /**
+     * @type {?AlertManager}
+     * @private
+     */
+    this.am_ = AlertManager.getInstance();
+    this.alertClientId_ = 'alertbadge';
+    this.am_.processMissedAlerts(this.alertClientId_, this.handleAlert_, this);
+    this.am_.listen(EventType.ALERT, this.handleAlert_, false, this);
+
+    $scope.$watch('reset', this.reset.bind(this));
+    $scope.$on('$destroy', this.destroy.bind(this));
+  }
 
   /**
-   * @type {number}
+   * Destroy the directive, cleaning up references/listeners.
+   *
+   * @protected
    */
-  this['count'] = 0;
+  destroy() {
+    this.am_.unlisten(EventType.ALERT, this.handleAlert_, false, this);
+    this.am_ = null;
+    this.scope = null;
+  }
 
   /**
-   * @type {os.alert.AlertEventSeverity}
+   * Reset the badge.
+   *
+   * @protected
    */
-  this['highestAlert'] = os.alert.AlertEventSeverity.INFO;
+  reset() {
+    if (this.scope['reset']) {
+      this['count'] = 0;
+      this['highestAlert'] = AlertEventSeverity.INFO;
+    }
+  }
 
   /**
-   * @type {?os.alert.AlertManager}
+   * @return {string}
+   * @export
+   */
+  getClass() {
+    return Controller.CLASSES[this['highestAlert']] || 'badge-light';
+  }
+
+  /**
+   * Updates the alert badge when the alert tab is not active.
+   *
+   * @param {AlertEvent} event The event to register
    * @private
    */
-  this.am_ = os.alert.AlertManager.getInstance();
-  this.alertClientId_ = 'alertbadge';
-  this.am_.processMissedAlerts(this.alertClientId_, this.handleAlert_, this);
-  this.am_.listen(os.alert.EventType.ALERT, this.handleAlert_, false, this);
+  handleAlert_(event) {
+    if (!this.scope['reset']) {
+      this['count'] += event.getCount();
 
-  $scope.$watch('reset', this.reset.bind(this));
-  $scope.$on('$destroy', this.destroy.bind(this));
-};
+      var severity = event.getSeverity();
+      if (severity.value > this['highestAlert'].value) {
+        this['highestAlert'] = severity;
+      }
+    }
 
+    apply(this.scope);
+  }
+}
 
 /**
  * @enum {string}
  */
-os.ui.alert.AlertBadgeCtrl.CLASSES = {
+Controller.CLASSES = {
   'Error': 'badge-danger',
   'Warning': 'badge-warning'
 };
 
-
-/**
- * Destroy the directive, cleaning up references/listeners.
- *
- * @protected
- */
-os.ui.alert.AlertBadgeCtrl.prototype.destroy = function() {
-  this.am_.unlisten(os.alert.EventType.ALERT, this.handleAlert_, false, this);
-  this.am_ = null;
-  this.scope = null;
-};
-
-
-/**
- * Reset the badge.
- *
- * @protected
- */
-os.ui.alert.AlertBadgeCtrl.prototype.reset = function() {
-  if (this.scope['reset']) {
-    this['count'] = 0;
-    this['highestAlert'] = os.alert.AlertEventSeverity.INFO;
-  }
-};
-
-
-/**
- * @return {string}
- * @export
- */
-os.ui.alert.AlertBadgeCtrl.prototype.getClass = function() {
-  return os.ui.alert.AlertBadgeCtrl.CLASSES[this['highestAlert']] || 'badge-light';
-};
-
-
-/**
- * Updates the alert badge when the alert tab is not active.
- *
- * @param {os.alert.AlertEvent} event The event to register
- * @private
- */
-os.ui.alert.AlertBadgeCtrl.prototype.handleAlert_ = function(event) {
-  if (!this.scope['reset']) {
-    this['count'] += event.getCount();
-
-    var severity = event.getSeverity();
-    if (severity.value > this['highestAlert'].value) {
-      this['highestAlert'] = severity;
-    }
-  }
-
-  os.ui.apply(this.scope);
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

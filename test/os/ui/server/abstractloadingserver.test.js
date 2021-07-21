@@ -1,9 +1,12 @@
-goog.require('os.ui.server.AbstractLoadingServer');
 goog.require('goog.array');
+goog.require('os.ui.server.AbstractLoadingServer');
 
 
 describe('os.ui.server.AbstractLoadingServer', function() {
-  var server = new os.ui.server.AbstractLoadingServer();
+  const googArray = goog.module.get('goog.array');
+  const AbstractLoadingServer = goog.module.get('os.ui.server.AbstractLoadingServer');
+
+  var server = new AbstractLoadingServer();
 
   var baseUrl = 'https://test.com/server';
   var alternateUrls = ['https://1.test.com/server', 'https://2.test.com/server', 'https://3.test.com/server'];
@@ -23,7 +26,7 @@ describe('os.ui.server.AbstractLoadingServer', function() {
 
     var alts = server.getAlternateUrls();
     expect(alts.length).toBe(3);
-    expect(goog.array.equals(alts, alternateUrls)).toBe(true);
+    expect(googArray.equals(alts, alternateUrls)).toBe(true);
   });
 
   it('removes alternate URLs', function() {
@@ -44,7 +47,7 @@ describe('os.ui.server.AbstractLoadingServer', function() {
 
     var alts = server.getAlternateUrls();
     expect(alts.length).toBe(3);
-    expect(goog.array.equals(alts, alternateUrls)).toBe(true);
+    expect(googArray.equals(alts, alternateUrls)).toBe(true);
   });
 
   it('rotates through the URL and alternates', function() {

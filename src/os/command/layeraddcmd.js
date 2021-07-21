@@ -1,8 +1,8 @@
-goog.provide('os.command.LayerAdd');
+goog.module('os.command.LayerAdd');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractLayer');
-goog.require('os.command.State');
-
+const AbstractLayer = goog.require('os.command.AbstractLayer');
+const State = goog.require('os.command.State');
 
 
 /**
@@ -10,45 +10,46 @@ goog.require('os.command.State');
  *
  * This should only be used for layers that do not have a descriptor. Layers will a synchronized descriptor should use
  * {@link os.data.ActivateDescriptor} instead.
- *
- * @param {Object.<string, *>} options The configuration for the map layer.
- * @extends {os.command.AbstractLayer}
- * @constructor
  */
-os.command.LayerAdd = function(options) {
-  os.command.LayerAdd.base(this, 'constructor', options);
-  this.title = 'Add Layer';
-};
-goog.inherits(os.command.LayerAdd, os.command.AbstractLayer);
+class LayerAdd extends AbstractLayer {
+  /**
+   * Constructor.
+   * @param {Object.<string, *>} options The configuration for the map layer.
+   */
+  constructor(options) {
+    super(options);
+    this.title = 'Add Layer';
+  }
 
+  /**
+   * @inheritDoc
+   */
+  execute() {
+    if (this.canExecute()) {
+      this.state = State.EXECUTING;
 
-/**
- * @inheritDoc
- */
-os.command.LayerAdd.prototype.execute = function() {
-  if (this.canExecute()) {
-    this.state = os.command.State.EXECUTING;
+      if (this.add(this.layerOptions)) {
+        this.state = State.SUCCESS;
+        return true;
+      }
+    }
 
-    if (this.add(this.layerOptions)) {
-      this.state = os.command.State.SUCCESS;
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
+
+    if (this.remove(this.layerOptions)) {
+      this.state = State.READY;
       return true;
     }
+
+    return false;
   }
+}
 
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.LayerAdd.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-
-  if (this.remove(this.layerOptions)) {
-    this.state = os.command.State.READY;
-    return true;
-  }
-
-  return false;
-};
+exports = LayerAdd;

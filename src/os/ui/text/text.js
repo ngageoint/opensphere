@@ -1,11 +1,12 @@
-goog.provide('os.ui.text');
+goog.module('os.ui.text');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.string');
-goog.require('os.alert.AlertEventSeverity');
-goog.require('os.alert.AlertManager');
 goog.require('os.ui.textPromptDirective');
-goog.require('os.ui.window');
 
+const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const osWindow = goog.require('os.ui.window');
 
 /**
  * Copies a string of text into the clipboard.
@@ -13,8 +14,8 @@ goog.require('os.ui.window');
  * @param {string} text The string to copy.
  * @param {string=} opt_msg Optional message to send as an alert.
  */
-os.ui.text.copy = function(text, opt_msg) {
-  if (text && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(text))) {
+const copy = function(text, opt_msg) {
+  if (text && !isEmptyOrWhitespace(makeSafe(text))) {
     var textArea = document.createElement('textarea');
     textArea.style.top = '-2000px';
     textArea.style.left = '-2000px';
@@ -34,9 +35,9 @@ os.ui.text.copy = function(text, opt_msg) {
 
     if (success) {
       var msg = opt_msg || (text.length > 20 ? 'Value ' : '"' + text + '" ') + 'copied to clipboard';
-      os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.INFO);
+      AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.INFO);
     } else {
-      os.ui.window.create({
+      osWindow.create({
         'id': 'copy',
         'x': 'center',
         'y': 'center',
@@ -56,4 +57,8 @@ os.ui.text.copy = function(text, opt_msg) {
       });
     }
   }
+};
+
+exports = {
+  copy
 };

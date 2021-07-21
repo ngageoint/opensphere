@@ -1,11 +1,15 @@
-goog.provide('os.ui.ex.AreaExportCtrl');
-goog.provide('os.ui.ex.areaExportDirective');
+goog.module('os.ui.ex.AreaExportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.array');
-goog.require('os.style');
-goog.require('os.ui.Module');
-goog.require('os.ui.file.ExportDialogCtrl');
-goog.require('os.ui.file.exportDialogDirective');
+const {removeDuplicates} = goog.require('goog.array');
+const {METHOD_FIELD} = goog.require('os.interpolate');
+const {DEFAULT_VECTOR_CONFIG, setFeatureStyle} = goog.require('os.style');
+const StyleType = goog.require('os.style.StyleType');
+const Module = goog.require('os.ui.Module');
+const {Controller: ExportDialogCtrl, directive: exportDialogDirective} = goog.require('os.ui.file.ExportDialogUI');
+const {create: createWindow} = goog.require('os.ui.window');
+const KMLExporter = goog.require('plugin.file.kml.KMLExporter');
+const SHPExporter = goog.require('plugin.file.shp.SHPExporter');
 
 
 /**
@@ -13,132 +17,143 @@ goog.require('os.ui.file.exportDialogDirective');
  *
  * @return {angular.Directive}
  */
-os.ui.ex.areaExportDirective = function() {
-  var directive = os.ui.file.exportDialogDirective();
-  directive.controller = os.ui.ex.AreaExportCtrl;
+const directive = () => {
+  var directive = exportDialogDirective();
+  directive.controller = Controller;
   return directive;
 };
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'areaexport';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('areaexport', [os.ui.ex.areaExportDirective]);
-
-
+Module.directive('areaexport', [directive]);
 
 /**
  * Controller function for the areaexport directive
  *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$compile} $compile
- * @extends {os.ui.file.ExportDialogCtrl.<!os.source.Vector>}
- * @constructor
- * @ngInject
+ * @extends {ExportDialogCtrl.<!os.source.Vector>}
+ * @unrestricted
  */
-os.ui.ex.AreaExportCtrl = function($scope, $element, $compile) {
-  os.ui.ex.AreaExportCtrl.base(this, 'constructor', $scope, $element, $compile);
+class Controller extends ExportDialogCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$compile} $compile
+   * @ngInject
+   */
+  constructor($scope, $element, $compile) {
+    super($scope, $element, $compile);
 
-  $scope['itemText'] = 'area';
+    $scope['itemText'] = 'area';
 
-  // Simplify some of the export guis since we dont need most options
-  $scope['simple'] = true;
+    // Simplify some of the export guis since we dont need most options
+    $scope['simple'] = true;
+
+    /**
+     * If multiple sources are allowed by the export method.
+     * @type {boolean}
+     */
+    $scope['allowMultiple'] = true;
+
+    // Used for Desktop's 'My Places'
+    this.options.items.forEach(function(area) {
+      area.set('mapVisualizationType', 'ANNOTATION_REGIONS');
+    });
+  }
 
   /**
-   * If multiple sources are allowed by the export method.
-   * @type {boolean}
+   * @inheritDoc
+   *
+   * @suppress {checkTypes|undefinedNames} TODO: remove references to plugin classes from this file! the compiler will
+   *                                       will throw errors if they aren't available in the build.
    */
-  $scope['allowMultiple'] = true;
+  onExporterChange(opt_new, opt_old) {
+    super.onExporterChange(opt_new, opt_old);
 
-  // Used for Desktop's 'My Places'
-  os.array.forEach(this.options.items, function(area) {
-    area.set('mapVisualizationType', 'ANNOTATION_REGIONS');
-  });
-};
-goog.inherits(os.ui.ex.AreaExportCtrl, os.ui.file.ExportDialogCtrl);
+    this.options.fields.length = 0;
 
+    var fields = ['name', 'title', 'description', 'tags', METHOD_FIELD];
+    if (opt_new instanceof KMLExporter) {
+      // set the label field for KML and add the mapVisualizationType for Desktop
+      opt_new.setDefaultLabelFields(['title']);
 
-/**
- * Starts the export process for the provided areas.
- *
- * @param {Array<ol.Feature>} areas
- * @param {Array<ol.Feature>=} opt_selected
- * @param {Array<ol.Feature>=} opt_active
- */
-os.ui.ex.AreaExportCtrl.start = function(areas, opt_selected, opt_active) {
-  if (!areas) {
-    areas = [];
+      fields.push('mapVisualizationType');
+    } else if (opt_new instanceof SHPExporter) {
+      // Dont show the ui
+      var uiWrapper = this.element.find('.js-export-ui__wrapper');
+      uiWrapper.children().remove();
+    }
+
+    // update the export columns
+    if (fields && fields.length > 0) {
+      this.options.fields = this.options.fields.concat(fields);
+    }
   }
 
-  // De-dupe areas
-  goog.array.removeDuplicates(areas);
+  /**
+   * Starts the export process for the provided areas.
+   *
+   * @param {Array<ol.Feature>} areas
+   * @param {Array<ol.Feature>=} opt_selected
+   * @param {Array<ol.Feature>=} opt_active
+   */
+  static start(areas, opt_selected, opt_active) {
+    if (!areas) {
+      areas = [];
+    }
 
-  // Replace the feature style with the default.
-  areas = areas.map(function(area) {
-    area = area.clone();
-    area.set(os.style.StyleType.FEATURE, os.style.DEFAULT_VECTOR_CONFIG);
-    os.style.setFeatureStyle(area);
-    return area;
-  });
+    // De-dupe areas
+    removeDuplicates(areas);
 
-  var title = areas.length == 1 ? areas[0].get('title') : null;
-  var scopeOptions = {
-    'options': /** @type {os.ex.ExportOptions} */ ({
-      allData: areas,
-      selectedData: opt_selected,
-      activeData: opt_active,
-      additionalOptions: opt_selected || opt_active,
-      exporter: null,
-      fields: [],
-      items: areas,
-      persister: null,
-      title: title
-    })
-  };
+    // Replace the feature style with the default.
+    areas = areas.map(function(area) {
+      area = area.clone();
+      area.set(StyleType.FEATURE, DEFAULT_VECTOR_CONFIG);
+      setFeatureStyle(area);
+      return area;
+    });
 
-  var windowOptions = {
-    'id': 'areaExport',
-    'label': 'Export Areas',
-    'icon': 'fa fa-download',
-    'x': 'center',
-    'y': 'center',
-    'width': '400',
-    'height': 'auto',
-    'show-close': 'true',
-    'modal': 'true'
-  };
+    var title = areas.length == 1 ? areas[0].get('title') : null;
+    var scopeOptions = {
+      'options': /** @type {os.ex.ExportOptions} */ ({
+        allData: areas,
+        selectedData: opt_selected,
+        activeData: opt_active,
+        additionalOptions: opt_selected || opt_active,
+        exporter: null,
+        fields: [],
+        items: areas,
+        persister: null,
+        title: title
+      })
+    };
 
-  var template = '<areaexport></areaexport>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-};
+    var windowOptions = {
+      'id': 'areaExport',
+      'label': 'Export Areas',
+      'icon': 'fa fa-download',
+      'x': 'center',
+      'y': 'center',
+      'width': '400',
+      'height': 'auto',
+      'show-close': 'true',
+      'modal': 'true'
+    };
 
-
-/**
- * @inheritDoc
- *
- * @suppress {checkTypes|undefinedNames} TODO: remove references to plugin classes from this file! the compiler will
- *                                       will throw errors if they aren't available in the build.
- */
-os.ui.ex.AreaExportCtrl.prototype.onExporterChange = function(opt_new, opt_old) {
-  os.ui.ex.AreaExportCtrl.base(this, 'onExporterChange', opt_new, opt_old);
-
-  this.options.fields.length = 0;
-
-  var fields = ['name', 'title', 'description', 'tags', os.interpolate.METHOD_FIELD];
-  if (opt_new instanceof plugin.file.kml.KMLExporter) {
-    // set the label field for KML and add the mapVisualizationType for Desktop
-    opt_new.setDefaultLabelFields(['title']);
-
-    fields.push('mapVisualizationType');
-  } else if (opt_new instanceof plugin.file.shp.SHPExporter) {
-    // Dont show the ui
-    var uiWrapper = this.element.find('.js-export-ui__wrapper');
-    uiWrapper.children().remove();
+    var template = '<areaexport></areaexport>';
+    createWindow(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
+}
 
-  // update the export columns
-  if (fields && fields.length > 0) {
-    this.options.fields = this.options.fields.concat(fields);
-  }
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

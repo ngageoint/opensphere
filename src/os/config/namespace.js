@@ -3,20 +3,19 @@
  * with manipulating appropriate namespaces.  Namespaces are prefixes applied to settings keys to keep them organized
  * and make them available to either an individual app or common to all apps.
  */
-goog.provide('os.config.namespace');
+goog.module('os.config.namespace');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.array');
-goog.require('goog.string');
-goog.require('os.array');
-goog.require('os.config');
-goog.require('os.object');
+const googArray = goog.require('goog.array');
+const googObject = goog.require('goog.object');
+const osConfig = goog.require('os.config');
+const osObject = goog.require('os.object');
 
 
 /**
- * Mapping of settings keys to migrate to os.
- * @const {Array.<string>}
+ * Mapping of settings keys to migrate to os. {Array.<string>}
  */
-os.config.namespace.CORE_KEYS = [
+const CORE_KEYS = [
   'consent',
   'areas',
   'filters',
@@ -30,24 +29,20 @@ os.config.namespace.CORE_KEYS = [
   'accessible_theme'
 ];
 
-
 /**
  * Obsolete keys that have actually been encountered somewhere in settings.  This list is populated as settings are
  * loaded and is cleared by the settings manager once the keys have been deleted.
  * E.G.: 'app.storage.writeType'
  * @type {!Array<!string>}
  */
-os.config.namespace.keysToDelete = [];
-
+const keysToDelete = [];
 
 /**
  * Keys that should be removed from storage if they're ever encountered.  This could be because they're no longer used
  * or because they've moved to the os namespace.
  * @type {?Array.<string>}
- * @private
  */
-os.config.namespace.obsoleteKeys_ = null;
-
+let obsoleteKeys_ = null;
 
 /**
  * Retrieve obsolete keys. This is provided as a function rather than a constant because the specific
@@ -55,50 +50,47 @@ os.config.namespace.obsoleteKeys_ = null;
  *
  * @return {!Array.<!string>}
  */
-os.config.namespace.getObsoleteKeys = function() {
-  if (!os.config.namespace.obsoleteKeys_) {
-    os.config.namespace.obsoleteKeys_ = [
+const getObsoleteKeys = function() {
+  if (!obsoleteKeys_) {
+    obsoleteKeys_ = [
       // This is left here as an example
-      // os.config.appNs + '.' + 'bgColor'
-      // os.config.coreNs + '.' + 'bgColor'
+      // osConfig.appNs + '.' + 'bgColor'
+      // osConfig.coreNs + '.' + 'bgColor'
     ];
   }
-  return os.config.namespace.obsoleteKeys_;
+  return obsoleteKeys_;
 };
-
 
 /**
  * Clear obsolete keys
  */
-os.config.namespace.clearObsoleteKeys = function() {
-  os.array.clear(os.config.namespace.getObsoleteKeys());
+const clearObsoleteKeys = function() {
+  getObsoleteKeys().length = 0;
 };
-
 
 /**
  * Delete keys which are designated as obsolete from the provided object.  Removes the key from the provided
- * object and marks it for deletion against the service by adding it to {@see os.config.namespace.keysToDelete}.
+ * object and marks it for deletion against the service by adding it to {@see osConfig.namespace.keysToDelete}.
  * Once the service has evaluated the keys to delete, it should clear that array.
  *
  * @param {Object} obj
  * @return {Object}
  */
-os.config.namespace.removeObsoleteKeys = function(obj) {
+const removeObsoleteKeys = function(obj) {
   if (obj) {
-    var keys = os.config.namespace.getObsoleteKeys();
-    var reduced = /** @type {!Object.<string, *>} */ (os.object.reduce(obj));
-    os.array.forEach(keys, function(key) {
-      if (goog.object.containsKey(reduced, key)) {
+    var keys = getObsoleteKeys();
+    var reduced = /** @type {!Object.<string, *>} */ (osObject.reduce(obj));
+    keys.forEach(function(key) {
+      if (googObject.containsKey(reduced, key)) {
         delete reduced[key];
-        goog.array.insert(os.config.namespace.keysToDelete, key);
+        googArray.insert(keysToDelete, key);
       }
     });
-    return os.object.expand(reduced);
+    return osObject.expand(reduced);
   } else {
     return null;
   }
 };
-
 
 /**
  * Migrate old settings structure, where each config object was unique to an application, and migrate it
@@ -107,18 +99,17 @@ os.config.namespace.removeObsoleteKeys = function(obj) {
  * @param {Object.<string, *>} config
  * @return {Object.<string, *>}
  */
-os.config.namespace.addNamespaces = function(config) {
-  var reduced = os.object.reduce(config);
+const addNamespaces = function(config) {
+  var reduced = osObject.reduce(config);
 
   var namespaced = {};
-  goog.object.forEach(reduced, function(value, key) {
-    namespaced[os.config.namespace.getPrefixedKey(key)] = value;
+  googObject.forEach(reduced, function(value, key) {
+    namespaced[getPrefixedKey(key)] = value;
   });
-  var expanded = os.object.expand(namespaced);
+  var expanded = osObject.expand(namespaced);
 
   return expanded;
 };
-
 
 /**
  * Remove the namespacing from configuration
@@ -126,19 +117,18 @@ os.config.namespace.addNamespaces = function(config) {
  * @param {Object.<string, *>} config
  * @return {Object.<string, *>}
  */
-os.config.namespace.removeNamespaces = function(config) {
-  var reduced = os.object.reduce(config);
+const removeNamespaces = function(config) {
+  var reduced = osObject.reduce(config);
 
-  var startsWithNsRegex = new RegExp('^(' + os.config.coreNs + '|' + os.config.appNs + ')\\.');
+  var startsWithNsRegex = new RegExp('^(' + osConfig.coreNs + '|' + osConfig.appNs + ')\\.');
   var namespaced = {};
-  goog.object.forEach(reduced, function(value, key) {
+  googObject.forEach(reduced, function(value, key) {
     namespaced[key.replace(startsWithNsRegex, '')] = value;
   });
 
-  var expanded = os.object.expand(namespaced);
+  var expanded = osObject.expand(namespaced);
   return expanded;
 };
-
 
 /**
  * Returns the given key prefixed with the appropriate namespace for migration, whether it be the app or os
@@ -146,10 +136,9 @@ os.config.namespace.removeNamespaces = function(config) {
  * @param {string} key
  * @return {string}
  */
-os.config.namespace.getPrefixedKey = function(key) {
-  return [os.config.namespace.isCoreKey(key) ? os.config.coreNs : os.config.appNs, key].join('.');
+const getPrefixedKey = function(key) {
+  return [isCoreKey(key) ? osConfig.coreNs : osConfig.appNs, key].join('.');
 };
-
 
 /**
  * Returns the given key prefixed with the appropriate namespace for migration, whether it be the app or os
@@ -157,18 +146,16 @@ os.config.namespace.getPrefixedKey = function(key) {
  * @param {Array.<string|number>} keys
  * @return {!Array.<string>}
  */
-os.config.namespace.getPrefixedKeys = function(keys) {
+const getPrefixedKeys = function(keys) {
   var namespaced;
   if (keys && keys.length > 0) {
     var reduced = keys.join('.');
-    var prefix = os.config.namespace.isCoreKey(
-        /** @type {!string} */ (reduced)) ? os.config.coreNs : os.config.appNs;
-    namespaced = goog.array.clone(keys);
+    var prefix = isCoreKey(/** @type {!string} */ (reduced)) ? osConfig.coreNs : osConfig.appNs;
+    namespaced = googArray.clone(keys);
     namespaced.unshift(prefix);
   }
   return namespaced || [];
 };
-
 
 /**
  * Determine if the given key should be migrated to os namespace
@@ -176,8 +163,19 @@ os.config.namespace.getPrefixedKeys = function(keys) {
  * @param {!string} key
  * @return {boolean}
  */
-os.config.namespace.isCoreKey = function(key) {
-  return goog.array.some(os.config.namespace.CORE_KEYS, function(ck) {
-    return goog.string.startsWith(key, ck);
-  });
+const isCoreKey = function(key) {
+  return CORE_KEYS.some((ck) => ck && ck.startsWith(key));
+};
+
+exports = {
+  CORE_KEYS,
+  keysToDelete,
+  getObsoleteKeys,
+  clearObsoleteKeys,
+  removeObsoleteKeys,
+  addNamespaces,
+  removeNamespaces,
+  getPrefixedKey,
+  getPrefixedKeys,
+  isCoreKey
 };

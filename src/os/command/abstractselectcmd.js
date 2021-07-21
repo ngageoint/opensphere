@@ -1,92 +1,93 @@
-goog.provide('os.command.AbstractSelect');
-goog.require('os.command.AbstractSource');
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
+goog.module('os.command.AbstractSelect');
+goog.module.declareLegacyNamespace();
 
+const AbstractSource = goog.require('os.command.AbstractSource');
+const State = goog.require('os.command.State');
+
+const ICommand = goog.requireType('os.command.ICommand');
 
 
 /**
  * Abstract command for performing selections on a source
  *
  * @abstract
- * @implements {os.command.ICommand}
- * @extends {os.command.AbstractSource}
- * @param {!string} sourceId
- * @constructor
+ * @implements {ICommand}
  */
-os.command.AbstractSelect = function(sourceId) {
-  os.command.AbstractSelect.base(this, 'constructor', sourceId);
+class AbstractSelect extends AbstractSource {
+  /**
+   * Constructor.
+   * @param {!string} sourceId
+   */
+  constructor(sourceId) {
+    super(sourceId);
+
+    /**
+     * @type {?Array<number|string|undefined>}
+     * @protected
+     */
+    this.previous = null;
+  }
 
   /**
-   * @type {?Array.<number|string|undefined>}
-   * @protected
+   * @inheritDoc
    */
-  this.previous = null;
-};
-goog.inherits(os.command.AbstractSelect, os.command.AbstractSource);
+  execute() {
+    if (this.canExecute()) {
+      this.state = State.EXECUTING;
 
-
-/**
- * @inheritDoc
- */
-os.command.AbstractSelect.prototype.execute = function() {
-  if (this.canExecute()) {
-    this.state = os.command.State.EXECUTING;
-
-    var source = this.getSource();
-    this.previous = source.getSelectedItems().map(
-        /**
-         * @param {ol.Feature} feature
-         * @return {number|string|undefined}
-         */
-        function(feature) {
-          return feature.getId();
-        });
-
-
-    this.select();
-    this.state = os.command.State.SUCCESS;
-    return true;
-  }
-
-  return false;
-};
-
-
-/**
- * Does the selection
- *
- * @abstract
- */
-os.command.AbstractSelect.prototype.select = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.command.AbstractSelect.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-
-  var source = this.getSource();
-
-  if (source) {
-    if (this.previous) {
-      var src = /** @type {ol.source.Vector} */ (source);
-      var s = this.previous.map(
+      var source = this.getSource();
+      this.previous = source.getSelectedItems().map(
           /**
-           * @param {number|string|undefined} id
-           * @return {ol.Feature}
+           * @param {ol.Feature} feature
+           * @return {number|string|undefined}
            */
-          function(id) {
-            return src.getFeatureById(id || 0);
+          function(feature) {
+            return feature.getId();
           });
 
-      source.setSelectedItems(s);
-    } else {
-      source.selectNone();
+
+      this.select();
+      this.state = State.SUCCESS;
+      return true;
     }
+
+    return false;
   }
 
-  this.state = os.command.State.READY;
-  return true;
-};
+  /**
+   * Does the selection.
+   */
+  select() {}
+
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
+
+    var source = this.getSource();
+
+    if (source) {
+      if (this.previous) {
+        var src = /** @type {ol.source.Vector} */ (source);
+        var s = this.previous.map(
+            /**
+             * @param {number|string|undefined} id
+             * @return {ol.Feature}
+             */
+            function(id) {
+              return src.getFeatureById(id || 0);
+            });
+
+        source.setSelectedItems(s);
+      } else {
+        source.selectNone();
+      }
+    }
+
+    this.state = State.READY;
+    return true;
+  }
+}
+
+exports = AbstractSelect;

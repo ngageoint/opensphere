@@ -11,9 +11,9 @@ goog.require('os.im.IImporter');
 goog.require('os.implements');
 goog.require('os.registerClass');
 goog.require('os.source.IImportSource');
+goog.require('os.source.SourceClass');
 goog.require('os.source.Vector');
 goog.require('os.time.TimelineController');
-goog.require('os.time.TimelineEventType');
 
 
 
@@ -71,8 +71,8 @@ os.implements(os.source.Request, os.source.IImportSource.ID);
  * Class name
  * @type {string}
  */
-os.source.Request.NAME = 'os.source.Request';
-os.registerClass(os.source.Request.NAME, os.source.Request);
+os.source.Request.NAME = os.source.SourceClass.REQUEST;
+os.registerClass(os.source.SourceClass.REQUEST, os.source.Request);
 
 
 /**
@@ -81,7 +81,7 @@ os.registerClass(os.source.Request.NAME, os.source.Request);
  * @private
  * @const
  */
-os.source.Request.LOGGER_ = goog.log.getLogger(os.source.Request.NAME);
+os.source.Request.LOGGER_ = goog.log.getLogger(os.source.SourceClass.REQUEST);
 
 
 /**

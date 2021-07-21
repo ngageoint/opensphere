@@ -1,9 +1,10 @@
 goog.module('os.data.Registry');
 
 const EventTarget = goog.require('goog.events.EventTarget');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const {PROPERTYCHANGE} = goog.require('goog.events.EventType');
 const RegistryPropertyChange = goog.require('os.data.RegistryPropertyChange');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+
 
 /**
  * Object wrapper to serve as agnostic manager of objects/arrays/etc.

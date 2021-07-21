@@ -1,15 +1,26 @@
-goog.require('os.MapContainer');
+goog.require('ol.source.TileWMS');
+goog.require('ol.source.Vector');
 goog.require('os.data.LayerTreeSearch');
+goog.require('os.data.groupby.LayerZOrderGroupBy');
 goog.require('os.layer.Tile');
 goog.require('os.layer.Vector');
+goog.require('os.map.instance');
 goog.require('os.mock');
 
 
 describe('os.data.LayerTreeSearch', function() {
+  const TileWMS = goog.module.get('ol.source.TileWMS');
+  const OLVectorSource = goog.module.get('ol.source.Vector');
+  const LayerTreeSearch = goog.module.get('os.data.LayerTreeSearch');
+  const LayerZOrderGroupBy = goog.module.get('os.data.groupby.LayerZOrderGroupBy');
+  const Tile = goog.module.get('os.layer.Tile');
+  const VectorLayer = goog.module.get('os.layer.Vector');
+  const {getMapContainer} = goog.module.get('os.map.instance');
+
   beforeEach(function() {
     // add a tile layer
-    var layer = new os.layer.Tile({
-      source: new ol.source.TileWMS({
+    var layer = new Tile({
+      source: new TileWMS({
         url: '/bogus'
       })
     });
@@ -17,21 +28,21 @@ describe('os.data.LayerTreeSearch', function() {
     layer.setId('test#layer1');
     layer.setTitle('Alpha');
 
-    os.MapContainer.getInstance().addLayer(layer);
+    getMapContainer().addLayer(layer);
 
     // add a vector layer
-    layer = new os.layer.Vector({
-      source: new ol.source.Vector()
+    layer = new VectorLayer({
+      source: new OLVectorSource()
     });
 
     layer.setId('test#layer2');
     layer.setTitle('Beta');
 
-    os.MapContainer.getInstance().addLayer(layer);
+    getMapContainer().addLayer(layer);
 
     // add a second tile layer
-    layer = new os.layer.Tile({
-      source: new ol.source.TileWMS({
+    layer = new Tile({
+      source: new TileWMS({
         url: '/bogus'
       })
     });
@@ -39,18 +50,18 @@ describe('os.data.LayerTreeSearch', function() {
     layer.setId('test#layer3');
     layer.setTitle('Gamma');
 
-    os.MapContainer.getInstance().addLayer(layer);
+    getMapContainer().addLayer(layer);
   });
 
   afterEach(function() {
-    os.MapContainer.getInstance().removeLayer('test#layer1');
-    os.MapContainer.getInstance().removeLayer('test#layer2');
-    os.MapContainer.getInstance().removeLayer('test#layer3');
+    getMapContainer().removeLayer('test#layer1');
+    getMapContainer().removeLayer('test#layer2');
+    getMapContainer().removeLayer('test#layer3');
   });
 
   it('should search map layers', function() {
     var o = {};
-    var s = new os.data.LayerTreeSearch('data', o);
+    var s = new LayerTreeSearch('data', o);
 
     s.beginSearch('', null);
 
@@ -62,8 +73,8 @@ describe('os.data.LayerTreeSearch', function() {
 
   it('should always sort by Z-Order when grouping', function() {
     var o = {};
-    var s = new os.data.LayerTreeSearch('data', o);
-    var gb = new os.data.groupby.LayerZOrderGroupBy();
+    var s = new LayerTreeSearch('data', o);
+    var gb = new LayerZOrderGroupBy();
 
     s.beginSearch('', gb);
 

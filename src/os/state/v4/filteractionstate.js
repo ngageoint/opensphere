@@ -3,12 +3,14 @@ goog.provide('os.state.v4.FilterAction');
 goog.require('goog.dom.xml');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
-goog.require('os.data.OSDataManager');
-goog.require('os.im.action.FilterActionEntry');
+goog.require('os.data.DataManager');
+goog.require('os.im.action');
 goog.require('os.im.action.filter');
 goog.require('os.state.AbstractState');
 goog.require('os.state.XMLState');
 goog.require('os.xml');
+
+goog.requireType('os.im.action.FilterActionEntry');
 
 
 
@@ -137,7 +139,7 @@ os.state.v4.FilterAction.prototype.saveInternal = function(options, rootObj) {
     var iam = os.im.action.ImportActionManager.getInstance();
 
     // save enabled entries for active sources
-    var sources = os.data.OSDataManager.getInstance().getSources();
+    var sources = os.data.DataManager.getInstance().getSources();
     var entries = [];
     for (var i = 0, n = sources.length; i < n; i++) {
       var sourceEntries = iam.getActionEntries(sources[i].getId());

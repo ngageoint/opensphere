@@ -10,7 +10,7 @@ goog.require('os.data.RecordField');
 goog.require('os.feature');
 goog.require('os.implements');
 goog.require('os.source.Vector');
-goog.require('os.ui.feature.multiFeatureInfoDirective');
+goog.require('os.ui.feature.launchMultiFeatureInfo');
 
 
 

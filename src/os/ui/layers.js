@@ -6,7 +6,6 @@ goog.require('goog.Disposable');
 goog.require('goog.async.Delay');
 goog.require('goog.object');
 goog.require('os');
-goog.require('os.MapContainer');
 goog.require('os.config.Settings');
 goog.require('os.data.LayerNode');
 goog.require('os.data.LayerTreeSearch');
@@ -17,6 +16,7 @@ goog.require('os.data.groupby.LayerZOrderGroupBy');
 goog.require('os.events.LayerEventType');
 goog.require('os.layer.FolderManager');
 goog.require('os.layer.folder');
+goog.require('os.map.instance');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 goog.require('os.object');
@@ -34,6 +34,8 @@ goog.require('os.ui.menu.windows');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 goog.require('os.ui.uiSwitchDirective');
 goog.require('os.ui.windowSelector');
+
+goog.requireType('os.layer.ILayer');
 
 
 /**
@@ -115,7 +117,7 @@ os.ui.LayersCtrl = function($scope, $element) {
     this.menus_['.add-data-group'] = os.ui.menu.import.MENU;
   }
 
-  var map = os.MapContainer.getInstance();
+  var map = os.map.instance.getMapContainer();
   map.listen(os.events.LayerEventType.ADD, this.search, false, this);
   map.listen(os.events.LayerEventType.REMOVE, this.search, false, this);
   map.listen(os.events.LayerEventType.CHANGE, this.search, false, this);
@@ -169,7 +171,7 @@ os.ui.LayersCtrl.VIEWS = {
  * @inheritDoc
  */
 os.ui.LayersCtrl.prototype.disposeInternal = function() {
-  var map = os.MapContainer.getInstance();
+  var map = os.map.instance.getMapContainer();
   map.unlisten(os.events.LayerEventType.ADD, this.search, false, this);
   map.unlisten(os.events.LayerEventType.REMOVE, this.search, false, this);
   map.unlisten(os.events.LayerEventType.CHANGE, this.search, false, this);
@@ -279,7 +281,7 @@ os.ui.LayersCtrl.prototype.openMenu = function(selector) {
     var target = this.element.find(selector);
     if (target && target.length > 0) {
       menu.open(undefined, {
-        my: 'left top',
+        my: 'left top+3',
         at: 'left bottom',
         of: target
       });
@@ -310,18 +312,16 @@ os.ui.LayersCtrl.prototype.toggle = function(flagName) {
 os.ui.LayersCtrl.prototype.toggleTileLayers = function() {
   this.scope['showTiles'] = !this.scope['showTiles'];
 
-  var layers = os.map.mapContainer.getLayers();
+  var layers = os.map.instance.getMapContainer().getLayers();
   for (var i = 0; i < layers.length; i++) {
     // call the functions in SKIP_TOGGLE_FUNCS on each layer
     // to determine if it should not be toggled
-    if (!os.ui.LayersCtrl.SKIP_TOGGLE_FUNCS.some(function(func) {
-      return func(layers[i]);
-    })) {
+    if (!os.ui.LayersCtrl.SKIP_TOGGLE_FUNCS.some((fn) => fn(layers[i]))) {
       var type = layers[i].getType();
 
       if (type && type != ol.LayerType.VECTOR) {
         // toggle tiles
-        layers[i].setLayerVisible(this.showTiles());
+        /** @type {os.layer.ILayer} */ (layers[i]).setEnabled(this.showTiles());
       }
     }
   }
@@ -347,14 +347,14 @@ os.ui.LayersCtrl.prototype.showTiles = function() {
 os.ui.LayersCtrl.prototype.toggleFeatureLayers = function() {
   this.scope['showFeatures'] = !this.scope['showFeatures'];
 
-  var layers = os.map.mapContainer.getLayers();
+  var layers = os.map.instance.getMapContainer().getLayers();
   for (var i = 0; i < layers.length; i++) {
     var type = layers[i].getType();
 
     if (type && type == ol.LayerType.VECTOR) {
       // do not toggle the Drawing Layer
       if (!(layers[i] instanceof os.layer.Drawing)) {
-        layers[i].setLayerVisible(this.showFeatures());
+        /** @type {os.layer.ILayer} */ (layers[i]).setLayerVisible(this.showFeatures());
       }
     }
   }

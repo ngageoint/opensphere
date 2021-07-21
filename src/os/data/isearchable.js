@@ -1,5 +1,5 @@
-goog.provide('os.data.ISearchable');
-
+goog.module('os.data.ISearchable');
+goog.module.declareLegacyNamespace();
 
 
 /**
@@ -7,25 +7,26 @@ goog.provide('os.data.ISearchable');
  *
  * @interface
  */
-os.data.ISearchable = function() {};
+class ISearchable {
+  /**
+   * Returns the text to be used in searches
+   * @return {string} The text to search
+   */
+  getSearchText() {}
+
+  /**
+   * Returns the tags for the item
+   * @return {?Array.<!string>} The tags
+   */
+  getTags() {}
+}
 
 
 /**
  * ID for {@see os.implements}.
  * @const {string}
  */
-os.data.ISearchable.ID = 'os.data.ISearchable';
+ISearchable.ID = 'os.data.ISearchable';
 
 
-/**
- * Returns the text to be used in searches
- * @return {string} The text to search
- */
-os.data.ISearchable.prototype.getSearchText;
-
-
-/**
- * Returns the tags for the item
- * @return {?Array.<!string>} The tags
- */
-os.data.ISearchable.prototype.getTags;
+exports = ISearchable;

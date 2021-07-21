@@ -329,7 +329,6 @@ os.layer.config.AbstractTileLayerConfig.expandUrls = function(urls) {
  *
  * @param {string} url the url to expand
  * @return {Array<string>} the full list of urls corresponding to the url range.
- * @protected
  */
 os.layer.config.AbstractTileLayerConfig.expandUrl = function(url) {
   var urls = [];

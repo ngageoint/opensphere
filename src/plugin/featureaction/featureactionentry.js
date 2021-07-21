@@ -1,19 +1,26 @@
-goog.provide('plugin.im.action.feature.Entry');
+goog.module('plugin.im.action.feature.Entry');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.feature');
-goog.require('os.im.action.FilterActionEntry');
+const osFeature = goog.require('os.feature');
+const FilterActionEntry = goog.require('os.im.action.FilterActionEntry');
 
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
  * Filter entry that performs actions on matched features.
  *
- * @extends {os.im.action.FilterActionEntry<ol.Feature>}
- * @constructor
+ * @extends {FilterActionEntry<Feature>}
  */
-plugin.im.action.feature.Entry = function() {
-  plugin.im.action.feature.Entry.base(this, 'constructor');
-  this.setTitle('New Feature Action');
-  this.filterGetter = os.feature.filterFnGetter;
-};
-goog.inherits(plugin.im.action.feature.Entry, os.im.action.FilterActionEntry);
+class Entry extends FilterActionEntry {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.setTitle('New Feature Action');
+    this.filterGetter = osFeature.filterFnGetter;
+  }
+}
+
+exports = Entry;

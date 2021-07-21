@@ -1,7 +1,7 @@
 goog.provide('os.state.v2.Filter');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
-goog.require('os.data.OSDataManager');
+goog.require('os.data.DataManager');
 goog.require('os.filter.BaseFilterManager');
 goog.require('os.state.v2.BaseFilter');
 
@@ -114,6 +114,6 @@ os.state.v2.Filter.prototype.remove = function(id) {
  * @inheritDoc
  */
 os.state.v2.Filter.prototype.saveInternal = function(options, rootObj) {
-  this.setSources(os.osDataManager.getSources());
+  this.setSources(os.dataManager.getSources());
   os.state.v2.Filter.base(this, 'saveInternal', options, rootObj);
 };

@@ -1,15 +1,14 @@
 goog.module('os.ui.column');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.column.columnManagerDirective');
-const osWindow = goog.require('os.ui.window');
+const {create} = goog.require('os.ui.window');
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-
+const {directiveTag: columnManagerUi} = goog.require('os.ui.column.ColumnManagerUI');
 
 /**
  * Launches a column manager window with the given columns
  *
- * @param {Array.<ColumnDefinition>} columns
+ * @param {Array<ColumnDefinition>} columns
  * @param {Function} callback
  */
 const launchColumnManager = function(columns, callback) {
@@ -33,15 +32,14 @@ const launchColumnManager = function(columns, callback) {
     'modal': true
   };
 
-  var template = '<column-manager columns="columns" accept-callback="acceptCallback" ></column-manager>';
-  osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  var template = `<${columnManagerUi} columns="columns" accept-callback="acceptCallback" ></${columnManagerUi}>`;
+  create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
-
 
 /**
  * Launches a column manager window with the given columns
  *
- * @param {Array.<ColumnDefinition>} columns
+ * @param {Array<ColumnDefinition>} columns
  * @param {string} header Dialog header
  * @param {Function} callback
  */
@@ -66,10 +64,9 @@ const launchColumnManagerWithShownCallback = function(columns, header, callback)
     'modal': true
   };
 
-  var template = '<column-manager columns="columns" shown-callback="shownCallback"></column-manager>';
-  osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  var template = `<${columnManagerUi} columns="columns" shown-callback="shownCallback"></${columnManagerUi}>`;
+  create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
-
 
 exports = {
   launchColumnManager,

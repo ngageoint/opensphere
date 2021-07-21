@@ -20,8 +20,9 @@ goog.require('os.net.CertNazi');
 goog.require('os.net.ProxyHandler');
 goog.require('os.net.RequestHandlerFactory');
 goog.require('os.plugin.PluginManager');
+goog.require('os.time.replacers');
 goog.require('os.ui');
-goog.require('os.ui.alert.alertPopupDirective');
+goog.require('os.ui.alert.AlertPopupUI');
 goog.require('os.ui.consentDirective');
 goog.require('os.ui.globalMenuDirective');
 goog.require('os.ui.help.EventType');
@@ -251,13 +252,16 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
   os.net.ExtDomainHandler.MIXED_CONTENT_ENABLED = /** @type {boolean} */ (os.settings.get('mixedContent', false));
 
   // set if file:// URL's should be supported
-  os.file.FILE_URL_ENABLED = /** @type {boolean} */ (os.settings.get('fileUrls', false));
+  os.file.setFileUrlEnabled(/** @type {boolean} */ (os.settings.get('fileUrls', false)));
 
   // set up cross origin config
   os.net.loadCrossOriginCache();
 
   // set up trusted URI's
   os.net.loadTrustedUris();
+
+  // initialize variable replacers for time values in URI's
+  os.time.replacers.init();
 
   os.ui.Consent.launch();
 

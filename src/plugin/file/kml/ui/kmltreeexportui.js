@@ -45,8 +45,9 @@ Module.directive('kmltreeexport', [directive]);
  * @param {!plugin.file.kml.ui.KMLNode} rootNode The root node to export.
  * @param {string=} opt_winLabel The window label
  * @param {os.ex.ExportOptions=} opt_addOptions
+ * @param {string=} opt_windowTooltip The tooltip for the window, if any.
  */
-const launchTreeExport = function(rootNode, opt_winLabel, opt_addOptions) {
+const launchTreeExport = function(rootNode, opt_winLabel, opt_addOptions, opt_windowTooltip) {
   var scopeOptions = {
     'rootNode': rootNode,
     'options': opt_addOptions
@@ -63,6 +64,9 @@ const launchTreeExport = function(rootNode, opt_winLabel, opt_addOptions) {
     'height': 'auto',
     'show-close': true
   };
+  if (opt_windowTooltip) {
+    windowOptions['window-tooltip'] = opt_windowTooltip;
+  }
 
   var template = `<${directiveTag} root-node="rootNode" options="options"></${directiveTag}>`;
   osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
@@ -104,11 +108,6 @@ class Controller {
     this['title'] = root && root.getLabel() || (config.getAppName() + ' KML Tree').trim();
 
     /**
-     * @type {!KMLTreeExporter}
-     */
-    this['exporter'] = new KMLTreeExporter();
-
-    /**
      * @type {!Object<string, os.ex.IPersistenceMethod>}
      */
     this['persisters'] = {};
@@ -119,6 +118,16 @@ class Controller {
     this['persister'] = null;
 
     const options = this.scope['options'];
+
+    /**
+     * @type {!KMLTreeExporter}
+     */
+    this['exporter'] = new KMLTreeExporter();
+
+    /**
+     * @type {Array.<string>}
+     */
+    this['exportFields'] = options && options.fields || null;
 
     /**
      * @type {boolean}
@@ -193,7 +202,7 @@ class Controller {
 
       var options = /** @type {os.ex.ExportOptions} */ ({
         items: items,
-        fields: null,
+        fields: this['exportFields'],
         title: this['title'],
         exporter: this['exporter'],
         persister: this['persister']

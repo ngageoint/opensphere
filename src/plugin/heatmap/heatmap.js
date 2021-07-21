@@ -2,34 +2,40 @@ goog.module('plugin.heatmap');
 
 const dispose = goog.require('goog.dispose');
 const googString = goog.require('goog.string');
+const Feature = goog.require('ol.Feature');
 const dom = goog.require('ol.dom');
 const olExtent = goog.require('ol.extent');
-const os = goog.require('os');
+const Point = goog.require('ol.geom.Point');
+
+const {ROOT} = goog.require('os');
+const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const DataManager = goog.require('os.data.DataManager');
 const RecordField = goog.require('os.data.RecordField');
+const LayerConfigEvent = goog.require('os.events.LayerConfigEvent');
 const LayerConfigEventType = goog.require('os.events.LayerConfigEventType');
+const ZipExporter = goog.require('os.ex.ZipExporter');
 const osFeature = goog.require('os.feature');
+const OSFile = goog.require('os.file.File');
+const FilePersistence = goog.require('os.file.persist.FilePersistence');
 const fn = goog.require('os.fn');
+const Job = goog.require('os.job.Job');
 const JobEventType = goog.require('os.job.JobEventType');
 const LayerType = goog.require('os.layer.LayerType');
 const osOlFeature = goog.require('os.ol.feature');
 const style = goog.require('os.style');
 const exportManager = goog.require('os.ui.exportManager');
-
-const AlertManager = goog.require('os.alert.AlertManager');
-const dispatcher = goog.require('os.Dispatcher');
-const OSDataManager = goog.require('os.data.OSDataManager');
-const Feature = goog.require('ol.Feature');
-const Point = goog.require('ol.geom.Point');
-const LayerConfigEvent = goog.require('os.events.LayerConfigEvent');
-const ZipExporter = goog.require('os.ex.ZipExporter');
-const OSFile = goog.require('os.file.File');
-const Job = goog.require('os.job.Job');
 const worker = goog.require('os.worker');
 const HeatmapField = goog.require('plugin.heatmap.HeatmapField');
 
+const OLLayer = goog.requireType('ol.layer.Layer');
+const ExportOptions = goog.requireType('os.ex.ExportOptions');
 const JobEvent = goog.requireType('os.job.JobEvent');
+const ILayer = goog.requireType('os.layer.ILayer');
+const ISource = goog.requireType('os.source.ISource');
+const HeatmapLayer = goog.requireType('plugin.heatmap.Heatmap');
 
 
 /**
@@ -48,7 +54,7 @@ const EXTENT_SCALE_FACTOR = 1.5;
  * Clones a feature. This avoids copying style information since we handle styles very differently than base OL3.
  *
  * @param {!Feature} feature The feature to clone
- * @return {?ol.Feature} The cloned feature
+ * @return {?Feature} The cloned feature
  */
 const cloneFeature = function(feature) {
   var clone = null;
@@ -89,7 +95,7 @@ const cloneFeature = function(feature) {
  * @return {Array<!Feature>|undefined} The features.
  */
 const getSourceFeatures = function(sourceId) {
-  var source = sourceId ? OSDataManager.getInstance().getSource(sourceId) : undefined;
+  var source = sourceId ? DataManager.getInstance().getSource(sourceId) : undefined;
   return source ? source.getFeatures().map(function(feature, idx, arr) {
     if (feature) {
       var clone = cloneFeature(feature);
@@ -129,12 +135,12 @@ const createGradient = function(colors) {
 /**
  * Create a heatmap based on the passed layer.
  *
- * @param {os.layer.ILayer} layer
+ * @param {ILayer} layer
  */
 const createHeatmap = function(layer) {
   var options = {
     'id': googString.getRandomString(),
-    'sourceId': /** @type {os.source.ISource} */ (/** @type {ol.layer.Layer} */ (layer).getSource()).getId(),
+    'sourceId': /** @type {ISource} */ (/** @type {OLLayer} */ (layer).getSource()).getId(),
     'title': layer.getTitle(),
     'animate': false,
     'layerType': LayerType.FEATURES,
@@ -150,14 +156,14 @@ const createHeatmap = function(layer) {
 /**
  * Exports a heatmap to a KMZ as a GroundOverlay.
  *
- * @param {plugin.heatmap.Heatmap} layer
+ * @param {HeatmapLayer} layer
  */
 const exportHeatmap = function(layer) {
   var lastImage = layer.getLastImage();
   var canvas = lastImage.getImage();
   var dataUrl = canvas.toDataURL();
 
-  var jobUrl = os.ROOT + worker.DIR + 'dataurltoarray.js';
+  var jobUrl = ROOT + worker.DIR + 'dataurltoarray.js';
   var job = new Job(jobUrl, 'Canvas to Blob', 'Converting canvas data URL to a Blob.');
   job.listenOnce(JobEventType.COMPLETE, goog.partial(onImageComplete, layer));
   job.listenOnce(JobEventType.ERROR, onImageError);
@@ -169,7 +175,7 @@ const exportHeatmap = function(layer) {
 /**
  * Handle image job completion
  *
- * @param {plugin.heatmap.Heatmap} layer
+ * @param {HeatmapLayer} layer
  * @param {JobEvent} event
  */
 const onImageComplete = function(layer, event) {
@@ -212,11 +218,14 @@ const onImageComplete = function(layer, event) {
     exporter.addFile(imageFile);
     exporter.setCompress(true);
 
-    var options = /** @type {os.ex.ExportOptions} */ ({
+    var persister = new FilePersistence();
+
+    var options = /** @type {ExportOptions} */ ({
       items: [kmlFile],
       fields: [''],
       title: layerTitle + '.kmz',
-      exporter: exporter
+      exporter,
+      persister
     });
 
     exportManager.exportItems(options);

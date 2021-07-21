@@ -1,209 +1,235 @@
-goog.provide('os.ui.data.BaseProvider');
+goog.module('os.ui.data.BaseProvider');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.IDataProvider');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.ui.slick.SlickTreeNode');
+const log = goog.require('goog.log');
+const {getRandomString} = goog.require('goog.string');
+const {getAuth} = goog.require('os.auth');
+const IDataProvider = goog.require('os.data.IDataProvider');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const osImplements = goog.require('os.implements');
+const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
+const {AuthEntry} = goog.requireType('os.auth');
 
 
 /**
  * The base implementation of a provider
  *
  * @abstract
- * @extends {os.ui.slick.SlickTreeNode}
- * @implements {os.data.IDataProvider}
- * @constructor
+ * @implements {IDataProvider}
  */
-os.ui.data.BaseProvider = function() {
-  os.ui.data.BaseProvider.base(this, 'constructor');
-
+class BaseProvider extends SlickTreeNode {
   /**
-   * @type {goog.log.Logger}
-   * @protected
+   * Constructor.
    */
-  this.log = os.ui.data.BaseProvider.LOGGER_;
+  constructor() {
+    super();
+
+    /**
+     * @type {goog.log.Logger}
+     * @protected
+     */
+    this.log = logger;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.enabled_ = false;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.editable_ = false;
+
+    /**
+     * @type {boolean}
+     * @protected
+     */
+    this.listInServers = true;
+
+    /**
+     * @type {boolean}
+     * @protected
+     */
+    this.showWhenEmpty = false;
+
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.providerType = BaseProvider.TYPE;
+  }
 
   /**
-   * @type {boolean}
-   * @private
+   * @inheritDoc
    */
-  this.enabled_ = false;
+  configure(config) {
+    this.setEnabled(!!config['enabled']);
+
+    var label = /** @type {string|undefined} */ (config['label']);
+    if (label) {
+      this.setLabel(label);
+    }
+  }
 
   /**
-   * @type {boolean}
-   * @private
+   * @inheritDoc
    */
-  this.editable_ = false;
+  load(opt_ping) {
+  }
 
   /**
-   * @type {boolean}
-   * @protected
+   * @inheritDoc
    */
-  this.listInServers = true;
+  getEnabled() {
+    return this.enabled_;
+  }
 
   /**
-   * @type {boolean}
-   * @protected
+   * @inheritDoc
    */
-  this.showWhenEmpty = false;
+  setEnabled(value) {
+    var changed = this.enabled_ !== value;
+    this.enabled_ = value;
+
+    if (changed) {
+      this.dispatchEvent(new PropertyChangeEvent('children', null, value));
+    }
+  }
 
   /**
+   * @inheritDoc
+   */
+  getEditable() {
+    return this.editable_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setEditable(value) {
+    this.editable_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  includeInServers() {
+    return this.listInServers;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getShowWhenEmpty() {
+    return this.showWhenEmpty;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getInfo() {
+    const auth = this.getAuth();
+
+    if (auth) {
+      let message = auth.message;
+      if (auth.link) {
+        // if a link is available, add a link to open the auth page
+        message += `<br><br><a href="${auth.link}" target="_blank">Click here to go to the login page</a>`;
+      }
+
+      return message;
+    }
+
+    return '';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getError() {
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getCheckboxDisabled() {
+    return true;
+  }
+
+  /**
+   * Get a unique identifier for a child of this provider.
+   *
+   * @return {string}
+   */
+  getUniqueId() {
+    var id = this.getId() + BaseProvider.ID_DELIMITER + getRandomString();
+    var done = false;
+    while (!done) {
+      var children = this.getChildren();
+      if (children) {
+        done = !children.some((child) => child.getId() == id);
+      } else {
+        done = true;
+      }
+
+      id = this.getId() + BaseProvider.ID_DELIMITER + getRandomString();
+    }
+
+    return id;
+  }
+
+  /**
+   * Gets the authentication info for the server (if any).
+   *
+   * @return {?AuthEntry}
+   */
+  getAuth() {
+    return getAuth(this.getLabel());
+  }
+
+  /**
+   * @inheritDoc
+   */
+  formatIcons() {
+    let icons = '';
+
+    const auth = this.getAuth();
+    if (auth) {
+      icons = `<i class="fas fa-sign-in-alt" title="${auth.tooltip}"></i>`;
+
+      if (auth.link) {
+        // if a link is available, make the icon clickable
+        icons = `<a class="c-glyph" href="${auth.link}" target="_blank">${icons}</a>`;
+      }
+    }
+
+    return icons;
+  }
+
+  /**
+   * The server type.
    * @type {string}
-   * @protected
    */
-  this.providerType = os.ui.data.BaseProvider.TYPE;
-};
-goog.inherits(os.ui.data.BaseProvider, os.ui.slick.SlickTreeNode);
-os.implements(os.ui.data.BaseProvider, os.data.IDataProvider.ID);
-
+  static get TYPE() {
+    return 'default';
+  }
+}
+osImplements(BaseProvider, IDataProvider.ID);
 
 /**
  * Logger for os.ui.data.BaseProvider
  * @type {goog.log.Logger}
- * @private
- * @const
  */
-os.ui.data.BaseProvider.LOGGER_ = goog.log.getLogger('os.ui.data.BaseProvider');
-
+const logger = log.getLogger('os.ui.data.BaseProvider');
 
 /**
  * @type {string}
  * @const
  */
-os.ui.data.BaseProvider.ID_DELIMITER = '#';
+BaseProvider.ID_DELIMITER = '#';
 
-
-/**
- * @type {string}
- * @const
- */
-os.ui.data.BaseProvider.TYPE = 'default';
-
-
-/**
- * @inheritDoc
- */
-os.ui.data.BaseProvider.prototype.configure = function(config) {
-  this.setEnabled(!!config['enabled']);
-
-  var label = /** @type {string|undefined} */ (config['label']);
-  if (label) {
-    this.setLabel(label);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.data.BaseProvider.prototype.load = function(opt_ping) {
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.data.BaseProvider.prototype.getEnabled = function() {
-  return this.enabled_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.data.BaseProvider.prototype.setEnabled = function(value) {
-  var changed = this.enabled_ !== value;
-  this.enabled_ = value;
-
-  if (changed) {
-    this.dispatchEvent(new os.events.PropertyChangeEvent('children', null, value));
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.data.BaseProvider.prototype.getEditable = function() {
-  return this.editable_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.data.BaseProvider.prototype.setEditable = function(value) {
-  this.editable_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.data.BaseProvider.prototype.includeInServers = function() {
-  return this.listInServers;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.data.BaseProvider.prototype.getShowWhenEmpty = function() {
-  return this.showWhenEmpty;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.data.BaseProvider.prototype.getInfo = function() {
-  return '';
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.data.BaseProvider.prototype.getError = function() {
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.data.BaseProvider.prototype.getCheckboxDisabled = function() {
-  return true;
-};
-
-
-/**
- * @abstract
- * @inheritDoc
- */
-os.ui.data.BaseProvider.prototype.getErrorMessage = function() {};
-
-
-/**
- * Get a unique identifier for a child of this provider.
- *
- * @return {string}
- */
-os.ui.data.BaseProvider.prototype.getUniqueId = function() {
-  var id = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + goog.string.getRandomString();
-  var done = false;
-  while (!done) {
-    var children = this.getChildren();
-    if (children) {
-      done = !goog.array.some(children, function(child) {
-        return child.getId() == id;
-      });
-    } else {
-      done = true;
-    }
-
-    id = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + goog.string.getRandomString();
-  }
-
-  return id;
-};
+exports = BaseProvider;

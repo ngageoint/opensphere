@@ -1,13 +1,14 @@
 goog.module('plugin.places.ui.QuickAddPlacesUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.draw.drawPickerDirective');
+goog.require('os.ui.draw.DrawPickerUI');
 
 const Disposable = goog.require('goog.Disposable');
 const {ROOT} = goog.require('os');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const ParallelCommand = goog.require('os.command.ParallelCommand');
 const RecordField = goog.require('os.data.RecordField');
+const interpolate = goog.require('os.interpolate');
 const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
@@ -155,6 +156,12 @@ class Controller extends Disposable {
         },
         startTime: Date.now()
       }));
+
+      // re-interpolate the feature now to ensure that it has the original geometry and correct interpolation method
+      const method = /** @type {interpolate.Method} */ (geometry.get(interpolate.METHOD_FIELD));
+      interpolate.beginTempInterpolation(undefined, method);
+      interpolate.interpolateFeature(place.getFeature());
+      interpolate.endTempInterpolation();
 
       if (place) {
         this.added.push(place);

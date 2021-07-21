@@ -14,6 +14,7 @@ goog.require('os.layer');
 goog.require('os.layer.ExplicitLayerType');
 goog.require('os.layer.IColorableLayer');
 goog.require('os.layer.ILayer');
+goog.require('os.layer.LayerClass');
 goog.require('os.layer.LayerType');
 goog.require('os.layer.PropertyChange');
 goog.require('os.legend.ILegendRenderer');
@@ -21,6 +22,7 @@ goog.require('os.math');
 goog.require('os.mixin.TileImage');
 goog.require('os.mixin.UrlTileSource');
 goog.require('os.ogc');
+goog.require('os.registerClass');
 goog.require('os.source.IStyle');
 goog.require('os.style');
 goog.require('os.tile');
@@ -170,6 +172,7 @@ os.implements(os.layer.Tile, os.layer.ILayer.ID);
 os.implements(os.layer.Tile, os.layer.IColorableLayer.ID);
 os.implements(os.layer.Tile, os.IGroupable.ID);
 os.implements(os.layer.Tile, os.legend.ILegendRenderer.ID);
+os.registerClass(os.layer.LayerClass.TILE, os.layer.Tile);
 
 
 /**
@@ -722,6 +725,7 @@ os.layer.Tile.prototype.isEnabled = function() {
 os.layer.Tile.prototype.setEnabled = function(value) {
   // Layer does not have separate enabled/visible states, so this is a pass-through.
   this.setLayerVisible(value);
+  this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.ENABLED, value, !value));
 };
 
 

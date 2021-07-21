@@ -42,6 +42,6 @@ os.ui.Module.directive('stateButton', [os.ui.stateButtonDirective]);
  */
 os.ui.StateButtonCtrl = function($scope, $element) {
   os.ui.StateButtonCtrl.base(this, 'constructor', $scope, $element);
-  this.menu = os.ui.state.MENU;
+  this.menu = os.ui.state.menu.getMenu();
 };
 goog.inherits(os.ui.StateButtonCtrl, os.ui.menu.MenuButtonCtrl);

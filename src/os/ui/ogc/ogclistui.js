@@ -1,13 +1,14 @@
 goog.module('os.ui.ogc.OGCListUI');
 
-const array = goog.require('goog.array');
-const {noop} = goog.require('os.fn');
+const {ROOT} = goog.require('os');
+const Settings = goog.require('os.config.Settings');
 const registry = goog.require('os.ogc.registry');
+const {apply} = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 
-const OGCService = goog.requireType('os.ogc.OGCService');
-const Feature = goog.requireType('ol.Feature');
 const GoogPromise = goog.requireType('goog.Promise');
+const Feature = goog.requireType('ol.Feature');
+const OGCService = goog.requireType('os.ogc.OGCService');
 
 
 /**
@@ -16,7 +17,6 @@ const GoogPromise = goog.requireType('goog.Promise');
 const directive = () => ({
   restrict: 'AE',
   replace: true,
-
   scope: {
     'value': '=',
     'isRequired': '=?',
@@ -27,8 +27,7 @@ const directive = () => ({
     'error': '=?',
     'multi': '='
   },
-
-  templateUrl: os.ROOT + 'views/ogc/ogclist.html',
+  templateUrl: ROOT + 'views/ogc/ogclist.html',
   controller: Controller,
   controllerAs: 'ogcCtrl'
 });
@@ -104,7 +103,7 @@ class Controller {
       this.service_ = null;
     } else {
       this.allPromise = this.service_.getAll();
-      this.allPromise.then(this.prepareField, noop, this);
+      this.allPromise.then(this.prepareField, () => {}, this);
     }
 
     $scope.$on(Controller.BULK_CHOSEN, function(event, val) {
@@ -144,7 +143,7 @@ class Controller {
     this['items'] = this.scope_['filter'] ? data.filter(this.scope_['filter']) : data;
     this['loading'] = false;
 
-    array.forEach(this['items'], (item) => {
+    this['items'].forEach((item) => {
       var id = this.service_.getId(item);
       var text = this.service_.getLabel(item);
       var selectItem = {
@@ -155,11 +154,11 @@ class Controller {
     });
 
     if (values != null) {
-      array.forEach(values, (item) => {
+      values.forEach((item) => {
         if (item != null) {
           var id = this.service_.getId(item);
           var this_ = this;
-          var match = array.find(this['items'], function(item) {
+          var match = this['items'].find(function(item) {
             return this_.service_.getId(item) == id;
           });
 
@@ -176,7 +175,7 @@ class Controller {
         }
       });
     } else if (this.scope_['provideDefault'] == true) {
-      var selectItem = os.settings.get(this.scope_['defaultValueSetting']); // TODO
+      var selectItem = Settings.getInstance().get(this.scope_['defaultValueSetting']); // TODO
       selectInitItems.push(selectItem);
     }
 
@@ -192,7 +191,7 @@ class Controller {
         if (selectInitItems.length > 0) {
           this.scope_['value'] = [];
         }
-        array.forEach(selectInitItems, (selectedItem) => {
+        selectInitItems.forEach((selectedItem) => {
           var item = this.getById(selectedItem['id']);
           if (item) {
             items.push(item);
@@ -204,7 +203,7 @@ class Controller {
     }).select2('val', selectInitItems)
         .on('change', this.onChange.bind(this));
 
-    os.ui.apply(this.scope_);
+    apply(this.scope_);
   }
 
   /**
@@ -236,7 +235,7 @@ class Controller {
       }
       this.scope_.$emit(Controller.CHOSEN, this.scope_['value']);
       this.scope_['ogcListForm'].$setDirty();
-      os.ui.apply(this.scope_);
+      apply(this.scope_);
     }
   }
 }

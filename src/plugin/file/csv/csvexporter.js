@@ -165,8 +165,8 @@ class CSVExporter extends AbstractCSVExporter {
     if (time != null) {
       if (instanceOf(time, TimeRange.NAME)) {
         // time ranges need to be put into two separate fields so that we can reimport our own exports
-        result[CSVExporter.FIELDS.START_TIME] = time.getStartISOString();
-        result[CSVExporter.FIELDS.END_TIME] = time.getEndISOString();
+        result[CSVExporter.FIELDS.START_TIME] = /** @type {TimeRange} */ (time).getStartISOString();
+        result[CSVExporter.FIELDS.END_TIME] = /** @type {TimeRange} */ (time).getEndISOString();
       } else {
         result[Fields.TIME] = time.toISOString();
       }

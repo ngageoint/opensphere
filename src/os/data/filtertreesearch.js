@@ -1,53 +1,56 @@
-goog.provide('os.data.FilterTreeSearch');
+goog.module('os.data.FilterTreeSearch');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.FilterNode');
-goog.require('os.ui.slick.AbstractGroupByTreeSearch');
+const FilterNode = goog.require('os.data.FilterNode');
+const {getFilterManager} = goog.require('os.query.instance');
+const AbstractGroupByTreeSearch = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
 
+const FilterEntry = goog.requireType('os.filter.FilterEntry');
 
 
 /**
  * Extends AbstractGroupByTreeSearch to search through saved areas
- *
- * @extends {os.ui.slick.AbstractGroupByTreeSearch}
- * @param {!string} setAs The field to set on ...
- * @param {Object} onObj this object
- * @param {string=} opt_noResultLabel The label to use when there are no results
- * @constructor
  */
-os.data.FilterTreeSearch = function(setAs, onObj, opt_noResultLabel) {
-  os.data.FilterTreeSearch.base(this, 'constructor', [], setAs, onObj, opt_noResultLabel);
-};
-goog.inherits(os.data.FilterTreeSearch, os.ui.slick.AbstractGroupByTreeSearch);
-
-
-/**
- * @inheritDoc
- */
-os.data.FilterTreeSearch.prototype.getSearchItems = function() {
-  return /** @type {!Array} */ (os.ui.filterManager.getFilters());
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.FilterTreeSearch.prototype.setupNode = function(item) {
-  return new os.data.FilterNode(/** @type {os.filter.FilterEntry} */ (item));
-};
-
-
-/**
- * @override
- */
-os.data.FilterTreeSearch.prototype.fillListFromSearch = function(list) {
-  var filters = os.ui.filterManager.getFilters();
-  if (filters && filters.length > 0) {
-    for (var i = 0, n = filters.length; i < n; i++) {
-      var node = new os.data.FilterNode();
-      node.setEntry(filters[i]);
-      list.push(node);
-    }
-  } else {
-    this.addNoResult(list);
+class FilterTreeSearch extends AbstractGroupByTreeSearch {
+  /**
+   * Constructor.
+   * @param {!string} setAs The field to set on ...
+   * @param {Object} onObj this object
+   * @param {string=} opt_noResultLabel The label to use when there are no results
+   */
+  constructor(setAs, onObj, opt_noResultLabel) {
+    super([], setAs, onObj, opt_noResultLabel);
   }
-};
+
+  /**
+   * @inheritDoc
+   */
+  getSearchItems() {
+    return /** @type {!Array} */ (getFilterManager().getFilters());
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setupNode(item) {
+    return new FilterNode(/** @type {FilterEntry} */ (item));
+  }
+
+  /**
+   * @override
+   */
+  fillListFromSearch(list) {
+    var filters = getFilterManager().getFilters();
+    if (filters && filters.length > 0) {
+      for (var i = 0, n = filters.length; i < n; i++) {
+        var node = new FilterNode();
+        node.setEntry(filters[i]);
+        list.push(node);
+      }
+    } else {
+      this.addNoResult(list);
+    }
+  }
+}
+
+exports = FilterTreeSearch;

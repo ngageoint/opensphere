@@ -1,10 +1,13 @@
-goog.provide('os.ui.search.place.CoordinateResultCardCtrl');
-goog.provide('os.ui.search.place.coordResultCardDirective');
+goog.module('os.ui.search.place.CoordinateResultCardUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os');
-goog.require('os.map');
-goog.require('os.ui.Module');
-goog.require('os.ui.search.FeatureResultCardCtrl');
+const {toLonLat} = goog.require('ol.proj');
+const {ROOT} = goog.require('os');
+const osMap = goog.require('os.map');
+const Module = goog.require('os.ui.Module');
+const FeatureResultCardCtrl = goog.require('os.ui.search.FeatureResultCardCtrl');
+
+const Point = goog.requireType('ol.geom.Point');
 
 
 /**
@@ -12,52 +15,61 @@ goog.require('os.ui.search.FeatureResultCardCtrl');
  *
  * @return {angular.Directive}
  */
-os.ui.search.place.coordResultCardDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: os.ROOT + 'views/search/place/coordinateresultcard.html',
-    controller: os.ui.search.place.CoordinateResultCardCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  templateUrl: ROOT + 'views/search/place/coordinateresultcard.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'coordresultcard';
 
 /**
  * Register the beresultcard directive.
  */
-os.ui.Module.directive('coordresultcard', [os.ui.search.place.coordResultCardDirective]);
-
-
+Module.directive('coordresultcard', [directive]);
 
 /**
  * Controller for the beresultcard directive.
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @extends {os.ui.search.FeatureResultCardCtrl}
- * @ngInject
+ * @unrestricted
  */
-os.ui.search.place.CoordinateResultCardCtrl = function($scope, $element) {
-  os.ui.search.place.CoordinateResultCardCtrl.base(this, 'constructor', $scope, $element);
-
-  var geom = /** @type {ol.geom.Point} */ (this.feature.getGeometry());
-  var coord = ol.proj.toLonLat(geom.getFirstCoordinate(), os.map.PROJECTION);
-
+class Controller extends FeatureResultCardCtrl {
   /**
-   * @type {number}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
    */
-  this['lat'] = coord[1];
+  constructor($scope, $element) {
+    super($scope, $element);
 
-  /**
-   * @type {number}
-   */
-  this['lon'] = coord[0];
+    var geom = /** @type {Point} */ (this.feature.getGeometry());
+    var coord = toLonLat(geom.getFirstCoordinate(), osMap.PROJECTION);
 
-  /**
-   * @type {string}
-   */
-  this['mgrs'] = osasm.toMGRS(/** @type {Array<number>} */ ([this['lon'], this['lat']]));
+    /**
+     * @type {number}
+     */
+    this['lat'] = coord[1];
+
+    /**
+     * @type {number}
+     */
+    this['lon'] = coord[0];
+
+    /**
+     * @type {string}
+     */
+    this['mgrs'] = osasm.toMGRS(/** @type {Array<number>} */ ([this['lon'], this['lat']]));
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
-goog.inherits(os.ui.search.place.CoordinateResultCardCtrl, os.ui.search.FeatureResultCardCtrl);

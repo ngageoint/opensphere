@@ -106,14 +106,14 @@ Each target runs its individual pieces through npm scripts as well. Several of t
   $ npm run lint             # runs the linter to check code style
   $ npm run compile:resolve  # runs the resolver to check dependency/plugin/config resolution
   $ npm run compile:gcc      # runs the google-closure-compiler to produce the compiled JS
-  $ npm run compile:css      # runs node-sass to produce the minified/combined css
+  $ npm run compile:css      # runs sass to produce the minified/combined css
 
 If you are using yarn (recommended), replace ``npm run`` with ``yarn`` in those targets.
 
 The Resolver
 ============
 
-opensphere-build-resolver_ runs through all of an application's dependencies, plugins (opensphere-plugin-x), or config projects (opensphere-config-y) and then the resolver's plugins produce arguments for the compiler, arguments for node-sass, page templates for conversion, and more! All of these files are written to the ``.build`` directory and used later in the build.
+opensphere-build-resolver_ runs through all of an application's dependencies, plugins (opensphere-plugin-x), or config projects (opensphere-config-y) and then the resolver's plugins produce arguments for the compiler, arguments for sass, page templates for conversion, and more! All of these files are written to the ``.build`` directory and used later in the build.
 
 .. _opensphere-build-resolver: https://github.com/ngageoint/opensphere-build-resolver
 

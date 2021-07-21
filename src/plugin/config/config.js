@@ -1,8 +1,11 @@
-goog.provide('plugin.config');
-
+goog.module('plugin.config');
+goog.module.declareLegacyNamespace();
 
 /**
  * @type {string}
- * @const
  */
-plugin.config.ID = 'config';
+const ID = 'config';
+
+exports = {
+  ID
+};

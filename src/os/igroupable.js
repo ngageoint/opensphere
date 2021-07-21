@@ -1,32 +1,28 @@
-goog.provide('os.IGroupable');
-
-goog.require('os.implements');
-
-
+goog.module('os.IGroupable');
+goog.module.declareLegacyNamespace();
 
 /**
  * Interface representing a thing that supports advanced grouping options.
  * @interface
  */
-os.IGroupable = function() {};
+class IGroupable {
+  /**
+   * Gets the group ID.
+   * @return {!string} The ID
+   */
+  getGroupId() {}
 
+  /**
+   * Gets the group label.
+   * @return {!string} The label
+   */
+  getGroupLabel() {}
+}
 
 /**
  * ID for {@see os.implements}
  * @const {string}
  */
-os.IGroupable.ID = 'os.IGroupable';
+IGroupable.ID = 'os.IGroupable';
 
-
-/**
- * Gets the group ID.
- * @return {!string} The ID
- */
-os.IGroupable.prototype.getGroupId;
-
-
-/**
- * Gets the group label.
- * @return {!string} The label
- */
-os.IGroupable.prototype.getGroupLabel;
+exports = IGroupable;

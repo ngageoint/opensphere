@@ -1,58 +1,62 @@
-goog.provide('os.command.VectorLayerReplaceStyle');
+goog.module('os.command.VectorLayerReplaceStyle');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractVectorStyle');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.metrics');
-goog.require('os.source.PropertyChange');
-
+const asserts = goog.require('goog.asserts');
+const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
+const DataManager = goog.require('os.data.DataManager');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const metrics = goog.require('os.metrics');
+const PropertyChange = goog.require('os.source.PropertyChange');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**
  * Set if a layer style should override feature style.
- *
- * @param {string} layerId The layer id.
- * @param {boolean} value The value.
- * @extends {os.command.AbstractVectorStyle}
- * @constructor
  */
-os.command.VectorLayerReplaceStyle = function(layerId, value) {
-  os.command.VectorLayerReplaceStyle.base(this, 'constructor', layerId, value);
-  this.title = 'Force Layer Color';
-  this.metricKey = os.metrics.Layer.FORCE_LAYER_COLOR;
-};
-goog.inherits(os.command.VectorLayerReplaceStyle, os.command.AbstractVectorStyle);
+class VectorLayerReplaceStyle extends AbstractVectorStyle {
+  /**
+   * Constructor.
+   * @param {string} layerId The layer id.
+   * @param {boolean} value The value.
+   */
+  constructor(layerId, value) {
+    super(layerId, value);
+    this.title = 'Force Layer Color';
+    this.metricKey = metrics.Layer.FORCE_LAYER_COLOR;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config ? !!config[StyleField.REPLACE_STYLE] : false;
+  }
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerReplaceStyle.prototype.getOldValue = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  return config ? !!config[os.style.StyleField.REPLACE_STYLE] : false;
-};
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    config[StyleField.REPLACE_STYLE] = value;
 
+    super.applyValue(config, value);
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerReplaceStyle.prototype.applyValue = function(config, value) {
-  config[os.style.StyleField.REPLACE_STYLE] = value;
+    var source = /** @type {os.source.Vector} */ (DataManager.getInstance().getSource(this.layerId));
+    asserts.assert(source, 'source must be defined');
 
-  os.command.VectorLayerReplaceStyle.base(this, 'applyValue', config, value);
+    source.setHighlightedItems(source.getHighlightedItems());
+  }
 
-  var source = /** @type {os.source.Vector} */ (os.osDataManager.getSource(this.layerId));
-  goog.asserts.assert(source, 'source must be defined');
+  /**
+   * @inheritDoc
+   */
+  finish(config) {
+    // dispatch the replace style change event on the source for the histogram
+    var source = DataManager.getInstance().getSource(this.layerId);
+    source.dispatchEvent(new PropertyChangeEvent(PropertyChange.REPLACE_STYLE, this.value));
+    super.finish(config);
+  }
+}
 
-  source.setHighlightedItems(source.getHighlightedItems());
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerReplaceStyle.prototype.finish = function(config) {
-  // dispatch the replace style change event on the source for the histogram
-  var source = os.osDataManager.getSource(this.layerId);
-  source.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.REPLACE_STYLE, this.value));
-  os.command.VectorLayerReplaceStyle.base(this, 'finish', config);
-};
+exports = VectorLayerReplaceStyle;

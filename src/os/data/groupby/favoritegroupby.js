@@ -1,57 +1,60 @@
-goog.provide('os.data.groupby.FavoriteGroupBy');
-goog.require('os.data.groupby.BaseGroupBy');
-goog.require('os.ui.slick.SlickTreeNode');
-goog.require('os.user.settings.FavoriteManager');
+goog.module('os.data.groupby.FavoriteGroupBy');
+goog.module.declareLegacyNamespace();
 
+const DataManager = goog.require('os.data.DataManager');
+const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
+const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+const FavoriteManager = goog.require('os.user.settings.FavoriteManager');
 
 
 /**
  * Groups nodes by those tagged as a favorite
- *
- * @extends {os.data.groupby.BaseGroupBy}
- * @constructor
  */
-os.data.groupby.FavoriteGroupBy = function() {
-  os.data.groupby.FavoriteGroupBy.base(this, 'constructor');
-};
-goog.inherits(os.data.groupby.FavoriteGroupBy, os.data.groupby.BaseGroupBy);
-
-
-/**
- * @inheritDoc
- */
-os.data.groupby.FavoriteGroupBy.prototype.getGroupIds = function(node) {
+class FavoriteGroupBy extends BaseGroupBy {
   /**
-   * @type {Array.<string>}
+   * Constructor.
    */
-  var ids = [];
-  try {
-    var nodeId = /** @type {string} */ (node.getId());
-    if (nodeId) {
-      var desc = os.dataManager.getDescriptor(node.getId());
-      if (desc && os.favoriteManager.getFavorite(desc.getId())) {
-        ids.push('Favorites');
+  constructor() {
+    super();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getGroupIds(node) {
+    /**
+     * @type {Array.<string>}
+     */
+    var ids = [];
+    try {
+      var nodeId = /** @type {string} */ (node.getId());
+      if (nodeId) {
+        var desc = DataManager.getInstance().getDescriptor(node.getId());
+        if (desc && FavoriteManager.getInstance().getFavorite(desc.getId())) {
+          ids.push('Favorites');
+        } else {
+          ids.push('Other');
+        }
       } else {
         ids.push('Other');
       }
-    } else {
-      ids.push('Other');
+    } catch (e) {
     }
-  } catch (e) {
+
+    return ids;
   }
 
-  return ids;
-};
+  /**
+   * @inheritDoc
+   */
+  createGroup(node, id) {
+    var group = new SlickTreeNode();
+    group.setId(id);
+    group.setLabel(id);
+    group.setCheckboxVisible(false);
+    group.setCollapsed(false);
+    return group;
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.data.groupby.FavoriteGroupBy.prototype.createGroup = function(node, id) {
-  var group = new os.ui.slick.SlickTreeNode();
-  group.setId(id);
-  group.setLabel(id);
-  group.setCheckboxVisible(false);
-  group.setCollapsed(false);
-  return group;
-};
+exports = FavoriteGroupBy;

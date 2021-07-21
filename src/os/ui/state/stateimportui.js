@@ -1,151 +1,152 @@
-goog.provide('os.ui.state.StateImportUI');
+goog.module('os.ui.state.StateImportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.dom.xml');
-goog.require('os.parse.StateParserConfig');
-goog.require('os.state.Tag');
-goog.require('os.tag');
-goog.require('os.ui.im.FileImportUI');
-goog.require('os.ui.state.stateImportDirective');
-goog.require('os.ui.window');
+const {loadXml} = goog.require('goog.dom.xml');
+const StateParserConfig = goog.require('os.parse.StateParserConfig');
+const Tag = goog.require('os.state.Tag');
+const {stringFromXML} = goog.require('os.tag');
+const FileImportUI = goog.require('os.ui.im.FileImportUI');
+const {directiveTag: importUi} = goog.require('os.ui.state.StateImport');
+const {create} = goog.require('os.ui.window');
 
-
-
-/**
- * @extends {os.ui.im.FileImportUI}
- * @constructor
- */
-os.ui.state.StateImportUI = function() {
-  os.ui.state.StateImportUI.base(this, 'constructor');
-};
-goog.inherits(os.ui.state.StateImportUI, os.ui.im.FileImportUI);
+const OSFile = goog.requireType('os.file.File');
 
 
 /**
- * @inheritDoc
  */
-os.ui.state.StateImportUI.prototype.launchUI = function(file, opt_config) {
-  os.ui.state.StateImportUI.base(this, 'launchUI', file, opt_config);
-
-  var config = new os.parse.StateParserConfig();
-
-  // if an existing config was provided, merge it in
-  if (opt_config) {
-    this.mergeConfig(opt_config, config);
+class StateImportUI extends FileImportUI {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
   }
-  config['file'] = file;
 
-  var rawState = null;
+  /**
+   * @inheritDoc
+   */
+  launchUI(file, opt_config) {
+    super.launchUI(file, opt_config);
 
-  file.convertContentToString();
-  var content = file.getContent();
-  var contentType = file.getContentType();
-  if (content) {
-    if (typeof content === 'string') {
-      if (contentType == 'application/json') {
-        try {
-          rawState = /** @type {Object} */ (JSON.parse(content));
-        } catch (e) {
-          rawState = undefined;
+    var config = new StateParserConfig();
+
+    // if an existing config was provided, merge it in
+    if (opt_config) {
+      this.mergeConfig(opt_config, config);
+    }
+    config['file'] = file;
+
+    var rawState = null;
+
+    file.convertContentToString();
+    var content = file.getContent();
+    var contentType = file.getContentType();
+    if (content) {
+      if (typeof content === 'string') {
+        if (contentType == 'application/json') {
+          try {
+            rawState = /** @type {Object} */ (JSON.parse(content));
+          } catch (e) {
+            rawState = undefined;
+          }
+        } else {
+          rawState = loadXml(content);
         }
-      } else {
-        rawState = goog.dom.xml.loadXml(content);
+      } else if (content instanceof Document || goog.isObject(content)) {
+        rawState = content;
       }
-    } else if (content instanceof Document || goog.isObject(content)) {
-      rawState = content;
+    }
+
+    config['state'] = rawState;
+
+    if (rawState instanceof Document) {
+      this.handleXML(file, rawState, config);
+    } else if (goog.isObject(rawState)) {
+      this.handleJSON(file, rawState, config);
     }
   }
 
-  config['state'] = rawState;
-
-  if (rawState instanceof Document) {
-    this.handleXML(file, rawState, config);
-  } else if (goog.isObject(rawState)) {
-    this.handleJSON(file, rawState, config);
+  /**
+   * @inheritDoc
+   */
+  mergeConfig(from, to) {
+    super.mergeConfig(from, to);
+    to['state'] = from['state'];
+    to['loadItems'] = from['loadItems'];
   }
-};
 
+  /**
+   * Pulls information off of an XML state file and uses it to populate the import directive.
+   *
+   * @param {OSFile} file
+   * @param {Document} stateDoc
+   * @param {Object} config
+   */
+  handleXML(file, stateDoc, config) {
+    if (stateDoc) {
+      var titleEl = stateDoc.querySelector(Tag.STATE + ' > ' + Tag.TITLE);
+      if (titleEl && titleEl.textContent) {
+        config['title'] = titleEl.textContent;
+      }
 
-/**
- * @inheritDoc
- */
-os.ui.state.StateImportUI.prototype.mergeConfig = function(from, to) {
-  os.ui.state.StateImportUI.base(this, 'mergeConfig', from, to);
-  to['state'] = from['state'];
-  to['loadItems'] = from['loadItems'];
-};
+      var descEl = stateDoc.querySelector(Tag.STATE + ' > ' + Tag.DESCRIPTION);
+      if (descEl && descEl.textContent) {
+        config['description'] = descEl.textContent;
+      }
 
-
-/**
- * Pulls information off of an XML state file and uses it to populate the import directive.
- *
- * @param {os.file.File} file
- * @param {Document} stateDoc
- * @param {Object} config
- */
-os.ui.state.StateImportUI.prototype.handleXML = function(file, stateDoc, config) {
-  if (stateDoc) {
-    var titleEl = stateDoc.querySelector(os.state.Tag.STATE + ' > ' + os.state.Tag.TITLE);
-    if (titleEl && titleEl.textContent) {
-      config['title'] = titleEl.textContent;
+      var tagsEl = stateDoc.querySelector(Tag.STATE + ' > ' + Tag.TAGS);
+      if (tagsEl) {
+        config['tags'] = stringFromXML(tagsEl);
+      }
     }
 
-    var descEl = stateDoc.querySelector(os.state.Tag.STATE + ' > ' + os.state.Tag.DESCRIPTION);
-    if (descEl && descEl.textContent) {
-      config['description'] = descEl.textContent;
+    this.showUI(file, config);
+  }
+
+  /**
+   * Pulls information off of an XML state file and uses it to populate the import directive.
+   *
+   * @param {OSFile} file
+   * @param {Object} stateObject
+   * @param {Object} config
+   */
+  handleJSON(file, stateObject, config) {
+    if (stateObject) {
+      config['title'] = stateObject['title'];
+      config['description'] = stateObject['description'];
+      config['tags'] = stateObject['tags'];
     }
 
-    var tagsEl = stateDoc.querySelector(os.state.Tag.STATE + ' > ' + os.state.Tag.TAGS);
-    if (tagsEl) {
-      config['tags'] = os.tag.stringFromXML(tagsEl);
+    this.showUI(file, config);
+  }
+
+  /**
+   * Takes the completed config and displays the UI for it.
+   *
+   * @param {OSFile} file
+   * @param {Object} config
+   */
+  showUI(file, config) {
+    if (!config['title']) {
+      config['title'] = file.getFileName();
     }
+
+    var scopeOptions = {
+      'config': config
+    };
+    var windowOptions = {
+      'label': 'Import State',
+      'icon': 'fa fa-file-text',
+      'x': 'center',
+      'y': 'center',
+      'width': '400',
+      'height': 'auto',
+      'modal': 'true',
+      'show-close': 'true'
+    };
+    var template = `<${importUi}></${importUi}>`;
+    create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
+}
 
-  this.showUI(file, config);
-};
-
-
-/**
- * Pulls information off of an XML state file and uses it to populate the import directive.
- *
- * @param {os.file.File} file
- * @param {Object} stateObject
- * @param {Object} config
- */
-os.ui.state.StateImportUI.prototype.handleJSON = function(file, stateObject, config) {
-  if (stateObject) {
-    config['title'] = stateObject['title'];
-    config['description'] = stateObject['description'];
-    config['tags'] = stateObject['tags'];
-  }
-
-  this.showUI(file, config);
-};
-
-
-/**
- * Takes the completed config and displays the UI for it.
- *
- * @param {os.file.File} file
- * @param {Object} config
- */
-os.ui.state.StateImportUI.prototype.showUI = function(file, config) {
-  if (!config['title']) {
-    config['title'] = file.getFileName();
-  }
-
-  var scopeOptions = {
-    'config': config
-  };
-  var windowOptions = {
-    'label': 'Import State',
-    'icon': 'fa fa-file-text',
-    'x': 'center',
-    'y': 'center',
-    'width': '400',
-    'height': 'auto',
-    'modal': 'true',
-    'show-close': 'true'
-  };
-  var template = '<stateimport></stateimport>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-};
+exports = StateImportUI;
