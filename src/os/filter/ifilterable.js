@@ -1,65 +1,49 @@
-goog.provide('os.filter.IFilterable');
+goog.module('os.filter.IFilterable');
+goog.module.declareLegacyNamespace();
 
-
-/**
- * @typedef {function(...)}
- */
-os.filter.FilterLauncherFn;
-
-
-/**
- * @typedef {function(...):?Array<os.ogc.FeatureTypeColumn>}
- */
-os.filter.FilterColumnsFn;
-
-
+const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
 
 /**
  * @interface
  */
-os.filter.IFilterable = function() {};
+class IFilterable {
+  /**
+   * @return {?string} The title of the filterable.
+   */
+  getTitle() {}
 
+  /**
+   * @return {boolean} Whether or not this class is filterable
+   */
+  isFilterable() {}
+
+  /**
+   * @return {?string} The filter key to uniquely identify this filterable
+   */
+  getFilterKey() {}
+
+  /**
+   * Launches the filter manager for this class
+   */
+  launchFilterManager() {}
+
+  /**
+   * Get filter columns
+   * @return {?Array<FeatureTypeColumn>} the columns
+   */
+  getFilterColumns() {}
+
+  /**
+   * Get filterable types
+   * @return {!Array<!string>} the list of filterable types
+   */
+  getFilterableTypes() {}
+}
 
 /**
  * @type {string}
  * @const
  */
-os.filter.IFilterable.ID = 'os.filter.IFilterable';
+IFilterable.ID = 'os.filter.IFilterable';
 
-
-/**
- * @return {?string} The title of the filterable.
- */
-os.filter.IFilterable.prototype.getTitle;
-
-
-/**
- * @return {boolean} Whether or not this class is filterable
- */
-os.filter.IFilterable.prototype.isFilterable;
-
-
-/**
- * @return {?string} The filter key to uniquely identify this filterable
- */
-os.filter.IFilterable.prototype.getFilterKey;
-
-
-/**
- * Launches the filter manager for this class
- */
-os.filter.IFilterable.prototype.launchFilterManager;
-
-
-/**
- * Get filter columns
- * @return {?Array<os.ogc.FeatureTypeColumn>} the columns
- */
-os.filter.IFilterable.prototype.getFilterColumns;
-
-
-/**
- * Get filterable types
- * @return {!Array<!string>} the list of filterable types
- */
-os.filter.IFilterable.prototype.getFilterableTypes;
+exports = IFilterable;

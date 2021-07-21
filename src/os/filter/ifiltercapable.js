@@ -1,41 +1,39 @@
-goog.provide('os.filter.IFilterCapable');
-goog.require('os.filter.IFilter');
+goog.module('os.filter.IFilterCapable');
+goog.module.declareLegacyNamespace();
 
-
+const IFilter = goog.requireType('os.filter.IFilter');
 
 /**
  * @interface
  */
-os.filter.IFilterCapable = function() {};
+class IFilterCapable {
+  /**
+   * Adds or replaces a filter on the data.
+   * @param {string} key The key (or name) of the filter
+   * @param {IFilter} filter The filter
+   * @return {boolean} If the filter was added.
+   */
+  addFilter(key, filter) {}
 
+  /**
+   * Gets a filter by its key
+   * @param {string} key The key (or name) of the filter
+   * @return {IFilter|undefined}
+   */
+  getFilter(key) {}
 
-/**
- * Adds or replaces a filter on the data.
- * @param {string} key The key (or name) of the filter
- * @param {os.filter.IFilter} filter The filter
- * @return {boolean} If the filter was added.
- */
-os.filter.IFilterCapable.prototype.addFilter;
+  /**
+   * Gets all the filters
+   * @return {Array<IFilter>}
+   */
+  getFilters() {}
 
+  /**
+   * Removes a filter by its key
+   * @param {string} key The key (or name) of the filter
+   * @return {boolean} If the filter was removed
+   */
+  removeFilter(key) {}
+}
 
-/**
- * Gets a filter by its key
- * @param {string} key The key (or name) of the filter
- * @return {os.filter.IFilter|undefined}
- */
-os.filter.IFilterCapable.prototype.getFilter;
-
-
-/**
- * Gets all the filters
- * @return {Array.<os.filter.IFilter>}
- */
-os.filter.IFilterCapable.prototype.getFilters;
-
-
-/**
- * Removes a filter by its key
- * @param {string} key The key (or name) of the filter
- * @return {boolean} If the filter was removed
- */
-os.filter.IFilterCapable.prototype.removeFilter;
+exports = IFilterCapable;

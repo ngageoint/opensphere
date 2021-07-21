@@ -2,52 +2,57 @@ goog.require('os.filter.FilterEntry');
 goog.require('os.filter.impl.ecql.FilterFormatter');
 
 describe('os.filter.impl.ecql.FilterFormatter', function() {
+  const FilterEntry = goog.module.get('os.filter.FilterEntry');
+  const FilterFormatter = goog.module.get('os.filter.impl.ecql.FilterFormatter');
+
   var filters = [
-      '<PropertyIsEqualTo><PropertyName>boolField</PropertyName><Literal>true</Literal></PropertyIsEqualTo>',
-      '<PropertyIsNotEqualTo><PropertyName>numField</PropertyName><Literal>5</Literal></PropertyIsNotEqualTo>',
-      '<PropertyIsGreaterThan><PropertyName>stringField</PropertyName><Literal>ABC</Literal></PropertyIsGreaterThan>',
-      '<PropertyIsGreaterThanOrEqualTo><PropertyName>stringField</PropertyName><Literal>XYZ</Literal>' +
-        '</PropertyIsGreaterThanOrEqualTo>',
-      '<PropertyIsLessThan><PropertyName>numField</PropertyName><Literal>100</Literal></PropertyIsLessThan>',
-      '<PropertyIsLessThanOrEqualTo><PropertyName>numField</PropertyName><Literal>50</Literal>' +
-        '</PropertyIsLessThanOrEqualTo>',
-      '<PropertyIsLike><PropertyName>stringField</PropertyName><Literal>A*</Literal></PropertyIsLike>',
-      '<PropertyIsNotLike><PropertyName>stringField</PropertyName><Literal>b*</Literal></PropertyIsNotLike>',
-      '<PropertyIsNull><PropertyName>stringField</PropertyName></PropertyIsNull>',
-      '<PropertyIsNotNull><PropertyName>numField</PropertyName></PropertyIsNotNull>'];
+    '<PropertyIsEqualTo><PropertyName>boolField</PropertyName><Literal>true</Literal></PropertyIsEqualTo>',
+    '<PropertyIsNotEqualTo><PropertyName>numField</PropertyName><Literal>5</Literal></PropertyIsNotEqualTo>',
+    '<PropertyIsGreaterThan><PropertyName>stringField</PropertyName><Literal>ABC</Literal></PropertyIsGreaterThan>',
+    '<PropertyIsGreaterThanOrEqualTo><PropertyName>stringField</PropertyName><Literal>XYZ</Literal>' +
+      '</PropertyIsGreaterThanOrEqualTo>',
+    '<PropertyIsLessThan><PropertyName>numField</PropertyName><Literal>100</Literal></PropertyIsLessThan>',
+    '<PropertyIsLessThanOrEqualTo><PropertyName>numField</PropertyName><Literal>50</Literal>' +
+      '</PropertyIsLessThanOrEqualTo>',
+    '<PropertyIsLike><PropertyName>stringField</PropertyName><Literal>A*</Literal></PropertyIsLike>',
+    '<PropertyIsNotLike><PropertyName>stringField</PropertyName><Literal>b*</Literal></PropertyIsNotLike>',
+    '<PropertyIsNull><PropertyName>stringField</PropertyName></PropertyIsNull>',
+    '<PropertyIsNotNull><PropertyName>numField</PropertyName></PropertyIsNotNull>'
+  ];
 
   var expected = [
-      '(boolField = TRUE)',
-      '(numField <> 5)',
-      '(stringField > \'ABC\')',
-      '(stringField >= \'XYZ\')',
-      '(numField < 100)',
-      '(numField <= 50)',
-      '(stringField ILIKE \'A%\')',
-      '(stringField NOT ILIKE \'b%\')',
-      '(stringField IS NULL)',
-      '(numField IS NOT NULL)'];
+    '(boolField = TRUE)',
+    '(numField <> 5)',
+    '(stringField > \'ABC\')',
+    '(stringField >= \'XYZ\')',
+    '(numField < 100)',
+    '(numField <= 50)',
+    '(stringField ILIKE \'A%\')',
+    '(stringField NOT ILIKE \'b%\')',
+    '(stringField IS NULL)',
+    '(numField IS NOT NULL)'
+  ];
 
   it('should format filters', function() {
-    var formatter = new os.filter.impl.ecql.FilterFormatter();
+    var formatter = new FilterFormatter();
     expect(filters.length).toBe(expected.length);
 
     for (var i = 0, n = filters.length; i < n; i++) {
-      var entry = new os.filter.FilterEntry();
+      var entry = new FilterEntry();
       entry.setFilter(filters[i]);
       expect(formatter.format(entry)).toBe(expected[i]);
     }
   });
 
-  it ('should format groups properly', function() {
+  it('should format groups properly', function() {
     var filter = '<Or><And>' +
         filters[1] + filters[5] +
         '</And><Or>' +
         filters[2] + filters[8] +
         '</Or><Not>' + filters[0] + '</Not></Or>';
 
-    var formatter = new os.filter.impl.ecql.FilterFormatter();
-    var entry = new os.filter.FilterEntry();
+    var formatter = new FilterFormatter();
+    var entry = new FilterEntry();
     entry.setFilter(filter);
 
     expect(formatter.format(entry)).toBe(
@@ -62,8 +67,8 @@ describe('os.filter.impl.ecql.FilterFormatter', function() {
       '</PropertyIsEqualTo></And>';
 
 
-    var formatter = new os.filter.impl.ecql.FilterFormatter();
-    var entry = new os.filter.FilterEntry();
+    var formatter = new FilterFormatter();
+    var entry = new FilterEntry();
     entry.setFilter(filter);
 
     var result = formatter.format(entry);

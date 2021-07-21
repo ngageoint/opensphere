@@ -1,5 +1,5 @@
-goog.provide('os.filter.IFilter');
-
+goog.module('os.filter.IFilter');
+goog.module.declareLegacyNamespace();
 
 
 /**
@@ -8,27 +8,26 @@ goog.provide('os.filter.IFilter');
  * @template T
  * @interface
  */
-os.filter.IFilter = function() {};
+class IFilter {
+  /**
+   * @param {T} item The item being evaluated
+   * @param {number} index The item's index in its array
+   * @param {Array<T>} array Array containing the item
+   * @return {boolean}
+   */
+  evaluate(item, index, array) {}
 
+  /**
+   * Get the filter id.
+   * @return {!string} The filter id
+   */
+  getId() {}
 
-/**
- * @param {T} item The item being evaluated
- * @param {number} index The item's index in its array
- * @param {Array.<T>} array Array containing the item
- * @return {boolean}
- */
-os.filter.IFilter.prototype.evaluate;
+  /**
+   * Set the filter id.
+   * @param {!string} id The filter id
+   */
+  setId(id) {}
+}
 
-
-/**
- * Get the filter id.
- * @return {!string} The filter id
- */
-os.filter.IFilter.prototype.getId;
-
-
-/**
- * Set the filter id.
- * @param {!string} id The filter id
- */
-os.filter.IFilter.prototype.setId;
+exports = IFilter;

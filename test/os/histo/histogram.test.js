@@ -2,9 +2,12 @@ goog.require('os.histo.Histogram');
 goog.require('os.histo.UniqueBinMethod');
 
 describe('os.histo.Histogram', function() {
+  const Histogram = goog.module.get('os.histo.Histogram');
+  const UniqueBinMethod = goog.module.get('os.histo.UniqueBinMethod');
+
   it('should bin items after the method is added', function() {
-    var histogram = new os.histo.Histogram();
-    var method = new os.histo.UniqueBinMethod();
+    var histogram = new Histogram();
+    var method = new UniqueBinMethod();
     method.setField('field');
     histogram.setBinMethod(method);
 
@@ -40,8 +43,8 @@ describe('os.histo.Histogram', function() {
   });
 
   it('should bin already-added items when the method is added', function() {
-    var histogram = new os.histo.Histogram();
-    var method = new os.histo.UniqueBinMethod();
+    var histogram = new Histogram();
+    var method = new UniqueBinMethod();
     method.setField('field');
 
     var items = [
@@ -74,8 +77,8 @@ describe('os.histo.Histogram', function() {
   });
 
   it('should update as items are added', function() {
-    var histogram = new os.histo.Histogram();
-    var method = new os.histo.UniqueBinMethod();
+    var histogram = new Histogram();
+    var method = new UniqueBinMethod();
     method.setField('field');
     histogram.setBinMethod(method);
 
@@ -99,8 +102,8 @@ describe('os.histo.Histogram', function() {
   });
 
   it('should update as items are removed', function() {
-    var histogram = new os.histo.Histogram();
-    var method = new os.histo.UniqueBinMethod();
+    var histogram = new Histogram();
+    var method = new UniqueBinMethod();
     method.setField('field');
 
     var items = [
@@ -136,8 +139,8 @@ describe('os.histo.Histogram', function() {
   });
 
   it('should clear items', function() {
-    var histogram = new os.histo.Histogram();
-    var method = new os.histo.UniqueBinMethod();
+    var histogram = new Histogram();
+    var method = new UniqueBinMethod();
     method.setField('field');
     histogram.setBinMethod(method);
 

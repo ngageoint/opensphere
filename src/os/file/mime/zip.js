@@ -1,20 +1,21 @@
-goog.provide('os.file.mime.zip');
+goog.module('os.file.mime.zip');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Promise');
-goog.require('os.file.mime');
+const Promise = goog.require('goog.Promise');
+const mime = goog.require('os.file.mime');
+
+const OSFile = goog.requireType('os.file.File');
 
 
 /**
- * @const
  * @type {string}
  */
-os.file.mime.zip.TYPE = 'application/zip';
+const TYPE = 'application/zip';
 
 /**
- * @const
  * @type {number}
  */
-os.file.mime.zip.MAGIC_BYTES_BIG_ENDIAN = 0x504B0304;
+const MAGIC_BYTES_BIG_ENDIAN = 0x504B0304;
 
 /**
  * Tests if an ArrayBuffer holds zip content by looking for the magic number.
@@ -22,25 +23,24 @@ os.file.mime.zip.MAGIC_BYTES_BIG_ENDIAN = 0x504B0304;
  * @param {ArrayBuffer} buffer
  * @return {boolean}
  */
-os.file.mime.zip.isZip = function(buffer) {
+const isZip = function(buffer) {
   if (buffer && buffer.byteLength > 3) {
     var dv = new DataView(buffer.slice(0, 4));
-    return os.file.mime.zip.MAGIC_BYTES_BIG_ENDIAN == dv.getUint32(0);
+    return MAGIC_BYTES_BIG_ENDIAN == dv.getUint32(0);
   }
   return false;
 };
 
-
 /**
  * @param {ArrayBuffer} buffer
- * @param {os.file.File=} opt_file
- * @return {!goog.Promise<(!Array<!zip.Entry>|boolean|undefined)>}
+ * @param {OSFile=} opt_file
+ * @return {!Promise<(!Array<!zip.Entry>|boolean|undefined)>}
  */
-os.file.mime.zip.detectZip = function(buffer, opt_file) {
-  if (os.file.mime.zip.isZip(buffer)) {
+const detectZip = function(buffer, opt_file) {
+  if (isZip(buffer)) {
     // this is a zip file, get the entries
     if (window.zip) {
-      return new goog.Promise(function(resolve, reject) {
+      return new Promise(function(resolve, reject) {
         // if we have a file reference, use that
         var reader = opt_file && opt_file.getFile() ?
           new zip.BlobReader(opt_file.getFile()) :
@@ -62,26 +62,25 @@ os.file.mime.zip.detectZip = function(buffer, opt_file) {
     }
 
     // this cast is unfortunately necessary. faithInCompiler--
-    return /** @type {!goog.Promise<!Array<!zip.Entry>|boolean|undefined>} */ (goog.Promise.resolve(true));
+    return /** @type {!Promise<!Array<!zip.Entry>|boolean|undefined>} */ (Promise.resolve(true));
   }
 
-  return goog.Promise.resolve();
+  return Promise.resolve();
 };
 
-os.file.mime.register(os.file.mime.zip.TYPE, os.file.mime.zip.detectZip);
-
+mime.register(TYPE, detectZip);
 
 /**
  * @param {RegExp} fileNameRegex
- * @return {!function(ArrayBuffer, os.file.File, *=):!goog.Promise<*|undefined>} The detect function for registering with `os.file.mime`
+ * @return {!function(ArrayBuffer, OSFile, *=):!Promise<*|undefined>} The detect function for registering with `mime`
  */
-os.file.mime.zip.createDetect = function(fileNameRegex) {
+const createDetect = function(fileNameRegex) {
   return (
     /**
      * @param {ArrayBuffer} buffer
-     * @param {os.file.File=} opt_file
+     * @param {OSFile=} opt_file
      * @param {*=} opt_context
-     * @return {!goog.Promise<*|undefined>}
+     * @return {!Promise<*|undefined>}
      */
     function(buffer, opt_file, opt_context) {
       var retVal;
@@ -95,6 +94,15 @@ os.file.mime.zip.createDetect = function(fileNameRegex) {
         }
       }
 
-      return /** @type {!goog.Promise<*|undefined>} */ (goog.Promise.resolve(retVal));
-    });
+      return /** @type {!Promise<*|undefined>} */ (Promise.resolve(retVal));
+    }
+  );
+};
+
+exports = {
+  TYPE,
+  MAGIC_BYTES_BIG_ENDIAN,
+  isZip,
+  detectZip,
+  createDetect
 };

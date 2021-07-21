@@ -2,7 +2,6 @@ goog.module('os.data.histo.SourceHistogram');
 goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
-
 const Delay = goog.require('goog.async.Delay');
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -23,6 +22,7 @@ const FeatureEvent = goog.requireType('os.data.FeatureEvent');
 const ColorMethod = goog.requireType('os.data.histo.ColorMethod');
 const IGroupable = goog.requireType('os.data.xf.IGroupable');
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const DateBinMethod = goog.requireType('os.histo.DateBinMethod');
 const osHistoBin = goog.requireType('os.histo.bin');
 
 
@@ -466,7 +466,7 @@ class SourceHistogram extends EventTarget {
         var valueFn = this.binMethod.getValue.bind(this.binMethod);
         // add dimension that will handle an array of keys
         var isArray = this.binMethod.getBinType() == 'Date' ?
-          DateRangeBinType[this.binMethod.getDateBinType()] : false;
+          DateRangeBinType[/** @type {DateBinMethod} */ (this.binMethod).getDateBinType()] : false;
         isArray = this.binRanges_ ? isArray : false;
         this.timeModel_.addDimension(this.id_, valueFn, isArray);
 
@@ -782,7 +782,7 @@ class SourceHistogram extends EventTarget {
   setBinRanges(value) {
     this.binRanges_ = value;
     if (this.binMethod && this.binMethod.getBinType() == 'Date' &&
-        DateRangeBinType[this.binMethod.getDateBinType()]) {
+        DateRangeBinType[/** @type {DateBinMethod} */ (this.binMethod).getDateBinType()]) {
       this.binMethod.setArrayKeys(value);
     }
 

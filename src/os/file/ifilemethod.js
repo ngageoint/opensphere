@@ -1,62 +1,57 @@
-goog.provide('os.file.IFileMethod');
-goog.require('goog.disposable.IDisposable');
-goog.require('goog.events.Listenable');
-goog.require('os.file.File');
+goog.module('os.file.IFileMethod');
+goog.module.declareLegacyNamespace();
 
-
+const IDisposable = goog.requireType('goog.disposable.IDisposable');
+const Listenable = goog.requireType('goog.events.Listenable');
+const OSFile = goog.requireType('os.file.File');
 
 /**
- * @extends {goog.disposable.IDisposable}
- * @extends {goog.events.Listenable}
+ * @extends {IDisposable}
+ * @extends {Listenable}
  * @interface
  */
-os.file.IFileMethod = function() {};
+class IFileMethod {
+  /**
+   * Gets the priority of this method. The higher the priority, the earlier the method is tried.
+   * @return {number}
+   */
+  getPriority() {}
 
+  /**
+   * Detects whether or not this method is supported and returns the result.
+   * @return {boolean}
+   */
+  isSupported() {}
 
-/**
- * Gets the priority of this method. The higher the priority, the earlier the method is tried.
- * @return {number}
- */
-os.file.IFileMethod.prototype.getPriority;
+  /**
+   * The resulting file.
+   * @return {OSFile}
+   */
+  getFile() {}
 
+  /**
+   * Associate a file with this method.
+   * @param {OSFile} file
+   */
+  setFile(file) {}
 
-/**
- * Detects whether or not this method is supported and returns the result.
- * @return {boolean}
- */
-os.file.IFileMethod.prototype.isSupported;
+  /**
+   * Launch whatever is needed to load the file. When finished, fire {@type os.events.EventType.COMPLETE}.
+   * If canceled, fire {@type os.events.EventType.CANCEL}.
+   * @param {Object=} opt_options Additional options for the import manager
+   */
+  loadFile(opt_options) {}
 
+  /**
+   * Clears the file since we are done with the reference
+   */
+  clearFile() {}
 
-/**
- * The resulting file.
- * @return {os.file.File}
- */
-os.file.IFileMethod.prototype.getFile;
+  /**
+   * Clones the method
+   * @return {IFileMethod} A copy of the method
+   */
+  clone() {}
+}
 
-
-/**
- * Associate a file with this method.
- * @param {os.file.File} file
- */
-os.file.IFileMethod.prototype.setFile;
-
-
-/**
- * Launch whatever is needed to load the file. When finished, fire {@type os.events.EventType.COMPLETE}.
- * If canceled, fire {@type os.events.EventType.CANCEL}.
- * @param {Object=} opt_options Additional options for the import manager
- */
-os.file.IFileMethod.prototype.loadFile;
-
-
-/**
- * Clears the file since we are done with the reference
- */
-os.file.IFileMethod.prototype.clearFile;
-
-
-/**
- * Clones the method
- * @return {os.file.IFileMethod} A copy of the method
- */
-os.file.IFileMethod.prototype.clone;
+exports = IFileMethod;

@@ -1,24 +1,30 @@
-goog.provide('os.file.mime.any');
+goog.module('os.file.mime.any');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Promise');
-goog.require('os.file.mime');
+const Promise = goog.require('goog.Promise');
+const mime = goog.require('os.file.mime');
+
+const OSFile = goog.requireType('os.file.File');
 
 
 /**
- * @const
  * @type {string}
  */
-os.file.mime.any.TYPE = '*/*';
-
+const TYPE = '*/*';
 
 /**
  * @param {ArrayBuffer} buffer
- * @param {os.file.File=} opt_file
+ * @param {OSFile=} opt_file
  * @param {*=} opt_context
- * @return {!goog.Promise<*|undefined>}
+ * @return {!Promise<*|undefined>}
  */
-os.file.mime.any.isSomething = function(buffer, opt_file, opt_context) {
-  return /** @type {!goog.Promise<*|undefined>} */ (goog.Promise.resolve(!!(buffer && buffer.byteLength)));
+const isSomething = function(buffer, opt_file, opt_context) {
+  return /** @type {!Promise<*|undefined>} */ (Promise.resolve(!!(buffer && buffer.byteLength)));
 };
 
-os.file.mime.register(os.file.mime.any.TYPE, os.file.mime.any.isSomething, 1000000);
+mime.register(TYPE, isSomething, 1000000);
+
+exports = {
+  TYPE,
+  isSomething
+};

@@ -1,23 +1,26 @@
-goog.provide('os.filter.im.OSFilterImportUI');
-goog.require('os.filter.im.osFilterImportDirective');
-goog.require('os.ui.filter.im.FilterImportUI');
+goog.module('os.filter.im.OSFilterImportUI');
+goog.module.declareLegacyNamespace();
 
-
-
-/**
- * @extends {os.ui.filter.im.FilterImportUI}
- * @constructor
- */
-os.filter.im.OSFilterImportUI = function() {
-  os.filter.im.OSFilterImportUI.base(this, 'constructor');
-};
-goog.inherits(os.filter.im.OSFilterImportUI, os.ui.filter.im.FilterImportUI);
-
+const {directiveTag: filterImportUi} = goog.require('os.filter.im.OSFilterImport');
+const FilterImportUI = goog.require('os.ui.filter.im.FilterImportUI');
 
 /**
- * @inheritDoc
  */
-os.filter.im.OSFilterImportUI.prototype.getTemplate = function() {
-  return '<osfilterimport class="flex-column d-flex flex-fill" filter-data="filterData" ' +
-    ' layer-id="layerId"></osfilterimport>';
-};
+class OSFilterImportUI extends FilterImportUI {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getTemplate() {
+    return `<${filterImportUi} class="flex-column d-flex flex-fill" filter-data="filterData" ` +
+        `layer-id="layerId"></${filterImportUi}>`;
+  }
+}
+
+exports = OSFilterImportUI;

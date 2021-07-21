@@ -1,21 +1,17 @@
 goog.module('plugin.file.gml.GMLMixin');
 goog.module.declareLegacyNamespace();
 
-const dom = goog.require('goog.dom');
-
+const {getFirstElementChild} = goog.require('goog.dom');
 const GMLBase = goog.require('ol.format.GMLBase');
-
-const olProj = goog.require('ol.proj');
+const {get: getProjection} = goog.require('ol.proj');
 
 const Projection = goog.requireType('ol.proj.Projection');
-
 
 /**
  * If the mixin has been initialized.
  * @type {boolean}
  */
 let initialized = false;
-
 
 /**
  * Initialize the mixin.
@@ -35,8 +31,8 @@ const init = () => {
      */
     GMLBase.prototype.readProjectionFromNode = function(node) {
       var attr = 'srsName';
-      return olProj.get(this.srsName ||
-          dom.getFirstElementChild(node).getAttribute(attr) ||
+      return getProjection(this.srsName ||
+          getFirstElementChild(node).getAttribute(attr) ||
           node.querySelector('[' + attr + ']').getAttribute(attr));
     };
   }

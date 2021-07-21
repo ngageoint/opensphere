@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const AlertManager = goog.require('os.alert.AlertManager');
+const {saveFile} = goog.require('os.file.persist');
 const {testFilterActionEnabled} = goog.require('os.im.action');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const {exportEntries} = goog.require('os.im.action.filter');
@@ -227,7 +228,7 @@ const exportFilterActionEntries = function(fileName, entries) {
       }
     }
 
-    os.file.persist.saveFile(fileName, os.xml.serialize(rootNode), 'text/xml');
+    saveFile(fileName, os.xml.serialize(rootNode), 'text/xml');
   } else {
     AlertManager.getInstance().sendAlert('No actions to export.', os.alert.AlertEventSeverity.WARNING);
   }

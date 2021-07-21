@@ -16,7 +16,7 @@ const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
 const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
 const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
 const ILayer = goog.require('os.layer.ILayer');
-const {ORIENTATION} = goog.require('os.Fields');
+const Fields = goog.require('os.Fields');
 const {
   isDerived: isDerived,
   DEFAULT_RADIUS_COL_NAME: RADIUS,
@@ -170,7 +170,7 @@ class Controller {
      * The name of the orientation Column
      * @type {string}
      */
-    this['orientation'] = columns.find((col) => col === ORIENTATION);
+    this['orientation'] = columns.find((col) => col === Fields.ORIENTATION);
 
     /**
      * Suggested columns for orientation
@@ -465,7 +465,7 @@ const updateColumns_ = function(desc, mappings) {
         col['derivedFrom'] = mapping.field;
         descColumns.push(col);
       } else if (OrientationMapping.REGEX.test(label)) {
-        const col = new ColumnDefinition(ORIENTATION);
+        const col = new ColumnDefinition(Fields.ORIENTATION);
         col['derivedFrom'] = mapping.field;
         descColumns.push(col);
       }

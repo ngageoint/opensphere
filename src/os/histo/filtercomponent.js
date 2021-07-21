@@ -1,5 +1,5 @@
-goog.provide('os.histo.FilterComponent');
-
+goog.module('os.histo.FilterComponent');
+goog.module.declareLegacyNamespace();
 
 /**
  * Strings used to create OGC filters from a histogram.
@@ -7,7 +7,7 @@ goog.provide('os.histo.FilterComponent');
  * These were primarily put here so tests won't immediately break if we need to tweak a filter.
  * @enum {string}
  */
-os.histo.FilterComponent = {
+exports = {
   IS_EMPTY_HEAD: '<PropertyIsNull><PropertyName>',
   IS_EMPTY_TAIL: '</PropertyName></PropertyIsNull>',
 

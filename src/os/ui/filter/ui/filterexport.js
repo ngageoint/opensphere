@@ -1,7 +1,9 @@
 goog.provide('os.ui.filter.ui.FilterExportChoice');
 goog.provide('os.ui.filter.ui.FilterExportCtrl');
 goog.provide('os.ui.filter.ui.filterExportDirective');
+
 goog.require('os.array');
+goog.require('os.file.persist');
 goog.require('os.ui.Module');
 goog.require('os.ui.checklistDirective');
 goog.require('os.ui.util.ValidationMessageUI');

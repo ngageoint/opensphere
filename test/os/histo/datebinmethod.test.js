@@ -1,12 +1,26 @@
+goog.require('os.data.histo.ColorBin');
 goog.require('os.histo.DateBinMethod');
+goog.require('os.histo.DateBinType');
+goog.require('os.histo.DateRangeBinType');
+goog.require('os.histo.bin');
+goog.require('os.time');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 
 
 describe('os.histo.DateBinMethod', function() {
-  var method = new os.histo.DateBinMethod();
+  const ColorBin = goog.module.get('os.data.histo.ColorBin');
+  const DateBinMethod = goog.module.get('os.histo.DateBinMethod');
+  const DateBinType = goog.module.get('os.histo.DateBinType');
+  const DateRangeBinType = goog.module.get('os.histo.DateRangeBinType');
+  const osHistoBin = goog.module.get('os.histo.bin');
+  const time = goog.module.get('os.time');
+  const TimeInstant = goog.module.get('os.time.TimeInstant');
+  const TimeRange = goog.module.get('os.time.TimeRange');
+
+  var method = new DateBinMethod();
   method.setField('field');
-  method.setDateBinType(os.histo.DateBinType.UNIQUE);
+  method.setDateBinType(DateBinType.UNIQUE);
 
   var valueSpy;
 
@@ -27,8 +41,8 @@ describe('os.histo.DateBinMethod', function() {
       {field: '2014-01-30T12:34:56Z'},
       {field: '2014-01-30T12:34:56+0000'},
       {field: d},
-      {field: new os.time.TimeInstant(d.getTime())},
-      {field: new os.time.TimeRange(d.getTime(), d.getTime())},
+      {field: new TimeInstant(d.getTime())},
+      {field: new TimeRange(d.getTime(), d.getTime())},
       {field: d.toISOString()}
     ];
     for (var i = 0, n = utcItems.length; i < n; i++) {
@@ -64,12 +78,12 @@ describe('os.histo.DateBinMethod', function() {
     ];
 
     for (var i = 0, n = unsupportedItems.length; i < n; i++) {
-      expect(method.getValue(unsupportedItems[i])).toBe(os.histo.DateBinMethod.MAGIC);
+      expect(method.getValue(unsupportedItems[i])).toBe(DateBinMethod.MAGIC);
     }
   });
 
   it('should bin uniquely', function() {
-    method.setDateBinType(os.histo.DateBinType.UNIQUE);
+    method.setDateBinType(DateBinType.UNIQUE);
     var items = [
       {field: '2014-01-30T12:34:56Z'},
       {field: '2014-01-30T12:34:30+0000'},
@@ -80,8 +94,8 @@ describe('os.histo.DateBinMethod', function() {
 
     var values = items.map(method.getValue, method);
     var expected = [1391085296000, 1391085270000,
-      os.histo.DateBinMethod.MAGIC, os.histo.DateBinMethod.MAGIC,
-      os.histo.DateBinMethod.MAGIC, os.histo.DateBinMethod.MAGIC];
+      DateBinMethod.MAGIC, DateBinMethod.MAGIC,
+      DateBinMethod.MAGIC, DateBinMethod.MAGIC];
 
     var expectedLabels = ['2014-01-30T12:34:56Z', '2014-01-30T12:34:30Z',
       'Invalid Date', 'Invalid Date', 'Invalid Date', 'Invalid Date'];
@@ -93,7 +107,7 @@ describe('os.histo.DateBinMethod', function() {
   });
 
   it('should bin by hour', function() {
-    method.setDateBinType(os.histo.DateBinType.HOUR);
+    method.setDateBinType(DateBinType.HOUR);
 
     var items = [
       {field: '2014-01-30T12:34:56Z'},
@@ -102,7 +116,7 @@ describe('os.histo.DateBinMethod', function() {
 
     var values = items.map(method.getValue, method);
 
-    var expected = [1391083200000, 1391086800000, os.histo.DateBinMethod.MAGIC];
+    var expected = [1391083200000, 1391086800000, DateBinMethod.MAGIC];
     var expectedLabels = ['2014-01-30 12', '2014-01-30 13', 'Invalid Date'];
 
     for (var i = 0, n = values.length; i < n; i++) {
@@ -112,7 +126,7 @@ describe('os.histo.DateBinMethod', function() {
   });
 
   it('should bin by hour of day', function() {
-    method.setDateBinType(os.histo.DateBinType.HOUR_OF_DAY);
+    method.setDateBinType(DateBinType.HOUR_OF_DAY);
 
     var items = [
       {field: '2014-01-30T12:34:56Z'},
@@ -120,7 +134,7 @@ describe('os.histo.DateBinMethod', function() {
       {field: 'gibberish'}];
 
     var values = items.map(method.getValue, method);
-    var expected = [12, 13, os.histo.DateBinMethod.MAGIC];
+    var expected = [12, 13, DateBinMethod.MAGIC];
     var expectedLabels = ['1200', '1300', 'Invalid Date'];
 
     for (var i = 0, n = values.length; i < n; i++) {
@@ -130,7 +144,7 @@ describe('os.histo.DateBinMethod', function() {
   });
 
   it('should bin by day', function() {
-    method.setDateBinType(os.histo.DateBinType.DAY);
+    method.setDateBinType(DateBinType.DAY);
 
     var items = [
       {field: '2014-01-30T12:34:56Z'},
@@ -138,7 +152,7 @@ describe('os.histo.DateBinMethod', function() {
       {field: 'gibberish'}];
 
     var values = items.map(method.getValue, method);
-    var expected = [1391040000000, 1391126400000, os.histo.DateBinMethod.MAGIC];
+    var expected = [1391040000000, 1391126400000, DateBinMethod.MAGIC];
     var expectedLabels = ['2014-01-30', '2014-01-31', 'Invalid Date'];
 
     for (var i = 0, n = values.length; i < n; i++) {
@@ -148,7 +162,7 @@ describe('os.histo.DateBinMethod', function() {
   });
 
   it('should bin by day of week', function() {
-    method.setDateBinType(os.histo.DateBinType.DAY_OF_WEEK);
+    method.setDateBinType(DateBinType.DAY_OF_WEEK);
 
     var items = [
       {field: '2014-01-30T12:34:56Z'},
@@ -158,7 +172,7 @@ describe('os.histo.DateBinMethod', function() {
       {field: 'gibberish'}];
 
     var values = items.map(method.getValue, method);
-    var expected = [4, 5, 5, os.histo.DateBinMethod.MAGIC];
+    var expected = [4, 5, 5, DateBinMethod.MAGIC];
     var expectedLabels = ['Thursday', 'Friday', 'Friday', 'Invalid Date'];
 
     for (var i = 0, n = values.length; i < n; i++) {
@@ -168,7 +182,7 @@ describe('os.histo.DateBinMethod', function() {
   });
 
   it('should bin by week', function() {
-    method.setDateBinType(os.histo.DateBinType.WEEK);
+    method.setDateBinType(DateBinType.WEEK);
 
     var items = [
       {field: '2014-01-23T12:34:56Z'},
@@ -176,7 +190,7 @@ describe('os.histo.DateBinMethod', function() {
       {field: 'gibberish'}];
 
     var values = items.map(method.getValue, method);
-    var expected = [1390089600000, 1390694400000, os.histo.DateBinMethod.MAGIC];
+    var expected = [1390089600000, 1390694400000, DateBinMethod.MAGIC];
     var expectedLabels = ['2014-01-19', '2014-01-26', 'Invalid Date'];
 
     for (var i = 0, n = values.length; i < n; i++) {
@@ -186,7 +200,7 @@ describe('os.histo.DateBinMethod', function() {
   });
 
   it('should bin by month', function() {
-    method.setDateBinType(os.histo.DateBinType.MONTH);
+    method.setDateBinType(DateBinType.MONTH);
 
     var items = [
       {field: '2014-01-23T12:34:56Z'},
@@ -194,7 +208,7 @@ describe('os.histo.DateBinMethod', function() {
       {field: 'gibberish'}];
 
     var values = items.map(method.getValue, method);
-    var expected = [1388534400000, 1391212800000, os.histo.DateBinMethod.MAGIC];
+    var expected = [1388534400000, 1391212800000, DateBinMethod.MAGIC];
     var expectedLabels = ['2014-01', '2014-02', 'Invalid Date'];
 
     for (var i = 0, n = values.length; i < n; i++) {
@@ -204,7 +218,7 @@ describe('os.histo.DateBinMethod', function() {
   });
 
   it('should bin by year', function() {
-    method.setDateBinType(os.histo.DateBinType.YEAR);
+    method.setDateBinType(DateBinType.YEAR);
 
     var items = [
       {field: '2014-01-23T12:34:56Z'},
@@ -212,7 +226,7 @@ describe('os.histo.DateBinMethod', function() {
       {field: 'gibberish'}];
 
     var values = items.map(method.getValue, method);
-    var expected = [1388534400000, 1356998400000, os.histo.DateBinMethod.MAGIC];
+    var expected = [1388534400000, 1356998400000, DateBinMethod.MAGIC];
     var expectedLabels = ['2014', '2013', 'Invalid Date'];
 
     for (var i = 0, n = values.length; i < n; i++) {
@@ -222,7 +236,7 @@ describe('os.histo.DateBinMethod', function() {
   });
 
   it('should bin by month of year', function() {
-    method.setDateBinType(os.histo.DateBinType.MONTH_OF_YEAR);
+    method.setDateBinType(DateBinType.MONTH_OF_YEAR);
 
     var items = [
       {field: '2014-01-31T12:34:56Z'},
@@ -231,7 +245,7 @@ describe('os.histo.DateBinMethod', function() {
       {field: 'gibberish'}];
 
     var values = items.map(method.getValue, method);
-    var expected = ['0', 1, '0', os.histo.DateBinMethod.MAGIC];
+    var expected = ['0', 1, '0', DateBinMethod.MAGIC];
     var expectedLabels = ['January', 'February', 'January', 'Invalid Date'];
 
     for (var i = 0, n = values.length; i < n; i++) {
@@ -241,7 +255,7 @@ describe('os.histo.DateBinMethod', function() {
   });
 
   it('should bin by month of year with keys', function() {
-    method.setDateBinType(os.histo.DateBinType.MONTH_OF_YEAR);
+    method.setDateBinType(DateBinType.MONTH_OF_YEAR);
     var item = {field: '2014-01-31T12:34:56Z'};
     var expected = [0];
     method.arrayKeys = true;
@@ -251,7 +265,7 @@ describe('os.histo.DateBinMethod', function() {
   });
 
   it('shold bin by month of year across a range', function() {
-    method.setDateBinType(os.histo.DateBinType.MONTH_OF_YEAR);
+    method.setDateBinType(DateBinType.MONTH_OF_YEAR);
     var d1 = new Date('2014-01-11T12:34:56Z').getTime();
     var d2 = new Date('2014-02-11T12:34:56Z').getTime();
 
@@ -268,63 +282,55 @@ describe('os.histo.DateBinMethod', function() {
   });
 
   it('should restore correctly', function() {
-    var method = new os.histo.DateBinMethod();
-    method.setDateBinType(os.histo.DateBinType.UNIQUE);
+    var method = new DateBinMethod();
+    method.setDateBinType(DateBinType.UNIQUE);
 
     // if the bin type isn't set, don't change it
     method.restore({});
-    expect(method.getDateBinType()).toBe(os.histo.DateBinType.UNIQUE);
+    expect(method.getDateBinType()).toBe(DateBinType.UNIQUE);
 
     method.restore({
       binType: null
     });
-    expect(method.getDateBinType()).toBe(os.histo.DateBinType.UNIQUE);
+    expect(method.getDateBinType()).toBe(DateBinType.UNIQUE);
 
     // if the bin type isn't known, don't change it
     method.restore({
       binType: 'SomeUnknownType'
     });
-    expect(method.getDateBinType()).toBe(os.histo.DateBinType.UNIQUE);
+    expect(method.getDateBinType()).toBe(DateBinType.UNIQUE);
 
     // sets the bin type if the value is a known type
     method.restore({
-      binType: os.histo.DateBinType.MINUTE
+      binType: DateBinType.MINUTE
     });
-    expect(method.getDateBinType()).toBe(os.histo.DateBinType.MINUTE);
+    expect(method.getDateBinType()).toBe(DateBinType.MINUTE);
 
     method.restore({
-      binType: os.histo.DateBinType.HOUR
+      binType: DateBinType.HOUR
     });
-    expect(method.getDateBinType()).toBe(os.histo.DateBinType.HOUR);
+    expect(method.getDateBinType()).toBe(DateBinType.HOUR);
   });
 
   it('should map types to range types', function() {
-    var expectedLength = Object.keys(os.histo.DateBinType).length;
-    var resultLength = Object.keys(os.histo.DateRangeBinType).length;
+    var expectedLength = Object.keys(DateBinType).length;
+    var resultLength = Object.keys(DateRangeBinType).length;
 
     expect(resultLength).toBe(expectedLength);
   });
 
   it('should provide sort label by key ascending', function() {
-    var method = new os.histo.DateBinMethod();
-    os.histo.bin.sortByKey = 1;
-
-    var result = method.getSortLabelFnAsc();
-
-    expect(result).toBe(1);
+    var method = new DateBinMethod();
+    expect(method.getSortLabelFnAsc()).toBe(osHistoBin.sortByKey);
   });
 
   it('should provide sort label by key descending', function() {
-    var method = new os.histo.DateBinMethod();
-    os.histo.bin.sortByKeyDesc = 1;
-
-    var result = method.getSortLabelFnDesc();
-
-    expect(result).toBe(1);
+    var method = new DateBinMethod();
+    expect(method.getSortLabelFnDesc()).toBe(osHistoBin.sortByKeyDesc);
   });
 
   it('should return simple values for simple input when calling generateValues()', function() {
-    var method = new os.histo.DateBinMethod();
+    var method = new DateBinMethod();
     var result;
 
     method.arrayKeys = true;
@@ -337,14 +343,14 @@ describe('os.histo.DateBinMethod', function() {
   });
 
   it('should return the value passed to getBinKey() if the input value is an array', function() {
-    var method = new os.histo.DateBinMethod();
+    var method = new DateBinMethod();
     var result = method.getBinKey([1]);
 
     expect(result).toEqual([1]);
   });
 
   it('should return the value passed to getBinKey() if the input value is not an array', function() {
-    var method = new os.histo.DateBinMethod();
+    var method = new DateBinMethod();
     var result;
 
     result = method.getBinKey('123123');
@@ -356,18 +362,18 @@ describe('os.histo.DateBinMethod', function() {
 
 
   it('should provide bins statistics', function() {
-    var method = new os.histo.DateBinMethod();
+    var method = new DateBinMethod();
     method.setField('field');
-    method.setDateBinType(os.histo.DateBinType.MONTH);
+    method.setDateBinType(DateBinType.MONTH);
 
     var minDate = new Date(2020, 0, 3); // Jan 3, 2020 >> Jan 2020
     var maxDate = new Date(2030, 0, 15); // Jan 15, 2030 >> Jan 2030
-    var min = os.time.floor(minDate, 'month').getTime();
-    var max = os.time.floor(maxDate, 'month').getTime();
+    var min = time.floor(minDate, 'month').getTime();
+    var max = time.floor(maxDate, 'month').getTime();
     var bins = [];
     var bin;
 
-    bin = new os.data.histo.ColorBin('#000');
+    bin = new ColorBin('#000');
     bin['key'] = min;
     bin['label'] = method.getLabelForKey(min);
     bin['id'] = bin['label'];
@@ -377,7 +383,7 @@ describe('os.histo.DateBinMethod', function() {
     bin['highlight'] = false;
     bins.push(bin);
 
-    bin = new os.data.histo.ColorBin('#000');
+    bin = new ColorBin('#000');
     bin['key'] = max;
     bin['label'] = method.getLabelForKey(max);
     bin['id'] = bin['label'];
@@ -396,11 +402,11 @@ describe('os.histo.DateBinMethod', function() {
 
     minDate = new Date(2019, 1, 12); // Feb 12 >> Feb
     maxDate = new Date(2019, 2, 1); // Mar 1 >> Mar
-    min = os.time.floor(minDate, 'month').getTime();
-    max = os.time.floor(maxDate, 'month').getTime();
+    min = time.floor(minDate, 'month').getTime();
+    max = time.floor(maxDate, 'month').getTime();
     bins = [];
 
-    bin = new os.data.histo.ColorBin('#000');
+    bin = new ColorBin('#000');
     bin['key'] = min;
     bin['label'] = method.getLabelForKey(min);
     bin['id'] = bin['label'];
@@ -410,7 +416,7 @@ describe('os.histo.DateBinMethod', function() {
     bin['highlight'] = false;
     bins.push(bin);
 
-    bin = new os.data.histo.ColorBin('#000');
+    bin = new ColorBin('#000');
     bin['key'] = max;
     bin['label'] = method.getLabelForKey(max);
     bin['id'] = bin['label'];

@@ -9,6 +9,7 @@ goog.require('os.MapChange');
 goog.require('os.events.LayerConfigEvent');
 goog.require('os.events.LayerEvent');
 goog.require('os.events.PropertyChangeEvent');
+goog.require('os.filter');
 goog.require('os.filter.IFilterable');
 goog.require('os.implements');
 goog.require('os.layer');

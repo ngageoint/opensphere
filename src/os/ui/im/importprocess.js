@@ -164,7 +164,7 @@ os.ui.im.ImportProcess.prototype.setEvent = function(event) {
 /**
  * Create URL method.  May be overridden by sub-classes.
  *
- * @return {!os.file.IFileMethod}
+ * @return {!os.ui.file.method.UrlMethod}
  * @protected
  */
 os.ui.im.ImportProcess.prototype.createUrlMethod = function() {

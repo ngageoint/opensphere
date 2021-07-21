@@ -12,6 +12,7 @@ goog.require('os.events.PayloadEvent');
 goog.require('os.feature');
 goog.require('os.fn');
 goog.require('os.interaction.Modify');
+goog.require('os.layer.ILayer');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.query.ui.mergeAreasDirective');
 goog.require('os.source.IModifiableSource');
@@ -824,7 +825,7 @@ os.ui.menu.spatial.getLayers = function(opt_areaId) {
     }
   }
   for (var key in set) {
-    var l = /** @type {os.filter.IFilterable} */ (os.MapContainer.getInstance().getLayer(key));
+    var l = /** @type {os.layer.ILayer} */ (os.MapContainer.getInstance().getLayer(key));
     try {
       if (l) {
         if (opt_areaId !== undefined) {

@@ -1,5 +1,7 @@
-goog.provide('os.filter.ISpatialFormatter');
+goog.module('os.filter.ISpatialFormatter');
+goog.module.declareLegacyNamespace();
 
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
@@ -7,27 +9,26 @@ goog.provide('os.filter.ISpatialFormatter');
  *
  * @interface
  */
-os.filter.ISpatialFormatter = function() {};
+class ISpatialFormatter {
+  /**
+   * Formats a spatial region.
+   * @param {Feature} feature
+   * @return {string}
+   */
+  format(feature) {}
 
+  /**
+   * If the formatter supports multiple spatial regions.
+   * @return {boolean}
+   */
+  supportsMultiple() {}
 
-/**
- * Formats a spatial region.
- * @param {ol.Feature} feature
- * @return {string}
- */
-os.filter.ISpatialFormatter.prototype.format;
+  /**
+   * Wraps a string comprised of multiple formatted values.
+   * @param {string} value
+   * @return {string}
+   */
+  wrapMultiple(value) {}
+}
 
-
-/**
- * If the formatter supports multiple spatial regions.
- * @return {boolean}
- */
-os.filter.ISpatialFormatter.prototype.supportsMultiple;
-
-
-/**
- * Wraps a string comprised of multiple formatted values.
- * @param {string} value
- * @return {string}
- */
-os.filter.ISpatialFormatter.prototype.wrapMultiple;
+exports = ISpatialFormatter;

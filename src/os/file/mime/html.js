@@ -1,35 +1,40 @@
-goog.provide('os.file.mime.html');
+goog.module('os.file.mime.html');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Promise');
-goog.require('os.file.mime');
-goog.require('os.file.mime.text');
+const Promise = goog.require('goog.Promise');
+const mime = goog.require('os.file.mime');
+const text = goog.require('os.file.mime.text');
+
+const OSFile = goog.requireType('os.file.File');
 
 
 /**
  * @type {string}
- * @const
  */
-os.file.mime.html.TYPE = 'text/html';
-
+const TYPE = 'text/html';
 
 /**
  * @param {ArrayBuffer} buffer
- * @param {os.file.File} file
+ * @param {OSFile} file
  * @param {*=} opt_context
- * @return {!goog.Promise<*|undefined>}
+ * @return {!Promise<*|undefined>}
  */
-os.file.mime.html.detectHtml = function(buffer, file, opt_context) {
+const detectHtml = function(buffer, file, opt_context) {
   var retVal;
 
   if ((file && file.getFileName() && /\.x?html?$/i.test(file.getFileName())) ||
-      (file && file.getContentType() === os.file.mime.html.TYPE) ||
+      (file && file.getContentType() === TYPE) ||
       (opt_context && typeof opt_context === 'string' && /^<(\!doctype )?html( |>)/i.test(opt_context.trim()))) {
     retVal = opt_context;
   }
 
-  return /** @type {!goog.Promise<*|undefined>} */ (goog.Promise.resolve(retVal));
+  return /** @type {!Promise<*|undefined>} */ (Promise.resolve(retVal));
 };
 
-
 // as much as we'd like HTML to be a child of XML, it isn't
-os.file.mime.register(os.file.mime.html.TYPE, os.file.mime.html.detectHtml, -10, os.file.mime.text.TYPE);
+mime.register(TYPE, detectHtml, -10, text.TYPE);
+
+exports = {
+  TYPE,
+  detectHtml
+};

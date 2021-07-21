@@ -1,5 +1,6 @@
 goog.provide('os.ui.filter.im.FilterImporter');
 
+goog.require('os.filter.FilterEntry');
 goog.require('os.im.Importer');
 goog.require('os.ui');
 
@@ -199,7 +200,7 @@ os.ui.filter.im.FilterImporter.prototype.processData = function() {
  * @protected
  */
 os.ui.filter.im.FilterImporter.prototype.getFilterTooltip = function(entry) {
-  return os.ui.filter.toFilterString(entry.getFilterNode(), 1000);
+  return os.ui.filter.toFilterString(/** @type {os.filter.FilterEntry} */ (entry).getFilterNode(), 1000);
 };
 
 

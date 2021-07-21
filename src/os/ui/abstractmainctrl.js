@@ -252,7 +252,7 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
   os.net.ExtDomainHandler.MIXED_CONTENT_ENABLED = /** @type {boolean} */ (os.settings.get('mixedContent', false));
 
   // set if file:// URL's should be supported
-  os.file.FILE_URL_ENABLED = /** @type {boolean} */ (os.settings.get('fileUrls', false));
+  os.file.setFileUrlEnabled(/** @type {boolean} */ (os.settings.get('fileUrls', false)));
 
   // set up cross origin config
   os.net.loadCrossOriginCache();

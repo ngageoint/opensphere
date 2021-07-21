@@ -1,7 +1,8 @@
 goog.require('os.filter.FilterEntry');
 
-
 describe('os.filter.FilterEntry', function() {
+  const FilterEntry = goog.module.get('os.filter.FilterEntry');
+
   var filterXml = '<And xmlns="http://www.opengis.net/ogc" namehint="Test Keep Filter Name">' +
       '<PropertyIsLike escape="\\" singleChar="." wildCard="*">' +
       '<PropertyName>PROPERTY</PropertyName>' +
@@ -10,7 +11,7 @@ describe('os.filter.FilterEntry', function() {
       '</And>';
 
   it('should initialize correctly', function() {
-    var fe = new os.filter.FilterEntry();
+    var fe = new FilterEntry();
 
     expect(typeof fe.getId() === 'string').toBe(true);
     expect(fe.getMatch()).toBe(true);
@@ -19,7 +20,7 @@ describe('os.filter.FilterEntry', function() {
   });
 
   it('should take an XML filter entry and maintain it as a Node', function() {
-    var fe = new os.filter.FilterEntry();
+    var fe = new FilterEntry();
     expect(fe.getFilterNode()).toBe(null);
     fe.setFilter(filterXml);
 
@@ -45,7 +46,7 @@ describe('os.filter.FilterEntry', function() {
   });
 
   it('should clone/persist/restore properly', function() {
-    var fe = new os.filter.FilterEntry();
+    var fe = new FilterEntry();
     var id = fe.getId();
     fe.setTitle('Clone Me');
     fe.setDescription('Description Boys');
@@ -114,25 +115,25 @@ describe('os.filter.FilterEntry', function() {
       '</And>';
 
   it('should match simple filters properly against a set of columns', function() {
-    var fe = new os.filter.FilterEntry();
+    var fe = new FilterEntry();
     fe.setFilter(altitudeXml);
     expect(fe.matches(featureTypeColumns)).toBe(true);
   });
 
   it('should NOT match simple filters when the column type does not match', function() {
-    var fe = new os.filter.FilterEntry();
+    var fe = new FilterEntry();
     fe.setFilter(badAltitudeXml);
     expect(fe.matches(featureTypeColumns)).toBe(false);
   });
 
   it('should NOT match simple filters when the column name is not in the columns', function() {
-    var fe = new os.filter.FilterEntry();
+    var fe = new FilterEntry();
     fe.setFilter(notInFeatureTypeXml);
     expect(fe.matches(featureTypeColumns)).toBe(false);
   });
 
   it('should not explode when it sees no Literal (i.e. for a PropertyIsNull filter)', function() {
-    var fe = new os.filter.FilterEntry();
+    var fe = new FilterEntry();
     fe.setFilter(isNullXml);
     expect(fe.matches(featureTypeColumns)).toBe(true);
   });
@@ -164,7 +165,7 @@ describe('os.filter.FilterEntry', function() {
       '</And>';
 
   it('should match filters properly against an advanced filter', function() {
-    var fe = new os.filter.FilterEntry();
+    var fe = new FilterEntry();
     fe.setFilter(advancedXml);
     expect(fe.matches(featureTypeColumns)).toBe(true);
   });
@@ -196,7 +197,7 @@ describe('os.filter.FilterEntry', function() {
       '</And>';
 
   it('should NOT match advanced filters when the column type does not match', function() {
-    var fe = new os.filter.FilterEntry();
+    var fe = new FilterEntry();
     fe.setFilter(badAdvancedXml);
     expect(fe.matches(featureTypeColumns)).toBe(false);
   });
@@ -212,7 +213,7 @@ describe('os.filter.FilterEntry', function() {
       '</And>';
 
   it('should NOT match a geometry field', function() {
-    var fe = new os.filter.FilterEntry();
+    var fe = new FilterEntry();
     fe.setFilter(geometryXml);
     expect(fe.matches(featureTypeColumns)).toBe(false);
   });

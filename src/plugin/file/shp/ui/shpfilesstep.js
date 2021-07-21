@@ -216,7 +216,7 @@ class Controller {
       this['loading'] = true;
 
       const file = inputEl.files[0];
-      if (file.path && osFile.FILE_URL_ENABLED) {
+      if (file.path && osFile.isFileUrlEnabled()) {
         this[type + 'Name'] = osFile.getFileUrl(file.path);
         this.loadUrl(type);
       } else {

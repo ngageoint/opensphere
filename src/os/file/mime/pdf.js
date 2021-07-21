@@ -1,42 +1,46 @@
-goog.provide('os.file.mime.pdf');
+goog.module('os.file.mime.pdf');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Promise');
-goog.require('os.file.mime');
+const Promise = goog.require('goog.Promise');
+const mime = goog.require('os.file.mime');
 
 
 /**
- * @const
  * @type {number}
  */
-os.file.mime.pdf.MAGIC_BYTES_BIG_ENDIAN = 0x25504446;
+const MAGIC_BYTES_BIG_ENDIAN = 0x25504446;
 
 /**
- * @const
  * @type {string}
  */
-os.file.mime.pdf.TYPE = 'application/pdf';
-
+const TYPE = 'application/pdf';
 
 /**
  * @param {ArrayBuffer} buffer
- * @return {!goog.Promise<boolean>}
+ * @return {!Promise<boolean>}
  */
-os.file.mime.pdf.isPDF = function(buffer) {
+const isPDF = function(buffer) {
   if (buffer && buffer.byteLength > 3) {
     // PDF magic number can occur anywhere in the first 1024 bytes
     var dv = new DataView(buffer);
     for (var i = 0, n = Math.min(1024, dv.byteLength) - 4; i < n; i++) {
-      if (dv.getUint32(i) === os.file.mime.pdf.MAGIC_BYTES_BIG_ENDIAN) {
-        return goog.Promise.resolve(true);
+      if (dv.getUint32(i) === MAGIC_BYTES_BIG_ENDIAN) {
+        return Promise.resolve(true);
       }
     }
   }
 
-  return goog.Promise.resolve(false);
+  return Promise.resolve(false);
 };
 
 
 // We register PDF, not because we do anything with it, but because we do
 // not want to accidentally detect PDF documents as text since they tend
 // to contain a large amount of text content.
-os.file.mime.register(os.file.mime.pdf.TYPE, os.file.mime.pdf.isPDF);
+mime.register(TYPE, isPDF);
+
+exports = {
+  MAGIC_BYTES_BIG_ENDIAN,
+  TYPE,
+  isPDF
+};

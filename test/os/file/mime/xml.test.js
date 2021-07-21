@@ -1,14 +1,23 @@
 goog.require('os.file.File');
+goog.require('os.file.mime');
 goog.require('os.file.mime.mock');
+goog.require('os.file.mime.text');
 goog.require('os.file.mime.xml');
 
 describe('os.file.mime.xml', function() {
+  const OSFile = goog.module.get('os.file.File');
+  const mime = goog.module.get('os.file.mime');
+  const text = goog.module.get('os.file.mime.text');
+  const xml = goog.module.get('os.file.mime.xml');
+
+  const mockMime = goog.module.get('os.file.mime.mock');
+
   it('should not detect files that are not xml files', function() {
-    os.file.mime.mock.testFiles([
+    mockMime.testFiles([
       '/base/test/plugin/file/geojson/10k.json',
       '/base/test/resources/bin/rand.bin',
       '/base/test/resources/xml/ERROR_text-before-root.xml'],
-    os.file.mime.mock.testNo(os.file.mime.xml.TYPE));
+    mockMime.testNo(xml.TYPE));
   });
 
   it('should detect files that are xml files', function() {
@@ -27,13 +36,13 @@ describe('os.file.mime.xml', function() {
       }
     };
 
-    os.file.mime.mock.testFiles(Object.keys(expected),
+    mockMime.testFiles(Object.keys(expected),
         function(buffer, filename) {
           var eVal = expected[filename];
           var result = null;
           runs(function() {
-            os.file.mime.text.detectText(buffer).then(function(context) {
-              return os.file.mime.xml.isXML(buffer, undefined, context);
+            text.detectText(buffer).then(function(context) {
+              return xml.isXML(buffer, undefined, context);
             }).then(function(val) {
               result = val;
             });
@@ -57,16 +66,16 @@ describe('os.file.mime.xml', function() {
     var buffer = new TextEncoder().encode(test).buffer;
 
     // pretend this came from a file
-    var file = new os.file.File();
+    var file = new OSFile();
     file.setFileName('something.xml');
     file.setUrl(file.getFileName());
 
-    var testFunc = os.file.mime.mock.testYes(os.file.mime.xml.TYPE);
+    var testFunc = mockMime.testYes(xml.TYPE);
     testFunc(buffer, file);
   });
 
   it('should register itself with mime detection', function() {
-    var chain = os.file.mime.getTypeChain('text/xml').join(', ');
+    var chain = mime.getTypeChain('text/xml').join(', ');
     expect(chain).toBe('application/octet-stream, text/plain, text/xml');
   });
 });
