@@ -1,6 +1,8 @@
 goog.provide('os.style.CircleReader');
 
+goog.require('goog.string');
 goog.require('ol.style.Circle');
+goog.require('os.color');
 goog.require('os.style');
 goog.require('os.style.AbstractReader');
 
@@ -25,6 +27,7 @@ goog.inherits(os.style.CircleReader, os.style.AbstractReader);
 os.style.CircleReader.prototype.getOrCreateStyle = function(config) {
   var fill;
   var stroke;
+  var opacity;
 
   var radius = config['radius'] !== undefined ? /** @type {number} */ (config['radius']) :
     os.style.DEFAULT_FEATURE_SIZE;
@@ -42,14 +45,32 @@ os.style.CircleReader.prototype.getOrCreateStyle = function(config) {
     hash = 31 * hash + stroke['id'] >>> 0;
   }
 
+  var color = /** @type {string} */ (config['color']);
+  if (color) {
+    hash = 31 + hash + goog.string.hashCode(color) >>> 0;
+
+    var rgbArray = os.color.toRgbArray(color);
+    if (rgbArray) {
+      opacity = rgbArray[3];
+    }
+  }
+
   if (!this.cache[hash]) {
-    this.cache[hash] = new ol.style.Circle({
+    var style = new ol.style.Circle({
       radius: radius,
       fill: fill,
       stroke: stroke
     });
 
-    this.cache[hash]['id'] = hash;
+    if (opacity != null) {
+      // set the opacity if it's defined, this is used by the WebGL synchronizers and is not passed by the options
+      // up to the parent style class for some reason (???)
+      style.setOpacity(opacity);
+    }
+
+    this.cache[hash] = style;
+
+    style['id'] = hash;
   }
 
   return /** @type {!ol.style.Circle} */ (this.cache[hash]);
