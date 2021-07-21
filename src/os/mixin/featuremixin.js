@@ -12,7 +12,6 @@ goog.require('os.registerClass');
 /**
  * Enable use of os.instanceOf to detect an ol.Feature.
  * @type {string}
- * @const
  */
 ol.Feature.NAME = 'ol.Feature';
 os.registerClass(ol.Feature.NAME, ol.Feature);

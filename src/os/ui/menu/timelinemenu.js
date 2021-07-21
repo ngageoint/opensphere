@@ -4,6 +4,7 @@ goog.require('os.action.EventType');
 goog.require('os.metrics.keys');
 goog.require('os.time.TimeRange');
 goog.require('os.time.TimelineActionEventType');
+goog.require('os.ui.feature.launchMultiFeatureInfo');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');

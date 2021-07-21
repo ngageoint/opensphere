@@ -1,39 +1,37 @@
-goog.provide('os.ui.file.method.UrlNoFailMethod');
-goog.require('goog.events');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('os.file.File');
-goog.require('os.file.IFileMethod');
-goog.require('os.net.Request');
-goog.require('os.ui.file.method.UrlMethod');
+goog.module('os.ui.file.method.UrlNoFailMethod');
+goog.module.declareLegacyNamespace();
+
+const log = goog.require('goog.log');
+const EventType = goog.require('os.events.EventType');
+const OSFile = goog.require('os.file.File');
+const UrlMethod = goog.require('os.ui.file.method.UrlMethod');
+
+const GoogEvent = goog.requireType('goog.events.Event');
+const Logger = goog.requireType('goog.log.Logger');
+const Request = goog.requireType('os.net.Request');
 
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {Logger}
  */
-os.ui.file.method.UrlNoFailMethod.LOGGER_ = goog.log.getLogger('os.ui.file.method.UrlNoFailMethod');
-
+const logger = log.getLogger('os.ui.file.method.UrlNoFailMethod');
 
 /**
  * @type {string}
- * @const
  */
-os.ui.file.method.UrlNoFailMethod.TYPE = 'unkown';
-
+const TYPE = 'unkown';
 
 /**
  * Handle the file request failure.  Create file with name and URL but no contents.
  *
  * @override
- * @param {goog.events.Event} event
+ * @param {GoogEvent} event
  * @protected
  * @suppress {duplicate}
  */
-os.ui.file.method.UrlMethod.prototype.onError = function(event) {
-  var request = /** @type {os.net.Request} */ (event.target);
+UrlMethod.prototype.onError = function(event) {
+  var request = /** @type {Request} */ (event.target);
   request.removeAllListeners();
 
   var url = request.getUri().toString();
@@ -42,12 +40,16 @@ os.ui.file.method.UrlMethod.prototype.onError = function(event) {
   var fileName = decodeURI(url.substring(i == -1 ? 0 : i, q == -1 ? url.length : q));
 
   var msg = 'Unable to read contents from URL "' + url + '"!  Creating file with name and URL, but no contents';
-  goog.log.info(os.ui.file.method.UrlNoFailMethod.LOGGER_, msg);
+  log.info(logger, msg);
 
-  var file = new os.file.File();
+  var file = new OSFile();
   file.setFileName(fileName);
   file.setUrl(url);
-  file.setType(os.ui.file.method.UrlNoFailMethod.TYPE);
+  file.setType(TYPE);
   this.setFile(file);
-  this.dispatchEvent(os.events.EventType.COMPLETE);
+  this.dispatchEvent(EventType.COMPLETE);
+};
+
+exports = {
+  TYPE
 };

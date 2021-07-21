@@ -2,7 +2,7 @@ goog.provide('os.ui.filter.op.time.NewerOlderThanCtrl');
 goog.provide('os.ui.filter.op.time.newerOlderThanDirective');
 
 goog.require('os.ui.Module');
-goog.require('os.ui.datetime.durationDirective');
+goog.require('os.ui.datetime.DurationUI');
 goog.require('os.ui.filter.colTypeCheckValidation');
 goog.require('os.ui.popover.popoverDirective');
 

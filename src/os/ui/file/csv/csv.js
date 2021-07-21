@@ -1,10 +1,11 @@
-goog.provide('os.ui.file.csv');
+goog.module('os.ui.file.csv');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * Configure Papa Parse for use with OpenSphere.
  */
-os.ui.file.csv.configurePapaParse = function() {
+const configurePapaParse = function() {
   // Papa Parse locates the script path by looking up the last script element on the page. this is generally a fine
   // assumption, unless a browser extension injects scripts at the end of the page. this locates the script by a more
   // specific selector that should be less prone to false positives.
@@ -22,17 +23,20 @@ os.ui.file.csv.configurePapaParse = function() {
   }
 };
 
-
 /**
  * Default configuration options for the CSV parser.
  * @type {Object<string, *>}
- * @const
  */
-os.ui.file.csv.DEFAULT_CONFIG = {
+const DEFAULT_CONFIG = {
   'color': '#ffffff',
   'commentChar': '#',
   'dataRow': 2,
   'delimiter': ',',
   'headerRow': 1,
   'useHeader': true
+};
+
+exports = {
+  configurePapaParse,
+  DEFAULT_CONFIG
 };

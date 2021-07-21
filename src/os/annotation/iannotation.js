@@ -1,6 +1,5 @@
-goog.provide('os.annotation.IAnnotation');
-
-
+goog.module('os.annotation.IAnnotation');
+goog.module.declareLegacyNamespace();
 
 /**
  * Interface representing an annotation.
@@ -8,44 +7,40 @@ goog.provide('os.annotation.IAnnotation');
  * @interface
  * @template T
  */
-os.annotation.IAnnotation = function() {};
+class IAnnotation {
+  /**
+   * Get the annotation options.
+   * @return {osx.annotation.Options|undefined} The annotation options or undefined.
+   */
+  getOptions() {}
 
+  /**
+   * Set the annotation options.
+   * @param {osx.annotation.Options|undefined} options The annotation options.
+   */
+  setOptions(options) {}
 
-/**
- * Get the annotation options.
- * @return {osx.annotation.Options|undefined} The annotation options or undefined.
- */
-os.annotation.IAnnotation.prototype.getOptions;
+  /**
+   * Creates the UI for the annotation.
+   */
+  createUI() {}
 
+  /**
+   * Dispose the annotation UI.
+   */
+  disposeUI() {}
 
-/**
- * Set the annotation options.
- * @param {osx.annotation.Options|undefined} options The annotation options.
- */
-os.annotation.IAnnotation.prototype.setOptions;
+  /**
+   * Get if the annotation is visible.
+   * @return {boolean} If the annotation is visible.
+   */
+  getVisible() {}
 
+  /**
+   * Set if the annotation is visible.
+   * @param {boolean} value If the annotation is visible.
+   */
+  setVisible(value) {}
+}
 
-/**
- * Creates the UI for the annotation.
- */
-os.annotation.IAnnotation.prototype.createUI;
-
-
-/**
- * Dispose the annotation UI.
- */
-os.annotation.IAnnotation.prototype.disposeUI;
-
-
-/**
- * Get if the annotation is visible.
- * @return {boolean} If the annotation is visible.
- */
-os.annotation.IAnnotation.prototype.getVisible;
-
-
-/**
- * Set if the annotation is visible.
- * @param {boolean} value If the annotation is visible.
- */
-os.annotation.IAnnotation.prototype.setVisible;
+exports = IAnnotation;

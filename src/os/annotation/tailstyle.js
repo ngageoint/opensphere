@@ -1,10 +1,10 @@
-goog.provide('os.annotation.TailStyle');
-
+goog.module('os.annotation.TailStyle');
+goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}
  */
-os.annotation.TailStyle = {
+exports = {
   DEFAULT: 'default',
   NOTAIL: 'none',
   LINETAIL: 'line'

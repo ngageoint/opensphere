@@ -5,7 +5,6 @@ goog.require('os.config.Settings');
 goog.require('os.metrics.keys');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
-goog.require('os.ui.ex.ExportDirective');
 goog.require('os.ui.menu.windows');
 goog.require('os.ui.windowSelector');
 

@@ -1,19 +1,13 @@
-goog.provide('os.ui.datetime.AnyDateCtrl');
-goog.provide('os.ui.datetime.AnyDateHelp');
-goog.provide('os.ui.datetime.AnyDateType');
-goog.provide('os.ui.datetime.anyDateDirective');
-goog.require('os.ui.Module');
-goog.require('os.ui.datetime.dateTimeDirective');
+goog.module('os.ui.datetime.AnyDateUI');
+goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.datetime.DateTimeUI');
 
-/**
- * @typedef {{
- *   name: string,
- *   content: string,
- *   pos: string
- * }}
- */
-os.ui.datetime.AnyDateHelp;
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const AnyDateType = goog.require('os.ui.datetime.AnyDateType');
+
+const AnyDateHelp = goog.requireType('os.ui.datetime.AnyDateHelp');
 
 
 /**
@@ -23,233 +17,230 @@ os.ui.datetime.AnyDateHelp;
  * Scope vars:
  *  - initialstart: The initial start date or time instant to use.
  *  - initialend: The initial end date to use.
- *  - initialtype: The initial time type to use. Should be one of {@link os.ui.datetime.AnyDateType} values.
+ *  - initialtype: The initial time type to use. Should be one of {@link AnyDateType} values.
  *  - disabled: A boolean indicating an ancestor is performing an action that should disable the form.
  *
  * @return {angular.Directive}
  */
-os.ui.datetime.anyDateDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'initialStart': '=initialstart',
-      'initialEnd': '=initialend',
-      'initialType': '=initialtype',
-      'disabled': '=?',
-      'help': '=?'
-    },
-    templateUrl: os.ROOT + 'views/datetime/anydate.html',
-    controller: os.ui.datetime.AnyDateCtrl,
-    controllerAs: 'anydate'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'initialStart': '=initialstart',
+    'initialEnd': '=initialend',
+    'initialType': '=initialtype',
+    'disabled': '=?',
+    'help': '=?'
+  },
+  templateUrl: ROOT + 'views/datetime/anydate.html',
+  controller: Controller,
+  controllerAs: 'anydate'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'anydate';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('anydate', [os.ui.datetime.anyDateDirective]);
-
-
-/**
- * @enum {string}
- */
-os.ui.datetime.AnyDateType = {
-  NOTIME: 'notime',
-  INSTANT: 'instant',
-  RANGE: 'range'
-};
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the anydate directive.
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$compile} $compile
- * @param {!angular.$timeout} $timeout
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.datetime.AnyDateCtrl = function($scope, $element, $compile, $timeout) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$compile} $compile
+   * @param {!angular.$timeout} $timeout
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope, $element, $compile, $timeout) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  /**
-   * @type {string}
-   */
-  this['dateType'] = $scope['initialType'] || os.ui.datetime.AnyDateType.INSTANT;
+    /**
+     * @type {string}
+     */
+    this['dateType'] = $scope['initialType'] || AnyDateType.INSTANT;
 
-  /**
-   * @type {boolean}
-   */
-  this['timesValid'] = true;
+    /**
+     * @type {boolean}
+     */
+    this['timesValid'] = true;
 
-  /**
-   * @type {?string}
-   */
-  this['startDate'] = $scope['initialStart'] || null;
+    /**
+     * @type {?string}
+     */
+    this['startDate'] = $scope['initialStart'] || null;
 
-  /**
-   * @type {?string}
-   */
-  this['endDate'] = $scope['initialEnd'] || null;
+    /**
+     * @type {?string}
+     */
+    this['endDate'] = $scope['initialEnd'] || null;
 
-  /**
-   * @type {boolean}
-   */
-  this['startUnknown'] = this['dateType'] == os.ui.datetime.AnyDateType.RANGE && !this['startDate'];
+    /**
+     * @type {boolean}
+     */
+    this['startUnknown'] = this['dateType'] == AnyDateType.RANGE && !this['startDate'];
 
-  /**
-   * @type {boolean}
-   */
-  this['endUnknown'] = this['dateType'] == os.ui.datetime.AnyDateType.RANGE && !this['endDate'];
+    /**
+     * @type {boolean}
+     */
+    this['endUnknown'] = this['dateType'] == AnyDateType.RANGE && !this['endDate'];
 
-  /**
-   * @type {os.ui.datetime.AnyDateHelp|undefined}
-   */
-  this['help'] = this.scope_['help'];
+    /**
+     * @type {AnyDateHelp|undefined}
+     */
+    this['help'] = this.scope_['help'];
 
-  $scope.$watch('anydate.dateType', function(newVal, oldVal) {
-    if (newVal != oldVal) {
+    $scope.$watch('anydate.dateType', function(newVal, oldVal) {
+      if (newVal != oldVal) {
+        this['startUnknown'] = false;
+        this['endUnknown'] = false;
+
+        this.validateTimes_();
+        this.fireDateChange_();
+      }
+    }.bind(this));
+
+    $scope.$watch('anydate.startUnknown', function(newVal, oldVal) {
+      if (newVal != oldVal) {
+        if (newVal) {
+          this['endUnknown'] = false;
+        }
+
+        this.validateTimes_();
+        this.fireDateChange_();
+      }
+    }.bind(this));
+
+    $scope.$watch('anydate.endUnknown', function(newVal, oldVal) {
+      if (newVal != oldVal) {
+        if (newVal) {
+          this['startUnknown'] = false;
+        }
+
+        this.validateTimes_();
+        this.fireDateChange_();
+      }
+    }.bind(this));
+
+    $scope.$watch('anydate.startDate', function(newVal, oldVal) {
+      if (newVal != oldVal) {
+        // If the form doesnt have the input, dont set data on it. It gets initialized correctly when displayed
+        if ($scope['anyDateForm'] && $scope['anyDateForm']['startDate']) {
+          var modelCtrl = /** @type {angular.NgModelController} */ ($scope['anyDateForm']['startDate']);
+          modelCtrl.$setViewValue(newVal);
+          modelCtrl.$setDirty();
+        }
+
+        this.validateTimes_();
+        this.fireDateChange_();
+      }
+    }.bind(this));
+
+    $scope.$watch('anydate.endDate', function(newVal, oldVal) {
+      if (newVal != oldVal) {
+        // If the form doesnt have the input, dont set data on it. It gets initialized correctly when displayed
+        if ($scope['anyDateForm'] && $scope['anyDateForm']['endDate']) {
+          var modelCtrl = /** @type {angular.NgModelController} */ ($scope['anyDateForm']['endDate']);
+          modelCtrl.$setViewValue(newVal);
+          modelCtrl.$setDirty();
+        }
+
+        this.validateTimes_();
+        this.fireDateChange_();
+      }
+    }.bind(this));
+
+    $scope.$on('resetForm', function() {
+      this['dateType'] = AnyDateType.NOTIME;
+      this['startDate'] = null;
+      this['endDate'] = null;
       this['startUnknown'] = false;
       this['endUnknown'] = false;
+    }.bind(this));
 
-      this.validateTimes_();
-      this.fireDateChange_();
+    this.validateTimes_();
+    $scope.$on('$destroy', this.destroy_.bind(this));
+  }
+
+  /**
+   * Clean up references/listeners.
+   *
+   * @private
+   */
+  destroy_() {
+    this.scope_ = null;
+  }
+
+  /**
+   * Fire an event notifying the parent of a date change.
+   *
+   * @private
+   */
+  fireDateChange_() {
+    switch (this['dateType']) {
+      case AnyDateType.NOTIME:
+        this.scope_.$emit(Controller.CHANGE, null, null, null);
+        break;
+      case AnyDateType.INSTANT:
+        this.scope_.$emit(Controller.CHANGE, this['startDate'], null, null);
+        break;
+      case AnyDateType.RANGE:
+        if (this['startDate'] != null && this['endDate'] == null && !this['startUnknown'] && !this['endUnknown']) {
+          // default the end date to the end of the start datetime
+          var tmpStr = this['startDate'].split('T');
+          tmpStr = tmpStr[0] + 'T23:59:59Z';
+          this['endDate'] = tmpStr;
+        }
+
+        this.scope_.$emit(Controller.CHANGE, null,
+            this['startUnknown'] ? null : this['startDate'],
+            this['endUnknown'] ? null : this['endDate']);
+        break;
+      default:
+        this.scope_.$emit(Controller.CHANGE, null, null, null);
+        break;
     }
-  }.bind(this));
+  }
 
-  $scope.$watch('anydate.startUnknown', function(newVal, oldVal) {
-    if (newVal != oldVal) {
-      if (newVal) {
-        this['endUnknown'] = false;
-      }
-
-      this.validateTimes_();
-      this.fireDateChange_();
+  /**
+   * Make sure the provided times are valid.
+   *
+   * @private
+   */
+  validateTimes_() {
+    if (this['dateType'] == AnyDateType.RANGE && this['startDate'] && this['endDate'] &&
+        !this['startUnknown'] && !this['endUnknown']) {
+      var startDate = new Date(this['startDate']).getTime();
+      var endDate = new Date(this['endDate']).getTime();
+      this['timesValid'] = (endDate > startDate) ? true : undefined;
+    } else {
+      this['timesValid'] = true;
     }
-  }.bind(this));
-
-  $scope.$watch('anydate.endUnknown', function(newVal, oldVal) {
-    if (newVal != oldVal) {
-      if (newVal) {
-        this['startUnknown'] = false;
-      }
-
-      this.validateTimes_();
-      this.fireDateChange_();
-    }
-  }.bind(this));
-
-  $scope.$watch('anydate.startDate', function(newVal, oldVal) {
-    if (newVal != oldVal) {
-      // If the form doesnt have the input, dont set data on it. It gets initialized correctly when displayed
-      if ($scope['anyDateForm'] && $scope['anyDateForm']['startDate']) {
-        var modelCtrl = /** @type {angular.NgModelController} */ ($scope['anyDateForm']['startDate']);
-        modelCtrl.$setViewValue(newVal);
-        modelCtrl.$setDirty();
-      }
-
-      this.validateTimes_();
-      this.fireDateChange_();
-    }
-  }.bind(this));
-
-  $scope.$watch('anydate.endDate', function(newVal, oldVal) {
-    if (newVal != oldVal) {
-      // If the form doesnt have the input, dont set data on it. It gets initialized correctly when displayed
-      if ($scope['anyDateForm'] && $scope['anyDateForm']['endDate']) {
-        var modelCtrl = /** @type {angular.NgModelController} */ ($scope['anyDateForm']['endDate']);
-        modelCtrl.$setViewValue(newVal);
-        modelCtrl.$setDirty();
-      }
-
-      this.validateTimes_();
-      this.fireDateChange_();
-    }
-  }.bind(this));
-
-  $scope.$on('resetForm', function() {
-    this['dateType'] = os.ui.datetime.AnyDateType.NOTIME;
-    this['startDate'] = null;
-    this['endDate'] = null;
-    this['startUnknown'] = false;
-    this['endUnknown'] = false;
-  }.bind(this));
-
-  this.validateTimes_();
-  $scope.$on('$destroy', this.destroy_.bind(this));
-};
-
+  }
+}
 
 /**
  * Change event type.
  * @type {string}
  * @const
  */
-os.ui.datetime.AnyDateCtrl.CHANGE = 'anydate:change';
+Controller.CHANGE = 'anydate:change';
 
-
-/**
- * Clean up references/listeners.
- *
- * @private
- */
-os.ui.datetime.AnyDateCtrl.prototype.destroy_ = function() {
-  this.scope_ = null;
-};
-
-
-/**
- * Fire an event notifying the parent of a date change.
- *
- * @private
- */
-os.ui.datetime.AnyDateCtrl.prototype.fireDateChange_ = function() {
-  switch (this['dateType']) {
-    case os.ui.datetime.AnyDateType.NOTIME:
-      this.scope_.$emit(os.ui.datetime.AnyDateCtrl.CHANGE, null, null, null);
-      break;
-    case os.ui.datetime.AnyDateType.INSTANT:
-      this.scope_.$emit(os.ui.datetime.AnyDateCtrl.CHANGE, this['startDate'], null, null);
-      break;
-    case os.ui.datetime.AnyDateType.RANGE:
-      if (this['startDate'] != null && this['endDate'] == null && !this['startUnknown'] && !this['endUnknown']) {
-        // default the end date to the end of the start datetime
-        var tmpStr = this['startDate'].split('T');
-        tmpStr = tmpStr[0] + 'T23:59:59Z';
-        this['endDate'] = tmpStr;
-      }
-
-      this.scope_.$emit(os.ui.datetime.AnyDateCtrl.CHANGE, null,
-          this['startUnknown'] ? null : this['startDate'],
-          this['endUnknown'] ? null : this['endDate']);
-      break;
-    default:
-      this.scope_.$emit(os.ui.datetime.AnyDateCtrl.CHANGE, null, null, null);
-      break;
-  }
-};
-
-
-/**
- * Make sure the provided times are valid.
- *
- * @private
- */
-os.ui.datetime.AnyDateCtrl.prototype.validateTimes_ = function() {
-  if (this['dateType'] == os.ui.datetime.AnyDateType.RANGE && this['startDate'] && this['endDate'] &&
-      !this['startUnknown'] && !this['endUnknown']) {
-    var startDate = new Date(this['startDate']).getTime();
-    var endDate = new Date(this['endDate']).getTime();
-    this['timesValid'] = (endDate > startDate) ? true : undefined;
-  } else {
-    this['timesValid'] = true;
-  }
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

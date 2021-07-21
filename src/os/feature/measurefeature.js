@@ -1,47 +1,49 @@
-goog.provide('os.feature.measure');
+goog.module('os.feature.measure');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.bearing');
-goog.require('os.feature');
-goog.require('os.geo');
-goog.require('os.style');
-goog.require('os.unit.UnitManager');
+const LineString = goog.require('ol.geom.LineString');
+const {modifyBearing, getFormattedBearing} = goog.require('os.bearing');
+const {getLayer} = goog.require('os.feature');
+const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
+const {getMapContainer} = goog.require('os.map.instance');
+const {notifyStyleChange} = goog.require('os.style');
+const TimelineController = goog.require('os.time.TimelineController');
+const UnitManager = goog.require('os.unit.UnitManager');
 
 
 /**
  * Updates all the current measure features
  */
-os.feature.measure.updateAll = function() {
-  os.MapContainer.getInstance().getFeatures().filter(function(item) {
+const updateAll = function() {
+  getMapContainer().getFeatures().filter(function(item) {
     var title = item.get('title');
     return title && title.indexOf('Measure') > -1;
-  }).forEach(os.feature.measure.update);
+  }).forEach(update);
 };
-
 
 /**
  * The decimal precision (number of digits after the decimal place) to use in formatting.
  * @type {number}
  */
-os.feature.measure.numDecimalPlaces = 3;
-
+const numDecimalPlaces = 3;
 
 /**
  * @param {ol.Feature} feature
  * @suppress {accessControls}
  */
-os.feature.measure.update = function(feature) {
+const update = function(feature) {
   if (!feature) {
     return;
   }
 
-  var geom = /** @type {ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD)) || feature.getGeometry();
+  var geom = /** @type {ol.geom.Geometry} */ (feature.get(ORIGINAL_GEOM_FIELD)) || feature.getGeometry();
 
-  if (geom && geom instanceof ol.geom.LineString) {
+  if (geom && geom instanceof LineString) {
     geom.toLonLat();
 
-    var um = os.unit.UnitManager.getInstance();
+    var um = UnitManager.getInstance();
     var coords = geom.getCoordinates();
-    var date = new Date(os.time.TimelineController.getInstance().getCurrent());
+    var date = new Date(TimelineController.getInstance().getCurrent());
 
     if (coords) {
       var total = 0;
@@ -52,9 +54,9 @@ os.feature.measure.update = function(feature) {
         total += d;
 
         if (coord) {
-          var bearing = os.bearing.modifyBearing(result.initialBearing, coord, date);
-          var formattedBearing = os.bearing.getFormattedBearing(bearing);
-          var label = um.formatToBestFit('distance', d, 'm', um.getBaseSystem(), os.feature.measure.numDecimalPlaces) +
+          var bearing = modifyBearing(result.initialBearing, coord, date);
+          var formattedBearing = getFormattedBearing(bearing);
+          var label = um.formatToBestFit('distance', d, 'm', um.getBaseSystem(), numDecimalPlaces) +
               ' Bearing: ' + formattedBearing;
         }
         // get the style for the beginning of the segment
@@ -76,8 +78,7 @@ os.feature.measure.update = function(feature) {
           }
 
           if (i + 1 === n && n < styleArrs[j].length) {
-            var totalLabel = um.formatToBestFit('distance', total, 'm', um.getBaseSystem(),
-                os.feature.measure.numDecimalPlaces);
+            var totalLabel = um.formatToBestFit('distance', total, 'm', um.getBaseSystem(), numDecimalPlaces);
             style = styleArrs[j][n];
             if (style) {
               text = style.getText();
@@ -91,10 +92,16 @@ os.feature.measure.update = function(feature) {
 
       geom.osTransform();
 
-      var layer = os.feature.getLayer(feature);
+      var layer = getLayer(feature);
       if (layer) {
-        os.style.notifyStyleChange(layer);
+        notifyStyleChange(layer);
       }
     }
   }
+};
+
+exports = {
+  updateAll,
+  numDecimalPlaces,
+  update
 };

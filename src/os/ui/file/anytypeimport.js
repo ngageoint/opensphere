@@ -1,9 +1,13 @@
-goog.provide('os.ui.file.AnyTypeImportCtrl');
-goog.provide('os.ui.file.anyTypeImportDirective');
+goog.module('os.ui.file.AnyTypeImport');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.file.mime.zip');
-goog.require('os.ui.im.ImportManager');
-goog.require('os.ui.window');
+const {ROOT} = goog.require('os');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const {isZip} = goog.require('os.file.mime.zip');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const osWindow = goog.require('os.ui.window');
 
 
 /**
@@ -11,84 +15,93 @@ goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-os.ui.file.anyTypeImportDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/file/anytypeimport.html',
-    controller: os.ui.file.AnyTypeImportCtrl,
-    controllerAs: 'anytype'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  templateUrl: ROOT + 'views/file/anytypeimport.html',
+  controller: Controller,
+  controllerAs: 'anytype'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'anytypeimport';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('anytypeimport', [os.ui.file.anyTypeImportDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the KML import dialog
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.file.AnyTypeImportCtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  /**
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.element_ = $element;
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
 
-  /**
-   * @type {?os.ui.im.IImportUI}
-   * @private
-   */
-  this['import'] = null;
+    /**
+     * @type {?os.ui.im.IImportUI}
+     * @private
+     */
+    this['import'] = null;
 
-  this.scope_['isZip'] = this.scope_['file'] ? os.file.mime.zip.isZip(this.scope_['file'].getContent()) : false;
+    this.scope_['isZip'] = this.scope_['file'] ? isZip(this.scope_['file'].getContent()) : false;
 
-  this.scope_.$emit(os.ui.WindowEventType.READY);
-  this.scope_.$on('destroy', function() {
-    this.scope_ = null;
-    this.element_ = null;
-  }.bind(this));
-};
-
-
-/**
- * Open the correct importer
- *
- * @export
- */
-os.ui.file.AnyTypeImportCtrl.prototype.accept = function() {
-  try {
-    this['import'].launchUI(/** @type {os.file.File} */ (this.scope_['file']), this.scope_['config']);
-  } catch (e) {
-    os.alert.AlertManager.getInstance().sendAlert(
-        'Error loading file: <b>' + this.scope_['file'].getFileName() + '</b>', os.alert.AlertEventSeverity.ERROR);
+    this.scope_.$emit(WindowEventType.READY);
+    this.scope_.$on('destroy', function() {
+      this.scope_ = null;
+      this.element_ = null;
+    }.bind(this));
   }
 
-  this.close();
-};
+  /**
+   * Open the correct importer
+   *
+   * @export
+   */
+  accept() {
+    try {
+      this['import'].launchUI(/** @type {os.file.File} */ (this.scope_['file']), this.scope_['config']);
+    } catch (e) {
+      AlertManager.getInstance().sendAlert(
+          'Error loading file: <b>' + this.scope_['file'].getFileName() + '</b>', AlertEventSeverity.ERROR);
+    }
 
+    this.close();
+  }
 
-/**
- * Open the correct importer
- *
- * @export
- */
-os.ui.file.AnyTypeImportCtrl.prototype.close = function() {
-  os.ui.window.close(this.element_);
+  /**
+   * Open the correct importer
+   *
+   * @export
+   */
+  close() {
+    osWindow.close(this.element_);
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
