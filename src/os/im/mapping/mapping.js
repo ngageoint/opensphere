@@ -37,13 +37,13 @@ const getTimeTypeForString = function(input) {
  * Convenience function to get a mapping field from an item, or null if the field doesn't exist.
  *
  * @param {?Object|undefined} item
- * @param {string} field
+ * @param {?string|undefined} field
  * @return {*}
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 const getItemField = function(item, field) {
-  if (item) {
+  if (item && field) {
     if (instanceOf(item, Feature.NAME)) {
       return /** @type {!Feature} */ (item).values_[field];
     } else {
@@ -72,21 +72,23 @@ const getItemFields = function(item) {
  * Convenience function to set a mapping field on an item.. Setting the field to undefined will remove it.
  *
  * @param {Object} item
- * @param {string} field
+ * @param {?string|undefined} field
  * @param {*} value
  */
 const setItemField = function(item, field, value) {
-  if (instanceOf(item, Feature.NAME)) {
-    var feature = /** @type {!Feature} */ (item);
-    if (value === undefined) {
-      feature.unset(field, true);
+  if (field) {
+    if (instanceOf(item, Feature.NAME)) {
+      var feature = /** @type {!Feature} */ (item);
+      if (value === undefined) {
+        feature.unset(field, true);
+      } else {
+        feature.set(field, value, true);
+      }
+    } else if (value !== undefined) {
+      item[field] = value;
     } else {
-      feature.set(field, value, true);
+      delete item[field];
     }
-  } else if (value !== undefined) {
-    item[field] = value;
-  } else {
-    delete item[field];
   }
 };
 
