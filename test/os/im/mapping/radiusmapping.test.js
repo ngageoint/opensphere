@@ -1,22 +1,31 @@
 goog.require('ol.Feature');
 goog.require('ol.geom.Point');
 goog.require('os.Fields');
+goog.require('os.fields');
+goog.require('os.im.mapping');
 goog.require('os.im.mapping.RadiusMapping');
 goog.require('os.math');
 goog.require('os.math.Units');
 
 describe('os.im.mapping.RadiusMapping', function() {
+  const Feature = goog.module.get('ol.Feature');
+  const Point = goog.module.get('ol.geom.Point');
+  const Fields = goog.module.get('os.Fields');
+  const fields = goog.module.get('os.fields');
+  const mapping = goog.module.get('os.im.mapping');
+  const RadiusMapping = goog.module.get('os.im.mapping.RadiusMapping');
+
   it('should auto detect radius string types', function() {
     // test with a feature (WFS layer or csv import)
     // does not contain the correct fields
-    var feature = new ol.Feature();
+    var feature = new Feature();
     feature.set('value1', 'nope');
     feature.set('value2', 'nope');
     feature.set('value3', 'nope');
     feature.set('value4', 'nope');
 
     // should return null because the correct fields do not exist in either object
-    var rm = new os.im.mapping.RadiusMapping();
+    var rm = new RadiusMapping();
     var m = rm.autoDetect([feature]);
     expect(m).toBeNull();
 
@@ -41,31 +50,31 @@ describe('os.im.mapping.RadiusMapping', function() {
   });
 
   it('should map radius to a feature', function() {
-    var feature = new ol.Feature(new ol.geom.Point([0, 0]));
+    var feature = new Feature(new Point([0, 0]));
     feature.set('RADIUS', '50');
 
-    var m = new os.im.mapping.RadiusMapping();
+    var m = new RadiusMapping();
     var rm = m.autoDetect([feature]);
     rm.execute(feature);
 
     // feature should have radius defaulted to nmi
-    expect(os.im.mapping.getItemField(feature, os.Fields.RADIUS)).toBeCloseTo(50, 1);
-    expect(os.im.mapping.getItemField(feature, os.fields.DEFAULT_RADIUS_COL_NAME)).toBeCloseTo(50, 1);
+    expect(mapping.getItemField(feature, Fields.RADIUS)).toBeCloseTo(50, 1);
+    expect(mapping.getItemField(feature, fields.DEFAULT_RADIUS_COL_NAME)).toBeCloseTo(50, 1);
   });
 
   it('should normalize radius column names', function() {
-    var feature = new ol.Feature(new ol.geom.Point([0, 0]));
+    var feature = new Feature(new Point([0, 0]));
     feature.set('CEP', '50');
     feature.set('CEP_UNITS', 'yd');
 
-    var m = new os.im.mapping.RadiusMapping();
+    var m = new RadiusMapping();
     var rm = m.autoDetect([feature]);
     rm.execute(feature);
 
     // feature should have original column remain the same and new derived column
-    expect(os.im.mapping.getItemField(feature, os.fields.DEFAULT_RADIUS_COL_NAME)).toBeCloseTo(0.024687369519647, .001);
-    expect(os.im.mapping.getItemField(feature, os.Fields.RADIUS_UNITS)).toBe('yd');
-    expect(os.im.mapping.getItemField(feature, 'CEP')).toBe('50');
-    expect(os.im.mapping.getItemField(feature, 'CEP_UNITS')).toBe('yd');
+    expect(mapping.getItemField(feature, fields.DEFAULT_RADIUS_COL_NAME)).toBeCloseTo(0.024687369519647, .001);
+    expect(mapping.getItemField(feature, Fields.RADIUS_UNITS)).toBe('yd');
+    expect(mapping.getItemField(feature, 'CEP')).toBe('50');
+    expect(mapping.getItemField(feature, 'CEP_UNITS')).toBe('yd');
   });
 });

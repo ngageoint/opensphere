@@ -1,9 +1,14 @@
 goog.require('ol.Feature');
+goog.require('os.geo');
 goog.require('os.im.mapping.LatLonMapping');
 
 describe('os.im.mapping.LatLonMapping', function() {
+  const Feature = goog.module.get('ol.Feature');
+  const geo = goog.module.get('os.geo');
+  const LatLonMapping = goog.module.get('os.im.mapping.LatLonMapping');
+
   it('should test position strings correctly', function() {
-    var m = new os.im.mapping.LatLonMapping();
+    var m = new LatLonMapping();
     expect(m.testField('103036 501545')).toBe(true);
     expect(m.testField('033036 0501545')).toBe(true);
     expect(m.testField('10 30 36 50 15 45')).toBe(true);
@@ -28,7 +33,7 @@ describe('os.im.mapping.LatLonMapping', function() {
     expect(m.testAndGetField('N001.16 E01.11', 'DD')).not.toBeNull();
     expect(m.testField('E01.11 N001.16')).toBe(true);
 
-    m.setOrder(os.geo.PREFER_LON_FIRST);
+    m.setOrder(geo.PREFER_LON_FIRST);
     expect(m.testField('1.11 1.16')).toBe(true);
     expect(m.testField('001.11 001.16')).toBe(true);
 
@@ -42,10 +47,10 @@ describe('os.im.mapping.LatLonMapping', function() {
 
   it('should map positions to a feature correctly', function() {
     var field = 'test';
-    var feature = new ol.Feature();
+    var feature = new Feature();
     feature.setId(field);
 
-    var m = new os.im.mapping.LatLonMapping();
+    var m = new LatLonMapping();
     m.execute(feature);
     expect(feature.getGeometry()).toBeUndefined();
 

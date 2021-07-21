@@ -1,7 +1,9 @@
 goog.require('os.im.mapping.AbstractPositionMapping');
 
 describe('os.im.mapping.AbstractPositionMapping', function() {
-  var apm = new os.im.mapping.AbstractPositionMapping();
+  const AbstractPositionMapping = goog.module.get('os.im.mapping.AbstractPositionMapping');
+
+  var apm = new AbstractPositionMapping();
 
   apm.field = 'TestField';
   apm.label = 'Abstract Mapping';
@@ -10,7 +12,7 @@ describe('os.im.mapping.AbstractPositionMapping', function() {
   it('should clone properly', function() {
     var clone = apm.clone();
     expect(clone).not.toBeNull();
-    expect(clone instanceof os.im.mapping.AbstractPositionMapping).toBe(true);
+    expect(clone instanceof AbstractPositionMapping).toBe(true);
     expect(clone.customFormat).toBe(apm.customFormat);
   });
 
@@ -19,7 +21,7 @@ describe('os.im.mapping.AbstractPositionMapping', function() {
     expect(persist.id).toBe(apm.getId());
     expect(persist.customFormat).toBe(apm.customFormat);
 
-    var restored = new os.im.mapping.AbstractPositionMapping();
+    var restored = new AbstractPositionMapping();
     expect(restored.customFormat).not.toBe(apm.customFormat);
     restored.restore(persist);
     expect(restored.customFormat).toBe(apm.customFormat);
@@ -35,7 +37,7 @@ describe('os.im.mapping.AbstractPositionMapping', function() {
     expect(customFormatEl).toBeDefined();
     expect(customFormatEl.textContent).toBe(apm.customFormat);
 
-    var restored = new os.im.mapping.AbstractPositionMapping();
+    var restored = new AbstractPositionMapping();
     expect(restored.customFormat).not.toBe(apm.customFormat);
     restored.fromXml(xml);
     expect(restored.customFormat).toBe(apm.customFormat);

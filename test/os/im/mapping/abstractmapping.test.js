@@ -1,7 +1,11 @@
+goog.require('os.im.mapping');
 goog.require('os.im.mapping.AbstractMapping');
 
 describe('os.im.mapping.AbstractMapping', function() {
-  var am = new os.im.mapping.AbstractMapping();
+  const mapping = goog.module.get('os.im.mapping');
+  const AbstractMapping = goog.module.get('os.im.mapping.AbstractMapping');
+
+  var am = new AbstractMapping();
 
   am.field = 'TestField';
   am.label = 'Abstract Mapping';
@@ -13,7 +17,7 @@ describe('os.im.mapping.AbstractMapping', function() {
   });
 
   it('should report a null sosType', function() {
-    expect(am.getScoreType()).toBe(os.im.mapping.DEFAULT_SCORETYPE);
+    expect(am.getScoreType()).toBe(mapping.DEFAULT_SCORETYPE);
   });
 
   it('should report a 0 for the sos', function() {
@@ -23,7 +27,7 @@ describe('os.im.mapping.AbstractMapping', function() {
   it('should clone properly', function() {
     var clone = am.clone();
     expect(clone).not.toBeNull();
-    expect(clone instanceof os.im.mapping.AbstractMapping).toBe(true);
+    expect(clone instanceof AbstractMapping).toBe(true);
     expect(clone.field).toBe(am.field);
   });
 
@@ -32,7 +36,7 @@ describe('os.im.mapping.AbstractMapping', function() {
     expect(persist.id).toBe(am.getId());
     expect(persist.field).toBe(am.field);
 
-    var restored = new os.im.mapping.AbstractMapping();
+    var restored = new AbstractMapping();
     expect(restored.field).not.toBe(am.field);
     restored.restore(persist);
     expect(restored.field).toBe(am.field);
@@ -48,7 +52,7 @@ describe('os.im.mapping.AbstractMapping', function() {
     expect(fieldEl).toBeDefined();
     expect(fieldEl.textContent).toBe(am.field);
 
-    var restored = new os.im.mapping.AbstractMapping();
+    var restored = new AbstractMapping();
     expect(restored.field).not.toBe(am.field);
     expect(restored.xmlType).not.toBe(am.xmlType);
     restored.fromXml(xml);
