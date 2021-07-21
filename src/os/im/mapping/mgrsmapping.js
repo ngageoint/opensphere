@@ -41,9 +41,11 @@ os.im.mapping.MappingRegistry.getInstance().registerMapping(
  * @override
  */
 os.im.mapping.MGRSMapping.prototype.execute = function(item) {
+  let result = false;
   if (this.field) {
     var mgrs = os.im.mapping.getItemField(item, this.field);
     if (mgrs) {
+      result = mgrs !== undefined || mgrs !== '' || mgrs !== null;
       mgrs = mgrs.replace(/\s/g, '');
       mgrs = mgrs.toUpperCase();
 
@@ -58,4 +60,5 @@ os.im.mapping.MGRSMapping.prototype.execute = function(item) {
       }
     }
   }
+  return result;
 };

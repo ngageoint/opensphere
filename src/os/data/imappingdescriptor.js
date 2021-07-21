@@ -38,6 +38,12 @@ class IMappingDescriptor {
    * @param {ILayer=} layer
    */
   updateMappings(layer) {}
+
+
+  /**
+   * Log the the number of failed/successful mappings.
+   */
+  alertUser() {}
 }
 
 /**

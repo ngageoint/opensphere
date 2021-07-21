@@ -165,17 +165,20 @@ os.im.mapping.RuleMapping.prototype.getScoreType = function() {
  * @inheritDoc
  */
 os.im.mapping.RuleMapping.prototype.execute = function(item, targetItem) {
+  let result = false;
   if (this.field && this.targetField) {
-    var fieldValue = os.im.mapping.getItemField(item, this.field);
-    var rules = this.getRules();
-    var staticValue = this.staticValue;
+    const fieldValue = os.im.mapping.getItemField(item, this.field);
+    const rules = this.getRules();
+    const staticValue = this.staticValue;
 
     if (staticValue) {
+      result = staticValue !== undefined || staticValue !== '' || staticValue !== null;
       // map to the static value every time
       targetItem[this.targetField] = staticValue;
     } else if (fieldValue && rules) {
+      result = fieldValue !== undefined || fieldValue !== '' || fieldValue !== null;
       // select the appropriate rule and use its mappedValue
-      var rule = ol.array.find(rules, function(r) {
+      const rule = ol.array.find(rules, function(r) {
         return r['initialValue'] == fieldValue;
       });
 
@@ -184,6 +187,7 @@ os.im.mapping.RuleMapping.prototype.execute = function(item, targetItem) {
       }
     }
   }
+  return result;
 };
 
 

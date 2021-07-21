@@ -110,20 +110,23 @@ os.im.mapping.RadiusMapping.prototype.getLabel = function() {
  * @inheritDoc
  */
 os.im.mapping.RadiusMapping.prototype.execute = function(item) {
+  let result = false;
   if (this.field && this.toField) {
-    var current = os.math.parseNumber(os.im.mapping.getItemField(item, this.field));
+    let current = os.math.parseNumber(os.im.mapping.getItemField(item, this.field));
     if (!isNaN(current)) {
       if (this.units) {
         current = os.math.convertUnits(current, os.fields.DEFAULT_RADIUS_UNIT, this.units);
       }
 
-      os.im.mapping.setItemField(item, this.toField, current);
+      result = os.im.mapping.setItemField(item, this.toField, current);
 
       if (this.units && this.unitsField) {
-        os.im.mapping.setItemField(item, this.unitsField, this.units);
+        result = result && os.im.mapping.setItemField(item, this.unitsField, this.units);
       }
     }
   }
+
+  return result;
 };
 
 

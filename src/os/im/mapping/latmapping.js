@@ -104,19 +104,22 @@ os.im.mapping.LatMapping.prototype.getScoreType = function() {
  * @inheritDoc
  */
 os.im.mapping.LatMapping.prototype.execute = function(item) {
-  var value = NaN;
+  let value = NaN;
+  let result = false;
   if (this.field) {
-    var fieldValue = os.im.mapping.getItemField(item, this.field);
+    let fieldValue = os.im.mapping.getItemField(item, this.field);
     if (fieldValue != null) {
       fieldValue = String(fieldValue).replace(os.geo.COORD_CLEANER, '');
       value = os.geo.parseLat(fieldValue, this.customFormat);
 
       if (!isNaN(value)) {
-        os.im.mapping.setItemField(item, this.coordField, value);
+        result = os.im.mapping.setItemField(item, this.coordField, value);
         this.addGeometry(item);
       }
     }
   }
+
+  return result;
 };
 
 

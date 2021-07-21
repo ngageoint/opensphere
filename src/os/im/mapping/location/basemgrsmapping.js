@@ -27,12 +27,14 @@ goog.inherits(os.im.mapping.location.BaseMGRSMapping, os.im.mapping.AbstractPosi
  * @override
  */
 os.im.mapping.location.BaseMGRSMapping.prototype.execute = function(item, opt_targetItem) {
+  let result = false;
   if (this.field) {
     var mgrs = os.im.mapping.getItemField(item, this.field);
     if (mgrs) {
       mgrs = mgrs.replace(/\s/g, '');
       mgrs = mgrs.toUpperCase();
 
+      result = mgrs !== undefined || mgrs !== '' || mgrs !== null;
       if (mgrs.match(os.geo.MGRS_REGEXP)) {
         var coord = osasm.toLonLat(mgrs);
         item[this.field] = coord;
@@ -41,6 +43,7 @@ os.im.mapping.location.BaseMGRSMapping.prototype.execute = function(item, opt_ta
       }
     }
   }
+  return result;
 };
 
 

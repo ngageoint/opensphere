@@ -181,15 +181,16 @@ os.im.mapping.AltMapping.prototype.getLabel = function() {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 os.im.mapping.AltMapping.prototype.execute = function(feature) {
+  let result = false;
   if (feature && this.field) {
-    var targetField = this.toField || this.field;
+    const targetField = this.toField || this.field;
     if (feature && feature.values_[os.Fields.GEOM_ALT] != null) {
       // don't do a thing.  the alt was set in the point geom
       // just set our derived column to whatever that says
-      os.im.mapping.setItemField(feature, targetField, Math.round(feature.values_[os.Fields.GEOM_ALT]));
+      result = os.im.mapping.setItemField(feature, targetField, Math.round(feature.values_[os.Fields.GEOM_ALT]));
     } else {
       // perform the mapping
-      var current = Number(os.im.mapping.getItemField(feature, this.field));
+      let current = Number(os.im.mapping.getItemField(feature, this.field));
       if (!isNaN(current)) {
         // convert to units set externally.  This defaults to meters, so if it
         // hasn't been changed externally, we are just doing meters to meters
@@ -200,12 +201,12 @@ os.im.mapping.AltMapping.prototype.execute = function(feature) {
 
         if (!this.unitsOverride) {
           // check for a units field
-          var u = os.im.mapping.getBestFieldMatch(feature, this.getUnitsRegExp());
+          const u = os.im.mapping.getBestFieldMatch(feature, this.getUnitsRegExp());
           if (u) {
             this.unitsField = u;
           }
           // if a unit field was detected, get the value and convert it to meters from that
-          var curUnits = /** @type {string|undefined} */(os.im.mapping.getItemField(feature, this.unitsField));
+          let curUnits = /** @type {string|undefined} */(os.im.mapping.getItemField(feature, this.unitsField));
 
           // look up the units from the data in our list of known units (example: FEET ->ft)
           if (curUnits) {
@@ -228,11 +229,12 @@ os.im.mapping.AltMapping.prototype.execute = function(feature) {
       }
 
       // set the new field
-      os.im.mapping.setItemField(feature, targetField, current);
+      result = os.im.mapping.setItemField(feature, targetField, current);
 
       os.feature.setAltitude(feature, targetField);
     }
   }
+  return result;
 };
 
 

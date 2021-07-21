@@ -34,12 +34,14 @@ goog.inherits(os.im.mapping.location.BaseLatLonMapping, os.im.mapping.AbstractPo
  * @override
  */
 os.im.mapping.location.BaseLatLonMapping.prototype.execute = function(item, opt_targetItem) {
+  let result = false;
   if (this.field) {
     var fieldValue = os.im.mapping.getItemField(item, this.field) || '';
 
     // try to idiot proof the position string
     fieldValue = goog.string.trim(fieldValue.replace(os.geo.COORD_CLEANER, ''));
     if (fieldValue) {
+      result = fieldValue !== undefined || fieldValue !== '' || fieldValue !== null;
       var location = this.parseLatLon(fieldValue, this.customFormat);
       if (location) {
         var coord = [location.lon, location.lat];
@@ -49,6 +51,7 @@ os.im.mapping.location.BaseLatLonMapping.prototype.execute = function(item, opt_
       }
     }
   }
+  return result;
 };
 
 

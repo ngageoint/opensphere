@@ -5,6 +5,8 @@ goog.require('os.ui.file.ui.defaultFileNodeUIDirective');
 
 const log = goog.require('goog.log');
 const Settings = goog.require('os.config.Settings');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
 const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
 const IUrlDescriptor = goog.require('os.data.IUrlDescriptor');
 const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
@@ -182,10 +184,57 @@ class FileDescriptor extends LayerSyncDescriptor {
   updateMappings(layer) {
     const source = /** @type {RequestSource} */ (layer.getSource());
     const importer = source.getImporter();
+    importer.listen(os.events.EventType.COMPLETE, this.alertUser, false, this);
 
     this.saveDescriptor();
     importer.setMappings(this.getMappings());
     source.refresh();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  alertUser(event) {
+    const importer = /** @type {!os.im.IImporter} */ (event.target);
+    const mappings = this.getMappings();
+    const failedMappingsCount = importer.getMappingFailCount();
+    const totalCount = importer.getTotalProcessed();
+    let allFailed = false;
+    const title = this.getTitle();
+    let failMessage = `<div><b>Issues with mappings for ${title}</b></div>`;
+
+    if (totalCount > 0) {
+      for (let i = 0; i < mappings.length; i++) {
+        const mapping = mappings[i];
+        const id = mapping.getId();
+        const numFailed = failedMappingsCount[id];
+        const key = mapping.getId();
+
+        allFailed = (numFailed == totalCount || allFailed);
+
+        if (numFailed !== 0) {
+          const message = `<div> ${key}: ${numFailed} out of ${totalCount} features failed to map this column.<div>`;
+          failMessage += message;
+          // Send failures to the logger
+          goog.log.error(logger,
+              `${key}: Failed to map ${numFailed} out of ${totalCount} features for ${title}.`);
+        } else if (numFailed === 0) {
+          goog.log.info(logger,
+              `${key}: Successfully mapped all ${totalCount} features for ${title}. There were ${numFailed} failures.`);
+        }
+
+        console.log(`${id}: ${numFailed} failed out of ${totalCount}`);
+      }
+    }
+
+    // Generate an alert but only if some failed
+    const someFailed = Object.values(failedMappingsCount).some((m) => m > 0);
+    if (someFailed && this.alertUser_) {
+      failMessage += `<div>${allFailed ? 'All' : 'Some'} Ellipse Data failed to map for this layer. 
+      Please check to ensure your data is formatted correctly.<div>`;
+      const errorType = allFailed ? AlertEventSeverity.ERROR : AlertEventSeverity.WARNING;
+      AlertManager.getInstance().sendAlert(failMessage, errorType);
+    }
   }
 
   /**

@@ -37,6 +37,7 @@ goog.inherits(os.im.mapping.RenameMapping, os.im.mapping.AbstractMapping);
  */
 os.im.mapping.RenameMapping.ID = 'Rename';
 
+
 // Register the mapping.
 os.im.mapping.MappingRegistry.getInstance().registerMapping(
     os.im.mapping.RenameMapping.ID, os.im.mapping.RenameMapping);
@@ -78,16 +79,19 @@ os.im.mapping.RenameMapping.prototype.getFieldsChanged = function() {
  * @inheritDoc
  */
 os.im.mapping.RenameMapping.prototype.execute = function(item) {
+  let result = false;
   if (this.field && this.toField && this.toField != this.field) {
     var current = os.im.mapping.getItemField(item, this.field);
     if (current != null) {
-      os.im.mapping.setItemField(item, this.toField, current);
+      result = os.im.mapping.setItemField(item, this.toField, current);
 
       if (!this.keepOriginal) {
         os.im.mapping.setItemField(item, this.field, undefined);
       }
     }
   }
+
+  return result;
 };
 
 

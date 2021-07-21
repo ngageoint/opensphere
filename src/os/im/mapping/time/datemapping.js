@@ -52,9 +52,11 @@ os.im.mapping.time.DateMapping.prototype.getScore = function() {
  * @inheritDoc
  */
 os.im.mapping.time.DateMapping.prototype.updateItem = function(t, item) {
+  let result = false;
   if (this.field) {
-    os.im.mapping.setItemField(item, this.field, os.time.format(new Date(t), os.time.Duration.DAY));
+    result = os.im.mapping.setItemField(item, this.field, os.time.format(new Date(t), os.time.Duration.DAY));
   }
+  return result;
 };
 
 

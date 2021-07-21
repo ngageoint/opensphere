@@ -97,6 +97,7 @@ os.im.mapping.WKTMapping.prototype.getScoreType = function() {
  * @inheritDoc
  */
 os.im.mapping.WKTMapping.prototype.execute = function(item) {
+  let result = false;
   if (this.field) {
     var fieldValue = os.im.mapping.getItemField(item, this.field);
     if (fieldValue) {
@@ -106,6 +107,7 @@ os.im.mapping.WKTMapping.prototype.execute = function(item) {
       });
 
       if (geom) {
+        result = geom !== undefined || geom !== '' || geom !== null;
         item.suppressEvents();
         item.set(this.field, undefined);
         item.setGeometry(geom);
@@ -113,6 +115,7 @@ os.im.mapping.WKTMapping.prototype.execute = function(item) {
       }
     }
   }
+  return result;
 };
 
 

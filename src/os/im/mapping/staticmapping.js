@@ -55,9 +55,11 @@ os.im.mapping.StaticMapping.prototype.getLabel = function() {
  * @inheritDoc
  */
 os.im.mapping.StaticMapping.prototype.execute = function(item) {
+  let result = false;
   if (item && this.field && (this.replace || os.im.mapping.getItemField(item, this.field) == null)) {
-    os.im.mapping.setItemField(item, this.field, this.value);
+    result = os.im.mapping.setItemField(item, this.field, this.value);
   }
+  return result;
 };
 
 

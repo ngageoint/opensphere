@@ -40,16 +40,18 @@ os.im.mapping.MappingRegistry.getInstance().registerMapping(
  * @override
  */
 os.im.mapping.LatLonMapping.prototype.execute = function(item) {
+  const result = false;
   if (this.field) {
-    var fieldValue = os.im.mapping.getItemField(item, this.field) || '';
-
+    let fieldValue = os.im.mapping.getItemField(item, this.field) || '';
     // try to idiot proof the position string
     fieldValue = goog.string.trim(fieldValue.replace(os.geo.COORD_CLEANER, ''));
+
     if (fieldValue) {
-      var location = this.parseLatLon(fieldValue, this.customFormat);
+      result = fieldValue !== undefined || fieldValue !== '' || fieldValue !== null;
+      const location = this.parseLatLon(fieldValue, this.customFormat);
       if (location) {
-        var coord = [location.lon, location.lat];
-        var geom = new ol.geom.Point(coord).osTransform();
+        const coord = [location.lon, location.lat];
+        const geom = new ol.geom.Point(coord).osTransform();
 
         item.suppressEvents();
         item.setGeometry(geom);
@@ -59,4 +61,5 @@ os.im.mapping.LatLonMapping.prototype.execute = function(item) {
       }
     }
   }
+  return result;
 };

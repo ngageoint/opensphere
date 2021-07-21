@@ -106,6 +106,7 @@ os.im.mapping.getItemFields = function(item) {
  * @param {Object} item
  * @param {string} field
  * @param {*} value
+ * @return {boolean}
  */
 os.im.mapping.setItemField = function(item, field, value) {
   if (os.instanceOf(item, ol.Feature.NAME)) {
@@ -120,6 +121,8 @@ os.im.mapping.setItemField = function(item, field, value) {
   } else {
     delete item[field];
   }
+
+  return value !== undefined || value !== '' || value !== null;
 };
 
 

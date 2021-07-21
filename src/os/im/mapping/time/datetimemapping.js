@@ -142,19 +142,21 @@ os.im.mapping.time.DateTimeMapping.TIMEZONE_REGEX = /(Z|UTC|[+-]\d\d+:?\d\d)$/;
  * @inheritDoc
  */
 os.im.mapping.time.DateTimeMapping.prototype.execute = function(item) {
+  let result = false;
   if (this.field && this.format) {
     var current = /** @type {string|number} */ (os.im.mapping.getItemField(item, this.field));
     var t = this.getTimestamp(current);
 
     if (this.applyTime_) {
       var old = os.im.mapping.getItemField(item, os.data.RecordField.TIME) || null; // not an ITime! See THIN-8508
-      os.im.mapping.setItemField(item, os.data.RecordField.TIME, this.getTime(t, old));
+      result = os.im.mapping.setItemField(item, os.data.RecordField.TIME, this.getTime(t, old));
     } else if (t) {
       // only modify the original field if the time wasn't mapped to recordTime. note that this will prevent the
       // field from being used by other date mappings because the format will no longer apply.
-      this.updateItem(t, item);
+      result = this.updateItem(t, item);
     }
   }
+  return result;
 };
 
 
@@ -310,11 +312,14 @@ os.im.mapping.time.DateTimeMapping.prototype.getRegex = function() {
  *
  * @param {number} t The time in ms UTC
  * @param {T} item The item to update
+ * @return {boolean}
  */
 os.im.mapping.time.DateTimeMapping.prototype.updateItem = function(t, item) {
+  let result = false;
   if (this.field) {
-    os.im.mapping.setItemField(item, this.field, new Date(t).toISOString());
+    result = os.im.mapping.setItemField(item, this.field, new Date(t).toISOString());
   }
+  return result;
 };
 
 

@@ -88,6 +88,7 @@ os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.getScoreType = func
  */
 os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.execute = function(item, targetItem) {
   var value = NaN;
+  let result = false;
   if (!targetItem) {
     targetItem = item;
   }
@@ -99,11 +100,12 @@ os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.execute = function(
       value = this.parseFn(fieldValue, this.customFormat);
 
       if (!isNaN(value)) {
-        os.im.mapping.setItemField(item, this.coordField, value);
+        result = os.im.mapping.setItemField(item, this.coordField, value);
         this.addGeometry(item, targetItem);
       }
     }
   }
+  return result;
 };
 
 

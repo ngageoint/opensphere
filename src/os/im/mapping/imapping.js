@@ -92,6 +92,7 @@ os.im.mapping.IMapping.prototype.getFieldsChanged;
  * Executes the mapping on the given item
  * @param {T} item The item to modify
  * @param {S=} opt_targetItem The target item. Could be of different type or the same as item.
+ * @return {boolean} Whether the mapping was successful (i.e. not undefined/empty string/null)
  */
 os.im.mapping.IMapping.prototype.execute;
 

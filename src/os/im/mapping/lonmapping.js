@@ -44,6 +44,8 @@ os.im.mapping.LonMapping.LON_REGEX = /(\b|_)lon(g(i(t(u(d(e)?)?)?)?)?)?(\b|_)/i;
  */
 os.im.mapping.LonMapping.prototype.execute = function(item) {
   var value = NaN;
+  let result = false;
+
   if (this.field) {
     var fieldValue = os.im.mapping.getItemField(item, this.field);
     if (fieldValue != null) {
@@ -51,11 +53,13 @@ os.im.mapping.LonMapping.prototype.execute = function(item) {
       value = os.geo.parseLon(fieldValue, this.customFormat);
 
       if (!isNaN(value)) {
-        os.im.mapping.setItemField(item, this.coordField, value);
+        result = os.im.mapping.setItemField(item, this.coordField, value);
         this.addGeometry(item);
       }
     }
   }
+
+  return result;
 };
 
 
