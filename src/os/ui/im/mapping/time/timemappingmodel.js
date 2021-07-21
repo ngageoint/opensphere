@@ -1,175 +1,176 @@
-goog.provide('os.ui.im.mapping.time.TimeMappingModel');
-goog.require('os.im.mapping.DateType');
-goog.require('os.im.mapping.TimeType');
-goog.require('os.im.mapping.time.DateMapping');
-goog.require('os.im.mapping.time.DateTimeMapping');
-goog.require('os.im.mapping.time.TimeMapping');
-goog.require('os.time');
+goog.module('os.ui.im.mapping.time.TimeMappingModel');
+goog.module.declareLegacyNamespace();
 
+const DateType = goog.require('os.im.mapping.DateType');
+const TimeType = goog.require('os.im.mapping.TimeType');
+const DateMapping = goog.require('os.im.mapping.time.DateMapping');
+const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
+const TimeMapping = goog.require('os.im.mapping.time.TimeMapping');
+const {DATETIME_FORMATS, TIME_FORMATS} = goog.require('os.time');
 
 
 /**
  * Model for describing a time mapping.
- *
- * @param {os.im.mapping.TimeType=} opt_type The type of time mapping (instant, start, end).
- * @constructor
+ * @unrestricted
  */
-os.ui.im.mapping.time.TimeMappingModel = function(opt_type) {
+class TimeMappingModel {
   /**
-   * @type {string}
+   * Constructor.
+   * @param {TimeType=} opt_type The type of time mapping (instant, start, end).
    */
-  this['dateType'] = os.im.mapping.DateType.COMBINED;
+  constructor(opt_type) {
+    /**
+     * @type {string}
+     */
+    this['dateType'] = DateType.COMBINED;
+
+    /**
+     * @type {string}
+     */
+    this['dateColumn'] = '';
+
+    /**
+     * @type {string}
+     */
+    this['timeColumn'] = '';
+
+    /**
+     * @type {string}
+     */
+    this['dateFormat'] = DATETIME_FORMATS[0];
+
+    /**
+     * @type {string}
+     */
+    this['timeFormat'] = TIME_FORMATS[0];
+
+    /**
+     * @type {DateTimeMapping}
+     * @private
+     */
+    this.dateMapping_ = null;
+
+    /**
+     * @type {DateTimeMapping}
+     * @private
+     */
+    this.timeMapping_ = null;
+
+    /**
+     * @type {TimeType}
+     * @private
+     */
+    this.type_ = opt_type || TimeType.START;
+  }
 
   /**
-   * @type {string}
+   * @param {TimeType} type The type of time mapping (instant, start, end).
    */
-  this['dateColumn'] = '';
+  setType(type) {
+    this.type_ = type;
+  }
 
   /**
-   * @type {string}
+   * @return {TimeType}
    */
-  this['timeColumn'] = '';
+  getType() {
+    return this.type_;
+  }
 
   /**
-   * @type {string}
+   * Configure the model from a set of mappings.
+   *
+   * @param {Array.<DateTimeMapping>} mappings
    */
-  this['dateFormat'] = os.time.DATETIME_FORMATS[0];
+  updateFromMappings(mappings) {
+    this.dateMapping_ = null;
+    this.timeMapping_ = null;
+
+    for (var i = 0, n = mappings.length; i < n; i++) {
+      var m = mappings[i];
+      if (m instanceof TimeMapping) {
+        this.timeMapping_ = m.clone();
+        this['timeColumn'] = this.timeMapping_.field;
+        this['timeFormat'] = this.timeMapping_.getFormat();
+      } else {
+        this.dateMapping_ = m.clone();
+        this['dateColumn'] = this.dateMapping_.field;
+        this['dateFormat'] = this.dateMapping_.getFormat();
+      }
+    }
+
+    this.updateTypeCombo_();
+  }
 
   /**
-   * @type {string}
+   * Generate mappings from the model configuration.
+   *
+   * @return {Array.<DateTimeMapping>}
    */
-  this['timeFormat'] = os.time.TIME_FORMATS[0];
+  generateMappings() {
+    var mappings = [];
+
+    switch (this['dateType']) {
+      case DateType.COMBINED:
+        var dtm = new DateTimeMapping(this.type_);
+        dtm.field = this['dateColumn'];
+        dtm.setFormat(this['dateFormat']);
+
+        mappings.push(dtm);
+        break;
+      case DateType.SEPARATE:
+        var dm = new DateMapping(this.type_);
+        dm.field = this['dateColumn'];
+        dm.setFormat(this['dateFormat']);
+        mappings.push(dm);
+
+        var tm = new TimeMapping(this.type_);
+        tm.field = this['timeColumn'];
+        tm.setFormat(this['timeFormat']);
+        mappings.push(tm);
+        break;
+      case DateType.DATE_ONLY:
+        var dm = new DateMapping(this.type_);
+        dm.field = this['dateColumn'];
+        dm.setFormat(this['dateFormat']);
+        mappings.push(dm);
+        break;
+      default:
+        break;
+    }
+
+    return mappings;
+  }
 
   /**
-   * @type {os.im.mapping.time.DateTimeMapping}
+   * Check if mappings can be generated from this model.
+   *
+   * @return {boolean}
+   */
+  validate() {
+    var valid = this['dateColumn'] && this['dateFormat'];
+    if (this['dateType'] == DateType.SEPARATE) {
+      valid = valid && this['timeColumn'] && this['timeFormat'];
+    }
+
+    return valid;
+  }
+
+  /**
    * @private
    */
-  this.dateMapping_ = null;
-
-  /**
-   * @type {os.im.mapping.time.DateTimeMapping}
-   * @private
-   */
-  this.timeMapping_ = null;
-
-  /**
-   * @type {os.im.mapping.TimeType}
-   * @private
-   */
-  this.type_ = opt_type || os.im.mapping.TimeType.START;
-};
-
-
-/**
- * @param {os.im.mapping.TimeType} type The type of time mapping (instant, start, end).
- */
-os.ui.im.mapping.time.TimeMappingModel.prototype.setType = function(type) {
-  this.type_ = type;
-};
-
-
-/**
- * @return {os.im.mapping.TimeType}
- */
-os.ui.im.mapping.time.TimeMappingModel.prototype.getType = function() {
-  return this.type_;
-};
-
-
-/**
- * Configure the model from a set of mappings.
- *
- * @param {Array.<os.im.mapping.time.DateTimeMapping>} mappings
- */
-os.ui.im.mapping.time.TimeMappingModel.prototype.updateFromMappings = function(mappings) {
-  this.dateMapping_ = null;
-  this.timeMapping_ = null;
-
-  for (var i = 0, n = mappings.length; i < n; i++) {
-    var m = mappings[i];
-    if (m instanceof os.im.mapping.time.TimeMapping) {
-      this.timeMapping_ = m.clone();
-      this['timeColumn'] = this.timeMapping_.field;
-      this['timeFormat'] = this.timeMapping_.getFormat();
+  updateTypeCombo_() {
+    if (this.timeMapping_) {
+      // use separate fields if a time mapping exists even without a date mapping (may have been auto detected)
+      this['dateType'] = DateType.SEPARATE;
+    } else if (this.dateMapping_ instanceof DateMapping) {
+      // date but no time
+      this['dateType'] = DateType.DATE_ONLY;
     } else {
-      this.dateMapping_ = m.clone();
-      this['dateColumn'] = this.dateMapping_.field;
-      this['dateFormat'] = this.dateMapping_.getFormat();
+      // default to combined
+      this['dateType'] = DateType.COMBINED;
     }
   }
+}
 
-  this.updateTypeCombo_();
-};
-
-
-/**
- * Generate mappings from the model configuration.
- *
- * @return {Array.<os.im.mapping.time.DateTimeMapping>}
- */
-os.ui.im.mapping.time.TimeMappingModel.prototype.generateMappings = function() {
-  var mappings = [];
-
-  switch (this['dateType']) {
-    case os.im.mapping.DateType.COMBINED:
-      var dtm = new os.im.mapping.time.DateTimeMapping(this.type_);
-      dtm.field = this['dateColumn'];
-      dtm.setFormat(this['dateFormat']);
-
-      mappings.push(dtm);
-      break;
-    case os.im.mapping.DateType.SEPARATE:
-      var dm = new os.im.mapping.time.DateMapping(this.type_);
-      dm.field = this['dateColumn'];
-      dm.setFormat(this['dateFormat']);
-      mappings.push(dm);
-
-      var tm = new os.im.mapping.time.TimeMapping(this.type_);
-      tm.field = this['timeColumn'];
-      tm.setFormat(this['timeFormat']);
-      mappings.push(tm);
-      break;
-    case os.im.mapping.DateType.DATE_ONLY:
-      var dm = new os.im.mapping.time.DateMapping(this.type_);
-      dm.field = this['dateColumn'];
-      dm.setFormat(this['dateFormat']);
-      mappings.push(dm);
-      break;
-    default:
-      break;
-  }
-
-  return mappings;
-};
-
-
-/**
- * Check if mappings can be generated from this model.
- *
- * @return {boolean}
- */
-os.ui.im.mapping.time.TimeMappingModel.prototype.validate = function() {
-  var valid = this['dateColumn'] && this['dateFormat'];
-  if (this['dateType'] == os.im.mapping.DateType.SEPARATE) {
-    valid = valid && this['timeColumn'] && this['timeFormat'];
-  }
-
-  return valid;
-};
-
-
-/**
- * @private
- */
-os.ui.im.mapping.time.TimeMappingModel.prototype.updateTypeCombo_ = function() {
-  if (this.timeMapping_) {
-    // use separate fields if a time mapping exists even without a date mapping (may have been auto detected)
-    this['dateType'] = os.im.mapping.DateType.SEPARATE;
-  } else if (this.dateMapping_ instanceof os.im.mapping.time.DateMapping) {
-    // date but no time
-    this['dateType'] = os.im.mapping.DateType.DATE_ONLY;
-  } else {
-    // default to combined
-    this['dateType'] = os.im.mapping.DateType.COMBINED;
-  }
-};
+exports = TimeMappingModel;
