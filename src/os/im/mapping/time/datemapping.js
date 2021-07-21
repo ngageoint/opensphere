@@ -1,70 +1,71 @@
-goog.provide('os.im.mapping.time.DateMapping');
-goog.require('os.im.mapping');
-goog.require('os.im.mapping.MappingRegistry');
-goog.require('os.im.mapping.TimeType');
-goog.require('os.im.mapping.time.DateTimeMapping');
-goog.require('os.time');
-goog.require('os.time.Duration');
+goog.module('os.im.mapping.time.DateMapping');
+goog.module.declareLegacyNamespace();
 
+const {setItemField} = goog.require('os.im.mapping');
+const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
+const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
+const osTime = goog.require('os.time');
+const Duration = goog.require('os.time.Duration');
+
+const TimeType = goog.requireType('os.im.mapping.TimeType');
 
 
 /**
  * Mapping for fields representing date but not time.
  *
- * @param {os.im.mapping.TimeType} type The type of time mapping.
- * @extends {os.im.mapping.time.DateTimeMapping.<T>}
- * @constructor
+ * @extends {DateTimeMapping<T>}
  * @template T
  */
-os.im.mapping.time.DateMapping = function(type) {
-  os.im.mapping.time.DateMapping.base(this, 'constructor', type, os.im.mapping.time.DateMapping.ID);
-  this.format = os.time.DATE_FORMATS[0];
-  this.formats = os.time.DATE_FORMATS;
-  this.customFormats = [];
-  this.regexes = os.time.DATE_REGEXES;
+class DateMapping extends DateTimeMapping {
+  /**
+   * Constructor.
+   * @param {TimeType} type The type of time mapping.
+   */
+  constructor(type) {
+    super(type, DateMapping.ID);
+    this.format = osTime.DATE_FORMATS[0];
+    this.formats = osTime.DATE_FORMATS;
+    this.customFormats = [];
+    this.regexes = osTime.DATE_REGEXES;
 
-  this.xmlType = os.im.mapping.time.DateMapping.ID;
-};
-goog.inherits(os.im.mapping.time.DateMapping, os.im.mapping.time.DateTimeMapping);
+    this.xmlType = DateMapping.ID;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getScore() {
+    return 1;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  updateItem(t, item) {
+    if (this.field) {
+      setItemField(item, this.field, osTime.format(new Date(t), Duration.DAY));
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  updateTime(to, from) {
+    var toDate = new Date(to);
+    var fromDate = new Date(from);
+    toDate.setUTCFullYear(fromDate.getUTCFullYear(), fromDate.getUTCMonth(), fromDate.getUTCDate());
+
+    return toDate;
+  }
+}
 
 /**
  * @type {string}
- * @const
+ * @override
  */
-os.im.mapping.time.DateMapping.ID = 'Date';
-
+DateMapping.ID = 'Date';
 
 // Register the mapping.
-os.im.mapping.MappingRegistry.getInstance().registerMapping(
-    os.im.mapping.time.DateMapping.ID, os.im.mapping.time.DateMapping);
+MappingRegistry.getInstance().registerMapping(DateMapping.ID, DateMapping);
 
-
-/**
- * @inheritDoc
- */
-os.im.mapping.time.DateMapping.prototype.getScore = function() {
-  return 1;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.time.DateMapping.prototype.updateItem = function(t, item) {
-  if (this.field) {
-    os.im.mapping.setItemField(item, this.field, os.time.format(new Date(t), os.time.Duration.DAY));
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.time.DateMapping.prototype.updateTime = function(to, from) {
-  var toDate = new Date(to);
-  var fromDate = new Date(from);
-  toDate.setUTCFullYear(fromDate.getUTCFullYear(), fromDate.getUTCMonth(), fromDate.getUTCDate());
-
-  return toDate;
-};
+exports = DateMapping;

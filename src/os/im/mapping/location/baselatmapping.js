@@ -1,56 +1,55 @@
-goog.provide('os.im.mapping.location.BaseLatMapping');
+goog.module('os.im.mapping.location.BaseLatMapping');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.geo');
-goog.require('os.im.mapping.AbstractPositionMapping');
-goog.require('os.im.mapping.location.AbstractBaseLatOrLonMapping');
-
+const {parseLat} = goog.require('os.geo');
+const AbstractBaseLatOrLonMapping = goog.require('os.im.mapping.location.AbstractBaseLatOrLonMapping');
 
 
 /**
- * @extends {os.im.mapping.location.AbstractBaseLatOrLonMapping.<T, S>}
- * @constructor
+ * @extends {AbstractBaseLatOrLonMapping<T, S>}
  * @template T, S
  */
-os.im.mapping.location.BaseLatMapping = function() {
-  os.im.mapping.location.BaseLatMapping.base(this, 'constructor');
-
+class BaseLatMapping extends AbstractBaseLatOrLonMapping {
   /**
-   * @type {string}
-   * @protected
+   * Constructor.
    */
-  this.coordField = 'LAT';
+  constructor() {
+    super();
 
-  /**
-   * @type {string}
-   * @protected
-   */
-  this.type = os.im.mapping.location.BaseLatMapping.ID;
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.coordField = 'LAT';
 
-  /**
-   * @type {RegExp}
-   * @protected
-   */
-  this.regex = os.im.mapping.location.BaseLatMapping.LAT_REGEX;
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.type = BaseLatMapping.ID;
 
-  /**
-   * @type {Function}
-   * @protected
-   */
-  this.parseFn = os.geo.parseLat;
-};
-goog.inherits(os.im.mapping.location.BaseLatMapping, os.im.mapping.location.AbstractBaseLatOrLonMapping);
+    /**
+     * @type {RegExp}
+     * @protected
+     */
+    this.regex = BaseLatMapping.LAT_REGEX;
 
+    /**
+     * @type {Function}
+     * @protected
+     */
+    this.parseFn = parseLat;
+  }
+}
 
 /**
  * @type {string}
- * @const
  */
-os.im.mapping.location.BaseLatMapping.ID = 'Latitude';
-
+BaseLatMapping.ID = 'Latitude';
 
 /**
  * @type {RegExp}
- * @const
  */
-os.im.mapping.location.BaseLatMapping.LAT_REGEX = /lat(i(t(u(d(e)?)?)?)?)?\b/i;
+BaseLatMapping.LAT_REGEX = /lat(i(t(u(d(e)?)?)?)?)?\b/i;
 
+exports = BaseLatMapping;

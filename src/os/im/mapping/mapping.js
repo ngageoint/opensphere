@@ -1,69 +1,37 @@
-goog.provide('os.im.mapping');
-goog.provide('os.im.mapping.DateType');
-goog.provide('os.im.mapping.TimeFormat');
-goog.provide('os.im.mapping.TimeType');
+goog.module('os.im.mapping');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.object');
-goog.require('ol.Feature');
-goog.require('os');
 goog.require('os.mixin.feature');
+
+const Feature = goog.require('ol.Feature');
+const TimeType = goog.require('os.im.mapping.TimeType');
+const instanceOf = goog.require('os.instanceOf');
+
+const IMapping = goog.requireType('os.im.mapping.IMapping');
 
 
 /**
  * @type {string}
- * @const
  */
-os.im.mapping.DEFAULT_SCORETYPE = 'default';
-
-
-/**
- * @enum {string}
- */
-os.im.mapping.TimeFormat = {
-  ISO: 'ISO',
-  TIMESTAMP: 'Timestamp'
-};
-
-
-/**
- * @enum {string}
- */
-os.im.mapping.TimeType = {
-  INSTANT: 'instant',
-  START: 'start',
-  END: 'end',
-  PUBLICATION: 'publication'
-};
-
-
-/**
- * @enum {string}
- */
-os.im.mapping.DateType = {
-  COMBINED: 'combined',
-  SEPARATE: 'separate',
-  DATE_ONLY: 'dateonly'
-};
-
+const DEFAULT_SCORETYPE = 'default';
 
 /**
  * Returns the enum for the string
  *
- * @param {string} input A string that matches an enum value from os.im.mapping.TimeType
- * @return {os.im.mapping.TimeType} A TimeType
+ * @param {string} input A string that matches an enum value from TimeType
+ * @return {TimeType} A TimeType
  */
-os.im.mapping.getTimeTypeForString = function(input) {
+const getTimeTypeForString = function(input) {
   if ('start' === input) {
-    return os.im.mapping.TimeType.START;
+    return TimeType.START;
   } else if ('end' === input) {
-    return os.im.mapping.TimeType.END;
+    return TimeType.END;
   } else if ('pub' == input) {
-    return os.im.mapping.TimeType.PUBLICATION;
+    return TimeType.PUBLICATION;
   } else {
-    return os.im.mapping.TimeType.INSTANT;
+    return TimeType.INSTANT;
   }
 };
-
 
 /**
  * Convenience function to get a mapping field from an item, or null if the field doesn't exist.
@@ -74,31 +42,31 @@ os.im.mapping.getTimeTypeForString = function(input) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.im.mapping.getItemField = function(item, field) {
+const getItemField = function(item, field) {
   if (item) {
-    if (os.instanceOf(item, ol.Feature.NAME)) {
-      return /** @type {!ol.Feature} */ (item).values_[field];
+    if (instanceOf(item, Feature.NAME)) {
+      return /** @type {!Feature} */ (item).values_[field];
     } else {
       return item[field];
     }
   }
 };
 
-
 /**
  * @param {Object} item
- * @return {Array.<string>}
+ * @return {Array<string>}
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.im.mapping.getItemFields = function(item) {
-  if (os.instanceOf(item, ol.Feature.NAME)) {
-    return goog.object.getKeys(/** @type {!ol.Feature} */ (item).values_);
-  } else {
-    return goog.object.getKeys(item);
+const getItemFields = function(item) {
+  if (instanceOf(item, Feature.NAME)) {
+    return Object.keys(/** @type {!Feature} */ (item).values_);
+  } else if (item) {
+    return Object.keys(item);
   }
-};
 
+  return [];
+};
 
 /**
  * Convenience function to set a mapping field on an item.. Setting the field to undefined will remove it.
@@ -107,9 +75,9 @@ os.im.mapping.getItemFields = function(item) {
  * @param {string} field
  * @param {*} value
  */
-os.im.mapping.setItemField = function(item, field, value) {
-  if (os.instanceOf(item, ol.Feature.NAME)) {
-    var feature = /** @type {!ol.Feature} */ (item);
+const setItemField = function(item, field, value) {
+  if (instanceOf(item, Feature.NAME)) {
+    var feature = /** @type {!Feature} */ (item);
     if (value === undefined) {
       feature.unset(field, true);
     } else {
@@ -121,7 +89,6 @@ os.im.mapping.setItemField = function(item, field, value) {
     delete item[field];
   }
 };
-
 
 /**
  * Gets the best field in the item that matches the given regex. "Best" is currently defined as the
@@ -136,12 +103,12 @@ os.im.mapping.setItemField = function(item, field, value) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.im.mapping.getBestFieldMatch = function(item, regex, opt_currentField) {
+const getBestFieldMatch = function(item, regex, opt_currentField) {
   var f = undefined;
   var currentFieldIndex = Number.MAX_VALUE;
   var fIndex = Number.MAX_VALUE;
 
-  var obj = os.instanceOf(item, ol.Feature.NAME) ? /** @type {!ol.Feature} */ (item).values_ : item;
+  var obj = instanceOf(item, Feature.NAME) ? /** @type {!Feature} */ (item).values_ : item;
   for (var field in obj) {
     var matches = field.match(regex);
     if (matches && (matches.index < fIndex || (matches.index == fIndex && field.length < f.length))) {
@@ -161,15 +128,14 @@ os.im.mapping.getBestFieldMatch = function(item, regex, opt_currentField) {
   return f;
 };
 
-
 /**
  * Compares mappings and only returns the highest scored within each score type.
  *
- * @param {Array.<os.im.mapping.IMapping.<T>>} mappings
- * @return {Array.<os.im.mapping.IMapping.<T>>}
+ * @param {Array<IMapping<T>>} mappings
+ * @return {Array<IMapping<T>>}
  * @template T
  */
-os.im.mapping.reduceMappings = function(mappings) {
+const reduceMappings = function(mappings) {
   var highScore = 0;
 
   // score the mappings
@@ -191,14 +157,13 @@ os.im.mapping.reduceMappings = function(mappings) {
   return mappings;
 };
 
-
 /**
  * Convert a moment time format to a java time format
  *
  * @param {?string} input moment time format
  * @return {?string} java time format.
  */
-os.im.mapping.momentFormatToJavaFormat = function(input) {
+const momentFormatToJavaFormat = function(input) {
   if (!input) {
     return null;
   }
@@ -211,14 +176,13 @@ os.im.mapping.momentFormatToJavaFormat = function(input) {
   return retval;
 };
 
-
 /**
  * Convert a moment time format to a java time format
  *
  * @param {?string} input moment time format
  * @return {?string} java time format.
  */
-os.im.mapping.javaFormatToMomentFormat = function(input) {
+const javaFormatToMomentFormat = function(input) {
   if (!input) {
     return null;
   }
@@ -230,15 +194,14 @@ os.im.mapping.javaFormatToMomentFormat = function(input) {
   return retval;
 };
 
-
 /**
  * Convert a local field to the common XML field format.
  * This only applies for columns that do not have a header.
  *
- * @param {?string} input moment time format
+ * @param {?string|undefined} input moment time format
  * @return {?string} java time format.
  */
-os.im.mapping.localFieldToXmlField = function(input) {
+const localFieldToXmlField = function(input) {
   if (!input) {
     return null;
   }
@@ -254,15 +217,14 @@ os.im.mapping.localFieldToXmlField = function(input) {
   }
 };
 
-
 /**
  * Convert the common XML field to a local field format.
  * This only applies for columns that do not have a header.
  *
- * @param {?string} input moment time format
+ * @param {?string|undefined} input moment time format
  * @return {?string} java time format.
  */
-os.im.mapping.xmlFieldToLocalField = function(input) {
+const xmlFieldToLocalField = function(input) {
   if (!input) {
     return null;
   }
@@ -276,4 +238,18 @@ os.im.mapping.xmlFieldToLocalField = function(input) {
     // This should occur when there is a header.
     return input;
   }
+};
+
+exports = {
+  DEFAULT_SCORETYPE,
+  getTimeTypeForString,
+  getItemField,
+  getItemFields,
+  setItemField,
+  getBestFieldMatch,
+  reduceMappings,
+  momentFormatToJavaFormat,
+  javaFormatToMomentFormat,
+  localFieldToXmlField,
+  xmlFieldToLocalField
 };

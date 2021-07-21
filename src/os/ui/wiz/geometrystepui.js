@@ -16,6 +16,7 @@ const GeoHelpUI = goog.require('os.ui.window.GeoHelpUI');
 const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const AbstractPositionMapping = goog.requireType('os.im.mapping.AbstractPositionMapping');
 const IMapping = goog.requireType('os.im.mapping.IMapping');
 const GeometryStep = goog.requireType('os.ui.wiz.GeometryStep');
 
@@ -180,7 +181,7 @@ class Controller {
             var latm = new LatMapping();
             latm.field = geomStep['latColumn'];
             var fmtLat = !geomStep['useGeoSeparateAutoFormat'] ? geomStep['geoSeparateFormat'] : undefined;
-            var compareLat = /** @type {GeoMapTestRes} */ (this.testMappingAndEmpty_(latm, latm.field, fmtLat));
+            var compareLat = /** @type {GeoMapTestRes} */ (this.testMappingAndEmpty_(latm, latm.field || '', fmtLat));
             if (compareLat['test'] === 0) {
               this['warnings'].push('Caution: No data found in first ' + AbstractCsvParser.PREVIEW_SIZE +
                   ' rows from latitude column "' + latm.field + '"!');
@@ -194,7 +195,7 @@ class Controller {
             var lonm = new LonMapping();
             lonm.field = geomStep['lonColumn'];
             var fmtLon = !geomStep['useGeoSeparateAutoFormat'] ? geomStep['geoSeparateFormat'] : undefined;
-            var compareLon = /** @type {GeoMapTestRes} */ (this.testMappingAndEmpty_(lonm, lonm.field, fmtLon));
+            var compareLon = /** @type {GeoMapTestRes} */ (this.testMappingAndEmpty_(lonm, lonm.field || '', fmtLon));
             if (compareLon['test'] === 0) {
               this['warnings'].push('Caution: No data found in first ' + AbstractCsvParser.PREVIEW_SIZE +
                   ' rows from longitude column "' + lonm.field + '"!');
@@ -230,7 +231,7 @@ class Controller {
   /**
    * Tests a field in preview features against a mapping. Also checks if the field is empty.
    *
-   * @param {IMapping} mapping
+   * @param {AbstractPositionMapping} mapping
    * @param {string} field
    * @param {string=} opt_format Custom format string
    * @return {GeoMapTestRes} test field meaning: 1 -> passes; 0 -> empty column; -1 -> not empty, fails mapping

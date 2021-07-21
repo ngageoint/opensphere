@@ -13,6 +13,7 @@ const Module = goog.require('os.ui.Module');
 const {close: closeWindow} = goog.require('os.ui.window');
 const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
 const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
+const RenameMapping = goog.require('os.im.mapping.RenameMapping');
 const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
 const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
 const ILayer = goog.require('os.layer.ILayer');
@@ -218,14 +219,14 @@ class Controller {
       if (id == RadiusMapping.ID) {
         this['inputType'] = EllipseInputType.CIRCLE;
         this['radiusColumn'] = column;
-        this['radiusUnits'] = mapping.units;
+        this['radiusUnits'] = /** @type {RadiusMapping} */ (mapping).getUnits();
       } else if (id == SemiMajorMapping.ID) {
         this['inputType'] = EllipseInputType.ELLIPSE;
         this['semiMajorColumn'] = column;
-        this['semiMajorUnits'] = mapping.units;
+        this['semiMajorUnits'] = /** @type {SemiMajorMapping} */ (mapping).getUnits();
       } else if (id == SemiMinorMapping.ID) {
         this['semiMinorColumn'] = column;
-        this['semiMinorUnits'] = mapping.units;
+        this['semiMinorUnits'] = /** @type {SemiMinorMapping} */ (mapping).getUnits();
       } else if (id == OrientationMapping.ID) {
         this['orientation'] = column;
       }
@@ -252,7 +253,12 @@ class Controller {
     // Only combine the mappings if passed a layer, don't if passed anything else (used by geometrystep)
     if (layerId && mappings.length != 0 && descMappings.length != 0) {
       mappings.forEach((mapping) => {
-        const im = result.findIndex((res) => res['toField'] === mapping.toField);
+        let im = -1;
+
+        if (mapping instanceof RenameMapping) {
+          im = result.findIndex((res) => res['toField'] === /** @type {RenameMapping} */ (mapping).toField);
+        }
+
         if (im >= 0) {
           result[im] = mapping;
         } else {

@@ -1,62 +1,65 @@
-goog.provide('os.im.mapping.LatLonMapping');
-goog.require('ol.Feature');
-goog.require('ol.geom.Point');
-goog.require('os.im.mapping');
-goog.require('os.im.mapping.MappingRegistry');
-goog.require('os.im.mapping.location.BaseLatLonMapping');
+goog.module('os.im.mapping.LatLonMapping');
+goog.module.declareLegacyNamespace();
 
+const Point = goog.require('ol.geom.Point');
+const {COORD_CLEANER} = goog.require('os.geo');
+const {getItemField} = goog.require('os.im.mapping');
+const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
+const BaseLatLonMapping = goog.require('os.im.mapping.location.BaseLatLonMapping');
+
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
  * Mapping to translate a coordinate string to a point geometry.
  *
- * @param {number=} opt_order
- * @extends {os.im.mapping.location.BaseLatLonMapping.<ol.Feature>}
- * @constructor
+ * @extends {BaseLatLonMapping<Feature>}
  */
-os.im.mapping.LatLonMapping = function(opt_order) {
-  os.im.mapping.LatLonMapping.base(this, 'constructor', opt_order);
-};
-goog.inherits(os.im.mapping.LatLonMapping, os.im.mapping.location.BaseLatLonMapping);
+class LatLonMapping extends BaseLatLonMapping {
+  /**
+   * Constructor.
+   * @param {number=} opt_order
+   */
+  constructor(opt_order) {
+    super(opt_order);
+  }
 
+  /**
+   * Maps a coordinate string to a geometry.
+   *
+   * @param {Feature} item The feature to modify
+   * @throws {Error} If the location field cannot be parsed.
+   * @override
+   */
+  execute(item) {
+    if (this.field) {
+      var fieldValue = getItemField(item, this.field) || '';
 
-/**
- * @type {string}
- * @const
- */
-os.im.mapping.LatLonMapping.ID = 'LatLon';
+      // try to idiot proof the position string
+      fieldValue = fieldValue.replace(COORD_CLEANER, '').trim();
+      if (fieldValue) {
+        var location = this.parseLatLon(fieldValue, this.customFormat);
+        if (location) {
+          var coord = [location.lon, location.lat];
+          var geom = new Point(coord).osTransform();
 
-
-// Register the mapping.
-os.im.mapping.MappingRegistry.getInstance().registerMapping(
-    os.im.mapping.LatLonMapping.ID, os.im.mapping.LatLonMapping);
-
-
-/**
- * Maps a coordinate string to a geometry.
- *
- * @param {ol.Feature} item The feature to modify
- * @throws {Error} If the location field cannot be parsed.
- * @override
- */
-os.im.mapping.LatLonMapping.prototype.execute = function(item) {
-  if (this.field) {
-    var fieldValue = os.im.mapping.getItemField(item, this.field) || '';
-
-    // try to idiot proof the position string
-    fieldValue = goog.string.trim(fieldValue.replace(os.geo.COORD_CLEANER, ''));
-    if (fieldValue) {
-      var location = this.parseLatLon(fieldValue, this.customFormat);
-      if (location) {
-        var coord = [location.lon, location.lat];
-        var geom = new ol.geom.Point(coord).osTransform();
-
-        item.suppressEvents();
-        item.setGeometry(geom);
-        item.enableEvents();
-      } else {
-        throw new Error('Could not parse coordinate from "' + fieldValue + '"!');
+          item.suppressEvents();
+          item.setGeometry(geom);
+          item.enableEvents();
+        } else {
+          throw new Error('Could not parse coordinate from "' + fieldValue + '"!');
+        }
       }
     }
   }
-};
+}
+
+/**
+ * @type {string}
+ */
+LatLonMapping.ID = 'LatLon';
+
+// Register the mapping.
+MappingRegistry.getInstance().registerMapping(LatLonMapping.ID, LatLonMapping);
+
+exports = LatLonMapping;

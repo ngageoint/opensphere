@@ -1,196 +1,177 @@
-goog.provide('os.im.mapping.AbstractMapping');
+goog.module('os.im.mapping.AbstractMapping');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.dom.xml');
-goog.require('os.IXmlPersistable');
-goog.require('os.im.mapping');
-goog.require('os.im.mapping.IMapping');
-goog.require('os.xml');
-
+const IXmlPersistable = goog.require('os.IXmlPersistable'); // eslint-disable-line
+const osMapping = goog.require('os.im.mapping');
+const IMapping = goog.require('os.im.mapping.IMapping'); // eslint-disable-line
+const {appendElement, createElement} = goog.require('os.xml');
 
 
 /**
  * @abstract
- * @implements {os.im.mapping.IMapping.<T, S>}
- * @implements {os.IXmlPersistable}
+ * @implements {IMapping<T, S>}
+ * @implements {IXmlPersistable}
  * @template T,S
- * @constructor
  */
-os.im.mapping.AbstractMapping = function() {
+class AbstractMapping {
   /**
-   * @type {string|undefined}
-   * @protected
+   * Constructor.
    */
-  this.id = undefined;
+  constructor() {
+    /**
+     * @type {string|undefined}
+     * @protected
+     */
+    this.id = undefined;
+
+    /**
+     * The type attribute value for the root XML node.
+     * @type {!string}
+     */
+    this.xmlType = 'AbstractMapping';
+
+    /**
+     * @inheritDoc
+     */
+    this.field = undefined;
+
+    /**
+     * @inheritDoc
+     */
+    this.ui = undefined;
+
+    /**
+     * @inheritDoc
+     */
+    this.warnings = undefined;
+  }
 
   /**
-   * The type attribute value for the root XML node.
-   * @type {!string}
+   * @inheritDoc
    */
-  this.xmlType = 'AbstractMapping';
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.AbstractMapping.prototype.field = undefined;
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.AbstractMapping.prototype.ui = undefined;
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.AbstractMapping.prototype.warnings = undefined;
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.AbstractMapping.prototype.autoDetect = function(items) {
-  return null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.AbstractMapping.prototype.getId = function() {
-  return this.id;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.AbstractMapping.prototype.getLabel = function() {
-  return null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.AbstractMapping.prototype.getScore = function() {
-  return 0;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.AbstractMapping.prototype.getScoreType = function() {
-  return os.im.mapping.DEFAULT_SCORETYPE;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.AbstractMapping.prototype.getFieldsChanged = function() {
-  return [this.field];
-};
-
-
-/**
- * @abstract
- * @inheritDoc
- */
-os.im.mapping.AbstractMapping.prototype.execute = function(item, opt_targetItem) {};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.AbstractMapping.prototype.testField = function(value) {
-  return value != null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.AbstractMapping.prototype.clone = function() {
-  var other = new this.constructor();
-  other.field = this.field;
-  return other;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.AbstractMapping.prototype.persist = function(opt_to) {
-  opt_to = opt_to || {};
-
-  opt_to['id'] = this.getId();
-  opt_to['field'] = this.field;
-
-  return opt_to;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.AbstractMapping.prototype.restore = function(config) {
-  this.field = config['field'];
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.AbstractMapping.prototype.toXml = function() {
-  var mapping = os.xml.createElement('mapping', undefined, undefined, {
-    'type': this.xmlType
-  });
-
-  os.xml.appendElement('field', mapping, os.im.mapping.localFieldToXmlField(this.field));
-
-  return mapping;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.AbstractMapping.prototype.fromXml = function(xml) {
-  this.xmlType = xml.getAttribute('type');
-  this.field = os.im.mapping.xmlFieldToLocalField(this.getXmlValue(xml, 'field'));
-};
-
-
-/**
- * Convert a string to a boolean
- *
- * @param {string} input  An input string
- * @return {boolean} true if the string is 'true', false otherwise.
- */
-os.im.mapping.AbstractMapping.prototype.toBoolean = function(input) {
-  if ('true' === input) {
-    return true;
+  autoDetect(items) {
+    return null;
   }
-  return false;
-};
 
-
-/**
- * Safely extract from an xml Element the first value of the first tag
- *
- * @param {!Element} xml The xml element
- * @param {string}  tagName The tag to look for.
- * @return {?string} The value if available. Null otherwise.
- */
-os.im.mapping.AbstractMapping.prototype.getXmlValue = function(xml, tagName) {
-  var list = xml.getElementsByTagName(tagName);
-  if (list && list[0]) {
-    return list[0].innerHTML;
+  /**
+   * @inheritDoc
+   */
+  getId() {
+    return this.id;
   }
-  return null;
-};
 
+  /**
+   * @inheritDoc
+   */
+  getLabel() {
+    return null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getScore() {
+    return 0;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getScoreType() {
+    return osMapping.DEFAULT_SCORETYPE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getFieldsChanged() {
+    return [this.field];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  testField(value) {
+    return value != null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  clone() {
+    // HACK: The compiler doesn't like using "new" on abstract classes, so cast it as the interface.
+    var other = new /** @type {function(new:IMapping)} */ (this.constructor)();
+    other.field = this.field;
+    return other;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  persist(opt_to) {
+    opt_to = opt_to || {};
+
+    opt_to['id'] = this.getId();
+    opt_to['field'] = this.field;
+
+    return opt_to;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  restore(config) {
+    this.field = config['field'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  toXml() {
+    var mapping = createElement('mapping', undefined, undefined, {
+      'type': this.xmlType
+    });
+
+    appendElement('field', mapping, osMapping.localFieldToXmlField(this.field));
+
+    return mapping;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  fromXml(xml) {
+    this.xmlType = xml.getAttribute('type');
+    this.field = osMapping.xmlFieldToLocalField(this.getXmlValue(xml, 'field'));
+  }
+
+  /**
+   * Convert a string to a boolean
+   *
+   * @param {string} input  An input string
+   * @return {boolean} true if the string is 'true', false otherwise.
+   */
+  toBoolean(input) {
+    if ('true' === input) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Safely extract from an xml Element the first value of the first tag
+   *
+   * @param {!Element} xml The xml element
+   * @param {string}  tagName The tag to look for.
+   * @return {?string} The value if available. Null otherwise.
+   */
+  getXmlValue(xml, tagName) {
+    var list = xml.getElementsByTagName(tagName);
+    if (list && list[0]) {
+      return list[0].innerHTML;
+    }
+    return null;
+  }
+}
+
+exports = AbstractMapping;

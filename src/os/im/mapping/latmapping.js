@@ -1,198 +1,191 @@
-goog.provide('os.im.mapping.LatMapping');
-goog.require('ol.geom.Point');
-goog.require('os.Fields');
-goog.require('os.geo');
-goog.require('os.im.mapping');
-goog.require('os.im.mapping.AbstractPositionMapping');
-goog.require('os.im.mapping.MappingRegistry');
+goog.module('os.im.mapping.LatMapping');
+goog.module.declareLegacyNamespace();
 
+const Point = goog.require('ol.geom.Point');
+const Fields = goog.require('os.Fields');
+const {COORD_CLEANER, parseLat} = goog.require('os.geo');
+const {getBestFieldMatch, getItemField, setItemField} = goog.require('os.im.mapping');
+const AbstractPositionMapping = goog.require('os.im.mapping.AbstractPositionMapping');
+const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
+
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
- * @extends {os.im.mapping.AbstractPositionMapping.<ol.Feature>}
- * @constructor
+ * @extends {AbstractPositionMapping<Feature>}
  */
-os.im.mapping.LatMapping = function() {
-  os.im.mapping.LatMapping.base(this, 'constructor');
-  this.xmlType = os.im.mapping.LatMapping.ID;
+class LatMapping extends AbstractPositionMapping {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.xmlType = LatMapping.ID;
+
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.coordField = Fields.LAT;
+
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.type = LatMapping.ID;
+
+    /**
+     * @type {RegExp}
+     * @protected
+     */
+    this.regex = LatMapping.LAT_REGEX;
+  }
 
   /**
-   * @type {string}
-   * @protected
+   * @inheritDoc
    */
-  this.coordField = os.Fields.LAT;
+  getId() {
+    return this.type;
+  }
 
   /**
-   * @type {string}
-   * @protected
+   * @inheritDoc
    */
-  this.type = os.im.mapping.LatMapping.ID;
+  getFieldsChanged() {
+    return [this.field, this.coordField];
+  }
 
   /**
-   * @type {RegExp}
+   * @inheritDoc
+   */
+  getLabel() {
+    return this.type;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getScore() {
+    if (this.type && this.field) {
+      return this.type.toLowerCase().indexOf(this.field.toLowerCase()) == 0 ? 11 : 10;
+    }
+
+    return super.getScore();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getScoreType() {
+    return 'geom';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  execute(item) {
+    var value = NaN;
+    if (this.field) {
+      var fieldValue = getItemField(item, this.field);
+      if (fieldValue != null) {
+        fieldValue = String(fieldValue).replace(COORD_CLEANER, '');
+        value = parseLat(fieldValue, this.customFormat);
+
+        if (!isNaN(value)) {
+          setItemField(item, this.coordField, value);
+          this.addGeometry(item);
+        }
+      }
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  testField(value) {
+    if (value) {
+      var l = parseLat(String(value));
+      return l != null && !isNaN(l);
+    }
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  testAndGetField(value, opt_format) {
+    if (value) {
+      var l = parseLat(String(value), opt_format);
+      if (l != null && !isNaN(l)) {
+        return l.toString();
+      }
+    }
+    return null;
+  }
+
+  /**
+   * @param {Feature} feature
    * @protected
    */
-  this.regex = os.im.mapping.LatMapping.LAT_REGEX;
-};
-goog.inherits(os.im.mapping.LatMapping, os.im.mapping.AbstractPositionMapping);
+  addGeometry(feature) {
+    var current = feature.getGeometry();
+    if (current) {
+      // already has a geometry... don't bother
+      return;
+    }
 
+    var lat = feature.get(Fields.LAT);
+    var lon = feature.get(Fields.LON);
+    if (lat !== undefined && !isNaN(lat) && typeof lat === 'number' &&
+        lon !== undefined && !isNaN(lon) && typeof lon === 'number') {
+      var geom = new Point([lon, lat]);
+      feature.suppressEvents();
+      feature.setGeometry(geom.osTransform());
+      feature.enableEvents();
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  autoDetect(items) {
+    var m = null;
+    if (items) {
+      var i = items.length;
+      var f = undefined;
+      while (i--) {
+        var feature = items[i];
+        var geom = feature.getGeometry();
+        if (geom) {
+          // Something else (most likely the parser) has already populated the geometry.
+          return null;
+        }
+
+        f = getBestFieldMatch(feature, this.regex, f);
+
+        if (f) {
+          m = new this.constructor();
+          m.field = f;
+        }
+      }
+    }
+
+    return m;
+  }
+}
 
 /**
  * @type {string}
- * @const
  */
-os.im.mapping.LatMapping.ID = 'Latitude';
+LatMapping.ID = 'Latitude';
 
 // Register the mapping.
-os.im.mapping.MappingRegistry.getInstance().registerMapping(
-    os.im.mapping.LatMapping.ID, os.im.mapping.LatMapping);
-
+MappingRegistry.getInstance().registerMapping(LatMapping.ID, LatMapping);
 
 /**
  * Matches "lat" with optional variations of "itude", surrounded by a word boundary, whitespace, or undersos.
  * @type {RegExp}
- * @const
  */
-os.im.mapping.LatMapping.LAT_REGEX = /(\b|_)lat(i(t(u(d(e)?)?)?)?)?(\b|_)/i;
+LatMapping.LAT_REGEX = /(\b|_)lat(i(t(u(d(e)?)?)?)?)?(\b|_)/i;
 
-
-/**
- * @inheritDoc
- */
-os.im.mapping.LatMapping.prototype.getId = function() {
-  return this.type;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.LatMapping.prototype.getFieldsChanged = function() {
-  return [this.field, this.coordField];
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.LatMapping.prototype.getLabel = function() {
-  return this.type;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.LatMapping.prototype.getScore = function() {
-  if (this.type && this.field) {
-    return this.type.toLowerCase().indexOf(this.field.toLowerCase()) == 0 ? 11 : 10;
-  }
-
-  return os.im.mapping.LatMapping.base(this, 'getScore');
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.LatMapping.prototype.getScoreType = function() {
-  return 'geom';
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.LatMapping.prototype.execute = function(item) {
-  var value = NaN;
-  if (this.field) {
-    var fieldValue = os.im.mapping.getItemField(item, this.field);
-    if (fieldValue != null) {
-      fieldValue = String(fieldValue).replace(os.geo.COORD_CLEANER, '');
-      value = os.geo.parseLat(fieldValue, this.customFormat);
-
-      if (!isNaN(value)) {
-        os.im.mapping.setItemField(item, this.coordField, value);
-        this.addGeometry(item);
-      }
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.LatMapping.prototype.testField = function(value) {
-  if (value) {
-    var l = os.geo.parseLat(String(value));
-    return l != null && !isNaN(l);
-  }
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.LatMapping.prototype.testAndGetField = function(value, opt_format) {
-  if (value) {
-    var l = os.geo.parseLat(String(value), opt_format);
-    if (l != null && !isNaN(l)) {
-      return l.toString();
-    }
-  }
-  return null;
-};
-
-
-/**
- * @param {ol.Feature} feature
- * @protected
- */
-os.im.mapping.LatMapping.prototype.addGeometry = function(feature) {
-  var current = feature.getGeometry();
-  if (current) {
-    // already has a geometry... don't bother
-    return;
-  }
-
-  var lat = feature.get(os.Fields.LAT);
-  var lon = feature.get(os.Fields.LON);
-  if (lat !== undefined && !isNaN(lat) && typeof lat === 'number' &&
-      lon !== undefined && !isNaN(lon) && typeof lon === 'number') {
-    var geom = new ol.geom.Point([lon, lat]);
-    feature.suppressEvents();
-    feature.setGeometry(geom.osTransform());
-    feature.enableEvents();
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.LatMapping.prototype.autoDetect = function(items) {
-  var m = null;
-  if (items) {
-    var i = items.length;
-    var f = undefined;
-    while (i--) {
-      var feature = items[i];
-      var geom = feature.getGeometry();
-      if (geom) {
-        // Something else (most likely the parser) has already populated the geometry.
-        return null;
-      }
-
-      f = os.im.mapping.getBestFieldMatch(feature, this.regex, f);
-
-      if (f) {
-        m = new this.constructor();
-        m.field = f;
-      }
-    }
-  }
-
-  return m;
-};
+exports = LatMapping;

@@ -1,107 +1,107 @@
-goog.provide('os.im.mapping.location.BaseLatLonMapping');
-goog.require('os.geo');
-goog.require('os.im.mapping.AbstractMapping');
-goog.require('os.im.mapping.AbstractPositionMapping');
+goog.module('os.im.mapping.location.BaseLatLonMapping');
+goog.module.declareLegacyNamespace();
 
+const {COORD_CLEANER, PREFER_LAT_FIRST, parseLatLon} = goog.require('os.geo');
+const {getItemField} = goog.require('os.im.mapping');
+const AbstractPositionMapping = goog.require('os.im.mapping.AbstractPositionMapping');
 
 
 /**
  * Mapping to translate a coordinate string to a point geometry.
  *
- * @param {number=} opt_order
- * @extends {os.im.mapping.AbstractPositionMapping.<T, S>}
- * @constructor
+ * @extends {AbstractPositionMapping<T, S>}
  * @template T, S
  */
-os.im.mapping.location.BaseLatLonMapping = function(opt_order) {
-  os.im.mapping.location.BaseLatLonMapping.base(this, 'constructor');
+class BaseLatLonMapping extends AbstractPositionMapping {
+  /**
+   * Constructor.
+   * @param {number=} opt_order
+   */
+  constructor(opt_order) {
+    super();
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this.order_ = opt_order !== undefined ? opt_order : PREFER_LAT_FIRST;
+  }
 
   /**
-   * @type {number}
-   * @private
+   * Maps a coordinate string to a geometry.
+   *
+   * @param {T} item The item to modify
+   * @param {S=} opt_targetItem The optional target item
+   * @throws {Error} If the location field cannot be parsed.
+   * @override
    */
-  this.order_ = opt_order !== undefined ? opt_order : os.geo.PREFER_LAT_FIRST;
-};
-goog.inherits(os.im.mapping.location.BaseLatLonMapping, os.im.mapping.AbstractPositionMapping);
+  execute(item, opt_targetItem) {
+    if (this.field) {
+      var fieldValue = getItemField(item, this.field) || '';
 
-
-/**
- * Maps a coordinate string to a geometry.
- *
- * @param {T} item The item to modify
- * @param {S=} opt_targetItem The optional target item
- * @throws {Error} If the location field cannot be parsed.
- * @override
- */
-os.im.mapping.location.BaseLatLonMapping.prototype.execute = function(item, opt_targetItem) {
-  if (this.field) {
-    var fieldValue = os.im.mapping.getItemField(item, this.field) || '';
-
-    // try to idiot proof the position string
-    fieldValue = goog.string.trim(fieldValue.replace(os.geo.COORD_CLEANER, ''));
-    if (fieldValue) {
-      var location = this.parseLatLon(fieldValue, this.customFormat);
-      if (location) {
-        var coord = [location.lon, location.lat];
-        item[this.field] = coord;
-      } else {
-        throw new Error('Could not parse coordinate from "' + fieldValue + '"!');
+      // try to idiot proof the position string
+      fieldValue = fieldValue.replace(COORD_CLEANER, '').trim();
+      if (fieldValue) {
+        var location = this.parseLatLon(fieldValue, this.customFormat);
+        if (location) {
+          var coord = [location.lon, location.lat];
+          item[this.field] = coord;
+        } else {
+          throw new Error('Could not parse coordinate from "' + fieldValue + '"!');
+        }
       }
     }
   }
-};
 
-
-/**
- * @return {number}
- */
-os.im.mapping.location.BaseLatLonMapping.prototype.getOrder = function() {
-  return this.order_;
-};
-
-
-/**
- * @param {number} order
- */
-os.im.mapping.location.BaseLatLonMapping.prototype.setOrder = function(order) {
-  this.order_ = order;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.location.BaseLatLonMapping.prototype.testField = function(value) {
-  if (value) {
-    var l = this.parseLatLon(String(value));
-    return l != null;
+  /**
+   * @return {number}
+   */
+  getOrder() {
+    return this.order_;
   }
-  return false;
-};
 
+  /**
+   * @param {number} order
+   */
+  setOrder(order) {
+    this.order_ = order;
+  }
 
-/**
- * @inheritDoc
- */
-os.im.mapping.location.BaseLatLonMapping.prototype.testAndGetField = function(value, opt_format) {
-  if (value) {
-    var l = this.parseLatLon(String(value), opt_format);
-    if (l != null) {
-      return l.lat.toString() + ' ' + l.lon.toString();
+  /**
+   * @inheritDoc
+   */
+  testField(value) {
+    if (value) {
+      var l = this.parseLatLon(String(value));
+      return l != null;
     }
+    return false;
   }
-  return null;
-};
 
+  /**
+   * @inheritDoc
+   */
+  testAndGetField(value, opt_format) {
+    if (value) {
+      var l = this.parseLatLon(String(value), opt_format);
+      if (l != null) {
+        return l.lat.toString() + ' ' + l.lon.toString();
+      }
+    }
+    return null;
+  }
 
-/**
- * Parses a coordinate string into a lat/lon pair.
- *
- * @param {string} value
- * @param {string=} opt_format Custom format string
- * @return {?osx.geo.Location}
- * @protected
- */
-os.im.mapping.location.BaseLatLonMapping.prototype.parseLatLon = function(value, opt_format) {
-  return os.geo.parseLatLon(value, this.order_, opt_format);
-};
+  /**
+   * Parses a coordinate string into a lat/lon pair.
+   *
+   * @param {string} value
+   * @param {string=} opt_format Custom format string
+   * @return {?osx.geo.Location}
+   * @protected
+   */
+  parseLatLon(value, opt_format) {
+    return parseLatLon(value, this.order_, opt_format);
+  }
+}
+
+exports = BaseLatLonMapping;
