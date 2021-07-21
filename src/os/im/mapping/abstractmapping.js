@@ -91,6 +91,13 @@ class AbstractMapping {
   /**
    * @inheritDoc
    */
+  execute(item, opt_targetItem) {
+    // Do nothing by default.
+  }
+
+  /**
+   * @inheritDoc
+   */
   testField(value) {
     return value != null;
   }
