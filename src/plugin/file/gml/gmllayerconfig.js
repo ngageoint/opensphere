@@ -7,6 +7,7 @@ const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
 const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
 const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
 
+const FeatureImporter = goog.requireType('os.im.FeatureImporter');
 const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const GMLParserConfig = goog.require('plugin.file.gml.GMLParserConfig');
@@ -40,7 +41,7 @@ class GMLLayerConfig extends AbstractDataSourceLayerConfig {
    * @inheritDoc
    */
   getImporter(options) {
-    var importer = super.getImporter(options);
+    const importer = /** @type {FeatureImporter} */ (super.getImporter(options));
     if (this.parserConfig['mappings'] != null && this.parserConfig['mappings'].length) {
       // setAutoMappings() ignores manual configs (e.g. custom Datetime format) since it re-autodetects
       importer.setExecMappings(this.parserConfig['mappings']);

@@ -7,6 +7,7 @@ const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
 const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
 const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
 
+const FeatureImporter = goog.requireType('os.im.FeatureImporter');
 const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const GeoJSONParserConfig = goog.require('plugin.file.geojson.GeoJSONParserConfig');
@@ -40,7 +41,7 @@ class GeoJSONLayerConfig extends AbstractDataSourceLayerConfig {
    * @inheritDoc
    */
   getImporter(options) {
-    var importer = super.getImporter(options);
+    const importer = /** @type {FeatureImporter} */ (super.getImporter(options));
     if (this.parserConfig['mappings'] == null || this.parserConfig['mappings'].length == 0) {
       // there was no user interaction, so default the mappings to a set the importer would have used
       importer.selectAutoMappings([

@@ -11,6 +11,7 @@ const SHPParser = goog.require('plugin.file.shp.SHPParser');
 const SHPParserConfig = goog.require('plugin.file.shp.SHPParserConfig');
 
 const Logger = goog.requireType('goog.log.Logger');
+const FeatureImporter = goog.requireType('os.im.FeatureImporter');
 
 
 /**
@@ -81,7 +82,7 @@ class SHPLayerConfig extends AbstractDataSourceLayerConfig {
    * @inheritDoc
    */
   getImporter(options) {
-    var importer = super.getImporter(options);
+    const importer = /** @type {FeatureImporter} */ (super.getImporter(options));
 
     // setAutoMappings() ignores manual configs (e.g. custom Datetime format) since it re-autodetects
     importer.setExecMappings(this.parserConfig['mappings']);

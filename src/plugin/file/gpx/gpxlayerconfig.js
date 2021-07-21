@@ -7,6 +7,8 @@ const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractData
 const RequestSource = goog.require('os.source.Request');
 const GPXParser = goog.require('plugin.file.gpx.GPXParser');
 
+const FeatureImporter = goog.requireType('os.im.FeatureImporter');
+
 
 /**
  */
@@ -44,7 +46,7 @@ class GPXLayerConfig extends AbstractDataSourceLayerConfig {
    * @inheritDoc
    */
   getImporter(options) {
-    var importer = super.getImporter(options);
+    const importer = /** @type {FeatureImporter} */ (super.getImporter(options));
     // enable autodetection using the default set of mappings (i.e. all of them)
     importer.setAutoDetect(true);
     return importer;
