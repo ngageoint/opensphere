@@ -157,8 +157,7 @@ class KMLTreeExporter extends AbstractKMLExporter {
       }
     }
 
-    // Add ring options to export fields
-    return this.fields ? [RecordField.RING_OPTIONS].concat(this.fields) : this.fields;
+    return this.fields;
   }
 
   /**
