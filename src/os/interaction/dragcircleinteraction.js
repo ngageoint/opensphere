@@ -1,87 +1,83 @@
-goog.provide('os.interaction.DragCircle');
+goog.module('os.interaction.DragCircle');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.string');
-goog.require('ol');
-goog.require('os.I3DSupport');
-goog.require('os.MapEvent');
-goog.require('os.fn');
-goog.require('os.geo');
-goog.require('os.implements');
-goog.require('os.map');
-goog.require('os.ui.ol.interaction.DragCircle');
+const I3DSupport = goog.require('os.I3DSupport');
+const osImplements = goog.require('os.implements');
+const OLDragCircle = goog.require('os.ui.ol.interaction.DragCircle');
 
+const OSMap = goog.requireType('os.Map');
 
 
 /**
  * Draws a circular query area on the map.
  * This interaction is only supported for mouse devices.
  *
- * @constructor
- * @implements {os.I3DSupport}
- * @extends {os.ui.ol.interaction.DragCircle}
+ * @implements {I3DSupport}
  */
-os.interaction.DragCircle = function() {
-  os.interaction.DragCircle.base(this, 'constructor');
-};
-goog.inherits(os.interaction.DragCircle, os.ui.ol.interaction.DragCircle);
-os.implements(os.interaction.DragCircle, os.I3DSupport.ID);
-
-/**
- * @inheritDoc
- */
-os.interaction.DragCircle.prototype.update2D = function(start, end) {
-  if (start && end) {
-    this.circle2D.setCoordinates(start, end);
+class DragCircle extends OLDragCircle {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
   }
 
-  this.updateWebGL(start, end);
-};
+  /**
+   * @inheritDoc
+   */
+  update2D(start, end) {
+    if (start && end) {
+      this.circle2D.setCoordinates(start, end);
+    }
 
-
-/**
- * @inheritDoc
- */
-os.interaction.DragCircle.prototype.cleanup = function() {
-  os.interaction.DragCircle.base(this, 'cleanup');
-
-  // restore camera controls in 3D mode
-  var map = /** @type {os.Map} */ (this.getMap());
-  if (map) {
-    map.toggleMovement(true);
+    this.updateWebGL(start, end);
   }
 
-  this.cleanupWebGL();
-};
+  /**
+   * @inheritDoc
+   */
+  cleanup() {
+    super.cleanup();
 
+    // restore camera controls in 3D mode
+    var map = /** @type {OSMap} */ (this.getMap());
+    if (map) {
+      map.toggleMovement(true);
+    }
 
-/**
- * Clean up the WebGL renderer.
- */
-os.interaction.DragCircle.prototype.cleanupWebGL = os.fn.noop;
+    this.cleanupWebGL();
+  }
 
+  /**
+   * @inheritDoc
+   */
+  is3DSupported() {
+    return true;
+  }
 
-/**
- * Update the circle in the WebGL renderer.
- * @param {ol.Coordinate} start The start coordinate.
- * @param {ol.Coordinate} end The end coordinate.
- */
-os.interaction.DragCircle.prototype.updateWebGL = os.fn.noop;
+  /**
+   * @inheritDoc
+   */
+  begin(mapBrowserEvent) {
+    super.begin(mapBrowserEvent);
+    var map = this.getMap();
+    // stop camera controls in 3D mode
+    /** @type {OSMap} */ (map).toggleMovement(false);
+  }
 
+  /**
+   * Clean up the WebGL renderer.
+   */
+  cleanupWebGL() {}
 
-/**
- * @inheritDoc
- */
-os.interaction.DragCircle.prototype.is3DSupported = function() {
-  return true;
-};
+  /**
+   * Update the circle in the WebGL renderer.
+   * @param {ol.Coordinate} start The start coordinate.
+   * @param {ol.Coordinate} end The end coordinate.
+   */
+  updateWebGL(start, end) {}
+}
 
+osImplements(DragCircle, I3DSupport.ID);
 
-/**
- * @inheritDoc
- */
-os.interaction.DragCircle.prototype.begin = function(mapBrowserEvent) {
-  os.interaction.DragCircle.base(this, 'begin', mapBrowserEvent);
-  var map = this.getMap();
-  // stop camera controls in 3D mode
-  /** @type {os.Map} */ (map).toggleMovement(false);
-};
+exports = DragCircle;

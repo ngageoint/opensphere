@@ -1,367 +1,356 @@
-goog.provide('os.interaction.Measure');
+goog.module('os.interaction.Measure');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol');
-goog.require('ol.MapBrowserPointerEvent');
-goog.require('ol.events.condition');
-goog.require('ol.geom.LineString');
-goog.require('ol.geom.Point');
-goog.require('ol.layer.Vector');
-goog.require('ol.source.Vector');
-goog.require('ol.style.Circle');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
-goog.require('ol.style.Text');
-goog.require('os.bearing');
-goog.require('os.config.Settings');
-goog.require('os.feature.measure');
-goog.require('os.fn');
-goog.require('os.geo2');
-goog.require('os.interaction.DrawPolygon');
-goog.require('os.math');
+const GoogEventType = goog.require('goog.events.EventType');
+const LineString = goog.require('ol.geom.LineString');
+const Point = goog.require('ol.geom.Point');
+const {toLonLat} = goog.require('ol.proj');
+const Fill = goog.require('ol.style.Fill');
+const Stroke = goog.require('ol.style.Stroke');
+const Style = goog.require('ol.style.Style');
+const Text = goog.require('ol.style.Text');
+const {getFormattedBearing, modifyBearing} = goog.require('os.bearing');
+const BearingSettingsKeys = goog.require('os.bearing.BearingSettingsKeys');
+const Settings = goog.require('os.config.Settings');
+const {numDecimalPlaces, updateAll} = goog.require('os.feature.measure');
+const {normalizeGeometryCoordinates} = goog.require('os.geo2');
+const DrawPolygon = goog.require('os.interaction.DrawPolygon');
+const {METHOD_FIELD, getMethod} = goog.require('os.interpolate');
+const Method = goog.require('os.interpolate.Method');
+const osMap = goog.require('os.map');
+const {getMapContainer} = goog.require('os.map.instance');
+const {getFont} = goog.require('os.style.label');
+const TimelineController = goog.require('os.time.TimelineController');
+const UnitChange = goog.require('os.unit.UnitChange');
+const UnitManager = goog.require('os.unit.UnitManager');
 
+const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
  * Interaction to measure the distance between drawn points on the map.
- *
- * @param {olx.interaction.PointerOptions=} opt_options
- * @extends {os.interaction.DrawPolygon}
- * @constructor
  */
-os.interaction.Measure = function(opt_options) {
-  os.interaction.Measure.base(this, 'constructor');
-  this.color = [255, 0, 0, 1];
-  this.type = 'measure';
-
+class Measure extends DrawPolygon {
   /**
-   * @type {number}
-   * @private
+   * Constructor.
+   * @param {olx.interaction.PointerOptions=} opt_options
    */
-  this.lastlen_ = 0;
+  constructor(opt_options) {
+    super();
+    this.color = [255, 0, 0, 1];
+    this.type = 'measure';
 
-  /**
-   * @type {Array<number>}
-   * @private
-   */
-  this.bearings_ = [];
+    /**
+     * @type {number}
+     * @private
+     */
+    this.lastlen_ = 0;
 
-  /**
-   * @type {Array<number>}
-   * @private
-   */
-  this.distances_ = [];
+    /**
+     * @type {Array<number>}
+     * @private
+     */
+    this.bearings_ = [];
 
-  this.setStyle(new ol.style.Style({
-    stroke: new ol.style.Stroke({
-      color: this.color,
-      lineCap: 'square',
-      width: 2
-    })
-  }));
+    /**
+     * @type {Array<number>}
+     * @private
+     */
+    this.distances_ = [];
 
-  /**
-   * @type {!Array<!ol.style.Style>}
-   * @private
-   */
-  this.waypoints_ = [];
+    this.setStyle(new Style({
+      stroke: new Stroke({
+        color: this.color,
+        lineCap: 'square',
+        width: 2
+      })
+    }));
 
-  os.unit.UnitManager.getInstance().listen(goog.events.EventType.PROPERTYCHANGE, this.onUnitsChange_, false, this);
-  os.settings.listen(os.bearing.BearingSettingsKeys.BEARING_TYPE, this.onChange_, false, this);
-};
-goog.inherits(os.interaction.Measure, os.interaction.DrawPolygon);
+    /**
+     * @type {!Array<!Style>}
+     * @private
+     */
+    this.waypoints_ = [];
 
-
-/**
- * @type {number}
- */
-os.interaction.Measure.nextId = 0;
-
-
-/**
- * @type {number}
- * @const
- * @private
- */
-os.interaction.Measure.LABEL_FONT_SIZE_ = 14;
-
-
-/**
- * @type {os.interpolate.Method}
- */
-os.interaction.Measure.method = os.interpolate.getMethod();
-
-
-/**
- * @inheritDoc
- */
-os.interaction.Measure.prototype.disposeInternal = function() {
-  os.unit.UnitManager.getInstance().unlisten(goog.events.EventType.PROPERTYCHANGE, this.onUnitsChange_, false, this);
-  os.settings.unlisten(os.bearing.BearingSettingsKeys.BEARING_TYPE, this.onChange_, false, this);
-  os.interaction.Measure.base(this, 'disposeInternal');
-};
-
-
-/**
- * @inheritDoc
- */
-os.interaction.Measure.prototype.getGeometry = function() {
-  this.coords.length = this.coords.length - 1;
-  const geom = new ol.geom.LineString(this.coords);
-  os.geo2.normalizeGeometryCoordinates(geom);
-  return geom;
-};
-
-
-/**
- * @inheritDoc
- */
-os.interaction.Measure.prototype.getProperties = function() {
-  const props = {};
-  props[os.interpolate.METHOD_FIELD] = os.interaction.Measure.method;
-  return props;
-};
-
-
-/**
- * @inheritDoc
- */
-os.interaction.Measure.prototype.shouldFinish = function(mapBrowserEvent) {
-  return this.distances_.length > 0 && !mapBrowserEvent.originalEvent.shiftKey;
-};
-
-
-/**
- * @inheritDoc
- */
-os.interaction.Measure.prototype.begin = function(mapBrowserEvent) {
-  if (this.line2D) {
-    this.line2D = null;
+    UnitManager.getInstance().listen(GoogEventType.PROPERTYCHANGE, this.onUnitsChange_, false, this);
+    Settings.getInstance().listen(BearingSettingsKeys.BEARING_TYPE, this.onChange_, false, this);
   }
 
-  os.interaction.Measure.base(this, 'begin', mapBrowserEvent);
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    UnitManager.getInstance().unlisten(GoogEventType.PROPERTYCHANGE, this.onUnitsChange_, false, this);
+    Settings.getInstance().unlisten(BearingSettingsKeys.BEARING_TYPE, this.onChange_, false, this);
+    super.disposeInternal();
+  }
 
-  this.distances_.length = 0;
-  this.bearings_.length = 0;
-  this.waypoints_.length = 0;
-  this.lastlen_ = 0;
-};
+  /**
+   * @inheritDoc
+   */
+  getGeometry() {
+    this.coords.length = this.coords.length - 1;
+    const geom = new LineString(this.coords);
+    normalizeGeometryCoordinates(geom);
+    return geom;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getProperties() {
+    const props = {};
+    props[METHOD_FIELD] = Measure.method;
+    return props;
+  }
 
-/**
- * @inheritDoc
- */
-os.interaction.Measure.prototype.beforeUpdate = function(opt_mapBrowserEvent) {
-  let result;
-  const len = this.coords.length;
-  if (len > 1) {
-    const j = this.coords.length - 1;
-    const i = j - 1;
+  /**
+   * @inheritDoc
+   */
+  shouldFinish(mapBrowserEvent) {
+    return this.distances_.length > 0 && !mapBrowserEvent.originalEvent.shiftKey;
+  }
 
-    const start = ol.proj.toLonLat(this.coords[i], os.map.PROJECTION);
-    const end = ol.proj.toLonLat(this.coords[j], os.map.PROJECTION);
-
-    if (os.interaction.Measure.method === os.interpolate.Method.GEODESIC) {
-      result = osasm.geodesicInverse(start, end);
-    } else {
-      result = osasm.rhumbInverse(start, end);
+  /**
+   * @inheritDoc
+   */
+  begin(mapBrowserEvent) {
+    if (this.line2D) {
+      this.line2D = null;
     }
+
+    super.begin(mapBrowserEvent);
+
+    this.distances_.length = 0;
+    this.bearings_.length = 0;
+    this.waypoints_.length = 0;
+    this.lastlen_ = 0;
   }
 
-  if (this.lastlen_ != len) {
-    if (result) {
-      this.distances_.push(result.distance);
-      this.bearings_.push(result.initialBearing || result.bearing);
-    }
-  } else if (result && this.distances_.length > 0) {
-    this.distances_[this.distances_.length - 1] = result.distance;
-    this.bearings_[this.bearings_.length - 1] = result.initialBearing || result.bearing;
-  }
+  /**
+   * @inheritDoc
+   */
+  beforeUpdate(opt_mapBrowserEvent) {
+    let result;
+    const len = this.coords.length;
+    if (len > 1) {
+      const j = this.coords.length - 1;
+      const i = j - 1;
 
-  this.lastlen_ = len;
-};
+      const start = toLonLat(this.coords[i], osMap.PROJECTION);
+      const end = toLonLat(this.coords[j], osMap.PROJECTION);
 
-
-/**
- * @inheritDoc
- */
-os.interaction.Measure.prototype.getStyle = function() {
-  const style = os.interaction.Measure.base(this, 'getStyle');
-  return [style].concat(this.waypoints_);
-};
-
-
-/**
- * @param {string=} opt_text Optional text to apply to the style
- * @return {!ol.style.Text} The text style
- * @private
- */
-os.interaction.Measure.getTextStyle_ = function(opt_text) {
-  return new ol.style.Text({
-    font: os.style.label.getFont(os.interaction.Measure.LABEL_FONT_SIZE_),
-    offsetX: 5,
-    text: opt_text,
-    textAlign: 'left',
-    fill: new ol.style.Fill({
-      color: [0xff, 0xff, 0xff, 1]
-    }),
-    stroke: new ol.style.Stroke({
-      color: [0, 0, 0, 1],
-      width: 2
-    })
-  });
-};
-
-
-/**
- * Creates waypoints to act as anchors for labels in OL3.
- *
- * @inheritDoc
- */
-os.interaction.Measure.prototype.update2D = function() {
-  this.createOverlay();
-
-  // add/update waypoints while drawing the line
-  let waypoint = null;
-  if (this.waypoints_.length === this.distances_.length) {
-    // modify the last one
-    waypoint = this.waypoints_[this.waypoints_.length - 1];
-  } else {
-    // create a new one and style it
-    waypoint = new ol.style.Style({
-      text: os.interaction.Measure.getTextStyle_()
-    });
-
-    this.waypoints_.push(waypoint);
-  }
-
-  const i = this.distances_.length - 1;
-
-  waypoint.setGeometry(new ol.geom.Point(this.coords[i]));
-  waypoint.getText().setText(this.getDistanceText_(i));
-
-  if (this.line2D) {
-    this.line2D.setStyle(this.getStyle());
-  }
-
-  os.interaction.Measure.base(this, 'update2D');
-};
-
-
-/**
- * @inheritDoc
- */
-os.interaction.Measure.prototype.end = function(mapBrowserEvent) {
-  if (this.drawing) {
-    if (this.isType('measure')) {
-      // add a total distance waypoint if there are multiple points
-      if (this.waypoints_.length > 1) {
-        const um = os.unit.UnitManager.getInstance();
-        const text = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(),
-            os.feature.measure.numDecimalPlaces);
-
-        this.waypoints_.push(new ol.style.Style({
-          geometry: new ol.geom.Point(this.coords[this.coords.length - 1]),
-          text: os.interaction.Measure.getTextStyle_(text)
-        }));
-
-        this.line2D.setStyle(this.getStyle());
+      if (Measure.method === Method.GEODESIC) {
+        result = osasm.geodesicInverse(start, end);
+      } else {
+        result = osasm.rhumbInverse(start, end);
       }
-
-      let type = os.interaction.Measure.method;
-      type = type.substring(0, 1).toUpperCase() + type.substring(1);
-
-      os.interaction.Measure.nextId++;
-      this.line2D.set('title', type + ' Measure ' + os.interaction.Measure.nextId);
-      this.line2D.set('icons', ' <i class="fa fa-arrows-h" title="Measure feature"></i> ');
-      os.MapContainer.getInstance().addFeature(this.line2D);
     }
-    os.interaction.Measure.base(this, 'end', mapBrowserEvent);
-  }
-};
 
-
-/**
- * @inheritDoc
- */
-os.interaction.Measure.prototype.saveLast = os.fn.noop;
-
-
-/**
- * Gets the text for the ith distance label.
- *
- * @param {number} i The index of the distance to use.
- * @param {boolean=} opt_noBearing Whether to exclude the bearing (for the last point)
- * @return {string}
- * @private
- */
-os.interaction.Measure.prototype.getDistanceText_ = function(i, opt_noBearing) {
-  const d = this.distances_[i];
-  const coord = /** @type {ol.geom.Point} */ (this.waypoints_[i].getGeometry()).getCoordinates();
-  const u = os.unit.UnitManager.getInstance();
-  let text = u.formatToBestFit('distance', d, 'm', u.getBaseSystem(), os.feature.measure.numDecimalPlaces);
-
-  let bearing = this.bearings_[i];
-  const date = new Date(os.time.TimelineController.getInstance().getCurrent());
-
-  if (bearing !== undefined && !opt_noBearing && coord) {
-    bearing = os.bearing.modifyBearing(bearing, coord, date);
-    const formattedBearing = os.bearing.getFormattedBearing(bearing, os.feature.measure.numDecimalPlaces);
-    text += ' Bearing: ' + formattedBearing;
-  }
-
-  return text;
-};
-
-
-/**
- * Gets the total distance for the measurement
- *
- * @return {number}
- * @private
- */
-os.interaction.Measure.prototype.getTotalDistance_ = function() {
-  let totalDist = 0;
-  for (let i = 0; i < this.distances_.length; i++) {
-    totalDist += this.distances_[i];
-  }
-  return totalDist;
-};
-
-
-/**
- * Listener for map unit changes. Updates the features on the map (if present) to reflect the new units.
- *
- * @param {os.events.PropertyChangeEvent} event
- * @private
- */
-os.interaction.Measure.prototype.onUnitsChange_ = function(event) {
-  if (event.getProperty() == os.unit.UnitChange) {
-    this.onChange_();
-    os.feature.measure.updateAll();
-  }
-};
-
-
-/**
- * Updates the displayed measure text.
- *
- * @private
- */
-os.interaction.Measure.prototype.onChange_ = function() {
-  if (this.waypoints_.length > 0) {
-    const n = this.waypoints_.length - 1;
-    for (let i = 1; i < n; i++) {
-      const dist = this.getDistanceText_(i);
-      this.waypoints_[i].getText().setText(dist);
+    if (this.lastlen_ != len) {
+      if (result) {
+        this.distances_.push(result.distance);
+        this.bearings_.push(result.initialBearing || result.bearing);
+      }
+    } else if (result && this.distances_.length > 0) {
+      this.distances_[this.distances_.length - 1] = result.distance;
+      this.bearings_[this.bearings_.length - 1] = result.initialBearing || result.bearing;
     }
-    const um = os.unit.UnitManager.getInstance();
-    const totalDist = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(),
-        os.feature.measure.numDecimalPlaces);
-    this.waypoints_[n].getText().setText(totalDist);
+
+    this.lastlen_ = len;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getStyle() {
+    const style = super.getStyle();
+    return [style].concat(this.waypoints_);
+  }
+
+  /**
+   * Creates waypoints to act as anchors for labels in OL3.
+   *
+   * @inheritDoc
+   */
+  update2D() {
+    this.createOverlay();
+
+    // add/update waypoints while drawing the line
+    let waypoint = null;
+    if (this.waypoints_.length === this.distances_.length) {
+      // modify the last one
+      waypoint = this.waypoints_[this.waypoints_.length - 1];
+    } else {
+      // create a new one and style it
+      waypoint = new Style({
+        text: Measure.getTextStyle_()
+      });
+
+      this.waypoints_.push(waypoint);
+    }
+
+    const i = this.distances_.length - 1;
+
+    waypoint.setGeometry(new Point(this.coords[i]));
+    waypoint.getText().setText(this.getDistanceText_(i));
 
     if (this.line2D) {
       this.line2D.setStyle(this.getStyle());
     }
+
+    super.update2D();
   }
-};
+
+  /**
+   * @inheritDoc
+   */
+  end(mapBrowserEvent) {
+    if (this.drawing) {
+      if (this.isType('measure')) {
+        // add a total distance waypoint if there are multiple points
+        if (this.waypoints_.length > 1) {
+          const um = UnitManager.getInstance();
+          const text = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(),
+              numDecimalPlaces);
+
+          this.waypoints_.push(new Style({
+            geometry: new Point(this.coords[this.coords.length - 1]),
+            text: Measure.getTextStyle_(text)
+          }));
+
+          this.line2D.setStyle(this.getStyle());
+        }
+
+        let type = Measure.method;
+        type = type.substring(0, 1).toUpperCase() + type.substring(1);
+
+        Measure.nextId++;
+        this.line2D.set('title', type + ' Measure ' + Measure.nextId);
+        this.line2D.set('icons', ' <i class="fa fa-arrows-h" title="Measure feature"></i> ');
+        getMapContainer().addFeature(this.line2D);
+      }
+      super.end(mapBrowserEvent);
+    }
+  }
+
+  /**
+   * Gets the text for the ith distance label.
+   *
+   * @param {number} i The index of the distance to use.
+   * @param {boolean=} opt_noBearing Whether to exclude the bearing (for the last point)
+   * @return {string}
+   * @private
+   */
+  getDistanceText_(i, opt_noBearing) {
+    const d = this.distances_[i];
+    const coord = /** @type {Point} */ (this.waypoints_[i].getGeometry()).getCoordinates();
+    const u = UnitManager.getInstance();
+    let text = u.formatToBestFit('distance', d, 'm', u.getBaseSystem(), numDecimalPlaces);
+
+    let bearing = this.bearings_[i];
+    const date = new Date(TimelineController.getInstance().getCurrent());
+
+    if (bearing !== undefined && !opt_noBearing && coord) {
+      bearing = modifyBearing(bearing, coord, date);
+      const formattedBearing = getFormattedBearing(bearing, numDecimalPlaces);
+      text += ' Bearing: ' + formattedBearing;
+    }
+
+    return text;
+  }
+
+  /**
+   * Gets the total distance for the measurement
+   *
+   * @return {number}
+   * @private
+   */
+  getTotalDistance_() {
+    let totalDist = 0;
+    for (let i = 0; i < this.distances_.length; i++) {
+      totalDist += this.distances_[i];
+    }
+    return totalDist;
+  }
+
+  /**
+   * Listener for map unit changes. Updates the features on the map (if present) to reflect the new units.
+   *
+   * @param {PropertyChangeEvent} event
+   * @private
+   */
+  onUnitsChange_(event) {
+    if (event.getProperty() == UnitChange) {
+      this.onChange_();
+      updateAll();
+    }
+  }
+
+  /**
+   * Updates the displayed measure text.
+   *
+   * @private
+   */
+  onChange_() {
+    if (this.waypoints_.length > 0) {
+      const n = this.waypoints_.length - 1;
+      for (let i = 1; i < n; i++) {
+        const dist = this.getDistanceText_(i);
+        this.waypoints_[i].getText().setText(dist);
+      }
+      const um = UnitManager.getInstance();
+      const totalDist = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(),
+          numDecimalPlaces);
+      this.waypoints_[n].getText().setText(totalDist);
+
+      if (this.line2D) {
+        this.line2D.setStyle(this.getStyle());
+      }
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  saveLast() {}
+
+  /**
+   * @param {string=} opt_text Optional text to apply to the style
+   * @return {!Text} The text style
+   * @private
+   */
+  static getTextStyle_(opt_text) {
+    return new Text({
+      font: getFont(Measure.LABEL_FONT_SIZE_),
+      offsetX: 5,
+      text: opt_text,
+      textAlign: 'left',
+      fill: new Fill({
+        color: [0xff, 0xff, 0xff, 1]
+      }),
+      stroke: new Stroke({
+        color: [0, 0, 0, 1],
+        width: 2
+      })
+    });
+  }
+}
+
+/**
+ * @type {number}
+ */
+Measure.nextId = 0;
+
+/**
+ * @type {number}
+ * @const
+ */
+Measure.LABEL_FONT_SIZE_ = 14;
+
+/**
+ * @type {Method}
+ */
+Measure.method = getMethod();
+
+exports = Measure;

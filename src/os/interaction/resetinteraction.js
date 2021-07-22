@@ -1,80 +1,88 @@
-goog.provide('os.interaction.Reset');
-goog.require('ol.MapBrowserEvent');
-goog.require('ol.events.EventType');
-goog.require('ol.events.condition');
-goog.require('ol.interaction.Interaction');
-goog.require('os.I3DSupport');
-goog.require('os.MapContainer');
-goog.require('os.implements');
-goog.require('os.metrics.Metrics');
-goog.require('os.metrics.keys');
+goog.module('os.interaction.Reset');
+goog.module.declareLegacyNamespace();
 
+const KeyCodes = goog.require('goog.events.KeyCodes');
+const {and} = goog.require('goog.functions');
+const EventType = goog.require('ol.events.EventType');
+const {noModifierKeys, targetNotEditable} = goog.require('ol.events.condition');
+const Interaction = goog.require('ol.interaction.Interaction');
+const I3DSupport = goog.require('os.I3DSupport');
+const osImplements = goog.require('os.implements');
+const {getMapContainer} = goog.require('os.map.instance');
+const Metrics = goog.require('os.metrics.Metrics');
+const {Map: MapMetrics} = goog.require('os.metrics.keys');
+
+const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 
 
 /**
  * Overridden to use smaller zoom increments
  *
- * @constructor
- * @implements {os.I3DSupport}
- * @extends {ol.interaction.Interaction}
- * @param {olx.interaction.MouseWheelZoomOptions=} opt_options Options.
+ * @implements {I3DSupport}
  */
-os.interaction.Reset = function(opt_options) {
-  os.interaction.Reset.base(this, 'constructor', {
-    handleEvent: os.interaction.Reset.handleEvent
-  });
+class Reset extends Interaction {
+  /**
+   * Constructor.
+   * @param {olx.interaction.MouseWheelZoomOptions=} opt_options Options.
+   */
+  constructor(opt_options) {
+    super({
+      handleEvent: Reset.handleEvent
+    });
 
-  this.condition_ = goog.functions.and(ol.events.condition.noModifierKeys, ol.events.condition.targetNotEditable);
-};
-goog.inherits(os.interaction.Reset, ol.interaction.Interaction);
-os.implements(os.interaction.Reset, os.I3DSupport.ID);
+    this.condition_ = and(noModifierKeys, targetNotEditable);
+  }
 
-/**
- * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
- * @return {boolean} `false` to stop event propagation.
- * @this os.interaction.Reset
- * @suppress {duplicate}
- */
-os.interaction.Reset.handleEvent = function(mapBrowserEvent) {
-  var stopEvent = false;
-  if (mapBrowserEvent.type == ol.events.EventType.KEYDOWN && this.condition_(mapBrowserEvent)) {
-    var keyCode = mapBrowserEvent.originalEvent.keyCode;
-    stopEvent = true;
+  /**
+   * @inheritDoc
+   */
+  is3DSupported() {
+    return true;
+  }
 
-    switch (keyCode) {
-      case goog.events.KeyCodes.V:
-        os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_VIEW_KB, 1);
-        os.MapContainer.getInstance().resetView();
-        break;
-      case goog.events.KeyCodes.R:
-        os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_ROTATION_KB, 1);
-        os.MapContainer.getInstance().resetRotation();
-        break;
-      case goog.events.KeyCodes.N:
-        os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_ROLL_KB, 1);
-        os.MapContainer.getInstance().resetRoll();
-        break;
-      case goog.events.KeyCodes.U:
-        os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.RESET_TILT_KB, 1);
-        os.MapContainer.getInstance().resetTilt();
-        break;
-      default:
-        stopEvent = false;
-        break;
+  /**
+   * @param {MapBrowserEvent} mapBrowserEvent Map browser event.
+   * @return {boolean} `false` to stop event propagation.
+   * @this Reset
+   * @suppress {duplicate}
+   */
+  static handleEvent(mapBrowserEvent) {
+    var stopEvent = false;
+    if (mapBrowserEvent.type == EventType.KEYDOWN && this.condition_(mapBrowserEvent)) {
+      var keyCode = mapBrowserEvent.originalEvent.keyCode;
+      stopEvent = true;
+
+      switch (keyCode) {
+        case KeyCodes.V:
+          Metrics.getInstance().updateMetric(MapMetrics.RESET_VIEW_KB, 1);
+          getMapContainer().resetView();
+          break;
+        case KeyCodes.R:
+          Metrics.getInstance().updateMetric(MapMetrics.RESET_ROTATION_KB, 1);
+          getMapContainer().resetRotation();
+          break;
+        case KeyCodes.N:
+          Metrics.getInstance().updateMetric(MapMetrics.RESET_ROLL_KB, 1);
+          getMapContainer().resetRoll();
+          break;
+        case KeyCodes.U:
+          Metrics.getInstance().updateMetric(MapMetrics.RESET_TILT_KB, 1);
+          getMapContainer().resetTilt();
+          break;
+        default:
+          stopEvent = false;
+          break;
+      }
     }
+
+    if (stopEvent) {
+      mapBrowserEvent.preventDefault();
+    }
+
+    return !stopEvent;
   }
+}
 
-  if (stopEvent) {
-    mapBrowserEvent.preventDefault();
-  }
+osImplements(Reset, I3DSupport.ID);
 
-  return !stopEvent;
-};
-
-
-/**
- * @inheritDoc
- */
-os.interaction.Reset.prototype.is3DSupported = function() {
-  return true;
-};
+exports = Reset;

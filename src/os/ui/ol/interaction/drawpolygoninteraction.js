@@ -81,7 +81,6 @@ goog.inherits(os.ui.ol.interaction.DrawPolygon, os.ui.ol.interaction.AbstractDra
 
 /**
  * @type {string}
- * @const
  */
 os.ui.ol.interaction.DrawPolygon.TYPE = 'polygon';
 

@@ -1,49 +1,49 @@
-goog.provide('os.interaction');
+goog.module('os.interaction');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.Feature');
-goog.require('ol.layer.Vector');
-goog.require('ol.layer.VectorTile');
-goog.require('os.feature');
-goog.require('os.map');
+const Feature = goog.require('ol.Feature');
+const OLVectorLayer = goog.require('ol.layer.Vector');
+const VectorTile = goog.require('ol.layer.VectorTile');
+const RecordField = goog.require('os.data.RecordField');
+const {getLayer} = goog.require('os.feature');
+const {getMapContainer} = goog.require('os.map.instance');
 
-goog.requireType('ol.render.Feature');
+const Layer = goog.requireType('ol.layer.Layer');
+const RenderFeature = goog.requireType('ol.render.Feature');
 
 
 /**
  * Event types for the modify interaction.
  * @enum {string}
  */
-os.interaction.ModifyEventType = {
+const ModifyEventType = {
   COMPLETE: 'modify:complete',
   CANCEL: 'modify:cancel'
 };
 
-
 /**
  * Rotation delta, in radians.
  * @type {number}
- * @const
  */
-os.interaction.ROTATE_DELTA = Math.PI / 60;
-
+const ROTATE_DELTA = Math.PI / 60;
 
 /**
  * Feature hit detection callback.
  *
- * @param {(ol.Feature|ol.render.Feature)} feature The feature
- * @param {ol.layer.Layer} layer The layer containing the feature
+ * @param {(Feature|RenderFeature)} feature The feature
+ * @param {Layer} layer The layer containing the feature
  * @return {osx.interaction.FeatureResult|undefined} The hit detection result.
  */
-os.interaction.getFeatureResult = function(feature, layer) {
-  if (feature instanceof ol.Feature) {
+const getFeatureResult = function(feature, layer) {
+  if (feature instanceof Feature) {
     // do not hit detect "preview" features unless they are flagged as interactive
-    if (feature.get(os.data.RecordField.DRAWING_LAYER_NODE) === false &&
-        !feature.get(os.data.RecordField.INTERACTIVE)) {
+    if (feature.get(RecordField.DRAWING_LAYER_NODE) === false &&
+        !feature.get(RecordField.INTERACTIVE)) {
       return undefined;
     }
 
     if (!layer) {
-      layer = os.feature.getLayer(feature);
+      layer = getLayer(feature);
     }
 
     // if the layer can't be determined, don't return anything
@@ -58,7 +58,6 @@ os.interaction.getFeatureResult = function(feature, layer) {
   return undefined;
 };
 
-
 /**
  * Get the delta value to use when zooming.
  *
@@ -66,10 +65,10 @@ os.interaction.getFeatureResult = function(feature, layer) {
  * @param {boolean} inverse If the delta should be inverted
  * @return {number}
  */
-os.interaction.getZoomDelta = function(boost, inverse) {
+const getZoomDelta = function(boost, inverse) {
   var delta;
 
-  var mapContainer = os.MapContainer.getInstance();
+  var mapContainer = getMapContainer();
   if (mapContainer.is3DEnabled()) {
     delta = boost ? 0.5 : 0.9;
 
@@ -87,17 +86,24 @@ os.interaction.getZoomDelta = function(boost, inverse) {
   return delta;
 };
 
-
 /**
- * @param {ol.layer.Layer} layer Layer.
+ * @param {Layer} layer Layer.
  * @return {boolean} Include.
  */
-os.interaction.defaultLayerFilter = function(layer) {
+const defaultLayerFilter = function(layer) {
   //
-  // Unmanaged layers aren't automatically included in hit detection, so the ol.layer.Vector check is intended to
+  // Unmanaged layers aren't automatically included in hit detection, so the OLVectorLayer check is intended to
   // cover those layers.
   //
   // Vector Tiles are excluded because they implement more specific interactions for performance reasons.
   //
-  return layer instanceof ol.layer.Vector && !(layer instanceof ol.layer.VectorTile);
+  return layer instanceof OLVectorLayer && !(layer instanceof VectorTile);
+};
+
+exports = {
+  ModifyEventType,
+  ROTATE_DELTA,
+  getFeatureResult,
+  getZoomDelta,
+  defaultLayerFilter
 };

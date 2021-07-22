@@ -1,151 +1,156 @@
-goog.provide('os.interaction.Select');
+goog.module('os.interaction.Select');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.Feature');
-goog.require('ol.array');
-goog.require('ol.events.condition');
-goog.require('ol.interaction.Interaction');
-goog.require('os.I3DSupport');
-goog.require('os.data.DataManager');
-goog.require('os.data.RecordField');
-goog.require('os.feature');
-goog.require('os.implements');
-goog.require('os.interaction');
-goog.require('os.source.Vector');
+const Feature = goog.require('ol.Feature');
+const ViewHint = goog.require('ol.ViewHint');
+const {singleClick} = goog.require('ol.events.condition');
+const GeometryType = goog.require('ol.geom.GeometryType');
+const Interaction = goog.require('ol.interaction.Interaction');
+const I3DSupport = goog.require('os.I3DSupport');
+const Settings = goog.require('os.config.Settings');
+const {getSource} = goog.require('os.feature');
+const osImplements = goog.require('os.implements');
+const {defaultLayerFilter} = goog.require('os.interaction');
+const VectorSource = goog.require('os.source.Vector');
 
-goog.requireType('ol.render.Feature');
-
+const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
+const Layer = goog.requireType('ol.layer.Layer');
+const RenderFeature = goog.requireType('ol.render.Feature');
 
 
 /**
  * Handles selection of vector features
  *
- * @constructor
- * @extends {ol.interaction.Interaction}
- * @implements {os.I3DSupport}
- * @param {olx.interaction.SelectOptions=} opt_options Options.
+ * @implements {I3DSupport}
  */
-os.interaction.Select = function(opt_options) {
-  os.interaction.Select.base(this, 'constructor', {
-    handleEvent: os.interaction.Select.handleEvent_
-  });
-
-  var options = opt_options !== undefined ? opt_options : {};
-
+class Select extends Interaction {
   /**
-   * @type {ol.EventsConditionType}
-   * @protected
+   * Constructor.
+   * @param {olx.interaction.SelectOptions=} opt_options Options.
    */
-  this.condition = options.condition !== undefined ? options.condition : ol.events.condition.singleClick;
+  constructor(opt_options) {
+    super({
+      handleEvent: Select.handleEvent_
+    });
 
-  var layerFilter;
-  if (options.layers != null) {
-    if (typeof options.layers === 'function') {
-      layerFilter = options.layers;
-    } else {
-      var layers = options.layers;
-      /**
-       * @param {ol.layer.Layer} layer Layer.
-       * @return {boolean} Include.
-       */
-      layerFilter = function(layer) {
-        return ol.array.includes(layers, layer);
-      };
-    }
-  } else {
-    layerFilter = os.interaction.defaultLayerFilter;
-  }
+    var options = opt_options !== undefined ? opt_options : {};
 
-  /**
-   * @type {function(ol.layer.Layer): boolean}
-   * @protected
-   */
-  this.layerFilter = layerFilter;
+    /**
+     * @type {ol.EventsConditionType}
+     * @protected
+     */
+    this.condition = options.condition !== undefined ? options.condition : singleClick;
 
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.supports3D_ = true;
-
-  /**
-   * Gets whether selection behavior is additive (true) or set (false).
-   * @type {boolean}
-   */
-  this.selectionBehavior = /** @type {boolean} */ (os.settings.get('interaction.selectionBehavior', true));
-};
-goog.inherits(os.interaction.Select, ol.interaction.Interaction);
-os.implements(os.interaction.Select, os.I3DSupport.ID);
-
-/**
- * @inheritDoc
- */
-os.interaction.Select.prototype.is3DSupported = function() {
-  return this.supports3D_;
-};
-
-
-/**
- * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
- * @return {boolean} 'false' to stop event propagation.
- * @this os.interaction.Select
- * @private
- *
- * Select/highlight the item and return
- * If the item is a polygon, return but continue to process events
- * so we can load/add/save as a potential new area
- */
-os.interaction.Select.handleEvent_ = function(mapBrowserEvent) {
-  var map = mapBrowserEvent.map;
-
-  if (!this.condition(mapBrowserEvent) || map.getView().getHints()[ol.ViewHint.INTERACTING] > 0) {
-    return true;
-  }
-
-  var selectionBehavior = this.selectionBehavior;
-
-  try {
-    var source;
-    var feature = map.forEachFeatureAtPixel(mapBrowserEvent.pixel,
+    var layerFilter;
+    if (options.layers != null) {
+      if (typeof options.layers === 'function') {
+        layerFilter = options.layers;
+      } else {
+        var layers = options.layers;
         /**
-         * @param {ol.Feature|ol.render.Feature} feature Feature.
-         * @param {ol.layer.Layer} layer Layer.
-         * @return {ol.Feature|ol.render.Feature|undefined} The feature, or undefined if no feature hit
+         * @param {Layer} layer Layer.
+         * @return {boolean} Include.
          */
-        function(feature, layer) {
-          if (feature instanceof ol.Feature) {
-            source = os.feature.getSource(feature, layer);
+        layerFilter = function(layer) {
+          return layers.includes(layer);
+        };
+      }
+    } else {
+      layerFilter = defaultLayerFilter;
+    }
 
-            if (source instanceof os.source.Vector) {
-              if (source.isSelected(feature)) {
-                source.removeFromSelected([feature]);
-              } else {
-                selectionBehavior ? source.addToSelected([feature]) : source.setSelectedItems(feature);
+    /**
+     * @type {function(Layer): boolean}
+     * @protected
+     */
+    this.layerFilter = layerFilter;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.supports3D_ = true;
+
+    /**
+     * Gets whether selection behavior is additive (true) or set (false).
+     * @type {boolean}
+     */
+    this.selectionBehavior = /** @type {boolean} */ (Settings.getInstance().get('interaction.selectionBehavior', true));
+  }
+
+  /**
+   * @inheritDoc
+   */
+  is3DSupported() {
+    return this.supports3D_;
+  }
+
+  /**
+   * @param {MapBrowserEvent} mapBrowserEvent Map browser event.
+   * @return {boolean} 'false' to stop event propagation.
+   * @this Select
+   * @private
+   *
+   * Select/highlight the item and return
+   * If the item is a polygon, return but continue to process events
+   * so we can load/add/save as a potential new area
+   */
+  static handleEvent_(mapBrowserEvent) {
+    var map = mapBrowserEvent.map;
+
+    if (!this.condition(mapBrowserEvent) || map.getView().getHints()[ViewHint.INTERACTING] > 0) {
+      return true;
+    }
+
+    var selectionBehavior = this.selectionBehavior;
+
+    try {
+      var source;
+      var feature = map.forEachFeatureAtPixel(mapBrowserEvent.pixel,
+          /**
+           * @param {Feature|RenderFeature} feature Feature.
+           * @param {Layer} layer Layer.
+           * @return {Feature|RenderFeature|undefined} The feature, or undefined if no feature hit
+           */
+          function(feature, layer) {
+            if (feature instanceof Feature) {
+              source = getSource(feature, layer);
+
+              if (source instanceof VectorSource) {
+                if (source.isSelected(feature)) {
+                  source.removeFromSelected([feature]);
+                } else {
+                  selectionBehavior ? source.addToSelected([feature]) : source.setSelectedItems(feature);
+                }
+
+                return feature;
               }
-
-              return feature;
             }
-          }
 
-          return undefined;
-        }, {
-          layerFilter: this.layerFilter
-        });
-  } catch (e) {
+            return undefined;
+          }, {
+            layerFilter: this.layerFilter
+          });
+    } catch (e) {
+    }
+
+    if (!feature) {
+      // no feature, so allow the event to proceed and do other things
+      return true;
+    }
+
+    var geometry = feature.getGeometry();
+    var geomType = geometry && geometry.getType() || null;
+    if (geomType == GeometryType.POLYGON || geomType == GeometryType.MULTI_POLYGON) {
+      // selected a polygon that is not in the area list. return true so we can bring up the spatial menu.
+      return true;
+    }
+
+    // kill the event for everything else
+    return false;
   }
+}
 
-  if (!feature) {
-    // no feature, so allow the event to proceed and do other things
-    return true;
-  }
+osImplements(Select, I3DSupport.ID);
 
-  var geometry = feature.getGeometry();
-  var geomType = geometry && geometry.getType() || null;
-  if (geomType == ol.geom.GeometryType.POLYGON || geomType == ol.geom.GeometryType.MULTI_POLYGON) {
-    // selected a polygon that is not in the area list. return true so we can bring up the spatial menu.
-    return true;
-  }
-
-  // kill the event for everything else
-  return false;
-};
-
+exports = Select;

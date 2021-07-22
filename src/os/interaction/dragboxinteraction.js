@@ -1,104 +1,104 @@
-goog.provide('os.interaction.DragBox');
+goog.module('os.interaction.DragBox');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.MapBrowserEvent');
-goog.require('ol.color');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
-goog.require('os.I3DSupport');
-goog.require('os.MapEvent');
-goog.require('os.fn');
-goog.require('os.geo');
-goog.require('os.implements');
-goog.require('os.ui.ol.interaction.DragBox');
+const {asArray} = goog.require('ol.color');
+const Stroke = goog.require('ol.style.Stroke');
+const Style = goog.require('ol.style.Style');
+const I3DSupport = goog.require('os.I3DSupport');
+const osImplements = goog.require('os.implements');
+const OLDragBox = goog.require('os.ui.ol.interaction.DragBox');
+
+const Polygon = goog.requireType('ol.geom.Polygon');
+const OSMap = goog.requireType('os.Map');
 
 
 /**
  * Draws a rectangluar query area on the map. This interaction is only supported for mouse devices.
  *
- * @param {olx.interaction.PointerOptions=} opt_options
- * @extends {os.ui.ol.interaction.DragBox}
- * @implements {os.I3DSupport}
- * @constructor
+ * @implements {I3DSupport}
  */
-os.interaction.DragBox = function(opt_options) {
-  var options = opt_options || {};
-  var color = /** @type {ol.Color|string} */ (options.color) || 'rgba(0,255,255,1)';
-  options.style = options.style || new ol.style.Style({
-    stroke: new ol.style.Stroke({
-      color: color,
-      lineCap: 'square',
-      width: 2
-    })
-  });
+class DragBox extends OLDragBox {
+  /**
+   * Constructor.
+   * @param {olx.interaction.PointerOptions=} opt_options
+   */
+  constructor(opt_options) {
+    var options = opt_options || {};
+    var color = /** @type {ol.Color|string} */ (options.color) || 'rgba(0,255,255,1)';
+    options.style = options.style || new Style({
+      stroke: new Stroke({
+        color: color,
+        lineCap: 'square',
+        width: 2
+      })
+    });
 
-  os.interaction.DragBox.base(this, 'constructor', options);
+    super(options);
+
+    /**
+     * The box color.
+     * @type {ol.Color}
+     * @protected
+     */
+    this.color = asArray(color) || [0, 255, 255, 1];
+  }
 
   /**
-   * The box color.
-   * @type {ol.Color}
-   * @protected
+   * @inheritDoc
    */
-  this.color = ol.color.asArray(color) || [0, 255, 255, 1];
-};
-goog.inherits(os.interaction.DragBox, os.ui.ol.interaction.DragBox);
-os.implements(os.interaction.DragBox, os.I3DSupport.ID);
+  updateGeometry(geometry) {
+    super.updateGeometry(geometry);
 
-
-/**
- * @inheritDoc
- */
-os.interaction.DragBox.prototype.updateGeometry = function(geometry) {
-  os.interaction.DragBox.base(this, 'updateGeometry', geometry);
-
-  if (geometry) {
-    this.updateWebGL(geometry);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.interaction.DragBox.prototype.cleanup = function() {
-  os.interaction.DragBox.base(this, 'cleanup');
-
-  // restore camera controls in 3D mode
-  var map = /** @type {os.Map} */ (this.getMap());
-  if (map) {
-    map.toggleMovement(true);
+    if (geometry) {
+      this.updateWebGL(geometry);
+    }
   }
 
-  this.cleanupWebGL();
-};
+  /**
+   * @inheritDoc
+   */
+  cleanup() {
+    super.cleanup();
+
+    // restore camera controls in 3D mode
+    var map = /** @type {OSMap} */ (this.getMap());
+    if (map) {
+      map.toggleMovement(true);
+    }
+
+    this.cleanupWebGL();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  is3DSupported() {
+    return true;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  begin(mapBrowserEvent) {
+    super.begin(mapBrowserEvent);
+    var map = this.getMap();
+    // stop camera controls in 3D mode
+    /** @type {OSMap} */ (map).toggleMovement(false);
+  }
+
+  /**
+   * Clean up the WebGL renderer.
+   */
+  cleanupWebGL() {}
+
+  /**
+   * Update the box in the WebGL renderer.
+   * @param {Polygon} geometry The geometry to update to.
+   */
+  updateWebGL(geometry) {}
+}
+
+osImplements(DragBox, I3DSupport.ID);
 
 
-/**
- * Clean up the WebGL renderer.
- */
-os.interaction.DragBox.prototype.cleanupWebGL = os.fn.noop;
-
-
-/**
- * Update the box in the WebGL renderer.
- * @param {ol.geom.Polygon} geometry The geometry to update to.
- */
-os.interaction.DragBox.prototype.updateWebGL = os.fn.noop;
-
-
-/**
- * @inheritDoc
- */
-os.interaction.DragBox.prototype.is3DSupported = function() {
-  return true;
-};
-
-
-/**
- * @inheritDoc
- */
-os.interaction.DragBox.prototype.begin = function(mapBrowserEvent) {
-  os.interaction.DragBox.base(this, 'begin', mapBrowserEvent);
-  var map = this.getMap();
-  // stop camera controls in 3D mode
-  /** @type {os.Map} */ (map).toggleMovement(false);
-};
+exports = DragBox;

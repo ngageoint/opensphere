@@ -1,13 +1,13 @@
 goog.module('os.interaction.Modify');
 goog.module.declareLegacyNamespace();
 
-const {getRandomString} = goog.require('goog.string');
+const dispose = goog.require('goog.dispose');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
+const {getRandomString} = goog.require('goog.string');
 const {getUid} = goog.require('ol');
 const Collection = goog.require('ol.Collection');
-const Circle = goog.require('ol.style.Circle');
 const Feature = goog.require('ol.Feature');
 const olEvents = goog.require('ol.events');
 const OLEventType = goog.require('ol.events.EventType');
@@ -15,6 +15,7 @@ const Point = goog.require('ol.geom.Point');
 const OLModify = goog.require('ol.interaction.Modify');
 const olModifyEventType = goog.require('ol.interaction.ModifyEventType');
 const RBush = goog.require('ol.structs.RBush');
+const Circle = goog.require('ol.style.Circle');
 const Fill = goog.require('ol.style.Fill');
 const Stroke = goog.require('ol.style.Stroke');
 const Style = goog.require('ol.style.Style');
@@ -25,11 +26,12 @@ const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const osImplements = goog.require('os.implements');
 const {ModifyEventType} = goog.require('os.interaction');
 const interpolate = goog.require('os.interpolate');
+const {getMapContainer} = goog.require('os.map.instance');
 const {notifyStyleChange} = goog.require('os.style');
+const {MODAL_SELECTOR} = goog.require('os.ui');
 const Controls = goog.require('os.ui.help.Controls');
 const osWindow = goog.require('os.ui.window');
 const windowSelector = goog.require('os.ui.windowSelector');
-const {MODAL_SELECTOR} = goog.require('os.ui');
 
 const MapBrowserPointerEvent = goog.requireType('ol.MapBrowserPointerEvent');
 const Geometry = goog.requireType('ol.geom.Geometry');
@@ -208,10 +210,10 @@ class Modify extends OLModify {
       this.getMap().removeInteraction(this);
     }
 
-    goog.dispose(this.keyHandler);
+    dispose(this.keyHandler);
 
-    olEvents.unlisten(this, ol.interaction.ModifyEventType.MODIFYSTART, this.handleStart, this);
-    olEvents.unlisten(this, ol.interaction.ModifyEventType.MODIFYEND, this.handleEnd, this);
+    olEvents.unlisten(this, olModifyEventType.MODIFYSTART, this.handleStart, this);
+    olEvents.unlisten(this, olModifyEventType.MODIFYEND, this.handleEnd, this);
 
     this.removeControls();
   }
@@ -229,7 +231,7 @@ class Modify extends OLModify {
           olEvents.unlisten(geometry, OLEventType.CHANGE, this.onGeometryChange, this);
         }
 
-        os.MapContainer.getInstance().removeFeature(this.clone_);
+        getMapContainer().removeFeature(this.clone_);
       } else {
         this.updateInterpolatedGeometry();
         const geometry = this.clone_.getGeometry();
@@ -237,7 +239,7 @@ class Modify extends OLModify {
           olEvents.listen(geometry, OLEventType.CHANGE, this.onGeometryChange, this);
         }
 
-        os.MapContainer.getInstance().addFeature(this.clone_);
+        getMapContainer().addFeature(this.clone_);
       }
     }
 

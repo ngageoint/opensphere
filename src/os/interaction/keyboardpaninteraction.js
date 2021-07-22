@@ -1,39 +1,44 @@
-goog.provide('os.interaction.KeyboardPan');
+goog.module('os.interaction.KeyboardPan');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.events.EventType');
-goog.require('ol.interaction.KeyboardPan');
-goog.require('os.I3DSupport');
-goog.require('os.implements');
-goog.require('os.ui.ol.interaction');
-
+const {rotate} = goog.require('ol.coordinate');
+const EventType = goog.require('ol.events.EventType');
+const KeyCode = goog.require('ol.events.KeyCode');
+const Interaction = goog.require('ol.interaction.Interaction');
+const OLKeyboardPan = goog.require('ol.interaction.KeyboardPan');
+const I3DSupport = goog.require('os.I3DSupport');
+const osImplements = goog.require('os.implements');
+const {KEY_TYPE} = goog.require('os.ui.ol.interaction');
 
 
 /**
- * @param {olx.interaction.KeyboardPanOptions=} opt_options Options.
- * @extends {ol.interaction.KeyboardPan}
- * @implements {os.I3DSupport}
- * @constructor
+ * @implements {I3DSupport}
  */
-os.interaction.KeyboardPan = function(opt_options) {
-  os.interaction.KeyboardPan.base(this, 'constructor', opt_options);
+class KeyboardPan extends OLKeyboardPan {
+  /**
+   * Constructor.
+   * @param {olx.interaction.KeyboardPanOptions=} opt_options Options.
+   */
+  constructor(opt_options) {
+    super(opt_options);
+
+    /**
+     * The keyCode of the most recent keydown event.
+     * @type {number}
+     * @private
+     */
+    this.lastKeyCode_ = 0;
+  }
 
   /**
-   * The keyCode of the most recent keydown event.
-   * @type {number}
-   * @private
+   * @inheritDoc
    */
-  this.lastKeyCode_ = 0;
-};
-goog.inherits(os.interaction.KeyboardPan, ol.interaction.KeyboardPan);
-os.implements(os.interaction.KeyboardPan, os.I3DSupport.ID);
+  is3DSupported() {
+    return false;
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.interaction.KeyboardPan.prototype.is3DSupported = function() {
-  return false;
-};
-
+osImplements(KeyboardPan, I3DSupport.ID);
 
 /**
  * Handles the {@link ol.MapBrowserEvent map browser event} if it was a
@@ -42,47 +47,48 @@ os.interaction.KeyboardPan.prototype.is3DSupported = function() {
  *
  * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
  * @return {boolean} `false` to stop event propagation.
- * @this os.interaction.KeyboardPan
+ * @this KeyboardPan
  *
  * @suppress {accessControls|duplicate}
  */
-ol.interaction.KeyboardPan.handleEvent = function(mapBrowserEvent) {
+OLKeyboardPan.handleEvent = function(mapBrowserEvent) {
   var stopEvent = false;
 
   // Firefox doesn't always set the keyCode in the 'keypress' event, so save the last code from the 'keydown' event
-  if (mapBrowserEvent.type == ol.events.EventType.KEYDOWN) {
+  if (mapBrowserEvent.type == EventType.KEYDOWN) {
     this.lastKeyCode_ = mapBrowserEvent.originalEvent.keyCode;
   }
 
   // use the same event as {@link goog.events.KeyHandler}, to prevent Openlayers events from always being handled first
-  if (mapBrowserEvent.type == os.ui.ol.interaction.KEY_TYPE) {
+  if (mapBrowserEvent.type == KEY_TYPE) {
     var keyCode = this.lastKeyCode_ || mapBrowserEvent.originalEvent.keyCode;
 
     if (this.condition_(mapBrowserEvent) &&
-        (keyCode == ol.events.KeyCode.DOWN ||
-        keyCode == ol.events.KeyCode.LEFT ||
-        keyCode == ol.events.KeyCode.RIGHT ||
-        keyCode == ol.events.KeyCode.UP)) {
+        (keyCode == KeyCode.DOWN ||
+        keyCode == KeyCode.LEFT ||
+        keyCode == KeyCode.RIGHT ||
+        keyCode == KeyCode.UP)) {
       var map = mapBrowserEvent.map;
       var view = map.getView();
       var mapUnitsDelta = view.getResolution() * this.pixelDelta_;
       var deltaX = 0;
       var deltaY = 0;
-      if (keyCode == ol.events.KeyCode.DOWN) {
+      if (keyCode == KeyCode.DOWN) {
         deltaY = -mapUnitsDelta;
-      } else if (keyCode == ol.events.KeyCode.LEFT) {
+      } else if (keyCode == KeyCode.LEFT) {
         deltaX = -mapUnitsDelta;
-      } else if (keyCode == ol.events.KeyCode.RIGHT) {
+      } else if (keyCode == KeyCode.RIGHT) {
         deltaX = mapUnitsDelta;
       } else {
         deltaY = mapUnitsDelta;
       }
       var delta = [deltaX, deltaY];
-      ol.coordinate.rotate(delta, view.getRotation());
-      ol.interaction.Interaction.pan(view, delta, this.duration_);
+      rotate(delta, view.getRotation());
+      Interaction.pan(view, delta, this.duration_);
       mapBrowserEvent.preventDefault();
       stopEvent = true;
     }
   }
   return !stopEvent;
 };
+exports = KeyboardPan;

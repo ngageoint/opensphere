@@ -72,7 +72,9 @@ const loadInteractionMixins = function() {
   DrawPolygon.prototype.cleanupWebGL = drawpolygon.cleanupWebGL;
   DrawPolygon.prototype.updateWebGL = drawpolygon.updateWebGL;
 
+  /** @override */
   Measure.prototype.cleanupWebGL = measure.cleanupWebGL;
+  /** @override */
   Measure.prototype.updateWebGL = measure.updateWebGL;
 };
 
