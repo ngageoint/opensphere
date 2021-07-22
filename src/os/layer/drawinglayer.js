@@ -1,63 +1,70 @@
-goog.provide('os.layer.Drawing');
+goog.module('os.layer.Drawing');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.DrawingLayerNode');
-goog.require('os.layer.LayerId');
-goog.require('os.layer.Vector');
 goog.require('os.mixin.layerbase');
-goog.require('os.structs.ITreeNodeSupplier');
 
+const Feature = goog.require('ol.Feature');
+const dispatcher = goog.require('os.Dispatcher');
+const EventType = goog.require('os.action.EventType');
+const DrawingLayerNode = goog.require('os.data.DrawingLayerNode');
+const instanceOf = goog.require('os.instanceOf');
+const LayerId = goog.require('os.layer.LayerId');
+const VectorLayer = goog.require('os.layer.Vector');
+
+const ITreeNodeSupplier = goog.requireType('os.structs.ITreeNodeSupplier');
+const ActionEvent = goog.requireType('os.ui.action.ActionEvent');
 
 
 /**
- * @extends {os.layer.Vector}
- * @implements {os.structs.ITreeNodeSupplier}
- * @param {olx.layer.VectorOptions} options Vector layer options
- * @constructor
+ * @implements {ITreeNodeSupplier}
  */
-os.layer.Drawing = function(options) {
-  os.layer.Drawing.base(this, 'constructor', options);
-  os.dispatcher.listen(os.action.EventType.REMOVE_FEATURE, this.onRemoveFeature_, false, this);
-};
-goog.inherits(os.layer.Drawing, os.layer.Vector);
+class Drawing extends VectorLayer {
+  /**
+   * Constructor.
+   * @param {olx.layer.VectorOptions} options Vector layer options
+   */
+  constructor(options) {
+    super(options);
+    dispatcher.getInstance().listen(EventType.REMOVE_FEATURE, this.onRemoveFeature_, false, this);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getTreeNode() {
+    var node = new DrawingLayerNode();
+    node.collapsed = true;
+    node.setLayer(this);
+    return node;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getId() {
+    return Drawing.ID;
+  }
+
+  /**
+   * @param {ActionEvent} evt The event
+   * @private
+   */
+  onRemoveFeature_(evt) {
+    var context = evt.getContext();
+    if (instanceOf(context.feature, Feature.NAME)) {
+      var feature = /** {!Feature} */ (context.feature);
+      var source = this.getSource();
+      if (source && source.getFeatureById(feature.getId()) === feature) {
+        source.removeFeature(feature);
+      }
+    }
+  }
+}
 
 /**
  * @type {string}
  * @const
  */
-os.layer.Drawing.ID = os.layer.LayerId.DRAW;
+Drawing.ID = LayerId.DRAW;
 
-
-/**
- * @inheritDoc
- */
-os.layer.Drawing.prototype.getTreeNode = function() {
-  var node = new os.data.DrawingLayerNode();
-  node.collapsed = true;
-  node.setLayer(this);
-  return node;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Drawing.prototype.getId = function() {
-  return os.layer.Drawing.ID;
-};
-
-
-/**
- * @param {os.ui.action.ActionEvent} evt The event
- * @private
- */
-os.layer.Drawing.prototype.onRemoveFeature_ = function(evt) {
-  var context = evt.getContext();
-  if (os.instanceOf(context.feature, ol.Feature.NAME)) {
-    var feature = /** {!ol.Feature} */ (context.feature);
-    var source = this.getSource();
-    if (source && source.getFeatureById(feature.getId()) === feature) {
-      source.removeFeature(feature);
-    }
-  }
-};
+exports = Drawing;

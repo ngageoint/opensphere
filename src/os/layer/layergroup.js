@@ -1,713 +1,669 @@
-goog.provide('os.layer.LayerGroup');
+goog.module('os.layer.LayerGroup');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventTarget');
-goog.require('ol.array');
-goog.require('os.IGroupable');
-goog.require('os.implements');
-goog.require('os.layer.ILayer');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
 
+const EventTarget = goog.require('goog.events.EventTarget');
+const {clamp} = goog.require('goog.math');
+const {getRandomString} = goog.require('goog.string');
+const {remove} = goog.require('ol.array');
+const IGroupable = goog.require('os.IGroupable');
+const osImplements = goog.require('os.implements');
+const ILayer = goog.require('os.layer.ILayer');
 
 
 /**
  * Logical grouping of layers
  *
- * @extends {goog.events.EventTarget}
- * @implements {os.layer.ILayer}
- * @implements {os.IGroupable}
- * @constructor
+ * @implements {ILayer}
+ * @implements {IGroupable}
  */
-os.layer.LayerGroup = function() {
-  os.layer.LayerGroup.base(this, 'constructor');
+class LayerGroup extends EventTarget {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {!string}
+     * @private
+     */
+    this.id_ = getRandomString();
+
+    /**
+     * @type {!Array<!ILayer>}
+     * @private
+     */
+    this.layers_ = [];
+
+    /**
+     * @type {Object<string, *>}
+     * @private
+     */
+    this.layerOptions_ = null;
+
+    /**
+     * If the layer is enabled.
+     * @type {boolean}
+     * @private
+     */
+    this.enabled_ = true;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.loading_ = false;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.provider_ = null;
+
+    /**
+     * @type {?Array<!string>}
+     * @private
+     */
+    this.tags_ = null;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.removable_ = true;
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.nodeUi_ = '<defaultlayernodeui></defaultlayernodeui>';
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.layerUi_ = 'defaultlayerui';
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.hidden_ = false;
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.title_ = '';
+  }
 
   /**
-   * @type {!string}
-   * @private
+   * @inheritDoc
    */
-  this.id_ = goog.string.getRandomString();
+  disposeInternal() {
+    this.layers_.length = 0;
+  }
 
   /**
-   * @type {!Array.<!os.layer.ILayer>}
-   * @private
+   * @inheritDoc
    */
-  this.layers_ = [];
+  getId() {
+    return this.id_;
+  }
 
   /**
-   * @type {Object.<string, *>}
-   * @private
+   * @inheritDoc
    */
-  this.layerOptions_ = null;
+  setId(value) {
+    this.id_ = value;
+  }
 
   /**
-   * If the layer is enabled.
-   * @type {boolean}
-   * @private
+   * @inheritDoc
    */
-  this.enabled_ = true;
+  getGroupId() {
+    return this.getId();
+  }
 
   /**
-   * @type {boolean}
-   * @private
+   * @inheritDoc
    */
-  this.loading_ = false;
+  getGroupLabel() {
+    return this.getTitle();
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @inheritDoc
    */
-  this.provider_ = null;
+  getSource() {
+    return null;
+  }
 
   /**
-   * @type {?Array.<!string>}
-   * @private
+   * @inheritDoc
    */
-  this.tags_ = null;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.removable_ = true;
-
-  /**
-   * @type {string}
-   * @private
-   */
-  this.nodeUi_ = '<defaultlayernodeui></defaultlayernodeui>';
-
-  /**
-   * @type {string}
-   * @private
-   */
-  this.layerUi_ = 'defaultlayerui';
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.hidden_ = false;
-};
-goog.inherits(os.layer.LayerGroup, goog.events.EventTarget);
-os.implements(os.layer.LayerGroup, os.layer.ILayer.ID);
-os.implements(os.layer.LayerGroup, os.IGroupable.ID);
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.disposeInternal = function() {
-  this.layers_.length = 0;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getId = function() {
-  return this.id_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setId = function(value) {
-  this.id_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getGroupId = function() {
-  return this.getId();
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getGroupLabel = function() {
-  return this.getTitle();
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getSource = function() {
-  return null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.isEnabled = function() {
-  try {
-    if (this.layers_ && this.layers_.some((layer) => layer.isEnabled())) {
-      return true;
-    }
-  } catch (e) {
-    // Likely a non-ILayer in the group, defer to the group flag.
-  }
-
-  return this.enabled_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setEnabled = function(value) {
-  this.enabled_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.isLoading = function() {
-  try {
-    if (this.layers_ && this.layers_.some((layer) => layer.isLoading())) {
-      return true;
-    }
-  } catch (e) {
-    // Likely a non-ILayer in the group, defer to the group flag.
-  }
-
-  return this.loading_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setLoading = function(value) {
-  // manually set the loading flag.  this is used when children aren't
-  // present yet because there is intermediate loading to be done before
-  // we can figure out what the children should actually be.
-  this.loading_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getTitle = function() {
-  return this.title_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setTitle = function(value) {
-  this.title_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getIcons = function() {
-  return '';
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getOSType = function() {
-  if (this.layers_.length > 0) {
-    return this.layers_[0].getOSType();
-  }
-  return 'group';
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setOSType = function(value) {};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getExplicitType = function() {
-  return '';
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setExplicitType = function(value) {};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getProvider = function() {
-  if (this.layers_.length > 0) {
-    return this.layers_[0].getProvider();
-  }
-  return this.provider_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setProvider = function(value) {
-  this.provider_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getBrightness = function() {
-  var maxBrightness = 0;
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
+  isEnabled() {
     try {
-      maxBrightness = Math.max(maxBrightness, this.layers_[i].getBrightness());
-    } catch (e) {
-    }
-  }
-
-  return goog.math.clamp(maxBrightness, 0, 1);
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setBrightness = function(value) {
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    try {
-      this.layers_[i].setBrightness(value);
-    } catch (e) {
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getContrast = function() {
-  var maxContrast = 0;
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    try {
-      maxContrast = Math.max(maxContrast, this.layers_[i].getContrast());
-    } catch (e) {
-    }
-  }
-
-  return goog.math.clamp(maxContrast, 0, 1);
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setContrast = function(value) {
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    try {
-      this.layers_[i].setContrast(value);
-    } catch (e) {
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getHue = function() {
-  var maxHue = -180;
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    try {
-      maxHue = Math.max(maxHue, this.layers_[i].getHue());
-    } catch (e) {
-    }
-  }
-
-  return goog.math.clamp(maxHue, -180, 180);
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setHue = function(value) {
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    try {
-      this.layers_[i].setHue(value);
-    } catch (e) {
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getOpacity = function() {
-  var maxOpacity = 0;
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    try {
-      maxOpacity = Math.max(maxOpacity, this.layers_[i].getOpacity());
-    } catch (e) {
-    }
-  }
-
-  return goog.math.clamp(maxOpacity, 0, 1);
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setOpacity = function(value) {
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    try {
-      this.layers_[i].setOpacity(value);
-    } catch (e) {
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getSaturation = function() {
-  var maxSaturation = 0;
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    try {
-      maxSaturation = Math.max(maxSaturation, this.layers_[i].getSaturation());
-    } catch (e) {
-    }
-  }
-
-  return goog.math.clamp(maxSaturation, 0, 1);
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setSaturation = function(value) {
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    try {
-      this.layers_[i].setSaturation(value);
-    } catch (e) {
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getSharpness = function() {
-  var maxSharpness = 0;
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    try {
-      maxSharpness = Math.max(maxSharpness, this.layers_[i].getSharpness());
-    } catch (e) {
-    }
-  }
-
-  return goog.math.clamp(maxSharpness, 0, 1);
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setSharpness = function(value) {
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    try {
-      this.layers_[i].setSharpness(value);
-    } catch (e) {
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getLayerVisible = function() {
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    try {
-      if (this.layers_[i].getLayerVisible()) {
+      if (this.layers_ && this.layers_.some((layer) => layer.isEnabled())) {
         return true;
       }
     } catch (e) {
+      // Likely a non-ILayer in the group, defer to the group flag.
     }
+
+    return this.enabled_;
   }
 
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setLayerVisible = function(value) {
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    try {
-      this.layers_[i].setLayerVisible(value);
-    } catch (e) {
-    }
+  /**
+   * @inheritDoc
+   */
+  setEnabled(value) {
+    this.enabled_ = value;
   }
-};
 
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setBaseVisible = function(value) {
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
+  /**
+   * @inheritDoc
+   */
+  isLoading() {
     try {
-      this.layers_[i].setBaseVisible(value);
-    } catch (e) {
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getBaseVisible = function() {
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    try {
-      if (this.layers_[i].getBaseVisible()) {
+      if (this.layers_ && this.layers_.some((layer) => layer.isLoading())) {
         return true;
       }
     } catch (e) {
+      // Likely a non-ILayer in the group, defer to the group flag.
+    }
+
+    return this.loading_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setLoading(value) {
+    // manually set the loading flag.  this is used when children aren't
+    // present yet because there is intermediate loading to be done before
+    // we can figure out what the children should actually be.
+    this.loading_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getTitle() {
+    return this.title_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setTitle(value) {
+    this.title_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getIcons() {
+    return '';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getOSType() {
+    if (this.layers_.length > 0) {
+      return this.layers_[0].getOSType();
+    }
+    return 'group';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setOSType(value) {}
+
+  /**
+   * @inheritDoc
+   */
+  getExplicitType() {
+    return '';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setExplicitType(value) {}
+
+  /**
+   * @inheritDoc
+   */
+  getProvider() {
+    if (this.layers_.length > 0) {
+      return this.layers_[0].getProvider();
+    }
+    return this.provider_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setProvider(value) {
+    this.provider_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getBrightness() {
+    var maxBrightness = 0;
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        maxBrightness = Math.max(maxBrightness, this.layers_[i].getBrightness());
+      } catch (e) {
+      }
+    }
+
+    return clamp(maxBrightness, 0, 1);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setBrightness(value) {
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        this.layers_[i].setBrightness(value);
+      } catch (e) {
+      }
     }
   }
 
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getTags = function() {
-  return this.tags_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setTags = function(value) {
-  this.tags_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getLayerOptions = function() {
-  return this.layerOptions_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setLayerOptions = function(value) {
-  this.layerOptions_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.isRemovable = function() {
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    try {
-      if (!this.layers_[i].isRemovable()) {
-        return false;
+  /**
+   * @inheritDoc
+   */
+  getContrast() {
+    var maxContrast = 0;
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        maxContrast = Math.max(maxContrast, this.layers_[i].getContrast());
+      } catch (e) {
       }
-    } catch (e) {
     }
+
+    return clamp(maxContrast, 0, 1);
   }
 
-  return this.removable_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setRemovable = function(value) {
-  this.removable_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getNodeUI = function() {
-  var set = {};
-  var max = 0;
-  var maxGroup = null;
-
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    var group = this.layers_[i].getGroupUI();
-
-    if (group) {
-      if (group in set) {
-        set[group]++;
-      } else {
-        set[group] = 1;
-      }
-
-      if (set[group] > max) {
-        max = set[group];
-        maxGroup = group;
+  /**
+   * @inheritDoc
+   */
+  setContrast(value) {
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        this.layers_[i].setContrast(value);
+      } catch (e) {
       }
     }
   }
 
-  if (maxGroup) {
-    return '<' + maxGroup + '></' + maxGroup + '>';
+  /**
+   * @inheritDoc
+   */
+  getHue() {
+    var maxHue = -180;
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        maxHue = Math.max(maxHue, this.layers_[i].getHue());
+      } catch (e) {
+      }
+    }
+
+    return clamp(maxHue, -180, 180);
   }
 
-  return this.nodeUi_;
-};
+  /**
+   * @inheritDoc
+   */
+  setHue(value) {
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        this.layers_[i].setHue(value);
+      } catch (e) {
+      }
+    }
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getOpacity() {
+    var maxOpacity = 0;
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        maxOpacity = Math.max(maxOpacity, this.layers_[i].getOpacity());
+      } catch (e) {
+      }
+    }
 
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setNodeUI = function(value) {};
+    return clamp(maxOpacity, 0, 1);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  setOpacity(value) {
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        this.layers_[i].setOpacity(value);
+      } catch (e) {
+      }
+    }
+  }
 
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getLayerUI = function() {
-  return this.layerUi_;
-};
+  /**
+   * @inheritDoc
+   */
+  getSaturation() {
+    var maxSaturation = 0;
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        maxSaturation = Math.max(maxSaturation, this.layers_[i].getSaturation());
+      } catch (e) {
+      }
+    }
 
+    return clamp(maxSaturation, 0, 1);
+  }
 
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setLayerUI = function(value) {
-  this.layerUi_ = value;
-};
+  /**
+   * @inheritDoc
+   */
+  setSaturation(value) {
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        this.layers_[i].setSaturation(value);
+      } catch (e) {
+      }
+    }
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getSharpness() {
+    var maxSharpness = 0;
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        maxSharpness = Math.max(maxSharpness, this.layers_[i].getSharpness());
+      } catch (e) {
+      }
+    }
 
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getGroupUI = function() {
-  return null;
-};
+    return clamp(maxSharpness, 0, 1);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  setSharpness(value) {
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        this.layers_[i].setSharpness(value);
+      } catch (e) {
+      }
+    }
+  }
 
-/**
- * Adds a layer to the group.
- *
- * @param {!os.layer.ILayer} layer
- */
-os.layer.LayerGroup.prototype.addLayer = function(layer) {
-  this.layers_.push(layer);
-};
+  /**
+   * @inheritDoc
+   */
+  getLayerVisible() {
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        if (this.layers_[i].getLayerVisible()) {
+          return true;
+        }
+      } catch (e) {
+      }
+    }
 
+    return false;
+  }
 
-/**
- * Get the layers in the group.
- *
- * @return {!Array.<!os.layer.ILayer>}
- */
-os.layer.LayerGroup.prototype.getLayers = function() {
-  return this.layers_;
-};
+  /**
+   * @inheritDoc
+   */
+  setLayerVisible(value) {
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        this.layers_[i].setLayerVisible(value);
+      } catch (e) {
+      }
+    }
+  }
 
+  /**
+   * @inheritDoc
+   */
+  setBaseVisible(value) {
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        this.layers_[i].setBaseVisible(value);
+      } catch (e) {
+      }
+    }
+  }
 
-/**
- * Removes a layer from the group.
- *
- * @param {!os.layer.ILayer} layer
- */
-os.layer.LayerGroup.prototype.removeLayer = function(layer) {
-  ol.array.remove(this.layers_, layer);
-};
+  /**
+   * @inheritDoc
+   */
+  getBaseVisible() {
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        if (this.layers_[i].getBaseVisible()) {
+          return true;
+        }
+      } catch (e) {
+      }
+    }
 
+    return false;
+  }
 
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.callAction = function(type) {
-  // unsupported
-};
+  /**
+   * @inheritDoc
+   */
+  getTags() {
+    return this.tags_;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  setTags(value) {
+    this.tags_ = value;
+  }
 
-/**
- * @inheritDoc
- * @see {os.ui.action.IActionTarget}
- */
-os.layer.LayerGroup.prototype.supportsAction = function(type, opt_actionArgs) {
-  return false;
-};
+  /**
+   * @inheritDoc
+   */
+  getLayerOptions() {
+    return this.layerOptions_;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  setLayerOptions(value) {
+    this.layerOptions_ = value;
+  }
 
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getSynchronizerType = function() {
-  return null;
-};
+  /**
+   * @inheritDoc
+   */
+  isRemovable() {
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      try {
+        if (!this.layers_[i].isRemovable()) {
+          return false;
+        }
+      } catch (e) {
+      }
+    }
 
+    return this.removable_;
+  }
 
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setSynchronizerType = function(value) {};
+  /**
+   * @inheritDoc
+   */
+  setRemovable(value) {
+    this.removable_ = value;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getNodeUI() {
+    var set = {};
+    var max = 0;
+    var maxGroup = null;
 
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.getHidden = function() {
-  return this.hidden_;
-};
+    for (var i = 0, n = this.layers_.length; i < n; i++) {
+      var group = this.layers_[i].getGroupUI();
 
+      if (group) {
+        if (group in set) {
+          set[group]++;
+        } else {
+          set[group] = 1;
+        }
 
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.setHidden = function(value) {
-  this.hidden_ = value;
-};
+        if (set[group] > max) {
+          max = set[group];
+          maxGroup = group;
+        }
+      }
+    }
 
+    if (maxGroup) {
+      return '<' + maxGroup + '></' + maxGroup + '>';
+    }
 
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.persist = function(opt_to) {
-  // intentionally empty
-  return opt_to || {};
-};
+    return this.nodeUi_;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  setNodeUI(value) {}
 
-/**
- * @inheritDoc
- */
-os.layer.LayerGroup.prototype.restore = function(config) {
-  // intentionally empty
-};
+  /**
+   * @inheritDoc
+   */
+  getLayerUI() {
+    return this.layerUi_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setLayerUI(value) {
+    this.layerUi_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getGroupUI() {
+    return null;
+  }
+
+  /**
+   * Adds a layer to the group.
+   *
+   * @param {!ILayer} layer
+   */
+  addLayer(layer) {
+    this.layers_.push(layer);
+  }
+
+  /**
+   * Get the layers in the group.
+   *
+   * @return {!Array<!ILayer>}
+   */
+  getLayers() {
+    return this.layers_;
+  }
+
+  /**
+   * Removes a layer from the group.
+   *
+   * @param {!ILayer} layer
+   */
+  removeLayer(layer) {
+    remove(this.layers_, layer);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  callAction(type) {
+    // unsupported
+  }
+
+  /**
+   * @inheritDoc
+   * @see {os.ui.action.IActionTarget}
+   */
+  supportsAction(type, opt_actionArgs) {
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getSynchronizerType() {
+    return null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setSynchronizerType(value) {}
+
+  /**
+   * @inheritDoc
+   */
+  getHidden() {
+    return this.hidden_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setHidden(value) {
+    this.hidden_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  persist(opt_to) {
+    // intentionally empty
+    return opt_to || {};
+  }
+
+  /**
+   * @inheritDoc
+   */
+  restore(config) {
+    // intentionally empty
+  }
+}
+osImplements(LayerGroup, ILayer.ID);
+osImplements(LayerGroup, IGroupable.ID);
+
+exports = LayerGroup;

@@ -1,10 +1,10 @@
-goog.provide('os.layer.PropertyChange');
-
+goog.module('os.layer.PropertyChange');
+goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}
  */
-os.layer.PropertyChange = {
+exports = {
   ALTITUDE: 'altitude',
   ANIMATION_ENABLED: 'animationEnabled',
   COLOR_MODEL: 'colorModel',
