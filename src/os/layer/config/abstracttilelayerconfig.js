@@ -1,384 +1,381 @@
-goog.provide('os.layer.config.AbstractTileLayerConfig');
+goog.module('os.layer.config.AbstractTileLayerConfig');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Uri');
-goog.require('goog.log');
-goog.require('os.TileClass');
-goog.require('os.layer.Tile');
-goog.require('os.layer.config.AbstractLayerConfig');
-goog.require('os.map');
 goog.require('os.mixin.TileImage');
 goog.require('os.mixin.UrlTileSource');
-goog.require('os.net');
-goog.require('os.net.URLModifier');
-goog.require('os.ol.source.tileimage');
-goog.require('os.proj');
-goog.require('os.tile.ColorableTile');
 
+const log = goog.require('goog.log');
+const {DEFAULT_MAX_ZOOM} = goog.require('ol');
+const {transformExtent} = goog.require('ol.proj');
+const {createForProjection} = goog.require('ol.tilegrid');
+const Settings = goog.require('os.config.Settings');
+const osImplements = goog.require('os.implements');
+const Tile = goog.require('os.layer.Tile');
+const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
+const {getCrossOrigin, isValidCrossOrigin, registerCrossOrigin} = goog.require('os.net');
+const CrossOrigin = goog.require('os.net.CrossOrigin');
+const {addProxyWrapper, autoProxyCheck} = goog.require('os.ol.source.tileimage');
+const {EPSG4326, getBestSupportedProjection} = goog.require('os.proj');
+const IFilterableTileSource = goog.require('os.source.IFilterableTileSource');
+const ColorableTile = goog.require('os.tile.ColorableTile');
+
+const Logger = goog.requireType('goog.log.Logger');
+const Projection = goog.requireType('ol.proj.Projection');
+const TileImage = goog.requireType('ol.source.TileImage');
+const TileGrid = goog.requireType('ol.tilegrid.TileGrid');
+const TileClass = goog.requireType('os.TileClass');
 
 
 /**
  * @abstract
- * @extends {os.layer.config.AbstractLayerConfig}
- * @constructor
  */
-os.layer.config.AbstractTileLayerConfig = function() {
-  os.layer.config.AbstractTileLayerConfig.base(this, 'constructor');
+class AbstractTileLayerConfig extends AbstractLayerConfig {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {Projection}
+     * @protected
+     */
+    this.projection = null;
+
+    /**
+     * @type {?TileGrid}
+     * @protected
+     */
+    this.tileGrid = null;
+
+    /**
+     * @type {?CrossOrigin}
+     * @protected
+     */
+    this.crossOrigin = null;
+
+    /**
+     * @type {!Function}
+     * @protected
+     */
+    this.layerClass = Tile;
+
+    /**
+     * @type {!TileClass}
+     * @protected
+     */
+    this.tileClass = ColorableTile;
+
+    /**
+     * List of URLs for load balancing.
+     * @type {Array<string>}
+     * @protected
+     */
+    this.urls = [];
+
+    /**
+     * Node UI string for the layer being created.
+     * @type {?string}
+     * @protected
+     */
+    this.layerNodeUi = null;
+  }
 
   /**
-   * @type {ol.proj.Projection}
-   * @protected
+   * @inheritDoc
    */
-  this.projection = null;
+  initializeConfig(options) {
+    super.initializeConfig(options);
+
+    if (options['urls'] != null) {
+      this.urls = /** @type {!Array<string>} */ (options['urls']);
+    } else if (this.url) {
+      // make sure the "urls" property is set in the options for multiple URL support
+      options['urls'] = this.urls = [this.url];
+
+      // remove the "url" property to avoid confusion
+      options['url'] = undefined;
+    }
+
+    this.expandUrls();
+    this.urls = this.urls.map(AbstractTileLayerConfig.addBaseServer);
+
+    options['urls'] = this.urls;
+
+    var width = this.getTileWidth(options);
+    var height = this.getTileHeight(options);
+
+    if (width === 512 && options['zoomOffset'] == null) {
+      options['zoomOffset'] = -1;
+    }
+
+    var projection = getBestSupportedProjection(options);
+    if (!projection) {
+      throw new Error('No projections supported by the layer are defined!');
+    }
+
+    this.projection = projection;
+    this.tileGrid = createForProjection(this.projection, DEFAULT_MAX_ZOOM, [width, height]);
+
+    // cross origin
+    if (!isValidCrossOrigin(options['crossOrigin'])) {
+      this.crossOrigin = /** @type {CrossOrigin} */ (getCrossOrigin(this.urls[0]));
+    } else {
+      this.crossOrigin = /** @type {CrossOrigin} */ (options['crossOrigin']);
+
+      for (var i = 0; i < this.urls.length; i++) {
+        var url = this.urls[i];
+
+        // register the cross origin value by URL pattern so that our Cesium.loadImage mixin can find it
+        registerCrossOrigin(AbstractTileLayerConfig.getUrlPattern(url), this.crossOrigin);
+      }
+    }
+
+    // the correct none equivalent for crossOrigin in OL3 is null
+    if (this.crossOrigin === CrossOrigin.NONE) {
+      this.crossOrigin = null;
+      options['crossOrigin'] = null;
+    }
+
+    if (options['layerNodeUi']) {
+      // pull the nodeUi off the options object to prevent it from being persisted by the layer
+      this.layerNodeUi = options['layerNodeUi'];
+      delete options['layerNodeUi'];
+    }
+
+    // tile class
+    this.layerClass = /** @type {Function} */ (options['layerClass']) || this.layerClass;
+    this.tileClass = /** @type {TileClass} */ (options['tileClass']) || this.tileClass;
+  }
 
   /**
-   * @type {?ol.tilegrid.TileGrid}
-   * @protected
+   * @inheritDoc
    */
-  this.tileGrid = null;
+  createLayer(options) {
+    this.initializeConfig(options);
+
+    var source = this.getSource(options);
+
+    if (this.tileClass && osImplements(source, IFilterableTileSource.ID)) {
+      source.setTileClass(this.tileClass);
+    }
+
+    // The extent is set on the source and not the layer in order to properly support wrap-x.
+    // See urltilemixin.js for more details.
+    if (options['extent']) {
+      var extentProjection = /** @type {!string} */ (options['extentProjection']) || EPSG4326;
+      var extent = /** @type {ol.Extent} */ (options['extent']);
+      source.setExtent(transformExtent(extent, extentProjection, this.projection));
+    }
+
+    if (options['attributions']) {
+      source.setAttributions(/** @type {Array<string>} */ (options['attributions']));
+    }
+
+    if (this.crossOrigin && this.crossOrigin !== CrossOrigin.NONE) {
+      if (options['proxy']) {
+        log.fine(logger,
+            'layer ' + this.id + ' proxy=true');
+        addProxyWrapper(source);
+      } else if (options['proxy'] === undefined) {
+        log.fine(logger,
+            'layer ' + this.id + ' proxy=auto');
+        autoProxyCheck(source, this.projection);
+      }
+    }
+
+    log.fine(logger,
+        'layer ' + this.id + ' crossOrigin=' + this.crossOrigin);
+
+    if (!source.tileLoadSet) {
+      source.setTileLoadFunction(source.getTileLoadFunction());
+    }
+
+    var tileImageOptions = /** @type {olx.source.TileImageOptions} */ ({
+      source: source
+    });
+
+    var tileLayer = new this.layerClass(tileImageOptions);
+    this.configureLayer(tileLayer, options);
+    tileLayer.restore(options);
+    return tileLayer;
+  }
 
   /**
-   * @type {?os.net.CrossOrigin}
+   * @param {Tile} layer
+   * @param {Object<string, *>} options
    * @protected
    */
-  this.crossOrigin = null;
+  configureLayer(layer, options) {
+    if (options['explicitType'] != null) {
+      layer.setExplicitType(/** @type {string} */ (options['explicitType']));
+    }
+
+    if (this.layerNodeUi) {
+      layer.setNodeUI(this.layerNodeUi);
+    }
+  }
 
   /**
-   * @type {!Function}
+   * @abstract
+   * @param {Object<string, *>} options
+   * @return {TileImage}
    * @protected
    */
-  this.layerClass = os.layer.Tile;
+  getSource(options) {}
 
   /**
-   * @type {!os.TileClass}
+   * @param {Object<string, *>} options
+   * @return {number}
    * @protected
    */
-  this.tileClass = os.tile.ColorableTile;
+  getTileWidth(options) {
+    return /** @type {number} */ (options['tileWidth'] || options['tileSize'] || 512);
+  }
 
   /**
-   * List of URLs for load balancing.
-   * @type {Array<string>}
+   * @param {Object<string, *>} options
+   * @return {number}
    * @protected
    */
-  this.urls = [];
+  getTileHeight(options) {
+    return /** @type {number} */ (options['tileHeight'] || options['tileSize'] || 512);
+  }
 
   /**
-   * Node UI string for the layer being created.
-   * @type {?string}
+   * Expand URLs that contain ranges for rotating tile servers.
+   *
    * @protected
    */
-  this.layerNodeUi = null;
-};
-goog.inherits(os.layer.config.AbstractTileLayerConfig, os.layer.config.AbstractLayerConfig);
+  expandUrls() {
+    this.urls = AbstractTileLayerConfig.expandUrls(this.urls);
+  }
 
+  /**
+   * @param {string} url The url
+   * @return {RegExp} The url pattern
+   */
+  static getUrlPattern(url) {
+    // replace {z}, {x}, {y}, and {-y} with number regexps
+    url = url.replace(/{-?[zxy]}/g, '\\d+');
+
+    // replace {0-9} ranges for rotating tile servers
+    url = url.replace(AbstractTileLayerConfig.RotatingNumericRegexp, '\\d');
+
+    // replace {a-z} ranges for rotating tile servers
+    url = url.replace(AbstractTileLayerConfig.RotatingAlphaRegexp, '[a-zA-Z]');
+
+    return new RegExp('^' + url);
+  }
+
+  /**
+   * Expand URLs that contain ranges for rotating tile servers.
+   * @param {Array<string>} urls The URLs to expand.
+   * @return {Array<string>} The expanded URLs.
+   */
+  static expandUrls(urls) {
+    var expandedUrls = [];
+
+    if (urls) {
+      for (var i = 0; i < urls.length; i++) {
+        var url = urls[i];
+        if (typeof url === 'string') {
+          var expanded = /** @type {Array<string>} */ (AbstractTileLayerConfig.expandUrl(url));
+          for (var j = 0; j < expanded.length; j++) {
+            var expandedUrl = /** @type {string} */ (expanded[j]);
+            expandedUrls.push(expandedUrl);
+          }
+        } else {
+          // pass through.
+          expandedUrls.push(url);
+        }
+      }
+    }
+
+    log.fine(logger,
+        'Potentially expanded URL set: ' + expandedUrls.join());
+
+    return expandedUrls;
+  }
+
+  /**
+   * Expand a URL that contains a range for rotating tile servers.
+   *
+   * URLs that do not contain a range are returned as a single element array.
+   *
+   * @param {string} url the url to expand
+   * @return {Array<string>} the full list of urls corresponding to the url range.
+   */
+  static expandUrl(url) {
+    var urls = [];
+    if (AbstractTileLayerConfig.RotatingAlphaRegexp.test(url)) {
+      log.fine(logger, 'Expanding URL with alpha range: ' + url);
+      var match = url.match(AbstractTileLayerConfig.RotatingAlphaRegexp)[0];
+      urls = urls.concat(AbstractTileLayerConfig.expandUrlMatch(url, match));
+    } else if (AbstractTileLayerConfig.RotatingNumericRegexp.test(url)) {
+      log.fine(logger, 'Expanding URL with numeric range: ' + url);
+      var match = url.match(AbstractTileLayerConfig.RotatingNumericRegexp)[0];
+      urls = urls.concat(AbstractTileLayerConfig.expandUrlMatch(url, match));
+    } else {
+      log.fine(logger, 'Not expanding URL: ' + url);
+      urls.push(url);
+    }
+    return urls;
+  }
+
+  /**
+   * Expand a URL match.
+   *
+   * URLs that do not contain a range are returned as a single element array.
+   *
+   * @param {string} url the url to expand
+   * @param {string} match the matched values
+   * @return {Array<string>} the full list of urls corresponding to the url.
+   * @protected
+   */
+  static expandUrlMatch(url, match) {
+    var urls = [];
+    var range = match.slice(1, -1);
+    var parts = range.split('-');
+    var start = parts[0];
+    var end = parts[1];
+    for (var i = start.charCodeAt(0); i <= end.charCodeAt(0); i++) {
+      var replace = String.fromCharCode(i);
+      var expandedUrl = url.replace(match, replace);
+      urls.push(expandedUrl);
+    }
+    return urls;
+  }
+
+  /**
+   * @param {string} url
+   * @return {string}
+   */
+  static addBaseServer(url) {
+    var baseUrl = /** @type {string|undefined} */ (Settings.getInstance().get('baseUrl'));
+    return (baseUrl && url && url.startsWith('/') && !url.startsWith('//')) ?
+        baseUrl + url : url;
+  }
+}
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {Logger}
  */
-os.layer.config.AbstractTileLayerConfig.LOGGER_ = goog.log.getLogger('os.layer.config.AbstractTileLayerConfig');
-
+const logger = log.getLogger('os.layer.config.AbstractTileLayerConfig');
 
 /**
  * Regular expression matcher for rotating tile server names in alpha range.
  * @type {RegExp}
  * @const
  */
-os.layer.config.AbstractTileLayerConfig.RotatingAlphaRegexp = new RegExp(/{[a-zA-Z]-[a-zA-Z]}/g);
-
+AbstractTileLayerConfig.RotatingAlphaRegexp = new RegExp(/{[a-zA-Z]-[a-zA-Z]}/g);
 
 /**
  * Regular expression matcher for rotating tile server names in numerical range.
  * @type {RegExp}
  * @const
  */
-os.layer.config.AbstractTileLayerConfig.RotatingNumericRegexp = new RegExp(/{\d-\d}/g);
+AbstractTileLayerConfig.RotatingNumericRegexp = new RegExp(/{\d-\d}/g);
 
-
-/**
- * @inheritDoc
- */
-os.layer.config.AbstractTileLayerConfig.prototype.initializeConfig = function(options) {
-  os.layer.config.AbstractTileLayerConfig.base(this, 'initializeConfig', options);
-
-  if (options['urls'] != null) {
-    this.urls = /** @type {!Array<string>} */ (options['urls']);
-  } else if (this.url) {
-    // make sure the "urls" property is set in the options for multiple URL support
-    options['urls'] = this.urls = [this.url];
-
-    // remove the "url" property to avoid confusion
-    options['url'] = undefined;
-  }
-
-  this.expandUrls();
-  this.urls = this.urls.map(os.layer.config.AbstractTileLayerConfig.addBaseServer);
-
-  options['urls'] = this.urls;
-
-  var width = this.getTileWidth(options);
-  var height = this.getTileHeight(options);
-
-  if (width === 512 && options['zoomOffset'] == null) {
-    options['zoomOffset'] = -1;
-  }
-
-  var projection = os.proj.getBestSupportedProjection(options);
-  if (!projection) {
-    throw new Error('No projections supported by the layer are defined!');
-  }
-
-  this.projection = projection;
-  this.tileGrid = ol.tilegrid.createForProjection(this.projection, ol.DEFAULT_MAX_ZOOM, [width, height]);
-
-  // cross origin
-  if (!os.net.isValidCrossOrigin(options['crossOrigin'])) {
-    this.crossOrigin = /** @type {os.net.CrossOrigin} */ (os.net.getCrossOrigin(this.urls[0]));
-  } else {
-    this.crossOrigin = /** @type {os.net.CrossOrigin} */ (options['crossOrigin']);
-
-    for (var i = 0; i < this.urls.length; i++) {
-      var url = this.urls[i];
-
-      // register the cross origin value by URL pattern so that our Cesium.loadImage mixin can find it
-      os.net.registerCrossOrigin(os.layer.config.AbstractTileLayerConfig.getUrlPattern(url), this.crossOrigin);
-    }
-  }
-
-  // the correct none equivalent for crossOrigin in OL3 is null
-  if (this.crossOrigin === os.net.CrossOrigin.NONE) {
-    this.crossOrigin = null;
-    options['crossOrigin'] = null;
-  }
-
-  if (options['layerNodeUi']) {
-    // pull the nodeUi off the options object to prevent it from being persisted by the layer
-    this.layerNodeUi = options['layerNodeUi'];
-    delete options['layerNodeUi'];
-  }
-
-  // tile class
-  this.layerClass = /** @type {Function} */ (options['layerClass']) || this.layerClass;
-  this.tileClass = /** @type {os.TileClass} */ (options['tileClass']) || this.tileClass;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.config.AbstractTileLayerConfig.prototype.createLayer = function(options) {
-  this.initializeConfig(options);
-
-  var source = this.getSource(options);
-
-  if (this.tileClass && os.implements(source, os.source.IFilterableTileSource.ID)) {
-    source.setTileClass(this.tileClass);
-  }
-
-  // The extent is set on the source and not the layer in order to properly support wrap-x.
-  // See urltilemixin.js for more details.
-  if (options['extent']) {
-    var extentProjection = /** @type {!string} */ (options['extentProjection']) || os.proj.EPSG4326;
-    var extent = /** @type {ol.Extent} */ (options['extent']);
-    source.setExtent(ol.proj.transformExtent(extent, extentProjection, this.projection));
-  }
-
-  if (options['attributions']) {
-    source.setAttributions(/** @type {Array<string>} */ (options['attributions']));
-  }
-
-  if (this.crossOrigin && this.crossOrigin !== os.net.CrossOrigin.NONE) {
-    if (options['proxy']) {
-      goog.log.fine(os.layer.config.AbstractTileLayerConfig.LOGGER_,
-          'layer ' + this.id + ' proxy=true');
-      os.ol.source.tileimage.addProxyWrapper(source);
-    } else if (options['proxy'] === undefined) {
-      goog.log.fine(os.layer.config.AbstractTileLayerConfig.LOGGER_,
-          'layer ' + this.id + ' proxy=auto');
-      os.ol.source.tileimage.autoProxyCheck(source, this.projection);
-    }
-  }
-
-  goog.log.fine(os.layer.config.AbstractTileLayerConfig.LOGGER_,
-      'layer ' + this.id + ' crossOrigin=' + this.crossOrigin);
-
-  if (!source.tileLoadSet) {
-    source.setTileLoadFunction(source.getTileLoadFunction());
-  }
-
-  var tileImageOptions = /** @type {olx.source.TileImageOptions} */ ({
-    source: source
-  });
-
-  var tileLayer = new this.layerClass(tileImageOptions);
-  this.configureLayer(tileLayer, options);
-  tileLayer.restore(options);
-  return tileLayer;
-};
-
-
-/**
- * @param {os.layer.Tile} layer
- * @param {Object<string, *>} options
- * @protected
- */
-os.layer.config.AbstractTileLayerConfig.prototype.configureLayer = function(layer, options) {
-  if (options['explicitType'] != null) {
-    layer.setExplicitType(/** @type {string} */ (options['explicitType']));
-  }
-
-  if (this.layerNodeUi) {
-    layer.setNodeUI(this.layerNodeUi);
-  }
-};
-
-
-/**
- * @abstract
- * @param {Object<string, *>} options
- * @return {ol.source.TileImage}
- * @protected
- */
-os.layer.config.AbstractTileLayerConfig.prototype.getSource = function(options) {};
-
-
-/**
- * @param {Object<string, *>} options
- * @return {number}
- * @protected
- */
-os.layer.config.AbstractTileLayerConfig.prototype.getTileWidth = function(options) {
-  return /** @type {number} */ (options['tileWidth'] || options['tileSize'] || 512);
-};
-
-
-/**
- * @param {Object<string, *>} options
- * @return {number}
- * @protected
- */
-os.layer.config.AbstractTileLayerConfig.prototype.getTileHeight = function(options) {
-  return /** @type {number} */ (options['tileHeight'] || options['tileSize'] || 512);
-};
-
-
-/**
- * @param {string} url The url
- * @return {RegExp} The url pattern
- */
-os.layer.config.AbstractTileLayerConfig.getUrlPattern = function(url) {
-  // replace {z}, {x}, {y}, and {-y} with number regexps
-  url = url.replace(/{-?[zxy]}/g, '\\d+');
-
-  // replace {0-9} ranges for rotating tile servers
-  url = url.replace(os.layer.config.AbstractTileLayerConfig.RotatingNumericRegexp, '\\d');
-
-  // replace {a-z} ranges for rotating tile servers
-  url = url.replace(os.layer.config.AbstractTileLayerConfig.RotatingAlphaRegexp, '[a-zA-Z]');
-
-  return new RegExp('^' + url);
-};
-
-
-/**
- * Expand URLs that contain ranges for rotating tile servers.
- *
- * @protected
- */
-os.layer.config.AbstractTileLayerConfig.prototype.expandUrls = function() {
-  this.urls = os.layer.config.AbstractTileLayerConfig.expandUrls(this.urls);
-};
-
-
-/**
- * Expand URLs that contain ranges for rotating tile servers.
- * @param {Array<string>} urls The URLs to expand.
- * @return {Array<string>} The expanded URLs.
- */
-os.layer.config.AbstractTileLayerConfig.expandUrls = function(urls) {
-  var expandedUrls = [];
-
-  if (urls) {
-    for (var i = 0; i < urls.length; i++) {
-      var url = urls[i];
-      if (typeof url === 'string') {
-        var expanded = /** @type {Array<string>} */ (os.layer.config.AbstractTileLayerConfig.expandUrl(url));
-        for (var j = 0; j < expanded.length; j++) {
-          var expandedUrl = /** @type {string} */ (expanded[j]);
-          expandedUrls.push(expandedUrl);
-        }
-      } else {
-        // pass through.
-        expandedUrls.push(url);
-      }
-    }
-  }
-
-  goog.log.fine(os.layer.config.AbstractTileLayerConfig.LOGGER_,
-      'Potentially expanded URL set: ' + expandedUrls.join());
-
-  return expandedUrls;
-};
-
-
-/**
- * Expand a URL that contains a range for rotating tile servers.
- *
- * URLs that do not contain a range are returned as a single element array.
- *
- * @param {string} url the url to expand
- * @return {Array<string>} the full list of urls corresponding to the url range.
- */
-os.layer.config.AbstractTileLayerConfig.expandUrl = function(url) {
-  var urls = [];
-  if (os.layer.config.AbstractTileLayerConfig.RotatingAlphaRegexp.test(url)) {
-    goog.log.fine(os.layer.config.AbstractTileLayerConfig.LOGGER_, 'Expanding URL with alpha range: ' + url);
-    var match = url.match(os.layer.config.AbstractTileLayerConfig.RotatingAlphaRegexp)[0];
-    urls = urls.concat(os.layer.config.AbstractTileLayerConfig.expandUrlMatch(url, match));
-  } else if (os.layer.config.AbstractTileLayerConfig.RotatingNumericRegexp.test(url)) {
-    goog.log.fine(os.layer.config.AbstractTileLayerConfig.LOGGER_, 'Expanding URL with numeric range: ' + url);
-    var match = url.match(os.layer.config.AbstractTileLayerConfig.RotatingNumericRegexp)[0];
-    urls = urls.concat(os.layer.config.AbstractTileLayerConfig.expandUrlMatch(url, match));
-  } else {
-    goog.log.fine(os.layer.config.AbstractTileLayerConfig.LOGGER_, 'Not expanding URL: ' + url);
-    urls.push(url);
-  }
-  return urls;
-};
-
-/**
- * Expand a URL match.
- *
- * URLs that do not contain a range are returned as a single element array.
- *
- * @param {string} url the url to expand
- * @param {string} match the matched values
- * @return {Array<string>} the full list of urls corresponding to the url.
- * @protected
- */
-os.layer.config.AbstractTileLayerConfig.expandUrlMatch = function(url, match) {
-  var urls = [];
-  var range = match.slice(1, -1);
-  var parts = range.split('-');
-  var start = parts[0];
-  var end = parts[1];
-  for (var i = start.charCodeAt(0); i <= end.charCodeAt(0); i++) {
-    var replace = String.fromCharCode(i);
-    var expandedUrl = url.replace(match, replace);
-    urls.push(expandedUrl);
-  }
-  return urls;
-};
-
-
-/**
- * @param {string} url
- * @return {string}
- */
-os.layer.config.AbstractTileLayerConfig.addBaseServer = function(url) {
-  var baseUrl = /** @type {string|undefined} */ (os.settings.get('baseUrl'));
-  return (baseUrl && url && url.startsWith('/') && !url.startsWith('//')) ?
-      baseUrl + url : url;
-};
-
+exports = AbstractTileLayerConfig;

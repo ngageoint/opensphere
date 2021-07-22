@@ -1,16 +1,17 @@
-goog.provide('os.layer.config.ILayerConfig');
-goog.require('ol.layer.Layer');
+goog.module('os.layer.config.ILayerConfig');
+goog.module.declareLegacyNamespace();
 
-
+const Layer = goog.requireType('ol.layer.Layer');
 
 /**
  * @interface
  */
-os.layer.config.ILayerConfig = function() {};
+class ILayerConfig {
+  /**
+   * @param {Object<string, *>} options Layer configuration options.
+   * @return {Layer}
+   */
+  createLayer(options) {}
+}
 
-
-/**
- * @param {Object.<string, *>} options Layer configuration options.
- * @return {ol.layer.Layer}
- */
-os.layer.config.ILayerConfig.prototype.createLayer;
+exports = ILayerConfig;
