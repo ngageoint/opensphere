@@ -543,7 +543,7 @@ const createRings = function(feature, opt_replace) {
     var center = null;
 
     if (geometry && geometry instanceof Point) {
-      center = toLonLat(olExtent.getCenter(geometry.getExtent()), osMap.PROJECTION);
+      center = toLonLat(geometry.getCoordinates(), osMap.PROJECTION);
     } else if (geometry) {
       // We can import range rings as a polygon, still with ring options; the center from getCenter may not be correct
       var lon = Number(feature.get(Fields.LON));

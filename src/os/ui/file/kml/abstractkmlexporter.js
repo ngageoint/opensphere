@@ -7,7 +7,6 @@ const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
 const KML = goog.require('ol.format.KML');
 const olXml = goog.require('ol.xml');
-const RecordField = goog.require('os.data.RecordField');
 const Fields = goog.require('os.Fields');
 const ZipExporter = goog.require('os.ex.ZipExporter');
 const {DESC_REGEXP} = goog.require('os.fields');
@@ -607,8 +606,6 @@ class AbstractKMLExporter extends ZipExporter {
     this.addGeometryNode(item, element);
 
     var fields = this.getFields(item);
-    fields.push(RecordField.RING_OPTIONS);
-
     if (fields && fields.length > 0) {
       var descEl;
       for (var i = 0, n = fields.length; i < n; i++) {

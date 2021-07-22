@@ -176,7 +176,10 @@ class KMLExporter extends AbstractKMLExporter {
       fields = this.sourceFields_[sourceId];
     }
 
-    return fields || this.fields;
+    fields = fields || this.fields;
+
+    // Export Ring Options even though it's internal metadata, just for consistency
+    return fields ? fields.concat(RecordField.RING_OPTIONS) : fields;
   }
 
   /**
