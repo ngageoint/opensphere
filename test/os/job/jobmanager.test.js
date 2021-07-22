@@ -6,6 +6,10 @@ goog.require('os.job.JobState');
 
 
 describe('os.job.JobManager', function() {
+  const JobEventType = goog.module.get('os.job.JobEventType');
+  const JobManager = goog.module.get('os.job.JobManager');
+  const JobState = goog.module.get('os.job.JobState');
+
   var jobManager;
   var job1;
   var job2;
@@ -13,7 +17,7 @@ describe('os.job.JobManager', function() {
   var jobDetails = 'This is a boring job designed to test basic features.';
 
   beforeEach(function() {
-    jobManager = new os.job.JobManager();
+    jobManager = new JobManager();
     job1 = jobManager.createJob('/base/test/os/job/job.test.worker.js', jobName + ' 1', jobDetails);
     expect(jobManager.getJobs().length).toBe(1);
     job2 = jobManager.createJob('/base/test/os/job/job.test.worker.js', jobName + ' 2', jobDetails);
@@ -24,9 +28,9 @@ describe('os.job.JobManager', function() {
     var executing = false;
     var onChange = function(event) {
       // job will be disposed on completion, so we can only capture the executing transition event directly
-      var job = /** @type {os.job.Job} */ (event.target);
+      var job = /** @type {Job} */ (event.target);
       switch (job.state) {
-        case os.job.JobState.EXECUTING:
+        case JobState.EXECUTING:
           executing = true;
           break;
         default:
@@ -35,12 +39,12 @@ describe('os.job.JobManager', function() {
     };
 
     runs(function() {
-      job2.listen(os.job.JobEventType.CHANGE, onChange, false, job2);
+      job2.listen(JobEventType.CHANGE, onChange, false, job2);
       job2.startExecution();
     });
 
     waitsFor(function() {
-      return job2.state == os.job.JobState.COMPLETE;
+      return job2.state == JobState.COMPLETE;
     }, 'Job 2 to transition through executing/complete states');
 
     waitsFor(function() {
@@ -49,16 +53,16 @@ describe('os.job.JobManager', function() {
 
     runs(function() {
       expect(executing).toBe(true);
-      expect(job2.state).toBe(os.job.JobState.COMPLETE);
+      expect(job2.state).toBe(JobState.COMPLETE);
 
       executing = false;
 
-      job1.listen(os.job.JobEventType.CHANGE, onChange, false, job1);
+      job1.listen(JobEventType.CHANGE, onChange, false, job1);
       job1.startExecution();
     });
 
     waitsFor(function() {
-      return job1.state == os.job.JobState.COMPLETE;
+      return job1.state == JobState.COMPLETE;
     }, 'Job 1 to transition through executing/complete states');
 
     waitsFor(function() {
@@ -67,8 +71,8 @@ describe('os.job.JobManager', function() {
 
     runs(function() {
       expect(executing).toBe(true);
-      expect(job1.state).toBe(os.job.JobState.COMPLETE);
-      job1.unlisten(os.job.JobEventType.CHANGE, onChange, false, job1);
+      expect(job1.state).toBe(JobState.COMPLETE);
+      job1.unlisten(JobEventType.CHANGE, onChange, false, job1);
     });
   });
 });
