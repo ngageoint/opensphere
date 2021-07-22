@@ -57,7 +57,7 @@ class LayerTreeSearch extends AbstractGroupByTreeSearch {
     var layer = /** @type {!ILayer} */ (item);
     var node;
 
-    if (layer.getTreeNode) {
+    if (typeof /** @type {!ITreeNodeSupplier} */ (layer).getTreeNode === 'function') {
       node = /** @type {!ITreeNodeSupplier} */ (layer).getTreeNode();
     } else {
       // not supported - create a normal layer node
