@@ -1,64 +1,57 @@
-goog.provide('os.load.ILoadingTask');
-
-
+goog.module('os.load.ILoadingTask');
+goog.module.declareLegacyNamespace();
 
 /**
  * Interface representing loading tasks.
  *
  * @interface
  */
-os.load.ILoadingTask = function() {};
+class ILoadingTask {
+  /**
+   * Increments the count of things of this type loading
+   */
+  incrementCount() {}
 
+  /**
+   * Decrements the count of things of this type loading
+   */
+  decrementCount() {}
 
-/**
- * Increments the count of things of this type loading
- */
-os.load.ILoadingTask.prototype.incrementCount;
+  /**
+   * Gets the loading count.
+   * @return {number}
+   */
+  getCount() {}
 
+  /**
+   * Gets the loading duration.
+   * @return {number}
+   */
+  getDuration() {}
 
-/**
- * Decrements the count of things of this type loading
- */
-os.load.ILoadingTask.prototype.decrementCount;
+  /**
+   * Get whether the task is CPU intensive
+   * @return {boolean}
+   */
+  getCPUIntensive() {}
 
+  /**
+   * Set whether the task is CPU intensive
+   * @param {boolean} value
+   */
+  setCPUIntensive(value) {}
 
-/**
- * Gets the loading count.
- * @return {number}
- */
-os.load.ILoadingTask.prototype.getCount;
+  /**
+   * Get the title
+   * @return {?string}
+   */
+  getTitle() {}
 
+  /**
+   * Set the title
+   * @param {?string} value
+   */
+  setTitle(value) {}
+}
 
-/**
- * Gets the loading duration.
- * @return {number}
- */
-os.load.ILoadingTask.prototype.getDuration;
-
-
-/**
- * Get whether the task is CPU intensive
- * @return {boolean}
- */
-os.load.ILoadingTask.prototype.getCPUIntensive;
-
-
-/**
- * Set whether the task is CPU intensive
- * @param {boolean} value
- */
-os.load.ILoadingTask.prototype.setCPUIntensive;
-
-
-/**
- * Get the title
- * @return {?string}
- */
-os.load.ILoadingTask.prototype.getTitle;
-
-
-/**
- * Set the title
- * @param {?string} value
- */
-os.load.ILoadingTask.prototype.setTitle;
+exports = ILoadingTask;
