@@ -1,15 +1,28 @@
-goog.require('os.layer.Tile');
-goog.require('os.mock');
+goog.require('goog.events.EventType');
+goog.require('ol');
+goog.require('ol.events');
 goog.require('ol.source.TileWMS');
+goog.require('ol.tilegrid');
+goog.require('os.layer.Tile');
+goog.require('os.map');
+goog.require('os.mock');
 goog.require('plugin.ogc.wms.TileWMSSource');
 
 
 describe('os.layer.Tile', function() {
+  const GoogEventType = goog.module.get('goog.events.EventType');
+  const ol = goog.module.get('ol');
+  const events = goog.module.get('ol.events');
+  const TileWMS = goog.module.get('ol.source.TileWMS');
+  const tilegrid = goog.module.get('ol.tilegrid');
+  const Tile = goog.module.get('os.layer.Tile');
+  const osMap = goog.module.get('os.map');
+  const TileWMSSource = goog.module.get('plugin.ogc.wms.TileWMSSource');
   var layer;
 
   it('initializes the layer', function() {
-    layer = new os.layer.Tile({
-      source: new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
+    layer = new Tile({
+      source: new TileWMS( ({
         params: { 'LAYERS': 'dontcare' }
       }))
     });
@@ -27,7 +40,7 @@ describe('os.layer.Tile', function() {
     };
 
     runs(function() {
-      ol.events.listen(layer, goog.events.EventType.PROPERTYCHANGE, loadListener);
+      events.listen(layer, GoogEventType.PROPERTYCHANGE, loadListener);
       expect(layer.isLoading()).toBe(false);
 
       // make sure setting to the same value doesn't fire a change event
@@ -62,7 +75,7 @@ describe('os.layer.Tile', function() {
       expect(calls).toEqual(2);
       expect(layer.isLoading()).toBe(false);
 
-      ol.events.unlisten(layer, goog.events.EventType.PROPERTYCHANGE, loadListener);
+      events.unlisten(layer, GoogEventType.PROPERTYCHANGE, loadListener);
     });
   });
 
@@ -82,10 +95,10 @@ describe('os.layer.Tile', function() {
   ];
 
   it('should restore properly', function() {
-    var layer = new os.layer.Tile({
-      source: new plugin.ogc.wms.TileWMSSource(/** @type {olx.source.TileWMSOptions} */ ({
+    var layer = new Tile({
+      source: new TileWMSSource( ({
         params: { 'LAYERS': 'dontcare' },
-        tileGrid: ol.tilegrid.createForProjection(os.map.PROJECTION, ol.DEFAULT_MAX_ZOOM, [256, 256])
+        tileGrid: tilegrid.createForProjection(osMap.PROJECTION, ol.DEFAULT_MAX_ZOOM, [256, 256])
       }))
     });
 
