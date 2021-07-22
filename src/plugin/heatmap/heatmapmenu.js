@@ -3,7 +3,7 @@ goog.module('plugin.heatmap.menu');
 const asserts = goog.require('goog.asserts');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const LayerNode = goog.require('os.data.LayerNode');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 
 const AlertManager = goog.require('os.alert.AlertManager');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
@@ -51,7 +51,7 @@ const setup = function() {
         icons: ['<i class="fa fa-fw fa-download"></i>'],
         beforeRender: visibleIfSupported_,
         handler: exportLayer_,
-        metricKey: metrics.Layer.HEATMAP
+        metricKey: LayerKeys.HEATMAP
       }]
     });
 
@@ -63,7 +63,7 @@ const setup = function() {
       icons: ['<i class="fa fa-fw fa-fire"></i>'],
       beforeRender: layerMenu.visibleIfSupported,
       handler: generateHeatmap_,
-      metricKey: metrics.Layer.HEATMAP
+      metricKey: LayerKeys.HEATMAP
     });
   }
 };

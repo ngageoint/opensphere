@@ -2,7 +2,7 @@ goog.module('os.command.VectorLayerFillOpacity');
 goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
@@ -21,7 +21,7 @@ class VectorLayerFillOpacity extends AbstractVectorStyle {
   constructor(layerId, opacity, opt_oldOpacity) {
     super(layerId, opacity, opt_oldOpacity);
     this.title = 'Change Layer Fill Opacity';
-    this.metricKey = metrics.Layer.VECTOR_FILL_OPACITY;
+    this.metricKey = LayerKeys.VECTOR_FILL_OPACITY;
 
     if (this.value == null) {
       this.value = osStyle.DEFAULT_FILL_ALPHA;

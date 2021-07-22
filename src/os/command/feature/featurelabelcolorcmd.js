@@ -2,7 +2,7 @@ goog.module('os.command.FeatureLabelColor');
 goog.module.declareLegacyNamespace();
 
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 
@@ -25,7 +25,7 @@ class FeatureLabelColor extends AbstractFeatureStyle {
   constructor(layerId, featureId, value, opt_oldValue) {
     super(layerId, featureId, value, opt_oldValue);
     this.title = 'Change Feature Label Color';
-    this.metricKey = metrics.Layer.FEATURE_LABEL_COLOR;
+    this.metricKey = LayerKeys.FEATURE_LABEL_COLOR;
     // make sure the value is an rgba string, not hex
     if (value != '') {
       this.value = osStyle.toRgbaString(value);

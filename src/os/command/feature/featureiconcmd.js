@@ -3,7 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const osStyle = goog.require('os.style');
 const kml = goog.require('os.ui.file.kml');
 
@@ -24,7 +24,7 @@ class FeatureIcon extends AbstractFeatureStyle {
   constructor(layerId, featureId, icon, opt_oldIcon) {
     super(layerId, featureId, icon, opt_oldIcon);
     this.title = 'Change Feature Icon';
-    this.metricKey = metrics.Layer.FEATURE_ICON;
+    this.metricKey = LayerKeys.FEATURE_ICON;
   }
 
   /**

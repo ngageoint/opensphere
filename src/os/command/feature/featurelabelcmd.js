@@ -3,7 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const olArray = goog.require('ol.array');
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const label = goog.require('os.style.label');
@@ -27,7 +27,7 @@ class FeatureLabel extends AbstractFeatureStyle {
   constructor(layerId, featureId, value, opt_oldValue) {
     super(layerId, featureId, value, opt_oldValue);
     this.title = 'Change Feature Label';
-    this.metricKey = metrics.Layer.FEATURE_LABEL_COLUMN_SELECT;
+    this.metricKey = LayerKeys.FEATURE_LABEL_COLUMN_SELECT;
 
     /**
      * @type {Array<label.LabelConfig>}

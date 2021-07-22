@@ -81,7 +81,7 @@ os.ui.menu.layer.setup = function() {
         icons: ['<i class="fa fa-fw fa-save"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onSave_,
-        metricKey: os.metrics.Layer.SAVE,
+        metricKey: os.metrics.keys.Layer.SAVE,
         sort: -10010 // we want this to appear at the top when its available
       }, {
         label: 'Save As...',
@@ -90,7 +90,7 @@ os.ui.menu.layer.setup = function() {
         icons: ['<i class="fa fa-fw fa-save"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onSaveAs_,
-        metricKey: os.metrics.Layer.SAVE_AS,
+        metricKey: os.metrics.keys.Layer.SAVE_AS,
         sort: -10000 // we want this to appear right below save
       }, {
         label: 'Compare Layers',
@@ -105,7 +105,7 @@ os.ui.menu.layer.setup = function() {
         icons: ['<i class="fa fa-fw fa-fighter-jet"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onGoTo_,
-        metricKey: os.metrics.Layer.GO_TO,
+        metricKey: os.metrics.keys.Layer.GO_TO,
         sort: os.ui.menu.layer.GroupSort.LAYER++
       }, {
         label: 'Identify',
@@ -114,7 +114,7 @@ os.ui.menu.layer.setup = function() {
         icons: ['<i class="fa fa-fw fa-eye"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onIdentify_,
-        metricKey: os.metrics.Layer.IDENTIFY,
+        metricKey: os.metrics.keys.Layer.IDENTIFY,
         sort: os.ui.menu.layer.GroupSort.LAYER++
       },
       {
@@ -124,7 +124,7 @@ os.ui.menu.layer.setup = function() {
         icons: ['<i class="fa fa-fw fa-times-circle"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onLayerMenuEvent,
-        metricKey: os.metrics.Layer.CLEAR_SELECTION,
+        metricKey: os.metrics.keys.Layer.CLEAR_SELECTION,
         sort: os.ui.menu.layer.GroupSort.LAYER++
       },
       {
@@ -152,7 +152,7 @@ os.ui.menu.layer.setup = function() {
         icons: ['<i class="fa fa-fw fa-fast-forward"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onLayerMenuEvent,
-        metricKey: os.metrics.Layer.MOST_RECENT,
+        metricKey: os.metrics.keys.Layer.MOST_RECENT,
         sort: os.ui.menu.layer.GroupSort.LAYER++
       },
       {
@@ -162,7 +162,7 @@ os.ui.menu.layer.setup = function() {
         icons: ['<i class="fa fa-fw fa-refresh"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onLayerMenuEvent,
-        metricKey: os.metrics.Layer.REFRESH,
+        metricKey: os.metrics.keys.Layer.REFRESH,
         sort: os.ui.menu.layer.GroupSort.LAYER++
       },
       {
@@ -172,7 +172,7 @@ os.ui.menu.layer.setup = function() {
         icons: ['<i class="fa fa-fw fa-tint"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onLayerMenuEvent,
-        metricKey: os.metrics.Layer.RESET_COLOR,
+        metricKey: os.metrics.keys.Layer.RESET_COLOR,
         sort: os.ui.menu.layer.GroupSort.LAYER++
       },
       {
@@ -182,7 +182,7 @@ os.ui.menu.layer.setup = function() {
         icons: ['<i class="fa fa-fw fa-lock"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onLayerMenuEvent,
-        metricKey: os.metrics.Layer.LOCK,
+        metricKey: os.metrics.keys.Layer.LOCK,
         sort: os.ui.menu.layer.GroupSort.LAYER++
       },
       {
@@ -192,7 +192,7 @@ os.ui.menu.layer.setup = function() {
         icons: ['<i class="fa fa-fw fa-unlock-alt"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onLayerMenuEvent,
-        metricKey: os.metrics.Layer.UNLOCK,
+        metricKey: os.metrics.keys.Layer.UNLOCK,
         sort: os.ui.menu.layer.GroupSort.LAYER++
       },
       {
@@ -202,7 +202,7 @@ os.ui.menu.layer.setup = function() {
         icons: ['<i class="fa fa-fw fa-times"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onLayerMenuEvent,
-        metricKey: os.metrics.Layer.REMOVE,
+        metricKey: os.metrics.keys.Layer.REMOVE,
         sort: os.ui.menu.layer.GroupSort.LAYER++
       },
       {
@@ -212,7 +212,7 @@ os.ui.menu.layer.setup = function() {
         icons: ['<i class="fa fa-fw fa-i-cursor"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onLayerMenuEvent,
-        metricKey: os.metrics.Layer.RENAME,
+        metricKey: os.metrics.keys.Layer.RENAME,
         sort: os.ui.menu.layer.GroupSort.LAYER++
       },
       {
@@ -222,7 +222,7 @@ os.ui.menu.layer.setup = function() {
         icons: ['<i class="fa fa-fw fa-newspaper-o"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onDescription_,
-        metricKey: os.metrics.Layer.SHOW_DESCRIPTION,
+        metricKey: os.metrics.keys.Layer.SHOW_DESCRIPTION,
         sort: os.ui.menu.layer.GroupSort.LAYER++
       },
       {
@@ -232,7 +232,7 @@ os.ui.menu.layer.setup = function() {
         icons: ['<i class="fa fa-fw fa-table"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onFeatureList_,
-        metricKey: os.metrics.Layer.FEATURE_LIST,
+        metricKey: os.metrics.keys.Layer.FEATURE_LIST,
         sort: os.ui.menu.layer.GroupSort.LAYER++
       },
       {
@@ -255,7 +255,7 @@ os.ui.menu.layer.setup = function() {
         icons: ['<i class="fa fa-fw fa-download"></i>'],
         beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onExport_,
-        metricKey: os.metrics.Layer.EXPORT,
+        metricKey: os.metrics.keys.Layer.EXPORT,
         sort: -1000 // commonly used, so prioritize above other items
       }]
     }]

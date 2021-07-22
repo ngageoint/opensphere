@@ -2,7 +2,7 @@ goog.module('os.command.VectorLayerLOBLengthUnits');
 goog.module.declareLegacyNamespace();
 
 const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
@@ -24,7 +24,7 @@ class VectorLayerLOBLengthUnits extends AbstractVectorLayerLOB {
     super(layerId, value, opt_oldValue);
     this.title = 'Change length units';
     this.value = value || osStyle.DEFAULT_UNITS;
-    this.metricKey = metrics.Layer.VECTOR_LOB_LENGTH_UNITS;
+    this.metricKey = LayerKeys.VECTOR_LOB_LENGTH_UNITS;
   }
 
   /**

@@ -2,7 +2,7 @@ goog.module('os.command.VectorLayerSize');
 goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const osStyle = goog.require('os.style');
 const StyleManager = goog.require('os.style.StyleManager');
 
@@ -20,7 +20,7 @@ class VectorLayerSize extends AbstractVectorStyle {
   constructor(layerId, size, opt_oldSize) {
     super(layerId, size, opt_oldSize);
     this.title = 'Change Size';
-    this.metricKey = metrics.Layer.VECTOR_SIZE;
+    this.metricKey = LayerKeys.VECTOR_SIZE;
   }
 
   /**

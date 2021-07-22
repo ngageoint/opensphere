@@ -7,7 +7,7 @@ const ColorChangeType = goog.require('os.command.style.ColorChangeType');
 const DataManager = goog.require('os.data.DataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const {getMapContainer} = goog.require('os.map.instance');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const VectorSource = goog.require('os.source.Vector');
 const osStyle = goog.require('os.style');
@@ -42,10 +42,10 @@ class VectorLayerColor extends AbstractVectorStyle {
 
     if (this.changeMode === ColorChangeType.FILL) {
       this.title = 'Change Layer Fill Color';
-      this.metricKey = metrics.Layer.VECTOR_FILL_COLOR;
+      this.metricKey = LayerKeys.VECTOR_FILL_COLOR;
     } else {
       this.title = 'Change Layer Color';
-      this.metricKey = metrics.Layer.VECTOR_COLOR;
+      this.metricKey = LayerKeys.VECTOR_COLOR;
     }
 
     if (!color) {

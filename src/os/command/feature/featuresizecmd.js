@@ -2,7 +2,7 @@ goog.module('os.command.FeatureSize');
 goog.module.declareLegacyNamespace();
 
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const osStyle = goog.require('os.style');
 
 const Feature = goog.requireType('ol.Feature');
@@ -22,7 +22,7 @@ class FeatureSize extends AbstractFeatureStyle {
   constructor(layerId, featureId, size, opt_oldSize) {
     super(layerId, featureId, size, opt_oldSize);
     this.title = 'Change Feature Size';
-    this.metricKey = metrics.Layer.FEATURE_SIZE;
+    this.metricKey = LayerKeys.FEATURE_SIZE;
   }
 
   /**

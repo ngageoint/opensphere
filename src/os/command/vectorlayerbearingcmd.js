@@ -2,7 +2,7 @@ goog.module('os.command.VectorLayerBearing');
 goog.module.declareLegacyNamespace();
 
 const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
 
@@ -23,7 +23,7 @@ class VectorLayerBearing extends AbstractVectorLayerLOB {
     super(layerId, value, opt_oldValue);
     this.title = 'Change bearing column';
     this.value = value || '';
-    this.metricKey = metrics.Layer.VECTOR_LOB_BEARING_COLUMN;
+    this.metricKey = LayerKeys.VECTOR_LOB_BEARING_COLUMN;
   }
 
   /**

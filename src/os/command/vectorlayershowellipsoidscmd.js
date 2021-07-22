@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
 const DataManager = goog.require('os.data.DataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
@@ -22,7 +22,7 @@ class VectorLayerShowEllipsoids extends AbstractVectorStyle {
    */
   constructor(layerId, value, opt_oldValue) {
     super(layerId, value, opt_oldValue);
-    this.metricKey = metrics.Layer.VECTOR_ELLIPSOID;
+    this.metricKey = LayerKeys.VECTOR_ELLIPSOID;
 
     // make sure the value is a boolean
     this.value = !!value;

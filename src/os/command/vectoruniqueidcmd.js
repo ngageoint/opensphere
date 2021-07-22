@@ -3,7 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 
 
 /**
@@ -21,7 +21,7 @@ class VectorUniqueIdCmd extends AbstractVectorStyle {
   constructor(layerId, value, opt_oldValue) {
     super(layerId, value, opt_oldValue);
     this.title = 'Change Unique ID';
-    this.metricKey = metrics.Layer.VECTOR_UNIQUE_ID;
+    this.metricKey = LayerKeys.VECTOR_UNIQUE_ID;
 
     /**
      * @type {os.data.ColumnDefinition}

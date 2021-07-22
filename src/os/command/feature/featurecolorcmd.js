@@ -6,7 +6,7 @@ const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
 const State = goog.require('os.command.State');
 const ColorChangeType = goog.require('os.command.style.ColorChangeType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const osStyle = goog.require('os.style');
 
 const Feature = goog.requireType('ol.Feature');
@@ -38,18 +38,18 @@ class FeatureColor extends AbstractFeatureStyle {
     switch (this.changeMode) {
       case ColorChangeType.FILL:
         this.title = 'Change Feature Fill Color';
-        this.metricKey = metrics.Layer.FEATURE_FILL_COLOR;
+        this.metricKey = LayerKeys.FEATURE_FILL_COLOR;
         this.defaultColor = osStyle.DEFAULT_FILL_COLOR;
         break;
       case ColorChangeType.STROKE:
         this.title = 'Change Feature Color';
-        this.metricKey = metrics.Layer.FEATURE_COLOR;
+        this.metricKey = LayerKeys.FEATURE_COLOR;
         this.defaultColor = osStyle.DEFAULT_LAYER_COLOR;
         break;
       case ColorChangeType.COMBINED:
       default:
         this.title = 'Change Feature Color';
-        this.metricKey = metrics.Layer.FEATURE_COLOR;
+        this.metricKey = LayerKeys.FEATURE_COLOR;
         this.defaultColor = osStyle.DEFAULT_LAYER_COLOR;
         break;
     }

@@ -3,7 +3,8 @@ goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const {getMapContainer} = goog.require('os.map.instance');
-const metrics = goog.require('os.metrics');
+const Metrics = goog.require('os.metrics.Metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const VectorSource = goog.require('os.source.Vector');
 
 const ICommand = goog.requireType('os.command.ICommand');
@@ -84,7 +85,7 @@ class VectorLayerAutoRefresh {
       this.oldInterval = source.getRefreshInterval();
 
       source.setRefreshInterval(this.interval);
-      metrics.Metrics.getInstance().updateMetric(metrics.Layer.VECTOR_AUTO_REFRESH, 1);
+      Metrics.getInstance().updateMetric(LayerKeys.VECTOR_AUTO_REFRESH, 1);
 
       this.state = State.SUCCESS;
       return true;
