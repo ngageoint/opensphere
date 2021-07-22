@@ -1,20 +1,12 @@
-goog.provide('os.metrics.keys');
-
-
-/**
- * Global key hash to centralize metric keys.
- * This object is attached to the root angular scope
- * as metrics.
- * @type {*}
- */
-os.metrics.keys = {};
+goog.module('os.metrics.keys');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * Timeline metrics
  * @enum {string}
  */
-os.metrics.keys.Timeline = {
+const Timeline = {
   // features
   OPEN: 'timeline.features.open',
 
@@ -61,12 +53,11 @@ os.metrics.keys.Timeline = {
   MIN_PLAY: 'timeline.stats.min-play'
 };
 
-
 /**
  * AddData metrics
  * @enum {string}
  */
-os.metrics.keys.AddData = {
+const AddData = {
   OPEN: 'addData.open',
   SEARCH: 'addData.search',
   GROUP_BY: 'addData.groupBy',
@@ -80,12 +71,11 @@ os.metrics.keys.AddData = {
   REMOVE_LAYER_COMMAND: 'addData.remove-layer-command'
 };
 
-
 /**
  * Filters metrics
  * @enum {string}
  */
-os.metrics.keys.Filters = {
+const Filters = {
   ADVANCED: 'filters.advancedOpen',
   SEARCH: 'filters.search',
   GROUP_BY: 'filters.groupBy',
@@ -109,12 +99,11 @@ os.metrics.keys.Filters = {
   ADVANCED_AREA_COPY: 'filters.advanced.areaCopy'
 };
 
-
 /**
  * Map metrics
  * @enum {string}
  */
-os.metrics.keys.Map = {
+const Map = {
   ADD_FEATURE: 'map.features.addFeature',
   ADD_FEATURES: 'map.features.addFeatures',
   ADD_LABEL: 'map.features.addLabel',
@@ -179,50 +168,45 @@ os.metrics.keys.Map = {
   WEBGL_UNSUPPORTED: 'map.stats.error-webglUnsupported'
 };
 
-
 /**
  * Descriptor metrics tracked
  * @enum {string}
  */
-os.metrics.keys.Descriptor = {
+const Descriptor = {
   ACTIVATE: 'descriptor.activate',
   DEACTIVATE: 'descriptor.de-activate'
 };
-
 
 /**
  * Settings metrics tracked
  * @enum {string}
  */
-os.metrics.keys.Settings = {
+const Settings = {
   RESET_SETTINGS: 'settings.reset',
   STORAGE_REMOTE: 'settings.storage.remote',
   STORAGE_LOCAL: 'settings.storage.local',
   SWITCH_PROJECTION: 'settings.projectionSwitch'
 };
 
-
 /**
  * Search metrics tracked
  * @enum {string}
  */
-os.metrics.keys.Search = {
+const Search = {
   SEARCH_TYPE: 'type'
 };
-
 
 /**
  * Create a metric key based on the browser version
  * @type {string}
  */
-os.metrics.keys.BROWSER = 'browser';
-
+const BROWSER = 'browser';
 
 /**
  * Create a metric key based on the OS version
  * @enum {string}
  */
-os.metrics.keys.OS = {
+const OS = {
   WINDOWS: 'os.windows',
   LINUX: 'os.linux',
   MAC: 'os.mac',
@@ -230,12 +214,11 @@ os.metrics.keys.OS = {
   ANDROID: 'os.android'
 };
 
-
 /**
  * Layer metrics
  * @enum {string}
  */
-os.metrics.Layer = {
+const Layer = {
   PRESET: 'layers.features.preset',
   FORCE_LAYER_COLOR: 'layers.features.forceLayerColor',
   VECTOR_COLOR: 'layers.features.changeVectorColor',
@@ -309,12 +292,11 @@ os.metrics.Layer = {
   SAVE_AS: 'layers.contextMenu.saveAs'
 };
 
-
 /**
  * Preset metrics
  * @enum {string}
  */
-os.metrics.keys.Presets = {
+const Presets = {
   OPEN: 'preset.menu.open',
   REMOVE: 'preset.remove',
   SAVE: 'preset.saveupdate',
@@ -322,20 +304,18 @@ os.metrics.keys.Presets = {
   TOGGLE_PUBLISHED: 'preset.toggle.published'
 };
 
-
 /**
  * Feature metrics
  * @enum {string}
  */
-os.metrics.Feature = {
+const Feature = {
 };
-
 
 /**
  * Feature list metrics
  * @enum {string}
  */
-os.metrics.FeatureList = {
+const FeatureList = {
   EXPORT: 'featureList.export',
   GOTO: 'featureList.goTo',
   SORT_SELECTED: 'featureList.sortSelected',
@@ -346,12 +326,11 @@ os.metrics.FeatureList = {
   RESET_COLOR: 'featureList.resetColor'
 };
 
-
 /**
  * Places metrics
  * @enum {string}
  */
-os.metrics.Places = {
+const Places = {
   ADD_ANNOTATION: 'places.addAnnotation',
   ADD_FOLDER: 'places.addFolder',
   ADD_PLACE: 'places.addPlace',
@@ -370,15 +349,32 @@ os.metrics.Places = {
   REMOVE_ALL: 'places.removeAll'
 };
 
-
 /**
  * Servers metrics
  * @enum {string}
  */
-os.metrics.Servers = {
+const Servers = {
   ADD_SERVER: 'servers.addServer',
   VIEW: 'servers.view',
   REFRESH: 'servers.refresh',
   EDIT: 'servers.edit',
   REMOVE: 'servers.delete'
+};
+
+exports = {
+  AddData,
+  BROWSER,
+  Descriptor,
+  Feature,
+  FeatureList,
+  Filters,
+  Layer,
+  Map,
+  OS,
+  Places,
+  Presets,
+  Search,
+  Servers,
+  Settings,
+  Timeline
 };

@@ -1,6 +1,5 @@
-goog.provide('os.metrics.IMetricServiceProvider');
-
-
+goog.module('os.metrics.IMetricServiceProvider');
+goog.module.declareLegacyNamespace();
 
 /**
  * Interface for sending metic date to metric service provider,
@@ -8,12 +7,13 @@ goog.provide('os.metrics.IMetricServiceProvider');
  *
  * @interface
  */
-os.metrics.IMetricServiceProvider = function() {};
+class IMetricServiceProvider {
+  /**
+   * Records a specifc metric.
+   * @param {?string} key metric key
+   * @param {?number} value metric value
+   */
+  recordMetric(key, value) {}
+}
 
-
-/**
- * Records a specifc metric.
- * @param {?string} key metric key
- * @param {?number} value metric value
- */
-os.metrics.IMetricServiceProvider.prototype.recordMetric;
+exports = IMetricServiceProvider;
