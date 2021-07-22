@@ -1,8 +1,11 @@
+goog.require('os.metrics.MapMetrics');
 goog.require('os.metrics.Metrics');
 
 describe('os.metrics.MapMetrics', function() {
+  const MapMetrics = goog.module.get('os.metrics.MapMetrics');
+
   it('should have map metrics', function() {
-    var target = new os.metrics.MapMetrics();
+    var target = new MapMetrics();
     expect(target).not.toBe(null);
     expect(target.getLabel()).toBe('Map');
     expect(target.getDescription()).not.toBe(null);
