@@ -102,8 +102,8 @@ class Controller {
     /**
      * @type {string}
      */
-    this['rangeRingHelp'] = 'Range Rings are a Place style specific to this application. Enabling this option ' +
-        'will export them as polygon geometries, but they will lose data (such as labels) and no longer be editable.';
+    this['rangeRingHelp'] = 'Enabling this option will export Range Rings as polygon geometries for use in other ' +
+        'applications. They will lose data tied to their styling (e.g. ring labels) and no longer be editable.';
 
     /**
      * @type {boolean}
