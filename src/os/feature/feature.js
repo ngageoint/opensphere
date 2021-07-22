@@ -29,7 +29,7 @@ const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const fields = goog.require('os.fields');
 const {reduceExtentFromGeometries} = goog.require('os.fn');
 const geo = goog.require('os.geo');
-const {validate: jstsValidate} = goog.require('os.geo.jsts');
+const osGeoJsts = goog.require('os.geo.jsts');
 const Ellipse = goog.require('os.geom.Ellipse');
 const GeometryField = goog.require('os.geom.GeometryField');
 const MappingManager = goog.require('os.im.mapping.MappingManager');
@@ -1362,7 +1362,7 @@ const validateGeometries = function(feature, opt_quiet) {
     var geometries = geometry.getGeometriesArray();
     for (var i = geometries.length; i > 0; i--) {
       if (geometries[i] instanceof Polygon || geometries[i] instanceof MultiPolygon) {
-        var geom = validatePolygonType_(geometries[i], opt_quiet);
+        var geom = validatePolygonType(geometries[i], opt_quiet);
         if (geom !== undefined) {
           geometries[i] = geom;
         } else {
@@ -1372,7 +1372,7 @@ const validateGeometries = function(feature, opt_quiet) {
       }
     }
   } else if (geometry instanceof Polygon || geometry instanceof MultiPolygon) {
-    var geom = validatePolygonType_(geometry, opt_quiet);
+    var geom = validatePolygonType(geometry, opt_quiet);
     if (geom === undefined) {
       count++;
     }
@@ -1390,13 +1390,12 @@ const validateGeometries = function(feature, opt_quiet) {
  * @param {Geometry} geometry The polygon-type geometry to validate
  * @param {boolean=} opt_quiet If alerts should be suppressed
  * @return {Geometry|undefined} a valid polygon, or undefined if invalid
- * @private
  */
-const validatePolygonType_ = function(geometry, opt_quiet) {
+const validatePolygonType = function(geometry, opt_quiet) {
   if (geometry instanceof MultiPolygon) {
     const validPolygons = [];
     for (let i = 0, n = geometry.getEndss().length; i < n; ++i) {
-      const geom = jstsValidate(geometry.getPolygon(i), opt_quiet, true);
+      const geom = osGeoJsts.validate(geometry.getPolygon(i), opt_quiet, true);
       if (geom !== undefined) {
         validPolygons.push(geom);
       }
@@ -1414,7 +1413,7 @@ const validatePolygonType_ = function(geometry, opt_quiet) {
     return undefined;
   }
 
-  return jstsValidate(geometry, opt_quiet, true);
+  return osGeoJsts.validate(geometry, opt_quiet, true);
 };
 
 
