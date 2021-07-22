@@ -1,38 +1,41 @@
-goog.provide('os.layer.config.MockVectorLayerConfig');
+goog.module('os.layer.config.MockVectorLayerConfig');
 
-goog.require('os.layer.Vector');
-goog.require('os.layer.config.AbstractLayerConfig');
-goog.require('os.source.Vector');
+const VectorLayer = goog.require('os.layer.Vector');
+const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
+const VectorSource = goog.require('os.source.Vector');
 
 
 /**
- * @constructor
  */
-os.layer.config.MockVectorLayerConfig = function() {
-  os.layer.config.MockVectorLayerConfig.base(this, 'constructor');
-};
-goog.inherits(os.layer.config.MockVectorLayerConfig, os.layer.config.AbstractLayerConfig);
+class MockVectorLayerConfig extends AbstractLayerConfig {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
+  /**
+   * @param {Object} options The layer options.
+   * @return {VectorLayer}
+   */
+  createLayer(options) {
+    var layer = new VectorLayer({
+      source: new VectorSource()
+    });
+
+    if (options['id']) {
+      layer.setId(options['id']);
+    }
+
+    return layer;
+  }
+}
 
 /**
  * @type {string}
  * @const
  */
-os.layer.config.MockVectorLayerConfig.TYPE = 'MockVectorLayerConfig';
+MockVectorLayerConfig.TYPE = 'MockVectorLayerConfig';
 
-
-/**
- * @param {Object} options The layer options.
- * @return {os.layer.Vector}
- */
-os.layer.config.MockVectorLayerConfig.prototype.createLayer = function(options) {
-  var layer = new os.layer.Vector({
-    source: new os.source.Vector()
-  });
-
-  if (options['id']) {
-    layer.setId(options['id']);
-  }
-
-  return layer;
-};
+exports = MockVectorLayerConfig;

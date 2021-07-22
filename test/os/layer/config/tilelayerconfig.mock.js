@@ -1,43 +1,46 @@
-goog.provide('os.layer.config.MockTileLayerConfig');
+goog.module('os.layer.config.MockTileLayerConfig');
 
-goog.require('ol.source.TileWMS');
-goog.require('os.layer.Tile');
-goog.require('os.layer.config.AbstractLayerConfig');
+const TileWMS = goog.require('ol.source.TileWMS');
+const Tile = goog.require('os.layer.Tile');
+const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
 
 
 /**
- * @constructor
  */
-os.layer.config.MockTileLayerConfig = function() {
-  os.layer.config.MockTileLayerConfig.base(this, 'constructor');
-};
-goog.inherits(os.layer.config.MockTileLayerConfig, os.layer.config.AbstractLayerConfig);
+class MockTileLayerConfig extends AbstractLayerConfig {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
+  /**
+   * @param {Object} options The layer options.
+   * @return {Tile}
+   */
+  createLayer(options) {
+    var layer = new Tile({
+      source: new TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
+        params: {
+          'LAYERS': 'dontcare'
+        },
+        projection: 'EPSG:4326'
+      }))
+    });
+
+    if (options['id']) {
+      layer.setId(options['id']);
+    }
+
+    return layer;
+  }
+}
 
 /**
  * @type {string}
  * @const
  */
-os.layer.config.MockTileLayerConfig.TYPE = 'MockLayerConfig';
+MockTileLayerConfig.TYPE = 'MockLayerConfig';
 
-
-/**
- * @param {Object} options The layer options.
- * @return {os.layer.Tile}
- */
-os.layer.config.MockTileLayerConfig.prototype.createLayer = function(options) {
-  var layer = new os.layer.Tile({
-    source: new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
-      params: {
-        'LAYERS': 'dontcare'
-      },
-      projection: 'EPSG:4326'
-    }))
-  });
-
-  if (options['id']) {
-    layer.setId(options['id']);
-  }
-
-  return layer;
-};
+exports = MockTileLayerConfig;
