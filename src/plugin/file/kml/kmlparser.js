@@ -1804,7 +1804,7 @@ const logger = log.getLogger('plugin.file.kml.KMLParser');
  * @private
  * @const
  */
-KMLParser.SKIPPED_COLUMNS_ = /^(geometry|recordtime|time|styleurl|_kmlStyle)$/i;
+KMLParser.SKIPPED_COLUMNS_ = /^(geometry|recordtime|time|styleurl|visibility|_kmlStyle)$/i;
 
 
 /**

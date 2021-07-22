@@ -91,7 +91,11 @@ os.im.FeatureImporter.prototype.addItemInternal = function(item) {
       // this works around inadvertant duplicate IDs, but maintains the original ID
       var realId = feature.id_;
       feature.setId(ol.getUid(feature) + '');
-      feature.values_[os.Fields.ID] = realId;
+
+      // set the ID field only if it wasn't already set
+      if (feature.values_[os.Fields.ID] == null) {
+        feature.values_[os.Fields.ID] = realId;
+      }
     }
 
     // simplify the geometry if possible
