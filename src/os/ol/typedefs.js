@@ -3,14 +3,9 @@
  * loaded as an externs file, the Closure Compiler assumes "ol" is already
  * defined which causes errors in the compiled output.
  *
- * The 'ol.ext' provide is added due to a similar issue with the 'ol.ext.*'
- * provides in openlayers/build/ol.ext. The ol.ext namespace is never created,
- * so the child namespaces fail to initialize.
- *
  * @suppress {checkTypes} To ignore JSDoc references to OL types, so they don't
  *                        need goog.require statements.
  */
-goog.provide('ol.ext');
 goog.provide('ol.typedefs');
 
 
