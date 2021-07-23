@@ -60,6 +60,7 @@
         "ol-cesium/externs/olcsx.js"
       ],
       "entry_point": [
+        "goog:ol.ext",
         "goog:osmain"
       ],
       "extra_annotation_name": [
