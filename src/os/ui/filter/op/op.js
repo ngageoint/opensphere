@@ -1,9 +1,8 @@
 goog.module('os.ui.filter.op.Op');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.textDirective');
-
 const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
+const {directiveTag: textUi} = goog.require('os.ui.filter.TextUI');
 
 const DataType = goog.requireType('os.xsd.DataType');
 
@@ -72,7 +71,7 @@ class Op {
      * @type {!string}
      * @private
      */
-    this.ui_ = opt_ui || 'fb-text';
+    this.ui_ = opt_ui || textUi;
 
     /**
      * @type {!string}

@@ -1,9 +1,8 @@
 goog.module('os.ui.filter.op.LikeListNumeric');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.listNoColCheckDirective');
-
 const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
+const {directiveTag} = goog.require('os.ui.filter.ListNoColCheckUI');
 const IsLikeNumeric = goog.require('os.ui.filter.op.IsLikeNumeric');
 
 
@@ -14,7 +13,7 @@ class LikeListNumeric extends IsLikeNumeric {
    * Constructor.
    */
   constructor() {
-    super('is like list', 'like list', ['decimal', 'integer'], '', 'eg. 12.45*, 3.568*, ...', 'fb-list-no-col-check');
+    super('is like list', 'like list', ['decimal', 'integer'], '', 'eg. 12.45*, 3.568*, ...', directiveTag);
     this.matchHint = 'like list numeric';
   }
 

@@ -2,7 +2,6 @@ goog.module('os.ui.filter.op.time.BetweenTimeUI');
 goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.datetime.DurationUI');
-goog.require('os.ui.filter.colTypeCheckValidation');
 goog.require('os.ui.popover.popoverDirective');
 
 const {ROOT} = goog.require('os');

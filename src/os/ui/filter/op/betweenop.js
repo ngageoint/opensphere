@@ -1,8 +1,7 @@
 goog.module('os.ui.filter.op.Between');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.betweenDirective');
-
+const {directiveTag} = goog.require('os.ui.filter.BetweenUI');
 const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
 const Op = goog.require('os.ui.filter.op.Op');
 const DataType = goog.require('os.xsd.DataType');
@@ -16,7 +15,7 @@ class Between extends Op {
    */
   constructor() {
     super('And', 'is between', 'between', [DataType.INTEGER, DataType.DECIMAL], 'hint="between"', undefined,
-        'fb-between');
+        directiveTag);
     this.matchHint = 'between';
   }
 

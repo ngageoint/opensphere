@@ -1,8 +1,8 @@
 goog.module('os.ui.filter.ui.EditFiltersUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.advancedFilterBuilderDirective');
-goog.require('os.ui.filter.basicFilterBuilderDirective');
+goog.require('os.ui.filter.AdvancedFilterBuilderUI');
+goog.require('os.ui.filter.BasicFilterBuilderUI');
 goog.require('os.ui.util.ValidationMessageUI');
 
 const {getFirstElementChild, getNextElementSibling} = goog.require('goog.dom');

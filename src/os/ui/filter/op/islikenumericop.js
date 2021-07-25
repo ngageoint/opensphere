@@ -1,9 +1,8 @@
 goog.module('os.ui.filter.op.IsLikeNumeric');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.textNoColCheckDirective');
-
 const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
+const {directiveTag} = goog.require('os.ui.filter.TextNoColCheckUI');
 const Op = goog.require('os.ui.filter.op.Op');
 
 
@@ -25,7 +24,7 @@ class IsLikeNumeric extends Op {
     opt_supportedTypes = opt_supportedTypes || ['integer', 'decimal'];
     opt_attributes = opt_attributes || 'hint="is like numeric"';
     opt_hint = opt_hint || 'e.g. 12.34*';
-    opt_ui = opt_ui || 'fb-text-no-col-check';
+    opt_ui = opt_ui || directiveTag;
 
     super('And', opt_title, opt_shortTitle, opt_supportedTypes, opt_attributes, opt_hint, opt_ui);
     this.matchHint = 'is like numeric';

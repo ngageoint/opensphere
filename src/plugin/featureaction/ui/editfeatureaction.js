@@ -1,8 +1,8 @@
 goog.module('plugin.im.action.feature.ui.EditFeatureActionUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.advancedFilterBuilderDirective');
-goog.require('os.ui.filter.basicFilterBuilderDirective');
+goog.require('os.ui.filter.AdvancedFilterBuilderUI');
+goog.require('os.ui.filter.BasicFilterBuilderUI');
 goog.require('os.ui.util.ValidationMessageUI');
 
 const Feature = goog.require('ol.Feature');

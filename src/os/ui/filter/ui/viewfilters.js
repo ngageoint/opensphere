@@ -1,7 +1,7 @@
 goog.module('os.ui.filter.ui.ViewFiltersUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.advancedFilterBuilderDirective');
+goog.require('os.ui.filter.AdvancedFilterBuilderUI');
 
 const {getFirstElementChild, getNextElementSibling} = goog.require('goog.dom');
 const {ROOT} = goog.require('os');

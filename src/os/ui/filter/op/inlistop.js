@@ -1,9 +1,8 @@
 goog.module('os.ui.filter.op.InList');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.listDirective');
-
 const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
+const {directiveTag} = goog.require('os.ui.filter.ListUI');
 const Op = goog.require('os.ui.filter.op.Op');
 const {quoteString} = goog.require('os.ui.filter.string');
 
@@ -39,7 +38,7 @@ class InList extends Op {
     opt_supportedTypes = opt_supportedTypes || null;
     opt_attrs = opt_attrs || 'hint="in list"';
     opt_hint = opt_hint || 'e.g. A, b, ...' + Op.TEXT.CASE_SENSITIVE;
-    opt_ui = opt_ui || 'fb-list';
+    opt_ui = opt_ui || directiveTag;
     opt_popoverTitle = opt_popoverTitle || Op.TEXT.CASE_SENSITIVE_TITLE;
     opt_popoverContent = opt_popoverContent || Op.TEXT.CASE_SENSITIVE_DETAIL;
 

@@ -16,7 +16,7 @@ goog.require('os.ui.Module');
 goog.require('os.ui.addFilterDirective');
 goog.require('os.ui.filter.ui.FilterExportUI');
 goog.require('os.ui.filter.ui.FilterGroupBy');
-goog.require('os.ui.filter.ui.filterTreeDirective');
+goog.require('os.ui.filter.ui.FilterTreeUI');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.menu.filter');
 goog.require('os.ui.query.BaseCombinatorCtrl');
