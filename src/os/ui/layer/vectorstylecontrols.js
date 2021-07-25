@@ -5,7 +5,7 @@ goog.require('goog.Disposable');
 goog.require('os.data.DataManager');
 goog.require('os.data.IMappingDescriptor');
 goog.require('os.ui.Module');
-goog.require('os.ui.icon.iconPickerDirective');
+goog.require('os.ui.icon.IconPickerUI');
 goog.require('os.ui.layer.EllipseColumnsUI');
 goog.require('os.ui.layer.VectorStyleControlsEventType');
 goog.require('os.ui.sliderDirective');

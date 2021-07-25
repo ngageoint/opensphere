@@ -2,6 +2,7 @@ goog.module('os.ui.icon.IconSelectorManager');
 goog.module.declareLegacyNamespace();
 
 const CollectionManager = goog.require('os.data.CollectionManager');
+const {directiveTag: iconPalette} = goog.require('os.ui.icon.IconPaletteUI');
 
 
 /**
@@ -19,8 +20,8 @@ class IconSelectorManager extends CollectionManager {
       // default icon selector
       'id': 'google_icons',
       'name': 'Google Icons',
-      'html': '<iconpalette accept-callback="acceptCallback" selected="selected" icon-set="iconSet" ' +
-          'icon-src="iconSrc"></iconpalette>'
+      'html': `<${iconPalette} accept-callback="acceptCallback" selected="selected" icon-set="iconSet" ` +
+          `icon-src="iconSrc"></${iconPalette}>`
     });
   }
 
