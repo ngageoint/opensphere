@@ -8,7 +8,7 @@ goog.require('os.ui.clear.ClearButtonUI');
 goog.require('os.ui.datePanelDirective');
 goog.require('os.ui.draw.DrawControlsUI');
 goog.require('os.ui.help');
-goog.require('os.ui.history.historyButtonDirective');
+goog.require('os.ui.history.HistoryButtonUI');
 goog.require('os.ui.layersButtonDirective');
 goog.require('os.ui.legendButtonDirective');
 goog.require('os.ui.list');
@@ -81,6 +81,6 @@ os.ui.navbaroptions.init = function() {
   os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'legend-button', 200);
   os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'servers-button', 300);
   os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'alert-button', 400);
-  os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'history-button', 500);
+  os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, os.ui.history.HistoryButtonUI.directiveTag, 500);
   os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'mute-button', 600);
 };
