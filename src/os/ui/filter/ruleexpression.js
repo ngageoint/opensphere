@@ -1,12 +1,13 @@
 goog.provide('os.ui.filter.RuleExpression');
 goog.provide('os.ui.filter.RuleExpressionCtrl');
 goog.provide('os.ui.filter.ruleExpressionDirective');
+
 goog.require('os.ui.Module');
 goog.require('os.ui.filter.Expression');
 goog.require('os.ui.filter.ExpressionCtrl');
 goog.require('os.ui.filter.expressionDirective');
+goog.require('os.ui.filter.op.OPUISwitchUI');
 goog.require('os.ui.filter.op.Rule');
-goog.require('os.ui.filter.op.opUISwitchDirective');
 
 
 /**

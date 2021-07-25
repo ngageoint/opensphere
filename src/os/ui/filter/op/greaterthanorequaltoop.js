@@ -1,31 +1,33 @@
-goog.provide('os.ui.filter.op.GreaterThanOrEqualTo');
+goog.module('os.ui.filter.op.GreaterThanOrEqualTo');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.string');
-goog.require('os.ui.filter.op.Op');
-goog.require('os.ui.filter.string');
+const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
+const Op = goog.require('os.ui.filter.op.Op');
+const {quoteString} = goog.require('os.ui.filter.string');
 
 
 /**
  * A 'PropertyIsGreaterThanOrEqualTo' operation class.
- *
- * @extends {os.ui.filter.op.Op}
- * @constructor
  */
-os.ui.filter.op.GreaterThanOrEqualTo = function() {
-  os.ui.filter.op.GreaterThanOrEqualTo.base(this, 'constructor',
-      'PropertyIsGreaterThanOrEqualTo', 'is greater than or equal to', '>=');
-};
-goog.inherits(os.ui.filter.op.GreaterThanOrEqualTo, os.ui.filter.op.Op);
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.op.GreaterThanOrEqualTo.prototype.getEvalExpression = function(varName, literal) {
-  if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(literal))) {
-    return varName + '>=' + os.ui.filter.string.quoteString(literal);
+class GreaterThanOrEqualTo extends Op {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super('PropertyIsGreaterThanOrEqualTo', 'is greater than or equal to', '>=');
   }
 
-  // null/empty string is not supported, so don't return an expression
-  return '';
-};
+  /**
+   * @inheritDoc
+   */
+  getEvalExpression(varName, literal) {
+    if (!isEmptyOrWhitespace(makeSafe(literal))) {
+      return varName + '>=' + quoteString(literal);
+    }
+
+    // null/empty string is not supported, so don't return an expression
+    return '';
+  }
+}
+
+exports = GreaterThanOrEqualTo;

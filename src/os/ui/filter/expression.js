@@ -5,7 +5,7 @@ goog.provide('os.ui.filter.expressionDirective');
 goog.require('goog.dom');
 goog.require('os.ui.Module');
 goog.require('os.ui.filter');
-goog.require('os.ui.filter.op.opUISwitchDirective');
+goog.require('os.ui.filter.op.OPUISwitchUI');
 goog.require('os.ui.slick.column');
 
 

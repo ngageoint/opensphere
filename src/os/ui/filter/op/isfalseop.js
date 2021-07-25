@@ -1,70 +1,76 @@
-goog.provide('os.ui.filter.op.IsFalse');
+goog.module('os.ui.filter.op.IsFalse');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.op.Op');
-goog.require('os.xsd.DataType');
+const Op = goog.require('os.ui.filter.op.Op');
+const DataType = goog.require('os.xsd.DataType');
 
 
 /**
  * A 'PropertyIsFalse' operation class.
  * Based on the OGC Filter Spec
- *
- * @extends {os.ui.filter.op.Op}
- * @constructor
  */
-os.ui.filter.op.IsFalse = function() {
-  os.ui.filter.op.IsFalse.base(this, 'constructor',
-      'And', 'is false', 'false',
-      [os.xsd.DataType.BOOLEAN, os.xsd.DataType.INTEGER, os.xsd.DataType.STRING],
-      'hint="is false"', 'Supports false, 0, and "false" (case insensitive)', 'span', true);
-  this.matchHint = 'is false';
-};
+class IsFalse extends Op {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super(
+        'And',
+        'is false',
+        'false',
+        [DataType.BOOLEAN, DataType.INTEGER, DataType.STRING],
+        'hint="is false"',
+        'Supports false, 0, and "false" (case insensitive)',
+        'span',
+        true
+    );
+    this.matchHint = 'is false';
+  }
 
+  /**
+   * Because OpenSphere allows isEmpty() comparator for Boolean type properties, fail null/empty tests
+   *
+   * @inheritDoc
+   */
+  getEvalExpression(v, literal) {
+    return '(' + v + '===false||' + v + '===0||String(' + v + ').toLowerCase()==="false")';
+  }
 
-goog.inherits(os.ui.filter.op.IsFalse, os.ui.filter.op.Op);
+  /**
+   *
+   * @inheritDoc
+   */
+  getFilter(column, literal) {
+    var f = [];
+    var attr = this.getAttributes();
 
+    f.push('<' + this.localName + (attr ? ' ' + attr : '') + '>');
 
-/**
- * Because OpenSphere allows isEmpty() comparator for Boolean type properties, fail null/empty tests
- *
- * @inheritDoc
- */
-os.ui.filter.op.IsFalse.prototype.getEvalExpression = function(v, literal) {
-  return '(' + v + '===false||' + v + '===0||String(' + v + ').toLowerCase()==="false")';
-};
+    f.push(
+        '<Not><PropertyIsNull>' +
+          '<PropertyName>' + column + '</PropertyName>' +
+        '</PropertyIsNull></Not>'
+    );
 
+    f.push('<Or>');
+    f.push(
+        '<PropertyIsEqualTo>' +
+          '<PropertyName>' + column + '</PropertyName>' +
+          '<Literal><![CDATA[0]]></Literal>' +
+        '</PropertyIsEqualTo>'
+    );
+    f.push(
+        '<PropertyIsEqualTo matchCase="false">' +
+          '<PropertyName>' + column + '</PropertyName>' +
+          '<Literal><![CDATA[false]]></Literal>' +
+        '</PropertyIsEqualTo>'
+    );
+    f.push('</Or>');
 
-/**
- *
- * @inheritDoc
- */
-os.ui.filter.op.IsFalse.prototype.getFilter = function(column, literal) {
-  var f = [];
-  var attr = this.getAttributes();
+    f.push('</' + this.localName + '>');
 
-  f.push('<' + this.localName + (attr ? ' ' + attr : '') + '>');
+    return f.join('');
+  }
+}
 
-  f.push(
-      '<Not><PropertyIsNull>' +
-        '<PropertyName>' + column + '</PropertyName>' +
-      '</PropertyIsNull></Not>'
-  );
-
-  f.push('<Or>');
-  f.push(
-      '<PropertyIsEqualTo>' +
-        '<PropertyName>' + column + '</PropertyName>' +
-        '<Literal><![CDATA[0]]></Literal>' +
-      '</PropertyIsEqualTo>'
-  );
-  f.push(
-      '<PropertyIsEqualTo matchCase="false">' +
-        '<PropertyName>' + column + '</PropertyName>' +
-        '<Literal><![CDATA[false]]></Literal>' +
-      '</PropertyIsEqualTo>'
-  );
-  f.push('</Or>');
-
-  f.push('</' + this.localName + '>');
-
-  return f.join('');
-};
+exports = IsFalse;

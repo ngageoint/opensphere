@@ -1,136 +1,134 @@
-goog.provide('os.ui.filter.op.Between');
+goog.module('os.ui.filter.op.Between');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.FilterPatterns');
 goog.require('os.ui.filter.betweenDirective');
-goog.require('os.ui.filter.op.Op');
-goog.require('os.xsd.DataType');
 
-
-
-/**
- * @constructor
- * @extends {os.ui.filter.op.Op}
- */
-os.ui.filter.op.Between = function() {
-  os.ui.filter.op.Between.base(this, 'constructor',
-      'And', 'is between', 'between', [os.xsd.DataType.INTEGER, os.xsd.DataType.DECIMAL],
-      'hint="between"', undefined, 'fb-between');
-  this.matchHint = 'between';
-};
-goog.inherits(os.ui.filter.op.Between, os.ui.filter.op.Op);
+const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
+const Op = goog.require('os.ui.filter.op.Op');
+const DataType = goog.require('os.xsd.DataType');
 
 
 /**
- * @inheritDoc
  */
-os.ui.filter.op.Between.prototype.getEvalExpression = function(varName, literal) {
-  var range = this.getRangeFromLiteral(literal);
-  if (range && range.length == 2 && range[0] !== range[1]) {
-    return '(' + varName + '>=' + range[0] + '&&' + varName + '<=' + range[1] + ')';
+class Between extends Op {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super('And', 'is between', 'between', [DataType.INTEGER, DataType.DECIMAL], 'hint="between"', undefined,
+        'fb-between');
+    this.matchHint = 'between';
   }
 
-  // range couldn't be parsed, so don't return an expression
-  return '';
-};
+  /**
+   * @inheritDoc
+   */
+  getEvalExpression(varName, literal) {
+    var range = this.getRangeFromLiteral(literal);
+    if (range && range.length == 2 && range[0] !== range[1]) {
+      return '(' + varName + '>=' + range[0] + '&&' + varName + '<=' + range[1] + ')';
+    }
 
-
-/**
- * @inheritDoc
- */
-os.ui.filter.op.Between.prototype.getFilter = function(column, literal) {
-  var f = '';
-
-  var range = this.getRangeFromLiteral(literal);
-  if (range && range.length == 2 && range[0] !== range[1]) {
-    var attr = this.getAttributes();
-
-    f = '<' + this.localName + (attr ? ' ' + attr : '') + '>';
-
-    // yes, I realize that a non-inclusive end and/or a non-inclusive start is much more
-    // technically useful, but these are apparently non-intuitive to our users (glare face).
-
-    f += '<PropertyIsGreaterThanOrEqualTo>' +
-        '<PropertyName>' + column + '</PropertyName>' +
-        '<Literal><![CDATA[' + range[0] + ']]></Literal>' +
-        '</PropertyIsGreaterThanOrEqualTo>' +
-        '<PropertyIsLessThanOrEqualTo>' +
-        '<PropertyName>' + column + '</PropertyName>' +
-        '<Literal><![CDATA[' + range[1] + ']]></Literal>' +
-        '</PropertyIsLessThanOrEqualTo>';
-
-    f += '</' + this.localName + '>';
+    // range couldn't be parsed, so don't return an expression
+    return '';
   }
 
-  return f;
-};
+  /**
+   * @inheritDoc
+   */
+  getFilter(column, literal) {
+    var f = '';
 
+    var range = this.getRangeFromLiteral(literal);
+    if (range && range.length == 2 && range[0] !== range[1]) {
+      var attr = this.getAttributes();
 
-/**
- * Get the numeric range from the literal value.
- *
- * @param {?string} literal The filter literal.
- * @return {Array<number>} The range, in the form [min, max].
- * @protected
- */
-os.ui.filter.op.Between.prototype.getRangeFromLiteral = function(literal) {
-  if (literal) {
-    var list = literal.trim().split(/\s*,\s*/);
+      f = '<' + this.localName + (attr ? ' ' + attr : '') + '>';
 
-    if (list.length == 2) {
-      var a = parseFloat(list[0]);
-      var b = parseFloat(list[1]);
-      if (!isNaN(a) && !isNaN(b)) {
-        return [Math.min(a, b), Math.max(a, b)];
+      // yes, I realize that a non-inclusive end and/or a non-inclusive start is much more
+      // technically useful, but these are apparently non-intuitive to our users (glare face).
+
+      f += '<PropertyIsGreaterThanOrEqualTo>' +
+          '<PropertyName>' + column + '</PropertyName>' +
+          '<Literal><![CDATA[' + range[0] + ']]></Literal>' +
+          '</PropertyIsGreaterThanOrEqualTo>' +
+          '<PropertyIsLessThanOrEqualTo>' +
+          '<PropertyName>' + column + '</PropertyName>' +
+          '<Literal><![CDATA[' + range[1] + ']]></Literal>' +
+          '</PropertyIsLessThanOrEqualTo>';
+
+      f += '</' + this.localName + '>';
+    }
+
+    return f;
+  }
+
+  /**
+   * Get the numeric range from the literal value.
+   *
+   * @param {?string} literal The filter literal.
+   * @return {Array<number>} The range, in the form [min, max].
+   * @protected
+   */
+  getRangeFromLiteral(literal) {
+    if (literal) {
+      var list = literal.trim().split(/\s*,\s*/);
+
+      if (list.length == 2) {
+        var a = parseFloat(list[0]);
+        var b = parseFloat(list[1]);
+        if (!isNaN(a) && !isNaN(b)) {
+          return [Math.min(a, b), Math.max(a, b)];
+        }
       }
     }
+
+    return null;
   }
 
-  return null;
-};
+  /**
+   * @inheritDoc
+   */
+  getLiteral(el) {
+    var arr = el.find('Literal');
+    var literals = [];
 
+    arr.each(function(i, domEl) {
+      literals.push($(domEl).text());
+    });
 
-/**
- * @inheritDoc
- */
-os.ui.filter.op.Between.prototype.getLiteral = function(el) {
-  var arr = el.find('Literal');
-  var literals = [];
-
-  arr.each(function(i, domEl) {
-    literals.push($(domEl).text());
-  });
-
-  return literals.join(', ');
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.op.Between.prototype.matches = function(el) {
-  if (el) {
-    return el.attr('hint') == this.matchHint;
+    return literals.join(', ');
   }
 
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.op.Between.prototype.validate = function(value, key) {
-  if (value) {
-    var list = value.trim().split(/\s*,\s*/);
-
-    if (list.length == 2) {
-      var a = parseFloat(list[0]);
-      var b = parseFloat(list[1]);
-
-      var pattern = os.ui.filter.FilterPatterns[key];
-      return pattern.test(a) && pattern.test(b);
+  /**
+   * @inheritDoc
+   */
+  matches(el) {
+    if (el) {
+      return el.attr('hint') == this.matchHint;
     }
+
+    return false;
   }
 
-  return false;
-};
+  /**
+   * @inheritDoc
+   */
+  validate(value, key) {
+    if (value) {
+      var list = value.trim().split(/\s*,\s*/);
+
+      if (list.length == 2) {
+        var a = parseFloat(list[0]);
+        var b = parseFloat(list[1]);
+
+        var pattern = FilterPatterns[key];
+        return pattern.test(a) && pattern.test(b);
+      }
+    }
+
+    return false;
+  }
+}
+
+exports = Between;

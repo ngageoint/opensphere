@@ -1,149 +1,141 @@
-goog.provide('os.ui.filter.op.Not');
+goog.module('os.ui.filter.op.Not');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.op.Op');
-
+const Op = goog.require('os.ui.filter.op.Op');
 
 
 /**
- * @param {os.ui.filter.op.Op} op
- * @constructor
- * @extends {os.ui.filter.op.Op}
+ * @unrestricted
  */
-os.ui.filter.op.Not = function(op) {
+class Not extends Op {
   /**
-   * @type {os.ui.filter.op.Op}
-   * @protected
+   * Constructor.
+   * @param {Op} op
    */
-  this.op = op;
+  constructor(op) {
+    super('Not', 'not');
 
-  os.ui.filter.op.Not.base(this, 'constructor', 'Not', 'not');
+    /**
+     * @type {Op}
+     * @protected
+     */
+    this.op = op;
 
-  /**
-   * @type {!string}
-   */
-  this['hint'] = op['hint'] || '';
+    /**
+     * @type {!string}
+     */
+    this['hint'] = op['hint'] || '';
 
-  /**
-   * @type {!string}
-   */
-  this['popoverTitle'] = op['popoverTitle'] || '';
+    /**
+     * @type {!string}
+     */
+    this['popoverTitle'] = op['popoverTitle'] || '';
 
-  /**
-   * @type {?string}
-   */
-  this['popoverContent'] = op['popoverContent'];
-};
-goog.inherits(os.ui.filter.op.Not, os.ui.filter.op.Op);
-
-
-/**
- * @inheritDoc
- * @export
- */
-os.ui.filter.op.Not.prototype.getTitle = function() {
-  return this.op.getTitle().replace('is', 'is not');
-};
-
-
-/**
- * @inheritDoc
- * @export
- */
-os.ui.filter.op.Not.prototype.getShortTitle = function() {
-  return 'not ' + this.op.getShortTitle();
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.op.Not.prototype.getAttributes = function() {
-  return this.op.getAttributes();
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.op.Not.prototype.setAttributes = function(attributes) {
-  return this.op.setAttributes(attributes);
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.op.Not.prototype.getUi = function() {
-  return this.op.getUi();
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.op.Not.prototype.getEvalExpression = function(varName, literal) {
-  var opExpr = this.op.getEvalExpression(varName, literal);
-  if (opExpr) {
-    return '!(' + opExpr + ')';
+    /**
+     * @type {?string}
+     */
+    this['popoverContent'] = op['popoverContent'];
   }
 
-  return '';
-};
+  /**
+   * @inheritDoc
+   * @export
+   */
+  getTitle() {
+    return this.op.getTitle().replace('is', 'is not');
+  }
 
+  /**
+   * @inheritDoc
+   * @export
+   */
+  getShortTitle() {
+    return 'not ' + this.op.getShortTitle();
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.filter.op.Not.prototype.getFilter = function(column, literal) {
-  var filter = this.op.getFilter(column, literal);
-  return filter ? '<Not>' + filter + '</Not>' : '';
-};
+  /**
+   * @inheritDoc
+   */
+  getAttributes() {
+    return this.op.getAttributes();
+  }
 
+  /**
+   * @inheritDoc
+   */
+  setAttributes(attributes) {
+    return this.op.setAttributes(attributes);
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.filter.op.Not.prototype.getColumn = function(el) {
-  return this.op.getColumn(el);
-};
+  /**
+   * @inheritDoc
+   */
+  getUi() {
+    return this.op.getUi();
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getEvalExpression(varName, literal) {
+    var opExpr = this.op.getEvalExpression(varName, literal);
+    if (opExpr) {
+      return '!(' + opExpr + ')';
+    }
 
-/**
- * @inheritDoc
- */
-os.ui.filter.op.Not.prototype.getLiteral = function(el) {
-  return this.op.getLiteral(el);
-};
+    return '';
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getFilter(column, literal) {
+    var filter = this.op.getFilter(column, literal);
+    return filter ? '<Not>' + filter + '</Not>' : '';
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.filter.op.Not.prototype.matches = function(el) {
-  return os.ui.filter.op.Not.base(this, 'matches', el) &&
-      el.children().length == 1 && this.op.matches(el.children().first());
-};
+  /**
+   * @inheritDoc
+   */
+  getColumn(el) {
+    return this.op.getColumn(el);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getLiteral(el) {
+    return this.op.getLiteral(el);
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.filter.op.Not.prototype.isSupported = function(type) {
-  return this.op.isSupported(type);
-};
+  /**
+   * @inheritDoc
+   */
+  matches(el) {
+    return super.matches(el) &&
+        el.children().length == 1 && this.op.matches(el.children().first());
+  }
 
+  /**
+   * @inheritDoc
+   */
+  isSupported(type) {
+    return this.op.isSupported(type);
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.filter.op.Not.prototype.setSupported = function(types) {
-  this.op.setSupported(types);
-};
+  /**
+   * @inheritDoc
+   */
+  setSupported(types) {
+    this.op.setSupported(types);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  validate(value, key) {
+    return this.op.validate(value, key);
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.ui.filter.op.Not.prototype.validate = function(value, key) {
-  return this.op.validate(value, key);
-};
+exports = Not;
