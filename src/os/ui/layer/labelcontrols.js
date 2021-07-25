@@ -9,7 +9,7 @@ goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 goog.require('os.style.label');
 goog.require('os.ui.Module');
-goog.require('os.ui.geo.positionDirective');
+goog.require('os.ui.geo.PositionUI');
 
 
 /**

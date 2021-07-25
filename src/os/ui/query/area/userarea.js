@@ -20,7 +20,7 @@ goog.require('os.map');
 goog.require('os.map.instance');
 goog.require('os.style');
 goog.require('os.ui.Module');
-goog.require('os.ui.geo.positionDirective');
+goog.require('os.ui.geo.PositionUI');
 goog.require('os.ui.util.ValidationMessageUI');
 goog.require('os.ui.window');
 
