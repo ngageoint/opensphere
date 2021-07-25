@@ -1,60 +1,33 @@
-goog.provide('os.ui.filter.FilterEvent');
-goog.provide('os.ui.filter.FilterEventType');
-goog.provide('os.ui.filter.FilterImportEvent');
-goog.require('goog.events.Event');
+goog.module('os.ui.filter.FilterEvent');
+goog.module.declareLegacyNamespace();
 
+const GoogEvent = goog.require('goog.events.Event');
 
-
-/**
- * @param {string} type
- * @param {string=} opt_key
- * @param {os.filter.FilterEntry=} opt_entry
- * @extends {goog.events.Event}
- * @constructor
- */
-os.ui.filter.FilterEvent = function(type, opt_key, opt_entry) {
-  os.ui.filter.FilterEvent.base(this, 'constructor', type);
-
-  /**
-   * @type {?string}
-   */
-  this.key = opt_key || null;
-
-  /**
-   * @type {os.filter.FilterEntry}
-   */
-  this.entry = opt_entry || null;
-};
-goog.inherits(os.ui.filter.FilterEvent, goog.events.Event);
-
+const FilterEntry = goog.requireType('os.filter.FilterEntry');
 
 
 /**
- * @param {string} type
- * @param {Array<os.filter.FilterEntry>} filters
- * @extends {goog.events.Event}
- * @constructor
  */
-os.ui.filter.FilterImportEvent = function(type, filters) {
-  os.ui.filter.FilterImportEvent.base(this, 'constructor', os.ui.filter.FilterEventType.FILTERS_IMPORTED);
-
+class FilterEvent extends GoogEvent {
   /**
-   * @type {Array<os.filter.FilterEntry>}
+   * Constructor.
+   * @param {string} type
+   * @param {string=} opt_key
+   * @param {FilterEntry=} opt_entry
    */
-  this.filters = filters;
-};
-goog.inherits(os.ui.filter.FilterImportEvent, goog.events.Event);
+  constructor(type, opt_key, opt_entry) {
+    super(type);
 
+    /**
+     * @type {?string}
+     */
+    this.key = opt_key || null;
 
-/**
- * @enum {string}
- */
-os.ui.filter.FilterEventType = {
-  FILTERS_CHANGED: 'filtersChanged',
-  GROUPING_CHANGED: 'filterGroupingChanged',
-  HANDLERS_CHANGED: 'filterHandlersChanged',
-  FILTERS_REFRESH: 'filtersRefresh',
-  FILTERS_IMPORTED: 'filtersImported',
-  ADD_FILTER: 'addFilter',
-  EXPORT_FILTER: 'exportFilter'
-};
+    /**
+     * @type {FilterEntry}
+     */
+    this.entry = opt_entry || null;
+  }
+}
+
+exports = FilterEvent;

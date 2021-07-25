@@ -1,6 +1,8 @@
-goog.provide('os.ui.filter.listNoColCheckDirective');
+goog.module('os.ui.filter.ListNoColCheckUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -10,17 +12,24 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.filter.listNoColCheckDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    templateUrl: os.ROOT + 'views/filter/listnocolcheck.html'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  templateUrl: ROOT + 'views/filter/listnocolcheck.html'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'fb-list-no-col-check';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('fbListNoColCheck', [os.ui.filter.listNoColCheckDirective]);
+Module.directive('fbListNoColCheck', [directive]);
 
+exports = {
+  directive,
+  directiveTag
+};

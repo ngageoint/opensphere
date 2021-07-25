@@ -1,8 +1,10 @@
-goog.provide('os.ui.filter.colTypeCheckValidation');
-goog.provide('os.ui.filter.textDirective');
+goog.module('os.ui.filter.TextUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-goog.require('os.ui.filter.FilterPatterns');
+goog.require('os.ui.filter.colTypeCheckValidation');
+
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -10,67 +12,24 @@ goog.require('os.ui.filter.FilterPatterns');
  *
  * @return {angular.Directive}
  */
-os.ui.filter.textDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    templateUrl: os.ROOT + 'views/filter/text.html'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  templateUrl: ROOT + 'views/filter/text.html'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'fb-text';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('fbText', [os.ui.filter.textDirective]);
+Module.directive('fbText', [directive]);
 
-
-/**
- * The column type check validation
- *
- * @return {angular.Directive}
- */
-os.ui.filter.colTypeCheckValidation = function() {
-  return {
-    require: 'ngModel',
-    link: os.ui.filter.colTypeCheckLink
-  };
+exports = {
+  directive,
+  directiveTag
 };
-
-
-/**
- * The link for type check validation
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {*} $attrs
- * @param {*} $ctrl
- * @ngInject
- */
-os.ui.filter.colTypeCheckLink = function($scope, $element, $attrs, $ctrl) {
-  $ctrl.$parsers.unshift(
-      /**
-       * @param {string} viewValue
-       * @return {string|undefined}
-       */
-      function(viewValue) {
-        var key = $scope['expr']['column']['type'];
-        var pattern = os.ui.filter.FilterPatterns[key];
-
-        if (pattern && pattern.test(viewValue)) {
-          $ctrl.$setValidity('type', true);
-          $element.attr('title', '');
-          return viewValue;
-        } else {
-          $ctrl.$setValidity('type', false);
-          $element.attr('title', 'Please enter a valid ' + key);
-          return undefined;
-        }
-      });
-};
-
-
-/**
- * Add directive to module
- */
-os.ui.Module.directive('coltypecheck', [os.ui.filter.colTypeCheckValidation]);

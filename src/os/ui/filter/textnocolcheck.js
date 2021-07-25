@@ -1,7 +1,8 @@
-goog.provide('os.ui.filter.TextNoColCheckCtrl');
-goog.provide('os.ui.filter.textNoColCheckDirective');
+goog.module('os.ui.filter.TextNoColCheckUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -11,64 +12,73 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.filter.textNoColCheckDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    templateUrl: os.ROOT + 'views/filter/textnocolcheck.html',
-    controller: os.ui.filter.TextNoColCheckCtrl,
-    controllerAs: 'textNoColCheckCtrl'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  templateUrl: ROOT + 'views/filter/textnocolcheck.html',
+  controller: Controller,
+  controllerAs: 'textNoColCheckCtrl'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'fb-text-no-col-check';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('fbTextNoColCheck', [os.ui.filter.textNoColCheckDirective]);
-
-
+Module.directive('fbTextNoColCheck', [directive]);
 
 /**
  * Controller for the between UI
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.filter.TextNoColCheckCtrl = function($scope) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  this['start'] = undefined;
+    this['start'] = undefined;
 
-  if ($scope['expr']['literal'] != null) {
-    this['start'] = $scope['expr']['literal'];
+    if ($scope['expr']['literal'] != null) {
+      this['start'] = $scope['expr']['literal'];
+    }
+
+    this.onChange();
+    $scope.$on('$destroy', this.onDestroy_.bind(this));
   }
 
-  this.onChange();
-  $scope.$on('$destroy', this.onDestroy_.bind(this));
-};
+  /**
+   * clean up
+   *
+   * @private
+   */
+  onDestroy_() {
+    this.scope_ = null;
+  }
 
+  /**
+   * Run when the user changes the value
+   *
+   * @export
+   */
+  onChange() {
+    this.scope_['expr']['literal'] = this['start'];
+  }
+}
 
-/**
- * clean up
- *
- * @private
- */
-os.ui.filter.TextNoColCheckCtrl.prototype.onDestroy_ = function() {
-  this.scope_ = null;
-};
-
-
-/**
- * Run when the user changes the value
- *
- * @export
- */
-os.ui.filter.TextNoColCheckCtrl.prototype.onChange = function() {
-  this.scope_['expr']['literal'] = this['start'];
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
