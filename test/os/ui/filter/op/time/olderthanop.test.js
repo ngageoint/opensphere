@@ -3,7 +3,11 @@ goog.require('os.time.TimeRange');
 goog.require('os.ui.filter.op.time.OlderThan');
 
 describe('os.ui.filter.op.time.OlderThan', function() {
-  var between = new os.ui.filter.op.time.OlderThan();
+  const TimeInstant = goog.module.get('os.time.TimeInstant');
+  const TimeRange = goog.module.get('os.time.TimeRange');
+  const OlderThan = goog.module.get('os.ui.filter.op.time.OlderThan');
+
+  var between = new OlderThan();
   currentFilterTimestamp = 120000;
 
   it('should return the correct defaults', function() {
@@ -72,7 +76,7 @@ describe('os.ui.filter.op.time.OlderThan', function() {
 
   it('should evaluate its filter function correctly on time instants', function() {
     var expr = between.getEvalExpression('testVar', '60000');
-    var testVar = new os.time.TimeInstant(60000);
+    var testVar = new TimeInstant(60000);
 
     // prevent eslint no-unused-vars
     expect(testVar).toBeDefined();
@@ -81,17 +85,17 @@ describe('os.ui.filter.op.time.OlderThan', function() {
     expect(eval(expr)).toBe(false);
 
     // older than
-    testVar = new os.time.TimeInstant(40000);
+    testVar = new TimeInstant(40000);
     expect(eval(expr)).toBe(true);
 
     // newer than
-    testVar = new os.time.TimeInstant(80000);
+    testVar = new TimeInstant(80000);
     expect(eval(expr)).toBe(false);
   });
 
   it('should evaluate its filter function correctly on time ranges', function() {
     var expr = between.getEvalExpression('testVar', '60000');
-    var testVar = new os.time.TimeRange(60000, 70000);
+    var testVar = new TimeRange(60000, 70000);
 
     // prevent eslint no-unused-vars
     expect(testVar).toBeDefined();
@@ -100,15 +104,15 @@ describe('os.ui.filter.op.time.OlderThan', function() {
     expect(eval(expr)).toBe(false);
 
     // range end greater than the value
-    testVar = new os.time.TimeRange(50000, 80000);
+    testVar = new TimeRange(50000, 80000);
     expect(eval(expr)).toBe(true);
 
     // range entirely greater than the value
-    testVar = new os.time.TimeRange(20000, 30000);
+    testVar = new TimeRange(20000, 30000);
     expect(eval(expr)).toBe(true);
 
     // range entirely before the value
-    testVar = new os.time.TimeRange(100000, 110000);
+    testVar = new TimeRange(100000, 110000);
     expect(eval(expr)).toBe(false);
   });
 

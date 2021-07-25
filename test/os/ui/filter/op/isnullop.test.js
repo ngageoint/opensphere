@@ -1,7 +1,9 @@
 goog.require('os.ui.filter.op.IsNull');
 
 describe('os.ui.filter.op.IsNull', function() {
-  var op = new os.ui.filter.op.IsNull();
+  const IsNull = goog.module.get('os.ui.filter.op.IsNull');
+
+  var op = new IsNull();
 
   it('should return the correct default UI', function() {
     expect(op.getUi()).toBe('span');

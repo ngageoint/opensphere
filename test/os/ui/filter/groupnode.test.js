@@ -4,24 +4,28 @@ goog.require('os.ui.filter.ui.GroupNode');
 
 
 describe('os.ui.filter.ui.GroupNode', function() {
+  const ColumnDefinition = goog.module.get('os.data.ColumnDefinition');
+  const ExpressionNode = goog.module.get('os.ui.filter.ui.ExpressionNode');
+  const GroupNode = goog.module.get('os.ui.filter.ui.GroupNode');
+
   var cols = [
-    new os.data.ColumnDefinition('ALT'),
-    new os.data.ColumnDefinition('LAT'),
-    new os.data.ColumnDefinition('LON')
+    new ColumnDefinition('ALT'),
+    new ColumnDefinition('LAT'),
+    new ColumnDefinition('LON')
   ];
   var filter = '<PropertyIsGreaterThan><PropertyName>ALT</PropertyName><Literal>55</Literal></PropertyIsGreaterThan>';
   var node = $.parseXML(filter).firstChild;
-  var exprNode = os.ui.filter.ui.ExpressionNode.createExpressionNode(node, cols);
+  var exprNode = ExpressionNode.createExpressionNode(node, cols);
 
   it('should instantiate correctly', function() {
-    var groupingNode = new os.ui.filter.ui.GroupNode();
+    var groupingNode = new GroupNode();
     expect(groupingNode['grouping']).toBe('And');
     expect(groupingNode.collapsed).toBe(false);
   });
 
   it('should write out its filter correctly', function() {
     // it should not write anything if it has no children
-    var groupingNode = new os.ui.filter.ui.GroupNode();
+    var groupingNode = new GroupNode();
     expect(groupingNode.writeFilter()).toBe('');
 
     groupingNode.addChild(exprNode);

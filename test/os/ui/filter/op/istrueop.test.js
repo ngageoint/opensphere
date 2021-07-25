@@ -1,7 +1,9 @@
 goog.require('os.ui.filter.op.IsTrue');
 
 describe('os.ui.filter.op.IsTrue', function() {
-  var op = new os.ui.filter.op.IsTrue();
+  const IsTrue = goog.module.get('os.ui.filter.op.IsTrue');
+
+  var op = new IsTrue();
 
   it('should return the correct configs', function() {
     expect(op.getUi()).toBe('span');
@@ -58,7 +60,7 @@ describe('os.ui.filter.op.IsTrue', function() {
     v = {};
     expect(eval(expr)).toBe(false);
 
-    v = 'DC';  //testing non-empty does not follow 'coding' logic that evaluates to true
+    v = 'DC'; // testing non-empty does not follow 'coding' logic that evaluates to true
     expect(eval(expr)).toBe(false);
 
     v = 0;
@@ -67,7 +69,7 @@ describe('os.ui.filter.op.IsTrue', function() {
     v = false;
     expect(eval(expr)).toBe(false);
 
-    //specific values allowed; should be true
+    // specific values allowed; should be true
     v = 'TRUE';
     expect(eval(expr)).toBe(true);
 
@@ -76,6 +78,5 @@ describe('os.ui.filter.op.IsTrue', function() {
 
     v = true;
     expect(eval(expr)).toBe(true);
-
   });
 });

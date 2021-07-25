@@ -1,7 +1,9 @@
 goog.require('os.ui.filter.op.IsLike');
 
 describe('os.ui.filter.op.IsLike', function() {
-  var op = new os.ui.filter.op.IsLike();
+  const IsLike = goog.module.get('os.ui.filter.op.IsLike');
+
+  var op = new IsLike();
 
   it('should be configured correctly', function() {
     expect(op.localName).toBe('PropertyIsLike');

@@ -1,7 +1,9 @@
 goog.require('os.ui.filter.op.LikeList');
 
 describe('os.ui.filter.op.LikeList', function() {
-  var op = new os.ui.filter.op.LikeList();
+  const LikeList = goog.module.get('os.ui.filter.op.LikeList');
+
+  var op = new LikeList();
 
   it('should properly match XML', function() {
     var filter = '<Or hint="in list">' +

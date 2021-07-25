@@ -3,7 +3,9 @@ goog.require('os.ui.filter.op.Op');
 
 
 describe('os.ui.filter.op.Between', function() {
-  var between = new os.ui.filter.op.Between();
+  const Between = goog.module.get('os.ui.filter.op.Between');
+
+  var between = new Between();
 
   it('should return the correct defaults', function() {
     expect(between.getTitle()).toBe('is between');

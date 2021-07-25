@@ -6,17 +6,23 @@ goog.require('os.ui.filter.op.Op');
 
 
 describe('os.ui.filter.op.Not', function() {
-  var defaultOp = new os.ui.filter.op.Op();
-  var notDefaultOp = new os.ui.filter.op.Not(defaultOp);
+  const EqualTo = goog.module.get('os.ui.filter.op.EqualTo');
+  const IsLike = goog.module.get('os.ui.filter.op.IsLike');
+  const IsNull = goog.module.get('os.ui.filter.op.IsNull');
+  const Not = goog.module.get('os.ui.filter.op.Not');
+  const Op = goog.module.get('os.ui.filter.op.Op');
 
-  var equal = new os.ui.filter.op.EqualTo();
-  var notEqual = new os.ui.filter.op.Not(equal);
+  var defaultOp = new Op();
+  var notDefaultOp = new Not(defaultOp);
 
-  var empty = new os.ui.filter.op.IsNull();
-  var notEmpty = new os.ui.filter.op.Not(empty);
+  var equal = new EqualTo();
+  var notEqual = new Not(equal);
 
-  var like = new os.ui.filter.op.IsLike();
-  var notLike = new os.ui.filter.op.Not(like);
+  var empty = new IsNull();
+  var notEmpty = new Not(empty);
+
+  var like = new IsLike();
+  var notLike = new Not(like);
 
   it('should return the correct title', function() {
     // replaces "is" with "is not"

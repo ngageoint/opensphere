@@ -1,7 +1,9 @@
 goog.require('os.ui.filter.op.LessThanOrEqualTo');
 
 describe('os.ui.filter.op.LessThanOrEqualTo', function() {
-  var op = new os.ui.filter.op.LessThanOrEqualTo();
+  const LessThanOrEqualTo = goog.module.get('os.ui.filter.op.LessThanOrEqualTo');
+
+  var op = new LessThanOrEqualTo();
 
   it('should be configured correctly', function() {
     expect(op.localName).toBe('PropertyIsLessThanOrEqualTo');
