@@ -1,8 +1,9 @@
-goog.provide('os.ui.help.supportMsg');
-goog.require('goog.format.JsonPrettyPrinter');
-goog.require('goog.userAgent');
-goog.require('os.config.Settings');
+goog.module('os.ui.help.supportMsg');
+goog.module.declareLegacyNamespace();
 
+const {escapeString} = goog.require('goog.string');
+const userAgent = goog.require('goog.userAgent');
+const Settings = goog.require('os.config.Settings');
 
 
 /**
@@ -15,89 +16,90 @@ goog.require('os.config.Settings');
  * truncated or just not work. Non windows boxes seem to have
  * a higher limit, not sure of the exact value so using an
  * arbitrary 3096 default.
- *
- * @constructor
- * @param {Object=} opt_options optional default overrides
  */
-os.ui.help.supportMsg = function(opt_options) {
-  opt_options = opt_options || {};
-  this.subject = goog.string.escapeString(opt_options['subject'] || this.getDefaultSubjectLine_());
-  this.bodyHeader = opt_options['bodyHeader'] || '';
-  this.bodyContent = opt_options['bodyContent'] || 'Provide detailed description of the issue:\n\n\n\n';
-  this.location = opt_options['location'] || document.location.href;
-  this.maxLength = opt_options.maxLength || (goog.userAgent.WINDOWS ? 2041 : 3096);
-};
-
-
-/**
- * Returns a parametered string for email, e.g.
- * subject=[this.subject]&body=...
- *
- * @return {string}
- */
-os.ui.help.supportMsg.prototype.getMailToParameters = function() {
-  var result = 'subject=' + escape(this.subject) + '&body=';
-  var body = this.bodyHeader + this.bodyContent +
-      '---- SUPPORT DATA ----\n' +
-      'location:' + this.location + '\n' +
-      'user-agent:' + goog.userAgent.getUserAgentString() + '\n' +
-      'WINDOWS:' + goog.userAgent.WINDOWS + '\n' +
-      'MAC:' + goog.userAgent.MAC + '\n' +
-      'LINUX:' + goog.userAgent.LINUX + '\n' +
-      'PLATFORM:' + goog.userAgent.PLATFORM + '\n' +
-      this.getModernizrValues();
-  // truncate the body part to acomadate the max width with a margin for encoding.
-  var maxBodyLength = this.maxLength - result.length - 200;
-  result = result + escape(body.substring(0, maxBodyLength));
-  return result;
-};
-
-
-/**
- * Use settings, if possible, to build a default subject line.
- *
- * @return {string}
- * @private
- */
-os.ui.help.supportMsg.prototype.getDefaultSubjectLine_ = function() {
-  var applicationName = /** @type {string|undefined} */ (os.settings.get('about.application'));
-  var result = 'Support Request';
-  if (applicationName) {
-    result = result + ' - ' + applicationName;
+class supportMsg {
+  /**
+   * Constructor.
+   * @param {Object=} opt_options optional default overrides
+   */
+  constructor(opt_options) {
+    opt_options = opt_options || {};
+    this.subject = escapeString(opt_options['subject'] || this.getDefaultSubjectLine_());
+    this.bodyHeader = opt_options['bodyHeader'] || '';
+    this.bodyContent = opt_options['bodyContent'] || 'Provide detailed description of the issue:\n\n\n\n';
+    this.location = opt_options['location'] || document.location.href;
+    this.maxLength = opt_options.maxLength || (userAgent.WINDOWS ? 2041 : 3096);
   }
-  return result;
-};
 
+  /**
+   * Returns a parametered string for email, e.g.
+   * subject=[this.subject]&body=...
+   *
+   * @return {string}
+   */
+  getMailToParameters() {
+    var result = 'subject=' + escape(this.subject) + '&body=';
+    var body = this.bodyHeader + this.bodyContent +
+        '---- SUPPORT DATA ----\n' +
+        'location:' + this.location + '\n' +
+        'user-agent:' + userAgent.getUserAgentString() + '\n' +
+        'WINDOWS:' + userAgent.WINDOWS + '\n' +
+        'MAC:' + userAgent.MAC + '\n' +
+        'LINUX:' + userAgent.LINUX + '\n' +
+        'PLATFORM:' + userAgent.PLATFORM + '\n' +
+        this.getModernizrValues();
+    // truncate the body part to acomadate the max width with a margin for encoding.
+    var maxBodyLength = this.maxLength - result.length - 200;
+    result = result + escape(body.substring(0, maxBodyLength));
+    return result;
+  }
 
-/**
- * Returns formatted mailto href string.
- *
- * @param {string|undefined|null} emailAddress
- * @return {string}
- */
-os.ui.help.supportMsg.prototype.getMailTo = function(emailAddress) {
-  var result = 'mailto:' + emailAddress + '?' + this.getMailToParameters();
-  return result.substring(0, this.maxLength);
-};
-
-
-/**
- * Reads most values from modernizer as a string
- *
- * @return {string}
- */
-os.ui.help.supportMsg.prototype.getModernizrValues = function() {
-  var result = '';
-  for (var key in Modernizr) {
-    if (key.indexOf('_') === 0 ||
-        typeof Modernizr[key] === 'function') {
-      continue;
-    } else if (Modernizr[key] instanceof Boolean) {
-      result += key + ':' + Modernizr[key].valueOf() + '\n';
-    } else if (typeof Modernizr[key] === 'object') {
-      continue;
+  /**
+   * Use settings, if possible, to build a default subject line.
+   *
+   * @return {string}
+   * @private
+   */
+  getDefaultSubjectLine_() {
+    var applicationName = /** @type {string|undefined} */ (Settings.getInstance().get('about.application'));
+    var result = 'Support Request';
+    if (applicationName) {
+      result = result + ' - ' + applicationName;
     }
-    result += key + ':' + Modernizr[key] + '\n';
+    return result;
   }
-  return result;
-};
+
+  /**
+   * Returns formatted mailto href string.
+   *
+   * @param {string|undefined|null} emailAddress
+   * @return {string}
+   */
+  getMailTo(emailAddress) {
+    var result = 'mailto:' + emailAddress + '?' + this.getMailToParameters();
+    return result.substring(0, this.maxLength);
+  }
+
+  /**
+   * Reads most values from modernizer as a string
+   *
+   * @return {string}
+   */
+  getModernizrValues() {
+    var result = '';
+    for (var key in Modernizr) {
+      if (key.indexOf('_') === 0 ||
+          typeof Modernizr[key] === 'function') {
+        continue;
+      } else if (Modernizr[key] instanceof Boolean) {
+        result += key + ':' + Modernizr[key].valueOf() + '\n';
+      } else if (typeof Modernizr[key] === 'object') {
+        continue;
+      }
+      result += key + ':' + Modernizr[key] + '\n';
+    }
+    return result;
+  }
+}
+
+exports = supportMsg;

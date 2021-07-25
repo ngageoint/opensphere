@@ -1,52 +1,69 @@
-goog.provide('os.ui.help.MisconfiguredUiCtrl');
-goog.provide('os.ui.help.misconfiguredUiDirective');
+goog.module('os.ui.help.MisconfiguredWindowUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-goog.require('os.ui.help.misconfiguredDirective');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const {directiveTag: misconfigured} = goog.require('os.ui.help.MisconfiguredUI');
 
+
+/**
+ * The UI template.
+ * @type {string}
+ */
+const template = [
+  '<div class="js-window__wrapper">',
+  '<div class="js-window__content">',
+  `<${misconfigured} reason="{{reason}}" name="{{name}}"></${misconfigured}>`,
+  '</div>',
+  '</div>'
+].join('');
 
 /**
  * The misconfiguredUi directive
  *
  * @return {angular.Directive}
  */
-os.ui.help.misconfiguredUiDirective = function() {
-  var template = [
-    '<div class="js-window__wrapper">',
-    '<div class="js-window__content">',
-    '<misconfigured reason="{{reason}}" name="{{name}}"></misconfigured>',
-    '</div>',
-    '</div>'].join('');
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  scope: {
+    'reason': '@',
+    'name': '@'
+  },
+  template,
+  controller: Controller,
+  controllerAs: 'misconfiguredUi'
+});
 
-  return {
-    restrict: 'AE',
-    replace: true,
-    scope: {
-      'reason': '@',
-      'name': '@'
-    },
-    template: template,
-    controller: os.ui.help.MisconfiguredUiCtrl,
-    controllerAs: 'misconfiguredUi'
-  };
-};
-
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'misconfigured-ui';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('misconfiguredUi', [os.ui.help.misconfiguredUiDirective]);
-
-
+Module.directive('misconfiguredUi', [directive]);
 
 /**
  * Controller function for the misconfiguredUi directive
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.help.MisconfiguredUiCtrl = function($scope, $element) {
-  $scope.$emit(os.ui.WindowEventType.READY);
+class Controller {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    $scope.$emit(WindowEventType.READY);
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

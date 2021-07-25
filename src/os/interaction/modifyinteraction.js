@@ -30,6 +30,7 @@ const {getMapContainer} = goog.require('os.map.instance');
 const {notifyStyleChange} = goog.require('os.style');
 const {MODAL_SELECTOR} = goog.require('os.ui');
 const Controls = goog.require('os.ui.help.Controls');
+const {directiveTag: controlBlock} = goog.require('os.ui.help.ControlBlockUI');
 const osWindow = goog.require('os.ui.window');
 const windowSelector = goog.require('os.ui.windowSelector');
 
@@ -379,7 +380,7 @@ class Modify extends OLModify {
       'show-close': true
     };
 
-    const template = '<controlblock class="u-bg-body-offset" controls="controls"></controlblock>';
+    const template = `<${controlBlock} class="u-bg-body-offset" controls="controls"></${controlBlock}>`;
     osWindow.create(windowOptions, template, undefined, scope, undefined, scopeOptions);
   }
 
