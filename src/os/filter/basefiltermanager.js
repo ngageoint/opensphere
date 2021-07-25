@@ -1,8 +1,6 @@
 goog.module('os.filter.BaseFilterManager');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.ui.editFiltersDirective');
-
 const {removeDuplicates} = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const googObject = goog.require('goog.object');
@@ -22,6 +20,9 @@ const cloneToContext = goog.require('os.filter.cloneToContext');
 const {getFilterManager, setFilterManager, getQueryManager} = goog.require('os.query.instance');
 const FilterEvent = goog.require('os.ui.filter.FilterEvent');
 const FilterEventType = goog.require('os.ui.filter.FilterEventType');
+const {directiveTag: copyFilterUi} = goog.require('os.ui.filter.ui.CopyFilterUI');
+const {directiveTag: editFilterUi} = goog.require('os.ui.filter.ui.EditFiltersUI');
+const {directiveTag: viewFilterUi} = goog.require('os.ui.filter.ui.ViewFiltersUI');
 const FilterAdd = goog.require('os.ui.query.cmd.FilterAdd');
 const osWindow = goog.require('os.ui.window');
 
@@ -485,7 +486,7 @@ class BaseFilterManager extends EventTarget {
       'callback': callback
     };
 
-    osWindow.create(options, 'editfilter', undefined, undefined, undefined, scopeOptions);
+    osWindow.create(options, editFilterUi, undefined, undefined, undefined, scopeOptions);
   }
 
   /**
@@ -526,7 +527,7 @@ class BaseFilterManager extends EventTarget {
       'viewonly': true
     };
 
-    osWindow.create(options, 'viewfilter', undefined, undefined, undefined, scopeOptions);
+    osWindow.create(options, viewFilterUi, undefined, undefined, undefined, scopeOptions);
   }
 
   /**
@@ -553,7 +554,7 @@ class BaseFilterManager extends EventTarget {
       'layerId': layerId
     };
 
-    var template = '<copyfilter filter-entry="filterEntry" layer-id="layerId"></copyfilter>';
+    var template = `<${copyFilterUi} filter-entry="filterEntry" layer-id="layerId"></${copyFilterUi}>`;
     osWindow.create(options, template, undefined, undefined, undefined, scopeOptions);
   }
 

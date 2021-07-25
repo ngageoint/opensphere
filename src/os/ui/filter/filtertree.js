@@ -7,7 +7,6 @@ goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.filter.ui.FilterGroupBy');
 goog.require('os.ui.filter.ui.FilterNode');
-goog.require('os.ui.filter.ui.filterNodeUIDirective');
 goog.require('os.ui.slick.TreeSearch');
 goog.require('os.ui.slick.slickTreeDirective');
 

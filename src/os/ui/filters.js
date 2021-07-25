@@ -14,6 +14,7 @@ goog.require('os.query.FilterManager');
 goog.require('os.ui.FilterLayerGroupBy');
 goog.require('os.ui.Module');
 goog.require('os.ui.addFilterDirective');
+goog.require('os.ui.filter.ui.FilterExportUI');
 goog.require('os.ui.filter.ui.FilterGroupBy');
 goog.require('os.ui.filter.ui.filterTreeDirective');
 goog.require('os.ui.im.ImportEvent');
@@ -142,7 +143,7 @@ os.ui.FiltersCtrl.prototype.launch = function() {
  * @export
  */
 os.ui.FiltersCtrl.prototype.export = function(opt_event) {
-  os.ui.filter.ui.launchFilterExport(this.save_.bind(this));
+  os.ui.filter.ui.FilterExportUI.launchFilterExport(this.save_.bind(this));
 };
 
 
@@ -186,7 +187,7 @@ os.ui.FiltersCtrl.prototype.save_ = function(name, mode) {
     return f instanceof os.data.FilterNode;
   });
 
-  os.ui.filter.ui.export(name, filters);
+  os.ui.filter.ui.FilterExportUI.exportFilters(name, filters);
 };
 
 

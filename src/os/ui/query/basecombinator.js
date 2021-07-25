@@ -15,10 +15,7 @@ goog.require('os.metrics.keys');
 goog.require('os.query.BaseQueryManager');
 goog.require('os.ui.Module');
 goog.require('os.ui.filter.FilterEventType');
-goog.require('os.ui.filter.ui.copyFilterDirective');
-goog.require('os.ui.filter.ui.editFiltersDirective');
-goog.require('os.ui.filter.ui.filterExportDirective');
-goog.require('os.ui.filter.ui.viewFiltersDirective');
+goog.require('os.ui.filter.ui.FilterExportUI');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.menu.areaImport');
 goog.require('os.ui.query');
@@ -1232,7 +1229,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.save_ = function(name, mode) {
     });
   }
 
-  os.ui.filter.ui.export(name, filters);
+  os.ui.filter.ui.FilterExportUI.exportFilters(name, filters);
 };
 
 
@@ -1261,7 +1258,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.exportDisabled = function() {
  */
 os.ui.query.BaseCombinatorCtrl.prototype.launchExport = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.EXPORT, 1);
-  os.ui.filter.ui.launchFilterExport(this.save_.bind(this));
+  os.ui.filter.ui.FilterExportUI.launchFilterExport(this.save_.bind(this));
 };
 
 

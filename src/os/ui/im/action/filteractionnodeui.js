@@ -4,8 +4,7 @@ goog.module.declareLegacyNamespace();
 const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
 const Metrics = goog.require('os.metrics.Metrics');
 const Module = goog.require('os.ui.Module');
-const FilterNodeUICtrl = goog.require('os.ui.filter.ui.FilterNodeUICtrl');
-const filterNodeUIDirective = goog.require('os.ui.filter.ui.filterNodeUIDirective');
+const {directive: filterNodeUIDirective, Controller: FilterNodeUICtrl} = goog.require('os.ui.filter.ui.FilterNodeUI');
 
 
 /**

@@ -1,8 +1,6 @@
 goog.module('plugin.ogc.OGCLayerDescriptor');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.ui.filterableDescriptorNodeUIDirective');
-
 const QueryData = goog.require('goog.Uri.QueryData');
 const EventType = goog.require('goog.net.EventType');
 const googString = goog.require('goog.string');
@@ -32,6 +30,7 @@ const Icons = goog.require('os.ui.Icons');
 const IconsSVG = goog.require('os.ui.IconsSVG');
 const BaseProvider = goog.require('os.ui.data.BaseProvider');
 const filter = goog.require('os.ui.filter');
+const {directiveTag: nodeUi} = goog.require('os.ui.filter.ui.FilterableDescriptorNodeUI');
 const icons = goog.require('os.ui.icons');
 const IFeatureTypeDescriptor = goog.require('os.ui.ogc.IFeatureTypeDescriptor');
 const IOGCDescriptor = goog.require('os.ui.ogc.IOGCDescriptor');
@@ -1208,7 +1207,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
    */
   getNodeUI() {
     var nodeUI = super.getNodeUI();
-    nodeUI += '<filterabledescriptornodeui></filterabledescriptornodeui>';
+    nodeUI += `<${nodeUi}></${nodeUi}>`;
     return nodeUI;
   }
 

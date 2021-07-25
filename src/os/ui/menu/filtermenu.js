@@ -8,7 +8,6 @@ goog.require('os.command.FilterEnable');
 goog.require('os.command.ParallelCommand');
 goog.require('os.command.SequenceCommand');
 goog.require('os.ui.filter.FilterEvent');
-goog.require('os.ui.filter.ui.filterExportDirective');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');

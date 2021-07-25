@@ -6,7 +6,6 @@ goog.require('os.filter.BaseFilterManager');
 goog.require('os.filter.FilterEntry');
 goog.require('os.layer.ILayer');
 goog.require('os.ui.Module');
-goog.require('os.ui.filter.ui.editFiltersDirective');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');

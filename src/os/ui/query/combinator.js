@@ -8,8 +8,6 @@ goog.require('os.implements');
 goog.require('os.layer.ILayer');
 goog.require('os.ui.Module');
 goog.require('os.ui.addFilterDirective');
-goog.require('os.ui.filter.ui.editFiltersDirective');
-goog.require('os.ui.filter.ui.filterExportDirective');
 goog.require('os.ui.query.BaseCombinatorCtrl');
 goog.require('os.ui.query.baseCombinatorDirective');
 goog.require('os.ui.query.cmd.FilterAdd');
