@@ -1,11 +1,10 @@
 goog.module('os.ui.filter.ui.FilterGroupBy');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.ui.filterGroupUIDirective');
-
-const googArray = goog.require('goog.array');
+const {insert} = goog.require('goog.array');
 const DataManager = goog.require('os.data.DataManager');
 const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
+const {directiveTag} = goog.require('os.ui.filter.ui.FilterGroupUI');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 const FilterNode = goog.requireType('os.ui.filter.ui.FilterNode');
@@ -61,7 +60,7 @@ class FilterGroupBy extends BaseGroupBy {
       }
     }
 
-    googArray.insert(ids, val);
+    insert(ids, val);
     return ids;
   }
 
@@ -75,7 +74,7 @@ class FilterGroupBy extends BaseGroupBy {
     group.setCheckboxVisible(false);
     group.collapsed = false;
     if (this.useUi_) {
-      group.setNodeUI('<filtergroupui></filtergroupui>');
+      group.setNodeUI(`<${directiveTag}></${directiveTag}>`);
     }
 
     var dm = DataManager.getInstance();

@@ -1,53 +1,60 @@
-goog.provide('os.ui.filter.ui.FilterTypeGroupBy');
-goog.require('os.ui.filter.ui.FilterGroupBy');
+goog.module('os.ui.filter.ui.FilterTypeGroupBy');
+goog.module.declareLegacyNamespace();
 
+const {insert} = goog.require('goog.array');
+const {toTitleCase} = goog.require('goog.string');
+const FilterGroupBy = goog.require('os.ui.filter.ui.FilterGroupBy');
+
+const FilterNode = goog.requireType('os.ui.filter.ui.FilterNode');
 
 
 /**
  * Groups nodes by type
- *
- * @extends {os.ui.filter.ui.FilterGroupBy}
- * @constructor
  */
-os.ui.filter.ui.FilterTypeGroupBy = function() {
-  os.ui.filter.ui.FilterTypeGroupBy.base(this, 'constructor');
-};
-goog.inherits(os.ui.filter.ui.FilterTypeGroupBy, os.ui.filter.ui.FilterGroupBy);
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.ui.FilterTypeGroupBy.prototype.getGroupIds = function(node) {
+class FilterTypeGroupBy extends FilterGroupBy {
   /**
-   * @type {Array.<!string>}
+   * Constructor.
    */
-  var ids = [];
-
-  /**
-   * @type {?string}
-   */
-  var val = /** @type {os.ui.filter.ui.FilterNode} */ (node).getEntry().type;
-
-  if (!val) {
-    val = 'Unknown';
-  } else {
-    try {
-      var firstHashIdx = val.indexOf('#');
-      if (firstHashIdx != -1) {
-        val = val.substring(firstHashIdx + 1);
-        var secHashIdx = val.indexOf('#');
-        if (secHashIdx != -1) {
-          var category = val.substring(secHashIdx + 1);
-          val = val.substring(0, secHashIdx) + ' ' + goog.string.toTitleCase(category);
-        }
-        val = val.replace('#', ' ');
-      }
-    } catch (e) {
-      // weirdly structured typename
-    }
+  constructor() {
+    super();
   }
 
-  goog.array.insert(ids, val);
-  return ids;
-};
+  /**
+   * @inheritDoc
+   */
+  getGroupIds(node) {
+    /**
+     * @type {Array<!string>}
+     */
+    var ids = [];
+
+    /**
+     * @type {?string}
+     */
+    var val = /** @type {FilterNode} */ (node).getEntry().type;
+
+    if (!val) {
+      val = 'Unknown';
+    } else {
+      try {
+        var firstHashIdx = val.indexOf('#');
+        if (firstHashIdx != -1) {
+          val = val.substring(firstHashIdx + 1);
+          var secHashIdx = val.indexOf('#');
+          if (secHashIdx != -1) {
+            var category = val.substring(secHashIdx + 1);
+            val = val.substring(0, secHashIdx) + ' ' + toTitleCase(category);
+          }
+          val = val.replace('#', ' ');
+        }
+      } catch (e) {
+        // weirdly structured typename
+      }
+    }
+
+    insert(ids, val);
+    return ids;
+  }
+}
+
+exports = FilterTypeGroupBy;

@@ -1,6 +1,9 @@
-goog.provide('os.ui.filter.ui.ExpressionNodeUI');
-goog.provide('os.ui.filter.ui.expressionNodeUIDirective');
-goog.require('os.ui.Module');
+goog.module('os.ui.filter.ui.ExpressionNodeUI');
+goog.module.declareLegacyNamespace();
+
+const Module = goog.require('os.ui.Module');
+
+const ExpressionNode = goog.requireType('os.ui.filter.ui.ExpressionNode');
 
 
 /**
@@ -8,63 +11,74 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.filter.ui.expressionNodeUIDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    template: '<span>' +
-        '<span ng-click="nodeUi.edit()">' +
-        '<i class="fa fa-pencil fa-fw c-glyph" title="Edit the expression"></i></span>' +
-        '<span ng-click="nodeUi.remove()">' +
-        '<i class="fa fa-times fa-fw c-glyph" title="Remove the expression"></i></span>' +
-        '</span>',
-    controller: os.ui.filter.ui.ExpressionNodeUI,
-    controllerAs: 'nodeUi'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
 
+  template: '<span>' +
+      '<span ng-click="nodeUi.edit()">' +
+      '<i class="fa fa-pencil fa-fw c-glyph" title="Edit the expression"></i></span>' +
+      '<span ng-click="nodeUi.remove()">' +
+      '<i class="fa fa-times fa-fw c-glyph" title="Remove the expression"></i></span>' +
+      '</span>',
+
+  controller: Controller,
+  controllerAs: 'nodeUi'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'expressionnodeui';
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('expressionnodeui', [os.ui.filter.ui.expressionNodeUIDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for selected/highlighted node UI
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.filter.ui.ExpressionNodeUI = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
    */
-  this.scope_ = $scope;
-};
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+  }
 
+  /**
+   * Removes the expression
+   *
+   * @export
+   */
+  remove() {
+    var node = /** @type {ExpressionNode} */ (this.scope_['item']);
+    this.scope_.$emit('filterbuilder.remove', node);
+  }
 
-/**
- * Removes the expression
- *
- * @export
- */
-os.ui.filter.ui.ExpressionNodeUI.prototype.remove = function() {
-  var node = /** @type {os.ui.filter.ui.ExpressionNode} */ (this.scope_['item']);
-  this.scope_.$emit('filterbuilder.remove', node);
-};
+  /**
+   * Edits the expression
+   *
+   * @export
+   */
+  edit() {
+    var node = /** @type {ExpressionNode} */ (this.scope_['item']);
+    this.scope_.$emit('advancedfilterbuilder.editExpr', node);
+  }
+}
 
-
-/**
- * Edits the expression
- *
- * @export
- */
-os.ui.filter.ui.ExpressionNodeUI.prototype.edit = function() {
-  var node = /** @type {os.ui.filter.ui.ExpressionNode} */ (this.scope_['item']);
-  this.scope_.$emit('advancedfilterbuilder.editExpr', node);
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

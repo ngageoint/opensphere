@@ -1,208 +1,205 @@
-goog.provide('os.ui.filter.ui.FilterNode');
+goog.module('os.ui.filter.ui.FilterNode');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventType');
-goog.require('os.data.ISearchable');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.filter.default');
-goog.require('os.structs.TriState');
-goog.require('os.ui.filter.PropertyChange');
-goog.require('os.ui.slick.SlickTreeNode');
+const GoogEventType = goog.require('goog.events.EventType');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const {ICON} = goog.require('os.filter.default');
+const TriState = goog.require('os.structs.TriState');
+const {tagsFromString} = goog.require('os.tag');
+const {toFilterString} = goog.require('os.ui.filter');
+const PropertyChange = goog.require('os.ui.filter.PropertyChange');
+const {directiveTag} = goog.require('os.ui.filter.ui.FilterNodeUI');
+const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
+const ISearchable = goog.requireType('os.data.ISearchable');
+const FilterEntry = goog.requireType('os.filter.FilterEntry');
 
 
 /**
  * Tree nodes for filters
  *
- * @param {os.filter.FilterEntry=} opt_entry
- * @extends {os.ui.slick.SlickTreeNode}
- * @implements {os.data.ISearchable}
- * @constructor
+ * @implements {ISearchable}
  */
-os.ui.filter.ui.FilterNode = function(opt_entry) {
-  os.ui.filter.ui.FilterNode.base(this, 'constructor');
-
+class FilterNode extends SlickTreeNode {
   /**
-   * The icon to display for default filters.
-   * @type {string}
-   * @protected
+   * Constructor.
+   * @param {FilterEntry=} opt_entry
    */
-  this.defaultIcon = os.filter.default.ICON;
+  constructor(opt_entry) {
+    super();
 
-  /**
-   * @type {?os.filter.FilterEntry}
-   * @protected
-   */
-  this.entry = null;
-  if (opt_entry) {
-    this.setEntry(opt_entry);
-  }
-  this.nodeUI = '<filternodeui></filternodeui>';
-};
-goog.inherits(os.ui.filter.ui.FilterNode, os.ui.slick.SlickTreeNode);
+    /**
+     * The icon to display for default filters.
+     * @type {string}
+     * @protected
+     */
+    this.defaultIcon = ICON;
 
-
-/**
- * @inheritDoc
- */
-os.ui.filter.ui.FilterNode.prototype.setState = function(value) {
-  var old = this.getState();
-  os.ui.filter.ui.FilterNode.superClass_.setState.call(this, value);
-  var s = this.getState();
-
-  if (old != s && this.entry) {
-    var enabled = s === os.structs.TriState.ON;
-
-    if (s !== os.structs.TriState.BOTH && this.entry.isEnabled() !== enabled) {
-      this.entry.setEnabled(enabled);
-    }
-  }
-};
-
-
-/**
- * @return {?os.filter.FilterEntry}
- */
-os.ui.filter.ui.FilterNode.prototype.getEntry = function() {
-  return this.entry;
-};
-
-
-/**
- * @param {?os.filter.FilterEntry} value
- */
-os.ui.filter.ui.FilterNode.prototype.setEntry = function(value) {
-  if (value !== this.entry) {
-    if (this.entry) {
-      this.entry.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onPropertyChange, false, this);
-    }
-
-    var old = this.entry;
-    this.entry = value;
-
-    if (this.entry) {
-      this.entry.listen(goog.events.EventType.PROPERTYCHANGE, this.onPropertyChange, false, this);
-      this.setId(this.entry.getId());
-      this.setLabel(this.entry.getTitle());
-      this.setState(this.entry.isEnabled() ? os.structs.TriState.ON : os.structs.TriState.OFF);
-    }
-
-    this.setToolTip(this.generateToolTip());
-    this.dispatchEvent(new os.events.PropertyChangeEvent('filter', value, old));
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.ui.FilterNode.prototype.disposeInternal = function() {
-  if (this.entry) {
-    this.entry.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onPropertyChange, false, this);
+    /**
+     * @type {?FilterEntry}
+     * @protected
+     */
     this.entry = null;
+    if (opt_entry) {
+      this.setEntry(opt_entry);
+    }
+    this.nodeUI = `<${directiveTag}></${directiveTag}>`;
   }
 
-  os.ui.filter.ui.FilterNode.superClass_.disposeInternal.call(this);
-};
+  /**
+   * @inheritDoc
+   */
+  setState(value) {
+    var old = this.getState();
+    super.setState(value);
+    var s = this.getState();
 
+    if (old != s && this.entry) {
+      var enabled = s === TriState.ON;
 
-/**
- * @inheritDoc
- */
-os.ui.filter.ui.FilterNode.prototype.getId = function() {
-  if (this.entry) {
-    return this.entry.getId();
+      if (s !== TriState.BOTH && this.entry.isEnabled() !== enabled) {
+        this.entry.setEnabled(enabled);
+      }
+    }
   }
 
-  return os.ui.filter.ui.FilterNode.superClass_.getId.call(this);
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.ui.FilterNode.prototype.getLabel = function() {
-  if (this.entry) {
-    return this.entry.getTitle();
+  /**
+   * @return {?FilterEntry}
+   */
+  getEntry() {
+    return this.entry;
   }
 
-  return os.ui.filter.ui.FilterNode.superClass_.getLabel.call(this);
-};
+  /**
+   * @param {?FilterEntry} value
+   */
+  setEntry(value) {
+    if (value !== this.entry) {
+      if (this.entry) {
+        this.entry.unlisten(GoogEventType.PROPERTYCHANGE, this.onPropertyChange, false, this);
+      }
 
+      var old = this.entry;
+      this.entry = value;
 
-/**
- * @inheritDoc
- */
-os.ui.filter.ui.FilterNode.prototype.getSearchText = function() {
-  var t = '';
+      if (this.entry) {
+        this.entry.listen(GoogEventType.PROPERTYCHANGE, this.onPropertyChange, false, this);
+        this.setId(this.entry.getId());
+        this.setLabel(this.entry.getTitle());
+        this.setState(this.entry.isEnabled() ? TriState.ON : TriState.OFF);
+      }
 
-  if (this.entry) {
-    t += this.entry.getTitle();
-    t += ' ' + this.entry.getDescription();
-    t += ' ' + this.entry.type;
-    t += ' ' + this.entry.getTags();
+      this.setToolTip(this.generateToolTip());
+      this.dispatchEvent(new PropertyChangeEvent('filter', value, old));
+    }
   }
 
-  return t;
-};
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    if (this.entry) {
+      this.entry.unlisten(GoogEventType.PROPERTYCHANGE, this.onPropertyChange, false, this);
+      this.entry = null;
+    }
 
-
-/**
- * @inheritDoc
- */
-os.ui.filter.ui.FilterNode.prototype.getTags = function() {
-  return this.entry ? os.tag.tagsFromString(this.entry.getTags()) : null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.ui.FilterNode.prototype.formatIcons = function() {
-  var icons = os.ui.filter.ui.FilterNode.base(this, 'formatIcons');
-
-  if (this.entry && this.entry.isDefault()) {
-    icons += this.defaultIcon;
+    super.disposeInternal();
   }
 
-  return icons;
-};
+  /**
+   * @inheritDoc
+   */
+  getId() {
+    if (this.entry) {
+      return this.entry.getId();
+    }
 
-
-/**
- * Generate a tooltip to display when the node is hovered.
- *
- * @return {string} The new tooltip.
- * @protected
- */
-os.ui.filter.ui.FilterNode.prototype.generateToolTip = function() {
-  var tooltip = '';
-
-  if (this.entry) {
-    tooltip += 'Description: ' + (this.entry.getDescription() || 'None provided.');
-    tooltip += '\nFilter: ' + os.ui.filter.toFilterString(this.entry.getFilterNode(), 1000);
+    return super.getId();
   }
 
-  return tooltip;
-};
+  /**
+   * @inheritDoc
+   */
+  getLabel() {
+    if (this.entry) {
+      return this.entry.getTitle();
+    }
 
-
-/**
- * @inheritDoc
- */
-os.ui.filter.ui.FilterNode.prototype.updateFrom = function(other) {
-  os.ui.filter.ui.FilterNode.superClass_.updateFrom.call(this, other);
-  this.setEntry(/** @type {os.ui.filter.ui.FilterNode} */ (other).getEntry());
-};
-
-
-/**
- * @param {os.events.PropertyChangeEvent} event
- * @protected
- */
-os.ui.filter.ui.FilterNode.prototype.onPropertyChange = function(event) {
-  var prop = event.getProperty();
-
-  if (prop == os.ui.filter.PropertyChange.ENABLED) {
-    this.setState(this.entry.isEnabled() ? os.structs.TriState.ON : os.structs.TriState.OFF);
+    return super.getLabel();
   }
-};
+
+  /**
+   * @inheritDoc
+   */
+  getSearchText() {
+    var t = '';
+
+    if (this.entry) {
+      t += this.entry.getTitle();
+      t += ' ' + this.entry.getDescription();
+      t += ' ' + this.entry.type;
+      t += ' ' + this.entry.getTags();
+    }
+
+    return t;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getTags() {
+    return this.entry ? tagsFromString(this.entry.getTags()) : null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  formatIcons() {
+    var icons = super.formatIcons();
+
+    if (this.entry && this.entry.isDefault()) {
+      icons += this.defaultIcon;
+    }
+
+    return icons;
+  }
+
+  /**
+   * Generate a tooltip to display when the node is hovered.
+   *
+   * @return {string} The new tooltip.
+   * @protected
+   */
+  generateToolTip() {
+    var tooltip = '';
+
+    if (this.entry) {
+      tooltip += 'Description: ' + (this.entry.getDescription() || 'None provided.');
+      tooltip += '\nFilter: ' + toFilterString(this.entry.getFilterNode(), 1000);
+    }
+
+    return tooltip;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  updateFrom(other) {
+    super.updateFrom(other);
+    this.setEntry(/** @type {FilterNode} */ (other).getEntry());
+  }
+
+  /**
+   * @param {PropertyChangeEvent} event
+   * @protected
+   */
+  onPropertyChange(event) {
+    var prop = event.getProperty();
+
+    if (prop == PropertyChange.ENABLED) {
+      this.setState(this.entry.isEnabled() ? TriState.ON : TriState.OFF);
+    }
+  }
+}
+
+exports = FilterNode;

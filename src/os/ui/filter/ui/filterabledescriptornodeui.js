@@ -1,8 +1,15 @@
-goog.provide('os.ui.filter.ui.FilterableDescriptorNodeUICtrl');
-goog.provide('os.ui.filter.ui.filterableDescriptorNodeUIDirective');
+goog.module('os.ui.filter.ui.FilterableDescriptorNodeUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-goog.require('os.ui.slick.AbstractNodeUICtrl');
+const GoogEventType = goog.require('goog.events.EventType');
+const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
+const Module = goog.require('os.ui.Module');
+const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
+
+const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const IFilterable = goog.requireType('os.filter.IFilterable');
+const DescriptorNode = goog.requireType('os.ui.data.DescriptorNode');
 
 
 /**
@@ -10,105 +17,109 @@ goog.require('os.ui.slick.AbstractNodeUICtrl');
  *
  * @return {angular.Directive}
  */
-os.ui.filter.ui.filterableDescriptorNodeUIDirective = function() {
-  return {
-    restrict: 'E',
-    scope: true,
-    template: os.ui.filter.ui.filterableDescriptorNodeUIDirective.TEMPLATE_,
-    controller: os.ui.filter.ui.FilterableDescriptorNodeUICtrl,
-    controllerAs: 'nodeUi'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  scope: true,
+  template,
+  controller: Controller,
+  controllerAs: 'nodeUi'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'filterabledescriptornodeui';
 
 /**
  * @type {string}
- * @private
  */
-os.ui.filter.ui.filterableDescriptorNodeUIDirective.TEMPLATE_ =
+const template =
     '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
     '<span ng-if="nodeUi.filtersEnabled" ng-click="nodeUi.filter()">' +
     '<i class="fa fa-filter fa-fw c-glyph" title="Manage filters"' +
     'ng-class="{\'text-success\': nodeUi.filtered, \'c-glyph__off\': !nodeUi.filtered}"></i></span></span>';
 
-
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('filterabledescriptornodeui', [os.ui.filter.ui.filterableDescriptorNodeUIDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for selected/highlighted node UI
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.ui.slick.AbstractNodeUICtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.filter.ui.FilterableDescriptorNodeUICtrl = function($scope, $element) {
-  os.ui.filter.ui.FilterableDescriptorNodeUICtrl.base(this, 'constructor', $scope, $element);
+class Controller extends AbstractNodeUICtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
+
+    /**
+     * @type {DescriptorNode}
+     * @private
+     */
+    this.node_ = $scope['item'];
+
+    var qm = getQueryManager();
+    qm.listen(GoogEventType.PROPERTYCHANGE, this.updateFilters_, false, this);
+
+    this.updateFilters_();
+  }
 
   /**
-   * @type {os.ui.data.DescriptorNode}
+   * @inheritDoc
+   */
+  destroy() {
+    super.destroy();
+
+    var qm = getQueryManager();
+    qm.unlisten(GoogEventType.PROPERTYCHANGE, this.updateFilters_, false, this);
+  }
+
+  /**
+   * Update filters
+   *
+   * @param {PropertyChangeEvent=} opt_event
    * @private
    */
-  this.node_ = $scope['item'];
+  updateFilters_(opt_event) {
+    var d = /** @type {IFilterable} */ (this.node_.getDescriptor());
 
-  var qm = os.ui.queryManager;
-  qm.listen(goog.events.EventType.PROPERTYCHANGE, this.updateFilters_, false, this);
+    try {
+      this['filtersEnabled'] = d.isFilterable();
+    } catch (e) {
+      // wasn't filterable, return
+      this['filtersEnabled'] = false;
+      return;
+    }
 
-  this.updateFilters_();
-};
-goog.inherits(os.ui.filter.ui.FilterableDescriptorNodeUICtrl, os.ui.slick.AbstractNodeUICtrl);
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.ui.FilterableDescriptorNodeUICtrl.prototype.destroy = function() {
-  os.ui.filter.ui.FilterableDescriptorNodeUICtrl.base(this, 'destroy');
-
-  var qm = os.ui.queryManager;
-  qm.unlisten(goog.events.EventType.PROPERTYCHANGE, this.updateFilters_, false, this);
-};
-
-
-/**
- * Update filters
- *
- * @param {os.events.PropertyChangeEvent=} opt_event
- * @private
- */
-os.ui.filter.ui.FilterableDescriptorNodeUICtrl.prototype.updateFilters_ = function(opt_event) {
-  var d = /** @type {os.filter.IFilterable} */ (this.node_.getDescriptor());
-
-  try {
-    this['filtersEnabled'] = d.isFilterable();
-  } catch (e) {
-    // wasn't filterable, return
-    this['filtersEnabled'] = false;
-    return;
+    d = /** @type {IDataDescriptor} */ (d);
+    var aliases = d.getAliases();
+    this['filtered'] = aliases.some(function(alias) {
+      return getFilterManager().hasEnabledFilters(alias);
+    });
   }
 
-  d = /** @type {os.data.IDataDescriptor} */ (d);
-  var aliases = d.getAliases();
-  this['filtered'] = goog.array.some(aliases, function(alias) {
-    return os.ui.filterManager.hasEnabledFilters(alias);
-  });
-};
-
-
-/**
- * Launch the filter manager for the layer
- *
- * @export
- */
-os.ui.filter.ui.FilterableDescriptorNodeUICtrl.prototype.filter = function() {
-  var d = /** @type {os.filter.IFilterable} */ (this.node_.getDescriptor());
-  if (d) {
-    d.launchFilterManager();
+  /**
+   * Launch the filter manager for the layer
+   *
+   * @export
+   */
+  filter() {
+    var d = /** @type {IFilterable} */ (this.node_.getDescriptor());
+    if (d) {
+      d.launchFilterManager();
+    }
   }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

@@ -1,11 +1,11 @@
-goog.provide('os.ui.filter.ui.FilterGroupUICtrl');
-goog.provide('os.ui.filter.ui.filterGroupUIDirective');
+goog.module('os.ui.filter.ui.FilterGroupUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.filter.BaseFilterManager');
-goog.require('os.ui.Module');
-goog.require('os.ui.filter.FilterEvent');
-goog.require('os.ui.filter.FilterEventType');
-goog.require('os.ui.filter.ui.FilterNode');
+const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
+const Module = goog.require('os.ui.Module');
+const FilterEventType = goog.require('os.ui.filter.FilterEventType');
+
+const FilterEvent = goog.requireType('os.ui.filter.FilterEvent');
 
 
 /**
@@ -13,99 +13,106 @@ goog.require('os.ui.filter.ui.FilterNode');
  *
  * @return {angular.Directive}
  */
-os.ui.filter.ui.filterGroupUIDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    template: '<span class="float-right">' +
-        '<select class="filter-select" ng-model="groupUi.group" ng-change="groupUi.onGroup()"' +
-        ' ng-options="key for (key, value) in groupUi.groups"' +
-        ' title="Whether results can match any filter or must match all filters."/>' +
-        '</span>',
-    controller: os.ui.filter.ui.FilterGroupUICtrl,
-    controllerAs: 'groupUi'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  template: '<span class="float-right">' +
+      '<select class="filter-select" ng-model="groupUi.group" ng-change="groupUi.onGroup()"' +
+      ' ng-options="key for (key, value) in groupUi.groups"' +
+      ' title="Whether results can match any filter or must match all filters."/>' +
+      '</span>',
+  controller: Controller,
+  controllerAs: 'groupUi'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'filtergroupui';
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('filtergroupui', [os.ui.filter.ui.filterGroupUIDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for selected/highlighted node UI
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.filter.ui.FilterGroupUICtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    var fqm = BaseFilterManager.getInstance();
+    fqm.listen(FilterEventType.GROUPING_CHANGED, this.onGroupChanged_, false, this);
+    var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
+
+    this['group'] = fqm.getGrouping(node.getId());
+    this['groups'] = Controller.GROUPS;
+
+    this.scope_.$on('$destroy', this.onDestroy_.bind(this));
+  }
+
+  /**
+   * Clean up
+   *
    * @private
    */
-  this.scope_ = $scope;
+  onDestroy_() {
+    var fqm = BaseFilterManager.getInstance();
+    fqm.unlisten(FilterEventType.GROUPING_CHANGED, this.onGroupChanged_, false, this);
+  }
 
-  var fqm = os.filter.BaseFilterManager.getInstance();
-  fqm.listen(os.ui.filter.FilterEventType.GROUPING_CHANGED, this.onGroupChanged_, false, this);
-  var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
+  /**
+   * Handles group changes outside of this UI
+   *
+   * @param {FilterEvent} event
+   * @private
+   */
+  onGroupChanged_(event) {
+    var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
 
-  this['group'] = fqm.getGrouping(node.getId());
-  this['groups'] = os.ui.filter.ui.FilterGroupUICtrl.GROUPS;
+    if (event.key == node.getId()) {
+      var fqm = BaseFilterManager.getInstance();
+      this['group'] = fqm.getGrouping(event.key);
+    }
+  }
 
-  this.scope_.$on('$destroy', this.onDestroy_.bind(this));
-};
-
+  /**
+   * Update the grouping
+   *
+   * @export
+   */
+  onGroup() {
+    var fqm = BaseFilterManager.getInstance();
+    var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
+    fqm.setGrouping(node.getId(), /** @type {boolean} */ (this['group']));
+  }
+}
 
 /**
  * The group options
- * @type {!Object.<string, boolean>}
+ * @type {!Object<string, boolean>}
  * @const
  */
-os.ui.filter.ui.FilterGroupUICtrl.GROUPS = {
+Controller.GROUPS = {
   'Any': false,
   'All': true
 };
 
-
-/**
- * Clean up
- *
- * @private
- */
-os.ui.filter.ui.FilterGroupUICtrl.prototype.onDestroy_ = function() {
-  var fqm = os.filter.BaseFilterManager.getInstance();
-  fqm.unlisten(os.ui.filter.FilterEventType.GROUPING_CHANGED, this.onGroupChanged_, false, this);
-};
-
-
-/**
- * Handles group changes outside of this UI
- *
- * @param {os.ui.filter.FilterEvent} event
- * @private
- */
-os.ui.filter.ui.FilterGroupUICtrl.prototype.onGroupChanged_ = function(event) {
-  var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
-
-  if (event.key == node.getId()) {
-    var fqm = os.filter.BaseFilterManager.getInstance();
-    this['group'] = fqm.getGrouping(event.key);
-  }
-};
-
-
-/**
- * Update the grouping
- *
- * @export
- */
-os.ui.filter.ui.FilterGroupUICtrl.prototype.onGroup = function() {
-  var fqm = os.filter.BaseFilterManager.getInstance();
-  var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
-  fqm.setGrouping(node.getId(), /** @type {boolean} */ (this['group']));
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
