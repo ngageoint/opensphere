@@ -1,5 +1,6 @@
 goog.provide('os.ui.filter.op.Between');
 
+goog.require('os.ui.filter.FilterPatterns');
 goog.require('os.ui.filter.betweenDirective');
 goog.require('os.ui.filter.op.Op');
 goog.require('os.xsd.DataType');
@@ -126,7 +127,7 @@ os.ui.filter.op.Between.prototype.validate = function(value, key) {
       var a = parseFloat(list[0]);
       var b = parseFloat(list[1]);
 
-      var pattern = os.ui.filter.PATTERNS[key];
+      var pattern = os.ui.filter.FilterPatterns[key];
       return pattern.test(a) && pattern.test(b);
     }
   }

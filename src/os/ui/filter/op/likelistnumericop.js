@@ -1,5 +1,6 @@
 goog.provide('os.ui.filter.op.LikeListNumeric');
 
+goog.require('os.ui.filter.FilterPatterns');
 goog.require('os.ui.filter.listNoColCheckDirective');
 goog.require('os.ui.filter.op.IsLikeNumeric');
 
@@ -106,7 +107,7 @@ os.ui.filter.op.LikeListNumeric.prototype.validate = function(value, key) {
       // strip off the '*' if there is one
       var valVar = Number(list[i].trim().split('*')[0]);
 
-      var pattern = os.ui.filter.PATTERNS[key];
+      var pattern = os.ui.filter.FilterPatterns[key];
       if (!pattern || !pattern.test(valVar)) {
         valid = false;
       }

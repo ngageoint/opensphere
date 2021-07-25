@@ -1,7 +1,7 @@
 goog.module('os.ui.filter.op.time.Between');
 goog.module.declareLegacyNamespace();
 
-const {PATTERNS} = goog.require('os.ui.filter');
+const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
 const {directiveTag} = goog.require('os.ui.filter.op.time.BetweenTimeUI');
 const Op = goog.require('os.ui.filter.op.Op');
 
@@ -118,7 +118,7 @@ class Between extends Op {
         var a = parseFloat(list[0]);
         var b = parseFloat(list[1]);
 
-        var pattern = PATTERNS[key];
+        var pattern = FilterPatterns[key];
         return pattern.test(a) && pattern.test(b);
       }
     }

@@ -1,5 +1,6 @@
 goog.provide('os.ui.filter.op.InList');
 
+goog.require('os.ui.filter.FilterPatterns');
 goog.require('os.ui.filter.listDirective');
 goog.require('os.ui.filter.op.Op');
 goog.require('os.ui.filter.string');
@@ -143,7 +144,7 @@ os.ui.filter.op.InList.prototype.validate = function(value, key) {
   var valid = false;
   if (value) {
     var list = value.trim().split(/\s*,\s*/);
-    var pattern = os.ui.filter.PATTERNS[key];
+    var pattern = os.ui.filter.FilterPatterns[key];
     valid = true;
 
     for (var i = 0, n = list.length; i < n; i++) {

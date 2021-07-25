@@ -2,6 +2,7 @@ goog.provide('os.ui.filter.colTypeCheckValidation');
 goog.provide('os.ui.filter.textDirective');
 
 goog.require('os.ui.Module');
+goog.require('os.ui.filter.FilterPatterns');
 
 
 /**
@@ -38,19 +39,6 @@ os.ui.filter.colTypeCheckValidation = function() {
 
 
 /**
- * Enum of validation regexes for different logical column types.
- * @type {Object<string, RegExp>}
- * @const
- */
-os.ui.filter.PATTERNS = {
-  'string': /.*/,
-  'decimal': /^\-?\d+((\.|\,)\d+)?$/,
-  'integer': /^\-?\d+$/,
-  'recordtime': /^\-?\d+((\.|\,)\d+)?$/
-};
-
-
-/**
  * The link for type check validation
  *
  * @param {!angular.Scope} $scope
@@ -67,7 +55,7 @@ os.ui.filter.colTypeCheckLink = function($scope, $element, $attrs, $ctrl) {
        */
       function(viewValue) {
         var key = $scope['expr']['column']['type'];
-        var pattern = os.ui.filter.PATTERNS[key];
+        var pattern = os.ui.filter.FilterPatterns[key];
 
         if (pattern && pattern.test(viewValue)) {
           $ctrl.$setValidity('type', true);

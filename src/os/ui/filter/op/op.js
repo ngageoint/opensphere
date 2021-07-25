@@ -1,4 +1,6 @@
 goog.provide('os.ui.filter.op.Op');
+
+goog.require('os.ui.filter.FilterPatterns');
 goog.require('os.ui.filter.textDirective');
 goog.require('os.xsd.DataType');
 
@@ -288,7 +290,7 @@ os.ui.filter.op.Op.prototype.validate = function(value, key) {
     return false;
   }
 
-  var pattern = os.ui.filter.PATTERNS[key];
+  var pattern = os.ui.filter.FilterPatterns[key];
   if (pattern && pattern.test(value)) {
     return true;
   }

@@ -4,6 +4,7 @@ goog.provide('os.ui.filter.listDirective');
 
 goog.require('os.ui.Module');
 goog.require('os.ui.clipboard');
+goog.require('os.ui.filter.FilterPatterns');
 
 
 /**
@@ -124,7 +125,7 @@ os.ui.filter.colTypeListLink = function($scope, $element, $attrs, $ctrl) {
        */
       function(viewValue) {
         var key = $scope['expr']['column']['type'];
-        var pattern = os.ui.filter.PATTERNS[key];
+        var pattern = os.ui.filter.FilterPatterns[key];
         var values = viewValue ? viewValue.split(/\s*,\s*/) : null;
         var ret = viewValue;
 

@@ -1,6 +1,6 @@
 goog.provide('os.ui.filter.op.Not');
+
 goog.require('os.ui.filter.op.Op');
-goog.require('os.ui.filter.textDirective');
 
 
 

@@ -1,6 +1,7 @@
 goog.provide('os.ui.filter.op.IsLikeNumeric');
 
 goog.require('os.math');
+goog.require('os.ui.filter.FilterPatterns');
 goog.require('os.ui.filter.op.Op');
 goog.require('os.ui.filter.textNoColCheckDirective');
 
@@ -123,7 +124,7 @@ os.ui.filter.op.IsLikeNumeric.prototype.validate = function(value, key) {
   // strip off the '*' if there is one
   var valVar = Number(value.trim().split('*')[0]);
 
-  var pattern = os.ui.filter.PATTERNS[key];
+  var pattern = os.ui.filter.FilterPatterns[key];
   if (pattern && pattern.test(valVar)) {
     return true;
   }
