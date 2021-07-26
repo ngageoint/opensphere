@@ -1,7 +1,6 @@
 goog.module('plugin.im.action.feature.ui.LabelConfigUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.data.addColumnFormDirective');
 goog.require('os.ui.layer.labelControlsDirective');
 goog.require('os.ui.popover.popoverDirective');
 
@@ -21,7 +20,7 @@ const osStyle = goog.require('os.style');
 const label = goog.require('os.style.label');
 const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
-const AddColumnFormCtrl = goog.require('os.ui.data.AddColumnFormCtrl');
+const {isDuplicateColumn} = goog.require('os.ui.data.AddColumnFormUI');
 const EventType = goog.require('os.ui.im.action.EventType');
 const osUiLayer = goog.require('os.ui.layer');
 const column = goog.require('os.ui.slick.column');
@@ -152,7 +151,7 @@ class Controller extends ActionConfigCtrl {
         this['validators'].push({
           'id': 'duplicate',
           'model': 'name',
-          'handler': AddColumnFormCtrl.isDuplicate.bind(this, source)
+          'handler': isDuplicateColumn.bind(null, source)
         });
       }
     }
