@@ -604,8 +604,9 @@ os.MainCtrl.prototype.onPluginsLoaded = function(opt_e) {
   rm.initialize();
 
   // add the search results panel
-  if (os.ui.navbaroptions.searchresults) {
-    os.ui.list.add(os.ui.AbstractMainContent, os.ui.navbaroptions.searchresults, 100);
+  const searchResults = os.ui.navbaroptions.getSearchResults();
+  if (searchResults) {
+    os.ui.list.add(os.ui.AbstractMainContent, searchResults, 100);
   }
 
   // display initial onboarding
