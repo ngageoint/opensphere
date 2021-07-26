@@ -3,8 +3,8 @@ goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 
-const ILayer = goog.requireType('os.layer.ILayer');
 const LayerNode = goog.requireType('os.data.LayerNode');
+const ILayer = goog.requireType('os.layer.ILayer');
 
 
 /**

@@ -5,12 +5,14 @@ goog.require('os.ui.layer.ColumnSuggestionSelect');
 
 const {getValues} = goog.require('goog.object');
 const {ROOT, implements: implementationOf} = goog.require('os');
+const Settings = goog.require('os.config.Settings');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 const DataManager = goog.require('os.data.DataManager');
 const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
 const Units = goog.require('os.math.Units');
 const Module = goog.require('os.ui.Module');
 const {close: closeWindow} = goog.require('os.ui.window');
+const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
 const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
 const RenameMapping = goog.require('os.im.mapping.RenameMapping');
@@ -123,7 +125,7 @@ class Controller {
 
     // get suggestions regex from settings, or use RadiusMapping
     const radiusRegex = new RegExp(
-        /** @type {!(string|RegExp)} */ (os.settings.get(ELLIPSE_RADIUS_REGEX, RadiusMapping.REGEX)), 'i');
+        /** @type {!(string|RegExp)} */ (Settings.getInstance().get(ELLIPSE_RADIUS_REGEX, RadiusMapping.REGEX)), 'i');
 
     /**
      * Suggested columns for radius
@@ -422,7 +424,7 @@ const launchConfigureWindow = function(layer, opt_confirmCallback) {
     }
   });
 
-  os.ui.window.ConfirmUI.launchConfirm(options, scopeOptions);
+  ConfirmUI.launchConfirm(options, scopeOptions);
 };
 
 

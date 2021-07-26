@@ -1,24 +1,21 @@
-goog.provide('os.ui.layer.LabelControlsCtrl');
-goog.provide('os.ui.layer.labelControlsDirective');
+goog.module('os.ui.layer.LabelControlsUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
-goog.require('goog.array');
-goog.require('ol.array');
-goog.require('os');
-goog.require('os.metrics.Metrics');
-goog.require('os.metrics.keys');
-goog.require('os.style.label');
-goog.require('os.ui.Module');
 goog.require('os.ui.geo.PositionUI');
 
+const Disposable = goog.require('goog.Disposable');
+const {moveItem} = goog.require('goog.array');
+const {remove} = goog.require('ol.array');
+const {ROOT} = goog.require('os');
+const Settings = goog.require('os.config.Settings');
+const Metrics = goog.require('os.metrics.Metrics');
+const {Layer} = goog.require('os.metrics.keys');
+const {MAX_SIZE, MIN_SIZE, cloneConfig} = goog.require('os.style.label');
+const {apply} = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const LabelControlsEventType = goog.require('os.ui.layer.LabelControlsEventType');
 
-/**
- * @enum {string}
- */
-os.ui.layer.LabelControlsEventType = {
-  COLUMN_CHANGE: 'labelcontrols:columnChange',
-  SHOW_LABELS_CHANGE: 'labelcontrols:showLabelsChange'
-};
+const {LabelConfig} = goog.requireType('os.style.label');
 
 
 /**
@@ -26,269 +23,268 @@ os.ui.layer.LabelControlsEventType = {
  *
  * @return {angular.Directive}
  */
-os.ui.layer.labelControlsDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'labels': '=',
-      'columns': '=',
-      'labelColor': '=',
-      'labelSize': '=',
-      'showLabels': '=?',
-      'required': '=?',
-      'alwaysShowLabels': '@'
-    },
-    templateUrl: os.ROOT + 'views/layer/labelcontrols.html',
-    controller: os.ui.layer.LabelControlsCtrl,
-    controllerAs: 'labelCtrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'labels': '=',
+    'columns': '=',
+    'labelColor': '=',
+    'labelSize': '=',
+    'showLabels': '=?',
+    'required': '=?',
+    'alwaysShowLabels': '@'
+  },
+  templateUrl: ROOT + 'views/layer/labelcontrols.html',
+  controller: Controller,
+  controllerAs: 'labelCtrl'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'labelcontrols';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('labelcontrols', [os.ui.layer.labelControlsDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller function for the labelcontrols directive
- *
- * @param {!angular.Scope} $scope The Angular scope.
- * @param {!angular.JQLite} $element The root DOM element.
- * @param {!angular.$timeout} $timeout Angular timeout.
- * @extends {goog.Disposable}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.layer.LabelControlsCtrl = function($scope, $element, $timeout) {
-  os.ui.layer.LabelControlsCtrl.base(this, 'constructor');
+class Controller extends Disposable {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @param {!angular.JQLite} $element The root DOM element.
+   * @param {!angular.$timeout} $timeout Angular timeout.
+   * @ngInject
+   */
+  constructor($scope, $element, $timeout) {
+    super();
+
+    /**
+     * The Angular scope.
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
+
+    /**
+     * The root DOM element.
+     * @type {?angular.JQLite}
+     * @protected
+     */
+    this.element = $element;
+
+    /**
+     * The start index for drag operations.
+     * @type {number}
+     * @private
+     */
+    this.startIndex_ = -1;
+
+    /**
+     * The maximum label size.
+     * @type {number}
+     */
+    this['maxSize'] = MAX_SIZE;
+
+    /**
+     * The minimum label size.
+     * @type {number}
+     */
+    this['minSize'] = MIN_SIZE;
+
+    /**
+     * The maximum number of labels to allow.
+     * @type {number}
+     */
+    this['labelLimit'] = Settings.getInstance().get(['maxLabels'], 5);
+
+    // make the labels sortable via drag handle
+    this.element.find('.js-label-container').sortable(this.getSortOptions());
+
+    $timeout(this.validate_.bind(this));
+
+    $scope.$on('$destroy', this.dispose.bind(this));
+  }
 
   /**
-   * The Angular scope.
-   * @type {?angular.Scope}
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+
+    this.scope = null;
+    this.element = null;
+  }
+
+  /**
+   * Get options for the label sortable.
+   *
+   * @return {!Object}
    * @protected
    */
-  this.scope = $scope;
+  getSortOptions() {
+    return {
+      'items': 'tr',
+      'handle': '.js-handle',
+      'axis': 'y',
+      'containment': 'parent',
+      'snap': true,
+      'tolerance': 'pointer',
+      'start': this.onDragStart.bind(this),
+      'stop': this.onDragEnd.bind(this)
+    };
+  }
 
   /**
-   * The root DOM element.
-   * @type {?angular.JQLite}
-   * @protected
+   * Handles column changes
+   *
+   * @export
    */
-  this.element = $element;
+  onColumnChange() {
+    if (this.scope) {
+      this.sort_();
+      this.validate_();
+
+      this.scope.$emit(LabelControlsEventType.COLUMN_CHANGE);
+    }
+  }
 
   /**
-   * The start index for drag operations.
-   * @type {number}
+   * Handles changes to the show labels checkbox.
+   *
+   * @export
+   */
+  onShowLabelsChange() {
+    if (this.scope) {
+      this.scope.$emit(LabelControlsEventType.SHOW_LABELS_CHANGE, this.scope['showLabels']);
+    }
+  }
+
+  /**
+   * Add a new label
+   *
+   * @export
+   */
+  addLabel() {
+    this.scope['labels'].push(cloneConfig());
+    this.onColumnChange();
+    Metrics.getInstance().updateMetric(Layer.LABEL_COLUMN_ADD, 1);
+  }
+
+  /**
+   * Remove a label
+   *
+   * @param {LabelConfig} label
+   * @export
+   */
+  removeLabel(label) {
+    remove(this.scope['labels'], label);
+    this.onColumnChange();
+    Metrics.getInstance().updateMetric(Layer.LABEL_COLUMN_REMOVE, 1);
+  }
+
+  /**
+   * Sort the labels so "None" labels are at the end of the list.
+   *
    * @private
    */
-  this.startIndex_ = -1;
+  sort_() {
+    if (this.scope && this.scope['labels']) {
+      // sort the array in place so changes affect the array on label commands
+      var labels = this.scope['labels'];
+      var n = labels.length;
+      while (n--) {
+        if (labels[n]['column'] == null) {
+          labels.push(labels.splice(n, 1)[0]);
+        }
+      }
 
-  /**
-   * The maximum label size.
-   * @type {number}
-   */
-  this['maxSize'] = os.style.label.MAX_SIZE;
-
-  /**
-   * The minimum label size.
-   * @type {number}
-   */
-  this['minSize'] = os.style.label.MIN_SIZE;
-
-  /**
-   * The maximum number of labels to allow.
-   * @type {number}
-   */
-  this['labelLimit'] = os.settings.get(['maxLabels'], 5);
-
-  // make the labels sortable via drag handle
-  this.element.find('.js-label-container').sortable(this.getSortOptions());
-
-  $timeout(this.validate_.bind(this));
-
-  $scope.$on('$destroy', this.dispose.bind(this));
-};
-goog.inherits(os.ui.layer.LabelControlsCtrl, goog.Disposable);
-
-
-/**
- * @inheritDoc
- */
-os.ui.layer.LabelControlsCtrl.prototype.disposeInternal = function() {
-  os.ui.layer.LabelControlsCtrl.base(this, 'disposeInternal');
-
-  this.scope = null;
-  this.element = null;
-};
-
-
-/**
- * Get options for the label sortable.
- *
- * @return {!Object}
- * @protected
- */
-os.ui.layer.LabelControlsCtrl.prototype.getSortOptions = function() {
-  return {
-    'items': 'tr',
-    'handle': '.js-handle',
-    'axis': 'y',
-    'containment': 'parent',
-    'snap': true,
-    'tolerance': 'pointer',
-    'start': this.onDragStart.bind(this),
-    'stop': this.onDragEnd.bind(this)
-  };
-};
-
-
-/**
- * Handles column changes
- *
- * @export
- */
-os.ui.layer.LabelControlsCtrl.prototype.onColumnChange = function() {
-  if (this.scope) {
-    this.sort_();
-    this.validate_();
-
-    this.scope.$emit(os.ui.layer.LabelControlsEventType.COLUMN_CHANGE);
+      apply(this.scope);
+    }
   }
-};
 
+  /**
+   * Validate the form.
+   *
+   * @private
+   */
+  validate_() {
+    if (this.scope && this.scope['labels']) {
+      var labelForm = /** @type {angular.NgModelController} */ (this.scope['labelForm']);
+      if (labelForm) {
+        if (this.scope['required']) {
+          labelForm.$setValidity('columnRequired', this.scope['labels'].some(function(obj) {
+            return !!obj['column'];
+          }));
+        } else {
+          labelForm.$setValidity('columnRequired', true);
+        }
+      }
 
-/**
- * Handles changes to the show labels checkbox.
- *
- * @export
- */
-os.ui.layer.LabelControlsCtrl.prototype.onShowLabelsChange = function() {
-  if (this.scope) {
-    this.scope.$emit(os.ui.layer.LabelControlsEventType.SHOW_LABELS_CHANGE, this.scope['showLabels']);
+      apply(this.scope);
+    }
   }
-};
 
+  /**
+   * Handle label drag start.
+   *
+   * @param {!jQuery.Event} event
+   * @param {!{item: jQuery, placeholder: jQuery}} ui
+   * @protected
+   */
+  onDragStart(event, ui) {
+    // add a buffer to the bottom of the containment to account for the container padding
+    var sortable = this.element.find('.js-label-container').sortable('instance');
+    if (sortable && sortable['containment']) {
+      sortable['containment'][3] += 3;
+    }
 
-/**
- * Add a new label
- *
- * @export
- */
-os.ui.layer.LabelControlsCtrl.prototype.addLabel = function() {
-  this.scope['labels'].push(os.style.label.cloneConfig());
-  this.onColumnChange();
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Layer.LABEL_COLUMN_ADD, 1);
-};
+    // placeholder should be the same height as the item being dragged so the container size doesn't change
+    if (ui['helper'] && ui['placeholder']) {
+      ui['placeholder'].height(ui['helper'].height());
+    }
 
+    if (ui['item']) {
+      // show the grippy dragging cursor
+      ui['item'].find('.js-handle').addClass('moving');
 
-/**
- * Remove a label
- *
- * @param {os.style.label.LabelConfig} label
- * @export
- */
-os.ui.layer.LabelControlsCtrl.prototype.removeLabel = function(label) {
-  ol.array.remove(this.scope['labels'], label);
-  this.onColumnChange();
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Layer.LABEL_COLUMN_REMOVE, 1);
-};
+      // save the start index
+      this.startIndex_ = ui['item'].index();
+    }
+  }
 
+  /**
+   * Handle label drag end.
+   *
+   * @param {!jQuery.Event} event
+   * @param {!{item: Element}} ui
+   * @protected
+   */
+  onDragEnd(event, ui) {
+    if (ui['item']) {
+      // revert to grippy hover cursor
+      ui['item'].find('.js-handle').removeClass('moving');
 
-/**
- * Sort the labels so "None" labels are at the end of the list.
- *
- * @private
- */
-os.ui.layer.LabelControlsCtrl.prototype.sort_ = function() {
-  if (this.scope && this.scope['labels']) {
-    // sort the array in place so changes affect the array on label commands
-    var labels = this.scope['labels'];
-    var n = labels.length;
-    while (n--) {
-      if (labels[n]['column'] == null) {
-        labels.push(labels.splice(n, 1)[0]);
+      // if the index changed, update the label order
+      var stopIndex = ui['item'].index();
+      if (this.startIndex_ != stopIndex) {
+        moveItem(this.scope['labels'], this.startIndex_, stopIndex);
+        apply(this.scope);
+        this.onColumnChange();
       }
     }
-
-    os.ui.apply(this.scope);
   }
-};
+}
 
-
-/**
- * Validate the form.
- *
- * @private
- */
-os.ui.layer.LabelControlsCtrl.prototype.validate_ = function() {
-  if (this.scope && this.scope['labels']) {
-    var labelForm = /** @type {angular.NgModelController} */ (this.scope['labelForm']);
-    if (labelForm) {
-      if (this.scope['required']) {
-        labelForm.$setValidity('columnRequired', this.scope['labels'].some(function(obj) {
-          return !!obj['column'];
-        }));
-      } else {
-        labelForm.$setValidity('columnRequired', true);
-      }
-    }
-
-    os.ui.apply(this.scope);
-  }
-};
-
-
-/**
- * Handle label drag start.
- *
- * @param {!jQuery.Event} event
- * @param {!{item: jQuery, placeholder: jQuery}} ui
- * @protected
- */
-os.ui.layer.LabelControlsCtrl.prototype.onDragStart = function(event, ui) {
-  // add a buffer to the bottom of the containment to account for the container padding
-  var sortable = this.element.find('.js-label-container').sortable('instance');
-  if (sortable && sortable['containment']) {
-    sortable['containment'][3] += 3;
-  }
-
-  // placeholder should be the same height as the item being dragged so the container size doesn't change
-  if (ui['helper'] && ui['placeholder']) {
-    ui['placeholder'].height(ui['helper'].height());
-  }
-
-  if (ui['item']) {
-    // show the grippy dragging cursor
-    ui['item'].find('.js-handle').addClass('moving');
-
-    // save the start index
-    this.startIndex_ = ui['item'].index();
-  }
-};
-
-
-/**
- * Handle label drag end.
- *
- * @param {!jQuery.Event} event
- * @param {!{item: Element}} ui
- * @protected
- */
-os.ui.layer.LabelControlsCtrl.prototype.onDragEnd = function(event, ui) {
-  if (ui['item']) {
-    // revert to grippy hover cursor
-    ui['item'].find('.js-handle').removeClass('moving');
-
-    // if the index changed, update the label order
-    var stopIndex = ui['item'].index();
-    if (this.startIndex_ != stopIndex) {
-      goog.array.moveItem(this.scope['labels'], this.startIndex_, stopIndex);
-      os.ui.apply(this.scope);
-      this.onColumnChange();
-    }
-  }
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

@@ -1,14 +1,27 @@
-goog.provide('os.ui.layer');
+goog.module('os.ui.layer');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.style.label');
+const {instanceOf} = goog.require('os.classRegistry');
+const SourceClass = goog.require('os.source.SourceClass');
+const {getConfigColor} = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
+const {cloneConfig} = goog.require('os.style.label');
+const {nameCompare} = goog.require('os.ui.slick.column');
+
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const ILayer = goog.requireType('os.layer.ILayer');
+const TileLayer = goog.requireType('os.layer.Tile');
+const VectorLayer = goog.requireType('os.layer.Vector');
+const VectorSource = goog.requireType('os.source.Vector');
+const {LabelConfig} = goog.requireType('os.style.label');
 
 
 /**
  * Intervals for the layer refresh option, in seconds.
  * @type {!Array<!osx.layer.RefreshOption>}
- * @const
  */
-os.ui.layer.REFRESH_DURATIONS = [
+const REFRESH_DURATIONS = [
   {label: '-- None --', interval: 0},
   {label: '15 seconds', interval: 15},
   {label: '30 seconds', interval: 30},
@@ -25,96 +38,88 @@ os.ui.layer.REFRESH_DURATIONS = [
   {label: '1 day', interval: 24 * 3600}
 ];
 
-
 /**
  * Get the label column for the layer
  *
- * @param {os.layer.ILayer} layer
- * @return {Array<os.style.label.LabelConfig>}
+ * @param {ILayer} layer
+ * @return {Array<LabelConfig>}
  */
-os.ui.layer.getColumn = function(layer) {
-  var layerConfig = os.style.StyleManager.getInstance().getLayerConfig(layer.getId());
-  return layerConfig && layerConfig[os.style.StyleField.LABELS] || [os.style.label.cloneConfig()];
+const getColumn = function(layer) {
+  var layerConfig = StyleManager.getInstance().getLayerConfig(layer.getId());
+  return layerConfig && layerConfig[StyleField.LABELS] || [cloneConfig()];
 };
-
 
 /**
  * Get if labels should be shown on the layer
  *
- * @param {os.layer.ILayer} layer
+ * @param {ILayer} layer
  * @return {string}
  */
-os.ui.layer.getShowLabel = function(layer) {
-  var layerConfig = os.style.StyleManager.getInstance().getLayerConfig(layer.getId());
-  return layerConfig && layerConfig[os.style.StyleField.SHOW_LABELS] || false;
+const getShowLabel = function(layer) {
+  var layerConfig = StyleManager.getInstance().getLayerConfig(layer.getId());
+  return layerConfig && layerConfig[StyleField.SHOW_LABELS] || false;
 };
-
 
 /**
  * Get the label color for the layer.
  *
- * @param {os.layer.ILayer} layer
+ * @param {ILayer} layer
  * @return {string}
  */
-os.ui.layer.getLabelColor = function(layer) {
-  var layerConfig = os.style.StyleManager.getInstance().getLayerConfig(layer.getId());
-  return layerConfig && layerConfig[os.style.StyleField.LABEL_COLOR] || os.style.getConfigColor(layerConfig);
+const getLabelColor = function(layer) {
+  var layerConfig = StyleManager.getInstance().getLayerConfig(layer.getId());
+  return layerConfig && layerConfig[StyleField.LABEL_COLOR] || getConfigColor(layerConfig);
 };
-
 
 /**
  * Get the label size for the layer.
  *
- * @param {os.layer.ILayer} layer
+ * @param {ILayer} layer
  * @return {string}
  */
-os.ui.layer.getLabelSize = function(layer) {
-  var layerConfig = os.style.StyleManager.getInstance().getLayerConfig(layer.getId());
-  return layerConfig && layerConfig[os.style.StyleField.LABEL_SIZE] || false;
+const getLabelSize = function(layer) {
+  var layerConfig = StyleManager.getInstance().getLayerConfig(layer.getId());
+  return layerConfig && layerConfig[StyleField.LABEL_SIZE] || false;
 };
-
 
 /**
  * Get the available columns for the layer
  *
- * @param {os.layer.ILayer} layer
- * @return {Array<os.data.ColumnDefinition>}
+ * @param {ILayer} layer
+ * @return {Array<ColumnDefinition>}
  */
-os.ui.layer.getColumns = function(layer) {
-  var source = /** @type {os.layer.Vector} */ (layer).getSource();
-  if (source && os.instanceOf(source, os.source.Vector.NAME)) {
-    return os.ui.layer.getColumnsFromSource(/** @type {!os.source.Vector} */ (source));
+const getColumns = function(layer) {
+  var source = /** @type {VectorLayer} */ (layer).getSource();
+  if (source && instanceOf(source, SourceClass.VECTOR)) {
+    return getColumnsFromSource(/** @type {VectorSource} */ (source));
   }
   return null;
 };
 
-
 /**
  * Get the available columns for the source
  *
- * @param {os.source.Vector} source
- * @return {Array<os.data.ColumnDefinition>}
+ * @param {VectorSource} source
+ * @return {Array<ColumnDefinition>}
  */
-os.ui.layer.getColumnsFromSource = function(source) {
-  return source ? source.getColumns().sort(os.ui.slick.column.nameCompare) : [];
+const getColumnsFromSource = function(source) {
+  return source ? source.getColumns().sort(nameCompare) : [];
 };
 
-
 /**
- * @param {os.layer.ILayer} layer
- * @return {Array.<osx.ogc.TileStyle>}
+ * @param {ILayer} layer
+ * @return {Array<osx.ogc.TileStyle>}
  */
-os.ui.layer.getStyles = function(layer) {
-  return /** @type {os.layer.Tile} */ (layer).getStyles();
+const getStyles = function(layer) {
+  return /** @type {TileLayer} */ (layer).getStyles();
 };
 
-
 /**
- * @param {os.layer.ILayer} layer
+ * @param {ILayer} layer
  * @return {?osx.ogc.TileStyle}
  */
-os.ui.layer.getStyle = function(layer) {
-  var style = /** @type {os.layer.Tile} */ (layer).getStyle();
+const getStyle = function(layer) {
+  var style = /** @type {TileLayer} */ (layer).getStyle();
 
   if (goog.isObject(style)) {
     return /** @type {!osx.ogc.TileStyle} */ (style);
@@ -123,46 +128,58 @@ os.ui.layer.getStyle = function(layer) {
   return null;
 };
 
-
 /**
- * @param {os.layer.ILayer} layer
+ * @param {ILayer} layer
  * @param {osx.ogc.TileStyle} value
  */
-os.ui.layer.setStyle = function(layer, value) {
-  /** @type {os.layer.Tile} */ (layer).setStyle(value);
+const setStyle = function(layer, value) {
+  /** @type {TileLayer} */ (layer).setStyle(value);
 };
 
-
 /**
- * @param {os.layer.ILayer} layer
+ * @param {ILayer} layer
  * @return {?boolean}
  */
-os.ui.layer.getColorize = function(layer) {
-  return /** @type {os.layer.Tile} */ (layer).getColorize();
+const getColorize = function(layer) {
+  return /** @type {TileLayer} */ (layer).getColorize();
 };
-
 
 /**
- * @param {os.layer.ILayer} layer
+ * @param {ILayer} layer
  * @param {boolean} value
  */
-os.ui.layer.setColorize = function(layer, value) {
-  /** @type {os.layer.Tile} */ (layer).setColorize(value);
+const setColorize = function(layer, value) {
+  /** @type {TileLayer} */ (layer).setColorize(value);
 };
-
 
 /**
  * Get the unique ID column for a layer
  *
- * @param {os.layer.ILayer} layer
- * @return {os.data.ColumnDefinition}
+ * @param {ILayer} layer
+ * @return {ColumnDefinition}
  */
-os.ui.layer.getUniqueId = function(layer) {
-  var source = /** @type {os.layer.Vector} */ (layer).getSource();
-  if (source && os.instanceOf(source, os.source.Vector.NAME)) {
-    source = /** @type {!os.source.Vector} */ (source);
+const getUniqueId = function(layer) {
+  var source = /** @type {VectorLayer} */ (layer).getSource();
+  if (source && instanceOf(source, SourceClass.VECTOR)) {
+    source = /** @type {!VectorSource} */ (source);
     return source.getUniqueId();
   }
 
   return null;
+};
+
+exports = {
+  REFRESH_DURATIONS,
+  getColumn,
+  getShowLabel,
+  getLabelColor,
+  getLabelSize,
+  getColumns,
+  getColumnsFromSource,
+  getStyles,
+  getStyle,
+  setStyle,
+  getColorize,
+  setColorize,
+  getUniqueId
 };

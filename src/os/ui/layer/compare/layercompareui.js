@@ -16,8 +16,8 @@ const osImplements = goog.require('os.implements');
 const ILayer = goog.require('os.layer.ILayer');
 const osMap = goog.require('os.map');
 const {getMapContainer} = goog.require('os.map.instance');
-const Module = goog.require('os.ui.Module');
 const {resize, removeResize} = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
 const {
   bringToFront,
   close: closeWindow,
