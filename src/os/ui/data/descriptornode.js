@@ -1,204 +1,198 @@
-goog.provide('os.ui.data.DescriptorNode');
+goog.module('os.ui.data.DescriptorNode');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventType');
-goog.require('os.command.CommandProcessor');
-goog.require('os.data.ActivateDescriptor');
-goog.require('os.data.DeactivateDescriptor');
-goog.require('os.data.ISearchable');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.structs.TriState');
-goog.require('os.ui.slick.SlickTreeNode');
+const GoogEventType = goog.require('goog.events.EventType');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const ActivateDescriptor = goog.require('os.data.ActivateDescriptor');
+const DeactivateDescriptor = goog.require('os.data.DeactivateDescriptor');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const TriState = goog.require('os.structs.TriState');
+const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
+const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const ISearchable = goog.requireType('os.data.ISearchable');
 
 
 /**
  * Displays a data descriptor in a tree node
  *
- * @implements {os.data.ISearchable}
- * @extends {os.ui.slick.SlickTreeNode}
- * @constructor
+ * @implements {ISearchable}
  */
-os.ui.data.DescriptorNode = function() {
-  os.ui.data.DescriptorNode.base(this, 'constructor');
+class DescriptorNode extends SlickTreeNode {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {?IDataDescriptor}
+     * @private
+     */
+    this.descriptor_ = null;
+  }
 
   /**
-   * @type {?os.data.IDataDescriptor}
-   * @private
+   * @inheritDoc
    */
-  this.descriptor_ = null;
-};
-goog.inherits(os.ui.data.DescriptorNode, os.ui.slick.SlickTreeNode);
+  setState(value) {
+    var old = this.getState();
+    super.setState(value);
+    var s = this.getState();
 
+    if (old != s && this.descriptor_) {
+      var active = s === TriState.ON;
+      if (active !== this.descriptor_.isActive()) {
+        var cmd = active ? new ActivateDescriptor(this.descriptor_) :
+          new DeactivateDescriptor(this.descriptor_);
 
-/**
- * @inheritDoc
- */
-os.ui.data.DescriptorNode.prototype.setState = function(value) {
-  var old = this.getState();
-  os.ui.data.DescriptorNode.superClass_.setState.call(this, value);
-  var s = this.getState();
-
-  if (old != s && this.descriptor_) {
-    var active = s === os.structs.TriState.ON;
-    if (active !== this.descriptor_.isActive()) {
-      var cmd = active ? new os.data.ActivateDescriptor(this.descriptor_) :
-        new os.data.DeactivateDescriptor(this.descriptor_);
-
-      if (!os.commandStack.addCommand(cmd)) {
-        os.ui.data.DescriptorNode.superClass_.setState.call(this, os.structs.TriState.OFF);
+        if (!CommandProcessor.getInstance().addCommand(cmd)) {
+          super.setState(TriState.OFF);
+        }
       }
     }
   }
-};
 
+  /**
+   * Gets the data descriptor
+   *
+   * @return {?IDataDescriptor} The descriptor
+   */
+  getDescriptor() {
+    return this.descriptor_;
+  }
 
-/**
- * Gets the data descriptor
- *
- * @return {?os.data.IDataDescriptor} The descriptor
- */
-os.ui.data.DescriptorNode.prototype.getDescriptor = function() {
-  return this.descriptor_;
-};
+  /**
+   * Sets the data descriptor
+   *
+   * @param {!IDataDescriptor} value The descriptor
+   */
+  setDescriptor(value) {
+    if (value !== this.descriptor_) {
+      if (this.descriptor_) {
+        this.descriptor_.unlisten(GoogEventType.PROPERTYCHANGE, this.onPropertyChange_, false, this);
+      }
 
+      var old = this.descriptor_;
+      this.descriptor_ = value;
 
-/**
- * Sets the data descriptor
- *
- * @param {!os.data.IDataDescriptor} value The descriptor
- */
-os.ui.data.DescriptorNode.prototype.setDescriptor = function(value) {
-  if (value !== this.descriptor_) {
+      this.descriptor_.listen(GoogEventType.PROPERTYCHANGE, this.onPropertyChange_, false, this);
+      this.setId(this.descriptor_.getId());
+      this.setLabel(this.descriptor_.getTitle());
+      this.setToolTip(this.descriptor_.getDescription() || '');
+      this.nodeUI = this.descriptor_.getNodeUI();
+
+      this.setState(this.descriptor_.isActive() ? TriState.ON : TriState.OFF);
+      this.dispatchEvent(new PropertyChangeEvent('descriptor', value, old));
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
     if (this.descriptor_) {
-      this.descriptor_.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onPropertyChange_, false, this);
+      this.descriptor_.unlisten(GoogEventType.PROPERTYCHANGE, this.onPropertyChange_, false, this);
     }
 
-    var old = this.descriptor_;
-    this.descriptor_ = value;
-
-    this.descriptor_.listen(goog.events.EventType.PROPERTYCHANGE, this.onPropertyChange_, false, this);
-    this.setId(this.descriptor_.getId());
-    this.setLabel(this.descriptor_.getTitle());
-    this.setToolTip(this.descriptor_.getDescription() || '');
-    this.nodeUI = this.descriptor_.getNodeUI();
-
-    this.setState(this.descriptor_.isActive() ? os.structs.TriState.ON : os.structs.TriState.OFF);
-    this.dispatchEvent(new os.events.PropertyChangeEvent('descriptor', value, old));
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.data.DescriptorNode.prototype.disposeInternal = function() {
-  if (this.descriptor_) {
-    this.descriptor_.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onPropertyChange_, false, this);
+    super.disposeInternal();
   }
 
-  os.ui.data.DescriptorNode.superClass_.disposeInternal.call(this);
-};
+  /**
+   * @inheritDoc
+   */
+  getId() {
+    if (this.descriptor_) {
+      return this.descriptor_.getId();
+    }
 
-
-/**
- * @inheritDoc
- */
-os.ui.data.DescriptorNode.prototype.getId = function() {
-  if (this.descriptor_) {
-    return this.descriptor_.getId();
+    return super.getId();
   }
 
-  return os.ui.data.DescriptorNode.superClass_.getId.call(this);
-};
+  /**
+   * @inheritDoc
+   */
+  getLabel() {
+    if (this.descriptor_) {
+      return this.descriptor_.getTitle();
+    }
 
-
-/**
- * @inheritDoc
- */
-os.ui.data.DescriptorNode.prototype.getLabel = function() {
-  if (this.descriptor_) {
-    return this.descriptor_.getTitle();
+    return super.getId();
   }
 
-  return os.ui.data.DescriptorNode.superClass_.getId.call(this);
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.data.DescriptorNode.prototype.getSearchText = function() {
-  return this.descriptor_ ? this.descriptor_.getSearchText() : '';
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.data.DescriptorNode.prototype.getTags = function() {
-  return this.descriptor_ ? this.descriptor_.getTags() : [];
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.data.DescriptorNode.prototype.formatIcons = function() {
-  var s = null;
-
-  if (this.descriptor_) {
-    s = this.descriptor_.getIcons();
+  /**
+   * @inheritDoc
+   */
+  getSearchText() {
+    return this.descriptor_ ? this.descriptor_.getSearchText() : '';
   }
 
-  if (!s) {
-    return os.ui.data.DescriptorNode.superClass_.formatIcons.call(this);
+  /**
+   * @inheritDoc
+   */
+  getTags() {
+    return this.descriptor_ ? this.descriptor_.getTags() : [];
   }
 
-  return s;
-};
+  /**
+   * @inheritDoc
+   */
+  formatIcons() {
+    var s = null;
 
+    if (this.descriptor_) {
+      s = this.descriptor_.getIcons();
+    }
 
-/**
- * Whether or not the descriptor (or the items the descriptor has added) is loading
- *
- * @return {boolean}
- * @export
- */
-os.ui.data.DescriptorNode.prototype.isLoading = function() {
-  if (this.descriptor_) {
-    return this.descriptor_.isLoading();
+    if (!s) {
+      return super.formatIcons();
+    }
+
+    return s;
   }
 
-  return false;
-};
+  /**
+   * Whether or not the descriptor (or the items the descriptor has added) is loading
+   *
+   * @return {boolean}
+   * @export
+   */
+  isLoading() {
+    if (this.descriptor_) {
+      return this.descriptor_.isLoading();
+    }
 
-
-/**
- * Handles changes on the desriptor
- *
- * @param {os.events.PropertyChangeEvent} e The event
- * @private
- */
-os.ui.data.DescriptorNode.prototype.onPropertyChange_ = function(e) {
-  var p = e.getProperty();
-
-  if (p == 'active') {
-    this.setState(this.descriptor_.isActive() ? os.structs.TriState.ON : os.structs.TriState.OFF);
-  } else if (p == 'loading') {
-    this.dispatchEvent(new os.events.PropertyChangeEvent('loading', e.getOldValue(), e.getNewValue()));
-  } else if (p == 'icons') {
-    this.dispatchEvent(new os.events.PropertyChangeEvent(p));
-  } else if (p == 'title' || p == 'explicitTitle') {
-    this.setLabel(this.descriptor_.getTitle());
-    this.dispatchEvent(new os.events.PropertyChangeEvent('label'));
+    return false;
   }
-};
 
+  /**
+   * Handles changes on the desriptor
+   *
+   * @param {PropertyChangeEvent} e The event
+   * @private
+   */
+  onPropertyChange_(e) {
+    var p = e.getProperty();
 
-/**
- * @inheritDoc
- */
-os.ui.data.DescriptorNode.prototype.updateFrom = function(other) {
-  this.setDescriptor(other.getDescriptor());
-  os.ui.data.DescriptorNode.superClass_.updateFrom.call(this, other);
-};
+    if (p == 'active') {
+      this.setState(this.descriptor_.isActive() ? TriState.ON : TriState.OFF);
+    } else if (p == 'loading') {
+      this.dispatchEvent(new PropertyChangeEvent('loading', e.getOldValue(), e.getNewValue()));
+    } else if (p == 'icons') {
+      this.dispatchEvent(new PropertyChangeEvent(p));
+    } else if (p == 'title' || p == 'explicitTitle') {
+      this.setLabel(this.descriptor_.getTitle());
+      this.dispatchEvent(new PropertyChangeEvent('label'));
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  updateFrom(other) {
+    this.setDescriptor(other.getDescriptor());
+    super.updateFrom(other);
+  }
+}
+
+exports = DescriptorNode;

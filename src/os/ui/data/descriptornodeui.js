@@ -1,147 +1,155 @@
-goog.provide('os.ui.data.DescriptorNodeUICtrl');
-goog.provide('os.ui.data.descriptorNodeUIDirective');
+goog.module('os.ui.data.DescriptorNodeUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.fn');
-goog.require('os.ui.Module');
-goog.require('os.ui.data.DescriptorProvider');
-goog.require('os.ui.slick.AbstractNodeUICtrl');
-goog.require('os.ui.window.ConfirmUI');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const BaseDescriptor = goog.require('os.data.BaseDescriptor');
+const DataManager = goog.require('os.data.DataManager');
+const Module = goog.require('os.ui.Module');
+const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
+const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
+const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+
+const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const DescriptorNode = goog.requireType('os.ui.data.DescriptorNode');
 
 
 /**
  * Generic node UI for descriptors.
  * @return {angular.Directive}
  */
-os.ui.data.descriptorNodeUIDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    template: '<span ng-if="nodeUi.show()" class="flex-shrink-0" ng-click="nodeUi.tryRemove()">' +
-      '<i class="fa fa-trash-o fa-fw c-glyph" title="Remove this layer from the application"></i>' +
-    '</span>',
-    controller: os.ui.data.DescriptorNodeUICtrl,
-    controllerAs: 'nodeUi'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  template: '<span ng-if="nodeUi.show()" class="flex-shrink-0" ng-click="nodeUi.tryRemove()">' +
+    '<i class="fa fa-trash-o fa-fw c-glyph" title="Remove this layer from the application"></i>' +
+  '</span>',
+  controller: Controller,
+  controllerAs: 'nodeUi'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'descriptornodeui';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('descriptornodeui', [os.ui.data.descriptorNodeUIDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for descriptor node UI.
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.ui.slick.AbstractNodeUICtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.data.DescriptorNodeUICtrl = function($scope, $element) {
-  os.ui.data.DescriptorNodeUICtrl.base(this, 'constructor', $scope, $element);
-};
-goog.inherits(os.ui.data.DescriptorNodeUICtrl, os.ui.slick.AbstractNodeUICtrl);
-
-
-/**
- * Prompt the user to remove the descriptor from the application.
- * @export
- */
-os.ui.data.DescriptorNodeUICtrl.prototype.tryRemove = function() {
-  os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
-    confirm: this.remove.bind(this),
-    cancel: os.fn.noop,
-    prompt: this.getRemoveWindowText(),
-    yesText: 'Remove',
-    yesIcon: 'fa fa-trash-o',
-    yesButtonClass: 'btn-danger',
-    windowOptions: this.getRemoveWindowOptions()
-  }));
-};
-
-
-/**
- * Get the window options for the remove prompt.
- * @return {Object<string, string>} The window options.
- * @protected
- */
-os.ui.data.DescriptorNodeUICtrl.prototype.getRemoveWindowOptions = function() {
-  var title = '';
-  var descriptor = this.getDescriptor();
-  if (descriptor) {
-    title = descriptor.getTitle();
+class Controller extends AbstractNodeUICtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
   }
 
-  return {
-    'label': 'Remove ' + title + '?',
-    'icon': 'fa fa-trash-o',
-    'headerClass': 'bg-danger u-bg-danger-text',
-    'x': 'center',
-    'y': 'center',
-    'width': '325',
-    'height': 'auto',
-    'modal': 'true'
-  };
-};
+  /**
+   * Prompt the user to remove the descriptor from the application.
+   * @export
+   */
+  tryRemove() {
+    ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+      confirm: this.remove.bind(this),
+      cancel: () => {},
+      prompt: this.getRemoveWindowText(),
+      yesText: 'Remove',
+      yesIcon: 'fa fa-trash-o',
+      yesButtonClass: 'btn-danger',
+      windowOptions: this.getRemoveWindowOptions()
+    }));
+  }
 
-
-/**
- * Get the text to display in the remove prompt.
- * @return {!string} The text.
- * @protected
- */
-os.ui.data.DescriptorNodeUICtrl.prototype.getRemoveWindowText = function() {
-  return 'Are you sure you want to remove this layer from the application? ' +
-      '<b>This action cannot be undone</b>, and will clear the application history.';
-};
-
-
-/**
- * Get the descriptor for the node.
- * @return {os.data.IDataDescriptor} The descriptor.
- * @protected
- */
-os.ui.data.DescriptorNodeUICtrl.prototype.getDescriptor = function() {
-  // the node should be on the scope as 'item'
-  var node = /** @type {os.ui.data.DescriptorNode} */ (this.scope['item']);
-  return node.getDescriptor();
-};
-
-
-/**
- * Remove the descriptor.
- * @protected
- */
-os.ui.data.DescriptorNodeUICtrl.prototype.remove = function() {
-  this.removeDescriptor();
-};
-
-
-/**
- * Permanently remove the descriptor and associated data from the application.
- * @protected
- */
-os.ui.data.DescriptorNodeUICtrl.prototype.removeDescriptor = function() {
-  var descriptor = this.getDescriptor();
-  var dm = os.dataManager;
-  if (descriptor && descriptor instanceof os.data.BaseDescriptor) {
-    // remove the descriptor from the data manager
-    dm.removeDescriptor(descriptor);
-
-    var provider = /** @type {os.ui.data.DescriptorProvider} */ (dm.getProvider(descriptor.getId()) ||
-        dm.getProviderByLabel(descriptor.getProvider() || ''));
-    if (provider && provider instanceof os.ui.data.DescriptorProvider) {
-      // remove the descriptor from the provider
-      provider.removeDescriptor(descriptor, true);
+  /**
+   * Get the window options for the remove prompt.
+   * @return {Object<string, string>} The window options.
+   * @protected
+   */
+  getRemoveWindowOptions() {
+    var title = '';
+    var descriptor = this.getDescriptor();
+    if (descriptor) {
+      title = descriptor.getTitle();
     }
 
-    descriptor.dispose();
-
-    // restoring descriptors is currently not supported, so clear the application stack to avoid conflicts
-    os.command.CommandProcessor.getInstance().clearHistory();
+    return {
+      'label': 'Remove ' + title + '?',
+      'icon': 'fa fa-trash-o',
+      'headerClass': 'bg-danger u-bg-danger-text',
+      'x': 'center',
+      'y': 'center',
+      'width': '325',
+      'height': 'auto',
+      'modal': 'true'
+    };
   }
+
+  /**
+   * Get the text to display in the remove prompt.
+   * @return {!string} The text.
+   * @protected
+   */
+  getRemoveWindowText() {
+    return 'Are you sure you want to remove this layer from the application? ' +
+        '<b>This action cannot be undone</b>, and will clear the application history.';
+  }
+
+  /**
+   * Get the descriptor for the node.
+   * @return {IDataDescriptor} The descriptor.
+   * @protected
+   */
+  getDescriptor() {
+    // the node should be on the scope as 'item'
+    var node = /** @type {DescriptorNode} */ (this.scope['item']);
+    return node.getDescriptor();
+  }
+
+  /**
+   * Remove the descriptor.
+   * @protected
+   */
+  remove() {
+    this.removeDescriptor();
+  }
+
+  /**
+   * Permanently remove the descriptor and associated data from the application.
+   * @protected
+   */
+  removeDescriptor() {
+    var descriptor = this.getDescriptor();
+    var dm = DataManager.getInstance();
+    if (descriptor && descriptor instanceof BaseDescriptor) {
+      // remove the descriptor from the data manager
+      dm.removeDescriptor(descriptor);
+
+      var provider = /** @type {DescriptorProvider} */ (dm.getProvider(descriptor.getId()) ||
+          dm.getProviderByLabel(descriptor.getProvider() || ''));
+      if (provider && provider instanceof DescriptorProvider) {
+        // remove the descriptor from the provider
+        provider.removeDescriptor(descriptor, true);
+      }
+
+      descriptor.dispose();
+
+      // restoring descriptors is currently not supported, so clear the application stack to avoid conflicts
+      CommandProcessor.getInstance().clearHistory();
+    }
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
