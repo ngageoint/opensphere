@@ -1,10 +1,13 @@
-goog.provide('os.ui.node.AreaNodeUICtrl');
-goog.provide('os.ui.node.areaNodeUIDirective');
+goog.module('os.ui.node.AreaNodeUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.query.BaseAreaManager');
-goog.require('os.ui.Module');
-goog.require('os.ui.query.cmd.AreaRemove');
-goog.require('os.ui.slick.AbstractNodeUICtrl');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const BaseAreaManager = goog.require('os.query.BaseAreaManager');
+const Module = goog.require('os.ui.Module');
+const AreaRemove = goog.require('os.ui.query.cmd.AreaRemove');
+const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
+
+const AreaNode = goog.requireType('os.data.AreaNode');
 
 
 /**
@@ -12,81 +15,85 @@ goog.require('os.ui.slick.AbstractNodeUICtrl');
  *
  * @return {angular.Directive}
  */
-os.ui.node.areaNodeUIDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    template: '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
-        '<span ng-click="nodeUi.edit()">' +
-        '<i class="fa fa-fw c-glyph" ng-class="nodeUi.getTemp() ? \'fa-save\' : \'fa-pencil\'" ' +
-            'title="{{nodeUi.getTemp() ? \'Save\' : \'Edit\'}}"></i></span>' +
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  template: '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
+      '<span ng-click="nodeUi.edit()">' +
+      '<i class="fa fa-fw c-glyph" ng-class="nodeUi.getTemp() ? \'fa-save\' : \'fa-pencil\'" ' +
+          'title="{{nodeUi.getTemp() ? \'Save\' : \'Edit\'}}"></i></span>' +
+      '<span ng-click="nodeUi.remove()">' +
+      '<i class="fa fa-times fa-fw c-glyph" title="Remove the area"></i></span>' +
+      '</span>',
+  controller: Controller,
+  controllerAs: 'nodeUi'
+});
 
-        '<span ng-click="nodeUi.remove()">' +
-        '<i class="fa fa-times fa-fw c-glyph" title="Remove the area"></i></span>' +
-
-        '</span>',
-    controller: os.ui.node.AreaNodeUICtrl,
-    controllerAs: 'nodeUi'
-  };
-};
-
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'areanodeui';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('areanodeui', [os.ui.node.areaNodeUIDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for selected/highlighted node UI
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.ui.slick.AbstractNodeUICtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.node.AreaNodeUICtrl = function($scope, $element) {
-  os.ui.node.AreaNodeUICtrl.base(this, 'constructor', $scope, $element);
-};
-goog.inherits(os.ui.node.AreaNodeUICtrl, os.ui.slick.AbstractNodeUICtrl);
-
-
-/**
- * @return {boolean} Whether or not the item is temporary
- * @export
- */
-os.ui.node.AreaNodeUICtrl.prototype.getTemp = function() {
-  var area = /** @type {os.data.AreaNode} */ (this.scope['item']).getArea();
-  return /** @type {boolean} */ (area.get('temp'));
-};
-
-
-/**
- * Removes the area
- *
- * @export
- */
-os.ui.node.AreaNodeUICtrl.prototype.remove = function() {
-  var area = /** @type {os.data.AreaNode} */ (this.scope['item']).getArea();
-
-  if (area) {
-    var cmd = new os.ui.query.cmd.AreaRemove(area);
-    os.command.CommandProcessor.getInstance().addCommand(cmd);
+class Controller extends AbstractNodeUICtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
   }
-};
 
-
-/**
- * Edits the filter
- *
- * @export
- */
-os.ui.node.AreaNodeUICtrl.prototype.edit = function() {
-  var area = /** @type {os.data.AreaNode} */ (this.scope['item']).getArea();
-
-  if (area) {
-    os.query.BaseAreaManager.save(area);
+  /**
+   * @return {boolean} Whether or not the item is temporary
+   * @export
+   */
+  getTemp() {
+    var area = /** @type {AreaNode} */ (this.scope['item']).getArea();
+    return /** @type {boolean} */ (area.get('temp'));
   }
+
+  /**
+   * Removes the area
+   *
+   * @export
+   */
+  remove() {
+    var area = /** @type {AreaNode} */ (this.scope['item']).getArea();
+
+    if (area) {
+      var cmd = new AreaRemove(area);
+      CommandProcessor.getInstance().addCommand(cmd);
+    }
+  }
+
+  /**
+   * Edits the filter
+   *
+   * @export
+   */
+  edit() {
+    var area = /** @type {AreaNode} */ (this.scope['item']).getArea();
+
+    if (area) {
+      BaseAreaManager.save(area);
+    }
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

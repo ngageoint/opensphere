@@ -1,23 +1,33 @@
-goog.provide('os.ui.node.DefaultLayerNodeUICtrl');
-goog.provide('os.ui.node.defaultLayerNodeUIDirective');
+goog.module('os.ui.node.DefaultLayerNodeUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventType');
-goog.require('ol.ObjectEventType');
-goog.require('ol.events');
-goog.require('os.events.LayerEvent');
-goog.require('os.events.LayerEventType');
-goog.require('os.filter.BaseFilterManager');
-goog.require('os.filter.IFilterable');
-goog.require('os.implements');
-goog.require('os.layer.ILayer');
-goog.require('os.ui.Module');
-goog.require('os.ui.slick.AbstractNodeUICtrl');
+const GoogEventType = goog.require('goog.events.EventType');
+const Layer = goog.require('ol.layer.Layer');
+const dispatcher = goog.require('os.Dispatcher');
+const {instanceOf} = goog.require('os.classRegistry');
+const {DescriptorClass, NodeClass} = goog.require('os.data');
+const DataManager = goog.require('os.data.DataManager');
+const LayerEvent = goog.require('os.events.LayerEvent');
+const LayerEventType = goog.require('os.events.LayerEventType');
+const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
+const IFilterable = goog.require('os.filter.IFilterable');
+const osImplements = goog.require('os.implements');
+const ILayer = goog.require('os.layer.ILayer');
+const LayerClass = goog.require('os.layer.LayerClass');
+const {getQueryManager} = goog.require('os.query.instance');
+const Module = goog.require('os.ui.Module');
+const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
+
+const Source = goog.requireType('ol.source.Source');
+const LayerNode = goog.requireType('os.data.LayerNode');
+const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const ITreeNode = goog.requireType('os.structs.ITreeNode');
 
 
 /**
  * @type {string}
  */
-os.ui.node.DefaultLayerNodeUITemplate = `
+const template = `
   <span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">
     <span ng-if="nodeUi.canFavorite()">
       <favorite ng-show="nodeUi.show()" type="descriptor" key="{{nodeUi.descId}}" value="{{nodeUi.layerLabel}}">
@@ -40,231 +50,230 @@ os.ui.node.DefaultLayerNodeUITemplate = `
  *
  * @return {angular.Directive}
  */
-os.ui.node.defaultLayerNodeUIDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    template: os.ui.node.DefaultLayerNodeUITemplate,
-    controller: os.ui.node.DefaultLayerNodeUICtrl,
-    controllerAs: 'nodeUi'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  template,
+  controller: Controller,
+  controllerAs: 'nodeUi'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'defaultlayernodeui';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('defaultlayernodeui', [os.ui.node.defaultLayerNodeUIDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for selected/highlighted node UI
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.ui.slick.AbstractNodeUICtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.node.DefaultLayerNodeUICtrl = function($scope, $element) {
-  os.ui.node.DefaultLayerNodeUICtrl.base(this, 'constructor', $scope, $element);
+class Controller extends AbstractNodeUICtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
 
-  var qm = os.ui.queryManager;
-  qm.listen(goog.events.EventType.PROPERTYCHANGE, this.updateFilters_, false, this);
+    var qm = getQueryManager();
+    qm.listen(GoogEventType.PROPERTYCHANGE, this.updateFilters_, false, this);
 
-  this.updateFilters_();
-  this.updateFavorites_();
-};
-goog.inherits(os.ui.node.DefaultLayerNodeUICtrl, os.ui.slick.AbstractNodeUICtrl);
-
-
-/**
- * @inheritDoc
- */
-os.ui.node.DefaultLayerNodeUICtrl.prototype.destroy = function() {
-  os.ui.node.DefaultLayerNodeUICtrl.base(this, 'destroy');
-
-  var qm = os.ui.queryManager;
-  qm.unlisten(goog.events.EventType.PROPERTYCHANGE, this.updateFilters_, false, this);
-};
-
-
-/**
- * Get the layer for this node.
- *
- * @return {os.layer.ILayer}
- * @protected
- */
-os.ui.node.DefaultLayerNodeUICtrl.prototype.getLayer = function() {
-  if (this.scope && this.scope['item'] instanceof os.data.LayerNode) {
-    return /** @type {os.data.LayerNode} */ (this.scope['item']).getLayer();
+    this.updateFilters_();
+    this.updateFavorites_();
   }
 
-  return null;
-};
+  /**
+   * @inheritDoc
+   */
+  destroy() {
+    super.destroy();
 
-
-/**
- * Get the source for this node.
- *
- * @return {ol.source.Source}
- * @protected
- */
-os.ui.node.DefaultLayerNodeUICtrl.prototype.getSource = function() {
-  var layer = this.getLayer();
-  if (layer instanceof ol.layer.Layer) {
-    return layer.getSource();
+    var qm = getQueryManager();
+    qm.unlisten(GoogEventType.PROPERTYCHANGE, this.updateFilters_, false, this);
   }
 
-  return null;
-};
-
-
-/**
- * If the layer is removable.
- *
- * @return {boolean}
- * @export
- */
-os.ui.node.DefaultLayerNodeUICtrl.prototype.isRemovable = function() {
-  var node = /** @type {os.data.LayerNode} */ (this.scope['item']);
-  if (node && node instanceof os.data.LayerNode) {
-    var layer = node.getLayer();
-    if (node && layer && os.implements(layer, os.layer.ILayer.ID)) {
-      return /** @type {!os.layer.ILayer} */ (layer).isRemovable();
+  /**
+   * Get the layer for this node.
+   *
+   * @return {ILayer}
+   * @protected
+   */
+  getLayer() {
+    if (this.scope && instanceOf(this.scope['item'], NodeClass.LAYER)) {
+      return /** @type {LayerNode} */ (this.scope['item']).getLayer();
     }
+
+    return null;
   }
 
-  return false;
-};
-
-
-/**
- * Remove the layer
- *
- * @export
- */
-os.ui.node.DefaultLayerNodeUICtrl.prototype.remove = function() {
-  // the node should be on the scope as 'item'
-  var node = /** @type {os.data.LayerNode} */ (this.scope['item']);
-  if (node.getLayer() instanceof os.layer.LayerGroup) {
-    // if the node being removed is a group, pick the first child and remove that instead. this should cause
-    // all other children in the group to be removed because they're synchronized.
-    var children = node.getChildren().slice();
-    if (children && children.length > 0) {
-      var i = children.length;
-      while (i--) {
-        this.removeNode_(children[i]);
-      }
-    }
-  } else {
-    this.removeNode_(node);
-  }
-};
-
-
-/**
- * Fires an event to remove a layer node.
- *
- * @param {!os.structs.ITreeNode} node The node to remove
- * @private
- */
-os.ui.node.DefaultLayerNodeUICtrl.prototype.removeNode_ = function(node) {
-  var removeEvent = new os.events.LayerEvent(os.events.LayerEventType.REMOVE, node.getId());
-  os.dispatcher.dispatchEvent(removeEvent);
-};
-
-
-/**
- * If the layer is favoritable.
- *
- * @return {boolean}
- * @export
- */
-os.ui.node.DefaultLayerNodeUICtrl.prototype.canFavorite = function() {
-  var id = this.getLayerId();
-  if (id) {
-    var descriptor = os.dataManager.getDescriptor(id);
-    return !!(descriptor && (descriptor instanceof os.data.LayerSyncDescriptor));
-  }
-
-  return false;
-};
-
-
-/**
- * Launch the filter manager for the layer
- *
- * @export
- */
-os.ui.node.DefaultLayerNodeUICtrl.prototype.filter = function() {
-  var id = this.getLayerId();
-  if (id) {
-    var descriptor = os.dataManager.getDescriptor(id);
+  /**
+   * Get the source for this node.
+   *
+   * @return {Source}
+   * @protected
+   */
+  getSource() {
     var layer = this.getLayer();
-    var list = [descriptor, layer];
+    if (layer instanceof Layer) {
+      return layer.getSource();
+    }
 
-    for (var i = 0, n = list.length; i < n; i++) {
-      var thing = list[i];
-      if (os.implements(thing, os.filter.IFilterable.ID) && thing.isFilterable()) {
-        /** @type {os.filter.IFilterable} */ (thing).launchFilterManager();
-        break;
+    return null;
+  }
+
+  /**
+   * If the layer is removable.
+   *
+   * @return {boolean}
+   * @export
+   */
+  isRemovable() {
+    var node = /** @type {LayerNode} */ (this.scope['item']);
+    if (node && instanceOf(node, NodeClass.LAYER)) {
+      var layer = node.getLayer();
+      if (node && layer && osImplements(layer, ILayer.ID)) {
+        return /** @type {!ILayer} */ (layer).isRemovable();
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Remove the layer
+   *
+   * @export
+   */
+  remove() {
+    // the node should be on the scope as 'item'
+    var node = /** @type {LayerNode} */ (this.scope['item']);
+    if (instanceOf(node.getLayer(), LayerClass.GROUP)) {
+      // if the node being removed is a group, pick the first child and remove that instead. this should cause
+      // all other children in the group to be removed because they're synchronized.
+      var children = node.getChildren().slice();
+      if (children && children.length > 0) {
+        var i = children.length;
+        while (i--) {
+          this.removeNode_(children[i]);
+        }
+      }
+    } else {
+      this.removeNode_(node);
+    }
+  }
+
+  /**
+   * Fires an event to remove a layer node.
+   *
+   * @param {!ITreeNode} node The node to remove
+   * @private
+   */
+  removeNode_(node) {
+    var removeEvent = new LayerEvent(LayerEventType.REMOVE, node.getId());
+    dispatcher.getInstance().dispatchEvent(removeEvent);
+  }
+
+  /**
+   * If the layer is favoritable.
+   *
+   * @return {boolean}
+   * @export
+   */
+  canFavorite() {
+    var id = this.getLayerId();
+    if (id) {
+      var descriptor = DataManager.getInstance().getDescriptor(id);
+      return instanceOf(descriptor, DescriptorClass.LAYER_SYNC);
+    }
+
+    return false;
+  }
+
+  /**
+   * Launch the filter manager for the layer
+   *
+   * @export
+   */
+  filter() {
+    var id = this.getLayerId();
+    if (id) {
+      var descriptor = DataManager.getInstance().getDescriptor(id);
+      var layer = this.getLayer();
+      var list = [descriptor, layer];
+
+      for (var i = 0, n = list.length; i < n; i++) {
+        var thing = list[i];
+        if (osImplements(thing, IFilterable.ID) && thing.isFilterable()) {
+          /** @type {IFilterable} */ (thing).launchFilterManager();
+          break;
+        }
       }
     }
   }
-};
 
+  /**
+   * Update filters
+   *
+   * @param {PropertyChangeEvent=} opt_event
+   * @private
+   */
+  updateFilters_(opt_event) {
+    var node = /** @type {LayerNode} */ (this.scope['item']);
 
-/**
- * Update filters
- *
- * @param {os.events.PropertyChangeEvent=} opt_event
- * @private
- */
-os.ui.node.DefaultLayerNodeUICtrl.prototype.updateFilters_ = function(opt_event) {
-  var node = /** @type {os.data.LayerNode} */ (this.scope['item']);
+    var fqm = BaseFilterManager.getInstance();
+    this['filtered'] = fqm.hasEnabledFilters(node.getId());
 
-  var fqm = os.filter.BaseFilterManager.getInstance();
-  this['filtered'] = fqm.hasEnabledFilters(node.getId());
+    if (this['filtered']) {
+      this.cellEl.addClass('font-italic');
+    } else {
+      this.cellEl.removeClass('font-italic');
+    }
 
-  if (this['filtered']) {
-    this.cellEl.addClass('font-italic');
-  } else {
-    this.cellEl.removeClass('font-italic');
+    var layer = this.getLayer();
+    if (osImplements(layer, IFilterable.ID)) {
+      this['filtersEnabled'] = /** @type {IFilterable} */ (layer).isFilterable();
+    } else {
+      this['filtersEnabled'] = false;
+    }
   }
 
-  var layer = this.getLayer();
-  if (os.implements(layer, os.filter.IFilterable.ID)) {
-    this['filtersEnabled'] = /** @type {os.filter.IFilterable} */ (layer).isFilterable();
-  } else {
-    this['filtersEnabled'] = false;
+  /**
+   * Update favorite information on the node scope
+   *
+   * @protected
+   */
+  updateFavorites_() {
+    var node = /** @type {LayerNode} */ (this.scope['item']);
+    this['layerLabel'] = node.getLabel();
+    var desc = DataManager.getInstance().getDescriptor(node.getId());
+    if (desc) {
+      this['descId'] = desc.getId();
+    }
   }
-};
 
-
-/**
- * Update favorite information on the node scope
- *
- * @protected
- */
-os.ui.node.DefaultLayerNodeUICtrl.prototype.updateFavorites_ = function() {
-  var node = /** @type {os.data.LayerNode} */ (this.scope['item']);
-  this['layerLabel'] = node.getLabel();
-  var desc = os.dataManager.getDescriptor(node.getId());
-  if (desc) {
-    this['descId'] = desc.getId();
+  /**
+   * Get the layer id
+   *
+   * @return {string}
+   * @protected
+   */
+  getLayerId() {
+    var node = /** @type {LayerNode} */ (this.scope['item']);
+    return node.getId();
   }
-};
+}
 
-
-/**
- * Get the layer id
- *
- * @return {string}
- * @protected
- */
-os.ui.node.DefaultLayerNodeUICtrl.prototype.getLayerId = function() {
-  var node = /** @type {os.data.LayerNode} */ (this.scope['item']);
-  return node.getId();
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  template
 };
