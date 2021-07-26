@@ -1,43 +1,56 @@
-goog.provide('os.ui.notification.NotifyPulseCtrl');
-goog.provide('os.ui.notification.notifyPulseDirective');
+goog.module('os.ui.notification.NotifyPulseUI');
+goog.module.declareLegacyNamespace();
+
+const Module = goog.require('os.ui.Module');
 
 
 /**
  * @return {angular.Directive}
  */
-os.ui.notification.notifyPulseDirective = function() {
-  return {
-    restrict: 'A',
-    controller: os.ui.notification.NotifyPulseCtrl
-  };
-};
+const directive = () => ({
+  restrict: 'A',
+  controller: Controller
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'notifypulse';
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('notifypulse', [os.ui.notification.notifyPulseDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.notification.NotifyPulseCtrl = function($scope, $element, $timeout) {
-  $scope.$on(os.ui.notification.NotifyPulseCtrl.FIRE, function() {
-    $element.addClass('a-pulsate active');
-    $timeout(function() {
-      $element.removeClass('a-pulsate active');
-    }, 3250);
-  });
-};
-
+class Controller {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$timeout} $timeout
+   * @ngInject
+   */
+  constructor($scope, $element, $timeout) {
+    $scope.$on(Controller.FIRE, function() {
+      $element.addClass('a-pulsate active');
+      $timeout(function() {
+        $element.removeClass('a-pulsate active');
+      }, 3250);
+    });
+  }
+}
 
 /**
  * @type {string}
  */
-os.ui.notification.NotifyPulseCtrl.FIRE = 'notification.indicator.fire';
+Controller.FIRE = 'notification.indicator.fire';
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
+};

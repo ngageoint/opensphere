@@ -214,8 +214,8 @@ os.ui.AbstractMainCtrl.prototype.initInstances = function() {
 
   os.ui.metricsManager = os.ui.metrics.MetricsManager.getInstance();
 
-  os.ui.notificationManager = os.ui.notification.NotificationManager.getInstance();
-  os.ui.notificationManager.setAppTitle(this.scope['appName']);
+  const notificationManager = os.ui.notification.NotificationManager.getInstance();
+  notificationManager.setAppTitle(this.scope['appName']);
 
   os.ui.onboarding.OnboardingManager.PATH = this.scope['path'];
   os.ui.onboardingManager = os.ui.onboarding.OnboardingManager.getInstance();
