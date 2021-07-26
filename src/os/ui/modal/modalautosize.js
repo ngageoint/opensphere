@@ -1,10 +1,10 @@
-goog.provide('os.ui.modal.ModalAutoSize');
-goog.provide('os.ui.modal.modalAutoSizeDirective');
+goog.module('os.ui.modal.ModalAutoSizeUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.async.Throttle');
-goog.require('goog.dom.ViewportSizeMonitor');
-goog.require('goog.events.EventType');
-goog.require('os.ui.Module');
+const Throttle = goog.require('goog.async.Throttle');
+const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
+const GoogEventType = goog.require('goog.events.EventType');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -12,19 +12,21 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.modal.modalAutoSizeDirective = function() {
-  return {
-    restrict: 'C',
-    link: os.ui.modal.modalAutoSizeLink
-  };
-};
+const directive = () => ({
+  restrict: 'C',
+  link: modalAutoSizeLink
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'modal-auto-size';
 
 /**
  * Register modal-auto-size directive.
  */
-os.ui.Module.directive('modalAutoSize', [os.ui.modal.modalAutoSizeDirective]);
-
+Module.directive('modalAutoSize', [directive]);
 
 /**
  * Link function for modal-auto-size directive
@@ -32,80 +34,87 @@ os.ui.Module.directive('modalAutoSize', [os.ui.modal.modalAutoSizeDirective]);
  * @param {!angular.Scope} $scope angular scope
  * @param {!angular.JQLite} $element to which this directive is applied
  */
-os.ui.modal.modalAutoSizeLink = function($scope, $element) {
-  new os.ui.modal.ModalAutoSize($scope, $element);
+const modalAutoSizeLink = function($scope, $element) {
+  new Controller($scope, $element);
 };
-
-
 
 /**
  * Object containing the link function used by the directive.
- *
- * @param {!angular.Scope} $scope angular scope
- * @param {!angular.JQLite} $element to which this directive is applied
- * @constructor
+ * @unrestricted
  */
-os.ui.modal.ModalAutoSize = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.JQLite}
+   * Constructor.
+   * @param {!angular.Scope} $scope angular scope
+   * @param {!angular.JQLite} $element to which this directive is applied
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
+
+    var modalEl = this.element_;
+    if (!modalEl.hasClass('modal')) {
+      return;
+    }
+
+    var throttle = new Throttle(this.updateSizeConstraints_, 500, this);
+    modalEl.bind('DOMSubtreeModified', throttle.fire.bind(throttle));
+
+    $scope.$on('$destroy', this.onDestroy_.bind(this));
+
+    /**
+     * @type {?ViewportSizeMonitor}
+     * @private
+     */
+    this.vsm_ = new ViewportSizeMonitor();
+    this.vsm_.listen(GoogEventType.RESIZE, this.updateSizeConstraints_, false, this);
+  }
+
+  /**
+   * Autoresizes the modal element when the window is resized.
+   *
    * @private
    */
-  this.element_ = $element;
+  updateSizeConstraints_() {
+    if (this.element_) {
+      var headerEl = this.element_.find('.modal-header');
+      var bodyEl = this.element_.find('.modal-body');
+      var footerEl = this.element_.find('.modal-footer');
 
-  var modalEl = this.element_;
-  if (!modalEl.hasClass('modal')) {
-    return;
+      var windowHeight = $(window).height() || 0;
+      var padding = this.element_.hasClass('modal-huge') ? 12 : Math.floor(windowHeight * 0.1);
+      var headerHeight = headerEl.outerHeight() || 0;
+      var footerHeight = footerEl.outerHeight() || 0;
+      var bodyOffset = (parseInt($('body').css('margin-top'), 10) || 0) +
+          (parseInt($('body').css('padding-top'), 10) || 0);
+      var maxBodyHeight = (windowHeight - (bodyOffset + padding * 2 + footerHeight + headerHeight));
+
+      bodyEl.css({
+        'max-height': maxBodyHeight + 'px'
+      });
+    }
   }
-
-  var throttle = new goog.async.Throttle(this.updateSizeConstraints_, 500, this);
-  modalEl.bind('DOMSubtreeModified', throttle.fire.bind(throttle));
-
-  $scope.$on('$destroy', this.onDestroy_.bind(this));
 
   /**
-   * @type {?goog.dom.ViewportSizeMonitor}
+   * Clean up
+   *
    * @private
    */
-  this.vsm_ = new goog.dom.ViewportSizeMonitor();
-  this.vsm_.listen(goog.events.EventType.RESIZE, this.updateSizeConstraints_, false, this);
-};
-
-
-/**
- * Autoresizes the modal element when the window is resized.
- *
- * @private
- */
-os.ui.modal.ModalAutoSize.prototype.updateSizeConstraints_ = function() {
-  if (this.element_) {
-    var headerEl = this.element_.find('.modal-header');
-    var bodyEl = this.element_.find('.modal-body');
-    var footerEl = this.element_.find('.modal-footer');
-
-    var windowHeight = $(window).height() || 0;
-    var padding = this.element_.hasClass('modal-huge') ? 12 : Math.floor(windowHeight * 0.1);
-    var headerHeight = headerEl.outerHeight() || 0;
-    var footerHeight = footerEl.outerHeight() || 0;
-    var bodyOffset = (parseInt($('body').css('margin-top'), 10) || 0) +
-        (parseInt($('body').css('padding-top'), 10) || 0);
-    var maxBodyHeight = (windowHeight - (bodyOffset + padding * 2 + footerHeight + headerHeight));
-
-    bodyEl.css({
-      'max-height': maxBodyHeight + 'px'
-    });
+  onDestroy_() {
+    if (this.vsm_) {
+      this.vsm_.dispose();
+      this.vsm_ = null;
+    }
+    this.element_ = null;
   }
-};
+}
 
-
-/**
- * Clean up
- *
- * @private
- */
-os.ui.modal.ModalAutoSize.prototype.onDestroy_ = function() {
-  if (this.vsm_) {
-    this.vsm_.dispose();
-    this.vsm_ = null;
-  }
-  this.element_ = null;
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

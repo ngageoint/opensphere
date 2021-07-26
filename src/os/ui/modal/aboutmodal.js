@@ -1,83 +1,93 @@
-goog.provide('os.ui.modal.AboutModalCtrl');
-goog.provide('os.ui.modal.aboutModalDirective');
+goog.module('os.ui.modal.AboutModalUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os');
-goog.require('os.config');
-goog.require('os.config.Settings');
-goog.require('os.ui.Module');
-goog.require('os.ui.modal');
-goog.require('os.ui.modal.modalAutoSizeDirective');
-goog.require('os.ui.windowSelector');
+const {ROOT} = goog.require('os');
+const {getAppName} = goog.require('os.config');
+const Settings = goog.require('os.config.Settings');
+const Module = goog.require('os.ui.Module');
+const {create, open} = goog.require('os.ui.modal');
+const windowSelector = goog.require('os.ui.windowSelector');
 
 
 /**
  * The about modal displays the version of the browser from navigator.userAgent and the version
- * of the application from the os.settings.Config.
+ * of the application from the Settings.Config.
  *
  * @return {angular.Directive}
  */
-os.ui.modal.aboutModalDirective = function() {
-  return {
-    replace: true,
-    restrict: 'E',
-    templateUrl: os.ROOT + 'views/modal/aboutmodal.html',
-    controller: os.ui.modal.AboutModalCtrl,
-    controllerAs: 'aboutModalCtrl'
-  };
-};
+const directive = () => ({
+  replace: true,
+  restrict: 'E',
+  templateUrl: ROOT + 'views/modal/aboutmodal.html',
+  controller: Controller,
+  controllerAs: 'aboutModalCtrl'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'about-modal';
 
 /**
  * Register about-modal directive
  */
-os.ui.Module.directive('aboutModal', [os.ui.modal.aboutModalDirective]);
-
-
+Module.directive('aboutModal', [directive]);
 
 /**
  * Controller function for the about-modal directive.
- *
- * @param {!angular.Scope} $scope The scope
- * @param {!angular.JQLite} $element The element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.modal.AboutModalCtrl = function($scope, $element) {
-  $scope['path'] = os.ROOT;
-  $scope['os.uiPath'] = os.ROOT;
-
+class Controller {
   /**
-   * @type {string}
+   * Constructor.
+   * @param {!angular.Scope} $scope The scope
+   * @param {!angular.JQLite} $element The element
+   * @ngInject
    */
-  this['application'] = os.config.getAppName();
+  constructor($scope, $element) {
+    $scope['path'] = ROOT;
+    $scope['os.uiPath'] = ROOT;
 
-  /**
-   * @type {string}
-   */
-  this['logoPath'] = /** @type {string} */ (os.settings.get('about.logoPath', 'images/logo.png'));
+    /**
+     * @type {string}
+     */
+    this['application'] = getAppName();
 
-  /**
-   * @type {string}
-   */
-  this['userAgent'] = navigator.userAgent;
+    /**
+     * @type {string}
+     */
+    this['logoPath'] = /** @type {string} */ (Settings.getInstance().get('about.logoPath', 'images/logo.png'));
 
-  /**
-   * @type {Array.<Object>}
-   */
-  this['appVendors'] = os.settings.get(['about', 'appVendors'], []);
+    /**
+     * @type {string}
+     */
+    this['userAgent'] = navigator.userAgent;
 
-  /**
-   * @type {Array.<Object>}
-   */
-  this['vendors'] = os.settings.get(['about', 'vendors'], []);
+    /**
+     * @type {Array.<Object>}
+     */
+    this['appVendors'] = Settings.getInstance().get(['about', 'appVendors'], []);
 
-  os.ui.modal.open($element);
-};
+    /**
+     * @type {Array.<Object>}
+     */
+    this['vendors'] = Settings.getInstance().get(['about', 'vendors'], []);
 
+    open($element);
+  }
+}
 
 /**
  * Create the modal
  */
-os.ui.modal.AboutModalCtrl.launch = function() {
-  os.ui.modal.create(os.ui.windowSelector.CONTAINER, '<about-modal></about-modal>');
+const launchAboutModal = () => {
+  create(windowSelector.CONTAINER, '<about-modal></about-modal>');
+};
+
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launchAboutModal
 };

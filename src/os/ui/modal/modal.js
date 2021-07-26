@@ -1,6 +1,7 @@
-goog.provide('os.ui.modal');
+goog.module('os.ui.modal');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.obj');
+const ui = goog.require('os.ui');
 
 
 /**
@@ -8,11 +9,11 @@ goog.require('ol.obj');
  * @param {string} markup The markup to compile
  * @param {Object=} opt_scopeOptions
  */
-os.ui.modal.create = function(target, markup, opt_scopeOptions) {
-  var compile = /** @type {!angular.$compile} */ (os.ui.injector.get('$compile'));
-  var scope = /** @type {!angular.Scope} */ (os.ui.injector.get('$rootScope').$new());
+const create = function(target, markup, opt_scopeOptions) {
+  var compile = /** @type {!angular.$compile} */ (ui.injector.get('$compile'));
+  var scope = /** @type {!angular.Scope} */ (ui.injector.get('$rootScope').$new());
 
-  ol.obj.assign(scope, opt_scopeOptions || null);
+  Object.assign(scope, opt_scopeOptions || null);
 
   var parent = $(target);
   parent.append(/** @type {Element} */ (compile(markup)(scope)[0]));
@@ -25,14 +26,13 @@ os.ui.modal.create = function(target, markup, opt_scopeOptions) {
   }
 };
 
-
 /**
  * Opens a modal
  *
  * @param {!angular.JQLite} el
  * @param {Object<string, *>=} opt_options
  */
-os.ui.modal.open = function(el, opt_options) {
+const open = function(el, opt_options) {
   // Tabindex -1 is required for the modal to close on the ESC key
   el.attr('tabindex', '-1');
   var options = opt_options || {};
@@ -47,4 +47,9 @@ os.ui.modal.open = function(el, opt_options) {
     }
     el.remove();
   });
+};
+
+exports = {
+  create,
+  open
 };

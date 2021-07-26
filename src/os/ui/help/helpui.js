@@ -14,7 +14,7 @@ const {launchControlsHelp} = goog.require('os.ui.help.ControlsUI');
 const EventType = goog.require('os.ui.help.EventType');
 const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const AboutModalCtrl = goog.require('os.ui.modal.AboutModalCtrl');
+const {launchAboutModal} = goog.require('os.ui.modal.AboutModalUI');
 const OnboardingManager = goog.require('os.ui.onboarding.OnboardingManager');
 const ResetSettings = goog.require('os.ui.util.ResetSettings');
 
@@ -193,7 +193,7 @@ class Controller extends MenuButtonCtrl {
   onHelpAction_(event) {
     switch (event.type) {
       case EventType.ABOUT:
-        AboutModalCtrl.launch();
+        launchAboutModal();
         break;
       case EventType.SHOW_TIPS:
         // enable onboarding and reset so none are flagged as being viewed

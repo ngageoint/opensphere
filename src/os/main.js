@@ -21,7 +21,7 @@ goog.require('os.ui.globalMenuDirective');
 goog.require('os.ui.historyDirective');
 goog.require('os.ui.layersDirective');
 goog.require('os.ui.metrics.MetricsContainerUI');
-goog.require('os.ui.modal.aboutModalDirective');
+goog.require('os.ui.modal.AboutModalUI');
 goog.require('os.ui.savedWindowDirective');
 goog.require('os.ui.serversDirective');
 goog.require('os.ui.slick.slickTreeDirective');
