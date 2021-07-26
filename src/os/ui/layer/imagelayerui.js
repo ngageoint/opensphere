@@ -49,7 +49,6 @@ class Controller extends DefaultLayerUICtrl {
    */
   constructor($scope, $element, $timeout) {
     super($scope, $element, $timeout);
-    this.initUI();
   }
 }
 

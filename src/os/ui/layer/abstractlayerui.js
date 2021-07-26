@@ -193,7 +193,9 @@ class Controller extends Disposable {
    */
   initUI() {
     // allow init calls to finish, then apply the scope
-    nextTick(goog.partial(apply, this.scope));
+    nextTick(() => {
+      apply(this.scope);
+    });
   }
 
   /**

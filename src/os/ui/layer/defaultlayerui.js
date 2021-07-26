@@ -138,21 +138,24 @@ class Controller extends AbstractLayerUICtrl {
       $scope.$on(key + '.slidestart', this.onSliderStart.bind(this));
       $scope.$on(key + '.slidestop', this.onSliderStop.bind(this, fn, key));
     }
+  }
 
+  /**
+   * Angular $onInit lifecycle function.
+   */
+  $onInit() {
     this.initUI();
     this.setInitialValues_();
 
-    $timeout(function() {
-      if (this.element) {
-        var selector = /** @type {string} */ (Settings.getInstance().get('layercontrols', ''));
-        if (selector) {
-          var section = this.element.find(selector);
-          if (section) {
-            $(section).collapse('show');
-          }
+    if (this.element) {
+      var selector = /** @type {string} */ (Settings.getInstance().get('layercontrols', ''));
+      if (selector) {
+        var section = this.element.find(selector);
+        if (section) {
+          $(section).collapse('show');
         }
       }
-    }.bind(this));
+    }
   }
 
   /**
