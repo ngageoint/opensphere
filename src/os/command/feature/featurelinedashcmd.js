@@ -2,7 +2,7 @@ goog.module('os.command.FeatureLineDash');
 goog.module.declareLegacyNamespace();
 
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const osStyle = goog.require('os.style');
 
 const Feature = goog.requireType('ol.Feature');
@@ -22,7 +22,7 @@ class FeatureLineDash extends AbstractFeatureStyle {
   constructor(layerId, featureId, lineDash, opt_oldLineDash) {
     super(layerId, featureId, lineDash, opt_oldLineDash);
     this.title = 'Change Feature Line Dash';
-    this.metricKey = metrics.Layer.FEATURE_LINE_DASH;
+    this.metricKey = LayerKeys.FEATURE_LINE_DASH;
   }
 
   /**

@@ -4,6 +4,7 @@ goog.require('os.command.FeaturesVisibility');
 goog.require('os.feature');
 goog.require('os.fn');
 goog.require('os.instanceOf');
+goog.require('os.metrics.keys');
 goog.require('os.ui.ex.ExportUI');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
@@ -65,7 +66,7 @@ os.ui.menu.list.setup = function() {
         icons: ['<i class="fa fa-fw fa-sort"></i>'],
         handler: os.ui.menu.list.onSortSelected,
         beforeRender: os.ui.menu.list.visibleIfHasSelected,
-        metricKey: os.metrics.FeatureList.SORT_SELECTED,
+        metricKey: os.metrics.keys.FeatureList.SORT_SELECTED,
         sort: 4
       }]
     }, {
@@ -78,7 +79,7 @@ os.ui.menu.list.setup = function() {
         tooltip: os.ui.menu.list.Strings.COLOR_SELECTED_TOOLTIP,
         icons: ['<i class="fa fa-fw fa-tint"></i>'],
         handler: os.ui.menu.list.onColorSelected,
-        metricKey: os.metrics.FeatureList.COLOR_SELECTED,
+        metricKey: os.metrics.keys.FeatureList.COLOR_SELECTED,
         beforeRender: os.ui.menu.list.visibleIfHasSelected,
         sort: 0
       }, {
@@ -87,7 +88,7 @@ os.ui.menu.list.setup = function() {
         tooltip: os.ui.menu.list.Strings.COLOR_RESET_TOOLTIP,
         icons: ['<i class="fa fa-fw fa-tint"></i>'],
         handler: os.ui.menu.list.onResetColor,
-        metricKey: os.metrics.FeatureList.RESET_COLOR,
+        metricKey: os.metrics.keys.FeatureList.RESET_COLOR,
         sort: 10
       }]
     }, {
@@ -101,7 +102,7 @@ os.ui.menu.list.setup = function() {
         icons: ['<i class="fa fa-fw fa-download"></i>'],
         beforeRender: os.ui.menu.list.canExport,
         handler: os.ui.menu.list.onExport,
-        metricKey: os.metrics.FeatureList.EXPORT
+        metricKey: os.metrics.keys.FeatureList.EXPORT
       }, {
         label: 'Go To',
         eventType: os.action.EventType.GOTO,
@@ -109,7 +110,7 @@ os.ui.menu.list.setup = function() {
         icons: ['<i class="fa fa-fw fa-fighter-jet"></i>'],
         beforeRender: os.ui.menu.list.visibleIfHasSelected,
         handler: os.ui.menu.list.handleListEvent,
-        metricKey: os.metrics.FeatureList.GOTO
+        metricKey: os.metrics.keys.FeatureList.GOTO
       }]
     }]
   }));
@@ -141,17 +142,17 @@ os.ui.menu.list.handleListEvent = function(event) {
       case os.action.EventType.SELECT:
         // don't create and execute a command if it's simple and we don't want it on the stack
         source.selectAll();
-        os.metrics.Metrics.getInstance().updateMetric(os.metrics.FeatureList.SELECT_ALL, 1);
+        os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.FeatureList.SELECT_ALL, 1);
         break;
       case os.action.EventType.DESELECT:
         // don't create and execute a command if it's simple and we don't want it on the stack
         source.selectNone();
-        os.metrics.Metrics.getInstance().updateMetric(os.metrics.FeatureList.DESELECT_ALL, 1);
+        os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.FeatureList.DESELECT_ALL, 1);
         break;
       case os.action.EventType.INVERT:
         // don't create and execute a command if it's simple and we don't want it on the stack
         source.invertSelection();
-        os.metrics.Metrics.getInstance().updateMetric(os.metrics.FeatureList.INVERT_SELECTION, 1);
+        os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.FeatureList.INVERT_SELECTION, 1);
         break;
       case os.action.EventType.HIDE_SELECTED:
         var selected = source.getSelectedItems();

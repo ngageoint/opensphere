@@ -9,6 +9,8 @@ const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const osWindow = goog.require('os.ui.window');
 
+const IImportUI = goog.requireType('os.ui.im.IImportUI');
+
 
 /**
  * The KML import directive
@@ -60,18 +62,29 @@ class Controller {
     this.element_ = $element;
 
     /**
-     * @type {?os.ui.im.IImportUI}
+     * @type {?IImportUI}
      * @private
      */
     this['import'] = null;
 
     this.scope_['isZip'] = this.scope_['file'] ? isZip(this.scope_['file'].getContent()) : false;
+  }
 
-    this.scope_.$emit(WindowEventType.READY);
-    this.scope_.$on('destroy', function() {
-      this.scope_ = null;
-      this.element_ = null;
-    }.bind(this));
+  /**
+   * The Angular $onDestroy lifecycle function.
+   */
+  $onDestroy() {
+    this.scope_ = null;
+    this.element_ = null;
+  }
+
+  /**
+   * The Angular $onInit lifecycle function.
+   */
+  $onInit() {
+    if (this.scope_) {
+      this.scope_.$emit(WindowEventType.READY);
+    }
   }
 
   /**
@@ -97,6 +110,16 @@ class Controller {
    */
   close() {
     osWindow.close(this.element_);
+  }
+
+  /**
+   * Get the title for an import UI.
+   * @param {IImportUI} importer The import UI.
+   * @return {string} The title.
+   * @export
+   */
+  getTitle(importer) {
+    return importer.getTitle();
   }
 }
 

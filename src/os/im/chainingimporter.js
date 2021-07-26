@@ -1,173 +1,168 @@
-goog.provide('os.im.ChainingImporter');
-goog.require('goog.asserts');
-goog.require('goog.events.Event');
-goog.require('goog.events.EventTarget');
-goog.require('goog.events.EventType');
-goog.require('os.events.EventType');
-goog.require('os.im.IImporter');
+goog.module('os.im.ChainingImporter');
+goog.module.declareLegacyNamespace();
 
+const {assert} = goog.require('goog.asserts');
+const GoogEvent = goog.require('goog.events.Event');
+const EventTarget = goog.require('goog.events.EventTarget');
+const EventType = goog.require('os.events.EventType');
+
+const IImporter = goog.requireType('os.im.IImporter');
 
 
 /**
  * Imports a set of items via multiple importers
  *
- * @param {!Array<!os.im.IImporter>} chain The chain of importers to execute
- * @implements {os.im.IImporter}
- * @extends {goog.events.EventTarget}
- * @constructor
+ * @implements {IImporter}
  * @template T
  */
-os.im.ChainingImporter = function(chain) {
-  goog.asserts.assert(chain != null, 'importer chain cannot be null');
-  goog.asserts.assert(chain.length > 0, 'importer chain cannot be empty');
-
-  os.im.ChainingImporter.base(this, 'constructor');
-
+class ChainingImporter extends EventTarget {
   /**
-   * The importer chain
-   * @type {!Array<!os.im.IImporter>}
-   * @private
+   * Constructor.
+   * @param {!Array<!IImporter>} chain The chain of importers to execute
    */
-  this.chain_ = chain;
+  constructor(chain) {
+    assert(chain != null, 'importer chain cannot be null');
+    assert(chain.length > 0, 'importer chain cannot be empty');
 
-  /**
-   * Index of the currently executing importer
-   * @type {number}
-   * @private
-   */
-  this.current_ = -1;
+    super();
 
-  /**
-   * Data from the import
-   * @type {!Array<!T>}
-   * @private
-   */
-  this.data_ = [];
-};
-goog.inherits(os.im.ChainingImporter, goog.events.EventTarget);
+    /**
+     * The importer chain
+     * @type {!Array<!IImporter>}
+     * @private
+     */
+    this.chain_ = chain;
 
-
-/**
- * @inheritDoc
- */
-os.im.ChainingImporter.prototype.getMappings = function() {/* NO-OP */};
-
-
-/**
- * @inheritDoc
- */
-os.im.ChainingImporter.prototype.setMappings = function(value) {/* NO-OP */};
-
-
-/**
- * @inheritDoc
- */
-os.im.ChainingImporter.prototype.disposeInternal = function() {
-  this.reset();
-  os.im.ChainingImporter.base(this, 'disposeInternal');
-};
-
-
-/**
- * Executes the next importer in the chain.
- *
- * @param {Object|Array|string|Node|Document} source Source
- * @private
- */
-os.im.ChainingImporter.prototype.executeNext_ = function(source) {
-  this.current_++;
-
-  if (this.current_ < this.chain_.length) {
-    var importer = this.chain_[this.current_];
-    importer.listenOnce(os.events.EventType.COMPLETE, this.onImporterComplete_, false, this);
-    importer.startImport(source);
-  } else {
-    // reset the importer index
+    /**
+     * Index of the currently executing importer
+     * @type {number}
+     * @private
+     */
     this.current_ = -1;
 
-    // set the final data
-    if (Array.isArray(source)) {
-      this.data_ = source;
-    }
-
-    // dispatch the complete event
-    this.dispatchEvent(new goog.events.Event(os.events.EventType.COMPLETE));
-  }
-};
-
-
-/**
- * Handle importer completion.
- *
- * @param {goog.events.Event} event
- * @private
- */
-os.im.ChainingImporter.prototype.onImporterComplete_ = function(event) {
-  var importer = /** @type {!os.im.IImporter} */ (event.target);
-  this.executeNext_(importer.getData());
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.ChainingImporter.prototype.getData = function(opt_reset) {
-  var reset = opt_reset != null ? opt_reset : true;
-  var ret = this.data_;
-  if (reset) {
+    /**
+     * Data from the import
+     * @type {!Array<!T>}
+     * @private
+     */
     this.data_ = [];
   }
 
-  return ret;
-};
+  /**
+   * @inheritDoc
+   */
+  getMappings() {/* NO-OP */}
 
+  /**
+   * @inheritDoc
+   */
+  setMappings(value) {/* NO-OP */}
 
-/**
- * @inheritDoc
- */
-os.im.ChainingImporter.prototype.getParser = function() {
-  if (this.current_ > -1 && this.current_ < this.chain_.length) {
-    // TODO: fire an intermediate progress event when each importer before the last completes if we come up with a case
-    // where this is needed
-    //
-    // return the parser for the current importer
-    return this.chain_[this.current_].getParser();
-  } else if (this.chain_.length > 0) {
-    // return the parser for the last importer
-    return this.chain_[this.chain_.length - 1].getParser();
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    this.reset();
+    super.disposeInternal();
   }
 
-  return null;
-};
+  /**
+   * Executes the next importer in the chain.
+   *
+   * @param {Object|Array|string|Node|Document} source Source
+   * @private
+   */
+  executeNext_(source) {
+    this.current_++;
 
+    if (this.current_ < this.chain_.length) {
+      var importer = this.chain_[this.current_];
+      importer.listenOnce(EventType.COMPLETE, this.onImporterComplete_, false, this);
+      importer.startImport(source);
+    } else {
+      // reset the importer index
+      this.current_ = -1;
 
-/**
- * @inheritDoc
- */
-os.im.ChainingImporter.prototype.reset = function() {
-  this.stop();
-  this.data_ = [];
-};
+      // set the final data
+      if (Array.isArray(source)) {
+        this.data_ = source;
+      }
 
-
-/**
- * @inheritDoc
- */
-os.im.ChainingImporter.prototype.startImport = function(source) {
-  this.current_ = -1;
-  this.executeNext_(source);
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.ChainingImporter.prototype.stop = function() {
-  if (this.current_ > -1) {
-    var importer = this.chain_[this.current_];
-    importer.unlisten(os.events.EventType.COMPLETE, this.onImporterComplete_, false, this);
-    importer.stop();
+      // dispatch the complete event
+      this.dispatchEvent(new GoogEvent(EventType.COMPLETE));
+    }
   }
 
-  this.current_ = -1;
-};
+  /**
+   * Handle importer completion.
+   *
+   * @param {GoogEvent} event
+   * @private
+   */
+  onImporterComplete_(event) {
+    var importer = /** @type {!IImporter} */ (event.target);
+    this.executeNext_(importer.getData());
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getData(opt_reset) {
+    var reset = opt_reset != null ? opt_reset : true;
+    var ret = this.data_;
+    if (reset) {
+      this.data_ = [];
+    }
+
+    return ret;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getParser() {
+    if (this.current_ > -1 && this.current_ < this.chain_.length) {
+      // TODO: fire an intermediate progress event when each importer before the last completes if we come up with a case
+      // where this is needed
+      //
+      // return the parser for the current importer
+      return this.chain_[this.current_].getParser();
+    } else if (this.chain_.length > 0) {
+      // return the parser for the last importer
+      return this.chain_[this.chain_.length - 1].getParser();
+    }
+
+    return null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  reset() {
+    this.stop();
+    this.data_ = [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  startImport(source) {
+    this.current_ = -1;
+    this.executeNext_(source);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  stop() {
+    if (this.current_ > -1) {
+      var importer = this.chain_[this.current_];
+      importer.unlisten(EventType.COMPLETE, this.onImporterComplete_, false, this);
+      importer.stop();
+    }
+
+    this.current_ = -1;
+  }
+}
+
+exports = ChainingImporter;

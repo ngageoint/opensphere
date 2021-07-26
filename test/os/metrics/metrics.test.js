@@ -2,8 +2,10 @@ goog.require('os.metrics.Metrics');
 goog.require('os.mock');
 
 describe('os.metrics.Metrics', function() {
+  const Metrics = goog.module.get('os.metrics.Metrics');
+
   it('should update a metric', function() {
-    var target = new os.metrics.Metrics();
+    var target = new Metrics();
     target.enabled_ = true;
     var key = 'test.key';
     expect(target).not.toBe(null);
@@ -15,7 +17,7 @@ describe('os.metrics.Metrics', function() {
   });
 
   it('should have metrics disabled by default', function() {
-    var metrics = new os.metrics.Metrics();
+    var metrics = new Metrics();
     expect(metrics.isEnabled()).toBe(false);
     var key = 'test.key2';
     metrics.updateMetric(key, 1);
@@ -23,7 +25,7 @@ describe('os.metrics.Metrics', function() {
   });
 
   it('should have default metric value of 0', function() {
-    var metrics = new os.metrics.Metrics();
+    var metrics = new Metrics();
     metrics.enabled_ = true;
     var key = 'xyzzy';
     expect(metrics).not.toBe(null);

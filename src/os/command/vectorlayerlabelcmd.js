@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
 const DataManager = goog.require('os.data.DataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
@@ -26,7 +26,7 @@ class VectorLayerLabel extends AbstractVectorStyle {
   constructor(layerId, value, opt_oldValue) {
     super(layerId, value, opt_oldValue);
     this.title = 'Change Label';
-    this.metricKey = metrics.Layer.LABEL_COLUMN_SELECT;
+    this.metricKey = LayerKeys.LABEL_COLUMN_SELECT;
     /**
      * @type {Array<label.LabelConfig>}
      */

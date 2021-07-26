@@ -1,29 +1,34 @@
-goog.provide('os.interaction.PinchZoom');
+goog.module('os.interaction.PinchZoom');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.interaction.PinchZoom');
-goog.require('os.I3DSupport');
-goog.require('os.implements');
+const OLPinchZoom = goog.require('ol.interaction.PinchZoom');
+const I3DSupport = goog.require('os.I3DSupport');
+const osImplements = goog.require('os.implements');
 
 
 /**
  * Handles the behavior of pinch zooming.
  *
- * @constructor
- * @extends {ol.interaction.PinchZoom}
- * @implements {os.I3DSupport}
- * @param {olx.interaction.PinchZoomOptions=} opt_options Options.
+ * @implements {I3DSupport}
  */
-os.interaction.PinchZoom = function(opt_options) {
-  os.interaction.PinchZoom.base(this, 'constructor', opt_options);
-};
-goog.inherits(os.interaction.PinchZoom, ol.interaction.PinchZoom);
-os.implements(os.interaction.PinchZoom, os.I3DSupport.ID);
+class PinchZoom extends OLPinchZoom {
+  /**
+   * Constructor.
+   * @param {olx.interaction.PinchZoomOptions=} opt_options Options.
+   */
+  constructor(opt_options) {
+    super(opt_options);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  is3DSupported() {
+    // handled directly by WebGL renderers
+    return false;
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.interaction.PinchZoom.prototype.is3DSupported = function() {
-  // handled directly by WebGL renderers
-  return false;
-};
+osImplements(PinchZoom, I3DSupport.ID);
+
+exports = PinchZoom;

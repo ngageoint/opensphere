@@ -1,173 +1,167 @@
-goog.provide('os.im.mapping.WKTMapping');
-goog.require('ol.format.WKT');
-goog.require('os.im.mapping');
-goog.require('os.im.mapping.AbstractPositionMapping');
-goog.require('os.im.mapping.MappingRegistry');
-goog.require('os.ol.wkt');
+goog.module('os.im.mapping.WKTMapping');
+goog.module.declareLegacyNamespace();
 
+const log = goog.require('goog.log');
+const {getItemField} = goog.require('os.im.mapping');
+const AbstractPositionMapping = goog.require('os.im.mapping.AbstractPositionMapping');
+const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
+const osMap = goog.require('os.map');
+const {FORMAT} = goog.require('os.ol.wkt');
+const {EPSG4326} = goog.require('os.proj');
+
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
- * @extends {os.im.mapping.AbstractPositionMapping.<ol.Feature>}
- * @constructor
+ * @extends {AbstractPositionMapping<Feature>}
  */
-os.im.mapping.WKTMapping = function() {
-  os.im.mapping.WKTMapping.base(this, 'constructor');
-  this.xmlType = os.im.mapping.WKTMapping.ID;
-};
-goog.inherits(os.im.mapping.WKTMapping, os.im.mapping.AbstractPositionMapping);
+class WKTMapping extends AbstractPositionMapping {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.xmlType = WKTMapping.ID;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getId() {
+    return WKTMapping.ID;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getFieldsChanged() {
+    return [this.field];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getLabel() {
+    return WKTMapping.ID;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getScore() {
+    return 20;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getScoreType() {
+    return 'geom';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  execute(item) {
+    if (this.field) {
+      var fieldValue = getItemField(item, this.field);
+      if (fieldValue) {
+        var geom = FORMAT.readGeometry(String(fieldValue), {
+          dataProjection: EPSG4326,
+          featureProjection: osMap.PROJECTION
+        });
+
+        if (geom) {
+          item.suppressEvents();
+          item.set(this.field, undefined);
+          item.setGeometry(geom);
+          item.enableEvents();
+        }
+      }
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  autoDetect(features) {
+    if (features) {
+      var i = features.length;
+      while (i--) {
+        var feature = features[i];
+        var geom = feature.getGeometry();
+        if (geom) {
+          // Something else (most likely the parser) has already populated the geometry.
+          return null;
+        }
+
+        var fields = feature.getProperties();
+        var mappings = [];
+
+        for (var field in fields) {
+          var val = feature.get(field);
+          if (val && WKTMapping.WKT_REGEX.test(String(val))) {
+            var mapping = new WKTMapping();
+            mapping.field = field;
+            mappings.push(mapping);
+          }
+        }
+
+        // if multiple WKT fields, favor anything over CENTROID/CENTER, which is likely center of the actual geometry
+        if (mappings.length > 0) {
+          var map = mappings[0];
+          for (var j = 0; j < mappings.length; j++) {
+            if (!WKTMapping.CENTER_REGEXP.test(mappings[j].field)) {
+              map = mappings[j];
+            }
+          }
+          return map;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  testField(value) {
+    var geom = null;
+    try { // ol throws all kinds off errors when the format is unexpected
+      geom = FORMAT.readGeometry(String(value));
+    } catch (e) {
+      log.error(logger, 'failed restoring descriptors from settings', e);
+    }
+    return geom != null;
+  }
+}
 
 /**
  * @type {string}
- * @const
  */
-os.im.mapping.WKTMapping.ID = 'WKTGeometry';
-
+WKTMapping.ID = 'WKTGeometry';
 
 // Register the mapping.
-os.im.mapping.MappingRegistry.getInstance().registerMapping(
-    os.im.mapping.WKTMapping.ID, os.im.mapping.WKTMapping);
-
+MappingRegistry.getInstance().registerMapping(WKTMapping.ID, WKTMapping);
 
 /**
  * Logger
  * @type {goog.log.Logger}
- * @private
- * @const
  */
-os.im.mapping.WKTMapping.LOGGER_ = goog.log.getLogger('os.im.mapping.WKTMapping');
-
+const logger = log.getLogger('os.im.mapping.WKTMapping');
 
 /**
  * @type {RegExp}
  * @const
  */
-os.im.mapping.WKTMapping.WKT_REGEX =
+WKTMapping.WKT_REGEX =
     /^\s*(POINT|LINESTRING|LINEARRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)\s*Z?[(]/i;
 
 /**
  * @type {RegExp}
  * @const
  */
-os.im.mapping.WKTMapping.CENTER_REGEXP = /(center|centroid)/i;
+WKTMapping.CENTER_REGEXP = /(center|centroid)/i;
 
-
-/**
- * @inheritDoc
- */
-os.im.mapping.WKTMapping.prototype.getId = function() {
-  return os.im.mapping.WKTMapping.ID;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.WKTMapping.prototype.getFieldsChanged = function() {
-  return [this.field];
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.WKTMapping.prototype.getLabel = function() {
-  return os.im.mapping.WKTMapping.ID;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.WKTMapping.prototype.getScore = function() {
-  return 20;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.WKTMapping.prototype.getScoreType = function() {
-  return 'geom';
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.WKTMapping.prototype.execute = function(item) {
-  if (this.field) {
-    var fieldValue = os.im.mapping.getItemField(item, this.field);
-    if (fieldValue) {
-      var geom = os.ol.wkt.FORMAT.readGeometry(String(fieldValue), {
-        dataProjection: os.proj.EPSG4326,
-        featureProjection: os.map.PROJECTION
-      });
-
-      if (geom) {
-        item.suppressEvents();
-        item.set(this.field, undefined);
-        item.setGeometry(geom);
-        item.enableEvents();
-      }
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.WKTMapping.prototype.autoDetect = function(features) {
-  if (features) {
-    var i = features.length;
-    while (i--) {
-      var feature = features[i];
-      var geom = feature.getGeometry();
-      if (geom) {
-        // Something else (most likely the parser) has already populated the geometry.
-        return null;
-      }
-
-      var fields = feature.getProperties();
-      var mappings = [];
-
-      for (var field in fields) {
-        var val = feature.get(field);
-        if (val && os.im.mapping.WKTMapping.WKT_REGEX.test(String(val))) {
-          var mapping = new os.im.mapping.WKTMapping();
-          mapping.field = field;
-          mappings.push(mapping);
-        }
-      }
-
-      // if multiple WKT fields, favor anything over CENTROID/CENTER, which is likely center of the actual geometry
-      if (mappings.length > 0) {
-        var map = mappings[0];
-        for (var j = 0; j < mappings.length; j++) {
-          if (!os.im.mapping.WKTMapping.CENTER_REGEXP.test(mappings[j].field)) {
-            map = mappings[j];
-          }
-        }
-        return map;
-      }
-    }
-  }
-
-  return null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.WKTMapping.prototype.testField = function(value) {
-  var geom = null;
-  try { // ol throws all kinds off errors when the format is unexpected
-    geom = os.ol.wkt.FORMAT.readGeometry(String(value));
-  } catch (e) {
-    goog.log.error(os.im.mapping.WKTMapping.LOGGER_, 'failed restoring descriptors from settings', e);
-  }
-  return geom != null;
-};
+exports = WKTMapping;

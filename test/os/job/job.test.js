@@ -2,8 +2,11 @@ goog.require('os.job.Job');
 goog.require('os.job.JobEventType');
 goog.require('os.job.JobState');
 
-
 xdescribe('os.job.Job', function() {
+  const Job = goog.module.get('os.job.Job');
+  const JobEventType = goog.module.get('os.job.JobEventType');
+  const JobState = goog.module.get('os.job.JobState');
+
   var testJob;
   var jobName = 'Karma Job';
   var jobDetails = 'This is a boring job designed to test basic features.';
@@ -14,13 +17,13 @@ xdescribe('os.job.Job', function() {
   var counter = 0;
   var onChange = function() {
     switch (this.state) {
-      case os.job.JobState.EXECUTING:
+      case JobState.EXECUTING:
         executing = true;
         break;
-      case os.job.JobState.COMPLETE:
+      case JobState.COMPLETE:
         complete = true;
         break;
-      case os.job.JobState.PAUSED:
+      case JobState.PAUSED:
         paused = true;
         break;
       default:
@@ -36,8 +39,8 @@ xdescribe('os.job.Job', function() {
     paused = false;
     counter = 0;
 
-    testJob = new os.job.Job('/base/test/os/job/job.test.worker.js', jobName, jobDetails);
-    testJob.listen(os.job.JobEventType.CHANGE, onChange, false, testJob);
+    testJob = new Job('/base/test/os/job/job.test.worker.js', jobName, jobDetails);
+    testJob.listen(JobEventType.CHANGE, onChange, false, testJob);
 
     expect(testJob.getName()).toBe(jobName);
     expect(testJob.getDetails()).toBe(jobDetails);
@@ -52,12 +55,12 @@ xdescribe('os.job.Job', function() {
     }, 'Job to to transition through executing/complete states');
 
     runs(function() {
-      testJob.unlisten(os.job.JobEventType.CHANGE, onChange, false, testJob);
+      testJob.unlisten(JobEventType.CHANGE, onChange, false, testJob);
       expect(executing).toBe(true);
       expect(complete).toBe(true);
       expect(paused).toBe(false);
       expect(testJob.executionTime).not.toBe(0);
-      expect(testJob.state).toBe(os.job.JobState.COMPLETE);
+      expect(testJob.state).toBe(JobState.COMPLETE);
     });
   });
 
@@ -74,11 +77,11 @@ xdescribe('os.job.Job', function() {
     }, 'Job to enter executing > paused > executing > stopped states');
 
     runs(function() {
-      testJob.unlisten(os.job.JobEventType.CHANGE, onChange, false, testJob);
+      testJob.unlisten(JobEventType.CHANGE, onChange, false, testJob);
       expect(executing).toBe(true);
       expect(complete).toBe(false);
       expect(paused).toBe(true);
-      expect(testJob.state).toBe(os.job.JobState.STOPPED);
+      expect(testJob.state).toBe(JobState.STOPPED);
     });
   });
 });

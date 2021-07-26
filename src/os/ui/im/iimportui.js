@@ -1,6 +1,7 @@
-goog.provide('os.ui.im.IImportUI');
-goog.require('os.file.File');
+goog.module('os.ui.im.IImportUI');
+goog.module.declareLegacyNamespace();
 
+const OSFile = goog.requireType('os.file.File');
 
 
 /**
@@ -9,51 +10,52 @@ goog.require('os.file.File');
  * @interface
  * @template T
  */
-os.ui.im.IImportUI = function() {};
+class IImportUI {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    /**
+     * If the import UI needs to store local files.
+     * @type {boolean}
+     */
+    this.requiresStorage;
+  }
 
+  /**
+   * Title of the import ui used in the anytype import chooser
+   * @return {string}
+   */
+  getTitle() {}
 
-/**
- * If the import UI needs to store local files.
- * @type {boolean}
- */
-os.ui.im.IImportUI.prototype.requiresStorage;
+  /**
+   * Launches the import UI for a given file.
+   * @param {OSFile} file The file being imported by the UI
+   * @param {T=} opt_config Optional import configuration
+   */
+  launchUI(file, opt_config) {}
 
+  /**
+   * Merges one import configuration into another.
+   * @param {T} from The import configuration to merge from
+   * @param {T} to The import configuration to merge to
+   */
+  mergeConfig(from, to) {}
 
-/**
- * Title of the import ui used in the anytype import chooser
- * @return {string}
- */
-os.ui.im.IImportUI.prototype.getTitle;
+  /**
+   * Gets the default config for the import UI.
+   * @param {OSFile} file The file being imported by the UI
+   * @param {T} config The base import configuration
+   * @return {!T} config The default import config for the UI.
+   */
+  getDefaultConfig(file, config) {}
 
+  /**
+   * Handles the default import path, skipping the UI.
+   * @param {OSFile} file The file being imported by the UI
+   * @param {T} config The import configuration
+   */
+  handleDefaultImport(file, config) {}
+}
 
-/**
- * Launches the import UI for a given file.
- * @param {os.file.File} file The file being imported by the UI
- * @param {T=} opt_config Optional import configuration
- */
-os.ui.im.IImportUI.prototype.launchUI;
-
-
-/**
- * Merges one import configuration into another.
- * @param {T} from The import configuration to merge from
- * @param {T} to The import configuration to merge to
- */
-os.ui.im.IImportUI.prototype.mergeConfig;
-
-
-/**
- * Gets the default config for the import UI.
- * @param {os.file.File} file The file being imported by the UI
- * @param {T} config The base import configuration
- * @return {!T} config The default import config for the UI.
- */
-os.ui.im.IImportUI.prototype.getDefaultConfig;
-
-
-/**
- * Handles the default import path, skipping the UI.
- * @param {os.file.File} file The file being imported by the UI
- * @param {T} config The import configuration
- */
-os.ui.im.IImportUI.prototype.handleDefaultImport;
+exports = IImportUI;

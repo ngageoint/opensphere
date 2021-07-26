@@ -2,7 +2,8 @@ goog.module('os.command.FeatureShape');
 goog.module.declareLegacyNamespace();
 
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
-const metrics = goog.require('os.metrics');
+const {SUB_DELIMITER} = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
@@ -26,7 +27,7 @@ class FeatureShape extends AbstractFeatureStyle {
     this.title = 'Change Feature Style';
 
     var type = value ? value.replace(/ /g, '_') : 'Unknown';
-    this.metricKey = metrics.Layer.FEATURE_SHAPE + metrics.SUB_DELIMITER + type;
+    this.metricKey = LayerKeys.FEATURE_SHAPE + SUB_DELIMITER + type;
   }
 
   /**

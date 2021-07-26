@@ -1,96 +1,97 @@
-goog.provide('os.im.mapping.PositionMapping');
-goog.require('os.Fields');
-goog.require('os.geo');
-goog.require('os.im.mapping');
-goog.require('os.im.mapping.AbstractMapping');
-goog.require('os.im.mapping.LatLonMapping');
-goog.require('os.im.mapping.MGRSMapping');
-goog.require('os.im.mapping.MappingRegistry');
-goog.require('os.im.mapping.location.BasePositionMapping');
+goog.module('os.im.mapping.PositionMapping');
+goog.module.declareLegacyNamespace();
 
+const Fields = goog.require('os.Fields');
+const {PREFER_LAT_FIRST, PREFER_LON_FIRST} = goog.require('os.geo');
+const LatLonMapping = goog.require('os.im.mapping.LatLonMapping');
+const MGRSMapping = goog.require('os.im.mapping.MGRSMapping');
+const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
+const BasePositionMapping = goog.require('os.im.mapping.location.BasePositionMapping');
+
+const Feature = goog.requireType('ol.Feature');
+const IMapping = goog.requireType('os.im.mapping.IMapping');
 
 
 /**
- * @extends {os.im.mapping.location.BasePositionMapping.<ol.Feature>}
- * @constructor
+ * @extends {BasePositionMapping<Feature>}
  */
-os.im.mapping.PositionMapping = function() {
-  os.im.mapping.PositionMapping.base(this, 'constructor');
-  this.xmlType = os.im.mapping.PositionMapping.ID;
+class PositionMapping extends BasePositionMapping {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.xmlType = PositionMapping.ID;
+
+    /**
+     * @inheritDoc
+     */
+    this.types = PositionMapping.TYPES;
+
+    /**
+     * @inheritDoc
+     */
+    this.type = 'Lat/Lon';
+  }
 
   /**
    * @inheritDoc
    */
-  this.types = os.im.mapping.PositionMapping.TYPES;
+  getFieldsChanged() {
+    return [this.field, Fields.LAT, Fields.LON];
+  }
 
   /**
    * @inheritDoc
    */
-  this.type = 'Lat/Lon';
-};
-goog.inherits(os.im.mapping.PositionMapping, os.im.mapping.location.BasePositionMapping);
+  autoDetect(features) {
+    if (features) {
+      var i = features.length;
+      while (i--) {
+        var feature = features[i];
+        var geom = feature.getGeometry();
+        if (geom) {
+          // Something else (most likely the parser) has already populated the geometry.
+          return null;
+        }
 
-
-/**
- * @type {string}
- * @const
- */
-os.im.mapping.PositionMapping.ID = 'Position';
-
-
-// Register the mapping.
-os.im.mapping.MappingRegistry.getInstance().registerMapping(
-    os.im.mapping.PositionMapping.ID, os.im.mapping.PositionMapping);
-
-
-/**
- * @type {Object.<string, os.im.mapping.IMapping>}
- * @const
- */
-os.im.mapping.PositionMapping.TYPES = {
-  'Lat/Lon': new os.im.mapping.LatLonMapping(os.geo.PREFER_LAT_FIRST),
-  'Lon/Lat': new os.im.mapping.LatLonMapping(os.geo.PREFER_LON_FIRST),
-  'MGRS': new os.im.mapping.MGRSMapping()
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.PositionMapping.prototype.getFieldsChanged = function() {
-  return [this.field, os.Fields.LAT, os.Fields.LON];
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.PositionMapping.prototype.autoDetect = function(features) {
-  if (features) {
-    var i = features.length;
-    while (i--) {
-      var feature = features[i];
-      var geom = feature.getGeometry();
-      if (geom) {
-        // Something else (most likely the parser) has already populated the geometry.
-        return null;
-      }
-
-      var fields = feature.getProperties();
-      for (var field in fields) {
-        if (field.match(os.im.mapping.location.BasePositionMapping.POS_REGEX)) {
-          for (var type in this.types) {
-            if (this.types[type].testField(String(fields[field]))) {
-              var mapping = new os.im.mapping.PositionMapping();
-              mapping.field = field;
-              mapping.setType(type);
-              return mapping;
+        var fields = feature.getProperties();
+        for (var field in fields) {
+          if (field.match(BasePositionMapping.POS_REGEX)) {
+            for (var type in this.types) {
+              if (this.types[type].testField(String(fields[field]))) {
+                var mapping = new PositionMapping();
+                mapping.field = field;
+                mapping.setType(type);
+                return mapping;
+              }
             }
           }
         }
       }
     }
-  }
 
-  return null;
+    return null;
+  }
+}
+
+/**
+ * @type {string}
+ * @override
+ */
+PositionMapping.ID = 'Position';
+
+// Register the mapping.
+MappingRegistry.getInstance().registerMapping(PositionMapping.ID, PositionMapping);
+
+/**
+ * @type {Object<string, IMapping>}
+ * @override
+ */
+PositionMapping.TYPES = {
+  'Lat/Lon': new LatLonMapping(PREFER_LAT_FIRST),
+  'Lon/Lat': new LatLonMapping(PREFER_LON_FIRST),
+  'MGRS': new MGRSMapping()
 };
+
+exports = PositionMapping;

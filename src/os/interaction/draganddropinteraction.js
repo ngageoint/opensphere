@@ -1,129 +1,124 @@
-goog.provide('os.interaction.DragAndDrop');
-goog.require('goog.asserts');
-goog.require('goog.events');
-goog.require('goog.events.Event');
-goog.require('goog.events.FileDropHandler');
-goog.require('goog.events.FileDropHandler.EventType');
-goog.require('goog.functions');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('ol.interaction.Interaction');
-goog.require('os.alert.AlertEventSeverity');
-goog.require('os.alert.AlertManager');
-goog.require('os.file');
-goog.require('os.file.File');
-goog.require('os.file.FileManager');
-goog.require('os.ui.im.ImportEvent');
-goog.require('os.ui.im.ImportEventType');
+goog.module('os.interaction.DragAndDrop');
+goog.module.declareLegacyNamespace();
 
+const {assert} = goog.require('goog.asserts');
+const dispose = goog.require('goog.dispose');
+const googEvents = goog.require('goog.events');
+const FileDropHandler = goog.require('goog.events.FileDropHandler');
+const EventType = goog.require('goog.events.FileDropHandler.EventType');
+const {TRUE} = goog.require('goog.functions');
+const log = goog.require('goog.log');
+const Interaction = goog.require('ol.interaction.Interaction');
+const dispatcher = goog.require('os.Dispatcher');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const {createFromFile} = goog.require('os.file');
+const ImportEvent = goog.require('os.ui.im.ImportEvent');
+const ImportEventType = goog.require('os.ui.im.ImportEventType');
+
+const Logger = goog.requireType('goog.log.Logger');
+const OSFile = goog.requireType('os.file.File');
 
 
 /**
  * Handles input of vector data by drag and drop.
- *
- * @extends {ol.interaction.Interaction}
- * @constructor
  */
-os.interaction.DragAndDrop = function() {
-  os.interaction.DragAndDrop.base(this, 'constructor', {
-    handleEvent: goog.functions.TRUE
-  });
+class DragAndDrop extends Interaction {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super({
+      handleEvent: TRUE
+    });
+
+    /**
+     * @private
+     * @type {FileDropHandler}
+     */
+    this.fileDropHandler_ = null;
+
+    /**
+     * @private
+     * @type {googEvents.Key|undefined}
+     */
+    this.dropListenKey_ = undefined;
+  }
 
   /**
-   * @private
-   * @type {goog.events.FileDropHandler}
+   * @inheritDoc
    */
-  this.fileDropHandler_ = null;
+  disposeInternal() {
+    if (this.dropListenKey_ !== undefined) {
+      googEvents.unlistenByKey(this.dropListenKey_);
+    }
+    super.disposeInternal();
+  }
 
   /**
+   * @param {googEvents.BrowserEvent} event Event.
    * @private
-   * @type {goog.events.Key|undefined}
    */
-  this.dropListenKey_ = undefined;
-};
-goog.inherits(os.interaction.DragAndDrop, ol.interaction.Interaction);
+  handleDrop_(event) {
+    var files = event.getBrowserEvent().dataTransfer.files;
+    var i;
+    var ii;
+    var file;
+    for (i = 0, ii = files.length; i < ii; ++i) {
+      file = files[i];
 
+      var reader = createFromFile(file);
+      if (reader) {
+        reader.addCallbacks(this.handleResult_, this.handleError_, this);
+      }
+    }
+  }
+
+  /**
+   * @param {OSFile} file File.
+   * @private
+   */
+  handleResult_(file) {
+    var event = new ImportEvent(ImportEventType.FILE, file);
+    dispatcher.getInstance().dispatchEvent(event);
+  }
+
+  /**
+   * @param {string} errorMsg
+   * @private
+   */
+  handleError_(errorMsg) {
+    if (errorMsg && typeof errorMsg === 'string') {
+      log.error(logger, errorMsg);
+      AlertManager.getInstance().sendAlert(errorMsg, AlertEventSeverity.ERROR);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setMap(map) {
+    if (this.dropListenKey_ !== undefined) {
+      googEvents.unlistenByKey(this.dropListenKey_);
+      this.dropListenKey_ = undefined;
+    }
+    if (this.fileDropHandler_ !== null) {
+      dispose(this.fileDropHandler_);
+      this.fileDropHandler_ = null;
+    }
+    assert(this.dropListenKey_ === undefined);
+    super.setMap(map);
+    if (map !== null) {
+      this.fileDropHandler_ = new FileDropHandler(map.getViewport());
+      this.dropListenKey_ = googEvents.listen(this.fileDropHandler_, EventType.DROP, this.handleDrop_, false, this);
+    }
+  }
+}
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {Logger}
  */
-os.interaction.DragAndDrop.LOGGER_ = goog.log.getLogger('os.interaction.DragAndDrop');
+const logger = log.getLogger('os.interaction.DragAndDrop');
 
-
-/**
- * @inheritDoc
- */
-os.interaction.DragAndDrop.prototype.disposeInternal = function() {
-  if (this.dropListenKey_ !== undefined) {
-    goog.events.unlistenByKey(this.dropListenKey_);
-  }
-  os.interaction.DragAndDrop.base(this, 'disposeInternal');
-};
-
-
-/**
- * @param {goog.events.BrowserEvent} event Event.
- * @private
- */
-os.interaction.DragAndDrop.prototype.handleDrop_ = function(event) {
-  var files = event.getBrowserEvent().dataTransfer.files;
-  var i;
-  var ii;
-  var file;
-  for (i = 0, ii = files.length; i < ii; ++i) {
-    file = files[i];
-
-    var reader = os.file.createFromFile(file);
-    if (reader) {
-      reader.addCallbacks(this.handleResult_, this.handleError_, this);
-    }
-  }
-};
-
-
-/**
- * @param {os.file.File} file File.
- * @private
- */
-os.interaction.DragAndDrop.prototype.handleResult_ = function(file) {
-  var event = new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE, file);
-  os.dispatcher.dispatchEvent(event);
-};
-
-
-/**
- * @param {string} errorMsg
- * @private
- */
-os.interaction.DragAndDrop.prototype.handleError_ = function(errorMsg) {
-  if (errorMsg && typeof errorMsg === 'string') {
-    goog.log.error(os.interaction.DragAndDrop.LOGGER_, errorMsg);
-    os.alert.AlertManager.getInstance().sendAlert(errorMsg, os.alert.AlertEventSeverity.ERROR);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.interaction.DragAndDrop.prototype.setMap = function(map) {
-  if (this.dropListenKey_ !== undefined) {
-    goog.events.unlistenByKey(this.dropListenKey_);
-    this.dropListenKey_ = undefined;
-  }
-  if (this.fileDropHandler_ !== null) {
-    goog.dispose(this.fileDropHandler_);
-    this.fileDropHandler_ = null;
-  }
-  goog.asserts.assert(this.dropListenKey_ === undefined);
-  os.interaction.DragAndDrop.base(this, 'setMap', map);
-  if (map !== null) {
-    this.fileDropHandler_ = new goog.events.FileDropHandler(map.getViewport());
-    this.dropListenKey_ = goog.events.listen(
-        this.fileDropHandler_, goog.events.FileDropHandler.EventType.DROP,
-        this.handleDrop_, false, this);
-  }
-};
+exports = DragAndDrop;

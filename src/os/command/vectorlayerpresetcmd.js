@@ -6,7 +6,7 @@ const State = goog.require('os.command.State');
 const DataManager = goog.require('os.data.DataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const action = goog.require('os.im.action');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const PropertyChange = goog.require('os.source.PropertyChange');
 
 
@@ -23,7 +23,7 @@ class VectorLayerPreset extends AbstractVectorStyle {
   constructor(layerId, preset, opt_oldPreset) {
     super(layerId, preset, opt_oldPreset);
     this.title = 'Change layer preset: ' + preset.label;
-    this.metricKey = metrics.Layer.PRESET;
+    this.metricKey = LayerKeys.PRESET;
     this.value = preset.layerConfig;
 
     /**

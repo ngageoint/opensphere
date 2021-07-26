@@ -1,7 +1,11 @@
+goog.require('os.im.mapping');
 goog.require('os.im.mapping.StaticMapping');
 
 describe('os.im.mapping.StaticMapping', function() {
-  var mapping = new os.im.mapping.StaticMapping();
+  const osImMapping = goog.module.get('os.im.mapping');
+  const StaticMapping = goog.module.get('os.im.mapping.StaticMapping');
+
+  var mapping = new StaticMapping();
   var field = 'testField';
   var value = 'testValue';
 
@@ -47,7 +51,7 @@ describe('os.im.mapping.StaticMapping', function() {
   });
 
   it('should report the default sos type (meaning no autodetection)', function() {
-    expect(mapping.getScoreType()).toBe(os.im.mapping.DEFAULT_SCORETYPE);
+    expect(mapping.getScoreType()).toBe(osImMapping.DEFAULT_SCORETYPE);
   });
 
   it('should report a 0 for the sos', function() {
@@ -62,7 +66,7 @@ describe('os.im.mapping.StaticMapping', function() {
 
     var clone = mapping.clone();
     expect(clone).not.toBeNull();
-    expect(clone instanceof os.im.mapping.StaticMapping).toBe(true);
+    expect(clone instanceof StaticMapping).toBe(true);
     expect(clone.field).toBe(mapping.field);
     expect(clone.value).toBe(mapping.value);
     expect(clone.replace).toBe(mapping.replace);
@@ -80,7 +84,7 @@ describe('os.im.mapping.StaticMapping', function() {
     expect(persist.value).toBe(mapping.value);
     expect(persist.replace).toBe(mapping.replace);
 
-    var restored = new os.im.mapping.StaticMapping();
+    var restored = new StaticMapping();
     expect(restored.field).not.toBe(mapping.field);
     expect(restored.value).not.toBe(mapping.value);
     expect(restored.replace).not.toBe(mapping.replace);

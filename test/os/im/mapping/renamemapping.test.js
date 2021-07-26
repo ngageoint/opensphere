@@ -1,7 +1,11 @@
+goog.require('os.im.mapping');
 goog.require('os.im.mapping.RenameMapping');
 
 describe('os.im.mapping.RenameMapping', function() {
-  var rm = new os.im.mapping.RenameMapping();
+  const mapping = goog.module.get('os.im.mapping');
+  const RenameMapping = goog.module.get('os.im.mapping.RenameMapping');
+
+  var rm = new RenameMapping();
 
   beforeEach(function() {
     rm.field = 'TestField';
@@ -57,7 +61,7 @@ describe('os.im.mapping.RenameMapping', function() {
   });
 
   it('should report a null sosType (meaning no autodetection)', function() {
-    expect(rm.getScoreType()).toBe(os.im.mapping.DEFAULT_SCORETYPE);
+    expect(rm.getScoreType()).toBe(mapping.DEFAULT_SCORETYPE);
   });
 
   it('should report a 0 for the sos', function() {
@@ -67,7 +71,7 @@ describe('os.im.mapping.RenameMapping', function() {
   it('should clone properly', function() {
     var clone = rm.clone();
     expect(clone).not.toBeNull();
-    expect(clone instanceof os.im.mapping.RenameMapping).toBe(true);
+    expect(clone instanceof RenameMapping).toBe(true);
     expect(clone.field).toBe(rm.field);
     expect(clone.toField).toBe(rm.toField);
     expect(clone.keepOriginal).toBe(rm.keepOriginal);
@@ -83,7 +87,7 @@ describe('os.im.mapping.RenameMapping', function() {
     expect(persist.toField).toBe(rm.toField);
     expect(persist.keepOriginal).toBe(rm.keepOriginal);
 
-    var restored = new os.im.mapping.RenameMapping();
+    var restored = new RenameMapping();
     expect(restored.field).not.toBe(rm.field);
     expect(restored.toField).not.toBe(rm.toField);
     expect(restored.keepOriginal).not.toBe(rm.keepOriginal);
@@ -115,7 +119,7 @@ describe('os.im.mapping.RenameMapping', function() {
     expect(keepOriginalEl).toBeDefined();
     expect(keepOriginalEl.textContent).toBe(String(rm.keepOriginal));
 
-    var restored = new os.im.mapping.RenameMapping();
+    var restored = new RenameMapping();
     expect(restored.field).not.toBe(rm.field);
     expect(restored.toField).not.toBe(rm.toField);
     expect(restored.keepOriginal).not.toBe(rm.keepOriginal);

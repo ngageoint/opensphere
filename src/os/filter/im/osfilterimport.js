@@ -6,8 +6,7 @@ const OSFilterImporter = goog.require('os.filter.im.OSFilterImporter');
 const osImplements = goog.require('os.implements');
 const {getMapContainer} = goog.require('os.map.instance');
 const Module = goog.require('os.ui.Module');
-const FilterImportCtrl = goog.require('os.ui.filter.im.FilterImportCtrl');
-const filterImportDirective = goog.require('os.ui.filter.im.filterImportDirective');
+const {directive: filterImportDirective, Controller: FilterImportCtrl} = goog.require('os.ui.filter.im.FilterImport');
 
 /**
  * The osfilterimport directive

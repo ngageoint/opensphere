@@ -59,7 +59,6 @@ goog.inherits(os.ui.ol.interaction.DragBox, os.ui.ol.interaction.AbstractDrag);
 
 /**
  * @type {string}
- * @const
  */
 os.ui.ol.interaction.DragBox.TYPE = 'box';
 

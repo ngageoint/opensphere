@@ -1,50 +1,44 @@
-goog.provide('os.ui.im.ImportEvent');
-goog.provide('os.ui.im.ImportEventType');
-goog.require('goog.events.Event');
-goog.require('os.file.File');
+goog.module('os.ui.im.ImportEvent');
+goog.module.declareLegacyNamespace();
 
-
-/**
- * @enum {string}
- */
-os.ui.im.ImportEventType = {
-  FILE: 'importFile',
-  URL: 'importUrl'
-};
-
+const GoogEvent = goog.require('goog.events.Event');
+const OSFile = goog.require('os.file.File');
 
 
 /**
  * File/URL import event.
- *
- * @param {string} type
- * @param {(os.file.File|string)=} opt_fileOrUrl
- * @param {string=} opt_contentHint
- * @param {Object=} opt_config Optional config, giving context to the import process
- * @extends {goog.events.Event}
- * @constructor
  */
-os.ui.im.ImportEvent = function(type, opt_fileOrUrl, opt_contentHint, opt_config) {
-  os.ui.im.ImportEvent.base(this, 'constructor', type);
-
+class ImportEvent extends GoogEvent {
   /**
-   * @type {?string}
+   * Constructor.
+   * @param {string} type
+   * @param {(OSFile|string)=} opt_fileOrUrl
+   * @param {string=} opt_contentHint
+   * @param {Object=} opt_config Optional config, giving context to the import process
    */
-  this.contentHint = opt_contentHint ? opt_contentHint : null;
+  constructor(type, opt_fileOrUrl, opt_contentHint, opt_config) {
+    super(type);
 
-  /**
-   * @type {?os.file.File}
-   */
-  this.file = opt_fileOrUrl && opt_fileOrUrl instanceof os.file.File ? opt_fileOrUrl : null;
+    /**
+     * @type {?string}
+     */
+    this.contentHint = opt_contentHint ? opt_contentHint : null;
 
-  /**
-   * @type {?string}
-   */
-  this.url = opt_fileOrUrl && typeof opt_fileOrUrl === 'string' ? opt_fileOrUrl : null;
+    /**
+     * @type {?OSFile}
+     */
+    this.file = opt_fileOrUrl && opt_fileOrUrl instanceof OSFile ? opt_fileOrUrl : null;
 
-  /**
-   * @type {?Object}
-   */
-  this.config = opt_config || null;
-};
-goog.inherits(os.ui.im.ImportEvent, goog.events.Event);
+    /**
+     * @type {?string}
+     */
+    this.url = opt_fileOrUrl && typeof opt_fileOrUrl === 'string' ? opt_fileOrUrl : null;
+
+    /**
+     * @type {?Object}
+     */
+    this.config = opt_config || null;
+  }
+}
+
+exports = ImportEvent;

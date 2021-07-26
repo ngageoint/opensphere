@@ -416,11 +416,13 @@ class KMLSource extends RequestSource {
    * @inheritDoc
    */
   onImportComplete(opt_event) {
-    this.setRootNode(this.importer.getRootNode());
-    this.setMinRefreshPeriod(this.importer.getMinRefreshPeriod());
+    const kmlImporter = /** @type {KMLImporter} */ (this.importer);
+
+    this.setRootNode(kmlImporter.getRootNode());
+    this.setMinRefreshPeriod(kmlImporter.getMinRefreshPeriod());
 
     if (!this.externalColumns) {
-      var columns = this.importer.getColumns();
+      var columns = kmlImporter.getColumns();
       if (columns) {
         // set columns on the source. {@link setColumns} may create new columns, so wait until after the call to sort and
         // dispatch the column event

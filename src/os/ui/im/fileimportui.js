@@ -1,48 +1,52 @@
-goog.provide('os.ui.im.FileImportUI');
+goog.module('os.ui.im.FileImportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.file.mime.text');
-goog.require('os.ui.im.AbstractImportUI');
-
+const {getTypeChain} = goog.require('os.file.mime');
+const {TYPE} = goog.require('os.file.mime.text');
+const AbstractImportUI = goog.require('os.ui.im.AbstractImportUI');
 
 
 /**
- * @extends {os.ui.im.AbstractImportUI.<T>}
- * @constructor
+ * @extends {AbstractImportUI<T>}
  * @template T
  */
-os.ui.im.FileImportUI = function() {
-  os.ui.im.FileImportUI.base(this, 'constructor');
+class FileImportUI extends AbstractImportUI {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
 
-  // default file import to requiring a local storage mechanism
-  this.requiresStorage = true;
-};
-goog.inherits(os.ui.im.FileImportUI, os.ui.im.AbstractImportUI);
+    // default file import to requiring a local storage mechanism
+    this.requiresStorage = true;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  mergeConfig(from, to) {
+    super.mergeConfig(from, to);
+    to['descriptor'] = from['descriptor'];
+    to['file'] = from['file'];
+    to['oldFile'] = from['oldFile'];
+    to['replace'] = from['replace'];
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.im.FileImportUI.prototype.mergeConfig = function(from, to) {
-  os.ui.im.FileImportUI.base(this, 'mergeConfig', from, to);
-  to['descriptor'] = from['descriptor'];
-  to['file'] = from['file'];
-  to['oldFile'] = from['oldFile'];
-  to['replace'] = from['replace'];
-};
+  /**
+   * @inheritDoc
+   */
+  launchUI(file, opt_config) {
+    if (file) {
+      var type = file.getType();
 
-
-/**
- * @inheritDoc
- */
-os.ui.im.FileImportUI.prototype.launchUI = function(file, opt_config) {
-  if (file) {
-    var type = file.getType();
-
-    if (type) {
-      var chain = os.file.mime.getTypeChain(type);
-      if (chain && chain.indexOf(os.file.mime.text.TYPE) > -1) {
-        file.convertContentToString();
+      if (type) {
+        var chain = getTypeChain(type);
+        if (chain && chain.indexOf(TYPE) > -1) {
+          file.convertContentToString();
+        }
       }
     }
   }
-};
+}
+
+exports = FileImportUI;

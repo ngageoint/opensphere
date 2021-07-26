@@ -4,57 +4,61 @@ goog.require('os.layer.MockLayer');
 
 
 describe('os.layer', function() {
+  const MapContainer = goog.module.get('os.MapContainer');
+  const MockLayer = goog.module.get('os.layer.MockLayer');
+  const osLayer = goog.module.get('os.layer');
+
   it('gets a layer title by id', function() {
     var id = 'mocklayer';
     var title = 'Test Title';
 
-    var layer = new os.layer.MockLayer();
+    var layer = new MockLayer();
     layer.setId(id);
     layer.setTitle(title);
 
-    spyOn(os.MapContainer.prototype, 'getLayer').andReturn(layer);
+    spyOn(MapContainer.prototype, 'getLayer').andReturn(layer);
 
-    expect(os.layer.getTitle(id)).toBe(title);
-    expect(os.layer.getTitle(id, false)).toBe(title);
-    expect(os.layer.getTitle(id, true)).toBe(title + ' ' + layer.getExplicitType());
+    expect(osLayer.getTitle(id)).toBe(title);
+    expect(osLayer.getTitle(id, false)).toBe(title);
+    expect(osLayer.getTitle(id, true)).toBe(title + ' ' + layer.getExplicitType());
   });
 
   it('finds unique layer titles', function() {
     var layers = [];
     var title = 'Test Title';
 
-    spyOn(os.MapContainer.prototype, 'getLayers').andReturn(layers);
+    spyOn(MapContainer.prototype, 'getLayers').andReturn(layers);
 
     // calls return the same value while the layer doesn't exist
-    expect(os.layer.getUniqueTitle(title)).toBe(title);
-    expect(os.layer.getUniqueTitle(title)).toBe(title);
+    expect(osLayer.getUniqueTitle(title)).toBe(title);
+    expect(osLayer.getUniqueTitle(title)).toBe(title);
 
-    var layer = new os.layer.MockLayer();
+    var layer = new MockLayer();
     layer.title = title;
     layers.push(layer);
 
-    var nextTitle = os.layer.getUniqueTitle(title);
+    var nextTitle = osLayer.getUniqueTitle(title);
     expect(nextTitle).toBe(title + ' [1]');
 
-    layer = new os.layer.MockLayer();
+    layer = new MockLayer();
     layer.title = nextTitle;
     layers.push(layer);
 
-    nextTitle = os.layer.getUniqueTitle(title);
+    nextTitle = osLayer.getUniqueTitle(title);
     expect(nextTitle).toBe(title + ' [2]');
 
-    layer = new os.layer.MockLayer();
+    layer = new MockLayer();
     layer.title = nextTitle;
     layers.push(layer);
 
-    expect(os.layer.getUniqueTitle(title)).toBe(title + ' [3]');
+    expect(osLayer.getUniqueTitle(title)).toBe(title + ' [3]');
 
     // remove the [1] layer
     layers.splice(1);
-    expect(os.layer.getUniqueTitle(title)).toBe(title + ' [1]');
+    expect(osLayer.getUniqueTitle(title)).toBe(title + ' [1]');
 
     // remove all layers
     layers.length = 0;
-    expect(os.layer.getUniqueTitle(title)).toBe(title);
+    expect(osLayer.getUniqueTitle(title)).toBe(title);
   });
 });

@@ -1,52 +1,228 @@
-goog.provide('os.interaction.KeyboardTiltRotate');
+goog.module('os.interaction.KeyboardTiltRotate');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.asserts');
-goog.require('goog.functions');
-goog.require('ol.MapBrowserEvent');
-goog.require('ol.events.EventType');
-goog.require('ol.events.condition');
-goog.require('ol.interaction.Interaction');
-goog.require('os.I3DSupport');
-goog.require('os.MapContainer');
-goog.require('os.implements');
-goog.require('os.interaction');
-goog.require('os.ui.ol.interaction');
+const {assert} = goog.require('goog.asserts');
+const KeyCodes = goog.require('goog.events.KeyCodes');
+const {and} = goog.require('goog.functions');
+const {toRadians} = goog.require('goog.math');
+const EventType = goog.require('ol.events.EventType');
+const {noModifierKeys, shiftKeyOnly, targetNotEditable} = goog.require('ol.events.condition');
+const Interaction = goog.require('ol.interaction.Interaction');
+const {transform} = goog.require('ol.proj');
+const I3DSupport = goog.require('os.I3DSupport');
+const osImplements = goog.require('os.implements');
+const {ROTATE_DELTA} = goog.require('os.interaction');
+const osMap = goog.require('os.map');
+const {getMapContainer} = goog.require('os.map.instance');
+const {EPSG4326} = goog.require('os.proj');
+const {KEY_TYPE} = goog.require('os.ui.ol.interaction');
 
+const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 
 
 /**
  * Interaction to tilt/rotate/spin the 3D globe with the keyboard.
  *
- * @param {olx.interaction.MouseWheelZoomOptions=} opt_options Options.
- * @extends {ol.interaction.Interaction}
- * @implements {os.I3DSupport}
- * @constructor
+ * @implements {I3DSupport}
  */
-os.interaction.KeyboardTiltRotate = function(opt_options) {
-  var options = opt_options || {};
+class KeyboardTiltRotate extends Interaction {
+  /**
+   * Constructor.
+   * @param {olx.interaction.MouseWheelZoomOptions=} opt_options Options.
+   */
+  constructor(opt_options) {
+    var options = opt_options || {};
 
-  os.interaction.KeyboardTiltRotate.base(this, 'constructor', {
-    handleEvent: os.interaction.KeyboardTiltRotate.handleEvent
-  });
+    super({
+      handleEvent: KeyboardTiltRotate.handleEvent
+    });
+
+    /**
+     * The keyCode of the most recent keydown event.
+     * @type {number}
+     * @private
+     */
+    this.lastKeyCode_ = 0;
+
+    /**
+     * Condition to trigger handling the event.
+     * @type {ol.EventsConditionType}
+     * @private
+     */
+    this.condition_ = options.condition != null ? options.condition :
+      and(noModifierKeys, targetNotEditable);
+  }
 
   /**
-   * The keyCode of the most recent keydown event.
-   * @type {number}
-   * @private
+   * Tilt the globe.
+   *
+   * @param {MapBrowserEvent} mapBrowserEvent Map browser event
+   * @return {boolean}
    */
-  this.lastKeyCode_ = 0;
+  tilt(mapBrowserEvent) {
+    var stopEvent = false;
+
+    // Tilt only supported in 3D
+    var mapContainer = getMapContainer();
+    if (mapContainer.is3DEnabled()) {
+      var camera = mapContainer.getWebGLCamera();
+      if (camera) {
+        var keyCode = mapBrowserEvent.originalEvent.keyCode;
+        var mapUnitsDelta = .05;
+        var delta = 0;
+
+        if (keyCode == KeyCodes.DOWN) {
+          delta = mapUnitsDelta;
+        } else {
+          delta = -mapUnitsDelta;
+        }
+
+        camera.setTilt(camera.getTilt() + delta);
+        stopEvent = true;
+      }
+    }
+    return stopEvent;
+  }
 
   /**
-   * Condition to trigger handling the event.
-   * @type {ol.EventsConditionType}
-   * @private
+   * Rotate the globe.
+   *
+   * @param {MapBrowserEvent} mapBrowserEvent Map browser event.
+   * @return {boolean}
    */
-  this.condition_ = options.condition != null ? options.condition :
-    goog.functions.and(ol.events.condition.noModifierKeys,
-        ol.events.condition.targetNotEditable);
-};
-goog.inherits(os.interaction.KeyboardTiltRotate, ol.interaction.Interaction);
-os.implements(os.interaction.KeyboardTiltRotate, os.I3DSupport.ID);
+  rotate(mapBrowserEvent) {
+    var keyCode = mapBrowserEvent.originalEvent.keyCode;
+    var stopEvent = false;
+
+    var mapContainer = getMapContainer();
+    if (mapContainer.is3DEnabled()) {
+      var camera = mapContainer.getWebGLCamera();
+      if (camera) {
+        if (keyCode == KeyCodes.LEFT) {
+          camera.twistLeft();
+        } else {
+          camera.twistRight();
+        }
+
+        stopEvent = true;
+      }
+    } else {
+      var view = mapContainer.getMap().getView();
+      if (view) {
+        var rotation = view.getRotation();
+        if (keyCode == KeyCodes.LEFT) {
+          rotation += ROTATE_DELTA;
+        } else {
+          rotation -= ROTATE_DELTA;
+        }
+
+        view.setRotation(rotation);
+
+        stopEvent = true;
+      }
+    }
+
+    return stopEvent;
+  }
+
+  /**
+   * Spin the globe.
+   *
+   * @param {MapBrowserEvent} mapBrowserEvent Map browser event.
+   * @return {boolean}
+   */
+  spin(mapBrowserEvent) {
+    var stopEvent = false;
+
+    // Spin only supported in 3D
+    var mapContainer = getMapContainer();
+    if (mapContainer.is3DEnabled()) {
+      var camera = mapContainer.getWebGLCamera();
+      if (camera) {
+        var keyCode = mapBrowserEvent.originalEvent.keyCode;
+
+        var view = mapContainer.getMap().getView();
+        assert(view !== null, 'view should not be null');
+        var viewState = view.getState();
+
+        // transform the resolution to degrees, then to radians for the camera
+        var ll = transform([viewState.resolution, 0], osMap.PROJECTION, EPSG4326);
+        var mapUnitsDelta = toRadians(ll[0] * KeyboardTiltRotate.SPIN_DELTA);
+
+        switch (keyCode) {
+          case KeyCodes.UP:
+            camera.rotateDown(mapUnitsDelta);
+            break;
+          case KeyCodes.DOWN:
+            camera.rotateUp(mapUnitsDelta);
+            break;
+          case KeyCodes.LEFT:
+            camera.rotateLeft(mapUnitsDelta);
+            break;
+          case KeyCodes.RIGHT:
+            camera.rotateRight(mapUnitsDelta);
+            break;
+          default:
+            break;
+        }
+
+        stopEvent = true;
+      }
+    }
+
+    return stopEvent;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  is3DSupported() {
+    return true;
+  }
+
+  /**
+   * Handle the map browser event.
+   *
+   * @param {MapBrowserEvent} mapBrowserEvent Map browser event.
+   * @return {boolean} `false` to stop event propagation.
+   * @this KeyboardTiltRotate
+   */
+  static handleEvent(mapBrowserEvent) {
+    // Firefox doesn't always set the keyCode in the 'keypress' event, so save the last code from the 'keydown' event
+    if (mapBrowserEvent.type == EventType.KEYDOWN) {
+      this.lastKeyCode_ = mapBrowserEvent.originalEvent.keyCode;
+    }
+
+    // use the same event as {@link goog.events.KeyHandler}, to prevent Openlayers events from always being handled first
+    var stopEvent = false;
+    if (mapBrowserEvent.type == KEY_TYPE) {
+      var keyCode = this.lastKeyCode_ || mapBrowserEvent.originalEvent.keyCode;
+
+      if (keyCode == KeyCodes.LEFT ||
+          keyCode == KeyCodes.RIGHT) {
+        if (this.condition_(mapBrowserEvent)) {
+          stopEvent = this.spin(mapBrowserEvent);
+        } else if (shiftKeyOnly(mapBrowserEvent)) {
+          stopEvent = this.rotate(mapBrowserEvent);
+        }
+      } else if (keyCode == KeyCodes.DOWN || keyCode == KeyCodes.UP) {
+        if (this.condition_(mapBrowserEvent)) {
+          stopEvent = this.spin(mapBrowserEvent);
+        } else if (shiftKeyOnly(mapBrowserEvent)) {
+          stopEvent = this.tilt(mapBrowserEvent);
+        }
+      }
+    }
+
+    if (stopEvent) {
+      mapBrowserEvent.preventDefault();
+    }
+
+    return !stopEvent;
+  }
+}
+
+osImplements(KeyboardTiltRotate, I3DSupport.ID);
 
 /**
  * Multiplier to use when spinning the globe. This is based off of using the view resolution, which is measured in
@@ -54,177 +230,6 @@ os.implements(os.interaction.KeyboardTiltRotate, os.I3DSupport.ID);
  * @type {number}
  * @const
  */
-os.interaction.KeyboardTiltRotate.SPIN_DELTA = 100;
+KeyboardTiltRotate.SPIN_DELTA = 100;
 
-
-/**
- * Handle the map browser event.
- *
- * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
- * @return {boolean} `false` to stop event propagation.
- * @this os.interaction.KeyboardTiltRotate
- */
-os.interaction.KeyboardTiltRotate.handleEvent = function(mapBrowserEvent) {
-  // Firefox doesn't always set the keyCode in the 'keypress' event, so save the last code from the 'keydown' event
-  if (mapBrowserEvent.type == ol.events.EventType.KEYDOWN) {
-    this.lastKeyCode_ = mapBrowserEvent.originalEvent.keyCode;
-  }
-
-  // use the same event as {@link goog.events.KeyHandler}, to prevent Openlayers events from always being handled first
-  var stopEvent = false;
-  if (mapBrowserEvent.type == os.ui.ol.interaction.KEY_TYPE) {
-    var keyCode = this.lastKeyCode_ || mapBrowserEvent.originalEvent.keyCode;
-
-    if (keyCode == goog.events.KeyCodes.LEFT ||
-        keyCode == goog.events.KeyCodes.RIGHT) {
-      if (this.condition_(mapBrowserEvent)) {
-        stopEvent = this.spin(mapBrowserEvent);
-      } else if (ol.events.condition.shiftKeyOnly(mapBrowserEvent)) {
-        stopEvent = this.rotate(mapBrowserEvent);
-      }
-    } else if (keyCode == goog.events.KeyCodes.DOWN || keyCode == goog.events.KeyCodes.UP) {
-      if (this.condition_(mapBrowserEvent)) {
-        stopEvent = this.spin(mapBrowserEvent);
-      } else if (ol.events.condition.shiftKeyOnly(mapBrowserEvent)) {
-        stopEvent = this.tilt(mapBrowserEvent);
-      }
-    }
-  }
-
-  if (stopEvent) {
-    mapBrowserEvent.preventDefault();
-  }
-
-  return !stopEvent;
-};
-
-
-/**
- * Tilt the globe.
- *
- * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event
- * @return {boolean}
- */
-os.interaction.KeyboardTiltRotate.prototype.tilt = function(mapBrowserEvent) {
-  var stopEvent = false;
-
-  // Tilt only supported in 3D
-  var mapContainer = os.MapContainer.getInstance();
-  if (mapContainer.is3DEnabled()) {
-    var camera = mapContainer.getWebGLCamera();
-    if (camera) {
-      var keyCode = mapBrowserEvent.originalEvent.keyCode;
-      var mapUnitsDelta = .05;
-      var delta = 0;
-
-      if (keyCode == goog.events.KeyCodes.DOWN) {
-        delta = mapUnitsDelta;
-      } else {
-        delta = -mapUnitsDelta;
-      }
-
-      camera.setTilt(camera.getTilt() + delta);
-      stopEvent = true;
-    }
-  }
-  return stopEvent;
-};
-
-
-/**
- * Rotate the globe.
- *
- * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
- * @return {boolean}
- */
-os.interaction.KeyboardTiltRotate.prototype.rotate = function(mapBrowserEvent) {
-  var keyCode = mapBrowserEvent.originalEvent.keyCode;
-  var stopEvent = false;
-
-  var mapContainer = os.MapContainer.getInstance();
-  if (mapContainer.is3DEnabled()) {
-    var camera = mapContainer.getWebGLCamera();
-    if (camera) {
-      if (keyCode == goog.events.KeyCodes.LEFT) {
-        camera.twistLeft();
-      } else {
-        camera.twistRight();
-      }
-
-      stopEvent = true;
-    }
-  } else {
-    var view = mapContainer.getMap().getView();
-    if (view) {
-      var rotation = view.getRotation();
-      if (keyCode == goog.events.KeyCodes.LEFT) {
-        rotation += os.interaction.ROTATE_DELTA;
-      } else {
-        rotation -= os.interaction.ROTATE_DELTA;
-      }
-
-      view.setRotation(rotation);
-
-      stopEvent = true;
-    }
-  }
-
-  return stopEvent;
-};
-
-
-/**
- * Spin the globe.
- *
- * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
- * @return {boolean}
- */
-os.interaction.KeyboardTiltRotate.prototype.spin = function(mapBrowserEvent) {
-  var stopEvent = false;
-
-  // Spin only supported in 3D
-  var mapContainer = os.MapContainer.getInstance();
-  if (mapContainer.is3DEnabled()) {
-    var camera = mapContainer.getWebGLCamera();
-    if (camera) {
-      var keyCode = mapBrowserEvent.originalEvent.keyCode;
-
-      var view = mapContainer.getMap().getView();
-      goog.asserts.assert(view !== null, 'view should not be null');
-      var viewState = view.getState();
-
-      // transform the resolution to degrees, then to radians for the camera
-      var ll = ol.proj.transform([viewState.resolution, 0], os.map.PROJECTION, os.proj.EPSG4326);
-      var mapUnitsDelta = goog.math.toRadians(ll[0] * os.interaction.KeyboardTiltRotate.SPIN_DELTA);
-
-      switch (keyCode) {
-        case goog.events.KeyCodes.UP:
-          camera.rotateDown(mapUnitsDelta);
-          break;
-        case goog.events.KeyCodes.DOWN:
-          camera.rotateUp(mapUnitsDelta);
-          break;
-        case goog.events.KeyCodes.LEFT:
-          camera.rotateLeft(mapUnitsDelta);
-          break;
-        case goog.events.KeyCodes.RIGHT:
-          camera.rotateRight(mapUnitsDelta);
-          break;
-        default:
-          break;
-      }
-
-      stopEvent = true;
-    }
-  }
-
-  return stopEvent;
-};
-
-
-/**
- * @inheritDoc
- */
-os.interaction.KeyboardTiltRotate.prototype.is3DSupported = function() {
-  return true;
-};
+exports = KeyboardTiltRotate;

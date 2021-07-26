@@ -2,7 +2,7 @@ goog.module('os.command.FeatureLabelSize');
 goog.module.declareLegacyNamespace();
 
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const StyleField = goog.require('os.style.StyleField');
 const label = goog.require('os.style.label');
 
@@ -25,7 +25,7 @@ class FeatureLabelSize extends AbstractFeatureStyle {
   constructor(layerId, featureId, value, opt_oldValue) {
     super(layerId, featureId, value, opt_oldValue);
     this.title = 'Change Feature Label Size';
-    this.metricKey = metrics.Layer.FEATURE_LABEL_SIZE;
+    this.metricKey = LayerKeys.FEATURE_LABEL_SIZE;
   }
 
   /**

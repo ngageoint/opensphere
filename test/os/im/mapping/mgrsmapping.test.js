@@ -3,8 +3,11 @@ goog.require('os.im.mapping.MGRSMapping');
 goog.require('os.osasm.wait');
 
 describe('os.im.mapping.MGRSMapping', function() {
+  const Feature = goog.module.get('ol.Feature');
+  const MGRSMapping = goog.module.get('os.im.mapping.MGRSMapping');
+
   it('should test MGRS position strings correctly', function() {
-    var m = new os.im.mapping.MGRSMapping();
+    var m = new MGRSMapping();
     expect(m.testField('13SED1714696655')).toBe(true);
     expect(m.testField('13SED1796')).toBe(true);
     expect(m.testField('13SED')).toBe(true);
@@ -24,10 +27,10 @@ describe('os.im.mapping.MGRSMapping', function() {
 
   it('should map MGRS positions to a feature correctly', function() {
     var field = 'test';
-    var feature = new ol.Feature();
+    var feature = new Feature();
     feature.setId(field);
 
-    var m = new os.im.mapping.MGRSMapping();
+    var m = new MGRSMapping();
     m.execute(feature);
     expect(feature.getGeometry()).toBeUndefined();
 

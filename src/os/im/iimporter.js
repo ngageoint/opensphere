@@ -1,62 +1,59 @@
-goog.provide('os.im.IImporter');
-goog.require('goog.events.Listenable');
-goog.require('os.parse.IParser');
+goog.module('os.im.IImporter');
+goog.module.declareLegacyNamespace();
 
+const Listenable = goog.requireType('goog.events.Listenable');
+const IMapping = goog.requireType('os.im.mapping.IMapping');
+const IParser = goog.requireType('os.parse.IParser');
 
 
 /**
  * Imports a set of items via a parser
  *
- * @extends {goog.events.Listenable}
+ * @extends {Listenable}
  * @interface
  * @template T
  */
-os.im.IImporter = function() {};
+class IImporter {
+  /**
+   * Gets the data
+   * @param {boolean=} opt_reset Whether or not to reset the data as well. Defaults to <code>true</code>
+   * @return {!Array<T>}
+   */
+  getData(opt_reset) {}
 
+  /**
+   * Get the parser used by the importer.
+   * @return {IParser<T>}
+   */
+  getParser() {}
 
-/**
- * Gets the data
- * @param {boolean=} opt_reset Whether or not to reset the data as well. Defaults to <code>true</code>
- * @return {!Array<T>}
- */
-os.im.IImporter.prototype.getData;
+  /**
+   * Stops the importer and clears its data
+   */
+  reset() {}
 
+  /**
+   * Starts the import
+   * @param {Object|Array|string|Node|Document} source Source
+   */
+  startImport(source) {}
 
-/**
- * Get the parser used by the importer.
- * @return {os.parse.IParser<T>}
- */
-os.im.IImporter.prototype.getParser;
+  /**
+   * Stops the importer
+   */
+  stop() {}
 
+  /**
+   * Gettings the current mappings.
+   * @return {?Array<IMapping>} The mappings or null
+   */
+  getMappings() {}
 
-/**
- * Stops the importer and clears its data
- */
-os.im.IImporter.prototype.reset;
+  /**
+   * Set the mappings.
+   * @param {?Array<IMapping>} value The mappings
+   */
+  setMappings(value) {}
+}
 
-
-/**
- * Starts the import
- * @param {Object|Array|string|Node|Document} source Source
- */
-os.im.IImporter.prototype.startImport;
-
-
-/**
- * Stops the importer
- */
-os.im.IImporter.prototype.stop;
-
-
-/**
- * Gettings the current mappings.
- * @return {?Array<os.im.mapping.IMapping>} The mappings or null
- */
-os.im.IImporter.prototype.getMappings;
-
-
-/**
- * Set the mappings.
- * @param {?Array<os.im.mapping.IMapping>} value The mappings
- */
-os.im.IImporter.prototype.setMappings;
+exports = IImporter;

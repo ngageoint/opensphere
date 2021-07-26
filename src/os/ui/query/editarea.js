@@ -4,7 +4,7 @@ goog.provide('os.ui.query.editAreaDirective');
 goog.require('os.command.CommandProcessor');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.ui.Module');
-goog.require('os.ui.im.basicInfoDirective');
+goog.require('os.ui.im.BasicInfoUI');
 goog.require('os.ui.query');
 goog.require('os.ui.query.AreaImportCtrl');
 goog.require('os.ui.query.cmd.AreaAdd');

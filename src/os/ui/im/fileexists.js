@@ -1,19 +1,12 @@
-goog.provide('os.ui.im.FileExistsChoice');
-goog.provide('os.ui.im.FileExistsCtrl');
-goog.provide('os.ui.im.fileExistsDirective');
+goog.module('os.ui.im.FileExistsUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-goog.require('os.ui.window.ConfirmUI');
-
-
-/**
- * @enum {string}
- */
-os.ui.im.FileExistsChoice = {
-  SAVE_NEW: 'saveNew',
-  REPLACE: 'replace',
-  REPLACE_AND_IMPORT: 'replaceAndImport'
-};
+const {ROOT} = goog.require('os');
+const {getAppName} = goog.require('os.config');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const FileExistsChoice = goog.require('os.ui.im.FileExistsChoice');
+const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -21,53 +14,57 @@ os.ui.im.FileExistsChoice = {
  *
  * @return {angular.Directive}
  */
-os.ui.im.fileExistsDirective = function() {
-  return {
-    restrict: 'E',
-    templateUrl: os.ROOT + 'views/im/fileexists.html',
-    controller: os.ui.im.FileExistsCtrl,
-    controllerAs: 'fileExists'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  templateUrl: ROOT + 'views/im/fileexists.html',
+  controller: Controller,
+  controllerAs: 'fileExists'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'fileexists';
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('fileexists', [os.ui.im.fileExistsDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the File Exists! window
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.im.FileExistsCtrl = function($scope) {
-  $scope.$watch('confirmValue', function(newVal, oldVal) {
-    if (newVal != oldVal) {
-      $scope.$parent['confirmValue'] = newVal;
-    }
-  });
+class Controller {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
+   */
+  constructor($scope) {
+    $scope.$watch('confirmValue', function(newVal, oldVal) {
+      if (newVal != oldVal) {
+        $scope.$parent['confirmValue'] = newVal;
+      }
+    });
 
-  $scope['application'] = os.config.getAppName('the application');
-  $scope.$emit(os.ui.WindowEventType.READY);
-};
-
+    $scope['application'] = getAppName('the application');
+    $scope.$emit(WindowEventType.READY);
+  }
+}
 
 /**
  * Launch a dialog prompting the user the file they're importing already exists and requesting action.
  *
  * @param {!os.file.File} file
- * @param {function(os.ui.im.FileExistsChoice)} confirm
+ * @param {function(FileExistsChoice)} confirm
  */
-os.ui.im.launchFileExists = function(file, confirm) {
+const launchFileExists = function(file, confirm) {
   var confirmOptions = /** @type {osx.window.ConfirmOptions} */ ({
     confirm: confirm,
-    confirmValue: os.ui.im.FileExistsChoice.SAVE_NEW,
-    prompt: '<fileexists></fileexists>',
+    confirmValue: FileExistsChoice.SAVE_NEW,
+    prompt: `<${directiveTag}></${directiveTag}>`,
     windowOptions: {
       'label': 'File Exists!',
       'icon': 'fa fa-exclamation-triangle',
@@ -84,5 +81,12 @@ os.ui.im.launchFileExists = function(file, confirm) {
     'fileName': file.getFileName()
   };
 
-  os.ui.window.ConfirmUI.launchConfirm(confirmOptions, scopeOptions);
+  ConfirmUI.launchConfirm(confirmOptions, scopeOptions);
+};
+
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launchFileExists
 };

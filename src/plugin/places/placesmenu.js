@@ -13,7 +13,7 @@ const RecordField = goog.require('os.data.RecordField');
 const osFeature = goog.require('os.feature');
 const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
 const VectorLayer = goog.require('os.layer.Vector');
-const metrics = goog.require('os.metrics');
+const {Places: PlacesKeys} = goog.require('os.metrics.keys');
 const VectorSource = goog.require('os.source.Vector');
 const ui = goog.require('os.ui');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
@@ -67,7 +67,7 @@ const layerSetup = function() {
           icons: ['<i class="fa fa-fw fa-folder-plus"></i>'],
           beforeRender: visibleIfLayerNodeSupported_,
           handler: onLayerEvent_,
-          metricKey: metrics.Places.ADD_FOLDER,
+          metricKey: PlacesKeys.ADD_FOLDER,
           sort: 100
         },
         {
@@ -77,7 +77,7 @@ const layerSetup = function() {
           icons: ['<i class="fa fa-fw fa-map-marker"></i>'],
           beforeRender: visibleIfLayerNodeSupported_,
           handler: onLayerEvent_,
-          metricKey: metrics.Places.ADD_PLACE,
+          metricKey: PlacesKeys.ADD_PLACE,
           sort: 110
         },
         {
@@ -87,7 +87,7 @@ const layerSetup = function() {
           icons: ['<i class="fa fa-fw ' + places.Icon.QUICK_ADD + '"></i>'],
           beforeRender: visibleIfLayerNodeSupported_,
           handler: onLayerEvent_,
-          metricKey: metrics.Places.QUICK_ADD_PLACES,
+          metricKey: PlacesKeys.QUICK_ADD_PLACES,
           sort: 120
         },
         {
@@ -97,7 +97,7 @@ const layerSetup = function() {
           icons: ['<i class="fa fa-fw fa-table"></i>'],
           beforeRender: visibleIfLayerNodeSupported_,
           handler: onLayerEvent_,
-          metricKey: metrics.Places.FEATURE_LIST,
+          metricKey: PlacesKeys.FEATURE_LIST,
           sort: 125
         },
         {
@@ -107,7 +107,7 @@ const layerSetup = function() {
           icons: ['<i class="fa fa-fw fa-pencil"></i>'],
           beforeRender: visibleIfLayerNodeSupported_,
           handler: onLayerEvent_,
-          metricKey: metrics.Places.EDIT_FOLDER,
+          metricKey: PlacesKeys.EDIT_FOLDER,
           sort: 130
         },
         {
@@ -117,7 +117,7 @@ const layerSetup = function() {
           icons: ['<i class="fa fa-fw fa-pencil"></i>'],
           beforeRender: visibleIfLayerNodeSupported_,
           handler: onLayerEvent_,
-          metricKey: metrics.Places.EDIT_PLACEMARK,
+          metricKey: PlacesKeys.EDIT_PLACEMARK,
           sort: 140
         },
         {
@@ -127,7 +127,7 @@ const layerSetup = function() {
           icons: ['<i class="fa fa-fw fa-download"></i>'],
           beforeRender: visibleIfLayerNodeSupported_,
           handler: onLayerEvent_,
-          metricKey: metrics.Places.EXPORT_CONTEXT,
+          metricKey: PlacesKeys.EXPORT_CONTEXT,
           sort: 150
         },
         {
@@ -138,7 +138,7 @@ const layerSetup = function() {
           icons: ['<i class="fa fa-fw ' + places.Icon.PLACEMARK + '"></i>'],
           beforeRender: visibleIfCanSaveLayer,
           handler: saveLayerToPlaces,
-          metricKey: metrics.Places.SAVE_TO,
+          metricKey: PlacesKeys.SAVE_TO,
           sort: 160
         },
         {
@@ -148,7 +148,7 @@ const layerSetup = function() {
           icons: ['<i class="fa fa-fw fa-times"></i>'],
           beforeRender: visibleIfLayerNodeSupported_,
           handler: onLayerEvent_,
-          metricKey: metrics.Places.REMOVE_PLACE,
+          metricKey: PlacesKeys.REMOVE_PLACE,
           sort: 170
         },
         {
@@ -158,7 +158,7 @@ const layerSetup = function() {
           icons: ['<i class="fa fa-fw fa-times"></i>'],
           beforeRender: visibleIfLayerNodeSupported_,
           handler: onLayerEvent_,
-          metricKey: metrics.Places.REMOVE_ALL,
+          metricKey: PlacesKeys.REMOVE_ALL,
           sort: 180
         }
       ]
@@ -301,7 +301,7 @@ const mapSetup = function() {
           icons: ['<i class="fa fa-fw ' + places.Icon.PLACEMARK + '"></i>'],
           beforeRender: mapMenu.showIfHasCoordinate,
           handler: saveCoordinateToPlaces,
-          metricKey: metrics.Places.ADD_PLACE,
+          metricKey: PlacesKeys.ADD_PLACE,
           sort: 0
         }, {
           label: 'Create Text Box...',
@@ -310,7 +310,7 @@ const mapSetup = function() {
           icons: ['<i class="fa fa-fw ' + places.Icon.ANNOTATION + '"></i>'],
           beforeRender: mapMenu.showIfHasCoordinate,
           handler: createAnnotationFromCoordinate,
-          metricKey: metrics.Places.ADD_ANNOTATION,
+          metricKey: PlacesKeys.ADD_ANNOTATION,
           sort: 1
         },
         {
@@ -320,7 +320,7 @@ const mapSetup = function() {
           icons: ['<i class="fa fa-fw ' + places.Icon.QUICK_ADD + '"></i>'],
           beforeRender: mapMenu.showIfHasCoordinate,
           handler: quickAddFromCoordinate,
-          metricKey: metrics.Places.QUICK_ADD_PLACES,
+          metricKey: PlacesKeys.QUICK_ADD_PLACES,
           sort: 120
         }
       ]
@@ -361,7 +361,7 @@ const spatialSetup = function() {
           icons: ['<i class="fa fa-fw ' + places.Icon.PLACEMARK + '"></i>'],
           beforeRender: visibleIfCanSaveSpatial,
           handler: saveSpatialToPlaces,
-          metricKey: metrics.Places.ADD_PLACE,
+          metricKey: PlacesKeys.ADD_PLACE,
           sort: 100
         }, {
           label: 'Edit Place',
@@ -379,7 +379,7 @@ const spatialSetup = function() {
           icons: ['<i class="fa fa-fw ' + places.Icon.ANNOTATION + '"></i>'],
           beforeRender: visibleIfCanSaveSpatial,
           handler: saveSpatialToAnnotation,
-          metricKey: metrics.Places.ADD_ANNOTATION,
+          metricKey: PlacesKeys.ADD_ANNOTATION,
           sort: 120
         },
         {
@@ -389,7 +389,7 @@ const spatialSetup = function() {
           icons: ['<i class="fa fa-fw ' + places.Icon.QUICK_ADD + '"></i>'],
           beforeRender: visibleIfCanSaveSpatial,
           handler: quickAddFromSpatial,
-          metricKey: metrics.Places.QUICK_ADD_PLACES,
+          metricKey: PlacesKeys.QUICK_ADD_PLACES,
           sort: 120
         }
       ]

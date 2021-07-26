@@ -1,159 +1,158 @@
-goog.provide('os.metrics.GraphiteMetricsProvider');
-goog.require('goog.Timer');
-goog.require('goog.events.Event');
-goog.require('goog.events.EventTarget');
-goog.require('goog.log');
-goog.require('os.metrics.IMetricServiceProvider');
-goog.require('os.net.IDataFormatter');
-goog.require('os.net.Request');
-goog.require('os.plugin.IPlugin');
+goog.module('os.metrics.GraphiteMetricsProvider');
+goog.module.declareLegacyNamespace();
 
+const Timer = goog.require('goog.Timer');
+const log = goog.require('goog.log');
+const EventType = goog.require('goog.net.EventType');
+const {getSettings} = goog.require('os.config.instance');
+const Request = goog.require('os.net.Request');
+const GoogEvent = goog.requireType('goog.events.Event');
+
+const Logger = goog.requireType('goog.log.Logger');
+const IMetricServiceProvider = goog.requireType('os.metrics.IMetricServiceProvider');
+const IDataFormatter = goog.requireType('os.net.IDataFormatter');
 
 
 /**
  * Metric service provider for graphite/grafana
  *
- * @implements {os.metrics.IMetricServiceProvider}
- * @implements {os.net.IDataFormatter}
- * @constructor
+ * @implements {IMetricServiceProvider}
+ * @implements {IDataFormatter}
  */
-os.metrics.GraphiteMetricsProvider = function() {
+class GraphiteMetricsProvider {
   /**
-   * The logger.
-   * @type {goog.log.Logger}
-   * @private
+   * Constructor.
    */
-  this.log_ = os.metrics.GraphiteMetricsProvider.LOGGER_;
+  constructor() {
+    /**
+     * The logger.
+     * @type {Logger}
+     * @private
+     */
+    this.log_ = logger;
+
+    /**
+     * Array of metrics to push to graphite when the timer expires
+     * @type {Array}
+     * @private
+     */
+    this.metrics_ = [];
+
+    /**
+     * URL to post metrics
+     * @type {string}
+     * @private
+     */
+    this.metricUrl_ = /** @type {string} */ (getSettings().get(['metrics', 'baseUrl']));
+
+    /**
+     * How often to send metrics, graphite refreshes every minute
+     * @type {number}
+     * @private
+     */
+    this.interval_ = /** @type {number} */ (getSettings().get(['metrics', 'interval'], 60000));
+
+    /**
+     * The number of times we have failed (in succession) to send metrics
+     * @type {number}
+     * @private
+     */
+    this.failures_ = 0;
+
+    /**
+     * Send metrics on tick
+     * @type {?Timer}
+     * @private
+     */
+    this.timer_ = new Timer(this.interval_);
+    this.timer_.listen(Timer.TICK, this.onTimer_, false, this);
+    this.timer_.start();
+  }
 
   /**
-   * Array of metrics to push to graphite when the timer expires
-   * @type {Array}
-   * @private
+   * @inheritDoc
    */
-  this.metrics_ = [];
+  recordMetric(key, value) {
+    // add the metric to our queue
+    if (this.timer_.enabled) {
+      var metric = {'name': key, 'value': value};
+      this.metrics_.push(metric);
+    }
+  }
 
   /**
-   * URL to post metrics
-   * @type {string}
-   * @private
+   * @inheritDoc
    */
-  this.metricUrl_ = /** @type {string} */ (os.settings.get(['metrics', 'baseUrl']));
+  getContentType() {
+    return 'application/json';
+  }
 
   /**
-   * How often to send metrics, graphite refreshes every minute
-   * @type {number}
-   * @private
+   * @inheritDoc
    */
-  this.interval_ = /** @type {number} */ (os.settings.get(['metrics', 'interval'], 60000));
+  format(uri) {
+    // merge our json array into a single json object
+    return JSON.stringify(this.metrics_);
+  }
 
   /**
-   * The number of times we have failed (in succession) to send metrics
-   * @type {number}
+   * Publish metrics to the server - viewable in graphite
+   *
    * @private
    */
-  this.failures_ = 0;
+  onTimer_() {
+    if (this.metricUrl_ && this.metrics_.length > 0) {
+      var request = new Request();
+      request.setUri(this.metricUrl_);
+      request.setMethod(Request.METHOD_POST);
+      request.setDataFormatter(this);
+      request.setHeader('Accept', 'application/json, text/plain, */*');
+      request.listen(EventType.SUCCESS, this.onSuccess_, false, this);
+      request.listen(EventType.ERROR, this.onError_, false, this);
+      request.load();
+    }
+  }
 
   /**
-   * Send metrics on tick
-   * @type {?goog.Timer}
+   * Publish metrics to server without waiting for the timer
+   */
+  publish() {
+    this.onTimer_();
+  }
+
+  /**
+   * Handles request complete
+   *
+   * @param {GoogEvent} e
    * @private
    */
-  this.timer_ = new goog.Timer(this.interval_);
-  this.timer_.listen(goog.Timer.TICK, this.onTimer_, false, this);
-  this.timer_.start();
-};
+  onSuccess_(e) {
+    // metrics sent, reset
+    this.metrics_ = [];
+    this.failures_ = 0;
+  }
 
+  /**
+   * Handles request error
+   *
+   * @param {GoogEvent} e
+   * @private
+   */
+  onError_(e) {
+    log.error(this.log_, 'Failed to send metrics to server - ' + this.metricUrl_);
+    this.failures_ += 1;
+    if (this.failures_ >= 3) {
+      log.error(this.log_, 'Metrics will not be sent to server, too many failures.');
+      this.timer_.stop();
+      this.metrics_ = [];
+    }
+  }
+}
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {Logger}
  */
-os.metrics.GraphiteMetricsProvider.LOGGER_ = goog.log.getLogger('os.metrics.GraphiteMetricsProvider');
+const logger = log.getLogger('os.metrics.GraphiteMetricsProvider');
 
-
-/**
- * @inheritDoc
- */
-os.metrics.GraphiteMetricsProvider.prototype.recordMetric = function(key, value) {
-  // add the metric to our queue
-  if (this.timer_.enabled) {
-    var metric = {'name': key, 'value': value};
-    this.metrics_.push(metric);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.metrics.GraphiteMetricsProvider.prototype.getContentType = function() {
-  return 'application/json';
-};
-
-
-/**
- * @inheritDoc
- */
-os.metrics.GraphiteMetricsProvider.prototype.format = function(uri) {
-  // merge our json array into a single json object
-  return JSON.stringify(this.metrics_);
-};
-
-
-/**
- * Publish metrics to the server - viewable in graphite
- *
- * @private
- */
-os.metrics.GraphiteMetricsProvider.prototype.onTimer_ = function() {
-  if (this.metricUrl_ && this.metrics_.length > 0) {
-    var request = new os.net.Request();
-    request.setUri(this.metricUrl_);
-    request.setMethod(os.net.Request.METHOD_POST);
-    request.setDataFormatter(this);
-    request.setHeader('Accept', 'application/json, text/plain, */*');
-    request.listen(goog.net.EventType.SUCCESS, this.onSuccess_, false, this);
-    request.listen(goog.net.EventType.ERROR, this.onError_, false, this);
-    request.load();
-  }
-};
-
-
-/**
- * Publish metrics to server without waiting for the timer
- */
-os.metrics.GraphiteMetricsProvider.prototype.publish = function() {
-  this.onTimer_();
-};
-
-
-/**
- * Handles request complete
- *
- * @param {goog.events.Event} e
- * @private
- */
-os.metrics.GraphiteMetricsProvider.prototype.onSuccess_ = function(e) {
-  // metrics sent, reset
-  this.metrics_ = [];
-  this.failures_ = 0;
-};
-
-
-/**
- * Handles request error
- *
- * @param {goog.events.Event} e
- * @private
- */
-os.metrics.GraphiteMetricsProvider.prototype.onError_ = function(e) {
-  goog.log.error(this.log_, 'Failed to send metrics to server - ' + this.metricUrl_);
-  this.failures_ += 1;
-  if (this.failures_ >= 3) {
-    goog.log.error(this.log_, 'Metrics will not be sent to server, too many failures.');
-    this.timer_.stop();
-    this.metrics_ = [];
-  }
-};
+exports = GraphiteMetricsProvider;

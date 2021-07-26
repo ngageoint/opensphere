@@ -1,27 +1,38 @@
-goog.provide('os.interaction.DoubleClickZoom');
+goog.module('os.interaction.DoubleClickZoom');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.MapBrowserEventType');
-goog.require('ol.events.condition');
-goog.require('ol.interaction.DoubleClickZoom');
-goog.require('os.I3DSupport');
-goog.require('os.implements');
-
+const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
+const {platformModifierKeyOnly} = goog.require('ol.events.condition');
+const OLDoubleClickZoom = goog.require('ol.interaction.DoubleClickZoom');
+const Interaction = goog.require('ol.interaction.Interaction');
+const I3DSupport = goog.require('os.I3DSupport');
+const MapContainer = goog.require('os.MapContainer');
+const osImplements = goog.require('os.implements');
 
 
 /**
  * Extends the OpenLayers double click zoom interaction to support WebGL.
  *
- * @param {olx.interaction.DoubleClickZoomOptions=} opt_options Options.
- * @extends {ol.interaction.DoubleClickZoom}
- * @implements {os.I3DSupport}
- * @constructor
+ * @implements {I3DSupport}
  */
-os.interaction.DoubleClickZoom = function(opt_options) {
-  os.interaction.DoubleClickZoom.base(this, 'constructor', opt_options);
-};
-goog.inherits(os.interaction.DoubleClickZoom, ol.interaction.DoubleClickZoom);
-os.implements(os.interaction.DoubleClickZoom, os.I3DSupport.ID);
+class DoubleClickZoom extends OLDoubleClickZoom {
+  /**
+   * Constructor.
+   * @param {olx.interaction.DoubleClickZoomOptions=} opt_options Options.
+   */
+  constructor(opt_options) {
+    super(opt_options);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  is3DSupported() {
+    return true;
+  }
+}
+
+osImplements(DoubleClickZoom, I3DSupport.ID);
 
 /**
  * Handles the {@link ol.MapBrowserEvent map browser event} (if it was a
@@ -32,14 +43,14 @@ os.implements(os.interaction.DoubleClickZoom, os.I3DSupport.ID);
  * @this os.interaction.DoubleClickZoom
  * @suppress {accessControls|duplicate}
  */
-ol.interaction.DoubleClickZoom.handleEvent = function(mapBrowserEvent) {
+OLDoubleClickZoom.handleEvent = function(mapBrowserEvent) {
   var stopEvent = false;
 
-  if (mapBrowserEvent.type == ol.MapBrowserEventType.DBLCLICK) {
+  if (mapBrowserEvent.type == MapBrowserEventType.DBLCLICK) {
     var anchor = mapBrowserEvent.coordinate;
-    var zoomOut = ol.events.condition.platformModifierKeyOnly(mapBrowserEvent);
+    var zoomOut = platformModifierKeyOnly(mapBrowserEvent);
 
-    var mapContainer = os.MapContainer.getInstance();
+    var mapContainer = MapContainer.getInstance();
     if (mapContainer.is3DEnabled()) {
       var camera = mapContainer.getWebGLCamera();
       if (camera) {
@@ -56,7 +67,7 @@ ol.interaction.DoubleClickZoom.handleEvent = function(mapBrowserEvent) {
       var delta = zoomOut ? -this.delta_ : this.delta_;
       var view = mapBrowserEvent.map.getView();
       if (view) {
-        ol.interaction.Interaction.zoomByDelta(view, delta, anchor, this.duration_);
+        Interaction.zoomByDelta(view, delta, anchor, this.duration_);
       }
     }
 
@@ -67,9 +78,4 @@ ol.interaction.DoubleClickZoom.handleEvent = function(mapBrowserEvent) {
 };
 
 
-/**
- * @inheritDoc
- */
-os.interaction.DoubleClickZoom.prototype.is3DSupported = function() {
-  return true;
-};
+exports = DoubleClickZoom;

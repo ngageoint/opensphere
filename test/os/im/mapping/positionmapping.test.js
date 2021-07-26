@@ -1,26 +1,29 @@
-goog.require('os.im.mapping.PositionMapping');
 goog.require('ol.Feature');
+goog.require('os.im.mapping.PositionMapping');
 
 describe('os.im.mapping.PositionMapping', function() {
+  const Feature = goog.module.get('ol.Feature');
+  const PositionMapping = goog.module.get('os.im.mapping.PositionMapping');
+
   it('should auto detect position string types correctly', function() {
-    var a = new ol.Feature();
+    var a = new Feature();
     a.set('test1', 'nope');
     a.set('test2', 'nope');
     a.set('test3', 'nope');
 
-    var b = new ol.Feature();
+    var b = new Feature();
     b.set('test1', 'nope');
     b.set('test2', 'nope');
     b.set('test3', 'nope');
 
-    var c = new ol.Feature();
+    var c = new Feature();
     c.set('test1', 'nope');
     c.set('test2', 'nope');
     c.set('test3', 'nope');
 
     var features = [a, b, c];
 
-    var pm = new os.im.mapping.PositionMapping();
+    var pm = new PositionMapping();
     var m = pm.autoDetect(features);
     expect(m).toBeNull();
 
@@ -34,10 +37,10 @@ describe('os.im.mapping.PositionMapping', function() {
 
   it('should map positions to a feature correctly', function() {
     var field = 'test';
-    var feature = new ol.Feature();
+    var feature = new Feature();
     feature.setId(field);
 
-    var m = new os.im.mapping.PositionMapping();
+    var m = new PositionMapping();
     m.execute(feature);
     expect(feature.getGeometry()).toBeUndefined();
 
@@ -57,19 +60,19 @@ describe('os.im.mapping.PositionMapping', function() {
   });
 
   it('should clone properly', function() {
-    var pm = new os.im.mapping.PositionMapping();
+    var pm = new PositionMapping();
     pm.field = 'test';
     pm.setType('MGRS');
 
     var clone = pm.clone();
     expect(clone).not.toBeNull();
-    expect(clone instanceof os.im.mapping.PositionMapping).toBe(true);
+    expect(clone instanceof PositionMapping).toBe(true);
     expect(clone.field).toBe(pm.field);
     expect(clone.getType()).toBe(pm.getType());
   });
 
   it('should persist/restore properly', function() {
-    var pm = new os.im.mapping.PositionMapping();
+    var pm = new PositionMapping();
     pm.field = 'test';
     pm.setType('MGRS');
 
@@ -78,7 +81,7 @@ describe('os.im.mapping.PositionMapping', function() {
     expect(persist.field).toBe(pm.field);
     expect(persist.type).toBe(pm.getType());
 
-    var restored = new os.im.mapping.PositionMapping();
+    var restored = new PositionMapping();
     expect(restored.field).not.toBe(pm.field);
     expect(restored.getType()).not.toBe(pm.getType());
 

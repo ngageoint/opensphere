@@ -1,905 +1,865 @@
-goog.provide('os.layer.Vector');
+goog.module('os.layer.Vector');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.string');
-goog.require('ol.events');
-goog.require('ol.layer.Property');
-goog.require('ol.layer.Vector');
-goog.require('os.IGroupable');
-goog.require('os.MapChange');
-goog.require('os.events.LayerConfigEvent');
-goog.require('os.events.LayerEvent');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.filter');
-goog.require('os.filter.IFilterable');
-goog.require('os.implements');
-goog.require('os.layer');
-goog.require('os.layer.ExplicitLayerType');
-goog.require('os.layer.ILayer');
-goog.require('os.layer.LayerClass');
-goog.require('os.layer.LayerType');
-goog.require('os.layer.PropertyChange');
-goog.require('os.legend');
-goog.require('os.legend.ILegendRenderer');
-goog.require('os.net');
-goog.require('os.query.instance');
-goog.require('os.registerClass');
-goog.require('os.source');
-goog.require('os.source.ISource');
-goog.require('os.source.Request');
-goog.require('os.source.Vector');
-goog.require('os.style');
-goog.require('os.style.label');
-goog.require('os.ui.Icons');
-goog.require('os.ui.IconsSVG');
-goog.require('os.ui.feature.launchMultiFeatureInfo');
-goog.require('os.ui.icons');
 goog.require('os.ui.layer.vectorLayerUIDirective');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
-goog.require('os.ui.renamelayer');
-goog.require('os.ui.timeline.TimelineUI');
-goog.require('os.ui.window');
 
+const GoogEventType = goog.require('goog.events.EventType');
+const {getRandomString} = goog.require('goog.string');
 
+const events = goog.require('ol.events');
+const Property = goog.require('ol.layer.Property');
+const OLVectorLayer = goog.require('ol.layer.Vector');
 
-/**
- * @extends {ol.layer.Vector}
- * @implements {os.layer.ILayer}
- * @implements {os.IGroupable}
- * @implements {os.filter.IFilterable}
- * @implements {os.legend.ILegendRenderer}
- * @param {olx.layer.VectorOptions} options Vector layer options
- * @constructor
- */
-os.layer.Vector = function(options) {
-  os.layer.Vector.base(this, 'constructor', options);
+const dispatcher = goog.require('os.Dispatcher');
+const IGroupable = goog.require('os.IGroupable');
+const MapChange = goog.require('os.MapChange');
+const ActionEventType = goog.require('os.action.EventType');
+const {toRgbArray} = goog.require('os.color');
+const DataManager = goog.require('os.data.DataManager');
+const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
+const LayerEvent = goog.require('os.events.LayerEvent');
+const LayerEventType = goog.require('os.events.LayerEventType');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const {getTitle} = goog.require('os.feature');
+const IFilterable = goog.require('os.filter.IFilterable');
+const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const osImplements = goog.require('os.implements');
+const {identifyLayer} = goog.require('os.layer');
+const ExplicitLayerType = goog.require('os.layer.ExplicitLayerType');
+const ILayer = goog.require('os.layer.ILayer');
+const LayerClass = goog.require('os.layer.LayerClass');
+const LayerType = goog.require('os.layer.LayerType');
+const PropertyChange = goog.require('os.layer.PropertyChange');
+const SynchronizerType = goog.require('os.layer.SynchronizerType');
+const {drawVectorLayer} = goog.require('os.legend');
+const ILegendRenderer = goog.require('os.legend.ILegendRenderer');
+const {getMapContainer} = goog.require('os.map.instance');
+const {paramsToQueryData} = goog.require('os.net');
+const {getQueryManager} = goog.require('os.query.instance');
+const registerClass = goog.require('os.registerClass');
+const {identifySource} = goog.require('os.source');
+const ISource = goog.require('os.source.ISource');
+const SourcePropertyChange = goog.require('os.source.PropertyChange');
+const VectorSource = goog.require('os.source.Vector');
+const {isStateFile} = goog.require('os.state');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
+const {DEFAULT_SIZE, cloneConfig, updateShown} = goog.require('os.style.label');
+const TimeInstant = goog.require('os.time.TimeInstant');
+const TimelineController = goog.require('os.time.TimelineController');
+const Icons = goog.require('os.ui.Icons');
+const IconsSVG = goog.require('os.ui.IconsSVG');
+const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
+const {FILTER_KEY_DELIMITER} = goog.require('os.ui.filter');
+const {createIconSet} = goog.require('os.ui.icons');
+const {launchRenameDialog} = goog.require('os.ui.renamelayer');
+const TimelineUI = goog.require('os.ui.timeline.TimelineUI');
 
-  /**
-   * @type {!string}
-   * @private
-   */
-  this.id_ = goog.string.getRandomString();
-
-  /**
-   * @type {?string}
-   * @private
-   */
-  this.osType_ = os.layer.LayerType.FEATURES;
-
-  /**
-   * @type {string}
-   * @private
-   */
-  this.explicitType_ = os.layer.ExplicitLayerType.FEATURES;
-
-  /**
-   * @type {!string}
-   * @private
-   */
-  this.title_ = 'New Layer';
-
-  /**
-   * If the layer is enabled.
-   * @type {boolean}
-   * @private
-   */
-  this.enabled_ = true;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.loading_ = false;
-
-  /**
-   * @type {?string}
-   * @private
-   */
-  this.provider_ = null;
-
-  /**
-   * @type {?Array.<!string>}
-   * @private
-   */
-  this.tags_ = null;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.removable_ = true;
-
-  /**
-   * @type {Object.<string, *>}
-   * @private
-   */
-  this.layerOptions_ = null;
-
-  /**
-   * The tree node UI (glyphs) to show in the layers window.
-   * @type {string}
-   * @private
-   */
-  this.nodeUi_ = '<defaultlayernodeui></defaultlayernodeui>';
-
-  /**
-   * The controls UI to show in the Layers window.
-   * @type {string}
-   * @private
-   */
-  this.layerUi_ = 'vectorlayerui';
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.visible_ = true;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.animationEnabled_ = false;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.mapVisibilityLocked_ = false;
-
-  /**
-   * @type {Function}
-   * @private
-   */
-  this.doubleClickHandler_ = os.layer.Vector.defaultDoubleClickHandler.bind(this);
-
-  /**
-   * Function to launch the filter manager for this layer
-   * @type {?os.filter.FilterLauncherFn}
-   * @private
-   */
-  this.filterLauncher_ = null;
-
-  /**
-   * Function to return the columns used in the filter
-   * @type {?os.filter.FilterColumnsFn}
-   * @private
-   */
-  this.filterColumns_ = null;
-
-  /**
-   * @type {string|undefined} An alternative feature directive name. Used to override the default behavior.
-   * @private
-   */
-  this.featureDirective_;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.sticky_ = false;
-
-  /**
-   * @type {?string}
-   * @private
-   */
-  this.syncType_ = os.layer.SynchronizerType.VECTOR;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.hidden_ = false;
-
-  // we don't care about the render order, so disable it to save some processing time
-  this.setRenderOrder(null);
-  os.MapContainer.getInstance().listen(goog.events.EventType.PROPERTYCHANGE, this.onMapChange_, false, this);
-};
-goog.inherits(os.layer.Vector, ol.layer.Vector);
-os.implements(os.layer.Vector, os.layer.ILayer.ID);
-os.implements(os.layer.Vector, os.IGroupable.ID);
-os.implements(os.layer.Vector, os.filter.IFilterable.ID);
-os.implements(os.layer.Vector, os.legend.ILegendRenderer.ID);
+const Feature = goog.requireType('ol.Feature');
+const IPersistable = goog.requireType('os.IPersistable');
+const filter = goog.requireType('os.filter');
 
 
 /**
- * Class name
- * @type {string}
- * @deprecated Please use os.layer.LayerClass.VECTOR.
+ * @implements {ILayer}
+ * @implements {IGroupable}
+ * @implements {IFilterable}
+ * @implements {ILegendRenderer}
  */
-os.layer.Vector.NAME = os.layer.LayerClass.VECTOR;
-os.registerClass(os.layer.LayerClass.VECTOR, os.layer.Vector);
+class Vector extends OLVectorLayer {
+  /**
+   * Constructor.
+   * @param {olx.layer.VectorOptions} options Vector layer options
+   */
+  constructor(options) {
+    super(options);
 
+    /**
+     * @type {!string}
+     * @private
+     */
+    this.id_ = getRandomString();
 
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.disposeInternal = function() {
-  // call the parent chain first to remove listeners
-  os.layer.Vector.base(this, 'disposeInternal');
-  os.MapContainer.getInstance().unlisten(goog.events.EventType.PROPERTYCHANGE, this.onMapChange_, false, this);
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.osType_ = LayerType.FEATURES;
 
-  // make sure the map loading counters are updated since the layer is being removed
-  this.setLoading(false);
+    /**
+     * @type {string}
+     * @private
+     */
+    this.explicitType_ = ExplicitLayerType.FEATURES;
 
-  var source = this.getSource();
-  if (source) {
-    source.dispose();
+    /**
+     * @type {!string}
+     * @private
+     */
+    this.title_ = 'New Layer';
+
+    /**
+     * If the layer is enabled.
+     * @type {boolean}
+     * @private
+     */
+    this.enabled_ = true;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.loading_ = false;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.provider_ = null;
+
+    /**
+     * @type {?Array.<!string>}
+     * @private
+     */
+    this.tags_ = null;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.removable_ = true;
+
+    /**
+     * @type {Object.<string, *>}
+     * @private
+     */
+    this.layerOptions_ = null;
+
+    /**
+     * The tree node UI (glyphs) to show in the layers window.
+     * @type {string}
+     * @private
+     */
+    this.nodeUi_ = '<defaultlayernodeui></defaultlayernodeui>';
+
+    /**
+     * The controls UI to show in the Layers window.
+     * @type {string}
+     * @private
+     */
+    this.layerUi_ = 'vectorlayerui';
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.visible_ = true;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.animationEnabled_ = false;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.mapVisibilityLocked_ = false;
+
+    /**
+     * @type {Function}
+     * @private
+     */
+    this.doubleClickHandler_ = Vector.defaultDoubleClickHandler.bind(this);
+
+    /**
+     * Function to launch the filter manager for this layer
+     * @type {?filter.FilterLauncherFn}
+     * @private
+     */
+    this.filterLauncher_ = null;
+
+    /**
+     * Function to return the columns used in the filter
+     * @type {?filter.FilterColumnsFn}
+     * @private
+     */
+    this.filterColumns_ = null;
+
+    /**
+     * @type {string|undefined} An alternative feature directive name. Used to override the default behavior.
+     * @private
+     */
+    this.featureDirective_;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.sticky_ = false;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.syncType_ = SynchronizerType.VECTOR;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.hidden_ = false;
+
+    // we don't care about the render order, so disable it to save some processing time
+    this.setRenderOrder(null);
+    getMapContainer().listen(GoogEventType.PROPERTYCHANGE, this.onMapChange_, false, this);
   }
 
-  os.style.StyleManager.getInstance().removeLayerConfig(this.getId());
-};
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    // call the parent chain first to remove listeners
+    super.disposeInternal();
+    getMapContainer().unlisten(GoogEventType.PROPERTYCHANGE, this.onMapChange_, false, this);
 
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setSource = function(source) {
-  var old = this.getSource();
-  if (old && old instanceof os.source.Vector) {
-    ol.events.unlisten(old, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange, this);
-    old.setWebGLEnabled(false);
-  }
-
-  os.layer.Vector.base(this, 'setSource', source);
-
-  if (source && source instanceof os.source.Vector) {
-    source = /** @type {os.source.Vector} */ (source);
-    ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange, this);
-    source.setWebGLEnabled(os.MapContainer.getInstance().is3DEnabled());
-  }
-};
-
-
-/**
- * @param {os.events.PropertyChangeEvent} event
- * @private
- */
-os.layer.Vector.prototype.onMapChange_ = function(event) {
-  var p = event.getProperty();
-  if (p == os.MapChange.VIEW3D) {
-    var enabled = /** @type {boolean} */ (event.getNewValue());
-    this.updateMapVisibility_();
+    // make sure the map loading counters are updated since the layer is being removed
+    this.setLoading(false);
 
     var source = this.getSource();
-    if (source instanceof os.source.Vector) {
-      /** @type {os.source.Vector} */ (source).setWebGLEnabled(enabled);
+    if (source) {
+      source.dispose();
+    }
+
+    StyleManager.getInstance().removeLayerConfig(this.getId());
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setSource(source) {
+    var old = this.getSource();
+    if (old && old instanceof VectorSource) {
+      events.unlisten(old, GoogEventType.PROPERTYCHANGE, this.onSourceChange, this);
+      old.setWebGLEnabled(false);
+    }
+
+    super.setSource(source);
+
+    if (source && source instanceof VectorSource) {
+      source = /** @type {VectorSource} */ (source);
+      events.listen(source, GoogEventType.PROPERTYCHANGE, this.onSourceChange, this);
+      source.setWebGLEnabled(getMapContainer().is3DEnabled());
     }
   }
-};
 
-
-/**
- * @param {os.events.PropertyChangeEvent} event
- * @protected
- */
-os.layer.Vector.prototype.onSourceChange = function(event) {
-  var p = event.getProperty();
-  var e;
-
-  switch (p) {
-    case os.source.PropertyChange.FEATURE_VISIBILITY:
-      var source = /** @type {os.source.ISource} */ (this.getSource());
-      var features = /** @type {Array.<ol.Feature>} */ (event.getNewValue());
-      if (features) {
-        for (var i = 0, n = features.length; i < n; i++) {
-          var feature = features[i];
-          os.MapContainer.getInstance().updateFeatureVisibility(feature, !source.isHidden(feature));
-        }
-      }
-      break;
-    case os.source.PropertyChange.LOADING:
-      this.setLoading(/** @type {boolean} */ (event.getNewValue()));
-      break;
-    case os.source.PropertyChange.VISIBLE:
-      this.setLayerVisible(/** @type {boolean} */ (event.getNewValue()));
-      break;
-    case os.source.PropertyChange.ANIMATION_ENABLED:
-      this.animationEnabled_ = /** @type {boolean} */ (event.getNewValue());
+  /**
+   * @param {PropertyChangeEvent} event
+   * @private
+   */
+  onMapChange_(event) {
+    var p = event.getProperty();
+    if (p == MapChange.VIEW3D) {
+      var enabled = /** @type {boolean} */ (event.getNewValue());
       this.updateMapVisibility_();
-      break;
-    case os.source.PropertyChange.TIME_ENABLED:
-      // forward as a layer event
-      e = new os.events.PropertyChangeEvent(os.layer.PropertyChange.TIME_ENABLED, event.getNewValue(),
-          event.getOldValue());
-      this.dispatchEvent(e);
-      break;
-    case os.source.PropertyChange.STYLE:
-      // forward as a layer event
-      e = new os.events.PropertyChangeEvent(os.layer.PropertyChange.STYLE, event.getNewValue(),
-          event.getOldValue());
-      this.dispatchEvent(e);
-      break;
-    case os.source.PropertyChange.LABEL:
-      // forward as a layer event
-      e = new os.events.PropertyChangeEvent(os.layer.PropertyChange.LABEL, event.getNewValue(), event.getOldValue());
-      this.dispatchEvent(e);
-      break;
-    case os.source.PropertyChange.LOCK:
-      e = new os.events.PropertyChangeEvent(os.layer.PropertyChange.LOCK, event.getNewValue(),
-          event.getOldValue());
-      this.dispatchEvent(e);
-      break;
-    case os.source.PropertyChange.REFRESH_INTERVAL:
-      e = new os.events.PropertyChangeEvent(os.layer.PropertyChange.REFRESH_INTERVAL, event.getNewValue(),
-          event.getOldValue());
-      this.dispatchEvent(e);
-      break;
-    case os.source.PropertyChange.COLOR_MODEL:
-      e = new os.events.PropertyChangeEvent(os.layer.PropertyChange.COLOR_MODEL, event.getNewValue(),
-          event.getOldValue());
-      this.dispatchEvent(e);
-      break;
-    case os.source.PropertyChange.HAS_MODIFICATIONS:
-    case os.source.PropertyChange.COLUMNS:
-    case os.source.PropertyChange.COLUMN_ADDED:
-      this.dispatchEvent(new os.events.PropertyChangeEvent(p, event.getNewValue(), event.getOldValue()));
-      break;
-    case os.source.PropertyChange.ALTITUDE:
-      // forward as a layer event
-      e = new os.events.PropertyChangeEvent(os.layer.PropertyChange.ALTITUDE, event.getNewValue(),
-          event.getOldValue());
-      this.dispatchEvent(e);
-      break;
-    default:
-      break;
-  }
-};
 
-
-/**
- * Updates map visibility based on the animation/view (2d/3d) state.
- *
- * @private
- */
-os.layer.Vector.prototype.updateMapVisibility_ = function() {
-  if (this.animationEnabled_ && !os.MapContainer.getInstance().is3DEnabled()) {
-    this.lockMapVisibility(false);
-  } else {
-    this.unlockMapVisibility();
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getId = function() {
-  return this.id_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setId = function(value) {
-  this.id_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getGroupId = function() {
-  return this.getId();
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getGroupLabel = function() {
-  return this.getTitle();
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getIcons = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.getId());
-
-  if (config) {
-    var color = os.style.getConfigColor(config, true);
-    if (color) {
-      return os.ui.icons.createIconSet(this.getId(), this.getSVGSet(), this.getFASet(), color);
+      var source = this.getSource();
+      if (source instanceof VectorSource) {
+        /** @type {VectorSource} */ (source).setWebGLEnabled(enabled);
+      }
     }
   }
 
-  return this.getIconSet().join('');
-};
+  /**
+   * @param {PropertyChangeEvent} event
+   * @protected
+   */
+  onSourceChange(event) {
+    var p = event.getProperty();
+    var e;
 
-
-/**
- * Get the FontAwesome icons for the layer.
- *
- * @return {!Array<string>}
- * @protected
- */
-os.layer.Vector.prototype.getFASet = function() {
-  var icons = [];
-
-  var source = this.getSource();
-  if (source instanceof os.source.Vector) {
-    if (source.hasColors()) {
-      icons.push(os.ui.Icons.COLOR_MODEL);
-    }
-
-    if (os.im.action.ImportActionManager.getInstance().hasActiveActions(/** @type {string} */ (source.getId()))) {
-      icons.push(os.ui.Icons.FEATUREACTION);
-    }
-  }
-
-  if (os.state.isStateFile(this.getId())) {
-    icons.push(os.ui.Icons.STATE);
-  }
-
-  if (os.query.instance.getQueryManager().hasEnabledEntries(this.getId())) {
-    icons.push(os.ui.Icons.FILTER);
-  }
-
-  return icons;
-};
-
-
-/**
- * Get the SVG icons for the layer.
- *
- * @return {Array<string>}
- * @protected
- */
-os.layer.Vector.prototype.getSVGSet = function() {
-  var icons = [os.ui.IconsSVG.FEATURES];
-  var source = this.getSource();
-
-  if (source instanceof os.source.Vector) {
-    if (source.getTimeEnabled()) {
-      icons.push(os.ui.IconsSVG.TIME);
-    }
-
-    if (source.isLocked()) {
-      icons.push(os.ui.IconsSVG.LOCK);
-    }
-  }
-
-  return icons;
-};
-
-
-/**
- * @return {Array<string>}
- * @protected
- */
-os.layer.Vector.prototype.getIconSet = function() {
-  var icons = [os.ui.Icons.FEATURES];
-  var source = this.getSource();
-  if (source instanceof os.source.Vector) {
-    if (source.getTimeEnabled()) {
-      icons.push(os.ui.Icons.TIME);
-    }
-
-    if (source.isLocked()) {
-      icons.push(os.ui.Icons.LOCK);
-    }
-
-    if (source.hasColors()) {
-      icons.push(os.ui.Icons.COLOR_MODEL);
-    }
-
-    if (os.state.isStateFile(this.getId())) {
-      icons.push(os.ui.Icons.STATE);
-    }
-
-    if (os.query.instance.getQueryManager().hasEnabledEntries(this.getId())) {
-      icons.push(os.ui.Icons.FILTER);
+    switch (p) {
+      case SourcePropertyChange.FEATURE_VISIBILITY:
+        var source = /** @type {ISource} */ (this.getSource());
+        var features = /** @type {Array.<Feature>} */ (event.getNewValue());
+        if (features) {
+          for (var i = 0, n = features.length; i < n; i++) {
+            var feature = features[i];
+            getMapContainer().updateFeatureVisibility(feature, !source.isHidden(feature));
+          }
+        }
+        break;
+      case SourcePropertyChange.LOADING:
+        this.setLoading(/** @type {boolean} */ (event.getNewValue()));
+        break;
+      case SourcePropertyChange.VISIBLE:
+        this.setLayerVisible(/** @type {boolean} */ (event.getNewValue()));
+        break;
+      case SourcePropertyChange.ANIMATION_ENABLED:
+        this.animationEnabled_ = /** @type {boolean} */ (event.getNewValue());
+        this.updateMapVisibility_();
+        break;
+      case SourcePropertyChange.TIME_ENABLED:
+        // forward as a layer event
+        e = new PropertyChangeEvent(PropertyChange.TIME_ENABLED, event.getNewValue(),
+            event.getOldValue());
+        this.dispatchEvent(e);
+        break;
+      case SourcePropertyChange.STYLE:
+        // forward as a layer event
+        e = new PropertyChangeEvent(PropertyChange.STYLE, event.getNewValue(),
+            event.getOldValue());
+        this.dispatchEvent(e);
+        break;
+      case SourcePropertyChange.LABEL:
+        // forward as a layer event
+        e = new PropertyChangeEvent(PropertyChange.LABEL, event.getNewValue(), event.getOldValue());
+        this.dispatchEvent(e);
+        break;
+      case SourcePropertyChange.LOCK:
+        e = new PropertyChangeEvent(PropertyChange.LOCK, event.getNewValue(),
+            event.getOldValue());
+        this.dispatchEvent(e);
+        break;
+      case SourcePropertyChange.REFRESH_INTERVAL:
+        e = new PropertyChangeEvent(PropertyChange.REFRESH_INTERVAL, event.getNewValue(),
+            event.getOldValue());
+        this.dispatchEvent(e);
+        break;
+      case SourcePropertyChange.COLOR_MODEL:
+        e = new PropertyChangeEvent(PropertyChange.COLOR_MODEL, event.getNewValue(),
+            event.getOldValue());
+        this.dispatchEvent(e);
+        break;
+      case SourcePropertyChange.HAS_MODIFICATIONS:
+      case SourcePropertyChange.COLUMNS:
+      case SourcePropertyChange.COLUMN_ADDED:
+        this.dispatchEvent(new PropertyChangeEvent(p, event.getNewValue(), event.getOldValue()));
+        break;
+      case SourcePropertyChange.ALTITUDE:
+        // forward as a layer event
+        e = new PropertyChangeEvent(PropertyChange.ALTITUDE, event.getNewValue(),
+            event.getOldValue());
+        this.dispatchEvent(e);
+        break;
+      default:
+        break;
     }
   }
 
-  return icons;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getLayerOptions = function() {
-  return this.layerOptions_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setLayerOptions = function(value) {
-  this.layerOptions_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.isEnabled = function() {
-  return this.enabled_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setEnabled = function(value) {
-  if (this.enabled_ !== value) {
-    this.enabled_ = value;
-    this.setEnabledInternal(value);
-    this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.ENABLED, value, !value));
+  /**
+   * Updates map visibility based on the animation/view (2d/3d) state.
+   *
+   * @private
+   */
+  updateMapVisibility_() {
+    if (this.animationEnabled_ && !getMapContainer().is3DEnabled()) {
+      this.lockMapVisibility(false);
+    } else {
+      this.unlockMapVisibility();
+    }
   }
-};
 
-
-/**
- * Perform internal layer actions when the enabled state changes.
- * @param {boolean} value The new value.
- * @protected
- */
-os.layer.Vector.prototype.setEnabledInternal = function(value) {
-  var source = this.getSource();
-  if (os.implements(source, os.source.ISource.ID)) {
-    /** @type {os.source.ISource} */ (source).setEnabled(value);
+  /**
+   * @inheritDoc
+   */
+  getId() {
+    return this.id_;
   }
-};
 
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.isLoading = function() {
-  return this.loading_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setLoading = function(value) {
-  if (this.loading_ !== value) {
-    var old = this.loading_;
-    this.loading_ = value;
-
-    this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.LOADING, value, old));
+  /**
+   * @inheritDoc
+   */
+  setId(value) {
+    this.id_ = value;
   }
-};
 
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getProvider = function() {
-  return this.provider_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setProvider = function(value) {
-  this.provider_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.isRemovable = function() {
-  return this.removable_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setRemovable = function(value) {
-  this.removable_ = value;
-};
-
-
-/**
- * Tells whether the vector should stick
- *
- * @return {boolean}
- */
-os.layer.Vector.prototype.isSticky = function() {
-  return this.sticky_;
-};
-
-
-/**
- * Set whether the vector should stick
- *
- * @param {boolean} value
- */
-os.layer.Vector.prototype.setSticky = function(value) {
-  this.sticky_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getTags = function() {
-  return this.tags_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setTags = function(value) {
-  this.tags_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getTitle = function() {
-  return this.title_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setTitle = function(value) {
-  if (this.title_ !== value) {
-    var old = this.title_;
-    this.title_ = value;
-    this.dispatchEvent(new os.events.PropertyChangeEvent('title', value, old));
+  /**
+   * @inheritDoc
+   */
+  getGroupId() {
+    return this.getId();
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  getGroupLabel() {
+    return this.getTitle();
+  }
 
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getOSType = function() {
-  return this.osType_;
-};
+  /**
+   * @inheritDoc
+   */
+  getIcons() {
+    var config = StyleManager.getInstance().getLayerConfig(this.getId());
 
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setOSType = function(value) {
-  this.osType_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getExplicitType = function() {
-  return this.explicitType_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setExplicitType = function(value) {
-  this.explicitType_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getLayerVisible = function() {
-  return this.visible_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setLayerVisible = function(value) {
-  value = !!value;
-
-  if (value != this.visible_) {
-    this.visible_ = value;
-    if (!this.mapVisibilityLocked_) {
-      this.setVisible(value);
+    if (config) {
+      var color = osStyle.getConfigColor(config, true);
+      if (color) {
+        return createIconSet(this.getId(), this.getSVGSet(), this.getFASet(), color);
+      }
     }
 
-    this.dispatchEvent(new os.events.PropertyChangeEvent('visible', value, !value));
+    return this.getIconSet().join('');
+  }
+
+  /**
+   * Get the FontAwesome icons for the layer.
+   *
+   * @return {!Array<string>}
+   * @protected
+   */
+  getFASet() {
+    var icons = [];
 
     var source = this.getSource();
-    if (source instanceof os.source.Vector) {
-      /** @type {os.source.Vector} */ (source).setVisible(value);
+    if (source instanceof VectorSource) {
+      if (source.hasColors()) {
+        icons.push(Icons.COLOR_MODEL);
+      }
+
+      if (ImportActionManager.getInstance().hasActiveActions(/** @type {string} */ (source.getId()))) {
+        icons.push(Icons.FEATUREACTION);
+      }
+    }
+
+    if (isStateFile(this.getId())) {
+      icons.push(Icons.STATE);
+    }
+
+    if (getQueryManager().hasEnabledEntries(this.getId())) {
+      icons.push(Icons.FILTER);
+    }
+
+    return icons;
+  }
+
+  /**
+   * Get the SVG icons for the layer.
+   *
+   * @return {Array<string>}
+   * @protected
+   */
+  getSVGSet() {
+    var icons = [IconsSVG.FEATURES];
+    var source = this.getSource();
+
+    if (source instanceof VectorSource) {
+      if (source.getTimeEnabled()) {
+        icons.push(IconsSVG.TIME);
+      }
+
+      if (source.isLocked()) {
+        icons.push(IconsSVG.LOCK);
+      }
+    }
+
+    return icons;
+  }
+
+  /**
+   * @return {Array<string>}
+   * @protected
+   */
+  getIconSet() {
+    var icons = [Icons.FEATURES];
+    var source = this.getSource();
+    if (source instanceof VectorSource) {
+      if (source.getTimeEnabled()) {
+        icons.push(Icons.TIME);
+      }
+
+      if (source.isLocked()) {
+        icons.push(Icons.LOCK);
+      }
+
+      if (source.hasColors()) {
+        icons.push(Icons.COLOR_MODEL);
+      }
+
+      if (isStateFile(this.getId())) {
+        icons.push(Icons.STATE);
+      }
+
+      if (getQueryManager().hasEnabledEntries(this.getId())) {
+        icons.push(Icons.FILTER);
+      }
+    }
+
+    return icons;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getLayerOptions() {
+    return this.layerOptions_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setLayerOptions(value) {
+    this.layerOptions_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  isEnabled() {
+    return this.enabled_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setEnabled(value) {
+    if (this.enabled_ !== value) {
+      this.enabled_ = value;
+      this.setEnabledInternal(value);
+      this.dispatchEvent(new PropertyChangeEvent(PropertyChange.ENABLED, value, !value));
     }
   }
-};
 
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setBaseVisible = function(value) {
-  this.setVisible(value);
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getBaseVisible = function() {
-  return this.getVisible();
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getNodeUI = function() {
-  return this.nodeUi_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setNodeUI = function(value) {
-  this.nodeUi_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setOpacity = function(value) {
-  var source = this.getSource();
-  if (source instanceof os.source.Vector) {
-    source.setOverlayOpacity(value);
-    source.set(ol.layer.Property.OPACITY, value, true);
+  /**
+   * Perform internal layer actions when the enabled state changes.
+   * @param {boolean} value The new value.
+   * @protected
+   */
+  setEnabledInternal(value) {
+    var source = this.getSource();
+    if (osImplements(source, ISource.ID)) {
+      /** @type {ISource} */ (source).setEnabled(value);
+    }
   }
 
-  os.layer.Vector.base(this, 'setOpacity', value);
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setZIndex = function(value) {
-  var source = this.getSource();
-  if (source instanceof os.source.Vector) {
-    source.setOverlayZIndex(value);
-    source.set(ol.layer.Property.Z_INDEX, value, true);
+  /**
+   * @inheritDoc
+   */
+  isLoading() {
+    return this.loading_;
   }
 
-  os.layer.Vector.base(this, 'setZIndex', value);
+  /**
+   * @inheritDoc
+   */
+  setLoading(value) {
+    if (this.loading_ !== value) {
+      var old = this.loading_;
+      this.loading_ = value;
 
-  os.style.label.updateShown();
-};
+      this.dispatchEvent(new PropertyChangeEvent(PropertyChange.LOADING, value, old));
+    }
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getProvider() {
+    return this.provider_;
+  }
 
-/**
- * @return {string|undefined} The alternative feature directive.
- */
-os.layer.Vector.prototype.getFeatureDirective = function() {
-  return this.featureDirective_;
-};
+  /**
+   * @inheritDoc
+   */
+  setProvider(value) {
+    this.provider_ = value;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  isRemovable() {
+    return this.removable_;
+  }
 
-/**
- * @param {string|undefined} value An alternative feature directive.
- */
-os.layer.Vector.prototype.setFeatureDirective = function(value) {
-  this.featureDirective_ = value;
-};
+  /**
+   * @inheritDoc
+   */
+  setRemovable(value) {
+    this.removable_ = value;
+  }
 
+  /**
+   * Tells whether the vector should stick
+   *
+   * @return {boolean}
+   */
+  isSticky() {
+    return this.sticky_;
+  }
 
-/**
- * Locks map visibility for this layer to the specified value. This is useful when rendering features with an
- * overlay instead of the rbush for things like animation.
- *
- * @param {boolean} value
- */
-os.layer.Vector.prototype.lockMapVisibility = function(value) {
-  this.mapVisibilityLocked_ = true;
+  /**
+   * Set whether the vector should stick
+   *
+   * @param {boolean} value
+   */
+  setSticky(value) {
+    this.sticky_ = value;
+  }
 
-  if (this.getVisible() != value) {
+  /**
+   * @inheritDoc
+   */
+  getTags() {
+    return this.tags_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setTags(value) {
+    this.tags_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getTitle() {
+    return this.title_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setTitle(value) {
+    if (this.title_ !== value) {
+      var old = this.title_;
+      this.title_ = value;
+      this.dispatchEvent(new PropertyChangeEvent('title', value, old));
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getOSType() {
+    return this.osType_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setOSType(value) {
+    this.osType_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getExplicitType() {
+    return this.explicitType_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setExplicitType(value) {
+    this.explicitType_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getLayerVisible() {
+    return this.visible_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setLayerVisible(value) {
+    value = !!value;
+
+    if (value != this.visible_) {
+      this.visible_ = value;
+      if (!this.mapVisibilityLocked_) {
+        this.setVisible(value);
+      }
+
+      this.dispatchEvent(new PropertyChangeEvent('visible', value, !value));
+
+      var source = this.getSource();
+      if (source instanceof VectorSource) {
+        /** @type {VectorSource} */ (source).setVisible(value);
+      }
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setBaseVisible(value) {
     this.setVisible(value);
   }
-};
 
-
-/**
- * Unlocks map visibility for this layer.
- */
-os.layer.Vector.prototype.unlockMapVisibility = function() {
-  this.mapVisibilityLocked_ = false;
-
-  if (this.getVisible() != this.visible_) {
-    this.setVisible(this.visible_);
+  /**
+   * @inheritDoc
+   */
+  getBaseVisible() {
+    return this.getVisible();
   }
-};
 
-
-/**
- * Identify the layer on the map.
- *
- * @protected
- */
-os.layer.Vector.prototype.identify = function() {
-  var source = this.getSource();
-  if (source instanceof os.source.Vector) {
-    os.source.identifySource(/** @type {os.source.Vector} */ (source));
-  } else {
-    os.layer.identifyLayer(this);
+  /**
+   * @inheritDoc
+   */
+  getNodeUI() {
+    return this.nodeUi_;
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  setNodeUI(value) {
+    this.nodeUi_ = value;
+  }
 
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.callAction = function(type) {
-  var source = this.getSource();
+  /**
+   * @inheritDoc
+   */
+  setOpacity(value) {
+    var source = this.getSource();
+    if (source instanceof VectorSource) {
+      source.setOverlayOpacity(value);
+      source.set(Property.OPACITY, value, true);
+    }
 
-  if (os.action) {
+    super.setOpacity(value);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setZIndex(value) {
+    var source = this.getSource();
+    if (source instanceof VectorSource) {
+      source.setOverlayZIndex(value);
+      source.set(Property.Z_INDEX, value, true);
+    }
+
+    super.setZIndex(value);
+
+    updateShown();
+  }
+
+  /**
+   * @return {string|undefined} The alternative feature directive.
+   */
+  getFeatureDirective() {
+    return this.featureDirective_;
+  }
+
+  /**
+   * @param {string|undefined} value An alternative feature directive.
+   */
+  setFeatureDirective(value) {
+    this.featureDirective_ = value;
+  }
+
+  /**
+   * Locks map visibility for this layer to the specified value. This is useful when rendering features with an
+   * overlay instead of the rbush for things like animation.
+   *
+   * @param {boolean} value
+   */
+  lockMapVisibility(value) {
+    this.mapVisibilityLocked_ = true;
+
+    if (this.getVisible() != value) {
+      this.setVisible(value);
+    }
+  }
+
+  /**
+   * Unlocks map visibility for this layer.
+   */
+  unlockMapVisibility() {
+    this.mapVisibilityLocked_ = false;
+
+    if (this.getVisible() != this.visible_) {
+      this.setVisible(this.visible_);
+    }
+  }
+
+  /**
+   * Identify the layer on the map.
+   *
+   * @protected
+   */
+  identify() {
+    var source = this.getSource();
+    if (source instanceof VectorSource) {
+      identifySource(/** @type {VectorSource} */ (source));
+    } else {
+      identifyLayer(this);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  callAction(type) {
+    var source = this.getSource();
+
     switch (type) {
-      case os.action.EventType.IDENTIFY:
+      case ActionEventType.IDENTIFY:
         this.identify();
         break;
-      case os.action.EventType.CLEAR_SELECTION:
-        if (source instanceof os.source.Vector) {
+      case ActionEventType.CLEAR_SELECTION:
+        if (source instanceof VectorSource) {
           source.selectNone();
         }
         break;
-      case os.action.EventType.DISABLE_TIME:
-        if (source instanceof os.source.Vector) {
+      case ActionEventType.DISABLE_TIME:
+        if (source instanceof VectorSource) {
           source.setTimeEnabled(false);
         }
         break;
-      case os.action.EventType.ENABLE_TIME:
-        if (source instanceof os.source.Vector) {
+      case ActionEventType.ENABLE_TIME:
+        if (source instanceof VectorSource) {
           source.setTimeEnabled(true);
         }
         break;
-      case os.action.EventType.MOST_RECENT:
-        var dm = os.dataManager;
+      case ActionEventType.MOST_RECENT:
+        var dm = DataManager.getInstance();
 
-        if (!dm.setTimeFromDescriptor(this.getId()) && source instanceof os.source.Vector) {
+        if (!dm.setTimeFromDescriptor(this.getId()) && source instanceof VectorSource) {
           var timeModel = source.getTimeModel();
           if (timeModel) {
             var range = timeModel.getRange();
             var maxTime = range.getEnd();
-            if (maxTime > 0 && maxTime < os.time.TimeInstant.MAX_TIME) {
+            if (maxTime > 0 && maxTime < TimeInstant.MAX_TIME) {
               // try to clamp this to reasonable values, avoiding unbounded end dates
-              os.time.TimelineController.getInstance().setRangeStart(maxTime);
+              TimelineController.getInstance().setRangeStart(maxTime);
             }
           }
         }
-        os.ui.timeline.TimelineUI.Controller.setView();
+        TimelineUI.Controller.setView();
         break;
-      case os.action.EventType.REFRESH:
-        if (source instanceof os.source.Vector && source.isRefreshEnabled()) {
+      case ActionEventType.REFRESH:
+        if (source instanceof VectorSource && source.isRefreshEnabled()) {
           source.refresh();
         }
         break;
-      case os.action.EventType.LOCK:
-      case os.action.EventType.UNLOCK:
-        if (source instanceof os.source.Vector && source.isLockable()) {
-          source.setLocked(type == os.action.EventType.LOCK);
+      case ActionEventType.LOCK:
+      case ActionEventType.UNLOCK:
+        if (source instanceof VectorSource && source.isLockable()) {
+          source.setLocked(type == ActionEventType.LOCK);
         }
         break;
-      case os.action.EventType.REMOVE_LAYER:
-        var removeEvent = new os.events.LayerEvent(os.events.LayerEventType.REMOVE, this.getId());
-        os.dispatcher.dispatchEvent(removeEvent);
+      case ActionEventType.REMOVE_LAYER:
+        var removeEvent = new LayerEvent(LayerEventType.REMOVE, this.getId());
+        dispatcher.getInstance().dispatchEvent(removeEvent);
         break;
-      case os.action.EventType.RENAME:
-        os.ui.renamelayer.launchRenameDialog(this);
+      case ActionEventType.RENAME:
+        launchRenameDialog(this);
         break;
-      case os.action.EventType.RESET_COLOR:
-        if (source instanceof os.source.Vector) {
+      case ActionEventType.RESET_COLOR:
+        if (source instanceof VectorSource) {
           source.setColorModel(null);
         }
         break;
@@ -907,174 +867,162 @@ os.layer.Vector.prototype.callAction = function(type) {
         break;
     }
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  getLayerUI() {
+    return this.layerUi_;
+  }
 
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getLayerUI = function() {
-  return this.layerUi_;
-};
+  /**
+   * @inheritDoc
+   */
+  setLayerUI(value) {
+    this.layerUi_ = value;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getGroupUI() {
+    return null;
+  }
 
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setLayerUI = function(value) {
-  this.layerUi_ = value;
-};
+  /**
+   * @inheritDoc
+   */
+  isFilterable() {
+    return this.filterLauncher_ != null;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getFilterKey() {
+    var options = this.getLayerOptions();
+    if (options) {
+      var id = /** @type {string} */ (options['id']);
 
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getGroupUI = function() {
-  return null;
-};
+      // try to get it from the descriptor
+      var d = DataManager.getInstance().getDescriptor(id);
+      if (osImplements(d, IFilterable.ID)) {
+        return (
+          /** @type {!IFilterable} */
+          (d).getFilterKey()
+        );
+      }
 
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.isFilterable = function() {
-  return this.filterLauncher_ != null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getFilterKey = function() {
-  var options = this.getLayerOptions();
-  if (options) {
-    var id = /** @type {string} */ (options['id']);
-
-    // try to get it from the descriptor
-    var d = os.dataManager.getDescriptor(id);
-    if (os.implements(d, os.filter.IFilterable.ID)) {
-      return /** @type {!os.filter.IFilterable} */ (d).getFilterKey();
-    }
-
-    // try to derive it from the layer options
-    var url = /** @type {string} */ (options['url']);
-    var params = /** @type {string|Object<string, *>|goog.Uri.QueryData} */ (options['params']);
-    if (params) {
-      params = os.net.paramsToQueryData(params);
-      var typeName = params.get('typename');
-      if (url && typeName) {
-        return url + os.ui.filter.FILTER_KEY_DELIMITER + typeName;
+      // try to derive it from the layer options
+      var url = /** @type {string} */ (options['url']);
+      var params = /** @type {string|Object<string, *>|goog.Uri.QueryData} */ (options['params']);
+      if (params) {
+        params = paramsToQueryData(params);
+        var typeName = params.get('typename');
+        if (url && typeName) {
+          return url + FILTER_KEY_DELIMITER + typeName;
+        }
       }
     }
+
+    // dang
+    return null;
   }
 
-  // dang
-  return null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getFilterableTypes = function() {
-  return [this.getId()];
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.launchFilterManager = function() {
-  if (this.filterLauncher_ != null) {
-    this.filterLauncher_(this);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getFilterColumns = function() {
-  if (this.filterColumns_ != null) {
-    return this.filterColumns_(this);
+  /**
+   * @inheritDoc
+   */
+  getFilterableTypes() {
+    return [this.getId()];
   }
 
-  return null;
-};
+  /**
+   * @inheritDoc
+   */
+  launchFilterManager() {
+    if (this.filterLauncher_ != null) {
+      this.filterLauncher_(this);
+    }
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getFilterColumns() {
+    if (this.filterColumns_ != null) {
+      return this.filterColumns_(this);
+    }
 
-/**
- * Get the filter manager launcher for this layer
- *
- * @return {?os.filter.FilterLauncherFn}
- */
-os.layer.Vector.prototype.getFilterLauncher = function() {
-  return this.filterLauncher_;
-};
+    return null;
+  }
 
+  /**
+   * Get the filter manager launcher for this layer
+   *
+   * @return {?filter.FilterLauncherFn}
+   */
+  getFilterLauncher() {
+    return this.filterLauncher_;
+  }
 
-/**
- * Set the filter manager launcher for this layer
- *
- * @param {?os.filter.FilterLauncherFn} value
- */
-os.layer.Vector.prototype.setFilterLauncher = function(value) {
-  this.filterLauncher_ = value;
-};
+  /**
+   * Set the filter manager launcher for this layer
+   *
+   * @param {?filter.FilterLauncherFn} value
+   */
+  setFilterLauncher(value) {
+    this.filterLauncher_ = value;
+  }
 
+  /**
+   * Gets the function that returns the filter columns
+   *
+   * @return {?filter.FilterColumnsFn}
+   */
+  getFilterColumnsFn() {
+    return this.filterColumns_;
+  }
 
-/**
- * Gets the function that returns the filter columns
- *
- * @return {?os.filter.FilterColumnsFn}
- */
-os.layer.Vector.prototype.getFilterColumnsFn = function() {
-  return this.filterColumns_;
-};
+  /**
+   * Sets the function that returns the filter columns
+   *
+   * @param {?filter.FilterColumnsFn} value
+   */
+  setFilterColumnsFn(value) {
+    this.filterColumns_ = value;
+  }
 
+  /**
+   * @inheritDoc
+   * @see {os.ui.action.IActionTarget}
+   */
+  supportsAction(type, opt_actionArgs) {
+    const source = /** @type {VectorSource} */ (this.getSource());
+    const isVector = source instanceof VectorSource;
+    const onlyOneLayer = !!opt_actionArgs && goog.isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
 
-/**
- * Sets the function that returns the filter columns
- *
- * @param {?os.filter.FilterColumnsFn} value
- */
-os.layer.Vector.prototype.setFilterColumnsFn = function(value) {
-  this.filterColumns_ = value;
-};
-
-
-/**
- * @inheritDoc
- * @see {os.ui.action.IActionTarget}
- */
-os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
-  const source = /** @type {os.source.Vector} */ (this.getSource());
-  const isVector = source instanceof os.source.Vector;
-  const onlyOneLayer = !!opt_actionArgs && goog.isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
-
-  if (os.action) {
     switch (type) {
-      case os.action.EventType.GOTO:
-      case os.action.EventType.IDENTIFY:
-      case os.action.EventType.SHOW_DESCRIPTION:
+      case ActionEventType.GOTO:
+      case ActionEventType.IDENTIFY:
+      case ActionEventType.SHOW_DESCRIPTION:
         return true;
-      case os.action.EventType.FEATURE_LIST:
+      case ActionEventType.FEATURE_LIST:
         return isVector;
-      case os.action.EventType.RENAME:
+      case ActionEventType.RENAME:
         return onlyOneLayer;
-      case os.action.EventType.BUFFER:
-      case os.action.EventType.EXPORT:
-      case os.action.EventType.CLEAR_SELECTION:
+      case ActionEventType.BUFFER:
+      case ActionEventType.EXPORT:
+      case ActionEventType.CLEAR_SELECTION:
         return isVector && source.getSupportsAction(type);
-      case os.action.EventType.DISABLE_TIME:
+      case ActionEventType.DISABLE_TIME:
         return isVector && source.getTimeEnabled();
-      case os.action.EventType.ENABLE_TIME:
+      case ActionEventType.ENABLE_TIME:
         return isVector && !source.getTimeEnabled();
-      case os.action.EventType.MOST_RECENT:
+      case ActionEventType.MOST_RECENT:
         var maxDate = NaN;
         if (isVector) {
           // look for the max date on the descriptor
-          var desc = os.dataManager.getDescriptor(this.getId());
+          var desc = DataManager.getInstance().getDescriptor(this.getId());
           if (desc != null) {
             maxDate = desc.getMaxDate();
           }
@@ -1089,319 +1037,321 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
           }
         }
 
-        return maxDate > 0 && maxDate < os.time.TimeInstant.MAX_TIME;
-      case os.action.EventType.REMOVE_LAYER:
+        return maxDate > 0 && maxDate < TimeInstant.MAX_TIME;
+      case ActionEventType.REMOVE_LAYER:
         return this.isRemovable();
-      case os.action.EventType.REFRESH:
+      case ActionEventType.REFRESH:
         // don't allow refresh on reference layers (internally managed), or if the source doesn't allow refresh
-        return this.osType_ !== os.layer.LayerType.REF && isVector && source.isRefreshEnabled();
-      case os.action.EventType.LOCK:
+        return this.osType_ !== LayerType.REF && isVector && source.isRefreshEnabled();
+      case ActionEventType.LOCK:
         return isVector && source.isLockable() && !source.isLocked();
-      case os.action.EventType.UNLOCK:
+      case ActionEventType.UNLOCK:
         return isVector && source.isLockable() && source.isLocked();
-      case os.action.EventType.RESET_COLOR:
+      case ActionEventType.RESET_COLOR:
         return isVector && source.hasColors();
-      case os.action.EventType.SAVE_LAYER:
-      case os.action.EventType.SAVE_LAYER_AS:
+      case ActionEventType.SAVE_LAYER:
+      case ActionEventType.SAVE_LAYER_AS:
         return isVector && source.getHasModifications();
-      case os.action.EventType.LAYER_SETTINGS:
-        const descriptor = os.dataManager.getDescriptor(source.getId());
+      case ActionEventType.LAYER_SETTINGS:
+        const descriptor = DataManager.getInstance().getDescriptor(source.getId());
 
         return isVector && onlyOneLayer &&
-        os.implements(descriptor, os.data.IMappingDescriptor.ID) &&
-        /** @type {os.data.IMappingDescriptor} */ (descriptor).supportsMapping();
+        osImplements(descriptor, IMappingDescriptor.ID) &&
+        /** @type {IMappingDescriptor} */ (descriptor).supportsMapping();
       default:
         // ask the source if it supports the action
         return isVector && source.getSupportsAction(type);
     }
   }
 
-  return false;
-};
-
-
-/**
- * Gets the double click handler for the layer.
- *
- * @return {Function}
- */
-os.layer.Vector.prototype.getDoubleClickHandler = function() {
-  return this.doubleClickHandler_;
-};
-
-
-/**
- * Sets the double click handler for the layer. This can be a function that operates on either a single feature
- * or an array of features.
- *
- * @param {Function} handler
- */
-os.layer.Vector.prototype.setDoubleClickHandler = function(handler) {
-  this.doubleClickHandler_ = handler;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getSynchronizerType = function() {
-  return this.syncType_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setSynchronizerType = function(value) {
-  this.syncType_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.getHidden = function() {
-  return this.hidden_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.setHidden = function(value) {
-  this.hidden_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.renderLegend = function(options) {
-  // use default vector layer legend renderer
-  os.legend.drawVectorLayer(this, options);
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.persist = function(opt_to) {
-  opt_to = opt_to || {};
-
-  opt_to['enabled'] = this.isEnabled();
-  opt_to['visible'] = this.getLayerVisible();
-  opt_to['opacity'] = this.getOpacity();
-  opt_to['minResolution'] = this.getMinResolution();
-  opt_to['maxResolution'] = this.getMaxResolution();
-
-  // style
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.getId());
-
-  if (config) {
-    opt_to[os.style.StyleField.ARROW_SIZE] = config[os.style.StyleField.ARROW_SIZE];
-    opt_to[os.style.StyleField.ARROW_UNITS] = config[os.style.StyleField.ARROW_UNITS];
-    opt_to[os.style.StyleField.COLOR] = os.style.getConfigColor(config);
-    opt_to[os.style.StyleField.FILL_COLOR] = os.style.getConfigColor(config, false, os.style.StyleField.FILL);
-    opt_to[os.style.StyleField.REPLACE_STYLE] = config[os.style.StyleField.REPLACE_STYLE];
-    opt_to[os.style.StyleField.SIZE] = os.style.getConfigSize(config);
-    opt_to[os.style.StyleField.ICON] = os.style.getConfigIcon(config);
-    opt_to[os.style.StyleField.LABELS] = config[os.style.StyleField.LABELS];
-    opt_to[os.style.StyleField.LABEL_COLOR] = config[os.style.StyleField.LABEL_COLOR];
-    opt_to[os.style.StyleField.LABEL_SIZE] = config[os.style.StyleField.LABEL_SIZE];
-    opt_to[os.style.StyleField.LINE_DASH] = os.style.getConfigLineDash(config);
-    opt_to[os.style.StyleField.LOB_COLUMN_LENGTH] = config[os.style.StyleField.LOB_COLUMN_LENGTH];
-    opt_to[os.style.StyleField.LOB_LENGTH] = config[os.style.StyleField.LOB_LENGTH];
-    opt_to[os.style.StyleField.LOB_LENGTH_TYPE] = config[os.style.StyleField.LOB_LENGTH_TYPE];
-    opt_to[os.style.StyleField.LOB_LENGTH_COLUMN] = config[os.style.StyleField.LOB_LENGTH_COLUMN];
-    opt_to[os.style.StyleField.LOB_LENGTH_ERROR] = config[os.style.StyleField.LOB_LENGTH_ERROR];
-    opt_to[os.style.StyleField.LOB_LENGTH_ERROR_COLUMN] = config[os.style.StyleField.LOB_LENGTH_ERROR_COLUMN];
-    opt_to[os.style.StyleField.LOB_LENGTH_ERROR_UNITS] = config[os.style.StyleField.LOB_LENGTH_ERROR_UNITS];
-    opt_to[os.style.StyleField.LOB_LENGTH_UNITS] = config[os.style.StyleField.LOB_LENGTH_UNITS];
-    opt_to[os.style.StyleField.LOB_BEARING_COLUMN] = config[os.style.StyleField.LOB_BEARING_COLUMN];
-    opt_to[os.style.StyleField.LOB_BEARING_ERROR] = config[os.style.StyleField.LOB_BEARING_ERROR];
-    opt_to[os.style.StyleField.LOB_BEARING_ERROR_COLUMN] = config[os.style.StyleField.LOB_BEARING_ERROR_COLUMN];
-    opt_to[os.style.StyleField.ROTATION_COLUMN] = config[os.style.StyleField.ROTATION_COLUMN];
-    opt_to[os.style.StyleField.SHOW_ROTATION] = config[os.style.StyleField.SHOW_ROTATION];
-    opt_to[os.style.StyleField.SHOW_ARROW] = config[os.style.StyleField.SHOW_ARROW];
-    opt_to[os.style.StyleField.SHOW_ELLIPSE] = config[os.style.StyleField.SHOW_ELLIPSE];
-    opt_to[os.style.StyleField.SHOW_ERROR] = config[os.style.StyleField.SHOW_ERROR];
-    opt_to[os.style.StyleField.SHOW_LABELS] = config[os.style.StyleField.SHOW_LABELS];
-    opt_to[os.style.StyleField.SHOW_ELLIPSOIDS] = config[os.style.StyleField.SHOW_ELLIPSOIDS];
-    opt_to[os.style.StyleField.SHOW_GROUND_REF] = config[os.style.StyleField.SHOW_GROUND_REF];
+  /**
+   * Gets the double click handler for the layer.
+   *
+   * @return {Function}
+   */
+  getDoubleClickHandler() {
+    return this.doubleClickHandler_;
   }
 
-  var source = /** @type {os.IPersistable} */ (this.getSource());
-  if (source && os.implements(source, os.source.ISource.ID)) {
-    opt_to = /** @type {os.source.ISource} */ (source).persist(opt_to);
+  /**
+   * Sets the double click handler for the layer. This can be a function that operates on either a single feature
+   * or an array of features.
+   *
+   * @param {Function} handler
+   */
+  setDoubleClickHandler(handler) {
+    this.doubleClickHandler_ = handler;
   }
 
-  return opt_to;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Vector.prototype.restore = function(config) {
-  if (config['id'] != null) {
-    this.setId(config['id']);
+  /**
+   * @inheritDoc
+   */
+  getSynchronizerType() {
+    return this.syncType_;
   }
 
-  if (config['enabled'] != null) {
-    this.setEnabled(config['enabled']);
+  /**
+   * @inheritDoc
+   */
+  setSynchronizerType(value) {
+    this.syncType_ = value;
   }
 
-  var styleConf = os.style.StyleManager.getInstance().getOrCreateLayerConfig(this.getId());
-
-  if (config['provider'] != null) {
-    this.setProvider(config['provider']);
+  /**
+   * @inheritDoc
+   */
+  getHidden() {
+    return this.hidden_;
   }
 
-  if (config['tags'] != null) {
-    this.setTags(config['tags']);
+  /**
+   * @inheritDoc
+   */
+  setHidden(value) {
+    this.hidden_ = value;
   }
 
-  if (config['title'] != null) {
-    this.setTitle(config['title']);
+  /**
+   * @inheritDoc
+   */
+  renderLegend(options) {
+    // use default vector layer legend renderer
+    drawVectorLayer(this, options);
   }
 
-  if (config['layerType'] != null) {
-    this.setOSType(config['layerType']);
-  }
+  /**
+   * @inheritDoc
+   */
+  persist(opt_to) {
+    opt_to = opt_to || {};
 
-  if (config['explicitType'] != null) {
-    this.setExplicitType(config['explicitType']);
-  }
+    opt_to['enabled'] = this.isEnabled();
+    opt_to['visible'] = this.getLayerVisible();
+    opt_to['opacity'] = this.getOpacity();
+    opt_to['minResolution'] = this.getMinResolution();
+    opt_to['maxResolution'] = this.getMaxResolution();
 
-  if (config['visible'] != null) {
-    this.setLayerVisible(config['visible']);
-  }
+    // style
+    var config = StyleManager.getInstance().getLayerConfig(this.getId());
 
-  if (config['featureDirective'] != null) {
-    this.setFeatureDirective(config['featureDirective']);
-  }
-
-  if (config['layerUI'] != null) {
-    this.setLayerUI(config['layerUI']);
-  }
-
-  if (config['nodeUI'] != null) {
-    this.setNodeUI(config['nodeUI']);
-  }
-
-  var opacity = config['alpha'] || config['opacity'];
-  if (opacity != null) {
-    this.setOpacity(opacity);
-  }
-
-  this.setMinResolution(config['minResolution'] || this.getMinResolution());
-  this.setMaxResolution(config['maxResolution'] || this.getMaxResolution());
-
-  var color = config[os.style.StyleField.COLOR];
-  if (color) {
-    os.style.setConfigColor(styleConf, os.style.toRgbaString(color));
-  }
-
-  var fillColor = config[os.style.StyleField.FILL_COLOR];
-
-  // if fill color is not defined, use the base color with default fill opacity
-  if (!fillColor && color) {
-    fillColor = os.color.toRgbArray(color);
-    fillColor[3] = os.style.DEFAULT_FILL_ALPHA;
-  }
-
-  if (fillColor) {
-    // if a fill opacity is defined, override it in the color
-    if (config[os.style.StyleField.FILL_OPACITY] != null) {
-      fillColor = os.color.toRgbArray(fillColor);
-      fillColor[3] = config[os.style.StyleField.FILL_OPACITY];
+    if (config) {
+      opt_to[StyleField.ARROW_SIZE] = config[StyleField.ARROW_SIZE];
+      opt_to[StyleField.ARROW_UNITS] = config[StyleField.ARROW_UNITS];
+      opt_to[StyleField.COLOR] = osStyle.getConfigColor(config);
+      opt_to[StyleField.FILL_COLOR] = osStyle.getConfigColor(config, false, StyleField.FILL);
+      opt_to[StyleField.REPLACE_STYLE] = config[StyleField.REPLACE_STYLE];
+      opt_to[StyleField.SIZE] = osStyle.getConfigSize(config);
+      opt_to[StyleField.ICON] = osStyle.getConfigIcon(config);
+      opt_to[StyleField.LABELS] = config[StyleField.LABELS];
+      opt_to[StyleField.LABEL_COLOR] = config[StyleField.LABEL_COLOR];
+      opt_to[StyleField.LABEL_SIZE] = config[StyleField.LABEL_SIZE];
+      opt_to[StyleField.LINE_DASH] = osStyle.getConfigLineDash(config);
+      opt_to[StyleField.LOB_COLUMN_LENGTH] = config[StyleField.LOB_COLUMN_LENGTH];
+      opt_to[StyleField.LOB_LENGTH] = config[StyleField.LOB_LENGTH];
+      opt_to[StyleField.LOB_LENGTH_TYPE] = config[StyleField.LOB_LENGTH_TYPE];
+      opt_to[StyleField.LOB_LENGTH_COLUMN] = config[StyleField.LOB_LENGTH_COLUMN];
+      opt_to[StyleField.LOB_LENGTH_ERROR] = config[StyleField.LOB_LENGTH_ERROR];
+      opt_to[StyleField.LOB_LENGTH_ERROR_COLUMN] = config[StyleField.LOB_LENGTH_ERROR_COLUMN];
+      opt_to[StyleField.LOB_LENGTH_ERROR_UNITS] = config[StyleField.LOB_LENGTH_ERROR_UNITS];
+      opt_to[StyleField.LOB_LENGTH_UNITS] = config[StyleField.LOB_LENGTH_UNITS];
+      opt_to[StyleField.LOB_BEARING_COLUMN] = config[StyleField.LOB_BEARING_COLUMN];
+      opt_to[StyleField.LOB_BEARING_ERROR] = config[StyleField.LOB_BEARING_ERROR];
+      opt_to[StyleField.LOB_BEARING_ERROR_COLUMN] = config[StyleField.LOB_BEARING_ERROR_COLUMN];
+      opt_to[StyleField.ROTATION_COLUMN] = config[StyleField.ROTATION_COLUMN];
+      opt_to[StyleField.SHOW_ROTATION] = config[StyleField.SHOW_ROTATION];
+      opt_to[StyleField.SHOW_ARROW] = config[StyleField.SHOW_ARROW];
+      opt_to[StyleField.SHOW_ELLIPSE] = config[StyleField.SHOW_ELLIPSE];
+      opt_to[StyleField.SHOW_ERROR] = config[StyleField.SHOW_ERROR];
+      opt_to[StyleField.SHOW_LABELS] = config[StyleField.SHOW_LABELS];
+      opt_to[StyleField.SHOW_ELLIPSOIDS] = config[StyleField.SHOW_ELLIPSOIDS];
+      opt_to[StyleField.SHOW_GROUND_REF] = config[StyleField.SHOW_GROUND_REF];
     }
 
-    os.style.setFillColor(styleConf, os.style.toRgbaString(fillColor));
+    var source = /** @type {IPersistable} */ (this.getSource());
+    if (source && osImplements(source, ISource.ID)) {
+      opt_to = /** @type {ISource} */ (source).persist(opt_to);
+    }
+
+    return opt_to;
   }
 
-  if (config[os.style.StyleField.REPLACE_STYLE] != null) {
-    styleConf[os.style.StyleField.REPLACE_STYLE] = config[os.style.StyleField.REPLACE_STYLE];
+  /**
+   * @inheritDoc
+   */
+  restore(config) {
+    if (config['id'] != null) {
+      this.setId(config['id']);
+    }
+
+    if (config['enabled'] != null) {
+      this.setEnabled(config['enabled']);
+    }
+
+    var styleConf = StyleManager.getInstance().getOrCreateLayerConfig(this.getId());
+
+    if (config['provider'] != null) {
+      this.setProvider(config['provider']);
+    }
+
+    if (config['tags'] != null) {
+      this.setTags(config['tags']);
+    }
+
+    if (config['title'] != null) {
+      this.setTitle(config['title']);
+    }
+
+    if (config['layerType'] != null) {
+      this.setOSType(config['layerType']);
+    }
+
+    if (config['explicitType'] != null) {
+      this.setExplicitType(config['explicitType']);
+    }
+
+    if (config['visible'] != null) {
+      this.setLayerVisible(config['visible']);
+    }
+
+    if (config['featureDirective'] != null) {
+      this.setFeatureDirective(config['featureDirective']);
+    }
+
+    if (config['layerUI'] != null) {
+      this.setLayerUI(config['layerUI']);
+    }
+
+    if (config['nodeUI'] != null) {
+      this.setNodeUI(config['nodeUI']);
+    }
+
+    var opacity = config['alpha'] || config['opacity'];
+    if (opacity != null) {
+      this.setOpacity(opacity);
+    }
+
+    this.setMinResolution(config['minResolution'] || this.getMinResolution());
+    this.setMaxResolution(config['maxResolution'] || this.getMaxResolution());
+
+    var color = config[StyleField.COLOR];
+    if (color) {
+      osStyle.setConfigColor(styleConf, osStyle.toRgbaString(color));
+    }
+
+    var fillColor = config[StyleField.FILL_COLOR];
+
+    // if fill color is not defined, use the base color with default fill opacity
+    if (!fillColor && color) {
+      fillColor = toRgbArray(color);
+      fillColor[3] = osStyle.DEFAULT_FILL_ALPHA;
+    }
+
+    if (fillColor) {
+      // if a fill opacity is defined, override it in the color
+      if (config[StyleField.FILL_OPACITY] != null) {
+        fillColor = toRgbArray(fillColor);
+        fillColor[3] = config[StyleField.FILL_OPACITY];
+      }
+
+      osStyle.setFillColor(styleConf, osStyle.toRgbaString(fillColor));
+    }
+
+    if (config[StyleField.REPLACE_STYLE] != null) {
+      styleConf[StyleField.REPLACE_STYLE] = config[StyleField.REPLACE_STYLE];
+    }
+
+    if (config[StyleField.SIZE] != null) {
+      osStyle.setConfigSize(styleConf, config[StyleField.SIZE]);
+    }
+
+    if (config[StyleField.LINE_DASH] != null) {
+      osStyle.setConfigLineDash(styleConf, config[StyleField.LINE_DASH]);
+    }
+
+    if (config[StyleField.ICON] != null) {
+      osStyle.setConfigIcon(styleConf, config[StyleField.ICON]);
+    }
+
+    if (config[StyleField.SHOW_ARROW] != null) {
+      styleConf[StyleField.SHOW_ARROW] = config[StyleField.SHOW_ARROW];
+    }
+
+    if (config[StyleField.SHOW_ERROR] != null) {
+      styleConf[StyleField.SHOW_ERROR] = config[StyleField.SHOW_ERROR];
+    }
+
+    if (config[StyleField.SHOW_ELLIPSE] != null) {
+      styleConf[StyleField.SHOW_ELLIPSE] = config[StyleField.SHOW_ELLIPSE];
+    }
+
+    if (config[StyleField.SHOW_ELLIPSOIDS] != null) {
+      styleConf[StyleField.SHOW_ELLIPSOIDS] = config[StyleField.SHOW_ELLIPSOIDS];
+    }
+
+    if (config[StyleField.SHOW_GROUND_REF] != null) {
+      styleConf[StyleField.SHOW_GROUND_REF] = config[StyleField.SHOW_GROUND_REF];
+    }
+
+    if (config[StyleField.SHOW_ROTATION] != null) {
+      styleConf[StyleField.SHOW_ROTATION] = config[StyleField.SHOW_ROTATION];
+    }
+
+    styleConf[StyleField.ARROW_SIZE] = config[StyleField.ARROW_SIZE] || osStyle.DEFAULT_ARROW_SIZE;
+    styleConf[StyleField.ARROW_UNITS] = config[StyleField.ARROW_UNITS] || osStyle.DEFAULT_UNITS;
+    styleConf[StyleField.LOB_COLUMN_LENGTH] = config[StyleField.LOB_COLUMN_LENGTH] ||
+        osStyle.DEFAULT_LOB_LENGTH;
+    styleConf[StyleField.LOB_LENGTH] = config[StyleField.LOB_LENGTH] || osStyle.DEFAULT_LOB_LENGTH;
+    styleConf[StyleField.LOB_LENGTH_ERROR] = config[StyleField.LOB_LENGTH_ERROR] ||
+        osStyle.DEFAULT_LOB_LENGTH_ERROR;
+    styleConf[StyleField.LOB_LENGTH_TYPE] = config[StyleField.LOB_LENGTH_TYPE] ||
+        osStyle.DEFAULT_LOB_LENGTH_TYPE;
+    styleConf[StyleField.LOB_LENGTH_COLUMN] = config[StyleField.LOB_LENGTH_COLUMN] || '';
+    styleConf[StyleField.LOB_LENGTH_ERROR_COLUMN] = config[StyleField.LOB_LENGTH_ERROR_COLUMN] || '';
+    styleConf[StyleField.LOB_BEARING_COLUMN] = config[StyleField.LOB_BEARING_COLUMN] || '';
+    styleConf[StyleField.LOB_LENGTH_ERROR_UNITS] = config[StyleField.LOB_LENGTH_ERROR_UNITS] ||
+        osStyle.DEFAULT_UNITS;
+    styleConf[StyleField.LOB_LENGTH_UNITS] = config[StyleField.LOB_LENGTH_UNITS] ||
+        osStyle.DEFAULT_UNITS;
+    styleConf[StyleField.LOB_BEARING_ERROR] = config[StyleField.LOB_BEARING_ERROR] ||
+        osStyle.DEFAULT_LOB_BEARING_ERROR;
+    styleConf[StyleField.LOB_BEARING_ERROR_COLUMN] = config[StyleField.LOB_BEARING_ERROR_COLUMN] || '';
+    styleConf[StyleField.ROTATION_COLUMN] = config[StyleField.ROTATION_COLUMN] || '';
+    styleConf[StyleField.LABELS] = config[StyleField.LABELS] || [cloneConfig()];
+    styleConf[StyleField.LABEL_COLOR] = config[StyleField.LABEL_COLOR];
+    styleConf[StyleField.LABEL_SIZE] = config[StyleField.LABEL_SIZE] || DEFAULT_SIZE;
+    styleConf[StyleField.SHOW_LABELS] = config[StyleField.SHOW_LABELS] || false;
+
+    var source = /** @type {IPersistable} */ (this.getSource());
+    if (source && osImplements(source, ISource.ID)) {
+      /** @type {ISource} */ (source).restore(config);
+    }
   }
 
-  if (config[os.style.StyleField.SIZE] != null) {
-    os.style.setConfigSize(styleConf, config[os.style.StyleField.SIZE]);
+  /**
+   * Handles double clicks on features by popping up a window to display feature metadata.
+   *
+   * @param {Feature} feature *
+   * @this Vector
+   */
+  static defaultDoubleClickHandler(feature) {
+    if (feature) {
+      // look for a title on the feature, otherwise use the layer title
+      var title = getTitle(feature) || this.getTitle();
+      launchMultiFeatureInfo(feature, title);
+    }
   }
-
-  if (config[os.style.StyleField.LINE_DASH] != null) {
-    os.style.setConfigLineDash(styleConf, config[os.style.StyleField.LINE_DASH]);
-  }
-
-  if (config[os.style.StyleField.ICON] != null) {
-    os.style.setConfigIcon(styleConf, config[os.style.StyleField.ICON]);
-  }
-
-  if (config[os.style.StyleField.SHOW_ARROW] != null) {
-    styleConf[os.style.StyleField.SHOW_ARROW] = config[os.style.StyleField.SHOW_ARROW];
-  }
-
-  if (config[os.style.StyleField.SHOW_ERROR] != null) {
-    styleConf[os.style.StyleField.SHOW_ERROR] = config[os.style.StyleField.SHOW_ERROR];
-  }
-
-  if (config[os.style.StyleField.SHOW_ELLIPSE] != null) {
-    styleConf[os.style.StyleField.SHOW_ELLIPSE] = config[os.style.StyleField.SHOW_ELLIPSE];
-  }
-
-  if (config[os.style.StyleField.SHOW_ELLIPSOIDS] != null) {
-    styleConf[os.style.StyleField.SHOW_ELLIPSOIDS] = config[os.style.StyleField.SHOW_ELLIPSOIDS];
-  }
-
-  if (config[os.style.StyleField.SHOW_GROUND_REF] != null) {
-    styleConf[os.style.StyleField.SHOW_GROUND_REF] = config[os.style.StyleField.SHOW_GROUND_REF];
-  }
-
-  if (config[os.style.StyleField.SHOW_ROTATION] != null) {
-    styleConf[os.style.StyleField.SHOW_ROTATION] = config[os.style.StyleField.SHOW_ROTATION];
-  }
-
-  styleConf[os.style.StyleField.ARROW_SIZE] = config[os.style.StyleField.ARROW_SIZE] || os.style.DEFAULT_ARROW_SIZE;
-  styleConf[os.style.StyleField.ARROW_UNITS] = config[os.style.StyleField.ARROW_UNITS] || os.style.DEFAULT_UNITS;
-  styleConf[os.style.StyleField.LOB_COLUMN_LENGTH] = config[os.style.StyleField.LOB_COLUMN_LENGTH] ||
-      os.style.DEFAULT_LOB_LENGTH;
-  styleConf[os.style.StyleField.LOB_LENGTH] = config[os.style.StyleField.LOB_LENGTH] || os.style.DEFAULT_LOB_LENGTH;
-  styleConf[os.style.StyleField.LOB_LENGTH_ERROR] = config[os.style.StyleField.LOB_LENGTH_ERROR] ||
-      os.style.DEFAULT_LOB_LENGTH_ERROR;
-  styleConf[os.style.StyleField.LOB_LENGTH_TYPE] = config[os.style.StyleField.LOB_LENGTH_TYPE] ||
-      os.style.DEFAULT_LOB_LENGTH_TYPE;
-  styleConf[os.style.StyleField.LOB_LENGTH_COLUMN] = config[os.style.StyleField.LOB_LENGTH_COLUMN] || '';
-  styleConf[os.style.StyleField.LOB_LENGTH_ERROR_COLUMN] = config[os.style.StyleField.LOB_LENGTH_ERROR_COLUMN] || '';
-  styleConf[os.style.StyleField.LOB_BEARING_COLUMN] = config[os.style.StyleField.LOB_BEARING_COLUMN] || '';
-  styleConf[os.style.StyleField.LOB_LENGTH_ERROR_UNITS] = config[os.style.StyleField.LOB_LENGTH_ERROR_UNITS] ||
-      os.style.DEFAULT_UNITS;
-  styleConf[os.style.StyleField.LOB_LENGTH_UNITS] = config[os.style.StyleField.LOB_LENGTH_UNITS] ||
-      os.style.DEFAULT_UNITS;
-  styleConf[os.style.StyleField.LOB_BEARING_ERROR] = config[os.style.StyleField.LOB_BEARING_ERROR] ||
-      os.style.DEFAULT_LOB_BEARING_ERROR;
-  styleConf[os.style.StyleField.LOB_BEARING_ERROR_COLUMN] = config[os.style.StyleField.LOB_BEARING_ERROR_COLUMN] || '';
-  styleConf[os.style.StyleField.ROTATION_COLUMN] = config[os.style.StyleField.ROTATION_COLUMN] || '';
-  styleConf[os.style.StyleField.LABELS] = config[os.style.StyleField.LABELS] || [os.style.label.cloneConfig()];
-  styleConf[os.style.StyleField.LABEL_COLOR] = config[os.style.StyleField.LABEL_COLOR];
-  styleConf[os.style.StyleField.LABEL_SIZE] = config[os.style.StyleField.LABEL_SIZE] || os.style.label.DEFAULT_SIZE;
-  styleConf[os.style.StyleField.SHOW_LABELS] = config[os.style.StyleField.SHOW_LABELS] || false;
-
-  var source = /** @type {os.IPersistable} */ (this.getSource());
-  if (source && os.implements(source, os.source.ISource.ID)) {
-    /** @type {os.source.ISource} */ (source).restore(config);
-  }
-};
-
+}
+osImplements(Vector, ILayer.ID);
+osImplements(Vector, IGroupable.ID);
+osImplements(Vector, IFilterable.ID);
+osImplements(Vector, ILegendRenderer.ID);
 
 /**
- * Handles double clicks on features by popping up a window to display feature metadata.
- *
- * @param {ol.Feature} feature *
- * @this os.layer.Vector
+ * Class name
+ * @type {string}
+ * @deprecated Please use LayerClass.VECTOR.
  */
-os.layer.Vector.defaultDoubleClickHandler = function(feature) {
-  if (feature) {
-    // look for a title on the feature, otherwise use the layer title
-    var title = os.feature.getTitle(feature) || this.getTitle();
-    os.ui.feature.launchMultiFeatureInfo(feature, title);
-  }
-};
+Vector.NAME = LayerClass.VECTOR;
+registerClass(LayerClass.VECTOR, Vector);
+
+exports = Vector;

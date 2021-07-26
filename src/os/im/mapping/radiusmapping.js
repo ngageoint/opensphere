@@ -1,15 +1,14 @@
 goog.module('os.im.mapping.RadiusMapping');
 goog.module.declareLegacyNamespace();
 
-const googObject = goog.require('goog.object');
 const Fields = goog.require('os.Fields');
-const fields = goog.require('os.fields');
-const mapping = goog.require('os.im.mapping');
+const {DEFAULT_RADIUS_COL_NAME, DEFAULT_RADIUS_UNIT} = goog.require('os.fields');
+const osMapping = goog.require('os.im.mapping');
 const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
 const RenameMapping = goog.require('os.im.mapping.RenameMapping');
-const math = goog.require('os.math');
+const {convertUnits, parseNumber} = goog.require('os.math');
 const Units = goog.require('os.math.Units');
-const osXml = goog.require('os.xml');
+const {appendElement} = goog.require('os.xml');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -17,7 +16,7 @@ const Feature = goog.requireType('ol.Feature');
 /**
  * Ellipse radius mapping.
  *
- * @extends {RenameMapping.<Feature>}
+ * @extends {RenameMapping<Feature>}
  */
 class RadiusMapping extends RenameMapping {
   /**
@@ -25,7 +24,7 @@ class RadiusMapping extends RenameMapping {
    */
   constructor() {
     super();
-    this.toField = fields.DEFAULT_RADIUS_COL_NAME;
+    this.toField = DEFAULT_RADIUS_COL_NAME;
     this.xmlType = RadiusMapping.ID;
 
     /**
@@ -50,7 +49,7 @@ class RadiusMapping extends RenameMapping {
      * @type {?string}
      * @protected
      */
-    this.units = fields.DEFAULT_RADIUS_UNIT;
+    this.units = DEFAULT_RADIUS_UNIT;
   }
 
   /**
@@ -90,16 +89,16 @@ class RadiusMapping extends RenameMapping {
    */
   execute(item) {
     if (this.field && this.toField) {
-      var current = math.parseNumber(mapping.getItemField(item, this.field));
+      var current = parseNumber(osMapping.getItemField(item, this.field));
       if (!isNaN(current)) {
         if (this.units) {
-          current = math.convertUnits(current, fields.DEFAULT_RADIUS_UNIT, this.units);
+          current = convertUnits(current, DEFAULT_RADIUS_UNIT, this.units);
         }
 
-        mapping.setItemField(item, this.toField, current);
+        osMapping.setItemField(item, this.toField, current);
 
         if (this.units && this.unitsField) {
-          mapping.setItemField(item, this.unitsField, this.units);
+          osMapping.setItemField(item, this.unitsField, this.units);
         }
       }
     }
@@ -113,20 +112,20 @@ class RadiusMapping extends RenameMapping {
       var i = items.length;
       while (i--) {
         var item = items[i];
-        var f = mapping.getBestFieldMatch(item, this.regex);
+        var f = osMapping.getBestFieldMatch(item, this.regex);
 
         if (f) {
           var m = new this.constructor();
           m.field = f;
 
           if (this.unitsRegex) {
-            var unitsField = mapping.getBestFieldMatch(item, this.unitsRegex);
+            var unitsField = osMapping.getBestFieldMatch(item, this.unitsRegex);
             if (unitsField) {
-              var units = mapping.getItemField(item, unitsField);
+              var units = osMapping.getItemField(item, unitsField);
               if (typeof units == 'string') {
                 units = units.toLowerCase();
 
-                if (googObject.getValues(Units).indexOf(units) !== -1) {
+                if (Object.values(Units).indexOf(units) !== -1) {
                   m.setUnits(units);
                 }
               }
@@ -145,7 +144,7 @@ class RadiusMapping extends RenameMapping {
    * @inheritDoc
    */
   clone() {
-    var other = super.clone();
+    var other = /** @type {RadiusMapping} */ (super.clone());
     other.setUnits(this.getUnits());
     return other;
   }
@@ -173,7 +172,7 @@ class RadiusMapping extends RenameMapping {
    */
   toXml() {
     var xml = super.toXml();
-    osXml.appendElement('units', xml, this.getUnits());
+    appendElement('units', xml, this.getUnits());
 
     return xml;
   }

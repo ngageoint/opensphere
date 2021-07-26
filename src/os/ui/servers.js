@@ -11,8 +11,8 @@ goog.require('os.config.Settings');
 goog.require('os.data');
 goog.require('os.data.DataManager');
 goog.require('os.im.ImportProcess');
-goog.require('os.metrics');
 goog.require('os.metrics.Metrics');
+goog.require('os.metrics.keys');
 goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.AddServer');
@@ -347,9 +347,9 @@ os.ui.ServersCtrl.prototype.edit = function(provider) {
   var ui = im.getImportUI(type);
   // Log metric
   if (provider.getEditable()) {
-    os.metrics.Metrics.getInstance().updateMetric(os.metrics.Servers.EDIT, 1);
+    os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Servers.EDIT, 1);
   } else {
-    os.metrics.Metrics.getInstance().updateMetric(os.metrics.Servers.VIEW, 1);
+    os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Servers.VIEW, 1);
   }
 
   if (ui) {
@@ -374,7 +374,7 @@ os.ui.ServersCtrl.prototype.remove = function(provider, opt_prompt) {
   if (opt_prompt === undefined) {
     opt_prompt = true;
   }
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.Servers.REMOVE, 1);
+  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Servers.REMOVE, 1);
   var titles = this.checkForActiveDescriptors_(provider, !opt_prompt);
 
   if (titles.length > 0 && opt_prompt) {
@@ -401,7 +401,7 @@ os.ui.ServersCtrl.prototype.remove = function(provider, opt_prompt) {
  */
 os.ui.ServersCtrl.prototype.refresh = function(provider) {
   goog.log.info(os.ui.ServersCtrl.LOGGER_, 'Refreshing provider "' + provider.getLabel() + '"');
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.Servers.REFRESH, 1);
+  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Servers.REFRESH, 1);
   if (provider instanceof os.ui.server.AbstractLoadingServer) {
     if (!(provider).isLoading()) {
       provider.load(true);

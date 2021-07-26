@@ -2,7 +2,8 @@ goog.module('os.command.FeatureCenterShape');
 goog.module.declareLegacyNamespace();
 
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
-const metrics = goog.require('os.metrics');
+const {SUB_DELIMITER} = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 
@@ -25,7 +26,7 @@ class FeatureCenterShape extends AbstractFeatureStyle {
     this.title = 'Change Feature Center Style';
 
     var type = value ? value.replace(/ /g, '_') : 'Unknown';
-    this.metricKey = metrics.Layer.FEATURE_CENTER_SHAPE + metrics.SUB_DELIMITER + type;
+    this.metricKey = LayerKeys.FEATURE_CENTER_SHAPE + SUB_DELIMITER + type;
   }
 
   /**

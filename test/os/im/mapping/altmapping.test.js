@@ -1,15 +1,24 @@
 goog.require('ol.Feature');
 goog.require('ol.geom.Point');
 goog.require('os.Fields');
+goog.require('os.fields');
+goog.require('os.im.mapping');
 goog.require('os.im.mapping.AltMapping');
 goog.require('os.math');
 goog.require('os.math.Units');
 
 describe('os.im.mapping.AltMapping', function() {
+  const Feature = goog.module.get('ol.Feature');
+  const Point = goog.module.get('ol.geom.Point');
+  const Fields = goog.module.get('os.Fields');
+  const fields = goog.module.get('os.fields');
+  const mapping = goog.module.get('os.im.mapping');
+  const AltMapping = goog.module.get('os.im.mapping.AltMapping');
+
   it('should auto detect altitude string types', function() {
     // test with a feature (WFS layer or csv import)
     // does not contain the correct fields
-    var a = new ol.Feature();
+    var a = new Feature();
     a.set('value1', 'nope');
     a.set('value2', 'nope');
     a.set('value3', 'nope');
@@ -17,7 +26,7 @@ describe('os.im.mapping.AltMapping', function() {
 
     // should return null because the correct fields do
     // not exist in either object
-    var pm = new os.im.mapping.AltMapping();
+    var pm = new AltMapping();
     var m = pm.autoDetect([a]);
     expect(m).toBeNull();
 
@@ -58,41 +67,41 @@ describe('os.im.mapping.AltMapping', function() {
   });
 
   it('should map altitude to a feature', function() {
-    var feature = new ol.Feature(new ol.geom.Point([0, 0]));
+    var feature = new Feature(new Point([0, 0]));
     feature.set('ALTITUDE', '5000');
     feature.set('ALTITUDE_UNITS', 'm');
 
-    var m = new os.im.mapping.AltMapping();
+    var m = new AltMapping();
     var nm = m.autoDetect([feature]);
     nm.execute(feature);
 
     // feature should have ALTITUDE, ALTITUDE_UNITS remain the same
-    expect(os.im.mapping.getItemField(feature, os.Fields.ALT)).toBe('5000');
-    expect(os.im.mapping.getItemField(feature, os.Fields.ALT_UNITS)).toBe('m');
+    expect(mapping.getItemField(feature, Fields.ALT)).toBe('5000');
+    expect(mapping.getItemField(feature, Fields.ALT_UNITS)).toBe('m');
     expect(feature.getGeometry().getFirstCoordinate()[2]).toBe(5000);
   });
 
   it('should map altitude to a feature with normalized units', function() {
-    var feature = new ol.Feature(new ol.geom.Point([0, 0]));
+    var feature = new Feature(new Point([0, 0]));
     feature.set('ALTITUDE', '5000');
     feature.set('ALTITUDE_UNITS', 'FEET');
 
-    var m = new os.im.mapping.AltMapping();
+    var m = new AltMapping();
     var nm = m.autoDetect([feature]);
     nm.execute(feature);
 
     // altitude should be converted to meters, but the original columns should be maintained.
-    expect(os.im.mapping.getItemField(feature, os.Fields.ALT)).toBe('5000');
-    expect(os.im.mapping.getItemField(feature, os.fields.DEFAULT_ALT_COL_NAME)).toBe(1524);
-    expect(os.im.mapping.getItemField(feature, os.Fields.ALT_UNITS)).toBe('FEET');
+    expect(mapping.getItemField(feature, Fields.ALT)).toBe('5000');
+    expect(mapping.getItemField(feature, fields.DEFAULT_ALT_COL_NAME)).toBe(1524);
+    expect(mapping.getItemField(feature, Fields.ALT_UNITS)).toBe('FEET');
     expect(feature.getGeometry().getFirstCoordinate()[2]).toBe(1524);
   });
 
   it('should map inverse altitude to a feature', function() {
-    var feature = new ol.Feature(new ol.geom.Point([0, 0]));
+    var feature = new Feature(new Point([0, 0]));
     feature.set('DEPTH', '5000');
 
-    var m = new os.im.mapping.AltMapping();
+    var m = new AltMapping();
     var nm = m.autoDetect([feature]);
     nm.execute(feature);
 
@@ -101,50 +110,50 @@ describe('os.im.mapping.AltMapping', function() {
   });
 
   it('should map inverse altitude to a feature with normalized units', function() {
-    var feature = new ol.Feature(new ol.geom.Point([0, 0]));
+    var feature = new Feature(new Point([0, 0]));
     feature.set('DEPTH', '50');
     feature.set('DEPTH_UNITS', 'KM');
 
-    var m = new os.im.mapping.AltMapping();
+    var m = new AltMapping();
     var nm = m.autoDetect([feature]);
     nm.execute(feature);
 
     // altitude should be converted to meters, but the original columns should be maintained.
-    expect(os.im.mapping.getItemField(feature, os.fields.DEFAULT_ALT_COL_NAME)).toBe(-50000);
+    expect(mapping.getItemField(feature, fields.DEFAULT_ALT_COL_NAME)).toBe(-50000);
     expect(feature.getGeometry().getFirstCoordinate()[2]).toBe(-50000);
   });
 
   it('should normalize altitude column names', function() {
-    var feature = new ol.Feature(new ol.geom.Point([0, 0]));
+    var feature = new Feature(new Point([0, 0]));
     feature.set('ELEV', '5000');
     feature.set('ELEV_UNITS', 'm');
 
-    var m = new os.im.mapping.AltMapping();
+    var m = new AltMapping();
     var nm = m.autoDetect([feature]);
     nm.execute(feature);
 
     // feature should have ELEV, ELEV_UNITS remain the same
     // and new derived column
-    expect(os.im.mapping.getItemField(feature, 'ELEV')).toBe('5000');
-    expect(os.im.mapping.getItemField(feature, os.fields.DEFAULT_ALT_COL_NAME)).toBe(5000);
-    expect(os.im.mapping.getItemField(feature, 'ELEV_UNITS')).toBe('m');
+    expect(mapping.getItemField(feature, 'ELEV')).toBe('5000');
+    expect(mapping.getItemField(feature, fields.DEFAULT_ALT_COL_NAME)).toBe(5000);
+    expect(mapping.getItemField(feature, 'ELEV_UNITS')).toBe('m');
     expect(feature.getGeometry().getFirstCoordinate()[2]).toBe(5000);
   });
 
   it('should normalize altitude column names and units', function() {
-    var feature = new ol.Feature(new ol.geom.Point([0, 0]));
+    var feature = new Feature(new Point([0, 0]));
     feature.set('ELEV', '5000');
     feature.set('ELEV_UNITS', 'nmi');
 
-    var m = new os.im.mapping.AltMapping();
+    var m = new AltMapping();
     var nm = m.autoDetect([feature]);
     nm.execute(feature);
 
     // feature should have ELEV, ELEV_UNITS remain the same
     // and new derived column
-    expect(os.im.mapping.getItemField(feature, os.fields.DEFAULT_ALT_COL_NAME)).toBe(9259824);
-    expect(os.im.mapping.getItemField(feature, 'ELEV')).toBe('5000');
-    expect(os.im.mapping.getItemField(feature, 'ELEV_UNITS')).toBe('nmi');
+    expect(mapping.getItemField(feature, fields.DEFAULT_ALT_COL_NAME)).toBe(9259824);
+    expect(mapping.getItemField(feature, 'ELEV')).toBe('5000');
+    expect(mapping.getItemField(feature, 'ELEV_UNITS')).toBe('nmi');
     expect(feature.getGeometry().getFirstCoordinate()[2]).toBe(9259824);
   });
 });

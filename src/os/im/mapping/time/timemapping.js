@@ -1,69 +1,71 @@
-goog.provide('os.im.mapping.time.TimeMapping');
-goog.require('os.im.mapping');
-goog.require('os.im.mapping.MappingRegistry');
-goog.require('os.im.mapping.TimeType');
-goog.require('os.im.mapping.time.DateTimeMapping');
-goog.require('os.time');
+goog.module('os.im.mapping.time.TimeMapping');
+goog.module.declareLegacyNamespace();
 
+const {setItemField} = goog.require('os.im.mapping');
+const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
+const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
+const osTime = goog.require('os.time');
+
+const TimeType = goog.requireType('os.im.mapping.TimeType');
 
 
 /**
  * Mapping for fields representing time but not date.
  *
- * @param {os.im.mapping.TimeType} type The type of time mapping.
- * @extends {os.im.mapping.time.DateTimeMapping.<T>}
- * @constructor
+ * @extends {DateTimeMapping<T>}
  * @template T
  */
-os.im.mapping.time.TimeMapping = function(type) {
-  os.im.mapping.time.TimeMapping.base(this, 'constructor', type, os.im.mapping.time.TimeMapping.ID);
-  this.format = os.time.TIME_FORMATS[0];
-  this.formats = os.time.TIME_FORMATS;
-  this.customFormats = os.time.CUSTOM_TIME_FORMATS;
-  this.regexes = os.time.TIME_REGEXES;
+class TimeMapping extends DateTimeMapping {
+  /**
+   * Constructor.
+   * @param {TimeType} type The type of time mapping.
+   */
+  constructor(type) {
+    super(type, TimeMapping.ID);
+    this.format = osTime.TIME_FORMATS[0];
+    this.formats = osTime.TIME_FORMATS;
+    this.customFormats = osTime.CUSTOM_TIME_FORMATS;
+    this.regexes = osTime.TIME_REGEXES;
 
-  this.xmlType = os.im.mapping.time.TimeMapping.ID;
-};
-goog.inherits(os.im.mapping.time.TimeMapping, os.im.mapping.time.DateTimeMapping);
+    this.xmlType = TimeMapping.ID;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getScore() {
+    return 1;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  updateItem(t, item) {
+    if (this.field) {
+      setItemField(item, this.field, osTime.format(new Date(t)));
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  updateTime(to, from) {
+    var toDate = new Date(to);
+    var fromDate = new Date(from);
+    toDate.setUTCHours(fromDate.getUTCHours(), fromDate.getUTCMinutes(), fromDate.getUTCSeconds(),
+        fromDate.getUTCMilliseconds());
+
+    return toDate;
+  }
+}
 
 /**
  * @type {string}
- * @const
+ * @override
  */
-os.im.mapping.time.TimeMapping.ID = 'Time';
+TimeMapping.ID = 'Time';
 
 // Register the mapping.
-os.im.mapping.MappingRegistry.getInstance().registerMapping(
-    os.im.mapping.time.TimeMapping.ID, os.im.mapping.time.TimeMapping);
+MappingRegistry.getInstance().registerMapping(TimeMapping.ID, TimeMapping);
 
-
-/**
- * @inheritDoc
- */
-os.im.mapping.time.TimeMapping.prototype.getScore = function() {
-  return 1;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.time.TimeMapping.prototype.updateItem = function(t, item) {
-  if (this.field) {
-    os.im.mapping.setItemField(item, this.field, os.time.format(new Date(t)));
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.time.TimeMapping.prototype.updateTime = function(to, from) {
-  var toDate = new Date(to);
-  var fromDate = new Date(from);
-  toDate.setUTCHours(fromDate.getUTCHours(), fromDate.getUTCMinutes(), fromDate.getUTCSeconds(),
-      fromDate.getUTCMilliseconds());
-
-  return toDate;
-};
+exports = TimeMapping;

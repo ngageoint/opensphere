@@ -1,9 +1,15 @@
+goog.require('goog.events.EventType');
+goog.require('os.load.LoadingEventType');
 goog.require('os.load.LoadingManager');
 
 
 describe('os.load.LoadingManager', function() {
+  const GoogEventType = goog.module.get('goog.events.EventType');
+  const LoadingEventType = goog.module.get('os.load.LoadingEventType');
+  const LoadingManager = goog.module.get('os.load.LoadingManager');
+
   it('should be able to add loading tasks', function() {
-    var lm = new os.load.LoadingManager();
+    var lm = new LoadingManager();
     expect(lm.getLoading()).toBe(false);
     expect(lm.getLoadingCount()).toBe(0);
 
@@ -34,7 +40,7 @@ describe('os.load.LoadingManager', function() {
   });
 
   it('should be able to remove loading tasks', function() {
-    var lm = new os.load.LoadingManager();
+    var lm = new LoadingManager();
 
     // start by adding a task
     lm.addLoadingTask('testId', 'testTitle', true);
@@ -74,9 +80,10 @@ describe('os.load.LoadingManager', function() {
   });
 
   it('should fire events', function() {
-    var lm = new os.load.LoadingManager();
+    var lm = new LoadingManager();
     var isLoading = false;
-    var addedTask, removedTask;
+    var addedTask;
+    var removedTask;
 
     var loadingListener = function(event) {
       isLoading = event.getNewValue();
@@ -90,9 +97,9 @@ describe('os.load.LoadingManager', function() {
       removedTask = event.getTask();
     };
 
-    lm.listen(goog.events.EventType.PROPERTYCHANGE, loadingListener);
-    lm.listen(os.load.LoadingEventType.ADD, addListener);
-    lm.listen(os.load.LoadingEventType.REMOVE, removeListener);
+    lm.listen(GoogEventType.PROPERTYCHANGE, loadingListener);
+    lm.listen(LoadingEventType.ADD, addListener);
+    lm.listen(LoadingEventType.REMOVE, removeListener);
 
     expect(isLoading).toBe(false);
 

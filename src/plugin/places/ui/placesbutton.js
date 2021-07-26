@@ -1,7 +1,7 @@
 goog.module('plugin.places.ui.PlacesButtonUI');
 goog.module.declareLegacyNamespace();
 
-const metrics = goog.require('os.metrics');
+const {Places: PlacesKeys} = goog.require('os.metrics.keys');
 const Module = goog.require('os.ui.Module');
 const Menu = goog.require('os.ui.menu.Menu');
 const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
@@ -71,7 +71,7 @@ class Controller extends MenuButtonCtrl {
         tooltip: 'Creates a new saved place with a text box at this location',
         icons: ['<i class="fa fa-fw ' + places.Icon.ANNOTATION + '"></i>'],
         handler: this.addPlace.bind(this, true),
-        metricKey: metrics.Places.ADD_ANNOTATION,
+        metricKey: PlacesKeys.ADD_ANNOTATION,
         sort: 0
       },
       {
@@ -80,7 +80,7 @@ class Controller extends MenuButtonCtrl {
         tooltip: 'Quickly add places to the selected folder',
         icons: ['<i class="fa fa-fw ' + places.Icon.QUICK_ADD + '"></i>'],
         handler: this.quickAddPlaces.bind(this),
-        metricKey: metrics.Places.QUICK_ADD_PLACES,
+        metricKey: PlacesKeys.QUICK_ADD_PLACES,
         sort: 10
       }]
     }));

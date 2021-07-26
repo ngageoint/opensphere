@@ -12,7 +12,7 @@ const FilterActionAdd = goog.require('os.im.action.cmd.FilterActionAdd');
 const DrawingLayer = goog.require('os.layer.Drawing');
 const {getMapContainer} = goog.require('os.map.instance');
 const Module = goog.require('os.ui.Module');
-const filterImportDirective = goog.require('os.ui.filter.im.filterImportDirective');
+const {directive: filterImportDirective} = goog.require('os.ui.filter.im.FilterImport');
 const {getEntriesFromMatched} = goog.require('os.ui.im.action');
 const FilterActionImporter = goog.require('os.ui.im.action.FilterActionImporter');
 

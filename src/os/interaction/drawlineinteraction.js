@@ -1,12 +1,13 @@
-goog.provide('os.interaction.DrawLine');
+goog.module('os.interaction.DrawLine');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol');
-goog.require('ol.MapBrowserEventType');
-goog.require('ol.coordinate');
-goog.require('ol.geom.LineString');
-goog.require('os.geo2');
-goog.require('os.interaction.DrawPolygon');
+const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
+const {squaredDistance} = goog.require('ol.coordinate');
+const LineString = goog.require('ol.geom.LineString');
+const {normalizeGeometryCoordinates} = goog.require('os.geo2');
+const DrawPolygon = goog.require('os.interaction.DrawPolygon');
 
+const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 
 /**
  * @typedef {{
@@ -14,49 +15,108 @@ goog.require('os.interaction.DrawPolygon');
  *   time: number
  * }}
  */
-os.interaction.DrawLineClick;
-
-
+let DrawLineClick;
 
 /**
  * Interaction to draw a line on the map/globe.
- *
- * @param {olx.interaction.PointerOptions=} opt_options
- * @extends {os.interaction.DrawPolygon}
- * @constructor
  */
-os.interaction.DrawLine = function(opt_options) {
-  os.interaction.DrawLine.base(this, 'constructor');
+class DrawLine extends DrawPolygon {
+  /**
+   * Constructor.
+   * @param {olx.interaction.PointerOptions=} opt_options
+   */
+  constructor(opt_options) {
+    super();
 
-  this.origHandleEvent = this.handleEvent;
-  this.handleEvent = os.interaction.DrawLine.handleEvent.bind(this);
-  this.type = os.interaction.DrawLine.TYPE;
+    this.origHandleEvent = this.handleEvent;
+    this.handleEvent = DrawLine.handleEvent.bind(this);
+    this.type = DrawLine.TYPE;
+
+    /**
+     * The time of the last down event.
+     * @type {DrawLineClick|undefined}
+     * @protected
+     */
+    this.lastDown = undefined;
+  }
 
   /**
-   * The time of the last down event.
-   * @type {os.interaction.DrawLineClick|undefined}
-   * @protected
+   * @inheritDoc
    */
-  this.lastDown = undefined;
-};
-goog.inherits(os.interaction.DrawLine, os.interaction.DrawPolygon);
+  getGeometry() {
+    var geom = null;
 
+    this.coords.length = this.coords.length - 1;
+
+    if (this.coords.length > 1) {
+      geom = new LineString(this.coords);
+      normalizeGeometryCoordinates(geom);
+    }
+
+    return geom;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  shouldFinish(mapBrowserEvent) {
+    if (this.coords.length > 2 && this.lastDown != null) {
+      var lastPixel = this.lastDown.pixel;
+      var currPixel = mapBrowserEvent.pixel;
+      if (lastPixel && currPixel) {
+        var distance = Math.sqrt(squaredDistance(currPixel, lastPixel));
+        var duration = Date.now() - this.lastDown.time;
+        return distance < DrawLine.FINISH_DISTANCE && duration < DrawLine.FINISH_INTERVAL;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  update(mapBrowserEvent) {
+    super.update(mapBrowserEvent);
+
+    if (mapBrowserEvent.type === MapBrowserEventType.POINTERUP) {
+      this.lastDown = /** @type {DrawLineClick} */ ({
+        time: Date.now(),
+        pixel: mapBrowserEvent.pixel.slice()
+      });
+    }
+  }
+
+  /**
+   * Handles map browser events while the control is active.
+   *
+   * @param {MapBrowserEvent} mapBrowserEvent Map browser event.
+   * @return {boolean} `false` to stop event propagation.
+   * @this os.interaction.DrawLine
+   */
+  static handleEvent(mapBrowserEvent) {
+    // squelch double click events when active
+    if (mapBrowserEvent.type === MapBrowserEventType.DBLCLICK) {
+      return false;
+    }
+
+    return this.origHandleEvent.call(this, mapBrowserEvent);
+  }
+}
 
 /**
  * The draw control type.
  * @type {string}
- * @const
+ * @override
  */
-os.interaction.DrawLine.TYPE = 'line';
-
+DrawLine.TYPE = 'line';
 
 /**
  * Maximum distance between clicks to finish drawing.
  * @type {number}
  * @const
  */
-os.interaction.DrawLine.FINISH_DISTANCE = 5;
-
+DrawLine.FINISH_DISTANCE = 5;
 
 /**
  * Interval between mouse down events to finish drawing the line.
@@ -66,72 +126,6 @@ os.interaction.DrawLine.FINISH_DISTANCE = 5;
  * @type {number}
  * @const
  */
-os.interaction.DrawLine.FINISH_INTERVAL = 250;
+DrawLine.FINISH_INTERVAL = 250;
 
-
-/**
- * @inheritDoc
- */
-os.interaction.DrawLine.prototype.getGeometry = function() {
-  var geom = null;
-
-  this.coords.length = this.coords.length - 1;
-
-  if (this.coords.length > 1) {
-    geom = new ol.geom.LineString(this.coords);
-    os.geo2.normalizeGeometryCoordinates(geom);
-  }
-
-  return geom;
-};
-
-
-/**
- * @inheritDoc
- */
-os.interaction.DrawLine.prototype.shouldFinish = function(mapBrowserEvent) {
-  if (this.coords.length > 2 && this.lastDown != null) {
-    var lastPixel = this.lastDown.pixel;
-    var currPixel = mapBrowserEvent.pixel;
-    if (lastPixel && currPixel) {
-      var distance = Math.sqrt(ol.coordinate.squaredDistance(currPixel, lastPixel));
-      var duration = Date.now() - this.lastDown.time;
-      return distance < os.interaction.DrawLine.FINISH_DISTANCE &&
-          duration < os.interaction.DrawLine.FINISH_INTERVAL;
-    }
-  }
-
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.interaction.DrawLine.prototype.update = function(mapBrowserEvent) {
-  os.interaction.DrawLine.base(this, 'update', mapBrowserEvent);
-
-  if (mapBrowserEvent.type === ol.MapBrowserEventType.POINTERUP) {
-    this.lastDown = /** @type {os.interaction.DrawLineClick} */ ({
-      time: Date.now(),
-      pixel: mapBrowserEvent.pixel.slice()
-    });
-  }
-};
-
-
-/**
- * Handles map browser events while the control is active.
- *
- * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
- * @return {boolean} `false` to stop event propagation.
- * @this os.interaction.DrawLine
- */
-os.interaction.DrawLine.handleEvent = function(mapBrowserEvent) {
-  // squelch double click events when active
-  if (mapBrowserEvent.type === ol.MapBrowserEventType.DBLCLICK) {
-    return false;
-  }
-
-  return this.origHandleEvent.call(this, mapBrowserEvent);
-};
+exports = DrawLine;

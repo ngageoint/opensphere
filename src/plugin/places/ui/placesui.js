@@ -11,7 +11,7 @@ const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const EventType = goog.require('os.config.EventType');
 const osImplements = goog.require('os.implements');
-const metrics = goog.require('os.metrics');
+const {Places: PlacesKeys} = goog.require('os.metrics.keys');
 const Metrics = goog.require('os.metrics.Metrics');
 const ui = goog.require('os.ui');
 const ILayerUIProvider = goog.require('os.ui.ILayerUIProvider');
@@ -163,7 +163,7 @@ class Controller extends Disposable {
         items: this.placesRoot_.getChildren()
       }));
 
-      Metrics.getInstance().updateMetric(metrics.Places.EXPORT, 1);
+      Metrics.getInstance().updateMetric(PlacesKeys.EXPORT, 1);
     } else {
       AlertManager.getInstance().sendAlert('Nothing to export.', AlertEventSeverity.WARNING);
     }
@@ -176,7 +176,7 @@ class Controller extends Disposable {
    */
   import() {
     PlacesManager.getInstance().startImport();
-    Metrics.getInstance().updateMetric(metrics.Places.IMPORT, 1);
+    Metrics.getInstance().updateMetric(PlacesKeys.IMPORT, 1);
   }
 
   /**
@@ -195,7 +195,7 @@ class Controller extends Disposable {
         'parent': parent
       }));
     }
-    Metrics.getInstance().updateMetric(metrics.Places.ADD_FOLDER, 1);
+    Metrics.getInstance().updateMetric(PlacesKeys.ADD_FOLDER, 1);
   }
 
   /**
@@ -209,7 +209,7 @@ class Controller extends Disposable {
       node.setCollapsed(false, true);
       this.scope_.$broadcast(SlickGridEvent.INVALIDATE_ROWS);
     }
-    Metrics.getInstance().updateMetric(metrics.Places.EXPAND_ALL, 1);
+    Metrics.getInstance().updateMetric(PlacesKeys.EXPAND_ALL, 1);
   }
 
   /**
@@ -223,7 +223,7 @@ class Controller extends Disposable {
       node.setCollapsed(true, true);
       this.scope_.$broadcast(SlickGridEvent.INVALIDATE_ROWS);
     }
-    Metrics.getInstance().updateMetric(metrics.Places.COLLAPSE_ALL, 1);
+    Metrics.getInstance().updateMetric(PlacesKeys.COLLAPSE_ALL, 1);
   }
 
   /**

@@ -4,6 +4,7 @@ goog.module.declareLegacyNamespace();
 const EventTarget = goog.require('goog.events.EventTarget');
 const Settings = goog.require('os.config.Settings');
 const MapContainer = goog.require('os.MapContainer');
+const LayerEventType = goog.require('os.events.LayerEventType');
 const {FolderEventType, SettingsKey} = goog.require('os.layer.folder');
 const {remove} = goog.require('goog.array');
 const log = goog.require('goog.log');
@@ -42,7 +43,7 @@ class FolderManager extends EventTarget {
      */
     this.items = [];
 
-    MapContainer.getInstance().listen(os.events.LayerEventType.ADD, this.mergeFromMap, false, this);
+    MapContainer.getInstance().listen(LayerEventType.ADD, this.mergeFromMap, false, this);
 
     this.restore();
   }
@@ -51,7 +52,7 @@ class FolderManager extends EventTarget {
    * @inheritDoc
    */
   disposeInternal() {
-    MapContainer.getInstance().unlisten(os.events.LayerEventType.ADD, this.mergeFromMap, false, this);
+    MapContainer.getInstance().unlisten(LayerEventType.ADD, this.mergeFromMap, false, this);
   }
 
   /**

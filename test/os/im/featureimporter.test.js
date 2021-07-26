@@ -3,20 +3,23 @@ goog.require('os.im.FeatureImporter');
 goog.require('os.ui');
 
 describe('os.im.FeatureImporter', function() {
+  const Feature = goog.module.get('ol.Feature');
+  const FeatureImporter = goog.module.get('os.im.FeatureImporter');
+
   it('should sanitize data to protect against XSS attacks', function() {
-    var attack = new ol.Feature({
+    var attack = new Feature({
       field1: 'some value <iframe src="http://malicious.evil.com"></iframe>',
       field2: '42 <script>$(document.body).remove()</script>',
       count: 3
     });
 
-    var safe = new ol.Feature({
+    var safe = new Feature({
       field1: 'some value',
       field2: '42',
       count: 3
     });
 
-    var importer = new os.im.FeatureImporter();
+    var importer = new FeatureImporter();
 
     importer.sanitize(attack);
     importer.sanitize(safe);

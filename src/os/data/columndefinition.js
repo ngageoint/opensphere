@@ -1,8 +1,8 @@
 goog.module('os.data.ColumnDefinition');
 goog.module.declareLegacyNamespace();
 
+const IPersistable = goog.require('os.IPersistable'); // eslint-disable-line
 const DataType = goog.require('os.xsd.DataType');
-const IPersistable = goog.requireType('os.IPersistable');
 
 
 /**

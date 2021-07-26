@@ -2,7 +2,7 @@ goog.module('os.command.VectorLayerShowRotation');
 goog.module.declareLegacyNamespace();
 
 const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
 
@@ -21,7 +21,7 @@ class VectorLayerShowRotation extends AbstractVectorLayerLOB {
    */
   constructor(layerId, value, opt_oldValue) {
     super(layerId, value, opt_oldValue);
-    this.metricKey = metrics.Layer.VECTOR_SHOW_ROTATION;
+    this.metricKey = LayerKeys.VECTOR_SHOW_ROTATION;
 
     // make sure the value is a boolean
     this.value = !!value;

@@ -1,8 +1,8 @@
-goog.provide('os.im.mapping.AltMappingId');
-
+goog.module('os.im.mapping.AltMappingId');
+goog.module.declareLegacyNamespace();
 
 /**
  * @type {string}
  * @const
  */
-os.im.mapping.AltMappingId = 'Altitude';
+exports = 'Altitude';

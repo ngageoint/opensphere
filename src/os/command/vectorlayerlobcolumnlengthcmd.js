@@ -2,7 +2,7 @@ goog.module('os.command.VectorLayerLOBColumnLength');
 goog.module.declareLegacyNamespace();
 
 const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
@@ -24,7 +24,7 @@ class VectorLayerLOBColumnLength extends AbstractVectorLayerLOB {
     super(layerId, value, opt_oldValue);
     this.title = 'Change Line of Bearing column length';
     this.value = value;
-    this.metricKey = metrics.Layer.VECTOR_LOB_COLUMN_LENGTH;
+    this.metricKey = LayerKeys.VECTOR_LOB_COLUMN_LENGTH;
   }
 
   /**

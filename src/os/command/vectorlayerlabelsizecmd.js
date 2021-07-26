@@ -2,7 +2,7 @@ goog.module('os.command.VectorLayerLabelSize');
 goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
 const label = goog.require('os.style.label');
@@ -23,7 +23,7 @@ class VectorLayerLabelSize extends AbstractVectorStyle {
   constructor(layerId, value, opt_oldValue) {
     super(layerId, value, opt_oldValue);
     this.title = 'Change Label Size';
-    this.metricKey = metrics.Layer.LABEL_SIZE;
+    this.metricKey = LayerKeys.LABEL_SIZE;
   }
 
   /**

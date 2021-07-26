@@ -1,108 +1,128 @@
-goog.provide('os.layer.config.LayerConfigManager');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('os.layer.config.ILayerConfig');
+goog.module('os.layer.config.LayerConfigManager');
+goog.module.declareLegacyNamespace();
+
+const log = goog.require('goog.log');
+
+const Logger = goog.requireType('goog.log.Logger');
+const {DefaultFn} = goog.requireType('os.layer.config');
+const ILayerConfig = goog.requireType('os.layer.config.ILayerConfig');
 
 
 /**
- * @typedef {function():!Object<string, *>}
  */
-os.layer.config.DefaultFn;
+class LayerConfigManager {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    /**
+     * @type {Object<string, DefaultFn>}
+     * @private
+     */
+    this.defaultFns_ = {};
 
+    /**
+     * @type {Object<string, function(new:ILayerConfig)>}
+     * @private
+     */
+    this.layerConfigs_ = {};
+  }
 
+  /**
+   * Gets a new layer config instance by type (not case sensitive).
+   *
+   * @param {string} type
+   * @return {!Object<string, *>}
+   */
+  getDefaultLayerConfig(type) {
+    var defaultConfig = {};
+    type = type.toLowerCase();
+    if (type in this.defaultFns_) {
+      defaultConfig = this.defaultFns_[type]();
+    }
+
+    return defaultConfig;
+  }
+
+  /**
+   * Gets a new layer config instance by type (not case sensitive).
+   *
+   * @param {string} type
+   * @return {?ILayerConfig}
+   */
+  getLayerConfig(type) {
+    var layerConfig = null;
+    type = type.toLowerCase();
+    if (type in this.layerConfigs_) {
+      layerConfig = new this.layerConfigs_[type]();
+    }
+
+    return layerConfig;
+  }
+
+  /**
+   * Registers a default layer config function with the manager. Registered types are not case sensitive.
+   *
+   * @param {string} type
+   * @param {!DefaultFn} defaultFn
+   */
+  registerDefaultLayerConfig(type, defaultFn) {
+    type = type.toLowerCase();
+
+    if (type in this.defaultFns_) {
+      log.warning(logger, 'Default layer config is being overridden for: ' + type);
+    }
+
+    this.defaultFns_[type] = defaultFn;
+  }
+
+  /**
+   * Registers a layer config class with the manager. Registered types are not case sensitive.
+   *
+   * @param {string} type
+   * @param {function(new:ILayerConfig)} layerConfig
+   */
+  registerLayerConfig(type, layerConfig) {
+    type = type.toLowerCase();
+
+    if (type in this.layerConfigs_) {
+      log.warning(logger, 'Layer config is being overridden for: ' + type);
+    }
+
+    this.layerConfigs_[type] = layerConfig;
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!LayerConfigManager}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new LayerConfigManager();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {LayerConfigManager} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
 
 /**
- * @constructor
+ * Global instance.
+ * @type {LayerConfigManager|undefined}
  */
-os.layer.config.LayerConfigManager = function() {
-  /**
-   * @type {Object.<string, os.layer.config.DefaultFn>}
-   * @private
-   */
-  this.defaultFns_ = {};
-
-  /**
-   * @type {Object.<string, function(new:os.layer.config.ILayerConfig)>}
-   * @private
-   */
-  this.layerConfigs_ = {};
-};
-goog.addSingletonGetter(os.layer.config.LayerConfigManager);
-
+let instance;
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {Logger}
  */
-os.layer.config.LayerConfigManager.LOGGER_ = goog.log.getLogger('os.layer.config.LayerConfigManager');
+const logger = log.getLogger('os.layer.config.LayerConfigManager');
 
-
-/**
- * Gets a new layer config instance by type (not case sensitive).
- *
- * @param {string} type
- * @return {!Object<string, *>}
- */
-os.layer.config.LayerConfigManager.prototype.getDefaultLayerConfig = function(type) {
-  var defaultConfig = {};
-  type = type.toLowerCase();
-  if (type in this.defaultFns_) {
-    defaultConfig = this.defaultFns_[type]();
-  }
-
-  return defaultConfig;
-};
-
-
-/**
- * Gets a new layer config instance by type (not case sensitive).
- *
- * @param {string} type
- * @return {?os.layer.config.ILayerConfig}
- */
-os.layer.config.LayerConfigManager.prototype.getLayerConfig = function(type) {
-  var layerConfig = null;
-  type = type.toLowerCase();
-  if (type in this.layerConfigs_) {
-    layerConfig = new this.layerConfigs_[type]();
-  }
-
-  return layerConfig;
-};
-
-
-/**
- * Registers a default layer config function with the manager. Registered types are not case sensitive.
- *
- * @param {string} type
- * @param {!os.layer.config.DefaultFn} defaultFn
- */
-os.layer.config.LayerConfigManager.prototype.registerDefaultLayerConfig = function(type, defaultFn) {
-  type = type.toLowerCase();
-
-  if (type in this.defaultFns_) {
-    goog.log.warning(os.layer.config.LayerConfigManager.LOGGER_,
-        'Default layer config is being overridden for: ' + type);
-  }
-
-  this.defaultFns_[type] = defaultFn;
-};
-
-
-/**
- * Registers a layer config class with the manager. Registered types are not case sensitive.
- *
- * @param {string} type
- * @param {function(new:os.layer.config.ILayerConfig)} layerConfig
- */
-os.layer.config.LayerConfigManager.prototype.registerLayerConfig = function(type, layerConfig) {
-  type = type.toLowerCase();
-
-  if (type in this.layerConfigs_) {
-    goog.log.warning(os.layer.config.LayerConfigManager.LOGGER_, 'Layer config is being overridden for: ' + type);
-  }
-
-  this.layerConfigs_[type] = layerConfig;
-};
+exports = LayerConfigManager;

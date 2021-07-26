@@ -1,114 +1,121 @@
-goog.provide('os.interaction.MouseZoom');
+goog.module('os.interaction.MouseZoom');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.asserts');
-goog.require('goog.events.BrowserEvent');
-goog.require('ol.coordinate');
-goog.require('ol.events.condition');
-goog.require('ol.interaction.Interaction');
-goog.require('os.I3DSupport');
-goog.require('os.implements');
+const {assert} = goog.require('goog.asserts');
+const BrowserEvent = goog.require('goog.events.BrowserEvent');
+const {clamp} = goog.require('goog.math');
+const {MOUSEWHEELZOOM_MAXDELTA} = goog.require('ol');
+const {platformModifierKeyOnly} = goog.require('ol.events.condition');
+const Interaction = goog.require('ol.interaction.Interaction');
+const I3DSupport = goog.require('os.I3DSupport');
+const osImplements = goog.require('os.implements');
+const {getMapContainer} = goog.require('os.map.instance');
 
+const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 
 
 /**
  * Allows the user to pan the map by dragging the map.
  *
- * @param {olx.interaction.DragPanOptions=} opt_options Options.
- * @extends {ol.interaction.Interaction}
- * @implements {os.I3DSupport}
- * @constructor
+ * @implements {I3DSupport}
  */
-os.interaction.MouseZoom = function(opt_options) {
-  os.interaction.MouseZoom.base(this, 'constructor', {
-    handleEvent: os.interaction.MouseZoom.handleEvent
-  });
+class MouseZoom extends Interaction {
+  /**
+   * Constructor.
+   * @param {olx.interaction.DragPanOptions=} opt_options Options.
+   */
+  constructor(opt_options) {
+    super({
+      handleEvent: MouseZoom.handleEvent
+    });
+
+    /**
+     * @type {Object}
+     * @private
+     */
+    this.lastY_ = {};
+  }
 
   /**
-   * @type {Object}
-   * @private
+   * @inheritDoc
    */
-  this.lastY_ = {};
-};
-goog.inherits(os.interaction.MouseZoom, ol.interaction.Interaction);
-os.implements(os.interaction.MouseZoom, os.I3DSupport.ID);
-
-/**
- * @inheritDoc
- */
-os.interaction.MouseZoom.prototype.is3DSupported = function() {
-  return true;
-};
-
-
-/**
- * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
- */
-os.interaction.MouseZoom.prototype.zoom = function(mapBrowserEvent) {
-  var zoomIncrements = 0.1;
-
-  var delta = 0;
-  var coordinate = mapBrowserEvent.coordinate;
-  var browserEvent = new goog.events.BrowserEvent(mapBrowserEvent.originalEvent);
-
-  // Add a little buffer so it doesnt seem like it zooms horizontally
-  if (this.lastY_ != null) {
-    if (browserEvent.clientY < this.lastY_.low) {
-      delta = -zoomIncrements;
-    } else if (browserEvent.clientY > this.lastY_.high) {
-      delta = zoomIncrements;
-    }
-    coordinate = mapBrowserEvent.map.getView().getCenter();
-  } else {
-    this.lastY_ = {
-      low: browserEvent.clientY - 5,
-      high: browserEvent.clientY + 5
-    };
+  is3DSupported() {
+    return true;
   }
 
-  if (delta != 0) {
-    this.lastY_ = {
-      low: browserEvent.clientY - 5,
-      high: browserEvent.clientY + 5
-    };
-    var maxDelta = ol.MOUSEWHEELZOOM_MAXDELTA;
-    delta = goog.math.clamp(delta, -maxDelta, maxDelta);
-    var map = mapBrowserEvent.map;
+  /**
+   * @param {MapBrowserEvent} mapBrowserEvent Map browser event.
+   */
+  zoom(mapBrowserEvent) {
+    var zoomIncrements = 0.1;
 
-    var view = map.getView();
-    goog.asserts.assert(view !== undefined);
+    var delta = 0;
+    var coordinate = mapBrowserEvent.coordinate;
+    var browserEvent = new BrowserEvent(mapBrowserEvent.originalEvent);
 
-    var mapContainer = os.MapContainer.getInstance();
-    if (mapContainer.is3DEnabled()) {
-      var camera = mapContainer.getWebGLCamera();
-      if (camera) {
-        // this will change the zoom level by ~0.1 per call
-        camera.zoomByDelta(delta > 0 ? (1 / 0.95) : 0.95);
+    // Add a little buffer so it doesnt seem like it zooms horizontally
+    if (this.lastY_ != null) {
+      if (browserEvent.clientY < this.lastY_.low) {
+        delta = -zoomIncrements;
+      } else if (browserEvent.clientY > this.lastY_.high) {
+        delta = zoomIncrements;
       }
+      coordinate = mapBrowserEvent.map.getView().getCenter();
     } else {
-      map.render();
-      ol.interaction.Interaction.zoomByDelta(view, -delta, coordinate);
+      this.lastY_ = {
+        low: browserEvent.clientY - 5,
+        high: browserEvent.clientY + 5
+      };
+    }
+
+    if (delta != 0) {
+      this.lastY_ = {
+        low: browserEvent.clientY - 5,
+        high: browserEvent.clientY + 5
+      };
+      var maxDelta = MOUSEWHEELZOOM_MAXDELTA;
+      delta = clamp(delta, -maxDelta, maxDelta);
+      var map = mapBrowserEvent.map;
+
+      var view = map.getView();
+      assert(view !== undefined);
+
+      var mapContainer = getMapContainer();
+      if (mapContainer.is3DEnabled()) {
+        var camera = mapContainer.getWebGLCamera();
+        if (camera) {
+          // this will change the zoom level by ~0.1 per call
+          camera.zoomByDelta(delta > 0 ? (1 / 0.95) : 0.95);
+        }
+      } else {
+        map.render();
+        Interaction.zoomByDelta(view, -delta, coordinate);
+      }
     }
   }
-};
 
+  /**
+   * @param {MapBrowserEvent} mapBrowserEvent Map browser event.
+   * @return {boolean} `false` to stop event propagation.
+   * @this MouseZoom
+   */
+  static handleEvent(mapBrowserEvent) {
+    var stopEvent = false;
+    if (mapBrowserEvent.pointerEvent &&
+        mapBrowserEvent.pointerEvent.buttons == 2 &&
+        mapBrowserEvent.dragging &&
+        platformModifierKeyOnly(mapBrowserEvent)) {
+      this.zoom(mapBrowserEvent);
+      stopEvent = true;
+    } else {
+      // Reset the last y
+      this.lastY_ = null;
+    }
 
-/**
- * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
- * @return {boolean} `false` to stop event propagation.
- * @this os.interaction.MouseZoom
- */
-os.interaction.MouseZoom.handleEvent = function(mapBrowserEvent) {
-  var stopEvent = false;
-  if (mapBrowserEvent.pointerEvent &&
-      mapBrowserEvent.pointerEvent.buttons == 2 &&
-      mapBrowserEvent.dragging &&
-      ol.events.condition.platformModifierKeyOnly(mapBrowserEvent)) {
-    this.zoom(mapBrowserEvent);
-    stopEvent = true;
-  } else {
-    // Reset the last y
-    this.lastY_ = null;
+    return !stopEvent;
   }
+}
 
-  return !stopEvent;
-};
+osImplements(MouseZoom, I3DSupport.ID);
+
+exports = MouseZoom;

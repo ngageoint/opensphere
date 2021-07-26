@@ -1,7 +1,7 @@
 goog.provide('os.ui.query.AreaImportCtrl');
 
 goog.require('goog.Disposable');
-goog.require('os.ui.im.basicInfoDirective');
+goog.require('os.ui.im.BasicInfoUI');
 goog.require('os.ui.query');
 goog.require('os.ui.window');
 

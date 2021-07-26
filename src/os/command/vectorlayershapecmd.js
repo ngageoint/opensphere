@@ -4,7 +4,8 @@ goog.module.declareLegacyNamespace();
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
 const DataManager = goog.require('os.data.DataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const metrics = goog.require('os.metrics');
+const {SUB_DELIMITER} = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const osStyle = goog.require('os.style');
 const kml = goog.require('os.ui.file.kml');
@@ -27,7 +28,7 @@ class VectorLayerShape extends AbstractVectorStyle {
     this.title = 'Change Style';
 
     var type = style ? style.replace(/ /g, '_') : 'Unknown';
-    this.metricKey = metrics.Layer.VECTOR_SHAPE + metrics.SUB_DELIMITER + type;
+    this.metricKey = LayerKeys.VECTOR_SHAPE + SUB_DELIMITER + type;
   }
 
   /**

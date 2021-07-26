@@ -1,19 +1,11 @@
-goog.provide('os.ui.im.URLExistsChoice');
-goog.provide('os.ui.im.URLExistsCtrl');
-goog.provide('os.ui.im.urlExistsDirective');
+goog.module('os.ui.im.URLExistsUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-goog.require('os.ui.window.ConfirmUI');
-
-
-/**
- * @enum {string}
- */
-os.ui.im.URLExistsChoice = {
-  ACTIVATE: 'activate',
-  REIMPORT: 'reimport',
-  CREATE_NEW: 'createNew'
-};
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const URLExistsChoice = goog.require('os.ui.im.URLExistsChoice');
+const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -21,53 +13,57 @@ os.ui.im.URLExistsChoice = {
  *
  * @return {angular.Directive}
  */
-os.ui.im.urlExistsDirective = function() {
-  return {
-    restrict: 'E',
-    templateUrl: os.ROOT + 'views/im/urlexists.html',
-    controller: os.ui.im.URLExistsCtrl,
-    controllerAs: 'urlExists'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  templateUrl: ROOT + 'views/im/urlexists.html',
+  controller: Controller,
+  controllerAs: 'urlExists'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'urlexists';
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('urlexists', [os.ui.im.urlExistsDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the URL Exists! window
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.im.URLExistsCtrl = function($scope) {
-  $scope.$watch('confirmValue', function(newVal, oldVal) {
-    if (newVal != oldVal) {
-      $scope.$parent['confirmValue'] = newVal;
-    }
-  });
+class Controller {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
+   */
+  constructor($scope) {
+    $scope.$watch('confirmValue', function(newVal, oldVal) {
+      if (newVal != oldVal) {
+        $scope.$parent['confirmValue'] = newVal;
+      }
+    });
 
-  $scope.$emit(os.ui.WindowEventType.READY);
-};
-
+    $scope.$emit(WindowEventType.READY);
+  }
+}
 
 /**
  * Launch a dialog prompting the user the url they're importing already exists and requesting action.
  *
  * @param {string} url
  * @param {string} current
- * @param {function(os.ui.im.URLExistsChoice)} confirm
+ * @param {function(URLExistsChoice)} confirm
  */
-os.ui.im.launchURLExists = function(url, current, confirm) {
+const launchURLExists = function(url, current, confirm) {
   var confirmOptions = /** @type {osx.window.ConfirmOptions} */ ({
     confirm: confirm,
-    confirmValue: os.ui.im.URLExistsChoice.ACTIVATE,
-    prompt: '<urlexists></urlexists>',
+    confirmValue: URLExistsChoice.ACTIVATE,
+    prompt: `<${directiveTag}></${directiveTag}>`,
     windowOptions: {
       'label': 'URL Exists!',
       'icon': 'fa fa-exclamation-triangle',
@@ -85,5 +81,12 @@ os.ui.im.launchURLExists = function(url, current, confirm) {
     'url': url
   };
 
-  os.ui.window.ConfirmUI.launchConfirm(confirmOptions, scopeOptions);
+  ConfirmUI.launchConfirm(confirmOptions, scopeOptions);
+};
+
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launchURLExists
 };

@@ -1,55 +1,55 @@
-goog.provide('os.im.mapping.location.BaseLonMapping');
+goog.module('os.im.mapping.location.BaseLonMapping');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.geo');
-goog.require('os.im.mapping.AbstractPositionMapping');
-goog.require('os.im.mapping.location.AbstractBaseLatOrLonMapping');
-
+const {parseLon} = goog.require('os.geo');
+const AbstractBaseLatOrLonMapping = goog.require('os.im.mapping.location.AbstractBaseLatOrLonMapping');
 
 
 /**
- * @extends {os.im.mapping.location.AbstractBaseLatOrLonMapping.<T, S>}
- * @constructor
+ * @extends {AbstractBaseLatOrLonMapping<T, S>}
  * @template T, S
  */
-os.im.mapping.location.BaseLonMapping = function() {
-  os.im.mapping.location.BaseLonMapping.base(this, 'constructor');
-
+class BaseLonMapping extends AbstractBaseLatOrLonMapping {
   /**
-   * @type {string}
-   * @protected
+   * Constructor.
    */
-  this.coordField = 'LON';
+  constructor() {
+    super();
 
-  /**
-   * @type {string}
-   * @protected
-   */
-  this.type = os.im.mapping.location.BaseLonMapping.ID;
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.coordField = 'LON';
 
-  /**
-   * @type {RegExp}
-   * @protected
-   */
-  this.regex = os.im.mapping.location.BaseLonMapping.LON_REGEX;
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.type = BaseLonMapping.ID;
 
-  /**
-   * @type {Function}
-   * @protected
-   */
-  this.parseFn = os.geo.parseLon;
-};
-goog.inherits(os.im.mapping.location.BaseLonMapping, os.im.mapping.location.AbstractBaseLatOrLonMapping);
+    /**
+     * @type {RegExp}
+     * @protected
+     */
+    this.regex = BaseLonMapping.LON_REGEX;
 
+    /**
+     * @type {Function}
+     * @protected
+     */
+    this.parseFn = parseLon;
+  }
+}
 
 /**
  * @type {string}
- * @const
  */
-os.im.mapping.location.BaseLonMapping.ID = 'Longitude';
-
+BaseLonMapping.ID = 'Longitude';
 
 /**
  * @type {RegExp}
- * @const
  */
-os.im.mapping.location.BaseLonMapping.LON_REGEX = /lon(g(i(t(u(d(e)?)?)?)?)?)?\b/i;
+BaseLonMapping.LON_REGEX = /lon(g(i(t(u(d(e)?)?)?)?)?)?\b/i;
+
+exports = BaseLonMapping;

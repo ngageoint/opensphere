@@ -6,6 +6,7 @@ goog.require('goog.array');
 goog.require('ol.array');
 goog.require('os');
 goog.require('os.metrics.Metrics');
+goog.require('os.metrics.keys');
 goog.require('os.style.label');
 goog.require('os.ui.Module');
 goog.require('os.ui.geo.positionDirective');
@@ -180,7 +181,7 @@ os.ui.layer.LabelControlsCtrl.prototype.onShowLabelsChange = function() {
 os.ui.layer.LabelControlsCtrl.prototype.addLabel = function() {
   this.scope['labels'].push(os.style.label.cloneConfig());
   this.onColumnChange();
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.Layer.LABEL_COLUMN_ADD, 1);
+  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Layer.LABEL_COLUMN_ADD, 1);
 };
 
 
@@ -193,7 +194,7 @@ os.ui.layer.LabelControlsCtrl.prototype.addLabel = function() {
 os.ui.layer.LabelControlsCtrl.prototype.removeLabel = function(label) {
   ol.array.remove(this.scope['labels'], label);
   this.onColumnChange();
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.Layer.LABEL_COLUMN_REMOVE, 1);
+  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Layer.LABEL_COLUMN_REMOVE, 1);
 };
 
 

@@ -6,7 +6,7 @@ const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
 const DataManager = goog.require('os.data.DataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const osFeature = goog.require('os.feature');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
@@ -26,7 +26,7 @@ class VectorLayerShowLabel extends AbstractVectorStyle {
    */
   constructor(layerId, value, opt_oldValue) {
     super(layerId, value, opt_oldValue);
-    this.metricKey = metrics.Layer.LABEL_TOGGLE;
+    this.metricKey = LayerKeys.LABEL_TOGGLE;
     // make sure the value is a boolean
     this.value = value || false;
     this.title = value ? 'Show Labels' : 'Hide Labels';

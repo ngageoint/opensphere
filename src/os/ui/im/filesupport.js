@@ -1,24 +1,24 @@
-goog.provide('os.ui.im.FileSupportChoice');
-goog.provide('os.ui.im.FileSupportCtrl');
-goog.provide('os.ui.im.fileSupportDirective');
+goog.module('os.ui.im.FileSupportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
-goog.require('goog.Promise');
-goog.require('goog.dom');
-goog.require('goog.events.KeyEvent');
-goog.require('goog.events.KeyHandler');
-goog.require('os.file.upload');
-goog.require('os.string');
-goog.require('os.ui.Module');
+const Disposable = goog.require('goog.Disposable');
+const Promise = goog.require('goog.Promise');
+const dispose = goog.require('goog.dispose');
+const {getDocument} = goog.require('goog.dom');
+const KeyCodes = goog.require('goog.events.KeyCodes');
+const KeyEvent = goog.require('goog.events.KeyEvent');
+const KeyHandler = goog.require('goog.events.KeyHandler');
+const {ROOT} = goog.require('os');
+const {getAppName, getSupportContact} = goog.require('os.config');
+const EventType = goog.require('os.events.EventType');
+const {getUploadFile} = goog.require('os.file.upload');
+const {linkify} = goog.require('os.string');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const FileSupportChoice = goog.require('os.ui.im.FileSupportChoice');
+const osWindow = goog.require('os.ui.window');
 
-
-/**
- * @enum {string}
- */
-os.ui.im.FileSupportChoice = {
-  LOCAL: 'local',
-  UPLOAD: 'upload'
-};
+const OSFile = goog.requireType('os.file.File');
 
 
 /**
@@ -26,195 +26,191 @@ os.ui.im.FileSupportChoice = {
  *
  * @return {angular.Directive}
  */
-os.ui.im.fileSupportDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: os.ROOT + 'views/im/filesupport.html',
-    controller: os.ui.im.FileSupportCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  templateUrl: ROOT + 'views/im/filesupport.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'filesupport';
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('filesupport', [os.ui.im.fileSupportDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the file support directive.
- *
- * @param {!angular.Scope} $scope The Angular scope.
- * @param {!angular.JQLite} $element The root DOM element.
- * @extends {goog.Disposable}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.im.FileSupportCtrl = function($scope, $element) {
-  os.ui.im.FileSupportCtrl.base(this, 'constructor');
+class Controller extends Disposable {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @param {!angular.JQLite} $element The root DOM element.
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super();
+
+    /**
+     * The Angular scope.
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    /**
+     * The root DOM element.
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
+
+    /**
+     * The file.
+     * @type {OSFile}
+     * @private
+     */
+    this.file_ = this.scope_['file'];
+
+    /**
+     * Callback for dialog confirmation.
+     * @type {function(string=)}
+     * @private
+     */
+    this.confirmCallback_ = this.scope_['confirm'];
+
+    /**
+     * Callback for dialog cancel.
+     * @type {function(*)}
+     * @private
+     */
+    this.cancelCallback_ = this.scope_['cancel'];
+
+    /**
+     * Key event handler.
+     * @type {!KeyHandler}
+     * @private
+     */
+    this.keyHandler_ = new KeyHandler(getDocument());
+    this.keyHandler_.listen(KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
+
+    /**
+     * The application name.
+     * @type {string}
+     */
+    this['application'] = getAppName('the application');
+
+    /**
+     * If file upload is supported by the application.
+     * @type {boolean}
+     */
+    this['supportsUpload'] = getUploadFile() != null;
+
+    /**
+     * Support contact details.
+     * @type {string}
+     */
+    this['supportContact'] = linkify(/** @type {string} */ (getSupportContact('your system administrator')));
+
+    /**
+     * User selection.
+     * @type {!FileSupportChoice}
+     */
+    this['choice'] = FileSupportChoice.LOCAL;
+
+    $scope.$on('$destroy', this.dispose.bind(this));
+
+    if (!this.file_) {
+      if (this.cancelCallback_) {
+        this.cancelCallback_('Local file could not be loaded.');
+      }
+
+      this.close_();
+    } else {
+      $scope.$emit(WindowEventType.READY);
+    }
+  }
 
   /**
-   * The Angular scope.
-   * @type {?angular.Scope}
-   * @private
+   * @inheritDoc
    */
-  this.scope_ = $scope;
+  disposeInternal() {
+    super.disposeInternal();
+
+    dispose(this.keyHandler_);
+
+    this.element_ = null;
+    this.scope_ = null;
+    this.file_ = null;
+  }
 
   /**
-   * The root DOM element.
-   * @type {?angular.JQLite}
-   * @private
+   * Fire the cancel callback and close the window.
+   *
+   * @export
    */
-  this.element_ = $element;
-
-  /**
-   * The file.
-   * @type {os.file.File}
-   * @private
-   */
-  this.file_ = this.scope_['file'];
-
-  /**
-   * Callback for dialog confirmation.
-   * @type {function(string=)}
-   * @private
-   */
-  this.confirmCallback_ = this.scope_['confirm'];
-
-  /**
-   * Callback for dialog cancel.
-   * @type {function(*)}
-   * @private
-   */
-  this.cancelCallback_ = this.scope_['cancel'];
-
-  /**
-   * Key event handler.
-   * @type {!goog.events.KeyHandler}
-   * @private
-   */
-  this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
-  this.keyHandler_.listen(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
-
-  /**
-   * The application name.
-   * @type {string}
-   */
-  this['application'] = os.config.getAppName('the application');
-
-  /**
-   * If file upload is supported by the application.
-   * @type {boolean}
-   */
-  this['supportsUpload'] = os.file.upload.getUploadFile() != null;
-
-  /**
-   * Support contact details.
-   * @type {string}
-   */
-  this['supportContact'] = os.string.linkify(/** @type {string} */ (
-    os.config.getSupportContact('your system administrator')));
-
-  /**
-   * User selection.
-   * @type {!os.ui.im.FileSupportChoice}
-   */
-  this['choice'] = os.ui.im.FileSupportChoice.LOCAL;
-
-  $scope.$on('$destroy', this.dispose.bind(this));
-
-  if (!this.file_) {
+  cancel() {
     if (this.cancelCallback_) {
-      this.cancelCallback_('Local file could not be loaded.');
+      this.cancelCallback_(EventType.CANCEL);
     }
 
     this.close_();
-  } else {
-    $scope.$emit(os.ui.WindowEventType.READY);
-  }
-};
-goog.inherits(os.ui.im.FileSupportCtrl, goog.Disposable);
-
-
-/**
- * @inheritDoc
- */
-os.ui.im.FileSupportCtrl.prototype.disposeInternal = function() {
-  os.ui.im.FileSupportCtrl.base(this, 'disposeInternal');
-
-  goog.dispose(this.keyHandler_);
-
-  this.element_ = null;
-  this.scope_ = null;
-  this.file_ = null;
-};
-
-
-/**
- * Fire the cancel callback and close the window.
- *
- * @export
- */
-os.ui.im.FileSupportCtrl.prototype.cancel = function() {
-  if (this.cancelCallback_) {
-    this.cancelCallback_(os.events.EventType.CANCEL);
   }
 
-  this.close_();
-};
+  /**
+   * Fire the confirmation callback and close the window.
+   *
+   * @export
+   */
+  confirm() {
+    const uploadFile = getUploadFile();
+    if (this['choice'] === FileSupportChoice.UPLOAD && uploadFile != null) {
+      uploadFile(this.file_).then(this.confirmCallback_, this.cancelCallback_);
+    } else if (this.confirmCallback_) {
+      this.confirmCallback_();
+    }
 
-
-/**
- * Fire the confirmation callback and close the window.
- *
- * @export
- */
-os.ui.im.FileSupportCtrl.prototype.confirm = function() {
-  const uploadFile = os.file.upload.getUploadFile();
-  if (this['choice'] === os.ui.im.FileSupportChoice.UPLOAD && uploadFile != null) {
-    uploadFile(this.file_).then(this.confirmCallback_, this.cancelCallback_);
-  } else if (this.confirmCallback_) {
-    this.confirmCallback_();
+    this.close_();
   }
 
-  this.close_();
-};
-
-
-/**
- * Close the window.
- *
- * @private
- */
-os.ui.im.FileSupportCtrl.prototype.close_ = function() {
-  os.ui.window.close(this.element_);
-};
-
-
-/**
- * Handles key events
- *
- * @param {goog.events.KeyEvent} event
- * @private
- */
-os.ui.im.FileSupportCtrl.prototype.handleKeyEvent_ = function(event) {
-  if (event.keyCode == goog.events.KeyCodes.ESC) {
-    this.cancel();
+  /**
+   * Close the window.
+   *
+   * @private
+   */
+  close_() {
+    osWindow.close(this.element_);
   }
-};
 
+  /**
+   * Handles key events
+   *
+   * @param {KeyEvent} event
+   * @private
+   */
+  handleKeyEvent_(event) {
+    if (event.keyCode == KeyCodes.ESC) {
+      this.cancel();
+    }
+  }
+}
 
 /**
  * Launch a dialog prompting the user the file they're importing already exists and requesting action.
  *
- * @param {!os.file.File} file The file
- * @return {!goog.Promise<string>}
+ * @param {!OSFile} file The file
+ * @return {!Promise<string>}
  */
-os.ui.im.launchFileSupport = function(file) {
-  return new goog.Promise(function(resolve, reject) {
+const launchFileSupport = function(file) {
+  return new Promise(function(resolve, reject) {
     var scopeOptions = {
       'file': file,
       'confirm': resolve,
@@ -236,6 +232,13 @@ os.ui.im.launchFileSupport = function(file) {
     };
 
     var template = '<filesupport></filesupport>';
-    os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   });
+};
+
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launchFileSupport
 };

@@ -2,7 +2,7 @@ goog.module('os.command.VectorLayerLineDash');
 goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const osStyle = goog.require('os.style');
 const StyleManager = goog.require('os.style.StyleManager');
 
@@ -20,7 +20,7 @@ class VectorLayerLineDash extends AbstractVectorStyle {
   constructor(layerId, lineDash, opt_oldLineDash) {
     super(layerId, lineDash, opt_oldLineDash);
     this.title = 'Change LineDash';
-    this.metricKey = metrics.Layer.VECTOR_LINE_DASH;
+    this.metricKey = LayerKeys.VECTOR_LINE_DASH;
   }
 
   /**

@@ -5,6 +5,8 @@ const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractData
 const CSVParser = goog.require('plugin.file.csv.CSVParser');
 const CSVParserConfig = goog.require('plugin.file.csv.CSVParserConfig');
 
+const FeatureImporter = goog.requireType('os.im.FeatureImporter');
+
 
 /**
  */
@@ -70,7 +72,7 @@ class CSVLayerConfig extends AbstractDataSourceLayerConfig {
    * @inheritDoc
    */
   getImporter(options) {
-    var importer = super.getImporter(options);
+    var importer = /** @type {FeatureImporter} */ (super.getImporter(options));
     // indicate the mappings we have already configured based on the user
     importer.setExecMappings(this.parserConfig['mappings']);
     return importer;

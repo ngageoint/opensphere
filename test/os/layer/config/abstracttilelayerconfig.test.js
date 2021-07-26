@@ -1,32 +1,44 @@
 goog.require('ol.source.XYZ');
+goog.require('os.layer.MockLayer');
 goog.require('os.layer.config.AbstractTileLayerConfig');
 goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.layer.config.MockTileLayerConfig');
 goog.require('os.mock');
 goog.require('os.net');
-goog.require('os.source.MockSource');
+goog.require('os.net.CrossOrigin');
+goog.require('os.proj');
 
 describe('os.layer.config.AbstractTileLayerConfig', function() {
+  const XYZ = goog.module.get('ol.source.XYZ');
+  const AbstractTileLayerConfig = goog.module.get('os.layer.config.AbstractTileLayerConfig');
+  const LayerConfigManager = goog.module.get('os.layer.config.LayerConfigManager');
+  const net = goog.module.get('os.net');
+  const CrossOrigin = goog.module.get('os.net.CrossOrigin');
+  const osProj = goog.module.get('os.proj');
+
+  const MockLayer = goog.module.get('os.layer.MockLayer');
+  const MockTileLayerConfig = goog.module.get('os.layer.config.MockTileLayerConfig');
+
   it('configures for an explicitType', function() {
-    var lc = new os.layer.config.AbstractTileLayerConfig();
-    var layer = new os.layer.MockLayer();
+    var lc = new AbstractTileLayerConfig();
+    var layer = new MockLayer();
     var options = {'explicitType': 'someType'};
     lc.configureLayer(layer, options);
     expect(layer.getExplicitType()).toBe('someType');
   });
 
   it('correctly replaces URLs with rotating numeric ranges', function() {
-    var expandedURL = os.layer.config.AbstractTileLayerConfig.getUrlPattern('https://{0-4}.tile.bits/{x}/{y}/{z}.png');
+    var expandedURL = AbstractTileLayerConfig.getUrlPattern('https://{0-4}.tile.bits/{x}/{y}/{z}.png');
     expect(expandedURL.toString()).toBe('/^https:\\/\\/\\d.tile.bits\\/\\d+\\/\\d+\\/\\d+.png/');
   });
 
   it('correctly replaces URLs with rotating alpha ranges', function() {
-    var expandedURL = os.layer.config.AbstractTileLayerConfig.getUrlPattern('https://{d-f}.tile.bits/{x}/{y}/{z}.png');
+    var expandedURL = AbstractTileLayerConfig.getUrlPattern('https://{d-f}.tile.bits/{x}/{y}/{z}.png');
     expect(expandedURL.toString()).toBe('/^https:\\/\\/[a-zA-Z].tile.bits\\/\\d+\\/\\d+\\/\\d+.png/');
   });
 
   it('returns URLs as Regexp when no rotating range', function() {
-    var expandedURL = os.layer.config.AbstractTileLayerConfig.getUrlPattern('https://abc.tile.bits/{x}/{y}/{z}.png');
+    var expandedURL = AbstractTileLayerConfig.getUrlPattern('https://abc.tile.bits/{x}/{y}/{z}.png');
     expect(expandedURL.toString()).toBe('/^https:\\/\\/abc.tile.bits\\/\\d+\\/\\d+\\/\\d+.png/');
   });
 
@@ -35,15 +47,14 @@ describe('os.layer.config.AbstractTileLayerConfig', function() {
     var testOptions = {
       'id': testLayerId,
       'url': 'https://abc.layer.bits/{x}/{y}/{z}',
-      'type': os.layer.config.MockTileLayerConfig.TYPE,
-      'projection': os.proj.EPSG3857
+      'type': MockTileLayerConfig.TYPE,
+      'projection': osProj.EPSG3857
     };
-    os.layerConfigManager = os.layer.config.LayerConfigManager.getInstance();
-    os.layerConfigManager.registerLayerConfig(os.layer.config.MockTileLayerConfig.TYPE,
-        os.layer.config.MockTileLayerConfig);
-    var lc = new os.layer.config.AbstractTileLayerConfig();
+    os.layerConfigManager = LayerConfigManager.getInstance();
+    LayerConfigManager.getInstance().registerLayerConfig(MockTileLayerConfig.TYPE, MockTileLayerConfig);
+    var lc = new AbstractTileLayerConfig();
     lc.initializeConfig(testOptions);
-    expect(lc.projection.getCode()).toBe(os.proj.EPSG3857);
+    expect(lc.projection.getCode()).toBe(osProj.EPSG3857);
   });
 
   it('sets desired projection for WGS-84 if included in options', function() {
@@ -51,15 +62,14 @@ describe('os.layer.config.AbstractTileLayerConfig', function() {
     var testOptions = {
       'id': testLayerId,
       'url': 'https://abc.layer.bits/{x}/{y}/{z}',
-      'type': os.layer.config.MockTileLayerConfig.TYPE,
-      'projection': os.proj.EPSG4326
+      'type': MockTileLayerConfig.TYPE,
+      'projection': osProj.EPSG4326
     };
-    os.layerConfigManager = os.layer.config.LayerConfigManager.getInstance();
-    os.layerConfigManager.registerLayerConfig(os.layer.config.MockTileLayerConfig.TYPE,
-        os.layer.config.MockTileLayerConfig);
-    var lc = new os.layer.config.AbstractTileLayerConfig();
+    os.layerConfigManager = LayerConfigManager.getInstance();
+    LayerConfigManager.getInstance().registerLayerConfig(MockTileLayerConfig.TYPE, MockTileLayerConfig);
+    var lc = new AbstractTileLayerConfig();
     lc.initializeConfig(testOptions);
-    expect(lc.projection.getCode()).toBe(os.proj.EPSG4326);
+    expect(lc.projection.getCode()).toBe(osProj.EPSG4326);
   });
 
   it('sets cross origin if included in options', function() {
@@ -67,27 +77,25 @@ describe('os.layer.config.AbstractTileLayerConfig', function() {
     var testOptions = {
       'id': testLayerId,
       'url': 'https://{a-b}.layer.bits',
-      'type': os.layer.config.MockTileLayerConfig.TYPE,
-      'crossOrigin': os.net.CrossOrigin.USE_CREDENTIALS
+      'type': MockTileLayerConfig.TYPE,
+      'crossOrigin': CrossOrigin.USE_CREDENTIALS
     };
-    os.layerConfigManager = os.layer.config.LayerConfigManager.getInstance();
-    os.layerConfigManager.registerLayerConfig(os.layer.config.MockTileLayerConfig.TYPE,
-        os.layer.config.MockTileLayerConfig);
-    var lc = new os.layer.config.AbstractTileLayerConfig();
+    os.layerConfigManager = LayerConfigManager.getInstance();
+    LayerConfigManager.getInstance().registerLayerConfig(MockTileLayerConfig.TYPE, MockTileLayerConfig);
+    var lc = new AbstractTileLayerConfig();
     lc.initializeConfig(testOptions);
-    expect(os.net.getCrossOrigin('https://a.layer.bits')).toBe(os.net.CrossOrigin.USE_CREDENTIALS);
-    expect(os.net.getCrossOrigin('https://b.layer.bits')).toBe(os.net.CrossOrigin.USE_CREDENTIALS);
+    expect(net.getCrossOrigin('https://a.layer.bits')).toBe(CrossOrigin.USE_CREDENTIALS);
+    expect(net.getCrossOrigin('https://b.layer.bits')).toBe(CrossOrigin.USE_CREDENTIALS);
   });
 
   it('sets attributions if included in options', function() {
     var testOptions = {
       'attributions': ['mock attribution', 'ex libris']
     };
-    var source = new ol.source.XYZ({});
-    os.layerConfigManager = os.layer.config.LayerConfigManager.getInstance();
-    os.layerConfigManager.registerLayerConfig(os.layer.config.MockTileLayerConfig.TYPE,
-        os.layer.config.MockTileLayerConfig);
-    var lc = new os.layer.config.AbstractTileLayerConfig();
+    var source = new XYZ({});
+    os.layerConfigManager = LayerConfigManager.getInstance();
+    LayerConfigManager.getInstance().registerLayerConfig(MockTileLayerConfig.TYPE, MockTileLayerConfig);
+    var lc = new AbstractTileLayerConfig();
     spyOn(lc, 'getSource').andCallFake(function() {
       return source;
     });

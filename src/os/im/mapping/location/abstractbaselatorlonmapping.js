@@ -1,169 +1,166 @@
-goog.provide('os.im.mapping.location.AbstractBaseLatOrLonMapping');
-goog.require('os.geo');
-goog.require('os.im.mapping.AbstractPositionMapping');
+goog.module('os.im.mapping.location.AbstractBaseLatOrLonMapping');
+goog.module.declareLegacyNamespace();
 
+const {COORD_CLEANER} = goog.require('os.geo');
+const {getBestFieldMatch, getItemField, setItemField} = goog.require('os.im.mapping');
+const AbstractPositionMapping = goog.require('os.im.mapping.AbstractPositionMapping');
 
 
 /**
- * @extends {os.im.mapping.AbstractPositionMapping.<T, S>}
- * @constructor
+ * @extends {AbstractPositionMapping<T, S>}
  * @template T, S
  */
-os.im.mapping.location.AbstractBaseLatOrLonMapping = function() {
-  os.im.mapping.location.AbstractBaseLatOrLonMapping.base(this, 'constructor');
-
+class AbstractBaseLatOrLonMapping extends AbstractPositionMapping {
   /**
-   * @type {string}
-   * @protected
+   * Constructor.
    */
-  this.coordField = '';
+  constructor() {
+    super();
 
-  /**
-   * @type {string}
-   * @protected
-   */
-  this.type = '';
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.coordField = '';
 
-  /**
-   * @type {RegExp}
-   * @protected
-   */
-  this.regex = null;
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.type = '';
 
-  /**
-   * @type {Function}
-   * @protected
-   */
-  this.parseFn = null;
-};
-goog.inherits(os.im.mapping.location.AbstractBaseLatOrLonMapping, os.im.mapping.AbstractPositionMapping);
+    /**
+     * @type {RegExp}
+     * @protected
+     */
+    this.regex = null;
 
-
-/**
- * @inheritDoc
- */
-os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.getId = function() {
-  return this.type;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.getFieldsChanged = function() {
-  return [this.field, this.coordField];
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.getLabel = function() {
-  return this.type;
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.getScore = function() {
-  if (this.type && this.field) {
-    return this.type.toLowerCase().indexOf(this.field.toLowerCase()) == 0 ? 11 : 10;
+    /**
+     * @type {Function}
+     * @protected
+     */
+    this.parseFn = null;
   }
 
-  return os.im.mapping.location.AbstractBaseLatOrLonMapping.base(this, 'getScore');
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.getScoreType = function() {
-  return 'geom';
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.execute = function(item, targetItem) {
-  var value = NaN;
-  if (!targetItem) {
-    targetItem = item;
+  /**
+   * @inheritDoc
+   */
+  getId() {
+    return this.type;
   }
 
-  if (this.field) {
-    var fieldValue = os.im.mapping.getItemField(item, this.field);
-    if (fieldValue) {
-      fieldValue = String(fieldValue).replace(os.geo.COORD_CLEANER, '');
-      value = this.parseFn(fieldValue, this.customFormat);
+  /**
+   * @inheritDoc
+   */
+  getFieldsChanged() {
+    return [this.field, this.coordField];
+  }
 
-      if (!isNaN(value)) {
-        os.im.mapping.setItemField(item, this.coordField, value);
-        this.addGeometry(item, targetItem);
-      }
+  /**
+   * @inheritDoc
+   */
+  getLabel() {
+    return this.type;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getScore() {
+    if (this.type && this.field) {
+      return this.type.toLowerCase().indexOf(this.field.toLowerCase()) == 0 ? 11 : 10;
     }
+
+    return super.getScore();
   }
-};
 
-
-/**
- * @inheritDoc
- */
-os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.testField = function(value) {
-  if (value) {
-    var l = this.parseFn(String(value));
-    return l != null && !isNaN(l);
+  /**
+   * @inheritDoc
+   */
+  getScoreType() {
+    return 'geom';
   }
-  return false;
-};
 
+  /**
+   * @inheritDoc
+   */
+  execute(item, targetItem) {
+    var value = NaN;
+    if (!targetItem) {
+      targetItem = item;
+    }
 
-/**
- * @inheritDoc
- */
-os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.testAndGetField = function(value, opt_format) {
-  if (value) {
-    var l = this.parseFn(String(value), opt_format);
-    return l != null && !isNaN(l) ? l.toString() : null;
-  }
-  return null;
-};
+    if (this.field) {
+      var fieldValue = getItemField(item, this.field);
+      if (fieldValue) {
+        fieldValue = String(fieldValue).replace(COORD_CLEANER, '');
+        value = this.parseFn(fieldValue, this.customFormat);
 
-
-/**
- * @param {T} item
- * @param {S} targetItem
- * @protected
- */
-os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.addGeometry = function(item, targetItem) {
-  var lat = item['LAT'];
-  var lon = item['LON'];
-  if (lat !== undefined && !isNaN(lat) && typeof lat === 'number' &&
-      lon !== undefined && !isNaN(lon) && typeof lon === 'number') {
-    targetItem['GEOM'] = [lon, lat];
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.im.mapping.location.AbstractBaseLatOrLonMapping.prototype.autoDetect = function(items) {
-  var m = null;
-  if (items) {
-    var i = items.length;
-    var f = undefined;
-    while (i--) {
-      var item = items[i];
-      f = os.im.mapping.getBestFieldMatch(item, this.regex, f);
-
-      if (f) {
-        m = new this.constructor();
-        m.field = f;
+        if (!isNaN(value)) {
+          setItemField(item, this.coordField, value);
+          this.addGeometry(item, targetItem);
+        }
       }
     }
   }
 
-  return m;
-};
+  /**
+   * @inheritDoc
+   */
+  testField(value) {
+    if (value) {
+      var l = this.parseFn(String(value));
+      return l != null && !isNaN(l);
+    }
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  testAndGetField(value, opt_format) {
+    if (value) {
+      var l = this.parseFn(String(value), opt_format);
+      return l != null && !isNaN(l) ? l.toString() : null;
+    }
+    return null;
+  }
+
+  /**
+   * @param {T} item
+   * @param {S} targetItem
+   * @protected
+   */
+  addGeometry(item, targetItem) {
+    var lat = item['LAT'];
+    var lon = item['LON'];
+    if (lat !== undefined && !isNaN(lat) && typeof lat === 'number' &&
+        lon !== undefined && !isNaN(lon) && typeof lon === 'number') {
+      targetItem['GEOM'] = [lon, lat];
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  autoDetect(items) {
+    var m = null;
+    if (items) {
+      var i = items.length;
+      var f = undefined;
+      while (i--) {
+        var item = items[i];
+        f = getBestFieldMatch(item, this.regex, f);
+
+        if (f) {
+          m = new this.constructor();
+          m.field = f;
+        }
+      }
+    }
+
+    return m;
+  }
+}
+
+exports = AbstractBaseLatOrLonMapping;

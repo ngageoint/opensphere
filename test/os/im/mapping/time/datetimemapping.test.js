@@ -1,10 +1,18 @@
 goog.require('os.im.mapping.TimeFormat');
 goog.require('os.im.mapping.TimeType');
 goog.require('os.im.mapping.time.DateTimeMapping');
+goog.require('os.time');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 
 describe('os.im.mapping.time.DateTimeMapping', function() {
+  const TimeFormat = goog.module.get('os.im.mapping.TimeFormat');
+  const TimeType = goog.module.get('os.im.mapping.TimeType');
+  const DateTimeMapping = goog.module.get('os.im.mapping.time.DateTimeMapping');
+  const osTime = goog.module.get('os.time');
+  const TimeInstant = goog.module.get('os.time.TimeInstant');
+  const TimeRange = goog.module.get('os.time.TimeRange');
+
   var dtm = null;
   var dtItem = null;
   var noDtItem = {};
@@ -12,7 +20,7 @@ describe('os.im.mapping.time.DateTimeMapping', function() {
   var end = '2014-02-15T15:42:59.123Z';
 
   beforeEach(function() {
-    dtm = new os.im.mapping.time.DateTimeMapping(os.im.mapping.TimeType.INSTANT);
+    dtm = new DateTimeMapping(TimeType.INSTANT);
     dtItem = {'DateTime': start, 'DownDateTime': end};
     noDtItem = {'noRegexMatch': '2014-02-13T15:42:59.123Z'};
   });
@@ -20,27 +28,27 @@ describe('os.im.mapping.time.DateTimeMapping', function() {
   it('should auto detect date/time columns', function() {
     var m = dtm.autoDetect([dtItem]);
     expect(m).not.toBeNull();
-    expect(m instanceof os.im.mapping.time.DateTimeMapping).toBe(true);
+    expect(m instanceof DateTimeMapping).toBe(true);
     expect(m.field).toBe('DateTime');
     expect(m.getFormat()).toBe('YYYY-MM-DDTHH:mm:ss.SSSZ');
 
     m = dtm.autoDetect([noDtItem]);
     expect(m).toBeNull();
 
-    dtm = new os.im.mapping.time.DateTimeMapping(os.im.mapping.TimeType.START);
+    dtm = new DateTimeMapping(TimeType.START);
     m = dtm.autoDetect([dtItem]);
     expect(m).not.toBeNull();
-    expect(m instanceof os.im.mapping.time.DateTimeMapping).toBe(true);
+    expect(m instanceof DateTimeMapping).toBe(true);
     expect(m.field).toBe('DateTime');
     expect(m.getFormat()).toBe('YYYY-MM-DDTHH:mm:ss.SSSZ');
 
     m = dtm.autoDetect([noDtItem]);
     expect(m).toBeNull();
 
-    dtm = new os.im.mapping.time.DateTimeMapping(os.im.mapping.TimeType.END);
+    dtm = new DateTimeMapping(TimeType.END);
     m = dtm.autoDetect([dtItem]);
     expect(m).not.toBeNull();
-    expect(m instanceof os.im.mapping.time.DateTimeMapping).toBe(true);
+    expect(m instanceof DateTimeMapping).toBe(true);
     expect(m.field).toBe('DownDateTime');
     expect(m.getFormat()).toBe('YYYY-MM-DDTHH:mm:ss.SSSZ');
 
@@ -52,21 +60,21 @@ describe('os.im.mapping.time.DateTimeMapping', function() {
     var t = Date.now();
     var time = dtm.getNewTime(t);
     expect(time).not.toBeNull();
-    expect(time instanceof os.time.TimeInstant).toBe(true);
+    expect(time instanceof TimeInstant).toBe(true);
     expect(time.getStart()).toBe(t);
 
-    dtm.setType(os.im.mapping.TimeType.START);
+    dtm.setType(TimeType.START);
     time = dtm.getNewTime(t);
     expect(time).not.toBeNull();
-    expect(time instanceof os.time.TimeRange).toBe(true);
+    expect(time instanceof TimeRange).toBe(true);
     // the end and the start should both be t
     expect(time.getStart()).toBe(t);
     expect(time.getEnd()).toBe(t);
 
-    dtm.setType(os.im.mapping.TimeType.END);
+    dtm.setType(TimeType.END);
     time = dtm.getNewTime(t);
     expect(time).not.toBeNull();
-    expect(time instanceof os.time.TimeRange).toBe(true);
+    expect(time instanceof TimeRange).toBe(true);
     expect(time.getStart()).toBe(0);
     expect(time.getEnd()).toBe(t);
   });
@@ -76,33 +84,33 @@ describe('os.im.mapping.time.DateTimeMapping', function() {
     var im = dtm.autoDetect([dtItem]);
     im.execute(dtItem);
     expect(dtItem.recordTime).not.toBeNull();
-    expect(dtItem.recordTime instanceof os.time.TimeInstant).toBe(true);
+    expect(dtItem.recordTime instanceof TimeInstant).toBe(true);
     expect(dtItem.recordTime.getStart()).toBe(new Date(start).getTime());
 
     // start mapping only
-    dtm.setType(os.im.mapping.TimeType.START);
+    dtm.setType(TimeType.START);
     dtItem = {'DateTime': start, 'DownDateTime': end};
     var sm = dtm.autoDetect([dtItem]);
     sm.execute(dtItem);
     expect(dtItem.recordTime).not.toBeNull();
-    expect(dtItem.recordTime instanceof os.time.TimeRange).toBe(true);
+    expect(dtItem.recordTime instanceof TimeRange).toBe(true);
     expect(dtItem.recordTime.getStart()).toBe(new Date(start).getTime());
     expect(dtItem.recordTime.getEnd()).toBe(new Date(start).getTime());
 
     // end mapping only
-    dtm.setType(os.im.mapping.TimeType.END);
+    dtm.setType(TimeType.END);
     dtItem = {'DateTime': start, 'DownDateTime': end};
     var em = dtm.autoDetect([dtItem]);
     em.execute(dtItem);
     expect(dtItem.recordTime).not.toBeNull();
-    expect(dtItem.recordTime instanceof os.time.TimeRange).toBe(true);
+    expect(dtItem.recordTime instanceof TimeRange).toBe(true);
     expect(dtItem.recordTime.getStart()).toBe(0);
     expect(dtItem.recordTime.getEnd()).toBe(new Date(end).getTime());
 
     // start + end mapping applied
     sm.execute(dtItem);
     expect(dtItem.recordTime).not.toBeNull();
-    expect(dtItem.recordTime instanceof os.time.TimeRange).toBe(true);
+    expect(dtItem.recordTime instanceof TimeRange).toBe(true);
     expect(dtItem.recordTime.getStart()).toBe(new Date(start).getTime());
     expect(dtItem.recordTime.getEnd()).toBe(new Date(end).getTime());
 
@@ -111,7 +119,7 @@ describe('os.im.mapping.time.DateTimeMapping', function() {
     im.execute(dtItem);
     em.execute(dtItem);
     expect(dtItem.recordTime).not.toBeNull();
-    expect(dtItem.recordTime instanceof os.time.TimeRange).toBe(true);
+    expect(dtItem.recordTime instanceof TimeRange).toBe(true);
     expect(dtItem.recordTime.getStart()).toBe(new Date(start).getTime());
     expect(dtItem.recordTime.getEnd()).toBe(new Date(end).getTime());
   });
@@ -120,9 +128,9 @@ describe('os.im.mapping.time.DateTimeMapping', function() {
     // instant mapping applied
     var startTime = 1482904308000;
     var endTime = 1482904308001;
-    var time = new os.time.TimeRange(startTime);
-    var time2 = new os.time.TimeRange(undefined, endTime);
-    var time3 = new os.time.TimeRange(startTime, startTime);
+    var time = new TimeRange(startTime);
+    var time2 = new TimeRange(undefined, endTime);
+    var time3 = new TimeRange(startTime, startTime);
     var im = dtm.autoDetect([dtItem]);
     expect(im.getTime(null, null)).toBeNull();
     expect(im.getTime(null, '2016-12-28 07:41:18Z')).toBeNull();
@@ -132,7 +140,7 @@ describe('os.im.mapping.time.DateTimeMapping', function() {
     expect(im.getTime(startTime, null).getStart()).toEqual(startTime);
     expect(im.getTime(startTime, time)).toEqual(time);
     expect(im.getTime(startTime, time2)).toEqual(time2);
-    im.type = os.im.mapping.TimeType.END;
+    im.type = TimeType.END;
     expect(im.getTime(endTime, null).getEnd()).toEqual(endTime);
     expect(im.getTime(startTime, time)).toEqual(time3);
     expect(im.getTime(startTime, time2)).toEqual(time3);
@@ -140,10 +148,10 @@ describe('os.im.mapping.time.DateTimeMapping', function() {
 
   it('should parse ISO strings properly', function() {
     var im = dtm.autoDetect([dtItem]);
-    im.format = os.im.mapping.TimeFormat.ISO;
+    im.format = TimeFormat.ISO;
     im.execute(dtItem);
     expect(dtItem.recordTime).not.toBeNull();
-    expect(dtItem.recordTime instanceof os.time.TimeInstant).toBe(true);
+    expect(dtItem.recordTime instanceof TimeInstant).toBe(true);
     expect(dtItem.recordTime.getStart()).toBe(moment(start).valueOf());
   });
 
@@ -156,13 +164,13 @@ describe('os.im.mapping.time.DateTimeMapping', function() {
 
     var m = dtm.autoDetect([obj]);
     expect(m).not.toBeNull();
-    expect(m instanceof os.im.mapping.time.DateTimeMapping).toBe(true);
+    expect(m instanceof DateTimeMapping).toBe(true);
     expect(m.field).toBe('recordTime');
     expect(m.getFormat()).toBe('YYYY-MM-DDTHH:mm:ss.SSSZ');
 
     m.execute(obj);
     expect(obj.recordTime).not.toBeNull();
-    expect(obj.recordTime instanceof os.time.TimeInstant).toBe(true);
+    expect(obj.recordTime instanceof TimeInstant).toBe(true);
     expect(obj.recordTime.getStart()).toBe(now.getTime());
   });
 
@@ -172,7 +180,7 @@ describe('os.im.mapping.time.DateTimeMapping', function() {
 
     var clone = m.clone();
     expect(clone).not.toBeNull();
-    expect(clone instanceof os.im.mapping.time.DateTimeMapping).toBe(true);
+    expect(clone instanceof DateTimeMapping).toBe(true);
     expect(clone.field).toBe(m.field);
     expect(clone.getApplyTime()).toBe(m.getApplyTime());
     expect(clone.getFormat()).toBe(m.getFormat());
@@ -184,7 +192,7 @@ describe('os.im.mapping.time.DateTimeMapping', function() {
     m.setApplyTime(false);
 
     // just set this to not the default (first one)
-    m.setFormat(os.time.DATETIME_FORMATS[4]);
+    m.setFormat(osTime.DATETIME_FORMATS[4]);
 
     var persist = m.persist();
     expect(persist.id).toBe(m.getId());
@@ -193,7 +201,7 @@ describe('os.im.mapping.time.DateTimeMapping', function() {
     expect(persist.format).toBe(m.getFormat());
     expect(persist.type).toBe(m.getType());
 
-    var restored = new os.im.mapping.time.DateTimeMapping(os.im.mapping.TimeType.END);
+    var restored = new DateTimeMapping(TimeType.END);
     expect(restored.field).not.toBe(m.field);
     expect(restored.getFormat()).not.toBe(m.getFormat());
     expect(restored.getApplyTime()).not.toBe(m.getApplyTime());
@@ -211,7 +219,7 @@ describe('os.im.mapping.time.DateTimeMapping', function() {
     m.setApplyTime(false);
 
     // just set this to not the default (first one)
-    m.setFormat(os.time.DATETIME_FORMATS[7]);
+    m.setFormat(osTime.DATETIME_FORMATS[7]);
 
     var xml = m.toXml();
     expect(xml).toBeDefined();
@@ -230,7 +238,7 @@ describe('os.im.mapping.time.DateTimeMapping', function() {
     expect(typeEl).toBeDefined();
     expect(typeEl.textContent).toBe(m.getType());
 
-    var restored = new os.im.mapping.time.DateTimeMapping(os.im.mapping.TimeType.END);
+    var restored = new DateTimeMapping(TimeType.END);
     expect(restored.field).not.toBe(m.field);
     expect(restored.getFormat()).not.toBe(m.getFormat());
     expect(restored.getApplyTime()).not.toBe(m.getApplyTime());

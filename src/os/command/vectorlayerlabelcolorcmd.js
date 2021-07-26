@@ -2,7 +2,7 @@ goog.module('os.command.VectorLayerLabelColor');
 goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const metrics = goog.require('os.metrics');
+const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
@@ -23,7 +23,7 @@ class VectorLayerLabelColor extends AbstractVectorStyle {
   constructor(layerId, value, opt_oldValue) {
     super(layerId, value, opt_oldValue);
     this.title = 'Change Label Color';
-    this.metricKey = metrics.Layer.LABEL_COLOR;
+    this.metricKey = LayerKeys.LABEL_COLOR;
     // make sure the value is an rgba string, not hex
     if (value != '') {
       this.value = osStyle.toRgbaString(value);

@@ -45,7 +45,6 @@ goog.inherits(os.ui.ol.interaction.DragCircle, os.ui.ol.interaction.AbstractDrag
 
 /**
  * @type {string}
- * @const
  */
 os.ui.ol.interaction.DragCircle.TYPE = 'circle';
 

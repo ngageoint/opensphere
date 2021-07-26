@@ -10,6 +10,7 @@ const MapContainer = goog.require('os.MapContainer');
 const EventType = goog.require('os.action.EventType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const SelectionType = goog.require('os.events.SelectionType');
+const {noop} = goog.require('os.fn');
 const VectorLayer = goog.require('os.layer.Vector');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const VectorSource = goog.require('os.source.Vector');
@@ -226,7 +227,7 @@ class Controller extends Disposable {
     searchLayer.setNodeUI('');
     searchLayer.setLayerUI('');
     searchLayer.setSticky(true);
-    searchLayer.renderLegend = () => {};
+    searchLayer.renderLegend = noop;
 
     var layerConfig = StyleManager.getInstance().getOrCreateLayerConfig(
         Controller.SEARCH_LAYER_ID);

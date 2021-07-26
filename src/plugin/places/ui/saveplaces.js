@@ -1,7 +1,7 @@
 goog.module('plugin.places.ui.SavePlacesUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.im.basicInfoDirective');
+goog.require('os.ui.im.BasicInfoUI');
 
 const {ROOT} = goog.require('os');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');

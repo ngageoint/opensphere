@@ -10,7 +10,9 @@
         <div>Please select the file's type from the list below, or import a file of a type that is supported.</div>
       </div>
       <div class="row justify-content-center">
-        <select class="custom-select w-25" ng-model="anytype.import" ng-options="importer.title for importer in importers"></select>
+        <select class="custom-select w-25" ng-model="anytype.import"
+            ng-options="importer as anytype.getTitle(importer) for importer in importers">
+        </select>
       </div>
     </div>
   </div>
