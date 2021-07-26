@@ -1,7 +1,7 @@
 goog.module('os.ui.feature.MultiFeatureInfoUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.location.SimpleLocationDirective');
+goog.require('os.ui.location.SimpleLocationUI');
 
 const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');

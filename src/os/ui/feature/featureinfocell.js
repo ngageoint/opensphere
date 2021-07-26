@@ -1,7 +1,7 @@
 goog.module('os.ui.feature.FeatureInfoCellUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.location.SimpleLocationDirective');
+goog.require('os.ui.location.SimpleLocationUI');
 goog.require('os.ui.propertyInfoDirective');
 
 const {ROOT} = goog.require('os');
