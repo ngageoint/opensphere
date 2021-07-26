@@ -1,10 +1,12 @@
 goog.module('plugin.file.kml.ui.KMLImageLayerUI');
 goog.module.declareLegacyNamespace();
 
-const LayerNode = goog.require('os.data.LayerNode');
+const {isLayerNode} = goog.require('os.data');
 const LayerGroup = goog.require('os.layer.LayerGroup');
 const Module = goog.require('os.ui.Module');
 const ImageLayerUI = goog.require('os.ui.layer.ImageLayerUI');
+
+const LayerNode = goog.requireType('os.data.LayerNode');
 
 
 /**
@@ -70,7 +72,7 @@ class Controller extends ImageLayerUI.Controller {
       }
     }
 
-    items = /** @type {!Array<!LayerNode>} */ (items.filter(LayerNode.isLayerNode));
+    items = /** @type {!Array<!LayerNode>} */ (items.filter(isLayerNode));
 
     for (var i = 0; i < items.length; i++) {
       var item = items[i];

@@ -1,16 +1,12 @@
 goog.module('os.data.LayerNode');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.layer.LayerVisibilityUI');
-goog.require('os.ui.node.defaultLayerNodeUIDirective');
-goog.require('os.ui.node.featureCountDirective');
-goog.require('os.ui.node.layerTypeDirective');
-goog.require('os.ui.node.tileLoadingDirective');
 goog.require('os.ui.triStateCheckboxDirective');
 
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
-const {instanceOf} = goog.require('os.classRegistry');
+const {instanceOf, registerClass} = goog.require('os.classRegistry');
+const {NodeClass} = goog.require('os.data');
 const DataManager = goog.require('os.data.DataManager');
 const LayerEventType = goog.require('os.events.LayerEventType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
@@ -27,6 +23,10 @@ const PropertyChange = goog.require('os.source.PropertyChange');
 const VectorSource = goog.require('os.source.Vector');
 const TriState = goog.require('os.structs.TriState');
 const ILayerUIProvider = goog.require('os.ui.ILayerUIProvider');
+const {directiveTag: layerVisibility} = goog.require('os.ui.layer.LayerVisibilityUI');
+const {directiveTag: featureCount} = goog.require('os.ui.node.FeatureCountUI');
+const {directiveTag: layerType} = goog.require('os.ui.node.LayerTypeUI');
+const {directiveTag: tileLoading} = goog.require('os.ui.node.TileLoadingUI');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 const IExtent = goog.requireType('os.data.IExtent');
@@ -127,7 +127,7 @@ class LayerNode extends SlickTreeNode {
       // add a separate visibility toggle for feature layers
       if (instanceOf(layer, LayerClass.VECTOR)) {
         const padClass = checkboxParts.length ? 'pl-1' : '';
-        checkboxParts.push(`<layervisibility class="c-glyph ${padClass}"></layervisibility>`);
+        checkboxParts.push(`<${layerVisibility} class="c-glyph ${padClass}"></${layerVisibility}>`);
       }
     }
 
@@ -343,10 +343,10 @@ class LayerNode extends SlickTreeNode {
     if (layer instanceof LayerGroup) {
       s += ' (' + this.getLayer().getProvider() + ')';
     } else {
-      s += ' <layertype></layertype>';
+      s += ` <${layerType}></${layerType}>`;
 
       if (instanceOf(layer, LayerClass.VECTOR)) {
-        s += ' <featurecount></featurecount>';
+        s += ` <${featureCount}></${featureCount}>`;
 
         var source = layer.getSource();
         if (source instanceof VectorSource && source.getHasModifications()) {
@@ -354,7 +354,7 @@ class LayerNode extends SlickTreeNode {
               class="font-weight-bolder">  •  </span>${s}`;
         }
       } else if (instanceOf(layer, LayerClass.TILE)) {
-        s += ' <tileloading></tileloading>';
+        s += ` <${tileLoading}></${tileLoading}>`;
       }
     }
 
@@ -382,20 +382,10 @@ class LayerNode extends SlickTreeNode {
   onNodeChanged_(event) {
     this.dispatchEvent(new PropertyChangeEvent('icons'));
   }
-
-  /**
-   * Check if an item is a layer node.
-   *
-   * @param {*} item The item
-   * @return {boolean}
-   */
-  static isLayerNode(item) {
-    return item instanceof LayerNode;
-  }
 }
 
 osImplements(LayerNode, ILayerProvider.ID);
 osImplements(LayerNode, ILayerUIProvider.ID);
-
+registerClass(NodeClass.LAYER, LayerNode);
 
 exports = LayerNode;

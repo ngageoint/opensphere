@@ -11,7 +11,7 @@ const {listen, unlistenByKey} = goog.require('ol.events');
 const MapChange = goog.require('os.MapChange');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const ParallelCommand = goog.require('os.command.ParallelCommand');
-const LayerNode = goog.require('os.data.LayerNode');
+const {isLayerNode} = goog.require('os.data');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const LayerGroup = goog.require('os.layer.LayerGroup');
 const PropertyChange = goog.require('os.layer.PropertyChange');
@@ -19,6 +19,7 @@ const {getMapContainer} = goog.require('os.map.instance');
 const {apply} = goog.require('os.ui');
 
 const ICommand = goog.requireType('os.command.ICommand');
+const LayerNode = goog.requireType('os.data.LayerNode');
 const ILayer = goog.requireType('os.layer.ILayer');
 
 
@@ -166,7 +167,7 @@ class Controller extends Disposable {
     var nodes = [];
 
     var items = this.scope['items'] || [];
-    items = /** @type {!Array<!LayerNode>} */ (items.filter(LayerNode.isLayerNode));
+    items = /** @type {!Array<!LayerNode>} */ (items.filter(isLayerNode));
 
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
@@ -237,7 +238,7 @@ class Controller extends Disposable {
 
       // register listeners to handle updating the UI on style change
       if (newVal) {
-        var nodes = newVal.filter(LayerNode.isLayerNode);
+        var nodes = newVal.filter(isLayerNode);
         for (var i = 0, n = nodes.length; i < n; i++) {
           var layer = /** @type {ol.layer.Layer} */ (nodes[i].getLayer());
           if (layer) {
