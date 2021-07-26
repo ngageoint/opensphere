@@ -1,7 +1,7 @@
 goog.module('os.layer.VectorTile');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.layer.defaultLayerUIDirective');
+goog.require('os.ui.layer.DefaultLayerUI');
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');

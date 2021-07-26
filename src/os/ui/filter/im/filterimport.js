@@ -2,7 +2,7 @@ goog.module('os.ui.filter.im.FilterImport');
 goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.filter.im.FilterImportModelUI');
-goog.require('os.ui.layer.layerPickerDirective');
+goog.require('os.ui.layer.LayerPickerUI');
 
 const {assert} = goog.require('goog.asserts');
 const dispose = goog.require('goog.dispose');

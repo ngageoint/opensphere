@@ -3,7 +3,6 @@ goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin.TileImage');
 goog.require('os.mixin.UrlTileSource');
-goog.require('os.ui.layer.tileLayerUIDirective');
 
 const {assert} = goog.require('goog.asserts');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -48,6 +47,7 @@ const TimeInstant = goog.require('os.time.TimeInstant');
 const Icons = goog.require('os.ui.Icons');
 const IconsSVG = goog.require('os.ui.IconsSVG');
 const {adjustIconSet, createIconSet} = goog.require('os.ui.icons');
+const {directiveTag: layerUi} = goog.require('os.ui.layer.TileLayerUI');
 const {launchRenameDialog} = goog.require('os.ui.renamelayer');
 
 const {TileFilterFn} = goog.requireType('os.tile');
@@ -151,7 +151,7 @@ class Tile extends OLTileLayer {
      * @type {!string}
      * @private
      */
-    this.layerUi_ = 'tilelayerui';
+    this.layerUi_ = layerUi;
 
     /**
      * @type {?string}

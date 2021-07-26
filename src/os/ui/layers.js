@@ -26,7 +26,7 @@ goog.require('os.ui.Module');
 goog.require('os.ui.data.groupby.TagGroupBy');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
-goog.require('os.ui.layer.defaultLayerUIDirective');
+goog.require('os.ui.layer.DefaultLayerUI');
 goog.require('os.ui.layerTreeDirective');
 goog.require('os.ui.menu.import');
 goog.require('os.ui.menu.layer');
