@@ -7,7 +7,7 @@ goog.require('os.ui.alert.AlertButtonUI');
 goog.require('os.ui.clear.ClearButtonUI');
 goog.require('os.ui.datePanelDirective');
 goog.require('os.ui.draw.DrawControlsUI');
-goog.require('os.ui.help');
+goog.require('os.ui.help.HelpUI');
 goog.require('os.ui.history.HistoryButtonUI');
 goog.require('os.ui.layersButtonDirective');
 goog.require('os.ui.legendButtonDirective');
@@ -30,7 +30,7 @@ goog.require('os.ui.windowsButtonDirective');
  * Help template.
  * @type {string}
  */
-os.ui.navbaroptions.help = 'help';
+os.ui.navbaroptions.help = os.ui.help.HelpUI.directiveTag;
 
 
 /**
