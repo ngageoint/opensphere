@@ -1,43 +1,42 @@
-goog.provide('os.ui.location');
+goog.module('os.ui.location');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.config.Settings');
-goog.require('os.ui');
-goog.require('os.ui.location.Format');
 goog.require('os.ui.location.ddmFilter');
 goog.require('os.ui.location.degFilter');
 goog.require('os.ui.location.dmsFilter');
 goog.require('os.ui.location.mgrsFilter');
 
+const log = goog.require('goog.log');
+const Settings = goog.require('os.config.Settings');
+const ui = goog.require('os.ui');
+const Format = goog.require('os.ui.location.Format');
+
+const Logger = goog.requireType('goog.log.Logger');
+
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {Logger}
  */
-os.ui.location.LOGGER_ = goog.log.getLogger('os.ui.location');
-
+const logger = log.getLogger('os.ui.location');
 
 /**
  * Display settings keys.
  * @enum {string}
  */
-os.ui.location.LocationSetting = {
+const LocationSetting = {
   POSITION: 'locationFormat',
   POSITIONOLD: 'os.map.mousePosition'
 };
-
 
 /**
  * Get the currently selected location format
  *
  * @return {string}
  */
-os.ui.location.getCurrentFormat = function() {
-  return /** @type {string} */ (os.settings.get(
-      os.ui.location.LocationSetting.POSITION, os.ui.location.Format.DEG));
+const getCurrentFormat = function() {
+  return /** @type {string} */ (Settings.getInstance().get(LocationSetting.POSITION, Format.DEG));
 };
-
 
 /**
  * Helper function to format a lat lon in the current format.  Good
@@ -47,27 +46,33 @@ os.ui.location.getCurrentFormat = function() {
  * @param {number|string} lon
  * @return {string}
  */
-os.ui.location.formatAsCurrent = function(lat, lon) {
+const formatAsCurrent = function(lat, lon) {
   lat = parseFloat(lat);
   lon = parseFloat(lon);
 
-  var curFormat = os.ui.location.getCurrentFormat();
+  var curFormat = getCurrentFormat();
 
   try {
-    var filter = /** @type {angular.$filter} */ (os.ui.injector.get('$filter'));
+    var filter = /** @type {angular.$filter} */ (ui.injector.get('$filter'));
     var formatter = filter(curFormat);
     return formatter(lat, lon);
   } catch (e) {
     // make this super obvious so we catch it in dev
     // some errors come as a result of poorly formatted text, ignore those
     if (filter === undefined) {
-      goog.log.warning(os.ui.location.LOGGER_, '$filter service unavailable!');
-    } else if (os.ui.injector === undefined) {
-      goog.log.warning(os.ui.location.LOGGER_, 'os.ui.injector service never defined!');
+      log.warning(logger, '$filter service unavailable!');
+    } else if (ui.injector === undefined) {
+      log.warning(logger, 'os.ui.injector service never defined!');
     } else {
-      goog.log.warning(os.ui.location.LOGGER_, 'Unknown error trying to use formatter!');
+      log.warning(logger, 'Unknown error trying to use formatter!');
     }
   }
 
   return lat + '°  ' + lon + '°';
+};
+
+exports = {
+  LocationSetting,
+  getCurrentFormat,
+  formatAsCurrent
 };

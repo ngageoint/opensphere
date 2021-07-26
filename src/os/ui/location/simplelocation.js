@@ -1,132 +1,15 @@
-/**
- * @fileoverview Directives to display locatoin controls using Angular.js
- */
-goog.provide('os.ui.location.SimpleLocationControlsCtrl');
-goog.provide('os.ui.location.SimpleLocationControlsDirective');
-goog.provide('os.ui.location.SimpleLocationCtrl');
-goog.provide('os.ui.location.SimpleLocationDirective');
+goog.module('os.ui.location.SimpleLocationUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.async.Delay');
-goog.require('os.config.Settings');
-goog.require('os.ui');
-goog.require('os.ui.Module');
+const Delay = goog.require('goog.async.Delay');
+const dispose = goog.require('goog.dispose');
+const Settings = goog.require('os.config.Settings');
+const {apply} = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const {LocationSetting, getCurrentFormat} = goog.require('os.ui.location');
 
-
-
-/**
- * The directive controller
- *
- * @constructor
- * @param {!angular.Scope} $scope
- * @param {!angular.$filter} $filter
- * @ngInject
- */
-os.ui.location.SimpleLocationCtrl = function($scope, $filter) {
-  /**
-   * @type {?angular.Scope}
-   * @private
-   */
-  this.scope_ = $scope;
-
-  /**
-   * @type {?angular.$filter}
-   * @private
-   */
-  this.filter_ = $filter;
-
-  /**
-   * Provide a model for the view.
-   * @type {string}
-   */
-  this['location'] = '';
-
-  /**
-   * @type {os.ui.location.Format}
-   * @private
-   */
-  this['currentFormat'] = os.ui.location.getCurrentFormat();
-
-  /**
-   * Delay to debounce updates.
-   * @type {goog.async.Delay}
-   * @private
-   */
-  this.updateDelay_ = new goog.async.Delay(this.format, 25, this);
-
-  this.scope_.$on('$destroy', this.destroy_.bind(this));
-  this.scope_.$watch('latdeg', this.onLatLonChange_.bind(this));
-  this.scope_.$watch('londeg', this.onLatLonChange_.bind(this));
-
-  os.settings.listen(os.ui.location.LocationSetting.POSITION, this.locationChanged, false, this);
-};
-
-
-/**
- * Clean up
- *
- * @private
- */
-os.ui.location.SimpleLocationCtrl.prototype.destroy_ = function() {
-  goog.dispose(this.updateDelay_);
-  this.updateDelay_ = null;
-
-  this.scope_ = null;
-  this.filter_ = null;
-};
-
-
-/**
- * Callback when lat or lon changes
- *
- * @private
- */
-os.ui.location.SimpleLocationCtrl.prototype.onLatLonChange_ = function() {
-  // lat/lon will typically both change, but not always. this ensures the coordinate is only formatted once in either
-  // case.
-  if (this.updateDelay_) {
-    this.updateDelay_.start();
-  }
-};
-
-
-/**
- * Change the display model
- *
- * @param {os.ui.location.Format=} opt_format
- * @export
- */
-os.ui.location.SimpleLocationCtrl.prototype.format = function(opt_format) {
-  if (this.scope_ && this.scope_['latdeg'] != undefined && this.scope_['londeg'] != undefined) {
-    this['currentFormat'] = opt_format || os.ui.location.getCurrentFormat();
-    var formatter = this.filter_(this['currentFormat']);
-    var lat = this.scope_['latdeg'];
-    var lon = this.scope_['londeg'];
-
-    if ((typeof lat === 'number' || typeof lat === 'string') && (typeof lon === 'number' || typeof lon === 'string')) {
-      this['location'] = formatter(this.scope_['latdeg'], this.scope_['londeg']).replace(/°/g, '&deg;');
-    } else {
-      this['location'] = '';
-    }
-
-    if (this.scope_['onchange']) {
-      this.scope_['onchange']();
-    }
-    os.ui.apply(this.scope_);
-  }
-};
-
-
-/**
- * Change the display model
- *
- * @param {os.events.SettingChangeEvent} event
- * @export
- */
-os.ui.location.SimpleLocationCtrl.prototype.locationChanged = function(event) {
-  if (event.newVal) {
-    this.format(/** @type {os.ui.location.Format} */ (event.newVal));
-  }
-};
+const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
+const Format = goog.requireType('os.ui.location.Format');
 
 
 /**
@@ -146,154 +29,157 @@ os.ui.location.SimpleLocationCtrl.prototype.locationChanged = function(event) {
  *
  * @return {angular.Directive}
  */
-os.ui.location.SimpleLocationDirective = function() {
-  return {
-    restrict: 'EA',
-    replace: true,
-    template: os.ui.location.SimpleLocationDirective.template_,
-    controller: os.ui.location.SimpleLocationCtrl,
-    controllerAs: 'simpleLocationCtrl',
-    scope: {
-      'latdeg': '=',
-      'londeg': '=',
-      'onchange': '&'
-    }
-  };
-};
-
+const directive = () => ({
+  restrict: 'EA',
+  replace: true,
+  template,
+  controller: Controller,
+  controllerAs: 'simpleLocationCtrl',
+  scope: {
+    'latdeg': '=',
+    'londeg': '=',
+    'onchange': '&'
+  }
+});
 
 /**
- * Service name to be referenced when looking up via the injector.
+ * The element tag for the directive.
  * @type {string}
- * @const
  */
-os.ui.location.SimpleLocationDirective.ID = 'simpleLocation';
+const directiveTag = 'simple-location';
 
 // Register the directive
-os.ui.Module.directive(os.ui.location.SimpleLocationDirective.ID, [os.ui.location.SimpleLocationDirective]);
-
+Module.directive('simpleLocation', [directive]);
 
 /**
  * The template for this directive
  * @type {string}
- * @private
- * @const
  */
-os.ui.location.SimpleLocationDirective.template_ =
+const template =
     '<div class="d-flex">' +
     '<span ng-bind-html="simpleLocationCtrl.location"></span>' +
     '<simple-location-controls format-default="simpleLocationCtrl.currentFormat" ' +
     'on-change="simpleLocationCtrl.format(opt_format)"></simple-location-controls>' +
     '</div>';
 
-
-
 /**
- * @constructor
- * @param {!angular.Scope} $scope
- * @ngInject
+ * The directive controller
+ * @unrestricted
  */
-os.ui.location.SimpleLocationControlsCtrl = function($scope) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.$filter} $filter
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope, $filter) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  /**
-   * @type {function(Object<os.ui.location.Format>)}
-   * @private
-   */
-  this.change_ = this.scope_['change'];
+    /**
+     * @type {?angular.$filter}
+     * @private
+     */
+    this.filter_ = $filter;
 
-  /**
-   * @type {os.ui.location.Format}
-   * @private
-   */
-  this['format'] = os.ui.location.getCurrentFormat();
+    /**
+     * Provide a model for the view.
+     * @type {string}
+     */
+    this['location'] = '';
 
-  this.change_({'opt_format': this['format']});
+    /**
+     * @type {Format}
+     * @private
+     */
+    this['currentFormat'] = getCurrentFormat();
 
-  this.scope_.$on('$destroy', this.destroy_.bind(this));
-  this.scope_.$watch('formatDefault', function(format) {
-    this['format'] = format;
-  }.bind(this));
+    /**
+     * Delay to debounce updates.
+     * @type {Delay}
+     * @private
+     */
+    this.updateDelay_ = new Delay(this.format, 25, this);
 
-  os.settings.listen(os.ui.location.LocationSetting.POSITION, this.locationControlChanged, false, this);
-};
+    this.scope_.$on('$destroy', this.destroy_.bind(this));
+    this.scope_.$watch('latdeg', this.onLatLonChange_.bind(this));
+    this.scope_.$watch('londeg', this.onLatLonChange_.bind(this));
 
-
-/**
- * Change the display model
- *
- * @param {os.ui.location.Format} formatType
- * @param {angular.Scope.Event=} opt_event
- * @export
- */
-os.ui.location.SimpleLocationControlsCtrl.prototype.formatChanged = function(formatType, opt_event) {
-  this.change_({'opt_format': formatType});
-  if (opt_event && opt_event.target) {
-    opt_event.target.blur();
+    Settings.getInstance().listen(LocationSetting.POSITION, this.locationChanged, false, this);
   }
-  os.settings.set(os.ui.location.LocationSetting.POSITION, formatType);
-  os.ui.apply(this.scope_);
-};
 
+  /**
+   * Clean up
+   *
+   * @private
+   */
+  destroy_() {
+    dispose(this.updateDelay_);
+    this.updateDelay_ = null;
 
-/**
- * Change the display model
- *
- * @param {os.events.SettingChangeEvent} event
- * @export
- */
-os.ui.location.SimpleLocationControlsCtrl.prototype.locationControlChanged = function(event) {
-  if (event.newVal) {
-    this.formatChanged(/** @type {os.ui.location.Format} */ (event.newVal));
+    this.scope_ = null;
+    this.filter_ = null;
   }
-};
 
-
-/**
- * Clean up
- *
- * @private
- */
-os.ui.location.SimpleLocationControlsCtrl.prototype.destroy_ = function() {
-  this.scope_ = null;
-};
-
-
-/**
- * SimpleLocationControls Directive.
- * Provide
- *
- * @return {angular.Directive}
- */
-os.ui.location.SimpleLocationControlsDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: os.ROOT + 'views/location/simplelocation.html',
-    controller: os.ui.location.SimpleLocationControlsCtrl,
-    controllerAs: 'simpleLocationControlsCtrl',
-    scope: {
-      'formatDefault': '=',
-      'change': '&onChange',
-      'formatGroup': '&'
+  /**
+   * Callback when lat or lon changes
+   *
+   * @private
+   */
+  onLatLonChange_() {
+    // lat/lon will typically both change, but not always. this ensures the coordinate is only formatted once in either
+    // case.
+    if (this.updateDelay_) {
+      this.updateDelay_.start();
     }
-  };
+  }
+
+  /**
+   * Change the display model
+   *
+   * @param {Format=} opt_format
+   * @export
+   */
+  format(opt_format) {
+    if (this.scope_ && this.scope_['latdeg'] != undefined && this.scope_['londeg'] != undefined) {
+      this['currentFormat'] = opt_format || getCurrentFormat();
+      var formatter = this.filter_(this['currentFormat']);
+      var lat = this.scope_['latdeg'];
+      var lon = this.scope_['londeg'];
+
+      if ((typeof lat === 'number' || typeof lat === 'string') &&
+          (typeof lon === 'number' || typeof lon === 'string')) {
+        this['location'] = formatter(this.scope_['latdeg'], this.scope_['londeg']).replace(/°/g, '&deg;');
+      } else {
+        this['location'] = '';
+      }
+
+      if (this.scope_['onchange']) {
+        this.scope_['onchange']();
+      }
+      apply(this.scope_);
+    }
+  }
+
+  /**
+   * Change the display model
+   *
+   * @param {SettingChangeEvent} event
+   * @export
+   */
+  locationChanged(event) {
+    if (event.newVal) {
+      this.format(/** @type {Format} */ (event.newVal));
+    }
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
-
-
-/**
- * Service name to be referenced when looking up via the injector.
- * @type {string}
- * @const
- */
-os.ui.location.SimpleLocationControlsDirective.ID = 'simpleLocationControls';
-
-// Register the directive
-os.ui.Module.directive(os.ui.location.SimpleLocationControlsDirective.ID,
-    os.ui.location.SimpleLocationControlsDirective);
-
-
