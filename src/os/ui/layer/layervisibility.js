@@ -29,13 +29,16 @@ const directive = () => ({
   controllerAs: 'ctrl'
 });
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'layervisibility';
 
 /**
  * Add the directive to the module
  */
-Module.directive('layervisibility', [directive]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the layer visibility directive.
@@ -115,5 +118,6 @@ class Controller {
 
 exports = {
   Controller,
-  directive
+  directive,
+  directiveTag
 };

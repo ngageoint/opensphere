@@ -1,7 +1,7 @@
 goog.module('plugin.file.kml.ui.KMLNode');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.node.defaultLayerNodeUIDirective');
+goog.require('os.ui.node.DefaultLayerNodeUI');
 
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');

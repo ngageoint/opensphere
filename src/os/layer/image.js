@@ -28,6 +28,7 @@ const SourcePropertyChange = goog.require('os.source.PropertyChange');
 const Icons = goog.require('os.ui.Icons');
 const IconsSVG = goog.require('os.ui.IconsSVG');
 const ImageLayerUI = goog.require('os.ui.layer.ImageLayerUI');
+const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
 const {launchRenameDialog} = goog.require('os.ui.renamelayer');
 
 const IActionTarget = goog.requireType('os.ui.action.IActionTarget');
@@ -384,7 +385,7 @@ class Image extends ImageLayer {
    * @inheritDoc
    */
   getNodeUI() {
-    return '<defaultlayernodeui></defaultlayernodeui>';
+    return `<${nodeUi}></${nodeUi}>`;
   }
 
   /**

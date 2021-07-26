@@ -2,7 +2,7 @@ goog.module('plugin.places.ui.PlacesNodeUI');
 goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
-const DefaultLayerNodeUICtrl = goog.require('os.ui.node.DefaultLayerNodeUICtrl');
+const {Controller: DefaultLayerNodeUICtrl} = goog.require('os.ui.node.DefaultLayerNodeUI');
 const {createOrEditFolder, createOrEditPlace} = goog.require('plugin.file.kml.ui');
 const {Icon, getPlacesRoot} = goog.require('plugin.places');
 const PlacesManager = goog.require('plugin.places.PlacesManager');

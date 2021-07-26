@@ -21,6 +21,7 @@ const ILayer = goog.require('os.layer.ILayer');
 const PropertyChange = goog.require('os.layer.PropertyChange');
 const osStyle = goog.require('os.style');
 const {adjustIconSet, createIconSet} = goog.require('os.ui.icons');
+const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
 
 const LayerType = goog.requireType('ol.LayerType');
 const IActionTarget = goog.requireType('os.ui.action.IActionTarget');
@@ -98,7 +99,7 @@ class Layer extends OLLayer {
      * @type {!string}
      * @private
      */
-    this.nodeUI_ = '<defaultlayernodeui></defaultlayernodeui>';
+    this.nodeUI_ = `<${nodeUi}></${nodeUi}>`;
 
     /**
      * @type {!string}

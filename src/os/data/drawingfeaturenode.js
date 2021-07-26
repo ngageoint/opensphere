@@ -2,7 +2,6 @@ goog.module('os.data.DrawingFeatureNode');
 goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin.object');
-goog.require('os.ui.node.drawingFeatureNodeUIDirective');
 
 const Circle = goog.require('ol.style.Circle');
 const RegularShape = goog.require('ol.style.RegularShape');
@@ -14,6 +13,7 @@ const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const IMenuSupplier = goog.require('os.ui.menu.IMenuSupplier');
 const spatial = goog.require('os.ui.menu.spatial');
+const {directiveTag: nodeUi} = goog.require('os.ui.node.DrawingFeatureNodeUI');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 
@@ -27,7 +27,7 @@ class DrawingFeatureNode extends SlickTreeNode {
    */
   constructor(feature) {
     super();
-    this.nodeUI = '<drawingfeaturenodeui></drawingfeaturenodeui>';
+    this.nodeUI = `<${nodeUi}></${nodeUi}>`;
 
     /**
      * @type {ol.Feature}

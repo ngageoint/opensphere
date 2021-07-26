@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const DisplaySetting = goog.require('os.config.DisplaySetting');
 const Settings = goog.require('os.config.Settings');
 const Module = goog.require('os.ui.Module');
-const DefaultLayerNodeUICtrl = goog.require('os.ui.node.DefaultLayerNodeUICtrl');
+const {Controller: DefaultLayerNodeUICtrl} = goog.require('os.ui.node.DefaultLayerNodeUI');
 
 
 /**

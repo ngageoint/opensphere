@@ -48,6 +48,7 @@ const Icons = goog.require('os.ui.Icons');
 const IconsSVG = goog.require('os.ui.IconsSVG');
 const {adjustIconSet, createIconSet} = goog.require('os.ui.icons');
 const {directiveTag: layerUi} = goog.require('os.ui.layer.TileLayerUI');
+const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
 const {launchRenameDialog} = goog.require('os.ui.renamelayer');
 
 const {TileFilterFn} = goog.requireType('os.tile');
@@ -145,7 +146,7 @@ class Tile extends OLTileLayer {
      * @type {!string}
      * @private
      */
-    this.nodeUI_ = '<defaultlayernodeui></defaultlayernodeui>';
+    this.nodeUI_ = `<${nodeUi}></${nodeUi}>`;
 
     /**
      * @type {!string}

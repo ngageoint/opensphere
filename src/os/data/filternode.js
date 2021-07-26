@@ -1,8 +1,6 @@
 goog.module('os.data.FilterNode');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.node.areaNodeUIDirective');
-
 const GoogEventType = goog.require('goog.events.EventType');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const FilterEnable = goog.require('os.command.FilterEnable');

@@ -35,6 +35,7 @@ const SourcePropertyChange = goog.require('os.source.PropertyChange');
 const {isStateFile} = goog.require('os.state');
 const ui = goog.require('os.ui');
 const Icons = goog.require('os.ui.Icons');
+const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
 const renamelayer = goog.require('os.ui.renamelayer');
 
 
@@ -116,7 +117,7 @@ class VectorTile extends VectorTileLayer {
      * @type {!string}
      * @private
      */
-    this.nodeUI_ = '<defaultlayernodeui></defaultlayernodeui>';
+    this.nodeUI_ = `<${nodeUi}></${nodeUi}>`;
 
     /**
      * @type {!string}
