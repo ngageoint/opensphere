@@ -1,147 +1,152 @@
-goog.provide('os.ui.metrics.MetricsContainerCtrl');
-goog.provide('os.ui.metrics.MetricsContainerDirective');
+goog.module('os.ui.metrics.MetricsContainerUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.async.Delay');
-goog.require('os.metrics.Metrics');
-goog.require('os.structs.ITreeNode');
-goog.require('os.ui.Module');
-goog.require('os.ui.config.SettingPlugin');
-goog.require('os.ui.config.SettingsManager');
-goog.require('os.ui.config.SettingsManagerEventType');
-goog.require('os.ui.data.AddDataCtrl');
-goog.require('os.ui.metrics.MetricNode');
-goog.require('os.ui.metrics.metricDetailsDirective');
-goog.require('os.ui.slick.SlickTreeNode');
-goog.require('os.ui.slick.TreeSearch');
-goog.require('os.ui.uiSwitchDirective');
+goog.require('os.ui.metrics.MetricDetailsUI');
+
+const {ROOT} = goog.require('os');
+const Metrics = goog.require('os.metrics.Metrics');
+const Module = goog.require('os.ui.Module');
+const AddDataCtrl = goog.require('os.ui.data.AddDataCtrl');
+const MetricsManager = goog.require('os.ui.metrics.MetricsManager');
+const MetricsManagerEventType = goog.require('os.ui.metrics.MetricsManagerEventType');
+const TreeSearch = goog.require('os.ui.slick.TreeSearch');
+
+const MetricNode = goog.requireType('os.ui.metrics.MetricNode');
+const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
- * The stateexport window directive
+ * The metrics container directive.
  *
  * @return {angular.Directive}
  */
-os.ui.metrics.metricsContainerDirective = function() {
+const directive = function() {
   return {
     restrict: 'E',
     replace: true,
-    templateUrl: os.ROOT + 'views/config/metricscontainer.html',
-    controller: os.ui.metrics.MetricsContainerCtrl,
+    templateUrl: ROOT + 'views/config/metricscontainer.html',
+    controller: Controller,
     controllerAs: 'setCon'
   };
 };
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'metrics';
 
 /**
- * Add the directive to the os.ui module
+ * Add the directive to the module.
  */
-os.ui.Module.directive('metrics', [os.ui.metrics.metricsContainerDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
- * Controller for the save export window
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout
- * @extends {os.ui.data.AddDataCtrl}
- * @constructor
- * @ngInject
+ * Controller for the metrics container.
+ * @unrestricted
  */
-os.ui.metrics.MetricsContainerCtrl = function($scope, $element, $timeout) {
-  os.ui.metrics.MetricsContainerCtrl.base(this, 'constructor', $scope, $element);
+class Controller extends AddDataCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$timeout} $timeout
+   * @ngInject
+   */
+  constructor($scope, $element, $timeout) {
+    super($scope, $element);
+
+    /**
+     * @type {os.ui.metrics.MetricsManager}
+     * @private
+     */
+    this.metricsManager_ = MetricsManager.getInstance();
+
+    /**
+     * @type {?angular.$timeout}
+     * @private
+     */
+    this.timeout_ = $timeout;
+
+    /**
+     * @type {Array<SlickTreeNode>}
+     */
+    this.scope['metricsNodes'] = null;
+
+    /**
+     * @type {MetricNode}
+     */
+    this.scope['selected'] = null;
+
+    /**
+     * @type {string}
+     */
+    this['details'] = '';
+
+    this.metricsManager_.listen(MetricsManagerEventType.METRIC_ADDED, this.refresh_, false, this);
+    this.metricsManager_.listen(MetricsManagerEventType.METRIC_CHANGE, this.refresh_, false, this);
+    this.refresh_();
+  }
 
   /**
-   * @type {os.ui.metrics.MetricsManager}
+   * @inheritDoc
+   */
+  onDestroy() {
+    this.scope['metricsNodes'] = null;
+
+    super.onDestroy();
+
+    this.timeout_ = null;
+
+    this.metricsManager_.unlisten(MetricsManagerEventType.METRIC_ADDED, this.refresh_, false, this);
+    this.metricsManager_.unlisten(MetricsManagerEventType.METRIC_CHANGE, this.refresh_, false, this);
+    this.metricsManager = null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  initTreeSearch() {
+    var root = MetricsManager.getInstance().getRootNode();
+    var search = root.getChildren() || [];
+    return new TreeSearch(search, 'metricsNodes', this.scope);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  initRoot() {
+    return MetricsManager.getInstance().getRootNode();
+  }
+
+  /**
+   * Save the metrics
+   *
+   * @export
+   */
+  save() {
+    Metrics.getInstance().save();
+  }
+
+  /**
    * @private
    */
-  this.metricsManager_ = os.ui.metrics.MetricsManager.getInstance();
+  refresh_() {
+    this.scope['metricsNodes'] = this.metricsManager_.getRootNode().getChildren();
 
-  /**
-   * @type {?angular.$timeout}
-   * @private
-   */
-  this.timeout_ = $timeout;
+    this.timeout_(function() {
+      this.scope['selected'] = this.metricsManager_.getSelected();
 
-  /**
-   * @type {Array.<os.ui.slick.SlickTreeNode>}
-   */
-  this.scope['metricsNodes'] = null;
+      if (!this.scope['selected']) {
+        // nothing selected - select the first setting
+        this.scope['selected'] = this.metricsManager_.initSelection();
+      }
+    }.bind(this));
+  }
+}
 
-  /**
-   * @type {os.ui.metrics.MetricNode}
-   */
-  this.scope['selected'] = null;
-
-  /**
-   * @type {string}
-   */
-  this['details'] = '';
-
-  this.metricsManager_.listen(os.ui.metrics.MetricsManagerEventType.METRIC_ADDED, this.refresh_, false, this);
-  this.metricsManager_.listen(os.ui.metrics.MetricsManagerEventType.METRIC_CHANGE, this.refresh_, false, this);
-  this.refresh_();
-};
-goog.inherits(os.ui.metrics.MetricsContainerCtrl, os.ui.data.AddDataCtrl);
-
-
-/**
- * @inheritDoc
- */
-os.ui.metrics.MetricsContainerCtrl.prototype.onDestroy = function() {
-  this.scope['metricsNodes'] = null;
-
-  os.ui.metrics.MetricsContainerCtrl.base(this, 'onDestroy');
-
-  this.timeout_ = null;
-
-  this.metricsManager_.unlisten(os.ui.metrics.MetricsManagerEventType.METRIC_ADDED, this.refresh_, false, this);
-  this.metricsManager_.unlisten(os.ui.metrics.MetricsManagerEventType.METRIC_CHANGE, this.refresh_, false, this);
-  this.metricsManager = null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.metrics.MetricsContainerCtrl.prototype.initTreeSearch = function() {
-  var root = os.ui.metrics.MetricsManager.getInstance().getRootNode();
-  var search = root.getChildren() || [];
-  return new os.ui.slick.TreeSearch(search, 'metricsNodes', this.scope);
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.metrics.MetricsContainerCtrl.prototype.initRoot = function() {
-  return os.ui.metrics.MetricsManager.getInstance().getRootNode();
-};
-
-
-/**
- * Save the metrics
- *
- * @export
- */
-os.ui.metrics.MetricsContainerCtrl.prototype.save = function() {
-  os.metrics.Metrics.getInstance().save();
-};
-
-
-/**
- * @private
- */
-os.ui.metrics.MetricsContainerCtrl.prototype.refresh_ = function() {
-  this.scope['metricsNodes'] = this.metricsManager_.getRootNode().getChildren();
-
-  this.timeout_(function() {
-    this.scope['selected'] = this.metricsManager_.getSelected();
-
-    if (!this.scope['selected']) {
-      // nothing selected - select the first setting
-      this.scope['selected'] = this.metricsManager_.initSelection();
-    }
-  }.bind(this));
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
