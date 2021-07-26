@@ -1,6 +1,8 @@
-goog.provide('os.ui.osNavTopDirective');
+goog.module('os.ui.OSNavTopUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -8,16 +10,24 @@ goog.require('os');
  *
  * @return {angular.Directive}
  */
-os.ui.osNavTopDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: os.ROOT + 'views/osnavtop.html'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  templateUrl: ROOT + 'views/osnavtop.html'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'os-nav-top';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('osNavTop', [os.ui.osNavTopDirective]);
+Module.directive('osNavTop', [directive]);
+
+exports = {
+  directive,
+  directiveTag
+};

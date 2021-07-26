@@ -1,86 +1,99 @@
-goog.provide('os.ui.navbaroptions');
-goog.provide('os.ui.navbaroptions.searchbox');
+goog.module('os.ui.navbaroptions');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.ScaleLine');
 goog.require('os.ui.addDataButtonDirective');
-goog.require('os.ui.alert.AlertButtonUI');
-goog.require('os.ui.clear.ClearButtonUI');
 goog.require('os.ui.datePanelDirective');
-goog.require('os.ui.draw.DrawControlsUI');
-goog.require('os.ui.help.HelpUI');
-goog.require('os.ui.history.HistoryButtonUI');
 goog.require('os.ui.layersButtonDirective');
 goog.require('os.ui.legendButtonDirective');
-goog.require('os.ui.list');
 goog.require('os.ui.measureButtonDirective');
 goog.require('os.ui.muteButtonDirective');
-goog.require('os.ui.nav');
 goog.require('os.ui.navBottomDirective');
 goog.require('os.ui.navTopDirective');
-goog.require('os.ui.osNavTopDirective');
 goog.require('os.ui.saveButtonDirective');
-goog.require('os.ui.search.SearchBoxUI');
 goog.require('os.ui.serversButtonDirective');
 goog.require('os.ui.settingsButtonDirective');
 goog.require('os.ui.stateButtonDirective');
 goog.require('os.ui.windowsButtonDirective');
 
-
-/**
- * Help template.
- * @type {string}
- */
-os.ui.navbaroptions.help = os.ui.help.HelpUI.directiveTag;
-
-
-/**
- * Search box template.
- * @type {string}
- */
-os.ui.navbaroptions.searchbox = '<search-box show-clear="true"></search-box>';
-
+const OSNavTopUI = goog.require('os.ui.OSNavTopUI');
+const ScaleLine = goog.require('os.ui.ScaleLine');
+const AlertButtonUI = goog.require('os.ui.alert.AlertButtonUI');
+const ClearButtonUI = goog.require('os.ui.clear.ClearButtonUI');
+const DrawControlsUI = goog.require('os.ui.draw.DrawControlsUI');
+const HelpUI = goog.require('os.ui.help.HelpUI');
+const HistoryButtonUI = goog.require('os.ui.history.HistoryButtonUI');
+const list = goog.require('os.ui.list');
+const Location = goog.require('os.ui.nav.Location');
+const {getSearchBox} = goog.require('os.ui.navbaroptions.searchbox');
+const SearchResultsUI = goog.require('os.ui.search.SearchResultsUI');
 
 /**
  * Search results template.
  * @type {string}
  */
-os.ui.navbaroptions.searchresults = '<searchresults parent="#js-main"></searchresults>';
+let searchResults = `<${SearchResultsUI.directiveTag} parent="#js-main"></${SearchResultsUI.directiveTag}>`;
 
+/**
+ * @type {string}
+ * @deprecated Please use getSearchResults and setSearchResults instead.
+ */
+const searchresults = searchResults;
+
+/**
+ * Get the search results UI.
+ * @return {string}
+ */
+const getSearchResults = () => searchResults;
+
+/**
+ * Set the search results UI.
+ * @param {string} value
+ */
+const setSearchResults = (value) => {
+  searchResults = value;
+};
 
 /**
  * Initialize the nav bars.
  */
-os.ui.navbaroptions.init = function() {
+const init = function() {
   // Add the top nav bar
-  os.ui.list.add(os.ui.nav.Location.HEADER, 'os-nav-top', 100);
+  list.add(Location.HEADER, OSNavTopUI.directiveTag, 100);
 
   // Top navbar items
-  os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'add-data-button', 100);
-  os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'layers-button', 200);
-  os.ui.list.add(os.ui.nav.Location.TOP_LEFT, os.ui.draw.DrawControlsUI.directiveTag, 300);
-  os.ui.list.add(os.ui.nav.Location.TOP_LEFT, 'measure-button', 400);
-  os.ui.list.add(os.ui.nav.Location.TOP_LEFT, os.ui.clear.ClearButtonUI.directiveTag, 500);
+  list.add(Location.TOP_LEFT, 'add-data-button', 100);
+  list.add(Location.TOP_LEFT, 'layers-button', 200);
+  list.add(Location.TOP_LEFT, DrawControlsUI.directiveTag, 300);
+  list.add(Location.TOP_LEFT, 'measure-button', 400);
+  list.add(Location.TOP_LEFT, ClearButtonUI.directiveTag, 500);
 
-  os.ui.list.add(os.ui.nav.Location.TOP_CENTER, 'date-panel', 1);
+  list.add(Location.TOP_CENTER, 'date-panel', 1);
 
-  os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, 'save-button', 200);
-  os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, 'state-button', 300);
-  os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, os.ui.navbaroptions.searchbox, 900);
-  os.ui.list.add(os.ui.nav.Location.TOP_RIGHT, os.ui.navbaroptions.help, 1000);
+  list.add(Location.TOP_RIGHT, 'save-button', 200);
+  list.add(Location.TOP_RIGHT, 'state-button', 300);
+  list.add(Location.TOP_RIGHT, getSearchBox(), 900);
+  list.add(Location.TOP_RIGHT, HelpUI.directiveTag, 1000);
 
   // Bottom navbar options
-  os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT,
+  list.add(Location.BOTTOM_LEFT,
       '<div id="zoom-level" class="nav-item mr-1 my-auto flex-shrink-0"></div>', 100);
-  os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT, '<scale-line></scale-line>', 200);
-  os.ui.list.add(os.ui.nav.Location.BOTTOM_LEFT,
+  list.add(Location.BOTTOM_LEFT, `<${ScaleLine.directiveTag}></${ScaleLine.directiveTag}>`, 200);
+  list.add(Location.BOTTOM_LEFT,
       '<div id="mouse-position" class="nav-item mr-1 my-auto flex-shrink-0"></div>', 300);
 
-  os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT,
+  list.add(Location.BOTTOM_RIGHT,
       '<div id="js-dock-bottom-micro__container"></div>', 0);
-  os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'settings-button', 100);
-  os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'legend-button', 200);
-  os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'servers-button', 300);
-  os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'alert-button', 400);
-  os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, os.ui.history.HistoryButtonUI.directiveTag, 500);
-  os.ui.list.add(os.ui.nav.Location.BOTTOM_RIGHT, 'mute-button', 600);
+  list.add(Location.BOTTOM_RIGHT, 'settings-button', 100);
+  list.add(Location.BOTTOM_RIGHT, 'legend-button', 200);
+  list.add(Location.BOTTOM_RIGHT, 'servers-button', 300);
+  list.add(Location.BOTTOM_RIGHT, AlertButtonUI.directiveTag, 400);
+  list.add(Location.BOTTOM_RIGHT, HistoryButtonUI.directiveTag, 500);
+  list.add(Location.BOTTOM_RIGHT, 'mute-button', 600);
+};
+
+exports = {
+  searchresults,
+  getSearchResults,
+  setSearchResults,
+  init
 };

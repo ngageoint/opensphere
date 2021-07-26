@@ -1,33 +1,26 @@
-goog.provide('os.ui.nav.EventType');
-goog.provide('os.ui.nav.NavBarEvent');
+goog.module('os.ui.nav.NavBarEvent');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Event');
-
-
-/**
- * Events for the nav bar
- * @enum {string}
- */
-os.ui.nav.EventType = {
-  RESIZE: 'os.ui.nav.resize'
-};
-
+const GoogEvent = goog.require('goog.events.Event');
 
 
 /**
- * @param {string} type The event type
- * @param {boolean} state
- *
- * @extends {goog.events.Event}
- * @constructor
  */
-os.ui.nav.NavBarEvent = function(type, state) {
-  os.ui.nav.NavBarEvent.base(this, 'constructor', type);
-
+class NavBarEvent extends GoogEvent {
   /**
-   * The status of this event
-   * @type {boolean}
+   * Constructor.
+   * @param {string} type The event type
+   * @param {boolean} state
    */
-  this.state = state;
-};
-goog.inherits(os.ui.nav.NavBarEvent, goog.events.Event);
+  constructor(type, state) {
+    super(type);
+
+    /**
+     * The status of this event
+     * @type {boolean}
+     */
+    this.state = state;
+  }
+}
+
+exports = NavBarEvent;

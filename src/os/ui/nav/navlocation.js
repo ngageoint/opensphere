@@ -1,12 +1,11 @@
-goog.provide('os.ui.nav');
-goog.provide('os.ui.nav.Location');
-
+goog.module('os.ui.nav.Location');
+goog.module.declareLegacyNamespace();
 
 /**
  * Nav bar locations.
  * @enum {string}
  */
-os.ui.nav.Location = {
+exports = {
   HEADER: 'nav-top-header',
   BOTTOM_LEFT: 'nav-bottom-left',
   BOTTOM_MIDDLE: 'nav-bottom-middle',
