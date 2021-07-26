@@ -10,6 +10,10 @@ const {notifyStyleChange} = goog.require('os.style');
 const TimelineController = goog.require('os.time.TimelineController');
 const UnitManager = goog.require('os.unit.UnitManager');
 
+const Feature = goog.requireType('ol.Feature');
+const Geometry = goog.requireType('ol.geom.Geometry');
+const Style = goog.requireType('ol.style.Style');
+
 
 /**
  * Updates all the current measure features
@@ -28,7 +32,7 @@ const updateAll = function() {
 const numDecimalPlaces = 3;
 
 /**
- * @param {ol.Feature} feature
+ * @param {Feature} feature
  * @suppress {accessControls}
  */
 const update = function(feature) {
@@ -36,7 +40,7 @@ const update = function(feature) {
     return;
   }
 
-  var geom = /** @type {ol.geom.Geometry} */ (feature.get(ORIGINAL_GEOM_FIELD)) || feature.getGeometry();
+  var geom = /** @type {Geometry} */ (feature.get(ORIGINAL_GEOM_FIELD)) || feature.getGeometry();
 
   if (geom && geom instanceof LineString) {
     geom.toLonLat();
@@ -54,7 +58,9 @@ const update = function(feature) {
         total += d;
 
         if (coord) {
-          var bearing = modifyBearing(result.initialBearing, coord, date);
+          // the compiler still thinks coord can be null, causing an error. unclear why this is happening, but the
+          // type annotation fixes the error.
+          var bearing = modifyBearing(result.initialBearing, /** @type {!ol.Coordinate} */ (coord), date);
           var formattedBearing = getFormattedBearing(bearing);
           var label = um.formatToBestFit('distance', d, 'm', um.getBaseSystem(), numDecimalPlaces) +
               ' Bearing: ' + formattedBearing;
@@ -63,7 +69,7 @@ const update = function(feature) {
         // the first style is the style for the overall line
 
         /**
-         * @type {Array<Array<ol.style.Style>>}
+         * @type {Array<Array<Style>>}
          */
         var styleArrs = [feature.getStyle(), feature.values_['_originalStyle']];
         for (var j = 0, m = styleArrs.length; j < m; j++) {
