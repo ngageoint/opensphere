@@ -180,7 +180,7 @@ const onEditComplete = function(original, entry) {
         searchArray = iam.getActionEntries(entry.getType());
       }
 
-      insertIndex = olArray.findIndex(searchArray, function(entry) {
+      insertIndex = searchArray.findIndex(function(entry) {
         return entry == original;
       });
 
