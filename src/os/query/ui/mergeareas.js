@@ -14,7 +14,7 @@ const {getMapContainer} = goog.require('os.map.instance');
 const {PREVIEW_CONFIG} = goog.require('os.style');
 const Module = goog.require('os.ui.Module');
 const {applyMappings, createMappingsFromConfig} = goog.require('os.ui.query');
-const EditAreaCtrl = goog.require('os.ui.query.EditAreaCtrl');
+const {Controller: EditAreaCtrl} = goog.require('os.ui.query.EditAreaUI');
 const AreaAdd = goog.require('os.ui.query.cmd.AreaAdd');
 const AreaRemove = goog.require('os.ui.query.cmd.AreaRemove');
 

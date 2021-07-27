@@ -23,10 +23,10 @@ goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.query');
 goog.require('os.ui.query.AreaNode');
+goog.require('os.ui.query.ModifyAreaUI');
 goog.require('os.ui.query.cmd.AreaAdd');
 goog.require('os.ui.query.cmd.AreaModify');
 goog.require('os.ui.query.cmd.AreaRemove');
-goog.require('os.ui.query.modifyAreaDirective');
 
 
 /**
@@ -726,10 +726,10 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
             } else {
               // the feature was just drawn, so we will treat it as the targetArea
               conf['targetArea'] = feature;
-              conf['op'] = os.ui.query.ModifyOp.ADD;
+              conf['op'] = os.ui.query.ModifyAreaUI.ModifyOp.ADD;
             }
 
-            os.ui.query.launchModifyArea(conf);
+            os.ui.query.ModifyAreaUI.launchModifyArea(conf);
             break;
           case os.action.EventType.MERGE_AREAS:
           case os.action.EventType.EXPORT:

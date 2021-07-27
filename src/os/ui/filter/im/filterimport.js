@@ -21,10 +21,14 @@ const {getFilterableByType} = goog.require('os.ui.filter');
 const FilterImporter = goog.require('os.ui.filter.im.FilterImporter');
 const FilterParser = goog.require('os.ui.filter.parse.FilterParser');
 const IOGCDescriptor = goog.require('os.ui.ogc.IOGCDescriptor');
-const ComboNodeUICtrl = goog.require('os.ui.query.ComboNodeUICtrl');
+const {Controller: ComboNodeUICtrl} = goog.require('os.ui.query.ComboNodeUI');
 const osWindow = goog.require('os.ui.window');
 
+const GoogEvent = goog.requireType('goog.events.Event');
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
+const IParser = goog.requireType('os.parse.IParser');
 
 
 /**
@@ -105,7 +109,7 @@ class Controller {
     assert(this.filterString, 'No filter string provided to import!');
 
     /**
-     * @type {?Array<!os.ogc.FeatureTypeColumn>}
+     * @type {?Array<!FeatureTypeColumn>}
      * @protected
      */
     this.columns = null;
@@ -118,7 +122,7 @@ class Controller {
     this.filterTitle = 'filter';
 
     /**
-     * @type {os.filter.IFilterable}
+     * @type {IFilterable}
      * @private
      */
     this['layer'] = null;
@@ -156,7 +160,7 @@ class Controller {
     this['groups'] = ComboNodeUICtrl.GROUPS;
 
     /**
-     * @type {!Array<!os.filter.IFilterable>}
+     * @type {!Array<!IFilterable>}
      * @private
      */
     this.filterables_ = this.getFilterables();
@@ -188,7 +192,7 @@ class Controller {
   /**
    * Get the filterables for this dialog.
    *
-   * @return {!Array<!os.filter.IFilterable>} The parser.
+   * @return {!Array<!IFilterable>} The parser.
    * @protected
    */
   getFilterables() {
@@ -196,11 +200,11 @@ class Controller {
 
     // filter down to only the IFilterable descriptors
     var filterables = descriptors.filter(function(d) {
-      d = /** @type {os.filter.IFilterable} */ (d);
+      d = /** @type {IFilterable} */ (d);
       return osImplements(d, IFilterable.ID) && d.isFilterable();
     });
 
-    return /** @type {!Array<!os.filter.IFilterable>} */ (filterables);
+    return /** @type {!Array<!IFilterable>} */ (filterables);
   }
 
   /**
@@ -217,7 +221,7 @@ class Controller {
   /**
    * Get the parser.
    *
-   * @return {!os.parse.IParser} The parser.
+   * @return {!IParser} The parser.
    * @protected
    */
   getParser() {
@@ -227,7 +231,7 @@ class Controller {
   /**
    * Handles parse/import completion.
    *
-   * @param {goog.events.Event} event
+   * @param {GoogEvent} event
    * @protected
    */
   onImportComplete(event) {
@@ -254,7 +258,7 @@ class Controller {
   /**
    * Watcher for layer changes. Either requests the columns for the layer or moves forward with validation.
    *
-   * @param {IDataDescriptor|os.filter.IFilterable} layer The layer.
+   * @param {IDataDescriptor|IFilterable} layer The layer.
    * @protected
    */
   onLayerChange(layer) {
@@ -273,7 +277,7 @@ class Controller {
         return;
       }
     } else if (osImplements(layer, IFilterable.ID)) {
-      var filterable = /** @type {os.filter.IFilterable} */ (layer);
+      var filterable = /** @type {IFilterable} */ (layer);
       this.columns = filterable.getFilterColumns();
     }
 
@@ -340,7 +344,7 @@ class Controller {
   /**
    * Gets the list of filterable items.
    *
-   * @return {!Array<!os.filter.IFilterable>}
+   * @return {!Array<!IFilterable>}
    * @export
    */
   getLayersFunction() {
@@ -372,7 +376,7 @@ class Controller {
   addUnmatched() {
     var layer = /** @type {IDataDescriptor} */ (this['layer']);
     if (this.importer && osImplements(layer, IFilterable.ID)) {
-      var f = /** @type {!os.filter.IFilterable} */ (layer);
+      var f = /** @type {!IFilterable} */ (layer);
       var i = this['unmatched'].length;
       var matchedCount = 0;
 
@@ -385,7 +389,7 @@ class Controller {
 
           for (var j = 0, jj = types.length; j < jj; j++) {
             var type = types[j];
-            var filter = /** @type {os.filter.FilterEntry} */ (filterModel['filter']);
+            var filter = /** @type {FilterEntry} */ (filterModel['filter']);
             filter = filter.clone();
             filter.setId(getRandomString());
             filter.setType(type);
@@ -439,7 +443,7 @@ class Controller {
       var match = /** @type {boolean} */ (layerModel['match']);
       for (var i = 0, ii = filterModels.length; i < ii; i++) {
         // add each filter and create a query entry for it
-        var filter = /** @type {os.filter.FilterEntry} */ (filterModels[i]['filter']);
+        var filter = /** @type {FilterEntry} */ (filterModels[i]['filter']);
         getFilterManager().addFilter(filter);
 
         var entry = {

@@ -34,7 +34,7 @@ const {directiveTag: nodeUi} = goog.require('os.ui.filter.ui.FilterableDescripto
 const icons = goog.require('os.ui.icons');
 const IFeatureTypeDescriptor = goog.require('os.ui.ogc.IFeatureTypeDescriptor');
 const IOGCDescriptor = goog.require('os.ui.ogc.IOGCDescriptor');
-const CombinatorCtrl = goog.require('os.ui.query.CombinatorCtrl');
+const {launchForLayer} = goog.require('os.ui.query.CombinatorUI');
 const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
 const deprecated = goog.require('os.ui.util.deprecated');
 
@@ -1172,7 +1172,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
 
     if (this.isFeatureTypeReady()) {
       var id = this.getId() + BaseProvider.ID_DELIMITER + 'features';
-      CombinatorCtrl.launchForLayer(id, this.getTitle() + ' Features');
+      launchForLayer(id, this.getTitle() + ' Features');
     }
   }
 

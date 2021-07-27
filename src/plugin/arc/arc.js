@@ -3,7 +3,7 @@ goog.module('plugin.arc');
 const xml = goog.require('goog.dom.xml');
 const googString = goog.require('goog.string');
 const text = goog.require('os.file.mime.text');
-const CombinatorCtrl = goog.require('os.ui.query.CombinatorCtrl');
+const {launchForLayer} = goog.require('os.ui.query.CombinatorUI');
 const ArcFeatureType = goog.require('plugin.arc.ArcFeatureType');
 const ESRIType = goog.require('plugin.arc.ESRIType');
 
@@ -59,7 +59,7 @@ const getColumnType = function(esriType) {
  * @param {!VectorLayer} layer The layer
  */
 const launchFilterManager = function(layer) {
-  CombinatorCtrl.launchForLayer(layer.getId());
+  launchForLayer(layer.getId());
 };
 
 /**
