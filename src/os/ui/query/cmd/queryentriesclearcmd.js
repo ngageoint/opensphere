@@ -1,17 +1,20 @@
-goog.provide('os.ui.query.cmd.QueryEntriesClear');
+goog.module('os.ui.query.cmd.QueryEntriesClear');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.query.cmd.QueryEntries');
-
+const QueryEntries = goog.require('os.ui.query.cmd.QueryEntries');
 
 
 /**
  * Command to clear all query entries
- *
- * @extends {os.ui.query.cmd.QueryEntries}
- * @constructor
  */
-os.ui.query.cmd.QueryEntriesClear = function() {
-  os.ui.query.cmd.QueryEntriesClear.base(this, 'constructor', []);
-  this.title = 'Clear query entries';
-};
-goog.inherits(os.ui.query.cmd.QueryEntriesClear, os.ui.query.cmd.QueryEntries);
+class QueryEntriesClear extends QueryEntries {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super([]);
+    this.title = 'Clear query entries';
+  }
+}
+
+exports = QueryEntriesClear;

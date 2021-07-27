@@ -1,47 +1,52 @@
-goog.provide('os.ui.query.cmd.FilterAdd');
-goog.require('os.command.State');
-goog.require('os.ui.query.cmd.AbstractFilter');
+goog.module('os.ui.query.cmd.FilterAdd');
+goog.module.declareLegacyNamespace();
 
+const State = goog.require('os.command.State');
+const AbstractFilter = goog.require('os.ui.query.cmd.AbstractFilter');
+
+const FilterEntry = goog.requireType('os.filter.FilterEntry');
 
 
 /**
- * @extends {os.ui.query.cmd.AbstractFilter}
- * @constructor
- * @param {os.filter.FilterEntry} filter
  */
-os.ui.query.cmd.FilterAdd = function(filter) {
-  os.ui.query.cmd.FilterAdd.base(this, 'constructor', filter);
+class FilterAdd extends AbstractFilter {
+  /**
+   * Constructor.
+   * @param {FilterEntry} filter
+   */
+  constructor(filter) {
+    super(filter);
 
-  if (this.filter) {
-    this.title = 'Add Filter "' + this.filter.getTitle() + '"';
+    if (this.filter) {
+      this.title = 'Add Filter "' + this.filter.getTitle() + '"';
+    }
   }
-};
-goog.inherits(os.ui.query.cmd.FilterAdd, os.ui.query.cmd.AbstractFilter);
 
+  /**
+   * @inheritDoc
+   */
+  execute() {
+    if (this.canExecute()) {
+      this.state = State.EXECUTING;
 
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.FilterAdd.prototype.execute = function() {
-  if (this.canExecute()) {
-    this.state = os.command.State.EXECUTING;
+      this.add();
+      this.state = State.SUCCESS;
+      return true;
+    }
 
-    this.add();
-    this.state = os.command.State.SUCCESS;
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
+
+    this.remove();
+    this.state = State.READY;
     return true;
   }
+}
 
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.FilterAdd.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-
-  this.remove();
-  this.state = os.command.State.READY;
-  return true;
-};
+exports = FilterAdd;
