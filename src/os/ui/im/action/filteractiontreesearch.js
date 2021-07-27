@@ -53,7 +53,8 @@ class FilterActionTreeSearch extends AbstractGroupByTreeSearch {
    * @inheritDoc
    */
   beginSearch(term, groupBy) {
-    var oldSearch = /** @type {!Array<!os.structs.ITreeNode>} */ (this.target[this.field]);
+    var oldSearch = /** @type {!Array<!os.structs.ITreeNode>} */ (this.target[this.field].slice());
+    super.beginSearch(term, groupBy);
     if (Array.isArray(oldSearch)) {
       // dispose the old nodes, otherwise they will be retained in memory due to listeners on the filter action entries
       oldSearch.forEach(function(node) {
@@ -62,8 +63,6 @@ class FilterActionTreeSearch extends AbstractGroupByTreeSearch {
 
       oldSearch.length = 0;
     }
-
-    super.beginSearch(term, groupBy);
   }
 
   /**
