@@ -19,7 +19,7 @@ goog.require('os.ui.query.cmd.QueryEntries');
 /**
  * @type {os.ui.menu.Menu<!Array<!os.structs.TreeNode>>}
  */
-os.ui.menu.FILTER = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
+os.ui.menu.filter.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
   type: os.ui.menu.MenuItemType.ROOT,
   children: [{
     label: 'Show',
@@ -62,10 +62,17 @@ os.ui.menu.FILTER = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
 
 
 /**
+ * @type {os.ui.menu.Menu<!Array<!os.structs.TreeNode>>}
+ * @deprecated Please use os.ui.menu.filter.MENU instead.
+ */
+os.ui.menu.FILTER = os.ui.menu.filter.MENU;
+
+
+/**
  * Sets up the dynamic portions of the menu
  */
 os.ui.menu.filter.setup = function() {
-  var menu = os.ui.menu.FILTER;
+  var menu = os.ui.menu.filter.MENU;
 
   var genVisible = os.ui.menu.filter.genVisibility;
   var show = menu.getRoot().find(os.action.EventType.ENABLE);
@@ -130,8 +137,8 @@ os.ui.menu.filter.genVisibility = function(func) {
  * Disposes filter menu
  */
 os.ui.menu.filter.dispose = function() {
-  if (os.ui.menu.FILTER) {
-    os.ui.menu.FILTER.dispose();
+  if (os.ui.menu.filter.MENU) {
+    os.ui.menu.filter.MENU.dispose();
   }
 };
 
