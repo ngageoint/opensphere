@@ -666,7 +666,7 @@ os.query.BaseQueryManager.prototype.hasInclusion = function(layerId) {
 /**
  * Gets the set of layers
  *
- * @return {Object<string, string>}
+ * @return {!Object<string, string>}
  */
 os.query.BaseQueryManager.prototype.getLayerSet = function() {
   var layerIds = {};

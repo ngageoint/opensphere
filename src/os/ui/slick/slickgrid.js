@@ -358,7 +358,6 @@ os.ui.slick.SlickGridCtrl.DEFAULT_OPTIONS_ = {
 /**
  * Default message to display when the user tries copying too much data to the clipboard.
  * @type {string}
- * @const
  */
 os.ui.slick.SlickGridCtrl.COPY_LIMIT_MSG = 'Data exceeds the maximum copy limit. Please reduce the ' +
     'selected/displayed data and try again.';

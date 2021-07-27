@@ -6,9 +6,9 @@ goog.require('goog.events.EventType');
 goog.require('os.source.PropertyChange');
 goog.require('os.ui');
 goog.require('os.ui.Module');
+goog.require('os.ui.SourceGridUI');
 goog.require('os.ui.menu.list');
 goog.require('os.ui.sliderDirective');
-goog.require('os.ui.sourceGridDirective');
 goog.require('os.ui.window');
 
 

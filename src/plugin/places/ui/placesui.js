@@ -1,7 +1,7 @@
 goog.module('plugin.places.ui.PlacesUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.layerTreeDirective');
+goog.require('os.ui.LayerTreeUI');
 goog.require('os.ui.uiSwitchDirective');
 goog.require('plugin.places.ui.PlacesButtonUI');
 

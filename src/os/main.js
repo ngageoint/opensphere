@@ -19,7 +19,6 @@ goog.require('os.ui.config.SettingsWindowUI');
 goog.require('os.ui.consentDirective');
 goog.require('os.ui.globalMenuDirective');
 goog.require('os.ui.historyDirective');
-goog.require('os.ui.layersDirective');
 goog.require('os.ui.metrics.MetricsContainerUI');
 goog.require('os.ui.modal.AboutModalUI');
 goog.require('os.ui.savedWindowDirective');
