@@ -92,7 +92,8 @@ class DrawLine extends DrawPolygon {
    *
    * @param {MapBrowserEvent} mapBrowserEvent Map browser event.
    * @return {boolean} `false` to stop event propagation.
-   * @this os.interaction.DrawLine
+   * @this DrawLine
+   * @override
    */
   static handleEvent(mapBrowserEvent) {
     // squelch double click events when active

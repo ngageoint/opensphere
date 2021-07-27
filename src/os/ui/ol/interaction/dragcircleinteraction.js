@@ -1,161 +1,155 @@
-goog.provide('os.ui.ol.interaction.DragCircle');
+goog.module('os.ui.ol.interaction.DragCircle');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.string');
-goog.require('ol');
-goog.require('os.data.RecordField');
-goog.require('os.geo2');
-goog.require('os.math.Units');
-goog.require('os.olm.render.Circle');
-goog.require('os.ui.ol.interaction.AbstractDrag');
-goog.require('os.webgl');
-
+const {toLonLat} = goog.require('ol.proj');
+const RecordField = goog.require('os.data.RecordField');
+const {normalizeGeometryCoordinates} = goog.require('os.geo2');
+const {METHOD_FIELD, getMethod} = goog.require('os.interpolate');
+const Units = goog.require('os.math.Units');
+const Circle = goog.require('os.olm.render.Circle');
+const AbstractDrag = goog.require('os.ui.ol.interaction.AbstractDrag');
+const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
 
 /**
  * Draws a circular query area on the map.
  * This interaction is only supported for mouse devices.
- *
- * @constructor
- * @extends {os.ui.ol.interaction.AbstractDrag}
  */
-os.ui.ol.interaction.DragCircle = function() {
-  os.ui.ol.interaction.DragCircle.base(this, 'constructor');
-  this.type = os.ui.ol.interaction.DragCircle.TYPE;
+class DragCircle extends AbstractDrag {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.type = DragCircle.TYPE;
+
+    /**
+     * @type {!Circle}
+     * @protected
+     */
+    this.circle2D = new Circle(this.getStyle(), Units.KILOMETERS);
+
+    /**
+     * @type {?ol.Coordinate}
+     * @protected
+     */
+    this.center = null;
+
+    /**
+     * @type {number}
+     * @protected
+     */
+    this.distance = -1;
+  }
 
   /**
-   * @type {!os.olm.render.Circle}
-   * @protected
+   * @inheritDoc
    */
-  this.circle2D = new os.olm.render.Circle(this.getStyle(), os.math.Units.KILOMETERS);
+  disposeInternal() {
+    this.cleanup();
+
+    super.disposeInternal();
+  }
 
   /**
-   * @type {?ol.Coordinate}
-   * @protected
+   * @inheritDoc
    */
-  this.center = null;
+  getGeometry() {
+    var geom = this.circle2D.getOriginalGeometry();
+
+    if (geom) {
+      normalizeGeometryCoordinates(geom);
+    }
+
+    return geom;
+  }
 
   /**
-   * @type {number}
+   * @inheritDoc
+   */
+  getProperties() {
+    var props = {};
+    props[METHOD_FIELD] = getMethod();
+    props[RecordField.ALTITUDE_MODE] = AltitudeMode.CLAMP_TO_GROUND;
+    return props;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  begin(mapBrowserEvent) {
+    super.begin(mapBrowserEvent);
+    this.circle2D.setMap(mapBrowserEvent.map);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  update(mapBrowserEvent) {
+    var endCoord = mapBrowserEvent.coordinate;
+
+    if (this.startCoord) {
+      this.center = this.startCoord;
+
+      if (endCoord) {
+        var start = toLonLat(this.startCoord, this.getMap().getView().getProjection());
+        var end = toLonLat(endCoord, this.getMap().getView().getProjection());
+
+        this.distance = osasm.geodesicInverse(start, end).distance;
+        this.update2D(this.startCoord, endCoord);
+      }
+    }
+  }
+
+  /**
+   * Updates the 2D version
+   *
+   * @param {ol.Coordinate} start
+   * @param {ol.Coordinate} end
    * @protected
    */
-  this.distance = -1;
-};
-goog.inherits(os.ui.ol.interaction.DragCircle, os.ui.ol.interaction.AbstractDrag);
+  update2D(start, end) {
+    if (start && end) {
+      this.circle2D.setCoordinates(start, end);
+    }
+  }
 
+  /**
+   * @inheritDoc
+   */
+  cleanup() {
+    super.cleanup();
+
+    this.center = null;
+    this.distance = -1;
+
+    if (this.circle2D) {
+      this.circle2D.setMap(null);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getResultString() {
+    var str = '';
+
+    if (this.startCoord) {
+      str += this.startCoord[0] + 'E ';
+      str += this.startCoord[1] + 'N ';
+    }
+
+    if (this.distance) {
+      str += this.distance + 'm';
+    }
+
+    return str;
+  }
+}
 
 /**
  * @type {string}
  */
-os.ui.ol.interaction.DragCircle.TYPE = 'circle';
+DragCircle.TYPE = 'circle';
 
-
-/**
- * @inheritDoc
- */
-os.ui.ol.interaction.DragCircle.prototype.disposeInternal = function() {
-  this.cleanup();
-
-  os.ui.ol.interaction.DragCircle.base(this, 'disposeInternal');
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.ol.interaction.DragCircle.prototype.getGeometry = function() {
-  var geom = this.circle2D.getOriginalGeometry();
-
-  if (geom) {
-    os.geo2.normalizeGeometryCoordinates(geom);
-  }
-
-  return geom;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.ol.interaction.DragCircle.prototype.getProperties = function() {
-  var props = {};
-  props[os.interpolate.METHOD_FIELD] = os.interpolate.getMethod();
-  props[os.data.RecordField.ALTITUDE_MODE] = os.webgl.AltitudeMode.CLAMP_TO_GROUND;
-  return props;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.ol.interaction.DragCircle.prototype.begin = function(mapBrowserEvent) {
-  os.ui.ol.interaction.DragCircle.base(this, 'begin', mapBrowserEvent);
-  this.circle2D.setMap(mapBrowserEvent.map);
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.ol.interaction.DragCircle.prototype.update = function(mapBrowserEvent) {
-  var endCoord = mapBrowserEvent.coordinate;
-
-  if (this.startCoord) {
-    this.center = this.startCoord;
-
-    if (endCoord) {
-      var start = ol.proj.toLonLat(this.startCoord, this.getMap().getView().getProjection());
-      var end = ol.proj.toLonLat(endCoord, this.getMap().getView().getProjection());
-
-      this.distance = osasm.geodesicInverse(start, end).distance;
-      this.update2D(this.startCoord, endCoord);
-    }
-  }
-};
-
-
-/**
- * Updates the 2D version
- *
- * @param {ol.Coordinate} start
- * @param {ol.Coordinate} end
- * @protected
- */
-os.ui.ol.interaction.DragCircle.prototype.update2D = function(start, end) {
-  if (start && end) {
-    this.circle2D.setCoordinates(start, end);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.ol.interaction.DragCircle.prototype.cleanup = function() {
-  os.ui.ol.interaction.DragCircle.base(this, 'cleanup');
-
-  this.center = null;
-  this.distance = -1;
-
-  if (this.circle2D) {
-    this.circle2D.setMap(null);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.ol.interaction.DragCircle.prototype.getResultString = function() {
-  var str = '';
-
-  if (this.startCoord) {
-    str += this.startCoord[0] + 'E ';
-    str += this.startCoord[1] + 'N ';
-  }
-
-  if (this.distance) {
-    str += this.distance + 'm';
-  }
-
-  return str;
-};
+exports = DragCircle;

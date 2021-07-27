@@ -1,561 +1,551 @@
-goog.provide('os.ui.ol.OLMap');
+goog.module('os.ui.ol.OLMap');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventTarget');
-goog.require('goog.events.MouseWheelHandler');
-goog.require('goog.log');
-goog.require('goog.math.Coordinate');
-goog.require('ol');
-goog.require('ol.Feature');
-goog.require('ol.Map');
-goog.require('ol.View');
-goog.require('ol.control.ZoomSlider');
-goog.require('ol.extent');
-goog.require('ol.geom.LineString');
-goog.require('ol.interaction.DragPan');
-goog.require('ol.interaction.DragZoom');
-goog.require('ol.interaction.Modify');
-goog.require('ol.interaction.Select');
-goog.require('ol.layer.Tile');
-goog.require('ol.layer.Vector');
-goog.require('ol.proj');
-goog.require('ol.proj.Projection');
-goog.require('ol.proj.Units');
-goog.require('ol.source.TileWMS');
-goog.require('ol.source.Vector');
-goog.require('ol.style.Circle');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
-goog.require('ol.tilegrid.TileGrid');
-goog.require('os.control.ScaleLine');
-goog.require('os.data');
-goog.require('os.fn');
-goog.require('os.map');
-goog.require('os.map.IMapContainer');
-goog.require('os.ol.source.XYZ');
-goog.require('os.query.BaseAreaManager');
-goog.require('os.ui.ol.control.LayerSwitcher');
-goog.require('os.ui.ol.interaction.AreaHover');
-goog.require('os.ui.ol.interaction.FocusInteraction');
-goog.require('os.ui.ol.interaction.MouseWheelZoom');
+const {assert} = goog.require('goog.asserts');
+const EventTarget = goog.require('goog.events.EventTarget');
+const log = goog.require('goog.log');
+const userAgent = goog.require('goog.userAgent');
+const {DEFAULT_MAX_ZOOM, getUid} = goog.require('ol');
+const Feature = goog.require('ol.Feature');
+const olMap = goog.require('ol.Map');
+const View = goog.require('ol.View');
+const {defaults: controlDefaults} = goog.require('ol.control');
+const {platformModifierKeyOnly} = goog.require('ol.events.condition');
+const {createEmpty, scaleFromCenter} = goog.require('ol.extent');
+const {defaults: interactionDefaults} = goog.require('ol.interaction');
+const DragPan = goog.require('ol.interaction.DragPan');
+const DragZoom = goog.require('ol.interaction.DragZoom');
+const Tile = goog.require('ol.layer.Tile');
+const OLVectorLayer = goog.require('ol.layer.Vector');
+const olProj = goog.require('ol.proj');
+const TileWMS = goog.require('ol.source.TileWMS');
+const OLVectorSource = goog.require('ol.source.Vector');
+const Circle = goog.require('ol.style.Circle');
+const Fill = goog.require('ol.style.Fill');
+const Stroke = goog.require('ol.style.Stroke');
+const Style = goog.require('ol.style.Style');
+const {createForProjection} = goog.require('ol.tilegrid');
+const dispatcher = goog.require('os.Dispatcher');
+const Settings = goog.require('os.config.Settings');
+const {ProviderKey} = goog.require('os.data');
+const {reduceExtentFromGeometries} = goog.require('os.fn');
+const {MAX_AUTO_ZOOM, OPENLAYERS_CANVAS} = goog.require('os.map');
+const {unsafeClone} = goog.require('os.object');
+const XYZ = goog.require('os.ol.source.XYZ');
+const BaseAreaManager = goog.require('os.query.BaseAreaManager');
+const {setFeatureStyle} = goog.require('os.style');
+const StyleType = goog.require('os.style.StyleType');
+const EventType = goog.require('os.ui.action.EventType');
+const LayerSwitcher = goog.require('os.ui.ol.control.LayerSwitcher');
+const AreaHover = goog.require('os.ui.ol.interaction.AreaHover');
+const FocusInteraction = goog.require('os.ui.ol.interaction.FocusInteraction');
+const MouseWheelZoom = goog.require('os.ui.ol.interaction.MouseWheelZoom');
 
+const Collection = goog.requireType('ol.Collection');
+const PluggableMap = goog.requireType('ol.PluggableMap');
+const Geometry = goog.requireType('ol.geom.Geometry');
+const LayerBase = goog.requireType('ol.layer.Base');
+const Layer = goog.requireType('ol.layer.Layer');
+const Projection = goog.requireType('ol.proj.Projection');
+const TileGrid = goog.requireType('ol.tilegrid.TileGrid');
+const IMapContainer = goog.requireType('os.map.IMapContainer');
+const ActionEvent = goog.requireType('os.ui.action.ActionEvent');
 
 
 /**
  * A basic implementation of an Openlayers map. Attaches itself in the DOM to the passed in selector. Creates a
  * basic vector layer for drawings/shapes. Adds a base set of maps from localStorage layer configs.
  *
- * @implements {os.map.IMapContainer}
- * @extends {goog.events.EventTarget}
- * @constructor
+ * @implements {IMapContainer}
  */
-os.ui.ol.OLMap = function() {
-  os.ui.ol.OLMap.base(this, 'constructor');
-
+class OLMap extends EventTarget {
   /**
-   * The Openlayers map.
-   * @type {ol.PluggableMap}
-   * @private
+   * Constructor.
    */
-  this.map_ = null;
+  constructor() {
+    super();
 
-  /**
-   * @type {ol.layer.Vector}
-   * @private
-   */
-  this.drawingLayer_ = null;
-
-  /**
-   * Since this map is in scrollable pages, set a focus flag when the map should be focused
-   * @type {boolean}
-   * @private
-   */
-  this.focused_ = false;
-
-  os.dispatcher.listen(os.ui.action.EventType.ZOOM, this.onZoom_, false, this);
-};
-goog.inherits(os.ui.ol.OLMap, goog.events.EventTarget);
-
-
-/**
- * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
- */
-os.ui.ol.OLMap.LOGGER_ = goog.log.getLogger('os.ui.ol.OLMap');
-
-
-/**
- * Projection used for the map and all of its layers.
- * @type {ol.proj.Projection}
- * @const
- */
-os.ui.ol.OLMap.PROJECTION = ol.proj.get('EPSG:4326');
-
-
-/**
- * Tile grid to request 512x512 tiles.
- * @type {ol.tilegrid.TileGrid}
- * @const
- */
-os.ui.ol.OLMap.TILEGRID = ol.tilegrid.createForProjection(
-    os.ui.ol.OLMap.PROJECTION, ol.DEFAULT_MAX_ZOOM, [512, 512]);
-
-
-/**
- * The ID for the drawing layer
- * @type {string}
- * @const
- */
-os.ui.ol.OLMap.DRAW_ID = 'draw';
-
-
-/**
- * The style for the drawing layer
- * @type {ol.style.Style}
- * @const
- */
-os.ui.ol.OLMap.DRAW_STYLE = new ol.style.Style({
-  stroke: new ol.style.Stroke({
-    color: '#0ff',
-    lineCap: 'square',
-    width: 3
-  }),
-  image: new ol.style.Circle({
-    radius: 3,
-    fill: new ol.style.Fill({
-      color: '#0ff'
-    })
-  })
-});
-
-
-/**
- * @inheritDoc
- */
-os.ui.ol.OLMap.prototype.disposeInternal = function() {
-  if (this.map_) {
-    this.map_.dispose();
+    /**
+     * The Openlayers map.
+     * @type {PluggableMap}
+     * @private
+     */
     this.map_ = null;
+
+    /**
+     * @type {OLVectorLayer}
+     * @private
+     */
+    this.drawingLayer_ = null;
+
+    /**
+     * Since this map is in scrollable pages, set a focus flag when the map should be focused
+     * @type {boolean}
+     * @private
+     */
+    this.focused_ = false;
+
+    dispatcher.getInstance().listen(EventType.ZOOM, this.onZoom_, false, this);
   }
 
-  os.dispatcher.unlisten(os.ui.action.EventType.ZOOM, this.onZoom_, false, this);
-
-  os.ui.ol.OLMap.base(this, 'disposeInternal');
-};
-
-
-/**
- * Initializes the map and layers.
- *
- * @param {(string|Element)=} opt_container The optional container, defaults to map-container.
- */
-os.ui.ol.OLMap.prototype.init = function(opt_container) {
-  if (this.map_) {
-    return;
-  }
-
-  opt_container = opt_container || 'map-container';
-  this.map_ = new ol.Map({
-    controls: this.getControls_(),
-    interactions: this.getInteractions_(),
-    layers: this.getLayers_(),
-    target: opt_container,
-    view: new ol.View({
-      extent: [-180, -90, 180, 90],
-      projection: os.ui.ol.OLMap.PROJECTION,
-      center: [0, 0],
-      zoom: 2,
-      minZoom: 1,
-      maxZoom: 15
-    })
-  });
-
-  if (goog.userAgent.IE) {
-    try {
-      var olCanvas = /** @type {HTMLElement} */ ($(os.map.OPENLAYERS_CANVAS)[0]);
-      olCanvas.style.height = '';
-      olCanvas.style.width = '';
-    } catch (e) {
-    }
-  }
-
-  $(this.map_.getViewport()).attr('tabindex', 50);
-  os.query.BaseAreaManager.getInstance().setMap(this);
-
-  // If any control element gets clicked. set the map focus
-  $('.ol-overlaycontainer-stopevent > div, .ol-overlaycontainer-stopevent > div *').click(function() {
-    this.setFocused(true);
-  }.bind(this));
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.ol.OLMap.prototype.addFeature = function(feature, opt_style) {
-  if (feature) {
-    if (typeof opt_style === 'object') {
-      // if created externally, clone the style config
-      var style = opt_style instanceof Object ? opt_style : os.object.unsafeClone(opt_style);
-      feature.set(os.style.StyleType.FEATURE, style);
-      os.style.setFeatureStyle(feature);
-    } else if (opt_style && opt_style instanceof ol.style.Style) {
-      feature.setStyle(opt_style);
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    if (this.map_) {
+      this.map_.dispose();
+      this.map_ = null;
     }
 
-    if (!feature.getId()) {
-      feature.setId(ol.getUid(feature));
-    }
+    dispatcher.getInstance().unlisten(EventType.ZOOM, this.onZoom_, false, this);
 
-    var source = this.drawingLayer_.getSource();
-    source.addFeature(feature);
-    return feature;
-  }
-  return undefined;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.ol.OLMap.prototype.addFeatures = function(features) {
-  var added = [];
-  for (var i = 0, n = features.length; i < n; i++) {
-    if (this.addFeature(features[i])) {
-      added.push(features[i]);
-    }
+    super.disposeInternal();
   }
 
-  return added;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.ol.OLMap.prototype.removeFeature = function(feature, opt_dispose) {
-  if (feature) {
-    var source = this.drawingLayer_.getSource();
-    if (typeof feature === 'string' || typeof feature === 'number') {
-      feature = source.getFeatureById(feature);
-    } else {
-      feature = source.getFeatureById(feature.getId() + '');
+  /**
+   * Initializes the map and layers.
+   *
+   * @param {(string|Element)=} opt_container The optional container, defaults to map-container.
+   */
+  init(opt_container) {
+    if (this.map_) {
+      return;
     }
 
-    if (feature) {
-      source.removeFeature(feature);
-
-      if (opt_dispose) {
-        feature.dispose();
-      }
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.ol.OLMap.prototype.removeFeatures = function(features, opt_dispose) {
-  for (var i = 0, n = features.length; i < n; i++) {
-    this.removeFeature(features[i], opt_dispose);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.ol.OLMap.prototype.getMap = function() {
-  return this.map_;
-};
-
-
-/**
- * @return {?ol.layer.Vector}
- */
-os.ui.ol.OLMap.prototype.getDrawingLayer = function() {
-  return this.drawingLayer_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.ol.OLMap.prototype.containsFeature = function(feature) {
-  if (feature != null) {
-    var layer = this.getDrawingLayer();
-
-    if (layer) {
-      var source = /** @type {ol.source.Vector} */ (layer.getSource());
-
-      return !!(typeof feature === 'string' || typeof feature === 'number' ? source.getFeatureById(feature) :
-        source.getFeatureById(feature.getId() + ''));
-    }
-  }
-
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.ol.OLMap.prototype.flyToExtent = function(extent, opt_buffer, opt_maxZoom) {
-  var map = this.getMap();
-  if (map) {
-    var view = map.getView();
-    goog.asserts.assert(view !== undefined);
-
-    if (extent) {
-      if (opt_buffer && opt_buffer > 0) {
-        // clone the extent before modifying it to avoid potentially adverse affects
-        extent = extent.slice();
-        ol.extent.scaleFromCenter(extent, opt_buffer);
-      }
-
-      view.fit(extent, {
-        constrainResolution: false,
-        duration: 1000,
-        maxZoom: opt_maxZoom
-      });
-    }
-  }
-};
-
-
-/**
- * @return {ol.Collection}
- * @private
- */
-os.ui.ol.OLMap.prototype.getControls_ = function() {
-  var controls = ol.control.defaults({
-    attribution: false,
-    rotate: false
-  });
-  var mapControls = [];
-  var layerSwitcher = new os.ui.ol.control.LayerSwitcher();
-  mapControls.push(layerSwitcher);
-  controls.extend(mapControls);
-  return controls;
-};
-
-
-/**
- * @return {ol.Collection}
- * @private
- */
-os.ui.ol.OLMap.prototype.getInteractions_ = function() {
-  var ctrlZoom = new ol.interaction.DragZoom({
-    condition: ol.events.condition.platformModifierKeyOnly,
-    style: new ol.style.Style({
-      stroke: new ol.style.Stroke({
-        color: [0x33, 0xff, 0xff, 1]
-      }),
-      fill: new ol.style.Fill({
-        color: [0, 0, 0, 0.25]
+    opt_container = opt_container || 'map-container';
+    this.map_ = new olMap({
+      controls: this.getControls_(),
+      interactions: this.getInteractions_(),
+      layers: this.getLayers_(),
+      target: opt_container,
+      view: new View({
+        extent: [-180, -90, 180, 90],
+        projection: OLMap.PROJECTION,
+        center: [0, 0],
+        zoom: 2,
+        minZoom: 1,
+        maxZoom: 15
       })
-    })
-  });
+    });
 
-  var dragPan = new ol.interaction.DragPan({
-    kinetic: undefined
-  });
-  var areaHover = new os.ui.ol.interaction.AreaHover();
+    if (userAgent.IE) {
+      try {
+        var olCanvas = /** @type {HTMLElement} */ ($(OPENLAYERS_CANVAS)[0]);
+        olCanvas.style.height = '';
+        olCanvas.style.width = '';
+      } catch (e) {
+      }
+    }
 
-  // interaction to disable alt+shift+drag to rotate the map and shift+drag to zoom from the defaults
-  var options = {
-    delta: 0.2
-  };
-  var mwZoom = new os.ui.ol.interaction.MouseWheelZoom(options);
-  var focus = new os.ui.ol.interaction.FocusInteraction();
+    $(this.map_.getViewport()).attr('tabindex', 50);
+    BaseAreaManager.getInstance().setMap(this);
 
-  // interaction to disable alt+shift+drag to rotate the map and shift+drag to zoom from the defaults
-  var interactions = ol.interaction.defaults({
-    dragPan: false,
-    shiftDragZoom: false,
-    mouseWheelZoom: false,
-    zoomDelta: 0.2
-  });
-  interactions.extend([ctrlZoom, dragPan, mwZoom, areaHover, focus]);
-  return interactions;
-};
+    // If any control element gets clicked. set the map focus
+    $('.ol-overlaycontainer-stopevent > div, .ol-overlaycontainer-stopevent > div *').click(function() {
+      this.setFocused(true);
+    }.bind(this));
+  }
 
+  /**
+   * @inheritDoc
+   */
+  addFeature(feature, opt_style) {
+    if (feature) {
+      if (typeof opt_style === 'object') {
+        // if created externally, clone the style config
+        var style = opt_style instanceof Object ? opt_style : unsafeClone(opt_style);
+        feature.set(StyleType.FEATURE, style);
+        setFeatureStyle(feature);
+      } else if (opt_style && opt_style instanceof Style) {
+        feature.setStyle(opt_style);
+      }
 
-/**
- * Gets the map layers.
- *
- * @return {Array<ol.layer.Base>}
- * @private
- */
-os.ui.ol.OLMap.prototype.getLayers_ = function() {
-  var provider = /** @type {Object<string, *>} */ (os.settings.get([os.data.ProviderKey.ADMIN, 'basemap']));
-  var baseMapConfigs = /** @type {Object<string, Object<string, *>>} */ (provider['maps']);
-  var layers = [];
-  var hasDefault = false;
+      if (!feature.getId()) {
+        feature.setId(getUid(feature));
+      }
 
-  // Add the layers separately to be able to add to map by default
-  for (var key in baseMapConfigs) {
-    var layerConfig = baseMapConfigs[key];
-    var source;
-    var proj = ol.proj.get(/** @type {string|undefined} */ (layerConfig['projection']) || os.ui.ol.OLMap.PROJECTION);
-    if (ol.proj.equivalent(proj, os.ui.ol.OLMap.PROJECTION)) {
-      if (layerConfig['baseType'] === 'XYZ') {
-        source = new os.ol.source.XYZ(/** @type {olx.source.XYZOptions} */ ({
-          projection: proj,
-          url: layerConfig['url'],
-          tileSize: layerConfig['tileSize'] || 512,
-          minZoom: layerConfig['minZoom'],
-          maxZoom: layerConfig['maxZoom'],
-          'zoomOffset': layerConfig['zoomOffset']
-        }));
+      var source = this.drawingLayer_.getSource();
+      source.addFeature(feature);
+      return feature;
+    }
+    return undefined;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  addFeatures(features) {
+    var added = [];
+    for (var i = 0, n = features.length; i < n; i++) {
+      if (this.addFeature(features[i])) {
+        added.push(features[i]);
+      }
+    }
+
+    return added;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  removeFeature(feature, opt_dispose) {
+    if (feature) {
+      var source = this.drawingLayer_.getSource();
+      if (typeof feature === 'string' || typeof feature === 'number') {
+        feature = source.getFeatureById(feature);
       } else {
-        var params = {
-          'EXCEPTIONS': 'INIMAGE',
-          'LAYERS': layerConfig['name']
-        };
-
-        source = new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
-          url: layerConfig['url'],
-          params: params,
-          serverType: 'geoserver',
-          tileGrid: os.ui.ol.OLMap.TILEGRID
-        }));
+        feature = source.getFeatureById(feature.getId() + '');
       }
 
-      var layer = new ol.layer.Tile({
-        source: source
-      });
+      if (feature) {
+        source.removeFeature(feature);
 
-      if (layerConfig['isDefault']) {
-        // note that we have a default because if we don't, we need to set the first one visible
-        hasDefault = true;
+        if (opt_dispose) {
+          feature.dispose();
+        }
       }
-
-      layer.setVisible(layerConfig['isDefault'] !== undefined);
-      layer.set('title', layerConfig['title'] || layerConfig['display']);
-      layer.set('type', 'base');
-      layers.push(layer);
     }
   }
 
-  if (!hasDefault && layers.length > 0) {
-    // no default configured, just set the first one visible
-    layers[0].setVisible(true);
+  /**
+   * @inheritDoc
+   */
+  removeFeatures(features, opt_dispose) {
+    for (var i = 0, n = features.length; i < n; i++) {
+      this.removeFeature(features[i], opt_dispose);
+    }
   }
 
-  this.drawingLayer_ = new ol.layer.Vector({
-    source: new ol.source.Vector()
-  });
-  this.drawingLayer_.set('id', os.ui.ol.OLMap.DRAW_ID);
-  this.drawingLayer_.setStyle(os.ui.ol.OLMap.DRAW_STYLE);
-  layers.unshift(this.drawingLayer_);
-
-  return layers.reverse();
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.ol.OLMap.prototype.getLayer = function(layerOrFeature, opt_search, opt_remove) {
-  if (opt_remove == null) {
-    opt_remove = false;
+  /**
+   * @inheritDoc
+   */
+  getMap() {
+    return this.map_;
   }
 
-  if (!opt_search && this.map_) {
-    opt_search = this.map_.getLayers();
+  /**
+   * @return {?OLVectorLayer}
+   */
+  getDrawingLayer() {
+    return this.drawingLayer_;
   }
 
-  var l = null;
+  /**
+   * @inheritDoc
+   */
+  containsFeature(feature) {
+    if (feature != null) {
+      var layer = this.getDrawingLayer();
 
-  if (this.map_) {
-    for (var i = 0, n = opt_search.getLength(); i < n; i++) {
-      var item = opt_search.item(i);
+      if (layer) {
+        var source = /** @type {OLVectorSource} */ (layer.getSource());
 
-      try {
-        if (typeof layerOrFeature === 'string') {
-          var lid = /** @type {ol.layer.Layer} */ (item).get('id');
-          if (lid == layerOrFeature) {
-            l = /** @type {ol.layer.Layer} */ (item);
+        return !!(typeof feature === 'string' || typeof feature === 'number' ? source.getFeatureById(feature) :
+          source.getFeatureById(feature.getId() + ''));
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  flyToExtent(extent, opt_buffer, opt_maxZoom) {
+    var map = this.getMap();
+    if (map) {
+      var view = map.getView();
+      assert(view !== undefined);
+
+      if (extent) {
+        if (opt_buffer && opt_buffer > 0) {
+          // clone the extent before modifying it to avoid potentially adverse affects
+          extent = extent.slice();
+          scaleFromCenter(extent, opt_buffer);
+        }
+
+        view.fit(extent, {
+          constrainResolution: false,
+          duration: 1000,
+          maxZoom: opt_maxZoom
+        });
+      }
+    }
+  }
+
+  /**
+   * @return {Collection}
+   * @private
+   */
+  getControls_() {
+    var controls = controlDefaults({
+      attribution: false,
+      rotate: false
+    });
+    var mapControls = [];
+    var layerSwitcher = new LayerSwitcher();
+    mapControls.push(layerSwitcher);
+    controls.extend(mapControls);
+    return controls;
+  }
+
+  /**
+   * @return {Collection}
+   * @private
+   */
+  getInteractions_() {
+    var ctrlZoom = new DragZoom({
+      condition: platformModifierKeyOnly,
+      style: new Style({
+        stroke: new Stroke({
+          color: [0x33, 0xff, 0xff, 1]
+        }),
+        fill: new Fill({
+          color: [0, 0, 0, 0.25]
+        })
+      })
+    });
+
+    var dragPan = new DragPan({
+      kinetic: undefined
+    });
+    var areaHover = new AreaHover();
+
+    // interaction to disable alt+shift+drag to rotate the map and shift+drag to zoom from the defaults
+    var options = {
+      delta: 0.2
+    };
+    var mwZoom = new MouseWheelZoom(options);
+    var focus = new FocusInteraction();
+
+    // interaction to disable alt+shift+drag to rotate the map and shift+drag to zoom from the defaults
+    var interactions = interactionDefaults({
+      dragPan: false,
+      shiftDragZoom: false,
+      mouseWheelZoom: false,
+      zoomDelta: 0.2
+    });
+    interactions.extend([ctrlZoom, dragPan, mwZoom, areaHover, focus]);
+    return interactions;
+  }
+
+  /**
+   * Gets the map layers.
+   *
+   * @return {Array<LayerBase>}
+   * @private
+   */
+  getLayers_() {
+    var provider = /** @type {Object<string, *>} */ (Settings.getInstance().get([ProviderKey.ADMIN, 'basemap']));
+    var baseMapConfigs = /** @type {Object<string, Object<string, *>>} */ (provider['maps']);
+    var layers = [];
+    var hasDefault = false;
+
+    // Add the layers separately to be able to add to map by default
+    for (var key in baseMapConfigs) {
+      var layerConfig = baseMapConfigs[key];
+      var source;
+      var proj = olProj.get(/** @type {string|undefined} */ (layerConfig['projection']) || OLMap.PROJECTION);
+      if (olProj.equivalent(proj, OLMap.PROJECTION)) {
+        if (layerConfig['baseType'] === 'XYZ') {
+          source = new XYZ(/** @type {olx.source.XYZOptions} */ ({
+            projection: proj,
+            url: layerConfig['url'],
+            tileSize: layerConfig['tileSize'] || 512,
+            minZoom: layerConfig['minZoom'],
+            maxZoom: layerConfig['maxZoom'],
+            'zoomOffset': layerConfig['zoomOffset']
+          }));
+        } else {
+          var params = {
+            'EXCEPTIONS': 'INIMAGE',
+            'LAYERS': layerConfig['name']
+          };
+
+          source = new TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
+            url: layerConfig['url'],
+            params: params,
+            serverType: 'geoserver',
+            tileGrid: OLMap.TILEGRID
+          }));
+        }
+
+        var layer = new Tile({
+          source: source
+        });
+
+        if (layerConfig['isDefault']) {
+          // note that we have a default because if we don't, we need to set the first one visible
+          hasDefault = true;
+        }
+
+        layer.setVisible(layerConfig['isDefault'] !== undefined);
+        layer.set('title', layerConfig['title'] || layerConfig['display']);
+        layer.set('type', 'base');
+        layers.push(layer);
+      }
+    }
+
+    if (!hasDefault && layers.length > 0) {
+      // no default configured, just set the first one visible
+      layers[0].setVisible(true);
+    }
+
+    this.drawingLayer_ = new OLVectorLayer({
+      source: new OLVectorSource()
+    });
+    this.drawingLayer_.set('id', OLMap.DRAW_ID);
+    this.drawingLayer_.setStyle(OLMap.DRAW_STYLE);
+    layers.unshift(this.drawingLayer_);
+
+    return layers.reverse();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getLayer(layerOrFeature, opt_search, opt_remove) {
+    if (opt_remove == null) {
+      opt_remove = false;
+    }
+
+    if (!opt_search && this.map_) {
+      opt_search = this.map_.getLayers();
+    }
+
+    var l = null;
+
+    if (this.map_) {
+      for (var i = 0, n = opt_search.getLength(); i < n; i++) {
+        var item = opt_search.item(i);
+
+        try {
+          if (typeof layerOrFeature === 'string') {
+            var lid = /** @type {Layer} */ (item).get('id');
+            if (lid == layerOrFeature) {
+              l = /** @type {Layer} */ (item);
+
+              if (opt_remove) {
+                opt_search.removeAt(i);
+              }
+
+              break;
+            }
+          } else if (layerOrFeature === item) {
+            l = /** @type {Layer} */ (item);
 
             if (opt_remove) {
               opt_search.removeAt(i);
             }
 
             break;
-          }
-        } else if (layerOrFeature === item) {
-          l = /** @type {ol.layer.Layer} */ (item);
+          } else if (layerOrFeature instanceof Feature) {
+            var src = /** @type {Layer} */ (item).getSource();
 
-          if (opt_remove) {
-            opt_search.removeAt(i);
+            if (src instanceof OLVectorSource &&
+                src.getFeatureById(/** @type {Feature} */ (layerOrFeature).getId() || '')) {
+              l = /** @type {Layer} */ (item);
+            }
           }
-
-          break;
-        } else if (layerOrFeature instanceof ol.Feature) {
-          var src = /** @type {ol.layer.Layer} */ (item).getSource();
-
-          if (src instanceof ol.source.Vector &&
-              src.getFeatureById(/** @type {ol.Feature} */ (layerOrFeature).getId() || '')) {
-            l = /** @type {ol.layer.Layer} */ (item);
-          }
+        } catch (e) {
+          // whatever
         }
-      } catch (e) {
-        // whatever
-      }
 
-      if (l) {
-        break;
+        if (l) {
+          break;
+        }
       }
     }
+
+    return l;
   }
 
-  return l;
-};
+  /**
+   * Set if the map is focused or not
+   *
+   * @param {boolean} focused
+   */
+  setFocused(focused) {
+    this.focused_ = focused;
+  }
 
+  /**
+   * Get if the map is focused or not
+   *
+   * @return {boolean}
+   */
+  getFocused() {
+    return this.focused_;
+  }
 
-/**
- * Set if the map is focused or not
- *
- * @param {boolean} focused
- */
-os.ui.ol.OLMap.prototype.setFocused = function(focused) {
-  this.focused_ = focused;
-};
+  /**
+   * Handle zoom action events. Flies to an extent containing all geometries in the extent.
+   *
+   * @param {ActionEvent} event The action event.
+   * @private
+   */
+  onZoom_(event) {
+    try {
+      var context = event.getContext();
+      if (!Array.isArray(context)) {
+        context = [context];
+      }
 
+      var extent = /** @type {!Array<?{geometry: Geometry}>} */ (context).reduce(
+          reduceExtentFromGeometries,
+          createEmpty());
 
-/**
- * Get if the map is focused or not
- *
- * @return {boolean}
- */
-os.ui.ol.OLMap.prototype.getFocused = function() {
-  return this.focused_;
-};
-
-
-/**
- * Handle zoom action events. Flies to an extent containing all geometries in the extent.
- *
- * @param {os.ui.action.ActionEvent} event The action event.
- * @private
- */
-os.ui.ol.OLMap.prototype.onZoom_ = function(event) {
-  try {
-    var context = event.getContext();
-    if (!Array.isArray(context)) {
-      context = [context];
+      this.flyToExtent(extent, 1.5, MAX_AUTO_ZOOM);
+    } catch (e) {
+      log.error(logger, 'Zoom action failed:', e);
     }
-
-    var extent = /** @type {!Array<?{geometry: ol.geom.Geometry}>} */ (context).reduce(
-        os.fn.reduceExtentFromGeometries,
-        ol.extent.createEmpty());
-
-    this.flyToExtent(extent, 1.5, os.map.MAX_AUTO_ZOOM);
-  } catch (e) {
-    goog.log.error(os.ui.ol.OLMap.LOGGER_, 'Zoom action failed:', e);
   }
-};
+}
+
+/**
+ * Logger
+ * @type {log.Logger}
+ */
+const logger = log.getLogger('os.ui.ol.OLMap');
+
+/**
+ * Projection used for the map and all of its layers.
+ * @type {Projection}
+ * @const
+ */
+OLMap.PROJECTION = olProj.get('EPSG:4326');
+
+/**
+ * Tile grid to request 512x512 tiles.
+ * @type {TileGrid}
+ * @const
+ */
+OLMap.TILEGRID = createForProjection(OLMap.PROJECTION, DEFAULT_MAX_ZOOM, [512, 512]);
+
+/**
+ * The ID for the drawing layer
+ * @type {string}
+ * @const
+ */
+OLMap.DRAW_ID = 'draw';
+
+/**
+ * The style for the drawing layer
+ * @type {Style}
+ * @const
+ */
+OLMap.DRAW_STYLE = new Style({
+  stroke: new Stroke({
+    color: '#0ff',
+    lineCap: 'square',
+    width: 3
+  }),
+  image: new Circle({
+    radius: 3,
+    fill: new Fill({
+      color: '#0ff'
+    })
+  })
+});
+
+exports = OLMap;
