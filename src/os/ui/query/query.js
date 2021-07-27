@@ -1,38 +1,36 @@
-goog.provide('os.ui.query');
-goog.require('os.im.mapping.RenameMapping');
-goog.require('os.im.mapping.StaticMapping');
-goog.require('os.interpolate');
+goog.module('os.ui.query');
+goog.module.declareLegacyNamespace();
+
+const RenameMapping = goog.require('os.im.mapping.RenameMapping');
+const StaticMapping = goog.require('os.im.mapping.StaticMapping');
+const {ORIGINAL_GEOM_FIELD, METHOD_FIELD} = goog.require('os.interpolate');
+
+const Feature = goog.requireType('ol.Feature');
+const IMapping = goog.requireType('os.im.mapping.IMapping');
 
 
 /**
  * Identifier used for all layers.
  * @type {string}
- * @const
  */
-os.ui.query.ALL_ID = 'all';
-
+const ALL_ID = 'all';
 
 /**
  * Label used for the save area dialog. Please update e2e tests if you change this!
  * @type {string}
- * @const
  */
-os.ui.query.SAVE_WIN_LABEL = 'Save Area...';
-
+const SAVE_WIN_LABEL = 'Save Area...';
 
 /**
  * Label used for the edit area dialog. Please update e2e tests if you change this!
  * @type {string}
- * @const
  */
-os.ui.query.EDIT_WIN_LABEL = 'Edit Area Details...';
-
+const EDIT_WIN_LABEL = 'Edit Area Details...';
 
 /**
  * @type {!Object<string, string>}
- * @const
  */
-os.ui.query.AREA_IMPORT_HELP = {
+const AREA_IMPORT_HELP = {
   'merge': 'Combines all imported areas into a single area.',
   'title': 'Custom title given to all imported areas.',
   'titleColumn': 'Column used to apply titles to all imported areas. If an imported item doesn\'t have this field ' +
@@ -48,27 +46,24 @@ os.ui.query.AREA_IMPORT_HELP = {
       'be left blank. You may also choose to provide your own custom tags.'
 };
 
-
 /**
  * To prevent import errors, only accept these keys for features on import
  * @type {Array}
  */
-os.ui.query.featureKeys = ['title', 'name', 'description', 'tags', 'geometry', os.interpolate.ORIGINAL_GEOM_FIELD,
-  os.interpolate.METHOD_FIELD];
-
+const featureKeys = ['title', 'name', 'description', 'tags', 'geometry', ORIGINAL_GEOM_FIELD, METHOD_FIELD];
 
 /**
  * Apply query mappings to a feature and make sure a title is set.
  *
- * @param {!ol.Feature} feature The feature
- * @param {!Array<!os.im.mapping.IMapping>} mappings The mappings
+ * @param {!Feature} feature The feature
+ * @param {!Array<!IMapping>} mappings The mappings
  */
-os.ui.query.applyMappings = function(feature, mappings) {
+const applyMappings = function(feature, mappings) {
   mappings.forEach(function(m) {
     m.execute(feature);
 
     // make sure each area has a title!
-    if (m instanceof os.im.mapping.RenameMapping && m.toField == 'title' && !feature.get('title')) {
+    if (m instanceof RenameMapping && m.toField == 'title' && !feature.get('title')) {
       feature.set('title', 'No ' + m.field);
     }
   });
@@ -79,28 +74,27 @@ os.ui.query.applyMappings = function(feature, mappings) {
   }
 };
 
-
 /**
  * Create mappings from an area config.
  *
  * @param {Object} config
- * @return {!Array<!os.im.mapping.IMapping>}
+ * @return {!Array<!IMapping>}
  */
-os.ui.query.createMappingsFromConfig = function(config) {
+const createMappingsFromConfig = function(config) {
   var mappings = [];
   var mapping;
 
   if (config) {
     if (config['titleColumn'] && config['titleColumn']['field']) {
       // keep the original column in case the same column is used on multiple mappings
-      mapping = new os.im.mapping.RenameMapping();
+      mapping = new RenameMapping();
       mapping.keepOriginal = true;
       mapping.toField = 'title';
       mapping.field = config['titleColumn']['field'];
 
       mappings.push(mapping);
     } else if (config['title']) {
-      mapping = new os.im.mapping.StaticMapping();
+      mapping = new StaticMapping();
       mapping.field = 'title';
       mapping.value = config['title'] || 'No Title Provided';
 
@@ -109,14 +103,14 @@ os.ui.query.createMappingsFromConfig = function(config) {
 
     if (config['descColumn'] && config['descColumn']['field']) {
       // keep the original column in case the same column is used on multiple mappings
-      mapping = new os.im.mapping.RenameMapping();
+      mapping = new RenameMapping();
       mapping.keepOriginal = true;
       mapping.toField = 'description';
       mapping.field = config['descColumn']['field'];
 
       mappings.push(mapping);
     } else if (config['description']) {
-      mapping = new os.im.mapping.StaticMapping();
+      mapping = new StaticMapping();
       mapping.field = 'description';
       mapping.value = config['description'];
 
@@ -125,14 +119,14 @@ os.ui.query.createMappingsFromConfig = function(config) {
 
     if (config['tagsColumn'] && config['tagsColumn']['field']) {
       // keep the original column in case the same column is used on multiple mappings
-      mapping = new os.im.mapping.RenameMapping();
+      mapping = new RenameMapping();
       mapping.keepOriginal = true;
       mapping.toField = 'tags';
       mapping.field = config['tagsColumn']['field'];
 
       mappings.push(mapping);
     } else if (config['tags']) {
-      mapping = new os.im.mapping.StaticMapping();
+      mapping = new StaticMapping();
       mapping.field = 'tags';
       mapping.value = config['tags'];
 
@@ -141,4 +135,14 @@ os.ui.query.createMappingsFromConfig = function(config) {
   }
 
   return mappings;
+};
+
+exports = {
+  ALL_ID,
+  SAVE_WIN_LABEL,
+  EDIT_WIN_LABEL,
+  AREA_IMPORT_HELP,
+  featureKeys,
+  applyMappings,
+  createMappingsFromConfig
 };
