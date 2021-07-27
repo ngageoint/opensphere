@@ -1,5 +1,4 @@
 goog.module('os.ui.navbaroptions.searchbox');
-goog.module.declareLegacyNamespace();
 
 const {directiveTag} = goog.require('os.ui.search.SearchBoxUI');
 
@@ -9,6 +8,12 @@ const {directiveTag} = goog.require('os.ui.search.SearchBoxUI');
  * @type {string}
  */
 let searchBox = `<${directiveTag} show-clear="true"></${directiveTag}>`;
+
+/**
+ * @type {string}
+ * @deprecated Please use getSearchBox and setSearchBox instead.
+ */
+const searchbox = searchBox;
 
 /**
  * Get the search box UI.
@@ -25,6 +30,7 @@ const setSearchBox = (value) => {
 };
 
 exports = {
+  searchbox,
   getSearchBox,
   setSearchBox
 };
