@@ -1,7 +1,7 @@
 goog.module('plugin.im.action.feature.ui.SoundConfigUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.popover.popoverDirective');
+goog.require('os.ui.popover.PopoverUI');
 goog.require('os.ui.spinnerDirective');
 
 const {ROOT} = goog.require('os');

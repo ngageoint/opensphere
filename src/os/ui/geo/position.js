@@ -2,7 +2,7 @@ goog.module('os.ui.geo.PositionUI');
 goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.geo.GeoUI');
-goog.require('os.ui.popover.popoverDirective');
+goog.require('os.ui.popover.PopoverUI');
 
 const {ROOT} = goog.require('os');
 const {EPSILON, parseLatLon} = goog.require('os.geo');

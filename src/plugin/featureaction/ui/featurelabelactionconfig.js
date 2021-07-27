@@ -2,7 +2,7 @@ goog.module('plugin.im.action.feature.ui.LabelConfigUI');
 goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.layer.LabelControlsUI');
-goog.require('os.ui.popover.popoverDirective');
+goog.require('os.ui.popover.PopoverUI');
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');

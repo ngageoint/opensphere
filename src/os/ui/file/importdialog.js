@@ -1,7 +1,7 @@
 goog.module('os.ui.file.ImportDialogUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.popover.popoverDirective');
+goog.require('os.ui.popover.PopoverUI');
 
 const dom = goog.require('goog.dom');
 const TagName = goog.require('goog.dom.TagName');

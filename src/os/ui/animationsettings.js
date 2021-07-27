@@ -10,7 +10,7 @@ goog.require('os.time');
 goog.require('os.time.TimelineController');
 goog.require('os.ui.Module');
 goog.require('os.ui.datetime.DateTimeUI');
-goog.require('os.ui.popover.popoverDirective');
+goog.require('os.ui.popover.PopoverUI');
 goog.require('os.ui.timeline.TimelineUI');
 
 

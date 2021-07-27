@@ -2,7 +2,7 @@ goog.module('os.ui.filter.op.time.BetweenTimeUI');
 goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.datetime.DurationUI');
-goog.require('os.ui.popover.popoverDirective');
+goog.require('os.ui.popover.PopoverUI');
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
