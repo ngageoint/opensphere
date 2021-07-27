@@ -5,7 +5,7 @@ goog.require('os.ui.im.BasicInfoUI');
 
 const {ROOT} = goog.require('os');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
-const BaseAreaManager = goog.require('os.query.BaseAreaManager');
+const {getAreaManager} = goog.require('os.query.instance');
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const {applyMappings, createMappingsFromConfig} = goog.require('os.ui.query');
@@ -96,7 +96,7 @@ class Controller extends AreaImportCtrl {
       // if we save it, it should not longer be a temporary area
       feature.set('temp', undefined);
 
-      var am = BaseAreaManager.getInstance();
+      var am = getAreaManager();
       if (!am.get(feature)) {
         // new areas should be on the stack
         var cmd = new AreaAdd(feature);
