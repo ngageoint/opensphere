@@ -1,8 +1,8 @@
-goog.provide('os.ui.onboarding.ContextOnboardingCtrl');
-goog.provide('os.ui.onboarding.contextOnboardingDirective');
+goog.module('os.ui.onboarding.ContextOnboardingUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-goog.require('os.ui.onboarding.OnboardingManager');
+const Module = goog.require('os.ui.Module');
+const OnboardingManager = goog.require('os.ui.onboarding.OnboardingManager');
 
 
 /**
@@ -10,60 +10,69 @@ goog.require('os.ui.onboarding.OnboardingManager');
  *
  * @return {angular.Directive}
  */
-os.ui.onboarding.contextOnboardingDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'context': '@'
-    },
-    template: '<button title="Show help" class="btn btn-sm btn-outline-secondary border-0" ng-click="ctrl.show()">' +
-        '<i class="fa fa-fw fa-question"></i></button>',
-    controller: os.ui.onboarding.ContextOnboardingCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'context': '@'
+  },
+  template: '<button title="Show help" class="btn btn-sm btn-outline-secondary border-0" ng-click="ctrl.show()">' +
+      '<i class="fa fa-fw fa-question"></i></button>',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'context-onboarding';
 
 /**
  * Register context-onboarding directive.
  */
-os.ui.Module.directive('contextOnboarding', [os.ui.onboarding.contextOnboardingDirective]);
-
-
+Module.directive('contextOnboarding', [directive]);
 
 /**
  * Controller function for the context-onboarding directive.
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.onboarding.ContextOnboardingCtrl = function($scope) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
+   */
+  constructor($scope) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+    $scope.$on('$destroy', this.destroy_.bind(this));
+  }
+
+  /**
+   * Clean up listeners/references.
+   *
    * @private
    */
-  this.scope_ = $scope;
-  $scope.$on('$destroy', this.destroy_.bind(this));
-};
+  destroy_() {
+    this.scope_ = null;
+  }
 
+  /**
+   * Called on clicking the button to display the onboarding for the element this directive is attached to.
+   *
+   * @export
+   */
+  show() {
+    OnboardingManager.getInstance().showContextOnboarding(this.scope_['context']);
+  }
+}
 
-/**
- * Clean up listeners/references.
- *
- * @private
- */
-os.ui.onboarding.ContextOnboardingCtrl.prototype.destroy_ = function() {
-  this.scope_ = null;
-};
-
-
-/**
- * Called on clicking the button to display the onboarding for the element this directive is attached to.
- *
- * @export
- */
-os.ui.onboarding.ContextOnboardingCtrl.prototype.show = function() {
-  os.ui.onboarding.OnboardingManager.getInstance().showContextOnboarding(this.scope_['context']);
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

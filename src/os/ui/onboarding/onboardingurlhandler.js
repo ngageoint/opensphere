@@ -30,12 +30,10 @@ class OnboardingUrlHandler extends AbstractUrlHandler {
   }
 }
 
-
 /**
  * @type {string}
  * @const
  */
 OnboardingUrlHandler.KEY = 'tips';
-
 
 exports = OnboardingUrlHandler;
