@@ -1,29 +1,45 @@
-goog.provide('os.ui.FiltersCtrl');
-goog.provide('os.ui.filtersDirective');
+goog.module('os.ui.FiltersUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os');
-goog.require('os.MapContainer');
-goog.require('os.command.SequenceCommand');
-goog.require('os.data.FilterTreeSearch');
-goog.require('os.data.groupby.SourceGroupBy');
-goog.require('os.layer');
-goog.require('os.metrics.Metrics');
-goog.require('os.query');
-goog.require('os.query.BaseQueryManager');
-goog.require('os.query.FilterManager');
 goog.require('os.ui.AddFilterUI');
-goog.require('os.ui.FilterLayerGroupBy');
-goog.require('os.ui.Module');
-goog.require('os.ui.filter.ui.FilterExportUI');
-goog.require('os.ui.filter.ui.FilterGroupBy');
-goog.require('os.ui.filter.ui.FilterTreeUI');
-goog.require('os.ui.im.ImportEvent');
-goog.require('os.ui.menu.filter');
-goog.require('os.ui.query.CombinatorUI');
-goog.require('os.ui.query.cmd.FilterAdd');
-goog.require('os.ui.query.cmd.FilterRemove');
-goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 goog.require('os.ui.slick.slickTreeDirective');
+
+const GoogEventType = goog.require('goog.events.EventType');
+const {ROOT} = goog.require('os');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const SequenceCommand = goog.require('os.command.SequenceCommand');
+const FilterNode = goog.require('os.data.FilterNode');
+const FilterTreeSearch = goog.require('os.data.FilterTreeSearch');
+const SourceGroupBy = goog.require('os.data.groupby.SourceGroupBy');
+const LayerEventType = goog.require('os.events.LayerEventType');
+const {createFromFile} = goog.require('os.file');
+const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
+const {getMapContainer} = goog.require('os.map.instance');
+const Metrics = goog.require('os.metrics.Metrics');
+const {Filters} = goog.require('os.metrics.keys');
+const {launchQueryImport} = goog.require('os.query');
+const {getFilterManager} = goog.require('os.query.instance');
+const FilterLayerGroupBy = goog.require('os.ui.FilterLayerGroupBy');
+const Module = goog.require('os.ui.Module');
+const FilterEventType = goog.require('os.ui.filter.FilterEventType');
+const FilterExportChoice = goog.require('os.ui.filter.ui.FilterExportChoice');
+const FilterExportUI = goog.require('os.ui.filter.ui.FilterExportUI');
+const {MENU} = goog.require('os.ui.menu.filter');
+const CombinatorUI = goog.require('os.ui.query.CombinatorUI');
+const FilterAdd = goog.require('os.ui.query.cmd.FilterAdd');
+const FilterRemove = goog.require('os.ui.query.cmd.FilterRemove');
+const AbstractGroupByTreeSearchCtrl = goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
+
+const GoogEvent = goog.requireType('goog.events.Event');
+const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
+const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const OSFile = goog.requireType('os.file.File');
+const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const IFilterable = goog.requireType('os.filter.IFilterable');
+const FilterEvent = goog.requireType('os.ui.filter.FilterEvent');
+const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -31,335 +47,328 @@ goog.require('os.ui.slick.slickTreeDirective');
  *
  * @return {angular.Directive}
  */
-os.ui.filtersDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/filters.html',
-    controller: os.ui.FiltersCtrl,
-    controllerAs: 'filtersCtrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  templateUrl: ROOT + 'views/filters.html',
+  controller: Controller,
+  controllerAs: 'filtersCtrl'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'filters';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('filters', [os.ui.filtersDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for Filters window
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.ui.slick.AbstractGroupByTreeSearchCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.FiltersCtrl = function($scope, $element) {
-  os.ui.FiltersCtrl.base(this, 'constructor', $scope, $element, 25);
+class Controller extends AbstractGroupByTreeSearchCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element, 25);
 
-  this.title = 'filters';
-  try {
-    this.scope['contextMenu'] = os.ui.menu.FILTER;
-  } catch (e) {
+    this.title = 'filters';
+    try {
+      this.scope['contextMenu'] = MENU;
+    } catch (e) {
+    }
+
+    this.viewDefault = 'Layer Type';
+
+    /**
+     * Bound version of the drag-drop handler.
+     * @type {Function}
+     */
+    this['onDrop'] = this.onDrop_.bind(this);
+
+    /**
+     * @type {?FilterTreeSearch}
+     */
+    this.treeSearch = new FilterTreeSearch('filters', this.scope);
+    this.scope['views'] = Controller.VIEWS;
+    this.init();
+
+    $scope.$on('filterCopy', this.onCopyFilter_.bind(this));
+    $scope.$on('filterEdit', this.onEditFilter_.bind(this));
+    $scope.$on('filterComplete', this.onEditComplete_.bind(this));
+
+    getFilterManager().listen(GoogEventType.PROPERTYCHANGE, this.searchIfAddedOrRemoved_, false, this);
+    getFilterManager().listen(FilterEventType.FILTERS_REFRESH, this.search, false, this);
+    getFilterManager().listen(FilterEventType.EXPORT_FILTER, this.export, false, this);
+
+    var map = getMapContainer();
+    map.listen(LayerEventType.ADD, this.search, false, this);
+    map.listen(LayerEventType.REMOVE, this.search, false, this);
   }
-
-  this.viewDefault = 'Layer Type';
 
   /**
-   * Bound version of the drag-drop handler.
-   * @type {Function}
+   * @inheritDoc
    */
-  this['onDrop'] = this.onDrop_.bind(this);
+  disposeInternal() {
+    getFilterManager().unlisten(FilterEventType.EXPORT_FILTER, this.export, false, this);
+    getFilterManager().unlisten(FilterEventType.FILTERS_REFRESH, this.search, false, this);
+    getFilterManager().unlisten(GoogEventType.PROPERTYCHANGE, this.searchIfAddedOrRemoved_, false, this);
+    var map = getMapContainer();
+    map.unlisten(LayerEventType.ADD, this.search, false, this);
+    map.unlisten(LayerEventType.REMOVE, this.search, false, this);
+    super.disposeInternal();
+  }
 
   /**
-   * @type {?os.data.FilterTreeSearch}
+   * Launches the advanced combination window
+   *
+   * @export
    */
-  this.treeSearch = new os.data.FilterTreeSearch('filters', this.scope);
-  this.scope['views'] = os.ui.FiltersCtrl.VIEWS;
-  this.init();
-
-  $scope.$on('filterCopy', this.onCopyFilter_.bind(this));
-  $scope.$on('filterEdit', this.onEditFilter_.bind(this));
-  $scope.$on('filterComplete', this.onEditComplete_.bind(this));
-
-  os.ui.filterManager.listen(goog.events.EventType.PROPERTYCHANGE, this.searchIfAddedOrRemoved_, false, this);
-  os.ui.filterManager.listen(os.ui.filter.FilterEventType.FILTERS_REFRESH, this.search, false, this);
-  os.ui.filterManager.listen(os.ui.filter.FilterEventType.EXPORT_FILTER, this.export, false, this);
-
-  var map = os.MapContainer.getInstance();
-  map.listen(os.events.LayerEventType.ADD, this.search, false, this);
-  map.listen(os.events.LayerEventType.REMOVE, this.search, false, this);
-};
-goog.inherits(os.ui.FiltersCtrl, os.ui.slick.AbstractGroupByTreeSearchCtrl);
-
-
-/**
- * The view options for grouping filters
- * @type {!Object<string, os.data.groupby.INodeGroupBy>}
- */
-os.ui.FiltersCtrl.VIEWS = {
-  'None': -1, // you can't use null because Angular treats that as the empty/unselected option
-  'Layer': new os.ui.FilterLayerGroupBy(),
-  'Layer Type': new os.ui.FilterLayerGroupBy(true),
-  'Source': new os.data.groupby.SourceGroupBy(true)
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.FiltersCtrl.prototype.disposeInternal = function() {
-  os.ui.filterManager.unlisten(os.ui.filter.FilterEventType.EXPORT_FILTER, this.export, false, this);
-  os.ui.filterManager.unlisten(os.ui.filter.FilterEventType.FILTERS_REFRESH, this.search, false, this);
-  os.ui.filterManager.unlisten(goog.events.EventType.PROPERTYCHANGE, this.searchIfAddedOrRemoved_, false, this);
-  var map = os.MapContainer.getInstance();
-  map.unlisten(os.events.LayerEventType.ADD, this.search, false, this);
-  map.unlisten(os.events.LayerEventType.REMOVE, this.search, false, this);
-  os.ui.FiltersCtrl.base(this, 'disposeInternal');
-};
-
-
-/**
- * Launches the advanced combination window
- *
- * @export
- */
-os.ui.FiltersCtrl.prototype.launch = function() {
-  os.ui.query.CombinatorUI.launch();
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.ADVANCED, 1);
-};
-
-
-/**
- * Pop up filter export gui
- *
- * @param {os.ui.filter.FilterEvent=} opt_event right click export event
- * @export
- */
-os.ui.FiltersCtrl.prototype.export = function(opt_event) {
-  os.ui.filter.ui.FilterExportUI.launchFilterExport(this.save_.bind(this));
-};
-
-
-/**
- * Disables export button
- *
- * @return {boolean}
- * @export
- */
-os.ui.FiltersCtrl.prototype.exportDisabled = function() {
-  // off when no filters present
-  var filters = os.ui.filterManager.getFilters();
-  if (filters && filters.length > 0) {
-    return false;
+  launch() {
+    CombinatorUI.launch();
+    Metrics.getInstance().updateMetric(Filters.ADVANCED, 1);
   }
 
-  return true;
-};
-
-
-/**
- * Save the filters to a file
- *
- * @param {string} name of the file
- * @param {os.ui.filter.ui.FilterExportChoice} mode how to export filters
- * @private
- */
-os.ui.FiltersCtrl.prototype.save_ = function(name, mode) {
-  var filters = [];
-  if (mode != os.ui.filter.ui.FilterExportChoice.SELECTED) {
-    this.flatten_(this.scope['filters'], filters,
-        mode == os.ui.filter.ui.FilterExportChoice.ACTIVE);
-  } else if (this.scope['selected'] && this.scope['selected'].length) {
-    filters = this.scope['selected'];
-  } else if (this.scope['selected']) {
-    filters = [this.scope['selected']];
+  /**
+   * Pop up filter export gui
+   *
+   * @param {FilterEvent=} opt_event right click export event
+   * @export
+   */
+  export(opt_event) {
+    FilterExportUI.launchFilterExport(this.save_.bind(this));
   }
 
-  // remove nodes that are not filters (e.g. the layer node in Group Type -> Layer Type)
-  filters = goog.array.filter(filters, function(f) {
-    return f instanceof os.data.FilterNode;
-  });
+  /**
+   * Disables export button
+   *
+   * @return {boolean}
+   * @export
+   */
+  exportDisabled() {
+    // off when no filters present
+    var filters = getFilterManager().getFilters();
+    if (filters && filters.length > 0) {
+      return false;
+    }
 
-  os.ui.filter.ui.FilterExportUI.exportFilters(name, filters);
-};
+    return true;
+  }
 
+  /**
+   * Save the filters to a file
+   *
+   * @param {string} name of the file
+   * @param {FilterExportChoice} mode how to export filters
+   * @private
+   */
+  save_(name, mode) {
+    var filters = [];
+    if (mode != FilterExportChoice.SELECTED) {
+      this.flatten_(this.scope['filters'], filters,
+          mode == FilterExportChoice.ACTIVE);
+    } else if (this.scope['selected'] && this.scope['selected'].length) {
+      filters = this.scope['selected'];
+    } else if (this.scope['selected']) {
+      filters = [this.scope['selected']];
+    }
 
-/**
- * Get filters out of the tree
- *
- * @param {Array} arr The array of items
- * @param {Array} result The resulting flat array
- * @param {boolean} activeOnly get only the active filters
- * @private
- */
-os.ui.FiltersCtrl.prototype.flatten_ = function(arr, result, activeOnly) {
-  if (arr) {
-    for (var i = 0, n = arr.length; i < n; i++) {
-      var item = /** @type {os.ui.slick.SlickTreeNode} */ (arr[i]);
-      if (item.getChildren()) {
-        // parent node
-        this.flatten_(item.getChildren(), result, activeOnly);
-      } else if ((activeOnly && item.getState() == 'on' || !activeOnly) && item.getEntry()) {
-        var filterId = item.getId();
-        if (filterId !== undefined && filterId != '*') {
-          result.push(item);
+    // remove nodes that are not filters (e.g. the layer node in Group Type -> Layer Type)
+    filters = filters.filter(function(f) {
+      return f instanceof FilterNode;
+    });
+
+    FilterExportUI.exportFilters(name, filters);
+  }
+
+  /**
+   * Get filters out of the tree
+   *
+   * @param {Array} arr The array of items
+   * @param {Array} result The resulting flat array
+   * @param {boolean} activeOnly get only the active filters
+   * @private
+   */
+  flatten_(arr, result, activeOnly) {
+    if (arr) {
+      for (var i = 0, n = arr.length; i < n; i++) {
+        var item = /** @type {SlickTreeNode} */ (arr[i]);
+        if (item.getChildren()) {
+          // parent node
+          this.flatten_(item.getChildren(), result, activeOnly);
+        } else if ((activeOnly && item.getState() == 'on' || !activeOnly) && item.getEntry()) {
+          var filterId = item.getId();
+          if (filterId !== undefined && filterId != '*') {
+            result.push(item);
+          }
         }
       }
     }
   }
-};
 
+  /**
+   * Launches the filter import window.
+   *
+   * @param {OSFile=} opt_file Optional file to use in the import.
+   * @export
+   */
+  import(opt_file) {
+    launchQueryImport(undefined, opt_file);
+  }
 
-/**
- * Launches the filter import window.
- *
- * @param {os.file.File=} opt_file Optional file to use in the import.
- * @export
- */
-os.ui.FiltersCtrl.prototype.import = function(opt_file) {
-  os.query.launchQueryImport(undefined, opt_file);
-};
-
-
-/**
- * Handles adds/edits to filters
- *
- * @param {angular.Scope.Event} event
- * @param {os.filter.FilterEntry} entry
- * @private
- */
-os.ui.FiltersCtrl.prototype.onEditFilter_ = function(event, entry) {
-  var filterable = /** @type {os.filter.IFilterable} */ (os.ui.filterManager.getFilterable(entry.getType()));
-  var cols = null;
-  try {
-    if (filterable) {
-      cols = filterable.getFilterColumns();
+  /**
+   * Handles adds/edits to filters
+   *
+   * @param {angular.Scope.Event} event
+   * @param {FilterEntry} entry
+   * @private
+   */
+  onEditFilter_(event, entry) {
+    var filterable = /** @type {IFilterable} */ (getFilterManager().getFilterable(entry.getType()));
+    var cols = null;
+    try {
+      if (filterable) {
+        cols = filterable.getFilterColumns();
+      }
+    } catch (e) {
+      // most likely, layer wasn't an IFilterable implementation
     }
-  } catch (e) {
-    // most likely, layer wasn't an IFilterable implementation
-  }
-  if (cols) {
-    os.filter.BaseFilterManager.edit(entry.getType(), cols, this.editEntry.bind(this), entry);
-  } else {
-    os.alertManager.sendAlert('This layer is missing required information to edit filters.',
-        os.alert.AlertEventSeverity.WARNING);
-  }
-};
-
-
-/**
- * Handles adds/edits to filters
- *
- * @param {angular.Scope.Event} event
- * @param {os.filter.FilterEntry} entry
- * @private
- */
-os.ui.FiltersCtrl.prototype.onEditComplete_ = function(event, entry) {
-  event.stopPropagation();
-
-  this.editEntry(entry);
-};
-
-
-/**
- * Handles adds/edits to filters
- *
- * @param {os.filter.FilterEntry} entry
- * @protected
- */
-os.ui.FiltersCtrl.prototype.editEntry = function(entry) {
-  if (entry) {
-    var fqm = os.ui.filterManager;
-    var original = fqm.getFilter(entry.getId());
-
-    if (original) {
-      // edit
-      var rm = new os.ui.query.cmd.FilterRemove(original);
-      var add = new os.ui.query.cmd.FilterAdd(entry);
-      var edit = new os.command.SequenceCommand();
-      edit.setCommands([rm, add]);
-      edit.title = 'Edit Filter ' + entry.getTitle();
-      os.command.CommandProcessor.getInstance().addCommand(edit);
+    if (cols) {
+      BaseFilterManager.edit(entry.getType(), cols, this.editEntry.bind(this), entry);
     } else {
-      // add
-      os.command.CommandProcessor.getInstance().addCommand(new os.ui.query.cmd.FilterAdd(entry));
+      AlertManager.getInstance().sendAlert('This layer is missing required information to edit filters.',
+          AlertEventSeverity.WARNING);
     }
   }
-};
 
+  /**
+   * Handles adds/edits to filters
+   *
+   * @param {angular.Scope.Event} event
+   * @param {FilterEntry} entry
+   * @private
+   */
+  onEditComplete_(event, entry) {
+    event.stopPropagation();
 
-/**
- * Handles adds/edits to filters
- *
- * @param {angular.Scope.Event} event
- * @param {os.filter.FilterEntry} entry
- * @private
- */
-os.ui.FiltersCtrl.prototype.onCopyFilter_ = function(event, entry) {
-  os.filter.BaseFilterManager.copy(entry, entry.getType());
-};
+    this.editEntry(entry);
+  }
 
+  /**
+   * Handles adds/edits to filters
+   *
+   * @param {FilterEntry} entry
+   * @protected
+   */
+  editEntry(entry) {
+    if (entry) {
+      var fqm = getFilterManager();
+      var original = fqm.getFilter(entry.getId());
 
-/**
- * Preform a search only if a node is added, updated, or removed
- *
- * @param {os.events.PropertyChangeEvent} event The event
- * @private
- */
-os.ui.FiltersCtrl.prototype.searchIfAddedOrRemoved_ = function(event) {
-  if (event && event.getProperty() !== 'toggle') {
+      if (original) {
+        // edit
+        var rm = new FilterRemove(original);
+        var add = new FilterAdd(entry);
+        var edit = new SequenceCommand();
+        edit.setCommands([rm, add]);
+        edit.title = 'Edit Filter ' + entry.getTitle();
+        CommandProcessor.getInstance().addCommand(edit);
+      } else {
+        // add
+        CommandProcessor.getInstance().addCommand(new FilterAdd(entry));
+      }
+    }
+  }
+
+  /**
+   * Handles adds/edits to filters
+   *
+   * @param {angular.Scope.Event} event
+   * @param {FilterEntry} entry
+   * @private
+   */
+  onCopyFilter_(event, entry) {
+    BaseFilterManager.copy(entry, entry.getType());
+  }
+
+  /**
+   * Preform a search only if a node is added, updated, or removed
+   *
+   * @param {PropertyChangeEvent} event The event
+   * @private
+   */
+  searchIfAddedOrRemoved_(event) {
+    if (event && event.getProperty() !== 'toggle') {
+      this.search();
+    }
+  }
+
+  /**
+   * Handles Group By change
+   *
+   * @export
+   */
+  onGroupChange() {
     this.search();
+    Metrics.getInstance().updateMetric(Filters.GROUP_BY, 1);
   }
-};
 
-
-/**
- * Handles Group By change
- *
- * @export
- */
-os.ui.FiltersCtrl.prototype.onGroupChange = function() {
-  this.search();
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.GROUP_BY, 1);
-};
-
-
-/**
- * Handles Group By change
- *
- * @export
- */
-os.ui.FiltersCtrl.prototype.onSearchTermChange = function() {
-  this.search();
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.SEARCH, 1);
-};
-
-
-/**
- * Handles file drops over the filters tab.
- *
- * @param {Event} event The drop event.
- */
-os.ui.FiltersCtrl.prototype.onDrop_ = function(event) {
-  if (event.dataTransfer && event.dataTransfer.files) {
-    os.file.createFromFile(/** @type {!File} */ (event.dataTransfer.files[0]))
-        .addCallback(this.import.bind(this), this.onFail_.bind(this));
+  /**
+   * Handles Group By change
+   *
+   * @export
+   */
+  onSearchTermChange() {
+    this.search();
+    Metrics.getInstance().updateMetric(Filters.SEARCH, 1);
   }
-};
 
+  /**
+   * Handles file drops over the filters tab.
+   *
+   * @param {Event} event The drop event.
+   */
+  onDrop_(event) {
+    if (event.dataTransfer && event.dataTransfer.files) {
+      createFromFile(/** @type {!File} */ (event.dataTransfer.files[0]))
+          .addCallback(this.import.bind(this), this.onFail_.bind(this));
+    }
+  }
+
+  /**
+   * Handle file drag-drop.
+   *
+   * @param {!GoogEvent|OSFile} event
+   * @private
+   */
+  onFail_(event) {
+    AlertManager.getInstance().sendAlert(
+        'Could not handle file with drag and drop. Try again or use the browse capability.');
+  }
+}
 
 /**
- * Handle file drag-drop.
- *
- * @param {!goog.events.Event|os.file.File} event
- * @private
+ * The view options for grouping filters
+ * @type {!Object<string, INodeGroupBy>}
  */
-os.ui.FiltersCtrl.prototype.onFail_ = function(event) {
-  os.alertManager.sendAlert('Could not handle file with drag and drop. Try again or use the browse capability.');
+Controller.VIEWS = {
+  'None': -1, // you can't use null because Angular treats that as the empty/unselected option
+  'Layer': new FilterLayerGroupBy(),
+  'Layer Type': new FilterLayerGroupBy(true),
+  'Source': new SourceGroupBy(true)
+};
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
