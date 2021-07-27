@@ -1,46 +1,62 @@
-goog.provide('os.ui.query.area.UserAreaCtrl');
-goog.provide('os.ui.query.area.getUserArea');
-goog.provide('os.ui.query.area.userAreaDirective');
+goog.module('os.ui.query.area.UserAreaUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
-goog.require('goog.Promise');
-goog.require('goog.async.Delay');
-goog.require('goog.dom');
-goog.require('goog.events.KeyEvent');
-goog.require('goog.events.KeyHandler');
-goog.require('ol.Feature');
-goog.require('ol.array');
-goog.require('ol.geom.Point');
-goog.require('ol.geom.Polygon');
-goog.require('os.events.EventType');
-goog.require('os.extent');
-goog.require('os.geo.jsts');
-goog.require('os.interpolate');
-goog.require('os.map');
-goog.require('os.map.instance');
-goog.require('os.style');
-goog.require('os.ui.Module');
 goog.require('os.ui.geo.PositionUI');
 goog.require('os.ui.util.ValidationMessageUI');
-goog.require('os.ui.window');
+
+const Disposable = goog.require('goog.Disposable');
+const {equals} = goog.require('goog.array');
+const Delay = goog.require('goog.async.Delay');
+const dispose = goog.require('goog.dispose');
+const {getDocument} = goog.require('goog.dom');
+const KeyCodes = goog.require('goog.events.KeyCodes');
+const KeyEvent = goog.require('goog.events.KeyEvent');
+const KeyHandler = goog.require('goog.events.KeyHandler');
+const {getUid} = goog.require('ol');
+const Feature = goog.require('ol.Feature');
+const {remove} = goog.require('ol.array');
+const {getArea} = goog.require('ol.extent');
+const GeometryType = goog.require('ol.geom.GeometryType');
+const Point = goog.require('ol.geom.Point');
+const Polygon = goog.require('ol.geom.Polygon');
+const {ROOT} = goog.require('os');
+const Settings = goog.require('os.config.Settings');
+const RecordField = goog.require('os.data.RecordField');
+const EventType = goog.require('os.events.EventType');
+const {getFunctionalExtent} = goog.require('os.extent');
+const {filterFalsey} = goog.require('os.fn');
+const {PREFER_LON_FIRST, isRectangular, parseLatLon} = goog.require('os.geo');
+const {buffer, validate} = goog.require('os.geo.jsts');
+const {normalizeLongitude} = goog.require('os.geo2');
+const GeometryField = goog.require('os.geom.GeometryField');
+const interpolate = goog.require('os.interpolate');
+const {getIMapContainer} = goog.require('os.map.instance');
+const {convertUnits} = goog.require('os.math');
+const Units = goog.require('os.math.Units');
+const {PREVIEW_CONFIG} = goog.require('os.style');
+const {apply} = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const {close} = goog.require('os.ui.window');
+
+const Geometry = goog.requireType('ol.geom.Geometry');
 
 
 /**
  * Supported area input types.
  * @enum {string}
  */
-os.ui.query.area.AreaType = {
+const AreaType = {
   BBOX: 'bbox',
   CIRCLE: 'circle',
   POLYGON: 'polygon'
 };
 
-
 /**
  * UI details for each area type.
  * @type {Object}
  */
-os.ui.query.area.AreaTypeDetails = {
+const AreaTypeDetails = {
   'bbox': {
     'name': 'Bounding Box',
     'icon': 'fa-square-o',
@@ -58,713 +74,659 @@ os.ui.query.area.AreaTypeDetails = {
   }
 };
 
-
 /**
  * Directive to enter a user-defined area.
  *
  * @return {angular.Directive}
  */
-os.ui.query.area.userAreaDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/query/area/userarea.html',
-    controller: os.ui.query.area.UserAreaCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  templateUrl: ROOT + 'views/query/area/userarea.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'userarea';
 
 /**
  * Add the directive to the Angular module.
  */
-os.ui.Module.directive('userarea', [os.ui.query.area.userAreaDirective]);
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the userarea directive.
- *
- * @param {!angular.Scope} $scope The Angular scope.
- * @param {!angular.JQLite} $element The root DOM element.
- * @param {!angular.$timeout} $timeout The Angular $timeout service.
- * @extends {goog.Disposable}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.query.area.UserAreaCtrl = function($scope, $element, $timeout) {
-  os.ui.query.area.UserAreaCtrl.base(this, 'constructor');
-
+class Controller extends Disposable {
   /**
-   * The Angular scope.
-   * @type {angular.Scope|undefined}
-   * @protected
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @param {!angular.JQLite} $element The root DOM element.
+   * @param {!angular.$timeout} $timeout The Angular $timeout service.
+   * @ngInject
    */
-  this.scope = $scope;
+  constructor($scope, $element, $timeout) {
+    super();
 
-  /**
-   * The root DOM element.
-   * @type {angular.JQLite|undefined}
-   * @protected
-   */
-  this.element = $element;
+    /**
+     * The Angular scope.
+     * @type {angular.Scope|undefined}
+     * @protected
+     */
+    this.scope = $scope;
 
-  /**
-   * Area passed to the form to be edited.
-   * @type {ol.Feature|undefined}
-   * @protected
-   */
-  this.editArea = /** @type {ol.Feature|undefined} */ ($scope['area']);
+    /**
+     * The root DOM element.
+     * @type {angular.JQLite|undefined}
+     * @protected
+     */
+    this.element = $element;
 
-  /**
-   * Handle keyboard events.
-   * @type {goog.events.KeyHandler|undefined}
-   * @protected
-   */
-  this.keyHandler = new goog.events.KeyHandler(goog.dom.getDocument());
-  this.keyHandler.listen(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent, false, this);
+    /**
+     * Area passed to the form to be edited.
+     * @type {Feature|undefined}
+     * @protected
+     */
+    this.editArea = /** @type {Feature|undefined} */ ($scope['area']);
 
-  /**
-   * Delay to update the area from the form.
-   * @type {goog.async.Delay|undefined}
-   * @protected
-   */
-  this.updateDelay = new goog.async.Delay(this.onUpdateDelay, 250, this);
+    /**
+     * Handle keyboard events.
+     * @type {KeyHandler|undefined}
+     * @protected
+     */
+    this.keyHandler = new KeyHandler(getDocument());
+    this.keyHandler.listen(KeyEvent.EventType.KEY, this.handleKeyEvent, false, this);
 
-  /**
-   * @type {ol.Feature|undefined}
-   */
-  this['area'] = undefined;
+    /**
+     * Delay to update the area from the form.
+     * @type {Delay|undefined}
+     * @protected
+     */
+    this.updateDelay = new Delay(this.onUpdateDelay, 250, this);
 
-  /**
-   * The input area type.
-   * @type {string}
-   */
-  this['areaType'] = os.ui.query.area.AreaType.BBOX;
+    /**
+     * @type {Feature|undefined}
+     */
+    this['area'] = undefined;
 
-  /**
-   * The allowed input area types.
-   * @type {!Array<string>}
-   */
-  this['areaTypes'] = this.scope['areaTypes'] || goog.object.getValues(os.ui.query.area.AreaType);
+    /**
+     * The input area type.
+     * @type {string}
+     */
+    this['areaType'] = AreaType.BBOX;
 
-  /**
-   * @type {string}
-   */
-  this['name'] = this.editArea && this.editArea.get('title') || 'New Area';
+    /**
+     * The allowed input area types.
+     * @type {!Array<string>}
+     */
+    this['areaTypes'] = this.scope['areaTypes'] || Object.values(AreaType);
 
-  /**
-   * Only allow editing bounding boxes. We should eventually provide draw/edit controls for all geometries, but we
-   * don't have that capability yet.
-   * @type {boolean}
-   */
-  this['canEditGeometry'] = true;
+    /**
+     * @type {string}
+     */
+    this['name'] = this.editArea && this.editArea.get('title') || 'New Area';
 
-  /**
-   * @type {string}
-   */
-  this['errorMsg'] = '';
+    /**
+     * Only allow editing bounding boxes. We should eventually provide draw/edit controls for all geometries, but we
+     * don't have that capability yet.
+     * @type {boolean}
+     */
+    this['canEditGeometry'] = true;
 
-  /**
-   * If coordinates should be parsed with longitude first.
-   * @type {boolean}
-   */
-  this['lonFirst'] = false;
+    /**
+     * @type {string}
+     */
+    this['errorMsg'] = '';
 
-  /**
-   * The preferred coordinate order.
-   * @type {number|undefined}
-   */
-  this['coordOrder'] = undefined;
+    /**
+     * If coordinates should be parsed with longitude first.
+     * @type {boolean}
+     */
+    this['lonFirst'] = false;
 
-  /**
-   * @type {osx.geo.Location}
-   */
-  this['corner1'] = {};
+    /**
+     * The preferred coordinate order.
+     * @type {number|undefined}
+     */
+    this['coordOrder'] = undefined;
 
-  /**
-   * @type {osx.geo.Location}
-   */
-  this['corner2'] = {};
+    /**
+     * @type {osx.geo.Location}
+     */
+    this['corner1'] = {};
 
-  /**
-   * @type {string}
-   */
-  this['coordinates'] = '';
+    /**
+     * @type {osx.geo.Location}
+     */
+    this['corner2'] = {};
 
-  /**
-   * @type {osx.geo.Location}
-   */
-  this['center'] = {};
+    /**
+     * @type {string}
+     */
+    this['coordinates'] = '';
 
-  /**
-   * @type {number|undefined}
-   */
-  this['radius'] = undefined;
+    /**
+     * @type {osx.geo.Location}
+     */
+    this['center'] = {};
 
-  /**
-   * Radius units.
-   * @type {os.math.Unit}
-   */
-  this['radiusUnits'] = os.math.Units.KILOMETERS;
+    /**
+     * @type {number|undefined}
+     */
+    this['radius'] = undefined;
 
-  /**
-   * Supported radius units.
-   * @type {!Array<!os.math.Units>}
-   */
-  this['units'] = [
-    os.math.Units.NAUTICAL_MILES,
-    os.math.Units.MILES,
-    os.math.Units.KILOMETERS,
-    os.math.Units.METERS
-  ];
+    /**
+     * Radius units.
+     * @type {string}
+     */
+    this['radiusUnits'] = Units.KILOMETERS;
 
-  /**
-   * Flag for whether the box should be reversed. We prefer the shorter path by default, this sets the longer path.
-   * @type {boolean}
-   */
-  this['reverseBox'] = false;
+    /**
+     * Supported radius units.
+     * @type {!Array<!Units>}
+     */
+    this['units'] = [
+      Units.NAUTICAL_MILES,
+      Units.MILES,
+      Units.KILOMETERS,
+      Units.METERS
+    ];
 
-  /**
-   * @type {string}
-   */
-  this['reverseHelp'] = `Reverse the horizontal direction of your box, causing it to take the longer path between
-      your defined corners instead of the shorter one.`;
+    /**
+     * Flag for whether the box should be reversed. We prefer the shorter path by default, this sets the longer path.
+     * @type {boolean}
+     */
+    this['reverseBox'] = false;
 
-  /**
-   * @type {string}
-   */
-  this['customPopoverContent'] = `Enter coordinates with spaces between latitude/longitude and commas separating
-      coordinate pairs or MGRS values. The polygon will be validated/closed if necessary.<br><br>
-      Takes DD, DMS, DDM or MGRS. If Lat/Lon, the first coordinate is assumed to
-      be latitude unless it is zero-padded (0683000.55 or 058.135), three-digits (105&deg;30'10.1&quot; or
-      105.3), or contains the direction (68 30 12 W or 105 E).`;
+    /**
+     * @type {string}
+     */
+    this['reverseHelp'] = `Reverse the horizontal direction of your box, causing it to take the longer path between
+        your defined corners instead of the shorter one.`;
 
-  /**
-   * The number of polygon coordinates that could not be parsed.
-   * @type {number}
-   */
-  this['numInvalidCoords'] = 0;
+    /**
+     * @type {string}
+     */
+    this['customPopoverContent'] = `Enter coordinates with spaces between latitude/longitude and commas separating
+        coordinate pairs or MGRS values. The polygon will be validated/closed if necessary.<br><br>
+        Takes DD, DMS, DDM or MGRS. If Lat/Lon, the first coordinate is assumed to
+        be latitude unless it is zero-padded (0683000.55 or 058.135), three-digits (105&deg;30'10.1&quot; or
+        105.3), or contains the direction (68 30 12 W or 105 E).`;
 
-  if (this.editArea) {
-    // remove unsupported edit types
-    ol.array.remove(this['areaTypes'], os.ui.query.area.AreaType.CIRCLE);
+    /**
+     * The number of polygon coordinates that could not be parsed.
+     * @type {number}
+     */
+    this['numInvalidCoords'] = 0;
 
-    // prepopulate the form from the provided area
-    var geometry = this.editArea.getGeometry();
-    if (geometry) {
-      geometry = geometry.clone();
-      geometry.toLonLat();
+    if (this.editArea) {
+      // remove unsupported edit types
+      remove(this['areaTypes'], AreaType.CIRCLE);
 
-      var extent = geometry.getExtent();
-      var type = geometry.getType();
-      if (type == ol.geom.GeometryType.POLYGON) {
-        var coords = /** @type {!ol.geom.Polygon} */ (geometry).getCoordinates();
-        if (coords && coords.length == 1) {
-          this['canEditGeometry'] = true;
+      // prepopulate the form from the provided area
+      var geometry = this.editArea.getGeometry();
+      if (geometry) {
+        geometry = geometry.clone();
+        geometry.toLonLat();
 
-          if (os.geo.isRectangular(coords[0], extent)) {
-            this['areaType'] = os.ui.query.area.AreaType.BBOX;
+        var extent = geometry.getExtent();
+        var type = geometry.getType();
+        if (type == GeometryType.POLYGON) {
+          var coords = /** @type {!Polygon} */ (geometry).getCoordinates();
+          if (coords && coords.length == 1) {
+            this['canEditGeometry'] = true;
+
+            if (isRectangular(coords[0], extent)) {
+              this['areaType'] = AreaType.BBOX;
+            } else {
+              this['areaType'] = AreaType.POLYGON;
+            }
+
+            // prepopulate bbox fields
+            this['corner1']['lon'] = this.toFixed(extent[0]);
+            this['corner1']['lat'] = this.toFixed(extent[1]);
+            this['corner2']['lon'] = this.toFixed(extent[2]);
+            this['corner2']['lat'] = this.toFixed(extent[3]);
+
+            // prepopulate polygon field
+            this['coordinates'] = coords[0].map(function(c) {
+              return this.toFixed(c[1]) + ' ' + this.toFixed(c[0]);
+            }, this).join(',');
           } else {
-            this['areaType'] = os.ui.query.area.AreaType.POLYGON;
+            this['canEditGeometry'] = false;
           }
-
-          // prepopulate bbox fields
-          this['corner1']['lon'] = this.toFixed(extent[0]);
-          this['corner1']['lat'] = this.toFixed(extent[1]);
-          this['corner2']['lon'] = this.toFixed(extent[2]);
-          this['corner2']['lat'] = this.toFixed(extent[3]);
-
-          // prepopulate polygon field
-          this['coordinates'] = coords[0].map(function(c) {
-            return this.toFixed(c[1]) + ' ' + this.toFixed(c[0]);
-          }, this).join(',');
         } else {
           this['canEditGeometry'] = false;
         }
+      }
+    }
+
+    this.updateArea();
+
+    $scope.$watch('ctrl.areaType', this.updateArea.bind(this));
+    $scope.$watch('ctrl.corner1.lon', this.updateArea.bind(this));
+    $scope.$watch('ctrl.corner1.lat', this.updateArea.bind(this));
+    $scope.$watch('ctrl.corner2.lon', this.updateArea.bind(this));
+    $scope.$watch('ctrl.corner2.lat', this.updateArea.bind(this));
+    $scope.$watch('ctrl.center.lon', this.updateArea.bind(this));
+    $scope.$watch('ctrl.center.lat', this.updateArea.bind(this));
+
+    Settings.getInstance().listen(interpolate.SettingsKey.INTERPOLATION, this.updateArea, false, this);
+
+    $scope.$on('$destroy', this.dispose.bind(this));
+
+    // trigger window auto height after the DOM is rendered
+    $timeout(function() {
+      $scope.$emit(WindowEventType.READY);
+    });
+  }
+
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+
+    Settings.getInstance().unlisten(interpolate.SettingsKey.INTERPOLATION, this.updateArea, false, this);
+
+    this.setArea(undefined);
+
+    dispose(this.keyHandler);
+    this.keyHandler = undefined;
+
+    dispose(this.updateDelay);
+    this.updateDelay = undefined;
+
+    this.element = undefined;
+    this.scope = undefined;
+  }
+
+  /**
+   * Fire the cancel callback and close the window.
+   *
+   * @export
+   */
+  cancel() {
+    if (this.scope && this.scope['cancel']) {
+      this.scope['cancel'](EventType.CANCEL);
+    }
+
+    this.close();
+  }
+
+  /**
+   * Fire the confirmation callback and close the window.
+   *
+   * @export
+   */
+  confirm() {
+    if (this.scope && this.scope['confirm'] && this['area']) {
+      var area = this.editArea;
+      if (area) {
+        // update the area passed to the controller
+        var clone = this['area'].getGeometry().clone();
+        area.setGeometry(clone);
+        area.set(interpolate.ORIGINAL_GEOM_FIELD, clone, true);
+        area.set('title', this['name'], true);
+
+        var interpolationMethod = this['area'].get(interpolate.METHOD_FIELD);
+        area.set(interpolate.METHOD_FIELD, interpolationMethod, true);
       } else {
-        this['canEditGeometry'] = false;
+        // new area
+        area = /** @type {!Feature} */ (this['area']);
+        area.set('title', this['name'], true);
+        area.unset(RecordField.DRAWING_LAYER_NODE, true);
       }
+
+      this.scope['confirm'](area);
+    }
+
+    this.close();
+  }
+
+  /**
+   * Close the window.
+   *
+   * @protected
+   */
+  close() {
+    if (this.element) {
+      close(this.element);
     }
   }
 
-  this.updateArea();
-
-  $scope.$watch('ctrl.areaType', this.updateArea.bind(this));
-  $scope.$watch('ctrl.corner1.lon', this.updateArea.bind(this));
-  $scope.$watch('ctrl.corner1.lat', this.updateArea.bind(this));
-  $scope.$watch('ctrl.corner2.lon', this.updateArea.bind(this));
-  $scope.$watch('ctrl.corner2.lat', this.updateArea.bind(this));
-  $scope.$watch('ctrl.center.lon', this.updateArea.bind(this));
-  $scope.$watch('ctrl.center.lat', this.updateArea.bind(this));
-
-  os.settings.listen(os.interpolate.SettingsKey.INTERPOLATION, this.updateArea, false, this);
-
-  $scope.$on('$destroy', this.dispose.bind(this));
-
-  // trigger window auto height after the DOM is rendered
-  $timeout(function() {
-    $scope.$emit(os.ui.WindowEventType.READY);
-  });
-};
-goog.inherits(os.ui.query.area.UserAreaCtrl, goog.Disposable);
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.area.UserAreaCtrl.prototype.disposeInternal = function() {
-  os.ui.query.area.UserAreaCtrl.base(this, 'disposeInternal');
-
-  os.settings.unlisten(os.interpolate.SettingsKey.INTERPOLATION, this.updateArea, false, this);
-
-  this.setArea(undefined);
-
-  goog.dispose(this.keyHandler);
-  this.keyHandler = undefined;
-
-  goog.dispose(this.updateDelay);
-  this.updateDelay = undefined;
-
-  this.element = undefined;
-  this.scope = undefined;
-};
-
-
-/**
- * Fire the cancel callback and close the window.
- *
- * @export
- */
-os.ui.query.area.UserAreaCtrl.prototype.cancel = function() {
-  if (this.scope && this.scope['cancel']) {
-    this.scope['cancel'](os.events.EventType.CANCEL);
+  /**
+   * Handles key events
+   *
+   * @param {KeyEvent} event
+   * @protected
+   */
+  handleKeyEvent(event) {
+    if (event.keyCode == KeyCodes.ESC) {
+      this.cancel();
+    }
   }
 
-  this.close();
-};
+  /**
+   * Get the user-facing name for an area type.
+   *
+   * @param {string} type The area type.
+   * @return {string} The user-facing name for the area type.
+   * @export
+   */
+  getAreaTypeName(type) {
+    var typeDetails = AreaTypeDetails[type];
+    if (typeDetails && typeDetails['name']) {
+      return typeDetails['name'];
+    }
 
+    return 'Unspecified Type';
+  }
 
-/**
- * Fire the confirmation callback and close the window.
- *
- * @export
- */
-os.ui.query.area.UserAreaCtrl.prototype.confirm = function() {
-  if (this.scope && this.scope['confirm'] && this['area']) {
-    var area = this.editArea;
+  /**
+   * Get the user-facing name for an area type.
+   *
+   * @param {string} type The area type.
+   * @return {string} The user-facing name for the area type.
+   * @export
+   */
+  getAreaTypeIcon(type) {
+    var typeDetails = AreaTypeDetails[type];
+    if (typeDetails && typeDetails['icon']) {
+      return typeDetails['icon'];
+    }
+
+    return 'fa-calculator';
+  }
+
+  /**
+   * Get the user-facing tooltip for an area type.
+   *
+   * @param {string} type The area type.
+   * @return {string} The user-facing tooltip for the area type.
+   * @export
+   */
+  getAreaTypeTooltip(type) {
+    var typeDetails = AreaTypeDetails[type];
+    if (typeDetails && typeDetails['tooltip']) {
+      return typeDetails['tooltip'];
+    }
+
+    return 'Enter coordinates to define an area.';
+  }
+
+  /**
+   * Set the current area for the form.
+   *
+   * @param {Feature|undefined} area The area.
+   * @protected
+   */
+  setArea(area) {
+    var mapContainer = getIMapContainer();
+
+    if (this['area']) {
+      // remove the existing preview
+      mapContainer.removeFeature(this['area']);
+    }
+
+    this['area'] = area;
+
     if (area) {
-      // update the area passed to the controller
-      var clone = this['area'].getGeometry().clone();
-      area.setGeometry(clone);
-      area.set(os.interpolate.ORIGINAL_GEOM_FIELD, clone, true);
-      area.set('title', this['name'], true);
-
-      var interpolationMethod = this['area'].get(os.interpolate.METHOD_FIELD);
-      area.set(os.interpolate.METHOD_FIELD, interpolationMethod, true);
-    } else {
-      // new area
-      area = /** @type {!ol.Feature} */ (this['area']);
-      area.set('title', this['name'], true);
-      area.unset(os.data.RecordField.DRAWING_LAYER_NODE, true);
-    }
-
-    this.scope['confirm'](area);
-  }
-
-  this.close();
-};
-
-
-/**
- * Close the window.
- *
- * @protected
- */
-os.ui.query.area.UserAreaCtrl.prototype.close = function() {
-  if (this.element) {
-    os.ui.window.close(this.element);
-  }
-};
-
-
-/**
- * Handles key events
- *
- * @param {goog.events.KeyEvent} event
- * @protected
- */
-os.ui.query.area.UserAreaCtrl.prototype.handleKeyEvent = function(event) {
-  if (event.keyCode == goog.events.KeyCodes.ESC) {
-    this.cancel();
-  }
-};
-
-
-/**
- * Get the user-facing name for an area type.
- *
- * @param {string} type The area type.
- * @return {string} The user-facing name for the area type.
- * @export
- */
-os.ui.query.area.UserAreaCtrl.prototype.getAreaTypeName = function(type) {
-  var typeDetails = os.ui.query.area.AreaTypeDetails[type];
-  if (typeDetails && typeDetails['name']) {
-    return typeDetails['name'];
-  }
-
-  return 'Unspecified Type';
-};
-
-
-/**
- * Get the user-facing name for an area type.
- *
- * @param {string} type The area type.
- * @return {string} The user-facing name for the area type.
- * @export
- */
-os.ui.query.area.UserAreaCtrl.prototype.getAreaTypeIcon = function(type) {
-  var typeDetails = os.ui.query.area.AreaTypeDetails[type];
-  if (typeDetails && typeDetails['icon']) {
-    return typeDetails['icon'];
-  }
-
-  return 'fa-calculator';
-};
-
-
-/**
- * Get the user-facing tooltip for an area type.
- *
- * @param {string} type The area type.
- * @return {string} The user-facing tooltip for the area type.
- * @export
- */
-os.ui.query.area.UserAreaCtrl.prototype.getAreaTypeTooltip = function(type) {
-  var typeDetails = os.ui.query.area.AreaTypeDetails[type];
-  if (typeDetails && typeDetails['tooltip']) {
-    return typeDetails['tooltip'];
-  }
-
-  return 'Enter coordinates to define an area.';
-};
-
-
-/**
- * Set the current area for the form.
- *
- * @param {ol.Feature|undefined} area The area.
- * @protected
- */
-os.ui.query.area.UserAreaCtrl.prototype.setArea = function(area) {
-  var mapContainer = os.map.instance.getIMapContainer();
-
-  if (this['area']) {
-    // remove the existing preview
-    mapContainer.removeFeature(this['area']);
-  }
-
-  this['area'] = area;
-
-  if (area) {
-    // display and fly to a preview of the area
-    var geometry = area.getGeometry();
-
-    if (geometry) {
-      mapContainer.addFeature(area, os.style.PREVIEW_CONFIG);
-
-      var extent = this['reverseBox'] ? geometry.getExtent() : os.extent.getFunctionalExtent(geometry);
-      mapContainer.flyToExtent(extent, 1.5);
-    }
-  }
-};
-
-
-/**
- * Update the name on the area.
- *
- * @export
- */
-os.ui.query.area.UserAreaCtrl.prototype.onLonFirstChange = function() {
-  this['coordOrder'] = this['lonFirst'] ? os.geo.PREFER_LON_FIRST : undefined;
-  this.updateArea();
-};
-
-
-/**
- * Update the area from the form.
- *
- * @export
- */
-os.ui.query.area.UserAreaCtrl.prototype.updateArea = function() {
-  if (this.updateDelay) {
-    this.updateDelay.start();
-  }
-};
-
-
-/**
- * Update the area from the form.
- *
- * @protected
- */
-os.ui.query.area.UserAreaCtrl.prototype.onUpdateDelay = function() {
-  if (!this.isDisposed()) {
-    var area;
-    var geometry;
-
-    // only create the area if the area form is valid
-    if (this.scope['areaForm']['$valid']) {
-      var conf = os.interpolate.getConfig();
-      var interpolationMethod = conf['method'];
-
-      switch (this['areaType']) {
-        case os.ui.query.area.AreaType.BBOX:
-          geometry = this.getBbox();
-          interpolationMethod = os.interpolate.Method.RHUMB;
-          break;
-        case os.ui.query.area.AreaType.CIRCLE:
-          geometry = this.getCircle();
-          interpolationMethod = os.interpolate.Method.NONE;
-          break;
-        case os.ui.query.area.AreaType.POLYGON:
-          geometry = this.getPolygon();
-          break;
-        default:
-          break;
-      }
+      // display and fly to a preview of the area
+      var geometry = area.getGeometry();
 
       if (geometry) {
-        area = new ol.Feature(geometry);
-        area.set(os.data.RecordField.DRAWING_LAYER_NODE, false, true);
-        area.set(os.interpolate.METHOD_FIELD, interpolationMethod, true);
-        area.set('title', this['name'], true);
-        area.setId(ol.getUid(geometry));
-        geometry.osTransform();
+        mapContainer.addFeature(area, PREVIEW_CONFIG);
+
+        var extent = this['reverseBox'] ? geometry.getExtent() : getFunctionalExtent(geometry);
+        mapContainer.flyToExtent(extent, 1.5);
       }
     }
-
-    this.setArea(area);
-    os.ui.apply(this.scope);
-  }
-};
-
-
-/**
- * Create an extend from bounding box coordinates.
- *
- * @return {Array<number>|undefined}
- * @protected
- */
-os.ui.query.area.UserAreaCtrl.prototype.getExtent = function() {
-  var extent;
-  var lon1 = this['corner1']['lon'];
-  var lat1 = this['corner1']['lat'];
-  var lon2 = this['corner2']['lon'];
-  var lat2 = this['corner2']['lat'];
-
-  if (lon1 != null && lat1 != null && lon2 != null && lat2 != null) {
-    // correct the order so our extent is [minX, minY, maxX, maxY]
-    extent = [
-      lon1 < lon2 ? lon1 : lon2,
-      lat1 < lat2 ? lat1 : lat2,
-      lon2 > lon1 ? lon2 : lon1,
-      lat2 > lat1 ? lat2 : lat1
-    ];
   }
 
-  return extent;
-};
+  /**
+   * Update the name on the area.
+   *
+   * @export
+   */
+  onLonFirstChange() {
+    this['coordOrder'] = this['lonFirst'] ? PREFER_LON_FIRST : undefined;
+    this.updateArea();
+  }
 
+  /**
+   * Update the area from the form.
+   *
+   * @export
+   */
+  updateArea() {
+    if (this.updateDelay) {
+      this.updateDelay.start();
+    }
+  }
 
-/**
- * Update the geometry from bounding box fields.
- *
- * @return {ol.geom.Geometry|undefined}
- * @protected
- */
-os.ui.query.area.UserAreaCtrl.prototype.getBbox = function() {
-  if (this['canEditGeometry'] || !this.scope['geometry']) {
-    var extent = this.getExtent();
-
-    if (extent && ol.extent.getArea(extent) > 1E-6) {
-      var minX = extent[0];
-      var minY = extent[1];
-      var maxX = extent[2];
-      var maxY = extent[3];
-      var maxXNormalizedRight = os.geo2.normalizeLongitude(maxX, minX, minX + 360);
-      var maxXNormalizedLeft = os.geo2.normalizeLongitude(maxX, minX, minX - 360);
+  /**
+   * Update the area from the form.
+   *
+   * @protected
+   */
+  onUpdateDelay() {
+    if (!this.isDisposed()) {
+      var area;
       var geometry;
 
-      if (this['reverseBox']) {
-        // create the geometry in the opposite direction from the extent
-        maxX = Math.abs(maxX - minX) < 180 ? maxXNormalizedLeft : maxXNormalizedRight;
+      // only create the area if the area form is valid
+      if (this.scope['areaForm']['$valid']) {
+        var conf = interpolate.getConfig();
+        var interpolationMethod = conf['method'];
 
-        // construct the polygon coordinates with the center points included to force wrapping the intended direction
-        var middleLon = (minX + maxX) / 2;
-        var coords = [
-          [minX, minY],
-          [minX, maxY],
-          [middleLon, maxY],
-          [maxX, maxY],
-          [maxX, minY],
-          [middleLon, minY],
-          [minX, minY]
-        ];
+        switch (this['areaType']) {
+          case AreaType.BBOX:
+            geometry = this.getBbox();
+            interpolationMethod = interpolate.Method.RHUMB;
+            break;
+          case AreaType.CIRCLE:
+            geometry = this.getCircle();
+            interpolationMethod = interpolate.Method.NONE;
+            break;
+          case AreaType.POLYGON:
+            geometry = this.getPolygon();
+            break;
+          default:
+            break;
+        }
 
-        geometry = new ol.geom.Polygon([coords]);
-        geometry.set(os.geom.GeometryField.NORMALIZED, true);
-
-        // perform the rhumb interpolation
-        os.interpolate.beginTempInterpolation(undefined, os.interpolate.Method.RHUMB);
-        os.interpolate.interpolateGeom(geometry);
-        os.interpolate.endTempInterpolation();
-      } else {
-        // create the shortest path geometry, but still normalize it in case it crosses the antimeridian
-        // we only want a true rectangular polygon here as interpolating it adds unnecessary complexity
-        maxX = Math.abs(maxX - minX) > 180 ? maxXNormalizedLeft : maxXNormalizedRight;
-        geometry = ol.geom.Polygon.fromExtent([minX, minY, maxX, maxY]);
+        if (geometry) {
+          area = new Feature(geometry);
+          area.set(RecordField.DRAWING_LAYER_NODE, false, true);
+          area.set(interpolate.METHOD_FIELD, interpolationMethod, true);
+          area.set('title', this['name'], true);
+          area.setId(getUid(geometry));
+          geometry.osTransform();
+        }
       }
+
+      this.setArea(area);
+      apply(this.scope);
     }
-  } else {
-    // editing was disabled, so send the original geometry
-    geometry = /** @type {ol.geom.Geometry|undefined} */ (this.scope['geometry']);
   }
 
-  return geometry;
-};
+  /**
+   * Create an extend from bounding box coordinates.
+   *
+   * @return {Array<number>|undefined}
+   * @protected
+   */
+  getExtent() {
+    var extent;
+    var lon1 = this['corner1']['lon'];
+    var lat1 = this['corner1']['lat'];
+    var lon2 = this['corner2']['lon'];
+    var lat2 = this['corner2']['lat'];
 
+    if (lon1 != null && lat1 != null && lon2 != null && lat2 != null) {
+      // correct the order so our extent is [minX, minY, maxX, maxY]
+      extent = [
+        lon1 < lon2 ? lon1 : lon2,
+        lat1 < lat2 ? lat1 : lat2,
+        lon2 > lon1 ? lon2 : lon1,
+        lat2 > lat1 ? lat2 : lat1
+      ];
+    }
 
-/**
- * Update the geometry from circle fields.
- *
- * @return {ol.geom.Geometry|undefined}
- * @protected
- */
-os.ui.query.area.UserAreaCtrl.prototype.getCircle = function() {
-  var center = [this['center']['lon'], this['center']['lat']];
-  var point = new ol.geom.Point(center);
-  var radius = os.math.convertUnits(this['radius'], os.math.Units.METERS, this['radiusUnits']);
-  return os.geo.jsts.buffer(point, radius, true);
-};
+    return extent;
+  }
 
+  /**
+   * Update the geometry from bounding box fields.
+   *
+   * @return {Geometry|undefined}
+   * @protected
+   */
+  getBbox() {
+    if (this['canEditGeometry'] || !this.scope['geometry']) {
+      var extent = this.getExtent();
 
-/**
- * Update the geometry from polygon fields.
- *
- * @return {ol.geom.Geometry|undefined}
- * @protected
- */
-os.ui.query.area.UserAreaCtrl.prototype.getPolygon = function() {
-  var geometry;
+      if (extent && getArea(extent) > 1E-6) {
+        var minX = extent[0];
+        var minY = extent[1];
+        var maxX = extent[2];
+        var maxY = extent[3];
+        var maxXNormalizedRight = normalizeLongitude(maxX, minX, minX + 360);
+        var maxXNormalizedLeft = normalizeLongitude(maxX, minX, minX - 360);
+        var geometry;
 
-  this['numInvalidCoords'] = 0;
+        if (this['reverseBox']) {
+          // create the geometry in the opposite direction from the extent
+          maxX = Math.abs(maxX - minX) < 180 ? maxXNormalizedLeft : maxXNormalizedRight;
 
-  if (this['coordinates']) {
-    var coords = this['coordinates'].split(',').map(function(str) {
-      try {
-        str = str.trim();
+          // construct the polygon coordinates with the center points included to force wrapping the intended direction
+          var middleLon = (minX + maxX) / 2;
+          var coords = [
+            [minX, minY],
+            [minX, maxY],
+            [middleLon, maxY],
+            [maxX, maxY],
+            [maxX, minY],
+            [middleLon, minY],
+            [minX, minY]
+          ];
 
-        var result = os.geo.parseLatLon(str, this['coordOrder']);
-        if (result && Math.abs(result.lat) > 90) {
+          geometry = new Polygon([coords]);
+          geometry.set(GeometryField.NORMALIZED, true);
+
+          // perform the rhumb interpolation
+          interpolate.beginTempInterpolation(undefined, interpolate.Method.RHUMB);
+          interpolate.interpolateGeom(geometry);
+          interpolate.endTempInterpolation();
+        } else {
+          // create the shortest path geometry, but still normalize it in case it crosses the antimeridian
+          // we only want a true rectangular polygon here as interpolating it adds unnecessary complexity
+          maxX = Math.abs(maxX - minX) > 180 ? maxXNormalizedLeft : maxXNormalizedRight;
+          geometry = Polygon.fromExtent([minX, minY, maxX, maxY]);
+        }
+      }
+    } else {
+      // editing was disabled, so send the original geometry
+      geometry = /** @type {Geometry|undefined} */ (this.scope['geometry']);
+    }
+
+    return geometry;
+  }
+
+  /**
+   * Update the geometry from circle fields.
+   *
+   * @return {Geometry|undefined}
+   * @protected
+   */
+  getCircle() {
+    var center = [this['center']['lon'], this['center']['lat']];
+    var point = new Point(center);
+    var radius = convertUnits(this['radius'], Units.METERS, this['radiusUnits']);
+    return buffer(point, radius, true);
+  }
+
+  /**
+   * Update the geometry from polygon fields.
+   *
+   * @return {Geometry|undefined}
+   * @protected
+   */
+  getPolygon() {
+    var geometry;
+
+    this['numInvalidCoords'] = 0;
+
+    if (this['coordinates']) {
+      var coords = this['coordinates'].split(',').map(function(str) {
+        try {
+          str = str.trim();
+
+          var result = parseLatLon(str, this['coordOrder']);
+          if (result && Math.abs(result.lat) > 90) {
+            result = undefined;
+          }
+
+          if (!result) {
+            result = osasm.toLonLat(str);
+          } else {
+            result = [result.lon, result.lat];
+          }
+        } catch (e) {
           result = undefined;
         }
 
         if (!result) {
-          result = osasm.toLonLat(str);
-        } else {
-          result = [result.lon, result.lat];
+          this['numInvalidCoords']++;
         }
-      } catch (e) {
-        result = undefined;
-      }
 
-      if (!result) {
-        this['numInvalidCoords']++;
-      }
+        return result;
+      }, this).filter(filterFalsey);
 
-      return result;
-    }, this).filter(os.fn.filterFalsey);
+      if (coords.length > 2) {
+        if (!equals(coords[0], coords[coords.length - 1])) {
+          coords.push(coords[0]);
+        }
 
-    if (coords.length > 2) {
-      if (!goog.array.equals(coords[0], coords[coords.length - 1])) {
-        coords.push(coords[0]);
-      }
+        if (coords.length > 3) {
+          geometry = new Polygon([coords]);
 
-      if (coords.length > 3) {
-        geometry = new ol.geom.Polygon([coords]);
-
-        // fix any topology errors in the polygon. if it still isn't valid (same geometry returned), drop it.
-        var validGeometry = os.geo.jsts.validate(geometry, true);
-        if (validGeometry !== geometry) {
-          geometry = validGeometry;
-        } else {
-          geometry = undefined;
+          // fix any topology errors in the polygon. if it still isn't valid (same geometry returned), drop it.
+          var validGeometry = validate(geometry, true);
+          if (validGeometry !== geometry) {
+            geometry = validGeometry;
+          } else {
+            geometry = undefined;
+          }
         }
       }
     }
+
+    return geometry;
   }
 
-  return geometry;
-};
+  /**
+   * Convert a coordinate to fixed decimal notation and strip trailing 0's. This prevents exponential notation, which
+   * will break the position parser.
+   *
+   * @param {number} coord The coordinate.
+   * @return {string} The coordinate, for display in the UI.
+   * @protected
+   */
+  toFixed(coord) {
+    return coord.toFixed(14).replace(/\.?0+$/, '');
+  }
+}
 
-
-/**
- * Convert a coordinate to fixed decimal notation and strip trailing 0's. This prevents exponential notation, which
- * will break the position parser.
- *
- * @param {number} coord The coordinate.
- * @return {string} The coordinate, for display in the UI.
- * @protected
- */
-os.ui.query.area.UserAreaCtrl.prototype.toFixed = function(coord) {
-  return coord.toFixed(14).replace(/\.?0+$/, '');
-};
-
-
-/**
- * Open a UI to get a user-defined area.
- *
- * @param {ol.Feature=} opt_area The area.
- * @param {Array<string>=} opt_areaTypes The allowed area types.
- * @param {boolean=} opt_modal If the window should be modal.
- * @return {!goog.Promise} A promise that resolves to the entered area, or is rejected if the UI is closed.
- */
-os.ui.query.area.getUserArea = function(opt_area, opt_areaTypes, opt_modal) {
-  return new goog.Promise(function(resolve, reject) {
-    var id = opt_area ? opt_area.getId() : undefined;
-    var title = 'Enter Area Coordinates';
-    var icon = 'fa-calculator';
-
-    if (id) {
-      title = os.ui.query.EDIT_WIN_LABEL;
-      icon = 'fa-pencil';
-    } else if (opt_area) {
-      title = 'Save Area';
-      icon = 'fa-globe';
-    }
-
-    var windowOptions = {
-      'x': 'center',
-      'y': 'center',
-      'label': title,
-      'icon': 'fa ' + icon,
-      'height': 'auto',
-      'width': 500,
-      'modal': opt_modal || false,
-      'show-close': true
-    };
-
-    var scopeOptions = {
-      'confirm': resolve,
-      'cancel': reject,
-      'area': opt_area,
-      'areaTypes': opt_areaTypes
-    };
-
-    os.ui.window.create(windowOptions, '<userarea></userarea>', undefined, undefined, undefined,
-        scopeOptions);
-  });
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
