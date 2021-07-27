@@ -16,7 +16,7 @@ goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.WindowEventType');
 goog.require('os.ui.events.UIEvent');
-goog.require('os.ui.onboarding.contextOnboardingDirective');
+goog.require('os.ui.onboarding.ContextOnboardingUI');
 goog.require('os.ui.window');
 goog.require('os.ui.window.HeaderBtnConfig');
 goog.require('os.ui.windowCommonElements');
