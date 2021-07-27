@@ -14,7 +14,7 @@ goog.require('os.fn');
 goog.require('os.interaction.Modify');
 goog.require('os.layer.ILayer');
 goog.require('os.query.BaseAreaManager');
-goog.require('os.query.ui.mergeAreasDirective');
+goog.require('os.query.ui.MergeAreasUI');
 goog.require('os.source.IModifiableSource');
 goog.require('os.ui.ex.AreaExportUI');
 goog.require('os.ui.feature.launchMultiFeatureInfo');
@@ -766,7 +766,8 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
     }
 
     if (event.type === os.action.EventType.MERGE_AREAS) {
-      os.query.BaseAreaManager.merge(/** @type {!Array<!ol.Feature>} */ (features), 'mergeareas');
+      os.query.BaseAreaManager.merge(/** @type {!Array<!ol.Feature>} */ (features),
+          os.query.ui.MergeAreasUI.directiveTag);
     } else if (event.type === os.action.EventType.EXPORT) {
       // I don't really have any idea why this one type doesn't operate with the menu properly without these
       event.preventDefault();
