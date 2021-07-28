@@ -2,27 +2,44 @@ goog.module('os.ui.text.TuiEditorMarkdownIt');
 goog.module.declareLegacyNamespace();
 
 /**
- * @type {Markdownit}
+ * @type {?Markdownit}
  */
-const TuiEditorMarkdownIt = markdownit({
-  'html': true,
-  'breaks': true,
-  'quotes': '“”‘’',
-  'langPrefix': 'lang-'
-});
+let TuiEditorMarkdownIt = null;
 
 /**
- *
- * ATTENTION: This is not our code. this is tui-editors addtion to markdownit.
- * This gives us the ability to lazy load the editor, but include the viewer as light as possible
- * If we dont lazy load the editor / viewer, we no longer need this
- *
- * DO NOT CHANGE YOURSELF
- *
- * COPY AND PASTE FROM node_modules/tui-editor/dist/tui-editor-Editor.js
- * Future checkout https://github.com/nhn/tui.editor/blob/master/src/js/markdownItPlugins/markdownitTaskPlugin.js
+ * Get the Markdownit instance.
+ * @return {?Markdownit}
  */
-(function() {
+const getMarkdownIt = () => TuiEditorMarkdownIt;
+
+/**
+ * Initialize the Markdownit instance, if not already initialized.
+ */
+const initialize = () => {
+  // Do not initialize if the vendor library has not been loaded, or initialization has already been done.
+  if (window.markdownit == null || TuiEditorMarkdownIt != null) {
+    return;
+  }
+
+  TuiEditorMarkdownIt = markdownit({
+    'html': true,
+    'breaks': true,
+    'quotes': '“”‘’',
+    'langPrefix': 'lang-'
+  });
+
+  /**
+   *
+   * ATTENTION: This is not our code. this is tui-editors addtion to markdownit.
+   * This gives us the ability to lazy load the editor, but include the viewer as light as possible
+   * If we dont lazy load the editor / viewer, we no longer need this
+   *
+   * DO NOT CHANGE YOURSELF
+   *
+   * COPY AND PASTE FROM node_modules/tui-editor/dist/tui-editor-Editor.js
+   * Future checkout https://github.com/nhn/tui.editor/blob/master/src/js/markdownItPlugins/markdownitTaskPlugin.js
+   */
+
   /**
    * Remove task format text for rendering
    * @param {Object} token Token object
@@ -112,6 +129,12 @@ const TuiEditorMarkdownIt = markdownit({
   };
 
   TuiEditorMarkdownIt.core.ruler.after('inline', 'tui-task-list', tasklistrule);
-})();
+};
 
-exports = TuiEditorMarkdownIt;
+// Attempt initialization on module load.
+initialize();
+
+exports = {
+  initialize,
+  getMarkdownIt
+};

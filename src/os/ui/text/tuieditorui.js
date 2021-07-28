@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const Timer = goog.require('goog.Timer');
+const {assert} = goog.require('goog.asserts');
 const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
 const {safeLoad} = goog.require('goog.net.jsloader');
 const {normalizeSpaces, normalizeWhitespace} = goog.require('goog.string');
@@ -16,7 +17,7 @@ const {apply} = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const TuiEditor = goog.require('os.ui.text.TuiEditor');
 const TuiEditorLang = goog.require('os.ui.text.TuiEditorLang');
-const TuiEditorMarkdownIt = goog.require('os.ui.text.TuiEditorMarkdownIt');
+const {getMarkdownIt} = goog.require('os.ui.text.TuiEditorMarkdownIt');
 
 
 /**
@@ -516,7 +517,9 @@ class Controller {
  * @return {string} - markdown parsed to html
  */
 TuiEditor.render = function(opt_markdown) {
-  return opt_markdown ? TuiEditorMarkdownIt.render(opt_markdown) : '';
+  const markdownIt = getMarkdownIt();
+  assert(markdownIt != null, 'markdownit is not available!');
+  return opt_markdown ? markdownIt.render(opt_markdown) : '';
 };
 
 
