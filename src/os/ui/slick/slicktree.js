@@ -322,8 +322,8 @@ class Controller extends SlickGridCtrl {
    * @protected
    */
   isMultiSelect() {
-    // Multi select should default to being disabled, so only enabled when set to the string 'true'.
-    return this.scope != null && this['multiSelect'] == 'true';
+    // Enable multi select if set to the boolean true or string literal "true".
+    return this.scope != null && (this.scope['multiSelect'] === true || this.scope['multiSelect'] === 'true');
   }
 
   /**
