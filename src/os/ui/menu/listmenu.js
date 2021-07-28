@@ -10,6 +10,7 @@ goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.menu.feature');
+goog.require('os.ui.slick.SlickGridUI');
 goog.require('os.ui.window.ConfirmColorUI');
 
 
@@ -221,7 +222,7 @@ os.ui.menu.list.onExport = function(event) {
  * @param {os.ui.menu.MenuEvent} event The menu event.
  */
 os.ui.menu.list.onSortSelected = function(event) {
-  var target = /** @type {os.ui.slick.SlickGridCtrl} */ (event.target);
+  var target = /** @type {os.ui.slick.SlickGridUI.Controller} */ (event.target);
   if (target && target.onSortBySelectionChange) {
     target.onSortBySelectionChange();
   }

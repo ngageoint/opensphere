@@ -1,7 +1,7 @@
 goog.module('os.ui.filter.ui.FilterTreeUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.slick.slickTreeDirective');
+goog.require('os.ui.slick.SlickTreeUI');
 
 const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
 const {apply} = goog.require('os.ui');

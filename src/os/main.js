@@ -23,7 +23,7 @@ goog.require('os.ui.metrics.MetricsContainerUI');
 goog.require('os.ui.modal.AboutModalUI');
 goog.require('os.ui.savedWindowDirective');
 goog.require('os.ui.serversDirective');
-goog.require('os.ui.slick.slickTreeDirective');
+goog.require('os.ui.slick.SlickTreeUI');
 goog.require('os.ui.triStateCheckboxDirective');
 
 

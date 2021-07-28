@@ -2,9 +2,8 @@ goog.module('os.ui.filter.BasicFilterTreeUI');
 goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
-const SlickTreeCtrl = goog.require('os.ui.slick.SlickTreeCtrl');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
-const slickTreeDirective = goog.require('os.ui.slick.slickTreeDirective');
+const {Controller: SlickTreeCtrl, directive: slickTreeDirective} = goog.require('os.ui.slick.SlickTreeUI');
 
 
 /**

@@ -2,7 +2,7 @@ goog.module('os.ui.query.BaseCombinatorUI');
 goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.query.AddFilterUI');
-goog.require('os.ui.slick.slickTreeDirective');
+goog.require('os.ui.slick.SlickTreeUI');
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');

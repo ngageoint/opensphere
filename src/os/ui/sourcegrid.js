@@ -20,7 +20,7 @@ const {OFFSET_KEY} = goog.require('os.time');
 const Module = goog.require('os.ui.Module');
 const ColumnEventType = goog.require('os.ui.slick.ColumnEventType');
 const ColumnMenuGroup = goog.require('os.ui.slick.ColumnMenuGroup');
-const SlickGridCtrl = goog.require('os.ui.slick.SlickGridCtrl');
+const {Controller: SlickGridCtrl} = goog.require('os.ui.slick.SlickGridUI');
 const {COLOR_ID, autoSizeAndSortColumns, color: colorColumn} = goog.require('os.ui.slick.column');
 const formatter = goog.require('os.ui.slick.formatter');
 

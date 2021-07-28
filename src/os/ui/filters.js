@@ -2,7 +2,7 @@ goog.module('os.ui.FiltersUI');
 goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.AddFilterUI');
-goog.require('os.ui.slick.slickTreeDirective');
+goog.require('os.ui.slick.SlickTreeUI');
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {ROOT} = goog.require('os');

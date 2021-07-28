@@ -8,9 +8,8 @@ const {mapLayersToIds} = goog.require('os.layer');
 const FolderManager = goog.require('os.layer.FolderManager');
 const LayerGroup = goog.require('os.layer.LayerGroup');
 const Module = goog.require('os.ui.Module');
-const SlickTreeCtrl = goog.require('os.ui.slick.SlickTreeCtrl');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
-const slickTreeDirective = goog.require('os.ui.slick.slickTreeDirective');
+const {Controller: SlickTreeCtrl, directive: slickTreeDirective} = goog.require('os.ui.slick.SlickTreeUI');
 
 const ITreeNode = goog.requireType('os.structs.ITreeNode');
 

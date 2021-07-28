@@ -3,8 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const {directiveTag: mappingExpressionUi} = goog.require('os.ui.column.mapping.MappingExpressionUI');
-const SlickTreeCtrl = goog.require('os.ui.slick.SlickTreeCtrl');
-const slickTreeDirective = goog.require('os.ui.slick.slickTreeDirective');
+const {Controller: SlickTreeCtrl, directive: slickTreeDirective} = goog.require('os.ui.slick.SlickTreeUI');
 
 
 /**
