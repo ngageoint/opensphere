@@ -1,21 +1,24 @@
-goog.require('os.ui.slick.SlickTreeCtrl');
 goog.require('os.ui.slick.SlickTreeNode');
+goog.require('os.ui.slick.SlickTreeUI');
 
-describe('os.ui.slick.SlickTreeCtrl', function() {
+describe('os.ui.slick.SlickTreeUI', function() {
+  const SlickTreeNode = goog.module.get('os.ui.slick.SlickTreeNode');
+  const {Controller} = goog.module.get('os.ui.slick.SlickTreeUI');
+
   it('should flatten trees properly', function() {
-    var root = new os.ui.slick.SlickTreeNode();
+    var root = new SlickTreeNode();
     root.setId('root');
-    var folder1 = new os.ui.slick.SlickTreeNode();
+    var folder1 = new SlickTreeNode();
     folder1.setId('folder1');
-    var folder2 = new os.ui.slick.SlickTreeNode();
+    var folder2 = new SlickTreeNode();
     folder2.setId('folder2');
-    var leaf1A = new os.ui.slick.SlickTreeNode();
+    var leaf1A = new SlickTreeNode();
     leaf1A.setId('leaf1A');
-    var leaf1B = new os.ui.slick.SlickTreeNode();
+    var leaf1B = new SlickTreeNode();
     leaf1B.setId('leaf1B');
-    var leaf2A = new os.ui.slick.SlickTreeNode();
+    var leaf2A = new SlickTreeNode();
     leaf2A.setId('leaf2A');
-    var leaf2B = new os.ui.slick.SlickTreeNode();
+    var leaf2B = new SlickTreeNode();
     leaf2B.setId('leaf2B');
 
     folder1.setChildren([leaf1A, leaf1B]);
@@ -23,7 +26,7 @@ describe('os.ui.slick.SlickTreeCtrl', function() {
     root.setChildren([folder1, folder2]);
 
     var result = [];
-    os.ui.slick.SlickTreeCtrl.flatten_([root], result);
+    Controller.flatten_([root], result);
 
     expect(result.indexOf(root)).toBe(0);
     expect(root.depth).toBe(0);
