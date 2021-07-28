@@ -1,40 +1,45 @@
-goog.provide('os.ui.slick.SlickColumnActionModel');
-goog.require('os.ui.columnactions.IColumnActionModel');
+goog.module('os.ui.slick.SlickColumnActionModel');
+goog.module.declareLegacyNamespace();
 
+const IColumnActionModel = goog.requireType('os.ui.columnactions.IColumnActionModel');
 
 
 /**
- * @param {Object.<string, *>} columnDef
- * @param {string=} opt_field The field, used for cases where the column definition should be overridden
- * @implements {os.ui.columnactions.IColumnActionModel}
- * @constructor
+ * @implements {IColumnActionModel}
  */
-os.ui.slick.SlickColumnActionModel = function(columnDef, opt_field) {
+class SlickColumnActionModel {
   /**
-   * @type {Object<string, *>}
-   * @private
+   * Constructor.
+   * @param {Object<string, *>} columnDef
+   * @param {string=} opt_field The field, used for cases where the column definition should be overridden
    */
-  this.columnDef_ = columnDef;
+  constructor(columnDef, opt_field) {
+    /**
+     * @type {Object<string, *>}
+     * @private
+     */
+    this.columnDef_ = columnDef;
+
+    /**
+     * @type {string|undefined}
+     * @private
+     */
+    this.field_ = opt_field;
+  }
 
   /**
-   * @type {string|undefined}
-   * @private
+   * @inheritDoc
    */
-  this.field_ = opt_field;
-};
+  getTitle() {
+    return this.field_ || /** @type {string} */ (this.columnDef_['name']);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getDataField() {
+    return this.field_ || /** @type {string} */ (this.columnDef_['field']);
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.ui.slick.SlickColumnActionModel.prototype.getTitle = function() {
-  return this.field_ || /** @type {string} */ (this.columnDef_['name']);
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.slick.SlickColumnActionModel.prototype.getDataField = function() {
-  return this.field_ || /** @type {string} */ (this.columnDef_['field']);
-};
+exports = SlickColumnActionModel;

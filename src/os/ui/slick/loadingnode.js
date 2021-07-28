@@ -1,66 +1,65 @@
-goog.provide('os.ui.slick.LoadingNode');
+goog.module('os.ui.slick.LoadingNode');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.ui.slick.SlickTreeNode');
-
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 
 /**
  * Tree node implementing loading behavior.
- *
- * @extends {os.ui.slick.SlickTreeNode}
- * @constructor
  */
-os.ui.slick.LoadingNode = function() {
-  os.ui.slick.LoadingNode.base(this, 'constructor');
+class LoadingNode extends SlickTreeNode {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.loading_ = false;
+  }
 
   /**
-   * @type {boolean}
-   * @private
+   * Whether or not the node is loading
+   *
+   * @return {boolean}
+   * @export
    */
-  this.loading_ = false;
-};
-goog.inherits(os.ui.slick.LoadingNode, os.ui.slick.SlickTreeNode);
-
-
-/**
- * Whether or not the node is loading
- *
- * @return {boolean}
- * @export
- */
-os.ui.slick.LoadingNode.prototype.isLoading = function() {
-  return this.loading_;
-};
-
-
-/**
- * Set whether or not the node is loading
- *
- * @param {boolean} value
- * @export
- */
-os.ui.slick.LoadingNode.prototype.setLoading = function(value) {
-  if (value != this.loading_) {
-    this.loading_ = value;
-    this.dispatchEvent(new os.events.PropertyChangeEvent('loading', value, !value));
+  isLoading() {
+    return this.loading_;
   }
-};
 
+  /**
+   * Set whether or not the node is loading
+   *
+   * @param {boolean} value
+   * @export
+   */
+  setLoading(value) {
+    if (value != this.loading_) {
+      this.loading_ = value;
+      this.dispatchEvent(new PropertyChangeEvent('loading', value, !value));
+    }
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.slick.LoadingNode.prototype.getCheckboxDisabled = function() {
-  return this.isLoading() || null;
-};
+  /**
+   * @inheritDoc
+   */
+  getCheckboxDisabled() {
+    return this.isLoading() || null;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  updateFrom(other) {
+    var node = /** @type {LoadingNode} */ (other);
+    this.setLoading(node.isLoading());
+    super.updateFrom(other);
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.ui.slick.LoadingNode.prototype.updateFrom = function(other) {
-  var node = /** @type {os.ui.slick.LoadingNode} */ (other);
-  this.setLoading(node.isLoading());
-  os.ui.slick.LoadingNode.base(this, 'updateFrom', other);
-};
+exports = LoadingNode;

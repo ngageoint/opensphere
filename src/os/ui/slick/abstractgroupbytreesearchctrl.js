@@ -1,206 +1,211 @@
-goog.provide('os.ui.slick.AbstractGroupByTreeSearchCtrl');
+goog.module('os.ui.slick.AbstractGroupByTreeSearchCtrl');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
-goog.require('goog.async.Delay');
-goog.require('os.config.Settings');
-goog.require('os.ui');
+const Disposable = goog.require('goog.Disposable');
+const Delay = goog.require('goog.async.Delay');
+const dispose = goog.require('goog.dispose');
+const Settings = goog.require('os.config.Settings');
+const ui = goog.require('os.ui');
 
-goog.requireType('os.data.groupby.INodeGroupBy');
-
+const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
+const ActionManager = goog.requireType('os.ui.action.ActionManager');
+const TreeSearch = goog.requireType('os.ui.slick.TreeSearch');
 
 
 /**
  * Controller for Layers window
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {number} searchDelay how long to delay the search
- * @extends {goog.Disposable}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.slick.AbstractGroupByTreeSearchCtrl = function($scope, $element, searchDelay) {
+class Controller extends Disposable {
   /**
-   * @type {?angular.JQLite}
-   * @protected
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {number} searchDelay how long to delay the search
+   * @ngInject
    */
-  this.element = $element;
+  constructor($scope, $element, searchDelay) {
+    super();
 
-  /**
-   * @type {?angular.Scope}
-   * @protected
-   */
-  this.scope = $scope;
+    /**
+     * @type {?angular.JQLite}
+     * @protected
+     */
+    this.element = $element;
 
-  /**
-   * @type {goog.async.Delay}
-   * @protected
-   */
-  this.searchDelay = new goog.async.Delay(this.onSearch, searchDelay, this);
+    /**
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
 
-  /**
-   * The title to use for storing values
-   * @type {string}
-   * @protected
-   */
-  this.title = '';
+    /**
+     * @type {Delay}
+     * @protected
+     */
+    this.searchDelay = new Delay(this.onSearch, searchDelay, this);
 
-  /**
-   * The search term
-   * @type {string}
-   */
-  this.scope['term'] = '';
+    /**
+     * The title to use for storing values
+     * @type {string}
+     * @protected
+     */
+    this.title = '';
 
-  /**
-   * The selected group by view
-   * @type {os.data.groupby.INodeGroupBy}
-   */
-  this.scope['view'] = null;
+    /**
+     * The search term
+     * @type {string}
+     */
+    this.scope['term'] = '';
 
-  /**
-   * If the group by is enabled
-   * @type {boolean}
-   */
-  this.scope['viewEnabled'] = true;
+    /**
+     * The selected group by view
+     * @type {INodeGroupBy}
+     */
+    this.scope['view'] = null;
 
-  /**
-   * The group by views
-   * @type {Array<os.data.groupby.INodeGroupBy>}
-   */
-  this.scope['views'] = [];
+    /**
+     * If the group by is enabled
+     * @type {boolean}
+     */
+    this.scope['viewEnabled'] = true;
 
-  /**
-   * Default View
-   * @type {string}
-   * @protected
-   */
-  this.viewDefault = 'None';
+    /**
+     * The group by views
+     * @type {Array<INodeGroupBy>}
+     */
+    this.scope['views'] = [];
 
-  /**
-   * The selected tree rows
-   * @type {Array}
-   */
-  this.scope['selected'] = null;
+    /**
+     * Default View
+     * @type {string}
+     * @protected
+     */
+    this.viewDefault = 'None';
 
-  /**
-   * @type {?os.ui.slick.TreeSearch}
-   * @protected
-   */
-  this.treeSearch = null;
+    /**
+     * The selected tree rows
+     * @type {Array}
+     */
+    this.scope['selected'] = null;
 
-  /**
-   * @type {os.ui.action.ActionManager}
-   */
-  this.scope['contextMenu'] = null;
+    /**
+     * @type {?TreeSearch}
+     * @protected
+     */
+    this.treeSearch = null;
 
-  /**
-   * @type {string}
-   * @protected
-   */
-  this.prefix = 'groupBy';
+    /**
+     * @type {ActionManager}
+     */
+    this.scope['contextMenu'] = null;
 
-  $scope.$on('$destroy', this.dispose.bind(this));
-  $scope.$on('search', this.onSearch.bind(this));
-  $scope.$on('collapseChange', this.save.bind(this));
-};
-goog.inherits(os.ui.slick.AbstractGroupByTreeSearchCtrl, goog.Disposable);
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.prefix = 'groupBy';
 
-
-/**
- * @inheritDoc
- */
-os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.disposeInternal = function() {
-  this.save();
-
-  goog.dispose(this.searchDelay);
-  this.searchDelay = null;
-
-  goog.dispose(this.treeSearch);
-  this.treeSearch = null;
-
-  this.scope = null;
-  this.element = null;
-};
-
-
-/**
- * @protected
- */
-os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.save = function() {
-  os.settings.set([this.prefix, this.title, 'openIds'], this.treeSearch.getOpenIds());
-};
-
-
-/**
- * Init defaults
- */
-os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.init = function() {
-  // The defaults here are from the old location of the settings, some of which were conflicting. The new
-  // prefix allows us to be more specific. The old locations can be removed after a couple of releases.
-  var openIds = /** @type {Object<string, boolean>} */ (os.settings.get([this.prefix, this.title, 'openIds'],
-      os.settings.get([this.title, 'openIds'], {})));
-
-  this.treeSearch.setOpenIds(openIds);
-
-  var viewKey = /** @type {string} */ (os.settings.get([this.prefix, this.title, 'groupBy'],
-      os.settings.get([this.title, 'groupBy'], this.viewDefault)));
-  var view = this.scope['views'][viewKey] || this.scope['views'][this.viewDefault];
-
-  this.scope['view'] = view;
-
-  // The "Folder" view was replaced by the toggle checkbox, so if that was selected disable Group By.
-  var defaultViewEnabled = viewKey !== 'Folder';
-  var viewEnabled = /** @type {boolean} */ (os.settings.get([this.prefix, this.title, 'groupByEnabled'],
-      defaultViewEnabled));
-  this.scope['viewEnabled'] = viewEnabled;
-
-  this.search();
-};
-
-
-/**
- * Starts a search
- *
- * @export
- */
-os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.search = function() {
-  this.searchDelay.start();
-};
-
-
-/**
- * Clears the search
- *
- * @export
- */
-os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.clearSearch = function() {
-  this.scope['term'] = '';
-  this.search();
-  this.element.find('.search').focus();
-};
-
-
-/**
- * On search
- *
- * @protected
- */
-os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.onSearch = function() {
-  var t = this.scope['term'];
-
-  var viewEnabled = !!this.scope['viewEnabled'];
-  var view = viewEnabled ? this.scope['view'] : null;
-
-  for (var key in this.scope['views']) {
-    if (this.scope['views'][key] === view) {
-      os.settings.set([this.prefix, this.title, 'groupBy'], key);
-      break;
-    }
+    $scope.$on('$destroy', this.dispose.bind(this));
+    $scope.$on('search', this.onSearch.bind(this));
+    $scope.$on('collapseChange', this.save.bind(this));
   }
 
-  os.settings.set([this.prefix, this.title, 'groupByEnabled'], viewEnabled);
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    this.save();
 
-  // do the search
-  this.treeSearch.beginSearch(t, view == -1 ? null : view);
-  os.ui.apply(this.scope);
-};
+    dispose(this.searchDelay);
+    this.searchDelay = null;
+
+    dispose(this.treeSearch);
+    this.treeSearch = null;
+
+    this.scope = null;
+    this.element = null;
+  }
+
+  /**
+   * @protected
+   */
+  save() {
+    Settings.getInstance().set([this.prefix, this.title, 'openIds'], this.treeSearch.getOpenIds());
+  }
+
+  /**
+   * Init defaults
+   */
+  init() {
+    const settings = Settings.getInstance();
+
+    // The defaults here are from the old location of the settings, some of which were conflicting. The new
+    // prefix allows us to be more specific. The old locations can be removed after a couple of releases.
+    var openIds = /** @type {Object<string, boolean>} */ (settings.get([this.prefix, this.title, 'openIds'],
+        settings.get([this.title, 'openIds'], {})));
+
+    this.treeSearch.setOpenIds(openIds);
+
+    var viewKey = /** @type {string} */ (settings.get([this.prefix, this.title, 'groupBy'],
+        settings.get([this.title, 'groupBy'], this.viewDefault)));
+    var view = this.scope['views'][viewKey] || this.scope['views'][this.viewDefault];
+
+    this.scope['view'] = view;
+
+    // The "Folder" view was replaced by the toggle checkbox, so if that was selected disable Group By.
+    var defaultViewEnabled = viewKey !== 'Folder';
+    var viewEnabled = /** @type {boolean} */ (settings.get([this.prefix, this.title, 'groupByEnabled'],
+        defaultViewEnabled));
+    this.scope['viewEnabled'] = viewEnabled;
+
+    this.search();
+  }
+
+  /**
+   * Starts a search
+   *
+   * @export
+   */
+  search() {
+    this.searchDelay.start();
+  }
+
+  /**
+   * Clears the search
+   *
+   * @export
+   */
+  clearSearch() {
+    this.scope['term'] = '';
+    this.search();
+    this.element.find('.search').focus();
+  }
+
+  /**
+   * On search
+   *
+   * @protected
+   */
+  onSearch() {
+    var t = this.scope['term'];
+
+    var viewEnabled = !!this.scope['viewEnabled'];
+    var view = viewEnabled ? this.scope['view'] : null;
+
+    for (var key in this.scope['views']) {
+      if (this.scope['views'][key] === view) {
+        Settings.getInstance().set([this.prefix, this.title, 'groupBy'], key);
+        break;
+      }
+    }
+
+    Settings.getInstance().set([this.prefix, this.title, 'groupByEnabled'], viewEnabled);
+
+    // do the search
+    this.treeSearch.beginSearch(t, view == -1 ? null : view);
+    ui.apply(this.scope);
+  }
+}
+
+exports = Controller;
