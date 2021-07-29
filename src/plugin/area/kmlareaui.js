@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.im.MergeAreaOptionUI');
 
+const googString = goog.require('goog.string');
 const {ROOT} = goog.require('os');
 const EventType = goog.require('os.events.EventType');
 const Importer = goog.require('os.im.Importer');
@@ -88,6 +89,12 @@ class Controller extends AreaImportCtrl {
   onImportComplete_(event) {
     var importer = /** @type {Importer} */ (event.target);
     var features = /** @type {!Array<ol.Feature>} */ (importer.getData() || []);
+
+    // give each feature a unique ID so it can be imported again
+    features.forEach((feature) => {
+      feature.setId(googString.getRandomString());
+    });
+
     importer.dispose();
 
     this.processFeatures(features);
