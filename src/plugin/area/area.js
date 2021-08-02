@@ -1,6 +1,7 @@
 goog.module('plugin.area');
 goog.module.declareLegacyNamespace();
 
+const googString = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
 const olArray = goog.require('ol.array');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
@@ -23,6 +24,11 @@ const processFeatures = function(features, config) {
 
   // filter only valid features
   features = areaManager.filterFeatures(features);
+
+  // give each feature a unique ID so it can be imported again
+  features.forEach((feature) => {
+    feature.setId(googString.getRandomString());
+  });
 
   if (features && features.length > 0) {
     var mappings = query.createMappingsFromConfig(config);
