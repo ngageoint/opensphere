@@ -1,8 +1,9 @@
-goog.provide('os.ui.icon.IconPaletteCtrl');
-goog.provide('os.ui.icon.iconPaletteDirective');
+goog.module('os.ui.icon.IconPaletteUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-
+const {ROOT} = goog.require('os');
+const {apply} = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -10,103 +11,102 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.icon.iconPaletteDirective = function() {
-  return {
-    restrict: 'E',
-    scope: {
-      'selected': '=',
-      'acceptCallback': '=',
-      'iconSet': '=',
-      'iconSrc': '=?'
-    },
-    replace: true,
-    templateUrl: os.ROOT + 'views/icon/iconpalette.html',
-    controller: os.ui.icon.IconPaletteCtrl,
-    controllerAs: 'palette'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  scope: {
+    'selected': '=',
+    'acceptCallback': '=',
+    'iconSet': '=',
+    'iconSrc': '=?'
+  },
+  replace: true,
+  templateUrl: ROOT + 'views/icon/iconpalette.html',
+  controller: Controller,
+  controllerAs: 'palette'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'iconpalette';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('iconpalette', [os.ui.icon.iconPaletteDirective]);
-
-
-/**
- * Base Angular event types for the icon palette.
- * @type {Object}
- */
-os.ui.icon.IconPaletteEventType = {
-  SELECTED: 'palette.selected'
-};
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller function for the iconpalette directive
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.icon.IconPaletteCtrl = function($scope) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  var ics = this.scope_['iconSet'] ? this.scope_['iconSet'] : [];
-  if (this.scope_['selected'] && ics) { // if a default icon is provided, pre-select it
-    var con = /** @type {osx.icon.Icon} */ (this.scope_['selected']);
-    if (con && con['path']) {
-      for (var i = 0; i < ics.length; i++) {
-        if (ics[i]['path'] == con['path']) {
-          this.pick(ics[i]['path'], ics[i]['title'], ics[i]['options']);
-          break;
+    var ics = this.scope_['iconSet'] ? this.scope_['iconSet'] : [];
+    if (this.scope_['selected'] && ics) { // if a default icon is provided, pre-select it
+      var con = /** @type {osx.icon.Icon} */ (this.scope_['selected']);
+      if (con && con['path']) {
+        for (var i = 0; i < ics.length; i++) {
+          if (ics[i]['path'] == con['path']) {
+            this.pick(ics[i]['path'], ics[i]['title'], ics[i]['options']);
+            break;
+          }
         }
       }
     }
+
+    $scope.$on('$destroy', this.destroy_.bind(this));
   }
 
-  $scope.$on('$destroy', this.destroy_.bind(this));
-};
+  /**
+   * Clean up.
+   *
+   * @private
+   */
+  destroy_() {
+    this.scope_ = null;
+  }
 
+  /**
+   * Get the icon src to use in the Image element.
+   *
+   * @param {string} src The icon src.
+   * @return {string} The adjusted icon source.
+   * @export
+   */
+  getIconSrc(src) {
+    return this.scope_ && this.scope_['iconSrc'] ? this.scope_['iconSrc'](src) : src;
+  }
 
-/**
- * Clean up.
- *
- * @private
- */
-os.ui.icon.IconPaletteCtrl.prototype.destroy_ = function() {
-  this.scope_ = null;
-};
+  /**
+   * Notify parent scope that a icon was chosen.
+   *
+   * @param {string} iconPath The selected iconPath
+   * @param {string} iconTitle The selected iconTitle
+   * @param {Object|undefined} options The selected options
+   * @export
+   */
+  pick(iconPath, iconTitle, options) {
+    this.scope_['selected']['path'] = iconPath;
+    this.scope_['selected']['title'] = iconTitle;
+    this.scope_['selected']['options'] = options;
+    apply(this.scope_);
+  }
+}
 
-
-/**
- * Get the icon src to use in the Image element.
- *
- * @param {string} src The icon src.
- * @return {string} The adjusted icon source.
- * @export
- */
-os.ui.icon.IconPaletteCtrl.prototype.getIconSrc = function(src) {
-  return this.scope_ && this.scope_['iconSrc'] ? this.scope_['iconSrc'](src) : src;
-};
-
-
-/**
- * Notify parent scope that a icon was chosen.
- *
- * @param {string} iconPath The selected iconPath
- * @param {string} iconTitle The selected iconTitle
- * @param {Object|undefined} options The selected options
- * @export
- */
-os.ui.icon.IconPaletteCtrl.prototype.pick = function(iconPath, iconTitle, options) {
-  this.scope_['selected']['path'] = iconPath;
-  this.scope_['selected']['title'] = iconTitle;
-  this.scope_['selected']['options'] = options;
-  os.ui.apply(this.scope_);
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

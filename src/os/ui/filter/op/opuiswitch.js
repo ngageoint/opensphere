@@ -1,8 +1,9 @@
-goog.provide('os.ui.filter.op.OPUISwitchCtrl');
-goog.provide('os.ui.filter.op.opUISwitchDirective');
-goog.require('os.ui.Module');
-goog.require('os.ui.UISwitchCtrl');
-goog.require('os.ui.uiSwitchDirective');
+goog.module('os.ui.filter.op.OPUISwitchUI');
+goog.module.declareLegacyNamespace();
+
+const Module = goog.require('os.ui.Module');
+const UISwitchCtrl = goog.require('os.ui.UISwitchCtrl');
+const uiSwitchDirective = goog.require('os.ui.uiSwitchDirective');
 
 
 /**
@@ -10,41 +11,52 @@ goog.require('os.ui.uiSwitchDirective');
  *
  * @return {angular.Directive}
  */
-os.ui.filter.op.opUISwitchDirective = function() {
-  var dir = os.ui.uiSwitchDirective();
+const directive = () => {
+  var dir = uiSwitchDirective();
 
   dir['template'] = '<span></span>';
   dir['scope']['expr'] = '=';
-  dir['controller'] = os.ui.filter.op.OPUISwitchCtrl;
+  dir['controller'] = Controller;
 
   return dir;
 };
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'opuiswitch';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('opuiswitch', [os.ui.filter.op.opUISwitchDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$compile} $compile
- * @extends {os.ui.UISwitchCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.filter.op.OPUISwitchCtrl = function($scope, $element, $compile) {
-  os.ui.filter.op.OPUISwitchCtrl.base(this, 'constructor', $scope, $element, $compile);
-};
-goog.inherits(os.ui.filter.op.OPUISwitchCtrl, os.ui.UISwitchCtrl);
+class Controller extends UISwitchCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$compile} $compile
+   * @ngInject
+   */
+  constructor($scope, $element, $compile) {
+    super($scope, $element, $compile);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  addToScope(scope) {
+    scope['expr'] = this.scope['expr'];
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.ui.filter.op.OPUISwitchCtrl.prototype.addToScope = function(scope) {
-  scope['expr'] = this.scope['expr'];
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

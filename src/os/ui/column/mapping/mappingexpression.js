@@ -1,7 +1,7 @@
 goog.module('os.ui.column.mapping.MappingExpressionUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.layer.layerPickerDirective');
+goog.require('os.ui.layer.LayerPickerUI');
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');

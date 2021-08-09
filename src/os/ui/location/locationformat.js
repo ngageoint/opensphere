@@ -1,10 +1,10 @@
-goog.provide('os.ui.location.Format');
-
+goog.module('os.ui.location.Format');
+goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}
  */
-os.ui.location.Format = {
+exports = {
   DEG: 'deg',
   DMS: 'dms',
   DDM: 'ddm',

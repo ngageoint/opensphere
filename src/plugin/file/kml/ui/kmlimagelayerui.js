@@ -1,9 +1,9 @@
 goog.module('plugin.file.kml.ui.KMLImageLayerUI');
 goog.module.declareLegacyNamespace();
 
+const {isLayerNode} = goog.require('os.data');
 const LayerGroup = goog.require('os.layer.LayerGroup');
 const Module = goog.require('os.ui.Module');
-const {isLayerNode} = goog.require('os.ui.layer');
 const ImageLayerUI = goog.require('os.ui.layer.ImageLayerUI');
 
 const LayerNode = goog.requireType('os.data.LayerNode');

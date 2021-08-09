@@ -3,9 +3,9 @@ goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const log = goog.require('goog.log');
+const INodeGroupBy = goog.require('os.data.groupby.INodeGroupBy'); // eslint-disable-line
 const TreeNode = goog.require('os.structs.TreeNode');
 
-const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
 const ITreeNode = goog.requireType('os.structs.ITreeNode');
 
 

@@ -1,15 +1,12 @@
 goog.module('os.data.LayerNode');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.layer.LayerVisibilityUI');
-goog.require('os.ui.node.defaultLayerNodeUIDirective');
-goog.require('os.ui.node.featureCountDirective');
-goog.require('os.ui.node.layerTypeDirective');
-goog.require('os.ui.node.tileLoadingDirective');
 goog.require('os.ui.triStateCheckboxDirective');
 
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
+const {instanceOf, registerClass} = goog.require('os.classRegistry');
+const {NodeClass} = goog.require('os.data');
 const DataManager = goog.require('os.data.DataManager');
 const LayerEventType = goog.require('os.events.LayerEventType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
@@ -17,20 +14,24 @@ const ImportActionEventType = goog.require('os.im.action.ImportActionEventType')
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const osImplements = goog.require('os.implements');
 const ILayerProvider = goog.require('os.layer.ILayerProvider');
+const LayerClass = goog.require('os.layer.LayerClass');
 const LayerGroup = goog.require('os.layer.LayerGroup');
 const LayerPropertyChange = goog.require('os.layer.PropertyChange');
-const Tile = goog.require('os.layer.Tile');
-const VectorLayer = goog.require('os.layer.Vector');
 const {getMapContainer} = goog.require('os.map.instance');
 const {getQueryManager} = goog.require('os.query.instance');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const VectorSource = goog.require('os.source.Vector');
 const TriState = goog.require('os.structs.TriState');
 const ILayerUIProvider = goog.require('os.ui.ILayerUIProvider');
+const {directiveTag: layerVisibility} = goog.require('os.ui.layer.LayerVisibilityUI');
+const {directiveTag: featureCount} = goog.require('os.ui.node.FeatureCountUI');
+const {directiveTag: layerType} = goog.require('os.ui.node.LayerTypeUI');
+const {directiveTag: tileLoading} = goog.require('os.ui.node.TileLoadingUI');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 const IExtent = goog.requireType('os.data.IExtent');
 const ISearchable = goog.requireType('os.data.ISearchable');
+const VectorLayer = goog.requireType('os.layer.Vector');
 
 /**
  * Tree nodes for layers
@@ -79,7 +80,7 @@ class LayerNode extends SlickTreeNode {
     var extent = null;
     var layer = this.getLayer();
 
-    if (layer instanceof VectorLayer) {
+    if (instanceOf(layer, LayerClass.VECTOR)) {
       extent = /** @type {VectorLayer} */ (layer).getSource().getExtent();
     }
 
@@ -124,9 +125,9 @@ class LayerNode extends SlickTreeNode {
       }
 
       // add a separate visibility toggle for feature layers
-      if (layer instanceof VectorLayer) {
+      if (instanceOf(layer, LayerClass.VECTOR)) {
         const padClass = checkboxParts.length ? 'pl-1' : '';
-        checkboxParts.push(`<layervisibility class="c-glyph ${padClass}"></layervisibility>`);
+        checkboxParts.push(`<${layerVisibility} class="c-glyph ${padClass}"></${layerVisibility}>`);
       }
     }
 
@@ -342,18 +343,18 @@ class LayerNode extends SlickTreeNode {
     if (layer instanceof LayerGroup) {
       s += ' (' + this.getLayer().getProvider() + ')';
     } else {
-      s += ' <layertype></layertype>';
+      s += ` <${layerType}></${layerType}>`;
 
-      if (layer instanceof VectorLayer) {
-        s += ' <featurecount></featurecount>';
+      if (instanceOf(layer, LayerClass.VECTOR)) {
+        s += ` <${featureCount}></${featureCount}>`;
 
         var source = layer.getSource();
         if (source instanceof VectorSource && source.getHasModifications()) {
           s = `<span title="This layer has unsaved changes. Right click to save them."
               class="font-weight-bolder">  •  </span>${s}`;
         }
-      } else if (layer instanceof Tile) {
-        s += ' <tileloading></tileloading>';
+      } else if (instanceOf(layer, LayerClass.TILE)) {
+        s += ` <${tileLoading}></${tileLoading}>`;
       }
     }
 
@@ -385,6 +386,6 @@ class LayerNode extends SlickTreeNode {
 
 osImplements(LayerNode, ILayerProvider.ID);
 osImplements(LayerNode, ILayerUIProvider.ID);
-
+registerClass(NodeClass.LAYER, LayerNode);
 
 exports = LayerNode;

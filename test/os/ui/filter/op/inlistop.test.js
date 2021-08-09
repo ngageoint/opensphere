@@ -2,7 +2,9 @@ goog.require('os.ui.filter.op.InList');
 goog.require('os.ui.filter.op.Op');
 
 describe('os.ui.filter.op.InList', function() {
-  var op = new os.ui.filter.op.InList();
+  const InList = goog.module.get('os.ui.filter.op.InList');
+
+  var op = new InList();
 
   it('should return the correct defaults', function() {
     expect(op.getTitle()).toBe('is in list');

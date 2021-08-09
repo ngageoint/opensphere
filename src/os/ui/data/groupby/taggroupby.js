@@ -2,6 +2,7 @@ goog.module('os.ui.data.groupby.TagGroupBy');
 goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
+const log = goog.require('goog.log');
 const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
@@ -57,7 +58,7 @@ class TagGroupBy extends BaseGroupBy {
         }
       }
       if (invalid) {
-        goog.log.fine(this.log, 'Invalid tag set for ' + node.getLabel() + ': \n' + JSON.stringify(tags));
+        log.fine(this.log, 'Invalid tag set for ' + node.getLabel() + ': \n' + JSON.stringify(tags));
       }
     }
 

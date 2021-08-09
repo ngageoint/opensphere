@@ -1,24 +1,21 @@
-goog.provide('os.ui.hist');
-goog.provide('os.ui.hist.HistogramEventType');
-goog.require('os.ui.hist.IHistogramChart');
-goog.require('os.ui.hist.LineChart');
-goog.require('os.ui.hist.StackedBarChart');
+goog.module('os.ui.hist');
+goog.module.declareLegacyNamespace();
+
+const LineChart = goog.require('os.ui.hist.LineChart');
+const StackedBarChart = goog.require('os.ui.hist.StackedBarChart');
+
+const IHistogramChart = goog.requireType('os.ui.hist.IHistogramChart');
 
 
 /**
  * Convenience mapping of chart type to constructor.
- * @type {Object.<string, function(new: os.ui.hist.IHistogramChart, !Element)>}
- * @const
+ * @type {Object<string, function(new: IHistogramChart, !Element)>}
  */
-os.ui.hist.CHART_TYPES = {
-  'line': os.ui.hist.LineChart,
-  'stackedBar': os.ui.hist.StackedBarChart
+const CHART_TYPES = {
+  'line': LineChart,
+  'stackedBar': StackedBarChart
 };
 
-
-/**
- * @enum {string}
- */
-os.ui.hist.HistogramEventType = {
-  CHANGE: 'histogramChange'
+exports = {
+  CHART_TYPES
 };

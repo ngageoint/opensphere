@@ -1,8 +1,11 @@
-goog.provide('os.ui.navTopDirective');
+goog.module('os.ui.navTopDirective');
+goog.module.declareLegacyNamespace();
 
-goog.require('os');
-goog.require('os.ui.NavBarCtrl');
 goog.require('os.ui.util.PunyParentUI');
+
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const NavBarCtrl = goog.require('os.ui.NavBarCtrl');
 
 
 /**
@@ -10,21 +13,29 @@ goog.require('os.ui.util.PunyParentUI');
  *
  * @return {angular.Directive}
  */
-os.ui.navTopDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'options': '=?'
-    },
-    templateUrl: os.ROOT + 'views/navtop.html',
-    controller: os.ui.NavBarCtrl,
-    controllerAs: 'navTop'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'options': '=?'
+  },
+  templateUrl: ROOT + 'views/navtop.html',
+  controller: NavBarCtrl,
+  controllerAs: 'navTop'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'nav-top';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('navTop', [os.ui.navTopDirective]);
+Module.directive('navTop', [directive]);
+
+exports = {
+  directive,
+  directiveTag
+};

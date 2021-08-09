@@ -1,8 +1,13 @@
+goog.require('goog.events.EventType');
 goog.require('ol.Feature');
+goog.require('ol.geom.GeometryLayout');
 goog.require('ol.geom.Polygon');
 goog.require('os.query');
-
-
+goog.require('os.query.AreaManager');
+goog.require('os.query.BaseAreaManager');
+goog.require('os.query.BaseQueryManager');
+goog.require('os.query.QueryManager');
+goog.require('os.ui.query');
 
 /**
  * mock
@@ -30,20 +35,31 @@ os.ui.query.Handler.prototype.getLayerName = function() {
 };
 
 describe('os.query.BaseQueryManager', function() {
+  const GoogEventType = goog.module.get('goog.events.EventType');
+  const Feature = goog.module.get('ol.Feature');
+  const GeometryLayout = goog.module.get('ol.geom.GeometryLayout');
+  const Polygon = goog.module.get('ol.geom.Polygon');
+  const osQuery = goog.module.get('os.query');
+  const AreaManager = goog.module.get('os.query.AreaManager');
+  const BaseAreaManager = goog.module.get('os.query.BaseAreaManager');
+  const BaseQueryManager = goog.module.get('os.query.BaseQueryManager');
+  const QueryManager = goog.module.get('os.query.QueryManager');
+  const query = goog.module.get('os.ui.query');
+
   var am;
   var qm;
   var testPolygon;
   beforeEach(function() {
-    testPolygon = new ol.geom.Polygon([[[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]], ol.geom.GeometryLayout.XY);
+    testPolygon = new Polygon([[[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]], GeometryLayout.XY);
 
-    am = os.ui.areaManager;
-    qm = os.ui.queryManager;
+    am = AreaManager.getInstance();
+    qm = QueryManager.getInstance();
 
-    spyOn(os.ui.queryManager, 'save');
-    spyOn(os.ui.queryManager, 'load');
-    spyOn(os.ui.areaManager, 'save');
-    spyOn(os.ui.areaManager, 'load');
-    spyOn(os.ui.areaManager, 'updateStyles_');
+    spyOn(QueryManager.getInstance(), 'save');
+    spyOn(QueryManager.getInstance(), 'load');
+    spyOn(AreaManager.getInstance(), 'save');
+    spyOn(AreaManager.getInstance(), 'load');
+    spyOn(AreaManager.getInstance(), 'updateStyles_');
   });
 
   var testTemplate = function(addFunc, expected, opt_debug) {
@@ -54,7 +70,7 @@ describe('os.query.BaseQueryManager', function() {
       count++;
     };
 
-    qm.listen(goog.events.EventType.PROPERTYCHANGE, listener);
+    qm.listen(GoogEventType.PROPERTYCHANGE, listener);
 
     runs(addFunc);
 
@@ -64,13 +80,13 @@ describe('os.query.BaseQueryManager', function() {
 
 
     runs(function() {
-      qm.unlisten(goog.events.EventType.PROPERTYCHANGE, listener);
+      qm.unlisten(GoogEventType.PROPERTYCHANGE, listener);
       var entries = qm.getEntries(null, null, null, true);
 
-      entries.sort(os.query.BaseQueryManager.sortEntries);
+      entries.sort(BaseQueryManager.sortEntries);
 
       for (var i = 0, n = entries.length; i < n; i++) {
-        var key = os.query.BaseQueryManager.getKey_(entries[i]);
+        var key = BaseQueryManager.getKey_(entries[i]);
 
         if (opt_debug) {
           console.log(key);
@@ -137,7 +153,7 @@ describe('os.query.BaseQueryManager', function() {
 
   it('should properly expand simple wildcard entries with regular entries', function() {
     testTemplate(function() {
-      var handlerA = new os.ui.query.Handler('A');
+      var handlerA = new query.Handler('A');
       qm.registerHandler(handlerA);
 
       // add a non-wildcard filter to check mixing
@@ -163,9 +179,9 @@ describe('os.query.BaseQueryManager', function() {
 
   it('should properly expand wildcard entries with regular entries', function() {
     testTemplate(function() {
-      var handlerA = new os.ui.query.Handler('A');
-      var handlerB = new os.ui.query.Handler('B');
-      var handlerC = new os.ui.query.Handler('C');
+      var handlerA = new query.Handler('A');
+      var handlerB = new query.Handler('B');
+      var handlerC = new query.Handler('C');
 
       qm.registerHandler(handlerA);
       qm.registerHandler(handlerB);
@@ -274,7 +290,7 @@ describe('os.query.BaseQueryManager', function() {
   it('should return whether active explicit entries exist', function() {
     // While we have an explicit entry, there is no handler that matches the layer ID
     expect(qm.hasActiveExplicitEntries()).toBe(false);
-    var handlerX = new os.ui.query.Handler('X');
+    var handlerX = new query.Handler('X');
     qm.registerHandler(handlerX);
     expect(qm.hasActiveExplicitEntries()).toBe(true);
     qm.removeEntries('X');
@@ -284,31 +300,31 @@ describe('os.query.BaseQueryManager', function() {
   });
 
   it('should report area states', function() {
-    var am = os.query.BaseAreaManager.getInstance();
+    var am = BaseAreaManager.getInstance();
     // don't do map stuff
     am.mapReady_ = false;
     qm.removeEntries();
 
     var verifyStates = function(actual, expected) {
-      expect(actual[os.query.AreaState.NONE]).toBe(expected[os.query.AreaState.NONE] || undefined);
-      expect(actual[os.query.AreaState.EXCLUSION]).toBe(expected[os.query.AreaState.EXCLUSION] || undefined);
-      expect(actual[os.query.AreaState.INCLUSION]).toBe(expected[os.query.AreaState.INCLUSION] || undefined);
-      expect(actual[os.query.AreaState.BOTH]).toBe(expected[os.query.AreaState.BOTH] || undefined);
+      expect(actual[osQuery.AreaState.NONE]).toBe(expected[osQuery.AreaState.NONE] || undefined);
+      expect(actual[osQuery.AreaState.EXCLUSION]).toBe(expected[osQuery.AreaState.EXCLUSION] || undefined);
+      expect(actual[osQuery.AreaState.INCLUSION]).toBe(expected[osQuery.AreaState.INCLUSION] || undefined);
+      expect(actual[osQuery.AreaState.BOTH]).toBe(expected[osQuery.AreaState.BOTH] || undefined);
     };
 
     var result = qm.hasArea('bogus');
-    expect(result).toBe(os.query.AreaState.NONE);
+    expect(result).toBe(osQuery.AreaState.NONE);
 
     verifyStates(qm.getAreaStates(), [0, 0, 0, 0]);
 
     qm.addEntry('*', 'box', '*', true);
     // since it isn't in the area manager, we still expect 0
     result = qm.hasArea('box');
-    expect(result).toBe(os.query.AreaState.NONE);
+    expect(result).toBe(osQuery.AreaState.NONE);
     verifyStates(qm.getAreaStates(), [0, 0, 0, 0]);
 
     // now put it in the area manager
-    var area = new ol.Feature();
+    var area = new Feature();
     area.setId('box');
     area.set('title', 'Box');
     area.setGeometry(testPolygon);
@@ -317,26 +333,26 @@ describe('os.query.BaseQueryManager', function() {
 
     // The area is in the area manager but it isn't shown
     result = qm.hasArea('box');
-    expect(result).toBe(os.query.AreaState.NONE);
+    expect(result).toBe(osQuery.AreaState.NONE);
     verifyStates(qm.getAreaStates(), [1, 0, 0, 0]);
 
     // now it is shown
     area.set('shown', true);
     result = qm.hasArea('box');
-    expect(result).toBe(os.query.AreaState.INCLUSION);
+    expect(result).toBe(osQuery.AreaState.INCLUSION);
     verifyStates(qm.getAreaStates(), [0, 0, 1, 0]);
 
     // make another entry that uses box for exclude
     qm.addEntry('A', 'box', '*', false);
 
     result = qm.hasArea('box');
-    expect(result).toBe(os.query.AreaState.BOTH);
+    expect(result).toBe(osQuery.AreaState.BOTH);
     verifyStates(qm.getAreaStates(), [0, 0, 0, 1]);
 
     qm.removeEntries('*', 'box');
 
     result = qm.hasArea('box');
-    expect(result).toBe(os.query.AreaState.EXCLUSION);
+    expect(result).toBe(osQuery.AreaState.EXCLUSION);
     verifyStates(qm.getAreaStates(), [0, 1, 0, 0]);
 
     qm.removeEntries();
@@ -358,13 +374,13 @@ describe('os.query.BaseQueryManager', function() {
     expect(qm.hasInclusion('*')).toBe(false);
     expect(qm.hasInclusion('A')).toBe(false);
 
-    var box = new ol.Feature();
+    var box = new Feature();
     box.setId('box');
     box.set('title', 'box');
     box.setGeometry(testPolygon);
     am.add(box);
 
-    var circle = new ol.Feature();
+    var circle = new Feature();
     circle.setId('circle');
     circle.set('title', 'circle');
     circle.setGeometry(testPolygon);

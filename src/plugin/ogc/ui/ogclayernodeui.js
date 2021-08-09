@@ -5,8 +5,10 @@ const Deferred = goog.require('goog.async.Deferred');
 const DataManager = goog.require('os.data.DataManager');
 const osImplements = goog.require('os.implements');
 const Module = goog.require('os.ui.Module');
-const DefaultLayerNodeUICtrl = goog.require('os.ui.node.DefaultLayerNodeUICtrl');
-const defaultLayerNodeUIDirective = goog.require('os.ui.node.defaultLayerNodeUIDirective');
+const {
+  Controller: DefaultLayerNodeUICtrl,
+  directive: defaultLayerNodeUIDirective
+} = goog.require('os.ui.node.DefaultLayerNodeUI');
 const IFeatureTypeDescriptor = goog.require('os.ui.ogc.IFeatureTypeDescriptor');
 const {Controller: ChooseTimeColumnController} = goog.require('plugin.ogc.ui.ChooseTimeColumnUI');
 

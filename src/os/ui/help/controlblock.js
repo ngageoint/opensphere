@@ -1,12 +1,13 @@
 goog.module('os.ui.help.ControlBlockUI');
 goog.module.declareLegacyNamespace();
 
-const Module = goog.require('os.ui.Module');
-const OSWindow = goog.require('os.ui.window');
-const {ROOT, isOSX} = goog.require('os');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyNames = goog.require('goog.events.KeyNames');
 const {toTitleCase} = goog.require('goog.string');
+const {ROOT, isOSX} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const Controls = goog.require('os.ui.help.Controls');
+const OSWindow = goog.require('os.ui.window');
 
 
 /**
@@ -24,12 +25,16 @@ const directive = () => ({
   controllerAs: 'controlBlock'
 });
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'controlblock';
 
 /**
  * Add the directive to the module.
  */
-Module.directive('controlblock', [directive]);
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Map of keycodes to their OSX equivalents.
@@ -39,7 +44,6 @@ const osxKeyCodeMap = {
   [KeyCodes.META]: 'Command',
   [KeyCodes.ALT]: 'Option'
 };
-
 
 /**
  * Controller function for the controlblock directive
@@ -96,7 +100,7 @@ class Controller {
    */
   getMouse(other) {
     // TODO: requiring os.ui.help.Controls creates a circular dependency, so file class needs to be decomposed
-    var mouse = os.ui.help.Controls.MOUSE_IMAGE[other];
+    var mouse = Controls.MOUSE_IMAGE[other];
     if (mouse) {
       return mouse;
     }
@@ -110,9 +114,9 @@ class Controller {
    * @export
    */
   getFont(other) {
-    var font = os.ui.help.Controls.FONT_CLASS[other];
+    var font = Controls.FONT_CLASS[other];
     if (font) {
-      return os.ui.help.Controls.FONT_CLASS[other]['font'];
+      return Controls.FONT_CLASS[other]['font'];
     }
     return null;
   }
@@ -124,16 +128,16 @@ class Controller {
    * @export
    */
   getFontClass(other) {
-    var font = os.ui.help.Controls.FONT_CLASS[other];
+    var font = Controls.FONT_CLASS[other];
     if (font) {
-      return os.ui.help.Controls.FONT_CLASS[other]['class'];
+      return Controls.FONT_CLASS[other]['class'];
     }
     return null;
   }
 }
 
-
 exports = {
   Controller,
-  directive
+  directive,
+  directiveTag
 };

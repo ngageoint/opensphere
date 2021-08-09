@@ -1,8 +1,8 @@
 goog.module('plugin.im.action.feature.ui.StyleConfigUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.layer.iconStyleControlsDirective');
-goog.require('os.ui.layer.vectorStyleControlsDirective');
+goog.require('os.ui.layer.IconStyleControlsUI');
+goog.require('os.ui.layer.VectorStyleControlsUI');
 
 const googArray = goog.require('goog.array');
 const googObject = goog.require('goog.object');

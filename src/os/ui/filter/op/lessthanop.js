@@ -1,31 +1,33 @@
-goog.provide('os.ui.filter.op.LessThan');
+goog.module('os.ui.filter.op.LessThan');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.string');
-goog.require('os.ui.filter.op.Op');
-goog.require('os.ui.filter.string');
+const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
+const Op = goog.require('os.ui.filter.op.Op');
+const {quoteString} = goog.require('os.ui.filter.string');
 
 
 /**
  * A 'PropertyIsLessThan' operation class.
- *
- * @extends {os.ui.filter.op.Op}
- * @constructor
  */
-os.ui.filter.op.LessThan = function() {
-  os.ui.filter.op.LessThan.base(this, 'constructor',
-      'PropertyIsLessThan', 'is less than', '<');
-};
-goog.inherits(os.ui.filter.op.LessThan, os.ui.filter.op.Op);
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.op.LessThan.prototype.getEvalExpression = function(varName, literal) {
-  if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(literal))) {
-    return varName + '<' + os.ui.filter.string.quoteString(literal);
+class LessThan extends Op {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super('PropertyIsLessThan', 'is less than', '<');
   }
 
-  // null/empty string is not supported, so don't return an expression
-  return '';
-};
+  /**
+   * @inheritDoc
+   */
+  getEvalExpression(varName, literal) {
+    if (!isEmptyOrWhitespace(makeSafe(literal))) {
+      return varName + '<' + quoteString(literal);
+    }
+
+    // null/empty string is not supported, so don't return an expression
+    return '';
+  }
+}
+
+exports = LessThan;

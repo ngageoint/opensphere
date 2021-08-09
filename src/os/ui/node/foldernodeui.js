@@ -1,10 +1,11 @@
 goog.module('os.ui.node.FolderNodeUI');
 goog.module.declareLegacyNamespace();
 
-const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
+const {getRandomString} = goog.require('goog.string');
 const FolderManager = goog.require('os.layer.FolderManager');
-const Module = goog.require('os.ui.Module');
 const {launchRemoveFolder, createOrEditFolder} = goog.require('os.layer.folder');
+const Module = goog.require('os.ui.Module');
+const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
 
 const FolderNode = goog.requireType('os.data.FolderNode');
 
@@ -67,7 +68,7 @@ class Controller extends AbstractNodeUICtrl {
       const options = {
         name: 'New Folder',
         type: 'folder',
-        id: goog.string.getRandomString(),
+        id: getRandomString(),
         parentId: node.getId(),
         children: []
       };

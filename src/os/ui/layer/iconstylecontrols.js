@@ -1,9 +1,10 @@
-goog.provide('os.ui.layer.IconStyleControlsCtrl');
-goog.provide('os.ui.layer.iconStyleControlsDirective');
+goog.module('os.ui.layer.IconStyleControlsUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
-goog.require('os.ui.Module');
-goog.require('os.ui.layer.VectorStyleControlsEventType');
+const Disposable = goog.require('goog.Disposable');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const VectorStyleControlsEventType = goog.require('os.ui.layer.VectorStyleControlsEventType');
 
 
 /**
@@ -11,86 +12,92 @@ goog.require('os.ui.layer.VectorStyleControlsEventType');
  *
  * @return {angular.Directive}
  */
-os.ui.layer.iconStyleControlsDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'columns': '=',
-      'showRotation': '=?',
-      'rotationColumn': '=?'
-    },
-    templateUrl: os.ROOT + 'views/layer/iconstylecontrols.html',
-    controller: os.ui.layer.IconStyleControlsCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'columns': '=',
+    'showRotation': '=?',
+    'rotationColumn': '=?'
+  },
+  templateUrl: ROOT + 'views/layer/iconstylecontrols.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'iconstylecontrols';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('iconstylecontrols', [os.ui.layer.iconStyleControlsDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller function for the iconstyleoptions directive.
- *
- * @param {!angular.Scope} $scope The Angular scope.
- * @extends {goog.Disposable}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.layer.IconStyleControlsCtrl = function($scope) {
-  os.ui.layer.IconStyleControlsCtrl.base(this, 'constructor');
+class Controller extends Disposable {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @ngInject
+   */
+  constructor($scope) {
+    super();
+
+    /**
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
+
+    if (this.scope['showRotation'] == null) {
+      this.scope['showRotation'] = true;
+    }
+
+    if (this.scope['rotationColumn'] == null) {
+      this.scope['rotationColumn'] = '';
+    }
+
+    $scope.$on('$destroy', this.dispose.bind(this));
+  }
 
   /**
-   * @type {?angular.Scope}
-   * @protected
+   * @inheritDoc
    */
-  this.scope = $scope;
-
-  if (this.scope['showRotation'] == null) {
-    this.scope['showRotation'] = true;
+  disposeInternal() {
+    this.scope = null;
   }
 
-  if (this.scope['rotationColumn'] == null) {
-    this.scope['rotationColumn'] = '';
+  /**
+   * Toggle the Show Rotation.
+   *
+   * @export
+   */
+  toggleShowRotation() {
+    if (this.scope) {
+      this.scope.$emit(VectorStyleControlsEventType.SHOW_ROTATION_CHANGE, this.scope['showRotation']);
+    }
   }
 
-  $scope.$on('$destroy', this.dispose.bind(this));
-};
-goog.inherits(os.ui.layer.IconStyleControlsCtrl, goog.Disposable);
-
-
-/**
- * @inheritDoc
- */
-os.ui.layer.IconStyleControlsCtrl.prototype.disposeInternal = function() {
-  this.scope = null;
-};
-
-
-/**
- * Toggle the Show Rotation.
- *
- * @export
- */
-os.ui.layer.IconStyleControlsCtrl.prototype.toggleShowRotation = function() {
-  if (this.scope) {
-    this.scope.$emit(os.ui.layer.VectorStyleControlsEventType.SHOW_ROTATION_CHANGE, this.scope['showRotation']);
+  /**
+   * Handles column changes to the rotation
+   *
+   * @export
+   */
+  onRotationColumnChange() {
+    if (this.scope) {
+      this.scope.$emit(VectorStyleControlsEventType.ROTATION_COLUMN_CHANGE, this.scope['rotationColumn']);
+    }
   }
-};
+}
 
-
-/**
- * Handles column changes to the rotation
- *
- * @export
- */
-os.ui.layer.IconStyleControlsCtrl.prototype.onRotationColumnChange = function() {
-  if (this.scope) {
-    this.scope.$emit(os.ui.layer.VectorStyleControlsEventType.ROTATION_COLUMN_CHANGE, this.scope['rotationColumn']);
-  }
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

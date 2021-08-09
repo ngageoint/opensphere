@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.electron.CustomizeSettingsUI');
 
-goog.require('os.ui.slick.slickTreeDirective');
+goog.require('os.ui.slick.SlickTreeUI');
 
 import SettingsFileNode from './settingsfilenode';
 import settingsImportManager from './settingsimportmanager';

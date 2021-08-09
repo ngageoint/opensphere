@@ -2,7 +2,7 @@ goog.module('plugin.xyz.XYZDescriptorNodeUI');
 goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
-const DescriptorNodeUICtrl = goog.require('os.ui.data.DescriptorNodeUICtrl');
+const {Controller: DescriptorNodeUICtrl} = goog.require('os.ui.data.DescriptorNodeUI');
 const uiWindow = goog.require('os.ui.window');
 
 const ConfigDescriptor = goog.requireType('os.data.ConfigDescriptor');

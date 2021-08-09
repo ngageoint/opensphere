@@ -1,8 +1,8 @@
-goog.provide('os.ui.hist.IHistogramManager');
+goog.module('os.ui.hist.IHistogramManager');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Listenable');
-
-goog.requireType('os.ui.timeline.TimelineScaleOptions');
+const HistogramData = goog.requireType('os.hist.HistogramData');
+const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 
 /**
@@ -10,13 +10,13 @@ goog.requireType('os.ui.timeline.TimelineScaleOptions');
  *
  * @interface
  */
-os.ui.hist.IHistogramManager = function() {};
+class IHistogramManager {
+  /**
+   * Gets the histogram
+   * @param {TimelineScaleOptions} options Histogram options
+   * @return {!Array<!HistogramData>}
+   */
+  getHistograms(options) {}
+}
 
-
-/**
- * Gets the histogram
- * @param {os.ui.timeline.TimelineScaleOptions} options Histogram options
- * @return {!Array.<!os.hist.HistogramData>}
- */
-
-os.ui.hist.IHistogramManager.prototype.getHistograms;
+exports = IHistogramManager;

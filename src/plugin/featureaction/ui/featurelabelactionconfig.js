@@ -1,9 +1,8 @@
 goog.module('plugin.im.action.feature.ui.LabelConfigUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.data.addColumnFormDirective');
-goog.require('os.ui.layer.labelControlsDirective');
-goog.require('os.ui.popover.popoverDirective');
+goog.require('os.ui.layer.LabelControlsUI');
+goog.require('os.ui.popover.PopoverUI');
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
@@ -21,9 +20,10 @@ const osStyle = goog.require('os.style');
 const label = goog.require('os.style.label');
 const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
-const AddColumnFormCtrl = goog.require('os.ui.data.AddColumnFormCtrl');
+const {isDuplicateColumn} = goog.require('os.ui.data.AddColumnFormUI');
 const EventType = goog.require('os.ui.im.action.EventType');
-const osUiLayer = goog.require('os.ui.layer');
+const {getColumns} = goog.require('os.ui.layer');
+const LabelControlsEventType = goog.require('os.ui.layer.LabelControlsEventType');
 const column = goog.require('os.ui.slick.column');
 const ActionConfigCtrl = goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
 
@@ -124,7 +124,7 @@ class Controller extends ActionConfigCtrl {
 
     $scope.$on('labelColor.change', this.onColorChange.bind(this));
     $scope.$on('labelColor.reset', this.onColorReset.bind(this));
-    $scope.$on(osUiLayer.LabelControlsEventType.COLUMN_CHANGE, this.validate.bind(this));
+    $scope.$on(LabelControlsEventType.COLUMN_CHANGE, this.validate.bind(this));
     $scope.$watch('size', this.onSizeChange.bind(this));
     $scope.$watch('config.customName', this.onCustomNameChange.bind(this));
 
@@ -152,7 +152,7 @@ class Controller extends ActionConfigCtrl {
         this['validators'].push({
           'id': 'duplicate',
           'model': 'name',
-          'handler': AddColumnFormCtrl.isDuplicate.bind(this, source)
+          'handler': isDuplicateColumn.bind(null, source)
         });
       }
     }
@@ -166,7 +166,7 @@ class Controller extends ActionConfigCtrl {
 
       var layer = MapContainer.getInstance().getLayer(this.type);
       if (osImplements(layer, ILayer.ID)) {
-        this.scope['columns'] = osUiLayer.getColumns(/** @type {ILayer} */ (layer));
+        this.scope['columns'] = getColumns(/** @type {ILayer} */ (layer));
       }
 
       if (!this.scope['columns']) {

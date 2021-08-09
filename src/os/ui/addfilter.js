@@ -1,8 +1,9 @@
-goog.provide('os.ui.AddFilter');
-goog.provide('os.ui.addFilterDirective');
-goog.require('os.MapContainer');
-goog.require('os.ui.Module');
-goog.require('os.ui.query.AddFilterCtrl');
+goog.module('os.ui.AddFilterUI');
+goog.module.declareLegacyNamespace();
+
+const {getMapContainer} = goog.require('os.map.instance');
+const Module = goog.require('os.ui.Module');
+const {Controller: AddFilterController, directive: addFilterDirective} = goog.require('os.ui.query.AddFilterUI');
 
 
 /**
@@ -10,44 +11,58 @@ goog.require('os.ui.query.AddFilterCtrl');
  *
  * @return {angular.Directive}
  */
-os.ui.addFilterDirective = function() {
-  var dir = os.ui.query.addFilterDirective();
-  dir.controller = os.ui.AddFilter;
+const directive = () => {
+  var dir = addFilterDirective();
+  dir.controller = Controller;
   return dir;
 };
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'osaddfilter';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('osaddfilter', [os.ui.addFilterDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for combinator window
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.ui.query.AddFilterCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.AddFilter = function($scope, $element) {
-  os.ui.AddFilter.base(this, 'constructor', $scope, $element);
-  os.MapContainer.getInstance().listen(os.events.LayerEventType.ADD, this.updateLayers, false, this);
-  os.MapContainer.getInstance().listen(os.events.LayerEventType.REMOVE, this.updateLayers, false, this);
-  os.MapContainer.getInstance().listen(os.events.LayerEventType.RENAME, this.updateLayers, false, this);
-};
-goog.inherits(os.ui.AddFilter, os.ui.query.AddFilterCtrl);
+class Controller extends AddFilterController {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
 
+    const mapContainer = getMapContainer();
+    mapContainer.listen(os.events.LayerEventType.ADD, this.updateLayers, false, this);
+    mapContainer.listen(os.events.LayerEventType.REMOVE, this.updateLayers, false, this);
+    mapContainer.listen(os.events.LayerEventType.RENAME, this.updateLayers, false, this);
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.AddFilter.prototype.onDestroy = function() {
-  os.ui.AddFilter.base(this, 'onDestroy');
-  os.MapContainer.getInstance().unlisten(os.events.LayerEventType.ADD, this.updateLayers, false, this);
-  os.MapContainer.getInstance().unlisten(os.events.LayerEventType.REMOVE, this.updateLayers, false, this);
-  os.MapContainer.getInstance().unlisten(os.events.LayerEventType.RENAME, this.updateLayers, false, this);
+  /**
+   * @inheritDoc
+   */
+  onDestroy() {
+    super.onDestroy();
+
+    const mapContainer = getMapContainer();
+    mapContainer.unlisten(os.events.LayerEventType.ADD, this.updateLayers, false, this);
+    mapContainer.unlisten(os.events.LayerEventType.REMOVE, this.updateLayers, false, this);
+    mapContainer.unlisten(os.events.LayerEventType.RENAME, this.updateLayers, false, this);
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

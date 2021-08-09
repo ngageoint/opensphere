@@ -1,7 +1,9 @@
 goog.require('os.ui.filter.op.IsFalse');
 
 describe('os.ui.filter.op.IsFalse', function() {
-  var op = new os.ui.filter.op.IsFalse();
+  const IsFalse = goog.module.get('os.ui.filter.op.IsFalse');
+
+  var op = new IsFalse();
 
   it('should return the correct configs', function() {
     expect(op.getUi()).toBe('span');
@@ -36,7 +38,7 @@ describe('os.ui.filter.op.IsFalse', function() {
   it('should evaluate variables as desired', function() {
     var expr = op.getEvalExpression('v', 'noop');
     var v = null;
-  
+
     // prevent eslint no-unused-vars
     expect(v).toBeDefined();
 
@@ -61,7 +63,7 @@ describe('os.ui.filter.op.IsFalse', function() {
     v = true;
     expect(eval(expr)).toBe(false);
 
-    //specific values allowed; should be true
+    // specific values allowed; should be true
     v = 'FALSE';
     expect(eval(expr)).toBe(true);
 
@@ -70,6 +72,5 @@ describe('os.ui.filter.op.IsFalse', function() {
 
     v = false;
     expect(eval(expr)).toBe(true);
-
   });
 });

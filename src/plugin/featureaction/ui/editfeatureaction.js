@@ -1,8 +1,8 @@
 goog.module('plugin.im.action.feature.ui.EditFeatureActionUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.advancedFilterBuilderDirective');
-goog.require('os.ui.filter.basicFilterBuilderDirective');
+goog.require('os.ui.filter.AdvancedFilterBuilderUI');
+goog.require('os.ui.filter.BasicFilterBuilderUI');
 goog.require('os.ui.util.ValidationMessageUI');
 
 const Feature = goog.require('ol.Feature');
@@ -19,8 +19,10 @@ const StyleManager = goog.require('os.style.StyleManager');
 const StyleType = goog.require('os.style.StyleType');
 const label = goog.require('os.style.label');
 const Module = goog.require('os.ui.Module');
-const editFiltersDirective = goog.require('os.ui.filter.ui.editFiltersDirective');
-const EditFilterActionCtrl = goog.require('os.ui.im.action.EditFilterActionCtrl');
+const {
+  directive: editFiltersDirective,
+  Controller: EditFilterActionCtrl
+} = goog.require('os.ui.filter.ui.EditFiltersUI');
 const EventType = goog.require('os.ui.im.action.EventType');
 
 const OLStyle = goog.requireType('ol.style.Style');

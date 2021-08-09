@@ -28,9 +28,9 @@ goog.require('os.ui.globalMenuDirective');
 goog.require('os.ui.help.EventType');
 goog.require('os.ui.metrics.MetricsManager');
 goog.require('os.ui.notification.NotificationManager');
+goog.require('os.ui.onboarding.ContextOnboardingUI');
 goog.require('os.ui.onboarding.OnboardingManager');
-goog.require('os.ui.onboarding.contextOnboardingDirective');
-goog.require('os.ui.onboarding.onboardingDirective');
+goog.require('os.ui.onboarding.OnboardingUI');
 goog.require('os.ui.window.ConfirmUI');
 goog.require('plugin.electron.ElectronPlugin');
 goog.require('polyfill.chardetng');
@@ -214,8 +214,8 @@ os.ui.AbstractMainCtrl.prototype.initInstances = function() {
 
   os.ui.metricsManager = os.ui.metrics.MetricsManager.getInstance();
 
-  os.ui.notificationManager = os.ui.notification.NotificationManager.getInstance();
-  os.ui.notificationManager.setAppTitle(this.scope['appName']);
+  const notificationManager = os.ui.notification.NotificationManager.getInstance();
+  notificationManager.setAppTitle(this.scope['appName']);
 
   os.ui.onboarding.OnboardingManager.PATH = this.scope['path'];
   os.ui.onboardingManager = os.ui.onboarding.OnboardingManager.getInstance();

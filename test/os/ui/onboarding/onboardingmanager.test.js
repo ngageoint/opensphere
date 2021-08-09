@@ -7,20 +7,27 @@ goog.require('os.ui.onboarding.OnboardingManager');
 
 
 describe('os.ui.onboarding.OnboardingManager', function() {
-  os.net.RequestHandlerFactory.addHandler(os.net.SameDomainHandler);
+  const Settings = goog.module.get('os.config.Settings');
+  const RequestHandlerFactory = goog.module.get('os.net.RequestHandlerFactory');
+  const SameDomainHandler = goog.module.get('os.net.SameDomainHandler');
+  const EventType = goog.module.get('os.ui.EventType');
+  const OnboardingManager = goog.module.get('os.ui.onboarding.OnboardingManager');
+
+  RequestHandlerFactory.addHandler(SameDomainHandler);
+
   var manager;
 
   beforeEach(function() {
-    manager = os.ui.onboarding.OnboardingManager.getInstance();
+    manager = OnboardingManager.getInstance();
   });
 
   it('should load an onboarding config and fire an event', function() {
-    os.settings.init('nuhuh', 'who.cares.yo');
+    Settings.getInstance().init('nuhuh', 'who.cares.yo');
     var obConfig = null;
     var listener = function(e) {
       obConfig = e;
     };
-    manager.listen(os.ui.EventType.DISPLAY_ONBOARDING, listener);
+    manager.listen(EventType.DISPLAY_ONBOARDING, listener);
 
     runs(function() {
       manager.displayOnboarding('/base/test/os/ui/onboarding/valid.json');
@@ -40,7 +47,7 @@ describe('os.ui.onboarding.OnboardingManager', function() {
       expect(obConfig.steps.length).toBe(2);
 
 
-      manager.unlisten(os.ui.EventType.DISPLAY_ONBOARDING, listener);
+      manager.unlisten(EventType.DISPLAY_ONBOARDING, listener);
     });
   });
 
@@ -69,7 +76,7 @@ describe('os.ui.onboarding.OnboardingManager', function() {
     var listener = function(e) {
       contextOb = e;
     };
-    manager.listen(os.ui.EventType.DISPLAY_ONBOARDING, listener);
+    manager.listen(EventType.DISPLAY_ONBOARDING, listener);
 
     runs(function() {
       manager.showContextOnboarding('somethingSweet');
@@ -88,7 +95,7 @@ describe('os.ui.onboarding.OnboardingManager', function() {
       expect(contextOb.steps).not.toBe(null);
       expect(contextOb.steps.length).toBe(1);
 
-      manager.unlisten(os.ui.EventType.DISPLAY_ONBOARDING, listener);
+      manager.unlisten(EventType.DISPLAY_ONBOARDING, listener);
     });
   });
 });

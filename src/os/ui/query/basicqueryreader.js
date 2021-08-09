@@ -1,174 +1,184 @@
-goog.provide('os.ui.query.BasicQueryReader');
+goog.module('os.ui.query.BasicQueryReader');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.asserts');
-goog.require('goog.asserts.dom');
-goog.require('os.filter.FilterEntry');
-goog.require('os.ui.filter');
-goog.require('os.ui.query.AbstractQueryReader');
-
+const {some} = goog.require('goog.array');
+const {assert} = goog.require('goog.asserts');
+const {assertIsElement} = goog.require('goog.asserts.dom');
+const {getChildren, getFirstElementChild, getNextElementSibling, getParentElement} = goog.require('goog.dom');
+const {serialize} = goog.require('goog.dom.xml');
+const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
+const FilterEntry = goog.require('os.filter.FilterEntry');
+const {METHOD_FIELD} = goog.require('os.interpolate');
+const Method = goog.require('os.interpolate.Method');
+const {getAreaManager, getQueryManager} = goog.require('os.query.instance');
+const {OPERATIONS} = goog.require('os.ui.filter');
+const AbstractQueryReader = goog.require('os.ui.query.AbstractQueryReader');
+const {unescape: xmlUnescape} = goog.require('os.xml');
 
 
 /**
  * Reader for queries written out by the pre-combinator filter/area handlers.
- *
- * @extends {os.ui.query.AbstractQueryReader}
- * @constructor
  */
-os.ui.query.BasicQueryReader = function() {
-  os.ui.query.BasicQueryReader.base(this, 'constructor');
-
+class BasicQueryReader extends AbstractQueryReader {
   /**
-   * Array of all inclusion entries found when the query is parsed.
-   * @type {?Array}
-   * @private
+   * Constructor.
    */
-  this.entries_ = null;
+  constructor() {
+    super();
 
-  /**
-   * Array of all exclusion entries found when the query is parsed. These never have filters associated to them.
-   * @type {?Array}
-   * @private
-   */
-  this.excEntries_ = null;
-};
-goog.inherits(os.ui.query.BasicQueryReader, os.ui.query.AbstractQueryReader);
+    /**
+     * Array of all inclusion entries found when the query is parsed.
+     * @type {?Array}
+     * @private
+     */
+    this.entries_ = null;
 
-
-/**
- * @inheritDoc
- */
-os.ui.query.BasicQueryReader.prototype.parseEntries = function() {
-  goog.asserts.assert(this.filter, 'No filter provided!');
-
-  this.entries_ = [];
-  this.excEntries_ = [];
-
-  this.parseEntries_(this.filter);
-  if (this.entries_.length > 0 || this.excEntries_.length > 0) {
-    os.ui.queryManager.addEntries(this.entries_.concat(this.excEntries_));
+    /**
+     * Array of all exclusion entries found when the query is parsed. These never have filters associated to them.
+     * @type {?Array}
+     * @private
+     */
+    this.excEntries_ = null;
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  parseEntries() {
+    assert(this.filter, 'No filter provided!');
 
-/**
- * Traverses the tree to parse entries from a combinator-written filter.
- *
- * @param {Element} ele
- * @private
- */
-os.ui.query.BasicQueryReader.prototype.parseEntries_ = function(ele) {
-  goog.asserts.assert(this.layerId, 'No layer ID provided!');
-  var layerId = /** @type {!string} */ (this.layerId);
-  var child = goog.dom.getFirstElementChild(ele);
-  var children = goog.dom.getChildren(ele);
-  var next = null;
+    this.entries_ = [];
+    this.excEntries_ = [];
 
-  // if the element has a namehint or a description, it's a filter entry
-  var isFilter = Boolean(ele.getAttribute('namehint') || ele.getAttribute('description'));
+    this.parseEntries_(this.filter);
+    if (this.entries_.length > 0 || this.excEntries_.length > 0) {
+      getQueryManager().addEntries(this.entries_.concat(this.excEntries_));
+    }
+  }
 
-  if (!isFilter) {
-    // if any of the children match any of the ops, then ele is a filter entry
-    isFilter = goog.array.some(children, function(item) {
-      return goog.array.some(os.ui.filter.OPERATIONS, function(op) {
-        return op.matches(angular.element(item));
+  /**
+   * Traverses the tree to parse entries from a combinator-written filter.
+   *
+   * @param {Element} ele
+   * @private
+   */
+  parseEntries_(ele) {
+    assert(this.layerId, 'No layer ID provided!');
+    var layerId = /** @type {!string} */ (this.layerId);
+    var child = getFirstElementChild(ele);
+    var children = getChildren(ele);
+    var next = null;
+
+    // if the element has a namehint or a description, it's a filter entry
+    var isFilter = Boolean(ele.getAttribute('namehint') || ele.getAttribute('description'));
+
+    if (!isFilter) {
+      // if any of the children match any of the ops, then ele is a filter entry
+      isFilter = some(children, function(item) {
+        return OPERATIONS.some(function(op) {
+          return op.matches(angular.element(item));
+        });
       });
-    });
-  }
-
-  // test to see if its an area
-  if (ele.localName == 'BBOX' || ele.localName == 'Intersects') {
-    var areaEle = ele.querySelector('MultiPolygon') || ele.querySelector('Envelope') || ele.querySelector('Polygon');
-    goog.asserts.dom.assertIsElement(areaEle);
-    var area = os.ui.query.AbstractQueryReader.parseArea(areaEle);
-    if (area) {
-      var title = os.xml.unescape(ele.getAttribute('areanamehint') || ele.getAttribute('namehint') || 'New Area');
-      area.set('title', title);
-      area.set('description', os.xml.unescape(ele.getAttribute('description')));
-      if (ele.getAttribute('id')) {
-        area.setId(os.xml.unescape(ele.getAttribute('id')));
-      }
-      area.set('shown', true);
-      area.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE);
-      os.ui.areaManager.add(area);
-
-      var entry = {
-        'layerId': layerId,
-        'areaId': area.getId(),
-        'filterId': '*',
-        'includeArea': true,
-        'filterGroup': true,
-        'temp': true
-      };
-      this.entries_.push(entry);
     }
-    child = null;
-  }
-  if (ele.localName == 'Disjoint') {
-    var excAreaEle = ele.querySelector('MultiPolygon') || ele.querySelector('Envelope') || ele.querySelector('Polygon');
-    goog.asserts.dom.assertIsElement(excAreaEle);
-    var excArea = os.ui.query.AbstractQueryReader.parseArea(excAreaEle);
-    if (excArea) {
-      var title = os.xml.unescape(ele.getAttribute('areanamehint') || ele.getAttribute('namehint') || 'New Area');
-      excArea.set('title', title);
-      excArea.set('description', os.xml.unescape(ele.getAttribute('description')));
-      if (ele.getAttribute('id')) {
-        excArea.setId(os.xml.unescape(ele.getAttribute('id')));
-      }
-      excArea.set('shown', true);
-      excArea.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE);
-      os.ui.areaManager.add(excArea);
 
-      var entry = {
-        'layerId': layerId,
-        'areaId': excArea.getId(),
-        'filterId': '*',
-        'includeArea': false,
-        'filterGroup': true,
-        'temp': true
-      };
-      this.excEntries_.push(entry);
-    }
-    child = null;
-  }
-
-  while (child) {
-    if (isFilter) {
-      // if it doesn't contain a PropertyName element as a child, or is a validTime property, exclude it
-      var propNameEle = ele.querySelector('PropertyName');
-      if (propNameEle && propNameEle.textContent != 'validTime') {
-        var filterText = goog.dom.xml.serialize(ele);
-        var name = os.xml.unescape(ele.getAttribute('namehint') || child.getAttribute('namehint') || 'New Filter');
-        var description = os.xml.unescape(ele.getAttribute('description') || '');
-        var filterEntry = new os.filter.FilterEntry();
-        var grouping = String(goog.dom.getParentElement(ele).localName) == 'And';
-
-        filterEntry.setFilter(filterText);
-        filterEntry.setTitle(name);
-        filterEntry.setDescription(description);
-        filterEntry.setEnabled(true);
-        filterEntry.type = layerId;
-        filterEntry.setTemporary(true);
-
-        var fm = os.filter.BaseFilterManager.getInstance();
-        fm.addFilter(filterEntry);
-        fm.setGrouping(filterEntry.type, grouping);
+    // test to see if its an area
+    if (ele.localName == 'BBOX' || ele.localName == 'Intersects') {
+      var areaEle = ele.querySelector('MultiPolygon') || ele.querySelector('Envelope') || ele.querySelector('Polygon');
+      assertIsElement(areaEle);
+      var area = AbstractQueryReader.parseArea(areaEle);
+      if (area) {
+        var title = xmlUnescape(ele.getAttribute('areanamehint') || ele.getAttribute('namehint') || 'New Area');
+        area.set('title', title);
+        area.set('description', xmlUnescape(ele.getAttribute('description')));
+        if (ele.getAttribute('id')) {
+          area.setId(xmlUnescape(ele.getAttribute('id')));
+        }
+        area.set('shown', true);
+        area.set(METHOD_FIELD, Method.NONE);
+        getAreaManager().add(area);
 
         var entry = {
           'layerId': layerId,
-          'areaId': '*',
-          'filterId': filterEntry.getId(),
+          'areaId': area.getId(),
+          'filterId': '*',
           'includeArea': true,
-          'filterGroup': grouping,
+          'filterGroup': true,
           'temp': true
         };
         this.entries_.push(entry);
-        child = null;
-        continue;
       }
+      child = null;
+    }
+    if (ele.localName == 'Disjoint') {
+      var excAreaEle = ele.querySelector('MultiPolygon') || ele.querySelector('Envelope') ||
+          ele.querySelector('Polygon');
+      assertIsElement(excAreaEle);
+      var excArea = AbstractQueryReader.parseArea(excAreaEle);
+      if (excArea) {
+        var title = xmlUnescape(ele.getAttribute('areanamehint') || ele.getAttribute('namehint') || 'New Area');
+        excArea.set('title', title);
+        excArea.set('description', xmlUnescape(ele.getAttribute('description')));
+        if (ele.getAttribute('id')) {
+          excArea.setId(xmlUnescape(ele.getAttribute('id')));
+        }
+        excArea.set('shown', true);
+        excArea.set(METHOD_FIELD, Method.NONE);
+        getAreaManager().add(excArea);
+
+        var entry = {
+          'layerId': layerId,
+          'areaId': excArea.getId(),
+          'filterId': '*',
+          'includeArea': false,
+          'filterGroup': true,
+          'temp': true
+        };
+        this.excEntries_.push(entry);
+      }
+      child = null;
     }
 
-    next = goog.dom.getNextElementSibling(child);
-    this.parseEntries_(child);
-    child = next;
+    while (child) {
+      if (isFilter) {
+        // if it doesn't contain a PropertyName element as a child, or is a validTime property, exclude it
+        var propNameEle = ele.querySelector('PropertyName');
+        if (propNameEle && propNameEle.textContent != 'validTime') {
+          var filterText = serialize(ele);
+          var name = xmlUnescape(ele.getAttribute('namehint') || child.getAttribute('namehint') || 'New Filter');
+          var description = xmlUnescape(ele.getAttribute('description') || '');
+          var filterEntry = new FilterEntry();
+          var grouping = String(getParentElement(ele).localName) == 'And';
+
+          filterEntry.setFilter(filterText);
+          filterEntry.setTitle(name);
+          filterEntry.setDescription(description);
+          filterEntry.setEnabled(true);
+          filterEntry.type = layerId;
+          filterEntry.setTemporary(true);
+
+          var fm = BaseFilterManager.getInstance();
+          fm.addFilter(filterEntry);
+          fm.setGrouping(filterEntry.type, grouping);
+
+          var entry = {
+            'layerId': layerId,
+            'areaId': '*',
+            'filterId': filterEntry.getId(),
+            'includeArea': true,
+            'filterGroup': grouping,
+            'temp': true
+          };
+          this.entries_.push(entry);
+          child = null;
+          continue;
+        }
+      }
+
+      next = getNextElementSibling(child);
+      this.parseEntries_(child);
+      child = next;
+    }
   }
-};
+}
+
+exports = BasicQueryReader;

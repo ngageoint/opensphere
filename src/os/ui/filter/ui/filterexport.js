@@ -1,22 +1,20 @@
-goog.provide('os.ui.filter.ui.FilterExportChoice');
-goog.provide('os.ui.filter.ui.FilterExportCtrl');
-goog.provide('os.ui.filter.ui.filterExportDirective');
+goog.module('os.ui.filter.ui.FilterExportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.array');
-goog.require('os.file.persist');
-goog.require('os.ui.Module');
-goog.require('os.ui.checklistDirective');
 goog.require('os.ui.util.ValidationMessageUI');
 
-
-/**
- * @enum {string}
- */
-os.ui.filter.ui.FilterExportChoice = {
-  ACTIVE: 'active',
-  SELECTED: 'selected',
-  ALL: 'all'
-};
+const {ROOT} = goog.require('os');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const {saveFile} = goog.require('os.file.persist');
+const FilterEntry = goog.require('os.filter.FilterEntry');
+const {getFilterManager} = goog.require('os.query.instance');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const {getFilterableByType} = goog.require('os.ui.filter');
+const FilterExportChoice = goog.require('os.ui.filter.ui.FilterExportChoice');
+const {close, create} = goog.require('os.ui.window');
+const {appendElement, clone, createElementNS, serialize} = goog.require('os.xml');
 
 
 /**
@@ -24,79 +22,112 @@ os.ui.filter.ui.FilterExportChoice = {
  *
  * @return {angular.Directive}
  */
-os.ui.filter.ui.filterExportDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'confirm': '=',
-      'mode': '='
-    },
-    templateUrl: os.ROOT + 'views/filter/filterexport.html',
-    controller: os.ui.filter.ui.FilterExportCtrl,
-    controllerAs: 'filterexport'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'confirm': '=',
+    'mode': '='
+  },
+  templateUrl: ROOT + 'views/filter/filterexport.html',
+  controller: Controller,
+  controllerAs: 'filterexport'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'filterexport';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('filterexport', [os.ui.filter.ui.filterExportDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller function for the filterexport directive
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout The Angular $timeout service.
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.filter.ui.FilterExportCtrl = function($scope, $element, $timeout) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @protected
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$timeout} $timeout The Angular $timeout service.
+   * @ngInject
    */
-  this.scope = $scope;
+  constructor($scope, $element, $timeout) {
+    /**
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
+
+    /**
+     * @type {?angular.JQLite}
+     * @protected
+     */
+    this.element = $element;
+
+    /**
+     * @type {number}
+     */
+    this['mode'] = $scope['mode'] ? $scope['mode'] : FilterExportChoice.ACTIVE;
+
+    /**
+     * @type {string}
+     */
+    this['fileName'] = 'filters.xml';
+
+    /**
+     * @type {Function}
+     */
+    this['confirm'] = $scope['confirm'];
+
+    // trigger window auto height after the DOM is rendered
+    $timeout(function() {
+      $scope.$emit(WindowEventType.READY);
+    });
+  }
 
   /**
-   * @type {?angular.JQLite}
-   * @protected
+   * Fire the cancel callback and close the window.
+   *
+   * @export
    */
-  this.element = $element;
+  cancel() {
+    this.close_();
+  }
 
   /**
-   * @type {number}
+   * Fire the confirmation callback and close the window.
+   *
+   * @export
    */
-  this['mode'] = $scope['mode'] ? $scope['mode'] : os.ui.filter.ui.FilterExportChoice.ACTIVE;
+  save() {
+    // call our confirm function with the file name and mode
+    this['confirm'](this['fileName'], this['mode']);
+    this.close_();
+  }
 
   /**
-   * @type {string}
+   * Close the window.
+   *
+   * @private
    */
-  this['fileName'] = 'filters.xml';
-
-  /**
-   * @type {Function}
-   */
-  this['confirm'] = $scope['confirm'];
-
-  // trigger window auto height after the DOM is rendered
-  $timeout(function() {
-    $scope.$emit(os.ui.WindowEventType.READY);
-  });
-};
-
+  close_() {
+    close(this.element);
+  }
+}
 
 /**
  * Launch a dialog prompting the user the file they're importing already exists and requesting action.
  *
- * @param {function(string, os.ui.filter.ui.FilterExportChoice)} confirm
+ * @param {function(string, FilterExportChoice)} confirm
  * @param {number=} opt_mode
  */
-os.ui.filter.ui.launchFilterExport = function(confirm, opt_mode) {
+const launchFilterExport = function(confirm, opt_mode) {
   var scopeOptions = {
     'confirm': confirm,
     'mode': opt_mode
@@ -115,41 +146,8 @@ os.ui.filter.ui.launchFilterExport = function(confirm, opt_mode) {
   };
 
   var template = '<filterexport mode="mode" confirm="confirm"></filterexport>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
-
-
-/**
- * Fire the cancel callback and close the window.
- *
- * @export
- */
-os.ui.filter.ui.FilterExportCtrl.prototype.cancel = function() {
-  this.close_();
-};
-
-
-/**
- * Fire the confirmation callback and close the window.
- *
- * @export
- */
-os.ui.filter.ui.FilterExportCtrl.prototype.save = function() {
-  // call our confirm function with the file name and mode
-  this['confirm'](this['fileName'], this['mode']);
-  this.close_();
-};
-
-
-/**
- * Close the window.
- *
- * @private
- */
-os.ui.filter.ui.FilterExportCtrl.prototype.close_ = function() {
-  os.ui.window.close(this.element);
-};
-
 
 /**
  * Export the passed in filters
@@ -157,20 +155,20 @@ os.ui.filter.ui.FilterExportCtrl.prototype.close_ = function() {
  * @param {string} name of the file
  * @param {Array} filters
  */
-os.ui.filter.ui.export = function(name, filters) {
+const exportFilters = function(name, filters) {
   if (filters.length > 0) {
-    var root = os.xml.createElementNS('filters', 'http://www.bit-sys.com/state/v2');
+    var root = createElementNS('filters', 'http://www.bit-sys.com/state/v2');
 
     var exportSuccess = false;
-    os.array.forEach(filters, function(filter) {
+    filters.forEach(function(filter) {
       var queryEntry = filter.getEntry();
-      var filterEntry = queryEntry instanceof os.filter.FilterEntry ?
-        queryEntry : os.ui.filterManager.getFilter(queryEntry['filterId']);
+      var filterEntry = queryEntry instanceof FilterEntry ?
+        queryEntry : getFilterManager().getFilter(queryEntry['filterId']);
       var parsedFilter = filterEntry.getFilterNode();
       if (parsedFilter) {
         // Get the filter key from the filterable. This should almost always work, but in the event that it doesn't
         // we send an error message.
-        var filterable = os.ui.filter.getFilterableByType(filterEntry['type']);
+        var filterable = getFilterableByType(filterEntry['type']);
         if (filterable) {
           var filterAttr = {
             'active': filter.getState() == 'on' ? 'true' : 'false',
@@ -180,20 +178,28 @@ os.ui.filter.ui.export = function(name, filters) {
             'type': filterable.getFilterKey(),
             'match': queryEntry['filterGroup'] == true || queryEntry['filterGroup'] === undefined ? 'AND' : 'OR'
           };
-          var filterRootXml = os.xml.appendElement('filter', root, null, filterAttr);
-          os.xml.clone(parsedFilter, filterRootXml, 'ogc', 'http://www.opengis.net/ogc');
+          var filterRootXml = appendElement('filter', root, null, filterAttr);
+          clone(parsedFilter, filterRootXml, 'ogc', 'http://www.opengis.net/ogc');
           exportSuccess = true;
         }
       }
     });
 
     if (exportSuccess) {
-      os.file.persist.saveFile(name, os.xml.serialize(root), 'text/xml; subtype=FILTER');
+      saveFile(name, serialize(root), 'text/xml; subtype=FILTER');
     } else {
       var errorMsg = 'Something went wrong! We were unable to export your filters.';
-      os.alertManager.sendAlert(errorMsg, os.alert.AlertEventSeverity.ERROR);
+      AlertManager.getInstance().sendAlert(errorMsg, AlertEventSeverity.ERROR);
     }
   } else {
-    os.alertManager.sendAlert('No filters to export', os.alert.AlertEventSeverity.WARNING);
+    AlertManager.getInstance().sendAlert('No filters to export', AlertEventSeverity.WARNING);
   }
+};
+
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launchFilterExport,
+  exportFilters
 };

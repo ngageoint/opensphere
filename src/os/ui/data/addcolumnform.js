@@ -1,8 +1,12 @@
-goog.provide('os.ui.data.AddColumnFormCtrl');
-goog.provide('os.ui.data.addColumnFormDirective');
+goog.module('os.ui.data.AddColumnFormUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
 goog.require('os.ui.util.ValidationMessageUI');
+
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+
+const ISource = goog.requireType('os.source.ISource');
 
 
 /**
@@ -10,91 +14,107 @@ goog.require('os.ui.util.ValidationMessageUI');
  *
  * @return {angular.Directive}
  */
-os.ui.data.addColumnFormDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'name': '=',
-      'value': '=',
-      'validators': '&'
-    },
-    templateUrl: os.ROOT + 'views/data/addcolumnform.html',
-    controller: os.ui.data.AddColumnFormCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'name': '=',
+    'value': '=',
+    'validators': '&'
+  },
+  templateUrl: ROOT + 'views/data/addcolumnform.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'addcolumnform';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('addcolumnform', [os.ui.data.addColumnFormDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller function for the addcolumnform directive
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.$timeout} $timeout
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.data.AddColumnFormCtrl = function($scope, $timeout) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.$timeout} $timeout
+   * @ngInject
+   */
+  constructor($scope, $timeout) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    $scope.$on('$destroy', this.destroy_.bind(this));
+
+    $timeout(this.addValidators_.bind(this));
+  }
+
+  /**
+   * Clean up.
+   *
    * @private
    */
-  this.scope_ = $scope;
+  destroy_() {
+    this.scope_ = null;
+  }
 
-  $scope.$on('$destroy', this.destroy_.bind(this));
-
-  $timeout(this.addValidators_.bind(this));
-};
-
-
-/**
- * Clean up.
- *
- * @private
- */
-os.ui.data.AddColumnFormCtrl.prototype.destroy_ = function() {
-  this.scope_ = null;
-};
-
-
-/**
- * Add validators to the model controller.
- *
- * @private
- */
-os.ui.data.AddColumnFormCtrl.prototype.addValidators_ = function() {
-  if (this.scope_) {
-    var form = this.scope_['columnForm'];
-    var validators = this.scope_['validators'] ? this.scope_['validators']() : null;
-    if (form && validators) {
-      validators.forEach(function(validator) {
-        // add a custom validator to check for duplicate column names
-        var model = /** @type {angular.NgModelController|undefined} */ (form[validator['model']]);
-        if (model) {
-          model.$validators[validator['id']] = validator['handler'];
-        }
-      }, this);
+  /**
+   * Add validators to the model controller.
+   *
+   * @private
+   */
+  addValidators_() {
+    if (this.scope_) {
+      var form = this.scope_['columnForm'];
+      var validators = this.scope_['validators'] ? this.scope_['validators']() : null;
+      if (form && validators) {
+        validators.forEach(function(validator) {
+          // add a custom validator to check for duplicate column names
+          var model = /** @type {angular.NgModelController|undefined} */ (form[validator['model']]);
+          if (model) {
+            model.$validators[validator['id']] = validator['handler'];
+          }
+        }, this);
+      }
     }
   }
-};
 
+  /**
+   * Checks whether the form is invalid due to duplicate column names.
+   *
+   * @param {ISource} source The data source.
+   * @param {string} modelVal
+   * @param {string} viewVal
+   * @return {boolean}
+   *
+   * @deprecated Please use os.ui.data.AddColumnFormUI.isDuplicateColumn instead.
+   */
+  static isDuplicate(source, modelVal, viewVal) {
+    return isDuplicateColumn(source, modelVal, viewVal);
+  }
+}
 
 /**
  * Checks whether the form is invalid due to duplicate column names.
  *
- * @param {os.source.ISource} source The data source.
+ * @param {ISource} source The data source.
  * @param {string} modelVal
  * @param {string} viewVal
  * @return {boolean}
  */
-os.ui.data.AddColumnFormCtrl.isDuplicate = function(source, modelVal, viewVal) {
+const isDuplicateColumn = (source, modelVal, viewVal) => {
   var columns = source.getColumnsArray();
   var value = modelVal || viewVal;
   if (value) {
@@ -109,4 +129,11 @@ os.ui.data.AddColumnFormCtrl.isDuplicate = function(source, modelVal, viewVal) {
   }
 
   return true;
+};
+
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  isDuplicateColumn
 };

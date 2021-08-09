@@ -12,8 +12,8 @@ goog.require('os.query.utils');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportProcess');
 goog.require('os.ui.menu.MenuEvent');
-goog.require('os.ui.query.area.chooseAreaDirective');
-goog.require('os.ui.query.area.userAreaDirective');
+goog.require('os.ui.query.area.getUserArea');
+goog.require('os.ui.query.area.launchChooseArea');
 goog.require('os.ui.query.cmd.AreaAdd');
 
 

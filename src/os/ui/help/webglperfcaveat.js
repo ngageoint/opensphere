@@ -1,11 +1,11 @@
-goog.provide('os.ui.help.webGLPerfCaveatDirective');
+goog.module('os.ui.help.WebGLPerfCaveatUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.userAgent');
-goog.require('os.config');
-goog.require('os.fn');
-goog.require('os.ui.Module');
-goog.require('os.ui.util.LinkyFilter');
-goog.require('os.ui.window');
+const {ROOT} = goog.require('os');
+const {getAppName, getSupportContact} = goog.require('os.config');
+const Settings = goog.require('os.config.Settings');
+const Module = goog.require('os.ui.Module');
+const osWindow = goog.require('os.ui.window');
 
 
 /**
@@ -13,19 +13,21 @@ goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-os.ui.help.webGLPerfCaveatDirective = function() {
-  return {
-    restrict: 'E',
-    templateUrl: os.ROOT + 'views/help/webglperfcaveat.html'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  templateUrl: ROOT + 'views/help/webglperfcaveat.html'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'webglperfcaveat';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('webglperfcaveat', [os.ui.help.webGLPerfCaveatDirective]);
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Launches a dialog telling the user their browser is terrible.
@@ -33,12 +35,12 @@ os.ui.Module.directive('webglperfcaveat', [os.ui.help.webGLPerfCaveatDirective])
  * @param {string=} opt_title The window title
  * @param {function()=} opt_overrideCallback The function to call if user decides to override
  */
-os.ui.help.launchWebGLPerfCaveatDialog = function(opt_title, opt_overrideCallback) {
+const launchWebGLPerfCaveatDialog = function(opt_title, opt_overrideCallback) {
   var scopeOptions = {
-    'confirmCallback': os.fn.noop,
-    'cancelCallback': opt_overrideCallback || os.fn.noop,
+    'confirmCallback': () => {},
+    'cancelCallback': opt_overrideCallback || (() => {}),
     'hideCancel': !opt_overrideCallback,
-    'supportLink': /** @type {string|undefined} */ (os.settings.get('webgl.performanceCaveat.supportLink')),
+    'supportLink': /** @type {string|undefined} */ (Settings.getInstance().get('webgl.performanceCaveat.supportLink')),
     'yesText': 'Got it!',
     'yesIcon': 'fa fa-thumbs-up',
     'yesButtonTitle': 'Cancel and continue using 2D.',
@@ -63,9 +65,15 @@ os.ui.help.launchWebGLPerfCaveatDialog = function(opt_title, opt_overrideCallbac
     'modal': 'true'
   };
 
-  scopeOptions['appName'] = os.config.getAppName('the application');
-  scopeOptions['supportText'] = os.config.getSupportContact('your system administrator');
+  scopeOptions['appName'] = getAppName('the application');
+  scopeOptions['supportText'] = getSupportContact('your system administrator');
 
   var template = '<confirm><webglperfcaveat></webglperfcaveat></confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+};
+
+exports = {
+  directive,
+  directiveTag,
+  launchWebGLPerfCaveatDialog
 };

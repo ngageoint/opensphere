@@ -1,8 +1,8 @@
 goog.module('os.ui.wiz.WizardPreviewUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.slick.slickGridDirective');
-goog.require('os.ui.slick.slickHeaderButtonDirective');
+goog.require('os.ui.slick.SlickGridUI');
+goog.require('os.ui.slick.SlickHeaderButtonUI');
 
 const {ROOT} = goog.require('os');
 const mapping = goog.require('os.im.mapping');

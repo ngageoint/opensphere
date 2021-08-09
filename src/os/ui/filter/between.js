@@ -1,8 +1,10 @@
-goog.provide('os.ui.filter.BetweenCtrl');
-goog.provide('os.ui.filter.betweenDirective');
+goog.module('os.ui.filter.BetweenUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
 goog.require('os.ui.filter.colTypeCheckValidation');
+
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -10,82 +12,91 @@ goog.require('os.ui.filter.colTypeCheckValidation');
  *
  * @return {angular.Directive}
  */
-os.ui.filter.betweenDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    templateUrl: os.ROOT + 'views/filter/between.html',
-    controller: os.ui.filter.BetweenCtrl,
-    controllerAs: 'betweenCtrl'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  templateUrl: ROOT + 'views/filter/between.html',
+  controller: Controller,
+  controllerAs: 'betweenCtrl'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'fb-between';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('fbBetween', [os.ui.filter.betweenDirective]);
-
-
+Module.directive('fbBetween', [directive]);
 
 /**
  * Controller for the between UI
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.filter.BetweenCtrl = function($scope) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
+   */
+  constructor($scope) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    this['min'] = 0;
+    this['max'] = 1;
+
+    if ($scope['expr']['literal'] != null) {
+      var nums = $scope['expr']['literal'].split(/\s*,\s*/);
+
+      if (nums.length == 2) {
+        this['min'] = parseFloat(nums[0]);
+        this['max'] = parseFloat(nums[1]);
+      }
+    }
+
+    this.onChange();
+    $scope.$on('$destroy', this.onDestroy_.bind(this));
+  }
+
+  /**
+   * clean up
+   *
    * @private
    */
-  this.scope_ = $scope;
+  onDestroy_() {
+    this.scope_ = null;
+  }
 
-  this['min'] = 0;
-  this['max'] = 1;
+  /**
+   * Run when the user changes the value
+   *
+   * @export
+   */
+  onChange() {
+    var a = parseFloat(this['min']);
+    var b = parseFloat(this['max']);
+    var val = '';
 
-  if ($scope['expr']['literal'] != null) {
-    var nums = $scope['expr']['literal'].split(/\s*,\s*/);
-
-    if (nums.length == 2) {
-      this['min'] = parseFloat(nums[0]);
-      this['max'] = parseFloat(nums[1]);
+    if (!isNaN(a)) {
+      val += a + ', ';
     }
+
+    if (!isNaN(b)) {
+      val += b;
+    }
+
+    this.scope_['expr']['literal'] = val;
   }
+}
 
-  this.onChange();
-  $scope.$on('$destroy', this.onDestroy_.bind(this));
-};
-
-
-/**
- * clean up
- *
- * @private
- */
-os.ui.filter.BetweenCtrl.prototype.onDestroy_ = function() {
-  this.scope_ = null;
-};
-
-
-/**
- * Run when the user changes the value
- *
- * @export
- */
-os.ui.filter.BetweenCtrl.prototype.onChange = function() {
-  var a = parseFloat(this['min']);
-  var b = parseFloat(this['max']);
-  var val = '';
-
-  if (!isNaN(a)) {
-    val += a + ', ';
-  }
-
-  if (!isNaN(b)) {
-    val += b;
-  }
-
-  this.scope_['expr']['literal'] = val;
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

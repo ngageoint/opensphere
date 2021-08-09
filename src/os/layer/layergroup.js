@@ -1,15 +1,16 @@
 goog.module('os.layer.LayerGroup');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.node.defaultLayerNodeUIDirective');
-
 const EventTarget = goog.require('goog.events.EventTarget');
 const {clamp} = goog.require('goog.math');
 const {getRandomString} = goog.require('goog.string');
 const {remove} = goog.require('ol.array');
 const IGroupable = goog.require('os.IGroupable');
+const {registerClass} = goog.require('os.classRegistry');
 const osImplements = goog.require('os.implements');
+const LayerClass = goog.require('os.layer.LayerClass');
 const ILayer = goog.require('os.layer.ILayer');
+const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
 
 
 /**
@@ -78,7 +79,7 @@ class LayerGroup extends EventTarget {
      * @type {string}
      * @private
      */
-    this.nodeUi_ = '<defaultlayernodeui></defaultlayernodeui>';
+    this.nodeUi_ = `<${nodeUi}></${nodeUi}>`;
 
     /**
      * @type {string}
@@ -665,5 +666,6 @@ class LayerGroup extends EventTarget {
 }
 osImplements(LayerGroup, ILayer.ID);
 osImplements(LayerGroup, IGroupable.ID);
+registerClass(LayerClass.GROUP, LayerGroup);
 
 exports = LayerGroup;

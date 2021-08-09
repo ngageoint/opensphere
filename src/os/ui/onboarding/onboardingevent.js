@@ -1,37 +1,40 @@
-goog.provide('os.ui.onboarding.OnboardingEvent');
+goog.module('os.ui.onboarding.OnboardingEvent');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Event');
-goog.require('os.ui.EventType');
-
+const GoogEvent = goog.require('goog.events.Event');
+const EventType = goog.require('os.ui.EventType');
 
 
 /**
  * Configuration for user onboarding.
- *
- * @param {string} title Onboarding set title.
- * @param {Array.<Object>} steps The onboarding steps.
- * @param {Object=} opt_config ngOnboarding configuration.
- * @extends {goog.events.Event}
- * @constructor
  */
-os.ui.onboarding.OnboardingEvent = function(title, steps, opt_config) {
-  os.ui.onboarding.OnboardingEvent.base(this, 'constructor', os.ui.EventType.DISPLAY_ONBOARDING);
-
+class OnboardingEvent extends GoogEvent {
   /**
-   * Title for the onboarding set.
-   * @type {string}
+   * Constructor.
+   * @param {string} title Onboarding set title.
+   * @param {Array<Object>} steps The onboarding steps.
+   * @param {Object=} opt_config ngOnboarding configuration.
    */
-  this.title = title;
+  constructor(title, steps, opt_config) {
+    super(EventType.DISPLAY_ONBOARDING);
 
-  /**
-   * The ngOnboarding steps.
-   * @type {Array.<Object>}
-   */
-  this.steps = steps;
+    /**
+     * Title for the onboarding set.
+     * @type {string}
+     */
+    this.title = title;
 
-  /**
-   * @dict
-   */
-  this.config = opt_config || null;
-};
-goog.inherits(os.ui.onboarding.OnboardingEvent, goog.events.Event);
+    /**
+     * The ngOnboarding steps.
+     * @type {Array<Object>}
+     */
+    this.steps = steps;
+
+    /**
+     * @dict
+     */
+    this.config = opt_config || null;
+  }
+}
+
+exports = OnboardingEvent;

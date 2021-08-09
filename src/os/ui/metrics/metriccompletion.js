@@ -1,9 +1,15 @@
-goog.provide('os.ui.metrics.MetricCompletionCtrl');
-goog.provide('os.ui.metrics.metricCompletionDirective');
+goog.module('os.ui.metrics.MetricCompletionUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.color');
-goog.require('os.color');
-goog.require('os.ui.Module');
+const {toString} = goog.require('ol.color');
+const {instanceOf} = goog.require('os.classRegistry');
+const {getGradientColor} = goog.require('os.color');
+const {METRIC_GRADIENT} = goog.require('os.metrics');
+const {getLeafNodes} = goog.require('os.structs');
+const Module = goog.require('os.ui.Module');
+const {ClassName} = goog.require('os.ui.metrics');
+
+const MetricNode = goog.requireType('os.ui.metrics.MetricNode');
 
 
 /**
@@ -11,114 +17,121 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.metrics.metricCompletionDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    template: '<span class="pl-1 c-slick-grid__hover-color" ng-style="mc.style" ' +
-        'ng-bind-html="mc.getCompleted()" />',
-    controller: os.ui.metrics.MetricCompletionCtrl,
-    controllerAs: 'mc'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  template: '<span class="pl-1 c-slick-grid__hover-color" ng-style="mc.style" ' +
+      'ng-bind-html="mc.getCompleted()" />',
+  controller: Controller,
+  controllerAs: 'mc'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'metriccompletion';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('metriccompletion', [os.ui.metrics.metricCompletionDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for selected/highlighted node UI
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.metrics.MetricCompletionCtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?os.ui.metrics.MetricNode}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    /**
+     * @type {?MetricNode}
+     * @private
+     */
+    this.node_ = null;
+
+    /**
+     * @type {string}
+     */
+    this['style'] = '';
+
+    if (instanceOf($scope['item'], ClassName.METRIC_NODE)) {
+      this.node_ = /** @type {MetricNode} */ ($scope['item']);
+    }
+
+    $scope.$on('$destroy', this.onDestroy_.bind(this));
+  }
+
+  /**
+   * Clean up
+   *
    * @private
    */
-  this.node_ = null;
+  onDestroy_() {
+    this.node_ = null;
+  }
 
   /**
-   * @type {string}
+   * @return {string}
+   * @export
    */
-  this['style'] = '';
-
-  if ($scope['item'] instanceof os.ui.metrics.MetricNode) {
-    this.node_ = $scope['item'];
-  }
-
-  $scope.$on('$destroy', this.onDestroy_.bind(this));
-};
-
-
-/**
- * Clean up
- *
- * @private
- */
-os.ui.metrics.MetricCompletionCtrl.prototype.onDestroy_ = function() {
-  this.node_ = null;
-};
-
-
-/**
- * @return {string}
- * @export
- */
-os.ui.metrics.MetricCompletionCtrl.prototype.getCompleted = function() {
-  try {
-    if (this.node_ && this.node_.hasChildren()) {
-      var percent = this.getVisitedPercent_();
-      var color = os.color.getGradientColor(percent / 100 * 255, os.metrics.METRIC_GRADIENT);
-      if (color.length == 3) {
-        color.push(1);
-      }
-
-      this['style'] = {
-        'color': ol.color.toString(color)
-      };
-
-      return '<strong>(' + percent + '% Explored)</strong>';
-    }
-  } catch (e) {
-  }
-
-  return '';
-};
-
-
-/**
- * Gets the visited percentage for the node.
- *
- * @return {number}
- * @private
- */
-os.ui.metrics.MetricCompletionCtrl.prototype.getVisitedPercent_ = function() {
-  if (this.node_) {
-    if (this.node_.hasChildren()) {
-      var leaves = /** @type {!Array<!os.ui.metrics.MetricNode>} */ (os.structs.getLeafNodes(this.node_));
-      var total = leaves.length;
-      var visited = 0;
-
-      for (var i = 0; i < total; i++) {
-        if (leaves[i].getVisited()) {
-          visited++;
+  getCompleted() {
+    try {
+      if (this.node_ && this.node_.hasChildren()) {
+        var percent = this.getVisitedPercent_();
+        var color = getGradientColor(percent / 100 * 255, METRIC_GRADIENT);
+        if (color.length == 3) {
+          color.push(1);
         }
-      }
 
-      return Math.round(visited / total * 100);
-    } else {
-      return this.node_.getVisited() ? 100 : 0;
+        this['style'] = {
+          'color': toString(color)
+        };
+
+        return '<strong>(' + percent + '% Explored)</strong>';
+      }
+    } catch (e) {
     }
+
+    return '';
   }
 
-  return 0;
-};
+  /**
+   * Gets the visited percentage for the node.
+   *
+   * @return {number}
+   * @private
+   */
+  getVisitedPercent_() {
+    if (this.node_) {
+      if (this.node_.hasChildren()) {
+        var leaves = /** @type {!Array<!MetricNode>} */ (getLeafNodes(this.node_));
+        var total = leaves.length;
+        var visited = 0;
 
+        for (var i = 0; i < total; i++) {
+          if (leaves[i].getVisited()) {
+            visited++;
+          }
+        }
+
+        return Math.round(visited / total * 100);
+      } else {
+        return this.node_.getVisited() ? 100 : 0;
+      }
+    }
+
+    return 0;
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
+};

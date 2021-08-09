@@ -1,45 +1,47 @@
-goog.provide('os.ui.filter.op.Rule');
-goog.require('os.ui.filter.op.Op');
-goog.require('os.xsd.DataType');
+goog.module('os.ui.filter.op.Rule');
+goog.module.declareLegacyNamespace();
 
-
-
-/**
- * @param {string} localName
- * @param {string} title
- * @param {string=} opt_shortTitle
- * @param {?Array.<string>=} opt_supportedTypes
- * @param {string=} opt_attrs
- * @param {string=} opt_hint
- * @param {string=} opt_ui
- * @extends {os.ui.filter.op.Op}
- * @constructor
- */
-os.ui.filter.op.Rule = function(localName, title, opt_shortTitle, opt_supportedTypes, opt_attrs, opt_hint, opt_ui) {
-  os.ui.filter.op.Rule.base(this, 'constructor',
-      localName, title, opt_shortTitle, opt_supportedTypes, opt_attrs, opt_hint, opt_ui);
-
-  this.supportedTypes = [os.xsd.DataType.INTEGER];
-};
-goog.inherits(os.ui.filter.op.Rule, os.ui.filter.op.Op);
+const Op = goog.require('os.ui.filter.op.Op');
+const DataType = goog.require('os.xsd.DataType');
 
 
 /**
- * @inheritDoc
  */
-os.ui.filter.op.Rule.prototype.getFilter = function(column, literal) {
-  if (literal) {
-    return '<And><' + this.localName + ' property="getNumberOfResults" value="' + literal + '">' +
-        '</' + this.localName + '></And>';
+class Rule extends Op {
+  /**
+   * Constructor.
+   * @param {string} localName
+   * @param {string} title
+   * @param {string=} opt_shortTitle
+   * @param {?Array.<string>=} opt_supportedTypes
+   * @param {string=} opt_attrs
+   * @param {string=} opt_hint
+   * @param {string=} opt_ui
+   */
+  constructor(localName, title, opt_shortTitle, opt_supportedTypes, opt_attrs, opt_hint, opt_ui) {
+    super(localName, title, opt_shortTitle, opt_supportedTypes, opt_attrs, opt_hint, opt_ui);
+
+    this.supportedTypes = [DataType.INTEGER];
   }
 
-  return null;
-};
+  /**
+   * @inheritDoc
+   */
+  getFilter(column, literal) {
+    if (literal) {
+      return '<And><' + this.localName + ' property="getNumberOfResults" value="' + literal + '">' +
+          '</' + this.localName + '></And>';
+    }
 
+    return null;
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.filter.op.Rule.prototype.getLiteral = function(el) {
-  return el.attr('value');
-};
+  /**
+   * @inheritDoc
+   */
+  getLiteral(el) {
+    return el.attr('value');
+  }
+}
+
+exports = Rule;

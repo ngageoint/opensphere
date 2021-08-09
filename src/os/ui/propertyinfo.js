@@ -12,9 +12,9 @@ goog.require('os.data.RecordField');
 goog.require('os.style');
 goog.require('os.ui');
 goog.require('os.ui.Module');
-goog.require('os.ui.location.SimpleLocationDirective');
+goog.require('os.ui.location.SimpleLocationUI');
+goog.require('os.ui.slick.SlickGridUI');
 goog.require('os.ui.slick.formatter');
-goog.require('os.ui.slick.slickGridDirective');
 goog.require('os.ui.window');
 
 

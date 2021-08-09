@@ -1,238 +1,219 @@
-goog.provide('os.ui.metrics.MetricNode');
-goog.provide('os.ui.metrics.MetricNodeOptions');
+goog.module('os.ui.metrics.MetricNode');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.ISearchable');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.ui.metrics.metricCompletionDirective');
-goog.require('os.ui.slick.SlickTreeNode');
+const {registerClass} = goog.require('os.classRegistry');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const {MetricsEventType} = goog.require('os.metrics');
+const Metrics = goog.require('os.metrics.Metrics');
+const {ClassName} = goog.require('os.ui.metrics');
+const {directiveTag} = goog.require('os.ui.metrics.MetricCompletionUI');
+const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
-
-/**
- * @typedef {{
- *   label: !string,
- *   description: (string|undefined),
- *   key: (string|undefined),
- *   icon: (string|undefined),
- *   collapsed: (boolean|undefined)
- * }}
- */
-os.ui.metrics.MetricNodeOptions;
-
+const ISearchable = goog.requireType('os.data.ISearchable');
 
 
 /**
  * Tree nodes for layers
  *
- * @extends {os.ui.slick.SlickTreeNode}
- * @implements {os.data.ISearchable}
- * @param {string=} opt_key
- * @constructor
+ * @implements {ISearchable}
  */
-os.ui.metrics.MetricNode = function(opt_key) {
-  os.ui.metrics.MetricNode.base(this, 'constructor');
-  this.setCheckboxVisible(false);
-
+class MetricNode extends SlickTreeNode {
   /**
-   * @type {string|undefined}
-   * @private
+   * Constructor.
+   * @param {string=} opt_key
    */
-  this.key_ = opt_key;
+  constructor(opt_key) {
+    super();
+    this.setCheckboxVisible(false);
 
-  /**
-   * @type {string|undefined}
-   * @private
-   */
-  this.description_ = undefined;
+    /**
+     * @type {string|undefined}
+     * @private
+     */
+    this.key_ = opt_key;
 
-  /**
-   * @type {!function()}
-   * @private
-   */
-  this.callback_;
+    /**
+     * @type {string|undefined}
+     * @private
+     */
+    this.description_ = undefined;
 
-  /**
-   * @type {?string}
-   */
-  this.icon = null;
+    /**
+     * @type {!function()}
+     * @private
+     */
+    this.callback_;
 
-  /**
-   * Indicates if a node has been visited.
-   * @type {!boolean}
-   * @private
-   */
-  this.visited_ = false;
+    /**
+     * @type {?string}
+     */
+    this.icon = null;
 
-  if (this.key_) {
-    var metrics = os.metrics.Metrics.getInstance();
-    this.setVisited(metrics.hasMetric(this.key_));
+    /**
+     * Indicates if a node has been visited.
+     * @type {!boolean}
+     * @private
+     */
+    this.visited_ = false;
 
-    metrics.listen(this.key_, this.onMetricChange_, false, this);
-    metrics.listen(os.metrics.MetricsEventType.RESET, this.onMetricsReset_, false, this);
-  }
-};
-goog.inherits(os.ui.metrics.MetricNode, os.ui.slick.SlickTreeNode);
+    if (this.key_) {
+      var metrics = Metrics.getInstance();
+      this.setVisited(metrics.hasMetric(this.key_));
 
-
-/**
- * @inheritDoc
- */
-os.ui.metrics.MetricNode.prototype.disposeInternal = function() {
-  os.ui.metrics.MetricNode.base(this, 'disposeInternal');
-
-  if (this.key_) {
-    var metrics = os.metrics.Metrics.getInstance();
-    metrics.unlisten(this.key_, this.onMetricChange_, false, this);
-    metrics.unlisten(os.metrics.MetricsEventType.RESET, this.onMetricsReset_, false, this);
-  }
-};
-
-
-/**
- * @param {os.events.SettingChangeEvent} event
- * @private
- */
-os.ui.metrics.MetricNode.prototype.onMetricChange_ = function(event) {
-  if (typeof event.newVal == 'number') {
-    this.setVisited(event.newVal > 0);
-  }
-};
-
-
-/**
- * @param {os.events.SettingChangeEvent} event
- * @private
- */
-os.ui.metrics.MetricNode.prototype.onMetricsReset_ = function(event) {
-  if (this.key_) {
-    var metrics = os.metrics.Metrics.getInstance();
-    this.setVisited(metrics.hasMetric(this.key_));
-  }
-};
-
-
-/**
- * @return {string|undefined}
- */
-os.ui.metrics.MetricNode.prototype.getDescription = function() {
-  return this.description_;
-};
-
-
-/**
- * @param {string|undefined} description
- */
-os.ui.metrics.MetricNode.prototype.setDescription = function(description) {
-  this.description_ = description;
-};
-
-
-/**
- * @return {!function()}
- */
-os.ui.metrics.MetricNode.prototype.getCallback = function() {
-  return this.callback_;
-};
-
-
-/**
- * @param {!function()} callback
- */
-os.ui.metrics.MetricNode.prototype.setCallback = function(callback) {
-  this.callback_ = callback;
-};
-
-
-/**
- * @return {!boolean}
- */
-os.ui.metrics.MetricNode.prototype.getVisited = function() {
-  return this.visited_;
-};
-
-
-/**
- * @param {!boolean} visited
- */
-os.ui.metrics.MetricNode.prototype.setVisited = function(visited) {
-  if (visited != this.visited_) {
-    this.visited_ = visited;
-    this.dispatchEvent(new os.events.PropertyChangeEvent('visited', visited, !visited));
-    this.dispatchEvent(new os.events.PropertyChangeEvent('label'));
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.metrics.MetricNode.prototype.getSearchText = function() {
-  return [
-    (this.getLabel() || ''),
-    (this.getDescription() || ''),
-    (this.getTags() || '')
-  ].join(' ');
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.metrics.MetricNode.prototype.getTags = function() {
-  return null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.metrics.MetricNode.prototype.formatIcons = function() {
-  if (!this.hasChildren()) {
-    if (this.getVisited()) {
-      return '<i class="fa fa-check"></i>';
-    } else {
-      return '<i class="fa fa-times"></i>';
+      metrics.listen(this.key_, this.onMetricChange_, false, this);
+      metrics.listen(MetricsEventType.RESET, this.onMetricsReset_, false, this);
     }
   }
 
-  return this.icon || '&nbsp;';
-};
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
 
-
-/**
- * Returns this nodes icon, or empty string.
- *
- * @return {string}
- */
-os.ui.metrics.MetricNode.prototype.getNodeIcon = function() {
-  if (this.icon) {
-    return /^<.*>/.test(this.icon) ?
-      this.icon : '<i class="' + this.icon + '"></i>';
+    if (this.key_) {
+      var metrics = Metrics.getInstance();
+      metrics.unlisten(this.key_, this.onMetricChange_, false, this);
+      metrics.unlisten(MetricsEventType.RESET, this.onMetricsReset_, false, this);
+    }
   }
-  return '';
-};
 
+  /**
+   * @param {os.events.SettingChangeEvent} event
+   * @private
+   */
+  onMetricChange_(event) {
+    if (typeof event.newVal == 'number') {
+      this.setVisited(event.newVal > 0);
+    }
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.metrics.MetricNode.prototype.formatValue = function(value) {
-  var html = os.ui.metrics.MetricNode.base(this, 'formatValue', value);
-  html += '<metriccompletion></metriccompletion>';
-  return html;
-};
+  /**
+   * @param {os.events.SettingChangeEvent} event
+   * @private
+   */
+  onMetricsReset_(event) {
+    if (this.key_) {
+      var metrics = Metrics.getInstance();
+      this.setVisited(metrics.hasMetric(this.key_));
+    }
+  }
 
+  /**
+   * @return {string|undefined}
+   */
+  getDescription() {
+    return this.description_;
+  }
 
-/**
- * @return {!boolean}
- */
-os.ui.metrics.MetricNode.prototype.getEnabled = function() {
-  return true;
-};
+  /**
+   * @param {string|undefined} description
+   */
+  setDescription(description) {
+    this.description_ = description;
+  }
 
+  /**
+   * @return {!function()}
+   */
+  getCallback() {
+    return this.callback_;
+  }
 
-/**
- * @return {!boolean}
- */
-os.ui.metrics.MetricNode.prototype.isLoading = function() {
-  return false;
-};
+  /**
+   * @param {!function()} callback
+   */
+  setCallback(callback) {
+    this.callback_ = callback;
+  }
+
+  /**
+   * @return {!boolean}
+   */
+  getVisited() {
+    return this.visited_;
+  }
+
+  /**
+   * @param {!boolean} visited
+   */
+  setVisited(visited) {
+    if (visited != this.visited_) {
+      this.visited_ = visited;
+      this.dispatchEvent(new PropertyChangeEvent('visited', visited, !visited));
+      this.dispatchEvent(new PropertyChangeEvent('label'));
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getSearchText() {
+    return [
+      (this.getLabel() || ''),
+      (this.getDescription() || ''),
+      (this.getTags() || '')
+    ].join(' ');
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getTags() {
+    return null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  formatIcons() {
+    if (!this.hasChildren()) {
+      if (this.getVisited()) {
+        return '<i class="fa fa-check"></i>';
+      } else {
+        return '<i class="fa fa-times"></i>';
+      }
+    }
+
+    return this.icon || '&nbsp;';
+  }
+
+  /**
+   * Returns this nodes icon, or empty string.
+   *
+   * @return {string}
+   */
+  getNodeIcon() {
+    if (this.icon) {
+      return /^<.*>/.test(this.icon) ?
+        this.icon : '<i class="' + this.icon + '"></i>';
+    }
+    return '';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  formatValue(value) {
+    var html = super.formatValue(value);
+    html += `<${directiveTag}></${directiveTag}>`;
+    return html;
+  }
+
+  /**
+   * @return {!boolean}
+   */
+  getEnabled() {
+    return true;
+  }
+
+  /**
+   * @return {!boolean}
+   */
+  isLoading() {
+    return false;
+  }
+}
+registerClass(ClassName.METRIC_NODE, MetricNode);
+
+exports = MetricNode;

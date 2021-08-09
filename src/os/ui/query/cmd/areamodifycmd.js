@@ -1,104 +1,109 @@
-goog.provide('os.ui.query.cmd.AreaModify');
-goog.require('os.command.ICommand');
-goog.require('os.interpolate');
-goog.require('os.ol.feature');
-goog.require('os.ui.query.cmd.AbstractArea');
+goog.module('os.ui.query.cmd.AreaModify');
+goog.module.declareLegacyNamespace();
 
+const State = goog.require('os.command.State');
+const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
+const {getAreaManager} = goog.require('os.query.instance');
+const AbstractArea = goog.require('os.ui.query.cmd.AbstractArea');
+
+const Feature = goog.requireType('ol.Feature');
+const Geometry = goog.requireType('ol.geom.Geometry');
+const ICommand = goog.requireType('os.command.ICommand');
 
 
 /**
  * Command for modifying an area
  *
- * @param {!ol.Feature} area
- * @param {!ol.geom.Geometry} geometry
- * @implements {os.command.ICommand}
- * @extends {os.ui.query.cmd.AbstractArea}
- * @constructor
+ * @implements {ICommand}
  */
-os.ui.query.cmd.AreaModify = function(area, geometry) {
-  os.ui.query.cmd.AreaModify.base(this, 'constructor', area);
-
+class AreaModify extends AbstractArea {
   /**
-   * @type {ol.geom.Geometry|undefined}
-   * @protected
+   * Constructor.
+   * @param {!Feature} area
+   * @param {!Geometry} geometry
    */
-  this.newGeometry = undefined;
+  constructor(area, geometry) {
+    super(area);
 
-  /**
-   * @type {ol.geom.Geometry|undefined}
-   * @protected
-   */
-  this.oldGeometry = undefined;
+    /**
+     * @type {Geometry|undefined}
+     * @protected
+     */
+    this.newGeometry = undefined;
 
-  // this will prevent the command from executing if the area isn't in the query manager already
-  if (os.ui.areaManager.get(area)) {
-    this.newGeometry = geometry;
-    this.oldGeometry = area.getGeometry();
-  }
+    /**
+     * @type {Geometry|undefined}
+     * @protected
+     */
+    this.oldGeometry = undefined;
 
-  this.title = 'Modify area';
-  if (area) {
-    var areaTitle = area.get('title');
-    if (areaTitle) {
-      this.title += ' "' + areaTitle + '"';
+    // this will prevent the command from executing if the area isn't in the query manager already
+    if (getAreaManager().get(area)) {
+      this.newGeometry = geometry;
+      this.oldGeometry = area.getGeometry();
+    }
+
+    this.title = 'Modify area';
+    if (area) {
+      var areaTitle = area.get('title');
+      if (areaTitle) {
+        this.title += ' "' + areaTitle + '"';
+      }
     }
   }
-};
-goog.inherits(os.ui.query.cmd.AreaModify, os.ui.query.cmd.AbstractArea);
 
+  /**
+   * @inheritDoc
+   */
+  execute() {
+    if (this.canExecute()) {
+      this.state = State.EXECUTING;
 
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.AreaModify.prototype.execute = function() {
-  if (this.canExecute()) {
-    this.state = os.command.State.EXECUTING;
+      // update the geometry and re-add the area to trigger a refresh
+      this.area.set(ORIGINAL_GEOM_FIELD, undefined);
+      this.area.setGeometry(this.newGeometry);
+      getAreaManager().remove(this.area);
+      getAreaManager().add(this.area);
 
-    // update the geometry and re-add the area to trigger a refresh
-    this.area.set(os.interpolate.ORIGINAL_GEOM_FIELD, undefined);
-    this.area.setGeometry(this.newGeometry);
-    os.ui.areaManager.remove(this.area);
-    os.ui.areaManager.add(this.area);
+      this.state = State.SUCCESS;
+      return true;
+    }
 
-    this.state = os.command.State.SUCCESS;
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
+
+    // revert to the original geometry and re-add the area to trigger a refresh
+    this.area.set(ORIGINAL_GEOM_FIELD, undefined);
+    this.area.setGeometry(this.oldGeometry);
+    getAreaManager().remove(this.area);
+    getAreaManager().add(this.area);
+
+    this.state = State.READY;
     return true;
   }
 
-  return false;
-};
+  /**
+   * @inheritDoc
+   */
+  canExecute() {
+    if (!this.oldGeometry) {
+      this.details = 'Original area unknown.';
+      return false;
+    }
 
+    if (!this.newGeometry) {
+      this.details = 'No new area provided.';
+      return false;
+    }
 
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.AreaModify.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-
-  // revert to the original geometry and re-add the area to trigger a refresh
-  this.area.set(os.interpolate.ORIGINAL_GEOM_FIELD, undefined);
-  this.area.setGeometry(this.oldGeometry);
-  os.ui.areaManager.remove(this.area);
-  os.ui.areaManager.add(this.area);
-
-  this.state = os.command.State.READY;
-  return true;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.AreaModify.prototype.canExecute = function() {
-  if (!this.oldGeometry) {
-    this.details = 'Original area unknown.';
-    return false;
+    return super.canExecute();
   }
+}
 
-  if (!this.newGeometry) {
-    this.details = 'No new area provided.';
-    return false;
-  }
-
-  return os.ui.query.cmd.AreaModify.base(this, 'canExecute');
-};
-
+exports = AreaModify;

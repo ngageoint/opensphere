@@ -1,7 +1,8 @@
-goog.provide('os.ui.slick.SlickHeaderButtonCtrl');
-goog.provide('os.ui.slick.slickHeaderButtonDirective');
-goog.require('os.ui.Module');
-goog.require('os.ui.slick.SlickGridCtrl');
+goog.module('os.ui.slick.SlickHeaderButtonUI');
+goog.module.declareLegacyNamespace();
+
+const Module = goog.require('os.ui.Module');
+const {Controller: SlickGridCtrl, directive: slickGridDirective} = goog.require('os.ui.slick.SlickGridUI');
 
 
 /**
@@ -9,45 +10,56 @@ goog.require('os.ui.slick.SlickGridCtrl');
  *
  * @return {angular.Directive}
  */
-os.ui.slick.slickHeaderButtonDirective = function() {
-  var dir = os.ui.slickGridDirective();
+const directive = () => {
+  var dir = slickGridDirective();
   dir['scope']['onCommand'] = '=?';
-  dir['controller'] = os.ui.slick.SlickHeaderButtonCtrl;
+  dir['controller'] = Controller;
   return dir;
 };
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'slickheaderbutton';
 
 /**
  * Add the directive
  */
-os.ui.Module.directive('slickheaderbutton', [os.ui.slick.slickHeaderButtonDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller class for SlickGrid with header buttons
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$compile} $compile
- * @extends {os.ui.slick.SlickGridCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.slick.SlickHeaderButtonCtrl = function($scope, $element, $compile) {
-  os.ui.slick.SlickHeaderButtonCtrl.base(this, 'constructor', $scope, $element, $compile);
+class Controller extends SlickGridCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$compile} $compile
+   * @ngInject
+   */
+  constructor($scope, $element, $compile) {
+    super($scope, $element, $compile);
 
-  var headerButtonsPlugin = new Slick.Plugins.HeaderButtons();
+    var headerButtonsPlugin = new Slick.Plugins.HeaderButtons();
 
-  headerButtonsPlugin.onCommand.subscribe(function(e, args) {
-    var button = args['button'];
-    var command = args['command'];
-    var idx = this.grid.getColumnIndex(args['column']['id']);
-    var column = this.scope['columns'][idx];
+    headerButtonsPlugin.onCommand.subscribe(function(e, args) {
+      var button = args['button'];
+      var command = args['command'];
+      var idx = this.grid.getColumnIndex(args['column']['id']);
+      var column = this.scope['columns'][idx];
 
-    this.scope['onCommand'](column, button, command, this.scope['columns']);
-  }.bind(this));
+      this.scope['onCommand'](column, button, command, this.scope['columns']);
+    }.bind(this));
 
-  this.grid.registerPlugin(headerButtonsPlugin);
+    this.grid.registerPlugin(headerButtonsPlugin);
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
-goog.inherits(os.ui.slick.SlickHeaderButtonCtrl, os.ui.slick.SlickGridCtrl);

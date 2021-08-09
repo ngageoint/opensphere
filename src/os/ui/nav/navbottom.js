@@ -1,7 +1,9 @@
-goog.provide('os.ui.navBottomDirective');
+goog.module('os.ui.navBottomDirective');
+goog.module.declareLegacyNamespace();
 
-goog.require('os');
-goog.require('os.ui.NavBarCtrl');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const NavBarCtrl = goog.require('os.ui.NavBarCtrl');
 
 
 /**
@@ -9,19 +11,27 @@ goog.require('os.ui.NavBarCtrl');
  *
  * @return {angular.Directive}
  */
-os.ui.navBottomDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/navbottom.html',
-    controller: os.ui.NavBarCtrl,
-    controllerAs: 'navBottom'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  templateUrl: ROOT + 'views/navbottom.html',
+  controller: NavBarCtrl,
+  controllerAs: 'navBottom'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'nav-bottom';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('navBottom', [os.ui.navBottomDirective]);
+Module.directive('navBottom', [directive]);
+
+exports = {
+  directive,
+  directiveTag
+};

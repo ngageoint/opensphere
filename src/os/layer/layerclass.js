@@ -6,6 +6,7 @@ goog.module.declareLegacyNamespace();
  * @enum {string}
  */
 exports = {
+  GROUP: 'os.layer.LayerGroup',
   TILE: 'os.layer.Tile',
   VECTOR: 'os.layer.Vector'
 };

@@ -1,32 +1,25 @@
-goog.provide('os.ui.metrics.MetricsManagerEvent');
-goog.provide('os.ui.metrics.MetricsManagerEventType');
-goog.require('goog.events.Event');
+goog.module('os.ui.metrics.MetricsManagerEvent');
+
+const GoogEvent = goog.require('goog.events.Event');
+const MetricsPlugin = goog.requireType('os.ui.metrics.MetricsPlugin');
 
 
 /**
- * @enum {string}
  */
-os.ui.metrics.MetricsManagerEventType = {
-  METRIC_CHANGE: 'metricsmanager:selectedchange',
-  METRIC_ADDED: 'metricsmanager:pluginadded'
-};
-
-
-
-/**
- * @param {string} type
- * @param {os.ui.metrics.MetricsPlugin=} opt_plugin
- * @extends {goog.events.Event}
- * @constructor
- */
-os.ui.metrics.MetricsManagerEvent = function(type, opt_plugin) {
-  os.ui.metrics.MetricsManagerEvent.base(this, 'constructor', type);
-
+class MetricsManagerEvent extends GoogEvent {
   /**
-   * @type {os.ui.metrics.MetricsPlugin}
+   * Constructor.
+   * @param {string} type
+   * @param {MetricsPlugin=} opt_plugin
    */
-  this.plugin = opt_plugin || null;
-};
-goog.inherits(os.ui.metrics.MetricsManagerEvent, goog.events.Event);
+  constructor(type, opt_plugin) {
+    super(type);
 
+    /**
+     * @type {MetricsPlugin}
+     */
+    this.plugin = opt_plugin || null;
+  }
+}
 
+exports = MetricsManagerEvent;

@@ -1,44 +1,49 @@
-goog.provide('os.ui.filter.op.IsLike');
+goog.module('os.ui.filter.op.IsLike');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.string');
-goog.require('os.ui.filter.op.Op');
-goog.require('os.ui.filter.string');
-goog.require('os.xsd.DataType');
-
+const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
+const Op = goog.require('os.ui.filter.op.Op');
+const {escapeRegExp} = goog.require('os.ui.filter.string');
+const DataType = goog.require('os.xsd.DataType');
 
 
 /**
  * A 'PropertyIsLike' operation class.
- *
- * @extends {os.ui.filter.op.Op}
- * @constructor
  */
-os.ui.filter.op.IsLike = function() {
-  os.ui.filter.op.IsLike.base(this, 'constructor',
-      'PropertyIsLike', 'is like', 'like',
-      [os.xsd.DataType.STRING], 'wildCard="*" singleChar="." escape="\\"',
-      'e.g. abc*' + os.ui.filter.op.Op.TEXT.CASE_INSENSITIVE,
-      undefined,
-      undefined,
-      os.ui.filter.op.Op.TEXT.CASE_INSENSITIVE_TITLE,
-      os.ui.filter.op.Op.TEXT.CASE_INSENSITIVE_DETAIL
-  );
-};
-goog.inherits(os.ui.filter.op.IsLike, os.ui.filter.op.Op);
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.op.IsLike.prototype.getEvalExpression = function(varName, literal) {
-  if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(literal))) {
-    // make the string safe for use in a RegExp
-    var reStr = os.ui.filter.string.escapeRegExp(literal);
-
-    // test the expression, case insensitive
-    return '/^' + reStr + '$/im.test(' + varName + ')';
+class IsLike extends Op {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super(
+        'PropertyIsLike',
+        'is like',
+        'like',
+        [DataType.STRING],
+        'wildCard="*" singleChar="." escape="\\"',
+        'e.g. abc*' + Op.TEXT.CASE_INSENSITIVE,
+        undefined,
+        undefined,
+        Op.TEXT.CASE_INSENSITIVE_TITLE,
+        Op.TEXT.CASE_INSENSITIVE_DETAIL
+    );
   }
 
-  // null/empty string is not supported, so don't return an expression
-  return '';
-};
+  /**
+   * @inheritDoc
+   */
+  getEvalExpression(varName, literal) {
+    if (!isEmptyOrWhitespace(makeSafe(literal))) {
+      // make the string safe for use in a RegExp
+      var reStr = escapeRegExp(literal);
+
+      // test the expression, case insensitive
+      return '/^' + reStr + '$/im.test(' + varName + ')';
+    }
+
+    // null/empty string is not supported, so don't return an expression
+    return '';
+  }
+}
+
+exports = IsLike;

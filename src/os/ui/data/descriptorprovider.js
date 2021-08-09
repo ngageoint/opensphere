@@ -86,7 +86,7 @@ class DescriptorProvider extends BaseProvider {
   /**
    * Get the descriptors registered to this provider.
    *
-   * @return {!Array.<T>} The descriptors
+   * @return {!Array<T>} The descriptors
    */
   getDescriptors() {
     var dm = DataManager.getInstance();

@@ -8,7 +8,7 @@ const os = goog.require('os');
 const MapContainer = goog.require('os.MapContainer');
 const osMap = goog.require('os.map');
 const Module = goog.require('os.ui.Module');
-const TileLayerUICtrl = goog.require('os.ui.layer.TileLayerUICtrl');
+const {Controller: TileLayerUICtrl} = goog.require('os.ui.layer.TileLayerUI');
 
 
 /**

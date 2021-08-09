@@ -1,36 +1,35 @@
-goog.provide('os.ui.hist.IHistogramChart');
-goog.require('goog.disposable.IDisposable');
-goog.require('os.hist.HistogramData');
+goog.module('os.ui.hist.IHistogramChart');
+goog.module.declareLegacyNamespace();
 
-
+const IDisposable = goog.requireType('goog.disposable.IDisposable');
+const IHistogramData = goog.requireType('os.hist.IHistogramData');
 
 /**
  * Interface for a chart driven by a histogram.
  *
- * @extends {goog.disposable.IDisposable}
+ * @extends {IDisposable}
  * @interface
  */
-os.ui.hist.IHistogramChart = function() {};
+class IHistogramChart {
+  /**
+   * Clears the chart if one is currently drawn.
+   */
+  clear() {}
 
+  /**
+   * Draws the chart, first clearing any previous one.
+   * @param {!Array<!IHistogramData>} data The data to draw.
+   * @param {d3.Scale} x The scale for the chart's x axis.
+   * @param {d3.Scale} y The scale for the chart's y axis.
+   * @param {Object=} opt_options Optional options for the histogram
+   */
+  draw(data, x, y, opt_options) {}
 
-/**
- * Clears the chart if one is currently drawn.
- */
-os.ui.hist.IHistogramChart.prototype.clear;
+  /**
+   * Applies a tooltip to the chart.
+   * @param {d3.Tip} tooltip The d3 tooltip instance.
+   */
+  tooltip(tooltip) {}
+}
 
-
-/**
- * Draws the chart, first clearing any previous one.
- * @param {!Array.<!os.hist.IHistogramData>} data The data to draw.
- * @param {d3.Scale} x The scale for the chart's x axis.
- * @param {d3.Scale} y The scale for the chart's y axis.
- * @param {Object=} opt_options Optional options for the histogram
- */
-os.ui.hist.IHistogramChart.prototype.draw;
-
-
-/**
- * Applies a tooltip to the chart.
- * @param {d3.Tip} tooltip The d3 tooltip instance.
- */
-os.ui.hist.IHistogramChart.prototype.tooltip;
+exports = IHistogramChart;

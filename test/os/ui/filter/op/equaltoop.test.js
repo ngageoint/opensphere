@@ -1,7 +1,9 @@
 goog.require('os.ui.filter.op.EqualTo');
 
 describe('os.ui.filter.op.EqualTo', function() {
-  var op = new os.ui.filter.op.EqualTo();
+  const EqualTo = goog.module.get('os.ui.filter.op.EqualTo');
+
+  var op = new EqualTo();
 
   it('should be configured correctly', function() {
     expect(op.localName).toBe('PropertyIsEqualTo');

@@ -1,308 +1,308 @@
-goog.provide('os.ui.filter.op.Op');
-goog.require('os.ui.filter.textDirective');
-goog.require('os.xsd.DataType');
+goog.module('os.ui.filter.op.Op');
+goog.module.declareLegacyNamespace();
 
+const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
+const {directiveTag: textUi} = goog.require('os.ui.filter.TextUI');
+
+const DataType = goog.requireType('os.xsd.DataType');
 
 
 /**
  * Model class representing operations. Operations can be a single expression or multiple (generally subclasses).
- *
- * @param {string} localName Element name for the expression it creates
- * @param {string} title Human readable name for the op
- * @param {string=} opt_shortTitle Abbreviated human readable name for the op
- * @param {?Array<os.xsd.DataType>=} opt_supportedTypes Supported input types (number, string, integer)
- * @param {string=} opt_attributes
- * @param {string=} opt_hint Hint text for the UI
- * @param {string=} opt_ui The UI rendered next to the op select
- * @param {boolean=} opt_noLiteral Whether to exclude the literal value
- * @param {string=} opt_popoverTitle title for a popover, if wanted; default "Info"
- * @param {string=} opt_popoverContent content for a popover, if wanted
- * @constructor
+ * @unrestricted
  */
-os.ui.filter.op.Op = function(localName, title, opt_shortTitle, opt_supportedTypes, opt_attributes, opt_hint, opt_ui,
-    opt_noLiteral, opt_popoverTitle, opt_popoverContent) {
+class Op {
   /**
-   * @type {string}
-   * @protected
+   * Constructor.
+   * @param {string} localName Element name for the expression it creates
+   * @param {string} title Human readable name for the op
+   * @param {string=} opt_shortTitle Abbreviated human readable name for the op
+   * @param {?Array<DataType>=} opt_supportedTypes Supported input types (number, string, integer)
+   * @param {string=} opt_attributes
+   * @param {string=} opt_hint Hint text for the UI
+   * @param {string=} opt_ui The UI rendered next to the op select
+   * @param {boolean=} opt_noLiteral Whether to exclude the literal value
+   * @param {string=} opt_popoverTitle title for a popover, if wanted; default "Info"
+   * @param {string=} opt_popoverContent content for a popover, if wanted
    */
-  this.localName = localName;
+  constructor(
+      localName,
+      title,
+      opt_shortTitle,
+      opt_supportedTypes,
+      opt_attributes,
+      opt_hint,
+      opt_ui,
+      opt_noLiteral,
+      opt_popoverTitle,
+      opt_popoverContent
+  ) {
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.localName = localName;
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.title_ = title;
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.shortTitle_ = opt_shortTitle || title;
+
+    /**
+     * @type {?Array<DataType>}
+     * @protected
+     */
+    this.supportedTypes = opt_supportedTypes || null;
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.attributes_ = opt_attributes || '';
+
+    /**
+     * @type {!string}
+     * @private
+     */
+    this.ui_ = opt_ui || textUi;
+
+    /**
+     * @type {!string}
+     */
+    this['hint'] = opt_hint || '';
+
+    /**
+     * @type {!string}
+     */
+    this['popoverTitle'] = opt_popoverTitle || 'Info';
+
+    /**
+     * @type {?string}
+     */
+    this['popoverContent'] = opt_popoverContent;
+
+    /**
+     * String for matching the hint saved to the filter XML.
+     * @type {?string}
+     * @protected
+     */
+    this.matchHint = null;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.excludeLiteral_ = opt_noLiteral === true || false;
+  }
 
   /**
-   * @type {string}
-   * @private
+   * Gets the op node name
+   *
+   * @return {string}
    */
-  this.title_ = title;
+  getLocalName() {
+    return this.localName;
+  }
 
   /**
-   * @type {string}
-   * @private
+   * Gets the title
+   *
+   * @return {string} The title
+   * @export
    */
-  this.shortTitle_ = opt_shortTitle || title;
+  getTitle() {
+    return this.title_;
+  }
 
   /**
-   * @type {?Array<os.xsd.DataType>}
-   * @protected
+   * Gets the title
+   *
+   * @return {string} The title
+   * @export
    */
-  this.supportedTypes = opt_supportedTypes || null;
+  getShortTitle() {
+    return this.shortTitle_;
+  }
 
   /**
-   * @type {string}
-   * @private
+   * Get the attributes on the root XML element.
+   *
+   * @return {string}
    */
-  this.attributes_ = opt_attributes || '';
+  getAttributes() {
+    return this.attributes_;
+  }
 
   /**
-   * @type {!string}
-   * @private
+   * Set the attributes on the root XML element.
+   *
+   * @param {string} attributes The attributes.
    */
-  this.ui_ = opt_ui || 'fb-text';
+  setAttributes(attributes) {
+    this.attributes_ = attributes;
+  }
 
   /**
-   * @type {!string}
+   * Gets the UI
+   *
+   * @return {!string}
    */
-  this['hint'] = opt_hint || '';
+  getUi() {
+    return this.ui_;
+  }
 
   /**
-   * @type {!string}
+   * Get if the literal should be excluded/ignored for the operation.
+   *
+   * @return {boolean}
    */
-  this['popoverTitle'] = opt_popoverTitle || 'Info';
+  getExcludeLiteral() {
+    return this.excludeLiteral_;
+  }
 
   /**
-   * @type {?string}
+   * Set if the literal should be excluded/ignored for the operation.
+   *
+   * @param {boolean} value The new value.
    */
-  this['popoverContent'] = opt_popoverContent;
+  setExcludeLiteral(value) {
+    this.excludeLiteral_ = value;
+  }
 
   /**
-   * String for matching the hint saved to the filter XML.
-   * @type {?string}
-   * @protected
+   * Gets the filter
+   *
+   * @param {string} column
+   * @param {string} literal
+   * @return {?string} the filter
    */
-  this.matchHint = null;
+  getFilter(column, literal) {
+    var f = null;
 
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.excludeLiteral_ = opt_noLiteral === true || false;
-};
+    if (column) {
+      f = '<' + this.localName +
+          (this.attributes_ ? ' ' + this.attributes_ : '') + '>' +
+          '<PropertyName>' + column + '</PropertyName>';
 
+      if (literal && !this.excludeLiteral_) {
+        f += '<Literal><![CDATA[' + literal.trim() + ']]></Literal>';
+      }
 
-/**
- * Gets the op node name
- *
- * @return {string}
- */
-os.ui.filter.op.Op.prototype.getLocalName = function() {
-  return this.localName;
-};
-
-
-/**
- * Gets the title
- *
- * @return {string} The title
- * @export
- */
-os.ui.filter.op.Op.prototype.getTitle = function() {
-  return this.title_;
-};
-
-
-/**
- * Gets the title
- *
- * @return {string} The title
- * @export
- */
-os.ui.filter.op.Op.prototype.getShortTitle = function() {
-  return this.shortTitle_;
-};
-
-
-/**
- * Get the attributes on the root XML element.
- *
- * @return {string}
- */
-os.ui.filter.op.Op.prototype.getAttributes = function() {
-  return this.attributes_;
-};
-
-
-/**
- * Set the attributes on the root XML element.
- *
- * @param {string} attributes The attributes.
- */
-os.ui.filter.op.Op.prototype.setAttributes = function(attributes) {
-  this.attributes_ = attributes;
-};
-
-
-/**
- * Gets the UI
- *
- * @return {!string}
- */
-os.ui.filter.op.Op.prototype.getUi = function() {
-  return this.ui_;
-};
-
-
-/**
- * Get if the literal should be excluded/ignored for the operation.
- *
- * @return {boolean}
- */
-os.ui.filter.op.Op.prototype.getExcludeLiteral = function() {
-  return this.excludeLiteral_;
-};
-
-
-/**
- * Set if the literal should be excluded/ignored for the operation.
- *
- * @param {boolean} value The new value.
- */
-os.ui.filter.op.Op.prototype.setExcludeLiteral = function(value) {
-  this.excludeLiteral_ = value;
-};
-
-
-/**
- * Gets the filter
- *
- * @param {string} column
- * @param {string} literal
- * @return {?string} the filter
- */
-os.ui.filter.op.Op.prototype.getFilter = function(column, literal) {
-  var f = null;
-
-  if (column) {
-    f = '<' + this.localName +
-        (this.attributes_ ? ' ' + this.attributes_ : '') + '>' +
-        '<PropertyName>' + column + '</PropertyName>';
-
-    if (literal && !this.excludeLiteral_) {
-      f += '<Literal><![CDATA[' + literal.trim() + ']]></Literal>';
+      f += '</' + this.localName + '>';
     }
 
-    f += '</' + this.localName + '>';
+    return f;
   }
 
-  return f;
-};
-
-
-/**
- * Get a function expression to evaluate the operation against a variable.
- *
- * @param {string} varName The name of the variable storing the value.
- * @param {?string} literal The value to test against.
- * @return {string} The filter function expression.
- */
-os.ui.filter.op.Op.prototype.getEvalExpression = function(varName, literal) {
-  // this must be extended to support eval expressions
-  return '';
-};
-
-
-/**
- * @param {angular.JQLite} el
- * @return {string} the column name
- */
-os.ui.filter.op.Op.prototype.getColumn = function(el) {
-  return el.find('*').filter(function() {
-    return this.localName == 'PropertyName';
-  }).first().text();
-};
-
-
-/**
- * @param {angular.JQLite} el
- * @return {string} the literal
- */
-os.ui.filter.op.Op.prototype.getLiteral = function(el) {
-  return this.excludeLiteral_ ? null : el.find('*').filter(function() {
-    return this.localName == 'Literal';
-  }).first().text();
-};
-
-
-/**
- * @param {angular.JQLite} el
- * @return {boolean}
- */
-os.ui.filter.op.Op.prototype.matches = function(el) {
-  if (el && el.length) {
-    var hint = el[0].getAttribute('hint');
-    return el[0].localName == this.localName && hint == this.matchHint;
+  /**
+   * Get a function expression to evaluate the operation against a variable.
+   *
+   * @param {string} varName The name of the variable storing the value.
+   * @param {?string} literal The value to test against.
+   * @return {string} The filter function expression.
+   */
+  getEvalExpression(varName, literal) {
+    // this must be extended to support eval expressions
+    return '';
   }
 
-  return false;
-};
-
-
-/**
- * @param {os.xsd.DataType} type
- * @return {boolean} Whether or not the column type is supported
- */
-os.ui.filter.op.Op.prototype.isSupported = function(type) {
-  if (type && this.supportedTypes) {
-    return this.supportedTypes.indexOf(type) > -1;
+  /**
+   * @param {angular.JQLite} el
+   * @return {string} the column name
+   */
+  getColumn(el) {
+    return el.find('*').filter(function() {
+      return this.localName == 'PropertyName';
+    }).first().text();
   }
 
-  // no support for spatial types and most ops don't support time
-  if (type && (type.indexOf('gml:') === 0 || type.indexOf('datetime') !== -1 || type.indexOf('recordtime') !== -1)) {
+  /**
+   * @param {angular.JQLite} el
+   * @return {string} the literal
+   */
+  getLiteral(el) {
+    return this.excludeLiteral_ ? null : el.find('*').filter(function() {
+      return this.localName == 'Literal';
+    }).first().text();
+  }
+
+  /**
+   * @param {angular.JQLite} el
+   * @return {boolean}
+   */
+  matches(el) {
+    if (el && el.length) {
+      var hint = el[0].getAttribute('hint');
+      return el[0].localName == this.localName && hint == this.matchHint;
+    }
+
     return false;
   }
 
-  return true;
-};
+  /**
+   * @param {DataType} type
+   * @return {boolean} Whether or not the column type is supported
+   */
+  isSupported(type) {
+    if (type && this.supportedTypes) {
+      return this.supportedTypes.indexOf(type) > -1;
+    }
 
+    // no support for spatial types and most ops don't support time
+    if (type && (type.indexOf('gml:') === 0 || type.indexOf('datetime') !== -1 || type.indexOf('recordtime') !== -1)) {
+      return false;
+    }
 
-/**
- * Set the supported column types.
- *
- * @param {Array<string>} types The supported types.
- */
-os.ui.filter.op.Op.prototype.setSupported = function(types) {
-  this.supportedTypes = types;
-};
-
-
-/**
- * Validates the value against the pattern associated to the key.
- *
- * @param {string|null|undefined} value
- * @param {string} key
- * @return {boolean} Whether or not the column type is supported
- */
-os.ui.filter.op.Op.prototype.validate = function(value, key) {
-  if (this.getExcludeLiteral()) {
     return true;
   }
 
-  if (!value) {
+  /**
+   * Set the supported column types.
+   *
+   * @param {Array<string>} types The supported types.
+   */
+  setSupported(types) {
+    this.supportedTypes = types;
+  }
+
+  /**
+   * Validates the value against the pattern associated to the key.
+   *
+   * @param {string|null|undefined} value
+   * @param {string} key
+   * @return {boolean} Whether or not the column type is supported
+   */
+  validate(value, key) {
+    if (this.getExcludeLiteral()) {
+      return true;
+    }
+
+    if (!value) {
+      return false;
+    }
+
+    var pattern = FilterPatterns[key];
+    if (pattern && pattern.test(value)) {
+      return true;
+    }
+
     return false;
   }
-
-  var pattern = os.ui.filter.PATTERNS[key];
-  if (pattern && pattern.test(value)) {
-    return true;
-  }
-
-  return false;
-};
-
+}
 
 /**
  * Text reused in several ops; to save on total the KB of the min file
  * @enum {string}
  * @const
  */
-os.ui.filter.op.Op.TEXT = {
+Op.TEXT = {
   CASE_INSENSITIVE: '  (INFO: not case-sensitive)',
   CASE_INSENSITIVE_DETAIL: '<strong>Case-insensitive</strong><sup>1</sup>, i.e. "A" == "a" and<br />' +
   '<strong>Wildcard</strong> support, i.e. "a*" == "ab"<br /><br /><sup>1</sup>&nbsp;Typically, case' +
@@ -313,3 +313,5 @@ os.ui.filter.op.Op.TEXT = {
   CASE_SENSITIVE_TITLE: 'Additional Info',
   CASE_SENSITIVE: '  (INFO: case-sensitive)'
 };
+
+exports = Op;

@@ -2,7 +2,9 @@ goog.require('os.ui.filter.op.IsLikeNumeric');
 goog.require('os.ui.filter.op.Op');
 
 describe('os.ui.filter.op.IsLikeNumeric', function() {
-  var op = new os.ui.filter.op.IsLikeNumeric();
+  const IsLikeNumeric = goog.module.get('os.ui.filter.op.IsLikeNumeric');
+
+  var op = new IsLikeNumeric();
 
   it('should return the correct defaults', function() {
     expect(op.getTitle()).toBe('is like');

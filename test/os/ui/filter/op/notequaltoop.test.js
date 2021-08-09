@@ -1,7 +1,9 @@
 goog.require('os.ui.filter.op.NotEqualTo');
 
 describe('os.ui.filter.op.NotEqualTo', function() {
-  var op = new os.ui.filter.op.NotEqualTo();
+  const NotEqualTo = goog.module.get('os.ui.filter.op.NotEqualTo');
+
+  var op = new NotEqualTo();
 
   it('should be configured correctly', function() {
     expect(op.localName).toBe('PropertyIsNotEqualTo');

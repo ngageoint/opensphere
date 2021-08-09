@@ -1,183 +1,183 @@
-goog.provide('os.ui.query.cmd.QueryEntries');
+goog.module('os.ui.query.cmd.QueryEntries');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
+const State = goog.require('os.command.State');
+const {getQueryManager} = goog.require('os.query.instance');
 
+const ICommand = goog.requireType('os.command.ICommand');
 
 
 /**
  * Command for adding query entries.
  *
- * @param {!Array<!Object<string, string|boolean>>} entries
- * @param {boolean=} opt_merge
- * @param {string=} opt_layerHint
- * @param {boolean=} opt_immediate Whether to immediately force queryManager to update
- * @implements {os.command.ICommand}
- * @constructor
+ * @implements {ICommand}
  */
-os.ui.query.cmd.QueryEntries = function(entries, opt_merge, opt_layerHint, opt_immediate) {
+class QueryEntries {
   /**
-   * @inheritDoc
+   * Constructor.
+   * @param {!Array<!Object<string, string|boolean>>} entries
+   * @param {boolean=} opt_merge
+   * @param {string=} opt_layerHint
+   * @param {boolean=} opt_immediate Whether to immediately force queryManager to update
    */
-  this.isAsync = false;
+  constructor(entries, opt_merge, opt_layerHint, opt_immediate) {
+    /**
+     * @inheritDoc
+     */
+    this.isAsync = false;
 
-  /**
-   * @inheritDoc
-   */
-  this.title = 'Change query entries';
+    /**
+     * @inheritDoc
+     */
+    this.title = 'Change query entries';
 
-  /**
-   * @inheritDoc
-   */
-  this.details = null;
+    /**
+     * @inheritDoc
+     */
+    this.details = null;
 
-  /**
-   * @inheritDoc
-   */
-  this.state = os.command.State.READY;
+    /**
+     * @inheritDoc
+     */
+    this.state = State.READY;
 
-  /**
-   * @type {!Array<!Object<string, string|boolean>>}
-   * @protected
-   */
-  this.newEntries = entries;
+    /**
+     * @type {!Array<!Object<string, string|boolean>>}
+     * @protected
+     */
+    this.newEntries = entries;
 
-  /**
-   * @type {boolean}
-   * @protected
-   */
-  this.merge = opt_merge !== undefined ? opt_merge : false;
+    /**
+     * @type {boolean}
+     * @protected
+     */
+    this.merge = opt_merge !== undefined ? opt_merge : false;
 
-  /**
-   * @type {string|undefined}
-   * @protected
-   */
-  this.layerHint = opt_layerHint;
+    /**
+     * @type {string|undefined}
+     * @protected
+     */
+    this.layerHint = opt_layerHint;
 
-  /**
-   * @type {boolean}
-   * @protected
-   */
-  this.immediate = opt_immediate !== undefined ? opt_immediate : false;
+    /**
+     * @type {boolean}
+     * @protected
+     */
+    this.immediate = opt_immediate !== undefined ? opt_immediate : false;
 
-  /**
-   * @type {!Array<!Object<string, string|boolean>>}
-   * @protected
-   */
-  this.oldEntries = this.getOldEntries();
-};
-
-
-/**
- * Checks if the command is ready to execute
- *
- * @return {boolean}
- */
-os.ui.query.cmd.QueryEntries.prototype.canExecute = function() {
-  if (this.state !== os.command.State.READY) {
-    this.details = 'Command not in ready state.';
-    return false;
+    /**
+     * @type {!Array<!Object<string, string|boolean>>}
+     * @protected
+     */
+    this.oldEntries = this.getOldEntries();
   }
 
-  if (!this.newEntries) {
-    this.details = 'No new entries provided.';
-    return false;
-  }
+  /**
+   * Checks if the command is ready to execute
+   *
+   * @return {boolean}
+   */
+  canExecute() {
+    if (this.state !== State.READY) {
+      this.details = 'Command not in ready state.';
+      return false;
+    }
 
-  if (!this.oldEntries) {
-    this.details = 'No old entries found.';
-    return false;
-  }
+    if (!this.newEntries) {
+      this.details = 'No new entries provided.';
+      return false;
+    }
 
-  if (this.merge && this.newEntries.length === 0 && !this.layerHint) {
-    this.details = 'When merging an empty set, the layer hint must be supplied';
-    return false;
-  }
+    if (!this.oldEntries) {
+      this.details = 'No old entries found.';
+      return false;
+    }
 
-  return true;
-};
+    if (this.merge && this.newEntries.length === 0 && !this.layerHint) {
+      this.details = 'When merging an empty set, the layer hint must be supplied';
+      return false;
+    }
 
-
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.QueryEntries.prototype.execute = function() {
-  if (this.canExecute()) {
-    this.state = os.command.State.EXECUTING;
-    this.swap(this.newEntries);
-    this.state = os.command.State.SUCCESS;
     return true;
   }
 
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.QueryEntries.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-  this.swap(this.oldEntries);
-  this.state = os.command.State.READY;
-  return true;
-};
-
-
-/**
- * @param {!Array<!Object<string, string|boolean>>} entries
- * @protected
- */
-os.ui.query.cmd.QueryEntries.prototype.swap = function(entries) {
-  var qm = os.ui.queryManager;
-
-  if (this.merge) {
-    var layerSet = this.getLayerSet();
-    // remove all items related to those layers
-    for (var id in layerSet) {
-      qm.removeEntries(id, undefined, undefined, true);
+  /**
+   * @inheritDoc
+   */
+  execute() {
+    if (this.canExecute()) {
+      this.state = State.EXECUTING;
+      this.swap(this.newEntries);
+      this.state = State.SUCCESS;
+      return true;
     }
-  } else {
-    qm.removeEntries(undefined, undefined, undefined, true);
+
+    return false;
   }
 
-  qm.addEntries(entries, this.immediate, this.layerHint);
-};
-
-
-/**
- * @return {!Array<!Object<string, string|boolean>>}
- * @protected
- */
-os.ui.query.cmd.QueryEntries.prototype.getOldEntries = function() {
-  var fullSet = os.ui.queryManager.getEntries();
-  var layerSet = this.getLayerSet();
-
-  return this.merge ? fullSet.filter(function(entry) {
-    var id = /** @type {string} */ (entry['layerId']);
-    return id in layerSet;
-  }) : fullSet;
-};
-
-
-/**
- * @return {Object<string, boolean>} layer set
- * @protected
- */
-os.ui.query.cmd.QueryEntries.prototype.getLayerSet = function() {
-  var layerSet = {};
-
-  if (this.layerHint) {
-    layerSet[this.layerHint] = true;
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
+    this.swap(this.oldEntries);
+    this.state = State.READY;
+    return true;
   }
 
-  layerSet = this.newEntries.reduce(function(layerSet, entry) {
-    var id = /** @type {string} */ (entry['layerId']);
-    layerSet[id] = true;
+  /**
+   * @param {!Array<!Object<string, string|boolean>>} entries
+   * @protected
+   */
+  swap(entries) {
+    var qm = getQueryManager();
+
+    if (this.merge) {
+      var layerSet = this.getLayerSet();
+      // remove all items related to those layers
+      for (var id in layerSet) {
+        qm.removeEntries(id, undefined, undefined, true);
+      }
+    } else {
+      qm.removeEntries(undefined, undefined, undefined, true);
+    }
+
+    qm.addEntries(entries, this.immediate, this.layerHint);
+  }
+
+  /**
+   * @return {!Array<!Object<string, string|boolean>>}
+   * @protected
+   */
+  getOldEntries() {
+    var fullSet = getQueryManager().getEntries();
+    var layerSet = this.getLayerSet();
+
+    return this.merge ? fullSet.filter(function(entry) {
+      var id = /** @type {string} */ (entry['layerId']);
+      return id in layerSet;
+    }) : fullSet;
+  }
+
+  /**
+   * @return {Object<string, boolean>} layer set
+   * @protected
+   */
+  getLayerSet() {
+    var layerSet = {};
+
+    if (this.layerHint) {
+      layerSet[this.layerHint] = true;
+    }
+
+    layerSet = this.newEntries.reduce(function(layerSet, entry) {
+      var id = /** @type {string} */ (entry['layerId']);
+      layerSet[id] = true;
+      return layerSet;
+    }, layerSet);
+
     return layerSet;
-  }, layerSet);
+  }
+}
 
-  return layerSet;
-};
-
-
+exports = QueryEntries;

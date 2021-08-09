@@ -1,134 +1,122 @@
-goog.provide('os.ui.query.area.ChooseAreaCtrl');
-goog.provide('os.ui.query.area.chooseAreaDirective');
-goog.provide('os.ui.query.area.launchChooseArea');
+goog.module('os.ui.query.area.ChooseAreaUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
-goog.require('os.ui.Module');
-goog.require('os.ui.window.ConfirmUI');
+const Disposable = goog.require('goog.Disposable');
+const GoogEventType = goog.require('goog.events.EventType');
+const {ROOT} = goog.require('os');
+const {getAreaManager} = goog.require('os.query.instance');
+const {apply} = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
 
 
 /**
  * @return {angular.Directive}
  */
-os.ui.query.area.chooseAreaDirective = function() {
-  return {
-    restrict: 'E',
-    scope: {
-      'area': '=?',
-      'areas': '=?',
-      'filter': '=?',
-      'helpTitle': '@',
-      'helpContent': '@'
-    },
-    templateUrl: os.ROOT + 'views/query/area/choosearea.html',
-    controller: os.ui.query.area.ChooseAreaCtrl,
-    controllerAs: 'choosearea'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  scope: {
+    'area': '=?',
+    'areas': '=?',
+    'filter': '=?',
+    'helpTitle': '@',
+    'helpContent': '@'
+  },
+  templateUrl: ROOT + 'views/query/area/choosearea.html',
+  controller: Controller,
+  controllerAs: 'choosearea'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'choosearea';
 
 /**
  * Add the directive to the os module
  */
-os.ui.Module.directive('choosearea', [os.ui.query.area.chooseAreaDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
- * @param {!angular.Scope} $scope
- * @extends {goog.Disposable}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.query.area.ChooseAreaCtrl = function($scope) {
+class Controller extends Disposable {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
+   */
+  constructor($scope) {
+    super();
+
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    if (!this.scope_['areas']) {
+      // if areas aren't defined, then populate them from the area manager and keep them up to date
+      this.updateAreas_();
+      getAreaManager().listen(GoogEventType.PROPERTYCHANGE, this.onAreasChanged_, false, this);
+    }
+
+    // only pick a default value if area is undefined. do *not* pick a default on null. this allows us to control if a
+    // default is chosen or not.
+    if (this.scope_['area'] === undefined && this.scope_['areas'] && this.scope_['areas'].length > 0) {
+      this.scope_['area'] = this.scope_['areas'][0];
+    }
+
+    // make it work with the confirm control
+    $scope.$watch('area', function(newVal, oldVal) {
+      $scope.$parent['confirmValue'] = newVal;
+    });
+
+
+    $scope.$on('$destroy', this.dispose.bind(this));
+  }
+
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+    getAreaManager().unlisten(GoogEventType.PROPERTYCHANGE, this.onAreasChanged_, false, this);
+  }
+
+  /**
+   * @param {os.events.PropertyChangeEvent} event
    * @private
    */
-  this.scope_ = $scope;
+  onAreasChanged_(event) {
+    if (this.scope_) {
+      this.updateAreas_();
 
-  if (!this.scope_['areas']) {
-    // if areas aren't defined, then populate them from the area manager and keep them up to date
-    this.updateAreas_();
-    os.ui.areaManager.listen(goog.events.EventType.PROPERTYCHANGE, this.onAreasChanged_, false, this);
-  }
+      // area was removed from the manager, so remove it from the list
+      if (event.getProperty() == 'remove' && event.getNewValue() == this.scope_['area']) {
+        this.scope_['area'] = null;
+      }
 
-  // only pick a default value if area is undefined. do *not* pick a default on null. this allows us to control if a
-  // default is chosen or not.
-  if (this.scope_['area'] === undefined && this.scope_['areas'] && this.scope_['areas'].length > 0) {
-    this.scope_['area'] = this.scope_['areas'][0];
-  }
-
-  // make it work with the confirm control
-  $scope.$watch('area', function(newVal, oldVal) {
-    $scope.$parent['confirmValue'] = newVal;
-  });
-
-
-  $scope.$on('$destroy', this.dispose.bind(this));
-};
-goog.inherits(os.ui.query.area.ChooseAreaCtrl, goog.Disposable);
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.area.ChooseAreaCtrl.prototype.disposeInternal = function() {
-  os.ui.query.area.ChooseAreaCtrl.base(this, 'disposeInternal');
-  os.ui.areaManager.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onAreasChanged_, false, this);
-};
-
-
-/**
- * @param {os.events.PropertyChangeEvent} event
- * @private
- */
-os.ui.query.area.ChooseAreaCtrl.prototype.onAreasChanged_ = function(event) {
-  if (this.scope_) {
-    this.updateAreas_();
-
-    // area was removed from the manager, so remove it from the list
-    if (event.getProperty() == 'remove' && event.getNewValue() == this.scope_['area']) {
-      this.scope_['area'] = null;
-    }
-
-    os.ui.apply(this.scope_);
-  }
-};
-
-
-/**
- * @private
- */
-os.ui.query.area.ChooseAreaCtrl.prototype.updateAreas_ = function() {
-  if (this.scope_) {
-    this.scope_['areas'] = os.ui.areaManager.getAll();
-
-    if (this.scope_['filter']) {
-      this.scope_['areas'] = this.scope_['areas'].filter(this.scope_['filter']);
+      apply(this.scope_);
     }
   }
-};
 
+  /**
+   * @private
+   */
+  updateAreas_() {
+    if (this.scope_) {
+      this.scope_['areas'] = getAreaManager().getAll();
 
-/**
- * @param {function(!ol.Feature)} confirm
- * @param {ol.Feature=} opt_default The default area to select
- */
-os.ui.query.area.launchChooseArea = function(confirm, opt_default) {
-  os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
-    confirm: confirm,
-    confirmValue: opt_default,
-    prompt: '<span>Please choose an area from the list:</span><choosearea></choosearea>',
-    windowOptions: {
-      'label': 'Choose Area',
-      'icon': 'fa fa-list-ul',
-      'x': 'center',
-      'y': 'center',
-      'width': '400',
-      'height': 'auto',
-      'show-close': 'true',
-      'modal': 'true'
+      if (this.scope_['filter']) {
+        this.scope_['areas'] = this.scope_['areas'].filter(this.scope_['filter']);
+      }
     }
-  }));
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

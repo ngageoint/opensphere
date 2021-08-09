@@ -1,24 +1,26 @@
-goog.provide('os.ui.filter.op.IsNull');
+goog.module('os.ui.filter.op.IsNull');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.op.Op');
+const Op = goog.require('os.ui.filter.op.Op');
 
 
 /**
  * A 'PropertyIsNull' operation class.
- *
- * @extends {os.ui.filter.op.Op}
- * @constructor
  */
-os.ui.filter.op.IsNull = function() {
-  os.ui.filter.op.IsNull.base(this, 'constructor',
-      'PropertyIsNull', 'is empty', 'empty', undefined, undefined, undefined, 'span', true);
-};
-goog.inherits(os.ui.filter.op.IsNull, os.ui.filter.op.Op);
+class IsNull extends Op {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super('PropertyIsNull', 'is empty', 'empty', undefined, undefined, undefined, 'span', true);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getEvalExpression(varName, literal) {
+    return '(' + varName + '==null||' + varName + '==="")';
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.ui.filter.op.IsNull.prototype.getEvalExpression = function(varName, literal) {
-  return '(' + varName + '==null||' + varName + '==="")';
-};
+exports = IsNull;

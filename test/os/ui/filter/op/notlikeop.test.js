@@ -1,11 +1,15 @@
+goog.require('os.ui.filter.op.IsLike');
 goog.require('os.ui.filter.op.NotLike');
 
 describe('os.ui.filter.op.NotLike', function() {
-  var op = new os.ui.filter.op.NotLike();
+  const IsLike = goog.module.get('os.ui.filter.op.IsLike');
+  const NotLike = goog.module.get('os.ui.filter.op.NotLike');
+
+  var op = new NotLike();
   var innerOp = op.op;
 
   it('should be configured correctly', function() {
-    expect(innerOp instanceof os.ui.filter.op.IsLike).toBe(true);
+    expect(innerOp instanceof IsLike).toBe(true);
 
     expect(op.getTitle()).toBe('is not like');
     expect(op.getShortTitle()).toBe('not like');

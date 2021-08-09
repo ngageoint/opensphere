@@ -1,5 +1,4 @@
 goog.module('os.ui.query.ActiveEntries');
-goog.module.declareLegacyNamespace();
 
 /**
  * @typedef {{

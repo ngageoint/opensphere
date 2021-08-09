@@ -1,7 +1,10 @@
-goog.provide('os.ui.node.LayerTypeCtrl');
-goog.provide('os.ui.node.layerTypeDirective');
-goog.require('os.config.Settings');
-goog.require('os.ui.Module');
+goog.module('os.ui.node.LayerTypeUI');
+goog.module.declareLegacyNamespace();
+
+const Settings = goog.require('os.config.Settings');
+const Module = goog.require('os.ui.Module');
+
+const LayerNode = goog.requireType('os.data.LayerNode');
 
 
 /**
@@ -9,56 +12,65 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.node.layerTypeDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    template: '<span>{{layerType.getType()}}</span>',
-    controller: os.ui.node.LayerTypeCtrl,
-    controllerAs: 'layerType'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  template: '<span>{{layerType.getType()}}</span>',
+  controller: Controller,
+  controllerAs: 'layerType'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'layertype';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('layertype', [os.ui.node.layerTypeDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for selected/highlighted node UI
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.node.LayerTypeCtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
    */
-  this.scope_ = $scope;
-};
-
-
-/**
- * @return {string}
- * @export
- */
-os.ui.node.LayerTypeCtrl.prototype.getType = function() {
-  if (os.settings.get(['ui', 'layers', 'showLayerTypes'], true)) {
-    var node = /** @type {os.data.LayerNode} */ (this.scope_['item']);
-    if (node) {
-      var layer = node.getLayer();
-      if (layer) {
-        return layer.getExplicitType();
-      }
-    }
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
   }
 
-  return '';
-};
+  /**
+   * @return {string}
+   * @export
+   */
+  getType() {
+    if (Settings.getInstance().get(['ui', 'layers', 'showLayerTypes'], true)) {
+      var node = /** @type {LayerNode} */ (this.scope_['item']);
+      if (node) {
+        var layer = node.getLayer();
+        if (layer) {
+          return layer.getExplicitType();
+        }
+      }
+    }
 
+    return '';
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
+};

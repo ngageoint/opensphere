@@ -4,34 +4,36 @@ goog.require('os.ui.slick.TreeSearch');
 
 
 describe('os.ui.slick.TreeSearch', function() {
+  const SlickTreeNode = goog.module.get('os.ui.slick.SlickTreeNode');
+  const TreeSearch = goog.module.get('os.ui.slick.TreeSearch');
   const MockTypeGroupBy = goog.module.get('os.ui.MockTypeGroupBy');
 
   var list = [];
 
-  var node = new os.ui.slick.SlickTreeNode();
+  var node = new SlickTreeNode();
   node.setId('greek');
   node.setLabel('Greek');
   list.push(node);
 
-  node = new os.ui.slick.SlickTreeNode();
+  node = new SlickTreeNode();
   node.setId('A');
   node.setLabel('Alpha');
   node.type = 'Greek';
   list[0].addChild(node);
 
-  node = new os.ui.slick.SlickTreeNode();
+  node = new SlickTreeNode();
   node.setId('B2');
   node.setLabel('Beta');
   node.type = 'Greek';
   list[0].addChild(node);
 
-  node = new os.ui.slick.SlickTreeNode();
+  node = new SlickTreeNode();
   node.setId('yermom');
   node.setLabel('Yermom');
   node.type = 'Large';
   list.push(node);
 
-  node = new os.ui.slick.SlickTreeNode();
+  node = new SlickTreeNode();
   node.setId('B');
   node.setLabel('Beta');
   node.type = 'Greek';
@@ -39,7 +41,7 @@ describe('os.ui.slick.TreeSearch', function() {
 
   it('should search everything', function() {
     var o = {};
-    var s = new os.ui.slick.TreeSearch(list, 'data', o);
+    var s = new TreeSearch(list, 'data', o);
     s.beginSearch('', null);
 
     expect(o.data).toBeTruthy();
@@ -50,7 +52,7 @@ describe('os.ui.slick.TreeSearch', function() {
 
   it('should search nothing', function() {
     var o = {};
-    var s = new os.ui.slick.TreeSearch([], 'data', o, 'No soup for you!');
+    var s = new TreeSearch([], 'data', o, 'No soup for you!');
     s.beginSearch('', null);
 
     expect(o.data).toBeTruthy();
@@ -60,7 +62,7 @@ describe('os.ui.slick.TreeSearch', function() {
 
   it('should search with a specific term', function() {
     var o = {};
-    var s = new os.ui.slick.TreeSearch(list, 'data', o);
+    var s = new TreeSearch(list, 'data', o);
     s.beginSearch('beta', null);
 
     expect(o.data).toBeTruthy();
@@ -71,7 +73,7 @@ describe('os.ui.slick.TreeSearch', function() {
 
   it('should leave out itty bitty terms unless it is the only term', function() {
     var o = {};
-    var s = new os.ui.slick.TreeSearch(list, 'data', o);
+    var s = new TreeSearch(list, 'data', o);
     s.beginSearch('be', null);
 
     expect(o.data).toBeTruthy();
@@ -88,7 +90,7 @@ describe('os.ui.slick.TreeSearch', function() {
 
   it('should rock a filter function like a boss', function() {
     var o = {};
-    var s = new os.ui.slick.TreeSearch(list, 'data', o);
+    var s = new TreeSearch(list, 'data', o);
     s.setFilterFunction(function(item) {
       return item.getId().length == 1;
     });
@@ -101,7 +103,7 @@ describe('os.ui.slick.TreeSearch', function() {
 
   it('should group search results', function() {
     var o = {};
-    var s = new os.ui.slick.TreeSearch(list, 'data', o);
+    var s = new TreeSearch(list, 'data', o);
 
     // group everything
     s.beginSearch('', new MockTypeGroupBy());
@@ -121,7 +123,7 @@ describe('os.ui.slick.TreeSearch', function() {
 
   it('should maintain open items between searches if possible', function() {
     var o = {};
-    var s = new os.ui.slick.TreeSearch(list, 'data', o);
+    var s = new TreeSearch(list, 'data', o);
 
     var tgb = new MockTypeGroupBy();
 
@@ -139,7 +141,7 @@ describe('os.ui.slick.TreeSearch', function() {
 
   it('should not die an unclean death with odd terms', function() {
     var o = {};
-    var s = new os.ui.slick.TreeSearch(list, 'data', o);
+    var s = new TreeSearch(list, 'data', o);
 
     var fn = function() {
       s.beginSearch('-()\[]+?*.$\^|,:#<!\\', null);

@@ -2,7 +2,7 @@ goog.module('os.ui.wiz.OptionsStepUI');
 goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.color.ColorPickerUI');
-goog.require('os.ui.icon.iconPickerDirective');
+goog.require('os.ui.icon.IconPickerUI');
 goog.require('os.ui.util.ValidationMessageUI');
 
 const {ROOT} = goog.require('os');

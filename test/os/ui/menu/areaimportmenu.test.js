@@ -2,37 +2,40 @@ goog.require('os.query');
 goog.require('os.ui.menu.areaImport');
 
 describe('os.ui.menu.areaImport', function() {
+  const query = goog.module.get('os.query');
+  const areaImport = goog.module.get('os.ui.menu.areaImport');
+
   it('defaults to undefined', function() {
-    expect(os.ui.menu.areaImport.MENU).toBeUndefined();
+    expect(areaImport.MENU).toBeUndefined();
   });
 
   it('adds default options on setup', function() {
-    os.ui.menu.areaImport.setup();
+    areaImport.setup();
 
-    var menu = os.ui.menu.areaImport.MENU;
+    var menu = areaImport.MENU;
     expect(menu).toBeDefined();
     expect(menu.getRoot()).toBeDefined();
-    expect(menu.getRoot().find(os.ui.menu.areaImport.EventType.FILE)).toBeDefined();
-    expect(menu.getRoot().find(os.ui.menu.areaImport.EventType.ENTER_COORDINATES)).toBeDefined();
-    expect(menu.getRoot().find(os.ui.menu.areaImport.EventType.QUERY_WORLD)).toBeDefined();
+    expect(menu.getRoot().find(areaImport.EventType.FILE)).toBeDefined();
+    expect(menu.getRoot().find(areaImport.EventType.ENTER_COORDINATES)).toBeDefined();
+    expect(menu.getRoot().find(areaImport.EventType.QUERY_WORLD)).toBeDefined();
   });
 
   it('handles menu events', function() {
-    spyOn(os.query, 'launchQueryImport');
-    os.ui.menu.areaImport.handleQueryEvent_({type: os.ui.menu.areaImport.EventType.FILE});
-    expect(os.query.launchQueryImport).toHaveBeenCalled();
+    spyOn(query, 'launchQueryImport');
+    areaImport.handleQueryEvent_({type: areaImport.EventType.FILE});
+    expect(query.launchQueryImport).toHaveBeenCalled();
 
-    spyOn(os.query, 'launchCoordinates');
-    os.ui.menu.areaImport.handleQueryEvent_({type: os.ui.menu.areaImport.EventType.ENTER_COORDINATES});
-    expect(os.query.launchCoordinates).toHaveBeenCalled();
+    spyOn(query, 'launchCoordinates');
+    areaImport.handleQueryEvent_({type: areaImport.EventType.ENTER_COORDINATES});
+    expect(query.launchCoordinates).toHaveBeenCalled();
 
-    spyOn(os.query, 'queryWorld');
-    os.ui.menu.areaImport.handleQueryEvent_({type: os.ui.menu.areaImport.EventType.QUERY_WORLD});
-    expect(os.query.queryWorld).toHaveBeenCalled();
+    spyOn(query, 'queryWorld');
+    areaImport.handleQueryEvent_({type: areaImport.EventType.QUERY_WORLD});
+    expect(query.queryWorld).toHaveBeenCalled();
   });
 
   it('disposes the menu', function() {
-    os.ui.menu.areaImport.dispose();
-    expect(os.ui.menu.areaImport.MENU).toBeUndefined();
+    areaImport.dispose();
+    expect(areaImport.MENU).toBeUndefined();
   });
 });

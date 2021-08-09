@@ -3,6 +3,7 @@ goog.require('os.ui.layer.EllipseColumnsUI');
 
 describe('os.ui.layer.EllipseColumnsUI', function() {
   const EllipseColumnsUI = goog.module.get('os.ui.layer.EllipseColumnsUI');
+
   var scope;
   var element;
 

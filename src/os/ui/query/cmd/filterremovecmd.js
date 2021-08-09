@@ -1,47 +1,52 @@
-goog.provide('os.ui.query.cmd.FilterRemove');
-goog.require('os.command.State');
-goog.require('os.ui.query.cmd.AbstractFilter');
+goog.module('os.ui.query.cmd.FilterRemove');
+goog.module.declareLegacyNamespace();
 
+const State = goog.require('os.command.State');
+const AbstractFilter = goog.require('os.ui.query.cmd.AbstractFilter');
+
+const FilterEntry = goog.requireType('os.filter.FilterEntry');
 
 
 /**
- * @extends {os.ui.query.cmd.AbstractFilter}
- * @constructor
- * @param {os.filter.FilterEntry} filter
  */
-os.ui.query.cmd.FilterRemove = function(filter) {
-  os.ui.query.cmd.FilterRemove.base(this, 'constructor', filter);
+class FilterRemove extends AbstractFilter {
+  /**
+   * Constructor.
+   * @param {FilterEntry} filter
+   */
+  constructor(filter) {
+    super(filter);
 
-  if (this.filter) {
-    this.title = 'Remove filter "' + this.filter.getTitle() + '"';
+    if (this.filter) {
+      this.title = 'Remove filter "' + this.filter.getTitle() + '"';
+    }
   }
-};
-goog.inherits(os.ui.query.cmd.FilterRemove, os.ui.query.cmd.AbstractFilter);
 
+  /**
+   * @inheritDoc
+   */
+  execute() {
+    if (this.canExecute()) {
+      this.state = State.EXECUTING;
 
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.FilterRemove.prototype.execute = function() {
-  if (this.canExecute()) {
-    this.state = os.command.State.EXECUTING;
+      this.remove();
+      this.state = State.SUCCESS;
+      return true;
+    }
 
-    this.remove();
-    this.state = os.command.State.SUCCESS;
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
+
+    this.add();
+    this.state = State.READY;
     return true;
   }
+}
 
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.FilterRemove.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-
-  this.add();
-  this.state = os.command.State.READY;
-  return true;
-};
+exports = FilterRemove;

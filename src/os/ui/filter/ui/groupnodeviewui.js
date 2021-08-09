@@ -1,6 +1,9 @@
-goog.provide('os.ui.filter.ui.GroupNodeViewUICtrl');
-goog.provide('os.ui.filter.ui.GroupNodeViewUIDirective');
-goog.require('os.ui.Module');
+goog.module('os.ui.filter.ui.GroupNodeViewUI');
+goog.module.declareLegacyNamespace();
+
+const Module = goog.require('os.ui.Module');
+
+const GroupNode = goog.requireType('os.ui.filter.ui.GroupNode');
 
 
 /**
@@ -8,53 +11,63 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.filter.ui.GroupNodeViewUIDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    template: '<span>' +
-        '<span>{{groupUi.group}}</span>' +
-        '</span>',
-    controller: os.ui.filter.ui.GroupNodeViewUICtrl,
-    controllerAs: 'groupUi'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  template: '<span>' +
+      '<span>{{groupUi.group}}</span>' +
+      '</span>',
+  controller: Controller,
+  controllerAs: 'groupUi'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'groupnodeviewui';
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('groupnodeviewui', [os.ui.filter.ui.GroupNodeViewUIDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for selected/highlighted node UI
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.filter.ui.GroupNodeViewUICtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  var node = /** @type {os.ui.filter.ui.GroupNode} */ (this.scope_['item']);
-  this['group'] = os.ui.filter.ui.GroupNodeViewUICtrl.GROUPS[node.getGrouping()];
-};
-
+    var node = /** @type {GroupNode} */ (this.scope_['item']);
+    this['group'] = Controller.GROUPS[node.getGrouping()];
+  }
+}
 
 /**
  * Available groupings for advanced filter grouping nodes.
  * @type {Object<string, string>}
  * @const
  */
-os.ui.filter.ui.GroupNodeViewUICtrl.GROUPS = {
+Controller.GROUPS = {
   'And': 'All (AND)',
   'Or': 'Any (OR)',
   'Not': 'Not'
+};
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

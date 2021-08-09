@@ -3,6 +3,7 @@ goog.provide('os.ui.menu.windows.default');
 goog.require('os.config.ServerSettings');
 goog.require('os.config.Settings');
 goog.require('os.metrics.keys');
+goog.require('os.ui.LayersWindowUI');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.ui.menu.windows');
@@ -47,6 +48,7 @@ os.ui.menu.windows.default.setup = function() {
   const layersDefaults = /** @type {osx.window.WindowOptions} */ (
     settings.get(os.ui.menu.windows.default.SettingsKey.LAYERS_DEFAULTS, {}));
 
+  const layersWindowUI = os.ui.LayersWindowUI.directiveTag;
   const layersWindowOptions = Object.assign({
     'key': 'layers',
     'icon': 'fas fa-layer-group',
@@ -63,7 +65,7 @@ os.ui.menu.windows.default.setup = function() {
     'show-close': true,
     'help-context': 'layers',
     'shortcut': 'alt+l',
-    'html': '<layerswin tab="layers"></layerswin>',
+    'html': `<${layersWindowUI} tab="layers"></${layersWindowUI}>`,
     'metricKey': os.metrics.keys.Map.SHOW_LAYER_WINDOW
   }, layersDefaults);
 

@@ -2,7 +2,7 @@ goog.module('os.ui.feature.FeatureInfoUI');
 goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.feature.SimplePropertiesUI');
-goog.require('os.ui.location.SimpleLocationDirective');
+goog.require('os.ui.location.SimpleLocationUI');
 goog.require('os.ui.uiSwitchDirective');
 
 const Disposable = goog.require('goog.Disposable');

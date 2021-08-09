@@ -4,9 +4,12 @@ goog.require('os.query.BaseAreaManager');
 goog.require('os.query.BaseQueryManager');
 
 describe('os.filter.BaseFilterManager', function() {
+  const BaseFilterManager = goog.module.get('os.filter.BaseFilterManager');
+  const FilterEntry = goog.module.get('os.filter.FilterEntry');
+
   var fm = null;
   beforeEach(function() {
-    fm = os.filter.BaseFilterManager.getInstance();
+    fm = BaseFilterManager.getInstance();
   });
 
   it('should work correctly when empty', function() {
@@ -17,14 +20,14 @@ describe('os.filter.BaseFilterManager', function() {
   });
 
   it('should add a filter', function() {
-    var filter = new os.filter.FilterEntry();
+    var filter = new FilterEntry();
     filter.type = 'TypeA';
     filter.title = 'Filter A';
     filter.setFilter('La la la');
 
     fm.addFilter(filter);
 
-    filter = new os.filter.FilterEntry();
+    filter = new FilterEntry();
     filter.type = 'TypeB';
     filter.title = 'Filter B';
     filter.setFilter('da da da');

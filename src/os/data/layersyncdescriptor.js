@@ -2,7 +2,6 @@ goog.module('os.data.LayerSyncDescriptor');
 goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.layer.EllipseColumnsUI');
-goog.require('os.ui.node.defaultLayerNodeUIDirective');
 
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
@@ -11,6 +10,8 @@ const OLObject = goog.require('ol.Object');
 const olArray = goog.require('ol.array');
 const events = goog.require('ol.events');
 const dispatcher = goog.require('os.Dispatcher');
+const {registerClass} = goog.require('os.classRegistry');
+const {DescriptorClass} = goog.require('os.data');
 const BaseDescriptor = goog.require('os.data.BaseDescriptor');
 const DataManager = goog.require('os.data.DataManager');
 const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
@@ -22,6 +23,7 @@ const PropertyChange = goog.require('os.layer.PropertyChange');
 const {getMapContainer} = goog.require('os.map.instance');
 const Online = goog.require('os.net.Online');
 const {merge} = goog.require('os.object');
+const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
 
 const Logger = goog.requireType('goog.log.Logger');
 const LayerEvent = goog.requireType('os.events.LayerEvent');
@@ -74,7 +76,7 @@ class LayerSyncDescriptor extends BaseDescriptor {
      */
     this.mappings = [];
 
-    this.setNodeUI('<defaultlayernodeui></defaultlayernodeui>');
+    this.setNodeUI(`<${nodeUi}></${nodeUi}>`);
 
     dispatcher.getInstance().listen(LayerEventType.ADD, this.onLayerAdded, false, this);
     dispatcher.getInstance().listen(LayerEventType.REMOVE, this.onLayerRemoved, false, this);
@@ -461,6 +463,7 @@ class LayerSyncDescriptor extends BaseDescriptor {
   }
 }
 osImplements(LayerSyncDescriptor, IMappingDescriptor.ID);
+registerClass(DescriptorClass.LAYER_SYNC, LayerSyncDescriptor);
 
 /**
  * Logger

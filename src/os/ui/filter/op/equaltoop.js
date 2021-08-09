@@ -1,33 +1,43 @@
-goog.provide('os.ui.filter.op.EqualTo');
+goog.module('os.ui.filter.op.EqualTo');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.op.Op');
-goog.require('os.ui.filter.string');
+const Op = goog.require('os.ui.filter.op.Op');
+const {quoteString} = goog.require('os.ui.filter.string');
 
 
 /**
  * A 'PropertyIsEqualTo' operation class.
- *
- * @extends {os.ui.filter.op.Op}
- * @constructor
  */
-os.ui.filter.op.EqualTo = function() {
-  os.ui.filter.op.EqualTo.base(this, 'constructor',
-      'PropertyIsEqualTo', 'is equal to', '=',
-      undefined, undefined, 'e.g. Abc' + os.ui.filter.op.Op.TEXT.CASE_SENSITIVE,
-      undefined, undefined, os.ui.filter.op.Op.TEXT.CASE_SENSITIVE_TITLE,
-      os.ui.filter.op.Op.TEXT.CASE_SENSITIVE_DETAIL);
-};
-goog.inherits(os.ui.filter.op.EqualTo, os.ui.filter.op.Op);
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.op.EqualTo.prototype.getEvalExpression = function(varName, literal) {
-  if (literal != null) {
-    return varName + '==' + os.ui.filter.string.quoteString(literal);
+class EqualTo extends Op {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super(
+        'PropertyIsEqualTo',
+        'is equal to',
+        '=',
+        undefined,
+        undefined,
+        'e.g. Abc' + Op.TEXT.CASE_SENSITIVE,
+        undefined,
+        undefined,
+        Op.TEXT.CASE_SENSITIVE_TITLE,
+        Op.TEXT.CASE_SENSITIVE_DETAIL
+    );
   }
 
-  // null is not supported, so don't return an expression
-  return '';
-};
+  /**
+   * @inheritDoc
+   */
+  getEvalExpression(varName, literal) {
+    if (literal != null) {
+      return varName + '==' + quoteString(literal);
+    }
+
+    // null is not supported, so don't return an expression
+    return '';
+  }
+}
+
+exports = EqualTo;

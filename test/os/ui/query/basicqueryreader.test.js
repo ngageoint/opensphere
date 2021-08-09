@@ -1,26 +1,45 @@
+goog.require('goog.dom.xml');
+goog.require('goog.net.EventType');
 goog.require('goog.net.XhrIo');
 goog.require('goog.object');
 goog.require('ol.geom.Polygon');
 goog.require('os.filter.BaseFilterManager');
+goog.require('os.interpolate');
+goog.require('os.interpolate.Method');
 goog.require('os.mock');
+goog.require('os.query.AreaManager');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.query.BaseQueryManager');
+goog.require('os.query.FilterManager');
+goog.require('os.query.QueryManager');
 goog.require('os.ui.query.BasicQueryReader');
 
 
 describe('os.ui.query.BasicQueryReader', function() {
+  const xml = goog.module.get('goog.dom.xml');
+  const EventType = goog.module.get('goog.net.EventType');
+  const XhrIo = goog.module.get('goog.net.XhrIo');
+  const googObject = goog.module.get('goog.object');
+  const Polygon = goog.module.get('ol.geom.Polygon');
+  const interpolate = goog.module.get('os.interpolate');
+  const Method = goog.module.get('os.interpolate.Method');
+  const AreaManager = goog.module.get('os.query.AreaManager');
+  const FilterManager = goog.module.get('os.query.FilterManager');
+  const QueryManager = goog.module.get('os.query.QueryManager');
+  const BasicQueryReader = goog.module.get('os.ui.query.BasicQueryReader');
+
   var basicQueryUrl = '/base/test/os/ui/query/basicquery.xml';
 
   afterEach(function() {
-    os.ui.filterManager.clear();
-    os.ui.areaManager.clear();
-    os.ui.queryManager.removeEntries();
+    FilterManager.getInstance().clear();
+    AreaManager.getInstance().clear();
+    QueryManager.getInstance().removeEntries();
   });
 
   it('should properly load a basic query', function() {
     var query = null;
-    var xhr = new goog.net.XhrIo();
-    xhr.listen(goog.net.EventType.SUCCESS, function() {
+    var xhr = new XhrIo();
+    xhr.listen(EventType.SUCCESS, function() {
       query = xhr.getResponse();
     }, false);
 
@@ -33,24 +52,24 @@ describe('os.ui.query.BasicQueryReader', function() {
     }, 'test query to load');
 
     runs(function() {
-      os.ui.filterManager.clear();
-      os.ui.areaManager.clear();
-      os.ui.queryManager.removeEntries();
+      FilterManager.getInstance().clear();
+      AreaManager.getInstance().clear();
+      QueryManager.getInstance().removeEntries();
 
-      expect(goog.object.getCount(os.ui.filterManager.types)).toBe(0);
-      expect(os.ui.areaManager.items_.length).toBe(0);
-      expect(os.ui.queryManager.entries.length).toBe(0);
+      expect(googObject.getCount(FilterManager.getInstance().types)).toBe(0);
+      expect(AreaManager.getInstance().items_.length).toBe(0);
+      expect(QueryManager.getInstance().entries.length).toBe(0);
 
-      var doc = goog.dom.xml.loadXml(query);
+      var doc = xml.loadXml(query);
       var queryElement = doc.firstChild;
-      var qr = new os.ui.query.BasicQueryReader();
+      var qr = new BasicQueryReader();
       qr.setLayerId('SOME_LAYER');
       qr.setFilter(queryElement);
       qr.parseEntries();
 
       // check the filter manager
-      expect(goog.object.getCount(os.ui.filterManager.types)).toBe(1);
-      var type = os.ui.filterManager.types['SOME_LAYER'];
+      expect(googObject.getCount(FilterManager.getInstance().types)).toBe(1);
+      var type = FilterManager.getInstance().types['SOME_LAYER'];
       expect(type).not.toBe(null);
       expect(type.and).toBe(false);
       expect(type.filters.length).toBe(1);
@@ -60,27 +79,27 @@ describe('os.ui.query.BasicQueryReader', function() {
       expect(filter.getDescription()).toBe('This is an advanced filter of some kind');
 
       // check the area manager
-      expect(os.ui.areaManager.items_.length).toBe(1);
-      var area = os.ui.areaManager.items_[0];
+      expect(AreaManager.getInstance().items_.length).toBe(1);
+      var area = AreaManager.getInstance().items_[0];
       expect(area.get('title')).toBe('Some Area');
       expect(area.get('description')).toBe('Some Description');
       expect(area.getId()).toBe('&ID');
-      expect(area.get(os.interpolate.METHOD_FIELD)).toBe(os.interpolate.Method.NONE);
+      expect(area.get(interpolate.METHOD_FIELD)).toBe(Method.NONE);
       expect(area.get('temp')).toBe(true);
       expect(area.get('shown')).toBe(true);
       var geometry = area.getGeometry();
-      expect(geometry instanceof ol.geom.Polygon).toBe(true);
+      expect(geometry instanceof Polygon).toBe(true);
       expect(geometry.getFlatCoordinates().length).toBe(60);
 
       // check the query manager
-      expect(os.ui.queryManager.entries.length).toBe(2);
-      var e1 = os.ui.queryManager.entries[0];
+      expect(QueryManager.getInstance().entries.length).toBe(2);
+      var e1 = QueryManager.getInstance().entries[0];
       expect(e1['areaId']).toBe('*');
       expect(e1['filterGroup']).toBe(false);
       expect(e1['filterId']).toBe(filter.getId());
       expect(e1['includeArea']).toBe(true);
       expect(e1['layerId']).toBe('SOME_LAYER');
-      var e2 = os.ui.queryManager.entries[1];
+      var e2 = QueryManager.getInstance().entries[1];
       expect(e2['areaId']).toBe(area.getId());
       expect(e2['filterGroup']).toBe(true); // filter group is irrelevant to an area entry from the basic reader
       expect(e2['filterId']).toBe('*');

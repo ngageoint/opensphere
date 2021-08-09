@@ -1,16 +1,21 @@
 goog.require('os.data.ColumnDefinition');
+goog.require('os.ui.filter.op.Op');
 goog.require('os.ui.filter.ui.ExpressionNode');
 
 
 describe('os.ui.filter.ui.ExpressionNode', function() {
+  const ColumnDefinition = goog.module.get('os.data.ColumnDefinition');
+  const Op = goog.module.get('os.ui.filter.op.Op');
+  const ExpressionNode = goog.module.get('os.ui.filter.ui.ExpressionNode');
+
   var cols = [
-    new os.data.ColumnDefinition('ALT'),
-    new os.data.ColumnDefinition('LAT'),
-    new os.data.ColumnDefinition('LON')
+    new ColumnDefinition('ALT'),
+    new ColumnDefinition('LAT'),
+    new ColumnDefinition('LON')
   ];
   var filter = '<PropertyIsGreaterThan><PropertyName>ALT</PropertyName><Literal>55</Literal></PropertyIsGreaterThan>';
   var node = $.parseXML(filter).firstChild;
-  var exprNode = os.ui.filter.ui.ExpressionNode.createExpressionNode(node, cols);
+  var exprNode = ExpressionNode.createExpressionNode(node, cols);
 
   it('should create new expression nodes from filters', function() {
     var expr = exprNode.getExpression();
@@ -20,7 +25,7 @@ describe('os.ui.filter.ui.ExpressionNode', function() {
     expect(expr['column']).toBe(cols[0]);
     expect(expr['literal']).toBe('55');
     expect(expr['op']).not.toBe(null);
-    expect(expr['op'] instanceof os.ui.filter.op.Op).toBe(true);
+    expect(expr['op'] instanceof Op).toBe(true);
     expect(expr['op'].localName).toBe('PropertyIsGreaterThan');
   });
 

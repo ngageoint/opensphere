@@ -1,8 +1,10 @@
 goog.require('os.ui.filter.op.Op');
 
 describe('os.ui.filter.op.Op', function() {
+  const Op = goog.module.get('os.ui.filter.op.Op');
+
   var testOpName = 'TestOp';
-  var op = new os.ui.filter.op.Op(testOpName);
+  var op = new Op(testOpName);
 
   it('should use the provided localName', function() {
     expect(op.localName).toBe(testOpName);

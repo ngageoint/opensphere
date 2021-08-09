@@ -14,7 +14,7 @@ goog.require('os.fn');
 goog.require('os.interaction.Modify');
 goog.require('os.layer.ILayer');
 goog.require('os.query.BaseAreaManager');
-goog.require('os.query.ui.mergeAreasDirective');
+goog.require('os.query.ui.MergeAreasUI');
 goog.require('os.source.IModifiableSource');
 goog.require('os.ui.ex.AreaExportUI');
 goog.require('os.ui.feature.launchMultiFeatureInfo');
@@ -23,10 +23,10 @@ goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.query');
 goog.require('os.ui.query.AreaNode');
+goog.require('os.ui.query.ModifyAreaUI');
 goog.require('os.ui.query.cmd.AreaAdd');
 goog.require('os.ui.query.cmd.AreaModify');
 goog.require('os.ui.query.cmd.AreaRemove');
-goog.require('os.ui.query.modifyAreaDirective');
 
 
 /**
@@ -726,10 +726,10 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
             } else {
               // the feature was just drawn, so we will treat it as the targetArea
               conf['targetArea'] = feature;
-              conf['op'] = os.ui.query.ModifyOp.ADD;
+              conf['op'] = os.ui.query.ModifyAreaUI.ModifyOp.ADD;
             }
 
-            os.ui.query.launchModifyArea(conf);
+            os.ui.query.ModifyAreaUI.launchModifyArea(conf);
             break;
           case os.action.EventType.MERGE_AREAS:
           case os.action.EventType.EXPORT:
@@ -766,7 +766,8 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
     }
 
     if (event.type === os.action.EventType.MERGE_AREAS) {
-      os.query.BaseAreaManager.merge(/** @type {!Array<!ol.Feature>} */ (features), 'mergeareas');
+      os.query.BaseAreaManager.merge(/** @type {!Array<!ol.Feature>} */ (features),
+          os.query.ui.MergeAreasUI.directiveTag);
     } else if (event.type === os.action.EventType.EXPORT) {
       // I don't really have any idea why this one type doesn't operate with the menu properly without these
       event.preventDefault();

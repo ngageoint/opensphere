@@ -1,12 +1,12 @@
 goog.module('os.ui.data.LayerCheckboxUI');
 
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
-const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
 const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
-const Module = goog.require('os.ui.Module');
 const TriState = goog.require('os.structs.TriState');
+const Module = goog.require('os.ui.Module');
 const TriStateCheckboxCtrl = goog.require('os.ui.TriStateCheckboxCtrl');
+const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
 const triStateCheckboxDirective = goog.require('os.ui.triStateCheckboxDirective');
+const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 const ITreeNode = goog.requireType('os.structs.ITreeNode');
 const TriStateTreeNode = goog.requireType('os.structs.TriStateTreeNode');
@@ -23,19 +23,16 @@ const directive = () => {
   return dir;
 };
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
 const directiveTag = 'layercheckbox';
 
-
 /**
  * Add the directive to the module
  */
 Module.directive(directiveTag, [directive]);
-
 
 /**
  * Reducer function to count the number of layers under a node.
@@ -66,7 +63,6 @@ const countLayerChildren = (count, child) => {
 
   return count;
 };
-
 
 /**
  * Controller for the layer checkbox.
@@ -110,7 +106,7 @@ class Controller extends TriStateCheckboxCtrl {
             // we're over the minimum, so confirm first
             ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
               confirm: this.toggleInternal.bind(this, TriState.ON),
-              prompt: `You are about to enable ${count} layers. Enabling too many layers at once can cause 
+              prompt: `You are about to enable ${count} layers. Enabling too many layers at once can cause
                   performance issues. Are you sure?`.trim(),
               yesText: 'OK',
               noText: 'Cancel',

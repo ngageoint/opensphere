@@ -1,7 +1,9 @@
 goog.require('os.ui.filter.op.GreaterThan');
 
 describe('os.ui.filter.op.GreaterThan', function() {
-  var op = new os.ui.filter.op.GreaterThan();
+  const GreaterThan = goog.module.get('os.ui.filter.op.GreaterThan');
+
+  var op = new GreaterThan();
 
   it('should be configured correctly', function() {
     expect(op.localName).toBe('PropertyIsGreaterThan');

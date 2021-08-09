@@ -1,45 +1,50 @@
-goog.provide('os.ui.query.AreaTreeSearch');
-goog.require('os.ui.query.AreaNode');
-goog.require('os.ui.slick.AbstractGroupByTreeSearch');
+goog.module('os.ui.query.AreaTreeSearch');
+goog.module.declareLegacyNamespace();
 
+const AreaNode = goog.require('os.ui.query.AreaNode');
+const AbstractGroupByTreeSearch = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
+
+const Feature = goog.requireType('ol.Feature');
+const ITreeNode = goog.requireType('os.structs.ITreeNode');
 
 
 /**
  * Extends AbstractGroupByTreeSearch to search through saved areas
- *
- * @extends {os.ui.slick.AbstractGroupByTreeSearch}
- * @param {!Array.<!os.structs.ITreeNode>} search The original tree to search
- * @param {!string} setAs The field to set on ...
- * @param {Object} onObj this object
- * @param {string=} opt_noResultLabel The label to use when there are no results
- * @constructor
  */
-os.ui.query.AreaTreeSearch = function(search, setAs, onObj, opt_noResultLabel) {
-  os.ui.query.AreaTreeSearch.base(this, 'constructor', search, setAs, onObj, opt_noResultLabel);
-};
-goog.inherits(os.ui.query.AreaTreeSearch, os.ui.slick.AbstractGroupByTreeSearch);
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.AreaTreeSearch.prototype.getSearchItems = function() {
-  var tree = this.getSearch();
-  if (tree) {
-    var areas = tree.map(function(item) {
-      return item.getArea();
-    });
-    return areas;
+class AreaTreeSearch extends AbstractGroupByTreeSearch {
+  /**
+   * Constructor.
+   * @param {!Array<!ITreeNode>} search The original tree to search
+   * @param {!string} setAs The field to set on ...
+   * @param {Object} onObj this object
+   * @param {string=} opt_noResultLabel The label to use when there are no results
+   */
+  constructor(search, setAs, onObj, opt_noResultLabel) {
+    super(search, setAs, onObj, opt_noResultLabel);
   }
-  return [];
-};
 
+  /**
+   * @inheritDoc
+   */
+  getSearchItems() {
+    var tree = this.getSearch();
+    if (tree) {
+      var areas = tree.map(function(item) {
+        return item.getArea();
+      });
+      return areas;
+    }
+    return [];
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.query.AreaTreeSearch.prototype.setupNode = function(item) {
-  var node = new os.ui.query.AreaNode(/** @type {!ol.Feature} */ (item));
-  node.setCheckboxVisible(true);
-  return node;
-};
+  /**
+   * @inheritDoc
+   */
+  setupNode(item) {
+    var node = new AreaNode(/** @type {!Feature} */ (item));
+    node.setCheckboxVisible(true);
+    return node;
+  }
+}
+
+exports = AreaTreeSearch;

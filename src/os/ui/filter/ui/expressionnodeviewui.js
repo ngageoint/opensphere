@@ -1,6 +1,7 @@
-goog.provide('os.ui.filter.ui.ExpressionNodeViewUI');
-goog.provide('os.ui.filter.ui.expressionNodeViewUIDirective');
-goog.require('os.ui.Module');
+goog.module('os.ui.filter.ui.ExpressionNodeViewUI');
+goog.module.declareLegacyNamespace();
+
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -8,36 +9,39 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.filter.ui.expressionNodeViewUIDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    template: '<span class="c-glyph"></span>',
-    controller: os.ui.filter.ui.ExpressionNodeViewUI,
-    controllerAs: 'nodeUi'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  template: '<span class="c-glyph"></span>',
+  controller: Controller,
+  controllerAs: 'nodeUi'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'expressionnodeviewui';
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('expressionnodeviewui', [os.ui.filter.ui.expressionNodeViewUIDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for selected/highlighted node UI
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.filter.ui.ExpressionNodeViewUI = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor() {}
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

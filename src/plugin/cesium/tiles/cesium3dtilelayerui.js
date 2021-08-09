@@ -8,7 +8,7 @@ const LayerColor = goog.require('os.command.LayerColor');
 const osImplements = goog.require('os.implements');
 const IColorableLayer = goog.require('os.layer.IColorableLayer');
 const Module = goog.require('os.ui.Module');
-const DefaultLayerUICtrl = goog.require('os.ui.layer.DefaultLayerUICtrl');
+const {Controller: DefaultLayerUICtrl} = goog.require('os.ui.layer.DefaultLayerUI');
 
 const ICommand = goog.requireType('os.command.ICommand');
 const LayerNode = goog.requireType('os.data.LayerNode');

@@ -1,15 +1,23 @@
-goog.provide('os.ui.layer.TileLayerUICtrl');
-goog.provide('os.ui.layer.tileLayerUIDirective');
+goog.module('os.ui.layer.TileLayerUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os');
-goog.require('os.command.LayerColor');
-goog.require('os.command.TileLayerColorize');
-goog.require('os.command.TileLayerStyle');
-goog.require('os.ui.ControlType');
-goog.require('os.ui.Module');
-goog.require('os.ui.layer');
-goog.require('os.ui.layer.DefaultLayerUICtrl');
 goog.require('os.ui.sliderDirective');
+
+const {ROOT} = goog.require('os');
+const {instanceOf} = goog.require('os.classRegistry');
+const {toHexString} = goog.require('os.color');
+const LayerColor = goog.require('os.command.LayerColor');
+const TileLayerColorize = goog.require('os.command.TileLayerColorize');
+const TileLayerStyle = goog.require('os.command.TileLayerStyle');
+const LayerClass = goog.require('os.layer.LayerClass');
+const Module = goog.require('os.ui.Module');
+const {getColorize, getStyle, getStyles} = goog.require('os.ui.layer');
+const {Controller: DefaultLayerUICtrl} = goog.require('os.ui.layer.DefaultLayerUI');
+
+const ICommand = goog.requireType('os.command.ICommand');
+const LayerNode = goog.requireType('os.data.LayerNode');
+const ILayer = goog.requireType('os.layer.ILayer');
+const Tile = goog.requireType('os.layer.Tile');
 
 
 /**
@@ -17,158 +25,161 @@ goog.require('os.ui.sliderDirective');
  *
  * @return {angular.Directive}
  */
-os.ui.layer.tileLayerUIDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    templateUrl: os.ROOT + 'views/layer/tile.html',
-    controller: os.ui.layer.TileLayerUICtrl,
-    controllerAs: 'tile'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  templateUrl: ROOT + 'views/layer/tile.html',
+  controller: Controller,
+  controllerAs: 'tile'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'tilelayerui';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('tilelayerui', [os.ui.layer.tileLayerUIDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the tile layer UI
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout
- * @extends {os.ui.layer.DefaultLayerUICtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.layer.TileLayerUICtrl = function($scope, $element, $timeout) {
-  os.ui.layer.TileLayerUICtrl.base(this, 'constructor', $scope, $element, $timeout);
+class Controller extends DefaultLayerUICtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$timeout} $timeout
+   * @ngInject
+   */
+  constructor($scope, $element, $timeout) {
+    super($scope, $element, $timeout);
 
-  $scope.$on('color.change', this.onColorChange.bind(this));
-  $scope.$on('color.reset', this.onColorReset.bind(this));
-};
-goog.inherits(os.ui.layer.TileLayerUICtrl, os.ui.layer.DefaultLayerUICtrl);
-
-
-/**
- * @inheritDoc
- */
-os.ui.layer.TileLayerUICtrl.prototype.initUI = function() {
-  os.ui.layer.TileLayerUICtrl.base(this, 'initUI');
-
-  if (this.scope) {
-    this.scope['color'] = this.getColor_();
-    this.scope['styles'] = this.getValue(os.ui.layer.getStyles);
-    this.scope['style'] = this.getValue(os.ui.layer.getStyle);
-    this.scope['colorize'] = this.getValue(os.ui.layer.getColorize);
+    $scope.$on('color.change', this.onColorChange.bind(this));
+    $scope.$on('color.reset', this.onColorReset.bind(this));
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  initUI() {
+    super.initUI();
 
-/**
- * Gets the color from the item(s)
- *
- * @return {?string} a hex color string
- * @private
- */
-os.ui.layer.TileLayerUICtrl.prototype.getColor_ = function() {
-  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
-
-  if (items) {
-    for (var i = 0, n = items.length; i < n; i++) {
-      try {
-        var layer = items[i].getLayer();
-        if (layer instanceof os.layer.Tile) {
-          var color = layer.getColor();
-          return color ? os.color.toHexString(color) : color;
-        }
-      } catch (e) {
-      }
+    if (this.scope) {
+      this.scope['color'] = this.getColor_();
+      this.scope['styles'] = this.getValue(getStyles);
+      this.scope['style'] = this.getValue(getStyle);
+      this.scope['colorize'] = this.getValue(getColorize);
     }
   }
 
-  return null;
-};
+  /**
+   * Gets the color from the item(s)
+   *
+   * @return {?string} a hex color string
+   * @private
+   */
+  getColor_() {
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
 
+    if (items) {
+      for (var i = 0, n = items.length; i < n; i++) {
+        try {
+          var layer = items[i].getLayer();
+          if (instanceOf(layer, LayerClass.TILE)) {
+            var color = /** @type {Tile} */ (layer).getColor();
+            return color ? toHexString(color) : color;
+          }
+        } catch (e) {
+        }
+      }
+    }
 
-/**
- * Handles changes to color
- *
- * @param {angular.Scope.Event} event
- * @param {string} value
- * @protected
- */
-os.ui.layer.TileLayerUICtrl.prototype.onColorChange = function(event, value) {
-  var fn =
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.LayerColor(layer.getId(), value);
-      };
+    return null;
+  }
 
-  this.createCommand(fn);
-};
-
-
-/**
- * Handles color reset
- *
- * @param {angular.Scope.Event} event
- * @protected
- */
-os.ui.layer.TileLayerUICtrl.prototype.onColorReset = function(event) {
-  // clear the label color config value
-  this.onColorChange(event, '');
-
-  // reset to the layer color
-  this.scope['color'] = this.getColor_();
-};
-
-
-/**
- * Handles style changes.
- *
- * @export
- */
-os.ui.layer.TileLayerUICtrl.prototype.onStyleChange = function() {
-  var items = /** @type {Array} */ (this.scope['items']);
-  if (items && items.length === 1 && this.scope['style'] != null) {
-    var value = /** @type {(string|osx.ogc.TileStyle)} */ (this.scope['style']);
+  /**
+   * Handles changes to color
+   *
+   * @param {angular.Scope.Event} event
+   * @param {string} value
+   * @protected
+   */
+  onColorChange(event, value) {
     var fn =
         /**
-         * @param {os.layer.ILayer} layer
-         * @return {os.command.ICommand}
+         * @param {ILayer} layer
+         * @return {ICommand}
          */
         function(layer) {
-          return new os.command.TileLayerStyle(layer.getId(), value);
+          return new LayerColor(layer.getId(), value);
         };
 
     this.createCommand(fn);
   }
-};
 
+  /**
+   * Handles color reset
+   *
+   * @param {angular.Scope.Event} event
+   * @protected
+   */
+  onColorReset(event) {
+    // clear the label color config value
+    this.onColorChange(event, '');
 
-/**
- * Handles colorize changes.
- *
- * @export
- */
-os.ui.layer.TileLayerUICtrl.prototype.onColorizeChange = function() {
-  var value = /** @type {boolean} */ (this.scope['colorize']);
-  var fn =
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.TileLayerColorize(layer.getId(), value);
-      };
+    // reset to the layer color
+    this.scope['color'] = this.getColor_();
+  }
 
-  this.createCommand(fn);
+  /**
+   * Handles style changes.
+   *
+   * @export
+   */
+  onStyleChange() {
+    var items = /** @type {Array} */ (this.scope['items']);
+    if (items && items.length === 1 && this.scope['style'] != null) {
+      var value = /** @type {(string|osx.ogc.TileStyle)} */ (this.scope['style']);
+      var fn =
+          /**
+           * @param {ILayer} layer
+           * @return {ICommand}
+           */
+          function(layer) {
+            return new TileLayerStyle(layer.getId(), value);
+          };
+
+      this.createCommand(fn);
+    }
+  }
+
+  /**
+   * Handles colorize changes.
+   *
+   * @export
+   */
+  onColorizeChange() {
+    var value = /** @type {boolean} */ (this.scope['colorize']);
+    var fn =
+        /**
+         * @param {ILayer} layer
+         * @return {ICommand}
+         */
+        function(layer) {
+          return new TileLayerColorize(layer.getId(), value);
+        };
+
+    this.createCommand(fn);
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

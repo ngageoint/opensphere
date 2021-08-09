@@ -1,9 +1,6 @@
 goog.module('os.layer.Vector');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.layer.vectorLayerUIDirective');
-goog.require('os.ui.node.defaultLayerNodeUIDirective');
-
 const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');
 
@@ -54,6 +51,8 @@ const IconsSVG = goog.require('os.ui.IconsSVG');
 const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
 const {FILTER_KEY_DELIMITER} = goog.require('os.ui.filter');
 const {createIconSet} = goog.require('os.ui.icons');
+const {directiveTag: layerUi} = goog.require('os.ui.layer.VectorLayerUI');
+const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
 const {launchRenameDialog} = goog.require('os.ui.renamelayer');
 const TimelineUI = goog.require('os.ui.timeline.TimelineUI');
 
@@ -142,14 +141,14 @@ class Vector extends OLVectorLayer {
      * @type {string}
      * @private
      */
-    this.nodeUi_ = '<defaultlayernodeui></defaultlayernodeui>';
+    this.nodeUi_ = `<${nodeUi}></${nodeUi}>`;
 
     /**
      * The controls UI to show in the Layers window.
      * @type {string}
      * @private
      */
-    this.layerUi_ = 'vectorlayerui';
+    this.layerUi_ = layerUi;
 
     /**
      * @type {boolean}

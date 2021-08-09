@@ -1,15 +1,16 @@
-goog.provide('os.ui.slick.formatter');
+goog.module('os.ui.slick.formatter');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.string');
-goog.require('os.array');
-goog.require('os.ui');
-goog.require('os.ui.columnactions.ColumnActionEvent');
-goog.require('os.ui.columnactions.ColumnActionFormatterFn');
-goog.require('os.ui.columnactions.ColumnActionManager');
-goog.require('os.ui.formatter');
-goog.require('os.ui.slick.SlickColumnActionModel');
-goog.require('os.ui.slick.asyncrenderer.slickColActAsyncRenderer');
-goog.require('os.url');
+const {buildString, htmlEscape} = goog.require('goog.string');
+const ui = goog.require('os.ui');
+const ColumnActionManager = goog.require('os.ui.columnactions.ColumnActionManager');
+const {urlNewTabFormatter: formatterUrlNewTabFormatter} = goog.require('os.ui.formatter');
+const SlickColumnActionModel = goog.require('os.ui.slick.SlickColumnActionModel');
+const slickColActAsyncRenderer = goog.require('os.ui.slick.asyncrenderer.slickColActAsyncRenderer');
+const {URL_REGEXP} = goog.require('os.url');
+
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const ColumnActionFormatterFn = goog.requireType('os.ui.columnactions.ColumnActionFormatterFn');
 
 
 /**
@@ -19,16 +20,15 @@ goog.require('os.url');
  * @param {number} cell The cell number in the row
  * @param {string} value The value
  * @param {Object} columnDef The column definition
- * @param {os.ui.slick.SlickTreeNode} node The node
+ * @param {ui.slick.SlickTreeNode} node The node
  * @return {string} The HTML for the cell
  */
-os.ui.slick.formatter.columnFormatter = function(row, cell, value, columnDef, node) {
+const columnFormatter = function(row, cell, value, columnDef, node) {
   if (!value) {
     return '';
   }
   return value;
 };
-
 
 /**
  * Generic formatter for reading a string field separated by dots, i.e: "a.b.c" will read row[a][b][c];
@@ -37,10 +37,10 @@ os.ui.slick.formatter.columnFormatter = function(row, cell, value, columnDef, no
  * @param {number} cell The cell number in the row
  * @param {string} value The value
  * @param {Object} columnDef The column definition
- * @param {os.ui.slick.SlickTreeNode} node The node
+ * @param {ui.slick.SlickTreeNode} node The node
  * @return {string} The HTML for the cell
  */
-os.ui.slick.formatter.depthfulFormatter = function(row, cell, value, columnDef, node) {
+const depthfulFormatter = function(row, cell, value, columnDef, node) {
   var field = columnDef['field'];
   var fields = field.split('.');
   var val = node;
@@ -55,22 +55,20 @@ os.ui.slick.formatter.depthfulFormatter = function(row, cell, value, columnDef, 
   return val || '';
 };
 
-
 /**
  * Formats a column to display a dot colored by the cell's value. Cell value should either be a hex or rgba string.
  *
  * @param {number} row Row in the grid
  * @param {number} cell Cell in the row
  * @param {string} value Data value (color as hex or rgba)
- * @param {os.data.ColumnDefinition} columnDef The column definition
+ * @param {ColumnDefinition} columnDef The column definition
  * @param {Object} item The item
  * @return {string} A dot colored based on the cell content
  */
-os.ui.slick.formatter.color = function(row, cell, value, columnDef, item) {
+const color = function(row, cell, value, columnDef, item) {
   return value ? '<i class="fa fa-circle" style="color:' + value + '"></i>' :
     '<i class="fa fa-adjust c-formatter__adjust" title="Multiple Colors Present"></i>';
 };
-
 
 /**
  * Formats a column with fixed row numbers
@@ -82,16 +80,14 @@ os.ui.slick.formatter.color = function(row, cell, value, columnDef, item) {
  * @param {Object} item The item
  * @return {number} The row number
  */
-os.ui.slick.formatter.rowNumber = function(row, cell, value, columnDef, item) {
+const rowNumber = function(row, cell, value, columnDef, item) {
   return row + 1;
 };
-
 
 /**
  * @type {RegExp}
  */
-os.ui.slick.formatter.ANCHOR = /<a /;
-
+const ANCHOR = /<a /;
 
 /**
  * Formats the data to be a link if it passes the regex
@@ -100,20 +96,19 @@ os.ui.slick.formatter.ANCHOR = /<a /;
  * @param {number} cell The cell number in the row
  * @param {string} value The value
  * @param {Object} columnDef The column definition
- * @param {os.ui.slick.SlickTreeNode} node The node
- * @param {os.ui.columnactions.ColumnActionFormatterFn=} opt_colFn Optional column action function. This will
+ * @param {ui.slick.SlickTreeNode} node The node
+ * @param {ColumnActionFormatterFn=} opt_colFn Optional column action function. This will
  *        override the default one if provided.
  * @return {string} The HTML for the cell
  */
-os.ui.slick.formatter.urlNewTabFormatter = function(row, cell, value, columnDef, node, opt_colFn) {
-  value = os.ui.formatter.urlNewTabFormatter(value);
+const urlNewTabFormatter = function(row, cell, value, columnDef, node, opt_colFn) {
+  value = formatterUrlNewTabFormatter(value);
 
-  var colFn = opt_colFn || os.ui.slick.formatter.columnActionFormatter;
+  var colFn = opt_colFn || columnActionFormatter;
   var colAct = colFn(row, cell, value, columnDef, node, true);
 
-  return goog.string.buildString(value, colAct);
+  return buildString(value, colAct);
 };
-
 
 /**
  * Formats the source column
@@ -122,10 +117,10 @@ os.ui.slick.formatter.urlNewTabFormatter = function(row, cell, value, columnDef,
  * @param {number} cell The cell number in the row
  * @param {string} value The value
  * @param {Object} columnDef The column definition
- * @param {os.ui.slick.SlickTreeNode} node The node
+ * @param {ui.slick.SlickTreeNode} node The node
  * @return {string} The HTML for the cell
  */
-os.ui.slick.formatter.shortUrlFormatter = function(row, cell, value, columnDef, node) {
+const shortUrlFormatter = function(row, cell, value, columnDef, node) {
   if (!value) {
     return '';
   }
@@ -134,20 +129,19 @@ os.ui.slick.formatter.shortUrlFormatter = function(row, cell, value, columnDef, 
   var newValue = '';
   var cite = 1;
 
-  os.array.forEach(splitVal, function(elem, index, arr) {
-    if (os.url.URL_REGEXP.test(elem)) {
+  splitVal.forEach(function(elem, index, arr) {
+    if (URL_REGEXP.test(elem)) {
       var url = String(elem);
       elem = ['[', cite, ']'].join('').link(url)
-          .replace('<a', goog.string.buildString('<a title="', url, '" target="', url, '" '));
+          .replace('<a', buildString('<a title="', url, '" target="', url, '" '));
       cite++;
     }
 
     newValue = newValue.concat(elem) + ' ';
   });
 
-  return os.ui.sanitize(newValue.trim());
+  return ui.sanitize(newValue.trim());
 };
-
 
 /**
  * Formats the source column
@@ -156,10 +150,10 @@ os.ui.slick.formatter.shortUrlFormatter = function(row, cell, value, columnDef, 
  * @param {number} cell The cell number in the row
  * @param {string} value The value
  * @param {Object} columnDef The column definition
- * @param {os.ui.slick.SlickTreeNode} node The node
+ * @param {ui.slick.SlickTreeNode} node The node
  * @return {string} The HTML for the cell
  */
-os.ui.slick.formatter.urlFormatter = function(row, cell, value, columnDef, node) {
+const urlFormatter = function(row, cell, value, columnDef, node) {
   if (!value) {
     return '';
   }
@@ -167,10 +161,10 @@ os.ui.slick.formatter.urlFormatter = function(row, cell, value, columnDef, node)
   var splitVal = value.split(' ');
   var newValue = '';
 
-  os.array.forEach(splitVal, function(elem, index, arr) {
-    if (os.url.URL_REGEXP.test(elem)) {
-      var url = os.ui.sanitize(String(elem));
-      elem = url.link(url).replace('<a', goog.string.buildString('<a title="', url, '" target="', url, '" '));
+  splitVal.forEach(function(elem, index, arr) {
+    if (URL_REGEXP.test(elem)) {
+      var url = ui.sanitize(String(elem));
+      elem = url.link(url).replace('<a', buildString('<a title="', url, '" target="', url, '" '));
     }
 
     newValue = newValue.concat(elem) + ' ';
@@ -179,44 +173,42 @@ os.ui.slick.formatter.urlFormatter = function(row, cell, value, columnDef, node)
   return newValue.trim();
 };
 
-
 /**
  * @param {number} row The row number
  * @param {number} cell The cell number in the row
  * @param {string} value The value
  * @param {Object} columnDef The column definition
- * @param {os.ui.slick.SlickTreeNode} node The node
+ * @param {ui.slick.SlickTreeNode} node The node
  * @param {boolean=} opt_asDecorator this formatter is being called by another formatter and will be use to decorate
  *  the output of the calling formatter.  Dont include the value in the output.
  * @return {string} The HTML for the cell
  */
-os.ui.slick.formatter.columnActionFormatter = function(row, cell, value, columnDef, node, opt_asDecorator) {
+const columnActionFormatter = function(row, cell, value, columnDef, node, opt_asDecorator) {
   var formatted = '';
   if (opt_asDecorator !== true) {
     // escape the value or Slickgrid will attempt to render any valid HTML characters (and it will fail)
-    formatted = goog.string.htmlEscape(value);
+    formatted = htmlEscape(value);
   }
-  var cam = os.ui.columnactions.ColumnActionManager.getInstance();
+  var cam = ColumnActionManager.getInstance();
 
-  var actions = cam.getActions(null, new os.ui.slick.SlickColumnActionModel(columnDef), value);
+  var actions = cam.getActions(null, new SlickColumnActionModel(columnDef), value);
   if (actions.length === 1) {
-    formatted = goog.string.buildString(formatted, ' <div ',
+    formatted = buildString(formatted, ' <div ',
         'class="col-act col-act-single d-inline-block" data-colvalue="', value, '">',
         '<a class="os-colact-anchor" href="', actions[0].getAction(value), '" target="_blank">',
         '<i class="fa fa-external-link-square" title="', actions[0].getDescription(), '"></i></a></div>');
   } else if (actions.length > 1) {
-    formatted = goog.string.buildString(formatted, ' <div ',
+    formatted = buildString(formatted, ' <div ',
         'class="col-act col-act-mult d-inline-block" data-colvalue="', value, '">',
         '<span title="Multiple Column Actions" ',
         'class="fa-stack mult-colaction align-baseline">',
         '<i class="fa fa-square-o fa-stack-1x c-formatter__column-action-square"></i>',
         '<i class="fa fa-stack fa-external-link-square"></i></span></div>');
-    columnDef['asyncPostRender'] = goog.partial(os.ui.slick.asyncrenderer.slickColActAsyncRenderer, node);
+    columnDef['asyncPostRender'] = goog.partial(slickColActAsyncRenderer, node);
   }
 
   return formatted;
 };
-
 
 /**
  * Formats the source column
@@ -225,13 +217,26 @@ os.ui.slick.formatter.columnActionFormatter = function(row, cell, value, columnD
  * @param {number} cell The cell number in the row
  * @param {string} value The value
  * @param {Object} columnDef The column definition
- * @param {os.ui.slick.SlickTreeNode} node The node
+ * @param {ui.slick.SlickTreeNode} node The node
  * @return {string} The HTML for the cell
  */
-os.ui.slick.formatter.imgPreviewFormatter = function(row, cell, value, columnDef, node) {
+const imgPreviewFormatter = function(row, cell, value, columnDef, node) {
   if (!value) {
     return '';
   }
 
-  return goog.string.buildString('<img class="h-100" src="', value, '"/>');
+  return buildString('<img class="h-100" src="', value, '"/>');
+};
+
+exports = {
+  columnFormatter,
+  depthfulFormatter,
+  color,
+  rowNumber,
+  ANCHOR,
+  urlNewTabFormatter,
+  shortUrlFormatter,
+  urlFormatter,
+  columnActionFormatter,
+  imgPreviewFormatter
 };

@@ -3,7 +3,11 @@ goog.require('os.time.TimeRange');
 goog.require('os.ui.filter.op.time.Between');
 
 describe('os.ui.filter.op.time.Between', function() {
-  var between = new os.ui.filter.op.time.Between();
+  const TimeInstant = goog.module.get('os.time.TimeInstant');
+  const TimeRange = goog.module.get('os.time.TimeRange');
+  const Between = goog.module.get('os.ui.filter.op.time.Between');
+
+  var between = new Between();
   currentFilterTimestamp = 120000;
 
   it('should return the correct defaults', function() {
@@ -95,7 +99,7 @@ describe('os.ui.filter.op.time.Between', function() {
     // this test defines the currentFilterTimestamp = 120000, so we are looking for hits between 60000 and 120000
     // before that, AKA values between 0 and 60000
     var expr = between.getEvalExpression('testVar', '60000 ,   120000  ');
-    var testVar = new os.time.TimeInstant(0);
+    var testVar = new TimeInstant(0);
 
     // prevent eslint no-unused-vars
     expect(testVar).toBeDefined();
@@ -104,25 +108,25 @@ describe('os.ui.filter.op.time.Between', function() {
     expect(eval(expr)).toBe(true);
 
     // equals max value
-    testVar = new os.time.TimeInstant(60000);
+    testVar = new TimeInstant(60000);
     expect(eval(expr)).toBe(true);
 
     // between min/max
-    testVar = new os.time.TimeInstant(40000);
+    testVar = new TimeInstant(40000);
     expect(eval(expr)).toBe(true);
 
     // greater than max
-    testVar = new os.time.TimeInstant(80000);
+    testVar = new TimeInstant(80000);
     expect(eval(expr)).toBe(false);
 
     // less than min
-    testVar = new os.time.TimeInstant(-10000);
+    testVar = new TimeInstant(-10000);
     expect(eval(expr)).toBe(false);
   });
 
   it('should evaluate its filter function correctly on time ranges', function() {
     var expr = between.getEvalExpression('testVar', '60000 ,   120000  ');
-    var testVar = new os.time.TimeRange(-10000, 0);
+    var testVar = new TimeRange(-10000, 0);
 
     // prevent eslint no-unused-vars
     expect(testVar).toBeDefined();
@@ -131,31 +135,31 @@ describe('os.ui.filter.op.time.Between', function() {
     expect(eval(expr)).toBe(true);
 
     // range end between the min and max values
-    testVar = new os.time.TimeRange(-10000, 10000);
+    testVar = new TimeRange(-10000, 10000);
     expect(eval(expr)).toBe(true);
 
     // range entirely between the min and max values
-    testVar = new os.time.TimeRange(20000, 30000);
+    testVar = new TimeRange(20000, 30000);
     expect(eval(expr)).toBe(true);
 
     // range start before the min and range end after the min
-    testVar = new os.time.TimeRange(-10000, 90000);
+    testVar = new TimeRange(-10000, 90000);
     expect(eval(expr)).toBe(true);
 
     // range start between the min and max values
-    testVar = new os.time.TimeRange(30000, 140000);
+    testVar = new TimeRange(30000, 140000);
     expect(eval(expr)).toBe(true);
 
     // range start equals the max value
-    testVar = new os.time.TimeRange(60000, 180000);
+    testVar = new TimeRange(60000, 180000);
     expect(eval(expr)).toBe(true);
 
     // range entirely before the min value
-    testVar = new os.time.TimeRange(-20000, -10000);
+    testVar = new TimeRange(-20000, -10000);
     expect(eval(expr)).toBe(false);
 
     // range entirely after the max value
-    testVar = new os.time.TimeRange(130000, 200000);
+    testVar = new TimeRange(130000, 200000);
     expect(eval(expr)).toBe(false);
   });
 

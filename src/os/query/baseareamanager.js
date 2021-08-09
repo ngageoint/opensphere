@@ -1,28 +1,37 @@
 goog.module('os.query.BaseAreaManager');
 goog.module.declareLegacyNamespace();
 
-const googArray = goog.require('goog.array');
+const {assert} = goog.require('goog.asserts');
 const Deferred = goog.require('goog.async.Deferred');
 const Delay = goog.require('goog.async.Delay');
-const googString = goog.require('goog.string');
+const GoogEventType = goog.require('goog.events.EventType');
+const log = goog.require('goog.log');
+const {getRandomString} = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
 const GeoJSON = goog.require('ol.format.GeoJSON');
+const GeometryType = goog.require('ol.geom.GeometryType');
 const OLVectorSource = goog.require('ol.source.Vector');
 const VectorEventType = goog.require('ol.source.VectorEventType');
-const os = goog.require('os');
+const {AREA_STORAGE_KEY} = goog.require('os');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const osArray = goog.require('os.array');
 const Settings = goog.require('os.config.Settings');
 const CollectionManager = goog.require('os.data.CollectionManager');
 const RecordField = goog.require('os.data.RecordField');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osJsts = goog.require('os.geo.jsts');
-const geo2 = goog.require('os.geo2');
+const {toPolygon, validate} = goog.require('os.geo.jsts');
+const {normalizeGeometryCoordinates} = goog.require('os.geo2');
+const GeometryField = goog.require('os.geom.GeometryField');
+const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
 const osMap = goog.require('os.map');
 const {getAreaManager, setAreaManager, getQueryManager} = goog.require('os.query.instance');
 const osStyleArea = goog.require('os.style.area');
-const osWindow = goog.require('os.ui.window');
+const {EDIT_WIN_LABEL, SAVE_WIN_LABEL} = goog.require('os.ui.query');
+const {directiveTag: editArea} = goog.require('os.ui.query.EditAreaUI');
+const {create} = goog.require('os.ui.window');
 
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 const IMapContainer = goog.requireType('os.map.IMapContainer');
 
 
@@ -100,8 +109,8 @@ class BaseAreaManager extends CollectionManager {
       this.toggle(feature, show !== undefined ? show : true);
     }
 
-    var qm = os.query.BaseQueryManager.getInstance();
-    qm.listen(goog.events.EventType.PROPERTYCHANGE, this.updateStyles_, false, this);
+    var qm = getQueryManager();
+    qm.listen(GoogEventType.PROPERTYCHANGE, this.updateStyles_, false, this);
     this.updateStyles_();
   }
 
@@ -112,8 +121,8 @@ class BaseAreaManager extends CollectionManager {
    */
   onMapUnready_() {
     this.mapReady_ = false;
-    var qm = os.query.BaseQueryManager.getInstance();
-    qm.unlisten(goog.events.EventType.PROPERTYCHANGE, this.updateStyles_, false, this);
+    var qm = getQueryManager();
+    qm.unlisten(GoogEventType.PROPERTYCHANGE, this.updateStyles_, false, this);
   }
 
   /**
@@ -162,7 +171,7 @@ class BaseAreaManager extends CollectionManager {
 
     osArray.forEach(features, function(feature) {
       if (!feature.getId()) {
-        feature.setId(BaseAreaManager.FEATURE_PREFIX + googString.getRandomString());
+        feature.setId(BaseAreaManager.FEATURE_PREFIX + getRandomString());
       }
       if (!feature.get('temp') && !feature.get('title')) {
         feature.set('temp', true);
@@ -180,10 +189,10 @@ class BaseAreaManager extends CollectionManager {
    * @inheritDoc
    */
   add(feature) {
-    goog.asserts.assert(feature !== undefined, 'Cannot add null/undefined feature');
+    assert(feature !== undefined, 'Cannot add null/undefined feature');
 
     if (!feature.getId()) {
-      feature.setId(BaseAreaManager.FEATURE_PREFIX + googString.getRandomString());
+      feature.setId(BaseAreaManager.FEATURE_PREFIX + getRandomString());
     }
 
     if (!feature.get('title') && feature.get('name')) {
@@ -215,34 +224,34 @@ class BaseAreaManager extends CollectionManager {
    */
   isValidFeature(feature) {
     var geometry = feature.getGeometry();
-    var originalGeometry = /** @type {ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD));
+    var originalGeometry = /** @type {ol.geom.Geometry} */ (feature.get(ORIGINAL_GEOM_FIELD));
     if (!geometry) {
       return false;
     }
 
     var isValid = false;
     var geomType = geometry.getType();
-    if (geomType == ol.geom.GeometryType.POLYGON || geomType == ol.geom.GeometryType.MULTI_POLYGON) {
-      var validated = osJsts.validate(geometry);
+    if (geomType == GeometryType.POLYGON || geomType == GeometryType.MULTI_POLYGON) {
+      var validated = validate(geometry);
       var validatedOriginal = null;
 
       if (originalGeometry) {
-        validatedOriginal = osJsts.validate(originalGeometry);
+        validatedOriginal = validate(originalGeometry);
       }
 
       isValid = true;
 
       feature.setGeometry(validated);
-      feature.set(os.interpolate.ORIGINAL_GEOM_FIELD, validatedOriginal || validated);
+      feature.set(ORIGINAL_GEOM_FIELD, validatedOriginal || validated);
     } else {
       try {
-        var polygon = osJsts.toPolygon(geometry);
+        var polygon = toPolygon(geometry);
         if (polygon) {
           feature.setGeometry(polygon);
           isValid = true;
         }
       } catch (e) {
-        goog.log.error(this.log, 'Error converting ' + geomType + ' to polygon:', e);
+        log.error(this.log, 'Error converting ' + geomType + ' to polygon:', e);
         isValid = false;
       }
     }
@@ -259,7 +268,7 @@ class BaseAreaManager extends CollectionManager {
    * @protected
    */
   normalizeGeometry(feature) {
-    geo2.normalizeGeometryCoordinates(feature.getGeometry());
+    normalizeGeometryCoordinates(feature.getGeometry());
   }
 
   /**
@@ -270,7 +279,7 @@ class BaseAreaManager extends CollectionManager {
    */
   filterFeatures(features) {
     if (features) {
-      return googArray.filter(features, function(feature) {
+      return features.filter(function(feature) {
         return feature != null && this.isValidFeature(feature);
       }, this);
     }
@@ -305,7 +314,7 @@ class BaseAreaManager extends CollectionManager {
     } else {
       AlertManager.getInstance().sendAlert('Area is invalid and cannot be used. Common problems include polygons ' +
         'that cross themselves and multipolygons with overlapping elements.',
-      os.alert.AlertEventSeverity.WARNING);
+      AlertEventSeverity.WARNING);
     }
 
     return false;
@@ -463,7 +472,7 @@ class BaseAreaManager extends CollectionManager {
    */
   getStoredAreas() {
     return Deferred.succeed(this.onAreasLoaded_(
-        /** @type {?Object} */ (Settings.getInstance().get(os.AREA_STORAGE_KEY))));
+        /** @type {?Object} */ (Settings.getInstance().get(AREA_STORAGE_KEY))));
   }
 
   /**
@@ -487,7 +496,7 @@ class BaseAreaManager extends CollectionManager {
         for (var i = 0; i < areas.length; i++) {
           var geom = areas[i] ? areas[i].getGeometry() : undefined;
           if (geom) {
-            geom.set(os.geom.GeometryField.NORMALIZED, true, true);
+            geom.set(GeometryField.NORMALIZED, true, true);
           }
         }
       }
@@ -537,7 +546,7 @@ class BaseAreaManager extends CollectionManager {
    * @protected
    */
   updateStyle(area, opt_suppress) {
-    var qm = os.query.BaseQueryManager.getInstance();
+    var qm = getQueryManager();
 
     var changed = false;
     var defaultStyle = osStyleArea.DEFAULT_STYLE;
@@ -550,7 +559,7 @@ class BaseAreaManager extends CollectionManager {
 
     if (entries && entries.length > 0) {
       var layerSet = getQueryManager().getLayerSet();
-      var layers = goog.object.getKeys(layerSet);
+      var layers = Object.keys(layerSet);
       var layer = layers.length == 1 ? layers[0] : null;
       if (layer) {
         for (var i = 0, n = entries.length; i < n; i++) {
@@ -653,7 +662,7 @@ class BaseAreaManager extends CollectionManager {
 
   /**
    * @param {!Feature} feature The feature to save as an area
-   * @param {Array<os.data.ColumnDefinition>=} opt_columns Columns to display in the save area dialog
+   * @param {Array<ColumnDefinition>=} opt_columns Columns to display in the save area dialog
    */
   static save(feature, opt_columns) {
     var columns = opt_columns || undefined;
@@ -664,9 +673,9 @@ class BaseAreaManager extends CollectionManager {
 
     var winLabel;
     if (!getAreaManager().get(feature) || feature.get('temp')) {
-      winLabel = os.ui.query.SAVE_WIN_LABEL;
+      winLabel = SAVE_WIN_LABEL;
     } else {
-      winLabel = os.ui.query.EDIT_WIN_LABEL;
+      winLabel = EDIT_WIN_LABEL;
     }
 
     var windowOptions = {
@@ -679,8 +688,8 @@ class BaseAreaManager extends CollectionManager {
       'modal': true
     };
 
-    var template = '<editarea></editarea>';
-    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+    var template = `<${editArea}></${editArea}>`;
+    create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 
   /**
@@ -704,7 +713,7 @@ class BaseAreaManager extends CollectionManager {
 
     var ui = opt_ui || 'mergeareas';
     var template = '<' + ui + '></' + ui + '>';
-    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+    create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 
   /**
@@ -736,7 +745,7 @@ class BaseAreaManager extends CollectionManager {
  * Logger
  * @type {goog.log.Logger}
  */
-const logger = goog.log.getLogger('os.query.BaseAreaManager');
+const logger = log.getLogger('os.query.BaseAreaManager');
 
 
 /**
@@ -762,7 +771,7 @@ BaseAreaManager.tempId_ = 1;
 
 
 /**
- * @type {os.query.BaseAreaManager}
+ * @type {BaseAreaManager}
  */
 os.ui.areaManager = null;
 

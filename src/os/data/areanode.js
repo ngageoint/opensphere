@@ -1,8 +1,6 @@
 goog.module('os.data.AreaNode');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.node.areaNodeUIDirective');
-
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
 const AreaToggle = goog.require('os.command.AreaToggle');
@@ -15,6 +13,7 @@ const {isStateFile} = goog.require('os.state');
 const TriState = goog.require('os.structs.TriState');
 const IMenuSupplier = goog.require('os.ui.menu.IMenuSupplier');
 const spatial = goog.require('os.ui.menu.spatial');
+const {directiveTag: nodeUi} = goog.require('os.ui.node.AreaNodeUI');
 const QueryAreaNode = goog.require('os.ui.query.AreaNode');
 
 const ISearchable = goog.requireType('os.data.ISearchable');
@@ -68,7 +67,7 @@ class AreaNode extends QueryAreaNode {
       this.updateFromArea();
 
       if (this.area) {
-        this.nodeUI = '<areanodeui></areanodeui>';
+        this.nodeUI = `<${nodeUi}></${nodeUi}>`;
         events.listen(this.area, 'toggle', this.onAreaToggled, this);
       } else {
         this.nodeUI = '';

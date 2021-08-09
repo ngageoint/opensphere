@@ -1,11 +1,12 @@
-goog.provide('os.ui.help.webGLSupportDirective');
+goog.module('os.ui.help.WebGLSupportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.userAgent');
-goog.require('os.config');
-goog.require('os.ui.Module');
-goog.require('os.ui.util.LinkyFilter');
-goog.require('os.ui.window');
-goog.require('os.ui.window.ConfirmUI');
+const userAgent = goog.require('goog.userAgent');
+const {ROOT} = goog.require('os');
+const {getAppName, getSupportContact} = goog.require('os.config');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -13,39 +14,39 @@ goog.require('os.ui.window.ConfirmUI');
  *
  * @return {angular.Directive}
  */
-os.ui.help.webGLSupportDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    link: os.ui.help.webGLSupportLink_,
-    templateUrl: os.ROOT + 'views/help/webglsupport.html'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  link: webGLSupportLink,
+  templateUrl: ROOT + 'views/help/webglsupport.html'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'webglsupport';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('webglsupport', [os.ui.help.webGLSupportDirective]);
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Fire the window ready event for auto height.
  *
  * @param {!angular.Scope} $scope The Angular scope.
- * @private
  */
-os.ui.help.webGLSupportLink_ = function($scope) {
-  $scope.$emit(os.ui.WindowEventType.READY);
+const webGLSupportLink = function($scope) {
+  $scope.$emit(WindowEventType.READY);
 };
-
 
 /**
  * Launches a dialog telling the user their browser is terrible.
  *
  * @param {string=} opt_title The window title
  */
-os.ui.help.launchWebGLSupportDialog = function(opt_title) {
+const launchWebGLSupportDialog = function(opt_title) {
   var scopeOptions = {
     'hideCancel': true
   };
@@ -65,19 +66,25 @@ os.ui.help.launchWebGLSupportDialog = function(opt_title) {
     'modal': true
   };
 
-  scopeOptions['appName'] = os.config.getAppName('the application');
-  scopeOptions['supportText'] = os.config.getSupportContact('your system administrator');
+  scopeOptions['appName'] = getAppName('the application');
+  scopeOptions['supportText'] = getSupportContact('your system administrator');
 
-  if (goog.userAgent.IE && goog.userAgent.VERSION == 11) {
+  if (userAgent.IE && userAgent.VERSION == 11) {
     scopeOptions['showIEHelp'] = true;
-  } else if (goog.userAgent.GECKO && goog.userAgent.isVersionOrHigher(10)) {
+  } else if (userAgent.GECKO && userAgent.isVersionOrHigher(10)) {
     scopeOptions['showFFHelp'] = true;
-  } else if (goog.userAgent.WEBKIT && goog.userAgent.isVersionOrHigher(28)) {
+  } else if (userAgent.WEBKIT && userAgent.isVersionOrHigher(28)) {
     scopeOptions['showGCHelp'] = true;
   }
 
-  os.ui.window.ConfirmUI.launchConfirm(/** @type {!osx.window.ConfirmOptions} */ ({
-    prompt: '<webglsupport></webglsupport>',
+  ConfirmUI.launchConfirm(/** @type {!osx.window.ConfirmOptions} */ ({
+    prompt: `<${directiveTag}></${directiveTag}>`,
     windowOptions: windowOptions
   }), scopeOptions);
+};
+
+exports = {
+  directive,
+  directiveTag,
+  launchWebGLSupportDialog
 };

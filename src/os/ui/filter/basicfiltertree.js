@@ -1,102 +1,108 @@
-goog.provide('os.ui.filter.BasicFilterTreeCtrl');
-goog.provide('os.ui.filter.basicFilterTreeDirective');
+goog.module('os.ui.filter.BasicFilterTreeUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-goog.require('os.ui.slick.SlickTreeCtrl');
-goog.require('os.ui.slick.SlickTreeNode');
-goog.require('os.ui.slick.slickTreeDirective');
+const Module = goog.require('os.ui.Module');
+const {directiveTag: expressionUi} = goog.require('os.ui.filter.ExpressionUI');
+const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+const {Controller: SlickTreeCtrl, directive: slickTreeDirective} = goog.require('os.ui.slick.SlickTreeUI');
 
 
 /**
  * @return {angular.Directive}
  */
-os.ui.filter.basicFilterTreeDirective = function() {
-  var conf = os.ui.slick.slickTreeDirective();
-  conf.controller = os.ui.filter.BasicFilterTreeCtrl;
+const directive = () => {
+  var conf = slickTreeDirective();
+  conf.controller = Controller;
   conf.template = '<div class="c-slick-tree no-hover"></div>';
   return conf;
 };
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'basicfiltertree';
 
-os.ui.Module.directive('basicfiltertree', [os.ui.filter.basicFilterTreeDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for basic filter tree
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$compile} $compile
- * @extends {os.ui.slick.SlickTreeCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.filter.BasicFilterTreeCtrl = function($scope, $element, $compile) {
-  os.ui.filter.BasicFilterTreeCtrl.base(this, 'constructor', $scope, $element, $compile);
-};
-goog.inherits(os.ui.filter.BasicFilterTreeCtrl, os.ui.slick.SlickTreeCtrl);
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.BasicFilterTreeCtrl.prototype.treeFormatter = function(row, cell, value, columnDef, node) {
-  return row % 2 == 1 ? '<div ng-bind="root.grouping"></div>' :
-    '<expression expr="item.getExpression()" columns="columns"></expression>' +
-      ('<span ng-if="hasMultipleFilters()">' +
-          '<button class="btn btn-danger btn-sm" tabindex="-1" ng-click="$emit(\'filterbuilder.remove\', item)" ' +
-          'title="Remove this expression"><i class="fa fa-times"></i></button></span>');
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.BasicFilterTreeCtrl.prototype.getOptions = function() {
-  var opts = os.ui.filter.BasicFilterTreeCtrl.base(this, 'getOptions');
-  opts['rowHeight'] = 30;
-  return opts;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.BasicFilterTreeCtrl.prototype.initRowScope = function(s, row, node, item) {
-  s['columns'] = this.scope.$parent['columns'];
-  s['root'] = this.scope.$parent['root'];
-  s['hasMultipleFilters'] = this.hasMultipleFilters.bind(this);
-
-  os.ui.filter.BasicFilterTreeCtrl.base(this, 'initRowScope', s, row, node, item);
-};
-
-
-/**
- * Check if there are multiple filter components. This is used to determine if the remove button should be displayed.
- *
- * @return {boolean}
- * @protected
- */
-os.ui.filter.BasicFilterTreeCtrl.prototype.hasMultipleFilters = function() {
-  if (this.scope && this.scope.$parent && this.scope.$parent['root']) {
-    var children = this.scope.$parent['root'].getChildren();
-    return !!children && children.length > 1;
+class Controller extends SlickTreeCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$compile} $compile
+   * @ngInject
+   */
+  constructor($scope, $element, $compile) {
+    super($scope, $element, $compile);
   }
 
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.BasicFilterTreeCtrl.prototype.updateData = function(data) {
-  // insert the odd-numbered "group" rows
-  for (var i = 1, n = 2 * data.length - 1; i < n; i += 2) {
-    var node = new os.ui.slick.SlickTreeNode();
-    node['id'] = 'g.' + i;
-    data.splice(i, 0, node);
+  /**
+   * @inheritDoc
+   */
+  treeFormatter(row, cell, value, columnDef, node) {
+    return row % 2 == 1 ? '<div ng-bind="root.grouping"></div>' :
+      `<${expressionUi} expr="item.getExpression()" columns="columns"></${expressionUi}>` +
+        ('<span ng-if="hasMultipleFilters()">' +
+            '<button class="btn btn-danger btn-sm" tabindex="-1" ng-click="$emit(\'filterbuilder.remove\', item)" ' +
+            'title="Remove this expression"><i class="fa fa-times"></i></button></span>');
   }
-  os.ui.filter.BasicFilterTreeCtrl.base(this, 'updateData', data);
+
+  /**
+   * @inheritDoc
+   */
+  getOptions() {
+    var opts = super.getOptions();
+    opts['rowHeight'] = 30;
+    return opts;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  initRowScope(s, row, node, item) {
+    s['columns'] = this.scope.$parent['columns'];
+    s['root'] = this.scope.$parent['root'];
+    s['hasMultipleFilters'] = this.hasMultipleFilters.bind(this);
+
+    super.initRowScope(s, row, node, item);
+  }
+
+  /**
+   * Check if there are multiple filter components. This is used to determine if the remove button should be displayed.
+   *
+   * @return {boolean}
+   * @protected
+   */
+  hasMultipleFilters() {
+    if (this.scope && this.scope.$parent && this.scope.$parent['root']) {
+      var children = this.scope.$parent['root'].getChildren();
+      return !!children && children.length > 1;
+    }
+
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  updateData(data) {
+    // insert the odd-numbered "group" rows
+    for (var i = 1, n = 2 * data.length - 1; i < n; i += 2) {
+      var node = new SlickTreeNode();
+      node['id'] = 'g.' + i;
+      data.splice(i, 0, node);
+    }
+    super.updateData(data);
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

@@ -1,4 +1,7 @@
-goog.provide('os.ui.filter.string');
+goog.module('os.ui.filter.string');
+goog.module.declareLegacyNamespace();
+
+const {regExpEscape} = goog.require('goog.string');
 
 
 /**
@@ -7,11 +10,10 @@ goog.provide('os.ui.filter.string');
  * @param {*} s The value. If not a string, it will be casted to one.
  * @return {string} A double quoted, escaped copy of {@code s}.
  */
-os.ui.filter.string.quoteString = function(s) {
+const quoteString = function(s) {
   // this will both escape double quotes and backslashes, and wrap in double quotes
   return JSON.stringify(String(s));
 };
-
 
 /**
  * Escape a value for use in a double quoted filter string.
@@ -19,11 +21,10 @@ os.ui.filter.string.quoteString = function(s) {
  * @param {*} s The value. If not a string, it will be casted to one.
  * @return {string} An escaped copy of {@code s}.
  */
-os.ui.filter.string.escapeString = function(s) {
+const escapeString = function(s) {
   // escape double quotes and backslashes, for use in an evaluated double quoted string
   return String(s).replace(/([\\"])/g, '\\$1');
 };
-
 
 /**
  * Escape a value for use in a filter string RegExp.
@@ -33,7 +34,7 @@ os.ui.filter.string.escapeString = function(s) {
  * @param {string=} opt_singleChar The single wildcard character. Defaults to '.'.
  * @return {string} A RegExp-safe, escaped copy of {@code s}.
  */
-os.ui.filter.string.escapeRegExp = function(s, opt_wildcard, opt_singleChar) {
+const escapeRegExp = function(s, opt_wildcard, opt_singleChar) {
   // escape all RegExp characters that won't be used by the filter
   var result = String(s)
       .replace(/([-()/\[\]{}+?$\^|,:#<!\\])/g, '\\$1')
@@ -49,7 +50,7 @@ os.ui.filter.string.escapeRegExp = function(s, opt_wildcard, opt_singleChar) {
     // if they're the same, skip this in favor of the wildcard replace
     if (singleChar != wildcard) {
       // replace single wildcard chars with '.' for use in a RegExp
-      var singleRe = new RegExp(goog.string.regExpEscape(singleChar), 'g');
+      var singleRe = new RegExp(regExpEscape(singleChar), 'g');
       result = result.replace(singleRe, '.');
     }
   }
@@ -60,8 +61,14 @@ os.ui.filter.string.escapeRegExp = function(s, opt_wildcard, opt_singleChar) {
   }
 
   // replace wildcard chars with '.*' for use in a RegExp
-  var wildcardRe = new RegExp(goog.string.regExpEscape(wildcard), 'g');
+  var wildcardRe = new RegExp(regExpEscape(wildcard), 'g');
   result = result.replace(wildcardRe, '.*');
 
   return result;
+};
+
+exports = {
+  quoteString,
+  escapeString,
+  escapeRegExp
 };

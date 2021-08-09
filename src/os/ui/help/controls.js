@@ -1,136 +1,114 @@
-goog.provide('os.ui.help.Controls');
-goog.provide('os.ui.help.ControlsCtrl');
-goog.provide('os.ui.help.controlsDirective');
+goog.module('os.ui.help.Controls');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.KeyCodes');
-goog.require('goog.events.KeyNames');
-goog.require('ol.array');
-goog.require('os.ui');
-goog.require('os.ui.Module');
-goog.require('os.ui.help.ControlBlockUI');
-goog.require('os.ui.window');
+const {ROOT} = goog.require('os');
 
-
-/**
- * A directive to display the help menu
- *
- * @return {angular.Directive}
- */
-os.ui.help.controlsDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/help/controls.html',
-    controller: os.ui.help.ControlsCtrl,
-    controllerAs: 'controlsHelp'
-  };
-};
-
-
-/**
- * Register the directive.
- */
-os.ui.Module.directive('controlshelp', [os.ui.help.controlsDirective]);
-
-
-
-/**
- * Display the controls for this application
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
- */
-os.ui.help.ControlsCtrl = function($scope) {
-  var controls = os.ui.help.Controls.getInstance().getControls();
-  goog.array.sort(controls, function(a, b) {
-    return a['order'] > b['order'] ? 1 : a['order'] < b['order'] ? -1 : 0;
-  });
-
-  var splitIndex = (controls.length / 2) + 1;
-
-  /**
-   * List of controls
-   * @type {Object}
-   */
-  this['controls'] = {
-    'left': goog.array.slice(controls, 0, splitIndex),
-    'right': goog.array.slice(controls, splitIndex, controls.length)
-  };
-};
-
-
-/**
- * Launch the controls window
- */
-os.ui.help.ControlsCtrl.launch = function() {
-  var id = 'controlsHelp';
-  if (os.ui.window.exists(id)) {
-    os.ui.window.bringToFront(id);
-  } else {
-    os.ui.window.create({
-      'id': id,
-      'x': 'center',
-      'y': 'center',
-      'label': 'Controls',
-      'show-close': true,
-      'min-width': 850,
-      'min-height': 750,
-      'max-width': 900,
-      'max-height': 800,
-      'modal': false,
-      'width': 850,
-      'height': 750,
-      'icon': 'fa fa-keyboard-o'
-    }, 'controlshelp');
-  }
-};
-
+const KeyCodes = goog.requireType('goog.events.KeyCodes');
 
 /**
  * Singleton for application to add controls
- *
- * @constructor
  */
-os.ui.help.Controls = function() {
+class Controls {
   /**
-   * List of controls
-   * @type {Array}
-   * @private
+   * Constructor.
    */
-  this.controls_ = [];
-};
-goog.addSingletonGetter(os.ui.help.Controls);
+  constructor() {
+    /**
+     * List of controls
+     * @type {Array}
+     * @private
+     */
+    this.controls_ = [];
+  }
 
+  /**
+   * @return {Array}
+   */
+  getControls() {
+    return this.controls_;
+  }
+
+  /**
+   * Allow application to add controls
+   *
+   * @param {string} section
+   * @param {number} order
+   * @param {string} text
+   * @param {Array<KeyCodes>=} opt_keys
+   * @param {Array<string>=} opt_other
+   */
+  addControl(section, order, text, opt_keys, opt_other) {
+    var ctrlGroup = this.controls_.find(function(group) {
+      return group['section'] == section;
+    });
+    if (!ctrlGroup) {
+      ctrlGroup = {
+        'section': section,
+        'order': order,
+        'controls': []
+      };
+      this.controls_.push(ctrlGroup);
+    }
+    // Add this control to the list of controls
+    ctrlGroup.controls.push({
+      'text': text,
+      'keys': opt_keys,
+      'other': opt_other
+    });
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!Controls}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new Controls();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {Controls} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
+
+/**
+ * Global instance.
+ * @type {Controls|undefined}
+ */
+let instance;
 
 /**
  * Mouse Pictures
  * @type {Object}
  */
-os.ui.help.Controls.MOUSE = {
+Controls.MOUSE = {
   LEFT_MOUSE: 'LEFT_MOUSE',
   MIDDLE_MOUSE: 'MIDDLE_MOUSE',
   RIGHT_MOUSE: 'RIGHT_MOUSE'
 };
 
-
 /**
  * Mouse Pictures
  * @type {Object}
  */
-os.ui.help.Controls.MOUSE_IMAGE = {
-  'LEFT_MOUSE': os.ROOT + 'images/MouseLeft.png',
-  'MIDDLE_MOUSE': os.ROOT + 'images/MouseMiddle.png',
-  'RIGHT_MOUSE': os.ROOT + 'images/MouseRight.png'
+Controls.MOUSE_IMAGE = {
+  'LEFT_MOUSE': ROOT + 'images/MouseLeft.png',
+  'MIDDLE_MOUSE': ROOT + 'images/MouseMiddle.png',
+  'RIGHT_MOUSE': ROOT + 'images/MouseRight.png'
 };
 
-
 /**
  * Mouse Pictures
  * @type {Object}
  */
-os.ui.help.Controls.FONT = {
+Controls.FONT = {
   HORIZONTAL: 'HORIZONTAL',
   VERTICAL: 'VERTICAL',
   ALL: 'ALL',
@@ -140,12 +118,11 @@ os.ui.help.Controls.FONT = {
   DOWN: 'DOWN'
 };
 
-
 /**
  * Mouse Pictures
  * @type {Object}
  */
-os.ui.help.Controls.FONT_CLASS = {
+Controls.FONT_CLASS = {
   'HORIZONTAL': {
     'font': 'fa fa-fw fa-arrows-h',
     'class': 'control-drag'
@@ -176,40 +153,4 @@ os.ui.help.Controls.FONT_CLASS = {
   }
 };
 
-
-/**
- * @return {Array}
- */
-os.ui.help.Controls.prototype.getControls = function() {
-  return this.controls_;
-};
-
-
-/**
- * Allow application to add controls
- *
- * @param {string} section
- * @param {number} order
- * @param {string} text
- * @param {Array<goog.events.KeyCodes>=} opt_keys
- * @param {Array<string>=} opt_other
- */
-os.ui.help.Controls.prototype.addControl = function(section, order, text, opt_keys, opt_other) {
-  var ctrlGroup = ol.array.find(this.controls_, function(group) {
-    return group['section'] == section;
-  });
-  if (!ctrlGroup) {
-    ctrlGroup = {
-      'section': section,
-      'order': order,
-      'controls': []
-    };
-    this.controls_.push(ctrlGroup);
-  }
-  // Add this control to the list of controls
-  ctrlGroup.controls.push({
-    'text': text,
-    'keys': opt_keys,
-    'other': opt_other
-  });
-};
+exports = Controls;

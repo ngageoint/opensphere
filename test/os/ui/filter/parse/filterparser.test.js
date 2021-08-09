@@ -1,18 +1,24 @@
 goog.require('goog.dom.xml');
+goog.require('goog.net.EventType');
 goog.require('goog.net.XhrIo');
 goog.require('os.ui.filter.parse.FilterParser');
 
 
 describe('os.ui.filter.parse.FilterParser', function() {
+  const xml = goog.module.get('goog.dom.xml');
+  const EventType = goog.module.get('goog.net.EventType');
+  const XhrIo = goog.module.get('goog.net.XhrIo');
+  const FilterParser = goog.module.get('os.ui.filter.parse.FilterParser');
+
   var filtersUrl = '/base/test/os/ui/filter/parse/filters.xml';
   var stateUrl = '/base/test/os/ui/filter/parse/state.xml';
-  var parser = new os.ui.filter.parse.FilterParser();
+  var parser = new FilterParser();
 
   var requestFilters = function(url, waitsFn) {
-    var xhr = new goog.net.XhrIo();
+    var xhr = new XhrIo();
     var response = null;
 
-    xhr.listen(goog.net.EventType.SUCCESS, function() {
+    xhr.listen(EventType.SUCCESS, function() {
       response = xhr.getResponse();
     }, false);
 
@@ -31,7 +37,7 @@ describe('os.ui.filter.parse.FilterParser', function() {
 
   it('should extract filters from a filter file', function() {
     var filterFn = function(filterString) {
-      var ele = goog.dom.xml.loadXml(filterString);
+      var ele = xml.loadXml(filterString);
       var filters = parser.extractFromFilters(ele.firstChild);
       expect(filters.length).toBe(3);
 
@@ -50,7 +56,7 @@ describe('os.ui.filter.parse.FilterParser', function() {
 
   it('should extract filters from a state file', function() {
     var stateFn = function(filterString) {
-      var ele = goog.dom.xml.loadXml(filterString);
+      var ele = xml.loadXml(filterString);
       var filters = parser.extractFromFilters(ele.firstChild);
       expect(filters.length).toBe(2);
 

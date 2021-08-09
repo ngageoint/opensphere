@@ -1,13 +1,15 @@
 goog.require('os.data.ColumnDefinition');
 goog.require('os.ui.slick.column');
 
-
 describe('os.ui.slick.column', function() {
+  const ColumnDefinition = goog.module.get('os.data.ColumnDefinition');
+  const column = goog.module.get('os.ui.slick.column');
+
   it('should properly enable/disable the remove action', function() {
     var cols = [
-      new os.data.ColumnDefinition('column1'),
-      new os.data.ColumnDefinition('column2'),
-      new os.data.ColumnDefinition('column3')
+      new ColumnDefinition('column1'),
+      new ColumnDefinition('column2'),
+      new ColumnDefinition('column3')
     ];
 
     var thisArg = {};
@@ -17,22 +19,22 @@ describe('os.ui.slick.column', function() {
       grid: {}
     };
 
-    os.ui.slick.column.visibleIfCanRemove_.call(thisArg, context);
+    column.visibleIfCanRemove.call(thisArg, context);
     expect(thisArg.visible).toBe(true);
 
     delete thisArg.visible;
     cols[0].visible = false;
-    os.ui.slick.column.visibleIfCanRemove_.call(thisArg, context);
+    column.visibleIfCanRemove.call(thisArg, context);
     expect(thisArg.visible).toBe(true);
 
     delete thisArg.visible;
     cols[1].visible = false;
-    os.ui.slick.column.visibleIfCanRemove_.call(thisArg, context);
+    column.visibleIfCanRemove.call(thisArg, context);
     expect(thisArg.visible).toBe(false);
 
     delete thisArg.visible;
     cols[1].visible = true;
-    os.ui.slick.column.visibleIfCanRemove_.call(thisArg, context);
+    column.visibleIfCanRemove.call(thisArg, context);
     expect(thisArg.visible).toBe(true);
   });
 });

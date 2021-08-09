@@ -1,9 +1,6 @@
 goog.module('os.MapContainer');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.help.webGLPerfCaveatDirective');
-goog.require('os.ui.help.webGLSupportDirective');
-
 const Promise = goog.require('goog.Promise');
 const {binarySelect, defaultCompare} = goog.require('goog.array');
 const {assert} = goog.require('goog.asserts');
@@ -95,7 +92,8 @@ const StyleType = goog.require('os.style.StyleType');
 const label = goog.require('os.style.label');
 const ui = goog.require('os.ui');
 const ActionEventType = goog.require('os.ui.action.EventType');
-const {launchWebGLPerfCaveatDialog, launchWebGLSupportDialog} = goog.require('os.ui.help');
+const {launchWebGLPerfCaveatDialog} = goog.require('os.ui.help.WebGLPerfCaveatUI');
+const {launchWebGLSupportDialog} = goog.require('os.ui.help.WebGLSupportUI');
 const Controls = goog.require('os.ui.help.Controls');
 const OnboardingManager = goog.require('os.ui.onboarding.OnboardingManager');
 const {isSupported: isWebglSupported, hasPerformanceCaveat} = goog.require('os.webgl');

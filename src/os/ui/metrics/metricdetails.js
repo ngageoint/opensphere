@@ -1,8 +1,13 @@
-goog.provide('os.ui.metrics.MetricDetailsCtrl');
-goog.provide('os.ui.metrics.metricDetailsDirective');
+goog.module('os.ui.metrics.MetricDetailsUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
-goog.require('os.ui.Module');
+const Disposable = goog.require('goog.Disposable');
+const {ROOT} = goog.require('os');
+const {instanceOf} = goog.require('os.classRegistry');
+const Module = goog.require('os.ui.Module');
+const {ClassName} = goog.require('os.ui.metrics');
+
+const MetricNode = goog.requireType('os.ui.metrics.MetricNode');
 
 
 /**
@@ -10,100 +15,106 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.metrics.metricDetailsDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'metric': '='
-    },
-    templateUrl: os.ROOT + 'views/config/metricdetails.html',
-    controller: os.ui.metrics.MetricDetailsCtrl,
-    controllerAs: 'details'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'metric': '='
+  },
+  templateUrl: ROOT + 'views/config/metricdetails.html',
+  controller: Controller,
+  controllerAs: 'details'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'metricdetails';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('metricdetails', [os.ui.metrics.metricDetailsDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller function for the metricdetails directive
- *
- * @param {!angular.Scope} $scope
- * @extends {goog.Disposable}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.metrics.MetricDetailsCtrl = function($scope) {
-  os.ui.metrics.MetricDetailsCtrl.base(this, 'constructor');
+class Controller extends Disposable {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
+   */
+  constructor($scope) {
+    super();
+
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    $scope.$on('$destroy', this.dispose.bind(this));
+  }
 
   /**
-   * @type {?angular.Scope}
-   * @private
+   * @inheritDoc
    */
-  this.scope_ = $scope;
+  disposeInternal() {
+    super.disposeInternal();
 
-  $scope.$on('$destroy', this.dispose.bind(this));
-};
-goog.inherits(os.ui.metrics.MetricDetailsCtrl, goog.Disposable);
+    this.scope_ = null;
+  }
 
+  /**
+   * Get the metric label.
+   *
+   * @return {string}
+   * @export
+   */
+  getLabel() {
+    if (this.scope_ && instanceOf(this.scope_['metric'], ClassName.METRIC_NODE)) {
+      var node = /** @type {!MetricNode} */ (this.scope_['metric']);
+      var crumbs = [node.getLabel()];
 
-/**
- * @inheritDoc
- */
-os.ui.metrics.MetricDetailsCtrl.prototype.disposeInternal = function() {
-  os.ui.metrics.MetricDetailsCtrl.base(this, 'disposeInternal');
-
-  this.scope_ = null;
-};
-
-
-/**
- * Get the metric label.
- *
- * @return {string}
- * @export
- */
-os.ui.metrics.MetricDetailsCtrl.prototype.getLabel = function() {
-  if (this.scope_ && this.scope_['metric'] instanceof os.ui.metrics.MetricNode) {
-    var node = /** @type {!os.ui.metrics.MetricNode} */ (this.scope_['metric']);
-    var crumbs = [node.getLabel()];
-
-    var current = node;
-    var parent;
-    while (current && (parent = current.getParent())) {
-      var parentLabel = parent.getLabel();
-      if (parentLabel) {
-        crumbs.unshift(parentLabel);
-        current = parent;
-      } else {
-        break;
+      var current = node;
+      var parent;
+      while (current && (parent = current.getParent())) {
+        var parentLabel = parent.getLabel();
+        if (parentLabel) {
+          crumbs.unshift(parentLabel);
+          current = parent;
+        } else {
+          break;
+        }
       }
+
+      return crumbs.join(' > ');
     }
 
-    return crumbs.join(' > ');
+    return '';
   }
 
-  return '';
-};
+  /**
+   * Get the metric description.
+   *
+   * @return {string}
+   * @export
+   */
+  getDescription() {
+    if (this.scope_ && instanceOf(this.scope_['metric'], ClassName.METRIC_NODE)) {
+      var node = /** @type {MetricNode} */ (this.scope_['metric']);
+      return node.getDescription() || '';
+    }
 
-
-/**
- * Get the metric description.
- *
- * @return {string}
- * @export
- */
-os.ui.metrics.MetricDetailsCtrl.prototype.getDescription = function() {
-  if (this.scope_ && this.scope_['metric'] instanceof os.ui.metrics.MetricNode) {
-    var node = /** @type {os.ui.metrics.MetricNode} */ (this.scope_['metric']);
-    return node.getDescription() || '';
+    return '';
   }
+}
 
-  return '';
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

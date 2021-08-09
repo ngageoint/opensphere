@@ -1,88 +1,92 @@
-goog.provide('os.ui.query.AreaImportCtrl');
+goog.module('os.ui.query.AreaImportCtrl');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
 goog.require('os.ui.im.BasicInfoUI');
-goog.require('os.ui.query');
-goog.require('os.ui.window');
 
+const Disposable = goog.require('goog.Disposable');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const {AREA_IMPORT_HELP} = goog.require('os.ui.query');
+const {close} = goog.require('os.ui.window');
 
 
 /**
  * Abstract controller for importing areas from a file.
  *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout The Angular $timeout service.
- * @extends {goog.Disposable}
- * @constructor
- * @ngInject
  * @template T
+ * @unrestricted
  */
-os.ui.query.AreaImportCtrl = function($scope, $element, $timeout) {
+class Controller extends Disposable {
   /**
-   * @type {?angular.Scope}
-   * @protected
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$timeout} $timeout The Angular $timeout service.
+   * @ngInject
    */
-  this.scope = $scope;
+  constructor($scope, $element, $timeout) {
+    super();
+
+    /**
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
+
+    /**
+     * @type {?angular.JQLite}
+     * @protected
+     */
+    this.element = $element;
+
+    /**
+     * @type {T}
+     * @protected
+     */
+    this.config = $scope['config'];
+
+    /**
+     * @type {boolean}
+     */
+    this['loading'] = false;
+
+    /**
+     * @type {!Object<string, string>}
+     */
+    this['help'] = AREA_IMPORT_HELP;
+
+    $scope.$on('$destroy', this.dispose.bind(this));
+
+    // trigger window auto height after the DOM is rendered
+    $timeout(function() {
+      $scope.$emit(WindowEventType.READY);
+    });
+  }
 
   /**
-   * @type {?angular.JQLite}
-   * @protected
+   * @inheritDoc
    */
-  this.element = $element;
+  disposeInternal() {
+    super.disposeInternal();
+
+    this.scope = null;
+    this.element = null;
+  }
 
   /**
-   * @type {T}
-   * @protected
+   * Close the window
+   * @export
    */
-  this.config = $scope['config'];
+  close() {
+    close(this.element);
+  }
 
   /**
-   * @type {boolean}
+   * Load areas from the selected file(s).
+   * @export
    */
-  this['loading'] = false;
+  finish() {
+    this['loading'] = true;
+  }
+}
 
-  /**
-   * @type {!Object<string, string>}
-   */
-  this['help'] = os.ui.query.AREA_IMPORT_HELP;
-
-  $scope.$on('$destroy', this.dispose.bind(this));
-
-  // trigger window auto height after the DOM is rendered
-  $timeout(function() {
-    $scope.$emit(os.ui.WindowEventType.READY);
-  });
-};
-goog.inherits(os.ui.query.AreaImportCtrl, goog.Disposable);
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.AreaImportCtrl.prototype.disposeInternal = function() {
-  os.ui.query.AreaImportCtrl.base(this, 'disposeInternal');
-
-  this.scope = null;
-  this.element = null;
-};
-
-
-/**
- * Close the window
- *
- * @export
- */
-os.ui.query.AreaImportCtrl.prototype.close = function() {
-  os.ui.window.close(this.element);
-};
-
-
-/**
- * Load areas from the selected file(s).
- *
- * @export
- */
-os.ui.query.AreaImportCtrl.prototype.finish = function() {
-  this['loading'] = true;
-};
+exports = Controller;

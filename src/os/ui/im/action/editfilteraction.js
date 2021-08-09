@@ -5,7 +5,7 @@ const dispatcher = goog.require('os.Dispatcher');
 const DataManager = goog.require('os.data.DataManager');
 const {sortByLabel} = goog.require('os.im.action');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const EditFiltersCtrl = goog.require('os.ui.filter.ui.EditFiltersCtrl');
+const {Controller: EditFiltersCtrl} = goog.require('os.ui.filter.ui.EditFiltersUI');
 const EventType = goog.require('os.ui.im.action.EventType');
 const osWindow = goog.require('os.ui.window');
 

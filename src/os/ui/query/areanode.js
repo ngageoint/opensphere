@@ -1,216 +1,211 @@
-goog.provide('os.ui.query.AreaNode');
-goog.require('ol.events');
-goog.require('os.data.ISearchable');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.structs.TriState');
-goog.require('os.tag');
-goog.require('os.ui.slick.SlickTreeNode');
+goog.module('os.ui.query.AreaNode');
+goog.module.declareLegacyNamespace();
 
+const {listen, unlisten} = goog.require('ol.events');
+const {getAreaManager} = goog.require('os.query.instance');
+const TriState = goog.require('os.structs.TriState');
+const {HOVER_STYLE} = goog.require('os.style.area');
+const {tagsFromString} = goog.require('os.tag');
+const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+
+const GoogEvent = goog.requireType('goog.events.Event');
+const Feature = goog.requireType('ol.Feature');
+const ISearchable = goog.requireType('os.data.ISearchable');
 
 
 /**
  * Tree nodes for areas
  *
- * @extends {os.ui.slick.SlickTreeNode}
- * @implements {os.data.ISearchable}
- * @param {ol.Feature=} opt_area
- * @constructor
+ * @implements {ISearchable}
  */
-os.ui.query.AreaNode = function(opt_area) {
-  os.ui.query.AreaNode.base(this, 'constructor');
+class AreaNode extends SlickTreeNode {
+  /**
+   * Constructor.
+   * @param {Feature=} opt_area
+   */
+  constructor(opt_area) {
+    super();
+
+    /**
+     * @type {?Feature}
+     * @protected
+     */
+    this.area = null;
+
+    if (opt_area) {
+      this.setArea(opt_area);
+    }
+  }
 
   /**
-   * @type {?ol.Feature}
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+    this.setArea(null);
+  }
+
+  /**
+   * @return {?Feature} the area
+   */
+  getArea() {
+    return this.area;
+  }
+
+  /**
+   * Sets the area
+   *
+   * @param {?Feature} area the area
+   */
+  setArea(area) {
+    if (this.area) {
+      unlisten(this.area, 'toggle', this.onAreaToggled, this);
+    }
+
+    this.area = area;
+    this.updateFromArea();
+
+    if (this.area) {
+      listen(this.area, 'toggle', this.onAreaToggled, this);
+    }
+  }
+
+  /**
+   * Update the node from the current area.
+   *
    * @protected
    */
-  this.area = null;
+  updateFromArea() {
+    this.setId(this.getId());
+    this.setLabel(this.getLabel());
 
-  if (opt_area) {
-    this.setArea(opt_area);
-  }
-};
-goog.inherits(os.ui.query.AreaNode, os.ui.slick.SlickTreeNode);
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.AreaNode.prototype.disposeInternal = function() {
-  os.ui.query.AreaNode.base(this, 'disposeInternal');
-  this.setArea(null);
-};
-
-
-/**
- * @return {?ol.Feature} the area
- */
-os.ui.query.AreaNode.prototype.getArea = function() {
-  return this.area;
-};
-
-
-/**
- * Sets the area
- *
- * @param {?ol.Feature} area the area
- */
-os.ui.query.AreaNode.prototype.setArea = function(area) {
-  if (this.area) {
-    ol.events.unlisten(this.area, 'toggle', this.onAreaToggled, this);
+    if (this.area) {
+      this.setToolTip(/** @type {string} */ (this.area.get('description') || ''));
+      this.setState(this.area.get('shown') ? TriState.ON : TriState.OFF);
+    }
   }
 
-  this.area = area;
-  this.updateFromArea();
+  /**
+   * @inheritDoc
+   */
+  setState(value) {
+    if (value !== TriState.BOTH) {
+      var old = this.getState();
+      super.setState(value);
+      var s = this.getState();
 
-  if (this.area) {
-    ol.events.listen(this.area, 'toggle', this.onAreaToggled, this);
-  }
-};
+      if (old != s && this.area) {
+        var show = s !== TriState.OFF;
+        var shown = /** @type {boolean} */ (this.area.get('shown'));
 
-
-/**
- * Update the node from the current area.
- *
- * @protected
- */
-os.ui.query.AreaNode.prototype.updateFromArea = function() {
-  this.setId(this.getId());
-  this.setLabel(this.getLabel());
-
-  if (this.area) {
-    this.setToolTip(/** @type {string} */ (this.area.get('description') || ''));
-    this.setState(this.area.get('shown') ? os.structs.TriState.ON : os.structs.TriState.OFF);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.AreaNode.prototype.setState = function(value) {
-  if (value !== os.structs.TriState.BOTH) {
-    var old = this.getState();
-    os.ui.query.AreaNode.base(this, 'setState', value);
-    var s = this.getState();
-
-    if (old != s && this.area) {
-      var show = s !== os.structs.TriState.OFF;
-      var shown = /** @type {boolean} */ (this.area.get('shown'));
-
-      if (show !== shown) {
-        this.area.set('shown', show);
-        this.area.dispatchEvent('toggle');
+        if (show !== shown) {
+          this.area.set('shown', show);
+          this.area.dispatchEvent('toggle');
+        }
       }
     }
   }
-};
 
-
-/**
- * @param {goog.events.Event} event
- * @protected
- */
-os.ui.query.AreaNode.prototype.onAreaToggled = function(event) {
-  this.setState(this.area.get('shown') ? os.structs.TriState.ON : os.structs.TriState.OFF);
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.AreaNode.prototype.getId = function() {
-  if (this.area) {
-    return /** @type {!string} */ (this.area.getId());
+  /**
+   * @param {GoogEvent} event
+   * @protected
+   */
+  onAreaToggled(event) {
+    this.setState(this.area.get('shown') ? TriState.ON : TriState.OFF);
   }
 
-  return os.ui.query.AreaNode.base(this, 'getId');
-};
+  /**
+   * @inheritDoc
+   */
+  getId() {
+    if (this.area) {
+      return /** @type {!string} */ (this.area.getId());
+    }
 
-
-/**
- * @inheritDoc
- */
-os.ui.query.AreaNode.prototype.getLabel = function() {
-  if (this.area) {
-    return /** @type {!string} */ (this.area.get('title')) || '';
+    return super.getId();
   }
 
-  return os.ui.query.AreaNode.base(this, 'getLabel');
-};
+  /**
+   * @inheritDoc
+   */
+  getLabel() {
+    if (this.area) {
+      return /** @type {!string} */ (this.area.get('title')) || '';
+    }
 
-
-/**
- * @inheritDoc
- */
-os.ui.query.AreaNode.prototype.getSearchText = function() {
-  var t = '';
-
-  if (this.area) {
-    t += this.area.get('title') || '';
-    t += ' ' + (this.area.get('description') || '');
-    t += ' ' + (this.area.get('tags') || '');
+    return super.getLabel();
   }
 
-  return t;
-};
+  /**
+   * @inheritDoc
+   */
+  getSearchText() {
+    var t = '';
 
+    if (this.area) {
+      t += this.area.get('title') || '';
+      t += ' ' + (this.area.get('description') || '');
+      t += ' ' + (this.area.get('tags') || '');
+    }
 
-/**
- * @inheritDoc
- */
-os.ui.query.AreaNode.prototype.getTags = function() {
-  if (this.area) {
-    var tags = /** @type {string} */ (this.area.get('tags'));
+    return t;
+  }
 
-    if (tags) {
-      return os.tag.tagsFromString(tags);
+  /**
+   * @inheritDoc
+   */
+  getTags() {
+    if (this.area) {
+      var tags = /** @type {string} */ (this.area.get('tags'));
+
+      if (tags) {
+        return tagsFromString(tags);
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  onMouseEnter() {
+    var map = getAreaManager().getMap();
+
+    if (map) {
+      this.area.setStyle(HOVER_STYLE);
+      map.addFeature(this.area);
     }
   }
 
-  return null;
-};
+  /**
+   * @inheritDoc
+   */
+  onMouseLeave() {
+    var map = getAreaManager().getMap();
 
-
-/**
- * @inheritDoc
- */
-os.ui.query.AreaNode.prototype.onMouseEnter = function() {
-  var map = os.ui.areaManager.getMap();
-
-  if (map) {
-    this.area.setStyle(os.style.area.HOVER_STYLE);
-    os.ui.areaManager.getMap().addFeature(this.area);
+    if (map) {
+      map.removeFeature(this.area);
+    }
   }
-};
 
-
-/**
- * @inheritDoc
- */
-os.ui.query.AreaNode.prototype.onMouseLeave = function() {
-  var map = os.ui.areaManager.getMap();
-
-  if (map) {
-    os.ui.areaManager.getMap().removeFeature(this.area);
+  /**
+   * Whether or not the layer is loading
+   *
+   * @return {boolean}
+   * @export
+   */
+  isLoading() {
+    return false;
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  updateFrom(other) {
+    this.setArea(other.getArea());
+    super.updateFrom(other);
+  }
+}
 
-/**
- * Whether or not the layer is loading
- *
- * @return {boolean}
- * @export
- */
-os.ui.query.AreaNode.prototype.isLoading = function() {
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.AreaNode.prototype.updateFrom = function(other) {
-  this.setArea(other.getArea());
-  os.ui.query.AreaNode.base(this, 'updateFrom', other);
-};
+exports = AreaNode;

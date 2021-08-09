@@ -1,6 +1,6 @@
 goog.module('plugin.params.EditRequestParamsUI');
 
-goog.require('os.ui.slick.slickGridDirective');
+goog.require('os.ui.slick.SlickGridUI');
 
 const Disposable = goog.require('goog.Disposable');
 const googString = goog.require('goog.string');

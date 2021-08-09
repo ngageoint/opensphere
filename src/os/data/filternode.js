@@ -1,9 +1,6 @@
 goog.module('os.data.FilterNode');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.ui.filterNodeUIDirective');
-goog.require('os.ui.node.areaNodeUIDirective');
-
 const GoogEventType = goog.require('goog.events.EventType');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const FilterEnable = goog.require('os.command.FilterEnable');
@@ -15,6 +12,7 @@ const {isStateFile} = goog.require('os.state');
 const TriState = goog.require('os.structs.TriState');
 const {toFilterString} = goog.require('os.ui.filter');
 const UIFilterNode = goog.require('os.ui.filter.ui.FilterNode');
+const {directiveTag} = goog.require('os.ui.filter.ui.FilterNodeUI');
 const QueryEntries = goog.require('os.ui.query.cmd.QueryEntries');
 
 const ISearchable = goog.requireType('os.data.ISearchable');
@@ -64,7 +62,7 @@ class FilterNode extends UIFilterNode {
         this.setLabel(this.entry.getTitle());
         this.setState(this.entry.isEnabled() ? TriState.ON : TriState.OFF);
         this.setToolTip(toFilterString(this.entry.getFilterNode(), 1000));
-        this.nodeUI = '<filternodeui></filternodeui>';
+        this.nodeUI = `<${directiveTag}></${directiveTag}>`;
       }
 
       this.dispatchEvent(new PropertyChangeEvent('filter', value, old));

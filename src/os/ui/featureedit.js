@@ -32,11 +32,13 @@ goog.require('os.ui.datetime.AnyDateHelp');
 goog.require('os.ui.datetime.AnyDateType');
 goog.require('os.ui.datetime.AnyDateUI');
 goog.require('os.ui.file.kml');
+goog.require('os.ui.geo');
 goog.require('os.ui.geo.PositionEventType');
-goog.require('os.ui.geo.positionDirective');
-goog.require('os.ui.geo.ringOptionsDirective');
-goog.require('os.ui.layer.labelControlsDirective');
-goog.require('os.ui.layer.vectorStyleControlsDirective');
+goog.require('os.ui.geo.PositionUI');
+goog.require('os.ui.geo.RingOptionsUI');
+goog.require('os.ui.layer.LabelControlsEventType');
+goog.require('os.ui.layer.LabelControlsUI');
+goog.require('os.ui.layer.VectorStyleControlsUI');
 goog.require('os.ui.list');
 goog.require('os.ui.text.tuiEditorDirective');
 goog.require('os.ui.util.ValidationMessageUI');
@@ -331,7 +333,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   /**
    * @type {string}
    */
-  this['ringTitle'] = os.ui.geo.RingTitle;
+  this['ringTitle'] = os.ui.geo.getRingTitle();
 
   /**
    * Icon Rotation, in degrees.

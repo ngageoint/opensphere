@@ -92,7 +92,6 @@ goog.require('os.ui.AbstractMainCtrl');
 goog.require('os.ui.AddExportOptionsUI');
 goog.require('os.ui.TimelinePanelUI');
 goog.require('os.ui.alertsDirective');
-goog.require('os.ui.areasDirective');
 goog.require('os.ui.clear.ClearEntry');
 goog.require('os.ui.clear.ClearManager');
 goog.require('os.ui.column.mapping.ColumnMappingSettings');
@@ -106,7 +105,6 @@ goog.require('os.ui.exportManager');
 goog.require('os.ui.file.AnyTypeImportUI');
 goog.require('os.ui.file.FileXTHandler');
 goog.require('os.ui.file.method.ImportMethod');
-goog.require('os.ui.filtersDirective');
 goog.require('os.ui.help.Controls');
 goog.require('os.ui.help.metricsOption');
 goog.require('os.ui.historyDirective');
@@ -604,8 +602,9 @@ os.MainCtrl.prototype.onPluginsLoaded = function(opt_e) {
   rm.initialize();
 
   // add the search results panel
-  if (os.ui.navbaroptions.searchresults) {
-    os.ui.list.add(os.ui.AbstractMainContent, os.ui.navbaroptions.searchresults, 100);
+  const searchResults = os.ui.navbaroptions.getSearchResults();
+  if (searchResults) {
+    os.ui.list.add(os.ui.AbstractMainContent, searchResults, 100);
   }
 
   // display initial onboarding

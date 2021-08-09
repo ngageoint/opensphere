@@ -1,7 +1,7 @@
 goog.module('plugin.file.kml.ui.KMLExportUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.icon.iconPickerDirective');
+goog.require('os.ui.icon.IconPickerUI');
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');

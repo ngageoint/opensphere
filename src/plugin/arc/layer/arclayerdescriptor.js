@@ -18,7 +18,7 @@ const ColorControlType = goog.require('os.ui.ColorControlType');
 const IARCDescriptor = goog.require('os.ui.arc.IARCDescriptor');
 const BaseProvider = goog.require('os.ui.data.BaseProvider');
 const IFeatureTypeDescriptor = goog.require('os.ui.ogc.IFeatureTypeDescriptor');
-const CombinatorCtrl = goog.require('os.ui.query.CombinatorCtrl');
+const {launchForLayer} = goog.require('os.ui.query.CombinatorUI');
 const arc = goog.require('plugin.arc');
 const ArcFeatureLayerConfig = goog.require('plugin.arc.layer.ArcFeatureLayerConfig');
 const ArcTileLayerConfig = goog.require('plugin.arc.layer.ArcTileLayerConfig');
@@ -506,7 +506,7 @@ class ArcLayerDescriptor extends LayerSyncDescriptor {
    */
   launchFilterManager() {
     var id = this.getId() + BaseProvider.ID_DELIMITER + 'features';
-    CombinatorCtrl.launchForLayer(id, this.getTitle() + ' Features');
+    launchForLayer(id, this.getTitle() + ' Features');
   }
 
   /**
