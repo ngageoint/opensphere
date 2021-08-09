@@ -2,16 +2,9 @@
  * @fileoverview Mixins to Openlayers to replace private/protected vendor code that doesn't meet our requirements.
  * @suppress {missingProvide}
  */
-goog.provide('os.mixin');
+goog.module('os.mixin');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.math');
-goog.require('ol.View');
-goog.require('ol.color');
-goog.require('ol.extent');
-goog.require('ol.interaction.Modify');
-goog.require('ol.math');
-goog.require('ol.renderer.canvas.Map');
-goog.require('ol.renderer.canvas.VectorLayer');
 goog.require('os.mixin.Image');
 goog.require('os.mixin.ImageSource');
 goog.require('os.mixin.ResolutionConstraint');
@@ -24,9 +17,19 @@ goog.require('os.mixin.map');
 goog.require('os.mixin.object');
 goog.require('os.mixin.polygon');
 goog.require('os.mixin.zoomscale');
-goog.require('os.net');
 goog.require('os.ol');
-goog.require('os.registerClass');
+
+const {getUid} = goog.require('ol');
+const olColor = goog.require('ol.color');
+const LayerGroup = goog.require('ol.layer.Group');
+const {clamp} = goog.require('ol.math');
+const MapRenderer = goog.require('ol.renderer.canvas.Map');
+const VectorLayer = goog.require('ol.renderer.canvas.VectorLayer');
+const registerClass = goog.require('os.registerClass');
+
+const Feature = goog.requireType('ol.Feature');
+const RenderFeature = goog.requireType('ol.render.Feature');
+
 
 
 /**
@@ -34,8 +37,8 @@ goog.require('os.registerClass');
  * @type {string}
  * @const
  */
-ol.layer.Group.NAME = 'ol.layer.Group';
-os.registerClass(ol.layer.Group.NAME, ol.layer.Group);
+LayerGroup.NAME = 'LayerGroup';
+registerClass(LayerGroup.NAME, LayerGroup);
 
 
 /**
@@ -44,12 +47,12 @@ os.registerClass(ol.layer.Group.NAME, ol.layer.Group);
  * @override
  * @suppress {accessControls|duplicate}
  */
-ol.color.normalize = function(color, opt_color) {
+olColor.normalize = function(color, opt_color) {
   var result = opt_color || [];
-  result[0] = ol.math.clamp((color[0] + 0.5) | 0, 0, 255);
-  result[1] = ol.math.clamp((color[1] + 0.5) | 0, 0, 255);
-  result[2] = ol.math.clamp((color[2] + 0.5) | 0, 0, 255);
-  result[3] = Math.round(ol.math.clamp(color[3], 0, 1) * 100) / 100;
+  result[0] = clamp((color[0] + 0.5) | 0, 0, 255);
+  result[1] = clamp((color[1] + 0.5) | 0, 0, 255);
+  result[2] = clamp((color[2] + 0.5) | 0, 0, 255);
+  result[3] = Math.round(clamp(color[3], 0, 1) * 100) / 100;
   return result;
 };
 
@@ -63,7 +66,7 @@ ol.color.normalize = function(color, opt_color) {
  *
  * @suppress {accessControls|duplicate}
  */
-ol.renderer.canvas.VectorLayer.prototype.forEachFeatureAtCoordinate = function(coordinate, frameState, hitTolerance,
+VectorLayer.prototype.forEachFeatureAtCoordinate = function(coordinate, frameState, hitTolerance,
     callback, thisArg) {
   if (!this.replayGroup_) {
     return undefined;
@@ -77,11 +80,11 @@ ol.renderer.canvas.VectorLayer.prototype.forEachFeatureAtCoordinate = function(c
     return this.replayGroup_.forEachFeatureAtCoordinate(coordinate, resolution,
         rotation, hitTolerance, skippedFeatures,
         /**
-         * @param {ol.Feature|ol.render.Feature} feature Feature.
+         * @param {Feature|RenderFeature} feature Feature.
          * @return {?} Callback result.
          */
         function(feature) {
-          var key = ol.getUid(feature).toString();
+          var key = getUid(feature).toString();
           if (!(key in features)) {
             features[key] = true;
             return callback.call(thisArg, feature, layer);
@@ -90,38 +93,35 @@ ol.renderer.canvas.VectorLayer.prototype.forEachFeatureAtCoordinate = function(c
   }
 };
 
+const originalRenderFrame = MapRenderer.prototype.renderFrame;
 
-(function() {
-  var originalRenderFrame = ol.renderer.canvas.Map.prototype.renderFrame;
+/**
+ * @inheritDoc
+ * @suppress {accessControls}
+ */
+MapRenderer.prototype.renderFrame = function(frameState) {
+  // Browsers differ wildly in their interpretation of style.width/height = 100%
+  // on a canvas and how that style width/height is related to the canvas width/height.
+  //
+  // Most of the problems seem to crop up on high resolution displays such as Apple's
+  // Retina displays (or really anything that sets window.devicePixelRatio to something
+  // other than 1).
+  //
+  // Therefore, we will manually keep the style width/height in exact pixels.
 
-  /**
-   * @inheritDoc
-   * @suppress {accessControls}
-   */
-  ol.renderer.canvas.Map.prototype.renderFrame = function(frameState) {
-    // Browsers differ wildly in their interpretation of style.width/height = 100%
-    // on a canvas and how that style width/height is related to the canvas width/height.
-    //
-    // Most of the problems seem to crop up on high resolution displays such as Apple's
-    // Retina displays (or really anything that sets window.devicePixelRatio to something
-    // other than 1).
-    //
-    // Therefore, we will manually keep the style width/height in exact pixels.
+  if (frameState) {
+    var canvas = this.canvas_;
+    var widthPx = frameState.size[0] + 'px';
+    var heightPx = frameState.size[1] + 'px';
 
-    if (frameState) {
-      var canvas = this.canvas_;
-      var widthPx = frameState.size[0] + 'px';
-      var heightPx = frameState.size[1] + 'px';
-
-      if (canvas.style.width !== widthPx) {
-        canvas.style.width = widthPx;
-      }
-
-      if (canvas.style.height !== heightPx) {
-        canvas.style.height = heightPx;
-      }
+    if (canvas.style.width !== widthPx) {
+      canvas.style.width = widthPx;
     }
 
-    originalRenderFrame.call(this, frameState);
-  };
-})();
+    if (canvas.style.height !== heightPx) {
+      canvas.style.height = heightPx;
+    }
+  }
+
+  originalRenderFrame.call(this, frameState);
+};

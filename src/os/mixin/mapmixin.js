@@ -1,20 +1,24 @@
 /**
- * @fileoverview Modifications to {@link ol.PluggableMap}.
+ * @fileoverview Modifications to {@link PluggableMap}.
  */
-goog.provide('os.mixin.map');
+goog.module('os.mixin.map');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.PluggableMap');
+const {getUid} = goog.require('ol');
+const PluggableMap = goog.require('ol.PluggableMap');
+
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
  * Modified to only render if the feature wasn't skipped already.
  *
- * @param {ol.Feature} feature Feature.
+ * @param {Feature} feature Feature.
  * @suppress {accessControls|duplicate|checkTypes}
  */
-ol.PluggableMap.prototype.skipFeature = function(feature) {
-  // do not change this from using ol.getUid, or the OL3 renderer will not recognize it!!
-  var featureUid = ol.getUid(feature).toString();
+PluggableMap.prototype.skipFeature = function(feature) {
+  // do not change this from using getUid, or the OL3 renderer will not recognize it!!
+  var featureUid = getUid(feature).toString();
   if (!this.skippedFeatureUids_[featureUid]) {
     this.skippedFeatureUids_[featureUid] = true;
     this.render();
@@ -25,16 +29,14 @@ ol.PluggableMap.prototype.skipFeature = function(feature) {
 /**
  * Modified to only render if the feature was previously skipped.
  *
- * @param {ol.Feature} feature Feature.
+ * @param {Feature} feature Feature.
  * @suppress {accessControls|duplicate|checkTypes}
  */
-ol.PluggableMap.prototype.unskipFeature = function(feature) {
-  // do not change this from using ol.getUid, or the OL3 renderer will not recognize it!!
-  var featureUid = ol.getUid(feature).toString();
+PluggableMap.prototype.unskipFeature = function(feature) {
+  // do not change this from using getUid, or the OL3 renderer will not recognize it!!
+  var featureUid = getUid(feature).toString();
   if (this.skippedFeatureUids_[featureUid]) {
     delete this.skippedFeatureUids_[featureUid];
     this.render();
   }
 };
-
-

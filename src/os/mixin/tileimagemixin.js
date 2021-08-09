@@ -1,73 +1,72 @@
 /**
  * @fileoverview This mixin adds all of the basic logic needed for us to be able to apply arbitrary image filters to
  * tile layers. The source keeps around a set of filter functions that it runs on tiles as they load (or on the tile
- * cache when the filters change). It also adds the implements call for: {@see os.source.IFilterableTileSource}.
+ * cache when the filters change). It also adds the implements call for: {@see IFilterableTileSource}.
  *
  * @suppress {accessControls}
  */
-goog.provide('os.mixin.TileImage');
+goog.module('os.mixin.TileImage');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.TileState');
-goog.require('ol.array');
-goog.require('ol.source.TileImage');
-goog.require('os');
-goog.require('os.TileClass');
-goog.require('os.source.IFilterableTileSource');
-goog.require('os.tile');
-goog.require('os.tile.ColorableTile');
+const {insert} = goog.require('goog.array');
+const {remove} = goog.require('ol.array');
+const TileImage = goog.require('ol.source.TileImage');
+const osImplements = goog.require('os.implements');
+const IFilterableTileSource = goog.require('os.source.IFilterableTileSource');
+const ColorableTile = goog.require('os.tile.ColorableTile');
+
+const Tile = goog.requireType('ol.Tile');
+const Projection = goog.requireType('ol.proj.Projection');
+const UrlTile = goog.requireType('ol.source.UrlTile');
+const TileClass = goog.requireType('os.TileClass');
+const {TileFilterFn} = goog.requireType('os.tile');
 
 
-
-/**
- * Redeclare this to say that it implements IFilterableTileSource...
- * @param {olx.source.TileImageOptions} options Image tile options.
- * @implements {os.source.IFilterableTileSource}
- * @extends {ol.source.UrlTile}
- * @constructor
- * @suppress {checkTypes|duplicate}
- */
-ol.source.TileImage;
-os.implements(ol.source.TileImage, os.source.IFilterableTileSource.ID);
+// Add to os.implements registry.
+osImplements(TileImage, IFilterableTileSource.ID);
 
 
 /**
  * Set of filters to run against tiles that are loaded by this source.
- * @type {Array<os.tile.TileFilterFn>}
+ * @type {Array<TileFilterFn>}
  * @protected
  */
-ol.source.TileImage.prototype.tileFilters = null;
+TileImage.prototype.tileFilters = null;
 
 
 /**
- * @inheritDoc
+ * Adds a tile filter function to the source.
+ * @param {TileFilterFn} fn
  */
-ol.source.TileImage.prototype.addTileFilter = function(fn) {
+TileImage.prototype.addTileFilter = function(fn) {
   if (!this.tileFilters) {
     this.tileFilters = [];
   }
 
-  goog.array.insert(this.tileFilters, fn);
+  insert(this.tileFilters, fn);
   this.applyTileFilters();
 };
 
 
 /**
- * @inheritDoc
+ * Removes a tile filter function from the source.
+ * @param {TileFilterFn} fn
  */
-ol.source.TileImage.prototype.removeTileFilter = function(fn) {
+TileImage.prototype.removeTileFilter = function(fn) {
   if (!this.tileFilters) {
     this.tileFilters = [];
   }
 
-  ol.array.remove(this.tileFilters, fn);
+  remove(this.tileFilters, fn);
   this.applyTileFilters();
 };
 
 
 /**
- * @inheritDoc
+ * Gets the set of tile filters.
+ * @return {Array<TileFilterFn>}
  */
-ol.source.TileImage.prototype.getTileFilters = function() {
+TileImage.prototype.getTileFilters = function() {
   if (!this.tileFilters) {
     this.tileFilters = [];
   }
@@ -77,13 +76,13 @@ ol.source.TileImage.prototype.getTileFilters = function() {
 
 
 /**
- * @inheritDoc
+ * Resets the tile filter on every cached tile in the source. Then forces a rerender of the map to reapply the filters.
  */
-ol.source.TileImage.prototype.applyTileFilters = function() {
+TileImage.prototype.applyTileFilters = function() {
   var tiles = this.tileCache.getValues();
   for (var i = 0, ii = tiles.length; i < ii; i++) {
     var tile = tiles[i];
-    if (tile instanceof os.tile.ColorableTile) {
+    if (tile instanceof ColorableTile) {
       tile.reset();
     }
   }
@@ -93,38 +92,36 @@ ol.source.TileImage.prototype.applyTileFilters = function() {
 /**
  * Sets the tileClass.
  *
- * @param {!os.TileClass} clazz The tile class
+ * @param {!TileClass} clazz The tile class
  */
-ol.source.TileImage.prototype.setTileClass = function(clazz) {
+TileImage.prototype.setTileClass = function(clazz) {
   this.tileClass = clazz;
 };
 
 
-(function() {
-  var origCreateTile = ol.source.TileImage.prototype.createTile_;
+const origCreateTile = TileImage.prototype.createTile_;
 
-  /**
-   * This is one of the only places where we can get reference to tiles as they are created. For the tile
-   * coloring/filtering architecture to work, the tiles need to reference back to their respective sources, so this
-   * override gives them that reference.
-   *
-   * @param {number} z Tile coordinate z.
-   * @param {number} x Tile coordinate x.
-   * @param {number} y Tile coordinate y.
-   * @param {number} pixelRatio Pixel ratio.
-   * @param {ol.proj.Projection} projection Projection.
-   * @param {string} key The key set on the tile.
-   * @return {!ol.Tile} Tile.
-   * @private
-   * @suppress {duplicate}
-   */
-  ol.source.TileImage.prototype.createTile_ = function(z, x, y, pixelRatio, projection, key) {
-    var tile = origCreateTile.call(this, z, x, y, pixelRatio, projection, key);
+/**
+ * This is one of the only places where we can get reference to tiles as they are created. For the tile
+ * coloring/filtering architecture to work, the tiles need to reference back to their respective sources, so this
+ * override gives them that reference.
+ *
+ * @param {number} z Tile coordinate z.
+ * @param {number} x Tile coordinate x.
+ * @param {number} y Tile coordinate y.
+ * @param {number} pixelRatio Pixel ratio.
+ * @param {Projection} projection Projection.
+ * @param {string} key The key set on the tile.
+ * @return {!Tile} Tile.
+ * @private
+ * @suppress {duplicate}
+ */
+TileImage.prototype.createTile_ = function(z, x, y, pixelRatio, projection, key) {
+  var tile = origCreateTile.call(this, z, x, y, pixelRatio, projection, key);
 
-    if (tile instanceof os.tile.ColorableTile) {
-      tile.setOLSource(this);
-    }
+  if (tile instanceof ColorableTile) {
+    tile.setOLSource(this);
+  }
 
-    return tile;
-  };
-})();
+  return tile;
+};
