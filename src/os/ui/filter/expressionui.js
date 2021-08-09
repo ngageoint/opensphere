@@ -8,6 +8,7 @@ const Module = goog.require('os.ui.Module');
 const {OPERATIONS} = goog.require('os.ui.filter');
 const {findColumn} = goog.require('os.ui.slick.column');
 
+const Expression = goog.requireType('os.ui.filter.Expression');
 const Op = goog.requireType('os.ui.filter.op.Op');
 
 

@@ -10,6 +10,7 @@ const {apply} = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const Expression = goog.require('os.ui.filter.Expression');
 const ExpressionNode = goog.require('os.ui.filter.ui.ExpressionNode');
+const {directiveTag: expressionUi} = goog.require('os.ui.filter.ExpressionUI');
 const GroupNode = goog.require('os.ui.filter.ui.GroupNode');
 const SlickGridEvent = goog.require('os.ui.slick.SlickGridEvent');
 const {close, exists} = goog.require('os.ui.window');
@@ -289,7 +290,7 @@ class Controller {
       confirm: edit && opt_node ?
         this.doEditExpr_.bind(this, opt_expr, opt_node) : this.doAddExpr_.bind(this, opt_expr),
       cancel: this.onEditComplete_.bind(this),
-      prompt: '<expression expr="expr" columns="columns"></expression>',
+      prompt: `<${expressionUi} expr="expr" columns="columns"></${expressionUi}>`,
       windowOptions: {
         'id': Controller.EXPR_WINDOW_ID,
         'x': 'center',

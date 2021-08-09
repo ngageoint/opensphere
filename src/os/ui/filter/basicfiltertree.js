@@ -2,6 +2,7 @@ goog.module('os.ui.filter.BasicFilterTreeUI');
 goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
+const {directiveTag: expressionUi} = goog.require('os.ui.filter.ExpressionUI');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 const {Controller: SlickTreeCtrl, directive: slickTreeDirective} = goog.require('os.ui.slick.SlickTreeUI');
 
@@ -45,7 +46,7 @@ class Controller extends SlickTreeCtrl {
    */
   treeFormatter(row, cell, value, columnDef, node) {
     return row % 2 == 1 ? '<div ng-bind="root.grouping"></div>' :
-      '<expression expr="item.getExpression()" columns="columns"></expression>' +
+      `<${expressionUi} expr="item.getExpression()" columns="columns"></${expressionUi}>` +
         ('<span ng-if="hasMultipleFilters()">' +
             '<button class="btn btn-danger btn-sm" tabindex="-1" ng-click="$emit(\'filterbuilder.remove\', item)" ' +
             'title="Remove this expression"><i class="fa fa-times"></i></button></span>');
