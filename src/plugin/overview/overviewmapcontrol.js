@@ -68,6 +68,7 @@ class OverviewMap extends OLOverviewMap {
   /**
    * Updates the view with the current projection
    *
+   * @suppress {accessControls} To allow replacing the resolution constraint function.
    * @private
    */
   updateView_() {
@@ -76,6 +77,13 @@ class OverviewMap extends OLOverviewMap {
       minZoom: osMap.MIN_ZOOM,
       maxZoom: osMap.MAX_ZOOM
     });
+
+    // Don't contrain the view resolution for the overview map. This improves overview map behavior when fitting the
+    // view to the current map extent. Without this, small changes in rotation can drastically change the resolution
+    // which makes the overmap appear jumpy. This is especially prevalent in the 3D view.
+    const minResolution = view.getMinResolution();
+    const maxResolution = view.getMaxResolution();
+    view.constraints_.resolution = (resolution) => Math.max(minResolution, Math.min(maxResolution, resolution));
 
     if (this.getMap()) {
       var mainView = this.getMap().getView();

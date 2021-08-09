@@ -99,10 +99,6 @@ ol.renderer.canvas.VectorLayer.prototype.forEachFeatureAtCoordinate = function(c
    * @suppress {accessControls}
    */
   ol.renderer.canvas.Map.prototype.renderFrame = function(frameState) {
-    if (frameState && os.MapContainer.getInstance().is3DEnabled()) {
-      frameState.viewState.rotation = 0;
-    }
-
     // Browsers differ wildly in their interpretation of style.width/height = 100%
     // on a canvas and how that style width/height is related to the canvas width/height.
     //
