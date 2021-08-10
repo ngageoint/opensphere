@@ -1,10 +1,11 @@
-goog.provide('os.ogc.filter.ModifierConstants');
+goog.module('os.ogc.filter.ModifierConstants');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @enum {string}
  */
-os.ogc.filter.ModifierConstants = {
+exports = {
   EXCLUSIONS: '{exclusions}',
   FILTER: '{customFilter}',
   IDENTIFIERS: '{identifiers}',

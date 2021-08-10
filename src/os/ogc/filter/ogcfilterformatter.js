@@ -1,35 +1,39 @@
-goog.provide('os.ogc.filter.OGCFilterFormatter');
-goog.require('os.filter.IFilterFormatter');
+goog.module('os.ogc.filter.OGCFilterFormatter');
+goog.module.declareLegacyNamespace();
 
-
-
-/**
- * @constructor
- * @implements {os.filter.IFilterFormatter}
- */
-os.ogc.filter.OGCFilterFormatter = function() {};
+const IFilterFormatter = goog.requireType('os.filter.IFilterFormatter');
 
 
 /**
- * @inheritDoc
+ * @implements {IFilterFormatter}
  */
-os.ogc.filter.OGCFilterFormatter.prototype.format = function(filter) {
-  return filter.getFilter() || '';
-};
+class OGCFilterFormatter {
+  /**
+   * Constructor.
+   */
+  constructor() {}
 
+  /**
+   * @inheritDoc
+   */
+  format(filter) {
+    return filter.getFilter() || '';
+  }
 
-/**
- * @inheritDoc
- */
-os.ogc.filter.OGCFilterFormatter.prototype.wrap = function(filter, group) {
-  var g = group ? 'And' : 'Or';
-  return '<' + g + '>' + filter + '</' + g + '>';
-};
+  /**
+   * @inheritDoc
+   */
+  wrap(filter, group) {
+    var g = group ? 'And' : 'Or';
+    return '<' + g + '>' + filter + '</' + g + '>';
+  }
 
+  /**
+   * @inheritDoc
+   */
+  wrapAll(filter) {
+    return filter ? '<And>' + filter + '</And>' : '';
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.ogc.filter.OGCFilterFormatter.prototype.wrapAll = function(filter) {
-  return filter ? '<And>' + filter + '</And>' : '';
-};
+exports = OGCFilterFormatter;
