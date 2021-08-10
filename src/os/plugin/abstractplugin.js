@@ -1,52 +1,47 @@
-goog.provide('os.plugin.AbstractPlugin');
+goog.module('os.plugin.AbstractPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
-goog.require('os.plugin.IPlugin');
-
-
-
-/**
- * @abstract
- * @implements {os.plugin.IPlugin}
- * @extends {goog.Disposable}
- * @constructor
- */
-os.plugin.AbstractPlugin = function() {
-  os.plugin.AbstractPlugin.base(this, 'constructor');
-
-  /**
-   * @type {!string}
-   * @protected
-   */
-  this.id = '';
-
-  /**
-   * @type {?string}
-   * @protected
-   */
-  this.error = null;
-};
-goog.inherits(os.plugin.AbstractPlugin, goog.Disposable);
-
-
-/**
- * @inheritDoc
- */
-os.plugin.AbstractPlugin.prototype.getId = function() {
-  return this.id;
-};
-
-
-/**
- * @inheritDoc
- */
-os.plugin.AbstractPlugin.prototype.getError = function() {
-  return this.error;
-};
+const Disposable = goog.require('goog.Disposable');
+const IPlugin = goog.requireType('os.plugin.IPlugin');
 
 
 /**
  * @abstract
- * @inheritDoc
+ * @implements {IPlugin}
  */
-os.plugin.AbstractPlugin.prototype.init = function() {};
+class AbstractPlugin extends Disposable {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {!string}
+     * @protected
+     */
+    this.id = '';
+
+    /**
+     * @type {?string}
+     * @protected
+     */
+    this.error = null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getId() {
+    return this.id;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getError() {
+    return this.error;
+  }
+}
+
+exports = AbstractPlugin;
