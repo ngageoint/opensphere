@@ -6,7 +6,10 @@
  * @suppress {checkTypes} To ignore JSDoc references to OL types, so they don't
  *                        need goog.require statements.
  */
-goog.provide('ol.typedefs');
+goog.module('ol.typedefs');
+goog.module.declareLegacyNamespace();
+
+const ol = goog.require('ol');
 
 
 /**

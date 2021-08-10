@@ -1,23 +1,27 @@
-goog.provide('os.ol.image');
+goog.module('os.ol.image');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.ImageCanvas');
-goog.require('ol.dom');
-goog.require('ol.extent');
+const ImageCanvas = goog.require('ol.ImageCanvas');
+const {createCanvasContext2D} = goog.require('ol.dom');
+const olExtent = goog.require('ol.extent');
+const {D2R} = goog.require('os.geo');
+
+const ImageBase = goog.requireType('ol.ImageBase');
 
 
 /**
  * Rotates an OL Image about the center of the image's extent by the given value.
  *
- * @param {ol.ImageBase} image
+ * @param {ImageBase} image
  * @param {number} rotation degrees clockwise
- * @return {ol.ImageCanvas} The rotated image
+ * @return {ImageCanvas} The rotated image
  */
-os.ol.image.rotate = function(image, rotation) {
-  var rad = rotation * os.geo.D2R;
+const rotate = function(image, rotation) {
+  var rad = rotation * D2R;
   var origExtent = image.getExtent();
-  var center = ol.extent.getCenter(origExtent);
-  var width = ol.extent.getWidth(origExtent);
-  var height = ol.extent.getHeight(origExtent);
+  var center = olExtent.getCenter(origExtent);
+  var width = olExtent.getWidth(origExtent);
+  var height = olExtent.getHeight(origExtent);
 
   var resolution = image.getResolution();
   var pxWidth = width / resolution;
@@ -27,15 +31,15 @@ os.ol.image.rotate = function(image, rotation) {
 
   // I couldn't find a way to get the extent of all things drawn to the canvas (not its set size),
   // so calculate it ourselves
-  var rotate = os.ol.image.rotate_;
+  var rotate = rotate_;
   var coords = [
     rotate(rad, pxWidth2, pxHeight2),
     rotate(rad, -pxWidth2, pxHeight2),
     rotate(rad, -pxWidth2, -pxHeight2),
     rotate(rad, pxWidth2, -pxHeight2)];
-  var pxExtent = ol.extent.boundingExtent(coords);
+  var pxExtent = olExtent.boundingExtent(coords);
 
-  var ctx = ol.dom.createCanvasContext2D(ol.extent.getWidth(pxExtent), ol.extent.getHeight(pxExtent));
+  var ctx = createCanvasContext2D(olExtent.getWidth(pxExtent), olExtent.getHeight(pxExtent));
 
   var canvas = ctx.canvas;
   var newWidth2 = canvas.width / 2;
@@ -53,19 +57,21 @@ os.ol.image.rotate = function(image, rotation) {
     center[0] + deltaX,
     center[1] + deltaY];
 
-  return new ol.ImageCanvas(newExtent, resolution, image.getPixelRatio(), canvas);
+  return new ImageCanvas(newExtent, resolution, image.getPixelRatio(), canvas);
 };
-
 
 /**
  * @param {number} rotation
  * @param {number} x
  * @param {number} y
  * @return {Array<number>}
- * @private
  */
-os.ol.image.rotate_ = function(rotation, x, y) {
+const rotate_ = function(rotation, x, y) {
   var sin = Math.sin(rotation);
   var cos = Math.cos(rotation);
   return [x * cos - y * sin, y * cos + x * sin];
+};
+
+exports = {
+  rotate
 };

@@ -1,6 +1,7 @@
-goog.provide('os.ol.mixin.Disposable');
+goog.module('os.ol.mixin.Disposable');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.Disposable');
+const Disposable = goog.require('ol.Disposable');
 
 
 /**
@@ -9,6 +10,6 @@ goog.require('ol.Disposable');
  * @return {boolean} If the object has been disposed.
  * @suppress {accessControls}
  */
-ol.Disposable.prototype.isDisposed = function() {
+Disposable.prototype.isDisposed = function() {
   return this.disposed_;
 };
