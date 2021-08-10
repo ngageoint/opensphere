@@ -1,30 +1,37 @@
-goog.provide('os.parse.FileParserConfig');
-goog.require('os.file.File');
-goog.require('os.parse.BaseParserConfig');
+goog.module('os.parse.FileParserConfig');
+goog.module.declareLegacyNamespace();
 
+const BaseParserConfig = goog.require('os.parse.BaseParserConfig');
+const OSFile = goog.requireType('os.file.File');
 
 
 /**
  * Configuration for a file parser.
  *
- * @extends {os.parse.BaseParserConfig.<T>}
- * @param {os.file.File=} opt_file
- * @constructor
+ * @extends {BaseParserConfig<T>}
+ * @unrestricted
  * @template T
  */
-os.parse.FileParserConfig = function(opt_file) {
-  os.parse.FileParserConfig.base(this, 'constructor');
-
+class FileParserConfig extends BaseParserConfig {
   /**
-   * The file to import
-   * @type {?os.file.File}
+   * Constructor.
+   * @param {OSFile=} opt_file
    */
-  this['file'] = opt_file || null;
+  constructor(opt_file) {
+    super();
 
-  /**
-   * If this file should replace another already in the application.
-   * @type {boolean}
-   */
-  this['replace'] = false;
-};
-goog.inherits(os.parse.FileParserConfig, os.parse.BaseParserConfig);
+    /**
+     * The file to import
+     * @type {?OSFile}
+     */
+    this['file'] = opt_file || null;
+
+    /**
+     * If this file should replace another already in the application.
+     * @type {boolean}
+     */
+    this['replace'] = false;
+  }
+}
+
+exports = FileParserConfig;

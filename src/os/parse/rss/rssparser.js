@@ -1,118 +1,119 @@
-goog.provide('os.parse.RssParser');
+goog.module('os.parse.RssParser');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.dom.xml');
-goog.require('os.file.mime.text');
-goog.require('os.parse.AsyncParser');
-goog.require('os.parse.IParser');
-goog.require('os.xml');
+const {getChildren} = goog.require('goog.dom');
+const {loadXml} = goog.require('goog.dom.xml');
+const {getText} = goog.require('os.file.mime.text');
+const AsyncParser = goog.require('os.parse.AsyncParser');
+const {getElementValueOrDefault} = goog.require('os.xml');
 
+const IParser = goog.requireType('os.parse.IParser');
 
 
 /**
  * Generic RSS parser that translates items from the RSS feed to JSON objects.
  *
- * @extends {os.parse.AsyncParser}
- * @implements {os.parse.IParser<T>}
- * @constructor
+ * @implements {IParser<T>}
  * @template T
  */
-os.parse.RssParser = function() {
-  os.parse.RssParser.base(this, 'constructor');
+class RssParser extends AsyncParser {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * The RSS items to parse.
+     * @type {NodeList}
+     * @protected
+     */
+    this.items = null;
+
+    /**
+     * The index of the next item to parse.
+     * @type {number}
+     * @protected
+     */
+    this.nextIndex = 0;
+  }
 
   /**
-   * The RSS items to parse.
-   * @type {NodeList}
-   * @protected
+   * @inheritDoc
    */
-  this.items = null;
+  cleanup() {
+    this.items = null;
+    this.nextIndex = 0;
+  }
 
   /**
-   * The index of the next item to parse.
-   * @type {number}
-   * @protected
+   * @inheritDoc
    */
-  this.nextIndex = 0;
-};
-goog.inherits(os.parse.RssParser, os.parse.AsyncParser);
-
-
-/**
- * @inheritDoc
- */
-os.parse.RssParser.prototype.cleanup = function() {
-  this.items = null;
-  this.nextIndex = 0;
-};
-
-
-/**
- * @inheritDoc
- */
-os.parse.RssParser.prototype.hasNext = function() {
-  return this.items != null && this.nextIndex < this.items.length;
-};
-
-
-/**
- * @inheritDoc
- */
-os.parse.RssParser.prototype.setSource = function(source) {
-  this.cleanup();
-
-  if (source instanceof ArrayBuffer) {
-    source = os.file.mime.text.getText(source) || null;
+  hasNext() {
+    return this.items != null && this.nextIndex < this.items.length;
   }
 
-  var doc;
-  if (typeof source == 'string') {
-    doc = goog.dom.xml.loadXml(source);
-  } else if (source instanceof Document) {
-    doc = source;
-  }
+  /**
+   * @inheritDoc
+   */
+  setSource(source) {
+    this.cleanup();
 
-  if (doc) {
-    this.items = doc.querySelectorAll('channel > item');
-  }
-};
+    if (source instanceof ArrayBuffer) {
+      source = getText(source) || null;
+    }
 
+    var doc;
+    if (typeof source == 'string') {
+      doc = loadXml(source);
+    } else if (source instanceof Document) {
+      doc = source;
+    }
 
-/**
- * @inheritDoc
- */
-os.parse.RssParser.prototype.parseNext = function() {
-  // unshift is very slow in browsers other than Chrome, so leave the list intact while parsing
-  var item = this.items[this.nextIndex++];
-  if (item) {
-    return this.parseItem(item);
-  }
-
-  return null;
-};
-
-
-/**
- * Parses an RSS `item` element.
- *
- * @param {!Element} item The RSS item element.
- * @return {T} The parsed item.
- * @protected
- */
-os.parse.RssParser.prototype.parseItem = function(item) {
-  var result = {};
-
-  var children = goog.dom.getChildren(item);
-  for (var i = 0; i < children.length; i++) {
-    var child = children[i];
-    if (child) {
-      var value = os.xml.getElementValueOrDefault(child, '');
-      if (child.prefix) {
-        result[child.prefix] = result[child.prefix] || {};
-        result[child.prefix][child.localName] = value;
-      } else {
-        result[child.localName] = value;
-      }
+    if (doc) {
+      this.items = doc.querySelectorAll('channel > item');
     }
   }
 
-  return result;
-};
+  /**
+   * @inheritDoc
+   */
+  parseNext() {
+    // unshift is very slow in browsers other than Chrome, so leave the list intact while parsing
+    var item = this.items[this.nextIndex++];
+    if (item) {
+      return this.parseItem(item);
+    }
+
+    return null;
+  }
+
+  /**
+   * Parses an RSS `item` element.
+   *
+   * @param {!Element} item The RSS item element.
+   * @return {T} The parsed item.
+   * @protected
+   */
+  parseItem(item) {
+    var result = {};
+
+    var children = getChildren(item);
+    for (var i = 0; i < children.length; i++) {
+      var child = children[i];
+      if (child) {
+        var value = getElementValueOrDefault(child, '');
+        if (child.prefix) {
+          result[child.prefix] = result[child.prefix] || {};
+          result[child.prefix][child.localName] = value;
+        } else {
+          result[child.localName] = value;
+        }
+      }
+    }
+
+    return result;
+  }
+}
+
+exports = RssParser;

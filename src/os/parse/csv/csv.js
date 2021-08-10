@@ -1,28 +1,24 @@
-goog.provide('os.parse.csv');
+goog.module('os.parse.csv');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @type {string}
- * @const
  */
-os.parse.csv.DEFAULT_COMMENT_CHAR = '#';
-
+const DEFAULT_COMMENT_CHAR = '#';
 
 /**
  * @type {string}
- * @const
  */
-os.parse.csv.DEFAULT_DELIMITER = ',';
-
+const DEFAULT_DELIMITER = ',';
 
 /**
  * All possible  comment character values accepted by the CSV parser. PapaParse only uses single characters,
  * so '//' was not included.
- * @type {Object.<string, (string|boolean)>}
- * @const
+ * @type {Object<string, (string|boolean)>}
  * @todo Add custom character support.
  */
-os.parse.csv.COMMENT_CHARS = {
+const COMMENT_CHARS = {
   'Dollar Sign ($)': '$',
   'Exclamation (!)': '!',
   'Hash (#)': '#',
@@ -30,14 +26,12 @@ os.parse.csv.COMMENT_CHARS = {
   'None': false
 };
 
-
 /**
  * All possible delimiter values accepted by the CSV parser.
- * @type {Object.<string, string>}
- * @const
+ * @type {Object<string, string>}
  * @todo Add custom delimiter support.
  */
-os.parse.csv.DELIMITERS = {
+const DELIMITERS = {
   'Backslash (\\)': '\\',
   'Colon (:)': ':',
   'Comma (,)': ',',
@@ -46,4 +40,11 @@ os.parse.csv.DELIMITERS = {
   'Slash (/)': '/',
   'Space ( )': ' ',
   'Tab (->)': '\t'
+};
+
+exports = {
+  DEFAULT_COMMENT_CHAR,
+  DEFAULT_DELIMITER,
+  COMMENT_CHARS,
+  DELIMITERS
 };

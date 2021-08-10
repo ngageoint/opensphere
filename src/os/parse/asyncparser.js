@@ -1,8 +1,11 @@
-goog.provide('os.parse.AsyncParser');
-goog.require('goog.events.Event');
-goog.require('goog.events.EventTarget');
-goog.require('os.parse.IParser');
+goog.module('os.parse.AsyncParser');
+goog.module.declareLegacyNamespace();
 
+const GoogEvent = goog.require('goog.events.Event');
+const EventTarget = goog.require('goog.events.EventTarget');
+const EventType = goog.require('os.events.EventType');
+
+const IParser = goog.requireType('os.parse.IParser');
 
 
 /**
@@ -10,60 +13,34 @@ goog.require('os.parse.IParser');
  * is ready, call onReady to fire the ready event.
  *
  * @abstract
- * @extends {goog.events.EventTarget}
- * @implements {os.parse.IParser<T>}
- * @constructor
+ * @implements {IParser<T>}
  * @template T
  */
-os.parse.AsyncParser = function() {
-  os.parse.AsyncParser.base(this, 'constructor');
-};
-goog.inherits(os.parse.AsyncParser, goog.events.EventTarget);
+class AsyncParser extends EventTarget {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
+  /**
+   * Fires an error event to indicate initialization failed.
+   *
+   * @protected
+   */
+  onError() {
+    this.dispatchEvent(new GoogEvent(EventType.ERROR));
+  }
 
-/**
- * Fires an error event to indicate initialization failed.
- *
- * @protected
- */
-os.parse.AsyncParser.prototype.onError = function() {
-  this.dispatchEvent(new goog.events.Event(os.events.EventType.ERROR));
-};
+  /**
+   * Fires a complete event to indicate the parser has been initialized and is ready to os.parse.
+   *
+   * @protected
+   */
+  onReady() {
+    this.dispatchEvent(new GoogEvent(EventType.COMPLETE));
+  }
+}
 
-
-/**
- * Fires a complete event to indicate the parser has been initialized and is ready to os.parse.
- *
- * @protected
- */
-os.parse.AsyncParser.prototype.onReady = function() {
-  this.dispatchEvent(new goog.events.Event(os.events.EventType.COMPLETE));
-};
-
-
-/**
- * @abstract
- * @inheritDoc
- */
-os.parse.AsyncParser.prototype.hasNext = function() {};
-
-
-/**
- * @abstract
- * @inheritDoc
- */
-os.parse.AsyncParser.prototype.parseNext = function() {};
-
-
-/**
- * @abstract
- * @inheritDoc
- */
-os.parse.AsyncParser.prototype.setSource = function(source) {};
-
-
-/**
- * @abstract
- * @inheritDoc
- */
-os.parse.AsyncParser.prototype.cleanup = function() {};
+exports = AsyncParser;

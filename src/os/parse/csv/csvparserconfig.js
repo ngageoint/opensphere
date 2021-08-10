@@ -1,72 +1,78 @@
-goog.provide('os.parse.csv.CsvParserConfig');
-goog.require('os.file.File');
-goog.require('os.parse.FileParserConfig');
-goog.require('os.parse.csv');
+goog.module('os.parse.csv.CsvParserConfig');
+goog.module.declareLegacyNamespace();
 
+const FileParserConfig = goog.require('os.parse.FileParserConfig');
+const {DEFAULT_COMMENT_CHAR, DEFAULT_DELIMITER} = goog.require('os.parse.csv');
+const OSFile = goog.requireType('os.file.File');
 
 
 /**
  * Parser config for CSV
  *
- * @extends {os.parse.FileParserConfig.<T>}
+ * @extends {FileParserConfig<T>}
+ * @unrestricted
  * @template T
- * @param {os.file.File=} opt_file
- * @constructor
  */
-os.parse.csv.CsvParserConfig = function(opt_file) {
-  os.parse.csv.CsvParserConfig.base(this, 'constructor', opt_file);
+class CsvParserConfig extends FileParserConfig {
+  /**
+   * Constructor.
+   * @param {OSFile=} opt_file
+   */
+  constructor(opt_file) {
+    super(opt_file);
+
+    /**
+     * @type {string}
+     */
+    this['commentChar'] = DEFAULT_COMMENT_CHAR;
+
+    /**
+     * @type {number}
+     */
+    this['dataRow'] = 2;
+
+    /**
+     * @type {string}
+     */
+    this['delimiter'] = DEFAULT_DELIMITER;
+
+    /**
+     * @type {number}
+     */
+    this['headerRow'] = 1;
+
+    /**
+     * @type {Array<string>}
+     */
+    this['linePreview'] = [];
+
+    /**
+     * @type {boolean}
+     */
+    this['useHeader'] = true;
+  }
 
   /**
-   * @type {string}
+   * Updates the unparsed line preview.
    */
-  this['commentChar'] = os.parse.csv.DEFAULT_COMMENT_CHAR;
+  updateLinePreview() {
+    this['linePreview'] = [];
 
-  /**
-   * @type {number}
-   */
-  this['dataRow'] = 2;
+    if (this['file']) {
+      var content = /** @type {string} */ (this['file'].getContent());
+      if (content) {
+        var preview = content.split(/\r?\n/, 50);
 
-  /**
-   * @type {string}
-   */
-  this['delimiter'] = os.parse.csv.DEFAULT_DELIMITER;
-
-  /**
-   * @type {number}
-   */
-  this['headerRow'] = 1;
-
-  /**
-   * @type {Array.<string>}
-   */
-  this['linePreview'] = [];
-
-  /**
-   * @type {boolean}
-   */
-  this['useHeader'] = true;
-};
-goog.inherits(os.parse.csv.CsvParserConfig, os.parse.FileParserConfig);
-
-
-/**
- * Updates the unparsed line preview.
- */
-os.parse.csv.CsvParserConfig.prototype.updateLinePreview = function() {
-  this['linePreview'] = [];
-
-  if (this['file']) {
-    var content = /** @type {string} */ (this['file'].getContent());
-    if (content) {
-      var preview = content.split(/\r?\n/, 50);
-
-      // only include non-empty lines
-      for (var i = 0, n = preview.length; i < n; i++) {
-        var line = goog.string.trim(preview[i]);
-        if (line) {
-          this['linePreview'].push(line);
+        // only include non-empty lines
+        for (var i = 0, n = preview.length; i < n; i++) {
+          var line = preview[i].trim();
+          if (line) {
+            this['linePreview'].push(line);
+          }
         }
       }
     }
   }
-};
+}
+
+exports = CsvParserConfig;
