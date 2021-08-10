@@ -26,6 +26,7 @@ const {Controller: ChooseTimeColumnController} = goog.require('plugin.ogc.ui.Cho
 const {directiveTag: ogcLayerNodeUi} = goog.require('plugin.ogc.ui.OGCLayerNodeUI');
 
 const IMapping = goog.requireType('os.im.mapping.IMapping');
+const WFSTypeConfig = goog.requireType('os.ogc.WFSTypeConfig');
 const GMLParser = goog.requireType('plugin.file.gml.GMLParser');
 
 
@@ -457,7 +458,7 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
 
   /**
    * Register a type config object.
-   * @param {!ogc.WFSTypeConfig} config
+   * @param {!WFSTypeConfig} config
    * @protected
    */
   static registerType(config) {
@@ -481,7 +482,7 @@ const logger = log.getLogger('plugin.ogc.wfs.WFSLayerConfig');
 
 /**
  * Type config for GeoJSON parsing.
- * @type {ogc.WFSTypeConfig}
+ * @type {WFSTypeConfig}
  */
 WFSLayerConfig.GEOJSON_CONFIG = {
   regex: /^application\/json$/,
@@ -493,7 +494,7 @@ WFSLayerConfig.GEOJSON_CONFIG = {
 
 /**
  * Type config for GML3 parsing.
- * @type {ogc.WFSTypeConfig}
+ * @type {WFSTypeConfig}
  */
 WFSLayerConfig.GML3_CONFIG = {
   regex: /gml\/?3/i,
@@ -505,7 +506,7 @@ WFSLayerConfig.GML3_CONFIG = {
 
 /**
  * Type config for GML2 parsing.
- * @type {ogc.WFSTypeConfig}
+ * @type {WFSTypeConfig}
  */
 WFSLayerConfig.GML2_CONFIG = {
   regex: /gml\/?2/i,
@@ -517,7 +518,7 @@ WFSLayerConfig.GML2_CONFIG = {
 
 /**
  * The available WFS type config objects. Plugins can add supported parser types to this.
- * @type {Array<ogc.WFSTypeConfig>}
+ * @type {Array<WFSTypeConfig>}
  */
 WFSLayerConfig.TYPE_CONFIGS = [
   WFSLayerConfig.GEOJSON_CONFIG,
