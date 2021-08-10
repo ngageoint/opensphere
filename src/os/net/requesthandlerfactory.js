@@ -39,6 +39,19 @@ const removeHandler = function(clazz) {
 };
 
 /**
+ * Reset handlers registered with the module.
+ */
+const resetHandlers = function() {
+  handlerClasses = null;
+};
+
+/**
+ * Get all handlers registered with the module.
+ * @return {?Array<Function>}
+ */
+const getAllHandlers = () => handlers;
+
+/**
  * Gets an array of handlers that support the given method and uri.
  *
  * @param {string} method The request method
@@ -88,5 +101,7 @@ const getHandlers = function(method, uri, opt_timeout) {
 exports = {
   addHandler,
   removeHandler,
+  resetHandlers,
+  getAllHandlers,
   getHandlers
 };
