@@ -1,13 +1,14 @@
 goog.module('os.query.utils');
 goog.module.declareLegacyNamespace();
 
-const googmath = goog.require('goog.math');
-const olextent = goog.require('ol.extent');
-const olFeature = goog.require('ol.Feature');
-const olproj = goog.require('ol.proj');
-const osmap = goog.require('os.map');
-const osproj = goog.require('os.proj');
+const {nearlyEquals} = goog.require('goog.math');
+const Feature = goog.require('ol.Feature');
+const {getArea} = goog.require('ol.extent');
+const GeometryType = goog.require('ol.geom.GeometryType');
 const Polygon = goog.require('ol.geom.Polygon');
+const {transformExtent} = goog.require('ol.proj');
+const osMap = goog.require('os.map');
+const {EPSG4326} = goog.require('os.proj');
 
 
 /**
@@ -60,10 +61,10 @@ exports.isWorldQuery = function(geometry) {
     exports.initWorldArea();
   }
 
-  if (worldArea_ && geometry && geometry.getType() === ol.geom.GeometryType.POLYGON) {
+  if (worldArea_ && geometry && geometry.getType() === GeometryType.POLYGON) {
     // transform the world extent to the current projection to compute the area
     var geomArea = /** @type {ol.geom.Polygon} */ (geometry).getArea();
-    return googmath.nearlyEquals(geomArea / worldArea_, 1, 1E-4) || geomArea == 0;
+    return nearlyEquals(geomArea / worldArea_, 1, 1E-4) || geomArea == 0;
   }
 
   return false;
@@ -79,17 +80,17 @@ exports.initWorldArea = function(opt_reset) {
   if (opt_reset) {
     worldArea_ = undefined;
   } else {
-    var worldExtent = olproj.transformExtent(WORLD_EXTENT, osproj.EPSG4326, osmap.PROJECTION);
-    worldArea_ = olextent.getArea(worldExtent);
+    var worldExtent = transformExtent(WORLD_EXTENT, EPSG4326, osMap.PROJECTION);
+    worldArea_ = getArea(worldExtent);
   }
 };
 
 
 /**
  * Feature representing the whole world.
- * @type {olFeature}
+ * @type {Feature}
  */
-exports.WORLD_AREA = new olFeature({
+exports.WORLD_AREA = new Feature({
   'geometry': WORLD_GEOM,
   'title': 'Whole World'
 });
@@ -97,9 +98,9 @@ exports.WORLD_AREA = new olFeature({
 
 /**
  * Feature representing the area we want to zoom to when zooming to the whole world.
- * @type {olFeature}
+ * @type {Feature}
  */
-exports.WORLD_ZOOM_FEATURE = new olFeature(new Polygon([[
+exports.WORLD_ZOOM_FEATURE = new Feature(new Polygon([[
   [179, 90],
   [181, 90],
   [181, -90],

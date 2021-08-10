@@ -3,25 +3,35 @@ goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin.object');
 
+const Deferred = goog.require('goog.async.Deferred');
+const {unsafeClone} = goog.require('goog.object');
+const {asString} = goog.require('ol.color');
 const GeoJSON = goog.require('ol.format.GeoJSON');
+const Polygon = goog.require('ol.geom.Polygon');
 const OLVectorSource = goog.require('ol.source.Vector');
 const VectorEventType = goog.require('ol.source.VectorEventType');
-const osArray = goog.require('os.array');
+const {AREA_STORAGE_KEY, ALL_AREA_STORAGE_KEY} = goog.require('os');
+const {toRgbArray} = goog.require('os.color');
 const TransformAreas = goog.require('os.command.TransformAreas');
 const Settings = goog.require('os.config.Settings');
-const geo = goog.require('os.geo');
-const geo2 = goog.require('os.geo2');
+const {isRectangular} = goog.require('os.geo');
+const {normalizeGeometryCoordinates} = goog.require('os.geo2');
+const GeometryField = goog.require('os.geom.GeometryField');
+const {METHOD_FIELD, ORIGINAL_GEOM_FIELD, getMethod} = goog.require('os.interpolate');
+const Method = goog.require('os.interpolate.Method');
 const DrawingLayer = goog.require('os.layer.Drawing');
 const osMap = goog.require('os.map');
 const {getMapContainer} = goog.require('os.map.instance');
 const CommandListEvent = goog.require('os.proj.switch.CommandListEvent');
 const SwitchProjection = goog.require('os.proj.switch.SwitchProjection');
-const query = goog.require('os.query');
 const BaseAreaManager = goog.require('os.query.BaseAreaManager');
 const {getQueryManager} = goog.require('os.query.instance');
 const {isWorldQuery} = goog.require('os.query.utils');
+const {setFeatureStyle} = goog.require('os.style');
+const StyleType = goog.require('os.style.StyleType');
 
 const Feature = goog.requireType('ol.Feature');
+const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
 
 
 /**
@@ -82,18 +92,18 @@ class AreaManager extends BaseAreaManager {
       featureProjection: osMap.PROJECTION
     });
 
-    Settings.getInstance().set(os.AREA_STORAGE_KEY, obj);
-    Settings.getInstance().delete(os.ALL_AREA_STORAGE_KEY);
-    return goog.async.Deferred.succeed();
+    Settings.getInstance().set(AREA_STORAGE_KEY, obj);
+    Settings.getInstance().delete(ALL_AREA_STORAGE_KEY);
+    return Deferred.succeed();
   }
 
   /**
    * @inheritDoc
    */
   setDefaultStyle(feature) {
-    feature.set(os.style.StyleType.HIGHLIGHT, undefined, true);
-    feature.set(os.style.StyleType.FEATURE, AreaManager.DEFAULT_AREA_STYLE, true);
-    os.style.setFeatureStyle(feature);
+    feature.set(StyleType.HIGHLIGHT, undefined, true);
+    feature.set(StyleType.FEATURE, AreaManager.DEFAULT_AREA_STYLE, true);
+    setFeatureStyle(feature);
   }
 
   /**
@@ -117,12 +127,12 @@ class AreaManager extends BaseAreaManager {
       expectedStyle = /** @type {boolean} */ (entries[0]['includeArea']) ? includeStyle : excludeStyle;
     }
 
-    var style = area.get(os.style.StyleType.SELECT);
+    var style = area.get(StyleType.SELECT);
 
     var id = area.getId();
     if (style !== expectedStyle && id) {
-      area.set(os.style.StyleType.SELECT, expectedStyle);
-      os.style.setFeatureStyle(area);
+      area.set(StyleType.SELECT, expectedStyle);
+      setFeatureStyle(area);
 
       if (source.getFeatureById(id)) {
         // 3D can take per feature updates
@@ -156,28 +166,28 @@ class AreaManager extends BaseAreaManager {
    * @inheritDoc
    */
   addInternal(feature, opt_bulk) {
-    if (feature && !feature.get(os.interpolate.METHOD_FIELD)) {
-      var geometry = /** @type {ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD)) ||
+    if (feature && !feature.get(METHOD_FIELD)) {
+      var geometry = /** @type {ol.geom.Geometry} */ (feature.get(ORIGINAL_GEOM_FIELD)) ||
           feature.getGeometry();
       var set = false;
 
-      if (geometry instanceof ol.geom.Polygon) {
+      if (geometry instanceof Polygon) {
         var coords = geometry.getCoordinates();
 
-        if (coords.length == 1 && geo.isRectangular(coords[0], geometry.getExtent())) {
+        if (coords.length == 1 && isRectangular(coords[0], geometry.getExtent())) {
           // a single rectangular polygon is a box, which should always be interpolated with rhumb lines
-          feature.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.RHUMB, true);
+          feature.set(METHOD_FIELD, Method.RHUMB, true);
           set = true;
         }
       }
 
       if (!set) {
         // if it wasn't a rectangle geometry, then instead fall back to the application setting
-        feature.set(os.interpolate.METHOD_FIELD, os.interpolate.getMethod(), true);
+        feature.set(METHOD_FIELD, getMethod(), true);
       }
 
       if (isWorldQuery(geometry)) {
-        feature.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE);
+        feature.set(METHOD_FIELD, Method.NONE);
       }
     }
 
@@ -197,8 +207,8 @@ class AreaManager extends BaseAreaManager {
     // rather than converting to/from EPSG:4326
     var geom = feature.getGeometry();
 
-    if (!geom.get(os.geom.GeometryField.NORMALIZED)) {
-      geo2.normalizeGeometryCoordinates(geom);
+    if (!geom.get(GeometryField.NORMALIZED)) {
+      normalizeGeometryCoordinates(geom);
       feature.setGeometry(geom);
     }
   }
@@ -210,13 +220,13 @@ class AreaManager extends BaseAreaManager {
    * @return {string}
    */
   toRgbaString(color) {
-    return ol.color.asString(typeof color === 'string' ? os.color.toRgbArray(color) : color);
+    return asString(typeof color === 'string' ? toRgbArray(color) : color);
   }
 
   /**
    * Handle Include Color changes.
    *
-   * @param {os.events.SettingChangeEvent} event
+   * @param {SettingChangeEvent} event
    * @private
    */
   updateInColor_(event) {
@@ -230,7 +240,7 @@ class AreaManager extends BaseAreaManager {
   /**
    * Handle Include Width changes.
    *
-   * @param {os.events.SettingChangeEvent} event
+   * @param {SettingChangeEvent} event
    * @private
    */
   updateInWidth_(event) {
@@ -243,7 +253,7 @@ class AreaManager extends BaseAreaManager {
   /**
    * Handle Exclude Color changes.
    *
-   * @param {os.events.SettingChangeEvent} event
+   * @param {SettingChangeEvent} event
    * @private
    */
   updateExColor_(event) {
@@ -257,7 +267,7 @@ class AreaManager extends BaseAreaManager {
   /**
    * Handle Exclude Width changes.
    *
-   * @param {os.events.SettingChangeEvent} event
+   * @param {SettingChangeEvent} event
    * @private
    */
   updateExWidth_(event) {
@@ -274,15 +284,15 @@ class AreaManager extends BaseAreaManager {
    */
   redrawQueryAreas_() {
     var areas = this.getAll();
-    osArray.forEach(areas, function(area) {
+    areas.forEach(function(area) {
       if (area.getStyle() != null) {
-        var entries = query.BaseQueryManager.getInstance().getEntries(null, /** @type {string} */ (area.getId()));
+        var entries = getQueryManager().getEntries(null, /** @type {string} */ (area.getId()));
         if (entries && entries.length > 0) {
           var expectedStyle = /** @type {boolean} */ (entries[0]['includeArea']) ?
-            goog.object.unsafeClone(AreaManager.FULL_INCLUSION_STYLE) :
-            goog.object.unsafeClone(AreaManager.FULL_EXCLUSION_STYLE);
-          area.set(os.style.StyleType.SELECT, expectedStyle);
-          os.style.setFeatureStyle(area);
+            unsafeClone(AreaManager.FULL_INCLUSION_STYLE) :
+            unsafeClone(AreaManager.FULL_EXCLUSION_STYLE);
+          area.set(StyleType.SELECT, expectedStyle);
+          setFeatureStyle(area);
           this.redraw(area);
         }
       }
@@ -310,12 +320,12 @@ class AreaManager extends BaseAreaManager {
    * @return {!ol.Feature} The area with the original geometry, if any
    */
   static mapOriginalGeoms(area) {
-    var orig = /** @type {ol.geom.Geometry} */ (area.get(os.interpolate.ORIGINAL_GEOM_FIELD));
+    var orig = /** @type {ol.geom.Geometry} */ (area.get(ORIGINAL_GEOM_FIELD));
 
     if (orig) {
       area = /** @type {!Feature} */ (area.clone());
       area.setGeometry(orig);
-      area.set(os.interpolate.ORIGINAL_GEOM_FIELD, undefined);
+      area.set(ORIGINAL_GEOM_FIELD, undefined);
     }
 
     return area;

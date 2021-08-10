@@ -1,114 +1,142 @@
-goog.provide('os.query.TemporalQueryManager');
-goog.require('goog.Disposable');
-goog.require('goog.asserts');
-goog.require('goog.string');
-goog.require('os.data.DataManager');
-goog.require('os.data.event.DataEventType');
-goog.require('os.time.TimelineController');
-goog.require('os.time.TimelineEventType');
+goog.module('os.query.TemporalQueryManager');
+goog.module.declareLegacyNamespace();
 
+const Disposable = goog.require('goog.Disposable');
+const {assert} = goog.require('goog.asserts');
+const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
+const DataManager = goog.require('os.data.DataManager');
+const DataEventType = goog.require('os.data.event.DataEventType');
+const TimelineController = goog.require('os.time.TimelineController');
+const TimelineEventType = goog.require('os.time.TimelineEventType');
+
+const DataEvent = goog.requireType('os.data.event.DataEvent');
+const TemporalHandler = goog.requireType('os.query.TemporalHandler');
+const TimelineControllerEvent = goog.requireType('os.time.TimelineControllerEvent');
 
 
 /**
- * @extends {goog.Disposable}
- * @constructor
  */
-os.query.TemporalQueryManager = function() {
+class TemporalQueryManager extends Disposable {
   /**
-   * @type {!Object.<string, os.query.TemporalHandler>}
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {!Object<string, TemporalHandler>}
+     * @private
+     */
+    this.handlers_ = {};
+
+    /**
+     * @type {TimelineController}
+     * @private
+     */
+    this.controller_ = TimelineController.getInstance();
+    this.controller_.listen(TimelineEventType.RESET, this.onTimelineReset_, false, this);
+
+    DataManager.getInstance().listen(DataEventType.SOURCE_REMOVED, this.onDataSourceRemoved_, false, this);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+
+    this.controller_.unlisten(TimelineEventType.RESET, this.onTimelineReset_, false, this);
+    DataManager.getInstance().unlisten(DataEventType.SOURCE_REMOVED, this.onDataSourceRemoved_, false, this);
+  }
+
+  /**
+   * @param {DataEvent} event
    * @private
    */
-  this.handlers_ = {};
+  onDataSourceRemoved_(event) {
+    if (event.source && this.hasHandler(event.source.getId())) {
+      this.unregisterHandler(event.source.getId());
+    }
+  }
 
   /**
-   * @type {os.time.TimelineController}
+   * @param {TimelineControllerEvent} event
    * @private
    */
-  this.controller_ = os.time.TimelineController.getInstance();
-  this.controller_.listen(os.time.TimelineEventType.RESET, this.onTimelineReset_, false, this);
-
-  os.dataManager.listen(os.data.event.DataEventType.SOURCE_REMOVED, this.onDataSourceRemoved_, false, this);
-};
-goog.inherits(os.query.TemporalQueryManager, goog.Disposable);
-goog.addSingletonGetter(os.query.TemporalQueryManager);
-
-
-/**
- * @inheritDoc
- */
-os.query.TemporalQueryManager.prototype.disposeInternal = function() {
-  os.query.TemporalQueryManager.base(this, 'disposeInternal');
-
-  this.controller_.unlisten(os.time.TimelineEventType.RESET, this.onTimelineReset_, false, this);
-  os.dataManager.unlisten(os.data.event.DataEventType.SOURCE_REMOVED, this.onDataSourceRemoved_, false, this);
-};
-
-
-/**
- * @param {os.data.event.DataEvent} event
- * @private
- */
-os.query.TemporalQueryManager.prototype.onDataSourceRemoved_ = function(event) {
-  if (event.source && this.hasHandler(event.source.getId())) {
-    this.unregisterHandler(event.source.getId());
+  onTimelineReset_(event) {
+    for (var id in this.handlers_) {
+      this.handlers_[id].handleTimelineReset(this.controller_);
+    }
   }
-};
 
-
-/**
- * @param {os.time.TimelineControllerEvent} event
- * @private
- */
-os.query.TemporalQueryManager.prototype.onTimelineReset_ = function(event) {
-  for (var id in this.handlers_) {
-    this.handlers_[id].handleTimelineReset(this.controller_);
+  /**
+   * Gets a handler if a matching one is registered with the manager.
+   *
+   * @param {string} id Id of the handler
+   * @return {?TemporalHandler} The handler, if it has been registered
+   */
+  getHandler(id) {
+    return this.hasHandler(id) ? this.handlers_[id] : null;
   }
-};
 
+  /**
+   * Checks if a handler is registered with the manager.
+   *
+   * @param {string} id Id of the handler
+   * @return {boolean} If the handler is registered
+   */
+  hasHandler(id) {
+    return id in this.handlers_;
+  }
+
+  /**
+   * Registers a handler with the manager.
+   *
+   * @param {string} id Id of the handler
+   * @param {TemporalHandler} handler The handler
+   */
+  registerHandler(id, handler) {
+    assert(!isEmptyOrWhitespace(makeSafe(id)), 'Cannot register handler with empty/null id!');
+    assert(handler != null, 'Cannot register null handler (id = ' + id + ')');
+
+    this.handlers_[id] = handler;
+    handler.handleTimelineReset(this.controller_, false);
+  }
+
+  /**
+   * Unregisters a handler with the manager.
+   *
+   * @param {string} id Id of the handler
+   */
+  unregisterHandler(id) {
+    delete this.handlers_[id];
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!TemporalQueryManager}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new TemporalQueryManager();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {TemporalQueryManager} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
 
 /**
- * Gets a handler if a matching one is registered with the manager.
- *
- * @param {string} id Id of the handler
- * @return {?os.query.TemporalHandler} The handler, if it has been registered
+ * Global instance.
+ * @type {TemporalQueryManager|undefined}
  */
-os.query.TemporalQueryManager.prototype.getHandler = function(id) {
-  return this.hasHandler(id) ? this.handlers_[id] : null;
-};
+let instance;
 
-
-/**
- * Checks if a handler is registered with the manager.
- *
- * @param {string} id Id of the handler
- * @return {boolean} If the handler is registered
- */
-os.query.TemporalQueryManager.prototype.hasHandler = function(id) {
-  return id in this.handlers_;
-};
-
-
-/**
- * Registers a handler with the manager.
- *
- * @param {string} id Id of the handler
- * @param {os.query.TemporalHandler} handler The handler
- */
-os.query.TemporalQueryManager.prototype.registerHandler = function(id, handler) {
-  goog.asserts.assert(!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(id)),
-      'Cannot register handler with empty/null id!');
-  goog.asserts.assert(handler != null, 'Cannot register null handler (id = ' + id + ')');
-
-  this.handlers_[id] = handler;
-  handler.handleTimelineReset(this.controller_, false);
-};
-
-
-/**
- * Unregisters a handler with the manager.
- *
- * @param {string} id Id of the handler
- */
-os.query.TemporalQueryManager.prototype.unregisterHandler = function(id) {
-  delete this.handlers_[id];
-};
+exports = TemporalQueryManager;
