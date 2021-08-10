@@ -1,13 +1,16 @@
-goog.require('os.ol.source.XYZ');
 goog.require('ol.proj.common');
+goog.require('os.ol.source.XYZ');
 
 
 describe('os.ol.source.XYZ', function() {
+  const common = goog.module.get('ol.proj.common');
+  const XYZ = goog.module.get('os.ol.source.XYZ');
+
   it('should apply the offset to the zoom', function() {
     var url = 'http://example.com/layer/{z}/{y}/{x}';
-    ol.proj.common.add();
+    common.add();
 
-    var src = new os.ol.source.XYZ({
+    var src = new XYZ({
       'tileSize': 512,
       'zoomOffset': -1,
       'url': url
