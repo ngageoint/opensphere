@@ -59,6 +59,7 @@ const KMLNetworkLinkNode = goog.require('plugin.file.kml.ui.KMLNetworkLinkNode')
 const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
 const KMLTourNode = goog.require('plugin.file.kml.ui.KMLTourNode');
 
+const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
 const IParser = goog.requireType('os.parse.IParser');
 
@@ -70,20 +71,19 @@ const IParser = goog.requireType('os.parse.IParser');
  *   node: KMLNode
  * }}
  */
-kml.KMLParserStackObj;
-
+let KMLParserStackObj;
 
 
 /**
  * Parses a KML source
  *
- * @implements {IParser.<KMLNode>}
+ * @implements {IParser<KMLNode>}
  * @template T
  */
 class KMLParser extends AsyncZipParser {
   /**
    * Constructor.
-   * @param {Object.<string, *>} options Layer configuration options.
+   * @param {Object<string, *>} options Layer configuration options.
    */
   constructor(options) {
     super();
@@ -142,7 +142,7 @@ class KMLParser extends AsyncZipParser {
 
     /**
      * The parsing stack
-     * @type {!Array.<!kml.KMLParserStackObj>}
+     * @type {!Array<!KMLParserStackObj>}
      * @private
      */
     this.stack_ = [];
@@ -437,7 +437,7 @@ class KMLParser extends AsyncZipParser {
   }
 
   /**
-   * @param {goog.events.Event} evt
+   * @param {GoogEvent} evt
    * @protected
    */
   onExtStyleLoad(evt) {
@@ -524,7 +524,7 @@ class KMLParser extends AsyncZipParser {
 
     if (rootChildren && rootChildren.length > 0) {
       // start parsing at the first child of the kml tag
-      this.stack_.push(/** @type {kml.KMLParserStackObj} */ ({
+      this.stack_.push(/** @type {KMLParserStackObj} */ ({
         children: [rootEl],
         index: 0,
         node: null
@@ -749,7 +749,7 @@ class KMLParser extends AsyncZipParser {
           var stackChildren = dom.getChildren(currentEl);
           if (stackChildren && stackChildren.length > 0) {
             // only continue down this path if the element has children to parse
-            stackObj = /** @type {kml.KMLParserStackObj} */ ({
+            stackObj = /** @type {KMLParserStackObj} */ ({
               children: stackChildren,
               index: 0,
               node: node
@@ -985,7 +985,7 @@ class KMLParser extends AsyncZipParser {
     }
 
     if (node) {
-      this.updateNode_(el, node, KMLParser.BASE_ELEMENT_PARSERS_);
+      this.updateNode_(el, node, baseElementParsers);
     }
 
     return node;
@@ -996,7 +996,7 @@ class KMLParser extends AsyncZipParser {
    *
    * @param {Element} el The XML element
    * @param {KMLNode} node The KML tree node
-   * @param {Object.<string, kml.KMLElementParser>} parsers The parsers to use
+   * @param {Object<string, KMLElementParser>} parsers The parsers to use
    * @private
    */
   updateNode_(el, node, parsers) {
@@ -1783,20 +1783,17 @@ class KMLParser extends AsyncZipParser {
   }
 }
 
-
 /**
  * @type {Array<string>}
  * @const
  */
 KMLParser.KML_THINGS = ['NetworkLink', 'Placemark', 'GroundOverlay', 'ScreenOverlay', 'Tour'];
 
-
 /**
  * Logger
  * @type {Logger}
  */
 const logger = log.getLogger('plugin.file.kml.KMLParser');
-
 
 /**
  * Fields to ignore when creating the column list.
@@ -1806,21 +1803,18 @@ const logger = log.getLogger('plugin.file.kml.KMLParser');
  */
 KMLParser.SKIPPED_COLUMNS_ = /^(geometry|recordtime|time|styleurl|visibility|_kmlStyle)$/i;
 
-
 /**
  * @typedef {function(KMLNode, Element)}
  */
-kml.KMLElementParser;
-
+let KMLElementParser;
 
 /**
- * @type {Object.<string, kml.KMLElementParser>}
- * @private
- * @const
+ * @type {Object<string, KMLElementParser>}
  */
-KMLParser.BASE_ELEMENT_PARSERS_ = {
+const baseElementParsers = {
   'name': KMLParser.setNodeLabel_,
   'open': KMLParser.setNodeCollapsed_,
   'visibility': KMLParser.setNodeVisibility_
 };
+
 exports = KMLParser;

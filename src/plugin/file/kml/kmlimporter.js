@@ -2,34 +2,34 @@ goog.module('plugin.file.kml.KMLImporter');
 goog.module.declareLegacyNamespace();
 
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-
 const AlertManager = goog.require('os.alert.AlertManager');
 const osFeature = goog.require('os.feature');
 const FeatureImporter = goog.require('os.im.FeatureImporter');
-
-
 const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
+const KMLParser = goog.requireType('plugin.file.kml.KMLParser');
+const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
+
 
 /**
  * Imports a set of KML items
  *
- * @extends {FeatureImporter.<plugin.file.kml.ui.KMLNode>}
+ * @extends {FeatureImporter<KMLNode>}
  */
 class KMLImporter extends FeatureImporter {
   /**
    * Constructor.
-   * @param {plugin.file.kml.KMLParser} parser The parser
+   * @param {KMLParser} parser The parser
    */
   constructor(parser) {
     super(parser);
 
     /**
      * The last parsed KML root node
-     * @type {plugin.file.kml.ui.KMLNode}
+     * @type {KMLNode}
      * @private
      */
     this.rootNode_ = null;
@@ -67,7 +67,7 @@ class KMLImporter extends FeatureImporter {
   /**
    * Get the root KML tree node.
    * @param {boolean=} opt_clear If the root node should be cleared on call.
-   * @return {plugin.file.kml.ui.KMLNode}
+   * @return {KMLNode}
    */
   getRootNode(opt_clear = false) {
     var rootNode = this.rootNode_;
@@ -100,7 +100,7 @@ class KMLImporter extends FeatureImporter {
    */
   onParserReady(opt_event) {
     // if a KML tree was previously parsed, set it on the parser so the tree is merged
-    this.parser.setRootNode(this.rootNode_);
+    /** @type {KMLParser} */ (this.parser).setRootNode(this.rootNode_);
 
     super.onParserReady(opt_event);
   }
@@ -110,9 +110,10 @@ class KMLImporter extends FeatureImporter {
    */
   onParsingComplete(opt_event) {
     // grab the newly parsed KML tree before it's removed by parser cleanup
-    this.rootNode_ = this.parser.getRootNode();
-    this.columns_ = this.parser.getColumns();
-    this.minRefreshPeriod_ = this.parser.getMinRefreshPeriod();
+    const kmlParser = /** @type {KMLParser} */ (this.parser);
+    this.rootNode_ = kmlParser.getRootNode();
+    this.columns_ = kmlParser.getColumns();
+    this.minRefreshPeriod_ = kmlParser.getMinRefreshPeriod();
 
     if (this.invalidCount_ > 0) {
       var msg = this.invalidCount_ === 1 ? 'An area was' : (this.invalidCount_ + ' areas were');
