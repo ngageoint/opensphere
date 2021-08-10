@@ -1,107 +1,104 @@
-goog.provide('os.net.ParamModifier');
-goog.require('goog.asserts');
-goog.require('goog.string');
-goog.require('os.net.AbstractModifier');
+goog.module('os.net.ParamModifier');
+goog.module.declareLegacyNamespace();
 
+const {assert} = goog.require('goog.asserts');
+const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
+const AbstractModifier = goog.require('os.net.AbstractModifier');
 
 
 /**
  * URI parameter replacement modifier.
- *
- * @param {string} id Identifier for the modifier
- * @param {string} param Parameter to modify
- * @param {string|RegExp} replaceTerm The term to replace
- * @param {string|Function} replacement The replacement value
- * @param {number=} opt_priority Priority of the modifier
- * @extends {os.net.AbstractModifier}
- * @constructor
  */
-os.net.ParamModifier = function(id, param, replaceTerm, replacement, opt_priority) {
-  os.net.ParamModifier.base(this, 'constructor', id, opt_priority);
-
+class ParamModifier extends AbstractModifier {
   /**
-   * @type {string}
-   * @private
+   * Constructor.
+   * @param {string} id Identifier for the modifier
+   * @param {string} param Parameter to modify
+   * @param {string|RegExp} replaceTerm The term to replace
+   * @param {string|Function} replacement The replacement value
+   * @param {number=} opt_priority Priority of the modifier
    */
-  this.param_ = param;
+  constructor(id, param, replaceTerm, replacement, opt_priority) {
+    super(id, opt_priority);
 
-  /**
-   * @type {string|RegExp}
-   * @private
-   */
-  this.replaceTerm_ = replaceTerm;
+    /**
+     * @type {string}
+     * @private
+     */
+    this.param_ = param;
 
-  /**
-   * @type {string|Function}
-   * @private
-   */
-  this.replacement_ = replacement;
-};
-goog.inherits(os.net.ParamModifier, os.net.AbstractModifier);
+    /**
+     * @type {string|RegExp}
+     * @private
+     */
+    this.replaceTerm_ = replaceTerm;
 
-
-/**
- * @return {string|Function}
- */
-os.net.ParamModifier.prototype.getReplacement = function() {
-  return this.replacement_;
-};
-
-
-/**
- * @param {string|Function} replacement
- */
-os.net.ParamModifier.prototype.setReplacement = function(replacement) {
-  this.replacement_ = replacement;
-};
-
-
-/**
- * @return {string|RegExp}
- */
-os.net.ParamModifier.prototype.getReplaceTerm = function() {
-  return this.replaceTerm_;
-};
-
-
-/**
- * @param {string|RegExp} replaceTerm
- */
-os.net.ParamModifier.prototype.setReplaceTerm = function(replaceTerm) {
-  this.replaceTerm_ = replaceTerm;
-};
-
-
-/**
- * @return {string}
- */
-os.net.ParamModifier.prototype.getParam = function() {
-  return this.param_;
-};
-
-
-/**
- * @param {string} param
- */
-os.net.ParamModifier.prototype.setParam = function(param) {
-  this.param_ = param;
-};
-
-
-/**
- * @inheritDoc
- */
-os.net.ParamModifier.prototype.modify = function(uri) {
-  goog.asserts.assert(!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(this.param_)),
-      'The parameter for modifier ' + this.getId() + ' was not set. Request will not load.');
-  goog.asserts.assert(!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(this.replaceTerm_)),
-      'The replacement term for modifier ' + this.getId() + ' was not set. Request will not load.');
-  goog.asserts.assert(this.replacement_ != null,
-      'The replacement for modifier ' + this.getId() + ' was not set. Request will not load.');
-
-  var qd = uri.getQueryData();
-  var old = qd.get(this.param_);
-  if (old) {
-    qd.set(this.param_, old.replace(this.replaceTerm_, this.replacement_));
+    /**
+     * @type {string|Function}
+     * @private
+     */
+    this.replacement_ = replacement;
   }
-};
+
+  /**
+   * @return {string|Function}
+   */
+  getReplacement() {
+    return this.replacement_;
+  }
+
+  /**
+   * @param {string|Function} replacement
+   */
+  setReplacement(replacement) {
+    this.replacement_ = replacement;
+  }
+
+  /**
+   * @return {string|RegExp}
+   */
+  getReplaceTerm() {
+    return this.replaceTerm_;
+  }
+
+  /**
+   * @param {string|RegExp} replaceTerm
+   */
+  setReplaceTerm(replaceTerm) {
+    this.replaceTerm_ = replaceTerm;
+  }
+
+  /**
+   * @return {string}
+   */
+  getParam() {
+    return this.param_;
+  }
+
+  /**
+   * @param {string} param
+   */
+  setParam(param) {
+    this.param_ = param;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  modify(uri) {
+    assert(!isEmptyOrWhitespace(makeSafe(this.param_)),
+        'The parameter for modifier ' + this.getId() + ' was not set. Request will not load.');
+    assert(!isEmptyOrWhitespace(makeSafe(this.replaceTerm_)),
+        'The replacement term for modifier ' + this.getId() + ' was not set. Request will not load.');
+    assert(this.replacement_ != null,
+        'The replacement for modifier ' + this.getId() + ' was not set. Request will not load.');
+
+    var qd = uri.getQueryData();
+    var old = qd.get(this.param_);
+    if (old) {
+      qd.set(this.param_, old.replace(this.replaceTerm_, this.replacement_));
+    }
+  }
+}
+
+exports = ParamModifier;

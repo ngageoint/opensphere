@@ -1,7 +1,9 @@
-goog.provide('os.net.FormEncFormatter');
-goog.require('goog.net.XhrIo');
-goog.require('os.net.IDataFormatter');
+goog.module('os.net.FormEncFormatter');
+goog.module.declareLegacyNamespace();
 
+const XhrIo = goog.require('goog.net.XhrIo');
+
+const IDataFormatter = goog.requireType('os.net.IDataFormatter');
 
 
 /**
@@ -11,26 +13,30 @@ goog.require('os.net.IDataFormatter');
  *
  * Creates a x-www-form-urlencoded payload for a typical POST request of form data
  *
- * @implements {os.net.IDataFormatter}
- * @constructor
+ * @implements {IDataFormatter}
  */
-os.net.FormEncFormatter = function() {
-};
+class FormEncFormatter {
+  /**
+   * Constructor.
+   */
+  constructor() {
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getContentType() {
+    return XhrIo.FORM_CONTENT_TYPE;
+  }
 
-/**
- * @inheritDoc
- */
-os.net.FormEncFormatter.prototype.getContentType = function() {
-  return goog.net.XhrIo.FORM_CONTENT_TYPE;
-};
+  /**
+   * @inheritDoc
+   */
+  format(uri) {
+    var q = uri.getQuery();
+    uri.getQueryData().clear();
+    return q;
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.net.FormEncFormatter.prototype.format = function(uri) {
-  var q = uri.getQuery();
-  uri.getQueryData().clear();
-  return q;
-};
+exports = FormEncFormatter;

@@ -1,6 +1,7 @@
-goog.provide('os.net.IModifier');
-goog.require('goog.Uri');
+goog.module('os.net.IModifier');
+goog.module.declareLegacyNamespace();
 
+const Uri = goog.requireType('goog.Uri');
 
 
 /**
@@ -8,41 +9,38 @@ goog.require('goog.Uri');
  *
  * @interface
  */
-os.net.IModifier = function() {};
+class IModifier {
+  /**
+   * Gets the ID of the modifier
+   * @return {string}
+   */
+  getId() {}
 
+  /**
+   * Sets the ID of the modifier
+   * @param {string} id The ID
+   */
+  setId(id) {}
 
-/**
- * Gets the ID of the modifier
- * @return {string}
- */
-os.net.IModifier.prototype.getId;
+  /**
+   * Gets the priority of the modifier. Modifiers are executed from
+   * highest to lowest priority.
+   * @return {number} The priority
+   */
+  getPriority() {}
 
+  /**
+   * Sets the priority of the modifier. Modifiers are executed from
+   * highest to lowest priority.
+   * @param {number} priority The priority
+   */
+  setPriority(priority) {}
 
-/**
- * Sets the ID of the modifier
- * @param {string} id The ID
- */
-os.net.IModifier.prototype.setId;
+  /**
+   * Modifies a URI in place
+   * @param {Uri} uri The URI to modify
+   */
+  modify(uri) {}
+}
 
-
-/**
- * Gets the priority of the modifier. Modifiers are executed from
- * highest to lowest priority.
- * @return {number} The priority
- */
-os.net.IModifier.prototype.getPriority;
-
-
-/**
- * Sets the priority of the modifier. Modifiers are executed from
- * highest to lowest priority.
- * @param {number} priority The priority
- */
-os.net.IModifier.prototype.setPriority;
-
-
-/**
- * Modifies a URI in place
- * @param {goog.Uri} uri The URI to modify
- */
-os.net.IModifier.prototype.modify;
+exports = IModifier;

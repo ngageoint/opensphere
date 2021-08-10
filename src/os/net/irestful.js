@@ -1,5 +1,5 @@
-goog.provide('os.net.IRestful');
-
+goog.module('os.net.IRestful');
+goog.module.declareLegacyNamespace();
 
 
 /**
@@ -7,32 +7,30 @@ goog.provide('os.net.IRestful');
  *
  * @interface
  */
-os.net.IRestful = function() {};
+class IRestful {
+  /**
+   * Retrieve read REST relative URL.
+   * @return {!string}
+   */
+  getReadUrl() {}
 
+  /**
+   * Retrieve create REST relative URL
+   * @return {!string}
+   */
+  getCreateUrl() {}
 
-/**
- * Retrieve read REST relative URL.
- * @return {!string}
- */
-os.net.IRestful.prototype.getReadUrl;
+  /**
+   * Retrieve update REST relative URL
+   * @return {!string}
+   */
+  getUpdateUrl() {}
 
+  /**
+   * Retrieve delete REST relative URL
+   * @return {!string}
+   */
+  getDeleteUrl() {}
+}
 
-/**
- * Retrieve create REST relative URL
- * @return {!string}
- */
-os.net.IRestful.prototype.getCreateUrl;
-
-
-/**
- * Retrieve update REST relative URL
- * @return {!string}
- */
-os.net.IRestful.prototype.getUpdateUrl;
-
-
-/**
- * Retrieve delete REST relative URL
- * @return {!string}
- */
-os.net.IRestful.prototype.getDeleteUrl;
+exports = IRestful;

@@ -1,9 +1,10 @@
-goog.provide('os.net.ProxyHandler');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('os.net.HandlerType');
-goog.require('os.net.SameDomainHandler');
+goog.module('os.net.ProxyHandler');
+goog.module.declareLegacyNamespace();
 
+const log = goog.require('goog.log');
+const HandlerType = goog.require('os.net.HandlerType');
+const SameDomainHandler = goog.require('os.net.SameDomainHandler');
+const Logger = goog.requireType('goog.log.Logger');
 
 
 /**
@@ -13,137 +14,128 @@ goog.require('os.net.SameDomainHandler');
  * os.net.ProxyHandler.METHODS = ['GET', 'POST', ...];
  * os.net.ProxyHandler.SCHEMES = ['http', https', ...];
  * </pre>
- *
- * @extends {os.net.SameDomainHandler}
- * @constructor
  */
-os.net.ProxyHandler = function() {
-  os.net.ProxyHandler.base(this, 'constructor');
+class ProxyHandler extends SameDomainHandler {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
 
-  // this is not the best way to get requests
-  this.score = -10;
-};
-goog.inherits(os.net.ProxyHandler, os.net.SameDomainHandler);
+    // this is not the best way to get requests
+    this.score = -10;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  handles(method, uri) {
+    /** @type {string} */
+    var purl = ProxyHandler.PROXY_URL;
+
+    if (!purl || purl.indexOf('{url}') == -1) {
+      log.warning(logger,
+          'The proxy url is not set properly');
+      return false;
+    }
+
+    /** @type {Array.<string>} */
+    var methods = ProxyHandler.METHODS;
+    if (!methods || methods.indexOf(method) == -1) {
+      log.fine(logger,
+          'The ' + method + ' method is not supported by the proxy.');
+      return false;
+    }
+
+    /** @type {Array.<string>} */
+    var schemes = ProxyHandler.SCHEMES;
+    if (!schemes || schemes.indexOf(uri.getScheme()) == -1) {
+      log.fine(logger,
+          'The ' + uri.getScheme() + ' scheme is not supported by the proxy');
+      return false;
+    }
+
+    return !super.handles(method, uri);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  modUri(uri) {
+    return ProxyHandler.getProxyUri(uri);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getHandlerType() {
+    return HandlerType.PROXY;
+  }
+
+  /**
+   * @param {?Object} conf
+   */
+  static configure(conf) {
+    if (conf) {
+      if (conf['schemes'] !== undefined) {
+        ProxyHandler.SCHEMES = /** @type {Array<string>} */ (conf['schemes']);
+      }
+
+      if (conf['methods'] !== undefined) {
+        ProxyHandler.METHODS = /** @type {Array<string>} */ (conf['methods']);
+      }
+
+      if (conf['encode'] !== undefined) {
+        ProxyHandler.ENCODE = /** @type {boolean} */ (conf['encode']);
+      }
+
+      if (conf['url'] !== undefined) {
+        ProxyHandler.PROXY_URL = /** @type {string} */ (conf['url']);
+      }
+    }
+  }
+
+  /**
+   * Get the proxy URI with the encoded url parameter set.
+   *
+   * @param {goog.Uri|string} uri The URI parameter
+   * @return {string} The proxy URI
+   */
+  static getProxyUri(uri) {
+    uri = ProxyHandler.ENCODE ? encodeURIComponent(uri.toString()) : uri.toString();
+    return ProxyHandler.PROXY_URL.replace('{url}', uri);
+  }
+}
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {Logger}
  */
-os.net.ProxyHandler.LOGGER_ = goog.log.getLogger('os.net.ProxyHandler');
-
+const logger = log.getLogger('os.net.ProxyHandler');
 
 /**
  * The proxy URL. Must contain '{url}', which will be replaced by the encoded
  * URL.
  * @type {string}
  */
-os.net.ProxyHandler.PROXY_URL = '/proxy/{url}';
-
+ProxyHandler.PROXY_URL = '/proxy/{url}';
 
 /**
  * The schemes that the proxy supports
  * @type {Array.<string>}
  */
-os.net.ProxyHandler.SCHEMES = ['http'];
-
+ProxyHandler.SCHEMES = ['http'];
 
 /**
  * The request methods that the proxy supports
  * @type {Array.<string>}
  */
-os.net.ProxyHandler.METHODS = ['GET'];
-
+ProxyHandler.METHODS = ['GET'];
 
 /**
  * Whether or not to encode the remote URL in the proxy URL
  * @type {boolean}
  */
-os.net.ProxyHandler.ENCODE = true;
+ProxyHandler.ENCODE = true;
 
-
-/**
- * @param {?Object} conf
- */
-os.net.ProxyHandler.configure = function(conf) {
-  if (conf) {
-    if (conf['schemes'] !== undefined) {
-      os.net.ProxyHandler.SCHEMES = /** @type {Array<string>} */ (conf['schemes']);
-    }
-
-    if (conf['methods'] !== undefined) {
-      os.net.ProxyHandler.METHODS = /** @type {Array<string>} */ (conf['methods']);
-    }
-
-    if (conf['encode'] !== undefined) {
-      os.net.ProxyHandler.ENCODE = /** @type {boolean} */ (conf['encode']);
-    }
-
-    if (conf['url'] !== undefined) {
-      os.net.ProxyHandler.PROXY_URL = /** @type {string} */ (conf['url']);
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.net.ProxyHandler.prototype.handles = function(method, uri) {
-  /** @type {string} */
-  var purl = os.net.ProxyHandler.PROXY_URL;
-
-  if (!purl || purl.indexOf('{url}') == -1) {
-    goog.log.warning(os.net.ProxyHandler.LOGGER_,
-        'The proxy url is not set properly');
-    return false;
-  }
-
-  /** @type {Array.<string>} */
-  var methods = os.net.ProxyHandler.METHODS;
-  if (!methods || methods.indexOf(method) == -1) {
-    goog.log.fine(os.net.ProxyHandler.LOGGER_,
-        'The ' + method + ' method is not supported by the proxy.');
-    return false;
-  }
-
-  /** @type {Array.<string>} */
-  var schemes = os.net.ProxyHandler.SCHEMES;
-  if (!schemes || schemes.indexOf(uri.getScheme()) == -1) {
-    goog.log.fine(os.net.ProxyHandler.LOGGER_,
-        'The ' + uri.getScheme() + ' scheme is not supported by the proxy');
-    return false;
-  }
-
-  return !os.net.ProxyHandler.superClass_.handles.call(this, method, uri);
-};
-
-
-/**
- * @inheritDoc
- */
-os.net.ProxyHandler.prototype.modUri = function(uri) {
-  return os.net.ProxyHandler.getProxyUri(uri);
-};
-
-
-/**
- * Get the proxy URI with the encoded url parameter set.
- *
- * @param {goog.Uri|string} uri The URI parameter
- * @return {string} The proxy URI
- */
-os.net.ProxyHandler.getProxyUri = function(uri) {
-  uri = os.net.ProxyHandler.ENCODE ? encodeURIComponent(uri.toString()) : uri.toString();
-  return os.net.ProxyHandler.PROXY_URL.replace('{url}', uri);
-};
-
-
-/**
- * @inheritDoc
- */
-os.net.ProxyHandler.prototype.getHandlerType = function() {
-  return os.net.HandlerType.PROXY;
-};
+exports = ProxyHandler;

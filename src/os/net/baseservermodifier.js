@@ -1,15 +1,21 @@
-goog.provide('os.net.BaseServerModifier');
-goog.require('goog.Uri');
-goog.require('os.net.URLModifier');
+goog.module('os.net.BaseServerModifier');
+goog.module.declareLegacyNamespace();
+
+const Settings = goog.require('os.config.Settings');
+const URLModifier = goog.require('os.net.URLModifier');
 
 
 /**
  * @param {string} server
  */
-os.net.BaseServerModifier.configure = function(server) {
+const configure = function(server) {
   if (server) {
     var config = {};
-    config[os.settings.get('baseServerRegex', '^\\/([^\\/].*)$')] = server.replace(/\/$/, '') + '/$1';
-    os.net.URLModifier.configure(config);
+    config[Settings.getInstance().get('baseServerRegex', '^\\/([^\\/].*)$')] = server.replace(/\/$/, '') + '/$1';
+    URLModifier.configure(config);
   }
+};
+
+exports = {
+  configure
 };
