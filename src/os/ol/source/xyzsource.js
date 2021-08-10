@@ -25,6 +25,13 @@ class XYZ extends OLXYZ {
      * @protected
      */
     this.zoomOffset = options['zoomOffset'] || 0;
+
+    // Set these again because createFromTemplates uses the zoom offset.
+    if (options.urls) {
+      this.setUrls(options.urls);
+    } else if (options.url) {
+      this.setUrl(options.url);
+    }
   }
 
   /**
@@ -54,7 +61,7 @@ class XYZ extends OLXYZ {
     var xRegEx = /\{x\}|\%x/g;
     var yRegEx = /\{y\}|\%y/g;
     var dashYRegEx = /\{-y\}/g;
-    var offset = this.zoomOffset;
+    var offset = this.zoomOffset || 0;
     return (
       /**
        * @param {ol.TileCoord} tileCoord Tile Coordinate.
