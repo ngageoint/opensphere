@@ -18,6 +18,11 @@ const Tag = goog.require('plugin.descriptor.facet.Tag');
 const TagSplit = goog.require('plugin.descriptor.facet.TagSplit');
 const Type = goog.require('plugin.descriptor.facet.Type');
 
+const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const BaseFacet = goog.requireType('os.search.BaseFacet');
+const AppliedFacets = goog.requireType('os.search.AppliedFacets');
+const FacetSet = goog.requireType('os.search.FacetSet');
+
 
 /**
  * Searches descriptors
@@ -42,13 +47,13 @@ class DescriptorSearch extends AbstractSearch {
     this.results_ = [];
 
     /**
-     * @type {os.search.FacetSet}
+     * @type {FacetSet}
      * @private
      */
     this.availableFacets_ = {};
 
     /**
-     * @type {?os.search.AppliedFacets}
+     * @type {?AppliedFacets}
      * @private
      */
     this.appliedFacets_ = null;
@@ -60,7 +65,7 @@ class DescriptorSearch extends AbstractSearch {
     this.searchTermFacet_ = new SearchTerm();
 
     /**
-     * @type {!Array<!os.search.BaseFacet<!os.data.IDataDescriptor>>}
+     * @type {!Array<!BaseFacet<!IDataDescriptor>>}
      * @private
      */
     this.facets_ = [];
@@ -90,7 +95,7 @@ class DescriptorSearch extends AbstractSearch {
   }
 
   /**
-   * @return {!Array<!os.data.IDataDescriptor>}
+   * @return {!Array<!IDataDescriptor>}
    */
   getDescriptors() {
     return DataManager.getInstance().getDescriptors();
@@ -262,7 +267,7 @@ class DescriptorSearch extends AbstractSearch {
   }
 
   /**
-   * @param {!os.data.IDataDescriptor} descriptor
+   * @param {!IDataDescriptor} descriptor
    * @return {number|Promise} the score or a promise which resolves to the score
    * @protected
    */
