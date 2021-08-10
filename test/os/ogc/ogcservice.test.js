@@ -39,7 +39,7 @@ describe('os.ogc.OGCService', function() {
     expect(s.getServiceId()).toBe('meaningful');
     expect(s.isConfigured()).toBe(true);
 
-    const q = /** @type {os.ogc.query.OGCQuery} */ (s.getQuery());
+    const q = /** @type {OGCQuery} */ (s.getQuery());
     expect(q).not.toBe(null);
     expect(q.service).toBe(s);
   });
@@ -64,7 +64,7 @@ describe('os.ogc.OGCService', function() {
 
     const key = 'myServiceKey';
 
-    expect(os.ogc.registry.isOGCServiceEnabled(key)).toBe(false);
+    expect(registry.isOGCServiceEnabled(key)).toBe(false);
 
     const service = new OGCService();
     service.setServiceId(key);
@@ -76,6 +76,6 @@ describe('os.ogc.OGCService', function() {
     });
     registry.getInstance().register(key, service);
 
-    expect(os.ogc.registry.isOGCServiceEnabled(key)).toBe(true);
+    expect(registry.isOGCServiceEnabled(key)).toBe(true);
   });
 });

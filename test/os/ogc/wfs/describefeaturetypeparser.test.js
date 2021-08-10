@@ -1,22 +1,26 @@
-goog.require('os.ogc.wfs.DescribeFeatureTypeParser');
 goog.require('goog.net.EventType');
 goog.require('goog.net.XhrIo');
+goog.require('os.ogc.wfs.DescribeFeatureTypeParser');
 
 
 describe('os.ogc.wfs.DescribeFeatureTypeParser', function() {
+  const EventType = goog.module.get('goog.net.EventType');
+  const XhrIo = goog.module.get('goog.net.XhrIo');
+  const DescribeFeatureTypeParser = goog.module.get('os.ogc.wfs.DescribeFeatureTypeParser');
+
   var dftUrl = '/base/test/os/ogc/wfs/dft.xml';
   var errorUrl = '/base/test/os/ogc/wfs/dftError.xml';
 
   var parser = null;
   beforeEach(function() {
-    parser = new os.ogc.wfs.DescribeFeatureTypeParser();
+    parser = new DescribeFeatureTypeParser();
     complete = false;
   });
 
   it('handles errors gracefully', function() {
     var testError = null;
-    var xhr = new goog.net.XhrIo();
-    xhr.listen(goog.net.EventType.SUCCESS, function() {
+    var xhr = new XhrIo();
+    xhr.listen(EventType.SUCCESS, function() {
       testError = xhr.getResponse();
     }, false);
 
@@ -37,8 +41,8 @@ describe('os.ogc.wfs.DescribeFeatureTypeParser', function() {
 
   it('parses a WFS DescribeFeatureType', function() {
     var testData = null;
-    var xhr = new goog.net.XhrIo();
-    xhr.listen(goog.net.EventType.SUCCESS, function() {
+    var xhr = new XhrIo();
+    xhr.listen(EventType.SUCCESS, function() {
       testData = xhr.getResponse();
     }, false);
 
