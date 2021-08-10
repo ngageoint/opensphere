@@ -1,90 +1,54 @@
-goog.provide('os.ogc');
-goog.provide('os.ogc.LayerType');
-goog.provide('os.ogc.WFSTypeConfig');
+goog.module('os.ogc');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Uri.QueryData');
-goog.require('goog.dom.xml');
-goog.require('goog.string');
-goog.require('os.config.Settings');
-goog.require('os.file.mime.text');
+const QueryData = goog.require('goog.Uri.QueryData');
+const {loadXml} = goog.require('goog.dom.xml');
+const Settings = goog.require('os.config.Settings');
+const {getText} = goog.require('os.file.mime.text');
 
 
 /**
  * Identifier used by OGC data model.
  * @type {string}
- * @const
  */
-os.ogc.ID = 'ogc';
-
+const ID = 'ogc';
 
 /**
  * Default projection to use for OGC requests.
  * @type {string}
  */
-os.ogc.defaultProjection = 'EPSG:4326';
-
-
-/**
- * @enum {string}
- */
-os.ogc.LayerType = {
-  WFS: 'wfs',
-  WMS: 'wms',
-  WMTS: 'wmts',
-  WPS: 'wps'
-};
-
+const defaultProjection = 'EPSG:4326';
 
 /**
  * Regular expressions to detect OGC GetCapabilities root elements.
  * @enum {RegExp}
  */
-os.ogc.GetCapsRootRegexp = {
+const GetCapsRootRegexp = {
   WMS: /^WM(T_M)?S_Capabilities$/i,
   WMTS: /^Capabilities$/i,
   WFS: /^WFS_Capabilities$/i
 };
 
-
 /**
  * The default tile style object.
  * @type {!osx.ogc.TileStyle}
- * @const
  */
-os.ogc.DEFAULT_TILE_STYLE = /** @type {!osx.ogc.TileStyle} */ ({
+const DEFAULT_TILE_STYLE = {
   label: 'Default',
   data: ''
-});
-
+};
 
 /**
  * Regular expression to detect tile styles that support changing the tile color.
  * @type {RegExp}
- * @const
  */
-os.ogc.COLOR_STYLE_REGEX = /(density)|(foreground color)/i;
-
+const COLOR_STYLE_REGEX = /(density)|(foreground color)/i;
 
 /**
  * Regular expression to detect an OGC error response.
  * @type {RegExp}
- * @const
  */
-os.ogc.ERROR_REGEX = /(ExceptionText|ServiceException)/i;
-
-
-/**
- * Typedef describing available WFS format types (GML, GeoJSON, etc.)
- * @typedef {{
- *   type: !string,
- *   regex: !RegExp,
- *   parser: !string,
- *   priority: !number,
- *   responseType: (string|undefined)
- * }}
- */
-os.ogc.WFSTypeConfig;
-
+const ERROR_REGEX = /(ExceptionText|ServiceException)/i;
 
 /**
  * A validator function for requests which checks for OGC exceptions
@@ -94,7 +58,7 @@ os.ogc.WFSTypeConfig;
  * @param {Array<number>=} opt_codes Response codes, if available.
  * @return {?string} An error message if one was found, or null if the response is OK
  */
-os.ogc.getException = function(response, opt_contentType, opt_codes) {
+const getException = function(response, opt_contentType, opt_codes) {
   try {
     // Try to parse the response as XML and determine if it appears to be an OGC exception report.
     //  - Ignore if the content type is not XML
@@ -103,9 +67,9 @@ os.ogc.getException = function(response, opt_contentType, opt_codes) {
     if (response &&
         (!opt_contentType || opt_contentType.indexOf('/xml') != -1) &&
         (!opt_codes || opt_codes.indexOf(200) === -1)) {
-      const strResponse = typeof response === 'string' ? response : os.file.mime.text.getText(response);
-      if (strResponse && os.ogc.ERROR_REGEX.test(strResponse)) {
-        const doc = goog.dom.xml.loadXml(strResponse);
+      const strResponse = typeof response === 'string' ? response : getText(response);
+      if (strResponse && ERROR_REGEX.test(strResponse)) {
+        const doc = loadXml(strResponse);
         const ex = doc.querySelector('ExceptionText, ServiceException');
         if (ex) {
           return ex.textContent;
@@ -118,13 +82,12 @@ os.ogc.getException = function(response, opt_contentType, opt_codes) {
   return null;
 };
 
-
 /**
  * Get the default WFS layer options
  *
  * @return {!Object<string, *>}
  */
-os.ogc.getDefaultWfsOptions = function() {
+const getDefaultWfsOptions = function() {
   return {
     'load': true,
     'spatial': true,
@@ -132,18 +95,17 @@ os.ogc.getDefaultWfsOptions = function() {
     'exclusions': false, // TODO: make this true after supporting exclusion areas
     'filter': true,
     'usePost': true,
-    'params': os.ogc.getDefaultWfsParams()
+    'params': getDefaultWfsParams()
   };
 };
-
 
 /**
  * Get a default set of WFS parameters
  *
- * @return {!goog.Uri.QueryData}
+ * @return {!QueryData}
  */
-os.ogc.getDefaultWfsParams = function() {
-  var params = new goog.Uri.QueryData();
+const getDefaultWfsParams = function() {
+  var params = new QueryData();
   params.setIgnoreCase(true);
   params.set('service', 'WFS');
   params.set('version', '1.1.0');
@@ -153,14 +115,13 @@ os.ogc.getDefaultWfsParams = function() {
   return params;
 };
 
-
 /**
  * Get the WFS params for an OGC descriptor.
  * @param {os.ui.ogc.IOGCDescriptor} descriptor The descriptor.
- * @return {!goog.Uri.QueryData} The params.
+ * @return {!QueryData} The params.
  */
-os.ogc.getWfsParams = function(descriptor) {
-  var params = os.ogc.getDefaultWfsParams();
+const getWfsParams = function(descriptor) {
+  var params = getDefaultWfsParams();
   if (descriptor) {
     params.set('typename', descriptor.getWfsName());
 
@@ -179,17 +140,16 @@ os.ogc.getWfsParams = function(descriptor) {
   return params;
 };
 
-
 /**
  * Get the maxiumum number of features supported by the application.
  *
  * @param {string=} opt_key Optional settings key
  * @return {number}
  */
-os.ogc.getMaxFeatures = function(opt_key) {
+const getMaxFeatures = function(opt_key) {
   if (opt_key) {
     // use the key if provided
-    return /** @type {number} */ (os.settings.get('maxFeatures.' + opt_key, 50000));
+    return /** @type {number} */ (Settings.getInstance().get('maxFeatures.' + opt_key, 50000));
   }
 
   if (os.MapContainer) {
@@ -204,5 +164,19 @@ os.ogc.getMaxFeatures = function(opt_key) {
   }
 
   // fallback to the safest option
-  return /** @type {number} */ (os.settings.get('maxFeatures.2d', 50000));
+  return /** @type {number} */ (Settings.getInstance().get('maxFeatures.2d', 50000));
+};
+
+exports = {
+  ID,
+  defaultProjection,
+  GetCapsRootRegexp,
+  DEFAULT_TILE_STYLE,
+  COLOR_STYLE_REGEX,
+  ERROR_REGEX,
+  getException,
+  getDefaultWfsOptions,
+  getDefaultWfsParams,
+  getWfsParams,
+  getMaxFeatures
 };
