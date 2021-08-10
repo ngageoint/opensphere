@@ -1,41 +1,41 @@
-goog.provide('os.record.Record');
-goog.require('os.record.IRecord');
+goog.module('os.record.Record');
+goog.module.declareLegacyNamespace();
 
+const IRecord = goog.requireType('os.record.IRecord');
 
 
 /**
  * The most basic implementation of a record.
  *
- * @constructor
- * @implements {os.record.IRecord}
+ * @implements {IRecord}
  */
-os.record.Record = function() {
-  this.id = '' + os.record.Record.RECORD_ID_;
-  os.record.Record.RECORD_ID_++;
-};
+class Record {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    /**
+     * @inheritDoc
+     */
+    this.id = '' + Record.RECORD_ID_++;
 
+    /**
+     * @inheritDoc
+     */
+    this.color = 0;
+
+    /**
+     * @inheritDoc
+     */
+    this.recordTime = null;
+  }
+}
 
 /**
  * A one-up counter for all records
  * @type {number}
  * @private
  */
-os.record.Record.RECORD_ID_ = 0;
+Record.RECORD_ID_ = 0;
 
-
-/**
- * @inheritDoc
- */
-os.record.Record.prototype.id = null;
-
-
-/**
- * @inheritDoc
- */
-os.record.Record.prototype.color = 0;
-
-
-/**
- * @inheritDoc
- */
-os.record.Record.prototype.recordTime = null;
+exports = Record;
