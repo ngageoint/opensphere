@@ -3,15 +3,19 @@ goog.require('goog.net.XhrIo');
 goog.require('os.parse.RssParser');
 
 describe('os.parse.RssParser', function() {
+  const EventType = goog.module.get('goog.net.EventType');
+  const XhrIo = goog.module.get('goog.net.XhrIo');
+  const RssParser = goog.module.get('os.parse.RssParser');
+
   var dataUrl = '/base/test/os/parse/rss/rsstest.xml';
-  var rss = new os.parse.RssParser();
+  var rss = new RssParser();
   var numItems = 3;
 
   var rssData;
 
   it('requests RSS test data', function() {
-    var xhr = new goog.net.XhrIo();
-    xhr.listen(goog.net.EventType.SUCCESS, function() {
+    var xhr = new XhrIo();
+    xhr.listen(EventType.SUCCESS, function() {
       rssData = xhr.getResponse();
     }, false);
 
