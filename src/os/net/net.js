@@ -157,11 +157,11 @@ const sortCache_ = function(a, b) {
  * @param {Uri|string} uri The uri
  * @return {!CrossOrigin} The cross origin value to use for the URI
  */
-const getCrossOrigin = function(uri) {
+let getCrossOriginFn = function(uri) {
   if (uri) {
     uri = typeof uri === 'string' ? new Uri(uri) : uri;
 
-    var result = getCrossOriginInternal_(uri.toString());
+    var result = getCrossOriginInternal(uri.toString());
     if (result) {
       return result;
     }
@@ -172,6 +172,25 @@ const getCrossOrigin = function(uri) {
   }
 
   return CrossOrigin.NONE;
+};
+
+/**
+ * Set the function used to get the cross origin.
+ * @param {function((Uri|string)):!CrossOrigin} fn The function.
+ */
+const setGetCrossOriginFn = (fn) => {
+  getCrossOriginFn = fn;
+};
+
+/**
+ * Get the crossOrigin value to use for a URI. Any URI not matching a registered cross origin cache pattern
+ * will be assumed to be anonymous.
+ *
+ * @param {Uri|string} uri The uri
+ * @return {!CrossOrigin} The cross origin value to use for the URI
+ */
+const getCrossOrigin = function(uri) {
+  return getCrossOriginFn(uri);
 };
 
 /**
@@ -225,7 +244,7 @@ const saveCrossOrigin = function(pattern, crossOrigin, opt_priority, opt_skipSor
  * @param {string} url
  * @return {CrossOrigin|undefined}
  */
-const getCrossOriginInternal_ = function(url) {
+const getCrossOriginInternal = function(url) {
   var cache = crossOriginCache_;
 
   if (cache) {
@@ -361,6 +380,7 @@ exports = {
   isValidCrossOrigin,
   loadCrossOriginCache,
   getCrossOrigin,
+  setGetCrossOriginFn,
   registerCrossOrigin,
   resetCrossOriginCache,
   saveCrossOrigin,
