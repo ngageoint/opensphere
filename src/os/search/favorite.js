@@ -1,50 +1,54 @@
-goog.provide('os.search.Favorite');
-goog.require('goog.string');
-goog.require('os.search.SearchEventType');
+goog.module('os.search.Favorite');
+goog.module.declareLegacyNamespace();
 
+const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 
 
 /**
  * Favorite
- *
- * @param {string} name
- * @param {string} uri
- * @param {string} title
- * @param {string=} opt_type
- * @constructor
+ * @unrestricted
  */
-os.search.Favorite = function(name, uri, title, opt_type) {
-  this['name'] = name;
-  this['type'] = opt_type || 'search';
-  this['uri'] = uri;
-  this['title'] = title;
-};
-
-
-/**
- * Creates a favorite from a bookmark.
- *
- * @param {Object} bookmark
- * @param {string=} opt_type
- * @return {?os.search.Favorite}
- */
-os.search.Favorite.fromBookmark = function(bookmark, opt_type) {
-  if (bookmark) {
-    var uri = goog.string.isEmptyOrWhitespace(goog.string.makeSafe(bookmark['key'])) ?
-      bookmark['key2'] : bookmark['key'];
-    return new os.search.Favorite(bookmark['value'], uri, uri, opt_type);
+class Favorite {
+  /**
+   * Constructor.
+   * @param {string} name
+   * @param {string} uri
+   * @param {string} title
+   * @param {string=} opt_type
+   */
+  constructor(name, uri, title, opt_type) {
+    this['name'] = name;
+    this['type'] = opt_type || 'search';
+    this['uri'] = uri;
+    this['title'] = title;
   }
-  return null;
-};
 
+  /**
+   * Creates a favorite from a bookmark.
+   *
+   * @param {Object} bookmark
+   * @param {string=} opt_type
+   * @return {?Favorite}
+   */
+  static fromBookmark(bookmark, opt_type) {
+    if (bookmark) {
+      var uri = isEmptyOrWhitespace(makeSafe(bookmark['key'])) ?
+        bookmark['key2'] : bookmark['key'];
+      return new Favorite(bookmark['value'], uri, uri, opt_type);
+    }
+    return null;
+  }
 
-/**
- * Helper to just get the URl to favorite
- *
- * @return {string}
- */
-os.search.Favorite.getFavUrl = function() {
-  var url = window.location.href;
-  var index = url.indexOf('?');
-  return index > 0 ? url.substring(0, index) : url;
-};
+  /**
+   * Helper to just get the URl to favorite
+   *
+   * @return {string}
+   */
+  static getFavUrl() {
+    var url = window.location.href;
+    var index = url.indexOf('?');
+    return index > 0 ? url.substring(0, index) : url;
+  }
+}
+
+exports = Favorite;

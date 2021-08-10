@@ -48,13 +48,11 @@ class ISubSearch {
   isSubSearchCapabilityEnabled() {}
 }
 
-
 /**
  * See os.implements
  * @type {string}
  * @const
  */
 ISubSearch.ID = 'os.search.ISubSearch';
-
 
 exports = ISubSearch;

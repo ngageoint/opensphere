@@ -1,5 +1,5 @@
-goog.provide('os.search.ISearchResult');
-
+goog.module('os.search.ISearchResult');
+goog.module.declareLegacyNamespace();
 
 
 /**
@@ -8,54 +8,49 @@ goog.provide('os.search.ISearchResult');
  * @interface
  * @template T
  */
-os.search.ISearchResult = function() {};
+class ISearchResult {
+  /**
+   * The search result ID
+   * @return {number|string}
+   */
+  getId() {}
 
+  /**
+   * Get the search result.
+   * @return {T}
+   */
+  getResult() {}
 
-/**
- * The search result ID
- * @return {number|string}
- */
-os.search.ISearchResult.prototype.getId;
+  /**
+   * Set the search result.
+   * @param {T} value
+   */
+  setResult(value) {}
 
+  /**
+   * Get the search result's score.
+   * @return {number}
+   */
+  getScore() {}
 
-/**
- * Get the search result.
- * @return {T}
- */
-os.search.ISearchResult.prototype.getResult;
+  /**
+   * Set the search result's score.
+   * @param {number} value
+   */
+  setScore(value) {}
 
+  /**
+   * Get the interface used to render the search result.
+   * @return {string}
+   */
+  getSearchUI() {}
 
-/**
- * Set the search result.
- * @param {T} value
- */
-os.search.ISearchResult.prototype.setResult;
+  /**
+   * Perform an application action for the result. Should return if action was taken, otherwise the result will be
+   * displayed in the search results.
+   * @return {boolean} If the action was performed.
+   */
+  performAction() {}
+}
 
-
-/**
- * Get the search result's score.
- * @return {number}
- */
-os.search.ISearchResult.prototype.getScore;
-
-
-/**
- * Set the search result's score.
- * @param {number} value
- */
-os.search.ISearchResult.prototype.setScore;
-
-
-/**
- * Get the interface used to render the search result.
- * @return {string}
- */
-os.search.ISearchResult.prototype.getSearchUI;
-
-
-/**
- * Perform an application action for the result. Should return if action was taken, otherwise the result will be
- * displayed in the search results.
- * @return {boolean} If the action was performed.
- */
-os.search.ISearchResult.prototype.performAction;
+exports = ISearchResult;
