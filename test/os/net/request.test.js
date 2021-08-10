@@ -100,7 +100,7 @@ describe('os.net.Request', function() {
       r.load();
     };
 
-    ol.array.remove(os.net.RequestHandlerFactory.list_, os.net.ExtDomainHandler);
+    os.net.RequestHandlerFactory.removeHandler(os.net.ExtDomainHandler);
     expect(fn).toThrow();
   });
 

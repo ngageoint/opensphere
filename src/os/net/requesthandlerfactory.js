@@ -8,31 +8,24 @@ const IRequestHandler = goog.requireType('os.net.IRequestHandler');
 
 
 /**
- * The list of handler classes
- * @type {?Array<Function>}
+ * The list of handler classes registered with the module.
+ * @type {!Array<function(new: IRequestHandler, ...)>}
  */
-let handlerClasses = null;
+const handlerClasses = [];
 
 /**
  * Adds a handler type to the factory
  *
- * @param {Function} clazz The constructor for the class
+ * @param {function(new: IRequestHandler, ...)} clazz The constructor for the class
  */
 const addHandler = function(clazz) {
-  /** @type {?Array<Function>} */
-  var list = handlerClasses;
-
-  if (!list) {
-    list = handlerClasses = [];
-  }
-
-  if (list.indexOf(clazz) == -1) {
-    list.push(clazz);
+  if (handlerClasses.indexOf(clazz) == -1) {
+    handlerClasses.push(clazz);
   }
 };
 
 /**
- * @param {Function} clazz The class to remove
+ * @param {function(new: IRequestHandler, ...)} clazz The class to remove
  */
 const removeHandler = function(clazz) {
   remove(handlerClasses, clazz);
@@ -42,14 +35,14 @@ const removeHandler = function(clazz) {
  * Reset handlers registered with the module.
  */
 const resetHandlers = function() {
-  handlerClasses = null;
+  handlerClasses.length = 0;
 };
 
 /**
  * Get all handlers registered with the module.
- * @return {?Array<Function>}
+ * @return {!Array<function(new: IRequestHandler, ...)>}
  */
-const getAllHandlers = () => handlers;
+const getAllHandlers = () => handlerClasses;
 
 /**
  * Gets an array of handlers that support the given method and uri.
@@ -60,25 +53,19 @@ const getAllHandlers = () => handlers;
  * @return {?Array<IRequestHandler>}
  */
 const getHandlers = function(method, uri, opt_timeout) {
-  /** @type {?Array<Function>} */
-  var list = handlerClasses;
-
-  /** @type {?Array<IRequestHandler>} */
   var handlers = null;
 
-  if (list) {
-    for (var i = 0, n = list.length; i < n; i++) {
-      var clazz = /** @type {Function} */ (list[i]);
-      var handler = /** @type {IRequestHandler} */ (new clazz());
-      if (opt_timeout) {
-        handler.setTimeout(opt_timeout);
-      }
-      if (handler.handles(method, uri)) {
-        if (!handlers) {
-          handlers = [handler];
-        } else {
-          handlers.push(handler);
-        }
+  for (var i = 0, n = handlerClasses.length; i < n; i++) {
+    var clazz = handlerClasses[i];
+    var handler = new clazz();
+    if (opt_timeout) {
+      handler.setTimeout(opt_timeout);
+    }
+    if (handler.handles(method, uri)) {
+      if (!handlers) {
+        handlers = [handler];
+      } else {
+        handlers.push(handler);
       }
     }
   }
