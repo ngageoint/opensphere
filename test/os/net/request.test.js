@@ -1,6 +1,8 @@
 goog.require('goog.Uri');
 goog.require('goog.array');
+goog.require('goog.net.EventType');
 goog.require('ol.array');
+goog.require('os.net');
 goog.require('os.net.ExtDomainHandler');
 goog.require('os.net.Request');
 goog.require('os.net.RequestHandlerFactory');
@@ -34,30 +36,38 @@ os.net.MockModifier.prototype.modify = function(uri) {
 };
 
 describe('os.net.Request', function() {
-  os.net.RequestHandlerFactory.addHandler(os.net.SameDomainHandler);
+  const Uri = goog.module.get('goog.Uri');
+  const EventType = goog.module.get('goog.net.EventType');
+  const net = goog.module.get('os.net');
+  const ExtDomainHandler = goog.module.get('os.net.ExtDomainHandler');
+  const Request = goog.module.get('os.net.Request');
+  const RequestHandlerFactory = goog.module.get('os.net.RequestHandlerFactory');
+  const SameDomainHandler = goog.module.get('os.net.SameDomainHandler');
+
+  RequestHandlerFactory.addHandler(SameDomainHandler);
 
   it('should optionally handle the uri in the constructor', function() {
-    var r = new os.net.Request(window.location.toString());
+    var r = new Request(window.location.toString());
     expect(r.getUri().toString()).toBe(window.location.toString());
-    expect(r.getMethod()).toBe(os.net.Request.METHOD_GET);
+    expect(r.getMethod()).toBe(Request.METHOD_GET);
   });
 
   it('should optionally handle the method in the constructor', function() {
-    var r = new os.net.Request(
-        window.location.toString(), os.net.Request.METHOD_POST);
+    var r = new Request(
+        window.location.toString(), Request.METHOD_POST);
     expect(r.getUri().toString()).toBe(window.location.toString());
-    expect(r.getMethod()).toBe(os.net.Request.METHOD_POST);
+    expect(r.getMethod()).toBe(Request.METHOD_POST);
   });
 
   it('should successfully execute a request', function() {
-    var r = new os.net.Request(window.location.toString());
+    var r = new Request(window.location.toString());
     var fired = false;
     var listener = function(e) {
       fired = true;
     };
 
     runs(function() {
-      r.listen(goog.net.EventType.SUCCESS, listener);
+      r.listen(EventType.SUCCESS, listener);
       r.load();
     });
 
@@ -66,13 +76,13 @@ describe('os.net.Request', function() {
     }, 'valid response');
 
     runs(function() {
-      r.unlisten(goog.net.EventType.SUCCESS, listener);
+      r.unlisten(EventType.SUCCESS, listener);
       expect(r.getResponse()).not.toBe(null);
     });
   });
 
   it('should be able to defeat the browser cache', function() {
-    var r = new os.net.Request(window.location.toString());
+    var r = new Request(window.location.toString());
     var fired = false;
     var listener = function(e) {
       expect(r.modUri_.getParameterValue('_cd')).not.toBeNull();
@@ -80,7 +90,7 @@ describe('os.net.Request', function() {
     };
 
     runs(function() {
-      r.listen(goog.net.EventType.SUCCESS, listener);
+      r.listen(EventType.SUCCESS, listener);
       r.load(true);
     });
 
@@ -89,33 +99,33 @@ describe('os.net.Request', function() {
     }, 'valid response');
 
     runs(function() {
-      r.unlisten(goog.net.EventType.SUCCESS, listener);
+      r.unlisten(EventType.SUCCESS, listener);
       expect(r.getResponse()).not.toBe(null);
     });
   });
 
   it('should throw an error when trying to load a URL that cannot be handled', function() {
-    var r = new os.net.Request('https://bogus.local');
+    var r = new Request('https://bogus.local');
     var fn = function() {
       r.load();
     };
 
-    os.net.RequestHandlerFactory.removeHandler(os.net.ExtDomainHandler);
+    RequestHandlerFactory.removeHandler(ExtDomainHandler);
     expect(fn).toThrow();
   });
 
   it('should properly handle request errors', function() {
-    var r = new os.net.Request();
+    var r = new Request();
     var fired = false;
     var listener = function(e) {
       fired = true;
     };
 
     runs(function() {
-      var uri = new goog.Uri(window.location.toString());
+      var uri = new Uri(window.location.toString());
       uri.setPath('/' + (new Date().getTime()) + '.xml');
       r.setUri(uri);
-      r.listen(goog.net.EventType.ERROR, listener);
+      r.listen(EventType.ERROR, listener);
       r.load();
     });
 
@@ -124,16 +134,16 @@ describe('os.net.Request', function() {
     }, 'error response');
 
     runs(function() {
-      r.unlisten(goog.net.EventType.ERROR, listener);
+      r.unlisten(EventType.ERROR, listener);
       expect(r.getErrors().length).not.toBe(0);
       expect(r.getErrors()[0].length).not.toBe(0);
     });
   });
 
   it('should keep modifiers sorted by <Priority, ID>  as they are added', function() {
-    var r = new os.net.Request(window.location.toString());
-    var m = new os.net.MockModifier();
-    var m2 = new os.net.MockModifier();
+    var r = new Request(window.location.toString());
+    var m = new net.MockModifier();
+    var m2 = new net.MockModifier();
 
     m2.setId('mock2');
     m2.setPriority(2);
@@ -146,9 +156,9 @@ describe('os.net.Request', function() {
   });
 
   it('should be able to remove modifiers', function() {
-    var r = new os.net.Request(window.location.toString());
-    var m = new os.net.MockModifier();
-    var m2 = new os.net.MockModifier();
+    var r = new Request(window.location.toString());
+    var m = new net.MockModifier();
+    var m2 = new net.MockModifier();
 
     m2.setId('mock2');
     m2.setPriority(2);
@@ -165,8 +175,8 @@ describe('os.net.Request', function() {
   });
 
   it('should prevent the addition of modifiers with the same id', function() {
-    var r = new os.net.Request(window.location.toString());
-    var m = new os.net.MockModifier();
+    var r = new Request(window.location.toString());
+    var m = new net.MockModifier();
 
 
     r.addModifier(m);
@@ -179,9 +189,9 @@ describe('os.net.Request', function() {
   });
 
   it('should run the modifiers on the URI before making the request', function() {
-    var r = new os.net.Request(window.location.toString());
-    var m = new os.net.MockModifier();
-    var m2 = new os.net.MockModifier();
+    var r = new Request(window.location.toString());
+    var m = new net.MockModifier();
+    var m2 = new net.MockModifier();
 
     m2.setId('mock2');
     m2.setPriority(2);
@@ -197,7 +207,7 @@ describe('os.net.Request', function() {
     };
 
     runs(function() {
-      r.listen(goog.net.EventType.SUCCESS, listener);
+      r.listen(EventType.SUCCESS, listener);
       r.load();
     });
 
@@ -206,14 +216,14 @@ describe('os.net.Request', function() {
     }, 'valid response');
 
     runs(function() {
-      r.unlisten(goog.net.EventType.SUCCESS, listener);
+      r.unlisten(EventType.SUCCESS, listener);
       expect(r.getResponse()).not.toBeNull();
     });
   });
 
   it('should throw an error when trying to modify a read-only URI', function() {
-    var r = new os.net.Request(window.location.toString());
-    var m = new os.net.MockModifier();
+    var r = new Request(window.location.toString());
+    var m = new net.MockModifier();
 
     r.addModifier(m);
     r.getUri().setReadOnly(true);
@@ -226,7 +236,7 @@ describe('os.net.Request', function() {
   });
 
   it('should be able to make multiple requests', function() {
-    var r = new os.net.Request(window.location.toString());
+    var r = new Request(window.location.toString());
     var count = 0;
     var listener = function(e) {
       if (count === 0) {
@@ -236,7 +246,7 @@ describe('os.net.Request', function() {
     };
 
     runs(function() {
-      r.listen(goog.net.EventType.SUCCESS, listener);
+      r.listen(EventType.SUCCESS, listener);
       r.load();
     });
 
@@ -245,13 +255,13 @@ describe('os.net.Request', function() {
     }, 'valid response');
 
     runs(function() {
-      r.unlisten(goog.net.EventType.SUCCESS, listener);
+      r.unlisten(EventType.SUCCESS, listener);
       expect(r.getResponse()).not.toBe(null);
     });
   });
 
   it('should validate the response', function() {
-    var r = new os.net.Request(window.location.toString());
+    var r = new Request(window.location.toString());
     r.setValidator(function(value) {
       return 'Error!';
     });
@@ -261,7 +271,7 @@ describe('os.net.Request', function() {
       count++;
     };
 
-    r.listen(goog.net.EventType.ERROR, listener);
+    r.listen(EventType.ERROR, listener);
 
     runs(function() {
       r.load();
@@ -277,16 +287,16 @@ describe('os.net.Request', function() {
   });
 
   it('should not use default validators when not enabled', function() {
-    os.net.registerDefaultValidator((value) => 'Error!');
+    net.registerDefaultValidator((value) => 'Error!');
 
-    var r = new os.net.Request(window.location.toString());
+    var r = new Request(window.location.toString());
 
     var count = 0;
     var listener = function() {
       count++;
     };
 
-    r.listen(goog.net.EventType.SUCCESS, listener);
+    r.listen(EventType.SUCCESS, listener);
 
     runs(function() {
       r.load();
@@ -302,9 +312,9 @@ describe('os.net.Request', function() {
   });
 
   it('should use default validators when enabled', function() {
-    os.net.registerDefaultValidator((value) => 'Error!');
+    net.registerDefaultValidator((value) => 'Error!');
 
-    var r = new os.net.Request(window.location.toString());
+    var r = new Request(window.location.toString());
     r.setUseDefaultValidators(true);
 
     var count = 0;
@@ -312,7 +322,7 @@ describe('os.net.Request', function() {
       count++;
     };
 
-    r.listen(goog.net.EventType.ERROR, listener);
+    r.listen(EventType.ERROR, listener);
 
     runs(function() {
       r.load();
@@ -329,7 +339,7 @@ describe('os.net.Request', function() {
 
   describe('promise', function() {
     it('should load a request and resolve to the response', function() {
-      var r = new os.net.Request(window.location.toString());
+      var r = new Request(window.location.toString());
       var count = 0;
 
       runs(function() {
@@ -350,7 +360,7 @@ describe('os.net.Request', function() {
     });
 
     it('should load a request and reject on errors', function() {
-      var r = new os.net.Request('http://localhost/doesnotexist.html');
+      var r = new Request('http://localhost/doesnotexist.html');
       var count = 0;
 
       runs(function() {
@@ -371,7 +381,7 @@ describe('os.net.Request', function() {
     });
 
     it('should abort the request when the promise is cancelled', function() {
-      var r = new os.net.Request(window.location.toString());
+      var r = new Request(window.location.toString());
       spyOn(r, 'abort').andCallThrough();
 
       var count = 0;
@@ -395,7 +405,7 @@ describe('os.net.Request', function() {
     });
 
     it('should reject the promise when the request is aborted', function() {
-      var r = new os.net.Request(window.location.toString());
+      var r = new Request(window.location.toString());
       var count = 0;
 
       runs(function() {
