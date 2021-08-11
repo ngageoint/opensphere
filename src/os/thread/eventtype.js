@@ -1,11 +1,12 @@
-goog.provide('os.thread.EventType');
+goog.module('os.thread.EventType');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * Event types for threads
  * @enum {string}
  */
-os.thread.EventType = {
+exports = {
   STOP: 'threadStop',
   START: 'threadStart',
   COMPLETE: 'threadComplete',
