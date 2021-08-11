@@ -13,6 +13,7 @@ const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 const {getUid} = goog.require('ol');
+const Collection = goog.require('ol.Collection');
 const events = goog.require('ol.events');
 const OLEventType = goog.require('ol.events.EventType');
 const olExtent = goog.require('ol.extent');
@@ -109,12 +110,15 @@ class Vector extends OLVectorSource {
    */
   constructor(opt_options) {
     // remove things from our layer options that we don't want managed by ol3
-    var options = opt_options ? Object.assign({}, opt_options) : {};
+    const options = opt_options ? Object.assign({}, opt_options) : {};
     delete options['url'];
 
-    //
-    // TODO: This was called last in case options contain features, need to fix!
-    //
+    // features will be added at the end of this constructor's execution via addFeaturesFromOptions_
+    const pendingFeatures = options.features;
+    if (pendingFeatures) {
+      delete options.features;
+    }
+
     super(options);
 
     /**
@@ -475,6 +479,42 @@ class Vector extends OLVectorSource {
 
     this.tlc.listen(TimelineEventType.FADE_TOGGLE, this.fadeToggle_, false, this);
     this.tlc.listen(TimelineEventType.HOLD_RANGE_CHANGED, this.reindexTimeModel, false, this);
+
+    this.addFeaturesFromOptions_(pendingFeatures);
+  }
+
+  /**
+   * Add pending features from the source options.
+   *
+   * This code was copied from the OL source to defer adding features from the options until the end of this
+   * constructor's execution.
+   *
+   * @param {Array<Feature>|Collection<Feature>|undefined} pendingFeatures The pending features.
+   * @private
+   *
+   * @suppress {accessControls} To allow access to private properties/methods.
+   */
+  addFeaturesFromOptions_(pendingFeatures) {
+    if (pendingFeatures) {
+      let collection;
+      let features;
+      if (pendingFeatures instanceof Collection) {
+        collection = pendingFeatures;
+        features = collection.getArray();
+      } else if (Array.isArray(pendingFeatures)) {
+        features = pendingFeatures;
+      }
+      // replaced useSpatialIndex check from the original code with a featuresRtree_ check
+      if (!this.featuresRtree_ && collection === undefined) {
+        collection = new Collection(features);
+      }
+      if (features !== undefined) {
+        this.addFeaturesInternal(features);
+      }
+      if (collection !== undefined) {
+        this.bindFeaturesCollection_(collection);
+      }
+    }
   }
 
   /**
