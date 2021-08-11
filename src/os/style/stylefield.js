@@ -1,11 +1,12 @@
-goog.provide('os.style.StyleField');
+goog.module('os.style.StyleField');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @enum {string}
  * @const
  */
-os.style.StyleField = {
+const StyleField = {
   ADDITIONAL_LABELS: '_additionalLabels',
   ARROW_SIZE: 'arrowSize',
   ARROW_UNITS: 'arrowUnits',
@@ -51,13 +52,11 @@ os.style.StyleField = {
   STYLE_URL: 'styleUrl'
 };
 
-
 /**
  * @type {RegExp}
- * @const
  */
-os.style.StyleField.REGEXP = (function() {
-  var values = goog.object.getValues(os.style.StyleField);
+StyleField.REGEXP = (function() {
+  var values = Object.values(StyleField);
   for (var i = 0, n = values.length; i < n; i++) {
     values[i] = '(' + values[i] + ')';
   }
@@ -65,3 +64,5 @@ os.style.StyleField.REGEXP = (function() {
   // anything that starts with an undersos, or matches one of the record fields
   return new RegExp('^(_.*|' + values.join('|') + ')$');
 })();
+
+exports = StyleField;

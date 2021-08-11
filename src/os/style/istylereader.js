@@ -1,32 +1,38 @@
-goog.provide('os.style.IStyleReader');
+goog.module('os.style.IStyleReader');
+goog.module.declareLegacyNamespace();
 
+const Fill = goog.requireType('ol.style.Fill');
+const Icon = goog.requireType('ol.style.Icon');
+const Image = goog.requireType('ol.style.Image');
+const Stroke = goog.requireType('ol.style.Stroke');
+const Style = goog.requireType('ol.style.Style');
+const Text = goog.requireType('ol.style.Text');
 
 
 /**
  * @interface
  * @template T
  */
-os.style.IStyleReader = function() {};
+class IStyleReader {
+  /**
+   * Get a style from the cache, or create a new one and add it to the cache.
+   * @param {!Object<string, *>} config
+   * @return {T}
+   */
+  getOrCreateStyle(config) {}
 
+  /**
+   * Sets the reader map
+   * @param {!Object<string, IStyleReader>} readers
+   */
+  setReaders(readers) {}
 
-/**
- * Get a style from the cache, or create a new one and add it to the cache.
- * @param {!Object<string, *>} config
- * @return {T}
- */
-os.style.IStyleReader.prototype.getOrCreateStyle;
+  /**
+   * Creates a reader config from a style
+   * @param {!(Style|Fill|Icon|Image|Stroke|Text)} style
+   * @param {Object<string, *>} obj
+   */
+  toConfig(style, obj) {}
+}
 
-
-/**
- * Sets the reader map
- * @param {!Object<string, os.style.IStyleReader>} readers
- */
-os.style.IStyleReader.prototype.setReaders;
-
-
-/**
- * Creates a reader config from a style
- * @param {!(ol.style.Style|ol.style.Fill|ol.style.Icon|ol.style.Image|ol.style.Stroke|ol.style.Text)} style
- * @param {Object<string, *>} obj
- */
-os.style.IStyleReader.prototype.toConfig;
+exports = IStyleReader;

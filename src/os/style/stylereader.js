@@ -1,119 +1,122 @@
-goog.provide('os.style.StyleReader');
+goog.module('os.style.StyleReader');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.style.Style');
-goog.require('os.style');
-goog.require('os.style.AbstractReader');
-
+const {hashCode} = goog.require('goog.string');
+const Style = goog.require('ol.style.Style');
+const AbstractReader = goog.require('os.style.AbstractReader');
 
 
 /**
  * Root style reader
  *
- * @extends {os.style.AbstractReader<!ol.style.Style>}
- * @constructor
+ * @extends {AbstractReader<!Style>}
  */
-os.style.StyleReader = function() {
-  os.style.StyleReader.base(this, 'constructor');
-};
-goog.inherits(os.style.StyleReader, os.style.AbstractReader);
-
-
-/**
- * @inheritDoc
- *
- * @suppress {checkTypes} To ignore errors caused by ol.style.Style being a struct.
- */
-os.style.StyleReader.prototype.getOrCreateStyle = function(config) {
-  var geometry;
-  var image;
-  var fill;
-  var stroke;
-  var zIndex;
-  var styleIds = [];
-
-  zIndex = /** @type {number|undefined} */ (config['zIndex']) || 0;
-  var hash = 31 * this.baseHash + zIndex >>> 0;
-
-  geometry = /** @type {string|undefined} */ (config['geometry']);
-  if (geometry) {
-    hash = 31 * hash + goog.string.hashCode(geometry) >>> 0;
-  }
-  styleIds.push(hash);
-
-  var imageConfig = /** @type {Object.<string, *>|undefined} */ (config['image']);
-  if (imageConfig) {
-    image = this.readers['image'].getOrCreateStyle(imageConfig);
-    styleIds.push(image['id']);
-  } else {
-    styleIds.push(0);
+class StyleReader extends AbstractReader {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
   }
 
-  var fillConfig = /** @type {Object.<string, *>|undefined} */ (config['fill']);
-  if (fillConfig) {
-    fill = this.readers['fill'].getOrCreateStyle(fillConfig);
-    styleIds.push(fill['id']);
-  } else {
-    styleIds.push(0);
-  }
+  /**
+   * @inheritDoc
+   *
+   * @suppress {checkTypes} To ignore errors caused by Style being a struct.
+   */
+  getOrCreateStyle(config) {
+    var geometry;
+    var image;
+    var fill;
+    var stroke;
+    var zIndex;
+    var styleIds = [];
 
-  var strokeConfig = /** @type {Object.<string, *>|undefined} */ (config['stroke']);
-  if (strokeConfig) {
-    stroke = this.readers['stroke'].getOrCreateStyle(strokeConfig);
-    styleIds.push(stroke['id']);
-  } else {
-    styleIds.push(0);
-  }
+    zIndex = /** @type {number|undefined} */ (config['zIndex']) || 0;
+    var hash = 31 * this.baseHash + zIndex >>> 0;
 
-  // separate the id's for each style type to avoid collisions in the top-level cache (this one)
-  var styleId = styleIds.join('-');
-  if (!this.cache[styleId]) {
-    this.cache[styleId] = new ol.style.Style({
-      geometry: geometry,
-      image: image,
-      fill: fill,
-      stroke: stroke,
-      zIndex: zIndex
-    });
+    geometry = /** @type {string|undefined} */ (config['geometry']);
+    if (geometry) {
+      hash = 31 * hash + hashCode(geometry) >>> 0;
+    }
+    styleIds.push(hash);
 
-    this.cache[styleId]['id'] = styleId;
-  }
-
-  return /** @type {!ol.style.Style} */ (this.cache[styleId]);
-};
-
-
-/**
- * @inheritDoc
- */
-os.style.StyleReader.prototype.toConfig = function(style, obj) {
-  if (style instanceof ol.style.Style) {
-    var s = /** @type {ol.style.Style} */ (style);
-
-    var geom = s.getGeometry();
-
-    if (geom) {
-      obj['geometry'] = geom;
+    var imageConfig = /** @type {Object.<string, *>|undefined} */ (config['image']);
+    if (imageConfig) {
+      image = this.readers['image'].getOrCreateStyle(imageConfig);
+      styleIds.push(image['id']);
+    } else {
+      styleIds.push(0);
     }
 
-    var zIndex = s.getZIndex();
-
-    if (zIndex !== undefined && zIndex !== 0) {
-      obj['zIndex'] = zIndex;
+    var fillConfig = /** @type {Object.<string, *>|undefined} */ (config['fill']);
+    if (fillConfig) {
+      fill = this.readers['fill'].getOrCreateStyle(fillConfig);
+      styleIds.push(fill['id']);
+    } else {
+      styleIds.push(0);
     }
 
-    var image = s.getImage();
-    if (image) {
-      this.readers['image'].toConfig(image, obj);
+    var strokeConfig = /** @type {Object.<string, *>|undefined} */ (config['stroke']);
+    if (strokeConfig) {
+      stroke = this.readers['stroke'].getOrCreateStyle(strokeConfig);
+      styleIds.push(stroke['id']);
+    } else {
+      styleIds.push(0);
     }
 
-    var fill = s.getFill();
-    if (fill) {
-      this.readers['fill'].toConfig(fill, obj);
+    // separate the id's for each style type to avoid collisions in the top-level cache (this one)
+    var styleId = styleIds.join('-');
+    if (!this.cache[styleId]) {
+      this.cache[styleId] = new Style({
+        geometry: geometry,
+        image: image,
+        fill: fill,
+        stroke: stroke,
+        zIndex: zIndex
+      });
+
+      this.cache[styleId]['id'] = styleId;
     }
 
-    var stroke = s.getStroke();
-    if (stroke) {
-      this.readers['stroke'].toConfig(stroke, obj);
+    return /** @type {!Style} */ (this.cache[styleId]);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  toConfig(style, obj) {
+    if (style instanceof Style) {
+      var s = /** @type {Style} */ (style);
+
+      var geom = s.getGeometry();
+
+      if (geom) {
+        obj['geometry'] = geom;
+      }
+
+      var zIndex = s.getZIndex();
+
+      if (zIndex !== undefined && zIndex !== 0) {
+        obj['zIndex'] = zIndex;
+      }
+
+      var image = s.getImage();
+      if (image) {
+        this.readers['image'].toConfig(image, obj);
+      }
+
+      var fill = s.getFill();
+      if (fill) {
+        this.readers['fill'].toConfig(fill, obj);
+      }
+
+      var stroke = s.getStroke();
+      if (stroke) {
+        this.readers['stroke'].toConfig(stroke, obj);
+      }
     }
   }
-};
+}
+
+exports = StyleReader;

@@ -1,49 +1,72 @@
-goog.provide('os.style.label');
+goog.module('os.style.label');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.async.ConditionalDelay');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('ol.style.Style');
-goog.require('os.fn');
-goog.require('os.map');
+const {assert} = goog.require('goog.asserts');
+const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
+const log = goog.require('goog.log');
+const {clamp} = goog.require('goog.math');
+const {isEmptyOrWhitespace, makeSafe, truncate} = goog.require('goog.string');
+const {asArray} = goog.require('ol.color');
+const olExtent = goog.require('ol.extent');
+const Geometry = goog.require('ol.geom.Geometry');
+const GeometryCollection = goog.require('ol.geom.GeometryCollection');
+const GeometryType = goog.require('ol.geom.GeometryType');
+const Polygon = goog.require('ol.geom.Polygon');
+const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
+const Style = goog.require('ol.style.Style');
+const Fields = goog.require('os.Fields');
+const {instanceOf} = goog.require('os.classRegistry');
+const DataManager = goog.require('os.data.DataManager');
+const RecordField = goog.require('os.data.RecordField');
+const {hideLabel, showLabel} = goog.require('os.feature');
+const {filterFalsey} = goog.require('os.fn');
+const PropertyChange = goog.require('os.layer.PropertyChange');
+const {ZERO_EXTENT} = goog.require('os.map');
+const {getMapContainer} = goog.require('os.map.instance');
+const {getFirstValue} = goog.require('os.object');
+const {zIndexCompare} = goog.require('os.source');
+const SourceClass = goog.require('os.source.SourceClass');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleType = goog.require('os.style.StyleType');
+const {getStyleManager} = goog.require('os.style.instance');
+const {measureText} = goog.require('os.ui');
+
+const Logger = goog.requireType('goog.log.Logger');
+const Feature = goog.requireType('ol.Feature');
+const VectorSource = goog.requireType('os.source.Vector');
 
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {Logger}
  */
-os.style.label.LOGGER_ = goog.log.getLogger('os.style.label');
-
+const logger = log.getLogger('os.style.label');
 
 /**
  * @typedef {{column: (string|null), showColumn: !boolean}}
  */
-os.style.label.LabelConfig;
-
+let LabelConfig;
 
 /**
  * Default label config.
- * @type {!os.style.label.LabelConfig}
- * @const
+ * @type {!LabelConfig}
  */
-os.style.label.DEFAULT_LABEL = {
+const DEFAULT_LABEL = {
   'column': null,
   'showColumn': false
 };
 
-
 /**
  * Checks whether a set of labels has any non-default labels.
  *
- * @param {Array<os.style.label.LabelConfig>} labels The label configs.
+ * @param {Array<LabelConfig>} labels The label configs.
  * @return {boolean} If one or more label configs have a non-default column.
  */
-os.style.label.hasNonDefaultLabels = function(labels) {
+const hasNonDefaultLabels = function(labels) {
   if (labels && labels.length) {
     for (var i = 0; i < labels.length; i++) {
-      if (labels[i]['column'] !== os.style.label.DEFAULT_LABEL['column']) {
+      if (labels[i]['column'] !== DEFAULT_LABEL['column']) {
         return true;
       }
     }
@@ -52,45 +75,43 @@ os.style.label.hasNonDefaultLabels = function(labels) {
   return false;
 };
 
-
 /**
  * Gets the first non-default set of labels between the feature and layer configs.
  *
- * @param {?Array<os.style.label.LabelConfig>} featureLabels
- * @param {?Array<os.style.label.LabelConfig>} layerLabels
- * @return {!Array<os.style.label.LabelConfig>}
+ * @param {?Array<LabelConfig>} featureLabels
+ * @param {?Array<LabelConfig>} layerLabels
+ * @return {!Array<LabelConfig>}
  */
-os.style.label.getLabels = function(featureLabels, layerLabels) {
+const getLabels = function(featureLabels, layerLabels) {
   // prefer feature labels
   if (featureLabels) {
     return featureLabels;
   }
 
   // no feature labels - check if layer labels are defined and not the defaults
-  if (layerLabels && os.style.label.hasNonDefaultLabels(layerLabels)) {
+  if (layerLabels && hasNonDefaultLabels(layerLabels)) {
     return layerLabels;
   }
 
   // return the default label config
-  return [os.style.label.cloneConfig()];
+  return [cloneConfig()];
 };
-
 
 /**
  * Gets the first non-default set of labels between the feature and layer configs.
  *
  * @param {Array<Object>|Object|undefined} config
- * @return {Array<os.style.label.LabelConfig>}
+ * @return {Array<LabelConfig>}
  */
-os.style.label.getConfigLabels = function(config) {
+const getConfigLabels = function(config) {
   if (config) {
-    if (config[os.style.StyleField.LABELS]) {
-      return config[os.style.StyleField.LABELS];
+    if (config[StyleField.LABELS]) {
+      return config[StyleField.LABELS];
     } else if (Array.isArray(config)) {
       // return the first non-empty label config
       for (var i = 0; i < config.length; i++) {
-        var labels = /** @type {Array<os.style.label.LabelConfig>} */ (config[i][os.style.StyleField.LABELS]);
-        if (os.style.label.hasNonDefaultLabels(labels)) {
+        var labels = /** @type {Array<LabelConfig>} */ (config[i][StyleField.LABELS]);
+        if (hasNonDefaultLabels(labels)) {
           return labels;
         }
       }
@@ -100,30 +121,28 @@ os.style.label.getConfigLabels = function(config) {
   return null;
 };
 
-
 /**
  * Clone a label config. This copies explicit properties to avoid properties like $$hashKey and closure_uid_nnn used by
  * Angular and Closure. If a config is not provided, the default config is cloned.
  *
- * @param {os.style.label.LabelConfig=} opt_config The config to clone
- * @return {!os.style.label.LabelConfig}
+ * @param {LabelConfig=} opt_config The config to clone
+ * @return {!LabelConfig}
  */
-os.style.label.cloneConfig = function(opt_config) {
-  var config = opt_config || os.style.label.DEFAULT_LABEL;
+const cloneConfig = function(opt_config) {
+  var config = opt_config || DEFAULT_LABEL;
   return {
     'column': config['column'],
     'showColumn': config['showColumn']
   };
 };
 
-
 /**
  * Filter label configs, returning those that are defined and have a column set.
  *
- * @param {Array<os.style.label.LabelConfig>} configs The label configs.
- * @return {!Array<!os.style.label.LabelConfig>}
+ * @param {Array<LabelConfig>} configs The label configs.
+ * @return {!Array<!LabelConfig>}
  */
-os.style.label.filterValid = function(configs) {
+const filterValid = function(configs) {
   if (configs) {
     return configs.filter(function(config) {
       return config != null && !!config['column'];
@@ -133,66 +152,52 @@ os.style.label.filterValid = function(configs) {
   return [];
 };
 
-
 /**
  * Default font.
  * @type {string}
- * @const
  */
-os.style.label.DEFAULT_FONT = 'Arial';
-
+const DEFAULT_FONT = 'Arial';
 
 /**
  * Default font size.
  * @type {number}
- * @const
  */
-os.style.label.DEFAULT_SIZE = 14;
-
+const DEFAULT_SIZE = 14;
 
 /**
  * Minimum font size.
  * @type {number}
- * @const
  */
-os.style.label.MIN_SIZE = 8;
-
+const MIN_SIZE = 8;
 
 /**
  * Maximum font size.
  * @type {number}
- * @const
  */
-os.style.label.MAX_SIZE = 48;
-
+const MAX_SIZE = 48;
 
 /**
  * Z-index for label styles.
  * @type {number}
- * @const
  */
-os.style.label.Z_INDEX = 500;
-
+const Z_INDEX = 500;
 
 /**
  * The truncation length for labels.
  * @type {number}
- * @const
  */
-os.style.label.TRUNCATE_LENGTH = 50;
-
+const TRUNCATE_LENGTH = 50;
 
 /**
  * Update which features should have their labels shown.
  *
  * @return {boolean}
- * @private
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.style.label.updateShown_ = function() {
+const updateShown_ = function() {
   // if the map/view aren't ready, return false so the conditional delay will keep trying
-  var map = os.MapContainer.getInstance();
+  var map = getMapContainer();
   var view = null;
   if (map.getMap() && map.getMap().getView()) {
     view = map.getMap().getView();
@@ -208,17 +213,17 @@ os.style.label.updateShown_ = function() {
   // check if the view extent is ready to update labels. if the viewport was resized recently, the map size may be zero,
   // which will prevent labels from updating correctly.
   var viewExtent = map.getViewExtent();
-  if (ol.extent.equals(viewExtent, os.map.ZERO_EXTENT)) {
+  if (olExtent.equals(viewExtent, ZERO_EXTENT)) {
     return false;
   }
 
   // this is precise in 2D but gets less precise in 3D as the globe is tilted/rotated. the extent will still be focused
   // in the center of the screen, but keep this in mind if label updates seem off in 3D.
-  var viewPoly = ol.geom.Polygon.fromExtent(viewExtent);
-  goog.asserts.assert(viewPoly, 'failed creating polygon from view');
+  var viewPoly = Polygon.fromExtent(viewExtent);
+  assert(viewPoly, 'failed creating polygon from view');
 
   // reusable extent to reduce GC
-  var extent = ol.extent.createEmpty();
+  var extent = olExtent.createEmpty();
 
   var then = Date.now();
   var labelSources = [];
@@ -228,24 +233,28 @@ os.style.label.updateShown_ = function() {
 
   // gather sources/features that may have labels shown and sorte by z-index so higher indexed layers generate labels
   // first
-  var dm = os.dataManager;
+  var dm = DataManager.getInstance();
   var sources = dm.getSources();
-  sources.sort(os.source.zIndexCompare);
+  sources.sort(zIndexCompare);
 
   for (var i = 0, ii = sources.length; i < ii; i++) {
     var source = sources[i];
-    if (source instanceof os.source.Vector && source.isEnabled() && source.getVisible()) {
-      var id = source.getId();
-      var config = os.style.StyleManager.getInstance().getLayerConfig(id);
-      if (config && config[os.style.StyleField.SHOW_LABELS]) {
-        // source is configured to show labels. keep a reference to the label column, init the changed features array.
-        fields[id] = config[os.style.StyleField.LABELS];
-        changed[id] = [];
-        labelSources.push(source);
+    if (instanceOf(source, SourceClass.VECTOR)) {
+      source = /** @type {VectorSource} */ (source);
 
-        // add time-filtered features in the current view extent
-        var tempFeatures = source.getFilteredFeatures(false);
-        features = features.concat(source.getFeaturesInGeometry(viewPoly, tempFeatures));
+      if (source.isEnabled() && source.getVisible()) {
+        var id = source.getId();
+        var config = getStyleManager().getLayerConfig(id);
+        if (config && config[StyleField.SHOW_LABELS]) {
+          // source is configured to show labels. keep a reference to the label column, init the changed features array.
+          fields[id] = config[StyleField.LABELS];
+          changed[id] = [];
+          labelSources.push(source);
+
+          // add time-filtered features in the current view extent
+          var tempFeatures = source.getFilteredFeatures(false);
+          features = features.concat(source.getFeaturesInGeometry(viewPoly, tempFeatures));
+        }
       }
     }
   }
@@ -260,36 +269,36 @@ os.style.label.updateShown_ = function() {
       visited[feature['id']] = true;
 
       // labels set on the feature config take precedence over source labels
-      var featureConfig = feature.values_[os.style.StyleType.FEATURE];
-      var featureLabels = os.style.label.getConfigLabels(featureConfig);
-      var featureSourceId = feature.values_[os.data.RecordField.SOURCE_ID];
+      var featureConfig = feature.values_[StyleType.FEATURE];
+      var featureLabels = getConfigLabels(featureConfig);
+      var featureSourceId = feature.values_[RecordField.SOURCE_ID];
       var layerLabels = fields[featureSourceId];
-      var labels = os.style.label.getLabels(featureLabels, layerLabels);
-      var labelText = os.style.label.getLabelsText(feature, labels, featureConfig);
+      var labels = getLabels(featureLabels, layerLabels);
+      var labelText = getLabelsText(feature, labels, featureConfig);
 
-      var geometry = os.style.label.defaultGeometryFunction(feature);
-      if (!(geometry instanceof ol.geom.SimpleGeometry) || !labelText) {
+      var geometry = defaultGeometryFunction(feature);
+      if (!(geometry instanceof SimpleGeometry) || !labelText) {
         // unsupported geometry type or there is no text to display - ignore it
         continue;
       }
 
       // compute the size of the label on screen. this is accurate for Openlayers, not necessarily other renderers
-      var config = os.style.StyleManager.getInstance().getLayerConfig(featureSourceId);
-      var labelFont = os.style.label.getFont(config[os.style.StyleField.LABEL_SIZE]);
-      var labelSize = os.ui.measureText(labelText, 'feature-label', labelFont);
+      var config = getStyleManager().getLayerConfig(featureSourceId);
+      var labelFont = getFont(config[StyleField.LABEL_SIZE]);
+      var labelSize = measureText(labelText, 'feature-label', labelFont);
 
       // pad labels by 10px to reduce crowding
       var xBuffer = (labelSize.width + 5) * resolution;
       var yBuffer = (labelSize.height + 5) * resolution;
 
       // show the label for this feature
-      if (os.feature.showLabel(feature)) {
+      if (showLabel(feature)) {
         changed[featureSourceId].push(feature);
       }
 
       // create the map extent for the label (in 2D without rotation)
-      var labelCenter = ol.extent.getCenter(geometry.getExtent());
-      ol.extent.createOrUpdateFromCoordinate(labelCenter, extent);
+      var labelCenter = olExtent.getCenter(geometry.getExtent());
+      olExtent.createOrUpdateFromCoordinate(labelCenter, extent);
 
       extent[0] -= xBuffer;
       extent[1] -= yBuffer;
@@ -310,9 +319,9 @@ os.style.label.updateShown_ = function() {
               // non-point geometries need to be tested against the center of their extent, where the label will be
               // positioned or they may be hidden when they don't need to be.
               var neighborGeometry = neighbor.getGeometry();
-              if (neighborGeometry && neighborGeometry.getType() != ol.geom.GeometryType.POINT) {
-                var neighborCenter = ol.extent.getCenter(neighborGeometry.getExtent());
-                if (!ol.extent.containsCoordinate(extent, neighborCenter)) {
+              if (neighborGeometry && neighborGeometry.getType() != GeometryType.POINT) {
+                var neighborCenter = olExtent.getCenter(neighborGeometry.getExtent());
+                if (!olExtent.containsCoordinate(extent, neighborCenter)) {
                   // the neighbor's label position is not within the extent of the current label, so don't turn it off
                   continue;
                 }
@@ -320,7 +329,7 @@ os.style.label.updateShown_ = function() {
 
               visited[neighbor['id']] = true;
 
-              if (os.feature.hideLabel(neighbor)) {
+              if (hideLabel(neighbor)) {
                 changed[labelSourceId].push(neighbor);
               }
             }
@@ -333,24 +342,23 @@ os.style.label.updateShown_ = function() {
   for (var id in changed) {
     if (changed[id].length > 0) {
       // update the style on all changed features so the label will be shown/hidden
-      os.style.setFeaturesStyle(changed[id]);
+      osStyle.setFeaturesStyle(changed[id]);
 
       var layer = map.getLayer(id);
       if (layer) {
         // THIN-6912: use a specific event type since os.layer.PropertyChange.STYLE is handled in many other places,
         // specifically updating the vector controls UI. we only want to tell opensphere to redraw labels.
-        os.style.notifyStyleChange(layer, changed[id], os.layer.PropertyChange.LABEL_VISIBILITY);
+        osStyle.notifyStyleChange(layer, changed[id], PropertyChange.LABEL_VISIBILITY);
       }
     }
   }
 
   var msg = 'Label visibility computed in ' + (Date.now() - then) + 'ms.';
-  goog.log.fine(os.style.label.LOGGER_, msg);
+  log.fine(logger, msg);
 
   // return true to stop the conditional delay
   return true;
 };
-
 
 /**
  * A delay to limit how often labels are updated. This reduces bursts of update calls from multiple sources/paths.
@@ -358,123 +366,118 @@ os.style.label.updateShown_ = function() {
  * Label update depends on the map/view being initialized, so the callback is executed using a conditional delay that
  * will fire until the update succeeds or times out.
  *
- * @type {goog.async.ConditionalDelay}
- * @private
- * @const
+ * @type {ConditionalDelay}
  */
-os.style.label.UPDATE_DELAY_ = new goog.async.ConditionalDelay(os.style.label.updateShown_);
-
+const UPDATE_DELAY_ = new ConditionalDelay(updateShown_);
 
 /**
  * Update which features should have their labels shown.
  */
-os.style.label.updateShown = function() {
-  if (!os.style.label.UPDATE_DELAY_.isActive()) {
+const updateShown = function() {
+  if (!UPDATE_DELAY_.isActive()) {
     // try once every 100ms for 5 seconds or until the update succeeds
-    os.style.label.UPDATE_DELAY_.start(100, 5000);
+    UPDATE_DELAY_.start(100, 5000);
   }
 };
-
 
 /**
  * Creates or updates a label style for the provided feature. Label styles are saved to each feature instead of being
  * cached on the reader like other styles. This prevents saving a style for each text/font/color combo which would get
  * out of hand real fast.
  *
- * @param {ol.Feature} feature The feature
+ * @param {Feature} feature The feature
  * @param {Object} config Base configuration for the feature
  * @param {Object=} opt_layerConfig Layer configuration for the feature
- * @return {ol.style.Style|undefined} The label style, or undefined if the feature isn't labelled
+ * @return {Style|undefined} The label style, or undefined if the feature isn't labelled
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.style.label.createOrUpdate = function(feature, config, opt_layerConfig) {
+const createOrUpdate = function(feature, config, opt_layerConfig) {
   var labelStyle;
 
   // always show labels for highlighted features, otherwise show if the flag isn't explicity set to false. this is
   // managed by the hit detection function, and if that isn't run on the feature we should show the label.
-  if (feature.values_[os.style.StyleType.HIGHLIGHT] || feature.values_[os.style.StyleField.SHOW_LABELS] !== false) {
-    var featureLabels = config[os.style.StyleField.LABELS];
+  if (feature.values_[StyleType.HIGHLIGHT] || feature.values_[StyleField.SHOW_LABELS] !== false) {
+    var featureLabels = config[StyleField.LABELS];
     var layerLabels = opt_layerConfig ?
-      opt_layerConfig[os.style.StyleField.LABELS] : [os.style.label.cloneConfig()];
-    var labelConfigs = os.style.label.getLabels(featureLabels, layerLabels);
+      opt_layerConfig[StyleField.LABELS] : [cloneConfig()];
+    var labelConfigs = getLabels(featureLabels, layerLabels);
 
-    var labelText = os.style.label.getLabelsText(feature, labelConfigs, config);
-    if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(labelText))) {
-      labelStyle = /** @type {ol.style.Style|undefined} */ (feature.get(os.style.StyleType.LABEL));
+    var labelText = getLabelsText(feature, labelConfigs, config);
+    if (!isEmptyOrWhitespace(makeSafe(labelText))) {
+      labelStyle = /** @type {Style|undefined} */ (feature.get(StyleType.LABEL));
 
-      const baseLabelConfig = os.style.label.getLabelConfig(config, opt_layerConfig);
+      const baseLabelConfig = getLabelConfig(config, opt_layerConfig);
 
       if (!labelStyle) {
         // label style hasn't been created for the layer yet - do it now!
-        var reader = os.style.StyleManager.getInstance().getReader('text');
-        goog.asserts.assert(reader);
+        var reader = getStyleManager().getReader('text');
+        assert(reader);
 
         // look for the text style configuration on the feature config, then the layer config.
         // if these change in the future we'll have to rework this a bit.
         var labelConfig = {};
-        os.style.mergeConfig(baseLabelConfig, labelConfig);
+        osStyle.mergeConfig(baseLabelConfig, labelConfig);
 
         // create the style using the text reader
         var textStyle = reader.getOrCreateStyle(labelConfig);
-        labelStyle = new ol.style.Style({
-          geometry: os.style.label.defaultGeometryFunction,
+        labelStyle = new Style({
+          geometry: defaultGeometryFunction,
           text: textStyle
         });
       }
 
-      os.style.label.updateLabelStyle(labelStyle, feature, config, opt_layerConfig);
+      updateLabelStyle(labelStyle, feature, config, opt_layerConfig);
 
-      os.style.label.updateText(labelStyle, labelText);
-      os.style.label.updateDefaultOffsetX(labelStyle, config);
-      os.style.label.updateDefaultTextAlign(labelStyle, config, 'left');
+      updateText(labelStyle, labelText);
+      updateDefaultOffsetX(labelStyle, config);
+      updateDefaultTextAlign(labelStyle, config, 'left');
 
       // update the cache on the feature
-      feature.set(os.style.StyleType.LABEL, labelStyle, true);
+      feature.set(StyleType.LABEL, labelStyle, true);
     }
   }
 
   return labelStyle;
 };
 
-
 /**
  * Creates label styles for additional label config included on a feature.
  *
- * @param {ol.Feature} feature The feature
+ * @param {Feature} feature The feature
  * @param {Object} config Base configuration for the feature
  * @param {Object=} opt_layerConfig Layer configuration for the feature
- * @return {Array<ol.style.Style>|undefined} The label style, or undefined if the feature isn't labelled
+ * @return {Array<Style>|undefined} The label style, or undefined if the feature isn't labelled
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.style.label.createAdditionalLabels = function(feature, config, opt_layerConfig) {
-  var additionalLabels = feature.get(os.style.StyleField.ADDITIONAL_LABELS);
+const createAdditionalLabels = function(feature, config, opt_layerConfig) {
+  var additionalLabels = feature.get(StyleField.ADDITIONAL_LABELS);
   var labelStyles;
 
   if (additionalLabels) {
     labelStyles = [];
 
-    var reader = os.style.StyleManager.getInstance().getReader('text');
-    goog.asserts.assert(reader);
+    var reader = getStyleManager().getReader('text');
+    assert(reader);
 
     additionalLabels.forEach(function(additionalConfig) {
       // look for the text style configuration on the feature config, then the layer config.
       // if these change in the future we'll have to rework this a bit.
       var labelConfig = {};
-      var baseLabelConfig = os.style.label.getLabelConfig(config, opt_layerConfig);
-      os.style.mergeConfig(config, labelConfig);
-      os.style.mergeConfig(baseLabelConfig, labelConfig);
-      os.style.mergeConfig(additionalConfig, labelConfig);
+      var baseLabelConfig = getLabelConfig(config, opt_layerConfig);
+      osStyle.mergeConfig(config, labelConfig);
+      osStyle.mergeConfig(baseLabelConfig, labelConfig);
+      osStyle.mergeConfig(additionalConfig, labelConfig);
 
       // create the style using the text reader
       var textStyle = reader.getOrCreateStyle(labelConfig);
-      var labelStyle = new ol.style.Style({
-        geometry: additionalConfig['geometry'] || os.style.label.defaultGeometryFunction,
+      var labelStyle = new Style({
+        geometry: additionalConfig['geometry'] || defaultGeometryFunction,
         text: textStyle
       });
 
-      os.style.label.updateLabelStyle(labelStyle, feature, config, opt_layerConfig);
+      updateLabelStyle(labelStyle, feature, config, opt_layerConfig);
 
       labelStyles.push(labelStyle);
     });
@@ -483,20 +486,19 @@ os.style.label.createAdditionalLabels = function(feature, config, opt_layerConfi
   return labelStyles;
 };
 
-
 /**
  * Prepare label text for display to the user. Strips HTML and newlines and truncates the label.
  *
- * @param {ol.style.Style} labelStyle The style.
- * @param {ol.Feature} feature The feature.
+ * @param {Style} labelStyle The style.
+ * @param {Feature} feature The feature.
  * @param {Object} config Base configuration for the feature.
  * @param {Object=} opt_layerConfig Layer configuration for the feature.
  */
-os.style.label.updateLabelStyle = function(labelStyle, feature, config, opt_layerConfig) {
-  os.style.label.updateZIndex(labelStyle, config);
-  os.style.label.updateDefaultFontFromSize(labelStyle, config, opt_layerConfig);
-  os.style.label.updateDefaultFillColor(labelStyle, feature, config, opt_layerConfig);
-  os.style.label.updateDefaultStrokeColor(labelStyle, feature, config, opt_layerConfig);
+const updateLabelStyle = function(labelStyle, feature, config, opt_layerConfig) {
+  updateZIndex(labelStyle, config);
+  updateDefaultFontFromSize(labelStyle, config, opt_layerConfig);
+  updateDefaultFillColor(labelStyle, feature, config, opt_layerConfig);
+  updateDefaultStrokeColor(labelStyle, feature, config, opt_layerConfig);
 };
 
 /**
@@ -504,56 +506,54 @@ os.style.label.updateLabelStyle = function(labelStyle, feature, config, opt_laye
  * @param {Object=} opt_layerConfig
  * @return {!Object}
  */
-os.style.label.getLabelConfig = function(featureConfig, opt_layerConfig) {
-  return /** @type {Object|undefined} */ (
-    os.object.getFirstValue('text', featureConfig, opt_layerConfig)) || {};
+const getLabelConfig = function(featureConfig, opt_layerConfig) {
+  return /** @type {Object|undefined} */ (getFirstValue('text', featureConfig, opt_layerConfig)) || {};
 };
 
 /**
- * @param {ol.style.Style} labelStyle
+ * @param {Style} labelStyle
  * @param {Object} config
- * @private
  */
-os.style.label.updateZIndex = function(labelStyle, config) {
+const updateZIndex = function(labelStyle, config) {
   const baseZIndex = config['zIndex'] || 0;
-  labelStyle.setZIndex(baseZIndex + os.style.label.Z_INDEX);
+  labelStyle.setZIndex(baseZIndex + Z_INDEX);
 };
 
 /**
- * @param {ol.style.Style} labelStyle
+ * @param {Style} labelStyle
  * @param {Object} config
  * @param {Object=} opt_layerConfig
  */
-os.style.label.updateDefaultFontFromSize = function(labelStyle, config, opt_layerConfig) {
+const updateDefaultFontFromSize = function(labelStyle, config, opt_layerConfig) {
   if (!config || !config['text'] || config['text']['font'] === undefined) {
     const textStyle = labelStyle.getText();
     // update the font and colors
-    let fontSize = /** @type {string|number|undefined} */ (os.object.getFirstValue(
-        os.style.StyleField.LABEL_SIZE, config, opt_layerConfig));
+    let fontSize = /** @type {string|number|undefined} */ (getFirstValue(
+        StyleField.LABEL_SIZE, config, opt_layerConfig));
     if (typeof fontSize == 'string') {
       fontSize = parseInt(fontSize, 10) || undefined;
     }
 
-    fontSize = fontSize || os.style.label.DEFAULT_SIZE;
+    fontSize = fontSize || DEFAULT_SIZE;
 
-    const labelFont = os.style.label.getFont(fontSize);
+    const labelFont = getFont(fontSize);
     textStyle.setFont(labelFont);
   }
 };
 
 /**
- * @param {ol.style.Style} labelStyle
- * @param {ol.Feature} feature
+ * @param {Style} labelStyle
+ * @param {Feature} feature
  * @param {Object} config
  * @param {Object=} opt_layerConfig
  */
-os.style.label.updateDefaultFillColor = function(labelStyle, feature, config, opt_layerConfig) {
+const updateDefaultFillColor = function(labelStyle, feature, config, opt_layerConfig) {
   if (!config || !config['text'] || (
     config['text']['fillColor'] === undefined && (
       config['text']['fill'] === undefined ||
           config['text']['fill']['color'] === undefined))) {
     const textStyle = labelStyle.getText();
-    const labelColor = os.style.label.getColor(feature, config, opt_layerConfig);
+    const labelColor = getColor(feature, config, opt_layerConfig);
     const fill = textStyle.getFill();
     if (fill) {
       fill.setColor(labelColor);
@@ -562,59 +562,58 @@ os.style.label.updateDefaultFillColor = function(labelStyle, feature, config, op
 };
 
 /**
- * @param {ol.style.Style} labelStyle
- * @param {ol.Feature} feature
+ * @param {Style} labelStyle
+ * @param {Feature} feature
  * @param {Object} config
  * @param {Object=} opt_layerConfig
  */
-os.style.label.updateDefaultStrokeColor = function(labelStyle, feature, config, opt_layerConfig) {
+const updateDefaultStrokeColor = function(labelStyle, feature, config, opt_layerConfig) {
   if (!config || !config['text'] || (
     config['text']['strokeColor'] === undefined && (
       config['text']['stroke'] === undefined ||
       config['text']['stroke']['color'] === undefined))) {
     const textStyle = labelStyle.getText();
-    const labelColor = os.style.label.getColor(feature, config, opt_layerConfig);
+    const labelColor = getColor(feature, config, opt_layerConfig);
     const stroke = textStyle.getStroke();
     if (stroke) {
-      const fillColor = ol.color.asArray(labelColor);
-      const strokeColor = ol.color.asArray(/** @type {Array<number>|string} */ (stroke.getColor()));
+      const fillColor = asArray(labelColor);
+      const strokeColor = asArray(/** @type {Array<number>|string} */ (stroke.getColor()));
       strokeColor[3] = fillColor[3];
-      stroke.setColor(os.style.toRgbaString(strokeColor));
+      stroke.setColor(osStyle.toRgbaString(strokeColor));
     }
   }
 };
 
 /**
- * @param {ol.style.Style} labelStyle
+ * @param {Style} labelStyle
  * @param {string} label
  */
-os.style.label.updateText = function(labelStyle, label) {
+const updateText = function(labelStyle, label) {
   const text = labelStyle.getText();
-  text.setText(os.style.label.prepareText(label, true));
+  text.setText(prepareText(label, true));
 };
 
 /**
- * @param {ol.style.Style} labelStyle
+ * @param {Style} labelStyle
  * @param {Object} config
  */
-os.style.label.updateDefaultOffsetX = function(labelStyle, config) {
+const updateDefaultOffsetX = function(labelStyle, config) {
   // labels need to be offset a little more when next to an icon. this helps, but isn't nearly complete.
   // TODO: determine the size of the rendered feature and use that for the x offset
   if (!config || !config['text'] || config['text']['offsetX'] === undefined) {
     const text = labelStyle.getText();
-    const fontSize = os.style.label.DEFAULT_SIZE;
-    const offsetx = os.style.isIconConfig(config) ? fontSize : (fontSize / 2);
+    const fontSize = DEFAULT_SIZE;
+    const offsetx = osStyle.isIconConfig(config) ? fontSize : (fontSize / 2);
     text.setOffsetX(offsetx);
   }
 };
 
-
 /**
- * @param {ol.style.Style} labelStyle
+ * @param {Style} labelStyle
  * @param {Object} config
  * @param {string} align
  */
-os.style.label.updateDefaultTextAlign = function(labelStyle, config, align) {
+const updateDefaultTextAlign = function(labelStyle, config, align) {
   if (!config || !config['text'] || !config['text']['textAlign']) {
     const text = labelStyle.getText();
     text.setTextAlign(align);
@@ -628,8 +627,8 @@ os.style.label.updateDefaultTextAlign = function(labelStyle, config, align) {
  * @param {boolean=} opt_truncate If the label should be truncated. Defaults to true.
  * @return {string} The stripped label text, or the original text if an error was encountered
  */
-os.style.label.prepareText = function(text, opt_truncate) {
-  var truncate = opt_truncate != null ? opt_truncate : false;
+const prepareText = function(text, opt_truncate) {
+  var shouldTruncate = opt_truncate != null ? opt_truncate : false;
 
   var result;
   try {
@@ -641,32 +640,31 @@ os.style.label.prepareText = function(text, opt_truncate) {
 
   result = result.trim();
 
-  if (truncate) {
+  if (shouldTruncate) {
     result = result.split('\n').map(function(l) {
-      return goog.string.truncate(l.trim(), os.style.label.TRUNCATE_LENGTH);
+      return truncate(l.trim(), TRUNCATE_LENGTH);
     }).join('\n');
   }
 
   return result;
 };
 
-
 /**
  * Get the label text for a feature field.
  *
- * @param {ol.Feature} feature The feature
+ * @param {Feature} feature The feature
  * @param {string} field The field
  * @return {string} The label text
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.style.label.getText = function(feature, field) {
+const getText = function(feature, field) {
   var value;
 
   // handle special fields here
   switch (field) {
-    case os.Fields.TIME:
-      value = feature.values_[os.data.RecordField.TIME] || '';
+    case Fields.TIME:
+      value = feature.values_[RecordField.TIME] || '';
       break;
     default:
       value = feature.values_[field];
@@ -678,16 +676,15 @@ os.style.label.getText = function(feature, field) {
   return value;
 };
 
-
 /**
  * Gets the text string from all the label fields
  *
- * @param {ol.Feature} feature The feature
- * @param {os.style.label.LabelConfig} label
+ * @param {Feature} feature The feature
+ * @param {LabelConfig} label
  * @return {string} the label text
  */
-os.style.label.getLabelText = function(feature, label) {
-  var value = os.style.label.getText(feature, label['column']);
+const getLabelText = function(feature, label) {
+  var value = getText(feature, label['column']);
   if (value && label['showColumn']) {
     // Dont ever just show the key. only if theres a value
     value = label['column'] + ': ' + value;
@@ -695,47 +692,44 @@ os.style.label.getLabelText = function(feature, label) {
   return value;
 };
 
-
 /**
  * Gets the text string from all the label fields
  *
- * @param {ol.Feature} feature The feature
- * @param {Array<os.style.label.LabelConfig>} labels
+ * @param {Feature} feature The feature
+ * @param {Array<LabelConfig>} labels
  * @param {Object} config
  * @return {string} the label text
  */
-os.style.label.getLabelsText = function(feature, labels, config) {
+const getLabelsText = function(feature, labels, config) {
   if (config && config['text'] && config['text']['text']) {
     return /** @type {string} */ (config['text']['text']);
   }
 
   return labels.map(function(label) {
-    return os.style.label.getLabelText(feature, label);
-  }).filter(os.fn.filterFalsey).join('\n');
+    return getLabelText(feature, label);
+  }).filter(filterFalsey).join('\n');
 };
-
 
 /**
  * Get the label color for a feature.
  *
- * @param {ol.Feature} feature The feature
+ * @param {Feature} feature The feature
  * @param {Object} config Base configuration for the feature
  * @param {Object=} opt_layerConfig Layer configuration for the feature
  * @return {string}
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.style.label.getColor = function(feature, config, opt_layerConfig) {
-  var color = config[os.style.StyleField.LABEL_COLOR] ||
-      (opt_layerConfig && opt_layerConfig[os.style.StyleField.LABEL_COLOR]);
-  if (!color || feature.values_[os.style.StyleType.HIGHLIGHT] || feature.values_[os.style.StyleType.SELECT]) {
+const getColor = function(feature, config, opt_layerConfig) {
+  var color = config[StyleField.LABEL_COLOR] ||
+      (opt_layerConfig && opt_layerConfig[StyleField.LABEL_COLOR]);
+  if (!color || feature.values_[StyleType.HIGHLIGHT] || feature.values_[StyleType.SELECT]) {
     // label color wasn't defined, or the feature is highlighed/selected. use the config color.
-    color = os.style.getConfigColor(config);
+    color = osStyle.getConfigColor(config);
   }
 
-  return color || os.style.DEFAULT_LAYER_COLOR;
+  return color || osStyle.DEFAULT_LAYER_COLOR;
 };
-
 
 /**
  * Generate a CSS font style for labels. Assume bold because non-bold fonts are generally hard to read.
@@ -743,32 +737,31 @@ os.style.label.getColor = function(feature, config, opt_layerConfig) {
  * @param {number=} opt_size The font size.
  * @return {string} The CSS font style.
  */
-os.style.label.getFont = function(opt_size) {
+const getFont = function(opt_size) {
   // using size/size sets the line height to the font size, creating compact labels
-  var size = goog.math.clamp(opt_size || os.style.label.DEFAULT_SIZE, os.style.label.MIN_SIZE, os.style.label.MAX_SIZE);
+  var size = clamp(opt_size || DEFAULT_SIZE, MIN_SIZE, MAX_SIZE);
   var pxSize = size + 'px';
-  return 'bold ' + pxSize + '/' + pxSize + ' ' + os.style.label.DEFAULT_FONT;
+  return 'bold ' + pxSize + '/' + pxSize + ' ' + DEFAULT_FONT;
 };
-
 
 /**
  * Get the default geometry for a feature. If the default geometry is a collection, only use the first geometry in the
  * collection. I intentionally didn't handle collections of collections until we actually encounter it for the sake of
  * simplicity.
  *
- * @param {ol.Feature} feature Feature to get the geometry for.
- * @return {ol.geom.Geometry|undefined} Geometry to render.
+ * @param {Feature} feature Feature to get the geometry for.
+ * @return {Geometry|undefined} Geometry to render.
  */
-os.style.label.defaultGeometryFunction = function(feature) {
+const defaultGeometryFunction = function(feature) {
   var geometry;
-  goog.asserts.assert(feature != undefined, 'feature must be defined');
+  assert(feature != undefined, 'feature must be defined');
 
-  var labelGeometry = /** @type {string|undefined} */ (feature.get(os.style.StyleField.LABEL_GEOMETRY));
+  var labelGeometry = /** @type {string|undefined} */ (feature.get(StyleField.LABEL_GEOMETRY));
   if (labelGeometry) {
     // get the defined label geometry, and verify it is an OpenLayers geometry
     geometry = feature.get(labelGeometry);
 
-    if (!(geometry instanceof ol.geom.Geometry)) {
+    if (!(geometry instanceof Geometry)) {
       geometry = undefined;
     }
   } else {
@@ -777,10 +770,44 @@ os.style.label.defaultGeometryFunction = function(feature) {
   }
 
   // only display the label on the first geometry in a collection, to avoid excessive labels
-  if (geometry instanceof ol.geom.GeometryCollection) {
+  if (geometry instanceof GeometryCollection) {
     var geometries = geometry.getGeometriesArray();
     geometry = geometries && geometries[0] || null;
   }
 
   return geometry;
+};
+
+exports = {
+  DEFAULT_LABEL,
+  hasNonDefaultLabels,
+  getLabels,
+  getConfigLabels,
+  cloneConfig,
+  filterValid,
+  DEFAULT_FONT,
+  DEFAULT_SIZE,
+  MIN_SIZE,
+  MAX_SIZE,
+  Z_INDEX,
+  TRUNCATE_LENGTH,
+  updateShown,
+  createOrUpdate,
+  createAdditionalLabels,
+  updateLabelStyle,
+  getLabelConfig,
+  updateDefaultFontFromSize,
+  updateDefaultFillColor,
+  updateDefaultStrokeColor,
+  updateText,
+  updateDefaultOffsetX,
+  updateDefaultTextAlign,
+  prepareText,
+  getText,
+  getLabelText,
+  getLabelsText,
+  getColor,
+  getFont,
+  defaultGeometryFunction,
+  LabelConfig
 };

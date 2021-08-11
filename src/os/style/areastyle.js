@@ -1,134 +1,123 @@
-goog.provide('os.style.area');
-goog.require('ol.style.Circle');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
+goog.module('os.style.area');
+goog.module.declareLegacyNamespace();
+
+const Circle = goog.require('ol.style.Circle');
+const Fill = goog.require('ol.style.Fill');
+const Stroke = goog.require('ol.style.Stroke');
+const Style = goog.require('ol.style.Style');
 
 
 /**
  * The style for default areas
- * @type {ol.style.Style}
- * @const
+ * @type {Style}
  */
-os.style.area.DEFAULT_STYLE = new ol.style.Style({
-  stroke: new ol.style.Stroke({
+const DEFAULT_STYLE = new Style({
+  stroke: new Stroke({
     color: '#888',
     lineCap: 'square',
     width: 3
   }),
-  image: new ol.style.Circle({
+  image: new Circle({
     radius: 3,
-    fill: new ol.style.Fill({
+    fill: new Fill({
       color: '#888'
     })
   })
 });
 
-
 /**
  * The style for inclusion areas
- * @type {ol.style.Style}
- * @const
+ * @type {Style}
  */
-os.style.area.INCLUSION_STYLE = new ol.style.Style({
-  stroke: new ol.style.Stroke({
+const INCLUSION_STYLE = new Style({
+  stroke: new Stroke({
     color: '#ff0',
     lineCap: 'square',
     width: 3
   }),
-  image: new ol.style.Circle({
+  image: new Circle({
     radius: 3,
-    fill: new ol.style.Fill({
+    fill: new Fill({
       color: '#ff0'
     })
   })
 });
 
-
 /**
  * The style for exclusion areas
- * @type {ol.style.Style}
- * @const
+ * @type {Style}
  */
-os.style.area.EXCLUSION_STYLE = new ol.style.Style({
-  stroke: new ol.style.Stroke({
+const EXCLUSION_STYLE = new Style({
+  stroke: new Stroke({
     color: '#f00',
     lineCap: 'square',
     width: 3
   }),
-  image: new ol.style.Circle({
+  image: new Circle({
     radius: 3,
-    fill: new ol.style.Fill({
+    fill: new Fill({
       color: '#f00'
     })
   })
 });
 
-
 /**
  * The style for exclusion areas
- * @type {ol.style.Style}
- * @const
+ * @type {Style}
  */
-os.style.area.HOVER_STYLE = new ol.style.Style({
-  stroke: new ol.style.Stroke({
+const HOVER_STYLE = new Style({
+  stroke: new Stroke({
     color: '#fff',
     lineCap: 'square',
     width: 3
   }),
-  image: new ol.style.Circle({
+  image: new Circle({
     radius: 3,
-    fill: new ol.style.Fill({
+    fill: new Fill({
       color: '#fff'
     })
   })
 });
-
 
 /**
  * Style for the search area.
  *
- * @type {ol.style.Style}
- * @const
+ * @type {Style}
  */
-os.style.area.SEARCH_AREA_STYLE = new ol.style.Style({
-  stroke: new ol.style.Stroke({
+const SEARCH_AREA_STYLE = new Style({
+  stroke: new Stroke({
     color: '#fff',
     lineCap: 'square',
     width: 3
   }),
-  image: new ol.style.Circle({
+  image: new Circle({
     radius: 3,
-    fill: new ol.style.Fill({
+    fill: new Fill({
       color: '#fff'
     })
   })
 });
 
-
 /**
  * Style for the default grid.
  *
- * @type {ol.style.Style}
- * @const
+ * @type {Style}
  */
-os.style.area.GRID_STYLE = new ol.style.Style({
-  stroke: new ol.style.Stroke({
+const GRID_STYLE = new Style({
+  stroke: new Stroke({
     color: 'rgba(245,245,245,1.0)',
     lineCap: 'square',
     width: 2
   }),
-  fill: new ol.style.Fill({
+  fill: new Fill({
     color: 'rgba(255,255,255,0.15)'
   })
 });
 
-
 /**
  * @type {Object}
- * @const
  */
-os.style.area.HIGHLIGHT_STYLE = {
+const HIGHLIGHT_STYLE = {
   'fill': {
     'color': 'rgba(0,255,255,0.15)'
   },
@@ -137,4 +126,14 @@ os.style.area.HIGHLIGHT_STYLE = {
     'lineCap': 'square',
     'width': 2
   }
+};
+
+exports = {
+  DEFAULT_STYLE,
+  INCLUSION_STYLE,
+  EXCLUSION_STYLE,
+  HOVER_STYLE,
+  SEARCH_AREA_STYLE,
+  GRID_STYLE,
+  HIGHLIGHT_STYLE
 };

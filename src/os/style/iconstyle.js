@@ -1,93 +1,95 @@
-goog.provide('os.style.Icon');
+goog.module('os.style.Icon');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.ImageState');
-goog.require('ol.style');
-goog.require('ol.style.Icon');
-goog.require('os.color');
 goog.require('os.mixin.IconImageMixin');
+
+const ImageState = goog.require('ol.ImageState');
+const IconStyle = goog.require('ol.style.Icon');
+const {toRgbArray} = goog.require('os.color');
+
+const OLEvent = goog.requireType('ol.events.Event');
 
 
 /**
  * This is to handle icon styles like Google Earth. Google Earth (and also Maps) normalizes the minimum dimension
  * to 32px at scale 1.0 (16px at 0.5, 64px at 2.0, etc.).
- *
- * @constructor
- * @param {olx.style.IconOptions=} opt_options Options.
- * @extends {ol.style.Icon}
  */
-os.style.Icon = function(opt_options) {
-  var options = opt_options || {};
+class Icon extends IconStyle {
+  /**
+   * Constructor.
+   * @param {olx.style.IconOptions=} opt_options Options.
+   */
+  constructor(opt_options) {
+    var options = opt_options || {};
 
-  // if an opacity wasn't provided, get it from the color
-  if (options.opacity == null && options.color != null) {
-    var colorArr = os.color.toRgbArray(options.color);
-    if (colorArr && typeof colorArr[3] == 'number' && !isNaN(colorArr[3])) {
-      options.opacity = /** @type {number} */ (colorArr[3]);
+    // if an opacity wasn't provided, get it from the color
+    if (options.opacity == null && options.color != null) {
+      var colorArr = toRgbArray(options.color);
+      if (colorArr && typeof colorArr[3] == 'number' && !isNaN(colorArr[3])) {
+        options.opacity = /** @type {number} */ (colorArr[3]);
+      }
     }
-  }
 
-  os.style.Icon.base(this, 'constructor', options);
+    super(options);
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this.normalizedScale_ = 0;
+
+    this.listenImageChange(this.onImageChange, this);
+  }
 
   /**
-   * @type {number}
-   * @private
+   * @param {ol.Size} size
+   * @suppress {accessControls}
    */
-  this.normalizedScale_ = 0;
+  setSize(size) {
+    this.normalizedScale_ = 0;
+    this.normalizedAnchor_ = null;
+    this.size_ = size;
+  }
 
-  this.listenImageChange(this.onImageChange, this);
-};
-goog.inherits(os.style.Icon, ol.style.Icon);
+  /**
+   * @inheritDoc
+   */
+  getScale() {
+    if (this.normalizedScale_) {
+      return this.normalizedScale_;
+    } else {
+      var size = this.getSize();
+      var scale = super.getScale();
 
+      if (size) {
+        this.normalizedScale_ = scale = 32 * scale / Math.min(size[0], size[1]);
+      }
+    }
 
-/**
- * @param {ol.Size} size
- * @suppress {accessControls}
- */
-os.style.Icon.prototype.setSize = function(size) {
-  this.normalizedScale_ = 0;
-  this.normalizedAnchor_ = null;
-  this.size_ = size;
-};
+    return scale;
+  }
 
+  /**
+   * @param {OLEvent} event
+   * @suppress {accessControls}
+   */
+  onImageChange(event) {
+    var state = this.iconImage_.getImageState();
 
-/**
- * @inheritDoc
- */
-os.style.Icon.prototype.getScale = function() {
-  if (this.normalizedScale_) {
-    return this.normalizedScale_;
-  } else {
-    var size = this.getSize();
-    var scale = os.style.Icon.base(this, 'getScale');
-
-    if (size) {
-      this.normalizedScale_ = scale = 32 * scale / Math.min(size[0], size[1]);
+    if (state >= ImageState.LOADED) {
+      this.unlistenImageChange(this.onImageChange, this);
     }
   }
 
-  return scale;
-};
-
-
-/**
- * @param {ol.events.Event} event
- * @suppress {accessControls}
- */
-os.style.Icon.prototype.onImageChange = function(event) {
-  var state = this.iconImage_.getImageState();
-
-  if (state >= ol.ImageState.LOADED) {
-    this.unlistenImageChange(this.onImageChange, this);
+  /**
+   * Get the base image for the icon. This is necessary to check if the image has been loaded.
+   *
+   * @return {Image|HTMLCanvasElement} Image.
+   * @suppress {accessControls}
+   */
+  getBaseImage() {
+    return this.iconImage_.image_;
   }
-};
+}
 
-
-/**
- * Get the base image for the icon. This is necessary to check if the image has been loaded.
- *
- * @return {Image|HTMLCanvasElement} Image.
- * @suppress {accessControls}
- */
-os.style.Icon.prototype.getBaseImage = function() {
-  return this.iconImage_.image_;
-};
+exports = Icon;

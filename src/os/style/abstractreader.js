@@ -1,59 +1,62 @@
-goog.provide('os.style.AbstractReader');
-goog.require('ol.structs.LRUCache');
-goog.require('os.style.IStyleReader');
+goog.module('os.style.AbstractReader');
+goog.module.declareLegacyNamespace();
 
+const IStyleReader = goog.require('os.style.IStyleReader'); // eslint-disable-line
 
 
 /**
  * Base implementation of a style configuration reader.
  *
  * @abstract
- * @implements {os.style.IStyleReader<T>}
- * @constructor
+ * @implements {IStyleReader<T>}
  * @template T
  */
-os.style.AbstractReader = function() {
+class AbstractReader {
   /**
-   * @type {!Object<string, os.style.IStyleReader>}
-   * @protected
+   * Constructor.
    */
-  this.readers = {};
+  constructor() {
+    /**
+     * @type {!Object<string, IStyleReader>}
+     * @protected
+     */
+    this.readers = {};
+
+    /**
+     * The reader's style cache. Styles are cached by a hash generated from all components added to the style. Hashes
+     * should always be the same type (number) for JS engine optimization purposes.
+     * @type {Object<number, T>}
+     * @protected
+     */
+    this.cache = {};
+
+    /**
+     * A hash of 0 is reserved for an undefined config, so make sure all styles have a hash of at least 1.
+     * @type {number}
+     * @protected
+     */
+    this.baseHash = 1;
+  }
 
   /**
-   * The reader's style cache. Styles are cached by a hash generated from all components added to the style. Hashes
-   * should always be the same type (number) for JS engine optimization purposes.
-   * @type {Object<number, T>}
-   * @protected
+   * @abstract
+   * @inheritDoc
    */
-  this.cache = {};
+  getOrCreateStyle(config) {}
 
   /**
-   * A hash of 0 is reserved for an undefined config, so make sure all styles have a hash of at least 1.
-   * @type {number}
-   * @protected
+   * @inheritDoc
    */
-  this.baseHash = 1;
-};
+  setReaders(readers) {
+    this.readers = readers;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  toConfig(style, obj) {
+    // intentionally empty
+  }
+}
 
-/**
- * @abstract
- * @inheritDoc
- */
-os.style.AbstractReader.prototype.getOrCreateStyle = function(config) {};
-
-
-/**
- * @inheritDoc
- */
-os.style.AbstractReader.prototype.setReaders = function(readers) {
-  this.readers = readers;
-};
-
-
-/**
- * @inheritDoc
- */
-os.style.AbstractReader.prototype.toConfig = function(style, obj) {
-  // intentionally empty
-};
+exports = AbstractReader;
