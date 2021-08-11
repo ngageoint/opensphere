@@ -1,59 +1,65 @@
-goog.provide('os.source.ImageStatic');
+goog.module('os.source.ImageStatic');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.ImageState');
-goog.require('ol.extent');
-goog.require('ol.source.ImageStatic');
-goog.require('os.ol.image');
+const ImageState = goog.require('ol.ImageState');
+const {intersects} = goog.require('ol.extent');
+const OLImageStatic = goog.require('ol.source.ImageStatic');
+const {rotate} = goog.require('os.ol.image');
+
+const ImageBase = goog.requireType('ol.ImageBase');
 
 
 /**
- * @constructor
- * @extends {ol.source.ImageStatic}
- * @param {olx.source.ImageStaticOptions} options
- * @param {number} rotation
  * @suppress {accessControls}
  */
-os.source.ImageStatic = function(options, rotation) {
-  os.source.ImageStatic.base(this, 'constructor', options);
-
+class ImageStatic extends OLImageStatic {
   /**
-   * @type {ol.ImageBase}
-   * @protected
+   * Constructor.
+   * @param {olx.source.ImageStaticOptions} options
+   * @param {number} rotation
    */
-  this.rotatedImage = null;
+  constructor(options, rotation) {
+    super(options);
 
-  /**
-   * @type {number}
-   * @protected
-   */
-  this.rotation = rotation;
+    /**
+     * @type {ImageBase}
+     * @protected
+     */
+    this.rotatedImage = null;
 
-  // Set the source of the image so it can handle style changes properly
-  this.image_.olSource = this;
-};
-goog.inherits(os.source.ImageStatic, ol.source.ImageStatic);
+    /**
+     * @type {number}
+     * @protected
+     */
+    this.rotation = rotation;
 
-
-/**
- * @inheritDoc
- */
-os.source.ImageStatic.prototype.getImageInternal = function(extent, resolution, pixelRatio, projection) {
-  if (this.rotatedImage && ol.extent.intersects(extent, this.rotatedImage.getExtent())) {
-    return this.rotatedImage;
+    // Set the source of the image so it can handle style changes properly
+    this.image_.olSource = this;
   }
 
-  return os.source.ImageStatic.base(this, 'getImageInternal', extent, resolution, pixelRatio, projection);
-};
+  /**
+   * @inheritDoc
+   */
+  getImageInternal(extent, resolution, pixelRatio, projection) {
+    if (this.rotatedImage && intersects(extent, this.rotatedImage.getExtent())) {
+      return this.rotatedImage;
+    }
 
-/**
- * @inheritDoc
- */
-os.source.ImageStatic.prototype.handleImageChange = function(evt) {
-  os.source.ImageStatic.base(this, 'handleImageChange', evt);
-
-  var image = /** @type {ol.Image} */ (evt.target);
-  if (image.getState() == ol.ImageState.LOADED) {
-    this.rotatedImage = this.rotation ? os.ol.image.rotate(image, this.rotation) : image;
-    this.changed();
+    return super.getImageInternal(extent, resolution, pixelRatio, projection);
   }
-};
+
+  /**
+   * @inheritDoc
+   */
+  handleImageChange(evt) {
+    super.handleImageChange(evt);
+
+    var image = /** @type {ol.Image} */ (evt.target);
+    if (image.getState() == ImageState.LOADED) {
+      this.rotatedImage = this.rotation ? rotate(image, this.rotation) : image;
+      this.changed();
+    }
+  }
+}
+
+exports = ImageStatic;

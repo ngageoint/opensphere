@@ -1,4 +1,8 @@
-goog.provide('os.source.IImportSource');
+goog.module('os.source.IImportSource');
+goog.module.declareLegacyNamespace();
+
+const Feature = goog.requireType('ol.Feature');
+const IImporter = goog.requireType('os.im.IImporter');
 
 
 /**
@@ -6,25 +10,24 @@ goog.provide('os.source.IImportSource');
  *
  * @interface
  */
-os.source.IImportSource = function() {};
+class IImportSource {
+  /**
+   * Get the importer.
+   * @return {IImporter<Feature>} The importer.
+   */
+  getImporter() {}
 
+  /**
+   * Set the importer.
+   * @param {IImporter<Feature>} importer The importer.
+   */
+  setImporter(importer) {}
+}
 
 /**
  * ID for {@link os.implements}.
  * @const {string}
  */
-os.source.IImportSource.ID = 'os.source.IImportSource';
+IImportSource.ID = 'os.source.IImportSource';
 
-
-/**
- * Get the importer.
- * @return {os.im.IImporter<ol.Feature>} The importer.
- */
-os.source.IImportSource.prototype.getImporter;
-
-
-/**
- * Set the importer.
- * @param {os.im.IImporter<ol.Feature>} importer The importer.
- */
-os.source.IImportSource.prototype.setImporter;
+exports = IImportSource;

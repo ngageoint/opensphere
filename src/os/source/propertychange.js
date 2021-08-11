@@ -1,10 +1,11 @@
-goog.provide('os.source.PropertyChange');
+goog.module('os.source.PropertyChange');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @enum {string}
  */
-os.source.PropertyChange = {
+exports = {
   ALTITUDE: 'altitude',
   ANIMATION_ENABLED: 'animationEnabled',
   ANIMATION_FRAME: 'animationFrame',

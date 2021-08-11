@@ -1,428 +1,412 @@
-goog.provide('os.source.Request');
+goog.module('os.source.Request');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.async.Delay');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('goog.net.EventType');
-goog.require('os.alert.AlertEventSeverity');
-goog.require('os.alert.AlertManager');
-goog.require('os.data.event.DataEventType');
-goog.require('os.im.IImporter');
-goog.require('os.implements');
-goog.require('os.registerClass');
-goog.require('os.source.IImportSource');
-goog.require('os.source.SourceClass');
-goog.require('os.source.Vector');
-goog.require('os.time.TimelineController');
+const log = goog.require('goog.log');
+const NetEventType = goog.require('goog.net.EventType');
+const dispatcher = goog.require('os.Dispatcher');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const {registerClass} = goog.require('os.classRegistry');
+const DataEventType = goog.require('os.data.event.DataEventType');
+const EventType = goog.require('os.events.EventType');
+const osImplements = goog.require('os.implements');
+const IImportSource = goog.require('os.source.IImportSource');
+const SourceClass = goog.require('os.source.SourceClass');
+const VectorSource = goog.require('os.source.Vector');
+const ThreadEventType = goog.require('os.thread.EventType');
+const {formatDate} = goog.require('os.time');
 
+const GoogEvent = goog.requireType('goog.events.Event');
+const Logger = goog.requireType('goog.log.Logger');
+const Feature = goog.requireType('ol.Feature');
+const IImporter = goog.requireType('os.im.IImporter');
+const NetRequest = goog.requireType('os.net.Request');
 
 
 /**
- * Source that loads data with a {@link os.net.Request}.
+ * Source that loads data with a {@link NetRequest}.
  *
- * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
- * @extends {os.source.Vector}
- * @implements {os.source.IImportSource}
- * @constructor
+ * @implements {IImportSource}
  */
-os.source.Request = function(opt_options) {
-  os.source.Request.base(this, 'constructor', opt_options);
-  this.log = os.source.Request.LOGGER_;
-  this.refreshEnabled = true;
-
+class Request extends VectorSource {
   /**
-   * @type {?os.im.IImporter.<ol.Feature>}
-   * @protected
+   * Constructor.
+   * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
    */
-  this.importer = null;
+  constructor(opt_options) {
+    super(opt_options);
+    this.log = logger;
+    this.refreshEnabled = true;
+
+    /**
+     * @type {?IImporter<Feature>}
+     * @protected
+     */
+    this.importer = null;
+
+    /**
+     * @type {?NetRequest}
+     * @protected
+     */
+    this.request = null;
+
+    /**
+     * @type {number}
+     * @protected
+     */
+    this.durationStart = 0;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.useCache_ = true;
+
+    /**
+     * After the initial request, lock the layer
+     * @type {boolean}
+     * @private
+     */
+    this.lockAfterQuery_ = false;
+
+    dispatcher.getInstance().listen(DataEventType.MAX_FEATURES, this.onMaxFeaturesReached_, false, this);
+  }
 
   /**
-   * @type {?os.net.Request}
-   * @protected
+   * @inheritDoc
    */
-  this.request = null;
+  clear() {
+    this.abortRequest();
+
+    if (this.importer) {
+      this.importer.reset();
+    }
+
+    super.clear();
+  }
 
   /**
-   * @type {number}
-   * @protected
+   * @inheritDoc
    */
-  this.durationStart = 0;
+  disposeInternal() {
+    super.disposeInternal();
+
+    dispatcher.getInstance().unlisten(DataEventType.MAX_FEATURES, this.onMaxFeaturesReached_, false, this);
+
+    this.setRequest(null);
+    this.setImporter(null);
+  }
 
   /**
-   * @type {boolean}
+   * Listens for the max features reached event and stops any pending requests
+   *
+   * @param {GoogEvent} event
    * @private
    */
-  this.useCache_ = true;
+  onMaxFeaturesReached_(event) {
+    this.abortRequest();
+  }
 
   /**
-   * After the initial request, lock the layer
-   * @type {boolean}
-   * @private
+   * Aborts the request.
    */
-  this.lockAfterQuery_ = false;
+  abortRequest() {
+    if (this.isLoading()) {
+      this.setLoading(false);
 
-  os.dispatcher.listen(os.data.event.DataEventType.MAX_FEATURES, this.onMaxFeaturesReached_, false, this);
-};
-goog.inherits(os.source.Request, os.source.Vector);
-os.implements(os.source.Request, os.source.IImportSource.ID);
+      if (this.request) {
+        this.request.abort();
+      }
+    }
+  }
 
+  /**
+   * Loads the request.
+   */
+  loadRequest() {
+    if (this.request && this.isEnabled() && !this.isLocked()) {
+      if (this.getFeatureCount() > 50000) {
+        this.clear();
+      } else {
+        this.toClear = this.getFeatures().slice();
+      }
+
+      this.abortRequest();
+      this.durationStart = Date.now();
+      this.setLoading(true);
+
+      try {
+        this.request.load(!this.useCache_);
+        if (this.lockAfterQuery_) {
+          this.setLocked(true);
+        }
+      } catch (e) {
+        var msg = 'There was an error loading the request. Please see the log for more details.';
+        this.handleError(msg);
+      }
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setLocked(value) {
+    var old = this.isLocked();
+    super.setLocked(value);
+
+    if (old && !value) {
+      this.refresh();
+    }
+
+    this.setLockAfterQuery(false);
+  }
+
+  /**
+   * Load and lock, useful when relating layers
+   *
+   * @param {boolean} value
+   */
+  setLockAfterQuery(value) {
+    this.lockAfterQuery_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  refresh() {
+    if (this.isEnabled() && !this.isLocked()) {
+      if (this.importer) {
+        this.importer.reset();
+      }
+
+      if (this.request) {
+        this.loadRequest();
+      }
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getImporter() {
+    return this.importer;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setImporter(importer) {
+    if (importer !== this.importer) {
+      if (this.importer) {
+        this.importer.unlisten(ThreadEventType.PROGRESS, this.onImportProgress, false, this);
+        this.importer.unlisten(EventType.COMPLETE, this.onImportComplete, false, this);
+
+        this.importer.reset();
+      }
+
+      this.importer = importer;
+
+      if (this.importer) {
+        this.importer.listen(ThreadEventType.PROGRESS, this.onImportProgress, false, this);
+        this.importer.listen(EventType.COMPLETE, this.onImportComplete, false, this);
+      }
+    }
+  }
+
+  /**
+   * @return {?NetRequest}
+   */
+  getRequest() {
+    return this.request;
+  }
+
+  /**
+   * @param {?NetRequest} request
+   */
+  setRequest(request) {
+    if (request !== this.request) {
+      if (this.request) {
+        this.request.unlisten(NetEventType.SUCCESS, this.onRequestComplete, false, this);
+        this.request.unlisten(NetEventType.ERROR, this.onRequestError, false, this);
+
+        if (this.isLoading()) {
+          this.setLoading(false);
+        }
+
+        this.request.dispose();
+      }
+
+      this.request = request;
+
+      if (this.request) {
+        this.request.listen(NetEventType.SUCCESS, this.onRequestComplete, false, this);
+        this.request.listen(NetEventType.ERROR, this.onRequestError, false, this);
+      }
+    }
+  }
+
+  /**
+   * Request success handler.
+   *
+   * @param {GoogEvent} event
+   * @protected
+   */
+  onRequestComplete(event) {
+    var msg = 'Request complete for ' + this.getTitle() + this.urlLogString() + this.durationString();
+    log.info(this.log, msg);
+
+    var req = /** @type {NetRequest} */ (event.target);
+    var response = /** @type {string} */ (req.getResponse());
+
+    // Don't let the request hang on to the response. We want it *gone* from memory
+    // as soon as possible after parsing it.
+    req.clearResponse();
+    this.doImport(response);
+  }
+
+  /**
+   * Request error handler.
+   *
+   * @param {GoogEvent} event
+   * @protected
+   */
+  onRequestError(event) {
+    // there was an error loading the request
+    var error = this.request.getErrors() ? this.request.getErrors().join(' ') : 'unknown error.';
+    var msg = 'There was an error loading the data source: ' + error;
+    this.handleError(msg);
+  }
+
+  /**
+   * Report an error and stop loading the source.
+   *
+   * @param {string} msg The error message
+   * @param {Error=} opt_error The error
+   * @protected
+   */
+  handleError(msg, opt_error) {
+    AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.ERROR);
+    log.error(this.log, msg, opt_error);
+    this.setLoading(false);
+  }
+
+  /**
+   * Import data from the request.
+   *
+   * @param {Object|Array|string|Node|Document} data
+   * @protected
+   */
+  doImport(data) {
+    if (this.importer) {
+      // make sure the loading flag is set before importing, in case this is called outside the request stack
+      this.setLoading(true);
+
+      this.importer.startImport(data);
+    } else {
+      var msg = 'No importer set on source "' + this.getTitle() + '"!';
+      this.handleError(msg);
+    }
+  }
+
+  /**
+   * Import progress handler
+   *
+   * @param {GoogEvent=} opt_event
+   * @protected
+   */
+  onImportProgress(opt_event) {
+    if (this.importer) {
+      this.addFeatures(this.importer.getData());
+    }
+  }
+
+  /**
+   * Import complete handler.
+   *
+   * @param {GoogEvent=} opt_event
+   * @protected
+   */
+  onImportComplete(opt_event) {
+    // make sure all data has been loaded from the importer
+    this.onImportProgress(opt_event);
+
+    this.setLoading(false);
+
+    var msg = 'Import complete for ' + this.getTitle() + this.urlLogString() + this.durationString();
+    log.info(this.log, msg);
+  }
+
+  /**
+   * Import error handler.
+   *
+   * @param {GoogEvent=} opt_event
+   * @protected
+   */
+  onImporterError(opt_event) {
+    this.setLoading(false);
+
+    var msg = 'Import completed with errors for ' + this.getTitle() + this.urlLogString();
+    log.warning(this.log, msg);
+  }
+
+  /**
+   * Gets a string representing the duration from the last time durationStart was set. Resets durationStart for
+   * subsequent calls in the same request sequence.
+   *
+   * @return {string}
+   * @protected
+   */
+  durationString() {
+    var now = Date.now();
+    var duration = new Date(now - this.durationStart);
+    var durationString = ' in ' + formatDate(duration, 'mm:ss.SSS');
+    this.durationStart = now;
+
+    return durationString;
+  }
+
+  /**
+   * Gets a string representing the URL for the source request.
+   *
+   * @return {string}
+   * @protected
+   */
+  urlLogString() {
+    var str = '';
+    if (this.request && this.request.getUri()) {
+      str += ' (' + this.request.getUri().toString() + ')';
+    }
+    return str;
+  }
+
+  /**
+   * @return {boolean}
+   */
+  getUseCache() {
+    return this.useCache_;
+  }
+
+  /**
+   * @param {boolean} value
+   */
+  setUseCache(value) {
+    this.useCache_ = value;
+  }
+}
+osImplements(Request, IImportSource.ID);
 
 /**
  * Class name
  * @type {string}
+ * @override
  */
-os.source.Request.NAME = os.source.SourceClass.REQUEST;
-os.registerClass(os.source.SourceClass.REQUEST, os.source.Request);
-
+Request.NAME = SourceClass.REQUEST;
+registerClass(SourceClass.REQUEST, Request);
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {Logger}
  */
-os.source.Request.LOGGER_ = goog.log.getLogger(os.source.SourceClass.REQUEST);
+const logger = log.getLogger(SourceClass.REQUEST);
 
-
-/**
- * @inheritDoc
- */
-os.source.Request.prototype.clear = function() {
-  this.abortRequest();
-
-  if (this.importer) {
-    this.importer.reset();
-  }
-
-  os.source.Request.base(this, 'clear');
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.Request.prototype.disposeInternal = function() {
-  os.source.Request.base(this, 'disposeInternal');
-
-  os.dispatcher.unlisten(os.data.event.DataEventType.MAX_FEATURES, this.onMaxFeaturesReached_, false, this);
-
-  this.setRequest(null);
-  this.setImporter(null);
-};
-
-
-/**
- * Listens for the max features reached event and stops any pending requests
- *
- * @param {goog.events.Event} event
- * @private
- */
-os.source.Request.prototype.onMaxFeaturesReached_ = function(event) {
-  this.abortRequest();
-};
-
-
-/**
- * Aborts the request.
- */
-os.source.Request.prototype.abortRequest = function() {
-  if (this.isLoading()) {
-    this.setLoading(false);
-
-    if (this.request) {
-      this.request.abort();
-    }
-  }
-};
-
-
-/**
- * Loads the request.
- */
-os.source.Request.prototype.loadRequest = function() {
-  if (this.request && this.isEnabled() && !this.isLocked()) {
-    if (this.getFeatureCount() > 50000) {
-      this.clear();
-    } else {
-      this.toClear = this.getFeatures().slice();
-    }
-
-    this.abortRequest();
-    this.durationStart = Date.now();
-    this.setLoading(true);
-
-    try {
-      this.request.load(!this.useCache_);
-      if (this.lockAfterQuery_) {
-        this.setLocked(true);
-      }
-    } catch (e) {
-      var msg = 'There was an error loading the request. Please see the log for more details.';
-      this.handleError(msg);
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.Request.prototype.setLocked = function(value) {
-  var old = this.isLocked();
-  os.source.Request.base(this, 'setLocked', value);
-
-  if (old && !value) {
-    this.refresh();
-  }
-
-  this.setLockAfterQuery(false);
-};
-
-
-/**
- * Load and lock, useful when relating layers
- *
- * @param {boolean} value
- */
-os.source.Request.prototype.setLockAfterQuery = function(value) {
-  this.lockAfterQuery_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.Request.prototype.refresh = function() {
-  if (this.isEnabled() && !this.isLocked()) {
-    if (this.importer) {
-      this.importer.reset();
-    }
-
-    if (this.request) {
-      this.loadRequest();
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.Request.prototype.getImporter = function() {
-  return this.importer;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.Request.prototype.setImporter = function(importer) {
-  if (importer !== this.importer) {
-    if (this.importer) {
-      this.importer.unlisten(os.thread.EventType.PROGRESS, this.onImportProgress, false, this);
-      this.importer.unlisten(os.events.EventType.COMPLETE, this.onImportComplete, false, this);
-
-      this.importer.reset();
-    }
-
-    this.importer = importer;
-
-    if (this.importer) {
-      this.importer.listen(os.thread.EventType.PROGRESS, this.onImportProgress, false, this);
-      this.importer.listen(os.events.EventType.COMPLETE, this.onImportComplete, false, this);
-    }
-  }
-};
-
-
-/**
- * @return {?os.net.Request}
- */
-os.source.Request.prototype.getRequest = function() {
-  return this.request;
-};
-
-
-/**
- * @param {?os.net.Request} request
- */
-os.source.Request.prototype.setRequest = function(request) {
-  if (request !== this.request) {
-    if (this.request) {
-      this.request.unlisten(goog.net.EventType.SUCCESS, this.onRequestComplete, false, this);
-      this.request.unlisten(goog.net.EventType.ERROR, this.onRequestError, false, this);
-
-      if (this.isLoading()) {
-        this.setLoading(false);
-      }
-
-      this.request.dispose();
-    }
-
-    this.request = request;
-
-    if (this.request) {
-      this.request.listen(goog.net.EventType.SUCCESS, this.onRequestComplete, false, this);
-      this.request.listen(goog.net.EventType.ERROR, this.onRequestError, false, this);
-    }
-  }
-};
-
-
-/**
- * Request success handler.
- *
- * @param {goog.events.Event} event
- * @protected
- */
-os.source.Request.prototype.onRequestComplete = function(event) {
-  var msg = 'Request complete for ' + this.getTitle() + this.urlLogString() + this.durationString();
-  goog.log.info(this.log, msg);
-
-  var req = /** @type {os.net.Request} */ (event.target);
-  var response = /** @type {string} */ (req.getResponse());
-
-  // Don't let the request hang on to the response. We want it *gone* from memory
-  // as soon as possible after parsing it.
-  req.clearResponse();
-  this.doImport(response);
-};
-
-
-/**
- * Request error handler.
- *
- * @param {goog.events.Event} event
- * @protected
- */
-os.source.Request.prototype.onRequestError = function(event) {
-  // there was an error loading the request
-  var error = this.request.getErrors() ? this.request.getErrors().join(' ') : 'unknown error.';
-  var msg = 'There was an error loading the data source: ' + error;
-  this.handleError(msg);
-};
-
-
-/**
- * Report an error and stop loading the source.
- *
- * @param {string} msg The error message
- * @param {Error=} opt_error The error
- * @protected
- */
-os.source.Request.prototype.handleError = function(msg, opt_error) {
-  os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
-  goog.log.error(this.log, msg, opt_error);
-  this.setLoading(false);
-};
-
-
-/**
- * Import data from the request.
- *
- * @param {Object|Array|string|Node|Document} data
- * @protected
- */
-os.source.Request.prototype.doImport = function(data) {
-  if (this.importer) {
-    // make sure the loading flag is set before importing, in case this is called outside the request stack
-    this.setLoading(true);
-
-    this.importer.startImport(data);
-  } else {
-    var msg = 'No importer set on source "' + this.getTitle() + '"!';
-    this.handleError(msg);
-  }
-};
-
-
-/**
- * Import progress handler
- *
- * @param {goog.events.Event=} opt_event
- * @protected
- */
-os.source.Request.prototype.onImportProgress = function(opt_event) {
-  if (this.importer) {
-    this.addFeatures(this.importer.getData());
-  }
-};
-
-
-/**
- * Import complete handler.
- *
- * @param {goog.events.Event=} opt_event
- * @protected
- */
-os.source.Request.prototype.onImportComplete = function(opt_event) {
-  // make sure all data has been loaded from the importer
-  this.onImportProgress(opt_event);
-
-  this.setLoading(false);
-
-  var msg = 'Import complete for ' + this.getTitle() + this.urlLogString() + this.durationString();
-  goog.log.info(this.log, msg);
-};
-
-
-/**
- * Import error handler.
- *
- * @param {goog.events.Event=} opt_event
- * @protected
- */
-os.source.Request.prototype.onImporterError = function(opt_event) {
-  this.setLoading(false);
-
-  var msg = 'Import completed with errors for ' + this.getTitle() + this.urlLogString();
-  goog.log.warning(this.log, msg);
-};
-
-
-/**
- * Gets a string representing the duration from the last time durationStart was set. Resets durationStart for
- * subsequent calls in the same request sequence.
- *
- * @return {string}
- * @protected
- */
-os.source.Request.prototype.durationString = function() {
-  var now = Date.now();
-  var duration = new Date(now - this.durationStart);
-  var durationString = ' in ' + os.time.formatDate(duration, 'mm:ss.SSS');
-  this.durationStart = now;
-
-  return durationString;
-};
-
-
-/**
- * Gets a string representing the URL for the source request.
- *
- * @return {string}
- * @protected
- */
-os.source.Request.prototype.urlLogString = function() {
-  var str = '';
-  if (this.request && this.request.getUri()) {
-    str += ' (' + this.request.getUri().toString() + ')';
-  }
-  return str;
-};
-
-
-/**
- * @return {boolean}
- */
-os.source.Request.prototype.getUseCache = function() {
-  return this.useCache_;
-};
-
-
-/**
- * @param {boolean} value
- */
-os.source.Request.prototype.setUseCache = function(value) {
-  this.useCache_ = value;
-};
+exports = Request;

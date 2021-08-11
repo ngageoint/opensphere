@@ -22,12 +22,10 @@ class IModifiableSource {
   getModifyFunction() {}
 }
 
-
 /**
  * Identifier used with os.implements.
  * @type {string}
  */
 IModifiableSource.ID = 'os.source.IModifiableSource';
-
 
 exports = IModifiableSource;
