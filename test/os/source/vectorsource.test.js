@@ -13,6 +13,7 @@ goog.require('os.events.SelectionType');
 goog.require('os.feature.DynamicFeature');
 goog.require('os.im.Importer');
 goog.require('os.layer.MockLayer');
+goog.require('os.map.instance');
 goog.require('os.mock');
 goog.require('os.source.Vector');
 goog.require('os.style');
@@ -23,6 +24,8 @@ goog.require('plugin.file.geojson.GeoJSONParser');
 
 
 describe('os.source.Vector', function() {
+  const {getMapContainer, setMapContainer} = goog.module.get('os.map.instance');
+
   var dynamicFeatures = null;
   var features = null;
   var source;
@@ -95,7 +98,12 @@ describe('os.source.Vector', function() {
     });
   };
 
+  var originalMapContainer;
+
   var fakeMapContainer = function() {
+    // Save a reference to the current map container instance.
+    originalMapContainer = getMapContainer();
+
     // Create a fake layer object to mock functions used by vector source.
     var layer = new os.layer.MockLayer();
 
@@ -107,8 +115,18 @@ describe('os.source.Vector', function() {
       is3DSupported: goog.functions.FALSE
     };
 
-    spyOn(os.MapContainer, 'getInstance').andReturn(mapContainer);
+    // Replace the map container instance with the fake.
+    setMapContainer(mapContainer);
   };
+
+  // After each test, restore the global map container instance.
+  var restoreMapContainer = function() {
+    if (originalMapContainer) {
+      setMapContainer(originalMapContainer);
+      originalMapContainer = undefined;
+    }
+  };
+  afterEach(restoreMapContainer);
 
   beforeEach(waitForTestObject);
 
