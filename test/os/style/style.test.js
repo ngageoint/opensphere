@@ -1,75 +1,100 @@
+goog.require('goog.events.EventType');
 goog.require('goog.object');
 goog.require('ol.Feature');
 goog.require('ol.events');
 goog.require('ol.layer.Vector');
+goog.require('ol.obj');
+goog.require('ol.style.Fill');
+goog.require('ol.style.Stroke');
+goog.require('ol.style.Style');
+goog.require('os.color');
+goog.require('os.source.PropertyChange');
 goog.require('os.source.Vector');
 goog.require('os.style');
+goog.require('os.style.StyleField');
+goog.require('os.style.StyleType');
 
 describe('os.style', function() {
+  const GoogEventType = goog.module.get('goog.events.EventType');
+  const googObject = goog.module.get('goog.object');
+  const Feature = goog.module.get('ol.Feature');
+  const events = goog.module.get('ol.events');
+  const OLVectorLayer = goog.module.get('ol.layer.Vector');
+  const olObj = goog.module.get('ol.obj');
+  const Fill = goog.module.get('ol.style.Fill');
+  const Stroke = goog.module.get('ol.style.Stroke');
+  const Style = goog.module.get('ol.style.Style');
+  const osColor = goog.module.get('os.color');
+  const PropertyChange = goog.module.get('os.source.PropertyChange');
+  const VectorSource = goog.module.get('os.source.Vector');
+  const osStyle = goog.module.get('os.style');
+  const StyleField = goog.module.get('os.style.StyleField');
+  const StyleType = goog.module.get('os.style.StyleType');
+
   it('should convert colors properly', function() {
-    expect(os.style.toRgbaString('#f84')).toBe('rgba(255,136,68,1)');
-    expect(os.style.toRgbaString('  AB C Def')).toBe('rgba(171,205,239,1)');
-    expect(os.style.toRgbaString(' rgb(50, 150, 200)')).toBe('rgba(50,150,200,1)');
-    expect(os.style.toRgbaString([255, 0, 255, 1])).toBe('rgba(255,0,255,1)');
-    expect(os.style.toRgbaString('0x00ff00')).toBe('rgba(0,255,0,1)');
+    expect(osStyle.toRgbaString('#f84')).toBe('rgba(255,136,68,1)');
+    expect(osStyle.toRgbaString('  AB C Def')).toBe('rgba(171,205,239,1)');
+    expect(osStyle.toRgbaString(' rgb(50, 150, 200)')).toBe('rgba(50,150,200,1)');
+    expect(osStyle.toRgbaString([255, 0, 255, 1])).toBe('rgba(255,0,255,1)');
+    expect(osStyle.toRgbaString('0x00ff00')).toBe('rgba(0,255,0,1)');
   });
 
   it('should set config colors in rgba', function() {
     var config = {};
-    os.style.setConfigColor(config, os.style.toRgbaString('#f84'));
-    expect(goog.object.isEmpty(config)).toBeTruthy();
+    osStyle.setConfigColor(config, osStyle.toRgbaString('#f84'));
+    expect(googObject.isEmpty(config)).toBeTruthy();
 
     config.image = {
       color: '#fff'
     };
-    os.style.setConfigColor(config, os.style.toRgbaString('#f84'));
+    osStyle.setConfigColor(config, osStyle.toRgbaString('#f84'));
     expect(config.image.color).toBe('rgba(255,136,68,1)');
 
-    os.style.setConfigColor(config, os.style.toRgbaString([255, 0, 255, 1]));
+    osStyle.setConfigColor(config, osStyle.toRgbaString([255, 0, 255, 1]));
     expect(config.image.color).toBe('rgba(255,0,255,1)');
 
-    os.style.setConfigColor(config, os.style.toRgbaString(' rgb(50, 150, 200)'));
+    osStyle.setConfigColor(config, osStyle.toRgbaString(' rgb(50, 150, 200)'));
     expect(config.image.color).toBe('rgba(50,150,200,1)');
   });
 
   it('should set config colors when color is absent', function() {
     var color = 'rgba(11,22,33,1)';
     var config = {};
-    os.style.setConfigColor(config, color);
-    expect(goog.object.isEmpty(config)).toBeTruthy();
+    osStyle.setConfigColor(config, color);
+    expect(googObject.isEmpty(config)).toBeTruthy();
 
     config.image = {};
-    os.style.setConfigColor(config, color);
+    osStyle.setConfigColor(config, color);
     expect(config.image.color).toBe(color);
 
     config.image.color = 'rgba(255,255,255,1)';
-    os.style.setConfigColor(config, color);
+    osStyle.setConfigColor(config, color);
     expect(config.image.color).toBe(color);
 
     config.image.fill = {};
     config.image.stroke = {};
-    os.style.setConfigColor(config, color);
+    osStyle.setConfigColor(config, color);
     expect(config.image.color).toBe(color);
     expect(config.image.fill.color).toBe(color);
     expect(config.image.stroke.color).toBe(color);
 
     config.stroke = {};
-    os.style.setConfigColor(config, color);
+    osStyle.setConfigColor(config, color);
     expect(config.stroke.color).toBe(color);
   });
 
   it('should get the icon from a config', function() {
     var config = null;
-    expect(os.style.getConfigIcon(config)).toBeNull();
+    expect(osStyle.getConfigIcon(config)).toBeNull();
 
     config = {};
-    expect(os.style.getConfigIcon(config)).toBeNull();
+    expect(osStyle.getConfigIcon(config)).toBeNull();
 
     config.image = {};
-    expect(os.style.getConfigIcon(config)).toBeNull();
+    expect(osStyle.getConfigIcon(config)).toBeNull();
 
     config.image.src = 'test';
-    var icon = os.style.getConfigIcon(config);
+    var icon = osStyle.getConfigIcon(config);
     expect(icon).toBeDefined();
     expect(icon.path).toBe('test');
   });
@@ -81,15 +106,15 @@ describe('os.style', function() {
       }
     };
 
-    os.style.setConfigIcon(config, {
+    osStyle.setConfigIcon(config, {
       path: 'newvalue'
     });
-    expect(os.style.getConfigIcon(config).path).toBe('newvalue');
+    expect(osStyle.getConfigIcon(config).path).toBe('newvalue');
   });
 
   describe('os.style.getConfigColor', function() {
     var testColor = 'rgba(12,34,56,.5)';
-    var testColorArray = os.color.toRgbArray(testColor);
+    var testColorArray = osColor.toRgbArray(testColor);
     var colorConfig = {
       color: testColor
     };
@@ -122,59 +147,59 @@ describe('os.style', function() {
     };
 
     it('should get the color from a config using default fields', function() {
-      expect(os.style.getConfigColor(null)).toBeNull();
-      expect(os.style.getConfigColor({})).toBeNull();
+      expect(osStyle.getConfigColor(null)).toBeNull();
+      expect(osStyle.getConfigColor({})).toBeNull();
 
-      expect(os.style.getConfigColor(colorConfig)).toBe(testColor);
-      expect(os.style.getConfigColor(fillConfig)).toBe(testColor);
-      expect(os.style.getConfigColor(imageConfig)).toBe(testColor);
-      expect(os.style.getConfigColor(strokeConfig)).toBe(testColor);
+      expect(osStyle.getConfigColor(colorConfig)).toBe(testColor);
+      expect(osStyle.getConfigColor(fillConfig)).toBe(testColor);
+      expect(osStyle.getConfigColor(imageConfig)).toBe(testColor);
+      expect(osStyle.getConfigColor(strokeConfig)).toBe(testColor);
     });
 
     it('should get the color from a config using the array parameter', function() {
-      expect(os.style.getConfigColor(colorConfig, false)).toEqual(testColor);
-      expect(os.style.getConfigColor(fillConfig, false)).toEqual(testColor);
-      expect(os.style.getConfigColor(imageConfig, false)).toEqual(testColor);
-      expect(os.style.getConfigColor(strokeConfig, false)).toEqual(testColor);
+      expect(osStyle.getConfigColor(colorConfig, false)).toEqual(testColor);
+      expect(osStyle.getConfigColor(fillConfig, false)).toEqual(testColor);
+      expect(osStyle.getConfigColor(imageConfig, false)).toEqual(testColor);
+      expect(osStyle.getConfigColor(strokeConfig, false)).toEqual(testColor);
 
-      expect(os.style.getConfigColor(colorConfig, true)).toEqual(testColorArray);
-      expect(os.style.getConfigColor(fillConfig, true)).toEqual(testColorArray);
-      expect(os.style.getConfigColor(imageConfig, true)).toEqual(testColorArray);
-      expect(os.style.getConfigColor(strokeConfig, true)).toEqual(testColorArray);
+      expect(osStyle.getConfigColor(colorConfig, true)).toEqual(testColorArray);
+      expect(osStyle.getConfigColor(fillConfig, true)).toEqual(testColorArray);
+      expect(osStyle.getConfigColor(imageConfig, true)).toEqual(testColorArray);
+      expect(osStyle.getConfigColor(strokeConfig, true)).toEqual(testColorArray);
     });
 
     it('should get the color from a config using a field hint parameter', function() {
       // hint doesn't exist in config
-      expect(os.style.getConfigColor(colorConfig, undefined, os.style.StyleField.FILL)).toBeUndefined();
-      expect(os.style.getConfigColor(imageConfig, undefined, os.style.StyleField.FILL)).toBeUndefined();
-      expect(os.style.getConfigColor(strokeConfig, undefined, os.style.StyleField.FILL)).toBeUndefined();
+      expect(osStyle.getConfigColor(colorConfig, undefined, StyleField.FILL)).toBeUndefined();
+      expect(osStyle.getConfigColor(imageConfig, undefined, StyleField.FILL)).toBeUndefined();
+      expect(osStyle.getConfigColor(strokeConfig, undefined, StyleField.FILL)).toBeUndefined();
 
-      expect(os.style.getConfigColor(colorConfig, undefined, os.style.StyleField.STROKE)).toBeUndefined();
-      expect(os.style.getConfigColor(fillConfig, undefined, os.style.StyleField.STROKE)).toBeUndefined();
-      expect(os.style.getConfigColor(imageConfig, undefined, os.style.StyleField.STROKE)).toBeUndefined();
+      expect(osStyle.getConfigColor(colorConfig, undefined, StyleField.STROKE)).toBeUndefined();
+      expect(osStyle.getConfigColor(fillConfig, undefined, StyleField.STROKE)).toBeUndefined();
+      expect(osStyle.getConfigColor(imageConfig, undefined, StyleField.STROKE)).toBeUndefined();
 
-      expect(os.style.getConfigColor(colorConfig, undefined, os.style.StyleField.IMAGE)).toBeUndefined();
-      expect(os.style.getConfigColor(fillConfig, undefined, os.style.StyleField.IMAGE)).toBeUndefined();
-      expect(os.style.getConfigColor(strokeConfig, undefined, os.style.StyleField.IMAGE)).toBeUndefined();
+      expect(osStyle.getConfigColor(colorConfig, undefined, StyleField.IMAGE)).toBeUndefined();
+      expect(osStyle.getConfigColor(fillConfig, undefined, StyleField.IMAGE)).toBeUndefined();
+      expect(osStyle.getConfigColor(strokeConfig, undefined, StyleField.IMAGE)).toBeUndefined();
 
       // hint is defined in config
-      expect(os.style.getConfigColor(fillConfig, false, os.style.StyleField.FILL)).toBe(testColor);
-      expect(os.style.getConfigColor(imageConfig, false, os.style.StyleField.IMAGE)).toBe(testColor);
-      expect(os.style.getConfigColor(strokeConfig, false, os.style.StyleField.STROKE)).toBe(testColor);
+      expect(osStyle.getConfigColor(fillConfig, false, StyleField.FILL)).toBe(testColor);
+      expect(osStyle.getConfigColor(imageConfig, false, StyleField.IMAGE)).toBe(testColor);
+      expect(osStyle.getConfigColor(strokeConfig, false, StyleField.STROKE)).toBe(testColor);
 
-      expect(os.style.getConfigColor(fillConfig, true, os.style.StyleField.FILL)).toEqual(testColorArray);
-      expect(os.style.getConfigColor(imageConfig, true, os.style.StyleField.IMAGE)).toEqual(testColorArray);
-      expect(os.style.getConfigColor(strokeConfig, true, os.style.StyleField.STROKE)).toEqual(testColorArray);
+      expect(osStyle.getConfigColor(fillConfig, true, StyleField.FILL)).toEqual(testColorArray);
+      expect(osStyle.getConfigColor(imageConfig, true, StyleField.IMAGE)).toEqual(testColorArray);
+      expect(osStyle.getConfigColor(strokeConfig, true, StyleField.STROKE)).toEqual(testColorArray);
 
       // hint is undefined in config
-      expect(os.style.getConfigColor(undefinedFillConfig, undefined, os.style.StyleField.FILL)).toBeUndefined();
-      expect(os.style.getConfigColor(undefinedImageConfig, undefined, os.style.StyleField.IMAGE)).toBeUndefined();
-      expect(os.style.getConfigColor(undefinedStrokeConfig, undefined, os.style.StyleField.STROKE)).toBeUndefined();
+      expect(osStyle.getConfigColor(undefinedFillConfig, undefined, StyleField.FILL)).toBeUndefined();
+      expect(osStyle.getConfigColor(undefinedImageConfig, undefined, StyleField.IMAGE)).toBeUndefined();
+      expect(osStyle.getConfigColor(undefinedStrokeConfig, undefined, StyleField.STROKE)).toBeUndefined();
 
       // hint is null in config
-      expect(os.style.getConfigColor(nullFillConfig, undefined, os.style.StyleField.FILL)).toBeNull();
-      expect(os.style.getConfigColor(nullImageConfig, undefined, os.style.StyleField.IMAGE)).toBeNull();
-      expect(os.style.getConfigColor(nullStrokeConfig, undefined, os.style.StyleField.STROKE)).toBeNull();
+      expect(osStyle.getConfigColor(nullFillConfig, undefined, StyleField.FILL)).toBeNull();
+      expect(osStyle.getConfigColor(nullImageConfig, undefined, StyleField.IMAGE)).toBeNull();
+      expect(osStyle.getConfigColor(nullStrokeConfig, undefined, StyleField.STROKE)).toBeNull();
     });
   });
 
@@ -224,20 +249,20 @@ describe('os.style', function() {
       var baseExpected = JSON.stringify(base);
       var layerExpected = JSON.stringify(layer);
 
-      var feature = new ol.Feature();
-      feature.set(os.style.StyleType.FEATURE, base);
+      var feature = new Feature();
+      feature.set(StyleType.FEATURE, base);
 
       expect(JSON.stringify(base)).toBe(baseExpected);
       expect(JSON.stringify(layer)).toBe(layerExpected);
     });
 
     it('should create styles with a new opacity value', function() {
-      var feature = new ol.Feature();
-      feature.set(os.style.StyleType.FEATURE, base);
-      feature.set(os.style.StyleField.OPACITY, opacity);
+      var feature = new Feature();
+      feature.set(StyleType.FEATURE, base);
+      feature.set(StyleField.OPACITY, opacity);
       feature.set('some_field', 'test');
 
-      var style = os.style.createFeatureStyle(feature, base, layer);
+      var style = osStyle.createFeatureStyle(feature, base, layer);
 
       // check all the colors and verify the rgba value
       expect(style.length).toBe(2);
@@ -248,12 +273,12 @@ describe('os.style', function() {
 
       // attempt the same again with an empty base config
       // to make sure no exceptions are thrown
-      feature = new ol.Feature();
-      feature.set(os.style.StyleType.FEATURE, {});
-      feature.set(os.style.StyleField.OPACITY, opacity);
+      feature = new Feature();
+      feature.set(StyleType.FEATURE, {});
+      feature.set(StyleField.OPACITY, opacity);
       feature.set('some_field', 'test');
 
-      var style = os.style.createFeatureStyle(feature, {}, layer);
+      var style = osStyle.createFeatureStyle(feature, {}, layer);
 
       // check all the colors and verify the rgba value
       expect(style.length).toBe(2);
@@ -270,7 +295,7 @@ describe('os.style', function() {
 
       var to = {};
 
-      os.style.mergeConfig(from, to);
+      osStyle.mergeConfig(from, to);
       expect(to).toEqual(from);
       expect(to).not.toBe(from);
     });
@@ -288,7 +313,7 @@ describe('os.style', function() {
       };
 
       var to = {};
-      os.style.mergeConfig(from, to);
+      osStyle.mergeConfig(from, to);
       expect(to).toEqual(from);
     });
 
@@ -312,15 +337,15 @@ describe('os.style', function() {
         'other': 'no change'
       };
 
-      os.style.mergeConfig(from, toMergeAll);
-      expect(toMergeAll).toEqual(ol.obj.assign({}, toMergeAll, from));
+      osStyle.mergeConfig(from, toMergeAll);
+      expect(toMergeAll).toEqual(olObj.assign({}, toMergeAll, from));
 
       var toMergeSome = {
         'string': 'mergeSome',
         'number': -1
       };
 
-      os.style.mergeConfig(from, toMergeSome);
+      osStyle.mergeConfig(from, toMergeSome);
       expect(toMergeSome).toEqual(from);
 
       var toMergeSomeNested = {
@@ -328,7 +353,7 @@ describe('os.style', function() {
         'string': 'mergeSomeNested'
       };
 
-      os.style.mergeConfig(from, toMergeSomeNested);
+      osStyle.mergeConfig(from, toMergeSomeNested);
       expect(toMergeSomeNested).toEqual(from);
     });
 
@@ -337,12 +362,12 @@ describe('os.style', function() {
 
       var to = {'value': {'color': 'red'}};
 
-      os.style.mergeConfig(from, to);
+      osStyle.mergeConfig(from, to);
       expect(to).toEqual(from);
 
       var newAddition = {'value': {'color': 'blue'}};
 
-      os.style.mergeConfig(newAddition, to);
+      osStyle.mergeConfig(newAddition, to);
       expect(to).toEqual(newAddition);
     });
 
@@ -350,44 +375,44 @@ describe('os.style', function() {
       // we've already tested implicit undefined above, so test explicit undefined
       var to = {'value': undefined};
       var from = {'value': 1};
-      os.style.mergeConfig(from, to);
+      osStyle.mergeConfig(from, to);
       expect(to).toEqual(from);
 
       var to = {'stroke': undefined};
       var from = {'stroke': {'color': 'red'}};
-      os.style.mergeConfig(from, to);
+      osStyle.mergeConfig(from, to);
       expect(to).toEqual(from);
     });
 
     it('should detect non-zero opacity fills', function() {
-      var fill = new ol.style.Fill();
+      var fill = new Fill();
       fill.setColor('rgba(1,1,1,1)');
-      var style = new ol.style.Style();
+      var style = new Style();
       style.setFill(fill);
 
-      expect(os.style.hasNonZeroFillOpacity(style)).toBe(true);
+      expect(osStyle.hasNonZeroFillOpacity(style)).toBe(true);
       fill.setColor('rgba(1,1,1,0)');
-      expect(os.style.hasNonZeroFillOpacity(style)).toBe(false);
+      expect(osStyle.hasNonZeroFillOpacity(style)).toBe(false);
     });
 
     it('should detect non-zero opacity strokes', function() {
-      var stroke = new ol.style.Stroke();
+      var stroke = new Stroke();
       stroke.setColor('rgba(1,1,1,1)');
-      var style = new ol.style.Style();
+      var style = new Style();
       style.setStroke(stroke);
 
-      expect(os.style.hasNonZeroStrokeOpacity(style)).toBe(true);
+      expect(osStyle.hasNonZeroStrokeOpacity(style)).toBe(true);
       stroke.setColor('rgba(1,1,1,0)');
-      expect(os.style.hasNonZeroStrokeOpacity(style)).toBe(false);
+      expect(osStyle.hasNonZeroStrokeOpacity(style)).toBe(false);
     });
   });
 
   describe('os.style.notifyStyleChange', function() {
     it('should send events at the layer level ONLY by default', function() {
-      var source = new os.source.Vector();
+      var source = new VectorSource();
       source.setId('style.test.js');
 
-      var layer = new ol.layer.Vector({source});
+      var layer = new OLVectorLayer({source});
       var colormodel = source.createColorModel();
       source.setColorModel(colormodel);
 
@@ -397,35 +422,35 @@ describe('os.style', function() {
         'colormodel': 0
       };
 
-      ol.events.listen(layer, goog.events.EventType.PROPERTYCHANGE, function(evt) {
+      events.listen(layer, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['layer']++;
       });
 
-      ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, function(evt) {
+      events.listen(source, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['source']++;
       });
 
-      ol.events.listen(colormodel, goog.events.EventType.PROPERTYCHANGE, function(evt) {
+      events.listen(colormodel, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['colormodel']++;
       });
 
       // the call being tested
-      os.style.notifyStyleChange(layer);
+      osStyle.notifyStyleChange(layer);
 
       expect(on['layer']).toBe(1);
       expect(on['source']).toBe(0);
       expect(on['colormodel']).toBe(0);
 
-      ol.events.unlisten(layer, goog.events.EventType.PROPERTYCHANGE);
-      ol.events.unlisten(source, goog.events.EventType.PROPERTYCHANGE);
-      ol.events.unlisten(colormodel, goog.events.EventType.PROPERTYCHANGE);
+      events.unlisten(layer, GoogEventType.PROPERTYCHANGE);
+      events.unlisten(source, GoogEventType.PROPERTYCHANGE);
+      events.unlisten(colormodel, GoogEventType.PROPERTYCHANGE);
     });
 
     it('should send events at the layer, source, and colormodel levels when configured', function() {
-      var source = new os.source.Vector();
+      var source = new VectorSource();
       source.setId('style.test.js');
 
-      var layer = new ol.layer.Vector({source});
+      var layer = new OLVectorLayer({source});
       var colormodel = source.createColorModel();
       source.setColorModel(colormodel);
 
@@ -438,17 +463,17 @@ describe('os.style', function() {
         'colormodel': 0
       };
 
-      ol.events.listen(layer, goog.events.EventType.PROPERTYCHANGE, function(evt) {
+      events.listen(layer, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['layer']++;
       });
 
-      ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, function(evt) {
+      events.listen(source, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['source']['total']++;
 
         var p = evt.getProperty();
         switch (p) {
-          case os.source.PropertyChange.VISIBLE:
-          case os.source.PropertyChange.CLEARED:
+          case PropertyChange.VISIBLE:
+          case PropertyChange.CLEARED:
             on['source']['configured']++;
             break;
           default:
@@ -456,16 +481,16 @@ describe('os.style', function() {
         }
       });
 
-      ol.events.listen(colormodel, goog.events.EventType.PROPERTYCHANGE, function(evt) {
+      events.listen(colormodel, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['colormodel']++;
       });
 
       // the call being tested
-      os.style.notifyStyleChange(
+      osStyle.notifyStyleChange(
           layer,
           undefined,
-          os.source.PropertyChange.VISIBLE,
-          [os.source.PropertyChange.VISIBLE, os.source.PropertyChange.CLEARED], // 2
+          PropertyChange.VISIBLE,
+          [PropertyChange.VISIBLE, PropertyChange.CLEARED], // 2
           true
       );
 
@@ -478,9 +503,9 @@ describe('os.style', function() {
       expect(on['source']['configured']).toBe(2);
       expect(on['colormodel']).toBe(1);
 
-      ol.events.unlisten(layer, goog.events.EventType.PROPERTYCHANGE);
-      ol.events.unlisten(source, goog.events.EventType.PROPERTYCHANGE);
-      ol.events.unlisten(colormodel, goog.events.EventType.PROPERTYCHANGE);
+      events.unlisten(layer, GoogEventType.PROPERTYCHANGE);
+      events.unlisten(source, GoogEventType.PROPERTYCHANGE);
+      events.unlisten(colormodel, GoogEventType.PROPERTYCHANGE);
     });
   });
 });

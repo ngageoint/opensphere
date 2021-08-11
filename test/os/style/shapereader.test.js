@@ -1,10 +1,17 @@
+goog.require('goog.math');
 goog.require('os.style.FillReader');
 goog.require('os.style.ShapeReader');
 goog.require('os.style.StrokeReader');
 
 
 describe('os.style.ShapeReader', function() {
-  var config, reader;
+  const math = goog.module.get('goog.math');
+  const FillReader = goog.module.get('os.style.FillReader');
+  const ShapeReader = goog.module.get('os.style.ShapeReader');
+  const StrokeReader = goog.module.get('os.style.StrokeReader');
+
+  var config;
+  var reader;
 
   beforeEach(function() {
     config = {
@@ -19,21 +26,21 @@ describe('os.style.ShapeReader', function() {
       }
     };
 
-    reader = new os.style.ShapeReader();
+    reader = new ShapeReader();
     reader.setReaders({
-      'fill': new os.style.FillReader(),
-      'stroke': new os.style.StrokeReader()
+      'fill': new FillReader(),
+      'stroke': new StrokeReader()
     });
   });
 
   it('should create a shape without the cache', function() {
     var shape = reader.getOrCreateStyle(config);
-    expect(shape.getRadius()).toBe(Math.round(config.radius * os.style.ShapeReader.RADIUS_MULTIPLIER));
+    expect(shape.getRadius()).toBe(Math.round(config.radius * ShapeReader.RADIUS_MULTIPLIER));
     expect(shape.getFill().getColor()).toBe(config.fill.color);
     expect(shape.getStroke().getColor()).toBe(config.stroke.color);
     expect(shape.getStroke().getWidth()).toBe(config.stroke.width);
     expect(shape.points_).toBe(4);
-    expect(shape.angle_).toBe(goog.math.toRadians(45));
+    expect(shape.angle_).toBe(math.toRadians(45));
 
     var firstId = shape.id;
     config.subType = 'triangle';

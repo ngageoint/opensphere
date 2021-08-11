@@ -1,8 +1,17 @@
+goog.require('ol.style.Icon');
+goog.require('os.style.CircleReader');
+goog.require('os.style.IconReader');
 goog.require('os.style.ImageReader');
 
 
 describe('os.style.ImageReader', function() {
-  var config, reader;
+  const Icon = goog.module.get('ol.style.Icon');
+  const CircleReader = goog.module.get('os.style.CircleReader');
+  const IconReader = goog.module.get('os.style.IconReader');
+  const ImageReader = goog.module.get('os.style.ImageReader');
+
+  var config;
+  var reader;
 
   beforeEach(function() {
     config = {
@@ -10,17 +19,17 @@ describe('os.style.ImageReader', function() {
       src: '/something.png'
     };
 
-    reader = new os.style.ImageReader();
+    reader = new ImageReader();
     reader.setReaders({
-      'icon': new os.style.IconReader(),
-      'circle': new os.style.CircleReader()
+      'icon': new IconReader(),
+      'circle': new CircleReader()
     });
   });
 
   it('should create an image without the cache', function() {
     var icon = reader.getOrCreateStyle(config);
 
-    expect(icon instanceof ol.style.Icon).toBe(true);
+    expect(icon instanceof Icon).toBe(true);
     expect(icon.getSrc()).toBe('/something.png');
   });
 
@@ -33,7 +42,7 @@ describe('os.style.ImageReader', function() {
 
   it('should convert a style to a config', function() {
     var config = {};
-    var style = new ol.style.Icon({
+    var style = new Icon({
       src: '/something.png'
     });
 
