@@ -148,7 +148,7 @@ class Controller {
       if (nodes) {
         for (var i = 0, n = nodes.length; i < n; i++) {
           var enabled = [];
-          var children = nodes[i].getChildren();
+          var children = /** @type {Array<SlickTreeNode>} */ (nodes[i].getChildren());
 
           if (children) {
             for (var j = 0, m = children.length; j < m; j++) {
@@ -226,8 +226,8 @@ class Controller {
       oldRoot.unlisten(FacetNode.TYPE, this.search, false, this);
 
       // copy collapsed state
-      var children = oldRoot.getChildren();
-      var newChildren = root.getChildren();
+      var children = /** @type {Array<SlickTreeNode>} */ (oldRoot.getChildren());
+      var newChildren = /** @type {Array<SlickTreeNode>} */ (root.getChildren());
       if (children && newChildren) {
         for (var i = 0, n = children.length; i < n; i++) {
           if (children[i].collapsed) {

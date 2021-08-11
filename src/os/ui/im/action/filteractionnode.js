@@ -80,7 +80,7 @@ class FilterActionNode extends FilterNode {
    * @inheritDoc
    */
   addChild(child, opt_skipAddParent, opt_index) {
-    this.entry.addChild(child.getEntry());
+    this.entry.addChild(/** @type {FilterActionNode} */ (child).getEntry());
     return super.addChild(child, opt_skipAddParent, opt_index);
   }
 
@@ -88,7 +88,7 @@ class FilterActionNode extends FilterNode {
    * @inheritDoc
    */
   removeChild(child) {
-    this.entry.removeChild(child.getEntry());
+    this.entry.removeChild(/** @type {FilterActionNode} */ (child).getEntry());
     return super.removeChild(child);
   }
 
@@ -103,7 +103,7 @@ class FilterActionNode extends FilterNode {
    * Translate filter action entries to nodes.
    *
    * @param {Array<!os.im.action.FilterActionEntry>} entries The filter action entries.
-   * @return {!Array<!os.ui.im.action.FilterActionNode>} The filter action nodes.
+   * @return {!Array<!FilterActionNode>} The filter action nodes.
    */
   static fromEntries(entries) {
     if (entries) {
@@ -120,7 +120,7 @@ class FilterActionNode extends FilterNode {
   /**
    * Translate filter action nodes to entries.
    *
-   * @param {Array<!os.ui.im.action.FilterActionNode>} nodes The filter action nodes.
+   * @param {Array<!FilterActionNode>} nodes The filter action nodes.
    * @return {!Array<!os.im.action.FilterActionEntry>} The filter action entries.
    */
   static toEntries(nodes) {

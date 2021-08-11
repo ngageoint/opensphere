@@ -623,7 +623,7 @@ const visibleIfCanSaveLayer = function(context) {
       var kmlRoot = places.getPlacesRoot(layerNode);
       this.visible = kmlRoot != null && kmlRoot != rootNode;
     } else if (context[0] instanceof LayerNode) {
-      var layer = /** @type {!os.data.LayerNode} */ (context[0]).getLayer();
+      var layer = /** @type {!LayerNode} */ (context[0]).getLayer();
       if (layer.getId() != places.ID && layer instanceof VectorLayer) {
         if (layer instanceof KMLLayer) {
           this.visible = true;
@@ -636,8 +636,9 @@ const visibleIfCanSaveLayer = function(context) {
         }
       }
     } else if (context[0] instanceof KMLNode) {
-      var features = context[0].getFeatures();
-      this.visible = (context[0].getRoot() != rootNode.getRoot()) && (features.length > 0);
+      var node = /** @type {KMLNode} */ (context[0]);
+      var features = node.getFeatures();
+      this.visible = (node.getRoot() != rootNode.getRoot()) && (features.length > 0);
     }
   }
 };
@@ -803,7 +804,7 @@ const saveLayerToPlaces = function(event) {
           saveKMLToPlaces(kmlRoot);
         }
       } else if (context[0] instanceof LayerNode) {
-        var layer = /** @type {os.data.LayerNode} */ (context[0]).getLayer();
+        var layer = /** @type {LayerNode} */ (context[0]).getLayer();
         if (layer.getId() != places.ID) {
           if (layer instanceof KMLLayer) {
             var source = /** @type {plugin.file.kml.KMLSource} */ (layer.getSource());

@@ -27,7 +27,7 @@ goog.require('os.ui.window.ConfirmUI');
 
 
 /**
- * @typedef {!Array<!os.structs.ITreeNode>}
+ * @typedef {!Array<!os.ui.slick.SlickTreeNode>}
  */
 os.ui.menu.layer.Context;
 

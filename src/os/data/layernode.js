@@ -316,7 +316,7 @@ class LayerNode extends SlickTreeNode {
    * @inheritDoc
    */
   updateFrom(other) {
-    this.setLayer(other.getLayer());
+    this.setLayer(/** @type {LayerNode} */ (other).getLayer());
     super.updateFrom(other);
   }
 

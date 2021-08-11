@@ -12,6 +12,7 @@ const GroupNode = goog.require('os.ui.filter.ui.GroupNode');
 const {close} = goog.require('os.ui.window');
 
 const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -120,7 +121,7 @@ class Controller {
    * Traverses the filter XML and adds nodes to the slicktree.
    *
    * @param {Node} ele
-   * @param {os.structs.ITreeNode} treeNode
+   * @param {SlickTreeNode} treeNode
    * @private
    */
   readFilters_(ele, treeNode) {
@@ -141,8 +142,8 @@ class Controller {
    * Creates a tree node for the child and adds it as a child to the treeNode passed in.
    *
    * @param {Node} child
-   * @param {os.structs.ITreeNode} treeNode
-   * @return {os.structs.ITreeNode}
+   * @param {SlickTreeNode} treeNode
+   * @return {SlickTreeNode}
    * @private
    */
   addTreeNode_(child, treeNode) {

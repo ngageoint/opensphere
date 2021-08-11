@@ -979,7 +979,7 @@ class BaseQueryManager extends EventTarget {
         }
       }
 
-      node = node.getParent();
+      node = /** @type {ComboNode} */ (node.getParent());
     }
 
     var fqm = this.fm;

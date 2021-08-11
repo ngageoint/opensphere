@@ -190,7 +190,11 @@ class DescriptorNode extends SlickTreeNode {
    * @inheritDoc
    */
   updateFrom(other) {
-    this.setDescriptor(other.getDescriptor());
+    const descriptor = /** @type {DescriptorNode} */ (other).getDescriptor();
+    if (descriptor) {
+      this.setDescriptor(descriptor);
+    }
+
     super.updateFrom(other);
   }
 }

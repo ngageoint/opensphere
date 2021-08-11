@@ -9,6 +9,8 @@ const {getQueryManager} = goog.require('os.query.instance');
 const TriState = goog.require('os.structs.TriState');
 const Module = goog.require('os.ui.Module');
 
+const ComboNode = goog.requireType('os.ui.query.ComboNode');
+
 
 /**
  * @return {angular.Directive}
@@ -68,7 +70,7 @@ class Controller {
     this.scope_ = $scope;
 
     /**
-     * @type {os.ui.query.ComboNode}
+     * @type {ComboNode}
      * @private
      */
     this.node_ = $scope['item'];
@@ -104,7 +106,7 @@ class Controller {
    * @protected
    */
   getFilterGroup() {
-    var children = this.node_.getChildren();
+    var children = /** @type {Array<ComboNode>} */ (this.node_.getChildren());
 
     if (children && children.length) {
       // check all of the children to see if we are AND or we are OR
@@ -148,11 +150,11 @@ class Controller {
   toggleGroup() {
     this['group'] = !this['group'];
     this.getEntry()['filterGroup'] = this['group'];
-    var children = this.node_.getChildren();
+    var children = /** @type {Array<ComboNode>} */ (this.node_.getChildren());
 
     if (children) {
       for (var i = 0, n = children.length; i < n; i++) {
-        var node = /** @type {os.ui.query.ComboNode} */ (children[i]);
+        var node = /** @type {ComboNode} */ (children[i]);
 
         if (node) {
           var entry = node.getEntry();
@@ -175,7 +177,7 @@ class Controller {
     var children = this.node_.getChildren();
 
     if (children && children.length) {
-      var entry = /** @type {os.ui.query.ComboNode} */ (children[0]).getEntry();
+      var entry = /** @type {ComboNode} */ (children[0]).getEntry();
       return !!entry && !!entry['filterId'] && entry['filterId'] !== '*';
     }
 

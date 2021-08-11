@@ -207,7 +207,7 @@ class Controller {
 
     var item = this.getAddParent_();
     if (item) {
-      var parent = item instanceof GroupNode ? item : item.getParent();
+      var parent = item instanceof GroupNode ? item : /** @type {SlickTreeNode} */ (item.getParent());
       var child = new ExpressionNode();
       child.setExpression(expr);
 
@@ -234,7 +234,7 @@ class Controller {
 
     var item = this.getAddParent_();
     if (item) {
-      var parent = item instanceof GroupNode ? item : item.getParent();
+      var parent = item instanceof GroupNode ? item : /** @type {SlickTreeNode} */ (item.getParent());
       var child = new GroupNode();
 
       // add the child to the top of the children array and select it

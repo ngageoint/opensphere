@@ -139,7 +139,7 @@ class BaseGroupBy extends Disposable {
       var label = group.getLabel();
       label = label.replace(/ \(\d+( of \d+)?\)$/, '');
       label += ' (' + count.found + (count.found != count.total ? ' of ' + count.total : '') + ')';
-      group.setLabel(label);
+      /** @type {TreeNode} */ (group).setLabel(label);
     }
   }
 

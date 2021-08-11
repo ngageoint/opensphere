@@ -78,7 +78,7 @@ class ComboNode extends SlickTreeNode {
    * @inheritDoc
    */
   updateFrom(other) {
-    this.setEntry(other.getEntry());
+    this.setEntry(/** @type {ComboNode} */ (other).getEntry());
     super.updateFrom(other);
   }
 
