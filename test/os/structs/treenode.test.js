@@ -1,42 +1,48 @@
+goog.require('goog.events');
+goog.require('goog.events.EventType');
 goog.require('ol.array');
-
 goog.require('os.structs.TreeNode');
 
 describe('os.structs.TreeNode', function() {
+  const googEvents = goog.module.get('goog.events');
+  const GoogEventType = goog.module.get('goog.events.EventType');
+  const olArray = goog.module.get('ol.array');
+  const TreeNode = goog.module.get('os.structs.TreeNode');
+
   it('should default everything to null except ID', function() {
-    var node = new os.structs.TreeNode();
+    var node = new TreeNode();
     expect(node.getId()).not.toBe(null);
     expect(node.getParent()).toBe(null);
     expect(node.getChildren()).toBe(null);
   });
 
   it('should be able to set children to an array or null', function() {
-    var root = new os.structs.TreeNode();
-    var first = new os.structs.TreeNode();
-    var second = new os.structs.TreeNode();
-    var third = new os.structs.TreeNode();
+    var root = new TreeNode();
+    var first = new TreeNode();
+    var second = new TreeNode();
+    var third = new TreeNode();
     var children = [first, second, third];
     root.setChildren(children);
 
     var rootChildren = root.getChildren();
     expect(rootChildren.length).toBe(3);
-    expect(ol.array.includes(rootChildren, first)).toBe(true);
-    expect(ol.array.includes(rootChildren, second)).toBe(true);
-    expect(ol.array.includes(rootChildren, third)).toBe(true);
-    expect(goog.events.hasListener(first, goog.events.EventType.PROPERTYCHANGE, false)).toBe(true);
-    expect(goog.events.hasListener(second, goog.events.EventType.PROPERTYCHANGE, false)).toBe(true);
-    expect(goog.events.hasListener(third, goog.events.EventType.PROPERTYCHANGE, false)).toBe(true);
+    expect(olArray.includes(rootChildren, first)).toBe(true);
+    expect(olArray.includes(rootChildren, second)).toBe(true);
+    expect(olArray.includes(rootChildren, third)).toBe(true);
+    expect(googEvents.hasListener(first, GoogEventType.PROPERTYCHANGE, false)).toBe(true);
+    expect(googEvents.hasListener(second, GoogEventType.PROPERTYCHANGE, false)).toBe(true);
+    expect(googEvents.hasListener(third, GoogEventType.PROPERTYCHANGE, false)).toBe(true);
 
     root.setChildren(null);
     expect(root.getChildren()).toBe(null);
-    expect(goog.events.hasListener(first, goog.events.EventType.PROPERTYCHANGE, false)).toBe(false);
-    expect(goog.events.hasListener(second, goog.events.EventType.PROPERTYCHANGE, false)).toBe(false);
-    expect(goog.events.hasListener(third, goog.events.EventType.PROPERTYCHANGE, false)).toBe(false);
+    expect(googEvents.hasListener(first, GoogEventType.PROPERTYCHANGE, false)).toBe(false);
+    expect(googEvents.hasListener(second, GoogEventType.PROPERTYCHANGE, false)).toBe(false);
+    expect(googEvents.hasListener(third, GoogEventType.PROPERTYCHANGE, false)).toBe(false);
   });
 
   it('should know if it has children', function() {
-    var root = new os.structs.TreeNode();
-    var child = new os.structs.TreeNode();
+    var root = new TreeNode();
+    var child = new TreeNode();
     expect(root.hasChildren()).toBe(false);
     expect(child.hasChildren()).toBe(false);
 
@@ -49,8 +55,8 @@ describe('os.structs.TreeNode', function() {
   });
 
   it('should be able to add a child node', function() {
-    var root = new os.structs.TreeNode();
-    var child = new os.structs.TreeNode();
+    var root = new TreeNode();
+    var child = new TreeNode();
 
     root.addChild(child);
     expect(root.getChildren()).toContain(child);
@@ -58,8 +64,8 @@ describe('os.structs.TreeNode', function() {
   });
 
   it('should be able to add a child node without reparenting the child', function() {
-    var root = new os.structs.TreeNode();
-    var child = new os.structs.TreeNode();
+    var root = new TreeNode();
+    var child = new TreeNode();
 
     root.addChild(child, true);
     expect(root.getChildren()).toContain(child);
@@ -67,10 +73,10 @@ describe('os.structs.TreeNode', function() {
   });
 
   it('should be able to add a child node at a given index', function() {
-    var root = new os.structs.TreeNode();
-    var child = new os.structs.TreeNode();
-    var firstChild = new os.structs.TreeNode();
-    var middleChild = new os.structs.TreeNode();
+    var root = new TreeNode();
+    var child = new TreeNode();
+    var firstChild = new TreeNode();
+    var middleChild = new TreeNode();
 
     root.addChild(child, false);
     root.addChild(firstChild, false, 0);
@@ -82,8 +88,8 @@ describe('os.structs.TreeNode', function() {
   });
 
   it('should not add a node that is already there', function() {
-    var root = new os.structs.TreeNode();
-    var child = new os.structs.TreeNode();
+    var root = new TreeNode();
+    var child = new TreeNode();
 
     root.addChild(child);
     root.addChild(child);
@@ -92,11 +98,11 @@ describe('os.structs.TreeNode', function() {
   });
 
   it('should add multiple children', function() {
-    var root = new os.structs.TreeNode();
-    var child1 = new os.structs.TreeNode();
-    var child2 = new os.structs.TreeNode();
-    var child3 = new os.structs.TreeNode();
-    var child4 = new os.structs.TreeNode();
+    var root = new TreeNode();
+    var child1 = new TreeNode();
+    var child2 = new TreeNode();
+    var child3 = new TreeNode();
+    var child4 = new TreeNode();
 
     // doesn't break with null/empty array
     root.addChildren(null);
@@ -121,8 +127,8 @@ describe('os.structs.TreeNode', function() {
   });
 
   it('should be able to remove a child node', function() {
-    var root = new os.structs.TreeNode();
-    var child = new os.structs.TreeNode();
+    var root = new TreeNode();
+    var child = new TreeNode();
 
     root.addChild(child);
     var ret = root.removeChild(child);
@@ -133,9 +139,9 @@ describe('os.structs.TreeNode', function() {
   });
 
   it('should be able to remove a child that is not parented to itself', function() {
-    var root = new os.structs.TreeNode();
-    var child = new os.structs.TreeNode();
-    var other = new os.structs.TreeNode();
+    var root = new TreeNode();
+    var child = new TreeNode();
+    var other = new TreeNode();
 
     root.addChild(child);
     other.addChild(child, true);
@@ -148,9 +154,9 @@ describe('os.structs.TreeNode', function() {
   });
 
   it('should not fail when trying to remove a node that is not there', function() {
-    var root = new os.structs.TreeNode();
-    var child = new os.structs.TreeNode();
-    var other = new os.structs.TreeNode();
+    var root = new TreeNode();
+    var child = new TreeNode();
+    var other = new TreeNode();
 
     var fn = function() {
       var ret = root.removeChild(other);
@@ -163,15 +169,15 @@ describe('os.structs.TreeNode', function() {
   });
 
   it('should be able to find nodes by fields on the node', function() {
-    var root = new os.structs.TreeNode();
+    var root = new TreeNode();
     root.setId('rootId');
     root.setLabel('rootLabel');
 
-    var child = new os.structs.TreeNode();
+    var child = new TreeNode();
     child.setId('childId');
     child.setLabel('childLabel');
 
-    var other = new os.structs.TreeNode();
+    var other = new TreeNode();
     other.setId('otherId');
     other.setLabel('otherLabel');
 
@@ -192,15 +198,15 @@ describe('os.structs.TreeNode', function() {
   });
 
   it('should propagate children updates up the tree', function() {
-    var root = new os.structs.TreeNode();
+    var root = new TreeNode();
     root.setId('rootId');
     root.setLabel('rootLabel');
 
-    var child = new os.structs.TreeNode();
+    var child = new TreeNode();
     child.setId('childId');
     child.setLabel('childLabel');
 
-    var grandchild = new os.structs.TreeNode();
+    var grandchild = new TreeNode();
     grandchild.setId('grandchild');
     grandchild.setLabel('otherLabel');
 
@@ -211,7 +217,7 @@ describe('os.structs.TreeNode', function() {
       }
     };
 
-    root.listen(goog.events.EventType.PROPERTYCHANGE, listener);
+    root.listen(GoogEventType.PROPERTYCHANGE, listener);
 
     root.addChild(child);
     expect(count).toBe(1);
@@ -221,15 +227,15 @@ describe('os.structs.TreeNode', function() {
   });
 
   it('should be able to detect if grandchild has grandparent', function() {
-    var root = new os.structs.TreeNode();
+    var root = new TreeNode();
     root.setId('rootId');
     root.setLabel('rootLabel');
 
-    var child = new os.structs.TreeNode();
+    var child = new TreeNode();
     child.setId('childId');
     child.setLabel('childLabel');
 
-    var grandchild = new os.structs.TreeNode();
+    var grandchild = new TreeNode();
     grandchild.setId('grandchild');
     grandchild.setLabel('otherLabel');
 
