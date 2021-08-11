@@ -1,54 +1,59 @@
-goog.provide('os.state.JSONState');
-goog.require('os.state');
-goog.require('os.state.AbstractState');
-goog.require('os.state.JSONStateOptions');
+goog.module('os.state.JSONState');
+goog.module.declareLegacyNamespace();
 
+const {merge} = goog.require('os.object');
+const Tag = goog.require('os.state.Tag');
+const AbstractState = goog.require('os.state.AbstractState');
+
+const JSONStateOptions = goog.requireType('os.state.JSONStateOptions');
 
 
 /**
  * Base class for JSON states.
  *
- * @extends {os.state.AbstractState.<!Object.<string, *>, os.state.JSONStateOptions>}
- * @constructor
+ * @extends {AbstractState<!Object<string, *>, JSONStateOptions>}
  */
-os.state.JSONState = function() {
-  os.state.JSONState.base(this, 'constructor');
-};
-goog.inherits(os.state.JSONState, os.state.AbstractState);
-
-
-/**
- * @inheritDoc
- */
-os.state.JSONState.prototype.createRoot = function(options) {
-  var rootObj = {};
-  if (this.rootAttrs) {
-    os.object.merge(this.rootAttrs, rootObj, false);
+class JSONState extends AbstractState {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
   }
 
-  return rootObj;
-};
+  /**
+   * @inheritDoc
+   */
+  createRoot(options) {
+    var rootObj = {};
+    if (this.rootAttrs) {
+      merge(this.rootAttrs, rootObj, false);
+    }
 
-
-/**
- * @inheritDoc
- */
-os.state.JSONState.prototype.getSource = function(obj) {
-  // TODO: support this if the application that created the state file is required. we may have to pass the root object
-  // to the load function so it can be used here. objects can't walk up to the parent like XML elements can.
-  return null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.state.JSONState.prototype.saveComplete = function(options, rootObj) {
-  if (!options.obj[os.state.Tag.STATE]) {
-    options.obj[os.state.Tag.STATE] = [];
+    return rootObj;
   }
-  rootObj[os.state.Tag.TYPE] = this.rootName;
-  options.obj[os.state.Tag.STATE].push(rootObj);
 
-  os.state.JSONState.base(this, 'saveComplete', options, rootObj);
-};
+  /**
+   * @inheritDoc
+   */
+  getSource(obj) {
+    // TODO: support this if the application that created the state file is required. we may have to pass the root object
+    // to the load function so it can be used here. objects can't walk up to the parent like XML elements can.
+    return null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  saveComplete(options, rootObj) {
+    if (!options.obj[Tag.STATE]) {
+      options.obj[Tag.STATE] = [];
+    }
+    rootObj[Tag.TYPE] = this.rootName;
+    options.obj[Tag.STATE].push(rootObj);
+
+    super.saveComplete(options, rootObj);
+  }
+}
+
+exports = JSONState;

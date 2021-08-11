@@ -3,11 +3,12 @@ goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const StateType = goog.require('os.state.StateType');
-const osStyle = goog.require('os.style');
+const {DEFAULT_LAYER_COLOR} = goog.require('os.style');
 const Icons = goog.require('os.ui.Icons');
 const AbstractStateDescriptor = goog.require('os.ui.state.AbstractStateDescriptor');
 
 const Logger = goog.requireType('goog.log.Logger');
+const OSFile = goog.requireType('os.file.File');
 const XMLStateOptions = goog.requireType('os.state.XMLStateOptions');
 
 
@@ -34,12 +35,12 @@ class StateDescriptor extends AbstractStateDescriptor {
   /**
    * Creates a state descriptor from a file.
    *
-   * @param {!os.file.File} file The file
+   * @param {!OSFile} file The file
    * @return {!StateDescriptor} The descriptor
    */
   static createFromFile(file) {
     var descriptor = new StateDescriptor();
-    descriptor.setColor(osStyle.DEFAULT_LAYER_COLOR);
+    descriptor.setColor(DEFAULT_LAYER_COLOR);
     descriptor.setUrl(file.getUrl());
 
     return descriptor;
@@ -75,8 +76,6 @@ class StateDescriptor extends AbstractStateDescriptor {
 /**
  * Logger
  * @type {Logger}
- * @private
- * @const
  */
 const logger = log.getLogger('os.state.StateDescriptor');
 
