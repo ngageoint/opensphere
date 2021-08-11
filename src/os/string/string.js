@@ -1,49 +1,41 @@
-goog.provide('os.string');
-goog.require('goog.array');
-goog.require('goog.string');
-goog.require('os.ui');
-goog.require('os.url');
+goog.module('os.string');
+goog.module.declareLegacyNamespace();
+
+const {getRandomString, isEmptyOrWhitespace, makeSafe, removeAll} = goog.require('goog.string');
+const Const = goog.require('goog.string.Const');
+const {escapeHtml} = goog.require('os.ui');
+const {MAILTO_REGEXP, URL_REGEXP_LINKY} = goog.require('os.url');
 
 
 /**
  * Regular expression to test for boolean strings.
  * @type {RegExp}
- * @const
  */
-os.string.BOOLEAN = /^(true|false)$/i;
-
+const BOOLEAN = /^(true|false)$/i;
 
 /**
  * Regular expression to test for hex strings.
  * @type {RegExp}
- * @const
  */
-os.string.HEX = /^(0x)?[0-9A-Fa-f]+$/;
-
+const HEX = /^(0x)?[0-9A-Fa-f]+$/;
 
 /**
  * Regular expression to test for floats.
  * @type {RegExp}
- * @const
  */
-os.string.FLOAT = /^[+-]?\d+(\.\d*)?(E[+-]\d+)?$/;
-
+const FLOAT = /^[+-]?\d+(\.\d*)?(E[+-]\d+)?$/;
 
 /**
  * Regular expression to test for emails separated by commas.
  * @type {RegExp}
- * @const
  */
-os.string.EMAIL = /^\s*[^@,; ]+@[^@,; ]+\.[^@,; ]+\s*(\s*,\s*[^@,; ]+@[^@,; ]+\.[^@,; ]+)*\s*$/;
-
+const EMAIL = /^\s*[^@,; ]+@[^@,; ]+\.[^@,; ]+\s*(\s*,\s*[^@,; ]+@[^@,; ]+\.[^@,; ]+)*\s*$/;
 
 /**
  * Regular expression to extract for emails from string
  * @type {RegExp}
- * @const
  */
-os.string.EMAILS = /([a-zA-Z0-9._#\$\&'\*\+/=\?\^`{}\|~-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
-
+const EMAILS = /([a-zA-Z0-9._#\$\&'\*\+/=\?\^`{}\|~-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
 
 /**
  * Tests if a string represents a boolean value
@@ -51,10 +43,9 @@ os.string.EMAILS = /([a-zA-Z0-9._#\$\&'\*\+/=\?\^`{}\|~-]+@[a-zA-Z0-9._-]+\.[a-z
  * @param {string} str The string
  * @return {boolean} If the string represents a boolean value
  */
-os.string.isBoolean = function(str) {
-  return os.string.BOOLEAN.test(str);
+const isBoolean = function(str) {
+  return BOOLEAN.test(str);
 };
-
 
 /**
  * Tests if a string represents a float value
@@ -62,10 +53,9 @@ os.string.isBoolean = function(str) {
  * @param {string} str The string
  * @return {boolean} If the string represents a float value
  */
-os.string.isFloat = function(str) {
-  return os.string.FLOAT.test(str);
+const isFloat = function(str) {
+  return FLOAT.test(str);
 };
-
 
 /**
  * Tests if a string represents a hex value
@@ -73,10 +63,9 @@ os.string.isFloat = function(str) {
  * @param {string} str The string
  * @return {boolean} If the string represents a hex value
  */
-os.string.isHex = function(str) {
-  return os.string.HEX.test(str);
+const isHex = function(str) {
+  return HEX.test(str);
 };
-
 
 /**
  * Linkify a plain text string.
@@ -89,12 +78,12 @@ os.string.isHex = function(str) {
  * @param {string=} opt_clickHandler Optional click handler for the anchor tag
  * @return {string} Linkified text
  */
-os.string.linkify = function(text, opt_target, opt_class, opt_title, opt_htmlText, opt_clickHandler) {
+const linkify = function(text, opt_target, opt_class, opt_title, opt_htmlText, opt_clickHandler) {
   var addText = function(text) {
     if (!text) {
       return;
     }
-    html.push(os.ui.escapeHtml(text));
+    html.push(escapeHtml(text));
   };
 
   var addLink = function(url, text) {
@@ -134,7 +123,7 @@ os.string.linkify = function(text, opt_target, opt_class, opt_title, opt_htmlTex
   var html = [];
   var url;
   var i;
-  while ((match = raw.match(os.url.URL_REGEXP_LINKY))) {
+  while ((match = raw.match(URL_REGEXP_LINKY))) {
     // We can not end in these as they are sometimes found at the end of the sentence
     url = match[0];
     // if we did not match ftp/http/mailto then assume mailto
@@ -143,14 +132,13 @@ os.string.linkify = function(text, opt_target, opt_class, opt_title, opt_htmlTex
     }
     i = match.index;
     addText(raw.substr(0, i));
-    addLink(url, match[0].replace(os.url.MAILTO_REGEXP, ''));
+    addLink(url, match[0].replace(MAILTO_REGEXP, ''));
     raw = raw.substring(i + match[0].length);
   }
   addText(raw);
 
   return html.join('');
 };
-
 
 /**
  * Automatically determines a delimiter and splits a string.  Optionally takes an array of delimiters ordered by
@@ -160,45 +148,43 @@ os.string.linkify = function(text, opt_target, opt_class, opt_title, opt_htmlTex
  * @param {boolean=} opt_removeSpaces If the string should have spaces removed before splitting.  This is helpful
  *   to split with or without spaces (so ',' and ', ' are treated the same).  If space is the delimeter, this option
  *   is not exercised.
- * @param {Array.<string>=} opt_precedence
- * @return {!Array.<!string>}
+ * @param {Array<string>=} opt_precedence
+ * @return {!Array<!string>}
  */
-os.string.split = function(str, opt_removeSpaces, opt_precedence) {
+const split = function(str, opt_removeSpaces, opt_precedence) {
   var precedence = opt_precedence || [',', ';', '\t', '\n', ' '];
   var removeSpaces = !!opt_removeSpaces;
 
   var result;
   if (str) {
-    var trimmed = goog.string.trim(str);
+    var trimmed = str.trim();
     var delim;
     for (var i = 0, ii = precedence.length; i < ii; i++) {
-      if (goog.string.contains(trimmed, precedence[i])) {
+      if (trimmed.includes(precedence[i])) {
         delim = precedence[i];
         break;
       }
     }
 
     if (removeSpaces && delim !== ' ') {
-      trimmed = goog.string.removeAll(trimmed, ' ');
+      trimmed = removeAll(trimmed, ' ');
     }
     result = delim ? trimmed.split(delim) : [trimmed];
-    result = goog.array.filter(result, function(r) {
-      return !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(r));
+    result = result.filter(function(r) {
+      return !isEmptyOrWhitespace(makeSafe(r));
     });
   }
   return result || [];
 };
 
-
 /**
  * @suppress {accessControls} To allow creating a constant string from the URL, which varies by environment.
  * @param {!string} str
- * @return {!goog.string.Const}
+ * @return {!Const}
  */
-os.string.createConstant = function(str) {
-  return new goog.string.Const(goog.string.Const.GOOG_STRING_CONSTRUCTOR_TOKEN_PRIVATE_, str);
+const createConstant = function(str) {
+  return new Const(Const.GOOG_STRING_CONSTRUCTOR_TOKEN_PRIVATE_, str);
 };
-
 
 /**
  * This keeps the last instance of the substring and removes all others
@@ -207,7 +193,7 @@ os.string.createConstant = function(str) {
  * @param {?string} substr The substring whose duplicates to remove
  * @return {string}
  */
-os.string.removeDuplicates = function(str, substr) {
+const removeDuplicates = function(str, substr) {
   var result = str || '';
   if (str && substr) {
     var parts = str.split(substr);
@@ -223,17 +209,32 @@ os.string.removeDuplicates = function(str, substr) {
   return result;
 };
 
-
 /**
  * Generate a random string that conforms to the rules of js variable name conventions
  *
  * @return {string}
  */
-os.string.randomString = function() {
-  var s = goog.string.getRandomString();
+const randomString = function() {
+  var s = getRandomString();
   var code = s.charCodeAt(0);
   if (code > 64) {
     return s;
   }
   return String.fromCharCode(code + 50) + s.substring(1);
+};
+
+exports = {
+  BOOLEAN,
+  HEX,
+  FLOAT,
+  EMAIL,
+  EMAILS,
+  isBoolean,
+  isFloat,
+  isHex,
+  linkify,
+  split,
+  createConstant,
+  removeDuplicates,
+  randomString
 };
