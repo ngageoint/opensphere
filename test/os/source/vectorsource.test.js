@@ -1,30 +1,66 @@
+goog.require('goog.array');
 goog.require('goog.events.EventType');
+goog.require('goog.functions');
 goog.require('goog.net.EventType');
 goog.require('goog.net.XhrIo');
 goog.require('goog.object');
 goog.require('ol.Feature');
+goog.require('ol.events');
 goog.require('ol.geom.Point');
 goog.require('os.Fields');
 goog.require('os.data.ColumnDefinition');
+goog.require('os.data.DataManager');
+goog.require('os.data.RecordField');
 goog.require('os.data.filter.OddFilter');
 goog.require('os.events.EventType');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.events.SelectionType');
 goog.require('os.feature.DynamicFeature');
+goog.require('os.feature.DynamicPropertyChange');
 goog.require('os.im.Importer');
+goog.require('os.layer');
 goog.require('os.layer.MockLayer');
 goog.require('os.map.instance');
 goog.require('os.mock');
 goog.require('os.source.Vector');
 goog.require('os.style');
+goog.require('os.style.StyleField');
 goog.require('os.style.StyleManager');
 goog.require('os.time.TimeRange');
+goog.require('os.ui.formatter.DescriptionFormatter');
 goog.require('os.ui.formatter.PropertiesFormatter');
 goog.require('plugin.file.geojson.GeoJSONParser');
 
 
 describe('os.source.Vector', function() {
+  const googArray = goog.module.get('goog.array');
+  const GoogEventType = goog.module.get('goog.events.EventType');
+  const functions = goog.module.get('goog.functions');
+  const googNetEventType = goog.module.get('goog.net.EventType');
+  const XhrIo = goog.module.get('goog.net.XhrIo');
+  const googObject = goog.module.get('goog.object');
+  const Feature = goog.module.get('ol.Feature');
+  const events = goog.module.get('ol.events');
+  const Point = goog.module.get('ol.geom.Point');
+  const Fields = goog.module.get('os.Fields');
+  const ColumnDefinition = goog.module.get('os.data.ColumnDefinition');
+  const DataManager = goog.module.get('os.data.DataManager');
+  const RecordField = goog.module.get('os.data.RecordField');
+  const EventType = goog.module.get('os.events.EventType');
+  const PropertyChangeEvent = goog.module.get('os.events.PropertyChangeEvent');
+  const SelectionType = goog.module.get('os.events.SelectionType');
+  const DynamicFeature = goog.module.get('os.feature.DynamicFeature');
+  const DynamicPropertyChange = goog.module.get('os.feature.DynamicPropertyChange');
+  const Importer = goog.module.get('os.im.Importer');
+  const osLayer = goog.module.get('os.layer');
   const {getMapContainer, setMapContainer} = goog.module.get('os.map.instance');
+  const VectorSource = goog.module.get('os.source.Vector');
+  const StyleField = goog.module.get('os.style.StyleField');
+  const StyleManager = goog.module.get('os.style.StyleManager');
+  const TimeRange = goog.module.get('os.time.TimeRange');
+  const DescriptionFormatter = goog.module.get('os.ui.formatter.DescriptionFormatter');
+  const PropertiesFormatter = goog.module.get('os.ui.formatter.PropertiesFormatter');
+  const GeoJSONParser = goog.module.get('plugin.file.geojson.GeoJSONParser');
 
   var dynamicFeatures = null;
   var features = null;
@@ -32,32 +68,32 @@ describe('os.source.Vector', function() {
 
   var displayStart = Date.now();
   var displayEnd = displayStart + 5000;
-  var displayRange = new os.time.TimeRange(displayStart, displayEnd);
+  var displayRange = new TimeRange(displayStart, displayEnd);
 
   var waitForTestObject = function() {
     if (!source) {
-      source = new os.source.Vector(undefined);
+      source = new VectorSource(undefined);
       source.setDisplayRange(displayRange, false);
     }
 
     // make sure the timeline controller doesn't change our expected range
     spyOn(source.tlc, 'getLastEvent').andReturn({
-      getRange: goog.functions.constant(displayRange)
+      getRange: functions.constant(displayRange)
     });
 
     if (features) {
       return;
     }
 
-    var i = new os.im.Importer(new plugin.file.geojson.GeoJSONParser());
-    i.listenOnce(os.events.EventType.COMPLETE, function() {
+    var i = new Importer(new GeoJSONParser());
+    i.listenOnce(EventType.COMPLETE, function() {
       features = i.getData();
     });
 
-    var xhr = new goog.net.XhrIo();
+    var xhr = new XhrIo();
     var response = null;
 
-    xhr.listen(goog.net.EventType.SUCCESS, function() {
+    xhr.listen(googNetEventType.SUCCESS, function() {
       response = xhr.getResponseJson();
     }, false);
 
@@ -83,7 +119,7 @@ describe('os.source.Vector', function() {
       dynamicFeatures = [];
 
       for (var i = 0; i < 5; i++) {
-        var df = new os.feature.DynamicFeature(new ol.geom.Point([0, 0]));
+        var df = new DynamicFeature(new Point([0, 0]));
         df.setId('df' + i);
         dynamicFeatures.push(df);
       }
@@ -105,14 +141,14 @@ describe('os.source.Vector', function() {
     originalMapContainer = getMapContainer();
 
     // Create a fake layer object to mock functions used by vector source.
-    var layer = new os.layer.MockLayer();
+    var layer = new osLayer.MockLayer();
 
     // Create a fake map container to return our fake layer.
     var mapContainer = {
-      getLayer: goog.functions.constant(layer),
-      getMap: goog.functions.NULL,
-      is3DEnabled: goog.functions.FALSE,
-      is3DSupported: goog.functions.FALSE
+      getLayer: functions.constant(layer),
+      getMap: functions.NULL,
+      is3DEnabled: functions.FALSE,
+      is3DSupported: functions.FALSE
     };
 
     // Replace the map container instance with the fake.
@@ -151,7 +187,7 @@ describe('os.source.Vector', function() {
   });
 
   it('should ensure added features have a feature id', function() {
-    var feature = new ol.Feature(new ol.geom.Point([0, 0]));
+    var feature = new Feature(new Point([0, 0]));
     expect(feature.getId()).toBeUndefined();
 
     source.addFeature(feature);
@@ -163,10 +199,10 @@ describe('os.source.Vector', function() {
   });
 
   it('should remove features from the source', () => {
-    const feature = new ol.Feature(new ol.geom.Point([0, 0]));
+    const feature = new Feature(new Point([0, 0]));
     const sources = [
-      new os.source.Vector(undefined),
-      new os.source.Vector({
+      new VectorSource(undefined),
+      new VectorSource({
         useSpatialIndex: false
       })];
 
@@ -181,8 +217,8 @@ describe('os.source.Vector', function() {
   });
 
   it('should not error on attempting multiple removes of a feature', () => {
-    const feature = new ol.Feature(new ol.geom.Point([0, 0]));
-    const source = new os.source.Vector(undefined);
+    const feature = new Feature(new Point([0, 0]));
+    const source = new VectorSource(undefined);
     source.addFeature(feature);
     source.processNow();
 
@@ -220,12 +256,12 @@ describe('os.source.Vector', function() {
   });
 
   it('should not select/deselect features that are not in the source', function() {
-    var newFeature = new ol.Feature();
+    var newFeature = new Feature();
     newFeature.setId('im-not-in-the-source');
 
     expect(source.select(newFeature)).toBe(false);
     expect(source.selected_.length).toBe(0);
-    expect(goog.object.getKeys(source.selectedById_).length).toBe(0);
+    expect(googObject.getKeys(source.selectedById_).length).toBe(0);
 
     expect(source.deselect(newFeature)).toBe(false);
   });
@@ -234,12 +270,12 @@ describe('os.source.Vector', function() {
     var count = 0;
     var addedItems = null;
     var onPropertyChange = function(event) {
-      if (event.getProperty() == os.events.SelectionType.ADDED) {
+      if (event.getProperty() == SelectionType.ADDED) {
         addedItems = event.getNewValue();
         count++;
       }
     };
-    ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, onPropertyChange, this);
+    events.listen(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
 
     var singleFeature = features[0];
     var multiFeature = features.slice(0, 10);
@@ -256,7 +292,7 @@ describe('os.source.Vector', function() {
     runs(function() {
       expect(source.selected_.length).toBe(1);
       expect(source.selected_[0]).toBe(singleFeature);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(1);
+      expect(googObject.getKeys(source.selectedById_).length).toBe(1);
       expect(source.selectedById_[singleFeature['id']]).toBe(true);
       expect(addedItems).not.toBeNull();
       expect(addedItems.length).toBe(1);
@@ -272,7 +308,7 @@ describe('os.source.Vector', function() {
 
     runs(function() {
       expect(source.selected_.length).toBe(10);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(10);
+      expect(googObject.getKeys(source.selectedById_).length).toBe(10);
       expect(addedItems).not.toBeNull();
       expect(addedItems.length).toBe(9);
       expect(addedItems).not.toContain(singleFeature);
@@ -287,14 +323,14 @@ describe('os.source.Vector', function() {
 
     runs(function() {
       expect(source.selected_.length).toBe(12);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(12);
+      expect(googObject.getKeys(source.selectedById_).length).toBe(12);
       expect(addedItems).not.toBeNull();
       expect(addedItems.length).toBe(2);
       expect(addedItems).not.toContain(singleFeature);
       expect(addedItems).not.toContain(multiFeature[0]);
 
       addedItems = null;
-      ol.events.unlisten(source, goog.events.EventType.PROPERTYCHANGE, onPropertyChange, this);
+      events.unlisten(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
     });
   });
 
@@ -302,12 +338,12 @@ describe('os.source.Vector', function() {
     var count = 0;
     var removedItems = null;
     var onPropertyChange = function(event) {
-      if (event.getProperty() == os.events.SelectionType.REMOVED) {
+      if (event.getProperty() == SelectionType.REMOVED) {
         removedItems = event.getNewValue();
         count++;
       }
     };
-    ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, onPropertyChange, this);
+    events.listen(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
 
     var singleFeature = features[0];
     var multiFeature = features.slice(0, 10);
@@ -324,7 +360,7 @@ describe('os.source.Vector', function() {
     runs(function() {
       expect(source.selected_.length).toBe(11);
       expect(source.selected_).not.toContain(singleFeature);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(11);
+      expect(googObject.getKeys(source.selectedById_).length).toBe(11);
       expect(source.selectedById_[singleFeature.getId()]).toBeUndefined();
       expect(removedItems).not.toBeNull();
       expect(removedItems.length).toBe(1);
@@ -340,7 +376,7 @@ describe('os.source.Vector', function() {
 
     runs(function() {
       expect(source.selected_.length).toBe(2);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(2);
+      expect(googObject.getKeys(source.selectedById_).length).toBe(2);
       expect(removedItems).not.toBeNull();
       expect(removedItems.length).toBe(9);
       expect(removedItems).not.toContain(singleFeature);
@@ -355,24 +391,24 @@ describe('os.source.Vector', function() {
 
     runs(function() {
       expect(source.selected_.length).toBe(0);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(0);
+      expect(googObject.getKeys(source.selectedById_).length).toBe(0);
       expect(removedItems).not.toBeNull();
       expect(removedItems.length).toBe(2);
       expect(removedItems).not.toContain(singleFeature);
       expect(removedItems).not.toContain(multiFeature[0]);
 
-      ol.events.unlisten(source, goog.events.EventType.PROPERTYCHANGE, onPropertyChange, this);
+      events.unlisten(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
     });
   });
 
   it('should select all features in the source', function() {
     var addedCount = 0;
     var onPropertyChange = function(event) {
-      if (event.getProperty() == os.events.SelectionType.ADDED) {
+      if (event.getProperty() == SelectionType.ADDED) {
         addedCount++;
       }
     };
-    ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, onPropertyChange, this);
+    events.listen(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
 
     runs(function() {
       // should select all and fire a change event
@@ -385,7 +421,7 @@ describe('os.source.Vector', function() {
 
     runs(function() {
       expect(source.selected_.length).toBe(10000);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(10000);
+      expect(googObject.getKeys(source.selectedById_).length).toBe(10000);
 
       // shouldn't fire the change event if everything is already selected
       source.selectAll();
@@ -396,12 +432,12 @@ describe('os.source.Vector', function() {
     runs(function() {
       expect(addedCount).toBe(1);
       expect(source.selected_.length).toBe(10000);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(10000);
+      expect(googObject.getKeys(source.selectedById_).length).toBe(10000);
 
       // should fire a change event if at least one feature is selected
       source.deselect(features[0]);
       expect(source.selected_.length).toBe(9999);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(9999);
+      expect(googObject.getKeys(source.selectedById_).length).toBe(9999);
       source.selectAll();
     });
 
@@ -411,24 +447,24 @@ describe('os.source.Vector', function() {
 
     runs(function() {
       expect(source.selected_.length).toBe(10000);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(10000);
+      expect(googObject.getKeys(source.selectedById_).length).toBe(10000);
 
-      ol.events.unlisten(source, goog.events.EventType.PROPERTYCHANGE, onPropertyChange, this);
+      events.unlisten(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
     });
   });
 
   it('should deselect all features in the source', function() {
     var removedCount = 0;
     var onPropertyChange = function(event) {
-      if (event.getProperty() == os.events.SelectionType.REMOVED) {
+      if (event.getProperty() == SelectionType.REMOVED) {
         removedCount++;
       }
     };
-    ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, onPropertyChange, this);
+    events.listen(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
 
     runs(function() {
       expect(source.selected_.length).toBe(10000);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(10000);
+      expect(googObject.getKeys(source.selectedById_).length).toBe(10000);
 
       // should remove selection and fire a change event
       source.selectNone();
@@ -440,7 +476,7 @@ describe('os.source.Vector', function() {
 
     runs(function() {
       expect(source.selected_.length).toBe(0);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(0);
+      expect(googObject.getKeys(source.selectedById_).length).toBe(0);
 
       // shouldn't fire the change event if nothing is selected
       source.selectNone();
@@ -451,12 +487,12 @@ describe('os.source.Vector', function() {
     runs(function() {
       expect(removedCount).toBe(1);
       expect(source.selected_.length).toBe(0);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(0);
+      expect(googObject.getKeys(source.selectedById_).length).toBe(0);
 
       // should fire a change event if at least one feature is deselected
       source.select(features[0]);
       expect(source.selected_.length).toBe(1);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(1);
+      expect(googObject.getKeys(source.selectedById_).length).toBe(1);
       source.selectNone();
     });
 
@@ -466,9 +502,9 @@ describe('os.source.Vector', function() {
 
     runs(function() {
       expect(source.selected_.length).toBe(0);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(0);
+      expect(googObject.getKeys(source.selectedById_).length).toBe(0);
 
-      ol.events.unlisten(source, goog.events.EventType.PROPERTYCHANGE, onPropertyChange, this);
+      events.unlisten(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
     });
   });
 
@@ -514,7 +550,7 @@ describe('os.source.Vector', function() {
     // should hide selected features and deselect them
     source.addToSelected(features.slice(0, 10));
     expect(source.selected_.length).toBe(10);
-    expect(goog.object.getKeys(source.selectedById_).length).toBe(10);
+    expect(googObject.getKeys(source.selectedById_).length).toBe(10);
     source.hideSelected();
     expect(source.getFilteredFeatures().length).toBe(features.length - 10);
   });
@@ -524,12 +560,12 @@ describe('os.source.Vector', function() {
     expect(source.getFilteredFeatures().length).toBe(features.length);
     source.addToSelected(features.slice(0, 10));
     expect(source.selected_.length).toBe(10);
-    expect(goog.object.getKeys(source.selectedById_).length).toBe(10);
+    expect(googObject.getKeys(source.selectedById_).length).toBe(10);
 
     source.hideUnselected();
     expect(source.getFilteredFeatures().length).toBe(10);
     expect(source.selected_.length).toBe(10);
-    expect(goog.object.getKeys(source.selectedById_).length).toBe(10);
+    expect(googObject.getKeys(source.selectedById_).length).toBe(10);
   });
 
   it('create its refresh delay', function() {
@@ -544,7 +580,7 @@ describe('os.source.Vector', function() {
   });
 
   it('shares its refresh timer with all other sources', function() {
-    var newSource = new os.source.Vector(undefined);
+    var newSource = new VectorSource(undefined);
     newSource.setRefreshInterval(15);
     source.setRefreshInterval(15);
 
@@ -559,8 +595,8 @@ describe('os.source.Vector', function() {
   });
 
   it('should not allow invalid geometries', function() {
-    var f = new ol.Feature(new ol.geom.Point([]));
-    var newSource = new os.source.Vector(undefined);
+    var f = new Feature(new Point([]));
+    var newSource = new VectorSource(undefined);
     newSource.addFeature(f);
     expect(f.getGeometry()).toBe(null);
   });
@@ -582,7 +618,7 @@ describe('os.source.Vector', function() {
     var columns;
 
     var createColumn = function(name, field) {
-      var columnDefinition = new os.data.ColumnDefinition();
+      var columnDefinition = new ColumnDefinition();
       columnDefinition['id'] = name;
       columnDefinition['name'] = name;
       columnDefinition['field'] = field || name;
@@ -609,13 +645,13 @@ describe('os.source.Vector', function() {
 
       var copy = source.getColumns();
       expect(copy).not.toBe(source.columns);
-      expect(goog.array.equals(copy, source.columns)).toBe(true);
+      expect(googArray.equals(copy, source.columns)).toBe(true);
     });
 
     it('should always add an ID column to the source', function() {
       source.setColumns([]);
       expect(source.columns.length).toBe(1);
-      expect(source.hasColumn(os.Fields.ID)).toBe(true);
+      expect(source.hasColumn(Fields.ID)).toBe(true);
     });
 
     it('should set columns on the source from an array of strings', function() {
@@ -628,11 +664,11 @@ describe('os.source.Vector', function() {
         expect(source.hasColumn(columns[i])).toBe(true);
       }
 
-      expect(source.hasColumn(os.Fields.MGRS)).toBe(true);
-      expect(source.hasColumn(os.Fields.LAT_DMS)).toBe(true);
-      expect(source.hasColumn(os.Fields.LON_DMS)).toBe(true);
-      expect(source.hasColumn(os.Fields.LAT_DDM)).toBe(true);
-      expect(source.hasColumn(os.Fields.LON_DDM)).toBe(true);
+      expect(source.hasColumn(Fields.MGRS)).toBe(true);
+      expect(source.hasColumn(Fields.LAT_DMS)).toBe(true);
+      expect(source.hasColumn(Fields.LON_DMS)).toBe(true);
+      expect(source.hasColumn(Fields.LAT_DDM)).toBe(true);
+      expect(source.hasColumn(Fields.LON_DDM)).toBe(true);
     });
 
     it('should set columns on the source from an array of columns', function() {
@@ -645,11 +681,11 @@ describe('os.source.Vector', function() {
         expect(source.hasColumn(columns[i]['field'])).toBe(true);
       }
 
-      expect(source.hasColumn(os.Fields.MGRS)).toBe(true);
-      expect(source.hasColumn(os.Fields.LAT_DMS)).toBe(true);
-      expect(source.hasColumn(os.Fields.LON_DMS)).toBe(true);
-      expect(source.hasColumn(os.Fields.LAT_DDM)).toBe(true);
-      expect(source.hasColumn(os.Fields.LON_DDM)).toBe(true);
+      expect(source.hasColumn(Fields.MGRS)).toBe(true);
+      expect(source.hasColumn(Fields.LAT_DMS)).toBe(true);
+      expect(source.hasColumn(Fields.LON_DMS)).toBe(true);
+      expect(source.hasColumn(Fields.LAT_DDM)).toBe(true);
+      expect(source.hasColumn(Fields.LON_DDM)).toBe(true);
     });
 
     it('should add a TIME column if time enabled', function() {
@@ -657,7 +693,7 @@ describe('os.source.Vector', function() {
       source.setTimeEnabled(true);
       source.setColumns(columns);
       expect(source.columns.length).toBe(columns.length + 6); // +6 for mgrs, latdms, londms, latddm, londdm, time
-      expect(source.hasColumn(os.data.RecordField.TIME)).toBe(true);
+      expect(source.hasColumn(RecordField.TIME)).toBe(true);
 
       // disable it for subsequent tests
       source.setTimeEnabled(false);
@@ -665,11 +701,11 @@ describe('os.source.Vector', function() {
 
     it('should remove duplicate columns', function() {
       columns = [
-        new os.data.ColumnDefinition('ID'),
-        new os.data.ColumnDefinition('ID')
+        new ColumnDefinition('ID'),
+        new ColumnDefinition('ID')
       ];
 
-      var source = new os.source.Vector(undefined);
+      var source = new VectorSource(undefined);
       source.setColumns(columns);
       expect(source.columns.length).toBe(1);
       expect(source.columns[0]['id']).toBe('ID');
@@ -679,11 +715,11 @@ describe('os.source.Vector', function() {
       // create a fake descriptor that returns columns:
       //  - out of the normal auto sort order
       //  - non-default width and userModified values
-      var dColumn1 = new os.data.ColumnDefinition('TIME');
+      var dColumn1 = new ColumnDefinition('TIME');
       dColumn1['width'] = 123;
       dColumn1['userModified'] = true;
 
-      var dColumn2 = new os.data.ColumnDefinition('ID');
+      var dColumn2 = new ColumnDefinition('ID');
       dColumn2['width'] = 456;
       dColumn2['userModified'] = true;
 
@@ -695,14 +731,14 @@ describe('os.source.Vector', function() {
       };
 
       // return the descriptor when setColumns looks for one
-      spyOn(os.dataManager, 'getDescriptor').andReturn(descriptor);
+      spyOn(DataManager.getInstance(), 'getDescriptor').andReturn(descriptor);
 
       // columns on the descriptor start in opposite order, with new columns mixed in
       columns = [
-        new os.data.ColumnDefinition('ID'),
-        new os.data.ColumnDefinition('NEW_COLUMN_1'),
-        new os.data.ColumnDefinition('TIME'),
-        new os.data.ColumnDefinition('NEW_COLUMN_2')
+        new ColumnDefinition('ID'),
+        new ColumnDefinition('NEW_COLUMN_1'),
+        new ColumnDefinition('TIME'),
+        new ColumnDefinition('NEW_COLUMN_2')
       ];
 
       columns[0]['width'] = 100;
@@ -710,7 +746,7 @@ describe('os.source.Vector', function() {
       columns[2]['width'] = 300;
       columns[3]['width'] = 400;
 
-      var source = new os.source.Vector(undefined);
+      var source = new VectorSource(undefined);
       source.setColumns(columns);
 
       // still have 4 columns
@@ -743,11 +779,11 @@ describe('os.source.Vector', function() {
 
     it('should sort columns if they are not marked as user-modified', function() {
       columns = [
-        new os.data.ColumnDefinition('TIME'),
-        new os.data.ColumnDefinition('ID')
+        new ColumnDefinition('TIME'),
+        new ColumnDefinition('ID')
       ];
 
-      var source = new os.source.Vector(undefined);
+      var source = new VectorSource(undefined);
       source.setColumns(columns);
       expect(source.columns.length).toBe(2);
       expect(source.columns[0]['id']).toBe('TIME');
@@ -756,13 +792,13 @@ describe('os.source.Vector', function() {
 
     it('should not sort columns if they are marked as user-modified', function() {
       columns = [
-        new os.data.ColumnDefinition('TIME'),
-        new os.data.ColumnDefinition('ID')
+        new ColumnDefinition('TIME'),
+        new ColumnDefinition('ID')
       ];
 
       columns[0]['userModified'] = true;
 
-      var source = new os.source.Vector(undefined);
+      var source = new VectorSource(undefined);
       source.setColumns(columns);
       expect(source.columns.length).toBe(2);
       expect(source.columns[0]['id']).toBe('TIME');
@@ -771,39 +807,39 @@ describe('os.source.Vector', function() {
 
     it('should add a formatter to a "DESCRIPTION" column', function() {
       columns = ['ID', 'DESCRIPTION'];
-      source = new os.source.Vector();
+      source = new VectorSource();
       source.setColumns(columns);
       expect(source.columns.length).toBe(2);
       expect(source.hasColumn('DESCRIPTION')).toBe(true);
 
       // expect the formatter on that column to be the DescriptionFormatter
-      expect(source.columns[1]['formatter']).toBe(os.ui.formatter.DescriptionFormatter);
+      expect(source.columns[1]['formatter']).toBe(DescriptionFormatter);
     });
 
     it('should add a formatter to a "PROPERTIES" column', function() {
       columns = ['ID', 'PROPERTIES'];
-      source = new os.source.Vector();
+      source = new VectorSource();
       source.setColumns(columns);
       expect(source.columns.length).toBe(2);
       expect(source.hasColumn('PROPERTIES')).toBe(true);
 
       // expect the formatter on that column to be the PropertiesFormatter
-      expect(source.columns[1]['formatter']).toBe(os.ui.formatter.PropertiesFormatter);
+      expect(source.columns[1]['formatter']).toBe(PropertiesFormatter);
     });
 
     it('should detect an icon rotation column', function() {
       var styleConfig = {};
       columns = ['ID', 'TYPE', 'BEARING'];
-      source = new os.source.Vector();
+      source = new VectorSource();
 
-      var sm = os.style.StyleManager.getInstance();
+      var sm = StyleManager.getInstance();
       spyOn(sm, 'getLayerConfig').andCallFake(function() {
         return styleConfig;
       });
 
       source.setColumns(columns);
 
-      expect(styleConfig[os.style.StyleField.ROTATION_COLUMN]).toBe(os.Fields.BEARING);
+      expect(styleConfig[StyleField.ROTATION_COLUMN]).toBe(Fields.BEARING);
     });
   });
 
@@ -868,7 +904,7 @@ describe('os.source.Vector', function() {
       spyOn(source, 'onDynamicFeatureChange').andCallThrough();
 
       var df = dynamicFeatures[0];
-      df.dispatchEvent(new os.events.PropertyChangeEvent(os.feature.DynamicPropertyChange.GEOMETRY));
+      df.dispatchEvent(new PropertyChangeEvent(DynamicPropertyChange.GEOMETRY));
 
       // feature is already initialized so this shouldn't be called
       expect(df.initDynamic).not.toHaveBeenCalled();
@@ -982,7 +1018,7 @@ describe('os.source.Vector', function() {
 
       source.setColor([dynamicFeatures[0]], color);
       expect(source.hasColors()).toBe(true);
-      expect(dynamicFeatures[0].values_[os.style.StyleField.COLOR]).toBe(color);
+      expect(dynamicFeatures[0].values_[StyleField.COLOR]).toBe(color);
 
       source.setColorModel(null);
       expect(source.hasColors()).toBe(false);

@@ -1,17 +1,19 @@
-goog.require('os.mock');
 goog.require('os.im.AsyncImporter');
 goog.require('os.mock');
 goog.require('os.source.ImportQueue');
 
 
 describe('os.source.ImportQueue', function() {
+  const AsyncImporter = goog.module.get('os.im.AsyncImporter');
+  const ImportQueue = goog.module.get('os.source.ImportQueue');
+
   it('lets the importer fully complete before parsing the next queue item', function() {
     var queue1 = ['a', 'b', 'c'];
     var queue2 = [1, 2, 3];
     var queue3 = ['do', 're', 'me'];
 
-    var im = new os.im.AsyncImporter();
-    var source = new os.source.ImportQueue();
+    var im = new AsyncImporter();
+    var source = new ImportQueue();
     source.setImporter(im);
 
     var spyObj = spyOn(im, 'onParsingComplete');
@@ -31,7 +33,7 @@ describe('os.source.ImportQueue', function() {
     source.importQueue_.push(queue1, queue2);
     source.queueData(queue3);
 
-    // wait for the queue to clear or our spy may be called after the spec is disposed
+    // wait for the queue to clear or our spy may be called after the spec is dispos1ed
     waitsFor(function() {
       return source.importQueue_.length == 0 && spyCalls == 3;
     }, 'queue to finish processing');
