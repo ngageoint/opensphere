@@ -60,8 +60,8 @@ describe('os.state.v2.Filter', function() {
     expect(goog.object.getCount(os.ui.filterManager.types)).toBe(1);
     expect(os.ui.filterManager.types[id + 'layer1'].filters.length).toBe(2);
     expect(os.ui.queryManager.entries.length).toBe(2);
-    expect(os.state.v2.Filter.ADDED_[id]).not.toBe(null);
-    expect(os.state.v2.Filter.ADDED_[id].length).toBe(2);
+    expect(os.state.v2.Filter.getAddedEntries()[id]).not.toBe(null);
+    expect(os.state.v2.Filter.getAddedEntries()[id].length).toBe(2);
 
     // check one of the filters and entries
     var entry = os.ui.queryManager.entries[0];
@@ -81,14 +81,14 @@ describe('os.state.v2.Filter', function() {
     // check that we start where we expect to be
     expect(os.ui.filterManager.types[id + 'layer1'].filters.length).toBe(2);
     expect(os.ui.queryManager.entries.length).toBe(2);
-    expect(os.state.v2.Filter.ADDED_[id].length).toBe(2);
+    expect(os.state.v2.Filter.getAddedEntries()[id].length).toBe(2);
 
     state.remove(id);
 
     // and now everything has been removed
     expect(os.ui.filterManager.types[id + 'layer1'].filters.length).toBe(0);
     expect(os.ui.queryManager.entries.length).toBe(0);
-    expect(os.state.v2.Filter.ADDED_[id]).toBe(undefined);
+    expect(os.state.v2.Filter.getAddedEntries()[id]).toBe(undefined);
   });
 
   it('should save correctly', function() {

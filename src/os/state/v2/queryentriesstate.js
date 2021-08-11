@@ -149,6 +149,14 @@ class QueryEntries extends XMLState {
       this.saveFailed(e.message || 'Unspecified error.');
     }
   }
+
+  /**
+   * Get the query entries added by this state type.
+   * @return {Object<string, !Array<Object<string, string|boolean>>>}
+   */
+  static getAddedEntries() {
+    return addedEntries;
+  }
 }
 
 /**

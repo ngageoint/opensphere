@@ -1,4 +1,3 @@
-goog.require('os.xml');
 goog.require('goog.dom');
 goog.require('goog.dom.xml');
 goog.require('goog.string');
@@ -7,6 +6,7 @@ goog.require('os.query.FilterManager');
 goog.require('os.query.QueryManager');
 goog.require('os.state.v2.QueryEntries');
 goog.require('os.state.v2.QueryEntriesTag');
+goog.require('os.xml');
 
 
 describe('os.state.v2.QueryEntries', function() {
@@ -42,8 +42,8 @@ describe('os.state.v2.QueryEntries', function() {
     state.load(xmlEntries, id);
 
     expect(os.ui.queryManager.entries.length).toBe(5);
-    expect(os.state.v2.QueryEntries.ADDED_[id]).not.toBe(null);
-    expect(os.state.v2.QueryEntries.ADDED_[id].length).toBe(5);
+    expect(os.state.v2.QueryEntries.getAddedEntries()[id]).not.toBe(null);
+    expect(os.state.v2.QueryEntries.getAddedEntries()[id].length).toBe(5);
 
     // check one of the entries
     var entry = os.ui.queryManager.entries[0];
@@ -56,10 +56,10 @@ describe('os.state.v2.QueryEntries', function() {
 
   it('should remove correctly', function() {
     expect(os.ui.queryManager.entries.length).toBe(5);
-    expect(os.state.v2.QueryEntries.ADDED_[id].length).toBe(5);
+    expect(os.state.v2.QueryEntries.getAddedEntries()[id].length).toBe(5);
     state.remove(id);
     expect(os.ui.queryManager.entries.length).toBe(0);
-    expect(os.state.v2.QueryEntries.ADDED_[id]).toBe(undefined);
+    expect(os.state.v2.QueryEntries.getAddedEntries()[id]).toBe(undefined);
   });
 
   it('should save correctly', function() {

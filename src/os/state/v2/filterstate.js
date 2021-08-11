@@ -104,6 +104,14 @@ class Filter extends BaseFilter {
     this.setSources(DataManager.getInstance().getSources());
     super.saveInternal(options, rootObj);
   }
+
+  /**
+   * Get the filter entries added by this state type.
+   * @return {Object<string, !Array<!FilterEntry>>}
+   */
+  static getAddedEntries() {
+    return addedEntries;
+  }
 }
 
 /**
@@ -115,7 +123,6 @@ const logger = log.getLogger('os.state.v2.Filter');
 /**
  * Filter entries added by this state type
  * @type {Object<string, !Array<!FilterEntry>>}
- * @private
  */
 const addedEntries = {};
 
