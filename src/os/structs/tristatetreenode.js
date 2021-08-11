@@ -1,256 +1,247 @@
-goog.provide('os.structs.TriStateTreeNode');
-goog.require('goog.events.Event');
-goog.require('goog.events.EventType');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.structs.IStateTreeNode');
-goog.require('os.structs.TreeNode');
-goog.require('os.structs.TriState');
+goog.module('os.structs.TriStateTreeNode');
+goog.module.declareLegacyNamespace();
 
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const TreeNode = goog.require('os.structs.TreeNode');
+const TriState = goog.require('os.structs.TriState');
+
+const IStateTreeNode = goog.requireType('os.structs.IStateTreeNode');
 
 
 /**
  * Adds tri-state functionality to the tree nodes
  *
- * @extends {os.structs.TreeNode}
- * @implements {os.structs.IStateTreeNode}
- * @constructor
+ * @implements {IStateTreeNode}
  */
-os.structs.TriStateTreeNode = function() {
-  os.structs.TriStateTreeNode.base(this, 'constructor');
-
+class TriStateTreeNode extends TreeNode {
   /**
-   * The node state
-   * @type {string}
-   * @private
+   * Constructor.
    */
-  this.state_ = os.structs.TriState.OFF;
-  this.setState(os.structs.TriState.OFF);
+  constructor() {
+    super();
 
-  /**
-   * The counts of different child node types
-   * @type {Object.<string, number>}
-   * @private
-   */
-  this.counts_ = {};
+    /**
+     * The node state
+     * @type {string}
+     * @private
+     */
+    this.state_ = TriState.OFF;
+    this.setState(TriState.OFF);
 
-  this.counts_[os.structs.TriState.ON] = 0;
-  this.counts_[os.structs.TriState.OFF] = 0;
-  this.counts_[os.structs.TriState.BOTH] = 0;
+    /**
+     * The counts of different child node types
+     * @type {Object<string, number>}
+     * @private
+     */
+    this.counts_ = {};
 
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.updating_ = false;
+    this.counts_[TriState.ON] = 0;
+    this.counts_[TriState.OFF] = 0;
+    this.counts_[TriState.BOTH] = 0;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.updating_ = false;
+
+    /**
+     * Whether or not state bubbles up from children
+     * @protected
+     * @type {boolean}
+     */
+    this.bubbleState = true;
+
+    /**
+     * Whether or not the checkbox should be disabled;
+     * @type {?boolean}
+     * @private
+     */
+    this.disabled_ = null;
+  }
 
   /**
    * Whether or not state bubbles up from children
-   * @protected
-   * @type {boolean}
+   *
+   * @return {boolean}
    */
-  this.bubbleState = true;
+  getBubbleState() {
+    return this.bubbleState;
+  }
 
   /**
-   * Whether or not the checkbox should be disabled;
-   * @type {?boolean}
+   * Whether or not state bubbles up from children
+   *
+   * @param {boolean} value
+   */
+  setBubbleState(value) {
+    this.bubbleState = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getState() {
+    return this.state_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setState(value) {
+    if (value !== this.state_) {
+      var old = this.state_;
+      switch (value) {
+        case TriState.OFF:
+        case TriState.ON:
+        case TriState.BOTH:
+          this.state_ = value;
+
+          if (this.bubbleState && !this.updating_) {
+            this.updateChildren();
+          }
+
+          this.dispatchEvent(new PropertyChangeEvent('state', value, old));
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  /**
+   * Overridden to add state changes in child nodes and update the counts
+   *
+   * @override
+   */
+  initChild(child) {
+    if (this.bubbleState) {
+      this.counts_[/** @type {TriStateTreeNode} */ (child).getState()]++;
+      this.updateFromCounts_();
+    }
+
+    super.initChild(child);
+  }
+
+  /**
+   * Overridden to remove state listeners on child nodes and update the counts
+   *
+   * @override
+   */
+  destroyChild(child) {
+    if (this.bubbleState) {
+      this.counts_[/** @type {TriStateTreeNode} */ (child).getState()]--;
+      this.updateFromCounts_();
+    }
+
+    super.destroyChild(child);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  onChildChange(e) {
+    if (this.bubbleState && e.getProperty() == 'state' && !this.updating_) {
+      this.counts_[/** @type {string} */ (e.getOldValue())]--;
+      this.counts_[/** @type {string} */ (e.getNewValue())]++;
+      this.updateFromCounts_();
+    }
+
+    super.onChildChange(e);
+  }
+
+  /**
+   * Updates the state from the child state counts
+   *
    * @private
    */
-  this.disabled_ = null;
-};
-goog.inherits(os.structs.TriStateTreeNode, os.structs.TreeNode);
+  updateFromCounts_() {
+    var l = (this.getChildren() || []).length;
+    this.updating_ = true;
 
+    if (l > 0) {
+      if (this.counts_[TriState.ON] >= l) {
+        this.setState(TriState.ON);
+      } else if (this.counts_[TriState.OFF] >= l) {
+        this.setState(TriState.OFF);
+      } else {
+        this.setState(TriState.BOTH);
+      }
+    } else {
+      this.setState(TriState.OFF);
+    }
 
-/**
- * Whether or not state bubbles up from children
- *
- * @return {boolean}
- */
-os.structs.TriStateTreeNode.prototype.getBubbleState = function() {
-  return this.bubbleState;
-};
+    this.updating_ = false;
+  }
 
+  /**
+   * Updates the children to the current state
+   *
+   * @protected
+   */
+  updateChildren() {
+    this.updating_ = true;
 
-/**
- * Whether or not state bubbles up from children
- *
- * @param {boolean} value
- */
-os.structs.TriStateTreeNode.prototype.setBubbleState = function(value) {
-  this.bubbleState = value;
-};
+    if (this.getState() !== TriState.BOTH) {
+      var children = this.getChildren();
+      var state = this.getState();
 
+      this.counts_[TriState.OFF] = 0;
+      this.counts_[TriState.ON] = 0;
+      this.counts_[TriState.BOTH] = 0;
 
-/**
- * @inheritDoc
- */
-os.structs.TriStateTreeNode.prototype.getState = function() {
-  return this.state_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.structs.TriStateTreeNode.prototype.setState = function(value) {
-  if (value !== this.state_) {
-    var old = this.state_;
-    switch (value) {
-      case os.structs.TriState.OFF:
-      case os.structs.TriState.ON:
-      case os.structs.TriState.BOTH:
-        this.state_ = value;
-
-        if (this.bubbleState && !this.updating_) {
-          this.updateChildren();
+      if (children) {
+        // THIN-5877: I know this looks like a superfluous change (from for to while), but doing this backwards
+        // helps the combo tree a lot since there are some weird rules in that one. Fortunately, this change does
+        // not affect other trees
+        var i = children.length;
+        while (i--) {
+          this.updateChild(/** @type {!IStateTreeNode} */ (children[i]), state);
         }
 
-        this.dispatchEvent(new os.events.PropertyChangeEvent('state', value, old));
-        break;
-      default:
-        break;
-    }
-  }
-};
-
-
-/**
- * Overridden to add state changes in child nodes and update the counts
- *
- * @override
- */
-os.structs.TriStateTreeNode.prototype.initChild = function(child) {
-  if (this.bubbleState) {
-    this.counts_[child.getState()]++;
-    this.updateFromCounts_();
-  }
-
-  os.structs.TriStateTreeNode.superClass_.initChild.call(this, child);
-};
-
-
-/**
- * Overridden to remove state listeners on child nodes and update the counts
- *
- * @override
- */
-os.structs.TriStateTreeNode.prototype.destroyChild = function(child) {
-  if (this.bubbleState) {
-    this.counts_[child.getState()]--;
-    this.updateFromCounts_();
-  }
-
-  os.structs.TriStateTreeNode.superClass_.destroyChild.call(this, child);
-};
-
-
-/**
- * @inheritDoc
- */
-os.structs.TriStateTreeNode.prototype.onChildChange = function(e) {
-  if (this.bubbleState && e.getProperty() == 'state' && !this.updating_) {
-    this.counts_[/** @type {string} */ (e.getOldValue())]--;
-    this.counts_[/** @type {string} */ (e.getNewValue())]++;
-    this.updateFromCounts_();
-  }
-
-  os.structs.TriStateTreeNode.superClass_.onChildChange.call(this, e);
-};
-
-
-/**
- * Updates the state from the child state counts
- *
- * @private
- */
-os.structs.TriStateTreeNode.prototype.updateFromCounts_ = function() {
-  var l = (this.getChildren() || []).length;
-  this.updating_ = true;
-
-  if (l > 0) {
-    if (this.counts_[os.structs.TriState.ON] >= l) {
-      this.setState(os.structs.TriState.ON);
-    } else if (this.counts_[os.structs.TriState.OFF] >= l) {
-      this.setState(os.structs.TriState.OFF);
-    } else {
-      this.setState(os.structs.TriState.BOTH);
-    }
-  } else {
-    this.setState(os.structs.TriState.OFF);
-  }
-
-  this.updating_ = false;
-};
-
-
-/**
- * Updates the children to the current state
- *
- * @protected
- */
-os.structs.TriStateTreeNode.prototype.updateChildren = function() {
-  this.updating_ = true;
-
-  if (this.getState() !== os.structs.TriState.BOTH) {
-    var children = this.getChildren();
-    var state = this.getState();
-
-    this.counts_[os.structs.TriState.OFF] = 0;
-    this.counts_[os.structs.TriState.ON] = 0;
-    this.counts_[os.structs.TriState.BOTH] = 0;
-
-    if (children) {
-      // THIN-5877: I know this looks like a superfluous change (from for to while), but doing this backwards
-      // helps the combo tree a lot since there are some weird rules in that one. Fortunately, this change does
-      // not affect other trees
-      var i = children.length;
-      while (i--) {
-        this.updateChild(/** @type {!os.structs.IStateTreeNode} */ (children[i]), state);
+        this.counts_[state] = children.length;
       }
-
-      this.counts_[state] = children.length;
     }
+
+    this.updating_ = false;
   }
 
-  this.updating_ = false;
-};
+  /**
+   * Updates the children to the current state
+   *
+   * @param {!IStateTreeNode} child
+   * @param {string} state
+   * @protected
+   */
+  updateChild(child, state) {
+    child.setState(state);
+  }
 
+  /**
+   * Gets whether the checkbox should be disabled for this treenode.
+   *
+   * @return {?boolean}
+   */
+  getCheckboxDisabled() {
+    return this.disabled_;
+  }
 
-/**
- * Updates the children to the current state
- *
- * @param {!os.structs.IStateTreeNode} child
- * @param {string} state
- * @protected
- */
-os.structs.TriStateTreeNode.prototype.updateChild = function(child, state) {
-  child.setState(state);
-};
+  /**
+   * Sets whether the checkbox should be disabled for this treenode.
+   *
+   * @param {?boolean} disabled
+   */
+  setCheckboxDisabled(disabled) {
+    this.disabled_ = disabled;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  updateFrom(other) {
+    this.setState(/** @type {TriStateTreeNode} */ (other).getState());
+    super.updateFrom(other);
+  }
+}
 
-/**
- * Gets whether the checkbox should be disabled for this treenode.
- *
- * @return {?boolean}
- */
-os.structs.TriStateTreeNode.prototype.getCheckboxDisabled = function() {
-  return this.disabled_;
-};
-
-
-/**
- * Sets whether the checkbox should be disabled for this treenode.
- *
- * @param {?boolean} disabled
- */
-os.structs.TriStateTreeNode.prototype.setCheckboxDisabled = function(disabled) {
-  this.disabled_ = disabled;
-};
-
-
-/**
- * @inheritDoc
- */
-os.structs.TriStateTreeNode.prototype.updateFrom = function(other) {
-  this.setState(/** @type {os.structs.TriStateTreeNode} */ (other).getState());
-  os.structs.TriStateTreeNode.superClass_.updateFrom.call(this, other);
-};
+exports = TriStateTreeNode;

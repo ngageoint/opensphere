@@ -1,5 +1,7 @@
-goog.provide('os.structs.ITreeNodeSupplier');
+goog.module('os.structs.ITreeNodeSupplier');
+goog.module.declareLegacyNamespace();
 
+const ITreeNode = goog.requireType('os.structs.ITreeNode');
 
 
 /**
@@ -7,11 +9,12 @@ goog.provide('os.structs.ITreeNodeSupplier');
  *
  * @interface
  */
-os.structs.ITreeNodeSupplier = function() {};
+class ITreeNodeSupplier {
+  /**
+   * Get a tree node to represent the object.
+   * @return {!ITreeNode} The tree node
+   */
+  getTreeNode() {}
+}
 
-
-/**
- * Get a tree node to represent the object.
- * @return {!os.structs.ITreeNode} The tree node
- */
-os.structs.ITreeNodeSupplier.prototype.getTreeNode;
+exports = ITreeNodeSupplier;
