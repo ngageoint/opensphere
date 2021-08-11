@@ -2,19 +2,30 @@ goog.require('goog.dom');
 goog.require('goog.dom.xml');
 goog.require('goog.string');
 goog.require('os.MapContainer');
+goog.require('os.state.StateManager');
+goog.require('os.state.Versions');
 goog.require('os.state.v4.ViewState');
+goog.require('os.xml');
 
 describe('os.state.v4.ViewState', function() {
+  const MapContainer = goog.module.get('os.MapContainer');
+  const StateManager = goog.module.get('os.state.StateManager');
+  const Versions = goog.module.get('os.state.Versions');
+  const ViewState = goog.module.get('os.state.v4.ViewState');
+  const xml = goog.module.get('os.xml');
+
+  const {loadStateXsdFiles} = goog.module.get('os.test.xsd');
+
   var stateManager = null;
 
   beforeEach(function() {
-    stateManager = os.state.StateManager.getInstance();
-    stateManager.setVersion(os.state.Versions.V4);
+    stateManager = StateManager.getInstance();
+    stateManager.setVersion(Versions.V4);
   });
 
   it('should produce a valid state file with view state', function() {
     var resultSchemas = null;
-    var map = os.MapContainer.getInstance();
+    var map = MapContainer.getInstance();
     var cameraResults = {
       'center': [0, 0],
       'altitude': 45351397.87249297,
@@ -45,7 +56,7 @@ describe('os.state.v4.ViewState', function() {
     // Using jasman's async test, as we need to load the xsd files
     // that are used by xmllint.
     runs(function() {
-      os.test.xsd.loadStateXsdFiles().then(function(result) {
+      loadStateXsdFiles().then(function(result) {
         resultSchemas = result;
       }, function(err) {
         throw err;
@@ -59,12 +70,12 @@ describe('os.state.v4.ViewState', function() {
 
     // Runs the tests.
     runs(function() {
-      var state = new os.state.v4.ViewState();
+      var state = new ViewState();
       var xmlRootDocument = stateManager.createStateObject(function() {}, 'test state', 'desc');
       var stateOptions = stateManager.createStateOptions(function() {}, 'test state', 'desc');
       stateOptions.doc = xmlRootDocument;
       state.save(stateOptions);
-      var seralizedDoc = os.xml.serialize(stateOptions.doc);
+      var seralizedDoc = xml.serialize(stateOptions.doc);
       var xmlLintResult = xmllint.validateXML({
         xml: seralizedDoc,
         schema: resultSchemas
