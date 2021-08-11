@@ -1,37 +1,43 @@
-
-
 goog.require('os.alert.AlertManager');
 goog.require('os.search');
 goog.require('os.search.MockSearch');
+goog.require('os.search.SearchEventType');
 goog.require('os.search.SearchManager');
 goog.require('os.structs.EventType');
+
 describe('os.search.SearchManager', function() {
-  var alertManager = os.alert.AlertManager.getInstance();
+  const AlertManager = goog.module.get('os.alert.AlertManager');
+  const search = goog.module.get('os.search');
+  const SearchEventType = goog.module.get('os.search.SearchEventType');
+  const SearchManager = goog.module.get('os.search.SearchManager');
+  const EventType = goog.module.get('os.structs.EventType');
+
+  var alertManager = AlertManager.getInstance();
 
   var mockSearch1;
   var mockSearch2;
 
   beforeEach(function() {
-    mockSearch1 = new os.search.MockSearch('test1', 'Search Web', 'val1', 50);
-    mockSearch2 = new os.search.MockSearch('test2', 'Search Images', 'val2', 100);
+    mockSearch1 = new search.MockSearch('test1', 'Search Web', 'val1', 50);
+    mockSearch2 = new search.MockSearch('test2', 'Search Images', 'val2', 100);
   });
 
   it('should have a singleton instance', function() {
-    expect(os.search.SearchManager.getInstance).toBeDefined();
-    expect(os.search.SearchManager.getInstance()).not.toBeNull();
+    expect(SearchManager.getInstance).toBeDefined();
+    expect(SearchManager.getInstance()).not.toBeNull();
   });
 
   it('should fire off an alert when no manager is registered', function() {
     alertManager.clearAlerts();
     expect(alertManager.savedAlerts_.getCount()).toBe(0);
-    alertManager.listenOnce(os.structs.EventType.ALERT, function(e) {
+    alertManager.listenOnce(EventType.ALERT, function(e) {
       expect(alertManager.savedAlerts_.getCount()).toBe(1);
     }, false, this);
-    os.search.SearchManager.getInstance().search('test', 0, 10);
+    SearchManager.getInstance().search('test', 0, 10);
   });
 
   it('should register searches', function() {
-    var searchManager = new os.search.SearchManager();
+    var searchManager = new SearchManager();
     expect(searchManager.getRegisteredSearches().length).toBe(0);
     searchManager.registerSearch(mockSearch1);
     expect(searchManager.getRegisteredSearches().length).toBe(1);
@@ -42,7 +48,7 @@ describe('os.search.SearchManager', function() {
   });
 
   xit('should set selected search', function() {
-    var searchManager = new os.search.SearchManager();
+    var searchManager = new SearchManager();
     expect(searchManager.selectedSearch_).toBeFalsy();
     searchManager.registerSearch(mockSearch1);
     expect(searchManager.selectedSearch_).toBe('Search Web');
@@ -59,18 +65,18 @@ describe('os.search.SearchManager', function() {
   });
 
   it('should capture search results', function() {
-    var searchManager = new os.search.SearchManager();
-    searchManager.registerSearch(new os.search.MockSearch());
+    var searchManager = new SearchManager();
+    searchManager.registerSearch(new search.MockSearch());
     searchManager.search('test', 0, 10);
     expect(searchManager.getResults().length).toBe(10);
   });
 
   it('should capture autocomplete results', function() {
-    var searchManager = new os.search.SearchManager();
-    searchManager.registerSearch(new os.search.MockSearch());
+    var searchManager = new SearchManager();
+    searchManager.registerSearch(new search.MockSearch());
 
     var results = [];
-    searchManager.listenOnce(os.search.SearchEventType.AUTOCOMPLETED, function(event) {
+    searchManager.listenOnce(SearchEventType.AUTOCOMPLETED, function(event) {
       results = event.getResults();
     });
 
@@ -83,7 +89,7 @@ describe('os.search.SearchManager', function() {
   });
 
   it('should capture results from selected search', function() {
-    var searchManager = new os.search.SearchManager();
+    var searchManager = new SearchManager();
     searchManager.registerSearch(mockSearch1);
     searchManager.registerSearch(mockSearch2);
 
@@ -125,9 +131,9 @@ describe('os.search.SearchManager', function() {
   });
 
   it('should properly mix results as reported by search providers', function() {
-    var providerA = new os.search.MockSearch('a', 'A', 'valueA', 95);
-    var providerB = new os.search.MockSearch('b', 'B', 'valueB', 90);
-    var searchManager = new os.search.SearchManager();
+    var providerA = new search.MockSearch('a', 'A', 'valueA', 95);
+    var providerB = new search.MockSearch('b', 'B', 'valueB', 90);
+    var searchManager = new SearchManager();
     searchManager.registerSearch(providerA);
     searchManager.registerSearch(providerB);
     searchManager.search('test', 1, 10);
