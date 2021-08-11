@@ -42,8 +42,8 @@ const {convertUnits, parseNumber} = goog.require('os.math');
 const Units = goog.require('os.math.Units');
 const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
 const StyleType = goog.require('os.style.StyleType');
+const {getStyleManager} = goog.require('os.style.instance');
 const TimelineController = goog.require('os.time.TimelineController');
 const {quoteString} = goog.require('os.ui.filter.string');
 
@@ -974,7 +974,7 @@ const getColor = function(feature, opt_source, opt_default, opt_colorField) {
       // check the layer config to see if it's replacing feature styles
       // the config here will not be modified, so get it directly from the manager for speed
       // (rather than getting a new one merged together for changing)
-      var layerConfig = StyleManager.getInstance().getLayerConfig(getLayerId(feature) || '');
+      var layerConfig = getStyleManager().getLayerConfig(getLayerId(feature) || '');
       if (layerConfig && layerConfig[StyleField.REPLACE_STYLE]) {
         color = osStyle.getConfigColor(layerConfig, false, opt_colorField);
       }
