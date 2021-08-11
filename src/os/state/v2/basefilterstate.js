@@ -1,201 +1,148 @@
-goog.provide('os.state.v2.BaseFilter');
-goog.provide('os.state.v2.FilterTag');
-goog.require('goog.dom.xml');
-goog.require('ol.array');
-goog.require('os.array');
-goog.require('os.filter.FilterEntry');
-goog.require('os.state.XMLState');
-goog.require('os.xml');
+goog.module('os.state.v2.BaseFilter');
+goog.module.declareLegacyNamespace();
+
+const {getChildren, getFirstElementChild} = goog.require('goog.dom');
+const {loadXml, serialize} = goog.require('goog.dom.xml');
+const FilterEntry = goog.require('os.filter.FilterEntry');
+const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
+const AbstractState = goog.require('os.state.AbstractState');
+const XMLState = goog.require('os.state.XMLState');
+const FilterTag = goog.require('os.state.v2.FilterTag');
+const {XMLNS, appendElement, clone: cloneXml} = goog.require('os.xml');
+
+const VectorSource = goog.requireType('os.source.Vector');
 
 
 /**
- * XML tags for filter state
- * @enum {string}
- * @const
  */
-os.state.v2.FilterTag = {
-  FILTERS: 'filters',
-  FILTER: 'filter'
-};
+class BaseFilter extends XMLState {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
 
+    this.description = 'Saves the current filters';
+    this.priority = 90;
+    this.rootName = FilterTag.FILTERS;
+    this.title = 'Filters';
 
-
-/**
- * @extends {os.state.XMLState}
- * @constructor
- */
-os.state.v2.BaseFilter = function() {
-  os.state.v2.BaseFilter.base(this, 'constructor');
-
-  this.description = 'Saves the current filters';
-  this.priority = 90;
-  this.rootName = os.state.v2.FilterTag.FILTERS;
-  this.title = 'Filters';
-};
-goog.inherits(os.state.v2.BaseFilter, os.state.XMLState);
-
-
-/**
- * OGC namespace URI
- * @type {string}
- * @const
- */
-os.state.v2.BaseFilter.OGC_NS = 'http://www.opengis.net/ogc';
-
-
-/**
- * If a layer is tied to a filter, but the filter isnt tied to the layer, duplicate the filter for that layer
- * This was to support state files when filters applied to any layer it could (THIN-7215)
- *
- * @param {!Element} el
- */
-os.state.v2.BaseFilter.preload = function(el) {
-  var filtersNode = el.querySelector('filters');
-  var entries = el.querySelector('queryEntries');
-  if (filtersNode !== undefined && entries !== undefined) {
-    entries = entries ? entries.getElementsByTagName('queryEntry') : [];
-
-    os.array.forEach(entries, function(entry) {
-      var filterId = entry.getAttribute('filterId');
-      var layerId = entry.getAttribute('layerId');
-      var cloneId = filterId + '_' + layerId;
-
-      var filters = /** @type {Array} */ (filtersNode ? filtersNode.getElementsByTagName('filter') : []);
-      // Does this filterid exist for this layer
-      var found = ol.array.find(filters, function(filter) {
-        return filter.getAttribute('id') == filterId && filter.getAttribute('type') == layerId ||
-            filter.getAttribute('id') == cloneId && filter.getAttribute('type') == layerId;
-      });
-      if (!found) {
-        var similiar = ol.array.find(filters, function(filter) {
-          return filter.getAttribute('id') == filterId;
-        });
-        if (similiar) {
-          var clone = os.xml.clone(similiar, /** @type {!Element} */(filtersNode));
-          clone.setAttribute('id', cloneId);
-          clone.setAttribute('type', layerId);
-          // Since we changed the id for the filter, update the query entry
-          entry.setAttribute('filterId', cloneId);
-        }
-      }
-    });
-  }
-};
-
-
-/**
- * Get the layer id for the filter.
- *
- * @param {!Element} el The element
- * @param {string} stateId The state id
- * @return {string} The layer id
- * @protected
- */
-os.state.v2.BaseFilter.prototype.getLayerId = function(el, stateId) {
-  var id = String(el.getAttribute('urlKey') || el.getAttribute('type'));
-  return os.state.AbstractState.createId(stateId, id);
-};
-
-
-/**
- * Convert an XML filter to a FilterEntry
- *
- * @param {!Element} el The element
- * @return {os.filter.FilterEntry} The filter entry
- * @protected
- */
-os.state.v2.BaseFilter.prototype.xmlToFilter = function(el) {
-  var entry = null;
-
-  var children = goog.dom.getChildren(el);
-  if (children && children.length > 0) {
-    entry = new os.filter.FilterEntry();
-
-    var str = goog.dom.xml.serialize(children[0]);
-    str = str.replace(/xmlns=("|')[^"']*("|')/g, '');
-    str = str.replace(/ogc:/g, '');
-    str = str.replace(/>\s+</g, '><');
-    entry.setFilter(str);
-
-    entry.setMatch(/** @type {string} */ (el.getAttribute('match')) === 'AND');
-    entry.setId(/** @type {string} */ (el.getAttribute('id')));
-    entry.setDescription(/** @type {?string} */ (el.getAttribute('description')));
-    entry.setTitle(/** @type {string} */ (el.getAttribute('title')));
-    entry.type = el.getAttribute('type') || '';
+    /**
+     * @type {!Array<!VectorSource>}
+     * @protected
+     */
+    this.sources = [];
   }
 
-  return entry;
-};
+  /**
+   * Get the layer id for the filter.
+   *
+   * @param {!Element} el The element
+   * @param {string} stateId The state id
+   * @return {string} The layer id
+   * @protected
+   */
+  getLayerId(el, stateId) {
+    var id = String(el.getAttribute('urlKey') || el.getAttribute('type'));
+    return AbstractState.createId(stateId, id);
+  }
 
+  /**
+   * Convert an XML filter to a FilterEntry
+   *
+   * @param {!Element} el The element
+   * @return {FilterEntry} The filter entry
+   * @protected
+   */
+  xmlToFilter(el) {
+    var entry = null;
 
-/**
- * @param {!Array.<!os.source.Vector>} sources
- */
-os.state.v2.BaseFilter.prototype.setSources = function(sources) {
-  this.sources = sources;
-};
+    var children = getChildren(el);
+    if (children && children.length > 0) {
+      entry = new FilterEntry();
 
+      var str = serialize(children[0]);
+      str = str.replace(/xmlns=("|')[^"']*("|')/g, '');
+      str = str.replace(/ogc:/g, '');
+      str = str.replace(/>\s+</g, '><');
+      entry.setFilter(str);
 
-/**
- * @return {!Array.<!os.source.Vector>}
- */
-os.state.v2.BaseFilter.prototype.getSources = function() {
-  return this.sources;
-};
-
-
-/**
- * @inheritDoc
- */
-os.state.v2.BaseFilter.prototype.saveInternal = function(options, rootObj) {
-  try {
-    rootObj.setAttributeNS(os.xml.XMLNS, 'xmlns:ogc', os.state.v2.BaseFilter.OGC_NS);
-    var sources = this.getSources();
-    if (sources) {
-      for (var i = 0, n = sources.length; i < n; i++) {
-        var source = sources[i];
-        this.processFilters(rootObj, source.getId());
-      }
-    } else {
-      this.processFilters(rootObj);
+      entry.setMatch(/** @type {string} */ (el.getAttribute('match')) === 'AND');
+      entry.setId(/** @type {string} */ (el.getAttribute('id')));
+      entry.setDescription(/** @type {?string} */ (el.getAttribute('description')));
+      entry.setTitle(/** @type {string} */ (el.getAttribute('title')));
+      entry.type = el.getAttribute('type') || '';
     }
 
-    this.saveComplete(options, rootObj);
-  } catch (e) {
-    this.saveFailed(e.message || 'Unspecified error.');
+    return entry;
   }
-};
 
+  /**
+   * @param {!Array<!VectorSource>} sources
+   */
+  setSources(sources) {
+    this.sources = sources;
+  }
 
-/**
- * @param {!Element} rootObj
- * @param {string=} opt_sourceId
- */
-os.state.v2.BaseFilter.prototype.processFilters = function(rootObj, opt_sourceId) {
-  if (os.ui.filterManager.hasEnabledFilters(opt_sourceId)) {
-    var filters = os.ui.filterManager.getFilters(opt_sourceId);
-    for (var j = 0, m = filters.length; j < m; j++) {
-      var entry = filters[j];
-      if (entry && os.ui.filterManager.isEnabled(entry)) {
-        var grouping = os.ui.queryManager.isAnd(entry, opt_sourceId) ? 'AND' : 'OR';
-        var filter = entry.getFilter();
-        if (filter) {
-          var filterDoc = goog.dom.xml.loadXml(filter);
-          if (filterDoc && goog.dom.getFirstElementChild(filterDoc)) {
-            var node = /** @type {Node} */ (goog.dom.getFirstElementChild(filterDoc));
-            if (node) {
-              var ogcFilterDoc = os.xml.clone(node, rootObj, 'ogc', os.state.v2.BaseFilter.OGC_NS);
-              if (ogcFilterDoc) {
-                var filterEl = os.xml.appendElement(os.state.v2.FilterTag.FILTER, rootObj, undefined, {
-                  'id': entry.getId(),
-                  'active': true,
-                  'filterType': 'single',
-                  'title': entry.getTitle(),
-                  'description': entry.getDescription() || '',
-                  'type': opt_sourceId || entry.getType(),
-                  'match': grouping
-                });
-                filterEl.appendChild(ogcFilterDoc);
+  /**
+   * @return {!Array<!VectorSource>}
+   */
+  getSources() {
+    return this.sources;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  saveInternal(options, rootObj) {
+    try {
+      rootObj.setAttributeNS(XMLNS, 'xmlns:ogc', BaseFilter.OGC_NS);
+      var sources = this.getSources();
+      if (sources) {
+        for (var i = 0, n = sources.length; i < n; i++) {
+          var source = sources[i];
+          this.processFilters(rootObj, source.getId());
+        }
+      } else {
+        this.processFilters(rootObj);
+      }
+
+      this.saveComplete(options, rootObj);
+    } catch (e) {
+      this.saveFailed(e.message || 'Unspecified error.');
+    }
+  }
+
+  /**
+   * @param {!Element} rootObj
+   * @param {string=} opt_sourceId
+   */
+  processFilters(rootObj, opt_sourceId) {
+    if (getFilterManager().hasEnabledFilters(opt_sourceId)) {
+      var filters = getFilterManager().getFilters(opt_sourceId);
+      for (var j = 0, m = filters.length; j < m; j++) {
+        var entry = filters[j];
+        if (entry && getFilterManager().isEnabled(entry)) {
+          var grouping = getQueryManager().isAnd(entry, opt_sourceId) ? 'AND' : 'OR';
+          var filter = entry.getFilter();
+          if (filter) {
+            var filterDoc = loadXml(filter);
+            if (filterDoc && getFirstElementChild(filterDoc)) {
+              var node = /** @type {Node} */ (getFirstElementChild(filterDoc));
+              if (node) {
+                var ogcFilterDoc = cloneXml(node, rootObj, 'ogc', BaseFilter.OGC_NS);
+                if (ogcFilterDoc) {
+                  var filterEl = appendElement(FilterTag.FILTER, rootObj, undefined, {
+                    'id': entry.getId(),
+                    'active': true,
+                    'filterType': 'single',
+                    'title': entry.getTitle(),
+                    'description': entry.getDescription() || '',
+                    'type': opt_sourceId || entry.getType(),
+                    'match': grouping
+                  });
+                  filterEl.appendChild(ogcFilterDoc);
+                }
               }
             }
           }
@@ -203,10 +150,57 @@ os.state.v2.BaseFilter.prototype.processFilters = function(rootObj, opt_sourceId
       }
     }
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  remove(id) {}
+
+  /**
+   * If a layer is tied to a filter, but the filter isnt tied to the layer, duplicate the filter for that layer
+   * This was to support state files when filters applied to any layer it could (THIN-7215)
+   *
+   * @param {!Element} el
+   */
+  static preload(el) {
+    var filtersNode = el.querySelector('filters');
+    var entries = el.querySelector('queryEntries');
+    if (filtersNode !== undefined && entries !== undefined) {
+      entries = entries ? entries.getElementsByTagName('queryEntry') : [];
+
+      entries.forEach(function(entry) {
+        var filterId = entry.getAttribute('filterId');
+        var layerId = entry.getAttribute('layerId');
+        var cloneId = filterId + '_' + layerId;
+
+        var filters = /** @type {Array} */ (filtersNode ? filtersNode.getElementsByTagName('filter') : []);
+        // Does this filterid exist for this layer
+        var found = filters.find(function(filter) {
+          return filter.getAttribute('id') == filterId && filter.getAttribute('type') == layerId ||
+              filter.getAttribute('id') == cloneId && filter.getAttribute('type') == layerId;
+        });
+        if (!found) {
+          var similiar = filters.find(function(filter) {
+            return filter.getAttribute('id') == filterId;
+          });
+          if (similiar) {
+            var clone = cloneXml(similiar, /** @type {!Element} */(filtersNode));
+            clone.setAttribute('id', cloneId);
+            clone.setAttribute('type', layerId);
+            // Since we changed the id for the filter, update the query entry
+            entry.setAttribute('filterId', cloneId);
+          }
+        }
+      });
+    }
+  }
+}
 
 /**
- * @inheritDoc
+ * OGC namespace URI
+ * @type {string}
+ * @const
  */
-os.state.v2.BaseFilter.prototype.remove = function(id) {};
+BaseFilter.OGC_NS = 'http://www.opengis.net/ogc';
+
+exports = BaseFilter;
