@@ -16,13 +16,6 @@ os.ui.menu.unit.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
 
 
 /**
- * @type {os.ui.menu.Menu<undefined>|undefined}
- * @deprecated Please use MENU from goog.require('os.ui.menu.unit') instead.
- */
-os.ui.menu.UNIT = os.ui.menu.unit.MENU;
-
-
-/**
  * Set up the menu
  */
 os.ui.menu.unit.setup = function() {
@@ -75,7 +68,6 @@ os.ui.menu.unit.dispose = function() {
   goog.dispose(os.ui.menu.unit.MENU);
 
   os.ui.menu.unit.MENU = undefined;
-  os.ui.menu.UNIT = undefined;
 };
 
 

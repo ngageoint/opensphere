@@ -62,13 +62,6 @@ os.ui.menu.filter.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
 
 
 /**
- * @type {os.ui.menu.Menu<!Array<!os.structs.TreeNode>>}
- * @deprecated Please use os.ui.menu.filter.MENU instead.
- */
-os.ui.menu.FILTER = os.ui.menu.filter.MENU;
-
-
-/**
  * Sets up the dynamic portions of the menu
  */
 os.ui.menu.filter.setup = function() {

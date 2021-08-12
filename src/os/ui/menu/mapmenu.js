@@ -10,12 +10,6 @@ goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.window.ConfirmColorUI');
 
-/**
- * @type {os.ui.menu.Menu<ol.Coordinate>|undefined}
- * @deprecated use os.ui.menu.map.MENU instead
- */
-os.ui.menu.MAP = undefined;
-
 
 /**
  * @type {os.ui.menu.Menu<ol.Coordinate>|undefined}
@@ -54,7 +48,7 @@ os.ui.menu.map.setup = function() {
     return;
   }
 
-  os.ui.menu.MAP = os.ui.menu.map.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
+  os.ui.menu.map.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
     type: os.ui.menu.MenuItemType.ROOT,
     children: [{
       label: os.ui.menu.map.GroupLabel.MAP,
@@ -144,7 +138,7 @@ os.ui.menu.map.setup = function() {
  */
 os.ui.menu.map.dispose = function() {
   goog.dispose(os.ui.menu.map.MENU);
-  os.ui.menu.MAP = os.ui.menu.map.MENU = undefined;
+  os.ui.menu.map.MENU = undefined;
 };
 
 

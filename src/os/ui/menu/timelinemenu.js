@@ -116,13 +116,6 @@ os.ui.menu.timeline.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
 
 
 /**
- * @type {os.ui.menu.Menu<Array<number>>}
- * @deprecated Please use os.ui.menu.timeline.MENU instead
- */
-os.ui.menu.TIMELINE = os.ui.menu.timeline.MENU;
-
-
-/**
  * Timeline menu setup
  */
 os.ui.menu.timeline.setup = function() {
