@@ -22,18 +22,18 @@ MIME types are really trees of types. If we store them this way, we can reuse th
 
 The tree:
 
-- `application/octet-stream` (a.k.a. generic binary)
--- `application/zip`
---- `application/vnd.google-earth.kmz`
---- (zipped shapefile)
---- possibly other zipped text/plain types?
--- `text/plain`
---- `application/json`
----- `application/vnd.geo+json`
---- `text/xml`
----- `application/vnd.google-earth.kml+xml`
----- `text/xml; subtype=gml/3.x`
---- `text/csv`
+* `application/octet-stream` (a.k.a. generic binary)
+  * `application/zip`
+    * `application/vnd.google-earth.kmz`
+    * (zipped shapefile)
+    * possibly other zipped text/plain types?
+  * `text/plain`
+    * `application/json`
+      * `application/vnd.geo+json`
+    *`text/xml`
+      * `application/vnd.google-earth.kml+xml`
+      * `text/xml; subtype=gml/3.x`
+    * `text/csv`
 
 When registering types, it does not actually matter that you use the officially-registered MIME type. It only matters that the type is unique within the tree. However, for clarity and ease of registering child detections, we have opted to use the offical types where available.
 
