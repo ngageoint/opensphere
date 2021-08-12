@@ -1,47 +1,58 @@
-goog.provide('os.ui.WindowsButtonCtrl');
-goog.provide('os.ui.windowsButtonDirective');
+goog.module('os.ui.WindowsButtonUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-goog.require('os.ui.menu.MenuButtonCtrl');
-goog.require('os.ui.menu.windows');
+const Module = goog.require('os.ui.Module');
+const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
+const windows = goog.require('os.ui.menu.windows');
+
 
 /**
  * The windows button directive
  *
  * @return {angular.Directive}
  */
-os.ui.windowsButtonDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    controller: os.ui.WindowsButtonCtrl,
-    controllerAs: 'ctrl',
-    template: '<button class="btn btn-secondary dropdown-toggle" ng-click="ctrl.openMenu()"' +
-      ' title="Windows and other views" ng-right-click="ctrl.openMenu()" ng-class="{active: menu}">' +
-      'More' +
-      '</button>'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  controller: Controller,
+  controllerAs: 'ctrl',
+  template: '<button class="btn btn-secondary dropdown-toggle" ng-click="ctrl.openMenu()"' +
+    ' title="Windows and other views" ng-right-click="ctrl.openMenu()" ng-class="{active: menu}">' +
+    'More' +
+    '</button>'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'windows-button';
 
 /**
  * add the directive to the module
  */
-os.ui.Module.directive('windowsButton', [os.ui.windowsButtonDirective]);
-
+Module.directive('windowsButton', [directive]);
 
 /**
  * Controller function for the nav-top directive
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element The element
- * @extends {os.ui.menu.MenuButtonCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.WindowsButtonCtrl = function($scope, $element) {
-  os.ui.WindowsButtonCtrl.base(this, 'constructor', $scope, $element);
-  this.menu = os.ui.menu.windows.MENU;
+class Controller extends MenuButtonCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element The element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
+    this.menu = windows.MENU;
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
-goog.inherits(os.ui.WindowsButtonCtrl, os.ui.menu.MenuButtonCtrl);

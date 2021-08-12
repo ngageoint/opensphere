@@ -1,8 +1,8 @@
-goog.provide('os.ui.MuteButtonCtrl');
-goog.provide('os.ui.muteButtonDirective');
+goog.module('os.ui.MuteButtonUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.audio.AudioManager');
-goog.require('os.ui.Module');
+const AudioManager = goog.require('os.audio.AudioManager');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -10,52 +10,60 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive} The mute button directive
  */
-os.ui.muteButtonDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    controller: os.ui.MuteButtonCtrl,
-    controllerAs: 'ctrl',
-    template: '<button class="btn btn-secondary" ng-click="ctrl.toggle()"' +
-      ' title="{{mute ? \'Unmute\': \'Mute\'}}">' +
-      '<i class="fa fa-fw {{mute ? \'fa-volume-off\' : \'fa-volume-up\'}}"></i>' +
-      '</button>'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  controller: Controller,
+  controllerAs: 'ctrl',
+  template: '<button class="btn btn-secondary" ng-click="ctrl.toggle()"' +
+    ' title="{{mute ? \'Unmute\': \'Mute\'}}">' +
+    '<i class="fa fa-fw {{mute ? \'fa-volume-off\' : \'fa-volume-up\'}}"></i>' +
+    '</button>'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'mute-button';
 
 // add the directive to the module
-os.ui.Module.directive('muteButton', [os.ui.muteButtonDirective]);
-
-
+Module.directive('muteButton', [directive]);
 
 /**
  * The mute button controller
- *
- * @param {!angular.Scope} $scope The scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.MuteButtonCtrl = function($scope) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @protected
+   * Constructor.
+   * @param {!angular.Scope} $scope The scope
+   * @ngInject
    */
-  this.scope = $scope;
-  this.scope['mute'] = os.audio.AudioManager.getInstance().getMute();
+  constructor($scope) {
+    /**
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
+    this.scope['mute'] = AudioManager.getInstance().getMute();
+  }
+
+  /**
+   * Toggles mute
+   *
+   * @export
+   */
+  toggle() {
+    var am = AudioManager.getInstance();
+    am.setMute(!am.getMute());
+    this.scope['mute'] = am.getMute();
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
-
-
-/**
- * Toggles mute
- *
- * @export
- */
-os.ui.MuteButtonCtrl.prototype.toggle = function() {
-  var am = os.audio.AudioManager.getInstance();
-  am.setMute(!am.getMute());
-  this.scope['mute'] = am.getMute();
-};
-
-
