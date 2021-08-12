@@ -1,28 +1,32 @@
-goog.provide('os.ui.menu.unit');
+goog.module('os.ui.menu.unit');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.metrics.keys');
-goog.require('os.ui.menu.Menu');
-goog.require('os.ui.menu.MenuItem');
-goog.require('os.ui.menu.MenuItemType');
+const googDispose = goog.require('goog.dispose');
+const {Map: MapKeys} = goog.require('os.metrics.keys');
+const Menu = goog.require('os.ui.menu.Menu');
+const MenuItem = goog.require('os.ui.menu.MenuItem');
+const MenuItemType = goog.require('os.ui.menu.MenuItemType');
+const UnitManager = goog.require('os.unit.UnitManager');
+
+const ActionEvent = goog.requireType('os.ui.action.ActionEvent');
 
 
 /**
- * @type {os.ui.menu.Menu<undefined>|undefined}
+ * @type {Menu<undefined>|undefined}
  */
-os.ui.menu.unit.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
-  type: os.ui.menu.MenuItemType.ROOT,
+let MENU = new Menu(new MenuItem({
+  type: MenuItemType.ROOT,
   children: []
 }));
-
 
 /**
  * Set up the menu
  */
-os.ui.menu.unit.setup = function() {
-  var menu = os.ui.menu.unit.MENU;
+const setup = function() {
+  var menu = MENU;
   if (menu) {
     var root = menu.getRoot();
-    var um = os.unit.UnitManager.getInstance();
+    var um = UnitManager.getInstance();
     var systems = um.getFullSystems();
     var curSystem = um.getSelectedSystem();
 
@@ -43,54 +47,59 @@ os.ui.menu.unit.setup = function() {
           tooltip: 'Switches to ' + label,
           icons: ['<i class="fa fa-fw ' + icon + '"></i>'],
           sort: sort,
-          metricKey: os.metrics.keys.Map['UNITS_' + eventType.toUpperCase()],
-          beforeRender: os.ui.menu.unit.updateIcons
+          metricKey: MapKeys['UNITS_' + eventType.toUpperCase()],
+          beforeRender: updateIcons
         });
 
-        menu.listen(eventType, os.ui.menu.unit.toggleUnit);
+        menu.listen(eventType, toggleUnit);
       }
     }
 
     if (bottomIdx > 100) {
       root.addChild({
-        type: os.ui.menu.MenuItemType.SEPARATOR,
+        type: MenuItemType.SEPARATOR,
         sort: 99
       });
     }
   }
 };
 
-
 /**
  * Dispose unit actions.
  */
-os.ui.menu.unit.dispose = function() {
-  goog.dispose(os.ui.menu.unit.MENU);
+const dispose = function() {
+  googDispose(MENU);
 
-  os.ui.menu.unit.MENU = undefined;
+  MENU = undefined;
 };
-
 
 /**
  * Toggle active unit system.
  *
- * @param {os.ui.action.ActionEvent} event
+ * @param {ActionEvent} event
  */
-os.ui.menu.unit.toggleUnit = function(event) {
-  os.unit.UnitManager.getInstance().setSelectedSystem(event.type);
+const toggleUnit = function(event) {
+  UnitManager.getInstance().setSelectedSystem(event.type);
 };
-
 
 /**
  * Helper function for changing icons.
  *
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
-os.ui.menu.unit.updateIcons = function() {
-  var curSystem = os.unit.UnitManager.getInstance().getSelectedSystem();
+const updateIcons = function() {
+  var curSystem = UnitManager.getInstance().getSelectedSystem();
   if (this.eventType === curSystem) {
     this.icons = ['<i class="fa fa-fw fa-check-circle-o"></i>'];
   } else {
     this.icons = ['<i class="fa fa-fw fa-circle-o"></i>'];
   }
+};
+
+exports = {
+  MENU,
+  setup,
+  dispose,
+  toggleUnit,
+  updateIcons
 };

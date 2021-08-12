@@ -1,122 +1,127 @@
-goog.provide('os.ui.menu.filter');
+goog.module('os.ui.menu.filter');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.array');
-goog.require('os.MapContainer');
-goog.require('os.action.EventType');
-goog.require('os.array');
-goog.require('os.command.FilterEnable');
-goog.require('os.command.ParallelCommand');
-goog.require('os.command.SequenceCommand');
-goog.require('os.ui.filter.FilterEvent');
-goog.require('os.ui.menu.Menu');
-goog.require('os.ui.menu.MenuItem');
-goog.require('os.ui.menu.MenuItemType');
-goog.require('os.ui.query');
-goog.require('os.ui.query.cmd.FilterRemove');
-goog.require('os.ui.query.cmd.QueryEntries');
+const {removeDuplicates} = goog.require('goog.array');
+const {remove} = goog.require('ol.array');
+const EventType = goog.require('os.action.EventType');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const FilterEnable = goog.require('os.command.FilterEnable');
+const SequenceCommand = goog.require('os.command.SequenceCommand');
+const FilterNode = goog.require('os.data.FilterNode');
+const {getMapContainer} = goog.require('os.map.instance');
+const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
+const FilterEvent = goog.require('os.ui.filter.FilterEvent');
+const FilterEventType = goog.require('os.ui.filter.FilterEventType');
+const Menu = goog.require('os.ui.menu.Menu');
+const MenuItem = goog.require('os.ui.menu.MenuItem');
+const MenuItemType = goog.require('os.ui.menu.MenuItemType');
+const {ALL_ID} = goog.require('os.ui.query');
+const FilterRemove = goog.require('os.ui.query.cmd.FilterRemove');
+const QueryEntries = goog.require('os.ui.query.cmd.QueryEntries');
+
+const TreeNode = goog.requireType('os.structs.TreeNode');
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 
 
 /**
- * @type {os.ui.menu.Menu<!Array<!os.structs.TreeNode>>}
+ * @type {Menu<!Array<!TreeNode>>}
  */
-os.ui.menu.filter.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
-  type: os.ui.menu.MenuItemType.ROOT,
+const MENU = new Menu(new MenuItem({
+  type: MenuItemType.ROOT,
   children: [{
     label: 'Show',
-    eventType: os.action.EventType.ENABLE,
+    eventType: EventType.ENABLE,
     tooltip: 'Shows the filter',
     icons: ['<i class="fa fa-fw fa-check-square-o"></i>'],
     sort: 0
   }, {
     label: 'Hide',
-    eventType: os.action.EventType.DISABLE,
+    eventType: EventType.DISABLE,
     tooltip: 'Hides the filter',
     icons: ['<i class="fa fa-fw fa-square-o"></i>'],
     sort: 10
   }, {
     label: 'Turn filter on',
-    eventType: os.action.EventType.APPLY,
+    eventType: EventType.APPLY,
     tooltip: 'Apply the filter to all areas for the query',
     icons: ['<i class="fa fa-fw fa-filter"></i>'],
     sort: 20
   }, {
     label: 'Turn filter off',
-    eventType: os.action.EventType.UNAPPLY,
+    eventType: EventType.UNAPPLY,
     tooltip: 'Remove the filter from all areas for the query',
     icons: ['<i class="fa fa-fw fa-ban"></i>'],
     sort: 30
   }, {
     label: 'Remove',
-    eventType: os.action.EventType.REMOVE_FILTER,
+    eventType: EventType.REMOVE_FILTER,
     tooltip: 'Removes the filter',
     icons: ['<i class="fa fa-fw fa-times"></i>'],
     sort: 40
   }, {
     label: 'Export Filter',
-    eventType: os.action.EventType.EXPORT,
+    eventType: EventType.EXPORT,
     tooltip: 'Export the filter',
     icons: ['<i class="fa fa-fw fa-download"></i>'],
     sort: 50
   }]
 }));
 
-
 /**
  * Sets up the dynamic portions of the menu
  */
-os.ui.menu.filter.setup = function() {
-  var menu = os.ui.menu.filter.MENU;
+const setup = function() {
+  var menu = MENU;
 
-  var genVisible = os.ui.menu.filter.genVisibility;
-  var show = menu.getRoot().find(os.action.EventType.ENABLE);
+  var genVisible = genVisibility;
+  var show = menu.getRoot().find(EventType.ENABLE);
   if (show) {
-    show.beforeRender = genVisible(os.ui.menu.filter.hasDisabled_);
+    show.beforeRender = genVisible(hasDisabled_);
   }
 
-  var hide = menu.getRoot().find(os.action.EventType.DISABLE);
+  var hide = menu.getRoot().find(EventType.DISABLE);
   if (hide) {
-    hide.beforeRender = genVisible(os.ui.menu.filter.hasEnabled_);
+    hide.beforeRender = genVisible(hasEnabled_);
   }
 
-  var apply = menu.getRoot().find(os.action.EventType.APPLY);
+  var apply = menu.getRoot().find(EventType.APPLY);
   if (apply) {
-    apply.beforeRender = genVisible(os.ui.menu.filter.hasUnapplied_);
+    apply.beforeRender = genVisible(hasUnapplied_);
   }
 
-  var unapply = menu.getRoot().find(os.action.EventType.UNAPPLY);
+  var unapply = menu.getRoot().find(EventType.UNAPPLY);
   if (unapply) {
-    unapply.beforeRender = genVisible(os.ui.menu.filter.hasApplied_);
+    unapply.beforeRender = genVisible(hasApplied_);
   }
 
-  var ex = menu.getRoot().find(os.action.EventType.EXPORT);
+  var ex = menu.getRoot().find(EventType.EXPORT);
   if (ex) {
-    ex.beforeRender = genVisible(os.ui.menu.filter.isFilter_);
+    ex.beforeRender = genVisible(isFilter_);
   }
 
-  var remove = menu.getRoot().find(os.action.EventType.REMOVE_FILTER);
+  var remove = menu.getRoot().find(EventType.REMOVE_FILTER);
   if (remove) {
-    remove.beforeRender = genVisible(os.ui.menu.filter.isFilter_);
+    remove.beforeRender = genVisible(isFilter_);
   }
 
-  menu.listen(os.action.EventType.ENABLE, os.ui.menu.filter.onFilter_);
-  menu.listen(os.action.EventType.DISABLE, os.ui.menu.filter.onFilter_);
-  menu.listen(os.action.EventType.APPLY, os.ui.menu.filter.onFilter_);
-  menu.listen(os.action.EventType.UNAPPLY, os.ui.menu.filter.onFilter_);
-  menu.listen(os.action.EventType.REMOVE_FILTER, os.ui.menu.filter.onFilter_);
-  menu.listen(os.action.EventType.EXPORT, os.ui.menu.filter.onFilter_);
+  menu.listen(EventType.ENABLE, onFilter_);
+  menu.listen(EventType.DISABLE, onFilter_);
+  menu.listen(EventType.APPLY, onFilter_);
+  menu.listen(EventType.UNAPPLY, onFilter_);
+  menu.listen(EventType.REMOVE_FILTER, onFilter_);
+  menu.listen(EventType.EXPORT, onFilter_);
 };
-
 
 /**
  * Creates a function which modifies the menu item visibility before render
  *
- * @param {function(Array<!os.structs.TreeNode>):boolean} func The visibility function
- * @return {function(this:os.ui.menu.MenuItem, Array<!os.structs.TreeNode>)}
+ * @param {function(Array<!TreeNode>):boolean} func The visibility function
+ * @return {function(this:MenuItem, Array<!TreeNode>)}
  */
-os.ui.menu.filter.genVisibility = function(func) {
+const genVisibility = function(func) {
   /**
-   * @param {Array<!os.structs.TreeNode>} nodes
-   * @this {os.ui.menu.MenuItem}
+   * @param {Array<!TreeNode>} nodes
+   * @this {MenuItem}
    */
   var visibility = function(nodes) {
     this.visible = func(nodes);
@@ -125,63 +130,56 @@ os.ui.menu.filter.genVisibility = function(func) {
   return visibility;
 };
 
-
 /**
  * Disposes filter menu
  */
-os.ui.menu.filter.dispose = function() {
-  if (os.ui.menu.filter.MENU) {
-    os.ui.menu.filter.MENU.dispose();
+const dispose = function() {
+  if (MENU) {
+    MENU.dispose();
   }
 };
 
-
 /**
- * @param {Array<!os.structs.TreeNode>} nodes
+ * @param {Array<!TreeNode>} nodes
  * @return {Array<!os.filter.FilterEntry>}
  */
-os.ui.menu.filter.getFilters = function(nodes) {
+const getFilters = function(nodes) {
   var filters = [];
   if (nodes) {
     for (var i = 0, n = nodes.length; i < n; i++) {
       var node = nodes[i];
 
-      if (node instanceof os.data.FilterNode) {
+      if (node instanceof FilterNode) {
         filters.push(/** @type {os.data.FilterNode} */ (node).getEntry());
       } else {
-        filters = filters.concat(os.ui.menu.filter.getFilters(node.getChildren()));
+        filters = filters.concat(getFilters(node.getChildren()));
       }
     }
 
-    goog.array.removeDuplicates(filters);
+    removeDuplicates(filters);
   }
 
   return filters;
 };
-
 
 /**
  * Determin if the layer is on
  *
  * @param {string} layerId
  * @return {boolean}
- * @private
  */
-os.ui.menu.filter.layerOn_ = function(layerId) {
-  return os.MapContainer.getInstance().getLayer(layerId) != null;
+const layerOn_ = function(layerId) {
+  return getMapContainer().getLayer(layerId) != null;
 };
 
-
-
 /**
- * @param {Array<!os.structs.TreeNode>} context
+ * @param {Array<!TreeNode>} context
  * @return {boolean}
- * @private
  */
-os.ui.menu.filter.hasEnabled_ = function(context) {
-  var filters = os.ui.menu.filter.getFilters(context);
+const hasEnabled_ = function(context) {
+  var filters = getFilters(context);
   for (var i = 0, n = filters.length; i < n; i++) {
-    if (filters[i].isEnabled() && os.ui.menu.filter.layerOn_(filters[i].getType())) {
+    if (filters[i].isEnabled() && layerOn_(filters[i].getType())) {
       return true;
     }
   }
@@ -189,16 +187,14 @@ os.ui.menu.filter.hasEnabled_ = function(context) {
   return false;
 };
 
-
 /**
- * @param {Array<!os.structs.TreeNode>} context
+ * @param {Array<!TreeNode>} context
  * @return {boolean}
- * @private
  */
-os.ui.menu.filter.hasDisabled_ = function(context) {
-  var filters = os.ui.menu.filter.getFilters(context);
+const hasDisabled_ = function(context) {
+  var filters = getFilters(context);
   for (var i = 0, n = filters.length; i < n; i++) {
-    if (!filters[i].isEnabled() && os.ui.menu.filter.layerOn_(filters[i].getType())) {
+    if (!filters[i].isEnabled() && layerOn_(filters[i].getType())) {
       return true;
     }
   }
@@ -206,16 +202,14 @@ os.ui.menu.filter.hasDisabled_ = function(context) {
   return false;
 };
 
-
 /**
- * @param {Array<!os.structs.TreeNode>} context
+ * @param {Array<!TreeNode>} context
  * @return {boolean}
- * @private
  */
-os.ui.menu.filter.hasApplied_ = function(context) {
-  var filters = os.ui.menu.filter.getFilters(context);
+const hasApplied_ = function(context) {
+  var filters = getFilters(context);
   for (var i = 0, n = filters.length; i < n; i++) {
-    if (os.ui.queryManager.hasFilter(filters[i].getId()) && os.ui.menu.filter.layerOn_(filters[i].getType())) {
+    if (getQueryManager().hasFilter(filters[i].getId()) && layerOn_(filters[i].getType())) {
       return true;
     }
   }
@@ -223,18 +217,16 @@ os.ui.menu.filter.hasApplied_ = function(context) {
   return false;
 };
 
-
 /**
- * @param {Array<!os.structs.TreeNode>} context
+ * @param {Array<!TreeNode>} context
  * @return {boolean}
- * @private
  */
-os.ui.menu.filter.hasUnapplied_ = function(context) {
-  var filters = os.ui.menu.filter.getFilters(context);
+const hasUnapplied_ = function(context) {
+  var filters = getFilters(context);
   for (var i = 0, n = filters.length; i < n; i++) {
-    if (!os.ui.queryManager.hasFilter(filters[i].getId()) &&
+    if (!getQueryManager().hasFilter(filters[i].getId()) &&
         filters[i].isEnabled() &&
-        os.ui.menu.filter.layerOn_(filters[i].getType())) {
+        layerOn_(filters[i].getType())) {
       return true;
     }
   }
@@ -242,86 +234,80 @@ os.ui.menu.filter.hasUnapplied_ = function(context) {
   return false;
 };
 
-
 /**
- * @param {Array<!os.structs.TreeNode>} context
+ * @param {Array<!TreeNode>} context
  * @return {boolean}
- * @private
  */
-os.ui.menu.filter.isFilter_ = function(context) {
-  var filters = os.ui.menu.filter.getFilters(context);
+const isFilter_ = function(context) {
+  var filters = getFilters(context);
   return (filters.length > 0);
 };
-
 
 /**
  * Remove all entries for these filters
  *
  * @param {Array<!os.filter.FilterEntry>} filters
- * @return {os.ui.query.cmd.QueryEntries}
+ * @return {QueryEntries}
  */
-os.ui.menu.filter.fixEntries = function(filters) {
-  var allEntries = os.ui.queryManager.getEntries(null, null, null, false);
+const fixEntries = function(filters) {
+  var allEntries = getQueryManager().getEntries(null, null, null, false);
 
   // Remove the entry for this filter if it exists
-  os.array.forEach(filters, function(filter) {
-    var entries = os.ui.queryManager.getEntries(null, null, filter.getId(), false);
-    os.array.forEach(entries, function(entry) {
-      ol.array.remove(allEntries, entry);
+  filters.forEach(function(filter) {
+    var entries = getQueryManager().getEntries(null, null, filter.getId(), false);
+    entries.forEach(function(entry) {
+      remove(allEntries, entry);
     });
   });
 
-  return new os.ui.query.cmd.QueryEntries(allEntries, false, undefined, true);
+  return new QueryEntries(allEntries, false, undefined, true);
 };
 
-
 /**
- * @param {os.ui.menu.MenuEvent<Array<!os.structs.TreeNode>>} event The menu event
- * @private
+ * @param {MenuEvent<Array<!TreeNode>>} event The menu event
  */
-os.ui.menu.filter.onFilter_ = function(event) {
+const onFilter_ = function(event) {
   var context = event.getContext();
 
   if (context) {
     var cmds = [];
     var title = '';
-    var filters = os.ui.menu.filter.getFilters(context);
+    var filters = getFilters(context);
 
     switch (event.type) {
-      case os.action.EventType.DISABLE:
+      case EventType.DISABLE:
         title = 'Disable filter';
         for (var i = 0, n = filters.length; i < n; i++) {
-          cmds.push(new os.command.FilterEnable(filters[i], false));
+          cmds.push(new FilterEnable(filters[i], false));
         }
         break;
-      case os.action.EventType.REMOVE_FILTER:
+      case EventType.REMOVE_FILTER:
         title = 'Remove filter';
         for (var i = 0, n = filters.length; i < n; i++) {
-          cmds.push(new os.ui.query.cmd.FilterRemove(filters[i]));
+          cmds.push(new FilterRemove(filters[i]));
         }
         break;
-      case os.action.EventType.EXPORT:
+      case EventType.EXPORT:
         event.preventDefault();
         event.stopPropagation();
-        os.ui.filterManager.dispatchEvent(new os.ui.filter.FilterEvent(
-            os.ui.filter.FilterEventType.EXPORT_FILTER));
+        getFilterManager().dispatchEvent(new FilterEvent(FilterEventType.EXPORT_FILTER));
         break;
-      case os.action.EventType.ENABLE:
-      case os.action.EventType.APPLY:
+      case EventType.ENABLE:
+      case EventType.APPLY:
         var entries = [];
         for (var i = 0, n = filters.length; i < n; i++) {
           var filter = filters[i];
 
           // If the filter is already enabled, dont re-enable (messes up undo)
           if (!filter.isEnabled()) {
-            cmds.push(new os.command.FilterEnable(filter, true));
+            cmds.push(new FilterEnable(filter, true));
             title = 'Enable and turn on filter';
           } else {
             title = 'Turn on filter';
           }
 
           // The merge removes all entries for a layerid, so get those first
-          entries = entries.concat(os.ui.queryManager.getEntries(filter.getType()));
+          entries = entries.concat(getQueryManager().getEntries(filter.getType()));
 
           // Wipe out old entries and set wildcards
           var entry = {
@@ -333,37 +319,46 @@ os.ui.menu.filter.onFilter_ = function(event) {
           };
           entries.push(entry);
         }
-        goog.array.removeDuplicates(entries, undefined, function(filter) {
+        removeDuplicates(entries, undefined, function(filter) {
           return JSON.stringify(filter);
         });
-        cmds.push(new os.ui.query.cmd.QueryEntries(entries, true, os.ui.query.ALL_ID, true));
+        cmds.push(new QueryEntries(entries, true, ALL_ID, true));
         break;
-      case os.action.EventType.UNAPPLY:
+      case EventType.UNAPPLY:
         title = 'Turn off filter';
-        var allEntries = os.ui.queryManager.getEntries();
+        var allEntries = getQueryManager().getEntries();
         var removeEntries = [];
         for (var i = 0, n = filters.length; i < n; i++) {
           var filter = filters[i];
-          removeEntries = removeEntries.concat(os.ui.queryManager.getEntries(null, null, filter.getId()));
+          removeEntries = removeEntries.concat(getQueryManager().getEntries(null, null, filter.getId()));
         }
-        goog.array.removeDuplicates(removeEntries, undefined, function(filter) {
+        removeDuplicates(removeEntries, undefined, function(filter) {
           return JSON.stringify(filter);
         });
-        os.array.forEach(removeEntries, function(entry) {
-          ol.array.remove(allEntries, entry);
+        removeEntries.forEach(function(entry) {
+          remove(allEntries, entry);
         });
 
-        cmds.push(new os.ui.query.cmd.QueryEntries(allEntries, false, os.ui.query.ALL_ID, true));
+        cmds.push(new QueryEntries(allEntries, false, ALL_ID, true));
         break;
       default:
         break;
     }
 
     if (cmds.length > 0) {
-      var cmd = new os.command.SequenceCommand();
+      var cmd = new SequenceCommand();
       cmd.setCommands(cmds);
       cmd.title = title + (cmds.length > 1 ? 's' : '');
-      os.command.CommandProcessor.getInstance().addCommand(cmd);
+      CommandProcessor.getInstance().addCommand(cmd);
     }
   }
+};
+
+exports = {
+  MENU,
+  setup,
+  genVisibility,
+  dispose,
+  getFilters,
+  fixEntries
 };

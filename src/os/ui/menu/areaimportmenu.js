@@ -1,87 +1,94 @@
-goog.provide('os.ui.menu.areaImport');
+goog.module('os.ui.menu.areaImport');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.menu.Menu');
-goog.require('os.ui.menu.MenuItem');
-goog.require('os.ui.menu.MenuItemType');
+const googDispose = goog.require('goog.dispose');
+const {launchCoordinates, launchQueryImport, queryWorld} = goog.require('os.query');
+const Menu = goog.require('os.ui.menu.Menu');
+const MenuItem = goog.require('os.ui.menu.MenuItem');
+const MenuItemType = goog.require('os.ui.menu.MenuItemType');
+
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 
 
 /**
  * Events fired by the query area import menu.
  * @enum {string}
  */
-os.ui.menu.areaImport.EventType = {
+const EventType = {
   FILE: 'query:importFile',
   ENTER_COORDINATES: 'query:enterCoordinates',
   QUERY_WORLD: 'query:queryWorld'
 };
 
-
 /**
  * Menu for importing query areas.
- * @type {os.ui.menu.Menu|undefined}
+ * @type {Menu|undefined}
  */
-os.ui.menu.areaImport.MENU = undefined;
-
+let MENU = undefined;
 
 /**
  * Create the query area import menu.
  */
-os.ui.menu.areaImport.setup = function() {
-  os.ui.menu.areaImport.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
-    type: os.ui.menu.MenuItemType.ROOT,
+const setup = function() {
+  MENU = new Menu(new MenuItem({
+    type: MenuItemType.ROOT,
     children: [{
       label: 'Import File/URL',
-      eventType: os.ui.menu.areaImport.EventType.FILE,
+      eventType: EventType.FILE,
       tooltip: 'Import areas or filters from a file or URL',
       icons: ['<i class="fa fa-fw fa-cloud-download"></i>'],
-      handler: os.ui.menu.areaImport.handleQueryEvent_,
+      handler: handleQueryEvent,
       sort: 1
     }, {
       label: 'Enter Coordinates',
-      eventType: os.ui.menu.areaImport.EventType.ENTER_COORDINATES,
+      eventType: EventType.ENTER_COORDINATES,
       tooltip: 'Enter coordinates to load data for a box, circle, or polygon',
       icons: ['<i class="fa fa-fw fa-calculator"></i>'],
-      handler: os.ui.menu.areaImport.handleQueryEvent_,
+      handler: handleQueryEvent,
       sort: 2
     }, {
       label: 'Whole World',
-      eventType: os.ui.menu.areaImport.EventType.QUERY_WORLD,
+      eventType: EventType.QUERY_WORLD,
       tooltip: 'Load data for the whole world',
       icons: ['<i class="fa fa-fw fa-map-o"></i>'],
-      handler: os.ui.menu.areaImport.handleQueryEvent_,
+      handler: handleQueryEvent,
       sort: 3
     }]
   }));
 };
 
-
 /**
  * Dispose the query area import menu.
  */
-os.ui.menu.areaImport.dispose = function() {
-  goog.dispose(os.ui.menu.areaImport.MENU);
-  os.ui.menu.areaImport.MENU = undefined;
+const dispose = function() {
+  googDispose(MENU);
+  MENU = undefined;
 };
-
 
 /**
  * Handle query area import menu events.
  *
- * @param {!os.ui.menu.MenuEvent} event The menu event.
- * @private
+ * @param {!MenuEvent} event The menu event.
  */
-os.ui.menu.areaImport.handleQueryEvent_ = function(event) {
+const handleQueryEvent = function(event) {
   switch (event.type) {
-    case os.ui.menu.areaImport.EventType.FILE:
-      os.query.launchQueryImport();
+    case EventType.FILE:
+      launchQueryImport();
       break;
-    case os.ui.menu.areaImport.EventType.ENTER_COORDINATES:
-      os.query.launchCoordinates();
+    case EventType.ENTER_COORDINATES:
+      launchCoordinates();
       break;
-    case os.ui.menu.areaImport.EventType.QUERY_WORLD:
-      os.query.queryWorld();
+    case EventType.QUERY_WORLD:
+      queryWorld();
       break;
     default:
       break;
   }
+};
+
+exports = {
+  EventType,
+  MENU,
+  setup,
+  dispose
 };

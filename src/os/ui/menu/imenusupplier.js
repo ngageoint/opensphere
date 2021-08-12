@@ -1,4 +1,7 @@
-goog.provide('os.ui.menu.IMenuSupplier');
+goog.module('os.ui.menu.IMenuSupplier');
+goog.module.declareLegacyNamespace();
+
+const Menu = goog.requireType('os.ui.menu.Menu');
 
 
 /**
@@ -6,8 +9,13 @@ goog.provide('os.ui.menu.IMenuSupplier');
  *
  * @interface
  */
-os.ui.menu.IMenuSupplier = function() {};
-
+class IMenuSupplier {
+  /**
+   * Get the context menu.
+   * @return {Menu|undefined} The menu.
+   */
+  getMenu() {}
+}
 
 /**
  * Interface identifier.
@@ -15,11 +23,6 @@ os.ui.menu.IMenuSupplier = function() {};
  * @type {string}
  * @const
  */
-os.ui.menu.IMenuSupplier.ID = 'os.ui.menu.IMenuSupplier';
+IMenuSupplier.ID = 'os.ui.menu.IMenuSupplier';
 
-
-/**
- * Get the context menu.
- * @return {os.ui.menu.Menu|undefined} The menu.
- */
-os.ui.menu.IMenuSupplier.prototype.getMenu;
+exports = IMenuSupplier;
