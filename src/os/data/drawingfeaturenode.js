@@ -5,6 +5,8 @@ goog.require('os.mixin.object');
 
 const Circle = goog.require('ol.style.Circle');
 const RegularShape = goog.require('ol.style.RegularShape');
+const {registerClass} = goog.require('os.classRegistry');
+const {NodeClass} = goog.require('os.data');
 const osFeature = goog.require('os.feature');
 const osImplements = goog.require('os.implements');
 const TriState = goog.require('os.structs.TriState');
@@ -252,15 +254,13 @@ class DrawingFeatureNode extends SlickTreeNode {
     return null;
   }
 }
-
 osImplements(DrawingFeatureNode, IMenuSupplier.ID);
-
+registerClass(NodeClass.DRAW_FEATURE, DrawingFeatureNode);
 
 /**
  * @type {string}
  * @const
  */
 DrawingFeatureNode.ORIGINAL_STYLE = '_originalStyle';
-
 
 exports = DrawingFeatureNode;

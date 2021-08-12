@@ -16,6 +16,8 @@ const DescriptorClass = {
  * @type {Object}
  */
 const NodeClass = {
+  DRAW_FEATURE: 'os.data.DrawingFeatureNode',
+  DRAW_LAYER: 'os.data.DrawingLayerNode',
   LAYER: 'os.data.LayerNode'
 };
 

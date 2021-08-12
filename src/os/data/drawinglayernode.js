@@ -6,6 +6,8 @@ const GoogEventType = goog.require('goog.events.EventType');
 const googString = goog.require('goog.string');
 const events = goog.require('ol.events');
 const VectorEventType = goog.require('ol.source.VectorEventType');
+const {registerClass} = goog.require('os.classRegistry');
+const {NodeClass} = goog.require('os.data');
 const AreaNode = goog.require('os.data.AreaNode');
 const DrawingFeatureNode = goog.require('os.data.DrawingFeatureNode');
 const LayerNode = goog.require('os.data.LayerNode');
@@ -271,5 +273,6 @@ class DrawingLayerNode extends LayerNode {
     return !node;
   }
 }
+registerClass(NodeClass.DRAW_FEATURE, DrawingLayerNode);
 
 exports = DrawingLayerNode;
