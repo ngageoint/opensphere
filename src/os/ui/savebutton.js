@@ -42,6 +42,6 @@ os.ui.Module.directive('saveButton', [os.ui.saveButtonDirective]);
  */
 os.ui.SaveButtonCtrl = function($scope, $element) {
   os.ui.SaveButtonCtrl.base(this, 'constructor', $scope, $element);
-  this.menu = os.ui.menu.SAVE;
+  this.menu = os.ui.menu.save.MENU;
 };
 goog.inherits(os.ui.SaveButtonCtrl, os.ui.menu.MenuButtonCtrl);

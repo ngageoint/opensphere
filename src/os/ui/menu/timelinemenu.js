@@ -15,7 +15,7 @@ goog.requireType('os.ui.timeline.TimelineUI');
 /**
  * @type {os.ui.menu.Menu<Array<number>>}
  */
-os.ui.menu.TIMELINE = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
+os.ui.menu.timeline.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
   type: os.ui.menu.MenuItemType.ROOT,
   children: [{
     label: os.ui.menu.layer.GroupLabel.TOOLS,
@@ -116,10 +116,17 @@ os.ui.menu.TIMELINE = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
 
 
 /**
+ * @type {os.ui.menu.Menu<Array<number>>}
+ * @deprecated Please use os.ui.menu.timeline.MENU instead
+ */
+os.ui.menu.TIMELINE = os.ui.menu.timeline.MENU;
+
+
+/**
  * Timeline menu setup
  */
 os.ui.menu.timeline.setup = function() {
-  var menu = os.ui.menu.TIMELINE;
+  var menu = os.ui.menu.timeline.MENU;
 
   menu.listen(os.time.TimelineActionEventType.SELECT, os.ui.menu.timeline.onTimeSelect);
   menu.listen(os.time.TimelineActionEventType.SELECT_EXCLUSIVE, os.ui.menu.timeline.onTimeSelect);
@@ -142,8 +149,8 @@ os.ui.menu.timeline.setup = function() {
  * Clean up menu
  */
 os.ui.menu.timeline.dispose = function() {
-  if (os.ui.menu.TIMELINE) {
-    os.ui.menu.TIMELINE.dispose();
+  if (os.ui.menu.timeline.MENU) {
+    os.ui.menu.timeline.MENU.dispose();
   }
 };
 

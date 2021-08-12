@@ -113,7 +113,6 @@ goog.require('os.ui.icon.IconSelectorManager');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportEventType');
 goog.require('os.ui.im.ImportManager');
-goog.require('os.ui.menu');
 goog.require('os.ui.menu.areaImport');
 goog.require('os.ui.menu.buffer');
 goog.require('os.ui.menu.draw');

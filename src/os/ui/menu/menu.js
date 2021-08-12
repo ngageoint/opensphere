@@ -1,4 +1,3 @@
-goog.provide('os.ui.menu');
 goog.provide('os.ui.menu.Menu');
 
 goog.require('goog.async.Delay');
