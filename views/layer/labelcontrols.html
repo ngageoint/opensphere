@@ -20,7 +20,7 @@
     </div>
   </div>
 
-  <div class="js-label-container card-body border" ng-if="columns">
+  <div class="js-label-container card-body border" ng-show="columns">
     <table>
       <tbody>
         <tr ng-repeat="label in labels" ng-init="checkId = $root.getUniqueString()">
