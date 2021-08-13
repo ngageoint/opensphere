@@ -67,7 +67,7 @@ const IconPickerEventType = goog.require('os.ui.icon.IconPickerEventType');
 const LabelControlsEventType = goog.require('os.ui.layer.LabelControlsEventType');
 const TuiEditor = goog.require('os.ui.text.TuiEditor');
 const osWindow = goog.require('os.ui.window');
-const {CONTAINER} = goog.require('os.ui.windowSelector');
+const windowSelector = goog.require('os.ui.windowSelector');
 const {mapAltitudeModeToName} = goog.require('os.webgl');
 const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
@@ -1689,7 +1689,7 @@ class Controller extends Disposable {
    * @return {number} The X coordinate
    */
   static calculateXPosition(geom) {
-    var container = angular.element(CONTAINER);
+    var container = angular.element(windowSelector.CONTAINER);
     if (geom) {
       var extent = getFunctionalExtent(geom);
       var center = getCenter(extent);

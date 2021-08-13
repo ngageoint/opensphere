@@ -8,7 +8,7 @@ const {ROOT} = goog.require('os');
 const Settings = goog.require('os.config.Settings');
 const Module = goog.require('os.ui.Module');
 const {create, open} = goog.require('os.ui.modal');
-const {CONTAINER} = goog.require('os.ui.windowSelector');
+const windowSelector = goog.require('os.ui.windowSelector');
 const Peer = goog.require('os.xt.Peer');
 
 const IMessageHandler = goog.requireType('os.xt.IMessageHandler');
@@ -183,7 +183,7 @@ const launch = () => {
   var cookie = new Cookies(window.document);
 
   if (consent && consent['text'] && !cookie.get('consent')) {
-    create(CONTAINER, '<consent></consent>');
+    create(windowSelector.CONTAINER, '<consent></consent>');
   }
 };
 
