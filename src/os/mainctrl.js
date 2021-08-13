@@ -108,7 +108,6 @@ goog.require('os.ui.file.FileXTHandler');
 goog.require('os.ui.file.method.ImportMethod');
 goog.require('os.ui.help.Controls');
 goog.require('os.ui.help.metricsOption');
-goog.require('os.ui.historyDirective');
 goog.require('os.ui.icon.IconSelectorManager');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportEventType');

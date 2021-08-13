@@ -1,14 +1,41 @@
-goog.module('os.ui.history.HistoryViewCtrl');
+goog.module('os.ui.history.HistoryViewUI');
 goog.module.declareLegacyNamespace();
 
+const {ROOT} = goog.require('os');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const EventType = goog.require('os.command.EventType');
+const Module = goog.require('os.ui.Module');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const CommandEvent = goog.requireType('os.command.CommandEvent');
 const ICommand = goog.requireType('os.command.ICommand');
 
+
+/**
+ * The history directive
+ *
+ * @return {angular.Directive}
+ */
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  scope: true,
+  templateUrl: ROOT + 'views/windows/history.html',
+  controller: Controller,
+  controllerAs: 'historyView'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'history';
+
+/**
+ * Add the directive to the module
+ */
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller function for the history-view directive.
@@ -258,4 +285,8 @@ class Controller {
   }
 }
 
-exports = Controller;
+exports = {
+  Controller,
+  directive,
+  directiveTag
+};

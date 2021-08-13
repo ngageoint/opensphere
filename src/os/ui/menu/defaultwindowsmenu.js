@@ -10,6 +10,7 @@ const {Map: MapKeys, Timeline: TimelineKeys} = goog.require('os.metrics.keys');
 const LayersWindowUI = goog.require('os.ui.LayersWindowUI');
 const UIEvent = goog.require('os.ui.events.UIEvent');
 const UIEventType = goog.require('os.ui.events.UIEventType');
+const HistoryViewUI = goog.require('os.ui.history.HistoryViewUI');
 const {showLegend} = goog.require('os.ui.menu.map');
 const windows = goog.require('os.ui.menu.windows');
 const {WINDOW} = goog.require('os.ui.windowSelector');
@@ -150,7 +151,7 @@ const setup = function() {
     'min-height': '300',
     'max-height': '1000',
     'show-close': 'true',
-    'html': '<history resize-with="' + WINDOW + '"></history>'
+    'html': `<${HistoryViewUI.directiveTag} resize-with="${WINDOW}"></${HistoryViewUI.directiveTag}>`
   }, false, undefined);
 
   if (Settings.getInstance().get('metrics.enabled', false)) {
