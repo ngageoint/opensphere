@@ -1,7 +1,7 @@
 goog.module('os.ui.timeline.AbstractTimelineCtrl');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.sliderDirective');
+goog.require('os.ui.SliderUI');
 
 const googArray = goog.require('goog.array');
 const asserts = goog.require('goog.asserts');

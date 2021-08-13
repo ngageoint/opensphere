@@ -3,9 +3,11 @@ goog.module('os.ui.data.LayerCheckboxUI');
 const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
 const TriState = goog.require('os.structs.TriState');
 const Module = goog.require('os.ui.Module');
-const TriStateCheckboxCtrl = goog.require('os.ui.TriStateCheckboxCtrl');
+const {
+  Controller: TriStateCheckboxCtrl,
+  directive: triStateCheckboxDirective
+} = goog.require('os.ui.TriStateCheckboxUI');
 const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
-const triStateCheckboxDirective = goog.require('os.ui.triStateCheckboxDirective');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 const ITreeNode = goog.requireType('os.structs.ITreeNode');

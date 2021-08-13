@@ -1,12 +1,12 @@
 goog.module('os.ui.layer.VectorLayerUI');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.UISwitchUI');
 goog.require('os.ui.layer.EllipseOptionsUI');
 goog.require('os.ui.layer.IconStyleControlsUI');
 goog.require('os.ui.layer.LabelControlsUI');
 goog.require('os.ui.layer.LobOptionsUI');
 goog.require('os.ui.layer.VectorStyleControlsUI');
-goog.require('os.ui.uiSwitchDirective');
 
 const Delay = goog.require('goog.async.Delay');
 const {rgbArrayToHex} = goog.require('goog.color');

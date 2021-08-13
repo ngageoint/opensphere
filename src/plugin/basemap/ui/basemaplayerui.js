@@ -1,7 +1,7 @@
 goog.module('plugin.basemap.ui.BaseMapLayerUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.spinnerDirective');
+goog.require('os.ui.SpinnerUI');
 
 const Delay = goog.require('goog.async.Delay');
 const os = goog.require('os');

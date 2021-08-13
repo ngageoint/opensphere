@@ -1,7 +1,7 @@
 goog.module('os.ui.datetime.DurationUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.spinnerDirective');
+goog.require('os.ui.SpinnerUI');
 goog.require('os.ui.util.ValidationMessageUI');
 
 const {isEmpty} = goog.require('goog.object');
