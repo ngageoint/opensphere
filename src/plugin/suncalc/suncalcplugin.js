@@ -31,7 +31,7 @@ class SunCalcPlugin extends AbstractPlugin {
    * @inheritDoc
    */
   init() {
-    var menu = mapMenu.MENU;
+    var menu = mapMenu.getMenu();
     if (menu) {
       var group = menu.getRoot().find(mapMenu.GroupLabel.COORDINATE);
 

@@ -51,7 +51,7 @@ class DrawingFeatureNode extends SlickTreeNode {
    * @inheritDoc
    */
   getMenu() {
-    return spatial.MENU;
+    return spatial.getMenu();
   }
 
   /**

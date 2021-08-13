@@ -34,6 +34,20 @@ const EventType = {
 let MENU = undefined;
 
 /**
+ * Get the menu.
+ * @return {Menu|undefined}
+ */
+const getMenu = () => MENU;
+
+/**
+ * Set the menu.
+ * @param {Menu|undefined} menu The menu.
+ */
+const setMenu = (menu) => {
+  MENU = menu;
+};
+
+/**
  * Creates a draw menu.
  *
  * @param {function(MenuEvent)} handler The menu handler.
@@ -144,7 +158,8 @@ const handleDrawEvent = function(event) {
 
 exports = {
   EventType,
-  MENU,
+  getMenu,
+  setMenu,
   create,
   setup,
   dispose,

@@ -41,7 +41,7 @@ class CapturePlugin extends AbstractCapturePlugin {
   init() {
     super.init();
 
-    var menu = saveMenu.MENU;
+    var menu = saveMenu.getMenu();
     if (menu) {
       var root = menu.getRoot();
       root.addChild({

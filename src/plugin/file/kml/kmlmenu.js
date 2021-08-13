@@ -32,7 +32,7 @@ const EventType = {
  * Set up KML tree items in the layer menu.
  */
 const treeSetup = function() {
-  var menu = layerMenu.MENU;
+  var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(EventType.GOTO)) {
     var menuRoot = menu.getRoot();
     var toolsGroup = menuRoot.find(layerMenu.GroupLabel.TOOLS);

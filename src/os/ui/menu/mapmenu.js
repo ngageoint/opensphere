@@ -28,6 +28,20 @@ const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 let MENU = undefined;
 
 /**
+ * Get the menu.
+ * @return {Menu<ol.Coordinate>|undefined}
+ */
+const getMenu = () => MENU;
+
+/**
+ * Set the menu.
+ * @param {Menu<ol.Coordinate>|undefined} menu The menu.
+ */
+const setMenu = (menu) => {
+  MENU = menu;
+};
+
+/**
  * Sort value used for each map menu group.
  * @enum {number}
  */
@@ -247,7 +261,8 @@ const onTerrain = function(event) {
 };
 
 exports = {
-  MENU,
+  getMenu,
+  setMenu,
   GroupSort,
   GroupLabel,
   setup,

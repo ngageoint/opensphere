@@ -1090,7 +1090,7 @@ class Controller {
    */
   openImportMenu() {
     var target = this.element.find('.js-import-group');
-    var menu = areaImport.MENU;
+    var menu = areaImport.getMenu();
     if (menu && target && target.length) {
       menu.open(undefined, {
         my: 'left top+4',

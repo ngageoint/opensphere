@@ -31,7 +31,7 @@ const EventType = {
  * Add heatmap menu items to the layer menu.
  */
 const setup = function() {
-  var menu = layerMenu.MENU;
+  var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(EventType.EXPORT)) {
     var menuRoot = menu.getRoot();
     var toolsGroup = menuRoot.find(layerMenu.GroupLabel.TOOLS);

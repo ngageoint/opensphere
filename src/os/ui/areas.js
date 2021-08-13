@@ -73,7 +73,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
 
     this.title = 'areas';
     try {
-      this.scope['contextMenu'] = spatial.MENU;
+      this.scope['contextMenu'] = spatial.getMenu();
     } catch (e) {
     }
 
@@ -119,7 +119,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
    */
   openImportMenu() {
     var target = this.element.find('.js-import-group');
-    var menu = areaImport.MENU;
+    var menu = areaImport.getMenu();
     if (menu && target && target.length) {
       menu.open(undefined, {
         my: 'left top+4',

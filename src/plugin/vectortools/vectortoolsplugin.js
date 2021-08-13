@@ -42,7 +42,7 @@ class VectorToolsPlugin extends AbstractPlugin {
    * @inheritDoc
    */
   init() {
-    var menu = layerMenu.MENU;
+    var menu = layerMenu.getMenu();
     if (menu) {
       var group = menu.getRoot().find(layerMenu.GroupLabel.TOOLS);
       asserts.assert(group, 'Group should exist! Check spelling?');

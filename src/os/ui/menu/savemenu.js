@@ -17,6 +17,20 @@ const {EventType} = goog.require('os.ui.state.menu');
 let MENU = undefined;
 
 /**
+ * Get the menu.
+ * @return {Menu<undefined>|undefined}
+ */
+const getMenu = () => MENU;
+
+/**
+ * Set the menu.
+ * @param {Menu<undefined>|undefined} menu The menu.
+ */
+const setMenu = (menu) => {
+  MENU = menu;
+};
+
+/**
  * Set up the menu.
  */
 const setup = function() {
@@ -53,7 +67,8 @@ const onSaveState = function() {
 };
 
 exports = {
-  MENU,
+  getMenu,
+  setMenu,
   setup,
   dispose,
   onSaveState

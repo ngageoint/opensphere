@@ -48,6 +48,20 @@ let Context;
 let MENU = undefined;
 
 /**
+ * Get the menu.
+ * @return {Menu<Context>|undefined}
+ */
+const getMenu = () => MENU;
+
+/**
+ * Set the menu.
+ * @param {Menu<Context>|undefined} menu The menu.
+ */
+const setMenu = (menu) => {
+  MENU = menu;
+};
+
+/**
  * Group labels for the layer menu.
  * @enum {string}
  */
@@ -621,7 +635,8 @@ const handleCompareLayers = function(event) {
 };
 
 exports = {
-  MENU,
+  getMenu,
+  setMenu,
   GroupLabel,
   GroupSort,
   setup,

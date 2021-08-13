@@ -47,7 +47,7 @@ class Controller extends MenuButtonCtrl {
    */
   constructor($scope, $element) {
     super($scope, $element);
-    this.menu = save.MENU;
+    this.menu = save.getMenu();
   }
 }
 

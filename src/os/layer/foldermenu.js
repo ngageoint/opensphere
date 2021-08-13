@@ -153,7 +153,7 @@ const showUnfolder = function(context) {
  */
 const setup = function() {
   layerMenu.setup();
-  const menu = layerMenu.MENU;
+  const menu = layerMenu.getMenu();
 
   if (!initialized && menu) {
     var group = menu.getRoot().find(layerMenu.GroupLabel.LAYER);

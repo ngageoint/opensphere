@@ -6,13 +6,13 @@ describe('os.ui.menu.areaImport', function() {
   const areaImport = goog.module.get('os.ui.menu.areaImport');
 
   it('defaults to undefined', function() {
-    expect(areaImport.MENU).toBeUndefined();
+    expect(areaImport.getMenu()).toBeUndefined();
   });
 
   it('adds default options on setup', function() {
     areaImport.setup();
 
-    var menu = areaImport.MENU;
+    var menu = areaImport.getMenu();
     expect(menu).toBeDefined();
     expect(menu.getRoot()).toBeDefined();
     expect(menu.getRoot().find(areaImport.EventType.FILE)).toBeDefined();
@@ -36,6 +36,6 @@ describe('os.ui.menu.areaImport', function() {
 
   it('disposes the menu', function() {
     areaImport.dispose();
-    expect(areaImport.MENU).toBeUndefined();
+    expect(areaImport.getMenu()).toBeUndefined();
   });
 });

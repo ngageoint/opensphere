@@ -33,8 +33,8 @@ class PositionPlugin extends AbstractPlugin {
    * @inheritDoc
    */
   init() {
-    if (mapMenu.MENU) {
-      var menu = mapMenu.MENU;
+    if (mapMenu.getMenu()) {
+      var menu = mapMenu.getMenu();
 
       var group = menu.getRoot().find(mapMenu.GroupLabel.COORDINATE);
       if (group) {

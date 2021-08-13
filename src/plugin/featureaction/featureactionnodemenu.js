@@ -33,6 +33,20 @@ const layerMenu = goog.requireType('os.ui.menu.layer');
 let MENU = undefined;
 
 /**
+ * Get the menu.
+ * @return {Menu<undefined>|undefined}
+ */
+const getMenu = () => MENU;
+
+/**
+ * Set the menu.
+ * @param {Menu<undefined>|undefined} menu The menu.
+ */
+const setMenu = (menu) => {
+  MENU = menu;
+};
+
+/**
  * Feature action node menu event types.
  * @enum {string}
  */
@@ -387,9 +401,8 @@ const onToggleOffEvent_ = function(event) {
 };
 
 exports = {
-  get MENU() {
-    return MENU;
-  },
+  getMenu,
+  setMenu,
   EventType,
   setup,
   dispose,

@@ -86,7 +86,7 @@ plugin.cookbook_metrics.CookbookMetrics.prototype.init = function() {
   var metricsManager = os.ui.metrics.MetricsManager.getInstance();
   metricsManager.addMetricsPlugin(new plugin.cookbook_metrics.Metrics());
 
-  var menu = os.ui.menu.spatial.MENU;
+  var menu = os.ui.menu.spatial.getMenu();
   if (menu) {
     var root = menu.getRoot();
     var group = root.find(plugin.cookbook_metrics.MYGROUP);
@@ -94,7 +94,7 @@ plugin.cookbook_metrics.CookbookMetrics.prototype.init = function() {
       group = root.addChild({
         type: os.ui.menu.MenuItemType.GROUP,
         label: plugin.cookbook_metrics.MYGROUP,
-        tooltip: 'Added by cookbook metrics example',
+        tooltip: 'Added by cookbook metrics example'
       });
       group.addChild({
         type: os.ui.menu.MenuItemType.ITEM,

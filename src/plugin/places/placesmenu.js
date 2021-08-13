@@ -52,7 +52,7 @@ const GROUP_LABEL = places.TITLE;
  * Add places items to the layer menu.
  */
 const layerSetup = function() {
-  var menu = layerMenu.MENU;
+  var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(GROUP_LABEL)) {
     var menuRoot = menu.getRoot();
     menuRoot.addChild({
@@ -170,7 +170,7 @@ const layerSetup = function() {
  * Remove places items from the layer menu.
  */
 const layerDispose = function() {
-  var menu = layerMenu.MENU;
+  var menu = layerMenu.getMenu();
   var group = menu ? menu.getRoot().find(layerMenu.GroupLabel.TOOLS) : undefined;
   if (group) {
     // remove the entire places group
@@ -285,7 +285,7 @@ const visibleIfLayerNodeSupported_ = function(context) {
  * Set up places items on the map.
  */
 const mapSetup = function() {
-  var menu = mapMenu.MENU;
+  var menu = mapMenu.getMenu();
 
   if (menu && !menu.getRoot().find(GROUP_LABEL)) {
     var root = menu.getRoot();
@@ -332,7 +332,7 @@ const mapSetup = function() {
  * Clean up places items on the map.
  */
 const mapDispose = function() {
-  var menu = mapMenu.MENU;
+  var menu = mapMenu.getMenu();
   if (menu) {
     var group = menu.getRoot().find(mapMenu.GroupLabel.COORDINATE);
     if (group) {
@@ -345,7 +345,7 @@ const mapDispose = function() {
  * Set up places items in the spatial menu.
  */
 const spatialSetup = function() {
-  var menu = spatial.MENU;
+  var menu = spatial.getMenu();
 
   if (menu && !menu.getRoot().find(GROUP_LABEL)) {
     var root = menu.getRoot();
@@ -401,7 +401,7 @@ const spatialSetup = function() {
  * Clean up places items in the spatial menu.
  */
 const spatialDispose = function() {
-  var menu = mapMenu.MENU;
+  var menu = mapMenu.getMenu();
   if (menu) {
     var group = menu.getRoot().find(spatial.Group.TOOLS);
     if (group) {

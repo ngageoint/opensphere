@@ -57,7 +57,7 @@ class Controller extends MenuButtonCtrl {
    */
   constructor($scope, $element) {
     super($scope, $element);
-    this.menu = osUiMenuImport.MENU;
+    this.menu = osUiMenuImport.getMenu();
     this.flag = 'addData';
     this.metricKey = AddData.OPEN;
   }

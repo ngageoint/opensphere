@@ -88,7 +88,7 @@ class Controller {
      * The context menu for the source grid.
      * @type {Menu}
      */
-    this['contextMenu'] = list.MENU;
+    this['contextMenu'] = list.getMenu();
 
     /**
      * If data should be filtered to selected only.

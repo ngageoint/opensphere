@@ -64,6 +64,20 @@ const Group = {
 let MENU = undefined;
 
 /**
+ * Get the menu.
+ * @return {SpatialMenu|undefined}
+ */
+const getMenu = () => MENU;
+
+/**
+ * Set the menu.
+ * @param {SpatialMenu|undefined} menu The menu.
+ */
+const setMenu = (menu) => {
+  MENU = menu;
+};
+
+/**
  * Set up the menu.
  */
 const setup = function() {
@@ -1111,7 +1125,8 @@ class LayerChooserCtrl {
 
 exports = {
   Group,
-  MENU,
+  getMenu,
+  setMenu,
   setup,
   dispose,
   getGeometriesFromContext,

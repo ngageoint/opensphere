@@ -44,7 +44,7 @@ const dispose = function() {
  * Set up buffer region listeners in the layers window.
  */
 const layerSetup = function() {
-  var menu = layerMenu.MENU;
+  var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(EventType.BUFFER)) {
     var group = menu.getRoot().find(layerMenu.GroupLabel.TOOLS);
     assert(group, 'Group should exist! Check spelling?');
@@ -65,7 +65,7 @@ const layerSetup = function() {
  * Clean up buffer region listeners in the layers window.
  */
 const layerDispose = function() {
-  var menu = layerMenu.MENU;
+  var menu = layerMenu.getMenu();
   var group = menu ? menu.getRoot().find(layerMenu.GroupLabel.TOOLS) : undefined;
   if (group) {
     group.removeChild(EventType.BUFFER);
@@ -76,7 +76,7 @@ const layerDispose = function() {
  * Set up buffer region listeners on the map.
  */
 const mapSetup = function() {
-  var menu = mapMenu.MENU;
+  var menu = mapMenu.getMenu();
   if (menu && !menu.getRoot().find(EventType.BUFFER)) {
     var group = menu.getRoot().find(mapMenu.GroupLabel.COORDINATE);
     assert(group, 'Group should exist! Check spelling?');
@@ -95,7 +95,7 @@ const mapSetup = function() {
  * Clean up buffer region listeners on the map.
  */
 const mapDispose = function() {
-  var menu = mapMenu.MENU;
+  var menu = mapMenu.getMenu();
   if (menu) {
     var group = menu.getRoot().find(mapMenu.GroupLabel.COORDINATE);
     if (group) {
@@ -108,7 +108,7 @@ const mapDispose = function() {
  * Set up buffer region listeners on the spatial menu.
  */
 const spatialSetup = function() {
-  var menu = spatialMenu.MENU;
+  var menu = spatialMenu.getMenu();
   if (menu) {
     var root = menu.getRoot();
     var group = root.find(spatialMenu.Group.TOOLS);
@@ -129,7 +129,7 @@ const spatialSetup = function() {
  * Clean up buffer region listeners on the spatial menu.
  */
 const spatialDispose = function() {
-  var menu = spatialMenu.MENU;
+  var menu = spatialMenu.getMenu();
   if (menu) {
     var root = menu.getRoot();
     var group = root.find(spatialMenu.Group.TOOLS);

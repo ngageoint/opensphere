@@ -91,7 +91,7 @@ class Controller extends Disposable {
      * The context menu for Places.
      * @type {os.ui.menu.Menu<layerMenu.Context>|undefined}
      */
-    this['contextMenu'] = layerMenu.MENU;
+    this['contextMenu'] = layerMenu.getMenu();
 
     /**
      * The Places KML tree.

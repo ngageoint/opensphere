@@ -42,7 +42,7 @@ plugin.cookbook_submenu.EventType = {
  * @inheritDoc
  */
 plugin.cookbook_submenu.CookbookSubmenu.prototype.init = function() {
-  var menu = os.ui.menu.spatial.MENU;
+  var menu = os.ui.menu.spatial.getMenu();
   if (menu) {
     var root = menu.getRoot();
     var group = root.find(plugin.cookbook_submenu.MYGROUP);

@@ -19,6 +19,20 @@ const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 let MENU = undefined;
 
 /**
+ * Get the menu.
+ * @return {Menu|undefined}
+ */
+const getMenu = () => MENU;
+
+/**
+ * Set the menu.
+ * @param {Menu|undefined} menu The menu.
+ */
+const setMenu = (menu) => {
+  MENU = menu;
+};
+
+/**
  * @type {Object<string, Function|Object<string, string>>}
  */
 const configs_ = {};
@@ -171,7 +185,8 @@ const openSettingsTo = function(id) {
 };
 
 exports = {
-  MENU,
+  getMenu,
+  setMenu,
   addWindow,
   setup,
   dispose,

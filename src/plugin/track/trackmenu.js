@@ -42,7 +42,7 @@ const TRACK_GROUP = 'Tracks';
  * @param {boolean=} opt_enablePredict true to include "Predict" track capabilities
  */
 const layerSetup = function(opt_enablePredict = false) {
-  const menu = osUiMenuLayer.MENU;
+  const menu = osUiMenuLayer.getMenu();
   if (menu && !menu.getRoot().find(TRACK_GROUP)) {
     const group = menu.getRoot().find(osUiMenuLayer.GroupLabel.TOOLS);
     asserts.assert(group, 'Group should exist! Check spelling?');
@@ -287,7 +287,7 @@ const visibleIfTrackNode = function(context) {
  * @param {boolean=} opt_enablePredict true to include "Predict" track capabilities
  */
 const spatialSetup = function(opt_enablePredict = false) {
-  const menu = spatial.MENU;
+  const menu = spatial.getMenu();
   if (menu) {
     const root = menu.getRoot();
     const group = root.find(spatial.Group.FEATURES);

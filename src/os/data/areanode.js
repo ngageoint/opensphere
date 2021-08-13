@@ -50,7 +50,7 @@ class AreaNode extends QueryAreaNode {
    * @inheritDoc
    */
   getMenu() {
-    return spatial.MENU;
+    return spatial.getMenu();
   }
 
   /**

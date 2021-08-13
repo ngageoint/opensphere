@@ -84,7 +84,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
 
     this.title = 'layers';
     try {
-      this.scope['contextMenu'] = layerMenu.MENU;
+      this.scope['contextMenu'] = layerMenu.getMenu();
     } catch (e) {
     }
 
@@ -102,8 +102,8 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
      */
     this.menus_ = {};
 
-    if (importMenu.MENU) {
-      this.menus_['.add-data-group'] = importMenu.MENU;
+    if (importMenu.getMenu()) {
+      this.menus_['.add-data-group'] = importMenu.getMenu();
     }
 
     var map = getMapContainer();

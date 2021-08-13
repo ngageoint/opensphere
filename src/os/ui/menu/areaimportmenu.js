@@ -27,6 +27,20 @@ const EventType = {
 let MENU = undefined;
 
 /**
+ * Get the menu.
+ * @return {Menu|undefined}
+ */
+const getMenu = () => MENU;
+
+/**
+ * Set the menu.
+ * @param {Menu|undefined} menu The menu.
+ */
+const setMenu = (menu) => {
+  MENU = menu;
+};
+
+/**
  * Create the query area import menu.
  */
 const setup = function() {
@@ -88,7 +102,8 @@ const handleQueryEvent = function(event) {
 
 exports = {
   EventType,
-  MENU,
+  getMenu,
+  setMenu,
   setup,
   dispose
 };

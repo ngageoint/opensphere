@@ -65,7 +65,7 @@ class Controller extends FilterActionsCtrl {
      * The context menu for feature action nodes.
      * @type {Menu<layerMenu.Context>|undefined}
      */
-    this['contextMenu'] = node.MENU;
+    this['contextMenu'] = node.getMenu();
 
     /**
      * Flag for whether to show default feature actions.

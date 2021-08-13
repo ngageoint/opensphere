@@ -133,7 +133,7 @@ class Controller {
     /**
      * @type {Menu|undefined}
      */
-    this['controlMenu'] = draw.MENU;
+    this['controlMenu'] = draw.getMenu();
   }
 
   /**

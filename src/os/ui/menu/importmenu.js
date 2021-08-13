@@ -23,6 +23,20 @@ const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 let MENU = undefined;
 
 /**
+ * Get the menu.
+ * @return {Menu|undefined}
+ */
+const getMenu = () => MENU;
+
+/**
+ * Set the menu.
+ * @param {Menu|undefined} menu The menu.
+ */
+const setMenu = (menu) => {
+  MENU = menu;
+};
+
+/**
  * Default groups in the import menu
  */
 const GroupType = {
@@ -175,7 +189,8 @@ const refreshRecent = function() {
 };
 
 exports = {
-  MENU,
+  getMenu,
+  setMenu,
   GroupType,
   GroupSort,
   RECENT_PREFIX,

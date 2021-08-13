@@ -13,7 +13,7 @@ const {launchParamsEdit} = goog.require('plugin.params.EditRequestParamsUI');
  * Set up params menu items in the layer menu.
  */
 const layerSetup = function() {
-  var menu = layerMenu.MENU;
+  var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(pluginParams.EventType.EDIT_PARAMS)) {
     var group = menu.getRoot().find(layerMenu.GroupLabel.LAYER);
     asserts.assert(group, 'Group should exist! Check spelling?');
@@ -35,7 +35,7 @@ const layerSetup = function() {
  * Clean up params menu items in the layer menu.
  */
 const layerDispose = function() {
-  var menu = layerMenu.MENU;
+  var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(pluginParams.EventType.EDIT_PARAMS)) {
     var group = menu.getRoot().find(layerMenu.GroupLabel.LAYER);
     if (group) {

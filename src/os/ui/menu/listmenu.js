@@ -43,6 +43,20 @@ const PREFIX_REGEXP = /^.*?::/;
 let MENU = null;
 
 /**
+ * Get the menu.
+ * @return {Menu}
+ */
+const getMenu = () => MENU;
+
+/**
+ * Set the menu.
+ * @param {Menu} menu The menu.
+ */
+const setMenu = (menu) => {
+  MENU = menu;
+};
+
+/**
  * menu list strings
  * @enum {string}
  */
@@ -311,7 +325,8 @@ const visibleIfHasSelected = function(context) {
 exports = {
   PREFIX,
   PREFIX_REGEXP,
-  MENU,
+  getMenu,
+  setMenu,
   Strings,
   setup,
   dispose,
