@@ -1,8 +1,6 @@
 goog.module('os.ui.menu.layer');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.featureListDirective');
-
 const Timer = goog.require('goog.Timer');
 const googDispose = goog.require('goog.dispose');
 const {createEmpty, isEmpty} = goog.require('ol.extent');
@@ -20,7 +18,7 @@ const {getMapContainer} = goog.require('os.map.instance');
 const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const {getExportFields} = goog.require('os.source');
 const VectorSource = goog.require('os.source.Vector');
-const ui = goog.require('os.ui');
+const {launchFeatureList} = goog.require('os.ui.FeatureListUI');
 const ExportUI = goog.require('os.ui.ex.ExportUI');
 const ExportManager = goog.require('os.ui.file.ExportManager');
 const EllipseColumnsUI = goog.require('os.ui.layer.EllipseColumnsUI');
@@ -500,7 +498,7 @@ const onFeatureList_ = function(event) {
     layers.forEach(function(layer) {
       var source = layer.getSource();
       if (source instanceof VectorSource) {
-        ui.launchFeatureList(source);
+        launchFeatureList(source);
       }
     });
   }

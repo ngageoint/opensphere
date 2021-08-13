@@ -15,7 +15,7 @@ const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
 const VectorLayer = goog.require('os.layer.Vector');
 const {Places: PlacesKeys} = goog.require('os.metrics.keys');
 const VectorSource = goog.require('os.source.Vector');
-const ui = goog.require('os.ui');
+const {launchFeatureList} = goog.require('os.ui.FeatureListUI');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 const layerMenu = goog.require('os.ui.menu.layer');
 const mapMenu = goog.require('os.ui.menu.map');
@@ -508,7 +508,7 @@ const onLayerEvent_ = function(event) {
             break;
           case EventType.FEATURE_LIST:
             if (source instanceof VectorSource) {
-              ui.launchFeatureList(source);
+              launchFeatureList(source);
             }
             break;
           case EventType.EDIT_FOLDER:

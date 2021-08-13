@@ -1,15 +1,27 @@
-goog.provide('os.ui.FeatureListCtrl');
-goog.provide('os.ui.featureListDirective');
+goog.module('os.ui.FeatureListUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.asserts');
-goog.require('goog.events.EventType');
-goog.require('os.source.PropertyChange');
-goog.require('os.ui');
-goog.require('os.ui.Module');
 goog.require('os.ui.SourceGridUI');
-goog.require('os.ui.menu.list');
 goog.require('os.ui.sliderDirective');
-goog.require('os.ui.window');
+
+const {assert} = goog.require('goog.asserts');
+const GoogEventType = goog.require('goog.events.EventType');
+const {containsValue} = goog.require('goog.object');
+const events = goog.require('ol.events');
+const {ROOT} = goog.require('os');
+const LayerEventType = goog.require('os.events.LayerEventType');
+const SelectionType = goog.require('os.events.SelectionType');
+const {getMapContainer} = goog.require('os.map.instance');
+const PropertyChange = goog.require('os.source.PropertyChange');
+const {apply, sanitizeId} = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const list = goog.require('os.ui.menu.list');
+const {bringToFront, close, create, exists} = goog.require('os.ui.window');
+
+const LayerEvent = goog.requireType('os.events.LayerEvent');
+const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const VectorSource = goog.requireType('os.source.Vector');
+const Menu = goog.requireType('os.ui.menu.Menu');
 
 
 /**
@@ -17,238 +29,235 @@ goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-os.ui.featureListDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'source': '='
-    },
-    templateUrl: os.ROOT + 'views/windows/featurelist.html',
-    controller: os.ui.FeatureListCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'source': '='
+  },
+  templateUrl: ROOT + 'views/windows/featurelist.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'featurelist';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('featurelist', [os.ui.featureListDirective]);
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller class for the feature list.
- *
- * @param {!angular.Scope} $scope The Angular scope.
- * @param {!angular.JQLite} $element The root DOM element.
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.FeatureListCtrl = function($scope, $element) {
+class Controller {
   /**
-   * The Angular scope.
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @param {!angular.JQLite} $element The root DOM element.
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    /**
+     * The Angular scope.
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    /**
+     * The root DOM element.
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
+
+    /**
+     * The vector source.
+     * @type {VectorSource}
+     * @private
+     */
+    this.source_ = /** @type {VectorSource} */ ($scope['source']);
+
+    /**
+     * The context menu for the source grid.
+     * @type {Menu}
+     */
+    this['contextMenu'] = list.MENU;
+
+    /**
+     * If data should be filtered to selected only.
+     * @type {boolean}
+     */
+    this['selectedOnly'] = false;
+
+    /**
+     * The grid row height.
+     * @type {number}
+     */
+    this['rowHeight'] = 0;
+
+    /**
+     * The row height control step value.
+     * @type {number}
+     */
+    this['rowStep'] = 1;
+
+    /**
+     * The status message to display in the footer.
+     * @type {string}
+     */
+    this['status'] = '';
+
+    /**
+     * Identifier for control id's.
+     * @type {string}
+     */
+    this['uid'] = sanitizeId('featureList-' + this.source_.getId());
+
+    assert(this.source_ != null, 'Feature list source must be defined');
+    events.listen(this.source_, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+    $scope.$watch('ctrl.rowStep', this.updateRowHeight_.bind(this));
+
+    var map = getMapContainer();
+    map.listen(LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
+
+    this.updateRowHeight_();
+    this.updateStatus_();
+  }
+
+  /**
+   * Angular $onDestroy lifecycle hook.
+   */
+  $onDestroy() {
+    var map = getMapContainer();
+    map.unlisten(LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
+
+    if (this.source_) {
+      events.unlisten(this.source_, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+      this.source_ = null;
+    }
+
+    this.scope_ = null;
+    this.element_ = null;
+  }
+
+  /**
+   * Closes the window.
+   *
+   * @export
+   */
+  close() {
+    close(this.element_);
+  }
+
+  /**
+   * Updates the row height based on the step
+   *
    * @private
    */
-  this.scope_ = $scope;
+  updateRowHeight_() {
+    this['rowHeight'] = (Controller.DEFAULT_ROW_HEIGHT * this['rowStep']) + 4;
+  }
 
   /**
-   * The root DOM element.
-   * @type {?angular.JQLite}
+   * Handles layer removed event from the map.
+   *
+   * @param {LayerEvent} event The layer event.
    * @private
    */
-  this.element_ = $element;
+  onLayerRemoved_(event) {
+    if (event.layer && event.layer.getSource() === this.source_) {
+      // close the window if the layer is removed
+      this.close();
+    }
+  }
 
   /**
-   * The vector source.
-   * @type {os.source.Vector}
+   * Handles change events on the source.
+   *
+   * @param {PropertyChangeEvent} e The change event.
    * @private
    */
-  this.source_ = /** @type {os.source.Vector} */ ($scope['source']);
+  onSourceChange_(e) {
+    var p = e.getProperty();
+    if (p === PropertyChange.FEATURES || p === PropertyChange.FEATURE_VISIBILITY || containsValue(SelectionType, p)) {
+      // refresh status if the features or selection changes
+      this.updateStatus_();
+      apply(this.scope_);
+    }
+  }
 
   /**
-   * The context menu for the source grid.
-   * @type {os.ui.menu.Menu}
+   * Updates the status text for the current source.
+   *
+   * @private
    */
-  this['contextMenu'] = os.ui.menu.list.MENU;
+  updateStatus_() {
+    var message = '';
 
-  /**
-   * If data should be filtered to selected only.
-   * @type {boolean}
-   */
-  this['selectedOnly'] = false;
+    if (this.source_ && !this.source_.isDisposed()) {
+      var details = [];
 
-  /**
-   * The grid row height.
-   * @type {number}
-   */
-  this['rowHeight'] = 0;
+      var selected = this.source_.getSelectedItems();
+      if (selected && selected.length > 0) {
+        details.push(selected.length + ' selected');
+      }
 
-  /**
-   * The row height control step value.
-   * @type {number}
-   */
-  this['rowStep'] = 1;
+      var model = this.source_.getTimeModel();
+      if (model) {
+        var total = model.getSize();
+        var shown = this.source_.getFilteredFeatures().length;
+        if (total > 0) {
+          message += shown + ' record' + (shown != 1 ? 's' : '');
 
-  /**
-   * The status message to display in the footer.
-   * @type {string}
-   */
-  this['status'] = '';
+          var hidden = total - shown;
+          if (hidden > 0) {
+            details.push(hidden + ' hidden');
+          }
+        }
+      } else {
+        var total = this.source_.getFeatures();
+        if (total && total.length > 0) {
+          message += total.length + ' record' + (total.length != 1 ? 's' : '');
+        }
+      }
 
-  /**
-   * Identifier for control id's.
-   * @type {string}
-   */
-  this['uid'] = os.ui.sanitizeId('featureList-' + this.source_.getId());
+      if (this['selectedOnly']) {
+        details.push('showing selected only');
+      }
 
-  goog.asserts.assert(this.source_ != null, 'Feature list source must be defined');
-  ol.events.listen(this.source_, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
-  $scope.$watch('ctrl.rowStep', this.updateRowHeight_.bind(this));
+      if (details.length > 0) {
+        message += ' (' + details.join(', ') + ')';
+      }
+    }
 
-  var map = os.MapContainer.getInstance();
-  map.listen(os.events.LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
-
-  this.updateRowHeight_();
-  this.updateStatus_();
-};
-
+    this['status'] = message;
+  }
+}
 
 /**
  * The default row height, excluding padding.
  * @type {number}
  * @const
  */
-os.ui.FeatureListCtrl.DEFAULT_ROW_HEIGHT = 21;
-
-
-/**
- * Angular $onDestroy lifecycle hook.
- */
-os.ui.FeatureListCtrl.prototype.$onDestroy = function() {
-  var map = os.MapContainer.getInstance();
-  map.unlisten(os.events.LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
-
-  if (this.source_) {
-    ol.events.unlisten(this.source_, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
-    this.source_ = null;
-  }
-
-  this.scope_ = null;
-  this.element_ = null;
-};
-
-
-/**
- * Closes the window.
- *
- * @export
- */
-os.ui.FeatureListCtrl.prototype.close = function() {
-  os.ui.window.close(this.element_);
-};
-
-
-/**
- * Updates the row height based on the step
- *
- * @private
- */
-os.ui.FeatureListCtrl.prototype.updateRowHeight_ = function() {
-  this['rowHeight'] = (os.ui.FeatureListCtrl.DEFAULT_ROW_HEIGHT * this['rowStep']) + 4;
-};
-
-
-/**
- * Handles layer removed event from the map.
- *
- * @param {os.events.LayerEvent} event The layer event.
- * @private
- */
-os.ui.FeatureListCtrl.prototype.onLayerRemoved_ = function(event) {
-  if (event.layer && event.layer.getSource() === this.source_) {
-    // close the window if the layer is removed
-    this.close();
-  }
-};
-
-
-/**
- * Handles change events on the source.
- *
- * @param {os.events.PropertyChangeEvent} e The change event.
- * @private
- */
-os.ui.FeatureListCtrl.prototype.onSourceChange_ = function(e) {
-  var p = e.getProperty();
-  if (p === os.source.PropertyChange.FEATURES || p === os.source.PropertyChange.FEATURE_VISIBILITY ||
-      goog.object.containsValue(os.events.SelectionType, p)) {
-    // refresh status if the features or selection changes
-    this.updateStatus_();
-    os.ui.apply(this.scope_);
-  }
-};
-
-
-/**
- * Updates the status text for the current source.
- *
- * @private
- */
-os.ui.FeatureListCtrl.prototype.updateStatus_ = function() {
-  var message = '';
-
-  if (this.source_ && !this.source_.isDisposed()) {
-    var details = [];
-
-    var selected = this.source_.getSelectedItems();
-    if (selected && selected.length > 0) {
-      details.push(selected.length + ' selected');
-    }
-
-    var model = this.source_.getTimeModel();
-    if (model) {
-      var total = model.getSize();
-      var shown = this.source_.getFilteredFeatures().length;
-      if (total > 0) {
-        message += shown + ' record' + (shown != 1 ? 's' : '');
-
-        var hidden = total - shown;
-        if (hidden > 0) {
-          details.push(hidden + ' hidden');
-        }
-      }
-    } else {
-      var total = this.source_.getFeatures();
-      if (total && total.length > 0) {
-        message += total.length + ' record' + (total.length != 1 ? 's' : '');
-      }
-    }
-
-    if (this['selectedOnly']) {
-      details.push('showing selected only');
-    }
-
-    if (details.length > 0) {
-      message += ' (' + details.join(', ') + ')';
-    }
-  }
-
-  this['status'] = message;
-};
-
+Controller.DEFAULT_ROW_HEIGHT = 21;
 
 /**
  * Launches a feature list for a source.
  *
- * @param {!os.source.Vector} source The source.
+ * @param {!VectorSource} source The source.
  */
-os.ui.launchFeatureList = function(source) {
+const launchFeatureList = function(source) {
   // only launch a single window per source
-  var windowId = os.ui.sanitizeId('featureList-' + source.getId());
-  if (os.ui.window.exists(windowId)) {
-    os.ui.window.bringToFront(windowId);
+  var windowId = sanitizeId('featureList-' + source.getId());
+  if (exists(windowId)) {
+    bringToFront(windowId);
   } else {
     var scopeOptions = {
       'source': source
@@ -270,7 +279,14 @@ os.ui.launchFeatureList = function(source) {
       'show-close': true
     };
 
-    var template = '<featurelist source="source"></featurelist>';
-    os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+    var template = `<${directiveTag} source="source"></${directiveTag}>`;
+    create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
+};
+
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launchFeatureList
 };
