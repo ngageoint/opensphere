@@ -1,21 +1,8 @@
-goog.provide('os.ui.ListCtrl');
-goog.provide('os.ui.list');
-goog.provide('os.ui.list.ListEventType');
-goog.provide('os.ui.listDirective');
+goog.module('os.ui.list');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventTarget');
-goog.require('ol.array');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.ui.Module');
-
-
-/**
- * List event types.
- * @enum {string}
- */
-os.ui.list.ListEventType = {
-  CHANGE: 'list:change'
-};
+const EventTarget = goog.require('goog.events.EventTarget');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 
 
 /**
@@ -26,31 +13,31 @@ os.ui.list.ListEventType = {
  *    scope: (angular.Scope|undefined)
  *  }}
  */
-os.ui.list.ListEntry;
-
-
-/**
- * @type {Object<string, Array<os.ui.list.ListEntry>>}
- * @private
- */
-os.ui.list.map_ = {};
-
+let ListEntry;
 
 /**
- * @type {goog.events.EventTarget}
- * @const
- * @private
+ * @type {!EventTarget}
  */
-os.ui.list.dispatcher_ = new goog.events.EventTarget();
+const dispatcher = new EventTarget();
 
+/**
+ * @type {Object<string, Array<ListEntry>>}
+ */
+const entryMap = {};
+
+/**
+ * Get the list dispatcher.
+ * @return {!EventTarget}
+ */
+const getDispatcher = () => dispatcher;
 
 /**
  * @param {string} id The list ID to which to add
  * @param {string} markup The directive or markup to add
  * @param {number=} opt_priority The sort priority (lowest to highest)
  */
-os.ui.list.add = function(id, markup, opt_priority) {
-  var map = os.ui.list.map_;
+const add = function(id, markup, opt_priority) {
+  var map = entryMap;
 
   if (!(id in map)) {
     map[id] = [];
@@ -61,42 +48,42 @@ os.ui.list.add = function(id, markup, opt_priority) {
     priority: opt_priority || 0
   });
 
-  map[id].sort(os.ui.list.sort_);
-  os.ui.list.dispatcher_.dispatchEvent(new os.events.PropertyChangeEvent(id));
+  map[id].sort(sort_);
+  dispatcher.dispatchEvent(new PropertyChangeEvent(id));
 };
-
 
 /**
  * @param {string} id The list ID to which to check
  * @param {string} markup The directive or markup to delete
  */
-os.ui.list.remove = function(id, markup) {
-  var map = os.ui.list.map_[id];
+const remove = function(id, markup) {
+  var map = entryMap[id];
   if (map) {
-    var item = ol.array.find(map, function(item) {
+    var itemIdx = map.findIndex(function(item) {
       return item.markup == markup;
     });
-    if (item) {
+    if (itemIdx > -1) {
+      const item = map[itemIdx];
       if (item.scope) {
         item.scope.$destroy();
         item.scope = undefined;
       }
 
-      ol.array.remove(map, item);
-      os.ui.list.map_[id] = map;
-      os.ui.list.dispatcher_.dispatchEvent(new os.events.PropertyChangeEvent(id, null, item));
+      map.splice(itemIdx, 1);
+
+      entryMap[id] = map;
+      dispatcher.dispatchEvent(new PropertyChangeEvent(id, null, item));
     }
   }
 };
-
 
 /**
  * Remove a list by ID.
  *
  * @param {string} id The list ID to remove
  */
-os.ui.list.removeList = function(id) {
-  var map = os.ui.list.map_[id];
+const removeList = function(id) {
+  var map = entryMap[id];
   if (map) {
     map.forEach(function(item) {
       if (item) {
@@ -112,10 +99,9 @@ os.ui.list.removeList = function(id) {
       }
     });
 
-    delete os.ui.list.map_[id];
+    delete entryMap[id];
   }
 };
-
 
 /**
  * Copy a list under a new ID.
@@ -123,37 +109,33 @@ os.ui.list.removeList = function(id) {
  * @param {string} sourceId The original list ID.
  * @param {string} targetId The new list ID.
  */
-os.ui.list.copy = function(sourceId, targetId) {
+const copy = function(sourceId, targetId) {
   if (sourceId !== targetId) {
-    var items = os.ui.list.get(sourceId);
+    var items = get(sourceId);
     if (items) {
       items.forEach(function(item) {
-        os.ui.list.add(targetId, item.markup, item.priority);
+        add(targetId, item.markup, item.priority);
       });
     }
   }
 };
 
-
 /**
- * @param {os.ui.list.ListEntry} a list entry 1
- * @param {os.ui.list.ListEntry} b list entry 2
+ * @param {ListEntry} a list entry 1
+ * @param {ListEntry} b list entry 2
  * @return {number} per typical compare function
- * @private
  */
-os.ui.list.sort_ = function(a, b) {
+const sort_ = function(a, b) {
   return a.priority - b.priority;
 };
 
-
 /**
  * @param {string} id The list ID to get
- * @return {?Array<!os.ui.list.ListEntry>} the list or null if not found
+ * @return {?Array<!ListEntry>} the list or null if not found
  */
-os.ui.list.get = function(id) {
-  return os.ui.list.map_[id] || null;
+const get = function(id) {
+  return entryMap[id] || null;
 };
-
 
 /**
  * Checks to see if the markup already exists in the list
@@ -162,205 +144,24 @@ os.ui.list.get = function(id) {
  * @param {string} markup The directive or markup to check
  * @return {boolean} if the markup was found or not
  */
-os.ui.list.exists = function(id, markup) {
+const exists = function(id, markup) {
   var found = null;
-  var map = os.ui.list.map_[id];
+  var map = entryMap[id];
   if (map) {
-    found = ol.array.find(map, function(item) {
+    found = map.find(function(item) {
       return item.markup == markup;
     });
   }
   return !!found;
 };
 
-
-/**
- * A directive which takes a list of items and compiles them into the DOM
- *
- * Each item in items is passed to the directive function. That function then returns
- * the directive string (e.g. 'my-directive'). The generic directive is used when the
- * directive function returns null or when more than one directive is found for a set
- * of items.
- *
- * The items array is placed on the scope as 'items' for the resulting directive.
- *
- * @return {angular.Directive}
- */
-os.ui.listDirective = function() {
-  return {
-    restrict: 'A',
-    controller: os.ui.ListCtrl,
-    link: os.ui.listLink
-  };
-};
-
-
-/**
- * Add the directive to the os.ui module
- */
-os.ui.Module.directive('list', [os.ui.listDirective]);
-
-
-/**
- * @param {!angular.Scope} scope The scope
- * @param {!angular.JQLite} element The element
- * @param {!angular.Attributes} attr The element's attributes
- * @param {os.ui.ListCtrl} ctrl The controller
- */
-os.ui.listLink = function(scope, element, attr, ctrl) {
-  // add the list stuff to the scope
-  var id = attr['listId'];
-  ctrl.id = id;
-
-  var list = os.ui.list.get(id) || scope.$eval(attr['listItems']);
-
-  if (list) {
-    ctrl.items = /** @type {!Array<!os.ui.list.ListEntry>} */ (list);
-  }
-
-  ctrl.prefix = attr['listPrefix'];
-  ctrl.suffix = attr['listSuffix'];
-  ctrl.update_();
-};
-
-
-
-/**
- * Controller for the list directive
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$compile} $compile
- * @constructor
- * @ngInject
- */
-os.ui.ListCtrl = function($scope, $element, $compile) {
-  /**
-   * @type {?angular.Scope}
-   * @protected
-   */
-  this.scope = $scope;
-
-  /**
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.element_ = $element;
-
-  /**
-   * @type {?angular.$compile}
-   * @private
-   */
-  this.compile_ = $compile;
-
-  /**
-   * @type {?string}
-   * @protected
-   */
-  this.id = null;
-
-  /**
-   * @type {!Array<!os.ui.list.ListEntry>}
-   * @protected
-   */
-  this.items = [];
-
-  /**
-   * @type {string}
-   * @protected
-   */
-  this.prefix = '';
-
-  /**
-   * @type {string}
-   * @protected
-   */
-  this.suffix = '';
-
-  os.ui.list.dispatcher_.listen(goog.events.EventType.PROPERTYCHANGE, this.onChange, false, this);
-  $scope.$on('$destroy', this.onDestroy_.bind(this));
-};
-
-
-/**
- * Cleanup
- *
- * @private
- */
-os.ui.ListCtrl.prototype.onDestroy_ = function() {
-  os.ui.list.dispatcher_.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onChange, false, this);
-  this.scope = null;
-  this.element_ = null;
-  this.compile_ = null;
-
-  // Prevent element leaks when destroying lists by cleaning up the items.
-  // Keep around the items so when the list is displayed again it recompiles the items
-  this.items.forEach(function(item) {
-    item.element = undefined;
-  });
-};
-
-
-/**
- * Handles list change
- *
- * @param {os.events.PropertyChangeEvent} evt The list change event
- * @protected
- */
-os.ui.ListCtrl.prototype.onChange = function(evt) {
-  var oldItem = evt.getOldValue();
-  var newItem = evt.getNewValue();
-  if (evt.getProperty() === this.id) {
-    if (oldItem && !newItem) {
-      goog.dom.removeNode(oldItem.element[0]);
-      this.scope.$emit(os.ui.list.ListEventType.CHANGE);
-    } else {
-      this.update_();
-    }
-  }
-};
-
-
-/**
- * Updates the displayed UI
- *
- * @private
- */
-os.ui.ListCtrl.prototype.update_ = function() {
-  // Always attempt to get the updated list of items, or use the scope list of items if it doesnt exist
-  var items = os.ui.list.get(this.id || '') || this.items;
-
-  var prefix = this.prefix || '';
-  var suffix = this.suffix || '';
-
-  if (this.scope && items) {
-    for (var i = 0, n = items.length; i < n; i++) {
-      var item = items[i];
-
-      if (!item.element) {
-        var dir = item.markup;
-        if (dir.indexOf('<') === -1) {
-          dir = '<' + dir + '></' + dir + '>';
-        }
-
-        var html = prefix + dir + suffix;
-        var elScope = this.scope.$new();
-        item.element = this.compile_(html)(elScope);
-        item.scope = elScope;
-
-        // Assumption: existing items will not change in priority. If they do, they must be removed and added again.
-        if (i === 0) {
-          // Insert as the first child.
-          this.element_.prepend(item.element);
-        } else {
-          // Insert after the previous item's element. This takes the extra precaution to insert after the last element,
-          // in case the previous markup produced multiple elements.
-          const previous = items[i - 1].element;
-          item.element.insertAfter(previous[previous.length - 1]);
-        }
-      }
-    }
-
-    this.scope.$emit(os.ui.list.ListEventType.CHANGE);
-  }
+exports = {
+  ListEntry,
+  getDispatcher,
+  add,
+  remove,
+  removeList,
+  copy,
+  get,
+  exists
 };

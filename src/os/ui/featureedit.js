@@ -1,11 +1,11 @@
 goog.module('os.ui.FeatureEditUI');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.ListUI');
 goog.require('os.ui.geo.PositionUI');
 goog.require('os.ui.geo.RingOptionsUI');
 goog.require('os.ui.layer.LabelControlsUI');
 goog.require('os.ui.layer.VectorStyleControlsUI');
-goog.require('os.ui.list');
 goog.require('os.ui.text.tuiEditorDirective');
 goog.require('os.ui.util.ValidationMessageUI');
 

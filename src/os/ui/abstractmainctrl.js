@@ -24,6 +24,7 @@ goog.require('os.time.replacers');
 goog.require('os.ui');
 goog.require('os.ui.ConsentUI');
 goog.require('os.ui.GlobalMenuUI');
+goog.require('os.ui.ListUI');
 goog.require('os.ui.alert.AlertPopupUI');
 goog.require('os.ui.help.EventType');
 goog.require('os.ui.metrics.MetricsManager');
