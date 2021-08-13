@@ -1,7 +1,7 @@
 goog.module('os.annotation.FeatureAnnotationUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.text.tuiEditorDirective');
+goog.require('os.ui.text.TuiEditorUI');
 
 const olEvents = goog.require('ol.events');
 const EventType = goog.require('ol.events.EventType');
