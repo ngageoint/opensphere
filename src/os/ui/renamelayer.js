@@ -1,20 +1,22 @@
-goog.provide('os.ui.renamelayer');
+goog.module('os.ui.renamelayer');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.CommandProcessor');
-goog.require('os.command.RenameLayer');
-goog.require('os.layer.ILayer');
-goog.require('os.ui.window.ConfirmTextUI');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const RenameLayer = goog.require('os.command.RenameLayer');
+const ConfirmTextUI = goog.require('os.ui.window.ConfirmTextUI');
+
+const ILayer = goog.requireType('os.layer.ILayer');
 
 
 /**
  * Launches a rename layer dialog for the provided layer
  *
- * @param {os.layer.ILayer} layer
+ * @param {ILayer} layer
  */
-os.ui.renamelayer.launchRenameDialog = function(layer) {
+const launchRenameDialog = function(layer) {
   if (layer) {
-    os.ui.window.ConfirmTextUI.launchConfirmText({
-      confirm: goog.partial(os.ui.renamelayer.addRenameLayer, layer),
+    ConfirmTextUI.launchConfirmText({
+      confirm: goog.partial(addRenameLayer, layer),
       defaultValue: layer.getTitle(),
       prompt: 'Please choose a layer name:',
       select: true,
@@ -26,14 +28,18 @@ os.ui.renamelayer.launchRenameDialog = function(layer) {
   }
 };
 
-
 /**
  * Add a command to the command processor to rename a layer
  *
- * @param {!os.layer.ILayer} layer
+ * @param {!ILayer} layer
  * @param {string} newName
  */
-os.ui.renamelayer.addRenameLayer = function(layer, newName) {
-  var rename = new os.command.RenameLayer(layer, newName, layer.getTitle());
-  os.command.CommandProcessor.getInstance().addCommand(rename);
+const addRenameLayer = function(layer, newName) {
+  var rename = new RenameLayer(layer, newName, layer.getTitle());
+  CommandProcessor.getInstance().addCommand(rename);
+};
+
+exports = {
+  launchRenameDialog,
+  addRenameLayer
 };

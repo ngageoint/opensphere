@@ -1,8 +1,6 @@
 goog.module('os.ui.TimelinePanelUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.animationSettingsDirective');
-
 const {ROOT} = goog.require('os');
 const dispatcher = goog.require('os.Dispatcher');
 const IAnimationSupport = goog.require('os.IAnimationSupport');
@@ -16,6 +14,7 @@ const keys = goog.require('os.metrics.keys');
 const TimelineController = goog.require('os.time.TimelineController');
 const TimelineEventType = goog.require('os.time.TimelineEventType');
 const ui = goog.require('os.ui');
+const {directiveTag: animationSettingsUi} = goog.require('os.ui.AnimationSettingsUI');
 const Module = goog.require('os.ui.Module');
 const {directiveTag: timeSettingsUi} = goog.require('os.ui.TimeSettingsUI');
 const HistogramEventType = goog.require('os.ui.hist.HistogramEventType');
@@ -220,7 +219,7 @@ class Controller extends AbstractTimelineCtrl {
    * @protected
    */
   getAnimationSettingsTemplate() {
-    return '<animationsettings></animationsettings>';
+    return `<${animationSettingsUi}></${animationSettingsUi}>`;
   }
 
   /**
