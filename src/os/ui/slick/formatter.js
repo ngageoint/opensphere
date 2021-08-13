@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const {buildString, htmlEscape} = goog.require('goog.string');
 const ui = goog.require('os.ui');
 const ColumnActionManager = goog.require('os.ui.columnactions.ColumnActionManager');
-const {urlNewTabFormatter: formatterUrlNewTabFormatter} = goog.require('os.ui.formatter');
+const {ANCHOR: BASE_ANCHOR, urlNewTabFormatter: baseUrlNewTabFormatter} = goog.require('os.ui.formatter');
 const SlickColumnActionModel = goog.require('os.ui.slick.SlickColumnActionModel');
 const slickColActAsyncRenderer = goog.require('os.ui.slick.asyncrenderer.slickColActAsyncRenderer');
 const {URL_REGEXP} = goog.require('os.url');
@@ -86,8 +86,9 @@ const rowNumber = function(row, cell, value, columnDef, item) {
 
 /**
  * @type {RegExp}
+ * @deprecated Please use os.ui.formatter.ANCHOR instead.
  */
-const ANCHOR = /<a /;
+const ANCHOR = BASE_ANCHOR;
 
 /**
  * Formats the data to be a link if it passes the regex
@@ -102,7 +103,7 @@ const ANCHOR = /<a /;
  * @return {string} The HTML for the cell
  */
 const urlNewTabFormatter = function(row, cell, value, columnDef, node, opt_colFn) {
-  value = formatterUrlNewTabFormatter(value);
+  value = baseUrlNewTabFormatter(value);
 
   var colFn = opt_colFn || columnActionFormatter;
   var colAct = colFn(row, cell, value, columnDef, node, true);

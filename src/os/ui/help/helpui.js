@@ -6,7 +6,7 @@ const {isEmpty} = goog.require('goog.object');
 const dispatcher = goog.require('os.Dispatcher');
 const {getAppName} = goog.require('os.config');
 const Settings = goog.require('os.config.Settings');
-const {DISPLAY_CLEAR_LOCALSTORAGE} = goog.require('os.ui.EventType');
+const UIEventType = goog.require('os.ui.EventType');
 const Module = goog.require('os.ui.Module');
 const {MENU, showWindow} = goog.require('os.ui.help');
 const Controls = goog.require('os.ui.help.Controls');
@@ -179,7 +179,7 @@ class Controller extends MenuButtonCtrl {
 
 
     root.addChild(ResetSettings.resetSettingsOptions);
-    this.menu.listen(DISPLAY_CLEAR_LOCALSTORAGE, function() {
+    this.menu.listen(UIEventType.DISPLAY_CLEAR_LOCALSTORAGE, function() {
       ResetSettings.resetSettings();
     });
   }

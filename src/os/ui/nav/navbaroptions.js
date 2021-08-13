@@ -1,11 +1,11 @@
 goog.module('os.ui.navbaroptions');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.datePanelDirective');
 goog.require('os.ui.navBottomDirective');
 goog.require('os.ui.navTopDirective');
 
 const AddDataButtonUI = goog.require('os.ui.AddDataButtonUI');
+const DatePanelUI = goog.require('os.ui.DatePanelUI');
 const LayersButtonUI = goog.require('os.ui.LayersButtonUI');
 const LegendButtonUI = goog.require('os.ui.LegendButtonUI');
 const MeasureButtonUI = goog.require('os.ui.MeasureButtonUI');
@@ -66,7 +66,7 @@ const init = function() {
   list.add(Location.TOP_LEFT, MeasureButtonUI.directiveTag, 400);
   list.add(Location.TOP_LEFT, ClearButtonUI.directiveTag, 500);
 
-  list.add(Location.TOP_CENTER, 'date-panel', 1);
+  list.add(Location.TOP_CENTER, DatePanelUI.directiveTag, 1);
 
   list.add(Location.TOP_RIGHT, SaveButtonUI.directiveTag, 200);
   list.add(Location.TOP_RIGHT, StateButtonUI.directiveTag, 300);

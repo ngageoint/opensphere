@@ -1,167 +1,17 @@
-goog.provide('os.ui.Consent');
-goog.provide('os.ui.consentDirective');
-goog.require('goog.Timer');
-goog.require('goog.events.EventTarget');
-goog.require('goog.net.Cookies');
-goog.require('os.ui.Module');
-goog.require('os.ui.windowSelector');
-goog.require('os.xt.IMessageHandler');
-goog.require('os.xt.Peer');
+goog.module('os.ui.ConsentUI');
+goog.module.declareLegacyNamespace();
 
+const Timer = goog.require('goog.Timer');
+const dispose = goog.require('goog.dispose');
+const Cookies = goog.require('goog.net.Cookies');
+const {ROOT} = goog.require('os');
+const Settings = goog.require('os.config.Settings');
+const Module = goog.require('os.ui.Module');
+const {create, open} = goog.require('os.ui.modal');
+const {CONTAINER} = goog.require('os.ui.windowSelector');
+const Peer = goog.require('os.xt.Peer');
 
-
-/**
- * Controller function for the Consent directive
- *
- * @implements {os.xt.IMessageHandler}
- * @constructor
- * @param {angular.Scope} $scope
- * @param {angular.JQLite} $element
- * @ngInject
- */
-os.ui.Consent = function($scope, $element) {
-  /**
-   * @type {?angular.Scope}
-   * @private
-   */
-  this.scope_ = $scope;
-
-  /**
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.element_ = $element;
-
-  /**
-   * crosstalk
-   * @type {os.xt.Peer}
-   * @private
-   */
-  this.peer_ = os.xt.Peer.getInstance();
-  this.peer_.addHandler(this);
-
-  /**
-   * Timer to refresh the cookie.
-   * @type {goog.Timer}
-   * @private
-   */
-  this.timer_ = null;
-
-  /**
-   * The cookie max age.
-   * @type {number}
-   */
-  this.maxAge = -1;
-
-  this['server'] = location.host;
-
-  var cookie = new goog.net.Cookies(window.document);
-  var consent = os.settings.get(['consent']);
-
-  if (consent && consent['text']) {
-    const refresh = /** @type {number|undefined} */ (consent['refresh']);
-    if (refresh) {
-      this.maxAge = refresh;
-      this.timer_ = new goog.Timer(refresh * 900);
-      this.timer_.listen(goog.Timer.TICK, this.update_, false, this);
-    }
-
-    this['text'] = consent['text'];
-
-    if (cookie && !cookie.get('consent')) {
-      os.ui.modal.open($element, {
-        'backdrop': 'static',
-        'focus': true
-      });
-      $('body').addClass('c-consent');
-    } else {
-      if (this.timer_) {
-        this.timer_.start();
-      }
-      this.update_();
-    }
-  }
-
-  this.scope_.$on('$destroy', this.destroy.bind(this));
-};
-
-
-/**
- * Destroy.
- */
-os.ui.Consent.prototype.destroy = function() {
-  $('body').removeClass('c-consent');
-
-  goog.dispose(this.timer_);
-  this.timer_ = null;
-
-  this.scope_ = null;
-  this.element_ = null;
-  this.timeout_ = null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.Consent.prototype.getTypes = function() {
-  return ['consent'];
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.Consent.prototype.process = function(data, type, sender, time) {
-  this.element_.modal('hide');
-  if (this.timer_) {
-    this.timer_.start();
-  }
-};
-
-
-/**
- * update the cookie timer
- *
- * @private
- */
-os.ui.Consent.prototype.update_ = function() {
-  var cookie = new goog.net.Cookies(window.document);
-  cookie.set('consent', 'true', {
-    maxAge: this.maxAge,
-    path: '/',
-    domain: null,
-    secure: false
-  });
-};
-
-
-/**
- * Check consent
- */
-os.ui.Consent.launch = function() {
-  var consent = os.settings.get(['consent']);
-  var cookie = new goog.net.Cookies(window.document);
-
-  if (consent && consent['text'] && !cookie.get('consent')) {
-    os.ui.modal.create(os.ui.windowSelector.CONTAINER, '<consent></consent>');
-  }
-};
-
-
-/**
- * Save the cookie so it wont popup again
- *
- * @export
- */
-os.ui.Consent.prototype.saveCookie = function() {
-  this.update_();
-  this.element_.modal('hide');
-  if (this.timer_) {
-    this.timer_.start();
-  }
-  this.peer_.send('consent', '');
-};
+const IMessageHandler = goog.requireType('os.xt.IMessageHandler');
 
 
 /**
@@ -169,14 +19,177 @@ os.ui.Consent.prototype.saveCookie = function() {
  *
  * @return {angular.Directive} the directive definition
  */
-os.ui.consentDirective = function() {
-  return {
-    replace: true,
-    restrict: 'E',
-    templateUrl: os.ROOT + 'views/consent.html',
-    controller: os.ui.Consent,
-    controllerAs: 'consentCtrl'
-  };
+const directive = () => ({
+  replace: true,
+  restrict: 'E',
+  templateUrl: ROOT + 'views/consent.html',
+  controller: Controller,
+  controllerAs: 'consentCtrl'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'consent';
+
+Module.directive(directiveTag, directive);
+
+/**
+ * Controller function for the Consent directive
+ *
+ * @implements {IMessageHandler}
+ * @unrestricted
+ */
+class Controller {
+  /**
+   * Constructor.
+   * @param {angular.Scope} $scope
+   * @param {angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
+
+    /**
+     * crosstalk
+     * @type {Peer}
+     * @private
+     */
+    this.peer_ = Peer.getInstance();
+    this.peer_.addHandler(this);
+
+    /**
+     * Timer to refresh the cookie.
+     * @type {Timer}
+     * @private
+     */
+    this.timer_ = null;
+
+    /**
+     * The cookie max age.
+     * @type {number}
+     */
+    this.maxAge = -1;
+
+    this['server'] = location.host;
+
+    var cookie = new Cookies(window.document);
+    var consent = Settings.getInstance().get(['consent']);
+
+    if (consent && consent['text']) {
+      const refresh = /** @type {number|undefined} */ (consent['refresh']);
+      if (refresh) {
+        this.maxAge = refresh;
+        this.timer_ = new Timer(refresh * 900);
+        this.timer_.listen(Timer.TICK, this.update_, false, this);
+      }
+
+      this['text'] = consent['text'];
+
+      if (cookie && !cookie.get('consent')) {
+        open($element, {
+          'backdrop': 'static',
+          'focus': true
+        });
+        $('body').addClass('c-consent');
+      } else {
+        if (this.timer_) {
+          this.timer_.start();
+        }
+        this.update_();
+      }
+    }
+
+    this.scope_.$on('$destroy', this.destroy.bind(this));
+  }
+
+  /**
+   * Destroy.
+   */
+  destroy() {
+    $('body').removeClass('c-consent');
+
+    dispose(this.timer_);
+    this.timer_ = null;
+
+    this.scope_ = null;
+    this.element_ = null;
+    this.timeout_ = null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getTypes() {
+    return ['consent'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  process(data, type, sender, time) {
+    this.element_.modal('hide');
+    if (this.timer_) {
+      this.timer_.start();
+    }
+  }
+
+  /**
+   * update the cookie timer
+   *
+   * @private
+   */
+  update_() {
+    var cookie = new Cookies(window.document);
+    cookie.set('consent', 'true', {
+      maxAge: this.maxAge,
+      path: '/',
+      domain: null,
+      secure: false
+    });
+  }
+
+  /**
+   * Save the cookie so it wont popup again
+   *
+   * @export
+   */
+  saveCookie() {
+    this.update_();
+    this.element_.modal('hide');
+    if (this.timer_) {
+      this.timer_.start();
+    }
+    this.peer_.send('consent', '');
+  }
+}
+
+/**
+ * Check consent
+ */
+const launch = () => {
+  var consent = Settings.getInstance().get(['consent']);
+  var cookie = new Cookies(window.document);
+
+  if (consent && consent['text'] && !cookie.get('consent')) {
+    create(CONTAINER, '<consent></consent>');
+  }
 };
 
-os.ui.Module.directive('consent', os.ui.consentDirective);
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launch
+};

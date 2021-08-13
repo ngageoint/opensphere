@@ -1,7 +1,7 @@
 goog.module('os.ui.state.StateListUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.checklistDirective');
+goog.require('os.ui.ChecklistUI');
 
 const {ROOT} = goog.require('os');
 const {getAppName} = goog.require('os.config');

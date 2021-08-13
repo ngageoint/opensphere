@@ -1,11 +1,12 @@
-goog.provide('os.ui.EventType');
+goog.module('os.ui.EventType');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * This enumerates the os-ui event type constants.
  * @enum {string}
  */
-os.ui.EventType = {
+exports = {
   DISPLAY_ONBOARDING: 'displayOnboarding',
   DISPLAY_CLEAR_LOCALSTORAGE: 'displayClearLocalStorage'
 };

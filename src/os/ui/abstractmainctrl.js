@@ -22,9 +22,9 @@ goog.require('os.net.RequestHandlerFactory');
 goog.require('os.plugin.PluginManager');
 goog.require('os.time.replacers');
 goog.require('os.ui');
+goog.require('os.ui.ConsentUI');
 goog.require('os.ui.GlobalMenuUI');
 goog.require('os.ui.alert.AlertPopupUI');
-goog.require('os.ui.consentDirective');
 goog.require('os.ui.help.EventType');
 goog.require('os.ui.metrics.MetricsManager');
 goog.require('os.ui.notification.NotificationManager');
@@ -263,7 +263,7 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
   // initialize variable replacers for time values in URI's
   os.time.replacers.init();
 
-  os.ui.Consent.launch();
+  os.ui.ConsentUI.launch();
 
   this.doCertNazi();
   this.registerListeners();

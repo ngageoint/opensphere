@@ -1,9 +1,17 @@
-goog.provide('os.ui.formatter');
-goog.require('os.array');
+goog.module('os.ui.formatter');
+goog.module.declareLegacyNamespace();
+
+const instanceOf = goog.require('os.instanceOf');
+const {linkify} = goog.require('os.string');
+const TimeInstant = goog.require('os.time.TimeInstant');
+const {sanitize} = goog.require('os.ui');
+const {URL_REGEXP_LINKY} = goog.require('os.url');
 
 
-goog.require('os.time.TimeInstant');
-
+/**
+ * @type {RegExp}
+ */
+const ANCHOR = /<a /;
 
 /**
  * Formats the data to be a link if it passes the regex
@@ -11,27 +19,27 @@ goog.require('os.time.TimeInstant');
  * @param {string} value The value
  * @return {string} The HTML for the cell
  */
-os.ui.formatter.urlNewTabFormatter = function(value) {
+const urlNewTabFormatter = function(value) {
   if (typeof value !== 'object') {
     if (value != null) {
       // does this even have a URL?
-      if (os.url.URL_REGEXP_LINKY.test(value) && !os.ui.slick.formatter.ANCHOR.test(value)) {
+      if (URL_REGEXP_LINKY.test(value) && !ANCHOR.test(value)) {
         var newValue = '';
         var splitVal = value.split(' ');
         var cite = 1;
 
         // If theres only 1 value, make it 'Link'
         if (splitVal.length === 1) {
-          if (os.url.URL_REGEXP_LINKY.test(value)) {
-            var cleanValue = os.ui.sanitize(value);
-            newValue = os.string.linkify(cleanValue, '_blank', 'slick-cell-link', cleanValue);
+          if (URL_REGEXP_LINKY.test(value)) {
+            var cleanValue = sanitize(value);
+            newValue = linkify(cleanValue, '_blank', 'slick-cell-link', cleanValue);
           }
         } else if (splitVal.length < 500) { // performance suffers horribly here for long text (browser-crashingly bad)
           // If theres more than 1 value, put a number on it
-          os.array.forEach(splitVal, function(elem, index, arr) {
-            if (os.url.URL_REGEXP_LINKY.test(elem)) {
-              var url = os.ui.sanitize(String(elem));
-              elem = os.string.linkify(url, '_blank', 'slick-cell-link', url, '[' + cite + ']');
+          splitVal.forEach(function(elem, index, arr) {
+            if (URL_REGEXP_LINKY.test(elem)) {
+              var url = sanitize(String(elem));
+              elem = linkify(url, '_blank', 'slick-cell-link', url, '[' + cite + ']');
               cite++;
             }
 
@@ -44,11 +52,16 @@ os.ui.formatter.urlNewTabFormatter = function(value) {
         }
       }
     }
-  } else if (os.instanceOf(value, os.time.TimeInstant.NAME)) {
+  } else if (instanceOf(value, TimeInstant.NAME)) {
     value = value.toString();
   } else {
     value = '';
   }
 
   return value;
+};
+
+exports = {
+  ANCHOR,
+  urlNewTabFormatter
 };

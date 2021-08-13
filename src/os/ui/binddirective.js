@@ -1,6 +1,7 @@
-goog.provide('os.ui.bindDirectiveDirective');
+goog.module('os.ui.bindDirectiveDirective');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -11,36 +12,52 @@ goog.require('os.ui.Module');
  * @param {!angular.$compile} $compile
  * @return {angular.Directive}
  */
-os.ui.bindDirectiveDirective = function($parse, $compile) {
+const directive = ($parse, $compile) => {
+  /**
+   * @param {angular.JQLite} tElement The element.
+   * @param {angular.Attributes=} tAttrs The attributes.
+   * @return {Function}
+   */
+  const compileFn = (tElement, tAttrs) => {
+    var bindDirectiveWatch = $parse(tAttrs['bindDirective']);
+    $compile.$$addBindingClass(tElement);
+
+    return function(scope, element, attr) {
+      $compile.$$addBindingInfo(element, attr['bindDirective']);
+
+      scope.$watch(bindDirectiveWatch, function(value) {
+        element.html(value);
+
+        // compile it, which will compile any directives contained therein
+        $compile(element.children())(scope.$new());
+      });
+    };
+  };
+
   return {
     restrict: 'A',
-    compile: function(tElement, tAttrs) {
-      var bindDirectiveWatch = $parse(tAttrs['bindDirective']);
-      $compile.$$addBindingClass(tElement);
-
-      return function(scope, element, attr) {
-        $compile.$$addBindingInfo(element, attr['bindDirective']);
-
-        scope.$watch(bindDirectiveWatch, function(value) {
-          element.html(value);
-
-          // compile it, which will compile any directives contained therein
-          $compile(element.children())(scope.$new());
-        });
-      };
-    }
+    compile: compileFn
   };
 };
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'bind-directive';
 
 /**
  * The injectable object that we will register with Angular.
  * @type {angular.Injectable}
  */
-os.ui.bindDirectiveInjectable = ['$parse', '$compile', os.ui.bindDirectiveDirective];
-
+const bindDirectiveInjectable = ['$parse', '$compile', directive];
 
 /**
  * Add the injectable to the module.
  */
-os.ui.Module.directive('bindDirective', os.ui.bindDirectiveInjectable);
+Module.directive('bindDirective', bindDirectiveInjectable);
+
+exports = {
+  directive,
+  directiveTag
+};

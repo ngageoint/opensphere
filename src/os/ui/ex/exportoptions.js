@@ -1,7 +1,7 @@
 goog.module('os.ui.ex.ExportOptionsUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.checklistDirective');
+goog.require('os.ui.ChecklistUI');
 
 const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
