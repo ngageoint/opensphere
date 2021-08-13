@@ -6,7 +6,7 @@ const {SUB_DELIMITER} = goog.require('os.metrics');
 const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
-const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
+const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
 
 const Feature = goog.requireType('ol.Feature');
 
