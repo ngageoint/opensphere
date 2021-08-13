@@ -1,155 +1,127 @@
-goog.provide('os.map');
+goog.module('os.map');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.asserts');
-goog.require('ol.math');
-goog.require('ol.tilegrid');
-goog.require('os.map.IMapContainer');
 goog.require('os.ol');
 
+const {assert} = goog.require('goog.asserts');
+const {DEFAULT_MAX_ZOOM} = goog.require('ol');
+const {toRadians} = goog.require('ol.math');
+const {get: getProjection} = goog.require('ol.proj');
+const {createForProjection} = goog.require('ol.tilegrid');
 
-/**
- * Reference to the global map container instance.
- * @type {os.map.IMapContainer|undefined}
- */
-os.map.mapContainer = undefined;
+const PluggableMap = goog.requireType('ol.PluggableMap');
+const Projection = goog.requireType('ol.proj.Projection');
+const TileGrid = goog.requireType('ol.tilegrid.TileGrid');
 
 
 /**
  * Selector for the OpenLayers map canvas.
  * @type {string}
- * @const
  */
-os.map.OPENLAYERS_CANVAS = '.ol-viewport > canvas';
-
+const OPENLAYERS_CANVAS = '.ol-viewport > canvas';
 
 /**
  * Class name for the WebGL canvas.
  * @type {string}
- * @const
  */
-os.map.WEBGL_CANVAS_CLASS = 'webgl-canvas';
-
+const WEBGL_CANVAS_CLASS = 'webgl-canvas';
 
 /**
  * Selector for the WebGL canvas.
  * @type {string}
- * @const
  */
-os.map.WEBGL_CANVAS = 'canvas.' + os.map.WEBGL_CANVAS_CLASS;
-
+const WEBGL_CANVAS = 'canvas.' + WEBGL_CANVAS_CLASS;
 
 /**
  * Default center position for the map.
  * @type {!ol.Coordinate}
- * @const
  */
-os.map.DEFAULT_CENTER = [0, 0];
-
+const DEFAULT_CENTER = [0, 0];
 
 /**
  * Default zoom level for the map.
  * @type {number}
- * @const
  */
-os.map.DEFAULT_ZOOM = 3;
-
+const DEFAULT_ZOOM = 3;
 
 /**
  * Minimum zoom level for the map
  * @type {number}
- * @const
  */
-os.map.MIN_ZOOM = 2;
-
+const MIN_ZOOM = 2;
 
 /**
  * Maximum zoom level for the map
  * @type {number}
- * @const
  */
-os.map.MAX_ZOOM = 25;
-
+const MAX_ZOOM = 25;
 
 /**
  * Maximum zoom used for go to/fly to operations
  * @type {number}
- * @const
  */
-os.map.MAX_AUTO_ZOOM = 18;
-
+const MAX_AUTO_ZOOM = 18;
 
 /**
  * Projection used for the map and all of its layers.
- * @type {ol.proj.Projection}
+ * @type {Projection}
  */
-os.map.PROJECTION = ol.proj.get('EPSG:4326');
-
+let PROJECTION = getProjection('EPSG:4326');
 
 /**
  * Settings key for the map projection.
  * @type {string}
- * @const
  */
-os.map.PROJECTION_KEY = 'baseProjection';
-
+const PROJECTION_KEY = 'baseProjection';
 
 /**
  * Tile grid to request 512x512 tiles.
- * @type {ol.tilegrid.TileGrid}
+ * @type {TileGrid}
  */
-os.map.TILEGRID = ol.tilegrid.createForProjection(os.map.PROJECTION, ol.DEFAULT_MAX_ZOOM, [512, 512]);
-
+let TILEGRID = createForProjection(PROJECTION, DEFAULT_MAX_ZOOM, [512, 512]);
 
 /**
  * These constants don't represent any well-known values. C is for "Constant" and E is for "Exponent" in the curve fit
  * that I used on the data.
  *
  * @type {number}
- * @const
  */
-os.map.C = 110841096.471006;
-
+const C = 110841096.471006;
 
 /**
  * These constants don't represent any well-known values. C is for "Constant" and E is for "Exponent" in the curve fit
  * that I used on the data.
  *
  * @type {number}
- * @const
  */
-os.map.E = 0.9151598587;
-
+const E = 0.9151598587;
 
 /**
  * Empty extent used to test an uninitialized extent state.
  * @type {ol.Extent}
- * @const
  */
-os.map.ZERO_EXTENT = [0, 0, 0, 0];
-
+const ZERO_EXTENT = [0, 0, 0, 0];
 
 /**
  * Properties to scale icons/labels by camera distance. Near/far values represent camera altitude in meters.
  * @type {!Object<string, number>}
- * @const
  */
-os.map.ZoomScale = {
+const ZoomScale = {
   NEAR: 3e6,
   NEAR_SCALE: 1,
   FAR: 3e7,
   FAR_SCALE: .5
 };
 
-
 /**
  * Gets the zoom level from the given resolution.
  *
  * @param {number} resolution The view resolution.
- * @param {ol.proj.Projection} projection The map projection.
+ * @param {Projection} projection The map projection.
  * @param {number=} opt_precision The decimal precision
  * @return {number} zoom
  */
-os.map.resolutionToZoom = function(resolution, projection, opt_precision) {
+const resolutionToZoom = function(resolution, projection, opt_precision) {
   var extent = projection.getExtent();
   var size = extent[2] - extent[0];
 
@@ -164,15 +136,14 @@ os.map.resolutionToZoom = function(resolution, projection, opt_precision) {
   return zoom;
 };
 
-
 /**
  * Gets the resolution for the given zoom level
  *
  * @param {number} zoom
- * @param {ol.proj.Projection} projection
+ * @param {Projection} projection
  * @return {number} resolution (degrees per pixel)
  */
-os.map.zoomToResolution = function(zoom, projection) {
+const zoomToResolution = function(zoom, projection) {
   var extent = projection.getExtent();
   var size = extent[2] - extent[0];
 
@@ -181,61 +152,36 @@ os.map.zoomToResolution = function(zoom, projection) {
   return size / (256 * Math.pow(2, zoom));
 };
 
+/**
+ * Maximum zoom level for the map
+ * @type {number}
+ */
+let MIN_RESOLUTION = zoomToResolution(MAX_ZOOM, PROJECTION);
 
 /**
  * Maximum zoom level for the map
  * @type {number}
  */
-os.map.MIN_RESOLUTION = os.map.zoomToResolution(os.map.MAX_ZOOM, os.map.PROJECTION);
-
-
-/**
- * Maximum zoom level for the map
- * @type {number}
- */
-os.map.MAX_RESOLUTION = os.map.zoomToResolution(os.map.MIN_ZOOM, os.map.PROJECTION);
-
-
-/**
- * Get the degrees per pixel for a provided zoom level.
- *
- * @param {number} zoom The zoom level
- * @return {number} The degrees per pixel
- * @private
- */
-os.map.getDegreesPerPixel_ = function(zoom) {
-  return 90.0 / (256 * Math.pow(2, zoom - 2));
-};
-
-
-/**
- * @param {number} dpp The degrees per pixel
- * @return {number}
- * @private
- */
-os.map.getZoom_ = function(dpp) {
-  return 2 + Math.log(90.0 / (256 * dpp)) / Math.LN2;
-};
-
+let MAX_RESOLUTION = zoomToResolution(MIN_ZOOM, PROJECTION);
 
 /**
  * Calculate the camera distance for a given resolution.
  *
- * @param {Array.<number>} size
+ * @param {Array<number>} size
  * @param {number} resolution The view resolution.
  * @param {number=} opt_latitude The latitude to use in the calculation, defaults to 0.
  *
  * @return {number} The distance
  */
-os.map.distanceForResolution = function(size, resolution, opt_latitude) {
-  goog.asserts.assert(size != null && size.length > 0, 'size should be defined');
+const distanceForResolution = function(size, resolution, opt_latitude) {
+  assert(size != null && size.length > 0, 'size should be defined');
 
   var aspectRatio = size[0] / size[1];
 
-  var fov = ol.math.toRadians(45);
+  var fov = toRadians(45);
   var fovy = (aspectRatio <= 1) ? fov : Math.atan(Math.tan(fov * 0.5) / aspectRatio) * 2.0;
 
-  var metersPerUnit = os.map.PROJECTION.getMetersPerUnit();
+  var metersPerUnit = PROJECTION.getMetersPerUnit();
 
   // number of "map units" visible in 2D (vertically)
   var visibleMapUnits = resolution * size[1];
@@ -265,18 +211,17 @@ os.map.distanceForResolution = function(size, resolution, opt_latitude) {
   return requiredDistance;
 };
 
-
 /**
  * Calculate the view resolution for a camera distance.
  *
- * @param {ol.PluggableMap} map The map.
+ * @param {PluggableMap} map The map.
  * @param {number} distance The camera distance.
  * @param {number=} opt_latitude The latitude to use in the calculation, defaults to 0.
  *
  * @return {number} The calculated resolution, or NaN if the resolution cannot be calculated.
  */
-os.map.resolutionForDistance = function(map, distance, opt_latitude) {
-  goog.asserts.assert(map != null, 'map should be defined');
+const resolutionForDistance = function(map, distance, opt_latitude) {
+  assert(map != null, 'map should be defined');
 
   var size = map.getSize();
   if (!size || size[0] <= 0 || size[1] <= 0) {
@@ -285,10 +230,10 @@ os.map.resolutionForDistance = function(map, distance, opt_latitude) {
 
   var aspectRatio = size[0] / size[1];
 
-  var fov = ol.math.toRadians(45);
+  var fov = toRadians(45);
   var fovy = (aspectRatio <= 1) ? fov : Math.atan(Math.tan(fov * 0.5) / aspectRatio) * 2.0;
 
-  var metersPerUnit = os.map.PROJECTION.getMetersPerUnit();
+  var metersPerUnit = PROJECTION.getMetersPerUnit();
 
   // See the reverse calculation (calcDistanceForResolution) for details
   var visibleMeters = 2 * distance * Math.tan(fovy / 2);
@@ -300,4 +245,48 @@ os.map.resolutionForDistance = function(map, distance, opt_latitude) {
   var resolution = visibleMapUnits / size[1];
 
   return resolution;
+};
+
+exports = {
+  OPENLAYERS_CANVAS,
+  WEBGL_CANVAS_CLASS,
+  WEBGL_CANVAS,
+  DEFAULT_CENTER,
+  DEFAULT_ZOOM,
+  MIN_ZOOM,
+  MAX_ZOOM,
+  MAX_AUTO_ZOOM,
+  PROJECTION_KEY,
+  C,
+  E,
+  ZERO_EXTENT,
+  get PROJECTION() {
+    return PROJECTION;
+  },
+  set PROJECTION(value) {
+    PROJECTION = value;
+  },
+  get TILEGRID() {
+    return TILEGRID;
+  },
+  set TILEGRID(value) {
+    TILEGRID = value;
+  },
+  get MIN_RESOLUTION() {
+    return MIN_RESOLUTION;
+  },
+  set MIN_RESOLUTION(value) {
+    MIN_RESOLUTION = value;
+  },
+  get MAX_RESOLUTION() {
+    return MAX_RESOLUTION;
+  },
+  set MAX_RESOLUTION(value) {
+    MAX_RESOLUTION = value;
+  },
+  ZoomScale,
+  resolutionToZoom,
+  zoomToResolution,
+  distanceForResolution,
+  resolutionForDistance
 };
