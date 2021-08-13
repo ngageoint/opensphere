@@ -36,6 +36,7 @@ const {close} = goog.require('os.ui.window');
 const FilterEntry = goog.requireType('os.filter.FilterEntry');
 const BaseQueryManager = goog.requireType('os.query.BaseQueryManager');
 const ComboNode = goog.requireType('os.ui.query.ComboNode');
+const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -424,7 +425,7 @@ class Controller {
    * Traverse through the tree and select the nodes that match an id
    *
    * @param {string} id
-   * @param {os.ui.slick.SlickTreeNode=} opt_node
+   * @param {SlickTreeNode=} opt_node
    */
   selectById(id, opt_node) {
     if (!opt_node) {
@@ -438,7 +439,7 @@ class Controller {
         if (children[i].getId() == id) {
           this.scope['selected'].push(children[i]);
         }
-        this.selectById(id, /** @type {os.ui.slick.SlickTreeNode} */ (children[i]));
+        this.selectById(id, /** @type {SlickTreeNode} */ (children[i]));
       }
     }
     if (fire && this.scope['selected'].length > 0) {
@@ -835,7 +836,7 @@ class Controller {
 
   /**
    * @param {boolean} collapsed
-   * @param {os.ui.slick.SlickTreeNode=} opt_node
+   * @param {SlickTreeNode=} opt_node
    */
   toggle(collapsed, opt_node) {
     if (!opt_node) {
@@ -851,7 +852,7 @@ class Controller {
       var children = opt_node.getChildren();
       if (children) {
         for (var i = 0, n = children.length; i < n; i++) {
-          this.toggle(collapsed, /** @type {os.ui.slick.SlickTreeNode} */ (children[i]));
+          this.toggle(collapsed, /** @type {SlickTreeNode} */ (children[i]));
         }
       }
     }
@@ -1021,7 +1022,7 @@ class Controller {
    * Save the filters to a file
    *
    * @param {string} name of the file
-   * @param {os.ui.filter.ui.FilterExportChoice} mode how to export filters
+   * @param {FilterExportChoice} mode how to export filters
    * @private
    */
   save_(name, mode) {

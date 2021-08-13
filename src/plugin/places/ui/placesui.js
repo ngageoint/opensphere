@@ -23,6 +23,7 @@ const KMLTreeExportUI = goog.require('plugin.file.kml.ui.KMLTreeExportUI');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
 
 const ExportOptions = goog.requireType('os.ex.ExportOptions');
+const Menu = goog.requireType('os.ui.menu.Menu');
 const {FolderOptions} = goog.requireType('plugin.file.kml.ui');
 const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
 
@@ -89,7 +90,7 @@ class Controller extends Disposable {
 
     /**
      * The context menu for Places.
-     * @type {os.ui.menu.Menu<layerMenu.Context>|undefined}
+     * @type {Menu<layerMenu.Context>|undefined}
      */
     this['contextMenu'] = layerMenu.getMenu();
 

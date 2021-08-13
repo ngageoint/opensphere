@@ -437,7 +437,7 @@ class SlickTreeNode extends TriStateTreeNode {
    * @inheritDoc
    */
   updateFrom(other) {
-    var node = /** @type {os.ui.slick.SlickTreeNode} */ (other);
+    var node = /** @type {SlickTreeNode} */ (other);
 
     this.nodeUI = node.nodeUI;
     this.collapsed = node.collapsed;
@@ -475,8 +475,8 @@ class SlickTreeNode extends TriStateTreeNode {
   /**
    * If the node can be dropped on the provided item.
    *
-   * @param {os.ui.slick.SlickTreeNode} dropItem The drop target
-   * @param {os.ui.slick.SlickTreeNode.MOVE_MODE} moveMode The drag/drop move mode
+   * @param {SlickTreeNode} dropItem The drop target
+   * @param {SlickTreeNode.MOVE_MODE} moveMode The drag/drop move mode
    * @return {boolean}
    */
   canDropInternal(dropItem, moveMode) {

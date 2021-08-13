@@ -9,6 +9,8 @@ const mapMenu = goog.require('os.ui.menu.map');
 const PositionInteraction = goog.require('plugin.position.PositionInteraction');
 const {launchCopy} = goog.require('plugin.position.CopyPositionUI');
 
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+
 
 /**
  * Plugin identifier.
@@ -84,7 +86,7 @@ let instance = null;
 
 
 /**
- * @param {os.ui.menu.MenuEvent} evt The menu event
+ * @param {MenuEvent} evt The menu event
  */
 const onCopy = function(evt) {
   launchCopy(/** @type {ol.Coordinate} */ (evt.getContext()));

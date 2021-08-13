@@ -4,6 +4,8 @@ goog.module.declareLegacyNamespace();
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const Listenable = goog.requireType('goog.events.Listenable');
 
+const Action = goog.requireType('os.ui.action.Action');
+
 
 /**
  * @interface
@@ -49,13 +51,13 @@ class ITimelineItem {
 
   /**
    * Get the menu actions for the item.
-   * @return {Array<os.ui.action.Action>}
+   * @return {Array<Action>}
    */
   getActions() {}
 
   /**
    * Set the menu actions for the item.
-   * @param {Array<os.ui.action.Action>} actions
+   * @param {Array<Action>} actions
    */
   setActions(actions) {}
 

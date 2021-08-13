@@ -4,6 +4,8 @@ goog.module.declareLegacyNamespace();
 const EventTarget = goog.require('goog.events.EventTarget');
 const ITimelineItem = goog.require('os.ui.timeline.ITimelineItem'); // eslint-disable-line
 
+const Action = goog.requireType('os.ui.action.Action');
+
 
 /**
  * Base timeline item
@@ -54,7 +56,7 @@ class BaseItem extends EventTarget {
     this.interactive_ = true;
 
     /**
-     * @type {Array<os.ui.action.Action>}
+     * @type {Array<Action>}
      * @private
      */
     this.actions_ = null;

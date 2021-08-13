@@ -39,6 +39,8 @@ const PlacesUI = goog.require('plugin.places.ui.PlacesUI');
 const QuickAddPlacesUI = goog.require('plugin.places.ui.QuickAddPlacesUI');
 const {launchSavePlaces} = goog.require('plugin.places.ui.launchSavePlaces');
 
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const MenuItem = goog.requireType('os.ui.menu.MenuItem');
 const {FolderOptions, PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
 
 
@@ -182,7 +184,7 @@ const layerDispose = function() {
  * Show the places menu item if layers in the context support it.
  *
  * @param {layerMenu.Context} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
 const visibleIfLayerNodeSupported_ = function(context) {
   this.visible = false;
@@ -434,7 +436,7 @@ const spatialIsPlace = function(context) {
  * Shows a menu item if the context can be saved to places.
  *
  * @param {Object|undefined} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
 const visibleIfCanSaveSpatial = function(context) {
   this.visible = false;
@@ -452,7 +454,7 @@ const visibleIfCanSaveSpatial = function(context) {
  * Shows a menu item if the context is a saved place.
  *
  * @param {Object|undefined} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
 const visibleIfIsPlace = function(context) {
   this.visible = spatialIsPlace(context);
@@ -461,7 +463,7 @@ const visibleIfIsPlace = function(context) {
 /**
  * Handle Edit Place from spatial menu.
  *
- * @param {os.ui.menu.MenuEvent} event The event.
+ * @param {MenuEvent} event The event.
  */
 const onSpatialEdit_ = function(event) {
   var features = spatial.getFeaturesFromContext(/** @type {Object} */ (event.getContext()));
@@ -483,7 +485,7 @@ const onSpatialEdit_ = function(event) {
 /**
  * Handle menu events from the layer menu.
  *
- * @param {!os.ui.menu.MenuEvent<layerMenu.Context>} event The menu event.
+ * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  */
 const onLayerEvent_ = function(event) {
   var context = event.getContext();
@@ -606,7 +608,7 @@ const onLayerEvent_ = function(event) {
  * Show a layer menu item if the context can be saved to Places.
  *
  * @param {layerMenu.Context} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
 const visibleIfCanSaveLayer = function(context) {
   this.visible = false;
@@ -646,7 +648,7 @@ const visibleIfCanSaveLayer = function(context) {
 /**
  * Save a coordinate to places.
  *
- * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event The menu event.
+ * @param {MenuEvent<ol.Coordinate>} event The menu event.
  */
 const saveCoordinateToPlaces = function(event) {
   var context = event.getContext();
@@ -668,7 +670,7 @@ const saveCoordinateToPlaces = function(event) {
 /**
  * Save a coordinate to places as an annotation.
  *
- * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event The menu event.
+ * @param {MenuEvent<ol.Coordinate>} event The menu event.
  */
 const createAnnotationFromCoordinate = function(event) {
   var context = event.getContext();
@@ -691,7 +693,7 @@ const createAnnotationFromCoordinate = function(event) {
 /**
  * Launch the quick add dialog with an initial seed point.
  *
- * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event The menu event.
+ * @param {MenuEvent<ol.Coordinate>} event The menu event.
  */
 const quickAddFromCoordinate = function(event) {
   var context = event.getContext();
@@ -706,7 +708,7 @@ const quickAddFromCoordinate = function(event) {
 /**
  * Launch the quick add dialog with an initial seed point.
  *
- * @param {os.ui.menu.MenuEvent<Object>} event The menu event.
+ * @param {MenuEvent<Object>} event The menu event.
  */
 const quickAddFromSpatial = function(event) {
   var context = event.getContext();
@@ -719,7 +721,7 @@ const quickAddFromSpatial = function(event) {
 /**
  * Save the spatial menu context to an annotation.
  *
- * @param {os.ui.menu.MenuEvent} event The menu event.
+ * @param {MenuEvent} event The menu event.
  */
 const saveSpatialToAnnotation = function(event) {
   saveSpatialToPlaces(event, true);
@@ -728,7 +730,7 @@ const saveSpatialToAnnotation = function(event) {
 /**
  * Save the spatial menu context to places.
  *
- * @param {os.ui.menu.MenuEvent} event The menu event.
+ * @param {MenuEvent} event The menu event.
  * @param {boolean=} opt_annotation Whether the spatial save is an annotation.
  */
 const saveSpatialToPlaces = function(event, opt_annotation) {
@@ -783,7 +785,7 @@ const saveSpatialToPlaces = function(event, opt_annotation) {
 /**
  * Handle "Save to Places" events from the layer menu.
  *
- * @param {!os.ui.menu.MenuEvent<layerMenu.Context>} event The menu event.
+ * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  */
 const saveLayerToPlaces = function(event) {
   var context = event.getContext();

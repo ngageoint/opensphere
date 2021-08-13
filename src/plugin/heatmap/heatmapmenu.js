@@ -11,6 +11,9 @@ const layerMenu = goog.require('os.ui.menu.layer');
 const heatmap = goog.require('plugin.heatmap');
 const Heatmap = goog.require('plugin.heatmap.Heatmap');
 
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+
 
 /**
  * Heatmap event group label.
@@ -72,7 +75,7 @@ const setup = function() {
  * Show the heatmap menu item if layers in the context support it.
  *
  * @param {layerMenu.Context} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
 const visibleIfSupported_ = function(context) {
   this.visible = false;
@@ -89,7 +92,7 @@ const visibleIfSupported_ = function(context) {
 /**
  * Handle heatmap layer export event.
  *
- * @param {!os.ui.menu.MenuEvent<layerMenu.Context>} event The menu event.
+ * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  */
 const exportLayer_ = function(event) {
   var context = event.getContext();
@@ -107,7 +110,7 @@ const exportLayer_ = function(event) {
 /**
  * Handle generate heatmap event. Adds a heatmap layer to the map.
  *
- * @param {!os.ui.menu.MenuEvent<layerMenu.Context>} event The menu event.
+ * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  */
 const generateHeatmap_ = function(event) {
   var context = event.getContext();

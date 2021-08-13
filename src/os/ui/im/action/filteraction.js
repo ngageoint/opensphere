@@ -7,13 +7,16 @@ const SequenceCommand = goog.require('os.command.SequenceCommand');
 const {getImportActionManager} = goog.require('os.im.action');
 const TagName = goog.require('os.im.action.TagName');
 const FilterActionAdd = goog.require('os.im.action.cmd.FilterActionAdd');
+const FilterActionNode = goog.require('os.ui.im.action.FilterActionNode');
 const FilterActionRemove = goog.require('os.im.action.cmd.FilterActionRemove');
 const ExportTypeHint = goog.require('os.im.action.filter.ExportTypeHint');
 const {getFilterManager} = goog.require('os.query.instance');
 const filter = goog.require('os.ui.filter');
 const xml = goog.require('os.xml');
 
+const ICommand = goog.requireType('os.command.ICommand');
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const ITreeNode = goog.requireType('os.structs.ITreeNode');
 
 
 /**
@@ -95,7 +98,7 @@ const exportEntries = function(entries, opt_exactType) {
  *
  * @param {!FilterActionEntry} entry The import action entry.
  * @param {number=} opt_parentIndex Optional parent index to add the entry to.
- * @return {os.command.ICommand} The copy entry command.
+ * @return {ICommand} The copy entry command.
  */
 const copyEntryCmd = function(entry, opt_parentIndex) {
   /**
@@ -159,7 +162,7 @@ const getColumns = function(opt_entryType) {
  * Callback for filter action entry create/edit.
  *
  * @param {FilterActionEntry|undefined} original The orignial filter entry, for edits.
- * @param {os.im.action.FilterActionEntry} entry The edited filter entry.
+ * @param {FilterActionEntry} entry The edited filter entry.
  */
 const onEditComplete = function(original, entry) {
   // don't do anything if there was no change
@@ -208,7 +211,7 @@ const onEditComplete = function(original, entry) {
  * Create command to remove an entry.
  *
  * @param {!FilterActionEntry} entry The import action entry to remove.
- * @return {os.command.ICommand} The remove entry command.
+ * @return {ICommand} The remove entry command.
  */
 const removeEntryCmd = function(entry) {
   var iam = getImportActionManager();
@@ -235,11 +238,11 @@ const removeEntryCmd = function(entry) {
 /**
  * Recursive mapping function for pulling all of the feature actions out of a tree.
  *
- * @param {Array<os.ui.im.action.FilterActionNode>} targetArr The target array.
- * @param {os.structs.ITreeNode} node The current node.
+ * @param {Array<FilterActionNode>} targetArr The target array.
+ * @param {ITreeNode} node The current node.
  */
 const isFilterActionNode = function(targetArr, node) {
-  if (node instanceof os.ui.im.action.FilterActionNode) {
+  if (node instanceof FilterActionNode) {
     goog.array.insert(targetArr, node);
   } else if (node.getChildren()) {
     node.getChildren().forEach(isFilterActionNode.bind(undefined, targetArr));

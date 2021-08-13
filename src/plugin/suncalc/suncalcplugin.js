@@ -15,6 +15,9 @@ const {ID} = goog.require('plugin.suncalc');
 const LightStripSettings = goog.require('plugin.suncalc.LightStripSettings');
 const {directiveTag: sunCalcEl} = goog.require('plugin.suncalc.SunCalcUI');
 
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+
 
 /**
  */
@@ -96,7 +99,7 @@ let instance = null;
 /**
  * Update the Sunlight menu item.
  *
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
 const updateSunlightItem = function() {
   this.visible = MapContainer.getInstance().is3DEnabled();
@@ -107,8 +110,8 @@ const updateSunlightItem = function() {
 /**
  * Enable lighting menu option listener
  *
- * @param {os.ui.menu.MenuEvent<ol.Coordinate>} evt The event
- * @this {os.ui.menu.MenuItem}
+ * @param {MenuEvent<ol.Coordinate>} evt The event
+ * @this {MenuItem}
  */
 const onEnableLighting = function(evt) {
   settings.getInstance().set(DisplaySetting.ENABLE_LIGHTING, !this.selected);
@@ -118,7 +121,7 @@ const onEnableLighting = function(evt) {
 /**
  * Suncalc menu option listener
  *
- * @param {os.ui.menu.MenuEvent<ol.Coordinate>} evt The menu event
+ * @param {MenuEvent<ol.Coordinate>} evt The menu event
  */
 const onMenuItem = function(evt) {
   launchWindow(evt.getContext());

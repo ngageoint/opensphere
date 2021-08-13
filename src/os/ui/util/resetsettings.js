@@ -63,7 +63,6 @@ const resetSettings = function(opt_parent) {
   }
 };
 
-
 /**
  * Action for clearing local storage. Should be added to help action managers.
  * @type {!MenuItemOptions}
@@ -75,22 +74,6 @@ const resetSettingsOptions = {
   icons: ['<i class="fa fa-fw fa-refresh"></i>'],
   sort: 1000
 };
-
-
-/**
- * Launches the clear local storage window
- * @param {string=} opt_parent Optional parent selector.
- * @deprecated Please use os.ui.util.ResetSettings.resetSettings instead.
- */
-os.ui.util.resetSettings = resetSettings;
-
-
-/**
- * Action for clearing local storage. Should be added to help action managers.
- * @type {!MenuItemOptions}
- * @deprecated Please use os.ui.util.ResetSettings.resetSettingsOptions instead.
- */
-os.ui.util.resetSettingsOptions = resetSettingsOptions;
 
 exports = {
   resetSettings,

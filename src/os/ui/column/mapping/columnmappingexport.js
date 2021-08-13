@@ -96,9 +96,7 @@ class Controller {
 
     // manually add persisters instead of going to the manager
     var filePersister = new FilePersistence();
-    // var urlPersister = new os.ui.file.persist.URLPersistence();
     this['persisters'][filePersister.getLabel()] = filePersister;
-    // this['persisters'][urlPersister.getLabel()] = urlPersister;
     this['persister'] = filePersister;
 
     this.scope_.$emit(WindowEventType.READY);

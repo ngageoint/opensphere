@@ -5,7 +5,6 @@ goog.require('os.ui.color.ColorPickerUI');
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
-const osWindow = goog.require('os.ui.window');
 const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
 
 
@@ -76,12 +75,6 @@ const launchConfirmColor = function(confirm, opt_default) {
     windowOptions: windowOptions
   }));
 };
-
-/**
- * @type {function(Function, string=)}
- * @deprecated Please use os.ui.window.ConfirmColorUI.launchConfirmColor.
- */
-osWindow.launchConfirmColor = launchConfirmColor;
 
 exports = {
   Controller,

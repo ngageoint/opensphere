@@ -18,6 +18,13 @@ const {getAreaManager} = goog.require('os.query.instance');
 const TriState = goog.require('os.structs.TriState');
 const osUiQueryAreaNode = goog.require('os.ui.query.AreaNode');
 
+const Feature = goog.requireType('ol.Feature');
+const EventTarget = goog.requireType('ol.events.EventTarget');
+const OLVectorSource = goog.requireType('ol.source.Vector');
+const VectorLayer = goog.requireType('os.layer.Vector');
+const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+
 
 /**
  */
@@ -66,16 +73,16 @@ class DrawingLayerNode extends LayerNode {
     var am = getAreaManager();
 
     if (value !== currLayer && currLayer) {
-      source = /** @type {os.layer.Vector} */ (currLayer).getSource();
+      source = /** @type {VectorLayer} */ (currLayer).getSource();
 
       events.unlisten(
-          /** @type {ol.events.EventTarget} */ (source),
+          /** @type {EventTarget} */ (source),
           VectorEventType.ADDFEATURE,
           this.onFeatureAdded,
           this);
 
       events.unlisten(
-          /** @type {ol.events.EventTarget} */ (source),
+          /** @type {EventTarget} */ (source),
           VectorEventType.REMOVEFEATURE,
           this.onFeatureRemoved,
           this);
@@ -87,16 +94,16 @@ class DrawingLayerNode extends LayerNode {
     super.setLayer(value);
 
     if (value !== currLayer && value) {
-      source = /** @type {os.layer.Vector} */ (value).getSource();
+      source = /** @type {VectorLayer} */ (value).getSource();
 
       events.listen(
-          /** @type {ol.events.EventTarget} */ (source),
+          /** @type {EventTarget} */ (source),
           VectorEventType.ADDFEATURE,
           this.onFeatureAdded,
           this);
 
       events.listen(
-          /** @type {ol.events.EventTarget} */ (source),
+          /** @type {EventTarget} */ (source),
           VectorEventType.REMOVEFEATURE,
           this.onFeatureRemoved,
           this);
@@ -104,7 +111,7 @@ class DrawingLayerNode extends LayerNode {
       am.listen(GoogEventType.PROPERTYCHANGE, this.onAreasChanged_, false, this);
 
       var areas = am.getAll().map(DrawingLayerNode.createNode_);
-      var others = /** @type {!Array<!ol.Feature>} */ (source.getFeatures()).
+      var others = /** @type {!Array<!Feature>} */ (source.getFeatures()).
           filter(function(feature) {
             return !am.contains(feature) && !DrawingLayerNode.isHidden(feature);
           }).
@@ -121,7 +128,7 @@ class DrawingLayerNode extends LayerNode {
    * @private
    */
   onAreasChanged_(evt) {
-    var feature = /** @type {ol.Feature} */ (evt.getNewValue());
+    var feature = /** @type {Feature} */ (evt.getNewValue());
     var prop = evt.getProperty();
 
     if (prop === 'add' || prop === 'add/edit') {
@@ -134,7 +141,7 @@ class DrawingLayerNode extends LayerNode {
   /**
    * Adds a child node for each feature added to the source
    *
-   * @param {ol.source.Vector.Event} evt The feature add event
+   * @param {OLVectorSource.Event} evt The feature add event
    * @protected
    */
   onFeatureAdded(evt) {
@@ -142,7 +149,7 @@ class DrawingLayerNode extends LayerNode {
   }
 
   /**
-   * @param {ol.Feature|undefined} feature The feature to add
+   * @param {Feature|undefined} feature The feature to add
    * @protected
    */
   addFeature(feature) {
@@ -191,7 +198,7 @@ class DrawingLayerNode extends LayerNode {
   /**
    * Removes a child node for each feature removed from the source
    *
-   * @param {ol.source.Vector.Event} evt The feature remove event
+   * @param {OLVectorSource.Event} evt The feature remove event
    * @protected
    */
   onFeatureRemoved(evt) {
@@ -199,8 +206,8 @@ class DrawingLayerNode extends LayerNode {
   }
 
   /**
-   * @param {!ol.Feature} feature The feature for which to search
-   * @return {?os.structs.ITreeNode} The tree node or null if none was found
+   * @param {!Feature} feature The feature for which to search
+   * @return {?ITreeNode} The tree node or null if none was found
    * @protected
    */
   getChildByFeature(feature) {
@@ -208,7 +215,7 @@ class DrawingLayerNode extends LayerNode {
   }
 
   /**
-   * @param {ol.Feature|undefined} feature The feature to remove
+   * @param {Feature|undefined} feature The feature to remove
    * @protected
    */
   removeFeature(feature) {
@@ -223,8 +230,8 @@ class DrawingLayerNode extends LayerNode {
   }
 
   /**
-   * @param {!os.structs.ITreeNode} a The first node
-   * @param {!os.structs.ITreeNode} b The second node
+   * @param {!ITreeNode} a The first node
+   * @param {!ITreeNode} b The second node
    * @return {number} per typical compare functions
    * @private
    */
@@ -246,8 +253,8 @@ class DrawingLayerNode extends LayerNode {
   /**
    * Creates a node from a feature
    *
-   * @param {!ol.Feature} feature The feature
-   * @return {?os.ui.slick.SlickTreeNode} The node
+   * @param {!Feature} feature The feature
+   * @return {?SlickTreeNode} The node
    * @private
    */
   static createNode_(feature) {
@@ -264,7 +271,7 @@ class DrawingLayerNode extends LayerNode {
   }
 
   /**
-   * @param {!ol.Feature} feature The feature
+   * @param {!Feature} feature The feature
    * @return {boolean} Whether or not a feature is hidden
    */
   static isHidden(feature) {

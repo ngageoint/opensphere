@@ -23,11 +23,11 @@ const osWindow = goog.require('os.ui.window');
 const KMLImporter = goog.require('plugin.file.kml.KMLImporter');
 const KMLParser = goog.require('plugin.file.kml.KMLParser');
 const KMLSourceEvent = goog.require('plugin.file.kml.KMLSourceEvent');
-
 const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Image = goog.requireType('os.layer.Image');
+const UIEvent = goog.requireType('os.ui.events.UIEvent');
 
 
 /**
@@ -53,14 +53,14 @@ class KMLSource extends RequestSource {
 
     /**
      * The root KML node
-     * @type {plugin.file.kml.ui.KMLNode}
+     * @type {KMLNode}
      * @protected
      */
     this.rootNode = null;
 
     /**
      * A map of feature id's to KML tree node
-     * @type {!Object<string, (!plugin.file.kml.ui.KMLNode|undefined)>}
+     * @type {!Object<string, (!KMLNode|undefined)>}
      * @private
      */
     this.nodeMap_ = {};
@@ -128,7 +128,7 @@ class KMLSource extends RequestSource {
   /**
    * Listen for screen overlays being toggled off via the X button on the GUI
    *
-   * @param {os.ui.events.UIEvent} event The event
+   * @param {UIEvent} event The event
    * @private
    */
   onToggleUI_(event) {
@@ -150,7 +150,7 @@ class KMLSource extends RequestSource {
    * Get the KML tree node for a feature.
    *
    * @param {ol.Feature} feature The feature.
-   * @return {plugin.file.kml.ui.KMLNode} The KML node, or null if not found.
+   * @return {KMLNode} The KML node, or null if not found.
    */
   getFeatureNode(feature) {
     if (feature) {
@@ -168,7 +168,7 @@ class KMLSource extends RequestSource {
   /**
    * Get the root KML tree node
    *
-   * @return {plugin.file.kml.ui.KMLNode}
+   * @return {KMLNode}
    */
   getRootNode() {
     return this.rootNode;
@@ -177,7 +177,7 @@ class KMLSource extends RequestSource {
   /**
    * Set the root KML tree node
    *
-   * @param {plugin.file.kml.ui.KMLNode} node
+   * @param {KMLNode} node
    */
   setRootNode(node) {
     if (this.rootNode && this.rootNode !== node) {
@@ -334,7 +334,7 @@ class KMLSource extends RequestSource {
   /**
    * Adds KML nodes to the source. Any features referenced by the nodes will also be added.
    *
-   * @param {!Array<plugin.file.kml.ui.KMLNode>} nodes The KML nodes to add
+   * @param {!Array<KMLNode>} nodes The KML nodes to add
    * @param {boolean=} opt_recurse If children should be added recursively
    */
   addNodes(nodes, opt_recurse) {
@@ -376,7 +376,7 @@ class KMLSource extends RequestSource {
       }
 
       if (opt_recurse) {
-        var children = /** @type {Array<plugin.file.kml.ui.KMLNode>} */ (node.getChildren());
+        var children = /** @type {Array<KMLNode>} */ (node.getChildren());
         if (children && children.length > 0) {
           this.addNodes(children, true);
         }
@@ -408,7 +408,7 @@ class KMLSource extends RequestSource {
     // displaying them piecemeal and providing the user with some feedback.
     if (this.importer) {
       // request source importer expects features, but this one returns KML nodes
-      this.addNodes(/** @type {!Array<plugin.file.kml.ui.KMLNode>} */ (this.importer.getData()));
+      this.addNodes(/** @type {!Array<KMLNode>} */ (this.importer.getData()));
     }
   }
 
@@ -508,7 +508,7 @@ class KMLSource extends RequestSource {
    * Clears all descendant features of a tree node, disposing of the nodes unless indicated otherwise. Disable node
    * disposal when refreshing a node (like network links) to allow merging the tree.
    *
-   * @param {!plugin.file.kml.ui.KMLNode} node The root node.
+   * @param {!KMLNode} node The root node.
    * @param {boolean=} opt_dispose If feature nodes should be disposed on removal; defaults to false.
    */
   clearNode(node, opt_dispose) {

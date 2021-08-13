@@ -203,7 +203,7 @@ class Controller extends SlickGridCtrl {
 
     /**
      * the move mode used for drag and drop
-     * @type {SlickTreeNode.MOVE_MODE}
+     * @type {!SlickTreeNode.MOVE_MODE}
      * @protected
      */
     this.moveMode = SlickTreeNode.MOVE_MODE.SIBLING;

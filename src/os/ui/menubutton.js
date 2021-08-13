@@ -11,6 +11,8 @@ const windows = goog.require('os.ui.menu.windows');
 const osWindow = goog.require('os.ui.window');
 const windowSelector = goog.require('os.ui.windowSelector');
 
+const ActionManager = goog.requireType('os.ui.action.ActionManager');
+
 
 /**
  * Controller function for the menu button directive. Any button wishing
@@ -27,7 +29,7 @@ class Controller {
   constructor($scope, $element) {
     /**
      * The menu to pop up
-     * @type {?os.ui.action.ActionManager}
+     * @type {?ActionManager}
      * @protected
      */
     this.menu = null;

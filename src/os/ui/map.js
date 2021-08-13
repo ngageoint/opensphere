@@ -1,17 +1,19 @@
 goog.module('os.ui.Map');
 goog.module.declareLegacyNamespace();
 
-goog.require('goog.log');
-goog.require('os.MapContainer');
-goog.require('os.ui');
+const log = goog.require('goog.log');
+const MapContainer = goog.require('os.MapContainer');
+const {waitForAngular} = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+
+const Logger = goog.requireType('goog.log.Logger');
 
 
 /**
  * Logger.
- * @type {goog.log.Logger}
+ * @type {Logger}
  */
-const logger = goog.log.getLogger('os.ui.Map');
-
+const logger = log.getLogger('os.ui.Map');
 
 /**
  * Controller for the map directive.
@@ -27,11 +29,11 @@ class Controller {
      * @type {os.MapContainer}
      * @private
      */
-    this.map_ = os.MapContainer.getInstance();
+    this.map_ = MapContainer.getInstance();
 
     // let angular settle before initializing the map. this ensures the DOM is done laying out and the map container
     // is sized appropriately.
-    os.ui.waitForAngular(this.onAngularReady_.bind(this));
+    waitForAngular(this.onAngularReady_.bind(this));
   }
 
   /**
@@ -52,13 +54,12 @@ class Controller {
    */
   onAngularReady_(opt_err) {
     if (typeof opt_err === 'string') {
-      goog.log.error(logger, 'Error waiting for Angular to render the page: ' + JSON.stringify(opt_err));
+      log.error(logger, 'Error waiting for Angular to render the page: ' + JSON.stringify(opt_err));
     } else if (this.map_) {
       this.map_.init();
     }
   }
 }
-
 
 /**
  * The map directive.
@@ -73,10 +74,9 @@ const directive = () => ({
   controllerAs: 'mapCtrl'
 });
 
-
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('map', [directive]);
+Module.directive('map', [directive]);
 
 exports = {Controller, directive};

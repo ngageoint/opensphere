@@ -58,7 +58,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
 
     /**
      * The selected node(s) in the tree.
-     * @type {Array<FilterActionNode>|os.ui.im.action.FilterActionNode}
+     * @type {Array<FilterActionNode>|FilterActionNode}
      */
     this['selected'] = null;
 

@@ -115,7 +115,7 @@ class Controller {
   /**
    * Grabs the parameters from the message.
    *
-   * @param {os.ui.ConfirmationModalOptions} options
+   * @param {ConfirmationModalOptions} options
    */
   setMessage(options) {
     this['title'] = options['title'];
@@ -163,7 +163,7 @@ class Controller {
   /**
    * launches confirmation modal
    *
-   * @param {os.ui.ConfirmationModalOptions} params
+   * @param {ConfirmationModalOptions} params
    */
   static launch(params) {
     var html = '<confirmation-modal params="params"></confirmation-modal>';
@@ -198,6 +198,7 @@ class Controller {
 Controller.ID = 'confirmModal';
 
 exports = {
+  ConfirmationModalOptions,
   Controller,
   directive,
   directiveTag

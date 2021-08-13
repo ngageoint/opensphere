@@ -8,7 +8,9 @@ const {testFilterActionEnabled} = goog.require('os.im.action');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const {exportEntries} = goog.require('os.im.action.filter');
 const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
 const FilterActionExportType = goog.require('os.ui.im.action.FilterActionExportType');
+const {close, create} = goog.require('os.ui.window');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 
@@ -83,7 +85,7 @@ class Controller extends Disposable {
      */
     this['errorMsg'] = undefined;
 
-    $scope.$emit(os.ui.WindowEventType.READY);
+    $scope.$emit(WindowEventType.READY);
     $scope.$on('$destroy', this.dispose.bind(this));
 
     this.validate();
@@ -173,7 +175,7 @@ class Controller extends Disposable {
    * @private
    */
   close_() {
-    os.ui.window.close(this.element);
+    close(this.element);
   }
 }
 
@@ -207,7 +209,7 @@ const launchFilterActionExport = function(entries, opt_selected, opt_fileName, o
   };
 
   var template = '<filteractionexport></filteractionexport>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
 
 

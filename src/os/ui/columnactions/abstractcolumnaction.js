@@ -1,6 +1,8 @@
 goog.module('os.ui.columnactions.AbstractColumnAction');
 goog.module.declareLegacyNamespace();
 
+const IColumnActionModel = goog.requireType('os.ui.columnactions.IColumnActionModel');
+
 
 /**
  * @abstract
@@ -101,7 +103,7 @@ class AbstractColumnAction {
    * @abstract
    * @param {Object.<string, *>} context  The items to be matched.  They are meaningful to the concrete column
    *                                          action class.
-   * @param {os.ui.columnactions.IColumnActionModel} a technology agnostic model that describes the table column.
+   * @param {IColumnActionModel} a technology agnostic model that describes the table column.
    * @param {*} value The value for the column
    * @return {boolean} True if the column action applies, false otherwise.
    *

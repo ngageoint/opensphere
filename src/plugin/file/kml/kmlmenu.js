@@ -12,6 +12,9 @@ const layerMenu = goog.require('os.ui.menu.layer');
 const KMLNetworkLinkNode = goog.require('plugin.file.kml.ui.KMLNetworkLinkNode');
 const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
 
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+
 
 /**
  * KML menu event types.
@@ -123,7 +126,7 @@ const treeSetup = function() {
  * Show a KML menu item if the context supports it.
  *
  * @param {layerMenu.Context} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
 const visibleIfSupported_ = function(context) {
   this.visible = false;
@@ -164,7 +167,7 @@ const visibleIfSupported_ = function(context) {
 /**
  * Handle KML layer menu events.
  *
- * @param {!os.ui.menu.MenuEvent<layerMenu.Context>} event The menu event.
+ * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  */
 const onLayerEvent_ = function(event) {
   var context = event.getContext();

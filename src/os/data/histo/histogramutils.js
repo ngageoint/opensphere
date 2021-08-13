@@ -8,6 +8,7 @@ const AlertManager = goog.require('os.alert.AlertManager');
 const FilterEntry = goog.require('os.filter.FilterEntry');
 const {isCondition} = goog.require('os.ui.filter');
 
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 const IHistogramUI = goog.requireType('os.ui.IHistogramUI');
 
 
@@ -39,7 +40,7 @@ const OVERRIDE_LABEL = 'Manual';
  * Create a filter from an array of histogram controllers.
  *
  * @param {!Array<!IHistogramUI>} controllers The histogram controllers
- * @param {!Array<!os.data.ColumnDefinition>} columns The filter columns.
+ * @param {!Array<!ColumnDefinition>} columns The filter columns.
  * @param {boolean=} opt_allowAll If all bins should be used in absence of a cascade/selection.
  * @return {FilterEntry}
  */
@@ -83,9 +84,9 @@ const createFilter = function(controllers, columns, opt_allowAll) {
  * Create a filter from an array of histogram controllers.
  *
  * @param {!Array<!IHistogramUI>} controllers The histogram controllers
- * @param {!Array<!os.data.ColumnDefinition>} columns The filter columns.
+ * @param {!Array<!ColumnDefinition>} columns The filter columns.
  * @param {boolean=} opt_allowAll If all bins should be used in absence of a cascade/selection.
- * @return {!Array<!os.ui.IHistogramUI>}
+ * @return {!Array<!IHistogramUI>}
  */
 const filterValidControllers = function(controllers, columns, opt_allowAll) {
   var valid = [];

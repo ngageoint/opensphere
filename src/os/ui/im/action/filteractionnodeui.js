@@ -7,6 +7,8 @@ const {getIndexInParent} = goog.require('os.structs');
 const Module = goog.require('os.ui.Module');
 const {directive: filterNodeUIDirective, Controller: FilterNodeUICtrl} = goog.require('os.ui.filter.ui.FilterNodeUI');
 
+const FilterActionNode = goog.requireType('os.ui.im.action.FilterActionNode');
+
 
 /**
  * The selected/highlighted node UI directive for filter actions.
@@ -63,7 +65,7 @@ class Controller extends FilterNodeUICtrl {
    * @export
    */
   copy() {
-    var node = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']);
+    var node = /** @type {FilterActionNode} */ (this.scope['item']);
     var entry = node.getEntry();
 
     if (entry) {
@@ -80,7 +82,7 @@ class Controller extends FilterNodeUICtrl {
    * @export
    */
   edit() {
-    var entry = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']).getEntry();
+    var entry = /** @type {FilterActionNode} */ (this.scope['item']).getEntry();
     if (entry) {
       this.scope.$emit(ImportActionEventType.EDIT_ENTRY, entry);
       Metrics.getInstance().updateMetric(os.im.action.Metrics.EDIT, 1);
@@ -94,7 +96,7 @@ class Controller extends FilterNodeUICtrl {
    * @export
    */
   remove() {
-    var entry = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']).getEntry();
+    var entry = /** @type {FilterActionNode} */ (this.scope['item']).getEntry();
     if (entry && !entry.isDefault()) {
       this.scope.$emit(ImportActionEventType.REMOVE_ENTRY, entry);
       Metrics.getInstance().updateMetric(os.im.action.Metrics.REMOVE, 1);

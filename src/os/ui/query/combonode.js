@@ -130,7 +130,7 @@ class ComboNode extends SlickTreeNode {
    */
   setState(value) {
     var isNoEntry = this.isNoEntry();
-    var p = /** @type {os.ui.query.ComboNode} */ (this.getParent());
+    var p = /** @type {ComboNode} */ (this.getParent());
 
     if (p) {
       var parentEntry = p.getEntry();
@@ -144,7 +144,7 @@ class ComboNode extends SlickTreeNode {
         var siblings = p.getChildren();
         if (siblings) {
           for (var i = 0, n = siblings.length; i < n; i++) {
-            var sibling = /** @type {os.ui.query.ComboNode} */ (siblings[i]);
+            var sibling = /** @type {ComboNode} */ (siblings[i]);
             if (sibling !== this) {
               if (isNoEntry || sibling.isNoEntry()) {
                 // if either this or the sibling is a no entry, turn it off
@@ -160,12 +160,12 @@ class ComboNode extends SlickTreeNode {
           var parentIsNoEntry = p.isNoEntry();
           var uncles = gp.getChildren();
           for (var i = 0, ii = uncles.length; i < ii; i++) {
-            var uncle = /** @type {os.ui.query.ComboNode} */ (uncles[i]);
+            var uncle = /** @type {ComboNode} */ (uncles[i]);
             if (uncle !== p) {
               var cousins = uncle.getChildren();
               if (cousins) {
                 for (var j = 0, jj = cousins.length; j < jj; j++) {
-                  var cousin = /** @type {os.ui.query.ComboNode} */ (cousins[j]);
+                  var cousin = /** @type {ComboNode} */ (cousins[j]);
                   // if the IDs match, the cousin represents the same entry, turn it off if either this is the child
                   // of a no entry or the cousin is the child of a no entry
                   if (cousin.getId() === this.getId() && (parentIsNoEntry || uncle.isNoEntry())) {
