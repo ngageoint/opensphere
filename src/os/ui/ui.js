@@ -1,6 +1,4 @@
 goog.provide('os.ui');
-goog.provide('os.ui.Module');
-goog.provide('os.ui.ResizeEventType');
 
 goog.require('goog.events.EventTarget');
 goog.require('goog.html.SafeHtml');
@@ -150,23 +148,6 @@ os.ui.escapeHtml = function(html) {
 
 
 /**
- * Angular module "os.ui"
- */
-os.ui.Module = angular.module('os.ui', ['ui.directives', 'ngAnimate', 'ngSanitize']);
-
-/**
- * @param {!angular.$compileProvider} $compileProvider
- * @ngInject
- * @export
- */
-const configureModule = function($compileProvider) {
-  $compileProvider.aHrefSanitizationWhitelist(/^\s*((https?|s?ftp|mailto|tel|file):|data:image)/);
-};
-
-os.ui.Module.config(configureModule);
-
-
-/**
  * Measures the given string of text. Note that this function adds a node to the DOM completely
  * off the screen. This can affect flow and document size and is intended for single-page
  * applications which use <code>overflow: hidden;</code> on the <code>body</code> tag.
@@ -308,15 +289,6 @@ os.ui.removeResize = function(el, fn) {
   if (el && fn && window.ResizeSensor != null) {
     ResizeSensor.detach(el, fn);
   }
-};
-
-
-/**
- * Enumeration of resize event types.
- * @enum {string}
- */
-os.ui.ResizeEventType = {
-  UPDATE_RESIZE: 'updateResize'
 };
 
 
