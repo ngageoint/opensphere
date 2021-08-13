@@ -260,7 +260,6 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   // set the global map container reference
   os.map.instance.setIMapContainer(map);
   os.map.instance.setMapContainer(map);
-  os.map.mapContainer = map;
 
   // configure default layer configs
   os.layer.config.LayerConfigManager.getInstance().registerLayerConfig(os.layer.config.StaticLayerConfig.ID,

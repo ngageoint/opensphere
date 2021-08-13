@@ -11,6 +11,7 @@ const {getImportActionManager} = goog.require('os.im.action');
 const ILayer = goog.require('os.layer.ILayer');
 const LayerEventType = goog.require('os.events.LayerEventType');
 const OsLayerPreset = goog.require('os.layer.preset');
+const {getIMapContainer} = goog.require('os.map.instance');
 const OsStyle = goog.require('os.style');
 const Promise = goog.require('goog.Promise');
 const Registry = goog.require('os.data.Registry');
@@ -326,9 +327,8 @@ class LayerPresetManager extends Disposable {
    * @private
    */
   getLayer_(layerId) {
-    // HACK: doing goog.require('os.MapContainer') properly creates a circular dependency somewhere in
-    // the os.layer chain. TODO Fix it when there's time
-    return (os.map.mapContainer) ? os.map.mapContainer.getLayer(layerId) : null;
+    const mapContainer = getIMapContainer();
+    return mapContainer ? mapContainer.getLayer(layerId) : null;
   }
 
   /**

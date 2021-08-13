@@ -38,6 +38,7 @@ const interpolate = goog.require('os.interpolate');
 const LayerClass = goog.require('os.layer.LayerClass');
 const LayerId = goog.require('os.layer.LayerId');
 const osMap = goog.require('os.map');
+const {getIMapContainer} = goog.require('os.map.instance');
 const {convertUnits, parseNumber} = goog.require('os.math');
 const Units = goog.require('os.math.Units');
 const osStyle = goog.require('os.style');
@@ -911,11 +912,12 @@ const getLayerId = function(feature) {
  */
 const getLayer = function(feature) {
   var layer = null;
-  if (feature && osMap.mapContainer) {
+  var mapContainer = getIMapContainer();
+  if (feature && mapContainer) {
     var sourceId = getLayerId(feature);
     if (sourceId) {
       // look up the layer via the id
-      layer = osMap.mapContainer.getLayer(sourceId);
+      layer = mapContainer.getLayer(sourceId);
     }
   }
 
@@ -1159,8 +1161,9 @@ const update = function(feature, opt_source) {
     opt_source = getSource(feature);
   }
 
-  if (!opt_source && osMap.mapContainer && osMap.mapContainer.containsFeature(feature)) {
-    opt_source = osMap.mapContainer.getLayer(LayerId.DRAW).getSource();
+  var mapContainer = getIMapContainer();
+  if (!opt_source && mapContainer && mapContainer.containsFeature(feature)) {
+    opt_source = mapContainer.getLayer(LayerId.DRAW).getSource();
   }
 
   var id = feature.getId();
