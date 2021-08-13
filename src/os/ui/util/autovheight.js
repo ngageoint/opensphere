@@ -7,9 +7,10 @@ const GoogEventType = goog.require('goog.events.EventType');
 const googObject = goog.require('goog.object');
 const dispatcher = goog.require('os.Dispatcher');
 const ThemeSettingsChangeEvent = goog.require('os.config.ThemeSettingsChangeEvent');
-const ui = goog.require('os.ui');
+const {removeResize, resize, waitForAngular} = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const windowCommonElements = goog.require('os.ui.windowCommonElements');
+const windowCommonOptionalElements = goog.require('os.ui.windowCommonOptionalElements');
 
 
 /**
@@ -30,7 +31,7 @@ const windowCommonElements = goog.require('os.ui.windowCommonElements');
  * useMaxHeight: Set to true to use max-height property instead of height
  * padding: An optional amount of the vh to add to caculation to give some space around the element.
  * omitOptionalCommonElements: Opt-out of being offset by application specific, additional elements.
- * @see {ui.windowCommonOptionalElements} for more detail.
+ * @see {windowCommonOptionalElements} for more detail.
  *
  * @return {angular.Directive}
  */
@@ -154,7 +155,7 @@ class Controller {
 
     // there are some situations where resize won't fire on creation, particularly when using IE or when swapping DOM
     // elements with ng-if. this will make sure it fires as soon as Angular is done manipulating the DOM.
-    ui.waitForAngular(this.resizeFn_);
+    waitForAngular(this.resizeFn_);
   }
 
   /**
@@ -181,7 +182,7 @@ class Controller {
       });
 
       if (!this.scope_['omitOptionalCommonElements']) {
-        googObject.getValues(ui.windowCommonOptionalElements).forEach(function(sibling) {
+        googObject.getValues(windowCommonOptionalElements).forEach(function(sibling) {
           siblingHeight += ($(/** @type {string} */ (sibling)).outerHeight(true));
         });
       }
@@ -213,14 +214,14 @@ class Controller {
 
       // add resize to common elements
       var allCommonElements = googArray.clone(windowCommonElements);
-      Object.assign(allCommonElements, ui.windowCommonOptionalElements);
+      Object.assign(allCommonElements, windowCommonOptionalElements);
       allCommonElements.forEach(function(sibling) {
-        ui.resize($(/** @type {string} */ (sibling)), this.resizeFn_);
+        resize($(/** @type {string} */ (sibling)), this.resizeFn_);
       }.bind(this));
 
       var siblings = /** @type {string} */ (this.scope_['siblings']);
       if (siblings) {
-        ui.resize($(siblings), this.resizeFn_);
+        resize($(siblings), this.resizeFn_);
       }
     }
   }
@@ -237,17 +238,17 @@ class Controller {
 
       // remove resize from common elements
       var allCommonElements = googArray.clone(windowCommonElements);
-      googArray.extend(allCommonElements, ui.windowCommonOptionalElements);
+      googArray.extend(allCommonElements, windowCommonOptionalElements);
       allCommonElements.forEach(function(sibling) {
         if (this.resizeFn_) {
-          ui.removeResize($(/** @type {string} */ (sibling)), this.resizeFn_);
+          removeResize($(/** @type {string} */ (sibling)), this.resizeFn_);
         }
       }, this);
 
       var siblings = /** @type {string} */ (this.scope_['siblings']);
       if (siblings && this.resizeFn_) {
         try {
-          ui.removeResize($(siblings), this.resizeFn_);
+          removeResize($(siblings), this.resizeFn_);
         } catch (e) {}
       }
     }

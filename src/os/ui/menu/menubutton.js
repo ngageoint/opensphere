@@ -9,7 +9,7 @@ const UIEvent = goog.require('os.ui.events.UIEvent');
 const UIEventType = goog.require('os.ui.events.UIEventType');
 const {toggleWindow} = goog.require('os.ui.menu.windows');
 const osWindow = goog.require('os.ui.window');
-const {CONTAINER} = goog.require('os.ui.windowSelector');
+const windowSelector = goog.require('os.ui.windowSelector');
 
 const Menu = goog.requireType('os.ui.menu.Menu');
 
@@ -109,7 +109,7 @@ class Controller extends Disposable {
         this.menu.open(undefined, {
           my: this.menuPosition,
           at: this.btnPosition,
-          of: this.element || CONTAINER,
+          of: this.element || windowSelector.CONTAINER,
           within: $(document.firstElementChild)
         });
       }
@@ -151,7 +151,7 @@ class Controller extends Disposable {
     var flag = opt_flag || this.flag;
 
     if (flag) {
-      var s = angular.element(CONTAINER).scope();
+      var s = angular.element(windowSelector.CONTAINER).scope();
       if (s) {
         return osWindow.exists(flag) || (s['mainCtrl'] && s['mainCtrl'][flag]);
       }

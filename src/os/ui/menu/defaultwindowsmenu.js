@@ -13,7 +13,7 @@ const UIEventType = goog.require('os.ui.events.UIEventType');
 const HistoryViewUI = goog.require('os.ui.history.HistoryViewUI');
 const {showLegend} = goog.require('os.ui.menu.map');
 const windows = goog.require('os.ui.menu.windows');
-const {WINDOW} = goog.require('os.ui.windowSelector');
+const windowSelector = goog.require('os.ui.windowSelector');
 
 
 /**
@@ -119,7 +119,7 @@ const setup = function() {
     'min-height': '300',
     'max-height': '1000',
     'show-close': 'true',
-    'html': '<alerts resize-with="' + WINDOW + '"></alerts>'
+    'html': '<alerts resize-with="' + windowSelector.WINDOW + '"></alerts>'
   });
 
   windows.addWindow('clear', {
@@ -151,7 +151,7 @@ const setup = function() {
     'min-height': '300',
     'max-height': '1000',
     'show-close': 'true',
-    'html': `<${HistoryViewUI.directiveTag} resize-with="${WINDOW}"></${HistoryViewUI.directiveTag}>`
+    'html': `<${HistoryViewUI.directiveTag} resize-with="${windowSelector.WINDOW}"></${HistoryViewUI.directiveTag}>`
   }, false, undefined);
 
   if (Settings.getInstance().get('metrics.enabled', false)) {
