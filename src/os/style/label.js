@@ -21,7 +21,7 @@ const RecordField = goog.require('os.data.RecordField');
 const {hideLabel, showLabel} = goog.require('os.feature');
 const {filterFalsey} = goog.require('os.fn');
 const PropertyChange = goog.require('os.layer.PropertyChange');
-const {ZERO_EXTENT} = goog.require('os.map');
+const osMap = goog.require('os.map');
 const {getMapContainer} = goog.require('os.map.instance');
 const {getFirstValue} = goog.require('os.object');
 const {zIndexCompare} = goog.require('os.source');
@@ -213,7 +213,7 @@ const updateShown_ = function() {
   // check if the view extent is ready to update labels. if the viewport was resized recently, the map size may be zero,
   // which will prevent labels from updating correctly.
   var viewExtent = map.getViewExtent();
-  if (olExtent.equals(viewExtent, ZERO_EXTENT)) {
+  if (olExtent.equals(viewExtent, osMap.ZERO_EXTENT)) {
     return false;
   }
 

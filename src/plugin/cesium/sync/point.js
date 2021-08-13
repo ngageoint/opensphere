@@ -5,7 +5,7 @@ const {getUid} = goog.require('ol');
 const OLIconStyle = goog.require('ol.style.Icon');
 const OLRegularShape = goog.require('ol.style.RegularShape');
 const olcsCore = goog.require('olcs.core');
-const {ZoomScale} = goog.require('os.map');
+const osMap = goog.require('os.map');
 const OSIconStyle = goog.require('os.style.Icon');
 const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
 const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
@@ -281,8 +281,8 @@ const getDistanceScalar = () => {
   if (!distanceScalar) {
     // this sets up the constant after Cesium is initialized
     distanceScalar = new Cesium.NearFarScalar(
-        ZoomScale.NEAR, ZoomScale.NEAR_SCALE,
-        ZoomScale.FAR, ZoomScale.FAR_SCALE);
+        osMap.ZoomScale.NEAR, osMap.ZoomScale.NEAR_SCALE,
+        osMap.ZoomScale.FAR, osMap.ZoomScale.FAR_SCALE);
   }
   return distanceScalar;
 };

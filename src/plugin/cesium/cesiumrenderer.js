@@ -16,7 +16,7 @@ const DisplaySetting = goog.require('os.config.DisplaySetting');
 const settings = goog.require('os.config.Settings');
 const osFeature = goog.require('os.feature');
 const SynchronizerType = goog.require('os.layer.SynchronizerType');
-const {WEBGL_CANVAS_CLASS} = goog.require('os.map');
+const osMap = goog.require('os.map');
 const terrain = goog.require('os.map.terrain');
 const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
 const AltitudeMode = goog.require('os.webgl.AltitudeMode');
@@ -183,7 +183,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
               time: getJulianDate
             });
 
-            classlist.add(this.olCesium_.canvas_, WEBGL_CANVAS_CLASS);
+            classlist.add(this.olCesium_.canvas_, osMap.WEBGL_CANVAS_CLASS);
 
             this.olCesium_.setTargetFrameRate(this.targetFrameRate);
 
