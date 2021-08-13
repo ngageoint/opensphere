@@ -1,8 +1,7 @@
 goog.module('os.config.ServerSettings');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.serversDirective');
-
+const {directiveTag} = goog.require('os.ui.ServersUI');
 const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
 
 
@@ -19,7 +18,7 @@ class ServerSettings extends SettingPlugin {
     this.setDescription('Add and configure data servers');
     this.setTags(['servers', 'data', 'provider']);
     this.setIcon('fa fa-database');
-    this.setUI('servers');
+    this.setUI(directiveTag);
   }
 
   /**

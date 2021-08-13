@@ -16,7 +16,7 @@ const TimelineController = goog.require('os.time.TimelineController');
 const TimelineEventType = goog.require('os.time.TimelineEventType');
 const Icons = goog.require('os.ui.Icons');
 const IconsSVG = goog.require('os.ui.IconsSVG');
-const launchScreenOverlay = goog.require('os.ui.launchScreenOverlay');
+const {launchScreenOverlay} = goog.require('os.ui.ScreenOverlayUI');
 const osWindow = goog.require('os.ui.window');
 
 const TileArcGISRest = goog.requireType('ol.source.TileArcGISRest');

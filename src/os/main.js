@@ -16,12 +16,12 @@ goog.require('os.ui.LegendUI');
 goog.require('os.ui.Map');
 goog.require('os.ui.Module');
 goog.require('os.ui.SavedWindowUI');
+goog.require('os.ui.ServersUI');
 goog.require('os.ui.TriStateCheckboxUI');
 goog.require('os.ui.clear.ClearUI');
 goog.require('os.ui.config.SettingsWindowUI');
 goog.require('os.ui.metrics.MetricsContainerUI');
 goog.require('os.ui.modal.AboutModalUI');
-goog.require('os.ui.serversDirective');
 goog.require('os.ui.slick.SlickTreeUI');
 
 
