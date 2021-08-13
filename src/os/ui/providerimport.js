@@ -1,300 +1,296 @@
-goog.provide('os.ui.ProviderImportCtrl');
+goog.module('os.ui.ProviderImportCtrl');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventType');
-goog.require('goog.string');
-goog.require('os.config.Settings');
-goog.require('os.data');
-goog.require('os.ui.window');
+const GoogEventType = goog.require('goog.events.EventType');
+const {getRandomString} = goog.require('goog.string');
+const Settings = goog.require('os.config.Settings');
+const {ProviderKey} = goog.require('os.data');
+const DataManager = goog.require('os.data.DataManager');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const {close, create, exists, getById} = goog.require('os.ui.window');
 
+const IDataProvider = goog.requireType('os.data.IDataProvider');
 
 
 /**
  * Controller for the provider import UI
  *
  * @abstract
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.ProviderImportCtrl = function($scope, $element) {
-  $scope['error'] = '';
-
+class Controller {
   /**
-   * @type {!angular.Scope}
-   * @protected
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
    */
-  this.scope = $scope;
+  constructor($scope, $element) {
+    $scope['error'] = '';
 
-  /**
-   * @type {!angular.JQLite}
-   * @protected
-   */
-  this.element = $element;
+    /**
+     * @type {!angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
 
-  /**
-   * @type {?os.data.IDataProvider}
-   * @protected
-   */
-  this.dp = this.scope['config']['provider'] || null;
+    /**
+     * @type {!angular.JQLite}
+     * @protected
+     */
+    this.element = $element;
 
-  /**
-   * HTML ID for the Format Help windows
-   * @type {string}
-   */
-  this.helpWindowId = 'url-help';
+    /**
+     * @type {?IDataProvider}
+     * @protected
+     */
+    this.dp = this.scope['config']['provider'] || null;
 
-  /**
-   * The help UI for this provider.
-   * @type {string}
-   */
-  this['helpUi'] = null;
+    /**
+     * HTML ID for the Format Help windows
+     * @type {string}
+     */
+    this.helpWindowId = 'url-help';
 
-  this.initialize();
+    /**
+     * The help UI for this provider.
+     * @type {string}
+     */
+    this['helpUi'] = null;
 
-  setTimeout(() => {
-    // This event is sent before window content is fully populated, so delay emitting it
-    $scope.$emit(os.ui.WindowEventType.READY);
-  }, 0);
-  $scope.$on('accept', this.onAccept_.bind(this));
-};
+    this.initialize();
 
-
-/**
- * Angular $onDestroy lifecycle hook.
- */
-os.ui.ProviderImportCtrl.prototype.$onDestroy = function() {
-  this.closeHelpWindow();
-};
-
-
-/**
- * Initialize the controller.
- */
-os.ui.ProviderImportCtrl.prototype.initialize = function() {
-  this.scope['edit'] = this.dp ? this.dp.getEditable() : true;
-};
-
-
-/**
- * Set testing state.
- * @param {boolean} value
- */
-os.ui.ProviderImportCtrl.prototype.setTesting = function(value) {
-  this.scope['testing'] = value;
-  this.scope.$emit('testing', value);
-};
-
-
-/**
- * Save button handler
- *
- * @export
- */
-os.ui.ProviderImportCtrl.prototype.accept = function() {
-  if (!this.scope['form']['$invalid'] && !this.scope['testing']) {
-    this.cleanConfig();
-
-    if (!this.dp || this.scope['error'] || (this.dp.getEditable() && this.formDiff())) {
-      this.test();
-    } else if (this.dp && this.dp.getEditable()) {
-      this.saveAndClose();
-    } else {
-      this.close();
-    }
-  }
-};
-
-
-/**
- * Closes the window
- *
- * @export
- */
-os.ui.ProviderImportCtrl.prototype.close = function() {
-  if (this.dp) {
-    this.dp.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onTestFinished, false, this);
+    $scope.$on('accept', this.onAccept_.bind(this));
   }
 
-  os.ui.window.close(this.element);
-};
-
-
-/**
- * Apply the scope
- *
- * @protected
- */
-os.ui.ProviderImportCtrl.prototype.apply = function() {
-  try {
-    this.scope.$apply();
-  } catch (e) {}
-};
-
-
-/**
- * Tests the data provider to ensure that it loads properly
- *
- * @protected
- */
-os.ui.ProviderImportCtrl.prototype.test = function() {
-  this.setTesting(true);
-  var id = this.dp ? this.dp.getId() : goog.string.getRandomString();
-
-  this.dp = this.getDataProvider();
-  this.dp.setId(id);
-  this.dp.setEditable(true);
-  this.beforeTest();
-  this.dp.listen(goog.events.EventType.PROPERTYCHANGE, this.onTestFinished, false, this);
-  this.dp.load(true);
-};
-
-
-/**
- * Test finished handler
- *
- * @param {os.events.PropertyChangeEvent} event
- */
-os.ui.ProviderImportCtrl.prototype.onTestFinished = function(event) {
-  if (event.getProperty() == 'loading' && !event.getNewValue()) {
-    this.dp.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onTestFinished, false, this);
-
-    this.setTesting(false);
-    this.afterTest();
-
-    this.scope['error'] = this.dp.getErrorMessage();
-
-    if (!this.dp.getError()) {
-      this.saveAndClose();
-    } else {
-      this.apply();
-
-      // Scroll to the bottom to show any error messages
-      this.scope.$applyAsync(() => {
-        // Depending on how this form is embedded, the modal body may be a child or parent.
-        let container = this.element.find('.modal-body');
-        if (!container.length) {
-          container = this.element.closest('.modal-body');
-        }
-
-        if (container.length) {
-          container.animate({'scrollTop': container[0].scrollHeight}, 500);
-        }
-      });
-    }
-  }
-};
-
-
-/**
- * Accept handler
- */
-os.ui.ProviderImportCtrl.prototype.onAccept_ = function() {
-  this.accept();
-};
-
-
-/**
- * Launches the import help window.
- * @param {string=} opt_providerName The user-facing name for the provider.
- * @export
- */
-os.ui.ProviderImportCtrl.prototype.launchHelp = function(opt_providerName) {
-  if (!os.ui.window.exists(this.helpWindowId) && this['helpUi']) {
-    let label = 'URL Format Help';
-    if (opt_providerName) {
-      label = `${opt_providerName} ${label}`;
-    }
-
-    os.ui.window.create({
-      'label': label,
-      'icon': 'fa fa-question-circle',
-      'x': '-10',
-      'y': 'center',
-      'width': '500',
-      'height': 'auto',
-      'show-close': true,
-      'modal': true,
-      'id': this.helpWindowId
-    }, this['helpUi']);
-  } else {
+  /**
+   * Angular $onDestroy lifecycle hook.
+   */
+  $onDestroy() {
     this.closeHelpWindow();
   }
-};
 
-
-/**
- * Launches help window
- * @export
- */
-os.ui.ProviderImportCtrl.prototype.closeHelpWindow = function() {
-  const helpWindow = os.ui.window.getById(this.helpWindowId);
-  if (helpWindow) {
-    os.ui.window.close(helpWindow);
+  /**
+   * Angular $onInit lifecycle hook.
+   */
+  $onInit() {
+    this.scope.$emit(WindowEventType.READY);
   }
-};
 
+  /**
+   * Initialize the controller.
+   */
+  initialize() {
+    this.scope['edit'] = this.dp ? this.dp.getEditable() : true;
+  }
 
-/**
- * Save and close
- *
- * @protected
- */
-os.ui.ProviderImportCtrl.prototype.saveAndClose = function() {
-  var config = this.getConfig();
-  os.settings.set([os.data.ProviderKey.USER, this.dp.getId()], config);
-  // We want to add the test instance as replacement rather than re-configuring the old
-  // povider. This avoids reloading the provider again after we just did that to test it.
-  os.dataManager.removeProvider(this.dp.getId());
-  os.dataManager.addProvider(this.dp);
-  // todo Pop up some kind of message about where to find data?
-  this.close();
-};
+  /**
+   * Set testing state.
+   * @param {boolean} value
+   */
+  setTesting(value) {
+    this.scope['testing'] = value;
+    this.scope.$emit('testing', value);
+  }
 
+  /**
+   * Save button handler
+   *
+   * @export
+   */
+  accept() {
+    if (!this.scope['form']['$invalid'] && !this.scope['testing']) {
+      this.cleanConfig();
 
-/**
- * Creates a data provider from the form
- *
- * @abstract
- * @return {os.data.IDataProvider} The data provider
- */
-os.ui.ProviderImportCtrl.prototype.getDataProvider = function() {};
+      if (!this.dp || this.scope['error'] || (this.dp.getEditable() && this.formDiff())) {
+        this.test();
+      } else if (this.dp && this.dp.getEditable()) {
+        this.saveAndClose();
+      } else {
+        this.close();
+      }
+    }
+  }
 
+  /**
+   * Closes the window
+   *
+   * @export
+   */
+  close() {
+    if (this.dp) {
+      this.dp.unlisten(GoogEventType.PROPERTYCHANGE, this.onTestFinished, false, this);
+    }
 
-/**
- * For use by extension classes to modify the data provider for a test
- */
-os.ui.ProviderImportCtrl.prototype.beforeTest = function() {
-};
+    close(this.element);
+  }
 
+  /**
+   * Apply the scope
+   *
+   * @protected
+   */
+  apply() {
+    try {
+      this.scope.$apply();
+    } catch (e) {}
+  }
 
-/**
- * Preprocess the config prior to passing it to the provider.
- *
- * @protected
- */
-os.ui.ProviderImportCtrl.prototype.cleanConfig = function() {};
+  /**
+   * Tests the data provider to ensure that it loads properly
+   *
+   * @protected
+   */
+  test() {
+    this.setTesting(true);
+    var id = this.dp ? this.dp.getId() : getRandomString();
 
+    this.dp = this.getDataProvider();
+    this.dp.setId(id);
+    this.dp.setEditable(true);
+    this.beforeTest();
+    this.dp.listen(GoogEventType.PROPERTYCHANGE, this.onTestFinished, false, this);
+    this.dp.load(true);
+  }
 
-/**
- * For use by extension classes to modify the data provider after a test
- */
-os.ui.ProviderImportCtrl.prototype.afterTest = function() {
-};
+  /**
+   * Test finished handler
+   *
+   * @param {os.events.PropertyChangeEvent} event
+   */
+  onTestFinished(event) {
+    if (event.getProperty() == 'loading' && !event.getNewValue()) {
+      this.dp.unlisten(GoogEventType.PROPERTYCHANGE, this.onTestFinished, false, this);
 
+      this.setTesting(false);
+      this.afterTest();
 
-/**
- * @abstract
- * @return {boolean} True if the form differs from this.dp, false otherwise
- */
-os.ui.ProviderImportCtrl.prototype.formDiff = function() {};
+      this.scope['error'] = this.dp.getErrorMessage();
 
+      if (!this.dp.getError()) {
+        this.saveAndClose();
+      } else {
+        this.apply();
 
-/**
- * Gets the config to be persisted
- *
- * @abstract
- * @return {Object.<string, *>} the config
- * @protected
- */
-os.ui.ProviderImportCtrl.prototype.getConfig = function() {};
+        // Scroll to the bottom to show any error messages
+        this.scope.$applyAsync(() => {
+          // Depending on how this form is embedded, the modal body may be a child or parent.
+          let container = this.element.find('.modal-body');
+          if (!container.length) {
+            container = this.element.closest('.modal-body');
+          }
+
+          if (container.length) {
+            container.animate({'scrollTop': container[0].scrollHeight}, 500);
+          }
+        });
+      }
+    }
+  }
+
+  /**
+   * Accept handler
+   */
+  onAccept_() {
+    this.accept();
+  }
+
+  /**
+   * Launches the import help window.
+   * @param {string=} opt_providerName The user-facing name for the provider.
+   * @export
+   */
+  launchHelp(opt_providerName) {
+    if (!exists(this.helpWindowId) && this['helpUi']) {
+      let label = 'URL Format Help';
+      if (opt_providerName) {
+        label = `${opt_providerName} ${label}`;
+      }
+
+      create({
+        'label': label,
+        'icon': 'fa fa-question-circle',
+        'x': '-10',
+        'y': 'center',
+        'width': '500',
+        'height': 'auto',
+        'show-close': true,
+        'modal': true,
+        'id': this.helpWindowId
+      }, this['helpUi']);
+    } else {
+      this.closeHelpWindow();
+    }
+  }
+
+  /**
+   * Launches help window
+   * @export
+   */
+  closeHelpWindow() {
+    const helpWindow = getById(this.helpWindowId);
+    if (helpWindow) {
+      close(helpWindow);
+    }
+  }
+
+  /**
+   * Save and close
+   *
+   * @protected
+   */
+  saveAndClose() {
+    var config = this.getConfig();
+    Settings.getInstance().set([ProviderKey.USER, this.dp.getId()], config);
+    // We want to add the test instance as replacement rather than re-configuring the old
+    // povider. This avoids reloading the provider again after we just did that to test it.
+    DataManager.getInstance().removeProvider(this.dp.getId());
+    DataManager.getInstance().addProvider(this.dp);
+    // todo Pop up some kind of message about where to find data?
+    this.close();
+  }
+
+  /**
+   * Creates a data provider from the form
+   *
+   * @abstract
+   * @return {IDataProvider} The data provider
+   */
+  getDataProvider() {}
+
+  /**
+   * For use by extension classes to modify the data provider for a test
+   */
+  beforeTest() {
+  }
+
+  /**
+   * Preprocess the config prior to passing it to the provider.
+   *
+   * @protected
+   */
+  cleanConfig() {}
+
+  /**
+   * For use by extension classes to modify the data provider after a test
+   */
+  afterTest() {
+  }
+
+  /**
+   * @abstract
+   * @return {boolean} True if the form differs from this.dp, false otherwise
+   */
+  formDiff() {}
+
+  /**
+   * Gets the config to be persisted
+   *
+   * @abstract
+   * @return {Object.<string, *>} the config
+   * @protected
+   */
+  getConfig() {}
+}
+
+exports = Controller;

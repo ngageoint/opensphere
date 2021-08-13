@@ -1,19 +1,25 @@
-goog.provide('os.ui.uniqueProviderTitle');
+goog.module('os.ui.uniqueProviderTitle');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.DataManager');
-goog.require('os.ui.Module');
+const DataManager = goog.require('os.data.DataManager');
+const Module = goog.require('os.ui.Module');
+
+const IDataProvider = goog.requireType('os.data.IDataProvider');
 
 
 /**
  * @return {angular.Directive}
  */
-os.ui.uniqueProviderTitle = function() {
-  return {
-    'require': 'ngModel',
-    'link': os.ui.uniqueProviderTitle_
-  };
-};
+const directive = () => ({
+  'require': 'ngModel',
+  'link': uniqueProviderTitle
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'unique-provider-title';
 
 /**
  * Link function for unique title directive
@@ -23,14 +29,12 @@ os.ui.uniqueProviderTitle = function() {
  * @param {!angular.Attributes} $attrs
  * @param {!Object} $ctrl
  * @ngInject
- * @private
  */
-os.ui.uniqueProviderTitle_ = function($scope, $element, $attrs, $ctrl) {
+const uniqueProviderTitle = function($scope, $element, $attrs, $ctrl) {
   var check = function(viewValue) {
-    var list = /** @type {Array.<os.data.IDataProvider>} */ (
-      os.dataManager.getProviderRoot().getChildren());
+    var list = /** @type {Array<IDataProvider>} */ (DataManager.getInstance().getProviderRoot().getChildren());
 
-    var provider = /** @type {?os.data.IDataProvider} */ ($scope['config']['provider'] || null);
+    var provider = /** @type {?IDataProvider} */ ($scope['config']['provider'] || null);
 
     if (list) {
       for (var i = 0, n = list.length; i < n; i++) {
@@ -49,10 +53,12 @@ os.ui.uniqueProviderTitle_ = function($scope, $element, $attrs, $ctrl) {
   $ctrl.$parsers.unshift(check);
 };
 
-
 /**
  * Add the unique title directive
  */
-os.ui.Module.directive('uniqueProviderTitle', [os.ui.uniqueProviderTitle]);
+Module.directive('uniqueProviderTitle', [directive]);
 
-
+exports = {
+  directive,
+  directiveTag
+};
