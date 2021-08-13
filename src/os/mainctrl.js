@@ -92,7 +92,7 @@ goog.require('os.time.TimelineController');
 goog.require('os.ui.AbstractMainCtrl');
 goog.require('os.ui.AddExportOptionsUI');
 goog.require('os.ui.TimelinePanelUI');
-goog.require('os.ui.alertsDirective');
+goog.require('os.ui.alert.AlertsUI');
 goog.require('os.ui.clear.ClearEntry');
 goog.require('os.ui.clear.ClearManager');
 goog.require('os.ui.column.mapping.ColumnMappingSettings');
