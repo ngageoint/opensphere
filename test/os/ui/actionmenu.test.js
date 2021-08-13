@@ -1,17 +1,17 @@
-goog.require('os.ui.ActionMenuCtrl');
+goog.require('os.ui.ActionMenuUI');
 goog.require('os.ui.action.MenuOptions');
 
-describe('os.ui.ActionMenuCtrl', function() {
-  var actionMenu = new os.ui.ActionMenuCtrl({
-    provider:{
-      listen:function(){},
-      unlisten:function(){},
-      getEnabledActions:function(){}
+describe('os.ui.ActionMenuUI', function() {
+  var actionMenu = new os.ui.ActionMenuUI.Controller({
+    provider: {
+      listen: function() {},
+      unlisten: function() {},
+      getEnabledActions: function() {}
     },
-    $on:function() {},
+    $on: function() {},
     $watch: function() {}
   }, {
-    find:function(){return []}
+    find: () => []
   });
 
   it('should place actions into sub-menus based on their menu options', function() {
@@ -60,7 +60,7 @@ describe('os.ui.ActionMenuCtrl', function() {
     expect(createObjectItem.getName()).toBe('Create Object');
   });
 
-  it('should sort actions based on their division and order menu options', function(){
+  it('should sort actions based on their division and order menu options', function() {
     var noOrder = new os.ui.action.MenuItemAction(new os.ui.action.Action('NoOrder', 'NoOrder'));
     var noOrder2 = new os.ui.action.MenuItemAction(new os.ui.action.Action('NoOrder', 'NoOrder'));
     var one = new os.ui.action.MenuItemAction(new os.ui.action.Action('One', 'One', 'One', 'One', 'One',

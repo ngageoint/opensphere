@@ -4,6 +4,7 @@ goog.module.declareLegacyNamespace();
 const dispatcher = goog.require('os.Dispatcher');
 const ui = goog.require('os.ui');
 const GlobalMenuEventType = goog.require('os.ui.GlobalMenuEventType');
+const {openMenu} = goog.require('os.ui.GlobalMenuUI');
 const UIEvent = goog.require('os.ui.events.UIEvent');
 const UIEventType = goog.require('os.ui.events.UIEventType');
 const windows = goog.require('os.ui.menu.windows');
@@ -97,7 +98,7 @@ class Controller {
       } else {
         this.scope['menu'] = true;
         dispatcher.getInstance().listenOnce(GlobalMenuEventType.MENU_CLOSE, this.onMenuClose, false, this);
-        ui.openMenu(this.menu, this.position, this.element || undefined);
+        openMenu(this.menu, this.position, this.element || undefined);
       }
     }
 

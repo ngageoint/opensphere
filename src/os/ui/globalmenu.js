@@ -1,230 +1,251 @@
-goog.provide('os.ui.GlobalMenuCtrl');
-goog.provide('os.ui.GlobalMenuEventType');
-goog.provide('os.ui.globalMenuDirective');
+goog.module('os.ui.GlobalMenuUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.async.Delay');
-goog.require('goog.events.Event');
-goog.require('os.ui.ActionMenuCtrl');
-goog.require('os.ui.Module');
+const Delay = goog.require('goog.async.Delay');
+const {getDocument, getViewportSize} = goog.require('goog.dom');
+const GoogEventType = goog.require('goog.events.EventType');
+const dispatcher = goog.require('os.Dispatcher');
+const ui = goog.require('os.ui');
+const {Controller: ActionMenuCtrl, directive: actionMenuDirective} = goog.require('os.ui.ActionMenuUI');
+const GlobalMenuEventType = goog.require('os.ui.GlobalMenuEventType');
+const Module = goog.require('os.ui.Module');
+
+const ActionManager = goog.requireType('os.ui.action.ActionManager');
 
 
 /**
- * @enum {string}
+ * Defines a global menu directive. You should only need one of these. See `openMenu`.
+ *
+ * @return {angular.Directive} the directive definition
  */
-os.ui.GlobalMenuEventType = {
-  MENU_CLOSE: 'menuclose'
+const directive = () => {
+  var dir = actionMenuDirective();
+  dir['scope'] = true;
+  dir['controller'] = Controller;
+  return dir;
 };
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'global-menu';
 
+Module.directive('globalMenu', directive);
 
 /**
  * Controller function for the ActionMenu directive
- *
- * @constructor
- * @param {angular.Scope} $scope
- * @param {angular.JQLite} $element
- * @param {angular.$timeout} $timeout
- * @ngInject
- * @extends {os.ui.ActionMenuCtrl}
+ * @unrestricted
  */
-os.ui.GlobalMenuCtrl = function($scope, $element, $timeout) {
-  os.ui.GlobalMenuCtrl.base(this, 'constructor', $scope, $element, $timeout);
-
-  this.element.removeClass('show');
-  this.onDownBind_ = this.onClick_.bind(this);
-
+class Controller extends ActionMenuCtrl {
   /**
-   * @type {angular.JQLite|string|null}
+   * Constructor.
+   * @param {angular.Scope} $scope
+   * @param {angular.JQLite} $element
+   * @param {angular.$timeout} $timeout
+   * @ngInject
    */
-  this.target = null;
-
-  /**
-   * @type {({left:number,top:number}|undefined|!jQuery)}
-   */
-  this.targetOffset = undefined;
-
-  /**
-   * @type {goog.async.Delay}
-   * @private
-   */
-  this.listenerDelay_ = new goog.async.Delay(this.onAddOutsideListener_, 25, this);
-};
-goog.inherits(os.ui.GlobalMenuCtrl, os.ui.ActionMenuCtrl);
-
-
-/**
- * @inheritDoc
- */
-os.ui.GlobalMenuCtrl.prototype.destroy = function() {
-  os.ui.GlobalMenuCtrl.base(this, 'destroy');
-
-  this.listenerDelay_.dispose();
-  this.listenerDelay_ = null;
-};
-
-
-/**
- * Closes an already-open menu and dispatches a menu close event
- *
- * @param {boolean=} opt_dispatch
- */
-os.ui.GlobalMenuCtrl.prototype.close = function(opt_dispatch) {
-  if (opt_dispatch === undefined) {
-    opt_dispatch = true;
-  }
-
-  this.target = null;
-  this.targetOffset = undefined;
-
-  if (this.element.hasClass('show')) {
-    if (opt_dispatch && os.dispatcher) {
-      os.dispatcher.dispatchEvent(os.ui.GlobalMenuEventType.MENU_CLOSE);
-    }
+  constructor($scope, $element, $timeout) {
+    super($scope, $element, $timeout);
 
     this.element.removeClass('show');
-    this.element.removeClass('right-menu');
-    this.element.blur();
+    this.onDownBind_ = this.onClick_.bind(this);
+
+    /**
+     * @type {angular.JQLite|string|null}
+     */
+    this.target = null;
+
+    /**
+     * @type {({left:number,top:number}|undefined|!jQuery)}
+     */
+    this.targetOffset = undefined;
+
+    /**
+     * @type {Delay}
+     * @private
+     */
+    this.listenerDelay_ = new Delay(this.onAddOutsideListener_, 25, this);
   }
-  this.element.find('#js-global-menu__title').remove();
 
-  var doc = goog.dom.getDocument();
-  doc.removeEventListener(goog.events.EventType.MOUSEDOWN, this.onDownBind_, true);
-  doc.removeEventListener(goog.events.EventType.POINTERDOWN, this.onDownBind_, true);
-  doc.removeEventListener(goog.events.EventType.SCROLL, this.onScroll_.bind(this), true);
+  /**
+   * @inheritDoc
+   */
+  destroy() {
+    super.destroy();
 
-  os.ui.apply(this.scope);
-};
+    this.listenerDelay_.dispose();
+    this.listenerDelay_ = null;
+  }
+
+  /**
+   * Closes an already-open menu and dispatches a menu close event
+   *
+   * @param {boolean=} opt_dispatch
+   */
+  close(opt_dispatch) {
+    if (opt_dispatch === undefined) {
+      opt_dispatch = true;
+    }
+
+    this.target = null;
+    this.targetOffset = undefined;
+
+    if (this.element.hasClass('show')) {
+      if (opt_dispatch && dispatcher.getInstance()) {
+        dispatcher.getInstance().dispatchEvent(GlobalMenuEventType.MENU_CLOSE);
+      }
+
+      this.element.removeClass('show');
+      this.element.removeClass('right-menu');
+      this.element.blur();
+    }
+    this.element.find('#js-global-menu__title').remove();
+
+    var doc = getDocument();
+    doc.removeEventListener(GoogEventType.MOUSEDOWN, this.onDownBind_, true);
+    doc.removeEventListener(GoogEventType.POINTERDOWN, this.onDownBind_, true);
+    doc.removeEventListener(GoogEventType.SCROLL, this.onScroll_.bind(this), true);
+
+    ui.apply(this.scope);
+  }
+
+  /**
+   * Opens a menu
+   */
+  open() {
+    ui.apply(this.scope);
+    this.listenerDelay_.start();
+  }
+
+  /**
+   * @private
+   */
+  onAddOutsideListener_() {
+    var doc = getDocument();
+    doc.addEventListener(GoogEventType.MOUSEDOWN, this.onDownBind_, true);
+    doc.addEventListener(GoogEventType.POINTERDOWN, this.onDownBind_, true);
+    doc.addEventListener(GoogEventType.SCROLL, this.onScroll_.bind(this), true);
+  }
+
+  /**
+   * Click handler
+   *
+   * @param {Event} e
+   * @private
+   */
+  onClick_(e) {
+    // if we didn't click on something in the menu
+    if (!$(e.target).closest('#js-global-menu').length) {
+      // close the menu
+      this.close();
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  invoke(action) {
+    if (super.invoke(action) && !action.doNotCloseOnInvoke) {
+      this.close();
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Checks the position and ensures that the menu doesn't run off the screen
+   *
+   * @override
+   * @protected
+   */
+  position() {
+    var element = this.element;
+    var pos = this.scope['position'] || element.position();
+
+    this.timeout(function() {
+      if (goog.isObject(pos)) {
+        var x = pos.left || pos.right || pos.x;
+        var y = pos.top || pos.bottom || pos.y;
+        var w = element.outerWidth();
+        var h = element.outerHeight();
+        var viewportSize = getViewportSize();
+
+        if (x + w > viewportSize.width - 5) {
+          x = viewportSize.width - 5 - w;
+          element.addClass('right-menu');
+        } else if (x + 2 * w > viewportSize.width - 5) {
+          element.addClass('right-menu');
+        }
+
+        x = x < 0 ? 5 : x;
+        y = y < 0 ? 5 : y;
+
+        // offset the menu from the bottom if it's too tall
+        var yThreshold = 50;
+        if (y + h > viewportSize.height - yThreshold) {
+          y = viewportSize.height - yThreshold - h;
+        }
+
+        // clear everything before setting
+        element.css('top', '');
+        element.css('bottom', '');
+        element.css('left', '');
+        element.css('right', '');
+
+        element.css(pos['right'] !== undefined ? 'right' : 'left', x + 'px');
+        element.css(pos['bottom'] !== undefined ? 'bottom' : 'top', y + 'px');
+      } else if (pos == 'right') {
+        element.addClass('right-menu');
+      }
+
+      element.addClass('show');
+    }, 5);
+  }
+
+  /**
+   * Set target
+   *
+   * @param {angular.JQLite|string} target
+   */
+  setTarget(target) {
+    this.target = target;
+    this.targetOffset = $(target).offset();
+  }
+
+  /**
+   * Close window if target position changed
+   *
+   * @private
+   */
+  onScroll_() {
+    if (this.targetOffset) {
+      var currPos = $(this.target).offset();
+      if (this.targetOffset['left'] != currPos['left'] || this.targetOffset['top'] != currPos['top']) {
+        Controller.closeMenu();
+      }
+    }
+  }
+
+  /**
+   * Allow closing the current global menu if its up
+   */
+  static closeMenu() {
+    var menuEl = angular.element('#js-global-menu');
+    var s = menuEl.scope();
+    var ctrl = /** @type {Controller} */ (s['actionMenu']);
+
+    // close any open menu
+    ctrl.close();
+  }
+}
 
 
 /**
  * Opens a menu
- */
-os.ui.GlobalMenuCtrl.prototype.open = function() {
-  os.ui.apply(this.scope);
-  this.listenerDelay_.start();
-};
-
-
-/**
- * @private
- */
-os.ui.GlobalMenuCtrl.prototype.onAddOutsideListener_ = function() {
-  var doc = goog.dom.getDocument();
-  doc.addEventListener(goog.events.EventType.MOUSEDOWN, this.onDownBind_, true);
-  doc.addEventListener(goog.events.EventType.POINTERDOWN, this.onDownBind_, true);
-  doc.addEventListener(goog.events.EventType.SCROLL, this.onScroll_.bind(this), true);
-};
-
-
-/**
- * Click handler
  *
- * @param {Event} e
- * @private
- */
-os.ui.GlobalMenuCtrl.prototype.onClick_ = function(e) {
-  // if we didn't click on something in the menu
-  if (!$(e.target).closest('#js-global-menu').length) {
-    // close the menu
-    this.close();
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.GlobalMenuCtrl.prototype.invoke = function(action) {
-  if (os.ui.GlobalMenuCtrl.superClass_.invoke.call(this, action) && !action.doNotCloseOnInvoke) {
-    this.close();
-    return true;
-  }
-
-  return false;
-};
-
-
-/**
- * Checks the position and ensures that the menu doesn't run off the screen
- *
- * @override
- * @protected
- */
-os.ui.GlobalMenuCtrl.prototype.position = function() {
-  var element = this.element;
-  var pos = this.scope['position'] || element.position();
-
-  this.timeout(function() {
-    if (goog.isObject(pos)) {
-      var x = pos.left || pos.right || pos.x;
-      var y = pos.top || pos.bottom || pos.y;
-      var w = element.outerWidth();
-      var h = element.outerHeight();
-      var viewportSize = goog.dom.getViewportSize();
-
-      if (x + w > viewportSize.width - 5) {
-        x = viewportSize.width - 5 - w;
-        element.addClass('right-menu');
-      } else if (x + 2 * w > viewportSize.width - 5) {
-        element.addClass('right-menu');
-      }
-
-      x = x < 0 ? 5 : x;
-      y = y < 0 ? 5 : y;
-
-      // offset the menu from the bottom if it's too tall
-      var yThreshold = 50;
-      if (y + h > viewportSize.height - yThreshold) {
-        y = viewportSize.height - yThreshold - h;
-      }
-
-      // clear everything before setting
-      element.css('top', '');
-      element.css('bottom', '');
-      element.css('left', '');
-      element.css('right', '');
-
-      element.css(pos['right'] !== undefined ? 'right' : 'left', x + 'px');
-      element.css(pos['bottom'] !== undefined ? 'bottom' : 'top', y + 'px');
-    } else if (pos == 'right') {
-      element.addClass('right-menu');
-    }
-
-    element.addClass('show');
-  }, 5);
-};
-
-
-/**
- * Set target
- *
- * @param {angular.JQLite|string} target
- */
-os.ui.GlobalMenuCtrl.prototype.setTarget = function(target) {
-  this.target = target;
-  this.targetOffset = $(target).offset();
-};
-
-
-/**
- * Close window if target position changed
- *
- * @private
- */
-os.ui.GlobalMenuCtrl.prototype.onScroll_ = function() {
-  if (this.targetOffset) {
-    var currPos = $(this.target).offset();
-    if (this.targetOffset['left'] != currPos['left'] || this.targetOffset['top'] != currPos['top']) {
-      os.ui.GlobalMenuCtrl.closeMenu();
-    }
-  }
-};
-
-
-/**
- * Opens a menu
- *
- * @param {os.ui.action.ActionManager} provider The action menu manager that supplies the menu
+ * @param {ActionManager} provider The action menu manager that supplies the menu
  * @param {{
  *  x: (number|undefined),
  *  y: (number|undefined),
@@ -237,12 +258,12 @@ os.ui.GlobalMenuCtrl.prototype.onScroll_ = function() {
  * @param {?angular.JQLite=} opt_root Optional root element containing the target
  * @param {?string=} opt_title Optional title html for the menu
  */
-os.ui.openMenu = function(provider, position, opt_target, opt_root, opt_title) {
+const openMenu = function(provider, position, opt_target, opt_root, opt_title) {
   var menuEl = angular.element('#js-global-menu');
   var s = menuEl.scope();
   s['provider'] = provider;
-  var ctrl = /** @type {os.ui.GlobalMenuCtrl} */ (s['actionMenu']);
-  os.ui.GlobalMenuCtrl.closeMenu();
+  var ctrl = /** @type {Controller} */ (s['actionMenu']);
+  Controller.closeMenu();
 
   // update the menu title if provided
   if (opt_title) {
@@ -253,28 +274,15 @@ os.ui.openMenu = function(provider, position, opt_target, opt_root, opt_title) {
     ctrl.setTarget(opt_target);
   }
 
-  var timeout = /** @type {angular.$timeout} */ (os.ui.injector.get('$timeout'));
+  var timeout = /** @type {angular.$timeout} */ (ui.injector.get('$timeout'));
   if (timeout) {
     // the menu may need to be updated before we position it, in particular for right orientation. call the positioning
     // logic after a timeout so the menu is reconstructed first.
-    timeout(goog.partial(os.ui.positionMenu_, position, opt_target, opt_root));
+    timeout(goog.partial(positionMenu, position, opt_target, opt_root));
   } else {
     // this shouldn't happen, but if it does we don't want to prevent the menu from being opened
-    os.ui.positionMenu_(position, opt_target, opt_root);
+    positionMenu(position, opt_target, opt_root);
   }
-};
-
-
-/**
- * Allow closing the current global menu if its up
- */
-os.ui.GlobalMenuCtrl.closeMenu = function() {
-  var menuEl = angular.element('#js-global-menu');
-  var s = menuEl.scope();
-  var ctrl = /** @type {os.ui.GlobalMenuCtrl} */ (s['actionMenu']);
-
-  // close any open menu
-  ctrl.close();
 };
 
 
@@ -291,12 +299,11 @@ os.ui.GlobalMenuCtrl.closeMenu = function() {
  *  }|string} position The position relative to the target
  * @param {(angular.JQLite|string)=} opt_target An optional target selector to position from
  * @param {?angular.JQLite=} opt_root Optional root element containing the target
- * @private
  */
-os.ui.positionMenu_ = function(position, opt_target, opt_root) {
+const positionMenu = function(position, opt_target, opt_root) {
   var menuEl = angular.element('#js-global-menu');
   var s = menuEl.scope();
-  var ctrl = /** @type {os.ui.GlobalMenuCtrl} */ (s['actionMenu']);
+  var ctrl = /** @type {Controller} */ (s['actionMenu']);
 
   var targetEl;
   if (typeof opt_target === 'string') {
@@ -345,17 +352,9 @@ os.ui.positionMenu_ = function(position, opt_target, opt_root) {
   ctrl.open();
 };
 
-
-/**
- * Defines a global menu directive. You should only need one of these. See os.ui.openMenu().
- *
- * @return {angular.Directive} the directive definition
- */
-os.ui.globalMenuDirective = function() {
-  var dir = os.ui.actionMenuDirective();
-  dir['scope'] = true;
-  dir['controller'] = os.ui.GlobalMenuCtrl;
-  return dir;
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  openMenu
 };
-
-os.ui.Module.directive('globalMenu', os.ui.globalMenuDirective);
