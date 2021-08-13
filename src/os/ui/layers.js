@@ -2,8 +2,8 @@ goog.module('os.ui.LayersUI');
 goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.LayerTreeUI');
+goog.require('os.ui.UISwitchUI');
 goog.require('os.ui.layer.DefaultLayerUI');
-goog.require('os.ui.uiSwitchDirective');
 
 const {getRandomString} = goog.require('goog.string');
 const LayerType = goog.require('ol.LayerType');

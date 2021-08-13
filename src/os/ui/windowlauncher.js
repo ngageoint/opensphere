@@ -1,78 +1,87 @@
-goog.provide('os.ui.WindowLauncherCtrl');
-goog.provide('os.ui.windowLauncherDirective');
+goog.module('os.ui.WindowLauncherUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
+const Module = goog.require('os.ui.Module');
 
+const DescriptorNode = goog.requireType('os.ui.data.DescriptorNode');
 
 /**
  * Template used by the directive.
  * @type {string}
  * @const
  */
-os.ui.WINDOW_LAUNCHER_TEMPLATE = '<small><button ng-click="launchCtrl.click($event)" title="{{chkTooltip}}" ' +
+const template = '<small><button ng-click="launchCtrl.click($event)" title="{{chkTooltip}}" ' +
     'class="btn btn-sm btn-info border"><i ng-class="winLauncherClass"></i></button></small>';
-
 
 /**
  * The slick tree directive
  *
  * @return {angular.Directive}
  */
-os.ui.windowLauncherDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    template: os.ui.WINDOW_LAUNCHER_TEMPLATE,
-    controller: os.ui.WindowLauncherCtrl,
-    controllerAs: 'launchCtrl'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  template: template,
+  controller: Controller,
+  controllerAs: 'launchCtrl'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'windowlauncher';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('windowlauncher', [os.ui.windowLauncherDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for window launcher
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.WindowLauncherCtrl = function($scope) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
+   */
+  constructor($scope) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    $scope.$on('$destroy', this.destroy_.bind(this));
+  }
+
+  /**
+   * Clean up references
+   *
    * @private
    */
-  this.scope_ = $scope;
-
-  $scope.$on('$destroy', this.destroy_.bind(this));
-};
-
-
-/**
- * Clean up references
- *
- * @private
- */
-os.ui.WindowLauncherCtrl.prototype.destroy_ = function() {
-  this.scope_ = null;
-};
-
-
-/**
- * Sets the descriptor as active.
- *
- * @param {MouseEvent} e The event
- * @export
- */
-os.ui.WindowLauncherCtrl.prototype.click = function(e) {
-  if (this.scope_) {
-    var item = /** @type {os.ui.data.DescriptorNode} */ (this.scope_['item']);
-    item.getDescriptor().setActive(true);
+  destroy_() {
+    this.scope_ = null;
   }
+
+  /**
+   * Sets the descriptor as active.
+   *
+   * @param {MouseEvent} e The event
+   * @export
+   */
+  click(e) {
+    if (this.scope_) {
+      var item = /** @type {DescriptorNode} */ (this.scope_['item']);
+      item.getDescriptor().setActive(true);
+    }
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

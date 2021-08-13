@@ -1,8 +1,8 @@
 goog.module('os.ui.FeatureListUI');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.SliderUI');
 goog.require('os.ui.SourceGridUI');
-goog.require('os.ui.sliderDirective');
 
 const {assert} = goog.require('goog.asserts');
 const GoogEventType = goog.require('goog.events.EventType');
