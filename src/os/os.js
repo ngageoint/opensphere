@@ -135,6 +135,15 @@ os.logWindow = null;
 
 
 /**
+ * Set the log window.
+ * @param {os.debug.FancierWindow} win The log window.
+ */
+os.setLogWindow = (win) => {
+  os.logWindow = win;
+};
+
+
+/**
  * @type {string}
  */
 os.MainAppSelector = '.os-app';
