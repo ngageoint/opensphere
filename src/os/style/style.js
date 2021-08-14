@@ -963,7 +963,7 @@ const getBaseFeatureConfig = function(feature, opt_layerConfig) {
  * @param {(Array<Style>|Style)=} opt_style The style to use
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const setFeatureStyle = function(feature, opt_source, opt_style) {
+let setFeatureStyleFn = function(feature, opt_source, opt_style) {
   osFeature = goog.module.get('os.feature');
 
   var style = opt_style;
@@ -980,6 +980,30 @@ const setFeatureStyle = function(feature, opt_source, opt_style) {
   if (opt_source && opt_source.idIndex_[feature.id_.toString()]) {
     opt_source.updateIndex(feature);
   }
+};
+
+/**
+ * Update the style on a feature.
+ *
+ * @param {!Feature} feature The feature to update
+ * @param {VectorSource=} opt_source The source containing the feature
+ * @param {(Array<Style>|Style)=} opt_style The style to use
+ */
+const setFeatureStyle = function(feature, opt_source, opt_style) {
+  setFeatureStyleFn(feature, opt_source, opt_style);
+};
+
+/**
+ * @typedef {function(!Feature, VectorSource=, (Array<Style>|Style)=)}
+ */
+let SetFeatureStyleFn;
+
+/**
+ * Set the setFeatureStyle function.
+ * @param {SetFeatureStyleFn} fn The function.
+ */
+const setSetFeatureStyleFn = (fn) => {
+  setFeatureStyleFn = fn;
 };
 
 /**
@@ -1451,7 +1475,7 @@ const mergeConfig = function(from, to) {
  * @param {Array<string>=} opt_source The Source style event type(s)
  * @param {boolean=} opt_colormodel True if the color model should be bumped to trigger listeners
  */
-const notifyStyleChange = function(layer, opt_features, opt_type, opt_source, opt_colormodel) {
+let notifyStyleChangeFn = function(layer, opt_features, opt_type, opt_source, opt_colormodel) {
   // olcs will synchronize all features on this event
   var eventType = opt_type || LayerPropertyChange.STYLE;
   layer.dispatchEvent(new PropertyChangeEvent(eventType, opt_features));
@@ -1478,6 +1502,32 @@ const notifyStyleChange = function(layer, opt_features, opt_type, opt_source, op
     }
     source.changed();
   }
+};
+
+/**
+ * @typedef {function(Layer, Array<Feature>=, string=, Array<string>=, boolean=)}
+ */
+let NotifyStyleChangeFn;
+
+/**
+ * Set the notifyStyleChange function.
+ * @param {NotifyStyleChangeFn} fn The function.
+ */
+const setNotifyStyleChangeFn = (fn) => {
+  notifyStyleChangeFn = fn;
+};
+
+/**
+ * Notify that the layer style changed and should be updated.
+ *
+ * @param {Layer} layer The layer
+ * @param {Array<Feature>=} opt_features The features that changed
+ * @param {string=} opt_type The Layer style event type
+ * @param {Array<string>=} opt_source The Source style event type(s)
+ * @param {boolean=} opt_colormodel True if the color model should be bumped to trigger listeners
+ */
+const notifyStyleChange = function(layer, opt_features, opt_type, opt_source, opt_colormodel) {
+  notifyStyleChangeFn(layer, opt_features, opt_type, opt_source, opt_colormodel);
 };
 
 /**
@@ -1583,6 +1633,8 @@ exports = {
   scaleToSize,
   getBaseFeatureConfig,
   setFeatureStyle,
+  SetFeatureStyleFn,
+  setSetFeatureStyleFn,
   setFeaturesStyle,
   getLayerConfig,
   isIconConfig,
@@ -1591,6 +1643,8 @@ exports = {
   createFeatureStyle,
   mergeConfig,
   notifyStyleChange,
+  NotifyStyleChangeFn,
+  setNotifyStyleChangeFn,
   isLabelConfig,
   hasNonZeroFillOpacity,
   hasNonZeroStrokeOpacity,
