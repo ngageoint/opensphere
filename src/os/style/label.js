@@ -26,7 +26,6 @@ const {getMapContainer} = goog.require('os.map.instance');
 const {getFirstValue} = goog.require('os.object');
 const {zIndexCompare} = goog.require('os.source');
 const SourceClass = goog.require('os.source.SourceClass');
-const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const {getStyleManager} = goog.require('os.style.instance');
@@ -35,6 +34,8 @@ const {measureText} = goog.require('os.ui');
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');
 const VectorSource = goog.requireType('os.source.Vector');
+
+let osStyle = goog.forwardDeclare('os.style');
 
 
 /**
@@ -196,6 +197,8 @@ const TRUNCATE_LENGTH = 50;
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 const updateShown_ = function() {
+  osStyle = goog.module.get('os.style');
+
   // if the map/view aren't ready, return false so the conditional delay will keep trying
   var map = getMapContainer();
   var view = null;
@@ -393,6 +396,8 @@ const updateShown = function() {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 const createOrUpdate = function(feature, config, opt_layerConfig) {
+  osStyle = goog.module.get('os.style');
+
   var labelStyle;
 
   // always show labels for highlighted features, otherwise show if the flag isn't explicity set to false. this is
@@ -452,6 +457,8 @@ const createOrUpdate = function(feature, config, opt_layerConfig) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 const createAdditionalLabels = function(feature, config, opt_layerConfig) {
+  osStyle = goog.module.get('os.style');
+
   var additionalLabels = feature.get(StyleField.ADDITIONAL_LABELS);
   var labelStyles;
 
@@ -568,6 +575,8 @@ const updateDefaultFillColor = function(labelStyle, feature, config, opt_layerCo
  * @param {Object=} opt_layerConfig
  */
 const updateDefaultStrokeColor = function(labelStyle, feature, config, opt_layerConfig) {
+  osStyle = goog.module.get('os.style');
+
   if (!config || !config['text'] || (
     config['text']['strokeColor'] === undefined && (
       config['text']['stroke'] === undefined ||
@@ -598,6 +607,8 @@ const updateText = function(labelStyle, label) {
  * @param {Object} config
  */
 const updateDefaultOffsetX = function(labelStyle, config) {
+  osStyle = goog.module.get('os.style');
+
   // labels need to be offset a little more when next to an icon. this helps, but isn't nearly complete.
   // TODO: determine the size of the rendered feature and use that for the x offset
   if (!config || !config['text'] || config['text']['offsetX'] === undefined) {
@@ -721,6 +732,8 @@ const getLabelsText = function(feature, labels, config) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 const getColor = function(feature, config, opt_layerConfig) {
+  osStyle = goog.module.get('os.style');
+
   var color = config[StyleField.LABEL_COLOR] ||
       (opt_layerConfig && opt_layerConfig[StyleField.LABEL_COLOR]);
   if (!color || feature.values_[StyleType.HIGHLIGHT] || feature.values_[StyleType.SELECT]) {

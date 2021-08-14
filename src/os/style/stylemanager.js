@@ -2,7 +2,6 @@ goog.module('os.style.StyleManager');
 goog.module.declareLegacyNamespace();
 
 const {unsafeClone} = goog.require('os.object');
-const {DEFAULT_VECTOR_CONFIG} = goog.require('os.style');
 const CircleReader = goog.require('os.style.CircleReader');
 const FillReader = goog.require('os.style.FillReader');
 const IconReader = goog.require('os.style.IconReader');
@@ -13,6 +12,8 @@ const StyleReader = goog.require('os.style.StyleReader');
 const TextReader = goog.require('os.style.TextReader');
 
 const IStyleReader = goog.requireType('os.style.IStyleReader');
+
+let osStyle = goog.forwardDeclare('os.style');
 
 
 /**
@@ -133,7 +134,9 @@ class StyleManager {
    * @return {Object}
    */
   createLayerConfig(id) {
-    var config = /** @type {Object} */ (unsafeClone(DEFAULT_VECTOR_CONFIG));
+    osStyle = goog.module.get('os.style');
+
+    var config = /** @type {Object} */ (unsafeClone(osStyle.DEFAULT_VECTOR_CONFIG));
     this.layerConfigs_[id] = config;
     return config;
   }

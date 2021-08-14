@@ -41,7 +41,6 @@ const osMap = goog.require('os.map');
 const {getIMapContainer} = goog.require('os.map.instance');
 const {convertUnits, parseNumber} = goog.require('os.math');
 const Units = goog.require('os.math.Units');
-const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const {getStyleManager} = goog.require('os.style.instance');
@@ -56,6 +55,8 @@ const Source = goog.requireType('ol.source.Source');
 const ISource = goog.requireType('os.source.ISource');
 const VectorSource = goog.requireType('os.source.Vector');
 const ITime = goog.requireType('os.time.ITime');
+
+let osStyle = goog.forwardDeclare('os.style');
 
 
 /**
@@ -372,6 +373,8 @@ const getColumnValue = function(feature, opt_column, opt_default) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 const createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
+  osStyle = goog.module.get('os.style');
+
   var lob;
 
   if (!opt_replace) {
@@ -967,6 +970,8 @@ const getSource = function(feature, opt_layer) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 const getColor = function(feature, opt_source, opt_default, opt_colorField) {
+  osStyle = goog.module.get('os.style');
+
   var defaultColor = opt_default !== undefined ? opt_default : osStyle.DEFAULT_LAYER_COLOR;
 
   if (feature) {
@@ -1073,6 +1078,8 @@ const getStrokeWidth = function(feature) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 const getShapeName = function(feature, opt_source, opt_preferSource) {
+  osStyle = goog.module.get('os.style');
+
   var shapeName = /** @type {string|undefined} */ (feature.values_[StyleField.SHAPE]);
 
   if (!shapeName || opt_preferSource) {
@@ -1100,6 +1107,8 @@ const getShapeName = function(feature, opt_source, opt_preferSource) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 const getCenterShapeName = function(feature, opt_source, opt_preferSource) {
+  osStyle = goog.module.get('os.style');
+
   var shapeName = /** @type {string|undefined} */ (feature.values_[StyleField.CENTER_SHAPE]);
 
   if (!shapeName || opt_preferSource) {
@@ -1196,6 +1205,8 @@ const removeFeatures = function(sourceId, features) {
  * @return {!Feature}
  */
 const copyFeature = function(feature, opt_layerConfig) {
+  osStyle = goog.module.get('os.style');
+
   var clone = feature.clone();
   clone.setId(getUid(clone));
 
@@ -1244,6 +1255,8 @@ const copyFeature = function(feature, opt_layerConfig) {
  * @suppress {accessControls}
  */
 const updateFeaturesFadeStyle = function(features, opacity, opt_source) {
+  osStyle = goog.module.get('os.style');
+
   var source = opt_source || getSource(features[0]);
 
   if (source) {
@@ -1518,6 +1531,8 @@ const hasPolygon = function(feature) {
  * @return {string} the color
  */
 const getFirstColor = function(items) {
+  osStyle = goog.module.get('os.style');
+
   var str = osStyle.DEFAULT_LAYER_COLOR;
   if (!items) return str;
   var color;
