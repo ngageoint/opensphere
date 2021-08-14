@@ -1,379 +1,369 @@
-goog.provide('os.ui.AbstractMainContent');
-goog.provide('os.ui.AbstractMainCtrl');
+goog.module('os.ui.AbstractMainCtrl');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Event');
-goog.require('goog.events.EventTarget');
-goog.require('goog.events.EventType');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('goog.userAgent');
-goog.require('os.alert.AlertEvent');
-goog.require('os.alert.AlertManager');
-goog.require('os.config');
-goog.require('os.config.Settings');
-goog.require('os.fn');
-goog.require('os.metrics');
-goog.require('os.metrics.Metrics');
-goog.require('os.mixin.fixInjectorInvoke');
-goog.require('os.net');
-goog.require('os.net.CertNazi');
-goog.require('os.net.ProxyHandler');
-goog.require('os.net.RequestHandlerFactory');
-goog.require('os.plugin.PluginManager');
-goog.require('os.time.replacers');
-goog.require('os.ui');
-goog.require('os.ui.ConsentUI');
 goog.require('os.ui.GlobalMenuUI');
 goog.require('os.ui.ListUI');
 goog.require('os.ui.alert.AlertPopupUI');
-goog.require('os.ui.help.EventType');
-goog.require('os.ui.metrics.MetricsManager');
-goog.require('os.ui.notification.NotificationManager');
 goog.require('os.ui.onboarding.ContextOnboardingUI');
-goog.require('os.ui.onboarding.OnboardingManager');
 goog.require('os.ui.onboarding.OnboardingUI');
-goog.require('os.ui.window.ConfirmUI');
-goog.require('plugin.electron.ElectronPlugin');
 goog.require('polyfill.chardetng');
 
+const Timer = goog.require('goog.Timer');
+const EventTarget = goog.require('goog.events.EventTarget');
+const GoogEventType = goog.require('goog.events.EventType');
+const {getVersion, isFirefox} = goog.require('goog.labs.userAgent.browser');
+const NetEventType = goog.require('goog.net.EventType');
+const {getRandomString} = goog.require('goog.string');
+const {IE} = goog.require('goog.userAgent');
+const os = goog.require('os');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const {getAppName} = goog.require('os.config');
+const Settings = goog.require('os.config.Settings');
+const {setFileUrlEnabled} = goog.require('os.file');
+const Metrics = goog.require('os.metrics.Metrics');
+const {BROWSER} = goog.require('os.metrics.keys');
+const fixInjectorInvoke = goog.require('os.mixin.fixInjectorInvoke');
+const {loadCrossOriginCache, loadTrustedUris} = goog.require('os.net');
+const CertNazi = goog.require('os.net.CertNazi');
+const ExtDomainHandler = goog.require('os.net.ExtDomainHandler');
+const ProxyHandler = goog.require('os.net.ProxyHandler');
+const RequestHandlerFactory = goog.require('os.net.RequestHandlerFactory');
+const PluginManager = goog.require('os.plugin.PluginManager');
+const replacers = goog.require('os.time.replacers');
+const ui = goog.require('os.ui');
+const ConsentUI = goog.require('os.ui.ConsentUI');
+const EventType = goog.require('os.ui.help.EventType');
+const MetricsManager = goog.require('os.ui.metrics.MetricsManager');
+const NotificationManager = goog.require('os.ui.notification.NotificationManager');
+const OnboardingManager = goog.require('os.ui.onboarding.OnboardingManager');
+const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+const Peer = goog.require('os.xt.Peer');
+const ElectronPlugin = goog.require('plugin.electron.ElectronPlugin');
 
-
-/**
- * Key for injecting into the main-content list
- * @type {string}
- */
-os.ui.AbstractMainContent = 'main-content';
-
+const GoogEvent = goog.requireType('goog.events.Event');
 
 
 /**
  * Controller function for the Main directive
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.$injector} $injector
- * @param {string} rootPath
- * @param {string} defaultAppName
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.AbstractMainCtrl = function($scope, $injector, rootPath, defaultAppName) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.$injector} $injector
+   * @param {string} rootPath
+   * @param {string} defaultAppName
+   * @ngInject
+   */
+  constructor($scope, $injector, rootPath, defaultAppName) {
+    /**
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
+
+    /**
+     * set injector for global use (for when things outside of angular need to use services)
+     * @type {angular.$injector}
+     */
+    ui.injector = $injector;
+    fixInjectorInvoke($injector);
+
+    /**
+     * @type {?CertNazi}
+     * @private
+     */
+    this.certNazi_ = null;
+
+    /**
+     * @type {string}
+     */
+    $scope['path'] = rootPath;
+
+    /**
+     * @type {string}
+     */
+    $scope['appName'] = /** @type {string} */ (getAppName(defaultAppName));
+
+    /**
+     * Are the plugins ready?
+     * @type {boolean}
+     */
+    $scope['pluginsReady'] = false;
+
+    /**
+     * Are the plugins loading? Wait for a time to display loading spinner
+     * @type {boolean}
+     */
+    $scope['pluginsLoading'] = false;
+    this.pluginLoadingTimer_ = Timer.callOnce(function() {
+      $scope['pluginsLoading'] = true;
+      ui.apply($scope);
+    }, 1500);
+
+    // add window close handler
+    window.addEventListener(GoogEventType.BEFOREUNLOAD, this.onClose.bind(this));
+
+    // Initialize singletons
+    this.initInstances();
+
+    $scope.$on(EventType.VIEW_LOG, this.onLogWindow.bind(this));
+    $scope.$on('$destroy', this.destroy.bind(this));
+  }
+
+  /**
+   * Clean up references to Angular/DOM elements and listeners.
+   *
    * @protected
    */
-  this.scope = $scope;
+  destroy() {
+    this.removeListeners();
+    window.removeEventListener(GoogEventType.BEFOREUNLOAD, this.onClose.bind(this), true);
+    this.scope = null;
+  }
 
   /**
-   * set injector for global use (for when things outside of angular need to use services)
-   * @type {angular.$injector}
+   * Executes the certNazi check.
+   *
+   * @protected
    */
-  os.ui.injector = $injector;
-  os.mixin.fixInjectorInvoke($injector);
+  doCertNazi() {
+    var certCheckUrls = /** @type {Array.<string>} */ (Settings.getInstance().get(['certUrls']));
+    var certPostUrl = /** @type {string} */ (Settings.getInstance().get(['certPostUrl']));
+
+    if (certCheckUrls) {
+      this.certNazi_ = new CertNazi(certCheckUrls);
+
+      if (IE && certPostUrl) {
+        // if we're in IE and have a POST URL to test, do it
+        this.certNazi_.setPostUrl(certPostUrl);
+      }
+
+      this.certNazi_.listen(NetEventType.ERROR, this.onCertNazi_, false, this);
+      this.certNazi_.listen(NetEventType.SUCCESS, this.onCertNazi_, false, this);
+      this.certNazi_.inspect();
+    }
+  }
 
   /**
-   * @type {?os.net.CertNazi}
+   * @param {GoogEvent} event
    * @private
    */
-  this.certNazi_ = null;
-
-  /**
-   * @type {string}
-   */
-  $scope['path'] = rootPath;
-
-  /**
-   * @type {string}
-   */
-  $scope['appName'] = /** @type {string} */ (os.config.getAppName(defaultAppName));
-
-  /**
-   * Are the plugins ready?
-   * @type {boolean}
-   */
-  $scope['pluginsReady'] = false;
-
-  /**
-   * Are the plugins loading? Wait for a time to display loading spinner
-   * @type {boolean}
-   */
-  $scope['pluginsLoading'] = false;
-  this.pluginLoadingTimer_ = goog.Timer.callOnce(function() {
-    $scope['pluginsLoading'] = true;
-    os.ui.apply($scope);
-  }, 1500);
-
-  // add window close handler
-  window.addEventListener(goog.events.EventType.BEFOREUNLOAD, this.onClose.bind(this));
-
-  // Initialize singletons
-  this.initInstances();
-
-  $scope.$on(os.ui.help.EventType.VIEW_LOG, this.onLogWindow.bind(this));
-  $scope.$on('$destroy', this.destroy.bind(this));
-};
-
-
-/**
- * Clean up references to Angular/DOM elements and listeners.
- *
- * @protected
- */
-os.ui.AbstractMainCtrl.prototype.destroy = function() {
-  this.removeListeners();
-  window.removeEventListener(goog.events.EventType.BEFOREUNLOAD, this.onClose.bind(this), true);
-  this.scope = null;
-};
-
-
-/**
- * Executes the certNazi check.
- *
- * @protected
- */
-os.ui.AbstractMainCtrl.prototype.doCertNazi = function() {
-  var certCheckUrls = /** @type {Array.<string>} */ (os.settings.get(['certUrls']));
-  var certPostUrl = /** @type {string} */ (os.settings.get(['certPostUrl']));
-
-  if (certCheckUrls) {
-    this.certNazi_ = new os.net.CertNazi(certCheckUrls);
-
-    if (goog.userAgent.IE && certPostUrl) {
-      // if we're in IE and have a POST URL to test, do it
-      this.certNazi_.setPostUrl(certPostUrl);
+  onCertNazi_(event) {
+    if (event.type === NetEventType.ERROR || event.type === CertNazi.POST_ERROR) {
+      this.onCertNaziFailure(event);
     }
 
-    this.certNazi_.listen(goog.net.EventType.ERROR, this.onCertNazi_, false, this);
-    this.certNazi_.listen(goog.net.EventType.SUCCESS, this.onCertNazi_, false, this);
-    this.certNazi_.inspect();
-  }
-};
-
-
-/**
- * @param {goog.events.Event} event
- * @private
- */
-os.ui.AbstractMainCtrl.prototype.onCertNazi_ = function(event) {
-  if (event.type === goog.net.EventType.ERROR || event.type === os.net.CertNazi.POST_ERROR) {
-    this.onCertNaziFailure(event);
+    this.certNazi_.unlisten(NetEventType.ERROR, this.onCertNazi_, false, this);
+    this.certNazi_.unlisten(NetEventType.SUCCESS, this.onCertNazi_, false, this);
   }
 
-  this.certNazi_.unlisten(goog.net.EventType.ERROR, this.onCertNazi_, false, this);
-  this.certNazi_.unlisten(goog.net.EventType.SUCCESS, this.onCertNazi_, false, this);
-};
-
-
-/**
- * @param {goog.events.Event} event
- * @protected
- */
-os.ui.AbstractMainCtrl.prototype.onCertNaziFailure = function(event) {
-  var label = 'Certificate Authority Issues';
-  var url = /** @type {string} */ (os.settings.get(['caInstructions']));
-  var text = 'Your browser does not have the proper certificate authorities installed correctly. ' +
-      'Some features and base maps may fail to work properly. ' +
-      'Please <a class="important-link" target="_blank" href="' + url + '">click here</a> ' +
-      'for instructions on how to fix this.';
-
-  if (event.type === os.net.CertNazi.POST_ERROR) { // IE failure
-    label = 'Internet Explorer Issues';
-    url = /** @type {string} */ (os.settings.get(['ieCertIssuesUrl']));
-    text = 'You appear to be using a version of Internet Explorer that has problems with getting ' +
-        'data from cross-domain remote servers. ' +
+  /**
+   * @param {GoogEvent} event
+   * @protected
+   */
+  onCertNaziFailure(event) {
+    var label = 'Certificate Authority Issues';
+    var url = /** @type {string} */ (Settings.getInstance().get(['caInstructions']));
+    var text = 'Your browser does not have the proper certificate authorities installed correctly. ' +
+        'Some features and base maps may fail to work properly. ' +
         'Please <a class="important-link" target="_blank" href="' + url + '">click here</a> ' +
         'for instructions on how to fix this.';
-  }
 
-  os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
-    confirm: os.fn.noop,
-    prompt: text,
-    noText: '',
-    noIcon: '',
-    windowOptions: {
-      'label': label,
-      'icon': 'fa fa-frown-o',
-      'x': 'center',
-      'y': 'center',
-      'width': '350',
-      'height': 'auto',
-      'modal': 'true',
-      'headerClass': 'bg-warning u-bg-warning-text'
+    if (event.type === CertNazi.POST_ERROR) { // IE failure
+      label = 'Internet Explorer Issues';
+      url = /** @type {string} */ (Settings.getInstance().get(['ieCertIssuesUrl']));
+      text = 'You appear to be using a version of Internet Explorer that has problems with getting ' +
+          'data from cross-domain remote servers. ' +
+          'Please <a class="important-link" target="_blank" href="' + url + '">click here</a> ' +
+          'for instructions on how to fix this.';
     }
-  }));
-};
 
-
-/**
- * Initialize all the instances.
- * Some mainctrls will inherit most instances from the parent window.
- */
-os.ui.AbstractMainCtrl.prototype.initInstances = function() {
-  // Instantiate Singletons
-  os.metrics.Metrics.getInstance();
-
-  os.peer = os.xt.Peer.getInstance();
-
-  os.ui.metricsManager = os.ui.metrics.MetricsManager.getInstance();
-
-  const notificationManager = os.ui.notification.NotificationManager.getInstance();
-  notificationManager.setAppTitle(this.scope['appName']);
-
-  os.ui.onboarding.OnboardingManager.PATH = this.scope['path'];
-  os.ui.onboardingManager = os.ui.onboarding.OnboardingManager.getInstance();
-
-  os.ui.pluginManager = os.plugin.PluginManager.getInstance();
-  os.ui.pluginManager.listenOnce(goog.events.EventType.LOAD, this.onPluginsLoaded, false, this);
-};
-
-
-/**
- * Initializes the application.
- *
- * @protected
- */
-os.ui.AbstractMainCtrl.prototype.initialize = function() {
-  if (!os.settings.get(['sessionStart'])) {
-    os.settings.set(['sessionStart'], new Date().getTime());
-  }
-  if (!os.settings.get(['about', 'version'])) {
-    os.settings.set(['about', 'version'], this.scope['version']);
-  }
-
-  // configure the proxy via settings & only add the handler if it's successful
-  var proxyConfig = /** @type {?Object} */ (os.settings.get(['proxy']));
-  var proxyUrl = /** @type {?string} */ (os.settings.get(['proxyUrl']));
-
-  if (proxyConfig || proxyUrl) {
-    os.net.ProxyHandler.PROXY_URL = proxyUrl || os.net.ProxyHandler.PROXY_URL;
-    os.net.ProxyHandler.configure(proxyConfig);
-    os.net.RequestHandlerFactory.addHandler(os.net.ProxyHandler);
-  }
-
-  // set if mixed content should be enabled -- this should be true if proxy is not configured
-  os.net.ExtDomainHandler.MIXED_CONTENT_ENABLED = /** @type {boolean} */ (os.settings.get('mixedContent', false));
-
-  // set if file:// URL's should be supported
-  os.file.setFileUrlEnabled(/** @type {boolean} */ (os.settings.get('fileUrls', false)));
-
-  // set up cross origin config
-  os.net.loadCrossOriginCache();
-
-  // set up trusted URI's
-  os.net.loadTrustedUris();
-
-  // initialize variable replacers for time values in URI's
-  os.time.replacers.init();
-
-  os.ui.ConsentUI.launch();
-
-  this.doCertNazi();
-  this.registerListeners();
-
-  // Firefox < 38 doesnt support nested flexboxes very well. Moderizer checks dont help because it technically does
-  // support flexbox but just not well until 38
-  var versionArray = goog.labs.userAgent.browser.getVersion().split('.');
-  var version = (versionArray && versionArray.length > 1) ? Number(versionArray[0]) : 0;
-  var minVersion = /** @type {number} */(os.settings.get('minPerformatFFVersion', 38));
-  var deprecatedFirefoxMessage = /** @type {string} */ (os.settings.get('deprecatedFirefoxMessage',
-      '<h3>You are using an unsupported version of the Firefox browser!</h3>' +
-      'For the best experience, please consider updating your browser.'));
-
-  if (goog.labs.userAgent.browser.isFirefox() && version < minVersion) {
-    $('body').addClass('c-main__slowBrowser');
-    os.alert.AlertManager.getInstance().sendAlert(deprecatedFirefoxMessage,
-        os.alert.AlertEventSeverity.WARNING, undefined, 1, new goog.events.EventTarget());
+    ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+      confirm: () => {},
+      prompt: text,
+      noText: '',
+      noIcon: '',
+      windowOptions: {
+        'label': label,
+        'icon': 'fa fa-frown-o',
+        'x': 'center',
+        'y': 'center',
+        'width': '350',
+        'height': 'auto',
+        'modal': 'true',
+        'headerClass': 'bg-warning u-bg-warning-text'
+      }
+    }));
   }
 
   /**
-   * Expose the ability to get a unique string.
-   * This is useful for custom-check where you need a unqiueID to the whole DOM
-   *
-   * @return {string}
+   * Initialize all the instances.
+   * Some mainctrls will inherit most instances from the parent window.
    */
-  os.ui.injector.get('$rootScope')['getUniqueString'] = function() {
-    return goog.string.getRandomString();
-  };
-};
+  initInstances() {
+    // Instantiate Singletons
+    Metrics.getInstance();
+    MetricsManager.getInstance();
 
+    os.peer = Peer.getInstance();
 
-/**
- * Init plugins
- *
- * @protected
- */
-os.ui.AbstractMainCtrl.prototype.initPlugins = function() {
-  this.addMetricsPlugins();
-  this.addPlugins();
-  os.ui.pluginManager.init();
-};
+    const notificationManager = NotificationManager.getInstance();
+    notificationManager.setAppTitle(this.scope['appName']);
 
+    OnboardingManager.PATH = this.scope['path'];
+    OnboardingManager.getInstance();
 
-/**
- * Tasks that should run after plugins have finished loading.
- *
- * @param {?goog.events.Event=} opt_e The optional event
- * @protected
- */
-os.ui.AbstractMainCtrl.prototype.onPluginsLoaded = function(opt_e) {
-  // send browser info metric
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.BROWSER + '.' + os.browserVersion(), 1);
-  os.metrics.Metrics.getInstance().updateMetric(os.operatingSystem(), 1);
-  this.scope['pluginsReady'] = true;
-  goog.Timer.clear(this.pluginLoadingTimer_);
-  this.scope['pluginsLoading'] = false;
-  os.ui.apply(this.scope);
+    const pluginManager = PluginManager.getInstance();
+    pluginManager.listenOnce(GoogEventType.LOAD, this.onPluginsLoaded, false, this);
 
-  this.initXt();
-};
+    ui.pluginManager = pluginManager;
+  }
 
+  /**
+   * Initializes the application.
+   *
+   * @protected
+   */
+  initialize() {
+    if (!Settings.getInstance().get(['sessionStart'])) {
+      Settings.getInstance().set(['sessionStart'], new Date().getTime());
+    }
+    if (!Settings.getInstance().get(['about', 'version'])) {
+      Settings.getInstance().set(['about', 'version'], this.scope['version']);
+    }
 
-/**
- * What we do when the window closes
- * @protected
- */
-os.ui.AbstractMainCtrl.prototype.onClose = os.fn.noop;
+    // configure the proxy via settings & only add the handler if it's successful
+    var proxyConfig = /** @type {?Object} */ (Settings.getInstance().get(['proxy']));
+    var proxyUrl = /** @type {?string} */ (Settings.getInstance().get(['proxyUrl']));
 
+    if (proxyConfig || proxyUrl) {
+      ProxyHandler.PROXY_URL = proxyUrl || ProxyHandler.PROXY_URL;
+      ProxyHandler.configure(proxyConfig);
+      RequestHandlerFactory.addHandler(ProxyHandler);
+    }
 
-/**
- * @param {Object} event
- * @protected
- */
-os.ui.AbstractMainCtrl.prototype.onLogWindow = os.fn.noop;
+    // set if mixed content should be enabled -- this should be true if proxy is not configured
+    ExtDomainHandler.MIXED_CONTENT_ENABLED = /** @type {boolean} */ (Settings.getInstance().get('mixedContent', false));
 
+    // set if file:// URL's should be supported
+    setFileUrlEnabled(/** @type {boolean} */ (Settings.getInstance().get('fileUrls', false)));
 
-/**
- * Registers event listeners for the controller.
- * @protected
- */
-os.ui.AbstractMainCtrl.prototype.registerListeners = os.fn.noop;
+    // set up cross origin config
+    loadCrossOriginCache();
 
+    // set up trusted URI's
+    loadTrustedUris();
 
-/**
- * Removes event listeners for the controller.
- * @protected
- */
-os.ui.AbstractMainCtrl.prototype.removeListeners = os.fn.noop;
+    // initialize variable replacers for time values in URI's
+    replacers.init();
 
+    ConsentUI.launch();
 
-/**
- * Initialize the peer
- * @protected
- */
-os.ui.AbstractMainCtrl.prototype.initXt = os.fn.noop;
+    this.doCertNazi();
+    this.registerListeners();
 
+    // Firefox < 38 doesnt support nested flexboxes very well. Moderizer checks dont help because it technically does
+    // support flexbox but just not well until 38
+    var versionArray = getVersion().split('.');
+    var version = (versionArray && versionArray.length > 1) ? Number(versionArray[0]) : 0;
+    var minVersion = /** @type {number} */(Settings.getInstance().get('minPerformatFFVersion', 38));
+    var deprecatedFirefoxMessage = /** @type {string} */ (Settings.getInstance().get('deprecatedFirefoxMessage',
+        '<h3>You are using an unsupported version of the Firefox browser!</h3>' +
+        'For the best experience, please consider updating your browser.'));
 
-/**
- * Add the plugins for this app
- * @protected
- */
-os.ui.AbstractMainCtrl.prototype.addPlugins = function() {
-  const pm = os.plugin.PluginManager.getInstance();
-  pm.addPlugin(new plugin.electron.ElectronPlugin());
-};
+    if (isFirefox() && version < minVersion) {
+      $('body').addClass('c-main__slowBrowser');
+      AlertManager.getInstance().sendAlert(deprecatedFirefoxMessage,
+          AlertEventSeverity.WARNING, undefined, 1, new EventTarget());
+    }
 
+    /**
+     * Expose the ability to get a unique string.
+     * This is useful for custom-check where you need a unqiueID to the whole DOM
+     *
+     * @return {string}
+     */
+    ui.injector.get('$rootScope')['getUniqueString'] = function() {
+      return getRandomString();
+    };
+  }
 
-/**
- * Add the metrics plugins for this app
- * @protected
- */
-os.ui.AbstractMainCtrl.prototype.addMetricsPlugins = os.fn.noop;
+  /**
+   * Init plugins
+   *
+   * @protected
+   */
+  initPlugins() {
+    this.addMetricsPlugins();
+    this.addPlugins();
+    PluginManager.getInstance().init();
+  }
+
+  /**
+   * Tasks that should run after plugins have finished loading.
+   *
+   * @param {?GoogEvent=} opt_e The optional event
+   * @protected
+   */
+  onPluginsLoaded(opt_e) {
+    // send browser info metric
+    Metrics.getInstance().updateMetric(BROWSER + '.' + os.browserVersion(), 1);
+    Metrics.getInstance().updateMetric(os.operatingSystem(), 1);
+    this.scope['pluginsReady'] = true;
+    Timer.clear(this.pluginLoadingTimer_);
+    this.scope['pluginsLoading'] = false;
+    ui.apply(this.scope);
+
+    this.initXt();
+  }
+
+  /**
+   * Add the plugins for this app
+   * @protected
+   */
+  addPlugins() {
+    const pm = PluginManager.getInstance();
+    pm.addPlugin(new ElectronPlugin());
+  }
+
+  /**
+   * What we do when the window closes
+   * @protected
+   */
+  onClose() {}
+
+  /**
+   * @param {Object} event
+   * @protected
+   */
+  onLogWindow(event) {}
+
+  /**
+   * Registers event listeners for the controller.
+   * @protected
+   */
+  registerListeners() {}
+
+  /**
+   * Removes event listeners for the controller.
+   * @protected
+   */
+  removeListeners() {}
+
+  /**
+   * Initialize the peer
+   * @protected
+   */
+  initXt() {}
+
+  /**
+   * Add the metrics plugins for this app
+   * @protected
+   */
+  addMetricsPlugins() {}
+}
+
+exports = Controller;
