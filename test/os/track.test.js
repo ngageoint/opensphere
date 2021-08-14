@@ -21,6 +21,8 @@ describe('os.track', function() {
   const RecordField = goog.module.get('os.data.RecordField');
   const DynamicFeature = goog.module.get('os.feature.DynamicFeature');
   const style = goog.module.get('os.style');
+  const StyleField = goog.module.get('os.style.StyleField');
+  const StyleType = goog.module.get('os.style.StyleType');
   const TimeInstant = goog.module.get('os.time.TimeInstant');
   const TimeRange = goog.module.get('os.time.TimeRange');
   const osTrack = goog.module.get('os.track');
@@ -200,14 +202,14 @@ describe('os.track', function() {
     expect(track.get(osTrack.TrackField.SORT_FIELD)).toBe(sortField);
     expect(track.get(osTrack.TrackField.METADATA_MAP)).toBeUndefined();
 
-    var featureStyle = track.get(style.StyleType.FEATURE);
+    var featureStyle = track.get(StyleType.FEATURE);
     expect(featureStyle).toBeDefined();
     expect(Array.isArray(featureStyle)).toBe(true);
     expect(featureStyle.length).toBe(2);
     expect(style.getConfigColor(featureStyle[0])).toBe(color);
     expect(style.getConfigColor(featureStyle[1])).toBe(color);
 
-    var labelStyle = featureStyle[1][style.StyleField.LABELS];
+    var labelStyle = featureStyle[1][StyleField.LABELS];
     expect(labelStyle).toBeDefined();
     expect(Array.isArray(labelStyle)).toBe(true);
     expect(labelStyle.length).toBe(1);
@@ -226,14 +228,14 @@ describe('os.track', function() {
     expect(track.get(Fields.LOWERCASE_NAME)).toBe(actualId);
     expect(track.get(osTrack.TrackField.SORT_FIELD)).toBe(RecordField.TIME);
 
-    var featureStyle = track.get(style.StyleType.FEATURE);
+    var featureStyle = track.get(StyleType.FEATURE);
     expect(featureStyle).toBeDefined();
     expect(Array.isArray(featureStyle)).toBe(true);
     expect(featureStyle.length).toBe(2);
     expect(style.getConfigColor(featureStyle[0])).toBe(style.DEFAULT_LAYER_COLOR);
     expect(style.getConfigColor(featureStyle[1])).toBe(style.DEFAULT_LAYER_COLOR);
 
-    var labelStyle = featureStyle[1][style.StyleField.LABELS];
+    var labelStyle = featureStyle[1][StyleField.LABELS];
     expect(labelStyle).toBeDefined();
     expect(Array.isArray(labelStyle)).toBe(true);
     expect(labelStyle.length).toBe(1);

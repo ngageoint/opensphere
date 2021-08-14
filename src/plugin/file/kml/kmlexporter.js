@@ -15,6 +15,8 @@ const osFeature = goog.require('os.feature');
 const osImplements = goog.require('os.implements');
 const osSource = goog.require('os.source');
 const osStyle = goog.require('os.style');
+const StyleManager = goog.require('os.style.StyleManager');
+const StyleType = goog.require('os.style.StyleType');
 const ITime = goog.require('os.time.ITime');
 const kml = goog.require('os.ui.file.kml');
 const AbstractKMLExporter = goog.require('os.ui.file.kml.AbstractKMLExporter');
@@ -348,8 +350,8 @@ class KMLExporter extends AbstractKMLExporter {
       // don't count the drawing layer as a style source
       if (sourceId && sourceId != os.layer.LayerId.DRAW) {
         if (item instanceof osFeature.DynamicFeature || !(sourceId in this.labelMap)) {
-          var cfg = osStyle.StyleManager.getInstance().getLayerConfig(sourceId);
-          var itemStyle = item.get(osStyle.StyleType.FEATURE);
+          var cfg = StyleManager.getInstance().getLayerConfig(sourceId);
+          var itemStyle = item.get(StyleType.FEATURE);
           // Check the layer level
           if (cfg && cfg['labels'] && this.checkLabelsNotNull_(cfg['labels'])) {
             this.labelMap[sourceId] = cfg['labels'];

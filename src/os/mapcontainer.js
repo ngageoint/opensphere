@@ -89,6 +89,7 @@ const projSwitch = goog.require('os.proj.switch');
 const queryUtils = goog.require('os.query.utils');
 const {randomString} = goog.require('os.string');
 const osStyle = goog.require('os.style');
+const StyleManager = goog.require('os.style.StyleManager');
 const StyleType = goog.require('os.style.StyleType');
 const label = goog.require('os.style.label');
 const ui = goog.require('os.ui');
@@ -848,7 +849,7 @@ class MapContainer extends EventTarget {
     this.drawingLayer_.setTitle('Drawing Layer');
     this.drawingLayer_.setId(MapContainer.DRAW_ID);
     this.drawingLayer_.setProvider(getAppName() || null);
-    this.drawingLayer_.setStyle(osStyle.StyleManager.getInstance().getOrCreateStyle(osStyle.DEFAULT_VECTOR_CONFIG));
+    this.drawingLayer_.setStyle(StyleManager.getInstance().getOrCreateStyle(osStyle.DEFAULT_VECTOR_CONFIG));
     this.drawingLayer_.setOSType(LayerType.REF);
     this.drawingLayer_.setExplicitType('');
     this.drawingLayer_.setRemovable(false);
