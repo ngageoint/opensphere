@@ -2,7 +2,7 @@ goog.module('os.ui.menu.areaImport');
 goog.module.declareLegacyNamespace();
 
 const googDispose = goog.require('goog.dispose');
-const {launchCoordinates, launchQueryImport, queryWorld} = goog.require('os.query');
+const osQuery = goog.require('os.query');
 const Menu = goog.require('os.ui.menu.Menu');
 const MenuItem = goog.require('os.ui.menu.MenuItem');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
@@ -87,13 +87,13 @@ const dispose = function() {
 const handleQueryEvent = function(event) {
   switch (event.type) {
     case EventType.FILE:
-      launchQueryImport();
+      osQuery.launchQueryImport();
       break;
     case EventType.ENTER_COORDINATES:
-      launchCoordinates();
+      osQuery.launchCoordinates();
       break;
     case EventType.QUERY_WORLD:
-      queryWorld();
+      osQuery.queryWorld();
       break;
     default:
       break;
