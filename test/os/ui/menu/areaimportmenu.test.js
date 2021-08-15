@@ -22,15 +22,15 @@ describe('os.ui.menu.areaImport', function() {
 
   it('handles menu events', function() {
     spyOn(query, 'launchQueryImport');
-    areaImport.handleQueryEvent_({type: areaImport.EventType.FILE});
+    areaImport.handleQueryEvent({type: areaImport.EventType.FILE});
     expect(query.launchQueryImport).toHaveBeenCalled();
 
     spyOn(query, 'launchCoordinates');
-    areaImport.handleQueryEvent_({type: areaImport.EventType.ENTER_COORDINATES});
+    areaImport.handleQueryEvent({type: areaImport.EventType.ENTER_COORDINATES});
     expect(query.launchCoordinates).toHaveBeenCalled();
 
     spyOn(query, 'queryWorld');
-    areaImport.handleQueryEvent_({type: areaImport.EventType.QUERY_WORLD});
+    areaImport.handleQueryEvent({type: areaImport.EventType.QUERY_WORLD});
     expect(query.queryWorld).toHaveBeenCalled();
   });
 

@@ -105,5 +105,6 @@ exports = {
   getMenu,
   setMenu,
   setup,
-  dispose
+  dispose,
+  handleQueryEvent
 };
