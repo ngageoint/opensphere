@@ -80,7 +80,7 @@ beforeEach(function() {
   }
 
   // interpolation can break some tests, it should really only be on for the interpolation tests
-  os.interpolate.enabled_ = false;
+  os.interpolate.setEnabled(false);
 
   runs(function() {
     // vector source will need this
@@ -94,6 +94,7 @@ beforeEach(function() {
 
     // This needs to be initialized before the data manager.
     var map = os.MapContainer.getInstance();
+    os.map.instance.setIMapContainer(map);
     os.map.instance.setMapContainer(map);
 
     if (!os.dataManager || !os.dataManager) {
