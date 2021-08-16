@@ -14,7 +14,6 @@ goog.require('plugin.file.kml.KMLField');
 
 
 describe('OMAR.v4.ArcLayerState', function() {
-  const os = goog.module.get('os');
   const StateManager = goog.module.get('os.state.StateManager');
   const StateVersions = goog.module.get('os.state.Versions');
   const {setStateManager} = goog.module.get('os.state.instance');
@@ -22,6 +21,8 @@ describe('OMAR.v4.ArcLayerState', function() {
   const xml = goog.module.get('os.xml');
   const ArcFeatureLayerConfig = goog.module.get('plugin.arc.layer.ArcFeatureLayerConfig');
   const ArcLayerDescriptor = goog.module.get('plugin.arc.layer.ArcLayerDescriptor');
+
+  const {loadStateXsdFiles} = goog.module.get('os.test.xsd');
 
   var discriptorConfig = {
     'advancedQueryCapabilities': {
@@ -391,7 +392,7 @@ describe('OMAR.v4.ArcLayerState', function() {
     // Using jasman's async test, as we need to load the xsd files
     // that are used by xmllint.
     runs(function() {
-      os.test.xsd.loadStateXsdFiles().then(function(result) {
+      loadStateXsdFiles().then(function(result) {
         resultSchemas = result;
       }, function(err) {
         throw err;

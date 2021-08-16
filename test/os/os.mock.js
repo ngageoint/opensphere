@@ -49,6 +49,7 @@ angular.element(document.body).append('<div id="map-container"></div');
 beforeEach(function() {
   const EventTarget = goog.module.get('goog.events.EventTarget');
   const os = goog.module.get('os');
+  const osConfig = goog.module.get('os.config');
   const Dispatcher = goog.module.get('os.Dispatcher');
   const MapContainer = goog.module.get('os.MapContainer');
   const SettingsObjectStorage = goog.module.get('os.config.storage.SettingsObjectStorage');
@@ -71,11 +72,12 @@ beforeEach(function() {
   const StyleManager = goog.module.get('os.style.StyleManager');
   const osUi = goog.module.get('os.ui');
   const OGCDescriptor = goog.module.get('os.ui.ogc.OGCDescriptor');
+  const SettingsUtil = goog.module.get('test.os.config.SettingsUtil');
 
   const settings = Settings.getInstance();
 
   // the bracket notation gets the compiler to quit complaining about this
-  os['config']['appNs'] = 'unittest';
+  osConfig.appNs = 'unittest';
 
   // register request handlers
   RequestHandlerFactory.addHandler(ExtDomainHandler);
@@ -99,7 +101,7 @@ beforeEach(function() {
 
   if (!settings.isLoaded() || !settings.isInitialized()) {
     settings.getStorageRegistry().addStorage(new SettingsObjectStorage(['unit']));
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    SettingsUtil.initAndLoad(settings);
 
     waitsFor(function() {
       return settings.isLoaded() && settings.isInitialized();
@@ -125,9 +127,10 @@ beforeEach(function() {
     osMapInstance.setMapContainer(map);
 
     if (!os.dataManager) {
-      os.dataManager = DataManager.getInstance();
-      DataManager.getInstance().setMapContainer(map);
-      DataManager.getInstance().registerDescriptorType(ogc.ID, OGCDescriptor);
+      const dataManager = DataManager.getInstance();
+      os.setDataManager(dataManager);
+      dataManager.setMapContainer(map);
+      dataManager.registerDescriptorType(ogc.ID, OGCDescriptor);
     }
 
     if (!os.areaManager) {

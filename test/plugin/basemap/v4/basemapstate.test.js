@@ -27,6 +27,8 @@ describe('plugin.basemap.v4.BaseMapState', function() {
   const OGCLayerDescriptor = goog.module.get('plugin.ogc.OGCLayerDescriptor');
   const WMSLayerConfig = goog.module.get('plugin.ogc.wms.WMSLayerConfig');
 
+  const {loadStateXsdFiles} = goog.module.get('os.test.xsd');
+
   var stateManager = null;
 
   var expectPropertiesInAToBeSameInB = function(a, b, exclusions) {
@@ -99,7 +101,7 @@ describe('plugin.basemap.v4.BaseMapState', function() {
     // Using jasman's async test, as we need to load the xsd files
     // that are used by xmllint.
     runs(function() {
-      os.test.xsd.loadStateXsdFiles().then(function(result) {
+      loadStateXsdFiles().then(function(result) {
         resultSchemas = result;
       }, function(err) {
         throw err;

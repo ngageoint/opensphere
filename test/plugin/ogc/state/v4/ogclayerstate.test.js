@@ -16,7 +16,6 @@ goog.require('plugin.ogc.wms.WMSLayerConfig');
 
 describe('OGC.v4.ArcLayerState', function() {
   const QueryData = goog.module.get('goog.Uri.QueryData');
-  const os = goog.module.get('os');
   const FeatureType = goog.module.get('os.ogc.wfs.FeatureType');
   const StateManager = goog.module.get('os.state.StateManager');
   const StateVersions = goog.module.get('os.state.Versions');
@@ -25,6 +24,8 @@ describe('OGC.v4.ArcLayerState', function() {
   const xml = goog.module.get('os.xml');
   const OGCLayerDescriptor = goog.module.get('plugin.ogc.OGCLayerDescriptor');
   const WMSLayerConfig = goog.module.get('plugin.ogc.wms.WMSLayerConfig');
+
+  const {loadStateXsdFiles} = goog.module.get('os.test.xsd');
 
   var stateManager = null;
 
@@ -193,7 +194,7 @@ describe('OGC.v4.ArcLayerState', function() {
     // Using jasman's async test, as we need to load the xsd files
     // that are used by xmllint.
     runs(function() {
-      os.test.xsd.loadStateXsdFiles().then(function(result) {
+      loadStateXsdFiles().then(function(result) {
         resultSchemas = result;
       }, function(err) {
         throw err;

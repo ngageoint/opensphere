@@ -1,7 +1,6 @@
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
-goog.require('os');
 goog.require('os.config.Settings');
 goog.require('os.plugin.MockErrorPlugin');
 goog.require('os.plugin.MockPlugin');
@@ -9,9 +8,11 @@ goog.require('os.plugin.PluginManager');
 
 describe('os.plugin.PluginManager', function() {
   const GoogEventType = goog.module.get('goog.events.EventType');
-  const os = goog.module.get('os');
   const Settings = goog.module.get('os.config.Settings');
   const PluginManager = goog.module.get('os.plugin.PluginManager');
+
+  const MockErrorPlugin = goog.module.get('os.plugin.MockErrorPlugin');
+  const MockPlugin = goog.module.get('os.plugin.MockPlugin');
 
   var pm = null;
 
@@ -21,19 +22,19 @@ describe('os.plugin.PluginManager', function() {
   });
 
   it('should add plugins', function() {
-    pm.addPlugin(new os.plugin.MockPlugin());
+    pm.addPlugin(new MockPlugin());
     expect(pm.plugins_.length).toBe(1);
   });
 
   it('should add more plugins', function() {
-    pm.addPlugin(new os.plugin.MockPlugin());
+    pm.addPlugin(new MockPlugin());
     expect(pm.plugins_.length).toBe(1);
-    pm.addPlugin(new os.plugin.MockPlugin());
+    pm.addPlugin(new MockPlugin());
     expect(pm.plugins_.length).toBe(2);
   });
 
   it('should initialize plugins', function() {
-    pm.addPlugin(new os.plugin.MockPlugin());
+    pm.addPlugin(new MockPlugin());
 
     var count = 0;
     var listener = function(e) {
@@ -59,7 +60,7 @@ describe('os.plugin.PluginManager', function() {
     spyOn(window, 'setTimeout');
 
     // disable the setTimeout call in the mock plugin so the spy doesn't pick it up
-    pm.addPlugin(new os.plugin.MockPlugin({
+    pm.addPlugin(new MockPlugin({
       initTimeout: 0
     }));
 
@@ -76,7 +77,7 @@ describe('os.plugin.PluginManager', function() {
     pm = new PluginManager();
 
     // disable the setTimeout call in the mock plugin so the spy doesn't pick it up
-    pm.addPlugin(new os.plugin.MockPlugin({
+    pm.addPlugin(new MockPlugin({
       initTimeout: 0
     }));
 
@@ -94,7 +95,7 @@ describe('os.plugin.PluginManager', function() {
     Settings.getInstance().set('plugin.initTimeout', 50);
 
     // create a plugin that takes longer than the timeout to init
-    var slowPlugin = new os.plugin.MockPlugin({
+    var slowPlugin = new MockPlugin({
       initTimeout: 500
     });
     pm.addPlugin(slowPlugin);
@@ -168,16 +169,16 @@ describe('os.plugin.PluginManager', function() {
 
   it('should get a plugin', function() {
     expect(pm.getPlugin('mock')).toBe(null);
-    pm.addPlugin(new os.plugin.MockPlugin());
+    pm.addPlugin(new MockPlugin());
     expect(pm.getPlugin('mock').id).toBe('mock');
   });
 
   it('should filter out disabled plugins on init', function() {
-    pm.addPlugin(new os.plugin.MockPlugin());
+    pm.addPlugin(new MockPlugin());
 
     var settings = Settings.getInstance();
     settings.set(['plugins', 'unitTest_disabled'], false);
-    var p = new os.plugin.MockPlugin();
+    var p = new MockPlugin();
     p.id = 'unitTest_disabled';
 
     pm.addPlugin(p);
@@ -204,7 +205,7 @@ describe('os.plugin.PluginManager', function() {
   });
 
   it('should support adding plugins after init', function() {
-    pm.addPlugin(new os.plugin.MockPlugin());
+    pm.addPlugin(new MockPlugin());
 
     var count = 0;
     var listener = function(e) {
@@ -220,7 +221,7 @@ describe('os.plugin.PluginManager', function() {
       return count == 1;
     }, 'manager to init');
 
-    var p = new os.plugin.MockPlugin();
+    var p = new MockPlugin();
     runs(function() {
       p.id = 'mock2';
       pm.addPlugin(p);
@@ -236,13 +237,13 @@ describe('os.plugin.PluginManager', function() {
   });
 
   it('should not add disabled plugins after init', function() {
-    pm.addPlugin(new os.plugin.MockPlugin());
+    pm.addPlugin(new MockPlugin());
     pm.init();
 
     var settings = Settings.getInstance();
     settings.set(['plugins', 'unitTest_disabled'], false);
 
-    var p = new os.plugin.MockPlugin();
+    var p = new MockPlugin();
     p.id = 'unitTest_disabled';
 
     pm.addPlugin(p);
@@ -251,7 +252,7 @@ describe('os.plugin.PluginManager', function() {
   });
 
   it('should dispose properly', function() {
-    var p = new os.plugin.MockPlugin();
+    var p = new MockPlugin();
     pm.addPlugin(p);
 
     pm.dispose();
@@ -261,7 +262,7 @@ describe('os.plugin.PluginManager', function() {
   });
 
   it('should handle plugins that report errors', function() {
-    pm.addPlugin(new os.plugin.MockErrorPlugin());
+    pm.addPlugin(new MockErrorPlugin());
 
     var count = 0;
     var listener = function(e) {
@@ -283,7 +284,7 @@ describe('os.plugin.PluginManager', function() {
   });
 
   it('should handle plugins that throw errors', function() {
-    var mock = new os.plugin.MockErrorPlugin({
+    var mock = new MockErrorPlugin({
       shouldThrow: true
     });
 
