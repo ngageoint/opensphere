@@ -1,5 +1,6 @@
-goog.module('os.feature');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.feature');
+
+import * as osStyle from '../style/style.js';
 
 const {defaultCompare} = goog.require('goog.array');
 const {containsValue} = goog.require('goog.object');
@@ -56,14 +57,12 @@ const ISource = goog.requireType('os.source.ISource');
 const VectorSource = goog.requireType('os.source.Vector');
 const ITime = goog.requireType('os.time.ITime');
 
-let osStyle = goog.forwardDeclare('os.style');
-
 
 /**
  * A function used to sort features.
  * @typedef {function(!Feature, !Feature):number}
  */
-let SortFn;
+export let SortFn;
 
 /**
  * Defines set of options for creating the line of bearing
@@ -86,13 +85,13 @@ let SortFn;
  *   showError: (boolean|undefined)
  * }}
  */
-let LOBOptions;
+export let LOBOptions;
 
 /**
  * Regular expression to match a title field on a feature.
  * @type {RegExp}
  */
-const TITLE_REGEX = /^(name|title)$/i;
+export const TITLE_REGEX = /^(name|title)$/i;
 
 /**
  * @type {function(Array<Feature>)|undefined}
@@ -103,14 +102,14 @@ let flyToOverride;
  * Set the flyTo override.
  * @param {function(Array<Feature>)|undefined} value The override.
  */
-const setFlyToOverride = (value) => {
+export const setFlyToOverride = (value) => {
   flyToOverride = value;
 };
 
 /**
  * @param {null|undefined|Feature|Array<Feature>} features
  */
-const flyTo = function(features) {
+export const flyTo = function(features) {
   if (!features) {
     return;
   }
@@ -134,7 +133,7 @@ const flyTo = function(features) {
  * @param {!Array<!Feature>} features The features
  * @param {number=} opt_count Optional count of features for the automap to check, defaulting to 1.
  */
-const autoMap = function(features, opt_count) {
+export const autoMap = function(features, opt_count) {
   if (features && features.length > 0) {
     var mm = MappingManager.getInstance();
     var detectFeatures = opt_count !== undefined ? features.slice(0, opt_count) : [features[0]];
@@ -152,7 +151,7 @@ const autoMap = function(features, opt_count) {
  *
  * @param {Feature} feature The feature.
  */
-const simplifyGeometry = function(feature) {
+export const simplifyGeometry = function(feature) {
   if (feature) {
     var geom = feature.getGeometry();
     if (geom) {
@@ -171,7 +170,7 @@ const simplifyGeometry = function(feature) {
  * @param {Units=} opt_units The desired units. Defaults to nautical miles.
  * @return {number|undefined} The semi-major axis value, or undefined if not found.
  */
-const getSemiMajor = function(feature, opt_units) {
+export const getSemiMajor = function(feature, opt_units) {
   var value = getEllipseField_(feature,
       fields.DEFAULT_SEMI_MAJ_COL_NAME,
       Fields.SEMI_MAJOR,
@@ -189,7 +188,7 @@ const getSemiMajor = function(feature, opt_units) {
  * @param {Units=} opt_units The desired units. Defaults to nautical miles.
  * @return {number|undefined} The semi-minor axis value, or undefined if not found.
  */
-const getSemiMinor = function(feature, opt_units) {
+export const getSemiMinor = function(feature, opt_units) {
   var value = getEllipseField_(feature,
       fields.DEFAULT_SEMI_MIN_COL_NAME,
       Fields.SEMI_MINOR,
@@ -206,7 +205,7 @@ const getSemiMinor = function(feature, opt_units) {
  * @param {Feature} feature The feature.
  * @return {number|undefined} The orientation value, or undefined if not found.
  */
-const getOrientation = function(feature) {
+export const getOrientation = function(feature) {
   var orientation = parseNumber(feature.get(Fields.ORIENTATION));
   return !isNaN(orientation) ? orientation : undefined;
 };
@@ -218,7 +217,7 @@ const getOrientation = function(feature) {
  * @param {Units=} opt_units The desired units. Defaults to nautical miles.
  * @return {number|undefined} The radius axis value, or undefined if not found.
  */
-const getRadius = function(feature, opt_units) {
+export const getRadius = function(feature, opt_units) {
   var value = getEllipseField_(feature,
       fields.DEFAULT_RADIUS_COL_NAME,
       Fields.RADIUS,
@@ -235,7 +234,7 @@ const getRadius = function(feature, opt_units) {
  * @param {Feature} feature The feature.
  * @return {number|undefined} The orientation value, or undefined if not found.
  */
-const getBearing = function(feature) {
+export const getBearing = function(feature) {
   var bearing = parseNumber(feature.get(Fields.BEARING));
   return !isNaN(bearing) ? bearing : undefined;
 };
@@ -299,7 +298,7 @@ const getEllipseField_ = function(feature, nmiField, defaultField, defaultUnitsF
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const createEllipse = function(feature, opt_replace) {
+export const createEllipse = function(feature, opt_replace) {
   var ellipse;
 
   if (!opt_replace) {
@@ -350,7 +349,7 @@ const createEllipse = function(feature, opt_replace) {
  * @return {number} some value
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const getColumnValue = function(feature, opt_column, opt_default) {
+export const getColumnValue = function(feature, opt_column, opt_default) {
   if (opt_column) {
     if (feature.values_[opt_column] != null) {
       var val = parseFloat(feature.values_[opt_column]);
@@ -372,9 +371,7 @@ const getColumnValue = function(feature, opt_column, opt_default) {
  * @return {LineString|MultiLineString|Geometry|undefined} The lob, if one could be generated
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
-  osStyle = goog.module.get('os.style');
-
+export const createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
   var lob;
 
   if (!opt_replace) {
@@ -530,7 +527,7 @@ const createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
  * @return {Geometry|undefined} The rings.
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const createRings = function(feature, opt_replace) {
+export const createRings = function(feature, opt_replace) {
   var ringGeom;
 
   if (feature) {
@@ -711,7 +708,7 @@ const createRings = function(feature, opt_replace) {
  *
  * @param {Feature} feature The feature
  */
-const cleanRingGeoms = function(feature) {
+export const cleanRingGeoms = function(feature) {
   if (feature) {
     for (var i = 0; i < 100; i++) {
       var key = RecordField.RING_LABEL + i;
@@ -735,7 +732,7 @@ const cleanRingGeoms = function(feature) {
  * @param {Feature} feature The feature
  * @param {string=} opt_field The altitude field
  */
-const setAltitude = function(feature, opt_field) {
+export const setAltitude = function(feature, opt_field) {
   var field = opt_field || Fields.ALT;
   var geom = feature.getGeometry();
   if (geom instanceof Point) {
@@ -762,7 +759,7 @@ const setAltitude = function(feature, opt_field) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const populateCoordFields = function(feature, opt_replace, opt_geometry, opt_silent) {
+export const populateCoordFields = function(feature, opt_replace, opt_geometry, opt_silent) {
   var changed = false;
   var geom = opt_geometry || feature.getGeometry();
   if (geom instanceof Point) {
@@ -829,7 +826,7 @@ const populateCoordFields = function(feature, opt_replace, opt_geometry, opt_sil
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const getField = function(item, field) {
+export const getField = function(item, field) {
   return item ? item.values_[field] : undefined;
 };
 
@@ -841,7 +838,7 @@ const getField = function(item, field) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const getTitle = function(feature) {
+export const getTitle = function(feature) {
   var title;
   if (feature) {
     for (var key in feature.values_) {
@@ -863,7 +860,7 @@ const getTitle = function(feature) {
  * `values_` will be renamed by the Closure compiler.
  * @type {string}
  */
-const VALUES_FIELD = reflect.objectProperty('values_', new Feature());
+export const VALUES_FIELD = reflect.objectProperty('values_', new Feature());
 
 /**
  * Create a filter function expression to get a value from a feature.
@@ -872,7 +869,7 @@ const VALUES_FIELD = reflect.objectProperty('values_', new Feature());
  * @param {string} field The field to get.
  * @return {string} The get expression.
  */
-const filterFnGetter = function(itemVar, field) {
+export const filterFnGetter = function(itemVar, field) {
   // create the string: itemVar.values_["column_name"]
   // make the field safe for use as an object property name, to prevent injection attacks
   return itemVar + '.' + VALUES_FIELD + '[' + quoteString(field) + ']';
@@ -884,7 +881,7 @@ const filterFnGetter = function(itemVar, field) {
  * @param {string} field The metadata field
  * @return {boolean}
  */
-const isInternalField = function(field) {
+export const isInternalField = function(field) {
   return RecordField.REGEXP.test(field) || StyleType.REGEXP.test(field) ||
       StyleField.REGEXP.test(field);
 };
@@ -897,7 +894,7 @@ const isInternalField = function(field) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const getLayerId = function(feature) {
+export const getLayerId = function(feature) {
   var sourceId = undefined;
   if (feature) {
     sourceId = /** @type {string|undefined} */ (feature.values_[RecordField.SOURCE_ID]);
@@ -913,7 +910,7 @@ const getLayerId = function(feature) {
  * @param {Feature|RenderFeature} feature The feature
  * @return {Layer}
  */
-const getLayer = function(feature) {
+export const getLayer = function(feature) {
   var layer = null;
   var mapContainer = getIMapContainer();
   if (feature && mapContainer) {
@@ -936,7 +933,7 @@ const getLayer = function(feature) {
  * @param {Layer=} opt_layer The layer containing the feature
  * @return {VectorSource} The source, if it can be found
  */
-const getSource = function(feature, opt_layer) {
+export const getSource = function(feature, opt_layer) {
   var source = null;
   if (opt_layer != null) {
     // layer was provided - make sure the source is an OS source
@@ -969,9 +966,7 @@ const getSource = function(feature, opt_layer) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const getColor = function(feature, opt_source, opt_default, opt_colorField) {
-  osStyle = goog.module.get('os.style');
-
+export const getColor = function(feature, opt_source, opt_default, opt_colorField) {
   var defaultColor = opt_default !== undefined ? opt_default : osStyle.DEFAULT_LAYER_COLOR;
 
   if (feature) {
@@ -1030,7 +1025,7 @@ const getColor = function(feature, opt_source, opt_default, opt_colorField) {
  * @param {(Array<number>|string)=} opt_default The default color.
  * @return {Array<number>|string} The color.
  */
-const getFillColor = function(feature, opt_source, opt_default) {
+export const getFillColor = function(feature, opt_source, opt_default) {
   // default to null to indicate no fill
   return getColor(feature, opt_source, opt_default || null, StyleField.FILL);
 };
@@ -1042,7 +1037,7 @@ const getFillColor = function(feature, opt_source, opt_default) {
  * @param {(Array<number>|string)=} opt_default The default color.
  * @return {Array<number>|string} The color.
  */
-const getStrokeColor = function(feature, opt_source, opt_default) {
+export const getStrokeColor = function(feature, opt_source, opt_default) {
   // default to null to indicate no stroke
   return getColor(feature, opt_source, opt_default || null, StyleField.STROKE);
 };
@@ -1052,7 +1047,7 @@ const getStrokeColor = function(feature, opt_source, opt_default) {
  * @param {Feature} feature The feature.
  * @return {number|null} The stroke width.
  */
-const getStrokeWidth = function(feature) {
+export const getStrokeWidth = function(feature) {
   if (feature.getStyle() && feature.getStyle().length > 0) {
     var style = /** @type {Array<Style>} */(feature.getStyle())[0];
     if (style.getStroke() && style.getStroke().getWidth()) {
@@ -1077,9 +1072,7 @@ const getStrokeWidth = function(feature) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const getShapeName = function(feature, opt_source, opt_preferSource) {
-  osStyle = goog.module.get('os.style');
-
+export const getShapeName = function(feature, opt_source, opt_preferSource) {
   var shapeName = /** @type {string|undefined} */ (feature.values_[StyleField.SHAPE]);
 
   if (!shapeName || opt_preferSource) {
@@ -1106,9 +1099,7 @@ const getShapeName = function(feature, opt_source, opt_preferSource) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const getCenterShapeName = function(feature, opt_source, opt_preferSource) {
-  osStyle = goog.module.get('os.style');
-
+export const getCenterShapeName = function(feature, opt_source, opt_preferSource) {
   var shapeName = /** @type {string|undefined} */ (feature.values_[StyleField.CENTER_SHAPE]);
 
   if (!shapeName || opt_preferSource) {
@@ -1133,7 +1124,7 @@ const getCenterShapeName = function(feature, opt_source, opt_preferSource) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const hideLabel = function(feature) {
+export const hideLabel = function(feature) {
   if (feature && feature.values_[StyleField.SHOW_LABELS] !== false) {
     feature.values_[StyleField.SHOW_LABELS] = false;
     return true;
@@ -1150,7 +1141,7 @@ const hideLabel = function(feature) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const showLabel = function(feature) {
+export const showLabel = function(feature) {
   if (feature && feature.values_[StyleField.SHOW_LABELS] !== true) {
     feature.values_[StyleField.SHOW_LABELS] = true;
     return true;
@@ -1165,7 +1156,7 @@ const showLabel = function(feature) {
  * @param {Feature} feature The feature
  * @param {Source=} opt_source The source containing the feature
  */
-const update = function(feature, opt_source) {
+export const update = function(feature, opt_source) {
   if (!opt_source) {
     opt_source = getSource(feature);
   }
@@ -1190,7 +1181,7 @@ const update = function(feature, opt_source) {
  * @param {!string} sourceId
  * @param {Array<Feature>} features
  */
-const removeFeatures = function(sourceId, features) {
+export const removeFeatures = function(sourceId, features) {
   var source = DataManager.getInstance().getSource(sourceId);
   if (source && features) {
     source.removeFeatures(features);
@@ -1204,9 +1195,7 @@ const removeFeatures = function(sourceId, features) {
  * @param {Object=} opt_layerConfig The feature's layer config
  * @return {!Feature}
  */
-const copyFeature = function(feature, opt_layerConfig) {
-  osStyle = goog.module.get('os.style');
-
+export const copyFeature = function(feature, opt_layerConfig) {
   var clone = feature.clone();
   clone.setId(getUid(clone));
 
@@ -1254,9 +1243,7 @@ const copyFeature = function(feature, opt_layerConfig) {
  * @param {VectorSource=} opt_source
  * @suppress {accessControls}
  */
-const updateFeaturesFadeStyle = function(features, opacity, opt_source) {
-  osStyle = goog.module.get('os.style');
-
+export const updateFeaturesFadeStyle = function(features, opacity, opt_source) {
   var source = opt_source || getSource(features[0]);
 
   if (source) {
@@ -1289,7 +1276,7 @@ const updateFeaturesFadeStyle = function(features, opacity, opt_source) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const sourceIdEquals = function(sourceId, feature) {
+export const sourceIdEquals = function(sourceId, feature) {
   return feature.values_[RecordField.SOURCE_ID] == sourceId;
 };
 
@@ -1303,7 +1290,7 @@ const sourceIdEquals = function(sourceId, feature) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const sortByField = function(field, a, b) {
+export const sortByField = function(field, a, b) {
   var aValue = a.values_[field];
   var bValue = b.values_[field];
 
@@ -1331,7 +1318,7 @@ const sortByField = function(field, a, b) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const sortByTime = function(a, b) {
+export const sortByTime = function(a, b) {
   var aTimeObj = /** @type {ITime|undefined} */ (a.values_[RecordField.TIME]);
   var bTimeObj = /** @type {ITime|undefined} */ (b.values_[RecordField.TIME]);
 
@@ -1355,7 +1342,7 @@ const sortByTime = function(a, b) {
  * @param {!Feature} b The second feature.
  * @return {number}
  */
-const sortByTimeDesc = function(a, b) {
+export const sortByTimeDesc = function(a, b) {
   return sortByTime(b, a);
 };
 
@@ -1369,7 +1356,7 @@ const sortByTimeDesc = function(a, b) {
  * Inlined everything for performance reasons. Function calls are too expensive for how often this can be called.
  * @suppress {accessControls}
  */
-const idCompare = function(a, b) {
+export const idCompare = function(a, b) {
   return a.id_ > b.id_ ? 1 : a.id_ < b.id_ ? -1 : 0;
 };
 
@@ -1380,7 +1367,7 @@ const idCompare = function(a, b) {
  * @param {boolean=} opt_quiet If alerts should be suppressed
  * @return {number} number of invalid polygons removed
  */
-const validateGeometries = function(feature, opt_quiet) {
+export const validateGeometries = function(feature, opt_quiet) {
   var geometry = feature.getGeometry();
   var count = 0;
   if (geometry instanceof GeometryCollection) {
@@ -1447,7 +1434,7 @@ const validatePolygonType = function(geometry, opt_quiet) {
  * @param {function(!Geometry):(boolean|undefined)} callback Return
  *   false to shortcut the loop
  */
-const forEachGeometry = function(feature, callback) {
+export const forEachGeometry = function(feature, callback) {
   if (feature) {
     var mainGeom = feature.getGeometry();
     var mainGeomSeen = false;
@@ -1485,7 +1472,7 @@ const forEachGeometry = function(feature, callback) {
  * @param {(Feature|Array<Feature>)} features
  * @return {!Array<Geometry>} The array of all the geometries.
  */
-const getGeometries = function(features) {
+export const getGeometries = function(features) {
   const arr = [];
   const callback = (geom) => {
     arr.push(geom);
@@ -1506,7 +1493,7 @@ const getGeometries = function(features) {
  * @param {Feature} feature The feature.
  * @return {boolean} If one or more styles on the feature are rendering a polygon.
  */
-const hasPolygon = function(feature) {
+export const hasPolygon = function(feature) {
   var hasPolygon = false;
 
   if (feature) {
@@ -1530,9 +1517,7 @@ const hasPolygon = function(feature) {
  * @param {Array<!Feature>|null} items
  * @return {string} the color
  */
-const getFirstColor = function(items) {
-  osStyle = goog.module.get('os.style');
-
+export const getFirstColor = function(items) {
   var str = osStyle.DEFAULT_LAYER_COLOR;
   if (!items) return str;
   var color;
@@ -1543,56 +1528,4 @@ const getFirstColor = function(items) {
   }
 
   return color ? color : str;
-};
-
-exports = {
-  LOBOptions,
-  SortFn,
-  TITLE_REGEX,
-  VALUES_FIELD,
-  autoMap,
-  cleanRingGeoms,
-  copyFeature,
-  createEllipse,
-  createLineOfBearing,
-  createRings,
-  filterFnGetter,
-  flyTo,
-  forEachGeometry,
-  getBearing,
-  getCenterShapeName,
-  getColor,
-  getColumnValue,
-  getField,
-  getFillColor,
-  getFirstColor,
-  getGeometries,
-  getLayer,
-  getLayerId,
-  getOrientation,
-  getRadius,
-  getSemiMajor,
-  getSemiMinor,
-  getShapeName,
-  getSource,
-  getStrokeColor,
-  getStrokeWidth,
-  getTitle,
-  hasPolygon,
-  hideLabel,
-  idCompare,
-  isInternalField,
-  populateCoordFields,
-  removeFeatures,
-  setAltitude,
-  setFlyToOverride,
-  showLabel,
-  simplifyGeometry,
-  sortByField,
-  sortByTime,
-  sortByTimeDesc,
-  sourceIdEquals,
-  update,
-  updateFeaturesFadeStyle,
-  validateGeometries
 };

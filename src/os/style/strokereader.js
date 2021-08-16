@@ -1,11 +1,11 @@
-goog.module('os.style.StrokeReader');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.style.StrokeReader');
+
+import AbstractReader from './abstractreader.js';
+import {DEFAULT_LAYER_COLOR, DEFAULT_STROKE_WIDTH} from './style.js';
 
 const {hashCode} = goog.require('goog.string');
 const {asString} = goog.require('ol.color');
 const Stroke = goog.require('ol.style.Stroke');
-const {DEFAULT_LAYER_COLOR, DEFAULT_STROKE_WIDTH} = goog.require('os.style');
-const AbstractReader = goog.require('os.style.AbstractReader');
 
 
 /**
@@ -79,4 +79,4 @@ class StrokeReader extends AbstractReader {
   }
 }
 
-exports = StrokeReader;
+export default StrokeReader;

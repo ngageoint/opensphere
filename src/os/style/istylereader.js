@@ -1,5 +1,4 @@
-goog.module('os.style.IStyleReader');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.style.IStyleReader');
 
 const Fill = goog.requireType('ol.style.Fill');
 const Icon = goog.requireType('ol.style.Icon');
@@ -35,4 +34,4 @@ class IStyleReader {
   toConfig(style, obj) {}
 }
 
-exports = IStyleReader;
+export default IStyleReader;

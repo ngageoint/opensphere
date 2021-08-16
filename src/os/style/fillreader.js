@@ -1,11 +1,11 @@
-goog.module('os.style.FillReader');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.style.FillReader');
+
+import AbstractReader from './abstractreader.js';
+import * as osStyle from './style.js';
 
 const {hashCode} = goog.require('goog.string');
 const {asString} = goog.require('ol.color');
 const Fill = goog.require('ol.style.Fill');
-const osStyle = goog.require('os.style');
-const AbstractReader = goog.require('os.style.AbstractReader');
 
 
 /**
@@ -60,4 +60,4 @@ class FillReader extends AbstractReader {
   }
 }
 
-exports = FillReader;
+export default FillReader;

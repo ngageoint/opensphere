@@ -1,19 +1,20 @@
-goog.module('os.style.StyleManager');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.style.StyleManagerES');
+
+import * as osStyle from './style.js';
+import CircleReader from './circlereader.js';
+import FillReader from './fillreader.js';
+import IconReader from './iconreader.js';
+import ImageReader from './imagereader.js';
+import ShapeReader from './shapereader.js';
+import StrokeReader from './strokereader.js';
+import StyleReader from './stylereader.js';
+import TextReader from './textreader.js';
 
 const {unsafeClone} = goog.require('os.object');
-const CircleReader = goog.require('os.style.CircleReader');
-const FillReader = goog.require('os.style.FillReader');
-const IconReader = goog.require('os.style.IconReader');
-const ImageReader = goog.require('os.style.ImageReader');
-const ShapeReader = goog.require('os.style.ShapeReader');
-const StrokeReader = goog.require('os.style.StrokeReader');
-const StyleReader = goog.require('os.style.StyleReader');
-const TextReader = goog.require('os.style.TextReader');
 
-const IStyleReader = goog.requireType('os.style.IStyleReader');
-
-let osStyle = goog.forwardDeclare('os.style');
+const {
+  default: IStyleReader
+} = goog.requireType('os.style.IStyleReader');
 
 
 /**
@@ -63,7 +64,7 @@ let osStyle = goog.forwardDeclare('os.style');
  * feature.setStyle(os.style.StyleManager.getInstance().getOrCreateStyle([layer, feature]));
  * </pre>
  */
-class StyleManager {
+export default class StyleManager {
   /**
    * Constructor.
    */
@@ -134,8 +135,6 @@ class StyleManager {
    * @return {Object}
    */
   createLayerConfig(id) {
-    osStyle = goog.module.get('os.style');
-
     var config = /** @type {Object} */ (unsafeClone(osStyle.DEFAULT_VECTOR_CONFIG));
     this.layerConfigs_[id] = config;
     return config;
@@ -192,5 +191,3 @@ class StyleManager {
  * @type {StyleManager|undefined}
  */
 let instance;
-
-exports = StyleManager;

@@ -1,11 +1,11 @@
-goog.module('os.style.ShapeReader');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.style.ShapeReader');
+
+import AbstractReader from './abstractreader.js';
+import {DEFAULT_FEATURE_SIZE} from './style.js';
 
 const {toRadians} = goog.require('goog.math');
 const {hashCode} = goog.require('goog.string');
 const RegularShape = goog.require('ol.style.RegularShape');
-const {DEFAULT_FEATURE_SIZE} = goog.require('os.style');
-const AbstractReader = goog.require('os.style.AbstractReader');
 
 
 /**
@@ -103,4 +103,4 @@ class ShapeReader extends AbstractReader {
  */
 ShapeReader.RADIUS_MULTIPLIER = 1.33;
 
-exports = ShapeReader;
+export default ShapeReader;

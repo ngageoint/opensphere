@@ -1,9 +1,9 @@
-goog.module('os.style.StyleReader');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.style.StyleReader');
+
+import AbstractReader from './abstractreader.js';
 
 const {hashCode} = goog.require('goog.string');
 const Style = goog.require('ol.style.Style');
-const AbstractReader = goog.require('os.style.AbstractReader');
 
 
 /**
@@ -119,4 +119,4 @@ class StyleReader extends AbstractReader {
   }
 }
 
-exports = StyleReader;
+export default StyleReader;

@@ -2,8 +2,11 @@
  * @fileoverview Some default styles to use for different geometry types. This will be replaced/removed as we start
  * styling features based on the data/user settings.
  */
-goog.module('os.style');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.style');
+
+import * as osLabel from './label.js';
+import StyleManager from './stylemanager.js';
+import * as osFeature from '../feature/feature.js';
 
 const {equals} = goog.require('goog.array');
 const {toRadians} = goog.require('goog.math');
@@ -26,59 +29,54 @@ const Layer = goog.requireType('ol.layer.Layer');
 const Style = goog.requireType('ol.style.Style');
 const VectorSource = goog.requireType('os.source.Vector');
 
-// Avoid circular dependencies with these modules by getting the exports when needed with goog.module.get.
-let osFeature = goog.forwardDeclare('os.feature');
-let StyleManager = goog.forwardDeclare('os.style.StyleManager');
-let osLabel = goog.forwardDeclare('os.style.label');
-
 
 /**
  * Default alpha for tile/feature layers.
  * @type {number}
  */
-const DEFAULT_ALPHA = 1.0;
+export const DEFAULT_ALPHA = 1.0;
 
 /**
  * Default alpha for polygon fills.
  * @type {number}
  */
-const DEFAULT_FILL_ALPHA = 0.0;
+export const DEFAULT_FILL_ALPHA = 0.0;
 
 /**
  * Default color for tile/feature layers.
  * @type {string}
  */
-const DEFAULT_LAYER_COLOR = 'rgba(255,255,255,1)';
+export const DEFAULT_LAYER_COLOR = 'rgba(255,255,255,1)';
 
 /**
  * Default color for tile/feature layers.
  * @type {string}
  */
-const DEFAULT_INVERSE_COLOR = 'rgba(255,0,0,1)';
+export const DEFAULT_INVERSE_COLOR = 'rgba(255,0,0,1)';
 
 /**
  * Default fill color for tile/feature layers.
  * @type {string}
  */
-const DEFAULT_FILL_COLOR = 'rgba(255,255,255,0)';
+export const DEFAULT_FILL_COLOR = 'rgba(255,255,255,0)';
 
 /**
  * Default size for geometries. Radius for points.
  * @type {number}
  */
-const DEFAULT_FEATURE_SIZE = 3;
+export const DEFAULT_FEATURE_SIZE = 3;
 
 /**
  * Default size for geometries. Width for lines/polygons.
  * @type {number}
  */
-const DEFAULT_STROKE_WIDTH = 3;
+export const DEFAULT_STROKE_WIDTH = 3;
 
 /**
  * The default style fields to check for line dashes.
  * @type {!Array<string>}
  */
-const DEFAULT_LINE_DASH_STYLE_FIELDS = [
+export const DEFAULT_LINE_DASH_STYLE_FIELDS = [
   StyleField.STROKE
 ];
 
@@ -89,14 +87,14 @@ const DEFAULT_LINE_DASH_STYLE_FIELDS = [
  *   pattern: !Array<number>
  * }}
  */
-let styleLineDashOption;
+export let styleLineDashOption;
 
 /**
  * Line dash configurations
  * Patterns based on 16 bit number to make it look consistent between map engines
  * @type {!Array<!styleLineDashOption>}
  */
-const LINE_STYLE_OPTIONS = [
+export const LINE_STYLE_OPTIONS = [
   {
     id: 0,
     name: '\u2501\u2501\u2501\u2501\u2501\u2501\u2578',
@@ -135,48 +133,48 @@ const LINE_STYLE_OPTIONS = [
 /**
  * @type {number}
  */
-const DEFAULT_ARROW_SIZE = 100;
+export const DEFAULT_ARROW_SIZE = 100;
 
 /**
  * @type {number}
  */
-const DEFAULT_LOB_LENGTH = 1000;
+export const DEFAULT_LOB_LENGTH = 1000;
 
 /**
  * @type {string}
  */
-const DEFAULT_UNITS = Units.METERS;
+export const DEFAULT_UNITS = Units.METERS;
 
 /**
  * @type {string}
  */
-const DEFAULT_LOB_LENGTH_TYPE = 'manual';
+export const DEFAULT_LOB_LENGTH_TYPE = 'manual';
 
 /**
  * @type {number}
  */
-const DEFAULT_LOB_LENGTH_ERROR = 1;
+export const DEFAULT_LOB_LENGTH_ERROR = 1;
 
 /**
  * @type {number}
  */
-const DEFAULT_LOB_BEARING_ERROR = 1;
+export const DEFAULT_LOB_BEARING_ERROR = 1;
 
 /**
  * @type {number}
  */
-const DEFAULT_LOB_MULTIPLIER = 1;
+export const DEFAULT_LOB_MULTIPLIER = 1;
 
 /**
  * Arrow Picture
  * @type {string}
  */
-const ARROW_ICON = ROOT + 'images/arrow.png';
+export const ARROW_ICON = ROOT + 'images/arrow.png';
 
 /**
  * @type {Object<string, *>}
  */
-const POINT_CONFIG = {
+export const POINT_CONFIG = {
   'image': {
     'type': 'circle'
   }
@@ -186,7 +184,7 @@ const POINT_CONFIG = {
  * Shape types available in the application. These should map to the keys below.
  * @enum {string}
  */
-const ShapeType = {
+export const ShapeType = {
   DEFAULT: 'Default',
   NONE: 'None',
   POINT: 'Point',
@@ -204,18 +202,18 @@ const ShapeType = {
 /**
  * @type {string}
  */
-const DEFAULT_SHAPE = ShapeType.DEFAULT;
+export const DEFAULT_SHAPE = ShapeType.DEFAULT;
 
 /**
  * @type {string}
  */
-const DEFAULT_CENTER_SHAPE = ShapeType.POINT;
+export const DEFAULT_CENTER_SHAPE = ShapeType.POINT;
 
 /**
  * Shape configurations available in the application. These should only contain values that will override the defaults.
  * @type {!Object<string, (Object|undefined)>}
  */
-const SHAPES = {
+export const SHAPES = {
   'Default': undefined,
   'Point': {
     'config': {
@@ -284,37 +282,37 @@ const SHAPES = {
 /**
  * @type {RegExp}
  */
-const ICON_REGEXP = /icon/i;
+export const ICON_REGEXP = /icon/i;
 
 /**
  * @type {RegExp}
  */
-const LOB_REGEXP = /line of bearing/i;
+export const LOB_REGEXP = /line of bearing/i;
 
 /**
  * @type {RegExp}
  */
-const ELLIPSE_REGEXP = /ellipse/i;
+export const ELLIPSE_REGEXP = /ellipse/i;
 
 /**
  * @type {RegExp}
  */
-const CENTER_REGEXP = /center/i;
+export const CENTER_REGEXP = /center/i;
 
 /**
  * @type {RegExp}
  */
-const SELECTED_REGEXP = /selected/i;
+export const SELECTED_REGEXP = /selected/i;
 
 /**
  * @type {RegExp}
  */
-const DEFAULT_REGEXP = /default/i;
+export const DEFAULT_REGEXP = /default/i;
 
 /**
  * @type {Object.<string, boolean>}
  */
-const CENTER_LOOKUP = (function() {
+export const CENTER_LOOKUP = (function() {
   var lookup = {};
   for (var key in SHAPES) {
     lookup[key] = CENTER_REGEXP.test(key);
@@ -326,7 +324,7 @@ const CENTER_LOOKUP = (function() {
  * Default style config for vector layers
  * @type {!Object}
  */
-const DEFAULT_VECTOR_CONFIG = {
+export const DEFAULT_VECTOR_CONFIG = {
   // this will only be applied to point types
   'image': {
     'type': 'circle',
@@ -349,19 +347,19 @@ const DEFAULT_VECTOR_CONFIG = {
  * Z-index for selected features.
  * @type {number}
  */
-const SELECTED_Z = 100;
+export const SELECTED_Z = 100;
 
 /**
  * Z-index for selected features.
  * @type {number}
  */
-const HIGHLIGHT_Z = 102;
+export const HIGHLIGHT_Z = 102;
 
 /**
  * Overrides to the default style for selected features
  * @type {!Object}
  */
-const DEFAULT_SELECT_CONFIG = {
+export const DEFAULT_SELECT_CONFIG = {
   'image': {
     'color': 'rgba(255,0,0,1)',
     'fill': {
@@ -378,7 +376,7 @@ const DEFAULT_SELECT_CONFIG = {
  * Overrides to the default style for highlighted features
  * @type {!Object}
  */
-const INVERSE_SELECT_CONFIG = {
+export const INVERSE_SELECT_CONFIG = {
   'image': {
     'color': 'rgba(255,255,255,1)',
     'fill': {
@@ -399,7 +397,7 @@ const INVERSE_SELECT_CONFIG = {
  * Overrides to the default style for highlighted features
  * @type {!Object}
  */
-const DEFAULT_HIGHLIGHT_CONFIG = {
+export const DEFAULT_HIGHLIGHT_CONFIG = {
   'image': {
     'color': 'rgba(255,0,0,1)',
     'fill': {
@@ -420,7 +418,7 @@ const DEFAULT_HIGHLIGHT_CONFIG = {
  * Style config for feature previews.
  * @type {!Object}
  */
-const PREVIEW_CONFIG = {
+export const PREVIEW_CONFIG = {
   'fill': {
     'color': 'rgba(0,255,255,0.15)'
   },
@@ -434,7 +432,7 @@ const PREVIEW_CONFIG = {
  * The default style fields to check for a color.
  * @type {!Array<string>}
  */
-const DEFAULT_COLOR_STYLE_FIELDS = [
+export const DEFAULT_COLOR_STYLE_FIELDS = [
   StyleField.IMAGE,
   StyleField.FILL,
   StyleField.STROKE
@@ -446,7 +444,7 @@ const DEFAULT_COLOR_STYLE_FIELDS = [
  * @param {string} color The color
  * @return {Object<string, *>} The style config
  */
-const createColorOverride = function(color) {
+export const createColorOverride = function(color) {
   return {
     'image': {
       'fill': {
@@ -465,7 +463,7 @@ const createColorOverride = function(color) {
  * @param {Array<number>|string} color Color.
  * @return {string}
  */
-const toAbgrString = function(color) {
+export const toAbgrString = function(color) {
   var rgba = asArray(color);
   var opacity = (rgba.length == 4) ? rgba[3] : 1;
   var abgr = [opacity * 255, rgba[2], rgba[1], rgba[0]];
@@ -484,7 +482,7 @@ const toAbgrString = function(color) {
  * @param {Array<number>|string} color
  * @return {string}
  */
-const toRgbaString = function(color) {
+export const toRgbaString = function(color) {
   return asString(typeof color === 'string' ? toRgbArray(color) : color);
 };
 
@@ -503,7 +501,7 @@ const STYLE_COLOR_FIELDS_ = ['image', 'fill', 'stroke'];
  * @return {Array<number>|string|undefined} The color, or null if not found. Returns `undefined` if a style field was
  *                                          provided and the field was not present.
  */
-const getConfigColor = function(config, opt_array, opt_colorField) {
+export const getConfigColor = function(config, opt_array, opt_colorField) {
   if (config) {
     //
     // if a specific color field was provided, return:
@@ -552,7 +550,7 @@ const getConfigColor = function(config, opt_array, opt_colorField) {
  * @param {Array<string>=} opt_includeStyleFields optional array of style fields to color,
  *                                                e.g. StyleField.IMAGE.
  */
-const setConfigColor = function(config, color, opt_includeStyleFields) {
+export const setConfigColor = function(config, color, opt_includeStyleFields) {
   if (config) {
     var styleFields = opt_includeStyleFields || DEFAULT_COLOR_STYLE_FIELDS;
     for (var key in config) {
@@ -581,7 +579,7 @@ const setConfigColor = function(config, color, opt_includeStyleFields) {
  * @param {Object} config
  * @param {Array<number>|string|null|undefined} color
  */
-const setFillColor = function(config, color) {
+export const setFillColor = function(config, color) {
   if (config) {
     if (!color) {
       // no fill
@@ -604,7 +602,7 @@ const setFillColor = function(config, color) {
  * @param {Object|undefined} config The style config.
  * @return {?osx.icon.Icon} The icon or null if none was found.
  */
-const getConfigIcon = function(config) {
+export const getConfigIcon = function(config) {
   var icon = null;
   if (config) {
     var imageConfig = config[StyleField.IMAGE];
@@ -626,7 +624,7 @@ const getConfigIcon = function(config) {
  * @param {Object} config
  * @param {?osx.icon.Icon} icon
  */
-const setConfigIcon = function(config, icon) {
+export const setConfigIcon = function(config, icon) {
   if (icon && config) {
     var imageConfig = config[StyleField.IMAGE];
     if (imageConfig) {
@@ -644,7 +642,7 @@ const setConfigIcon = function(config, icon) {
  * @param {boolean} showRotation
  * @param {number} rotateAmount
  */
-const setConfigIconRotation = function(config, showRotation, rotateAmount) {
+export const setConfigIconRotation = function(config, showRotation, rotateAmount) {
   var rotation = {
     'image': {
       'rotation': showRotation ? toRadians(rotateAmount) : 0
@@ -662,7 +660,7 @@ const setConfigIconRotation = function(config, showRotation, rotateAmount) {
  * @param {!Feature} feature The feature
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const setConfigIconRotationFromObject = function(config, origin, feature) {
+export const setConfigIconRotationFromObject = function(config, origin, feature) {
   var showRotation = origin[StyleField.SHOW_ROTATION] || false;
   var rotationColumn = origin[StyleField.ROTATION_COLUMN];
   rotationColumn = typeof rotationColumn === 'string' ? rotationColumn : '';
@@ -677,7 +675,7 @@ const setConfigIconRotationFromObject = function(config, origin, feature) {
  * @param {Object|undefined} config The style config.
  * @return {number} The icon or null if none was found.
  */
-const getConfigIconRotation = function(config) {
+export const getConfigIconRotation = function(config) {
   if (config) {
     var imageConfig = config[StyleField.IMAGE];
     if (imageConfig && imageConfig['rotation']) {
@@ -696,7 +694,7 @@ const getConfigIconRotation = function(config) {
  * @param {number} opacity The opacity value, from 0 to 1.
  * @param {boolean=} opt_multiply If the opacity should be multiplied with the original.
  */
-const setConfigOpacityColor = function(config, opacity, opt_multiply) {
+export const setConfigOpacityColor = function(config, opacity, opt_multiply) {
   if (config) {
     var styleFields = DEFAULT_COLOR_STYLE_FIELDS;
     var colorArr;
@@ -733,7 +731,7 @@ const setConfigOpacityColor = function(config, opacity, opt_multiply) {
  * @param {Object} config The style config.
  * @return {number} The opacity value, from 0 to 1.
  */
-const getConfigOpacityColor = function(config) {
+export const getConfigOpacityColor = function(config) {
   if (config) {
     var styleFields = DEFAULT_COLOR_STYLE_FIELDS;
     var colorArr;
@@ -764,7 +762,7 @@ const getConfigOpacityColor = function(config) {
  * @param {Object} config
  * @return {number|undefined} The size
  */
-const getConfigSize = function(config) {
+export const getConfigSize = function(config) {
   if (config) {
     if (config['radius'] != undefined) {
       return /** @type {number} */ (config['radius']);
@@ -797,7 +795,7 @@ const getConfigSize = function(config) {
  * @param {Object} config
  * @param {number} size
  */
-const setConfigSize = function(config, size) {
+export const setConfigSize = function(config, size) {
   if (config) {
     for (var key in config) {
       if (key == 'radius') {
@@ -833,7 +831,7 @@ const setConfigSize = function(config, size) {
  * @param {number=} opt_default The default size
  * @return {number}
  */
-const getMergedSize = function(featureConfig, layerConfig, opt_default) {
+export const getMergedSize = function(featureConfig, layerConfig, opt_default) {
   var defaultSize = opt_default || DEFAULT_FEATURE_SIZE;
 
   // combine the layer/feature scales to determine the final scale
@@ -856,12 +854,12 @@ const getMergedSize = function(featureConfig, layerConfig, opt_default) {
  * @param {Array<number>|undefined} pattern
  * @return {styleLineDashOption}
  */
-const dashPatternToOptions = function(pattern) {
+export const dashPatternToOptions = function(pattern) {
   if (Array.isArray(pattern)) {
     for (var i = 0; i < LINE_STYLE_OPTIONS.length; i++) {
-      var styleLineDashOption = /** @type {styleLineDashOption} */ (LINE_STYLE_OPTIONS[i]);
-      if (equals(styleLineDashOption.pattern, pattern)) {
-        return styleLineDashOption;
+      var lineDashOption = /** @type {styleLineDashOption} */ (LINE_STYLE_OPTIONS[i]);
+      if (equals(lineDashOption.pattern, pattern)) {
+        return lineDashOption;
       }
     }
   }
@@ -873,7 +871,7 @@ const dashPatternToOptions = function(pattern) {
  * @param {(StyleField|string)=} opt_lineDashFieldHint A hint to where to find the dash to use.
  * @return {Array<number>|undefined} The line dash or null if none was found
  */
-const getConfigLineDash = function(config, opt_lineDashFieldHint) {
+export const getConfigLineDash = function(config, opt_lineDashFieldHint) {
   if (config) {
     if (opt_lineDashFieldHint &&
         config[opt_lineDashFieldHint] &&
@@ -903,7 +901,7 @@ const getConfigLineDash = function(config, opt_lineDashFieldHint) {
  * @param {Array<string>=} opt_includeLineDashFields optional array of style fields to line dash,
  *                                                e.g. StyleField.IMAGE.
  */
-const setConfigLineDash = function(config, lineDash, opt_includeLineDashFields) {
+export const setConfigLineDash = function(config, lineDash, opt_includeLineDashFields) {
   if (config) {
     var lineDashFields = opt_includeLineDashFields || DEFAULT_LINE_DASH_STYLE_FIELDS;
     for (var key in config) {
@@ -924,7 +922,7 @@ const setConfigLineDash = function(config, lineDash, opt_includeLineDashFields) 
  * @param {number} size The vector size value
  * @return {number} The icon scale value
  */
-const sizeToScale = function(size) {
+export const sizeToScale = function(size) {
   return Math.floor(size / DEFAULT_FEATURE_SIZE * 100) / 100;
 };
 
@@ -934,7 +932,7 @@ const sizeToScale = function(size) {
  * @param {number} scale The icon scale value
  * @return {number} The vector size value
  */
-const scaleToSize = function(scale) {
+export const scaleToSize = function(scale) {
   return Math.round(scale * DEFAULT_FEATURE_SIZE);
 };
 
@@ -947,7 +945,7 @@ const scaleToSize = function(scale) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const getBaseFeatureConfig = function(feature, opt_layerConfig) {
+export const getBaseFeatureConfig = function(feature, opt_layerConfig) {
   // priority: feature > layer > default
   return (
     /** @type {Object|undefined} */ (feature.values_[StyleType.FEATURE]) || opt_layerConfig ||
@@ -964,8 +962,6 @@ const getBaseFeatureConfig = function(feature, opt_layerConfig) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 let setFeatureStyleFn = function(feature, opt_source, opt_style) {
-  osFeature = goog.module.get('os.feature');
-
   var style = opt_style;
   if (!style) {
     var layerConfig = getLayerConfig(feature, opt_source);
@@ -989,20 +985,20 @@ let setFeatureStyleFn = function(feature, opt_source, opt_style) {
  * @param {VectorSource=} opt_source The source containing the feature
  * @param {(Array<Style>|Style)=} opt_style The style to use
  */
-const setFeatureStyle = function(feature, opt_source, opt_style) {
+export const setFeatureStyle = function(feature, opt_source, opt_style) {
   setFeatureStyleFn(feature, opt_source, opt_style);
 };
 
 /**
- * @typedef {function(!Feature, VectorSource=, (Array<Style>|Style)=)}
+ * @typedef {!function(!Feature, VectorSource=, (Array<Style>|Style)=)}
  */
-let SetFeatureStyleFn;
+export let SetFeatureStyleFn;
 
 /**
  * Set the setFeatureStyle function.
- * @param {SetFeatureStyleFn} fn The function.
+ * @param {!SetFeatureStyleFn} fn The function.
  */
-const setSetFeatureStyleFn = (fn) => {
+export const setSetFeatureStyleFn = (fn) => {
   setFeatureStyleFn = fn;
 };
 
@@ -1013,7 +1009,7 @@ const setSetFeatureStyleFn = (fn) => {
  * @param {VectorSource=} opt_source The source containing the features
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const setFeaturesStyle = function(features, opt_source) {
+export const setFeaturesStyle = function(features, opt_source) {
   if (features.length > 0) {
     var layerConfig = getLayerConfig(features[0], opt_source);
 
@@ -1034,10 +1030,7 @@ const setFeaturesStyle = function(features, opt_source) {
  * @param {VectorSource=} opt_source The source containing the feature
  * @return {Object|undefined}
  */
-const getLayerConfig = function(feature, opt_source) {
-  osFeature = goog.module.get('os.feature');
-  StyleManager = goog.module.get('os.style.StyleManager');
-
+export const getLayerConfig = function(feature, opt_source) {
   var config;
   var id = /** @type {string} */ (feature.get(RecordField.SOURCE_ID));
   var skipLayerStyle = /** @type {boolean} */ (feature.get(StyleField.SKIP_LAYER_STYLE));
@@ -1098,7 +1091,7 @@ const getLayerConfig = function(feature, opt_source) {
  * @param {Object} config The config object
  * @return {boolean}
  */
-const isIconConfig = function(config) {
+export const isIconConfig = function(config) {
   return config[StyleField.IMAGE] != null && config[StyleField.IMAGE]['type'] == 'icon';
 };
 
@@ -1112,7 +1105,7 @@ const isIconConfig = function(config) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
+export const createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
   // color override ALWAYS wins, so apply it whether replacing feature styles or not
   var colorOverride = /** @type {string|undefined} */ (feature.values_[RecordField.COLOR]);
 
@@ -1214,9 +1207,7 @@ const createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
  * @param {!Object} config The config object.
  * @param {Object=} opt_layerConfig The layerConfig object.
  */
-const verifyGeometries = function(feature, config, opt_layerConfig) {
-  osFeature = goog.module.get('os.feature');
-
+export const verifyGeometries = function(feature, config, opt_layerConfig) {
   if (config['geometry'] == RecordField.LINE_OF_BEARING ||
       config['geometries'] && config['geometries'].indexOf(RecordField.LINE_OF_BEARING) != -1) {
     // verify a line of bearing has been created
@@ -1264,10 +1255,7 @@ const verifyGeometries = function(feature, config, opt_layerConfig) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
-  osFeature = goog.module.get('os.feature');
-  StyleManager = goog.module.get('os.style.StyleManager');
-
+export const createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
   var styles = [];
   if (!feature) {
     return styles;
@@ -1394,8 +1382,6 @@ const createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
       styles.push(StyleManager.getInstance().getOrCreateStyle(featureConfig));
     }
 
-    osLabel = goog.module.get('os.style.label');
-
     // merge or create label style if no label geometry is defined, or the current config matches the geometry name
     var labelGeometry = feature.values_[StyleField.LABEL_GEOMETRY];
     if (!labelGeometry || labelGeometry == featureConfig['geometry']) {
@@ -1446,7 +1432,7 @@ const createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
  * @param {Object} from The object to merge
  * @param {Object} to The object to which to merge
  */
-const mergeConfig = function(from, to) {
+export const mergeConfig = function(from, to) {
   for (var key in from) {
     var fval = from[key];
     if (fval === IGNORE_VAL) {
@@ -1505,15 +1491,15 @@ let notifyStyleChangeFn = function(layer, opt_features, opt_type, opt_source, op
 };
 
 /**
- * @typedef {function(Layer, Array<Feature>=, string=, Array<string>=, boolean=)}
+ * @typedef {!function(Layer, Array<Feature>=, string=, Array<string>=, boolean=)}
  */
-let NotifyStyleChangeFn;
+export let NotifyStyleChangeFn;
 
 /**
  * Set the notifyStyleChange function.
- * @param {NotifyStyleChangeFn} fn The function.
+ * @param {!NotifyStyleChangeFn} fn The function.
  */
-const setNotifyStyleChangeFn = (fn) => {
+export const setNotifyStyleChangeFn = (fn) => {
   notifyStyleChangeFn = fn;
 };
 
@@ -1526,7 +1512,7 @@ const setNotifyStyleChangeFn = (fn) => {
  * @param {Array<string>=} opt_source The Source style event type(s)
  * @param {boolean=} opt_colormodel True if the color model should be bumped to trigger listeners
  */
-const notifyStyleChange = function(layer, opt_features, opt_type, opt_source, opt_colormodel) {
+export const notifyStyleChange = function(layer, opt_features, opt_type, opt_source, opt_colormodel) {
   notifyStyleChangeFn(layer, opt_features, opt_type, opt_source, opt_colormodel);
 };
 
@@ -1536,7 +1522,7 @@ const notifyStyleChange = function(layer, opt_features, opt_type, opt_source, op
  * @param {Object} configEntry Style config object to query
  * @return {boolean} True if the config object contains the labels
  */
-const isLabelConfig = function(configEntry) {
+export const isLabelConfig = function(configEntry) {
   return !!configEntry[StyleField.LABELS];
 };
 
@@ -1544,7 +1530,7 @@ const isLabelConfig = function(configEntry) {
  * @param {Style} style
  * @return {boolean}
  */
-const hasNonZeroFillOpacity = function(style) {
+export const hasNonZeroFillOpacity = function(style) {
   if (style) {
     const fill = style.getFill();
     if (fill) {
@@ -1560,7 +1546,7 @@ const hasNonZeroFillOpacity = function(style) {
  * @param {Style} style
  * @return {boolean}
  */
-const hasNonZeroStrokeOpacity = function(style) {
+export const hasNonZeroStrokeOpacity = function(style) {
   if (style) {
     const stroke = style.getStroke();
     if (stroke) {
@@ -1570,83 +1556,4 @@ const hasNonZeroStrokeOpacity = function(style) {
   }
 
   return false;
-};
-
-exports = {
-  DEFAULT_ALPHA,
-  DEFAULT_FILL_ALPHA,
-  DEFAULT_LAYER_COLOR,
-  DEFAULT_INVERSE_COLOR,
-  DEFAULT_FILL_COLOR,
-  DEFAULT_FEATURE_SIZE,
-  DEFAULT_STROKE_WIDTH,
-  DEFAULT_LINE_DASH_STYLE_FIELDS,
-  LINE_STYLE_OPTIONS,
-  DEFAULT_ARROW_SIZE,
-  DEFAULT_LOB_LENGTH,
-  DEFAULT_UNITS,
-  DEFAULT_LOB_LENGTH_TYPE,
-  DEFAULT_LOB_LENGTH_ERROR,
-  DEFAULT_LOB_BEARING_ERROR,
-  DEFAULT_LOB_MULTIPLIER,
-  ARROW_ICON,
-  POINT_CONFIG,
-  ShapeType,
-  DEFAULT_SHAPE,
-  DEFAULT_CENTER_SHAPE,
-  SHAPES,
-  ICON_REGEXP,
-  LOB_REGEXP,
-  ELLIPSE_REGEXP,
-  CENTER_REGEXP,
-  SELECTED_REGEXP,
-  DEFAULT_REGEXP,
-  CENTER_LOOKUP,
-  DEFAULT_VECTOR_CONFIG,
-  SELECTED_Z,
-  HIGHLIGHT_Z,
-  DEFAULT_SELECT_CONFIG,
-  INVERSE_SELECT_CONFIG,
-  DEFAULT_HIGHLIGHT_CONFIG,
-  PREVIEW_CONFIG,
-  DEFAULT_COLOR_STYLE_FIELDS,
-  createColorOverride,
-  toAbgrString,
-  toRgbaString,
-  getConfigColor,
-  setConfigColor,
-  setFillColor,
-  getConfigIcon,
-  setConfigIcon,
-  setConfigIconRotation,
-  setConfigIconRotationFromObject,
-  getConfigIconRotation,
-  setConfigOpacityColor,
-  getConfigOpacityColor,
-  getConfigSize,
-  setConfigSize,
-  getMergedSize,
-  dashPatternToOptions,
-  getConfigLineDash,
-  setConfigLineDash,
-  sizeToScale,
-  scaleToSize,
-  getBaseFeatureConfig,
-  setFeatureStyle,
-  SetFeatureStyleFn,
-  setSetFeatureStyleFn,
-  setFeaturesStyle,
-  getLayerConfig,
-  isIconConfig,
-  createFeatureConfig,
-  verifyGeometries,
-  createFeatureStyle,
-  mergeConfig,
-  notifyStyleChange,
-  NotifyStyleChangeFn,
-  setNotifyStyleChangeFn,
-  isLabelConfig,
-  hasNonZeroFillOpacity,
-  hasNonZeroStrokeOpacity,
-  styleLineDashOption
 };

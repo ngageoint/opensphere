@@ -1,5 +1,6 @@
-goog.module('os.style.IconReader');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.style.IconReader');
+
+import AbstractReader from './abstractreader.js';
 
 const Uri = goog.require('goog.Uri');
 const {hashCode} = goog.require('goog.string');
@@ -11,7 +12,6 @@ const IconAnchorUnits = goog.require('ol.style.IconAnchorUnits');
 const IconOrigin = goog.require('ol.style.IconOrigin');
 const {getCrossOrigin} = goog.require('os.net');
 const CrossOrigin = goog.require('os.net.CrossOrigin');
-const AbstractReader = goog.require('os.style.AbstractReader');
 const Icon = goog.require('os.style.Icon');
 const {DEFAULT_ICON, DEFAULT_ICON_OPTIONS} = goog.require('os.style.defaults');
 const {
@@ -230,4 +230,4 @@ IconReader.DEFAULT_ICON = DEFAULT_ICON;
  */
 IconReader.DEFAULT_ICON_OPTIONS = DEFAULT_ICON_OPTIONS;
 
-exports = IconReader;
+export default IconReader;
