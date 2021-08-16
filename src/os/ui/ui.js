@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui');
 
-const {fail} = goog.require('goog.asserts');
+const asserts = goog.require('goog.asserts');
 const SafeHtml = goog.require('goog.html.SafeHtml');
 const {nearlyEquals} = goog.require('goog.math');
 const Size = goog.require('goog.math.Size');
@@ -257,7 +257,7 @@ export const resize = function(el, fn) {
     if (window.ResizeSensor) {
       new ResizeSensor(el, fn);
     } else {
-      fail('The css-element-queries ResizeSensor library is not loaded. Element resize detection will ' +
+      asserts.fail('The css-element-queries ResizeSensor library is not loaded. Element resize detection will ' +
           'not work.');
     }
   }
