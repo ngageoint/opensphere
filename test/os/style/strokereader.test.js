@@ -4,7 +4,7 @@ goog.require('os.style.StrokeReader');
 
 describe('os.style.StrokeReader', function() {
   const Stroke = goog.module.get('ol.style.Stroke');
-  const StrokeReader = goog.module.get('os.style.StrokeReader');
+  const {default: StrokeReader} = goog.module.get('os.style.StrokeReader');
 
   var config;
   var reader;

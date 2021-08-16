@@ -44,6 +44,7 @@ angular.element(document.body).append('<div id="map-container"></div');
 beforeEach(function() {
   const Settings = goog.module.get('os.config.Settings');
   const {resetCrossOriginCache, resetDefaultValidators} = goog.module.get('os.net');
+  const StyleManager = goog.module.get('os.style.StyleManager');
 
   const settings = Settings.getInstance();
 
@@ -122,7 +123,7 @@ beforeEach(function() {
     }
 
     if (!os.styleManager) {
-      var styleManager = os.style.StyleManager.getInstance();
+      var styleManager = StyleManager.getInstance();
       os.styleManager = styleManager;
       os.style.instance.setStyleManager(styleManager);
     }

@@ -11,12 +11,12 @@ goog.require('os.style.StyleReader');
 describe('os.style.StyleReader', function() {
   const Circle = goog.module.get('ol.style.Circle');
   const Style = goog.module.get('ol.style.Style');
-  const CircleReader = goog.module.get('os.style.CircleReader');
-  const FillReader = goog.module.get('os.style.FillReader');
-  const IconReader = goog.module.get('os.style.IconReader');
-  const ImageReader = goog.module.get('os.style.ImageReader');
-  const StrokeReader = goog.module.get('os.style.StrokeReader');
-  const StyleReader = goog.module.get('os.style.StyleReader');
+  const {default: CircleReader} = goog.module.get('os.style.CircleReader');
+  const {default: FillReader} = goog.module.get('os.style.FillReader');
+  const {default: IconReader} = goog.module.get('os.style.IconReader');
+  const {default: ImageReader} = goog.module.get('os.style.ImageReader');
+  const {default: StrokeReader} = goog.module.get('os.style.StrokeReader');
+  const {default: StyleReader} = goog.module.get('os.style.StyleReader');
 
   var config;
   var reader;
