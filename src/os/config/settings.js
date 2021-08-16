@@ -11,6 +11,7 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
 
+const os = goog.require('os');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertEventTypes = goog.require('os.alert.AlertEventTypes');
 const AlertManager = goog.require('os.alert.AlertManager');
@@ -986,6 +987,7 @@ Settings.WRITE_STORAGE_BACKUP_KEY = 'opensphere.config.' + Settings.WRITE_STORAG
 /**
  * Legacy global settings reference. This should eventually be deprecated and removed.
  * @type {!Settings}
+ * @deprecated Please use os.config.Settings.getInstance() instead.
  */
 os.settings = Settings.getInstance();
 
