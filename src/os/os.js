@@ -1,169 +1,163 @@
-goog.provide('os');
+goog.declareModuleId('os');
 
-goog.require('goog.events.EventTarget');
-goog.require('goog.userAgent');
-goog.require('goog.userAgent.product');
-goog.require('goog.userAgent.product.isVersion');
 goog.require('ol.typedefs');
 goog.require('os.mixin.closure');
 goog.require('os.ol.license');
 
-goog.requireType('os.data.IDataManager');
-goog.requireType('os.data.DataManager');
-goog.requireType('os.debug.FancierWindow');
+const EventTarget = goog.require('goog.events.EventTarget');
+const userAgent = goog.require('goog.userAgent');
+const product = goog.require('goog.userAgent.product');
+const keys = goog.require('os.metrics.keys');
+
+const DataManager = goog.requireType('os.data.DataManager');
+const FancierWindow = goog.requireType('os.debug.FancierWindow');
+const Peer = goog.requireType('os.xt.Peer');
 
 
 /**
  * @define {string} The root namespace for DB and storage keys
  */
-os.NAMESPACE = goog.define('os.NAMESPACE', 'opensphere');
-
-
-/**
- * @define {string} The path to this project
- */
-os.ROOT = goog.define('os.ROOT', '../opensphere/');
-
+export const NAMESPACE = goog.define('os.NAMESPACE', 'opensphere');
 
 /**
  * @define {string} The path to this project
  */
-os.APP_ROOT = goog.define('os.APP_ROOT', './');
+export const ROOT = goog.define('os.ROOT', '../opensphere/');
 
+/**
+ * @define {string} The path to this project
+ */
+export const APP_ROOT = goog.define('os.APP_ROOT', './');
 
 /**
  * @define {string} The settings file
  */
-os.SETTINGS = goog.define('os.SETTINGS', '.build/settings-debug.json');
-
+export const SETTINGS = goog.define('os.SETTINGS', '.build/settings-debug.json');
 
 /**
  * @define {string} The DB name for settings storage
  */
-os.SETTINGS_DB_NAME = goog.define('os.SETTINGS_DB_NAME', os.NAMESPACE + '.settings');
-
+export const SETTINGS_DB_NAME = goog.define('os.SETTINGS_DB_NAME', NAMESPACE + '.settings');
 
 /**
  * @define {string} The database name used to transfer between apps
  */
-os.SHARED_FILE_DB_NAME = goog.define('os.SHARED_FILE_DB_NAME', 'com.bitsys.db');
-
+export const SHARED_FILE_DB_NAME = goog.define('os.SHARED_FILE_DB_NAME', 'com.bitsys.db');
 
 /**
  * @define {string} Shared IDB store name.
  */
-os.SHARED_STORE_NAME = goog.define('os.SHARED_STORE_NAME', 'shared');
-
+export const SHARED_STORE_NAME = goog.define('os.SHARED_STORE_NAME', 'shared');
 
 /**
  * @define {string} Shared IDB name.
  */
-os.SHARED_DB_NAME = goog.define('os.SHARED_DB_NAME', os.NAMESPACE + '.shared');
-
+export const SHARED_DB_NAME = goog.define('os.SHARED_DB_NAME', NAMESPACE + '.shared');
 
 /**
  * @define {number} Shared IDB version.
  */
-os.SHARED_DB_VERSION = goog.define('os.SHARED_DB_VERSION', 2);
-
+export const SHARED_DB_VERSION = goog.define('os.SHARED_DB_VERSION', 2);
 
 /**
  * @define {string} Area manager's storage save key
  */
-os.AREA_STORAGE_KEY = goog.define('os.AREA_STORAGE_KEY', 'areas');
-
+export const AREA_STORAGE_KEY = goog.define('os.AREA_STORAGE_KEY', 'areas');
 
 /**
  * @define {string} Area manager's storage save key for all current areas, including temps
  */
-os.ALL_AREA_STORAGE_KEY = goog.define('os.ALL_AREA_STORAGE_KEY', 'areasAll');
-
+export const ALL_AREA_STORAGE_KEY = goog.define('os.ALL_AREA_STORAGE_KEY', 'areasAll');
 
 /**
  * @define {string} The storage key used for column mappings.
  */
-os.COLUMN_MAPPINGS_STORAGE_KEY = goog.define('os.COLUMN_MAPPINGS_STORAGE_KEY', 'columnMappings');
-
+export const COLUMN_MAPPINGS_STORAGE_KEY = goog.define('os.COLUMN_MAPPINGS_STORAGE_KEY', 'columnMappings');
 
 /**
  * @define {string} The database name. Override this in the application to use a separate database for storage.
  */
-os.FILE_DB_NAME = goog.define('os.FILE_DB_NAME', os.NAMESPACE + '.files');
-
+export const FILE_DB_NAME = goog.define('os.FILE_DB_NAME', NAMESPACE + '.files');
 
 /**
  * @define {number} The database version.
  */
-os.FILE_DB_VERSION = goog.define('os.FILE_DB_VERSION', 2);
-
+export const FILE_DB_VERSION = goog.define('os.FILE_DB_VERSION', 2);
 
 /**
  * @define {string} The file store name
  */
-os.FILE_STORE_NAME = goog.define('os.FILE_STORE_NAME', 'files');
-
+export const FILE_STORE_NAME = goog.define('os.FILE_STORE_NAME', 'files');
 
 /**
  * @define {string} The storage key for filters
  */
-os.FILTER_STORAGE_KEY = goog.define('os.FILTER_STORAGE_KEY', 'filters');
-
+export const FILTER_STORAGE_KEY = goog.define('os.FILTER_STORAGE_KEY', 'filters');
 
 /**
  * Global data manager reference. Set this in each application with the app-specific manager reference.
- * @type {os.data.DataManager}
+ * @type {DataManager}
  */
-os.dataManager = null;
+export let dataManager = null;
 
+/**
+ * Set the global data manager.
+ * @param {DataManager} value The data manager.
+ */
+export const setDataManager = (value) => {
+  dataManager = value;
+};
 
 /**
  * TODO after running the ES6 conversion on a lot of the files, bring this deprecated to life; it'd add
  * over a thousand warnings right now.
  *
  * The global event dispatcher.
- * @type {goog.events.EventTarget}
+ * @type {!EventTarget}
  * <AT>deprecated Please use goog.require('os.Dispatcher').getInstance() instead
  */
-os.dispatcher = new goog.events.EventTarget();
+export let dispatcher = new EventTarget();
 
+/**
+ * Set the global event dispatcher.
+ * @param {!EventTarget} value The dispatcher.
+ */
+export const setDispatcher = (value) => {
+  dispatcher = value;
+};
 
 /**
  * The logging window.
- * @type {os.debug.FancierWindow}
+ * @type {FancierWindow}
  */
-os.logWindow = null;
-
+export let logWindow = null;
 
 /**
  * Set the log window.
- * @param {os.debug.FancierWindow} win The log window.
+ * @param {FancierWindow} win The log window.
  */
-os.setLogWindow = (win) => {
-  os.logWindow = win;
+export const setLogWindow = (win) => {
+  logWindow = win;
 };
 
+/**
+ * @type {string}
+ */
+export const MainAppSelector = '.os-app';
 
 /**
  * @type {string}
  */
-os.MainAppSelector = '.os-app';
-
-
-/**
- * @type {string}
- */
-os.DefaultAppName = 'OpenSphere';
-
+export const DefaultAppName = 'OpenSphere';
 
 /**
  * Whether or not we're in OSX
  *
  * @return {boolean}
  */
-os.isOSX = function() {
+export const isOSX = function() {
   return /os\s?x/i.test(navigator.userAgent);
 };
-
 
 /**
  * Tests if obj is a numeric value.
@@ -171,62 +165,59 @@ os.isOSX = function() {
  * @param {?} obj
  * @return {boolean}
  */
-os.isNumeric = function(obj) {
+export const isNumeric = function(obj) {
   // parseFloat NaNs numeric-cast false positives (null|true|false|"")
   // ...but misinterprets leading-number strings, particularly hex literals ("0x...")
   // subtraction forces infinities to NaN
   return !goog.isArrayLike(obj) && obj - parseFloat(obj) >= 0;
 };
 
-
 /**
  * Return the browser type/version, more browser checks (Android) if desired
  *
  * @return {string}
  */
-os.browserVersion = function() {
+export const browserVersion = function() {
   var key = 'UNKNOWN';
-  if (goog.userAgent.product.CHROME) {
+  if (product.CHROME) {
     key = 'CHROME';
-  } else if (goog.userAgent.product.IE) {
+  } else if (product.IE) {
     key = 'IE';
-  } else if (goog.userAgent.product.EDGE) {
+  } else if (product.EDGE) {
     key = 'EDGE';
-  } else if (goog.userAgent.product.FIREFOX) {
+  } else if (product.FIREFOX) {
     key = 'FIREFOX';
-  } else if (goog.userAgent.product.OPERA) {
+  } else if (product.OPERA) {
     key = 'OPERA';
-  } else if (goog.userAgent.product.SAFARI) {
+  } else if (product.SAFARI) {
     key = 'SAFARI';
   }
-  var version = goog.userAgent.product.VERSION || goog.userAgent.VERSION;
+  var version = product.VERSION || userAgent.VERSION;
   version = version.split('.')[0];
   var browser = key + '.' + version;
   return browser;
 };
 
-
 /**
  * Return the browser type/version, more browser checks (Android) if desired
  *
  * @return {string}
  */
-os.operatingSystem = function() {
+export const operatingSystem = function() {
   var key = 'os.UNKNOWN';
-  if (goog.userAgent.LINUX) {
-    key = os.metrics.keys.OS.LINUX;
-  } else if (goog.userAgent.WINDOWS) {
-    key = os.metrics.keys.OS.WINDOWS;
-  } else if (goog.userAgent.MAC) {
-    key = os.metrics.keys.OS.MAC;
-  } else if (goog.userAgent.IOS) {
-    key = os.metrics.keys.OS.IOS;
-  } else if (goog.userAgent.ANDROID) {
-    key = os.metrics.keys.OS.ANDROID;
+  if (userAgent.LINUX) {
+    key = keys.OS.LINUX;
+  } else if (userAgent.WINDOWS) {
+    key = keys.OS.WINDOWS;
+  } else if (userAgent.MAC) {
+    key = keys.OS.MAC;
+  } else if (userAgent.IOS) {
+    key = keys.OS.IOS;
+  } else if (userAgent.ANDROID) {
+    key = keys.OS.ANDROID;
   }
   return key;
 };
-
 
 /**
  * Debounces the calls of a function by the amount specified in wait.
@@ -236,7 +227,7 @@ os.operatingSystem = function() {
  * @param {boolean=} opt_immediate Whether to call it immediately before starting the cooldown
  * @return {function()}
  */
-os.debounce = function(func, wait, opt_immediate) {
+export const debounce = function(func, wait, opt_immediate) {
   var timeout;
   return function() {
     var context = this;
@@ -255,7 +246,6 @@ os.debounce = function(func, wait, opt_immediate) {
   };
 };
 
-
 /**
  * Strips off any minor revision portions of a string.  That is, anything after and including a second '.'
  *
@@ -263,7 +253,7 @@ os.debounce = function(func, wait, opt_immediate) {
  * @return {!string} The major version portion of the supplied value - e.g.: "1.0".
  *  Will always return `<thing>.<thing>`, inserting '0' where necessary.
  */
-os.getMajorVersion = function(version) {
+export const getMajorVersion = function(version) {
   if (!version) {
     return '0.0';
   }
@@ -294,14 +284,13 @@ os.getMajorVersion = function(version) {
   }
 };
 
-
 /**
  * Get the parent Window, catching exceptions that may occur. This tests for access to the Window object to avoid
  * cross-origin security exceptions that may occur if the application was launched from a webpage on another domain.
  *
  * @return {!Window}
  */
-os.getParentWindow = function() {
+export const getParentWindow = function() {
   try {
     // all browsers will block cross-origin access to Window.document and throw an exception
     var parent = window.opener || window.parent;
@@ -316,7 +305,6 @@ os.getParentWindow = function() {
   return window;
 };
 
-
 /**
  * Checks if the current window or optionally an known external window is loaded inside an iframe.
  *
@@ -328,7 +316,7 @@ os.getParentWindow = function() {
  * @param {Window=} opt_windowContext a windowContext other than the "this" window.
  * @return {boolean} If inside an iframe
  */
-os.inIframe = function(opt_windowContext) {
+export const inIframe = function(opt_windowContext) {
   var win = opt_windowContext || window;
   try {
     return win.self !== win.top;
@@ -339,16 +327,14 @@ os.inIframe = function(opt_windowContext) {
   }
 };
 
-
 /**
  * Checks whether the current window context contains the main app selector.
  *
  * @return {boolean} If this is the main window.
  */
-os.isMainWindow = function() {
-  return !!document.querySelector(os.MainAppSelector);
+export const isMainWindow = function() {
+  return !!document.querySelector(MainAppSelector);
 };
-
 
 /**
  * Opens an HTML popup with the given parameters passed in.
@@ -358,7 +344,7 @@ os.isMainWindow = function() {
  * @param {string=} opt_bgColor Optional color for the background. Defaults to white
  * @param {string=} opt_textColor Optional color for the text. Defaults to black
  */
-os.openPopup = function(title, htmlBody, opt_bgColor, opt_textColor) {
+export const openPopup = function(title, htmlBody, opt_bgColor, opt_textColor) {
   if (!opt_bgColor) {
     opt_bgColor = '#FFFFFF';
   }
@@ -391,8 +377,16 @@ os.openPopup = function(title, htmlBody, opt_bgColor, opt_textColor) {
   }
 };
 
+/**
+ * The global peer instance.
+ * @type {Peer}
+ */
+export let peer = null;
 
 /**
- * @type {?os.xt.Peer}
+ * Set the global peer instance.
+ * @param {Peer} value The instance.
  */
-os.peer = null;
+export const setPeer = (value) => {
+  peer = value;
+};
