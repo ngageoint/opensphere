@@ -10,6 +10,7 @@ const GeometryCollection = goog.require('ol.geom.GeometryCollection');
 const Point = goog.require('ol.geom.Point');
 const RecordField = goog.require('os.data.RecordField');
 const osFeature = goog.require('os.feature');
+const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
 const osSource = goog.require('os.source');
 const TriState = goog.require('os.structs.TriState');
@@ -175,7 +176,7 @@ class KMLTreeExporter extends AbstractKMLExporter {
 
       // may be an array of configs - use the first one (feature style)
       if (Array.isArray(config)) {
-        config = feature instanceof osFeature.DynamicFeature ? config[1] : config[0];
+        config = feature instanceof DynamicFeature ? config[1] : config[0];
       }
 
       if (config && config['image']) {

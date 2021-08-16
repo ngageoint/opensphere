@@ -9,7 +9,7 @@ const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 
 const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const instanceOf = goog.require('os.instanceOf');
-const osSource = goog.require('os.source');
+const VectorSource = goog.require('os.source.Vector');
 const osTrack = goog.require('os.track');
 const osUiMenuLayer = goog.require('os.ui.menu.layer');
 const spatial = goog.require('os.ui.menu.spatial');
@@ -202,7 +202,7 @@ const hasFeatures = function(context) {
       const layer = node.getLayer();
       if (layer instanceof VectorLayer) {
         const source = layer.getSource();
-        if (source instanceof osSource.Vector) {
+        if (source instanceof VectorSource) {
           return source.getFeatureCount() > 0;
         }
       }
@@ -228,7 +228,7 @@ const hasSelectedFeatures = function(context) {
       const layer = node.getLayer();
       if (layer instanceof VectorLayer) {
         const source = layer.getSource();
-        if (source instanceof osSource.Vector) {
+        if (source instanceof VectorSource) {
           return source.getSelectedItems().length > 0;
         }
       }
@@ -660,8 +660,8 @@ const getTracks = function(context) {
           tracks.push(trackNodes[i].getFeature());
         }
       }
-    } else if (instanceOf(context, osSource.Vector.NAME)) {
-      const source = /** @type {!osSource.Vector} */ (context);
+    } else if (instanceOf(context, VectorSource.NAME)) {
+      const source = /** @type {!VectorSource} */ (context);
       const temp = source.getSelectedItems();
       for (let i = 0; i < temp.length; i++) {
         if (osTrack.isTrackFeature(temp[i])) {
