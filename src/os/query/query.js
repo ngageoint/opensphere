@@ -1,7 +1,6 @@
 goog.module('os.query');
 goog.module.declareLegacyNamespace();
 
-const os = goog.require('os');
 const dispatcher = goog.require('os.Dispatcher');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const GeometryField = goog.require('os.geom.GeometryField');
@@ -22,6 +21,8 @@ const AreaAdd = goog.require('os.ui.query.cmd.AreaAdd');
 
 const Feature = goog.requireType('ol.Feature');
 const OSFile = goog.requireType('os.file.File');
+const FileManager = goog.requireType('os.file.FileManager');
+const ImportManager = goog.requireType('os.ui.im.ImportManager');
 
 
 /**
@@ -54,6 +55,46 @@ const addArea = function(area, opt_active) {
 };
 
 /**
+ * The area import manager.
+ * @type {ImportManager}
+ */
+let areaImportManager = null;
+
+/**
+ * Get the area import manager.
+ * @return {ImportManager}
+ */
+const getAreaImportManager = () => areaImportManager;
+
+/**
+ * Set the area import manager.
+ * @param {ImportManager} value The manager.
+ */
+const setAreaImportManager = (value) => {
+  areaImportManager = value;
+};
+
+/**
+ * The area file Manager.
+ * @type {FileManager}
+ */
+let areaFileManager = null;
+
+/**
+ * Get the area import manager.
+ * @return {FileManager}
+ */
+const getAreaFileManager = () => areaFileManager;
+
+/**
+ * Set the area import manager.
+ * @param {FileManager} value The manager.
+ */
+const setAreaFileManager = (value) => {
+  areaFileManager = value;
+};
+
+/**
  * Launches the import process for filters/areas.
  *
  * @param {Object<string, *>=} opt_config Optional config to pass to the import process.
@@ -61,7 +102,7 @@ const addArea = function(area, opt_active) {
  */
 const launchQueryImport = function(opt_config, opt_file) {
   Metrics.getInstance().updateMetric(FiltersKeys.IMPORT, 1);
-  var importProcess = new ImportProcess(os.areaImportManager, os.areaFileManager);
+  var importProcess = new ImportProcess(areaImportManager, areaFileManager);
   importProcess.setEvent(new ImportEvent(ImportEventType.FILE, opt_file, undefined, opt_config));
   importProcess.begin();
 };
@@ -101,6 +142,10 @@ const queryWorld = function() {
 exports = {
   AreaState,
   addArea,
+  getAreaImportManager,
+  setAreaImportManager,
+  getAreaFileManager,
+  setAreaFileManager,
   launchQueryImport,
   launchCoordinates,
   launchChooseArea,
