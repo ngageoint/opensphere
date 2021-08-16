@@ -1,5 +1,7 @@
 goog.declareModuleId('os.source');
 
+import {debounce} from '../os.js';
+import * as dispatcher from '../dispatcher.js';
 import {isInternalField} from '../feature/feature.js';
 
 const Timer = goog.require('goog.Timer');
@@ -7,8 +9,6 @@ const {defaultCompare} = goog.require('goog.array');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
 const Property = goog.require('ol.layer.Property');
-const {debounce} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
 const Fields = goog.require('os.Fields');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');

@@ -2,7 +2,8 @@ goog.declareModuleId('plugin.electron.CustomizeSettingsWindow');
 
 import * as CustomizeSettingsUI from './customizesettingsui'; // eslint-disable-line
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../os/os.js';
+
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const {create: createWindow, close: closeWindow} = goog.require('os.ui.window');

@@ -6,12 +6,12 @@ goog.declareModuleId('os.style');
 
 import * as osLabel from './label.js';
 import StyleManager from './stylemanager.js';
+import {ROOT} from '../os.js';
 import * as osFeature from '../feature/feature.js';
 
 const {equals} = goog.require('goog.array');
 const {toRadians} = goog.require('goog.math');
 const {asArray, asString, toString} = goog.require('ol.color');
-const {ROOT} = goog.require('os');
 const {toRgbArray} = goog.require('os.color');
 const RecordField = goog.require('os.data.RecordField');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');

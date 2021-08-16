@@ -4,7 +4,8 @@ goog.module.declareLegacyNamespace();
 goog.require('os.ui.layer.ColumnSuggestionSelect');
 
 const {getValues} = goog.require('goog.object');
-const {ROOT, implements: implementationOf} = goog.require('os');
+const {ROOT} = goog.require('os');
+const implementationOf = goog.require('os.implements');
 const Settings = goog.require('os.config.Settings');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 const DataManager = goog.require('os.data.DataManager');

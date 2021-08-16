@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const log = goog.require('goog.log');
+const {ROOT} = goog.require('os');
 const Settings = goog.require('os.config.Settings');
 const EventType = goog.require('os.events.EventType');
 const {FA_ICON} = goog.require('os.filter.default');
@@ -52,7 +53,7 @@ const getFileUrl = function(resource) {
   var result = '';
   if (resource && resource.url) {
     if (resource.debugPath) {
-      result += goog.DEBUG ? resource.debugPath : os.ROOT;
+      result += goog.DEBUG ? resource.debugPath : ROOT;
     }
     result += resource.url;
   }

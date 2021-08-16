@@ -17,6 +17,8 @@ const WindowEventType = goog.require('os.ui.WindowEventType');
 const osWindow = goog.require('os.ui.window');
 const JoinLayer = goog.require('plugin.vectortools.JoinLayer');
 
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+
 
 /**
  * @return {angular.Directive}
@@ -252,8 +254,8 @@ class Controller extends SourceManager {
   }
 
   /**
-   * @param {os.data.ColumnDefinition} a
-   * @param {os.data.ColumnDefinition} b
+   * @param {ColumnDefinition} a
+   * @param {ColumnDefinition} b
    * @return {number}
    * @private
    */

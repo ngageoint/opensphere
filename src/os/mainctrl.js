@@ -96,6 +96,7 @@ const PlacesMetrics = goog.require('os.metrics.PlacesMetrics');
 const ServersMetrics = goog.require('os.metrics.ServersMetrics');
 const TimelineMetrics = goog.require('os.metrics.TimelineMetrics');
 const {Map: MapKeys} = goog.require('os.metrics.keys');
+const {setAreaFileManager, setAreaImportManager} = goog.require('os.query');
 const AreaManager = goog.require('os.query.AreaManager');
 const FilterManager = goog.require('os.query.FilterManager');
 const QueryManager = goog.require('os.query.QueryManager');
@@ -190,7 +191,9 @@ const WeatherPlugin = goog.require('plugin.weather.WeatherPlugin');
 const XYZPlugin = goog.require('plugin.xyz.XYZPlugin');
 
 const LayerConfigEvent = goog.requireType('os.events.LayerConfigEvent');
+const OSFile = goog.requireType('os.file.File');
 const SettingPlugin = goog.requireType('os.ui.config.SettingPlugin');
+const UIEvent = goog.requireType('os.ui.events.UIEvent');
 
 
 /**
@@ -286,7 +289,7 @@ class Controller extends AbstractMainCtrl {
     // configure data manager
     const dataManager = DataManager.getInstance();
     dataManager.setMapContainer(map);
-    os.dataManager = dataManager;
+    os.setDataManager(dataManager);
 
     // configure exports
     exportManager.registerPersistenceMethod(new FilePersistence());
@@ -351,30 +354,26 @@ class Controller extends AbstractMainCtrl {
     // init filter manager
     var filterManager = FilterManager.getInstance();
     setFilterManager(filterManager);
-    os.filterManager = os.ui.filterManager = filterManager;
+    os.filterManager = ui.filterManager = filterManager;
 
     // init area manager
     var areaManager = AreaManager.getInstance();
     setAreaManager(areaManager);
-    os.areaManager = os.ui.areaManager = areaManager;
+    os.areaManager = ui.areaManager = areaManager;
 
     // init query manager
     var queryManager = QueryManager.getInstance();
     setQueryManager(queryManager);
-    os.queryManager = os.ui.queryManager = queryManager;
+    os.queryManager = ui.queryManager = queryManager;
 
     areaImportMenu.setup();
 
     // initialize the area/filter import/file managers
-    os.areaImportManager = new ImportManager();
-    os.areaImportManager.registerImportDetails('Area filters for supported layers.');
-    os.areaImportManager.registerImportUI(osFileMimeFilter.TYPE, new OSFilterImportUI());
-    os.areaFileManager = new FileManager();
-
-    // initialize the places import/file managers
-    os.placesImportManager = new ImportManager();
-    os.placesImportManager.registerImportUI(osFileMimeFilter.TYPE, new OSFilterImportUI());
-    os.placesFileManager = new FileManager();
+    const areaImportManager = new ImportManager();
+    areaImportManager.registerImportDetails('Area filters for supported layers.');
+    areaImportManager.registerImportUI(osFileMimeFilter.TYPE, new OSFilterImportUI());
+    setAreaImportManager(areaImportManager);
+    setAreaFileManager(new FileManager());
 
     // initialize the CMM
     ColumnMappingManager.getInstance();
@@ -908,7 +907,7 @@ class Controller extends AbstractMainCtrl {
   /**
    * Toggles a UI component
    *
-   * @param {os.ui.events.UIEvent} event The event
+   * @param {UIEvent} event The event
    * @private
    */
   onToggleUI_(event) {
@@ -963,7 +962,7 @@ class Controller extends AbstractMainCtrl {
   }
 
   /**
-   * @param {os.file.File} file File.
+   * @param {OSFile} file File.
    * @private
    */
   handleResult_(file) {

@@ -6,8 +6,8 @@ goog.declareModuleId('plugin.cesium.mixin');
 
 import {load as loadOLCesiumMixin} from './olcesiummixin';
 import {load as loadRenderLoopMixin} from './renderloopmixin';
+import * as dispatcher from '../../../os/dispatcher.js';
 
-const dispatcher = goog.require('os.Dispatcher');
 const MapEvent = goog.require('os.MapEvent');
 const {getCrossOrigin} = goog.require('os.net');
 const CrossOrigin = goog.require('os.net.CrossOrigin');

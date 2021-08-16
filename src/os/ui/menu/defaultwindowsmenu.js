@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.windows.default');
-goog.module.declareLegacyNamespace();
 
 const os = goog.require('os');
 const dispatcher = goog.require('os.Dispatcher');

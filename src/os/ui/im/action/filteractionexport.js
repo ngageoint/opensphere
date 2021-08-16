@@ -2,6 +2,7 @@ goog.module('os.ui.im.action.FilterActionExportUI');
 goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
+const {ROOT} = goog.require('os');
 const AlertManager = goog.require('os.alert.AlertManager');
 const {saveFile} = goog.require('os.file.persist');
 const {testFilterActionEnabled} = goog.require('os.im.action');
@@ -22,7 +23,7 @@ const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
  */
 const directive = () => ({
   restrict: 'E',
-  templateUrl: os.ROOT + 'views/im/action/filteractionexport.html',
+  templateUrl: ROOT + 'views/im/action/filteractionexport.html',
   controller: Controller,
   controllerAs: 'ctrl'
 });

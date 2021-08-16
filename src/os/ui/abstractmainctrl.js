@@ -205,7 +205,7 @@ class Controller {
     Metrics.getInstance();
     MetricsManager.getInstance();
 
-    os.peer = Peer.getInstance();
+    os.setPeer(Peer.getInstance());
 
     const notificationManager = NotificationManager.getInstance();
     notificationManager.setAppTitle(this.scope['appName']);

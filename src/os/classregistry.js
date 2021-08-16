@@ -6,7 +6,7 @@
  */
 goog.declareModuleId('os.classRegistry');
 
-const {getParentWindow} = goog.require('os');
+import {getParentWindow} from './os.js';
 
 /**
  * Class registry for cross-window instanceof calls.

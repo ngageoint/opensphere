@@ -5,14 +5,15 @@ goog.require('os.ui.slick.SlickTreeUI');
 import SettingsFileNode from './settingsfilenode.js';
 import settingsImportManager from './settingsimportmanager.js';
 import SettingsImportUI from './settingsimportui.js';
+
+import {ROOT} from '../../os/os.js';
+import * as Dispatcher from '../../os/dispatcher.js';
 import {apply} from '../../os/ui/ui.js';
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 
-const {ROOT} = goog.require('os');
-const Dispatcher = goog.require('os.Dispatcher');
 const AlertManager = goog.require('os.alert.AlertManager');
 const {createFromFile} = goog.require('os.file');
 const Module = goog.require('os.ui.Module');

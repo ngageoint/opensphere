@@ -5,6 +5,7 @@ const Throttle = goog.require('goog.async.Throttle');
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
+const {setDataManager} = goog.require('os');
 const dispatcher = goog.require('os.Dispatcher');
 const DataManager = goog.require('os.data.DataManager');
 const DataEventType = goog.require('os.data.event.DataEventType');
@@ -72,7 +73,7 @@ class TimelineHistManager extends EventTarget {
       events.unlisten(source, GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
     }
 
-    os.dataManager = null;
+    setDataManager(null);
   }
 
   /**

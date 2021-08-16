@@ -815,7 +815,7 @@ const saveLayerToPlaces = function(event) {
               saveKMLToPlaces(kmlRoot);
             }
           } else if (rootNode && layer instanceof VectorLayer) {
-            launchSavePlaces(/** @type {os.source.Vector} */ (layer.getSource()));
+            launchSavePlaces(/** @type {VectorSource} */ (layer.getSource()));
           }
         }
       } else if (context[0] instanceof KMLNode && context[0].getRoot() != rootNode) {
