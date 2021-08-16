@@ -1,36 +1,21 @@
-goog.module('os.Dispatcher');
-goog.module.declareLegacyNamespace();
-
-const os = goog.require('os');
-const EventTarget = goog.require('goog.events.EventTarget');
-
-
 // This module is named like a Class, but is not. This is for compatibility with the existing os.dispatcher
+goog.declareModuleId('os.Dispatcher');
 
-// TODO when everything is transformed off the deprecated os.dispatcher, remove references to it from here and
-// switch back to using a local "instance" variable like normal
-// let instance = null;
+import {dispatcher, setDispatcher} from './os.js';
+
+const EventTarget = goog.requireType('goog.events.EventTarget');
 
 /**
  * Get the global dispatcher.
  * @return {!EventTarget}
+ * @todo Deprecate os.dispatcher and replace with a local instance here.
  */
-function getInstance() {
-  if (!os.dispatcher) {
-    os.dispatcher = new EventTarget(); // nudge the compiler; can't just use setInstance() or it thinks it could be null
-  }
-  return os.dispatcher;
-}
+export const getInstance = () => dispatcher;
 
 /**
  * Set the global dispatcher.
- * @param {EventTarget} value
+ * @param {!EventTarget} value
  */
-function setInstance(value) {
-  os.dispatcher = value;
-}
-
-exports = {
-  getInstance,
-  setInstance
+export const setInstance = (value) => {
+  setDispatcher(value);
 };
