@@ -2,9 +2,10 @@ goog.declareModuleId('plugin.electron.CustomizeSettingsUI');
 
 goog.require('os.ui.slick.SlickTreeUI');
 
-import SettingsFileNode from './settingsfilenode';
-import settingsImportManager from './settingsimportmanager';
-import SettingsImportUI from './settingsimportui';
+import SettingsFileNode from './settingsfilenode.js';
+import settingsImportManager from './settingsimportmanager.js';
+import SettingsImportUI from './settingsimportui.js';
+import {apply} from '../../os/ui/ui.js';
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
@@ -14,7 +15,6 @@ const {ROOT} = goog.require('os');
 const Dispatcher = goog.require('os.Dispatcher');
 const AlertManager = goog.require('os.alert.AlertManager');
 const {createFromFile} = goog.require('os.file');
-const osUi = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const ImportEvent = goog.require('os.ui.im.ImportEvent');
 const ImportEventType = goog.require('os.ui.im.ImportEventType');
@@ -183,7 +183,7 @@ export class Controller {
     const files = this['fileNodes'].map((node) => node.getFile());
 
     this['changed'] = filesChanged(files);
-    osUi.apply(this.scope);
+    apply(this.scope);
 
     return ElectronOS.setSettingsFiles(files);
   }
@@ -225,6 +225,6 @@ export class Controller {
     });
 
     this['changed'] = filesChanged(files);
-    osUi.apply(this.scope);
+    apply(this.scope);
   }
 }

@@ -33,8 +33,8 @@ const math = goog.require('os.math');
 const registerClass = goog.require('os.registerClass');
 const SourcePropertyChange = goog.require('os.source.PropertyChange');
 const {isStateFile} = goog.require('os.state');
-const ui = goog.require('os.ui');
 const Icons = goog.require('os.ui.Icons');
+const IconsSVG = goog.require('os.ui.IconsSVG');
 const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
 const renamelayer = goog.require('os.ui.renamelayer');
 
@@ -291,7 +291,7 @@ class VectorTile extends VectorTileLayer {
    * @protected
    */
   getSVGIconsInternal() {
-    return [ui.IconsSVG.TILES];
+    return [IconsSVG.TILES];
   }
 
   /**

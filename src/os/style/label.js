@@ -4,6 +4,7 @@ import {instanceOf} from '../classregistry.js';
 import * as osStyle from './style.js';
 import {hideLabel, showLabel} from '../feature/feature.js';
 import {zIndexCompare} from '../source/source.js';
+import {measureText} from '../ui/ui.js';
 
 const {assert} = goog.require('goog.asserts');
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
@@ -30,7 +31,6 @@ const SourceClass = goog.require('os.source.SourceClass');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const {getStyleManager} = goog.require('os.style.instance');
-const {measureText} = goog.require('os.ui');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');

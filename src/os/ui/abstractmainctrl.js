@@ -64,11 +64,8 @@ class Controller {
      */
     this.scope = $scope;
 
-    /**
-     * set injector for global use (for when things outside of angular need to use services)
-     * @type {angular.$injector}
-     */
-    ui.injector = $injector;
+    // Set injector for global use (for when things outside of Angular need to use services).
+    ui.setInjector($injector);
     fixInjectorInvoke($injector);
 
     /**
