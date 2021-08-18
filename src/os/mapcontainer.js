@@ -886,13 +886,12 @@ class MapContainer extends EventTarget {
     referenceGroup.setPriority(100);
     referenceGroup.setOSType(LayerType.REF);
 
-    osMap.PROJECTION = olProj.get(/** @type {string} */ (
-      Settings.getInstance().get(osMap.PROJECTION_KEY, osMap.PROJECTION.getCode())));
+    osMap.setProjection(olProj.get(/** @type {string} */ (
+      Settings.getInstance().get(osMap.PROJECTION_KEY, osMap.PROJECTION.getCode()))));
 
-    osMap.TILEGRID = createForProjection(
-        osMap.PROJECTION, ol.DEFAULT_MAX_ZOOM, [512, 512]);
-    osMap.MIN_RESOLUTION = osMap.zoomToResolution(osMap.MAX_ZOOM, osMap.PROJECTION);
-    osMap.MAX_RESOLUTION = osMap.zoomToResolution(osMap.MIN_ZOOM, osMap.PROJECTION);
+    osMap.setTileGrid(createForProjection(osMap.PROJECTION, ol.DEFAULT_MAX_ZOOM, [512, 512]));
+    osMap.setMinResolution(osMap.zoomToResolution(osMap.MAX_ZOOM, osMap.PROJECTION));
+    osMap.setMaxResolution(osMap.zoomToResolution(osMap.MIN_ZOOM, osMap.PROJECTION));
 
     const enableReprojection = /** @type {boolean} */ (Settings.getInstance().get('enableReprojection', true));
     setEnableRasterReprojection(enableReprojection);

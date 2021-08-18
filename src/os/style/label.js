@@ -3,6 +3,7 @@ goog.declareModuleId('os.style.label');
 import {instanceOf} from '../classregistry.js';
 import * as osStyle from './style.js';
 import {hideLabel, showLabel} from '../feature/feature.js';
+import * as osMap from '../map/map.js';
 import {zIndexCompare} from '../source/source.js';
 import {measureText} from '../ui/ui.js';
 
@@ -24,7 +25,6 @@ const DataManager = goog.require('os.data.DataManager');
 const RecordField = goog.require('os.data.RecordField');
 const {filterFalsey} = goog.require('os.fn');
 const PropertyChange = goog.require('os.layer.PropertyChange');
-const osMap = goog.require('os.map');
 const {getMapContainer} = goog.require('os.map.instance');
 const {getFirstValue} = goog.require('os.object');
 const SourceClass = goog.require('os.source.SourceClass');

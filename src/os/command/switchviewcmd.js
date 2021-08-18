@@ -114,10 +114,10 @@ class SwitchView {
       var zoom = osMap.resolutionToZoom(resolution, osMap.PROJECTION);
     }
 
-    osMap.PROJECTION = projection;
-    osMap.TILEGRID = tilegrid.createForProjection(osMap.PROJECTION, DEFAULT_MAX_ZOOM, [512, 512]);
-    osMap.MIN_RESOLUTION = osMap.zoomToResolution(osMap.MAX_ZOOM, osMap.PROJECTION);
-    osMap.MAX_RESOLUTION = osMap.zoomToResolution(osMap.MIN_ZOOM, osMap.PROJECTION);
+    osMap.setProjection(projection);
+    osMap.setTileGrid(tilegrid.createForProjection(osMap.PROJECTION, DEFAULT_MAX_ZOOM, [512, 512]));
+    osMap.setMinResolution(osMap.zoomToResolution(osMap.MAX_ZOOM, osMap.PROJECTION));
+    osMap.setMaxResolution(osMap.zoomToResolution(osMap.MIN_ZOOM, osMap.PROJECTION));
 
     Settings.getInstance().set(osMap.PROJECTION_KEY, osMap.PROJECTION.getCode());
 

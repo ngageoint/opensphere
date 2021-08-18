@@ -1,5 +1,6 @@
 goog.declareModuleId('os.feature');
 
+import * as osMap from '../map/map.js';
 import * as osStyle from '../style/style.js';
 
 const {defaultCompare} = goog.require('goog.array');
@@ -38,7 +39,6 @@ const instanceOf = goog.require('os.instanceOf');
 const interpolate = goog.require('os.interpolate');
 const LayerClass = goog.require('os.layer.LayerClass');
 const LayerId = goog.require('os.layer.LayerId');
-const osMap = goog.require('os.map');
 const {getIMapContainer} = goog.require('os.map.instance');
 const {convertUnits, parseNumber} = goog.require('os.math');
 const Units = goog.require('os.math.Units');
