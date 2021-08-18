@@ -49,7 +49,7 @@ describe('plugin.cesium.sync.DynamicPolygonConverter', () => {
   const originalProjection = osMap.PROJECTION;
   afterEach(() => {
     disableWebGLMock();
-    osMap.PROJECTION = originalProjection;
+    osMap.setProjection(originalProjection);
   });
 
   const bluish = 'rgba(20,50,255,1)';

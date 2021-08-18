@@ -27,7 +27,7 @@ describe('os.geo2', function() {
 
   var originalProjection = osMap.PROJECTION;
   afterEach(function() {
-    osMap.PROJECTION = originalProjection;
+    osMap.setProjection(originalProjection);
   });
 
   it('should normalize longitudes properly', function() {
@@ -108,7 +108,7 @@ describe('os.geo2', function() {
 
 
   it('should normalize geometries', function() {
-    osMap.PROJECTION = olProj.get(osProj.EPSG4326);
+    osMap.setProjection(olProj.get(osProj.EPSG4326));
     var features = featureMock.getFeatures(true);
 
     features.forEach(function(feature) {

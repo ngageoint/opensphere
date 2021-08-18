@@ -12,16 +12,16 @@ describe('plugin.cesium.sync.getTransformFunction', () => {
   const proj = osMap.PROJECTION;
 
   afterEach(() => {
-    osMap.PROJECTION = proj;
+    osMap.setProjection(proj);
   });
 
   it('should return null for projections equivalent to EPSG:4326', () => {
-    osMap.PROJECTION = olProj.get(osProj.EPSG4326);
+    osMap.setProjection(olProj.get(osProj.EPSG4326));
     expect(getTransformFunction()).toBe(null);
   });
 
   it('should return a transform function for projections not equivalent to EPSG:4326', () => {
-    osMap.PROJECTION = olProj.get(osProj.EPSG3857);
+    osMap.setProjection(olProj.get(osProj.EPSG3857));
     const result = getTransformFunction();
     expect(result).toBeTruthy();
 
@@ -30,7 +30,7 @@ describe('plugin.cesium.sync.getTransformFunction', () => {
   });
 
   it('should transform coordinates', () => {
-    osMap.PROJECTION = olProj.get(osProj.EPSG3857);
+    osMap.setProjection(olProj.get(osProj.EPSG3857));
     const tx = getTransformFunction();
     const coord = [0, 0];
     const result = tx(coord);
@@ -40,7 +40,7 @@ describe('plugin.cesium.sync.getTransformFunction', () => {
   });
 
   it('should copy dimensions outside of x/y to the output', () => {
-    osMap.PROJECTION = olProj.get(osProj.EPSG3857);
+    osMap.setProjection(olProj.get(osProj.EPSG3857));
     const tx = getTransformFunction();
     const coord = [0, 0, 100];
     const result = tx(coord);
@@ -54,7 +54,7 @@ describe('plugin.cesium.sync.getTransformFunction', () => {
   });
 
   it('should use the optional result', () => {
-    osMap.PROJECTION = olProj.get(osProj.EPSG3857);
+    osMap.setProjection(olProj.get(osProj.EPSG3857));
     const tx = getTransformFunction();
     const coord = [0, 0, 100];
     const result = [];
@@ -66,7 +66,7 @@ describe('plugin.cesium.sync.getTransformFunction', () => {
   });
 
   it('should use the given dimensions size', () => {
-    osMap.PROJECTION = olProj.get(osProj.EPSG3857);
+    osMap.setProjection(olProj.get(osProj.EPSG3857));
     const tx = getTransformFunction();
     const coord = [0, 0, 100];
     const result = [];
