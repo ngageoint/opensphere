@@ -20,9 +20,9 @@ const StyleType = goog.require('os.style.StyleType');
 const label = goog.require('os.style.label');
 const Module = goog.require('os.ui.Module');
 const {
-  directive: editFiltersDirective,
-  Controller: EditFilterActionCtrl
+  directive: editFiltersDirective
 } = goog.require('os.ui.filter.ui.EditFiltersUI');
+const EditFilterActionCtrl = goog.require('os.ui.im.action.EditFilterActionCtrl');
 const EventType = goog.require('os.ui.im.action.EventType');
 
 const OLStyle = goog.requireType('ol.style.Style');
