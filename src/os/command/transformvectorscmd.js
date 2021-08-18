@@ -10,7 +10,6 @@ const osFeature = goog.require('os.feature');
 const geo2 = goog.require('os.geo2');
 const interpolate = goog.require('os.interpolate');
 const {getMapContainer} = goog.require('os.map.instance');
-const KMLSource = goog.require('plugin.file.kml.KMLSource');
 
 const ICommand = goog.requireType('os.command.ICommand');
 
@@ -132,26 +131,13 @@ class TransformVectors {
 
         if (source) {
           var features = source.getFeatures();
-
-          // we can't merely change the features in place because os.source.Vector has an override
-          // that removes the listener on feature change (because it is otherwise not used). Instead,
-          // we'll remove, transform, and re-add the features.
-
           if (features.length) {
-            if (!(source instanceof KMLSource)) {
-              source.clear(true);
-            }
-
             for (var j = 0, m = features.length; j < m; j++) {
               osFeature.forEachGeometry(features[j], tx);
 
               for (var k = 0, l = extraGeoms.length; k < l; k++) {
                 tx(/** @type {ol.geom.Geometry|undefined} */ (features[j].get(extraGeoms[k])));
               }
-            }
-
-            if (!(source instanceof KMLSource)) {
-              source.addFeatures(features);
             }
           }
         }

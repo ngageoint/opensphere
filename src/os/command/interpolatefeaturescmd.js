@@ -1,13 +1,10 @@
 goog.module('os.command.InterpolateFeatures');
 goog.module.declareLegacyNamespace();
 
-const asserts = goog.require('goog.asserts');
 const OLVectorLayer = goog.require('ol.layer.Vector');
 const State = goog.require('os.command.State');
 const interpolate = goog.require('os.interpolate');
 const {getMapContainer} = goog.require('os.map.instance');
-const VectorSource = goog.require('os.source.Vector');
-const KMLSource = goog.require('plugin.file.kml.KMLSource');
 
 const ICommand = goog.requireType('os.command.ICommand');
 
@@ -85,28 +82,10 @@ class InterpolateFeatures {
 
         if (source) {
           var features = source.getFeatures();
-
-          // we can't merely change the features in place because os.source.Vector has an override
-          // that removes the listener on feature change (because it is otherwise not used). Instead,
-          // we'll remove, interpolate, and re-add the features.
-
           if (features.length) {
-            if (source instanceof KMLSource) {
-              features.forEach((feature) => {
-                interpolate.interpolateFeature(feature);
-              });
-            } else {
-              source.clear(true);
-              asserts.assert(features.length > 0);
-
-              if (!(source instanceof VectorSource)) {
-                for (var j = 0, m = features.length; j < m; j++) {
-                  interpolate.interpolateFeature(features[j]);
-                }
-              }
-
-              source.addFeatures(features);
-            }
+            features.forEach((feature) => {
+              interpolate.interpolateFeature(feature);
+            });
           }
         }
       }
