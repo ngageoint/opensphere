@@ -10,6 +10,7 @@ const osFeature = goog.require('os.feature');
 const geo2 = goog.require('os.geo2');
 const interpolate = goog.require('os.interpolate');
 const {getMapContainer} = goog.require('os.map.instance');
+const KMLSource = goog.require('plugin.file.kml.KMLSource');
 
 const ICommand = goog.requireType('os.command.ICommand');
 
@@ -137,7 +138,9 @@ class TransformVectors {
           // we'll remove, transform, and re-add the features.
 
           if (features.length) {
-            source.clear(true);
+            if (!(source instanceof KMLSource)) {
+              source.clear(true);
+            }
 
             for (var j = 0, m = features.length; j < m; j++) {
               osFeature.forEachGeometry(features[j], tx);
@@ -147,7 +150,9 @@ class TransformVectors {
               }
             }
 
-            source.addFeatures(features);
+            if (!(source instanceof KMLSource)) {
+              source.addFeatures(features);
+            }
           }
         }
       }
