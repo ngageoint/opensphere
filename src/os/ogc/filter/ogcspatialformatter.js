@@ -1,127 +1,127 @@
-goog.provide('os.ogc.filter.OGCSpatialFormatter');
+goog.module('os.ogc.filter.OGCSpatialFormatter');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.geom.GeometryType');
-goog.require('ol.geom.Polygon');
-goog.require('os.filter.ISpatialFormatter');
-goog.require('os.geo');
-goog.require('os.geo.jsts');
-goog.require('os.interpolate');
-goog.require('os.ogc.spatial');
-goog.require('os.proj');
-goog.require('os.xml');
+const GeometryType = goog.require('ol.geom.GeometryType');
+const Polygon = goog.require('ol.geom.Polygon');
+const {interpolateCircle, isRectangular} = goog.require('os.geo');
+const {splitWithinWorldExtent} = goog.require('os.geo.jsts');
+const {beginTempInterpolation, endTempInterpolation, interpolateGeom} = goog.require('os.interpolate');
+const {formatExtent, formatGMLIntersection} = goog.require('os.ogc.spatial');
+const {EPSG4326} = goog.require('os.proj');
+const {escape: xmlEscape} = goog.require('os.xml');
 
+const ISpatialFormatter = goog.requireType('os.filter.ISpatialFormatter');
 
 
 /**
  * Formats a spatial query for use in an OGC Filter.
  *
- * @param {string=} opt_column
- * @implements {os.filter.ISpatialFormatter}
- * @constructor
+ * @implements {ISpatialFormatter}
  */
-os.ogc.filter.OGCSpatialFormatter = function(opt_column) {
+class OGCSpatialFormatter {
   /**
-   * @type {string}
-   * @private
+   * Constructor.
+   * @param {string=} opt_column
    */
-  this.column_ = opt_column || os.ogc.filter.OGCSpatialFormatter.DEFAULT_COLUMN_;
-};
-
-
-/**
- * @type {string}
- * @const
- * @private
- */
-os.ogc.filter.OGCSpatialFormatter.DEFAULT_COLUMN_ = 'GEOM';
-
-
-/**
- * @inheritDoc
- */
-os.ogc.filter.OGCSpatialFormatter.prototype.format = function(feature) {
-  var result = '';
-  var geometry = this.getGeometry(feature);
-  if (geometry) {
-    var type = geometry.getType();
-
-    // Encode area name and description to avoid problems with special chars. The
-    // name/desc does not matter.
-    var name = os.xml.escape(/** @type {string} */ (feature.get('title') || 'New Area'));
-    var description = os.xml.escape(/** @type {string} */ (feature.get('description')));
-    var id = feature.getId() != null ? os.xml.escape(feature.getId().toString()) : undefined;
-
-    switch (type) {
-      case ol.geom.GeometryType.CIRCLE:
-        geometry = /** @type {ol.geom.Circle} */ (geometry);
-
-        var polyCircle = new ol.geom.Polygon([os.geo.interpolateCircle(geometry.getCenter(), geometry.getRadius())]);
-        result = os.ogc.spatial.formatGMLIntersection(polyCircle, this.column_, name, description, id) || '';
-        break;
-      case ol.geom.GeometryType.MULTI_LINE_STRING:
-      case ol.geom.GeometryType.POLYGON:
-        geometry = /** @type {ol.geom.Polygon} */ (geometry);
-        var coords = geometry.getCoordinates();
-
-        if (coords.length == 1 && os.geo.isRectangular(coords[0], geometry.getExtent())) {
-          result = os.ogc.spatial.formatExtent(geometry.getExtent(), this.column_, name, description, id);
-        } else {
-          // Some OGC services (like GeoServer) do not support polygons that cross the antimeridian, so split the
-          // geometry if it crosses. Ensure the geometry has been interpolated so it is split properly.
-          os.interpolate.beginTempInterpolation(os.proj.EPSG4326);
-          os.interpolate.interpolateGeom(geometry);
-          os.interpolate.endTempInterpolation();
-
-          geometry = os.geo.jsts.splitWithinWorldExtent(geometry, os.proj.EPSG4326);
-
-          result = os.ogc.spatial.formatGMLIntersection(geometry, this.column_, name, description, id) || '';
-        }
-        break;
-      case ol.geom.GeometryType.LINE_STRING:
-      case ol.geom.GeometryType.MULTI_POLYGON:
-        result = os.ogc.spatial.formatGMLIntersection(geometry, this.column_, name, description, id) || '';
-        break;
-      default:
-        result = os.ogc.spatial.formatExtent(geometry.getExtent(), this.column_, name, description, id);
-        break;
-    }
+  constructor(opt_column) {
+    /**
+     * @type {string}
+     * @private
+     */
+    this.column_ = opt_column || defaultColumn;
   }
 
-  return result;
-};
+  /**
+   * @inheritDoc
+   */
+  format(feature) {
+    var result = '';
+    var geometry = this.getGeometry(feature);
+    if (geometry) {
+      var type = geometry.getType();
 
+      // Encode area name and description to avoid problems with special chars. The
+      // name/desc does not matter.
+      var name = xmlEscape(/** @type {string} */ (feature.get('title') || 'New Area'));
+      var description = xmlEscape(/** @type {string} */ (feature.get('description')));
+      var id = feature.getId() != null ? xmlEscape(feature.getId().toString()) : undefined;
+
+      switch (type) {
+        case GeometryType.CIRCLE:
+          geometry = /** @type {ol.geom.Circle} */ (geometry);
+
+          var polyCircle = new Polygon([interpolateCircle(geometry.getCenter(), geometry.getRadius())]);
+          result = formatGMLIntersection(polyCircle, this.column_, name, description, id) || '';
+          break;
+        case GeometryType.MULTI_LINE_STRING:
+        case GeometryType.POLYGON:
+          geometry = /** @type {Polygon} */ (geometry);
+          var coords = geometry.getCoordinates();
+
+          if (coords.length == 1 && isRectangular(coords[0], geometry.getExtent())) {
+            result = formatExtent(geometry.getExtent(), this.column_, name, description, id);
+          } else {
+            // Some OGC services (like GeoServer) do not support polygons that cross the antimeridian, so split the
+            // geometry if it crosses. Ensure the geometry has been interpolated so it is split properly.
+            beginTempInterpolation(EPSG4326);
+            interpolateGeom(geometry);
+            endTempInterpolation();
+
+            geometry = splitWithinWorldExtent(geometry, EPSG4326);
+
+            result = formatGMLIntersection(geometry, this.column_, name, description, id) || '';
+          }
+          break;
+        case GeometryType.LINE_STRING:
+        case GeometryType.MULTI_POLYGON:
+          result = formatGMLIntersection(geometry, this.column_, name, description, id) || '';
+          break;
+        default:
+          result = formatExtent(geometry.getExtent(), this.column_, name, description, id);
+          break;
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * @param {?ol.Feature} feature
+   * @return {null|ol.geom.Geometry|undefined}
+   * @protected
+   */
+  getGeometry(feature) {
+    return feature ? feature.getGeometry() : null;
+  }
+
+  /**
+   * Sets the column for the spatial region.
+   *
+   * @param {?string} value
+   */
+  setColumn(value) {
+    this.column_ = value || defaultColumn;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  supportsMultiple() {
+    return true;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  wrapMultiple(value) {
+    return value ? '<Or>' + value + '</Or>' : '';
+  }
+}
 
 /**
- * @param {?ol.Feature} feature
- * @return {null|ol.geom.Geometry|undefined}
- * @protected
+ * The default spatial column.
+ * @type {string}
  */
-os.ogc.filter.OGCSpatialFormatter.prototype.getGeometry = function(feature) {
-  return feature ? feature.getGeometry() : null;
-};
+const defaultColumn = 'GEOM';
 
-
-/**
- * Sets the column for the spatial region.
- *
- * @param {?string} value
- */
-os.ogc.filter.OGCSpatialFormatter.prototype.setColumn = function(value) {
-  this.column_ = value || os.ogc.filter.OGCSpatialFormatter.DEFAULT_COLUMN_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ogc.filter.OGCSpatialFormatter.prototype.supportsMultiple = function() {
-  return true;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ogc.filter.OGCSpatialFormatter.prototype.wrapMultiple = function(value) {
-  return value ? '<Or>' + value + '</Or>' : '';
-};
+exports = OGCSpatialFormatter;

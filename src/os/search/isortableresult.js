@@ -1,5 +1,5 @@
-goog.provide('os.search.ISortableResult');
-
+goog.module('os.search.ISortableResult');
+goog.module.declareLegacyNamespace();
 
 
 /**
@@ -7,19 +7,19 @@ goog.provide('os.search.ISortableResult');
  * @interface
  * @template T
  */
-os.search.ISortableResult = function() {};
-
+class ISortableResult {
+  /**
+   * Get the value for a sort type.
+   * @param {string} sortType The sort type.
+   * @return {?string} The sort value, or null if the value doesn't exist or sort type is not supported.
+   */
+  getSortValue(sortType) {}
+}
 
 /**
  * ID for {@see os.implements}
  * @const {string}
  */
-os.search.ISortableResult.ID = 'os.search.ISortableResult';
+ISortableResult.ID = 'os.search.ISortableResult';
 
-
-/**
- * Get the value for a sort type.
- * @param {string} sortType The sort type.
- * @return {?string} The sort value, or null if the value doesn't exist or sort type is not supported.
- */
-os.search.ISortableResult.prototype.getSortValue;
+exports = ISortableResult;

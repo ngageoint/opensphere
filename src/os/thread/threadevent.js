@@ -1,33 +1,38 @@
-goog.provide('os.thread.ThreadEvent');
-goog.require('goog.events.Event');
+goog.module('os.thread.ThreadEvent');
+goog.module.declareLegacyNamespace();
 
+const GoogEvent = goog.require('goog.events.Event');
+
+const IThreadJob = goog.requireType('os.thread.IThreadJob');
 
 
 /**
  * A thread event
- *
- * @param {string} type The event type
- * @param {os.thread.IThreadJob} job The job
- * @extends {goog.events.Event}
- * @constructor
  */
-os.thread.ThreadEvent = function(type, job) {
-  os.thread.ThreadEvent.base(this, 'constructor', type);
+class ThreadEvent extends GoogEvent {
+  /**
+   * Constructor.
+   * @param {string} type The event type
+   * @param {IThreadJob} job The job
+   */
+  constructor(type, job) {
+    super(type);
+
+    /**
+     * @type {IThreadJob}
+     * @private
+     */
+    this.job_ = job;
+  }
 
   /**
-   * @type {os.thread.IThreadJob}
-   * @private
+   * Gets the job
+   *
+   * @return {IThreadJob} The job that caused the event
    */
-  this.job_ = job;
-};
-goog.inherits(os.thread.ThreadEvent, goog.events.Event);
+  getJob() {
+    return this.job_;
+  }
+}
 
-
-/**
- * Gets the job
- *
- * @return {os.thread.IThreadJob} The job that caused the event
- */
-os.thread.ThreadEvent.prototype.getJob = function() {
-  return this.job_;
-};
+exports = ThreadEvent;

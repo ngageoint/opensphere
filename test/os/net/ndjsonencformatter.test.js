@@ -1,10 +1,12 @@
-goog.require('os.net.NDJsonEncFormatter');
 goog.require('goog.Uri');
+goog.require('os.net.NDJsonEncFormatter');
 
 
 describe('os.net.NDJsonEncFormatter', function() {
+  const NDJsonEncFormatter = goog.module.get('os.net.NDJsonEncFormatter');
+
   it('should encode an array of json payloads with new lines', function() {
-    var formatter = new os.net.NDJsonEncFormatter();
+    var formatter = new NDJsonEncFormatter();
     formatter.setContent([
       {},
       {'testKey': 'testValue'},

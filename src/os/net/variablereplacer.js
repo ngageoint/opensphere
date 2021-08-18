@@ -1,8 +1,10 @@
-goog.provide('os.net.VariableReplacer');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('os.net.AbstractModifier');
+goog.module('os.net.VariableReplacer');
+goog.module.declareLegacyNamespace();
 
+const log = goog.require('goog.log');
+const AbstractModifier = goog.require('os.net.AbstractModifier');
+
+const Logger = goog.requireType('goog.log.Logger');
 
 
 /**
@@ -18,98 +20,93 @@ goog.require('os.net.AbstractModifier');
  *  os.net.VariableReplacer.add('echo', function(match, submatch, offset, str) {
  *    return submatch;
  *  });
- *
- * @extends {os.net.AbstractModifier}
- * @constructor
  */
-os.net.VariableReplacer = function() {
-  os.net.VariableReplacer.base(this, 'constructor', 'variables', -100);
-};
-goog.inherits(os.net.VariableReplacer, os.net.AbstractModifier);
+class VariableReplacer extends AbstractModifier {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super('variables', -100);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  modify(uri) {
+    var qd = uri.getQueryData();
+    var keys = qd.getKeys();
+
+    for (var replaceKey in replacers) {
+      var replaceFn = replacers[replaceKey].replacer;
+      var regexp = replacers[replaceKey].regex;
+
+      // this replaces in the query string
+      if (keys) {
+        for (var i = 0, n = keys.length; i < n; i++) {
+          var key = keys[i];
+          var value = qd.get(key);
+
+          if (value) {
+            var newValue = value.toString().replace(regexp, replaceFn);
+
+            if (newValue != value) {
+              qd.set(key, newValue);
+            }
+          }
+        }
+      }
+
+      // this replaces in the URI path
+      value = uri.getPath();
+      if (value) {
+        newValue = value.replace(regexp, replaceFn);
+
+        if (newValue != value) {
+          uri.setPath(newValue);
+        }
+      }
+    }
+  }
+
+  /**
+   * Adds a variable replacer for the given key. Note that the key is case-sensitive
+   *
+   * @param {!string} key
+   * @param {function(string, string, number, string):string} replaceFn A function matching the definition for
+   *  string.replace(needle, replaceFn)
+   */
+  static add(key, replaceFn) {
+    if (key in replacers) {
+      log.warning(logger, 'Overriding variable replacement function for "' + key + '"!');
+    }
+
+    replacers[key] = {
+      replacer: replaceFn,
+      regex: new RegExp('{' + key + ':?([^}]+)?}', 'g')
+    };
+  }
+
+  /**
+   * Splits the submatch by commas and trims each value.
+   *
+   * @param {undefined|string} submatch
+   * @return {Array<string>} parts
+   */
+  static getParts(submatch) {
+    return submatch ? submatch.split(/\s*,\s*/) : [];
+  }
+}
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {Logger}
  */
-os.net.VariableReplacer.LOGGER_ = goog.log.getLogger('os.net.VariableReplacer');
-
+const logger = log.getLogger('os.net.VariableReplacer');
 
 /**
  * @type {Object<string, {replacer: function(string, string, number, string):string, regex: RegExp}>}
  * @private
  */
-os.net.VariableReplacer.REPLACERS_ = {};
+const replacers = {};
 
-
-/**
- * Adds a variable replacer for the given key. Note that the key is case-sensitive
- *
- * @param {!string} key
- * @param {function(string, string, number, string):string} replaceFn A function matching the definition for
- *  string.replace(needle, replaceFn)
- */
-os.net.VariableReplacer.add = function(key, replaceFn) {
-  if (key in os.net.VariableReplacer.REPLACERS_) {
-    goog.log.warning(os.net.VariableReplacer.LOGGER_, 'Overriding variable replacement function for "' + key + '"!');
-  }
-
-  os.net.VariableReplacer.REPLACERS_[key] = {
-    replacer: replaceFn,
-    regex: new RegExp('{' + key + ':?([^}]+)?}', 'g')
-  };
-};
-
-
-/**
- * @inheritDoc
- */
-os.net.VariableReplacer.prototype.modify = function(uri) {
-  var qd = uri.getQueryData();
-  var keys = qd.getKeys();
-  var replacers = os.net.VariableReplacer.REPLACERS_;
-
-  for (var replaceKey in replacers) {
-    var replaceFn = replacers[replaceKey].replacer;
-    var regexp = replacers[replaceKey].regex;
-
-    // this replaces in the query string
-    if (keys) {
-      for (var i = 0, n = keys.length; i < n; i++) {
-        var key = keys[i];
-        var value = qd.get(key);
-
-        if (value) {
-          var newValue = value.toString().replace(regexp, replaceFn);
-
-          if (newValue != value) {
-            qd.set(key, newValue);
-          }
-        }
-      }
-    }
-
-    // this replaces in the URI path
-    value = uri.getPath();
-    if (value) {
-      newValue = value.replace(regexp, replaceFn);
-
-      if (newValue != value) {
-        uri.setPath(newValue);
-      }
-    }
-  }
-};
-
-
-/**
- * Splits the submatch by commas and trims each value.
- *
- * @param {undefined|string} submatch
- * @return {Array<string>} parts
- */
-os.net.VariableReplacer.getParts = function(submatch) {
-  return submatch ? submatch.split(/\s*,\s*/) : [];
-};
+exports = VariableReplacer;

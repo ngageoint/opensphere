@@ -1,47 +1,64 @@
-goog.provide('os.source');
+goog.module('os.source');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Timer');
-goog.require('ol.array');
-goog.require('ol.layer.Property');
-goog.require('os');
-goog.require('os.data.ColumnDefinition');
-goog.require('os.data.RecordField');
-goog.require('os.filter.IFilterable');
-goog.require('os.implements');
-goog.require('os.layer');
-goog.require('os.time.ITime');
-goog.require('os.ui.slick.column');
+const Timer = goog.require('goog.Timer');
+const {defaultCompare} = goog.require('goog.array');
+const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
+const Feature = goog.require('ol.Feature');
+const Property = goog.require('ol.layer.Property');
+const {debounce} = goog.require('os');
+const dispatcher = goog.require('os.Dispatcher');
+const Fields = goog.require('os.Fields');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const ColumnDefinition = goog.require('os.data.ColumnDefinition');
+const DataManager = goog.require('os.data.DataManager');
+const RecordField = goog.require('os.data.RecordField');
+const DataEventType = goog.require('os.data.event.DataEventType');
+const {isInternalField} = goog.require('os.feature');
+const IFilterable = goog.require('os.filter.IFilterable');
+const osImplements = goog.require('os.implements');
+const {identifyLayer} = goog.require('os.layer');
+const {getMapContainer} = goog.require('os.map.instance');
+const {getFilterManager} = goog.require('os.query.instance');
+const ITime = goog.require('os.time.ITime');
+const TimelineController = goog.require('os.time.TimelineController');
+const {numerateNameCompare} = goog.require('os.ui.slick.column');
+
+const OLSource = goog.requireType('ol.source.Source');
+const VectorLayer = goog.requireType('os.layer.Vector');
+const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
+const ISource = goog.requireType('os.source.ISource');
+const VectorSource = goog.requireType('os.source.Vector');
 
 
 /**
- * @typedef {function(ol.Feature):boolean}
+ * @typedef {function(Feature):boolean}
  */
-os.source.FeatureHoverFn;
-
+let FeatureHoverFn;
 
 /**
  * Container for refresh timers. This is useful for keeping all sources set to a particular refresh interval refreshing
  * at the same time.
- * @type {Object<number, goog.Timer>}
+ * @type {Object<number, Timer>}
  */
-os.source.RefreshTimers = {};
-
+const RefreshTimers = {};
 
 /**
  * Identifies a vector source by flashing it on and off. This takes into account an animation overlay
  * if the source is using one to render features.
  *
- * @param {os.source.Vector} source
+ * @param {VectorSource} source
  */
-os.source.identifySource = function(source) {
+const identifySource = function(source) {
   var overlay = source.getAnimationOverlay();
-  if (overlay && !os.MapContainer.getInstance().is3DEnabled()) {
-    // 2D  (OL3) will blink the entire layer regardless of what's in the timeline window
+  if (overlay && !getMapContainer().is3DEnabled()) {
+    // 2D (OL) will blink the entire layer regardless of what's in the timeline window
     // so we need to add and remove the exact features
     var tickCount = 0;
     var oldFeatures = overlay.getFeatures().splice(0, overlay.getFeatures().length);
     if (oldFeatures && oldFeatures.length > 0) {
-      var featureTimer = new goog.Timer(250);
+      var featureTimer = new Timer(250);
       var toggleFeatures = function() {
         if (tickCount > 5) {
           overlay.setFeatures(oldFeatures);
@@ -53,27 +70,26 @@ os.source.identifySource = function(source) {
         }
       };
 
-      featureTimer.listen(goog.Timer.TICK, toggleFeatures);
+      featureTimer.listen(Timer.TICK, toggleFeatures);
       featureTimer.start();
     }
   } else {
-    var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(source.getId()));
+    var layer = /** @type {VectorLayer} */ (getMapContainer().getLayer(source.getId()));
     if (layer) {
-      os.layer.identifyLayer(layer);
+      identifyLayer(layer);
     }
   }
 };
 
-
 /**
  * Get the filterable columns on a source.
  *
- * @param {os.source.ISource} source The source.
+ * @param {ISource} source The source.
  * @param {boolean=} opt_local If local columns should be included.
  * @param {boolean=} opt_includeTime If the time column should be included.
- * @return {Array<!os.data.ColumnDefinition>} The columns.
+ * @return {Array<!ColumnDefinition>} The columns.
  */
-os.source.getFilterColumns = function(source, opt_local, opt_includeTime) {
+const getFilterColumns = function(source, opt_local, opt_includeTime) {
   var columns = null;
 
   if (source) {
@@ -84,25 +100,25 @@ os.source.getFilterColumns = function(source, opt_local, opt_includeTime) {
         // do not include the TIME column or any column with a datetime type by default for filtering
         var re = /datetime/i;
         columns = columns.filter(function(col) {
-          return col['field'] !== os.data.RecordField.TIME && col['field'] !== os.Fields.TIME && !re.test(col['type']);
+          return col['field'] !== RecordField.TIME && col['field'] !== Fields.TIME && !re.test(col['type']);
         });
 
         if (opt_includeTime && source.getTimeEnabled()) {
-          // add in a phony time column to represent the {@link os.data.RecordField.TIME} on features
+          // add in a phony time column to represent the {@link RecordField.TIME} on features
           // use a different logical type (recordtime vs. datetime) to distinguish this field from regular time fields
-          var timeCol = new os.data.ColumnDefinition(os.Fields.TIME, os.data.RecordField.TIME);
+          var timeCol = new ColumnDefinition(Fields.TIME, RecordField.TIME);
           timeCol['type'] = 'recordtime';
           columns.push(timeCol);
         }
 
-        columns.sort(os.ui.slick.column.numerateNameCompare);
+        columns.sort(numerateNameCompare);
       }
     }
 
     if (!columns) {
-      var filterable = os.filter.BaseFilterManager.getInstance().getFilterable(source.getId());
+      var filterable = getFilterManager().getFilterable(source.getId());
       if (filterable) {
-        columns = filterable.getFilterColumns().map(os.source.featureTypesToDefinitions);
+        columns = filterable.getFilterColumns().map(featureTypesToDefinitions);
       }
     }
   }
@@ -110,41 +126,44 @@ os.source.getFilterColumns = function(source, opt_local, opt_includeTime) {
   return columns;
 };
 
-
 /**
- * @param {!os.ogc.FeatureTypeColumn} c The feature type column to convert
- * @return {!os.data.ColumnDefinition}
+ * @param {!FeatureTypeColumn} c The feature type column to convert
+ * @return {!ColumnDefinition}
  */
-os.source.featureTypesToDefinitions = function(c) {
-  var col = new os.data.ColumnDefinition(c.name);
+const featureTypesToDefinitions = function(c) {
+  var col = new ColumnDefinition(c.name);
   col['type'] = c.type;
   return col;
 };
 
-
 /**
- * @param {!os.data.ColumnDefinition} c The feature type column to convert
- * @return {!os.ogc.FeatureTypeColumn}
+ * @param {!ColumnDefinition} c The feature type column to convert
+ * @return {!FeatureTypeColumn}
  */
-os.source.definitionsToFeatureTypes = function(c) {
+const definitionsToFeatureTypes = function(c) {
   return {name: c['name'], type: c['type']};
 };
 
-
 /**
- * @param {os.source.ISource} source
+ * @param {ISource} source
  * @return {boolean}
  */
-os.source.isFilterable = function(source) {
+const isFilterable = function(source) {
   if (source) {
     var id = source.getId();
-    var descriptor = os.dataManager.getDescriptor(id);
-    if (descriptor && os.implements(descriptor, os.filter.IFilterable.ID)) {
-      return /** @type {os.filter.IFilterable} */ (descriptor).isFilterable();
+    var descriptor = DataManager.getInstance().getDescriptor(id);
+    if (descriptor && osImplements(descriptor, IFilterable.ID)) {
+      return (
+        /** @type {IFilterable} */
+        (descriptor).isFilterable()
+      );
     } else {
-      var layer = os.MapContainer.getInstance().getLayer(id);
-      if (layer && os.implements(layer, os.filter.IFilterable.ID)) {
-        return /** @type {os.filter.IFilterable} */ (layer).isFilterable();
+      var layer = getMapContainer().getLayer(id);
+      if (layer && osImplements(layer, IFilterable.ID)) {
+        return (
+          /** @type {IFilterable} */
+          (layer).isFilterable()
+        );
       }
     }
   }
@@ -152,67 +171,62 @@ os.source.isFilterable = function(source) {
   return false;
 };
 
-
 /**
  * If a source is enabled.
- * @param {os.source.ISource} source The source.
+ * @param {ISource} source The source.
  * @return {boolean}
  */
-os.source.isEnabled = function(source) {
+const isEnabled = function(source) {
   return !!source && source.isEnabled();
 };
 
-
 /**
  * If a source is visible.
- * @param {os.source.ISource} source The source.
+ * @param {ISource} source The source.
  * @return {boolean}
  */
-os.source.isVisible = function(source) {
+const isVisible = function(source) {
   return !!source && source.getVisible();
 };
-
 
 /**
  * Compares sources by title.
  *
- * @param {os.source.ISource} a A source
- * @param {os.source.ISource} b Another source
+ * @param {ISource} a A source
+ * @param {ISource} b Another source
  * @return {number} The comparison
  */
-os.source.titleCompare = function(a, b) {
-  return goog.array.defaultCompare(a.getTitle(), b.getTitle());
+const titleCompare = function(a, b) {
+  return defaultCompare(a.getTitle(), b.getTitle());
 };
-
 
 /**
  * Compares sources by z-index in descending order.
  *
- * @param {ol.source.Source} a A source
- * @param {ol.source.Source} b Another source
+ * @param {OLSource} a A source
+ * @param {OLSource} b Another source
  * @return {number} The comparison
  */
-os.source.zIndexCompare = function(a, b) {
-  var aZ = a.get(ol.layer.Property.Z_INDEX) || 0;
-  var bZ = b.get(ol.layer.Property.Z_INDEX) || 0;
-  return goog.array.defaultCompare(bZ, aZ);
+const zIndexCompare = function(a, b) {
+  var aZ = a.get(Property.Z_INDEX) || 0;
+  var bZ = b.get(Property.Z_INDEX) || 0;
+  return defaultCompare(bZ, aZ);
 };
-
 
 /**
  * Retrieve the time field from a feature.
  *
  * @param {Object} item The feature
- * @return {?os.time.ITime} The record time, or null if held or not defined
+ * @return {?ITime} The record time, or null if held or not defined
  */
-os.source.getRecordTime = function(item) {
-  if (item instanceof ol.Feature) {
-    var time = item.get(os.data.RecordField.TIME);
-    var tlc = os.time.TimelineController.getInstance();
+const getRecordTime = function(item) {
+  if (item instanceof Feature) {
+    var time = item.get(RecordField.TIME);
+    var tlc = TimelineController.getInstance();
 
-    // return if a os.time.ITime instance and not in the held range
-    if (os.implements(time, os.time.ITime.ID)) {
-      time = /** @type {os.time.ITime} */ (time);
+    // return if a ITime instance and not in the held range
+    if (osImplements(time, ITime.ID)) {
+      time = /** @type {ITime} */ (time);
 
       if (!tlc.holdRangeContainsTime(time)) {
         return time;
@@ -223,21 +237,20 @@ os.source.getRecordTime = function(item) {
   return null;
 };
 
-
 /**
  * Retrieve the hold records time field from a feature.
  *
  * @param {Object} item The feature
- * @return {?os.time.ITime} The record time, or null if not within the held range
+ * @return {?ITime} The record time, or null if not within the held range
  */
-os.source.getHoldRecordTime = function(item) {
-  if (item instanceof ol.Feature) {
-    var time = item.get(os.data.RecordField.TIME);
-    var tlc = os.time.TimelineController.getInstance();
+const getHoldRecordTime = function(item) {
+  if (item instanceof Feature) {
+    var time = item.get(RecordField.TIME);
+    var tlc = TimelineController.getInstance();
 
-    // return if a os.time.ITime instance and in the held range
-    if (os.implements(time, os.time.ITime.ID)) {
-      time = /** @type {os.time.ITime} */ (time);
+    // return if a ITime instance and in the held range
+    if (osImplements(time, ITime.ID)) {
+      time = /** @type {ITime} */ (time);
 
       if (tlc.holdRangeContainsTime(time)) {
         return time;
@@ -248,16 +261,15 @@ os.source.getHoldRecordTime = function(item) {
   return null;
 };
 
-
 /**
  * Get the fields to export for features in the source.
  *
- * @param {os.source.Vector} source The source
+ * @param {VectorSource} source The source
  * @param {boolean=} opt_internal If internal fields should be included
  * @param {boolean=} opt_includeTime If the time field should be included
  * @return {Array<string>} The fields to export
  */
-os.source.getExportFields = function(source, opt_internal, opt_includeTime) {
+const getExportFields = function(source, opt_internal, opt_includeTime) {
   var fields = null;
 
   if (source) {
@@ -277,10 +289,10 @@ os.source.getExportFields = function(source, opt_internal, opt_includeTime) {
         //  - are internal to opensphere (unless specified otherwise)
         //
         if (column['visible'] &&
-            !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(field)) &&
-            !ol.array.includes(fields, field) &&
-            (opt_internal || !os.feature.isInternalField(field) ||
-            (opt_includeTime && field == os.data.RecordField.TIME))) {
+            !isEmptyOrWhitespace(makeSafe(field)) &&
+            !fields.includes(field) &&
+            (opt_internal || !isInternalField(field) ||
+            (opt_includeTime && field == RecordField.TIME))) {
           fields.push(field);
         }
       }
@@ -290,23 +302,40 @@ os.source.getExportFields = function(source, opt_internal, opt_includeTime) {
   return fields;
 };
 
-
 /**
  * Stops any import process currently occuring and fires an event that the max feature count has been hit
  * @param {number} count
  */
-os.source.handleMaxFeatureCount = os.debounce(function(count) {
-  os.dispatcher.dispatchEvent(os.data.event.DataEventType.MAX_FEATURES);
+const handleMaxFeatureCount = debounce(function(count) {
+  dispatcher.getInstance().dispatchEvent(DataEventType.MAX_FEATURES);
   var warning = 'The maximum feature count for the application has been reached (' + count + '). ' +
       'Further features will not be added until some are removed. Consider narrowing your time range, ' +
       'applying filters, shrinking your query areas, or removing some feature layers.';
 
   // when supported, prompt the user to try 3D mode if they are in 2D
-  var mm = os.MapContainer.getInstance();
+  var mm = getMapContainer();
   if (!mm.is3DEnabled() && mm.is3DSupported()) {
     warning += ' Switching to 3D mode will also allow more data to be loaded. To enable 3D mode, right-click the map ' +
         'and choose Toggle 2D/3D Mode.';
   }
 
-  os.alert.AlertManager.getInstance().sendAlert(warning, os.alert.AlertEventSeverity.WARNING);
+  AlertManager.getInstance().sendAlert(warning, AlertEventSeverity.WARNING);
 }, 5000, true);
+
+exports = {
+  RefreshTimers,
+  identifySource,
+  getFilterColumns,
+  featureTypesToDefinitions,
+  definitionsToFeatureTypes,
+  isFilterable,
+  isEnabled,
+  isVisible,
+  titleCompare,
+  zIndexCompare,
+  getRecordTime,
+  getHoldRecordTime,
+  getExportFields,
+  handleMaxFeatureCount,
+  FeatureHoverFn
+};

@@ -203,7 +203,7 @@ class AreaNode extends SlickTreeNode {
    * @inheritDoc
    */
   updateFrom(other) {
-    this.setArea(other.getArea());
+    this.setArea(/** @type {AreaNode} */ (other).getArea());
     super.updateFrom(other);
   }
 }

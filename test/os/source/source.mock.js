@@ -1,377 +1,333 @@
-goog.provide('os.source.MockSource');
+goog.module('os.source.MockSource');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.source.ISource');
-
+const ISource = goog.requireType('os.source.ISource');
 
 
 /**
  * Mock source.
- * @implements {os.source.ISource}
- * @constructor
+ * @implements {ISource}
  */
-os.source.MockSource = function() {
-  this.columns = [];
-  this.id = 'testSource';
-  this.features = [];
-  this.enabled = true;
-  this.loading = false;
-  this.lockable = false;
-  this.refreshInterval = 0;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.addFeature = function(feature) {
-  this.features.push(feature);
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.removeFeature = function(feature) {
-  var idx = this.features.indexOf(feature);
-  if (idx > -1) {
-    this.features.splice(idx, 1);
+class MockSource {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    this.columns = [];
+    this.id = 'testSource';
+    this.features = [];
+    this.enabled = true;
+    this.loading = false;
+    this.lockable = false;
+    this.refreshInterval = 0;
   }
-};
 
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.addFeatures = function(features) {
-  this.features = this.features.concat(features);
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.clear = function() {
-  this.features.length = 0;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.refresh = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.isRefreshEnabled = function() {
-  return true;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.getRefreshInterval = function() {
-  return this.refreshInterval;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.setRefreshInterval = function(value) {
-  this.refreshInterval = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.onRefreshDelay = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.getColor = function() {
-  return 'rgba(255,255,255,1)';
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.getColumns = function() {
-  return this.columns.slice();
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.getColumnsArray = function() {
-  return this.columns;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.setColumns = function(value) {
-  this.columns = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.getId = function() {
-  return this.id;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.setId = function(value) {
-  this.id = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.isEnabled = function() {
-  return this.enabled;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.setEnabled = function(value) {
-  this.enabled = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.isLoading = function() {
-  return this.loading;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.setLoading = function(value) {
-  this.loading = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.isLockable = function() {
-  return this.lockable;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.setLockable = function(value) {
-  this.lockable = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.isLocked = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.setLocked = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.getTitle = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.setTitle = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.getTimeEnabled = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.getTimeModel = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.setTimeEnabled = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.getVisible = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.setVisible = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.forEachFeature = function(callback, opt_this) {
-  this.features.forEach(callback, opt_this);
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.getFeatures = function() {
-  return this.features;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.getHighlightedItems = function() {
-  return [];
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.setHighlightedItems = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.displayAll = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.hideAll = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.hideFeatures = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.showFeatures = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.hideSelected = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.hideUnselected = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.getHiddenItems = function() {
-  return [];
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.isHidden = function() {
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.getUnselectedItems = function() {
-  return [];
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.isSelected = function() {
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.getSelectedItems = function() {
-  return [];
-};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.setSelectedItems = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.addToSelected = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.removeFromSelected = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.selectAll = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.source.MockSource.prototype.selectNone = function() {};
+  /**
+   * @inheritDoc
+   */
+  addFeature(feature) {
+    this.features.push(feature);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  removeFeature(feature) {
+    var idx = this.features.indexOf(feature);
+    if (idx > -1) {
+      this.features.splice(idx, 1);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  addFeatures(features) {
+    this.features = this.features.concat(features);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  clear() {
+    this.features.length = 0;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  refresh() {}
+
+  /**
+   * @inheritDoc
+   */
+  isRefreshEnabled() {
+    return true;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getRefreshInterval() {
+    return this.refreshInterval;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setRefreshInterval(value) {
+    this.refreshInterval = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  onRefreshDelay() {}
+
+  /**
+   * @inheritDoc
+   */
+  getColor() {
+    return 'rgba(255,255,255,1)';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getColumns() {
+    return this.columns.slice();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getColumnsArray() {
+    return this.columns;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setColumns(value) {
+    this.columns = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getId() {
+    return this.id;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setId(value) {
+    this.id = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  isEnabled() {
+    return this.enabled;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setEnabled(value) {
+    this.enabled = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  isLoading() {
+    return this.loading;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setLoading(value) {
+    this.loading = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  isLockable() {
+    return this.lockable;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setLockable(value) {
+    this.lockable = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  isLocked() {}
+
+  /**
+   * @inheritDoc
+   */
+  setLocked() {}
+
+  /**
+   * @inheritDoc
+   */
+  getTitle() {}
+
+  /**
+   * @inheritDoc
+   */
+  setTitle() {}
+
+  /**
+   * @inheritDoc
+   */
+  getTimeEnabled() {}
+
+  /**
+   * @inheritDoc
+   */
+  getTimeModel() {}
+
+  /**
+   * @inheritDoc
+   */
+  setTimeEnabled() {}
+
+  /**
+   * @inheritDoc
+   */
+  getVisible() {}
+
+  /**
+   * @inheritDoc
+   */
+  setVisible() {}
+
+  /**
+   * @inheritDoc
+   */
+  forEachFeature(callback, opt_this) {
+    this.features.forEach(callback, opt_this);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getFeatures() {
+    return this.features;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getHighlightedItems() {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setHighlightedItems() {}
+
+  /**
+   * @inheritDoc
+   */
+  displayAll() {}
+
+  /**
+   * @inheritDoc
+   */
+  hideAll() {}
+
+  /**
+   * @inheritDoc
+   */
+  hideFeatures() {}
+
+  /**
+   * @inheritDoc
+   */
+  showFeatures() {}
+
+  /**
+   * @inheritDoc
+   */
+  hideSelected() {}
+
+  /**
+   * @inheritDoc
+   */
+  hideUnselected() {}
+
+  /**
+   * @inheritDoc
+   */
+  getHiddenItems() {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  isHidden() {
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getUnselectedItems() {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  isSelected() {
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getSelectedItems() {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setSelectedItems() {}
+
+  /**
+   * @inheritDoc
+   */
+  addToSelected() {}
+
+  /**
+   * @inheritDoc
+   */
+  removeFromSelected() {}
+
+  /**
+   * @inheritDoc
+   */
+  selectAll() {}
+
+  /**
+   * @inheritDoc
+   */
+  selectNone() {}
+}
+
+exports = MockSource;

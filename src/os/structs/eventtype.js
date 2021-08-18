@@ -1,11 +1,12 @@
-goog.provide('os.structs.EventType');
+goog.module('os.structs.EventType');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * The event types for collections
  * @enum {string}
  */
-os.structs.EventType = {
+exports = {
   DATA_CHANGED: 'dataChanged',
   VIEW_DATA_CHANGED: 'viewDataChanged',
   SOURCE_DATA_CHANGED: 'sourceDataChanged'

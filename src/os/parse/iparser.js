@@ -1,5 +1,5 @@
-goog.provide('os.parse.IParser');
-
+goog.module('os.parse.IParser');
+goog.module.declareLegacyNamespace();
 
 
 /**
@@ -8,30 +8,28 @@ goog.provide('os.parse.IParser');
  * @template T
  * @interface
  */
-os.parse.IParser = function() {};
+class IParser {
+  /**
+   * @return {boolean} If there is another item to os.parse.
+   */
+  hasNext() {}
 
+  /**
+   * Parse the next item in the source.
+   * @return {T|Array<T>} The next item(s).
+   */
+  parseNext() {}
 
-/**
- * @return {boolean} If there is another item to os.parse.
- */
-os.parse.IParser.prototype.hasNext;
+  /**
+   * Sets the source object to be parsed.
+   * @param {Object|string|Node|Document} source The data source to os.parse.
+   */
+  setSource(source) {}
 
+  /**
+   * Cleans up and resets
+   */
+  cleanup() {}
+}
 
-/**
- * Parse the next item in the source.
- * @return {T|Array<T>} The next item(s).
- */
-os.parse.IParser.prototype.parseNext;
-
-
-/**
- * Sets the source object to be parsed.
- * @param {Object|string|Node|Document} source The data source to os.parse.
- */
-os.parse.IParser.prototype.setSource;
-
-
-/**
- * Cleans up and resets
- */
-os.parse.IParser.prototype.cleanup;
+exports = IParser;

@@ -1,30 +1,37 @@
-goog.provide('os.parse.StateParserConfig');
-goog.require('os.file.File');
-goog.require('os.parse.FileParserConfig');
+goog.module('os.parse.StateParserConfig');
+goog.module.declareLegacyNamespace();
 
+const FileParserConfig = goog.require('os.parse.FileParserConfig');
+const OSFile = goog.requireType('os.file.File');
 
 
 /**
  * Configuration for a file parser.
  *
- * @extends {os.parse.FileParserConfig.<T>}
- * @param {os.file.File=} opt_file
- * @constructor
+ * @extends {FileParserConfig<T>}
+ * @unrestricted
  * @template T
  */
-os.parse.StateParserConfig = function(opt_file) {
-  os.parse.StateParserConfig.base(this, 'constructor', opt_file);
-
+class StateParserConfig extends FileParserConfig {
   /**
-   * The state items to load
-   * @type {Array.<string>}
+   * Constructor.
+   * @param {OSFile=} opt_file
    */
-  this['loadItems'] = null;
+  constructor(opt_file) {
+    super(opt_file);
 
-  /**
-   * The state
-   * @type {Document|Object.<string, *>}
-   */
-  this['state'] = null;
-};
-goog.inherits(os.parse.StateParserConfig, os.parse.FileParserConfig);
+    /**
+     * The state items to load
+     * @type {Array<string>}
+     */
+    this['loadItems'] = null;
+
+    /**
+     * The state
+     * @type {Document|Object.<string, *>}
+     */
+    this['state'] = null;
+  }
+}
+
+exports = StateParserConfig;

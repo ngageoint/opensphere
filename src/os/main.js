@@ -9,7 +9,7 @@ goog.require('os.config.Settings');
 goog.require('os.config.SettingsInitializerManager');
 goog.require('os.debug.FancierWindow');
 goog.require('os.mixin');
-goog.require('os.net');
+goog.require('os.net.addDefaultHandlers');
 goog.require('os.ui.AddDataUI');
 goog.require('os.ui.LegendUI');
 goog.require('os.ui.Map');

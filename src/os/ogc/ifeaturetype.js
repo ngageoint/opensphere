@@ -1,89 +1,74 @@
-goog.provide('os.ogc.FeatureTypeColumn');
-goog.provide('os.ogc.IFeatureType');
-goog.require('os.IPersistable');
+goog.module('os.ogc.IFeatureType');
+goog.module.declareLegacyNamespace();
 
-
-/**
- * @typedef {{name: !string, type: !string}}
- */
-os.ogc.FeatureTypeColumn;
-
+const IPersistable = goog.requireType('os.IPersistable');
+const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
 
 
 /**
  * @interface
- * @extends {os.IPersistable}
+ * @extends {IPersistable}
  */
-os.ogc.IFeatureType = function() {};
+class IFeatureType {
+  /**
+   * @return {?string}
+   */
+  getTypeName() {}
 
+  /**
+   * @param {?string} value
+   */
+  setTypeName(value) {}
 
-/**
- * @return {?string}
- */
-os.ogc.IFeatureType.prototype.getTypeName;
+  /**
+   * @return {Array}
+   */
+  getTimeColumns() {}
 
+  /**
+   * @return {?string}
+   */
+  getGeometryColumnName() {}
 
-/**
- * @param {?string} value
- */
-os.ogc.IFeatureType.prototype.setTypeName;
+  /**
+   * @param {?string} value
+   */
+  setGeometryColumnName(value) {}
 
+  /**
+   * @return {?string}
+   */
+  getStartDateColumnName() {}
 
-/**
- * @return {Array}
- */
-os.ogc.IFeatureType.prototype.getTimeColumns;
+  /**
+   * @param {?string} value
+   */
+  setStartDateColumnName(value) {}
 
+  /**
+   * @return {?string}
+   */
+  getEndDateColumnName() {}
 
-/**
- * @return {?string}
- */
-os.ogc.IFeatureType.prototype.getGeometryColumnName;
+  /**
+   * @param {?string} value
+   */
+  setEndDateColumnName(value) {}
 
+  /**
+   * @return {Array<!FeatureTypeColumn>}
+   */
+  getColumns() {}
 
-/**
- * @param {?string} value
- */
-os.ogc.IFeatureType.prototype.setGeometryColumnName;
+  /**
+   * @param {Array<!FeatureTypeColumn>} value
+   */
+  setColumns(value) {}
 
+  /**
+   * @return {boolean}
+   */
+  getNeedsTimeColumns() {}
+}
 
-/**
- * @return {?string}
- */
-os.ogc.IFeatureType.prototype.getStartDateColumnName;
-
-
-/**
- * @param {?string} value
- */
-os.ogc.IFeatureType.prototype.setStartDateColumnName;
-
-
-/**
- * @return {?string}
- */
-os.ogc.IFeatureType.prototype.getEndDateColumnName;
-
-
-/**
- * @param {?string} value
- */
-os.ogc.IFeatureType.prototype.setEndDateColumnName;
-
-
-/**
- * @return {Array<!os.ogc.FeatureTypeColumn>}
- */
-os.ogc.IFeatureType.prototype.getColumns;
-
-
-/**
- * @param {Array<!os.ogc.FeatureTypeColumn>} value
- */
-os.ogc.IFeatureType.prototype.setColumns;
-
-
-/**
- * @return {boolean}
- */
-os.ogc.IFeatureType.prototype.getNeedsTimeColumns;
+exports = IFeatureType;

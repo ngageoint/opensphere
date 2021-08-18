@@ -1,25 +1,27 @@
-goog.provide('os.mixin.UrlTileSource');
+goog.module('os.mixin.UrlTileSource');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Timer');
-goog.require('goog.Uri');
-goog.require('goog.async.Delay');
-goog.require('goog.events');
-goog.require('goog.events.EventType');
-goog.require('ol.events');
-goog.require('ol.source.TileEventType');
-goog.require('ol.source.UrlTile');
-goog.require('os.alert.AlertManager');
-goog.require('os.array');
-goog.require('os.auth');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.implements');
-goog.require('os.ol.source.ILoadingSource');
-goog.require('os.ol.source.IUrlSource');
+const Timer = goog.require('goog.Timer');
+const Uri = goog.require('goog.Uri');
+const Delay = goog.require('goog.async.Delay');
+const {listen, unlistenByKey} = goog.require('ol.events');
+const {intersects} = goog.require('ol.extent');
+const Tile = goog.require('ol.source.Tile');
+const TileEventType = goog.require('ol.source.TileEventType');
+const UrlTile = goog.require('ol.source.UrlTile');
+const {alertAuth} = goog.require('os.auth');
+const Settings = goog.require('os.config.Settings');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const osImplements = goog.require('os.implements');
+const ILoadingSource = goog.require('os.ol.source.ILoadingSource');
+const IUrlSource = goog.require('os.ol.source.IUrlSource');
+const {RefreshTimers} = goog.require('os.source');
+const PropertyChange = goog.require('os.source.PropertyChange');
 
 
 // add support for providing custom URL parameters
-os.implements(ol.source.UrlTile, os.ol.source.IUrlSource.ID);
-os.implements(ol.source.UrlTile, os.ol.source.ILoadingSource.ID);
+osImplements(UrlTile, IUrlSource.ID);
+osImplements(UrlTile, ILoadingSource.ID);
 
 
 /*
@@ -35,19 +37,19 @@ os.implements(ol.source.UrlTile, os.ol.source.ILoadingSource.ID);
 /**
  * @type {boolean}
  */
-ol.source.UrlTile.prototype.tileUrlSet = false;
+UrlTile.prototype.tileUrlSet = false;
 
 
 /**
  * @type {boolean}
  */
-ol.source.UrlTile.prototype.tileLoadSet = false;
+UrlTile.prototype.tileLoadSet = false;
 
 
 /**
  * @type {?ol.Extent}
  */
-ol.source.UrlTile.prototype.extent = null;
+UrlTile.prototype.extent = null;
 
 
 /**
@@ -55,15 +57,15 @@ ol.source.UrlTile.prototype.extent = null;
  * @type {number}
  * @protected
  */
-ol.source.UrlTile.prototype.refreshInterval = 0;
+UrlTile.prototype.refreshInterval = 0;
 
 
 /**
  * The delay used to auto refresh the source.
- * @type {goog.Timer}
+ * @type {Timer}
  * @protected
  */
-ol.source.UrlTile.prototype.refreshTimer = null;
+UrlTile.prototype.refreshTimer = null;
 
 
 /**
@@ -71,13 +73,13 @@ ol.source.UrlTile.prototype.refreshTimer = null;
  * @type {boolean}
  * @protected
  */
-ol.source.UrlTile.prototype.refreshEnabled = false;
+UrlTile.prototype.refreshEnabled = false;
 
 
 /**
  * @return {?ol.Extent} The extent
  */
-ol.source.UrlTile.prototype.getExtent = function() {
+UrlTile.prototype.getExtent = function() {
   return this.extent;
 };
 
@@ -85,7 +87,7 @@ ol.source.UrlTile.prototype.getExtent = function() {
 /**
  * @param {?ol.Extent} extent The extent for the source. Must be in the same projection as the source.
  */
-ol.source.UrlTile.prototype.setExtent = function(extent) {
+UrlTile.prototype.setExtent = function(extent) {
   this.extent = extent;
 };
 
@@ -96,7 +98,7 @@ ol.source.UrlTile.prototype.setExtent = function(extent) {
  *
  * @return {Object} Params.
  */
-ol.source.UrlTile.prototype.getParams = function() {
+UrlTile.prototype.getParams = function() {
   // by default, params are not supported. openlayers implements these functions in higher level sources.
   return null;
 };
@@ -107,7 +109,7 @@ ol.source.UrlTile.prototype.getParams = function() {
  *
  * @param {Object} params Params.
  */
-ol.source.UrlTile.prototype.updateParams = function(params) {
+UrlTile.prototype.updateParams = function(params) {
   // by default, params are not supported. openlayers implements these functions in higher level sources.
 };
 
@@ -117,7 +119,7 @@ ol.source.UrlTile.prototype.updateParams = function(params) {
  *
  * @return {boolean}
  */
-ol.source.UrlTile.prototype.isRefreshEnabled = function() {
+UrlTile.prototype.isRefreshEnabled = function() {
   return this.refreshEnabled;
 };
 
@@ -127,7 +129,7 @@ ol.source.UrlTile.prototype.isRefreshEnabled = function() {
  *
  * @return {number}
  */
-ol.source.UrlTile.prototype.getRefreshInterval = function() {
+UrlTile.prototype.getRefreshInterval = function() {
   return this.refreshInterval;
 };
 
@@ -137,12 +139,12 @@ ol.source.UrlTile.prototype.getRefreshInterval = function() {
  *
  * @param {number} value The new refresh interval, in seconds.
  */
-ol.source.UrlTile.prototype.setRefreshInterval = function(value) {
+UrlTile.prototype.setRefreshInterval = function(value) {
   if (this.refreshInterval != value) {
     this.refreshInterval = value;
 
     if (this.refreshTimer) {
-      this.refreshTimer.unlisten(goog.Timer.TICK, this.onRefreshTimer, false, this);
+      this.refreshTimer.unlisten(Timer.TICK, this.onRefreshTimer, false, this);
       if (!this.refreshTimer.hasListener()) {
         // nobody's listening, so stop it
         this.refreshTimer.stop();
@@ -152,19 +154,19 @@ ol.source.UrlTile.prototype.setRefreshInterval = function(value) {
     this.refreshTimer = null;
 
     if (this.refreshInterval > 0) {
-      this.refreshTimer = os.source.RefreshTimers[value];
+      this.refreshTimer = RefreshTimers[value];
 
       if (!this.refreshTimer) {
         // didn't find one for that time, so make a new one and save it off
-        this.refreshTimer = new goog.Timer(1000 * value);
-        os.source.RefreshTimers[value] = this.refreshTimer;
+        this.refreshTimer = new Timer(1000 * value);
+        RefreshTimers[value] = this.refreshTimer;
       }
 
-      this.refreshTimer.listen(goog.Timer.TICK, this.onRefreshTimer, false, this);
+      this.refreshTimer.listen(Timer.TICK, this.onRefreshTimer, false, this);
       this.refreshTimer.start();
     }
 
-    this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.REFRESH_INTERVAL));
+    this.dispatchEvent(new PropertyChangeEvent(PropertyChange.REFRESH_INTERVAL));
   }
 };
 
@@ -174,7 +176,7 @@ ol.source.UrlTile.prototype.setRefreshInterval = function(value) {
  *
  * @protected
  */
-ol.source.UrlTile.prototype.onRefreshTimer = function() {
+UrlTile.prototype.onRefreshTimer = function() {
   if (this.isRefreshEnabled()) {
     this.refresh();
   }
@@ -184,7 +186,7 @@ ol.source.UrlTile.prototype.onRefreshTimer = function() {
 /**
  * @inheritDoc
  */
-ol.source.UrlTile.prototype.refresh = function() {
+UrlTile.prototype.refresh = function() {
   this.tileCache.clear();
   this.changed();
 };
@@ -194,14 +196,14 @@ ol.source.UrlTile.prototype.refresh = function() {
  * @param {ol.TileUrlFunctionType} tileUrlFunction
  * @private
  */
-ol.source.UrlTile.prototype.setTileUrlFunctionInternal_ = ol.source.UrlTile.prototype.setTileUrlFunction;
+UrlTile.prototype.setTileUrlFunctionInternal_ = UrlTile.prototype.setTileUrlFunction;
 
 
 /**
  * @param {ol.TileUrlFunctionType} tileUrlFunction
  * @suppress {duplicate}
  */
-ol.source.UrlTile.prototype.setTileUrlFunction = function(tileUrlFunction) {
+UrlTile.prototype.setTileUrlFunction = function(tileUrlFunction) {
   this.tileUrlSet = true;
   var getExtent = this.getExtent.bind(this);
   var getTileGrid = this.getTileGrid.bind(this);
@@ -215,7 +217,7 @@ ol.source.UrlTile.prototype.setTileUrlFunction = function(tileUrlFunction) {
        */
       function(tileCoord, pixelRatio, projection) {
         var extent = getExtent();
-        var intersects = true;
+        var intersectsTile = true;
 
         if (extent) {
           var tileGrid = getTileGrid();
@@ -229,10 +231,10 @@ ol.source.UrlTile.prototype.setTileUrlFunction = function(tileUrlFunction) {
           }
 
           var tileExtent = tileGrid.getTileCoordExtent(tileCoord);
-          intersects = ol.extent.intersects(extent, tileExtent);
+          intersectsTile = intersects(extent, tileExtent);
         }
 
-        return intersects ? tileUrlFunction(tileCoord, pixelRatio, projection) : undefined;
+        return intersectsTile ? tileUrlFunction(tileCoord, pixelRatio, projection) : undefined;
       });
 };
 
@@ -241,61 +243,61 @@ ol.source.UrlTile.prototype.setTileUrlFunction = function(tileUrlFunction) {
  * @type {boolean}
  * @private
  */
-ol.source.UrlTile.prototype.loading_ = false;
+UrlTile.prototype.loading_ = false;
 
 
 /**
  * @type {number}
  * @private
  */
-ol.source.UrlTile.prototype.numLoadingTiles_ = 0;
+UrlTile.prototype.numLoadingTiles_ = 0;
 
 
 /**
  * @type {number}
  * @private
  */
-ol.source.UrlTile.prototype.loadCount_ = 0;
+UrlTile.prototype.loadCount_ = 0;
 
 
 /**
  * @type {number}
  * @private
  */
-ol.source.UrlTile.prototype.errorCount_ = 0;
+UrlTile.prototype.errorCount_ = 0;
 
 
 /**
  * @type {boolean}
  * @private
  */
-ol.source.UrlTile.prototype.error_ = false;
+UrlTile.prototype.error_ = false;
 
 
 /**
  * @type {?Array<ol.EventsKey>}
  * @private
  */
-ol.source.UrlTile.prototype.listenerKeys_ = null;
+UrlTile.prototype.listenerKeys_ = null;
 
 
 /**
  * Timer to prevent rapid firing loading events.
- * @type {?goog.async.Delay}
+ * @type {?Delay}
  * @private
  */
-ol.source.UrlTile.prototype.loadingDelay_ = null;
+UrlTile.prototype.loadingDelay_ = null;
 
 
 /**
  * @inheritDoc
  */
-ol.source.UrlTile.prototype.disposeInternal = function() {
-  ol.source.Tile.prototype.disposeInternal.call(this);
+UrlTile.prototype.disposeInternal = function() {
+  Tile.prototype.disposeInternal.call(this);
 
   // remove any pending listeners
   if (this.listenerKeys_) {
-    os.array.forEach(this.listenerKeys_, ol.events.unlistenByKey);
+    this.listenerKeys_.forEach(unlistenByKey);
     this.listenerKeys_.length = 0;
   }
 
@@ -312,12 +314,12 @@ ol.source.UrlTile.prototype.disposeInternal = function() {
 
 
 /**
- * @return {?goog.async.Delay}
+ * @return {?Delay}
  * @protected
  */
-ol.source.UrlTile.prototype.getLoadingDelay = function() {
+UrlTile.prototype.getLoadingDelay = function() {
   if (!this.loadingDelay_ && !this.isDisposed()) {
-    this.loadingDelay_ = new goog.async.Delay(this.fireLoadingEvent_, 500, this);
+    this.loadingDelay_ = new Delay(this.fireLoadingEvent_, 500, this);
   }
 
   return this.loadingDelay_;
@@ -327,7 +329,7 @@ ol.source.UrlTile.prototype.getLoadingDelay = function() {
 /**
  * @return {boolean}
  */
-ol.source.UrlTile.prototype.isLoading = function() {
+UrlTile.prototype.isLoading = function() {
   return this.loading_;
 };
 
@@ -335,7 +337,7 @@ ol.source.UrlTile.prototype.isLoading = function() {
 /**
  * @param {boolean} value
  */
-ol.source.UrlTile.prototype.setLoading = function(value) {
+UrlTile.prototype.setLoading = function(value) {
   if (this.loading_ !== value) {
     this.loading_ = value;
     var delay = this.getLoadingDelay();
@@ -358,7 +360,7 @@ ol.source.UrlTile.prototype.setLoading = function(value) {
 /**
  * @return {boolean} True if this source has an error, false otherwise
  */
-ol.source.UrlTile.prototype.hasError = function() {
+UrlTile.prototype.hasError = function() {
   return this.error_;
 };
 
@@ -368,17 +370,17 @@ ol.source.UrlTile.prototype.hasError = function() {
  *
  * @private
  */
-ol.source.UrlTile.prototype.fireLoadingEvent_ = function() {
+UrlTile.prototype.fireLoadingEvent_ = function() {
   if (!this.isDisposed()) {
     if (this.loadCount_ || this.errorCount_) {
       this.error_ = this.errorCount_ / (this.loadCount_ + this.errorCount_) > /** @type {number} */ (
-        os.settings.get('tileErrorThreshold', 0.6));
+        Settings.getInstance().get('tileErrorThreshold', 0.6));
 
       this.errorCount_ = 0;
       this.loadCount_ = 0;
     }
 
-    this.dispatchEvent(new os.events.PropertyChangeEvent('loading', this.loading_, !this.loading_));
+    this.dispatchEvent(new PropertyChangeEvent('loading', this.loading_, !this.loading_));
   }
 };
 
@@ -386,7 +388,7 @@ ol.source.UrlTile.prototype.fireLoadingEvent_ = function() {
 /**
  * Decrements loading
  */
-ol.source.UrlTile.prototype.decrementLoading = function() {
+UrlTile.prototype.decrementLoading = function() {
   this.numLoadingTiles_--;
 
   if (this.numLoadingTiles_ === 0) {
@@ -398,7 +400,7 @@ ol.source.UrlTile.prototype.decrementLoading = function() {
 /**
  * Increments loading
  */
-ol.source.UrlTile.prototype.incrementLoading = function() {
+UrlTile.prototype.incrementLoading = function() {
   this.numLoadingTiles_++;
 
   if (this.numLoadingTiles_ === 1) {
@@ -411,8 +413,8 @@ ol.source.UrlTile.prototype.incrementLoading = function() {
  * @param {ol.source.Tile.Event} evt
  * @private
  */
-ol.source.UrlTile.prototype.onImageLoadOrError_ = function(evt) {
-  if (evt.type === ol.source.TileEventType.TILELOADEND) {
+UrlTile.prototype.onImageLoadOrError_ = function(evt) {
+  if (evt.type === TileEventType.TILELOADEND) {
     this.loadCount_++;
   } else {
     this.errorCount_++;
@@ -420,7 +422,7 @@ ol.source.UrlTile.prototype.onImageLoadOrError_ = function(evt) {
     // request failed, check if it's potentially due to a missing authentication with the server
     const urls = this.getUrls();
     urls.forEach((url) => {
-      os.auth.alertAuth(url);
+      alertAuth(url);
     });
   }
 
@@ -432,27 +434,27 @@ ol.source.UrlTile.prototype.onImageLoadOrError_ = function(evt) {
  * @param {ol.TileLoadFunctionType} tileLoadFunction
  * @private
  */
-ol.source.UrlTile.prototype.setTileLoadFunctionInternal_ = ol.source.UrlTile.prototype.setTileLoadFunction;
+UrlTile.prototype.setTileLoadFunctionInternal_ = UrlTile.prototype.setTileLoadFunction;
 
 
 /**
  * @param {ol.TileLoadFunctionType} tileLoadFunction
  * @suppress {duplicate}
  */
-ol.source.UrlTile.prototype.setTileLoadFunction = function(tileLoadFunction) {
+UrlTile.prototype.setTileLoadFunction = function(tileLoadFunction) {
   this.tileLoadSet = true;
 
   if (!this.listenerKeys_) {
     this.listenerKeys_ = [
-      ol.events.listen(this, ol.source.TileEventType.TILELOADSTART, this.incrementLoading, this),
-      ol.events.listen(this, ol.source.TileEventType.TILELOADEND, this.onImageLoadOrError_, this),
-      ol.events.listen(this, ol.source.TileEventType.TILELOADERROR, this.onImageLoadOrError_, this)];
+      listen(this, TileEventType.TILELOADSTART, this.incrementLoading, this),
+      listen(this, TileEventType.TILELOADEND, this.onImageLoadOrError_, this),
+      listen(this, TileEventType.TILELOADERROR, this.onImageLoadOrError_, this)];
   }
 
   var scope = this;
 
   if (!this.loadingDelay_) {
-    this.loadingDelay_ = new goog.async.Delay(this.fireLoadingEvent_, 500, this);
+    this.loadingDelay_ = new Delay(this.fireLoadingEvent_, 500, this);
   }
 
   this.setTileLoadFunctionInternal_(
@@ -462,7 +464,7 @@ ol.source.UrlTile.prototype.setTileLoadFunction = function(tileLoadFunction) {
        */
       function(tile, source) {
         if (scope.isRefreshEnabled() && scope.refreshInterval) {
-          var uri = new goog.Uri(source);
+          var uri = new Uri(source);
           var qd = uri.getQueryData();
           qd.set('_cd', Date.now());
           source = uri.toString();

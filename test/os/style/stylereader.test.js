@@ -1,3 +1,5 @@
+goog.require('ol.style.Circle');
+goog.require('ol.style.Style');
 goog.require('os.style.CircleReader');
 goog.require('os.style.FillReader');
 goog.require('os.style.IconReader');
@@ -7,7 +9,17 @@ goog.require('os.style.StyleReader');
 
 
 describe('os.style.StyleReader', function() {
-  var config, reader;
+  const Circle = goog.module.get('ol.style.Circle');
+  const Style = goog.module.get('ol.style.Style');
+  const CircleReader = goog.module.get('os.style.CircleReader');
+  const FillReader = goog.module.get('os.style.FillReader');
+  const IconReader = goog.module.get('os.style.IconReader');
+  const ImageReader = goog.module.get('os.style.ImageReader');
+  const StrokeReader = goog.module.get('os.style.StrokeReader');
+  const StyleReader = goog.module.get('os.style.StyleReader');
+
+  var config;
+  var reader;
 
   beforeEach(function() {
     config = {
@@ -31,14 +43,14 @@ describe('os.style.StyleReader', function() {
       }
     };
 
-    reader = new os.style.StyleReader();
+    reader = new StyleReader();
 
     var readers = {
-      'circle': new os.style.CircleReader(),
-      'fill': new os.style.FillReader(),
-      'icon': new os.style.IconReader(),
-      'image': new os.style.ImageReader(),
-      'stroke': new os.style.StrokeReader()
+      'circle': new CircleReader(),
+      'fill': new FillReader(),
+      'icon': new IconReader(),
+      'image': new ImageReader(),
+      'stroke': new StrokeReader()
     };
 
     for (var key in readers) {
@@ -49,13 +61,13 @@ describe('os.style.StyleReader', function() {
 
   it('should create a style without the cache', function() {
     var style = reader.getOrCreateStyle(config);
-    expect(style instanceof ol.style.Style).toBe(true);
+    expect(style instanceof Style).toBe(true);
     expect(style.getFill().getColor()).toBe(config.fill.color);
     expect(style.getStroke().getColor()).toBe(config.stroke.color);
     expect(style.getStroke().getWidth()).toBe(config.stroke.width);
 
     var image = style.getImage();
-    expect(image instanceof ol.style.Circle).toBe(true);
+    expect(image instanceof Circle).toBe(true);
     expect(image.getRadius()).toBe(config.image.radius);
     expect(image.getFill().getColor()).toBe(config.image.fill.color);
     expect(image.getStroke().getColor()).toBe(config.image.stroke.color);

@@ -1,7 +1,11 @@
+goog.require('goog.net.EventType');
 goog.require('os.ogc.wfs.DescribeFeatureLoader');
 
 
 describe('os.ogc.wfs.DescribeFeatureLoader', function() {
+  const EventType = goog.module.get('goog.net.EventType');
+  const DescribeFeatureLoader = goog.module.get('os.ogc.wfs.DescribeFeatureLoader');
+
   var dftType = 'testNS:TEST';
   var dftUrl = '/base/test/os/ogc/wfs/dft.xml';
   var dftParams = '?SERVICE=WFS&VERSION=1.1.0&REQUEST=DescribeFeatureType&TYPENAME=' + dftType;
@@ -17,7 +21,7 @@ describe('os.ogc.wfs.DescribeFeatureLoader', function() {
       loader.removeAllListeners();
     }
 
-    loader = new os.ogc.wfs.DescribeFeatureLoader();
+    loader = new DescribeFeatureLoader();
     complete = false;
   });
 
@@ -26,7 +30,7 @@ describe('os.ogc.wfs.DescribeFeatureLoader', function() {
     runs(function() {
       expect(loader.getTypename()).toBeNull();
       expect(loader.getUrl()).toBeNull();
-      loader.listenOnce(goog.net.EventType.COMPLETE, onComplete, false, this);
+      loader.listenOnce(EventType.COMPLETE, onComplete, false, this);
       spyOn(loader, 'onDescribeComplete_').andCallThrough();
       spyOn(loader, 'onDescribeError_').andCallThrough();
       loader.load();
@@ -48,7 +52,7 @@ describe('os.ogc.wfs.DescribeFeatureLoader', function() {
       expect(loader.getTypename()).toBe(dftType);
       expect(loader.getUrl()).toBeNull();
 
-      loader.listenOnce(goog.net.EventType.COMPLETE, onComplete, false, this);
+      loader.listenOnce(EventType.COMPLETE, onComplete, false, this);
       loader.load();
     });
 
@@ -69,7 +73,7 @@ describe('os.ogc.wfs.DescribeFeatureLoader', function() {
       expect(loader.getTypename()).toBeNull();
       expect(loader.getUrl()).toBe('/doesnt/matter');
 
-      loader.listenOnce(goog.net.EventType.COMPLETE, onComplete, false, this);
+      loader.listenOnce(EventType.COMPLETE, onComplete, false, this);
       loader.load();
     });
 
@@ -88,7 +92,7 @@ describe('os.ogc.wfs.DescribeFeatureLoader', function() {
     runs(function() {
       loader.setTypename(dftType);
       loader.setUrl('/doesnt/exist');
-      loader.listenOnce(goog.net.EventType.COMPLETE, onComplete, false, this);
+      loader.listenOnce(EventType.COMPLETE, onComplete, false, this);
       spyOn(loader, 'onDescribeError_').andCallThrough();
       loader.load();
     });
@@ -113,7 +117,7 @@ describe('os.ogc.wfs.DescribeFeatureLoader', function() {
   it('loads and parses a WFS DescribeFeatureType', function() {
     runs(function() {
       loader.setUrl(dftUrl + dftParams);
-      loader.listenOnce(goog.net.EventType.COMPLETE, onComplete, false, this);
+      loader.listenOnce(EventType.COMPLETE, onComplete, false, this);
       loader.load();
     });
 

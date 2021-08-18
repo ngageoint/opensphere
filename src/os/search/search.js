@@ -1,110 +1,85 @@
-goog.provide('os.search');
-goog.provide('os.search.SortOrder');
-goog.provide('os.search.SortType');
+goog.module('os.search');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.search.ITemporalSearch');
+const osImplements = goog.require('os.implements');
+const IGeoSearch = goog.require('os.search.IGeoSearch');
+const ITemporalSearch = goog.require('os.search.ITemporalSearch');
+const SortOrder = goog.require('os.search.SortOrder');
+
+const ISearch = goog.requireType('os.search.ISearch');
 
 
 /**
  * The base key for search settings.
  * @type {string}
  */
-os.search.BASE_KEY = 'search';
-
+const BASE_KEY = 'search';
 
 /**
  * Legacy name used to search all sources. Keeping this around for the purpose of migrating old recent searches.
  * @type {string}
- * @const
  */
-os.search.SEARCH_ALL = 'Search All Sources';
-
+const SEARCH_ALL = 'Search All Sources';
 
 /**
  * @enum {string}
  */
-os.search.SearchSetting = {
+const SearchSetting = {
   // global search settings
-  RECENT: os.search.BASE_KEY + '.recentlocal',
+  RECENT: BASE_KEY + '.recentlocal',
 
   // provider specific settings - retrieve these with {@link os.search.getSettingKey}
   ENABLED: 'enabled'
 };
 
-
 /**
  * @enum {string}
  */
-os.search.SubSearchSetting = {
+const SubSearchSetting = {
   ENABLED: 'ss'
 };
-
-
-/**
- * @enum {string}
- */
-os.search.SortType = {
-  DATE: 'Date',
-  RECENTLY_USED: 'Recently Used',
-  RELEVANCE: 'Relevance',
-  TITLE: 'Title'
-};
-
-
-/**
- * @enum {string}
- */
-os.search.SortOrder = {
-  ASC: 'asc',
-  DESC: 'desc'
-};
-
 
 /**
  * Get the setting key for a search provider.
  *
- * @param {!os.search.ISearch} search The search provider
+ * @param {!ISearch} search The search provider
  * @param {string} key The setting
  * @return {string}
  */
-os.search.getSettingKey = function(search, key) {
-  return [os.search.BASE_KEY, search.getId(), key].join('.');
+const getSettingKey = function(search, key) {
+  return [BASE_KEY, search.getId(), key].join('.');
 };
-
 
 /**
  * Get the identifier for a search provider. Convenience for Array functions.
  *
- * @param {!os.search.ISearch} search The search provider
+ * @param {!ISearch} search The search provider
  * @return {string}
  */
-os.search.getSearchId = function(search) {
+const getSearchId = function(search) {
   return search.getId();
 };
-
 
 /**
  * Get the name for a search provider. Convenience for Array functions.
  *
- * @param {!os.search.ISearch} search The search provider
+ * @param {!ISearch} search The search provider
  * @return {string}
  */
-os.search.getSearchName = function(search) {
+const getSearchName = function(search) {
   return search.getName();
 };
-
 
 /**
  * Get the name for a search provider. Convenience for Array functions.
  *
  * @param {string} name The name to test
- * @param {!os.search.ISearch} search The search provider
+ * @param {!ISearch} search The search provider
  * @return {boolean}
  */
-os.search.isNameEqual = function(name, search) {
+const isNameEqual = function(name, search) {
   return search.getName() == name;
 };
-
 
 /**
  * Do local paging of results
@@ -114,7 +89,7 @@ os.search.isNameEqual = function(name, search) {
  * @param {number=} opt_pageSize
  * @return {!Array}
  */
-os.search.pageResults = function(results, opt_start, opt_pageSize) {
+const pageResults = function(results, opt_start, opt_pageSize) {
   if (opt_start !== undefined && opt_pageSize !== undefined) {
     var startIndex = opt_start * opt_pageSize;
     if (startIndex > results.length) {
@@ -131,7 +106,6 @@ os.search.pageResults = function(results, opt_start, opt_pageSize) {
   }
 };
 
-
 /**
  * Create a score for date sorting by sort order
  *
@@ -139,9 +113,9 @@ os.search.pageResults = function(results, opt_start, opt_pageSize) {
  * @param {string} order
  * @return {number}
  */
-os.search.dateScore = function(time, order) {
+const dateScore = function(time, order) {
   if (time || time == 0) {
-    if (order == os.search.SortOrder.DESC) {
+    if (order == SortOrder.DESC) {
       return time;
     } else {
       return new Date().getTime() - time;
@@ -151,14 +125,13 @@ os.search.dateScore = function(time, order) {
   }
 };
 
-
 /**
  * Get whether a search supports geosearch.
- * @param {os.search.ISearch} search The search.
+ * @param {ISearch} search The search.
  * @return {boolean} Whether it implements and supports geosearch.
  */
-os.search.supportsGeoSearch = function(search) {
-  if (search && os.implements(search, os.search.IGeoSearch.ID)) {
+const supportsGeoSearch = function(search) {
+  if (search && osImplements(search, IGeoSearch.ID)) {
     var s = /** @type {os.search.IGeoSearch} */ (search);
     return s.supportsGeoDistance() || s.supportsGeoExtent() || s.supportsGeoShape();
   }
@@ -166,17 +139,31 @@ os.search.supportsGeoSearch = function(search) {
   return false;
 };
 
-
 /**
  * Get whether a search supports temporal search.
- * @param {os.search.ISearch} search The search.
+ * @param {ISearch} search The search.
  * @return {boolean} Whether it implements and supports temporal search.
  */
-os.search.supportsTemporalSearch = function(search) {
-  if (search && os.implements(search, os.search.ITemporalSearch.ID)) {
-    var s = /** @type {os.search.ITemporalSearch} */ (search);
+const supportsTemporalSearch = function(search) {
+  if (search && osImplements(search, ITemporalSearch.ID)) {
+    var s = /** @type {ITemporalSearch} */ (search);
     return s.supportsDateRange() || s.supportsStartDate() || s.supportsEndDate();
   }
 
   return false;
+};
+
+exports = {
+  BASE_KEY,
+  SEARCH_ALL,
+  SearchSetting,
+  SubSearchSetting,
+  getSettingKey,
+  getSearchId,
+  getSearchName,
+  isNameEqual,
+  pageResults,
+  dateScore,
+  supportsGeoSearch,
+  supportsTemporalSearch
 };

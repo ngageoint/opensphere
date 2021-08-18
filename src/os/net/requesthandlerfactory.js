@@ -1,43 +1,48 @@
-goog.provide('os.net.RequestHandlerFactory');
-goog.require('goog.array');
-goog.require('ol.array');
-goog.require('os.net.IRequestHandler');
+goog.module('os.net.RequestHandlerFactory');
+goog.module.declareLegacyNamespace();
+
+const {defaultCompare} = goog.require('goog.array');
+const {remove} = goog.require('ol.array');
+
+const IRequestHandler = goog.requireType('os.net.IRequestHandler');
 
 
 /**
- * The list of handler classes
- * @type {?Array.<Function>}
- * @private
+ * The list of handler classes registered with the module.
+ * @type {!Array<function(new: IRequestHandler, ...)>}
  */
-os.net.RequestHandlerFactory.list_ = null;
-
+const handlerClasses = [];
 
 /**
  * Adds a handler type to the factory
  *
- * @param {Function} clazz The constructor for the class
+ * @param {function(new: IRequestHandler, ...)} clazz The constructor for the class
  */
-os.net.RequestHandlerFactory.addHandler = function(clazz) {
-  /** @type {?Array.<Function>} */
-  var list = os.net.RequestHandlerFactory.list_;
-
-  if (!list) {
-    list = os.net.RequestHandlerFactory.list_ = [];
-  }
-
-  if (list.indexOf(clazz) == -1) {
-    list.push(clazz);
+const addHandler = function(clazz) {
+  if (handlerClasses.indexOf(clazz) == -1) {
+    handlerClasses.push(clazz);
   }
 };
-
 
 /**
- * @param {Function} clazz The class to remove
+ * @param {function(new: IRequestHandler, ...)} clazz The class to remove
  */
-os.net.RequestHandlerFactory.removeHandler = function(clazz) {
-  ol.array.remove(os.net.RequestHandlerFactory.list_, clazz);
+const removeHandler = function(clazz) {
+  remove(handlerClasses, clazz);
 };
 
+/**
+ * Reset handlers registered with the module.
+ */
+const resetHandlers = function() {
+  handlerClasses.length = 0;
+};
+
+/**
+ * Get all handlers registered with the module.
+ * @return {!Array<function(new: IRequestHandler, ...)>}
+ */
+const getAllHandlers = () => handlerClasses;
 
 /**
  * Gets an array of handlers that support the given method and uri.
@@ -45,28 +50,22 @@ os.net.RequestHandlerFactory.removeHandler = function(clazz) {
  * @param {string} method The request method
  * @param {goog.Uri} uri The URI
  * @param {number=} opt_timeout The timeout
- * @return {?Array.<os.net.IRequestHandler>}
+ * @return {?Array<IRequestHandler>}
  */
-os.net.RequestHandlerFactory.getHandlers = function(method, uri, opt_timeout) {
-  /** @type {?Array.<Function>} */
-  var list = os.net.RequestHandlerFactory.list_;
-
-  /** @type {?Array.<os.net.IRequestHandler>} */
+const getHandlers = function(method, uri, opt_timeout) {
   var handlers = null;
 
-  if (list) {
-    for (var i = 0, n = list.length; i < n; i++) {
-      var clazz = /** @type {Function} */ (list[i]);
-      var handler = /** @type {os.net.IRequestHandler} */ (new clazz());
-      if (opt_timeout) {
-        handler.setTimeout(opt_timeout);
-      }
-      if (handler.handles(method, uri)) {
-        if (!handlers) {
-          handlers = [handler];
-        } else {
-          handlers.push(handler);
-        }
+  for (var i = 0, n = handlerClasses.length; i < n; i++) {
+    var clazz = handlerClasses[i];
+    var handler = new clazz();
+    if (opt_timeout) {
+      handler.setTimeout(opt_timeout);
+    }
+    if (handler.handles(method, uri)) {
+      if (!handlers) {
+        handlers = [handler];
+      } else {
+        handlers.push(handler);
       }
     }
   }
@@ -74,14 +73,22 @@ os.net.RequestHandlerFactory.getHandlers = function(method, uri, opt_timeout) {
   if (handlers) {
     handlers.sort(
         /**
-         * @param {os.net.IRequestHandler} a
+         * @param {IRequestHandler} a
          * @param {os.net.IRequestHandler} b
          * @return {number} per compare functions
          */
         function(a, b) {
-          return -1 * goog.array.defaultCompare(a.getScore(), b.getScore());
+          return -1 * defaultCompare(a.getScore(), b.getScore());
         });
   }
 
   return handlers;
+};
+
+exports = {
+  addHandler,
+  removeHandler,
+  resetHandlers,
+  getAllHandlers,
+  getHandlers
 };

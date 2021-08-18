@@ -2,9 +2,11 @@ goog.require('os.ogc.spatial');
 
 
 describe('os.ogc.spatial', function() {
+  const spatial = goog.module.get('os.ogc.spatial');
+
   it('should close unclosed rings', function() {
     var coords = [[0, 0], [2, 2], [5, 5]];
-    var str = os.ogc.spatial.formatCoords(coords);
+    var str = spatial.formatCoords(coords);
 
     expect(str).toBe('0,0 2,2 5,5 0,0');
   });
@@ -14,7 +16,7 @@ describe('os.ogc.spatial', function() {
     // 1E-14, but all of our code considers the epsilon to be 1E-12
     var coords = [[0.12345612345678, 0.12345612345601], [2, 2], [5, 5], [0.12345612345652, 0.12345612345645]];
 
-    var str = os.ogc.spatial.formatCoords(coords);
+    var str = spatial.formatCoords(coords);
     expect(str).toBe('0.12345612345678,0.12345612345601 2,2 5,5 0.12345612345678,0.12345612345601');
   });
 });

@@ -1,6 +1,3 @@
-goog.provide('os.ol.license');
-
-
 /**
  * @license
  * Copyright 2005-2015 OpenLayers Contributors. All rights reserved.
@@ -30,3 +27,5 @@ goog.provide('os.ol.license');
  * of the authors and should not be interpreted as representing official policies,
  * either expressed or implied, of OpenLayers Contributors.
  */
+goog.module('os.ol.license');
+goog.module.declareLegacyNamespace();

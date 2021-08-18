@@ -1,30 +1,29 @@
-goog.provide('os.search.ISequentialPagingSearch');
-
+goog.module('os.search.ISequentialPagingSearch');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * The base interface for sequential paging providers
  * @interface
  */
-os.search.ISequentialPagingSearch = function() {};
+class ISequentialPagingSearch {
+  /**
+   * Does the search provider only support sequential access to paged results
+   * @return {boolean}
+   */
+  useSequentialPaging() {}
 
+  /**
+   * Set if search provider only supports sequential access to paged results
+   * @param {boolean} sequentialPaging
+   */
+  setSequentialPaging(sequentialPaging) {}
+}
 
 /**
  * ID for the interface
  * @const {string}
  */
-os.search.ISequentialPagingSearch.ID = 'os.search.ISequentialPagingSearch';
+ISequentialPagingSearch.ID = 'os.search.ISequentialPagingSearch';
 
-
-/**
- * Does the search provider only support sequential access to paged results
- * @return {boolean}
- */
-os.search.ISequentialPagingSearch.prototype.useSequentialPaging;
-
-
-/**
- * Set if search provider only supports sequential access to paged results
- * @param {boolean} sequentialPaging
- */
-os.search.ISequentialPagingSearch.prototype.setSequentialPaging;
+exports = ISequentialPagingSearch;

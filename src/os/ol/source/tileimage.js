@@ -1,18 +1,23 @@
-goog.provide('os.ol.source.tileimage');
+goog.module('os.ol.source.tileimage');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.net.EventType');
-goog.require('os.net.HandlerType');
-goog.require('os.net.ProxyHandler');
-goog.require('os.net.Request');
+const EventType = goog.require('goog.net.EventType');
+const HandlerType = goog.require('os.net.HandlerType');
+const ProxyHandler = goog.require('os.net.ProxyHandler');
+const Request = goog.require('os.net.Request');
+
+const Projection = goog.requireType('ol.proj.Projection');
+const TileImage = goog.requireType('ol.source.TileImage');
+const VectorTile = goog.requireType('ol.source.VectorTile');
 
 
 /**
  * Wraps the tileUrlFunction of the given source so that it goes through the
- * proxy configured in os.net.ProxyHandler
+ * proxy configured in ProxyHandler
  *
- * @param {ol.source.TileImage|ol.source.VectorTile} source
+ * @param {TileImage|VectorTile} source
  */
-os.ol.source.tileimage.addProxyWrapper = function(source) {
+const addProxyWrapper = function(source) {
   // wrap the tileUrlFunction with the proxy
   var originalUrlFunction = source.getTileUrlFunction();
 
@@ -20,13 +25,13 @@ os.ol.source.tileimage.addProxyWrapper = function(source) {
       /**
        * @param {ol.TileCoord} tileCoord
        * @param {number}  pixelRatio
-       * @param {ol.proj.Projection} projection
+       * @param {Projection} projection
        * @return {string|undefined} url for tile
        */
       function(tileCoord, pixelRatio, projection) {
         var uri = originalUrlFunction(tileCoord, pixelRatio, projection);
         if (uri) {
-          uri = os.net.ProxyHandler.getProxyUri(uri);
+          uri = ProxyHandler.getProxyUri(uri);
         }
 
         return uri;
@@ -35,37 +40,41 @@ os.ol.source.tileimage.addProxyWrapper = function(source) {
   source.setTileUrlFunction(wrapper);
 };
 
-
 /**
  * Automatically wrap the source with the proxy if CORS fails and the proxy succeeds.
  *
- * @param {ol.source.TileImage|ol.source.VectorTile} source
- * @param {ol.proj.Projection} proj
+ * @param {TileImage|VectorTile} source
+ * @param {Projection} proj
  */
-os.ol.source.tileimage.autoProxyCheck = function(source, proj) {
+const autoProxyCheck = function(source, proj) {
   var url = source.getTileUrlFunction()([2, 2, -1], 1, proj);
 
   if (url) {
-    var request = new os.net.Request(url);
+    var request = new Request(url);
     var listener = function(evt) {
-      var request = /** @type {os.net.Request} */ (evt.target);
+      var request = /** @type {Request} */ (evt.target);
 
-      if (request.getSuccessfulHandlerType() === os.net.HandlerType.PROXY) {
+      if (request.getSuccessfulHandlerType() === HandlerType.PROXY) {
         var codes = request.getStatusCodes();
 
         // This ensures that:
         //  1) the upstream handler failed (most likely) due to CORS
         //  2) or the proxy handler was the only handler
         if (codes && (codes.length === 1 || (codes.length > 1 && codes[codes.length - 2] === 0))) {
-          os.ol.source.tileimage.addProxyWrapper(source);
+          addProxyWrapper(source);
         }
       }
 
       request.dispose();
     };
 
-    request.listen(goog.net.EventType.SUCCESS, listener);
-    request.listen(goog.net.EventType.ERROR, listener);
+    request.listen(EventType.SUCCESS, listener);
+    request.listen(EventType.ERROR, listener);
     request.load();
   }
+};
+
+exports = {
+  addProxyWrapper,
+  autoProxyCheck
 };

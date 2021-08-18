@@ -1,24 +1,27 @@
-goog.require('os.structs.ArrayCollection');
-goog.require('os.structs.EventType');
 goog.require('goog.array');
 goog.require('goog.structs');
-
-
-/**
- * Mock filter function for unit tests
- * @param {*} val The value
- * @param {number} i The index
- * @param {Array} arr The array
- * @return {boolean} Whether or not to include the value
- */
-os.structs.ArrayCollection.mockFilter = function(val, i, arr) {
-  return val % 2 === 0;
-};
+goog.require('os.structs.ArrayCollection');
+goog.require('os.structs.EventType');
 
 describe('os.structs.ArrayCollection', function() {
+  const googArray = goog.module.get('goog.array');
+  const ArrayCollection = goog.module.get('os.structs.ArrayCollection');
+  const EventType = goog.module.get('os.structs.EventType');
+
+  /**
+   * Mock filter function for unit tests
+   * @param {*} val The value
+   * @param {number} i The index
+   * @param {Array} arr The array
+   * @return {boolean} Whether or not to include the value
+   */
+  const mockFilter = function(val, i, arr) {
+    return val % 2 === 0;
+  };
+
   it('should add items from the constructor', function() {
-    var c = new os.structs.ArrayCollection([1, 3, 2]);
-    var other = new os.structs.ArrayCollection();
+    var c = new ArrayCollection([1, 3, 2]);
+    var other = new ArrayCollection();
     expect(c.source_.length).toBe(3);
     expect(c.source_[0]).toBe(1);
     expect(c.source_[1]).toBe(3);
@@ -27,7 +30,7 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should be able to add items through add()', function() {
-    var c = new os.structs.ArrayCollection();
+    var c = new ArrayCollection();
     c.add(1);
     c.add(3);
     c.add(2);
@@ -38,7 +41,7 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should be able to return the index of an item', function() {
-    var c = new os.structs.ArrayCollection([1, 3, 2]);
+    var c = new ArrayCollection([1, 3, 2]);
     expect(c.getItemIndex(2)).toBe(2);
     expect(c.getItemIndex(3)).toBe(1);
     expect(c.getItemIndex(1)).toBe(0);
@@ -46,7 +49,7 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should be report if it contains an item', function() {
-    var c = new os.structs.ArrayCollection([1, 3, 2]);
+    var c = new ArrayCollection([1, 3, 2]);
     expect(c.contains(1)).toBe(true);
     expect(c.contains(2)).toBe(true);
     expect(c.contains(3)).toBe(true);
@@ -54,26 +57,26 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should properly report the count', function() {
-    var c = new os.structs.ArrayCollection([1, 3, 2]);
+    var c = new ArrayCollection([1, 3, 2]);
     expect(c.getCount()).toBe(3);
   });
 
   it('should be able to remove items through remove()', function() {
-    var c = new os.structs.ArrayCollection([1, 3, 2]);
+    var c = new ArrayCollection([1, 3, 2]);
     c.remove(3);
     expect(c.getValues()).not.toContain(3);
     expect(c.getValues().length).toBe(2);
   });
 
   it('should be able to add items through addAll()', function() {
-    var c = new os.structs.ArrayCollection();
+    var c = new ArrayCollection();
     c.addAll([1, 3, 2]);
     expect(c.source_.length).toBe(3);
     expect(c.source_[0]).toBe(1);
     expect(c.source_[1]).toBe(3);
     expect(c.source_[2]).toBe(2);
 
-    var x = new os.structs.ArrayCollection([4, 5, 6]);
+    var x = new ArrayCollection([4, 5, 6]);
     c.addAll(x);
     expect(c.source_.length).toBe(6);
     expect(c.source_[3]).toBe(4);
@@ -82,7 +85,7 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should be abnle to remove items through removeAll()', function() {
-    var c = new os.structs.ArrayCollection([1, 2, 3, 4, 5, 6]);
+    var c = new ArrayCollection([1, 2, 3, 4, 5, 6]);
     c.removeAll([1, 2, 3]);
 
     expect(c.source_.length).toBe(3);
@@ -90,20 +93,20 @@ describe('os.structs.ArrayCollection', function() {
     expect(c.source_[1]).toBe(5);
     expect(c.source_[2]).toBe(6);
 
-    c.removeAll(new os.structs.ArrayCollection([4, 5, 6]));
+    c.removeAll(new ArrayCollection([4, 5, 6]));
     expect(c.source_.length).toBe(0);
   });
 
   it('should properly report when it is empty', function() {
-    var c = new os.structs.ArrayCollection();
+    var c = new ArrayCollection();
     expect(c.isEmpty()).toBe(true);
   });
 
   it('should properly handle a sort added later', function() {
-    var c = new os.structs.ArrayCollection([3, 2, 1]);
-    c.setSort(goog.array.defaultCompare);
+    var c = new ArrayCollection([3, 2, 1]);
+    c.setSort(googArray.defaultCompare);
     expect(c.sortChanged_).toBe(true);
-    expect(c.getSort()).toBe(goog.array.defaultCompare);
+    expect(c.getSort()).toBe(googArray.defaultCompare);
     c.refresh();
     expect(c.sortChanged_).toBe(false);
 
@@ -113,8 +116,8 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should keep items sorted when added with a sort', function() {
-    var c = new os.structs.ArrayCollection([1, 3, 5]);
-    c.setSort(goog.array.defaultCompare);
+    var c = new ArrayCollection([1, 3, 5]);
+    c.setSort(googArray.defaultCompare);
     c.refresh();
 
     c.add(2);
@@ -122,8 +125,8 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should remove via binary search with a sort', function() {
-    var c = new os.structs.ArrayCollection([3, 2, 1]);
-    c.setSort(goog.array.defaultCompare);
+    var c = new ArrayCollection([3, 2, 1]);
+    c.setSort(googArray.defaultCompare);
     c.refresh();
 
     c.remove(2);
@@ -131,17 +134,17 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should find the proper index with a sort', function() {
-    var c = new os.structs.ArrayCollection([3, 2, 1]);
-    c.setSort(goog.array.defaultCompare);
+    var c = new ArrayCollection([3, 2, 1]);
+    c.setSort(googArray.defaultCompare);
     c.refresh();
 
     expect(c.getItemIndex(3)).toBe(2);
   });
 
   it('should properly handle a filter added later', function() {
-    var c = new os.structs.ArrayCollection([1, 2, 3, 4]);
-    c.setFilter(os.structs.ArrayCollection.mockFilter);
-    expect(c.getFilter()).toBe(os.structs.ArrayCollection.mockFilter);
+    var c = new ArrayCollection([1, 2, 3, 4]);
+    c.setFilter(mockFilter);
+    expect(c.getFilter()).toBe(mockFilter);
     expect(c.filterChanged_).toBe(true);
     c.refresh();
     expect(c.filterChanged_).toBe(false);
@@ -154,8 +157,8 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should properly add items with a filter', function() {
-    var c = new os.structs.ArrayCollection();
-    c.setFilter(os.structs.ArrayCollection.mockFilter);
+    var c = new ArrayCollection();
+    c.setFilter(mockFilter);
     c.refresh();
 
     c.add(1);
@@ -172,8 +175,8 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should properly remove items with a filter', function() {
-    var c = new os.structs.ArrayCollection([1, 2, 3, 4]);
-    c.setFilter(os.structs.ArrayCollection.mockFilter);
+    var c = new ArrayCollection([1, 2, 3, 4]);
+    c.setFilter(mockFilter);
     c.refresh();
 
     c.remove(4);
@@ -187,8 +190,8 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should find the proper index with a filter', function() {
-    var c = new os.structs.ArrayCollection([1, 2, 3, 4]);
-    c.setFilter(os.structs.ArrayCollection.mockFilter);
+    var c = new ArrayCollection([1, 2, 3, 4]);
+    c.setFilter(mockFilter);
     c.refresh();
 
     expect(c.getItemIndex(2)).toBe(0);
@@ -196,9 +199,9 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should properly handle both a filter and a sort added later', function() {
-    var c = new os.structs.ArrayCollection([4, 3, 2, 1]);
-    c.setSort(goog.array.defaultCompare);
-    c.setFilter(os.structs.ArrayCollection.mockFilter);
+    var c = new ArrayCollection([4, 3, 2, 1]);
+    c.setSort(googArray.defaultCompare);
+    c.setFilter(mockFilter);
     c.refresh();
 
     expect(c.source_.length).toBe(4);
@@ -209,9 +212,9 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should properly handle adding items with both a filter and a sort', function() {
-    var c = new os.structs.ArrayCollection();
-    c.setSort(goog.array.defaultCompare);
-    c.setFilter(os.structs.ArrayCollection.mockFilter);
+    var c = new ArrayCollection();
+    c.setSort(googArray.defaultCompare);
+    c.setFilter(mockFilter);
     c.refresh();
 
     c.add(3);
@@ -230,9 +233,9 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should properly handle removing items with both a filter and a sort', function() {
-    var c = new os.structs.ArrayCollection([4, 3, 2, 1]);
-    c.setSort(goog.array.defaultCompare);
-    c.setFilter(os.structs.ArrayCollection.mockFilter);
+    var c = new ArrayCollection([4, 3, 2, 1]);
+    c.setSort(googArray.defaultCompare);
+    c.setFilter(mockFilter);
     c.refresh();
 
     c.remove(3);
@@ -250,9 +253,9 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should find the proper index with both a filter and a sort', function() {
-    var c = new os.structs.ArrayCollection([4, 3, 2, 1]);
-    c.setSort(goog.array.defaultCompare);
-    c.setFilter(os.structs.ArrayCollection.mockFilter);
+    var c = new ArrayCollection([4, 3, 2, 1]);
+    c.setSort(googArray.defaultCompare);
+    c.setFilter(mockFilter);
     c.refresh();
 
     expect(c.getItemIndex(2)).toBe(0);
@@ -261,19 +264,19 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should be able to replace data', function() {
-    var c = new os.structs.ArrayCollection([2, 3]);
+    var c = new ArrayCollection([2, 3]);
     c.replace(2, 1);
     expect(c.source_[0]).toBe(1);
   });
 
   it('should be able to remove by index', function() {
-    var c = new os.structs.ArrayCollection([0, 1, 2, 3]);
+    var c = new ArrayCollection([0, 1, 2, 3]);
     var item = c.removeAt(3);
 
     expect(item).toBe(3);
     expect(c.getValues()).not.toContain(item);
 
-    c.setFilter(os.structs.ArrayCollection.mockFilter);
+    c.setFilter(mockFilter);
     c.refresh();
 
     item = c.removeAt(2);
@@ -289,8 +292,8 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should clear data', function() {
-    var c = new os.structs.ArrayCollection([4, 3, 2, 1]);
-    c.setFilter(os.structs.ArrayCollection.mockFilter);
+    var c = new ArrayCollection([4, 3, 2, 1]);
+    c.setFilter(mockFilter);
     c.refresh();
 
     c.clear();
@@ -307,13 +310,13 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should send a data change event for each change', function() {
-    var c = new os.structs.ArrayCollection([4, 3, 2, 1]);
+    var c = new ArrayCollection([4, 3, 2, 1]);
     var count = 0;
     var listener = function(e) {
       count++;
     };
 
-    c.listen(os.structs.EventType.VIEW_DATA_CHANGED, listener);
+    c.listen(EventType.VIEW_DATA_CHANGED, listener);
 
     c.add(5);
     expect(count).toBe(1);
@@ -326,13 +329,13 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('should pool data change events when a delay is set', function() {
-    var c = new os.structs.ArrayCollection([4, 3, 2, 1]);
+    var c = new ArrayCollection([4, 3, 2, 1]);
     var count = 0;
     var listener = function(e) {
       count++;
     };
 
-    c.listen(os.structs.EventType.VIEW_DATA_CHANGED, listener);
+    c.listen(EventType.VIEW_DATA_CHANGED, listener);
     c.setChangeDelay(20);
 
     runs(function() {
@@ -348,8 +351,10 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('does not require refresh when filter set after construction', function() {
-    var c = new os.structs.ArrayCollection();
-    c.setFilter(function(item) { return typeof item === 'number' && item > 10; });
+    var c = new ArrayCollection();
+    c.setFilter(function(item) {
+      return typeof item === 'number' && item > 10;
+    });
     c.add(1);
     c.add(20);
     expect(c.contains(1)).toBe(false);
@@ -357,8 +362,10 @@ describe('os.structs.ArrayCollection', function() {
   });
 
   it('retains the view after setting the filter without calling refresh', function() {
-    var c = new os.structs.ArrayCollection();
-    c.setFilter(function(item) { return typeof item === 'number' && item > 10; });
+    var c = new ArrayCollection();
+    c.setFilter(function(item) {
+      return typeof item === 'number' && item > 10;
+    });
     c.add(1);
     c.add(20);
     expect(c.getValues()).toEqual([20]);
@@ -367,5 +374,5 @@ describe('os.structs.ArrayCollection', function() {
     c.refresh();
     expect(c.getValues()).toEqual([1, 20]);
   });
-  //TODO: add tests of the basic goog.structs calls
+  // TODO: add tests of the basic goog.structs calls
 });

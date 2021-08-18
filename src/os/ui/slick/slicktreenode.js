@@ -499,7 +499,7 @@ class SlickTreeNode extends TriStateTreeNode {
     this.dispatchEvent(new PropertyChangeEvent('collapsed', value, !value));
 
     if (opt_recurse) {
-      var children = this.getChildren();
+      var children = /** @type {Array<SlickTreeNode>} */ (this.getChildren());
       if (children) {
         for (var i = 0; i < children.length; i++) {
           children[i].setCollapsed(value, true);

@@ -1,14 +1,32 @@
+goog.require('goog.Uri.QueryData');
 goog.require('os.layer.Vector');
 goog.require('os.ogc.wfs.FeatureType');
+goog.require('os.state.BaseStateManager');
 goog.require('os.state.StateManager');
+goog.require('os.state.Versions');
 goog.require('os.state.XMLStateManager');
 goog.require('os.state.XMLStateOptions');
+goog.require('os.state.instance');
 goog.require('os.state.v4.LayerState');
 goog.require('os.test.xsd');
+goog.require('os.ui.state');
 goog.require('os.xml');
 
 
 describe('os.state.v4.LayerState', function() {
+  const QueryData = goog.module.get('goog.Uri.QueryData');
+  const VectorLayer = goog.module.get('os.layer.Vector');
+  const FeatureType = goog.module.get('os.ogc.wfs.FeatureType');
+  const BaseStateManager = goog.module.get('os.state.BaseStateManager');
+  const StateManager = goog.module.get('os.state.StateManager');
+  const Versions = goog.module.get('os.state.Versions');
+  const instance = goog.module.get('os.state.instance');
+  const LayerState = goog.module.get('os.state.v4.LayerState');
+  const state = goog.module.get('os.ui.state');
+  const xml = goog.module.get('os.xml');
+
+  const {loadStateXsdFiles} = goog.module.get('os.test.xsd');
+
   var stateManager = null;
 
   var expectPropertiesInAToBeSameInB = function(a, b, exclusions) {
@@ -42,13 +60,13 @@ describe('os.state.v4.LayerState', function() {
   };
 
   beforeEach(function() {
-    stateManager = os.stateManager = os.state.StateManager.getInstance();
-    os.state.instance.setStateManager(stateManager);
-    stateManager.setVersion(os.state.Versions.V4);
+    stateManager = os.stateManager = StateManager.getInstance();
+    instance.setStateManager(stateManager);
+    stateManager.setVersion(Versions.V4);
   });
 
   it('should exist', function() {
-    expect(os.state.v4.LayerState).not.toBe(undefined);
+    expect(LayerState).not.toBe(undefined);
   });
 
 
@@ -187,14 +205,14 @@ describe('os.state.v4.LayerState', function() {
     var resultSchemas = null;
 
     // These options are objects at runtime, converting them back.
-    defaultOptions.params = goog.Uri.QueryData.createFromMap(defaultOptions.params.keyMap_.map_);
-    defaultOptions.featureType = new os.ogc.wfs.FeatureType(defaultOptions.featureType,
+    defaultOptions.params = QueryData.createFromMap(defaultOptions.params.keyMap_.map_);
+    defaultOptions.featureType = new FeatureType(defaultOptions.featureType,
         defaultOptions.featureType.columns_, defaultOptions.featureType.isDynamic_);
 
     // Using jasmine's async test, as we need to load the xsd files
     // that are used by xmllint.
     runs(function() {
-      os.test.xsd.loadStateXsdFiles().then(function(result) {
+      loadStateXsdFiles().then(function(result) {
         resultSchemas = result;
       }, function(err) {
         throw err;
@@ -203,18 +221,18 @@ describe('os.state.v4.LayerState', function() {
 
     // waiting for the xsd files to load
     waitsFor(function() {
-      return (resultSchemas && os.ui.state && os.state.BaseStateManager);
+      return resultSchemas && state && BaseStateManager;
     }, 'Wait for XSD(s) to load', 2 * jasmine.DEFAULT_TIMEOUT_INTERVAL);
 
     // Runs the tests.
     runs(function() {
       // create a basic layer
-      var layer = new os.layer.Vector();
+      var layer = new VectorLayer();
 
       // using the default options, as this is what is used
       // to create the state file.
       layer.setLayerOptions(defaultOptions);
-      var layerState = new os.state.v4.LayerState();
+      var layerState = new LayerState();
       var xmlRootDocument = stateManager.createStateObject(function() {}, 'test state', 'desc', defaultOptions.tags);
       var stateOptions = stateManager.createStateOptions(function() {}, 'test state', 'desc', defaultOptions.tags);
       stateOptions.doc = xmlRootDocument;
@@ -222,7 +240,7 @@ describe('os.state.v4.LayerState', function() {
       xmlRootDocument.firstElementChild.appendChild(rootObj);
       var result = layerState.layerToXML(layer, stateOptions);
       rootObj.appendChild(result);
-      var seralizedDoc = os.xml.serialize(stateOptions.doc);
+      var seralizedDoc = xml.serialize(stateOptions.doc);
       var xmlLintResult = xmllint.validateXML({
         xml: seralizedDoc,
         schema: resultSchemas
@@ -233,7 +251,7 @@ describe('os.state.v4.LayerState', function() {
       var mapLayersNode = xmlRootDocument.firstElementChild.querySelector('dataLayers');
       var restoredOptions = layerState.xmlToOptions(mapLayersNode.firstElementChild);
       expect(restoredOptions).toBeDefined();
-      // method does a basic value comparision with expect(a?).toBe(b?) for most of the
+      // method does a basic value comparision with expect(a?).toBe(b?) for mos1t of the
       // values defined in the orginal default optons.
       expectPropertiesInAToBeSameInB(defaultOptions, restoredOptions,
           ['id', 'color', 'baseColor', 'params', 'map_', 'featureType']);

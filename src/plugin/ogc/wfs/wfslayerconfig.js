@@ -25,7 +25,17 @@ const GeoJSONParser = goog.require('plugin.file.geojson.GeoJSONParser');
 const {Controller: ChooseTimeColumnController} = goog.require('plugin.ogc.ui.ChooseTimeColumnUI');
 const {directiveTag: ogcLayerNodeUi} = goog.require('plugin.ogc.ui.OGCLayerNodeUI');
 
+const GoogEvent = goog.requireType('goog.events.Event');
+const Logger = goog.requireType('goog.log.Logger');
+const ResponseType = goog.requireType('goog.net.XhrIo.ResponseType');
+const Feature = goog.requireType('ol.Feature');
+const Importer = goog.requireType('os.im.Importer');
 const IMapping = goog.requireType('os.im.mapping.IMapping');
+const IFeatureType = goog.requireType('os.ogc.IFeatureType');
+const WFSTypeConfig = goog.requireType('os.ogc.WFSTypeConfig');
+const IParser = goog.requireType('os.parse.IParser');
+const ISource = goog.requireType('os.source.ISource');
+const RequestSource = goog.requireType('os.source.Request');
 const GMLParser = goog.requireType('plugin.file.gml.GMLParser');
 
 
@@ -48,7 +58,7 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
     this.describeType = true;
 
     /**
-     * @type {ogc.IFeatureType}
+     * @type {IFeatureType}
      */
     this.featureType = null;
 
@@ -114,7 +124,7 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
         this.loadWFSDescribeFeature(layer, options);
       }
     } else if (options['load']) {
-      source = /** @type {os.source.ISource} */ (layer.getSource());
+      source = /** @type {ISource} */ (layer.getSource());
       source.refresh();
     }
 
@@ -123,7 +133,7 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
 
   /**
    * @param {VectorLayer} layer
-   * @param {Object.<string, *>} options
+   * @param {Object<string, *>} options
    * @protected
    */
   loadWFSDescribeFeature(layer, options) {
@@ -138,8 +148,8 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
 
   /**
    * @param {VectorLayer} layer
-   * @param {Object.<string, *>} options
-   * @param {goog.events.Event} event
+   * @param {Object<string, *>} options
+   * @param {GoogEvent} event
    * @private
    */
   onDescribeComplete_(layer, options, event) {
@@ -180,7 +190,7 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
 
     const type = this.getBestType(options);
     if (type && type.responseType != null) {
-      request.setResponseType(/** @type {goog.net.XhrIo.ResponseType} */ (type.responseType));
+      request.setResponseType(/** @type {ResponseType} */ (type.responseType));
     }
 
     return request;
@@ -188,7 +198,7 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
 
   /**
    * @param {VectorLayer} layer
-   * @param {Object.<string, *>} options
+   * @param {Object<string, *>} options
    * @protected
    */
   onFeatureTypeAvailable(layer, options) {
@@ -197,11 +207,11 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
 
   /**
    * @param {VectorLayer} layer
-   * @param {Object.<string, *>} options
+   * @param {Object<string, *>} options
    * @protected
    */
   featureTypeAvailable(layer, options) {
-    var source = /** @type {os.source.Request} */ (layer.getSource());
+    var source = /** @type {RequestSource} */ (layer.getSource());
 
     var checkRefresh = function() {
       if (source && !source.isDisposed() && options['load']) {
@@ -247,13 +257,13 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
    * Adds mappings
    *
    * @param {VectorLayer} layer
-   * @param {Object.<string, *>} options
+   * @param {Object<string, *>} options
    * @protected
    */
   addMappings(layer, options) {
     var animate = options['animate'] != null ? options['animate'] : false;
-    var source = /** @type {os.source.Request} */ (layer.getSource());
-    var importer = /** @type {os.im.Importer} */ (source.getImporter());
+    var source = /** @type {RequestSource} */ (layer.getSource());
+    var importer = /** @type {Importer} */ (source.getImporter());
     var execMappings = [];
     var timeFields = options['timeFields'];
 
@@ -424,13 +434,13 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
         parser = new GeoJSONParser();
       }
 
-      parser.setSourceId(this.id);
+      /** @type {GeoJSONParser} */ (parser).setSourceId(this.id);
     } else if (type == 'gml2') {
       // tell the parser to use it
       /** @type {GMLParser} */ (parser).useGML2Format(true);
     }
 
-    return /** @type {!os.parse.IParser<ol.Feature>} */ (parser);
+    return /** @type {!IParser<Feature>} */ (parser);
   }
 
   /**
@@ -457,7 +467,7 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
 
   /**
    * Register a type config object.
-   * @param {!ogc.WFSTypeConfig} config
+   * @param {!WFSTypeConfig} config
    * @protected
    */
   static registerType(config) {
@@ -474,14 +484,14 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
 
 
 /**
- * @type {goog.log.Logger}
+ * @type {Logger}
  */
 const logger = log.getLogger('plugin.ogc.wfs.WFSLayerConfig');
 
 
 /**
  * Type config for GeoJSON parsing.
- * @type {ogc.WFSTypeConfig}
+ * @type {WFSTypeConfig}
  */
 WFSLayerConfig.GEOJSON_CONFIG = {
   regex: /^application\/json$/,
@@ -493,7 +503,7 @@ WFSLayerConfig.GEOJSON_CONFIG = {
 
 /**
  * Type config for GML3 parsing.
- * @type {ogc.WFSTypeConfig}
+ * @type {WFSTypeConfig}
  */
 WFSLayerConfig.GML3_CONFIG = {
   regex: /gml\/?3/i,
@@ -505,7 +515,7 @@ WFSLayerConfig.GML3_CONFIG = {
 
 /**
  * Type config for GML2 parsing.
- * @type {ogc.WFSTypeConfig}
+ * @type {WFSTypeConfig}
  */
 WFSLayerConfig.GML2_CONFIG = {
   regex: /gml\/?2/i,
@@ -517,7 +527,7 @@ WFSLayerConfig.GML2_CONFIG = {
 
 /**
  * The available WFS type config objects. Plugins can add supported parser types to this.
- * @type {Array<ogc.WFSTypeConfig>}
+ * @type {Array<WFSTypeConfig>}
  */
 WFSLayerConfig.TYPE_CONFIGS = [
   WFSLayerConfig.GEOJSON_CONFIG,

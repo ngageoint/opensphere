@@ -22,6 +22,7 @@ const ExportOptionsEvent = goog.require('os.ui.ex.ExportOptionsEvent');
 const EventTarget = goog.requireType('ol.events.EventTarget');
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 const ISource = goog.requireType('os.source.ISource');
+const VectorSource = goog.requireType('os.source.Vector');
 
 
 /**
@@ -302,7 +303,7 @@ class Controller extends Disposable {
           sources.push(source);
 
           var sourceItems;
-          var features = source.getFilteredFeatures();
+          var features = /** @type {VectorSource} */ (source).getFilteredFeatures();
           var totalCount = features.length;
           if (this['useSelected']) {
             var selected = source.getSelectedItems();

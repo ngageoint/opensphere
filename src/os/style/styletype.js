@@ -1,11 +1,12 @@
-goog.provide('os.style.StyleType');
+goog.module('os.style.StyleType');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * Properties for styles
  * @enum {string}
  */
-os.style.StyleType = {
+const StyleType = {
   FEATURE: '_style',
   SELECT: '_selectStyle',
   CUSTOM_SELECT: '_customSelectStyle',
@@ -14,16 +15,16 @@ os.style.StyleType = {
   LABEL: '_labelStyle'
 };
 
-
 /**
  * @type {RegExp}
- * @const
  */
-os.style.StyleType.REGEXP = (function() {
-  var values = goog.object.getValues(os.style.StyleType);
+StyleType.REGEXP = (function() {
+  var values = Object.values(StyleType);
   for (var i = 0, n = values.length; i < n; i++) {
     values[i] = '(' + values[i] + ')';
   }
 
   return new RegExp('^(' + values.join('|') + ')$');
 })();
+
+exports = StyleType;

@@ -14,18 +14,8 @@ const osObject = goog.require('os.object');
 const url = goog.require('os.url');
 const FavoriteType = goog.require('os.user.settings.FavoriteType');
 
-
-/**
- * @typedef {{
- *   children: Array<os.user.settings.favorite>,
- *   key: string,
- *   time: number,
- *   type: string,
- *   value: string,
- *   key2: string
- *   }}
- */
-os.user.settings.favorite;
+const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const FavoriteSetting = goog.requireType('os.user.settings.favorite');
 
 
 /**
@@ -109,7 +99,7 @@ class FavoriteManager extends EventTarget {
    * Get the favorite
    *
    * @param {string} key
-   * @return {?os.user.settings.favorite}
+   * @return {?FavoriteSetting}
    */
   getFavorite(key) {
     return FavoriteManager.getFavoriteInternal_(this.getFavorites(), key);
@@ -119,7 +109,7 @@ class FavoriteManager extends EventTarget {
    * Get the favorite's folders
    *
    * @param {string} key
-   * @return {Array<os.user.settings.favorite>}
+   * @return {Array<FavoriteSetting>}
    */
   getFavoriteFolders(key) {
     var favFolders = [];
@@ -210,7 +200,7 @@ class FavoriteManager extends EventTarget {
 
     var fav = this.getFavorite(key);
     if (fav) {
-      fav = /** @type {os.user.settings.favorite} */ (osObject.unsafeClone(fav));
+      fav = /** @type {FavoriteSetting} */ (osObject.unsafeClone(fav));
       favs = FavoriteManager.removeFavoriteInternal_(favs, key);
     } else {
       fav = {
@@ -372,7 +362,7 @@ class FavoriteManager extends EventTarget {
   /**
    * Save the list order
    *
-   * @param {Array<!os.structs.ITreeNode>} nodes
+   * @param {Array<!ITreeNode>} nodes
    */
   convert(nodes) {
     var favs = FavoriteManager.convertInternal_(nodes);
@@ -382,7 +372,7 @@ class FavoriteManager extends EventTarget {
   /**
    * Save favorites to settings
    *
-   * @param {Array<os.user.settings.favorite>} favs
+   * @param {Array<FavoriteSetting>} favs
    */
   saveToSettings(favs) {
     Settings.getInstance().set([FavoriteManager.KEY], favs);
@@ -400,7 +390,7 @@ class FavoriteManager extends EventTarget {
    *
    * @param {Array} favs
    * @param {string} key
-   * @return {?os.user.settings.favorite}
+   * @return {?FavoriteSetting}
    * @private
    */
   static getFavoriteInternal_(favs, key) {
@@ -422,7 +412,7 @@ class FavoriteManager extends EventTarget {
   /**
    * Search folders for the favorite
    *
-   * @param {os.user.settings.favorite} folder
+   * @param {FavoriteSetting} folder
    * @param {string} key
    * @return {Array<string>} - the folder keys the favorite was found in
    * @private
@@ -566,7 +556,7 @@ class FavoriteManager extends EventTarget {
    * Save the favorite to a folder
    *
    * @param {Array} favs
-   * @param {os.user.settings.favorite} favorite
+   * @param {FavoriteSetting} favorite
    * @param {string} folder - the folder key
    * @return {Array} - the modified favorite array
    * @private
@@ -594,8 +584,8 @@ class FavoriteManager extends EventTarget {
   /**
    * Rebuild the favorites list from the tree nodes
    *
-   * @param {Array<!os.structs.ITreeNode>} nodes
-   * @return {Array<os.user.settings.favorite>}
+   * @param {Array<!ITreeNode>} nodes
+   * @return {Array<FavoriteSetting>}
    * @private
    */
   static convertInternal_(nodes) {
@@ -616,16 +606,39 @@ class FavoriteManager extends EventTarget {
     }
     return result;
   }
-}
-goog.addSingletonGetter(FavoriteManager);
 
+  /**
+   * Get the global instance.
+   * @return {!FavoriteManager}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new FavoriteManager();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {FavoriteManager} value The instance.
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
+
+/**
+ * Global instance.
+ * @type {FavoriteManager}
+ */
+let instance;
 
 /**
  * Key to use for settings
  * @type {string}
  */
 FavoriteManager.KEY = 'favorite';
-
 
 /**
  * Global reference to the favorite manager singleton.

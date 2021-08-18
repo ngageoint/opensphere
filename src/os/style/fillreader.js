@@ -1,59 +1,63 @@
-goog.provide('os.style.FillReader');
+goog.module('os.style.FillReader');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.color');
-goog.require('ol.style.Fill');
-goog.require('os.style');
-goog.require('os.style.AbstractReader');
-
+const {hashCode} = goog.require('goog.string');
+const {asString} = goog.require('ol.color');
+const Fill = goog.require('ol.style.Fill');
+const osStyle = goog.require('os.style');
+const AbstractReader = goog.require('os.style.AbstractReader');
 
 
 /**
  * Fill style reader
  *
- * @extends {os.style.AbstractReader<!ol.style.Fill>}
- * @constructor
+ * @extends {AbstractReader<!Fill>}
  */
-os.style.FillReader = function() {
-  os.style.FillReader.base(this, 'constructor');
-  this.baseHash = 31 * this.baseHash + goog.string.hashCode('fill') >>> 0;
-};
-goog.inherits(os.style.FillReader, os.style.AbstractReader);
-
-
-/**
- * @inheritDoc
- */
-os.style.FillReader.prototype.getOrCreateStyle = function(config) {
-  var color = /** @type {string|undefined} */ (config['color']) || os.style.DEFAULT_LAYER_COLOR;
-  color = ol.color.asString(color);
-
-  var hash = 31 * this.baseHash + goog.string.hashCode(color) >>> 0;
-  if (!this.cache[hash]) {
-    this.cache[hash] = new ol.style.Fill({
-      color: color
-    });
-
-    this.cache[hash]['id'] = hash;
+class FillReader extends AbstractReader {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.baseHash = 31 * this.baseHash + hashCode('fill') >>> 0;
   }
 
-  return /** @type {!ol.style.Fill} */ (this.cache[hash]);
-};
+  /**
+   * @inheritDoc
+   */
+  getOrCreateStyle(config) {
+    var color = /** @type {string|undefined} */ (config['color']) || osStyle.DEFAULT_LAYER_COLOR;
+    color = asString(color);
 
+    var hash = 31 * this.baseHash + hashCode(color) >>> 0;
+    if (!this.cache[hash]) {
+      this.cache[hash] = new Fill({
+        color: color
+      });
 
-/**
- * @inheritDoc
- */
-os.style.FillReader.prototype.toConfig = function(style, obj) {
-  if (style instanceof ol.style.Fill) {
-    var color = style.getColor();
-
-    if (color === undefined || color === null) {
-      // nope
-      return;
+      this.cache[hash]['id'] = hash;
     }
 
-    var child = {};
-    obj['fill'] = child;
-    child['color'] = ol.color.asString(/** @type {Array<number>|string} */ (color));
+    return /** @type {!Fill} */ (this.cache[hash]);
   }
-};
+
+  /**
+   * @inheritDoc
+   */
+  toConfig(style, obj) {
+    if (style instanceof Fill) {
+      var color = style.getColor();
+
+      if (color === undefined || color === null) {
+        // nope
+        return;
+      }
+
+      var child = {};
+      obj['fill'] = child;
+      child['color'] = asString(/** @type {Array<number>|string} */ (color));
+    }
+  }
+}
+
+exports = FillReader;

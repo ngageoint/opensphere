@@ -484,9 +484,10 @@ class DataManager extends EventTarget {
 
     if (list) {
       for (var i = 0, n = list.length; i < n; i++) {
-        if (list[i].getId() == id ||
-            (opt_url && list[i] instanceof AbstractLoadingServer && list[i].getUrl() == opt_url)) {
-          provider = /** @type {IDataProvider} */ (list[i]);
+        var item = list[i];
+        if (item.getId() == id ||
+            (opt_url && item instanceof AbstractLoadingServer && item.getUrl() == opt_url)) {
+          provider = /** @type {IDataProvider} */ (item);
           break;
         }
       }

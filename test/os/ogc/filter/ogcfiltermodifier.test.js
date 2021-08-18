@@ -1,10 +1,13 @@
-goog.require('os.ogc.filter.OGCFilterModifier');
 goog.require('goog.Uri');
+goog.require('os.ogc.filter.OGCFilterModifier');
 
 
 describe('os.ogc.filter.OGCFilterModifier', function() {
+  const Uri = goog.module.get('goog.Uri');
+  const OGCFilterModifier = goog.module.get('os.ogc.filter.OGCFilterModifier');
+
   it('initializes with defaults', function() {
-    var modifier = new os.ogc.filter.OGCFilterModifier();
+    var modifier = new OGCFilterModifier();
     expect(modifier.filter_).toBe(false);
     expect(modifier.identifiers_).toBe(false);
     expect(modifier.param_).toBe('filter');
@@ -22,7 +25,7 @@ describe('os.ogc.filter.OGCFilterModifier', function() {
       temporal: false
     };
 
-    var modifier = new os.ogc.filter.OGCFilterModifier(options);
+    var modifier = new OGCFilterModifier(options);
     expect(modifier.filter_).toBe(true);
     expect(modifier.identifiers_).toBe(true);
     expect(modifier.param_).toBe(testParam);
@@ -39,9 +42,9 @@ describe('os.ogc.filter.OGCFilterModifier', function() {
       param: testParam,
       temporal: true
     };
-    var modifier = new os.ogc.filter.OGCFilterModifier(options);
+    var modifier = new OGCFilterModifier(options);
 
-    var origUri = new goog.Uri();
+    var origUri = new Uri();
     origUri.getQueryData().set(testParam, '');
 
     var uri = origUri.clone();

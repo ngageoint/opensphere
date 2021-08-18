@@ -32,6 +32,7 @@ goog.require('os.query.FilterManager');
 goog.require('os.query.QueryManager');
 goog.require('os.query.instance');
 goog.require('os.style.StyleManager');
+goog.require('os.style.instance');
 goog.require('os.time.replacers');
 goog.require('os.ui.config.SettingsManager');
 goog.require('os.ui.ogc.OGCDescriptor');
@@ -120,7 +121,9 @@ beforeEach(function() {
     }
 
     if (!os.styleManager) {
-      os.styleManager = os.style.StyleManager.getInstance();
+      var styleManager = os.style.StyleManager.getInstance();
+      os.styleManager = styleManager;
+      os.style.instance.setStyleManager(styleManager);
     }
 
     if (!map.getMap()) {

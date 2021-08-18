@@ -1,27 +1,30 @@
 goog.module('os.string.Pluralize');
 goog.module.declareLegacyNamespace();
 
-const OsModule = goog.require('os.ui.Module');
+const Settings = goog.require('os.config.Settings');
+const Module = goog.require('os.ui.Module');
 
-
+/**
+ * If rules have been initialized.
+ * @type {boolean}
+ */
 let initialized = false;
+
 /**
  * Initialize pluralization rules
  */
 const initialize = function() {
   if (!initialized) {
-    /** @type {!Array<!Object>} */ (os.settings.get('pluralize.pluralRules', [])).forEach((rule) => {
+    /** @type {!Array<!Object>} */ (Settings.getInstance().get('pluralize.pluralRules', [])).forEach((rule) => {
       pluralize.addPluralRule(rule['re'], rule['plural']);
     });
 
-    /** @type {!Array<!Object>} */ (os.settings.get('pluralize.irregularRules', [])).forEach((rule) => {
+    /** @type {!Array<!Object>} */ (Settings.getInstance().get('pluralize.irregularRules', [])).forEach((rule) => {
       pluralize.addIrregularRule(rule['irregular'], rule['plural']);
     });
     initialized = true;
   }
 };
-
-
 
 /**
  * Controller for pluralize
@@ -78,10 +81,9 @@ const directive = () => ({
   controllerAs: 'ctrl'
 });
 
-
 /**
  * Add the directive to the module.
  */
-OsModule.directive('pluralize', [directive]);
+Module.directive('pluralize', [directive]);
 
 exports = {Controller, directive};

@@ -1,35 +1,27 @@
-goog.provide('os.ogc.spatial');
-goog.provide('os.ogc.spatial.Format');
-goog.require('goog.string');
-goog.require('ol.Feature');
-goog.require('ol.format.GML');
-goog.require('ol.format.KML');
-goog.require('ol.geom.LineString');
-goog.require('ol.geom.Polygon');
-goog.require('ol.xml');
+goog.module('os.ogc.spatial');
+goog.module.declareLegacyNamespace();
+
+const GML = goog.require('ol.format.GML');
+const KML = goog.require('ol.format.KML');
+const {pushParseAndPop} = goog.require('ol.xml');
+const Format = goog.require('os.ogc.spatial.Format');
+
+const Feature = goog.requireType('ol.Feature');
+const LineString = goog.requireType('ol.geom.LineString');
+const Polygon = goog.requireType('ol.geom.Polygon');
 
 
 /**
- * Supported spatial formats.
- * @enum {string}
- */
-os.ogc.spatial.Format = {
-  GML: 'GML',
-  KML: 'KML'
-};
-
-
-/**
- * Convert an element containing a KML geometry to an ol.Feature.
+ * Convert an element containing a KML geometry to an Feature.
  *
  * @param {Document|Element} element The element containing a KML geometry
  * @return {ol.geom.Geometry} The geometry
  *
  * @suppress {accessControls} Because OL3 decided not to let us use their code...
  */
-os.ogc.spatial.readKMLGeometry = function(element) {
+const readKMLGeometry = function(element) {
   if (element) {
-    var obj = ol.xml.pushParseAndPop({'geometry': null}, ol.format.KML.PLACEMARK_PARSERS_, element, []);
+    var obj = pushParseAndPop({'geometry': null}, KML.PLACEMARK_PARSERS_, element, []);
     if (obj && obj['geometry'] instanceof ol.geom.Geometry) {
       return obj['geometry'];
     }
@@ -37,7 +29,6 @@ os.ogc.spatial.readKMLGeometry = function(element) {
 
   return null;
 };
-
 
 /**
  * Convert a GML geometry node to an ol.geom.Geometry.
@@ -47,16 +38,15 @@ os.ogc.spatial.readKMLGeometry = function(element) {
  *
  * @suppress {accessControls} Because OL3 decided not to let us use their code...
  */
-os.ogc.spatial.readGMLGeometry = function(element) {
+const readGMLGeometry = function(element) {
   var geom = null;
   if (element) {
-    var gmlFormat = new ol.format.GML();
+    var gmlFormat = new GML();
     geom = gmlFormat.readGeometryFromNode(element);
   }
 
   return geom;
 };
-
 
 /**
  * Serializes a set of coordinates to a string.
@@ -65,7 +55,7 @@ os.ogc.spatial.readGMLGeometry = function(element) {
  * @param {string=} opt_separator The separator
  * @return {string} Serialized coordinates
  */
-os.ogc.spatial.formatCoords = function(coords, opt_separator) {
+const formatCoords = function(coords, opt_separator) {
   var separator = opt_separator || ',';
   var n = coords.length;
 
@@ -91,7 +81,6 @@ os.ogc.spatial.formatCoords = function(coords, opt_separator) {
   return ring.join(' ');
 };
 
-
 /**
  * Formats an {@link ol.Extent} to a GML string. KML is currently unsupported.
  *
@@ -104,7 +93,7 @@ os.ogc.spatial.formatCoords = function(coords, opt_separator) {
  *
  * @todo KML support?
  */
-os.ogc.spatial.formatExtent = function(extent, column, opt_name, opt_description, opt_id) {
+const formatExtent = function(extent, column, opt_name, opt_description, opt_id) {
   var bbox = '<BBOX';
   if (opt_name) {
     bbox += ' areanamehint="' + opt_name + '"';
@@ -122,7 +111,6 @@ os.ogc.spatial.formatExtent = function(extent, column, opt_name, opt_description
       '</gml:Envelope></BBOX>';
 };
 
-
 /**
  * Serializes a polygon or linestring geometry to GML or KML.
  *
@@ -133,11 +121,11 @@ os.ogc.spatial.formatExtent = function(extent, column, opt_name, opt_description
  * @param {string=} opt_id The id
  * @return {?string} The serialized polygon, or null if the geometry is not supported
  */
-os.ogc.spatial.formatGMLIntersection = function(geom, opt_column, opt_name, opt_description, opt_id) {
+const formatGMLIntersection = function(geom, opt_column, opt_name, opt_description, opt_id) {
   os.interpolate.interpolateGeom(geom);
 
   var parts = [];
-  var formattedPolygon = os.ogc.spatial.formatPolygon(geom, os.ogc.spatial.Format.GML);
+  var formattedPolygon = formatPolygon(geom, Format.GML);
   if (formattedPolygon) {
     parts.push('<Intersects');
 
@@ -157,7 +145,6 @@ os.ogc.spatial.formatGMLIntersection = function(geom, opt_column, opt_name, opt_
   return parts.length > 0 ? parts.join('') : null;
 };
 
-
 /**
  * Serializes a polygon or linestring geometry to GML or KML.
  *
@@ -165,7 +152,7 @@ os.ogc.spatial.formatGMLIntersection = function(geom, opt_column, opt_name, opt_
  * @param {string=} opt_format The output format, defaults to GML
  * @return {?string} The serialized polygon, or null if the geometry is not supported
  */
-os.ogc.spatial.formatPolygon = function(geom, opt_format) {
+const formatPolygon = function(geom, opt_format) {
   if (!geom) {
     return null;
   }
@@ -173,11 +160,11 @@ os.ogc.spatial.formatPolygon = function(geom, opt_format) {
   var polyCoords;
   switch (geom.getType()) {
     case ol.geom.GeometryType.LINE_STRING:
-      var lineCoords = /** @type {ol.geom.LineString} */ (geom).getCoordinates();
+      var lineCoords = /** @type {LineString} */ (geom).getCoordinates();
       polyCoords = [lineCoords];
       break;
     case ol.geom.GeometryType.POLYGON:
-      polyCoords = /** @type {ol.geom.Polygon} */ (geom).getCoordinates();
+      polyCoords = /** @type {Polygon} */ (geom).getCoordinates();
 
       // polygons that cross a pole will not return the expected results after being projected, so correct for that
       if (polyCoords.length == 1 && os.geo.isPolarPolygon(polyCoords[0])) {
@@ -185,9 +172,9 @@ os.ogc.spatial.formatPolygon = function(geom, opt_format) {
       }
       break;
     case ol.geom.GeometryType.MULTI_LINE_STRING:
-      return os.ogc.spatial.formatMultiPolygon(geom, opt_format);
+      return formatMultiPolygon(geom, opt_format);
     case ol.geom.GeometryType.MULTI_POLYGON:
-      return os.ogc.spatial.formatMultiPolygon(geom, opt_format);
+      return formatMultiPolygon(geom, opt_format);
     default:
       // unsupported geometry type
       return null;
@@ -195,40 +182,39 @@ os.ogc.spatial.formatPolygon = function(geom, opt_format) {
 
   var parts = [];
   if (polyCoords && polyCoords.length > 0) {
-    var format = opt_format || os.ogc.spatial.Format.GML;
-    var separator = format == os.ogc.spatial.Format.GML ? ' ' : ',';
-    parts.push(format == os.ogc.spatial.Format.GML ?
+    var format = opt_format || Format.GML;
+    var separator = format == Format.GML ? ' ' : ',';
+    parts.push(format == Format.GML ?
       '<gml:Polygon xmlns:gml="http://www.opengis.net/gml"><gml:exterior><gml:LinearRing>' +
         '<gml:posList srsDimension="2" srsName="CRS:84">' :
       '<kml:Polygon xmlns:kml="http://www.opengis.net/kml/2.2">' +
         '<kml:outerBoundaryIs><kml:LinearRing><kml:coordinates>');
 
     // format outer ring
-    parts.push(os.ogc.spatial.formatCoords(polyCoords[0], separator));
+    parts.push(formatCoords(polyCoords[0], separator));
 
-    parts.push(format == os.ogc.spatial.Format.GML ?
+    parts.push(format == Format.GML ?
       '</gml:posList></gml:LinearRing></gml:exterior>' :
       '</kml:coordinates></kml:LinearRing></kml:outerBoundaryIs>');
 
     // format interior rings
     for (var i = 1, n = polyCoords.length; i < n; i++) {
-      parts.push(format == os.ogc.spatial.Format.GML ?
+      parts.push(format == Format.GML ?
         '<gml:interior><gml:LinearRing><gml:posList srsDimension="2" srsName="CRS:84">' :
         '<kml:innerBoundaryIs><kml:LinearRing><kml:coordinates>');
 
-      parts.push(os.ogc.spatial.formatCoords(polyCoords[i], separator));
+      parts.push(formatCoords(polyCoords[i], separator));
 
-      parts.push(format == os.ogc.spatial.Format.GML ?
+      parts.push(format == Format.GML ?
         '</gml:posList></gml:LinearRing></gml:interior>' :
         '</kml:coordinates></kml:LinearRing></kml:innerBoundaryIs>');
     }
 
-    parts.push(format == os.ogc.spatial.Format.GML ? '</gml:Polygon>' : '</kml:Polygon>');
+    parts.push(format == Format.GML ? '</gml:Polygon>' : '</kml:Polygon>');
   }
 
   return parts.length > 0 ? parts.join('') : null;
 };
-
 
 /**
  * Serializes a polygon or linestring geometry to GML or KML.
@@ -237,7 +223,7 @@ os.ogc.spatial.formatPolygon = function(geom, opt_format) {
  * @param {string=} opt_format The output format, defaults to GML
  * @return {?string} The serialized polygon, or null if the geometry is not supported
  */
-os.ogc.spatial.formatMultiPolygon = function(geom, opt_format) {
+const formatMultiPolygon = function(geom, opt_format) {
   if (!geom) {
     return null;
   }
@@ -258,8 +244,8 @@ os.ogc.spatial.formatMultiPolygon = function(geom, opt_format) {
   // MultiSurface should be used for GML3, MultiPolygon for GML2
   // TODO: how do we know which version of GML to use?
   var useMultiSurface = false;
-  var format = opt_format || os.ogc.spatial.Format.GML;
-  var useGML = format === os.ogc.spatial.Format.GML;
+  var format = opt_format || Format.GML;
+  var useGML = format === Format.GML;
 
   var parts = [];
   if (geometries && geometries.length > 0) {
@@ -278,7 +264,7 @@ os.ogc.spatial.formatMultiPolygon = function(geom, opt_format) {
     // make sure we can create at least one polygon first
     var polyParts = [];
     for (var i = 0; i < geometries.length; i++) {
-      var formattedPolygon = os.ogc.spatial.formatPolygon(geometries[i], format);
+      var formattedPolygon = formatPolygon(geometries[i], format);
       if (formattedPolygon) {
         if (memberElement) {
           polyParts.push('<' + memberElement + '>');
@@ -297,4 +283,14 @@ os.ogc.spatial.formatMultiPolygon = function(geom, opt_format) {
   }
 
   return parts.length > 0 ? parts.join('') : null;
+};
+
+exports = {
+  readKMLGeometry,
+  readGMLGeometry,
+  formatCoords,
+  formatExtent,
+  formatGMLIntersection,
+  formatPolygon,
+  formatMultiPolygon
 };

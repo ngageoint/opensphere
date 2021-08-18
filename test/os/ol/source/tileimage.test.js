@@ -1,8 +1,12 @@
+goog.require('ol.source.TileImage');
 goog.require('os.net.ProxyHandler');
 goog.require('os.ol.source.tileimage');
-goog.require('ol.source.TileImage');
 
 describe('os.ol.source.tileimage', function() {
+  const TileImage = goog.module.get('ol.source.TileImage');
+  const ProxyHandler = goog.module.get('os.net.ProxyHandler');
+  const tileimage = goog.module.get('os.ol.source.tileimage');
+
   it('should wrap sources with proxies', function() {
     var url = '/path/to/tiles';
 
@@ -10,11 +14,11 @@ describe('os.ol.source.tileimage', function() {
       return url;
     };
 
-    var source = new ol.source.TileImage({});
+    var source = new TileImage({});
     source.setTileUrlFunction(fn);
 
-    os.ol.source.tileimage.addProxyWrapper(source);
+    tileimage.addProxyWrapper(source);
 
-    expect(source.getTileUrlFunction()()).toBe(os.net.ProxyHandler.getProxyUri(url));
+    expect(source.getTileUrlFunction()()).toBe(ProxyHandler.getProxyUri(url));
   });
 });

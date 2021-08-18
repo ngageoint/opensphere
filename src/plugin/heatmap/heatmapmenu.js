@@ -95,9 +95,11 @@ const exportLayer_ = function(event) {
   var context = event.getContext();
   if (context && context.length == 1) {
     var node = context[0];
-    var layer = node.getLayer();
-    if (layer instanceof Heatmap) {
-      heatmap.exportHeatmap(layer);
+    if (node instanceof LayerNode) {
+      var layer = node.getLayer();
+      if (layer instanceof Heatmap) {
+        heatmap.exportHeatmap(layer);
+      }
     }
   }
 };

@@ -1,31 +1,25 @@
-goog.provide('os.net.RequestEvent');
-goog.provide('os.net.RequestEventType');
+goog.module('os.net.RequestEvent');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Event');
-
-
-/**
- * @enum {string}
- */
-os.net.RequestEventType = {
-  TRY_URL: 'tryUrl',
-  USER_URL: 'userUrl'
-};
-
+const GoogEvent = goog.require('goog.events.Event');
 
 
 /**
- * @param {!string} type
- * @param {!string} url
- * @constructor
- * @extends {goog.events.Event}
  */
-os.net.RequestEvent = function(type, url) {
-  os.net.RequestEvent.base(this, 'constructor', type);
-
+class RequestEvent extends GoogEvent {
   /**
-   * @type {!string}
+   * Constructor.
+   * @param {!string} type
+   * @param {!string} url
    */
-  this.url = url;
-};
-goog.inherits(os.net.RequestEvent, goog.events.Event);
+  constructor(type, url) {
+    super(type);
+
+    /**
+     * @type {!string}
+     */
+    this.url = url;
+  }
+}
+
+exports = RequestEvent;

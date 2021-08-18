@@ -4,7 +4,12 @@ goog.require('os.style.StrokeReader');
 
 
 describe('os.style.CircleReader', function() {
-  var reader, config;
+  const CircleReader = goog.module.get('os.style.CircleReader');
+  const FillReader = goog.module.get('os.style.FillReader');
+  const StrokeReader = goog.module.get('os.style.StrokeReader');
+
+  var config;
+  var reader;
 
   beforeEach(function() {
     config = {
@@ -18,10 +23,10 @@ describe('os.style.CircleReader', function() {
       }
     };
 
-    reader = new os.style.CircleReader();
+    reader = new CircleReader();
     reader.setReaders({
-      'fill': new os.style.FillReader(),
-      'stroke': new os.style.StrokeReader()
+      'fill': new FillReader(),
+      'stroke': new StrokeReader()
     });
   });
 

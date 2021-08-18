@@ -3,26 +3,44 @@ goog.require('goog.dom.xml');
 goog.require('goog.string');
 goog.require('ol.Feature');
 goog.require('ol.geom.Polygon');
+goog.require('os.query.AreaManager');
 goog.require('os.query.BaseAreaManager');
+goog.require('os.query.QueryManager');
+goog.require('os.state.BaseStateManager');
+goog.require('os.state.StateManager');
+goog.require('os.state.Versions');
 goog.require('os.state.XMLStateManager');
 goog.require('os.state.XMLStateOptions');
-goog.require('os.state.v2.ExclusionArea'); // v2 state implemention works with v4
+goog.require('os.state.v2.ExclusionArea');
 goog.require('os.test.xsd');
+goog.require('os.ui.state');
 goog.require('os.xml');
 
-
-
 describe('QueryArea XSD State Test', function() {
+  const Feature = goog.module.get('ol.Feature');
+  const Polygon = goog.module.get('ol.geom.Polygon');
+  const AreaManager = goog.module.get('os.query.AreaManager');
+  const QueryManager = goog.module.get('os.query.QueryManager');
+  const BaseStateManager = goog.module.get('os.state.BaseStateManager');
+  const StateManager = goog.module.get('os.state.StateManager');
+  const Versions = goog.module.get('os.state.Versions');
+  const ExclusionArea = goog.module.get('os.state.v2.ExclusionArea');
+  const osUiState = goog.module.get('os.ui.state');
+  const xml = goog.module.get('os.xml');
+
+  const {loadStateXsdFiles} = goog.module.get('os.test.xsd');
+
   var stateManager = null;
+
   beforeEach(function() {
-    stateManager = os.state.StateManager.getInstance();
-    stateManager.setVersion(os.state.Versions.V4);
+    stateManager = StateManager.getInstance();
+    stateManager.setVersion(Versions.V4);
   });
 
   it('Should validate against the v4 XSD state', function() {
     var resultSchemas = null;
     runs(function() {
-      os.test.xsd.loadStateXsdFiles().then(function(result) {
+      loadStateXsdFiles().then(function(result) {
         resultSchemas = result;
       }, function(err) {
         throw err;
@@ -31,16 +49,16 @@ describe('QueryArea XSD State Test', function() {
 
     // waiting for the xsd files to load
     waitsFor(function() {
-      return (resultSchemas && os.ui.state && os.state.BaseStateManager);
+      return resultSchemas && osUiState && BaseStateManager;
     }, 'Wait for XSD(s) to load', 2 * jasmine.DEFAULT_TIMEOUT_INTERVAL);
 
     // Runs the tests.
     runs(function() {
-      var area = new ol.Feature();
-      var box = new ol.geom.Polygon([[[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]]);
+      var area = new Feature();
+      var box = new Polygon([[[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]]);
       area.setId('TestAreaId');
       area.setGeometry(box);
-      var state = new os.state.v2.ExclusionArea();
+      var state = new ExclusionArea();
       var activeQieries = [
         {
           'areaId': 'state#tfscv6m2l1gh-state#xrfum5dv146y-area_w0bik1ljk90r',
@@ -60,8 +78,8 @@ describe('QueryArea XSD State Test', function() {
       ];
 
       // Mock required behavor for area and query manager
-      spyOn(os.ui.queryManager, 'getActiveEntries').andReturn(activeQieries);
-      spyOn(os.ui.areaManager, 'get').andReturn(area);
+      spyOn(QueryManager.getInstance(), 'getActiveEntries').andReturn(activeQieries);
+      spyOn(AreaManager.getInstance(), 'get').andReturn(area);
 
       // Setting up independent root for testing.
       var xmlRootDocument = stateManager.createStateObject(function() {}, 'test state', 'desc');
@@ -72,7 +90,7 @@ describe('QueryArea XSD State Test', function() {
 
       state.saveInternal(stateOptions, rootObj);
 
-      var seralizedDoc = os.xml.serialize(stateOptions.doc);
+      var seralizedDoc = xml.serialize(stateOptions.doc);
       var xmlLintResult = xmllint.validateXML({
         xml: seralizedDoc,
         schema: resultSchemas

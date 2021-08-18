@@ -1,5 +1,5 @@
-goog.provide('os.net.IDataFormatter');
-
+goog.module('os.net.IDataFormatter');
+goog.module.declareLegacyNamespace();
 
 
 /**
@@ -7,19 +7,19 @@ goog.provide('os.net.IDataFormatter');
  *
  * @interface
  */
-os.net.IDataFormatter = function() {};
+class IDataFormatter {
+  /**
+   * Get the content type for the format.
+   * @return {string} The content type (e.g. <code>'text/xml'</code>)
+   */
+  getContentType() {}
 
+  /**
+   * Creates the payload from the given parameters.
+   * @param {goog.Uri} uri The URI for the request
+   * @return {(ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined)} The request payload
+   */
+  format(uri) {}
+}
 
-/**
- * Get the content type for the format.
- * @return {string} The content type (e.g. <code>'text/xml'</code>)
- */
-os.net.IDataFormatter.prototype.getContentType;
-
-
-/**
- * Creates the payload from the given parameters.
- * @param {goog.Uri} uri The URI for the request
- * @return {(ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined)} The request payload
- */
-os.net.IDataFormatter.prototype.format;
+exports = IDataFormatter;

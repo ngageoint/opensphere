@@ -23,7 +23,7 @@ class TypeGroupBy extends BaseGroupBy {
    */
   getGroupIds(node) {
     /**
-     * @type {Array.<!string>}
+     * @type {Array<!string>}
      */
     var ids = [];
 
@@ -36,10 +36,15 @@ class TypeGroupBy extends BaseGroupBy {
       if (node instanceof DescriptorNode) {
         var d = /** @type {DescriptorNode} */ (node).getDescriptor();
         val = d.getType();
-      } else if ('getType' in node) {
-        val = node['getType']();
-      } else if ('type' in node) {
-        val = node['type'];
+      } else {
+        // Unclear what these types are expected to be, but rather than risk breaking behavior we'll cast the type as
+        // a generic object.
+        var obj = /** @type {!Object} */ (node);
+        if ('getType' in obj) {
+          val = obj['getType']();
+        } else if ('type' in obj) {
+          val = obj['type'];
+        }
       }
     } catch (e) {
     }

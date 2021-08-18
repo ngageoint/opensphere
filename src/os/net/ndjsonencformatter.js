@@ -1,63 +1,66 @@
-goog.provide('os.net.NDJsonEncFormatter');
-goog.require('os.net.IDataFormatter');
+goog.module('os.net.NDJsonEncFormatter');
+goog.module.declareLegacyNamespace();
 
+const IDataFormatter = goog.requireType('os.net.IDataFormatter');
 
 
 /**
  * Creates an application/json payload
  *
- * @implements {os.net.IDataFormatter}
- * @param {Array<Object>} content The JSON objects to format.
- * @param {?function(string, *)=} opt_replacer The JSON object to format.
- * @param {string=} opt_contentType The Content-Type to set.
- * @constructor
+ * @implements {IDataFormatter}
  */
-os.net.NDJsonEncFormatter = function(content, opt_replacer, opt_contentType) {
+class NDJsonEncFormatter {
   /**
-   * @type {Array<Object>}
-   * @private
+   * Constructor.
+   * @param {Array<Object>} content The JSON objects to format.
+   * @param {?function(string, *)=} opt_replacer The JSON object to format.
+   * @param {string=} opt_contentType The Content-Type to set.
    */
-  this.content_ = content;
+  constructor(content, opt_replacer, opt_contentType) {
+    /**
+     * @type {Array<Object>}
+     * @private
+     */
+    this.content_ = content;
+
+    /**
+     * @type {string|undefined}
+     * @private
+     */
+    this.opt_contentType_ = opt_contentType;
+  }
 
   /**
-   * @type {string|undefined}
-   * @private
+   * @return {Array<Object>}
    */
-  this.opt_contentType_ = opt_contentType;
-};
+  getContent() {
+    return this.content_;
+  }
 
+  /**
+   * @param {Array<Object>} content
+   */
+  setContent(content) {
+    this.content_ = content;
+  }
 
-/**
- * @return {Array<Object>}
- */
-os.net.NDJsonEncFormatter.prototype.getContent = function() {
-  return this.content_;
-};
+  /**
+   * @inheritDoc
+   */
+  getContentType() {
+    return this.opt_contentType_ || 'application/x-ndjson';
+  }
 
+  /**
+   * @inheritDoc
+   */
+  format(uri) {
+    var payload = '';
+    this.content_.forEach(function(content) {
+      payload += JSON.stringify(content) + '\n';
+    });
+    return payload;
+  }
+}
 
-/**
- * @param {Array<Object>} content
- */
-os.net.NDJsonEncFormatter.prototype.setContent = function(content) {
-  this.content_ = content;
-};
-
-
-/**
- * @inheritDoc
- */
-os.net.NDJsonEncFormatter.prototype.getContentType = function() {
-  return this.opt_contentType_ || 'application/x-ndjson';
-};
-
-
-/**
- * @inheritDoc
- */
-os.net.NDJsonEncFormatter.prototype.format = function(uri) {
-  var payload = '';
-  this.content_.forEach(function(content) {
-    payload += JSON.stringify(content) + '\n';
-  });
-  return payload;
-};
+exports = NDJsonEncFormatter;

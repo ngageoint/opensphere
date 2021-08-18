@@ -5,49 +5,58 @@ goog.require('os.net.RequestHandlerFactory');
 goog.require('os.net.SameDomainHandler');
 
 describe('os.net.RequestHandlerFactory', function() {
-  var addHandler;
-  var originalList = null;
+  const Uri = goog.module.get('goog.Uri');
+  const RequestHandlerFactory = goog.module.get('os.net.RequestHandlerFactory');
+  const SameDomainHandler = goog.module.get('os.net.SameDomainHandler');
 
-  it('should prevent the os.mock beforeEach from meddling with the test', function() {
-    originalList = os.net.RequestHandlerFactory.list_;
-    addHandler = os.net.RequestHandlerFactory.addHandler;
-    os.net.RequestHandlerFactory.addHandler = os.fn.noop;
+  let originalList = null;
 
+  beforeEach(() => {
     // ensure we start with an empty factory
-    os.net.RequestHandlerFactory.list_ = null;
+    originalList = RequestHandlerFactory.getAllHandlers();
+    RequestHandlerFactory.resetHandlers();
+  });
+
+  afterEach(() => {
+    // restore the original handlers
+    RequestHandlerFactory.resetHandlers();
+    originalList.forEach(RequestHandlerFactory.addHandler);
   });
 
   it('should accept a proper handler', function() {
-    addHandler(os.net.SameDomainHandler);
-    expect(os.net.RequestHandlerFactory.list_.length).toBe(1);
+    RequestHandlerFactory.addHandler(SameDomainHandler);
+    expect(RequestHandlerFactory.getAllHandlers().length).toBe(1);
   });
 
   it('should not accept more than one handler of the same type', function() {
-    addHandler(os.net.SameDomainHandler);
-    expect(os.net.RequestHandlerFactory.list_.length).toBe(1);
+    RequestHandlerFactory.addHandler(SameDomainHandler);
+    RequestHandlerFactory.addHandler(SameDomainHandler);
+    expect(RequestHandlerFactory.getAllHandlers().length).toBe(1);
   });
 
   it('should generate a list of handlers for a URI', function() {
-    var handlers = os.net.RequestHandlerFactory.getHandlers(
-        'GET', new goog.Uri('/thisisatest.html'));
+    RequestHandlerFactory.addHandler(SameDomainHandler);
+
+    const handlers = RequestHandlerFactory.getHandlers(
+        'GET', new Uri('/thisisatest.html'));
 
     expect(handlers.length).toBe(1);
   });
 
   it('should not generate handlers for URIs that can\'t be handled', function() {
-    var handlers = os.net.RequestHandlerFactory.getHandlers(
-        'GET', new goog.Uri('https://www.docker.com/test.html'));
+    RequestHandlerFactory.addHandler(SameDomainHandler);
+
+    const handlers = RequestHandlerFactory.getHandlers(
+        'GET', new Uri('https://www.docker.com/test.html'));
 
     expect(handlers).toBe(null);
   });
 
   it('should remove a handler', function() {
-    os.net.RequestHandlerFactory.removeHandler(os.net.SameDomainHandler);
-    expect(os.net.RequestHandlerFactory.list_.length).toBe(0);
-  });
+    RequestHandlerFactory.addHandler(SameDomainHandler);
+    expect(RequestHandlerFactory.getAllHandlers().length).toBe(1);
 
-  it('should restore the peace', function() {
-    os.net.RequestHandlerFactory.list_ = originalList;
-    os.net.RequestHandlerFactory.addHandler = addHandler;
+    RequestHandlerFactory.removeHandler(SameDomainHandler);
+    expect(RequestHandlerFactory.getAllHandlers().length).toBe(0);
   });
 });

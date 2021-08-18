@@ -4,6 +4,11 @@ goog.require('ol.extent');
 goog.require('os.ol.image');
 
 describe('os.ol.image', function() {
+  const ImageCanvas = goog.module.get('ol.ImageCanvas');
+  const dom = goog.module.get('ol.dom');
+  const olExtent = goog.module.get('ol.extent');
+  const image = goog.module.get('os.ol.image');
+
   var getData = function(imgCanvas) {
     var canvas = imgCanvas.getImage();
     // don't want to deal with separate channels so treat the whole pixel as a single 32bit value
@@ -27,20 +32,20 @@ describe('os.ol.image', function() {
 
   it('should properly rotate images', function() {
     // create the image to rotate
-    var ctx = ol.dom.createCanvasContext2D(100, 50);
+    var ctx = dom.createCanvasContext2D(100, 50);
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     var extent = [8, 10, 16, 14];
-    var resolution = ol.extent.getHeight(extent) / ctx.canvas.height;
-    var original = new ol.ImageCanvas(extent, resolution, 1, ctx.canvas);
+    var resolution = olExtent.getHeight(extent) / ctx.canvas.height;
+    var original = new ImageCanvas(extent, resolution, 1, ctx.canvas);
 
     // create the expected image when rotated
-    ctx = ol.dom.createCanvasContext2D(50, 100);
+    ctx = dom.createCanvasContext2D(50, 100);
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     extent = [10, 8, 14, 16];
-    var expected = new ol.ImageCanvas(extent, resolution, 1, ctx.canvas);
+    var expected = new ImageCanvas(extent, resolution, 1, ctx.canvas);
 
     // spin it
-    var rotated = os.ol.image.rotate(original, 90);
+    var rotated = image.rotate(original, 90);
 
     // test it
     expect(rotated.getExtent()).toEqual(expected.getExtent());

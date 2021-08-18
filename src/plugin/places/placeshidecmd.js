@@ -6,6 +6,7 @@ const TriState = goog.require('os.structs.TriState');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
 
 const ICommand = goog.requireType('os.command.ICommand');
+const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
@@ -76,10 +77,10 @@ class PlacesHide {
 
   /**
    * Traverse the kml tree for visible nodes
-   * @param {plugin.file.kml.ui.KMLNode} rootNode
+   * @param {KMLNode} rootNode
    */
   storeVisibleChildren(rootNode) {
-    var children = rootNode.getChildren();
+    var children = /** @type {Array<KMLNode>} */ (rootNode.getChildren());
     if (children) {
       for (var i = 0; i < children.length; i++) {
         if (children[i].getState() == TriState.ON) {
@@ -88,7 +89,7 @@ class PlacesHide {
         }
 
         if (children[i].isFolder()) { // look at folder's children
-          this.storeVisibleChildren(/** @type {plugin.file.kml.ui.KMLNode} */ (children[i]));
+          this.storeVisibleChildren(/** @type {KMLNode} */ (children[i]));
         }
       }
     }

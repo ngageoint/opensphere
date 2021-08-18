@@ -1,4 +1,5 @@
-goog.provide('os.search.ITemporalSearch');
+goog.module('os.search.ITemporalSearch');
+goog.module.declareLegacyNamespace();
 
 
 /**
@@ -6,55 +7,50 @@ goog.provide('os.search.ITemporalSearch');
  *
  * @interface
  */
-os.search.ITemporalSearch = function() {};
+class ITemporalSearch {
+  /**
+   * Set the date range to apply to the query
+   * @param {Date|null|undefined} startDate The start date to apply to the query.
+   * @param {Date|null|undefined} endDate The end date to apply to the query.
+   */
+  setDateRange(startDate, endDate) {}
 
+  /**
+   * Set the start date to apply to the query.
+   * @param {Date|null|undefined} startDate The start date to apply to the query.
+   */
+  setStartDate(startDate) {}
+
+  /**
+   * Set the end date to apply to the query.
+   * @param {Date|null|undefined} startDate The start date to apply to the query.
+   */
+  setEndDate(startDate) {}
+
+  /**
+   * If the search provider supports filtering searches by a date range.
+   * @return {boolean}
+   */
+  supportsDateRange() {}
+
+  /**
+   * If the search provider supports filtering searches by start date.
+   * @return {boolean}
+   */
+  supportsStartDate() {}
+
+  /**
+   * If the search provider supports filtering searches by end date.
+   * @return {boolean}
+   */
+  supportsEndDate() {}
+}
 
 /**
  * See os.implements
  * @type {string}
  * @const
  */
-os.search.ITemporalSearch.ID = 'os.search.ITemporalSearch';
+ITemporalSearch.ID = 'os.search.ITemporalSearch';
 
-
-/**
- * Set the date range to apply to the query
- * @param {Date|null|undefined} startDate The start date to apply to the query.
- * @param {Date|null|undefined} endDate The end date to apply to the query.
- */
-os.search.ITemporalSearch.prototype.setDateRange;
-
-
-/**
- * Set the start date to apply to the query.
- * @param {Date|null|undefined} startDate The start date to apply to the query.
- */
-os.search.ITemporalSearch.prototype.setStartDate;
-
-
-/**
- * Set the end date to apply to the query.
- * @param {Date|null|undefined} startDate The start date to apply to the query.
- */
-os.search.ITemporalSearch.prototype.setEndDate;
-
-
-/**
- * If the search provider supports filtering searches by a date range.
- * @return {boolean}
- */
-os.search.ITemporalSearch.prototype.supportsDateRange;
-
-
-/**
- * If the search provider supports filtering searches by start date.
- * @return {boolean}
- */
-os.search.ITemporalSearch.prototype.supportsStartDate;
-
-
-/**
- * If the search provider supports filtering searches by end date.
- * @return {boolean}
- */
-os.search.ITemporalSearch.prototype.supportsEndDate;
+exports = ITemporalSearch;

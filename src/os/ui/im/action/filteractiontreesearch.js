@@ -36,7 +36,7 @@ class FilterActionTreeSearch extends AbstractGroupByTreeSearch {
 
     // filter out default actions when the flag is false
     this.setFilterFunction((node) => {
-      var entry = node.getEntry();
+      var entry = /** @type {FilterActionNode} */ (node).getEntry();
       return !entry.getParent() && (this.showDefaultActions || !entry.isDefault());
     });
   }

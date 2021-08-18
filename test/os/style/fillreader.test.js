@@ -1,8 +1,13 @@
+goog.require('ol.style.Fill');
 goog.require('os.style.FillReader');
 
 
 describe('os.style.FillReader', function() {
-  var config, reader;
+  const Fill = goog.module.get('ol.style.Fill');
+  const FillReader = goog.module.get('os.style.FillReader');
+
+  var config;
+  var reader;
 
   beforeEach(function() {
     config = {
@@ -10,7 +15,7 @@ describe('os.style.FillReader', function() {
       bogus: true
     };
 
-    reader = new os.style.FillReader();
+    reader = new FillReader();
   });
 
   it('should create a fill without the cache', function() {
@@ -33,7 +38,7 @@ describe('os.style.FillReader', function() {
 
   it('should convert a style to a config', function() {
     var config = {};
-    var style = new ol.style.Fill({
+    var style = new Fill({
       color: 'rgba(255,0,255,1)'
     });
 

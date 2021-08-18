@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
 const Metrics = goog.require('os.metrics.Metrics');
+const {getIndexInParent} = goog.require('os.structs');
 const Module = goog.require('os.ui.Module');
 const {directive: filterNodeUIDirective, Controller: FilterNodeUICtrl} = goog.require('os.ui.filter.ui.FilterNodeUI');
 
@@ -66,7 +67,7 @@ class Controller extends FilterNodeUICtrl {
     var entry = node.getEntry();
 
     if (entry) {
-      var parentIndex = os.structs.getIndexInParent(node);
+      var parentIndex = getIndexInParent(node);
       this.scope.$emit(ImportActionEventType.COPY_ENTRY, entry, parentIndex);
       Metrics.getInstance().updateMetric(os.im.action.Metrics.COPY, 1);
     }

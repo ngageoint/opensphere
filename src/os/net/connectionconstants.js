@@ -1,10 +1,15 @@
-goog.provide('os.net.ConnectionConstants');
+goog.module('os.net.ConnectionConstants');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @enum {string}
  */
-os.net.ConnectionConstants.Misconfigure = {
+const Misconfigure = {
   CA: 'ca',
   IE_SECURITY: 'ieSecurity'
+};
+
+exports = {
+  Misconfigure
 };

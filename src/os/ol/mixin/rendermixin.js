@@ -1,20 +1,24 @@
 /**
  * @fileoverview This file explicitly contains a set of mixins for the OL3 canvas renderer.
  */
-goog.provide('os.ol.mixin.render');
+goog.module('os.ol.mixin.render');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.render.canvas.PolygonReplay');
+const Instruction = goog.require('ol.render.canvas.Instruction');
+const PolygonReplay = goog.require('ol.render.canvas.PolygonReplay');
 
-goog.requireType('ol.Feature');
-goog.requireType('ol.render.Feature');
+const Feature = goog.requireType('ol.Feature');
+const Circle = goog.requireType('ol.geom.Circle');
+const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
+const Polygon = goog.requireType('ol.geom.Polygon');
+const RenderFeature = goog.requireType('ol.render.Feature');
 
 
 /**
  * Empty fill style used in our overrides of OL3 polygon rendering functions.
  * @type {string}
  */
-os.ol.mixin.render.EMPTY_FILL = 'rgba(0,0,0,0)';
-
+const EMPTY_FILL = 'rgba(0,0,0,0)';
 
 /**
  * THIN-4258: Polygons without fills should only hit detect the stroke.
@@ -23,12 +27,12 @@ os.ol.mixin.render.EMPTY_FILL = 'rgba(0,0,0,0)';
  * THIN-4636: The saga continues. We are now entirely replacing drawPolygon because the other hack
  * sucked worse.
  *
- * @param {ol.geom.Polygon|ol.render.Feature} polygonGeometry
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {Polygon|RenderFeature} polygonGeometry
+ * @param {Feature|RenderFeature} feature
  * @suppress {duplicate|accessControls}
  * @override
  */
-ol.render.canvas.PolygonReplay.prototype.drawPolygon = function(polygonGeometry, feature) {
+PolygonReplay.prototype.drawPolygon = function(polygonGeometry, feature) {
   var state = this.state;
   this.setFillStrokeStyles_(polygonGeometry);
   this.beginGeometry(polygonGeometry, feature);
@@ -37,12 +41,12 @@ ol.render.canvas.PolygonReplay.prototype.drawPolygon = function(polygonGeometry,
   // version. The hit detection instruction for fills needs to use the available value from the frame state
   // or be empty.
   this.hitDetectionInstructions.push(
-      [ol.render.canvas.Instruction.SET_FILL_STYLE,
-        state.fillStyle ? state.fillStyle : os.ol.mixin.render.EMPTY_FILL]);
+      [Instruction.SET_FILL_STYLE,
+        state.fillStyle ? state.fillStyle : EMPTY_FILL]);
 
   if (state.strokeStyle !== undefined) {
     this.hitDetectionInstructions.push([
-      ol.render.canvas.Instruction.SET_STROKE_STYLE,
+      Instruction.SET_STROKE_STYLE,
       state.strokeStyle, state.lineWidth, state.lineCap, state.lineJoin,
       state.miterLimit, state.lineDash, state.lineDashOffset
     ]);
@@ -54,17 +58,16 @@ ol.render.canvas.PolygonReplay.prototype.drawPolygon = function(polygonGeometry,
   this.endGeometry(polygonGeometry, feature);
 };
 
-
 /**
  * THIN-4636: The saga continues. We are now entirely replacing drawMultiPolygon because the other hack
  * sucked worse.
  *
- * @param {ol.geom.MultiPolygon} multiPolygonGeometry
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {MultiPolygon} multiPolygonGeometry
+ * @param {Feature|RenderFeature} feature
  * @suppress {duplicate|accessControls}
  * @override
  */
-ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygonGeometry, feature) {
+PolygonReplay.prototype.drawMultiPolygon = function(multiPolygonGeometry, feature) {
   var state = this.state;
   var fillStyle = state.fillStyle;
   var strokeStyle = state.strokeStyle;
@@ -78,11 +81,11 @@ ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygo
   // version. The hit detection instruction for fills needs to use the available value from the frame state
   // or be empty.
   this.hitDetectionInstructions.push(
-      [ol.render.canvas.Instruction.SET_FILL_STYLE, fillStyle ? fillStyle : os.ol.mixin.render.EMPTY_FILL]);
+      [Instruction.SET_FILL_STYLE, fillStyle ? fillStyle : EMPTY_FILL]);
 
   if (state.strokeStyle !== undefined) {
     this.hitDetectionInstructions.push([
-      ol.render.canvas.Instruction.SET_STROKE_STYLE,
+      Instruction.SET_STROKE_STYLE,
       state.strokeStyle, state.lineWidth, state.lineCap, state.lineJoin,
       state.miterLimit, state.lineDash, state.lineDashOffset
     ]);
@@ -100,17 +103,16 @@ ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygo
   this.endGeometry(multiPolygonGeometry, feature);
 };
 
-
 /**
  * THIN-4636: The saga continues. We are now entirely replacing drawCircle because the other hack
  * sucked worse.
  *
- * @param {ol.geom.Circle} circleGeometry
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {Circle} circleGeometry
+ * @param {Feature|RenderFeature} feature
  * @suppress {duplicate|accessControls}
  * @override
  */
-ol.render.canvas.PolygonReplay.prototype.drawCircle = function(circleGeometry, feature) {
+PolygonReplay.prototype.drawCircle = function(circleGeometry, feature) {
   var state = this.state;
   var fillStyle = state.fillStyle;
   var strokeStyle = state.strokeStyle;
@@ -124,11 +126,11 @@ ol.render.canvas.PolygonReplay.prototype.drawCircle = function(circleGeometry, f
   // version. The hit detection instruction for fills needs to use the available value from the frame state
   // or be empty.
   this.hitDetectionInstructions.push(
-      [ol.render.canvas.Instruction.SET_FILL_STYLE, fillStyle ? fillStyle : os.ol.mixin.render.EMPTY_FILL]);
+      [Instruction.SET_FILL_STYLE, fillStyle ? fillStyle : EMPTY_FILL]);
 
   if (state.strokeStyle !== undefined) {
     this.hitDetectionInstructions.push([
-      ol.render.canvas.Instruction.SET_STROKE_STYLE,
+      Instruction.SET_STROKE_STYLE,
       state.strokeStyle, state.lineWidth, state.lineCap, state.lineJoin,
       state.miterLimit, state.lineDash, state.lineDashOffset
     ]);
@@ -138,19 +140,23 @@ ol.render.canvas.PolygonReplay.prototype.drawCircle = function(circleGeometry, f
   var myBegin = this.coordinates.length;
   this.appendFlatCoordinates(
       flatCoordinates, 0, flatCoordinates.length, stride, false, false);
-  var beginPathInstruction = [ol.render.canvas.Instruction.BEGIN_PATH];
-  var circleInstruction = [ol.render.canvas.Instruction.CIRCLE, myBegin];
+  var beginPathInstruction = [Instruction.BEGIN_PATH];
+  var circleInstruction = [Instruction.CIRCLE, myBegin];
   this.instructions.push(beginPathInstruction, circleInstruction);
   this.hitDetectionInstructions.push(beginPathInstruction, circleInstruction);
-  var fillInstruction = [ol.render.canvas.Instruction.FILL];
+  var fillInstruction = [Instruction.FILL];
   this.hitDetectionInstructions.push(fillInstruction);
   if (state.fillStyle !== undefined) {
     this.instructions.push(fillInstruction);
   }
   if (state.strokeStyle !== undefined) {
-    var strokeInstruction = [ol.render.canvas.Instruction.STROKE];
+    var strokeInstruction = [Instruction.STROKE];
     this.instructions.push(strokeInstruction);
     this.hitDetectionInstructions.push(strokeInstruction);
   }
   this.endGeometry(circleGeometry, feature);
+};
+
+exports = {
+  EMPTY_FILL
 };

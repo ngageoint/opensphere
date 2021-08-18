@@ -1,11 +1,12 @@
-goog.provide('os.state.StateType');
+goog.module('os.state.StateType');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * State types.
  * @enum {string}
  */
-os.state.StateType = {
+exports = {
   OPENSPHERE: 'opensphere',
   UNKNOWN: 'UNKNOWN'
 };

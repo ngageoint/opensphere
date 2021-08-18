@@ -1,11 +1,13 @@
 /**
- * @fileoverview Modifications to {@link ol.Object}.
+ * @fileoverview Modifications to {@link OLObject}.
  */
-goog.provide('os.mixin.object');
+goog.module('os.mixin.object');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.Object');
-goog.require('ol.ObjectEventType');
-goog.require('ol.obj');
+const {getUid} = goog.require('ol');
+const OLObject = goog.require('ol.Object');
+const ObjectEventType = goog.require('ol.ObjectEventType');
+const EventTarget = goog.require('ol.events.EventTarget');
 
 
 /**
@@ -14,11 +16,11 @@ goog.require('ol.obj');
  *
  * @return {string|number}
  */
-ol.Object.prototype.getHashKey = function() {
-  return ol.getUid(this);
+OLObject.prototype.getHashKey = function() {
+  return getUid(this);
 };
-ol.obj.assign(ol.Object.prototype, {
-  '$$hashKey': ol.Object.prototype.getHashKey
+Object.assign(OLObject.prototype, {
+  '$$hashKey': OLObject.prototype.getHashKey
 });
 
 
@@ -27,13 +29,13 @@ ol.obj.assign(ol.Object.prototype, {
  * @type {boolean}
  * @protected
  */
-ol.Object.prototype.eventsEnabled = true;
+OLObject.prototype.eventsEnabled = true;
 
 
 /**
  * Enable events for the feature
  */
-ol.Object.prototype.enableEvents = function() {
+OLObject.prototype.enableEvents = function() {
   this.eventsEnabled = true;
 };
 
@@ -41,7 +43,7 @@ ol.Object.prototype.enableEvents = function() {
 /**
  * Suppress events for the feature
  */
-ol.Object.prototype.suppressEvents = function() {
+OLObject.prototype.suppressEvents = function() {
   this.eventsEnabled = false;
 };
 
@@ -51,26 +53,26 @@ ol.Object.prototype.suppressEvents = function() {
  *
  * @inheritDoc
  */
-ol.Object.prototype.dispatchEvent = function(e) {
+OLObject.prototype.dispatchEvent = function(e) {
   if (this.eventsEnabled) {
-    return ol.events.EventTarget.prototype.dispatchEvent.call(this, e);
+    return EventTarget.prototype.dispatchEvent.call(this, e);
   }
 };
 
 
 /**
- * Modified to prevent a lot of constructor/GC overhead with ol.Object.Event's if events are disabled.
+ * Modified to prevent a lot of constructor/GC overhead with OLObject.Event's if events are disabled.
  *
  * @param {string} key Key name.
  * @param {*} oldValue Old value.
  * @suppress {duplicate}
  */
-ol.Object.prototype.notify = function(key, oldValue) {
+OLObject.prototype.notify = function(key, oldValue) {
   if (this.eventsEnabled) {
     var eventType;
-    eventType = ol.Object.getChangeEventType(key);
-    this.dispatchEvent(new ol.Object.Event(eventType, key, oldValue));
-    eventType = ol.ObjectEventType.PROPERTYCHANGE;
-    this.dispatchEvent(new ol.Object.Event(eventType, key, oldValue));
+    eventType = OLObject.getChangeEventType(key);
+    this.dispatchEvent(new OLObject.Event(eventType, key, oldValue));
+    eventType = ObjectEventType.PROPERTYCHANGE;
+    this.dispatchEvent(new OLObject.Event(eventType, key, oldValue));
   }
 };

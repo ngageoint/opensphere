@@ -2,6 +2,8 @@ goog.require('os.ogc.wfs.FeatureType');
 
 
 describe('os.ogc.wfs.FeatureType', function() {
+  const FeatureType = goog.module.get('os.ogc.wfs.FeatureType');
+
   it('should detect geometry columns', function() {
     var cols = [
       {name: 'Title', type: 'string'},
@@ -9,7 +11,7 @@ describe('os.ogc.wfs.FeatureType', function() {
       {name: 'BestShapeEVER', type: 'gml:Polygon'}
     ];
 
-    var type = new os.ogc.wfs.FeatureType('yermom', cols);
+    var type = new FeatureType('yermom', cols);
     expect(type.getGeometryColumnName()).toBe('BestShapeEVER');
   });
 
@@ -20,7 +22,7 @@ describe('os.ogc.wfs.FeatureType', function() {
       {name: 'moment', type: 'datetime'}
     ];
 
-    var type = new os.ogc.wfs.FeatureType('yermom', cols);
+    var type = new FeatureType('yermom', cols);
     expect(type.getStartDateColumnName()).toBe('moment');
     expect(type.getEndDateColumnName()).toBe('moment');
   });
@@ -35,7 +37,7 @@ describe('os.ogc.wfs.FeatureType', function() {
       {name: 'enddt2', type: 'datetime'}
     ];
 
-    var type = new os.ogc.wfs.FeatureType('yermom', cols);
+    var type = new FeatureType('yermom', cols);
     expect(type.getStartDateColumnName()).toBe('startdt2');
     expect(type.getEndDateColumnName()).toBe('enddt2');
   });
@@ -50,7 +52,7 @@ describe('os.ogc.wfs.FeatureType', function() {
       {name: 'enddt2', type: 'datetime'}
     ];
 
-    var type = new os.ogc.wfs.FeatureType('yermom', cols, true);
+    var type = new FeatureType('yermom', cols, true);
     expect(type.getStartDateColumnName()).toBe('validTime');
     expect(type.getEndDateColumnName()).toBe('validTime');
   });
@@ -64,13 +66,13 @@ describe('os.ogc.wfs.FeatureType', function() {
       {name: 'stopDate', type: 'datetime'}
     ];
 
-    var type = new os.ogc.wfs.FeatureType('yermom', cols);
+    var type = new FeatureType('yermom', cols);
     expect(type.getStartDateColumnName()).toBe('startDate');
     expect(type.getEndDateColumnName()).toBe('stopDate');
   });
 
   it('should use explicitly-set start end dates for individual feature types', function() {
-    os.ogc.wfs.FeatureType.setTimeColumns('yermom', 'moment3', 'moment2');
+    FeatureType.setTimeColumns('yermom', 'moment3', 'moment2');
 
     var cols = [
       {name: 'Title', type: 'string'},
@@ -80,10 +82,10 @@ describe('os.ogc.wfs.FeatureType', function() {
       {name: 'moment3', type: 'datetime'}
     ];
 
-    var type = new os.ogc.wfs.FeatureType('yermom', cols, true);
+    var type = new FeatureType('yermom', cols, true);
     expect(type.getStartDateColumnName()).toBe('moment3');
     expect(type.getEndDateColumnName()).toBe('moment2');
 
-    os.ogc.wfs.FeatureType.removeTimeColumns('yermom', 'moment3', 'moment2');
+    FeatureType.removeTimeColumns('yermom', 'moment3', 'moment2');
   });
 });

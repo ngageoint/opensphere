@@ -1,16 +1,23 @@
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
+goog.require('os');
+goog.require('os.config.Settings');
 goog.require('os.plugin.MockErrorPlugin');
 goog.require('os.plugin.MockPlugin');
 goog.require('os.plugin.PluginManager');
 
 describe('os.plugin.PluginManager', function() {
+  const GoogEventType = goog.module.get('goog.events.EventType');
+  const os = goog.module.get('os');
+  const Settings = goog.module.get('os.config.Settings');
+  const PluginManager = goog.module.get('os.plugin.PluginManager');
+
   var pm = null;
 
   beforeEach(function() {
-    os.settings.init();
-    pm = new os.plugin.PluginManager();
+    Settings.getInstance().init();
+    pm = new PluginManager();
   });
 
   it('should add plugins', function() {
@@ -34,7 +41,7 @@ describe('os.plugin.PluginManager', function() {
     };
 
     runs(function() {
-      pm.listenOnce(goog.events.EventType.LOAD, listener);
+      pm.listenOnce(GoogEventType.LOAD, listener);
       pm.init();
     });
 
@@ -59,14 +66,14 @@ describe('os.plugin.PluginManager', function() {
     // initialize the plugin manager
     pm.init();
 
-    expect(window.setTimeout.mostRecentCall.args[1]).toBe(os.plugin.PluginManager.INIT_TIMEOUT_);
+    expect(window.setTimeout.mostRecentCall.args[1]).toBe(PluginManager.INIT_TIMEOUT);
 
     // change the value in settings
     var expectedTimeout = 50;
-    os.settings.set('plugin.initTimeout', expectedTimeout);
+    Settings.getInstance().set('plugin.initTimeout', expectedTimeout);
 
     // recreate the plugin manager so it uses the spy value
-    pm = new os.plugin.PluginManager();
+    pm = new PluginManager();
 
     // disable the setTimeout call in the mock plugin so the spy doesn't pick it up
     pm.addPlugin(new os.plugin.MockPlugin({
@@ -79,12 +86,12 @@ describe('os.plugin.PluginManager', function() {
     expect(window.setTimeout.mostRecentCall.args[1]).toBe(expectedTimeout);
 
     // clear the value for future tests
-    os.settings.set('plugin.initTimeout', undefined);
+    Settings.getInstance().set('plugin.initTimeout', undefined);
   });
 
   it('should time out when init takes too long', function() {
     // set a low timeout value for this test
-    os.settings.set('plugin.initTimeout', 50);
+    Settings.getInstance().set('plugin.initTimeout', 50);
 
     // create a plugin that takes longer than the timeout to init
     var slowPlugin = new os.plugin.MockPlugin({
@@ -106,7 +113,7 @@ describe('os.plugin.PluginManager', function() {
 
     runs(function() {
       // finish called and dispatched load event
-      expect(pm.dispatchEvent).toHaveBeenCalledWith(goog.events.EventType.LOAD);
+      expect(pm.dispatchEvent).toHaveBeenCalledWith(GoogEventType.LOAD);
       expect(pm.onInitTimeout_).toHaveBeenCalled();
       expect(pm.finish_.calls.length).toBe(1);
 
@@ -124,12 +131,12 @@ describe('os.plugin.PluginManager', function() {
       expect(pm.finish_.calls.length).toBe(2);
 
       // clear the value for future tests
-      os.settings.set('plugin.initTimeout', undefined);
+      Settings.getInstance().set('plugin.initTimeout', undefined);
     });
   });
 
   it('should recognize when plugins are disabled', function() {
-    var settings = os.settings;
+    var settings = Settings.getInstance();
     settings.set(['plugins', 'unitTest_enabled'], true);
     settings.set(['plugins', 'unitTest_disabled'], false);
 
@@ -145,7 +152,7 @@ describe('os.plugin.PluginManager', function() {
     };
 
     runs(function() {
-      pm.listenOnce(goog.events.EventType.LOAD, listener);
+      pm.listenOnce(GoogEventType.LOAD, listener);
       pm.init();
     });
 
@@ -168,7 +175,7 @@ describe('os.plugin.PluginManager', function() {
   it('should filter out disabled plugins on init', function() {
     pm.addPlugin(new os.plugin.MockPlugin());
 
-    var settings = os.settings;
+    var settings = Settings.getInstance();
     settings.set(['plugins', 'unitTest_disabled'], false);
     var p = new os.plugin.MockPlugin();
     p.id = 'unitTest_disabled';
@@ -181,7 +188,7 @@ describe('os.plugin.PluginManager', function() {
     };
 
     runs(function() {
-      pm.listenOnce(goog.events.EventType.LOAD, listener);
+      pm.listenOnce(GoogEventType.LOAD, listener);
       pm.init();
     });
 
@@ -205,7 +212,7 @@ describe('os.plugin.PluginManager', function() {
     };
 
     runs(function() {
-      pm.listenOnce(goog.events.EventType.LOAD, listener);
+      pm.listenOnce(GoogEventType.LOAD, listener);
       pm.init();
     });
 
@@ -232,7 +239,7 @@ describe('os.plugin.PluginManager', function() {
     pm.addPlugin(new os.plugin.MockPlugin());
     pm.init();
 
-    var settings = os.settings;
+    var settings = Settings.getInstance();
     settings.set(['plugins', 'unitTest_disabled'], false);
 
     var p = new os.plugin.MockPlugin();
@@ -262,7 +269,7 @@ describe('os.plugin.PluginManager', function() {
     };
 
     runs(function() {
-      pm.listenOnce(goog.events.EventType.LOAD, listener);
+      pm.listenOnce(GoogEventType.LOAD, listener);
       pm.init();
     });
 

@@ -1,9 +1,25 @@
+goog.require('goog.dom');
+goog.require('goog.dom.xml');
+goog.require('goog.math.Range');
+goog.require('goog.string');
 goog.require('os.state.v2.TimeState');
+goog.require('os.state.v2.TimeTag');
+goog.require('os.time');
 goog.require('os.time.TimelineController');
 goog.require('os.ui.timeline.AbstractTimelineCtrl');
 goog.require('os.xml');
 
 describe('os.state.v2.TimeState', function() {
+  const dom = goog.module.get('goog.dom');
+  const googDomXml = goog.module.get('goog.dom.xml');
+  const Range = goog.module.get('goog.math.Range');
+  const googString = goog.module.get('goog.string');
+  const TimeState = goog.module.get('os.state.v2.TimeState');
+  const TimeTag = goog.module.get('os.state.v2.TimeTag');
+  const osTime = goog.module.get('os.time');
+  const TimelineController = goog.module.get('os.time.TimelineController');
+  const xml = goog.module.get('os.xml');
+
   var time = '<time>' +
       '<interval>2016-02-14T00:00:00Z/2016-02-18T00:00:00Z</interval>' +
       '<current>2016-02-16T12:00:00Z/2016-02-17T12:00:00Z</current>' +
@@ -26,16 +42,16 @@ describe('os.state.v2.TimeState', function() {
       '</holds>' +
       '</time>';
 
-  var id = goog.string.getRandomString();
-  var xmlTime = goog.dom.xml.loadXml(time).firstChild;
-  var state = new os.state.v2.TimeState();
+  var id = googString.getRandomString();
+  var xmlTime = googDomXml.loadXml(time).firstChild;
+  var state = new TimeState();
   var tlc;
 
   beforeEach(function() {
-    tlc = os.time.TimelineController.getInstance();
+    tlc = TimelineController.getInstance();
 
     // pretend the timeline UI is in the correct open/closed state
-    spyOn(os.state.v2.TimeState, 'testUIState').andReturn(true);
+    spyOn(TimeState, 'testUIState').andReturn(true);
   });
 
   it('should initialize correctly', function() {
@@ -85,7 +101,7 @@ describe('os.state.v2.TimeState', function() {
     var initialStart = tlc.getStart();
     var initialEnd = tlc.getEnd();
     var xstime = time.replace('<time>', '<time xmlns="http://www.bit-sys.com/state/v3">');
-    xmlTime = goog.dom.xml.loadXml(xstime).firstChild;
+    xmlTime = googDomXml.loadXml(xstime).firstChild;
 
     state.load(xmlTime, id);
 
@@ -122,7 +138,7 @@ describe('os.state.v2.TimeState', function() {
   });
 
   it('should convert range to timestring', function() {
-    var range = new goog.math.Range(1000000, 100000000);
+    var range = new Range(1000000, 100000000);
     var string = state.rangeToDateFormatString_(range);
     expect(string).toBe('1970-01-01T00:16:40Z/1970-01-02T03:46:40Z');
   });
@@ -135,32 +151,32 @@ describe('os.state.v2.TimeState', function() {
 
   it('should save correctly', function() {
     var options = {
-      doc: goog.dom.xml.createDocument()
+      doc: googDomXml.createDocument()
     };
-    var rootObj = os.xml.createElement(os.state.v2.TimeTag.FILTERS);
+    var rootObj = xml.createElement(TimeTag.FILTERS);
 
     // Full time range.
-    var startDate = os.time.parseMoment('1970-01-01T00:16:39Z', [os.state.v2.TimeState.DATE_FORMAT], true);
-    var endDate = os.time.parseMoment('1974-03-15T02:21:41Z', [os.state.v2.TimeState.DATE_FORMAT], true);
+    var startDate = osTime.parseMoment('1970-01-01T00:16:39Z', [TimeState.DATE_FORMAT], true);
+    var endDate = osTime.parseMoment('1974-03-15T02:21:41Z', [TimeState.DATE_FORMAT], true);
     tlc.setRange(tlc.buildRange(startDate.valueOf(), endDate.valueOf()));
     var fullRangeString = state.rangeToDateFormatString_(tlc.getRange());
     tlc.setDuration('month');
     // Animate range
-    var animateStartDate = os.time.parseMoment('1971-01-01T00:16:39Z',
-        [os.state.v2.TimeState.DATE_FORMAT], true);
-    var animateEndDate = os.time.parseMoment('1973-03-15T02:21:41Z',
-        [os.state.v2.TimeState.DATE_FORMAT], true);
-    var animateRange = new goog.math.Range(animateStartDate.valueOf(), animateEndDate.valueOf());
+    var animateStartDate = osTime.parseMoment('1971-01-01T00:16:39Z',
+        [TimeState.DATE_FORMAT], true);
+    var animateEndDate = osTime.parseMoment('1973-03-15T02:21:41Z',
+        [TimeState.DATE_FORMAT], true);
+    var animateRange = new Range(animateStartDate.valueOf(), animateEndDate.valueOf());
     var animateRangeString = state.rangeToDateFormatString_(animateRange);
     tlc.clearAnimateRanges();
     tlc.addAnimateRange(animateRange);
 
     // Hold range
-    var holdStartDate = os.time.parseMoment('1971-03-01T00:16:39Z',
-        [os.state.v2.TimeState.DATE_FORMAT], true);
-    var holdEndDate = os.time.parseMoment('1971-06-12T01:15:11Z',
-        [os.state.v2.TimeState.DATE_FORMAT], true);
-    var holdRange = new goog.math.Range(holdStartDate.valueOf(), holdEndDate.valueOf());
+    var holdStartDate = osTime.parseMoment('1971-03-01T00:16:39Z',
+        [TimeState.DATE_FORMAT], true);
+    var holdEndDate = osTime.parseMoment('1971-06-12T01:15:11Z',
+        [TimeState.DATE_FORMAT], true);
+    var holdRange = new Range(holdStartDate.valueOf(), holdEndDate.valueOf());
     var holdRangeString = state.rangeToDateFormatString_(holdRange);
     // make sure this is empty bfore the test.
     tlc.clearHoldRanges();
@@ -171,45 +187,45 @@ describe('os.state.v2.TimeState', function() {
     tlc.setOffset(1000002);
     tlc.setSkip(10000000);
 
-    var currentString = state.rangeToDateFormatString_(new goog.math.Range(animateEndDate.valueOf() - tlc.getOffset(),
+    var currentString = state.rangeToDateFormatString_(new Range(animateEndDate.valueOf() - tlc.getOffset(),
         animateEndDate.valueOf()));
 
     // Add a fakey-fake timeline element to the DOM. The time state checks this to determine whether the
     // timeline is open and we want to simulate that state.
-    var fakeTimeline = os.xml.appendElement('div', document.body, null, {'class': 'js-timeline'});
+    var fakeTimeline = xml.appendElement('div', document.body, null, {'class': 'js-timeline'});
     state.saveInternal(options, rootObj);
 
-    expect(goog.dom.getChildren(rootObj).length).toBe(7);
+    expect(dom.getChildren(rootObj).length).toBe(7);
 
-    expect(rootObj.querySelector(os.state.v2.TimeTag.INTERVAL).textContent)
+    expect(rootObj.querySelector(TimeTag.INTERVAL).textContent)
         .toBe(fullRangeString);
 
-    expect(rootObj.querySelector(os.state.v2.TimeTag.CURRENT).textContent)
+    expect(rootObj.querySelector(TimeTag.CURRENT).textContent)
         .toBe(currentString);
 
-    expect(rootObj.querySelector(os.state.v2.TimeTag.ADVANCE).textContent).toBe('PT2H46M40S');
-    expect(rootObj.querySelector(os.state.v2.TimeTag.DURATION).textContent).toBe('month');
+    expect(rootObj.querySelector(TimeTag.ADVANCE).textContent).toBe('PT2H46M40S');
+    expect(rootObj.querySelector(TimeTag.DURATION).textContent).toBe('month');
 
-    var sequence = rootObj.querySelector(os.state.v2.TimeTag.SEQUENCE);
+    var sequence = rootObj.querySelector(TimeTag.SEQUENCE);
     expect(sequence).not.toBeNull();
     expect(sequence.childNodes.length).toBe(1);
     expect(sequence.childNodes[0].textContent).toBe(animateRangeString);
 
-    var holds = rootObj.querySelector(os.state.v2.TimeTag.HOLDS);
+    var holds = rootObj.querySelector(TimeTag.HOLDS);
     expect(holds).not.toBeNull();
     expect(holds.childNodes.length).toBe(1);
     expect(holds.childNodes[0].textContent).toBe(holdRangeString);
 
 
-    var animation = rootObj.querySelector(os.state.v2.TimeTag.ANIMATION);
+    var animation = rootObj.querySelector(TimeTag.ANIMATION);
     expect(animation).not.toBeNull();
     expect(animation.childNodes.length).toBe(4);
 
-    expect(animation.querySelector(os.state.v2.TimeTag.LOOP).textContent)
+    expect(animation.querySelector(TimeTag.LOOP).textContent)
         .toBe(animateRangeString);
-    expect(animation.querySelector(os.state.v2.TimeTag.LOOP_BEHAVIOR).textContent).toBe('taperEndSnapStart');
-    expect(animation.querySelector(os.state.v2.TimeTag.MS_PER_FRAME).textContent).toBe('1000');
-    expect(animation.querySelector(os.state.v2.TimeTag.PLAY_STATE).textContent).toBe('Stop');
+    expect(animation.querySelector(TimeTag.LOOP_BEHAVIOR).textContent).toBe('taperEndSnapStart');
+    expect(animation.querySelector(TimeTag.MS_PER_FRAME).textContent).toBe('1000');
+    expect(animation.querySelector(TimeTag.PLAY_STATE).textContent).toBe('Stop');
 
     document.body.removeChild(fakeTimeline);
   });

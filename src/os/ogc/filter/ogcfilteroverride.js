@@ -1,137 +1,140 @@
-goog.provide('os.ogc.filter.OGCFilterOverride');
-goog.require('ol.proj.EPSG4326');
-goog.require('os.net.AbstractModifier');
-goog.require('os.net.IModifier');
-goog.require('os.ogc.filter.OGCFilterModifier');
-goog.require('os.time');
+goog.module('os.ogc.filter.OGCFilterOverride');
+goog.module.declareLegacyNamespace();
 
+const AbstractModifier = goog.require('os.net.AbstractModifier');
+const OGCFilterModifier = goog.require('os.ogc.filter.OGCFilterModifier');
+const {format} = goog.require('os.time');
+
+const IModifier = goog.requireType('os.net.IModifier');
+const TimeRange = goog.requireType('os.time.TimeRange');
 
 
 /**
  * Replaces OGC filter to load data matching specific property values.
  *
- * @param {(Object<string, !Array<string>>|string)} filter Filter string, or a map of data fields/values to match
- * @param {string=} opt_startColumn The start date column
- * @param {string=} opt_endColumn The end date column
- * @param {os.time.TimeRange=} opt_timeRange The time range to load
- * @param {ol.Extent=} opt_bbox The query bounding box
- * @implements {os.net.IModifier}
- * @extends {os.net.AbstractModifier}
- * @constructor
+ * @implements {IModifier}
  */
-os.ogc.filter.OGCFilterOverride = function(filter, opt_startColumn, opt_endColumn, opt_timeRange, opt_bbox) {
-  os.ogc.filter.OGCFilterOverride.base(this, 'constructor', os.ogc.filter.OGCFilterOverride.ID, -200);
-
+class OGCFilterOverride extends AbstractModifier {
   /**
-   * @type {string|undefined}
-   * @private
+   * Constructor.
+   * @param {(Object<string, !Array<string>>|string)} filter Filter string, or a map of data fields/values to match
+   * @param {string=} opt_startColumn The start date column
+   * @param {string=} opt_endColumn The end date column
+   * @param {TimeRange=} opt_timeRange The time range to load
+   * @param {ol.Extent=} opt_bbox The query bounding box
    */
-  this.filter_ = undefined;
+  constructor(filter, opt_startColumn, opt_endColumn, opt_timeRange, opt_bbox) {
+    super(OGCFilterOverride.ID, -200);
 
-  if (typeof filter === 'object') {
-    var filterStr = '<Or>';
+    /**
+     * @type {string|undefined}
+     * @private
+     */
+    this.filter_ = undefined;
 
-    // add all key/value pairs from the map
-    for (var key in filter) {
-      var values = filter[key];
-      for (var i = 0, n = values.length; i < n; i++) {
-        filterStr += '<PropertyIsEqualTo>' +
-            '<PropertyName>' + key + '</PropertyName>' +
-            '<Literal><![CDATA[' + values[i] + ']]></Literal>' +
-            '</PropertyIsEqualTo>';
+    if (typeof filter === 'object') {
+      var filterStr = '<Or>';
+
+      // add all key/value pairs from the map
+      for (var key in filter) {
+        var values = filter[key];
+        for (var i = 0, n = values.length; i < n; i++) {
+          filterStr += '<PropertyIsEqualTo>' +
+              '<PropertyName>' + key + '</PropertyName>' +
+              '<Literal><![CDATA[' + values[i] + ']]></Literal>' +
+              '</PropertyIsEqualTo>';
+        }
       }
+
+      filterStr += '</Or>';
+
+      this.filter_ = filterStr;
+    } else if (typeof filter == 'string') {
+      this.filter_ = filter;
     }
 
-    filterStr += '</Or>';
+    /**
+     * @type {ol.Extent|undefined}
+     * @private
+     */
+    this.bbox_ = opt_bbox;
 
-    this.filter_ = filterStr;
-  } else if (typeof filter == 'string') {
-    this.filter_ = filter;
+    /**
+     * @type {string|undefined}
+     * @private
+     */
+    this.startColumn_ = opt_startColumn;
+
+    /**
+     * @type {string|undefined}
+     * @private
+     */
+    this.endColumn_ = opt_endColumn;
+
+    /**
+     * @type {TimeRange|undefined}
+     * @private
+     */
+    this.timeRange_ = opt_timeRange;
   }
 
   /**
-   * @type {ol.Extent|undefined}
-   * @private
+   * @inheritDoc
    */
-  this.bbox_ = opt_bbox;
+  modify(uri) {
+    var param = 'filter';
+    var qd = uri.getQueryData();
+    var old = qd.get(param);
+
+    if (old) {
+      qd.set(param, this.createFilter_());
+    }
+  }
 
   /**
-   * @type {string|undefined}
+   * @return {string} The WFS filter string
    * @private
    */
-  this.startColumn_ = opt_startColumn;
+  createFilter_() {
+    var filter = OGCFilterModifier.FILTER_BEGIN + '<And>';
 
-  /**
-   * @type {string|undefined}
-   * @private
-   */
-  this.endColumn_ = opt_endColumn;
+    if (this.bbox_) {
+      filter += '<BBOX>' +
+          '<PropertyName>GEOM</PropertyName>' +
+          '<gml:Envelope srsName="CRS:84">' +
+          '<gml:lowerCorner>' + this.bbox_[0] + ' ' + this.bbox_[1] + '</gml:lowerCorner>' +
+          '<gml:upperCorner>' + this.bbox_[2] + ' ' + this.bbox_[3] + '</gml:upperCorner>' +
+          '</gml:Envelope>' +
+          '</BBOX>';
+    }
 
-  /**
-   * @type {os.time.TimeRange|undefined}
-   * @private
-   */
-  this.timeRange_ = opt_timeRange;
-};
-goog.inherits(os.ogc.filter.OGCFilterOverride, os.net.AbstractModifier);
+    if (this.timeRange_ && this.startColumn_ && this.endColumn_) {
+      var start = format(new Date(this.timeRange_.getStart()), undefined, false, true);
+      var end = format(new Date(this.timeRange_.getEnd()), undefined, false, true);
+      filter += '<PropertyIsGreaterThanOrEqualTo>' +
+          '<PropertyName>' + this.endColumn_ + '</PropertyName>' +
+          '<Literal>' + start + '</Literal>' +
+          '</PropertyIsGreaterThanOrEqualTo>' +
+          '<PropertyIsLessThan>' +
+          '<PropertyName>' + this.startColumn_ + '</PropertyName>' +
+          '<Literal>' + end + '</Literal>' +
+          '</PropertyIsLessThan>';
+    }
 
+    if (this.filter_) {
+      filter += this.filter_;
+    }
+
+    filter += '</And>' + OGCFilterModifier.FILTER_END;
+    return filter;
+  }
+}
 
 /**
  * The modifier ID
  * @type {string}
  * @const
  */
-os.ogc.filter.OGCFilterOverride.ID = 'OGCFilterOverride';
+OGCFilterOverride.ID = 'OGCFilterOverride';
 
-
-/**
- * @inheritDoc
- */
-os.ogc.filter.OGCFilterOverride.prototype.modify = function(uri) {
-  var param = 'filter';
-  var qd = uri.getQueryData();
-  var old = qd.get(param);
-
-  if (old) {
-    qd.set(param, this.createFilter_());
-  }
-};
-
-
-/**
- * @return {string} The WFS filter string
- * @private
- */
-os.ogc.filter.OGCFilterOverride.prototype.createFilter_ = function() {
-  var filter = os.ogc.filter.OGCFilterModifier.FILTER_BEGIN + '<And>';
-
-  if (this.bbox_) {
-    filter += '<BBOX>' +
-        '<PropertyName>GEOM</PropertyName>' +
-        '<gml:Envelope srsName="CRS:84">' +
-        '<gml:lowerCorner>' + this.bbox_[0] + ' ' + this.bbox_[1] + '</gml:lowerCorner>' +
-        '<gml:upperCorner>' + this.bbox_[2] + ' ' + this.bbox_[3] + '</gml:upperCorner>' +
-        '</gml:Envelope>' +
-        '</BBOX>';
-  }
-
-  if (this.timeRange_ && this.startColumn_ && this.endColumn_) {
-    var start = os.time.format(new Date(this.timeRange_.getStart()), undefined, false, true);
-    var end = os.time.format(new Date(this.timeRange_.getEnd()), undefined, false, true);
-    filter += '<PropertyIsGreaterThanOrEqualTo>' +
-        '<PropertyName>' + this.endColumn_ + '</PropertyName>' +
-        '<Literal>' + start + '</Literal>' +
-        '</PropertyIsGreaterThanOrEqualTo>' +
-        '<PropertyIsLessThan>' +
-        '<PropertyName>' + this.startColumn_ + '</PropertyName>' +
-        '<Literal>' + end + '</Literal>' +
-        '</PropertyIsLessThan>';
-  }
-
-  if (this.filter_) {
-    filter += this.filter_;
-  }
-
-  filter += '</And>' + os.ogc.filter.OGCFilterModifier.FILTER_END;
-  return filter;
-};
+exports = OGCFilterOverride;

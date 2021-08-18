@@ -936,12 +936,21 @@ class KMLNode extends SlickTreeNode {
   }
 
   /**
+   * Override to type nodes appropriately.
+   * @return {Array<!KMLNode>}
+   * @override
+   */
+  getChildren() {
+    return /** @type {Array<!KMLNode>} */ (super.getChildren());
+  }
+
+  /**
    * @inheritDoc
    */
   updateChild(child, state) {
     // avoid changing source visibility when updating children, so the visibility calls aren't massively duplicated. the
     // visibility will be changed at the level toggled by the user, resulting in a single call to the source.
-    child.setStateOnly(state);
+    /** @type {KMLNode} */ (child).setStateOnly(state);
   }
 
   /**

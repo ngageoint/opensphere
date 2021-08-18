@@ -1,234 +1,233 @@
-goog.provide('os.style.IconReader');
+goog.module('os.style.IconReader');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Uri');
-goog.require('ol.color');
-goog.require('ol.style.Icon');
-goog.require('ol.style.IconAnchorUnits');
-goog.require('ol.style.IconOrigin');
-goog.require('os.net');
-goog.require('os.style.AbstractReader');
-goog.require('os.style.Icon');
-goog.require('os.ui.file.kml');
-
+const Uri = goog.require('goog.Uri');
+const {hashCode} = goog.require('goog.string');
+const {IE} = goog.require('goog.userAgent');
+const {asString} = goog.require('ol.color');
+const {toDegrees, toRadians} = goog.require('ol.math');
+const IconStyle = goog.require('ol.style.Icon');
+const IconAnchorUnits = goog.require('ol.style.IconAnchorUnits');
+const IconOrigin = goog.require('ol.style.IconOrigin');
+const {getCrossOrigin} = goog.require('os.net');
+const CrossOrigin = goog.require('os.net.CrossOrigin');
+const AbstractReader = goog.require('os.style.AbstractReader');
+const Icon = goog.require('os.style.Icon');
+const {DEFAULT_ICON, DEFAULT_ICON_OPTIONS} = goog.require('os.style.defaults');
+const {
+  GMAPS_SEARCH,
+  getMirror,
+  replaceExportableUri,
+  replaceGoogleUri
+} = goog.require('os.ui.file.kml');
 
 
 /**
  * Icon style reader
  *
- * @extends {os.style.AbstractReader<!ol.style.Icon>}
- * @constructor
+ * @extends {AbstractReader<!IconStyle>}
  */
-os.style.IconReader = function() {
-  os.style.IconReader.base(this, 'constructor');
-  this.baseHash = 31 * this.baseHash + goog.string.hashCode('icon') >>> 0;
-};
-goog.inherits(os.style.IconReader, os.style.AbstractReader);
-
-
-/**
- * @inheritDoc
- */
-os.style.IconReader.prototype.getOrCreateStyle = function(config) {
-  os.style.IconReader.translateIcons(config);
-  if (config['fill'] && config['fill']['color']) {
-    config['color'] = config['fill']['color'];
-  }
-  var iconOptions = config['options'] || undefined;
-  var hash = 31 * this.baseHash + goog.string.hashCode(JSON.stringify(config)) >>> 0;
-  if (!this.cache[hash]) {
-    var options = /** @type {olx.style.IconOptions} */ ({
-      anchor: config['anchor'],
-      anchorOrigin: config['anchorOrigin'],
-      anchorXUnits: config['anchorXUnits'],
-      anchorYUnits: config['anchorYUnits'],
-      color: config['color'],
-      offset: config['offset'],
-      offsetOrigin: config['offsetOrigin'],
-      options: iconOptions,
-      rotation: config['rotation'],
-      scale: config['scale'],
-      size: config['size'],
-      src: config['src']
-    });
-
-    var remote = new goog.Uri(options.src);
-    options.crossOrigin = os.net.getCrossOrigin(remote);
-
-    // Internet Explorer does not accept crossOrigin: 'none', and it should be omitted for that case
-    if (goog.userAgent.IE && options.crossOrigin === os.net.CrossOrigin.NONE) {
-      options.crossOrigin = undefined;
-    }
-
-    this.cache[hash] = new os.style.Icon(options);
-    this.cache[hash]['id'] = hash;
+class IconReader extends AbstractReader {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.baseHash = 31 * this.baseHash + hashCode('icon') >>> 0;
   }
 
-  return /** @type {!ol.style.Icon} */ (this.cache[hash]);
-};
+  /**
+   * @inheritDoc
+   */
+  getOrCreateStyle(config) {
+    IconReader.translateIcons(config);
+    if (config['fill'] && config['fill']['color']) {
+      config['color'] = config['fill']['color'];
+    }
+    var iconOptions = config['options'] || undefined;
+    var hash = 31 * this.baseHash + hashCode(JSON.stringify(config)) >>> 0;
+    if (!this.cache[hash]) {
+      var options = /** @type {olx.style.IconOptions} */ ({
+        anchor: config['anchor'],
+        anchorOrigin: config['anchorOrigin'],
+        anchorXUnits: config['anchorXUnits'],
+        anchorYUnits: config['anchorYUnits'],
+        color: config['color'],
+        offset: config['offset'],
+        offsetOrigin: config['offsetOrigin'],
+        options: iconOptions,
+        rotation: config['rotation'],
+        scale: config['scale'],
+        size: config['size'],
+        src: config['src']
+      });
 
+      var remote = new Uri(options.src);
+      options.crossOrigin = getCrossOrigin(remote);
 
-/**
- * @inheritDoc
- * @suppress {accessControls}
- */
-os.style.IconReader.prototype.toConfig = function(style, obj) {
-  if (style instanceof ol.style.Icon) {
-    var iconStyle = /** @type {ol.style.Icon} */ (style);
+      // Internet Explorer does not accept crossOrigin: 'none', and it should be omitted for that case
+      if (IE && options.crossOrigin === CrossOrigin.NONE) {
+        options.crossOrigin = undefined;
+      }
 
-    obj['type'] = 'icon';
-
-    // only add things if they differ from the default
-
-    // we want the original anchor and not the normalized one, which is why
-    // we are not calling getAnchor()
-    var anchor = iconStyle.anchor_;
-
-    if (anchor && anchor[0] != 0.5 && anchor[1] != 0.5) {
-      obj['anchor'] = anchor;
+      this.cache[hash] = new Icon(options);
+      this.cache[hash]['id'] = hash;
     }
 
-    var anchorOrigin = iconStyle.anchorOrigin_;
+    return /** @type {!IconStyle} */ (this.cache[hash]);
+  }
 
-    if (anchorOrigin && anchorOrigin != ol.style.IconOrigin.TOP_LEFT) {
-      obj['anchorOrigin'] = anchorOrigin;
+  /**
+   * @inheritDoc
+   * @suppress {accessControls}
+   */
+  toConfig(style, obj) {
+    if (style instanceof IconStyle) {
+      var iconStyle = /** @type {IconStyle} */ (style);
+
+      obj['type'] = 'icon';
+
+      // only add things if they differ from the default
+
+      // we want the original anchor and not the normalized one, which is why
+      // we are not calling getAnchor()
+      var anchor = iconStyle.anchor_;
+
+      if (anchor && anchor[0] != 0.5 && anchor[1] != 0.5) {
+        obj['anchor'] = anchor;
+      }
+
+      var anchorOrigin = iconStyle.anchorOrigin_;
+
+      if (anchorOrigin && anchorOrigin != IconOrigin.TOP_LEFT) {
+        obj['anchorOrigin'] = anchorOrigin;
+      }
+
+      var anchorXUnits = iconStyle.anchorXUnits_;
+
+      if (anchorXUnits && anchorXUnits != IconAnchorUnits.FRACTION) {
+        obj['anchorXUnits'] = anchorXUnits;
+      }
+
+      var anchorYUnits = iconStyle.anchorYUnits_;
+
+      if (anchorYUnits && anchorYUnits != IconAnchorUnits.FRACTION) {
+        obj['anchorYUnits'] = anchorYUnits;
+      }
+
+      if (style.iconImage_ && style.iconImage_.color_) {
+        obj['color'] = asString(style.iconImage_.color_);
+      }
+
+      var offset = iconStyle.offset_;
+
+      if (offset && offset[0] !== 0 && offset[1] !== 0) {
+        obj['offset'] = offset;
+      }
+
+      var offsetOrigin = iconStyle.offsetOrigin_;
+
+      if (offsetOrigin && offsetOrigin != IconOrigin.TOP_LEFT) {
+        obj['offsetOrigin'] = offsetOrigin;
+      }
+
+      var rotation = iconStyle.rotation_;
+
+      if (rotation !== undefined && rotation !== 0) {
+        obj['rotation'] = rotation;
+      }
+
+      var scale = iconStyle.scale_;
+
+      if (scale !== undefined && scale !== 1) {
+        obj['scale'] = scale;
+      }
+
+      var size = iconStyle.getSize();
+
+      if (size) {
+        obj['size'] = size;
+      }
+
+      var src = iconStyle.getSrc();
+
+      if (src) {
+        obj['src'] = src;
+      }
+
+      var options = iconStyle['options'] || undefined;
+
+      if (options) {
+        obj['options'] = options;
+      }
+    }
+  }
+
+  /**
+   * Translates common map icons from the Internet to our local versions. We do this for two reasons:
+   *   1. Those URLs will be inaccessible on other networks
+   *   2. To avoid cross-origin security restrictions that result in a tainted canvas
+   *
+   * @param {!Object<string, *>} config
+   */
+  static translateIcons(config) {
+    // fall back to the default icon if none provided
+    if (!config['src']) {
+      config['src'] = DEFAULT_ICON;
     }
 
-    var anchorXUnits = iconStyle.anchorXUnits_;
-
-    if (anchorXUnits && anchorXUnits != ol.style.IconAnchorUnits.FRACTION) {
-      obj['anchorXUnits'] = anchorXUnits;
+    if (config['rotation']) {
+      // convert to degrees, round it, and convert back to radians
+      config['rotation'] = toRadians(Math.round(toDegrees(/** @type {number} */ (config['rotation']))));
     }
 
-    var anchorYUnits = iconStyle.anchorYUnits_;
-
-    if (anchorYUnits && anchorYUnits != ol.style.IconAnchorUnits.FRACTION) {
-      obj['anchorYUnits'] = anchorYUnits;
-    }
-
-    if (style.iconImage_ && style.iconImage_.color_) {
-      obj['color'] = ol.color.asString(style.iconImage_.color_);
-    }
-
-    var offset = iconStyle.offset_;
-
-    if (offset && offset[0] !== 0 && offset[1] !== 0) {
-      obj['offset'] = offset;
-    }
-
-    var offsetOrigin = iconStyle.offsetOrigin_;
-
-    if (offsetOrigin && offsetOrigin != ol.style.IconOrigin.TOP_LEFT) {
-      obj['offsetOrigin'] = offsetOrigin;
-    }
-
-    var rotation = iconStyle.rotation_;
-
-    if (rotation !== undefined && rotation !== 0) {
-      obj['rotation'] = rotation;
-    }
-
-    var scale = iconStyle.scale_;
-
-    if (scale !== undefined && scale !== 1) {
-      obj['scale'] = scale;
-    }
-
-    var size = iconStyle.getSize();
-
-    if (size) {
-      obj['size'] = size;
-    }
-
-    var src = iconStyle.getSrc();
-
+    // replace google maps/earth icon urls with our copies
+    var src = /** @type {string|undefined} */ (config['src']);
     if (src) {
-      obj['src'] = src;
-    }
-
-    var options = iconStyle['options'] || undefined;
-
-    if (options) {
-      obj['options'] = options;
-    }
-  }
-};
-
-
-/**
- * Translates common map icons from the Internet to our local versions. We do this for two reasons:
- *   1. Those URLs will be inaccessible on other networks
- *   2. To avoid cross-origin security restrictions that result in a tainted canvas
- *
- * @param {!Object<string, *>} config
- */
-os.style.IconReader.translateIcons = function(config) {
-  // fall back to the default icon if none provided
-  if (!config['src']) {
-    config['src'] = os.style.IconReader.DEFAULT_ICON;
-  }
-
-  if (config['rotation']) {
-    // convert to degrees, round it, and convert back to radians
-    config['rotation'] = ol.math.toRadians(Math.round(ol.math.toDegrees(/** @type {number} */ (config['rotation']))));
-  }
-
-  // replace google maps/earth icon urls with our copies
-  var src = /** @type {string|undefined} */ (config['src']);
-  if (src) {
-    const isGmaps = os.ui.file.kml.GMAPS_SEARCH.test(src);
-    const isMirror = src.indexOf(os.ui.file.kml.getMirror()) != -1;
-    if (isGmaps || isMirror) {
-      if (isGmaps) {
-        config['src'] = os.ui.file.kml.replaceGoogleUri(src);
-      } else {
-        config['src'] = os.ui.file.kml.replaceExportableUri(src);
-      }
-
-      // if an anchor was not specified, fix it (because failing at "Pin the tail on the donkey" is embarrassing)
-      if (!config['anchor'] && src.indexOf('/pushpin/') > -1) {
-        config['anchor'] = [0.33, 0.07];
-        config['anchorOrigin'] = ol.style.IconOrigin.BOTTOM_LEFT;
-        config['anchorXUnits'] = ol.style.IconAnchorUnits.FRACTION;
-        config['anchorYUnits'] = ol.style.IconAnchorUnits.FRACTION;
-      }
-
-      if (!config['anchor'] && src.indexOf('/paddle/') > -1) {
-        if (src.indexOf('-lv') > -1) {
-          config['scale'] = 0.5;
+      const isGmaps = GMAPS_SEARCH.test(src);
+      const isMirror = src.indexOf(getMirror()) != -1;
+      if (isGmaps || isMirror) {
+        if (isGmaps) {
+          config['src'] = replaceGoogleUri(src);
         } else {
-          config['anchor'] = [0.5, 0.07];
-          config['anchorOrigin'] = ol.style.IconOrigin.BOTTOM_LEFT;
-          config['anchorXUnits'] = ol.style.IconAnchorUnits.FRACTION;
-          config['anchorYUnits'] = ol.style.IconAnchorUnits.FRACTION;
+          config['src'] = replaceExportableUri(src);
+        }
+
+        // if an anchor was not specified, fix it (because failing at "Pin the tail on the donkey" is embarrassing)
+        if (!config['anchor'] && src.indexOf('/pushpin/') > -1) {
+          config['anchor'] = [0.33, 0.07];
+          config['anchorOrigin'] = IconOrigin.BOTTOM_LEFT;
+          config['anchorXUnits'] = IconAnchorUnits.FRACTION;
+          config['anchorYUnits'] = IconAnchorUnits.FRACTION;
+        }
+
+        if (!config['anchor'] && src.indexOf('/paddle/') > -1) {
+          if (src.indexOf('-lv') > -1) {
+            config['scale'] = 0.5;
+          } else {
+            config['anchor'] = [0.5, 0.07];
+            config['anchorOrigin'] = IconOrigin.BOTTOM_LEFT;
+            config['anchorXUnits'] = IconAnchorUnits.FRACTION;
+            config['anchorYUnits'] = IconAnchorUnits.FRACTION;
+          }
         }
       }
     }
   }
-};
-
+}
 
 /**
  * The default icon (white circle).
  * @type {string}
+ * @deprecated Please use os.style.defaults.DEFAULT_ICON instead.
  */
-os.style.IconReader.DEFAULT_ICON = os.ui.file.kml.replaceGoogleUri(os.ui.file.kml.DEFAULT_ICON_PATH);
-
+IconReader.DEFAULT_ICON = DEFAULT_ICON;
 
 /**
  * Default icon options.
  * @type {!olx.style.IconOptions}
+ * @deprecated Please use os.style.defaults.DEFAULT_ICON_OPTIONS instead.
  */
-os.style.IconReader.DEFAULT_ICON_OPTIONS = {
-  src: os.style.IconReader.DEFAULT_ICON,
+IconReader.DEFAULT_ICON_OPTIONS = DEFAULT_ICON_OPTIONS;
 
-  // clear these out so the default icon displays correctly
-  anchorOrigin: undefined,
-  anchorXUnits: undefined,
-  anchorYUnits: undefined,
-  crossOrigin: undefined,
-  offset: undefined,
-  offsetOrigin: undefined,
-  rotation: undefined,
-  size: undefined,
-  imgSize: undefined
-};
+exports = IconReader;

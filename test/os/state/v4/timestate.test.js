@@ -1,7 +1,24 @@
+goog.require('goog.math.Range');
 goog.require('goog.math.RangeSet');
+goog.require('os.state.StateManager');
+goog.require('os.state.Versions');
 goog.require('os.state.v4.TimeState');
+goog.require('os.time');
+goog.require('os.time.TimelineController');
+goog.require('os.xml');
 
 describe('os.state.v4.TimeState', function() {
+  const Range = goog.module.get('goog.math.Range');
+  const RangeSet = goog.module.get('goog.math.RangeSet');
+  const StateManager = goog.module.get('os.state.StateManager');
+  const Versions = goog.module.get('os.state.Versions');
+  const TimeState = goog.module.get('os.state.v4.TimeState');
+  const time = goog.module.get('os.time');
+  const TimelineController = goog.module.get('os.time.TimelineController');
+  const xml = goog.module.get('os.xml');
+
+  const {loadStateXsdFiles} = goog.module.get('os.test.xsd');
+
   var stateManager = null;
   var tlc = null;
   var resultSchemas = null;
@@ -13,7 +30,7 @@ describe('os.state.v4.TimeState', function() {
     // Using jasmine's async test, as we need to load the xsd files
     // that are used by xmllint.
     runs(function() {
-      os.test.xsd.loadStateXsdFiles().then(function(result) {
+      loadStateXsdFiles().then(function(result) {
         resultSchemas = result;
       }, function(err) {
         throw err;
@@ -43,7 +60,7 @@ describe('os.state.v4.TimeState', function() {
   };
 
   var getXmlLintResult = function() {
-    var seralizedDoc = os.xml.serialize(stateOptions.doc);
+    var seralizedDoc = xml.serialize(stateOptions.doc);
     return xmllint.validateXML({
       xml: seralizedDoc,
       schema: resultSchemas
@@ -110,16 +127,16 @@ describe('os.state.v4.TimeState', function() {
   };
 
   beforeEach(function() {
-    stateManager = os.state.StateManager.getInstance();
-    stateManager.setVersion(os.state.Versions.V4);
-    tlc = os.time.TimelineController.getInstance();
+    stateManager = StateManager.getInstance();
+    stateManager.setVersion(Versions.V4);
+    tlc = TimelineController.getInstance();
     resultSchemas = null;
-    state = new os.state.v4.TimeState();
+    state = new TimeState();
     stateOptions = stateManager.createStateOptions(function() {}, 'test time state', 'desc');
     xmlRootDocument = stateManager.createStateObject(function() {}, 'test time state', 'desc');
 
-    // pretend the timeline UI is in the correct open/closed state
-    spyOn(os.state.v4.TimeState, 'testUIState').andReturn(true);
+    // pretend the timeline UI is in the correct open/clos1ed state
+    spyOn(TimeState, 'testUIState').andReturn(true);
     // set up mock return true on the state isTimeLineVisible, so all elements
     // will get seralized
     spyOn(state, 'isTimeLineVisible').andCallFake(function() {
@@ -129,32 +146,32 @@ describe('os.state.v4.TimeState', function() {
 
   it('should produce a valid state file with time state', function() {
     // Ensure the timeline controler is initalized
-    var startDate = os.time.parseMoment('1970-01-01T00:16:39Z', [os.state.v4.TimeState.DATE_FORMAT], true);
-    var endDate = os.time.parseMoment('1974-03-15T02:21:41Z', [os.state.v4.TimeState.DATE_FORMAT], true);
+    var startDate = time.parseMoment('1970-01-01T00:16:39Z', [TimeState.DATE_FORMAT], true);
+    var endDate = time.parseMoment('1974-03-15T02:21:41Z', [TimeState.DATE_FORMAT], true);
     tlc.setRange(tlc.buildRange(startDate.valueOf(), endDate.valueOf()));
     tlc.setDuration('month');
     // Animate range
-    var animateStartDate = os.time.parseMoment('1971-01-01T00:16:39Z',
-        [os.state.v4.TimeState.DATE_FORMAT], true);
-    var animateEndDate = os.time.parseMoment('1973-03-15T02:21:41Z',
-        [os.state.v4.TimeState.DATE_FORMAT], true);
-    var animateRange = new goog.math.Range(animateStartDate.valueOf(), animateEndDate.valueOf());
+    var animateStartDate = time.parseMoment('1971-01-01T00:16:39Z',
+        [TimeState.DATE_FORMAT], true);
+    var animateEndDate = time.parseMoment('1973-03-15T02:21:41Z',
+        [TimeState.DATE_FORMAT], true);
+    var animateRange = new Range(animateStartDate.valueOf(), animateEndDate.valueOf());
     tlc.clearAnimateRanges();
     tlc.addAnimateRange(animateRange);
 
     // Hold range
-    var holdStartDate = os.time.parseMoment('1971-03-01T00:16:39Z',
-        [os.state.v4.TimeState.DATE_FORMAT], true);
-    var holdEndDate = os.time.parseMoment('1971-06-12T01:15:11Z',
-        [os.state.v4.TimeState.DATE_FORMAT], true);
-    var holdRange = new goog.math.Range(holdStartDate.valueOf(), holdEndDate.valueOf());
+    var holdStartDate = time.parseMoment('1971-03-01T00:16:39Z',
+        [TimeState.DATE_FORMAT], true);
+    var holdEndDate = time.parseMoment('1971-06-12T01:15:11Z',
+        [TimeState.DATE_FORMAT], true);
+    var holdRange = new Range(holdStartDate.valueOf(), holdEndDate.valueOf());
     // make sure this is empty before the test.
     tlc.clearHoldRanges();
     tlc.addHoldRange(holdRange);
 
     // Slice ranges
-    var sliceRange1 = new goog.math.Range(20, 50);
-    var sliceRange2 = new goog.math.Range(20000, 5000000);
+    var sliceRange1 = new Range(20, 50);
+    var sliceRange2 = new Range(20000, 5000000);
     tlc.addSliceRange(sliceRange1);
     tlc.addSliceRange(sliceRange2);
 
@@ -197,15 +214,15 @@ describe('os.state.v4.TimeState', function() {
       expect(tlc.setDuration.mostRecentCall.args[0]).not.toBe(duration);
 
       expect(tlc.setAnimateRanges).toHaveBeenCalled();
-      expect(goog.math.RangeSet.equals(aRanges,
+      expect(RangeSet.equals(aRanges,
           tlc.setAnimateRanges.mostRecentCall.args[0])).toBe(true);
 
       expect(tlc.setHoldRanges).toHaveBeenCalled();
-      expect(goog.math.RangeSet.equals(hRanges,
+      expect(RangeSet.equals(hRanges,
           tlc.setHoldRanges.mostRecentCall.args[0])).toBe(true);
 
       expect(tlc.setSliceRanges).toHaveBeenCalled();
-      expect(goog.math.RangeSet.equals(sRanges,
+      expect(RangeSet.equals(sRanges,
           tlc.setSliceRanges.mostRecentCall.args[0])).toBe(true);
 
       expect(tlc.setCurrent).toHaveBeenCalled();

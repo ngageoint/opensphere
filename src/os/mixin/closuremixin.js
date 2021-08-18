@@ -1,12 +1,12 @@
 /**
- * @fileoverview Replacing Closure goog.object functions to check hasOwnProperty. This makes the functions work with
+ * @fileoverview Replacing Closure googObject functions to check hasOwnProperty. This makes the functions work with
  *               polyfills to Array and Object.
  */
+goog.module('os.mixin.closure');
+goog.module.declareLegacyNamespace();
 
-goog.provide('os.mixin.closure');
-
-goog.require('goog.html.TrustedResourceUrl');
-goog.require('goog.object');
+const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
+const googObject = goog.require('goog.object');
 
 
 /**
@@ -18,7 +18,7 @@ goog.require('goog.object');
  *
  * @suppress {duplicate}
  */
-goog.object.clone = function(obj) {
+googObject.clone = function(obj) {
   // We cannot use the prototype trick because a lot of methods depend on where
   // the actual key is set.
 
@@ -45,7 +45,7 @@ goog.object.clone = function(obj) {
  *
  * @suppress {duplicate}
  */
-goog.object.forEach = function(obj, f, opt_obj) {
+googObject.forEach = function(obj, f, opt_obj) {
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) {
       f.call(/** @type {?} */ (opt_obj), obj[key], key, obj);
@@ -65,7 +65,7 @@ goog.object.forEach = function(obj, f, opt_obj) {
  *
  * @suppress {duplicate}
  */
-goog.object.getCount = function(obj) {
+googObject.getCount = function(obj) {
   // JS1.5 has __count__ but it has been deprecated so it raises a warning...
   // in other words do not use. Also __count__ only includes the fields on the
   // actual object and not in the prototype chain.
@@ -89,7 +89,7 @@ goog.object.getCount = function(obj) {
  *
  * @suppress {duplicate}
  */
-goog.object.getKeys = function(obj) {
+googObject.getKeys = function(obj) {
   var res = [];
   var i = 0;
   for (var key in obj) {
@@ -112,7 +112,7 @@ goog.object.getKeys = function(obj) {
  *
  * @suppress {duplicate}
  */
-goog.object.getValues = function(obj) {
+googObject.getValues = function(obj) {
   var res = [];
   var i = 0;
   for (var key in obj) {
@@ -132,7 +132,7 @@ goog.object.getValues = function(obj) {
  *
  * @suppress {duplicate}
  */
-goog.object.isEmpty = function(obj) {
+googObject.isEmpty = function(obj) {
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) {
       return false;
@@ -158,7 +158,7 @@ goog.object.isEmpty = function(obj) {
  *
  * @suppress {duplicate}
  */
-goog.object.unsafeClone = function(obj) {
+googObject.unsafeClone = function(obj) {
   var type = goog.typeOf(obj);
   if (type == 'object' || type == 'array') {
     if (obj.clone) {
@@ -167,7 +167,7 @@ goog.object.unsafeClone = function(obj) {
     var clone = type == 'array' ? [] : {};
     for (var key in obj) {
       if (obj.hasOwnProperty(key)) {
-        clone[key] = goog.object.unsafeClone(obj[key]);
+        clone[key] = googObject.unsafeClone(obj[key]);
       }
     }
     return clone;
@@ -185,7 +185,7 @@ goog.object.unsafeClone = function(obj) {
  *
  * @suppress {accessControls|const}
  */
-os.mixin.replaceTrustedResourceUrl = function() {
-  goog.html.TrustedResourceUrl.BASE_URL_ = new RegExp('');
+const replaceTrustedResourceUrl = function() {
+  TrustedResourceUrl.BASE_URL_ = new RegExp('');
 };
-os.mixin.replaceTrustedResourceUrl();
+replaceTrustedResourceUrl();

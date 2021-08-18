@@ -1,20 +1,22 @@
 /**
- * @fileoverview Modifications to {@link ol.Feature}.
+ * @fileoverview Modifications to {@link Feature}.
  */
-goog.provide('os.mixin.feature');
+goog.module('os.mixin.feature');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.Feature');
-goog.require('ol.style.Style');
-goog.require('os.data.FeatureEvent');
-goog.require('os.registerClass');
+const Feature = goog.require('ol.Feature');
+const Style = goog.require('ol.style.Style');
+const dispatcher = goog.require('os.Dispatcher');
+const {registerClass} = goog.require('os.classRegistry');
+const FeatureEvent = goog.require('os.data.FeatureEvent');
 
 
 /**
- * Enable use of os.instanceOf to detect an ol.Feature.
+ * Enable use of instanceOf to detect an Feature.
  * @type {string}
  */
-ol.Feature.NAME = 'ol.Feature';
-os.registerClass(ol.Feature.NAME, ol.Feature);
+Feature.NAME = 'ol.Feature';
+registerClass(Feature.NAME, Feature);
 
 
 /**
@@ -23,7 +25,7 @@ os.registerClass(ol.Feature.NAME, ol.Feature);
  * @override
  * @suppress {accessControls}
  */
-ol.Feature.prototype.set = function(key, value, opt_silent) {
+Feature.prototype.set = function(key, value, opt_silent) {
   if (value === undefined) {
     delete this.values_[key];
   } else {
@@ -38,7 +40,7 @@ ol.Feature.prototype.set = function(key, value, opt_silent) {
  * @override
  * @suppress {accessControls}
  */
-ol.Feature.prototype.unset = function(key, opt_silent) {
+Feature.prototype.unset = function(key, opt_silent) {
   delete this.values_[key];
 };
 
@@ -46,11 +48,11 @@ ol.Feature.prototype.unset = function(key, opt_silent) {
 /**
  * For the love of god, don't clone the style!!
  *
- * @return {!ol.Feature} The clone.
+ * @return {!Feature} The clone.
  * @suppress {duplicate|accessControls}
  */
-ol.Feature.prototype.clone = function() {
-  var clone = new ol.Feature();
+Feature.prototype.clone = function() {
+  var clone = new Feature();
   clone.setProperties(this.values_, true);
   clone.setGeometryName(this.getGeometryName());
   var geometry = this.getGeometry();
@@ -66,11 +68,10 @@ ol.Feature.prototype.clone = function() {
  * We don't use style functions, and creating a new one every time the style changes is expensive. This is a much
  * simpler version that still does its job.
  *
- * @param {ol.style.Style|Array.<ol.style.Style>|
- *     ol.FeatureStyleFunction} style Style for this feature.
+ * @param {Style|Array<Style>|ol.FeatureStyleFunction} style Style for this feature.
  * @suppress {accessControls|duplicate}
  */
-ol.Feature.prototype.setStyle = function(style) {
+Feature.prototype.setStyle = function(style) {
   this.style_ = style;
   this.styleFunction_ = style ? this.getStyleFn : undefined;
 };
@@ -81,15 +82,15 @@ ol.Feature.prototype.setStyle = function(style) {
  * function every time setStyle is called.
  *
  * @param {number} resolution
- * @return {Array<ol.style.Style>}
+ * @return {Array<Style>}
  * @suppress {accessControls}
  */
-ol.Feature.prototype.getStyleFn = function(resolution) {
-  if (this.style_ instanceof ol.style.Style) {
+Feature.prototype.getStyleFn = function(resolution) {
+  if (this.style_ instanceof Style) {
     return [this.style_];
   } else if (typeof this.style_ == 'function') {
     var style = this.style_(resolution);
-    return style ? (style instanceof ol.style.Style ? [style] : style) : [];
+    return style ? (style instanceof Style ? [style] : style) : [];
   } else {
     return this.style_;
   }
@@ -99,7 +100,7 @@ ol.Feature.prototype.getStyleFn = function(resolution) {
 /**
  * @inheritDoc
  */
-ol.Feature.prototype.eventsEnabled = false;
+Feature.prototype.eventsEnabled = false;
 
 
 /**
@@ -108,7 +109,7 @@ ol.Feature.prototype.eventsEnabled = false;
  *
  * @type {number}
  */
-ol.Feature.nextId = 0;
+Feature.nextId = 0;
 
 
 /**
@@ -119,11 +120,11 @@ ol.Feature.nextId = 0;
  * {@link ol.source.Vector#getFeatureById} method.
  * @suppress {accessControls|duplicate|checkTypes}
  */
-ol.Feature.prototype.setId = function(id) {
+Feature.prototype.setId = function(id) {
   this.id_ = id;
 
   if (this['id'] == null) {
-    this['id'] = ol.Feature.nextId++;
+    this['id'] = Feature.nextId++;
   }
 
   this.changed();
@@ -134,9 +135,9 @@ ol.Feature.prototype.setId = function(id) {
  * @return {number} The unique feature ID per session
  * @suppress {checkTypes}
  */
-ol.Feature.prototype.getUid = function() {
+Feature.prototype.getUid = function() {
   if (this['id'] == null) {
-    this['id'] = ol.Feature.nextId++;
+    this['id'] = Feature.nextId++;
   }
 
   return this['id'];
@@ -152,6 +153,6 @@ ol.Feature.prototype.getUid = function() {
  * @param {*} oldVal The old value
  * @suppress {checkTypes}
  */
-ol.Feature.prototype.dispatchFeatureEvent = function(type, newVal, oldVal) {
-  os.dispatcher.dispatchEvent(new os.data.FeatureEvent(type, this['id'], newVal, oldVal));
+Feature.prototype.dispatchFeatureEvent = function(type, newVal, oldVal) {
+  dispatcher.getInstance().dispatchEvent(new FeatureEvent(type, this['id'], newVal, oldVal));
 };

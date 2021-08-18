@@ -1,8 +1,13 @@
+goog.require('ol.style.Stroke');
 goog.require('os.style.StrokeReader');
 
 
 describe('os.style.StrokeReader', function() {
-  var config, reader;
+  const Stroke = goog.module.get('ol.style.Stroke');
+  const StrokeReader = goog.module.get('os.style.StrokeReader');
+
+  var config;
+  var reader;
 
   beforeEach(function() {
     config = {
@@ -11,7 +16,7 @@ describe('os.style.StrokeReader', function() {
       bogus: true
     };
 
-    reader = new os.style.StrokeReader();
+    reader = new StrokeReader();
   });
 
   it('should create a stroke without the cache', function() {
@@ -38,7 +43,7 @@ describe('os.style.StrokeReader', function() {
 
   it('should convert a style to config', function() {
     var config = {};
-    var style = new ol.style.Stroke({
+    var style = new Stroke({
       color: 'rgba(255,0,255,1)'
     });
 
@@ -46,7 +51,7 @@ describe('os.style.StrokeReader', function() {
     expect(config.stroke.color).toBe(style.getColor());
     expect(config.stroke.width).toBe(undefined);
 
-    style = new ol.style.Stroke({
+    style = new Stroke({
       color: 'rgba(0,0,0,1)',
       width: 2
     });

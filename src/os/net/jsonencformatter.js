@@ -1,70 +1,72 @@
-goog.provide('os.net.JsonEncFormatter');
-goog.require('os.net.IDataFormatter');
+goog.module('os.net.JsonEncFormatter');
+goog.module.declareLegacyNamespace();
 
+const IDataFormatter = goog.requireType('os.net.IDataFormatter');
 
 
 /**
  * Creates an application/json payload
  *
- * @implements {os.net.IDataFormatter}
- * @param {Object=} opt_content The JSON object to format.
- * @param {?function(string, *)=} opt_replacer The JSON object to format.
- * @constructor
+ * @implements {IDataFormatter}
  */
-os.net.JsonEncFormatter = function(opt_content, opt_replacer) {
+class JsonEncFormatter {
   /**
-   * @type {*}
-   * @private
+   * Constructor.
+   * @param {Object=} opt_content The JSON object to format.
+   * @param {?function(string, *)=} opt_replacer The JSON object to format.
    */
-  this.content_ = opt_content;
+  constructor(opt_content, opt_replacer) {
+    /**
+     * @type {*}
+     * @private
+     */
+    this.content_ = opt_content;
 
+
+    /**
+     * @type {?function(string, *)}
+     * @private
+     */
+    this.replacer_ = opt_replacer || null;
+  }
 
   /**
-   * @type {?function(string, *)}
-   * @private
+   * @return {*}
    */
-  this.replacer_ = opt_replacer || null;
-};
+  getContent() {
+    return this.content_;
+  }
 
+  /**
+   * @param {*} content
+   */
+  setContent(content) {
+    this.content_ = content;
+  }
 
-/**
- * @return {*}
- */
-os.net.JsonEncFormatter.prototype.getContent = function() {
-  return this.content_;
-};
+  /**
+   * @inheritDoc
+   */
+  getContentType() {
+    return 'application/json;charset=UTF-8';
+  }
 
+  /**
+   * Sets the replacer function called for each (key, value) pair that determines how
+   * the value should be serialized.
+   *
+   * @param {?function(string, *)} replacer
+   */
+  setReplacer(replacer) {
+    this.replacer_ = replacer;
+  }
 
-/**
- * @param {*} content
- */
-os.net.JsonEncFormatter.prototype.setContent = function(content) {
-  this.content_ = content;
-};
+  /**
+   * @inheritDoc
+   */
+  format(uri) {
+    return JSON.stringify(this.content_, this.replacer_);
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.net.JsonEncFormatter.prototype.getContentType = function() {
-  return 'application/json;charset=UTF-8';
-};
-
-
-/**
- * Sets the replacer function called for each (key, value) pair that determines how
- * the value should be serialized.
- *
- * @param {?function(string, *)} replacer
- */
-os.net.JsonEncFormatter.prototype.setReplacer = function(replacer) {
-  this.replacer_ = replacer;
-};
-
-
-/**
- * @inheritDoc
- */
-os.net.JsonEncFormatter.prototype.format = function(uri) {
-  return JSON.stringify(this.content_, this.replacer_);
-};
+exports = JsonEncFormatter;

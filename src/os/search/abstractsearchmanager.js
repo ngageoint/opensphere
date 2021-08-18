@@ -1,321 +1,309 @@
-goog.provide('os.search.AbstractSearchManager');
+goog.module('os.search.AbstractSearchManager');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Event');
-goog.require('goog.events.EventTarget');
-goog.require('os.user.settings.FavoriteManager');
+const {defaultCompare} = goog.require('goog.array');
+const GoogEvent = goog.require('goog.events.Event');
+const EventTarget = goog.require('goog.events.EventTarget');
+const {hashCode} = goog.require('goog.string');
+const SearchEventType = goog.require('os.search.SearchEventType');
+const FavoriteManager = goog.require('os.user.settings.FavoriteManager');
+const FavoriteType = goog.require('os.user.settings.FavoriteType');
 
+const Favorite = goog.requireType('os.search.Favorite');
+const ISearch = goog.requireType('os.search.ISearch');
+const ISearchResult = goog.requireType('os.search.ISearchResult');
+const SearchEvent = goog.requireType('os.search.SearchEvent');
+const FavoriteSetting = goog.requireType('os.user.settings.favorite');
 
 
 /**
  * Responsible for executing search terms against the registered search managers
  *
  * @abstract
- * @param {string=} opt_id
- * @param {string=} opt_name
- * @extends {goog.events.EventTarget}
- * @constructor
  */
-os.search.AbstractSearchManager = function(opt_id, opt_name) {
-  os.search.AbstractSearchManager.base(this, 'constructor');
+class AbstractSearchManager extends EventTarget {
   /**
-   * @type {string}
-   * @private
+   * Constructor.
+   * @param {string=} opt_id
+   * @param {string=} opt_name
    */
-  this.id_ = opt_id || 'default';
+  constructor(opt_id, opt_name) {
+    super();
+    /**
+     * @type {string}
+     * @private
+     */
+    this.id_ = opt_id || 'default';
 
-  /**
-   * @type {string}
-   * @private
-   */
-  this.name_ = opt_name || this.id_;
+    /**
+     * @type {string}
+     * @private
+     */
+    this.name_ = opt_name || this.id_;
 
-  /**
-   * @type {string}
-   * @private
-   */
-  this.term_ = '';
+    /**
+     * @type {string}
+     * @private
+     */
+    this.term_ = '';
 
-  /**
-   * @type {string}
-   * @private
-   */
-  this.sortBy_ = '';
+    /**
+     * @type {string}
+     * @private
+     */
+    this.sortBy_ = '';
 
-  /**
-   * @type {?Function}
-   * @private
-   */
-  this.noResultClass_ = null;
+    /**
+     * @type {?Function}
+     * @private
+     */
+    this.noResultClass_ = null;
 
-  /**
-   * Function to filter out favorites
-   * @type {function (Array<os.user.settings.favorite>): Array<os.search.Favorite>}
-   * @private
-   */
-  this.filterFavorites_ = this.defaultFilterFavorites_;
-};
-goog.inherits(os.search.AbstractSearchManager, goog.events.EventTarget);
-
-
-/**
- * Get the search manager id
- *
- * @return {string}
- * @export
- */
-os.search.AbstractSearchManager.prototype.getId = function() {
-  return this.id_;
-};
-
-
-/**
- * Get the search manager id hash code
- *
- * @return {number}
- * @export
- */
-os.search.AbstractSearchManager.prototype.getIdHashCode = function() {
-  return goog.string.hashCode(this.id_);
-};
-
-
-/**
- * Get the search manager name
- *
- * @return {string}
- * @export
- */
-os.search.AbstractSearchManager.prototype.getName = function() {
-  return this.name_;
-};
-
-
-/**
- * Get the function to determine no result class.
- *
- * @return {Function}
- */
-os.search.AbstractSearchManager.prototype.getNoResultClass = function() {
-  return this.noResultClass_;
-};
-
-
-/**
- * @param {Function} noResultClass
- */
-os.search.AbstractSearchManager.prototype.setNoResultClass = function(noResultClass) {
-  this.noResultClass_ = noResultClass;
-};
-
-
-/**
- * Sets the last term.
- *
- * @param {string} term
- */
-os.search.AbstractSearchManager.prototype.setTerm = function(term) {
-  this.term_ = term;
-};
-
-
-/**
- * Gets the last term.
- *
- * @return {string}
- */
-os.search.AbstractSearchManager.prototype.getTerm = function() {
-  return this.term_;
-};
-
-
-/**
- * Sets the sort term.
- *
- * @param {string} sortBy
- */
-os.search.AbstractSearchManager.prototype.setSort = function(sortBy) {
-  this.sortBy_ = sortBy;
-};
-
-
-/**
- * Gets the sort term.
- *
- * @return {string}
- */
-os.search.AbstractSearchManager.prototype.getSort = function() {
-  return this.sortBy_;
-};
-
-
-/**
- * Gets favorite searches
- *
- * @param {number=} opt_max max number of reusltes to return.
- * @return {Array<os.search.Favorite>} array of favorite items
- */
-os.search.AbstractSearchManager.prototype.getFavorites = function(opt_max) {
-  var favorites = [];
-  if (this.filterFavorites_) {
-    const fm = os.user.settings.FavoriteManager.getInstance();
-    favorites = this.filterFavorites_(fm.filter(fm.getFavorites(), [os.user.settings.FavoriteType.SEARCH], opt_max));
+    /**
+     * Function to filter out favorites
+     * @type {function (Array<FavoriteSetting>): Array<Favorite>}
+     * @private
+     */
+    this.filterFavorites_ = this.defaultFilterFavorites_;
   }
 
-  return favorites;
-};
+  /**
+   * Get the search manager id
+   *
+   * @return {string}
+   * @export
+   */
+  getId() {
+    return this.id_;
+  }
 
+  /**
+   * Get the search manager id hash code
+   *
+   * @return {number}
+   * @export
+   */
+  getIdHashCode() {
+    return hashCode(this.id_);
+  }
 
-/**
- * register the filter favorites function
- *
- * @param {function (Array<os.user.settings.favorite>): Array<os.search.Favorite>} fn
- */
-os.search.AbstractSearchManager.prototype.registerFilterFavoritesFn = function(fn) {
-  this.filterFavorites_ = fn;
-};
+  /**
+   * Get the search manager name
+   *
+   * @return {string}
+   * @export
+   */
+  getName() {
+    return this.name_;
+  }
 
+  /**
+   * Get the function to determine no result class.
+   *
+   * @return {Function}
+   */
+  getNoResultClass() {
+    return this.noResultClass_;
+  }
 
-/**
- * Handle autocomplete failure event for a single search provider.
- *
- * @param {os.search.SearchEvent} event
- * @protected
- */
-os.search.AbstractSearchManager.prototype.handleAutocompleteFailure = function(event) {
-  this.dispatchEvent(new goog.events.Event(os.search.SearchEventType.AUTOCOMPLETEFAIL));
-};
+  /**
+   * @param {Function} noResultClass
+   */
+  setNoResultClass(noResultClass) {
+    this.noResultClass_ = noResultClass;
+  }
 
+  /**
+   * Sets the last term.
+   *
+   * @param {string} term
+   */
+  setTerm(term) {
+    this.term_ = term;
+  }
 
-/**
- * Compares two search results by their score, for sorting in descending order.
- *
- * @param {os.search.ISearchResult} a First result
- * @param {os.search.ISearchResult} b Second result
- * @return {number}
- * @protected
- */
-os.search.AbstractSearchManager.prototype.scoreCompare = function(a, b) {
-  // default is ascending order, so flip the sign
-  return -goog.array.defaultCompare(a.getScore(), b.getScore());
-};
+  /**
+   * Gets the last term.
+   *
+   * @return {string}
+   */
+  getTerm() {
+    return this.term_;
+  }
 
+  /**
+   * Sets the sort term.
+   *
+   * @param {string} sortBy
+   */
+  setSort(sortBy) {
+    this.sortBy_ = sortBy;
+  }
 
-/**
- * Filter favorites to only enabled providers
- *
- * @param {Array<os.user.settings.favorite>} favorites
- * @return {Array<os.search.Favorite>}
- * @private
- */
-os.search.AbstractSearchManager.prototype.defaultFilterFavorites_ = function(favorites) {
-  return [];
-};
+  /**
+   * Gets the sort term.
+   *
+   * @return {string}
+   */
+  getSort() {
+    return this.sortBy_;
+  }
 
+  /**
+   * Gets favorite searches
+   *
+   * @param {number=} opt_max max number of reusltes to return.
+   * @return {Array<Favorite>} array of favorite items
+   */
+  getFavorites(opt_max) {
+    var favorites = [];
+    if (this.filterFavorites_) {
+      const fm = FavoriteManager.getInstance();
+      favorites = this.filterFavorites_(fm.filter(fm.getFavorites(), [FavoriteType.SEARCH], opt_max));
+    }
 
-/**
- * Is the search manager a container for other search managers
- *
- * @return {boolean}
- */
-os.search.AbstractSearchManager.prototype.isContainer = function() {
-  return false;
-};
+    return favorites;
+  }
 
+  /**
+   * register the filter favorites function
+   *
+   * @param {function (Array<FavoriteSetting>): Array<Favorite>} fn
+   */
+  registerFilterFavoritesFn(fn) {
+    this.filterFavorites_ = fn;
+  }
 
-/**
- * Execute search using registered searches.
- *
- * @abstract
- * @param {string} term The keyword search term
- * @param {number=} opt_start The index of the search results page
- * @param {number=} opt_pageSize The number of results to include per page
- * @param {string=} opt_sortBy The sort by string
- * @param {boolean=} opt_force Force a search
- * @param {boolean=} opt_noFacets flag for indicating facet search is not needed
- * @param {string=} opt_sortOrder The sort order
- */
-os.search.AbstractSearchManager.prototype.search = function(term, opt_start, opt_pageSize, opt_sortBy, opt_force,
-    opt_noFacets, opt_sortOrder) {};
+  /**
+   * Handle autocomplete failure event for a single search provider.
+   *
+   * @param {SearchEvent} event
+   * @protected
+   */
+  handleAutocompleteFailure(event) {
+    this.dispatchEvent(new GoogEvent(SearchEventType.AUTOCOMPLETEFAIL));
+  }
 
+  /**
+   * Compares two search results by their score, for sorting in descending order.
+   *
+   * @param {ISearchResult} a First result
+   * @param {ISearchResult} b Second result
+   * @return {number}
+   * @protected
+   */
+  scoreCompare(a, b) {
+    // default is ascending order, so flip the sign
+    return -defaultCompare(a.getScore(), b.getScore());
+  }
 
-/**
- * Requests autocomplete results from a search term.
- *
- * @abstract
- * @param {string} term The keyword to use in the search
- * @param {number=} opt_maxResults The maximum number of autocomplete results.
- */
-os.search.AbstractSearchManager.prototype.autocomplete = function(term, opt_maxResults) {};
+  /**
+   * Filter favorites to only enabled providers
+   *
+   * @param {Array<FavoriteSetting>} favorites
+   * @return {Array<Favorite>}
+   * @private
+   */
+  defaultFilterFavorites_(favorites) {
+    return [];
+  }
 
+  /**
+   * Is the search manager a container for other search managers
+   *
+   * @return {boolean}
+   */
+  isContainer() {
+    return false;
+  }
 
-/**
- * Clear the search results.
- *
- * @abstract
- * @param {string=} opt_term A default search term. If not provided, the term will be cleared.
- */
-os.search.AbstractSearchManager.prototype.clear = function(opt_term) {};
+  /**
+   * Execute search using registered searches.
+   *
+   * @abstract
+   * @param {string} term The keyword search term
+   * @param {number=} opt_start The index of the search results page
+   * @param {number=} opt_pageSize The number of results to include per page
+   * @param {string=} opt_sortBy The sort by string
+   * @param {boolean=} opt_force Force a search
+   * @param {boolean=} opt_noFacets flag for indicating facet search is not needed
+   * @param {string=} opt_sortOrder The sort order
+   */
+  search(term, opt_start, opt_pageSize, opt_sortBy, opt_force, opt_noFacets, opt_sortOrder) {}
 
+  /**
+   * Requests autocomplete results from a search term.
+   *
+   * @abstract
+   * @param {string} term The keyword to use in the search
+   * @param {number=} opt_maxResults The maximum number of autocomplete results.
+   */
+  autocomplete(term, opt_maxResults) {}
 
-/**
- * Retrieve the total number of search results
- *
- * @abstract
- * @return {number}
- */
-os.search.AbstractSearchManager.prototype.getTotal = function() {};
+  /**
+   * Clear the search results.
+   *
+   * @abstract
+   * @param {string=} opt_term A default search term. If not provided, the term will be cleared.
+   */
+  clear(opt_term) {}
 
+  /**
+   * Retrieve the total number of search results
+   *
+   * @abstract
+   * @return {number}
+   */
+  getTotal() {}
 
-/**
- * Retrieve the identifying names of all the registered searches.
- *
- * @abstract
- * @param {boolean=} opt_excludeExternal
- * @return {!Array<!os.search.ISearch>}
- */
-os.search.AbstractSearchManager.prototype.getRegisteredSearches = function(opt_excludeExternal) {};
+  /**
+   * Retrieve the identifying names of all the registered searches.
+   *
+   * @abstract
+   * @param {boolean=} opt_excludeExternal
+   * @return {!Array<!ISearch>}
+   */
+  getRegisteredSearches(opt_excludeExternal) {}
 
+  /**
+   * Get the search providers that are currently enabled, and
+   * optionally support the search term.
+   *
+   * @abstract
+   * @param {string=} opt_term
+   * @return {!Array<!ISearch>}
+   */
+  getEnabledSearches(opt_term) {}
 
-/**
- * Get the search providers that are currently enabled, and
- * optionally support the search term.
- *
- * @abstract
- * @param {string=} opt_term
- * @return {!Array<!os.search.ISearch>}
- */
-os.search.AbstractSearchManager.prototype.getEnabledSearches = function(opt_term) {};
+  /**
+   * Retrieve search results as they have been captured be all searches or for a specitic search
+   *
+   * @abstract
+   * @param {number=} opt_limit
+   * @return {Array} A shallow copy of the search results
+   */
+  getResults(opt_limit) {}
 
+  /**
+   * Force events to fire indicating whether there is a search in progress.
+   *
+   * @abstract
+   */
+  checkProgress() {}
 
-/**
- * Retrieve search results as they have been captured be all searches or for a specitic search
- *
- * @abstract
- * @param {number=} opt_limit
- * @return {Array} A shallow copy of the search results
- */
-os.search.AbstractSearchManager.prototype.getResults = function(opt_limit) {};
+  /**
+   * Gets the providers still loading.
+   *
+   * @abstract
+   * @return {!Object<string, boolean>} object of loading providers
+   */
+  getLoading() {}
 
+  /**
+   * @abstract
+   * @return {boolean} whether providers are still loading
+   */
+  isLoading() {}
+}
 
-/**
- * Force events to fire indicating whether there is a search in progress.
- *
- * @abstract
- */
-os.search.AbstractSearchManager.prototype.checkProgress = function() {};
-
-
-/**
- * Gets the providers still loading.
- *
- * @abstract
- * @return {!Object<string, boolean>} object of loading providers
- */
-os.search.AbstractSearchManager.prototype.getLoading = function() {};
-
-
-/**
- * @abstract
- * @return {boolean} whether providers are still loading
- */
-os.search.AbstractSearchManager.prototype.isLoading = function() {};
+exports = AbstractSearchManager;

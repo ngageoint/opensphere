@@ -1,38 +1,32 @@
-goog.provide('os.query.SpatialQueryEvent');
-goog.provide('os.query.SpatialQueryEventType');
-goog.require('goog.events.Event');
-goog.require('ol.Feature');
+goog.module('os.query.SpatialQueryEvent');
+goog.module.declareLegacyNamespace();
+
+const GoogEvent = goog.require('goog.events.Event');
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
- * @enum {string}
  */
-os.query.SpatialQueryEventType = {
-  ADDED: 'queryAdded',
-  REMOVED: 'queryRemoved',
-  CLEARED: 'queriesCleared'
-};
-
-
-
-/**
- * @param {string} type
- * @param {ol.Feature=} opt_query
- * @param {boolean=} opt_append
- * @extends {goog.events.Event}
- * @constructor
- */
-os.query.SpatialQueryEvent = function(type, opt_query, opt_append) {
-  os.query.SpatialQueryEvent.base(this, 'constructor', type);
-
+class SpatialQueryEvent extends GoogEvent {
   /**
-   * @type {?ol.Feature}
+   * Constructor.
+   * @param {string} type
+   * @param {Feature=} opt_query
+   * @param {boolean=} opt_append
    */
-  this.query = opt_query || null;
+  constructor(type, opt_query, opt_append) {
+    super(type);
 
-  /**
-   * @type {boolean}
-   */
-  this.append = opt_append !== undefined ? opt_append : false;
-};
-goog.inherits(os.query.SpatialQueryEvent, goog.events.Event);
+    /**
+     * @type {?Feature}
+     */
+    this.query = opt_query || null;
+
+    /**
+     * @type {boolean}
+     */
+    this.append = opt_append !== undefined ? opt_append : false;
+  }
+}
+
+exports = SpatialQueryEvent;

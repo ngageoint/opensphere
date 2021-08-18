@@ -4,10 +4,13 @@ goog.require('os.ogc.wps');
 goog.require('os.time');
 
 describe('os.net.VariableReplacer', function() {
-  var vr = new os.net.VariableReplacer();
+  const Uri = goog.module.get('goog.Uri');
+  const VariableReplacer = goog.module.get('os.net.VariableReplacer');
+
+  var vr = new VariableReplacer();
 
   it('should register replacement functions', function() {
-    var uri = new goog.Uri('/path/{echo:foo}/?name={echo:bar}');
+    var uri = new Uri('/path/{echo:foo}/?name={echo:bar}');
     // force a QD decode
     uri.getQueryData().get('name');
 
@@ -23,7 +26,7 @@ describe('os.net.VariableReplacer', function() {
       return p1;
     };
 
-    os.net.VariableReplacer.add('echo', fn);
+    VariableReplacer.add('echo', fn);
 
     vr.modify(uri);
     expect(uri.toString()).toBe('/path/foo/?name=bar');
@@ -31,7 +34,7 @@ describe('os.net.VariableReplacer', function() {
 
   it('should replace time variables', function() {
     // the time replacement is provided by os.ogc.wps
-    var uri = new goog.Uri();
+    var uri = new Uri();
     var qd = uri.getQueryData();
 
     qd.set('start', '{time:start, Today}');
@@ -52,7 +55,7 @@ describe('os.net.VariableReplacer', function() {
 
   it('should replace now variables', function() {
     // the now replacement is provided by os.time
-    var uri = new goog.Uri();
+    var uri = new Uri();
     var qd = uri.getQueryData();
 
     qd.set('now', '{now}');

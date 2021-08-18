@@ -1,6 +1,7 @@
-goog.provide('os.mixin.ResolutionConstraint');
+goog.module('os.mixin.ResolutionConstraint');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.ResolutionConstraint');
+const ResolutionConstraint = goog.require('ol.ResolutionConstraint');
 
 
 /**
@@ -20,7 +21,7 @@ goog.require('ol.ResolutionConstraint');
  * @return {ol.ResolutionConstraintType} Zoom function.
  * @suppress {accessControls|duplicate}
  */
-ol.ResolutionConstraint.createSnapToPower = function(power, maxResolution, opt_maxLevel) {
+ResolutionConstraint.createSnapToPower = function(power, maxResolution, opt_maxLevel) {
   return (
     /**
      * @param {number|undefined} resolution Resolution.

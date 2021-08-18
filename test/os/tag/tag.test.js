@@ -1,12 +1,15 @@
-goog.require('os.tag');
 goog.require('goog.dom');
+goog.require('os.tag');
 
 describe('os.tag', function() {
+  const dom = goog.module.get('goog.dom');
+  const tag = goog.module.get('os.tag');
+
   var tagString = '  a  , b,   c  d  ,  e   ';
   var tagArray = ['a', 'b', 'c'];
 
   it('converts a tag string to an array', function() {
-    var arr = os.tag.tagsFromString(tagString);
+    var arr = tag.tagsFromString(tagString);
     expect(arr.length).toBe(4);
     expect(arr[0]).toBe('a');
     expect(arr[1]).toBe('b');
@@ -15,44 +18,44 @@ describe('os.tag', function() {
   });
 
   it('converts a tag array to a string', function() {
-    var str = os.tag.stringFromTags(tagArray);
+    var str = tag.stringFromTags(tagArray);
     expect(str).toBe('a, b, c');
   });
 
   it('converts an tag string/array to an XML element', function() {
     // test converting a string to an element, using the default root tag
-    var strEl = os.tag.xmlFromTags(tagString);
+    var strEl = tag.xmlFromTags(tagString);
     expect(strEl instanceof Element).toBe(true);
-    expect(strEl.localName).toBe(os.tag.DEFAULT_XML_ROOT);
+    expect(strEl.localName).toBe(tag.DEFAULT_XML_ROOT);
 
-    var children = goog.dom.getChildren(strEl);
+    var children = dom.getChildren(strEl);
     expect(children).not.toBeNull();
     expect(children.length).toBe(4);
 
-    var arr = os.tag.tagsFromString(tagString);
+    var arr = tag.tagsFromString(tagString);
     for (var i = 0, n = children.length; i < n; i++) {
-      expect(children[i].localName).toBe(os.tag.DEFAULT_XML_TAG);
+      expect(children[i].localName).toBe(tag.DEFAULT_XML_TAG);
       expect(children[i].textContent).toBe(arr[i]);
     }
 
     // test converting an array to an element, now using a custom root tag
     var customTag = 'my-tags';
-    var arrEl = os.tag.xmlFromTags(tagArray, customTag);
+    var arrEl = tag.xmlFromTags(tagArray, customTag);
     expect(arrEl instanceof Element).toBe(true);
     expect(arrEl.localName).toBe(customTag);
 
-    var children = goog.dom.getChildren(arrEl);
+    var children = dom.getChildren(arrEl);
     expect(children).not.toBeNull();
     expect(children.length).toBe(3);
     for (var i = 0, n = children.length; i < n; i++) {
-      expect(children[i].localName).toBe(os.tag.DEFAULT_XML_TAG);
+      expect(children[i].localName).toBe(tag.DEFAULT_XML_TAG);
       expect(children[i].textContent).toBe(tagArray[i]);
     }
   });
 
   it('converts an XML element to a tag array', function() {
-    var arrEl = os.tag.xmlFromTags(tagArray);
-    var tags = os.tag.tagsFromXML(arrEl);
+    var arrEl = tag.xmlFromTags(tagArray);
+    var tags = tag.tagsFromXML(arrEl);
 
     expect(tags).not.toBeNull();
     expect(tags.length).toBe(tagArray.length);
@@ -63,8 +66,8 @@ describe('os.tag', function() {
   });
 
   it('converts an XML element to a tag string', function() {
-    var arrEl = os.tag.xmlFromTags(tagArray);
-    var str = os.tag.stringFromXML(arrEl);
+    var arrEl = tag.xmlFromTags(tagArray);
+    var str = tag.stringFromXML(arrEl);
     expect(str).toBe('a, b, c');
   });
 });

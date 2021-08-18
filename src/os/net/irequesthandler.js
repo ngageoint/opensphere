@@ -1,9 +1,11 @@
-goog.provide('os.net.IRequestHandler');
-goog.require('goog.Uri');
-goog.require('goog.disposable.IDisposable');
-goog.require('goog.events.Listenable');
-goog.require('os.net.IDataFormatter');
+goog.module('os.net.IRequestHandler');
+goog.module.declareLegacyNamespace();
 
+const Uri = goog.requireType('goog.Uri');
+const IDisposable = goog.requireType('goog.disposable.IDisposable');
+const Listenable = goog.requireType('goog.events.Listenable');
+const ResponseType = goog.requireType('goog.net.XhrIo.ResponseType');
+const IDataFormatter = goog.requireType('os.net.IDataFormatter');
 
 
 /**
@@ -13,103 +15,91 @@ goog.require('os.net.IDataFormatter');
  * request failure.
  *
  * @interface
- * @extends {goog.events.Listenable}
- * @extends {goog.disposable.IDisposable}
+ * @extends {Listenable}
+ * @extends {IDisposable}
  */
-os.net.IRequestHandler = function() {};
+class IRequestHandler {
+  /**
+   * The score for this handler. Handlers will be tried in descending order
+   * of score.
+   * @return {number} The score
+   */
+  getScore() {}
 
+  /**
+   * Whether or not this handler can handle the given method and URI.
+   * @param {string} method The method for the request
+   * @param {Uri} uri The URI
+   * @return {boolean} True for can handle, false otherwise.
+   */
+  handles(method, uri) {}
 
-/**
- * The score for this handler. Handlers will be tried in descending order
- * of score.
- * @return {number} The score
- */
-os.net.IRequestHandler.prototype.getScore;
+  /**
+   * Aborts the current request if one is active.
+   */
+  abort() {}
 
+  /**
+   * Construct the request.
+   */
+  buildRequest() {}
 
-/**
- * Whether or not this handler can handle the given method and URI.
- * @param {string} method The method for the request
- * @param {goog.Uri} uri The URI
- * @return {boolean} True for can handle, false otherwise.
- */
-os.net.IRequestHandler.prototype.handles;
+  /**
+   * Get the response
+   * @return {*}
+   */
+  getResponse() {}
 
+  /**
+   * Get the response headers
+   * @return {?Object<string, string>}
+   */
+  getResponseHeaders() {}
 
-/**
- * Aborts the current request if one is active.
- */
-os.net.IRequestHandler.prototype.abort;
+  /**
+   * Get the errors
+   * @return {Array<string>} The list of errors
+   */
+  getErrors() {}
 
+  /**
+   * Get the status code of the response
+   * @return {number} The status code of the request
+   */
+  getStatusCode() {}
 
-/**
- * Executes the handler and retrieves the URI.
- *
- * @param {string} method The request method
- * @param {goog.Uri} uri The URI
- * @param {?Object.<string, string>=} opt_headers The request headers
- * @param {os.net.IDataFormatter=} opt_formatter The data formatter
- * @param {boolean=} opt_nocache Whether or not to skip the cache
- * @param {?goog.net.XhrIo.ResponseType=} opt_responseType The expected response type
- */
-os.net.IRequestHandler.prototype.execute = function(method, uri, opt_headers, opt_formatter, opt_nocache,
-    opt_responseType) {};
+  /**
+   * Gets the handler type identifier
+   * @return {string}
+   */
+  getHandlerType() {}
 
+  /**
+   * @return {boolean} Returns true if this handler has handled the request.
+   */
+  isHandled() {}
 
-/**
- * Construct the request.
- */
-os.net.IRequestHandler.prototype.buildRequest;
+  /**
+   * @return {number} Returns request timeout in milliseconds.
+   */
+  getTimeout() {}
 
+  /**
+   * @param {number} timeout sets the request timeout in milliseconds, default 0 for no timeout set (default).
+   */
+  setTimeout(timeout) {}
 
-/**
- * Get the response
- * @return {*}
- */
-os.net.IRequestHandler.prototype.getResponse;
+  /**
+   * Executes the handler and retrieves the URI.
+   *
+   * @param {string} method The request method
+   * @param {Uri} uri The URI
+   * @param {?Object<string, string>=} opt_headers The request headers
+   * @param {IDataFormatter=} opt_formatter The data formatter
+   * @param {boolean=} opt_nocache Whether or not to skip the cache
+   * @param {?ResponseType=} opt_responseType The expected response type
+   */
+  execute(method, uri, opt_headers, opt_formatter, opt_nocache, opt_responseType) {}
+}
 
-
-/**
- * Get the response headers
- * @return {?Object.<string, string>}
- */
-os.net.IRequestHandler.prototype.getResponseHeaders;
-
-
-/**
- * Get the errors
- * @return {Array.<string>} The list of errors
- */
-os.net.IRequestHandler.prototype.getErrors;
-
-
-/**
- * Get the status code of the response
- * @return {number} The status code of the request
- */
-os.net.IRequestHandler.prototype.getStatusCode;
-
-
-/**
- * Gets the handler type identifier
- * @return {string}
- */
-os.net.IRequestHandler.prototype.getHandlerType;
-
-
-/**
- * @return {boolean} Returns true if this handler has handled the request.
- */
-os.net.IRequestHandler.prototype.isHandled;
-
-
-/**
- * @return {number} Returns request timeout in milliseconds.
- */
-os.net.IRequestHandler.prototype.getTimeout;
-
-
-/**
- * @param {number} timeout sets the request timeout in milliseconds, default 0 for no timeout set (default).
- */
-os.net.IRequestHandler.prototype.setTimeout;
+exports = IRequestHandler;

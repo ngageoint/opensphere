@@ -2,10 +2,9 @@ goog.module('os.ui.query.ComboNode');
 goog.module.declareLegacyNamespace();
 
 const DataManager = goog.require('os.data.DataManager');
-const areaManager = goog.require('os.query.AreaManager');
-const filterManager = goog.require('os.query.FilterManager');
+const {getAreaManager, getFilterManager} = goog.require('os.query.instance');
 const TriState = goog.require('os.structs.TriState');
-const osUiFilter = goog.require('os.ui.filter');
+const {toFilterString} = goog.require('os.ui.filter');
 const {directiveTag} = goog.require('os.ui.query.ComboNodeUI');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
@@ -47,9 +46,9 @@ class ComboNode extends SlickTreeNode {
 
     var toolTip = '';
     if (this.entry_ && this.entry_['filterId']) {
-      var filter = filterManager.getInstance().getFilter(/** @type {string} */ (this.entry_['filterId']));
+      var filter = getFilterManager().getFilter(/** @type {string} */ (this.entry_['filterId']));
       if (filter) {
-        toolTip = osUiFilter.toFilterString(filter.getFilterNode(), 1000);
+        toolTip = toFilterString(filter.getFilterNode(), 1000);
       }
     }
 
@@ -78,7 +77,7 @@ class ComboNode extends SlickTreeNode {
    * @inheritDoc
    */
   updateFrom(other) {
-    this.setEntry(other.getEntry());
+    this.setEntry(/** @type {ComboNode} */ (other).getEntry());
     super.updateFrom(other);
   }
 
@@ -90,7 +89,7 @@ class ComboNode extends SlickTreeNode {
       var areaId = /** @type {string} */ (this.entry_['areaId']);
 
       if (areaId && areaId !== '*') {
-        areaManager.getInstance().highlight(areaId);
+        getAreaManager().highlight(areaId);
       }
     }
   }
@@ -103,7 +102,7 @@ class ComboNode extends SlickTreeNode {
       var areaId = /** @type {string} */ (this.entry_['areaId']);
 
       if (areaId && areaId !== '*') {
-        areaManager.getInstance().unhighlight(areaId);
+        getAreaManager().unhighlight(areaId);
       }
     }
   }

@@ -1,144 +1,113 @@
-goog.provide('os.net');
-goog.provide('os.net.CrossOrigin');
+goog.module('os.net');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Uri');
-goog.require('goog.Uri.QueryData');
-goog.require('goog.array');
-goog.require('os.net.ExtDomainHandler');
-goog.require('os.net.LocalFileHandler');
-goog.require('os.net.SameDomainHandler');
-goog.require('os.registerClass');
+const Uri = goog.require('goog.Uri');
+const QueryData = goog.require('goog.Uri.QueryData');
+const {defaultCompare} = goog.require('goog.array');
+const {hashCode} = goog.require('goog.string');
+const {registerClass} = goog.require('os.classRegistry');
+const {getSettings} = goog.require('os.config.instance');
+const instanceOf = goog.require('os.instanceOf');
+const CrossOrigin = goog.require('os.net.CrossOrigin');
+const {merge} = goog.require('os.object');
 
 
 /**
  * @type {string}
  */
-goog.Uri.QueryData.NAME = 'goog.Uri.QueryData';
+QueryData.NAME = 'goog.Uri.QueryData';
 
-// register {@link goog.Uri.QueryData} to allow type checking QueryData objects created in the external window
-os.registerClass(goog.Uri.QueryData.NAME, goog.Uri.QueryData);
-
-
-/**
- * @enum {string}
- */
-os.net.CrossOrigin = {
-  ANONYMOUS: 'anonymous',
-  USE_CREDENTIALS: 'use-credentials',
-  NONE: 'none'
-};
+// register {@link QueryData} to allow type checking QueryData objects created in the external window
+registerClass(QueryData.NAME, QueryData);
 
 
 /**
  * @typedef {{
  *   pattern: RegExp,
- *   crossOrigin: os.net.CrossOrigin,
+ *   crossOrigin: CrossOrigin,
  *   priority: number
  * }}
  */
-os.net.CrossOriginEntry;
-
+let CrossOriginEntry;
 
 /**
  * @typedef {function((ArrayBuffer|string), ?string=, Array<number>=):?string}
  */
-os.net.RequestValidator;
-
+let RequestValidator;
 
 /**
  * @typedef {{
- *   validator: !os.net.RequestValidator,
+ *   validator: !RequestValidator,
  *   priority: number
  * }}
  */
-os.net.RequestValidatorEntry;
-
+let RequestValidatorEntry;
 
 /**
- * @type {!Array<os.net.CrossOriginEntry>}
- * @private
+ * @type {!Array<CrossOriginEntry>}
  */
-os.net.crossOriginCache_ = [];
-
+const crossOriginCache_ = [];
 
 /**
  * List of default request validators.
- * @type {!Array<!os.net.RequestValidatorEntry>}
+ * @type {!Array<!RequestValidatorEntry>}
  */
-os.net.defaultValidators_ = [];
-
+const defaultValidators = [];
 
 /**
  * Map of trusted URI regular expressions.
  * @type {!Array<!RegExp>}
  */
-os.net.trustedURICache_ = [];
-
+const trustedURICache = [];
 
 /**
  * The URI of the local page when it was launched.
- * @type {!goog.Uri}
+ * @type {!Uri}
  */
-os.net.LOCAL_URI = new goog.Uri(window.location);
-
+const LOCAL_URI = new Uri(window.location);
 
 /**
  * Get the default request validators.
- * @return {!Array<!os.net.RequestValidator>}
+ * @return {!Array<!RequestValidator>}
  */
-os.net.getDefaultValidators = function() {
-  return os.net.defaultValidators_.map((entry) => entry.validator);
+const getDefaultValidators = function() {
+  return defaultValidators.map((entry) => entry.validator);
 };
-
 
 /**
  * Register a request validator. The validator should process response data and return an error if found, otherwise it
  * should return null or an empty string.
- * @param {!os.net.RequestValidator} validator The validation function.
+ * @param {!RequestValidator} validator The validation function.
  * @param {number=} opt_priority The priority. Defaults to 0, higher priority will execute first.
  * @param {boolean=} opt_skipSort If sorting should be skipped.
  */
-os.net.registerDefaultValidator = function(validator, opt_priority = 0, opt_skipSort = false) {
-  os.net.defaultValidators_.push({
+const registerDefaultValidator = function(validator, opt_priority = 0, opt_skipSort = false) {
+  defaultValidators.push({
     validator,
     priority: opt_priority
   });
 
   if (!opt_skipSort) {
-    os.net.defaultValidators_.sort(os.net.sortValidators_);
+    defaultValidators.sort(sortValidators_);
   }
 };
-
 
 /**
  * Reset the default request validators.
  */
-os.net.resetDefaultValidators = function() {
-  os.net.defaultValidators_.length = 0;
+const resetDefaultValidators = function() {
+  defaultValidators.length = 0;
 };
-
 
 /**
  * Sort request validator entries.
- * @param {os.net.RequestValidatorEntry} a Thing 1
- * @param {os.net.RequestValidatorEntry} b Thing 2
+ * @param {RequestValidatorEntry} a Thing 1
+ * @param {RequestValidatorEntry} b Thing 2
  * @return {number} per typical compare functions
- * @private
  */
-os.net.sortValidators_ = function(a, b) {
+const sortValidators_ = function(a, b) {
   return b.priority - a.priority;
 };
-
-
-/**
- * Adds the default set of handlers to the factory.
- */
-os.net.addDefaultHandlers = function() {
-  os.net.RequestHandlerFactory.addHandler(os.net.LocalFileHandler);
-  os.net.RequestHandlerFactory.addHandler(os.net.SameDomainHandler);
-  os.net.RequestHandlerFactory.addHandler(os.net.ExtDomainHandler);
-};
-
 
 /**
  * Check if a crossOrigin value is valid.
@@ -146,9 +115,9 @@ os.net.addDefaultHandlers = function() {
  * @param {*} crossOrigin The value to check
  * @return {boolean} If the value is a valid crossOrigin
  */
-os.net.isValidCrossOrigin = function(crossOrigin) {
-  for (var key in os.net.CrossOrigin) {
-    if (crossOrigin === os.net.CrossOrigin[key]) {
+const isValidCrossOrigin = function(crossOrigin) {
+  for (var key in CrossOrigin) {
+    if (crossOrigin === CrossOrigin[key]) {
       return true;
     }
   }
@@ -156,117 +125,127 @@ os.net.isValidCrossOrigin = function(crossOrigin) {
   return false;
 };
 
-
 /**
  * Load the crossOrigin cache from config.
  */
-os.net.loadCrossOriginCache = function() {
-  os.net.resetCrossOriginCache();
+const loadCrossOriginCache = function() {
+  resetCrossOriginCache();
 
-  var crossOrigin = /** @type {!Object} */ (os.settings.get('crossOrigin', {}));
+  var crossOrigin = /** @type {!Object} */ (getSettings().get('crossOrigin', {}));
 
   for (var id in crossOrigin) {
     var item = crossOrigin[id];
-    os.net.registerCrossOrigin(item['pattern'], item['value'], item['priority'], true);
+    registerCrossOrigin(item['pattern'], item['value'], item['priority'], true);
   }
 
-  os.net.crossOriginCache_.sort(os.net.sortCache_);
+  crossOriginCache_.sort(sortCache_);
 };
-
 
 /**
- * @param {os.net.CrossOriginEntry} a Thing 1
+ * @param {CrossOriginEntry} a Thing 1
  * @param {os.net.CrossOriginEntry} b Thing 2
  * @return {number} per typical compare functions
- * @private
  */
-os.net.sortCache_ = function(a, b) {
-  return goog.array.defaultCompare(b.priority, a.priority);
+const sortCache_ = function(a, b) {
+  return defaultCompare(b.priority, a.priority);
 };
-
 
 /**
  * Get the crossOrigin value to use for a URI. Any URI not matching a registered cross origin cache pattern
  * will be assumed to be anonymous.
  *
- * @param {goog.Uri|string} uri The uri
- * @return {!os.net.CrossOrigin} The cross origin value to use for the URI
+ * @param {Uri|string} uri The uri
+ * @return {!CrossOrigin} The cross origin value to use for the URI
  */
-os.net.getCrossOrigin = function(uri) {
+let getCrossOriginFn = function(uri) {
   if (uri) {
-    uri = typeof uri === 'string' ? new goog.Uri(uri) : uri;
+    uri = typeof uri === 'string' ? new Uri(uri) : uri;
 
-    var result = os.net.getCrossOriginInternal_(uri.toString());
+    var result = getCrossOriginInternal(uri.toString());
     if (result) {
       return result;
     }
 
-    if (uri.getDomain() && !uri.hasSameDomainAs(os.net.LOCAL_URI)) {
-      return os.net.CrossOrigin.ANONYMOUS;
+    if (uri.getDomain() && !uri.hasSameDomainAs(LOCAL_URI)) {
+      return CrossOrigin.ANONYMOUS;
     }
   }
 
-  return os.net.CrossOrigin.NONE;
+  return CrossOrigin.NONE;
 };
 
+/**
+ * Set the function used to get the cross origin.
+ * @param {function((Uri|string)):!CrossOrigin} fn The function.
+ */
+const setGetCrossOriginFn = (fn) => {
+  getCrossOriginFn = fn;
+};
+
+/**
+ * Get the crossOrigin value to use for a URI. Any URI not matching a registered cross origin cache pattern
+ * will be assumed to be anonymous.
+ *
+ * @param {Uri|string} uri The uri
+ * @return {!CrossOrigin} The cross origin value to use for the URI
+ */
+const getCrossOrigin = function(uri) {
+  return getCrossOriginFn(uri);
+};
 
 /**
  * @param {string|RegExp} pattern
- * @param {os.net.CrossOrigin} crossOrigin
+ * @param {CrossOrigin} crossOrigin
  * @param {number=} opt_priority
  * @param {boolean=} opt_skipSort
  */
-os.net.registerCrossOrigin = function(pattern, crossOrigin, opt_priority, opt_skipSort) {
+const registerCrossOrigin = function(pattern, crossOrigin, opt_priority, opt_skipSort) {
   opt_priority = opt_priority || 0;
 
-  os.net.crossOriginCache_.push({
+  crossOriginCache_.push({
     pattern: typeof pattern === 'string' ? new RegExp(pattern) : pattern,
     crossOrigin: crossOrigin,
     priority: opt_priority
   });
 
   if (!opt_skipSort) {
-    os.net.crossOriginCache_.sort(os.net.sortCache_);
+    crossOriginCache_.sort(sortCache_);
   }
 };
-
 
 /**
  * Reset the cross origin cache.
  */
-os.net.resetCrossOriginCache = function() {
-  os.net.crossOriginCache_.length = 0;
+const resetCrossOriginCache = function() {
+  crossOriginCache_.length = 0;
 };
-
 
 /**
  * @param {string} pattern
- * @param {os.net.CrossOrigin} crossOrigin
+ * @param {CrossOrigin} crossOrigin
  * @param {number=} opt_priority
  * @param {boolean=} opt_skipSort
  */
-os.net.saveCrossOrigin = function(pattern, crossOrigin, opt_priority, opt_skipSort) {
-  os.net.registerCrossOrigin(pattern, crossOrigin, opt_priority, opt_skipSort);
+const saveCrossOrigin = function(pattern, crossOrigin, opt_priority, opt_skipSort) {
+  registerCrossOrigin(pattern, crossOrigin, opt_priority, opt_skipSort);
 
   // save to user settings
-  var userCrossOrigin = /** @type {!Object} */ (os.settings.get('userCrossOrigin', {}));
-  userCrossOrigin[goog.string.hashCode(pattern)] = {
+  var userCrossOrigin = /** @type {!Object} */ (getSettings().get('userCrossOrigin', {}));
+  userCrossOrigin[hashCode(pattern)] = {
     'pattern': pattern,
     'crossOrigin': crossOrigin,
     'priority': opt_priority || 0
   };
 
-  os.settings.set('userCrossOrigin', userCrossOrigin);
+  getSettings().set('userCrossOrigin', userCrossOrigin);
 };
-
 
 /**
  * @param {string} url
- * @return {os.net.CrossOrigin|undefined}
- * @private
+ * @return {CrossOrigin|undefined}
  */
-os.net.getCrossOriginInternal_ = function(url) {
-  var cache = os.net.crossOriginCache_;
+const getCrossOriginInternal = function(url) {
+  var cache = crossOriginCache_;
 
   if (cache) {
     for (var i = 0, n = cache.length; i < n; i++) {
@@ -277,32 +256,30 @@ os.net.getCrossOriginInternal_ = function(url) {
   }
 };
 
-
 /**
  * Load trusted URI patterns from config.
  */
-os.net.loadTrustedUris = function() {
-  var trustedUris = /** @type {!Object<string, boolean>} */ (os.settings.get('trustedUris', {}));
-  var userTrustedUris = /** @type {!Object<string, boolean>} */ (os.settings.get('userTrustedUris', {}));
-  os.object.merge(userTrustedUris, trustedUris, true);
+const loadTrustedUris = function() {
+  var trustedUris = /** @type {!Object<string, boolean>} */ (getSettings().get('trustedUris', {}));
+  var userTrustedUris = /** @type {!Object<string, boolean>} */ (getSettings().get('userTrustedUris', {}));
+  merge(userTrustedUris, trustedUris, true);
 
-  os.net.trustedURICache_.length = 0;
+  trustedURICache.length = 0;
 
   for (var pattern in trustedUris) {
-    os.net.addTrustedUri(pattern);
+    addTrustedUri(pattern);
   }
 };
-
 
 /**
  * If content from a URI should be trusted for display in the DOM.
  *
- * @param {goog.Uri|string|undefined} uri The uri.
+ * @param {Uri|string|undefined} uri The uri.
  * @return {boolean} If content from the URI should be trusted.
  */
-os.net.isTrustedUri = function(uri) {
+const isTrustedUri = function(uri) {
   if (uri) {
-    var cache = os.net.trustedURICache_;
+    var cache = trustedURICache;
     if (cache) {
       var url = typeof uri === 'string' ? uri : uri.toString();
       return cache.some(function(pattern) {
@@ -314,46 +291,42 @@ os.net.isTrustedUri = function(uri) {
   return false;
 };
 
-
 /**
  * Adds a trusted URI to the cache (does not save it to settings).
  *
  * @param {string} uri The uri.
  */
-os.net.addTrustedUri = function(uri) {
-  os.net.trustedURICache_.push(new RegExp(uri));
+const addTrustedUri = function(uri) {
+  trustedURICache.push(new RegExp(uri));
 };
-
 
 /**
  * Add a URI to the trust cache and to the user's saved trusted URIs.
  *
- * @param {goog.Uri|string} uri The uri.
+ * @param {Uri|string} uri The uri.
  */
-os.net.registerTrustedUri = function(uri) {
+const registerTrustedUri = function(uri) {
   if (uri) {
     var url = typeof uri === 'string' ? uri : uri.toString();
     if (url) {
-      os.net.addTrustedUri(url);
+      addTrustedUri(url);
 
       // save to user settings
-      var userTrustedUris = /** @type {!Object<string, boolean>} */ (os.settings.get('userTrustedUris', {}));
+      var userTrustedUris = /** @type {!Object<string, boolean>} */ (getSettings().get('userTrustedUris', {}));
       userTrustedUris[url] = true;
-      os.settings.set('userTrustedUris', userTrustedUris);
+      getSettings().set('userTrustedUris', userTrustedUris);
     }
   }
 };
-
 
 /**
  * If the browser supports sending a beacon in a beforeunload handler.
  *
  * @return {boolean}
  */
-os.net.supportsBeacon = function() {
+const supportsBeacon = function() {
   return typeof navigator.sendBeacon == 'function';
 };
-
 
 /**
  * If the browser supports sending a beacon in a beforeunload handler.
@@ -362,8 +335,8 @@ os.net.supportsBeacon = function() {
  * @param {ArrayBufferView|Blob|FormData|null|string|undefined} data The data to send
  * @param {string=} opt_contentType The content type
  */
-os.net.sendBeacon = function(url, data, opt_contentType) {
-  if (os.net.supportsBeacon()) {
+const sendBeacon = function(url, data, opt_contentType) {
+  if (supportsBeacon()) {
     try {
       if (opt_contentType) {
         data = new Blob([data], {'type': opt_contentType});
@@ -376,24 +349,49 @@ os.net.sendBeacon = function(url, data, opt_contentType) {
   }
 };
 
-
 /**
  * Gets a query data object for a set of params.
  *
- * @param {string|goog.Uri.QueryData|Object|undefined} params The params.
- * @return {!goog.Uri.QueryData} The query data.
+ * @param {string|QueryData|Object|undefined} params The params.
+ * @return {!Uri.QueryData} The query data.
  */
-os.net.paramsToQueryData = function(params) {
+const paramsToQueryData = function(params) {
   var qd;
 
   if (typeof params === 'string') {
-    qd = new goog.Uri.QueryData(params);
-  } else if (os.instanceOf(params, goog.Uri.QueryData.NAME)) {
-    qd = /** @type {goog.Uri.QueryData} */ (params);
+    qd = new QueryData(params);
+  } else if (instanceOf(params, QueryData.NAME)) {
+    qd = /** @type {QueryData} */ (params);
   } else {
     // create a new one from the object or an empty one
-    qd = goog.isObject(params) ? goog.Uri.QueryData.createFromMap(params) : null;
+    qd = goog.isObject(params) ? QueryData.createFromMap(params) : null;
   }
 
-  return qd || new goog.Uri.QueryData();
+  return qd || new QueryData();
+};
+
+exports = {
+  defaultValidators,
+  trustedURICache,
+  LOCAL_URI,
+  getDefaultValidators,
+  registerDefaultValidator,
+  resetDefaultValidators,
+  isValidCrossOrigin,
+  loadCrossOriginCache,
+  getCrossOrigin,
+  setGetCrossOriginFn,
+  registerCrossOrigin,
+  resetCrossOriginCache,
+  saveCrossOrigin,
+  loadTrustedUris,
+  isTrustedUri,
+  addTrustedUri,
+  registerTrustedUri,
+  supportsBeacon,
+  sendBeacon,
+  paramsToQueryData,
+  CrossOriginEntry,
+  RequestValidator,
+  RequestValidatorEntry
 };

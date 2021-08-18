@@ -171,7 +171,7 @@ class LayerTreeSearch extends AbstractGroupByTreeSearch {
           for (i = 0, n = bucket.length; i < n; i++) {
             var node = bucket[i];
             if (node) {
-              var layer = node.getLayer();
+              var layer = /** @type {LayerNode} */ (node).getLayer();
               if (layer) {
                 groupLayer.addLayer(layer);
               }

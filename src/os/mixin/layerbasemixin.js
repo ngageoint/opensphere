@@ -1,42 +1,43 @@
 /**
- * @fileoverview Restores style properties removed from {@link ol.layer.Base} in OL3 commit
+ * @fileoverview Restores style properties removed from {@link Base} in OL3 commit
  *               d6f03697d7673ed57decdf92cb5d37f03a1f5323.
  * @see http://git.stwan.bits/projects/OSS/repos/ol3/commits/d6f03697d7673ed57decdf92cb5d37f03a1f5323#src/ol/layer/layerbase.js
  */
-goog.provide('os.mixin.layerbase');
+goog.module('os.mixin.layerbase');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.layer.Base');
-goog.require('ol.layer.Property');
-
-
-/**
- * @type {string}
- */
-ol.layer.Property.BRIGHTNESS = 'brightness';
+const Base = goog.require('ol.layer.Base');
+const Property = goog.require('ol.layer.Property');
 
 
 /**
  * @type {string}
  */
-ol.layer.Property.CONTRAST = 'contrast';
+Property.BRIGHTNESS = 'brightness';
 
 
 /**
  * @type {string}
  */
-ol.layer.Property.HUE = 'hue';
+Property.CONTRAST = 'contrast';
 
 
 /**
  * @type {string}
  */
-ol.layer.Property.SATURATION = 'saturation';
+Property.HUE = 'hue';
 
 
 /**
  * @type {string}
  */
-ol.layer.Property.SHARPNESS = 'sharpness';
+Property.SATURATION = 'saturation';
+
+
+/**
+ * @type {string}
+ */
+Property.SHARPNESS = 'sharpness';
 
 
 /**
@@ -44,8 +45,8 @@ ol.layer.Property.SHARPNESS = 'sharpness';
  *
  * @return {number} The brightness of the layer.
  */
-ol.layer.Base.prototype.getBrightness = function() {
-  return /** @type {number} */ (this.get(ol.layer.Property.BRIGHTNESS));
+Base.prototype.getBrightness = function() {
+  return /** @type {number} */ (this.get(Property.BRIGHTNESS));
 };
 
 
@@ -54,8 +55,8 @@ ol.layer.Base.prototype.getBrightness = function() {
  *
  * @return {number} The contrast of the layer.
  */
-ol.layer.Base.prototype.getContrast = function() {
-  return /** @type {number} */ (this.get(ol.layer.Property.CONTRAST));
+Base.prototype.getContrast = function() {
+  return /** @type {number} */ (this.get(Property.CONTRAST));
 };
 
 
@@ -64,8 +65,8 @@ ol.layer.Base.prototype.getContrast = function() {
  *
  * @return {number} The hue of the layer.
  */
-ol.layer.Base.prototype.getHue = function() {
-  return /** @type {number} */ (this.get(ol.layer.Property.HUE));
+Base.prototype.getHue = function() {
+  return /** @type {number} */ (this.get(Property.HUE));
 };
 
 
@@ -74,8 +75,8 @@ ol.layer.Base.prototype.getHue = function() {
  *
  * @return {number} The saturation of the layer.
  */
-ol.layer.Base.prototype.getSaturation = function() {
-  return /** @type {number} */ (this.get(ol.layer.Property.SATURATION));
+Base.prototype.getSaturation = function() {
+  return /** @type {number} */ (this.get(Property.SATURATION));
 };
 
 
@@ -84,8 +85,8 @@ ol.layer.Base.prototype.getSaturation = function() {
  *
  * @return {number} The sharpness of the layer.
  */
-ol.layer.Base.prototype.getSharpness = function() {
-  return /** @type {number} */ (this.get(ol.layer.Property.SHARPNESS));
+Base.prototype.getSharpness = function() {
+  return /** @type {number} */ (this.get(Property.SHARPNESS));
 };
 
 
@@ -109,8 +110,8 @@ ol.layer.Base.prototype.getSharpness = function() {
  *
  * @param {number} brightness The brightness of the layer.
  */
-ol.layer.Base.prototype.setBrightness = function(brightness) {
-  this.set(ol.layer.Property.BRIGHTNESS, brightness);
+Base.prototype.setBrightness = function(brightness) {
+  this.set(Property.BRIGHTNESS, brightness);
 };
 
 
@@ -121,8 +122,8 @@ ol.layer.Base.prototype.setBrightness = function(brightness) {
  *
  * @param {number} contrast The contrast of the layer.
  */
-ol.layer.Base.prototype.setContrast = function(contrast) {
-  this.set(ol.layer.Property.CONTRAST, contrast);
+Base.prototype.setContrast = function(contrast) {
+  this.set(Property.CONTRAST, contrast);
 };
 
 
@@ -133,8 +134,8 @@ ol.layer.Base.prototype.setContrast = function(contrast) {
  *
  * @param {number} hue The hue of the layer.
  */
-ol.layer.Base.prototype.setHue = function(hue) {
-  this.set(ol.layer.Property.HUE, hue);
+Base.prototype.setHue = function(hue) {
+  this.set(Property.HUE, hue);
 };
 
 
@@ -146,8 +147,8 @@ ol.layer.Base.prototype.setHue = function(hue) {
  *
  * @param {number} saturation The saturation of the layer.
  */
-ol.layer.Base.prototype.setSaturation = function(saturation) {
-  this.set(ol.layer.Property.SATURATION, saturation);
+Base.prototype.setSaturation = function(saturation) {
+  this.set(Property.SATURATION, saturation);
 };
 
 
@@ -156,6 +157,6 @@ ol.layer.Base.prototype.setSaturation = function(saturation) {
  *
  * @param {number} sharpness The sharpness of the layer.
  */
-ol.layer.Base.prototype.setSharpness = function(sharpness) {
-  this.set(ol.layer.Property.SHARPNESS, sharpness);
+Base.prototype.setSharpness = function(sharpness) {
+  this.set(Property.SHARPNESS, sharpness);
 };

@@ -1,91 +1,82 @@
-goog.provide('os.ogc.filter.OGCFilterModifier');
-goog.provide('os.ogc.filter.OGCFilterModifierOptions');
-goog.require('os.net.AbstractModifier');
-goog.require('os.ogc.filter.ModifierConstants');
+goog.module('os.ogc.filter.OGCFilterModifier');
+goog.module.declareLegacyNamespace();
+
+const AbstractModifier = goog.require('os.net.AbstractModifier');
+const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');
+
+const OGCFilterModifierOptions = goog.requireType('os.ogc.filter.OGCFilterModifierOptions');
 
 
 /**
- * @typedef {{
- *   filter: (boolean|undefined),
- *   identifiers: (boolean|undefined),
- *   param: (string|undefined),
- *   temporal: (boolean|undefined)
- *   }}
  */
-os.ogc.filter.OGCFilterModifierOptions;
-
-
-
-/**
- * @param {os.ogc.filter.OGCFilterModifierOptions=} opt_options
- * @extends {os.net.AbstractModifier}
- * @constructor
- */
-os.ogc.filter.OGCFilterModifier = function(opt_options) {
-  var options = opt_options != null ? opt_options : {};
-
+class OGCFilterModifier extends AbstractModifier {
   /**
-   * @type {boolean}
-   * @private
+   * Constructor.
+   * @param {OGCFilterModifierOptions=} opt_options
    */
-  this.filter_ = options.filter != null ? options.filter : false;
+  constructor(opt_options) {
+    super('OGCFilter', 100);
 
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.identifiers_ = options.identifiers != null ? options.identifiers : false;
+    var options = opt_options != null ? opt_options : {};
 
-  /**
-   * @type {string}
-   * @private
-   */
-  this.param_ = options.param || 'filter';
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.filter_ = options.filter != null ? options.filter : false;
 
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.temporal_ = options.temporal != null ? options.temporal : true;
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.identifiers_ = options.identifiers != null ? options.identifiers : false;
 
-  os.ogc.filter.OGCFilterModifier.base(this, 'constructor', 'OGCFilter', 100);
-};
-goog.inherits(os.ogc.filter.OGCFilterModifier, os.net.AbstractModifier);
+    /**
+     * @type {string}
+     * @private
+     */
+    this.param_ = options.param || 'filter';
 
-
-/**
- * @type {string}
- * @const
- */
-os.ogc.filter.OGCFilterModifier.FILTER_BEGIN = '<Filter xmlns="http://www.opengis.net/ogc" ' +
-    'xmlns:gml="http://www.opengis.net/gml">';
-
-
-/**
- * @type {string}
- * @const
- */
-os.ogc.filter.OGCFilterModifier.FILTER_END = '</Filter>';
-
-
-/**
- * @inheritDoc
- */
-os.ogc.filter.OGCFilterModifier.prototype.modify = function(uri) {
-  var qd = uri.getQueryData();
-  var filters = (this.temporal_ ? os.ogc.filter.ModifierConstants.TEMPORAL : '') +
-      (this.filter_ ? os.ogc.filter.ModifierConstants.FILTER : '');
-
-  if (filters || this.identifiers_) {
-    var filter = os.ogc.filter.OGCFilterModifier.FILTER_BEGIN +
-        (this.identifiers_ || filters ? '<And>' : '') +
-        (this.identifiers_ ? os.ogc.filter.ModifierConstants.IDENTIFIERS : '') +
-        (filters ? filters : '') +
-        (this.identifiers_ || filters ? '</And>' : '') +
-        os.ogc.filter.OGCFilterModifier.FILTER_END;
-
-    qd.set(this.param_, filter);
-  } else {
-    qd.remove(this.param_);
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.temporal_ = options.temporal != null ? options.temporal : true;
   }
-};
+
+  /**
+   * @inheritDoc
+   */
+  modify(uri) {
+    var qd = uri.getQueryData();
+    var filters = (this.temporal_ ? ModifierConstants.TEMPORAL : '') +
+        (this.filter_ ? ModifierConstants.FILTER : '');
+
+    if (filters || this.identifiers_) {
+      var filter = OGCFilterModifier.FILTER_BEGIN +
+          (this.identifiers_ || filters ? '<And>' : '') +
+          (this.identifiers_ ? ModifierConstants.IDENTIFIERS : '') +
+          (filters ? filters : '') +
+          (this.identifiers_ || filters ? '</And>' : '') +
+          OGCFilterModifier.FILTER_END;
+
+      qd.set(this.param_, filter);
+    } else {
+      qd.remove(this.param_);
+    }
+  }
+}
+
+/**
+ * @type {string}
+ * @const
+ */
+OGCFilterModifier.FILTER_BEGIN = '<Filter xmlns="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">';
+
+/**
+ * @type {string}
+ * @const
+ */
+OGCFilterModifier.FILTER_END = '</Filter>';
+
+exports = OGCFilterModifier;

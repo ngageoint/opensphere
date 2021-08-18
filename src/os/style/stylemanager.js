@@ -1,16 +1,18 @@
-goog.provide('os.style.StyleManager');
+goog.module('os.style.StyleManager');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.object');
-goog.require('os.object');
-goog.require('os.style.CircleReader');
-goog.require('os.style.FillReader');
-goog.require('os.style.IconReader');
-goog.require('os.style.ImageReader');
-goog.require('os.style.ShapeReader');
-goog.require('os.style.StrokeReader');
-goog.require('os.style.StyleReader');
-goog.require('os.style.TextReader');
+const {unsafeClone} = goog.require('os.object');
+const {DEFAULT_VECTOR_CONFIG} = goog.require('os.style');
+const CircleReader = goog.require('os.style.CircleReader');
+const FillReader = goog.require('os.style.FillReader');
+const IconReader = goog.require('os.style.IconReader');
+const ImageReader = goog.require('os.style.ImageReader');
+const ShapeReader = goog.require('os.style.ShapeReader');
+const StrokeReader = goog.require('os.style.StrokeReader');
+const StyleReader = goog.require('os.style.StyleReader');
+const TextReader = goog.require('os.style.TextReader');
 
+const IStyleReader = goog.requireType('os.style.IStyleReader');
 
 
 /**
@@ -59,110 +61,133 @@ goog.require('os.style.TextReader');
  *
  * feature.setStyle(os.style.StyleManager.getInstance().getOrCreateStyle([layer, feature]));
  * </pre>
- *
- * @constructor
  */
-os.style.StyleManager = function() {
+class StyleManager {
   /**
-   * @type {!os.style.StyleReader}
-   * @private
+   * Constructor.
    */
-  this.rootReader_ = new os.style.StyleReader();
+  constructor() {
+    /**
+     * @type {!StyleReader}
+     * @private
+     */
+    this.rootReader_ = new StyleReader();
 
-  /**
-   * @type {Object<string, !os.style.IStyleReader>}
-   * @private
-   */
-  this.readers_ = {
-    'circle': new os.style.CircleReader(),
-    'fill': new os.style.FillReader(),
-    'icon': new os.style.IconReader(),
-    'image': new os.style.ImageReader(),
-    'shape': new os.style.ShapeReader(),
-    'stroke': new os.style.StrokeReader(),
-    'text': new os.style.TextReader()
-  };
+    /**
+     * @type {Object<string, !IStyleReader>}
+     * @private
+     */
+    this.readers_ = {
+      'circle': new CircleReader(),
+      'fill': new FillReader(),
+      'icon': new IconReader(),
+      'image': new ImageReader(),
+      'shape': new ShapeReader(),
+      'stroke': new StrokeReader(),
+      'text': new TextReader()
+    };
 
-  this.rootReader_.setReaders(this.readers_);
+    this.rootReader_.setReaders(this.readers_);
 
-  for (var key in this.readers_) {
-    this.readers_[key].setReaders(this.readers_);
+    for (var key in this.readers_) {
+      this.readers_[key].setReaders(this.readers_);
+    }
+
+    /**
+     * @type {Object<string, Object>}
+     * @private
+     */
+    this.layerConfigs_ = {};
   }
 
   /**
-   * @type {Object<string, Object>}
-   * @private
+   * @param {!Object<string, *>} config
+   * @return {?ol.style.Style}
    */
-  this.layerConfigs_ = {};
-};
-goog.addSingletonGetter(os.style.StyleManager);
-
-
-/**
- * @param {!Object<string, *>} config
- * @return {?ol.style.Style}
- */
-os.style.StyleManager.prototype.getOrCreateStyle = function(config) {
-  return this.rootReader_.getOrCreateStyle(config);
-};
-
-
-/**
- * @param {!ol.style.Style} style
- * @return {Object} config
- */
-os.style.StyleManager.prototype.toConfig = function(style) {
-  var config = {};
-  this.rootReader_.toConfig(style, config);
-  return config;
-};
-
-
-/**
- * Get a style reader by id
- *
- * @param {string} id The reader id
- * @return {os.style.IStyleReader|undefined} The reader, if registered
- */
-os.style.StyleManager.prototype.getReader = function(id) {
-  return this.readers_[id];
-};
-
-
-/**
- * @param {!string} id
- * @return {Object}
- */
-os.style.StyleManager.prototype.createLayerConfig = function(id) {
-  var config = /** @type {Object} */ (os.object.unsafeClone(os.style.DEFAULT_VECTOR_CONFIG));
-  this.layerConfigs_[id] = config;
-  return config;
-};
-
-
-/**
- * @param {!string} id
- */
-os.style.StyleManager.prototype.removeLayerConfig = function(id) {
-  if (id in this.layerConfigs_) {
-    delete this.layerConfigs_[id];
+  getOrCreateStyle(config) {
+    return this.rootReader_.getOrCreateStyle(config);
   }
-};
 
+  /**
+   * @param {!ol.style.Style} style
+   * @return {Object} config
+   */
+  toConfig(style) {
+    var config = {};
+    this.rootReader_.toConfig(style, config);
+    return config;
+  }
+
+  /**
+   * Get a style reader by id
+   *
+   * @param {string} id The reader id
+   * @return {IStyleReader|undefined} The reader, if registered
+   */
+  getReader(id) {
+    return this.readers_[id];
+  }
+
+  /**
+   * @param {!string} id
+   * @return {Object}
+   */
+  createLayerConfig(id) {
+    var config = /** @type {Object} */ (unsafeClone(DEFAULT_VECTOR_CONFIG));
+    this.layerConfigs_[id] = config;
+    return config;
+  }
+
+  /**
+   * @param {!string} id
+   */
+  removeLayerConfig(id) {
+    if (id in this.layerConfigs_) {
+      delete this.layerConfigs_[id];
+    }
+  }
+
+  /**
+   * @param {!string} id
+   * @return {?Object} The config or null if not found
+   */
+  getLayerConfig(id) {
+    return id in this.layerConfigs_ ? this.layerConfigs_[id] : null;
+  }
+
+  /**
+   * @param {!string} id
+   * @return {Object}
+   */
+  getOrCreateLayerConfig(id) {
+    return id in this.layerConfigs_ ? this.layerConfigs_[id] : this.createLayerConfig(id);
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!StyleManager}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new StyleManager();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {StyleManager} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
 
 /**
- * @param {!string} id
- * @return {?Object} The config or null if not found
+ * Global instance.
+ * @type {StyleManager|undefined}
  */
-os.style.StyleManager.prototype.getLayerConfig = function(id) {
-  return id in this.layerConfigs_ ? this.layerConfigs_[id] : null;
-};
+let instance;
 
-
-/**
- * @param {!string} id
- * @return {Object}
- */
-os.style.StyleManager.prototype.getOrCreateLayerConfig = function(id) {
-  return id in this.layerConfigs_ ? this.layerConfigs_[id] : this.createLayerConfig(id);
-};
+exports = StyleManager;

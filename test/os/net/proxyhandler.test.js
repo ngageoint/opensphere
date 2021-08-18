@@ -1,36 +1,39 @@
-goog.require('os.net.ProxyHandler');
 goog.require('goog.Uri');
+goog.require('os.net.ProxyHandler');
 
 describe('os.net.ProxyHandler', function() {
+  const Uri = goog.module.get('goog.Uri');
+  const ProxyHandler = goog.module.get('os.net.ProxyHandler');
+
   it('should refuse handling URIs if the proxy is not set up properly', function() {
     // do something stupid to the proxy URL
-    os.net.ProxyHandler.PROXY_URL = '';
-    os.net.ProxyHandler.METHODS = ['GET'];
-    os.net.ProxyHandler.SCHEMES = ['http'];
-    var p = new os.net.ProxyHandler();
-    var u = new goog.Uri('http://www.example.com/thing.xml');
+    ProxyHandler.PROXY_URL = '';
+    ProxyHandler.METHODS = ['GET'];
+    ProxyHandler.SCHEMES = ['http'];
+    var p = new ProxyHandler();
+    var u = new Uri('http://www.example.com/thing.xml');
     expect(p.handles('GET', u)).toBe(false);
 
     // undo the stupid
-    os.net.ProxyHandler.PROXY_URL = '/ogc/proxy?com.bitsys.url={url}';
+    ProxyHandler.PROXY_URL = '/ogc/proxy?com.bitsys.url={url}';
   });
 
   it('should handle supported methods', function() {
-    os.net.ProxyHandler.METHODS = ['GET'];
-    var p = new os.net.ProxyHandler();
-    var u = new goog.Uri('http://www.example.com/thing.xml');
+    ProxyHandler.METHODS = ['GET'];
+    var p = new ProxyHandler();
+    var u = new Uri('http://www.example.com/thing.xml');
     expect(p.handles('GET', u)).toBe(true);
   });
 
   it('should refuse handling URIs if the method is not supported', function() {
-    var p = new os.net.ProxyHandler();
-    var u = new goog.Uri('http://www.example.com/thing.xml');
+    var p = new ProxyHandler();
+    var u = new Uri('http://www.example.com/thing.xml');
     expect(p.handles('POST', u)).toBe(false);
   });
-  
+
   it('should not handle local file uris', function() {
-    var p = new os.net.ProxyHandler();
-    var u = new goog.Uri('local://testfileurl');
+    var p = new ProxyHandler();
+    var u = new Uri('local://testfileurl');
     expect(p.handles('GET', u)).toBe(false);
     expect(p.handles('POST', u)).toBe(false);
     expect(p.handles('PUT', u)).toBe(false);
@@ -38,39 +41,39 @@ describe('os.net.ProxyHandler', function() {
   });
 
   it('should handle supported schemes', function() {
-    os.net.ProxyHandler.SCHEMES.push('https');
-    var p = new os.net.ProxyHandler();
-    var u = new goog.Uri('https://www.example.com/thing.xml');
+    ProxyHandler.SCHEMES.push('https');
+    var p = new ProxyHandler();
+    var u = new Uri('https://www.example.com/thing.xml');
     expect(p.handles('GET', u)).toBe(true);
   });
 
   it('should refuse handling unsupported schemes', function() {
-    os.net.ProxyHandler.SCHEMES.pop();
-    var p = new os.net.ProxyHandler();
-    var u = new goog.Uri('https://www.example.com/thing.xml');
+    ProxyHandler.SCHEMES.pop();
+    var p = new ProxyHandler();
+    var u = new Uri('https://www.example.com/thing.xml');
     expect(p.handles('GET', u)).toBe(false);
-    u = new goog.Uri('local://yermom.com/thing.xml');
+    u = new Uri('local://yermom.com/thing.xml');
     expect(p.handles('GET', u)).toBe(false);
   });
 
   it('should refuse handling same domain URIs', function() {
-    var p = new os.net.ProxyHandler();
-    var u = new goog.Uri('/thing.xml');
+    var p = new ProxyHandler();
+    var u = new Uri('/thing.xml');
     expect(p.handles('GET', u)).toBe(false);
-    u = new goog.Uri(window.location);
+    u = new Uri(window.location);
     expect(p.handles('GET', u)).toBe(false);
   });
 
   it('should modify URIs properly', function() {
-    var p = new os.net.ProxyHandler();
+    var p = new ProxyHandler();
     var u = 'https://www.example.com/thing.xml#fragment?query=true';
     expect(p.modUri(u)).toBe('/ogc/proxy?com.bitsys.url=' + encodeURIComponent(u));
   });
 
   it('should have an option for encoding', function() {
-    var p = new os.net.ProxyHandler();
+    var p = new ProxyHandler();
     var u = 'https://www.example.com/thing.xml#fragment?query=true';
-    os.net.ProxyHandler.ENCODE = false;
+    ProxyHandler.ENCODE = false;
     expect(p.modUri(u)).toBe('/ogc/proxy?com.bitsys.url=' + u);
   });
 });

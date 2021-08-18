@@ -3,11 +3,11 @@ goog.module.declareLegacyNamespace();
 
 const {hashCode} = goog.require('goog.string');
 const {FILTER_STORAGE_KEY} = goog.require('os');
-const {getMapContainer} = goog.require('os.map.instance');
 const Settings = goog.require('os.config.Settings');
 const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
 const FilterType = goog.require('os.filter.FilterType');
 const VectorLayer = goog.require('os.layer.Vector');
+const {getMapContainer} = goog.require('os.map.instance');
 const {getQueryManager} = goog.require('os.query.instance');
 const FilterEvent = goog.require('os.ui.filter.FilterEvent');
 const FilterEventType = goog.require('os.ui.filter.FilterEventType');

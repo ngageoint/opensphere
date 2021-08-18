@@ -1,55 +1,52 @@
-goog.provide('os.mixin.canvasreplaygroup');
+goog.module('os.mixin.canvasreplaygroup');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.extent');
-goog.require('ol.render.canvas.ReplayGroup');
+const {getWidth} = goog.require('ol.extent');
+const ReplayGroup = goog.require('ol.render.canvas.ReplayGroup');
+const osMap = goog.require('os.map');
 
-goog.requireType('ol.Feature');
-goog.requireType('ol.render.Feature');
+const Feature = goog.requireType('ol.Feature');
+const RenderFeature = goog.requireType('ol.render.Feature');
 
 
-(function() {
-  var oldForEachFeatureAtCoordinate = ol.render.canvas.ReplayGroup.prototype.forEachFeatureAtCoordinate;
+const oldForEachFeatureAtCoordinate = ReplayGroup.prototype.forEachFeatureAtCoordinate;
 
-  /**
-   * @param {ol.Coordinate} coordinate Coordinate.
-   * @param {number} resolution Resolution.
-   * @param {number} rotation Rotation.
-   * @param {number} hitTolerance Hit tolerance in pixels.
-   * @param {Object.<string, boolean>} skippedFeaturesHash Ids of features
-   *     to skip.
-   * @param {function((ol.Feature|ol.render.Feature)): T} callback Feature
-   *     callback.
-   * @param {Object.<string, ol.DeclutterGroup>} declutterReplays Declutter
-   *     replays.
-   * @return {T|undefined} Callback result.
-   * @template T
-   */
-  ol.render.canvas.ReplayGroup.prototype.forEachFeatureAtCoordinate = function(coordinate, resolution, rotation,
-      hitTolerance, skippedFeaturesHash, callback, declutterReplays) {
-    var val = oldForEachFeatureAtCoordinate.call(this, coordinate, resolution, rotation, hitTolerance,
+/**
+ * @param {ol.Coordinate} coordinate Coordinate.
+ * @param {number} resolution Resolution.
+ * @param {number} rotation Rotation.
+ * @param {number} hitTolerance Hit tolerance in pixels.
+ * @param {Object<string, boolean>} skippedFeaturesHash Ids of features to skip.
+ * @param {function((Feature|RenderFeature)): T} callback Feature callback.
+ * @param {Object<string, ol.DeclutterGroup>} declutterReplays Declutter replays.
+ * @return {T|undefined} Callback result.
+ * @template T
+ */
+ReplayGroup.prototype.forEachFeatureAtCoordinate = function(coordinate, resolution, rotation,
+    hitTolerance, skippedFeaturesHash, callback, declutterReplays) {
+  var val = oldForEachFeatureAtCoordinate.call(this, coordinate, resolution, rotation, hitTolerance,
+      skippedFeaturesHash, callback, declutterReplays);
+
+  var proj = osMap.PROJECTION;
+  if (!val && proj.canWrapX()) {
+    var width = getWidth(proj.getExtent());
+
+    // check one world left
+    coordinate[0] -= width;
+    val = oldForEachFeatureAtCoordinate.call(this, coordinate, resolution, rotation, hitTolerance,
         skippedFeaturesHash, callback, declutterReplays);
+    // Put. Ze candle. BACK!
+    coordinate[0] += width;
 
-    var proj = os.map.PROJECTION;
-    if (!val && proj.canWrapX()) {
-      var width = ol.extent.getWidth(proj.getExtent());
-
-      // check one world left
-      coordinate[0] -= width;
+    if (!val) {
+      // check one world right
+      coordinate[0] += width;
       val = oldForEachFeatureAtCoordinate.call(this, coordinate, resolution, rotation, hitTolerance,
           skippedFeaturesHash, callback, declutterReplays);
       // Put. Ze candle. BACK!
-      coordinate[0] += width;
-
-      if (!val) {
-        // check one world right
-        coordinate[0] += width;
-        val = oldForEachFeatureAtCoordinate.call(this, coordinate, resolution, rotation, hitTolerance,
-            skippedFeaturesHash, callback, declutterReplays);
-        // Put. Ze candle. BACK!
-        coordinate[0] -= width;
-      }
+      coordinate[0] -= width;
     }
+  }
 
-    return val;
-  };
-})();
+  return val;
+};

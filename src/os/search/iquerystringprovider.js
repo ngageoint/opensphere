@@ -1,5 +1,5 @@
-goog.provide('os.search.IQueryStringProvider');
-
+goog.module('os.search.IQueryStringProvider');
+goog.module.declareLegacyNamespace();
 
 
 /**
@@ -7,11 +7,12 @@ goog.provide('os.search.IQueryStringProvider');
  *
  *  @interface
  */
-os.search.IQueryStringProvider = function() {};
+class IQueryStringProvider {
+  /**
+   * Retruns a query sting
+   * @return {string}
+   */
+  toQueryString() {}
+}
 
-
-/**
- * Retruns a query sting
- * @return {string}
- */
-os.search.IQueryStringProvider.prototype.toQueryString;
+exports = IQueryStringProvider;

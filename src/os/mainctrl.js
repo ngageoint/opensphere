@@ -86,6 +86,7 @@ goog.require('os.search.SearchManager');
 goog.require('os.state.StateManager');
 goog.require('os.storage');
 goog.require('os.style.StyleManager');
+goog.require('os.style.instance');
 goog.require('os.time');
 goog.require('os.time.TimelineController');
 goog.require('os.ui.AbstractMainCtrl');
@@ -278,6 +279,8 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   var stateManager = os.state.StateManager.getInstance();
   os.state.instance.setStateManager(stateManager);
   os.stateManager = stateManager;
+
+  os.style.instance.setStyleManager(os.style.StyleManager.getInstance());
 
   // set up clear control
   const clearManager = os.ui.clear.ClearManager.getInstance();

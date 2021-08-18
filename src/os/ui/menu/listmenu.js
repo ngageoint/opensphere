@@ -5,6 +5,7 @@ goog.require('os.feature');
 goog.require('os.fn');
 goog.require('os.instanceOf');
 goog.require('os.metrics.keys');
+goog.require('os.source.Vector');
 goog.require('os.ui.ex.ExportUI');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
@@ -152,7 +153,7 @@ os.ui.menu.list.handleListEvent = function(event) {
         break;
       case os.action.EventType.INVERT:
         // don't create and execute a command if it's simple and we don't want it on the stack
-        source.invertSelection();
+        /** @type {os.source.Vector} */ (source).invertSelection();
         os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.FeatureList.INVERT_SELECTION, 1);
         break;
       case os.action.EventType.HIDE_SELECTED:

@@ -1,204 +1,196 @@
-goog.provide('os.ogc.wfs.DescribeFeatureLoader');
-goog.require('goog.Uri');
-goog.require('goog.Uri.QueryData');
-goog.require('goog.events.Event');
-goog.require('goog.events.EventTarget');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('goog.net.EventType');
-goog.require('os.net.Request');
-goog.require('os.ogc');
-goog.require('os.ogc.wfs.DescribeFeatureTypeParser');
+goog.module('os.ogc.wfs.DescribeFeatureLoader');
+goog.module.declareLegacyNamespace();
 
+const Uri = goog.require('goog.Uri');
+const QueryData = goog.require('goog.Uri.QueryData');
+const GoogEvent = goog.require('goog.events.Event');
+const EventTarget = goog.require('goog.events.EventTarget');
+const log = goog.require('goog.log');
+const EventType = goog.require('goog.net.EventType');
+const Request = goog.require('os.net.Request');
+const {getException} = goog.require('os.ogc');
+const DescribeFeatureTypeParser = goog.require('os.ogc.wfs.DescribeFeatureTypeParser');
+
+const Logger = goog.requireType('goog.log.Logger');
+const FeatureType = goog.requireType('os.ogc.wfs.FeatureType');
 
 
 /**
- * @extends {goog.events.EventTarget}
- * @constructor
  */
-os.ogc.wfs.DescribeFeatureLoader = function() {
-  os.ogc.wfs.DescribeFeatureLoader.base(this, 'constructor');
+class DescribeFeatureLoader extends EventTarget {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {FeatureType}
+     * @private
+     */
+    this.featureType_ = null;
+
+    /**
+     * @type {!QueryData}
+     * @private
+     */
+    this.params_ = new QueryData();
+
+    /**
+     * @type {Request}
+     * @private
+     */
+    this.request_ = null;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.typename_ = null;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.url_ = null;
+  }
 
   /**
-   * @type {os.ogc.wfs.FeatureType}
-   * @private
+   * @return {?string}
    */
-  this.featureType_ = null;
+  getUrl() {
+    return this.url_;
+  }
 
   /**
-   * @type {!goog.Uri.QueryData}
-   * @private
+   * @param {?string} value
    */
-  this.params_ = new goog.Uri.QueryData();
+  setUrl(value) {
+    var i = value.indexOf('?');
+    if (i > -1) {
+      this.url_ = value.substring(0, i);
+
+      if (!this.typename_) {
+        var qd = new QueryData(value.substring(i + 1), false);
+        if (qd) {
+          // flipping ignoreCase from false to true will lowercase all keys
+          qd.setIgnoreCase(true);
+
+          if (qd.containsKey('typename')) {
+            this.typename_ = /** @type {string} */ (qd.get('typename'));
+          }
+        }
+
+        if (!this.params_.getKeys().length) {
+          this.setParams(qd);
+        }
+      }
+    } else {
+      this.url_ = value;
+    }
+  }
 
   /**
-   * @type {os.net.Request}
-   * @private
+   * @return {?string}
    */
-  this.request_ = null;
+  getTypename() {
+    return this.typename_;
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @param {?string} value
    */
-  this.typename_ = null;
+  setTypename(value) {
+    this.typename_ = value;
+  }
 
   /**
-   * @type {?string}
+   * @param {!QueryData} value
+   */
+  setParams(value) {
+    this.params_ = value;
+  }
+
+  /**
+   * @return {FeatureType}
+   */
+  getFeatureType() {
+    return this.featureType_;
+  }
+
+  /**
+   * Load the DescribeFeatureType.
+   */
+  load() {
+    if (this.typename_ && this.url_) {
+      if (!this.params_.containsKey('SERVICE')) {
+        this.params_.set('SERVICE', 'WFS');
+      }
+      if (!this.params_.containsKey('VERSION')) {
+        this.params_.set('VERSION', '1.1.0');
+      }
+      if (!this.params_.containsKey('TYPENAME')) {
+        this.params_.set('TYPENAME', this.typename_);
+      }
+      this.params_.set('REQUEST', 'DescribeFeatureType');
+
+      var uri = new Uri(this.url_);
+      uri.setQueryData(this.params_);
+
+      this.request_ = new Request(uri);
+      this.request_.listen(EventType.SUCCESS, this.onDescribeComplete_, false, this);
+      this.request_.listen(EventType.ERROR, this.onDescribeError_, false, this);
+      this.request_.setValidator(getException);
+
+      log.info(logger, 'Loading DescribeFeatureType for "' + this.typename_ + '" on ' + this.url_);
+
+      this.request_.load();
+    } else {
+      this.dispatchEvent(new GoogEvent(EventType.COMPLETE));
+      log.error(logger,
+          'DescribeFeatureType missing url and/or typename!');
+    }
+  }
+
+  /**
+   * @param {GoogEvent} event
    * @private
    */
-  this.url_ = null;
-};
-goog.inherits(os.ogc.wfs.DescribeFeatureLoader, goog.events.EventTarget);
+  onDescribeComplete_(event) {
+    var req = /** @type {Request} */ (event.target);
+    req.removeAllListeners();
 
+    var response = /** @type {string} */ (req.getResponse());
+    var parser = new DescribeFeatureTypeParser();
+    var featureTypes = parser.parse(response);
+    if (featureTypes && featureTypes.length > 0) {
+      this.featureType_ = featureTypes[0];
+    } else {
+      log.error(logger, 'Unable to parse DescribeFeatureType for "' + this.typename_ + '" on ' + this.url_ + '!');
+    }
+
+    this.dispatchEvent(new GoogEvent(EventType.COMPLETE));
+  }
+
+  /**
+   * @param {GoogEvent} event
+   * @private
+   */
+  onDescribeError_(event) {
+    var req = /** @type {Request} */ (event.target);
+    req.removeAllListeners();
+
+    // TODO: Get the full error from the request!
+    log.error(logger, 'Failed to load DescribeFeatureType for "' + this.typename_ + '" on ' + this.url_ + '!');
+
+    this.dispatchEvent(new GoogEvent(EventType.COMPLETE));
+  }
+}
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {Logger}
  */
-os.ogc.wfs.DescribeFeatureLoader.LOGGER_ = goog.log.getLogger('os.ogc.wfs.DescribeFeatureLoader');
+const logger = log.getLogger('os.ogc.wfs.DescribeFeatureLoader');
 
-
-/**
- * @return {?string}
- */
-os.ogc.wfs.DescribeFeatureLoader.prototype.getUrl = function() {
-  return this.url_;
-};
-
-
-/**
- * @param {?string} value
- */
-os.ogc.wfs.DescribeFeatureLoader.prototype.setUrl = function(value) {
-  var i = value.indexOf('?');
-  if (i > -1) {
-    this.url_ = value.substring(0, i);
-
-    if (!this.typename_) {
-      var qd = new goog.Uri.QueryData(value.substring(i + 1), false);
-      if (qd) {
-        // flipping ignoreCase from false to true will lowercase all keys
-        qd.setIgnoreCase(true);
-
-        if (qd.containsKey('typename')) {
-          this.typename_ = /** @type {string} */ (qd.get('typename'));
-        }
-      }
-
-      if (!this.params_.getKeys().length) {
-        this.setParams(qd);
-      }
-    }
-  } else {
-    this.url_ = value;
-  }
-};
-
-
-/**
- * @return {?string}
- */
-os.ogc.wfs.DescribeFeatureLoader.prototype.getTypename = function() {
-  return this.typename_;
-};
-
-
-/**
- * @param {?string} value
- */
-os.ogc.wfs.DescribeFeatureLoader.prototype.setTypename = function(value) {
-  this.typename_ = value;
-};
-
-
-/**
- * @param {!goog.Uri.QueryData} value
- */
-os.ogc.wfs.DescribeFeatureLoader.prototype.setParams = function(value) {
-  this.params_ = value;
-};
-
-
-/**
- * @return {os.ogc.wfs.FeatureType}
- */
-os.ogc.wfs.DescribeFeatureLoader.prototype.getFeatureType = function() {
-  return this.featureType_;
-};
-
-
-/**
- * Load the DescribeFeatureType.
- */
-os.ogc.wfs.DescribeFeatureLoader.prototype.load = function() {
-  if (this.typename_ && this.url_) {
-    if (!this.params_.containsKey('SERVICE')) {
-      this.params_.set('SERVICE', 'WFS');
-    }
-    if (!this.params_.containsKey('VERSION')) {
-      this.params_.set('VERSION', '1.1.0');
-    }
-    if (!this.params_.containsKey('TYPENAME')) {
-      this.params_.set('TYPENAME', this.typename_);
-    }
-    this.params_.set('REQUEST', 'DescribeFeatureType');
-
-    var uri = new goog.Uri(this.url_);
-    uri.setQueryData(this.params_);
-
-    this.request_ = new os.net.Request(uri);
-    this.request_.listen(goog.net.EventType.SUCCESS, this.onDescribeComplete_, false, this);
-    this.request_.listen(goog.net.EventType.ERROR, this.onDescribeError_, false, this);
-    this.request_.setValidator(os.ogc.getException);
-
-    goog.log.info(os.ogc.wfs.DescribeFeatureLoader.LOGGER_,
-        'Loading DescribeFeatureType for "' + this.typename_ + '" on ' + this.url_);
-
-    this.request_.load();
-  } else {
-    this.dispatchEvent(new goog.events.Event(goog.net.EventType.COMPLETE));
-    goog.log.error(os.ogc.wfs.DescribeFeatureLoader.LOGGER_,
-        'DescribeFeatureType missing url and/or typename!');
-  }
-};
-
-
-/**
- * @param {goog.events.Event} event
- * @private
- */
-os.ogc.wfs.DescribeFeatureLoader.prototype.onDescribeComplete_ = function(event) {
-  var req = /** @type {os.net.Request} */ (event.target);
-  req.removeAllListeners();
-
-  var response = /** @type {string} */ (req.getResponse());
-  var parser = new os.ogc.wfs.DescribeFeatureTypeParser();
-  var featureTypes = parser.parse(response);
-  if (featureTypes && featureTypes.length > 0) {
-    this.featureType_ = featureTypes[0];
-  } else {
-    goog.log.error(os.ogc.wfs.DescribeFeatureLoader.LOGGER_,
-        'Unable to parse DescribeFeatureType for "' + this.typename_ + '" on ' + this.url_ + '!');
-  }
-
-  this.dispatchEvent(new goog.events.Event(goog.net.EventType.COMPLETE));
-};
-
-
-/**
- * @param {goog.events.Event} event
- * @private
- */
-os.ogc.wfs.DescribeFeatureLoader.prototype.onDescribeError_ = function(event) {
-  var req = /** @type {os.net.Request} */ (event.target);
-  req.removeAllListeners();
-
-  // TODO: Get the full error from the request!
-  goog.log.error(os.ogc.wfs.DescribeFeatureLoader.LOGGER_,
-      'Failed to load DescribeFeatureType for "' + this.typename_ + '" on ' + this.url_ + '!');
-
-  this.dispatchEvent(new goog.events.Event(goog.net.EventType.COMPLETE));
-};
+exports = DescribeFeatureLoader;

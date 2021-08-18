@@ -1,4 +1,5 @@
-goog.provide('os.source.IStyle');
+goog.module('os.source.IStyle');
+goog.module.declareLegacyNamespace();
 
 
 /**
@@ -6,20 +7,22 @@ goog.provide('os.source.IStyle');
  *
  * @interface
  */
-os.source.IStyle = function() {};
+class IStyle {
+  /**
+   * @return {?(string|osx.ogc.TileStyle)}
+   */
+  getStyle() {}
+
+  /**
+   * @param {?(string|osx.ogc.TileStyle)} value
+   */
+  setStyle(value) {}
+}
 
 /**
  * @const
  * @type {string}
  */
-os.source.IStyle.ID = 'os.source.IStyle';
+IStyle.ID = 'os.source.IStyle';
 
-/**
- * @return {?(string|osx.ogc.TileStyle)}
- */
-os.source.IStyle.prototype.getStyle;
-
-/**
- * @param {?(string|osx.ogc.TileStyle)} value
- */
-os.source.IStyle.prototype.setStyle;
+exports = IStyle;

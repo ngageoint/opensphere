@@ -4,67 +4,69 @@
  *
  * @suppress {accessControls} To allow access to private properties in OpenLayers classes.
  */
-goog.provide('os.mixin.zoomscale');
+goog.module('os.mixin.zoomscale');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.math');
-goog.require('ol.render.EventType');
-goog.require('ol.render.canvas.ImageReplay');
-goog.require('os.MapContainer');
-goog.require('os.MapEvent');
-goog.require('os.map');
+const {lerp} = goog.require('goog.math');
+const events = goog.require('ol.events');
+const EventType = goog.require('ol.render.EventType');
+const ImageReplay = goog.require('ol.render.canvas.ImageReplay');
+const MapContainer = goog.require('os.MapContainer');
+const MapEvent = goog.require('os.MapEvent');
+const {ZoomScale} = goog.require('os.map');
+
+const Icon = goog.requireType('ol.style.Icon');
 
 
-(function() {
-  // cache values to reduce how often the zoom scale is computed
-  var zoomScale;
-  var lastAltitude;
+// cache values to reduce how often the zoom scale is computed
+let zoomScale;
+let lastAltitude;
 
-  var mapContainer = os.MapContainer.getInstance();
+const mapContainer = MapContainer.getInstance();
 
-  /**
-   * Update the scale value for the current map zoom.
-   */
-  var updateZoomScale = function() {
-    var altitude = mapContainer.getAltitude();
-    if (lastAltitude != altitude) {
-      lastAltitude = altitude;
+/**
+ * Update the scale value for the current map zoom.
+ */
+const updateZoomScale = function() {
+  let altitude = mapContainer.getAltitude();
+  if (lastAltitude != altitude) {
+    lastAltitude = altitude;
 
-      if (altitude <= os.map.ZoomScale.NEAR) {
-        // don't scale icons beyond the near limit
-        zoomScale = undefined;
-      } else {
-        // don't scale beyond the far altitude value
-        altitude = Math.min(altitude, os.map.ZoomScale.FAR);
+    if (altitude <= ZoomScale.NEAR) {
+      // don't scale icons beyond the near limit
+      zoomScale = undefined;
+    } else {
+      // don't scale beyond the far altitude value
+      altitude = Math.min(altitude, ZoomScale.FAR);
 
-        zoomScale = goog.math.lerp(os.map.ZoomScale.NEAR_SCALE, os.map.ZoomScale.FAR_SCALE,
-            (altitude - os.map.ZoomScale.NEAR) / (os.map.ZoomScale.FAR - os.map.ZoomScale.NEAR));
-      }
+      zoomScale = lerp(ZoomScale.NEAR_SCALE, ZoomScale.FAR_SCALE,
+          (altitude - ZoomScale.NEAR) / (ZoomScale.FAR - ZoomScale.NEAR));
     }
-  };
+  }
+};
 
-  // update the zoom scale when the precompose event is fired, which will happen once per frame.
-  mapContainer.listenOnce(os.MapEvent.MAP_READY, function() {
-    var map = mapContainer.getMap();
-    if (map) {
-      ol.events.listen(map, ol.render.EventType.PRECOMPOSE, updateZoomScale);
-    }
-  });
+// update the zoom scale when the precompose event is fired, which will happen once per frame.
+mapContainer.listenOnce(MapEvent.MAP_READY, function() {
+  const map = mapContainer.getMap();
+  if (map) {
+    events.listen(map, EventType.PRECOMPOSE, updateZoomScale);
+  }
+});
 
-  var oldSetImageStyle = ol.render.canvas.ImageReplay.prototype.setImageStyle;
+const oldSetImageStyle = ImageReplay.prototype.setImageStyle;
 
-  /**
-   * @override
-   */
-  ol.render.canvas.ImageReplay.prototype.setImageStyle = function(imageStyle, declutterGroup) {
-    oldSetImageStyle.call(this, imageStyle, declutterGroup);
+/**
+ * @override
+ */
+ImageReplay.prototype.setImageStyle = function(imageStyle, declutterGroup) {
+  oldSetImageStyle.call(this, imageStyle, declutterGroup);
 
-    // only scale icon styles. this uses duck typing for performance reasons.
-    if (typeof /** @type {ol.style.Icon} */ (imageStyle).getSrc !== 'function') {
-      return;
-    }
+  // only scale icon styles. this uses duck typing for performance reasons.
+  if (typeof /** @type {Icon} */ (imageStyle).getSrc !== 'function') {
+    return;
+  }
 
-    if (zoomScale != null) {
-      this.scale_ *= zoomScale;
-    }
-  };
-})();
+  if (zoomScale != null) {
+    this.scale_ *= zoomScale;
+  }
+};

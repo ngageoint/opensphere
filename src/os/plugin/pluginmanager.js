@@ -1,277 +1,291 @@
-goog.provide('os.plugin.PluginManager');
+goog.module('os.plugin.PluginManager');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Event');
-goog.require('goog.events.EventTarget');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('os.config.Settings');
-goog.require('os.plugin.IPlugin');
+const EventTarget = goog.require('goog.events.EventTarget');
+const GoogEventType = goog.require('goog.events.EventType');
+const log = goog.require('goog.log');
+const Settings = goog.require('os.config.Settings');
 
+const GoogEvent = goog.requireType('goog.events.Event');
+const Logger = goog.requireType('goog.log.Logger');
+const IPlugin = goog.requireType('os.plugin.IPlugin');
 
 
 /**
  * The plugin manager helps initialize a group of plugins.
- *
- * @extends {goog.events.EventTarget}
- * @constructor
  */
-os.plugin.PluginManager = function() {
-  os.plugin.PluginManager.base(this, 'constructor');
-
+class PluginManager extends EventTarget {
   /**
-   * Whether or not the plugin manager has finished setting up
-   * @type {boolean}
+   * Constructor.
    */
-  this.ready = false;
+  constructor() {
+    super();
+
+    /**
+     * Whether or not the plugin manager has finished setting up
+     * @type {boolean}
+     */
+    this.ready = false;
+
+    /**
+     * Whether or not this manager has been initialized
+     * @type {boolean}
+     * @private
+     */
+    this.init_ = false;
+
+    /**
+     * The id returned by the init setTimeout call.
+     * @type {number|undefined}
+     * @private
+     */
+    this.initTimeoutId_ = undefined;
+
+    /**
+     * The list of plugins
+     * @type {!Array<!IPlugin>}
+     * @private
+     */
+    this.plugins_ = [];
+
+    /**
+     * The map of plugin IDs to init state
+     * @type {?Object<string, boolean>}
+     * @private
+     */
+    this.initMap_ = {};
+  }
 
   /**
-   * Whether or not this manager has been initialized
-   * @type {boolean}
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+
+    this.plugins_.forEach(function(plugin) {
+      plugin.dispose();
+    });
+
+    this.plugins_.length = 0;
+  }
+
+  /**
+   * Determine if plug-in is enabled based on configuration
+   *
+   * @param {!string} pluginId
+   * @return {boolean}
+   */
+  isPluginEnabled(pluginId) {
+    var enabled = Settings.getInstance().get(['plugins', pluginId], true);
+    // in the event that settings hasn't been used, enable will default to null instead of true
+    return (/** @type {boolean} */ (enabled) || enabled === null);
+  }
+
+  /**
+   * Adds a plugin and initializes it if the manager has already initialzed.
+   * Otherwise it will initialize when the manager initializes.
+   *
+   * @param {!IPlugin} p The plugin to add
+   */
+  addPlugin(p) {
+    if (this.init_) {
+      if (this.filterDisabled_(p)) {
+        this.plugins_.push(p);
+        this.initPlugin_(p);
+      }
+    } else {
+      this.plugins_.push(p);
+    }
+  }
+
+  /**
+   * @param {IPlugin} p The plugin to init
    * @private
    */
-  this.init_ = false;
+  initPlugin_(p) {
+    this.initMap_[p.getId()] = false;
+
+    log.fine(logger, 'Initializing plugin ' + p.getId());
+
+    try {
+      var promise = p.init();
+      if (promise) {
+        promise.then(() => {
+          log.fine(logger, 'Initialized plugin ' + p.getId());
+        }, (err) => {
+          log.warning(logger, 'Error loading plugin ' + p.getId() + ': ' + p.getError());
+        }).thenAlways(this.markPlugin_.bind(this, p));
+      } else {
+        this.markPlugin_(p);
+      }
+    } catch (e) {
+      log.error(logger, 'Error loading plugin ' + p.getId(), e);
+      this.markPlugin_(p);
+    }
+  }
 
   /**
-   * The id returned by the init setTimeout call.
-   * @type {number|undefined}
-   * @private
+   * Looks up a plugin by id.
+   *
+   * @param {string} id The plugin id
+   * @return {?IPlugin} The plugin, if found.
    */
-  this.initTimeoutId_ = undefined;
+  getPlugin(id) {
+    for (var i = 0, n = this.plugins_.length; i < n; i++) {
+      if (this.plugins_[i].getId() == id) {
+        return this.plugins_[i];
+      }
+    }
+
+    return null;
+  }
 
   /**
-   * The list of plugins
-   * @type {!Array<!os.plugin.IPlugin>}
-   * @private
+   * Initialize the manager. This will kick off the initialization of all plugins
+   * that are currently registered with the manager. Listen for
+   * {@link GoogEventType.LOAD} for when all plugins are complete.
    */
-  this.plugins_ = [];
+  init() {
+    log.info(logger, 'Initializing plugins ...');
+
+    this.init_ = true;
+    this.plugins_ = this.plugins_.filter(this.filterDisabled_, this);
+
+    if (this.plugins_.length > 0) {
+      // if plugins fail to load within the timeout interval, finish without them so the application can continue loading
+      var initTimeout = /** @type {number} */ (Settings.getInstance().get('plugin.initTimeout',
+          PluginManager.INIT_TIMEOUT));
+      this.initTimeoutId_ = setTimeout(this.onInitTimeout_.bind(this), initTimeout);
+      this.plugins_.forEach(this.initPlugin_, this);
+    } else {
+      // no plugins to load - all done
+      this.finish_();
+    }
+  }
 
   /**
-   * The map of plugin IDs to init state
-   * @type {?Object.<string, boolean>}
+   * Handle timeout reached in the initialization routine.
+   *
    * @private
    */
-  this.initMap_ = {};
-};
-goog.inherits(os.plugin.PluginManager, goog.events.EventTarget);
-goog.addSingletonGetter(os.plugin.PluginManager);
+  onInitTimeout_() {
+    // clear the timeout identifier
+    this.initTimeoutId_ = undefined;
 
+    // report which plugins have not yet initialized
+    var pending = [];
+    for (var id in this.initMap_) {
+      if (!this.initMap_[id]) {
+        pending.push(id);
+      }
+    }
+
+    log.warning(logger,
+        'Plugin initialization timed out for the following plugin(s): ' + pending.join(', '));
+
+    // finish the loading sequence
+    this.finish_();
+  }
+
+  /**
+   * @param {IPlugin} p The plugin
+   * @return {boolean} Whether or not the plugin should remain in the plugin list
+   * @private
+   */
+  filterDisabled_(p) {
+    if (!this.isPluginEnabled(p.getId())) {
+      log.info(logger, 'Plugin ' + p.getId() + ' is disabled and will not be added.');
+      p.dispose();
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * @private
+   */
+  finish_() {
+    if (!this.ready) {
+      log.info(logger, 'Finished loading plugins');
+
+      if (this.initTimeoutId_ != null) {
+        clearTimeout(this.initTimeoutId_);
+        this.initTimeoutId_ = undefined;
+      }
+
+      this.ready = true;
+      this.dispatchEvent(GoogEventType.LOAD);
+    }
+  }
+
+  /**
+   * Marks a plugin as complete and checks if the manager has finished loading
+   * all the plugins.
+   *
+   * @param {IPlugin} plugin The plugin
+   * @private
+   */
+  markPlugin_(plugin) {
+    this.initMap_[plugin.getId()] = true;
+
+    for (var i = 0, n = this.plugins_.length; i < n; i++) {
+      if (!this.initMap_[this.plugins_[i].getId()]) {
+        return;
+      }
+    }
+
+    // we're done
+    this.finish_();
+  }
+
+  /**
+   * Is the plugin manager done?
+   *
+   * @return {boolean}
+   */
+  isReady() {
+    return this.ready;
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!PluginManager}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new PluginManager();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {PluginManager} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
+
+/**
+ * Global instance.
+ * @type {PluginManager|undefined}
+ */
+let instance;
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {Logger}
  */
-os.plugin.PluginManager.LOGGER_ = goog.log.getLogger('os.plugin.PluginManager');
-
+const logger = log.getLogger('os.plugin.PluginManager');
 
 /**
  * Default initialization timeout duration.
  * @type {number}
- * @private
  * @const
  */
-os.plugin.PluginManager.INIT_TIMEOUT_ = 10 * 1000;
+PluginManager.INIT_TIMEOUT = 10 * 1000;
 
-
-/**
- * @inheritDoc
- */
-os.plugin.PluginManager.prototype.disposeInternal = function() {
-  os.plugin.PluginManager.base(this, 'disposeInternal');
-
-  this.plugins_.forEach(function(plugin) {
-    plugin.dispose();
-  });
-
-  this.plugins_.length = 0;
-};
-
-
-/**
- * Determine if plug-in is enabled based on configuration
- *
- * @param {!string} pluginId
- * @return {boolean}
- */
-os.plugin.PluginManager.prototype.isPluginEnabled = function(pluginId) {
-  var enabled = os.settings.get(['plugins', pluginId], true);
-  // in the event that settings hasn't been used, enable will default to null instead of true
-  return (/** @type {boolean} */ (enabled) || enabled === null);
-};
-
-
-/**
- * Adds a plugin and initializes it if the manager has already initialzed.
- * Otherwise it will initialize when the manager initializes.
- *
- * @param {!os.plugin.IPlugin} p The plugin to add
- */
-os.plugin.PluginManager.prototype.addPlugin = function(p) {
-  if (this.init_) {
-    if (this.filterDisabled_(p)) {
-      this.plugins_.push(p);
-      this.initPlugin_(p);
-    }
-  } else {
-    this.plugins_.push(p);
-  }
-};
-
-
-/**
- * @param {os.plugin.IPlugin} p The plugin to init
- * @private
- */
-os.plugin.PluginManager.prototype.initPlugin_ = function(p) {
-  this.initMap_[p.getId()] = false;
-
-  goog.log.fine(os.plugin.PluginManager.LOGGER_, 'Initializing plugin ' + p.getId());
-
-  try {
-    var promise = p.init();
-    if (promise) {
-      promise.then(function() {
-        goog.log.fine(os.plugin.PluginManager.LOGGER_, 'Initialized plugin ' + p.getId());
-      }, function(err) {
-        goog.log.warning(os.plugin.PluginManager.LOGGER_, 'Error loading plugin ' + p.getId() + ': ' + p.getError());
-      }, this).thenAlways(this.markPlugin_.bind(this, p));
-    } else {
-      this.markPlugin_(p);
-    }
-  } catch (e) {
-    goog.log.error(os.plugin.PluginManager.LOGGER_, 'Error loading plugin ' + p.getId(), e);
-    this.markPlugin_(p);
-  }
-};
-
-
-/**
- * Looks up a plugin by id.
- *
- * @param {string} id The plugin id
- * @return {?os.plugin.IPlugin} The plugin, if found.
- */
-os.plugin.PluginManager.prototype.getPlugin = function(id) {
-  for (var i = 0, n = this.plugins_.length; i < n; i++) {
-    if (this.plugins_[i].getId() == id) {
-      return this.plugins_[i];
-    }
-  }
-
-  return null;
-};
-
-
-/**
- * Initialize the manager. This will kick off the initialization of all plugins
- * that are currently registered with the manager. Listen for
- * {@link goog.events.EventType.LOAD} for when all plugins are complete.
- */
-os.plugin.PluginManager.prototype.init = function() {
-  goog.log.info(os.plugin.PluginManager.LOGGER_, 'Initializing plugins ...');
-
-  this.init_ = true;
-  this.plugins_ = this.plugins_.filter(this.filterDisabled_, this);
-
-  if (this.plugins_.length > 0) {
-    // if plugins fail to load within the timeout interval, finish without them so the application can continue loading
-    var initTimeout = /** @type {number} */ (os.settings.get('plugin.initTimeout',
-        os.plugin.PluginManager.INIT_TIMEOUT_));
-    this.initTimeoutId_ = setTimeout(this.onInitTimeout_.bind(this), initTimeout);
-    this.plugins_.forEach(this.initPlugin_, this);
-  } else {
-    // no plugins to load - all done
-    this.finish_();
-  }
-};
-
-
-/**
- * Handle timeout reached in the initialization routine.
- *
- * @private
- */
-os.plugin.PluginManager.prototype.onInitTimeout_ = function() {
-  // clear the timeout identifier
-  this.initTimeoutId_ = undefined;
-
-  // report which plugins have not yet initialized
-  var pending = [];
-  for (var id in this.initMap_) {
-    if (!this.initMap_[id]) {
-      pending.push(id);
-    }
-  }
-
-  goog.log.warning(os.plugin.PluginManager.LOGGER_,
-      'Plugin initialization timed out for the following plugin(s): ' + pending.join(', '));
-
-  // finish the loading sequence
-  this.finish_();
-};
-
-
-/**
- * @param {os.plugin.IPlugin} p The plugin
- * @return {boolean} Whether or not the plugin should remain in the plugin list
- * @private
- */
-os.plugin.PluginManager.prototype.filterDisabled_ = function(p) {
-  if (!this.isPluginEnabled(p.getId())) {
-    goog.log.info(os.plugin.PluginManager.LOGGER_, 'Plugin ' + p.getId() + ' is disabled and will not be added.');
-    p.dispose();
-    return false;
-  }
-
-  return true;
-};
-
-
-/**
- * @private
- */
-os.plugin.PluginManager.prototype.finish_ = function() {
-  if (!this.ready) {
-    goog.log.info(os.plugin.PluginManager.LOGGER_, 'Finished loading plugins');
-
-    if (this.initTimeoutId_ != null) {
-      clearTimeout(this.initTimeoutId_);
-      this.initTimeoutId_ = undefined;
-    }
-
-    this.ready = true;
-    this.dispatchEvent(goog.events.EventType.LOAD);
-  }
-};
-
-
-/**
- * Marks a plugin as complete and checks if the manager has finished loading
- * all the plugins.
- *
- * @param {os.plugin.IPlugin} plugin The plugin
- * @private
- */
-os.plugin.PluginManager.prototype.markPlugin_ = function(plugin) {
-  this.initMap_[plugin.getId()] = true;
-
-  for (var i = 0, n = this.plugins_.length; i < n; i++) {
-    if (!this.initMap_[this.plugins_[i].getId()]) {
-      return;
-    }
-  }
-
-  // we're done
-  this.finish_();
-};
-
-
-/**
- * Is the plugin manager done?
- *
- * @return {boolean}
- */
-os.plugin.PluginManager.prototype.isReady = function() {
-  return this.ready;
-};
+exports = PluginManager;

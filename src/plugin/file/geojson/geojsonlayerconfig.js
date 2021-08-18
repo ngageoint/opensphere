@@ -10,6 +10,7 @@ const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
 const FeatureImporter = goog.requireType('os.im.FeatureImporter');
 const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
 const ImportManager = goog.require('os.ui.im.ImportManager');
+const GeoJSONParser = goog.requireType('plugin.file.geojson.GeoJSONParser');
 const GeoJSONParserConfig = goog.require('plugin.file.geojson.GeoJSONParserConfig');
 
 
@@ -62,7 +63,7 @@ class GeoJSONLayerConfig extends AbstractDataSourceLayerConfig {
    */
   getParser(options) {
     var im = ImportManager.getInstance();
-    var parser = im.getParser('geojson');
+    var parser = /** @type {GeoJSONParser} */ (im.getParser('geojson'));
     parser.setSourceId(this.id);
     return parser;
   }

@@ -1,6 +1,8 @@
 goog.require('os.ogc.filter.OGCFilterCleaner');
 
 describe('os.ogc.filter.OGCFilterCleaner', function() {
+  const OGCFilterCleaner = goog.module.get('os.ogc.filter.OGCFilterCleaner');
+
   it('should clean filters', function() {
     var dirty = '<filter>' +
       '<And>' +
@@ -32,7 +34,7 @@ describe('os.ogc.filter.OGCFilterCleaner', function() {
       '</And></filter>';
 
 
-    var result = os.ogc.filter.OGCFilterCleaner.cleanFilter(dirty);
+    var result = OGCFilterCleaner.cleanFilter(dirty);
     expect(result).toBe(expected);
   });
 });

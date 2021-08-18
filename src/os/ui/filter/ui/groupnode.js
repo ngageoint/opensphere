@@ -58,7 +58,7 @@ class GroupNode extends SlickTreeNode {
    * @return {string}
    */
   writeFilter(opt_title, opt_desc) {
-    var children = this.getChildren();
+    var children = /** @type {Array<GroupNode>} */ (this.getChildren());
     var ret = '';
 
     if (children) {
