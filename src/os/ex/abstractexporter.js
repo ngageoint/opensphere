@@ -30,7 +30,7 @@ class AbstractExporter extends EventTarget {
     this.fields = null;
 
     /**
-     * The fields to export
+     * The items to export
      * @type {Array<T>}
      * @protected
      */
@@ -88,6 +88,13 @@ class AbstractExporter extends EventTarget {
   /**
    * @inheritDoc
    */
+  supportsProgress() {
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
   reset() {
     this.fields = null;
     this.items = null;
@@ -99,6 +106,13 @@ class AbstractExporter extends EventTarget {
    */
   setFields(fields) {
     this.fields = fields;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getItems() {
+    return this.items;
   }
 
   /**

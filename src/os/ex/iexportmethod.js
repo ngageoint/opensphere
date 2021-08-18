@@ -24,6 +24,12 @@ class IExportMethod {
   setFields(fields) {}
 
   /**
+   * Get the items to export.
+   * @return {Array<T>}
+   */
+  getItems() {}
+
+  /**
    * Set the items to export.
    * @param {Array.<T>} items
    */
@@ -70,6 +76,12 @@ class IExportMethod {
    * @return {boolean}
    */
   supportsTime() {}
+
+  /**
+   * If the export method supports reporting the export status. Useful for long running export jobs.
+   * @return {boolean}
+   */
+  supportsProgress() {}
 
   /**
    * Begins the export process.
