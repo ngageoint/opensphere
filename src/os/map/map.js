@@ -1,5 +1,4 @@
-goog.module('os.map');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.map');
 
 goog.require('os.ol');
 
@@ -18,67 +17,83 @@ const TileGrid = goog.requireType('ol.tilegrid.TileGrid');
  * Selector for the OpenLayers map canvas.
  * @type {string}
  */
-const OPENLAYERS_CANVAS = '.ol-viewport > canvas';
+export const OPENLAYERS_CANVAS = '.ol-viewport > canvas';
 
 /**
  * Class name for the WebGL canvas.
  * @type {string}
  */
-const WEBGL_CANVAS_CLASS = 'webgl-canvas';
+export const WEBGL_CANVAS_CLASS = 'webgl-canvas';
 
 /**
  * Selector for the WebGL canvas.
  * @type {string}
  */
-const WEBGL_CANVAS = 'canvas.' + WEBGL_CANVAS_CLASS;
+export const WEBGL_CANVAS = 'canvas.' + WEBGL_CANVAS_CLASS;
 
 /**
  * Default center position for the map.
  * @type {!ol.Coordinate}
  */
-const DEFAULT_CENTER = [0, 0];
+export const DEFAULT_CENTER = [0, 0];
 
 /**
  * Default zoom level for the map.
  * @type {number}
  */
-const DEFAULT_ZOOM = 3;
+export const DEFAULT_ZOOM = 3;
 
 /**
  * Minimum zoom level for the map
  * @type {number}
  */
-const MIN_ZOOM = 2;
+export const MIN_ZOOM = 2;
 
 /**
  * Maximum zoom level for the map
  * @type {number}
  */
-const MAX_ZOOM = 25;
+export const MAX_ZOOM = 25;
 
 /**
  * Maximum zoom used for go to/fly to operations
  * @type {number}
  */
-const MAX_AUTO_ZOOM = 18;
+export const MAX_AUTO_ZOOM = 18;
 
 /**
  * Projection used for the map and all of its layers.
  * @type {Projection}
  */
-let PROJECTION = getProjection('EPSG:4326');
+export let PROJECTION = getProjection('EPSG:4326');
+
+/**
+ * Set the map projection.
+ * @param {Projection} value The projection.
+ */
+export const setProjection = (value) => {
+  PROJECTION = value;
+};
 
 /**
  * Settings key for the map projection.
  * @type {string}
  */
-const PROJECTION_KEY = 'baseProjection';
+export const PROJECTION_KEY = 'baseProjection';
 
 /**
  * Tile grid to request 512x512 tiles.
  * @type {TileGrid}
  */
-let TILEGRID = createForProjection(PROJECTION, DEFAULT_MAX_ZOOM, [512, 512]);
+export let TILEGRID = createForProjection(PROJECTION, DEFAULT_MAX_ZOOM, [512, 512]);
+
+/**
+ * Set the map tile grid.
+ * @param {TileGrid} value The tile grid.
+ */
+export const setTileGrid = (value) => {
+  TILEGRID = value;
+};
 
 /**
  * These constants don't represent any well-known values. C is for "Constant" and E is for "Exponent" in the curve fit
@@ -86,7 +101,7 @@ let TILEGRID = createForProjection(PROJECTION, DEFAULT_MAX_ZOOM, [512, 512]);
  *
  * @type {number}
  */
-const C = 110841096.471006;
+export const C = 110841096.471006;
 
 /**
  * These constants don't represent any well-known values. C is for "Constant" and E is for "Exponent" in the curve fit
@@ -94,19 +109,19 @@ const C = 110841096.471006;
  *
  * @type {number}
  */
-const E = 0.9151598587;
+export const E = 0.9151598587;
 
 /**
  * Empty extent used to test an uninitialized extent state.
  * @type {ol.Extent}
  */
-const ZERO_EXTENT = [0, 0, 0, 0];
+export const ZERO_EXTENT = [0, 0, 0, 0];
 
 /**
  * Properties to scale icons/labels by camera distance. Near/far values represent camera altitude in meters.
  * @type {!Object<string, number>}
  */
-const ZoomScale = {
+export const ZoomScale = {
   NEAR: 3e6,
   NEAR_SCALE: 1,
   FAR: 3e7,
@@ -121,7 +136,7 @@ const ZoomScale = {
  * @param {number=} opt_precision The decimal precision
  * @return {number} zoom
  */
-const resolutionToZoom = function(resolution, projection, opt_precision) {
+export const resolutionToZoom = function(resolution, projection, opt_precision) {
   var extent = projection.getExtent();
   var size = extent[2] - extent[0];
 
@@ -143,7 +158,7 @@ const resolutionToZoom = function(resolution, projection, opt_precision) {
  * @param {Projection} projection
  * @return {number} resolution (degrees per pixel)
  */
-const zoomToResolution = function(zoom, projection) {
+export const zoomToResolution = function(zoom, projection) {
   var extent = projection.getExtent();
   var size = extent[2] - extent[0];
 
@@ -153,16 +168,32 @@ const zoomToResolution = function(zoom, projection) {
 };
 
 /**
- * Maximum zoom level for the map
+ * Minimum zoom level for the map
  * @type {number}
  */
-let MIN_RESOLUTION = zoomToResolution(MAX_ZOOM, PROJECTION);
+export let MIN_RESOLUTION = zoomToResolution(MAX_ZOOM, PROJECTION);
+
+/**
+ * Set the map minimum resolution.
+ * @param {number} value The minimum resolution.
+ */
+export const setMinResolution = (value) => {
+  MIN_RESOLUTION = value;
+};
 
 /**
  * Maximum zoom level for the map
  * @type {number}
  */
-let MAX_RESOLUTION = zoomToResolution(MIN_ZOOM, PROJECTION);
+export let MAX_RESOLUTION = zoomToResolution(MIN_ZOOM, PROJECTION);
+
+/**
+ * Set the map minimum resolution.
+ * @param {number} value The minimum resolution.
+ */
+export const setMaxResolution = (value) => {
+  MAX_RESOLUTION = value;
+};
 
 /**
  * Calculate the camera distance for a given resolution.
@@ -173,7 +204,7 @@ let MAX_RESOLUTION = zoomToResolution(MIN_ZOOM, PROJECTION);
  *
  * @return {number} The distance
  */
-const distanceForResolution = function(size, resolution, opt_latitude) {
+export const distanceForResolution = function(size, resolution, opt_latitude) {
   assert(size != null && size.length > 0, 'size should be defined');
 
   var aspectRatio = size[0] / size[1];
@@ -220,7 +251,7 @@ const distanceForResolution = function(size, resolution, opt_latitude) {
  *
  * @return {number} The calculated resolution, or NaN if the resolution cannot be calculated.
  */
-const resolutionForDistance = function(map, distance, opt_latitude) {
+export const resolutionForDistance = function(map, distance, opt_latitude) {
   assert(map != null, 'map should be defined');
 
   var size = map.getSize();
@@ -245,48 +276,4 @@ const resolutionForDistance = function(map, distance, opt_latitude) {
   var resolution = visibleMapUnits / size[1];
 
   return resolution;
-};
-
-exports = {
-  OPENLAYERS_CANVAS,
-  WEBGL_CANVAS_CLASS,
-  WEBGL_CANVAS,
-  DEFAULT_CENTER,
-  DEFAULT_ZOOM,
-  MIN_ZOOM,
-  MAX_ZOOM,
-  MAX_AUTO_ZOOM,
-  PROJECTION_KEY,
-  C,
-  E,
-  ZERO_EXTENT,
-  get PROJECTION() {
-    return PROJECTION;
-  },
-  set PROJECTION(value) {
-    PROJECTION = value;
-  },
-  get TILEGRID() {
-    return TILEGRID;
-  },
-  set TILEGRID(value) {
-    TILEGRID = value;
-  },
-  get MIN_RESOLUTION() {
-    return MIN_RESOLUTION;
-  },
-  set MIN_RESOLUTION(value) {
-    MIN_RESOLUTION = value;
-  },
-  get MAX_RESOLUTION() {
-    return MAX_RESOLUTION;
-  },
-  set MAX_RESOLUTION(value) {
-    MAX_RESOLUTION = value;
-  },
-  ZoomScale,
-  resolutionToZoom,
-  zoomToResolution,
-  distanceForResolution,
-  resolutionForDistance
 };
