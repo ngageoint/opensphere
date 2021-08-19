@@ -16,7 +16,7 @@ const directive = () => ({
   controller: Controller,
   controllerAs: 'ctrl',
   template: '<button class="btn btn-danger" ng-click="ctrl.toggle()" ' +
-      'title="Select items to clear/reset"><i class="fa fa-fw fa-times"></i></button>'
+      'title="Select items to clear/reset"><i class="fa fa-fw fa-times"></i> Clear</button>'
 });
 
 /**

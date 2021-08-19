@@ -12,6 +12,7 @@ const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
  *
  * @return {angular.Directive}
  */
+<<<<<<< HEAD
 const directive = () => ({
   restrict: 'E',
   replace: true,
@@ -24,6 +25,22 @@ const directive = () => ({
     '<i class="fa fa-map-signs"></i>' +
     '</button>'
 });
+=======
+os.ui.legendButtonDirective = function() {
+  return {
+    restrict: 'E',
+    replace: true,
+    scope: true,
+    controller: os.ui.LegendButtonCtrl,
+    controllerAs: 'ctrl',
+    template: '<button class="btn btn-secondary" title="View the map legend"' +
+      ' ng-click="ctrl.toggle()"' +
+      ' ng-class="{active: ctrl.isWindowActive()}">' +
+      '<i class="fa fa-map-signs"></i> Legend' +
+      '</button>'
+  };
+};
+>>>>>>> 83ac11865 (feat: added labels and descriptions to nav bar buttons)
 
 /**
  * The element tag for the directive.

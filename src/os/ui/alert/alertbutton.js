@@ -18,9 +18,9 @@ const directive = () => ({
   controller: Controller,
   controllerAs: 'ctrl',
   template:
-`<button class="btn btn-secondary" ng-click="ctrl.toggle()" title="Alerts"
+`<button class="btn btn-secondary" ng-click="ctrl.toggle()" title="View past alerts and toggle alert popups"
     ng-class="{'active': ctrl.isWindowActive()}">
-  <i class="fa fa-fw fa-bell"></i> <${alertBadgeUi} reset="ctrl.isWindowActive()"></${alertBadgeUi}>
+  <i class="fa fa-fw fa-bell"></i> Alerts <${alertBadgeUi} reset="ctrl.isWindowActive()"></${alertBadgeUi}>
 </button>`
 });
 
