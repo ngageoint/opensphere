@@ -19,7 +19,8 @@ const directive = () => ({
 
   template: '<button class="btn btn-secondary" ng-click="ctrl.toggle()" title="View past map interactions"' +
     ' ng-class="{\'active\': ctrl.isWindowActive()}">' +
-    '<i class="fa fa-fw fa-history"></i> History' +
+    '<i class="fa fa-fw fa-history"></i>' +
+    ' <span ng-class="{\'d-none\': puny}">History</span>' +
     '</button>'
 });
 
