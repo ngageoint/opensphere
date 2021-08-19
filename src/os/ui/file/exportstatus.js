@@ -3,7 +3,6 @@ goog.declareModuleId('os.ui.file.ExportStatusUI');
 const Module = goog.require('os.ui.Module');
 const OSEventType = goog.require('os.events.EventType');
 const ThreadEventType = goog.require('os.thread.EventType');
-const windowSelector = goog.require('os.ui.windowSelector');
 const {apply} = goog.require('os.ui');
 const {close, create} = goog.require('os.ui.window');
 const WindowEventType = goog.require('os.ui.WindowEventType');
@@ -158,25 +157,22 @@ const WINDOW_ID = 'exportProgress';
  * @param {IExportMethod} exporter
  */
 export const launch = (exporter) => {
-  var scopeOptions = {
+  const scopeOptions = {
     'exporter': exporter
   };
 
-  var container = angular.element(windowSelector.CONTAINER);
-  var x = container.width() - 350;
-
-  var windowOptions = {
+  const windowOptions = {
     'label': `${exporter.getLabel()} Export Progress`,
     'id': WINDOW_ID,
     'key': WINDOW_ID, // makes this a saved window, will remember position
     'icon': 'fas fa-download',
-    'x': x,
+    'x': -50,
     'y': 'center',
     'width': 300,
     'height': 'auto',
     'show-close': true
   };
 
-  var template = `<${directiveTag} exporter="exporter"></${directiveTag}>`;
+  const template = `<${directiveTag} exporter="exporter"></${directiveTag}>`;
   create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
