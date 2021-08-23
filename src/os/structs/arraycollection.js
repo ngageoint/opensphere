@@ -281,7 +281,7 @@ class ArrayCollection extends EventTarget {
     if (removedFromView) {
       this.viewChanged_ = true;
     }
-    this.sourceChanged = true;
+    this.sourceChanged_ = true;
     this.scheduleDataChanged();
   }
 
@@ -488,7 +488,7 @@ class ArrayCollection extends EventTarget {
     }
 
     this.viewChanged_ = false;
-    this.sourceChange_ = false;
+    this.sourceChanged_ = false;
   }
 
   // ****** goog.structs.* impl ******
