@@ -11,11 +11,14 @@ const ZoomControl = goog.require('ol.control.Zoom');
 const {getCenter: getExtentCenter} = goog.require('ol.extent');
 
 const {ROOT} = goog.require('os');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
 const capture = goog.require('os.capture');
 const osImplements = goog.require('os.implements');
 const ILayer = goog.require('os.layer.ILayer');
 const osMap = goog.require('os.map');
 const {getMapContainer} = goog.require('os.map.instance');
+const {getMaxFeatures} = goog.require('os.ogc');
 const {resize, removeResize} = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const {
@@ -28,6 +31,7 @@ const {
 const EventKey = goog.requireType('goog.events.Key');
 const Control = goog.requireType('ol.control.Control');
 const Layer = goog.requireType('ol.layer.Layer');
+const ISource = goog.requireType('os.source.ISource');
 
 
 /**
@@ -510,6 +514,12 @@ const windowId = 'compare-layers';
  * @param {!LayerCompareOptions} options The layer compare options.
  */
 const launchLayerCompare = (options) => {
+  const featureCount = countFeatures(options.left) + countFeatures(options.right);
+  if (featureCount > getMaxFeatures('2d')) {
+    AlertManager.getInstance().sendAlert('Switching to 2D mode with the current data volume may degrade performance ' +
+    'considerably or crash the browser', AlertEventSeverity.WARNING);
+  }
+
   const existing = getWindowById(windowId);
   if (existing) {
     const scope = existing.find(Selector.CONTAINER).scope();
@@ -538,6 +548,27 @@ const launchLayerCompare = (options) => {
 
     const template = `<${directiveTag}></${directiveTag}>`;
     createWindow(windowOptions, template, undefined, undefined, undefined, options);
+  }
+};
+
+
+/**
+ * Count the features in an array of layers.
+ * @param {Array<Layer>=} layerArray An array of layers.
+ * @return {number} The total number of features in the layer array.
+ */
+const countFeatures = (layerArray) => {
+  if (layerArray && layerArray.length > 0) {
+    var featureCount = 0;
+    layerArray.forEach((layer) => {
+      var source = /** @type {ISource} */ (layer.getSource());
+      if (source) {
+        featureCount += source.getFeatures().length;
+      }
+    });
+    return featureCount;
+  } else {
+    return 0;
   }
 };
 
