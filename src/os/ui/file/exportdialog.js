@@ -4,6 +4,7 @@ goog.module.declareLegacyNamespace();
 const {assert} = goog.require('goog.asserts');
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
+const {launch} = goog.require('os.ui.file.ExportStatusUI');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const exportManager = goog.require('os.ui.exportManager');
 const osWindow = goog.require('os.ui.window');
@@ -263,6 +264,10 @@ class Controller {
     assert(this.options.title != null, 'export title is null');
     assert(this.options.items.length > 0, 'no items to export');
     assert(this.options.fields.length > 0, 'no fields defined on export');
+
+    if (this.options.exporter.supportsProgress()) {
+      launch(this.options.exporter);
+    }
 
     exportManager.exportItems(this.options);
     this.close_();

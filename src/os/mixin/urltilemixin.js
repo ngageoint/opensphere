@@ -421,9 +421,11 @@ UrlTile.prototype.onImageLoadOrError_ = function(evt) {
 
     // request failed, check if it's potentially due to a missing authentication with the server
     const urls = this.getUrls();
-    urls.forEach((url) => {
-      alertAuth(url);
-    });
+    if (urls) {
+      urls.forEach((url) => {
+        alertAuth(url);
+      });
+    }
   }
 
   this.decrementLoading();
