@@ -16,7 +16,10 @@ const DescriptorClass = {
  * @type {Object}
  */
 const NodeClass = {
-  LAYER: 'os.data.LayerNode'
+  DRAW_FEATURE: 'os.data.DrawingFeatureNode',
+  DRAW_LAYER: 'os.data.DrawingLayerNode',
+  LAYER: 'os.data.LayerNode',
+  SLICK: 'os.ui.slick.SlickTreeNode'
 };
 
 /**

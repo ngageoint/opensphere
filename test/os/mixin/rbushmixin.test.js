@@ -11,14 +11,16 @@ goog.require('os.source.Vector');
 
 
 describe('os.mixin.rbush', function() {
-  var originalProjection = os.map.PROJECTION;
+  const osMap = goog.module.get('os.map');
+
+  var originalProjection = osMap.PROJECTION;
 
   beforeEach(function() {
-    os.map.PROJECTION = ol.proj.get(os.proj.EPSG4326);
+    osMap.setProjection(ol.proj.get(os.proj.EPSG4326));
   });
 
   afterEach(function() {
-    os.map.PROJECTION = originalProjection;
+    osMap.setProjection(originalProjection);
   });
 
   var bruteQuery = function(features, extent) {
@@ -123,12 +125,14 @@ describe('os.mixin.rbush', function() {
     var source = new os.source.Vector();
     source.addFeatures(features);
 
-    var results = [[-187, -2, -183, 2],
+    var results = [
+      [-187, -2, -183, 2],
       [-177, -2, -173, 2],
       [173, -2, 177, 2],
-      [183, -2, 187, 2]].map(function(extent) {
-        return source.getFeaturesInGeometry(ol.geom.Polygon.fromExtent(extent)).map(mapToId);
-      });
+      [183, -2, 187, 2]
+    ].map(function(extent) {
+      return source.getFeaturesInGeometry(ol.geom.Polygon.fromExtent(extent)).map(mapToId);
+    });
 
     for (var i = 0, n = results.length; i < n; i++) {
       expect(results[i].length).toBe(2);

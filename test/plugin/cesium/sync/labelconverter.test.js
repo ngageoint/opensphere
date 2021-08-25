@@ -53,7 +53,7 @@ describe('plugin.cesium.sync.LabelConverter', () => {
 
   const originalProjection = osMap.PROJECTION;
   afterEach(() => {
-    osMap.PROJECTION = originalProjection;
+    osMap.setProjection(originalProjection);
   });
 
   const blue = 'rgba(0,0,255,1)';
@@ -107,7 +107,7 @@ describe('plugin.cesium.sync.LabelConverter', () => {
 
     it('should create a label and transform other projection coordinates', () => {
       // pretend we swapped to EPSG:3857
-      osMap.PROJECTION = olProj.get(osProj.EPSG3857);
+      osMap.setProjection(olProj.get(osProj.EPSG3857));
 
       style.setText(new Text({
         text: 'Test'

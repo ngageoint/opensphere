@@ -1,5 +1,11 @@
-goog.module('os.style.label');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.style.label');
+
+import {instanceOf} from '../classregistry.js';
+import * as osStyle from './style.js';
+import {hideLabel, showLabel} from '../feature/feature.js';
+import * as osMap from '../map/map.js';
+import {zIndexCompare} from '../source/source.js';
+import {measureText} from '../ui/ui.js';
 
 const {assert} = goog.require('goog.asserts');
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
@@ -15,22 +21,16 @@ const Polygon = goog.require('ol.geom.Polygon');
 const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
 const Style = goog.require('ol.style.Style');
 const Fields = goog.require('os.Fields');
-const {instanceOf} = goog.require('os.classRegistry');
 const DataManager = goog.require('os.data.DataManager');
 const RecordField = goog.require('os.data.RecordField');
-const {hideLabel, showLabel} = goog.require('os.feature');
 const {filterFalsey} = goog.require('os.fn');
 const PropertyChange = goog.require('os.layer.PropertyChange');
-const {ZERO_EXTENT} = goog.require('os.map');
 const {getMapContainer} = goog.require('os.map.instance');
 const {getFirstValue} = goog.require('os.object');
-const {zIndexCompare} = goog.require('os.source');
 const SourceClass = goog.require('os.source.SourceClass');
-const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const {getStyleManager} = goog.require('os.style.instance');
-const {measureText} = goog.require('os.ui');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');
@@ -46,13 +46,13 @@ const logger = log.getLogger('os.style.label');
 /**
  * @typedef {{column: (string|null), showColumn: !boolean}}
  */
-let LabelConfig;
+export let LabelConfig;
 
 /**
  * Default label config.
  * @type {!LabelConfig}
  */
-const DEFAULT_LABEL = {
+export const DEFAULT_LABEL = {
   'column': null,
   'showColumn': false
 };
@@ -63,7 +63,7 @@ const DEFAULT_LABEL = {
  * @param {Array<LabelConfig>} labels The label configs.
  * @return {boolean} If one or more label configs have a non-default column.
  */
-const hasNonDefaultLabels = function(labels) {
+export const hasNonDefaultLabels = function(labels) {
   if (labels && labels.length) {
     for (var i = 0; i < labels.length; i++) {
       if (labels[i]['column'] !== DEFAULT_LABEL['column']) {
@@ -82,7 +82,7 @@ const hasNonDefaultLabels = function(labels) {
  * @param {?Array<LabelConfig>} layerLabels
  * @return {!Array<LabelConfig>}
  */
-const getLabels = function(featureLabels, layerLabels) {
+export const getLabels = function(featureLabels, layerLabels) {
   // prefer feature labels
   if (featureLabels) {
     return featureLabels;
@@ -103,7 +103,7 @@ const getLabels = function(featureLabels, layerLabels) {
  * @param {Array<Object>|Object|undefined} config
  * @return {Array<LabelConfig>}
  */
-const getConfigLabels = function(config) {
+export const getConfigLabels = function(config) {
   if (config) {
     if (config[StyleField.LABELS]) {
       return config[StyleField.LABELS];
@@ -128,7 +128,7 @@ const getConfigLabels = function(config) {
  * @param {LabelConfig=} opt_config The config to clone
  * @return {!LabelConfig}
  */
-const cloneConfig = function(opt_config) {
+export const cloneConfig = function(opt_config) {
   var config = opt_config || DEFAULT_LABEL;
   return {
     'column': config['column'],
@@ -142,7 +142,7 @@ const cloneConfig = function(opt_config) {
  * @param {Array<LabelConfig>} configs The label configs.
  * @return {!Array<!LabelConfig>}
  */
-const filterValid = function(configs) {
+export const filterValid = function(configs) {
   if (configs) {
     return configs.filter(function(config) {
       return config != null && !!config['column'];
@@ -156,37 +156,37 @@ const filterValid = function(configs) {
  * Default font.
  * @type {string}
  */
-const DEFAULT_FONT = 'Arial';
+export const DEFAULT_FONT = 'Arial';
 
 /**
  * Default font size.
  * @type {number}
  */
-const DEFAULT_SIZE = 14;
+export const DEFAULT_SIZE = 14;
 
 /**
  * Minimum font size.
  * @type {number}
  */
-const MIN_SIZE = 8;
+export const MIN_SIZE = 8;
 
 /**
  * Maximum font size.
  * @type {number}
  */
-const MAX_SIZE = 48;
+export const MAX_SIZE = 48;
 
 /**
  * Z-index for label styles.
  * @type {number}
  */
-const Z_INDEX = 500;
+export const Z_INDEX = 500;
 
 /**
  * The truncation length for labels.
  * @type {number}
  */
-const TRUNCATE_LENGTH = 50;
+export const TRUNCATE_LENGTH = 50;
 
 /**
  * Update which features should have their labels shown.
@@ -213,7 +213,7 @@ const updateShown_ = function() {
   // check if the view extent is ready to update labels. if the viewport was resized recently, the map size may be zero,
   // which will prevent labels from updating correctly.
   var viewExtent = map.getViewExtent();
-  if (olExtent.equals(viewExtent, ZERO_EXTENT)) {
+  if (olExtent.equals(viewExtent, osMap.ZERO_EXTENT)) {
     return false;
   }
 
@@ -373,7 +373,7 @@ const UPDATE_DELAY_ = new ConditionalDelay(updateShown_);
 /**
  * Update which features should have their labels shown.
  */
-const updateShown = function() {
+export const updateShown = function() {
   if (!UPDATE_DELAY_.isActive()) {
     // try once every 100ms for 5 seconds or until the update succeeds
     UPDATE_DELAY_.start(100, 5000);
@@ -392,7 +392,7 @@ const updateShown = function() {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const createOrUpdate = function(feature, config, opt_layerConfig) {
+export const createOrUpdate = function(feature, config, opt_layerConfig) {
   var labelStyle;
 
   // always show labels for highlighted features, otherwise show if the flag isn't explicity set to false. this is
@@ -451,7 +451,7 @@ const createOrUpdate = function(feature, config, opt_layerConfig) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const createAdditionalLabels = function(feature, config, opt_layerConfig) {
+export const createAdditionalLabels = function(feature, config, opt_layerConfig) {
   var additionalLabels = feature.get(StyleField.ADDITIONAL_LABELS);
   var labelStyles;
 
@@ -494,7 +494,7 @@ const createAdditionalLabels = function(feature, config, opt_layerConfig) {
  * @param {Object} config Base configuration for the feature.
  * @param {Object=} opt_layerConfig Layer configuration for the feature.
  */
-const updateLabelStyle = function(labelStyle, feature, config, opt_layerConfig) {
+export const updateLabelStyle = function(labelStyle, feature, config, opt_layerConfig) {
   updateZIndex(labelStyle, config);
   updateDefaultFontFromSize(labelStyle, config, opt_layerConfig);
   updateDefaultFillColor(labelStyle, feature, config, opt_layerConfig);
@@ -506,7 +506,7 @@ const updateLabelStyle = function(labelStyle, feature, config, opt_layerConfig) 
  * @param {Object=} opt_layerConfig
  * @return {!Object}
  */
-const getLabelConfig = function(featureConfig, opt_layerConfig) {
+export const getLabelConfig = function(featureConfig, opt_layerConfig) {
   return /** @type {Object|undefined} */ (getFirstValue('text', featureConfig, opt_layerConfig)) || {};
 };
 
@@ -524,7 +524,7 @@ const updateZIndex = function(labelStyle, config) {
  * @param {Object} config
  * @param {Object=} opt_layerConfig
  */
-const updateDefaultFontFromSize = function(labelStyle, config, opt_layerConfig) {
+export const updateDefaultFontFromSize = function(labelStyle, config, opt_layerConfig) {
   if (!config || !config['text'] || config['text']['font'] === undefined) {
     const textStyle = labelStyle.getText();
     // update the font and colors
@@ -547,7 +547,7 @@ const updateDefaultFontFromSize = function(labelStyle, config, opt_layerConfig) 
  * @param {Object} config
  * @param {Object=} opt_layerConfig
  */
-const updateDefaultFillColor = function(labelStyle, feature, config, opt_layerConfig) {
+export const updateDefaultFillColor = function(labelStyle, feature, config, opt_layerConfig) {
   if (!config || !config['text'] || (
     config['text']['fillColor'] === undefined && (
       config['text']['fill'] === undefined ||
@@ -567,7 +567,7 @@ const updateDefaultFillColor = function(labelStyle, feature, config, opt_layerCo
  * @param {Object} config
  * @param {Object=} opt_layerConfig
  */
-const updateDefaultStrokeColor = function(labelStyle, feature, config, opt_layerConfig) {
+export const updateDefaultStrokeColor = function(labelStyle, feature, config, opt_layerConfig) {
   if (!config || !config['text'] || (
     config['text']['strokeColor'] === undefined && (
       config['text']['stroke'] === undefined ||
@@ -588,7 +588,7 @@ const updateDefaultStrokeColor = function(labelStyle, feature, config, opt_layer
  * @param {Style} labelStyle
  * @param {string} label
  */
-const updateText = function(labelStyle, label) {
+export const updateText = function(labelStyle, label) {
   const text = labelStyle.getText();
   text.setText(prepareText(label, true));
 };
@@ -597,7 +597,7 @@ const updateText = function(labelStyle, label) {
  * @param {Style} labelStyle
  * @param {Object} config
  */
-const updateDefaultOffsetX = function(labelStyle, config) {
+export const updateDefaultOffsetX = function(labelStyle, config) {
   // labels need to be offset a little more when next to an icon. this helps, but isn't nearly complete.
   // TODO: determine the size of the rendered feature and use that for the x offset
   if (!config || !config['text'] || config['text']['offsetX'] === undefined) {
@@ -613,7 +613,7 @@ const updateDefaultOffsetX = function(labelStyle, config) {
  * @param {Object} config
  * @param {string} align
  */
-const updateDefaultTextAlign = function(labelStyle, config, align) {
+export const updateDefaultTextAlign = function(labelStyle, config, align) {
   if (!config || !config['text'] || !config['text']['textAlign']) {
     const text = labelStyle.getText();
     text.setTextAlign(align);
@@ -627,7 +627,7 @@ const updateDefaultTextAlign = function(labelStyle, config, align) {
  * @param {boolean=} opt_truncate If the label should be truncated. Defaults to true.
  * @return {string} The stripped label text, or the original text if an error was encountered
  */
-const prepareText = function(text, opt_truncate) {
+export const prepareText = function(text, opt_truncate) {
   var shouldTruncate = opt_truncate != null ? opt_truncate : false;
 
   var result;
@@ -658,7 +658,7 @@ const prepareText = function(text, opt_truncate) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const getText = function(feature, field) {
+export const getText = function(feature, field) {
   var value;
 
   // handle special fields here
@@ -683,7 +683,7 @@ const getText = function(feature, field) {
  * @param {LabelConfig} label
  * @return {string} the label text
  */
-const getLabelText = function(feature, label) {
+export const getLabelText = function(feature, label) {
   var value = getText(feature, label['column']);
   if (value && label['showColumn']) {
     // Dont ever just show the key. only if theres a value
@@ -700,7 +700,7 @@ const getLabelText = function(feature, label) {
  * @param {Object} config
  * @return {string} the label text
  */
-const getLabelsText = function(feature, labels, config) {
+export const getLabelsText = function(feature, labels, config) {
   if (config && config['text'] && config['text']['text']) {
     return /** @type {string} */ (config['text']['text']);
   }
@@ -720,7 +720,7 @@ const getLabelsText = function(feature, labels, config) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const getColor = function(feature, config, opt_layerConfig) {
+export const getColor = function(feature, config, opt_layerConfig) {
   var color = config[StyleField.LABEL_COLOR] ||
       (opt_layerConfig && opt_layerConfig[StyleField.LABEL_COLOR]);
   if (!color || feature.values_[StyleType.HIGHLIGHT] || feature.values_[StyleType.SELECT]) {
@@ -737,7 +737,7 @@ const getColor = function(feature, config, opt_layerConfig) {
  * @param {number=} opt_size The font size.
  * @return {string} The CSS font style.
  */
-const getFont = function(opt_size) {
+export const getFont = function(opt_size) {
   // using size/size sets the line height to the font size, creating compact labels
   var size = clamp(opt_size || DEFAULT_SIZE, MIN_SIZE, MAX_SIZE);
   var pxSize = size + 'px';
@@ -752,7 +752,7 @@ const getFont = function(opt_size) {
  * @param {Feature} feature Feature to get the geometry for.
  * @return {Geometry|undefined} Geometry to render.
  */
-const defaultGeometryFunction = function(feature) {
+export const defaultGeometryFunction = function(feature) {
   var geometry;
   assert(feature != undefined, 'feature must be defined');
 
@@ -776,38 +776,4 @@ const defaultGeometryFunction = function(feature) {
   }
 
   return geometry;
-};
-
-exports = {
-  DEFAULT_LABEL,
-  hasNonDefaultLabels,
-  getLabels,
-  getConfigLabels,
-  cloneConfig,
-  filterValid,
-  DEFAULT_FONT,
-  DEFAULT_SIZE,
-  MIN_SIZE,
-  MAX_SIZE,
-  Z_INDEX,
-  TRUNCATE_LENGTH,
-  updateShown,
-  createOrUpdate,
-  createAdditionalLabels,
-  updateLabelStyle,
-  getLabelConfig,
-  updateDefaultFontFromSize,
-  updateDefaultFillColor,
-  updateDefaultStrokeColor,
-  updateText,
-  updateDefaultOffsetX,
-  updateDefaultTextAlign,
-  prepareText,
-  getText,
-  getLabelText,
-  getLabelsText,
-  getColor,
-  getFont,
-  defaultGeometryFunction,
-  LabelConfig
 };

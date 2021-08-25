@@ -1,19 +1,22 @@
-goog.provide('os.ui.uniqueServerUrl');
+goog.module('os.ui.uniqueServerUrl');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.DataManager');
-goog.require('os.ui.Module');
+const Module = goog.require('os.ui.Module');
 
 
 /**
  * @return {angular.Directive}
  */
-os.ui.uniqueServerUrl = function() {
-  return {
-    'require': 'ngModel',
-    'link': os.ui.uniqueServerUrl_
-  };
-};
+const directive = () => ({
+  'require': 'ngModel',
+  'link': uniqueServerUrl
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'unique-server-url';
 
 /**
  * Link function for unique title directive
@@ -25,7 +28,7 @@ os.ui.uniqueServerUrl = function() {
  * @ngInject
  * @private
  */
-os.ui.uniqueServerUrl_ = function($scope, $element, $attrs, $ctrl) {
+const uniqueServerUrl = function($scope, $element, $attrs, $ctrl) {
   var check = function(viewValue) {
     // mark empty URL's as unique. they will be marked invalid by require, otherwise assumed valid.
     if (viewValue && $scope['config']) {
@@ -46,10 +49,12 @@ os.ui.uniqueServerUrl_ = function($scope, $element, $attrs, $ctrl) {
   $ctrl.$parsers.unshift(check);
 };
 
-
 /**
  * Add the unique title directive
  */
-os.ui.Module.directive('uniqueServerUrl', [os.ui.uniqueServerUrl]);
+Module.directive('uniqueServerUrl', [directive]);
 
-
+exports = {
+  directive,
+  directiveTag
+};

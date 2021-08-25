@@ -4,9 +4,9 @@ goog.require('os.style.StrokeReader');
 
 
 describe('os.style.CircleReader', function() {
-  const CircleReader = goog.module.get('os.style.CircleReader');
-  const FillReader = goog.module.get('os.style.FillReader');
-  const StrokeReader = goog.module.get('os.style.StrokeReader');
+  const {default: CircleReader} = goog.module.get('os.style.CircleReader');
+  const {default: FillReader} = goog.module.get('os.style.FillReader');
+  const {default: StrokeReader} = goog.module.get('os.style.StrokeReader');
 
   var config;
   var reader;

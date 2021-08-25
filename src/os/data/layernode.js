@@ -1,8 +1,6 @@
 goog.module('os.data.LayerNode');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.triStateCheckboxDirective');
-
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
 const {instanceOf, registerClass} = goog.require('os.classRegistry');
@@ -23,6 +21,7 @@ const PropertyChange = goog.require('os.source.PropertyChange');
 const VectorSource = goog.require('os.source.Vector');
 const TriState = goog.require('os.structs.TriState');
 const ILayerUIProvider = goog.require('os.ui.ILayerUIProvider');
+const {directiveTag: checkboxUi} = goog.require('os.ui.TriStateCheckboxUI');
 const {directiveTag: layerVisibility} = goog.require('os.ui.layer.LayerVisibilityUI');
 const {directiveTag: featureCount} = goog.require('os.ui.node.FeatureCountUI');
 const {directiveTag: layerType} = goog.require('os.ui.node.LayerTypeUI');
@@ -121,7 +120,7 @@ class LayerNode extends SlickTreeNode {
       // add a normal checkbox (layer enable/disable) if the layer is not removable
       const layerOptions = layer.getLayerOptions();
       if (layer.isRemovable() && layerOptions && !layerOptions['hideDisable']) {
-        checkboxParts.push('<tristatecheckbox></tristatecheckbox>');
+        checkboxParts.push(`<${checkboxUi}></${checkboxUi}>`);
       }
 
       // add a separate visibility toggle for feature layers

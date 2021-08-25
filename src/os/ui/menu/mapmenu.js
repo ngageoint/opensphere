@@ -1,260 +1,277 @@
-goog.provide('os.ui.menu.map');
+goog.module('os.ui.menu.map');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.action.EventType');
-goog.require('os.legend');
-goog.require('os.map.terrain');
-goog.require('os.metrics.keys');
-goog.require('os.ui.events.UIEvent');
-goog.require('os.ui.menu.Menu');
-goog.require('os.ui.menu.MenuItem');
-goog.require('os.ui.menu.MenuItemType');
-goog.require('os.ui.window.ConfirmColorUI');
+const googDispose = goog.require('goog.dispose');
+const dispatcher = goog.require('os.Dispatcher');
+const EventType = goog.require('os.action.EventType');
+const DisplaySetting = goog.require('os.config.DisplaySetting');
+const Settings = goog.require('os.config.Settings');
+const DataManager = goog.require('os.data.DataManager');
+const legend = goog.require('os.legend');
+const {getMapContainer} = goog.require('os.map.instance');
+const {hasTerrain} = goog.require('os.map.terrain');
+const {Map: MapKeys} = goog.require('os.metrics.keys');
+const VectorSource = goog.require('os.source.Vector');
+const UIEvent = goog.require('os.ui.events.UIEvent');
+const UIEventType = goog.require('os.ui.events.UIEventType');
+const Menu = goog.require('os.ui.menu.Menu');
+const MenuItem = goog.require('os.ui.menu.MenuItem');
+const MenuItemType = goog.require('os.ui.menu.MenuItemType');
+const ConfirmColorUI = goog.require('os.ui.window.ConfirmColorUI');
+
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+
 
 /**
- * @type {os.ui.menu.Menu<ol.Coordinate>|undefined}
- * @deprecated use os.ui.menu.map.MENU instead
+ * @type {Menu<ol.Coordinate>|undefined}
  */
-os.ui.menu.MAP = undefined;
-
+let MENU = undefined;
 
 /**
- * @type {os.ui.menu.Menu<ol.Coordinate>|undefined}
+ * Get the menu.
+ * @return {Menu<ol.Coordinate>|undefined}
  */
-os.ui.menu.map.MENU = undefined;
+const getMenu = () => MENU;
 
+/**
+ * Set the menu.
+ * @param {Menu<ol.Coordinate>|undefined} menu The menu.
+ */
+const setMenu = (menu) => {
+  MENU = menu;
+};
 
 /**
  * Sort value used for each map menu group.
  * @enum {number}
  */
-os.ui.menu.map.GroupSort = {
+const GroupSort = {
   MAP: 0,
   OPTIONS: 5,
   COORDINATE: 10
 };
 
-
 /**
  * Group labels for the map menu.
  * @enum {string}
  */
-os.ui.menu.map.GroupLabel = {
+const GroupLabel = {
   MAP: 'Map',
   OPTIONS: 'Options',
   COORDINATE: 'Coordinate'
 };
 
-
 /**
  * Set up the menu
  */
-os.ui.menu.map.setup = function() {
-  if (os.ui.menu.map.MENU) {
+const setup = function() {
+  if (MENU) {
     // already created
     return;
   }
 
-  os.ui.menu.MAP = os.ui.menu.map.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
-    type: os.ui.menu.MenuItemType.ROOT,
+  MENU = new Menu(new MenuItem({
+    type: MenuItemType.ROOT,
     children: [{
-      label: os.ui.menu.map.GroupLabel.MAP,
-      type: os.ui.menu.MenuItemType.GROUP,
-      sort: os.ui.menu.map.GroupSort.MAP,
+      label: GroupLabel.MAP,
+      type: MenuItemType.GROUP,
+      sort: GroupSort.MAP,
       children: [{
         label: 'Reset View',
-        eventType: os.action.EventType.RESET_VIEW,
+        eventType: EventType.RESET_VIEW,
         tooltip: 'Resets to the default view',
         icons: ['<i class="fa fa-fw fa-picture-o"></i>'],
         shortcut: 'V',
         sort: 10,
-        metricKey: os.metrics.keys.Map.RESET_VIEW_CONTEXT_MENU
+        metricKey: MapKeys.RESET_VIEW_CONTEXT_MENU
       }, {
         label: 'Reset Rotation',
-        eventType: os.action.EventType.RESET_ROTATION,
+        eventType: EventType.RESET_ROTATION,
         tooltip: 'Resets to the default rotation',
         icons: ['<i class="fa fa-fw fa-compass"></i>'],
         shortcut: 'R',
         sort: 20,
-        metricKey: os.metrics.keys.Map.RESET_ROTATION_CONTEXT_MENU
+        metricKey: MapKeys.RESET_ROTATION_CONTEXT_MENU
       }, {
         label: 'Toggle 2D/3D View',
-        eventType: os.action.EventType.TOGGLE_VIEW,
+        eventType: EventType.TOGGLE_VIEW,
         tooltip: 'Toggle the map view between 2D and 3D views',
         icons: ['<i class="fa fa-fw fa-globe"></i>'],
         sort: 30,
-        metricKey: os.metrics.keys.Map.TOGGLE_MODE
+        metricKey: MapKeys.TOGGLE_MODE
       }, {
         label: 'Show Legend',
-        eventType: os.action.EventType.SHOW_LEGEND,
+        eventType: EventType.SHOW_LEGEND,
         tooltip: 'Display the map legend',
-        icons: ['<i class="fa fa-fw ' + os.legend.ICON + '"></i>'],
+        icons: ['<i class="fa fa-fw ' + legend.ICON + '"></i>'],
         sort: 40,
-        handler: os.ui.menu.map.showLegend,
-        metricKey: os.metrics.keys.Map.SHOW_LEGEND_CONTEXT
+        handler: showLegend,
+        metricKey: MapKeys.SHOW_LEGEND_CONTEXT
       }, {
         label: 'Clear Selection',
-        eventType: os.action.EventType.CLEAR_SELECTION,
+        eventType: EventType.CLEAR_SELECTION,
         tooltip: 'Clears the selected features across all layers',
         icons: ['<i class="fa fa-fw fa-times-circle"></i>'],
         sort: 50,
-        handler: os.ui.menu.map.clearSelection_,
-        metricKey: os.metrics.keys.Map.CLEAR_SELECTION
+        handler: clearSelection,
+        metricKey: MapKeys.CLEAR_SELECTION
       }]
     }, {
-      label: os.ui.menu.map.GroupLabel.OPTIONS,
-      type: os.ui.menu.MenuItemType.GROUP,
-      sort: os.ui.menu.map.GroupSort.OPTIONS,
+      label: GroupLabel.OPTIONS,
+      type: MenuItemType.GROUP,
+      sort: GroupSort.OPTIONS,
       children: [{
         label: 'Background Color',
-        eventType: os.config.DisplaySetting.BG_COLOR,
+        eventType: DisplaySetting.BG_COLOR,
         tooltip: 'Change the map background color',
         icons: [],
-        beforeRender: os.ui.menu.map.updateBGIcon,
-        handler: os.ui.menu.map.changeColor_,
-        metricKey: os.metrics.keys.Map.BACKGROUND_COLOR
+        beforeRender: updateBGIcon,
+        handler: changeColor,
+        metricKey: MapKeys.BACKGROUND_COLOR
       }, {
         label: 'Sky',
-        eventType: os.config.DisplaySetting.ENABLE_SKY,
-        type: os.ui.menu.MenuItemType.CHECK,
+        eventType: DisplaySetting.ENABLE_SKY,
+        type: MenuItemType.CHECK,
         tooltip: 'Show the sky/stars around the 3D globe',
-        beforeRender: os.ui.menu.map.updateSkyItem,
-        handler: os.ui.menu.map.onSky
+        beforeRender: updateSkyItem,
+        handler: onSky
       }, {
         label: 'Terrain',
-        eventType: os.config.DisplaySetting.ENABLE_TERRAIN,
-        type: os.ui.menu.MenuItemType.CHECK,
+        eventType: DisplaySetting.ENABLE_TERRAIN,
+        type: MenuItemType.CHECK,
         tooltip: 'Show terrain on the 3D globe',
-        beforeRender: os.ui.menu.map.updateTerrainItem,
-        handler: os.ui.menu.map.onTerrain
+        beforeRender: updateTerrainItem,
+        handler: onTerrain
       }]
     }, {
-      label: os.ui.menu.map.GroupLabel.COORDINATE,
-      type: os.ui.menu.MenuItemType.GROUP,
+      label: GroupLabel.COORDINATE,
+      type: MenuItemType.GROUP,
       visible: false,
-      sort: os.ui.menu.map.GroupSort.COORDINATE,
+      sort: GroupSort.COORDINATE,
       children: [],
-      beforeRender: os.ui.menu.map.showIfHasCoordinate
+      beforeRender: showIfHasCoordinate
     }]
   }));
 };
 
-
 /**
  * Disposes map menu
  */
-os.ui.menu.map.dispose = function() {
-  goog.dispose(os.ui.menu.map.MENU);
-  os.ui.menu.MAP = os.ui.menu.map.MENU = undefined;
+const dispose = function() {
+  googDispose(MENU);
+  MENU = undefined;
 };
-
 
 /**
  * Show a menu item if the context is a valid coordinate.
  *
  * @param {ol.Coordinate} coord The coordinate.
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
-os.ui.menu.map.showIfHasCoordinate = function(coord) {
+const showIfHasCoordinate = function(coord) {
   this.visible = Boolean(coord && coord.length > 1);
 };
-
 
 /**
  * Color the icon for the Background Color menu item.
  *
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
-os.ui.menu.map.updateBGIcon = function() {
-  var color = os.settings.get(os.config.DisplaySetting.BG_COLOR, '#000000');
+const updateBGIcon = function() {
+  var color = Settings.getInstance().get(DisplaySetting.BG_COLOR, '#000000');
   this.icons[0] = '<i class="fa fa-fw fa-tint" style="color:' + color + '"></i>';
 };
-
 
 /**
  * Show the map legend.
  */
-os.ui.menu.map.showLegend = function() {
-  var event = new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, os.legend.ID, true,
-      null, os.metrics.keys.Map.SHOW_LEGEND);
-  os.dispatcher.dispatchEvent(event);
+const showLegend = function() {
+  var event = new UIEvent(UIEventType.TOGGLE_UI, legend.ID, true, null, MapKeys.SHOW_LEGEND);
+  dispatcher.getInstance().dispatchEvent(event);
 };
-
 
 /**
  * Clears selection on all vector sources.
  *
- * @private
  */
-os.ui.menu.map.clearSelection_ = function() {
-  var sources = os.dataManager.getSources();
+const clearSelection = function() {
+  var sources = DataManager.getInstance().getSources();
   for (var i = 0, ii = sources.length; i < ii; i++) {
     var s = sources[i];
-    if (s instanceof os.source.Vector) {
+    if (s instanceof VectorSource) {
       s.selectNone();
     }
   }
 };
 
-
 /**
- * @private
  */
-os.ui.menu.map.changeColor_ = function() {
-  var color = /** @type {string} */ (os.settings.get(os.config.DisplaySetting.BG_COLOR, '#000000'));
-  os.ui.window.ConfirmColorUI.launchConfirmColor(os.ui.menu.map.onColorChosen_, color);
+const changeColor = function() {
+  var color = /** @type {string} */ (Settings.getInstance().get(DisplaySetting.BG_COLOR, '#000000'));
+  ConfirmColorUI.launchConfirmColor(onColorChosen, color);
 };
-
 
 /**
  * Handle user selection of the map background color.
  *
  * @param {string} color
- * @private
  */
-os.ui.menu.map.onColorChosen_ = function(color) {
-  os.settings.set(os.config.DisplaySetting.BG_COLOR, color);
+const onColorChosen = function(color) {
+  Settings.getInstance().set(DisplaySetting.BG_COLOR, color);
 };
-
 
 /**
  * Update the Sky menu item.
  *
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
-os.ui.menu.map.updateSkyItem = function() {
-  this.visible = os.MapContainer.getInstance().is3DEnabled();
-  this.selected = !!os.settings.get(os.config.DisplaySetting.ENABLE_SKY, false);
+const updateSkyItem = function() {
+  this.visible = getMapContainer().is3DEnabled();
+  this.selected = !!Settings.getInstance().get(DisplaySetting.ENABLE_SKY, false);
 };
-
 
 /**
  * Enable terrain menu option listener.
  *
- * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event The event.
- * @this {os.ui.menu.MenuItem}
+ * @param {MenuEvent<ol.Coordinate>} event The event.
+ * @this {MenuItem}
  */
-os.ui.menu.map.onSky = function(event) {
-  os.settings.set(os.config.DisplaySetting.ENABLE_SKY, !this.selected);
+const onSky = function(event) {
+  Settings.getInstance().set(DisplaySetting.ENABLE_SKY, !this.selected);
 };
-
 
 /**
  * Update the Terrain menu item.
  *
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
-os.ui.menu.map.updateTerrainItem = function() {
-  this.visible = os.MapContainer.getInstance().is3DEnabled() && os.map.terrain.hasTerrain();
-  this.selected = !!os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN, false);
+const updateTerrainItem = function() {
+  this.visible = getMapContainer().is3DEnabled() && hasTerrain();
+  this.selected = !!Settings.getInstance().get(DisplaySetting.ENABLE_TERRAIN, false);
 };
-
 
 /**
  * Enable terrain menu option listener.
  *
- * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event The event.
- * @this {os.ui.menu.MenuItem}
+ * @param {MenuEvent<ol.Coordinate>} event The event.
+ * @this {MenuItem}
  */
-os.ui.menu.map.onTerrain = function(event) {
-  os.settings.set(os.config.DisplaySetting.ENABLE_TERRAIN, !this.selected);
+const onTerrain = function(event) {
+  Settings.getInstance().set(DisplaySetting.ENABLE_TERRAIN, !this.selected);
+};
+
+exports = {
+  getMenu,
+  setMenu,
+  GroupSort,
+  GroupLabel,
+  setup,
+  dispose,
+  showIfHasCoordinate,
+  updateBGIcon,
+  showLegend,
+  updateSkyItem,
+  onSky,
+  updateTerrainItem,
+  onTerrain
 };

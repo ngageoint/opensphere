@@ -25,6 +25,7 @@ const {set, unsafeClone} = goog.require('os.object');
 const {createEllipseGeometry} = goog.require('os.ol.canvas');
 const VectorSource = goog.require('os.source.Vector');
 const osStyle = goog.require('os.style');
+const StyleManager = goog.require('os.style.StyleManager');
 const {measureText} = goog.require('os.ui');
 
 const Layer = goog.requireType('ol.layer.Layer');
@@ -601,7 +602,7 @@ const queueVectorConfig = function(config, options, label, offsetX, opt_useDash)
   }
 
   if (!style) {
-    style = osStyle.StyleManager.getInstance().getOrCreateStyle(config);
+    style = StyleManager.getInstance().getOrCreateStyle(config);
   }
 
   var feature = new Feature(geometry);
@@ -664,7 +665,7 @@ const createTileGeometry = function(options) {
  * @return {!Object}
  */
 const getSourceConfig = function(source, options) {
-  var config = osStyle.StyleManager.getInstance().getLayerConfig(source.getId()) ||
+  var config = StyleManager.getInstance().getLayerConfig(source.getId()) ||
       osStyle.DEFAULT_VECTOR_CONFIG;
 
   // clone so we can modify it freely

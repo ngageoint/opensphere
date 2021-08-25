@@ -1,130 +1,132 @@
-goog.provide('os.ui.TextPromptCtrl');
-goog.provide('os.ui.textPromptDirective');
+goog.module('os.ui.TextPromptUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.async.Delay');
-goog.require('goog.dom');
-goog.require('goog.events.KeyCodes');
-goog.require('goog.events.KeyEvent');
-goog.require('goog.events.KeyHandler');
-goog.require('os.ui.Module');
-goog.require('os.ui.window');
+const Delay = goog.require('goog.async.Delay');
+const {getDocument} = goog.require('goog.dom');
+const KeyCodes = goog.require('goog.events.KeyCodes');
+const KeyEvent = goog.require('goog.events.KeyEvent');
+const KeyHandler = goog.require('goog.events.KeyHandler');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const {close, create} = goog.require('os.ui.window');
 
 
 /**
  * @return {angular.Directive}
  */
-os.ui.textPromptDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/window/textprompt.html',
-    controller: os.ui.TextPromptCtrl,
-    controllerAs: 'textPrompt'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  templateUrl: ROOT + 'views/window/textprompt.html',
+  controller: Controller,
+  controllerAs: 'textPrompt'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'textprompt';
 
 /**
  * Add the directive to the os module
  */
-os.ui.Module.directive('textprompt', [os.ui.textPromptDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
- * @constructor
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @ngInject
+ * @unrestricted
  */
-os.ui.TextPromptCtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.JQLite}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
+
+    $scope.$on('$destroy', this.onDestroy_.bind(this));
+
+    /**
+     * @type {!KeyHandler}
+     * @private
+     */
+    this.keyHandler_ = new KeyHandler(getDocument());
+    this.keyHandler_.listen(KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
+    this.delay_ = new Delay(this.select_, 50, this);
+    $scope.$emit(WindowEventType.READY);
+    $scope.$watch('value', this.onValueChange_.bind(this));
+  }
+
+  /**
+   * clean up
+   *
    * @private
    */
-  this.element_ = $element;
-
-  $scope.$on('$destroy', this.onDestroy_.bind(this));
+  onDestroy_() {
+    this.delay_.dispose();
+    this.keyHandler_.dispose();
+    this.element_ = null;
+  }
 
   /**
-   * @type {!goog.events.KeyHandler}
+   * Handles value change
+   *
+   * @param {string} newValue
    * @private
    */
-  this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
-  this.keyHandler_.listen(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
-  this.delay_ = new goog.async.Delay(this.select_, 50, this);
-  $scope.$emit(os.ui.WindowEventType.READY);
-  $scope.$watch('value', this.onValueChange_.bind(this));
-};
-
-
-/**
- * clean up
- *
- * @private
- */
-os.ui.TextPromptCtrl.prototype.onDestroy_ = function() {
-  this.delay_.dispose();
-  this.keyHandler_.dispose();
-  this.element_ = null;
-};
-
-
-/**
- * Handles value change
- *
- * @param {string} newValue
- * @private
- */
-os.ui.TextPromptCtrl.prototype.onValueChange_ = function(newValue) {
-  if (newValue) {
-    this.delay_.stop();
-    this.delay_.start();
+  onValueChange_(newValue) {
+    if (newValue) {
+      this.delay_.stop();
+      this.delay_.start();
+    }
   }
-};
 
-
-/**
- * Selects the text field
- *
- * @private
- */
-os.ui.TextPromptCtrl.prototype.select_ = function() {
-  var input = this.element_.find('.js-text-prompt__main');
-  input.select();
-};
-
-
-/**
- * Handles key events
- *
- * @param {goog.events.KeyEvent} event
- * @private
- */
-os.ui.TextPromptCtrl.prototype.handleKeyEvent_ = function(event) {
-  if (event.keyCode == goog.events.KeyCodes.ESC) {
-    this.close();
+  /**
+   * Selects the text field
+   *
+   * @private
+   */
+  select_() {
+    var input = this.element_.find('.js-text-prompt__main');
+    input.select();
   }
-};
 
+  /**
+   * Handles key events
+   *
+   * @param {KeyEvent} event
+   * @private
+   */
+  handleKeyEvent_(event) {
+    if (event.keyCode == KeyCodes.ESC) {
+      this.close();
+    }
+  }
 
-/**
- * Close the window
- *
- * @export
- */
-os.ui.TextPromptCtrl.prototype.close = function() {
-  os.ui.window.close(this.element_);
-};
-
+  /**
+   * Close the window
+   *
+   * @export
+   */
+  close() {
+    close(this.element_);
+  }
+}
 
 /**
  * Launch a dialog prompting the user with some text.
  *
  * @param {osx.window.TextPromptOptions=} opt_options The window options
  */
-os.ui.launchTextPrompt = function(opt_options) {
+const launchTextPrompt = function(opt_options) {
   var options = /** @type {!osx.window.TextPromptOptions} */ (opt_options || {});
   var scopeOptions = {
     'title': options.title,
@@ -160,5 +162,12 @@ os.ui.launchTextPrompt = function(opt_options) {
     'show-close': windowOverrides.showClose != null ? windowOverrides.showClose : true
   };
 
-  os.ui.window.create(windowOptions, 'textprompt', undefined, undefined, undefined, scopeOptions);
+  create(windowOptions, 'textprompt', undefined, undefined, undefined, scopeOptions);
+};
+
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launchTextPrompt
 };

@@ -57,7 +57,7 @@ class Controller extends AddDataCtrl {
     super($scope, $element);
 
     /**
-     * @type {os.ui.metrics.MetricsManager}
+     * @type {MetricsManager}
      * @private
      */
     this.metricsManager_ = MetricsManager.getInstance();

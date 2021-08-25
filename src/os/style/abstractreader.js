@@ -1,7 +1,6 @@
-goog.module('os.style.AbstractReader');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.style.AbstractReader');
 
-const IStyleReader = goog.require('os.style.IStyleReader'); // eslint-disable-line
+import IStyleReader from './istylereader.js'; // eslint-disable-line
 
 
 /**
@@ -59,4 +58,4 @@ class AbstractReader {
   }
 }
 
-exports = AbstractReader;
+export default AbstractReader;

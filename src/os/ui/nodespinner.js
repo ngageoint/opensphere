@@ -1,8 +1,12 @@
-goog.provide('os.ui.NodeSpinnerCtrl');
-goog.provide('os.ui.nodeSpinnerDirective');
+goog.module('os.ui.NodeSpinnerUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventType');
-goog.require('os.ui.Module');
+const GoogEventType = goog.require('goog.events.EventType');
+const {apply} = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+
+const Listenable = goog.requireType('goog.events.Listenable');
+const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
@@ -10,86 +14,94 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.nodeSpinnerDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    template: '<span ng-show="item.isLoading()" class="ng-hide"><i class="fa fa-fw" ng-class="spinClass" ' +
-        'title="Loading..."></i></span>',
-    controller: os.ui.NodeSpinnerCtrl,
-    controllerAs: 'spin'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  template: '<span ng-show="item.isLoading()" class="ng-hide"><i class="fa fa-fw" ng-class="spinClass" ' +
+      'title="Loading..."></i></span>',
+  controller: Controller,
+  controllerAs: 'spin'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'nodespinner';
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('nodespinner', [os.ui.nodeSpinnerDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the node spinner directive
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.NodeSpinnerCtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  if (!$scope['spinClass']) {
-    $scope['spinClass'] = os.ui.NodeSpinnerCtrl.DEFAULT_CLASS;
+    if (!$scope['spinClass']) {
+      $scope['spinClass'] = Controller.DEFAULT_CLASS;
+    }
+
+    if ('item' in this.scope_) {
+      var item = /** @type {Listenable} */ (this.scope_['item']);
+      if ('isLoading' in this.scope_['item']) {
+        item.listen(GoogEventType.PROPERTYCHANGE, this.onPropertyChange_, false, this);
+      }
+    }
+
+    this.scope_.$on('$destroy', this.onDestroy_.bind(this));
   }
 
-  if ('item' in this.scope_) {
-    var item = /** @type {goog.events.Listenable} */ (this.scope_['item']);
-    if ('isLoading' in this.scope_['item']) {
-      item.listen(goog.events.EventType.PROPERTYCHANGE, this.onPropertyChange_, false, this);
+  /**
+   * Cleans up the property change listener
+   *
+   * @private
+   */
+  onDestroy_() {
+    if (this.scope_) {
+      var item = /** @type {Listenable} */ (this.scope_['item']);
+      item.unlisten(GoogEventType.PROPERTYCHANGE, this.onPropertyChange_, false, this);
+
+      this.scope_ = null;
     }
   }
 
-  this.scope_.$on('$destroy', this.onDestroy_.bind(this));
-};
-
+  /**
+   * Handles the loading property change
+   *
+   * @param {PropertyChangeEvent} e The change event
+   * @private
+   */
+  onPropertyChange_(e) {
+    if (e.getOldValue() != e.getNewValue() && e.getProperty() == 'loading') {
+      apply(this.scope_);
+    }
+  }
+}
 
 /**
  * Default icon class for the spinner.
  * @type {string}
  * @const
  */
-os.ui.NodeSpinnerCtrl.DEFAULT_CLASS = 'fa-spin fa-spinner';
+Controller.DEFAULT_CLASS = 'fa-spin fa-spinner';
 
-
-/**
- * Cleans up the property change listener
- *
- * @private
- */
-os.ui.NodeSpinnerCtrl.prototype.onDestroy_ = function() {
-  if (this.scope_) {
-    var item = /** @type {goog.events.Listenable} */ (this.scope_['item']);
-    item.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onPropertyChange_, false, this);
-
-    this.scope_ = null;
-  }
-};
-
-
-/**
- * Handles the loading property change
- *
- * @param {os.events.PropertyChangeEvent} e The change event
- * @private
- */
-os.ui.NodeSpinnerCtrl.prototype.onPropertyChange_ = function(e) {
-  if (e.getOldValue() != e.getNewValue() && e.getProperty() == 'loading') {
-    os.ui.apply(this.scope_);
-  }
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

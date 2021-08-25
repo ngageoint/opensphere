@@ -11,6 +11,8 @@ const legend = goog.require('os.legend');
 const ILegendRenderer = goog.require('os.legend.ILegendRenderer');
 const osObject = goog.require('os.object');
 const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleType = goog.require('os.style.StyleType');
 const kml = goog.require('os.ui.file.kml');
 const osXml = goog.require('os.xml');
 const featureAction = goog.require('plugin.im.action.feature');
@@ -75,12 +77,12 @@ class StyleAction extends AbstractImportAction {
       var item = items[i];
       if (item && this.isFeatureStyled(item)) {
         item.set(StyleAction.FEATURE_ID, undefined);
-        item.set(osStyle.StyleField.SHAPE, undefined, true);
-        item.set(osStyle.StyleField.CENTER_SHAPE, undefined, true);
+        item.set(StyleField.SHAPE, undefined, true);
+        item.set(StyleField.CENTER_SHAPE, undefined, true);
 
         // reset the original feature config
         var originalConfig = /** @type {Array|Object|undefined} */ (item.get(featureAction.StyleType.ORIGINAL));
-        item.set(osStyle.StyleType.FEATURE, originalConfig, true);
+        item.set(StyleType.FEATURE, originalConfig, true);
         resetItems.push(item);
       }
     }
@@ -96,7 +98,7 @@ class StyleAction extends AbstractImportAction {
       var item = items[i];
       if (item) {
         // get the existing feature config or create a new one
-        var originalConfig = /** @type {Array|Object|undefined} */ (item.get(osStyle.StyleType.FEATURE));
+        var originalConfig = /** @type {Array|Object|undefined} */ (item.get(StyleType.FEATURE));
         var featureConfig = osObject.unsafeClone(originalConfig) || {};
 
         // flag this as a temporary style config
@@ -113,7 +115,7 @@ class StyleAction extends AbstractImportAction {
           osStyle.mergeConfig(this.styleConfig, featureConfig);
         }
 
-        item.set(osStyle.StyleType.FEATURE, featureConfig, true);
+        item.set(StyleType.FEATURE, featureConfig, true);
         item.set(StyleAction.FEATURE_ID, this.uid, true);
 
         if (originalConfig != null && !originalConfig['temporary'] &&
@@ -123,17 +125,17 @@ class StyleAction extends AbstractImportAction {
         }
 
         // set the feature shape
-        var configShape = this.styleConfig[osStyle.StyleField.SHAPE];
+        var configShape = this.styleConfig[StyleField.SHAPE];
         if (configShape && configShape != osStyle.DEFAULT_SHAPE) {
-          item.set(osStyle.StyleField.SHAPE, configShape, true);
+          item.set(StyleField.SHAPE, configShape, true);
         }
 
         // set the feature center shape
-        var configCenterShape = this.styleConfig[osStyle.StyleField.CENTER_SHAPE];
+        var configCenterShape = this.styleConfig[StyleField.CENTER_SHAPE];
         if (configCenterShape && configCenterShape != osStyle.DEFAULT_CENTER_SHAPE) {
-          item.set(osStyle.StyleField.CENTER_SHAPE, configCenterShape, true);
+          item.set(StyleField.CENTER_SHAPE, configCenterShape, true);
         } else {
-          item.set(osStyle.StyleField.CENTER_SHAPE, undefined, true);
+          item.set(StyleField.CENTER_SHAPE, undefined, true);
         }
       }
     }
@@ -225,7 +227,7 @@ class StyleAction extends AbstractImportAction {
     }
 
     var fillColor = /** @type {Array<number>} */
-        (osStyle.getConfigColor(this.styleConfig, true, osStyle.StyleField.FILL));
+        (osStyle.getConfigColor(this.styleConfig, true, StyleField.FILL));
     if (fillColor) {
       osXml.appendElement(StyleActionTagName.FILL_COLOR, element,
           osColor.toHexString(fillColor));
@@ -243,7 +245,7 @@ class StyleAction extends AbstractImportAction {
       osXml.appendElement(StyleActionTagName.LINE_DASH, element, JSON.stringify(lineDash));
     }
 
-    var shape = this.styleConfig[osStyle.StyleField.SHAPE] || osStyle.DEFAULT_SHAPE;
+    var shape = this.styleConfig[StyleField.SHAPE] || osStyle.DEFAULT_SHAPE;
     osXml.appendElement(StyleActionTagName.SHAPE, element, String(shape));
 
     if (shape == osStyle.ShapeType.ICON) {
@@ -251,7 +253,7 @@ class StyleAction extends AbstractImportAction {
       osXml.appendElement(StyleActionTagName.ICON_SRC, element, icon.path);
     }
 
-    var centerShape = this.styleConfig[osStyle.StyleField.CENTER_SHAPE] || osStyle.DEFAULT_CENTER_SHAPE;
+    var centerShape = this.styleConfig[StyleField.CENTER_SHAPE] || osStyle.DEFAULT_CENTER_SHAPE;
     osXml.appendElement(StyleActionTagName.CENTER_SHAPE, element, String(centerShape));
 
     if (centerShape == osStyle.ShapeType.ICON) {
@@ -259,12 +261,12 @@ class StyleAction extends AbstractImportAction {
       osXml.appendElement(StyleActionTagName.ICON_SRC, element, icon.path);
     }
 
-    var showRotation = this.styleConfig[osStyle.StyleField.SHOW_ROTATION];
+    var showRotation = this.styleConfig[StyleField.SHOW_ROTATION];
     if (showRotation != null) {
       osXml.appendElement(StyleActionTagName.SHOW_ROTATION, element, String(showRotation));
     }
 
-    var rotationColumn = this.styleConfig[osStyle.StyleField.ROTATION_COLUMN];
+    var rotationColumn = this.styleConfig[StyleField.ROTATION_COLUMN];
     if (rotationColumn != null) {
       osXml.appendElement(StyleActionTagName.ROTATION_COLUMN, element, String(rotationColumn));
     }
@@ -337,11 +339,11 @@ class StyleAction extends AbstractImportAction {
 
       var shape = osXml.getChildValue(xml, StyleActionTagName.SHAPE);
       if (shape) {
-        styleConfig[osStyle.StyleField.SHAPE] = shape;
+        styleConfig[StyleField.SHAPE] = shape;
 
         var centerShape = osXml.getChildValue(xml, StyleActionTagName.CENTER_SHAPE);
         if (centerShape) {
-          styleConfig[osStyle.StyleField.CENTER_SHAPE] = centerShape;
+          styleConfig[StyleField.CENTER_SHAPE] = centerShape;
         }
         if (shape == osStyle.ShapeType.ICON ||
             (osStyle.CENTER_LOOKUP[shape] && centerShape === osStyle.ShapeType.ICON)) {
@@ -357,12 +359,12 @@ class StyleAction extends AbstractImportAction {
 
       var showRotation = osXml.getChildValue(xml, StyleActionTagName.SHOW_ROTATION);
       if (showRotation != null) {
-        styleConfig[osStyle.StyleField.SHOW_ROTATION] = Boolean(showRotation);
+        styleConfig[StyleField.SHOW_ROTATION] = Boolean(showRotation);
       }
 
       var rotationColumn = osXml.getChildValue(xml, StyleActionTagName.ROTATION_COLUMN);
       if (rotationColumn != null) {
-        styleConfig[osStyle.StyleField.ROTATION_COLUMN] = rotationColumn;
+        styleConfig[StyleField.ROTATION_COLUMN] = rotationColumn;
       }
     }
 

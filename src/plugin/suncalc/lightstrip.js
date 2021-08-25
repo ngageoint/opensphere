@@ -9,7 +9,10 @@ const MapContainer = goog.require('os.MapContainer');
 const osMap = goog.require('os.map');
 const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
+const TimelineScaleEvent = goog.require('os.ui.timeline.TimelineScaleEvent');
 const {SettingKey} = goog.require('plugin.suncalc');
+
+const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 
 /**
@@ -63,7 +66,7 @@ class Controller {
     this.view_ = null;
 
     /**
-     * @type {?ui.timeline.TimelineScaleOptions}
+     * @type {?TimelineScaleOptions}
      * @private
      */
     this.options_ = null;
@@ -90,7 +93,7 @@ class Controller {
      */
     this.updateDelay_ = new ConditionalDelay(this.update_, this);
 
-    dispatcher.getInstance().listen(ui.timeline.TimelineScaleEvent.TYPE, this.update_, false, this);
+    dispatcher.getInstance().listen(TimelineScaleEvent.TYPE, this.update_, false, this);
     $scope.$on('$destroy', this.destroy_.bind(this));
 
     /**
@@ -122,7 +125,7 @@ class Controller {
       this.view_ = null;
     }
 
-    dispatcher.getInstance().unlisten(ui.timeline.TimelineScaleEvent.TYPE, this.update_, false, this);
+    dispatcher.getInstance().unlisten(TimelineScaleEvent.TYPE, this.update_, false, this);
 
     settings.getInstance().unlisten(SettingKey.DUSK_MODE, this.onDuskModeChange_, false, this);
 
@@ -192,7 +195,7 @@ class Controller {
       return true;
     }
 
-    if (opt_evt instanceof ui.timeline.TimelineScaleEvent) {
+    if (opt_evt instanceof TimelineScaleEvent) {
       this.options_ = opt_evt.options;
     }
 

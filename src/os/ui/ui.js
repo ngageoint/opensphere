@@ -1,47 +1,43 @@
-goog.provide('os.ui');
-goog.provide('os.ui.Module');
-goog.provide('os.ui.ResizeEventType');
+goog.declareModuleId('os.ui');
 
-goog.require('goog.events.EventTarget');
-goog.require('goog.html.SafeHtml');
-goog.require('goog.labs.userAgent.util');
-goog.require('goog.math');
-goog.require('goog.math.Size');
-goog.require('goog.string');
-goog.require('goog.userAgent');
-goog.require('os.fn');
+const asserts = goog.require('goog.asserts');
+const SafeHtml = goog.require('goog.html.SafeHtml');
+const {nearlyEquals} = goog.require('goog.math');
+const Size = goog.require('goog.math.Size');
+const {IE} = goog.require('goog.userAgent');
 
 
 /**
  * Default priority used when replacing Angular directives.
  * @type {number}
- * @const
  */
-os.ui.DIRECTIVE_PRIORITY = 100;
-
+export const DIRECTIVE_PRIORITY = 100;
 
 /**
  * Applications should use this to add a global reference to the main application's Angular injector.
  * @type {?angular.$injector}
  */
-os.ui.injector = null;
+export let injector = null;
 
+/**
+ * Set the injector instance.
+ * @param {?angular.$injector} value The injector.
+ */
+export const setInjector = (value) => {
+  injector = value;
+};
 
 /**
  * This will be set automatically by {@link os.ui.sanitize}.
  * @type {angular.$sanitize}
- * @private
  */
-os.ui.sanitize_;
-
+let sanitizeFn;
 
 /**
  * CSS selector for modal backdrops.
  * @type {string}
- * @const
  */
-os.ui.MODAL_SELECTOR = '.modal-backdrop,.window-modal-bg';
-
+export const MODAL_SELECTOR = '.modal-backdrop,.window-modal-bg';
 
 /**
  * Sanitizes a string to remove potentally malicious HTML content. Note that if the entire string is disallowed by the
@@ -50,17 +46,17 @@ os.ui.MODAL_SELECTOR = '.modal-backdrop,.window-modal-bg';
  * @param {string} value The value to sanitize
  * @return {string} The sanitized value, or the original value if angular.$sanitize is unavailable
  */
-os.ui.sanitize = function(value) {
+export const sanitize = function(value) {
   if (value) {
     try {
-      os.ui.sanitize_ = os.ui.sanitize_ || /** @type {angular.$sanitize} */ (os.ui.injector.get('$sanitize'));
-      return os.ui.sanitize_(value);
+      sanitizeFn = sanitizeFn || (injector.get('$sanitize'));
+      return sanitizeFn(value);
     } catch (e) {
       // make this super obvious so we catch it in dev
       // some errors come as a result of poorly formatted text, ignore those
-      if (os.ui.sanitize_ === undefined) {
+      if (sanitizeFn === undefined) {
         console.error('$santize service unavailable!');
-      } else if (os.ui.injector === undefined) {
+      } else if (injector === undefined) {
         console.error('os.ui.injector service never defined!');
       }
     }
@@ -69,14 +65,13 @@ os.ui.sanitize = function(value) {
   return value;
 };
 
-
 /**
  * Escape a string that contains < or > to prevent html injection
  *
  * @param {string} value The value to escape
  * @return {string} The escaped value, may be the same as the original value
  */
-os.ui.escapeHtmlOpenCloseTags = function(value) {
+export const escapeHtmlOpenCloseTags = function(value) {
   if (value) {
     var entityMap = {
       '<': '&lt;',
@@ -91,14 +86,13 @@ os.ui.escapeHtmlOpenCloseTags = function(value) {
   return value;
 };
 
-
 /**
  * Unescape a string previously escaped by escapeHtmlTags
  *
  * @param {string} value The value to unescape
  * @return {string} The unescaped value, may be the same as the original value
  */
-os.ui.unescapeHtmlOpenCloseTags = function(value) {
+export const unescapeHtmlOpenCloseTags = function(value) {
   if (value) {
     var entityMap = {
       '&lt;': '<',
@@ -113,18 +107,16 @@ os.ui.unescapeHtmlOpenCloseTags = function(value) {
   return value;
 };
 
-
 /**
  * Sanitize a string for use as a DOM element id.
  *
  * @param {string} value The string to sanitize
  * @return {string}
  */
-os.ui.sanitizeId = function(value) {
+export const sanitizeId = function(value) {
   // collapse all whitespace and replace all non-alphanumeric characters with hyphens
   return value.replace(/\s/g, '').replace(/[^\w]/g, '-');
 };
-
 
 /**
  * Strip HTML from text
@@ -132,11 +124,10 @@ os.ui.sanitizeId = function(value) {
  * @param {string} html string to sanitize
  * @return {string}
  */
-os.ui.getUnformattedText = function(html) {
+export const getUnformattedText = function(html) {
   var doc = new DOMParser().parseFromString(html, 'text/html');
-  return os.ui.escapeHtml(doc.body.textContent || '');
+  return escapeHtml(doc.body.textContent || '');
 };
-
 
 /**
  * Escape HTML in text
@@ -144,27 +135,9 @@ os.ui.getUnformattedText = function(html) {
  * @param {string} html
  * @return {string}
  */
-os.ui.escapeHtml = function(html) {
-  return goog.html.SafeHtml.unwrap(goog.html.SafeHtml.htmlEscape(html));
+export const escapeHtml = function(html) {
+  return SafeHtml.unwrap(SafeHtml.htmlEscape(html));
 };
-
-
-/**
- * Angular module "os.ui"
- */
-os.ui.Module = angular.module('os.ui', ['ui.directives', 'ngAnimate', 'ngSanitize']);
-
-/**
- * @param {!angular.$compileProvider} $compileProvider
- * @ngInject
- * @export
- */
-const configureModule = function($compileProvider) {
-  $compileProvider.aHrefSanitizationWhitelist(/^\s*((https?|s?ftp|mailto|tel|file):|data:image)/);
-};
-
-os.ui.Module.config(configureModule);
-
 
 /**
  * Measures the given string of text. Note that this function adds a node to the DOM completely
@@ -174,9 +147,9 @@ os.ui.Module.config(configureModule);
  * @param {string} text The text to measure
  * @param {string=} opt_classes The classes to use when measuring the string
  * @param {string=} opt_font The font style to use when measuring the string
- * @return {!goog.math.Size} The size of the text
+ * @return {!Size} The size of the text
  */
-os.ui.measureText = function(text, opt_classes, opt_font) {
+export const measureText = function(text, opt_classes, opt_font) {
   var el = angular.element('#measureText');
 
   if (!el || el.length === 0) {
@@ -194,12 +167,11 @@ os.ui.measureText = function(text, opt_classes, opt_font) {
 
     // replace newline characters with HTML breaks
     el.html(text.replace(/\n/g, '<br>'));
-    return new goog.math.Size(/** @type {number} */ (el.width()), /** @type {number} */ (el.height()));
+    return new Size(/** @type {number} */ (el.width()), /** @type {number} */ (el.height()));
   }
 
-  return new goog.math.Size(0, 0);
+  return new Size(0, 0);
 };
-
 
 /**
  * Applies the scope with angular.Scope#apply.
@@ -207,10 +179,10 @@ os.ui.measureText = function(text, opt_classes, opt_font) {
  * @param {?angular.Scope} scope The Angular scope.
  * @param {number=} opt_delay Timeout interval to wait before applying the scope, in milliseconds
  */
-os.ui.apply = function(scope, opt_delay) {
+export const apply = function(scope, opt_delay) {
   if (opt_delay != null && opt_delay >= 0) {
     setTimeout(function() {
-      os.ui.apply(scope);
+      apply(scope);
     }, opt_delay);
   } else {
     try {
@@ -222,18 +194,16 @@ os.ui.apply = function(scope, opt_delay) {
   }
 };
 
-
 /**
  * Asynchronously applies the scope with angular.Scope#applyAsync.
  *
  * @param {?angular.Scope} scope The Angular scope.
  */
-os.ui.applyAsync = function(scope) {
+export const applyAsync = function(scope) {
   if (scope) {
     scope.$applyAsync();
   }
 };
-
 
 /**
  * Wait for Angular to finish processing then call a function.
@@ -245,15 +215,14 @@ os.ui.applyAsync = function(scope) {
  * @param {function(string=)} callback The function to call when ready. Angular will pass an error string to the
  *                                     function if something went wrong.
  */
-os.ui.waitForAngular = function(callback) {
-  if (os.ui.injector) {
-    var browser = /** @type {angular.$browser} */ (os.ui.injector.get('$browser'));
+export const waitForAngular = function(callback) {
+  if (injector) {
+    var browser = /** @type {angular.$browser} */ (injector.get('$browser'));
     if (browser) {
       browser.notifyWhenNoOutstandingRequests(callback);
     }
   }
 };
-
 
 /**
  * Get the highest priority directive in a list.
@@ -261,13 +230,11 @@ os.ui.waitForAngular = function(callback) {
  * @param {!Array<!angular.Directive>} $delegate The directives.
  * @return {!Array<!angular.Directive>} The highest priority directive.
  * @ngInject
- * @private
  */
-os.ui.getPriorityDirective_ = function($delegate) {
-  $delegate.sort(os.ui.sortDirectives_);
+const getPriorityDirective_ = function($delegate) {
+  $delegate.sort(sortDirectives_);
   return [$delegate[0]];
 };
-
 
 /**
  * Sort directives by descending priority.
@@ -275,50 +242,37 @@ os.ui.getPriorityDirective_ = function($delegate) {
  * @param {!angular.Directive} a The first directive.
  * @param {!angular.Directive} b The second directive.
  * @return {number} The sort order.
- * @private
  */
-os.ui.sortDirectives_ = function(a, b) {
+const sortDirectives_ = function(a, b) {
   return a.priority > b.priority ? -1 : a.priority < b.priority ? 1 : 0;
 };
-
 
 /**
  * Listen to an element for size changes.
  * @param {?(angular.JQLite|jQuery)} el The element.
  * @param {?Function} fn The callback to remove.
  */
-os.ui.resize = function(el, fn) {
+export const resize = function(el, fn) {
   if (el && fn) {
     if (window.ResizeSensor) {
       new ResizeSensor(el, fn);
     } else {
-      goog.asserts.fail('The css-element-queries ResizeSensor library is not loaded. Element resize detection will ' +
+      asserts.fail('The css-element-queries ResizeSensor library is not loaded. Element resize detection will ' +
           'not work.');
     }
   }
 };
-
 
 /**
  * Remove resize listener from an element.
  * @param {?(angular.JQLite|jQuery)} el The element.
  * @param {?Function} fn The callback to remove.
  */
-os.ui.removeResize = function(el, fn) {
+export const removeResize = function(el, fn) {
   if (el && fn && window.ResizeSensor != null) {
     ResizeSensor.detach(el, fn);
   }
 };
-
-
-/**
- * Enumeration of resize event types.
- * @enum {string}
- */
-os.ui.ResizeEventType = {
-  UPDATE_RESIZE: 'updateResize'
-};
-
 
 /**
  * Replace a directive already registered with Angular. The directive name and module should be identical to the
@@ -342,9 +296,9 @@ os.ui.ResizeEventType = {
  * @param {function():angular.Directive} directiveFn The new directive function.
  * @param {number=} opt_priority The priority value to use.
  */
-os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
+export const replaceDirective = function(name, module, directiveFn, opt_priority) {
   // set the directive priority so the new directive is returned by os.ui.getPriorityDirective_
-  var priority = opt_priority != null ? opt_priority : os.ui.DIRECTIVE_PRIORITY;
+  var priority = opt_priority != null ? opt_priority : DIRECTIVE_PRIORITY;
   var directive = function() {
     var d = directiveFn();
     d.priority = priority;
@@ -355,18 +309,16 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
   module.directive(name, [directive]);
 
   // register a decorator to return the highest priority directive
-  module.decorator(name + 'Directive', os.ui.getPriorityDirective_);
+  module.decorator(name + 'Directive', getPriorityDirective_);
 };
-
 
 /**
  * Custom events fired from a typeahead.
  * @enum {string}
  */
-os.ui.TypeaheadEventType = {
+export const TypeaheadEventType = {
   CLICK: 'typeahead:click'
 };
-
 
 /**
  * Extends Bootstrap typeahead for a better user experience. Also extends Bootstrap modal to prevent it from
@@ -403,7 +355,7 @@ os.ui.TypeaheadEventType = {
             return this;
           }
           // unescape the autocomplete result before searching
-          val = os.ui.unescapeHtmlOpenCloseTags(val);
+          val = unescapeHtmlOpenCloseTags(val);
           this['setInputValue'](val);
 
           if (opt_hide || opt_hide == undefined) {
@@ -416,7 +368,7 @@ os.ui.TypeaheadEventType = {
           var that = this;
           items = $(items)['map'](function(i, item) {
             // escape the autocomplete result to prevent html injection
-            item = os.ui.escapeHtmlOpenCloseTags(item);
+            item = escapeHtmlOpenCloseTags(item);
             i = $(that['options']['item'])['attr']('data-value', item);
             i['find']('a')['html'](that['highlighter'](item));
             return i[0];
@@ -521,7 +473,7 @@ os.ui.TypeaheadEventType = {
           // the typeahead will only update the input value, but will not submit the form. to differentiate between the
           // user hitting enter (which will trigger a form submit) and a click, fire an event from the element to
           // indicate a value was selected via click.
-          this['$element'].trigger(os.ui.TypeaheadEventType.CLICK);
+          this['$element'].trigger(TypeaheadEventType.CLICK);
         }
       });
 
@@ -530,9 +482,9 @@ os.ui.TypeaheadEventType = {
       $.fn.typeahead.defaults.menu = '<ul class="typeahead dropdown-menu mw-100"></ul>';
 
       // Select2 has trouble with Bootstrap modals in IE only
-      if (goog.userAgent.IE) {
+      if (IE) {
         // so tell it to do nothing
-        $.fn.modal['Constructor'].prototype['enforceFocus'] = os.fn.noop;
+        $.fn.modal['Constructor'].prototype['enforceFocus'] = () => {};
       }
 
       // Overwriting enforceFocus and extending functionality
@@ -552,7 +504,6 @@ os.ui.TypeaheadEventType = {
     }
   }
 })();
-
 
 /**
  * Override jQuery UI Datepicker _checkOffset to prevent rounding/floating point equality from breaking
@@ -577,7 +528,7 @@ os.ui.TypeaheadEventType = {
           offset['left'] -= (this['_get'](inst, 'isRTL') ? dpWidth - inputWidth : 0);
           offset['left'] -= (isFixed && offset['left'] == inst['input']['offset']()['left']) ?
             $(document).scrollLeft() : 0;
-          offset['top'] -= goog.math.nearlyEquals(isFixed && offset['top'],
+          offset['top'] -= nearlyEquals(isFixed && offset['top'],
               inst['input']['offset']()['top'] + inputHeight, 1) ?
             $(document).scrollTop() : 0;
 

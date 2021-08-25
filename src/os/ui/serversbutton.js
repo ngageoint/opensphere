@@ -1,8 +1,11 @@
-goog.provide('os.ui.ServersButtonCtrl');
-goog.provide('os.ui.serversButtonDirective');
+goog.module('os.ui.ServersButtonUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.MenuButtonCtrl');
-goog.require('os.ui.Module');
+const DataManager = goog.require('os.data.DataManager');
+const DataProviderEventType = goog.require('os.data.DataProviderEventType');
+const {apply} = goog.require('os.ui');
+const MenuButtonCtrl = goog.require('os.ui.MenuButtonCtrl');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -10,72 +13,77 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.serversButtonDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    controller: os.ui.ServersButtonCtrl,
-    controllerAs: 'ctrl',
-    template: '<button class="btn btn-secondary" ng-click="ctrl.toggle()" title="Servers"' +
-      ' ng-class="{\'active\': ctrl.isWindowActive(\'settings\')}">' +
-      '<i class="fa fa-fw fa-database"></i>' +
-      '<span ng-if="serverError" class="ml-1 badge badge-warning"><i class="fa fa-fw fa-warning"></i></span>' +
-      '</button>'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  controller: Controller,
+  controllerAs: 'ctrl',
+  template: '<button class="btn btn-secondary" ng-click="ctrl.toggle()" title="Servers"' +
+    ' ng-class="{\'active\': ctrl.isWindowActive(\'settings\')}">' +
+    '<i class="fa fa-fw fa-database"></i>' +
+    '<span ng-if="serverError" class="ml-1 badge badge-warning"><i class="fa fa-fw fa-warning"></i></span>' +
+    '</button>'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'servers-button';
 
 /**
  * add the directive to the module
  */
-os.ui.Module.directive('serversButton', [os.ui.serversButtonDirective]);
-
-
+Module.directive('serversButton', [directive]);
 
 /**
  * Controller function for the nav-top directive
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element The element
- * @extends {os.ui.MenuButtonCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.ServersButtonCtrl = function($scope, $element) {
-  os.ui.ServersButtonCtrl.base(this, 'constructor', $scope, $element);
-  this.flag = 'servers';
+class Controller extends MenuButtonCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element The element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
+    this.flag = 'servers';
 
-  os.dataManager.listen(os.data.DataProviderEventType.LOADED, this.checkServerError_, false, this);
-  os.dataManager.listen(os.data.DataProviderEventType.EDIT_PROVIDER, this.checkServerError_, false, this);
-  os.dataManager.listen(os.data.DataProviderEventType.REMOVE_PROVIDER, this.checkServerError_, false, this);
-};
-goog.inherits(os.ui.ServersButtonCtrl, os.ui.MenuButtonCtrl);
-
-
-/**
- * @inheritDoc
- */
-os.ui.ServersButtonCtrl.prototype.onDestroy = function() {
-  os.ui.ServersButtonCtrl.base(this, 'onDestroy');
-
-  os.dataManager.unlisten(os.data.DataProviderEventType.LOADED, this.checkServerError_, false, this);
-  os.dataManager.unlisten(os.data.DataProviderEventType.EDIT_PROVIDER, this.checkServerError_, false, this);
-  os.dataManager.unlisten(os.data.DataProviderEventType.REMOVE_PROVIDER, this.checkServerError_, false, this);
-};
-
-
-/**
- * Check if any enabled providers encountered an error while loading and display a message to the user if it hasn't
- * already been seen.
- *
- * @private
- */
-os.ui.ServersButtonCtrl.prototype.checkServerError_ = function() {
-  if (this.scope) {
-    this.scope['serverError'] = os.dataManager.hasError();
-    os.ui.apply(this.scope);
+    DataManager.getInstance().listen(DataProviderEventType.LOADED, this.checkServerError_, false, this);
+    DataManager.getInstance().listen(DataProviderEventType.EDIT_PROVIDER, this.checkServerError_, false, this);
+    DataManager.getInstance().listen(DataProviderEventType.REMOVE_PROVIDER, this.checkServerError_, false, this);
   }
+
+  /**
+   * @inheritDoc
+   */
+  onDestroy() {
+    super.onDestroy();
+
+    DataManager.getInstance().unlisten(DataProviderEventType.LOADED, this.checkServerError_, false, this);
+    DataManager.getInstance().unlisten(DataProviderEventType.EDIT_PROVIDER, this.checkServerError_, false, this);
+    DataManager.getInstance().unlisten(DataProviderEventType.REMOVE_PROVIDER, this.checkServerError_, false, this);
+  }
+
+  /**
+   * Check if any enabled providers encountered an error while loading and display a message to the user if it hasn't
+   * already been seen.
+   *
+   * @private
+   */
+  checkServerError_() {
+    if (this.scope) {
+      this.scope['serverError'] = DataManager.getInstance().hasError();
+      apply(this.scope);
+    }
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
-
-

@@ -1,40 +1,49 @@
-goog.provide('os.ui.menu.save');
+goog.module('os.ui.menu.save');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.menu.Menu');
-goog.require('os.ui.menu.MenuItem');
-goog.require('os.ui.menu.MenuItemType');
-goog.require('os.ui.state.menu');
-
-
-/**
- * Application save menu.
- * @type {(os.ui.menu.Menu<undefined>|undefined)}
- * @deprecated use os.ui.menu.save.MENU instead
- */
-os.ui.menu.SAVE = undefined;
+const googDispose = goog.require('goog.dispose');
+const {Map: MapKey} = goog.require('os.metrics.keys');
+const StateManager = goog.require('os.state.StateManager');
+const Menu = goog.require('os.ui.menu.Menu');
+const MenuItem = goog.require('os.ui.menu.MenuItem');
+const MenuItemType = goog.require('os.ui.menu.MenuItemType');
+const {EventType} = goog.require('os.ui.state.menu');
 
 
 /**
  * Application save menu.
- * @type {(os.ui.menu.Menu<undefined>|undefined)}
+ * @type {(Menu<undefined>|undefined)}
  */
-os.ui.menu.save.MENU = undefined;
+let MENU = undefined;
 
+/**
+ * Get the menu.
+ * @return {Menu<undefined>|undefined}
+ */
+const getMenu = () => MENU;
+
+/**
+ * Set the menu.
+ * @param {Menu<undefined>|undefined} menu The menu.
+ */
+const setMenu = (menu) => {
+  MENU = menu;
+};
 
 /**
  * Set up the menu.
  */
-os.ui.menu.save.setup = function() {
-  if (!os.ui.menu.SAVE) {
-    os.ui.menu.SAVE = os.ui.menu.save.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
-      type: os.ui.menu.MenuItemType.ROOT,
+const setup = function() {
+  if (!MENU) {
+    MENU = new Menu(new MenuItem({
+      type: MenuItemType.ROOT,
       children: [{
         label: 'State',
-        eventType: os.ui.state.menu.EventType.SAVE_STATE,
+        eventType: EventType.SAVE_STATE,
         tooltip: 'Save the application state',
         icons: ['<i class="fa fa-fw fa-bookmark"></i>'],
-        handler: os.ui.menu.save.onSaveState,
-        metricKey: os.metrics.keys.Map.SAVE_STATE,
+        handler: onSaveState,
+        metricKey: MapKey.SAVE_STATE,
         shortcut: 'Ctrl+S',
         sort: 10
       }]
@@ -42,20 +51,25 @@ os.ui.menu.save.setup = function() {
   }
 };
 
-
 /**
  * Disposes layer actions
  */
-os.ui.menu.save.dispose = function() {
-  goog.dispose(os.ui.menu.save.MENU);
-  os.ui.menu.save.MENU = undefined;
-  os.ui.menu.SAVE = undefined;
+const dispose = function() {
+  googDispose(MENU);
+  MENU = undefined;
 };
-
 
 /**
  * Save the application state.
  */
-os.ui.menu.save.onSaveState = function() {
-  os.stateManager.startExport();
+const onSaveState = function() {
+  StateManager.getInstance().startExport();
+};
+
+exports = {
+  getMenu,
+  setMenu,
+  setup,
+  dispose,
+  onSaveState
 };

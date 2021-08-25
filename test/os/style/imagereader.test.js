@@ -6,9 +6,9 @@ goog.require('os.style.ImageReader');
 
 describe('os.style.ImageReader', function() {
   const Icon = goog.module.get('ol.style.Icon');
-  const CircleReader = goog.module.get('os.style.CircleReader');
-  const IconReader = goog.module.get('os.style.IconReader');
-  const ImageReader = goog.module.get('os.style.ImageReader');
+  const {default: CircleReader} = goog.module.get('os.style.CircleReader');
+  const {default: IconReader} = goog.module.get('os.style.IconReader');
+  const {default: ImageReader} = goog.module.get('os.style.ImageReader');
 
   var config;
   var reader;

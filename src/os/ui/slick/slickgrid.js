@@ -1,8 +1,6 @@
 goog.module('os.ui.slick.SlickGridUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.globalMenuDirective'); // TODO: os.ui.openMenu needs to be moved when this is transformed
-
 const Disposable = goog.require('goog.Disposable');
 const Timer = goog.require('goog.Timer');
 const {defaultCompare, insert, moveItem} = goog.require('goog.array');
@@ -24,6 +22,7 @@ const {filterFalsey} = goog.require('os.fn');
 const osImplements = goog.require('os.implements');
 const {FLOAT} = goog.require('os.string');
 const ui = goog.require('os.ui');
+const {openMenu} = goog.require('os.ui.GlobalMenuUI');
 const Module = goog.require('os.ui.Module');
 const ResizeEventType = goog.require('os.ui.ResizeEventType');
 const ActionManager = goog.require('os.ui.action.ActionManager');
@@ -1065,7 +1064,7 @@ class Controller extends Disposable {
         menu.refreshEnabledActions();
 
         if (menu.hasEnabledActions()) {
-          ui.openMenu(menu, {x: menuX, y: menuY});
+          openMenu(menu, {x: menuX, y: menuY});
         }
       } else if (menu instanceof Menu) {
         const rect = this.element[0].getBoundingClientRect();

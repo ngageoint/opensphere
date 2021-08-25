@@ -1,7 +1,6 @@
 goog.module('plugin.places.PlacesManager');
 goog.module.declareLegacyNamespace();
 
-const os = goog.require('os');
 const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const ActionEventType = goog.require('os.action.EventType');
@@ -10,6 +9,9 @@ const Settings = goog.require('os.config.Settings');
 const ZOrder = goog.require('os.data.ZOrder');
 const OsEventType = goog.require('os.events.EventType');
 const {getLocalUrl} = goog.require('os.file');
+const FileManager = goog.require('os.file.FileManager');
+const filterMime = goog.require('os.file.mime.filter');
+const OSFilterImportUI = goog.require('os.filter.im.OSFilterImportUI');
 const {noop} = goog.require('os.fn');
 const LayerType = goog.require('os.layer.LayerType');
 const {merge} = goog.require('os.object');
@@ -17,6 +19,7 @@ const {incrementResetTasks, decrementResetTasks} = goog.require('os.storage');
 const {DEFAULT_LAYER_COLOR} = goog.require('os.style');
 const ImportEvent = goog.require('os.ui.im.ImportEvent');
 const ImportEventType = goog.require('os.ui.im.ImportEventType');
+const ImportManager = goog.require('os.ui.im.ImportManager');
 const ImportProcess = goog.require('os.ui.im.ImportProcess');
 const AbstractKMLManager = goog.require('plugin.file.kml.AbstractKMLManager');
 const places = goog.require('plugin.places');
@@ -66,12 +69,54 @@ class PlacesManager extends AbstractKMLManager {
   constructor(options) {
     super(options);
 
+    /**
+     * The places import manager.
+     * @type {ImportManager}
+     * @protected
+     */
+    this.importManager = null;
+
+    /**
+     * The places file manager.
+     * @type {FileManager}
+     * @protected
+     */
+    this.fileManager = null;
+
     // clear storage when the reset event is fired
     dispatcher.getInstance().listen(OsEventType.RESET, this.onSettingsReset_, false, this);
 
     // // handle edit time change/cancel
     dispatcher.getInstance().listen(ActionEventType.SAVE_FEATURE, this.reindexTimeModel_, false, this);
     dispatcher.getInstance().listen(ActionEventType.RESTORE_FEATURE, this.reindexTimeModel_, false, this);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  initialize() {
+    super.initialize();
+
+    this.importManager = new ImportManager();
+    this.importManager.registerImportUI(filterMime.TYPE, new OSFilterImportUI());
+
+    this.fileManager = new FileManager();
+  }
+
+  /**
+   * Get the places import manager.
+   * @return {ImportManager}
+   */
+  getImportManager() {
+    return this.importManager;
+  }
+
+  /**
+   * Get the places file manager.
+   * @return {FileManager}
+   */
+  getFileManager() {
+    return this.fileManager;
   }
 
   /**
@@ -139,7 +184,7 @@ class PlacesManager extends AbstractKMLManager {
    * @param {OsFile=} opt_file Optional file to use in the import.
    */
   startImport(opt_file) {
-    const importProcess = new ImportProcess(os.placesImportManager, os.placesFileManager);
+    const importProcess = new ImportProcess(this.importManager, this.fileManager);
     importProcess.setEvent(new ImportEvent(ImportEventType.FILE, opt_file, undefined));
     importProcess.begin();
   }

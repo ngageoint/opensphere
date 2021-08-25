@@ -8,6 +8,8 @@ const ColorChangeType = goog.require('os.command.style.ColorChangeType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleType = goog.require('os.style.StyleType');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -56,7 +58,7 @@ class FeatureColor extends AbstractFeatureStyle {
 
     if (!color) {
       var feature = /** @type {Feature} */ (this.getFeature());
-      var config = /** @type {Object|undefined} */ (feature.get(osStyle.StyleType.FEATURE));
+      var config = /** @type {Object|undefined} */ (feature.get(StyleType.FEATURE));
 
       if (config) {
         if (Array.isArray(config)) {
@@ -92,10 +94,10 @@ class FeatureColor extends AbstractFeatureStyle {
     if (config) {
       switch (this.changeMode) {
         case ColorChangeType.FILL:
-          ret = osStyle.getConfigColor(config, false, osStyle.StyleField.FILL);
+          ret = osStyle.getConfigColor(config, false, StyleField.FILL);
           break;
         case ColorChangeType.STROKE:
-          ret = osStyle.getConfigColor(config, false, osStyle.StyleField.STROKE);
+          ret = osStyle.getConfigColor(config, false, StyleField.STROKE);
           break;
         case ColorChangeType.COMBINED:
         default:
@@ -114,7 +116,7 @@ class FeatureColor extends AbstractFeatureStyle {
    */
   getLabelValue() {
     var feature = /** @type {Feature} */ (this.getFeature());
-    var labelColor = /** @type {Array<number>|string|undefined} */ (feature.get(osStyle.StyleField.LABEL_COLOR));
+    var labelColor = /** @type {Array<number>|string|undefined} */ (feature.get(StyleField.LABEL_COLOR));
     return labelColor ? labelColor : osStyle.DEFAULT_LAYER_COLOR;
   }
 
@@ -137,7 +139,7 @@ class FeatureColor extends AbstractFeatureStyle {
         break;
       case ColorChangeType.STROKE:
         for (var i = 0; i < configs.length; i++) {
-          var fillColor = osStyle.getConfigColor(configs[i], false, osStyle.StyleField.FILL);
+          var fillColor = osStyle.getConfigColor(configs[i], false, StyleField.FILL);
 
           osStyle.setConfigColor(configs[i], color);
 
@@ -176,10 +178,10 @@ class FeatureColor extends AbstractFeatureStyle {
    */
   applyLabelValue(configs, value) {
     var feature = /** @type {Feature} */ (this.getFeature());
-    feature.set(osStyle.StyleField.LABEL_COLOR, value);
+    feature.set(StyleField.LABEL_COLOR, value);
 
     for (var i = 0; i < configs.length; i++) {
-      configs[i][osStyle.StyleField.LABEL_COLOR] = value;
+      configs[i][StyleField.LABEL_COLOR] = value;
     }
   }
 

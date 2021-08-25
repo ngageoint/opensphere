@@ -6,9 +6,9 @@ goog.require('os.style.StrokeReader');
 
 describe('os.style.ShapeReader', function() {
   const math = goog.module.get('goog.math');
-  const FillReader = goog.module.get('os.style.FillReader');
-  const ShapeReader = goog.module.get('os.style.ShapeReader');
-  const StrokeReader = goog.module.get('os.style.StrokeReader');
+  const {default: FillReader} = goog.module.get('os.style.FillReader');
+  const {default: ShapeReader} = goog.module.get('os.style.ShapeReader');
+  const {default: StrokeReader} = goog.module.get('os.style.StrokeReader');
 
   var config;
   var reader;

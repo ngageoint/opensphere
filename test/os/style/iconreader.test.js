@@ -11,7 +11,7 @@ describe('os.style.IconReader', function() {
   const IconAnchorUnits = goog.module.get('ol.style.IconAnchorUnits');
   const IconOrigin = goog.module.get('ol.style.IconOrigin');
   const os = goog.module.get('os');
-  const IconReader = goog.module.get('os.style.IconReader');
+  const {default: IconReader} = goog.module.get('os.style.IconReader');
 
   var config;
   var reader;

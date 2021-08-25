@@ -3,7 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const dispatcher = goog.require('os.Dispatcher');
-const ui = goog.require('os.ui');
+const {openMenu} = goog.require('os.ui.GlobalMenuUI');
 const GlobalMenuEventType = goog.require('os.ui.GlobalMenuEventType');
 const Brush = goog.require('os.ui.timeline.Brush');
 const BrushEventType = goog.require('os.ui.timeline.BrushEventType');
@@ -183,7 +183,7 @@ class SelectBrush extends Brush {
           });
         } else if (this.am_) {
           this.am_.withActionArgs(ex);
-          ui.openMenu(this.am_, pos, this.position_ ? undefined : target);
+          openMenu(this.am_, pos, this.position_ ? undefined : target);
         }
 
         dispatcher.getInstance().listen(GlobalMenuEventType.MENU_CLOSE, this.onMenuEnd_, false, this);

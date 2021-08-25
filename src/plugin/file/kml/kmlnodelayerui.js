@@ -1,10 +1,10 @@
 goog.module('plugin.file.kml.KMLNodeLayerUI');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.UISwitchUI');
 goog.require('os.ui.layer.IconStyleControlsUI');
 goog.require('os.ui.layer.LabelControlsUI');
 goog.require('os.ui.layer.VectorStyleControlsUI');
-goog.require('os.ui.uiSwitchDirective');
 
 const googArray = goog.require('goog.array');
 const olArray = goog.require('ol.array');
@@ -37,7 +37,7 @@ const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const label = goog.require('os.style.label');
-const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
+const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
 const Module = goog.require('os.ui.Module');
 const kml = goog.require('os.ui.file.kml');
 const {Controller: VectorLayerUICtrl, directive: vectorLayerUIDirective} = goog.require('os.ui.layer.VectorLayerUI');

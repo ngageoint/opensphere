@@ -1,5 +1,6 @@
 goog.module('plugin.electron.ElectronConfirmCertUI');
 
+const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const windowSelector = goog.require('os.ui.windowSelector');
@@ -13,7 +14,7 @@ const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
 const directive = () => ({
   replace: true,
   restrict: 'E',
-  templateUrl: os.ROOT + 'views/plugin/electron/electronconfirmcert.html',
+  templateUrl: ROOT + 'views/plugin/electron/electronconfirmcert.html',
   controller: Controller,
   controllerAs: 'ctrl'
 });

@@ -1,9 +1,9 @@
 goog.module('os.ui.layer.LobOptionsUI');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.SliderUI');
+goog.require('os.ui.UISwitchUI');
 goog.require('os.ui.layer.EllipseOptionsUI');
-goog.require('os.ui.sliderDirective');
-goog.require('os.ui.uiSwitchDirective');
 
 const Delay = goog.require('goog.async.Delay');
 const {ROOT} = goog.require('os');

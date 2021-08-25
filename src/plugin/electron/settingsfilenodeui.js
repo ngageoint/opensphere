@@ -1,6 +1,7 @@
 goog.declareModuleId('plugin.electron.SettingsFileNodeUI');
 
-const Dispatcher = goog.require('os.Dispatcher');
+import * as Dispatcher from '../../os/dispatcher.js';
+
 const Module = goog.require('os.ui.Module');
 const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
 const {launchConfirmText} = goog.require('os.ui.window.ConfirmTextUI');

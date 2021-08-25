@@ -1,7 +1,7 @@
 goog.module('os.ui.capture.RecordingUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.loadingBarDirective');
+goog.require('os.ui.LoadingBarUI');
 
 const dispose = goog.require('goog.dispose');
 const {ROOT} = goog.require('os');

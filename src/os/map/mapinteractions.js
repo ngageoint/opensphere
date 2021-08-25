@@ -92,12 +92,12 @@ const getInteractions = function() {
 
   var reset = new Reset();
 
-  asserts.assert(mapMenu.MENU != null, 'map manager has not been initialized');
-  asserts.assert(spatial.MENU != null, 'spatial manager has not been initialized');
+  asserts.assert(mapMenu.getMenu() != null, 'map manager has not been initialized');
+  asserts.assert(spatial.getMenu() != null, 'spatial manager has not been initialized');
 
   var contextOptions = /** @type {ContextMenuOptions} */ ({
-    featureMenu: spatial.MENU,
-    mapMenu: mapMenu.MENU
+    featureMenu: spatial.getMenu(),
+    mapMenu: mapMenu.getMenu()
   });
   var contextMenu = new ContextMenu(contextOptions);
 

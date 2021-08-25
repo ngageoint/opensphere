@@ -1,26 +1,27 @@
-goog.provide('os.ui.ServersCtrl');
-goog.provide('os.ui.serversDirective');
+goog.module('os.ui.ServersUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventType');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('os');
-goog.require('os.alert.AlertEventSeverity');
-goog.require('os.alert.AlertManager');
-goog.require('os.config.Settings');
-goog.require('os.data');
-goog.require('os.data.DataManager');
-goog.require('os.im.ImportProcess');
-goog.require('os.metrics.Metrics');
-goog.require('os.metrics.keys');
-goog.require('os.ui');
-goog.require('os.ui.Module');
-goog.require('os.ui.file.AddServer');
-goog.require('os.ui.im.ImportEvent');
-goog.require('os.ui.im.ImportEventType');
-goog.require('os.ui.server.AbstractLoadingServer');
-goog.require('os.ui.window');
-goog.require('os.ui.window.ConfirmUI');
+const GoogEventType = goog.require('goog.events.EventType');
+const log = goog.require('goog.log');
+const {ROOT} = goog.require('os');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const Settings = goog.require('os.config.Settings');
+const {ProviderKey} = goog.require('os.data');
+const DataManager = goog.require('os.data.DataManager');
+const DataProviderEventType = goog.require('os.data.DataProviderEventType');
+const Metrics = goog.require('os.metrics.Metrics');
+const {Servers: ServersKeys} = goog.require('os.metrics.keys');
+const {apply} = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const BaseProvider = goog.require('os.ui.data.BaseProvider');
+const AddServer = goog.require('os.ui.file.AddServer');
+const ImportManager = goog.require('os.ui.im.ImportManager');
+const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
+const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+
+const Logger = goog.requireType('goog.log.Logger');
+const IDataProvider = goog.requireType('os.data.IDataProvider');
 
 
 /**
@@ -28,385 +29,381 @@ goog.require('os.ui.window.ConfirmUI');
  *
  * @return {angular.Directive}
  */
-os.ui.serversDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/config/servers.html',
-    controller: os.ui.ServersCtrl,
-    controllerAs: 'servers'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  scope: true,
+  templateUrl: ROOT + 'views/config/servers.html',
+  controller: Controller,
+  controllerAs: 'servers'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'servers';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('servers', [os.ui.serversDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for Servers window
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.ServersCtrl = function($scope) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
+   */
+  constructor($scope) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    var dm = DataManager.getInstance();
+    dm.listen(DataProviderEventType.ADD_PROVIDER, this.updateData_, false, this);
+    dm.listen(DataProviderEventType.REMOVE_PROVIDER, this.updateData_, false, this);
+    this.updateData_();
+
+    $scope.$on('$destroy', this.onDestroy_.bind(this));
+  }
+
+  /**
+   * Cleanup
+   *
    * @private
    */
-  this.scope_ = $scope;
-
-  var dm = os.dataManager;
-  dm.listen(os.data.DataProviderEventType.ADD_PROVIDER, this.updateData_, false, this);
-  dm.listen(os.data.DataProviderEventType.REMOVE_PROVIDER, this.updateData_, false, this);
-  this.updateData_();
-
-  $scope.$on('$destroy', this.onDestroy_.bind(this));
-};
-
-
-/**
- * The logger.
- * @const
- * @type {goog.log.Logger}
- * @private
- */
-os.ui.ServersCtrl.LOGGER_ = goog.log.getLogger('os.ui.ServersCtrl');
-
-
-/**
- * Cleanup
- *
- * @private
- */
-os.ui.ServersCtrl.prototype.onDestroy_ = function() {
-  if (this.scope_ && this.scope_['data']) {
-    var list = this.scope_['data'];
-    for (var i = 0, n = list.length; i < n; i++) {
-      /** @type {os.data.IDataProvider} */ (list[i]['item']).unlisten(
-          goog.events.EventType.PROPERTYCHANGE, this.onItemChanged_, false, this);
-    }
-  }
-
-  var dm = os.dataManager;
-  dm.unlisten(os.data.DataProviderEventType.ADD_PROVIDER, this.updateData_, false, this);
-  dm.unlisten(os.data.DataProviderEventType.REMOVE_PROVIDER, this.updateData_, false, this);
-
-  this.scope_ = null;
-};
-
-
-/**
- * @private
- */
-os.ui.ServersCtrl.prototype.updateData_ = function() {
-  if (!this.scope_) {
-    return;
-  }
-
-  var list = /** @type {Array.<os.data.IDataProvider>} */ (
-    os.dataManager.getProviderRoot().getChildren());
-
-  this.scope_['all'] = true;
-  var data = [];
-
-  var im = os.ui.im.ImportManager.getInstance();
-  if (list) {
-    var id = 0;
-    for (var i = 0, n = list.length; i < n; i++) {
-      var item = list[i];
-
-      if (item.includeInServers()) {
-        var type = os.dataManager.getProviderTypeByClass(item.constructor);
-        var auth = item instanceof os.ui.data.BaseProvider ? item.getAuth() : null;
-        data.push({
-          'id': id,
-          'enabled': item.getEnabled(),
-          'edit': item.getEditable(),
-          'loading': false,
-          'error': item.getError(),
-          'label': item.getLabel(),
-          'item': item,
-          'hasView': !!im.getImportUI(type),
-          'authLink': auth && auth.link,
-          'authTooltip': auth && auth.tooltip
-        });
-
-        if (item instanceof os.ui.server.AbstractLoadingServer) {
-          data[data.length - 1]['loading'] = /** @type {os.ui.server.AbstractLoadingServer} */ (item).isLoading();
-        }
-
-        if (!item.getEnabled()) {
-          this.scope_['all'] = false;
-        }
-
-        item.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onItemChanged_, false, this);
-        item.listen(goog.events.EventType.PROPERTYCHANGE, this.onItemChanged_, false, this);
-        id++;
+  onDestroy_() {
+    if (this.scope_ && this.scope_['data']) {
+      var list = this.scope_['data'];
+      for (var i = 0, n = list.length; i < n; i++) {
+        /** @type {IDataProvider} */ (list[i]['item']).unlisten(
+            GoogEventType.PROPERTYCHANGE, this.onItemChanged_, false, this);
       }
     }
+
+    var dm = DataManager.getInstance();
+    dm.unlisten(DataProviderEventType.ADD_PROVIDER, this.updateData_, false, this);
+    dm.unlisten(DataProviderEventType.REMOVE_PROVIDER, this.updateData_, false, this);
+
+    this.scope_ = null;
   }
 
-  this.scope_['data'] = data;
-  this.apply();
-};
+  /**
+   * @private
+   */
+  updateData_() {
+    if (!this.scope_) {
+      return;
+    }
 
+    var list = /** @type {Array.<IDataProvider>} */ (
+      DataManager.getInstance().getProviderRoot().getChildren());
 
-/**
- * @param {os.events.PropertyChangeEvent} event
- * @private
- */
-os.ui.ServersCtrl.prototype.onItemChanged_ = function(event) {
-  var prop = event.getProperty();
-
-  if (prop === 'loading' || prop === 'error') {
-    // update the item icon during load and error conditions
-    this.updateData_();
-  }
-};
-
-
-/**
- * Applies the scope
- *
- * @protected
- */
-os.ui.ServersCtrl.prototype.apply = function() {
-  os.ui.apply(this.scope_);
-};
-
-
-/**
- * Updates the servers from the UI enabled flag
- *
- * @param {boolean=} opt_prompt
- * @export
- */
-os.ui.ServersCtrl.prototype.update = function(opt_prompt) {
-  if (!this.scope_) {
-    return;
-  }
-
-  if (opt_prompt === undefined) {
-    opt_prompt = true;
-  }
-
-  var list = this.scope_['data'];
-
-  if (list) {
     this.scope_['all'] = true;
-    for (var i = 0, n = list.length; i < n; i++) {
-      var enabled = list[i]['enabled'];
+    var data = [];
 
-      var provider = /** @type {os.data.IDataProvider} */ (list[i]['item']);
-      if (provider.getEnabled() !== enabled) {
-        if (!enabled && opt_prompt) {
-          // attempting to disable the server, so check if we need to prompt the user first
-          if (this.getPrompt_(provider, this.update.bind(this, false), false)) {
-            continue;
+    var im = ImportManager.getInstance();
+    if (list) {
+      var id = 0;
+      for (var i = 0, n = list.length; i < n; i++) {
+        var item = list[i];
+
+        if (item.includeInServers()) {
+          var type = DataManager.getInstance().getProviderTypeByClass(item.constructor);
+          var auth = item instanceof BaseProvider ? item.getAuth() : null;
+          data.push({
+            'id': id,
+            'enabled': item.getEnabled(),
+            'edit': item.getEditable(),
+            'loading': false,
+            'error': item.getError(),
+            'label': item.getLabel(),
+            'item': item,
+            'hasView': !!im.getImportUI(type),
+            'authLink': auth && auth.link,
+            'authTooltip': auth && auth.tooltip
+          });
+
+          if (item instanceof AbstractLoadingServer) {
+            data[data.length - 1]['loading'] = /** @type {AbstractLoadingServer} */ (item).isLoading();
+          }
+
+          if (!item.getEnabled()) {
+            this.scope_['all'] = false;
+          }
+
+          item.unlisten(GoogEventType.PROPERTYCHANGE, this.onItemChanged_, false, this);
+          item.listen(GoogEventType.PROPERTYCHANGE, this.onItemChanged_, false, this);
+          id++;
+        }
+      }
+    }
+
+    this.scope_['data'] = data;
+    this.apply();
+  }
+
+  /**
+   * @param {os.events.PropertyChangeEvent} event
+   * @private
+   */
+  onItemChanged_(event) {
+    var prop = event.getProperty();
+
+    if (prop === 'loading' || prop === 'error') {
+      // update the item icon during load and error conditions
+      this.updateData_();
+    }
+  }
+
+  /**
+   * Applies the scope
+   *
+   * @protected
+   */
+  apply() {
+    apply(this.scope_);
+  }
+
+  /**
+   * Updates the servers from the UI enabled flag
+   *
+   * @param {boolean=} opt_prompt
+   * @export
+   */
+  update(opt_prompt) {
+    if (!this.scope_) {
+      return;
+    }
+
+    if (opt_prompt === undefined) {
+      opt_prompt = true;
+    }
+
+    var list = this.scope_['data'];
+
+    if (list) {
+      this.scope_['all'] = true;
+      for (var i = 0, n = list.length; i < n; i++) {
+        var enabled = list[i]['enabled'];
+
+        var provider = /** @type {IDataProvider} */ (list[i]['item']);
+        if (provider.getEnabled() !== enabled) {
+          if (!enabled && opt_prompt) {
+            // attempting to disable the server, so check if we need to prompt the user first
+            if (this.getPrompt_(provider, this.update.bind(this, false), false)) {
+              continue;
+            }
+          }
+
+          // change the value
+          DataManager.getInstance().setProviderEnabled(provider.getId(), enabled);
+
+          // if enabling the server, load it now
+          if (enabled) {
+            provider.load();
           }
         }
 
-        // change the value
-        os.dataManager.setProviderEnabled(provider.getId(), enabled);
+        var providerKey = provider.getEditable() ? ProviderKey.USER : ProviderKey.ADMIN;
+        Settings.getInstance().set([providerKey, provider.getId(), 'enabled'], enabled);
 
-        // if enabling the server, load it now
-        if (enabled) {
-          provider.load();
-        }
-      }
-
-      var providerKey = provider.getEditable() ? os.data.ProviderKey.USER : os.data.ProviderKey.ADMIN;
-      os.settings.set([providerKey, provider.getId(), 'enabled'], enabled);
-
-      if (!enabled) {
-        this.checkForActiveDescriptors_(provider, true);
-        this.scope_['all'] = false;
-      }
-    }
-  }
-};
-
-
-/**
- * @param {os.data.IDataProvider} provider
- * @param {function()} callback
- * @param {boolean} remove True for remove, false for disable
- * @return {boolean} Whether or not the prompt was launched
- * @private
- */
-os.ui.ServersCtrl.prototype.getPrompt_ = function(provider, callback, remove) {
-  var titles = this.checkForActiveDescriptors_(provider);
-  var msg = null;
-
-  if (titles.length > 0) {
-    msg = 'The "' + provider.getLabel() + '" server is currently providing the following active layers:' +
-        '<ul><li>' + titles.join('</li><li>') + '</li></ul>Disabling this server will remove these layers. ' +
-        'Are you sure you wish to disable the server?';
-
-    if (remove) {
-      msg = msg.replace('Disabling', 'Removing');
-      msg = msg.replace('disable', 'remove');
-    }
-
-    os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
-      confirm: callback,
-      cancel: this.updateData_.bind(this),
-      prompt: msg,
-      yesText: 'Yes',
-      noText: 'No',
-      noIcon: 'fa fa-remove',
-      windowOptions: {
-        'label': 'Active Layers Exist',
-        'icon': 'fa fa-warning',
-        'x': 'center',
-        'y': 'center',
-        'width': '400',
-        'height': 'auto',
-        'modal': 'true',
-        'headerClass': 'bg-warning u-bg-warning-text'
-      }
-    }));
-
-    return true;
-  }
-
-  return false;
-};
-
-
-/**
- * @param {os.data.IDataProvider} provider
- * @param {boolean=} opt_deactivate
- * @return {!Array.<string>} titles of any active descriptors for this provider
- * @private
- */
-os.ui.ServersCtrl.prototype.checkForActiveDescriptors_ = function(provider, opt_deactivate) {
-  var dm = os.dataManager;
-  var descriptors = dm.getDescriptors(provider.getId() + os.ui.data.BaseProvider.ID_DELIMITER);
-  var titles = [];
-
-  if (descriptors) {
-    for (var i = 0, n = descriptors.length; i < n; i++) {
-      if (descriptors[i].isActive()) {
-        titles.push(descriptors[i].getTitle());
-
-        if (opt_deactivate) {
-          descriptors[i].setActive(false);
+        if (!enabled) {
+          this.checkForActiveDescriptors_(provider, true);
+          this.scope_['all'] = false;
         }
       }
     }
   }
 
-  return titles;
-};
+  /**
+   * @param {IDataProvider} provider
+   * @param {function()} callback
+   * @param {boolean} remove True for remove, false for disable
+   * @return {boolean} Whether or not the prompt was launched
+   * @private
+   */
+  getPrompt_(provider, callback, remove) {
+    var titles = this.checkForActiveDescriptors_(provider);
+    var msg = null;
 
+    if (titles.length > 0) {
+      msg = 'The "' + provider.getLabel() + '" server is currently providing the following active layers:' +
+          '<ul><li>' + titles.join('</li><li>') + '</li></ul>Disabling this server will remove these layers. ' +
+          'Are you sure you wish to disable the server?';
 
-/**
- * Toggles all servers
- *
- * @export
- */
-os.ui.ServersCtrl.prototype.toggleAll = function() {
-  var list = /** @type {Array<Object>} */ (this.scope_['data']);
+      if (remove) {
+        msg = msg.replace('Disabling', 'Removing');
+        msg = msg.replace('disable', 'remove');
+      }
 
-  if (list) {
-    for (var i = 0, n = list.length; i < n; i++) {
-      list[i]['enabled'] = this.scope_['all'];
+      ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+        confirm: callback,
+        cancel: this.updateData_.bind(this),
+        prompt: msg,
+        yesText: 'Yes',
+        noText: 'No',
+        noIcon: 'fa fa-remove',
+        windowOptions: {
+          'label': 'Active Layers Exist',
+          'icon': 'fa fa-warning',
+          'x': 'center',
+          'y': 'center',
+          'width': '400',
+          'height': 'auto',
+          'modal': 'true',
+          'headerClass': 'bg-warning u-bg-warning-text'
+        }
+      }));
+
+      return true;
     }
 
-    this.update();
-  }
-};
-
-
-/**
- * Adds a new server
- *
- * @export
- */
-os.ui.ServersCtrl.prototype.add = function() {
-  os.ui.file.AddServer.launchAddServerWindow();
-};
-
-
-/**
- * Edits/Views a server
- *
- * @param {!os.data.IDataProvider} provider
- * @export
- */
-os.ui.ServersCtrl.prototype.edit = function(provider) {
-  var im = os.ui.im.ImportManager.getInstance();
-  var type = os.dataManager.getProviderTypeByClass(provider.constructor);
-  var ui = im.getImportUI(type);
-  // Log metric
-  if (provider.getEditable()) {
-    os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Servers.EDIT, 1);
-  } else {
-    os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Servers.VIEW, 1);
+    return false;
   }
 
-  if (ui) {
-    ui.launchUI(null, {'provider': provider, 'type': type});
-  } else {
-    var errorMsg = 'There is no import UI defined for "' + type + '".';
+  /**
+   * @param {IDataProvider} provider
+   * @param {boolean=} opt_deactivate
+   * @return {!Array.<string>} titles of any active descriptors for this provider
+   * @private
+   */
+  checkForActiveDescriptors_(provider, opt_deactivate) {
+    var dm = DataManager.getInstance();
+    var descriptors = dm.getDescriptors(provider.getId() + BaseProvider.ID_DELIMITER);
+    var titles = [];
 
-    os.alert.AlertManager.getInstance().sendAlert(errorMsg, os.alert.AlertEventSeverity.ERROR);
-    goog.log.error(os.ui.ServersCtrl.LOGGER_, errorMsg);
+    if (descriptors) {
+      for (var i = 0, n = descriptors.length; i < n; i++) {
+        if (descriptors[i].isActive()) {
+          titles.push(descriptors[i].getTitle());
+
+          if (opt_deactivate) {
+            descriptors[i].setActive(false);
+          }
+        }
+      }
+    }
+
+    return titles;
   }
-};
 
+  /**
+   * Toggles all servers
+   *
+   * @export
+   */
+  toggleAll() {
+    var list = /** @type {Array<Object>} */ (this.scope_['data']);
 
-/**
- * Removes a server
- *
- * @param {!os.data.IDataProvider} provider
- * @param {boolean=} opt_prompt
- * @export
- */
-os.ui.ServersCtrl.prototype.remove = function(provider, opt_prompt) {
-  if (opt_prompt === undefined) {
-    opt_prompt = true;
-  }
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Servers.REMOVE, 1);
-  var titles = this.checkForActiveDescriptors_(provider, !opt_prompt);
+    if (list) {
+      for (var i = 0, n = list.length; i < n; i++) {
+        list[i]['enabled'] = this.scope_['all'];
+      }
 
-  if (titles.length > 0 && opt_prompt) {
-    if (this.getPrompt_(provider, this.remove.bind(this, provider, false), true)) {
-      return;
+      this.update();
     }
   }
-  var descList = os.dataManager.getDescriptors(provider.getId() + os.ui.data.BaseProvider.ID_DELIMITER);
-  for (var i = 0, ii = descList.length; i < ii; i++) {
-    os.dataManager.removeDescriptor(descList[i]);
+
+  /**
+   * Adds a new server
+   *
+   * @export
+   */
+  add() {
+    AddServer.launchAddServerWindow();
   }
-  os.settings.delete([os.data.ProviderKey.USER, provider.getId()]);
 
-  os.dataManager.removeProvider(provider.getId());
-  goog.log.info(os.ui.ServersCtrl.LOGGER_, 'Removed provider "' + provider.getLabel() + '"');
-};
+  /**
+   * Edits/Views a server
+   *
+   * @param {!IDataProvider} provider
+   * @export
+   */
+  edit(provider) {
+    var im = ImportManager.getInstance();
+    var type = DataManager.getInstance().getProviderTypeByClass(provider.constructor);
+    var ui = im.getImportUI(type);
+    // Log metric
+    if (provider.getEditable()) {
+      Metrics.getInstance().updateMetric(ServersKeys.EDIT, 1);
+    } else {
+      Metrics.getInstance().updateMetric(ServersKeys.VIEW, 1);
+    }
 
+    if (ui) {
+      ui.launchUI(null, {'provider': provider, 'type': type});
+    } else {
+      var errorMsg = 'There is no import UI defined for "' + type + '".';
 
-/**
- * Refreshes a server
- *
- * @param {!os.data.IDataProvider} provider
- * @export
- */
-os.ui.ServersCtrl.prototype.refresh = function(provider) {
-  goog.log.info(os.ui.ServersCtrl.LOGGER_, 'Refreshing provider "' + provider.getLabel() + '"');
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Servers.REFRESH, 1);
-  if (provider instanceof os.ui.server.AbstractLoadingServer) {
-    if (!(provider).isLoading()) {
+      AlertManager.getInstance().sendAlert(errorMsg, AlertEventSeverity.ERROR);
+      log.error(logger, errorMsg);
+    }
+  }
+
+  /**
+   * Removes a server
+   *
+   * @param {!IDataProvider} provider
+   * @param {boolean=} opt_prompt
+   * @export
+   */
+  remove(provider, opt_prompt) {
+    if (opt_prompt === undefined) {
+      opt_prompt = true;
+    }
+    Metrics.getInstance().updateMetric(ServersKeys.REMOVE, 1);
+    var titles = this.checkForActiveDescriptors_(provider, !opt_prompt);
+
+    if (titles.length > 0 && opt_prompt) {
+      if (this.getPrompt_(provider, this.remove.bind(this, provider, false), true)) {
+        return;
+      }
+    }
+    var descList = DataManager.getInstance().getDescriptors(provider.getId() + BaseProvider.ID_DELIMITER);
+    for (var i = 0, ii = descList.length; i < ii; i++) {
+      DataManager.getInstance().removeDescriptor(descList[i]);
+    }
+    Settings.getInstance().delete([ProviderKey.USER, provider.getId()]);
+
+    DataManager.getInstance().removeProvider(provider.getId());
+    log.info(logger, 'Removed provider "' + provider.getLabel() + '"');
+  }
+
+  /**
+   * Refreshes a server
+   *
+   * @param {!IDataProvider} provider
+   * @export
+   */
+  refresh(provider) {
+    log.info(logger, 'Refreshing provider "' + provider.getLabel() + '"');
+    Metrics.getInstance().updateMetric(ServersKeys.REFRESH, 1);
+    if (provider instanceof AbstractLoadingServer) {
+      if (!(provider).isLoading()) {
+        provider.load(true);
+      }
+    } else {
       provider.load(true);
     }
-  } else {
-    provider.load(true);
   }
+}
+
+/**
+ * The logger.
+ * @type {Logger}
+ */
+const logger = log.getLogger('os.ui.ServersUI');
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

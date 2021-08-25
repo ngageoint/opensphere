@@ -1,47 +1,33 @@
-goog.require('os.data.event.DataEvent');
 goog.require('os.data.DataManager');
+goog.require('os.data.event.DataEvent');
+goog.require('os.data.event.DataEventType');
 goog.require('os.mock');
-goog.require('ol.Feature');
-goog.require('ol.geom.Polygon');
+goog.require('os.query.AreaManager');
+goog.require('os.query.Handler');
+goog.require('os.query.QueryManager');
 
-
-
-/**
- * Mock query handler
- * @param {string} id
- * @constructor
- */
-os.query.Handler = function(id) {
-  this.id = id;
-};
-
-
-/**
- * @return {?}
- */
-os.query.Handler.prototype.getLayerId = function() {
-  return this.id;
-};
-
-
-/**
- * @return {?}
- */
-os.query.Handler.prototype.getLayerName = function() {
-  return this.id;
-};
 
 describe('os.query.QueryManager', function() {
-  var am, qm;
-  beforeEach(function() {
-    am = os.areaManager;
-    qm = os.queryManager;
+  const DataManager = goog.module.get('os.data.DataManager');
+  const DataEvent = goog.module.get('os.data.event.DataEvent');
+  const DataEventType = goog.module.get('os.data.event.DataEventType');
+  const AreaManager = goog.module.get('os.query.AreaManager');
+  const QueryManager = goog.module.get('os.query.QueryManager');
 
-    spyOn(os.queryManager, 'save');
-    spyOn(os.queryManager, 'load');
-    spyOn(os.areaManager, 'save');
-    spyOn(os.areaManager, 'load');
-    spyOn(os.areaManager, 'updateStyles_');
+  const Handler = goog.module.get('os.query.Handler');
+
+  var am;
+  var qm;
+
+  beforeEach(function() {
+    am = AreaManager.getInstance();
+    qm = QueryManager.getInstance();
+
+    spyOn(qm, 'save');
+    spyOn(qm, 'load');
+    spyOn(am, 'save');
+    spyOn(am, 'load');
+    spyOn(am, 'updateStyles_');
   });
 
   it('should start from scratch', function() {
@@ -53,17 +39,17 @@ describe('os.query.QueryManager', function() {
 
   it('should respond to source remove events', function() {
     var id = 'A';
-    var handlerA = new os.query.Handler(id);
+    var handlerA = new Handler(id);
     qm.registerHandler(handlerA);
     expect(qm.handlers.length).toBe(1);
 
-    var dm = os.dataManager;
+    var dm = DataManager.getInstance();
     var mockSource = {
       getId: function() {
         return id;
       }
     };
-    dm.dispatchEvent(new os.data.event.DataEvent(os.data.event.DataEventType.SOURCE_REMOVED, mockSource));
+    dm.dispatchEvent(new DataEvent(DataEventType.SOURCE_REMOVED, mockSource));
     expect(qm.handlers.length).toBe(0);
   });
 });

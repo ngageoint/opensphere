@@ -6,6 +6,6 @@ const ExportManager = goog.require('os.ui.file.ExportManager');
 
 /**
  * Global export manager reference.
- * @type {os.ui.file.ExportManager}
+ * @type {ExportManager}
  */
 exports = ExportManager.getInstance();

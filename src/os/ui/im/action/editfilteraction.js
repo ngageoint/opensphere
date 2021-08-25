@@ -5,6 +5,7 @@ const dispatcher = goog.require('os.Dispatcher');
 const DataManager = goog.require('os.data.DataManager');
 const {sortByLabel} = goog.require('os.im.action');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const {apply} = goog.require('os.ui');
 const {Controller: EditFiltersCtrl} = goog.require('os.ui.filter.ui.EditFiltersUI');
 const EventType = goog.require('os.ui.im.action.EventType');
 const osWindow = goog.require('os.ui.window');
@@ -294,7 +295,7 @@ class Controller extends EditFiltersCtrl {
       var stopIndex = ui['item'].index();
       if (this.startIndex_ != stopIndex) {
         goog.array.moveItem(this['actions'], this.startIndex_, stopIndex);
-        os.ui.apply(this.scope);
+        apply(this.scope);
       }
     }
   }

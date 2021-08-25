@@ -8,12 +8,15 @@ const layerMenu = goog.require('os.ui.menu.layer');
 const pluginParams = goog.require('plugin.params');
 const {launchParamsEdit} = goog.require('plugin.params.EditRequestParamsUI');
 
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+
 
 /**
  * Set up params menu items in the layer menu.
  */
 const layerSetup = function() {
-  var menu = layerMenu.MENU;
+  var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(pluginParams.EventType.EDIT_PARAMS)) {
     var group = menu.getRoot().find(layerMenu.GroupLabel.LAYER);
     asserts.assert(group, 'Group should exist! Check spelling?');
@@ -35,7 +38,7 @@ const layerSetup = function() {
  * Clean up params menu items in the layer menu.
  */
 const layerDispose = function() {
-  var menu = layerMenu.MENU;
+  var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(pluginParams.EventType.EDIT_PARAMS)) {
     var group = menu.getRoot().find(layerMenu.GroupLabel.LAYER);
     if (group) {
@@ -48,7 +51,7 @@ const layerDispose = function() {
  * Test if an event context supports editing layer request parameters.
  *
  * @param {layerMenu.Context} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
 const visibleIfSupported_ = function(context) {
   this.visible = false;
@@ -65,7 +68,7 @@ const visibleIfSupported_ = function(context) {
 /**
  * Handle params event from the layer menu.
  *
- * @param {!os.ui.menu.MenuEvent<layerMenu.Context>} event The menu event.
+ * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  */
 const handleLayerAction_ = function(event) {
   var layers = layerMenu.getLayersFromContext(event.getContext());

@@ -8,7 +8,7 @@ const {getMapContainer} = goog.require('os.map.instance');
 const TailStyle = goog.require('os.annotation.TailStyle');
 const {nearestPoints} = goog.require('os.geo.jsts');
 const {measureText} = goog.require('os.ui');
-const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
+const FeatureEditField = goog.require('os.ui.FeatureEditField');
 
 const Feature = goog.requireType('ol.Feature');
 const Overlay = goog.requireType('ol.Overlay');
@@ -107,7 +107,7 @@ const scaleToText = function(options, text) {
 const getNameText = function(feature) {
   if (feature) {
     return (
-      /** @type {string|undefined} */ (feature.get(FeatureEditCtrl.Field.NAME)) || ''
+      /** @type {string|undefined} */ (feature.get(FeatureEditField.NAME)) || ''
     );
   }
 
@@ -123,8 +123,8 @@ const getNameText = function(feature) {
 const getDescriptionText = function(feature) {
   if (feature) {
     return (
-      /** @type {string|undefined} */ (feature.get(FeatureEditCtrl.Field.MD_DESCRIPTION)) ||
-      /** @type {string|undefined} */ (feature.get(FeatureEditCtrl.Field.DESCRIPTION)) || ''
+      /** @type {string|undefined} */ (feature.get(FeatureEditField.MD_DESCRIPTION)) ||
+      /** @type {string|undefined} */ (feature.get(FeatureEditField.DESCRIPTION)) || ''
     );
   }
 

@@ -77,6 +77,7 @@ const SynchronizerType = goog.require('os.layer.SynchronizerType');
 const VectorLayer = goog.require('os.layer.Vector');
 const osMap = goog.require('os.map');
 const FlightMode = goog.require('os.map.FlightMode');
+const IMapContainer = goog.require('os.map.IMapContainer'); // eslint-disable-line
 const metrics = goog.require('os.metrics');
 const Metrics = goog.require('os.metrics.Metrics');
 const VariableReplacer = goog.require('os.net.VariableReplacer');
@@ -88,6 +89,7 @@ const projSwitch = goog.require('os.proj.switch');
 const queryUtils = goog.require('os.query.utils');
 const {randomString} = goog.require('os.string');
 const osStyle = goog.require('os.style');
+const StyleManager = goog.require('os.style.StyleManager');
 const StyleType = goog.require('os.style.StyleType');
 const label = goog.require('os.style.label');
 const ui = goog.require('os.ui');
@@ -103,7 +105,6 @@ const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 const Logger = goog.requireType('goog.log.Logger');
 const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
 const ILayer = goog.requireType('os.layer.ILayer');
-const IMapContainer = goog.requireType('os.map.IMapContainer');
 const ActionEvent = goog.requireType('os.ui.action.ActionEvent');
 const IWebGLCamera = goog.requireType('os.webgl.IWebGLCamera');
 const IWebGLRenderer = goog.requireType('os.webgl.IWebGLRenderer');
@@ -848,7 +849,7 @@ class MapContainer extends EventTarget {
     this.drawingLayer_.setTitle('Drawing Layer');
     this.drawingLayer_.setId(MapContainer.DRAW_ID);
     this.drawingLayer_.setProvider(getAppName() || null);
-    this.drawingLayer_.setStyle(osStyle.StyleManager.getInstance().getOrCreateStyle(osStyle.DEFAULT_VECTOR_CONFIG));
+    this.drawingLayer_.setStyle(StyleManager.getInstance().getOrCreateStyle(osStyle.DEFAULT_VECTOR_CONFIG));
     this.drawingLayer_.setOSType(LayerType.REF);
     this.drawingLayer_.setExplicitType('');
     this.drawingLayer_.setRemovable(false);
@@ -885,13 +886,12 @@ class MapContainer extends EventTarget {
     referenceGroup.setPriority(100);
     referenceGroup.setOSType(LayerType.REF);
 
-    osMap.PROJECTION = olProj.get(/** @type {string} */ (
-      Settings.getInstance().get(osMap.PROJECTION_KEY, osMap.PROJECTION.getCode())));
+    osMap.setProjection(olProj.get(/** @type {string} */ (
+      Settings.getInstance().get(osMap.PROJECTION_KEY, osMap.PROJECTION.getCode()))));
 
-    osMap.TILEGRID = createForProjection(
-        osMap.PROJECTION, ol.DEFAULT_MAX_ZOOM, [512, 512]);
-    osMap.MIN_RESOLUTION = osMap.zoomToResolution(osMap.MAX_ZOOM, osMap.PROJECTION);
-    osMap.MAX_RESOLUTION = osMap.zoomToResolution(osMap.MIN_ZOOM, osMap.PROJECTION);
+    osMap.setTileGrid(createForProjection(osMap.PROJECTION, ol.DEFAULT_MAX_ZOOM, [512, 512]));
+    osMap.setMinResolution(osMap.zoomToResolution(osMap.MAX_ZOOM, osMap.PROJECTION));
+    osMap.setMaxResolution(osMap.zoomToResolution(osMap.MIN_ZOOM, osMap.PROJECTION));
 
     const enableReprojection = /** @type {boolean} */ (Settings.getInstance().get('enableReprojection', true));
     setEnableRasterReprojection(enableReprojection);

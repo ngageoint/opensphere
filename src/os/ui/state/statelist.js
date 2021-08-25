@@ -1,7 +1,7 @@
 goog.module('os.ui.state.StateListUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.checklistDirective');
+goog.require('os.ui.ChecklistUI');
 
 const {ROOT} = goog.require('os');
 const {getAppName} = goog.require('os.config');
@@ -14,6 +14,7 @@ const AbstractStateDescriptor = goog.require('os.ui.state.AbstractStateDescripto
 const StateListEvent = goog.require('os.ui.state.StateListEvent');
 
 const DescriptorEvent = goog.requireType('os.data.DescriptorEvent');
+const IStateDescriptor = goog.requireType('os.ui.state.IStateDescriptor');
 
 /**
  * The statelist directive
@@ -94,7 +95,7 @@ class Controller {
   /**
    * Create a checklist item from a state descriptor.
    *
-   * @param {!os.ui.state.IStateDescriptor} descriptor The state descriptor
+   * @param {!IStateDescriptor} descriptor The state descriptor
    * @param {boolean=} opt_enabled If the item should be enabled
    * @return {!osx.ChecklistItem}
    * @private

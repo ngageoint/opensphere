@@ -12,9 +12,12 @@ const Point = goog.require('ol.geom.Point');
 const DataManager = goog.require('os.data.DataManager');
 const RecordField = goog.require('os.data.RecordField');
 const osFeature = goog.require('os.feature');
+const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const osImplements = goog.require('os.implements');
 const osSource = goog.require('os.source');
 const osStyle = goog.require('os.style');
+const StyleManager = goog.require('os.style.StyleManager');
+const StyleType = goog.require('os.style.StyleType');
 const ITime = goog.require('os.time.ITime');
 const kml = goog.require('os.ui.file.kml');
 const AbstractKMLExporter = goog.require('os.ui.file.kml.AbstractKMLExporter');
@@ -23,6 +26,7 @@ const pluginFileKmlExport = goog.require('plugin.file.kml.export');
 const {directiveTag: kmlExportUi} = goog.require('plugin.file.kml.ui.KMLExportUI');
 
 const Feature = goog.requireType('ol.Feature');
+const VectorSource = goog.requireType('os.source.Vector');
 
 
 /**
@@ -316,7 +320,7 @@ class KMLExporter extends AbstractKMLExporter {
    * Get the feature's source.
    *
    * @param {Feature} feature The feature
-   * @return {osSource.Vector} The source
+   * @return {VectorSource} The source
    * @private
    */
   getSource_(feature) {
@@ -324,7 +328,7 @@ class KMLExporter extends AbstractKMLExporter {
     if (feature) {
       var sourceId = feature.get(RecordField.SOURCE_ID);
       if (typeof sourceId === 'string') {
-        source = /** @type {osSource.Vector} */ (DataManager.getInstance().getSource(sourceId));
+        source = /** @type {VectorSource} */ (DataManager.getInstance().getSource(sourceId));
       }
     }
 
@@ -347,9 +351,9 @@ class KMLExporter extends AbstractKMLExporter {
 
       // don't count the drawing layer as a style source
       if (sourceId && sourceId != os.layer.LayerId.DRAW) {
-        if (item instanceof osFeature.DynamicFeature || !(sourceId in this.labelMap)) {
-          var cfg = osStyle.StyleManager.getInstance().getLayerConfig(sourceId);
-          var itemStyle = item.get(osStyle.StyleType.FEATURE);
+        if (item instanceof DynamicFeature || !(sourceId in this.labelMap)) {
+          var cfg = StyleManager.getInstance().getLayerConfig(sourceId);
+          var itemStyle = item.get(StyleType.FEATURE);
           // Check the layer level
           if (cfg && cfg['labels'] && this.checkLabelsNotNull_(cfg['labels'])) {
             this.labelMap[sourceId] = cfg['labels'];

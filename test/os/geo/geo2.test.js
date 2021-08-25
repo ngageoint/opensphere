@@ -1,6 +1,5 @@
 goog.require('ol.geom.SimpleGeometry');
 goog.require('ol.proj');
-goog.require('os.feature');
 goog.require('os.feature.mock');
 goog.require('os.geo');
 goog.require('os.geo2');
@@ -10,7 +9,7 @@ goog.require('os.proj');
 describe('os.geo2', function() {
   const SimpleGeometry = goog.module.get('ol.geom.SimpleGeometry');
   const olProj = goog.module.get('ol.proj');
-  const osFeature = goog.module.get('os.feature');
+  const featureMock = goog.module.get('os.feature.mock');
   const geo = goog.module.get('os.geo');
   const geo2 = goog.module.get('os.geo2');
   const osMap = goog.module.get('os.map');
@@ -28,7 +27,7 @@ describe('os.geo2', function() {
 
   var originalProjection = osMap.PROJECTION;
   afterEach(function() {
-    osMap.PROJECTION = originalProjection;
+    osMap.setProjection(originalProjection);
   });
 
   it('should normalize longitudes properly', function() {
@@ -109,8 +108,8 @@ describe('os.geo2', function() {
 
 
   it('should normalize geometries', function() {
-    osMap.PROJECTION = olProj.get(osProj.EPSG4326);
-    var features = osFeature.mock.getFeatures(true);
+    osMap.setProjection(olProj.get(osProj.EPSG4326));
+    var features = featureMock.getFeatures(true);
 
     features.forEach(function(feature) {
       if (geom2 instanceof SimpleGeometry) {

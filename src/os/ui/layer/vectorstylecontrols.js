@@ -1,8 +1,8 @@
 goog.module('os.ui.layer.VectorStyleControlsUI');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.SliderUI');
 goog.require('os.ui.icon.IconPickerUI');
-goog.require('os.ui.sliderDirective');
 
 const Disposable = goog.require('goog.Disposable');
 const {ROOT} = goog.require('os');

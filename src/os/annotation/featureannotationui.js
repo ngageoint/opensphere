@@ -1,7 +1,7 @@
 goog.module('os.annotation.FeatureAnnotationUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.text.tuiEditorDirective');
+goog.require('os.ui.text.TuiEditorUI');
 
 const olEvents = goog.require('ol.events');
 const EventType = goog.require('ol.events.EventType');
@@ -11,7 +11,7 @@ const TailStyle = goog.require('os.annotation.TailStyle');
 const TailType = goog.require('os.annotation.TailType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const {apply} = goog.require('os.ui');
-const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
+const FeatureEditField = goog.require('os.ui.FeatureEditField');
 const Module = goog.require('os.ui.Module');
 const TuiEditor = goog.require('os.ui.text.TuiEditor');
 
@@ -220,10 +220,10 @@ class Controller extends AbstractAnnotationCtrl {
   saveAnnotation() {
     super.saveAnnotation();
 
-    this.feature.set(FeatureEditCtrl.Field.NAME, this['name']);
-    this.feature.set(FeatureEditCtrl.Field.DESCRIPTION,
+    this.feature.set(FeatureEditField.NAME, this['name']);
+    this.feature.set(FeatureEditField.DESCRIPTION,
         TuiEditor.render(this['description']));
-    this.feature.set(FeatureEditCtrl.Field.MD_DESCRIPTION, this['description']);
+    this.feature.set(FeatureEditField.MD_DESCRIPTION, this['description']);
 
     this.feature.dispatchEvent(new PropertyChangeEvent(annotation.EventType.UPDATE_PLACEMARK));
   }

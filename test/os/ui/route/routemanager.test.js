@@ -16,7 +16,7 @@ describe('os.ui.route.RouteManager', function() {
 
   beforeEach(function() {
     inject(function($injector) {
-      ui.injector = $injector;
+      ui.setInjector($injector);
     });
 
     rm = new RouteManager();

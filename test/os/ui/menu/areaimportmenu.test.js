@@ -6,13 +6,13 @@ describe('os.ui.menu.areaImport', function() {
   const areaImport = goog.module.get('os.ui.menu.areaImport');
 
   it('defaults to undefined', function() {
-    expect(areaImport.MENU).toBeUndefined();
+    expect(areaImport.getMenu()).toBeUndefined();
   });
 
   it('adds default options on setup', function() {
     areaImport.setup();
 
-    var menu = areaImport.MENU;
+    var menu = areaImport.getMenu();
     expect(menu).toBeDefined();
     expect(menu.getRoot()).toBeDefined();
     expect(menu.getRoot().find(areaImport.EventType.FILE)).toBeDefined();
@@ -22,20 +22,20 @@ describe('os.ui.menu.areaImport', function() {
 
   it('handles menu events', function() {
     spyOn(query, 'launchQueryImport');
-    areaImport.handleQueryEvent_({type: areaImport.EventType.FILE});
+    areaImport.handleQueryEvent({type: areaImport.EventType.FILE});
     expect(query.launchQueryImport).toHaveBeenCalled();
 
     spyOn(query, 'launchCoordinates');
-    areaImport.handleQueryEvent_({type: areaImport.EventType.ENTER_COORDINATES});
+    areaImport.handleQueryEvent({type: areaImport.EventType.ENTER_COORDINATES});
     expect(query.launchCoordinates).toHaveBeenCalled();
 
     spyOn(query, 'queryWorld');
-    areaImport.handleQueryEvent_({type: areaImport.EventType.QUERY_WORLD});
+    areaImport.handleQueryEvent({type: areaImport.EventType.QUERY_WORLD});
     expect(query.queryWorld).toHaveBeenCalled();
   });
 
   it('disposes the menu', function() {
     areaImport.dispose();
-    expect(areaImport.MENU).toBeUndefined();
+    expect(areaImport.getMenu()).toBeUndefined();
   });
 });

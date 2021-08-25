@@ -9,7 +9,7 @@ const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 
 const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const instanceOf = goog.require('os.instanceOf');
-const osSource = goog.require('os.source');
+const VectorSource = goog.require('os.source.Vector');
 const osTrack = goog.require('os.track');
 const osUiMenuLayer = goog.require('os.ui.menu.layer');
 const spatial = goog.require('os.ui.menu.spatial');
@@ -42,7 +42,7 @@ const TRACK_GROUP = 'Tracks';
  * @param {boolean=} opt_enablePredict true to include "Predict" track capabilities
  */
 const layerSetup = function(opt_enablePredict = false) {
-  const menu = osUiMenuLayer.MENU;
+  const menu = osUiMenuLayer.getMenu();
   if (menu && !menu.getRoot().find(TRACK_GROUP)) {
     const group = menu.getRoot().find(osUiMenuLayer.GroupLabel.TOOLS);
     asserts.assert(group, 'Group should exist! Check spelling?');
@@ -202,7 +202,7 @@ const hasFeatures = function(context) {
       const layer = node.getLayer();
       if (layer instanceof VectorLayer) {
         const source = layer.getSource();
-        if (source instanceof osSource.Vector) {
+        if (source instanceof VectorSource) {
           return source.getFeatureCount() > 0;
         }
       }
@@ -228,7 +228,7 @@ const hasSelectedFeatures = function(context) {
       const layer = node.getLayer();
       if (layer instanceof VectorLayer) {
         const source = layer.getSource();
-        if (source instanceof osSource.Vector) {
+        if (source instanceof VectorSource) {
           return source.getSelectedItems().length > 0;
         }
       }
@@ -287,7 +287,7 @@ const visibleIfTrackNode = function(context) {
  * @param {boolean=} opt_enablePredict true to include "Predict" track capabilities
  */
 const spatialSetup = function(opt_enablePredict = false) {
-  const menu = spatial.MENU;
+  const menu = spatial.getMenu();
   if (menu) {
     const root = menu.getRoot();
     const group = root.find(spatial.Group.FEATURES);
@@ -660,8 +660,8 @@ const getTracks = function(context) {
           tracks.push(trackNodes[i].getFeature());
         }
       }
-    } else if (instanceOf(context, osSource.Vector.NAME)) {
-      const source = /** @type {!osSource.Vector} */ (context);
+    } else if (instanceOf(context, VectorSource.NAME)) {
+      const source = /** @type {!VectorSource} */ (context);
       const temp = source.getSelectedItems();
       for (let i = 0; i < temp.length; i++) {
         if (osTrack.isTrackFeature(temp[i])) {

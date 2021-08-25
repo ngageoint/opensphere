@@ -1,46 +1,57 @@
-goog.provide('os.ui.SettingsButtonCtrl');
-goog.provide('os.ui.settingsButtonDirective');
+goog.module('os.ui.SettingsButtonUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.metrics.keys');
-goog.require('os.ui.Module');
-goog.require('os.ui.menu.MenuButtonCtrl');
+const Module = goog.require('os.ui.Module');
+const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
+
 
 /**
  * The add data button bar directive
  *
  * @return {angular.Directive}
  */
-os.ui.settingsButtonDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    controller: os.ui.SettingsButtonCtrl,
-    controllerAs: 'ctrl',
-    template: '<button class="btn btn-secondary" title="View Settings"' +
-      ' ng-click="ctrl.toggle()"' +
-      ' ng-class="{active: ctrl.isWindowActive()}">' +
-      '<i class="fa fa-gears"></i>' +
-      '</button>'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  controller: Controller,
+  controllerAs: 'ctrl',
+  template: '<button class="btn btn-secondary" title="View Settings"' +
+    ' ng-click="ctrl.toggle()"' +
+    ' ng-class="{active: ctrl.isWindowActive()}">' +
+    '<i class="fa fa-gears"></i>' +
+    '</button>'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'settings-button';
 
 /**
  * add the directive to the module
  */
-os.ui.Module.directive('settingsButton', [os.ui.settingsButtonDirective]);
-
+Module.directive('settingsButton', [directive]);
 
 /**
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element The element
- * @extends {os.ui.menu.MenuButtonCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.SettingsButtonCtrl = function($scope, $element) {
-  os.ui.SettingsButtonCtrl.base(this, 'constructor', $scope, $element);
-  this.flag = 'settings';
+class Controller extends MenuButtonCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element The element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
+    this.flag = 'settings';
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
-goog.inherits(os.ui.SettingsButtonCtrl, os.ui.menu.MenuButtonCtrl);

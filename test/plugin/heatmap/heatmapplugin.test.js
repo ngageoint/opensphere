@@ -76,7 +76,7 @@ describe('plugin.heatmap.HeatmapPlugin', function() {
     dm.dispatchEvent(event);
     expect(source.getSupportsAction(heatmapMenu.EventType.GENERATE_HEATMAP)).toBe(true);
 
-    var menu = layerMenu.MENU;
+    var menu = layerMenu.getMenu();
     // expect(menu.getRoot().find(plugin.heatmap.menu.EventType.EXPORT)).not.toBe(null);
     expect(menu.getRoot().find(heatmapMenu.EventType.GENERATE_HEATMAP)).not.toBe(null);
 

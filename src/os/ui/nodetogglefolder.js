@@ -1,10 +1,8 @@
-goog.provide('os.ui.NodeToggleFolderCtrl');
-goog.provide('os.ui.nodeToggleFolderDirective');
+goog.module('os.ui.NodeToggleFolderUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventType');
-goog.require('os.ui.Module');
-goog.require('os.ui.NodeToggleCtrl');
-goog.require('os.ui.nodeToggleDirective');
+const Module = goog.require('os.ui.Module');
+const {Controller: NodeToggleCtrl, directive: nodeToggleDirective} = goog.require('os.ui.NodeToggleUI');
 
 
 /**
@@ -12,44 +10,53 @@ goog.require('os.ui.nodeToggleDirective');
  *
  * @return {angular.Directive}
  */
-os.ui.nodeToggleFolderDirective = function() {
-  var dir = os.ui.nodeToggleDirective();
+const directive = () => {
+  var dir = nodeToggleDirective();
   dir.template = '<span>' + dir.template + '<i class="fa fa-fw action" ' +
       'ng-class="{\'fa-folder\': item.collapsed, \'fa-folder-open\': !item.collapsed}"></i></span>';
-  dir.controller = os.ui.NodeToggleFolderCtrl;
+  dir.controller = Controller;
   return /** @type {angular.Directive} */ (dir);
 };
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'nodetogglefolder';
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('nodetogglefolder', [os.ui.nodeToggleFolderDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the node toggle w/ folder directive
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.ui.NodeToggleCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.NodeToggleFolderCtrl = function($scope, $element) {
-  os.ui.NodeToggleFolderCtrl.base(this, 'constructor', $scope, $element);
+class Controller extends NodeToggleCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  onPropertyChange(e) {}
+
+  /**
+   * @inheritDoc
+   */
+  updateOpacity() {}
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
-goog.inherits(os.ui.NodeToggleFolderCtrl, os.ui.NodeToggleCtrl);
-
-
-/**
- * @inheritDoc
- */
-os.ui.NodeToggleFolderCtrl.prototype.onPropertyChange = function(e) {};
-
-
-/**
- * @inheritDoc
- */
-os.ui.NodeToggleFolderCtrl.prototype.updateOpacity = function() {};

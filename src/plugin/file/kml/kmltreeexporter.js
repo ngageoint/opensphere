@@ -10,10 +10,12 @@ const GeometryCollection = goog.require('ol.geom.GeometryCollection');
 const Point = goog.require('ol.geom.Point');
 const RecordField = goog.require('os.data.RecordField');
 const osFeature = goog.require('os.feature');
+const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
 const osSource = goog.require('os.source');
 const TriState = goog.require('os.structs.TriState');
 const osStyle = goog.require('os.style');
+const StyleType = goog.require('os.style.StyleType');
 const osUiFileKml = goog.require('os.ui.file.kml');
 const AbstractKMLExporter = goog.require('os.ui.file.kml.AbstractKMLExporter');
 const xml = goog.require('os.xml');
@@ -170,11 +172,11 @@ class KMLTreeExporter extends AbstractKMLExporter {
     if (feature) {
       icon = /** @type {osUiFileKml.Icon} */ (googObject.clone(icon));
 
-      var config = /** @type {Array<Object>|Object|undefined} */ (feature.get(osStyle.StyleType.FEATURE));
+      var config = /** @type {Array<Object>|Object|undefined} */ (feature.get(StyleType.FEATURE));
 
       // may be an array of configs - use the first one (feature style)
       if (Array.isArray(config)) {
-        config = feature instanceof osFeature.DynamicFeature ? config[1] : config[0];
+        config = feature instanceof DynamicFeature ? config[1] : config[0];
       }
 
       if (config && config['image']) {

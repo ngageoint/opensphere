@@ -1,9 +1,8 @@
 goog.require('os.ui.text.TuiEditor');
-goog.require('os.ui.text.TuiEditorCtrl');
-goog.require('os.ui.text.tuiEditorDirective');
+goog.require('os.ui.text.TuiEditorUI');
 
-describe('os.ui.text.tuiEditorDirective', () => {
-  const tuiEditorDirective = goog.module.get('os.ui.text.tuiEditorDirective');
+describe('os.ui.text.TuiEditorUI.directive', () => {
+  const {directive: tuiEditorDirective} = goog.module.get('os.ui.text.TuiEditorUI');
 
   it('should copy blank text', () => {
     const result = tuiEditorDirective();
@@ -12,8 +11,8 @@ describe('os.ui.text.tuiEditorDirective', () => {
   });
 });
 
-describe('os.ui.text.TuiEditorCtrl', () => {
-  const TuiEditorCtrl = goog.module.get('os.ui.text.TuiEditorCtrl');
+describe('os.ui.text.TuiEditorUI.Controller', () => {
+  const {Controller: TuiEditorCtrl} = goog.module.get('os.ui.text.TuiEditorUI');
 
   let $scope;
   let element;

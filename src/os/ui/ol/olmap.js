@@ -29,7 +29,7 @@ const dispatcher = goog.require('os.Dispatcher');
 const Settings = goog.require('os.config.Settings');
 const {ProviderKey} = goog.require('os.data');
 const {reduceExtentFromGeometries} = goog.require('os.fn');
-const {MAX_AUTO_ZOOM, OPENLAYERS_CANVAS} = goog.require('os.map');
+const osMap = goog.require('os.map');
 const {unsafeClone} = goog.require('os.object');
 const XYZ = goog.require('os.ol.source.XYZ');
 const BaseAreaManager = goog.require('os.query.BaseAreaManager');
@@ -130,7 +130,7 @@ class OLMap extends EventTarget {
 
     if (userAgent.IE) {
       try {
-        var olCanvas = /** @type {HTMLElement} */ ($(OPENLAYERS_CANVAS)[0]);
+        var olCanvas = /** @type {HTMLElement} */ ($(osMap.OPENLAYERS_CANVAS)[0]);
         olCanvas.style.height = '';
         olCanvas.style.width = '';
       } catch (e) {
@@ -495,7 +495,7 @@ class OLMap extends EventTarget {
           reduceExtentFromGeometries,
           createEmpty());
 
-      this.flyToExtent(extent, 1.5, MAX_AUTO_ZOOM);
+      this.flyToExtent(extent, 1.5, osMap.MAX_AUTO_ZOOM);
     } catch (e) {
       log.error(logger, 'Zoom action failed:', e);
     }

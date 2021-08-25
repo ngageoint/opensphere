@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
+const unitMenu = goog.require('os.ui.menu.unit');
 
 
 /**
@@ -18,7 +19,7 @@ class Controller extends MenuButtonCtrl {
   constructor($scope, $element) {
     super($scope, $element);
 
-    this.menu = os.ui.menu.unit.MENU;
+    this.menu = unitMenu.MENU;
     this.btnPosition = 'right top';
     this.menuPosition = 'right bottom-4';
   }

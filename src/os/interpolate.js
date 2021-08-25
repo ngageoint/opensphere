@@ -46,7 +46,7 @@ const interpolateConfig = {
  * Whether or not the interpolation system is enabled
  * @type {boolean}
  */
-const interpolateEnabled = true;
+let interpolateEnabled = true;
 
 /**
  * If a feature is interpolated, its original geometry will be stored in this field
@@ -70,6 +70,14 @@ let overrideMethod = null;
  */
 const getEnabled = function() {
   return !!(interpolateEnabled && interpolateConfig.distance > 1000);
+};
+
+/**
+ * Set if interpolation is enabled.
+ * @param {boolean} value If interpolation in enabled.
+ */
+const setEnabled = function(value) {
+  interpolateEnabled = value;
 };
 
 /**
@@ -438,6 +446,7 @@ exports = {
   ORIGINAL_GEOM_FIELD,
   METHOD_FIELD,
   getEnabled,
+  setEnabled,
   getMethod,
   getConfig,
   setConfig,

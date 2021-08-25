@@ -1,7 +1,7 @@
 goog.module('os.ui.layer.TileLayerUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.sliderDirective');
+goog.require('os.ui.SliderUI');
 
 const {ROOT} = goog.require('os');
 const {instanceOf} = goog.require('os.classRegistry');

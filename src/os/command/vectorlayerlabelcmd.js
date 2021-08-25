@@ -21,7 +21,7 @@ class VectorLayerLabel extends AbstractVectorStyle {
    * Constructor.
    * @param {string} layerId
    * @param {Array<label.LabelConfig>} value
-   * @param {Array<os.style.label.LabelConfig>=} opt_oldValue
+   * @param {Array<label.LabelConfig>=} opt_oldValue
    */
   constructor(layerId, value, opt_oldValue) {
     super(layerId, value, opt_oldValue);

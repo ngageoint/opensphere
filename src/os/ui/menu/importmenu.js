@@ -1,127 +1,138 @@
-goog.provide('os.ui.menu.import');
+goog.module('os.ui.menu.import');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.layer.LayerType');
-goog.require('os.metrics.keys');
-goog.require('os.ui.im.ImportEventType');
-goog.require('os.ui.menu.Menu');
-goog.require('os.ui.menu.MenuItem');
-goog.require('os.ui.menu.MenuItemType');
-goog.require('os.ui.menu.windows');
+const googDispose = goog.require('goog.dispose');
+const {isOSX} = goog.require('os');
+const BaseDescriptor = goog.require('os.data.BaseDescriptor');
+const DataManager = goog.require('os.data.DataManager');
+const LayerType = goog.require('os.layer.LayerType');
+const {AddData: AddDataKeys} = goog.require('os.metrics.keys');
+const ImportEventType = goog.require('os.ui.im.ImportEventType');
+const Menu = goog.require('os.ui.menu.Menu');
+const MenuItem = goog.require('os.ui.menu.MenuItem');
+const MenuItemType = goog.require('os.ui.menu.MenuItemType');
+const {openWindow} = goog.require('os.ui.menu.windows');
+
+const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 
 
 /**
  * The import menu.
- * @type {os.ui.menu.Menu|undefined}
+ * @type {Menu|undefined}
  */
-os.ui.menu.import.MENU = undefined;
+let MENU = undefined;
 
+/**
+ * Get the menu.
+ * @return {Menu|undefined}
+ */
+const getMenu = () => MENU;
+
+/**
+ * Set the menu.
+ * @param {Menu|undefined} menu The menu.
+ */
+const setMenu = (menu) => {
+  MENU = menu;
+};
 
 /**
  * Default groups in the import menu
  */
-os.ui.menu.import.GroupType = {
+const GroupType = {
   MAJOR: 'Major',
   MINOR: 'Minor',
   RECENT: 'Recent'
 };
 
-
 /**
  * Default groups in the import menu
  */
-os.ui.menu.import.GroupSort = {
+const GroupSort = {
   MAJOR: 0,
   MINOR: 100,
   RECENT: 200
 };
 
-
 /**
  * Event type prefix for recent menu items.
  * @type {string}
- * @const
  */
-os.ui.menu.import.RECENT_PREFIX = 'recent.';
-
+const RECENT_PREFIX = 'recent.';
 
 /**
  * Set up the import menu.
  */
-os.ui.menu.import.setup = function() {
-  if (!os.ui.menu.import.MENU) {
-    os.ui.menu.import.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
-      type: os.ui.menu.MenuItemType.ROOT,
+const setup = function() {
+  if (!MENU) {
+    MENU = new Menu(new MenuItem({
+      type: MenuItemType.ROOT,
       children: [{
         label: '',
-        eventType: os.ui.menu.import.GroupType.MAJOR,
-        type: os.ui.menu.MenuItemType.GROUP,
+        eventType: GroupType.MAJOR,
+        type: MenuItemType.GROUP,
         sort: 0,
         children: [{
           label: 'Add Data',
           eventType: 'openwindow.addData',
           tooltip: 'Browse the data catalog',
           icons: ['<i class="fa fa-fw fa-plus"></i>'],
-          handler: os.ui.menu.windows.openWindow,
-          metricKey: os.metrics.keys.AddData.OPEN,
+          handler: openWindow,
+          metricKey: AddDataKeys.OPEN,
           sort: 0
         }, {
           label: 'Open File or URL',
-          eventType: os.ui.im.ImportEventType.FILE,
+          eventType: ImportEventType.FILE,
           tooltip: 'Import data from a local file or a URL',
           icons: ['<i class="fa fa-fw fa-folder-open"></i>'],
-          shortcut: (os.isOSX() ? 'cmd' : 'ctrl') + '+o',
-          metricKey: os.metrics.keys.AddData.IMPORT,
+          shortcut: (isOSX() ? 'cmd' : 'ctrl') + '+o',
+          metricKey: AddDataKeys.IMPORT,
           sort: 1
         }]
       }, {
         label: '',
-        eventType: os.ui.menu.import.GroupType.MINOR,
-        type: os.ui.menu.MenuItemType.GROUP,
+        eventType: GroupType.MINOR,
+        type: MenuItemType.GROUP,
         sort: 1
       },
       {
-        label: os.ui.menu.import.GroupType.RECENT,
-        eventType: os.ui.menu.import.GroupType.RECENT,
-        type: os.ui.menu.MenuItemType.GROUP,
-        beforeRender: os.ui.menu.import.refreshRecent_,
+        label: GroupType.RECENT,
+        eventType: GroupType.RECENT,
+        type: MenuItemType.GROUP,
+        beforeRender: refreshRecent,
         sort: 2
       }]
     }));
   }
 };
 
-
 /**
  * Dispose the import menu.
  */
-os.ui.menu.import.dispose = function() {
-  goog.dispose(os.ui.menu.import.MENU);
-  os.ui.menu.import.MENU = undefined;
+const dispose = function() {
+  googDispose(MENU);
+  MENU = undefined;
 };
-
 
 /**
  * Take in a descriptor and the enabled state and determine which icon to display
  *
- * @param {os.data.IDataDescriptor} descriptor
+ * @param {IDataDescriptor} descriptor
  * @param {boolean} enabled
  * @return {string}
- * @private
  */
-os.ui.menu.import.getDescriptorToggleIcon_ = function(descriptor, enabled) {
+const getDescriptorToggleIcon = function(descriptor, enabled) {
   return enabled ? 'fa-check-square-o' : 'fa-square-o';
 };
-
 
 /**
  * Update the "Recent" menu group.
  *
- * @private
  */
-os.ui.menu.import.refreshRecent_ = function() {
-  var menu = os.ui.menu.import.MENU;
+const refreshRecent = function() {
+  var menu = MENU;
   if (menu) {
-    var recentGroup = menu.getRoot().find(os.ui.menu.import.GroupType.RECENT);
+    var recentGroup = menu.getRoot().find(GroupType.RECENT);
 
     // clear all recents from the group
     if (recentGroup.children) {
@@ -130,15 +141,15 @@ os.ui.menu.import.refreshRecent_ = function() {
   }
 
   // filter descriptors by last active and then sort them
-  var descriptors = os.dataManager.getDescriptors().filter(
+  var descriptors = DataManager.getInstance().getDescriptors().filter(
       /**
-       * @param {os.data.IDataDescriptor} d The descriptor
+       * @param {IDataDescriptor} d The descriptor
        * @return {boolean} If the descriptor has a last active time
        */
       function(d) {
         return !isNaN(d.getLastActive());
       });
-  descriptors.sort(os.data.BaseDescriptor.lastActiveReverse);
+  descriptors.sort(BaseDescriptor.lastActiveReverse);
 
   // add up to 10 recent items
   var n = Math.min(descriptors.length, 10);
@@ -149,10 +160,10 @@ os.ui.menu.import.refreshRecent_ = function() {
     var enabled = descriptor.isActive();
     var title = descriptor.getTitle() || '';
     var type = descriptor.getType();
-    var icon = os.ui.menu.import.getDescriptorToggleIcon_(descriptor, enabled);
+    var icon = getDescriptorToggleIcon(descriptor, enabled);
 
     if (type) {
-      if (type === os.layer.LayerType.GROUPS) {
+      if (type === LayerType.GROUPS) {
         type = 'Group';
       }
 
@@ -167,7 +178,7 @@ os.ui.menu.import.refreshRecent_ = function() {
     seenTitles[title] = true;
 
     recentGroup.addChild({
-      eventType: os.ui.menu.import.RECENT_PREFIX + descriptor.getId(),
+      eventType: RECENT_PREFIX + descriptor.getId(),
       label: title,
       tooltip: (enabled ? 'Remove' : 'Add') + ' this item',
       icons: ['<i class="fa fa-fw ' + icon + '"></i>'],
@@ -175,4 +186,14 @@ os.ui.menu.import.refreshRecent_ = function() {
       handler: descriptor.setActive.bind(descriptor, !enabled)
     });
   }
+};
+
+exports = {
+  getMenu,
+  setMenu,
+  GroupType,
+  GroupSort,
+  RECENT_PREFIX,
+  setup,
+  dispose
 };

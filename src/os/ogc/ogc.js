@@ -6,6 +6,8 @@ const {loadXml} = goog.require('goog.dom.xml');
 const Settings = goog.require('os.config.Settings');
 const {getText} = goog.require('os.file.mime.text');
 
+const IOGCDescriptor = goog.requireType('os.ui.ogc.IOGCDescriptor');
+
 
 /**
  * Identifier used by OGC data model.
@@ -117,7 +119,7 @@ const getDefaultWfsParams = function() {
 
 /**
  * Get the WFS params for an OGC descriptor.
- * @param {os.ui.ogc.IOGCDescriptor} descriptor The descriptor.
+ * @param {IOGCDescriptor} descriptor The descriptor.
  * @return {!QueryData} The params.
  */
 const getWfsParams = function(descriptor) {

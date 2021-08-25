@@ -1,11 +1,11 @@
-goog.module('os.style.TextReader');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.style.TextReader');
+
+import AbstractReader from './abstractreader.js';
+import {getFont} from './label.js';
 
 const Fill = goog.require('ol.style.Fill');
 const Stroke = goog.require('ol.style.Stroke');
 const Text = goog.require('ol.style.Text');
-const AbstractReader = goog.require('os.style.AbstractReader');
-const {getFont} = goog.require('os.style.label');
 
 const TextPlacement = goog.requireType('ol.style.TextPlacement');
 
@@ -85,4 +85,4 @@ class TextReader extends AbstractReader {
   }
 }
 
-exports = TextReader;
+export default TextReader;

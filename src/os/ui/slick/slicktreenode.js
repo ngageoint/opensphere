@@ -1,16 +1,16 @@
 goog.module('os.ui.slick.SlickTreeNode');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.nodeIconsDirective');
-goog.require('os.ui.nodeSpinnerDirective');
-goog.require('os.ui.nodeToggleDirective');
-goog.require('os.ui.triStateCheckboxDirective');
-goog.require('os.ui.windowLauncherDirective');
-
+const {registerClass} = goog.require('os.classRegistry');
+const {NodeClass} = goog.require('os.data');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const TriStateTreeNode = goog.require('os.structs.TriStateTreeNode');
 const {sanitize} = goog.require('os.ui');
-const NodeToggleCtrl = goog.require('os.ui.NodeToggleCtrl');
+const {directiveTag: nodeIconsUi} = goog.require('os.ui.NodeIconsUI');
+const {directiveTag: nodeSpinnerUi} = goog.require('os.ui.NodeSpinnerUI');
+const {Controller: NodeToggleCtrl, directiveTag: nodeToggleUi} = goog.require('os.ui.NodeToggleUI');
+const {directiveTag: checkboxUi} = goog.require('os.ui.TriStateCheckboxUI');
+const {directiveTag: windowLauncherUi} = goog.require('os.ui.WindowLauncherUI');
 
 
 /**
@@ -256,7 +256,7 @@ class SlickTreeNode extends TriStateTreeNode {
     var html = this.getSpacer(15 * this.depth);
 
     if (this.nodetoggleVisible_) {
-      html += '<nodetoggle></nodetoggle>';
+      html += `<${nodeToggleUi}></${nodeToggleUi}>`;
     }
 
     // add the tri-state checkbox
@@ -270,8 +270,8 @@ class SlickTreeNode extends TriStateTreeNode {
       html += this.getSpacer();
     }
 
-    html += '<nodespinner></nodespinner>';
-    html += '<nodeicons class="flex-shrink-0"></nodeicons>';
+    html += `<${nodeSpinnerUi}></${nodeSpinnerUi}>`;
+    html += `<${nodeIconsUi} class="flex-shrink-0"></${nodeIconsUi}>`;
 
     html += this.formatLabel(value);
     html += this.formatNodeUI();
@@ -286,7 +286,7 @@ class SlickTreeNode extends TriStateTreeNode {
    * @protected
    */
   formatCheckbox() {
-    return '<tristatecheckbox></tristatecheckbox>';
+    return `<${checkboxUi}></${checkboxUi}>`;
   }
 
   /**
@@ -309,7 +309,7 @@ class SlickTreeNode extends TriStateTreeNode {
    * @protected
    */
   formatWinLauncher() {
-    return '<windowlauncher></windowlauncher>';
+    return `<${windowLauncherUi}></${windowLauncherUi}>`;
   }
 
   /**
@@ -437,7 +437,7 @@ class SlickTreeNode extends TriStateTreeNode {
    * @inheritDoc
    */
   updateFrom(other) {
-    var node = /** @type {os.ui.slick.SlickTreeNode} */ (other);
+    var node = /** @type {SlickTreeNode} */ (other);
 
     this.nodeUI = node.nodeUI;
     this.collapsed = node.collapsed;
@@ -475,8 +475,8 @@ class SlickTreeNode extends TriStateTreeNode {
   /**
    * If the node can be dropped on the provided item.
    *
-   * @param {os.ui.slick.SlickTreeNode} dropItem The drop target
-   * @param {os.ui.slick.SlickTreeNode.MOVE_MODE} moveMode The drag/drop move mode
+   * @param {SlickTreeNode} dropItem The drop target
+   * @param {SlickTreeNode.MOVE_MODE} moveMode The drag/drop move mode
    * @return {boolean}
    */
   canDropInternal(dropItem, moveMode) {
@@ -533,6 +533,7 @@ class SlickTreeNode extends TriStateTreeNode {
     this.disableFolder_ = value;
   }
 }
+registerClass(NodeClass.SLICK, SlickTreeNode);
 
 
 /**

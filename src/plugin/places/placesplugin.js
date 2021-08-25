@@ -6,7 +6,6 @@ goog.require('plugin.places.ui.PlacesNodeUI');
 goog.require('plugin.places.ui.PlacesUI');
 
 const log = goog.require('goog.log');
-const os = goog.require('os');
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const ClearEntry = goog.require('os.ui.clear.ClearEntry');
@@ -68,8 +67,8 @@ class PlacesPlugin extends AbstractPlugin {
     } catch (e) {
       log.error(logger, 'Failed initializing Places plugin:', e);
     }
-    var pim = os.placesImportManager;
-    var pfm = os.placesFileManager;
+    var pim = manager.getImportManager();
+    var pfm = manager.getFileManager();
 
     // register file import method
     pfm.registerFileMethod(new ImportMethod(false));

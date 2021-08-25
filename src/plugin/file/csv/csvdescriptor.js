@@ -1,6 +1,7 @@
 goog.module('plugin.file.csv.CSVDescriptor');
 goog.module.declareLegacyNamespace();
 
+const Settings = goog.require('os.config.Settings');
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const LayerType = goog.require('os.layer.LayerType');
 const csv = goog.require('os.ui.file.csv');
@@ -34,7 +35,7 @@ class CSVDescriptor extends FileDescriptor {
    * @inheritDoc
    */
   supportsMapping() {
-    return !!os.settings.get(ALLOW_ELLIPSE_CONFIG, false);
+    return !!Settings.getInstance().get(ALLOW_ELLIPSE_CONFIG, false);
   }
 
   /**

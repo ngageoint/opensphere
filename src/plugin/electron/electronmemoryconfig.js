@@ -1,6 +1,7 @@
 goog.module('plugin.electron.ElectronMemoryConfigUI');
 goog.module.declareLegacyNamespace();
 
+const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
 
 
@@ -11,7 +12,7 @@ const Module = goog.require('os.ui.Module');
 const directive = () => ({
   restrict: 'E',
   replace: true,
-  templateUrl: os.ROOT + 'views/plugin/electron/electronmemoryconfig.html',
+  templateUrl: ROOT + 'views/plugin/electron/electronmemoryconfig.html',
   controller: Controller,
   controllerAs: 'ctrl'
 });

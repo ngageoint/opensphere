@@ -1,11 +1,11 @@
-goog.module('os.style.CircleReader');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.style.CircleReader');
+
+import AbstractReader from './abstractreader.js';
+import {DEFAULT_FEATURE_SIZE} from './style.js';
 
 const {hashCode} = goog.require('goog.string');
 const Circle = goog.require('ol.style.Circle');
 const {toRgbArray} = goog.require('os.color');
-const {DEFAULT_FEATURE_SIZE} = goog.require('os.style');
-const AbstractReader = goog.require('os.style.AbstractReader');
 
 
 /**
@@ -99,4 +99,4 @@ class CircleReader extends AbstractReader {
   }
 }
 
-exports = CircleReader;
+export default CircleReader;

@@ -15,6 +15,7 @@ const instanceOf = goog.require('os.instanceOf');
 const osObject = goog.require('os.object');
 const VectorSource = goog.require('os.source.Vector');
 const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
 const Module = goog.require('os.ui.Module');
 const kml = goog.require('os.ui.file.kml');
 const IconPickerEventType = goog.require('os.ui.icon.IconPickerEventType');
@@ -128,7 +129,7 @@ class Controller extends ActionConfigCtrl {
   initialize() {
     if (this.styleConfig) {
       var color = /** @type {Array<number>} */
-          (osStyle.getConfigColor(this.styleConfig, true, osStyle.StyleField.STROKE));
+          (osStyle.getConfigColor(this.styleConfig, true, StyleField.STROKE));
 
       if (!color) {
         color = osStyle.getConfigColor(this.styleConfig, true);
@@ -149,7 +150,7 @@ class Controller extends ActionConfigCtrl {
         color[3] = this.scope['opacity'];
       }
 
-      var fill = /** @type {Array<number>} */ (osStyle.getConfigColor(this.styleConfig, true, osStyle.StyleField.FILL));
+      var fill = /** @type {Array<number>} */ (osStyle.getConfigColor(this.styleConfig, true, StyleField.FILL));
 
       if (fill) {
         this.scope['fillColor'] = osColor.toHexString(fill);
@@ -177,12 +178,12 @@ class Controller extends ActionConfigCtrl {
       this.scope['size'] = osStyle.getConfigSize(this.styleConfig);
       this.scope['lineDash'] = osStyle.getConfigLineDash(this.styleConfig);
 
-      this.scope['shape'] = this.styleConfig[osStyle.StyleField.SHAPE] || osStyle.DEFAULT_SHAPE;
+      this.scope['shape'] = this.styleConfig[StyleField.SHAPE] || osStyle.DEFAULT_SHAPE;
       this.updateIcon_();
-      this.scope['centerShape'] = this.styleConfig[osStyle.StyleField.CENTER_SHAPE] || osStyle.DEFAULT_CENTER_SHAPE;
+      this.scope['centerShape'] = this.styleConfig[StyleField.CENTER_SHAPE] || osStyle.DEFAULT_CENTER_SHAPE;
       this.updateCenterIcon_();
-      this.scope['showRotation'] = this.styleConfig[osStyle.StyleField.SHOW_ROTATION] || false;
-      this.scope['rotationColumn'] = this.styleConfig[osStyle.StyleField.ROTATION_COLUMN] || '';
+      this.scope['showRotation'] = this.styleConfig[StyleField.SHOW_ROTATION] || false;
+      this.scope['rotationColumn'] = this.styleConfig[StyleField.ROTATION_COLUMN] || '';
 
       if (this.type) {
         var dm = DataManager.getInstance();
@@ -370,7 +371,7 @@ class Controller extends ActionConfigCtrl {
     var color;
 
     if (event.name == 'fillOpacity.slidestop') {
-      color = osStyle.getConfigColor(this.styleConfig, true, osStyle.StyleField.FILL);
+      color = osStyle.getConfigColor(this.styleConfig, true, StyleField.FILL);
       color[3] = value;
 
       // Only change the fill color without changing the image fill color too
@@ -391,7 +392,7 @@ class Controller extends ActionConfigCtrl {
         this.scope['opacity'] = value;
         this.scope['fillOpacity'] = value;
       } else {
-        color = osStyle.getConfigColor(this.styleConfig, true, osStyle.StyleField.STROKE);
+        color = osStyle.getConfigColor(this.styleConfig, true, StyleField.STROKE);
         color[3] = value;
 
         osStyle.setConfigColor(this.styleConfig, color);
@@ -452,7 +453,7 @@ class Controller extends ActionConfigCtrl {
     }
 
     if (this.styleConfig) {
-      this.styleConfig[osStyle.StyleField.SHAPE] = value;
+      this.styleConfig[StyleField.SHAPE] = value;
     }
 
     this.updateIcon_();
@@ -471,7 +472,7 @@ class Controller extends ActionConfigCtrl {
     }
 
     if (this.styleConfig) {
-      this.styleConfig[osStyle.StyleField.CENTER_SHAPE] = value;
+      this.styleConfig[StyleField.CENTER_SHAPE] = value;
 
       // set the center shape image config from the shape picker
       var shape = osStyle.SHAPES[value];
@@ -489,7 +490,7 @@ class Controller extends ActionConfigCtrl {
    * @private
    */
   updateIcon_() {
-    if (this.styleConfig && this.styleConfig[osStyle.StyleField.SHAPE] == osStyle.ShapeType.ICON) {
+    if (this.styleConfig && this.styleConfig[StyleField.SHAPE] == osStyle.ShapeType.ICON) {
       this.scope['icon'] = osStyle.getConfigIcon(this.styleConfig) || kml.getDefaultIcon();
     } else {
       this.scope['icon'] = null;
@@ -504,7 +505,7 @@ class Controller extends ActionConfigCtrl {
    * @private
    */
   updateCenterIcon_() {
-    if (this.styleConfig && this.styleConfig[osStyle.StyleField.CENTER_SHAPE] == osStyle.ShapeType.ICON) {
+    if (this.styleConfig && this.styleConfig[StyleField.CENTER_SHAPE] == osStyle.ShapeType.ICON) {
       this.scope['centerIcon'] = osStyle.getConfigIcon(this.styleConfig) || kml.getDefaultIcon();
     } else {
       this.scope['centerIcon'] = null;
@@ -543,7 +544,7 @@ class Controller extends ActionConfigCtrl {
     }
 
     if (this.styleConfig) {
-      this.styleConfig[osStyle.StyleField.SHOW_ROTATION] = value;
+      this.styleConfig[StyleField.SHOW_ROTATION] = value;
     }
   }
 
@@ -560,7 +561,7 @@ class Controller extends ActionConfigCtrl {
     }
 
     if (opt_value && this.styleConfig) {
-      this.styleConfig[osStyle.StyleField.ROTATION_COLUMN] = opt_value;
+      this.styleConfig[StyleField.ROTATION_COLUMN] = opt_value;
     }
   }
 }

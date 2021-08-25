@@ -60,7 +60,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
   const originalProjection = osMap.PROJECTION;
   afterEach(() => {
     disableWebGLMock();
-    osMap.PROJECTION = originalProjection;
+    osMap.setProjection(originalProjection);
   });
 
   const blue = 'rgba(0,0,255,1)';

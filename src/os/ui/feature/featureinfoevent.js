@@ -7,7 +7,7 @@ goog.module.declareLegacyNamespace();
  */
 exports = {
   // Angular event type for switching the view to the description tab.
-  SHOW_DESCRIPTION: 'os.ui.feature.FeatureInfoCtrl.showDescription',
+  SHOW_DESCRIPTION: 'os.ui.feature.FeatureInfoUI.showDescription',
   // Angular event type for updating all tabs.
-  UPDATE_TABS: 'os.ui.feature.FeatureInfoCtrl.updateTabs'
+  UPDATE_TABS: 'os.ui.feature.FeatureInfoUI.updateTabs'
 };

@@ -2,6 +2,7 @@ goog.module('os.string.Pluralize');
 goog.module.declareLegacyNamespace();
 
 const Settings = goog.require('os.config.Settings');
+const {apply} = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 
 /**
@@ -53,7 +54,7 @@ class Controller {
    */
   pluralize_() {
     this['value'] = pluralize(this.scope_['word'], this.scope_['count'], this.scope_['inclusive']);
-    os.ui.apply(this.scope_);
+    apply(this.scope_);
   }
 
   /**

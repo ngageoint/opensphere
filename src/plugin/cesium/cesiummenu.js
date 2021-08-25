@@ -18,8 +18,8 @@ const EventType = {
  * Add Cesium items to the import menu.
  */
 const importSetup = function() {
-  if (importMenu.MENU && cesium.isIonEnabled()) {
-    var group = importMenu.MENU.getRoot().find(importMenu.GroupType.MAJOR);
+  if (importMenu.getMenu() && cesium.isIonEnabled()) {
+    var group = importMenu.getMenu().getRoot().find(importMenu.GroupType.MAJOR);
     group.addChild({
       label: 'Add Cesium Ion Asset',
       eventType: EventType.ADD_ION_RESOURCE,

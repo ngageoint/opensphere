@@ -1,8 +1,8 @@
-goog.module('os.style.ImageReader');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.style.ImageReader');
+
+import AbstractReader from './abstractreader.js';
 
 const Image = goog.require('ol.style.Image');
-const AbstractReader = goog.require('os.style.AbstractReader');
 
 
 /**
@@ -55,4 +55,4 @@ class ImageReader extends AbstractReader {
   }
 }
 
-exports = ImageReader;
+export default ImageReader;

@@ -262,7 +262,7 @@ class Controller extends EditFilterActionCtrl {
       if (lConfig != null) {
         var labelColor = osStyle.toRgbaString(lConfig['color'] || osStyle.DEFAULT_LAYER_COLOR);
         // var labelSize = parseInt(lConfig['size'], 10) || os.style.label.DEFAULT_SIZE;
-        var labels = /** @type {Array<!os.style.label.LabelConfig>} */ (osObject.unsafeClone(lConfig['labels']));
+        var labels = /** @type {Array<!label.LabelConfig>} */ (osObject.unsafeClone(lConfig['labels']));
         labels = label.filterValid(labels);
         // update label fields on the feature if there is at least one valid label config defined
         if (labels != null && labels.length > 0) {

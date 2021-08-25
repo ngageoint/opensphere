@@ -4,13 +4,14 @@ goog.module.declareLegacyNamespace();
 const {buildString, htmlEscape} = goog.require('goog.string');
 const ui = goog.require('os.ui');
 const ColumnActionManager = goog.require('os.ui.columnactions.ColumnActionManager');
-const {urlNewTabFormatter: formatterUrlNewTabFormatter} = goog.require('os.ui.formatter');
+const {ANCHOR: BASE_ANCHOR, urlNewTabFormatter: baseUrlNewTabFormatter} = goog.require('os.ui.formatter');
 const SlickColumnActionModel = goog.require('os.ui.slick.SlickColumnActionModel');
 const slickColActAsyncRenderer = goog.require('os.ui.slick.asyncrenderer.slickColActAsyncRenderer');
 const {URL_REGEXP} = goog.require('os.url');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 const ColumnActionFormatterFn = goog.requireType('os.ui.columnactions.ColumnActionFormatterFn');
+const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -20,7 +21,7 @@ const ColumnActionFormatterFn = goog.requireType('os.ui.columnactions.ColumnActi
  * @param {number} cell The cell number in the row
  * @param {string} value The value
  * @param {Object} columnDef The column definition
- * @param {ui.slick.SlickTreeNode} node The node
+ * @param {SlickTreeNode} node The node
  * @return {string} The HTML for the cell
  */
 const columnFormatter = function(row, cell, value, columnDef, node) {
@@ -37,7 +38,7 @@ const columnFormatter = function(row, cell, value, columnDef, node) {
  * @param {number} cell The cell number in the row
  * @param {string} value The value
  * @param {Object} columnDef The column definition
- * @param {ui.slick.SlickTreeNode} node The node
+ * @param {SlickTreeNode} node The node
  * @return {string} The HTML for the cell
  */
 const depthfulFormatter = function(row, cell, value, columnDef, node) {
@@ -86,8 +87,9 @@ const rowNumber = function(row, cell, value, columnDef, item) {
 
 /**
  * @type {RegExp}
+ * @deprecated Please use os.ui.formatter.ANCHOR instead.
  */
-const ANCHOR = /<a /;
+const ANCHOR = BASE_ANCHOR;
 
 /**
  * Formats the data to be a link if it passes the regex
@@ -96,13 +98,13 @@ const ANCHOR = /<a /;
  * @param {number} cell The cell number in the row
  * @param {string} value The value
  * @param {Object} columnDef The column definition
- * @param {ui.slick.SlickTreeNode} node The node
+ * @param {SlickTreeNode} node The node
  * @param {ColumnActionFormatterFn=} opt_colFn Optional column action function. This will
  *        override the default one if provided.
  * @return {string} The HTML for the cell
  */
 const urlNewTabFormatter = function(row, cell, value, columnDef, node, opt_colFn) {
-  value = formatterUrlNewTabFormatter(value);
+  value = baseUrlNewTabFormatter(value);
 
   var colFn = opt_colFn || columnActionFormatter;
   var colAct = colFn(row, cell, value, columnDef, node, true);
@@ -117,7 +119,7 @@ const urlNewTabFormatter = function(row, cell, value, columnDef, node, opt_colFn
  * @param {number} cell The cell number in the row
  * @param {string} value The value
  * @param {Object} columnDef The column definition
- * @param {ui.slick.SlickTreeNode} node The node
+ * @param {SlickTreeNode} node The node
  * @return {string} The HTML for the cell
  */
 const shortUrlFormatter = function(row, cell, value, columnDef, node) {
@@ -150,7 +152,7 @@ const shortUrlFormatter = function(row, cell, value, columnDef, node) {
  * @param {number} cell The cell number in the row
  * @param {string} value The value
  * @param {Object} columnDef The column definition
- * @param {ui.slick.SlickTreeNode} node The node
+ * @param {SlickTreeNode} node The node
  * @return {string} The HTML for the cell
  */
 const urlFormatter = function(row, cell, value, columnDef, node) {
@@ -178,7 +180,7 @@ const urlFormatter = function(row, cell, value, columnDef, node) {
  * @param {number} cell The cell number in the row
  * @param {string} value The value
  * @param {Object} columnDef The column definition
- * @param {ui.slick.SlickTreeNode} node The node
+ * @param {SlickTreeNode} node The node
  * @param {boolean=} opt_asDecorator this formatter is being called by another formatter and will be use to decorate
  *  the output of the calling formatter.  Dont include the value in the output.
  * @return {string} The HTML for the cell
@@ -217,7 +219,7 @@ const columnActionFormatter = function(row, cell, value, columnDef, node, opt_as
  * @param {number} cell The cell number in the row
  * @param {string} value The value
  * @param {Object} columnDef The column definition
- * @param {ui.slick.SlickTreeNode} node The node
+ * @param {SlickTreeNode} node The node
  * @return {string} The HTML for the cell
  */
 const imgPreviewFormatter = function(row, cell, value, columnDef, node) {

@@ -1,21 +1,13 @@
-goog.provide('os.ui.PropertyInfoCtrl');
-goog.provide('os.ui.SlickPropertiesAsyncRenderer');
-goog.provide('os.ui.formatter.PropertiesFormatter');
-goog.provide('os.ui.propertyInfoDirective');
+goog.module('os.ui.PropertyInfoUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.object');
-goog.require('goog.string');
-goog.require('ol.geom.Point');
-goog.require('os');
-goog.require('os.Fields');
-goog.require('os.data.RecordField');
-goog.require('os.style');
-goog.require('os.ui');
-goog.require('os.ui.Module');
-goog.require('os.ui.location.SimpleLocationUI');
 goog.require('os.ui.slick.SlickGridUI');
-goog.require('os.ui.slick.formatter');
-goog.require('os.ui.window');
+
+const {buildString} = goog.require('goog.string');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const {urlNewTabFormatter} = goog.require('os.ui.slick.formatter');
+const {bringToFront, create, exists} = goog.require('os.ui.window');
 
 
 /**
@@ -23,54 +15,93 @@ goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-os.ui.propertyInfoDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'feature': '='
-    },
-    templateUrl: os.ROOT + 'views/propertyinfo.html',
-    controller: os.ui.PropertyInfoCtrl,
-    controllerAs: 'info'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'feature': '='
+  },
+  templateUrl: ROOT + 'views/propertyinfo.html',
+  controller: Controller,
+  controllerAs: 'info'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'propertyinfo';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('propertyinfo', [os.ui.propertyInfoDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller function for the featureinfo directive
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.PropertyInfoCtrl = function($scope) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
+   */
+  constructor($scope) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    this.scope_['gridCols'] = Controller.GRID_COLUMNS_;
+    this.scope_['gridOptions'] = {
+      'enableColumnReorder': false,
+      'forceFitColumns': true,
+      'multiColumnSort': false,
+      'multiSelect': false,
+      'defaultFormatter': urlNewTabFormatter,
+      'enableAsyncPostRender': true
+    };
+
+    $scope.$watch('feature', this.onPropertyChange_.bind(this));
+    $scope.$on('$destroy', this.destroy_.bind(this));
+  }
+
+  /**
+   * Clean up.
+   *
    * @private
    */
-  this.scope_ = $scope;
+  destroy_() {
+    this.scope_ = null;
+  }
 
-  this.scope_['gridCols'] = os.ui.PropertyInfoCtrl.GRID_COLUMNS_;
-  this.scope_['gridOptions'] = {
-    'enableColumnReorder': false,
-    'forceFitColumns': true,
-    'multiColumnSort': false,
-    'multiSelect': false,
-    'defaultFormatter': os.ui.slick.formatter.urlNewTabFormatter,
-    'enableAsyncPostRender': true
-  };
+  /**
+   * Handle feature changes on the scope.
+   *
+   * @param {ol.Feature} newVal The new value
+   * @param {ol.Feature} oldVal The old value
+   * @private
+   *
+   * @todo Should polygons display the center point? See {@link ol.geom.Polygon#getInteriorPoint}. What about line
+   *       strings? We can get the center of the extent, but that's not very helpful. For now, only display the location
+   *       for point geometries.
+   */
+  onPropertyChange_(newVal, oldVal) {
+    this.scope_['lon'] = undefined;
+    this.scope_['lat'] = undefined;
+    this.scope_['description'] = undefined;
+    this.scope_['properties'] = [];
 
-  $scope.$watch('feature', this.onPropertyChange_.bind(this));
-  $scope.$on('$destroy', this.destroy_.bind(this));
-};
+    if (newVal) {
+      var properties = this.scope_['feature'];
+      for (var key in properties) {
+        this.scope_['properties'].push({'id': key, 'field': key, 'value': properties[key]});
+      }
+    }
+  }
+}
 
 
 /**
@@ -79,46 +110,10 @@ os.ui.PropertyInfoCtrl = function($scope) {
  * @const
  * @private
  */
-os.ui.PropertyInfoCtrl.GRID_COLUMNS_ = [
+Controller.GRID_COLUMNS_ = [
   {'id': 'field', 'field': 'field', 'name': 'Field', 'sortable': true, 'width': 40},
   {'id': 'value', 'field': 'value', 'name': 'Value', 'sortable': true}
 ];
-
-
-/**
- * Clean up.
- *
- * @private
- */
-os.ui.PropertyInfoCtrl.prototype.destroy_ = function() {
-  this.scope_ = null;
-};
-
-
-/**
- * Handle feature changes on the scope.
- *
- * @param {ol.Feature} newVal The new value
- * @param {ol.Feature} oldVal The old value
- * @private
- *
- * @todo Should polygons display the center point? See {@link ol.geom.Polygon#getInteriorPoint}. What about line
- *       strings? We can get the center of the extent, but that's not very helpful. For now, only display the location
- *       for point geometries.
- */
-os.ui.PropertyInfoCtrl.prototype.onPropertyChange_ = function(newVal, oldVal) {
-  this.scope_['lon'] = undefined;
-  this.scope_['lat'] = undefined;
-  this.scope_['description'] = undefined;
-  this.scope_['properties'] = [];
-
-  if (newVal) {
-    var properties = this.scope_['feature'];
-    for (var key in properties) {
-      this.scope_['properties'].push({'id': key, 'field': key, 'value': properties[key]});
-    }
-  }
-};
 
 
 /**
@@ -128,17 +123,17 @@ os.ui.PropertyInfoCtrl.prototype.onPropertyChange_ = function(newVal, oldVal) {
  * @param {!Object} object The object to display.
  * @param {string=} opt_titleDetail Title of the containing layer
  */
-os.ui.launchPropertyInfo = function(id, object, opt_titleDetail) {
+const launchPropertyInfo = function(id, object, opt_titleDetail) {
   var winLabel = 'Property Info';
 
   if (opt_titleDetail) {
     winLabel += ' for ' + opt_titleDetail;
   }
 
-  var windowId = goog.string.buildString('propertyInfo', id);
+  var windowId = buildString('propertyInfo', id);
 
-  if (os.ui.window.exists(windowId)) {
-    os.ui.window.bringToFront(windowId);
+  if (exists(windowId)) {
+    bringToFront(windowId);
   } else {
     // create a new window
     var scopeOptions = {
@@ -161,70 +156,14 @@ os.ui.launchPropertyInfo = function(id, object, opt_titleDetail) {
     };
 
     var template = '<propertyinfo feature="feature"></propertyinfo>';
-    os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+    create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 };
-goog.exportSymbol('os.ui.launchPropertyInfo', os.ui.launchPropertyInfo);
+goog.exportSymbol('os.ui.launchPropertyInfo', launchPropertyInfo);
 
-
-/**
- * Formats the source column
- *
- * @param {number} row The row number
- * @param {number} cell The cell number in the row
- * @param {*} value The value
- * @param {Object} columnDef The column definition
- * @param {os.ui.slick.SlickTreeNode} node The node
- * @return {string} The HTML for the cell
- */
-os.ui.formatter.PropertiesFormatter = function(row, cell, value, columnDef, node) {
-  if (!value) {
-    return '';
-  }
-  if (typeof value === 'string') {
-    return /** @type {string} */ (value);
-  }
-  columnDef['asyncPostRender'] = os.ui.SlickPropertiesAsyncRenderer;
-  return '<div class="btn btn-link">Show Properties</div>';
-};
-
-
-/**
- *
- * @param {!Object} elem
- * @param {number} row
- * @param {Object} dataContext
- * @param {Object} colDef
- */
-os.ui.SlickPropertiesAsyncRenderer = function(elem, row, dataContext, colDef) {
-  if (dataContext) {
-    var id = /** @type {!string} */ (dataContext.get(os.Fields.ID).toString());
-    var properties = /** @type {!Object} */ (dataContext.get(os.Fields.PROPERTIES));
-    if (properties instanceof Object && typeof id === 'string') {
-      var $elem = $(elem);
-      var doc = elem.ownerDocument;
-      var myWin = doc.defaultView || doc.parentWindow;
-      goog.object.forEach(properties, os.ui.processProperty);
-      $elem.on('click', function() {
-        if (os.inIframe(myWin)) {
-          os.ui.launchPropertyInfo(id, properties);
-        } else {
-          myWin['os']['ui']['launchPropertyInfo'](id, properties);
-        }
-      });
-    }
-  }
-};
-
-
-/**
- *
- * @param {*} value
- * @param {*} index
- * @param {Object} object
- */
-os.ui.processProperty = function(value, index, object) {
-  if (goog.isObject(value)) {
-    delete object[index];
-  }
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launchPropertyInfo
 };

@@ -1,26 +1,24 @@
-goog.provide('os.ui.ILayerUIProvider');
-
-goog.require('os.implements');
-
+goog.module('os.ui.ILayerUIProvider');
+goog.module.declareLegacyNamespace();
 
 /**
  * An interface for layer ui
  *
  * @interface
  */
-os.ui.ILayerUIProvider = function() {};
-
+class ILayerUIProvider {
+  /**
+   * Gets the layer controls UI
+   * @param {*} item
+   * @return {?string} The UI
+   */
+  getLayerUI(item) {}
+}
 
 /**
  * ID for interface {@see os.implements}
  * @const {string}
  */
-os.ui.ILayerUIProvider.ID = 'os.ui.ILayerUIProvider';
+ILayerUIProvider.ID = 'os.ui.ILayerUIProvider';
 
-
-/**
- * Gets the layer controls UI
- * @param {*} item
- * @return {?string} The UI
- */
-os.ui.ILayerUIProvider.prototype.getLayerUI;
+exports = ILayerUIProvider;

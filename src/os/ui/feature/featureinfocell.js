@@ -2,13 +2,12 @@ goog.module('os.ui.feature.FeatureInfoCellUI');
 goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.location.SimpleLocationUI');
-goog.require('os.ui.propertyInfoDirective');
 
 const {ROOT} = goog.require('os');
 const Fields = goog.require('os.Fields');
 const fields = goog.require('os.fields');
-const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
+const {launchPropertyInfo} = goog.require('os.ui.PropertyInfoUI');
 const ColumnActionManager = goog.require('os.ui.columnactions.ColumnActionManager');
 const SimpleColumnActionModel = goog.require('os.ui.columnactions.SimpleColumnActionModel');
 const launchColumnActionPrompt = goog.require('os.ui.columnactions.launchColumnActionPrompt');
@@ -162,7 +161,7 @@ class Controller {
     var properties = /** @type {!Object} */ (feature.get(Fields.PROPERTIES));
     var id = /** @type {!string} */ (feature.get(Fields.ID));
     if (properties instanceof Object && typeof id === 'string') {
-      ui.launchPropertyInfo(id, properties);
+      launchPropertyInfo(id, properties);
     }
   }
 

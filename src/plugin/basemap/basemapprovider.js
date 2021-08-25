@@ -12,6 +12,7 @@ const DataProviderEventType = goog.require('os.data.DataProviderEventType');
 const IDataProvider = goog.require('os.data.IDataProvider');
 const osImplements = goog.require('os.implements');
 const osMap = goog.require('os.map');
+const {addTerrainProvider, hasTerrain} = goog.require('os.map.terrain');
 const osProjSwitch = goog.require('os.proj.switch');
 const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
 const basemap = goog.require('plugin.basemap');
@@ -173,7 +174,7 @@ class BaseMapProvider extends DescriptorProvider {
               terrainOptions.title = conf['title'] || '';
               terrainOptions.type = terrainType;
 
-              osMap.terrain.addTerrainProvider(terrainOptions);
+              addTerrainProvider(terrainOptions);
             }
           } else if (type == basemap.TYPE) {
             var mapId = this.getId() + BaseDescriptor.ID_DELIMITER + id;
@@ -197,7 +198,7 @@ class BaseMapProvider extends DescriptorProvider {
       }
     }
 
-    if (osMap.terrain.hasTerrain()) {
+    if (hasTerrain()) {
       // if at least one terrain provider has been loaded, add a descriptor to enable/disable terrain
       var terrainId = this.getTerrainId();
       var d = dm.getDescriptor(terrainId);

@@ -8,6 +8,7 @@ const SettingsInitializerManager = goog.require('os.config.SettingsInitializerMa
 const ExtDomainHandler = goog.require('os.net.ExtDomainHandler');
 const Request = goog.require('os.net.Request');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const list = goog.require('os.ui.list');
 const {ID, SettingKey, isElectron} = goog.require('plugin.electron');
 const {initSupportMenu} = goog.require('plugin.electron.menu');
 const ElectronConfirmCertUI = goog.require('plugin.electron.ElectronConfirmCertUI');
@@ -67,7 +68,7 @@ class ElectronPlugin extends AbstractPlugin {
       ElectronOS.registerCertificateHandler(onCertificateRequest);
 
       // Add memory configuration to Map > Display settings.
-      os.ui.list.add('pluginMemoryConfig', '<electronmemoryconfig></electronmemoryconfig>');
+      list.add('pluginMemoryConfig', '<electronmemoryconfig></electronmemoryconfig>');
 
       /**
        * Electron uses the file protocol, so those URL's need to be considered safe.

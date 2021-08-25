@@ -13,6 +13,8 @@ const FileStorage = goog.require('os.file.FileStorage');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const osWindow = goog.require('os.ui.window');
 
+const DescriptorProvider = goog.requireType('os.ui.data.DescriptorProvider');
+
 
 /**
  * Abstract controller for a file import UI.
@@ -163,7 +165,7 @@ class Controller {
   /**
    * Get the provider for the file.
    *
-   * @return {os.ui.data.DescriptorProvider}
+   * @return {DescriptorProvider}
    */
   getProvider() {
     return null;

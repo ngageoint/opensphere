@@ -71,7 +71,7 @@ class Controller {
 
   /**
    * @param {SettingNode} newVal
-   * @param {os.ui.config.SettingNode} oldVal
+   * @param {SettingNode} oldVal
    * @protected
    */
   onSelected(newVal, oldVal) {

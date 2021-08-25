@@ -41,7 +41,7 @@ describe('plugin.cesium.sync.MultiDynamicLineStringConverter', () => {
 
   const originalProjection = osMap.PROJECTION;
   afterEach(() => {
-    osMap.PROJECTION = originalProjection;
+    osMap.setProjection(originalProjection);
   });
 
   const blue = 'rgba(0,0,255,1)';

@@ -20,7 +20,7 @@ const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
  * Sets up import actions in the layer menu.
  */
 const layerSetup = function() {
-  var menu = layerMenu.MENU;
+  var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(featureAction.EventType.LAUNCH)) {
     var group = menu.getRoot().find(layerMenu.GroupLabel.TOOLS);
     asserts.assert(group, 'Group should exist! Check spelling?');
@@ -42,7 +42,7 @@ const layerSetup = function() {
  * Clean up buffer region listeners in the layers window.
  */
 const layerDispose = function() {
-  var menu = layerMenu.MENU;
+  var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(featureAction.EventType.LAUNCH)) {
     var group = menu.getRoot().find(layerMenu.GroupLabel.TOOLS);
     if (group) {

@@ -224,7 +224,7 @@ class OffArrows extends BaseItem {
    * Compares the left side of the extents
    *
    * @param {ITimelineItem} a
-   * @param {os.ui.timeline.ITimelineItem} b
+   * @param {ITimelineItem} b
    * @return {number} -1, 0, or 1 per normal compare functions
    * @private
    */
@@ -236,7 +236,7 @@ class OffArrows extends BaseItem {
    * Compares the right side of the extents
    *
    * @param {ITimelineItem} a
-   * @param {os.ui.timeline.ITimelineItem} b
+   * @param {ITimelineItem} b
    * @return {number} -1, 0, or 1 per normal compare functions
    * @private
    */

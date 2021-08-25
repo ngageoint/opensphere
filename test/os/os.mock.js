@@ -2,6 +2,7 @@ goog.provide('os.mock');
 
 goog.require('goog.events.EventTarget');
 goog.require('os');
+goog.require('os.Dispatcher');
 goog.require('os.MapContainer');
 goog.require('os.config');
 goog.require('os.config.Settings');
@@ -11,15 +12,18 @@ goog.require('os.im.mapping.AltMapping');
 goog.require('os.im.mapping.BearingMapping');
 goog.require('os.im.mapping.LatMapping');
 goog.require('os.im.mapping.LonMapping');
+goog.require('os.im.mapping.MappingManager');
 goog.require('os.im.mapping.OrientationMapping');
 goog.require('os.im.mapping.PositionMapping');
 goog.require('os.im.mapping.RadiusMapping');
 goog.require('os.im.mapping.SemiMajorMapping');
 goog.require('os.im.mapping.SemiMinorMapping');
+goog.require('os.im.mapping.TimeType');
 goog.require('os.im.mapping.WKTMapping');
 goog.require('os.im.mapping.time.DateMapping');
 goog.require('os.im.mapping.time.DateTimeMapping');
 goog.require('os.im.mapping.time.TimeMapping');
+goog.require('os.interpolate');
 goog.require('os.map.instance');
 goog.require('os.mixin');
 goog.require('os.mixin.closure');
@@ -27,6 +31,7 @@ goog.require('os.net');
 goog.require('os.net.ExtDomainHandler');
 goog.require('os.net.RequestHandlerFactory');
 goog.require('os.net.SameDomainHandler');
+goog.require('os.ogc');
 goog.require('os.query.AreaManager');
 goog.require('os.query.FilterManager');
 goog.require('os.query.QueryManager');
@@ -42,17 +47,41 @@ goog.require('test.os.config.SettingsUtil');
 angular.element(document.body).append('<div id="map-container"></div');
 
 beforeEach(function() {
+  const EventTarget = goog.module.get('goog.events.EventTarget');
+  const os = goog.module.get('os');
+  const osConfig = goog.module.get('os.config');
+  const Dispatcher = goog.module.get('os.Dispatcher');
+  const MapContainer = goog.module.get('os.MapContainer');
+  const SettingsObjectStorage = goog.module.get('os.config.storage.SettingsObjectStorage');
+  const DataManager = goog.module.get('os.data.DataManager');
+  const interpolate = goog.module.get('os.interpolate');
+  const osMapInstance = goog.module.get('os.map.instance');
+  const ExtDomainHandler = goog.module.get('os.net.ExtDomainHandler');
+  const RequestHandlerFactory = goog.module.get('os.net.RequestHandlerFactory');
+  const SameDomainHandler = goog.module.get('os.net.SameDomainHandler');
+  const ogc = goog.module.get('os.ogc');
+  const AreaManager = goog.module.get('os.query.AreaManager');
+  const FilterManager = goog.module.get('os.query.FilterManager');
+  const QueryManager = goog.module.get('os.query.QueryManager');
+  const osQueryInstance = goog.module.get('os.query.instance');
+  const instance = goog.module.get('os.style.instance');
+  const replacers = goog.module.get('os.time.replacers');
+  const SettingsManager = goog.module.get('os.ui.config.SettingsManager');
   const Settings = goog.module.get('os.config.Settings');
   const {resetCrossOriginCache, resetDefaultValidators} = goog.module.get('os.net');
+  const StyleManager = goog.module.get('os.style.StyleManager');
+  const osUi = goog.module.get('os.ui');
+  const OGCDescriptor = goog.module.get('os.ui.ogc.OGCDescriptor');
+  const SettingsUtil = goog.module.get('test.os.config.SettingsUtil');
 
   const settings = Settings.getInstance();
 
   // the bracket notation gets the compiler to quit complaining about this
-  os['config']['appNs'] = 'unittest';
+  osConfig.appNs = 'unittest';
 
   // register request handlers
-  os.net.RequestHandlerFactory.addHandler(os.net.ExtDomainHandler);
-  os.net.RequestHandlerFactory.addHandler(os.net.SameDomainHandler);
+  RequestHandlerFactory.addHandler(ExtDomainHandler);
+  RequestHandlerFactory.addHandler(SameDomainHandler);
 
   // reset net module
   resetCrossOriginCache();
@@ -60,19 +89,19 @@ beforeEach(function() {
 
   angular.mock.module('ngSanitize');
 
-  if (!os.dispatcher) {
-    os.dispatcher = new goog.events.EventTarget();
+  if (!Dispatcher.getInstance()) {
+    Dispatcher.setInstance(new EventTarget());
   }
 
-  if (!os.ui.injector) {
+  if (!osUi.injector) {
     inject(function($injector) {
-      os.ui.injector = $injector;
+      osUi.setInjector($injector);
     });
   }
 
   if (!settings.isLoaded() || !settings.isInitialized()) {
-    settings.getStorageRegistry().addStorage(new os.config.storage.SettingsObjectStorage(['unit']));
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    settings.getStorageRegistry().addStorage(new SettingsObjectStorage(['unit']));
+    SettingsUtil.initAndLoad(settings);
 
     waitsFor(function() {
       return settings.isLoaded() && settings.isInitialized();
@@ -80,7 +109,7 @@ beforeEach(function() {
   }
 
   // interpolation can break some tests, it should really only be on for the interpolation tests
-  os.interpolate.enabled_ = false;
+  interpolate.setEnabled(false);
 
   runs(function() {
     // vector source will need this
@@ -93,37 +122,39 @@ beforeEach(function() {
     }
 
     // This needs to be initialized before the data manager.
-    var map = os.MapContainer.getInstance();
-    os.map.instance.setMapContainer(map);
+    var map = MapContainer.getInstance();
+    osMapInstance.setIMapContainer(map);
+    osMapInstance.setMapContainer(map);
 
-    if (!os.dataManager || !os.dataManager) {
-      os.dataManager = os.data.DataManager.getInstance();
-      os.dataManager.setMapContainer(map);
-      os.dataManager.registerDescriptorType(os.ogc.ID, os.ui.ogc.OGCDescriptor);
+    if (!os.dataManager) {
+      const dataManager = DataManager.getInstance();
+      os.setDataManager(dataManager);
+      dataManager.setMapContainer(map);
+      dataManager.registerDescriptorType(ogc.ID, OGCDescriptor);
     }
 
     if (!os.areaManager) {
-      var areaManager = os.query.AreaManager.getInstance();
-      os.query.instance.setAreaManager(areaManager);
-      os.areaManager = os.ui.areaManager = areaManager;
+      var areaManager = AreaManager.getInstance();
+      osQueryInstance.setAreaManager(areaManager);
+      os.areaManager = osUi.areaManager = areaManager;
     }
 
     if (!os.filterManager) {
-      var filterManager = os.query.FilterManager.getInstance();
-      os.query.instance.setFilterManager(filterManager);
-      os.filterManager = os.ui.filterManager = filterManager;
+      var filterManager = FilterManager.getInstance();
+      osQueryInstance.setFilterManager(filterManager);
+      os.filterManager = osUi.filterManager = filterManager;
     }
 
     if (!os.queryManager) {
-      var queryManager = os.query.QueryManager.getInstance();
-      os.query.instance.setQueryManager(queryManager);
-      os.queryManager = os.ui.queryManager = queryManager;
+      var queryManager = QueryManager.getInstance();
+      osQueryInstance.setQueryManager(queryManager);
+      os.queryManager = osUi.queryManager = queryManager;
     }
 
     if (!os.styleManager) {
-      var styleManager = os.style.StyleManager.getInstance();
+      var styleManager = StyleManager.getInstance();
       os.styleManager = styleManager;
-      os.style.instance.setStyleManager(styleManager);
+      instance.setStyleManager(styleManager);
     }
 
     if (!map.getMap()) {
@@ -131,10 +162,10 @@ beforeEach(function() {
     }
 
     if (!os.settingsManager) {
-      os.settingsManager = os.ui.config.SettingsManager.getInstance();
+      os.settingsManager = SettingsManager.getInstance();
     }
 
-    os.time.replacers.init();
+    replacers.init();
   });
 });
 
@@ -146,6 +177,7 @@ beforeEach(function() {
 //
 describe('OpenSphere Test Initialization', () => {
   const Settings = goog.module.get('os.config.Settings');
+  const osUi = goog.module.get('os.ui');
 
   const settings = Settings.getInstance();
 
@@ -153,7 +185,7 @@ describe('OpenSphere Test Initialization', () => {
     expect(settings.isLoaded()).toBe(true);
     expect(settings.isInitialized()).toBe(true);
 
-    expect(os.ui.injector).toBeDefined();
+    expect(osUi.injector).toBeDefined();
   });
 });
 

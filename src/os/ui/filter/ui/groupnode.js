@@ -1,9 +1,8 @@
 goog.module('os.ui.filter.ui.GroupNode');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.nodeIconsDirective');
-goog.require('os.ui.nodeToggleFolderDirective');
-
+const {directiveTag: nodeIconsUi} = goog.require('os.ui.NodeIconsUI');
+const {directiveTag: nodeToggleFolderUi} = goog.require('os.ui.NodeToggleFolderUI');
 const {directiveTag: groupNodeUi} = goog.require('os.ui.filter.ui.GroupNodeUI');
 const {directiveTag: groupNodeViewUi} = goog.require('os.ui.filter.ui.GroupNodeViewUI');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
@@ -95,8 +94,8 @@ class GroupNode extends SlickTreeNode {
    */
   format(row, cell, value) {
     var html = this.getSpacer(19 * this.depth);
-    html += '<nodetogglefolder></nodetogglefolder>';
-    html += '<nodeicons></nodeicons>';
+    html += `<${nodeToggleFolderUi}></${nodeToggleFolderUi}>`;
+    html += `<${nodeIconsUi}></${nodeIconsUi}>`;
     html += this.formatNodeUI();
     return html;
   }

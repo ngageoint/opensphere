@@ -1,8 +1,8 @@
 goog.module('plugin.area.AreaPlugin');
 goog.module.declareLegacyNamespace();
 
-const os = goog.require('os');
 const csv = goog.require('os.file.mime.csv');
+const {getAreaImportManager, getAreaFileManager} = goog.require('os.query');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const ImportMethod = goog.require('os.ui.file.method.ImportMethod');
 const CSVAreaImportUI = goog.require('plugin.area.CSVAreaImportUI');
@@ -31,8 +31,8 @@ class AreaPlugin extends AbstractPlugin {
    */
   init() {
     // initialize managers used by the area plugin
-    var aim = os.areaImportManager;
-    var afm = os.areaFileManager;
+    var aim = getAreaImportManager();
+    var afm = getAreaFileManager();
 
     // register file import method
     afm.registerFileMethod(new ImportMethod(false));

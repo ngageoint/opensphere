@@ -10,6 +10,7 @@ const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const osWindow = goog.require('os.ui.window');
 
+const IFeatureType = goog.requireType('os.ogc.IFeatureType');
 const OGCLayerDescriptor = goog.requireType('plugin.ogc.OGCLayerDescriptor');
 
 
@@ -80,7 +81,7 @@ class Controller extends Disposable {
       DataManager.getInstance().getDescriptor(this.scope_['id']));
 
     /**
-     * @type {os.ogc.IFeatureType}
+     * @type {IFeatureType}
      * @private
      */
     this.featureType_ = null;

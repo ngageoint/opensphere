@@ -19,21 +19,21 @@ describe('os.interpolate', function() {
   // expect on the feature.
 
   it('should not interpolate points', function() {
-    interpolate.enabled_ = true;
+    interpolate.setEnabled(true);
     var point = new Feature(new Point([0, 0]));
     interpolate.interpolateFeature(point);
     expect(point.get(interpolate.ORIGINAL_GEOM_FIELD)).toBe(undefined);
   });
 
   it('should not interpolate multipoints', function() {
-    interpolate.enabled_ = true;
+    interpolate.setEnabled(true);
     var multipoint = new Feature(new MultiPoint([[0, 0], [2, 2]]));
     interpolate.interpolateFeature(multipoint);
     expect(multipoint.get(interpolate.ORIGINAL_GEOM_FIELD)).toBe(undefined);
   });
 
   it('should interpolate lines', function() {
-    interpolate.enabled_ = true;
+    interpolate.setEnabled(true);
     var line = new Feature(new LineString([[0, 0], [2, 2]]));
     interpolate.interpolateFeature(line);
 
@@ -42,7 +42,7 @@ describe('os.interpolate', function() {
   });
 
   it('should interpolate polygons', function() {
-    interpolate.enabled_ = true;
+    interpolate.setEnabled(true);
     var poly = new Feature(new Polygon([[[0, 0], [0, 2], [2, 2], [0, 0]]]));
     interpolate.interpolateFeature(poly);
     expect(poly.getGeometry().getCoordinates()[0].length).toBeGreaterThan(7);
@@ -50,7 +50,7 @@ describe('os.interpolate', function() {
   });
 
   it('should interpolate lines with altitude/time', function() {
-    interpolate.enabled_ = true;
+    interpolate.setEnabled(true);
 
     var startAlt = 1000;
     var endAlt = 10000;

@@ -3,8 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const settings = goog.require('os.config.Settings');
 const Module = goog.require('os.ui.Module');
-const WindowCtrl = goog.require('os.ui.WindowCtrl');
-const windowDirective = goog.require('os.ui.windowDirective');
+const {Controller: WindowCtrl, directive: windowDirective} = goog.require('os.ui.WindowUI');
 
 
 /**

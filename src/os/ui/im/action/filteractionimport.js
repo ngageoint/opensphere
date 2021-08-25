@@ -15,6 +15,7 @@ const Module = goog.require('os.ui.Module');
 const {directive: filterImportDirective} = goog.require('os.ui.filter.im.FilterImport');
 const {getEntriesFromMatched} = goog.require('os.ui.im.action');
 const FilterActionImporter = goog.require('os.ui.im.action.FilterActionImporter');
+const {close} = goog.require('os.ui.window');
 
 const ILayer = goog.requireType('os.layer.ILayer');
 
@@ -168,7 +169,7 @@ class Controller extends OSFilterImportCtrl {
       am.sendAlert(msg, os.alert.AlertEventSeverity.WARNING);
     }
 
-    os.ui.window.close(this.element);
+    close(this.element);
   }
 }
 

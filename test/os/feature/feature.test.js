@@ -2,7 +2,6 @@ goog.require('ol.Feature');
 goog.require('ol.geom.GeometryCollection');
 goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
-goog.require('os');
 goog.require('os.Fields');
 goog.require('os.bearing.geomag.wait');
 goog.require('os.data.DataManager');
@@ -24,7 +23,7 @@ describe('os.feature', function() {
   const GeometryCollection = goog.module.get('ol.geom.GeometryCollection');
   const Point = goog.module.get('ol.geom.Point');
   const Polygon = goog.module.get('ol.geom.Polygon');
-  const os = goog.module.get('os');
+  const {getMockMappingManager} = goog.module.get('os.mock');
   const Fields = goog.module.get('os.Fields');
   const DataManager = goog.module.get('os.data.DataManager');
   const RecordField = goog.module.get('os.data.RecordField');
@@ -53,7 +52,7 @@ describe('os.feature', function() {
 
   it('should auto detect and apply mappings on features', function() {
     // use a local mapping manager for this test
-    spyOn(MappingManager, 'getInstance').andCallFake(os.mock.getMockMappingManager);
+    spyOn(MappingManager, 'getInstance').andCallFake(getMockMappingManager);
 
     var f1 = new Feature({
       LAT: 0,

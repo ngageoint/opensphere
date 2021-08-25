@@ -9,7 +9,7 @@ const googEvents = goog.require('goog.events');
 const GoogEvent = goog.require('goog.events.Event');
 const GoogEventType = goog.require('goog.events.EventType');
 const olArray = goog.require('ol.array');
-const os = goog.require('os');
+const {ROOT} = goog.require('os');
 const dispatcher = goog.require('os.Dispatcher');
 const Settings = goog.require('os.config.Settings');
 const osImplements = goog.require('os.implements');
@@ -47,7 +47,7 @@ const directive = () => ({
     'searchManager': '=?',
     'showClear': '@?'
   },
-  templateUrl: os.ROOT + 'views/search/searchbox.html',
+  templateUrl: ROOT + 'views/search/searchbox.html',
   controller: Controller,
   controllerAs: 'searchBox'
 });
@@ -1014,7 +1014,7 @@ class Controller {
    */
   onFavoritesUpdate() {
     // Read in favorites
-    this['favorites'] = os.searchManager.getFavorites(5);
+    this['favorites'] = SearchManager.getInstance().getFavorites(5);
     apply(this.scope);
   }
 

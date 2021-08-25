@@ -1,12 +1,19 @@
-goog.provide('os.ui.SourceAware');
+goog.module('os.ui.SourceAware');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
-goog.require('goog.async.Delay');
-goog.require('ol.array');
-goog.require('ol.events');
-goog.require('os.data.DataManager');
-goog.require('os.data.event.DataEventType');
+const Disposable = goog.require('goog.Disposable');
+const Delay = goog.require('goog.async.Delay');
+const dispose = goog.require('goog.dispose');
+const GoogEventType = goog.require('goog.events.EventType');
+const {remove} = goog.require('ol.array');
+const events = goog.require('ol.events');
+const DataManager = goog.require('os.data.DataManager');
+const DataEventType = goog.require('os.data.event.DataEventType');
+const PropertyChange = goog.require('os.source.PropertyChange');
 
+const ObjectEvent = goog.requireType('ol.Object.Event');
+const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const ISource = goog.requireType('os.source.ISource');
 
 
 /**
@@ -15,246 +22,236 @@ goog.require('os.data.event.DataEventType');
  *
  * @abstract
  * @deprecated Please use `os.data.SourceManager` instead.
- * @extends {goog.Disposable}
- * @constructor
  */
-os.ui.SourceAware = function() {
-  os.ui.SourceAware.base(this, 'constructor');
+class SourceAware extends Disposable {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * Visible sources in the application.
+     * @type {!Array<ISource>}
+     * @protected
+     */
+    this.sources = [];
+
+    /**
+     * Map of source listen keys.
+     * @type {Object<string, ol.EventsKey>}
+     * @private
+     */
+    this.sourceListeners_ = {};
+
+    /**
+     * This smooths out resizing components containing slickgrids by delaying the grid resize until the component stops
+     * resizing.
+     * @type {Delay}
+     * @protected
+     */
+    this.updateDelay = new Delay(this.updateUI, 25, this);
+
+    /**
+     * Source events that should trigger a UI update.
+     * @type {!Array<string>}
+     * @protected
+     */
+    this.updateEvents = SourceAware.UPDATE_EVENTS;
+
+    /**
+     * @type {!Array<function(ISource):boolean>}
+     * @protected
+     */
+    this.validationFunctions = SourceAware.VALIDATION_FUNCTIONS;
+  }
 
   /**
-   * Visible sources in the application.
-   * @type {!Array<os.source.ISource>}
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+
+    dispose(this.updateDelay);
+
+    var dm = DataManager.getInstance();
+    if (dm) {
+      dm.unlisten(DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
+      dm.unlisten(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
+    }
+
+    for (var key in this.sourceListeners_) {
+      events.unlistenByKey(this.sourceListeners_[key]);
+    }
+
+    this.sourceListeners_ = {};
+    this.sources.length = 0;
+  }
+
+  /**
+   * Initialize the sources
+   *
    * @protected
    */
-  this.sources = [];
+  init() {
+    var dm = DataManager.getInstance();
+    dm.listen(DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
+    dm.listen(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
+
+    var sources = dm.getSources();
+    for (var i = 0, n = sources.length; i < n; i++) {
+      var source = sources[i];
+      this.updateSource_(source);
+      this.addSourceListener_(sources[i]);
+    }
+  }
 
   /**
-   * Map of source listen keys.
-   * @type {Object<string, ol.EventsKey>}
+   * @param {!ISource} source
+   * @protected
+   */
+  addSource(source) {
+    if (this.sources.indexOf(source) === -1) {
+      this.sources.push(source);
+    }
+  }
+
+  /**
+   * @param {!ISource} source
+   * @protected
+   */
+  removeSource(source) {
+    remove(this.sources, source);
+  }
+
+  /**
+   * Registers change listener on a source.
+   *
+   * @param {ISource} source
    * @private
    */
-  this.sourceListeners_ = {};
+  addSourceListener_(source) {
+    this.removeSourceListener_(source);
+
+    var id = source.getId();
+    this.sourceListeners_[id] = events.listen(/** @type {events.EventTarget} */ (source),
+        GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange, this);
+  }
 
   /**
-   * This smooths out resizing components containing slickgrids by delaying the grid resize until the component stops
-   * resizing.
-   * @type {goog.async.Delay}
-   * @protected
+   * Removes change listener on a source.
+   *
+   * @param {ISource} source
+   * @private
    */
-  this.updateDelay = new goog.async.Delay(this.updateUI, 25, this);
+  removeSourceListener_(source) {
+    var id = source.getId();
+    if (id in this.sourceListeners_) {
+      events.unlistenByKey(this.sourceListeners_[id]);
+      delete this.sourceListeners_[id];
+    }
+  }
 
   /**
-   * Source events that should trigger a UI update.
-   * @type {!Array<string>}
-   * @protected
+   * @param {os.data.event.DataEvent} event
+   * @private
    */
-  this.updateEvents = os.ui.SourceAware.UPDATE_EVENTS;
+  onSourceAdded_(event) {
+    if (event.source) {
+      this.updateSource_(event.source);
+      this.addSourceListener_(event.source);
+    }
+  }
 
   /**
-   * @type {!Array<function(os.source.ISource):boolean>}
+   * @param {os.data.event.DataEvent} event
+   * @private
+   */
+  onSourceRemoved_(event) {
+    if (event.source) {
+      this.removeSourceListener_(event.source);
+      this.removeSource(event.source);
+    }
+  }
+
+  /**
+   * Handle property change events from a source.
+   *
+   * @param {PropertyChangeEvent|ObjectEvent} event
+   * @protected
+   *
+   * @suppress {checkTypes}
+   */
+  onSourcePropertyChange(event) {
+    var p;
+    try {
+      // ol3's ol.ObjectEventType.PROPERTYCHANGE is the same as goog.events.EventType.PROPERTYCHANGE, so make sure the
+      // event is from us
+      p = event.getProperty();
+    } catch (e) {
+      return;
+    }
+
+    var source = /** @type {ISource} */ (event.target);
+    if (source && this.updateEvents.indexOf(p) > -1) {
+      this.updateSource_(source);
+    }
+  }
+
+  /**
+   * @param {ISource} source
+   * @private
+   */
+  updateSource_(source) {
+    if (source) {
+      if (this.validate_(source)) {
+        this.addSource(source);
+      } else {
+        this.removeSource(source);
+      }
+
+      this.updateDelay.start();
+    }
+  }
+
+  /**
+   * @param {!ISource} source The source to validate
+   * @return {boolean} whether or not the source is valid
+   * @private
+   */
+  validate_(source) {
+    for (var i = 0, n = this.validationFunctions.length; i < n; i++) {
+      if (!this.validationFunctions[i](source)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Update the UI after a source was added/removed/changed.
+   *
+   * @abstract
    * @protected
    */
-  this.validationFunctions = os.ui.SourceAware.VALIDATION_FUNCTIONS;
-};
-goog.inherits(os.ui.SourceAware, goog.Disposable);
-
+  updateUI() {}
+}
 
 /**
- * @type {!Array<function(os.source.ISource):boolean>}
+ * @type {!Array<function(ISource):boolean>}
  */
-os.ui.SourceAware.VALIDATION_FUNCTIONS = [];
-
+SourceAware.VALIDATION_FUNCTIONS = [];
 
 /**
  * Events that will trigger a source update.
  * @type {!Array<string>}
  * @const
  */
-os.ui.SourceAware.UPDATE_EVENTS = [
-  os.source.PropertyChange.ENABLED,
-  os.source.PropertyChange.TITLE,
-  os.source.PropertyChange.VISIBLE
+SourceAware.UPDATE_EVENTS = [
+  PropertyChange.ENABLED,
+  PropertyChange.TITLE,
+  PropertyChange.VISIBLE
 ];
 
-
-/**
- * @inheritDoc
- */
-os.ui.SourceAware.prototype.disposeInternal = function() {
-  os.ui.SourceAware.base(this, 'disposeInternal');
-
-  goog.dispose(this.updateDelay);
-
-  var dm = os.dataManager;
-  if (dm) {
-    dm.unlisten(os.data.event.DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
-    dm.unlisten(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
-  }
-
-  for (var key in this.sourceListeners_) {
-    ol.events.unlistenByKey(this.sourceListeners_[key]);
-  }
-
-  this.sourceListeners_ = {};
-  this.sources.length = 0;
-};
-
-
-/**
- * Initialize the sources
- *
- * @protected
- */
-os.ui.SourceAware.prototype.init = function() {
-  var dm = os.dataManager;
-  dm.listen(os.data.event.DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
-  dm.listen(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
-
-  var sources = dm.getSources();
-  for (var i = 0, n = sources.length; i < n; i++) {
-    var source = sources[i];
-    this.updateSource_(source);
-    this.addSourceListener_(sources[i]);
-  }
-};
-
-
-/**
- * @param {!os.source.ISource} source
- * @protected
- */
-os.ui.SourceAware.prototype.addSource = function(source) {
-  if (this.sources.indexOf(source) === -1) {
-    this.sources.push(source);
-  }
-};
-
-
-/**
- * @param {!os.source.ISource} source
- * @protected
- */
-os.ui.SourceAware.prototype.removeSource = function(source) {
-  ol.array.remove(this.sources, source);
-};
-
-
-/**
- * Registers change listener on a source.
- *
- * @param {os.source.ISource} source
- * @private
- */
-os.ui.SourceAware.prototype.addSourceListener_ = function(source) {
-  this.removeSourceListener_(source);
-
-  var id = source.getId();
-  this.sourceListeners_[id] = ol.events.listen(/** @type {ol.events.EventTarget} */ (source),
-      goog.events.EventType.PROPERTYCHANGE, this.onSourcePropertyChange, this);
-};
-
-
-/**
- * Removes change listener on a source.
- *
- * @param {os.source.ISource} source
- * @private
- */
-os.ui.SourceAware.prototype.removeSourceListener_ = function(source) {
-  var id = source.getId();
-  if (id in this.sourceListeners_) {
-    ol.events.unlistenByKey(this.sourceListeners_[id]);
-    delete this.sourceListeners_[id];
-  }
-};
-
-
-/**
- * @param {os.data.event.DataEvent} event
- * @private
- */
-os.ui.SourceAware.prototype.onSourceAdded_ = function(event) {
-  if (event.source) {
-    this.updateSource_(event.source);
-    this.addSourceListener_(event.source);
-  }
-};
-
-
-/**
- * @param {os.data.event.DataEvent} event
- * @private
- */
-os.ui.SourceAware.prototype.onSourceRemoved_ = function(event) {
-  if (event.source) {
-    this.removeSourceListener_(event.source);
-    this.removeSource(event.source);
-  }
-};
-
-
-/**
- * Handle property change events from a source.
- *
- * @param {os.events.PropertyChangeEvent|ol.Object.Event} event
- * @protected
- *
- * @suppress {checkTypes}
- */
-os.ui.SourceAware.prototype.onSourcePropertyChange = function(event) {
-  var p;
-  try {
-    // ol3's ol.ObjectEventType.PROPERTYCHANGE is the same as goog.events.EventType.PROPERTYCHANGE, so make sure the
-    // event is from us
-    p = event.getProperty();
-  } catch (e) {
-    return;
-  }
-
-  var source = /** @type {os.source.ISource} */ (event.target);
-  if (source && this.updateEvents.indexOf(p) > -1) {
-    this.updateSource_(source);
-  }
-};
-
-
-/**
- * @param {os.source.ISource} source
- * @private
- */
-os.ui.SourceAware.prototype.updateSource_ = function(source) {
-  if (source) {
-    if (this.validate_(source)) {
-      this.addSource(source);
-    } else {
-      this.removeSource(source);
-    }
-
-    this.updateDelay.start();
-  }
-};
-
-
-/**
- * @param {!os.source.ISource} source The source to validate
- * @return {boolean} whether or not the source is valid
- * @private
- */
-os.ui.SourceAware.prototype.validate_ = function(source) {
-  for (var i = 0, n = this.validationFunctions.length; i < n; i++) {
-    if (!this.validationFunctions[i](source)) {
-      return false;
-    }
-  }
-
-  return true;
-};
-
-
-/**
- * Update the UI after a source was added/removed/changed.
- *
- * @abstract
- * @protected
- */
-os.ui.SourceAware.prototype.updateUI = function() {};
+exports = SourceAware;

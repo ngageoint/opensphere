@@ -9,8 +9,10 @@ const AbstractImportAction = goog.require('os.im.action.AbstractImportAction');
 const osObject = goog.require('os.object');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleType = goog.require('os.style.StyleType');
 const osStyleLabel = goog.require('os.style.label');
-const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
+const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
 const osXml = goog.require('os.xml');
 const featureAction = goog.require('plugin.im.action.feature');
 const {directiveTag: configUi, setDefaultConfig} = goog.require('plugin.im.action.feature.ui.LabelConfigUI');
@@ -67,7 +69,7 @@ class LabelAction extends AbstractImportAction {
       if (item && this.isFeatureLabeled(item)) {
         // reset the original feature config
         var originalConfig = /** @type {Array|Object|undefined} */ (item.get(featureAction.StyleType.ORIGINAL));
-        item.set(osStyle.StyleType.FEATURE, originalConfig, true);
+        item.set(StyleType.FEATURE, originalConfig, true);
       }
     }
 
@@ -101,7 +103,7 @@ class LabelAction extends AbstractImportAction {
         // update label fields on the feature if there is at least one valid label config defined
         if (labels.length > 0) {
           // get the existing feature config or create a new one
-          var originalConfig = /** @type {Array|Object|undefined} */ (item.get(osStyle.StyleType.FEATURE));
+          var originalConfig = /** @type {Array|Object|undefined} */ (item.get(StyleType.FEATURE));
           var featureConfig = osObject.unsafeClone(originalConfig) || {};
 
           // flag this as a temporary style config
@@ -110,18 +112,18 @@ class LabelAction extends AbstractImportAction {
           // apply label config
           if (Array.isArray(featureConfig)) {
             for (var j = 0; j < featureConfig.length; j++) {
-              featureConfig[j][osStyle.StyleField.LABELS] = labels;
-              featureConfig[j][osStyle.StyleField.LABEL_COLOR] = labelColor;
-              featureConfig[j][osStyle.StyleField.LABEL_SIZE] = labelSize;
+              featureConfig[j][StyleField.LABELS] = labels;
+              featureConfig[j][StyleField.LABEL_COLOR] = labelColor;
+              featureConfig[j][StyleField.LABEL_SIZE] = labelSize;
             }
           } else {
-            featureConfig[osStyle.StyleField.LABELS] = labels;
-            featureConfig[osStyle.StyleField.LABEL_COLOR] = labelColor;
-            featureConfig[osStyle.StyleField.LABEL_SIZE] = labelSize;
+            featureConfig[StyleField.LABELS] = labels;
+            featureConfig[StyleField.LABEL_COLOR] = labelColor;
+            featureConfig[StyleField.LABEL_SIZE] = labelSize;
           }
 
           // save the feature config(s) to the feature, and persist the label config to the feature
-          item.set(osStyle.StyleType.FEATURE, featureConfig, true);
+          item.set(StyleType.FEATURE, featureConfig, true);
           item.set(LabelAction.FEATURE_ID, this.uid, true);
           FeatureEditCtrl.persistFeatureLabels(item);
 

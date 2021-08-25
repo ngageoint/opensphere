@@ -4,6 +4,7 @@ goog.module.declareLegacyNamespace();
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const FilterActionNode = goog.require('os.ui.im.action.FilterActionNode');
 const AbstractGroupByTreeSearch = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
+const TreeSearch = goog.require('os.ui.slick.TreeSearch');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 
@@ -192,13 +193,13 @@ class FilterActionTreeSearch extends AbstractGroupByTreeSearch {
   setSort(list) {
     if (this.getGroupBy()) {
       // sort the top level by ID and every other level by label
-      list.sort(os.ui.slick.TreeSearch.idCompare);
+      list.sort(TreeSearch.idCompare);
 
       for (var i = 0, n = list.length; i < n; i++) {
         var c = list[i].getChildren();
 
         if (c) {
-          c.sort(os.ui.slick.TreeSearch.labelCompare);
+          c.sort(TreeSearch.labelCompare);
         }
       }
     }

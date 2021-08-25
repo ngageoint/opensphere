@@ -9,6 +9,6 @@ goog.module.declareLegacyNamespace();
 
 /**
  * Create the ol.ext namespace.
- * @type {!Object}
+ * @type {!Object<string, *>}
  */
 exports = {};

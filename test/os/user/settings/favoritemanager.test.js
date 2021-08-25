@@ -1,17 +1,17 @@
+goog.require('os.config.Settings');
 goog.require('os.mock');
 goog.require('os.user.settings.FavoriteManager');
 
 describe('os.user.settings.FavoriteManager', function() {
+  const Settings = goog.module.get('os.config.Settings');
   const FavoriteManager = goog.module.get('os.user.settings.FavoriteManager');
-  var settings;
 
   beforeEach(function() {
-    settings = os.settings;
-    settings.setPersistenceEnabled(false);
+    Settings.getInstance().setPersistenceEnabled(false);
   });
 
   afterEach(function() {
-    settings.setPersistenceEnabled(true);
+    Settings.getInstance().setPersistenceEnabled(true);
   });
 
   it('should start from scratch', function() {

@@ -1,6 +1,6 @@
 goog.module('plugin.cesium.tiles.Cesium3DTileLayerUI');
 
-goog.require('os.ui.sliderDirective');
+goog.require('os.ui.SliderUI');
 
 const {ROOT} = goog.require('os');
 const {toHexString} = goog.require('os.color');

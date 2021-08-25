@@ -31,10 +31,12 @@ const GeometryField = goog.require('os.geom.GeometryField');
 const interpolate = goog.require('os.interpolate');
 const osObject = goog.require('os.object');
 const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleType = goog.require('os.style.StyleType');
 const TimeRange = goog.require('os.time.TimeRange');
 const TimelineController = goog.require('os.time.TimelineController');
 const TrackField = goog.require('os.track.TrackField');
-const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
+const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
 const kml = goog.require('os.ui.file.kml');
 const column = goog.require('os.ui.slick.column');
 const ConfirmColumnUI = goog.require('os.ui.window.ConfirmColumnUI');
@@ -331,10 +333,10 @@ let createTrack_ = function(options) {
     delete currentStyle['image'];
   } else {
     trackColor = trackColor || osStyle.DEFAULT_LAYER_COLOR;
-    osStyle.setConfigColor(trackStyle, trackColor, [osStyle.StyleField.STROKE]);
-    osStyle.setConfigColor(currentStyle, trackColor, [osStyle.StyleField.IMAGE]);
+    osStyle.setConfigColor(trackStyle, trackColor, [StyleField.STROKE]);
+    osStyle.setConfigColor(currentStyle, trackColor, [StyleField.IMAGE]);
   }
-  track.set(osStyle.StyleType.FEATURE, [trackStyle, currentStyle]);
+  track.set(StyleType.FEATURE, [trackStyle, currentStyle]);
 
   if (options.label !== null) {
     // configure default label for the track
@@ -343,11 +345,11 @@ let createTrack_ = function(options) {
       'column': options.label || Fields.LOWERCASE_NAME,
       'showColumn': false
     };
-    currentStyle[osStyle.StyleField.LABELS] = [labelStyle];
+    currentStyle[StyleField.LABELS] = [labelStyle];
   }
 
   // display the current position as an icon
-  track.set(osStyle.StyleField.SHAPE, osStyle.ShapeType.ICON);
+  track.set(StyleField.SHAPE, osStyle.ShapeType.ICON);
 
   // update styles on the track
   osStyle.setFeatureStyle(track);
@@ -635,7 +637,7 @@ const disposeAnimationGeometries = function(track) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 const setShowLine = function(track, show, opt_update) {
-  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[osStyle.StyleType.FEATURE]);
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[StyleType.FEATURE]);
   if (trackStyles.length > 1) {
     var lineConfig = trackStyles[0];
     var dynamic = track instanceof DynamicFeature && track.isDynamicEnabled;
@@ -659,7 +661,7 @@ const setShowLine = function(track, show, opt_update) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 const getShowLine = function(track) {
-  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[osStyle.StyleType.FEATURE]);
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[StyleType.FEATURE]);
   return trackStyles.length > 0 && trackStyles[0]['geometry'] != HIDE_GEOMETRY;
 };
 
@@ -673,14 +675,14 @@ const getShowLine = function(track) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 const setShowMarker = function(track, show, opt_update) {
-  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[osStyle.StyleType.FEATURE]);
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[StyleType.FEATURE]);
   if (trackStyles.length > 1) { // recreate marker style
     var currentGeometry = show ? TrackField.CURRENT_POSITION : HIDE_GEOMETRY;
     var currentConfig = trackStyles[1];
     if (currentConfig['geometry'] !== currentGeometry ||
-        track.values_[osStyle.StyleField.LABEL_GEOMETRY] !== currentGeometry) {
+        track.values_[StyleField.LABEL_GEOMETRY] !== currentGeometry) {
       currentConfig['geometry'] = currentGeometry;
-      track.values_[osStyle.StyleField.LABEL_GEOMETRY] = currentGeometry;
+      track.values_[StyleField.LABEL_GEOMETRY] = currentGeometry;
 
       // set the style config for the track
       if (opt_update) {
@@ -766,7 +768,7 @@ const updateCurrentPosition = function(track) {
       // doesn't exist, so create a new one and set it as the label geometry
       currentPosition = new Point(newPosition);
       track.set(TrackField.CURRENT_POSITION, currentPosition);
-      track.set(osStyle.StyleField.LABEL_GEOMETRY, TrackField.CURRENT_POSITION);
+      track.set(StyleField.LABEL_GEOMETRY, TrackField.CURRENT_POSITION);
     } else {
       // update the existing position
       currentPosition.setFlatCoordinates(geometry.getLayout(), newPosition);
@@ -1162,7 +1164,7 @@ const promptForField = function(columns, prompt) {
  */
 const initDynamic = function(track) {
   // switch the displayed track geometry to show the "current" line
-  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(osStyle.StyleType.FEATURE));
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(StyleType.FEATURE));
   var trackStyle = trackStyles ? trackStyles[0] : null;
   if (trackStyle) {
     if (getShowLine(track)) {
@@ -1186,7 +1188,7 @@ const disposeDynamic = function(track, opt_disposing) {
 
   if (!opt_disposing) {
     // switch the style back to rendering the original track
-    var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(osStyle.StyleType.FEATURE));
+    var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(StyleType.FEATURE));
     var trackStyle = trackStyles ? trackStyles[0] : null;
     if (trackStyle) {
       setShowMarker(track, true);
@@ -1482,7 +1484,7 @@ const updateTrackZIndex = function(tracks) {
   var topTrackZIndex = tracks.length + 1;
   for (var i = 0; i < tracks.length; i++) {
     var track = tracks[i];
-    var trackStyles = /** @type {!Array<!Object<string, *>>} */ (track.get(osStyle.StyleType.FEATURE));
+    var trackStyles = /** @type {!Array<!Object<string, *>>} */ (track.get(StyleType.FEATURE));
     if (!Array.isArray(trackStyles)) {
       trackStyles = [trackStyles];
     }

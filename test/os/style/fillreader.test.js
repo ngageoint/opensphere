@@ -4,7 +4,7 @@ goog.require('os.style.FillReader');
 
 describe('os.style.FillReader', function() {
   const Fill = goog.module.get('ol.style.Fill');
-  const FillReader = goog.module.get('os.style.FillReader');
+  const {default: FillReader} = goog.module.get('os.style.FillReader');
 
   var config;
   var reader;

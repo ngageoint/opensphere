@@ -27,7 +27,7 @@ class WeatherPlugin extends AbstractPlugin {
    */
   init() {
     var url = getWeatherUrl();
-    var menu = mapMenu.MENU;
+    var menu = mapMenu.getMenu();
 
     if (url && menu) {
       var group = menu.getRoot().find(mapMenu.GroupLabel.COORDINATE);

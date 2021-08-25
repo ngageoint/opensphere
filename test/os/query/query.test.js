@@ -4,6 +4,8 @@ goog.require('os.proj');
 goog.require('os.query.utils');
 
 describe('os.query.utils', function() {
+  const osMap = goog.module.get('os.map');
+
   it('should detect world queries properly', function() {
     var tests = [{
       extent: [-180, -90, 180, 90],
@@ -17,11 +19,11 @@ describe('os.query.utils', function() {
     }];
 
     var projections = ['EPSG:4326', 'EPSG:3857'];
-    var oldProjection = os.map.PROJECTION;
+    var oldProjection = osMap.PROJECTION;
 
     projections.forEach(function(code) {
       var proj = ol.proj.get(code);
-      os.map.PROJECTION = proj;
+      osMap.setProjection(proj);
       os.query.utils.initWorldArea();
 
       tests.forEach(function(test) {
@@ -31,6 +33,6 @@ describe('os.query.utils', function() {
       });
     });
 
-    os.map.PROJECTION = oldProjection;
+    osMap.setProjection(oldProjection);
   });
 });

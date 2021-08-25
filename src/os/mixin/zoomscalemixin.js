@@ -13,7 +13,7 @@ const EventType = goog.require('ol.render.EventType');
 const ImageReplay = goog.require('ol.render.canvas.ImageReplay');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
-const {ZoomScale} = goog.require('os.map');
+const osMap = goog.require('os.map');
 
 const Icon = goog.requireType('ol.style.Icon');
 
@@ -32,15 +32,15 @@ const updateZoomScale = function() {
   if (lastAltitude != altitude) {
     lastAltitude = altitude;
 
-    if (altitude <= ZoomScale.NEAR) {
+    if (altitude <= osMap.ZoomScale.NEAR) {
       // don't scale icons beyond the near limit
       zoomScale = undefined;
     } else {
       // don't scale beyond the far altitude value
-      altitude = Math.min(altitude, ZoomScale.FAR);
+      altitude = Math.min(altitude, osMap.ZoomScale.FAR);
 
-      zoomScale = lerp(ZoomScale.NEAR_SCALE, ZoomScale.FAR_SCALE,
-          (altitude - ZoomScale.NEAR) / (ZoomScale.FAR - ZoomScale.NEAR));
+      zoomScale = lerp(osMap.ZoomScale.NEAR_SCALE, osMap.ZoomScale.FAR_SCALE,
+          (altitude - osMap.ZoomScale.NEAR) / (osMap.ZoomScale.FAR - osMap.ZoomScale.NEAR));
     }
   }
 };

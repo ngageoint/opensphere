@@ -1,22 +1,21 @@
 goog.module('os.ui.navbaroptions');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.addDataButtonDirective');
-goog.require('os.ui.datePanelDirective');
-goog.require('os.ui.layersButtonDirective');
-goog.require('os.ui.legendButtonDirective');
-goog.require('os.ui.measureButtonDirective');
-goog.require('os.ui.muteButtonDirective');
 goog.require('os.ui.navBottomDirective');
 goog.require('os.ui.navTopDirective');
-goog.require('os.ui.saveButtonDirective');
-goog.require('os.ui.serversButtonDirective');
-goog.require('os.ui.settingsButtonDirective');
-goog.require('os.ui.stateButtonDirective');
-goog.require('os.ui.windowsButtonDirective');
 
+const AddDataButtonUI = goog.require('os.ui.AddDataButtonUI');
+const DatePanelUI = goog.require('os.ui.DatePanelUI');
+const LayersButtonUI = goog.require('os.ui.LayersButtonUI');
+const LegendButtonUI = goog.require('os.ui.LegendButtonUI');
+const MeasureButtonUI = goog.require('os.ui.MeasureButtonUI');
+const MuteButtonUI = goog.require('os.ui.MuteButtonUI');
 const OSNavTopUI = goog.require('os.ui.OSNavTopUI');
+const SaveButtonUI = goog.require('os.ui.SaveButtonUI');
 const ScaleLine = goog.require('os.ui.ScaleLine');
+const ServersButtonUI = goog.require('os.ui.ServersButtonUI');
+const SettingsButtonUI = goog.require('os.ui.SettingsButtonUI');
+const StateButtonUI = goog.require('os.ui.StateButtonUI');
 const AlertButtonUI = goog.require('os.ui.alert.AlertButtonUI');
 const ClearButtonUI = goog.require('os.ui.clear.ClearButtonUI');
 const DrawControlsUI = goog.require('os.ui.draw.DrawControlsUI');
@@ -61,16 +60,16 @@ const init = function() {
   list.add(Location.HEADER, OSNavTopUI.directiveTag, 100);
 
   // Top navbar items
-  list.add(Location.TOP_LEFT, 'add-data-button', 100);
-  list.add(Location.TOP_LEFT, 'layers-button', 200);
+  list.add(Location.TOP_LEFT, AddDataButtonUI.directiveTag, 100);
+  list.add(Location.TOP_LEFT, LayersButtonUI.directiveTag, 200);
   list.add(Location.TOP_LEFT, DrawControlsUI.directiveTag, 300);
-  list.add(Location.TOP_LEFT, 'measure-button', 400);
+  list.add(Location.TOP_LEFT, MeasureButtonUI.directiveTag, 400);
   list.add(Location.TOP_LEFT, ClearButtonUI.directiveTag, 500);
 
-  list.add(Location.TOP_CENTER, 'date-panel', 1);
+  list.add(Location.TOP_CENTER, DatePanelUI.directiveTag, 1);
 
-  list.add(Location.TOP_RIGHT, 'save-button', 200);
-  list.add(Location.TOP_RIGHT, 'state-button', 300);
+  list.add(Location.TOP_RIGHT, SaveButtonUI.directiveTag, 200);
+  list.add(Location.TOP_RIGHT, StateButtonUI.directiveTag, 300);
   list.add(Location.TOP_RIGHT, getSearchBox(), 900);
   list.add(Location.TOP_RIGHT, HelpUI.directiveTag, 1000);
 
@@ -81,14 +80,13 @@ const init = function() {
   list.add(Location.BOTTOM_LEFT,
       '<div id="mouse-position" class="nav-item mr-1 my-auto flex-shrink-0"></div>', 300);
 
-  list.add(Location.BOTTOM_RIGHT,
-      '<div id="js-dock-bottom-micro__container"></div>', 0);
-  list.add(Location.BOTTOM_RIGHT, 'settings-button', 100);
-  list.add(Location.BOTTOM_RIGHT, 'legend-button', 200);
-  list.add(Location.BOTTOM_RIGHT, 'servers-button', 300);
+  list.add(Location.BOTTOM_RIGHT, '<div id="js-dock-bottom-micro__container"></div>', 0);
+  list.add(Location.BOTTOM_RIGHT, SettingsButtonUI.directiveTag, 100);
+  list.add(Location.BOTTOM_RIGHT, LegendButtonUI.directiveTag, 200);
+  list.add(Location.BOTTOM_RIGHT, ServersButtonUI.directiveTag, 300);
   list.add(Location.BOTTOM_RIGHT, AlertButtonUI.directiveTag, 400);
   list.add(Location.BOTTOM_RIGHT, HistoryButtonUI.directiveTag, 500);
-  list.add(Location.BOTTOM_RIGHT, 'mute-button', 600);
+  list.add(Location.BOTTOM_RIGHT, MuteButtonUI.directiveTag, 600);
 };
 
 exports = {

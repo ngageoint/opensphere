@@ -1,168 +1,180 @@
-goog.provide('os.ui.MeasureButtonCtrl');
-goog.provide('os.ui.measureButtonDirective');
+goog.module('os.ui.MeasureButtonUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.interaction.Measure');
-goog.require('os.metrics.keys');
-goog.require('os.ui.Module');
-goog.require('os.ui.menu.Menu');
-goog.require('os.ui.menu.MenuButtonCtrl');
-goog.require('os.ui.menu.MenuItem');
-goog.require('os.ui.menu.MenuItemType');
+const dispatcher = goog.require('os.Dispatcher');
+const Settings = goog.require('os.config.Settings');
+const Measure = goog.require('os.interaction.Measure');
+const Method = goog.require('os.interpolate.Method');
+const {getMapContainer} = goog.require('os.map.instance');
+const Metrics = goog.require('os.metrics.Metrics');
+const {Map: MapKeys} = goog.require('os.metrics.keys');
+const Module = goog.require('os.ui.Module');
+const DrawEventType = goog.require('os.ui.draw.DrawEventType');
+const Menu = goog.require('os.ui.menu.Menu');
+const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
+const MenuItem = goog.require('os.ui.menu.MenuItem');
+const MenuItemType = goog.require('os.ui.menu.MenuItemType');
+
+const DrawEvent = goog.requireType('os.ui.draw.DrawEvent');
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+
 
 /**
  * The add data button bar directive
  *
  * @return {angular.Directive}
  */
-os.ui.measureButtonDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'showLabel': '='
-    },
-    controller: os.ui.MeasureButtonCtrl,
-    controllerAs: 'ctrl',
-    template: '<div class="btn-group" ng-right-click="ctrl.openMenu()">' +
-      '<button class="btn btn-secondary" id="measureButton" title="Measure between points"' +
-      ' ng-click="ctrl.toggle()"' +
-      ' ng-class="{active: measuring}">' +
-      '<i class="fa fa-fw fa-drafting-compass"></i> {{showLabel ? \'Measure\' : \'\'}}' +
-      '</button>' +
-      '<button class="btn btn-secondary dropdown-toggle dropdown-toggle-split" ng-click="ctrl.openMenu()"' +
-      ' ng-class="{active: menu}">' +
-      '</button></div>'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'showLabel': '='
+  },
+  controller: Controller,
+  controllerAs: 'ctrl',
+  template: '<div class="btn-group" ng-right-click="ctrl.openMenu()">' +
+    '<button class="btn btn-secondary" id="measureButton" title="Measure between points"' +
+    ' ng-click="ctrl.toggle()"' +
+    ' ng-class="{active: measuring}">' +
+    '<i class="fa fa-fw fa-drafting-compass"></i> {{showLabel ? \'Measure\' : \'\'}}' +
+    '</button>' +
+    '<button class="btn btn-secondary dropdown-toggle dropdown-toggle-split" ng-click="ctrl.openMenu()"' +
+    ' ng-class="{active: menu}">' +
+    '</button></div>'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'measure-button';
 
 /**
  * add the directive to the module
  */
-os.ui.Module.directive('measureButton', [os.ui.measureButtonDirective]);
-
+Module.directive('measureButton', [directive]);
 
 /**
  * Controller function for the nav-top directive
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element The element
- * @extends {os.ui.menu.MenuButtonCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.MeasureButtonCtrl = function($scope, $element) {
-  os.ui.MeasureButtonCtrl.base(this, 'constructor', $scope, $element);
+class Controller extends MenuButtonCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element The element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
 
-  this.menu = os.ui.MeasureButtonCtrl.MEASURE;
-  this.menu.listen(os.interpolate.Method.GEODESIC, this.onMeasureTypeChange_, false, this);
-  this.menu.listen(os.interpolate.Method.RHUMB, this.onMeasureTypeChange_, false, this);
+    this.menu = Controller.MEASURE;
+    this.menu.listen(Method.GEODESIC, this.onMeasureTypeChange_, false, this);
+    this.menu.listen(Method.RHUMB, this.onMeasureTypeChange_, false, this);
 
-  this.flag = 'measure';
-  this.metricKey = os.metrics.keys.Map.MEASURE_TOGGLE;
+    this.flag = 'measure';
+    this.metricKey = MapKeys.MEASURE_TOGGLE;
 
-  this.scope['measuring'] = false;
+    this.scope['measuring'] = false;
 
-  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd_, false, this);
-  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWCANCEL, this.onDrawEnd_, false, this);
+    dispatcher.getInstance().listen(DrawEventType.DRAWEND, this.onDrawEnd_, false, this);
+    dispatcher.getInstance().listen(DrawEventType.DRAWCANCEL, this.onDrawEnd_, false, this);
+
+    /**
+     * @type {!string}
+     * @private
+     */
+    this.key_ = 'measureMethod';
+    Measure.method = /** @type {Method} */ (Settings.getInstance().get(this.key_, Measure.method));
+  }
 
   /**
-   * @type {!string}
+   * @param {boolean=} opt_value The toggle value
+   * @override
+   * @export
+   */
+  toggle(opt_value) {
+    var measure = this.getMeasureInteraction_();
+
+    if (measure) {
+      opt_value = opt_value !== undefined ? opt_value : !measure.getActive();
+
+      measure.setEnabled(opt_value);
+      measure.setActive(opt_value);
+      this.scope['measuring'] = opt_value;
+
+      if (opt_value && this.metricKey) {
+        Metrics.getInstance().updateMetric(this.metricKey, 1);
+      }
+    }
+  }
+
+  /**
+   * @param {DrawEvent} evt The draw event
    * @private
    */
-  this.key_ = 'measureMethod';
-  os.interaction.Measure.method = /** @type {os.interpolate.Method} */ (
-    os.settings.get(this.key_, os.interaction.Measure.method));
-};
-goog.inherits(os.ui.MeasureButtonCtrl, os.ui.menu.MenuButtonCtrl);
+  onDrawEnd_(evt) {
+    if (evt.target instanceof Measure) {
+      this.toggle(false);
+    }
+  }
 
+  /**
+   * @return {?Measure} The measure interaction
+   * @private
+   */
+  getMeasureInteraction_() {
+    var interactions = getMapContainer().getMap().getInteractions().getArray();
+    var measure = interactions.find((interaction) => {
+      return interaction instanceof Measure && interaction.isType('measure');
+    });
+    return /** @type {Measure} */ (measure);
+  }
+
+  /**
+   * @param {MenuEvent<undefined>} evt The event from the menu
+   * @private
+   */
+  onMeasureTypeChange_(evt) {
+    Measure.method = /** @type {Method} */ (evt.type);
+    Settings.getInstance().set(this.key_, evt.type);
+    this.toggle(true);
+  }
+
+  /**
+   * Helper function for changing icons.
+   *
+   * @this {MenuItem}
+   */
+  static updateIcons() {
+    if (this.eventType === Measure.method) {
+      this.icons = ['<i class="fa fa-fw fa-dot-circle-o"></i>'];
+    } else {
+      this.icons = ['<i class="fa fa-fw fa-circle-o"></i>'];
+    }
+  }
+}
 
 /**
- * @type {os.ui.menu.Menu<undefined>|undefined}
+ * @type {Menu<undefined>|undefined}
  */
-os.ui.MeasureButtonCtrl.MEASURE = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
-  type: os.ui.menu.MenuItemType.ROOT,
+Controller.MEASURE = new Menu(new MenuItem({
+  type: MenuItemType.ROOT,
   children: [{
     label: 'Measure Geodesic',
-    eventType: os.interpolate.Method.GEODESIC,
+    eventType: Method.GEODESIC,
     tooltip: 'Measures the shortest distance between two points (variable bearing).',
-    beforeRender: os.ui.MeasureButtonCtrl.updateIcons
+    beforeRender: Controller.updateIcons
   }, {
     label: 'Measure Rhumb Line',
-    eventType: os.interpolate.Method.RHUMB,
+    eventType: Method.RHUMB,
     tooltip: 'Measures the path of constant bearing between two points.',
-    beforeRender: os.ui.MeasureButtonCtrl.updateIcons
+    beforeRender: Controller.updateIcons
   }]
 }));
 
-
-/**
- * @param {boolean=} opt_value The toggle value
- * @override
- * @export
- */
-os.ui.MeasureButtonCtrl.prototype.toggle = function(opt_value) {
-  var measure = this.getMeasureInteraction_();
-
-  if (measure) {
-    opt_value = opt_value !== undefined ? opt_value : !measure.getActive();
-
-    measure.setEnabled(opt_value);
-    measure.setActive(opt_value);
-    this.scope['measuring'] = opt_value;
-
-    if (opt_value && this.metricKey) {
-      os.metrics.Metrics.getInstance().updateMetric(this.metricKey, 1);
-    }
-  }
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
-
-
-/**
- * @param {os.ui.draw.DrawEvent} evt The draw event
- * @private
- */
-os.ui.MeasureButtonCtrl.prototype.onDrawEnd_ = function(evt) {
-  if (evt.target instanceof os.interaction.Measure) {
-    this.toggle(false);
-  }
-};
-
-
-/**
- * @return {?os.interaction.Measure} The measure interaction
- * @private
- */
-os.ui.MeasureButtonCtrl.prototype.getMeasureInteraction_ = function() {
-  var interactions = os.MapContainer.getInstance().getMap().getInteractions().getArray();
-  var measure = interactions.find((interaction) => {
-    return (interaction instanceof os.interaction.Measure && interaction.isType('measure'));
-  });
-  return /** @type {os.interaction.Measure} */ (measure);
-};
-
-
-/**
- * @param {os.ui.menu.MenuEvent<undefined>} evt The event from the menu
- * @private
- */
-os.ui.MeasureButtonCtrl.prototype.onMeasureTypeChange_ = function(evt) {
-  os.interaction.Measure.method = /** @type {os.interpolate.Method} */ (evt.type);
-  os.settings.set(this.key_, evt.type);
-  this.toggle(true);
-};
-
-
-/**
- * Helper function for changing icons.
- *
- * @this {os.ui.menu.MenuItem}
- */
-os.ui.MeasureButtonCtrl.updateIcons = function() {
-  if (this.eventType === os.interaction.Measure.method) {
-    this.icons = ['<i class="fa fa-fw fa-dot-circle-o"></i>'];
-  } else {
-    this.icons = ['<i class="fa fa-fw fa-circle-o"></i>'];
-  }
-};
-

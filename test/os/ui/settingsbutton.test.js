@@ -1,6 +1,6 @@
-goog.require('os.ui.settingsButtonDirective');
+goog.require('os.ui.SettingsButtonUI');
 
-describe('os.ui.settingsButtonDirective', () => {
+describe('os.ui.SettingsButtonUI', () => {
   let controller;
   let element;
   let scope;

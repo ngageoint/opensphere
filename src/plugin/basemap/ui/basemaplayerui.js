@@ -1,7 +1,7 @@
 goog.module('plugin.basemap.ui.BaseMapLayerUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.spinnerDirective');
+goog.require('os.ui.SpinnerUI');
 
 const Delay = goog.require('goog.async.Delay');
 const os = goog.require('os');
@@ -9,6 +9,8 @@ const MapContainer = goog.require('os.MapContainer');
 const osMap = goog.require('os.map');
 const Module = goog.require('os.ui.Module');
 const {Controller: TileLayerUICtrl} = goog.require('os.ui.layer.TileLayerUI');
+
+const LayerNode = goog.requireType('os.data.LayerNode');
 
 
 /**
@@ -84,7 +86,7 @@ class Controller extends TileLayerUICtrl {
    * @protected
    */
   onMinZoomChange(event, value) {
-    var items = /** @type {Array.<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
 
     if (items) {
       var resolution = MapContainer.getInstance().zoomToResolution(value);
@@ -107,7 +109,7 @@ class Controller extends TileLayerUICtrl {
    * @protected
    */
   onMaxZoomChange(event, value) {
-    var items = /** @type {Array.<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
 
     if (items) {
       var resolution = MapContainer.getInstance().zoomToResolution(value);
@@ -128,7 +130,7 @@ class Controller extends TileLayerUICtrl {
   onRefresh() {
     // Changing the min/max zoom in Cesium affects the tile cache, so refresh
     if (MapContainer.getInstance().is3DEnabled()) {
-      var items = /** @type {Array.<!os.data.LayerNode>} */ (this.scope['items']);
+      var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
 
       if (items) {
         for (var i = 0, n = items.length; i < n; i++) {
@@ -149,7 +151,7 @@ class Controller extends TileLayerUICtrl {
    * @private
    */
   getMinZoom_() {
-    var items = /** @type {Array.<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
 
     if (items) {
       for (var i = 0, n = items.length; i < n; i++) {
@@ -174,7 +176,7 @@ class Controller extends TileLayerUICtrl {
    * @private
    */
   getMaxZoom_() {
-    var items = /** @type {Array.<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
 
     if (items) {
       for (var i = 0, n = items.length; i < n; i++) {

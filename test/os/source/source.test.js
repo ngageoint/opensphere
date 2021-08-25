@@ -29,6 +29,7 @@ describe('os.source', function() {
   const fn = goog.module.get('os.fn');
   const VectorLayer = goog.module.get('os.layer.Vector');
   const osSource = goog.module.get('os.source');
+  const MockSource = goog.module.get('os.source.MockSource');
   const VectorSource = goog.module.get('os.source.Vector');
   const StyleType = goog.module.get('os.style.StyleType');
   const TimeInstant = goog.module.get('os.time.TimeInstant');
@@ -179,7 +180,7 @@ describe('os.source', function() {
     expect(osSource.getExportFields(null)).toBeNull();
 
     var columns = [];
-    var source = new osSource.MockSource();
+    var source = new MockSource();
     source.setColumns(columns);
 
     var fields = osSource.getExportFields(source);

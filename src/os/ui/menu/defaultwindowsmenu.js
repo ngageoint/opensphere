@@ -1,34 +1,38 @@
-goog.provide('os.ui.menu.windows.default');
+goog.module('os.ui.menu.windows.default');
 
-goog.require('os.config.ServerSettings');
-goog.require('os.config.Settings');
-goog.require('os.metrics.keys');
-goog.require('os.ui.LayersWindowUI');
-goog.require('os.ui.events.UIEvent');
-goog.require('os.ui.events.UIEventType');
-goog.require('os.ui.menu.windows');
-goog.require('os.ui.windowSelector');
+const os = goog.require('os');
+const dispatcher = goog.require('os.Dispatcher');
+const ServerSettings = goog.require('os.config.ServerSettings');
+const Settings = goog.require('os.config.Settings');
+const legend = goog.require('os.legend');
+const {Map: MapKeys, Timeline: TimelineKeys} = goog.require('os.metrics.keys');
+const LayersWindowUI = goog.require('os.ui.LayersWindowUI');
+const UIEvent = goog.require('os.ui.events.UIEvent');
+const UIEventType = goog.require('os.ui.events.UIEventType');
+const HistoryViewUI = goog.require('os.ui.history.HistoryViewUI');
+const {showLegend} = goog.require('os.ui.menu.map');
+const windows = goog.require('os.ui.menu.windows');
+const windowSelector = goog.require('os.ui.windowSelector');
 
 
 /**
  * Settings keys for default windows.
  * @enum {string}
  */
-os.ui.menu.windows.default.SettingsKey = {
+const SettingsKey = {
   LAYERS_DEFAULTS: 'os.layers.defaults'
 };
-
 
 /**
  * Add default windows to the Windows menu.
  */
-os.ui.menu.windows.default.setup = function() {
-  const settings = os.config.Settings.getInstance();
+const setup = function() {
+  const settings = Settings.getInstance();
 
-  os.ui.menu.windows.setup();
+  windows.setup();
 
   // add windows
-  os.ui.menu.windows.addWindow('addData', {
+  windows.addWindow('addData', {
     'icon': 'fa fa-plus',
     'label': 'Add Data',
     'description': 'Add data to the map',
@@ -46,9 +50,9 @@ os.ui.menu.windows.default.setup = function() {
   }, true);
 
   const layersDefaults = /** @type {osx.window.WindowOptions} */ (
-    settings.get(os.ui.menu.windows.default.SettingsKey.LAYERS_DEFAULTS, {}));
+    settings.get(SettingsKey.LAYERS_DEFAULTS, {}));
 
-  const layersWindowUI = os.ui.LayersWindowUI.directiveTag;
+  const layersWindowUI = LayersWindowUI.directiveTag;
   const layersWindowOptions = Object.assign({
     'key': 'layers',
     'icon': 'fas fa-layer-group',
@@ -66,26 +70,26 @@ os.ui.menu.windows.default.setup = function() {
     'help-context': 'layers',
     'shortcut': 'alt+l',
     'html': `<${layersWindowUI} tab="layers"></${layersWindowUI}>`,
-    'metricKey': os.metrics.keys.Map.SHOW_LAYER_WINDOW
+    'metricKey': MapKeys.SHOW_LAYER_WINDOW
   }, layersDefaults);
 
-  var layers = os.ui.menu.windows.addWindow('layers', layersWindowOptions, true);
+  var layers = windows.addWindow('layers', layersWindowOptions, true);
 
   // layers is open by default
   if (layers) {
-    os.ui.menu.windows.openWindow('layers');
+    windows.openWindow('layers');
   }
 
-  os.ui.menu.windows.addWindow('timeline', {
+  windows.addWindow('timeline', {
     'icon': 'fa fa-clock-o',
     'label': 'Timeline',
-    'metricKey': os.metrics.keys.Timeline.OPEN
+    'metricKey': TimelineKeys.OPEN
   }, true, function() {
-    var event = new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, 'timeline');
-    os.dispatcher.dispatchEvent(event);
+    var event = new UIEvent(UIEventType.TOGGLE_UI, 'timeline');
+    dispatcher.getInstance().dispatchEvent(event);
   });
 
-  os.ui.menu.windows.addWindow('settings', {
+  windows.addWindow('settings', {
     'icon': 'fa fa-gears',
     'label': 'Settings',
     'description': 'Change application settings',
@@ -101,7 +105,7 @@ os.ui.menu.windows.default.setup = function() {
     'html': 'settings'
   }, true);
 
-  os.ui.menu.windows.addWindow('alerts', {
+  windows.addWindow('alerts', {
     'icon': 'fa fa-bell',
     'label': 'Alerts',
     'description': 'View notifications and alerts',
@@ -114,10 +118,10 @@ os.ui.menu.windows.default.setup = function() {
     'min-height': '300',
     'max-height': '1000',
     'show-close': 'true',
-    'html': '<alerts resize-with="' + os.ui.windowSelector.WINDOW + '"></alerts>'
+    'html': '<alerts resize-with="' + windowSelector.WINDOW + '"></alerts>'
   });
 
-  os.ui.menu.windows.addWindow('clear', {
+  windows.addWindow('clear', {
     'icon': 'fa fa-times',
     'label': 'Clear',
     'description': 'Clear data from the map',
@@ -133,7 +137,7 @@ os.ui.menu.windows.default.setup = function() {
     'html': 'clear'
   });
 
-  os.ui.menu.windows.addWindow('history', {
+  windows.addWindow('history', {
     'icon': 'fa fa-history',
     'label': 'History',
     'description': 'View undo history',
@@ -146,11 +150,11 @@ os.ui.menu.windows.default.setup = function() {
     'min-height': '300',
     'max-height': '1000',
     'show-close': 'true',
-    'html': '<history resize-with="' + os.ui.windowSelector.WINDOW + '"></history>'
+    'html': `<${HistoryViewUI.directiveTag} resize-with="${windowSelector.WINDOW}"></${HistoryViewUI.directiveTag}>`
   }, false, undefined);
 
-  if (os.settings.get('metrics.enabled', false)) {
-    os.ui.menu.windows.addWindow('metrics', {
+  if (Settings.getInstance().get('metrics.enabled', false)) {
+    windows.addWindow('metrics', {
       'icon': 'fa fa-cubes',
       'label': '{APP} Capabilities',
       'description': 'Explore {APP} Capabilities',
@@ -167,13 +171,13 @@ os.ui.menu.windows.default.setup = function() {
     }, false, undefined);
   }
 
-  os.ui.menu.windows.addWindow('legend', {
-    'icon': os.legend.ICON,
+  windows.addWindow('legend', {
+    'icon': legend.ICON,
     'label': 'Legend',
     'description': 'Shows a legend for all the data on the map'
-  }, false, os.ui.menu.map.showLegend);
+  }, false, showLegend);
 
-  os.ui.menu.windows.addWindow('log', {
+  windows.addWindow('log', {
     'icon': 'fa fa-terminal',
     'label': 'Log'
   }, false, function() {
@@ -182,14 +186,19 @@ os.ui.menu.windows.default.setup = function() {
     }
   });
 
-  os.ui.menu.windows.addWindow('servers', {
+  windows.addWindow('servers', {
     'icon': 'fa fa-database',
     'label': 'Servers'
-  }, false, os.ui.menu.windows.default.openServers, 'settings');
+  }, false, openServers, 'settings');
 };
-
 
 /**
  * @type {function()}
  */
-os.ui.menu.windows.default.openServers = goog.partial(os.ui.menu.windows.openSettingsTo, os.config.ServerSettings.ID);
+const openServers = goog.partial(windows.openSettingsTo, ServerSettings.ID);
+
+exports = {
+  SettingsKey,
+  setup,
+  openServers
+};
