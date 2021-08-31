@@ -23,7 +23,8 @@ const directive = () => ({
   replace: true,
   scope: {
     'menu': '=?',
-    'olMap': '=?'
+    'olMap': '=?',
+    'showLabel': '='
   },
   templateUrl: ROOT + 'views/draw/drawcontrols.html',
   controller: Controller,

@@ -19,9 +19,11 @@ const directive = () => ({
   scope: true,
   controller: Controller,
   controllerAs: 'ctrl',
-  template: '<button class="btn btn-secondary" ng-click="ctrl.toggle()" title="Servers"' +
+  template: '<button class="btn btn-secondary" ng-click="ctrl.toggle()"' +
+    ' title="Add, remove, edit, and toggle data servers"' +
     ' ng-class="{\'active\': ctrl.isWindowActive(\'settings\')}">' +
-    '<i class="fa fa-fw fa-database"></i>' +
+    '<i class="fa fa-fw fa-database"></i> ' +
+    '<span ng-class="{\'d-none\': puny}">Servers</span>' +
     '<span ng-if="serverError" class="ml-1 badge badge-warning"><i class="fa fa-fw fa-warning"></i></span>' +
     '</button>'
 });
