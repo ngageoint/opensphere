@@ -7,7 +7,9 @@ goog.module.declareLegacyNamespace();
  */
 exports = {
   'string': /.*/,
+  'text': /.*/,
   'decimal': /^\-?\d+((\.|\,)\d+)?$/,
   'integer': /^\-?\d+$/,
+  'real': /^\-?\d+((\.|\,)\d+)?$/,
   'recordtime': /^\-?\d+((\.|\,)\d+)?$/
 };

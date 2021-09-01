@@ -37,17 +37,14 @@ const colTypeCheckLink = function($scope, $element, $attrs, $ctrl) {
        * @return {string|undefined}
        */
       function(viewValue) {
+        // try the type, but if for some reason we don't understand the type, use string which allows anything
         var key = $scope['expr']['column']['type'];
-        var pattern = FilterPatterns[key];
+        var pattern = FilterPatterns[key] || FilterPatterns['string'];
 
         if (pattern && pattern.test(viewValue)) {
           $ctrl.$setValidity('type', true);
           $element.attr('title', '');
           return viewValue;
-        } else {
-          $ctrl.$setValidity('type', false);
-          $element.attr('title', 'Please enter a valid ' + key);
-          return undefined;
         }
       });
 };
