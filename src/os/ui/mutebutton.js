@@ -17,8 +17,9 @@ const directive = () => ({
   controller: Controller,
   controllerAs: 'ctrl',
   template: '<button class="btn btn-secondary" ng-click="ctrl.toggle()"' +
-    ' title="{{mute ? \'Unmute\': \'Mute\'}}">' +
-    '<i class="fa fa-fw {{mute ? \'fa-volume-off\' : \'fa-volume-up\'}}"></i>' +
+    ' title="{{mute ? \'Turn sound on\': \'Turn sound off\'}}">' +
+    '<i class="fa fa-fw {{mute ? \'fa-volume-off\' : \'fa-volume-up\'}}"></i> ' +
+    '<span ng-class="{\'d-none\': puny}">{{mute ? \'Unmute\': \'Mute\'}}</span>' +
     '</button>'
 });
 

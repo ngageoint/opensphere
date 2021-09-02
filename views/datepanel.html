@@ -5,6 +5,7 @@
       <button class="btn btn-secondary dropdown-toggle ml-1 flex-shrink-0" ng-class="{'btn-info': ctrl.extended}" ng-click="ctrl.toggleExtend()" title="{{ctrl.sliceTip}}">hh/mm</button>
       <button id="timelineButton" class="btn btn-warning ml-1 flex-shrink-0 o-timeline-button" ng-click="ctrl.expand()" title="Expand to full timeline">
         <i class="fa fa-fw fa-clock-o"></i>
+        <span ng-class="{'d-none': puny}">Timeline</span>
       </button>
     </div>
   </div>

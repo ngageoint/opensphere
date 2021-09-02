@@ -62,8 +62,10 @@ const init = function() {
   // Top navbar items
   list.add(Location.TOP_LEFT, AddDataButtonUI.directiveTag, 100);
   list.add(Location.TOP_LEFT, LayersButtonUI.directiveTag, 200);
-  list.add(Location.TOP_LEFT, DrawControlsUI.directiveTag, 300);
-  list.add(Location.TOP_LEFT, MeasureButtonUI.directiveTag, 400);
+  list.add(Location.TOP_LEFT,
+      `<${DrawControlsUI.directiveTag} show-label="!puny"></${DrawControlsUI.directiveTag}>`, 300);
+  list.add(Location.TOP_LEFT,
+      `<${MeasureButtonUI.directiveTag} show-label="!puny"></${MeasureButtonUI.directiveTag}>`, 400);
   list.add(Location.TOP_LEFT, ClearButtonUI.directiveTag, 500);
 
   list.add(Location.TOP_CENTER, DatePanelUI.directiveTag, 1);

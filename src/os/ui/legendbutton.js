@@ -18,10 +18,11 @@ const directive = () => ({
   scope: true,
   controller: Controller,
   controllerAs: 'ctrl',
-  template: '<button class="btn btn-secondary" title="View Legend"' +
+  template: '<button class="btn btn-secondary" title="View the map legend"' +
     ' ng-click="ctrl.toggle()"' +
     ' ng-class="{active: ctrl.isWindowActive()}">' +
-    '<i class="fa fa-map-signs"></i>' +
+    '<i class="fa fa-map-signs"></i> ' +
+    '<span ng-class="{\'d-none\': puny}">Legend</span>' +
     '</button>'
 });
 

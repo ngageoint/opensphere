@@ -16,10 +16,11 @@ const directive = () => ({
   scope: true,
   controller: Controller,
   controllerAs: 'ctrl',
-  template: '<button class="btn btn-secondary" title="View Settings"' +
+  template: '<button class="btn btn-secondary" title="Modify map settings such as projection and units"' +
     ' ng-click="ctrl.toggle()"' +
     ' ng-class="{active: ctrl.isWindowActive()}">' +
-    '<i class="fa fa-gears"></i>' +
+    '<i class="fa fa-gears"></i> ' +
+    '<span ng-class="{\'d-none\': puny}">Settings</span>' +
     '</button>'
 });
 
