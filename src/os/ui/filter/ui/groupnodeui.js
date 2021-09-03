@@ -14,17 +14,20 @@ const GroupNode = goog.requireType('os.ui.filter.ui.GroupNode');
 const directive = () => ({
   restrict: 'AE',
   replace: true,
-  template: '<span class="flex-fill form-inline">' +
-      '<span class="flex-fill">' +
-      '<select class="custom-select" ng-model="item.grouping"' +
-      ' ng-options="key for (key, value) in groupUi.groups"' +
-      ' title="Whether results can match any or all filters in the group"/>' +
-      '</span>' +
-      '<span>' +
-      '<span ng-show="!groupUi.isRoot" ng-click="groupUi.remove()">' +
-      '<i class="fa fa-times fa-fw c-glyph" title="Remove the expression"></i></span>' +
-      '</span>' +
-      '</span>',
+  template: `
+      <span class="flex-fill form-inline">
+        <span class="flex-fill">
+          <select class="custom-select" ng-model="item.grouping"
+            ng-options="key for (key, value) in groupUi.groups"
+            title="Whether results can match any or all filters in the group">
+          </select>
+        </span>
+        <span>
+          <span ng-show="!groupUi.isRoot" ng-click="groupUi.remove()">
+            <i class="fa fa-times fa-fw c-glyph" title="Remove the expression"></i>
+          </span>
+        </span>
+      </span>`,
   controller: Controller,
   controllerAs: 'groupUi'
 });
