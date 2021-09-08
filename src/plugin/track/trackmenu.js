@@ -14,6 +14,7 @@ const osUiMenuLayer = goog.require('os.ui.menu.layer');
 const spatial = goog.require('os.ui.menu.spatial');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
 const pluginTrack = goog.require('plugin.track');
+const Metrics = goog.require('plugin.track.Metrics');
 const Event = goog.require('plugin.track.Event');
 const EventType = goog.require('plugin.track.EventType');
 const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
@@ -52,7 +53,7 @@ const layerSetup = function(opt_enablePredict = false) {
         eventType: EventType.CREATE_TRACK,
         tooltip: 'Creates a new track by linking all features in time order.',
         icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
-        metricKey: pluginTrack.Metrics.Keys.CREATE_LAYER,
+        metricKey: Metrics.Keys.CREATE_LAYER,
         beforeRender: visibleIfHasFeatures,
         handler: handleAddCreateTrackEvent_,
         sort: 200
@@ -62,7 +63,7 @@ const layerSetup = function(opt_enablePredict = false) {
         eventType: EventType.CREATE_FROM_SELECTED,
         tooltip: 'Creates a new track by linking selected features in time order.',
         icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
-        metricKey: pluginTrack.Metrics.Keys.CREATE_LAYER,
+        metricKey: Metrics.Keys.CREATE_LAYER,
         beforeRender: visibleIfHasFeatures,
         handler: handleAddCreateTrackEvent_,
         sort: 201
@@ -72,7 +73,7 @@ const layerSetup = function(opt_enablePredict = false) {
         eventType: EventType.ADD_TO,
         tooltip: 'Adds all features to an existing track.',
         icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
-        metricKey: pluginTrack.Metrics.Keys.ADD_TO_LAYER,
+        metricKey: Metrics.Keys.ADD_TO_LAYER,
         beforeRender: visibleIfTracksExist,
         handler: handleAddCreateTrackEvent_,
         sort: 210
@@ -82,7 +83,7 @@ const layerSetup = function(opt_enablePredict = false) {
         eventType: EventType.ADD_FROM_SELECTED,
         tooltip: 'Adds selected features to an existing track.',
         icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
-        metricKey: pluginTrack.Metrics.Keys.ADD_TO_LAYER,
+        metricKey: Metrics.Keys.ADD_TO_LAYER,
         beforeRender: visibleIfTracksExist,
         handler: handleAddCreateTrackEvent_,
         sort: 211
@@ -92,7 +93,7 @@ const layerSetup = function(opt_enablePredict = false) {
         eventType: EventType.FOLLOW,
         tooltip: 'Follow the track as it animates.',
         icons: ['<i class="fa fa-fw fa-globe"></i>'],
-        metricKey: pluginTrack.Metrics.Keys.FOLLOW_TRACK,
+        metricKey: Metrics.Keys.FOLLOW_TRACK,
         beforeRender: visibleIfIsNotFollowed,
         handler: handleFollowTrackEvent,
         sort: 220
@@ -102,7 +103,7 @@ const layerSetup = function(opt_enablePredict = false) {
         eventType: EventType.UNFOLLOW,
         tooltip: 'Cancel following the track during animation.',
         icons: ['<i class="fa fa-fw fa-globe"></i>'],
-        metricKey: pluginTrack.Metrics.Keys.UNFOLLOW_TRACK,
+        metricKey: Metrics.Keys.UNFOLLOW_TRACK,
         beforeRender: visibleIfIsFollowed,
         handler: handleUnfollowTrackEvent,
         sort: 220
@@ -112,7 +113,7 @@ const layerSetup = function(opt_enablePredict = false) {
         eventType: EventType.HIDE_LINE,
         tooltip: 'Do not show the track line.',
         icons: ['<i class="fa fa-fw fa-level-up"></i>'],
-        metricKey: pluginTrack.Metrics.Keys.HIDE_TRACK_LINE,
+        metricKey: Metrics.Keys.HIDE_TRACK_LINE,
         beforeRender: visibleIfLineIsShown,
         handler: goog.partial(setShowTrackLine, false),
         sort: 230
@@ -122,7 +123,7 @@ const layerSetup = function(opt_enablePredict = false) {
         eventType: EventType.SHOW_LINE,
         tooltip: 'Show the track line.',
         icons: ['<i class="fa fa-fw fa-level-up"></i>'],
-        metricKey: pluginTrack.Metrics.Keys.SHOW_TRACK_LINE,
+        metricKey: Metrics.Keys.SHOW_TRACK_LINE,
         beforeRender: visibleIfLineIsHidden,
         handler: goog.partial(setShowTrackLine, true),
         sort: 230
@@ -132,7 +133,7 @@ const layerSetup = function(opt_enablePredict = false) {
         eventType: EventType.ENABLE_INTERPOLATE_MARKER,
         tooltip: 'Only move track marker when there is a supporting feature.',
         icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
-        metricKey: pluginTrack.Metrics.Keys.ENABLE_INTERPOLATE_MARKER,
+        metricKey: Metrics.Keys.ENABLE_INTERPOLATE_MARKER,
         beforeRender: visibleIfMarkerInterpolationEnabled,
         handler: goog.partial(setMarkerInterpolationEnabled, false),
         sort: 240
@@ -142,7 +143,7 @@ const layerSetup = function(opt_enablePredict = false) {
         eventType: EventType.DISABLE_INTERPOLATE_MARKER,
         tooltip: 'Show the interpolated position of the track marker.',
         icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
-        metricKey: pluginTrack.Metrics.Keys.DISABLE_INTERPOLATE_MARKER,
+        metricKey: Metrics.Keys.DISABLE_INTERPOLATE_MARKER,
         beforeRender: visibleIfMarkerInterpolationDisabled,
         handler: goog.partial(setMarkerInterpolationEnabled, true),
         sort: 250
@@ -161,7 +162,7 @@ const layerSetup = function(opt_enablePredict = false) {
             eventType: EventType.PREDICT_TRACK_RHUMB,
             tooltip: 'Extend the Track using constant-heading rhumb line.',
             icons: ['<i class="fa fa-fw fa-share"></i>'],
-            metricKey: pluginTrack.Metrics.Keys.PREDICT_TRACK_RHUMB,
+            metricKey: Metrics.Keys.PREDICT_TRACK_RHUMB,
             handler: handlePredictRhumb,
             sort: 10
           },
@@ -170,7 +171,7 @@ const layerSetup = function(opt_enablePredict = false) {
             eventType: EventType.PREDICT_TRACK_GEODESIC,
             tooltip: 'Extend the Track using shortest path geodesic line.',
             icons: ['<i class="fa fa-fw fa-long-arrow-right"></i>'],
-            metricKey: pluginTrack.Metrics.Keys.PREDICT_TRACK_GEODESIC,
+            metricKey: Metrics.Keys.PREDICT_TRACK_GEODESIC,
             handler: handlePredictGeodesic,
             sort: 20
           }
@@ -298,7 +299,7 @@ const spatialSetup = function(opt_enablePredict = false) {
       tooltip: 'Follow the track as it animates.',
       icons: ['<i class="fa fa-fw fa-globe"></i>'],
       sort: 80,
-      metricKey: pluginTrack.Metrics.Keys.FOLLOW_TRACK,
+      metricKey: Metrics.Keys.FOLLOW_TRACK,
       beforeRender: visibleIfIsNotFollowed,
       handler: handleFollowTrackEvent
     });
@@ -309,7 +310,7 @@ const spatialSetup = function(opt_enablePredict = false) {
       tooltip: 'Cancel following the track during animation.',
       icons: ['<i class="fa fa-fw fa-globe"></i>'],
       sort: 90,
-      metricKey: pluginTrack.Metrics.Keys.UNFOLLOW_TRACK,
+      metricKey: Metrics.Keys.UNFOLLOW_TRACK,
       beforeRender: visibleIfIsFollowed,
       handler: handleUnfollowTrackEvent
     });
@@ -320,7 +321,7 @@ const spatialSetup = function(opt_enablePredict = false) {
       tooltip: 'Do not show the track line.',
       icons: ['<i class="fa fa-fw fa-level-up"></i>'],
       sort: 100,
-      metricKey: pluginTrack.Metrics.Keys.HIDE_TRACK_LINE,
+      metricKey: Metrics.Keys.HIDE_TRACK_LINE,
       beforeRender: visibleIfLineIsShown,
       handler: goog.partial(setShowTrackLine, false)
     });
@@ -331,7 +332,7 @@ const spatialSetup = function(opt_enablePredict = false) {
       tooltip: 'Show the track line.',
       icons: ['<i class="fa fa-fw fa-level-up"></i>'],
       sort: 110,
-      metricKey: pluginTrack.Metrics.Keys.SHOW_TRACK_LINE,
+      metricKey: Metrics.Keys.SHOW_TRACK_LINE,
       beforeRender: visibleIfLineIsHidden,
       handler: goog.partial(setShowTrackLine, true)
     });
@@ -341,7 +342,7 @@ const spatialSetup = function(opt_enablePredict = false) {
       label: 'Disable Marker Interpolation',
       tooltip: 'Only move track marker when there is a supporting feature.',
       icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
-      metricKey: pluginTrack.Metrics.Keys.ENABLE_INTERPOLATE_MARKER,
+      metricKey: Metrics.Keys.ENABLE_INTERPOLATE_MARKER,
       sort: 120,
       beforeRender: visibleIfMarkerInterpolationEnabled,
       handler: goog.partial(setMarkerInterpolationEnabled, false)
@@ -352,7 +353,7 @@ const spatialSetup = function(opt_enablePredict = false) {
       label: 'Enable Marker Interpolation',
       tooltip: 'Show the interpolated position of the track marker.',
       icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
-      metricKey: pluginTrack.Metrics.Keys.DISABLE_INTERPOLATE_MARKER,
+      metricKey: Metrics.Keys.DISABLE_INTERPOLATE_MARKER,
       sort: 130,
       beforeRender: visibleIfMarkerInterpolationDisabled,
       handler: goog.partial(setMarkerInterpolationEnabled, true)
@@ -370,7 +371,7 @@ const spatialSetup = function(opt_enablePredict = false) {
             eventType: EventType.PREDICT_TRACK_RHUMB,
             tooltip: 'Extend the Track using constant-heading rhumb line.',
             icons: ['<i class="fa fa-fw fa-share"></i>'],
-            metricKey: pluginTrack.Metrics.Keys.PREDICT_TRACK_RHUMB,
+            metricKey: Metrics.Keys.PREDICT_TRACK_RHUMB,
             handler: handlePredictRhumb,
             sort: 10
           },
@@ -379,7 +380,7 @@ const spatialSetup = function(opt_enablePredict = false) {
             eventType: EventType.PREDICT_TRACK_GEODESIC,
             tooltip: 'Extend the Track using shortest path geodesic line.',
             icons: ['<i class="fa fa-fw fa-long-arrow-right"></i>'],
-            metricKey: pluginTrack.Metrics.Keys.PREDICT_TRACK_GEODESIC,
+            metricKey: Metrics.Keys.PREDICT_TRACK_GEODESIC,
             handler: handlePredictGeodesic,
             sort: 20
           }

@@ -12,8 +12,8 @@ const AlertManager = goog.require('os.alert.AlertManager');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const interpolate = goog.require('os.interpolate');
 const osTrack = goog.require('os.track');
-const kml = goog.require('plugin.file.kml');
 const KMLNodeAdd = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
+const {updatePlacemark} = goog.require('plugin.file.kml.ui');
 
 const Promise = goog.requireType('goog.Promise');
 const OlFeature = goog.requireType('ol.Feature');
@@ -451,7 +451,7 @@ let createAndAdd_ = function(options) {
     return;
   }
 
-  var trackNode = kml.ui.updatePlacemark({
+  var trackNode = updatePlacemark({
     'feature': track
   });
 

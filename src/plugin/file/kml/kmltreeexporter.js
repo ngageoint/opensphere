@@ -21,13 +21,13 @@ const xml = goog.require('os.xml');
 const pluginFileKmlExport = goog.require('plugin.file.kml.export');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
-const kml = goog.requireType('plugin.file.kml');
+const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
  * KML tree exporter
  *
- * @extends {AbstractKMLExporter<!kml.ui.KMLNode>}
+ * @extends {AbstractKMLExporter<!KMLNode>}
  */
 class KMLTreeExporter extends AbstractKMLExporter {
   /**
@@ -210,7 +210,7 @@ class KMLTreeExporter extends AbstractKMLExporter {
     // initialize the parent to the root kml:Document
     var parent = this.kmlDoc;
     if (parent) {
-      var parentNode = /** @type {kml.ui.KMLNode} */ (item.getParent());
+      var parentNode = /** @type {KMLNode} */ (item.getParent());
       if (parentNode) {
         var parentId = parentNode.getId();
         if (this.folders_[parentId]) {

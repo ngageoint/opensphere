@@ -50,6 +50,7 @@ const ControlType = goog.require('os.ui.ControlType');
 const osUiFileKml = goog.require('os.ui.file.kml');
 const xml = goog.require('os.xml');
 const kml = goog.require('plugin.file.kml');
+const JsonField = goog.require('plugin.file.kml.JsonField');
 const KMLField = goog.require('plugin.file.kml.KMLField');
 const model = goog.require('plugin.file.kml.model');
 const parseTour = goog.require('plugin.file.kml.tour.parseTour');
@@ -855,7 +856,7 @@ class KMLParser extends AsyncZipParser {
    *
    * @param {Element} el The XML element
    * @param {KMLNode=} opt_parent The parent tree node
-   * @return {kml.ui.KMLNode} The tree node
+   * @return {KMLNode} The tree node
    * @private
    */
   createTreeNode_(el, opt_parent) {
@@ -1185,8 +1186,8 @@ class KMLParser extends AsyncZipParser {
       this.setFeatureId_(feature);
 
       // parse any fields that are known to contain JSON data into objects
-      for (var i = 0, ii = kml.JsonField.length; i < ii; i++) {
-        var field = kml.JsonField[i];
+      for (var i = 0, ii = JsonField.length; i < ii; i++) {
+        var field = JsonField[i];
 
         if (object[field] && typeof object[field] === 'string') {
           object[field] = JSON.parse(object[field]);

@@ -17,6 +17,7 @@ const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 const layerMenu = goog.require('os.ui.menu.layer');
 const vectortools = goog.require('plugin.vectortools');
 const CopyLayer = goog.require('plugin.vectortools.CopyLayer');
+const Icons = goog.require('plugin.vectortools.Icons');
 const {launchJoinWindow, launchMergeWindow} = goog.require('plugin.vectortools.ui');
 
 const ICommand = goog.requireType('os.command.ICommand');
@@ -51,17 +52,17 @@ class VectorToolsPlugin extends AbstractPlugin {
       var parents = [{
         label: 'Copy',
         type: EventType.COPY,
-        icon: vectortools.Icons.COPY_ICON,
+        icon: Icons.COPY_ICON,
         tooltip: 'Creates a static copy of the layer'
       }, {
         label: 'Merge',
         type: EventType.MERGE,
-        icon: vectortools.Icons.MERGE_ICON,
+        icon: Icons.MERGE_ICON,
         tooltip: 'Merges multiple layers into a new static layer'
       }, {
         label: 'Join',
         type: EventType.JOIN,
-        icon: vectortools.Icons.JOIN_ICON,
+        icon: Icons.JOIN_ICON,
         tooltip: 'Joins layers by a primary key'
       }];
 
