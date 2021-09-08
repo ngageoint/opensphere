@@ -354,17 +354,14 @@ class Controller extends AbstractMainCtrl {
     // init filter manager
     var filterManager = FilterManager.getInstance();
     setFilterManager(filterManager);
-    os.filterManager = ui.filterManager = filterManager;
 
     // init area manager
     var areaManager = AreaManager.getInstance();
     setAreaManager(areaManager);
-    os.areaManager = ui.areaManager = areaManager;
 
     // init query manager
     var queryManager = QueryManager.getInstance();
     setQueryManager(queryManager);
-    os.queryManager = ui.queryManager = queryManager;
 
     areaImportMenu.setup();
 

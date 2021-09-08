@@ -1212,9 +1212,4 @@ const logger = log.getLogger('os.query.BaseQueryManager');
  */
 BaseQueryManager.sortFields_ = ['layerId', 'areaId', 'filterId', 'includeArea', 'filterGroup'];
 
-/**
- * @type {?BaseQueryManager}
- */
-os.ui.queryManager = null;
-
 exports = BaseQueryManager;

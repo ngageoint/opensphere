@@ -45,10 +45,6 @@ describe('os.state.v2.QueryEntries', function() {
   });
 
   it('should load correctly', function() {
-    os.ui.queryManager = QueryManager.getInstance();
-    os.ui.areaManager = AreaManager.getInstance();
-    os.ui.filterManager = FilterManager.getInstance();
-
     // clear everything out before starting
     resetManagers();
 

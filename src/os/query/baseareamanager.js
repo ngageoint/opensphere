@@ -770,9 +770,4 @@ BaseAreaManager.FEATURE_PREFIX = 'area_';
 BaseAreaManager.tempId_ = 1;
 
 
-/**
- * @type {BaseAreaManager}
- */
-os.ui.areaManager = null;
-
 exports = BaseAreaManager;

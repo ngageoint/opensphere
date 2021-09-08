@@ -49,6 +49,7 @@ angular.element(document.body).append('<div id="map-container"></div');
 beforeEach(function() {
   const EventTarget = goog.module.get('goog.events.EventTarget');
   const os = goog.module.get('os');
+  const osMock = goog.module.get('os.mock');
   const osConfig = goog.module.get('os.config');
   const Dispatcher = goog.module.get('os.Dispatcher');
   const MapContainer = goog.module.get('os.MapContainer');
@@ -133,22 +134,19 @@ beforeEach(function() {
       dataManager.registerDescriptorType(ogc.ID, OGCDescriptor);
     }
 
-    if (!os.areaManager) {
-      var areaManager = AreaManager.getInstance();
-      osQueryInstance.setAreaManager(areaManager);
-      os.areaManager = osUi.areaManager = areaManager;
+    if (!osMock.areaManager) {
+      osMock.areaManager = AreaManager.getInstance();
+      osQueryInstance.setAreaManager(osMock.areaManager);
     }
 
-    if (!os.filterManager) {
-      var filterManager = FilterManager.getInstance();
-      osQueryInstance.setFilterManager(filterManager);
-      os.filterManager = osUi.filterManager = filterManager;
+    if (!osMock.filterManager) {
+      osMock.filterManager = FilterManager.getInstance();
+      osQueryInstance.setFilterManager(osMock.filterManager);
     }
 
-    if (!os.queryManager) {
-      var queryManager = QueryManager.getInstance();
-      osQueryInstance.setQueryManager(queryManager);
-      os.queryManager = osUi.queryManager = queryManager;
+    if (!osMock.queryManager) {
+      osMock.queryManager = QueryManager.getInstance();
+      osQueryInstance.setQueryManager(osMock.queryManager);
     }
 
     if (!os.styleManager) {
