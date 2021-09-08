@@ -2,6 +2,7 @@ goog.module('os.ui.window');
 goog.module.declareLegacyNamespace();
 
 const {bucket} = goog.require('goog.array');
+const {forEach} = goog.require('os.array');
 const {apply} = goog.require('os.ui');
 const windowSelector = goog.require('os.ui.windowSelector');
 const windowZIndexMax = goog.require('os.ui.windowZIndexMax');
@@ -250,7 +251,7 @@ const closeAll = function(opt_parent) {
   if (winContainer.length) {
     var wins = winContainer.find(windowSelector.WINDOW);
     if (wins.length) {
-      wins.forEach((win) => close(/** @type {angular.JQLite} */ ($(win))));
+      forEach(wins, (win) => close(/** @type {angular.JQLite} */ ($(win))));
     }
   }
 };
