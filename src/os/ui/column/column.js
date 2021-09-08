@@ -6,12 +6,17 @@ const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 const {directiveTag: columnManagerUi} = goog.require('os.ui.column.ColumnManagerUI');
 
 /**
+ * @typedef {function(Array<ColumnDefinition>, Function)}
+ */
+let LaunchColumnManagerFn;
+
+/**
  * Launches a column manager window with the given columns
  *
  * @param {Array<ColumnDefinition>} columns
  * @param {Function} callback
  */
-const launchColumnManager = function(columns, callback) {
+let launchColumnManagerFn = function(columns, callback) {
   var scopeOptions = {
     'columns': columns,
     'acceptCallback': callback
@@ -34,6 +39,24 @@ const launchColumnManager = function(columns, callback) {
 
   var template = `<${columnManagerUi} columns="columns" accept-callback="acceptCallback" ></${columnManagerUi}>`;
   create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+};
+
+/**
+ * Launches a column manager window with the given columns
+ *
+ * @param {Array<ColumnDefinition>} columns
+ * @param {Function} callback
+ */
+const launchColumnManager = function(columns, callback) {
+  launchColumnManagerFn(columns, callback);
+};
+
+/**
+ * Set the launchColumnManager function.
+ * @param {LaunchColumnManagerFn} fn The function.
+ */
+const setLaunchColumnManagerFn = (fn) => {
+  launchColumnManagerFn = fn;
 };
 
 /**
@@ -69,6 +92,8 @@ const launchColumnManagerWithShownCallback = function(columns, header, callback)
 };
 
 exports = {
+  LaunchColumnManagerFn,
   launchColumnManager,
-  launchColumnManagerWithShownCallback
+  launchColumnManagerWithShownCallback,
+  setLaunchColumnManagerFn
 };
