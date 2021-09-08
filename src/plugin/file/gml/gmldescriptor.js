@@ -1,5 +1,4 @@
 goog.module('plugin.file.gml.GMLDescriptor');
-goog.module.declareLegacyNamespace();
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const layer = goog.require('os.layer');

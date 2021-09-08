@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.KMLParser');
-goog.module.declareLegacyNamespace();
 
 const Uri = goog.require('goog.Uri');
 const asserts = goog.require('goog.asserts');

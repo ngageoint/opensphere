@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.ui.KMLExportUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.icon.IconPickerUI');
 

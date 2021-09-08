@@ -1,5 +1,4 @@
 goog.module('plugin.xyz.XYZPlugin');
-goog.module.declareLegacyNamespace();
 
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');

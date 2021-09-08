@@ -1,5 +1,4 @@
 goog.module('plugin.places.PlacesPlugin');
-goog.module.declareLegacyNamespace();
 
 // Register directives with Angular
 goog.require('plugin.places.ui.PlacesNodeUI');

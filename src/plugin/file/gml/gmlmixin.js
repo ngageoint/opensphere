@@ -1,11 +1,11 @@
 goog.module('plugin.file.gml.GMLMixin');
-goog.module.declareLegacyNamespace();
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const GMLBase = goog.require('ol.format.GMLBase');
 const {get: getProjection} = goog.require('ol.proj');
 
 const Projection = goog.requireType('ol.proj.Projection');
+
 
 /**
  * If the mixin has been initialized.

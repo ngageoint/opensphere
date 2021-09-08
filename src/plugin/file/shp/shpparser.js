@@ -1,5 +1,4 @@
 goog.module('plugin.file.shp.SHPParser');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');

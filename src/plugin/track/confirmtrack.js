@@ -1,5 +1,4 @@
 goog.module('plugin.track.ConfirmTrackUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const KMLField = goog.require('plugin.file.kml.KMLField');

@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.ui.OgcServerImportUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.singleUrlFormDirective');
 

@@ -1,5 +1,4 @@
 goog.module('plugin.xyz.XYZImportForm');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const {directive: xyzImportDirective} = goog.require('plugin.xyz.XYZImport');

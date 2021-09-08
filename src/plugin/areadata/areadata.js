@@ -1,5 +1,4 @@
 goog.module('plugin.areadata');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

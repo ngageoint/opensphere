@@ -1,5 +1,4 @@
 goog.module('plugin.storage.PersistPlugin');
-goog.module.declareLegacyNamespace();
 
 const browser = goog.require('goog.labs.userAgent.browser');
 const log = goog.require('goog.log');

@@ -1,5 +1,4 @@
 goog.module('plugin.places.PlacesHide');
-goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const TriState = goog.require('os.structs.TriState');

@@ -1,5 +1,4 @@
 goog.module('plugin.file.zip.ZIPPlugin');
-goog.module.declareLegacyNamespace();
 
 const zip = goog.require('os.file.mime.zip');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');

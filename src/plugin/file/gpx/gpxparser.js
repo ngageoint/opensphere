@@ -4,8 +4,6 @@
  */
 goog.module('plugin.file.gpx.GPXParser');
 
-goog.module.declareLegacyNamespace();
-
 const dom = goog.require('goog.dom');
 
 const Feature = goog.require('ol.Feature');

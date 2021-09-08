@@ -1,5 +1,4 @@
 goog.module('plugin.basemap.Group');
-goog.module.declareLegacyNamespace();
 
 const LayerGroup = goog.require('os.layer.Group');
 const basemap = goog.require('plugin.basemap');

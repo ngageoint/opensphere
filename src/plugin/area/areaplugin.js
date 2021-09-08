@@ -1,5 +1,4 @@
 goog.module('plugin.area.AreaPlugin');
-goog.module.declareLegacyNamespace();
 
 const csv = goog.require('os.file.mime.csv');
 const {getAreaImportManager, getAreaFileManager} = goog.require('os.query');

@@ -1,5 +1,4 @@
 goog.module('plugin.pelias.geocoder.Plugin');
-goog.module.declareLegacyNamespace();
 
 const settings = goog.require('os.config.Settings');
 const SearchManager = goog.require('os.search.SearchManager');

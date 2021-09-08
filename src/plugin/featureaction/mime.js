@@ -1,5 +1,4 @@
 goog.module('plugin.featureaction.mime');
-goog.module.declareLegacyNamespace();
 
 const mime = goog.require('os.file.mime');
 const xml = goog.require('os.file.mime.xml');

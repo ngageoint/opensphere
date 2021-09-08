@@ -1,5 +1,4 @@
 goog.module('plugin.area.CSVAreaImportUI');
-goog.module.declareLegacyNamespace();
 
 const AreaOptionsStep = goog.require('os.query.ui.AreaOptionsStep');
 const ConfigStep = goog.require('os.ui.file.ui.csv.ConfigStep');

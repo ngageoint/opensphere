@@ -1,5 +1,4 @@
 goog.module('plugin.file.shp.SHPProvider');
-goog.module.declareLegacyNamespace();
 
 const FileProvider = goog.require('os.data.FileProvider');
 

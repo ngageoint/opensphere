@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.ui.GeometryIcons');
-goog.module.declareLegacyNamespace();
 
 
 /**

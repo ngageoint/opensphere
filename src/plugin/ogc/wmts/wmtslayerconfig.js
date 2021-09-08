@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.wmts.WMTSLayerConfig');
-goog.module.declareLegacyNamespace();
 
 const olProj = goog.require('ol.proj');
 const WMTSSource = goog.require('ol.source.WMTS');

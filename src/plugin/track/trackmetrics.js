@@ -1,5 +1,4 @@
 goog.module('plugin.track.Metrics');
-goog.module.declareLegacyNamespace();
 
 const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');
 

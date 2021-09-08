@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.KMLPlugin');
-goog.module.declareLegacyNamespace();
 
 // Load to register directive with Angular.
 goog.require('plugin.file.kml.ui.PlacemarkEditUI');

@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.KMLFeatureParser');
-goog.module.declareLegacyNamespace();
 
 const KML = goog.require('ol.format.KML');
 const xml = goog.require('ol.xml');

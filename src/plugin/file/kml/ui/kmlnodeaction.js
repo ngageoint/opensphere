@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.ui.KMLNodeAction');
-goog.module.declareLegacyNamespace();
 
 
 /**

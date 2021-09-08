@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.model');
-goog.module.declareLegacyNamespace();
 
 const Point = goog.require('ol.geom.Point');
 const AltitudeMode = goog.require('os.webgl.AltitudeMode');

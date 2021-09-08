@@ -1,5 +1,4 @@
 goog.module('plugin.file.csv.CSVLayerConfig');
-goog.module.declareLegacyNamespace();
 
 const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
 const CSVParser = goog.require('plugin.file.csv.CSVParser');

@@ -1,5 +1,4 @@
 goog.module('plugin.places.ui.QuickAddPlacesUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.draw.DrawPickerUI');
 

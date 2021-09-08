@@ -1,5 +1,4 @@
 goog.module('plugin.file.shp.SHPLayerConfig');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const ResponseType = goog.require('goog.net.XhrIo.ResponseType');

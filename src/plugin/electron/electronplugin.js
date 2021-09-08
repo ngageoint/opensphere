@@ -1,5 +1,4 @@
 goog.module('plugin.electron.ElectronPlugin');
-goog.module.declareLegacyNamespace();
 
 goog.require('plugin.electron.ElectronMemoryConfigUI');
 

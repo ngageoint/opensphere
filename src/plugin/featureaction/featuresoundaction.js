@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.SoundAction');
-goog.module.declareLegacyNamespace();
 
 const AudioManager = goog.require('os.audio.AudioManager');
 

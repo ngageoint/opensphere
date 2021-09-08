@@ -1,5 +1,4 @@
 goog.module('plugin.track.Event');
-goog.module.declareLegacyNamespace();
 
 const googEventsEvent = goog.require('goog.events.Event');
 

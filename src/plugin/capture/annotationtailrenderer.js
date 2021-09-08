@@ -1,5 +1,4 @@
 goog.module('plugin.capture.AnnotationTailRenderer');
-goog.module.declareLegacyNamespace();
 
 const {getMapCanvas} = goog.require('os.capture');
 const SvgRenderer = goog.require('os.ui.capture.SvgRenderer');

@@ -1,5 +1,4 @@
 goog.module('plugin.file.gpx.GPXLayerConfig');
-goog.module.declareLegacyNamespace();
 
 const ResponseType = goog.require('goog.net.XhrIo.ResponseType');
 const userAgent = goog.require('goog.userAgent');

@@ -1,5 +1,4 @@
 goog.module('plugin.file.shp.data.DBFField');
-goog.module.declareLegacyNamespace();
 
 
 /**

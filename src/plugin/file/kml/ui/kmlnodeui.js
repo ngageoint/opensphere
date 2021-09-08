@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.ui.KMLNodeUI');
-goog.module.declareLegacyNamespace();
 
 const annotation = goog.require('os.annotation');
 

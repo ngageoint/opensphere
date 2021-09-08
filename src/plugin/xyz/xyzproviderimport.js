@@ -1,5 +1,4 @@
 goog.module('plugin.xyz.XYZImport');
-goog.module.declareLegacyNamespace();
 
 const {getRandomString, numerateCompare} = goog.require('goog.string');
 const ConfigProvider = goog.require('plugin.config.Provider');
@@ -16,6 +15,7 @@ const {directiveTag: uiDirectiveTag} = goog.require('plugin.xyz.XYZDescriptorNod
 const XYZProviderHelpUI = goog.require('plugin.xyz.XYZProviderHelpUI');
 
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+
 
 /**
  * The XYZ provider import directive

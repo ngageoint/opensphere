@@ -1,5 +1,4 @@
 goog.module('plugin.file.csv.CSVParserConfig');
-goog.module.declareLegacyNamespace();
 
 const CsvParserConfig = goog.require('os.parse.csv.CsvParserConfig');
 const osUiSlickColumn = goog.require('os.ui.slick.column');

@@ -1,5 +1,4 @@
 goog.module('plugin.descriptor.facet.SearchTerm');
-goog.module.declareLegacyNamespace();
 
 const SearchTermFacet = goog.require('os.search.SearchTermFacet');
 

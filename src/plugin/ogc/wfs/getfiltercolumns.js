@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.wfs.getFilterColumns');
-goog.module.declareLegacyNamespace();
 
 
 /**

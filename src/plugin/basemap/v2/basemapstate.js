@@ -1,5 +1,4 @@
 goog.module('plugin.basemap.v2.BaseMapState');
-goog.module.declareLegacyNamespace();
 
 const googDomXml = goog.require('goog.dom.xml');
 const log = goog.require('goog.log');

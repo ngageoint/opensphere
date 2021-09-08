@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.menu');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 

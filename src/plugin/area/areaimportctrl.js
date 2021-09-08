@@ -1,5 +1,4 @@
 goog.module('plugin.area.AreaImportCtrl');
-goog.module.declareLegacyNamespace();
 
 const RecordField = goog.require('os.data.RecordField');
 const AreaImportCtrl = goog.require('os.ui.query.AreaImportCtrl');

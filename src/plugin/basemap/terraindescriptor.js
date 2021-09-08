@@ -1,5 +1,4 @@
 goog.module('plugin.basemap.TerrainDescriptor');
-goog.module.declareLegacyNamespace();
 
 const DisplaySetting = goog.require('os.config.DisplaySetting');
 const Settings = goog.require('os.config.Settings');

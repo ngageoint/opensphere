@@ -1,5 +1,4 @@
 goog.module('plugin.places.ui.PlacesNodeUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const {Controller: DefaultLayerNodeUICtrl} = goog.require('os.ui.node.DefaultLayerNodeUI');

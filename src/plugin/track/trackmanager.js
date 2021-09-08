@@ -1,5 +1,4 @@
 goog.module('plugin.track.TrackManager');
-goog.module.declareLegacyNamespace();
 
 goog.require('plugin.track.ConfirmTrackUI');
 

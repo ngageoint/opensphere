@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.KMLLayer');
-goog.module.declareLegacyNamespace();
 
 const VectorLayer = goog.require('os.layer.Vector');
 const KMLLayerNode = goog.require('plugin.file.kml.ui.KMLLayerNode');

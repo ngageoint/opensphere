@@ -1,5 +1,4 @@
 goog.module('plugin.file.geojson.GeoJSONLayerConfig');
-goog.module.declareLegacyNamespace();
 
 const AltMapping = goog.require('os.im.mapping.AltMapping');
 const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');

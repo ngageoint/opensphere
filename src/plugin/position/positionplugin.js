@@ -1,5 +1,4 @@
 goog.module('plugin.position.PositionPlugin');
-goog.module.declareLegacyNamespace();
 
 const MapContainer = goog.require('os.MapContainer');
 const EventType = goog.require('os.action.EventType');

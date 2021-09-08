@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.KMLTreeExporter');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 

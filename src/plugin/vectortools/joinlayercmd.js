@@ -1,5 +1,4 @@
 goog.module('plugin.vectortools.JoinLayer');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const MapContainer = goog.require('os.MapContainer');

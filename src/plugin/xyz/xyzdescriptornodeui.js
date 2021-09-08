@@ -1,5 +1,4 @@
 goog.module('plugin.xyz.XYZDescriptorNodeUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const {Controller: DescriptorNodeUICtrl} = goog.require('os.ui.data.DescriptorNodeUI');

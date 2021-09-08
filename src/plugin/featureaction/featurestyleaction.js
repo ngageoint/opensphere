@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.StyleAction');
-goog.module.declareLegacyNamespace();
 
 const math = goog.require('goog.math');
 const osColor = goog.require('os.color');

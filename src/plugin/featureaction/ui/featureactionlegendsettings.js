@@ -1,8 +1,8 @@
 goog.module('plugin.im.action.feature.ui.legendSettingsDirective');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
+
 
 /**
  * The featureactionlegendsettings directive.

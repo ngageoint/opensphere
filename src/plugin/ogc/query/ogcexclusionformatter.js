@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.query.OGCExclusionFormatter');
-goog.module.declareLegacyNamespace();
 
 const interpolate = goog.require('os.interpolate');
 const OSOGCExclusionFormatter = goog.require('os.ogc.filter.OGCExclusionFormatter');

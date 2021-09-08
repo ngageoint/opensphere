@@ -1,5 +1,4 @@
 goog.module('plugin.vectortools.VectorToolsPlugin');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const MapContainer = goog.require('os.MapContainer');
@@ -26,6 +25,7 @@ const ITreeNode = goog.requireType('os.structs.ITreeNode');
 const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 const MenuItem = goog.requireType('os.ui.menu.MenuItem');
 const Options = goog.requireType('plugin.vectortools.Options');
+
 
 /**
  */

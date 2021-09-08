@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.ui.KMLImportUI');
-goog.module.declareLegacyNamespace();
 
 const DataManager = goog.require('os.data.DataManager');
 const FileDescriptor = goog.require('os.data.FileDescriptor');

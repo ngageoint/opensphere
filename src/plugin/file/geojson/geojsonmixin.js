@@ -1,5 +1,4 @@
 goog.module('plugin.file.geojson.mixin');
-goog.module.declareLegacyNamespace();
 
 const GeoJSON = goog.require('ol.format.GeoJSON');
 

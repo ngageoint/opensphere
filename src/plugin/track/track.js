@@ -1,5 +1,4 @@
 goog.module('plugin.track');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
@@ -20,6 +19,7 @@ const Promise = goog.requireType('goog.Promise');
 const OlFeature = goog.requireType('ol.Feature');
 const OlGeometry = goog.requireType('ol.geom.Geometry');
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+
 
 /**
  * Base logger for the track plugin.

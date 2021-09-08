@@ -1,5 +1,4 @@
 goog.module('plugin.places.ui.SavePlacesUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.im.BasicInfoUI');
 

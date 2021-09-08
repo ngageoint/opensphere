@@ -1,5 +1,4 @@
 goog.module('plugin.file.shp.ui.SHPExportUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');

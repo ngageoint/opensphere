@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.ui.KMLTourNode');
-goog.module.declareLegacyNamespace();
 
 const dispose = goog.require('goog.dispose');
 

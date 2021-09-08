@@ -1,5 +1,4 @@
 goog.module('plugin.area.GeoJSONAreaImportUI');
-goog.module.declareLegacyNamespace();
 
 const AreaOptionsStep = goog.require('os.query.ui.AreaOptionsStep');
 const FileImportUI = goog.require('os.ui.im.FileImportUI');

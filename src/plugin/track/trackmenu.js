@@ -1,5 +1,4 @@
 goog.module('plugin.track.menu');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const OLVectorLayer = goog.require('ol.layer.Vector');

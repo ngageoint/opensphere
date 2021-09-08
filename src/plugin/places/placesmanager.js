@@ -1,5 +1,4 @@
 goog.module('plugin.places.PlacesManager');
-goog.module.declareLegacyNamespace();
 
 const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');

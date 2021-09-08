@@ -3,7 +3,6 @@
  * @suppress {accessControls}
  */
 goog.module('plugin.file.kml.tour.parseTour');
-goog.module.declareLegacyNamespace();
 
 const KML = goog.require('ol.format.KML');
 const XSD = goog.require('ol.format.XSD');

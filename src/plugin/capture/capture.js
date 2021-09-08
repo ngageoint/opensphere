@@ -1,5 +1,4 @@
 goog.module('plugin.capture');
-goog.module.declareLegacyNamespace();
 
 const Timer = goog.require('goog.Timer');
 const googArray = goog.require('goog.array');
@@ -11,6 +10,7 @@ const {
 const TimelineController = goog.require('os.time.TimelineController');
 
 const ILayer = goog.requireType('os.layer.ILayer');
+
 
 /**
  * Default wait time to check if the map is ready, in milliseconds.

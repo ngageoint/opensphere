@@ -1,5 +1,4 @@
 goog.module('plugin.places.ui.PlacesButtonUI');
-goog.module.declareLegacyNamespace();
 
 const {Places: PlacesKeys} = goog.require('os.metrics.keys');
 const Module = goog.require('os.ui.Module');

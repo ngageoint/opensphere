@@ -1,5 +1,4 @@
 goog.module('plugin.file.shp.SHPDescriptor');
-goog.module.declareLegacyNamespace();
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const osFile = goog.require('os.file');

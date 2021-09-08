@@ -1,5 +1,4 @@
 goog.module('plugin.config.Provider');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const Settings = goog.require('os.config.Settings');

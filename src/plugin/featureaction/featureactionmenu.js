@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.menu');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const MapContainer = goog.require('os.MapContainer');

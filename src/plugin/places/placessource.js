@@ -1,5 +1,4 @@
 goog.module('plugin.places.PlacesSource');
-goog.module.declareLegacyNamespace();
 
 const osFeature = goog.require('os.feature');
 const interpolate = goog.require('os.interpolate');

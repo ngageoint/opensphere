@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.Plugin');
-goog.module.declareLegacyNamespace();
 
 const MapContainer = goog.require('os.MapContainer');
 const settings = goog.require('os.config.Settings');

@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.KMLImporter');
-goog.module.declareLegacyNamespace();
 
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');

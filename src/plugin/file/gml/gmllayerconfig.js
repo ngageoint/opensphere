@@ -1,5 +1,4 @@
 goog.module('plugin.file.gml.GMLLayerConfig');
-goog.module.declareLegacyNamespace();
 
 const AltMapping = goog.require('os.im.mapping.AltMapping');
 const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');

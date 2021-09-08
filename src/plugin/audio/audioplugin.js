@@ -1,5 +1,4 @@
 goog.module('plugin.audio.AudioPlugin');
-goog.module.declareLegacyNamespace();
 
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const AudioImportUI = goog.require('os.ui.im.AudioImportUI');

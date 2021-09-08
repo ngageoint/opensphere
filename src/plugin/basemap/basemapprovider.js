@@ -1,5 +1,4 @@
 goog.module('plugin.basemap.BaseMapProvider');
-goog.module.declareLegacyNamespace();
 
 const dispose = goog.require('goog.dispose');
 const dispatcher = goog.require('os.Dispatcher');

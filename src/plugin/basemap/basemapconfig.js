@@ -1,5 +1,4 @@
 goog.module('plugin.basemap.BaseMapConfig');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const googObject = goog.require('goog.object');

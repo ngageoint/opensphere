@@ -1,5 +1,4 @@
 goog.module('plugin.vectortools.MappingCounterUI');
-goog.module.declareLegacyNamespace();
 
 const EventType = goog.require('goog.events.EventType');
 const googObject = goog.require('goog.object');

@@ -1,5 +1,4 @@
 goog.module('plugin.file.zip.ZIPParser');
-goog.module.declareLegacyNamespace();
 
 const googEvents = goog.require('goog.events');
 

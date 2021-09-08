@@ -1,5 +1,4 @@
 goog.module('plugin.places');
-goog.module.declareLegacyNamespace();
 
 const {removeDuplicates} = goog.require('goog.array');
 const {getUid} = goog.require('ol');

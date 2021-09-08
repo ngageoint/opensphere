@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.JsonField');
-goog.module.declareLegacyNamespace();
 
 const annotation = goog.require('os.annotation');
 const RecordField = goog.require('os.data.RecordField');

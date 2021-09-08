@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.ui.KMLTourNodeUI');
-goog.module.declareLegacyNamespace();
 
 const ui = goog.require('os.ui');
 

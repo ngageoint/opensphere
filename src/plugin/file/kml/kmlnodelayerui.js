@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.KMLNodeLayerUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.UISwitchUI');
 goog.require('os.ui.layer.IconStyleControlsUI');

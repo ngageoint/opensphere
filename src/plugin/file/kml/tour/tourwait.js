@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.tour.Wait');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const AbstractTourPrimitive = goog.require('plugin.file.kml.tour.AbstractTourPrimitive');

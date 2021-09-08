@@ -1,5 +1,4 @@
 goog.module('plugin.file.csv.CSVDescriptor');
-goog.module.declareLegacyNamespace();
 
 const Settings = goog.require('os.config.Settings');
 const FileDescriptor = goog.require('os.data.FileDescriptor');

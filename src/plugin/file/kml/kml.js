@@ -3,7 +3,6 @@
  * @suppress {accessControls}
  */
 goog.module('plugin.file.kml');
-goog.module.declareLegacyNamespace();
 
 const Uri = goog.require('goog.Uri');
 

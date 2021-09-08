@@ -1,5 +1,4 @@
 goog.module('plugin.vectortools.Options');
-goog.module.declareLegacyNamespace();
 
 
 /**

@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.KMLField');
-goog.module.declareLegacyNamespace();
 
 
 /**

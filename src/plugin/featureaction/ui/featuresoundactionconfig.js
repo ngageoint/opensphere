@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.ui.SoundConfigUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.SpinnerUI');
 goog.require('os.ui.popover.PopoverUI');

@@ -1,5 +1,4 @@
 goog.module('plugin.file.shp.data.SHPHeader');
-goog.module.declareLegacyNamespace();
 
 const DBFHeader = goog.require('plugin.file.shp.data.DBFHeader');
 const SHXHeader = goog.require('plugin.file.shp.data.SHXHeader');

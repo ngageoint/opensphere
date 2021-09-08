@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.LabelAction');
-goog.module.declareLegacyNamespace();
 
 const osColor = goog.require('os.color');
 const FeatureEventType = goog.require('os.data.FeatureEventType');

@@ -1,5 +1,4 @@
 goog.module('plugin.file.csv.CSVPlugin');
-goog.module.declareLegacyNamespace();
 
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');

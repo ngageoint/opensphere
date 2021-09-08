@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.OGCLayerDescriptor');
-goog.module.declareLegacyNamespace();
 
 const QueryData = goog.require('goog.Uri.QueryData');
 const EventType = goog.require('goog.net.EventType');

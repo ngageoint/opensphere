@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.wfs.launchFilterManager');
-goog.module.declareLegacyNamespace();
 
 const {launchForLayer} = goog.require('os.ui.query.CombinatorUI');
 

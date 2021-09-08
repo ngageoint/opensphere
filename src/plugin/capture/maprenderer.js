@@ -1,5 +1,4 @@
 goog.module('plugin.capture.MapRenderer');
-goog.module.declareLegacyNamespace();
 
 const MapContainer = goog.require('os.MapContainer');
 const {getMapCanvas} = goog.require('os.capture');

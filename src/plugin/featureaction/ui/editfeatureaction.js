@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.ui.EditFeatureActionUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.filter.AdvancedFilterBuilderUI');
 goog.require('os.ui.filter.BasicFilterBuilderUI');

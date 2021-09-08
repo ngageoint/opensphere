@@ -1,5 +1,4 @@
 goog.module('plugin.openpage.Plugin');
-goog.module.declareLegacyNamespace();
 
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const Peer = goog.require('os.xt.Peer');

@@ -1,5 +1,4 @@
 goog.module('plugin.vectortile.VectorTilePlugin');
-goog.module.declareLegacyNamespace();
 
 const MapContainer = goog.require('os.MapContainer');
 const OLDoubleClick = goog.require('os.interaction.DoubleClick');

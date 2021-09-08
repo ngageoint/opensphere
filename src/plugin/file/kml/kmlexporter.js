@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.KMLExporter');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 

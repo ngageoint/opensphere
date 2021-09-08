@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.KMLSource');
-goog.module.declareLegacyNamespace();
 
 const Timer = goog.require('goog.Timer');
 const Delay = goog.require('goog.async.Delay');
