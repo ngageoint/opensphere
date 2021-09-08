@@ -1,9 +1,10 @@
 goog.declareModuleId('os.ui.file.ExportStatusUI');
 
+import {apply} from '../ui.js';
+
 const Module = goog.require('os.ui.Module');
 const OSEventType = goog.require('os.events.EventType');
 const ThreadEventType = goog.require('os.thread.EventType');
-const {apply} = goog.require('os.ui');
 const {close, create} = goog.require('os.ui.window');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 
@@ -25,8 +26,8 @@ export const directive = () => ({
   template: `<div class="modal-body d-flex flex-column flex-fill">
   Exporting {{ctrl.total}} Feature{{ctrl.total == 1 ? '' : 's'}}...
   <div class="progress">
-    <div class="progress-bar progress-bar-striped progress-bar-animated text-dark" role="progressbar" 
-    aria-valuenow="{{ctrl.completed}}" aria-valuemin="0" aria-valuemax="100" 
+    <div class="progress-bar progress-bar-striped progress-bar-animated text-dark" role="progressbar"
+    aria-valuenow="{{ctrl.completed}}" aria-valuemin="0" aria-valuemax="100"
     ng-style="{'width': ctrl.completed + '%'}">{{ctrl.completed.toFixed(0)}}%</div>
   </div></div>`,
   controller: Controller,
