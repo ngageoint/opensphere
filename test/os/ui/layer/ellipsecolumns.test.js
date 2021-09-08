@@ -1,4 +1,3 @@
-goog.require('os.im.mapping.RadiusMapping');
 goog.require('os.ui.layer.EllipseColumnsUI');
 
 describe('os.ui.layer.EllipseColumnsUI', function() {
@@ -24,7 +23,7 @@ describe('os.ui.layer.EllipseColumnsUI', function() {
   });
 
   it('Feature Toggle settings key is set', function() {
-    expect(os.ui.layer.EllipseColumnsUI.ALLOW_ELLIPSE_CONFIG).toBeDefined();
+    expect(EllipseColumnsUI.ALLOW_ELLIPSE_CONFIG).toBeDefined();
   });
 
   it('Create no mappings if form is not filled out', function() {
