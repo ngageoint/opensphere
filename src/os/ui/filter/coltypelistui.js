@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ColTypeListUI');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {apply} = goog.require('os.ui');

@@ -1,5 +1,4 @@
 goog.module('os.ui.PropertyInfoUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.slick.SlickGridUI');
 

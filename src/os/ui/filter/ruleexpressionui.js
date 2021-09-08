@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.RuleExpressionUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');

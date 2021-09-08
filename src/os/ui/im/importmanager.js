@@ -1,5 +1,4 @@
 goog.module('os.ui.im.ImportManager');
-goog.module.declareLegacyNamespace();
 
 const {defaultCompare, removeDuplicates} = goog.require('goog.array');
 const log = goog.require('goog.log');

@@ -1,8 +1,8 @@
 goog.module('os.ui.urlDragDropDirective');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const UrlDragDrop = goog.require('os.ui.UrlDragDrop');
+
 
 /**
  * Enables an element to be a drag-drop target for URLs and files. When a URL drop

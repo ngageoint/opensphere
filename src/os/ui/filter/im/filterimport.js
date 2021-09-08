@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.im.FilterImport');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.filter.im.FilterImportModelUI');
 goog.require('os.ui.layer.LayerPickerUI');

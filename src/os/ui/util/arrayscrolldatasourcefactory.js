@@ -1,5 +1,4 @@
 goog.module('os.ui.util.ArrayScrollDataSourceFactory');
-goog.module.declareLegacyNamespace();
 
 const AbstractService = goog.require('os.ui.AbstractService');
 const ArrayScrollDataSource = goog.require('os.ui.util.ArrayScrollDataSource');

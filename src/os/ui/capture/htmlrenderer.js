@@ -1,5 +1,4 @@
 goog.module('os.ui.capture.HtmlRenderer');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const {getMapCanvas} = goog.require('os.capture');

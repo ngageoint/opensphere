@@ -1,5 +1,4 @@
 goog.module('os.ui.util.AutoHeightUI');
-goog.module.declareLegacyNamespace();
 
 const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');

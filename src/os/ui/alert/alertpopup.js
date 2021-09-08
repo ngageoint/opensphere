@@ -1,5 +1,4 @@
 goog.module('os.ui.alert.AlertPopupUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.alert.alertLinkFilter');
 

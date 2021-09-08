@@ -1,5 +1,4 @@
 goog.module('os.ui.color.ColorPickerUI');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const {append, contains} = goog.require('goog.dom');

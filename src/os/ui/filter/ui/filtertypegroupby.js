@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ui.FilterTypeGroupBy');
-goog.module.declareLegacyNamespace();
 
 const {insert} = goog.require('goog.array');
 const {toTitleCase} = goog.require('goog.string');

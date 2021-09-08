@@ -1,5 +1,4 @@
 goog.module('os.ui.navTopDirective');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.util.PunyParentUI');
 

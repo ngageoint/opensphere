@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ui.FilterableDescriptorNodeUI');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {getFilterManager, getQueryManager} = goog.require('os.query.instance');

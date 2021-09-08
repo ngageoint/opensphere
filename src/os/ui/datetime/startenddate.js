@@ -1,5 +1,4 @@
 goog.module('os.ui.datetime.StartEndDateUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.datetime.DateTimeUI');
 
@@ -9,6 +8,7 @@ const {apply} = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 
 const Logger = goog.requireType('goog.log.Logger');
+
 
 /**
  * The start-end-date directive

@@ -1,5 +1,4 @@
 goog.module('os.ui.WindowEventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

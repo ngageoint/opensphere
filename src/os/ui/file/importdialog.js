@@ -1,5 +1,4 @@
 goog.module('os.ui.file.ImportDialogUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.popover.PopoverUI');
 

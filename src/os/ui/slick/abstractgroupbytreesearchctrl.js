@@ -1,5 +1,4 @@
 goog.module('os.ui.slick.AbstractGroupByTreeSearchCtrl');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');

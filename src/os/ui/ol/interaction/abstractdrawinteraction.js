@@ -1,5 +1,4 @@
 goog.module('os.ui.ol.interaction.AbstractDraw');
-goog.module.declareLegacyNamespace();
 
 const {getDocument} = goog.require('goog.dom');
 const BrowserEvent = goog.require('goog.events.BrowserEvent');

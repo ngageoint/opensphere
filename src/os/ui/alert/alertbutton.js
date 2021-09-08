@@ -1,5 +1,4 @@
 goog.module('os.ui.alert.AlertButtonUI');
-goog.module.declareLegacyNamespace();
 
 const MenuButtonCtrl = goog.require('os.ui.MenuButtonCtrl');
 const Module = goog.require('os.ui.Module');

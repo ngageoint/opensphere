@@ -1,5 +1,4 @@
 goog.module('os.ui.column.mapping.ColumnMappingNodeUI');
-goog.module.declareLegacyNamespace();
 
 const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
 const Module = goog.require('os.ui.Module');

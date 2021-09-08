@@ -1,5 +1,4 @@
 goog.module('os.ui.ogc.wms.IWMSLayer');
-goog.module.declareLegacyNamespace();
 
 /**
  * @interface

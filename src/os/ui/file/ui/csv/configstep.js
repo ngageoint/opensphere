@@ -1,5 +1,4 @@
 goog.module('os.ui.file.ui.csv.ConfigStep');
-goog.module.declareLegacyNamespace();
 
 const MappingManager = goog.require('os.im.mapping.MappingManager');
 const AbstractWizardStep = goog.require('os.ui.wiz.step.AbstractWizardStep');

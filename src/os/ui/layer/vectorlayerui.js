@@ -1,5 +1,4 @@
 goog.module('os.ui.layer.VectorLayerUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.UISwitchUI');
 goog.require('os.ui.layer.EllipseOptionsUI');

@@ -1,5 +1,4 @@
 goog.module('os.ui.timeline.Brush');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const Throttle = goog.require('goog.async.Throttle');

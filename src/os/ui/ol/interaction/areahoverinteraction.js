@@ -1,5 +1,4 @@
 goog.module('os.ui.ol.interaction.AreaHover');
-goog.module.declareLegacyNamespace();
 
 const ViewHint = goog.require('ol.ViewHint');
 const {pointerMove} = goog.require('ol.events.condition');

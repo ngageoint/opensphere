@@ -1,5 +1,4 @@
 goog.module('os.ui.ol.OLMap');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const EventTarget = goog.require('goog.events.EventTarget');

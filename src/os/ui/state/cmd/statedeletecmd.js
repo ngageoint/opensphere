@@ -1,10 +1,10 @@
 goog.module('os.ui.state.cmd.StateDelete');
-goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const {getStateManager} = goog.require('os.state.instance');
 
 const ICommand = goog.requireType('os.command.ICommand');
+
 
 /**
  * Commnad removes local states

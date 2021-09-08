@@ -1,5 +1,4 @@
 goog.module('os.ui.file.gml.GMLParser');
-goog.module.declareLegacyNamespace();
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');

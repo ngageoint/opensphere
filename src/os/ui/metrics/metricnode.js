@@ -1,5 +1,4 @@
 goog.module('os.ui.metrics.MetricNode');
-goog.module.declareLegacyNamespace();
 
 const {registerClass} = goog.require('os.classRegistry');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');

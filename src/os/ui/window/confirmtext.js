@@ -1,5 +1,4 @@
 goog.module('os.ui.window.ConfirmTextUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.util.ValidationMessageUI');
 

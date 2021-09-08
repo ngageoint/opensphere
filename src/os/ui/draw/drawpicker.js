@@ -1,5 +1,4 @@
 goog.module('os.ui.draw.DrawPickerUI');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const dispose = goog.require('goog.dispose');

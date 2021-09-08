@@ -1,5 +1,4 @@
 goog.module('os.ui.slick.LoadingNode');
-goog.module.declareLegacyNamespace();
 
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');

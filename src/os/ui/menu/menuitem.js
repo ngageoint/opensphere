@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.MenuItem');
-goog.module.declareLegacyNamespace();
 
 const {defaultCompare, removeIf} = goog.require('goog.array');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');

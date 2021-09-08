@@ -1,5 +1,4 @@
 goog.module('os.ui.timeline.BaseItem');
-goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const ITimelineItem = goog.require('os.ui.timeline.ITimelineItem'); // eslint-disable-line

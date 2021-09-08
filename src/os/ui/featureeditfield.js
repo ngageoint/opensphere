@@ -1,5 +1,4 @@
 goog.module('os.ui.FeatureEditField');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

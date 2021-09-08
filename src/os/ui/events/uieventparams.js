@@ -1,5 +1,4 @@
 goog.module('os.ui.events.UIEventParams');
-goog.module.declareLegacyNamespace();
 
 /**
  * Enum for keys used for {@code os.ui.events.UIEvent} params

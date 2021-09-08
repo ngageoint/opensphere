@@ -1,5 +1,4 @@
 goog.module('os.ui.onboarding.OnboardingUrlHandler');
-goog.module.declareLegacyNamespace();
 
 const Settings = goog.require('os.config.Settings');
 const AbstractUrlHandler = goog.require('os.url.AbstractUrlHandler');

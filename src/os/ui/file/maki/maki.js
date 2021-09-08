@@ -1,7 +1,7 @@
 goog.module('os.ui.file.maki');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
+
 
 /**
  * Path to KML icons.

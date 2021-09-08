@@ -1,7 +1,7 @@
 goog.module('os.ui.filter.ui.CopyFilterPickerModel');
-goog.module.declareLegacyNamespace();
 
 const ColumnMapping = goog.requireType('os.column.ColumnMapping');
+
 
 /**
  * @typedef {{

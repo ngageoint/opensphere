@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.op.NotLike');
-goog.module.declareLegacyNamespace();
 
 const IsLike = goog.require('os.ui.filter.op.IsLike');
 const Not = goog.require('os.ui.filter.op.Not');

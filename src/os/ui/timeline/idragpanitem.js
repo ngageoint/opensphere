@@ -1,5 +1,4 @@
 goog.module('os.ui.timeline.IDragPanItem');
-goog.module.declareLegacyNamespace();
 
 const ITimelineItem = goog.requireType('os.ui.timeline.ITimelineItem');
 

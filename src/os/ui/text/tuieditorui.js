@@ -1,5 +1,4 @@
 goog.module('os.ui.text.TuiEditorUI');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const Timer = goog.require('goog.Timer');

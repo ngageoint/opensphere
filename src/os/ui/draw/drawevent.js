@@ -1,10 +1,10 @@
 goog.module('os.ui.draw.DrawEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 
 const OLEventTarget = goog.requireType('ol.events.EventTarget');
 const Geometry = goog.requireType('ol.geom.Geometry');
+
 
 /**
  */

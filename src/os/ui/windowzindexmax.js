@@ -1,5 +1,4 @@
 goog.module('os.ui.windowZIndexMax');
-goog.module.declareLegacyNamespace();
 
 /**
  * The max z-index for windows

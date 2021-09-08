@@ -1,10 +1,10 @@
 goog.module('os.ui.feature.FeatureInfoTabManager');
-goog.module.declareLegacyNamespace();
 
 const DescriptionTabUI = goog.require('os.ui.feature.tab.DescriptionTabUI');
 const PropertiesTabUI = goog.require('os.ui.feature.tab.PropertiesTabUI');
 const descriptionEnableFunction = goog.require('os.ui.feature.tab.descriptionEnableFunction');
 const FeatureTab = goog.require('os.ui.tab.FeatureTab');
+
 
 /**
  * Tab manager for the feature info

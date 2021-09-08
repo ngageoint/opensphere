@@ -1,5 +1,4 @@
 goog.module('os.ui.column.mapping.ColumnMappingFormUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.column.mapping.ColumnModelTreeUI');
 
@@ -18,6 +17,7 @@ const osWindow = goog.require('os.ui.window');
 
 const IColumnMapping = goog.requireType('os.column.IColumnMapping');
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+
 
 /**
  * The columnmappingform directive

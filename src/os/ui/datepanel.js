@@ -1,5 +1,4 @@
 goog.module('os.ui.DatePanelUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.datetime.DateControlUI');
 goog.require('os.ui.popover.PopoverUI');

@@ -1,5 +1,4 @@
 goog.module('os.ui.SpinnerUI');
-goog.module.declareLegacyNamespace();
 
 const {clamp} = goog.require('goog.math');
 const {apply} = goog.require('os.ui');

@@ -1,5 +1,4 @@
 goog.module('os.ui.feature.FeatureInfoCellUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.location.SimpleLocationUI');
 

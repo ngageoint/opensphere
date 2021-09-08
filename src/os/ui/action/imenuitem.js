@@ -1,7 +1,7 @@
 goog.module('os.ui.action.IMenuItem');
-goog.module.declareLegacyNamespace();
 
 const MenuOptions = goog.requireType('os.ui.action.MenuOptions');
+
 
 /**
  * Represents an entry in a menu.

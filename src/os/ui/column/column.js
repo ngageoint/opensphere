@@ -1,9 +1,9 @@
 goog.module('os.ui.column');
-goog.module.declareLegacyNamespace();
 
 const {create} = goog.require('os.ui.window');
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 const {directiveTag: columnManagerUi} = goog.require('os.ui.column.ColumnManagerUI');
+
 
 /**
  * Launches a column manager window with the given columns

@@ -1,5 +1,4 @@
 goog.module('os.ui.formatter.DescriptionFormatter');
-goog.module.declareLegacyNamespace();
 
 const SlickDescriptionAsyncRenderer = goog.require('os.ui.SlickDescriptionAsyncRenderer');
 

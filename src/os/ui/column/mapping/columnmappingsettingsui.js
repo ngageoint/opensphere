@@ -1,5 +1,4 @@
 goog.module('os.ui.column.mapping.ColumnMappingSettingsUI');
-goog.module.declareLegacyNamespace();
 
 const {defaultCompare, insert} = goog.require('goog.array');
 const {ROOT} = goog.require('os');

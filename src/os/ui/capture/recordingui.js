@@ -1,5 +1,4 @@
 goog.module('os.ui.capture.RecordingUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.LoadingBarUI');
 

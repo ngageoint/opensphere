@@ -1,5 +1,4 @@
 goog.module('os.ui.SavedWindowUI');
-goog.module.declareLegacyNamespace();
 
 const settings = goog.require('os.config.Settings');
 const Module = goog.require('os.ui.Module');

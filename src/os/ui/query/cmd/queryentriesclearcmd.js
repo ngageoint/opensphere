@@ -1,5 +1,4 @@
 goog.module('os.ui.query.cmd.QueryEntriesClear');
-goog.module.declareLegacyNamespace();
 
 const QueryEntries = goog.require('os.ui.query.cmd.QueryEntries');
 

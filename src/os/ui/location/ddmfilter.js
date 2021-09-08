@@ -1,5 +1,4 @@
 goog.module('os.ui.location.ddmFilter');
-goog.module.declareLegacyNamespace();
 
 const {toDegreesDecimalMinutes} = goog.require('os.geo');
 const Module = goog.require('os.ui.Module');

@@ -1,5 +1,4 @@
 goog.module('os.ui.ex.ExportUI');
-goog.module.declareLegacyNamespace();
 
 const {getAppName} = goog.require('os.config');
 const {getExportFields} = goog.require('os.source');
@@ -11,6 +10,7 @@ const osWindow = goog.require('os.ui.window');
 
 const Feature = goog.requireType('ol.Feature');
 const VectorSource = goog.requireType('os.source.Vector');
+
 
 /**
  * The export directive

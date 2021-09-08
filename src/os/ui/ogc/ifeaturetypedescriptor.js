@@ -1,7 +1,7 @@
 goog.module('os.ui.ogc.IFeatureTypeDescriptor');
-goog.module.declareLegacyNamespace();
 
 const IFeatureType = goog.requireType('os.ogc.IFeatureType');
+
 
 /**
  * Interface for descriptors providing an `IFeatureType`.

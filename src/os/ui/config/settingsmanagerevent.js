@@ -1,9 +1,9 @@
 goog.module('os.ui.config.SettingsManagerEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 
 const SettingPlugin = goog.requireType('os.ui.config.SettingPlugin');
+
 
 /**
  */

@@ -1,11 +1,11 @@
 goog.module('os.ui.columnactions.launchColumnActionPrompt');
-goog.module.declareLegacyNamespace();
 
 const {buildString} = goog.require('goog.string');
 const {create} = goog.require('os.ui.window');
 
 const AbstractColumnAction = goog.requireType('os.ui.columnactions.AbstractColumnAction');
 const IColumnActionModel = goog.requireType('os.ui.columnactions.IColumnActionModel');
+
 
 /**
  * Launch a dialog prompting the user the file they're importing already exists and requesting action.

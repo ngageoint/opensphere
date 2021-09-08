@@ -1,5 +1,4 @@
 goog.module('os.ui.query.area.UserAreaUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.geo.PositionUI');
 goog.require('os.ui.util.ValidationMessageUI');

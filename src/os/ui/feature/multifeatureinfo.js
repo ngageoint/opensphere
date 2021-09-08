@@ -1,5 +1,4 @@
 goog.module('os.ui.feature.MultiFeatureInfoUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.location.SimpleLocationUI');
 
@@ -22,6 +21,7 @@ const {urlNewTabFormatter} = goog.require('os.ui.slick.formatter');
 
 const Feature = goog.requireType('ol.Feature');
 const VectorLayer = goog.requireType('os.layer.Vector');
+
 
 /**
  * The featureinfo directive

@@ -1,5 +1,4 @@
 goog.module('os.ui.layer.LayerPickerUI');
-goog.module.declareLegacyNamespace();
 
 const {caseInsensitiveContains} = goog.require('goog.string');
 const {ROOT} = goog.require('os');

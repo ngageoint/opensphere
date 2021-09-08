@@ -1,7 +1,7 @@
 goog.module('os.ui.events.ScrollEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
+
 
 /**
  * Event that carries a selector to tell a section to scroll.

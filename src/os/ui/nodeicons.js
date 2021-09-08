@@ -1,5 +1,4 @@
 goog.module('os.ui.NodeIconsUI');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const Module = goog.require('os.ui.Module');

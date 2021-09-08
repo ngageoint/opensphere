@@ -1,7 +1,7 @@
 goog.module('os.ui.timeline.DragPanEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
+
 
 /**
  */

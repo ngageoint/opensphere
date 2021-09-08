@@ -1,5 +1,4 @@
 goog.module('os.ui.capture.AbstractCapturePlugin');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const googArray = goog.require('goog.array');

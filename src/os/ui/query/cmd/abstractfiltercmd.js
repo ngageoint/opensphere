@@ -1,5 +1,4 @@
 goog.module('os.ui.query.cmd.AbstractFilter');
-goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const {getFilterManager, getQueryManager} = goog.require('os.query.instance');

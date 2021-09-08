@@ -1,5 +1,4 @@
 goog.module('os.ui.datetime.AnyDateUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.datetime.DateTimeUI');
 

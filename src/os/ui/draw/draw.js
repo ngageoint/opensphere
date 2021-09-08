@@ -1,5 +1,4 @@
 goog.module('os.ui.draw');
-goog.module.declareLegacyNamespace();
 
 const {getRandomString} = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');

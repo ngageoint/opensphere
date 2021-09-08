@@ -1,5 +1,4 @@
 goog.module('os.ui.layer.TileLayerUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.SliderUI');
 

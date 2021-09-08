@@ -1,5 +1,4 @@
 goog.module('os.ui.icons');
-goog.module.declareLegacyNamespace();
 
 const {encodeString} = goog.require('goog.crypt.hash32');
 const {changeColor, toHexString, toRgbArray} = goog.require('os.color');

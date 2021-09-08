@@ -1,5 +1,4 @@
 goog.module('os.ui.help');
-goog.module.declareLegacyNamespace();
 
 const dispatcher = goog.require('os.Dispatcher');
 const UIEvent = goog.require('os.ui.events.UIEvent');

@@ -1,5 +1,4 @@
 goog.module('os.ui.wiz.step.TimeStep');
-goog.module.declareLegacyNamespace();
 
 const TimeType = goog.require('os.im.mapping.TimeType');
 const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');

@@ -1,5 +1,4 @@
 goog.module('os.ui.notification.NotifyPulseUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 

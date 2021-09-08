@@ -1,5 +1,4 @@
 goog.module('os.ui.geo.RingOptionsUI');
-goog.module.declareLegacyNamespace();
 
 const {peek} = goog.require('goog.array');
 const {ROOT} = goog.require('os');

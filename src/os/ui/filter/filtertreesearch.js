@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.FilterTreeSearch');
-goog.module.declareLegacyNamespace();
 
 const {getFilterManager} = goog.require('os.query.instance');
 const FilterNode = goog.require('os.ui.filter.ui.FilterNode');

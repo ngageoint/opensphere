@@ -1,5 +1,4 @@
 goog.module('os.ui.hist.BarChartOptions');
-goog.module.declareLegacyNamespace();
 
 /**
  * @typedef {{

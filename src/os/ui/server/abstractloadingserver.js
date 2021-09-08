@@ -1,5 +1,4 @@
 goog.module('os.ui.server.AbstractLoadingServer');
-goog.module.declareLegacyNamespace();
 
 const {remove} = goog.require('ol.array');
 const {getAuth} = goog.require('os.auth');
@@ -11,6 +10,7 @@ const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const osImplements = goog.require('os.implements');
 const TriState = goog.require('os.structs.TriState');
 const BaseProvider = goog.require('os.ui.data.BaseProvider');
+
 
 /**
  * A base implementation of a server that loads stuff.

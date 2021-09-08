@@ -1,5 +1,4 @@
 goog.module('os.ui.feature.FeatureInfoEvent');
-goog.module.declareLegacyNamespace();
 
 /**
  * Events emitted by the feature info window.

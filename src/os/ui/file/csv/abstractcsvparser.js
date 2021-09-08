@@ -1,5 +1,4 @@
 goog.module('os.ui.file.csv.AbstractCsvParser');
-goog.module.declareLegacyNamespace();
 
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 const {getText} = goog.require('os.file.mime.text');

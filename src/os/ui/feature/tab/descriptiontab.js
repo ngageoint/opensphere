@@ -1,5 +1,4 @@
 goog.module('os.ui.feature.tab.DescriptionTabUI');
-goog.module.declareLegacyNamespace();
 
 const {findValue} = goog.require('goog.object');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');

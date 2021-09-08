@@ -1,5 +1,4 @@
 goog.module('os.ui.NavBarCtrl');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const GoogEvent = goog.require('goog.events.Event');

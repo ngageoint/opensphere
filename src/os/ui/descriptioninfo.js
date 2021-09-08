@@ -1,5 +1,4 @@
 goog.module('os.ui.DescriptionInfoUI');
-goog.module.declareLegacyNamespace();
 
 const {buildString, isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 const {ROOT} = goog.require('os');

@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.BasicFilterTreeUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const {directiveTag: expressionUi} = goog.require('os.ui.filter.ExpressionUI');

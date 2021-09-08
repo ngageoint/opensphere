@@ -1,5 +1,4 @@
 goog.module('os.ui.arc.IARCDescriptor');
-goog.module.declareLegacyNamespace();
 
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 const IServerDescriptor = goog.requireType('os.data.IServerDescriptor');

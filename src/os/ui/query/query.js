@@ -1,5 +1,4 @@
 goog.module('os.ui.query');
-goog.module.declareLegacyNamespace();
 
 const RenameMapping = goog.require('os.im.mapping.RenameMapping');
 const StaticMapping = goog.require('os.im.mapping.StaticMapping');

@@ -1,5 +1,4 @@
 goog.module('os.ui.timeline.ITimelineItem');
-goog.module.declareLegacyNamespace();
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const Listenable = goog.requireType('goog.events.Listenable');

@@ -1,5 +1,4 @@
 goog.module('os.ui.query.ComboNodeUI');
-goog.module.declareLegacyNamespace();
 
 const {getCount} = goog.require('goog.object');
 const DataManager = goog.require('os.data.DataManager');

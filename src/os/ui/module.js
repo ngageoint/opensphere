@@ -1,5 +1,4 @@
 goog.module('os.ui.Module');
-goog.module.declareLegacyNamespace();
 
 /**
  * Angular module "os.ui"

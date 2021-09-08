@@ -1,9 +1,9 @@
 goog.module('os.ui.WindowLauncherUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 
 const DescriptorNode = goog.requireType('os.ui.data.DescriptorNode');
+
 
 /**
  * Template used by the directive.

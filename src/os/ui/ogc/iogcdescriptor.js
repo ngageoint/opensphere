@@ -1,5 +1,4 @@
 goog.module('os.ui.ogc.IOGCDescriptor');
-goog.module.declareLegacyNamespace();
 
 const IWMSLayer = goog.require('os.ui.ogc.wms.IWMSLayer'); // eslint-disable-line
 
@@ -8,6 +7,7 @@ const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 const IServerDescriptor = goog.requireType('os.data.IServerDescriptor');
 const IFilterable = goog.requireType('os.filter.IFilterable');
 const IFeatureTypeDescriptor = goog.requireType('os.ui.ogc.IFeatureTypeDescriptor');
+
 
 /**
  * Interface for OGC data descriptors.

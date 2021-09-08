@@ -1,5 +1,4 @@
 goog.module('os.ui.datetime.AnyDateHelp');
-goog.module.declareLegacyNamespace();
 
 /**
  * @typedef {{

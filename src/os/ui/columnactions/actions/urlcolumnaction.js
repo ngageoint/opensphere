@@ -1,9 +1,9 @@
 goog.module('os.ui.columnactions.actions.UrlColumnAction');
-goog.module.declareLegacyNamespace();
 
 const {buildString} = goog.require('goog.string');
 const {open} = goog.require('goog.window');
 const AbstractColumnAction = goog.require('os.ui.columnactions.AbstractColumnAction');
+
 
 /**
  */

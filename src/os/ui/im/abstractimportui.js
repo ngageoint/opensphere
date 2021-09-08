@@ -1,5 +1,4 @@
 goog.module('os.ui.im.AbstractImportUI');
-goog.module.declareLegacyNamespace();
 
 const IImportUI = goog.require('os.ui.im.IImportUI'); // eslint-disable-line
 

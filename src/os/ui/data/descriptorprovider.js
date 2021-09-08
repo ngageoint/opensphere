@@ -1,5 +1,4 @@
 goog.module('os.ui.data.DescriptorProvider');
-goog.module.declareLegacyNamespace();
 
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const ActivateDescriptor = goog.require('os.data.ActivateDescriptor');

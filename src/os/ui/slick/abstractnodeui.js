@@ -1,5 +1,4 @@
 goog.module('os.ui.slick.AbstractNodeUICtrl');
-goog.module.declareLegacyNamespace();
 
 
 /**

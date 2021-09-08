@@ -1,5 +1,4 @@
 goog.module('os.ui.ActionMenuUI');
-goog.module.declareLegacyNamespace();
 
 const {binaryInsert, insertAt} = goog.require('goog.array');
 const {getViewportSize} = goog.require('goog.dom');

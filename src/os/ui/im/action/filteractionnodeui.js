@@ -1,5 +1,4 @@
 goog.module('os.ui.im.action.FilterActionNodeUI');
-goog.module.declareLegacyNamespace();
 
 const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
 const Metrics = goog.require('os.metrics.Metrics');

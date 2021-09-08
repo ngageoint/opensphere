@@ -1,5 +1,4 @@
 goog.module('os.ui.column.mapping.ColumnModelTreeUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const {directiveTag: mappingExpressionUi} = goog.require('os.ui.column.mapping.MappingExpressionUI');

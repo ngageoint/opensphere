@@ -1,5 +1,4 @@
 goog.module('os.ui.query.BaseCombinatorUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.query.AddFilterUI');
 goog.require('os.ui.slick.SlickTreeUI');

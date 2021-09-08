@@ -1,5 +1,4 @@
 goog.module('os.ui.AddDataButtonUI');
-goog.module.declareLegacyNamespace();
 
 const dispatcher = goog.require('os.Dispatcher');
 const {AddData} = goog.require('os.metrics.keys');

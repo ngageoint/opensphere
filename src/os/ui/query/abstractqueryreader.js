@@ -1,5 +1,4 @@
 goog.module('os.ui.query.AbstractQueryReader');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const {getRandomString} = goog.require('goog.string');

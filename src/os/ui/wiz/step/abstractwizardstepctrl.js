@@ -1,5 +1,4 @@
 goog.module('os.ui.wiz.step.AbstractWizardStepCtrl');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');

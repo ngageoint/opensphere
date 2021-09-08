@@ -1,5 +1,4 @@
 goog.module('os.ui.window.ConfirmColorUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.color.ColorPickerUI');
 

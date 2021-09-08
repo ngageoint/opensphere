@@ -1,5 +1,4 @@
 goog.module('os.ui.help.HelpUI');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const {isEmpty} = goog.require('goog.object');

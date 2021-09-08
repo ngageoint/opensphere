@@ -1,5 +1,4 @@
 goog.module('os.ui.help.supportMsg');
-goog.module.declareLegacyNamespace();
 
 const {escapeString} = goog.require('goog.string');
 const userAgent = goog.require('goog.userAgent');

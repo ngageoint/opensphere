@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ui.FilterNode');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');

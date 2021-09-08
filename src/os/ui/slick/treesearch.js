@@ -1,5 +1,4 @@
 goog.module('os.ui.slick.TreeSearch');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const {defaultCompare} = goog.require('goog.array');

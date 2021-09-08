@@ -1,5 +1,4 @@
 goog.module('os.ui.layer.EllipseOptionsUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const VectorLayerShowEllipsoids = goog.require('os.command.VectorLayerShowEllipsoids');

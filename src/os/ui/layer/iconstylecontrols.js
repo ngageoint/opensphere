@@ -1,5 +1,4 @@
 goog.module('os.ui.layer.IconStyleControlsUI');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const {ROOT} = goog.require('os');

@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ui.CopyFilterUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.filter.ui.CopyFilterPickerUI');
 

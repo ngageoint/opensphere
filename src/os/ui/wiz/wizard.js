@@ -1,5 +1,4 @@
 goog.module('os.ui.wiz.WizardUI');
-goog.module.declareLegacyNamespace();
 
 const {clamp} = goog.require('goog.math');
 const {ROOT} = goog.require('os');

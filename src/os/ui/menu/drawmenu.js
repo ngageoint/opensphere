@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.draw');
-goog.module.declareLegacyNamespace();
 
 const googDispose = goog.require('goog.dispose');
 const GoogEvent = goog.require('goog.events.Event');

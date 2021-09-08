@@ -1,5 +1,4 @@
 goog.module('os.ui.config.SettingsWindowUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.config.SettingDefaultUI');
 

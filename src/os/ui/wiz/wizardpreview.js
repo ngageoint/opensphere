@@ -1,5 +1,4 @@
 goog.module('os.ui.wiz.WizardPreviewUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.slick.SlickGridUI');
 goog.require('os.ui.slick.SlickHeaderButtonUI');

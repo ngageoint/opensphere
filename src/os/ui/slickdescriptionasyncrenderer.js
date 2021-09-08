@@ -1,5 +1,4 @@
 goog.module('os.ui.SlickDescriptionAsyncRenderer');
-goog.module.declareLegacyNamespace();
 
 const {inIframe} = goog.require('os');
 const {sanitizeId} = goog.require('os.ui');

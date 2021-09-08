@@ -1,5 +1,4 @@
 goog.module('os.ui.im.BasicInfoUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.util.ValidationMessageUI');
 

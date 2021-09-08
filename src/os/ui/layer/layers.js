@@ -1,5 +1,4 @@
 goog.module('os.ui.layer');
-goog.module.declareLegacyNamespace();
 
 const {instanceOf} = goog.require('os.classRegistry');
 const SourceClass = goog.require('os.source.SourceClass');

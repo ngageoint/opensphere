@@ -1,5 +1,4 @@
 goog.module('os.ui.state');
-goog.module.declareLegacyNamespace();
 
 /**
  * @type {string}

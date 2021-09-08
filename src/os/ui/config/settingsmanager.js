@@ -1,5 +1,4 @@
 goog.module('os.ui.config.SettingsManager');
-goog.module.declareLegacyNamespace();
 
 const {defaultCompare} = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');

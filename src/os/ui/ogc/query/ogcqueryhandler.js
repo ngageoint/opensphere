@@ -1,5 +1,4 @@
 goog.module('os.ui.ogc.query.OGCQueryHandler');
-goog.module.declareLegacyNamespace();
 
 const ParamModifier = goog.require('os.net.ParamModifier');
 const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');
@@ -7,6 +6,7 @@ const OGCExclusionFormatter = goog.require('os.ogc.filter.OGCExclusionFormatter'
 const OGCFilterFormatter = goog.require('os.ogc.filter.OGCFilterFormatter');
 const OGCSpatialFormatter = goog.require('os.ogc.filter.OGCSpatialFormatter');
 const QueryHandler = goog.require('os.ui.query.QueryHandler');
+
 
 /**
  */

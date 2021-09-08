@@ -1,7 +1,7 @@
 goog.module('os.ui.IconsSVG');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
+
 
 /**
  * Icon svg markup

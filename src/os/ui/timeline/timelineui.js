@@ -1,5 +1,4 @@
 goog.module('os.ui.timeline.TimelineUI');
-goog.module.declareLegacyNamespace();
 
 const Timer = goog.require('goog.Timer');
 const googArray = goog.require('goog.array');

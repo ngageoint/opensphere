@@ -1,5 +1,4 @@
 goog.module('os.ui.state.AbstractStateDescriptor');
-goog.module.declareLegacyNamespace();
 
 const {assertString} = goog.require('goog.asserts');
 const {loadXml} = goog.require('goog.dom.xml');

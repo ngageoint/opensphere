@@ -1,9 +1,9 @@
 goog.module('os.ui.help.Controls');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 
 const KeyCodes = goog.requireType('goog.events.KeyCodes');
+
 
 /**
  * Singleton for application to add controls

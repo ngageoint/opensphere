@@ -1,5 +1,4 @@
 goog.module('os.ui.query.ModifyAreaUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.util.ValidationMessageUI');
 

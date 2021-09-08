@@ -1,5 +1,4 @@
 goog.module('os.ui.FeatureListUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.SliderUI');
 goog.require('os.ui.SourceGridUI');

@@ -1,5 +1,4 @@
 goog.module('os.ui.wiz.step.AbstractWizardStep');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const IWizardStep = goog.require('os.ui.wiz.step.IWizardStep'); // eslint-disable-line

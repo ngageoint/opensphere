@@ -1,5 +1,4 @@
 goog.module('os.ui.window.GeoHelpUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');

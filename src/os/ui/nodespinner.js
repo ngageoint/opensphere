@@ -1,5 +1,4 @@
 goog.module('os.ui.NodeSpinnerUI');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {apply} = goog.require('os.ui');

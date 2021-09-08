@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ui.FilterGroupBy');
-goog.module.declareLegacyNamespace();
 
 const {insert} = goog.require('goog.array');
 const DataManager = goog.require('os.data.DataManager');

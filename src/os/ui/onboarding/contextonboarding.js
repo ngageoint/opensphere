@@ -1,5 +1,4 @@
 goog.module('os.ui.onboarding.ContextOnboardingUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const OnboardingManager = goog.require('os.ui.onboarding.OnboardingManager');

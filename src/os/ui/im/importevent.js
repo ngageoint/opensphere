@@ -1,5 +1,4 @@
 goog.module('os.ui.im.ImportEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const OSFile = goog.require('os.file.File');

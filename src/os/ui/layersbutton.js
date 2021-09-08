@@ -1,5 +1,4 @@
 goog.module('os.ui.LayersButtonUI');
-goog.module.declareLegacyNamespace();
 
 const {Map: MapKeys} = goog.require('os.metrics.keys');
 const Module = goog.require('os.ui.Module');

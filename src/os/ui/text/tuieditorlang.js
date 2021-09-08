@@ -1,5 +1,4 @@
 goog.module('os.ui.text.TuiEditorLang');
-goog.module.declareLegacyNamespace();
 
 /**
  * Since tui editor is lazy loaded, run after loading

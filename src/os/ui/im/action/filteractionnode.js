@@ -1,5 +1,4 @@
 goog.module('os.ui.im.action.FilterActionNode');
-goog.module.declareLegacyNamespace();
 
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const {ICON} = goog.require('os.im.action.default');

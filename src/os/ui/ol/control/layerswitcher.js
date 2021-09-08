@@ -1,5 +1,4 @@
 goog.module('os.ui.ol.control.LayerSwitcher');
-goog.module.declareLegacyNamespace();
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {setInnerHtml} = goog.require('goog.dom.safe');

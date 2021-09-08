@@ -1,8 +1,8 @@
 goog.module('os.ui.time.timeDirective');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
+
 
 /**
  * The time directive

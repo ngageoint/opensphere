@@ -1,5 +1,4 @@
 goog.module('os.ui.im.action.FilterActionExportUI');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const {ROOT} = goog.require('os');

@@ -1,5 +1,4 @@
 goog.module('os.ui.query.area.ChooseAreaUI');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');

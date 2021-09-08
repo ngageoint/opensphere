@@ -1,9 +1,9 @@
 goog.module('os.ui.im.action.FilterActionImportUI');
-goog.module.declareLegacyNamespace();
 
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const FilterImportUI = goog.require('os.ui.filter.im.FilterImportUI');
 const {directiveTag: importUi} = goog.require('os.ui.im.action.FilterActionImport');
+
 
 /**
  * Filter action import UI.

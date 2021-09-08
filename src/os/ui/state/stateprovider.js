@@ -1,9 +1,9 @@
 goog.module('os.ui.state.StateProvider');
-goog.module.declareLegacyNamespace();
 
 const {getAppName} = goog.require('os.config');
 const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
 const AbstractStateDescriptor = goog.require('os.ui.state.AbstractStateDescriptor');
+
 
 /**
  * State file provider

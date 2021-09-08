@@ -1,5 +1,4 @@
 goog.module('os.ui.hist');
-goog.module.declareLegacyNamespace();
 
 const LineChart = goog.require('os.ui.hist.LineChart');
 const StackedBarChart = goog.require('os.ui.hist.StackedBarChart');

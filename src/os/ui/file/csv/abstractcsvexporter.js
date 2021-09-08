@@ -1,5 +1,4 @@
 goog.module('os.ui.file.csv.AbstractCSVExporter');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const AbstractExporter = goog.require('os.ex.AbstractExporter');

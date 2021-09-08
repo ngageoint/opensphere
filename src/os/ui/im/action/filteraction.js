@@ -1,5 +1,4 @@
 goog.module('os.im.action.filter');
-goog.module.declareLegacyNamespace();
 
 const olArray = goog.require('ol.array');
 const CommandProcessor = goog.require('os.command.CommandProcessor');

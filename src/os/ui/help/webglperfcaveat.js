@@ -1,5 +1,4 @@
 goog.module('os.ui.help.WebGLPerfCaveatUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const {getAppName, getSupportContact} = goog.require('os.config');

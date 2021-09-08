@@ -1,5 +1,4 @@
 goog.module('os.ui.ol.interaction.MouseWheelZoom');
-goog.module.declareLegacyNamespace();
 
 const OLMouseWheelZoom = goog.require('ol.interaction.MouseWheelZoom');
 

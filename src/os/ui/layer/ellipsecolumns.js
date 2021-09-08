@@ -1,5 +1,4 @@
 goog.module('os.ui.layer.EllipseColumnsUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.layer.ColumnSuggestionSelect');
 

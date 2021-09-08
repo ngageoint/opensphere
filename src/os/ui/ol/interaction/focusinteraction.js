@@ -1,5 +1,4 @@
 goog.module('os.ui.ol.interaction.FocusInteraction');
-goog.module.declareLegacyNamespace();
 
 const Interaction = goog.require('ol.interaction.Interaction');
 const {getAreaManager} = goog.require('os.query.instance');

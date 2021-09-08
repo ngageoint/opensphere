@@ -1,5 +1,4 @@
 goog.module('os.ui.window');
-goog.module.declareLegacyNamespace();
 
 const {bucket} = goog.require('goog.array');
 const {apply} = goog.require('os.ui');

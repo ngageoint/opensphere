@@ -1,5 +1,4 @@
 goog.module('os.ui.metrics.MetricsContainerUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.metrics.MetricDetailsUI');
 

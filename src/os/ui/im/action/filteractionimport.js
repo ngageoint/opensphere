@@ -1,5 +1,4 @@
 goog.module('os.ui.im.action.FilterActionImport');
-goog.module.declareLegacyNamespace();
 
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const SequenceCommand = goog.require('os.command.SequenceCommand');

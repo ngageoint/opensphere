@@ -1,5 +1,4 @@
 goog.module('os.ui.util.ResetSettings');
-goog.module.declareLegacyNamespace();
 
 const osConfig = goog.require('os.config');
 const {getSettings} = goog.require('os.config.instance');

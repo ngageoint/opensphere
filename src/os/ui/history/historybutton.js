@@ -1,5 +1,4 @@
 goog.module('os.ui.history.HistoryButtonUI');
-goog.module.declareLegacyNamespace();
 
 const MenuButtonCtrl = goog.require('os.ui.MenuButtonCtrl');
 const Module = goog.require('os.ui.Module');

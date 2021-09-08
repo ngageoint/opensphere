@@ -1,5 +1,4 @@
 goog.module('os.ui.layer.LabelControlsEventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

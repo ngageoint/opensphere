@@ -1,5 +1,4 @@
 goog.module('os.ui.ChecklistUI');
-goog.module.declareLegacyNamespace();
 
 const {defaultCompare} = goog.require('goog.array');
 const {getDocument} = goog.require('goog.dom');

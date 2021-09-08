@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.BasicFilterBuilderUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.filter.BasicFilterTreeUI');
 

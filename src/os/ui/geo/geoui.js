@@ -1,5 +1,4 @@
 goog.module('os.ui.geo.GeoUI');
-goog.module.declareLegacyNamespace();
 
 const {parseLatLon} = goog.require('os.geo');
 const Module = goog.require('os.ui.Module');

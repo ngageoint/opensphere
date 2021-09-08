@@ -1,5 +1,4 @@
 goog.module('os.ui.FilterLayerGroupBy');
-goog.module.declareLegacyNamespace();
 
 const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
 const {getFilterManager} = goog.require('os.query.instance');

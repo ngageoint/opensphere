@@ -1,5 +1,4 @@
 goog.module('os.ui.ILayerUIProvider');
-goog.module.declareLegacyNamespace();
 
 /**
  * An interface for layer ui

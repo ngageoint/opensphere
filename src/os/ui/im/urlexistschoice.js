@@ -1,5 +1,4 @@
 goog.module('os.ui.im.URLExistsChoice');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

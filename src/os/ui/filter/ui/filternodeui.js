@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ui.FilterNodeUI');
-goog.module.declareLegacyNamespace();
 
 const {getCount} = goog.require('goog.object');
 const CommandProcessor = goog.require('os.command.CommandProcessor');

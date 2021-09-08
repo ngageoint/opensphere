@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.unit');
-goog.module.declareLegacyNamespace();
 
 const googDispose = goog.require('goog.dispose');
 const {Map: MapKeys} = goog.require('os.metrics.keys');

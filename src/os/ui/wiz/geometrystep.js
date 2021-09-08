@@ -1,5 +1,4 @@
 goog.module('os.ui.wiz.GeometryStep');
-goog.module.declareLegacyNamespace();
 
 const {DEFAULT_ALT_UNIT} = goog.require('os.fields');
 const AltMapping = goog.require('os.im.mapping.AltMapping');

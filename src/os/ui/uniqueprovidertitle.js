@@ -1,5 +1,4 @@
 goog.module('os.ui.uniqueProviderTitle');
-goog.module.declareLegacyNamespace();
 
 const DataManager = goog.require('os.data.DataManager');
 const Module = goog.require('os.ui.Module');

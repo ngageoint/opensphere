@@ -1,5 +1,4 @@
 goog.module('os.ui.im.DuplicateAlwaysReimportProcess');
-goog.module.declareLegacyNamespace();
 
 const ImportProcess = goog.require('os.ui.im.ImportProcess');
 

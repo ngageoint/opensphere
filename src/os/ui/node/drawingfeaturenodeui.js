@@ -1,5 +1,4 @@
 goog.module('os.ui.node.DrawingFeatureNodeUI');
-goog.module.declareLegacyNamespace();
 
 const {getMapContainer} = goog.require('os.map.instance');
 const Module = goog.require('os.ui.Module');

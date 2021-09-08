@@ -1,5 +1,4 @@
 goog.module('os.ui.file.method.UrlMethod');
-goog.module.declareLegacyNamespace();
 
 const dispose = goog.require('goog.dispose');
 const EventTarget = goog.require('goog.events.EventTarget');

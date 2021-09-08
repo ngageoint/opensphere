@@ -1,5 +1,4 @@
 goog.module('os.ui.DockedWindowUI');
-goog.module.declareLegacyNamespace();
 
 const OsModule = goog.require('os.ui.Module');
 const {
@@ -7,6 +6,7 @@ const {
   directive: savedWindowDirective} = goog.require('os.ui.SavedWindowUI');
 const {ROOT} = goog.require('os');
 const windowSelector = goog.require('os.ui.windowSelector');
+
 
 const DOCKED_WINDOW_ATTR = 'dock';
 const DOCKED_WINDOW_BOTTOM_SELECTOR = '#js-dock-bottom__container';

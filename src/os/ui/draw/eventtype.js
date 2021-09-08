@@ -1,5 +1,4 @@
 goog.module('os.ui.draw.EventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * This enumerates the drawing event type constants.

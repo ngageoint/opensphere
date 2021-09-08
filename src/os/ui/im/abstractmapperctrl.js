@@ -1,5 +1,4 @@
 goog.module('os.ui.im.AbstractMapperCtrl');
-goog.module.declareLegacyNamespace();
 
 const {bucket} = goog.require('goog.array');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');

@@ -1,5 +1,4 @@
 goog.module('os.ui.timeline.TimelineScaleOptions');
-goog.module.declareLegacyNamespace();
 
 /**
  * @typedef {{

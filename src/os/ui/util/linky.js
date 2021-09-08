@@ -1,8 +1,8 @@
 goog.module('os.ui.util.LinkyFilter');
-goog.module.declareLegacyNamespace();
 
 const {linkify} = goog.require('os.string');
 const Module = goog.require('os.ui.Module');
+
 
 /**
  * Copy of the Angular 'linky' filter.  Uses a better RegExp for linkifying (works with parentheses).  Does not

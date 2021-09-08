@@ -1,5 +1,4 @@
 goog.module('os.ui.windowSelector');
-goog.module.declareLegacyNamespace();
 
 /**
  * Selectors for window compontents

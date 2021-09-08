@@ -1,5 +1,4 @@
 goog.module('os.ui.ogc.wms.AbstractWMSLayerParser');
-goog.module.declareLegacyNamespace();
 
 const {getValueByKeys} = goog.require('goog.object');
 const {sanitize} = goog.require('os.ui');

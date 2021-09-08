@@ -1,5 +1,4 @@
 goog.module('os.ui.slick.ColumnEventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

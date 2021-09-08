@@ -1,5 +1,4 @@
 goog.module('os.ui.data.AddDataCtrl');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.bindDirectiveDirective');
 

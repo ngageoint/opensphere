@@ -1,5 +1,4 @@
 goog.module('os.ui.state.AbstractStateFormCtrl');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.state.stateTitleDirective');
 

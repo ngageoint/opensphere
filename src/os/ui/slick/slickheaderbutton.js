@@ -1,5 +1,4 @@
 goog.module('os.ui.slick.SlickHeaderButtonUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const {Controller: SlickGridCtrl, directive: slickGridDirective} = goog.require('os.ui.slick.SlickGridUI');

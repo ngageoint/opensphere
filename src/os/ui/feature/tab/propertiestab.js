@@ -1,5 +1,4 @@
 goog.module('os.ui.feature.tab.PropertiesTabUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.feature.FeatureInfoCellUI');
 
@@ -20,6 +19,7 @@ const AbstractFeatureTabCtrl = goog.require('os.ui.feature.tab.AbstractFeatureTa
 const Feature = goog.requireType('ol.Feature');
 const RenderFeature = goog.requireType('ol.render.Feature');
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+
 
 /**
  * The PropertiesTabDirective

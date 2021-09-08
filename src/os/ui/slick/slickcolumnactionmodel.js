@@ -1,5 +1,4 @@
 goog.module('os.ui.slick.SlickColumnActionModel');
-goog.module.declareLegacyNamespace();
 
 const IColumnActionModel = goog.requireType('os.ui.columnactions.IColumnActionModel');
 

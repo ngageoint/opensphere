@@ -1,5 +1,4 @@
 goog.module('os.ui.popover.PopoverUI');
-goog.module.declareLegacyNamespace();
 
 const {truncate} = goog.require('goog.string');
 const {apply} = goog.require('os.ui');

@@ -1,8 +1,8 @@
 goog.module('os.ui.state.stateTitleDirective');
-goog.module.declareLegacyNamespace();
 
 const {getStateManager} = goog.require('os.state.instance');
 const Module = goog.require('os.ui.Module');
+
 
 /**
  * The statetitle directive, for validating state titles.

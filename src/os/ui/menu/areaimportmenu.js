@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.areaImport');
-goog.module.declareLegacyNamespace();
 
 const googDispose = goog.require('goog.dispose');
 const osQuery = goog.require('os.query');

@@ -1,5 +1,4 @@
 goog.module('os.ui.timeline.AbstractTimelineCtrl');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.SliderUI');
 

@@ -1,5 +1,4 @@
 goog.module('os.ui.state.StateImportUI');
-goog.module.declareLegacyNamespace();
 
 const {loadXml} = goog.require('goog.dom.xml');
 const StateParserConfig = goog.require('os.parse.StateParserConfig');

@@ -1,5 +1,4 @@
 goog.module('os.ui.data.AddColumnUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const FeatureEventType = goog.require('os.data.FeatureEventType');

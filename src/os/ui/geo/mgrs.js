@@ -1,7 +1,7 @@
 goog.module('os.ui.geo.mgrs');
-goog.module.declareLegacyNamespace();
 
 const {MGRS_REGEXP} = goog.require('os.geo');
+
 
 /**
  * @param {string} text

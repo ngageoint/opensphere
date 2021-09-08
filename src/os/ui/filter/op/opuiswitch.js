@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.op.OPUISwitchUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const {Controller: UISwitchCtrl, directive: uiSwitchDirective} = goog.require('os.ui.UISwitchUI');

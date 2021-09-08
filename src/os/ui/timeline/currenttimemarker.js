@@ -1,5 +1,4 @@
 goog.module('os.ui.timeline.CurrentTimeMarker');
-goog.module.declareLegacyNamespace();
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');

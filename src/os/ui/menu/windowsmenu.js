@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.windows');
-goog.module.declareLegacyNamespace();
 
 const googDispose = goog.require('goog.dispose');
 const SettingsManager = goog.require('os.ui.config.SettingsManager');

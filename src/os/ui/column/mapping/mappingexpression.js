@@ -1,5 +1,4 @@
 goog.module('os.ui.column.mapping.MappingExpressionUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.layer.LayerPickerUI');
 

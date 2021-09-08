@@ -1,5 +1,4 @@
 goog.module('os.ui.im.FileImportUI');
-goog.module.declareLegacyNamespace();
 
 const {getTypeChain} = goog.require('os.file.mime');
 const {TYPE} = goog.require('os.file.mime.text');

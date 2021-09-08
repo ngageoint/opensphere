@@ -1,5 +1,4 @@
 goog.module('os.ui.ol.interaction.DrawPolygon');
-goog.module.declareLegacyNamespace();
 
 const dispose = goog.require('goog.dispose');
 const {getDocument} = goog.require('goog.dom');

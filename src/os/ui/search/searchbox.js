@@ -1,5 +1,4 @@
 goog.module('os.ui.search.SearchBoxUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.dragDropDirective');
 

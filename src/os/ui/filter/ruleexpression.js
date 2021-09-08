@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.RuleExpression');
-goog.module.declareLegacyNamespace();
 
 const Expression = goog.require('os.ui.filter.Expression');
 const Rule = goog.require('os.ui.filter.op.Rule');

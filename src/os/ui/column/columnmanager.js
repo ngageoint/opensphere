@@ -1,5 +1,4 @@
 goog.module('os.ui.column.ColumnManagerUI');
-goog.module.declareLegacyNamespace();
 
 const {moveItem} = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');

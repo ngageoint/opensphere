@@ -1,5 +1,4 @@
 goog.module('os.ui.AbstractService');
-goog.module.declareLegacyNamespace();
 
 const {isValid} = goog.require('goog.json');
 const log = goog.require('goog.log');

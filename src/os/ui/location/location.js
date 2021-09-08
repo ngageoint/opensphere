@@ -1,5 +1,4 @@
 goog.module('os.ui.location');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.location.ddmFilter');
 goog.require('os.ui.location.degFilter');

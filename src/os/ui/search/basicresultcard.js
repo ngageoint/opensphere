@@ -1,5 +1,4 @@
 goog.module('os.ui.search.BasicResultCardUI');
-goog.module.declareLegacyNamespace();
 
 const Settings = goog.require('os.config.Settings');
 const Module = goog.require('os.ui.Module');

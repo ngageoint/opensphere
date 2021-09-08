@@ -1,5 +1,4 @@
 goog.module('os.ui.buffer.BufferFormUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.im.BasicInfoUI');
 

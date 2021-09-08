@@ -1,5 +1,4 @@
 goog.module('os.ui.help.ControlsUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.help.ControlBlockUI');
 

@@ -1,5 +1,4 @@
 goog.module('os.ui.onboarding.OnboardingUI');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const EventType = goog.require('os.ui.EventType');

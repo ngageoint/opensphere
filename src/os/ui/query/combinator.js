@@ -1,5 +1,4 @@
 goog.module('os.ui.query.CombinatorUI');
-goog.module.declareLegacyNamespace();
 
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const SequenceCommand = goog.require('os.command.SequenceCommand');

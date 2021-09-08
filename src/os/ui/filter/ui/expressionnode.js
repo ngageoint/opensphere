@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ui.ExpressionNode');
-goog.module.declareLegacyNamespace();
 
 const RecordField = goog.require('os.data.RecordField');
 const {humanize} = goog.require('os.time');

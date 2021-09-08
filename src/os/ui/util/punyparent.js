@@ -1,5 +1,4 @@
 goog.module('os.ui.util.PunyParentUI');
-goog.module.declareLegacyNamespace();
 
 const Throttle = goog.require('goog.Throttle');
 const Delay = goog.require('goog.async.Delay');

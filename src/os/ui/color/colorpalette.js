@@ -1,5 +1,4 @@
 goog.module('os.ui.color.ColorPaletteUI');
-goog.module.declareLegacyNamespace();
 
 const {getViewportSize} = goog.require('goog.dom');
 const ColorPicker = goog.require('goog.ui.ColorPicker');

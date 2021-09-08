@@ -1,5 +1,4 @@
 goog.module('os.ui.StateButtonUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');

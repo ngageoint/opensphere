@@ -1,5 +1,4 @@
 goog.module('os.ui.LoadingBarUI');
-goog.module.declareLegacyNamespace();
 
 const {getElementByClass} = goog.require('goog.dom');
 const {isNumeric, toNumber} = goog.require('goog.string');

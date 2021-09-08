@@ -1,5 +1,4 @@
 goog.module('os.ui.query.cmd.FilterRemove');
-goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const AbstractFilter = goog.require('os.ui.query.cmd.AbstractFilter');

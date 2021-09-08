@@ -1,5 +1,4 @@
 goog.module('os.ui.MultiUrlProviderImportCtrl');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.uniqueServerUrl');
 

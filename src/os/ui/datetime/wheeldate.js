@@ -1,5 +1,4 @@
 goog.module('os.ui.datetime.WheelDateUI');
-goog.module.declareLegacyNamespace();
 
 const Delay = goog.require('goog.async.Delay');
 const googEvents = goog.require('goog.events');

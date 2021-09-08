@@ -1,5 +1,4 @@
 goog.module('os.ui.ol.interaction.DragBox');
-goog.module.declareLegacyNamespace();
 
 const Polygon = goog.require('ol.geom.Polygon');
 const {toLonLat} = goog.require('ol.proj');

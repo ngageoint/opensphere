@@ -1,5 +1,4 @@
 goog.module('os.ui.query.AreaTreeSearch');
-goog.module.declareLegacyNamespace();
 
 const AreaNode = goog.require('os.ui.query.AreaNode');
 const AbstractGroupByTreeSearch = goog.require('os.ui.slick.AbstractGroupByTreeSearch');

@@ -1,5 +1,4 @@
 goog.module('os.ui.column.mapping.ColumnMappingImportUI');
-goog.module.declareLegacyNamespace();
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml, serialize} = goog.require('goog.dom.xml');

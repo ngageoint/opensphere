@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.FilterEventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

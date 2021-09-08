@@ -1,5 +1,4 @@
 goog.module('os.ui.location.mgrsFilter');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const Format = goog.require('os.ui.location.Format');

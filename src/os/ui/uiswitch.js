@@ -1,5 +1,4 @@
 goog.module('os.ui.UISwitchUI');
-goog.module.declareLegacyNamespace();
 
 const Delay = goog.require('goog.async.Delay');
 const log = goog.require('goog.log');

@@ -1,5 +1,4 @@
 goog.module('os.ui.SliderUI');
-goog.module.declareLegacyNamespace();
 
 const {apply} = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');

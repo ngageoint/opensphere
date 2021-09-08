@@ -1,8 +1,8 @@
 goog.module('os.ui.action.MenuItemSeparator');
-goog.module.declareLegacyNamespace();
 
 const MenuItem = goog.require('os.ui.action.MenuItem');
 const IMenuItem = goog.requireType('os.ui.action.IMenuItem');
+
 
 /**
  * Represents a menu divider.

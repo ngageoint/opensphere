@@ -1,5 +1,4 @@
 goog.module('os.ui.slick.asyncrenderer.slickColActAsyncRenderer');
-goog.module.declareLegacyNamespace();
 
 const ColumnActionManager = goog.require('os.ui.columnactions.ColumnActionManager');
 const launchColumnActionPrompt = goog.require('os.ui.columnactions.launchColumnActionPrompt');

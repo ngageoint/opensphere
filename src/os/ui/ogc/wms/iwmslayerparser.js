@@ -1,7 +1,7 @@
 goog.module('os.ui.ogc.wms.IWMSLayerParser');
-goog.module.declareLegacyNamespace();
 
 const IWMSLayer = goog.requireType('os.ui.ogc.wms.IWMSLayer');
+
 
 /**
  * @interface

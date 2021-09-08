@@ -1,10 +1,10 @@
 goog.module('os.ui.feature.tab.AbstractFeatureTabCtrl');
-goog.module.declareLegacyNamespace();
 
 const Feature = goog.require('ol.Feature');
 const RenderFeature = goog.require('ol.render.Feature');
 const {apply} = goog.require('os.ui');
 const FeatureInfoEvent = goog.require('os.ui.feature.FeatureInfoEvent');
+
 
 /**
  * Abstract controller for feature tabs.

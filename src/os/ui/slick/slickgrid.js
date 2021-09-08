@@ -1,5 +1,4 @@
 goog.module('os.ui.slick.SlickGridUI');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const Timer = goog.require('goog.Timer');

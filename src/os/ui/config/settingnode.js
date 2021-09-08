@@ -1,5 +1,4 @@
 goog.module('os.ui.config.SettingNode');
-goog.module.declareLegacyNamespace();
 
 const TriState = goog.require('os.structs.TriState');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');

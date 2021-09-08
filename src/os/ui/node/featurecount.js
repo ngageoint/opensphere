@@ -1,5 +1,4 @@
 goog.module('os.ui.node.FeatureCountUI');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {listen, unlisten} = goog.require('ol.events');

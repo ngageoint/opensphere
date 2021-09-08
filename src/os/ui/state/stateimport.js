@@ -1,5 +1,4 @@
 goog.module('os.ui.state.StateImport');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const {clear, getCount} = goog.require('goog.object');

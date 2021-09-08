@@ -1,5 +1,4 @@
 goog.module('os.ui.ListUI');
-goog.module.declareLegacyNamespace();
 
 const {removeNode} = goog.require('goog.dom');
 const GoogEventType = goog.require('goog.events.EventType');

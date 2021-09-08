@@ -1,7 +1,7 @@
 goog.module('os.ui.util.filters.ellipsisFilter');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
+
 
 /**
  * @param {?string} text

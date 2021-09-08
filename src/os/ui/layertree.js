@@ -1,5 +1,4 @@
 goog.module('os.ui.LayerTreeUI');
-goog.module.declareLegacyNamespace();
 
 const FolderNode = goog.require('os.data.FolderNode');
 const LayerNode = goog.require('os.data.LayerNode');

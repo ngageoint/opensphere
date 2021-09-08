@@ -1,5 +1,4 @@
 goog.module('os.ui.GlobalMenuUI');
-goog.module.declareLegacyNamespace();
 
 const Delay = goog.require('goog.async.Delay');
 const {getDocument, getViewportSize} = goog.require('goog.dom');

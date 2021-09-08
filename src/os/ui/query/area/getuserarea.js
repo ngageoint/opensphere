@@ -1,5 +1,4 @@
 goog.module('os.ui.query.area.getUserArea');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const {EDIT_WIN_LABEL} = goog.require('os.ui.query');

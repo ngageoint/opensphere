@@ -1,5 +1,4 @@
 goog.module('os.ui.UrlDragDrop');
-goog.module.declareLegacyNamespace();
 
 const classlist = goog.require('goog.dom.classlist');
 const googEvents = goog.require('goog.events');

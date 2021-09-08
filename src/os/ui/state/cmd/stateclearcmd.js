@@ -1,5 +1,4 @@
 goog.module('os.ui.state.cmd.StateClear');
-goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const DataManager = goog.require('os.data.DataManager');
@@ -8,6 +7,7 @@ const AbstractStateDescriptor = goog.require('os.ui.state.AbstractStateDescripto
 
 const ICommand = goog.requireType('os.command.ICommand');
 const IStateDescriptor = goog.requireType('os.ui.state.IStateDescriptor');
+
 
 /**
  * Command for clearing (deactivating) states loaded in the application.

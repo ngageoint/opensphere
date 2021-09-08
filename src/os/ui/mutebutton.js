@@ -1,5 +1,4 @@
 goog.module('os.ui.MuteButtonUI');
-goog.module.declareLegacyNamespace();
 
 const AudioManager = goog.require('os.audio.AudioManager');
 const Module = goog.require('os.ui.Module');

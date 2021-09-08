@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ui.FilterGroupUI');
-goog.module.declareLegacyNamespace();
 
 const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
 const Module = goog.require('os.ui.Module');

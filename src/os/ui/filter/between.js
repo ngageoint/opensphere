@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.BetweenUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.filter.colTypeCheckValidation');
 

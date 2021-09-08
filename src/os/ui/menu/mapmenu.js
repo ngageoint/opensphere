@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.map');
-goog.module.declareLegacyNamespace();
 
 const googDispose = goog.require('goog.dispose');
 const dispatcher = goog.require('os.Dispatcher');

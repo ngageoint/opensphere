@@ -1,5 +1,4 @@
 goog.module('os.ui.hist.HorizontalBarChart');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const {getBinCounts} = goog.require('os.hist');

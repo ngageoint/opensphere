@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.common');
-goog.module.declareLegacyNamespace();
 
 const LayerNode = goog.require('os.data.LayerNode');
 const instanceOf = goog.require('os.instanceOf');

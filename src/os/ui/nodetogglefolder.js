@@ -1,5 +1,4 @@
 goog.module('os.ui.NodeToggleFolderUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const {Controller: NodeToggleCtrl, directive: nodeToggleDirective} = goog.require('os.ui.NodeToggleUI');

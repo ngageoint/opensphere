@@ -1,5 +1,4 @@
 goog.module('os.ui.columnactions.AbstractColumnAction');
-goog.module.declareLegacyNamespace();
 
 const IColumnActionModel = goog.requireType('os.ui.columnactions.IColumnActionModel');
 

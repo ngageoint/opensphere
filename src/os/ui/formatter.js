@@ -1,5 +1,4 @@
 goog.module('os.ui.formatter');
-goog.module.declareLegacyNamespace();
 
 const instanceOf = goog.require('os.instanceOf');
 const {linkify} = goog.require('os.string');

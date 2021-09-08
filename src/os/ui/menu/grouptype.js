@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.windows.GroupType');
-goog.module.declareLegacyNamespace();
 
 
 /**

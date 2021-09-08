@@ -1,5 +1,4 @@
 goog.module('os.ui.query.ComboNode');
-goog.module.declareLegacyNamespace();
 
 const DataManager = goog.require('os.data.DataManager');
 const {getAreaManager, getFilterManager} = goog.require('os.query.instance');

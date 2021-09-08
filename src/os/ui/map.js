@@ -1,5 +1,4 @@
 goog.module('os.ui.Map');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const MapContainer = goog.require('os.MapContainer');

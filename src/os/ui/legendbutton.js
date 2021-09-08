@@ -1,5 +1,4 @@
 goog.module('os.ui.LegendButtonUI');
-goog.module.declareLegacyNamespace();
 
 const {ID} = goog.require('os.legend');
 const {Map: MapKeys} = goog.require('os.metrics.keys');

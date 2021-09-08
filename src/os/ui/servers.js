@@ -1,5 +1,4 @@
 goog.module('os.ui.ServersUI');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');

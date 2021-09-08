@@ -1,5 +1,4 @@
 goog.module('os.ui.draw.DrawControlsUI');
-goog.module.declareLegacyNamespace();
 
 const googEvents = goog.require('goog.events');
 const log = goog.require('goog.log');

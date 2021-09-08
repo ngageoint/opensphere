@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.MenuButtonCtrl');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const dispatcher = goog.require('os.Dispatcher');

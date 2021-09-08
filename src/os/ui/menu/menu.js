@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.Menu');
-goog.module.declareLegacyNamespace();
 
 const Delay = goog.require('goog.async.Delay');
 const {getAncestorByClass, getDocument} = goog.require('goog.dom');

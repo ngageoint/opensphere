@@ -1,5 +1,4 @@
 goog.module('os.ui.TimelinePanelUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const dispatcher = goog.require('os.Dispatcher');

@@ -1,5 +1,4 @@
 goog.module('os.ui.im.action.EditFilterActionCtrl');
-goog.module.declareLegacyNamespace();
 
 const dispatcher = goog.require('os.Dispatcher');
 const DataManager = goog.require('os.data.DataManager');

@@ -1,5 +1,4 @@
 goog.module('os.ui.SlickPropertiesAsyncRenderer');
-goog.module.declareLegacyNamespace();
 
 const {forEach} = goog.require('goog.object');
 const {inIframe} = goog.require('os');

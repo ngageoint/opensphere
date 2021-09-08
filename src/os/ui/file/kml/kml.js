@@ -1,7 +1,7 @@
 goog.module('os.ui.file.kml');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
+
 
 /**
  * Refresh modes for KML links and icons.
