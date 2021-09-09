@@ -1,5 +1,4 @@
 goog.module('os.data.groupby.FavoriteGroupBy');
-goog.module.declareLegacyNamespace();
 
 const DataManager = goog.require('os.data.DataManager');
 const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');

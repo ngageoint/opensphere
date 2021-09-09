@@ -1,5 +1,4 @@
 goog.module('os.data.LayerTreeSearch');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const IGroupable = goog.require('os.IGroupable');

@@ -1,5 +1,4 @@
 goog.module('os.data.DrawingFeatureNode');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin.object');
 

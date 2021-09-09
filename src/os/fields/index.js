@@ -1,5 +1,4 @@
 goog.module('os.fields');
-goog.module.declareLegacyNamespace();
 
 const Fields = goog.require('os.Fields');
 

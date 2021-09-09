@@ -1,7 +1,7 @@
 goog.module('os.filter.IFilterCapable');
-goog.module.declareLegacyNamespace();
 
 const IFilter = goog.requireType('os.filter.IFilter');
+
 
 /**
  * @interface

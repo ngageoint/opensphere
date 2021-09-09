@@ -1,5 +1,4 @@
 goog.module('os.filter.IFilterEntry');
-goog.module.declareLegacyNamespace();
 
 
 /**

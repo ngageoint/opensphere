@@ -1,10 +1,10 @@
 goog.module('os.filter.im.OSFilterImporter');
-goog.module.declareLegacyNamespace();
 
 const {toHexString} = goog.require('os.color');
 const osImplements = goog.require('os.implements');
 const ILayer = goog.require('os.layer.ILayer');
 const FilterImporter = goog.require('os.ui.filter.im.FilterImporter');
+
 
 /**
  * @template T

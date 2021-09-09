@@ -1,5 +1,4 @@
 goog.module('os.data.event.DataEventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

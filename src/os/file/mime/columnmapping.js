@@ -1,8 +1,8 @@
 goog.module('os.file.mime.columnmapping');
-goog.module.declareLegacyNamespace();
 
 const mime = goog.require('os.file.mime');
 const xml = goog.require('os.file.mime.xml');
+
 
 /**
  * @type {string}

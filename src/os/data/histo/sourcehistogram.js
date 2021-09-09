@@ -1,5 +1,4 @@
 goog.module('os.data.histo.SourceHistogram');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');

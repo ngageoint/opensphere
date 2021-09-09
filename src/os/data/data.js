@@ -1,7 +1,7 @@
 goog.module('os.data');
-goog.module.declareLegacyNamespace();
 
 const {instanceOf} = goog.require('os.classRegistry');
+
 
 /**
  * Descriptor class names used with os.classRegistry.

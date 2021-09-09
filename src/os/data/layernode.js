@@ -1,5 +1,4 @@
 goog.module('os.data.LayerNode');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
@@ -31,6 +30,7 @@ const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 const IExtent = goog.requireType('os.data.IExtent');
 const ISearchable = goog.requireType('os.data.ISearchable');
 const VectorLayer = goog.requireType('os.layer.Vector');
+
 
 /**
  * Tree nodes for layers

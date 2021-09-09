@@ -1,5 +1,4 @@
 goog.module('os.data.LayerSyncDescriptor');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.layer.EllipseColumnsUI');
 

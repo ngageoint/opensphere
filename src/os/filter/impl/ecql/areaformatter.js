@@ -1,5 +1,4 @@
 goog.module('os.filter.impl.ecql.AreaFormatter');
-goog.module.declareLegacyNamespace();
 
 const WKT = goog.require('ol.format.WKT');
 const FilterFormatter = goog.require('os.filter.impl.ecql.FilterFormatter');
@@ -7,6 +6,7 @@ const {normalizeGeometryCoordinates} = goog.require('os.geo');
 const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
 
 const ISpatialFormatter = goog.requireType('os.filter.ISpatialFormatter');
+
 
 /**
  * @implements {ISpatialFormatter}

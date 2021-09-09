@@ -1,5 +1,4 @@
 goog.module('os.filter.ISpatialFormatter');
-goog.module.declareLegacyNamespace();
 
 const Feature = goog.requireType('ol.Feature');
 

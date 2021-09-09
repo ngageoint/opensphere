@@ -1,5 +1,4 @@
 goog.module('os.ex.ZipExporter');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const log = goog.require('goog.log');

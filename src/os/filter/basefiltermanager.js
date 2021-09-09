@@ -1,5 +1,4 @@
 goog.module('os.filter.BaseFilterManager');
-goog.module.declareLegacyNamespace();
 
 const {removeDuplicates} = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');

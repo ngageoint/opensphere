@@ -1,5 +1,4 @@
 goog.module('os.filter.AbstractFilter');
-goog.module.declareLegacyNamespace();
 
 const IFilter = goog.requireType('os.filter.IFilter');
 

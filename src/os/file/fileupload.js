@@ -1,8 +1,8 @@
 goog.module('os.file.upload');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.requireType('goog.Promise');
 const OSFile = goog.requireType('os.file.File');
+
 
 /**
  * Set to add file upload support to an application. The function should take a `os.file.File` as an argument and return

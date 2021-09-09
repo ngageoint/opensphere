@@ -1,5 +1,4 @@
 goog.module('os.file.FileManager');
-goog.module.declareLegacyNamespace();
 
 const {defaultCompare} = goog.require('goog.array');
 const GoogFileReader = goog.require('goog.fs.FileReader');

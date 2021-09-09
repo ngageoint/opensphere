@@ -1,5 +1,4 @@
 goog.module('os.data.groupby.SourceGroupBy');
-goog.module.declareLegacyNamespace();
 
 const RecordField = goog.require('os.data.RecordField');
 const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');

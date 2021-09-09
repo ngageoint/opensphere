@@ -1,5 +1,4 @@
 goog.module('os.data.IMappingDescriptor');
-goog.module.declareLegacyNamespace();
 
 const IMapping = goog.requireType('os.im.mapping.IMapping');
 const ILayer = goog.requireType('os.layer.ILayer');

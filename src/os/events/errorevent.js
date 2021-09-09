@@ -1,5 +1,4 @@
 goog.module('os.events.ErrorEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const EventType = goog.require('os.events.EventType');

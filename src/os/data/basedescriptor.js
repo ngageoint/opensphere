@@ -1,5 +1,4 @@
 goog.module('os.data.BaseDescriptor');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const nextTick = goog.require('goog.async.nextTick');

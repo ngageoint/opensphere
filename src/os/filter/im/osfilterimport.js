@@ -1,5 +1,4 @@
 goog.module('os.filter.im.OSFilterImport');
-goog.module.declareLegacyNamespace();
 
 const IFilterable = goog.require('os.filter.IFilterable');
 const OSFilterImporter = goog.require('os.filter.im.OSFilterImporter');
@@ -7,6 +6,7 @@ const osImplements = goog.require('os.implements');
 const {getMapContainer} = goog.require('os.map.instance');
 const Module = goog.require('os.ui.Module');
 const {directive: filterImportDirective, Controller: FilterImportCtrl} = goog.require('os.ui.filter.im.FilterImport');
+
 
 /**
  * The osfilterimport directive

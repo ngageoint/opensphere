@@ -1,5 +1,4 @@
 goog.module('os.file.FileStorage');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const Deferred = goog.require('goog.async.Deferred');

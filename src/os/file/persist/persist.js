@@ -1,5 +1,4 @@
 goog.module('os.file.persist');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const {SHARED_DB_VERSION} = goog.require('os');

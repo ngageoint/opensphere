@@ -1,5 +1,4 @@
 goog.module('os.data.groupby.BaseGroupBy');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const log = goog.require('goog.log');

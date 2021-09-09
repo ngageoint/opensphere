@@ -1,5 +1,4 @@
 goog.module('os.data.histo.ColorBin');
-goog.module.declareLegacyNamespace();
 
 const osColor = goog.require('os.color');
 const Bin = goog.require('os.histo.Bin');

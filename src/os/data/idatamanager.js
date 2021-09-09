@@ -1,5 +1,4 @@
 goog.module('os.data.IDataManager');
-goog.module.declareLegacyNamespace();
 
 const Listenable = goog.requireType('goog.events.Listenable');
 const Settings = goog.requireType('os.config.Settings');

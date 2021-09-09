@@ -1,5 +1,4 @@
 goog.module('os.data.histo.ColorModel');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');

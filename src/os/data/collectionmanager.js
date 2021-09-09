@@ -1,5 +1,4 @@
 goog.module('os.data.CollectionManager');
-goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');

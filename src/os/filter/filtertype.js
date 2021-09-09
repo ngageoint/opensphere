@@ -1,5 +1,4 @@
 goog.module('os.filter.FilterType');
-goog.module.declareLegacyNamespace();
 
 const FilterEntry = goog.require('os.filter.FilterEntry');
 

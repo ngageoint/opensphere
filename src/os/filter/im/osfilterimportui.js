@@ -1,8 +1,8 @@
 goog.module('os.filter.im.OSFilterImportUI');
-goog.module.declareLegacyNamespace();
 
 const {directiveTag: filterImportUi} = goog.require('os.filter.im.OSFilterImport');
 const FilterImportUI = goog.require('os.ui.filter.im.FilterImportUI');
+
 
 /**
  */

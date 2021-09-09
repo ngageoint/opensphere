@@ -1,5 +1,4 @@
 goog.module('os.data.groupby.LayerTypeGroupBy');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const googString = goog.require('goog.string');

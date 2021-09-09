@@ -1,5 +1,4 @@
 goog.module('os.data.FilterNode');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const CommandProcessor = goog.require('os.command.CommandProcessor');

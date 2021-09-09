@@ -1,5 +1,4 @@
 goog.module('os.data.IUrlDescriptor');
-goog.module.declareLegacyNamespace();
 
 
 /**

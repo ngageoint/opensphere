@@ -1,5 +1,4 @@
 goog.module('os.data.FolderNode');
-goog.module.declareLegacyNamespace();
 
 const {directiveTag: folderNodeUi} = goog.require('os.ui.node.FolderNodeUI');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');

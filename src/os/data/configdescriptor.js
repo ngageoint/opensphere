@@ -1,5 +1,4 @@
 goog.module('os.data.ConfigDescriptor');
-goog.module.declareLegacyNamespace();
 
 const googObject = goog.require('goog.object');
 const osArray = goog.require('os.array');

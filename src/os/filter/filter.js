@@ -1,7 +1,7 @@
 goog.module('os.filter');
-goog.module.declareLegacyNamespace();
 
 const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
+
 
 /**
  * @typedef {function(...)}

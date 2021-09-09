@@ -1,5 +1,4 @@
 goog.module('os.ex.IPersistenceMethod');
-goog.module.declareLegacyNamespace();
 
 /**
  * Interface for a method that persists data to a file, url, etc.

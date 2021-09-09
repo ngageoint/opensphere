@@ -1,5 +1,4 @@
 goog.module('os.filter.FilterEntry');
-goog.module.declareLegacyNamespace();
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');

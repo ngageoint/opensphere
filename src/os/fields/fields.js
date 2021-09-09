@@ -1,5 +1,4 @@
 goog.module('os.Fields');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

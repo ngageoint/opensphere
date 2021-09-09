@@ -1,5 +1,4 @@
 goog.module('os.data.histo');
-goog.module.declareLegacyNamespace();
 
 const dom = goog.require('goog.dom');
 const olArray = goog.require('ol.array');

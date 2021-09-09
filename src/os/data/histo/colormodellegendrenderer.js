@@ -1,5 +1,4 @@
 goog.module('os.data.histo.legend');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const googObject = goog.require('goog.object');

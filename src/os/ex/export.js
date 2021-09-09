@@ -1,8 +1,8 @@
 goog.module('os.ex.ExportOptions');
-goog.module.declareLegacyNamespace();
 
 const IExportMethod = goog.requireType('os.ex.IExportMethod');
 const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
+
 
 /**
  * @typedef {{
