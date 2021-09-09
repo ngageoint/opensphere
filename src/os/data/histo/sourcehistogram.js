@@ -8,7 +8,7 @@ const log = goog.require('goog.log');
 const events = goog.require('ol.events');
 const dispatcher = goog.require('os.Dispatcher');
 const FeatureEventType = goog.require('os.data.FeatureEventType');
-const histo = goog.require('os.data.histo');
+const {HistoEventType} = goog.require('os.data.histo');
 const ColorBin = goog.require('os.data.histo.ColorBin');
 const DataModel = goog.require('os.data.xf.DataModel');
 const osFeature = goog.require('os.feature');
@@ -17,27 +17,31 @@ const DateRangeBinType = goog.require('os.histo.DateRangeBinType');
 const PropertyChange = goog.require('os.source.PropertyChange');
 
 const GoogEvent = goog.requireType('goog.events.Event');
+const Feature = goog.requireType('ol.Feature');
 const FeatureEvent = goog.requireType('os.data.FeatureEvent');
 const ColorMethod = goog.requireType('os.data.histo.ColorMethod');
 const IGroupable = goog.requireType('os.data.xf.IGroupable');
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 const DateBinMethod = goog.requireType('os.histo.DateBinMethod');
+const IBinMethod = goog.requireType('os.histo.IBinMethod');
 const osHistoBin = goog.requireType('os.histo.bin');
+const Vector = goog.requireType('os.source.Vector');
+const TimeModel = goog.requireType('os.time.xf.TimeModel');
 
 
 /**
  * Histogram with cascade support.
  *
- * Do not instantiate this directly! Please use {@link os.source.Vector#createHistogram} to make sure the model is
+ * Do not instantiate this directly! Please use {@link Vector#createHistogram} to make sure the model is
  * created in the same window context as the source.
  *
- * @implements {IGroupable<ol.Feature>}
+ * @implements {IGroupable<Feature>}
  */
 class SourceHistogram extends EventTarget {
   /**
    * Constructor.
-   * @param {os.source.Vector} source The source for the histogram
-   * @param {histo.SourceHistogram=} opt_parent Parent histogram for cascading
+   * @param {Vector} source The source for the histogram
+   * @param {SourceHistogram=} opt_parent Parent histogram for cascading
    */
   constructor(source, opt_parent) {
     super();
@@ -77,7 +81,7 @@ class SourceHistogram extends EventTarget {
     this.refCount_ = 0;
 
     /**
-     * @type {?os.histo.IBinMethod<ol.Feature>}
+     * @type {?IBinMethod<Feature>}
      * @protected
      */
     this.binMethod = null;
@@ -85,14 +89,14 @@ class SourceHistogram extends EventTarget {
     /**
      * Bin method that does not get it's own dimension on the dataModel, rather it creates a dimension pivoted
      * from this.binMethod
-     * @type {?os.histo.IBinMethod<ol.Feature>}
+     * @type {?IBinMethod<Feature>}
      * @protected
      */
     this.secondaryBinMethod = null;
 
     /**
      * The accessor function created from smashing together the primary and secondary bin methods
-     * @type {null|function(ol.Feature):string}
+     * @type {null|function(Feature):string}
      * @protected
      */
     this.combinedAccessor = null;
@@ -106,7 +110,7 @@ class SourceHistogram extends EventTarget {
 
     /**
      * The source for the histogram
-     * @type {os.source.Vector}
+     * @type {Vector}
      * @protected
      */
     this.source = source;
@@ -120,7 +124,7 @@ class SourceHistogram extends EventTarget {
 
     /**
      * The parent histogram for cascading results
-     * @type {histo.SourceHistogram}
+     * @type {SourceHistogram}
      * @private
      */
     this.parent_ = null;
@@ -134,7 +138,7 @@ class SourceHistogram extends EventTarget {
 
     /**
      * The source's time model
-     * @type {os.time.xf.TimeModel}
+     * @type {TimeModel}
      * @private
      */
     this.timeModel_ = source.getTimeModel();
@@ -321,14 +325,14 @@ class SourceHistogram extends EventTarget {
       this.cascadeValues_ = value;
 
       // notify cascaded histograms they need to update
-      this.dispatchEvent(histo.HistoEventType.CASCADE_CHANGE);
+      this.dispatchEvent(HistoEventType.CASCADE_CHANGE);
     }
   }
 
   /**
    * Get the parent of this histogram.
    *
-   * @return {histo.SourceHistogram}
+   * @return {SourceHistogram}
    */
   getParent() {
     return this.parent_;
@@ -337,13 +341,13 @@ class SourceHistogram extends EventTarget {
   /**
    * Set the parent of this histogram.
    *
-   * @param {histo.SourceHistogram} value
+   * @param {SourceHistogram} value
    */
   setParent(value) {
     if (this.parent_) {
       // remove parent listeners
       this.parent_.unlisten(GoogEventType.CHANGE, this.update, false, this);
-      this.parent_.unlisten(histo.HistoEventType.CASCADE_CHANGE, this.update, false, this);
+      this.parent_.unlisten(HistoEventType.CASCADE_CHANGE, this.update, false, this);
       this.parent_.decrementRefCount();
     } else {
       // no parent - remove source listeners
@@ -356,7 +360,7 @@ class SourceHistogram extends EventTarget {
       if (this.parent_) {
         // update when the parent histogram changes
         this.parent_.listen(GoogEventType.CHANGE, this.update, false, this);
-        this.parent_.listen(histo.HistoEventType.CASCADE_CHANGE, this.update, false, this);
+        this.parent_.listen(HistoEventType.CASCADE_CHANGE, this.update, false, this);
         this.parent_.incrementRefCount();
       } else {
         // no parent - update when the source changes
@@ -375,7 +379,7 @@ class SourceHistogram extends EventTarget {
   /**
    * Get the secondary bin method.
    *
-   * @return {os.histo.IBinMethod<ol.Feature>}
+   * @return {IBinMethod<Feature>}
    */
   getSecondaryBinMethod() {
     return this.secondaryBinMethod;
@@ -398,13 +402,13 @@ class SourceHistogram extends EventTarget {
 
     this.reindexFlag_ = true;
     this.update(100);
-    this.dispatchEvent(histo.HistoEventType.BIN_CHANGE);
+    this.dispatchEvent(HistoEventType.BIN_CHANGE);
   }
 
   /**
    * Sets the secondary bin method.
    *
-   * @param {os.histo.IBinMethod<ol.Feature>} method
+   * @param {IBinMethod<Feature>} method
    *
    * @export Prevent the compiler from moving the function off the prototype.
    */
@@ -420,7 +424,7 @@ class SourceHistogram extends EventTarget {
       /**
        * Do the binning for each dimension to create a xf key that represents the bins that would contain the item
        *
-       * @param {ol.Feature} item
+       * @param {Feature} item
        * @return {string}
        */
       this.combinedAccessor = function(item) {
@@ -447,7 +451,7 @@ class SourceHistogram extends EventTarget {
 
     this.reindexFlag_ = true;
     this.update(100);
-    this.dispatchEvent(histo.HistoEventType.BIN_CHANGE);
+    this.dispatchEvent(HistoEventType.BIN_CHANGE);
   }
 
   /**
@@ -573,11 +577,11 @@ class SourceHistogram extends EventTarget {
       }
 
       if (this.secondaryBinMethod) {
-        results = /** @type {!Array<!os.histo.Result<!ol.Feature>>} */ (this.timeModel_.groupData(this.multiId_,
+        results = /** @type {!Array<!os.histo.Result<!Feature>>} */ (this.timeModel_.groupData(this.multiId_,
             this.combinedKeyMethod.bind(this), this.reduceAdd.bind(this),
             this.reduceRemove.bind(this), this.reduceInit.bind(this)));
       } else {
-        results = /** @type {!Array<!os.histo.Result<!ol.Feature>>} */ (this.timeModel_.groupData(this.id_,
+        results = /** @type {!Array<!os.histo.Result<!Feature>>} */ (this.timeModel_.groupData(this.id_,
             this.binMethod.getBinKey.bind(this.binMethod), this.reduceAdd.bind(this),
             this.reduceRemove.bind(this), this.reduceInit.bind(this)));
       }
@@ -607,9 +611,9 @@ class SourceHistogram extends EventTarget {
   }
 
   /**
-   * @param {!os.histo.Result<!ol.Feature>} item
+   * @param {!os.histo.Result<!Feature>} item
    * @param {number} i
-   * @param {!Array<!os.histo.Result<!ol.Feature>>} arr
+   * @param {!Array<!os.histo.Result<!Feature>>} arr
    * @return {ColorBin}
    * @protected
    */
@@ -669,7 +673,7 @@ class SourceHistogram extends EventTarget {
   /**
    * Get the source for this histogram.
    *
-   * @return {os.source.Vector}
+   * @return {Vector}
    */
   getSource() {
     return this.source;
@@ -751,7 +755,7 @@ class SourceHistogram extends EventTarget {
   reduceInit() {
     var bin = new ColorBin(this.source.getColor());
     bin.setColorFunction(function(item) {
-      return /** @type {string|undefined} */ (osFeature.getColor(/** @type {!ol.Feature} */ (item)));
+      return /** @type {string|undefined} */ (osFeature.getColor(/** @type {!Feature} */ (item)));
     });
     return bin;
   }
@@ -813,7 +817,7 @@ class SourceHistogram extends EventTarget {
 }
 
 /**
- * Logger for histo.SourceHistogram
+ * Logger.
  * @type {log.Logger}
  */
 const logger = log.getLogger('os.data.histo.SourceHistogram');

@@ -17,6 +17,8 @@ const osStyle = goog.require('os.style');
 
 const Feature = goog.requireType('ol.Feature');
 const IPersistable = goog.requireType('os.IPersistable');
+const ColorBin = goog.requireType('os.data.histo.ColorBin');
+const SourceHistogram = goog.requireType('os.data.histo.SourceHistogram');
 const IBinMethod = goog.requireType('os.histo.IBinMethod');
 
 
@@ -47,7 +49,7 @@ class ColorModel extends EventTarget {
 
     /**
      * The histogram driving the color model.
-     * @type {osDataHisto.SourceHistogram}
+     * @type {SourceHistogram}
      * @private
      */
     this.histogram_ = null;
@@ -103,7 +105,7 @@ class ColorModel extends EventTarget {
   /**
    * Get the histogram driving the color model.
    *
-   * @return {osDataHisto.SourceHistogram}
+   * @return {SourceHistogram}
    */
   getHistogram() {
     return this.histogram_;
@@ -112,7 +114,7 @@ class ColorModel extends EventTarget {
   /**
    * Get the histogram driving the color model.
    *
-   * @param {osDataHisto.SourceHistogram} histogram
+   * @param {SourceHistogram} histogram
    */
   setHistogram(histogram) {
     if (this.histogram_) {
@@ -146,7 +148,7 @@ class ColorModel extends EventTarget {
   /**
    * Get the results
    *
-   * @return {!Array<!osDataHisto.ColorBin>}
+   * @return {!Array<!ColorBin>}
    * @protected
    */
   getResults() {
@@ -252,7 +254,7 @@ class ColorModel extends EventTarget {
    * with it and those bins are tracked by the manualBinColors_ map.
    *
    * @param {ColorMethod} value
-   * @param {Array<!osDataHisto.ColorBin>=} opt_bins The bins to color, for manual color
+   * @param {Array<!ColorBin>=} opt_bins The bins to color, for manual color
    * @param {string=} opt_color The manual color
    *
    * @export Prevent the compiler from moving the function off the prototype.

@@ -3,6 +3,7 @@ goog.module('os.ui.im.action.FilterActionImport');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
 const DataManager = goog.require('os.data.DataManager');
+const IDataDescriptor = goog.require('os.data.IDataDescriptor');
 const IFilterable = goog.require('os.filter.IFilterable');
 const {Controller: OSFilterImportCtrl} = goog.require('os.filter.im.OSFilterImport');
 const {ICON, getColumnsFromFilterable} = goog.require('os.im.action');
@@ -119,7 +120,7 @@ class Controller extends OSFilterImportCtrl {
   onLayerChange(layer) {
     this.columns = [];
 
-    if (os.implements(layer, os.data.IDataDescriptor.ID)) {
+    if (os.implements(layer, IDataDescriptor.ID)) {
       super.onLayerChange(layer);
       return;
     }

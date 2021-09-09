@@ -10,8 +10,9 @@ const dispatcher = goog.require('os.Dispatcher');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const Settings = goog.require('os.config.Settings');
-const data = goog.require('os.data');
+const {ProviderKey} = goog.require('os.data');
 const DataProviderEvent = goog.require('os.data.DataProviderEvent');
+const DataProviderEventType = goog.require('os.data.DataProviderEventType');
 const DescriptorEvent = goog.require('os.data.DescriptorEvent');
 const DescriptorEventType = goog.require('os.data.DescriptorEventType');
 const IUrlDescriptor = goog.require('os.data.IUrlDescriptor');
@@ -36,11 +37,13 @@ const IDataManager = goog.require('os.data.IDataManager'); // eslint-disable-lin
 const Logger = goog.requireType('goog.log.Logger');
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 const IDataProvider = goog.requireType('os.data.IDataProvider');
+const ILoadingProvider = goog.requireType('os.data.ILoadingProvider');
 const ProviderEntry = goog.requireType('os.data.ProviderEntry');
 const LayerEvent = goog.requireType('os.events.LayerEvent');
 const VectorLayer = goog.requireType('os.layer.Vector');
 const IMapContainer = goog.requireType('os.map.IMapContainer');
 const VectorSource = goog.requireType('os.source.Vector');
+const ITreeNode = goog.requireType('os.structs.ITreeNode');
 
 
 /**
@@ -77,7 +80,7 @@ class DataManager extends EventTarget {
     this.descriptorTypes_ = {};
 
     /**
-     * @type {!os.structs.ITreeNode}
+     * @type {!ITreeNode}
      * @private
      */
     this.providerRoot_ = new SlickTreeNode();
@@ -369,7 +372,7 @@ class DataManager extends EventTarget {
    * @inheritDoc
    */
   updateFromSettings(settings) {
-    var sets = Object.values(data.ProviderKey);
+    var sets = Object.values(ProviderKey);
     for (var s = 0, ss = sets.length; s < ss; s++) {
       var providerKey = sets[s];
       var set = /** @type {Object} */ (settings.get([providerKey]));
@@ -427,7 +430,7 @@ class DataManager extends EventTarget {
     this.providerRoot_.addChild(dp);
     dp.listen(GoogEventType.PROPERTYCHANGE, this.onProviderChange, false, this);
 
-    this.dispatchEvent(new DataProviderEvent(data.DataProviderEventType.ADD_PROVIDER, dp));
+    this.dispatchEvent(new DataProviderEvent(DataProviderEventType.ADD_PROVIDER, dp));
   }
 
   /**
@@ -439,7 +442,7 @@ class DataManager extends EventTarget {
       provider.unlisten(GoogEventType.PROPERTYCHANGE, this.onProviderChange, false, this);
       this.providerRoot_.removeChild(provider);
 
-      this.dispatchEvent(new DataProviderEvent(data.DataProviderEventType.REMOVE_PROVIDER, provider));
+      this.dispatchEvent(new DataProviderEvent(DataProviderEventType.REMOVE_PROVIDER, provider));
       provider.dispose();
     }
   }
@@ -447,16 +450,16 @@ class DataManager extends EventTarget {
   /**
    * Handle property change events fired by data providers.
    *
-   * @param {!os.events.PropertyChangeEvent} event
+   * @param {!PropertyChangeEvent} event
    * @protected
    */
   onProviderChange(event) {
     var p = event.getProperty();
-    var provider = /** @type {data.ILoadingProvider} */ (event.target);
+    var provider = /** @type {ILoadingProvider} */ (event.target);
 
     if (p == 'loading' && !provider.isLoading()) {
       // alert listeners that a server failed to load
-      this.dispatchEvent(new DataProviderEvent(data.DataProviderEventType.LOADED, provider));
+      this.dispatchEvent(new DataProviderEvent(DataProviderEventType.LOADED, provider));
     }
   }
 
@@ -467,7 +470,7 @@ class DataManager extends EventTarget {
     var provider = this.getProvider(id);
     if (provider) {
       provider.setEnabled(enabled);
-      this.dispatchEvent(new DataProviderEvent(data.DataProviderEventType.EDIT_PROVIDER, provider));
+      this.dispatchEvent(new DataProviderEvent(DataProviderEventType.EDIT_PROVIDER, provider));
     }
   }
 

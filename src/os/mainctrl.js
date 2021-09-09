@@ -54,6 +54,7 @@ const {getControls} = goog.require('os.control');
 const DataManager = goog.require('os.data.DataManager');
 const {registerLegendPlugin} = goog.require('os.data.histo.legend');
 const events = goog.require('os.events');
+const EventType = goog.require('os.events.EventType');
 const EventFactory = goog.require('os.events.EventFactory');
 const LayerConfigEventType = goog.require('os.events.LayerConfigEventType');
 const {createFromFile, getFileUrl, isFileUrlEnabled} = goog.require('os.file');
@@ -466,7 +467,7 @@ class Controller extends AbstractMainCtrl {
    * @inheritDoc
    */
   registerListeners() {
-    dispatcher.getInstance().listen(events.EventType.RESET, this.onSettingsReset_, false, this);
+    dispatcher.getInstance().listen(EventType.RESET, this.onSettingsReset_, false, this);
     dispatcher.getInstance().listen(LayerConfigEventType.CONFIGURE_AND_ADD, this.onLayerConfigEvent_, false, this);
     dispatcher.getInstance().listen(UIEventType.TOGGLE_UI, this.onToggleUI_, false, this);
     dispatcher.getInstance().listen(ImportEventType.FILE, this.onImportEvent_, false, this);
@@ -477,7 +478,7 @@ class Controller extends AbstractMainCtrl {
    * @inheritDoc
    */
   removeListeners() {
-    dispatcher.getInstance().unlisten(events.EventType.RESET, this.onSettingsReset_, false, this);
+    dispatcher.getInstance().unlisten(EventType.RESET, this.onSettingsReset_, false, this);
     dispatcher.getInstance().unlisten(LayerConfigEventType.CONFIGURE_AND_ADD, this.onLayerConfigEvent_, false, this);
     dispatcher.getInstance().unlisten(UIEventType.TOGGLE_UI, this.onToggleUI_, false, this);
     dispatcher.getInstance().unlisten(ImportEventType.FILE, this.onImportEvent_, false, this);

@@ -1341,7 +1341,7 @@ class Controller {
   }
 
   /**
-   * @param {events.PropertyChangeEvent} e
+   * @param {PropertyChangeEvent} e
    * @private
    */
   onArrowsChange_(e) {
