@@ -1,5 +1,4 @@
 goog.module('os.config.storage.SettingsStorageRegistry');
-goog.module.declareLegacyNamespace();
 
 const ISettingsWritableStorage = goog.require('os.config.storage.ISettingsWritableStorage');
 const SettingsWritableStorageType = goog.require('os.config.storage.SettingsWritableStorageType');

@@ -1,5 +1,4 @@
 goog.module('os.annotation.FeatureAnnotation');
-goog.module.declareLegacyNamespace();
 
 const {getUid} = goog.require('ol');
 const OverlayPositioning = goog.require('ol.OverlayPositioning');

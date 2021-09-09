@@ -1,5 +1,4 @@
 goog.module('os.config.SettingsInitializerManager');
-goog.module.declareLegacyNamespace();
 
 const SettingsInitializer = goog.require('os.config.SettingsInitializer');
 

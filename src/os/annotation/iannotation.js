@@ -1,5 +1,4 @@
 goog.module('os.annotation.IAnnotation');
-goog.module.declareLegacyNamespace();
 
 /**
  * Interface representing an annotation.

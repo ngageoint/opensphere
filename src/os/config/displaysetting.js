@@ -1,5 +1,4 @@
 goog.module('os.config.DisplaySetting');
-goog.module.declareLegacyNamespace();
 
 /**
  * The base key used by all display settings.

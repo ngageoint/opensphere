@@ -1,5 +1,4 @@
 goog.module('os.command.LayerColor');
-goog.module.declareLegacyNamespace();
 
 const AbstractLayerStyle = goog.require('os.command.AbstractLayerStyle');
 const osImplements = goog.require('os.implements');

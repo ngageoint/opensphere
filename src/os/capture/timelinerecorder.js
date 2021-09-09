@@ -1,5 +1,4 @@
 goog.module('os.capture.TimelineRecorder');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const GoogEventType = goog.require('goog.events.EventType');

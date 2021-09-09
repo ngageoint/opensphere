@@ -1,5 +1,4 @@
 goog.module('os.config.SettingsInitializer');
-goog.module.declareLegacyNamespace();
 
 const {SETTINGS} = goog.require('os');
 const osConfig = goog.require('os.config');

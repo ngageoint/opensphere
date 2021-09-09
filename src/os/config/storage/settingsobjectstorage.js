@@ -1,5 +1,4 @@
 goog.module('os.config.storage.SettingsObjectStorage');
-goog.module.declareLegacyNamespace();
 
 const Deferred = goog.require('goog.async.Deferred');
 const googObject = goog.require('goog.object');

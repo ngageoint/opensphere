@@ -1,5 +1,4 @@
 goog.module('os.command.TileLayerStyle');
-goog.module.declareLegacyNamespace();
 
 const AbstractLayerStyle = goog.require('os.command.AbstractLayerStyle');
 const instanceOf = goog.require('os.instanceOf');

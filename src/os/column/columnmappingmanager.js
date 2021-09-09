@@ -1,5 +1,4 @@
 goog.module('os.column.ColumnMappingManager');
-goog.module.declareLegacyNamespace();
 
 const Deferred = goog.require('goog.async.Deferred');
 const Delay = goog.require('goog.async.Delay');

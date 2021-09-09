@@ -1,5 +1,4 @@
 goog.module('os.command.AbstractStyle');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const State = goog.require('os.command.State');

@@ -1,5 +1,4 @@
 goog.module('os.command.FeatureOpacity');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const osColor = goog.require('os.color');

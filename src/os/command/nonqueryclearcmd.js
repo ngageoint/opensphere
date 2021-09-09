@@ -1,5 +1,4 @@
 goog.module('os.command.NonQueryClear');
-goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const {getMapContainer} = goog.require('os.map.instance');

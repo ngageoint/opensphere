@@ -1,5 +1,4 @@
 goog.module('os.config.ProjectionSettings');
-goog.module.declareLegacyNamespace();
 
 const {directiveTag: settingsUi} = goog.require('os.config.ProjectionSettingsUI');
 const SettingPlugin = goog.require('os.ui.config.SettingPlugin');

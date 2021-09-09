@@ -1,5 +1,4 @@
 goog.module('os.command.style.ColorChangeType');
-goog.module.declareLegacyNamespace();
 
 /**
  * Change types for color commands. Determines how color/opacity is set in style configs.

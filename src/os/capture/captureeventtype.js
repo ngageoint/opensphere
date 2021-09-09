@@ -1,5 +1,4 @@
 goog.module('os.capture.CaptureEventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * Capture event types.

@@ -1,5 +1,4 @@
 goog.module('os.command.FeatureIcon');
-goog.module.declareLegacyNamespace();
 
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');

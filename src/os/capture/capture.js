@@ -1,5 +1,4 @@
 goog.module('os.capture');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const dispose = goog.require('goog.dispose');

@@ -1,5 +1,4 @@
 goog.module('os.config.storage.SettingsIDBStorage');
-goog.module.declareLegacyNamespace();
 
 const {SETTINGS_DB_NAME} = goog.require('os');
 const BaseLocalSettingsStorage = goog.require('os.config.storage.BaseLocalSettingsStorage');

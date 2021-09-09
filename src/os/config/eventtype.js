@@ -1,5 +1,4 @@
 goog.module('os.config.EventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * Event types for settings

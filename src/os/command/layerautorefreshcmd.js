@@ -1,5 +1,4 @@
 goog.module('os.command.LayerAutoRefresh');
-goog.module.declareLegacyNamespace();
 
 const UrlTile = goog.require('ol.source.UrlTile');
 const State = goog.require('os.command.State');

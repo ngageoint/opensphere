@@ -1,5 +1,4 @@
 goog.module('os.command.FeatureLabelSize');
-goog.module.declareLegacyNamespace();
 
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
 const {Layer: LayerKeys} = goog.require('os.metrics.keys');

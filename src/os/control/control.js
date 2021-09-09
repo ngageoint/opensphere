@@ -1,5 +1,4 @@
 goog.module('os.control');
-goog.module.declareLegacyNamespace();
 
 const Collection = goog.require('ol.Collection');
 const AlertPopup = goog.require('os.control.AlertPopup');

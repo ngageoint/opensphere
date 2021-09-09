@@ -1,5 +1,4 @@
 goog.module('os.control.MapMode');
-goog.module.declareLegacyNamespace();
 
 const dom = goog.require('goog.dom');
 const GoogEventType = goog.require('goog.events.EventType');

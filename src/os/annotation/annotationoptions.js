@@ -1,8 +1,8 @@
 goog.module('os.annotation.annotationOptionsDirective');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
+
 
 /**
  * An annotation to attach to the map.

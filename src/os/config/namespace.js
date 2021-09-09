@@ -4,7 +4,6 @@
  * and make them available to either an individual app or common to all apps.
  */
 goog.module('os.config.namespace');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const googObject = goog.require('goog.object');

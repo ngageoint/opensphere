@@ -1,5 +1,4 @@
 goog.module('os.command.TransformAreas');
-goog.module.declareLegacyNamespace();
 
 const TransformVectors = goog.require('os.command.TransformVectors');
 const interpolate = goog.require('os.interpolate');

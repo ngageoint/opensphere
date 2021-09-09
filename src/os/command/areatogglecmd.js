@@ -1,5 +1,4 @@
 goog.module('os.command.AreaToggle');
-goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const {getAreaManager} = goog.require('os.query.instance');

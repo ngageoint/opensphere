@@ -1,5 +1,4 @@
 goog.module('os.command.AbstractSource');
-goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const DataManager = goog.require('os.data.DataManager');

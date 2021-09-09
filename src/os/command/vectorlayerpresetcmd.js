@@ -1,5 +1,4 @@
 goog.module('os.command.VectorLayerPreset');
-goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
 const State = goog.require('os.command.State');

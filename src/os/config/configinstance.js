@@ -1,9 +1,9 @@
 goog.module('os.config.instance');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 
 const Settings = goog.requireType('os.config.Settings');
+
 
 /**
  * The global Settings instance.

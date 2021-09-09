@@ -1,5 +1,4 @@
 goog.module('os.column.ColumnMappingTag');
-goog.module.declareLegacyNamespace();
 
 /**
  * Enumeration of column mapping tags

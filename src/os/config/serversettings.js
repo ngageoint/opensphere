@@ -1,5 +1,4 @@
 goog.module('os.config.ServerSettings');
-goog.module.declareLegacyNamespace();
 
 const {directiveTag} = goog.require('os.ui.ServersUI');
 const SettingPlugin = goog.require('os.ui.config.SettingPlugin');

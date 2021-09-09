@@ -1,5 +1,4 @@
 goog.module('os.config.AreaSettingsUI');
-goog.module.declareLegacyNamespace();
 
 const {unsafeClone} = goog.require('goog.object');
 const {ROOT} = goog.require('os');

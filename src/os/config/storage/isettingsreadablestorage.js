@@ -1,5 +1,4 @@
 goog.module('os.config.storage.ISettingsReadableStorage');
-goog.module.declareLegacyNamespace();
 
 const Deferred = goog.requireType('goog.async.Deferred');
 const ISettingsStorage = goog.requireType('os.config.storage.ISettingsStorage');

@@ -1,5 +1,4 @@
 goog.module('os.config.ProjectionSettingsUI');
-goog.module.declareLegacyNamespace();
 
 const {numerateCompare} = goog.require('goog.string');
 const {listen, unlisten} = goog.require('ol.events');

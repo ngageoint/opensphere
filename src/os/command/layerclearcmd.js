@@ -1,5 +1,4 @@
 goog.module('os.command.LayerClear');
-goog.module.declareLegacyNamespace();
 
 const EventType = goog.require('os.command.EventType');
 const LayerRemove = goog.require('os.command.LayerRemove');

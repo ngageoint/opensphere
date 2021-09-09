@@ -1,5 +1,4 @@
 goog.module('os.alert.AlertEventTypes');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

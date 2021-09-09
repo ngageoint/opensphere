@@ -1,5 +1,4 @@
 goog.module('os.audio.AudioManager');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');

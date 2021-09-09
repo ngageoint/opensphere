@@ -1,5 +1,4 @@
 goog.module('os.command.AbstractVectorStyle');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const AbstractStyle = goog.require('os.command.AbstractStyle');

@@ -1,5 +1,4 @@
 goog.module('os.annotation.FeatureAnnotationUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.text.TuiEditorUI');
 

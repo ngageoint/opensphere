@@ -1,5 +1,4 @@
 goog.module('os.command.SwitchView');
-goog.module.declareLegacyNamespace();
 
 const {DEFAULT_MAX_ZOOM} = goog.require('ol');
 const View = goog.require('ol.View');

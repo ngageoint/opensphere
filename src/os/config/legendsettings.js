@@ -1,5 +1,4 @@
 goog.module('os.config.LegendSettings');
-goog.module.declareLegacyNamespace();
 
 const {ICON, ID} = goog.require('os.legend');
 const {directiveTag: settingsUi} = goog.require('os.config.LegendSettingsUI');

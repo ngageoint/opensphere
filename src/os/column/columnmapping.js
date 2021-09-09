@@ -1,5 +1,4 @@
 goog.module('os.column.ColumnMapping');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const dom = goog.require('goog.dom');

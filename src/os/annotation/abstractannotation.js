@@ -1,5 +1,4 @@
 goog.module('os.annotation.AbstractAnnotation');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 

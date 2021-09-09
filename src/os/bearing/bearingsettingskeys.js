@@ -1,5 +1,4 @@
 goog.module('os.bearing.BearingSettingsKeys');
-goog.module.declareLegacyNamespace();
 
 
 /**

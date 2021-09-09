@@ -1,5 +1,4 @@
 goog.module('os.command.ICommand');
-goog.module.declareLegacyNamespace();
 
 const State = goog.requireType('os.command.State');
 

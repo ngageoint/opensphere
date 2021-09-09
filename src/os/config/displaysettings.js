@@ -1,5 +1,4 @@
 goog.module('os.config.DisplaySettings');
-goog.module.declareLegacyNamespace();
 
 const {directiveTag: settingsUi} = goog.require('os.config.DisplaySettingsUI');
 const SettingPlugin = goog.require('os.ui.config.SettingPlugin');

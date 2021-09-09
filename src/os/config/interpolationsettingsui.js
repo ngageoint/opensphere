@@ -1,5 +1,4 @@
 goog.module('os.config.InterpolationSettingsUI');
-goog.module.declareLegacyNamespace();
 
 const Delay = goog.require('goog.async.Delay');
 const GoogEventType = goog.require('goog.events.EventType');

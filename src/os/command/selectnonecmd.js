@@ -1,5 +1,4 @@
 goog.module('os.command.SelectNone');
-goog.module.declareLegacyNamespace();
 
 const AbstractSelect = goog.require('os.command.AbstractSelect');
 

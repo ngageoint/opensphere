@@ -1,5 +1,4 @@
 goog.module('os.command.FlyTo');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');

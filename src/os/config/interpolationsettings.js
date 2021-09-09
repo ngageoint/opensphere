@@ -1,5 +1,4 @@
 goog.module('os.config.InterpolationSettings');
-goog.module.declareLegacyNamespace();
 
 const {directiveTag: settingsUi} = goog.require('os.config.InterpolationSettingsUI');
 const SettingPlugin = goog.require('os.ui.config.SettingPlugin');

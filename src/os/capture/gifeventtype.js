@@ -1,5 +1,4 @@
 goog.module('os.capture.gif.EventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * Events fired by the GIF library.

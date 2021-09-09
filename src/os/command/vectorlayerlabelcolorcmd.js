@@ -1,5 +1,4 @@
 goog.module('os.command.VectorLayerLabelColor');
-goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
 const {Layer: LayerKeys} = goog.require('os.metrics.keys');

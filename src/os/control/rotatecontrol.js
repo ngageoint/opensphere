@@ -1,5 +1,4 @@
 goog.module('os.control.Rotate');
-goog.module.declareLegacyNamespace();
 
 const classlist = goog.require('goog.dom.classlist');
 const OLRotate = goog.require('ol.control.Rotate');

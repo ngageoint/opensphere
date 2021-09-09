@@ -1,5 +1,4 @@
 goog.module('os.command.AbstractVectorLayerLOB');
-goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
 const DataManager = goog.require('os.data.DataManager');

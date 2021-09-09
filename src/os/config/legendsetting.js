@@ -1,7 +1,7 @@
 goog.module('os.config.LegendSetting');
-goog.module.declareLegacyNamespace();
 
 const {DRAW_OPTIONS_KEY, POSITION_KEY} = goog.require('os.legend');
+
 
 /**
  * Legend settings keys.
