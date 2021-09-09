@@ -1,5 +1,4 @@
 goog.module('os.plugin.AbstractPlugin');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const IPlugin = goog.requireType('os.plugin.IPlugin');

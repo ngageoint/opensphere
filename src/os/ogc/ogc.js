@@ -1,5 +1,4 @@
 goog.module('os.ogc');
-goog.module.declareLegacyNamespace();
 
 const QueryData = goog.require('goog.Uri.QueryData');
 const {loadXml} = goog.require('goog.dom.xml');

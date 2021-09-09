@@ -1,5 +1,4 @@
 goog.module('os.style.area');
-goog.module.declareLegacyNamespace();
 
 const Circle = goog.require('ol.style.Circle');
 const Fill = goog.require('ol.style.Fill');

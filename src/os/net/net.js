@@ -1,5 +1,4 @@
 goog.module('os.net');
-goog.module.declareLegacyNamespace();
 
 const Uri = goog.require('goog.Uri');
 const QueryData = goog.require('goog.Uri.QueryData');

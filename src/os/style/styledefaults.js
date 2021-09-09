@@ -1,5 +1,4 @@
 goog.module('os.style.defaults');
-goog.module.declareLegacyNamespace();
 
 const {DEFAULT_ICON_PATH, replaceGoogleUri} = goog.require('os.ui.file.kml');
 

@@ -1,5 +1,4 @@
 goog.module('os.mixin.IconImageMixin');
-goog.module.declareLegacyNamespace();
 
 const {iconImageCache} = goog.require('ol.style');
 

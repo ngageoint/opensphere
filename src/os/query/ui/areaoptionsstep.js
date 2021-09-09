@@ -1,5 +1,4 @@
 goog.module('os.query.ui.AreaOptionsStep');
-goog.module.declareLegacyNamespace();
 
 const {directiveTag: stepUi} = goog.require('os.query.ui.AreaOptionsStepUI');
 const AbstractWizardStep = goog.require('os.ui.wiz.step.AbstractWizardStep');

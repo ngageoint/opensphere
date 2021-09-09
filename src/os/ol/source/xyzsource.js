@@ -1,5 +1,4 @@
 goog.module('os.ol.source.XYZ');
-goog.module.declareLegacyNamespace();
 
 const TileUrlFunction = goog.require('ol.TileUrlFunction');
 const OLXYZ = goog.require('ol.source.XYZ');

@@ -1,5 +1,4 @@
 goog.module('os.search.FacetResult');
-goog.module.declareLegacyNamespace();
 
 
 /**

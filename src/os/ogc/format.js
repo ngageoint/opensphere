@@ -1,5 +1,4 @@
 goog.module('os.ogc.spatial.Format');
-goog.module.declareLegacyNamespace();
 
 /**
  * Supported spatial formats.

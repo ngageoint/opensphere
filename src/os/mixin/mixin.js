@@ -3,7 +3,6 @@
  * @suppress {missingProvide}
  */
 goog.module('os.mixin');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin.Image');
 goog.require('os.mixin.ImageSource');
@@ -29,7 +28,6 @@ const registerClass = goog.require('os.registerClass');
 
 const Feature = goog.requireType('ol.Feature');
 const RenderFeature = goog.requireType('ol.render.Feature');
-
 
 
 /**

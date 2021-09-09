@@ -1,5 +1,4 @@
 goog.module('os.metrics.FiltersMetrics');
-goog.module.declareLegacyNamespace();
 
 const {Filters} = goog.require('os.metrics.keys');
 const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');

@@ -1,5 +1,4 @@
 goog.module('os.ogc.wps');
-goog.module.declareLegacyNamespace();
 
 const QueryData = goog.requireType('goog.Uri.QueryData');
 

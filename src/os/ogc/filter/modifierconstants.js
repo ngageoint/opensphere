@@ -1,5 +1,4 @@
 goog.module('os.ogc.filter.ModifierConstants');
-goog.module.declareLegacyNamespace();
 
 
 /**

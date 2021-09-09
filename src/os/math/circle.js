@@ -1,5 +1,4 @@
 goog.module('os.math.Circle');
-goog.module.declareLegacyNamespace();
 
 const Coordinate = goog.require('goog.math.Coordinate');
 const math = goog.requireType('goog.math');

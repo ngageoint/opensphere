@@ -1,5 +1,4 @@
 goog.module('os.metrics.GraphiteMetricsProvider');
-goog.module.declareLegacyNamespace();
 
 const Timer = goog.require('goog.Timer');
 const log = goog.require('goog.log');

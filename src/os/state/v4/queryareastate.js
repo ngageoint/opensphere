@@ -1,5 +1,4 @@
 goog.module('os.state.v4.QueryArea');
-goog.module.declareLegacyNamespace();
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');

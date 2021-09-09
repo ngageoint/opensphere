@@ -1,5 +1,4 @@
 goog.module('os.structs.TriStateTreeNode');
-goog.module.declareLegacyNamespace();
 
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const TreeNode = goog.require('os.structs.TreeNode');

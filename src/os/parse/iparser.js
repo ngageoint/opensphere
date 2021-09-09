@@ -1,5 +1,4 @@
 goog.module('os.parse.IParser');
-goog.module.declareLegacyNamespace();
 
 
 /**

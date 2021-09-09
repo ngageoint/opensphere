@@ -1,5 +1,4 @@
 goog.module('os.query.BaseAreaManager');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const Deferred = goog.require('goog.async.Deferred');

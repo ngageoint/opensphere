@@ -2,7 +2,6 @@
  * @fileoverview Utilities for merging objects
  */
 goog.module('os.object');
-goog.module.declareLegacyNamespace();
 
 const {defaultCompare} = goog.require('goog.array');
 const {getCount, getValueByKeys, isEmpty} = goog.require('goog.object');

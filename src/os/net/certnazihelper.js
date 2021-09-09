@@ -3,7 +3,6 @@
  * all connections, including IE weirdness, and reports success or failure with a reason.
  */
 goog.module('os.net.CertNaziHelper');
-goog.module.declareLegacyNamespace();
 
 const Deferred = goog.require('goog.async.Deferred');
 const EventType = goog.require('goog.net.EventType');

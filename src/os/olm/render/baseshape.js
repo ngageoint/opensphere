@@ -1,5 +1,4 @@
 goog.module('os.olm.render.BaseShape');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const Feature = goog.require('ol.Feature');

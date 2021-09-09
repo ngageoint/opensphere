@@ -1,5 +1,4 @@
 goog.module('os.parse.FileParserConfig');
-goog.module.declareLegacyNamespace();
 
 const BaseParserConfig = goog.require('os.parse.BaseParserConfig');
 const OSFile = goog.requireType('os.file.File');

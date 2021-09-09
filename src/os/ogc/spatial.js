@@ -1,5 +1,4 @@
 goog.module('os.ogc.spatial');
-goog.module.declareLegacyNamespace();
 
 const GML = goog.require('ol.format.GML');
 const KML = goog.require('ol.format.KML');

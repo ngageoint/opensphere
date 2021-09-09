@@ -2,7 +2,6 @@
  * @fileoverview Modifications to {@link OLObject}.
  */
 goog.module('os.mixin.object');
-goog.module.declareLegacyNamespace();
 
 const {getUid} = goog.require('ol');
 const OLObject = goog.require('ol.Object');

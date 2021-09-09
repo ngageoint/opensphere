@@ -1,9 +1,9 @@
 goog.module('os.string.Pluralize');
-goog.module.declareLegacyNamespace();
 
 const Settings = goog.require('os.config.Settings');
 const {apply} = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
+
 
 /**
  * If rules have been initialized.

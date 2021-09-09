@@ -1,5 +1,4 @@
 goog.module('os.state.StateManager');
-goog.module.declareLegacyNamespace();
 
 const {defaultCompare, insert} = goog.require('goog.array');
 const {getFirstElementChild} = goog.require('goog.dom');

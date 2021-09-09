@@ -1,10 +1,10 @@
 goog.module('os.proj.switch.BinnedLayersEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const GoogEventType = goog.require('goog.events.EventType');
 
 const BinnedLayersType = goog.requireType('os.proj.switch.BinnedLayersType');
+
 
 /**
  */

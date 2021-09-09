@@ -1,5 +1,4 @@
 goog.module('os.state.v3.LayerTag');
-goog.module.declareLegacyNamespace();
 
 
 /**

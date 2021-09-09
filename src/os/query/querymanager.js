@@ -1,5 +1,4 @@
 goog.module('os.query.QueryManager');
-goog.module.declareLegacyNamespace();
 
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');

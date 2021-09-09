@@ -1,5 +1,4 @@
 goog.module('os.source.column');
-goog.module.declareLegacyNamespace();
 
 const {caseInsensitiveEquals} = goog.require('goog.string');
 const Fields = goog.require('os.Fields');

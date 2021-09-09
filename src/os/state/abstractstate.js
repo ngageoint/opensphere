@@ -1,5 +1,4 @@
 goog.module('os.state.AbstractState');
-goog.module.declareLegacyNamespace();
 
 const Deferred = goog.require('goog.async.Deferred');
 const {ID_SEPARATOR, stateToString} = goog.require('os.state');

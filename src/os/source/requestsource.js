@@ -1,5 +1,4 @@
 goog.module('os.source.Request');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const NetEventType = goog.require('goog.net.EventType');

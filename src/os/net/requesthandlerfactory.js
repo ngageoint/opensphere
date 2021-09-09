@@ -1,5 +1,4 @@
 goog.module('os.net.RequestHandlerFactory');
-goog.module.declareLegacyNamespace();
 
 const {defaultCompare} = goog.require('goog.array');
 const {remove} = goog.require('ol.array');

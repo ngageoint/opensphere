@@ -1,5 +1,4 @@
 goog.module('os.ol.events');
-goog.module.declareLegacyNamespace();
 
 const {listen, unlisten} = goog.require('ol.events');
 

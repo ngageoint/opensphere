@@ -1,5 +1,4 @@
 goog.module('os.parse.csv.CsvParserConfig');
-goog.module.declareLegacyNamespace();
 
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const {DEFAULT_COMMENT_CHAR, DEFAULT_DELIMITER} = goog.require('os.parse.csv');

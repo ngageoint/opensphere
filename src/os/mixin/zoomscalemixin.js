@@ -5,7 +5,6 @@
  * @suppress {accessControls} To allow access to private properties in OpenLayers classes.
  */
 goog.module('os.mixin.zoomscale');
-goog.module.declareLegacyNamespace();
 
 const {lerp} = goog.require('goog.math');
 const events = goog.require('ol.events');

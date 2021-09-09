@@ -1,5 +1,4 @@
 goog.module('os.proj.switch');
-goog.module.declareLegacyNamespace();
 
 const Tile = goog.require('ol.layer.Tile');
 const olProj = goog.require('ol.proj');

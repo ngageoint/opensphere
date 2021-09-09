@@ -1,5 +1,4 @@
 goog.module('os.math.UnitLabels');
-goog.module.declareLegacyNamespace();
 
 const Units = goog.require('os.math.Units');
 

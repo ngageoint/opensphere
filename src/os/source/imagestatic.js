@@ -1,5 +1,4 @@
 goog.module('os.source.ImageStatic');
-goog.module.declareLegacyNamespace();
 
 const ImageState = goog.require('ol.ImageState');
 const {intersects} = goog.require('ol.extent');

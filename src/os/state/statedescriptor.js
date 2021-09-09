@@ -1,5 +1,4 @@
 goog.module('os.state.StateDescriptor');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const StateType = goog.require('os.state.StateType');

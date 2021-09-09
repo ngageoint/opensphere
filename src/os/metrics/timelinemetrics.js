@@ -1,5 +1,4 @@
 goog.module('os.metrics.TimelineMetrics');
-goog.module.declareLegacyNamespace();
 
 const {Timeline} = goog.require('os.metrics.keys');
 const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');

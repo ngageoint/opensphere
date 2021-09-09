@@ -1,5 +1,4 @@
 goog.module('os.proj.switch.BinnedLayersType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @typedef {{

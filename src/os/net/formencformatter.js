@@ -1,5 +1,4 @@
 goog.module('os.net.FormEncFormatter');
-goog.module.declareLegacyNamespace();
 
 const XhrIo = goog.require('goog.net.XhrIo');
 

@@ -1,5 +1,4 @@
 goog.module('os.source.IStyle');
-goog.module.declareLegacyNamespace();
 
 
 /**

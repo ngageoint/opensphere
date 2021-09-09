@@ -2,7 +2,6 @@
  * @fileoverview This file explicitly contains a set of mixins for the OL3 canvas renderer.
  */
 goog.module('os.ol.mixin.render');
-goog.module.declareLegacyNamespace();
 
 const Instruction = goog.require('ol.render.canvas.Instruction');
 const PolygonReplay = goog.require('ol.render.canvas.PolygonReplay');

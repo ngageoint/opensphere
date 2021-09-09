@@ -2,7 +2,6 @@
  * @fileoverview Modifications to {@link PluggableMap}.
  */
 goog.module('os.mixin.map');
-goog.module.declareLegacyNamespace();
 
 const {getUid} = goog.require('ol');
 const PluggableMap = goog.require('ol.PluggableMap');

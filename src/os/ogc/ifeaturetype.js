@@ -1,5 +1,4 @@
 goog.module('os.ogc.IFeatureType');
-goog.module.declareLegacyNamespace();
 
 const IPersistable = goog.requireType('os.IPersistable');
 const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');

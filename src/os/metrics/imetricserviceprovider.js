@@ -1,5 +1,4 @@
 goog.module('os.metrics.IMetricServiceProvider');
-goog.module.declareLegacyNamespace();
 
 /**
  * Interface for sending metic date to metric service provider,

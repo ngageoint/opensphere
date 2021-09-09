@@ -1,5 +1,4 @@
 goog.module('os.query.BaseQueryManager');
-goog.module.declareLegacyNamespace();
 
 const {defaultCompare} = goog.require('goog.array');
 const {assert} = goog.require('goog.asserts');

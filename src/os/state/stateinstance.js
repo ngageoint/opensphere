@@ -1,9 +1,9 @@
 goog.module('os.state.instance');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 
 const BaseStateManager = goog.requireType('os.state.BaseStateManager');
+
 
 /**
  * The global state manager instance.

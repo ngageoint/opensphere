@@ -1,5 +1,4 @@
 goog.module('os.query.instance');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 

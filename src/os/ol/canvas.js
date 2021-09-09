@@ -1,5 +1,4 @@
 goog.module('os.ol.canvas');
-goog.module.declareLegacyNamespace();
 
 const GeometryCollection = goog.require('ol.geom.GeometryCollection');
 const Point = goog.require('ol.geom.Point');

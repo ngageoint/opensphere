@@ -1,5 +1,4 @@
 goog.module('os.state.IState');
-goog.module.declareLegacyNamespace();
 
 const Deferred = goog.requireType('goog.async.Deferred');
 

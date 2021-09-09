@@ -1,5 +1,4 @@
 goog.module('os.metrics.MapMetrics');
-goog.module.declareLegacyNamespace();
 
 const {Map: MapKeys} = goog.require('os.metrics.keys');
 const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');

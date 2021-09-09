@@ -1,5 +1,4 @@
 goog.module('os.source.IFilterableTileSource');
-goog.module.declareLegacyNamespace();
 
 const {TileFilterFn} = goog.requireType('os.tile');
 

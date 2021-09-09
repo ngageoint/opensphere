@@ -1,5 +1,4 @@
 goog.module('os.source.Vector');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin.rbush');
 

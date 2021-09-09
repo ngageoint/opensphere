@@ -1,7 +1,7 @@
 goog.module('os.storage.IAsyncStorage');
-goog.module.declareLegacyNamespace();
 
 const Deferred = goog.requireType('goog.async.Deferred');
+
 
 /**
  * Interface for asynchronous storage mechanisms

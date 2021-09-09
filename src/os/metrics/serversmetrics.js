@@ -1,5 +1,4 @@
 goog.module('os.metrics.ServersMetrics');
-goog.module.declareLegacyNamespace();
 
 const {Servers} = goog.require('os.metrics.keys');
 const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');

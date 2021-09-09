@@ -1,5 +1,4 @@
 goog.module('os.net.AbstractModifier');
-goog.module.declareLegacyNamespace();
 
 const IModifier = goog.requireType('os.net.IModifier');
 

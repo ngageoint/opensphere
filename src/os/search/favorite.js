@@ -1,5 +1,4 @@
 goog.module('os.search.Favorite');
-goog.module.declareLegacyNamespace();
 
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 

@@ -1,5 +1,4 @@
 goog.module('os.ol.control.MousePosition');
-goog.module.declareLegacyNamespace();
 
 const {listen, unlistenByKey} = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');

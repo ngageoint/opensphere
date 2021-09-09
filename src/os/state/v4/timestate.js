@@ -1,5 +1,4 @@
 goog.module('os.state.v4.TimeState');
-goog.module.declareLegacyNamespace();
 
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const {getElementByClass} = goog.require('goog.dom');

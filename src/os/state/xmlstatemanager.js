@@ -1,5 +1,4 @@
 goog.module('os.state.XMLStateManager');
-goog.module.declareLegacyNamespace();
 
 const {getChildren, getFirstElementChild} = goog.require('goog.dom');
 const {createDocument, loadXml} = goog.require('goog.dom.xml');

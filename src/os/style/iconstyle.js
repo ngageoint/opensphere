@@ -1,5 +1,4 @@
 goog.module('os.style.Icon');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin.IconImageMixin');
 

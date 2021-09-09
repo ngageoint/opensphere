@@ -1,5 +1,4 @@
 goog.module('os.query.ECQLQueryHandler');
-goog.module.declareLegacyNamespace();
 
 const AreaFormatter = goog.require('os.filter.impl.ecql.AreaFormatter');
 const ExclusionFormatter = goog.require('os.filter.impl.ecql.ExclusionFormatter');

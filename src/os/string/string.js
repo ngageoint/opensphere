@@ -1,5 +1,4 @@
 goog.module('os.string');
-goog.module.declareLegacyNamespace();
 
 const {getRandomString, isEmptyOrWhitespace, makeSafe, removeAll} = goog.require('goog.string');
 const Const = goog.require('goog.string.Const');

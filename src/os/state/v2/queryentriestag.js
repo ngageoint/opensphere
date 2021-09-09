@@ -1,5 +1,4 @@
 goog.module('os.state.v2.QueryEntriesTag');
-goog.module.declareLegacyNamespace();
 
 
 /**

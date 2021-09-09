@@ -1,5 +1,4 @@
 goog.module('os.query.TemporalFormatter');
-goog.module.declareLegacyNamespace();
 
 const {format, momentFormat} = goog.require('os.time');
 

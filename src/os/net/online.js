@@ -1,5 +1,4 @@
 goog.module('os.net.Online');
-goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const dispatcher = goog.require('os.Dispatcher');

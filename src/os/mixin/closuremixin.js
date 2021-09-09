@@ -3,7 +3,6 @@
  *               polyfills to Array and Object.
  */
 goog.module('os.mixin.closure');
-goog.module.declareLegacyNamespace();
 
 const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
 const googObject = goog.require('goog.object');

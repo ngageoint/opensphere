@@ -1,5 +1,4 @@
 goog.module('os.net.SameDomainHandler');
-goog.module.declareLegacyNamespace();
 
 const Uri = goog.require('goog.Uri');
 const log = goog.require('goog.log');

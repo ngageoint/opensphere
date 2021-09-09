@@ -1,5 +1,4 @@
 goog.module('os.search.AbstractUrlSearch');
-goog.module.declareLegacyNamespace();
 
 const EventType = goog.require('goog.net.EventType');
 const Request = goog.require('os.net.Request');

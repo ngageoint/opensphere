@@ -1,5 +1,4 @@
 goog.module('os.state.v4.ViewProjection');
-goog.module.declareLegacyNamespace();
 
 
 /**

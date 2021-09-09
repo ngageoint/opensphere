@@ -1,5 +1,4 @@
 goog.module('os.math.Units');
-goog.module.declareLegacyNamespace();
 
 
 /**

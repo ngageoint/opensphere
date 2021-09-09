@@ -1,5 +1,4 @@
 goog.module('os.query.utils');
-goog.module.declareLegacyNamespace();
 
 const {nearlyEquals} = goog.require('goog.math');
 const Feature = goog.require('ol.Feature');

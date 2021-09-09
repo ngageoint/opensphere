@@ -1,5 +1,4 @@
 goog.module('os.storage.HTML5LocalStorage');
-goog.module.declareLegacyNamespace();
 
 const iter = goog.require('goog.iter');
 const googStorageMechanismHtml5LocalStorage = goog.require('goog.storage.mechanism.HTML5LocalStorage');

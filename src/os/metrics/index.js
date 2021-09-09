@@ -1,5 +1,4 @@
 goog.module('os.metrics');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const {

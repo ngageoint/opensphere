@@ -1,5 +1,4 @@
 goog.module('os.query.ui.MergeAreasUI');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const Feature = goog.require('ol.Feature');

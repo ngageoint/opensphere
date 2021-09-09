@@ -1,5 +1,4 @@
 goog.module('os.metrics.keys');
-goog.module.declareLegacyNamespace();
 
 
 /**

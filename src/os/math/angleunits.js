@@ -1,5 +1,4 @@
 goog.module('os.math.AngleUnits');
-goog.module.declareLegacyNamespace();
 
 
 /**

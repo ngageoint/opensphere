@@ -1,5 +1,4 @@
 goog.module('os.ol.mixin.Disposable');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('ol.Disposable');
 

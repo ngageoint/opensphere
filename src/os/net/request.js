@@ -1,5 +1,4 @@
 goog.module('os.net.Request');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const Uri = goog.require('goog.Uri');

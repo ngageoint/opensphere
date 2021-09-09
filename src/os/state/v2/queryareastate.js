@@ -1,5 +1,4 @@
 goog.module('os.state.v2.QueryArea');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin.geometry');
 

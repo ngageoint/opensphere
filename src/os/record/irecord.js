@@ -1,5 +1,4 @@
 goog.module('os.record.IRecord');
-goog.module.declareLegacyNamespace();
 
 const ITime = goog.requireType('os.time.ITime');
 

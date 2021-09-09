@@ -1,5 +1,4 @@
 goog.module('os.net.ProxyHandler');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const HandlerType = goog.require('os.net.HandlerType');

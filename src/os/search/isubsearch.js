@@ -1,5 +1,4 @@
 goog.module('os.search.ISubSearch');
-goog.module.declareLegacyNamespace();
 
 const SearchFacetDepartment = goog.requireType('os.search.SearchFacetDepartment');
 const TriState = goog.requireType('os.structs.TriState');

@@ -4,7 +4,6 @@
  * @see http://git.stwan.bits/projects/OSS/repos/ol3/commits/d6f03697d7673ed57decdf92cb5d37f03a1f5323#src/ol/layer/layerbase.js
  */
 goog.module('os.mixin.layerbase');
-goog.module.declareLegacyNamespace();
 
 const Base = goog.require('ol.layer.Base');
 const Property = goog.require('ol.layer.Property');

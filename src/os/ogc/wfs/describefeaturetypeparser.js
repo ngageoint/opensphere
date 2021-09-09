@@ -1,5 +1,4 @@
 goog.module('os.ogc.wfs.DescribeFeatureTypeParser');
-goog.module.declareLegacyNamespace();
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const NodeType = goog.require('goog.dom.NodeType');

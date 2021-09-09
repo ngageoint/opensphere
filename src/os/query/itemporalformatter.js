@@ -1,5 +1,4 @@
 goog.module('os.query.ITemporalFormatter');
-goog.module.declareLegacyNamespace();
 
 const TimelineController = goog.requireType('os.time.TimelineController');
 

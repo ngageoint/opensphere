@@ -1,5 +1,4 @@
 goog.module('os.state.v4.FilterAction');
-goog.module.declareLegacyNamespace();
 
 const {getChildren} = goog.require('goog.dom');
 const log = goog.require('goog.log');

@@ -1,5 +1,4 @@
 goog.module('os.search.AbstractSearchManager');
-goog.module.declareLegacyNamespace();
 
 const {defaultCompare} = goog.require('goog.array');
 const GoogEvent = goog.require('goog.events.Event');

@@ -1,5 +1,4 @@
 goog.module('os.mixin.Image');
-goog.module.declareLegacyNamespace();
 
 const OLImage = goog.require('ol.Image');
 const ImageState = goog.require('ol.ImageState');

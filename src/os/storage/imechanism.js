@@ -1,5 +1,4 @@
 goog.module('os.storage.IMechanism');
-goog.module.declareLegacyNamespace();
 
 
 /**

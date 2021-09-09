@@ -1,5 +1,4 @@
 goog.module('os.net.CredentialsHandler');
-goog.module.declareLegacyNamespace();
 
 const {getCrossOrigin} = goog.require('os.net');
 const CrossOrigin = goog.require('os.net.CrossOrigin');

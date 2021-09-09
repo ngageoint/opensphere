@@ -1,5 +1,4 @@
 goog.module('os.search.FeatureValueFacet');
-goog.module.declareLegacyNamespace();
 
 const ValueFacet = goog.require('os.search.ValueFacet');
 

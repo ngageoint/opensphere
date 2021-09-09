@@ -1,5 +1,4 @@
 goog.module('os.net.IDataFormatter');
-goog.module.declareLegacyNamespace();
 
 
 /**

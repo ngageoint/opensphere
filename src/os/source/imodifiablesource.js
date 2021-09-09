@@ -1,5 +1,4 @@
 goog.module('os.source.IModifiableSource');
-goog.module.declareLegacyNamespace();
 
 const Feature = goog.requireType('ol.Feature');
 

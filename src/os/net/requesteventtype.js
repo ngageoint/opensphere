@@ -1,5 +1,4 @@
 goog.module('os.net.RequestEventType');
-goog.module.declareLegacyNamespace();
 
 
 /**

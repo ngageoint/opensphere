@@ -1,5 +1,4 @@
 goog.module('os.source.PropertyChange');
-goog.module.declareLegacyNamespace();
 
 
 /**

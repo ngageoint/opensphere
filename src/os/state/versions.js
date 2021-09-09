@@ -1,5 +1,4 @@
 goog.module('os.state.Versions');
-goog.module.declareLegacyNamespace();
 
 
 /**

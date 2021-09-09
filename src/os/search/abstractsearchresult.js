@@ -1,5 +1,4 @@
 goog.module('os.search.AbstractSearchResult');
-goog.module.declareLegacyNamespace();
 
 const ISearchResult = goog.requireType('os.search.ISearchResult');
 

@@ -1,5 +1,4 @@
 goog.module('os.record.Record');
-goog.module.declareLegacyNamespace();
 
 const IRecord = goog.requireType('os.record.IRecord');
 

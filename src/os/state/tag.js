@@ -1,5 +1,4 @@
 goog.module('os.state.Tag');
-goog.module.declareLegacyNamespace();
 
 
 /**

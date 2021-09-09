@@ -1,5 +1,4 @@
 goog.module('os.search.IFacetedSearch');
-goog.module.declareLegacyNamespace();
 
 const AppliedFacets = goog.requireType('os.search.AppliedFacets');
 const FacetSet = goog.requireType('os.search.FacetSet');

@@ -1,5 +1,4 @@
 goog.module('os.ol.source.tileimage');
-goog.module.declareLegacyNamespace();
 
 const EventType = goog.require('goog.net.EventType');
 const HandlerType = goog.require('os.net.HandlerType');

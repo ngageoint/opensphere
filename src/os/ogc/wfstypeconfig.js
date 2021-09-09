@@ -1,5 +1,4 @@
 goog.module('os.ogc.WFSTypeConfig');
-goog.module.declareLegacyNamespace();
 
 /**
  * Typedef describing available WFS format types (GML, GeoJSON, etc.)

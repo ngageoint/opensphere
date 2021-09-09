@@ -1,5 +1,4 @@
 goog.module('os.ogc.filter.OGCExclusionFormatter');
-goog.module.declareLegacyNamespace();
 
 const OGCSpatialFormatter = goog.require('os.ogc.filter.OGCSpatialFormatter');
 

@@ -1,5 +1,4 @@
 goog.module('os.math');
-goog.module.declareLegacyNamespace();
 
 const Units = goog.require('os.math.Units');
 const OLUnits = goog.require('os.math.OLUnits');

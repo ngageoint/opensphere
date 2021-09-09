@@ -1,9 +1,9 @@
 goog.module('os.proj.switch.ReprojectionWarning');
-goog.module.declareLegacyNamespace();
 
 const Delay = goog.require('goog.async.Delay');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
+
 
 /**
  * Displays a warning when tile layers will be reprojected.
