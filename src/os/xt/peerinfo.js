@@ -1,5 +1,4 @@
 goog.module('os.xt.PeerInfo');
-goog.module.declareLegacyNamespace();
 
 const {getLastPing} = goog.require('os.xt');
 

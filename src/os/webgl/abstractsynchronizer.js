@@ -1,5 +1,4 @@
 goog.module('os.webgl.AbstractWebGLSynchronizer');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const TimelineController = goog.require('os.time.TimelineController');

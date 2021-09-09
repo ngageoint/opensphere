@@ -4,7 +4,6 @@
  * These time utilities depend critically on the presence of at least version 2.8.3 of moment.js
  */
 goog.module('os.time');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const asserts = goog.require('goog.asserts');

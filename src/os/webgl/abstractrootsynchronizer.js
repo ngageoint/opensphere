@@ -1,5 +1,4 @@
 goog.module('os.webgl.AbstractRootSynchronizer');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const asserts = goog.require('goog.asserts');

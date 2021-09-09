@@ -1,5 +1,4 @@
 goog.module('os.time.TimelineActionEventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * timeline actions

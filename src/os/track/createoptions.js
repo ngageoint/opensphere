@@ -1,5 +1,4 @@
 goog.module('os.track.CreateOptions');
-goog.module.declareLegacyNamespace();
 
 const Feature = goog.requireType('ol.Feature');
 const TrackLike = goog.requireType('os.track.TrackLike');

@@ -1,5 +1,4 @@
 goog.module('os.webgl.AbstractWebGLRenderer');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const Promise = goog.require('goog.Promise');

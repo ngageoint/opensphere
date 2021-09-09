@@ -1,5 +1,4 @@
 goog.module('os.time.UnboundedRange');
-goog.module.declareLegacyNamespace();
 
 const TimeInstant = goog.require('os.time.TimeInstant');
 

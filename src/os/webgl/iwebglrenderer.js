@@ -1,5 +1,4 @@
 goog.module('os.webgl.IWebGLRenderer');
-goog.module.declareLegacyNamespace();
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const IWebGLCamera = goog.requireType('os.webgl.IWebGLCamera');

@@ -1,5 +1,4 @@
 goog.module('os.user.settings.FavoriteManager');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 

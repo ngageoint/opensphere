@@ -1,5 +1,4 @@
 goog.module('os.thread.EventType');
-goog.module.declareLegacyNamespace();
 
 
 /**

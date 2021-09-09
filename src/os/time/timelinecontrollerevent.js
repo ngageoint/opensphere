@@ -1,5 +1,4 @@
 goog.module('os.time.TimelineControllerEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const TimeRange = goog.require('os.time.TimeRange');

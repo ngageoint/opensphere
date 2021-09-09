@@ -1,5 +1,4 @@
 goog.module('os.user.settings.favorite');
-goog.module.declareLegacyNamespace();
 
 
 /**

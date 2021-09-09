@@ -1,7 +1,7 @@
 goog.module('os.time.xf');
-goog.module.declareLegacyNamespace();
 
 const ITime = goog.requireType('os.time.ITime');
+
 
 /**
  * Definition for a function that takes an object and returns the time value for that object.

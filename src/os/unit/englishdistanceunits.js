@@ -1,5 +1,4 @@
 goog.module('os.unit.EnglishDistanceUnits');
-goog.module.declareLegacyNamespace();
 
 const BaseUnit = goog.require('os.unit.BaseUnit');
 const Multiplier = goog.require('os.unit.Multiplier');

@@ -1,5 +1,4 @@
 goog.module('os.unit.UnitManager');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');

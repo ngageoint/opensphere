@@ -1,5 +1,4 @@
 goog.module('os.unit.IMultiplier');
-goog.module.declareLegacyNamespace();
 
 
 /**

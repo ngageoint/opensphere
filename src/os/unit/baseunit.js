@@ -1,5 +1,4 @@
 goog.module('os.unit.BaseUnit');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 

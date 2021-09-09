@@ -1,5 +1,4 @@
 goog.module('os.xt');
-goog.module.declareLegacyNamespace();
 
 
 /**

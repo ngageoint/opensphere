@@ -1,8 +1,8 @@
 goog.module('os.track.TrackLike');
-goog.module.declareLegacyNamespace();
 
 const LineString = goog.requireType('ol.geom.LineString');
 const MultiLineString = goog.requireType('ol.geom.MultiLineString');
+
 
 /**
  * A type representing a track geometry. Tracks will use a `ol.geom.MultiLineString` if they cross the date line (to

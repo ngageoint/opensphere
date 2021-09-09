@@ -1,5 +1,4 @@
 goog.module('os.tile');
-goog.module.declareLegacyNamespace();
 
 const {createCanvasContext2D} = goog.require('ol.dom');
 

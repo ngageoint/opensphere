@@ -1,5 +1,4 @@
 goog.module('os.unit.IUnit');
-goog.module.declareLegacyNamespace();
 
 const IMultiplier = goog.requireType('os.unit.IMultiplier');
 

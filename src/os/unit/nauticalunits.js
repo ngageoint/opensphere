@@ -1,5 +1,4 @@
 goog.module('os.unit.NauticalUnits');
-goog.module.declareLegacyNamespace();
 
 const BaseUnit = goog.require('os.unit.BaseUnit');
 const Multiplier = goog.require('os.unit.Multiplier');

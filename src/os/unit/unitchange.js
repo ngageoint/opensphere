@@ -1,5 +1,4 @@
 goog.module('os.unit.UnitChange');
-goog.module.declareLegacyNamespace();
 
 
 /**
