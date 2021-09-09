@@ -2,7 +2,6 @@
  * @fileoverview Helpers for functional programming with the opensphere/openlayers API
  */
 goog.module('os.fn');
-goog.module.declareLegacyNamespace();
 
 const olExtent = goog.require('ol.extent');
 const GeometryType = goog.require('ol.geom.GeometryType');

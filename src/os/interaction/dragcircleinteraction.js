@@ -1,5 +1,4 @@
 goog.module('os.interaction.DragCircle');
-goog.module.declareLegacyNamespace();
 
 const I3DSupport = goog.require('os.I3DSupport');
 const osImplements = goog.require('os.implements');

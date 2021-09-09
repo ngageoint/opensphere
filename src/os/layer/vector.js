@@ -1,5 +1,4 @@
 goog.module('os.layer.Vector');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');

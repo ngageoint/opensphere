@@ -1,5 +1,4 @@
 goog.module('os.interaction.Modify');
-goog.module.declareLegacyNamespace();
 
 const dispose = goog.require('goog.dispose');
 const KeyCodes = goog.require('goog.events.KeyCodes');

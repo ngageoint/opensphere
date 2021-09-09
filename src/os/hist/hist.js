@@ -2,7 +2,6 @@
  * Histogram utility functions.
  */
 goog.module('os.hist');
-goog.module.declareLegacyNamespace();
 
 const {binaryInsert, defaultCompare} = goog.require('goog.array');
 const googObject = goog.require('goog.object');
@@ -13,6 +12,7 @@ const Layer = goog.requireType('ol.layer.Layer');
 const Source = goog.requireType('ol.source.Source');
 const IHistogramData = goog.requireType('os.hist.IHistogramData');
 const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
+
 
 /**
  * Gets the maximum combined bin count in an array of histograms.

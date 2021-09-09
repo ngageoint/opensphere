@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.Rule');
-goog.module.declareLegacyNamespace();
 
 const IPersistable = goog.requireType('os.IPersistable');
 

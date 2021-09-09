@@ -1,5 +1,4 @@
 goog.module('os.interaction.Reset');
-goog.module.declareLegacyNamespace();
 
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const {and} = goog.require('goog.functions');

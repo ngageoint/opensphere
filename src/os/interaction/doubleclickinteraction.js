@@ -1,5 +1,4 @@
 goog.module('os.interaction.DoubleClick');
-goog.module.declareLegacyNamespace();
 
 const {insert} = goog.require('goog.array');
 const Feature = goog.require('ol.Feature');

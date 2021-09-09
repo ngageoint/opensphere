@@ -1,5 +1,4 @@
 goog.module('os.interaction.DragZoom');
-goog.module.declareLegacyNamespace();
 
 const {platformModifierKeyOnly} = goog.require('ol.events.condition');
 const I3DSupport = goog.require('os.I3DSupport');

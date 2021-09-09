@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.AbstractPositionMapping');
-goog.module.declareLegacyNamespace();
 
 const {localFieldToXmlField, xmlFieldToLocalField} = goog.require('os.im.mapping');
 const AbstractMapping = goog.require('os.im.mapping.AbstractMapping');

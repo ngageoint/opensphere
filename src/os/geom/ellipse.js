@@ -1,5 +1,4 @@
 goog.module('os.geom.Ellipse');
-goog.module.declareLegacyNamespace();
 
 const Polygon = goog.require('ol.geom.Polygon');
 const geo = goog.require('os.geo');

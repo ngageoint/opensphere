@@ -1,5 +1,4 @@
 goog.module('os.interaction.KeyboardTiltRotate');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const KeyCodes = goog.require('goog.events.KeyCodes');

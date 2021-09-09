@@ -1,5 +1,4 @@
 goog.module('os.layer.IColorableLayer');
-goog.module.declareLegacyNamespace();
 
 /**
  * Interface for layers that support coloring.

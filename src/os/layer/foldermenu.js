@@ -1,5 +1,4 @@
 goog.module('os.menu.folder');
-goog.module.declareLegacyNamespace();
 
 const FolderManager = goog.require('os.layer.FolderManager');
 const FolderNode = goog.require('os.data.FolderNode');

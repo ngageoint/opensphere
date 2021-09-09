@@ -1,5 +1,4 @@
 goog.module('os.interaction.ContextMenu');
-goog.module.declareLegacyNamespace();
 
 const I3DSupport = goog.require('os.I3DSupport');
 const {normalizeLongitude} = goog.require('os.geo2');

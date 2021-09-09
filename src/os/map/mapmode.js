@@ -1,5 +1,4 @@
 goog.module('os.MapMode');
-goog.module.declareLegacyNamespace();
 
 /**
  * Available map modes.

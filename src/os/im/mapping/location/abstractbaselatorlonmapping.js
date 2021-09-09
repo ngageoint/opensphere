@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.location.AbstractBaseLatOrLonMapping');
-goog.module.declareLegacyNamespace();
 
 const {COORD_CLEANER} = goog.require('os.geo');
 const {getBestFieldMatch, getItemField, setItemField} = goog.require('os.im.mapping');

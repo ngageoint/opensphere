@@ -1,5 +1,4 @@
 goog.module('os.layer.preset.PresetMenuButton');
-goog.module.declareLegacyNamespace();
 
 const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
 const {getImportActionManager} = goog.require('os.im.action');

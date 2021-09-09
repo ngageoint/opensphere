@@ -1,5 +1,4 @@
 goog.module('os.layer.AnimationOverlayOptions');
-goog.module.declareLegacyNamespace();
 
 const Feature = goog.requireType('ol.Feature');
 const OLMap = goog.requireType('ol.Map');

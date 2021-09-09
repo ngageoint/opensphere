@@ -1,5 +1,4 @@
 goog.module('os.im.action');
-goog.module.declareLegacyNamespace();
 
 const osSource = goog.require('os.source');
 

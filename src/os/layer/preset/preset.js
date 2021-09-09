@@ -1,5 +1,4 @@
 goog.module('os.layer.preset');
-goog.module.declareLegacyNamespace();
 
 const object = goog.require('goog.object');
 const style = goog.require('os.style');

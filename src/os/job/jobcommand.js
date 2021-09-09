@@ -1,5 +1,4 @@
 goog.module('os.job.JobCommand');
-goog.module.declareLegacyNamespace();
 
 /**
  * Worker control commands.

@@ -1,5 +1,4 @@
 goog.module('os.interaction.Hover');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const Feature = goog.require('ol.Feature');

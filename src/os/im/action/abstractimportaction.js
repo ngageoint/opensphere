@@ -1,5 +1,4 @@
 goog.module('os.im.action.AbstractImportAction');
-goog.module.declareLegacyNamespace();
 
 const osXml = goog.require('os.xml');
 

@@ -1,7 +1,7 @@
 goog.module('os.histo.Bin');
-goog.module.declareLegacyNamespace();
 
 const Result = goog.requireType('os.histo.Result');
+
 
 /**
  * Represents a single bin in a histogram

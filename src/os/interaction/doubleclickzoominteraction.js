@@ -1,5 +1,4 @@
 goog.module('os.interaction.DoubleClickZoom');
-goog.module.declareLegacyNamespace();
 
 const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
 const {platformModifierKeyOnly} = goog.require('ol.events.condition');

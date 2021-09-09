@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.RadiusMapping');
-goog.module.declareLegacyNamespace();
 
 const Fields = goog.require('os.Fields');
 const {DEFAULT_RADIUS_COL_NAME, DEFAULT_RADIUS_UNIT} = goog.require('os.fields');

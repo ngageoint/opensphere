@@ -4,6 +4,7 @@ goog.module.declareLegacyNamespace();
 const IPersistable = goog.requireType('os.IPersistable');
 const Bin = goog.requireType('os.histo.Bin');
 
+
 /**
  * @interface
  * @extends {IPersistable}

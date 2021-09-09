@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.DateType');
-goog.module.declareLegacyNamespace();
 
 
 /**

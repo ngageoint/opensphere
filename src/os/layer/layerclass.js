@@ -1,5 +1,4 @@
 goog.module('os.layer.LayerClass');
-goog.module.declareLegacyNamespace();
 
 /**
  * Layer class names used with os.registerClass and os.instanceOf.

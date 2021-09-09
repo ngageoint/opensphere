@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.TimeType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

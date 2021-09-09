@@ -6,7 +6,6 @@
  * See /license.txt for the full text of the license.
  */
 goog.module('os.geo.jsts');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const Feature = goog.require('ol.Feature');
@@ -36,6 +35,7 @@ const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
 const LineString = goog.requireType('ol.geom.LineString');
 const MultiLineString = goog.requireType('ol.geom.MultiLineString');
 const Point = goog.requireType('ol.geom.Point');
+
 
 // Initialize the JSTS mixin on module load.
 initJstsMixin();

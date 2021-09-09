@@ -1,5 +1,4 @@
 goog.module('os.layer.config.LayerConfigManager');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 

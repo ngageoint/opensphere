@@ -1,11 +1,11 @@
 goog.module('os.histo.BinMethod');
-goog.module.declareLegacyNamespace();
 
 const DateBinMethod = goog.require('os.histo.DateBinMethod');
 const NumericBinMethod = goog.require('os.histo.NumericBinMethod');
 const UniqueBinMethod = goog.require('os.histo.UniqueBinMethod');
 
 const IBinMethod = goog.requireType('os.histo.IBinMethod');
+
 
 /**
  * Bin methods available in the application.

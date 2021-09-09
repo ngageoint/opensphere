@@ -1,5 +1,4 @@
 goog.module('os.legend');
-goog.module.declareLegacyNamespace();
 
 const {defaultCompare} = goog.require('goog.array');
 const {clamp} = goog.require('goog.math');

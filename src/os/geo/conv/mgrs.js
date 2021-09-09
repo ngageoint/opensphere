@@ -1,11 +1,11 @@
 goog.module('os.geo.conv.MGRS');
-goog.module.declareLegacyNamespace();
 
 const Coordinate = goog.require('goog.math.Coordinate');
 const {buildString, isAlpha, isNumeric} = goog.require('goog.string');
 const {MGRS_REGEXP} = goog.require('os.geo');
 const LatitudeBand = goog.require('os.geo.conv.LatitudeBand');
 const UTM = goog.require('os.geo.conv.UTM');
+
 
 /**
  * This is a partial port of GeoTrans 2.4.2. It allows conversion from

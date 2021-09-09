@@ -1,5 +1,4 @@
 goog.module('os.im.ChainingImporter');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const GoogEvent = goog.require('goog.events.Event');

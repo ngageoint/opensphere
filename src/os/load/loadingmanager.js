@@ -1,5 +1,4 @@
 goog.module('os.load.LoadingManager');
-goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');

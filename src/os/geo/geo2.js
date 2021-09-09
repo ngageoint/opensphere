@@ -4,7 +4,6 @@
  * back when using them.
  */
 goog.module('os.geo2');
-goog.module.declareLegacyNamespace();
 
 const GeometryType = goog.require('ol.geom.GeometryType');
 const {get: getProjection} = goog.require('ol.proj');

@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.LatMapping');
-goog.module.declareLegacyNamespace();
 
 const Point = goog.require('ol.geom.Point');
 const Fields = goog.require('os.Fields');

@@ -1,5 +1,4 @@
 goog.module('os.job.JobState');
-goog.module.declareLegacyNamespace();
 
 /**
  * Worker execution states.

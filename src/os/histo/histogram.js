@@ -1,5 +1,4 @@
 goog.module('os.histo.Histogram');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const EventTarget = goog.require('goog.events.EventTarget');
@@ -9,6 +8,7 @@ const Bin = goog.require('os.histo.Bin');
 const IGroupable = goog.requireType('os.data.xf.IGroupable');
 const IBinMethod = goog.requireType('os.histo.IBinMethod');
 const Result = goog.requireType('os.histo.Result');
+
 
 /**
  * @param {?} item

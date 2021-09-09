@@ -1,5 +1,4 @@
 goog.module('os.layer.config.AbstractLayerConfig');
-goog.module.declareLegacyNamespace();
 
 const {getLogger} = goog.require('goog.log');
 const {clamp} = goog.require('goog.math');

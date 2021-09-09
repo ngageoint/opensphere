@@ -1,10 +1,10 @@
 goog.module('os.map.instance');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 
 const MapContainer = goog.requireType('os.MapContainer');
 const IMapContainer = goog.requireType('os.map.IMapContainer');
+
 
 /**
  * The global IMapContainer instance.

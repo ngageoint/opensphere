@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.SemiMajorMapping');
-goog.module.declareLegacyNamespace();
 
 const Fields = goog.require('os.Fields');
 const fields = goog.require('os.fields');

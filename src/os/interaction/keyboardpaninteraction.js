@@ -1,5 +1,4 @@
 goog.module('os.interaction.KeyboardPan');
-goog.module.declareLegacyNamespace();
 
 const {rotate} = goog.require('ol.coordinate');
 const EventType = goog.require('ol.events.EventType');

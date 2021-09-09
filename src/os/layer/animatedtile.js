@@ -1,5 +1,4 @@
 goog.module('os.layer.AnimatedTile');
-goog.module.declareLegacyNamespace();
 
 const Delay = goog.require('goog.async.Delay');
 const {hashCode} = goog.require('goog.string');

@@ -1,5 +1,4 @@
 goog.module('os.layer.config.StaticLayerConfig');
-goog.module.declareLegacyNamespace();
 
 const {clone} = goog.require('goog.array');
 const {getLogger} = goog.require('goog.log');

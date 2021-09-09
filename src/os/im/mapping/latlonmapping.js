@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.LatLonMapping');
-goog.module.declareLegacyNamespace();
 
 const Point = goog.require('ol.geom.Point');
 const {COORD_CLEANER} = goog.require('os.geo');

@@ -1,7 +1,7 @@
 goog.module('os.im.mapping.IMapping');
-goog.module.declareLegacyNamespace();
 
 const IPersistable = goog.require('os.IPersistable'); // eslint-disable-line
+
 
 /**
  * Represents a mapping. A mapping can map a field to a well-known field (such

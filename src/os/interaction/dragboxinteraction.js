@@ -1,5 +1,4 @@
 goog.module('os.interaction.DragBox');
-goog.module.declareLegacyNamespace();
 
 const {asArray} = goog.require('ol.color');
 const Stroke = goog.require('ol.style.Stroke');

@@ -1,5 +1,4 @@
 goog.module('os.im.action.cmd.AbstractFilterAction');
-goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const {getImportActionManager} = goog.require('os.im.action');

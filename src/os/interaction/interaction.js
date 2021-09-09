@@ -1,5 +1,4 @@
 goog.module('os.interaction');
-goog.module.declareLegacyNamespace();
 
 const Feature = goog.require('ol.Feature');
 const OLVectorLayer = goog.require('ol.layer.Vector');

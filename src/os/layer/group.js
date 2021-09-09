@@ -1,5 +1,4 @@
 goog.module('os.layer.Group');
-goog.module.declareLegacyNamespace();
 
 const CollectionEventType = goog.require('ol.CollectionEventType');
 const {listen, unlisten} = goog.require('ol.events');

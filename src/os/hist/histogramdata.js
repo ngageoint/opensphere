@@ -1,8 +1,8 @@
 goog.module('os.hist.HistogramData');
-goog.module.declareLegacyNamespace();
 
 const AbstractHistogramData = goog.require('os.hist.AbstractHistogramData');
 const IHistogramData = goog.requireType('os.hist.IHistogramData');
+
 
 /**
  * Data representing a histogram for a single source.

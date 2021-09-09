@@ -1,5 +1,4 @@
 goog.module('os.im.Importer');
-goog.module.declareLegacyNamespace();
 
 const dispose = goog.require('goog.dispose');
 const GoogEvent = goog.require('goog.events.Event');

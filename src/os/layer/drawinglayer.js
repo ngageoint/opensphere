@@ -1,5 +1,4 @@
 goog.module('os.layer.Drawing');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin.layerbase');
 

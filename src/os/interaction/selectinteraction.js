@@ -1,5 +1,4 @@
 goog.module('os.interaction.Select');
-goog.module.declareLegacyNamespace();
 
 const Feature = goog.require('ol.Feature');
 const ViewHint = goog.require('ol.ViewHint');

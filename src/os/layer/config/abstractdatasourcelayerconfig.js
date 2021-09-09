@@ -1,5 +1,4 @@
 goog.module('os.layer.config.AbstractDataSourceLayerConfig');
-goog.module.declareLegacyNamespace();
 
 const Uri = goog.require('goog.Uri');
 const {removeIf} = goog.require('goog.array');

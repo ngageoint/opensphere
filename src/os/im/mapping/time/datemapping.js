@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.time.DateMapping');
-goog.module.declareLegacyNamespace();
 
 const {setItemField} = goog.require('os.im.mapping');
 const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');

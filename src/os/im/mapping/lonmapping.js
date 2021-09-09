@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.LonMapping');
-goog.module.declareLegacyNamespace();
 
 const Fields = goog.require('os.Fields');
 const {COORD_CLEANER, parseLon} = goog.require('os.geo');

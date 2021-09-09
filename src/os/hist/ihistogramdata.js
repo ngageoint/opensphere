@@ -1,5 +1,4 @@
 goog.module('os.hist.IHistogramData');
-goog.module.declareLegacyNamespace();
 
 /**
  * Interface that should be implemented by all histogram data classes.

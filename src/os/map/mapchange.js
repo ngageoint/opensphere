@@ -1,5 +1,4 @@
 goog.module('os.MapChange');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

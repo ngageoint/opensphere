@@ -1,5 +1,4 @@
 goog.module('os.histo.DateRangeBinType');
-goog.module.declareLegacyNamespace();
 
 /**
  * Provide the bin types that are capable of binning overlapping time ranges

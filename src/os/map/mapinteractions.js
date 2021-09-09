@@ -1,5 +1,4 @@
 goog.module('os.map.interaction');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const Collection = goog.require('ol.Collection');

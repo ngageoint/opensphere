@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.MappingRegistry');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 

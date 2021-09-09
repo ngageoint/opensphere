@@ -1,5 +1,4 @@
 goog.module('os.legend.ILegendRenderer');
-goog.module.declareLegacyNamespace();
 
 /**
  * Interface for layers that contribute to the legend.

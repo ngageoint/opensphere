@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.AbstractMapping');
-goog.module.declareLegacyNamespace();
 
 const IXmlPersistable = goog.require('os.IXmlPersistable'); // eslint-disable-line
 const osMapping = goog.require('os.im.mapping');

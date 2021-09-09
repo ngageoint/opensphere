@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.AltMapping');
-goog.module.declareLegacyNamespace();
 
 const googObject = goog.require('goog.object');
 const {toTitleCase} = goog.require('goog.string');

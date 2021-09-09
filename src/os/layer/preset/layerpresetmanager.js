@@ -1,5 +1,4 @@
 goog.module('os.layer.preset.LayerPresetManager');
-goog.module.declareLegacyNamespace();
 
 const Debouncer = goog.require('goog.async.Debouncer');
 const Dispatcher = goog.require('os.Dispatcher');
