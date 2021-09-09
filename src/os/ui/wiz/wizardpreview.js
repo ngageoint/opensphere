@@ -75,7 +75,7 @@ class Controller {
 
     /**
      * Grid options.
-     * @type {Object.<string, *>}
+     * @type {Object<string, *>}
      */
     this['options'] = {
       'dataItemColumnValueExtractor': this.getValue_,
@@ -185,7 +185,7 @@ class Controller {
    * @param {ColumnDefinition} column
    * @param {Object} button
    * @param {string} command
-   * @param {Array.<os.data.ColumnDefinition>} columns
+   * @param {Array<ColumnDefinition>} columns
    */
   onCommand(column, button, command, columns) {
     var count = 0;

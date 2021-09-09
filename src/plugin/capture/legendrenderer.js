@@ -1,7 +1,7 @@
 goog.module('plugin.capture.LegendRenderer');
 
 const {getMapCanvas} = goog.require('os.capture');
-const config = goog.require('os.config');
+const LegendSetting = goog.require('os.config.LegendSetting');
 const Settings = goog.require('os.config.Settings');
 const CanvasRenderer = goog.require('os.ui.capture.CanvasRenderer');
 
@@ -38,8 +38,8 @@ class LegendRenderer extends CanvasRenderer {
       y = (legendRect.top - mapRect.top) * pixelRatio;
     } else {
       // default to the settings values, or 0,0 if not present
-      x = /** @type {number} */ (Settings.getInstance().get(config.LegendSetting.LEFT, 0));
-      y = /** @type {number} */ (Settings.getInstance().get(config.LegendSetting.TOP, 0));
+      x = /** @type {number} */ (Settings.getInstance().get(LegendSetting.LEFT, 0));
+      y = /** @type {number} */ (Settings.getInstance().get(LegendSetting.TOP, 0));
     }
 
     return [x, y];

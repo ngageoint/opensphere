@@ -6,6 +6,7 @@ const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const olArray = goog.require('ol.array');
 const dispatcher = goog.require('os.Dispatcher');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const Settings = goog.require('os.config.Settings');
@@ -618,7 +619,7 @@ class ImportActionManager extends EventTarget {
       }
     } else {
       var msg = 'Failed adding ' + this.entryTitle.toLowerCase() + '. See the log for details.';
-      AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
+      AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.ERROR);
     }
   }
 

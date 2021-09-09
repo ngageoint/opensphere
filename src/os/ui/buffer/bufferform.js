@@ -22,6 +22,7 @@ const ExportOptionsEvent = goog.require('os.ui.ex.ExportOptionsEvent');
 const {nameCompare} = goog.require('os.ui.slick.column');
 
 const {BufferConfig} = goog.requireType('os.buffer');
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 
 
 /**
@@ -74,7 +75,7 @@ class Controller extends ExportOptionsCtrl {
     this['units'] = clone(UnitLabels);
 
     /**
-     * @type {!Array<!os.data.ColumnDefinition>}
+     * @type {!Array<!ColumnDefinition>}
      */
     this['columns'] = [];
 

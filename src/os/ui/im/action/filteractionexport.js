@@ -2,6 +2,7 @@ goog.module('os.ui.im.action.FilterActionExportUI');
 
 const Disposable = goog.require('goog.Disposable');
 const {ROOT} = goog.require('os');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const {saveFile} = goog.require('os.file.persist');
 const {testFilterActionEnabled} = goog.require('os.im.action');
@@ -232,7 +233,7 @@ const exportFilterActionEntries = function(fileName, entries) {
 
     saveFile(fileName, os.xml.serialize(rootNode), 'text/xml');
   } else {
-    AlertManager.getInstance().sendAlert('No actions to export.', os.alert.AlertEventSeverity.WARNING);
+    AlertManager.getInstance().sendAlert('No actions to export.', AlertEventSeverity.WARNING);
   }
 };
 

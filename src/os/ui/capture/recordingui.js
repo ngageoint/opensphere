@@ -7,6 +7,8 @@ const {ROOT} = goog.require('os');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const capture = goog.require('os.capture');
+const CaptureEventType = goog.require('os.capture.CaptureEventType');
+const ContentType = goog.require('os.capture.ContentType');
 const GifEncoder = goog.require('os.capture.GifEncoder');
 const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
@@ -15,6 +17,7 @@ const exportManager = goog.require('os.ui.exportManager');
 const osWindow = goog.require('os.ui.window');
 
 const IRecorder = goog.requireType('os.capture.IRecorder');
+const IVideoEncoder = goog.requireType('os.capture.IVideoEncoder');
 
 
 /**
@@ -78,10 +81,10 @@ class Controller {
     this.element_ = $element;
 
     /**
-     * @type {capture.IRecorder}
+     * @type {IRecorder}
      * @private
      */
-    this.recorder_ = /** @type {capture.IRecorder} */ ($scope['recorder']);
+    this.recorder_ = /** @type {IRecorder} */ ($scope['recorder']);
 
     /**
      * @type {boolean}
@@ -109,12 +112,12 @@ class Controller {
     this['title'] = 'Recording ' + capture.getTimestamp();
 
     /**
-     * @type {!Array<!capture.IVideoEncoder>}
+     * @type {!Array<!IVideoEncoder>}
      */
     this['encoders'] = [new GifEncoder()];
 
     /**
-     * @type {capture.IVideoEncoder}
+     * @type {IVideoEncoder}
      */
     this['encoder'] = this['encoders'][0];
 
@@ -186,11 +189,11 @@ class Controller {
    */
   record() {
     if (this.recorder_) {
-      this.recorder_.listen(capture.CaptureEventType.PROGRESS, this.onRecordingProgress_, false, this);
-      this.recorder_.listen(capture.CaptureEventType.STATUS, this.onRecordingStatus_, false, this);
-      this.recorder_.listenOnce(capture.CaptureEventType.UNBLOCK, this.onUnblock_, false, this);
-      this.recorder_.listenOnce(capture.CaptureEventType.COMPLETE, this.onRecordingComplete_, false, this);
-      this.recorder_.listenOnce(capture.CaptureEventType.ERROR, this.onRecordingError_, false, this);
+      this.recorder_.listen(CaptureEventType.PROGRESS, this.onRecordingProgress_, false, this);
+      this.recorder_.listen(CaptureEventType.STATUS, this.onRecordingStatus_, false, this);
+      this.recorder_.listenOnce(CaptureEventType.UNBLOCK, this.onUnblock_, false, this);
+      this.recorder_.listenOnce(CaptureEventType.COMPLETE, this.onRecordingComplete_, false, this);
+      this.recorder_.listenOnce(CaptureEventType.ERROR, this.onRecordingError_, false, this);
 
       this['recording'] = true;
       this['recordingCritical'] = true;
@@ -208,7 +211,7 @@ class Controller {
   /**
    * Get the title for a video encoder.
    *
-   * @param {capture.IVideoEncoder} encoder The encoder
+   * @param {IVideoEncoder} encoder The encoder
    * @return {string}
    * @export
    */
@@ -219,7 +222,7 @@ class Controller {
   /**
    * Get the description for the encoder.
    *
-   * @param {capture.IVideoEncoder} encoder The encoder
+   * @param {IVideoEncoder} encoder The encoder
    * @return {string}
    * @export
    */
@@ -281,7 +284,7 @@ class Controller {
   onRecordingComplete_(event) {
     if (this['persister'] && this.recorder_ && this.recorder_.data) {
       var name = this['title'] + '.' + this['encoder'].extension;
-      this['persister'].save(name, this.recorder_.data, capture.ContentType.GIF, this['title']);
+      this['persister'].save(name, this.recorder_.data, ContentType.GIF, this['title']);
     } else {
       AlertManager.getInstance().sendAlert('Unable to create recording: recording data missing.',
           AlertEventSeverity.ERROR);
@@ -297,7 +300,7 @@ class Controller {
    * @private
    */
   onRecordingError_(event) {
-    var recorder = /** @type {capture.IRecorder} */ (event.target);
+    var recorder = /** @type {IRecorder} */ (event.target);
     if (recorder && recorder.errorMsg) {
       AlertManager.getInstance().sendAlert('Recording failed. Please see the log for more details.',
           AlertEventSeverity.ERROR);

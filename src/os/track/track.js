@@ -42,6 +42,7 @@ const ConfirmColumnUI = goog.require('os.ui.window.ConfirmColumnUI');
 const ConfirmTextUI = goog.require('os.ui.window.ConfirmTextUI');
 const UnitManager = goog.require('os.unit.UnitManager');
 
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 const AddOptions = goog.requireType('os.track.AddOptions');
 const CreateOptions = goog.requireType('os.track.CreateOptions');
 const SplitOptions = goog.requireType('os.track.SplitOptions');
@@ -1135,7 +1136,7 @@ const promptForTitleAndMetadata = function(opt_default = '', opt_includeMetadata
 /**
  * Prompt the user to choose a track.
  *
- * @param {Array<os.data.ColumnDefinition>} columns The columns
+ * @param {Array<ColumnDefinition>} columns The columns
  * @param {string} prompt The dialog prompt
  * @return {!Promise}
  */

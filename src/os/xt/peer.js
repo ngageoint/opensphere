@@ -10,6 +10,7 @@ const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
 const olArray = goog.require('ol.array');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const events = goog.require('os.xt.events');
 const PeerInfo = goog.require('os.xt.PeerInfo');
@@ -448,7 +449,7 @@ class Peer {
         // only show this error once because if it starts to happen, it will spam the user pointlessly
         this.errorShown_ = true;
         var msg = logMsg + ' View the log for more details.';
-        AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
+        AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.ERROR);
       }
     }
   }

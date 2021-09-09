@@ -1,5 +1,7 @@
 goog.module('os.ui.im.action.FilterActionImport');
 
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
 const DataManager = goog.require('os.data.DataManager');
@@ -143,7 +145,7 @@ class Controller extends OSFilterImportCtrl {
     var entries = getEntriesFromMatched(this['matched']);
 
     var msg;
-    var am = os.alert.AlertManager.getInstance();
+    var am = AlertManager.getInstance();
     if (entries.length > 0) {
       var plural = entries.length == 1 ? '' : 's';
       var entryTitle = iam.entryTitle + plural;
@@ -164,10 +166,10 @@ class Controller extends OSFilterImportCtrl {
       CommandProcessor.getInstance().addCommand(cmd);
 
       msg = 'Successfully imported <b>' + this['matchedCount'] + '</b> ' + entryTitle + '.';
-      am.sendAlert(msg, os.alert.AlertEventSeverity.SUCCESS);
+      am.sendAlert(msg, AlertEventSeverity.SUCCESS);
     } else {
       msg = 'No ' + iam.entryTitle + 's were imported!';
-      am.sendAlert(msg, os.alert.AlertEventSeverity.WARNING);
+      am.sendAlert(msg, AlertEventSeverity.WARNING);
     }
 
     close(this.element);

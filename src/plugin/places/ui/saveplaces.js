@@ -13,6 +13,8 @@ const column = goog.require('os.ui.slick.column');
 const osWindow = goog.require('os.ui.window');
 const places = goog.require('plugin.places');
 
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+
 
 /**
  * Save places directive.
@@ -74,7 +76,7 @@ class Controller extends ExportOptionsCtrl {
     };
 
     /**
-     * @type {!Array<!os.data.ColumnDefinition>}
+     * @type {!Array<!ColumnDefinition>}
      */
     this['columns'] = [];
 

@@ -4,6 +4,10 @@ const asserts = goog.require('goog.asserts');
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
 const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const VectorLayer = goog.requireType('os.layer.Vector');
+const VectorSource = goog.requireType('os.source.Vector');
+
 
 /**
  * Changes the unique ID for a vector source.
@@ -14,8 +18,8 @@ class VectorUniqueIdCmd extends AbstractVectorStyle {
   /**
    * Constructor.
    * @param {string} layerId
-   * @param {os.data.ColumnDefinition} value
-   * @param {os.data.ColumnDefinition=} opt_oldValue
+   * @param {ColumnDefinition} value
+   * @param {ColumnDefinition=} opt_oldValue
    */
   constructor(layerId, value, opt_oldValue) {
     super(layerId, value, opt_oldValue);
@@ -23,7 +27,7 @@ class VectorUniqueIdCmd extends AbstractVectorStyle {
     this.metricKey = LayerKeys.VECTOR_UNIQUE_ID;
 
     /**
-     * @type {os.data.ColumnDefinition}
+     * @type {ColumnDefinition}
      */
     this.value = value;
   }
@@ -33,7 +37,7 @@ class VectorUniqueIdCmd extends AbstractVectorStyle {
    */
   getOldValue() {
     var layer = this.getLayer();
-    var source = /** @type {os.source.Vector} */ (layer.getSource());
+    var source = /** @type {VectorSource} */ (layer.getSource());
     return source.getUniqueId();
   }
 
@@ -41,7 +45,7 @@ class VectorUniqueIdCmd extends AbstractVectorStyle {
    * @inheritDoc
    */
   setValue(value) {
-    var layer = /** @type {os.layer.Vector} */ (this.getLayer());
+    var layer = /** @type {VectorLayer} */ (this.getLayer());
     asserts.assert(layer, 'layer must be defined');
 
     var config = this.getLayerConfig(layer);
@@ -56,7 +60,7 @@ class VectorUniqueIdCmd extends AbstractVectorStyle {
    */
   applyValue(config, value) {
     var layer = this.getLayer();
-    var source = /** @type {os.source.Vector} */ (layer.getSource());
+    var source = /** @type {VectorSource} */ (layer.getSource());
     source.setUniqueId(value);
   }
 }

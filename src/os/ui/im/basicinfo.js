@@ -7,6 +7,8 @@ const {getItemField} = goog.require('os.im.mapping');
 const Module = goog.require('os.ui.Module');
 const {findByField} = goog.require('os.ui.slick.column');
 
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+
 
 /**
  * Directive for requesting title, description, and tags for an import configuration.
@@ -87,8 +89,8 @@ class Controller {
   /**
    * Handle changes to columns on the scope.
    *
-   * @param {Array<os.data.ColumnDefinition>=} opt_new The new columns
-   * @param {Array<os.data.ColumnDefinition>=} opt_old The old columns
+   * @param {Array<ColumnDefinition>=} opt_new The new columns
+   * @param {Array<ColumnDefinition>=} opt_old The old columns
    * @protected
    */
   onColumnsChange(opt_new, opt_old) {
@@ -111,7 +113,7 @@ class Controller {
    * Update a column in the configuration from a set of columns.
    *
    * @param {string} columnField The config column field
-   * @param {Array<os.data.ColumnDefinition>} columns The columns
+   * @param {Array<ColumnDefinition>} columns The columns
    * @param {RegExp=} opt_regexp Auto detection regular expression.
    * @protected
    */
@@ -156,7 +158,7 @@ class Controller {
   /**
    * Gets sample text from the data.
    *
-   * @param {os.data.ColumnDefinition=} opt_column
+   * @param {ColumnDefinition=} opt_column
    * @return {string}
    * @protected
    */

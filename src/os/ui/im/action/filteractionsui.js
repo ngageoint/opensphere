@@ -2,6 +2,7 @@ goog.module('os.ui.im.action.FilterActionsCtrl');
 
 const googArray = goog.require('goog.array');
 const dispatcher = goog.require('os.Dispatcher');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
 const {Metrics: ActionMetrics} = goog.require('os.im.action');
 const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
@@ -184,7 +185,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
 
     if (entry) {
       var cmd = filter.copyEntryCmd(entry, parentIndex == -1 ? undefined : parentIndex + 1);
-      os.command.CommandProcessor.getInstance().addCommand(cmd);
+      CommandProcessor.getInstance().addCommand(cmd);
     }
   }
 
@@ -224,7 +225,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
 
     if (entry) {
       var cmd = filter.removeEntryCmd(entry);
-      os.command.CommandProcessor.getInstance().addCommand(cmd);
+      CommandProcessor.getInstance().addCommand(cmd);
     }
   }
 
