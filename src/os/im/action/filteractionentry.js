@@ -4,6 +4,7 @@ const functions = goog.require('goog.functions');
 const FilterEntry = goog.require('os.filter.FilterEntry');
 const fn = goog.require('os.ui.filter.fn');
 const IComparable = goog.requireType('os.IComparable');
+const {getImportActionManager} = goog.require('os.im.action');
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
 const {serialize} = goog.require('os.xml');
 
@@ -324,7 +325,8 @@ class FilterActionEntry extends FilterEntry {
    */
   restore(config) {
     super.restore(config);
-    var iam = os.im.action.ImportActionManager.getInstance();
+
+    var iam = getImportActionManager();
 
     this.actions.length = 0;
 

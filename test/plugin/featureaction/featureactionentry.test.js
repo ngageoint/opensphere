@@ -46,6 +46,16 @@ describe('plugin.im.action.feature.Entry', function() {
     expect(feature2.get('MATCH')).toBeUndefined();
   };
 
+  const originalManager = ImportActionManager.getInstance();
+
+  beforeEach(() => {
+    ImportActionManager.setInstance(getMockManager());
+  });
+
+  afterEach(() => {
+    ImportActionManager.setInstance(originalManager);
+  });
+
   it('should initialize correctly', function() {
     var fe = new Entry();
 
@@ -73,8 +83,6 @@ describe('plugin.im.action.feature.Entry', function() {
   });
 
   it('should clone/persist/restore properly', function() {
-    spyOn(ImportActionManager, 'getInstance').andCallFake(getMockManager);
-
     var fe = new Entry();
     fe.setFilter(filterXml);
     fe.actions = [new MockAction()];
