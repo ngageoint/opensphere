@@ -193,32 +193,48 @@ describe('OpenSphere Test Initialization', () => {
  * @return {os.im.mapping.MappingManager}
  */
 os.mock.getMockMappingManager = function() {
-  var mm = new os.im.mapping.MappingManager();
+  const AltMapping = goog.module.get('os.im.mapping.AltMapping');
+  const BearingMapping = goog.module.get('os.im.mapping.BearingMapping');
+  const LatMapping = goog.module.get('os.im.mapping.LatMapping');
+  const LonMapping = goog.module.get('os.im.mapping.LonMapping');
+  const MappingManager = goog.module.get('os.im.mapping.MappingManager');
+  const OrientationMapping = goog.module.get('os.im.mapping.OrientationMapping');
+  const PositionMapping = goog.module.get('os.im.mapping.PositionMapping');
+  const RadiusMapping = goog.module.get('os.im.mapping.RadiusMapping');
+  const SemiMajorMapping = goog.module.get('os.im.mapping.SemiMajorMapping');
+  const SemiMinorMapping = goog.module.get('os.im.mapping.SemiMinorMapping');
+  const TimeType = goog.module.get('os.im.mapping.TimeType');
+  const WKTMapping = goog.module.get('os.im.mapping.WKTMapping');
+  const DateMapping = goog.module.get('os.im.mapping.time.DateMapping');
+  const DateTimeMapping = goog.module.get('os.im.mapping.time.DateTimeMapping');
+  const TimeMapping = goog.module.get('os.im.mapping.time.TimeMapping');
+
+  var mm = new MappingManager();
 
   // register a date/time, date, and time mapping for each type
-  mm.registerMapping(new os.im.mapping.time.DateTimeMapping(os.im.mapping.TimeType.INSTANT));
-  mm.registerMapping(new os.im.mapping.time.DateMapping(os.im.mapping.TimeType.INSTANT));
-  mm.registerMapping(new os.im.mapping.time.TimeMapping(os.im.mapping.TimeType.INSTANT));
-  mm.registerMapping(new os.im.mapping.time.DateTimeMapping(os.im.mapping.TimeType.START));
-  mm.registerMapping(new os.im.mapping.time.DateMapping(os.im.mapping.TimeType.START));
-  mm.registerMapping(new os.im.mapping.time.TimeMapping(os.im.mapping.TimeType.START));
-  mm.registerMapping(new os.im.mapping.time.DateTimeMapping(os.im.mapping.TimeType.END));
-  mm.registerMapping(new os.im.mapping.time.DateMapping(os.im.mapping.TimeType.END));
-  mm.registerMapping(new os.im.mapping.time.TimeMapping(os.im.mapping.TimeType.END));
+  mm.registerMapping(new DateTimeMapping(TimeType.INSTANT));
+  mm.registerMapping(new DateMapping(TimeType.INSTANT));
+  mm.registerMapping(new TimeMapping(TimeType.INSTANT));
+  mm.registerMapping(new DateTimeMapping(TimeType.START));
+  mm.registerMapping(new DateMapping(TimeType.START));
+  mm.registerMapping(new TimeMapping(TimeType.START));
+  mm.registerMapping(new DateTimeMapping(TimeType.END));
+  mm.registerMapping(new DateMapping(TimeType.END));
+  mm.registerMapping(new TimeMapping(TimeType.END));
 
   // register geo mappings
-  mm.registerMapping(new os.im.mapping.WKTMapping());
-  mm.registerMapping(new os.im.mapping.LatMapping());
-  mm.registerMapping(new os.im.mapping.LonMapping());
-  mm.registerMapping(new os.im.mapping.PositionMapping());
-  mm.registerMapping(new os.im.mapping.AltMapping());
-  mm.registerMapping(new os.im.mapping.BearingMapping());
+  mm.registerMapping(new WKTMapping());
+  mm.registerMapping(new LatMapping());
+  mm.registerMapping(new LonMapping());
+  mm.registerMapping(new PositionMapping());
+  mm.registerMapping(new AltMapping());
+  mm.registerMapping(new BearingMapping());
 
   // register ellipse mappings
-  mm.registerMapping(new os.im.mapping.RadiusMapping());
-  mm.registerMapping(new os.im.mapping.OrientationMapping());
-  mm.registerMapping(new os.im.mapping.SemiMajorMapping());
-  mm.registerMapping(new os.im.mapping.SemiMinorMapping());
+  mm.registerMapping(new RadiusMapping());
+  mm.registerMapping(new OrientationMapping());
+  mm.registerMapping(new SemiMajorMapping());
+  mm.registerMapping(new SemiMinorMapping());
 
   return mm;
 };
