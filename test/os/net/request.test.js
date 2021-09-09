@@ -4,42 +4,18 @@ goog.require('goog.net.EventType');
 goog.require('ol.array');
 goog.require('os.net');
 goog.require('os.net.ExtDomainHandler');
+goog.require('os.net.MockModifier');
 goog.require('os.net.Request');
 goog.require('os.net.RequestHandlerFactory');
 goog.require('os.net.SameDomainHandler');
 
-
-// simple modifier implementations
-os.net.MockModifier = function() {
-  this.id_ = 'mock1';
-  this.priority_ = 1;
-};
-
-os.net.MockModifier.prototype.getId = function() {
-  return this.id_;
-};
-
-os.net.MockModifier.prototype.setId = function(id) {
-  this.id_ = id;
-};
-
-os.net.MockModifier.prototype.getPriority = function() {
-  return this.priority_;
-};
-
-os.net.MockModifier.prototype.setPriority = function(p) {
-  this.priority_ = p;
-};
-
-os.net.MockModifier.prototype.modify = function(uri) {
-  uri.setParameterValue(this.getId(), this.getPriority());
-};
 
 describe('os.net.Request', function() {
   const Uri = goog.module.get('goog.Uri');
   const EventType = goog.module.get('goog.net.EventType');
   const net = goog.module.get('os.net');
   const ExtDomainHandler = goog.module.get('os.net.ExtDomainHandler');
+  const MockModifier = goog.module.get('os.net.MockModifier');
   const Request = goog.module.get('os.net.Request');
   const RequestHandlerFactory = goog.module.get('os.net.RequestHandlerFactory');
   const SameDomainHandler = goog.module.get('os.net.SameDomainHandler');
@@ -142,8 +118,8 @@ describe('os.net.Request', function() {
 
   it('should keep modifiers sorted by <Priority, ID>  as they are added', function() {
     var r = new Request(window.location.toString());
-    var m = new net.MockModifier();
-    var m2 = new net.MockModifier();
+    var m = new MockModifier();
+    var m2 = new MockModifier();
 
     m2.setId('mock2');
     m2.setPriority(2);
@@ -157,8 +133,8 @@ describe('os.net.Request', function() {
 
   it('should be able to remove modifiers', function() {
     var r = new Request(window.location.toString());
-    var m = new net.MockModifier();
-    var m2 = new net.MockModifier();
+    var m = new MockModifier();
+    var m2 = new MockModifier();
 
     m2.setId('mock2');
     m2.setPriority(2);
@@ -176,7 +152,7 @@ describe('os.net.Request', function() {
 
   it('should prevent the addition of modifiers with the same id', function() {
     var r = new Request(window.location.toString());
-    var m = new net.MockModifier();
+    var m = new MockModifier();
 
 
     r.addModifier(m);
@@ -190,8 +166,8 @@ describe('os.net.Request', function() {
 
   it('should run the modifiers on the URI before making the request', function() {
     var r = new Request(window.location.toString());
-    var m = new net.MockModifier();
-    var m2 = new net.MockModifier();
+    var m = new MockModifier();
+    var m2 = new MockModifier();
 
     m2.setId('mock2');
     m2.setPriority(2);
@@ -223,7 +199,7 @@ describe('os.net.Request', function() {
 
   it('should throw an error when trying to modify a read-only URI', function() {
     var r = new Request(window.location.toString());
-    var m = new net.MockModifier();
+    var m = new MockModifier();
 
     r.addModifier(m);
     r.getUri().setReadOnly(true);

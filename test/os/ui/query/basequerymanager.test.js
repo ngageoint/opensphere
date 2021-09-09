@@ -20,7 +20,7 @@ describe('os.query.BaseQueryManager', function() {
   const BaseAreaManager = goog.module.get('os.query.BaseAreaManager');
   const BaseQueryManager = goog.module.get('os.query.BaseQueryManager');
   const QueryManager = goog.module.get('os.query.QueryManager');
-  const MockHandler = goog.module.get('os.ui.query.MockHandler');
+  const {MockHandler} = goog.module.get('os.ui.query.MockHandler');
 
   var am;
   var qm;

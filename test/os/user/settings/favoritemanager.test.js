@@ -1,10 +1,12 @@
 goog.require('os.config.Settings');
 goog.require('os.mock');
 goog.require('os.user.settings.FavoriteManager');
+goog.require('os.user.settings.FavoriteType');
 
 describe('os.user.settings.FavoriteManager', function() {
   const Settings = goog.module.get('os.config.Settings');
   const FavoriteManager = goog.module.get('os.user.settings.FavoriteManager');
+  const FavoriteType = goog.module.get('os.user.settings.FavoriteType');
 
   beforeEach(function() {
     Settings.getInstance().setPersistenceEnabled(false);
@@ -19,14 +21,14 @@ describe('os.user.settings.FavoriteManager', function() {
   });
 
   it('should save favorites', function() {
-    FavoriteManager.getInstance().save(os.user.settings.FavoriteType.DESCRIPTOR, '1', 'one');
-    FavoriteManager.getInstance().save(os.user.settings.FavoriteType.DESCRIPTOR, '2', 'two');
-    FavoriteManager.getInstance().save(os.user.settings.FavoriteType.DESCRIPTOR, '3', 'three');
+    FavoriteManager.getInstance().save(FavoriteType.DESCRIPTOR, '1', 'one');
+    FavoriteManager.getInstance().save(FavoriteType.DESCRIPTOR, '2', 'two');
+    FavoriteManager.getInstance().save(FavoriteType.DESCRIPTOR, '3', 'three');
     expect(FavoriteManager.getInstance().getFavorites().length).toBe(3);
   });
 
   it('should not add favorites that already exist', function() {
-    FavoriteManager.getInstance().save(os.user.settings.FavoriteType.DESCRIPTOR, '3', 'three');
+    FavoriteManager.getInstance().save(FavoriteType.DESCRIPTOR, '3', 'three');
     expect(FavoriteManager.getInstance().getFavorites().length).toBe(3);
   });
 
@@ -61,7 +63,7 @@ describe('os.user.settings.FavoriteManager', function() {
 
   // it('should move favorites to a folder', function() {
   //   var folder = FavoriteManager.getInstance().getFolders()[1];
-  //   FavoriteManager.getInstance().save(os.user.settings.FavoriteType.DESCRIPTOR, '1',
+  //   FavoriteManager.getInstance().save(FavoriteType.DESCRIPTOR, '1',
   //      'one', undefined, [folder['key']]);
 
   //   var favFolders = FavoriteManager.getInstance().getFavoriteFolders('1');
@@ -71,7 +73,7 @@ describe('os.user.settings.FavoriteManager', function() {
 
   // it('should get types of favorites', function() {
   //   var searchFavorites = FavoriteManager.getInstance().getFavTypes(FavoriteManager.getInstance().getFavorites(),
-  //       [os.user.settings.FavoriteType.DESCRIPTOR]);
+  //       [FavoriteType.DESCRIPTOR]);
   //   expect(searchFavorites.length).toBe(2);
   // });
 });

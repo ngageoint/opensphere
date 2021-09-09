@@ -3,7 +3,7 @@ goog.require('os.data.event.DataEvent');
 goog.require('os.data.event.DataEventType');
 goog.require('os.mock');
 goog.require('os.query.AreaManager');
-goog.require('os.query.Handler');
+goog.require('os.query.MockHandler');
 goog.require('os.query.QueryManager');
 
 
@@ -14,7 +14,7 @@ describe('os.query.QueryManager', function() {
   const AreaManager = goog.module.get('os.query.AreaManager');
   const QueryManager = goog.module.get('os.query.QueryManager');
 
-  const Handler = goog.module.get('os.query.Handler');
+  const {MockHandler} = goog.module.get('os.query.MockHandler');
 
   var am;
   var qm;
@@ -39,7 +39,7 @@ describe('os.query.QueryManager', function() {
 
   it('should respond to source remove events', function() {
     var id = 'A';
-    var handlerA = new Handler(id);
+    var handlerA = new MockHandler(id);
     qm.registerHandler(handlerA);
     expect(qm.handlers.length).toBe(1);
 

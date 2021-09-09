@@ -1,11 +1,11 @@
-goog.module('os.query.Handler');
+goog.declareModuleId('os.query.MockHandler');
 
 /**
  * Mock query handler
  * @param {string} id
  * @constructor
  */
-class Handler {
+export class MockHandler {
   /**
    * Constructor.
    * @param {string} id
@@ -28,5 +28,3 @@ class Handler {
     return this.id;
   }
 }
-
-exports = Handler;
