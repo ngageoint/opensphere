@@ -1,5 +1,4 @@
 goog.module('os.IAnimationSupport');
-goog.module.declareLegacyNamespace();
 
 /**
  * Interface for a layer or source that responds to timeline animation.

@@ -1,5 +1,4 @@
 goog.module('os.I3DSupport');
-goog.module.declareLegacyNamespace();
 
 /**
  * @interface

@@ -1,5 +1,4 @@
 goog.module('os.xsd.DataType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

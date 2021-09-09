@@ -2,7 +2,6 @@
  * Namespace for color utilities.
  */
 goog.module('os.color');
-goog.module.declareLegacyNamespace();
 
 goog.require('goog.array');
 goog.require('goog.color');

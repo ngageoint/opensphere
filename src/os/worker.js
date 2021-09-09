@@ -1,5 +1,4 @@
 goog.module('os.worker');
-goog.module.declareLegacyNamespace();
 
 /**
  * @define {string} The path to os workers.

@@ -1,5 +1,4 @@
 goog.module('os.MapContainer');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const {binarySelect, defaultCompare} = goog.require('goog.array');

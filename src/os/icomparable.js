@@ -1,5 +1,4 @@
 goog.module('os.IComparable');
-goog.module.declareLegacyNamespace();
 
 /**
  * Interface for objects that can be compared.

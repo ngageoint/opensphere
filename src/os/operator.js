@@ -1,5 +1,4 @@
 goog.module('os.operator');
-goog.module.declareLegacyNamespace();
 
 /**
  * @typedef {function(*,*):boolean}

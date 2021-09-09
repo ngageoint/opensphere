@@ -1,5 +1,4 @@
 goog.module('os.MainCtrl');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.file.mime.any');
 goog.require('os.ui.AddExportOptionsUI');

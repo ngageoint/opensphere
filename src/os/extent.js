@@ -1,11 +1,11 @@
 goog.module('os.extent');
-goog.module.declareLegacyNamespace();
 
 const math = goog.require('goog.math');
 const olExtent = goog.require('ol.extent');
 const olProj = goog.require('ol.proj');
 const geo2 = goog.require('os.geo2');
 const osMap = goog.require('os.map');
+
 
 /**
  * @type {number}

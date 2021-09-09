@@ -1,7 +1,7 @@
 goog.module('os.ILayerData');
-goog.module.declareLegacyNamespace();
 
 const Layer = goog.requireType('ol.layer.Layer');
+
 
 /**
  * @interface

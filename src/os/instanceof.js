@@ -5,9 +5,9 @@
  *               to the build warnings.
  */
 goog.module('os.instanceOf');
-goog.module.declareLegacyNamespace();
 
 const {instanceOf} = goog.require('os.classRegistry');
+
 
 /**
  * Checks if an object is an instance of the provided class type across multiple windows. This is intended for use

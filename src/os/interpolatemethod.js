@@ -1,5 +1,4 @@
 goog.module('os.interpolate.Method');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

@@ -1,5 +1,4 @@
 goog.module('os.interpolate.Config');
-goog.module.declareLegacyNamespace();
 
 /**
  * @typedef {{
