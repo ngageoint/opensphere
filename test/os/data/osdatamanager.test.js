@@ -26,10 +26,11 @@ describe('os.data.DataManager', function() {
   const VectorLayer = goog.module.get('os.layer.Vector');
   const VectorSource = goog.module.get('os.source.Vector');
   const {getMapContainer} = goog.module.get('os.map.instance');
+  const MockProvider = goog.module.get('os.data.MockProvider');
 
   it('should register provider types', function() {
     var dm = DataManager.getInstance();
-    var entry = new ProviderEntry('mock', data.MockProvider, 'Mock Provider', 'This is a test', '');
+    var entry = new ProviderEntry('mock', MockProvider, 'Mock Provider', 'This is a test', '');
     dm.registerProviderType(entry);
     expect(dm.providerTypes_['mock']).toBe(entry);
   });

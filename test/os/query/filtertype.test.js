@@ -3,9 +3,12 @@ goog.require('os.filter.FilterType');
 
 
 describe('os.filter.FilterType', function() {
+  const FilterEntry = goog.module.get('os.filter.FilterEntry');
+  const FilterType = goog.module.get('os.filter.FilterType');
+
   it('should persist and restore properly', function() {
-    var a = new os.filter.FilterType();
-    var filter = new os.filter.FilterEntry();
+    var a = new FilterType();
+    var filter = new FilterEntry();
     filter.title = 'Test';
     filter.description = 'A test';
     filter.type = 'TypeA';
@@ -20,7 +23,7 @@ describe('os.filter.FilterType', function() {
     expect(p.filters.length).toBe(1);
     expect(p.filters[0].id).toBe(filter.getId());
 
-    var b = new os.filter.FilterType();
+    var b = new FilterType();
     b.restore(p);
 
     expect(b.and).toBe(a.and);

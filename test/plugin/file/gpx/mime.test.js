@@ -6,18 +6,21 @@ goog.require('plugin.file.gpx.mime');
 describe('plugin.file.gpx.mime', function() {
   const osFileMime = goog.module.get('os.file.mime');
   const mime = goog.module.get('plugin.file.gpx.mime');
+
+  const mockMime = goog.module.get('os.file.mime.mock');
+
   it('should not detect files that are not gpx files', function() {
-    osFileMime.mock.testFiles([
+    mockMime.testFiles([
       '/base/test/resources/xml/namespaced-root-partial.xml',
       '/base/test/resources/xml/comment-with-embedded-xml.xml',
-      '/base/test/plugin/file/kml/kml_test.xml'],
-        osFileMime.mock.testNo(mime.TYPE));
+      '/base/test/plugin/file/kml/kml_test.xml'
+    ], mockMime.testNo(mime.TYPE));
   });
 
   it('should detect files that are gpx files', function() {
-    osFileMime.mock.testFiles([
-      '/base/test/resources/gpx/sample.gpx'],
-        osFileMime.mock.testYes(mime.TYPE));
+    mockMime.testFiles([
+      '/base/test/resources/gpx/sample.gpx'
+    ], mockMime.testYes(mime.TYPE));
   });
 
   it('should register itself with mime detection', function() {
