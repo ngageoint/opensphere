@@ -81,6 +81,7 @@ const DateMapping = goog.require('os.im.mapping.time.DateMapping');
 const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
 const TimeMapping = goog.require('os.im.mapping.time.TimeMapping');
 const TimeType = goog.require('os.im.mapping.TimeType');
+const {LayerConfigId} = goog.require('os.layer.config');
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const StaticLayerConfig = goog.require('os.layer.config.StaticLayerConfig');
 const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
@@ -283,8 +284,7 @@ class Controller extends AbstractMainCtrl {
     setMapContainer(map);
 
     // configure default layer configs
-    LayerConfigManager.getInstance().registerLayerConfig(StaticLayerConfig.ID,
-        StaticLayerConfig);
+    LayerConfigManager.getInstance().registerLayerConfig(LayerConfigId.STATIC, StaticLayerConfig);
 
     // configure data manager
     const dataManager = DataManager.getInstance();

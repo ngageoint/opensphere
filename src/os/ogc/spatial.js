@@ -3,6 +3,7 @@ goog.module('os.ogc.spatial');
 const GML = goog.require('ol.format.GML');
 const KML = goog.require('ol.format.KML');
 const {pushParseAndPop} = goog.require('ol.xml');
+const {createPolarPolygon, isPolarPolygon} = goog.require('os.geo');
 const Format = goog.require('os.ogc.spatial.Format');
 
 const Feature = goog.requireType('ol.Feature');
@@ -166,8 +167,8 @@ const formatPolygon = function(geom, opt_format) {
       polyCoords = /** @type {Polygon} */ (geom).getCoordinates();
 
       // polygons that cross a pole will not return the expected results after being projected, so correct for that
-      if (polyCoords.length == 1 && os.geo.isPolarPolygon(polyCoords[0])) {
-        polyCoords = [os.geo.createPolarPolygon(polyCoords[0])];
+      if (polyCoords.length == 1 && isPolarPolygon(polyCoords[0])) {
+        polyCoords = [createPolarPolygon(polyCoords[0])];
       }
       break;
     case ol.geom.GeometryType.MULTI_LINE_STRING:

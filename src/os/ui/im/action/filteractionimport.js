@@ -5,6 +5,7 @@ const SequenceCommand = goog.require('os.command.SequenceCommand');
 const DataManager = goog.require('os.data.DataManager');
 const IFilterable = goog.require('os.filter.IFilterable');
 const {Controller: OSFilterImportCtrl} = goog.require('os.filter.im.OSFilterImport');
+const {ICON, getColumnsFromFilterable} = goog.require('os.im.action');
 const FilterActionParser = goog.require('os.im.action.FilterActionParser');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const FilterActionAdd = goog.require('os.im.action.cmd.FilterActionAdd');
@@ -67,7 +68,7 @@ class Controller extends OSFilterImportCtrl {
    * @export
    */
   getFilterIcon() {
-    return os.im.action.ICON;
+    return ICON;
   }
 
   /**
@@ -126,7 +127,7 @@ class Controller extends OSFilterImportCtrl {
     if (os.implements(layer, IFilterable.ID)) {
       var filterable = /** @type {IFilterable} */ (layer);
 
-      this.columns = os.im.action.getColumnsFromFilterable(filterable);
+      this.columns = getColumnsFromFilterable(filterable);
     }
 
     this.testColumns();

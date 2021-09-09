@@ -13,6 +13,7 @@ const RecordField = goog.require('os.data.RecordField');
 const osFeature = goog.require('os.feature');
 const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const osImplements = goog.require('os.implements');
+const LayerId = goog.require('os.layer.LayerId');
 const osSource = goog.require('os.source');
 const osStyle = goog.require('os.style');
 const StyleManager = goog.require('os.style.StyleManager');
@@ -349,7 +350,7 @@ class KMLExporter extends AbstractKMLExporter {
       var sourceId = /** @type {string|undefined} */ (item.get(RecordField.SOURCE_ID));
 
       // don't count the drawing layer as a style source
-      if (sourceId && sourceId != os.layer.LayerId.DRAW) {
+      if (sourceId && sourceId != LayerId.DRAW) {
         if (item instanceof DynamicFeature || !(sourceId in this.labelMap)) {
           var cfg = StyleManager.getInstance().getLayerConfig(sourceId);
           var itemStyle = item.get(StyleType.FEATURE);

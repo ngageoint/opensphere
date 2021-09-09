@@ -11,6 +11,14 @@ const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
 let DefaultFn;
 
 /**
+ * Layer config identifiers.
+ * @enum {string}
+ */
+const LayerConfigId = {
+  STATIC: 'static'
+};
+
+/**
  * Map a feature type column to a column definition.
  *
  * @param {!FeatureTypeColumn} ftColumn The feature type column.
@@ -32,5 +40,6 @@ const mapFeatureTypeColumn = function(ftColumn) {
 
 exports = {
   DefaultFn,
-  mapFeatureTypeColumn
+  mapFeatureTypeColumn,
+  LayerConfigId
 };

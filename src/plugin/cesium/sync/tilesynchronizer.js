@@ -26,6 +26,7 @@ const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer')
 const GoogEvent = goog.requireType('goog.events.Event');
 const OLObject = goog.requireType('ol.Object');
 const PluggableMap = goog.requireType('ol.PluggableMap');
+const Tile = goog.requireType('os.layer.Tile');
 
 
 /**
@@ -55,12 +56,12 @@ const RESOLUTION_KEYS = [
 /**
  * Synchronizes a single OpenLayers tile layer to Cesium.
  *
- * @extends {CesiumSynchronizer.<osLayer.Tile>}
+ * @extends {CesiumSynchronizer<Tile>}
  */
 class TileSynchronizer extends CesiumSynchronizer {
   /**
    * Constructor.
-   * @param {!osLayer.Tile} layer The OpenLayers tile layer.
+   * @param {!Tile} layer The OpenLayers tile layer.
    * @param {!PluggableMap} map The OpenLayers map.
    * @param {!Cesium.Scene} scene The Cesium scene.
    */
@@ -444,7 +445,7 @@ class TileSynchronizer extends CesiumSynchronizer {
     // just to be sure, make the ID different
     options['id'] = googString.getRandomString();
 
-    var clone = /** @type {osLayer.Tile} */ (osLayer.createFromOptions(options));
+    var clone = /** @type {Tile} */ (osLayer.createFromOptions(options));
     var source = /** @type {TileWMS} */ (clone.getSource());
 
     // don't leak the layer and its ties to the source

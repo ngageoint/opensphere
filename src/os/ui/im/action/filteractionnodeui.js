@@ -1,5 +1,6 @@
 goog.module('os.ui.im.action.FilterActionNodeUI');
 
+const {Metrics: ActionMetrics} = goog.require('os.im.action');
 const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
 const Metrics = goog.require('os.metrics.Metrics');
 const {getIndexInParent} = goog.require('os.structs');
@@ -70,7 +71,7 @@ class Controller extends FilterNodeUICtrl {
     if (entry) {
       var parentIndex = getIndexInParent(node);
       this.scope.$emit(ImportActionEventType.COPY_ENTRY, entry, parentIndex);
-      Metrics.getInstance().updateMetric(os.im.action.Metrics.COPY, 1);
+      Metrics.getInstance().updateMetric(ActionMetrics.COPY, 1);
     }
   }
 
@@ -84,7 +85,7 @@ class Controller extends FilterNodeUICtrl {
     var entry = /** @type {FilterActionNode} */ (this.scope['item']).getEntry();
     if (entry) {
       this.scope.$emit(ImportActionEventType.EDIT_ENTRY, entry);
-      Metrics.getInstance().updateMetric(os.im.action.Metrics.EDIT, 1);
+      Metrics.getInstance().updateMetric(ActionMetrics.EDIT, 1);
     }
   }
 
@@ -98,7 +99,7 @@ class Controller extends FilterNodeUICtrl {
     var entry = /** @type {FilterActionNode} */ (this.scope['item']).getEntry();
     if (entry && !entry.isDefault()) {
       this.scope.$emit(ImportActionEventType.REMOVE_ENTRY, entry);
-      Metrics.getInstance().updateMetric(os.im.action.Metrics.REMOVE, 1);
+      Metrics.getInstance().updateMetric(ActionMetrics.REMOVE, 1);
     }
   }
 }

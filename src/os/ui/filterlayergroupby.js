@@ -2,6 +2,7 @@ goog.module('os.ui.FilterLayerGroupBy');
 
 const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
 const {getFilterManager} = goog.require('os.query.instance');
+const Vector = goog.require('os.layer.Vector');
 const FilterGroupBy = goog.require('os.ui.filter.ui.FilterGroupBy');
 
 const FilterNode = goog.requireType('os.ui.filter.ui.FilterNode');
@@ -42,7 +43,7 @@ class FilterLayerGroupBy extends FilterGroupBy {
 
     if (type) {
       var filterable = getFilterManager().getFilterable(type);
-      if (filterable instanceof os.layer.Vector) {
+      if (filterable instanceof Vector) {
         val = filterable.getTitle();
         if (this.useType_) {
           val += ' ' + filterable.getExplicitType();

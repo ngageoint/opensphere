@@ -1,5 +1,7 @@
 goog.module('os.im.action');
 
+const {instanceOf} = goog.require('os.classRegistry');
+const LayerClass = goog.require('os.layer.LayerClass');
 const osSource = goog.require('os.source');
 
 const IFilterable = goog.requireType('os.filter.IFilterable');
@@ -7,6 +9,7 @@ const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 const ImportActionManager = goog.requireType('os.im.action.ImportActionManager');
 const IImportAction = goog.requireType('os.im.action.IImportAction');
 const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
+const Vector = goog.requireType('os.layer.Vector');
 const ISource = goog.requireType('os.source.ISource');
 
 
@@ -79,8 +82,9 @@ const enableFromMap = function(entry, enabled) {
 const getColumnsFromFilterable = function(filterable) {
   var columns = null;
 
-  if (filterable instanceof os.layer.Vector) {
-    var source = /** @type {ISource} */ (filterable.getSource());
+  if (instanceOf(filterable, LayerClass.VECTOR)) {
+    var vectorLayer = /** @type {Vector} */ (filterable);
+    var source = /** @type {ISource} */ (vectorLayer.getSource());
     columns = osSource.getFilterColumns(source, true, true);
     columns = columns.map(osSource.definitionsToFeatureTypes);
   } else {

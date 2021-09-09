@@ -16,7 +16,9 @@ const histo = goog.require('os.histo');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const osStyle = goog.require('os.style');
 
+const Feature = goog.requireType('ol.Feature');
 const IPersistable = goog.requireType('os.IPersistable');
+const IBinMethod = goog.requireType('os.histo.IBinMethod');
 
 
 /**
@@ -74,7 +76,7 @@ class ColorModel extends EventTarget {
 
     /**
      * Features that have been colored by the model.
-     * @type {!Object<string, ol.Feature>}
+     * @type {!Object<string, Feature>}
      * @private
      */
     this.coloredFeatures_ = {};
@@ -218,7 +220,7 @@ class ColorModel extends EventTarget {
   /**
    * Get the histogram bin method.
    *
-   * @return {histo.IBinMethod<ol.Feature>}
+   * @return {IBinMethod<Feature>}
    */
   getBinMethod() {
     return this.histogram_ ? this.histogram_.getBinMethod() : null;
@@ -417,7 +419,7 @@ class ColorModel extends EventTarget {
   /**
    * Reset the color for features that were previously colored, but are no longer.
    *
-   * @param {!Object<string, ol.Feature>} oldColors Map of previously colored features
+   * @param {!Object<string, Feature>} oldColors Map of previously colored features
    * @private
    */
   cleanupOldColors_(oldColors) {
@@ -434,7 +436,7 @@ class ColorModel extends EventTarget {
   /**
    * Sets the color on a set of features.
    *
-   * @param {Array<ol.Feature>} features The features to update
+   * @param {Array<Feature>} features The features to update
    * @param {string=} opt_color The new feature color
    * @private
    *
@@ -467,7 +469,7 @@ class ColorModel extends EventTarget {
   /**
    * Sets the color on a set of features.
    *
-   * @param {Array<ol.Feature>} features The features to update
+   * @param {Array<Feature>} features The features to update
    * @param {string=} opt_color The new feature color
    *
    */

@@ -15,6 +15,7 @@ const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const IFilterable = goog.require('os.filter.IFilterable');
 const osImplements = goog.require('os.implements');
+const MappingManager = goog.require('os.im.mapping.MappingManager');
 const LayerType = goog.require('os.layer.LayerType');
 const ogc = goog.require('os.ogc');
 const osOgcLayerType = goog.require('os.ogc.LayerType');
@@ -1218,7 +1219,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
 
     var mappings = this.getMappings();
     if (mappings) {
-      var mm = os.im.mapping.MappingManager.getInstance();
+      var mm = MappingManager.getInstance();
       opt_obj['mappings'] = mm.persistMappings(mappings);
     }
 
@@ -1235,7 +1236,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
     super.restore(from);
 
     if (from['mappings']) {
-      var mm = os.im.mapping.MappingManager.getInstance();
+      var mm = MappingManager.getInstance();
       this.setMappings(mm.restoreMappings(from['mappings']));
     }
 
