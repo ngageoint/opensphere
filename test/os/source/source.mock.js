@@ -1,5 +1,4 @@
 goog.module('os.source.MockSource');
-goog.module.declareLegacyNamespace();
 
 const ISource = goog.requireType('os.source.ISource');
 

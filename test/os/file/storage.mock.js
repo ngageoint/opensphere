@@ -1,11 +1,11 @@
 goog.module('os.file.storage.mock');
-goog.module.declareLegacyNamespace();
 
 const dispose = goog.require('goog.dispose');
 const os = goog.require('os');
 const OSFile = goog.require('os.file.File');
 const FileStorage = goog.require('os.file.FileStorage');
 const AsyncStorageWrapper = goog.require('os.storage.AsyncStorageWrapper');
+
 
 /**
  * Runs file storage tests with or without IndexedDB.

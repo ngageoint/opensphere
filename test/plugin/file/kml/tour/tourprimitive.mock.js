@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.tour.MockTourPrimitive');
-goog.module.declareLegacyNamespace();
 
 const AbstractTourPrimitive = goog.require('plugin.file.kml.tour.AbstractTourPrimitive');
 

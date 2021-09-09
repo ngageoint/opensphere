@@ -1,7 +1,7 @@
 goog.module('os.ui.file.MockExportMethod');
-goog.module.declareLegacyNamespace();
 
 const AbstractExporter = goog.require('os.ex.AbstractExporter');
+
 
 /**
  * Mock export method for unit testing.

@@ -7,6 +7,8 @@ describe('plugin.descriptor.DescriptorSearch', function() {
   const Settings = goog.module.get('os.config.Settings');
   const DescriptorSearch = goog.module.get('plugin.descriptor.DescriptorSearch');
 
+  const SettingsUtil = goog.module.get('test.os.config.SettingsUtil');
+
   var mockDescriptor = function() {
     this.id = 'A';
     this.type = 'Type A';
@@ -40,7 +42,7 @@ describe('plugin.descriptor.DescriptorSearch', function() {
 
   it('should init properly', function() {
     var settings = new Settings();
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       ds = new DescriptorSearch('Layers');

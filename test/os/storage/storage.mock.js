@@ -2,9 +2,9 @@
  * @fileoverview Base tests for any classes extending os.storage.AsyncStorage.
  */
 goog.module('os.storage.mock');
-goog.module.declareLegacyNamespace();
 
 const {getCount} = goog.require('goog.object');
+
 
 /**
  * The last callback value.

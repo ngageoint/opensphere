@@ -1,4 +1,4 @@
-goog.provide('os.osasm.wait');
+goog.module('os.osasm.wait');
 
 if (!window.osasm || !window.osasm.geodesicDirect) {
   beforeEach(function() {

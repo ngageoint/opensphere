@@ -1,4 +1,4 @@
-goog.provide('os.mock');
+goog.declareModuleId('os.mock');
 
 goog.require('goog.events.EventTarget');
 goog.require('os');
@@ -65,7 +65,7 @@ beforeEach(function() {
   const FilterManager = goog.module.get('os.query.FilterManager');
   const QueryManager = goog.module.get('os.query.QueryManager');
   const osQueryInstance = goog.module.get('os.query.instance');
-  const instance = goog.module.get('os.style.instance');
+  const osStyleInstance = goog.module.get('os.style.instance');
   const replacers = goog.module.get('os.time.replacers');
   const SettingsManager = goog.module.get('os.ui.config.SettingsManager');
   const Settings = goog.module.get('os.config.Settings');
@@ -127,8 +127,8 @@ beforeEach(function() {
     osMapInstance.setIMapContainer(map);
     osMapInstance.setMapContainer(map);
 
-    if (!os.dataManager) {
-      const dataManager = DataManager.getInstance();
+    if (!osMock.dataManager) {
+      const dataManager = osMock.dataManager = DataManager.getInstance();
       os.setDataManager(dataManager);
       dataManager.setMapContainer(map);
       dataManager.registerDescriptorType(ogc.ID, OGCDescriptor);
@@ -149,24 +149,22 @@ beforeEach(function() {
       osQueryInstance.setQueryManager(osMock.queryManager);
     }
 
-    if (!os.styleManager) {
-      var styleManager = StyleManager.getInstance();
-      os.styleManager = styleManager;
-      instance.setStyleManager(styleManager);
+    if (!osMock.styleManager) {
+      osMock.styleManager = StyleManager.getInstance();
+      osStyleInstance.setStyleManager(osMock.styleManager);
     }
 
     if (!map.getMap()) {
       map.init();
     }
 
-    if (!os.settingsManager) {
-      os.settingsManager = SettingsManager.getInstance();
+    if (!osMock.settingsManager) {
+      osMock.settingsManager = SettingsManager.getInstance();
     }
 
     replacers.init();
   });
 });
-
 
 //
 // Verify test initialization is complete.
@@ -187,12 +185,11 @@ describe('OpenSphere Test Initialization', () => {
   });
 });
 
-
 /**
  * Creates and returns a new mapping manager configured the same as within the app
  * @return {os.im.mapping.MappingManager}
  */
-os.mock.getMockMappingManager = function() {
+export const getMockMappingManager = function() {
   const AltMapping = goog.module.get('os.im.mapping.AltMapping');
   const BearingMapping = goog.module.get('os.im.mapping.BearingMapping');
   const LatMapping = goog.module.get('os.im.mapping.LatMapping');

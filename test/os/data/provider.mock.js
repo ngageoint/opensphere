@@ -1,5 +1,4 @@
 goog.module('os.data.MockProvider');
-goog.module.declareLegacyNamespace();
 
 const BaseProvider = goog.require('os.ui.data.BaseProvider');
 

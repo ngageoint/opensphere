@@ -1,7 +1,7 @@
 goog.module('os.feature.mock');
-goog.module.declareLegacyNamespace();
 
 const GeoJSONParser = goog.require('plugin.file.geojson.GeoJSONParser');
+
 
 const geoms = [{
   'coordinates': [0.0, 0.0],

@@ -5,7 +5,6 @@ goog.require('os.config.Settings');
 goog.require('os.ui.timeline.TimelineScaleEvent');
 goog.require('plugin.suncalc');
 goog.require('plugin.suncalc.LightStripUI');
-goog.require('test.os.config.SettingsUtil');
 
 describe('plugin.suncalc.LightStripUI', function() {
   const dispose = goog.module.get('goog.dispose');

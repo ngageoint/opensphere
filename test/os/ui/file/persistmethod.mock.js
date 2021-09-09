@@ -1,5 +1,4 @@
 goog.module('os.ui.file.MockPersistMethod');
-goog.module.declareLegacyNamespace();
 
 /**
  * Mock persistence method for unit tests.

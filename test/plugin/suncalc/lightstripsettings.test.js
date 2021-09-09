@@ -2,7 +2,6 @@ goog.require('os');
 goog.require('os.config.Settings');
 goog.require('plugin.suncalc');
 goog.require('plugin.suncalc.LightStripSettingsUI');
-goog.require('test.os.config.SettingsUtil');
 
 describe('plugin.suncalc.LightStripSettingsUI', function() {
   const {ROOT} = goog.module.get('os');
