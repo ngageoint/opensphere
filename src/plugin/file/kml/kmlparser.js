@@ -62,6 +62,7 @@ const KMLTourNode = goog.require('plugin.file.kml.ui.KMLTourNode');
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
 const IParser = goog.requireType('os.parse.IParser');
+const CreateOptions = goog.requireType('os.track.CreateOptions');
 
 
 /**
@@ -1174,7 +1175,7 @@ class KMLParser extends AsyncZipParser {
         geometry = new LineString(coordinates);
       }
 
-      feature = track.createTrack(/** @type {!track.CreateOptions} */ ({
+      feature = track.createTrack(/** @type {!CreateOptions} */ ({
         geometry: geometry,
         name: /** @type {string|undefined} */ (object['name'])
       }));

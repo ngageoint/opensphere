@@ -10,6 +10,7 @@ const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const instanceOf = goog.require('os.instanceOf');
 const VectorSource = goog.require('os.source.Vector');
 const osTrack = goog.require('os.track');
+const TrackField = goog.require('os.track.TrackField');
 const osUiMenuLayer = goog.require('os.ui.menu.layer');
 const spatial = goog.require('os.ui.menu.spatial');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
@@ -23,9 +24,10 @@ const OsMeasure = goog.require('os.interaction.Measure');
 const OsInterpolateMethod = goog.require('os.interpolate.Method');
 const Settings = goog.require('os.config.Settings');
 
+const OlFeature = goog.requireType('ol.Feature');
+const CreateOptions = goog.requireType('os.track.CreateOptions');
 const ActionEvent = goog.requireType('os.ui.action.ActionEvent');
 const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const OlFeature = goog.requireType('ol.Feature');
 const OsMenuItem = goog.requireType('os.ui.menu.MenuItem');
 
 
@@ -709,7 +711,7 @@ const handleAddCreateTrackEvent_ = function(event) {
       if (event.type.startsWith(EventType.CREATE_TRACK)) {
         osTrack.promptForTitleAndMetadata(title).then(function({includeMetadata, title}) {
           osTrack.getSortField(features[0]).then(function(sortField) {
-            const options = /** @type {!osTrack.CreateOptions} */ ({
+            const options = /** @type {!CreateOptions} */ ({
               features: features,
               includeMetadata,
               name: title,
@@ -723,7 +725,7 @@ const handleAddCreateTrackEvent_ = function(event) {
         const tm = TrackManager.getInstance();
         tm.promptForTrack().then(function(track) {
           if (track) {
-            const metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+            const metadataMap = track.get(TrackField.METADATA_MAP);
             osTrack.addToTrack({
               track: track,
               features: features,
