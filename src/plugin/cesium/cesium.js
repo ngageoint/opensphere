@@ -17,6 +17,7 @@ const settings = goog.require('os.config.Settings');
 const osMap = goog.require('os.map');
 const {TerrainType} = goog.require('os.map.terrain');
 const net = goog.require('os.net');
+const CrossOrigin = goog.require('os.net.CrossOrigin');
 const proj = goog.require('os.proj');
 const utils = goog.require('os.query.utils');
 const osString = goog.require('os.string');
@@ -139,7 +140,7 @@ const LIBRARY_BASE_PATH = goog.define('plugin.cesium.LIBRARY_BASE_PATH', 'vendor
  * @param {string|undefined} url The server URL.
  */
 const addTrustedServer = function(url) {
-  if (url && net.getCrossOrigin(url) === net.CrossOrigin.USE_CREDENTIALS) {
+  if (url && net.getCrossOrigin(url) === CrossOrigin.USE_CREDENTIALS) {
     // add URL to Cesium.TrustedServers
     var uri = new Uri(url);
     var port = uri.getPort();

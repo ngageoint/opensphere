@@ -11,7 +11,9 @@ const OSFeature = goog.require('os.ol.feature');
 const AbstractService = goog.require('os.ui.AbstractService');
 const GMLParser = goog.require('os.ui.file.gml.GMLParser');
 const geo2 = goog.require('os.geo2');
-const spatial = goog.require('os.ogc.spatial');
+const {getDefaultWfsParams, getException} = goog.require('os.ogc');
+const {formatPolygon, readKMLGeometry} = goog.require('os.ogc.spatial');
+const Format = goog.require('os.ogc.spatial.Format');
 const OGCQuery = goog.require('os.ogc.query.OGCQuery');
 const OSSettings = goog.require('os.config.Settings');
 
@@ -225,7 +227,7 @@ class OGCService extends AbstractService {
    */
   loadAll_(resolve, reject) {
     if (this.isConfigured()) {
-      const qd = os.ogc.getDefaultWfsParams();
+      const qd = getDefaultWfsParams();
       qd.set('typename', this.typename_);
       qd.set('propertyname', 'ID,' + this.nameProperty_);
       qd.set('outputformat', 'text/xml; subtype=gml/3.1.1');
@@ -235,7 +237,7 @@ class OGCService extends AbstractService {
 
       const request = new Request(uri);
       request.setHeader('Accept', 'application/xml');
-      request.setValidator(os.ogc.getException);
+      request.setValidator(getException);
       request.setDataFormatter(new WFSFormatter());
 
       request.getPromise().then(
@@ -294,7 +296,7 @@ class OGCService extends AbstractService {
 
     if (name) {
       if (this.isConfigured()) {
-        const qd = os.ogc.getDefaultWfsParams();
+        const qd = getDefaultWfsParams();
         qd.set('typename', this.typename_);
         qd.set('maxfeatures', 1);
 
@@ -308,7 +310,7 @@ class OGCService extends AbstractService {
         const request = new Request(uri);
         request.setMethod(Request.METHOD_POST);
         request.setHeader('Accept', 'application/json, text/plain, */*');
-        request.setValidator(os.ogc.getException);
+        request.setValidator(getException);
         request.setDataFormatter(new WFSFormatter());
         request.addModifier(new OGCFilterModifier({
           filter: true
@@ -380,11 +382,11 @@ class OGCService extends AbstractService {
     if (geom) {
       geo2.normalizeGeometryCoordinates(feature.getGeometry());
       geom.toLonLat();
-      const kml = spatial.formatPolygon(geom, os.ogc.spatial.Format.KML);
+      const kml = formatPolygon(geom, Format.KML);
 
       if (kml) {
         const doc = os.xml.loadXml(kml);
-        const readGeometry = spatial.readKMLGeometry(doc);
+        const readGeometry = readKMLGeometry(doc);
         readGeometry.osTransform();
 
         feature.setGeometry(readGeometry);

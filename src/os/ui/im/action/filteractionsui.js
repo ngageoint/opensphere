@@ -5,6 +5,7 @@ const dispatcher = goog.require('os.Dispatcher');
 const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const filter = goog.require('os.im.action.filter');
+const Metrics = goog.require('os.metrics.Metrics');
 const TagGroupBy = goog.require('os.ui.data.groupby.TagGroupBy');
 const ImportEvent = goog.require('os.ui.im.ImportEvent');
 const ImportEventType = goog.require('os.ui.im.ImportEventType');
@@ -242,7 +243,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
    * @export
    */
   launchExport() {
-    os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.EXPORT, 1);
+    Metrics.getInstance().updateMetric(os.im.action.Metrics.EXPORT, 1);
 
     // pull the entry nodes out of the tree
     var entryNodes = [];
@@ -262,7 +263,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
    * @export
    */
   launchImport() {
-    os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.IMPORT, 1);
+    Metrics.getInstance().updateMetric(os.im.action.Metrics.IMPORT, 1);
 
     var event = new ImportEvent(ImportEventType.FILE, undefined, undefined, {
       'layerId': this.entryType

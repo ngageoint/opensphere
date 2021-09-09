@@ -2,6 +2,7 @@ goog.module('os.ui.im.action.FilterActionNode');
 
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const {ICON} = goog.require('os.im.action.default');
+const TriState = goog.require('os.structs.TriState');
 const FilterNode = goog.require('os.ui.filter.ui.FilterNode');
 const {directiveTag: nodeUi} = goog.require('os.ui.im.action.FilterActionNodeUI');
 
@@ -68,7 +69,7 @@ class FilterActionNode extends FilterNode {
    * @inheritDoc
    */
   onChildChange(e) {
-    if (e.getProperty() == 'state' && e.getNewValue() == os.structs.TriState.ON) {
+    if (e.getProperty() == 'state' && e.getNewValue() == TriState.ON) {
       this.bubbleState = true;
     }
     super.onChildChange(e);

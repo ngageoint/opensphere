@@ -17,8 +17,9 @@ const dispatcher = goog.require('os.Dispatcher');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const Settings = goog.require('os.config.Settings');
-const metrics = goog.require('os.metrics');
+const {SUB_DELIMITER} = goog.require('os.metrics');
 const Metrics = goog.require('os.metrics.Metrics');
+const {Timeline: TimelineKeys} = goog.require('os.metrics.keys');
 const osTime = goog.require('os.time');
 const TimeInstant = goog.require('os.time.TimeInstant');
 const TimeRange = goog.require('os.time.TimeRange');
@@ -446,7 +447,7 @@ class Controller {
       this['fps'] = value;
       this.setTimelineFps(value);
 
-      Metrics.getInstance().updateMetric(metrics.keys.Timeline.FPS, 1);
+      Metrics.getInstance().updateMetric(TimelineKeys.FPS, 1);
     }
   }
 
@@ -728,7 +729,7 @@ class Controller {
    */
   firstFrame() {
     this.tlc.first();
-    Metrics.getInstance().updateMetric(metrics.keys.Timeline.FIRST_FRAME, 1);
+    Metrics.getInstance().updateMetric(TimelineKeys.FIRST_FRAME, 1);
   }
 
   /**
@@ -738,7 +739,7 @@ class Controller {
    */
   lastFrame() {
     this.tlc.last();
-    Metrics.getInstance().updateMetric(metrics.keys.Timeline.LAST_FRAME, 1);
+    Metrics.getInstance().updateMetric(TimelineKeys.LAST_FRAME, 1);
   }
 
   /**
@@ -749,7 +750,7 @@ class Controller {
   nextFrame() {
     this.tlc.next();
     this.tlc.clamp();
-    Metrics.getInstance().updateMetric(metrics.keys.Timeline.NEXT_FRAME, 1);
+    Metrics.getInstance().updateMetric(TimelineKeys.NEXT_FRAME, 1);
   }
 
   /**
@@ -760,7 +761,7 @@ class Controller {
   previousFrame() {
     this.tlc.prev();
     this.tlc.clamp();
-    Metrics.getInstance().updateMetric(metrics.keys.Timeline.PREV_FRAME, 1);
+    Metrics.getInstance().updateMetric(TimelineKeys.PREV_FRAME, 1);
   }
 
   /**
@@ -772,7 +773,7 @@ class Controller {
     if (this.tlcState_) {
       this.tlc.reset(this.tlcState_);
       this.updateTimeline(true);
-      Metrics.getInstance().updateMetric(metrics.keys.Timeline.RESET, 1);
+      Metrics.getInstance().updateMetric(TimelineKeys.RESET, 1);
       var refreshTimer = new Delay(this.refreshLoadBrushes_, 10, this);
       refreshTimer.start();
     }
@@ -791,7 +792,7 @@ class Controller {
     } else {
       this.tlc.stop();
     }
-    Metrics.getInstance().updateMetric(metrics.keys.Timeline.TOGGLE_PLAY, 1);
+    Metrics.getInstance().updateMetric(TimelineKeys.TOGGLE_PLAY, 1);
   }
 
   /**
@@ -801,7 +802,7 @@ class Controller {
    */
   zoomIn() {
     this.getTimelineCtrl().zoomIn();
-    Metrics.getInstance().updateMetric(metrics.keys.Timeline.ZOOM_IN, 1);
+    Metrics.getInstance().updateMetric(TimelineKeys.ZOOM_IN, 1);
   }
 
   /**
@@ -811,7 +812,7 @@ class Controller {
    */
   zoomOut() {
     this.getTimelineCtrl().zoomOut();
-    Metrics.getInstance().updateMetric(metrics.keys.Timeline.ZOOM_OUT, 1);
+    Metrics.getInstance().updateMetric(TimelineKeys.ZOOM_OUT, 1);
   }
 
   /**
@@ -835,7 +836,7 @@ class Controller {
     this['histClass'] = hist.CHART_TYPES[chartType];
     Settings.getInstance().set(['ui', 'timelineSettings', 'chartType'], chartType);
 
-    var metricKey = metrics.keys.Timeline.CHART_TYPE + metrics.SUB_DELIMITER + chartType;
+    var metricKey = TimelineKeys.CHART_TYPE + SUB_DELIMITER + chartType;
     Metrics.getInstance().updateMetric(metricKey, 1);
   }
 
@@ -1675,7 +1676,7 @@ class Controller {
       this.tlc.stop();
     }
     dispatcher.getInstance().dispatchEvent(TimelineEventType.RECORD);
-    Metrics.getInstance().updateMetric(metrics.keys.Timeline.RECORD, 1);
+    Metrics.getInstance().updateMetric(TimelineKeys.RECORD, 1);
   }
 
   /**
