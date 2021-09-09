@@ -20,6 +20,7 @@ const Settings = goog.require('os.config.Settings');
 const metrics = goog.require('os.metrics');
 const Metrics = goog.require('os.metrics.Metrics');
 const osTime = goog.require('os.time');
+const TimeInstant = goog.require('os.time.TimeInstant');
 const TimeRange = goog.require('os.time.TimeRange');
 const TimelineController = goog.require('os.time.TimelineController');
 const TimelineEventType = goog.require('os.time.TimelineEventType');
@@ -1682,8 +1683,8 @@ class Controller {
    * @return {boolean} Whether the range is safe to use for pan/zoom
    */
   static isSafeRange(range) {
-    return !!range && range.getStart() != osTime.TimeInstant.MIN_TIME &&
-        range.getEnd() != osTime.TimeInstant.MAX_TIME &&
+    return !!range && range.getStart() != TimeInstant.MIN_TIME &&
+        range.getEnd() != TimeInstant.MAX_TIME &&
         !isNaN(range.getStart()) && !isNaN(range.getEnd()) &&
         !(range.getStart() == 0 && range.getEnd() == 0);
   }
