@@ -28,6 +28,7 @@ const fn = goog.require('os.fn');
 const geo = goog.require('os.geo');
 const GeometryField = goog.require('os.geom.GeometryField');
 const interpolate = goog.require('os.interpolate');
+const Method = goog.require('os.interpolate.Method');
 const osObject = goog.require('os.object');
 const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
@@ -289,7 +290,7 @@ let createTrack_ = function(options) {
 
   // prevent any further normalization of the geometry
   geometry.set(GeometryField.NORMALIZED, true);
-  geometry.set(interpolate.METHOD_FIELD, interpolate.Method.NONE);
+  geometry.set(interpolate.METHOD_FIELD, Method.NONE);
 
   // create the track feature
   var track;

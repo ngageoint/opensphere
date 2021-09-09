@@ -11,6 +11,7 @@ const AlertManager = goog.require('os.alert.AlertManager');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const Settings = goog.require('os.config.Settings');
 const IFilterable = goog.require('os.filter.IFilterable');
+const osImplements = goog.require('os.implements');
 const {getEnabledMap, getImportActionManager, setImportActionManager} = goog.require('os.im.action');
 const FilterActionEntry = goog.require('os.im.action.FilterActionEntry');
 const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
@@ -504,7 +505,7 @@ class ImportActionManager extends EventTarget {
 
       var filterKey = id;
       var layer = getMapContainer().getLayer(id);
-      if (os.implements(layer, IFilterable.ID)) {
+      if (osImplements(layer, IFilterable.ID)) {
         filterKey = /** @type {IFilterable} */ (layer).getFilterKey();
       }
 

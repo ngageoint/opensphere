@@ -12,6 +12,7 @@ const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const FilterActionExportType = goog.require('os.ui.im.action.FilterActionExportType');
 const {close, create} = goog.require('os.ui.window');
+const {createElementNS, serialize} = goog.require('os.xml');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 
@@ -223,7 +224,7 @@ const launchFilterActionExport = function(entries, opt_selected, opt_fileName, o
 const exportFilterActionEntries = function(fileName, entries) {
   if (entries.length > 0) {
     var iam = ImportActionManager.getInstance();
-    var rootNode = os.xml.createElementNS(iam.xmlGroup, 'http://www.bit-sys.com/state/v4');
+    var rootNode = createElementNS(iam.xmlGroup, 'http://www.bit-sys.com/state/v4');
     var entryEls = exportEntries(entries, false);
     if (entryEls) {
       for (var i = 0; i < entryEls.length; i++) {
@@ -231,7 +232,7 @@ const exportFilterActionEntries = function(fileName, entries) {
       }
     }
 
-    saveFile(fileName, os.xml.serialize(rootNode), 'text/xml');
+    saveFile(fileName, serialize(rootNode), 'text/xml');
   } else {
     AlertManager.getInstance().sendAlert('No actions to export.', AlertEventSeverity.WARNING);
   }

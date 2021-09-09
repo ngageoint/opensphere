@@ -25,6 +25,7 @@ const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const osImplements = goog.require('os.implements');
 const {ModifyEventType} = goog.require('os.interaction');
 const interpolate = goog.require('os.interpolate');
+const Method = goog.require('os.interpolate.Method');
 const {getMapContainer} = goog.require('os.map.instance');
 const {notifyStyleChange} = goog.require('os.style');
 const {MODAL_SELECTOR} = goog.require('os.ui');
@@ -120,7 +121,7 @@ const cloneFeature = (feature) => {
   clone.set(RecordField.DRAWING_LAYER_NODE, false);
 
   // Do not interpolate the geometry. The interaction will handle that internally.
-  clone.set(interpolate.METHOD_FIELD, interpolate.Method.NONE);
+  clone.set(interpolate.METHOD_FIELD, Method.NONE);
 
   // Enable events on the feature, then force the feature to listen to geometry changes. WebGL renderers in particular
   // rely on these change events to know when to update the rendered geometry.
@@ -142,7 +143,7 @@ class Modify extends OLModify {
    * @param {!Feature} feature The feature to modify.
    */
   constructor(feature) {
-    const interpolationMethod = /** @type {interpolate.Method} */ (feature.get(interpolate.METHOD_FIELD)) ||
+    const interpolationMethod = /** @type {Method} */ (feature.get(interpolate.METHOD_FIELD)) ||
         interpolate.getMethod();
     const clone = cloneFeature(feature);
     const options = {
@@ -167,7 +168,7 @@ class Modify extends OLModify {
 
     /**
      * The interpolation method used by the original feature.
-     * @type {interpolate.Method}
+     * @type {Method}
      * @private
      */
     this.interpolationMethod_ = interpolationMethod;

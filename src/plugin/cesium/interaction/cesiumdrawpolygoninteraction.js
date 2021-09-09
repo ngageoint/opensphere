@@ -6,6 +6,7 @@ const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const DrawPolygon = goog.require('os.interaction.DrawPolygon');
 const osInterpolate = goog.require('os.interpolate');
+const Method = goog.require('os.interpolate.Method');
 
 const LineString = goog.requireType('ol.geom.LineString');
 const CesiumRenderer = goog.requireType('plugin.cesium.CesiumRenderer');
@@ -88,7 +89,7 @@ const updateWebGL = function() {
         geometryInstances: new Cesium.GeometryInstance({
           geometry: new Cesium.GroundPolylineGeometry({
             positions: core.ol4326CoordinateArrayToCsCartesians(lonlats),
-            arcType: osInterpolate.getMethod() === osInterpolate.Method.RHUMB ?
+            arcType: osInterpolate.getMethod() === Method.RHUMB ?
               Cesium.ArcType.RHUMB : Cesium.ArcType.GEODESIC,
             width: 2
           }),

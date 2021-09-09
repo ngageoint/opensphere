@@ -37,6 +37,7 @@ const GeometryField = goog.require('os.geom.GeometryField');
 const MappingManager = goog.require('os.im.mapping.MappingManager');
 const instanceOf = goog.require('os.instanceOf');
 const interpolate = goog.require('os.interpolate');
+const Method = goog.require('os.interpolate.Method');
 const LayerClass = goog.require('os.layer.LayerClass');
 const LayerId = goog.require('os.layer.LayerId');
 const {getIMapContainer} = goog.require('os.map.instance');
@@ -556,7 +557,7 @@ export const createRings = function(feature, opt_replace) {
     if (options && options.enabled && options.rings && center) {
       // calculate the geomag object and get the current interpolation function to use
       var date = new Date(TimelineController.getInstance().getCurrent());
-      var directInterpFn = interpolate.getMethod() == interpolate.Method.GEODESIC ?
+      var directInterpFn = interpolate.getMethod() == Method.GEODESIC ?
           osasm.geodesicDirect : osasm.rhumbDirect;
 
       // calculate the magnetic declination

@@ -4,6 +4,7 @@ const GML = goog.require('ol.format.GML');
 const KML = goog.require('ol.format.KML');
 const {pushParseAndPop} = goog.require('ol.xml');
 const {createPolarPolygon, isPolarPolygon} = goog.require('os.geo');
+const {interpolateGeom} = goog.require('os.interpolate');
 const Format = goog.require('os.ogc.spatial.Format');
 
 const Feature = goog.requireType('ol.Feature');
@@ -122,7 +123,7 @@ const formatExtent = function(extent, column, opt_name, opt_description, opt_id)
  * @return {?string} The serialized polygon, or null if the geometry is not supported
  */
 const formatGMLIntersection = function(geom, opt_column, opt_name, opt_description, opt_id) {
-  os.interpolate.interpolateGeom(geom);
+  interpolateGeom(geom);
 
   var parts = [];
   var formattedPolygon = formatPolygon(geom, Format.GML);

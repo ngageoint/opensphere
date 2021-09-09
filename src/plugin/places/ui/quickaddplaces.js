@@ -17,6 +17,8 @@ const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 const KMLNodeRemove = goog.require('plugin.file.kml.cmd.KMLNodeRemove');
 const places = goog.require('plugin.places');
 
+const Method = goog.requireType('os.interpolate.Method');
+
 
 /**
  * The quickaddplaces directive
@@ -157,7 +159,7 @@ class Controller extends Disposable {
       }));
 
       // re-interpolate the feature now to ensure that it has the original geometry and correct interpolation method
-      const method = /** @type {interpolate.Method} */ (geometry.get(interpolate.METHOD_FIELD));
+      const method = /** @type {Method} */ (geometry.get(interpolate.METHOD_FIELD));
       interpolate.beginTempInterpolation(undefined, method);
       interpolate.interpolateFeature(place.getFeature());
       interpolate.endTempInterpolation();

@@ -11,6 +11,7 @@ const Circle = goog.requireType('ol.geom.Circle');
 const LineString = goog.requireType('ol.geom.LineString');
 const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
 const ISpatialFormatter = goog.requireType('os.filter.ISpatialFormatter');
+const Method = goog.requireType('os.interpolate.Method');
 
 
 /**
@@ -31,7 +32,7 @@ class ArcSpatialFormatter {
     var result = '';
     if (feature && feature.getGeometry()) {
       var geometry = feature.getGeometry().clone().toLonLat();
-      var method = /** @type {interpolate.Method|undefined} */ (feature.get(interpolate.METHOD_FIELD));
+      var method = /** @type {Method|undefined} */ (feature.get(interpolate.METHOD_FIELD));
 
       interpolate.beginTempInterpolation(osProj.EPSG4326, method);
       interpolate.interpolateGeom(geometry);

@@ -29,6 +29,7 @@ const {buffer, validate} = goog.require('os.geo.jsts');
 const {normalizeLongitude} = goog.require('os.geo2');
 const GeometryField = goog.require('os.geom.GeometryField');
 const interpolate = goog.require('os.interpolate');
+const Method = goog.require('os.interpolate.Method');
 const {getIMapContainer} = goog.require('os.map.instance');
 const {convertUnits} = goog.require('os.math');
 const Units = goog.require('os.math.Units');
@@ -528,11 +529,11 @@ class Controller extends Disposable {
         switch (this['areaType']) {
           case AreaType.BBOX:
             geometry = this.getBbox();
-            interpolationMethod = interpolate.Method.RHUMB;
+            interpolationMethod = Method.RHUMB;
             break;
           case AreaType.CIRCLE:
             geometry = this.getCircle();
-            interpolationMethod = interpolate.Method.NONE;
+            interpolationMethod = Method.NONE;
             break;
           case AreaType.POLYGON:
             geometry = this.getPolygon();
@@ -621,7 +622,7 @@ class Controller extends Disposable {
           geometry.set(GeometryField.NORMALIZED, true);
 
           // perform the rhumb interpolation
-          interpolate.beginTempInterpolation(undefined, interpolate.Method.RHUMB);
+          interpolate.beginTempInterpolation(undefined, Method.RHUMB);
           interpolate.interpolateGeom(geometry);
           interpolate.endTempInterpolation();
         } else {

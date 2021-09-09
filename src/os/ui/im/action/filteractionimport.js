@@ -8,6 +8,7 @@ const DataManager = goog.require('os.data.DataManager');
 const IDataDescriptor = goog.require('os.data.IDataDescriptor');
 const IFilterable = goog.require('os.filter.IFilterable');
 const {Controller: OSFilterImportCtrl} = goog.require('os.filter.im.OSFilterImport');
+const osImplements = goog.require('os.implements');
 const {ICON, getColumnsFromFilterable} = goog.require('os.im.action');
 const FilterActionParser = goog.require('os.im.action.FilterActionParser');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
@@ -99,14 +100,14 @@ class Controller extends OSFilterImportCtrl {
     // filter down to only the IFilterable descriptors
     var filterables = descriptors.filter(function(d) {
       d = /** @type {IFilterable} */ (d);
-      return os.implements(d, IFilterable.ID) && d.isFilterable();
+      return osImplements(d, IFilterable.ID) && d.isFilterable();
     });
 
     if (layers) {
       layers.forEach(function(layer) {
         // we only want IFilterable layers, BUT... we want even ones that return false from isFilterable()
         // also, exclude the drawing layer
-        if (os.implements(layer, IFilterable.ID) && /** @type {ILayer} */ (layer).getId() != DrawingLayer.ID) {
+        if (osImplements(layer, IFilterable.ID) && /** @type {ILayer} */ (layer).getId() != DrawingLayer.ID) {
           layer = /** @type {IFilterable} */ (layer);
           filterables.unshift(layer);
         }
@@ -122,12 +123,12 @@ class Controller extends OSFilterImportCtrl {
   onLayerChange(layer) {
     this.columns = [];
 
-    if (os.implements(layer, IDataDescriptor.ID)) {
+    if (osImplements(layer, IDataDescriptor.ID)) {
       super.onLayerChange(layer);
       return;
     }
 
-    if (os.implements(layer, IFilterable.ID)) {
+    if (osImplements(layer, IFilterable.ID)) {
       var filterable = /** @type {IFilterable} */ (layer);
 
       this.columns = getColumnsFromFilterable(filterable);

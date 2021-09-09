@@ -5,6 +5,7 @@ const Dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const osInterpolate = goog.require('os.interpolate');
+const Method = goog.require('os.interpolate.Method');
 const osLabel = goog.require('os.style.label');
 const UnitManager = goog.require('os.unit.UnitManager');
 const {generateCirclePositions} = goog.require('plugin.cesium');
@@ -119,7 +120,7 @@ const updateWebGL = function(start, end) {
         geometryInstances: new Cesium.GeometryInstance({
           geometry: new Cesium.GroundPolylineGeometry({
             positions: generateCirclePositions(center, this.distance),
-            arcType: osInterpolate.getMethod() === osInterpolate.Method.RHUMB ?
+            arcType: osInterpolate.getMethod() === Method.RHUMB ?
               Cesium.ArcType.RHUMB : Cesium.ArcType.GEODESIC,
             width: 2
           }),

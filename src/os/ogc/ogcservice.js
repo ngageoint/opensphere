@@ -16,6 +16,7 @@ const {formatPolygon, readKMLGeometry} = goog.require('os.ogc.spatial');
 const Format = goog.require('os.ogc.spatial.Format');
 const OGCQuery = goog.require('os.ogc.query.OGCQuery');
 const OSSettings = goog.require('os.config.Settings');
+const {loadXml} = goog.require('os.xml');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -385,7 +386,7 @@ class OGCService extends AbstractService {
       const kml = formatPolygon(geom, Format.KML);
 
       if (kml) {
-        const doc = os.xml.loadXml(kml);
+        const doc = loadXml(kml);
         const readGeometry = readKMLGeometry(doc);
         readGeometry.osTransform();
 
