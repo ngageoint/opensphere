@@ -32,12 +32,12 @@ const directive = () => ({
   controller: Controller,
   controllerAs: 'ctrl',
   template: '<div class="btn-group" ng-right-click="ctrl.openMenu()">' +
-    '<button class="btn btn-secondary" id="measureButton" title="Measure between points"' +
+    '<button class="btn btn-primary" id="measureButton" title="Measure between points"' +
     ' ng-click="ctrl.toggle()"' +
     ' ng-class="{active: measuring}">' +
     '<i class="fa fa-fw fa-drafting-compass"></i> {{showLabel ? \'Measure\' : \'\'}}' +
     '</button>' +
-    '<button class="btn btn-secondary dropdown-toggle dropdown-toggle-split" ng-click="ctrl.openMenu()"' +
+    '<button class="btn btn-primary dropdown-toggle dropdown-toggle-split" ng-click="ctrl.openMenu()"' +
     ' ng-class="{active: menu}">' +
     '</button></div>'
 });

@@ -16,7 +16,7 @@ const directive = () => ({
   scope: true,
   controller: Controller,
   controllerAs: 'ctrl',
-  template: '<button class="btn btn-secondary dropdown-toggle" ng-click="ctrl.openMenu()"' +
+  template: '<button class="btn btn-primary dropdown-toggle" ng-click="ctrl.openMenu()"' +
     ' title="Save options" ng-right-click="ctrl.openMenu()" ng-class="{active: menu}">' +
     '<i class="fa fa-floppy-o" ng-class="{\'fa-fw\': puny}"></i> <span ng-class="{\'d-none\': puny}">Save</span>' +
     '</button>'
