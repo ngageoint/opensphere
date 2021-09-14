@@ -117,13 +117,18 @@ Controller.GRID_COLUMNS_ = [
 
 
 /**
+ * @typedef {function(!string, !Object, string=)}
+ */
+let LaunchPropertyInfoFn;
+
+/**
  * Launches a feature info window for the provided feature.
  *
  * @param {!string} id The id to use for the window.
  * @param {!Object} object The object to display.
  * @param {string=} opt_titleDetail Title of the containing layer
  */
-const launchPropertyInfo = function(id, object, opt_titleDetail) {
+let launchPropertyInfoFn = function(id, object, opt_titleDetail) {
   var winLabel = 'Property Info';
 
   if (opt_titleDetail) {
@@ -159,11 +164,31 @@ const launchPropertyInfo = function(id, object, opt_titleDetail) {
     create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 };
-goog.exportSymbol('os.ui.launchPropertyInfo', launchPropertyInfo);
+
+/**
+ * Launches a feature info window for the provided feature.
+ *
+ * @param {!string} id The id to use for the window.
+ * @param {!Object} object The object to display.
+ * @param {string=} opt_titleDetail Title of the containing layer
+ */
+const launchPropertyInfo = function(id, object, opt_titleDetail) {
+  launchPropertyInfoFn(id, object, opt_titleDetail);
+};
+
+/**
+ * Set the launchPropertyInfo function.
+ * @param {LaunchPropertyInfoFn} fn The function.
+ */
+const setLaunchPropertyInfo = (fn) => {
+  launchPropertyInfoFn = fn;
+};
 
 exports = {
   Controller,
   directive,
   directiveTag,
-  launchPropertyInfo
+  LaunchPropertyInfoFn,
+  launchPropertyInfo,
+  setLaunchPropertyInfo
 };

@@ -215,8 +215,6 @@ class Controller {
 
     const pluginManager = PluginManager.getInstance();
     pluginManager.listenOnce(GoogEventType.LOAD, this.onPluginsLoaded, false, this);
-
-    ui.pluginManager = pluginManager;
   }
 
   /**
