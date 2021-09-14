@@ -12,6 +12,7 @@ const ZoomControl = goog.require('ol.control.Zoom');
 const {getCenter: getExtentCenter} = goog.require('ol.extent');
 
 const {ROOT} = goog.require('os');
+const capture = goog.require('os.capture');
 const osImplements = goog.require('os.implements');
 const ILayer = goog.require('os.layer.ILayer');
 const osMap = goog.require('os.map');
@@ -365,6 +366,52 @@ class Controller {
     }
 
     this.updateMapContainerWidth();
+  }
+
+  /**
+   * Export the layers to an image
+   * @export
+   */
+  export() {
+    // Get both canvases
+    var topCanvas = null;
+    var bottomCanvas = null;
+    if (this.leftOnTop) {
+      topCanvas = this.element.find(`${Selector.MAP_LEFT} canvas`)[0];
+      bottomCanvas = this.element.find(`${Selector.MAP_RIGHT} canvas`)[0];
+    } else {
+      topCanvas = this.element.find(`${Selector.MAP_RIGHT} canvas`)[0];
+      bottomCanvas = this.element.find(`${Selector.MAP_LEFT} canvas`)[0];
+    }
+
+    // Get the location of the split
+    const slider = this.element.find(Selector.SLIDER)[0];
+    const split = slider.offsetLeft * 2;
+
+    // Create the canvas that will be exported as an image
+    var fullCanvas = /** @type {!HTMLCanvasElement} */ (document.createElement('canvas'));
+    const width = fullCanvas.width = bottomCanvas.width;
+    const height = fullCanvas.height = bottomCanvas.height;
+    var fullContext = fullCanvas.getContext('2d');
+
+    // Fill the image with a black background to prevent transparency related issues
+    fullContext.fillStyle = 'black';
+    fullContext.fillRect(0, 0, width, height);
+
+    // Crop and add the bottom canvas to the right of the image
+    fullContext.drawImage(bottomCanvas, split, 0, width, height,
+        split, 0, width, height);
+
+    // Crop and add the top canvas to the left of the image
+    var topCanvasCrop = /** @type {!HTMLCanvasElement} */ (document.createElement('canvas'));
+    topCanvasCrop.width = split;
+    topCanvasCrop.height = bottomCanvas.height;
+    var topContext = topCanvasCrop.getContext('2d');
+    topContext.drawImage(topCanvas, 0, 0);
+    fullContext.drawImage(topCanvasCrop, 0, 0);
+
+    // Export the combined canvas
+    capture.saveCanvas(fullCanvas);
   }
 
   /**
