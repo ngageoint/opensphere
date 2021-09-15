@@ -15,7 +15,9 @@ const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const capture = goog.require('os.capture');
 const osImplements = goog.require('os.implements');
+const instanceOf = goog.require('os.instanceOf');
 const ILayer = goog.require('os.layer.ILayer');
+const SourceClass = goog.require('os.source.SourceClass');
 const osMap = goog.require('os.map');
 const {getMapContainer} = goog.require('os.map.instance');
 const {getMaxFeatures} = goog.require('os.ogc');
@@ -32,6 +34,7 @@ const EventKey = goog.requireType('goog.events.Key');
 const Control = goog.requireType('ol.control.Control');
 const Layer = goog.requireType('ol.layer.Layer');
 const ISource = goog.requireType('os.source.ISource');
+const VectorSource = goog.requireType('os.source.Vector');
 
 
 /**
@@ -516,7 +519,7 @@ const windowId = 'compare-layers';
 const launchLayerCompare = (options) => {
   const featureCount = countFeatures(options.left) + countFeatures(options.right);
   if (featureCount > getMaxFeatures('2d')) {
-    AlertManager.getInstance().sendAlert('Switching to 2D mode with the current data volume may degrade performance ' +
+    AlertManager.getInstance().sendAlert('Using Layer Compare with the current data volume may degrade performance ' +
     'considerably or crash the browser', AlertEventSeverity.WARNING);
   }
 
@@ -561,9 +564,9 @@ const countFeatures = (layerArray) => {
   if (layerArray && layerArray.length > 0) {
     var featureCount = 0;
     layerArray.forEach((layer) => {
-      var source = /** @type {ISource} */ (layer.getSource());
-      if (source) {
-        featureCount += source.getFeatures().length;
+      var source = /** @type {VectorSource} */ (layer.getSource());
+      if (source && instanceOf(source, SourceClass.VECTOR)) {
+        featureCount += source.getFeatureCount();
       }
     });
     return featureCount;
