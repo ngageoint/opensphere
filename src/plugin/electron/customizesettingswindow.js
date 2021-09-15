@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.electron.CustomizeSettingsWindow');
 
-import * as CustomizeSettingsUI from './customizesettingsui'; // eslint-disable-line
+import './customizesettingsui';
 
 import {ROOT} from '../../os/os.js';
 
