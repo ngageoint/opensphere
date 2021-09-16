@@ -1,5 +1,4 @@
 goog.module('os.histo.DateBinMethod');
-goog.module.declareLegacyNamespace();
 
 const {containsValue} = goog.require('goog.object');
 const {padNumber} = goog.require('goog.string');
@@ -10,6 +9,7 @@ const {sortByKey, sortByKeyDesc} = goog.require('os.histo.bin');
 const time = goog.require('os.time');
 
 const TimeInstant = goog.requireType('os.time.TimeInstant');
+
 
 /**
  */

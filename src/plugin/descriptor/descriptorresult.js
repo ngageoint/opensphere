@@ -1,5 +1,4 @@
 goog.module('plugin.descriptor.DescriptorResult');
-goog.module.declareLegacyNamespace();
 
 const AbstractSearchResult = goog.require('os.search.AbstractSearchResult');
 const {directiveTag: cardUi} = goog.require('plugin.descriptor.ResultCardUI');

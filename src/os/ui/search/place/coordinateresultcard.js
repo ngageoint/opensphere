@@ -1,5 +1,4 @@
 goog.module('os.ui.search.place.CoordinateResultCardUI');
-goog.module.declareLegacyNamespace();
 
 const {toLonLat} = goog.require('ol.proj');
 const {ROOT} = goog.require('os');

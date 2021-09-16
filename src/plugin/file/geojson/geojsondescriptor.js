@@ -1,5 +1,4 @@
 goog.module('plugin.file.geojson.GeoJSONDescriptor');
-goog.module.declareLegacyNamespace();
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const LayerType = goog.require('os.layer.LayerType');

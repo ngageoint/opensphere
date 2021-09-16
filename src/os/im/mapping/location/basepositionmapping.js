@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.location.BasePositionMapping');
-goog.module.declareLegacyNamespace();
 
 const AbstractPositionMapping = goog.require('os.im.mapping.AbstractPositionMapping');
 const {appendElement} = goog.require('os.xml');

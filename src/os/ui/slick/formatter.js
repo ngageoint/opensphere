@@ -1,5 +1,4 @@
 goog.module('os.ui.slick.formatter');
-goog.module.declareLegacyNamespace();
 
 const {buildString, htmlEscape} = goog.require('goog.string');
 const ui = goog.require('os.ui');

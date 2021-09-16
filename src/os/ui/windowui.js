@@ -1,5 +1,4 @@
 goog.module('os.ui.WindowUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.onboarding.ContextOnboardingUI');
 

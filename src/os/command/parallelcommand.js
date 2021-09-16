@@ -1,5 +1,4 @@
 goog.module('os.command.ParallelCommand');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const AbstractCommandSet = goog.require('os.command.AbstractCommandSet');

@@ -1,5 +1,4 @@
 goog.module('os.Map');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin.canvasreplay');
 goog.require('os.mixin.canvasreplaygroup');

@@ -1,5 +1,4 @@
 goog.module('os.time.period');
-goog.module.declareLegacyNamespace();
 
 
 /**

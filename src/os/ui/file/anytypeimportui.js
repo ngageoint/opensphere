@@ -1,10 +1,10 @@
 goog.module('os.ui.file.AnyTypeImportUI');
-goog.module.declareLegacyNamespace();
 
 const {directiveTag: importUi} = goog.require('os.ui.file.AnyTypeImport');
 const AbstractImportUI = goog.require('os.ui.im.AbstractImportUI');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const osWindow = goog.require('os.ui.window');
+
 
 /**
  * @extends {AbstractImportUI<T>}

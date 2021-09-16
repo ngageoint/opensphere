@@ -1,5 +1,4 @@
 goog.module('os.ui.state.IStateDescriptor');
-goog.module.declareLegacyNamespace();
 
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 const IUrlDescriptor = goog.requireType('os.data.IUrlDescriptor');

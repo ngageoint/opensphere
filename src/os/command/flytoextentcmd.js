@@ -1,5 +1,4 @@
 goog.module('os.command.FlyToExtent');
-goog.module.declareLegacyNamespace();
 
 const math = goog.require('goog.math');
 const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');

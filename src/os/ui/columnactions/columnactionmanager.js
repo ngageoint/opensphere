@@ -1,5 +1,4 @@
 goog.module('os.ui.columnactions.ColumnActionManager');
-goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const Settings = goog.require('os.config.Settings');

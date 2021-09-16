@@ -1,5 +1,4 @@
 goog.module('os.interaction.DragAndDrop');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const dispose = goog.require('goog.dispose');

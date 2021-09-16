@@ -1,7 +1,7 @@
 goog.module('os.histo.Result');
-goog.module.declareLegacyNamespace();
 
 const Bin = goog.requireType('os.histo.Bin');
+
 
 /**
  * @typedef {{

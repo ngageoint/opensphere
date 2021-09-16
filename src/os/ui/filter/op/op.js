@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.op.Op');
-goog.module.declareLegacyNamespace();
 
 const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
 const {directiveTag: textUi} = goog.require('os.ui.filter.TextUI');

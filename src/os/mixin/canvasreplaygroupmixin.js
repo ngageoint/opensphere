@@ -1,5 +1,4 @@
 goog.module('os.mixin.canvasreplaygroup');
-goog.module.declareLegacyNamespace();
 
 const {getWidth} = goog.require('ol.extent');
 const ReplayGroup = goog.require('ol.render.canvas.ReplayGroup');

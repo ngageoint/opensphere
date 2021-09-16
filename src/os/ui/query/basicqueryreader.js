@@ -1,5 +1,4 @@
 goog.module('os.ui.query.BasicQueryReader');
-goog.module.declareLegacyNamespace();
 
 const {some} = goog.require('goog.array');
 const {assert} = goog.require('goog.asserts');

@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.cmd.KMLNodeAdd');
-goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const AbstractKMLNode = goog.require('plugin.file.kml.cmd.AbstractKMLNode');

@@ -1,5 +1,4 @@
 goog.module('os.command.FeatureShape');
-goog.module.declareLegacyNamespace();
 
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
 const {SUB_DELIMITER} = goog.require('os.metrics');

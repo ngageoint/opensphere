@@ -1,5 +1,4 @@
 goog.module('os.config.storage.SettingsWritableStorageType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

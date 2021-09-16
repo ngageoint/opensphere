@@ -1,5 +1,4 @@
 goog.module('plugin.file.geojson.mime');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const GeoJSON = goog.require('ol.format.GeoJSON');

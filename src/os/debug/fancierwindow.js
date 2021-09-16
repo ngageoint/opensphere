@@ -1,5 +1,4 @@
 goog.module('os.debug.FancierWindow');
-goog.module.declareLegacyNamespace();
 
 const FancyWindow = goog.require('goog.debug.FancyWindow');
 const googEvents = goog.require('goog.events');

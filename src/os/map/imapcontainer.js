@@ -1,5 +1,4 @@
 goog.module('os.map.IMapContainer');
-goog.module.declareLegacyNamespace();
 
 const Listenable = goog.requireType('goog.events.Listenable');
 const Collection = goog.requireType('ol.Collection');

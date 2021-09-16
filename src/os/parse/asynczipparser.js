@@ -1,5 +1,4 @@
 goog.module('os.parse.AsyncZipParser');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const AsyncParser = goog.require('os.parse.AsyncParser');

@@ -1,5 +1,4 @@
 goog.module('plugin.basemap.ui.BaseMapLayerUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.SpinnerUI');
 

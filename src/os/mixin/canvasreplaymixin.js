@@ -1,5 +1,4 @@
 goog.module('os.mixin.canvasreplay');
-goog.module.declareLegacyNamespace();
 
 const {getUid} = goog.require('ol');
 const {equals} = goog.require('ol.array');

@@ -1,14 +1,16 @@
 goog.module('os.im.action.ImportActionManager');
-goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const olArray = goog.require('ol.array');
 const dispatcher = goog.require('os.Dispatcher');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const Settings = goog.require('os.config.Settings');
+const IFilterable = goog.require('os.filter.IFilterable');
+const osImplements = goog.require('os.implements');
 const {getEnabledMap, getImportActionManager, setImportActionManager} = goog.require('os.im.action');
 const FilterActionEntry = goog.require('os.im.action.FilterActionEntry');
 const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
@@ -502,8 +504,8 @@ class ImportActionManager extends EventTarget {
 
       var filterKey = id;
       var layer = getMapContainer().getLayer(id);
-      if (os.implements(layer, os.filter.IFilterable.ID)) {
-        filterKey = /** @type {os.filter.IFilterable} */ (layer).getFilterKey();
+      if (osImplements(layer, IFilterable.ID)) {
+        filterKey = /** @type {IFilterable} */ (layer).getFilterKey();
       }
 
       if (filterKey && defaultActions && defaultActions[filterKey]) {
@@ -617,7 +619,7 @@ class ImportActionManager extends EventTarget {
       }
     } else {
       var msg = 'Failed adding ' + this.entryTitle.toLowerCase() + '. See the log for details.';
-      AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
+      AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.ERROR);
     }
   }
 

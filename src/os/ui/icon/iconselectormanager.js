@@ -1,5 +1,4 @@
 goog.module('os.ui.icon.IconSelectorManager');
-goog.module.declareLegacyNamespace();
 
 const CollectionManager = goog.require('os.data.CollectionManager');
 const {directiveTag: iconPalette} = goog.require('os.ui.icon.IconPaletteUI');

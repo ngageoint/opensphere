@@ -1,7 +1,7 @@
 goog.module('os.alert.AlertEventSeverity');
-goog.module.declareLegacyNamespace();
 
 const AlertEventLevel = goog.require('os.alert.AlertEventLevel');
+
 
 /**
  * Severity levels of alert events.

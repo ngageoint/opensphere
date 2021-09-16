@@ -1,5 +1,4 @@
 goog.module('os.layer.folder');
-goog.module.declareLegacyNamespace();
 
 const ConfirmTextUI = goog.require('os.ui.window.ConfirmTextUI');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');

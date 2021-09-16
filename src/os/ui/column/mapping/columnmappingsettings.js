@@ -1,5 +1,4 @@
 goog.module('os.ui.column.mapping.ColumnMappingSettings');
-goog.module.declareLegacyNamespace();
 
 const {TYPE} = goog.require('os.file.mime.columnmapping');
 const ColumnMappingImportUI = goog.require('os.ui.column.mapping.ColumnMappingImportUI');

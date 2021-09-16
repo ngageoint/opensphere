@@ -1,5 +1,4 @@
 goog.module('os.column.IColumnMapping');
-goog.module.declareLegacyNamespace();
 
 const Listenable = goog.requireType('goog.events.Listenable');
 const IPersistable = goog.requireType('os.IPersistable');

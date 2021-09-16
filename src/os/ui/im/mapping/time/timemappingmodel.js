@@ -1,5 +1,4 @@
 goog.module('os.ui.im.mapping.time.TimeMappingModel');
-goog.module.declareLegacyNamespace();
 
 const DateType = goog.require('os.im.mapping.DateType');
 const TimeType = goog.require('os.im.mapping.TimeType');

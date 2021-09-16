@@ -1,11 +1,11 @@
 goog.module('os.command.AsyncMockCommandString');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const AsyncMockCommand = goog.require('os.command.AsyncMockCommand');
 const MockCommand = goog.require('os.command.MockCommand');
 const MockCommandString = goog.require('os.command.MockCommandString');
 const State = goog.require('os.command.State');
+
 
 /**
  * Helps test command sets.

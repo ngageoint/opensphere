@@ -1,5 +1,4 @@
 goog.module('os.mixin.fixInjectorInvoke');
-goog.module.declareLegacyNamespace();
 
 /**
  * The isClass function in angular does not properly check

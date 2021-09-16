@@ -2,7 +2,6 @@
  * @fileoverview Abstract interface for asynchonously storing and retrieving data using some persistence mechanism.
  */
 goog.module('os.storage.AsyncStorage');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const IAsyncStorage = goog.require('os.storage.IAsyncStorage'); // eslint-disable-line

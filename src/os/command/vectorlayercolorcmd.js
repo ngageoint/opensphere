@@ -1,5 +1,4 @@
 goog.module('os.command.VectorLayerColor');
-goog.module.declareLegacyNamespace();
 
 const osColor = goog.require('os.color');
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');

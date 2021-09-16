@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.op.IsNull');
-goog.module.declareLegacyNamespace();
 
 const Op = goog.require('os.ui.filter.op.Op');
 

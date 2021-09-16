@@ -1,5 +1,4 @@
 goog.module('os.ui.action.MenuOptions');
-goog.module.declareLegacyNamespace();
 
 /**
  * Options for defining an item in a menu.

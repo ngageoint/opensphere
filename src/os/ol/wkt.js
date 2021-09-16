@@ -1,5 +1,4 @@
 goog.module('os.ol.wkt');
-goog.module.declareLegacyNamespace();
 
 const WKT = goog.require('ol.format.WKT');
 

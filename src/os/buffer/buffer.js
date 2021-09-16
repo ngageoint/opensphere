@@ -1,5 +1,4 @@
 goog.module('os.buffer');
-goog.module.declareLegacyNamespace();
 
 const userAgent = goog.require('goog.userAgent');
 const Feature = goog.require('ol.Feature');

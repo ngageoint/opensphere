@@ -1,5 +1,4 @@
 goog.module('os.histo.datetext');
-goog.module.declareLegacyNamespace();
 
 /**
  * @typedef {function(number,number):string}

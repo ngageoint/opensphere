@@ -1,5 +1,4 @@
 goog.module('plugin.file.zip.ZIPParserConfig');
-goog.module.declareLegacyNamespace();
 
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
 

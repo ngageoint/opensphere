@@ -1,5 +1,4 @@
 goog.module('os.net.CertNaziResult');
-goog.module.declareLegacyNamespace();
 
 /**
  * @typedef {{

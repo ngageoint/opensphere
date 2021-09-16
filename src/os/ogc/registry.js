@@ -1,5 +1,4 @@
 goog.module('os.ogc.registry');
-goog.module.declareLegacyNamespace();
 
 const Registry = goog.require('os.data.Registry');
 

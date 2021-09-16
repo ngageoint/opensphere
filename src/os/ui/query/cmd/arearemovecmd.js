@@ -1,5 +1,4 @@
 goog.module('os.ui.query.cmd.AreaRemove');
-goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const {getAreaManager, getQueryManager} = goog.require('os.query.instance');

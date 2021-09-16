@@ -1,6 +1,5 @@
 /* FIXME add rotation */
 goog.module('os.olm.render.Circle');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const Sphere = goog.require('ol.Sphere');

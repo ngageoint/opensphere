@@ -1,10 +1,10 @@
 goog.module('os.layer.preset');
-goog.module.declareLegacyNamespace();
 
-const object = goog.require('goog.object');
-const style = goog.require('os.style');
-const OsColor = goog.require('os.color');
-const OsLayer = goog.require('os.layer');
+const {unsafeClone} = goog.require('goog.object');
+const {DEFAULT_FILL_ALPHA, toRgbaString} = goog.require('os.style');
+const {toRgbArray} = goog.require('os.color');
+const {createFromOptions} = goog.require('os.layer');
+const {LayerConfigId} = goog.require('os.layer.config');
 const Settings = goog.require('os.config.Settings');
 const StyleField = goog.require('os.style.StyleField');
 
@@ -62,9 +62,9 @@ const addDefault = function(presets, opt_layerId, opt_layerFilterKey) {
   if (presets) {
     if (!defaultPreset_) {
       // create a temporary vector layer to produce a default layer config
-      const layer = OsLayer.createFromOptions({
+      const layer = createFromOptions({
         'id': DEFAULT_PRESET_ID,
-        'type': os.layer.config.StaticLayerConfig.ID, // HACK: TODO resolve circular dependency
+        'type': LayerConfigId.STATIC,
         'animate': true,
         'visible': true
       });
@@ -87,7 +87,7 @@ const addDefault = function(presets, opt_layerId, opt_layerFilterKey) {
     });
 
     if (!hasDefault && defaultPreset_) {
-      const preset = object.unsafeClone(defaultPreset_);
+      const preset = unsafeClone(defaultPreset_);
       preset.default = !presets.some(function(p) {
         return !!p && p.default === true;
       }); // if nothing else is the default, flag "Basic" as default
@@ -160,11 +160,11 @@ const updateDefault = function(layer, preset) {
     const layerOptions = layer.getLayerOptions();
     if (layerOptions && layerOptions['baseColor']) {
       // update the default color
-      const color = OsColor.toRgbArray(/** @type {string} */ (layerOptions['baseColor']));
-      config[StyleField.COLOR] = style.toRgbaString(color);
+      const color = toRgbArray(/** @type {string} */ (layerOptions['baseColor']));
+      config[StyleField.COLOR] = toRgbaString(color);
 
-      color[3] = style.DEFAULT_FILL_ALPHA;
-      config[StyleField.FILL_COLOR] = style.toRgbaString(color);
+      color[3] = DEFAULT_FILL_ALPHA;
+      config[StyleField.FILL_COLOR] = toRgbaString(color);
     }
   }
 };

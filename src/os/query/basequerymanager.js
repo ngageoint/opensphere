@@ -1,5 +1,4 @@
 goog.module('os.query.BaseQueryManager');
-goog.module.declareLegacyNamespace();
 
 const {defaultCompare} = goog.require('goog.array');
 const {assert} = goog.require('goog.asserts');
@@ -1211,10 +1210,5 @@ const logger = log.getLogger('os.query.BaseQueryManager');
  * @private
  */
 BaseQueryManager.sortFields_ = ['layerId', 'areaId', 'filterId', 'includeArea', 'filterGroup'];
-
-/**
- * @type {?BaseQueryManager}
- */
-os.ui.queryManager = null;
 
 exports = BaseQueryManager;

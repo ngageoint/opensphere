@@ -1,5 +1,4 @@
 goog.module('os.ui.wiz.step.TimeStepUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.wiz.WizardPreviewUI');
 goog.require('os.ui.wiz.step.TimeInstantUI');

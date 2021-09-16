@@ -1,5 +1,4 @@
 goog.module('os.ui.ResizeEventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * Enumeration of resize event types.

@@ -1,5 +1,4 @@
 goog.require('os.alert.AlertManager');
-goog.require('os.search');
 goog.require('os.search.MockSearch');
 goog.require('os.search.SearchEventType');
 goog.require('os.search.SearchManager');
@@ -7,7 +6,7 @@ goog.require('os.structs.EventType');
 
 describe('os.search.SearchManager', function() {
   const AlertManager = goog.module.get('os.alert.AlertManager');
-  const search = goog.module.get('os.search');
+  const MockSearch = goog.module.get('os.search.MockSearch');
   const SearchEventType = goog.module.get('os.search.SearchEventType');
   const SearchManager = goog.module.get('os.search.SearchManager');
   const EventType = goog.module.get('os.structs.EventType');
@@ -18,8 +17,8 @@ describe('os.search.SearchManager', function() {
   var mockSearch2;
 
   beforeEach(function() {
-    mockSearch1 = new search.MockSearch('test1', 'Search Web', 'val1', 50);
-    mockSearch2 = new search.MockSearch('test2', 'Search Images', 'val2', 100);
+    mockSearch1 = new MockSearch('test1', 'Search Web', 'val1', 50);
+    mockSearch2 = new MockSearch('test2', 'Search Images', 'val2', 100);
   });
 
   it('should have a singleton instance', function() {
@@ -66,14 +65,14 @@ describe('os.search.SearchManager', function() {
 
   it('should capture search results', function() {
     var searchManager = new SearchManager();
-    searchManager.registerSearch(new search.MockSearch());
+    searchManager.registerSearch(new MockSearch());
     searchManager.search('test', 0, 10);
     expect(searchManager.getResults().length).toBe(10);
   });
 
   it('should capture autocomplete results', function() {
     var searchManager = new SearchManager();
-    searchManager.registerSearch(new search.MockSearch());
+    searchManager.registerSearch(new MockSearch());
 
     var results = [];
     searchManager.listenOnce(SearchEventType.AUTOCOMPLETED, function(event) {
@@ -131,8 +130,8 @@ describe('os.search.SearchManager', function() {
   });
 
   it('should properly mix results as reported by search providers', function() {
-    var providerA = new search.MockSearch('a', 'A', 'valueA', 95);
-    var providerB = new search.MockSearch('b', 'B', 'valueB', 90);
+    var providerA = new MockSearch('a', 'A', 'valueA', 95);
+    var providerB = new MockSearch('b', 'B', 'valueB', 90);
     var searchManager = new SearchManager();
     searchManager.registerSearch(providerA);
     searchManager.registerSearch(providerB);

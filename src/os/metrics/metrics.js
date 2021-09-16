@@ -1,5 +1,4 @@
 goog.module('os.metrics.Metrics');
-goog.module.declareLegacyNamespace();
 
 const {getDocument} = goog.require('goog.dom');
 const {listen} = goog.require('goog.events');
@@ -17,6 +16,7 @@ const {set} = goog.require('os.object');
 
 const Logger = goog.requireType('goog.log.Logger');
 const IMetricServiceProvider = goog.requireType('os.metrics.IMetricServiceProvider');
+
 
 /**
  * Maintains all application metrics for a user.

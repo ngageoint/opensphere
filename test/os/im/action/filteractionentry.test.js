@@ -44,6 +44,16 @@ describe('os.im.action.FilterActionEntry', function() {
     expect(obj2.MATCH).toBeUndefined();
   };
 
+  const originalManager = ImportActionManager.getInstance();
+
+  beforeEach(() => {
+    ImportActionManager.setInstance(getMockManager());
+  });
+
+  afterEach(() => {
+    ImportActionManager.setInstance(originalManager);
+  });
+
   it('should initialize correctly', function() {
     var fe = new FilterActionEntry();
 
@@ -71,8 +81,6 @@ describe('os.im.action.FilterActionEntry', function() {
   });
 
   it('should clone/persist/restore properly', function() {
-    spyOn(ImportActionManager, 'getInstance').andCallFake(getMockManager);
-
     var fe = new FilterActionEntry();
     fe.setFilter(filterXml);
     fe.actions = [new MockAction()];
@@ -100,7 +108,6 @@ describe('os.im.action.FilterActionEntry', function() {
   });
 
   it('should compare properly', function() {
-    spyOn(ImportActionManager, 'getInstance').andCallFake(getMockManager);
     var filterXml2 = filterXml + filterXml;
 
     var fe = new FilterActionEntry();

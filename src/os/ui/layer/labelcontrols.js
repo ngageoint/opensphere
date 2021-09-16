@@ -1,5 +1,4 @@
 goog.module('os.ui.layer.LabelControlsUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.geo.PositionUI');
 

@@ -1,5 +1,4 @@
 goog.module('os.interaction.PinchZoom');
-goog.module.declareLegacyNamespace();
 
 const OLPinchZoom = goog.require('ol.interaction.PinchZoom');
 const I3DSupport = goog.require('os.I3DSupport');

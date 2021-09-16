@@ -1,8 +1,8 @@
 goog.module('os.command.MockCommand');
-goog.module.declareLegacyNamespace();
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const State = goog.require('os.command.State');
+
 
 /**
  * Implement a couple of test commands.  MockCommand is a synchronous command.

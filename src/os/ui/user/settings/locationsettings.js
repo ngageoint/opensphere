@@ -1,8 +1,8 @@
 goog.module('os.ui.user.settings.LocationSettings');
-goog.module.declareLegacyNamespace();
 
 const {directiveTag: settingsUi} = goog.require('os.ui.user.settings.LocationSettingsUI');
 const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
+
 
 /**
  */

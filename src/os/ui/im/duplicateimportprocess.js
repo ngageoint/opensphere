@@ -1,5 +1,4 @@
 goog.module('os.ui.im.DuplicateImportProcess');
-goog.module.declareLegacyNamespace();
 
 const {getLogger} = goog.require('goog.log');
 const CommandProcessor = goog.require('os.command.CommandProcessor');

@@ -1,5 +1,4 @@
 goog.module('os.ui.ol.interaction.AbstractDrag');
-goog.module.declareLegacyNamespace();
 
 const {mouseOnly} = goog.require('ol.events.condition');
 const AbstractDraw = goog.require('os.ui.ol.interaction.AbstractDraw');

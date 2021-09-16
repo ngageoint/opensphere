@@ -1,5 +1,4 @@
 goog.module('os.command.AbstractFeatureStyle');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const GoogEvent = goog.require('goog.events.Event');

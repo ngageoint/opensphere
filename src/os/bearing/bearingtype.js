@@ -1,5 +1,4 @@
 goog.module('os.bearing.BearingType');
-goog.module.declareLegacyNamespace();
 
 
 /**

@@ -1,5 +1,4 @@
 goog.module('os.query.FilterManager');
-goog.module.declareLegacyNamespace();
 
 const {hashCode} = goog.require('goog.string');
 const {FILTER_STORAGE_KEY} = goog.require('os');

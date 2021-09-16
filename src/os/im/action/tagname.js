@@ -1,5 +1,4 @@
 goog.module('os.im.action.TagName');
-goog.module.declareLegacyNamespace();
 
 /**
  * XML tags used by import actions.

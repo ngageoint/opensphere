@@ -1,5 +1,4 @@
 goog.module('os.capture');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const dispose = goog.require('goog.dispose');
@@ -12,7 +11,7 @@ const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const ContentType = goog.require('os.capture.ContentType');
 const config = goog.require('os.config');
-const osFile = goog.require('os.file');
+const {saveFile} = goog.require('os.file.persist');
 const Job = goog.require('os.job.Job');
 const JobEventType = goog.require('os.job.JobEventType');
 const osMap = goog.require('os.map');
@@ -248,7 +247,7 @@ const saveDataUrl = function(dataUrl, opt_fileName) {
           if (event.data instanceof Uint8Array) {
             var blob = new Blob([event.data], {type: 'image/png'});
             var filename = (opt_fileName || ('Screenshot ' + getTimestamp())) + '.png';
-            osFile.persist.saveFile(filename, blob, ContentType.PNG);
+            saveFile(filename, blob, ContentType.PNG);
           } else {
             AlertManager.getInstance().sendAlert('Failed saving canvas to PNG',
                 AlertEventSeverity.ERROR, logger);

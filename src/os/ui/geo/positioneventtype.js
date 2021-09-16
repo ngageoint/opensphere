@@ -1,5 +1,4 @@
 goog.module('os.ui.geo.PositionEventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * Angular events for the position directive.

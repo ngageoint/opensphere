@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.ui');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const googString = goog.require('goog.string');

@@ -1,5 +1,4 @@
 goog.module('os.load.LoadingTask');
-goog.module.declareLegacyNamespace();
 
 const ILoadingTask = goog.requireType('os.load.ILoadingTask');
 

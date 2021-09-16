@@ -1,5 +1,4 @@
 goog.module('os.data.IAreaTest');
-goog.module.declareLegacyNamespace();
 
 const Listenable = goog.requireType('goog.events.Listenable');
 

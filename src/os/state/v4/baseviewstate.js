@@ -1,5 +1,4 @@
 goog.module('os.state.v4.BaseViewState');
-goog.module.declareLegacyNamespace();
 
 const {setAttributeNS} = goog.require('ol.xml');
 const XMLState = goog.require('os.state.XMLState');

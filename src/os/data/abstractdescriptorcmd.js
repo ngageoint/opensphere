@@ -1,5 +1,4 @@
 goog.module('os.data.AbstractDescriptor');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');

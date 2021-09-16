@@ -1,5 +1,4 @@
 goog.module('os.search.SearchTermFacet');
-goog.module.declareLegacyNamespace();
 
 const BaseFacet = goog.require('os.search.BaseFacet');
 const TreeSearch = goog.require('os.ui.slick.TreeSearch');

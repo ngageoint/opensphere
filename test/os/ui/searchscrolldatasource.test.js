@@ -4,8 +4,12 @@ goog.require('os.ui.search.SearchScrollDataSource');
 
 
 describe('os.ui.search.SearchScrollDataSource', function() {
-  var searchScrollDataSource = new os.ui.search.SearchScrollDataSource();
-  var searchManager = new os.search.SearchManager();
+  const SearchManager = goog.module.get('os.search.SearchManager');
+  const SearchScrollDataSource = goog.module.get('os.ui.search.SearchScrollDataSource');
+  const MockSearch = goog.module.get('os.search.MockSearch');
+
+  var searchScrollDataSource = new SearchScrollDataSource();
+  var searchManager = new SearchManager();
 
 
   var results = undefined;
@@ -21,7 +25,7 @@ describe('os.ui.search.SearchScrollDataSource', function() {
   });
 
   it('sets up the search manager', function() {
-    searchManager.registerSearch(new os.search.MockSearch('Mock Search', 'Mock Search Result '));
+    searchManager.registerSearch(new MockSearch('Mock Search', 'Mock Search Result '));
   });
 
   it('should return an empty array when no results found', function() {

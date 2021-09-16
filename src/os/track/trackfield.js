@@ -1,5 +1,4 @@
 goog.module('os.track.TrackField');
-goog.module.declareLegacyNamespace();
 
 /**
  * Feature metadata fields used by tracks

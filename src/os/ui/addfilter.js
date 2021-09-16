@@ -1,6 +1,6 @@
 goog.module('os.ui.AddFilterUI');
-goog.module.declareLegacyNamespace();
 
+const LayerEventType = goog.require('os.events.LayerEventType');
 const {getMapContainer} = goog.require('os.map.instance');
 const Module = goog.require('os.ui.Module');
 const {Controller: AddFilterController, directive: addFilterDirective} = goog.require('os.ui.query.AddFilterUI');
@@ -43,9 +43,9 @@ class Controller extends AddFilterController {
     super($scope, $element);
 
     const mapContainer = getMapContainer();
-    mapContainer.listen(os.events.LayerEventType.ADD, this.updateLayers, false, this);
-    mapContainer.listen(os.events.LayerEventType.REMOVE, this.updateLayers, false, this);
-    mapContainer.listen(os.events.LayerEventType.RENAME, this.updateLayers, false, this);
+    mapContainer.listen(LayerEventType.ADD, this.updateLayers, false, this);
+    mapContainer.listen(LayerEventType.REMOVE, this.updateLayers, false, this);
+    mapContainer.listen(LayerEventType.RENAME, this.updateLayers, false, this);
   }
 
   /**
@@ -55,9 +55,9 @@ class Controller extends AddFilterController {
     super.onDestroy();
 
     const mapContainer = getMapContainer();
-    mapContainer.unlisten(os.events.LayerEventType.ADD, this.updateLayers, false, this);
-    mapContainer.unlisten(os.events.LayerEventType.REMOVE, this.updateLayers, false, this);
-    mapContainer.unlisten(os.events.LayerEventType.RENAME, this.updateLayers, false, this);
+    mapContainer.unlisten(LayerEventType.ADD, this.updateLayers, false, this);
+    mapContainer.unlisten(LayerEventType.REMOVE, this.updateLayers, false, this);
+    mapContainer.unlisten(LayerEventType.RENAME, this.updateLayers, false, this);
   }
 }
 

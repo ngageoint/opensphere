@@ -1,5 +1,4 @@
 goog.module('plugin.places.ui.launchSavePlaces');
-goog.module.declareLegacyNamespace();
 
 const osWindow = goog.require('os.ui.window');
 const places = goog.require('plugin.places');

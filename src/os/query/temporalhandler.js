@@ -1,5 +1,4 @@
 goog.module('os.query.TemporalHandler');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const {getQueryManager} = goog.require('os.query.instance');

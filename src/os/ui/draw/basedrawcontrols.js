@@ -1,5 +1,4 @@
 goog.module('os.ui.draw.BaseDrawControlsUI');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const {getRandomString} = goog.require('goog.string');

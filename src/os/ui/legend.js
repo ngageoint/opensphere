@@ -1,5 +1,4 @@
 goog.module('os.ui.LegendUI');
-goog.module.declareLegacyNamespace();
 
 const Throttle = goog.require('goog.async.Throttle');
 const nextTick = goog.require('goog.async.nextTick');

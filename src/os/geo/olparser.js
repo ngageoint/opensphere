@@ -1,5 +1,4 @@
 goog.module('os.geo.jsts.OLParser');
-goog.module.declareLegacyNamespace();
 
 const GeometryCollection = goog.require('ol.geom.GeometryCollection');
 const GeometryType = goog.require('ol.geom.GeometryType');
@@ -12,6 +11,7 @@ const Point = goog.require('ol.geom.Point');
 const Polygon = goog.require('ol.geom.Polygon');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
+
 
 /**
  * Utility class to translate between OL and JSTS geometries. This was copied from JSTS so the instanceof calls would

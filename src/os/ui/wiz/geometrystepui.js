@@ -1,5 +1,4 @@
 goog.module('os.ui.wiz.GeometryStepUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.wiz.WizardPreviewUI');
 

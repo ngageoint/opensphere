@@ -1,5 +1,4 @@
 goog.module('plugin.descriptor.SearchPlugin');
-goog.module.declareLegacyNamespace();
 
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const SearchManager = goog.require('os.search.SearchManager');

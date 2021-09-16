@@ -1,5 +1,4 @@
 goog.module('os.config.storage.ISettingsStorage');
-goog.module.declareLegacyNamespace();
 
 const Deferred = goog.requireType('goog.async.Deferred');
 

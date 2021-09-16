@@ -1,5 +1,4 @@
 goog.module('os.net.URLModifier');
-goog.module.declareLegacyNamespace();
 
 const Uri = goog.require('goog.Uri');
 const AbstractModifier = goog.require('os.net.AbstractModifier');

@@ -1,8 +1,8 @@
 goog.module('os.ui.filter.im.FilterImportModelUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
+
 
 /**
  * The filterimportmodel directive

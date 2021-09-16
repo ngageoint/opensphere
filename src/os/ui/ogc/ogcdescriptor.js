@@ -1,5 +1,4 @@
 goog.module('os.ui.ogc.OGCDescriptor');
-goog.module.declareLegacyNamespace();
 
 const EventType = goog.require('goog.net.EventType');
 const {DEFAULT_WMS_VERSION} = goog.require('ol');

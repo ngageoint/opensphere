@@ -1,5 +1,4 @@
 goog.module('plugin.places.PlacesLayerConfig');
-goog.module.declareLegacyNamespace();
 
 const KMLLayerConfig = goog.require('plugin.file.kml.KMLLayerConfig');
 const PlacesLayer = goog.require('plugin.places.PlacesLayer');

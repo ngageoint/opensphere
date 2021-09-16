@@ -6,7 +6,6 @@
  * @suppress {accessControls}
  */
 goog.module('os.mixin.TileImage');
-goog.module.declareLegacyNamespace();
 
 const {insert} = goog.require('goog.array');
 const {remove} = goog.require('ol.array');

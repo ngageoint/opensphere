@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.MGRSMapping');
-goog.module.declareLegacyNamespace();
 
 const Point = goog.require('ol.geom.Point');
 const {MGRS_REGEXP} = goog.require('os.geo');

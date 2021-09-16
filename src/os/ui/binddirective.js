@@ -1,5 +1,4 @@
 goog.module('os.ui.bindDirectiveDirective');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 

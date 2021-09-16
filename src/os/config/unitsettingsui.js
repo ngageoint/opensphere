@@ -1,5 +1,4 @@
 goog.module('os.config.UnitSettingsUI');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {ROOT} = goog.require('os');

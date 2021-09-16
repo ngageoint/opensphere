@@ -1,5 +1,4 @@
 goog.module('os.ui.SourceGridUI');
-goog.module.declareLegacyNamespace();
 
 const {equals} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');

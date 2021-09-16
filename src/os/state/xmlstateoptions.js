@@ -1,5 +1,4 @@
 goog.module('os.state.XMLStateOptions');
-goog.module.declareLegacyNamespace();
 
 const StateOptions = goog.require('os.state.StateOptions');
 

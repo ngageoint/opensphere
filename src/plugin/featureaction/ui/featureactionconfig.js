@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.ui.ActionConfigCtrl');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const WindowEventType = goog.require('os.ui.WindowEventType');

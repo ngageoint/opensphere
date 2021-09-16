@@ -1,5 +1,4 @@
 goog.module('os.net.ConnectionConstants');
-goog.module.declareLegacyNamespace();
 
 
 /**

@@ -1,5 +1,4 @@
 goog.module('os.auth');
-goog.module.declareLegacyNamespace();
 
 const Settings = goog.require('os.config.Settings');
 const AlertManager = goog.require('os.alert.AlertManager');

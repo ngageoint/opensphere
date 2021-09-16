@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.node');
-goog.module.declareLegacyNamespace();
 
 const googDispose = goog.require('goog.dispose');
 const CommandProcessor = goog.require('os.command.CommandProcessor');

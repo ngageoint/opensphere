@@ -1,5 +1,4 @@
 goog.module('os.time.TimeRange');
-goog.module.declareLegacyNamespace();
 
 const UtcDateTime = goog.require('goog.date.UtcDateTime');
 const registerClass = goog.require('os.registerClass');

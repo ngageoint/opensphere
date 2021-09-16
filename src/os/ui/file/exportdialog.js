@@ -1,5 +1,4 @@
 goog.module('os.ui.file.ExportDialogUI');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const {ROOT} = goog.require('os');

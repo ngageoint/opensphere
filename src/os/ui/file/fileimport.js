@@ -1,5 +1,4 @@
 goog.module('os.ui.file.FileImportUI');
-goog.module.declareLegacyNamespace();
 
 const dom = goog.require('goog.dom');
 const TagName = goog.require('goog.dom.TagName');

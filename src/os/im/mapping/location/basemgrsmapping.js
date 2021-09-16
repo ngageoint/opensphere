@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.location.BaseMGRSMapping');
-goog.module.declareLegacyNamespace();
 
 const {MGRS_REGEXP} = goog.require('os.geo');
 const {getItemField} = goog.require('os.im.mapping');

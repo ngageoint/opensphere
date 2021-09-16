@@ -1,9 +1,10 @@
 goog.module('os.ogc.spatial');
-goog.module.declareLegacyNamespace();
 
 const GML = goog.require('ol.format.GML');
 const KML = goog.require('ol.format.KML');
 const {pushParseAndPop} = goog.require('ol.xml');
+const {createPolarPolygon, isPolarPolygon} = goog.require('os.geo');
+const {interpolateGeom} = goog.require('os.interpolate');
 const Format = goog.require('os.ogc.spatial.Format');
 
 const Feature = goog.requireType('ol.Feature');
@@ -122,7 +123,7 @@ const formatExtent = function(extent, column, opt_name, opt_description, opt_id)
  * @return {?string} The serialized polygon, or null if the geometry is not supported
  */
 const formatGMLIntersection = function(geom, opt_column, opt_name, opt_description, opt_id) {
-  os.interpolate.interpolateGeom(geom);
+  interpolateGeom(geom);
 
   var parts = [];
   var formattedPolygon = formatPolygon(geom, Format.GML);
@@ -167,8 +168,8 @@ const formatPolygon = function(geom, opt_format) {
       polyCoords = /** @type {Polygon} */ (geom).getCoordinates();
 
       // polygons that cross a pole will not return the expected results after being projected, so correct for that
-      if (polyCoords.length == 1 && os.geo.isPolarPolygon(polyCoords[0])) {
-        polyCoords = [os.geo.createPolarPolygon(polyCoords[0])];
+      if (polyCoords.length == 1 && isPolarPolygon(polyCoords[0])) {
+        polyCoords = [createPolarPolygon(polyCoords[0])];
       }
       break;
     case ol.geom.GeometryType.MULTI_LINE_STRING:

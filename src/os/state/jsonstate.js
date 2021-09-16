@@ -1,5 +1,4 @@
 goog.module('os.state.JSONState');
-goog.module.declareLegacyNamespace();
 
 const {merge} = goog.require('os.object');
 const Tag = goog.require('os.state.Tag');

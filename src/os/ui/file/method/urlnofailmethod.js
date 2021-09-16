@@ -1,5 +1,4 @@
 goog.module('os.ui.file.method.UrlNoFailMethod');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const EventType = goog.require('os.events.EventType');

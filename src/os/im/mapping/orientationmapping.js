@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.OrientationMapping');
-goog.module.declareLegacyNamespace();
 
 const Fields = goog.require('os.Fields');
 const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');

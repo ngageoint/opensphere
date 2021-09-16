@@ -1,5 +1,4 @@
 goog.module('os.ol.image');
-goog.module.declareLegacyNamespace();
 
 const ImageCanvas = goog.require('ol.ImageCanvas');
 const {createCanvasContext2D} = goog.require('ol.dom');

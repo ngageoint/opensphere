@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.ui.KMLNetworkLinkNode');
-goog.module.declareLegacyNamespace();
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');

@@ -1,5 +1,4 @@
 goog.module('os.search');
-goog.module.declareLegacyNamespace();
 
 const osImplements = goog.require('os.implements');
 const IGeoSearch = goog.require('os.search.IGeoSearch');

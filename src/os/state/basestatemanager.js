@@ -1,5 +1,4 @@
 goog.module('os.state.BaseStateManager');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.state.StateExportUI');
 goog.require('os.ui.state.StateImportUI');

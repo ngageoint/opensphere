@@ -1,5 +1,4 @@
 goog.module('os.im.FeatureImporter');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const {getUid} = goog.require('ol');

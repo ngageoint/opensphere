@@ -1,5 +1,4 @@
 goog.module('os.ui.im.action');
-goog.module.declareLegacyNamespace();
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 

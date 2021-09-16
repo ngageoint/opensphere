@@ -1,5 +1,4 @@
 goog.module('os.command.FeaturesVisibility');
-goog.module.declareLegacyNamespace();
 
 const AbstractSource = goog.require('os.command.AbstractSource');
 const State = goog.require('os.command.State');

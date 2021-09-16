@@ -1,5 +1,4 @@
 goog.module('plugin.file.geojson.GeoJSONParser');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const googObject = goog.require('goog.object');

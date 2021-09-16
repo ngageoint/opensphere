@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.ui.PlacemarkEditUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.annotation.annotationOptionsDirective');
 

@@ -1,5 +1,4 @@
 goog.module('os.time.Duration');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

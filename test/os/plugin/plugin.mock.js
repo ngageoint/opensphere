@@ -1,5 +1,4 @@
 goog.module('os.plugin.MockPlugin');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');

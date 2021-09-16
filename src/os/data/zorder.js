@@ -1,5 +1,4 @@
 goog.module('os.data.ZOrder');
-goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const olArray = goog.require('ol.array');

@@ -2,6 +2,8 @@ goog.require('os.ui.icons');
 
 
 describe('os.ui.icons', function() {
+  const {createIconSet} = goog.module.get('os.ui.icons');
+
   it('should not create iconSets with quotes in them', function() {
     var id = 'QUOTE\'S BOY\'S';
     var svgIcons = [
@@ -11,7 +13,7 @@ describe('os.ui.icons', function() {
     ];
     var faIcons = [];
     var color = '#fa0';
-    var result = os.ui.icons.createIconSet(id, svgIcons, faIcons, color);
+    var result = createIconSet(id, svgIcons, faIcons, color);
 
     // it should hash the ID, so the original value should be nowhere to be found in the result
     expect(result.indexOf(id)).toBe(-1);

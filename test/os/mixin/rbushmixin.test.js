@@ -1,7 +1,9 @@
 goog.require('ol.Feature');
+goog.require('ol.extent');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.Polygon');
 goog.require('ol.proj');
+goog.require('ol.structs.RBush');
 goog.require('os.extent');
 goog.require('os.feature.mock');
 goog.require('os.geo2');
@@ -11,12 +13,24 @@ goog.require('os.source.Vector');
 
 
 describe('os.mixin.rbush', function() {
+  const Feature = goog.module.get('ol.Feature');
+  const olExtent = goog.module.get('ol.extent');
+  const LineString = goog.module.get('ol.geom.LineString');
+  const Polygon = goog.module.get('ol.geom.Polygon');
+  const olProj = goog.module.get('ol.proj');
+  const RBush = goog.module.get('ol.structs.RBush');
+
+  const {getFeatures} = goog.module.get('os.feature.mock');
+  const geo2 = goog.module.get('os.geo2');
+  const VectorSource = goog.module.get('os.source.Vector');
+  const {normalizeAntiLeft, normalizeAntiRight} = goog.module.get('os.extent');
   const osMap = goog.module.get('os.map');
+  const {EPSG4326} = goog.module.get('os.proj');
 
   var originalProjection = osMap.PROJECTION;
 
   beforeEach(function() {
-    osMap.setProjection(ol.proj.get(os.proj.EPSG4326));
+    osMap.setProjection(olProj.get(EPSG4326));
   });
 
   afterEach(function() {
@@ -24,12 +38,12 @@ describe('os.mixin.rbush', function() {
   });
 
   var bruteQuery = function(features, extent) {
-    var left = os.extent.normalizeAntiLeft(extent);
-    var right = os.extent.normalizeAntiRight(extent);
+    var left = normalizeAntiLeft(extent);
+    var right = normalizeAntiRight(extent);
 
     return features.filter(function(f) {
       var gExtent = f.getGeometry().getExtent();
-      return ol.extent.intersects(left, gExtent) || ol.extent.intersects(right, gExtent);
+      return olExtent.intersects(left, gExtent) || olExtent.intersects(right, gExtent);
     });
   };
 
@@ -49,10 +63,10 @@ describe('os.mixin.rbush', function() {
   };
 
   var standardImport = function(rbush, opt_moveToAntimeridian) {
-    var features = os.feature.mock.getFeatures(opt_moveToAntimeridian);
+    var features = getFeatures(opt_moveToAntimeridian);
 
     features.forEach(function(f, i) {
-      os.geo2.normalizeGeometryCoordinates(f.getGeometry());
+      geo2.normalizeGeometryCoordinates(f.getGeometry());
       rbush.insert(f.getGeometry().getExtent(), f);
     });
 
@@ -61,7 +75,7 @@ describe('os.mixin.rbush', function() {
 
 
   it('should query normal items within the extent', function() {
-    var rbush = new ol.structs.RBush();
+    var rbush = new RBush();
     var features = standardImport(rbush);
     var result = testExtent(rbush, features, [-5, -20, 5, 20]);
     expect(result.length).toBeGreaterThan(0);
@@ -69,7 +83,7 @@ describe('os.mixin.rbush', function() {
 
 
   it('should query items around the antimeridian', function() {
-    var rbush = new ol.structs.RBush();
+    var rbush = new RBush();
     var features = standardImport(rbush, true);
 
     var left = testExtent(rbush, features, [-185, -20, -175, 20]);
@@ -81,7 +95,7 @@ describe('os.mixin.rbush', function() {
 
 
   it('should query full-world extents', function() {
-    var rbush = new ol.structs.RBush();
+    var rbush = new RBush();
     var features = standardImport(rbush, true);
     var result = testExtent(rbush, features, [-180, -90, 180, 90]);
     expect(result.length).toBe(features.length);
@@ -89,13 +103,13 @@ describe('os.mixin.rbush', function() {
 
 
   it('should query items indexed from right to left', function() {
-    var featureLeft = new ol.Feature(new ol.geom.LineString([[-175, 0], [-185, 0]]));
+    var featureLeft = new Feature(new LineString([[-175, 0], [-185, 0]]));
     featureLeft.id = 0;
-    var featureRight = new ol.Feature(new ol.geom.LineString([[175, 0], [185, 0]]));
+    var featureRight = new Feature(new LineString([[175, 0], [185, 0]]));
     featureRight.id = 1;
     var features = [featureLeft, featureRight];
 
-    var rbush = new ol.structs.RBush();
+    var rbush = new RBush();
     rbush.insert(featureLeft.getGeometry().getExtent(), featureLeft);
     rbush.insert(featureRight.getGeometry().getExtent(), featureRight);
 
@@ -116,13 +130,13 @@ describe('os.mixin.rbush', function() {
   });
 
   it('should work with sources', function() {
-    var featureLeft = new ol.Feature(new ol.geom.LineString([[-175, 0], [-185, 0]]));
+    var featureLeft = new Feature(new LineString([[-175, 0], [-185, 0]]));
     featureLeft.id = 0;
-    var featureRight = new ol.Feature(new ol.geom.LineString([[175, 0], [185, 0]]));
+    var featureRight = new Feature(new LineString([[175, 0], [185, 0]]));
     featureRight.id = 1;
     var features = [featureLeft, featureRight];
 
-    var source = new os.source.Vector();
+    var source = new VectorSource();
     source.addFeatures(features);
 
     var results = [
@@ -131,7 +145,7 @@ describe('os.mixin.rbush', function() {
       [173, -2, 177, 2],
       [183, -2, 187, 2]
     ].map(function(extent) {
-      return source.getFeaturesInGeometry(ol.geom.Polygon.fromExtent(extent)).map(mapToId);
+      return source.getFeaturesInGeometry(Polygon.fromExtent(extent)).map(mapToId);
     });
 
     for (var i = 0, n = results.length; i < n; i++) {

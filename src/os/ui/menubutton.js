@@ -1,5 +1,4 @@
 goog.module('os.ui.MenuButtonCtrl');
-goog.module.declareLegacyNamespace();
 
 const dispatcher = goog.require('os.Dispatcher');
 const ui = goog.require('os.ui');

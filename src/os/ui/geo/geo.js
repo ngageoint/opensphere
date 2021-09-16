@@ -1,5 +1,4 @@
 goog.module('os.ui.geo');
-goog.module.declareLegacyNamespace();
 
 /**
  * The title for the rings UIs.

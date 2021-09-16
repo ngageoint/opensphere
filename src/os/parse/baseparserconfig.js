@@ -1,5 +1,4 @@
 goog.module('os.parse.BaseParserConfig');
-goog.module.declareLegacyNamespace();
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 const IMapping = goog.requireType('os.im.mapping.IMapping');

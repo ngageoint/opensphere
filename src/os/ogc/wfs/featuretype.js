@@ -1,5 +1,4 @@
 goog.module('os.ogc.wfs.FeatureType');
-goog.module.declareLegacyNamespace();
 
 const {numerateCompare} = goog.require('goog.string');
 const {registerClass} = goog.require('os.classRegistry');

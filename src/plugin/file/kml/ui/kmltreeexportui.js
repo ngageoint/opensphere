@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.ui.KMLTreeExportUI');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const {ROOT} = goog.require('os');

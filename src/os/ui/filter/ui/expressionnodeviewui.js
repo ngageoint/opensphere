@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ui.ExpressionNodeViewUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 

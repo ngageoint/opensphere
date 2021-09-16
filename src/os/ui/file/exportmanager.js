@@ -1,5 +1,4 @@
 goog.module('os.ui.file.ExportManager');
-goog.module.declareLegacyNamespace();
 
 const {defaultCompare} = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');

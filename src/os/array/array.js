@@ -1,5 +1,4 @@
 goog.module('os.array');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const math = goog.require('goog.math');

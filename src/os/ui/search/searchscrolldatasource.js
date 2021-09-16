@@ -1,5 +1,4 @@
 goog.module('os.ui.search.SearchScrollDataSource');
-goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
@@ -8,6 +7,7 @@ const SearchEventType = goog.require('os.search.SearchEventType');
 
 const SearchManager = goog.requireType('os.search.SearchManager');
 const IScrollDataSource = goog.requireType('os.ui.IScrollDataSource');
+
 
 /**
  * @implements {IScrollDataSource}

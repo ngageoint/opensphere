@@ -1,5 +1,4 @@
 goog.module('os.alert.AlertEvent');
-goog.module.declareLegacyNamespace();
 
 const DateTime = goog.require('goog.date.DateTime');
 const GoogEvent = goog.require('goog.events.Event');

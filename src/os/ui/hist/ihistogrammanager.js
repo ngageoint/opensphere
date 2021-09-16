@@ -1,5 +1,4 @@
 goog.module('os.ui.hist.IHistogramManager');
-goog.module.declareLegacyNamespace();
 
 const HistogramData = goog.requireType('os.hist.HistogramData');
 const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');

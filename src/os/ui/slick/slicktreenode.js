@@ -1,5 +1,4 @@
 goog.module('os.ui.slick.SlickTreeNode');
-goog.module.declareLegacyNamespace();
 
 const {registerClass} = goog.require('os.classRegistry');
 const {NodeClass} = goog.require('os.data');

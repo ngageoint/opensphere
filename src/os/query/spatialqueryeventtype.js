@@ -1,5 +1,4 @@
 goog.module('os.query.SpatialQueryEventType');
-goog.module.declareLegacyNamespace();
 
 
 /**

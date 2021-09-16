@@ -1,5 +1,4 @@
 goog.module('os.ui.ex.AreaExportUI');
-goog.module.declareLegacyNamespace();
 
 const {removeDuplicates} = goog.require('goog.array');
 const {METHOD_FIELD} = goog.require('os.interpolate');

@@ -1,5 +1,4 @@
 goog.module('os.ui.help.MisconfiguredUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const Settings = goog.require('os.config.Settings');

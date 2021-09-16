@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ui.FilterTreeUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.slick.SlickTreeUI');
 

@@ -1,5 +1,4 @@
 goog.module('os.ui.config.AngularAppSettingsInitializer');
-goog.module.declareLegacyNamespace();
 
 const AbstractSettingsInitializer = goog.require('os.config.AbstractSettingsInitializer');
 const ThemeSettings = goog.require('os.config.ThemeSettings');

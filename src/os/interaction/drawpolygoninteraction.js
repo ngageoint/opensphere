@@ -1,5 +1,4 @@
 goog.module('os.interaction.DrawPolygon');
-goog.module.declareLegacyNamespace();
 
 const ViewHint = goog.require('ol.ViewHint');
 const {getWidth} = goog.require('ol.extent');

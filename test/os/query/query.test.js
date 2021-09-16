@@ -4,7 +4,11 @@ goog.require('os.proj');
 goog.require('os.query.utils');
 
 describe('os.query.utils', function() {
+  const Polygon = goog.module.get('ol.geom.Polygon');
+  const olProj = goog.module.get('ol.proj');
+  const osProj = goog.module.get('os.proj');
   const osMap = goog.module.get('os.map');
+  const {initWorldArea, isWorldQuery} = goog.module.get('os.query.utils');
 
   it('should detect world queries properly', function() {
     var tests = [{
@@ -22,14 +26,14 @@ describe('os.query.utils', function() {
     var oldProjection = osMap.PROJECTION;
 
     projections.forEach(function(code) {
-      var proj = ol.proj.get(code);
+      var proj = olProj.get(code);
       osMap.setProjection(proj);
-      os.query.utils.initWorldArea();
+      initWorldArea();
 
       tests.forEach(function(test) {
-        var extent = ol.proj.transformExtent(test.extent, os.proj.EPSG4326, proj);
-        var geom = ol.geom.Polygon.fromExtent(extent);
-        expect(os.query.utils.isWorldQuery(geom)).toBe(test.expected);
+        var extent = olProj.transformExtent(test.extent, osProj.EPSG4326, proj);
+        var geom = Polygon.fromExtent(extent);
+        expect(isWorldQuery(geom)).toBe(test.expected);
       });
     });
 

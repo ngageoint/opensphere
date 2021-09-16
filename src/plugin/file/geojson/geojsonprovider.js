@@ -1,5 +1,4 @@
 goog.module('plugin.file.geojson.GeoJSONProvider');
-goog.module.declareLegacyNamespace();
 
 const FileProvider = goog.require('os.data.FileProvider');
 

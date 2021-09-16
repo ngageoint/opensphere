@@ -1,5 +1,4 @@
 goog.module('os.config.storage.SettingsStorageLoader');
-goog.module.declareLegacyNamespace();
 
 const {insertArrayAt} = goog.require('goog.array');
 const Deferred = goog.require('goog.async.Deferred');

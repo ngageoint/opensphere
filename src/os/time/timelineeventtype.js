@@ -1,5 +1,4 @@
 goog.module('os.time.TimelineEventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

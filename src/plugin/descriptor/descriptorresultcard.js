@@ -1,5 +1,4 @@
 goog.module('plugin.descriptor.ResultCardUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const dispatcher = goog.require('os.Dispatcher');

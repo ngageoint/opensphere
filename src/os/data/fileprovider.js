@@ -1,5 +1,4 @@
 goog.module('os.data.FileProvider');
-goog.module.declareLegacyNamespace();
 
 const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
 

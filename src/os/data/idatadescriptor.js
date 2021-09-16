@@ -1,5 +1,4 @@
 goog.module('os.data.IDataDescriptor');
-goog.module.declareLegacyNamespace();
 
 const Listenable = goog.requireType('goog.events.Listenable');
 const IPersistable = goog.requireType('os.IPersistable');

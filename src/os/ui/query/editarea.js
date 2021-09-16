@@ -1,5 +1,4 @@
 goog.module('os.ui.query.EditAreaUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.im.BasicInfoUI');
 

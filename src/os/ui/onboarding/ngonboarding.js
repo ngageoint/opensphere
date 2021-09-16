@@ -1,5 +1,4 @@
 goog.module('os.ui.onboarding.NgOnboardingUI');
-goog.module.declareLegacyNamespace();
 
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
 const GoogEventType = goog.require('goog.events.EventType');

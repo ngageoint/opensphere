@@ -1,5 +1,4 @@
 goog.module('os.histo.BinMethodStats');
-goog.module.declareLegacyNamespace();
 
 /**
  * @typedef {{

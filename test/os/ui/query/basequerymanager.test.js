@@ -7,32 +7,8 @@ goog.require('os.query.AreaManager');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.query.BaseQueryManager');
 goog.require('os.query.QueryManager');
-goog.require('os.ui.query');
+goog.require('os.ui.query.MockHandler');
 
-/**
- * mock
- * @param {string} id
- * @constructor
- */
-os.ui.query.Handler = function(id) {
-  this.id = id;
-};
-
-
-/**
- * @return {?}
- */
-os.ui.query.Handler.prototype.getLayerId = function() {
-  return this.id;
-};
-
-
-/**
- * @return {?}
- */
-os.ui.query.Handler.prototype.getLayerName = function() {
-  return this.id;
-};
 
 describe('os.query.BaseQueryManager', function() {
   const GoogEventType = goog.module.get('goog.events.EventType');
@@ -44,7 +20,7 @@ describe('os.query.BaseQueryManager', function() {
   const BaseAreaManager = goog.module.get('os.query.BaseAreaManager');
   const BaseQueryManager = goog.module.get('os.query.BaseQueryManager');
   const QueryManager = goog.module.get('os.query.QueryManager');
-  const query = goog.module.get('os.ui.query');
+  const {MockHandler} = goog.module.get('os.ui.query.MockHandler');
 
   var am;
   var qm;
@@ -153,7 +129,7 @@ describe('os.query.BaseQueryManager', function() {
 
   it('should properly expand simple wildcard entries with regular entries', function() {
     testTemplate(function() {
-      var handlerA = new query.Handler('A');
+      var handlerA = new MockHandler('A');
       qm.registerHandler(handlerA);
 
       // add a non-wildcard filter to check mixing
@@ -179,9 +155,9 @@ describe('os.query.BaseQueryManager', function() {
 
   it('should properly expand wildcard entries with regular entries', function() {
     testTemplate(function() {
-      var handlerA = new query.Handler('A');
-      var handlerB = new query.Handler('B');
-      var handlerC = new query.Handler('C');
+      var handlerA = new MockHandler('A');
+      var handlerB = new MockHandler('B');
+      var handlerC = new MockHandler('C');
 
       qm.registerHandler(handlerA);
       qm.registerHandler(handlerB);
@@ -290,7 +266,7 @@ describe('os.query.BaseQueryManager', function() {
   it('should return whether active explicit entries exist', function() {
     // While we have an explicit entry, there is no handler that matches the layer ID
     expect(qm.hasActiveExplicitEntries()).toBe(false);
-    var handlerX = new query.Handler('X');
+    var handlerX = new MockHandler('X');
     qm.registerHandler(handlerX);
     expect(qm.hasActiveExplicitEntries()).toBe(true);
     qm.removeEntries('X');

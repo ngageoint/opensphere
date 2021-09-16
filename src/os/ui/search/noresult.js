@@ -1,7 +1,7 @@
 goog.module('os.ui.search.NoResult');
-goog.module.declareLegacyNamespace();
 
 const AbstractSearchResult = goog.require('os.search.AbstractSearchResult');
+
 
 /**
  * Search results containing a coordinate to display on the map.

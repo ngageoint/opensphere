@@ -1,5 +1,4 @@
 goog.module('os.mixin.ResolutionConstraint');
-goog.module.declareLegacyNamespace();
 
 const ResolutionConstraint = goog.require('ol.ResolutionConstraint');
 

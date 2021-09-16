@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ExpressionUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.filter.op.OPUISwitchUI');
 

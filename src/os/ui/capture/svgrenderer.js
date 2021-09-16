@@ -1,5 +1,4 @@
 goog.module('os.ui.capture.SvgRenderer');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const capture = goog.require('os.capture');

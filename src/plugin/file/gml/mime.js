@@ -1,5 +1,4 @@
 goog.module('plugin.file.gml.mime');
-goog.module.declareLegacyNamespace();
 
 const mime = goog.require('os.file.mime');
 

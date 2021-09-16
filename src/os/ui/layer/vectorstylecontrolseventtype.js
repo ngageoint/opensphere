@@ -1,5 +1,4 @@
 goog.module('os.ui.layer.VectorStyleControlsEventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

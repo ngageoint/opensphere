@@ -1,5 +1,4 @@
 goog.module('os.command.RenameLayer');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const State = goog.require('os.command.State');

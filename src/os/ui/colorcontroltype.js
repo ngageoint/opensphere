@@ -1,7 +1,7 @@
 goog.module('os.ui.ColorControlType');
-goog.module.declareLegacyNamespace();
 
 const ControlType = goog.require('os.ui.ControlType');
+
 
 /**
  * @enum {string}

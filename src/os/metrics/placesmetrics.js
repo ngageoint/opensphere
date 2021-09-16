@@ -1,5 +1,4 @@
 goog.module('os.metrics.PlacesMetrics');
-goog.module.declareLegacyNamespace();
 
 const {Places} = goog.require('os.metrics.keys');
 const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');

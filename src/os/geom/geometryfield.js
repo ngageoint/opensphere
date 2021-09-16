@@ -1,5 +1,4 @@
 goog.module('os.geom.GeometryField');
-goog.module.declareLegacyNamespace();
 
 /**
  * Fields used on `ol.geom.Geometry` objects.

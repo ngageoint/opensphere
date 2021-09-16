@@ -1,5 +1,4 @@
 goog.module('os.control.Attribution');
-goog.module.declareLegacyNamespace();
 
 const dom = goog.require('goog.dom');
 const SafeHtml = goog.require('goog.html.SafeHtml');

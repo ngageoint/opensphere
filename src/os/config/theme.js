@@ -1,5 +1,4 @@
 goog.module('os.config.theme');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

@@ -1,5 +1,4 @@
 goog.module('os.ui.header.ScrollHeaderEvents');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

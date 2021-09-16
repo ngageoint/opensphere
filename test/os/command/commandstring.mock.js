@@ -1,7 +1,7 @@
 goog.module('os.command.MockCommandString');
-goog.module.declareLegacyNamespace();
 
 const MockCommand = goog.require('os.command.MockCommand');
+
 
 /**
  * Helps test command sets.

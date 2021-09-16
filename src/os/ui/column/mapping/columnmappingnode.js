@@ -1,5 +1,4 @@
 goog.module('os.ui.column.mapping.ColumnMappingNode');
-goog.module.declareLegacyNamespace();
 
 const {directiveTag: nodeUi} = goog.require('os.ui.column.mapping.ColumnMappingNodeUI');
 const {FILTER_KEY_DELIMITER} = goog.require('os.ui.filter');

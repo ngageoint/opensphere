@@ -1,5 +1,4 @@
 goog.module('os.metrics.WebGLReport');
-goog.module.declareLegacyNamespace();
 
 
 /**

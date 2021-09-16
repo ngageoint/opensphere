@@ -1,11 +1,11 @@
 goog.module('os.ui.text');
-goog.module.declareLegacyNamespace();
 
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const {directiveTag} = goog.require('os.ui.TextPromptUI');
 const osWindow = goog.require('os.ui.window');
+
 
 /**
  * Copies a string of text into the clipboard.

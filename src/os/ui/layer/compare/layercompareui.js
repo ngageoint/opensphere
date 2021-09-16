@@ -1,5 +1,4 @@
 goog.module('os.ui.layer.compare.LayerCompareUI');
-goog.module.declareLegacyNamespace();
 
 const dispose = goog.require('goog.dispose');
 const {listen, unlistenByKey} = goog.require('goog.events');

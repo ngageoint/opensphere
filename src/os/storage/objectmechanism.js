@@ -2,7 +2,6 @@
  * @fileoverview Mechanism for storing and retrieving data using a local object cache.
  */
 goog.module('os.storage.ObjectMechanism');
-goog.module.declareLegacyNamespace();
 
 const Iterator = goog.require('goog.iter.Iterator');
 const StopIteration = goog.require('goog.iter.StopIteration');

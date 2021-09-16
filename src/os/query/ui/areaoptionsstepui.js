@@ -1,5 +1,4 @@
 goog.module('os.query.ui.AreaOptionsStepUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.im.MergeAreaOptionUI');
 

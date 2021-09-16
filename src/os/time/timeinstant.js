@@ -1,5 +1,4 @@
 goog.module('os.time.TimeInstant');
-goog.module.declareLegacyNamespace();
 
 const osImplements = goog.require('os.implements');
 const registerClass = goog.require('os.registerClass');

@@ -1,5 +1,4 @@
 goog.module('os.parse.RssParser');
-goog.module.declareLegacyNamespace();
 
 const {getChildren} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');

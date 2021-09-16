@@ -1,5 +1,4 @@
 goog.module('os.ui.formatter.PropertiesFormatter');
-goog.module.declareLegacyNamespace();
 
 const SlickPropertiesAsyncRenderer = goog.require('os.ui.SlickPropertiesAsyncRenderer');
 

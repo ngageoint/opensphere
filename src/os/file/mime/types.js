@@ -1,5 +1,4 @@
 goog.module('os.file.mime.xml.Types');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

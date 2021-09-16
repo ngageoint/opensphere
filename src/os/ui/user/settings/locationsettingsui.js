@@ -1,5 +1,4 @@
 goog.module('os.ui.user.settings.LocationSettingsUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const {getSettings} = goog.require('os.config.instance');

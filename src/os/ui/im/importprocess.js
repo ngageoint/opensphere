@@ -1,5 +1,4 @@
 goog.module('os.ui.im.ImportProcess');
-goog.module.declareLegacyNamespace();
 
 const Deferred = goog.require('goog.async.Deferred');
 const log = goog.require('goog.log');

@@ -1,5 +1,4 @@
 goog.module('os.ui.metrics.MetricDetailsUI');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const {ROOT} = goog.require('os');

@@ -1,5 +1,4 @@
 goog.module('os.IGroupable');
-goog.module.declareLegacyNamespace();
 
 /**
  * Interface representing a thing that supports advanced grouping options.

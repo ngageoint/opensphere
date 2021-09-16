@@ -1,5 +1,4 @@
 goog.module('os.ui.layer.LayerVisibilityUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 

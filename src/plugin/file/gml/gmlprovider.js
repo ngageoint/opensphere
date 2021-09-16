@@ -1,5 +1,4 @@
 goog.module('plugin.file.gml.GMLProvider');
-goog.module.declareLegacyNamespace();
 
 const FileProvider = goog.require('os.data.FileProvider');
 

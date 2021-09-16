@@ -1,5 +1,4 @@
 goog.module('os.layer');
-goog.module.declareLegacyNamespace();
 
 const Timer = goog.require('goog.Timer');
 const log = goog.require('goog.log');

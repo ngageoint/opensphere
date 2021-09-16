@@ -1,5 +1,4 @@
 goog.module('os.command.LayerRemove');
-goog.module.declareLegacyNamespace();
 
 const AbstractLayer = goog.require('os.command.AbstractLayer');
 const State = goog.require('os.command.State');

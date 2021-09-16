@@ -1,5 +1,4 @@
 goog.module('os.ui.NodeToggleUI');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {instanceOf} = goog.require('os.classRegistry');

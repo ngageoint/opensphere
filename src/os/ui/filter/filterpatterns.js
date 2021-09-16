@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.FilterPatterns');
-goog.module.declareLegacyNamespace();
 
 /**
  * Enum of validation regexes for different logical column types.

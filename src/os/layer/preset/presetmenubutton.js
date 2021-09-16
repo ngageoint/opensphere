@@ -1,5 +1,4 @@
 goog.module('os.layer.preset.PresetMenuButton');
-goog.module.declareLegacyNamespace();
 
 const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
 const {getImportActionManager} = goog.require('os.im.action');
@@ -9,6 +8,7 @@ const MenuItem = goog.require('os.ui.menu.MenuItem');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 const Module = goog.require('os.ui.Module');
 const OsLayerPreset = goog.require('os.layer.preset');
+const {getMapContainer} = goog.require('os.map.instance');
 const OsXml = goog.require('os.xml');
 const OsFilter = goog.require('os.im.action.filter');
 const {Presets: OsMetrics} = goog.require('os.metrics.keys');
@@ -166,7 +166,7 @@ class Controller extends MenuButtonCtrl {
 
     // get the current layerConfig
     if (clone.layerId) {
-      const layer = os.MapContainer.getInstance().getLayer(clone.layerId); // TODO fix global reference
+      const layer = getMapContainer().getLayer(clone.layerId);
       if (layer) {
         const config = /** @type {ILayer} */ (layer).persist();
         clone.layerConfig = config;

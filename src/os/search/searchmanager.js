@@ -1,5 +1,4 @@
 goog.module('os.search.SearchManager');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const GoogEventType = goog.require('goog.events.EventType');

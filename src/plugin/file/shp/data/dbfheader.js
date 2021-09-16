@@ -1,5 +1,4 @@
 goog.module('plugin.file.shp.data.DBFHeader');
-goog.module.declareLegacyNamespace();
 
 const DBFField = goog.requireType('plugin.file.shp.data.DBFField');
 

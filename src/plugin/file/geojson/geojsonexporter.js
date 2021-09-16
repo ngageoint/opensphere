@@ -1,5 +1,4 @@
 goog.module('plugin.file.geojson.GeoJSONExporter');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const GeoJSON = goog.require('ol.format.GeoJSON');

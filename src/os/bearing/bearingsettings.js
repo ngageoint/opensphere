@@ -1,5 +1,4 @@
 goog.module('os.bearing.BearingSettings');
-goog.module.declareLegacyNamespace();
 
 const bearing = goog.require('os.bearing');
 const {directiveTag: settingsUi} = goog.require('os.bearing.BearingSettingsUI');

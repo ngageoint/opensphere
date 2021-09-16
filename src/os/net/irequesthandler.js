@@ -1,5 +1,4 @@
 goog.module('os.net.IRequestHandler');
-goog.module.declareLegacyNamespace();
 
 const Uri = goog.requireType('goog.Uri');
 const IDisposable = goog.requireType('goog.disposable.IDisposable');

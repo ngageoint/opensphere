@@ -1,5 +1,4 @@
 goog.module('os.ui.state.StateExportUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const config = goog.require('os.config');

@@ -1,5 +1,4 @@
 goog.module('os.webgl.SynchronizerManager');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 

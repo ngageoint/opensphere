@@ -1,5 +1,4 @@
 goog.module('plugin.file.gpx.ui.GPXImport');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const FileDescriptor = goog.require('os.data.FileDescriptor');

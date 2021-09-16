@@ -1,5 +1,4 @@
 goog.module('plugin.params.ParamsPlugin');
-goog.module.declareLegacyNamespace();
 
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const params = goog.require('plugin.params');

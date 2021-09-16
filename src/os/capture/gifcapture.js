@@ -1,7 +1,7 @@
 goog.module('os.capture.gif');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
+
 
 /**
  * Path to the worker script used by the GIF library.

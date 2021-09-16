@@ -1,5 +1,4 @@
 goog.module('os.ogc.filter.OGCFilterOverride');
-goog.module.declareLegacyNamespace();
 
 const AbstractModifier = goog.require('os.net.AbstractModifier');
 const OGCFilterModifier = goog.require('os.ogc.filter.OGCFilterModifier');

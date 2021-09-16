@@ -1,5 +1,4 @@
 goog.module('os.ui.DragDropStyle');
-goog.module.declareLegacyNamespace();
 
 
 /**

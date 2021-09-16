@@ -1,5 +1,4 @@
 goog.module('os.unit.UnitFactory');
-goog.module.declareLegacyNamespace();
 
 const {UNIT_TYPE_DISTANCE, UnitSystem} = goog.require('os.unit');
 const EnglishDistanceUnits = goog.require('os.unit.EnglishDistanceUnits');

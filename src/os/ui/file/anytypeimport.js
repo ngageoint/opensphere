@@ -1,5 +1,4 @@
 goog.module('os.ui.file.AnyTypeImport');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');

@@ -1,11 +1,11 @@
 goog.module('os.ui.file.ui.DefaultFileNodeUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const {
   Controller: DescriptorNodeUICtrl,
   directive: descriptorNodeUIDirective
 } = goog.require('os.ui.data.DescriptorNodeUI');
+
 
 /**
  * The selected/highlighted file node UI directive.

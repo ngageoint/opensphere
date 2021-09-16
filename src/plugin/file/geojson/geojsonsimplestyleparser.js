@@ -1,5 +1,4 @@
 goog.module('plugin.file.geojson.GeoJSONSimpleStyleParser');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const osColor = goog.require('os.color');

@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.ui.OGCLayerNodeUI');
-goog.module.declareLegacyNamespace();
 
 const Deferred = goog.require('goog.async.Deferred');
 const DataManager = goog.require('os.data.DataManager');

@@ -1,5 +1,4 @@
 goog.module('os.webgl.WebGLOverlay');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const Overlay = goog.require('ol.Overlay');

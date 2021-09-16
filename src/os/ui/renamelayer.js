@@ -1,5 +1,4 @@
 goog.module('os.ui.renamelayer');
-goog.module.declareLegacyNamespace();
 
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const RenameLayer = goog.require('os.command.RenameLayer');

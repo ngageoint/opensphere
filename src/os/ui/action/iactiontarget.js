@@ -1,5 +1,4 @@
 goog.module('os.ui.action.IActionTarget');
-goog.module.declareLegacyNamespace();
 
 
 /**

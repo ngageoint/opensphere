@@ -1,4 +1,6 @@
-goog.provide('os.test.xsd');
+goog.declareModuleId('os.test.xsd');
+
+goog.require('goog.Promise');
 goog.require('goog.dom.xml');
 goog.require('goog.labs.net.xhr');
 goog.require('os.xml');
@@ -9,8 +11,7 @@ goog.require('os.xml');
  * @type {?Array<string>}
  * @private
  */
-os.test.xsd.stateCache_ = null;
-
+let stateCache = null;
 
 /**
  * Substitutes an xs:import and include schemaLocation content with
@@ -19,28 +20,30 @@ os.test.xsd.stateCache_ = null;
  * @param {Array<Object>} substutions {originalLocation:?, newLocation:?}
  * @return {string}
  */
-os.test.xsd.substituteImports = function(xsd, substutions) {
-  var xsdDoc = goog.dom.xml.loadXml(xsd);
+export const substituteImports = function(xsd, substutions) {
+  const {loadXml, setAttributes} = goog.module.get('goog.dom.xml');
+  const {getChildrenByTagName, serialize} = goog.module.get('os.xml');
+
+  var xsdDoc = loadXml(xsd);
   var node;
   var sub;
   var i;
   var x;
 
-  var imports = os.xml.getChildrenByTagName(xsdDoc.firstElementChild, 'import');
-  imports = imports.concat(os.xml.getChildrenByTagName(xsdDoc.firstElementChild, 'include'));
-  imports = imports.concat(os.xml.getChildrenByTagName(xsdDoc.firstElementChild, 'redefine'));
+  var imports = getChildrenByTagName(xsdDoc.firstElementChild, 'import');
+  imports = imports.concat(getChildrenByTagName(xsdDoc.firstElementChild, 'include'));
+  imports = imports.concat(getChildrenByTagName(xsdDoc.firstElementChild, 'redefine'));
   for (i = 0; i < imports.length; i++) {
     node = imports[i];
     for (x = 0; x < substutions.length; x++) {
       sub = substutions[x];
       if (node.getAttribute('schemaLocation') === sub.originalLocation) {
-        goog.dom.xml.setAttributes(node, {'schemaLocation': sub.newLocation});
+        setAttributes(node, {'schemaLocation': sub.newLocation});
       }
     }
   }
-  return os.xml.serialize(xsdDoc);
+  return serialize(xsdDoc);
 };
-
 
 /**
  * Loads the xsd schema files required for state.xsd
@@ -48,36 +51,39 @@ os.test.xsd.substituteImports = function(xsd, substutions) {
  * schema files which can be used with xmllint.
  * @return {goog.promise}
  */
-os.test.xsd.loadStateXsdFiles = function() {
+export const loadStateXsdFiles = function() {
+  const Promise = goog.module.get('goog.Promise');
+  const xhr = goog.module.get('goog.labs.net.xhr');
+
   var stateFileRoot = '/opensphere-state-schema/src/main/xsd/';
-  var p = goog.Promise.withResolver();
+  var p = Promise.withResolver();
 
   // return the cached result, if it exists.
-  if (os.test.xsd.stateCache_) {
-    p.resolve(os.test.xsd.stateCache_);
+  if (stateCache) {
+    p.resolve(stateCache);
     return p.promise;
   }
 
   var xsdPromises = [
-    goog.labs.net.xhr.get(stateFileRoot + 'xlink/1.0.0/xlinks.xsd'),
-    goog.labs.net.xhr.get(stateFileRoot + 'gml/2.1.2/geometry.xsd'),
-    goog.labs.net.xhr.get(stateFileRoot + 'kml/2.2.0/atom-author-link.xsd'),
-    goog.labs.net.xhr.get(stateFileRoot + 'kml/2.2.0/xAL.xsd'),
-    goog.labs.net.xhr.get(stateFileRoot + 'kml/2.2.0/ogckml22.xsd'),
-    goog.labs.net.xhr.get(stateFileRoot + 'filter/1.0.0/expr.xsd'),
-    goog.labs.net.xhr.get(stateFileRoot + 'filter/1.0.0/filter.xsd'),
-    goog.labs.net.xhr.get(stateFileRoot + 'state/1.0.0/filter-restriction.xsd'),
-    goog.labs.net.xhr.get(stateFileRoot + 'state/1.0.0/filter-extended.xsd'),
-    goog.labs.net.xhr.get(stateFileRoot + 'state/1.0.0/types.xsd'),
-    goog.labs.net.xhr.get(stateFileRoot + 'state/1.0.0/state.xsd')
+    xhr.get(stateFileRoot + 'xlink/1.0.0/xlinks.xsd'),
+    xhr.get(stateFileRoot + 'gml/2.1.2/geometry.xsd'),
+    xhr.get(stateFileRoot + 'kml/2.2.0/atom-author-link.xsd'),
+    xhr.get(stateFileRoot + 'kml/2.2.0/xAL.xsd'),
+    xhr.get(stateFileRoot + 'kml/2.2.0/ogckml22.xsd'),
+    xhr.get(stateFileRoot + 'filter/1.0.0/expr.xsd'),
+    xhr.get(stateFileRoot + 'filter/1.0.0/filter.xsd'),
+    xhr.get(stateFileRoot + 'state/1.0.0/filter-restriction.xsd'),
+    xhr.get(stateFileRoot + 'state/1.0.0/filter-extended.xsd'),
+    xhr.get(stateFileRoot + 'state/1.0.0/types.xsd'),
+    xhr.get(stateFileRoot + 'state/1.0.0/state.xsd')
   ];
   /**
-  * NOTE: xmllint does not support loading any embeded
-  * import or include references, however, xmllint can be used
-  * by loading all the required referenced schema files then replacing
-  * the references to the specific schemas with a file_[idx].xsd, where
-  * idx is the array index of the referenced schema file.
-  */
+   * NOTE: xmllint does not support loading any embeded
+   * import or include references, however, xmllint can be used
+   * by loading all the required referenced schema files then replacing
+   * the references to the specific schemas with a file_[idx].xsd, where
+   * idx is the array index of the referenced schema file.
+   */
   var subs = [{
     originalLocation: 'types.xsd',
     newLocation: 'file_9.xsd'
@@ -119,11 +125,11 @@ os.test.xsd.loadStateXsdFiles = function() {
     newLocation: 'file_8.xsd'
   }];
 
-  goog.Promise.all(xsdPromises).then(function(result) {
+  Promise.all(xsdPromises).then(function(result) {
     for (var v = 0; v < result.length; v++) {
-      result[v] = os.test.xsd.substituteImports(result[v], subs);
+      result[v] = substituteImports(result[v], subs);
     }
-    os.test.xsd.stateCache_ = result;
+    stateCache = result;
     p.resolve(result);
   }, function(err) {
     p.reject(err);

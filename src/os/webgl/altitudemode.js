@@ -1,5 +1,4 @@
 goog.module('os.webgl.AltitudeMode');
-goog.module.declareLegacyNamespace();
 
 
 /**

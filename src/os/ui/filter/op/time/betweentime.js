@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.op.time.BetweenTimeUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.datetime.DurationUI');
 goog.require('os.ui.popover.PopoverUI');

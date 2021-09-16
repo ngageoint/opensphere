@@ -1,5 +1,4 @@
 goog.module('os.im.mapping');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin.feature');
 

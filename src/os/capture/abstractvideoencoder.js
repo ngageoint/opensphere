@@ -1,5 +1,4 @@
 goog.module('os.capture.AbstractVideoEncoder');
-goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');

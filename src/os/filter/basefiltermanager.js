@@ -1,5 +1,4 @@
 goog.module('os.filter.BaseFilterManager');
-goog.module.declareLegacyNamespace();
 
 const {removeDuplicates} = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
@@ -18,7 +17,6 @@ const FilterEntry = goog.require('os.filter.FilterEntry');
 const FilterType = goog.require('os.filter.FilterType');
 const cloneToContext = goog.require('os.filter.cloneToContext');
 const {getFilterManager, setFilterManager, getQueryManager} = goog.require('os.query.instance');
-const ui = goog.require('os.ui');
 const FilterEvent = goog.require('os.ui.filter.FilterEvent');
 const FilterEventType = goog.require('os.ui.filter.FilterEventType');
 const {directiveTag: copyFilterUi} = goog.require('os.ui.filter.ui.CopyFilterUI');
@@ -612,10 +610,5 @@ class BaseFilterManager extends EventTarget {
     setFilterManager(value);
   }
 }
-
-/**
- * @type {BaseFilterManager}
- */
-ui.filterManager = null;
 
 exports = BaseFilterManager;

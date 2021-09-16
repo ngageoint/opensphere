@@ -9,6 +9,8 @@ describe('os.thread.Thread', function() {
   const EventType = goog.module.get('os.thread.EventType');
   const Thread = goog.module.get('os.thread.Thread');
 
+  const Job = goog.module.get('mock.thread.Job');
+
   var clock = lolex.createClock();
 
   beforeEach(function() {
@@ -24,7 +26,7 @@ describe('os.thread.Thread', function() {
   it('should execute properly', function() {
     expect(Timer.defaultTimerObject).toBe(clock);
 
-    var job = new mock.thread.Job(clock);
+    var job = new Job(clock);
     spyOn(job, 'executeNext').andCallThrough();
     var t = new Thread(job);
 
@@ -84,7 +86,7 @@ describe('os.thread.Thread', function() {
   it('should stop when told', function() {
     expect(Timer.defaultTimerObject).toBe(clock);
 
-    var job = new mock.thread.Job(clock);
+    var job = new Job(clock);
     spyOn(job, 'executeNext').andCallThrough();
     var t = new Thread(job);
 

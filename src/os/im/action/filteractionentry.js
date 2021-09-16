@@ -1,11 +1,12 @@
 goog.module('os.im.action.FilterActionEntry');
-goog.module.declareLegacyNamespace();
 
 const functions = goog.require('goog.functions');
 const FilterEntry = goog.require('os.filter.FilterEntry');
 const fn = goog.require('os.ui.filter.fn');
 const IComparable = goog.requireType('os.IComparable');
+const {getImportActionManager} = goog.require('os.im.action');
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
+const {serialize} = goog.require('os.xml');
 
 const IImportAction = goog.requireType('os.im.action.IImportAction');
 
@@ -324,7 +325,8 @@ class FilterActionEntry extends FilterEntry {
    */
   restore(config) {
     super.restore(config);
-    var iam = os.im.action.ImportActionManager.getInstance();
+
+    var iam = getImportActionManager();
 
     this.actions.length = 0;
 
@@ -376,8 +378,8 @@ class FilterActionEntry extends FilterEntry {
     if (val == 0) {
       // compare the important parts of the action by getting the toXml
       while (length--) {
-        var thisComp = os.xml.serialize(this.actions[length].toXml());
-        var thatComp = os.xml.serialize(other.actions[length].toXml());
+        var thisComp = serialize(this.actions[length].toXml());
+        var thatComp = serialize(other.actions[length].toXml());
         val = thisComp < thatComp ? -1 : thisComp > thatComp ? 1 : 0;
 
         if (val !== 0) {

@@ -1,6 +1,5 @@
 /* FIXME add rotation */
 goog.module('os.olm.render.Box');
-goog.module.declareLegacyNamespace();
 
 const {beginTempInterpolation, endTempInterpolation, interpolateGeom} = goog.require('os.interpolate');
 const Method = goog.require('os.interpolate.Method');

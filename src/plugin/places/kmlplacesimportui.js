@@ -1,5 +1,4 @@
 goog.module('plugin.places.KMLPlacesImportUI');
-goog.module.declareLegacyNamespace();
 
 const dispose = goog.require('goog.dispose');
 const {ROOT} = goog.require('os');

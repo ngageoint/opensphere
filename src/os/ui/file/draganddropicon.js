@@ -1,7 +1,7 @@
 goog.module('os.ui.file.dragAndDropIconDirective');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
+
 
 /**
  * The dragAndDropIcon directive

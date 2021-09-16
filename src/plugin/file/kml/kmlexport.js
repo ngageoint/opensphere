@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.export');
-goog.module.declareLegacyNamespace();
 
 const annotation = goog.require('os.annotation');
 const osStyle = goog.require('os.style');

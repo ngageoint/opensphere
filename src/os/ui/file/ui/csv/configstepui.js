@@ -1,5 +1,4 @@
 goog.module('os.ui.file.ui.csv.ConfigStepUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.SpinnerUI');
 goog.require('os.ui.wiz.WizardPreviewUI');

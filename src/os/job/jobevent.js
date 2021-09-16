@@ -1,7 +1,7 @@
 goog.module('os.job.JobEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
+
 
 /**
  * Job event

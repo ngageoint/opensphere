@@ -1,5 +1,4 @@
 goog.module('plugin.file.shp.mime');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 

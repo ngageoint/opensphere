@@ -1,7 +1,7 @@
 goog.module('os.data.CountBin');
-goog.module.declareLegacyNamespace();
 
 const ColorBin = goog.require('os.data.histo.ColorBin');
+
 
 /**
  * Histogram bin that only manages a count.

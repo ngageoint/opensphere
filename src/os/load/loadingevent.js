@@ -1,8 +1,8 @@
 goog.module('os.load.LoadingEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const ILoadingTask = goog.requireType('os.load.ILoadingTask');
+
 
 /**
  * Event representing a loading task change.

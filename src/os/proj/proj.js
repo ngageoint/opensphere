@@ -1,5 +1,4 @@
 goog.module('os.proj');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const log = goog.require('goog.log');

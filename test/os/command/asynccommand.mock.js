@@ -1,10 +1,10 @@
 goog.module('os.command.AsyncMockCommand');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
 const MockCommand = goog.require('os.command.MockCommand');
 const State = goog.require('os.command.State');
+
 
 /**
  * Mock async command.

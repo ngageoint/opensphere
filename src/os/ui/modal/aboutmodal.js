@@ -1,5 +1,4 @@
 goog.module('os.ui.modal.AboutModalUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const {getAppName} = goog.require('os.config');

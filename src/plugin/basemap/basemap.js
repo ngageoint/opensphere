@@ -1,5 +1,4 @@
 goog.module('plugin.basemap');
-goog.module.declareLegacyNamespace();
 
 const Tile = goog.require('os.layer.Tile');
 

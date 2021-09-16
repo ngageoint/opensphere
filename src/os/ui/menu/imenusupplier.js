@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.IMenuSupplier');
-goog.module.declareLegacyNamespace();
 
 const Menu = goog.requireType('os.ui.menu.Menu');
 

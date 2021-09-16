@@ -1,5 +1,4 @@
 goog.module('os.ui.tab.Tab');
-goog.module.declareLegacyNamespace();
 
 /**
  * Simple model class representing a pluggable tab.

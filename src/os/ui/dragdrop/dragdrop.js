@@ -1,5 +1,4 @@
 goog.module('os.ui.DragDrop');
-goog.module.declareLegacyNamespace();
 
 const {getAncestorByClass} = goog.require('goog.dom');
 const classlist = goog.require('goog.dom.classlist');

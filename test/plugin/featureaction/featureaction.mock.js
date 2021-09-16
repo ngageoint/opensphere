@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.mock');
-goog.module.declareLegacyNamespace();
 
 const Manager = goog.require('plugin.im.action.feature.Manager');
 const MockAction = goog.require('plugin.im.action.feature.mock.MockAction');

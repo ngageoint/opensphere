@@ -1,5 +1,4 @@
 goog.module('plugin.heatmap.HeatmapPlugin');
-goog.module.declareLegacyNamespace();
 
 const DataEventType = goog.require('os.data.event.DataEventType');
 const VectorSource = goog.require('os.source.Vector');

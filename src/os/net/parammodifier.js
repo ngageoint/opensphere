@@ -1,5 +1,4 @@
 goog.module('os.net.ParamModifier');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');

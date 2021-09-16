@@ -1,5 +1,4 @@
 goog.module('os.net.NDJsonEncFormatter');
-goog.module.declareLegacyNamespace();
 
 const IDataFormatter = goog.requireType('os.net.IDataFormatter');
 

@@ -2,7 +2,6 @@
  * @fileoverview Modifications to {@link Feature}.
  */
 goog.module('os.mixin.feature');
-goog.module.declareLegacyNamespace();
 
 const Feature = goog.require('ol.Feature');
 const Style = goog.require('ol.style.Style');

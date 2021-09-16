@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.layer');
-goog.module.declareLegacyNamespace();
 
 const Timer = goog.require('goog.Timer');
 const googDispose = goog.require('goog.dispose');

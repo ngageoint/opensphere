@@ -1,5 +1,4 @@
 goog.module('os.ui.ServersButtonUI');
-goog.module.declareLegacyNamespace();
 
 const DataManager = goog.require('os.data.DataManager');
 const DataProviderEventType = goog.require('os.data.DataProviderEventType');

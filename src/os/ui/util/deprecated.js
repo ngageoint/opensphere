@@ -1,5 +1,4 @@
 goog.module('os.ui.util.deprecated');
-goog.module.declareLegacyNamespace();
 
 const Delay = goog.require('goog.async.Delay');
 const Settings = goog.require('os.config.Settings');

@@ -1,5 +1,4 @@
 goog.module('os.ui.clipboard');
-goog.module.declareLegacyNamespace();
 
 /**
  * Retrieve data from the clipboard.  Different browsers do it differently, so make it convenient.

@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.feature');
-goog.module.declareLegacyNamespace();
 
 const EventType = goog.require('os.action.EventType');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');

@@ -1,5 +1,4 @@
 goog.module('os.im.IImporter');
-goog.module.declareLegacyNamespace();
 
 const Listenable = goog.requireType('goog.events.Listenable');
 const IMapping = goog.requireType('os.im.mapping.IMapping');

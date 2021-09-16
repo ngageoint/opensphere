@@ -1,5 +1,4 @@
 goog.module('os.xml');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const dom = goog.require('goog.dom');

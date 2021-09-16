@@ -1,5 +1,4 @@
 goog.module('os.ui.node.FolderNodeUI');
-goog.module.declareLegacyNamespace();
 
 const {getRandomString} = goog.require('goog.string');
 const FolderManager = goog.require('os.layer.FolderManager');

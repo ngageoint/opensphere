@@ -1,5 +1,4 @@
 goog.module('os.layer.VectorTile');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.layer.DefaultLayerUI');
 

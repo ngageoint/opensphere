@@ -1,5 +1,4 @@
 goog.module('plugin.file.shp.SHPParserConfig');
-goog.module.declareLegacyNamespace();
 
 const googEvents = goog.require('goog.events');
 const EventType = goog.require('os.events.EventType');

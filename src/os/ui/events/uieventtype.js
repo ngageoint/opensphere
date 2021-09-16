@@ -1,5 +1,4 @@
 goog.module('os.ui.events.UIEventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * UI event types

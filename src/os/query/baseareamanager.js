@@ -1,5 +1,4 @@
 goog.module('os.query.BaseAreaManager');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const Deferred = goog.require('goog.async.Deferred');
@@ -769,10 +768,5 @@ BaseAreaManager.FEATURE_PREFIX = 'area_';
  */
 BaseAreaManager.tempId_ = 1;
 
-
-/**
- * @type {BaseAreaManager}
- */
-os.ui.areaManager = null;
 
 exports = BaseAreaManager;

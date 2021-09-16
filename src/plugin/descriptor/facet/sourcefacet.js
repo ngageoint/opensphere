@@ -1,5 +1,4 @@
 goog.module('plugin.descriptor.facet.Source');
-goog.module.declareLegacyNamespace();
 
 const BaseFacet = goog.require('os.search.BaseFacet');
 

@@ -1,5 +1,4 @@
 goog.module('os.data.RecordField');
-goog.module.declareLegacyNamespace();
 
 const googObject = goog.require('goog.object');
 

@@ -1,5 +1,4 @@
 goog.module('os.ogc.wmts.WMTSLayerParsers');
-goog.module.declareLegacyNamespace();
 
 const {default: WMTSLayerParserV100} = goog.require('os.ogc.wmts.WMTSLayerParserV100');
 

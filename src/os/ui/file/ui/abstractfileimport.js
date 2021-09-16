@@ -1,5 +1,4 @@
 goog.module('os.ui.file.ui.AbstractFileImportCtrl');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const dispatcher = goog.require('os.Dispatcher');

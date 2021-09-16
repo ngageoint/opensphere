@@ -1,5 +1,4 @@
 goog.module('os.ui.SingleUrlProviderImportCtrl');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.uniqueProviderTitle');
 goog.require('os.ui.uniqueServerUrl');

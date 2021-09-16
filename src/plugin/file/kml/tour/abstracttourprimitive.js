@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.tour.AbstractTourPrimitive');
-goog.module.declareLegacyNamespace();
 
 const fn = goog.require('os.fn');
 

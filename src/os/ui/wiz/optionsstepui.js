@@ -1,5 +1,4 @@
 goog.module('os.ui.wiz.OptionsStepUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.color.ColorPickerUI');
 goog.require('os.ui.icon.IconPickerUI');

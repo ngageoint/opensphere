@@ -1,5 +1,4 @@
 goog.module('os.ui.datetime.AnyDateType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

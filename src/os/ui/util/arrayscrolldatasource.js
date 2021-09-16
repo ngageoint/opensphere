@@ -1,5 +1,4 @@
 goog.module('os.ui.util.ArrayScrollDataSource');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 

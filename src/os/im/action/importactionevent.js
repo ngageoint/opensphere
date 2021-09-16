@@ -1,5 +1,4 @@
 goog.module('os.im.action.ImportActionEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 

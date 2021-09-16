@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.filter');
-goog.module.declareLegacyNamespace();
 
 const {removeDuplicates} = goog.require('goog.array');
 const {remove} = goog.require('ol.array');

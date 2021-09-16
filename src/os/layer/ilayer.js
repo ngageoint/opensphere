@@ -1,11 +1,11 @@
 goog.module('os.layer.ILayer');
-goog.module.declareLegacyNamespace();
 
 const IPersistable = goog.require('os.IPersistable'); // eslint-disable-line
 const IActionTarget = goog.require('os.ui.action.IActionTarget'); // eslint-disable-line
 
 const Source = goog.requireType('ol.source.Source');
 const osImplements = goog.requireType('os.implements');
+
 
 /**
  * The interface for layers

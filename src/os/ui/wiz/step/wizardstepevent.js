@@ -1,5 +1,4 @@
 goog.module('os.ui.wiz.step.WizardStepEvent');
-goog.module.declareLegacyNamespace();
 
 
 /**

@@ -1,5 +1,4 @@
 goog.module('os.ui.config.AbstractSettingsCtrl');
-goog.module.declareLegacyNamespace();
 
 const SettingNode = goog.require('os.ui.config.SettingNode');
 const SettingsManager = goog.require('os.ui.config.SettingsManager');

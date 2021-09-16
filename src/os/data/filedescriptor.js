@@ -1,5 +1,4 @@
 goog.module('os.data.FileDescriptor');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const Settings = goog.require('os.config.Settings');

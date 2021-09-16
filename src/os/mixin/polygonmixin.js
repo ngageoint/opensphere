@@ -1,5 +1,4 @@
 goog.module('os.mixin.polygon');
-goog.module.declareLegacyNamespace();
 
 const Polygon = goog.require('ol.geom.Polygon');
 

@@ -1,5 +1,4 @@
 goog.module('os.layer.LayerGroup');
-goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const {clamp} = goog.require('goog.math');

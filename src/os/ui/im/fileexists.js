@@ -1,5 +1,4 @@
 goog.module('os.ui.im.FileExistsUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const {getAppName} = goog.require('os.config');

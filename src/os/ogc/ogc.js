@@ -1,10 +1,10 @@
 goog.module('os.ogc');
-goog.module.declareLegacyNamespace();
 
 const QueryData = goog.require('goog.Uri.QueryData');
 const {loadXml} = goog.require('goog.dom.xml');
 const Settings = goog.require('os.config.Settings');
 const {getText} = goog.require('os.file.mime.text');
+const {getMapContainer} = goog.require('os.map.instance');
 
 const IOGCDescriptor = goog.requireType('os.ui.ogc.IOGCDescriptor');
 
@@ -154,14 +154,12 @@ const getMaxFeatures = function(opt_key) {
     return /** @type {number} */ (Settings.getInstance().get('maxFeatures.' + opt_key, 50000));
   }
 
-  if (os.MapContainer) {
-    const map = os.MapContainer.getInstance();
-    if (map && map.is3DSupported() && map.is3DEnabled()) {
-      // try getting it for the 3D renderer
-      const renderer = map.getWebGLRenderer();
-      if (renderer) {
-        return renderer.getMaxFeatureCount();
-      }
+  const map = getMapContainer();
+  if (map && map.is3DSupported() && map.is3DEnabled()) {
+    // try getting it for the 3D renderer
+    const renderer = map.getWebGLRenderer();
+    if (renderer) {
+      return renderer.getMaxFeatureCount();
     }
   }
 

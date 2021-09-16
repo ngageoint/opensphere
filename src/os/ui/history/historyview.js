@@ -1,5 +1,4 @@
 goog.module('os.ui.history.HistoryViewUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const CommandProcessor = goog.require('os.command.CommandProcessor');

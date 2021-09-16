@@ -1,5 +1,4 @@
 goog.module('plugin.area.CSVAreaImport');
-goog.module.declareLegacyNamespace();
 
 const RecordField = goog.require('os.data.RecordField');
 const EventType = goog.require('os.events.EventType');

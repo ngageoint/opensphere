@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.parse.FilterParser');
-goog.module.declareLegacyNamespace();
 
 const {getFirstElementChild, getChildren} = goog.require('goog.dom');
 const {loadXml, serialize} = goog.require('goog.dom.xml');

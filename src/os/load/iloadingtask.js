@@ -1,5 +1,4 @@
 goog.module('os.load.ILoadingTask');
-goog.module.declareLegacyNamespace();
 
 /**
  * Interface representing loading tasks.

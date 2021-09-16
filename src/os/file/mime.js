@@ -1,5 +1,4 @@
 goog.module('os.file.mime');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const log = goog.require('goog.log');

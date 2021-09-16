@@ -1,5 +1,4 @@
 goog.module('os.ui.query.cmd.AreaAdd');
-goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const {clone} = goog.require('os.ol.feature');

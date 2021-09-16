@@ -1,5 +1,4 @@
 goog.module('plugin.basemap.BaseMapDescriptor');
-goog.module.declareLegacyNamespace();
 
 const googObject = goog.require('goog.object');
 const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');

@@ -1,5 +1,4 @@
 goog.module('os.ui.wiz.step.TimeInstantUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const {getItemField} = goog.require('os.im.mapping');

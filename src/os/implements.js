@@ -21,7 +21,6 @@
  *   e.g.: var isFun = os.implements(myToy, os.fun.IFlyingToy.ID);
  */
 goog.module('os.implements');
-goog.module.declareLegacyNamespace();
 
 
 /**

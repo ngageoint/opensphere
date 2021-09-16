@@ -17,7 +17,6 @@
  *
  */
 goog.module('os.storage.PrefixedMechanism');
-goog.module.declareLegacyNamespace();
 
 const iter = goog.require('goog.iter');
 const GoogPrefixedMechanism = goog.require('goog.storage.mechanism.PrefixedMechanism');

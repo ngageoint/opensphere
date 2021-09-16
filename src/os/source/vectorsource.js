@@ -1,5 +1,4 @@
 goog.module('os.source.Vector');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin.rbush');
 
@@ -1663,7 +1662,7 @@ class Vector extends OLVectorSource {
    * Create a new histogram for this source.
    *
    * @param {SourceHistogram=} opt_parent The parent histogram.
-   * @return {!histo.SourceHistogram}
+   * @return {!SourceHistogram}
    *
    * @export Prevent the compiler from moving the function off the prototype.
    */

@@ -1,5 +1,4 @@
 goog.module('os.command.FitLayerByID');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');

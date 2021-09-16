@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ListUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.filter.ColTypeListUI');
 

@@ -1,5 +1,4 @@
 goog.module('os.IXmlPersistable');
-goog.module.declareLegacyNamespace();
 
 /**
  * An interface for XML persistable/restorable objects.

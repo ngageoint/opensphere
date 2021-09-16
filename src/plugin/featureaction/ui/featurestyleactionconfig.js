@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.ui.StyleConfigUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.layer.IconStyleControlsUI');
 goog.require('os.ui.layer.VectorStyleControlsUI');

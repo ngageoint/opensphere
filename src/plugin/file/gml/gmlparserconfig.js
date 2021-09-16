@@ -1,5 +1,4 @@
 goog.module('plugin.file.gml.GMLParserConfig');
-goog.module.declareLegacyNamespace();
 
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const ImportManager = goog.require('os.ui.im.ImportManager');

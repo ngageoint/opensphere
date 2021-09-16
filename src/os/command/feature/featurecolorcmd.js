@@ -1,5 +1,4 @@
 goog.module('os.command.FeatureColor');
-goog.module.declareLegacyNamespace();
 
 const osColor = goog.require('os.color');
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');

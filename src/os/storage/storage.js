@@ -1,5 +1,4 @@
 goog.module('os.storage');
-goog.module.declareLegacyNamespace();
 
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const dispatcher = goog.require('os.Dispatcher');

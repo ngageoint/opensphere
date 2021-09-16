@@ -1,5 +1,4 @@
 goog.module('os.ogc.filter.OGCSpatialFormatter');
-goog.module.declareLegacyNamespace();
 
 const GeometryType = goog.require('ol.geom.GeometryType');
 const Polygon = goog.require('ol.geom.Polygon');

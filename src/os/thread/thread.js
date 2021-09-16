@@ -1,5 +1,4 @@
 goog.module('os.thread.Thread');
-goog.module.declareLegacyNamespace();
 
 const Delay = goog.require('goog.async.Delay');
 const EventTarget = goog.require('goog.events.EventTarget');

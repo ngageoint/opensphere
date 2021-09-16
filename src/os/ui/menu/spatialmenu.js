@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.SpatialMenu');
-goog.module.declareLegacyNamespace();
 
 const {instanceOf} = goog.require('os.classRegistry');
 const {NodeClass} = goog.require('os.data');

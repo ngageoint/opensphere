@@ -1,5 +1,4 @@
 goog.module('os.ui.node.DefaultLayerNodeUI');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const Layer = goog.require('ol.layer.Layer');

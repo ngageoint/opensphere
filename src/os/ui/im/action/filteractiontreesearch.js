@@ -1,5 +1,4 @@
 goog.module('os.ui.im.action.FilterActionTreeSearch');
-goog.module.declareLegacyNamespace();
 
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const FilterActionNode = goog.require('os.ui.im.action.FilterActionNode');

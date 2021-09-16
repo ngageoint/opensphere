@@ -1,5 +1,4 @@
 goog.module('os.command.AbstractLayer');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const googObject = goog.require('goog.object');

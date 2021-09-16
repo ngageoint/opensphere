@@ -1,5 +1,4 @@
 goog.module('os.net.CrossOrigin');
-goog.module.declareLegacyNamespace();
 
 
 /**

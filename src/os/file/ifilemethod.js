@@ -1,9 +1,9 @@
 goog.module('os.file.IFileMethod');
-goog.module.declareLegacyNamespace();
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const Listenable = goog.requireType('goog.events.Listenable');
 const OSFile = goog.requireType('os.file.File');
+
 
 /**
  * @extends {IDisposable}

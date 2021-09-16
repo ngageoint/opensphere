@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.Entry');
-goog.module.declareLegacyNamespace();
 
 const osFeature = goog.require('os.feature');
 const FilterActionEntry = goog.require('os.im.action.FilterActionEntry');

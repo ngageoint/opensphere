@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.wfs.QueryWFSLayerConfig');
-goog.module.declareLegacyNamespace();
 
 const ParamModifier = goog.require('os.net.ParamModifier');
 const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');

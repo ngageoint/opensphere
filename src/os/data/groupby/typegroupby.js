@@ -1,5 +1,4 @@
 goog.module('os.data.groupby.TypeGroupBy');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');

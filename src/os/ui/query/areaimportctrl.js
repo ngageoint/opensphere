@@ -1,5 +1,4 @@
 goog.module('os.ui.query.AreaImportCtrl');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.im.BasicInfoUI');
 

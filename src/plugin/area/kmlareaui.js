@@ -1,5 +1,4 @@
 goog.module('plugin.area.KMLAreaUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.im.MergeAreaOptionUI');
 

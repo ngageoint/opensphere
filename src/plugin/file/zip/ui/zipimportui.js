@@ -1,5 +1,4 @@
 goog.module('plugin.file.zip.ui.ZIPImportUI');
-goog.module.declareLegacyNamespace();
 
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const osWindow = goog.require('os.ui.window');

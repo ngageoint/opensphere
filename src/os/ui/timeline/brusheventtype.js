@@ -1,5 +1,4 @@
 goog.module('os.ui.timeline.BrushEventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

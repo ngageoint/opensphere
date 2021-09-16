@@ -1,5 +1,4 @@
 goog.module('os.control.ScaleLine');
-goog.module.declareLegacyNamespace();
 
 const safe = goog.require('goog.dom.safe');
 const GoogEventType = goog.require('goog.events.EventType');

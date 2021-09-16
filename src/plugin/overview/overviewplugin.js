@@ -1,5 +1,4 @@
 goog.module('plugin.overview.OverviewPlugin');
-goog.module.declareLegacyNamespace();
 
 const MapContainer = goog.require('os.MapContainer');
 const Settings = goog.require('os.config.Settings');

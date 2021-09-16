@@ -1,5 +1,4 @@
 goog.module('os.config.storage.SettingsObjectStorage');
-goog.module.declareLegacyNamespace();
 
 const Deferred = goog.require('goog.async.Deferred');
 const googObject = goog.require('goog.object');
@@ -8,6 +7,7 @@ const ISettingsReadableStorage = goog.require('os.config.storage.ISettingsReadab
 const ISettingsStorage = goog.require('os.config.storage.ISettingsStorage');
 const ISettingsWritableStorage = goog.require('os.config.storage.ISettingsWritableStorage');
 const SettingsWritableStorageType = goog.require('os.config.storage.SettingsWritableStorageType');
+const osImplements = goog.require('os.implements');
 
 
 /**
@@ -128,9 +128,9 @@ class SettingsObjectStorage {
     }
   }
 }
-os.implements(SettingsObjectStorage, ISettingsStorage.ID);
-os.implements(SettingsObjectStorage, ISettingsReadableStorage.ID);
-os.implements(SettingsObjectStorage, ISettingsWritableStorage.ID);
+osImplements(SettingsObjectStorage, ISettingsStorage.ID);
+osImplements(SettingsObjectStorage, ISettingsReadableStorage.ID);
+osImplements(SettingsObjectStorage, ISettingsWritableStorage.ID);
 
 
 exports = SettingsObjectStorage;

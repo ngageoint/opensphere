@@ -1,5 +1,4 @@
 goog.module('os.data.ColumnDefinition');
-goog.module.declareLegacyNamespace();
 
 const IPersistable = goog.require('os.IPersistable'); // eslint-disable-line
 const DataType = goog.require('os.xsd.DataType');
@@ -116,7 +115,7 @@ class ColumnDefinition {
 
     /**
      * The format function
-     * @type {?function(number, number, string, os.data.ColumnDefinition, *)}
+     * @type {?function(number, number, string, ColumnDefinition, *)}
      */
     this['formatter'] = null;
 
@@ -129,7 +128,7 @@ class ColumnDefinition {
     /**
      * The asynchronous post renderer for the column. Note that you have to set <code>enableAsyncPostRender</code>
      * to <code>true</code> in the grid options for this to work.
-     * @type {?function(angular.JQLite, number, *, os.data.ColumnDefinition)}
+     * @type {?function(angular.JQLite, number, *, ColumnDefinition)}
      */
     this['asyncPostRender'] = null;
 
@@ -318,7 +317,7 @@ class ColumnDefinition {
   /**
    * Creates a copy of the column definition.
    *
-   * @return {os.data.ColumnDefinition}
+   * @return {ColumnDefinition}
    */
   clone() {
     var clone = new ColumnDefinition();

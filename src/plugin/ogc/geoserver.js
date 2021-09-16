@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.GeoServer');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const IDataProvider = goog.require('os.data.IDataProvider');

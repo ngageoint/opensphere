@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.tour.EventType');
-goog.module.declareLegacyNamespace();
 
 
 /**

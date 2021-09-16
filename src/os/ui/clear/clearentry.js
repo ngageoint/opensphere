@@ -1,7 +1,7 @@
 goog.module('os.ui.clear.ClearEntry');
-goog.module.declareLegacyNamespace();
 
 const ICommand = goog.requireType('os.command.ICommand');
+
 
 /**
  */

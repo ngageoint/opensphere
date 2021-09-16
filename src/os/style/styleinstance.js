@@ -1,9 +1,9 @@
 goog.module('os.style.instance');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 
 const StyleManager = goog.requireType('os.style.StyleManager');
+
 
 /**
  * The global style manager instance.

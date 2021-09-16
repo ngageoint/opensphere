@@ -1,5 +1,4 @@
 goog.module('os.data.histo.TimelineHistManager');
-goog.module.declareLegacyNamespace();
 
 const Throttle = goog.require('goog.async.Throttle');
 const EventTarget = goog.require('goog.events.EventTarget');

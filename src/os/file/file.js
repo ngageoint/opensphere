@@ -1,5 +1,4 @@
 goog.module('os.file.File');
-goog.module.declareLegacyNamespace();
 
 const Deferred = goog.require('goog.async.Deferred');
 const GoogFileReader = goog.require('goog.fs.FileReader');

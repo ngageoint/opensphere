@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.ui.GeoserverImportUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.singleUrlFormDirective');
 

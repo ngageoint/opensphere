@@ -1,5 +1,4 @@
 goog.module('os.ui.ScreenOverlayUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const {getMapContainer} = goog.require('os.map.instance');

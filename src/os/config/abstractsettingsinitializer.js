@@ -1,5 +1,4 @@
 goog.module('os.config.AbstractSettingsInitializer');
-goog.module.declareLegacyNamespace();
 
 const EventType = goog.require('os.config.EventType');
 

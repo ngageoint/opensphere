@@ -1,5 +1,4 @@
 goog.module('os.geo');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin.geometry');
 

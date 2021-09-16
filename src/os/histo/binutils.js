@@ -1,9 +1,9 @@
 goog.module('os.histo.bin');
-goog.module.declareLegacyNamespace();
 
 const {FLOAT} = goog.require('os.string');
 
 const Bin = goog.requireType('os.histo.Bin');
+
 
 /**
  * "Unique" value used when a requested value is null or undefined. Crossfilter fails when values cannot be

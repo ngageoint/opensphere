@@ -1,5 +1,4 @@
 goog.module('os.data.ISearchable');
-goog.module.declareLegacyNamespace();
 
 
 /**

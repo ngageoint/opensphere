@@ -1,5 +1,4 @@
 goog.module('plugin.file.shp.SHPParser');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
@@ -17,10 +16,12 @@ const mimeZip = goog.require('os.file.mime.zip');
 const geo = goog.require('os.geo');
 const AsyncZipParser = goog.require('os.parse.AsyncZipParser');
 const shp = goog.require('plugin.file.shp');
+const {DBF_EXT_REGEXP, SHP_EXT_REGEXP} = goog.require('plugin.file.shp.mime');
 const DBFField = goog.require('plugin.file.shp.data.DBFField');
 const SHPHeader = goog.require('plugin.file.shp.data.SHPHeader');
 
 const Logger = goog.requireType('goog.log.Logger');
+const SHPParserConfig = goog.requireType('plugin.file.shp.SHPParserConfig');
 
 
 /**
@@ -31,7 +32,7 @@ const Logger = goog.requireType('goog.log.Logger');
 class SHPParser extends AsyncZipParser {
   /**
    * Constructor.
-   * @param {shp.SHPParserConfig} config
+   * @param {SHPParserConfig} config
    */
   constructor(config) {
     super();
@@ -513,10 +514,10 @@ class SHPParser extends AsyncZipParser {
       // if the entry is a shp or dbf, load the content and process it. only use the first file encountered, which means
       // archives with multiple shapefiles will only load the first
       var entry = entries[i];
-      if (!foundSHP && shp.mime.SHP_EXT_REGEXP.test(entry.filename)) {
+      if (!foundSHP && SHP_EXT_REGEXP.test(entry.filename)) {
         foundSHP = true;
         entry.getData(new zip.ArrayBufferWriter(), this.processZIPEntry_.bind(this, entry));
-      } else if (!foundDBF && shp.mime.DBF_EXT_REGEXP.test(entry.filename)) {
+      } else if (!foundDBF && DBF_EXT_REGEXP.test(entry.filename)) {
         foundDBF = true;
         entry.getData(new zip.ArrayBufferWriter(), this.processZIPEntry_.bind(this, entry));
       }
@@ -539,9 +540,9 @@ class SHPParser extends AsyncZipParser {
   processZIPEntry_(entry, content) {
     if (content instanceof ArrayBuffer) {
       content = /** @type {!ArrayBuffer} */ (content);
-      if (shp.mime.SHP_EXT_REGEXP.test(entry.filename)) {
+      if (SHP_EXT_REGEXP.test(entry.filename)) {
         this.setupSHPFile_(content);
-      } else if (shp.mime.DBF_EXT_REGEXP.test(entry.filename)) {
+      } else if (DBF_EXT_REGEXP.test(entry.filename)) {
         this.setupDBFFile_(content);
         this.updateColumns_();
       }

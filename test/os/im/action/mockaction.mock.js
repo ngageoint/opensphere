@@ -1,5 +1,4 @@
 goog.module('os.im.action.mock.MockAction');
-goog.module.declareLegacyNamespace();
 
 const AbstractImportAction = goog.require('os.im.action.AbstractImportAction');
 

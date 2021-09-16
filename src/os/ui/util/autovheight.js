@@ -1,5 +1,4 @@
 goog.module('os.ui.util.AutoVHeightUI');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');

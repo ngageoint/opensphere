@@ -1,5 +1,4 @@
 goog.module('os.data.AreaTreeSearch');
-goog.module.declareLegacyNamespace();
 
 const AreaNode = goog.require('os.data.AreaNode');
 const instance = goog.require('os.query.instance');

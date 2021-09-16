@@ -1,5 +1,4 @@
 goog.module('os.url.UrlManager');
-goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const UrlEvent = goog.require('os.url.UrlEvent');

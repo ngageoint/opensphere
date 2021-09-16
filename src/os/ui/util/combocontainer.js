@@ -1,5 +1,4 @@
 goog.module('os.ui.util.comboContainerDirective');
-goog.module.declareLegacyNamespace();
 
 const {getViewportSize} = goog.require('goog.dom');
 const {apply} = goog.require('os.ui');

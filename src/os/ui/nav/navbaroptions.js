@@ -1,5 +1,4 @@
 goog.module('os.ui.navbaroptions');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.navBottomDirective');
 goog.require('os.ui.navTopDirective');
@@ -25,6 +24,7 @@ const list = goog.require('os.ui.list');
 const Location = goog.require('os.ui.nav.Location');
 const {getSearchBox} = goog.require('os.ui.navbaroptions.searchbox');
 const SearchResultsUI = goog.require('os.ui.search.SearchResultsUI');
+
 
 /**
  * Search results template.

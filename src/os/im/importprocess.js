@@ -1,5 +1,4 @@
 goog.module('os.im.ImportProcess');
-goog.module.declareLegacyNamespace();
 
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const {getConfigColor} = goog.require('os.style');

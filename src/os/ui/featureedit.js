@@ -1,5 +1,4 @@
 goog.module('os.ui.FeatureEditUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.ListUI');
 goog.require('os.ui.geo.PositionUI');

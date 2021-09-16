@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.query.OGCTemporalFormatter');
-goog.module.declareLegacyNamespace();
 
 const time = goog.require('os.time');
 const ITemporalFormatter = goog.requireType('os.query.ITemporalFormatter');

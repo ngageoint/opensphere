@@ -1,5 +1,4 @@
 goog.module('os.net.BaseServerModifier');
-goog.module.declareLegacyNamespace();
 
 const Settings = goog.require('os.config.Settings');
 const URLModifier = goog.require('os.net.URLModifier');

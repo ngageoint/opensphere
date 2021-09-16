@@ -1,5 +1,4 @@
 goog.module('os.control.AlertPopup');
-goog.module.declareLegacyNamespace();
 
 const Control = goog.require('ol.control.Control');
 const osUi = goog.require('os.ui');

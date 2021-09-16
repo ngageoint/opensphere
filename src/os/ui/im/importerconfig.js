@@ -1,5 +1,4 @@
 goog.module('os.ui.im.ImporterConfig');
-goog.module.declareLegacyNamespace();
 
 /**
  * @typedef {{

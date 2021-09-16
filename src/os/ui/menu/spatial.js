@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.spatial');
-goog.module.declareLegacyNamespace();
 
 const googDispose = goog.require('goog.dispose');
 const {caseInsensitiveCompare, toTitleCase} = goog.require('goog.string');

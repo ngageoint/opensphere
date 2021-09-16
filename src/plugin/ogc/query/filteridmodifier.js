@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.query.FilterIDModifier');
-goog.module.declareLegacyNamespace();
 
 const googString = goog.require('goog.string');
 const ParamModifier = goog.require('os.net.ParamModifier');

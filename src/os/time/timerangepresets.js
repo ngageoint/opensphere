@@ -1,5 +1,4 @@
 goog.module('os.time.TimeRangePresets');
-goog.module.declareLegacyNamespace();
 
 const VariableReplacer = goog.require('os.net.VariableReplacer');
 const time = goog.require('os.time');

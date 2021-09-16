@@ -1,5 +1,4 @@
 goog.module('os.histo.DateBinType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

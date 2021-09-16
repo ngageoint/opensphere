@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.ui.FeatureActionsUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const DataManager = goog.require('os.data.DataManager');

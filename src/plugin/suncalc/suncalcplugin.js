@@ -1,5 +1,4 @@
 goog.module('plugin.suncalc.SunCalcPlugin');
-goog.module.declareLegacyNamespace();
 
 goog.require('plugin.suncalc.LightStripUI');
 

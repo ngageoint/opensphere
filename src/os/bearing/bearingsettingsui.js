@@ -1,5 +1,4 @@
 goog.module('os.bearing.BearingSettingsUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const BearingSettingsKeys = goog.require('os.bearing.BearingSettingsKeys');

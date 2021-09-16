@@ -5,9 +5,9 @@
  *               to the build warnings.
  */
 goog.module('os.registerClass');
-goog.module.declareLegacyNamespace();
 
 const {registerClass} = goog.require('os.classRegistry');
+
 
 /**
  * Registers a class by name.

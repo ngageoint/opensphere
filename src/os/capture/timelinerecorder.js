@@ -1,5 +1,4 @@
 goog.module('os.capture.TimelineRecorder');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -8,6 +7,8 @@ const capture = goog.require('os.capture');
 const AbstractRecorder = goog.require('os.capture.AbstractRecorder');
 const CaptureEventType = goog.require('os.capture.CaptureEventType');
 const TimelineController = goog.require('os.time.TimelineController');
+
+const IVideoEncoder = goog.requireType('os.capture.IVideoEncoder');
 
 
 /**
@@ -207,7 +208,7 @@ class TimelineRecorder extends AbstractRecorder {
    * @private
    */
   onExportProgress_(event) {
-    var exporter = /** @type {capture.IVideoEncoder} */ (event.target);
+    var exporter = /** @type {IVideoEncoder} */ (event.target);
     if (exporter) {
       this.setProgress(exporter.progress);
     }
@@ -220,7 +221,7 @@ class TimelineRecorder extends AbstractRecorder {
    * @private
    */
   onExportStatus_(event) {
-    var exporter = /** @type {capture.IVideoEncoder} */ (event.target);
+    var exporter = /** @type {IVideoEncoder} */ (event.target);
     if (exporter) {
       this.setStatus(exporter.status);
     }
@@ -233,7 +234,7 @@ class TimelineRecorder extends AbstractRecorder {
    * @private
    */
   onExportComplete_(event) {
-    var exporter = /** @type {capture.IVideoEncoder} */ (event.target);
+    var exporter = /** @type {IVideoEncoder} */ (event.target);
     if (exporter) {
       this.data = exporter.output;
       this.setStatus('Done!');
@@ -248,7 +249,7 @@ class TimelineRecorder extends AbstractRecorder {
    * @private
    */
   onExportError_(event) {
-    var exporter = /** @type {capture.IVideoEncoder} */ (event.target);
+    var exporter = /** @type {IVideoEncoder} */ (event.target);
     if (exporter && exporter.errorMsg) {
       this.handleError(exporter.errorMsg);
     } else {

@@ -1,5 +1,4 @@
 goog.module('os.mixin.rbush');
-goog.module.declareLegacyNamespace();
 
 const {getUid} = goog.require('ol');
 const {extend, intersects, returnOrUpdate} = goog.require('ol.extent');

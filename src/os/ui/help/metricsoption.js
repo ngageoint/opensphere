@@ -1,5 +1,4 @@
 goog.module('os.ui.help.metricsOption');
-goog.module.declareLegacyNamespace();
 
 const Settings = goog.require('os.config.Settings');
 const {MENU, showWindow} = goog.require('os.ui.help');

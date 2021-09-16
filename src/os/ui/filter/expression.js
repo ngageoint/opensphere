@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.Expression');
-goog.module.declareLegacyNamespace();
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {OPERATIONS} = goog.require('os.ui.filter');

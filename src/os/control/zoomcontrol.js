@@ -1,5 +1,4 @@
 goog.module('os.control.Zoom');
-goog.module.declareLegacyNamespace();
 
 const OLZoom = goog.require('ol.control.Zoom');
 const interaction = goog.require('os.interaction');

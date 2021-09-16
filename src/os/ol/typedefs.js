@@ -7,7 +7,6 @@
  *                        need goog.require statements.
  */
 goog.module('ol.typedefs');
-goog.module.declareLegacyNamespace();
 
 const ol = goog.require('ol');
 

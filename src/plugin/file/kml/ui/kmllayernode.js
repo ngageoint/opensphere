@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.ui.KMLLayerNode');
-goog.module.declareLegacyNamespace();
 
 const googEvents = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');

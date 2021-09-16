@@ -1,5 +1,4 @@
 goog.module('os.file.persist.LocalFilePersistence');
-goog.module.declareLegacyNamespace();
 
 const {SAVE_COMPLETE, SAVE_FAILED, saveLocal} = goog.require('os.file.persist');
 const FilePersistence = goog.require('os.file.persist.FilePersistence');

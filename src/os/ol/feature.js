@@ -1,5 +1,4 @@
 goog.module('os.ol.feature');
-goog.module.declareLegacyNamespace();
 
 const Feature = goog.require('ol.Feature');
 const Circle = goog.require('ol.geom.Circle');

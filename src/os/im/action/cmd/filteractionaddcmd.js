@@ -1,5 +1,4 @@
 goog.module('os.im.action.cmd.FilterActionAdd');
-goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const AbstractFilterAction = goog.require('os.im.action.cmd.AbstractFilterAction');

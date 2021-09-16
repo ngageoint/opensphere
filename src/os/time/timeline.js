@@ -2,7 +2,6 @@
  * Namespace for timeline utilities.
  */
 goog.module('os.time.timeline');
-goog.module.declareLegacyNamespace();
 
 const time = goog.require('os.time');
 const Duration = goog.require('os.time.Duration');

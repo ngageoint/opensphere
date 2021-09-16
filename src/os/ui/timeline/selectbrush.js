@@ -1,5 +1,4 @@
 goog.module('os.ui.timeline.SelectBrush');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const dispatcher = goog.require('os.Dispatcher');

@@ -1,5 +1,4 @@
 goog.module('os.command.FilterEnable');
-goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const filterManager = goog.require('os.query.FilterManager');

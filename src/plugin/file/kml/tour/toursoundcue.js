@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.tour.SoundCue');
-goog.module.declareLegacyNamespace();
 
 const AudioManager = goog.require('os.audio.AudioManager');
 const AudioSetting = goog.require('os.audio.AudioSetting');

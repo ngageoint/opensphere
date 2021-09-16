@@ -1,5 +1,4 @@
 goog.module('os.search.BaseFacet');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.requireType('goog.Promise');
 const AppliedFacets = goog.requireType('os.search.AppliedFacets');

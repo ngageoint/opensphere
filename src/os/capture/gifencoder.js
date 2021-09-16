@@ -1,5 +1,4 @@
 goog.module('os.capture.GifEncoder');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const {getCanvasData} = goog.require('os.capture');

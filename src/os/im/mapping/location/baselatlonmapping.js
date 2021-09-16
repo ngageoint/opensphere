@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.location.BaseLatLonMapping');
-goog.module.declareLegacyNamespace();
 
 const {COORD_CLEANER, PREFER_LAT_FIRST, parseLatLon} = goog.require('os.geo');
 const {getItemField} = goog.require('os.im.mapping');

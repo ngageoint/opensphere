@@ -1,8 +1,8 @@
 goog.module('os.ui.hist.IHistogramChart');
-goog.module.declareLegacyNamespace();
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const IHistogramData = goog.requireType('os.hist.IHistogramData');
+
 
 /**
  * Interface for a chart driven by a histogram.

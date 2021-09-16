@@ -1,5 +1,4 @@
 goog.module('os.ui.hist.StackedBarChart');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const {maxBinCount} = goog.require('os.hist');

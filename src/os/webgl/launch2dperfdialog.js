@@ -1,5 +1,4 @@
 goog.module('os.webgl.launch2DPerformanceDialog');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');

@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.op.NotEqualTo');
-goog.module.declareLegacyNamespace();
 
 const Op = goog.require('os.ui.filter.op.Op');
 const {quoteString} = goog.require('os.ui.filter.string');

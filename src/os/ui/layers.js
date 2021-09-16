@@ -1,5 +1,4 @@
 goog.module('os.ui.LayersUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.LayerTreeUI');
 goog.require('os.ui.UISwitchUI');

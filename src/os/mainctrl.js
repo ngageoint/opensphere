@@ -1,5 +1,4 @@
 goog.module('os.MainCtrl');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.file.mime.any');
 goog.require('os.ui.AddExportOptionsUI');
@@ -54,6 +53,7 @@ const {getControls} = goog.require('os.control');
 const DataManager = goog.require('os.data.DataManager');
 const {registerLegendPlugin} = goog.require('os.data.histo.legend');
 const events = goog.require('os.events');
+const EventType = goog.require('os.events.EventType');
 const EventFactory = goog.require('os.events.EventFactory');
 const LayerConfigEventType = goog.require('os.events.LayerConfigEventType');
 const {createFromFile, getFileUrl, isFileUrlEnabled} = goog.require('os.file');
@@ -81,6 +81,7 @@ const DateMapping = goog.require('os.im.mapping.time.DateMapping');
 const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
 const TimeMapping = goog.require('os.im.mapping.time.TimeMapping');
 const TimeType = goog.require('os.im.mapping.TimeType');
+const {LayerConfigId} = goog.require('os.layer.config');
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const StaticLayerConfig = goog.require('os.layer.config.StaticLayerConfig');
 const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
@@ -284,8 +285,7 @@ class Controller extends AbstractMainCtrl {
     setMapContainer(map);
 
     // configure default layer configs
-    LayerConfigManager.getInstance().registerLayerConfig(StaticLayerConfig.ID,
-        StaticLayerConfig);
+    LayerConfigManager.getInstance().registerLayerConfig(LayerConfigId.STATIC, StaticLayerConfig);
 
     // configure data manager
     const dataManager = DataManager.getInstance();
@@ -355,17 +355,14 @@ class Controller extends AbstractMainCtrl {
     // init filter manager
     var filterManager = FilterManager.getInstance();
     setFilterManager(filterManager);
-    os.filterManager = ui.filterManager = filterManager;
 
     // init area manager
     var areaManager = AreaManager.getInstance();
     setAreaManager(areaManager);
-    os.areaManager = ui.areaManager = areaManager;
 
     // init query manager
     var queryManager = QueryManager.getInstance();
     setQueryManager(queryManager);
-    os.queryManager = ui.queryManager = queryManager;
 
     areaImportMenu.setup();
 
@@ -470,7 +467,7 @@ class Controller extends AbstractMainCtrl {
    * @inheritDoc
    */
   registerListeners() {
-    dispatcher.getInstance().listen(events.EventType.RESET, this.onSettingsReset_, false, this);
+    dispatcher.getInstance().listen(EventType.RESET, this.onSettingsReset_, false, this);
     dispatcher.getInstance().listen(LayerConfigEventType.CONFIGURE_AND_ADD, this.onLayerConfigEvent_, false, this);
     dispatcher.getInstance().listen(UIEventType.TOGGLE_UI, this.onToggleUI_, false, this);
     dispatcher.getInstance().listen(ImportEventType.FILE, this.onImportEvent_, false, this);
@@ -481,7 +478,7 @@ class Controller extends AbstractMainCtrl {
    * @inheritDoc
    */
   removeListeners() {
-    dispatcher.getInstance().unlisten(events.EventType.RESET, this.onSettingsReset_, false, this);
+    dispatcher.getInstance().unlisten(EventType.RESET, this.onSettingsReset_, false, this);
     dispatcher.getInstance().unlisten(LayerConfigEventType.CONFIGURE_AND_ADD, this.onLayerConfigEvent_, false, this);
     dispatcher.getInstance().unlisten(UIEventType.TOGGLE_UI, this.onToggleUI_, false, this);
     dispatcher.getInstance().unlisten(ImportEventType.FILE, this.onImportEvent_, false, this);

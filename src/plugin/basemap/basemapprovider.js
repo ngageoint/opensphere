@@ -1,5 +1,4 @@
 goog.module('plugin.basemap.BaseMapProvider');
-goog.module.declareLegacyNamespace();
 
 const dispose = goog.require('goog.dispose');
 const dispatcher = goog.require('os.Dispatcher');
@@ -13,7 +12,8 @@ const IDataProvider = goog.require('os.data.IDataProvider');
 const osImplements = goog.require('os.implements');
 const osMap = goog.require('os.map');
 const {addTerrainProvider, hasTerrain} = goog.require('os.map.terrain');
-const osProjSwitch = goog.require('os.proj.switch');
+const BinnedLayersEvent = goog.require('os.proj.switch.BinnedLayersEvent');
+const SwitchProjection = goog.require('os.proj.switch.SwitchProjection');
 const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
 const basemap = goog.require('plugin.basemap');
 const BaseMapDescriptor = goog.require('plugin.basemap.BaseMapDescriptor');
@@ -57,8 +57,8 @@ class BaseMapProvider extends DescriptorProvider {
     // this provider should not show up in the server manager
     this.listInServers = false;
 
-    osProjSwitch.SwitchProjection.getInstance().listen(
-        osProjSwitch.BinnedLayersEvent.TYPE, this.onSwitchProjectionBins, false, this);
+    SwitchProjection.getInstance().listen(
+        BinnedLayersEvent.TYPE, this.onSwitchProjectionBins, false, this);
 
     dispatcher.getInstance().listen(MapEvent.TERRAIN_DISABLED, this.onTerrainDisabled, false, this);
     dispatcher.getInstance().listen('basemapAddFailover', this.activateFailSet, false, this);
@@ -214,7 +214,7 @@ class BaseMapProvider extends DescriptorProvider {
    * See if there are any base maps left after the projection switch. If not, add the default set of base maps
    * for the new projection.
    *
-   * @param {osProjSwitch.BinnedLayersEvent} evt
+   * @param {BinnedLayersEvent} evt
    * @protected
    */
   onSwitchProjectionBins(evt) {
@@ -242,7 +242,7 @@ class BaseMapProvider extends DescriptorProvider {
     }
 
     if (!numBaseMaps) {
-      var p = /** @type {osProjSwitch.SwitchProjection} */ (evt.target).getNewProjection();
+      var p = /** @type {SwitchProjection} */ (evt.target).getNewProjection();
 
       if (p) {
         var defaults = this.defaultSets_[p.getCode()];

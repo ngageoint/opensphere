@@ -1,5 +1,4 @@
 goog.module('os.ui.icon.IconPickerUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const {unsafeClone} = goog.require('os.object');

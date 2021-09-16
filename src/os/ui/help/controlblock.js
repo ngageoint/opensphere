@@ -1,5 +1,4 @@
 goog.module('os.ui.help.ControlBlockUI');
-goog.module.declareLegacyNamespace();
 
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyNames = goog.require('goog.events.KeyNames');

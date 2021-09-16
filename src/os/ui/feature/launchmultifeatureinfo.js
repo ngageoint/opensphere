@@ -1,11 +1,11 @@
 goog.module('os.ui.feature.launchMultiFeatureInfo');
-goog.module.declareLegacyNamespace();
 
 const osWindow = goog.require('os.ui.window');
 const {directiveTag: multiFeatureInfoUi} = goog.require('os.ui.feature.MultiFeatureInfoUI');
 
 const Feature = goog.requireType('ol.Feature');
 const RenderFeature = goog.requireType('ol.render.Feature');
+
 
 /**
  * Launches a feature info window for the provided feature(s).

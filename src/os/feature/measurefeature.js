@@ -1,5 +1,4 @@
 goog.module('os.feature.measure');
-goog.module.declareLegacyNamespace();
 
 const LineString = goog.require('ol.geom.LineString');
 const {modifyBearing, getFormattedBearing} = goog.require('os.bearing');

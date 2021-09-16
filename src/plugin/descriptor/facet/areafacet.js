@@ -1,5 +1,4 @@
 goog.module('plugin.descriptor.facet.Area');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 

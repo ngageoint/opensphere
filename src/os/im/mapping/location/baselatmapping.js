@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.location.BaseLatMapping');
-goog.module.declareLegacyNamespace();
 
 const {parseLat} = goog.require('os.geo');
 const AbstractBaseLatOrLonMapping = goog.require('os.im.mapping.location.AbstractBaseLatOrLonMapping');

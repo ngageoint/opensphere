@@ -1,8 +1,8 @@
 goog.module('os.ui.im.action.EditFilterActionCtrl');
-goog.module.declareLegacyNamespace();
 
 const dispatcher = goog.require('os.Dispatcher');
 const DataManager = goog.require('os.data.DataManager');
+const DataEventType = goog.require('os.data.event.DataEventType');
 const {sortByLabel} = goog.require('os.im.action');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const {apply} = goog.require('os.ui');
@@ -89,7 +89,7 @@ class Controller extends EditFiltersCtrl {
     }
 
     $scope.$on('$destroy', this.onDestroy.bind(this));
-    DataManager.getInstance().listen(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
+    DataManager.getInstance().listen(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
   }
 
   /**
@@ -198,7 +198,7 @@ class Controller extends EditFiltersCtrl {
    */
   onDestroy() {
     super.onDestroy();
-    DataManager.getInstance().unlisten(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
+    DataManager.getInstance().unlisten(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
   }
 
   /**

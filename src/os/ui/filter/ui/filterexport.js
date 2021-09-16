@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ui.FilterExportUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.util.ValidationMessageUI');
 

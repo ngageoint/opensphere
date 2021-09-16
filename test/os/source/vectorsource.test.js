@@ -18,7 +18,6 @@ goog.require('os.events.SelectionType');
 goog.require('os.feature.DynamicFeature');
 goog.require('os.feature.DynamicPropertyChange');
 goog.require('os.im.Importer');
-goog.require('os.layer');
 goog.require('os.layer.MockLayer');
 goog.require('os.map.instance');
 goog.require('os.mock');
@@ -52,7 +51,7 @@ describe('os.source.Vector', function() {
   const DynamicFeature = goog.module.get('os.feature.DynamicFeature');
   const DynamicPropertyChange = goog.module.get('os.feature.DynamicPropertyChange');
   const Importer = goog.module.get('os.im.Importer');
-  const osLayer = goog.module.get('os.layer');
+  const MockLayer = goog.module.get('os.layer.MockLayer');
   const {getMapContainer, setMapContainer} = goog.module.get('os.map.instance');
   const VectorSource = goog.module.get('os.source.Vector');
   const StyleField = goog.module.get('os.style.StyleField');
@@ -141,7 +140,7 @@ describe('os.source.Vector', function() {
     originalMapContainer = getMapContainer();
 
     // Create a fake layer object to mock functions used by vector source.
-    var layer = new osLayer.MockLayer();
+    var layer = new MockLayer();
 
     // Create a fake map container to return our fake layer.
     var mapContainer = {

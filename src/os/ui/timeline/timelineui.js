@@ -1,5 +1,4 @@
 goog.module('os.ui.timeline.TimelineUI');
-goog.module.declareLegacyNamespace();
 
 const Timer = goog.require('goog.Timer');
 const googArray = goog.require('goog.array');
@@ -27,8 +26,9 @@ const DragPanEventType = goog.require('os.ui.timeline.DragPanEventType');
 const OffArrows = goog.require('os.ui.timeline.OffArrows');
 const TimelineScaleEvent = goog.require('os.ui.timeline.TimelineScaleEvent');
 
-const hist = goog.requireType('os.hist');
+const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 const HistogramData = goog.requireType('os.hist.HistogramData');
+const ITime = goog.requireType('os.time.ITime');
 const IHistogramChart = goog.requireType('os.ui.hist.IHistogramChart');
 const DragPanEvent = goog.requireType('os.ui.timeline.DragPanEvent');
 const IDragPanItem = goog.requireType('os.ui.timeline.IDragPanItem');
@@ -441,7 +441,7 @@ class Controller {
    * Handle changes to scope.histData.
    *
    * @param {?Array<!HistogramData>=} opt_new
-   * @param {?Array<!hist.HistogramData>=} opt_old
+   * @param {?Array<!HistogramData>=} opt_old
    * @private
    */
   onHistDataChange_(opt_new, opt_old) {
@@ -455,7 +455,7 @@ class Controller {
    * Handle changes to scope.startEnd. This will update the displayed start/end date on the timeline.
    *
    * @param {TimeRange=} opt_new
-   * @param {os.time.TimeRange=} opt_old
+   * @param {TimeRange=} opt_old
    * @private
    */
   onStartEndChange_(opt_new, opt_old) {
@@ -476,7 +476,7 @@ class Controller {
   /**
    * Handles changes to the time offset
    *
-   * @param {events.PropertyChangeEvent} e
+   * @param {PropertyChangeEvent} e
    * @private
    */
   onOffsetChange_(e) {
@@ -1052,7 +1052,7 @@ class Controller {
   /**
    * Handles item change
    *
-   * @param {events.PropertyChangeEvent} e
+   * @param {PropertyChangeEvent} e
    * @private
    */
   onItemChange_(e) {
@@ -1163,7 +1163,7 @@ class Controller {
   /**
    * Set the start time and refresh the timeline to reflect the new value.
    *
-   * @param {os.time.ITime|goog.date.DateLike|string|number} value
+   * @param {ITime|goog.date.DateLike|string|number} value
    */
   setStart(value) {
     this.start_ = TimeInstant.parseTime(value);
@@ -1173,7 +1173,7 @@ class Controller {
   /**
    * Set the end time and refresh the timeline to reflect the new value.
    *
-   * @param {os.time.ITime|goog.date.DateLike|string|number} value
+   * @param {ITime|goog.date.DateLike|string|number} value
    */
   setEnd(value) {
     this.end_ = TimeInstant.parseTime(value);
@@ -1341,7 +1341,7 @@ class Controller {
   }
 
   /**
-   * @param {events.PropertyChangeEvent} e
+   * @param {PropertyChangeEvent} e
    * @private
    */
   onArrowsChange_(e) {

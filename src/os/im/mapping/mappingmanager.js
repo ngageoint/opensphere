@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.MappingManager');
-goog.module.declareLegacyNamespace();
 
 const {bucket} = goog.require('goog.array');
 const {expose} = goog.require('goog.debug');

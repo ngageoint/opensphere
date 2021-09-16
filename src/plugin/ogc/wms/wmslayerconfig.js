@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.wms.WMSLayerConfig');
-goog.module.declareLegacyNamespace();
 
 const AnimatedTile = goog.require('os.layer.AnimatedTile');
 const AbstractTileLayerConfig = goog.require('os.layer.config.AbstractTileLayerConfig');

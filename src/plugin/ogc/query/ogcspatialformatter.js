@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.query.OGCSpatialFormatter');
-goog.module.declareLegacyNamespace();
 
 const interpolate = goog.require('os.interpolate');
 const OSOGCSpatialFormatter = goog.require('os.ogc.filter.OGCSpatialFormatter');

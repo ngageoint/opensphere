@@ -1,7 +1,7 @@
 goog.module('os.filter.impl.ecql.ExclusionFormatter');
-goog.module.declareLegacyNamespace();
 
 const AreaFormatter = goog.require('os.filter.impl.ecql.AreaFormatter');
+
 
 /**
  */

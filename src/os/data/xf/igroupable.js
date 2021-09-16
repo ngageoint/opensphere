@@ -1,5 +1,4 @@
 goog.module('os.data.xf.IGroupable');
-goog.module.declareLegacyNamespace();
 
 const Listenable = goog.requireType('goog.events.Listenable');
 

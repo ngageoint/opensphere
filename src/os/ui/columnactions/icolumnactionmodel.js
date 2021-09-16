@@ -1,5 +1,4 @@
 goog.module('os.ui.columnactions.IColumnActionModel');
-goog.module.declareLegacyNamespace();
 
 /**
  * The interface that should be implemented by all column types that want to use a column action.

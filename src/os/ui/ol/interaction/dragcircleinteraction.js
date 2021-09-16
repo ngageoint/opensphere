@@ -1,5 +1,4 @@
 goog.module('os.ui.ol.interaction.DragCircle');
-goog.module.declareLegacyNamespace();
 
 const {toLonLat} = goog.require('ol.proj');
 const RecordField = goog.require('os.data.RecordField');

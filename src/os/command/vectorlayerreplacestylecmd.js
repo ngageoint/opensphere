@@ -1,5 +1,4 @@
 goog.module('os.command.VectorLayerReplaceStyle');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');

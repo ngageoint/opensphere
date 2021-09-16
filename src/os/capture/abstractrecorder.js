@@ -1,5 +1,4 @@
 goog.module('os.capture.AbstractRecorder');
-goog.module.declareLegacyNamespace();
 
 const dispose = goog.require('goog.dispose');
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');

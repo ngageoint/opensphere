@@ -1,5 +1,4 @@
 goog.module('os.ui.LayersWindowUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.AreasUI');
 goog.require('os.ui.FiltersUI');

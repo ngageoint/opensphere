@@ -1,9 +1,9 @@
 goog.module('os.histo');
-goog.module.declareLegacyNamespace();
 
 const BinMethod = goog.require('os.histo.BinMethod');
 
 const IBinMethod = goog.requireType('os.histo.IBinMethod');
+
 
 /**
  * Clones a bin method.

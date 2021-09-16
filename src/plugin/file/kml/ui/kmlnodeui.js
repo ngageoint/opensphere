@@ -1,10 +1,9 @@
 goog.module('plugin.file.kml.ui.KMLNodeUI');
-goog.module.declareLegacyNamespace();
 
 const annotation = goog.require('os.annotation');
 
 const CommandProcessor = goog.require('os.command.CommandProcessor');
-const events = goog.require('os.events');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const osObject = goog.require('os.object');
 const Module = goog.require('os.ui.Module');
 const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
@@ -248,8 +247,8 @@ class Controller extends AbstractNodeUICtrl {
         var options = /** @type {osx.annotation.Options|undefined} */ (feature.get(annotation.OPTIONS_FIELD));
         if (options) {
           options.show = false;
-          node.dispatchEvent(new events.PropertyChangeEvent('icons'));
-          node.dispatchEvent(new events.PropertyChangeEvent(annotation.EventType.CHANGE));
+          node.dispatchEvent(new PropertyChangeEvent('icons'));
+          node.dispatchEvent(new PropertyChangeEvent(annotation.EventType.CHANGE));
         }
       }
     }
@@ -274,8 +273,8 @@ class Controller extends AbstractNodeUICtrl {
         options.show = true;
 
         node.loadAnnotation();
-        node.dispatchEvent(new events.PropertyChangeEvent('icons'));
-        node.dispatchEvent(new events.PropertyChangeEvent(annotation.EventType.CHANGE));
+        node.dispatchEvent(new PropertyChangeEvent('icons'));
+        node.dispatchEvent(new PropertyChangeEvent(annotation.EventType.CHANGE));
       }
     }
   }

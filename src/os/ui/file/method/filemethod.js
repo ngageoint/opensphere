@@ -1,5 +1,4 @@
 goog.module('os.ui.file.method.FileMethod');
-goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const EventType = goog.require('os.events.EventType');

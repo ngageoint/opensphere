@@ -1,10 +1,10 @@
 goog.module('os.data.event.DataEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 
 const IFilter = goog.requireType('os.filter.IFilter');
 const ISource = goog.requireType('os.source.ISource');
+
 
 /**
  * @template T

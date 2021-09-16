@@ -1,5 +1,4 @@
 goog.module('plugin.capture.MapOverviewRenderer');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const has = goog.require('ol.has');

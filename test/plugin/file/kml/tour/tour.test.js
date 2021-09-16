@@ -1,11 +1,11 @@
-goog.require('plugin.file.kml');
 goog.require('plugin.file.kml.tour.MockTourPrimitive');
 goog.require('plugin.file.kml.tour.Tour');
 
 
 describe('plugin.file.kml.tour.Tour', function() {
-  const kml = goog.module.get('plugin.file.kml');
   const Tour = goog.module.get('plugin.file.kml.tour.Tour');
+  const MockTourPrimitive = goog.module.get('plugin.file.kml.tour.MockTourPrimitive');
+
   // test globals
   var testName = 'Test Name';
   var testDescription = 'Test Description';
@@ -14,9 +14,9 @@ describe('plugin.file.kml.tour.Tour', function() {
   var tour;
 
   // primitives that will be added to the playlist
-  var first = new kml.tour.MockTourPrimitive(true);
-  var second = new kml.tour.MockTourPrimitive(false);
-  var third = new kml.tour.MockTourPrimitive(true);
+  var first = new MockTourPrimitive(true);
+  var second = new MockTourPrimitive(false);
+  var third = new MockTourPrimitive(true);
 
   // the test tour playlist
   var playlist = [first, second, third];
@@ -47,15 +47,15 @@ describe('plugin.file.kml.tour.Tour', function() {
   it('adds to the playlist', function() {
     spyOn(tour, 'reset');
 
-    var fourth = new kml.tour.MockTourPrimitive();
+    var fourth = new MockTourPrimitive();
     tour.addToPlaylist(fourth);
     expect(tour.reset.callCount).toBe(1);
 
-    var fifth = new kml.tour.MockTourPrimitive();
+    var fifth = new MockTourPrimitive();
     tour.addToPlaylist(fifth);
     expect(tour.reset.callCount).toBe(2);
 
-    var sixth = new kml.tour.MockTourPrimitive();
+    var sixth = new MockTourPrimitive();
     tour.addToPlaylist(sixth);
     expect(tour.reset.callCount).toBe(3);
 

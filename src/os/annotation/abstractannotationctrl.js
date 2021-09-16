@@ -1,5 +1,4 @@
 goog.module('os.annotation.AbstractAnnotationCtrl');
-goog.module.declareLegacyNamespace();
 
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const dispose = goog.require('goog.dispose');

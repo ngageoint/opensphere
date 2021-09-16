@@ -1,5 +1,4 @@
 goog.module('os.layer.Tile');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin.TileImage');
 goog.require('os.mixin.UrlTileSource');

@@ -1,5 +1,4 @@
 goog.module('os.source.ImportQueue');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const nextTick = goog.require('goog.async.nextTick');

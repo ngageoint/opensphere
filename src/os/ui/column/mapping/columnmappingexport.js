@@ -1,5 +1,4 @@
 goog.module('os.ui.column.mapping.ColumnMappingExportUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const ColumnMappingTag = goog.require('os.column.ColumnMappingTag');

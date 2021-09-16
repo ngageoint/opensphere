@@ -1,5 +1,4 @@
 goog.module('os.ui.ogc.OGCServer');
-goog.module.declareLegacyNamespace();
 
 const Uri = goog.require('goog.Uri');
 const QueryData = goog.require('goog.Uri.QueryData');

@@ -1,9 +1,9 @@
 goog.module('os.ui.tab.FeatureTab');
-goog.module.declareLegacyNamespace();
 
 const Tab = goog.require('os.ui.tab.Tab');
 
 const Feature = goog.requireType('ol.Feature');
+
 
 /**
  * Model class representing a pluggable feature tab.

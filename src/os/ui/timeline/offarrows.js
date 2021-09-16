@@ -1,5 +1,4 @@
 goog.module('os.ui.timeline.OffArrows');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const GoogEventType = goog.require('goog.events.EventType');

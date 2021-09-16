@@ -1,5 +1,4 @@
 goog.module('os.ui.file.csv');
-goog.module.declareLegacyNamespace();
 
 
 /**

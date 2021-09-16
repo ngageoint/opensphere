@@ -1,5 +1,4 @@
 goog.module('os.ui.node.LayerTypeUI');
-goog.module.declareLegacyNamespace();
 
 const Settings = goog.require('os.config.Settings');
 const Module = goog.require('os.ui.Module');

@@ -1,5 +1,4 @@
 goog.module('os.webgl.IWebGLCamera');
-goog.module.declareLegacyNamespace();
 
 const IPersistable = goog.requireType('os.IPersistable');
 

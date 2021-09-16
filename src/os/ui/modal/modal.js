@@ -1,5 +1,4 @@
 goog.module('os.ui.modal');
-goog.module.declareLegacyNamespace();
 
 const ui = goog.require('os.ui');
 

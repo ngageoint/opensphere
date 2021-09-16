@@ -1,5 +1,4 @@
 goog.module('plugin.file.gpx.ui.GPXImportUI');
-goog.module.declareLegacyNamespace();
 
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const FileImportUI = goog.require('os.ui.im.FileImportUI');

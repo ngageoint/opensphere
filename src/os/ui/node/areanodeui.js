@@ -1,5 +1,4 @@
 goog.module('os.ui.node.AreaNodeUI');
-goog.module.declareLegacyNamespace();
 
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const BaseAreaManager = goog.require('os.query.BaseAreaManager');

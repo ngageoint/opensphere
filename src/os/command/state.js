@@ -1,5 +1,4 @@
 goog.module('os.command.State');
-goog.module.declareLegacyNamespace();
 
 /**
  * The states of commands

@@ -1,5 +1,4 @@
 goog.module('os.data.IDataProvider');
-goog.module.declareLegacyNamespace();
 
 const ITreeNode = goog.requireType('os.structs.ITreeNode');
 

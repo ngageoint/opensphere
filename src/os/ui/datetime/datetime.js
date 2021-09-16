@@ -1,5 +1,4 @@
 goog.module('os.ui.datetime.DateTimeUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.datetime.WheelDateUI');
 

@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ui.CopyFilterPickerUI');
-goog.module.declareLegacyNamespace();
 
 const {getRandomString} = goog.require('goog.string');
 const {ROOT} = goog.require('os');

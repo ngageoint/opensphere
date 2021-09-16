@@ -1,5 +1,4 @@
 goog.module('os.ui.im.action.FilterActionImporter');
-goog.module.declareLegacyNamespace();
 
 const OSFilterImporter = goog.require('os.filter.im.OSFilterImporter');
 const {getColumnsFromFilterable} = goog.require('os.im.action');

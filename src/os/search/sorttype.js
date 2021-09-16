@@ -1,5 +1,4 @@
 goog.module('os.search.SortType');
-goog.module.declareLegacyNamespace();
 
 
 /**

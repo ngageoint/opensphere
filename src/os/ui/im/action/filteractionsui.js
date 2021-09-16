@@ -1,11 +1,13 @@
 goog.module('os.ui.im.action.FilterActionsCtrl');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const dispatcher = goog.require('os.Dispatcher');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const {Metrics: ActionMetrics} = goog.require('os.im.action');
 const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const filter = goog.require('os.im.action.filter');
+const Metrics = goog.require('os.metrics.Metrics');
 const TagGroupBy = goog.require('os.ui.data.groupby.TagGroupBy');
 const ImportEvent = goog.require('os.ui.im.ImportEvent');
 const ImportEventType = goog.require('os.ui.im.ImportEventType');
@@ -183,7 +185,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
 
     if (entry) {
       var cmd = filter.copyEntryCmd(entry, parentIndex == -1 ? undefined : parentIndex + 1);
-      os.command.CommandProcessor.getInstance().addCommand(cmd);
+      CommandProcessor.getInstance().addCommand(cmd);
     }
   }
 
@@ -223,7 +225,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
 
     if (entry) {
       var cmd = filter.removeEntryCmd(entry);
-      os.command.CommandProcessor.getInstance().addCommand(cmd);
+      CommandProcessor.getInstance().addCommand(cmd);
     }
   }
 
@@ -243,7 +245,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
    * @export
    */
   launchExport() {
-    os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.EXPORT, 1);
+    Metrics.getInstance().updateMetric(ActionMetrics.EXPORT, 1);
 
     // pull the entry nodes out of the tree
     var entryNodes = [];
@@ -263,7 +265,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
    * @export
    */
   launchImport() {
-    os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.IMPORT, 1);
+    Metrics.getInstance().updateMetric(ActionMetrics.IMPORT, 1);
 
     var event = new ImportEvent(ImportEventType.FILE, undefined, undefined, {
       'layerId': this.entryType

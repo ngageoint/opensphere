@@ -1,5 +1,4 @@
 goog.module('os.metrics.LayersMetrics');
-goog.module.declareLegacyNamespace();
 
 const {Layer} = goog.require('os.metrics.keys');
 const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');

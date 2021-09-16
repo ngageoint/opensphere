@@ -1,5 +1,4 @@
 goog.module('os.ui.route.RouteManager');
-goog.module.declareLegacyNamespace();
 
 const Uri = goog.require('goog.Uri');
 const {isEmpty} = goog.require('goog.object');

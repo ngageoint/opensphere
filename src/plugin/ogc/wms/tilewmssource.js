@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.wms.TileWMSSource');
-goog.module.declareLegacyNamespace();
 
 const TileWMS = goog.require('ol.source.TileWMS');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');

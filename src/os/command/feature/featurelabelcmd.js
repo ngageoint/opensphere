@@ -1,5 +1,4 @@
 goog.module('os.command.FeatureLabel');
-goog.module.declareLegacyNamespace();
 
 const olArray = goog.require('ol.array');
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');

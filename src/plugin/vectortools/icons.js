@@ -1,5 +1,4 @@
 goog.module('plugin.vectortools.Icons');
-goog.module.declareLegacyNamespace();
 
 
 /**

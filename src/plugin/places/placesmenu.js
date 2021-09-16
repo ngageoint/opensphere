@@ -1,5 +1,4 @@
 goog.module('plugin.places.menu');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const Point = goog.require('ol.geom.Point');

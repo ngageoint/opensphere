@@ -1,5 +1,4 @@
 goog.module('os.data.histo.ColorModel');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
@@ -16,7 +15,11 @@ const histo = goog.require('os.histo');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const osStyle = goog.require('os.style');
 
+const Feature = goog.requireType('ol.Feature');
 const IPersistable = goog.requireType('os.IPersistable');
+const ColorBin = goog.requireType('os.data.histo.ColorBin');
+const SourceHistogram = goog.requireType('os.data.histo.SourceHistogram');
+const IBinMethod = goog.requireType('os.histo.IBinMethod');
 
 
 /**
@@ -46,7 +49,7 @@ class ColorModel extends EventTarget {
 
     /**
      * The histogram driving the color model.
-     * @type {osDataHisto.SourceHistogram}
+     * @type {SourceHistogram}
      * @private
      */
     this.histogram_ = null;
@@ -74,7 +77,7 @@ class ColorModel extends EventTarget {
 
     /**
      * Features that have been colored by the model.
-     * @type {!Object<string, ol.Feature>}
+     * @type {!Object<string, Feature>}
      * @private
      */
     this.coloredFeatures_ = {};
@@ -102,7 +105,7 @@ class ColorModel extends EventTarget {
   /**
    * Get the histogram driving the color model.
    *
-   * @return {osDataHisto.SourceHistogram}
+   * @return {SourceHistogram}
    */
   getHistogram() {
     return this.histogram_;
@@ -111,7 +114,7 @@ class ColorModel extends EventTarget {
   /**
    * Get the histogram driving the color model.
    *
-   * @param {osDataHisto.SourceHistogram} histogram
+   * @param {SourceHistogram} histogram
    */
   setHistogram(histogram) {
     if (this.histogram_) {
@@ -145,7 +148,7 @@ class ColorModel extends EventTarget {
   /**
    * Get the results
    *
-   * @return {!Array<!osDataHisto.ColorBin>}
+   * @return {!Array<!ColorBin>}
    * @protected
    */
   getResults() {
@@ -218,7 +221,7 @@ class ColorModel extends EventTarget {
   /**
    * Get the histogram bin method.
    *
-   * @return {histo.IBinMethod<ol.Feature>}
+   * @return {IBinMethod<Feature>}
    */
   getBinMethod() {
     return this.histogram_ ? this.histogram_.getBinMethod() : null;
@@ -251,7 +254,7 @@ class ColorModel extends EventTarget {
    * with it and those bins are tracked by the manualBinColors_ map.
    *
    * @param {ColorMethod} value
-   * @param {Array<!osDataHisto.ColorBin>=} opt_bins The bins to color, for manual color
+   * @param {Array<!ColorBin>=} opt_bins The bins to color, for manual color
    * @param {string=} opt_color The manual color
    *
    * @export Prevent the compiler from moving the function off the prototype.
@@ -417,7 +420,7 @@ class ColorModel extends EventTarget {
   /**
    * Reset the color for features that were previously colored, but are no longer.
    *
-   * @param {!Object<string, ol.Feature>} oldColors Map of previously colored features
+   * @param {!Object<string, Feature>} oldColors Map of previously colored features
    * @private
    */
   cleanupOldColors_(oldColors) {
@@ -434,7 +437,7 @@ class ColorModel extends EventTarget {
   /**
    * Sets the color on a set of features.
    *
-   * @param {Array<ol.Feature>} features The features to update
+   * @param {Array<Feature>} features The features to update
    * @param {string=} opt_color The new feature color
    * @private
    *
@@ -467,7 +470,7 @@ class ColorModel extends EventTarget {
   /**
    * Sets the color on a set of features.
    *
-   * @param {Array<ol.Feature>} features The features to update
+   * @param {Array<Feature>} features The features to update
    * @param {string=} opt_color The new feature color
    *
    */

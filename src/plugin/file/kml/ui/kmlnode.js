@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.ui.KMLNode');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.node.DefaultLayerNodeUI');
 

@@ -1,5 +1,4 @@
 goog.module('os.command.CommandProcessor');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');

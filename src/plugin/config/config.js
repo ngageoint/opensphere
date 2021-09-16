@@ -1,5 +1,4 @@
 goog.module('plugin.config');
-goog.module.declareLegacyNamespace();
 
 /**
  * @type {string}

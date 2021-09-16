@@ -1,5 +1,4 @@
 goog.module('os.interaction.MouseZoom');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const BrowserEvent = goog.require('goog.events.BrowserEvent');

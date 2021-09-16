@@ -1,5 +1,4 @@
 goog.module('plugin.capture.MapOverlayRenderer');
-goog.module.declareLegacyNamespace();
 
 const HtmlRenderer = goog.require('os.ui.capture.HtmlRenderer');
 

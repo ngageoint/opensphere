@@ -1,5 +1,4 @@
 goog.module('os.ui.MeasureButtonUI');
-goog.module.declareLegacyNamespace();
 
 const dispatcher = goog.require('os.Dispatcher');
 const Settings = goog.require('os.config.Settings');

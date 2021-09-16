@@ -1,5 +1,4 @@
 goog.module('os.state.JSONStateManager');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const {getAppName, getAppVersion} = goog.require('os.config');

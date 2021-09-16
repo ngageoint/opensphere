@@ -1,5 +1,4 @@
 goog.module('os.ui.geo.PositionUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.geo.GeoUI');
 goog.require('os.ui.popover.PopoverUI');

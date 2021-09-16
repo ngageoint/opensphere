@@ -1,5 +1,4 @@
 goog.module('os.ogc.wps.WPSParams');
-goog.module.declareLegacyNamespace();
 
 /**
  * WPS parameter names

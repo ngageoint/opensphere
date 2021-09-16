@@ -1,5 +1,4 @@
 goog.module('plugin.places.ui.SavePlacesUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.im.BasicInfoUI');
 
@@ -13,6 +12,8 @@ const ExportOptionsEvent = goog.require('os.ui.ex.ExportOptionsEvent');
 const column = goog.require('os.ui.slick.column');
 const osWindow = goog.require('os.ui.window');
 const places = goog.require('plugin.places');
+
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 
 
 /**
@@ -75,7 +76,7 @@ class Controller extends ExportOptionsCtrl {
     };
 
     /**
-     * @type {!Array<!os.data.ColumnDefinition>}
+     * @type {!Array<!ColumnDefinition>}
      */
     this['columns'] = [];
 

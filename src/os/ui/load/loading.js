@@ -1,5 +1,4 @@
 goog.module('os.ui.load.LoadingUI');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const LoadingManager = goog.require('os.load.LoadingManager');

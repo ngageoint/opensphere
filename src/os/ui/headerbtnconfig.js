@@ -1,5 +1,4 @@
 goog.module('os.ui.window.HeaderBtnConfig');
-goog.module.declareLegacyNamespace();
 
 /**
  * @typedef {{

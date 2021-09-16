@@ -1,5 +1,4 @@
 goog.module('os.ui.file.kml.AbstractKMLExporter');
-goog.module.declareLegacyNamespace();
 
 const {getFirstElementChild, insertSiblingBefore} = goog.require('goog.dom');
 const {createDocument, serialize} = goog.require('goog.dom.xml');

@@ -1,5 +1,4 @@
 goog.module('os.ui.TriStateCheckboxUI');
-goog.module.declareLegacyNamespace();
 
 const TriState = goog.require('os.structs.TriState');
 const {apply} = goog.require('os.ui');

@@ -1,5 +1,4 @@
 goog.module('os.ui.ProviderImportUI');
-goog.module.declareLegacyNamespace();
 
 const DataManager = goog.require('os.data.DataManager');
 const FileParserConfig = goog.require('os.parse.FileParserConfig');

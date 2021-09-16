@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.string');
-goog.module.declareLegacyNamespace();
 
 const {regExpEscape} = goog.require('goog.string');
 

@@ -3,9 +3,9 @@
  * those are replaced with `goog.require('os.alert.AlertManager')` and use `getInstance()`.
  */
 goog.module('os.alertManager');
-goog.module.declareLegacyNamespace();
 
 const AlertManager = goog.require('os.alert.AlertManager');
+
 
 /**
  * Global alert manager instance.

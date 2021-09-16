@@ -1,8 +1,8 @@
 goog.module('os.proj.switch.CommandListEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const GoogEventType = goog.require('goog.events.EventType');
+
 
 /**
  */

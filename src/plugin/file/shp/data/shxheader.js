@@ -1,5 +1,4 @@
 goog.module('plugin.file.shp.data.SHXHeader');
-goog.module.declareLegacyNamespace();
 
 
 /**

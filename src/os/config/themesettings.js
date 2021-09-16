@@ -1,5 +1,4 @@
 goog.module('os.config.ThemeSettings');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const {filter} = goog.require('goog.array');

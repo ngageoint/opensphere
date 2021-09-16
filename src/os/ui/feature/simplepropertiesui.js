@@ -1,5 +1,4 @@
 goog.module('os.ui.feature.SimplePropertiesUI');
-goog.module.declareLegacyNamespace();
 
 const OsFeature = goog.require('os.feature');
 const OsModule = goog.require('os.ui.Module');

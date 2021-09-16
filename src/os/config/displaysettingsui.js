@@ -1,5 +1,4 @@
 goog.module('os.config.DisplaySettingsUI');
-goog.module.declareLegacyNamespace();
 
 const {clamp} = goog.require('goog.math');
 const {ROOT} = goog.require('os');

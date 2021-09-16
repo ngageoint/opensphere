@@ -1,5 +1,4 @@
 goog.module('os.ui.feature.FeatureInfoUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.UISwitchUI');
 goog.require('os.ui.feature.SimplePropertiesUI');

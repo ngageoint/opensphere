@@ -1,5 +1,4 @@
 goog.module('os.ui.state.menu');
-goog.module.declareLegacyNamespace();
 
 const {removeAllIf} = goog.require('goog.array');
 const Throttle = goog.require('goog.async.Throttle');

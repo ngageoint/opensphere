@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.op.LikeList');
-goog.module.declareLegacyNamespace();
 
 const InList = goog.require('os.ui.filter.op.InList');
 const Op = goog.require('os.ui.filter.op.Op');

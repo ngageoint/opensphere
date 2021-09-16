@@ -1,5 +1,4 @@
 goog.module('os.ui.search.SearchResultsUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.search.ResultCardUI');
 goog.require('os.ui.util.AutoHeightUI');

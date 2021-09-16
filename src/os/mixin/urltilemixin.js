@@ -1,5 +1,4 @@
 goog.module('os.mixin.UrlTileSource');
-goog.module.declareLegacyNamespace();
 
 const Timer = goog.require('goog.Timer');
 const Uri = goog.require('goog.Uri');

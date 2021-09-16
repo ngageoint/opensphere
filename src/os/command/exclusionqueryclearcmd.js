@@ -1,5 +1,4 @@
 goog.module('os.command.ExclusionQueryClear');
-goog.module.declareLegacyNamespace();
 
 const QueryClear = goog.require('os.command.QueryClear');
 

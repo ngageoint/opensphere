@@ -1,5 +1,4 @@
 goog.module('plugin.areadata.AreaDataPlugin');
-goog.module.declareLegacyNamespace();
 
 
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
@@ -11,6 +10,7 @@ const OSSettings = goog.require('os.config.Settings');
 
 const {Options: OGCListUIOptions} = goog.requireType('os.ui.ogc.OGCListUI');
 const MenuItemOptions = goog.requireType('os.ui.menu.MenuItemOptions');
+
 
 const Settings = OSSettings.getInstance();
 

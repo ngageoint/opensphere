@@ -1,5 +1,4 @@
 goog.module('os.webgl');
-goog.module.declareLegacyNamespace();
 
 const userAgent = goog.require('goog.userAgent');
 const webgl = goog.require('ol.webgl');

@@ -1,5 +1,4 @@
 goog.module('os.ui.ol.interaction');
-goog.module.declareLegacyNamespace();
 
 const userAgent = goog.require('goog.userAgent');
 const EventType = goog.require('ol.events.EventType');

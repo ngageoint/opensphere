@@ -1,5 +1,4 @@
 goog.module('os.command.VectorLayerBearing');
-goog.module.declareLegacyNamespace();
 
 const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
 const {Layer: LayerKeys} = goog.require('os.metrics.keys');

@@ -1,5 +1,4 @@
 goog.module('os.layer.MockLayer');
-goog.module.declareLegacyNamespace();
 
 const {getRandomString} = goog.require('goog.string');
 const osImplements = goog.require('os.implements');

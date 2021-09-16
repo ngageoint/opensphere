@@ -1,5 +1,4 @@
 goog.module('os.search.SearchEventType');
-goog.module.declareLegacyNamespace();
 
 
 /**

@@ -1,9 +1,9 @@
 goog.module('os.layer.config.StaticLayerConfig');
-goog.module.declareLegacyNamespace();
 
 const {clone} = goog.require('goog.array');
 const {getLogger} = goog.require('goog.log');
 const VectorLayer = goog.require('os.layer.Vector');
+const {LayerConfigId} = goog.require('os.layer.config');
 const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
 const VectorSource = goog.require('os.source.Vector');
 
@@ -117,8 +117,9 @@ class StaticLayerConfig extends AbstractLayerConfig {
  * Id for this layer config
  * @type {string}
  * @const
+ * @deprecated Please use os.layer.config.LayerConfigId.STATIC instead.
  */
-StaticLayerConfig.ID = 'static';
+StaticLayerConfig.ID = LayerConfigId.STATIC;
 
 /**
  * Logger

@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.KMLProvider');
-goog.module.declareLegacyNamespace();
 
 const FileProvider = goog.require('os.data.FileProvider');
 

@@ -1,43 +1,14 @@
-goog.provide('os.xt.MockHandler');
-
-goog.require('ol.array');
+goog.require('os.xt.MockHandler');
 goog.require('os.xt.Peer');
 goog.require('os.xt.PeerInfo');
 goog.require('os.xt.events');
 
 
-/**
- * @constructor
- */
-os.xt.MockHandler = function() {
-};
-
-
-/**
- * @type {number}
- */
-os.xt.MockHandler.value = 0;
-
-
-/**
- * @return {Array.<!string>}
- */
-os.xt.MockHandler.prototype.getTypes = function() {
-  return ['test'];
-};
-
-
-/**
- * @param {*} data
- */
-os.xt.MockHandler.prototype.process = function(data) {
-  os.xt.MockHandler.value += data;
-};
-
-
 describe('Peer', function() {
+  const {MockHandler} = goog.module.get('os.xt.MockHandler');
   const Peer = goog.module.get('os.xt.Peer');
   const PeerInfo = goog.module.get('os.xt.PeerInfo');
+  const {DISPATCHER, EventType} = goog.module.get('os.xt.events');
 
   // mock storage
   var storage = function() {
@@ -194,7 +165,7 @@ describe('Peer', function() {
     enforceStrictStorageAPIForIE9Compatibility(window.localStorage);
     storage.clear();
     Peer.PING_INTERVAL = 500;
-    os.xt.MockHandler.value = 0;
+    MockHandler.value = 0;
   });
 
   // for the purposes of this test, let's ping faster
@@ -341,14 +312,14 @@ describe('Peer', function() {
     b.setTitle('bob');
 
     expect(a.getPeers().length).toBe(0);
-    expect(ol.array.find(a.getPeerInfo(), function(maybeB) {
+    expect(a.getPeerInfo().find(function(maybeB) {
       return maybeB.id === b.getId();
-    })).toBeNull();
+    })).toBeUndefined();
 
     b.init();
 
     expect(a.getPeers()).toContain(b.getId());
-    expect(ol.array.find(a.getPeerInfo(), function(maybeB) {
+    expect(a.getPeerInfo().find(function(maybeB) {
       return maybeB.id === b.getId();
     })).toBeTruthy();
 
@@ -391,10 +362,10 @@ describe('Peer', function() {
     var a = new Peer(storage);
     a.setId('a');
     a.setTitle('a');
-    var skipHandler = new os.xt.MockHandler();
+    var skipHandler = new MockHandler();
     spyOn(skipHandler, 'process');
     a.addHandler(skipHandler);
-    var targetHandler = new os.xt.MockHandler();
+    var targetHandler = new MockHandler();
     spyOn(targetHandler, 'getTypes').andReturn(['passTest']);
     spyOn(targetHandler, 'process');
     a.addHandler(targetHandler);
@@ -455,8 +426,8 @@ describe('Peer', function() {
 
     runs(function() {
       var master = a.isMaster() ? a : b;
-      os.xt.events.DISPATCHER.listenOnce(
-          os.xt.events.EventType.forGroup(os.xt.events.EventType.MASTER_APPOINTED, 'default'),
+      DISPATCHER.listenOnce(
+          EventType.forGroup(EventType.MASTER_APPOINTED, 'default'),
           function() {
             notified = true;
           });
@@ -548,7 +519,7 @@ describe('Peer', function() {
     var a = new Peer(storage);
     a.setId('a');
     a.setTitle('alice');
-    a.addHandler(new os.xt.MockHandler());
+    a.addHandler(new MockHandler());
     a.init();
 
     var b = new Peer(storage);
@@ -575,12 +546,12 @@ describe('Peer', function() {
     a.onStorage_(e);
 
     // verify that the message was handled
-    expect(os.xt.MockHandler.value).toBe(2);
+    expect(MockHandler.value).toBe(2);
     // verify that the message was cleaned up
     expect(storage.getItem(e.key)).toBeFalsy();
 
     // clean up
-    os.xt.MockHandler.value = 0;
+    MockHandler.value = 0;
     a.cleanup_();
     b.cleanup_();
   });
@@ -621,7 +592,7 @@ describe('Peer', function() {
     var a = new Peer(storage);
     a.setId('a');
     a.setTitle('alice');
-    a.addHandler(new os.xt.MockHandler());
+    a.addHandler(new MockHandler());
     a.init();
 
     var b = new Peer(storage);
@@ -649,7 +620,7 @@ describe('Peer', function() {
     a.onStorage_(e);
 
     // verify that the message was handled
-    expect(os.xt.MockHandler.value).toBe(2);
+    expect(MockHandler.value).toBe(2);
 
     a.cleanup_();
     b.cleanup_();
@@ -665,11 +636,11 @@ describe('Peer', function() {
     var a = new Peer(storage);
     a.setId('a');
     a.setTitle('alice');
-    a.addHandler(new os.xt.MockHandler());
+    a.addHandler(new MockHandler());
     a.init();
 
     // verify that the message was handled
-    expect(os.xt.MockHandler.value).toBe(2);
+    expect(MockHandler.value).toBe(2);
 
     a.cleanup_();
     b.cleanup_();
@@ -686,10 +657,9 @@ describe('Peer', function() {
     b.setTitle('Peer B');
 
     var bIsReady = jasmine.createSpy('bIsReady');
-    var deferred = null;
 
     runs(function() {
-      deferred = a.waitForPeer('b', null, Peer.PING_INTERVAL).addCallback(bIsReady);
+      a.waitForPeer('b', null, Peer.PING_INTERVAL).addCallback(bIsReady);
       b.init();
     });
 
@@ -983,15 +953,15 @@ describe('Peer', function() {
     var a = new Peer(storage);
     a.setId('a');
     a.setTitle('alice');
-    a.addHandler(new os.xt.MockHandler());
+    a.addHandler(new MockHandler());
     a.init();
 
     var fatString = 'asdfg'.repeat(1e7);
-    var sendBinding = a.send.bind(undefined, 'test', fatString);
+    a.send.bind(undefined, 'test', fatString);
     expect(a.send).not.toThrow();
 
     // clean up
-    os.xt.MockHandler.value = 0;
+    MockHandler.value = 0;
     a.cleanup_();
   });
 });

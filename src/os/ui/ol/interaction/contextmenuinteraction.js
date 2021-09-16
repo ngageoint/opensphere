@@ -1,5 +1,4 @@
 goog.module('os.ui.ol.interaction.ContextMenu');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ol.mixin.render');
 

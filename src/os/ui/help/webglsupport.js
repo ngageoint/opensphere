@@ -1,5 +1,4 @@
 goog.module('os.ui.help.WebGLSupportUI');
-goog.module.declareLegacyNamespace();
 
 const userAgent = goog.require('goog.userAgent');
 const {ROOT} = goog.require('os');

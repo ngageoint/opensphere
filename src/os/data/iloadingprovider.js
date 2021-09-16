@@ -1,5 +1,4 @@
 goog.module('os.data.ILoadingProvider');
-goog.module.declareLegacyNamespace();
 
 const IDataProvider = goog.requireType('os.data.IDataProvider');
 

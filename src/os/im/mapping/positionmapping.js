@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.PositionMapping');
-goog.module.declareLegacyNamespace();
 
 const Fields = goog.require('os.Fields');
 const {PREFER_LAT_FIRST, PREFER_LON_FIRST} = goog.require('os.geo');

@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.UnclickableTypes');
-goog.module.declareLegacyNamespace();
 
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 

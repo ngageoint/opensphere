@@ -1,10 +1,10 @@
 goog.module('os.feature.DynamicFeature');
-goog.module.declareLegacyNamespace();
 
 const Feature = goog.require('ol.Feature');
 const registerClass = goog.require('os.registerClass');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
+
 
 /**
  * A dynamic feature that changes with time.

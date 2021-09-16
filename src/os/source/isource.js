@@ -1,5 +1,4 @@
 goog.module('os.source.ISource');
-goog.module.declareLegacyNamespace();
 
 const Feature = goog.requireType('ol.Feature');
 const IPersistable = goog.requireType('os.IPersistable');

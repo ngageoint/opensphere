@@ -1,5 +1,4 @@
 goog.module('osmain');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin');
 goog.require('os.ui.AddDataUI');

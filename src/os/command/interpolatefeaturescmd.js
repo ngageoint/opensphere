@@ -1,5 +1,4 @@
 goog.module('os.command.InterpolateFeatures');
-goog.module.declareLegacyNamespace();
 
 const OLVectorLayer = goog.require('ol.layer.Vector');
 const State = goog.require('os.command.State');

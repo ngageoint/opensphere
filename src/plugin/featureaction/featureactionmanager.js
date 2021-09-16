@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.Manager');
-goog.module.declareLegacyNamespace();
 
 const Timer = goog.require('goog.Timer');
 const dispose = goog.require('goog.dispose');

@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.RuleMapping');
-goog.module.declareLegacyNamespace();
 
 const {getBestFieldMatch, getItemField} = goog.require('os.im.mapping');
 const AbstractMapping = goog.require('os.im.mapping.AbstractMapping');

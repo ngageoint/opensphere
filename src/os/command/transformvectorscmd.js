@@ -1,5 +1,4 @@
 goog.module('os.command.TransformVectors');
-goog.module.declareLegacyNamespace();
 
 const Geometry = goog.require('ol.geom.Geometry');
 const OLVectorLayer = goog.require('ol.layer.Vector');

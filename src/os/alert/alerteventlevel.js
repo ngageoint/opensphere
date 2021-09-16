@@ -1,5 +1,4 @@
 goog.module('os.alert.AlertEventLevel');
-goog.module.declareLegacyNamespace();
 
 
 /**

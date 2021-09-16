@@ -1,5 +1,4 @@
 goog.module('os.source.IImportSource');
-goog.module.declareLegacyNamespace();
 
 const Feature = goog.requireType('ol.Feature');
 const IImporter = goog.requireType('os.im.IImporter');

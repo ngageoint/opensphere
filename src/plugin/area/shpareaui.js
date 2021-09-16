@@ -1,5 +1,4 @@
 goog.module('plugin.area.SHPAreaUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.im.MergeAreaOptionUI');
 

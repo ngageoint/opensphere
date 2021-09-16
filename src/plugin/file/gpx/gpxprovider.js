@@ -1,5 +1,4 @@
 goog.module('plugin.file.gpx.GPXProvider');
-goog.module.declareLegacyNamespace();
 
 const FileProvider = goog.require('os.data.FileProvider');
 

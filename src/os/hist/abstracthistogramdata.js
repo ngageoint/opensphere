@@ -1,8 +1,8 @@
 goog.module('os.hist.AbstractHistogramData');
-goog.module.declareLegacyNamespace();
 
 const IHistogramData = goog.requireType('os.hist.IHistogramData');
 const TimeRange = goog.requireType('os.time.TimeRange');
+
 
 /**
  * @type {string}

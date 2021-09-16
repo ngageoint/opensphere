@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.tour.TourControl');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const nextTick = goog.require('goog.async.nextTick');

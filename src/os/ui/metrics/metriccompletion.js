@@ -1,5 +1,4 @@
 goog.module('os.ui.metrics.MetricCompletionUI');
-goog.module.declareLegacyNamespace();
 
 const {toString} = goog.require('ol.color');
 const {instanceOf} = goog.require('os.classRegistry');

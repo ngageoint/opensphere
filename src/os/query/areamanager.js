@@ -1,5 +1,4 @@
 goog.module('os.query.AreaManager');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin.object');
 

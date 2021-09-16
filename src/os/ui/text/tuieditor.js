@@ -1,7 +1,7 @@
 goog.module('os.ui.text.TuiEditor');
-goog.module.declareLegacyNamespace();
 
 const {APP_ROOT} = goog.require('os');
+
 
 /**
  * @type {string}

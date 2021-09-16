@@ -1,5 +1,4 @@
 goog.module('os.ui.text.TuiEditorMarkdownIt');
-goog.module.declareLegacyNamespace();
 
 /**
  * @type {?Markdownit}

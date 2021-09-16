@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.im.FilterImporter');
-goog.module.declareLegacyNamespace();
 
 const {getRandomString, toTitleCase} = goog.require('goog.string');
 const {toHexString} = goog.require('os.color');

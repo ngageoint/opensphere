@@ -1,5 +1,4 @@
 goog.module('os.ui.TextPromptUI');
-goog.module.declareLegacyNamespace();
 
 const Delay = goog.require('goog.async.Delay');
 const {getDocument} = goog.require('goog.dom');

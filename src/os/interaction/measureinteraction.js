@@ -1,5 +1,4 @@
 goog.module('os.interaction.Measure');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const LineString = goog.require('ol.geom.LineString');

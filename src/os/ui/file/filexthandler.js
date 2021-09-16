@@ -1,5 +1,4 @@
 goog.module('os.ui.file.FileXTHandler');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const {SHARED_DB_VERSION, SHARED_FILE_DB_NAME} = goog.require('os');

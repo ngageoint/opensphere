@@ -1,5 +1,4 @@
 goog.module('os.ui.metrics.MetricsPlugin');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const dispose = goog.require('goog.dispose');

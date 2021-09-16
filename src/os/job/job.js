@@ -1,5 +1,4 @@
 goog.module('os.job.Job');
-goog.module.declareLegacyNamespace();
 
 const Timer = goog.require('goog.Timer');
 const EventTarget = goog.require('goog.events.EventTarget');

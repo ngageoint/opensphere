@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.ui.ChooseTimeColumnUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.util.ValidationMessageUI');
 

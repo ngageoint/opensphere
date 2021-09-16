@@ -1,5 +1,4 @@
 goog.module('os.ui.layer.DefaultLayerUI');
-goog.module.declareLegacyNamespace();
 
 const Layer = goog.require('ol.layer.Layer');
 const UrlTile = goog.require('ol.source.UrlTile');

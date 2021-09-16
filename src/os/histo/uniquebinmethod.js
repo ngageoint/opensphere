@@ -1,5 +1,4 @@
 goog.module('os.histo.UniqueBinMethod');
-goog.module.declareLegacyNamespace();
 
 const DataModel = goog.require('os.data.xf.DataModel');
 const FilterComponent = goog.require('os.histo.FilterComponent');

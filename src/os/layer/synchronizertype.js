@@ -1,5 +1,4 @@
 goog.module('os.layer.SynchronizerType');
-goog.module.declareLegacyNamespace();
 
 /**
  * Enumeration of available base synchronizer types.

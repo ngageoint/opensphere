@@ -1,5 +1,4 @@
 goog.module('os.net.IRestful');
-goog.module.declareLegacyNamespace();
 
 
 /**

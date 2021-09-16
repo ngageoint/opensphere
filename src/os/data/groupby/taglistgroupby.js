@@ -1,5 +1,4 @@
 goog.module('os.data.groupby.TagListGroupBy');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');

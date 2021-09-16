@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.WKTMapping');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const {getItemField} = goog.require('os.im.mapping');

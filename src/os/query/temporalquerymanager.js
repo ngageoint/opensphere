@@ -1,5 +1,4 @@
 goog.module('os.query.TemporalQueryManager');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const {assert} = goog.require('goog.asserts');

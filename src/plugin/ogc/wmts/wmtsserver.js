@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.wmts.WMTSServer');
-goog.module.declareLegacyNamespace();
 
 const QueryData = goog.require('goog.Uri.QueryData');
 const log = goog.require('goog.log');

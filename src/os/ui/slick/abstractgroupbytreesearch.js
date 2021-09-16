@@ -1,5 +1,4 @@
 goog.module('os.ui.slick.AbstractGroupByTreeSearch');
-goog.module.declareLegacyNamespace();
 
 const TreeNode = goog.require('os.structs.TreeNode');
 const TreeSearch = goog.require('os.ui.slick.TreeSearch');

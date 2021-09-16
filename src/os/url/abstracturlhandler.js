@@ -1,5 +1,4 @@
 goog.module('os.url.AbstractUrlHandler');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 

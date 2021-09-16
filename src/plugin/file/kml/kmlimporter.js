@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.KMLImporter');
-goog.module.declareLegacyNamespace();
 
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
@@ -10,6 +9,7 @@ const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 const KMLParser = goog.requireType('plugin.file.kml.KMLParser');
 const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
 
@@ -36,7 +36,7 @@ class KMLImporter extends FeatureImporter {
 
     /**
      * Columns detected in the KML
-     * @type {Array<!os.data.ColumnDefinition>}
+     * @type {Array<!ColumnDefinition>}
      * @private
      */
     this.columns_ = null;
@@ -80,7 +80,7 @@ class KMLImporter extends FeatureImporter {
   /**
    * Get columns detected in the KML.
    *
-   * @return {Array<!os.data.ColumnDefinition>}
+   * @return {Array<!ColumnDefinition>}
    */
   getColumns() {
     return this.columns_;

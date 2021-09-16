@@ -1,5 +1,4 @@
 goog.module('os.search.SearchEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const ISearchResult = goog.requireType('os.search.ISearchResult');

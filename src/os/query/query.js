@@ -1,5 +1,4 @@
 goog.module('os.query');
-goog.module.declareLegacyNamespace();
 
 const dispatcher = goog.require('os.Dispatcher');
 const CommandProcessor = goog.require('os.command.CommandProcessor');

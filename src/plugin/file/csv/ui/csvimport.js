@@ -1,5 +1,4 @@
 goog.module('plugin.file.csv.ui.CSVImport');
-goog.module.declareLegacyNamespace();
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const Module = goog.require('os.ui.Module');

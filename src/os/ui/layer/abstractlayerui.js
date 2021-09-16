@@ -1,5 +1,4 @@
 goog.module('os.ui.layer.AbstractLayerUICtrl');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');

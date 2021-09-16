@@ -1,11 +1,15 @@
 goog.module('os.ui.im.action.FilterActionImport');
-goog.module.declareLegacyNamespace();
 
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
 const DataManager = goog.require('os.data.DataManager');
+const IDataDescriptor = goog.require('os.data.IDataDescriptor');
 const IFilterable = goog.require('os.filter.IFilterable');
 const {Controller: OSFilterImportCtrl} = goog.require('os.filter.im.OSFilterImport');
+const osImplements = goog.require('os.implements');
+const {ICON, getColumnsFromFilterable} = goog.require('os.im.action');
 const FilterActionParser = goog.require('os.im.action.FilterActionParser');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const FilterActionAdd = goog.require('os.im.action.cmd.FilterActionAdd');
@@ -68,7 +72,7 @@ class Controller extends OSFilterImportCtrl {
    * @export
    */
   getFilterIcon() {
-    return os.im.action.ICON;
+    return ICON;
   }
 
   /**
@@ -96,14 +100,14 @@ class Controller extends OSFilterImportCtrl {
     // filter down to only the IFilterable descriptors
     var filterables = descriptors.filter(function(d) {
       d = /** @type {IFilterable} */ (d);
-      return os.implements(d, IFilterable.ID) && d.isFilterable();
+      return osImplements(d, IFilterable.ID) && d.isFilterable();
     });
 
     if (layers) {
       layers.forEach(function(layer) {
         // we only want IFilterable layers, BUT... we want even ones that return false from isFilterable()
         // also, exclude the drawing layer
-        if (os.implements(layer, IFilterable.ID) && /** @type {ILayer} */ (layer).getId() != DrawingLayer.ID) {
+        if (osImplements(layer, IFilterable.ID) && /** @type {ILayer} */ (layer).getId() != DrawingLayer.ID) {
           layer = /** @type {IFilterable} */ (layer);
           filterables.unshift(layer);
         }
@@ -119,15 +123,15 @@ class Controller extends OSFilterImportCtrl {
   onLayerChange(layer) {
     this.columns = [];
 
-    if (os.implements(layer, os.data.IDataDescriptor.ID)) {
+    if (osImplements(layer, IDataDescriptor.ID)) {
       super.onLayerChange(layer);
       return;
     }
 
-    if (os.implements(layer, IFilterable.ID)) {
+    if (osImplements(layer, IFilterable.ID)) {
       var filterable = /** @type {IFilterable} */ (layer);
 
-      this.columns = os.im.action.getColumnsFromFilterable(filterable);
+      this.columns = getColumnsFromFilterable(filterable);
     }
 
     this.testColumns();
@@ -142,7 +146,7 @@ class Controller extends OSFilterImportCtrl {
     var entries = getEntriesFromMatched(this['matched']);
 
     var msg;
-    var am = os.alert.AlertManager.getInstance();
+    var am = AlertManager.getInstance();
     if (entries.length > 0) {
       var plural = entries.length == 1 ? '' : 's';
       var entryTitle = iam.entryTitle + plural;
@@ -163,10 +167,10 @@ class Controller extends OSFilterImportCtrl {
       CommandProcessor.getInstance().addCommand(cmd);
 
       msg = 'Successfully imported <b>' + this['matchedCount'] + '</b> ' + entryTitle + '.';
-      am.sendAlert(msg, os.alert.AlertEventSeverity.SUCCESS);
+      am.sendAlert(msg, AlertEventSeverity.SUCCESS);
     } else {
       msg = 'No ' + iam.entryTitle + 's were imported!';
-      am.sendAlert(msg, os.alert.AlertEventSeverity.WARNING);
+      am.sendAlert(msg, AlertEventSeverity.WARNING);
     }
 
     close(this.element);

@@ -1,8 +1,8 @@
 goog.module('os.filter.cloneToContext');
-goog.module.declareLegacyNamespace();
 
 const FilterEntry = goog.require('os.filter.FilterEntry');
 const instanceOf = goog.require('os.instanceOf');
+
 
 /**
  * Clone a filter entry to the current window context.

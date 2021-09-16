@@ -1,5 +1,4 @@
 goog.module('plugin.file.shp.ui.SHPImport');
-goog.module.declareLegacyNamespace();
 
 const osFile = goog.require('os.file');
 

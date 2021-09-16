@@ -1,5 +1,4 @@
 goog.module('os.layer.AnimationOverlay');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const {clone} = goog.require('goog.array');

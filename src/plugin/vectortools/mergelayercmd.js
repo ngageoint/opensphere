@@ -1,5 +1,4 @@
 goog.module('plugin.vectortools.MergeLayer');
-goog.module.declareLegacyNamespace();
 
 const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');

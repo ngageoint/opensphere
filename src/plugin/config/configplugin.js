@@ -1,5 +1,4 @@
 goog.module('plugin.config.Plugin');
-goog.module.declareLegacyNamespace();
 
 const ConfigDescriptor = goog.require('os.data.ConfigDescriptor');
 const DataManager = goog.require('os.data.DataManager');

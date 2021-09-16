@@ -1,5 +1,4 @@
 goog.module('os.ui.search.FacetedSearchCtrl');
-goog.module.declareLegacyNamespace();
 
 const {defaultCompare, sortObjectsByKey} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');

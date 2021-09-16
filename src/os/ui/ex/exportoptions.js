@@ -1,5 +1,4 @@
 goog.module('os.ui.ex.ExportOptionsUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.ChecklistUI');
 

@@ -1,5 +1,4 @@
 goog.module('plugin.ogc.query.OGCQueryHandler');
-goog.module.declareLegacyNamespace();
 
 const ParamModifier = goog.require('os.net.ParamModifier');
 const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');

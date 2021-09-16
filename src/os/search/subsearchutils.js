@@ -1,5 +1,4 @@
 goog.module('os.search.SubSearchUtils');
-goog.module.declareLegacyNamespace();
 
 const SearchFacetDepartment = goog.requireType('os.search.SearchFacetDepartment');
 

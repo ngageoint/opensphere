@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.import');
-goog.module.declareLegacyNamespace();
 
 const googDispose = goog.require('goog.dispose');
 const {isOSX} = goog.require('os');

@@ -3,10 +3,12 @@ goog.require('os.url.AbstractUrlHandler');
 
 
 describe('os.url.AbstractUrlHandler', function() {
+  const AbstractUrlHandler = goog.module.get('os.url.AbstractUrlHandler');
+
   var handler;
 
   beforeEach(function() {
-    handler = new os.url.AbstractUrlHandler();
+    handler = new AbstractUrlHandler();
   });
 
   it('should return whether it handles a key', function() {

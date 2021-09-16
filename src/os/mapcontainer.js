@@ -1,5 +1,4 @@
 goog.module('os.MapContainer');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const {binarySelect, defaultCompare} = goog.require('goog.array');
@@ -78,8 +77,8 @@ const VectorLayer = goog.require('os.layer.Vector');
 const osMap = goog.require('os.map');
 const FlightMode = goog.require('os.map.FlightMode');
 const IMapContainer = goog.require('os.map.IMapContainer'); // eslint-disable-line
-const metrics = goog.require('os.metrics');
 const Metrics = goog.require('os.metrics.Metrics');
+const {Map: MapKeys} = goog.require('os.metrics.keys');
 const VariableReplacer = goog.require('os.net.VariableReplacer');
 const {unsafeClone} = goog.require('os.object');
 const {clone: cloneFeature} = goog.require('os.ol.feature');
@@ -497,7 +496,7 @@ class MapContainer extends EventTarget {
   flyTo(options) {
     var map = this.getMap();
     if (map) {
-      Metrics.getInstance().updateMetric(metrics.keys.Map.FLY_TO, 1);
+      Metrics.getInstance().updateMetric(MapKeys.FLY_TO, 1);
       var view = map.getView();
       assert(view);
 
@@ -560,7 +559,7 @@ class MapContainer extends EventTarget {
 
     var map = this.getMap();
     if (map) {
-      Metrics.getInstance().updateMetric(metrics.keys.Map.FLY_TO_EXTENT, 1);
+      Metrics.getInstance().updateMetric(MapKeys.FLY_TO_EXTENT, 1);
       var view = map.getView();
       assert(view != null);
 
@@ -676,7 +675,7 @@ class MapContainer extends EventTarget {
       view.setZoom(3);
     }
 
-    Metrics.getInstance().updateMetric(metrics.keys.Map.RESET_VIEW, 1);
+    Metrics.getInstance().updateMetric(MapKeys.RESET_VIEW, 1);
   }
 
   /**
@@ -701,7 +700,7 @@ class MapContainer extends EventTarget {
       view.setRotation(0);
     }
 
-    Metrics.getInstance().updateMetric(metrics.keys.Map.RESET_ROTATION, 1);
+    Metrics.getInstance().updateMetric(MapKeys.RESET_ROTATION, 1);
   }
 
   /**
@@ -719,7 +718,7 @@ class MapContainer extends EventTarget {
       }
     }
 
-    Metrics.getInstance().updateMetric(metrics.keys.Map.RESET_TILT, 1);
+    Metrics.getInstance().updateMetric(MapKeys.RESET_TILT, 1);
   }
 
   /**
@@ -742,7 +741,7 @@ class MapContainer extends EventTarget {
       view.setRotation(0);
     }
 
-    Metrics.getInstance().updateMetric(metrics.keys.Map.RESET_ROLL, 1);
+    Metrics.getInstance().updateMetric(MapKeys.RESET_ROLL, 1);
   }
 
   /**
@@ -1312,7 +1311,7 @@ class MapContainer extends EventTarget {
       this.is3DSupported_ = false;
       launchWebGLSupportDialog('3D Globe Not Supported');
 
-      Metrics.getInstance().updateMetric(metrics.keys.Map.WEBGL_FAILED, 1);
+      Metrics.getInstance().updateMetric(MapKeys.WEBGL_FAILED, 1);
     }
 
     // save the current map mode to settings after the stack clears. this will prevent conflicts with Angular caused by
@@ -1332,7 +1331,7 @@ class MapContainer extends EventTarget {
     if (this.webGLRenderer_ && this.webGLRenderer_.isInitialized() && this.is3DSupported_) {
       this.webGLRenderer_.setEnabled(value);
 
-      var metricKey = value ? metrics.keys.Map.MODE_3D : metrics.keys.Map.MODE_2D;
+      var metricKey = value ? MapKeys.MODE_3D : MapKeys.MODE_2D;
       Metrics.getInstance().updateMetric(metricKey, 1);
 
       this.dispatchEvent(new PropertyChangeEvent(MapChange.VIEW3D, value));
@@ -1359,7 +1358,7 @@ class MapContainer extends EventTarget {
       this.is3DSupported_ = isWebglSupported();
 
       if (!this.is3DSupported_) {
-        Metrics.getInstance().updateMetric(metrics.keys.Map.WEBGL_UNSUPPORTED, 1);
+        Metrics.getInstance().updateMetric(MapKeys.WEBGL_UNSUPPORTED, 1);
       }
     }
 
@@ -1381,7 +1380,7 @@ class MapContainer extends EventTarget {
         this.hasPerformanceCaveat_ = failIfMajorPerformanceCaveat_ ?
           hasPerformanceCaveat() : false;
         if (this.hasPerformanceCaveat_) {
-          Metrics.getInstance().updateMetric(metrics.keys.Map.WEBGL_PERFORMANCE_CAVEAT, 1);
+          Metrics.getInstance().updateMetric(MapKeys.WEBGL_PERFORMANCE_CAVEAT, 1);
         }
       }
 
@@ -1463,12 +1462,12 @@ class MapContainer extends EventTarget {
    */
   recordLayerMetric_(layer, add) {
     if (add) {
-      Metrics.getInstance().updateMetric(metrics.keys.Map.ADD_LAYER, 1);
+      Metrics.getInstance().updateMetric(MapKeys.ADD_LAYER, 1);
     } else {
-      Metrics.getInstance().updateMetric(metrics.keys.Map.REMOVE_LAYER, 1);
+      Metrics.getInstance().updateMetric(MapKeys.REMOVE_LAYER, 1);
     }
 
-    Metrics.getInstance().updateMetric(metrics.keys.Map.LAYER_COUNT, this.map_.getLayers().getLength());
+    Metrics.getInstance().updateMetric(MapKeys.LAYER_COUNT, this.map_.getLayers().getLength());
   }
 
   /**
@@ -1594,7 +1593,7 @@ class MapContainer extends EventTarget {
    */
   addFeature(feature, opt_style) {
     if (feature != undefined) {
-      Metrics.getInstance().updateMetric(metrics.keys.Map.ADD_FEATURE, 1);
+      Metrics.getInstance().updateMetric(MapKeys.ADD_FEATURE, 1);
       if (!(feature instanceof Feature)) {
         // created in another context
         feature = cloneFeature(feature, [RecordField.DRAWING_LAYER_NODE]);
@@ -1636,7 +1635,7 @@ class MapContainer extends EventTarget {
    */
   addFeatures(features, opt_style) {
     var added = [];
-    Metrics.getInstance().updateMetric(metrics.keys.Map.ADD_FEATURES, 1);
+    Metrics.getInstance().updateMetric(MapKeys.ADD_FEATURES, 1);
     for (var i = 0, n = features.length; i < n; i++) {
       var addedFeature = this.addFeature(features[i], opt_style);
       if (addedFeature) {
@@ -1653,7 +1652,7 @@ class MapContainer extends EventTarget {
    */
   removeFeature(feature, opt_dispose) {
     if (feature != null) {
-      Metrics.getInstance().updateMetric(metrics.keys.Map.REMOVE_FEATURE, 1);
+      Metrics.getInstance().updateMetric(MapKeys.REMOVE_FEATURE, 1);
       var layer = this.getLayer(MapContainer.DRAW_ID);
       if (layer != null) {
         var source = /** @type {OLVectorSource} */ (layer.getSource());
@@ -1697,7 +1696,7 @@ class MapContainer extends EventTarget {
    * @export Prevent the compiler from moving the function off the prototype.
    */
   removeFeatures(features, opt_dispose) {
-    Metrics.getInstance().updateMetric(metrics.keys.Map.REMOVE_FEATURES, 1);
+    Metrics.getInstance().updateMetric(MapKeys.REMOVE_FEATURES, 1);
     for (var i = 0, n = features.length; i < n; i++) {
       this.removeFeature(features[i], opt_dispose);
     }

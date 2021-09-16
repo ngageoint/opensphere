@@ -27,9 +27,12 @@ describe('os.data.DataManager', function() {
   const VectorSource = goog.module.get('os.source.Vector');
   const {getMapContainer} = goog.module.get('os.map.instance');
 
+  const MockProvider = goog.module.get('os.data.MockProvider');
+  const SettingsUtil = goog.module.get('test.os.config.SettingsUtil');
+
   it('should register provider types', function() {
     var dm = DataManager.getInstance();
-    var entry = new ProviderEntry('mock', data.MockProvider, 'Mock Provider', 'This is a test', '');
+    var entry = new ProviderEntry('mock', MockProvider, 'Mock Provider', 'This is a test', '');
     dm.registerProviderType(entry);
     expect(dm.providerTypes_['mock']).toBe(entry);
   });
@@ -67,7 +70,8 @@ describe('os.data.DataManager', function() {
 
     var settings = new Settings();
     settings.getStorageRegistry().addStorage(new SettingsObjectStorage(['unit']));
-    test.os.config.SettingsUtil.initAndLoad(settings);
+
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       settings.set([data.ProviderKey.ADMIN, 'thing1', 'type'], 'mock');

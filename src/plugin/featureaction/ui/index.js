@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.ui');
-goog.module.declareLegacyNamespace();
 
 const {ICON} = goog.require('os.im.action');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
@@ -7,6 +6,7 @@ const osWindow = goog.require('os.ui.window');
 const {directiveTag: editUi} = goog.require('plugin.im.action.feature.ui.EditFeatureActionUI');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+
 
 /**
  * Create/edit a feature action entry. If no entry is provided, a new one will be created.

@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.ui.launchForLayer');
-goog.module.declareLegacyNamespace();
 
 const {ICON} = goog.require('os.im.action');
 const osLayer = goog.require('os.layer');

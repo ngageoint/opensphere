@@ -1,5 +1,4 @@
 goog.module('os.ui.config.SettingsContainerUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const AbstractSettingsCtrl = goog.require('os.ui.config.AbstractSettingsCtrl');

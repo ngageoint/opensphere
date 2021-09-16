@@ -1,5 +1,4 @@
 goog.module('os.time.xf.TimeModel');
-goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const functions = goog.require('goog.functions');

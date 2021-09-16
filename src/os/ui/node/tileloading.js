@@ -1,5 +1,4 @@
 goog.module('os.ui.node.TileLoadingUI');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {listen, unlisten} = goog.require('ol.events');

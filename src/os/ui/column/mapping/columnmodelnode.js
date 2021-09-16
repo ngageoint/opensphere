@@ -1,5 +1,4 @@
 goog.module('os.ui.column.mapping.ColumnModelNode');
-goog.module.declareLegacyNamespace();
 
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 

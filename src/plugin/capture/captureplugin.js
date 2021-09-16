@@ -1,5 +1,4 @@
 goog.module('plugin.capture.CapturePlugin');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const Timer = goog.require('goog.Timer');

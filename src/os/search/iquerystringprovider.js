@@ -1,5 +1,4 @@
 goog.module('os.search.IQueryStringProvider');
-goog.module.declareLegacyNamespace();
 
 
 /**

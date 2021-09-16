@@ -1,5 +1,4 @@
 goog.module('os.file.persist.FilePersistence');
-goog.module.declareLegacyNamespace();
 
 const IPersistenceMethod = goog.require('os.ex.IPersistenceMethod'); // eslint-disable-line
 const {saveFile} = goog.require('os.file.persist');

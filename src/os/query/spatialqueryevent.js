@@ -1,5 +1,4 @@
 goog.module('os.query.SpatialQueryEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const Feature = goog.requireType('ol.Feature');

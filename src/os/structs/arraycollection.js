@@ -1,5 +1,4 @@
 goog.module('os.structs.ArrayCollection');
-goog.module.declareLegacyNamespace();
 
 const {binaryInsert, binaryRemove, binarySearch} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');

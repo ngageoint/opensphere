@@ -1,4 +1,4 @@
-goog.provide('os.mock');
+goog.declareModuleId('os.mock');
 
 goog.require('goog.events.EventTarget');
 goog.require('os');
@@ -49,6 +49,7 @@ angular.element(document.body).append('<div id="map-container"></div');
 beforeEach(function() {
   const EventTarget = goog.module.get('goog.events.EventTarget');
   const os = goog.module.get('os');
+  const osMock = goog.module.get('os.mock');
   const osConfig = goog.module.get('os.config');
   const Dispatcher = goog.module.get('os.Dispatcher');
   const MapContainer = goog.module.get('os.MapContainer');
@@ -64,7 +65,7 @@ beforeEach(function() {
   const FilterManager = goog.module.get('os.query.FilterManager');
   const QueryManager = goog.module.get('os.query.QueryManager');
   const osQueryInstance = goog.module.get('os.query.instance');
-  const instance = goog.module.get('os.style.instance');
+  const osStyleInstance = goog.module.get('os.style.instance');
   const replacers = goog.module.get('os.time.replacers');
   const SettingsManager = goog.module.get('os.ui.config.SettingsManager');
   const Settings = goog.module.get('os.config.Settings');
@@ -126,49 +127,44 @@ beforeEach(function() {
     osMapInstance.setIMapContainer(map);
     osMapInstance.setMapContainer(map);
 
-    if (!os.dataManager) {
-      const dataManager = DataManager.getInstance();
+    if (!osMock.dataManager) {
+      const dataManager = osMock.dataManager = DataManager.getInstance();
       os.setDataManager(dataManager);
       dataManager.setMapContainer(map);
       dataManager.registerDescriptorType(ogc.ID, OGCDescriptor);
     }
 
-    if (!os.areaManager) {
-      var areaManager = AreaManager.getInstance();
-      osQueryInstance.setAreaManager(areaManager);
-      os.areaManager = osUi.areaManager = areaManager;
+    if (!osMock.areaManager) {
+      osMock.areaManager = AreaManager.getInstance();
+      osQueryInstance.setAreaManager(osMock.areaManager);
     }
 
-    if (!os.filterManager) {
-      var filterManager = FilterManager.getInstance();
-      osQueryInstance.setFilterManager(filterManager);
-      os.filterManager = osUi.filterManager = filterManager;
+    if (!osMock.filterManager) {
+      osMock.filterManager = FilterManager.getInstance();
+      osQueryInstance.setFilterManager(osMock.filterManager);
     }
 
-    if (!os.queryManager) {
-      var queryManager = QueryManager.getInstance();
-      osQueryInstance.setQueryManager(queryManager);
-      os.queryManager = osUi.queryManager = queryManager;
+    if (!osMock.queryManager) {
+      osMock.queryManager = QueryManager.getInstance();
+      osQueryInstance.setQueryManager(osMock.queryManager);
     }
 
-    if (!os.styleManager) {
-      var styleManager = StyleManager.getInstance();
-      os.styleManager = styleManager;
-      instance.setStyleManager(styleManager);
+    if (!osMock.styleManager) {
+      osMock.styleManager = StyleManager.getInstance();
+      osStyleInstance.setStyleManager(osMock.styleManager);
     }
 
     if (!map.getMap()) {
       map.init();
     }
 
-    if (!os.settingsManager) {
-      os.settingsManager = SettingsManager.getInstance();
+    if (!osMock.settingsManager) {
+      osMock.settingsManager = SettingsManager.getInstance();
     }
 
     replacers.init();
   });
 });
-
 
 //
 // Verify test initialization is complete.
@@ -189,38 +185,53 @@ describe('OpenSphere Test Initialization', () => {
   });
 });
 
-
 /**
  * Creates and returns a new mapping manager configured the same as within the app
  * @return {os.im.mapping.MappingManager}
  */
-os.mock.getMockMappingManager = function() {
-  var mm = new os.im.mapping.MappingManager();
+export const getMockMappingManager = function() {
+  const AltMapping = goog.module.get('os.im.mapping.AltMapping');
+  const BearingMapping = goog.module.get('os.im.mapping.BearingMapping');
+  const LatMapping = goog.module.get('os.im.mapping.LatMapping');
+  const LonMapping = goog.module.get('os.im.mapping.LonMapping');
+  const MappingManager = goog.module.get('os.im.mapping.MappingManager');
+  const OrientationMapping = goog.module.get('os.im.mapping.OrientationMapping');
+  const PositionMapping = goog.module.get('os.im.mapping.PositionMapping');
+  const RadiusMapping = goog.module.get('os.im.mapping.RadiusMapping');
+  const SemiMajorMapping = goog.module.get('os.im.mapping.SemiMajorMapping');
+  const SemiMinorMapping = goog.module.get('os.im.mapping.SemiMinorMapping');
+  const TimeType = goog.module.get('os.im.mapping.TimeType');
+  const WKTMapping = goog.module.get('os.im.mapping.WKTMapping');
+  const DateMapping = goog.module.get('os.im.mapping.time.DateMapping');
+  const DateTimeMapping = goog.module.get('os.im.mapping.time.DateTimeMapping');
+  const TimeMapping = goog.module.get('os.im.mapping.time.TimeMapping');
+
+  var mm = new MappingManager();
 
   // register a date/time, date, and time mapping for each type
-  mm.registerMapping(new os.im.mapping.time.DateTimeMapping(os.im.mapping.TimeType.INSTANT));
-  mm.registerMapping(new os.im.mapping.time.DateMapping(os.im.mapping.TimeType.INSTANT));
-  mm.registerMapping(new os.im.mapping.time.TimeMapping(os.im.mapping.TimeType.INSTANT));
-  mm.registerMapping(new os.im.mapping.time.DateTimeMapping(os.im.mapping.TimeType.START));
-  mm.registerMapping(new os.im.mapping.time.DateMapping(os.im.mapping.TimeType.START));
-  mm.registerMapping(new os.im.mapping.time.TimeMapping(os.im.mapping.TimeType.START));
-  mm.registerMapping(new os.im.mapping.time.DateTimeMapping(os.im.mapping.TimeType.END));
-  mm.registerMapping(new os.im.mapping.time.DateMapping(os.im.mapping.TimeType.END));
-  mm.registerMapping(new os.im.mapping.time.TimeMapping(os.im.mapping.TimeType.END));
+  mm.registerMapping(new DateTimeMapping(TimeType.INSTANT));
+  mm.registerMapping(new DateMapping(TimeType.INSTANT));
+  mm.registerMapping(new TimeMapping(TimeType.INSTANT));
+  mm.registerMapping(new DateTimeMapping(TimeType.START));
+  mm.registerMapping(new DateMapping(TimeType.START));
+  mm.registerMapping(new TimeMapping(TimeType.START));
+  mm.registerMapping(new DateTimeMapping(TimeType.END));
+  mm.registerMapping(new DateMapping(TimeType.END));
+  mm.registerMapping(new TimeMapping(TimeType.END));
 
   // register geo mappings
-  mm.registerMapping(new os.im.mapping.WKTMapping());
-  mm.registerMapping(new os.im.mapping.LatMapping());
-  mm.registerMapping(new os.im.mapping.LonMapping());
-  mm.registerMapping(new os.im.mapping.PositionMapping());
-  mm.registerMapping(new os.im.mapping.AltMapping());
-  mm.registerMapping(new os.im.mapping.BearingMapping());
+  mm.registerMapping(new WKTMapping());
+  mm.registerMapping(new LatMapping());
+  mm.registerMapping(new LonMapping());
+  mm.registerMapping(new PositionMapping());
+  mm.registerMapping(new AltMapping());
+  mm.registerMapping(new BearingMapping());
 
   // register ellipse mappings
-  mm.registerMapping(new os.im.mapping.RadiusMapping());
-  mm.registerMapping(new os.im.mapping.OrientationMapping());
-  mm.registerMapping(new os.im.mapping.SemiMajorMapping());
-  mm.registerMapping(new os.im.mapping.SemiMinorMapping());
+  mm.registerMapping(new RadiusMapping());
+  mm.registerMapping(new OrientationMapping());
+  mm.registerMapping(new SemiMajorMapping());
+  mm.registerMapping(new SemiMinorMapping());
 
   return mm;
 };

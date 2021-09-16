@@ -1,5 +1,4 @@
 goog.module('plugin.weather.WeatherPlugin');
-goog.module.declareLegacyNamespace();
 
 const olProj = goog.require('ol.proj');
 const settings = goog.require('os.config.Settings');
@@ -8,6 +7,7 @@ const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const mapMenu = goog.require('os.ui.menu.map');
 
 const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+
 
 /**
  * Provides a Weather menu option when right-clicking the map. The resulting location is then

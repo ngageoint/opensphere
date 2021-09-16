@@ -1,5 +1,4 @@
 goog.module('os.data.IExtent');
-goog.module.declareLegacyNamespace();
 
 
 /**

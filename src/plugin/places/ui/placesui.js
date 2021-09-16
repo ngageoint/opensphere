@@ -1,5 +1,4 @@
 goog.module('plugin.places.ui.PlacesUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.LayerTreeUI');
 goog.require('os.ui.UISwitchUI');

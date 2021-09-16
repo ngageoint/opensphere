@@ -1,4 +1,4 @@
-goog.provide('os.bearing.geomag.wait');
+goog.module('os.bearing.geomag.wait');
 
 goog.require('goog.net.EventType');
 goog.require('os.bearing');

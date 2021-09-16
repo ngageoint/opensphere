@@ -1,5 +1,4 @@
 goog.module('os.ui.location.Format');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

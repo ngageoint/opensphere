@@ -1,5 +1,4 @@
 goog.module('os.ui.query.cmd.QueryEntries');
-goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const {getQueryManager} = goog.require('os.query.instance');

@@ -1,5 +1,4 @@
 goog.module('os.capture.ContentType');
-goog.module.declareLegacyNamespace();
 
 /**
  * Capture content types.

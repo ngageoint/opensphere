@@ -1,8 +1,8 @@
 goog.module('os.ui.dragDropDirective');
-goog.module.declareLegacyNamespace();
 
 const DragDrop = goog.require('os.ui.DragDrop');
 const Module = goog.require('os.ui.Module');
+
 
 /**
  * Enables elements as draggable (creating drag source and drop targets).

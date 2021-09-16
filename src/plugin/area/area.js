@@ -1,5 +1,4 @@
 goog.module('plugin.area');
-goog.module.declareLegacyNamespace();
 
 const googString = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');

@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ui.GroupNode');
-goog.module.declareLegacyNamespace();
 
 const {directiveTag: nodeIconsUi} = goog.require('os.ui.NodeIconsUI');
 const {directiveTag: nodeToggleFolderUi} = goog.require('os.ui.NodeToggleFolderUI');

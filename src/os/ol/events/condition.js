@@ -1,5 +1,4 @@
 goog.module('os.ol.events.condition');
-goog.module.declareLegacyNamespace();
 
 const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
 

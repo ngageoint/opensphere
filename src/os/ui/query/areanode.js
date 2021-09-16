@@ -1,5 +1,4 @@
 goog.module('os.ui.query.AreaNode');
-goog.module.declareLegacyNamespace();
 
 const {listen, unlisten} = goog.require('ol.events');
 const {getAreaManager} = goog.require('os.query.instance');

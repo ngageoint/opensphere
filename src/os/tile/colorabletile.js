@@ -1,5 +1,4 @@
 goog.module('os.tile.ColorableTile');
-goog.module.declareLegacyNamespace();
 
 const ImageTile = goog.require('ol.ImageTile');
 const {filterImage} = goog.require('os.tile');

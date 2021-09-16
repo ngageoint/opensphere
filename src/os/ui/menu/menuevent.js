@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.MenuEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 

@@ -1,5 +1,4 @@
 goog.module('plugin.osm.nom.NominatimPlugin');
-goog.module.declareLegacyNamespace();
 
 const Settings = goog.require('os.config.Settings');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');

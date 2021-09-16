@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.op.time.Between');
-goog.module.declareLegacyNamespace();
 
 const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
 const {directiveTag} = goog.require('os.ui.filter.op.time.BetweenTimeUI');

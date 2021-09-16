@@ -1,5 +1,4 @@
 goog.module('os.histo.NumericBinMethod');
-goog.module.declareLegacyNamespace();
 
 const iter = goog.require('goog.iter');
 const Range = goog.require('goog.math.Range');

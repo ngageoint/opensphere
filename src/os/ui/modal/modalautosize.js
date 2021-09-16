@@ -1,5 +1,4 @@
 goog.module('os.ui.modal.ModalAutoSizeUI');
-goog.module.declareLegacyNamespace();
 
 const Throttle = goog.require('goog.async.Throttle');
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');

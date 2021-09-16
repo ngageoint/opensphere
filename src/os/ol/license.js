@@ -28,4 +28,3 @@
  * either expressed or implied, of OpenLayers Contributors.
  */
 goog.module('os.ol.license');
-goog.module.declareLegacyNamespace();

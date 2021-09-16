@@ -1,5 +1,4 @@
 goog.module('plugin.file.gml.GMLParser');
-goog.module.declareLegacyNamespace();
 
 const ol = goog.require('ol');
 const Fields = goog.require('os.Fields');

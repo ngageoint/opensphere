@@ -1,5 +1,4 @@
 goog.module('os.state.StateOptions');
-goog.module.declareLegacyNamespace();
 
 const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
 const IState = goog.requireType('os.state.IState');

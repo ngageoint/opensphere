@@ -1,5 +1,4 @@
 goog.module('os.ui.state.StateListUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.ChecklistUI');
 
@@ -15,6 +14,7 @@ const StateListEvent = goog.require('os.ui.state.StateListEvent');
 
 const DescriptorEvent = goog.requireType('os.data.DescriptorEvent');
 const IStateDescriptor = goog.requireType('os.ui.state.IStateDescriptor');
+
 
 /**
  * The statelist directive

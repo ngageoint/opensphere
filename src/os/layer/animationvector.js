@@ -1,5 +1,4 @@
 goog.module('os.layer.AnimationVector');
-goog.module.declareLegacyNamespace();
 
 const {getUid} = goog.require('ol');
 const {listen, unlistenByKey} = goog.require('ol.events');

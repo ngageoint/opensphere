@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.colTypeCheckValidation');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');

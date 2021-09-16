@@ -1,5 +1,4 @@
 goog.module('os.mixin.VectorImageTile');
-goog.module.declareLegacyNamespace();
 
 const VectorImageTile = goog.require('ol.VectorImageTile');
 const MapContainer = goog.require('os.MapContainer');

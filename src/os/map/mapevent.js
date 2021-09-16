@@ -1,5 +1,4 @@
 goog.module('os.MapEvent');
-goog.module.declareLegacyNamespace();
 
 /**
  * OpenSphere map events.

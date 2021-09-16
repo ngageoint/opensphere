@@ -1,5 +1,4 @@
 goog.module('os.easing');
-goog.module.declareLegacyNamespace();
 
 
 /**

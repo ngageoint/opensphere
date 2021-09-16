@@ -1,5 +1,4 @@
 goog.module('os.ui.search.place.CoordinateSearch');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const Point = goog.require('ol.geom.Point');

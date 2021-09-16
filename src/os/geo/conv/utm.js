@@ -1,8 +1,8 @@
 goog.module('os.geo.conv.UTM');
-goog.module.declareLegacyNamespace();
 
 const {toDegrees, toRadians} = goog.require('goog.math');
 const Coordinate = goog.require('goog.math.Coordinate');
+
 
 /**
  */

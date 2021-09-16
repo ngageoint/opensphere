@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.op.LessThan');
-goog.module.declareLegacyNamespace();
 
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 const Op = goog.require('os.ui.filter.op.Op');

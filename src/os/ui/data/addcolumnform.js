@@ -1,5 +1,4 @@
 goog.module('os.ui.data.AddColumnFormUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.util.ValidationMessageUI');
 

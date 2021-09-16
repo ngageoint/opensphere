@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.op.NotBetween');
-goog.module.declareLegacyNamespace();
 
 const Between = goog.require('os.ui.filter.op.Between');
 const Not = goog.require('os.ui.filter.op.Not');

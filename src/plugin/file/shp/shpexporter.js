@@ -1,5 +1,4 @@
 goog.module('plugin.file.shp.SHPExporter');
-goog.module.declareLegacyNamespace();
 
 const crypt = goog.require('goog.crypt');
 const log = goog.require('goog.log');

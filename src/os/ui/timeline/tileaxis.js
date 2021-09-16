@@ -1,5 +1,4 @@
 goog.module('os.ui.timeline.TileAxis');
-goog.module.declareLegacyNamespace();
 
 const time = goog.require('os.time');
 const TimelineController = goog.require('os.time.TimelineController');

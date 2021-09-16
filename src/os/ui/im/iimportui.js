@@ -1,5 +1,4 @@
 goog.module('os.ui.im.IImportUI');
-goog.module.declareLegacyNamespace();
 
 const OSFile = goog.requireType('os.file.File');
 

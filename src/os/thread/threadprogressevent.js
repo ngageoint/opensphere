@@ -1,5 +1,4 @@
 goog.module('os.thread.ThreadProgressEvent');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const EventType = goog.require('os.thread.EventType');

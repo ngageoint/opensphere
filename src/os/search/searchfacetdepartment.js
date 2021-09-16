@@ -1,5 +1,4 @@
 goog.module('os.search.SearchFacetDepartment');
-goog.module.declareLegacyNamespace();
 
 
 /**

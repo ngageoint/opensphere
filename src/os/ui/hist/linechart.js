@@ -1,5 +1,4 @@
 goog.module('os.ui.hist.LineChart');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const {maxBinCount} = goog.require('os.hist');

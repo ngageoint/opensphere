@@ -1,5 +1,4 @@
 goog.module('os.ui.search.FacetNode');
-goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const TriState = goog.require('os.structs.TriState');

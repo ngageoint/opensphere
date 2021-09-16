@@ -1,5 +1,4 @@
 goog.module('os.ui.slick.column');
-goog.module.declareLegacyNamespace();
 
 const {defaultCompare} = goog.require('goog.array');
 const {numerateCompare} = goog.require('goog.string');

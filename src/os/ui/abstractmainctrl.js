@@ -1,5 +1,4 @@
 goog.module('os.ui.AbstractMainCtrl');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.GlobalMenuUI');
 goog.require('os.ui.ListUI');

@@ -1,5 +1,4 @@
 goog.module('os.ui.action.Action');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 

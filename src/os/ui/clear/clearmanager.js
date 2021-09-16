@@ -1,5 +1,4 @@
 goog.module('os.ui.clear.ClearManager');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const CommandProcessor = goog.require('os.command.CommandProcessor');

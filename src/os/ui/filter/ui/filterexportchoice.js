@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.ui.FilterExportChoice');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

@@ -1,5 +1,4 @@
 goog.module('os.ui.PropertyInfoUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.slick.SlickGridUI');
 
@@ -8,6 +7,8 @@ const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
 const {urlNewTabFormatter} = goog.require('os.ui.slick.formatter');
 const {bringToFront, create, exists} = goog.require('os.ui.window');
+
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 
 
 /**
@@ -106,7 +107,7 @@ class Controller {
 
 /**
  * The columns to use for feature info grids.
- * @type {Array.<os.data.ColumnDefinition>}
+ * @type {Array<ColumnDefinition>}
  * @const
  * @private
  */

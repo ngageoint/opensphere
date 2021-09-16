@@ -1,5 +1,4 @@
 goog.module('os.ui.query.QueryHandler');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const {defaultCompare, removeDuplicates} = goog.require('goog.array');

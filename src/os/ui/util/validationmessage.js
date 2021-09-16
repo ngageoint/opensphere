@@ -1,5 +1,4 @@
 goog.module('os.ui.util.ValidationMessageUI');
-goog.module.declareLegacyNamespace();
 
 const {isEmpty} = goog.require('goog.object');
 const {ROOT} = goog.require('os');

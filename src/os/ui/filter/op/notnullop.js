@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.op.NotNull');
-goog.module.declareLegacyNamespace();
 
 const IsNull = goog.require('os.ui.filter.op.IsNull');
 const Not = goog.require('os.ui.filter.op.Not');

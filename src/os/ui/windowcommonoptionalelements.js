@@ -1,5 +1,4 @@
 goog.module('os.ui.windowCommonOptionalElements');
-goog.module.declareLegacyNamespace();
 
 /**
  * Common selectors for elements which are optionally considered for positioning application UI's.

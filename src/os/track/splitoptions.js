@@ -1,7 +1,7 @@
 goog.module('os.track.SplitOptions');
-goog.module.declareLegacyNamespace();
 
 const Feature = goog.requireType('ol.Feature');
+
 
 /**
  * @typedef {{

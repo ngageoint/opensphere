@@ -1,5 +1,4 @@
 goog.module('os.ui.draw.DrawEventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

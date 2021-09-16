@@ -1,5 +1,4 @@
 goog.module('os.histo.FilterComponent');
-goog.module.declareLegacyNamespace();
 
 /**
  * Strings used to create OGC filters from a histogram.

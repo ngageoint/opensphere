@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.fn');
-goog.module.declareLegacyNamespace();
 
 const {FALSE} = goog.require('goog.functions');
 const {isEmpty} = goog.require('goog.object');

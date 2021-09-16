@@ -1,5 +1,4 @@
 goog.module('plugin.xyz.XYZLayerConfig');
-goog.module.declareLegacyNamespace();
 
 const AbstractTileLayerConfig = goog.require('os.layer.config.AbstractTileLayerConfig');
 const osObject = goog.require('os.object');

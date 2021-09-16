@@ -1,5 +1,4 @@
 goog.module('os.search.ISequentialPagingSearch');
-goog.module.declareLegacyNamespace();
 
 
 /**

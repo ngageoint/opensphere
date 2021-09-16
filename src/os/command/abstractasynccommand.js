@@ -1,5 +1,4 @@
 goog.module('os.command.AbstractAsyncCommand');
-goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const EventType = goog.require('os.command.EventType');

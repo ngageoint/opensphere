@@ -1,5 +1,4 @@
 goog.module('os.ogc.wfs.WFSFormatter');
-goog.module.declareLegacyNamespace();
 
 const {getMaxFeatures, defaultProjection} = goog.require('os.ogc');
 

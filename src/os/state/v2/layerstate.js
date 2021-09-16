@@ -1,5 +1,4 @@
 goog.module('os.state.v2.LayerState');
-goog.module.declareLegacyNamespace();
 
 const QueryData = goog.require('goog.Uri.QueryData');
 const {getChildren} = goog.require('goog.dom');

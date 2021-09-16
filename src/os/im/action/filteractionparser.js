@@ -1,5 +1,4 @@
 goog.module('os.im.action.FilterActionParser');
-goog.module.declareLegacyNamespace();
 
 const dom = goog.require('goog.dom');
 const xml = goog.require('goog.dom.xml');

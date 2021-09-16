@@ -1,5 +1,4 @@
 goog.module('plugin.file.zip.ZIPParser');
-goog.module.declareLegacyNamespace();
 
 const googEvents = goog.require('goog.events');
 
@@ -7,7 +6,7 @@ const GoogEvent = goog.require('goog.events.Event');
 const log = goog.require('goog.log');
 const ol = goog.require('ol');
 const EventType = goog.require('os.events.EventType');
-const osFile = goog.require('os.file');
+const OSFile = goog.require('os.file.File');
 const mime = goog.require('os.file.mime');
 const text = goog.require('os.file.mime.text');
 const mimeZip = goog.require('os.file.mime.zip');
@@ -330,7 +329,7 @@ class ZIPParser extends AsyncZipParser {
       return;
     }
 
-    var file = new osFile.File();
+    var file = new OSFile();
     file.setFileName(entry.filename);
     file.setUrl('local://' + entry.filename);
 

@@ -1,5 +1,4 @@
 goog.module('plugin.file.csv.CSVParser');
-goog.module.declareLegacyNamespace();
 
 const googString = goog.require('goog.string');
 const ol = goog.require('ol');

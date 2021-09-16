@@ -1,5 +1,4 @@
 goog.module('os.events.LayerConfigEventType');
-goog.module.declareLegacyNamespace();
 
 
 /**

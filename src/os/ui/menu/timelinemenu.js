@@ -1,5 +1,4 @@
 goog.module('os.ui.menu.timeline');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const Range = goog.require('goog.math.Range');

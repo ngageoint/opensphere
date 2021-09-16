@@ -1,5 +1,4 @@
 goog.module('os.tag');
-goog.module.declareLegacyNamespace();
 
 const {getChildren} = goog.require('goog.dom');
 const {getAllTextContent} = goog.require('ol.xml');

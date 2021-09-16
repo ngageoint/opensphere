@@ -1,5 +1,4 @@
 goog.module('os.ol.source.ILoadingSource');
-goog.module.declareLegacyNamespace();
 
 
 /**

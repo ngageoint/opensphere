@@ -1,5 +1,4 @@
 goog.module('plugin.vectortools.CopyLayer');
-goog.module.declareLegacyNamespace();
 
 const MapContainer = goog.require('os.MapContainer');
 const AbstractSource = goog.require('os.command.AbstractSource');

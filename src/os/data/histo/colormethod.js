@@ -1,5 +1,4 @@
 goog.module('os.data.histo.ColorMethod');
-goog.module.declareLegacyNamespace();
 
 /**
  * Bin color methods.

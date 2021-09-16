@@ -26,6 +26,7 @@ describe('os.track', function() {
   const TimeInstant = goog.module.get('os.time.TimeInstant');
   const TimeRange = goog.module.get('os.time.TimeRange');
   const osTrack = goog.module.get('os.track');
+  const TrackField = goog.module.get('os.track.TrackField');
 
   var metadataField = 'testField';
   var sortIncrement = 1000;
@@ -199,8 +200,8 @@ describe('os.track', function() {
     expect(track.getId()).toBe(id);
     expect(track.get(Fields.ID)).toBe(id);
     expect(track.get(Fields.LOWERCASE_NAME)).toBe(name);
-    expect(track.get(osTrack.TrackField.SORT_FIELD)).toBe(sortField);
-    expect(track.get(osTrack.TrackField.METADATA_MAP)).toBeUndefined();
+    expect(track.get(TrackField.SORT_FIELD)).toBe(sortField);
+    expect(track.get(TrackField.METADATA_MAP)).toBeUndefined();
 
     var featureStyle = track.get(StyleType.FEATURE);
     expect(featureStyle).toBeDefined();
@@ -226,7 +227,7 @@ describe('os.track', function() {
     expect(actualId).toBeDefined();
     expect(track.get(Fields.ID)).toBe(actualId);
     expect(track.get(Fields.LOWERCASE_NAME)).toBe(actualId);
-    expect(track.get(osTrack.TrackField.SORT_FIELD)).toBe(RecordField.TIME);
+    expect(track.get(TrackField.SORT_FIELD)).toBe(RecordField.TIME);
 
     var featureStyle = track.get(StyleType.FEATURE);
     expect(featureStyle).toBeDefined();
@@ -249,7 +250,7 @@ describe('os.track', function() {
       includeMetadata: true
     });
 
-    var metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    var metadataMap = track.get(TrackField.METADATA_MAP);
     expect(metadataMap).toBeDefined();
 
     var keys = Object.keys(metadataMap);
@@ -288,7 +289,7 @@ describe('os.track', function() {
     });
 
     expect(track instanceof DynamicFeature).toBe(false);
-    expect(track.get(osTrack.TrackField.SORT_FIELD)).toBe(sortField);
+    expect(track.get(TrackField.SORT_FIELD)).toBe(sortField);
 
     var geometry = track.getGeometry();
     expect(geometry).toBeDefined();
@@ -331,7 +332,7 @@ describe('os.track', function() {
       features: features
     });
 
-    var metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    var metadataMap = track.get(TrackField.METADATA_MAP);
     expect(metadataMap).toBeUndefined();
 
     // overlap by 2 features to verify those are skipped
@@ -344,7 +345,7 @@ describe('os.track', function() {
       includeMetadata: true
     });
 
-    metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    metadataMap = track.get(TrackField.METADATA_MAP);
     expect(metadataMap).toBeDefined();
 
     var keys = Object.keys(metadataMap);
@@ -431,7 +432,7 @@ describe('os.track', function() {
     var geometry = track.getGeometry();
     expect(geometry.flatCoordinates.length).toBe(20 * geometry.stride);
 
-    var metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    var metadataMap = track.get(TrackField.METADATA_MAP);
     expect(object.getCount(metadataMap)).toBe(20);
 
     var lastTimeValue = geometry.flatCoordinates[geometry.flatCoordinates.length - 1];
@@ -442,7 +443,7 @@ describe('os.track', function() {
     expect(geometry.flatCoordinates.length).toBe(20 * geometry.stride);
     expect(geometry.flatCoordinates[geometry.flatCoordinates.length - 1]).toBe(lastTimeValue);
 
-    metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    metadataMap = track.get(TrackField.METADATA_MAP);
     expect(object.getCount(metadataMap)).toBe(20);
 
     verifyMetadata(geometry.flatCoordinates, geometry.stride, metadataMap);
@@ -453,7 +454,7 @@ describe('os.track', function() {
     expect(geometry.flatCoordinates.length).toBe(10 * geometry.stride);
     expect(geometry.flatCoordinates[geometry.flatCoordinates.length - 1]).toBe(lastTimeValue);
 
-    metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    metadataMap = track.get(TrackField.METADATA_MAP);
     expect(object.getCount(metadataMap)).toBe(10);
 
     verifyMetadata(geometry.flatCoordinates, geometry.stride, metadataMap);
@@ -463,7 +464,7 @@ describe('os.track', function() {
     geometry = track.getGeometry();
     expect(geometry.flatCoordinates.length).toBe(0);
 
-    metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    metadataMap = track.get(TrackField.METADATA_MAP);
     expect(object.getCount(metadataMap)).toBe(0);
   });
 
@@ -478,7 +479,7 @@ describe('os.track', function() {
     var geometry = track.getGeometry();
     expect(geometry.flatCoordinates.length).toBe(20 * geometry.stride);
 
-    var metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    var metadataMap = track.get(TrackField.METADATA_MAP);
     expect(object.getCount(metadataMap)).toBe(20);
 
     var originalCoordinates = geometry.flatCoordinates.slice();
@@ -490,7 +491,7 @@ describe('os.track', function() {
     expect(geometry.flatCoordinates[geometry.flatCoordinates.length - 1])
         .toBe(originalCoordinates[originalCoordinates.length - 1]);
 
-    metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    metadataMap = track.get(TrackField.METADATA_MAP);
     expect(object.getCount(metadataMap)).toBe(20);
 
     verifyMetadata(geometry.flatCoordinates, geometry.stride, metadataMap);
@@ -504,7 +505,7 @@ describe('os.track', function() {
     expect(geometry.flatCoordinates[geometry.flatCoordinates.length - 1])
         .toBe(originalCoordinates[15 * geometry.stride - 1]);
 
-    metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    metadataMap = track.get(TrackField.METADATA_MAP);
     expect(object.getCount(metadataMap)).toBe(10);
 
     verifyMetadata(geometry.flatCoordinates, geometry.stride, metadataMap);
@@ -514,7 +515,7 @@ describe('os.track', function() {
     geometry = track.getGeometry();
     expect(geometry.flatCoordinates.length).toBe(0);
 
-    metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    metadataMap = track.get(TrackField.METADATA_MAP);
     expect(object.getCount(metadataMap)).toBe(0);
   });
 });

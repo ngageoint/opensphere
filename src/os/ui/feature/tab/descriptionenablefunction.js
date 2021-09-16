@@ -1,10 +1,10 @@
 goog.module('os.ui.feature.tab.descriptionEnableFunction');
-goog.module.declareLegacyNamespace();
 
 const {findValue} = goog.require('goog.object');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 const RecordField = goog.require('os.data.RecordField');
 const {DESC_REGEXP} = goog.require('os.fields');
+
 
 /**
  * The tab enable function for the description tab.

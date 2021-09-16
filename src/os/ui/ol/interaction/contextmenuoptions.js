@@ -1,8 +1,8 @@
 goog.module('os.ui.ol.interaction.ContextMenuOptions');
-goog.module.declareLegacyNamespace();
 
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 const Menu = goog.requireType('os.ui.menu.Menu');
+
 
 /**
  * @typedef {{

@@ -1,5 +1,4 @@
 goog.module('os.layer.Image');
-goog.module.declareLegacyNamespace();
 
 const {assert} = goog.require('goog.asserts');
 const GoogEventType = goog.require('goog.events.EventType');

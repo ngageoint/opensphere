@@ -1,5 +1,4 @@
 goog.module('os.config.ThemeSettingsUI');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const {ROOT} = goog.require('os');
@@ -11,6 +10,7 @@ const {apply} = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 
 const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
+
 
 /**
  * The unit settings UI directive

@@ -1,5 +1,4 @@
 goog.module('os.time.ITime');
-goog.module.declareLegacyNamespace();
 
 const DateLike = goog.requireType('goog.date.DateLike');
 const IComparable = goog.requireType('os.IComparable');

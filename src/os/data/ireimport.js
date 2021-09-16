@@ -1,5 +1,4 @@
 goog.module('os.data.IReimport');
-goog.module.declareLegacyNamespace();
 
 
 /**

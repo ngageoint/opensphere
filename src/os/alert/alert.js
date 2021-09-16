@@ -1,5 +1,4 @@
 goog.module('os.alert.Alert');
-goog.module.declareLegacyNamespace();
 
 const AlertEventSeverity = goog.requireType('os.alert.AlertEventSeverity');
 

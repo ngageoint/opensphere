@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.legend');
-goog.module.declareLegacyNamespace();
 
 const osImplements = goog.require('os.implements');
 const legend = goog.require('os.legend');

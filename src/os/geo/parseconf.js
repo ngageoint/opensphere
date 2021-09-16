@@ -1,5 +1,4 @@
 goog.module('os.geo.ParseConf');
-goog.module.declareLegacyNamespace();
 
 /**
  * The parse config for os.geo.

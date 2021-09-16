@@ -1,5 +1,4 @@
 goog.module('os.ui.filter.op.IsFalse');
-goog.module.declareLegacyNamespace();
 
 const Op = goog.require('os.ui.filter.op.Op');
 const DataType = goog.require('os.xsd.DataType');

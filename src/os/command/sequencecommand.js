@@ -1,5 +1,4 @@
 goog.module('os.command.SequenceCommand');
-goog.module.declareLegacyNamespace();
 
 const Timer = goog.require('goog.Timer');
 const GoogEvent = goog.require('goog.events.Event');

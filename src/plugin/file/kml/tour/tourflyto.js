@@ -1,5 +1,4 @@
 goog.module('plugin.file.kml.tour.FlyTo');
-goog.module.declareLegacyNamespace();
 
 const olProj = goog.require('ol.proj');
 const MapContainer = goog.require('os.MapContainer');

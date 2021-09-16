@@ -1,5 +1,4 @@
 goog.module('os.im.action.ImportActionEventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

@@ -1,5 +1,4 @@
 goog.module('plugin.area.KMLAreaImportUI');
-goog.module.declareLegacyNamespace();
 
 const dispose = goog.require('goog.dispose');
 const EventType = goog.require('os.events.EventType');

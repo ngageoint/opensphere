@@ -1,5 +1,4 @@
 goog.module('os.search.MockSearch');
-goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 const AbstractSearch = goog.require('os.search.AbstractSearch');

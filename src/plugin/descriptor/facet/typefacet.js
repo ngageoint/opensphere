@@ -1,5 +1,4 @@
 goog.module('plugin.descriptor.facet.Type');
-goog.module.declareLegacyNamespace();
 
 const googString = goog.require('goog.string');
 const ValueFacet = goog.require('os.search.ValueFacet');

@@ -1,5 +1,4 @@
 goog.module('os.state.v2.ViewState');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const {clamp} = goog.require('goog.math');

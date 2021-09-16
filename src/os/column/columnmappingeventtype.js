@@ -1,5 +1,4 @@
 goog.module('os.column.ColumnMappingEventType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

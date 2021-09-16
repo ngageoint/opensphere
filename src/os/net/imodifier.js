@@ -1,5 +1,4 @@
 goog.module('os.net.IModifier');
-goog.module.declareLegacyNamespace();
 
 const Uri = goog.requireType('goog.Uri');
 

@@ -1,5 +1,4 @@
 goog.module('os.thread.IThreadJob');
-goog.module.declareLegacyNamespace();
 
 
 /**

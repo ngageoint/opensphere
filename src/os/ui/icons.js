@@ -1,7 +1,7 @@
 goog.module('os.ui.Icons');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
+
 
 /**
  * Icon image markup

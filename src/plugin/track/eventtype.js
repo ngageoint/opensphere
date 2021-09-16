@@ -1,5 +1,4 @@
 goog.module('plugin.track.EventType');
-goog.module.declareLegacyNamespace();
 
 
 /**

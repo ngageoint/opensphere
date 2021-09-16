@@ -1,5 +1,4 @@
 goog.module('os.data.groupby.INodeGroupBy');
-goog.module.declareLegacyNamespace();
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const ITreeNode = goog.requireType('os.structs.ITreeNode');

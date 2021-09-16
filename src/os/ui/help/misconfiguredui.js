@@ -1,5 +1,4 @@
 goog.module('os.ui.help.MisconfiguredWindowUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');

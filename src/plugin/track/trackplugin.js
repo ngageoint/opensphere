@@ -1,5 +1,4 @@
 goog.module('plugin.track.TrackPlugin');
-goog.module.declareLegacyNamespace();
 
 const menu = goog.require('plugin.track.menu');
 const track = goog.require('plugin.track');
@@ -9,6 +8,7 @@ const Metrics = goog.require('plugin.track.Metrics');
 const MetricsManager = goog.require('os.ui.metrics.MetricsManager');
 const Settings = goog.require('os.config.Settings');
 const TrackInteraction = goog.require('plugin.track.TrackInteraction');
+
 
 const settings = Settings.getInstance();
 

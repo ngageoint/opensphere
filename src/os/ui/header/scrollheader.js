@@ -1,5 +1,4 @@
 goog.module('os.ui.header.ScrollHeaderUI');
-goog.module.declareLegacyNamespace();
 
 const Throttle = goog.require('goog.async.Throttle');
 const Module = goog.require('os.ui.Module');

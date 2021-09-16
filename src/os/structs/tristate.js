@@ -1,5 +1,4 @@
 goog.module('os.structs.TriState');
-goog.module.declareLegacyNamespace();
 
 
 /**

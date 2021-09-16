@@ -1,5 +1,4 @@
 goog.module('os.command.ToggleWebGL');
-goog.module.declareLegacyNamespace();
 
 const MapMode = goog.require('os.MapMode');
 const AbstractAsyncCommand = goog.require('os.command.AbstractAsyncCommand');

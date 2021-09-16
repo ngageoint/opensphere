@@ -1,5 +1,4 @@
 goog.module('os.ui.slick.SlickTreeUI');
-goog.module.declareLegacyNamespace();
 
 const Delay = goog.require('goog.async.Delay');
 const {getAncestor} = goog.require('goog.dom');

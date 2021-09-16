@@ -1,5 +1,4 @@
 goog.module('os.ui.nav.Location');
-goog.module.declareLegacyNamespace();
 
 /**
  * Nav bar locations.

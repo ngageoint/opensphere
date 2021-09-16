@@ -1,5 +1,4 @@
 goog.module('os.ui.util.OffsetMarginUI');
-goog.module.declareLegacyNamespace();
 
 const Throttle = goog.require('goog.Throttle');
 const dispatcher = goog.require('os.Dispatcher');

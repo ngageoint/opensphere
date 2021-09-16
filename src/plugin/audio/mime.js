@@ -1,11 +1,11 @@
 goog.module('plugin.audio.mime');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const mime = goog.require('os.file.mime');
 const mimeText = goog.require('os.file.mime.text');
 
 const OSFile = goog.requireType('os.file.File');
+
 
 /**
  * Priority for audio file detection. Some audio formats (like .wav) may be detected as text, so this has to run first.

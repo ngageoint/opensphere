@@ -1,5 +1,4 @@
 goog.module('os.im.action.IImportAction');
-goog.module.declareLegacyNamespace();
 
 // The compiler has to process these first or @inheritDoc will not work properly on implementing classes.
 // @see https://github.com/google/closure-compiler/issues/3583

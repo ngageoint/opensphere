@@ -1,5 +1,4 @@
 goog.module('os.interaction.DrawLine');
-goog.module.declareLegacyNamespace();
 
 const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
 const {squaredDistance} = goog.require('ol.coordinate');
@@ -8,6 +7,7 @@ const {normalizeGeometryCoordinates} = goog.require('os.geo2');
 const DrawPolygon = goog.require('os.interaction.DrawPolygon');
 
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
+
 
 /**
  * @typedef {{

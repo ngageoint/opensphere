@@ -1,5 +1,4 @@
 goog.module('os.ogc.filter.OGCFilterFormatter');
-goog.module.declareLegacyNamespace();
 
 const IFilterFormatter = goog.requireType('os.filter.IFilterFormatter');
 

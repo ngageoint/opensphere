@@ -1,5 +1,4 @@
 goog.module('os.ui.IScrollDataSource');
-goog.module.declareLegacyNamespace();
 
 const SearchManager = goog.requireType('os.search.SearchManager');
 

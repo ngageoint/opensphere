@@ -16,7 +16,8 @@ const Icon = goog.require('ol.style.Icon');
 const Style = goog.require('ol.style.Style');
 const LayerEvent = goog.require('os.events.LayerEvent');
 const osImplements = goog.require('os.implements');
-const osLayer = goog.require('os.layer');
+const ExplicitLayerType = goog.require('os.layer.ExplicitLayerType');
+const LayerType = goog.require('os.layer.LayerType');
 const ILayer = goog.require('os.layer.ILayer');
 const VectorLayer = goog.require('os.layer.Vector');
 const RequestSource = goog.require('os.source.Request');
@@ -121,8 +122,8 @@ class Heatmap extends VectorLayer {
     this.setHidden(false);
     this.setLayerUI(layerUI);
     this.setSynchronizerType(SynchronizerType.HEATMAP);
-    this.setOSType(osLayer.LayerType.IMAGE);
-    this.setExplicitType(osLayer.ExplicitLayerType.IMAGE);
+    this.setOSType(LayerType.IMAGE);
+    this.setExplicitType(ExplicitLayerType.IMAGE);
     this.setDoubleClickHandler(null);
 
     if (options['title']) {

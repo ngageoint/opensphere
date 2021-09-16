@@ -1,8 +1,9 @@
 goog.module('os.ui.column.ColumnPickerUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
+
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 
 
 /**
@@ -155,7 +156,7 @@ class Controller {
   }
 
   /**
-   * @param {os.data.ColumnDefinition} column
+   * @param {ColumnDefinition} column
    * @export
    */
   columnPicked(column) {
@@ -163,7 +164,7 @@ class Controller {
   }
 
   /**
-   * @param {!Array.<!os.data.ColumnDefinition>} columns
+   * @param {!Array<!ColumnDefinition>} columns
    * @export
    */
   columnsChanged(columns) {

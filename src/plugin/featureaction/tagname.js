@@ -1,5 +1,4 @@
 goog.module('plugin.im.action.feature.TagName');
-goog.module.declareLegacyNamespace();
 
 /**
  * XML tags used by feature actions.

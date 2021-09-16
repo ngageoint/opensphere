@@ -1,5 +1,4 @@
 goog.module('os.ogc.wmts');
-goog.module.declareLegacyNamespace();
 
 const {DATETIME_FORMATS} = goog.require('os.time');
 

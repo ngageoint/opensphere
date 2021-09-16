@@ -1,5 +1,4 @@
 goog.module('os.ui.alert.AlertBadgeUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');

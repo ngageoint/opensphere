@@ -1,5 +1,4 @@
 goog.module('os.storage.IDBStorage');
-goog.module.declareLegacyNamespace();
 
 const Deferred = goog.require('goog.async.Deferred');
 const {deleteDatabase, openDatabase} = goog.require('goog.db');

@@ -1,5 +1,4 @@
 goog.module('os.track');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const googArray = goog.require('goog.array');
@@ -29,6 +28,7 @@ const fn = goog.require('os.fn');
 const geo = goog.require('os.geo');
 const GeometryField = goog.require('os.geom.GeometryField');
 const interpolate = goog.require('os.interpolate');
+const Method = goog.require('os.interpolate.Method');
 const osObject = goog.require('os.object');
 const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
@@ -43,6 +43,7 @@ const ConfirmColumnUI = goog.require('os.ui.window.ConfirmColumnUI');
 const ConfirmTextUI = goog.require('os.ui.window.ConfirmTextUI');
 const UnitManager = goog.require('os.unit.UnitManager');
 
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 const AddOptions = goog.requireType('os.track.AddOptions');
 const CreateOptions = goog.requireType('os.track.CreateOptions');
 const SplitOptions = goog.requireType('os.track.SplitOptions');
@@ -289,7 +290,7 @@ let createTrack_ = function(options) {
 
   // prevent any further normalization of the geometry
   geometry.set(GeometryField.NORMALIZED, true);
-  geometry.set(interpolate.METHOD_FIELD, interpolate.Method.NONE);
+  geometry.set(interpolate.METHOD_FIELD, Method.NONE);
 
   // create the track feature
   var track;
@@ -1136,7 +1137,7 @@ const promptForTitleAndMetadata = function(opt_default = '', opt_includeMetadata
 /**
  * Prompt the user to choose a track.
  *
- * @param {Array<os.data.ColumnDefinition>} columns The columns
+ * @param {Array<ColumnDefinition>} columns The columns
  * @param {string} prompt The dialog prompt
  * @return {!Promise}
  */

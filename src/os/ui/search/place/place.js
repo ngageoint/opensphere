@@ -1,5 +1,4 @@
 goog.module('os.ui.search.place');
-goog.module.declareLegacyNamespace();
 
 const {getUid} = goog.require('ol');
 const Feature = goog.require('ol.Feature');
@@ -8,6 +7,7 @@ const {setFeatureStyle} = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const {GOOGLE_EARTH_URL, GoogleEarthIcons} = goog.require('os.ui.file.kml');
+
 
 /**
  * @type {Object}

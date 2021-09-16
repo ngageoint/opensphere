@@ -1,5 +1,4 @@
 goog.module('plugin.area.KMLAreaParser');
-goog.module.declareLegacyNamespace();
 
 const dom = goog.require('goog.dom');
 const googDomXml = goog.require('goog.dom.xml');

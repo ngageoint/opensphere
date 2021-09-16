@@ -1,5 +1,4 @@
 goog.module('os.url');
-goog.module.declareLegacyNamespace();
 
 
 /**

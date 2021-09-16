@@ -1,5 +1,4 @@
 goog.module('plugin.config.Provider');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const Settings = goog.require('os.config.Settings');
@@ -10,6 +9,7 @@ const DataManager = goog.require('os.data.DataManager');
 const DataProviderEvent = goog.require('os.data.DataProviderEvent');
 const DataProviderEventType = goog.require('os.data.DataProviderEventType');
 const IDataProvider = goog.require('os.data.IDataProvider');
+const osImplements = goog.require('os.implements');
 const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
 const {ID} = goog.require('plugin.config');
 
@@ -216,7 +216,7 @@ class Provider extends DescriptorProvider {
     return provider;
   }
 }
-os.implements(Provider, IDataProvider.ID);
+osImplements(Provider, IDataProvider.ID);
 
 /**
  * The logger.

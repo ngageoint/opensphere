@@ -1,7 +1,7 @@
 goog.module('os.ui.config.SettingDefaultUI');
-goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
+
 
 /**
  * The selected/highlighted node UI directive for filter groups

@@ -1,5 +1,4 @@
 goog.module('os.metrics.AddDataMetrics');
-goog.module.declareLegacyNamespace();
 
 const {AddData} = goog.require('os.metrics.keys');
 const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');

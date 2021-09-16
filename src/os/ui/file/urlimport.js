@@ -1,5 +1,4 @@
 goog.module('os.ui.file.UrlImportUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.util.ValidationMessageUI');
 

@@ -1,5 +1,4 @@
 goog.module('os.im.mapping.RenameMapping');
-goog.module.declareLegacyNamespace();
 
 const {getItemField, setItemField} = goog.require('os.im.mapping');
 const AbstractMapping = goog.require('os.im.mapping.AbstractMapping');

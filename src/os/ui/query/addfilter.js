@@ -1,5 +1,4 @@
 goog.module('os.ui.query.AddFilterUI');
-goog.module.declareLegacyNamespace();
 
 const {insert} = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');

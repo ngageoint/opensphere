@@ -1,5 +1,4 @@
 goog.module('plugin.file.gpx.mime');
-goog.module.declareLegacyNamespace();
 
 const mime = goog.require('os.file.mime');
 

@@ -1,5 +1,4 @@
 goog.module('os.layer.LayerType');
-goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}

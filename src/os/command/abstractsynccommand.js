@@ -1,5 +1,4 @@
 goog.module('os.command.AbstractSyncCommand');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const State = goog.require('os.command.State');

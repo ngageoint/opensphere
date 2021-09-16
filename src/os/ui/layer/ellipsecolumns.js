@@ -1,10 +1,10 @@
-goog.module('os.ui.layer.EllipseColumnsUI');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.ui.layer.EllipseColumnsUI');
 
 goog.require('os.ui.layer.ColumnSuggestionSelect');
 
+import {ROOT} from '../../os.js';
+
 const {getValues} = goog.require('goog.object');
-const {ROOT} = goog.require('os');
 const implementationOf = goog.require('os.implements');
 const Settings = goog.require('os.config.Settings');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
@@ -38,24 +38,20 @@ const SourceRequest = goog.requireType('os.source.Request');
  * Convolve form directive.
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
-
   scope: {
     'layer': '='
   },
-
   templateUrl: ROOT + 'views/layer/ellipsecolumns.html',
   controller: Controller,
   controllerAs: 'ctrl'
 });
 
-
 /**
  * Add the directive to the mist module
  */
 Module.directive('ellipsecolumns', [directive]);
-
 
 /**
  * Settings key for radius column regex, outside of the normal RadiusMapping config.
@@ -64,12 +60,11 @@ Module.directive('ellipsecolumns', [directive]);
  */
 const ELLIPSE_RADIUS_REGEX = 'os.mapping.ellipse.radiusRegex';
 
-
 /**
  * Controller for the Ellipse Column Form.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -333,7 +328,7 @@ class Controller {
     const descMappings = this.getDescMappings();
     const mappings = this.removeEllipseMappings_(descMappings);
 
-    callback_(this.scope_['layer'], mappings);
+    callback(this.scope_['layer'], mappings);
     closeWindow(this.element);
   }
 
@@ -381,13 +376,11 @@ class Controller {
   }
 }
 
-
 /**
  * Settings key for if this capability is enabled in configs
  * @type {string}
  */
-const ALLOW_ELLIPSE_CONFIG = 'os.mapping.ellipse.allowConfiguration';
-
+export const ALLOW_ELLIPSE_CONFIG = 'os.mapping.ellipse.allowConfiguration';
 
 /**
  * Types of Mappings available
@@ -398,14 +391,13 @@ const EllipseInputType = {
   ELLIPSE: 'ellipse'
 };
 
-
 /**
  * Launches the window to configure ellipse columns
  * @param {ILayer} layer
  * @param {function(Array<AbstractMapping>)=} opt_confirmCallback
  */
-const launchConfigureWindow = function(layer, opt_confirmCallback) {
-  const confirm = opt_confirmCallback || callback_.bind(this, layer);
+export const launchConfigureWindow = function(layer, opt_confirmCallback) {
+  const confirm = opt_confirmCallback || callback.bind(this, layer);
   const scopeOptions = {
     'layer': layer
   };
@@ -428,32 +420,28 @@ const launchConfigureWindow = function(layer, opt_confirmCallback) {
   ConfirmUI.launchConfirm(options, scopeOptions);
 };
 
-
 /**
  * The default callback that sets the mappings and re-imports data
  * @param {ILayer} layer
  * @param {Array<AbstractMapping>} value
- * @private
  */
-const callback_ = function(layer, value) {
+const callback = function(layer, value) {
   // Update the Descriptor for reload
   const desc = DataManager.getInstance().getDescriptor(layer.getId());
   if (implementationOf(desc, IMappingDescriptor.ID)) {
     const mappingDescriptor = /** @type {IMappingDescriptor} */ (desc);
     mappingDescriptor.setMappings(value);
     mappingDescriptor.updateMappings(layer);
-    updateColumns_(desc, value);
+    updateColumns(desc, value);
   }
 };
-
 
 /**
  * Update the columns so they show up in the analyze tool/feature info
  * @param {IDataDescriptor} desc
  * @param {Array<AbstractMapping>} mappings
- * @private
  */
-const updateColumns_ = function(desc, mappings) {
+const updateColumns = function(desc, mappings) {
   const descColumns = desc.getColumns();
 
   mappings.forEach((mapping) => {
@@ -482,12 +470,4 @@ const updateColumns_ = function(desc, mappings) {
   });
 
   desc.setColumns(descColumns);
-};
-
-
-exports = {
-  Controller,
-  directive,
-  ALLOW_ELLIPSE_CONFIG,
-  launchConfigureWindow
 };

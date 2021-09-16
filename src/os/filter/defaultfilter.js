@@ -1,5 +1,4 @@
 goog.module('os.filter.default');
-goog.module.declareLegacyNamespace();
 
 /**
  * The Font Awesome icon for default filters.

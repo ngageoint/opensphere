@@ -1,5 +1,4 @@
 goog.module('os.bearing');
-goog.module.declareLegacyNamespace();
 
 const dispose = goog.require('goog.dispose');
 const NetEventType = goog.require('goog.net.EventType');

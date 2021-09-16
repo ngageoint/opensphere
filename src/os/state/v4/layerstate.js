@@ -1,5 +1,4 @@
 goog.module('os.state.v4.LayerState');
-goog.module.declareLegacyNamespace();
 
 const {getMapContainer} = goog.require('os.map.instance');
 const BaseLayerState = goog.require('os.state.v4.BaseLayerState');

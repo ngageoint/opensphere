@@ -1,5 +1,4 @@
 goog.module('os.ui.query.cmd.AreaModify');
-goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');

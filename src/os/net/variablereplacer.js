@@ -1,5 +1,4 @@
 goog.module('os.net.VariableReplacer');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const AbstractModifier = goog.require('os.net.AbstractModifier');

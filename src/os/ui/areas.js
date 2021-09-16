@@ -1,5 +1,4 @@
 goog.module('os.ui.AreasUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.urlDragDropDirective');
 

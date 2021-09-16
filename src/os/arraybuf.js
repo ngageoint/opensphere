@@ -1,5 +1,4 @@
 goog.module('os.arraybuf');
-goog.module.declareLegacyNamespace();
 
 goog.require('goog.array');
 

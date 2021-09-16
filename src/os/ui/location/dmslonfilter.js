@@ -1,5 +1,4 @@
 goog.module('os.ui.location.dmsLonFilter');
-goog.module.declareLegacyNamespace();
 
 const {toSexagesimal} = goog.require('os.geo');
 const Module = goog.require('os.ui.Module');

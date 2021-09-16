@@ -4,7 +4,6 @@
  * the projection.
  */
 goog.module('os.interpolate');
-goog.module.declareLegacyNamespace();
 
 const GeometryType = goog.require('ol.geom.GeometryType');
 const olProj = goog.require('ol.proj');

@@ -1,5 +1,4 @@
 goog.module('os.net.HandlerType');
-goog.module.declareLegacyNamespace();
 
 
 /**

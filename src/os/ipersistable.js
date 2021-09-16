@@ -1,5 +1,4 @@
 goog.module('os.IPersistable');
-goog.module.declareLegacyNamespace();
 
 /**
  * An interface for persistable/restorable objects

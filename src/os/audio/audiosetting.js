@@ -1,5 +1,4 @@
 goog.module('os.audio.AudioSetting');
-goog.module.declareLegacyNamespace();
 
 /**
  * Audio settings keys.

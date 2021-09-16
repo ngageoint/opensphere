@@ -1,5 +1,4 @@
 goog.module('os.ui.icon.IconSelectorUI');
-goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const {ROOT} = goog.require('os');

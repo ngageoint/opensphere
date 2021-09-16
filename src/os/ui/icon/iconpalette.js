@@ -1,5 +1,4 @@
 goog.module('os.ui.icon.IconPaletteUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const {apply} = goog.require('os.ui');

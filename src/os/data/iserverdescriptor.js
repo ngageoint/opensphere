@@ -1,5 +1,4 @@
 goog.module('os.data.IServerDescriptor');
-goog.module.declareLegacyNamespace();
 
 
 /**

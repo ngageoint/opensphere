@@ -1,5 +1,4 @@
 goog.module('os.command.EditLayerFeatures');
-goog.module.declareLegacyNamespace();
 
 const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
 const State = goog.require('os.command.State');

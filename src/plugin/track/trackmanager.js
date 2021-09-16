@@ -1,5 +1,4 @@
 goog.module('plugin.track.TrackManager');
-goog.module.declareLegacyNamespace();
 
 goog.require('plugin.track.ConfirmTrackUI');
 
@@ -17,6 +16,7 @@ const osObject = goog.require('os.object');
 const osMap = goog.require('os.map');
 const osStyle = goog.require('os.style');
 const osTrack = goog.require('os.track');
+const TrackField = goog.require('os.track.TrackField');
 const osWindow = goog.require('os.ui.window');
 const pluginTrack = goog.require('plugin.track');
 const AlertManager = goog.require('os.alert.AlertManager');
@@ -40,6 +40,8 @@ const Logger = goog.requireType('goog.log.Logger');
 const OlFeature = goog.requireType('ol.Feature');
 const OlMapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 const OsInterpolateConfig = goog.requireType('os.interpolate.Config');
+const AddOptions = goog.requireType('os.track.AddOptions');
+const CreateOptions = goog.requireType('os.track.CreateOptions');
 
 
 /**
@@ -286,7 +288,7 @@ class TrackManager extends EventTarget {
     const coordinates = [];
     if (tracks) {
       for (let i = 0; i < tracks.length; i++) {
-        const trackPos = tracks[i].get(osTrack.TrackField.CURRENT_POSITION);
+        const trackPos = tracks[i].get(TrackField.CURRENT_POSITION);
         if (trackPos) {
           coordinates.push(trackPos.getCoordinates());
         }
@@ -389,7 +391,7 @@ class TrackManager extends EventTarget {
         // build the coordinates, interpolating as necessary
         const coordinates = this.getCoordinates_(coords, isPredictedTrack);
         if (isPredictedTrack) {
-          osTrack.addToTrack(/** @type {osTrack.AddOptions} */ ({
+          osTrack.addToTrack(/** @type {AddOptions} */ ({
             track,
             coordinates
           }));
@@ -496,7 +498,7 @@ class TrackManager extends EventTarget {
     color[3] = .45;
     color = osStyle.toRgbaString(color);
 
-    const newTrack = pluginTrack.createAndAdd(/** @type {osTrack.CreateOptions} */ ({
+    const newTrack = pluginTrack.createAndAdd(/** @type {CreateOptions} */ ({
       name: [PREDICTED_TRACK_LABEL, ', ', OsMeasure.method, '] ',
         this.nextPredictedTrack, ' | ', opt_name].join(''),
       includeMetadata: true,

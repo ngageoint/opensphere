@@ -1,5 +1,4 @@
 goog.module('os.ui.timeline');
-goog.module.declareLegacyNamespace();
 
 /**
  * The timeline axis height.

@@ -1,5 +1,4 @@
 goog.module('os.mixin.ImageSource');
-goog.module.declareLegacyNamespace();
 
 const {insert} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');

@@ -1,5 +1,4 @@
 goog.module('os.ui.IHistogramUI');
-goog.module.declareLegacyNamespace();
 
 const Feature = goog.requireType('ol.Feature');
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');

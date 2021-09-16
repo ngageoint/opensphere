@@ -1,5 +1,4 @@
 goog.module('os.ui.slick.SlickGridEvent');
-goog.module.declareLegacyNamespace();
 
 /**
  * Angular events used by the slickgrid directive.

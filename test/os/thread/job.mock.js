@@ -1,5 +1,4 @@
 goog.module('mock.thread.Job');
-goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 

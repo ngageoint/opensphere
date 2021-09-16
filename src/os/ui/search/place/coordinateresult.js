@@ -1,5 +1,4 @@
 goog.module('os.ui.search.place.CoordinateResult');
-goog.module.declareLegacyNamespace();
 
 const {transformExtent} = goog.require('ol.proj');
 const MapContainer = goog.require('os.MapContainer');

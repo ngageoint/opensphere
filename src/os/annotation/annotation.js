@@ -1,5 +1,4 @@
 goog.module('os.annotation');
-goog.module.declareLegacyNamespace();
 
 const {getUid} = goog.require('ol');
 const GeometryType = goog.require('ol.geom.GeometryType');
