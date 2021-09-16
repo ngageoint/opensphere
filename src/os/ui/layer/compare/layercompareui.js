@@ -386,7 +386,7 @@ class Controller {
 
     // Get the location of the split
     const slider = this.element.find(Selector.SLIDER)[0];
-    const split = slider.offsetLeft * 2;
+    const split = slider.offsetLeft * window.devicePixelRatio;
 
     // Create the canvas that will be exported as an image
     var fullCanvas = /** @type {!HTMLCanvasElement} */ (document.createElement('canvas'));
@@ -403,12 +403,14 @@ class Controller {
         split, 0, width, height);
 
     // Crop and add the top canvas to the left of the image
-    var topCanvasCrop = /** @type {!HTMLCanvasElement} */ (document.createElement('canvas'));
-    topCanvasCrop.width = split;
-    topCanvasCrop.height = bottomCanvas.height;
-    var topContext = topCanvasCrop.getContext('2d');
-    topContext.drawImage(topCanvas, 0, 0);
-    fullContext.drawImage(topCanvasCrop, 0, 0);
+    fullContext.drawImage(topCanvas, 0, 0, split, height,
+        0, 0, split, height);
+
+    // Draw a line to represent where the canvases are split
+    fullContext.beginPath();
+    fullContext.moveTo(split, height);
+    fullContext.lineTo(split, 0);
+    fullContext.stroke();
 
     // Export the combined canvas
     capture.saveCanvas(fullCanvas);
