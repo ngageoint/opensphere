@@ -18,7 +18,7 @@ const userAgent = goog.require('goog.userAgent');
 const MapContainer = goog.require('os.MapContainer');
 const keys = goog.require('os.metrics.keys');
 const TimelineEventType = goog.require('os.time.TimelineEventType');
-const saveMenu = goog.require('os.ui.menu.save');
+const stateMenu = goog.require('os.ui.state.menu');
 
 const MenuItem = goog.requireType('os.ui.menu.MenuItem');
 
@@ -41,7 +41,7 @@ export default class CapturePlugin extends AbstractCapturePlugin {
   init() {
     super.init();
 
-    var menu = saveMenu.getMenu();
+    var menu = stateMenu.getMenu();
     if (menu) {
       var root = menu.getRoot();
       root.addChild({
@@ -50,7 +50,7 @@ export default class CapturePlugin extends AbstractCapturePlugin {
         tooltip: 'Save a screenshot',
         icons: ['<i class="fa fa-fw fa-camera"></i>'],
         metricKey: keys.Map.SCREEN_CAPTURE,
-        sort: 20
+        sort: 110
       });
 
       root.addChild({
@@ -60,7 +60,7 @@ export default class CapturePlugin extends AbstractCapturePlugin {
         icons: ['<i class="fa fa-fw fa-circle"></i>'],
         metricKey: keys.Map.SCREEN_RECORD,
         beforeRender: recordingBeforeRender,
-        sort: 21
+        sort: 111
       });
     }
 

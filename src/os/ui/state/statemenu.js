@@ -74,20 +74,21 @@ const setup = function() {
     menu = new Menu(new MenuItem({
       type: MenuItemType.ROOT,
       children: [{
-        label: 'Import State',
-        eventType: ImportEventType.FILE,
-        tooltip: 'Import a state from a local file or a URL',
-        icons: ['<i class="fa fa-fw fa-cloud-download"></i>'],
-        metricKey: MapMetrics.IMPORT_STATE,
-        sort: 100
-      },
-      {
         label: 'Save State',
         eventType: EventType.SAVE_STATE,
         tooltip: 'Save the application state',
         icons: ['<i class="fa fa-fw fa-floppy-o"></i>'],
         handler: onStateMenuEvent,
         metricKey: MapMetrics.SAVE_STATE,
+        shortcut: 'Ctrl+S',
+        sort: 100
+      },
+      {
+        label: 'Import State',
+        eventType: ImportEventType.FILE,
+        tooltip: 'Import a state from a local file or a URL',
+        icons: ['<i class="fa fa-fw fa-cloud-download"></i>'],
+        metricKey: MapMetrics.IMPORT_STATE,
         sort: 101
       },
       {
