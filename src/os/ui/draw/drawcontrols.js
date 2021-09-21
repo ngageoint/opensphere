@@ -8,8 +8,19 @@ const MapEvent = goog.require('os.MapEvent');
 const Module = goog.require('os.ui.Module');
 const {getMenu} = goog.require('os.ui.draw');
 const {Controller: BaseDrawControlsCtrl} = goog.require('os.ui.draw.BaseDrawControlsUI');
+const dispatcher = goog.require('os.Dispatcher');
+const Settings = goog.require('os.config.Settings');
+const Measure = goog.require('os.interaction.Measure');
+const Method = goog.require('os.interpolate.Method');
+const {getMapContainer} = goog.require('os.map.instance');
+const {Map: MapKeys} = goog.require('os.metrics.keys');
+const DrawEventType = goog.require('os.ui.draw.DrawEventType');
+const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 
 const Logger = goog.requireType('goog.log.Logger');
+const DrawEvent = goog.requireType('os.ui.draw.DrawEvent');
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const MenuItem = goog.requireType('os.ui.menu.MenuItem');
 
 
 /**
@@ -57,16 +68,77 @@ class Controller extends BaseDrawControlsCtrl {
 
     // Base draw controller doesn't support lines as a default.
     this['supportsLines'] = true;
-
     this.log = logger;
+
+    /**
+     * Flag for whether we are currently measuring.
+     * @type {boolean}
+     * @protected
+     */
+    this.measuring = false;
+
+    /**
+     * @type {!string}
+     * @private
+     */
+    this.key_ = 'measureMethod';
+    Measure.method = /** @type {Method} */ (Settings.getInstance().get(this.key_, Measure.method));
+
+    dispatcher.getInstance().listen(DrawEventType.DRAWEND, this.onDrawEnd_, false, this);
+    dispatcher.getInstance().listen(DrawEventType.DRAWCANCEL, this.onDrawEnd_, false, this);
   }
 
   /**
    * @inheritDoc
    */
   $onDestroy() {
-    super.$onDestroy();
     googEvents.unlisten(getIMapContainer(), MapEvent.MAP_READY, this.onMapReady, false, this);
+    dispatcher.getInstance().unlisten(DrawEventType.DRAWEND, this.onDrawEnd_, false, this);
+    dispatcher.getInstance().unlisten(DrawEventType.DRAWCANCEL, this.onDrawEnd_, false, this);
+    this.controlMenu.unlisten(Method.GEODESIC, this.onMeasureTypeChange_, false, this);
+    this.controlMenu.unlisten(Method.RHUMB, this.onMeasureTypeChange_, false, this);
+    super.$onDestroy();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  initControlMenu() {
+    super.initControlMenu();
+
+    var mi = this.controlMenu.getRoot();
+    mi.addChild({
+      type: MenuItemType.SEPARATOR,
+      label: 'Draw',
+      tooltip: 'Options for drawing new areas',
+      sort: 0
+    });
+    mi.addChild({
+      type: MenuItemType.SEPARATOR,
+      label: 'Measure',
+      tooltip: 'Options for measuring distances',
+      sort: 50
+    });
+
+    mi.addChild({
+      label: 'Measure Geodesic',
+      eventType: Method.GEODESIC,
+      tooltip: 'Measures the shortest distance between two points (variable bearing).',
+      metricKey: MapKeys.MEASURE_TOGGLE,
+      beforeRender: updateIcons,
+      sort: 60
+    });
+    mi.addChild({
+      label: 'Measure Rhumb Line',
+      eventType: Method.RHUMB,
+      tooltip: 'Measures the path of constant bearing between two points.',
+      metricKey: MapKeys.MEASURE_TOGGLE,
+      beforeRender: updateIcons,
+      sort: 70
+    });
+
+    this.controlMenu.listen(Method.GEODESIC, this.onMeasureTypeChange_, false, this);
+    this.controlMenu.listen(Method.RHUMB, this.onMeasureTypeChange_, false, this);
   }
 
   /**
@@ -106,7 +178,79 @@ class Controller extends BaseDrawControlsCtrl {
   listenForMapReady() {
     googEvents.listenOnce(getIMapContainer(), MapEvent.MAP_READY, this.onMapReady, false, this);
   }
+
+  /**
+   * @inheritDoc
+   * @export
+   */
+  isActive() {
+    return super.isActive() || this.measuring;
+  }
+
+  /**
+   * Toggles the measure interaction.
+   * @param {boolean=} opt_value The toggle value
+   * @export
+   */
+  toggleMeasure(opt_value) {
+    var measure = this.getMeasureInteraction_();
+
+    if (measure) {
+      opt_value = opt_value !== undefined ? opt_value : !measure.getActive();
+
+      measure.setEnabled(opt_value);
+      measure.setActive(opt_value);
+      this.measuring = opt_value;
+    }
+  }
+
+  /**
+   * Handles draw end events.
+   * @param {DrawEvent} evt The draw event
+   * @private
+   */
+  onDrawEnd_(evt) {
+    if (evt.target instanceof Measure) {
+      this.toggleMeasure(false);
+    }
+  }
+
+  /**
+   * Gets the measure interaction from the map.
+   * @return {?Measure} The measure interaction
+   * @private
+   */
+  getMeasureInteraction_() {
+    var interactions = getMapContainer().getMap().getInteractions().getArray();
+    var measure = interactions.find((interaction) => {
+      return interaction instanceof Measure && interaction.isType('measure');
+    });
+    return /** @type {Measure} */ (measure);
+  }
+
+  /**
+   * Handles measure type changes.
+   * @param {MenuEvent<undefined>} evt The event from the menu
+   * @private
+   */
+  onMeasureTypeChange_(evt) {
+    Measure.method = /** @type {Method} */ (evt.type);
+    Settings.getInstance().set(this.key_, evt.type);
+    this.toggleMeasure(true);
+  }
 }
+
+/**
+ * Helper function for changiing the icons on measure options.
+ * @this {MenuItem}
+ */
+const updateIcons = function() {
+  if (this.eventType === Measure.method) {
+    this.icons = ['<i class="fa fa-fw fa-dot-circle-o"></i>'];
+  } else {
+    this.icons = ['<i class="fa fa-fw fa-circle-o"></i>'];
+  }
+};
 
 /**
  * The logger.

@@ -77,7 +77,6 @@ const create = function(handler) {
       handler: handler,
       sort: 30
     }, {
-      label: 'drawMenuSeparator',
       type: MenuItemType.SEPARATOR,
       sort: 100
     }, {
