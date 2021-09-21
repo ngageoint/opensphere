@@ -265,7 +265,7 @@
     "conventional-changelog-cli": "^1.2.0",
     "conventional-recommended-bump": "^0.3.0",
     "eslint": "^7.26.0",
-    "eslint-config-opensphere": "^5.0.0",
+    "eslint-config-opensphere": "^6.0.2",
     "html-validate": "~4.13.1",
     "html-validate-angular": "^2.9.0",
     "husky": "^3.0.1",
