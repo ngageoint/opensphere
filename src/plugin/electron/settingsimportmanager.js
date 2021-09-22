@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.electron.settingsImportManager');
 
-import SettingsImportUI from './settingsimportui';
 import * as jsonMime from '../../os/file/mime/jsonsettings';
+import SettingsImportUI from './settingsimportui';
 
 const ImportManager = goog.require('os.ui.im.ImportManager');
 

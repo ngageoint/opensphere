@@ -1,8 +1,8 @@
 goog.declareModuleId('os.source');
 
-import {debounce} from '../os.js';
 import * as dispatcher from '../dispatcher.js';
 import {isInternalField} from '../feature/feature.js';
+import {debounce} from '../os.js';
 
 const Timer = goog.require('goog.Timer');
 const {defaultCompare} = goog.require('goog.array');

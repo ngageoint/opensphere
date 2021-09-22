@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.electron.SettingsImportUI');
 
-import * as jsonMime from '../../os/file/mime/jsonsettings';
 import * as Dispatcher from '../../os/dispatcher.js';
+import * as jsonMime from '../../os/file/mime/jsonsettings';
 
 const AlertManager = goog.require('os.alert.AlertManager');
 const {FileScheme} = goog.require('os.file');

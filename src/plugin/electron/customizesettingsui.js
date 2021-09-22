@@ -2,13 +2,13 @@ goog.declareModuleId('plugin.electron.CustomizeSettingsUI');
 
 goog.require('os.ui.slick.SlickTreeUI');
 
+import * as Dispatcher from '../../os/dispatcher.js';
+import {ROOT} from '../../os/os.js';
+import {apply} from '../../os/ui/ui.js';
 import SettingsFileNode from './settingsfilenode.js';
 import settingsImportManager from './settingsimportmanager.js';
 import SettingsImportUI from './settingsimportui.js';
 
-import {ROOT} from '../../os/os.js';
-import * as Dispatcher from '../../os/dispatcher.js';
-import {apply} from '../../os/ui/ui.js';
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
