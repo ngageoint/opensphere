@@ -1,11 +1,11 @@
 goog.declareModuleId('os.style.label');
 
 import {instanceOf} from '../classregistry.js';
-import * as osStyle from './style.js';
 import {hideLabel, showLabel} from '../feature/feature.js';
 import * as osMap from '../map/map.js';
 import {zIndexCompare} from '../source/source.js';
 import {measureText} from '../ui/ui.js';
+import * as osStyle from './style.js';
 
 const {assert} = goog.require('goog.asserts');
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');

@@ -4,10 +4,10 @@
  */
 goog.declareModuleId('os.style');
 
+import * as osFeature from '../feature/feature.js';
+import {ROOT} from '../os.js';
 import * as osLabel from './label.js';
 import StyleManager from './stylemanager.js';
-import {ROOT} from '../os.js';
-import * as osFeature from '../feature/feature.js';
 
 const {equals} = goog.require('goog.array');
 const {toRadians} = goog.require('goog.math');

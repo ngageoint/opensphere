@@ -1,12 +1,12 @@
 goog.declareModuleId('os.style.StyleManagerES');
 
-import * as osStyle from './style.js';
 import CircleReader from './circlereader.js';
 import FillReader from './fillreader.js';
 import IconReader from './iconreader.js';
 import ImageReader from './imagereader.js';
 import ShapeReader from './shapereader.js';
 import StrokeReader from './strokereader.js';
+import * as osStyle from './style.js';
 import StyleReader from './stylereader.js';
 import TextReader from './textreader.js';
 
