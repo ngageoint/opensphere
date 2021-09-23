@@ -1,5 +1,12 @@
 goog.declareModuleId('plugin.arc.layer.ArcFeatureLayerConfig');
 
+import * as arc from '../arc.js';
+import ArcJSONParser from '../arcjsonparser.js';
+import ArcFilterModifier from '../query/arcfiltermodifier.js';
+import ArcQueryHandler from '../query/arcqueryhandler.js';
+import ArcTemporalFormatter from '../query/arctemporalformatter.js';
+import ArcRequestSource from '../source/arcrequestsource.js';
+
 const log = goog.require('goog.log');
 const FeatureImporter = goog.require('os.im.FeatureImporter');
 const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
@@ -12,16 +19,10 @@ const Request = goog.require('os.net.Request');
 const TemporalHandler = goog.require('os.query.TemporalHandler');
 const TemporalQueryManager = goog.require('os.query.TemporalQueryManager');
 const {getQueryManager} = goog.require('os.query.instance');
-const ArcJSONParser = goog.require('plugin.arc.ArcJSONParser');
-const arc = goog.require('plugin.arc');
-const ArcFilterModifier = goog.require('plugin.arc.query.ArcFilterModifier');
-const ArcQueryHandler = goog.require('plugin.arc.query.ArcQueryHandler');
-const ArcTemporalFormatter = goog.require('plugin.arc.query.ArcTemporalFormatter');
-const ArcRequestSource = goog.require('plugin.arc.source.ArcRequestSource');
 
 const IMapping = goog.requireType('os.im.mapping.IMapping');
 const VectorLayer = goog.requireType('os.layer.Vector');
-const ArcFeatureType = goog.requireType('plugin.arc.ArcFeatureType');
+const {default: ArcFeatureType} = goog.requireType('plugin.arc.ArcFeatureType');
 
 
 /**

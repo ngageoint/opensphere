@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.arc.ArcServer');
 
+import * as arc from './arc.js';
+
 const asserts = goog.require('goog.asserts');
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
@@ -11,11 +13,10 @@ const osImplements = goog.require('os.implements');
 const ogc = goog.require('os.ogc');
 const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
-const arc = goog.require('plugin.arc');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
-const IArcLoader = goog.requireType('plugin.arc.IArcLoader');
+const {default: IArcLoader} = goog.requireType('plugin.arc.IArcLoader');
 
 
 /**

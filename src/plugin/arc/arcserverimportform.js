@@ -1,8 +1,9 @@
 goog.declareModuleId('plugin.arc.ArcImportForm');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../os/os.js';
+import {directive as arcServerDirective} from './arcserverimport.js';
+
 const Module = goog.require('os.ui.Module');
-const {directive: arcServerDirective} = goog.require('plugin.arc.ArcImportUI');
 
 
 /**

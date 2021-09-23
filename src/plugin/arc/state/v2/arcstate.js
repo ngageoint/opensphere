@@ -1,11 +1,12 @@
 goog.declareModuleId('plugin.arc.state.v2.arcstate');
 
+import ArcFeatureLayerConfig from '../../layer/arcfeaturelayerconfig.js';
+import ArcTileLayerConfig from '../../layer/arctilelayerconfig.js';
+
 const dom = goog.require('goog.dom');
 const googString = goog.require('goog.string');
 const olXml = goog.require('ol.xml');
 const xml = goog.require('os.xml');
-const ArcFeatureLayerConfig = goog.require('plugin.arc.layer.ArcFeatureLayerConfig');
-const ArcTileLayerConfig = goog.require('plugin.arc.layer.ArcTileLayerConfig');
 
 
 /**

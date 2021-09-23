@@ -1,6 +1,7 @@
 goog.declareModuleId('plugin.arc.ArcServerHelpUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../os/os.js';
+
 const Module = goog.require('os.ui.Module');
 const {directive: baseDirective} = goog.require('os.ui.window.BaseWindowUI');
 
@@ -11,7 +12,7 @@ const {directive: baseDirective} = goog.require('os.ui.window.BaseWindowUI');
  * @return {angular.Directive}
  */
 export const directive = () => {
-  export const directive = baseDirective();
+  const directive = baseDirective();
   directive.templateUrl = ROOT + 'views/plugin/arc/arcserverhelp.html';
   return directive;
 };
@@ -21,7 +22,6 @@ export const directive = () => {
  * @type {string}
  */
 export const directiveTag = 'arcserverhelp';
-
 
 /**
  * Add the directive to the os module

@@ -1,5 +1,9 @@
 goog.declareModuleId('plugin.arc.layer.ArcLayerDescriptor');
 
+import * as arc from '../arc.js';
+import ArcFeatureLayerConfig from './arcfeaturelayerconfig.js';
+import ArcTileLayerConfig from './arctilelayerconfig.js';
+
 const QueryData = goog.require('goog.Uri.QueryData');
 const googColor = goog.require('goog.color');
 const googObject = goog.require('goog.object');
@@ -19,11 +23,8 @@ const IARCDescriptor = goog.require('os.ui.arc.IARCDescriptor');
 const BaseProvider = goog.require('os.ui.data.BaseProvider');
 const IFeatureTypeDescriptor = goog.require('os.ui.ogc.IFeatureTypeDescriptor');
 const {launchForLayer} = goog.require('os.ui.query.CombinatorUI');
-const arc = goog.require('plugin.arc');
-const ArcFeatureLayerConfig = goog.require('plugin.arc.layer.ArcFeatureLayerConfig');
-const ArcTileLayerConfig = goog.require('plugin.arc.layer.ArcTileLayerConfig');
 
-const ArcFeatureType = goog.requireType('plugin.arc.ArcFeatureType');
+const {default: ArcFeatureType} = goog.requireType('plugin.arc.ArcFeatureType');
 
 
 /**
