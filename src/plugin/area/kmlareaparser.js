@@ -1,4 +1,4 @@
-goog.module('plugin.area.KMLAreaParser');
+goog.declareModuleId('plugin.area.KMLAreaParser');
 
 const dom = goog.require('goog.dom');
 const googDomXml = goog.require('goog.dom.xml');
@@ -272,4 +272,4 @@ class KMLAreaParser extends AsyncZipParser {
 const logger = log.getLogger('plugin.area.KMLAreaParser');
 
 
-exports = KMLAreaParser;
+export default KMLAreaParser;

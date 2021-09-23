@@ -1,4 +1,4 @@
-goog.module('plugin.area.KMLAreaUI');
+goog.declareModuleId('plugin.area.KMLAreaUI');
 
 goog.require('os.ui.im.MergeAreaOptionUI');
 
@@ -17,7 +17,7 @@ const FileParserConfig = goog.requireType('os.parse.FileParserConfig');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/plugin/kml/kmlarea.html',
@@ -25,12 +25,11 @@ const directive = () => ({
   controllerAs: 'areaFiles'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'kmlarea';
+export const directiveTag = 'kmlarea';
 
 
 /**
@@ -46,7 +45,7 @@ Module.directive('kmlarea', [directive]);
  * @extends {AreaImportCtrl<FileParserConfig>}
  * @unrestricted
  */
-class Controller extends AreaImportCtrl {
+export class Controller extends AreaImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -93,9 +92,3 @@ class Controller extends AreaImportCtrl {
     this.close();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

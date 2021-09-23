@@ -1,4 +1,4 @@
-goog.module('plugin.area.AreaImportCtrl');
+goog.declareModuleId('plugin.area.AreaImportCtrl');
 
 const RecordField = goog.require('os.data.RecordField');
 const AreaImportCtrl = goog.require('os.ui.query.AreaImportCtrl');
@@ -45,4 +45,4 @@ class Controller extends AreaImportCtrl {
   }
 }
 
-exports = Controller;
+export default Controller;

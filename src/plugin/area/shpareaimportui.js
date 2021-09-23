@@ -1,4 +1,4 @@
-goog.module('plugin.area.SHPAreaImportUI');
+goog.declareModuleId('plugin.area.SHPAreaImportUI');
 
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const osWindow = goog.require('os.ui.window');
@@ -70,4 +70,4 @@ class SHPAreaImportUI extends FileImportUI {
   }
 }
 
-exports = SHPAreaImportUI;
+export default SHPAreaImportUI;

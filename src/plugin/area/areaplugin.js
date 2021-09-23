@@ -1,4 +1,4 @@
-goog.module('plugin.area.AreaPlugin');
+goog.declareModuleId('plugin.area.AreaPlugin');
 
 const csv = goog.require('os.file.mime.csv');
 const {getAreaImportManager, getAreaFileManager} = goog.require('os.query');
@@ -64,4 +64,4 @@ class AreaPlugin extends AbstractPlugin {
 AreaPlugin.ID = 'areas';
 
 
-exports = AreaPlugin;
+export default AreaPlugin;

@@ -1,4 +1,4 @@
-goog.module('plugin.area.GeoJSONAreaImport');
+goog.declareModuleId('plugin.area.GeoJSONAreaImport');
 
 const RecordField = goog.require('os.data.RecordField');
 const EventType = goog.require('os.events.EventType');
@@ -17,7 +17,7 @@ const GeoJSONParser = goog.require('plugin.file.geojson.GeoJSONParser');
  * @template T,S
  * @unrestricted
  */
-class Controller extends WizardController {
+export class Controller extends WizardController {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -68,7 +68,7 @@ class Controller extends WizardController {
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = wizardDirective();
   dir.controller = Controller;
   return dir;
@@ -78,16 +78,10 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'geojsonareaimport';
+export const directiveTag = 'geojsonareaimport';
 
 
 /**
  * Add the directive to the module
  */
 Module.directive('geojsonareaimport', [directive]);
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,4 +1,4 @@
-goog.module('plugin.area.SHPAreaUI');
+goog.declareModuleId('plugin.area.SHPAreaUI');
 
 goog.require('os.ui.im.MergeAreaOptionUI');
 
@@ -19,7 +19,7 @@ const SHPParserConfig = goog.requireType('plugin.file.shp.SHPParserConfig');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/plugin/shp/shparea.html',
@@ -31,7 +31,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'shparea';
+export const directiveTag = 'shparea';
 
 
 /**
@@ -46,7 +46,7 @@ Module.directive('shparea', [directive]);
  * @extends {AreaImportCtrl<SHPParserConfig>}
  * @unrestricted
  */
-class Controller extends AreaImportCtrl {
+export class Controller extends AreaImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -125,9 +125,3 @@ class Controller extends AreaImportCtrl {
     this.close();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,4 +1,4 @@
-goog.module('plugin.area.GeoJSONAreaImportUI');
+goog.declareModuleId('plugin.area.GeoJSONAreaImportUI');
 
 const AreaOptionsStep = goog.require('os.query.ui.AreaOptionsStep');
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
@@ -71,4 +71,4 @@ class GeoJSONAreaImportUI extends FileImportUI {
   }
 }
 
-exports = GeoJSONAreaImportUI;
+export default GeoJSONAreaImportUI;

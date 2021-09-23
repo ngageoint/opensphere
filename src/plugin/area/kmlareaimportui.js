@@ -1,4 +1,4 @@
-goog.module('plugin.area.KMLAreaImportUI');
+goog.declareModuleId('plugin.area.KMLAreaImportUI');
 
 const dispose = goog.require('goog.dispose');
 const EventType = goog.require('os.events.EventType');
@@ -86,4 +86,4 @@ class KMLAreaImportUI extends FileImportUI {
   }
 }
 
-exports = KMLAreaImportUI;
+export default KMLAreaImportUI;

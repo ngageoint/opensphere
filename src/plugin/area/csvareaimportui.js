@@ -1,4 +1,4 @@
-goog.module('plugin.area.CSVAreaImportUI');
+goog.declareModuleId('plugin.area.CSVAreaImportUI');
 
 const AreaOptionsStep = goog.require('os.query.ui.AreaOptionsStep');
 const ConfigStep = goog.require('os.ui.file.ui.csv.ConfigStep');
@@ -71,4 +71,4 @@ class CSVAreaImportUI extends FileImportUI {
   }
 }
 
-exports = CSVAreaImportUI;
+export default CSVAreaImportUI;
