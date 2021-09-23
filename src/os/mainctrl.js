@@ -1,4 +1,4 @@
-goog.module('os.MainCtrl');
+goog.declareModuleId('os.MainCtrl');
 
 goog.require('os.file.mime.any');
 goog.require('os.ui.AddExportOptionsUI');
@@ -21,10 +21,12 @@ const KeyHandler = goog.require('goog.events.KeyHandler');
 const log = goog.require('goog.log');
 const {IE, GECKO, LINUX} = goog.require('goog.userAgent');
 
-const ViewHint = goog.require('ol.ViewHint');
+import * as dispatcher from './dispatcher.js';
+import * as os from './os.js';
+import AbstractMainCtrl from './ui/abstractmainctrl.js';
+import {MODAL_SELECTOR, apply, waitForAngular} from './ui/ui.js';
 
-const os = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
+const ViewHint = goog.require('ol.ViewHint');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
@@ -110,9 +112,7 @@ const {decrementResetTasks, incrementResetTasks} = goog.require('os.storage');
 const StyleManager = goog.require('os.style.StyleManager');
 const {setStyleManager} = goog.require('os.style.instance');
 const {initOffset} = goog.require('os.time');
-const ui = goog.require('os.ui');
 const AbstractMainContent = goog.require('os.ui.AbstractMainContent');
-const AbstractMainCtrl = goog.require('os.ui.AbstractMainCtrl');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const ClearEntry = goog.require('os.ui.clear.ClearEntry');
 const ClearManager = goog.require('os.ui.clear.ClearManager');
@@ -202,7 +202,7 @@ const UIEvent = goog.requireType('os.ui.events.UIEvent');
  * Controller function for the Main directive
  * @unrestricted
  */
-class Controller extends AbstractMainCtrl {
+export default class Controller extends AbstractMainCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -298,7 +298,6 @@ class Controller extends AbstractMainCtrl {
     // set state manager global reference
     var stateManager = StateManager.getInstance();
     setStateManager(stateManager);
-    os.stateManager = stateManager;
 
     setStyleManager(StyleManager.getInstance());
 
@@ -719,7 +718,7 @@ class Controller extends AbstractMainCtrl {
     var target = /** @type {Element} */ (event.target);
     var ctrlOr = os.isOSX() ? event.metaKey : event.ctrlKey;
 
-    if (!document.querySelector(ui.MODAL_SELECTOR)) {
+    if (!document.querySelector(MODAL_SELECTOR)) {
       if (target.tagName !== TagName.INPUT.toString() &&
           target.tagName !== TagName.TEXTAREA.toString()) {
         switch (event.keyCode) {
@@ -768,7 +767,7 @@ class Controller extends AbstractMainCtrl {
             Metrics.getInstance().updateMetric(MapKeys.SAVE_STATE_KB, 1);
             event.preventDefault();
             StateManager.getInstance().startExport();
-            ui.apply(this.scope);
+            apply(this.scope);
           }
           break;
         default:
@@ -919,7 +918,7 @@ class Controller extends AbstractMainCtrl {
         var open = typeof event.value === 'boolean' ? event.value :
           (event.params != null ? true : !this[event.id]);
         this[event.id] = open;
-        ui.apply(this.scope);
+        apply(this.scope);
       }
     } else {
       openWindow(event.id);
@@ -933,7 +932,7 @@ class Controller extends AbstractMainCtrl {
       // timeout so Angular will start creating the window, then wait for it to finish initializing everything before
       // calling setParams
       this.timeout_(function() {
-        ui.waitForAngular(goog.partial(osWindow.setParams, event.id, event.params));
+        waitForAngular(goog.partial(osWindow.setParams, event.id, event.params));
       });
     }
   }
@@ -1090,6 +1089,3 @@ Controller.unsupportedBrowserCancelCallback = undefined;
 Controller.UNSUPPORTED_BROWSER_TEXT = 'Internet Explorer does not offer a satisfactory user experience and is ' +
     'unsupported by {APP}. The application may become unresponsive as a result, and we recommend using ' +
     'Google Chrome. <b>Continue at your own risk.</b>';
-
-
-exports = Controller;
