@@ -1,10 +1,11 @@
 goog.declareModuleId('plugin.basemap.BaseMapConfig');
 
+import BaseMap from './layer/basemaplayer.js';
+
 const asserts = goog.require('goog.asserts');
 const googObject = goog.require('goog.object');
 const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
-const BaseMap = goog.require('plugin.basemap.layer.BaseMap');
 
 
 /**

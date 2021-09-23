@@ -1,5 +1,14 @@
 goog.declareModuleId('plugin.basemap.BaseMapPlugin');
 
+import {ID, LAYER_TYPE, TERRAIN_ID, TYPE, isBaseMap} from './basemap.js';
+import BaseMapConfig from './basemapconfig.js';
+import BaseMapDescriptor from './basemapdescriptor.js';
+import Group from './basemapgroup.js';
+import BaseMapProvider from './basemapprovider.js';
+import TerrainDescriptor from './terraindescriptor.js';
+import pluginBasemapV3BaseMapState from './v3/basemapstate.js';
+import BaseMapState from './v4/basemapstate.js';
+
 const MapContainer = goog.require('os.MapContainer');
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
@@ -8,15 +17,6 @@ const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const StateManager = goog.require('os.state.StateManager');
 const Versions = goog.require('os.state.Versions');
 const {Controller: LayersCtrl} = goog.require('os.ui.LayersUI');
-const basemap = goog.require('plugin.basemap');
-const BaseMapConfig = goog.require('plugin.basemap.BaseMapConfig');
-const BaseMapDescriptor = goog.require('plugin.basemap.BaseMapDescriptor');
-const BaseMapProvider = goog.require('plugin.basemap.BaseMapProvider');
-const Group = goog.require('plugin.basemap.Group');
-const TerrainDescriptor = goog.require('plugin.basemap.TerrainDescriptor');
-const pluginBasemapV3BaseMapState = goog.require('plugin.basemap.v3.BaseMapState');
-const BaseMapState = goog.require('plugin.basemap.v4.BaseMapState');
-
 
 /**
  * <p>Base maps (a.k.a. map layers) comprise the background imagery for the map.</p>
@@ -63,7 +63,7 @@ export default class BaseMapPlugin extends AbstractPlugin {
    */
   constructor() {
     super();
-    this.id = basemap.ID;
+    this.id = ID;
   }
 
   /**
@@ -76,18 +76,18 @@ export default class BaseMapPlugin extends AbstractPlugin {
     dm.registerProviderType(new ProviderEntry(
         this.id,
         BaseMapProvider,
-        basemap.LAYER_TYPE,
+        LAYER_TYPE,
         'Map layers provide background imagery. They often include streets, borders, or other reference information.'));
 
     // register the base map descriptor types
     dm.registerDescriptorType(this.id, BaseMapDescriptor);
-    dm.registerDescriptorType(basemap.TERRAIN_ID, TerrainDescriptor);
+    dm.registerDescriptorType(TERRAIN_ID, TerrainDescriptor);
 
     // add the base map group
     MapContainer.getInstance().addGroup(new Group());
 
     // register the layer config
-    LayerConfigManager.getInstance().registerLayerConfig(basemap.TYPE, BaseMapConfig);
+    LayerConfigManager.getInstance().registerLayerConfig(TYPE, BaseMapConfig);
 
     // register the state
     var sm = StateManager.getInstance();
@@ -95,6 +95,6 @@ export default class BaseMapPlugin extends AbstractPlugin {
     sm.addStateImplementation(Versions.V4, BaseMapState);
 
     // do not toggle the base maps on and off
-    LayersCtrl.SKIP_TOGGLE_FUNCS.push(basemap.isBaseMap);
+    LayersCtrl.SKIP_TOGGLE_FUNCS.push(isBaseMap);
   }
 }

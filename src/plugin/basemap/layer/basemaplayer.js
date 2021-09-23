@@ -1,10 +1,11 @@
 goog.declareModuleId('plugin.basemap.layer.BaseMap');
 
+import {directiveTag as basemapLayerUi} from '../ui/basemaplayerui.js';
+
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const fn = goog.require('os.fn');
 const Tile = goog.require('os.layer.Tile');
-const {directiveTag: basemapLayerUi} = goog.require('plugin.basemap.ui.BaseMapLayerUI');
 
 
 /**

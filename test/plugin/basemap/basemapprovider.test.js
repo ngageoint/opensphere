@@ -9,7 +9,9 @@ describe('plugin.basemap.BaseMapProvider', function() {
   const DataManager = goog.module.get('os.data.DataManager');
   const terrain = goog.module.get('os.map.terrain');
   const basemap = goog.module.get('plugin.basemap');
-  const BaseMapProvider = goog.module.get('plugin.basemap.BaseMapProvider');
+  const {
+    default: BaseMapProvider
+  } = goog.module.get('plugin.basemap.BaseMapProvider');
 
   var expectedTerrainType = 'testTerrain';
   var expectedTerrainOptions = {

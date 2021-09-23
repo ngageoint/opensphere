@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.basemap.Group');
 
-const LayerGroup = goog.require('os.layer.Group');
-const basemap = goog.require('plugin.basemap');
+import {LAYER_TYPE, isBaseMap} from './basemap.js';
 
+const LayerGroup = goog.require('os.layer.Group');
 
 /**
  * Basemap layer group.
@@ -16,7 +16,7 @@ export default class Group extends LayerGroup {
     super(opt_options);
 
     this.setPriority(-1000);
-    this.setCheckFunc(basemap.isBaseMap);
-    this.setOSType(basemap.LAYER_TYPE);
+    this.setCheckFunc(isBaseMap);
+    this.setOSType(LAYER_TYPE);
   }
 }
