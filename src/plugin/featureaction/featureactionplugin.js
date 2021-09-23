@@ -1,5 +1,16 @@
 goog.declareModuleId('plugin.im.action.feature.Plugin');
 
+import {ID} from './featureaction.js';
+import {addToLegend} from './featureactionlegendrenderer.js';
+import FeatureActionManager from './featureactionmanager.js';
+import {layerDispose, layerSetup} from './featureactionmenu.js';
+import * as node from './featureactionnodemenu.js';
+import LabelAction from './featurelabelaction.js';
+import SoundAction from './featuresoundaction.js';
+import StyleAction from './featurestyleaction.js';
+import * as mime from './mime.js';
+import {directiveTag as legendSettingsUi} from './ui/featureactionlegendsettings.js';
+
 const legend = goog.require('os.legend');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const StateManager = goog.require('os.state.StateManager');
@@ -7,17 +18,6 @@ const Versions = goog.require('os.state.Versions');
 const FilterAction = goog.require('os.state.v4.FilterAction');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const FilterActionImportUI = goog.require('os.ui.im.action.FilterActionImportUI');
-const mime = goog.require('plugin.featureaction.mime');
-const featureAction = goog.require('plugin.im.action.feature');
-const LabelAction = goog.require('plugin.im.action.feature.LabelAction');
-const FeatureActionManager = goog.require('plugin.im.action.feature.Manager');
-const SoundAction = goog.require('plugin.im.action.feature.SoundAction');
-const StyleAction = goog.require('plugin.im.action.feature.StyleAction');
-const {addToLegend} = goog.require('plugin.im.action.feature.legend');
-const faMenu = goog.require('plugin.im.action.feature.menu');
-const node = goog.require('plugin.im.action.feature.node');
-const {directiveTag: legendSettingsUi} = goog.require('plugin.im.action.feature.ui.legendSettingsDirective');
-
 
 /**
  * Plugin to create actions that apply to imported features.
@@ -29,7 +29,7 @@ export default class Plugin extends AbstractPlugin {
   constructor() {
     super();
 
-    this.id = featureAction.ID;
+    this.id = ID;
     this.errorMessage = null;
   }
 
@@ -39,7 +39,7 @@ export default class Plugin extends AbstractPlugin {
   disposeInternal() {
     super.disposeInternal();
 
-    faMenu.layerDispose();
+    layerDispose();
 
     node.dispose();
   }
@@ -58,7 +58,7 @@ export default class Plugin extends AbstractPlugin {
     ImportManager.getInstance().registerImportUI(mime.TYPE, new FilterActionImportUI());
 
     // add actions
-    faMenu.layerSetup();
+    layerSetup();
 
     // register the state
     var sm = StateManager.getInstance();

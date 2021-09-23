@@ -1,6 +1,7 @@
 goog.declareModuleId('plugin.im.action.feature.ui.legendSettingsDirective');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os/os.js';
+
 const Module = goog.require('os.ui.Module');
 
 

@@ -1,15 +1,16 @@
 goog.declareModuleId('plugin.im.action.feature.ui.FeatureActionsUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os/os.js';
+import {apply} from '../../../os/ui/ui.js';
+import {editEntry, getColumns, getExportName} from '../featureaction.js';
+import FeatureActionManager from '../featureactionmanager.js';
+import * as node from '../featureactionnodemenu.js';
+
 const DataManager = goog.require('os.data.DataManager');
 const DataEventType = goog.require('os.data.event.DataEventType');
-const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const FilterActionsCtrl = goog.require('os.ui.im.action.FilterActionsCtrl');
 const TreeSearch = goog.require('os.ui.slick.TreeSearch');
-const featureAction = goog.require('plugin.im.action.feature');
-const FeatureActionManager = goog.require('plugin.im.action.feature.Manager');
-const node = goog.require('plugin.im.action.feature.node');
 
 const Feature = goog.requireType('ol.Feature');
 const DataEvent = goog.requireType('os.data.event.DataEvent');
@@ -124,14 +125,14 @@ export class Controller extends FilterActionsCtrl {
    * @inheritDoc
    */
   getColumns() {
-    return featureAction.getColumns(this.entryType);
+    return getColumns(this.entryType);
   }
 
   /**
    * @inheritDoc
    */
   getExportName() {
-    return featureAction.getExportName(this.entryType);
+    return getExportName(this.entryType);
   }
 
   /**
@@ -140,7 +141,7 @@ export class Controller extends FilterActionsCtrl {
    */
   editEntry(opt_entry) {
     if (this.entryType) {
-      featureAction.editEntry(this.entryType, opt_entry);
+      editEntry(this.entryType, opt_entry);
     }
   }
 
@@ -154,7 +155,7 @@ export class Controller extends FilterActionsCtrl {
       this['hasDefaultActions'] = this.scope['entries'].some((node) => {
         return node.getId() != TreeSearch.NO_RESULT_ID && node.getEntry().isDefault();
       });
-      ui.apply(this.scope);
+      apply(this.scope);
     }
   }
 

@@ -21,9 +21,9 @@ describe('os.state.v4.FilterAction', function() {
   const FilterAction = goog.module.get('os.state.v4.FilterAction');
   const xsd = goog.module.get('os.test.xsd');
   const xml = goog.module.get('os.xml');
-  const Entry = goog.module.get('plugin.im.action.feature.Entry');
-  const StyleAction = goog.module.get('plugin.im.action.feature.StyleAction');
-  const FeatureActionManager = goog.module.get('plugin.im.action.feature.Manager');
+  const {default: Entry} = goog.module.get('plugin.im.action.feature.Entry');
+  const {default: StyleAction} = goog.module.get('plugin.im.action.feature.StyleAction');
+  const {default: FeatureActionManager} = goog.module.get('plugin.im.action.feature.Manager');
 
   var stateManager;
 

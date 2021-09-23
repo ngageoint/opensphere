@@ -1,6 +1,6 @@
 goog.module('plugin.im.action.feature.mock');
 
-const Manager = goog.require('plugin.im.action.feature.Manager');
+const {default: Manager} = goog.require('plugin.im.action.feature.Manager');
 const MockAction = goog.require('plugin.im.action.feature.mock.MockAction');
 
 

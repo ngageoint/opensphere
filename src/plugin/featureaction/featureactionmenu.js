@@ -1,5 +1,8 @@
 goog.declareModuleId('plugin.im.action.feature.menu');
 
+import {EventType, Metrics, TITLE} from './featureaction.js';
+import launchForLayer from './ui/launchforlayer.js';
+
 const asserts = goog.require('goog.asserts');
 const MapContainer = goog.require('os.MapContainer');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
@@ -8,8 +11,6 @@ const {ICON} = goog.require('os.im.action');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const LayerType = goog.require('os.layer.LayerType');
 const layerMenu = goog.require('os.ui.menu.layer');
-const featureAction = goog.require('plugin.im.action.feature');
-const launchForLayer = goog.require('plugin.im.action.feature.ui.launchForLayer');
 
 const MenuItem = goog.requireType('os.ui.menu.MenuItem');
 const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
@@ -20,18 +21,18 @@ const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
  */
 export const layerSetup = function() {
   var menu = layerMenu.getMenu();
-  if (menu && !menu.getRoot().find(featureAction.EventType.LAUNCH)) {
+  if (menu && !menu.getRoot().find(EventType.LAUNCH)) {
     var group = menu.getRoot().find(layerMenu.GroupLabel.TOOLS);
     asserts.assert(group, 'Group should exist! Check spelling?');
 
     group.addChild({
-      label: featureAction.TITLE + '...',
-      eventType: featureAction.EventType.LAUNCH,
+      label: TITLE + '...',
+      eventType: EventType.LAUNCH,
       tooltip: 'Perform actions on imported data matching a filter',
       icons: ['<i class="fa fa-fw ' + ICON + '"></i>'],
       beforeRender: visibleIfSupported,
       handler: handleLayerAction,
-      metricKey: featureAction.Metrics.LAYER_LAUNCH
+      metricKey: Metrics.LAYER_LAUNCH
     });
   }
 };
@@ -41,10 +42,10 @@ export const layerSetup = function() {
  */
 export const layerDispose = function() {
   var menu = layerMenu.getMenu();
-  if (menu && !menu.getRoot().find(featureAction.EventType.LAUNCH)) {
+  if (menu && !menu.getRoot().find(EventType.LAUNCH)) {
     var group = menu.getRoot().find(layerMenu.GroupLabel.TOOLS);
     if (group) {
-      group.removeChild(featureAction.EventType.LAUNCH);
+      group.removeChild(EventType.LAUNCH);
     }
   }
 };

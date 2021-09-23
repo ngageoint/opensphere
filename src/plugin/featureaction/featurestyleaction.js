@@ -1,21 +1,22 @@
 goog.declareModuleId('plugin.im.action.feature.StyleAction');
 
+import {getLayer} from '../../os/feature/feature.js';
+import * as osStyle from '../../os/style/style.js';
+import {StyleType as FAStyleType} from './featureaction.js';
+import {directiveTag as configUi} from './ui/featurestyleactionconfig.js';
+
 const math = goog.require('goog.math');
 const osColor = goog.require('os.color');
-const osFeature = goog.require('os.feature');
 const AbstractImportAction = goog.require('os.im.action.AbstractImportAction');
 const FilterActionEntry = goog.require('os.im.action.FilterActionEntry');
 const osImplements = goog.require('os.implements');
 const legend = goog.require('os.legend');
 const ILegendRenderer = goog.require('os.legend.ILegendRenderer');
 const osObject = goog.require('os.object');
-const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const kml = goog.require('os.ui.file.kml');
 const osXml = goog.require('os.xml');
-const featureAction = goog.require('plugin.im.action.feature');
-const {directiveTag: configUi} = goog.require('plugin.im.action.feature.ui.StyleConfigUI');
 
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
 
@@ -80,7 +81,7 @@ export default class StyleAction extends AbstractImportAction {
         item.set(StyleField.CENTER_SHAPE, undefined, true);
 
         // reset the original feature config
-        var originalConfig = /** @type {Array|Object|undefined} */ (item.get(featureAction.StyleType.ORIGINAL));
+        var originalConfig = /** @type {Array|Object|undefined} */ (item.get(FAStyleType.ORIGINAL));
         item.set(StyleType.FEATURE, originalConfig, true);
         resetItems.push(item);
       }
@@ -118,9 +119,9 @@ export default class StyleAction extends AbstractImportAction {
         item.set(StyleAction.FEATURE_ID, this.uid, true);
 
         if (originalConfig != null && !originalConfig['temporary'] &&
-              item.get(featureAction.StyleType.ORIGINAL) == null) {
+              item.get(FAStyleType.ORIGINAL) == null) {
           // if the original config isn't already set, add a reference back to it
-          item.set(featureAction.StyleType.ORIGINAL, originalConfig, true);
+          item.set(FAStyleType.ORIGINAL, originalConfig, true);
         }
 
         // set the feature shape
@@ -158,7 +159,7 @@ export default class StyleAction extends AbstractImportAction {
       setFeaturesStyle: true
     });
 
-    var layer = osFeature.getLayer(items[0]);
+    var layer = getLayer(items[0]);
     if (layer) {
       var source = /** @type {os.source.Vector} */ (layer.getSource());
       var color = (this.styleConfig['stroke']) ? this.styleConfig['stroke']['color'] : null;

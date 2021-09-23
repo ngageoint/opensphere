@@ -1,5 +1,12 @@
 goog.declareModuleId('plugin.im.action.feature.Manager');
 
+import {getLayer} from '../../os/feature/feature.js';
+import {updateShown} from '../../os/style/label.js';
+import {notifyStyleChange, setFeaturesStyle} from '../../os/style/style.js';
+import {ENTRY_TITLE} from './featureaction.js';
+import Entry from './featureactionentry.js';
+import TagName from './tagname.js';
+
 const Timer = goog.require('goog.Timer');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -8,18 +15,12 @@ const events = goog.require('ol.events');
 const DataManager = goog.require('os.data.DataManager');
 const RecordField = goog.require('os.data.RecordField');
 const DataEventType = goog.require('os.data.event.DataEventType');
-const osFeature = goog.require('os.feature');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const osImplements = goog.require('os.implements');
 const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
 const IImportSource = goog.require('os.source.IImportSource');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const state = goog.require('os.state');
-const osStyle = goog.require('os.style');
-const label = goog.require('os.style.label');
-const featureAction = goog.require('plugin.im.action.feature');
-const Entry = goog.require('plugin.im.action.feature.Entry');
-const TagName = goog.require('plugin.im.action.feature.TagName');
 
 const Feature = goog.requireType('ol.Feature');
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
@@ -36,7 +37,7 @@ export default class Manager extends ImportActionManager {
    */
   constructor() {
     super();
-    this.entryTitle = featureAction.ENTRY_TITLE;
+    this.entryTitle = ENTRY_TITLE;
     this.log = logger;
     this.xmlGroup = TagName.FEATURE_ACTIONS;
     this.xmlEntry = TagName.FEATURE_ACTION;
@@ -339,11 +340,11 @@ export default class Manager extends ImportActionManager {
   static notify_(items, config) {
     if (config) {
       if (config.setFeaturesStyle) {
-        osStyle.setFeaturesStyle(items);
+        setFeaturesStyle(items);
       }
 
       // notify that the layer needs to be updated
-      var layer = osFeature.getLayer(items[0]);
+      var layer = getLayer(items[0]);
       if (layer) {
         var source = /** @type {os.source.Vector} */ (layer.getSource());
         if (source && config.setColor && config.color && config.color.length > 0) {
@@ -357,7 +358,7 @@ export default class Manager extends ImportActionManager {
           });
         }
         if (config.notifyStyleChange) {
-          osStyle.notifyStyleChange(
+          notifyStyleChange(
               layer,
               items,
               undefined,
@@ -369,7 +370,7 @@ export default class Manager extends ImportActionManager {
     }
     // kick off label hit detection
     if (config.labelUpdateShown) {
-      label.updateShown();
+      updateShown();
     }
   }
 

@@ -3,11 +3,16 @@ goog.declareModuleId('plugin.im.action.feature.ui.LabelConfigUI');
 goog.require('os.ui.layer.LabelControlsUI');
 goog.require('os.ui.popover.PopoverUI');
 
+import * as dispatcher from '../../../os/dispatcher.js';
+import {ROOT} from '../../../os/os.js';
+import {DEFAULT_SIZE} from '../../../os/style/label.js';
+import {DEFAULT_LAYER_COLOR, toRgbaString} from '../../../os/style/style.js';
+import {apply} from '../../../os/ui/ui.js';
+import ActionConfigCtrl from './featureactionconfig.js';
+
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const olArray = goog.require('ol.array');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const osColor = goog.require('os.color');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
@@ -15,18 +20,14 @@ const DataManager = goog.require('os.data.DataManager');
 const osImplements = goog.require('os.implements');
 const ILayer = goog.require('os.layer.ILayer');
 const osObject = goog.require('os.object');
-const osStyle = goog.require('os.style');
-const label = goog.require('os.style.label');
-const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const {isDuplicateColumn} = goog.require('os.ui.data.AddColumnFormUI');
 const EventType = goog.require('os.ui.im.action.EventType');
 const {getColumns} = goog.require('os.ui.layer');
 const LabelControlsEventType = goog.require('os.ui.layer.LabelControlsEventType');
 const column = goog.require('os.ui.slick.column');
-const ActionConfigCtrl = goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
 
-const LabelAction = goog.requireType('plugin.im.action.feature.LabelAction');
+const {default: LabelAction} = goog.requireType('plugin.im.action.feature.LabelAction');
 
 
 /**
@@ -158,9 +159,9 @@ export class Controller extends ActionConfigCtrl {
     if (this.labelConfig) {
       this.scope['config'] = this.labelConfig;
 
-      var color = this.labelConfig['color'] || osStyle.DEFAULT_LAYER_COLOR;
+      var color = this.labelConfig['color'] || DEFAULT_LAYER_COLOR;
       this.scope['color'] = this.initialColor = osColor.toHexString(color);
-      this.scope['size'] = this.labelConfig['size'] || label.DEFAULT_SIZE;
+      this.scope['size'] = this.labelConfig['size'] || DEFAULT_SIZE;
 
       var layer = MapContainer.getInstance().getLayer(this.type);
       if (osImplements(layer, ILayer.ID)) {
@@ -254,7 +255,7 @@ export class Controller extends ActionConfigCtrl {
     }
 
     this.validate();
-    ui.apply(this.scope);
+    apply(this.scope);
   }
 
   /**
@@ -268,7 +269,7 @@ export class Controller extends ActionConfigCtrl {
     event.stopPropagation();
 
     if (this.labelConfig) {
-      var color = value ? osStyle.toRgbaString(value) : osStyle.DEFAULT_LAYER_COLOR;
+      var color = value ? toRgbaString(value) : DEFAULT_LAYER_COLOR;
       this.labelConfig['color'] = color;
       this.scope['color'] = osColor.toHexString(color);
     }

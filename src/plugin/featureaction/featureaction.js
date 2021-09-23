@@ -1,12 +1,13 @@
 goog.declareModuleId('plugin.im.action.feature');
 
+import {getFilterColumns} from '../../os/source/source.js';
+import {launchEditFeatureAction} from './ui/index.js';
+
 const MapContainer = goog.require('os.MapContainer');
 const DataManager = goog.require('os.data.DataManager');
 const filterAction = goog.require('os.im.action.filter');
 const osImplements = goog.require('os.implements');
 const ILayer = goog.require('os.layer.ILayer');
-const osSource = goog.require('os.source');
-const {launchEditFeatureAction} = goog.require('plugin.im.action.feature.ui');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 
@@ -99,7 +100,7 @@ export const getColumns = function(opt_entryType) {
     var dm = DataManager.getInstance();
     var source = dm.getSource(opt_entryType);
     if (source) {
-      columns = osSource.getFilterColumns(source, true, true);
+      columns = getFilterColumns(source, true, true);
     }
   }
 

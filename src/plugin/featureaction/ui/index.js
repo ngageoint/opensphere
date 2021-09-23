@@ -1,9 +1,10 @@
 goog.declareModuleId('plugin.im.action.feature.ui');
 
+import {directiveTag as editUi} from './editfeatureaction.js';
+
 const {ICON} = goog.require('os.im.action');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const osWindow = goog.require('os.ui.window');
-const {directiveTag: editUi} = goog.require('plugin.im.action.feature.ui.EditFeatureActionUI');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 

@@ -1,20 +1,21 @@
 goog.declareModuleId('plugin.im.action.feature.LabelAction');
 
+import {getLayer, getSource} from '../../os/feature/feature.js';
+import * as osStyleLabel from '../../os/style/label.js';
+import * as osStyle from '../../os/style/style.js';
+import {StyleType as FAStyleType} from './featureaction.js';
+import {directiveTag as configUi, setDefaultConfig} from './ui/featurelabelactionconfig.js';
+
 const osColor = goog.require('os.color');
 const FeatureEventType = goog.require('os.data.FeatureEventType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osFeature = goog.require('os.feature');
 const AbstractImportAction = goog.require('os.im.action.AbstractImportAction');
 const osObject = goog.require('os.object');
 const PropertyChange = goog.require('os.source.PropertyChange');
-const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
-const osStyleLabel = goog.require('os.style.label');
 const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
 const osXml = goog.require('os.xml');
-const featureAction = goog.require('plugin.im.action.feature');
-const {directiveTag: configUi, setDefaultConfig} = goog.require('plugin.im.action.feature.ui.LabelConfigUI');
 
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
 
@@ -67,7 +68,7 @@ export default class LabelAction extends AbstractImportAction {
       var item = items[i];
       if (item && this.isFeatureLabeled(item)) {
         // reset the original feature config
-        var originalConfig = /** @type {Array|Object|undefined} */ (item.get(featureAction.StyleType.ORIGINAL));
+        var originalConfig = /** @type {Array|Object|undefined} */ (item.get(FAStyleType.ORIGINAL));
         item.set(StyleType.FEATURE, originalConfig, true);
       }
     }
@@ -76,7 +77,7 @@ export default class LabelAction extends AbstractImportAction {
       /** {ImportActionCallbackConfig} */
       {
         labelUpdateShown: false,
-        notifyStyleChange: !!(osFeature.getLayer(items[0])),
+        notifyStyleChange: !!(getLayer(items[0])),
         setColor: false,
         setFeaturesStyle: true
       }
@@ -127,9 +128,9 @@ export default class LabelAction extends AbstractImportAction {
           FeatureEditCtrl.persistFeatureLabels(item);
 
           if (originalConfig != null && !originalConfig['temporary'] &&
-            item.get(featureAction.StyleType.ORIGINAL) == null) {
+            item.get(FAStyleType.ORIGINAL) == null) {
             // if the original config isn't already set, add a reference back to it
-            item.set(featureAction.StyleType.ORIGINAL, originalConfig, true);
+            item.set(FAStyleType.ORIGINAL, originalConfig, true);
           }
         }
 
@@ -144,7 +145,7 @@ export default class LabelAction extends AbstractImportAction {
 
     // if a custom column was configured, add it to the source
     if (customName && customValue) {
-      var source = osFeature.getSource(items[0]);
+      var source = getSource(items[0]);
       if (source) {
         source.addColumn(customName, undefined, true, true);
         source.dispatchEvent(new PropertyChangeEvent(PropertyChange.DATA));
@@ -155,7 +156,7 @@ export default class LabelAction extends AbstractImportAction {
       /** {ImportActionCallbackConfig} */
       {
         labelUpdateShown: true,
-        notifyStyleChange: !!(osFeature.getLayer(items[0])),
+        notifyStyleChange: !!(getLayer(items[0])),
         setColor: false,
         setFeaturesStyle: true
       }

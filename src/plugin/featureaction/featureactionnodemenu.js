@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.im.action.feature.node');
 
+import {Metrics as FeatureActionMetrics, editEntry, getExportName} from './featureaction.js';
+
 const googDispose = goog.require('goog.dispose');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const ParallelCommand = goog.require('os.command.ParallelCommand');
@@ -12,11 +14,6 @@ const FilterActionExportType = goog.require('os.ui.im.action.FilterActionExportT
 const Menu = goog.require('os.ui.menu.Menu');
 const MenuItem = goog.require('os.ui.menu.MenuItem');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const {
-  Metrics: FeatureActionMetrics,
-  editEntry,
-  getExportName
-} = goog.require('plugin.im.action.feature');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 const ITreeNode = goog.requireType('os.structs.ITreeNode');

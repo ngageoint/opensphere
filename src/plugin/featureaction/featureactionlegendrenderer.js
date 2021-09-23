@@ -1,9 +1,10 @@
 goog.declareModuleId('plugin.im.action.feature.legend');
 
+import FeatureActionManager from './featureactionmanager.js';
+
 const osImplements = goog.require('os.implements');
 const legend = goog.require('os.legend');
 const ILegendRenderer = goog.require('os.legend.ILegendRenderer');
-const FeatureActionManager = goog.require('plugin.im.action.feature.Manager');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 const IImportAction = goog.requireType('os.im.action.IImportAction');
