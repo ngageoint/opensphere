@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.EllipseConverter');
+goog.declareModuleId('plugin.cesium.sync.EllipseConverter');
 
 const LineString = goog.require('ol.geom.LineString');
 const implementz = goog.require('os.implements');
@@ -17,11 +17,12 @@ const Ellipse = goog.requireType('os.geom.Ellipse');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 const IConverter = goog.requireType('plugin.cesium.sync.IConverter');
 
+
 /**
  * Converter for Ellipses
  * @extends {BaseConverter<Ellipse, (Cesium.Polyline|Cesium.PolylineOptions)>}
  */
-class EllipseConverter extends BaseConverter {
+export default class EllipseConverter extends BaseConverter {
   /**
    * @inheritDoc
    */
@@ -121,6 +122,3 @@ const createOrUpdateGroundReference = (feature, geometry, style, context) => {
     runConverter(dynamicConverter, feature, groundRef, style, context);
   }
 };
-
-
-exports = EllipseConverter;

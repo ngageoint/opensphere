@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.Layer');
+goog.declareModuleId('plugin.cesium.Layer');
 
 const Delay = goog.require('goog.async.Delay');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -40,7 +40,7 @@ const logger = log.getLogger('plugin.cesium.Layer');
  * @implements {IColorableLayer}
  * @implements {IGroupable}
  */
-class Layer extends OLLayer {
+export default class Layer extends OLLayer {
   /**
    * Constructor.
    */
@@ -755,9 +755,7 @@ class Layer extends OLLayer {
    */
   refresh() {}
 }
+
 osImplements(Layer, ILayer.ID);
 osImplements(Layer, IColorableLayer.ID);
 osImplements(Layer, IGroupable.ID);
-
-
-exports = Layer;

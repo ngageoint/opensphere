@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.VectorSynchronizer');
+goog.declareModuleId('plugin.cesium.sync.VectorSynchronizer');
 
 const asserts = goog.require('goog.asserts');
 const EventType = goog.require('goog.events.EventType');
@@ -29,6 +29,7 @@ const OLVectorSource = goog.requireType('ol.source.Vector');
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 const Camera = goog.requireType('plugin.cesium.Camera');
 
+
 /**
  * Layer properties that should trigger a refresh.
  * @type {!Object<string, boolean>}
@@ -43,7 +44,7 @@ const REFRESH_PROPERTIES = {
  * Synchronizes a single OpenLayers vector layer to Cesium.
  * @extends {CesiumSynchronizer<OLVectorLayer>}
  */
-class VectorSynchronizer extends CesiumSynchronizer {
+export default class VectorSynchronizer extends CesiumSynchronizer {
   /**
    * Synchronizes a single OpenLayers vector layer to Cesium.
    *
@@ -778,5 +779,3 @@ class VectorSynchronizer extends CesiumSynchronizer {
     dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
   }
 }
-
-exports = VectorSynchronizer;

@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.interaction.dragcircle');
+goog.declareModuleId('plugin.cesium.interaction.dragcircle');
 
 const {toLonLat} = goog.require('ol.proj');
 const Dispatcher = goog.require('os.Dispatcher');
@@ -44,7 +44,7 @@ let cesiumColor = undefined;
  *
  * @this {DragCircle}
  */
-const cleanupWebGL = function() {
+export const cleanupWebGL = function() {
   var webgl = /** @type {CesiumRenderer|undefined} */ (MapContainer.getInstance().getWebGLRenderer());
   var scene = webgl ? webgl.getCesiumScene() : undefined;
   if (scene) {
@@ -70,7 +70,7 @@ const cleanupWebGL = function() {
  * @this {DragCircle}
  * @suppress {accessControls}
  */
-const updateWebGL = function(start, end) {
+export const updateWebGL = function(start, end) {
   if (MapContainer.getInstance().is3DEnabled()) {
     if (!cesiumColor) {
       cesiumColor = new Cesium.ColorGeometryInstanceAttribute(0, 1, 1, 1);
@@ -138,9 +138,4 @@ const updateWebGL = function(start, end) {
       Dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
-};
-
-exports = {
-  cleanupWebGL,
-  updateWebGL
 };

@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.tiles.Provider');
+goog.declareModuleId('plugin.cesium.tiles.Provider');
 
 const BaseDescriptor = goog.require('os.data.BaseDescriptor');
 const DataManager = goog.require('os.data.DataManager');
@@ -18,7 +18,7 @@ let instance;
 /**
  * Cesium 3D tiles provider.
  */
-class Provider extends FileProvider {
+export default class Provider extends FileProvider {
   /**
    * Constructor.
    */
@@ -73,5 +73,3 @@ class Provider extends FileProvider {
     instance = value;
   }
 }
-
-exports = Provider;

@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.tiles.Layer');
+goog.declareModuleId('plugin.cesium.tiles.Layer');
 
 const log = goog.require('goog.log');
 const {transformExtent} = goog.require('ol.proj');
@@ -37,7 +37,7 @@ const logger = log.getLogger('plugin.cesium.tiles.Layer');
 /**
  * Cesium 3D tiles layer.
  */
-class Layer extends PrimitiveLayer {
+export default class Layer extends PrimitiveLayer {
   /**
    * Constructor.
    */
@@ -302,5 +302,3 @@ class Layer extends PrimitiveLayer {
     return super.supportsAction(type, opt_actionArgs);
   }
 }
-
-exports = Layer;

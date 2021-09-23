@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.interaction');
+goog.declareModuleId('plugin.cesium.interaction');
 
 const DragBox = goog.require('os.interaction.DragBox');
 const DragCircle = goog.require('os.interaction.DragCircle');
@@ -19,7 +19,7 @@ const Camera = goog.requireType('plugin.cesium.Camera');
  * @param {!Camera} camera The camera.
  * @param {Cesium.ScreenSpaceCameraController} sscc The camera controller.
  */
-const configureCesium = function(camera, sscc) {
+export const configureCesium = function(camera, sscc) {
   // allow zooming out further in the 3D view
   var maxResolution = osMap.zoomToResolution(0, osMap.PROJECTION);
   sscc.maximumZoomDistance = camera.calcDistanceForResolution(maxResolution, 0);
@@ -62,7 +62,7 @@ const configureCesium = function(camera, sscc) {
 /**
  * Load Cesium mixins for OpenSphere interactions.
  */
-const loadInteractionMixins = function() {
+export const loadInteractionMixins = function() {
   DragBox.prototype.cleanupWebGL = dragbox.cleanupWebGL;
   DragBox.prototype.updateWebGL = dragbox.updateWebGL;
 
@@ -76,9 +76,4 @@ const loadInteractionMixins = function() {
   Measure.prototype.cleanupWebGL = measure.cleanupWebGL;
   /** @override */
   Measure.prototype.updateWebGL = measure.updateWebGL;
-};
-
-exports = {
-  configureCesium,
-  loadInteractionMixins
 };

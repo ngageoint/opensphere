@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.CesiumSynchronizer');
+goog.declareModuleId('plugin.cesium.sync.CesiumSynchronizer');
 
 const AbstractWebGLSynchronizer = goog.require('os.webgl.AbstractWebGLSynchronizer');
 
@@ -12,7 +12,7 @@ const PluggableMap = goog.requireType('ol.PluggableMap');
  * @extends {AbstractWebGLSynchronizer<T>}
  * @template T
  */
-class CesiumSynchronizer extends AbstractWebGLSynchronizer {
+export default class CesiumSynchronizer extends AbstractWebGLSynchronizer {
   /**
    * Constructor.
    * @param {!T} layer The OpenLayers layer.
@@ -30,5 +30,3 @@ class CesiumSynchronizer extends AbstractWebGLSynchronizer {
     this.scene = scene;
   }
 }
-
-exports = CesiumSynchronizer;

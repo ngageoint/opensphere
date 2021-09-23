@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.shape');
+goog.declareModuleId('plugin.cesium.sync.shape');
 
 const {asColorLike} = goog.require('ol.colorlike');
 const {createCanvasContext2D} = goog.require('ol.dom');
@@ -25,7 +25,7 @@ const scratchFakeShape = /** @type {OLRegularShape} */ ({
  * @return {HTMLCanvasElement}
  * @suppress {accessControls}
  */
-const drawShape = (style) => {
+export const drawShape = (style) => {
   const fill = style.getFill();
   let oldColor = null;
 
@@ -111,8 +111,4 @@ const getRenderOptions = (style) => {
     lineJoin: lineJoin,
     miterLimit: miterLimit
   };
-};
-
-exports = {
-  drawShape
 };

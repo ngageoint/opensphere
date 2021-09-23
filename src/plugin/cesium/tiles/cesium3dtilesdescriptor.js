@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.tiles.Descriptor');
+goog.declareModuleId('plugin.cesium.tiles.Descriptor');
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const ColorControlType = goog.require('os.ui.ColorControlType');
@@ -13,7 +13,7 @@ const FileParserConfig = goog.requireType('os.parse.FileParserConfig');
 /**
  * Cesium 3D tiles descriptor.
  */
-class Descriptor extends FileDescriptor {
+export default class Descriptor extends FileDescriptor {
   /**
    * Constructor.
    */
@@ -159,5 +159,3 @@ class Descriptor extends FileDescriptor {
     return descriptor;
   }
 }
-
-exports = Descriptor;

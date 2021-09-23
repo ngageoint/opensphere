@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.linestring');
+goog.declareModuleId('plugin.cesium.sync.linestring');
 
 const {assert} = goog.require('goog.asserts');
 const GeometryType = goog.require('ol.geom.GeometryType');
@@ -38,7 +38,7 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
  * @param {number=} opt_index
  * @return {Cesium.Primitive}
  */
-const createLineStringPrimitive = (feature, geometry, style, context, opt_flatCoords, opt_offset, opt_end,
+export const createLineStringPrimitive = (feature, geometry, style, context, opt_flatCoords, opt_offset, opt_end,
     opt_index) => {
   assert(geometry.getType() == GeometryType.LINE_STRING || geometry.getType() == GeometryType.MULTI_LINE_STRING);
 
@@ -134,20 +134,19 @@ const LINE_STYLE_OPTIONS = [
  * @param {!(Style|Text)} style
  * @return {number|undefined}
  */
-const getDashPattern = (style) => {
+export const getDashPattern = (style) => {
   const stroke = style.getStroke();
   const dashPattern = stroke != null ? stroke.getLineDash() : undefined;
   const id = dashPatternToOptions(dashPattern).id;
   return LINE_STYLE_OPTIONS[id];
 };
 
-
 /**
  * @param {!Array<!Cesium.PrimitiveLike>|!Cesium.PrimitiveLike} primitive
  * @param {!(Style|Text)} style
  * @return {boolean}
  */
-const isLineWidthChanging = (primitive, style) => {
+export const isLineWidthChanging = (primitive, style) => {
   if (primitive) {
     if (Array.isArray(primitive)) {
       return primitive.length ? isLineWidthChanging(primitive[0], style) : false;
@@ -160,13 +159,12 @@ const isLineWidthChanging = (primitive, style) => {
   return false;
 };
 
-
 /**
  * @param {!Array<!Cesium.PrimitiveLike>|!Cesium.PrimitiveLike} primitive
  * @param {!(Style|Text)} style
  * @return {boolean}
  */
-const isDashChanging = (primitive, style) => {
+export const isDashChanging = (primitive, style) => {
   if (Array.isArray(primitive)) {
     return primitive.length ? isDashChanging(primitive[0], style) : false;
   }
@@ -217,7 +215,7 @@ const scratchCoord2 = [];
  * @param {number=} opt_end
  * @return {!Array<Cesium.Cartesian3>}
  */
-const getLineStringPositions = (geometry, opt_flatCoords, opt_offset, opt_end) => {
+export const getLineStringPositions = (geometry, opt_flatCoords, opt_offset, opt_end) => {
   const transform = getTransformFunction();
   const flats = opt_flatCoords || geometry.getFlatCoordinates();
   const stride = geometry.stride;
@@ -246,13 +244,4 @@ const getLineStringPositions = (geometry, opt_flatCoords, opt_offset, opt_end) =
   }
 
   return positions;
-};
-
-
-exports = {
-  createLineStringPrimitive,
-  getDashPattern,
-  getLineStringPositions,
-  isDashChanging,
-  isLineWidthChanging
 };

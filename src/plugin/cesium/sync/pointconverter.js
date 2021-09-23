@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.PointConverter');
+goog.declareModuleId('plugin.cesium.sync.PointConverter');
 
 const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
 const {createBillboard, updateBillboard, updateStyleAfterLoad} = goog.require('plugin.cesium.sync.point');
@@ -10,7 +10,7 @@ const Point = goog.requireType('ol.geom.Point');
  * Converter for Points
  * @extends {BaseConverter<Point, Cesium.Billboard>}
  */
-class PointConverter extends BaseConverter {
+export default class PointConverter extends BaseConverter {
   /**
    * @inheritDoc
    */
@@ -45,6 +45,3 @@ class PointConverter extends BaseConverter {
     return false;
   }
 }
-
-
-exports = PointConverter;

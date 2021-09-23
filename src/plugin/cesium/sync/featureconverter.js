@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.convert');
+goog.declareModuleId('plugin.cesium.sync.convert');
 
 const converter = goog.require('plugin.cesium.sync.converter');
 
@@ -81,4 +81,4 @@ const getFeatureStyles = (feature, resolution, layer) => {
 };
 
 
-exports = convert;
+export default convert;

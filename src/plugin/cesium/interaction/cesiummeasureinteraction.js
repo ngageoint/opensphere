@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.interaction.measure');
+goog.declareModuleId('plugin.cesium.interaction.measure');
 
 const MapContainer = goog.require('os.MapContainer');
 const DrawPolygon = goog.require('os.interaction.DrawPolygon');
@@ -21,7 +21,7 @@ let cesiumLabels = undefined;
  *
  * @this {Measure}
  */
-const cleanupWebGL = function() {
+export const cleanupWebGL = function() {
   drawpolygon.cleanupWebGL.call(this);
 
   var webgl = /** @type {CesiumRenderer|undefined} */ (MapContainer.getInstance().getWebGLRenderer());
@@ -40,7 +40,7 @@ const cleanupWebGL = function() {
  * @this {Measure}
  * @suppress {accessControls}
  */
-const updateWebGL = function() {
+export const updateWebGL = function() {
   drawpolygon.updateWebGL.call(this);
 
   if (MapContainer.getInstance().is3DEnabled()) {
@@ -81,9 +81,4 @@ const updateWebGL = function() {
       label.show = true;
     }
   }
-};
-
-exports = {
-  cleanupWebGL,
-  updateWebGL
 };

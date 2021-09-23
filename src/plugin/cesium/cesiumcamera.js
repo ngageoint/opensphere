@@ -2,7 +2,7 @@
  * @fileoverview ol-cesium camera replacement.
  * @suppress {accessControls}
  */
-goog.module('plugin.cesium.Camera');
+goog.declareModuleId('plugin.cesium.Camera');
 
 const asserts = goog.require('goog.asserts');
 const Throttle = goog.require('goog.async.Throttle');
@@ -19,7 +19,6 @@ const IWebGLCamera = goog.require('os.webgl.IWebGLCamera'); // eslint-disable-li
 
 const OLMap = goog.requireType('ol.Map');
 const View = goog.requireType('ol.View');
-
 
 
 /**
@@ -156,7 +155,7 @@ const worldToClip = (position, eyeOffset, camera, opt_result) => {
  *
  * @implements {IWebGLCamera}
  */
-class Camera extends OLCSCamera {
+export default class Camera extends OLCSCamera {
   /**
    * Constructor.
    * @param {!Cesium.Scene} scene
@@ -953,5 +952,3 @@ class Camera extends OLCSCamera {
  * @param {?View} view New view to use.
  */
 OLCSCamera.prototype.setView_ = (view) => {};
-
-exports = Camera;

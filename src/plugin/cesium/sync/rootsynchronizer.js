@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.RootSynchronizer');
+goog.declareModuleId('plugin.cesium.sync.RootSynchronizer');
 
 const asserts = goog.require('goog.asserts');
 const dispatcher = goog.require('os.Dispatcher');
@@ -21,7 +21,7 @@ const AbstractWebGLSynchronizer = goog.requireType('os.webgl.AbstractWebGLSynchr
 /**
  * The root synchronizer for the Cesium renderer.
  */
-class RootSynchronizer extends AbstractRootSynchronizer {
+export default class RootSynchronizer extends AbstractRootSynchronizer {
   /**
    * Constructor.
    * @param {!PluggableMap} map The OpenLayers map.
@@ -158,5 +158,3 @@ class RootSynchronizer extends AbstractRootSynchronizer {
     return startIndex;
   }
 }
-
-exports = RootSynchronizer;

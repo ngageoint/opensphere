@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.TileSynchronizer');
+goog.declareModuleId('plugin.cesium.sync.TileSynchronizer');
 
 const asserts = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');
@@ -58,7 +58,7 @@ const RESOLUTION_KEYS = [
  *
  * @extends {CesiumSynchronizer<Tile>}
  */
-class TileSynchronizer extends CesiumSynchronizer {
+export default class TileSynchronizer extends CesiumSynchronizer {
   /**
    * Constructor.
    * @param {!Tile} layer The OpenLayers tile layer.
@@ -520,5 +520,3 @@ class TileSynchronizer extends CesiumSynchronizer {
     Dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
   }
 }
-
-exports = TileSynchronizer;

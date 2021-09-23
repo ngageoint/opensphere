@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.interaction.drawpolygon');
+goog.declareModuleId('plugin.cesium.interaction.drawpolygon');
 
 const core = goog.require('olcs.core');
 const dispatcher = goog.require('os.Dispatcher');
@@ -33,7 +33,7 @@ let cesiumLine = undefined;
  *
  * @this {DrawPolygon}
  */
-const cleanupWebGL = function() {
+export const cleanupWebGL = function() {
   var webgl = /** @type {CesiumRenderer|undefined} */ (
     MapContainer.getInstance().getWebGLRenderer());
   var scene = webgl ? webgl.getCesiumScene() : undefined;
@@ -53,7 +53,7 @@ const cleanupWebGL = function() {
  * @this {DrawPolygon}
  * @suppress {accessControls}
  */
-const updateWebGL = function() {
+export const updateWebGL = function() {
   if (MapContainer.getInstance().is3DEnabled()) {
     if (!cesiumColor) {
       cesiumColor = new Cesium.ColorGeometryInstanceAttribute(
@@ -103,9 +103,4 @@ const updateWebGL = function() {
       dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
-};
-
-exports = {
-  cleanupWebGL,
-  updateWebGL
 };

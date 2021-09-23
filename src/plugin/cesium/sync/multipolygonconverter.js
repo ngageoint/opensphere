@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.MultiPolygonConverter');
+goog.declareModuleId('plugin.cesium.sync.MultiPolygonConverter');
 
 const PolygonConverter = goog.require('plugin.cesium.sync.PolygonConverter');
 const {createAndAddPolygon} = goog.require('plugin.cesium.sync.polygon');
@@ -13,7 +13,7 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
  * Converter for MultiPolygons
  * @extends {PolygonConverter<MultiPolygon, Cesium.Primitive>}
  */
-class MultiPolygonConverter extends PolygonConverter {
+export default class MultiPolygonConverter extends PolygonConverter {
   /**
    * @inheritDoc
    */
@@ -71,6 +71,3 @@ const createMultiPolygon = (feature, multipoly, style, context) => {
     offset = ringEnds[ringEnds.length - 1];
   }
 };
-
-
-exports = MultiPolygonConverter;

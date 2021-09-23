@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.converter');
+goog.declareModuleId('plugin.cesium.sync.converter');
 
 const GeometryType = goog.require('ol.geom.GeometryType');
 const DynamicFeature = goog.require('os.feature.DynamicFeature');
@@ -24,13 +24,14 @@ const Style = goog.requireType('ol.style.Style');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 const IConverter = goog.requireType('plugin.cesium.sync.IConverter');
 
+
 /**
  * @param {!Feature} feature
  * @param {!Geometry} geometry
  * @param {!Style} style
  * @param {!VectorContext} context
  */
-const convertGeometry = (feature, geometry, style, context) => {
+export const convertGeometry = (feature, geometry, style, context) => {
   const converter = getConverter(feature, geometry, style, context);
 
   if (converter) {
@@ -78,7 +79,7 @@ const dynamicConverters = {
  * @param {!VectorContext} context
  * @return {IConverter|undefined}
  */
-const getConverter = (feature, geometry, style, context) => {
+export const getConverter = (feature, geometry, style, context) => {
   const geometryType = geometry.getType();
 
   if (style && style.getText()) {
@@ -94,10 +95,4 @@ const getConverter = (feature, geometry, style, context) => {
   }
 
   return converters[geometryType];
-};
-
-
-exports = {
-  convertGeometry,
-  getConverter
 };

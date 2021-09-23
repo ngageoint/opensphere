@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.PrimitiveLayer');
+goog.declareModuleId('plugin.cesium.PrimitiveLayer');
 
 const olProj = goog.require('ol.proj');
 const dispatcher = goog.require('os.Dispatcher');
@@ -11,7 +11,7 @@ const Layer = goog.require('plugin.cesium.Layer');
 
 /**
  */
-class PrimitiveLayer extends Layer {
+export default class PrimitiveLayer extends Layer {
   /**
    * Constructor.
    */
@@ -119,5 +119,3 @@ class PrimitiveLayer extends Layer {
     return undefined;
   }
 }
-
-exports = PrimitiveLayer;

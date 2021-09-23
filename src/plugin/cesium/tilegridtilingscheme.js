@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.TileGridTilingScheme');
+goog.declareModuleId('plugin.cesium.TileGridTilingScheme');
 
 const asserts = goog.require('goog.asserts');
 const ol = goog.require('ol');
@@ -15,7 +15,7 @@ const TileGrid = goog.requireType('ol.tilegrid.TileGrid');
 /**
  * @implements {Cesium.TilingScheme}
  */
-class TileGridTilingScheme {
+export default class TileGridTilingScheme {
   /**
    * Constructor.
    * @param {!TileImageSource} source The source.
@@ -225,5 +225,3 @@ class TileGridTilingScheme {
         position.longitude - rectangle.east > epsilon);
   }
 }
-
-exports = TileGridTilingScheme;

@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.tiles.Cesium3DTileLayerUI');
+goog.declareModuleId('plugin.cesium.tiles.Cesium3DTileLayerUI');
 
 goog.require('os.ui.SliderUI');
 
@@ -20,7 +20,7 @@ const ILayer = goog.requireType('os.layer.ILayer');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   templateUrl: ROOT + 'views/plugin/cesium/cesium3dtile.html',
@@ -28,12 +28,11 @@ const directive = () => ({
   controllerAs: 'ctrl'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'cesium3dtilelayerui';
+export const directiveTag = 'cesium3dtilelayerui';
 
 
 /**
@@ -47,7 +46,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the Cesium 3D tile layer UI.
  * @unrestricted
  */
-class Controller extends DefaultLayerUICtrl {
+export class Controller extends DefaultLayerUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -132,9 +131,3 @@ class Controller extends DefaultLayerUICtrl {
     this.scope['color'] = this.getColor_();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

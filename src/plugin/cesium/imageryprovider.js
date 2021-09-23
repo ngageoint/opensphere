@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.ImageryProvider');
+goog.declareModuleId('plugin.cesium.ImageryProvider');
 
 goog.require('os.mixin.VectorImageTile');
 
@@ -25,7 +25,7 @@ const TileImageSource = goog.requireType('ol.source.TileImage');
  *
  * @suppress {invalidCasts}
  */
-class ImageryProvider extends OLImageryProvider {
+export default class ImageryProvider extends OLImageryProvider {
   /**
    * Constructor.
    * @param {!TileSource} source
@@ -199,5 +199,3 @@ class ImageryProvider extends OLImageryProvider {
     return 256;
   }
 }
-
-exports = ImageryProvider;

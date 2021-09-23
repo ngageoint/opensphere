@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.PolygonConverter');
+goog.declareModuleId('plugin.cesium.sync.PolygonConverter');
 
 const {GeometryInstanceId} = goog.require('plugin.cesium');
 const LineStringConverter = goog.require('plugin.cesium.sync.LineStringConverter');
@@ -16,7 +16,7 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
  * Converter for Polygons
  * @extends {LineStringConverter<Polygon, Cesium.Primitive>}
  */
-class PolygonConverter extends LineStringConverter {
+export default class PolygonConverter extends LineStringConverter {
   /**
    * @inheritDoc
    */
@@ -100,6 +100,3 @@ class PolygonConverter extends LineStringConverter {
  * @return {boolean}
  */
 const isPolygonFill = (primitive) => primitive['olLineWidth'] == null;
-
-
-exports = PolygonConverter;

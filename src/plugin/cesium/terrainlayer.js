@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.TerrainLayer');
+goog.declareModuleId('plugin.cesium.TerrainLayer');
 
 const log = goog.require('goog.log');
 const dispatcher = goog.require('os.Dispatcher');
@@ -25,7 +25,7 @@ const logger = log.getLogger('plugin.cesium.TerrainLayer');
  *
  * @implements {ITreeNodeSupplier}
  */
-class TerrainLayer extends Layer {
+export default class TerrainLayer extends Layer {
   /**
    * Constructor.
    * @param {Cesium.TerrainProvider|undefined} provider The terrain provider.
@@ -197,5 +197,3 @@ class TerrainLayer extends Layer {
     this.synchronize();
   }
 }
-
-exports = TerrainLayer;

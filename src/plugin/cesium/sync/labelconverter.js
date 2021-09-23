@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.LabelConverter');
+goog.declareModuleId('plugin.cesium.sync.LabelConverter');
 
 const asserts = goog.require('goog.asserts');
 const olExtent = goog.require('ol.extent');
@@ -23,7 +23,7 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 /**
  * Converter for Label styles
  */
-class LabelConverter extends BaseConverter {
+export default class LabelConverter extends BaseConverter {
   /**
    * @inheritDoc
    */
@@ -281,6 +281,3 @@ const updateText = (label, textStyle) => {
   const labelText = textStyle.getText() || '';
   label.text = labelText.replace(/[^\x0a\x0d\x20-\x7e\xa0-\xff]/g, '');
 };
-
-
-exports = LabelConverter;

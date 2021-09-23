@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.CesiumRenderer');
+goog.declareModuleId('plugin.cesium.CesiumRenderer');
 
 const Promise = goog.require('goog.Promise');
 const dispose = goog.require('goog.dispose');
@@ -65,7 +65,7 @@ const logger = log.getLogger('plugin.cesium.CesiumRenderer');
 /**
  * A WebGL renderer powered by Cesium.
  */
-class CesiumRenderer extends AbstractWebGLRenderer {
+export default class CesiumRenderer extends AbstractWebGLRenderer {
   /**
    * Constructor.
    */
@@ -727,5 +727,3 @@ class CesiumRenderer extends AbstractWebGLRenderer {
     }
   }
 }
-
-exports = CesiumRenderer;

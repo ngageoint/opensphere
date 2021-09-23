@@ -1,7 +1,8 @@
-goog.module('plugin.cesium.sync.IConverter');
+goog.declareModuleId('plugin.cesium.sync.IConverter');
 
 const {
   default: IConverter
 } = goog.require('plugin.cesium.sync.IConverterTemp');
 
-exports = IConverter;
+
+export default IConverter;

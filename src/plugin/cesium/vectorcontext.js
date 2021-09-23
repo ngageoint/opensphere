@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.VectorContext');
+goog.declareModuleId('plugin.cesium.VectorContext');
 
 const Throttle = goog.require('goog.async.Throttle');
 const dispose = goog.require('goog.dispose');
@@ -27,7 +27,7 @@ const LOGGER = log.getLogger('plugin.cesium.VectorContext');
  * Maintains references to all Cesium primitives
  * @implements {IDisposable}
  */
-class VectorContext {
+export default class VectorContext {
   /**
    * @param {!Cesium.Scene} scene The Cesium scene
    * @param {!OLVectorLayer} layer The OL3 layer
@@ -570,5 +570,3 @@ class VectorContext {
     return shown == null ? true : shown;
   }
 }
-
-exports = VectorContext;

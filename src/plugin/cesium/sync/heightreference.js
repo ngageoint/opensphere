@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.HeightReference');
+goog.declareModuleId('plugin.cesium.sync.HeightReference');
 
 const RecordField = goog.require('os.data.RecordField');
 const implementz = goog.require('os.implements');
@@ -18,7 +18,7 @@ const VectorSource = goog.requireType('os.source.Vector');
  * @param {number=} opt_index Index into altitudeModes array for multi geoms
  * @return {!Cesium.HeightReference}
  */
-const getHeightReference = (layer, feature, geometry, opt_index) => {
+export const getHeightReference = (layer, feature, geometry, opt_index) => {
   let altitudeMode = getAltitudeModeFromItems(layer, feature, geometry);
   altitudeMode = getAltitudeModeFromArray(altitudeMode, opt_index);
   return getHeightReferenceFromAltitudeMode(altitudeMode);
@@ -88,15 +88,9 @@ const getHeightReferenceFromAltitudeMode = (altitudeMode) => {
  * @param {Cesium.PrimitiveLike|null} primitive
  * @return {boolean}
  */
-const isPrimitiveClassTypeChanging = (newHeightReference, primitive) => {
+export const isPrimitiveClassTypeChanging = (newHeightReference, primitive) => {
   return ((newHeightReference !== Cesium.HeightReference.CLAMP_TO_GROUND &&
     (primitive instanceof Cesium.GroundPolylinePrimitive || primitive instanceof Cesium.GroundPrimitive)) ||
     (newHeightReference === Cesium.HeightReference.CLAMP_TO_GROUND &&
     (primitive instanceof Cesium.Polyline || primitive instanceof Cesium.Primitive)));
-};
-
-
-exports = {
-  getHeightReference,
-  isPrimitiveClassTypeChanging
 };

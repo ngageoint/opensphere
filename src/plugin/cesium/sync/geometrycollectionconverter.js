@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.GeometryCollectionConverter');
+goog.declareModuleId('plugin.cesium.sync.GeometryCollectionConverter');
 
 const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
 
@@ -25,7 +25,7 @@ let convertFunction = undefined;
 /**
  * Converter for GeometryCollections
  */
-class GeometryCollectionConverter extends BaseConverter {
+export default class GeometryCollectionConverter extends BaseConverter {
   /**
    * @inheritDoc
    */
@@ -72,6 +72,3 @@ const convert = (feature, geometry, style, context) => {
 
   return false;
 };
-
-
-exports = GeometryCollectionConverter;

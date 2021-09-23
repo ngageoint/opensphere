@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.DynamicMultiPolygonConverter');
+goog.declareModuleId('plugin.cesium.sync.DynamicMultiPolygonConverter');
 
 const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
 const {createOrUpdateSegment} = goog.require('plugin.cesium.sync.DynamicLineString');
@@ -13,7 +13,7 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
  * Converter for DynamicFeature MultiPolygons.
  * @extends {BaseConverter<(MultiPolygon), (Cesium.Polyline|Cesium.PolylineOptions)>}
  */
-class DynamicMultiPolygonConverter extends BaseConverter {
+export default class DynamicMultiPolygonConverter extends BaseConverter {
   /**
    * @inheritDoc
    */
@@ -52,6 +52,3 @@ const createOrUpdateMultiPolygon = (feature, multipolygon, style, context, opt_p
     });
   });
 };
-
-
-exports = DynamicMultiPolygonConverter;

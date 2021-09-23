@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.MultiLineStringConverter');
+goog.declareModuleId('plugin.cesium.sync.MultiLineStringConverter');
 
 const {updatePrimitive} = goog.require('plugin.cesium.primitive');
 const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
@@ -14,7 +14,7 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
  * Converter for MultiLineStrings
  * @extends {BaseConverter<MultiLineString, Cesium.Primitive>}
  */
-class MultiLineStringConverter extends BaseConverter {
+export default class MultiLineStringConverter extends BaseConverter {
   /**
    * @inheritDoc
    */
@@ -72,6 +72,3 @@ const createMultiLineString = (feature, multiLine, style, context) => {
     offset = lineEnd;
   }
 };
-
-
-exports = MultiLineStringConverter;

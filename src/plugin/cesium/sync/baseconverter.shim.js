@@ -1,7 +1,8 @@
-goog.module('plugin.cesium.sync.BaseConverter');
+goog.declareModuleId('plugin.cesium.sync.BaseConverter');
 
 const {
   default: BaseConverter
 } = goog.require('plugin.cesium.sync.BaseConverterTemp');
 
-exports = BaseConverter;
+
+export default BaseConverter;

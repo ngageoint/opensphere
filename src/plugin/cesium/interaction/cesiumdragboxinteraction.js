@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.interaction.dragbox');
+goog.declareModuleId('plugin.cesium.interaction.dragbox');
 
 const {ol4326CoordinateArrayToCsCartesians} = goog.require('olcs.core');
 const Dispatcher = goog.require('os.Dispatcher');
@@ -31,7 +31,7 @@ let cesiumColor = undefined;
  *
  * @this {DragBox}
  */
-const cleanupWebGL = function() {
+export const cleanupWebGL = function() {
   var webgl = /** @type {CesiumRenderer|undefined} */ (MapContainer.getInstance().getWebGLRenderer());
   var scene = webgl ? webgl.getCesiumScene() : undefined;
   if (scene && cesiumBox) {
@@ -46,7 +46,7 @@ const cleanupWebGL = function() {
  * @this {DragBox}
  * @suppress {accessControls}
  */
-const updateWebGL = function(geometry) {
+export const updateWebGL = function(geometry) {
   if (MapContainer.getInstance().is3DEnabled()) {
     if (!cesiumColor) {
       cesiumColor = new Cesium.ColorGeometryInstanceAttribute(
@@ -87,9 +87,4 @@ const updateWebGL = function(geometry) {
       Dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
-};
-
-exports = {
-  cleanupWebGL,
-  updateWebGL
 };

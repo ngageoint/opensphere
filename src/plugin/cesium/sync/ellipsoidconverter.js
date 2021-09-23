@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.EllipsoidConverter');
+goog.declareModuleId('plugin.cesium.sync.EllipsoidConverter');
 
 const PolygonConverter = goog.require('plugin.cesium.sync.PolygonConverter');
 const {createEllipsoid} = goog.require('plugin.cesium.sync.ellipsoid');
@@ -7,7 +7,7 @@ const {createEllipsoid} = goog.require('plugin.cesium.sync.ellipsoid');
 /**
  * Converter for Ellipsoids
  */
-class EllipsoidConverter extends PolygonConverter {
+export default class EllipsoidConverter extends PolygonConverter {
   /**
    * @inheritDoc
    */
@@ -16,6 +16,3 @@ class EllipsoidConverter extends PolygonConverter {
     return true;
   }
 }
-
-
-exports = EllipsoidConverter;

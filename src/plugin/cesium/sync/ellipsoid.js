@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.ellipsoid');
+goog.declareModuleId('plugin.cesium.sync.ellipsoid');
 
 const {ol4326CoordinateToCesiumCartesian} = goog.require('olcs.core');
 const {GeometryInstanceId} = goog.require('plugin.cesium');
@@ -19,7 +19,7 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
  * @param {!Style} style
  * @param {!VectorContext} context
  */
-const createEllipsoid = (feature, geometry, style, context) => {
+export const createEllipsoid = (feature, geometry, style, context) => {
   const olCenter = geometry.getCenter();
   const center = ol4326CoordinateToCesiumCartesian(olCenter);
 
@@ -99,9 +99,4 @@ const createEllipsoidInstance = (id, geometry, color, opt_modelMatrix) => {
       color: Cesium.ColorGeometryInstanceAttribute.fromColor(color)
     }
   });
-};
-
-
-exports = {
-  createEllipsoid
 };

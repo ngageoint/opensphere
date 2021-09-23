@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.getTransformFunction');
+goog.declareModuleId('plugin.cesium.sync.getTransformFunction');
 
 const olProj = goog.require('ol.proj');
 const osMap = goog.require('os.map');

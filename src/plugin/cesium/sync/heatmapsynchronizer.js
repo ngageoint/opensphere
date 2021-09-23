@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.HeatmapSynchronizer');
+goog.declareModuleId('plugin.cesium.sync.HeatmapSynchronizer');
 
 const asserts = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');
@@ -24,12 +24,13 @@ const PluggableMap = goog.requireType('ol.PluggableMap');
 const MapCanvasRenderer = goog.requireType('ol.renderer.canvas.Map');
 const Heatmap = goog.requireType('plugin.heatmap.Heatmap');
 
+
 /**
  * Synchronizes a single OpenLayers image layer to Cesium.
  *
  * @extends {CesiumSynchronizer<Heatmap>}
  */
-class HeatmapSynchronizer extends CesiumSynchronizer {
+export default class HeatmapSynchronizer extends CesiumSynchronizer {
   /**
    * Constructor.
    * @param {!Heatmap} layer The OpenLayers heatmap layer.
@@ -272,6 +273,3 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
 HeatmapSynchronizer.STYLE_KEYS_ = [
   'change:opacity'
 ];
-
-
-exports = HeatmapSynchronizer;

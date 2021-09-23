@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.Plugin');
+goog.declareModuleId('plugin.cesium.Plugin');
 
 const MapContainer = goog.require('os.MapContainer');
 const settings = goog.require('os.config.Settings');
@@ -30,7 +30,7 @@ const mime = goog.require('plugin.cesium.tiles.mime');
 /**
  * Provides a WebGL renderer for the map, powered by Cesium.
  */
-class Plugin extends AbstractPlugin {
+export default class Plugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -95,5 +95,3 @@ class Plugin extends AbstractPlugin {
     im.registerImportUI(mime.TYPE, new TilesetImportUI());
   }
 }
-
-exports = Plugin;

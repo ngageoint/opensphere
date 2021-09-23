@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.command.FlyToSphere');
+goog.declareModuleId('plugin.cesium.command.FlyToSphere');
 
 const MapContainer = goog.require('os.MapContainer');
 const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
@@ -8,10 +8,11 @@ const osMap = goog.require('os.map');
 
 const Camera = goog.requireType('plugin.cesium.Camera');
 
+
 /**
  * @suppress {accessControls}
  */
-class FlyToSphere extends AbstractSyncCommand {
+export default class FlyToSphere extends AbstractSyncCommand {
   /**
    * Constructor.
    * @param {!Cesium.BoundingSphere} sphere
@@ -90,5 +91,3 @@ class FlyToSphere extends AbstractSyncCommand {
     return super.revert();
   }
 }
-
-exports = FlyToSphere;

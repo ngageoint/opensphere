@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.ImageSynchronizer');
+goog.declareModuleId('plugin.cesium.sync.ImageSynchronizer');
 
 const googEventsEventType = goog.require('goog.events.EventType');
 const ImageState = goog.require('ol.ImageState');
@@ -32,7 +32,7 @@ const ImageLayer = goog.requireType('os.layer.Image');
  *
  * @extends {CesiumSynchronizer<ImageLayer>}
  */
-class ImageSynchronizer extends CesiumSynchronizer {
+export default class ImageSynchronizer extends CesiumSynchronizer {
   /**
    * Constructor.
    * @param {!ImageLayer} layer The OpenLayers image layer.
@@ -345,5 +345,3 @@ class ImageSynchronizer extends CesiumSynchronizer {
     }
   }
 }
-
-exports = ImageSynchronizer;

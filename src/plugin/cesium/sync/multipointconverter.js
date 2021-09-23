@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.MultiPointConverter');
+goog.declareModuleId('plugin.cesium.sync.MultiPointConverter');
 
 const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
 const {createBillboard, updateBillboard, updateStyleAfterLoad} = goog.require('plugin.cesium.sync.point');
@@ -13,7 +13,7 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
  * Converter for MultiPoints
  * @extends {BaseConverter<MultiPoint, Array<!Cesium.Billboard>>}
  */
-class MultiPointConverter extends BaseConverter {
+export default class MultiPointConverter extends BaseConverter {
   /**
    * @inheritDoc
    */
@@ -75,6 +75,3 @@ const updateMultiPoint = (feature, geometry, imageStyle, context, opt_primitive)
     count++;
   }
 };
-
-
-exports = MultiPointConverter;
