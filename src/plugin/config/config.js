@@ -1,10 +1,6 @@
-goog.module('plugin.config');
+goog.declareModuleId('plugin.config');
 
 /**
  * @type {string}
  */
-const ID = 'config';
-
-exports = {
-  ID
-};
+export const ID = 'config';

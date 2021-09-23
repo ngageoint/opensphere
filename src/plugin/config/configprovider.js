@@ -1,4 +1,6 @@
-goog.module('plugin.config.Provider');
+goog.declareModuleId('plugin.config.Provider');
+
+import {ID} from './config.js';
 
 const log = goog.require('goog.log');
 const Settings = goog.require('os.config.Settings');
@@ -11,7 +13,6 @@ const DataProviderEventType = goog.require('os.data.DataProviderEventType');
 const IDataProvider = goog.require('os.data.IDataProvider');
 const osImplements = goog.require('os.implements');
 const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
-const {ID} = goog.require('plugin.config');
 
 const Logger = goog.requireType('goog.log.Logger');
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
@@ -22,7 +23,7 @@ const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
  *
  * @implements {IDataProvider}
  */
-class Provider extends DescriptorProvider {
+export default class Provider extends DescriptorProvider {
   /**
    * Constructor.
    */
@@ -216,6 +217,7 @@ class Provider extends DescriptorProvider {
     return provider;
   }
 }
+
 osImplements(Provider, IDataProvider.ID);
 
 /**
@@ -223,5 +225,3 @@ osImplements(Provider, IDataProvider.ID);
  * @type {Logger}
  */
 const logger = log.getLogger('plugin.config.Provider');
-
-exports = Provider;

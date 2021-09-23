@@ -1,7 +1,7 @@
 goog.module('plugin.xyz.XYZImport');
 
 const {getRandomString, numerateCompare} = goog.require('goog.string');
-const ConfigProvider = goog.require('plugin.config.Provider');
+const {default: ConfigProvider} = goog.require('plugin.config.Provider');
 const {ROOT} = goog.require('os');
 const ConfigDescriptor = goog.require('os.data.ConfigDescriptor');
 const DataManager = goog.require('os.data.DataManager');
