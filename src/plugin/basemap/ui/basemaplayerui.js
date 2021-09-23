@@ -1,4 +1,4 @@
-goog.module('plugin.basemap.ui.BaseMapLayerUI');
+goog.declareModuleId('plugin.basemap.ui.BaseMapLayerUI');
 
 goog.require('os.ui.SpinnerUI');
 
@@ -17,7 +17,7 @@ const LayerNode = goog.requireType('os.data.LayerNode');
  *
  * @return {!angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   templateUrl: os.ROOT + 'views/plugin/basemap/basemaplayerui.html',
@@ -29,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'basemaplayerui';
+export const directiveTag = 'basemaplayerui';
 
 
 /**
@@ -43,7 +43,7 @@ Module.directive('basemaplayerui', [directive]);
  * Controller for the base map layer UI
  * @unrestricted
  */
-class Controller extends TileLayerUICtrl {
+export class Controller extends TileLayerUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -224,9 +224,3 @@ class Controller extends TileLayerUICtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,4 +1,4 @@
-goog.module('plugin.basemap.BaseMapConfig');
+goog.declareModuleId('plugin.basemap.BaseMapConfig');
 
 const asserts = goog.require('goog.asserts');
 const googObject = goog.require('goog.object');
@@ -34,7 +34,7 @@ const BaseMap = goog.require('plugin.basemap.layer.BaseMap');
  * @see {@link plugin.ogc.wms.WMSLayerConfig} for configuring WMS map layers
  * @see {@link plugin.xyz.XYZLayerConfig} for configuring XYZ map layers (also best for ArcGIS map layers)
  */
-class BaseMapConfig extends AbstractLayerConfig {
+export default class BaseMapConfig extends AbstractLayerConfig {
   /**
    * Constructor.
    */
@@ -56,5 +56,3 @@ class BaseMapConfig extends AbstractLayerConfig {
     return layerConfig.createLayer(clonedOptions);
   }
 }
-
-exports = BaseMapConfig;

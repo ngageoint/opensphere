@@ -1,4 +1,4 @@
-goog.module('plugin.basemap.v4.BaseMapState');
+goog.declareModuleId('plugin.basemap.v4.BaseMapState');
 
 const googDomXml = goog.require('goog.dom.xml');
 const log = goog.require('goog.log');
@@ -15,7 +15,7 @@ const BaseMapTag = goog.require('plugin.basemap.v4.BaseMapTag');
  * Basemap state v4.
  * @unrestricted
  */
-class BaseMapState extends LayerState {
+export default class BaseMapState extends LayerState {
   /**
    * Constructor.
    */
@@ -140,6 +140,3 @@ const hasMinZoom = (el) => !!el.querySelector(BaseMapTag.MIN_ZOOM);
  * @type {goog.log.Logger}
  */
 const logger = log.getLogger('plugin.basemap.v4.BaseMapState');
-
-
-exports = BaseMapState;

@@ -1,4 +1,4 @@
-goog.module('plugin.basemap.v3.BaseMapState');
+goog.declareModuleId('plugin.basemap.v3.BaseMapState');
 
 const googDomXml = goog.require('goog.dom.xml');
 const log = goog.require('goog.log');
@@ -16,7 +16,7 @@ const BaseMapTag = goog.require('plugin.basemap.v3.BaseMapTag');
  * Basemap state v3.
  * @unrestricted
  */
-class BaseMapState extends LayerState {
+export default class BaseMapState extends LayerState {
   /**
    * Constructor.
    */
@@ -118,6 +118,3 @@ class BaseMapState extends LayerState {
  * @type {goog.log.Logger}
  */
 const logger = log.getLogger('plugin.basemap.v3.BaseMapState');
-
-
-exports = BaseMapState;

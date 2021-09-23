@@ -1,4 +1,4 @@
-goog.module('plugin.basemap.BaseMapProvider');
+goog.declareModuleId('plugin.basemap.BaseMapProvider');
 
 const dispose = goog.require('goog.dispose');
 const dispatcher = goog.require('os.Dispatcher');
@@ -27,7 +27,7 @@ const BaseMap = goog.require('plugin.basemap.layer.BaseMap');
  * @implements {IDataProvider}
  * @see {@link basemap.BaseMapPlugin} for configuration instructions
  */
-class BaseMapProvider extends DescriptorProvider {
+export default class BaseMapProvider extends DescriptorProvider {
   /**
    * Constructor.
    */
@@ -295,6 +295,5 @@ class BaseMapProvider extends DescriptorProvider {
     return null;
   }
 }
-osImplements(BaseMapProvider, IDataProvider.ID);
 
-exports = BaseMapProvider;
+osImplements(BaseMapProvider, IDataProvider.ID);

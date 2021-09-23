@@ -1,4 +1,4 @@
-goog.module('plugin.basemap.Group');
+goog.declareModuleId('plugin.basemap.Group');
 
 const LayerGroup = goog.require('os.layer.Group');
 const basemap = goog.require('plugin.basemap');
@@ -7,7 +7,7 @@ const basemap = goog.require('plugin.basemap');
 /**
  * Basemap layer group.
  */
-class Group extends LayerGroup {
+export default class Group extends LayerGroup {
   /**
    * Constructor.
    * @param {olx.layer.GroupOptions=} opt_options
@@ -20,5 +20,3 @@ class Group extends LayerGroup {
     this.setOSType(basemap.LAYER_TYPE);
   }
 }
-
-exports = Group;

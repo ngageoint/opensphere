@@ -1,4 +1,4 @@
-goog.module('plugin.basemap.layer.BaseMap');
+goog.declareModuleId('plugin.basemap.layer.BaseMap');
 
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
@@ -15,7 +15,7 @@ let warningShown = false;
 
 /**
  */
-class BaseMap extends Tile {
+export default class BaseMap extends Tile {
   /**
    * Constructor.
    * @param {olx.layer.TileOptions} options Tile layer options
@@ -49,5 +49,3 @@ class BaseMap extends Tile {
     }
   }
 }
-
-exports = BaseMap;

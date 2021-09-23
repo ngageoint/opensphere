@@ -1,4 +1,4 @@
-goog.module('plugin.basemap.BaseMapDescriptor');
+goog.declareModuleId('plugin.basemap.BaseMapDescriptor');
 
 const googObject = goog.require('goog.object');
 const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
@@ -12,7 +12,7 @@ const basemap = goog.require('plugin.basemap');
  *
  * @see {@link basemap.BaseMapPlugin} for configuration instructions
  */
-class BaseMapDescriptor extends LayerSyncDescriptor {
+export default class BaseMapDescriptor extends LayerSyncDescriptor {
   /**
    * Constructor.
    */
@@ -152,5 +152,3 @@ class BaseMapDescriptor extends LayerSyncDescriptor {
     }
   }
 }
-
-exports = BaseMapDescriptor;

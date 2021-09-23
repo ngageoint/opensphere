@@ -1,4 +1,4 @@
-goog.module('plugin.basemap.BaseMapPlugin');
+goog.declareModuleId('plugin.basemap.BaseMapPlugin');
 
 const MapContainer = goog.require('os.MapContainer');
 const DataManager = goog.require('os.data.DataManager');
@@ -57,7 +57,7 @@ const BaseMapState = goog.require('plugin.basemap.v4.BaseMapState');
  * @see {@link plugin.ogc.wms.WMSLayerConfig} for configuring WMS map layers
  * @see {@link plugin.xyz.XYZLayerConfig} for configuring XYZ map layers (also best for ArcGIS map layers)
  */
-class BaseMapPlugin extends AbstractPlugin {
+export default class BaseMapPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -98,5 +98,3 @@ class BaseMapPlugin extends AbstractPlugin {
     LayersCtrl.SKIP_TOGGLE_FUNCS.push(basemap.isBaseMap);
   }
 }
-
-exports = BaseMapPlugin;
