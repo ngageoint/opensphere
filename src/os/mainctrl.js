@@ -22,6 +22,7 @@ const log = goog.require('goog.log');
 const {IE, GECKO, LINUX} = goog.require('goog.userAgent');
 
 import ArcPlugin from '../plugin/arc/arcplugin.js';
+import AreaPlugin from '../plugin/area/areaplugin.js';
 import * as dispatcher from './dispatcher.js';
 import * as os from './os.js';
 import AbstractMainCtrl from './ui/abstractmainctrl.js';
@@ -158,7 +159,6 @@ const osWindow = goog.require('os.ui.window');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const UrlManager = goog.require('os.url.UrlManager');
 
-const AreaPlugin = goog.require('plugin.area.AreaPlugin');
 const AreaDataPlugin = goog.require('plugin.areadata.AreaDataPlugin');
 const AudioPlugin = goog.require('plugin.audio.AudioPlugin');
 const BaseMapPlugin = goog.require('plugin.basemap.BaseMapPlugin');

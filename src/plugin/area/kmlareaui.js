@@ -2,12 +2,13 @@ goog.declareModuleId('plugin.area.KMLAreaUI');
 
 goog.require('os.ui.im.MergeAreaOptionUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../os/os.js';
+import AreaImportCtrl from './areaimportctrl.js';
+import KMLAreaParser from './kmlareaparser.js';
+
 const EventType = goog.require('os.events.EventType');
 const Importer = goog.require('os.im.Importer');
 const Module = goog.require('os.ui.Module');
-const AreaImportCtrl = goog.require('plugin.area.AreaImportCtrl');
-const KMLAreaParser = goog.require('plugin.area.KMLAreaParser');
 
 const FileParserConfig = goog.requireType('os.parse.FileParserConfig');
 

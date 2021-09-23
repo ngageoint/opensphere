@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.area.KMLAreaParser');
 
+import {PROJECTION} from '../../os/map/map.js';
+
 const dom = goog.require('goog.dom');
 const googDomXml = goog.require('goog.dom.xml');
 const GoogFileReader = goog.require('goog.fs.FileReader');
@@ -9,7 +11,6 @@ const xml = goog.require('ol.xml');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 const text = goog.require('os.file.mime.text');
 const mimeZip = goog.require('os.file.mime.zip');
-const osMap = goog.require('os.map');
 const AsyncZipParser = goog.require('os.parse.AsyncZipParser');
 const osXml = goog.require('os.xml');
 
@@ -229,7 +230,7 @@ class KMLAreaParser extends AsyncZipParser {
       var doc = this.document_;
       this.document_ = null;
       features = this.format_.readFeatures(doc, {
-        featureProjection: osMap.PROJECTION
+        featureProjection: PROJECTION
       });
     }
 

@@ -1,8 +1,9 @@
 goog.declareModuleId('plugin.area.AreaImportCtrl');
 
+import {processFeatures} from './area.js';
+
 const RecordField = goog.require('os.data.RecordField');
 const AreaImportCtrl = goog.require('os.ui.query.AreaImportCtrl');
-const area = goog.require('plugin.area');
 
 
 /**
@@ -41,7 +42,7 @@ class Controller extends AreaImportCtrl {
    */
   processFeatures(features) {
     this.config[RecordField.SOURCE_NAME] = this.getFileName();
-    area.processFeatures(features, this.config);
+    processFeatures(features, this.config);
   }
 }
 

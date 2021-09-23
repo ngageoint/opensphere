@@ -1,12 +1,13 @@
 goog.declareModuleId('plugin.area.KMLAreaImportUI');
 
+import KMLAreaParser from './kmlareaparser.js';
+import {directiveTag as areaImportUi} from './kmlareaui.js';
+
 const dispose = goog.require('goog.dispose');
 const EventType = goog.require('os.events.EventType');
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const osWindow = goog.require('os.ui.window');
-const KMLAreaParser = goog.require('plugin.area.KMLAreaParser');
-const {directiveTag: areaImportUi} = goog.require('plugin.area.KMLAreaUI');
 
 
 /**

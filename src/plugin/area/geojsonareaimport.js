@@ -1,12 +1,13 @@
 goog.declareModuleId('plugin.area.GeoJSONAreaImport');
 
+import {processFeatures} from './area.js';
+
 const RecordField = goog.require('os.data.RecordField');
 const EventType = goog.require('os.events.EventType');
 const Importer = goog.require('os.im.Importer');
 const Module = goog.require('os.ui.Module');
 const osWindow = goog.require('os.ui.window');
 const {directive: wizardDirective, Controller: WizardController} = goog.require('os.ui.wiz.WizardUI');
-const area = goog.require('plugin.area');
 const GeoJSONParser = goog.require('plugin.file.geojson.GeoJSONParser');
 
 
@@ -56,7 +57,7 @@ export class Controller extends WizardController {
 
     if (features && features.length > 0) {
       this.scope['config'][RecordField.SOURCE_NAME] = this.scope['config']['file'].getFileName();
-      area.processFeatures(features, this.scope['config']);
+      processFeatures(features, this.scope['config']);
     }
 
     osWindow.close(this.element);

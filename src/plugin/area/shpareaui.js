@@ -2,13 +2,14 @@ goog.declareModuleId('plugin.area.SHPAreaUI');
 
 goog.require('os.ui.im.MergeAreaOptionUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../os/os.js';
+import {apply} from '../../os/ui/ui.js';
+import AreaImportCtrl from './areaimportctrl.js';
+
 const EventType = goog.require('os.events.EventType');
 const Importer = goog.require('os.im.Importer');
-const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
-const AreaImportCtrl = goog.require('plugin.area.AreaImportCtrl');
 const SHPParser = goog.require('plugin.file.shp.SHPParser');
 
 const SHPParserConfig = goog.requireType('plugin.file.shp.SHPParserConfig');
@@ -61,7 +62,7 @@ export class Controller extends AreaImportCtrl {
 
     // If this is the zip file, run the preview
     if (this.config['zipFile']) {
-      this.config.updateZipPreview(ui.apply.bind(this, this.scope));
+      this.config.updateZipPreview(apply.bind(this, this.scope));
     }
   }
 
@@ -74,7 +75,7 @@ export class Controller extends AreaImportCtrl {
    */
   onFileChange_(event, valid) {
     this.config.updatePreview();
-    ui.apply(this.scope);
+    apply(this.scope);
   }
 
   /**
