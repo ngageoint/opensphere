@@ -1,4 +1,4 @@
-goog.module('plugin.arc.query.ArcQueryHandler');
+goog.declareModuleId('plugin.arc.query.ArcQueryHandler');
 
 const googArray = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');
@@ -240,4 +240,4 @@ class ArcQueryHandler extends QueryHandler {
 const logger = log.getLogger('plugin.arc.query.ArcQueryHandler');
 
 
-exports = ArcQueryHandler;
+export default ArcQueryHandler;

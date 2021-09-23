@@ -1,4 +1,4 @@
-goog.module('plugin.arc.ArcPlugin');
+goog.declareModuleId('plugin.arc.ArcPlugin');
 
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
@@ -73,4 +73,4 @@ class ArcPlugin extends AbstractPlugin {
   }
 }
 
-exports = ArcPlugin;
+export default ArcPlugin;

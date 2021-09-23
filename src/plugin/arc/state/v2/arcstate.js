@@ -1,4 +1,4 @@
-goog.module('plugin.arc.state.v2.arcstate');
+goog.declareModuleId('plugin.arc.state.v2.arcstate');
 
 const dom = goog.require('goog.dom');
 const googString = goog.require('goog.string');
@@ -15,7 +15,7 @@ const ArcTileLayerConfig = goog.require('plugin.arc.layer.ArcTileLayerConfig');
  *
  * @param {!Element} el
  */
-const load = function(el) {
+export const load = function(el) {
   var wmsLayers = el.querySelectorAll('layer[type="wms"]');
   for (var i = 0, ii = wmsLayers.length; i < ii; i++) {
     var layer = wmsLayers[i];
@@ -56,7 +56,7 @@ const load = function(el) {
  *
  * @param {!Element} el
  */
-const save = function(el) {
+export const save = function(el) {
   var arcTileLayers = el.querySelectorAll('layer[type="' + ArcTileLayerConfig.ID + '"]');
   for (var i = 0, ii = arcTileLayers.length; i < ii; i++) {
     var layer = arcTileLayers[i];
@@ -83,9 +83,4 @@ const save = function(el) {
     var featureLayer = arcFeatureLayers[j];
     featureLayer.setAttribute('type', 'arc');
   }
-};
-
-exports = {
-  load,
-  save
 };

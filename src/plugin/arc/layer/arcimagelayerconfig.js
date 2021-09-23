@@ -1,4 +1,4 @@
-goog.module('plugin.arc.layer.ArcImageLayerConfig');
+goog.declareModuleId('plugin.arc.layer.ArcImageLayerConfig');
 
 const ImageArcGISRest = goog.require('ol.source.ImageArcGISRest');
 const Image = goog.require('os.layer.Image');
@@ -106,4 +106,4 @@ class ArcImageLayerConfig extends AbstractLayerConfig {
 ArcImageLayerConfig.ID = 'arcimage';
 
 
-exports = ArcImageLayerConfig;
+export default ArcImageLayerConfig;

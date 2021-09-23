@@ -1,4 +1,4 @@
-goog.module('plugin.arc.ArcServer');
+goog.declareModuleId('plugin.arc.ArcServer');
 
 const asserts = goog.require('goog.asserts');
 const dispose = goog.require('goog.dispose');
@@ -196,4 +196,4 @@ const logger = log.getLogger('plugin.arc.ArcServer');
 ArcServer.DEFAULT_COLOR = 'rgba(255,255,255,1)';
 
 
-exports = ArcServer;
+export default ArcServer;

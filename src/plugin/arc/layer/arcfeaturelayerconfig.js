@@ -1,4 +1,4 @@
-goog.module('plugin.arc.layer.ArcFeatureLayerConfig');
+goog.declareModuleId('plugin.arc.layer.ArcFeatureLayerConfig');
 
 const log = goog.require('goog.log');
 const FeatureImporter = goog.require('os.im.FeatureImporter');
@@ -201,4 +201,4 @@ ArcFeatureLayerConfig.ID = 'arcfeature';
 const logger = log.getLogger('plugin.arc.layer.ArcFeatureLayerConfig');
 
 
-exports = ArcFeatureLayerConfig;
+export default ArcFeatureLayerConfig;

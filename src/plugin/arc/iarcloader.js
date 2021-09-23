@@ -1,4 +1,4 @@
-goog.module('plugin.arc.IArcLoader');
+goog.declareModuleId('plugin.arc.IArcLoader');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const EventTarget = goog.requireType('goog.events.EventTarget');
@@ -70,4 +70,4 @@ class IArcLoader {
   load() {}
 }
 
-exports = IArcLoader;
+export default IArcLoader;

@@ -1,4 +1,4 @@
-goog.module('plugin.arc.ArcImportForm');
+goog.declareModuleId('plugin.arc.ArcImportForm');
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
@@ -10,27 +10,20 @@ const {directive: arcServerDirective} = goog.require('plugin.arc.ArcImportUI');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   const original = arcServerDirective();
   original.templateUrl = ROOT + 'views/forms/singleurlform.html';
   return original;
 };
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'arcserverform';
+export const directiveTag = 'arcserverform';
 
 
 /**
  * Add the directive to the os module
  */
 Module.directive(directiveTag, [directive]);
-
-
-exports = {
-  directive,
-  directiveTag
-};

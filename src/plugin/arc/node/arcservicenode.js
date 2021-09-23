@@ -1,4 +1,4 @@
-goog.module('plugin.arc.node.ArcServiceNode');
+goog.declareModuleId('plugin.arc.node.ArcServiceNode');
 
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
@@ -246,4 +246,4 @@ class ArcServiceNode extends LoadingNode {
 const logger = log.getLogger('plugin.arc.node.ArcServiceNode');
 
 
-exports = ArcServiceNode;
+export default ArcServiceNode;

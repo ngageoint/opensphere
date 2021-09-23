@@ -1,4 +1,4 @@
-goog.module('plugin.arc.query.ArcTemporalFormatter');
+goog.declareModuleId('plugin.arc.query.ArcTemporalFormatter');
 
 const ITemporalFormatter = goog.requireType('os.query.ITemporalFormatter');
 
@@ -20,4 +20,4 @@ class ArcTemporalFormatter {
   }
 }
 
-exports = ArcTemporalFormatter;
+export default ArcTemporalFormatter;

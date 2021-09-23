@@ -1,4 +1,4 @@
-goog.module('plugin.arc.ArcImportUI');
+goog.declareModuleId('plugin.arc.ArcImportUI');
 
 goog.require('os.ui.singleUrlFormDirective');
 
@@ -16,7 +16,7 @@ const OSFile = goog.requireType('os.file.File');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: os.ROOT + 'views/forms/singleurl.html',
@@ -28,7 +28,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'arcserver';
+export const directiveTag = 'arcserver';
 
 
 /**
@@ -42,7 +42,7 @@ Module.directive('arcserver', [directive]);
  * Controller for the Arc server import dialog
  * @unrestricted
  */
-class Controller extends SingleUrlProviderImportCtrl {
+export class Controller extends SingleUrlProviderImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -94,9 +94,3 @@ class Controller extends SingleUrlProviderImportCtrl {
     return '';
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

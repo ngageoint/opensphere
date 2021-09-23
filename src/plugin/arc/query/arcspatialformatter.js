@@ -1,4 +1,4 @@
-goog.module('plugin.arc.query.ArcSpatialFormatter');
+goog.declareModuleId('plugin.arc.query.ArcSpatialFormatter');
 
 const googString = goog.require('goog.string');
 const GeometryType = goog.require('ol.geom.GeometryType');
@@ -109,4 +109,4 @@ class ArcSpatialFormatter {
   }
 }
 
-exports = ArcSpatialFormatter;
+export default ArcSpatialFormatter;

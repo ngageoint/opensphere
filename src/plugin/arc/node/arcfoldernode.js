@@ -1,4 +1,4 @@
-goog.module('plugin.arc.node.ArcFolderNode');
+goog.declareModuleId('plugin.arc.node.ArcFolderNode');
 
 const dispose = goog.require('goog.dispose');
 const EventType = goog.require('goog.net.EventType');
@@ -80,4 +80,4 @@ class ArcFolderNode extends LoadingNode {
   }
 }
 
-exports = ArcFolderNode;
+export default ArcFolderNode;

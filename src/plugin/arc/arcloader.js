@@ -1,4 +1,4 @@
-goog.module('plugin.arc.ArcLoader');
+goog.declareModuleId('plugin.arc.ArcLoader');
 
 const asserts = goog.require('goog.asserts');
 const dispose = goog.require('goog.dispose');
@@ -380,4 +380,4 @@ const logger = log.getLogger('plugin.arc.ArcLoader');
 
 // Use this as the default class for loading an ArcGIS service/node.
 arc.setLoaderClass(ArcLoader);
-exports = ArcLoader;
+export default ArcLoader;

@@ -1,4 +1,4 @@
-goog.module('plugin.arc.layer.ArcLayerDescriptor');
+goog.declareModuleId('plugin.arc.layer.ArcLayerDescriptor');
 
 const QueryData = goog.require('goog.Uri.QueryData');
 const googColor = goog.require('goog.color');
@@ -584,4 +584,4 @@ osImplements(ArcLayerDescriptor, IFeatureTypeDescriptor.ID);
 osImplements(ArcLayerDescriptor, IFilterable.ID);
 osImplements(ArcLayerDescriptor, IARCDescriptor.ID);
 
-exports = ArcLayerDescriptor;
+export default ArcLayerDescriptor;

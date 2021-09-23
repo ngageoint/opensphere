@@ -1,10 +1,10 @@
-goog.module('plugin.arc.ESRIType');
+goog.declareModuleId('plugin.arc.ESRIType');
 
 /**
  * Enum of ESRI types.
  * @enum {string}
  */
-exports = {
+export default {
   BOOLEAN: 'esriFieldTypeBoolean',
   STRING: 'esriFieldTypeString',
   DATE: 'esriFieldTypeDate',

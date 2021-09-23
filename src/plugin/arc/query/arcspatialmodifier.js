@@ -1,4 +1,4 @@
-goog.module('plugin.arc.query.ArcSpatialModifier');
+goog.declareModuleId('plugin.arc.query.ArcSpatialModifier');
 
 const ParamModifier = goog.require('os.net.ParamModifier');
 
@@ -24,4 +24,4 @@ class ArcSpatialModifier extends ParamModifier {
   }
 }
 
-exports = ArcSpatialModifier;
+export default ArcSpatialModifier;
