@@ -11,8 +11,6 @@ const ZoomControl = goog.require('ol.control.Zoom');
 const {getCenter: getExtentCenter} = goog.require('ol.extent');
 
 const {ROOT} = goog.require('os');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
 const capture = goog.require('os.capture');
 const osImplements = goog.require('os.implements');
 const instanceOf = goog.require('os.instanceOf');
@@ -23,6 +21,7 @@ const {getMapContainer} = goog.require('os.map.instance');
 const {getMaxFeatures} = goog.require('os.ogc');
 const {resize, removeResize} = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
+const launchLayerComparePerformanceDialog = goog.require('os.webgl.launchLayerComparePerformanceDialog');
 const {
   bringToFront,
   close: closeWindow,
@@ -516,13 +515,7 @@ const windowId = 'compare-layers';
  * Launch the layer compare window.
  * @param {!LayerCompareOptions} options The layer compare options.
  */
-const launchLayerCompare = (options) => {
-  const featureCount = countFeatures(options.left) + countFeatures(options.right);
-  if (featureCount > getMaxFeatures('2d')) {
-    AlertManager.getInstance().sendAlert('Using Layer Compare with the current data volume may degrade performance ' +
-    'considerably or crash the browser', AlertEventSeverity.WARNING);
-  }
-
+const launchLayerCompareWindow = (options) => {
   const existing = getWindowById(windowId);
   if (existing) {
     const scope = existing.find(Selector.CONTAINER).scope();
@@ -551,6 +544,24 @@ const launchLayerCompare = (options) => {
 
     const template = `<${directiveTag}></${directiveTag}>`;
     createWindow(windowOptions, template, undefined, undefined, undefined, options);
+  }
+};
+
+
+/**
+ * Launch the layer compare.
+ * @param {!LayerCompareOptions} options The layer compare options.
+ */
+const launchLayerCompare = (options) => {
+  const featureCount = countFeatures(options.left) + countFeatures(options.right);
+  if (featureCount > getMaxFeatures('2d')) {
+    launchLayerComparePerformanceDialog().then(() => {
+      launchLayerCompareWindow(options);
+    }, () => {
+      // This empty block prevents an undefined error from appearing
+    });
+  } else {
+    launchLayerCompareWindow(options);
   }
 };
 
