@@ -2,10 +2,8 @@ goog.module('os.ui.text.TuiEditorUI');
 
 const Promise = goog.require('goog.Promise');
 const Timer = goog.require('goog.Timer');
-const {assert} = goog.require('goog.asserts');
 const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
 const {safeLoad} = goog.require('goog.net.jsloader');
-const {normalizeSpaces, normalizeWhitespace} = goog.require('goog.string');
 const {ROOT} = goog.require('os');
 const dispatcher = goog.require('os.Dispatcher');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
@@ -16,7 +14,6 @@ const {apply} = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const TuiEditor = goog.require('os.ui.text.TuiEditor');
 const TuiEditorLang = goog.require('os.ui.text.TuiEditorLang');
-const {getMarkdownIt} = goog.require('os.ui.text.TuiEditorMarkdownIt');
 
 
 /**
@@ -509,33 +506,6 @@ class Controller {
    */
   addEventTypes() {}
 }
-
-
-/**
- * @param {string=} opt_markdown
- * @return {string} - markdown parsed to html
- */
-TuiEditor.render = function(opt_markdown) {
-  const markdownIt = getMarkdownIt();
-  assert(markdownIt != null, 'markdownit is not available!');
-  return opt_markdown ? markdownIt.render(opt_markdown) : '';
-};
-
-
-/**
- * Convert markdown text to html free string.
- * @param {string=} opt_markdown
- * @return {string}
- */
-TuiEditor.getUnformatedText = function(opt_markdown) {
-  var html = $(TuiEditor.render(opt_markdown));
-  if (html && html.length) {
-    return normalizeSpaces(normalizeWhitespace(/** @type {string} */ (html.text())));
-  } else {
-    return '';
-  }
-};
-
 
 exports = {
   Controller,
