@@ -1,20 +1,21 @@
 goog.declareModuleId('os.capture');
 
+import {OPENLAYERS_CANVAS, WEBGL_CANVAS} from '../map/map.js';
+import {ROOT} from '../os.js';
+import ContentType from './contenttype.js';
+
 const Promise = goog.require('goog.Promise');
 const dispose = goog.require('goog.dispose');
 const dom = goog.require('goog.dom');
 const log = goog.require('goog.log');
 const webgl = goog.require('ol.webgl');
-const {ROOT} = goog.require('os');
 const MapContainer = goog.require('os.MapContainer');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
-const ContentType = goog.require('os.capture.ContentType');
 const config = goog.require('os.config');
 const {saveFile} = goog.require('os.file.persist');
 const Job = goog.require('os.job.Job');
 const JobEventType = goog.require('os.job.JobEventType');
-const osMap = goog.require('os.map');
 const osString = goog.require('os.string');
 const worker = goog.require('os.worker');
 
@@ -350,9 +351,9 @@ export const setPixelRatioFn = function(fn) {
 export const getMapCanvas = function() {
   var mapCanvas;
   if (MapContainer.getInstance().is3DEnabled()) {
-    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(osMap.WEBGL_CANVAS));
+    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(WEBGL_CANVAS));
   } else {
-    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(osMap.OPENLAYERS_CANVAS));
+    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(OPENLAYERS_CANVAS));
   }
 
   return mapCanvas || null;

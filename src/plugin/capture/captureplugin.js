@@ -1,23 +1,24 @@
 goog.declareModuleId('plugin.capture.CapturePlugin');
 
+import {getMapPixelRatio, setPixelRatioFn} from '../../os/capture/capture.js';
+import AbstractCapturePlugin from '../../os/ui/capture/abstractcaptureplugin.js';
+import TimelineRenderer from '../../os/ui/capture/timelinerenderer.js';
+import AnnotationTailRenderer from './annotationtailrenderer.js';
+import {WAIT_TIME, onReady, recordSupported} from './capture.js';
+import LegendRenderer from './legendrenderer.js';
+import MapOverlayRenderer from './mapoverlayrenderer.js';
+import MapOverviewRenderer from './mapoverviewrenderer.js';
+import MapRenderer from './maprenderer.js';
+import TimelineRecorder from './timelinerecorder.js';
+
 const Promise = goog.require('goog.Promise');
 const Timer = goog.require('goog.Timer');
 const log = goog.require('goog.log');
 const userAgent = goog.require('goog.userAgent');
 const MapContainer = goog.require('os.MapContainer');
-const {getMapPixelRatio, setPixelRatioFn} = goog.require('os.capture');
 const keys = goog.require('os.metrics.keys');
 const TimelineEventType = goog.require('os.time.TimelineEventType');
-const AbstractCapturePlugin = goog.require('os.ui.capture.AbstractCapturePlugin');
-const TimelineRenderer = goog.require('os.ui.capture.TimelineRenderer');
 const saveMenu = goog.require('os.ui.menu.save');
-const {WAIT_TIME, onReady, recordSupported} = goog.require('plugin.capture');
-const AnnotationTailRenderer = goog.require('plugin.capture.AnnotationTailRenderer');
-const LegendRenderer = goog.require('plugin.capture.LegendRenderer');
-const MapOverlayRenderer = goog.require('plugin.capture.MapOverlayRenderer');
-const MapOverviewRenderer = goog.require('plugin.capture.MapOverviewRenderer');
-const MapRenderer = goog.require('plugin.capture.MapRenderer');
-const TimelineRecorder = goog.require('plugin.capture.TimelineRecorder');
 
 const MenuItem = goog.requireType('os.ui.menu.MenuItem');
 

@@ -26,6 +26,7 @@ import AreaPlugin from '../plugin/area/areaplugin.js';
 import AreaDataPlugin from '../plugin/areadata/areadataplugin.js';
 import AudioPlugin from '../plugin/audio/audioplugin.js';
 import BaseMapPlugin from '../plugin/basemap/basemapplugin.js';
+import CapturePlugin from '../plugin/capture/captureplugin.js';
 import * as dispatcher from './dispatcher.js';
 import * as os from './os.js';
 import AbstractMainCtrl from './ui/abstractmainctrl.js';
@@ -162,7 +163,6 @@ const osWindow = goog.require('os.ui.window');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const UrlManager = goog.require('os.url.UrlManager');
 
-const CapturePlugin = goog.require('plugin.capture.CapturePlugin');
 const pluginCesiumPlugin = goog.require('plugin.cesium.Plugin');
 const pluginConfigPlugin = goog.require('plugin.config.Plugin');
 const SearchPlugin = goog.require('plugin.descriptor.SearchPlugin');

@@ -1,9 +1,10 @@
 goog.declareModuleId('plugin.capture.MapRenderer');
 
+import {getMapCanvas} from '../../os/capture/capture.js';
+import CanvasRenderer from '../../os/ui/capture/canvasrenderer.js';
+
 const MapContainer = goog.require('os.MapContainer');
-const {getMapCanvas} = goog.require('os.capture');
 const Settings = goog.require('os.config.Settings');
-const CanvasRenderer = goog.require('os.ui.capture.CanvasRenderer');
 
 
 /**

@@ -1,7 +1,6 @@
 goog.declareModuleId('os.capture.gif');
 
-const {ROOT} = goog.require('os');
-
+import {ROOT} from '../os.js';
 
 /**
  * Path to the worker script used by the GIF library.

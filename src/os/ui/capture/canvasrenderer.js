@@ -1,9 +1,9 @@
 goog.declareModuleId('os.ui.capture.CanvasRenderer');
 
-const Promise = goog.require('goog.Promise');
-const capture = goog.require('os.capture');
-const ElementRenderer = goog.require('os.ui.capture.ElementRenderer');
+import {getPixelRatio, isTainted} from '../../capture/capture.js';
+import ElementRenderer from './elementrenderer.js';
 
+const Promise = goog.require('goog.Promise');
 
 /**
  * Renders a canvas element to the canvas.
@@ -25,12 +25,12 @@ export default class CanvasRenderer extends ElementRenderer {
    */
   getCanvas() {
     var canvas = this.getRenderElement();
-    if (capture.isTainted(canvas)) {
+    if (isTainted(canvas)) {
       return Promise.reject('The HTML 2D canvas has been tainted');
     }
 
     if (canvas) {
-      var targetPixelRatio = capture.getPixelRatio();
+      var targetPixelRatio = getPixelRatio();
       var canvasRect = canvas.getBoundingClientRect();
       var canvasPixelRatio = canvas.width / canvasRect.width;
       if (canvasPixelRatio !== targetPixelRatio) {

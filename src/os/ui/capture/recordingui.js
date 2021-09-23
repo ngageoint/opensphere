@@ -2,22 +2,23 @@ goog.declareModuleId('os.ui.capture.RecordingUI');
 
 goog.require('os.ui.LoadingBarUI');
 
+import {getTimestamp} from '../../capture/capture.js';
+import CaptureEventType from '../../capture/captureeventtype.js';
+import ContentType from '../../capture/contenttype.js';
+import GifEncoder from '../../capture/gifencoder.js';
+import {ROOT} from '../../os.js';
+import {apply} from '../ui.js';
+
 const dispose = goog.require('goog.dispose');
-const {ROOT} = goog.require('os');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
-const capture = goog.require('os.capture');
-const CaptureEventType = goog.require('os.capture.CaptureEventType');
-const ContentType = goog.require('os.capture.ContentType');
-const GifEncoder = goog.require('os.capture.GifEncoder');
-const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const exportManager = goog.require('os.ui.exportManager');
 const osWindow = goog.require('os.ui.window');
 
-const IRecorder = goog.requireType('os.capture.IRecorder');
-const IVideoEncoder = goog.requireType('os.capture.IVideoEncoder');
+const {default: IRecorder} = goog.requireType('os.capture.IRecorder');
+const {default: IVideoEncoder} = goog.requireType('os.capture.IVideoEncoder');
 
 
 /**
@@ -109,7 +110,7 @@ export class Controller {
     /**
      * @type {string}
      */
-    this['title'] = 'Recording ' + capture.getTimestamp();
+    this['title'] = 'Recording ' + getTimestamp();
 
     /**
      * @type {!Array<!IVideoEncoder>}
@@ -244,7 +245,7 @@ export class Controller {
   onRecordingProgress_(event) {
     if (this.recorder_) {
       this['progress'] = this.recorder_.progress;
-      ui.apply(this.scope_);
+      apply(this.scope_);
     }
   }
 
@@ -258,7 +259,7 @@ export class Controller {
     if (this.recorder_) {
       this['recordingCritical'] = false;
       osWindow.disableModality(RECORDING_ID);
-      ui.apply(this.scope_);
+      apply(this.scope_);
     }
   }
 
@@ -271,7 +272,7 @@ export class Controller {
   onRecordingStatus_(event) {
     if (this.recorder_) {
       this['status'] = this.recorder_.status;
-      ui.apply(this.scope_);
+      apply(this.scope_);
     }
   }
 

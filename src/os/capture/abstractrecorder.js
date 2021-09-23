@@ -1,13 +1,14 @@
 goog.declareModuleId('os.capture.AbstractRecorder');
 
+import CaptureEventType from './captureeventtype.js';
+
 const dispose = goog.require('goog.dispose');
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
-const CaptureEventType = goog.require('os.capture.CaptureEventType');
 
-const IRecorder = goog.requireType('os.capture.IRecorder');
+const {default: IRecorder} = goog.requireType('os.capture.IRecorder');
 
 
 /**

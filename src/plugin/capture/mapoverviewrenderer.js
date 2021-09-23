@@ -1,10 +1,11 @@
 goog.declareModuleId('plugin.capture.MapOverviewRenderer');
 
+import {getMapCanvas, getPixelRatio, isTainted} from '../../os/capture/capture.js';
+import CanvasRenderer from '../../os/ui/capture/canvasrenderer.js';
+
 const Promise = goog.require('goog.Promise');
 const has = goog.require('ol.has');
-const capture = goog.require('os.capture');
 const Settings = goog.require('os.config.Settings');
-const CanvasRenderer = goog.require('os.ui.capture.CanvasRenderer');
 
 
 /**
@@ -26,7 +27,7 @@ export default class MapOverviewRenderer extends CanvasRenderer {
   getCanvas() {
     var canvas = null;
     var original = this.getRenderElement();
-    if (capture.isTainted(original)) {
+    if (isTainted(original)) {
       return Promise.reject('The HTML 2D canvas has been tainted');
     }
 
@@ -36,7 +37,7 @@ export default class MapOverviewRenderer extends CanvasRenderer {
     if (original) {
       // since OpenLayers allows for specifying the pixel ratio on a map (rather than always
       // using window.devicePixelRatio directly), we will calculate it
-      var pixelRatio = capture.getPixelRatio();
+      var pixelRatio = getPixelRatio();
       var originalRect = original.getBoundingClientRect();
       var origPixelRatio = original.width / originalRect.width;
       var pixelScale = pixelRatio / origPixelRatio;
@@ -100,7 +101,7 @@ export default class MapOverviewRenderer extends CanvasRenderer {
 
     // NOTE: For High DPI Displays such as Apple Retina Screens, canvas
     // pixels do not directly correspond to CSS pixels.
-    var mapCanvas = capture.getMapCanvas();
+    var mapCanvas = getMapCanvas();
     var overlayCanvas = this.getRenderElement();
 
     if (mapCanvas && overlayCanvas) {

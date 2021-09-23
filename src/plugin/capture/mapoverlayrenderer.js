@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.capture.MapOverlayRenderer');
 
-const HtmlRenderer = goog.require('os.ui.capture.HtmlRenderer');
+import HtmlRenderer from '../../os/ui/capture/htmlrenderer.js';
 
 const Overlay = goog.requireType('ol.Overlay');
 

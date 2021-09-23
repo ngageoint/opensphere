@@ -2,7 +2,7 @@ goog.declareModuleId('os.capture.IRecorder');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const Listenable = goog.requireType('goog.events.Listenable');
-const IVideoEncoder = goog.requireType('os.capture.IVideoEncoder');
+const {default: IVideoEncoder} = goog.requireType('os.capture.IVideoEncoder');
 
 
 /**

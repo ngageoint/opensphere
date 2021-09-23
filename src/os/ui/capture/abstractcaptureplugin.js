@@ -1,20 +1,21 @@
 goog.declareModuleId('os.ui.capture.AbstractCapturePlugin');
 
+import {ID, saveCanvas} from '../../capture/capture.js';
+import TimelineRecorder from '../../capture/timelinerecorder.js';
+import * as dispatcher from '../../dispatcher.js';
+import {launchRecordingUI} from './recordingui.js';
+
 const Promise = goog.require('goog.Promise');
 const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
 const userAgent = goog.require('goog.userAgent');
-const dispatcher = goog.require('os.Dispatcher');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
-const capture = goog.require('os.capture');
-const TimelineRecorder = goog.require('os.capture.TimelineRecorder');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const TimelineEventType = goog.require('os.time.TimelineEventType');
-const {launchRecordingUI} = goog.require('os.ui.capture.RecordingUI');
 
-const AbstractRecorder = goog.requireType('os.capture.AbstractRecorder');
-const ElementRenderer = goog.requireType('os.ui.capture.ElementRenderer');
+const {default: AbstractRecorder} = goog.requireType('os.capture.AbstractRecorder');
+const {default: ElementRenderer} = goog.requireType('os.ui.capture.ElementRenderer');
 
 
 /**
@@ -26,7 +27,7 @@ export default class AbstractCapturePlugin extends AbstractPlugin {
    */
   constructor() {
     super();
-    this.id = capture.ID;
+    this.id = ID;
 
     /**
      * The logger.
@@ -137,7 +138,7 @@ export default class AbstractCapturePlugin extends AbstractPlugin {
     this.renderFrame().then(() => {
       this.getCanvas().then((canvas) => {
         if (canvas) {
-          capture.saveCanvas(canvas);
+          saveCanvas(canvas);
         }
       }, this.onCaptureError, this);
     }, this.onCaptureError, this);

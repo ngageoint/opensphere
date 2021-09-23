@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.capture.AnnotationTailRenderer');
 
-const {getMapCanvas} = goog.require('os.capture');
-const SvgRenderer = goog.require('os.ui.capture.SvgRenderer');
+import {getMapCanvas} from '../../os/capture/capture.js';
+import SvgRenderer from '../../os/ui/capture/svgrenderer.js';
 
 const Overlay = goog.requireType('ol.Overlay');
 

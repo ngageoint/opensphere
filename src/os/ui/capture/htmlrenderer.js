@@ -1,9 +1,9 @@
 goog.declareModuleId('os.ui.capture.HtmlRenderer');
 
-const Promise = goog.require('goog.Promise');
-const {getMapCanvas} = goog.require('os.capture');
-const ElementRenderer = goog.require('os.ui.capture.ElementRenderer');
+import {getMapCanvas} from '../../capture/capture.js';
+import ElementRenderer from './elementrenderer.js';
 
+const Promise = goog.require('goog.Promise');
 
 /**
  * Renders an HTML element to a canvas.
