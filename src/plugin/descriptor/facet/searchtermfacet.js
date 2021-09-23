@@ -1,4 +1,4 @@
-goog.module('plugin.descriptor.facet.SearchTerm');
+goog.declareModuleId('plugin.descriptor.facet.SearchTerm');
 
 const SearchTermFacet = goog.require('os.search.SearchTermFacet');
 
@@ -8,7 +8,7 @@ const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 /**
  * @extends {SearchTermFacet<!IDataDescriptor>}
  */
-class SearchTerm extends SearchTermFacet {
+export default class SearchTerm extends SearchTermFacet {
   /**
    * Constructor.
    */
@@ -66,6 +66,3 @@ class SearchTerm extends SearchTermFacet {
  * @type {number}
  */
 const duration = 2 * 7 * 24 * 60 * 60 * 1000;
-
-
-exports = SearchTerm;

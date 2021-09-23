@@ -29,6 +29,7 @@ import BaseMapPlugin from '../plugin/basemap/basemapplugin.js';
 import CapturePlugin from '../plugin/capture/captureplugin.js';
 import CesiumPlugin from '../plugin/cesium/cesiumplugin.js';
 import ConfigPlugin from '../plugin/config/configplugin.js';
+import SearchPlugin from '../plugin/descriptor/searchplugin.js';
 import * as dispatcher from './dispatcher.js';
 import * as os from './os.js';
 import AbstractMainCtrl from './ui/abstractmainctrl.js';
@@ -165,7 +166,6 @@ const osWindow = goog.require('os.ui.window');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const UrlManager = goog.require('os.url.UrlManager');
 
-const SearchPlugin = goog.require('plugin.descriptor.SearchPlugin');
 const CSVPlugin = goog.require('plugin.file.csv.CSVPlugin');
 const GeoJSONPlugin = goog.require('plugin.file.geojson.GeoJSONPlugin');
 const GMLPlugin = goog.require('plugin.file.gml.GMLPlugin');

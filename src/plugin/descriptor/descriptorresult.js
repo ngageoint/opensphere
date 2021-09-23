@@ -1,7 +1,8 @@
-goog.module('plugin.descriptor.DescriptorResult');
+goog.declareModuleId('plugin.descriptor.DescriptorResult');
+
+import {directiveTag as cardUi} from './descriptorresultcard.js';
 
 const AbstractSearchResult = goog.require('os.search.AbstractSearchResult');
-const {directiveTag: cardUi} = goog.require('plugin.descriptor.ResultCardUI');
 
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 
@@ -10,7 +11,7 @@ const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
  * Descriptor search result.
  * @extends {AbstractSearchResult<!IDataDescriptor>}
  */
-class DescriptorResult extends AbstractSearchResult {
+export default class DescriptorResult extends AbstractSearchResult {
   /**
    * Constructor.
    * @param {!IDataDescriptor} result The descriptor.
@@ -41,5 +42,3 @@ class DescriptorResult extends AbstractSearchResult {
     return false;
   }
 }
-
-exports = DescriptorResult;

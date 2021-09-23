@@ -1,4 +1,4 @@
-goog.module('plugin.descriptor.facet.Tag');
+goog.declareModuleId('plugin.descriptor.facet.Tag');
 
 const BaseFacet = goog.require('os.search.BaseFacet');
 
@@ -8,7 +8,7 @@ const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 /**
  * @extends {BaseFacet<!IDataDescriptor>}
  */
-class Tag extends BaseFacet {
+export default class Tag extends BaseFacet {
   /**
    * Constructor.
    */
@@ -51,5 +51,3 @@ class Tag extends BaseFacet {
     }
   }
 }
-
-exports = Tag;

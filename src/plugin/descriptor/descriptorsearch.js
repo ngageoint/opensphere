@@ -1,4 +1,11 @@
-goog.module('plugin.descriptor.DescriptorSearch');
+goog.declareModuleId('plugin.descriptor.DescriptorSearch');
+
+import DescriptorResult from './descriptorresult.js';
+import SearchTerm from './facet/searchtermfacet.js';
+import Source from './facet/sourcefacet.js';
+import Tag from './facet/tagfacet.js';
+import TagSplit from './facet/tagsplitfacet.js';
+import Type from './facet/typefacet.js';
 
 const Promise = goog.require('goog.Promise');
 const googArray = goog.require('goog.array');
@@ -10,12 +17,6 @@ const AbstractSearch = goog.require('os.search.AbstractSearch');
 const IFacetedSearch = goog.require('os.search.IFacetedSearch');
 const SearchEvent = goog.require('os.search.SearchEvent');
 const SearchEventType = goog.require('os.search.SearchEventType');
-const DescriptorResult = goog.require('plugin.descriptor.DescriptorResult');
-const SearchTerm = goog.require('plugin.descriptor.facet.SearchTerm');
-const Source = goog.require('plugin.descriptor.facet.Source');
-const Tag = goog.require('plugin.descriptor.facet.Tag');
-const TagSplit = goog.require('plugin.descriptor.facet.TagSplit');
-const Type = goog.require('plugin.descriptor.facet.Type');
 
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 const BaseFacet = goog.requireType('os.search.BaseFacet');
@@ -28,7 +29,7 @@ const FacetSet = goog.requireType('os.search.FacetSet');
  *
  * @implements {IFacetedSearch}
  */
-class DescriptorSearch extends AbstractSearch {
+export default class DescriptorSearch extends AbstractSearch {
   /**
    * Constructor.
    * @param {string} name
@@ -311,6 +312,7 @@ class DescriptorSearch extends AbstractSearch {
     }
   }
 }
+
 osImplements(DescriptorSearch, IFacetedSearch.ID);
 
 
@@ -327,6 +329,3 @@ DescriptorSearch.ID = 'descriptor';
  * @type {log.Logger}
  */
 const logger = log.getLogger('plugin.descriptor.DescriptorSearch');
-
-
-exports = DescriptorSearch;

@@ -2,7 +2,7 @@ goog.require('plugin.descriptor.facet.TagSplit');
 
 
 describe('plugin.descriptor.facet.TagSplit', function() {
-  const TagSplit = goog.module.get('plugin.descriptor.facet.TagSplit');
+  const {default: TagSplit} = goog.module.get('plugin.descriptor.facet.TagSplit');
 
   var mockDescriptor = function() {
     this.tags = null;
@@ -19,11 +19,7 @@ describe('plugin.descriptor.facet.TagSplit', function() {
     var loaded = {};
     f.load(d, loaded);
 
-    var count = 0;
-    for (var c in loaded) {
-      count++;
-    }
-
+    var count = Object.keys(loaded).length;
     expect(count).toBe(0);
   });
 
@@ -32,10 +28,8 @@ describe('plugin.descriptor.facet.TagSplit', function() {
     var f = new TagSplit();
     var results = {};
     f.test(d, {}, results);
-    var count = 0;
-    for (var result in results) {
-      count++;
-    }
+
+    var count = Object.keys(results).length;
     expect(count).toBe(0);
   });
 

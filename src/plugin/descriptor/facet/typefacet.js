@@ -1,4 +1,4 @@
-goog.module('plugin.descriptor.facet.Type');
+goog.declareModuleId('plugin.descriptor.facet.Type');
 
 const googString = goog.require('goog.string');
 const ValueFacet = goog.require('os.search.ValueFacet');
@@ -9,7 +9,7 @@ const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 /**
  * @extends {ValueFacet<!IDataDescriptor>}
  */
-class Type extends ValueFacet {
+export default class Type extends ValueFacet {
   /**
    * Constructor.
    */
@@ -35,5 +35,3 @@ class Type extends ValueFacet {
     return value;
   }
 }
-
-exports = Type;

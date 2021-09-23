@@ -5,7 +5,7 @@ goog.require('test.os.config.SettingsUtil');
 
 describe('plugin.descriptor.DescriptorSearch', function() {
   const Settings = goog.module.get('os.config.Settings');
-  const DescriptorSearch = goog.module.get('plugin.descriptor.DescriptorSearch');
+  const {default: DescriptorSearch} = goog.module.get('plugin.descriptor.DescriptorSearch');
 
   const SettingsUtil = goog.module.get('test.os.config.SettingsUtil');
 
