@@ -1,4 +1,4 @@
-goog.module('plugin.im.action.feature.ui.StyleConfigUI');
+goog.declareModuleId('plugin.im.action.feature.ui.StyleConfigUI');
 
 goog.require('os.ui.layer.IconStyleControlsUI');
 goog.require('os.ui.layer.VectorStyleControlsUI');
@@ -31,7 +31,7 @@ const StyleAction = goog.requireType('plugin.im.action.feature.StyleAction');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
 
@@ -46,12 +46,11 @@ const directive = () => ({
   controllerAs: 'ctrl'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'featureactionstyleconfig';
+export const directiveTag = 'featureactionstyleconfig';
 
 
 /**
@@ -66,7 +65,7 @@ Module.directive(directiveTag, [directive]);
  * @extends {ActionConfigCtrl<StyleAction>}
  * @unrestricted
  */
-class Controller extends ActionConfigCtrl {
+export class Controller extends ActionConfigCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -564,9 +563,3 @@ class Controller extends ActionConfigCtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

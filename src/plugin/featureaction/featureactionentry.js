@@ -1,4 +1,4 @@
-goog.module('plugin.im.action.feature.Entry');
+goog.declareModuleId('plugin.im.action.feature.Entry');
 
 const osFeature = goog.require('os.feature');
 const FilterActionEntry = goog.require('os.im.action.FilterActionEntry');
@@ -11,7 +11,7 @@ const Feature = goog.requireType('ol.Feature');
  *
  * @extends {FilterActionEntry<Feature>}
  */
-class Entry extends FilterActionEntry {
+export default class Entry extends FilterActionEntry {
   /**
    * Constructor.
    */
@@ -21,5 +21,3 @@ class Entry extends FilterActionEntry {
     this.filterGetter = osFeature.filterFnGetter;
   }
 }
-
-exports = Entry;

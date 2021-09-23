@@ -1,4 +1,4 @@
-goog.module('plugin.im.action.feature.SoundAction');
+goog.declareModuleId('plugin.im.action.feature.SoundAction');
 
 const AudioManager = goog.require('os.audio.AudioManager');
 
@@ -31,7 +31,7 @@ const DEFAULT_SOUND = 'Default';
  * @extends {AbstractImportAction<ol.Feature>}
  * @unrestricted
  */
-class SoundAction extends AbstractImportAction {
+export default class SoundAction extends AbstractImportAction {
   /**
    * Constructor.
    */
@@ -171,6 +171,3 @@ SoundAction.DEFAULT_CONFIG = {
   'playDelay': 30
 };
 setDefaultConfig(SoundAction.DEFAULT_CONFIG);
-
-
-exports = SoundAction;

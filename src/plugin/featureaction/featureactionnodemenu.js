@@ -1,4 +1,4 @@
-goog.module('plugin.im.action.feature.node');
+goog.declareModuleId('plugin.im.action.feature.node');
 
 const googDispose = goog.require('goog.dispose');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
@@ -35,13 +35,13 @@ let MENU = undefined;
  * Get the menu.
  * @return {Menu<undefined>|undefined}
  */
-const getMenu = () => MENU;
+export const getMenu = () => MENU;
 
 /**
  * Set the menu.
  * @param {Menu<undefined>|undefined} menu The menu.
  */
-const setMenu = (menu) => {
+export const setMenu = (menu) => {
   MENU = menu;
 };
 
@@ -49,7 +49,7 @@ const setMenu = (menu) => {
  * Feature action node menu event types.
  * @enum {string}
  */
-const EventType = {
+export const EventType = {
   COPY: 'featureactionnodes:copy',
   EDIT: 'featureactionnodes:edit',
   EXPORT: 'featureactionnodes:export',
@@ -62,7 +62,7 @@ const EventType = {
 /**
  * Set up the menu.
  */
-const setup = function() {
+export const setup = function() {
   if (!MENU) {
     MENU = new Menu(new MenuItem({
       type: MenuItemType.ROOT,
@@ -136,7 +136,7 @@ const setup = function() {
 /**
  * Disposes feature action node menu
  */
-const dispose = function() {
+export const dispose = function() {
   googDispose(MENU);
   MENU = undefined;
 };
@@ -147,7 +147,7 @@ const dispose = function() {
  * @param {Array<ITreeNode>} context The array of nodes.
  * @return {!Array<FilterActionNode>} The array of filter action nodes.
  */
-const getFeatureActionNodes = function(context) {
+export const getFeatureActionNodes = function(context) {
   var filterActionNodes = [];
   if (context) {
     context.forEach(filterAction.isFilterActionNode.bind(undefined, filterActionNodes));
@@ -397,13 +397,4 @@ const onToggleOffEvent_ = function(event) {
       filterActionNodes[i].setState(TriState.OFF);
     }
   }
-};
-
-exports = {
-  getMenu,
-  setMenu,
-  EventType,
-  setup,
-  dispose,
-  getFeatureActionNodes
 };

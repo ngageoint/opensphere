@@ -1,4 +1,4 @@
-goog.module('plugin.im.action.feature.ui.ActionConfigCtrl');
+goog.declareModuleId('plugin.im.action.feature.ui.ActionConfigCtrl');
 
 const Disposable = goog.require('goog.Disposable');
 const WindowEventType = goog.require('os.ui.WindowEventType');
@@ -10,7 +10,7 @@ const WindowEventType = goog.require('os.ui.WindowEventType');
  * @template T
  * @unrestricted
  */
-class Controller extends Disposable {
+export default class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -83,5 +83,3 @@ class Controller extends Disposable {
    */
   saveAction() {}
 }
-
-exports = Controller;

@@ -1,4 +1,4 @@
-goog.module('plugin.im.action.feature.menu');
+goog.declareModuleId('plugin.im.action.feature.menu');
 
 const asserts = goog.require('goog.asserts');
 const MapContainer = goog.require('os.MapContainer');
@@ -18,7 +18,7 @@ const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 /**
  * Sets up import actions in the layer menu.
  */
-const layerSetup = function() {
+export const layerSetup = function() {
   var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(featureAction.EventType.LAUNCH)) {
     var group = menu.getRoot().find(layerMenu.GroupLabel.TOOLS);
@@ -36,11 +36,10 @@ const layerSetup = function() {
   }
 };
 
-
 /**
  * Clean up buffer region listeners in the layers window.
  */
-const layerDispose = function() {
+export const layerDispose = function() {
   var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(featureAction.EventType.LAUNCH)) {
     var group = menu.getRoot().find(layerMenu.GroupLabel.TOOLS);
@@ -85,9 +84,4 @@ const handleLayerAction = function(event) {
     AlertManager.getInstance().sendAlert('Unexpected layer selection. Please select a single layer and try again.',
         AlertEventSeverity.WARNING);
   }
-};
-
-exports = {
-  layerSetup,
-  layerDispose
 };

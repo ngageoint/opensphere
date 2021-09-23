@@ -1,4 +1,4 @@
-goog.module('plugin.im.action.feature.Plugin');
+goog.declareModuleId('plugin.im.action.feature.Plugin');
 
 const legend = goog.require('os.legend');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
@@ -22,7 +22,7 @@ const {directiveTag: legendSettingsUi} = goog.require('plugin.im.action.feature.
 /**
  * Plugin to create actions that apply to imported features.
  */
-class Plugin extends AbstractPlugin {
+export default class Plugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -106,5 +106,3 @@ class Plugin extends AbstractPlugin {
  * @type {Plugin|undefined}
  */
 let instance;
-
-exports = Plugin;

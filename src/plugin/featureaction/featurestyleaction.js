@@ -1,4 +1,4 @@
-goog.module('plugin.im.action.feature.StyleAction');
+goog.declareModuleId('plugin.im.action.feature.StyleAction');
 
 const math = goog.require('goog.math');
 const osColor = goog.require('os.color');
@@ -47,7 +47,7 @@ const StyleActionTagName = {
  * @extends {AbstractImportAction<ol.Feature>}
  * @implements {ILegendRenderer}
  */
-class StyleAction extends AbstractImportAction {
+export default class StyleAction extends AbstractImportAction {
   /**
    * Constructor.
    */
@@ -413,6 +413,7 @@ class StyleAction extends AbstractImportAction {
     return feature.values_[StyleAction.FEATURE_ID] === this.uid;
   }
 }
+
 osImplements(StyleAction, ILegendRenderer.ID);
 
 
@@ -438,6 +439,3 @@ StyleAction.FEATURE_ID = '_featureStyleAction';
  * @const
  */
 StyleAction.LABEL = 'Set Style';
-
-
-exports = StyleAction;

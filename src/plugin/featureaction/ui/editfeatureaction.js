@@ -1,4 +1,4 @@
-goog.module('plugin.im.action.feature.ui.EditFeatureActionUI');
+goog.declareModuleId('plugin.im.action.feature.ui.EditFeatureActionUI');
 
 goog.require('os.ui.filter.AdvancedFilterBuilderUI');
 goog.require('os.ui.filter.BasicFilterBuilderUI');
@@ -35,7 +35,7 @@ const StyleAction = goog.requireType('plugin.im.action.feature.StyleAction');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = editFiltersDirective();
   dir.templateUrl = ROOT + 'views/plugin/featureaction/editfeatureaction.html';
   dir.controller = Controller;
@@ -47,7 +47,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'editfeatureaction';
+export const directiveTag = 'editfeatureaction';
 
 /**
  * Add the directive to the module.
@@ -60,7 +60,7 @@ Module.directive('editfeatureaction', [directive]);
  * @template T
  * @unrestricted
  */
-class Controller extends EditFilterActionCtrl {
+export class Controller extends EditFilterActionCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -308,10 +308,4 @@ const onImageChange = function() {
     // if the image loaded, trigger a showPreview
     dispatcher.getInstance().dispatchEvent(EventType.UPDATE);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

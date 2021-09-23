@@ -1,4 +1,4 @@
-goog.module('plugin.im.action.feature.LabelAction');
+goog.declareModuleId('plugin.im.action.feature.LabelAction');
 
 const osColor = goog.require('os.color');
 const FeatureEventType = goog.require('os.data.FeatureEventType');
@@ -38,7 +38,7 @@ const LabelActionTagName = {
  *
  * @extends {AbstractImportAction<ol.Feature>}
  */
-class LabelAction extends AbstractImportAction {
+export default class LabelAction extends AbstractImportAction {
   /**
    * Constructor.
    */
@@ -324,6 +324,3 @@ LabelAction.DEFAULT_CONFIG = {
   'customValue': ''
 };
 setDefaultConfig(LabelAction.DEFAULT_CONFIG);
-
-
-exports = LabelAction;

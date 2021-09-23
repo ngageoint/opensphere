@@ -1,4 +1,4 @@
-goog.module('plugin.im.action.feature.ui.LabelConfigUI');
+goog.declareModuleId('plugin.im.action.feature.ui.LabelConfigUI');
 
 goog.require('os.ui.layer.LabelControlsUI');
 goog.require('os.ui.popover.PopoverUI');
@@ -34,7 +34,7 @@ const LabelAction = goog.requireType('plugin.im.action.feature.LabelAction');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/plugin/featureaction/featurelabelactionconfig.html',
@@ -42,12 +42,11 @@ const directive = () => ({
   controllerAs: 'ctrl'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'featurelabelaction';
+export const directiveTag = 'featurelabelaction';
 
 
 /**
@@ -62,7 +61,7 @@ Module.directive(directiveTag, [directive]);
  * @extends {ActionConfigCtrl<LabelAction>}
  * @unrestricted
  */
-class Controller extends ActionConfigCtrl {
+export class Controller extends ActionConfigCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -314,14 +313,6 @@ let defaultConfig = {};
  * Set the default config for the action.
  * @param {!Object} config The config.
  */
-const setDefaultConfig = (config) => {
+export const setDefaultConfig = (config) => {
   defaultConfig = config;
-};
-
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  setDefaultConfig
 };

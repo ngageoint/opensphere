@@ -1,4 +1,4 @@
-goog.module('plugin.im.action.feature.ui.SoundConfigUI');
+goog.declareModuleId('plugin.im.action.feature.ui.SoundConfigUI');
 
 goog.require('os.ui.SpinnerUI');
 goog.require('os.ui.popover.PopoverUI');
@@ -18,7 +18,7 @@ const SoundAction = goog.requireType('plugin.im.action.feature.SoundAction');
  * @return {angular.Directive}
  *
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/plugin/featureaction/featuresoundactionconfig.html',
@@ -26,12 +26,11 @@ const directive = () => ({
   controllerAs: 'ctrl'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'featureactionsoundconfig';
+export const directiveTag = 'featureactionsoundconfig';
 
 
 /**
@@ -47,7 +46,7 @@ Module.directive(directiveTag, [directive]);
  * @extends {ActionConfigCtrl<SoundAction>}
  * @unrestricted
  */
-class Controller extends ActionConfigCtrl {
+export class Controller extends ActionConfigCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -126,13 +125,6 @@ let defaultConfig = {};
  * Set the default config for the action.
  * @param {!Object} config The config.
  */
-const setDefaultConfig = (config) => {
+export const setDefaultConfig = (config) => {
   defaultConfig = config;
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  setDefaultConfig
 };

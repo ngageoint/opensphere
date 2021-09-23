@@ -1,4 +1,4 @@
-goog.module('plugin.im.action.feature.ui.launchForLayer');
+goog.declareModuleId('plugin.im.action.feature.ui.launchForLayer');
 
 const {ICON} = goog.require('os.im.action');
 const osLayer = goog.require('os.layer');
@@ -54,4 +54,4 @@ const launchForLayer = function(layerId) {
   }
 };
 
-exports = launchForLayer;
+export default launchForLayer;

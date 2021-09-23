@@ -1,4 +1,4 @@
-goog.module('plugin.im.action.feature.Manager');
+goog.declareModuleId('plugin.im.action.feature.Manager');
 
 const Timer = goog.require('goog.Timer');
 const dispose = goog.require('goog.dispose');
@@ -30,7 +30,7 @@ const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCa
  *
  * @extends {ImportActionManager<Feature>}
  */
-class Manager extends ImportActionManager {
+export default class Manager extends ImportActionManager {
   /**
    * Constructor.
    */
@@ -420,5 +420,3 @@ let instance;
 
 // Initialize the instance immediately to replace the global import manager instance with this one.
 Manager.getInstance();
-
-exports = Manager;

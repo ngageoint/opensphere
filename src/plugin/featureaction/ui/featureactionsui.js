@@ -1,4 +1,4 @@
-goog.module('plugin.im.action.feature.ui.FeatureActionsUI');
+goog.declareModuleId('plugin.im.action.feature.ui.FeatureActionsUI');
 
 const {ROOT} = goog.require('os');
 const DataManager = goog.require('os.data.DataManager');
@@ -22,7 +22,7 @@ const layerMenu = goog.requireType('os.ui.menu.layer');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/im/action/importactions.html',
@@ -34,7 +34,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'featureactions';
+export const directiveTag = 'featureactions';
 
 
 /**
@@ -50,7 +50,7 @@ Module.directive('featureactions', [directive]);
  * @extends {FilterActionsCtrl<Feature>}
  * @unrestricted
  */
-class Controller extends FilterActionsCtrl {
+export class Controller extends FilterActionsCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -167,9 +167,3 @@ class Controller extends FilterActionsCtrl {
     this.onSearch();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

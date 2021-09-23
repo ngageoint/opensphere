@@ -1,4 +1,4 @@
-goog.module('plugin.im.action.feature.ui');
+goog.declareModuleId('plugin.im.action.feature.ui');
 
 const {ICON} = goog.require('os.im.action');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
@@ -18,7 +18,7 @@ const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
  * @param {string=} opt_label Base window label.
  * @template T
  */
-const launchEditFeatureAction = function(type, columns, callback, opt_entry, opt_label) {
+export const launchEditFeatureAction = function(type, columns, callback, opt_entry, opt_label) {
   var iam = ImportActionManager.getInstance();
   var label = opt_label || iam.entryTitle;
   var entry = opt_entry;
@@ -58,8 +58,4 @@ const launchEditFeatureAction = function(type, columns, callback, opt_entry, opt
   };
 
   osWindow.create(options, editUi, undefined, undefined, undefined, scopeOptions);
-};
-
-exports = {
-  launchEditFeatureAction
 };
