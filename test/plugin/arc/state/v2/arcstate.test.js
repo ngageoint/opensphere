@@ -10,8 +10,12 @@ describe('plugin.arc.state.v2.arcstate', function() {
   const googDomXml = goog.module.get('goog.dom.xml');
   const EventType = goog.module.get('goog.net.EventType');
   const XhrIo = goog.module.get('goog.net.XhrIo');
-  const ArcFeatureLayerConfig = goog.module.get('plugin.arc.layer.ArcFeatureLayerConfig');
-  const ArcTileLayerConfig = goog.module.get('plugin.arc.layer.ArcTileLayerConfig');
+  const {
+    default: ArcFeatureLayerConfig
+  } = goog.module.get('plugin.arc.layer.ArcFeatureLayerConfig');
+  const {
+    default: ArcTileLayerConfig
+  } = goog.module.get('plugin.arc.layer.ArcTileLayerConfig');
   const arcstate = goog.module.get('plugin.arc.state.v2.arcstate');
   it('should modify loaded arc layers in states', function() {
     var url = '/base/test/plugin/arc/state/v2/loadstate.xml';
