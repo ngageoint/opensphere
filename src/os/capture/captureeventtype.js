@@ -1,10 +1,10 @@
-goog.module('os.capture.CaptureEventType');
+goog.declareModuleId('os.capture.CaptureEventType');
 
 /**
  * Capture event types.
  * @enum {string}
  */
-exports = {
+export default {
   STATUS: 'capture:status',
   UNBLOCK: 'capture:unblock',
   PROGRESS: 'capture:progress',

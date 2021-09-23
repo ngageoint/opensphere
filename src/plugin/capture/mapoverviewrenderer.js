@@ -1,4 +1,4 @@
-goog.module('plugin.capture.MapOverviewRenderer');
+goog.declareModuleId('plugin.capture.MapOverviewRenderer');
 
 const Promise = goog.require('goog.Promise');
 const has = goog.require('ol.has');
@@ -10,7 +10,7 @@ const CanvasRenderer = goog.require('os.ui.capture.CanvasRenderer');
 /**
  * Renders the map overview to a canvas.
  */
-class MapOverviewRenderer extends CanvasRenderer {
+export default class MapOverviewRenderer extends CanvasRenderer {
   /**
    * Constructor.
    */
@@ -118,5 +118,3 @@ class MapOverviewRenderer extends CanvasRenderer {
     return [x, y];
   }
 }
-
-exports = MapOverviewRenderer;

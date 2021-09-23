@@ -1,4 +1,4 @@
-goog.module('plugin.capture.CapturePlugin');
+goog.declareModuleId('plugin.capture.CapturePlugin');
 
 const Promise = goog.require('goog.Promise');
 const Timer = goog.require('goog.Timer');
@@ -25,7 +25,7 @@ const MenuItem = goog.requireType('os.ui.menu.MenuItem');
 /**
  * Plugin to manage screen capture for opensphere
  */
-class CapturePlugin extends AbstractCapturePlugin {
+export default class CapturePlugin extends AbstractCapturePlugin {
   /**
    * Constructor.
    */
@@ -181,5 +181,3 @@ CapturePlugin.WAIT_TIME = WAIT_TIME;
 const recordingBeforeRender = function() {
   this.visible = recordSupported();
 };
-
-exports = CapturePlugin;

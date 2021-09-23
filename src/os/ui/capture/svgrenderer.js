@@ -1,4 +1,4 @@
-goog.module('os.ui.capture.SvgRenderer');
+goog.declareModuleId('os.ui.capture.SvgRenderer');
 
 const Promise = goog.require('goog.Promise');
 const capture = goog.require('os.capture');
@@ -10,7 +10,7 @@ const ElementRenderer = goog.require('os.ui.capture.ElementRenderer');
  *
  * @extends {ElementRenderer<Element>}
  */
-class SvgRenderer extends ElementRenderer {
+export default class SvgRenderer extends ElementRenderer {
   /**
    * Constructor.
    * @param {Object=} opt_options Options to configure the renderer
@@ -79,5 +79,3 @@ class SvgRenderer extends ElementRenderer {
     resolve(svgCanvas || null);
   }
 }
-
-exports = SvgRenderer;

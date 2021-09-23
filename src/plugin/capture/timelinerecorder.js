@@ -1,4 +1,4 @@
-goog.module('plugin.capture.TimelineRecorder');
+goog.declareModuleId('plugin.capture.TimelineRecorder');
 
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
@@ -10,7 +10,7 @@ const PropertyChange = goog.require('os.data.PropertyChange');
 /**
  * Records each frame of the timeline controller animation loop from a canvas.
  */
-class TimelineRecorder extends osCaptureTimelineRecorder {
+export default class TimelineRecorder extends osCaptureTimelineRecorder {
   /**
    * Constructor.
    * @param {os.capture.CanvasFn=} opt_canvasFn Function to get the canvas
@@ -85,5 +85,3 @@ class TimelineRecorder extends osCaptureTimelineRecorder {
  * @type {log.Logger}
  */
 const logger = log.getLogger('plugin.capture.TimelineRecorder');
-
-exports = TimelineRecorder;

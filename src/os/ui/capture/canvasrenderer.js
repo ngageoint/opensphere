@@ -1,4 +1,4 @@
-goog.module('os.ui.capture.CanvasRenderer');
+goog.declareModuleId('os.ui.capture.CanvasRenderer');
 
 const Promise = goog.require('goog.Promise');
 const capture = goog.require('os.capture');
@@ -11,7 +11,7 @@ const ElementRenderer = goog.require('os.ui.capture.ElementRenderer');
  * @extends {ElementRenderer<HTMLCanvasElement>}
  * @template T
  */
-class CanvasRenderer extends ElementRenderer {
+export default class CanvasRenderer extends ElementRenderer {
   /**
    * Constructor.
    * @param {Object=} opt_options Options to configure the renderer
@@ -52,5 +52,3 @@ class CanvasRenderer extends ElementRenderer {
     return Promise.resolve(canvas);
   }
 }
-
-exports = CanvasRenderer;

@@ -1,4 +1,4 @@
-goog.module('plugin.capture.MapRenderer');
+goog.declareModuleId('plugin.capture.MapRenderer');
 
 const MapContainer = goog.require('os.MapContainer');
 const {getMapCanvas} = goog.require('os.capture');
@@ -9,7 +9,7 @@ const CanvasRenderer = goog.require('os.ui.capture.CanvasRenderer');
 /**
  * Renders the map to a canvas.
  */
-class MapRenderer extends CanvasRenderer {
+export default class MapRenderer extends CanvasRenderer {
   /**
    * Constructor.
    */
@@ -60,5 +60,3 @@ class MapRenderer extends CanvasRenderer {
     return /** @type {string} */ (Settings.getInstance().get(['bgColor'], '#000'));
   }
 }
-
-exports = MapRenderer;

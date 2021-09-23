@@ -1,4 +1,4 @@
-goog.module('os.capture.GifEncoder');
+goog.declareModuleId('os.capture.GifEncoder');
 
 const {ROOT} = goog.require('os');
 const {getCanvasData} = goog.require('os.capture');
@@ -10,7 +10,7 @@ const GIFEventType = goog.require('os.capture.gif.EventType');
 
 /**
  */
-class GifEncoder extends AbstractVideoEncoder {
+export default class GifEncoder extends AbstractVideoEncoder {
   /**
    * Constructor.
    */
@@ -202,6 +202,3 @@ class GifEncoder extends AbstractVideoEncoder {
  * @const
  */
 GifEncoder.SCRIPT_URL = ROOT + 'vendor/gif/gif.js';
-
-
-exports = GifEncoder;

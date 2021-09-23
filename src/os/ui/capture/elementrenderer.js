@@ -1,4 +1,4 @@
-goog.module('os.ui.capture.ElementRenderer');
+goog.declareModuleId('os.ui.capture.ElementRenderer');
 
 const Promise = goog.require('goog.Promise');
 const capture = goog.require('os.capture');
@@ -10,7 +10,7 @@ const capture = goog.require('os.capture');
  * @abstract
  * @template T
  */
-class ElementRenderer {
+export default class ElementRenderer {
   /**
    * Constructor.
    * @param {Object=} opt_options Options to configure the renderer
@@ -148,5 +148,3 @@ class ElementRenderer {
     return 0;
   }
 }
-
-exports = ElementRenderer;

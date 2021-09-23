@@ -1,4 +1,4 @@
-goog.module('os.capture.AbstractVideoEncoder');
+goog.declareModuleId('os.capture.AbstractVideoEncoder');
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
@@ -16,7 +16,7 @@ const IVideoEncoder = goog.requireType('os.capture.IVideoEncoder');
  * @abstract
  * @implements {IVideoEncoder}
  */
-class AbstractVideoEncoder extends EventTarget {
+export default class AbstractVideoEncoder extends EventTarget {
   /**
    * Constructor.
    */
@@ -238,5 +238,3 @@ const logger = log.getLogger('os.capture.AbstractVideoEncoder');
  * @const
  */
 AbstractVideoEncoder.DEFAULT_QUALITY = 1.0;
-
-exports = AbstractVideoEncoder;

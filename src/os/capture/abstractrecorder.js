@@ -1,4 +1,4 @@
-goog.module('os.capture.AbstractRecorder');
+goog.declareModuleId('os.capture.AbstractRecorder');
 
 const dispose = goog.require('goog.dispose');
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
@@ -16,7 +16,7 @@ const IRecorder = goog.requireType('os.capture.IRecorder');
  * @abstract
  * @implements {IRecorder}
  */
-class AbstractRecorder extends EventTarget {
+export default class AbstractRecorder extends EventTarget {
   /**
    * Constructor.
    */
@@ -227,6 +227,3 @@ class AbstractRecorder extends EventTarget {
  * @type {log.Logger}
  */
 const logger = log.getLogger('os.capture.AbstractRecorder');
-
-
-exports = AbstractRecorder;

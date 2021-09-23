@@ -1,4 +1,4 @@
-goog.module('os.ui.capture.TimelineRenderer');
+goog.declareModuleId('os.ui.capture.TimelineRenderer');
 
 const capture = goog.require('os.capture');
 const SvgRenderer = goog.require('os.ui.capture.SvgRenderer');
@@ -6,7 +6,7 @@ const SvgRenderer = goog.require('os.ui.capture.SvgRenderer');
 
 /**
  */
-class TimelineRenderer extends SvgRenderer {
+export default class TimelineRenderer extends SvgRenderer {
   /**
    * Constructor.
    * @param {Object=} opt_options Options to configure the renderer
@@ -68,5 +68,3 @@ class TimelineRenderer extends SvgRenderer {
     return 0;
   }
 }
-
-exports = TimelineRenderer;

@@ -1,4 +1,4 @@
-goog.module('os.ui.capture.HtmlRenderer');
+goog.declareModuleId('os.ui.capture.HtmlRenderer');
 
 const Promise = goog.require('goog.Promise');
 const {getMapCanvas} = goog.require('os.capture');
@@ -10,7 +10,7 @@ const ElementRenderer = goog.require('os.ui.capture.ElementRenderer');
  *
  * @extends {ElementRenderer<Element>}
  */
-class HtmlRenderer extends ElementRenderer {
+export default class HtmlRenderer extends ElementRenderer {
   /**
    * Constructor.
    * @param {Object=} opt_options Options to configure the renderer
@@ -81,5 +81,3 @@ class HtmlRenderer extends ElementRenderer {
     return [x, y];
   }
 }
-
-exports = HtmlRenderer;

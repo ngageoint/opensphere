@@ -1,10 +1,10 @@
-goog.module('os.capture.gif.EventType');
+goog.declareModuleId('os.capture.gif.EventType');
 
 /**
  * Events fired by the GIF library.
  * @enum {string}
  */
-exports = {
+export default {
   ABORT: 'abort',
   FINISHED: 'finished',
   PROGRESS: 'progress',

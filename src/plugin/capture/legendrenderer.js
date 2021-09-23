@@ -1,4 +1,4 @@
-goog.module('plugin.capture.LegendRenderer');
+goog.declareModuleId('plugin.capture.LegendRenderer');
 
 const {getMapCanvas} = goog.require('os.capture');
 const LegendSetting = goog.require('os.config.LegendSetting');
@@ -9,7 +9,7 @@ const CanvasRenderer = goog.require('os.ui.capture.CanvasRenderer');
 /**
  * Renders the legend to a canvas.
  */
-class LegendRenderer extends CanvasRenderer {
+export default class LegendRenderer extends CanvasRenderer {
   /**
    * Constructor.
    */
@@ -45,5 +45,3 @@ class LegendRenderer extends CanvasRenderer {
     return [x, y];
   }
 }
-
-exports = LegendRenderer;

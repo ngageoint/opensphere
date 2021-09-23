@@ -1,4 +1,4 @@
-goog.module('os.ui.capture.RecordingUI');
+goog.declareModuleId('os.ui.capture.RecordingUI');
 
 goog.require('os.ui.LoadingBarUI');
 
@@ -32,7 +32,7 @@ const RECORDING_ID = 'recordUi';
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -47,7 +47,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'recordingui';
+export const directiveTag = 'recordingui';
 
 
 /**
@@ -60,7 +60,7 @@ Module.directive('recordingui', [directive]);
  * Controller function for the recordingui directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -328,7 +328,7 @@ class Controller {
  *
  * @param {!IRecorder} recorder The recorder
  */
-const launchRecordingUI = function(recorder) {
+export const launchRecordingUI = function(recorder) {
   if (recorder && !osWindow.exists(RECORDING_ID)) {
     var scopeOptions = {
       'recorder': recorder
@@ -351,11 +351,4 @@ const launchRecordingUI = function(recorder) {
     var template = `<${directiveTag} recorder="recorder"></${directiveTag}>`;
     osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchRecordingUI
 };

@@ -1,4 +1,4 @@
-goog.module('os.ui.capture.AbstractCapturePlugin');
+goog.declareModuleId('os.ui.capture.AbstractCapturePlugin');
 
 const Promise = goog.require('goog.Promise');
 const googArray = goog.require('goog.array');
@@ -20,7 +20,7 @@ const ElementRenderer = goog.requireType('os.ui.capture.ElementRenderer');
 /**
  * Abstract plugin to manage screen capture.
  */
-class AbstractCapturePlugin extends AbstractPlugin {
+export default class AbstractCapturePlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -266,5 +266,3 @@ const logger = log.getLogger('os.ui.capture.AbstractCapturePlugin');
 const rendererPrioritySort = function(a, b) {
   return googArray.inverseDefaultCompare(a.priority, b.priority);
 };
-
-exports = AbstractCapturePlugin;
