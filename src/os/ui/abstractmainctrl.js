@@ -7,6 +7,7 @@ goog.require('os.ui.onboarding.ContextOnboardingUI');
 goog.require('os.ui.onboarding.OnboardingUI');
 goog.require('polyfill.chardetng');
 
+import ElectronPlugin from '../../plugin/electron/electronplugin.js';
 import {browserVersion, operatingSystem, setPeer} from '../os.js';
 import {apply, injector, setInjector} from './ui.js';
 
@@ -39,7 +40,6 @@ const NotificationManager = goog.require('os.ui.notification.NotificationManager
 const OnboardingManager = goog.require('os.ui.onboarding.OnboardingManager');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const Peer = goog.require('os.xt.Peer');
-const ElectronPlugin = goog.require('plugin.electron.ElectronPlugin');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 

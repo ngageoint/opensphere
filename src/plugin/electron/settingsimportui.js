@@ -1,14 +1,14 @@
 goog.declareModuleId('plugin.electron.SettingsImportUI');
 
 import * as Dispatcher from '../../os/dispatcher.js';
-import * as jsonMime from '../../os/file/mime/jsonsettings';
+import {detect} from '../../os/file/mime/jsonsettings';
+import {EventType} from './electron.js';
 
 const AlertManager = goog.require('os.alert.AlertManager');
 const {FileScheme} = goog.require('os.file');
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const {launchConfirmText} = goog.require('os.ui.window.ConfirmTextUI');
 const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
-const {EventType} = goog.require('plugin.electron');
 
 const OSFile = goog.requireType('os.file.File');
 
@@ -150,7 +150,7 @@ export default class SettingsImportUI extends FileImportUI {
     if (content && url) {
       try {
         const parsed = JSON.parse(content);
-        if (parsed && jsonMime.detect(null, file, parsed)) {
+        if (parsed && detect(null, file, parsed)) {
           if (url.startsWith(`${FileScheme.FILE}://`)) {
             this.importFile(fileName, content);
           } else {

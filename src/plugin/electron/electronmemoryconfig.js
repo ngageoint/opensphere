@@ -1,6 +1,7 @@
-goog.module('plugin.electron.ElectronMemoryConfigUI');
+goog.declareModuleId('plugin.electron.ElectronMemoryConfigUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../os/os.js';
+
 const Module = goog.require('os.ui.Module');
 
 
@@ -8,7 +9,7 @@ const Module = goog.require('os.ui.Module');
  * The electron configuration directive.
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/plugin/electron/electronmemoryconfig.html',
@@ -16,19 +17,16 @@ const directive = () => ({
   controllerAs: 'ctrl'
 });
 
-
 /**
  * Add the directive to the module
  */
 Module.directive('electronmemoryconfig', [directive]);
 
-
-
 /**
  * Controller function for the electron configuration.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope
@@ -65,8 +63,3 @@ class Controller {
     ElectronOS.restart();
   }
 }
-
-exports = {
-  Controller,
-  directive
-};

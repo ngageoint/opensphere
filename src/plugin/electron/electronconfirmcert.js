@@ -1,6 +1,7 @@
-goog.module('plugin.electron.ElectronConfirmCertUI');
+goog.declareModuleId('plugin.electron.ElectronConfirmCertUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../os/os.js';
+
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const windowSelector = goog.require('os.ui.windowSelector');
@@ -11,7 +12,7 @@ const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
  * Prompt the user to select a certificate for an Electron network request.
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   replace: true,
   restrict: 'E',
   templateUrl: ROOT + 'views/plugin/electron/electronconfirmcert.html',
@@ -30,7 +31,7 @@ Module.directive('electronconfirmcert', [directive]);
  * Controller for the certificate confirmation directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -92,14 +93,13 @@ class Controller {
   }
 }
 
-
 /**
  * Launch a dialog prompting the user to select a certificate.
  * @param {string} url The URL requesting a certificate.
  * @param {!Array<!Electron.Certificate>} certs The available client certificates.
  * @return {!Promise<!Electron.Certificate>} A promise that resolves to the selected certificate.
  */
-const launchConfirmCert = (url, certs) => {
+export const launchConfirmCert = (url, certs) => {
   return new Promise((resolve, reject) => {
     // Listen for unload event to reject the promise.
     const unloadListener = (event) => {
@@ -135,10 +135,4 @@ const launchConfirmCert = (url, certs) => {
       'prompt': `Please select a certificate to authenticate yourself to <span class="text-monospace">${url}</span>.`
     });
   });
-};
-
-exports = {
-  Controller,
-  directive,
-  launchConfirmCert
 };

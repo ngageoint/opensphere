@@ -1,6 +1,10 @@
-goog.module('plugin.electron.ElectronPlugin');
+goog.declareModuleId('plugin.electron.ElectronPlugin');
 
-goog.require('plugin.electron.ElectronMemoryConfigUI');
+import './electronmemoryconfig.js';
+
+import {ID, SettingKey, isElectron} from './electron.js';
+import * as ElectronConfirmCertUI from './electronconfirmcert.js';
+import {initSupportMenu} from './electronmenu.js';
 
 const Settings = goog.require('os.config.Settings');
 const SettingsInitializerManager = goog.require('os.config.SettingsInitializerManager');
@@ -8,9 +12,6 @@ const ExtDomainHandler = goog.require('os.net.ExtDomainHandler');
 const Request = goog.require('os.net.Request');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const list = goog.require('os.ui.list');
-const {ID, SettingKey, isElectron} = goog.require('plugin.electron');
-const {initSupportMenu} = goog.require('plugin.electron.menu');
-const ElectronConfirmCertUI = goog.require('plugin.electron.ElectronConfirmCertUI');
 
 
 /**
@@ -49,7 +50,7 @@ const checkForUpdates = () => {
 /**
  * Plugin to integrate Electron support.
  */
-class ElectronPlugin extends AbstractPlugin {
+export default class ElectronPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -120,6 +121,3 @@ if (isElectron()) {
     }
   }
 }
-
-
-exports = ElectronPlugin;
