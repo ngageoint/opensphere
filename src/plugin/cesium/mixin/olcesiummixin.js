@@ -6,7 +6,7 @@ const I3DSupport = goog.require('os.I3DSupport');
 const osImplements = goog.require('os.implements');
 
 const Interaction = goog.requireType('ol.interaction.Interaction');
-const Camera = goog.requireType('plugin.cesium.Camera');
+const {default: Camera} = goog.requireType('plugin.cesium.Camera');
 
 
 /**

@@ -1,8 +1,7 @@
 goog.declareModuleId('plugin.cesium.sync.EllipsoidConverter');
 
-const PolygonConverter = goog.require('plugin.cesium.sync.PolygonConverter');
-const {createEllipsoid} = goog.require('plugin.cesium.sync.ellipsoid');
-
+import {createEllipsoid} from './ellipsoid.js';
+import PolygonConverter from './polygonconverter.js';
 
 /**
  * Converter for Ellipsoids

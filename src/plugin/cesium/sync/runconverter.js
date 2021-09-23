@@ -3,8 +3,8 @@ goog.declareModuleId('plugin.cesium.sync.runConverter');
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const Style = goog.requireType('ol.style.Style');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
-const IConverter = goog.requireType('plugin.cesium.sync.IConverter');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
+const {default: IConverter} = goog.requireType('plugin.cesium.sync.IConverter');
 
 
 /**

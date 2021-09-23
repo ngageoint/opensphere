@@ -27,6 +27,7 @@ import AreaDataPlugin from '../plugin/areadata/areadataplugin.js';
 import AudioPlugin from '../plugin/audio/audioplugin.js';
 import BaseMapPlugin from '../plugin/basemap/basemapplugin.js';
 import CapturePlugin from '../plugin/capture/captureplugin.js';
+import CesiumPlugin from '../plugin/cesium/cesiumplugin.js';
 import * as dispatcher from './dispatcher.js';
 import * as os from './os.js';
 import AbstractMainCtrl from './ui/abstractmainctrl.js';
@@ -163,7 +164,6 @@ const osWindow = goog.require('os.ui.window');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const UrlManager = goog.require('os.url.UrlManager');
 
-const pluginCesiumPlugin = goog.require('plugin.cesium.Plugin');
 const pluginConfigPlugin = goog.require('plugin.config.Plugin');
 const SearchPlugin = goog.require('plugin.descriptor.SearchPlugin');
 const CSVPlugin = goog.require('plugin.file.csv.CSVPlugin');
@@ -509,7 +509,7 @@ export default class Controller extends AbstractMainCtrl {
 
     // Only "os" application plugins are added here
     const pluginManager = PluginManager.getInstance();
-    pluginManager.addPlugin(new pluginCesiumPlugin());
+    pluginManager.addPlugin(new CesiumPlugin());
     pluginManager.addPlugin(pluginImActionFeaturePlugin.getInstance());
     pluginManager.addPlugin(new SearchPlugin());
     pluginManager.addPlugin(new AreaPlugin());

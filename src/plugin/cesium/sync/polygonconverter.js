@@ -1,15 +1,15 @@
 goog.declareModuleId('plugin.cesium.sync.PolygonConverter');
 
-const {GeometryInstanceId} = goog.require('plugin.cesium');
-const LineStringConverter = goog.require('plugin.cesium.sync.LineStringConverter');
-const {createAndAddPolygon} = goog.require('plugin.cesium.sync.polygon');
-const {getColor} = goog.require('plugin.cesium.sync.style');
+import {GeometryInstanceId} from '../cesium.js';
+import LineStringConverter from './linestringconverter.js';
+import {createAndAddPolygon} from './polygon.js';
+import {getColor} from './style.js';
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const Polygon = goog.requireType('ol.geom.Polygon');
 const Style = goog.requireType('ol.style.Style');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**

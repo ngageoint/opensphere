@@ -1,15 +1,16 @@
 goog.declareModuleId('plugin.cesium.interaction.dragbox');
 
+import * as Dispatcher from '../../../os/dispatcher.js';
+import {GeometryInstanceId} from '../cesium.js';
+
 const {ol4326CoordinateArrayToCsCartesians} = goog.require('olcs.core');
-const Dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const DrawPolygon = goog.require('os.interaction.DrawPolygon');
-const {GeometryInstanceId} = goog.require('plugin.cesium');
 
 const Polygon = goog.requireType('ol.geom.Polygon');
 const DragBox = goog.requireType('os.interaction.DragBox');
-const CesiumRenderer = goog.requireType('plugin.cesium.CesiumRenderer');
+const {default: CesiumRenderer} = goog.requireType('plugin.cesium.CesiumRenderer');
 
 
 /**

@@ -37,24 +37,25 @@ describe('plugin.cesium.sync.converter', () => {
   const {convertGeometry, getConverter} = goog.module.get('plugin.cesium.sync.converter');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
   const DynamicFeature = goog.module.get('os.feature.DynamicFeature');
-  const DynamicLineStringConverter = goog.module.get('plugin.cesium.sync.DynamicLineStringConverter');
+  const {default: DynamicLineStringConverter} = goog.module.get('plugin.cesium.sync.DynamicLineStringConverter');
   const Ellipse = goog.module.get('os.geom.Ellipse');
   const Vector = goog.module.get('os.layer.Vector');
   const {EPSG4326} = goog.module.get('os.proj');
 
-  const EllipseConverter = goog.module.get('plugin.cesium.sync.EllipseConverter');
-  const GeometryCollectionConverter = goog.module.get('plugin.cesium.sync.GeometryCollectionConverter');
-  const LabelConverter = goog.module.get('plugin.cesium.sync.LabelConverter');
-  const LineStringConverter = goog.module.get('plugin.cesium.sync.LineStringConverter');
-  const MultiDynamicLineStringConverter = goog.module.get('plugin.cesium.sync.MultiDynamicLineStringConverter');
-  const MultiLineStringConverter = goog.module.get('plugin.cesium.sync.MultiLineStringConverter');
-  const MultiPointConverter = goog.module.get('plugin.cesium.sync.MultiPointConverter');
-  const MultiPolygonConverter = goog.module.get('plugin.cesium.sync.MultiPolygonConverter');
-  const PointConverter = goog.module.get('plugin.cesium.sync.PointConverter');
-  const PolygonConverter = goog.module.get('plugin.cesium.sync.PolygonConverter');
-  const VectorContext = goog.module.get('plugin.cesium.VectorContext');
-  const DynamicPolygonConverter = goog.module.get('plugin.cesium.sync.DynamicPolygonConverter');
-  const DynamicMultiPolygonConverter = goog.module.get('plugin.cesium.sync.DynamicMultiPolygonConverter');
+  const {default: EllipseConverter} = goog.module.get('plugin.cesium.sync.EllipseConverter');
+  const {default: GeometryCollectionConverter} = goog.module.get('plugin.cesium.sync.GeometryCollectionConverter');
+  const {default: LabelConverter} = goog.module.get('plugin.cesium.sync.LabelConverter');
+  const {default: LineStringConverter} = goog.module.get('plugin.cesium.sync.LineStringConverter');
+  const {default: MultiDynamicLineStringConverter} =
+    goog.module.get('plugin.cesium.sync.MultiDynamicLineStringConverter');
+  const {default: MultiLineStringConverter} = goog.module.get('plugin.cesium.sync.MultiLineStringConverter');
+  const {default: MultiPointConverter} = goog.module.get('plugin.cesium.sync.MultiPointConverter');
+  const {default: MultiPolygonConverter} = goog.module.get('plugin.cesium.sync.MultiPolygonConverter');
+  const {default: PointConverter} = goog.module.get('plugin.cesium.sync.PointConverter');
+  const {default: PolygonConverter} = goog.module.get('plugin.cesium.sync.PolygonConverter');
+  const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');
+  const {default: DynamicPolygonConverter} = goog.module.get('plugin.cesium.sync.DynamicPolygonConverter');
+  const {default: DynamicMultiPolygonConverter} = goog.module.get('plugin.cesium.sync.DynamicMultiPolygonConverter');
 
   let feature;
   let geometry;

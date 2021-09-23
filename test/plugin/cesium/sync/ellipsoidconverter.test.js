@@ -20,8 +20,8 @@ describe('plugin.cesium.sync.EllipsoidConverter', () => {
   const VectorLayer = goog.module.get('os.layer.Vector');
   const osProj = goog.module.get('os.proj');
   const {getRealScene} = goog.module.get('test.plugin.cesium.scene');
-  const VectorContext = goog.module.get('plugin.cesium.VectorContext');
-  const EllipsoidConverter = goog.module.get('plugin.cesium.sync.EllipsoidConverter');
+  const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');
+  const {default: EllipsoidConverter} = goog.module.get('plugin.cesium.sync.EllipsoidConverter');
   const ellipsoidConverter = new EllipsoidConverter();
 
   let feature;

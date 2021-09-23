@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.cesium.sync.LineStringConverter');
 
-const {updatePrimitive} = goog.require('plugin.cesium.primitive');
-const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
-const {createLineStringPrimitive, isLineWidthChanging, isDashChanging} = goog.require('plugin.cesium.sync.linestring');
+import {updatePrimitive} from '../primitive.js';
+import BaseConverter from './baseconverter.js';
+import {createLineStringPrimitive, isDashChanging, isLineWidthChanging} from './linestring.js';
 
 const LineString = goog.requireType('ol.geom.LineString');
 

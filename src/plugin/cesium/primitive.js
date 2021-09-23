@@ -1,16 +1,19 @@
 goog.declareModuleId('plugin.cesium.primitive');
 
+import {GeometryInstanceId} from './cesium.js';
+import {getHeightReference, isPrimitiveClassTypeChanging} from './sync/heightreference.js';
+import {getColor} from './sync/style.js';
+
 const Delay = goog.require('goog.async.Delay');
 const {clamp} = goog.require('goog.math');
 const {unsafeClone} = goog.require('os.object');
-const {GeometryInstanceId} = goog.require('plugin.cesium');
-const {getHeightReference, isPrimitiveClassTypeChanging} = goog.require('plugin.cesium.sync.HeightReference');
-const styleUtils = goog.require('plugin.cesium.sync.style');
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const Style = goog.requireType('ol.style.Style');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {
+  default: VectorContext
+} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**
@@ -100,7 +103,7 @@ const updatePrimitiveGeomInstances = (style, context, primitive) => {
       const attributes = primitive.getGeometryInstanceAttributes(field);
       const material = primitive.appearance.material;
       if (attributes) {
-        const color = styleUtils.getColor(style, context, field);
+        const color = getColor(style, context, field);
 
         if (color) {
           if (material && material.uniforms) {

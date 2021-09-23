@@ -2,7 +2,8 @@ goog.declareModuleId('plugin.cesium.tiles.Cesium3DTileLayerUI');
 
 goog.require('os.ui.SliderUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os/os.js';
+
 const {toHexString} = goog.require('os.color');
 const LayerColor = goog.require('os.command.LayerColor');
 const osImplements = goog.require('os.implements');

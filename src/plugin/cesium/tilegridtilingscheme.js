@@ -1,11 +1,12 @@
 goog.declareModuleId('plugin.cesium.TileGridTilingScheme');
 
+import {PROJECTION} from '../../os/map/map.js';
+
 const asserts = goog.require('goog.asserts');
 const ol = goog.require('ol');
 const olProj = goog.require('ol.proj');
 const {toSize} = goog.require('ol.size');
 const geo = goog.require('os.geo');
-const map = goog.require('os.map');
 const osProj = goog.require('os.proj');
 
 const TileImageSource = goog.requireType('ol.source.TileImage');
@@ -31,7 +32,7 @@ export default class TileGridTilingScheme {
      */
     this.tilegrid_ = tg;
 
-    var proj = source.getProjection() || map.PROJECTION;
+    var proj = source.getProjection() || PROJECTION;
     asserts.assert(proj);
     var isGeographic = olProj.equivalent(proj, olProj.get(osProj.EPSG4326));
     var isWebMercator = olProj.equivalent(proj, olProj.get(osProj.EPSG3857));

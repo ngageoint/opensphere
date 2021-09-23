@@ -1,16 +1,17 @@
 goog.declareModuleId('plugin.cesium.sync.linestring');
 
+import {dashPatternToOptions} from '../../../os/style/style.js';
+import {GeometryInstanceId} from '../cesium.js';
+import {createGeometryInstance} from '../primitive.js';
+import {getTransformFunction} from './gettransformfunction.js';
+import {getHeightReference} from './heightreference.js';
+import {getColor, getLineWidthFromStyle} from './style.js';
+
 const {assert} = goog.require('goog.asserts');
 const GeometryType = goog.require('ol.geom.GeometryType');
 const olcsCore = goog.require('olcs.core');
 const interpolate = goog.require('os.interpolate');
 const InterpolationMethod = goog.require('os.interpolate.Method');
-const {dashPatternToOptions} = goog.require('os.style');
-const {GeometryInstanceId} = goog.require('plugin.cesium');
-const {createGeometryInstance} = goog.require('plugin.cesium.primitive');
-const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
-const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
-const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
 
 const {Coordinate} = goog.requireType('ol');
 const Feature = goog.requireType('ol.Feature');
@@ -22,7 +23,7 @@ const Polygon = goog.requireType('ol.geom.Polygon');
 const Style = goog.requireType('ol.style.Style');
 const Text = goog.requireType('ol.style.Style');
 const Ellipse = goog.requireType('os.geom.Ellipse');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**

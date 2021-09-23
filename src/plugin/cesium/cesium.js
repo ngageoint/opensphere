@@ -1,5 +1,9 @@
 goog.declareModuleId('plugin.cesium');
 
+import * as osMap from '../../os/map/map.js';
+import {ROOT} from '../../os/os.js';
+import ImageryProvider from './imageryprovider.js';
+
 const Promise = goog.require('goog.Promise');
 const Uri = goog.require('goog.Uri');
 const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
@@ -8,13 +12,10 @@ const GeometryType = goog.require('ol.geom.GeometryType');
 const olProj = goog.require('ol.proj');
 const Tile = goog.require('ol.source.Tile');
 const core = goog.require('olcs.core');
-
-const {ROOT} = goog.require('os');
 const MapContainer = goog.require('os.MapContainer');
 const AlertManager = goog.require('os.alert.AlertManager');
 const DisplaySetting = goog.require('os.config.DisplaySetting');
 const settings = goog.require('os.config.Settings');
-const osMap = goog.require('os.map');
 const {TerrainType} = goog.require('os.map.terrain');
 const net = goog.require('os.net');
 const CrossOrigin = goog.require('os.net.CrossOrigin');
@@ -24,7 +25,6 @@ const osString = goog.require('os.string');
 const TimelineController = goog.require('os.time.TimelineController');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const {launchConfirmText} = goog.require('os.ui.window.ConfirmTextUI');
-const ImageryProvider = goog.require('plugin.cesium.ImageryProvider');
 
 const Deferred = goog.requireType('goog.async.Deferred');
 const Geometry = goog.requireType('ol.geom.Geometry');

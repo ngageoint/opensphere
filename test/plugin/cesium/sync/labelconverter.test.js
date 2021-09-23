@@ -32,8 +32,8 @@ describe('plugin.cesium.sync.LabelConverter', () => {
   const osProj = goog.module.get('os.proj');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
   const primitiveUtils = goog.module.get('test.plugin.cesium.primitive');
-  const VectorContext = goog.module.get('plugin.cesium.VectorContext');
-  const LabelConverter = goog.module.get('plugin.cesium.sync.LabelConverter');
+  const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');
+  const {default: LabelConverter} = goog.module.get('plugin.cesium.sync.LabelConverter');
   const {testColor} = goog.module.get('test.plugin.cesium.sync.style');
   const labelConverter = new LabelConverter();
 

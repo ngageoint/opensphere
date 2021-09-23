@@ -1,12 +1,12 @@
 goog.declareModuleId('plugin.cesium.sync.convert');
 
-const converter = goog.require('plugin.cesium.sync.converter');
+import {convertGeometry} from './converter.js';
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const OLVectorLayer = goog.requireType('ol.layer.Vector');
 const Style = goog.requireType('ol.style.Style');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**
@@ -24,7 +24,7 @@ const convert = (feature, resolution, context) => {
       if (style) {
         const geometry = /** @type {Geometry} */ (style.getGeometryFunction()(feature));
         if (geometry) {
-          converter.convertGeometry(feature, geometry, style, context);
+          convertGeometry(feature, geometry, style, context);
         }
       }
     }

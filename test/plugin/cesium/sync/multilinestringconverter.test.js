@@ -23,8 +23,8 @@ describe('plugin.cesium.sync.MultiLineStringConverter', () => {
   const osProj = goog.module.get('os.proj');
   const osStyle = goog.module.get('os.style');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
-  const VectorContext = goog.module.get('plugin.cesium.VectorContext');
-  const MultiLineStringConverter = goog.module.get('plugin.cesium.sync.MultiLineStringConverter');
+  const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');
+  const {default: MultiLineStringConverter} = goog.module.get('plugin.cesium.sync.MultiLineStringConverter');
   const converter = new MultiLineStringConverter();
 
   let feature;

@@ -1,12 +1,12 @@
 goog.declareModuleId('plugin.cesium.sync.MultiPolygonConverter');
 
-const PolygonConverter = goog.require('plugin.cesium.sync.PolygonConverter');
-const {createAndAddPolygon} = goog.require('plugin.cesium.sync.polygon');
+import {createAndAddPolygon} from './polygon.js';
+import PolygonConverter from './polygonconverter.js';
 
 const Feature = goog.requireType('ol.Feature');
 const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
 const Style = goog.requireType('ol.style.Style');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**

@@ -1,12 +1,13 @@
 goog.declareModuleId('plugin.cesium.VectorContext');
 
+import {isGroundPrimitive, isPrimitiveShown, setPrimitiveShown} from './primitive.js';
+
 const Throttle = goog.require('goog.async.Throttle');
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
 const {getUid} = goog.require('ol');
 const arrayUtils = goog.require('ol.array');
 const objectUtils = goog.require('os.object');
-const {isGroundPrimitive, isPrimitiveShown, setPrimitiveShown} = goog.require('plugin.cesium.primitive');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const Feature = goog.requireType('ol.Feature');

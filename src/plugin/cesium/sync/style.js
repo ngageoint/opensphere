@@ -1,13 +1,14 @@
 goog.declareModuleId('plugin.cesium.sync.style');
 
+import {DEFAULT_FEATURE_SIZE, DEFAULT_HIGHLIGHT_CONFIG} from '../../../os/style/style.js';
+import {OUTLINE_REGEXP} from '../cesium.js';
+
 const {convertColorToCesium} = goog.require('olcs.core');
-const {DEFAULT_FEATURE_SIZE, DEFAULT_HIGHLIGHT_CONFIG} = goog.require('os.style');
-const {OUTLINE_REGEXP} = goog.require('plugin.cesium');
 
 const Style = goog.requireType('ol.style.Style');
 const Text = goog.requireType('ol.style.Text');
 const {GeometryInstanceId} = goog.requireType('plugin.cesium');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**

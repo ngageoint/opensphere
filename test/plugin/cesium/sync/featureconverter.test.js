@@ -7,9 +7,7 @@ goog.require('os.layer.Vector');
 goog.require('os.proj');
 goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.convert');
-goog.require('plugin.cesium.sync.converter');
 goog.require('test.plugin.cesium.scene');
-
 
 describe('plugin.cesium.sync.convert', () => {
   const Feature = goog.module.get('ol.Feature');
@@ -19,9 +17,8 @@ describe('plugin.cesium.sync.convert', () => {
   const VectorLayer = goog.module.get('os.layer.Vector');
   const osProj = goog.module.get('os.proj');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
-  const converterExports = goog.module.get('plugin.cesium.sync.converter');
-  const VectorContext = goog.module.get('plugin.cesium.VectorContext');
-  const convert = goog.module.get('plugin.cesium.sync.convert');
+  const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');
+  const {default: convert} = goog.module.get('plugin.cesium.sync.convert');
 
   let feature;
   let geometry;
@@ -38,35 +35,30 @@ describe('plugin.cesium.sync.convert', () => {
   });
 
   it('should not convert empty styles', () => {
-    spyOn(converterExports, 'convertGeometry').andReturn(undefined);
     feature.setStyle(null);
     layer.setStyle(null);
     convert(feature, 1, context);
-    expect(converterExports.convertGeometry).not.toHaveBeenCalled();
+    expect(context.primitives.length).toBe(0);
   });
 
   it('should fall back on layer styles', () => {
-    spyOn(converterExports, 'convertGeometry').andReturn(undefined);
     layer.setStyle(new Style());
     convert(feature, 1, context);
-    expect(converterExports.convertGeometry.calls.length).toBe(1);
+    expect(context.primitives.length).toBe(1);
   });
 
   it('should convert each style on the feature', () => {
-    spyOn(converterExports, 'convertGeometry').andReturn(undefined);
     feature.setStyle([
       new Style(),
       null,
-      new Style()
+      new Style({geometry: new Polygon.fromExtent([-5, -5, 5, 5])})
     ]);
 
     convert(feature, 1, context);
-    expect(converterExports.convertGeometry.calls.length).toBe(2);
+    expect(context.primitives.length).toBe(2);
   });
 
   it('should not convert styles without geometries', () => {
-    spyOn(converterExports, 'convertGeometry').andReturn(undefined);
-
     const missingGeomStyle = new Style();
     missingGeomStyle.setGeometry(() => null);
 
@@ -77,13 +69,12 @@ describe('plugin.cesium.sync.convert', () => {
     ]);
 
     convert(feature, 1, context);
-    expect(converterExports.convertGeometry.calls.length).toBe(1);
+    expect(context.primitives.length).toBe(1);
   });
 
   it('should handle non-array styles', () => {
-    spyOn(converterExports, 'convertGeometry').andReturn(undefined);
     feature.setStyle(() => new Style());
     convert(feature, 1, context);
-    expect(converterExports.convertGeometry.calls.length).toBe(1);
+    expect(context.primitives.length).toBe(1);
   });
 });

@@ -2,6 +2,8 @@ goog.declareModuleId('plugin.cesium.ImageryProvider');
 
 goog.require('os.mixin.VectorImageTile');
 
+import TileGridTilingScheme from './tilegridtilingscheme.js';
+
 const ol = goog.require('ol');
 const ImageTile = goog.require('ol.ImageTile');
 const TileState = goog.require('ol.TileState');
@@ -11,7 +13,6 @@ const VectorTile = goog.require('ol.source.VectorTile');
 const olTilegrid = goog.require('ol.tilegrid');
 const OLImageryProvider = goog.require('olcs.core.OLImageryProvider');
 const {getSourceProjection} = goog.require('olcs.util');
-const TileGridTilingScheme = goog.require('plugin.cesium.TileGridTilingScheme');
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 
 const Layer = goog.requireType('ol.layer.Layer');

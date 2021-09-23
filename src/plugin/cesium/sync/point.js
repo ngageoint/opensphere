@@ -1,22 +1,23 @@
 goog.declareModuleId('plugin.cesium.sync.point');
 
+import {ZoomScale} from '../../../os/map/map.js';
+import {getTransformFunction} from './gettransformfunction.js';
+import {getHeightReference} from './heightreference.js';
+import {drawShape} from './shape.js';
+
 const {hashCode} = goog.require('goog.string');
 const {getUid} = goog.require('ol');
 const OLIconStyle = goog.require('ol.style.Icon');
 const OLRegularShape = goog.require('ol.style.RegularShape');
 const olcsCore = goog.require('olcs.core');
-const osMap = goog.require('os.map');
 const OSIconStyle = goog.require('os.style.Icon');
-const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
-const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
-const {drawShape} = goog.require('plugin.cesium.sync.shape');
 
 const Feature = goog.requireType('ol.Feature');
 const MultiPoint = goog.requireType('ol.geom.MultiPoint');
 const Point = goog.requireType('ol.geom.Point');
 const OLImageStyle = goog.requireType('ol.style.Image');
 const Style = goog.requireType('ol.style.Style');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**
@@ -280,8 +281,8 @@ const getDistanceScalar = () => {
   if (!distanceScalar) {
     // this sets up the constant after Cesium is initialized
     distanceScalar = new Cesium.NearFarScalar(
-        osMap.ZoomScale.NEAR, osMap.ZoomScale.NEAR_SCALE,
-        osMap.ZoomScale.FAR, osMap.ZoomScale.FAR_SCALE);
+        ZoomScale.NEAR, ZoomScale.NEAR_SCALE,
+        ZoomScale.FAR, ZoomScale.FAR_SCALE);
   }
   return distanceScalar;
 };

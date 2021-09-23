@@ -1,28 +1,29 @@
 goog.declareModuleId('plugin.cesium.sync.converter');
 
+import DynamicLineStringConverter from './dynamiclinestringconverter.js';
+import DynamicMultiPolygonConverter from './dynamicmultipolygonconverter.js';
+import DynamicPolygonConverter from './dynamicpolygonconverter.js';
+import EllipseConverter from './ellipseconverter.js';
+import GeometryCollectionConverter from './geometrycollectionconverter.js';
+import LabelConverter from './labelconverter.js';
+import LineStringConverter from './linestringconverter.js';
+import MultiDynamicLineStringConverter from './multidynamiclinestringconverter.js';
+import MultiLineStringConverter from './multilinestringconverter.js';
+import MultiPointConverter from './multipointconverter.js';
+import MultiPolygonConverter from './multipolygonconverter.js';
+import PointConverter from './pointconverter.js';
+import PolygonConverter from './polygonconverter.js';
+import {runConverter} from './runconverter.js';
+
 const GeometryType = goog.require('ol.geom.GeometryType');
 const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const Ellipse = goog.require('os.geom.Ellipse');
-const DynamicLineStringConverter = goog.require('plugin.cesium.sync.DynamicLineStringConverter');
-const DynamicMultiPolygonConverter = goog.require('plugin.cesium.sync.DynamicMultiPolygonConverter');
-const DynamicPolygonConverter = goog.require('plugin.cesium.sync.DynamicPolygonConverter');
-const EllipseConverter = goog.require('plugin.cesium.sync.EllipseConverter');
-const GeometryCollectionConverter = goog.require('plugin.cesium.sync.GeometryCollectionConverter');
-const LabelConverter = goog.require('plugin.cesium.sync.LabelConverter');
-const LineStringConverter = goog.require('plugin.cesium.sync.LineStringConverter');
-const MultiDynamicLineStringConverter = goog.require('plugin.cesium.sync.MultiDynamicLineStringConverter');
-const MultiLineStringConverter = goog.require('plugin.cesium.sync.MultiLineStringConverter');
-const MultiPointConverter = goog.require('plugin.cesium.sync.MultiPointConverter');
-const MultiPolygonConverter = goog.require('plugin.cesium.sync.MultiPolygonConverter');
-const PointConverter = goog.require('plugin.cesium.sync.PointConverter');
-const PolygonConverter = goog.require('plugin.cesium.sync.PolygonConverter');
-const {runConverter} = goog.require('plugin.cesium.sync.runConverter');
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const Style = goog.requireType('ol.style.Style');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
-const IConverter = goog.requireType('plugin.cesium.sync.IConverter');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
+const {default: IConverter} = goog.requireType('plugin.cesium.sync.IConverter');
 
 
 /**

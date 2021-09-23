@@ -1,10 +1,11 @@
 goog.declareModuleId('plugin.cesium.tiles.TilesetImport');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os/os.js';
+import Descriptor from './cesium3dtilesdescriptor.js';
+import Provider from './cesium3dtilesprovider.js';
+
 const Module = goog.require('os.ui.Module');
 const AbstractFileImportCtrl = goog.require('os.ui.file.ui.AbstractFileImportCtrl');
-const Descriptor = goog.require('plugin.cesium.tiles.Descriptor');
-const Provider = goog.require('plugin.cesium.tiles.Provider');
 
 const FileParserConfig = goog.requireType('os.parse.FileParserConfig');
 

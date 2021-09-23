@@ -1,27 +1,9 @@
 goog.declareModuleId('plugin.cesium.CesiumRenderer');
 
-const Promise = goog.require('goog.Promise');
-const dispose = goog.require('goog.dispose');
-const classlist = goog.require('goog.dom.classlist');
-const log = goog.require('goog.log');
-const {clamp} = goog.require('goog.math');
-const userAgent = goog.require('goog.userAgent');
-const ViewHint = goog.require('ol.ViewHint');
-const OLCesium = goog.require('olcs.OLCesium');
-const dispatcher = goog.require('os.Dispatcher');
-const MapContainer = goog.require('os.MapContainer');
-const MapEvent = goog.require('os.MapEvent');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const DisplaySetting = goog.require('os.config.DisplaySetting');
-const settings = goog.require('os.config.Settings');
-const osFeature = goog.require('os.feature');
-const SynchronizerType = goog.require('os.layer.SynchronizerType');
-const osMap = goog.require('os.map');
-const terrain = goog.require('os.map.terrain');
-const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
-const AltitudeMode = goog.require('os.webgl.AltitudeMode');
-const SynchronizerManager = goog.require('os.webgl.SynchronizerManager');
-const {
+import * as dispatcher from '../../os/dispatcher.js';
+import {getGeometries} from '../../os/feature/feature.js';
+import {WEBGL_CANVAS_CLASS} from '../../os/map/map.js';
+import {
   DEFAULT_FOG_DENSITY,
   ID,
   MAX_FOG_DENSITY,
@@ -34,20 +16,39 @@ const {
   getJulianDate,
   loadCesium,
   reduceBoundingSphere
-} = goog.require('plugin.cesium');
-const Camera = goog.require('plugin.cesium.Camera');
-const TerrainLayer = goog.require('plugin.cesium.TerrainLayer');
-const WMSTerrainProvider = goog.require('plugin.cesium.WMSTerrainProvider');
-const FlyToSphere = goog.require('plugin.cesium.command.FlyToSphere');
-const interaction = goog.require('plugin.cesium.interaction');
-const menu = goog.require('plugin.cesium.menu');
-const {load: loadCesiumMixins} = goog.require('plugin.cesium.mixin');
-const HeatmapSynchronizer = goog.require('plugin.cesium.sync.HeatmapSynchronizer');
-const ImageStaticSynchronizer = goog.require('plugin.cesium.sync.ImageStaticSynchronizer');
-const ImageSynchronizer = goog.require('plugin.cesium.sync.ImageSynchronizer');
-const RootSynchronizer = goog.require('plugin.cesium.sync.RootSynchronizer');
-const TileSynchronizer = goog.require('plugin.cesium.sync.TileSynchronizer');
-const VectorSynchronizer = goog.require('plugin.cesium.sync.VectorSynchronizer');
+} from './cesium.js';
+import Camera from './cesiumcamera.js';
+import {importSetup} from './cesiummenu.js';
+import FlyToSphere from './command/flytospherecmd.js';
+import {configureCesium, loadInteractionMixins} from './interaction/cesiuminteraction.js';
+import {load as loadCesiumMixins} from './mixin/cesiummixin.js';
+import HeatmapSynchronizer from './sync/heatmapsynchronizer.js';
+import ImageStaticSynchronizer from './sync/imagestaticsynchronizer.js';
+import ImageSynchronizer from './sync/imagesynchronizer.js';
+import RootSynchronizer from './sync/rootsynchronizer.js';
+import TileSynchronizer from './sync/tilesynchronizer.js';
+import VectorSynchronizer from './sync/vectorsynchronizer.js';
+import TerrainLayer from './terrainlayer.js';
+import WMSTerrainProvider from './wmsterrainprovider.js';
+
+const Promise = goog.require('goog.Promise');
+const dispose = goog.require('goog.dispose');
+const classlist = goog.require('goog.dom.classlist');
+const log = goog.require('goog.log');
+const {clamp} = goog.require('goog.math');
+const userAgent = goog.require('goog.userAgent');
+const ViewHint = goog.require('ol.ViewHint');
+const OLCesium = goog.require('olcs.OLCesium');
+const MapContainer = goog.require('os.MapContainer');
+const MapEvent = goog.require('os.MapEvent');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const DisplaySetting = goog.require('os.config.DisplaySetting');
+const settings = goog.require('os.config.Settings');
+const SynchronizerType = goog.require('os.layer.SynchronizerType');
+const terrain = goog.require('os.map.terrain');
+const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
+const AltitudeMode = goog.require('os.webgl.AltitudeMode');
+const SynchronizerManager = goog.require('os.webgl.SynchronizerManager');
 const HeatmapSynchronizerType = goog.require('plugin.heatmap.SynchronizerType');
 
 const OLMap = goog.requireType('ol.Map');
@@ -165,12 +166,12 @@ export default class CesiumRenderer extends AbstractWebGLRenderer {
             sm.registerSynchronizer(HeatmapSynchronizerType.HEATMAP, HeatmapSynchronizer);
 
             // set up menus
-            menu.importSetup();
+            importSetup();
 
             loadCesiumMixins();
 
             // initialize interactions that have additional support for Cesium
-            interaction.loadInteractionMixins();
+            loadInteractionMixins();
 
             this.registerTerrainProviderType(terrain.TerrainType.CESIUM, createCesiumTerrain);
             this.registerTerrainProviderType(terrain.TerrainType.ION, createWorldTerrain);
@@ -183,7 +184,7 @@ export default class CesiumRenderer extends AbstractWebGLRenderer {
               time: getJulianDate
             });
 
-            classlist.add(this.olCesium_.canvas_, osMap.WEBGL_CANVAS_CLASS);
+            classlist.add(this.olCesium_.canvas_, WEBGL_CANVAS_CLASS);
 
             this.olCesium_.setTargetFrameRate(this.targetFrameRate);
 
@@ -227,7 +228,7 @@ export default class CesiumRenderer extends AbstractWebGLRenderer {
             var camera = this.olCesium_.camera_ = new Camera(scene, mapInstance);
 
             // configure camera interactions. do not move this before the camera is created!
-            interaction.configureCesium(camera, scene.screenSpaceCameraController);
+            configureCesium(camera, scene.screenSpaceCameraController);
 
             // only render the scene when something changes
             this.olCesium_.enableAutoRenderLoop();
@@ -719,7 +720,7 @@ export default class CesiumRenderer extends AbstractWebGLRenderer {
    * @inheritDoc
    */
   flyToFeatures(features) {
-    var sphere = osFeature.getGeometries(features).reduce(reduceBoundingSphere, null);
+    var sphere = getGeometries(features).reduce(reduceBoundingSphere, null);
 
     if (sphere) {
       var cmd = new FlyToSphere(sphere);

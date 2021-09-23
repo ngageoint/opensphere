@@ -1,19 +1,20 @@
 goog.declareModuleId('plugin.cesium.sync.HeatmapSynchronizer');
 
+import * as dispatcher from '../../../os/dispatcher.js';
+import {updateCesiumLayerProperties} from '../cesium.js';
+import CesiumSynchronizer from './cesiumsynchronizer.js';
+
 const asserts = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const EventType = goog.require('goog.events.EventType');
 const olEvents = goog.require('ol.events');
 const {scaleFromCenter} = goog.require('ol.extent');
-const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const PropertyChange = goog.require('os.layer.PropertyChange');
 const events = goog.require('os.ol.events');
-const cesium = goog.require('plugin.cesium');
-const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer');
 const {EXTENT_SCALE_FACTOR} = goog.require('plugin.heatmap');
 const HeatmapField = goog.require('plugin.heatmap.HeatmapField');
 const HeatmapPropertyType = goog.require('plugin.heatmap.HeatmapPropertyType');
@@ -139,7 +140,7 @@ export default class HeatmapSynchronizer extends CesiumSynchronizer {
 
       asserts.assert(this.activeLayer_);
       asserts.assert(this.layer);
-      cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
+      updateCesiumLayerProperties(this.layer, this.activeLayer_);
       dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
@@ -158,7 +159,7 @@ export default class HeatmapSynchronizer extends CesiumSynchronizer {
         this.visible_ = /** @type {boolean} */ (event.getNewValue());
 
         if (this.layer && this.activeLayer_) {
-          cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
+          updateCesiumLayerProperties(this.layer, this.activeLayer_);
           dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
         }
       } else if (p == HeatmapPropertyType.INTENSITY ||
@@ -178,7 +179,7 @@ export default class HeatmapSynchronizer extends CesiumSynchronizer {
   onStyleChange_(event) {
     asserts.assert(this.layer !== null);
     asserts.assert(this.activeLayer_ !== null);
-    cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
+    updateCesiumLayerProperties(this.layer, this.activeLayer_);
     dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
   }
 

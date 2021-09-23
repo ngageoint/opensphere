@@ -1,28 +1,21 @@
 goog.declareModuleId('plugin.cesium.tiles.Layer');
 
+import * as dispatcher from '../../../os/dispatcher.js';
+import {PROJECTION} from '../../../os/map/map.js';
+import {DEFAULT_LAYER_COLOR} from '../../../os/style/style.js';
+import {CESIUM_ONLY_LAYER, SettingsKey, createIonAssetUrl, promptForAccessToken, promptForWorldTerrain, rectangleToExtent} from '../cesium.js';
+import PrimitiveLayer from '../primitivelayer.js';
+import {directiveTag as layerUITag} from './cesium3dtilelayerui.js';
+import {ICON, TYPE} from './cesium3dtiles.js';
+
 const log = goog.require('goog.log');
 const {transformExtent} = goog.require('ol.proj');
-const dispatcher = goog.require('os.Dispatcher');
 const MapEvent = goog.require('os.MapEvent');
 const ActionEventType = goog.require('os.action.EventType');
 const settings = goog.require('os.config.Settings');
 const LayerEvent = goog.require('os.events.LayerEvent');
 const LayerEventType = goog.require('os.events.LayerEventType');
-const osMap = goog.require('os.map');
 const {EPSG4326} = goog.require('os.proj');
-const osStyle = goog.require('os.style');
-
-const {
-  CESIUM_ONLY_LAYER,
-  promptForAccessToken,
-  createIonAssetUrl,
-  promptForWorldTerrain,
-  SettingsKey,
-  rectangleToExtent
-} = goog.require('plugin.cesium');
-const PrimitiveLayer = goog.require('plugin.cesium.PrimitiveLayer');
-const {ICON, TYPE} = goog.require('plugin.cesium.tiles');
-const {directiveTag: layerUITag} = goog.require('plugin.cesium.tiles.Cesium3DTileLayerUI');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -190,7 +183,7 @@ export default class Layer extends PrimitiveLayer {
    * @return {Cesium.Color} The color.
    */
   getFeatureColor(feature, result) {
-    var cssColor = this.getColor() || osStyle.DEFAULT_LAYER_COLOR;
+    var cssColor = this.getColor() || DEFAULT_LAYER_COLOR;
     var cesiumColor = Cesium.Color.fromCssColorString(cssColor, result);
     cesiumColor.alpha = this.getOpacity();
 
@@ -280,7 +273,7 @@ export default class Layer extends PrimitiveLayer {
       if (tileset && tileset.root && tileset.root.contentBoundingVolume) {
         var extent = rectangleToExtent(tileset.root.contentBoundingVolume.rectangle);
         if (extent) {
-          return transformExtent(extent, EPSG4326, osMap.PROJECTION);
+          return transformExtent(extent, EPSG4326, PROJECTION);
         }
       }
     } catch (e) {

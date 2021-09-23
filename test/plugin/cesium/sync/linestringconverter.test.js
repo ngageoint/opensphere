@@ -35,8 +35,8 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
   const AltitudeMode = goog.module.get('os.webgl.AltitudeMode');
   const {getRealScene} = goog.module.get('test.plugin.cesium.scene');
   const {getLineRetriever, testLine} = goog.module.get('test.plugin.cesium.sync.linestring');
-  const VectorContext = goog.module.get('plugin.cesium.VectorContext');
-  const LineStringConverter = goog.module.get('plugin.cesium.sync.LineStringConverter');
+  const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');
+  const {default: LineStringConverter} = goog.module.get('plugin.cesium.sync.LineStringConverter');
   const lineStringConverter = new LineStringConverter();
 
   let feature;

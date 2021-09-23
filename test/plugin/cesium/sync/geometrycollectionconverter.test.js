@@ -25,8 +25,8 @@ describe('plugin.cesium.sync.GeometryCollectionConverter', () => {
   const VectorLayer = goog.module.get('os.layer.Vector');
   const osProj = goog.module.get('os.proj');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
-  const VectorContext = goog.module.get('plugin.cesium.VectorContext');
-  const GeometryCollectionConverter = goog.module.get('plugin.cesium.sync.GeometryCollectionConverter');
+  const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');
+  const {default: GeometryCollectionConverter} = goog.module.get('plugin.cesium.sync.GeometryCollectionConverter');
   const converter = new GeometryCollectionConverter();
 
   let feature;

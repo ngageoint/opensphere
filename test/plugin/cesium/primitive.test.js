@@ -31,7 +31,7 @@ describe('plugin.cesium.primitive', () => {
   const AltitudeMode = goog.module.get('os.webgl.AltitudeMode');
 
   const {GeometryInstanceId} = goog.module.get('plugin.cesium');
-  const VectorContext = goog.module.get('plugin.cesium.VectorContext');
+  const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');
   const syncUtils = goog.module.get('plugin.cesium.primitive');
   const primitiveUtils = goog.module.get('test.plugin.cesium.primitive');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');

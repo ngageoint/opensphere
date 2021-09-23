@@ -1,7 +1,9 @@
 goog.declareModuleId('plugin.cesium.sync.RootSynchronizer');
 
+import * as dispatcher from '../../../os/dispatcher.js';
+import TileSynchronizer from './tilesynchronizer.js';
+
 const asserts = goog.require('goog.asserts');
-const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const Image = goog.require('os.layer.Image');
@@ -9,7 +11,6 @@ const Tile = goog.require('os.layer.Tile');
 const Vector = goog.require('os.layer.Vector');
 const VectorTile = goog.require('os.layer.VectorTile');
 const AbstractRootSynchronizer = goog.require('os.webgl.AbstractRootSynchronizer');
-const TileSynchronizer = goog.require('plugin.cesium.sync.TileSynchronizer');
 
 const PluggableMap = goog.requireType('ol.PluggableMap');
 const OLLayer = goog.requireType('ol.layer.Layer');

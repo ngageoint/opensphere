@@ -1,5 +1,11 @@
 goog.declareModuleId('plugin.cesium.sync.TileSynchronizer');
 
+import * as Dispatcher from '../../../os/dispatcher.js';
+import {resolutionToZoom, zoomToResolution} from '../../../os/map/map.js';
+import {tileLayerToImageryLayer, updateCesiumLayerProperties} from '../cesium.js';
+import ImageryProvider from '../imageryprovider.js';
+import CesiumSynchronizer from './cesiumsynchronizer.js';
+
 const asserts = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
@@ -8,20 +14,14 @@ const googObject = goog.require('goog.object');
 const googString = goog.require('goog.string');
 const olEvents = goog.require('ol.events');
 const TileWMS = goog.require('ol.source.TileWMS');
-
-const Dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const osLayer = goog.require('os.layer');
 const AnimatedTile = goog.require('os.layer.AnimatedTile');
 const PropertyChange = goog.require('os.layer.PropertyChange');
-const osMap = goog.require('os.map');
 const events = goog.require('os.ol.events');
 const osTime = goog.require('os.time');
-const {tileLayerToImageryLayer, updateCesiumLayerProperties} = goog.require('plugin.cesium');
-const ImageryProvider = goog.require('plugin.cesium.ImageryProvider');
-const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const OLObject = goog.requireType('ol.Object');
@@ -176,10 +176,10 @@ export default class TileSynchronizer extends CesiumSynchronizer {
       var min = this.layer.getMinResolution();
       var max = this.layer.getMaxResolution();
 
-      min = min !== undefined ? min : osMap.zoomToResolution(42, proj);
-      max = max !== undefined ? max : osMap.zoomToResolution(1, proj);
+      min = min !== undefined ? min : zoomToResolution(42, proj);
+      max = max !== undefined ? max : zoomToResolution(1, proj);
 
-      var maxZoom = osMap.resolutionToZoom(min, proj);
+      var maxZoom = resolutionToZoom(min, proj);
       // for layers with a max zoom of 20 or greater, we will assume that they should just stay on indefinitely as
       // the user zooms in (since they are probably last in the base map "stack")
       this.activeLayer_.show = (maxZoom >= 20 || min <= current) && current <= max && this.layer.getVisible();

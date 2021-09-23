@@ -1,14 +1,17 @@
 goog.declareModuleId('plugin.cesium.sync.ellipsoid');
 
+import {GeometryInstanceId} from '../cesium.js';
+import {createColoredPrimitive} from '../primitive.js';
+import {getColor} from './style.js';
+
 const {ol4326CoordinateToCesiumCartesian} = goog.require('olcs.core');
-const {GeometryInstanceId} = goog.require('plugin.cesium');
-const {createColoredPrimitive} = goog.require('plugin.cesium.primitive');
-const {getColor} = goog.require('plugin.cesium.sync.style');
 
 const Feature = goog.requireType('ol.Feature');
 const Style = goog.requireType('ol.style.Style');
 const Ellipse = goog.requireType('os.geom.Ellipse');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {
+  default: VectorContext
+} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**
