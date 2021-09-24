@@ -46,6 +46,7 @@ import NominatimPlugin from '../plugin/osm/nom/nominatimplugin.js';
 import OverviewPlugin from '../plugin/overview/overviewplugin.js';
 import ParamsPlugin from '../plugin/params/paramsplugin.js';
 import PeliasGeocoderPlugin from '../plugin/pelias/geocoder/plugin.js';
+import PlacesPlugin from '../plugin/places/placesplugin.js';
 import * as dispatcher from './dispatcher.js';
 import * as os from './os.js';
 import AbstractMainCtrl from './ui/abstractmainctrl.js';
@@ -182,7 +183,6 @@ const osWindow = goog.require('os.ui.window');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const UrlManager = goog.require('os.url.UrlManager');
 
-const PlacesPlugin = goog.require('plugin.places.PlacesPlugin');
 const PositionPlugin = goog.require('plugin.position.PositionPlugin');
 const PersistPlugin = goog.require('plugin.storage.PersistPlugin');
 const SunCalcPlugin = goog.require('plugin.suncalc.SunCalcPlugin');

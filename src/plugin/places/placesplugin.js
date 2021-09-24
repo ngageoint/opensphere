@@ -1,8 +1,15 @@
-goog.module('plugin.places.PlacesPlugin');
+goog.declareModuleId('plugin.places.PlacesPlugin');
 
-// Register directives with Angular
-goog.require('plugin.places.ui.PlacesNodeUI');
-goog.require('plugin.places.ui.PlacesUI');
+import './ui/placesnodeui.js';
+import './ui/placesui.js';
+
+import * as mime from '../file/kml/mime.js';
+import KMLPlacesImportUI from './kmlplacesimportui.js';
+import * as places from './places.js';
+import PlacesHide from './placeshidecmd.js';
+import PlacesLayerConfig from './placeslayerconfig.js';
+import PlacesManager from './placesmanager.js';
+import * as menu from './placesmenu.js';
 
 const log = goog.require('goog.log');
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
@@ -10,13 +17,6 @@ const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const ClearEntry = goog.require('os.ui.clear.ClearEntry');
 const ClearManager = goog.require('os.ui.clear.ClearManager');
 const ImportMethod = goog.require('os.ui.file.method.ImportMethod');
-const mime = goog.require('plugin.file.kml.mime');
-const places = goog.require('plugin.places');
-const KMLPlacesImportUI = goog.require('plugin.places.KMLPlacesImportUI');
-const PlacesHide = goog.require('plugin.places.PlacesHide');
-const PlacesLayerConfig = goog.require('plugin.places.PlacesLayerConfig');
-const PlacesManager = goog.require('plugin.places.PlacesManager');
-const menu = goog.require('plugin.places.menu');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -24,7 +24,7 @@ const Logger = goog.requireType('goog.log.Logger');
 /**
  * Plugin that allows the user to manage saved features as a KML tree.
  */
-class PlacesPlugin extends AbstractPlugin {
+export default class PlacesPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -118,6 +118,3 @@ let instance;
  * @type {Logger}
  */
 const logger = log.getLogger('plugin.places.PlacesPlugin');
-
-
-exports = PlacesPlugin;

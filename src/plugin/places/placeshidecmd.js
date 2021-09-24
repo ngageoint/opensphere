@@ -1,8 +1,9 @@
-goog.module('plugin.places.PlacesHide');
+goog.declareModuleId('plugin.places.PlacesHide');
+
+import PlacesManager from './placesmanager.js';
 
 const State = goog.require('os.command.State');
 const TriState = goog.require('os.structs.TriState');
-const PlacesManager = goog.require('plugin.places.PlacesManager');
 
 const ICommand = goog.requireType('os.command.ICommand');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
@@ -12,7 +13,7 @@ const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
  * Command for hiding all places
  * @implements {ICommand}
  */
-class PlacesHide {
+export default class PlacesHide {
   /**
    * Constructor.
    */
@@ -126,5 +127,3 @@ class PlacesHide {
     return true;
   }
 }
-
-exports = PlacesHide;

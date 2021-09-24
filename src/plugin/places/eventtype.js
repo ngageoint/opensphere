@@ -1,4 +1,4 @@
-goog.module('plugin.places.EventType');
+goog.declareModuleId('plugin.places.EventType');
 
 /**
  * Places menu event types.
@@ -21,4 +21,4 @@ const EventType = {
   REMOVE_ALL: 'places:removeAll'
 };
 
-exports = EventType;
+export default EventType;

@@ -4,6 +4,7 @@ goog.require('os.annotation.annotationOptionsDirective');
 
 import * as osFeature from '../../../../os/feature/feature.js';
 import * as osStyle from '../../../../os/style/style.js';
+import PlacesManager from '../../../places/placesmanager.js';
 import * as kml from '../kml.js';
 import * as kmlUI from './kmlui.js';
 
@@ -19,7 +20,6 @@ const Module = goog.require('os.ui.Module');
 const AnyDateType = goog.require('os.ui.datetime.AnyDateType');
 const {Controller: FeatureEditCtrl, directive: featureEditDirective} = goog.require('os.ui.FeatureEditUI');
 const list = goog.require('os.ui.list');
-const PlacesManager = goog.require('plugin.places.PlacesManager');
 
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 

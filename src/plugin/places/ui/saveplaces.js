@@ -1,8 +1,10 @@
-goog.module('plugin.places.ui.SavePlacesUI');
+goog.declareModuleId('plugin.places.ui.SavePlacesUI');
 
 goog.require('os.ui.im.BasicInfoUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os/os.js';
+import * as places from '../places.js';
+
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const Module = goog.require('os.ui.Module');
@@ -11,7 +13,6 @@ const {Controller: ExportOptionsCtrl} = goog.require('os.ui.ex.ExportOptionsUI')
 const ExportOptionsEvent = goog.require('os.ui.ex.ExportOptionsEvent');
 const column = goog.require('os.ui.slick.column');
 const osWindow = goog.require('os.ui.window');
-const places = goog.require('plugin.places');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 
@@ -21,7 +22,7 @@ const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -36,7 +37,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'saveplaces';
+export const directiveTag = 'saveplaces';
 
 
 /**
@@ -49,7 +50,7 @@ Module.directive('saveplaces', [directive]);
  * Controller for the save places dialog.
  * @unrestricted
  */
-class Controller extends ExportOptionsCtrl {
+export class Controller extends ExportOptionsCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -183,9 +184,3 @@ class Controller extends ExportOptionsCtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

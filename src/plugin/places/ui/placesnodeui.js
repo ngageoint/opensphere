@@ -1,10 +1,11 @@
-goog.module('plugin.places.ui.PlacesNodeUI');
+goog.declareModuleId('plugin.places.ui.PlacesNodeUI');
+
+import {createOrEditFolder, createOrEditPlace} from '../../file/kml/ui/kmlui.js';
+import {Icon, getPlacesRoot} from '../places.js';
+import PlacesManager from '../placesmanager.js';
 
 const Module = goog.require('os.ui.Module');
 const {Controller: DefaultLayerNodeUICtrl} = goog.require('os.ui.node.DefaultLayerNodeUI');
-const {createOrEditFolder, createOrEditPlace} = goog.require('plugin.file.kml.ui');
-const {Icon, getPlacesRoot} = goog.require('plugin.places');
-const PlacesManager = goog.require('plugin.places.PlacesManager');
 
 const {FolderOptions, PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
 const {default: KMLLayerNode} = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
@@ -36,7 +37,7 @@ const template = `
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: template,
@@ -48,7 +49,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'placesnodeui';
+export const directiveTag = 'placesnodeui';
 
 
 /**
@@ -62,7 +63,7 @@ Module.directive('placesnodeui', [directive]);
  * Controller for the Places selected/highlighted node UI
  * @unrestricted
  */
-class Controller extends DefaultLayerNodeUICtrl {
+export class Controller extends DefaultLayerNodeUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -128,9 +129,3 @@ class Controller extends DefaultLayerNodeUICtrl {
     PlacesManager.getInstance().removeLayer();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

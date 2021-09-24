@@ -1,8 +1,9 @@
-goog.module('plugin.places.ui.launchSavePlaces');
+goog.declareModuleId('plugin.places.ui.launchSavePlaces');
+
+import * as places from '../places.js';
+import {directiveTag as savePlacesUi} from './saveplaces.js';
 
 const osWindow = goog.require('os.ui.window');
-const places = goog.require('plugin.places');
-const {directiveTag: savePlacesUi} = goog.require('plugin.places.ui.SavePlacesUI');
 
 const VectorSource = goog.requireType('os.source.Vector');
 
@@ -44,7 +45,7 @@ let launchSavePlaces_ = (source) => {
  *
  * @param {VectorSource} source The source
  */
-const launchSavePlaces = (source) => {
+export const launchSavePlaces = (source) => {
   launchSavePlaces_(source);
 };
 
@@ -53,11 +54,6 @@ const launchSavePlaces = (source) => {
  *
  * @param {!function(VectorSource)} f The new implementation
  */
-const setLaunchSavePlaces = function(f) {
+export const setLaunchSavePlaces = function(f) {
   launchSavePlaces_ = f;
-};
-
-exports = {
-  launchSavePlaces,
-  setLaunchSavePlaces
 };

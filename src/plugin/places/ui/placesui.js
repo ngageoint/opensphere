@@ -1,25 +1,27 @@
-goog.module('plugin.places.ui.PlacesUI');
+goog.declareModuleId('plugin.places.ui.PlacesUI');
 
 goog.require('os.ui.LayerTreeUI');
 goog.require('os.ui.UISwitchUI');
-goog.require('plugin.places.ui.PlacesButtonUI');
+
+import './placesbutton.js';
+
+import {ROOT} from '../../../os/os.js';
+import * as ui from '../../../os/ui/ui.js';
+import * as KMLTreeExportUI from '../../file/kml/ui/kmltreeexportui.js';
+import {createOrEditFolder} from '../../file/kml/ui/kmlui.js';
+import PlacesManager from '../placesmanager.js';
 
 const Disposable = goog.require('goog.Disposable');
-const {ROOT} = goog.require('os');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const EventType = goog.require('os.config.EventType');
 const osImplements = goog.require('os.implements');
 const {Places: PlacesKeys} = goog.require('os.metrics.keys');
 const Metrics = goog.require('os.metrics.Metrics');
-const ui = goog.require('os.ui');
 const ILayerUIProvider = goog.require('os.ui.ILayerUIProvider');
 const Module = goog.require('os.ui.Module');
 const layerMenu = goog.require('os.ui.menu.layer');
 const SlickGridEvent = goog.require('os.ui.slick.SlickGridEvent');
-const {createOrEditFolder} = goog.require('plugin.file.kml.ui');
-const KMLTreeExportUI = goog.require('plugin.file.kml.ui.KMLTreeExportUI');
-const PlacesManager = goog.require('plugin.places.PlacesManager');
 
 const ExportOptions = goog.requireType('os.ex.ExportOptions');
 const Menu = goog.requireType('os.ui.menu.Menu');
@@ -32,7 +34,7 @@ const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -45,7 +47,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'places';
+export const directiveTag = 'places';
 
 
 /**
@@ -59,7 +61,7 @@ Module.directive('places', [directive]);
  * Controller function for the places directive
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -275,16 +277,8 @@ const getActivePlaces = function(root) {
  * @param {!KMLNode} rootNode
  * @param {ExportOptions=} opt_options
  */
-const launchExportUI = function(rootNode, opt_options) {
+export const launchExportUI = function(rootNode, opt_options) {
   var tooltip = 'Places-specific feature styles (e.g. Range Rings) will not be exported, and will render as points. ' +
       'The standard Layer export window can support this action.';
   KMLTreeExportUI.launchTreeExport(rootNode, 'Export Places', opt_options, tooltip);
-};
-
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchExportUI
 };

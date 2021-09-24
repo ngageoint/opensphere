@@ -1,7 +1,12 @@
-goog.module('plugin.places.KMLPlacesImportUI');
+goog.declareModuleId('plugin.places.KMLPlacesImportUI');
+
+import {ROOT} from '../../os/os.js';
+import KMLNodeAdd from '../file/kml/cmd/kmlnodeaddcmd.js';
+import KMLParser from '../file/kml/kmlparser.js';
+import {updatePlacemark} from '../file/kml/ui/kmlui.js';
+import {getPlacesManager} from './places.js';
 
 const dispose = goog.require('goog.dispose');
-const {ROOT} = goog.require('os');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
 const EventType = goog.require('os.events.EventType');
@@ -11,15 +16,11 @@ const Module = goog.require('os.ui.Module');
 const {Controller: FileImportCtrl} = goog.require('os.ui.file.FileImportUI');
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const osWindow = goog.require('os.ui.window');
-const {default: KMLParser} = goog.require('plugin.file.kml.KMLParser');
-const {default: KMLNodeAdd} = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
-const {updatePlacemark} = goog.require('plugin.file.kml.ui');
-const {getPlacesManager} = goog.require('plugin.places');
 
 
 /**
  */
-class KMLPlacesImportUI extends FileImportUI {
+export default class KMLPlacesImportUI extends FileImportUI {
   /**
    * Constructor.
    */
@@ -198,5 +199,3 @@ class Controller extends FileImportCtrl {
     this.close();
   }
 }
-
-exports = KMLPlacesImportUI;

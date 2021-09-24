@@ -1,4 +1,12 @@
-goog.module('plugin.places');
+goog.declareModuleId('plugin.places');
+
+import * as osFeature from '../../os/feature/feature.js';
+import * as osStyle from '../../os/style/style.js';
+import KMLNodeAdd from '../file/kml/cmd/kmlnodeaddcmd.js';
+import * as kml from '../file/kml/kml.js';
+import KMLField from '../file/kml/kmlfield.js';
+import KMLTreeExporter from '../file/kml/kmltreeexporter.js';
+import {getKMLRoot, updateFolder, updatePlacemark} from '../file/kml/ui/kmlui.js';
 
 const {removeDuplicates} = goog.require('goog.array');
 const {getUid} = goog.require('ol');
@@ -10,44 +18,37 @@ const annotation = goog.require('os.annotation');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
 const RecordField = goog.require('os.data.RecordField');
-const osFeature = goog.require('os.feature');
 const osObject = goog.require('os.object');
 const osOlFeature = goog.require('os.ol.feature');
-const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const TimeInstant = goog.require('os.time.TimeInstant');
 const TimeRange = goog.require('os.time.TimeRange');
 const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
-const kml = goog.require('plugin.file.kml');
-const {default: KMLField} = goog.require('plugin.file.kml.KMLField');
-const {default: KMLTreeExporter} = goog.require('plugin.file.kml.KMLTreeExporter');
-const {default: KMLNodeAdd} = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
 const {METHOD_FIELD} = goog.require('os.interpolate');
-const {getKMLRoot, updateFolder, updatePlacemark} = goog.require('plugin.file.kml.ui');
 
 const {default: KMLLayerNode} = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
-const PlacesManager = goog.requireType('plugin.places.PlacesManager');
+const {default: PlacesManager} = goog.requireType('plugin.places.PlacesManager');
 
 
 /**
  * Identifier used by the places plugin.
  * @type {string}
  */
-const ID = 'places';
+export const ID = 'places';
 
 /**
  * Places layer title.
  * @type {string}
  */
-const TITLE = 'Saved Places';
+export const TITLE = 'Saved Places';
 
 /**
  * Places icons.
  * @enum {string}
  */
-const Icon = {
+export const Icon = {
   ANNOTATION: 'fa-comment',
   FOLDER: 'fa-folder',
   PLACEMARK: 'fa-map-marker',
@@ -58,7 +59,7 @@ const Icon = {
  * Places icon.
  * @type {string}
  */
-const ICON = Icon.PLACEMARK;
+export const ICON = Icon.PLACEMARK;
 
 /**
  * Fields that must be exported to the KML. Any style fields (like shape) that aren't supported by the KML spec must be
@@ -66,7 +67,7 @@ const ICON = Icon.PLACEMARK;
  *
  * @type {!Array<string>}
  */
-const ExportFields = [
+export const ExportFields = [
   KMLField.DESCRIPTION,
   KMLField.MD_DESCRIPTION,
   annotation.OPTIONS_FIELD,
@@ -98,7 +99,7 @@ const ExportFields = [
  *
  * @type {!Array<string>}
  */
-const SourceFields = [
+export const SourceFields = [
   KMLField.NAME,
   KMLField.DESCRIPTION,
   Fields.BEARING,
@@ -132,7 +133,7 @@ removeDuplicates(CopyableFields);
  *   parent: (KMLNode|undefined)
  * }}
  */
-let FolderOptions;
+export let FolderOptions;
 
 /**
  * @typedef {{
@@ -147,7 +148,7 @@ let FolderOptions;
  *   styleConfig: (Object|undefined)
  * }}
  */
-let PlaceOptions;
+export let PlaceOptions;
 
 /**
  * The global PlacesManager instance. This is used to deconflict circular dependencies.
@@ -158,13 +159,13 @@ let placesManager;
  * Set the global PlacesManager instance.
  * @return {PlacesManager|undefined}
  */
-const getPlacesManager = () => placesManager;
+export const getPlacesManager = () => placesManager;
 
 /**
  * Set the global PlacesManager instance.
  * @param {!PlacesManager} value The instance.
  */
-const setPlacesManager = (value) => {
+export const setPlacesManager = (value) => {
   placesManager = value;
 };
 
@@ -174,7 +175,7 @@ const setPlacesManager = (value) => {
  * @param {KMLNode} root The root node to export
  * @return {KMLTreeExporter}
  */
-const createExporter = function(root) {
+export const createExporter = function(root) {
   var exporter = new KMLTreeExporter();
   exporter.setFields(ExportFields);
   exporter.setName(TITLE);
@@ -190,7 +191,7 @@ const createExporter = function(root) {
  *
  * @return {boolean}
  */
-const isLayerPresent = function() {
+export const isLayerPresent = function() {
   return MapContainer.getInstance().getLayer(ID) != null;
 };
 
@@ -201,7 +202,7 @@ const isLayerPresent = function() {
  * @param {Object=} opt_layerConfig The feature's layer config
  * @return {!ol.Feature}
  */
-const copyFeature = function(feature, opt_layerConfig) {
+export const copyFeature = function(feature, opt_layerConfig) {
   var clone = osOlFeature.clone(feature, CopyableFields);
   clone.setId(getUid(clone));
 
@@ -359,7 +360,7 @@ let saveFromSource_ = function(config) {
  *
  * @param {!Object} config The save configuration
  */
-const saveFromSource = function(config) {
+export const saveFromSource = function(config) {
   saveFromSource_(config);
 };
 
@@ -368,7 +369,7 @@ const saveFromSource = function(config) {
  *
  * @param {!function(!Object)} f The new implementation
  */
-const setSaveFromSource = function(f) {
+export const setSaveFromSource = function(f) {
   saveFromSource_ = f;
 };
 
@@ -379,7 +380,7 @@ const setSaveFromSource = function(f) {
  *                                                         provided.
  * @return {KMLNode}
  */
-const getPlacesRoot = function(opt_layerNode) {
+export const getPlacesRoot = function(opt_layerNode) {
   var root;
 
   if (opt_layerNode) {
@@ -423,7 +424,7 @@ let addFolder_ = function(options) {
  * @param {!FolderOptions} options The folder options.
  * @return {KMLNode} The folder node, or null if one could not be created.
  */
-const addFolder = function(options) {
+export const addFolder = function(options) {
   return addFolder_(options);
 };
 
@@ -432,7 +433,7 @@ const addFolder = function(options) {
  *
  * @param {!function(!FolderOptions):KMLNode} f The new implementation
  */
-const setAddFolder = function(f) {
+export const setAddFolder = function(f) {
   addFolder_ = f;
 };
 
@@ -493,7 +494,7 @@ let addPlace_ = function(options) {
  * @param {!PlaceOptions} options The save options.
  * @return {KMLNode} The place node, or null if one could not be created.
  */
-const addPlace = function(options) {
+export const addPlace = function(options) {
   return addPlace_(options);
 };
 
@@ -502,29 +503,6 @@ const addPlace = function(options) {
  *
  * @param {!function(!PlaceOptions):KMLNode} f The new implementation
  */
-const setAddPlace = function(f) {
+export const setAddPlace = function(f) {
   addPlace_ = f;
-};
-
-exports = {
-  ID,
-  TITLE,
-  Icon,
-  ICON,
-  ExportFields,
-  SourceFields,
-  createExporter,
-  getPlacesManager,
-  setPlacesManager,
-  isLayerPresent,
-  copyFeature,
-  saveFromSource,
-  setSaveFromSource,
-  getPlacesRoot,
-  addFolder,
-  addPlace,
-  setAddFolder,
-  setAddPlace,
-  FolderOptions,
-  PlaceOptions
 };

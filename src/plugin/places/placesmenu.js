@@ -1,15 +1,28 @@
-goog.module('plugin.places.menu');
+goog.declareModuleId('plugin.places.menu');
+
+import * as osFeature from '../../os/feature/feature.js';
+import * as os from '../../os/os.js';
+import KMLNodeAdd from '../file/kml/cmd/kmlnodeaddcmd.js';
+import KMLNodeRemove from '../file/kml/cmd/kmlnoderemovecmd.js';
+import KMLLayer from '../file/kml/kmllayer.js';
+import KMLLayerNode from '../file/kml/ui/kmllayernode.js';
+import KMLNode from '../file/kml/ui/kmlnode.js';
+import {createOrEditFolder, createOrEditPlace, getKMLRoot, updateFolder, updatePlacemark} from '../file/kml/ui/kmlui.js';
+import EventType from './eventtype.js';
+import * as places from './places.js';
+import PlacesManager from './placesmanager.js';
+import {launchSavePlaces} from './ui/launchsaveplaces.js';
+import * as PlacesUI from './ui/placesui.js';
+import * as QuickAddPlacesUI from './ui/quickaddplaces.js';
 
 const GoogEvent = goog.require('goog.events.Event');
 const Point = goog.require('ol.geom.Point');
-const os = goog.require('os');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const ParallelCommand = goog.require('os.command.ParallelCommand');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
 const DataManager = goog.require('os.data.DataManager');
 const LayerNode = goog.require('os.data.LayerNode');
 const RecordField = goog.require('os.data.RecordField');
-const osFeature = goog.require('os.feature');
 const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
 const VectorLayer = goog.require('os.layer.Vector');
 const {Places: PlacesKeys} = goog.require('os.metrics.keys');
@@ -19,24 +32,6 @@ const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 const layerMenu = goog.require('os.ui.menu.layer');
 const mapMenu = goog.require('os.ui.menu.map');
 const spatial = goog.require('os.ui.menu.spatial');
-const {default: KMLLayer} = goog.require('plugin.file.kml.KMLLayer');
-const {default: KMLNodeAdd} = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
-const {default: KMLNodeRemove} = goog.require('plugin.file.kml.cmd.KMLNodeRemove');
-const {
-  createOrEditFolder,
-  createOrEditPlace,
-  getKMLRoot,
-  updateFolder,
-  updatePlacemark
-} = goog.require('plugin.file.kml.ui');
-const {default: KMLLayerNode} = goog.require('plugin.file.kml.ui.KMLLayerNode');
-const {default: KMLNode} = goog.require('plugin.file.kml.ui.KMLNode');
-const places = goog.require('plugin.places');
-const EventType = goog.require('plugin.places.EventType');
-const PlacesManager = goog.require('plugin.places.PlacesManager');
-const PlacesUI = goog.require('plugin.places.ui.PlacesUI');
-const QuickAddPlacesUI = goog.require('plugin.places.ui.QuickAddPlacesUI');
-const {launchSavePlaces} = goog.require('plugin.places.ui.launchSavePlaces');
 
 const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 const MenuItem = goog.requireType('os.ui.menu.MenuItem');
@@ -47,12 +42,12 @@ const {FolderOptions, PlacemarkOptions} = goog.requireType('plugin.file.kml.ui')
  * Places group label for menus.
  * @type {string}
  */
-const GROUP_LABEL = places.TITLE;
+export const GROUP_LABEL = places.TITLE;
 
 /**
  * Add places items to the layer menu.
  */
-const layerSetup = function() {
+export const layerSetup = function() {
   var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(GROUP_LABEL)) {
     var menuRoot = menu.getRoot();
@@ -170,7 +165,7 @@ const layerSetup = function() {
 /**
  * Remove places items from the layer menu.
  */
-const layerDispose = function() {
+export const layerDispose = function() {
   var menu = layerMenu.getMenu();
   var group = menu ? menu.getRoot().find(layerMenu.GroupLabel.TOOLS) : undefined;
   if (group) {
@@ -285,7 +280,7 @@ const visibleIfLayerNodeSupported_ = function(context) {
 /**
  * Set up places items on the map.
  */
-const mapSetup = function() {
+export const mapSetup = function() {
   var menu = mapMenu.getMenu();
 
   if (menu && !menu.getRoot().find(GROUP_LABEL)) {
@@ -332,7 +327,7 @@ const mapSetup = function() {
 /**
  * Clean up places items on the map.
  */
-const mapDispose = function() {
+export const mapDispose = function() {
   var menu = mapMenu.getMenu();
   if (menu) {
     var group = menu.getRoot().find(mapMenu.GroupLabel.COORDINATE);
@@ -345,7 +340,7 @@ const mapDispose = function() {
 /**
  * Set up places items in the spatial menu.
  */
-const spatialSetup = function() {
+export const spatialSetup = function() {
   var menu = spatial.getMenu();
 
   if (menu && !menu.getRoot().find(GROUP_LABEL)) {
@@ -401,7 +396,7 @@ const spatialSetup = function() {
 /**
  * Clean up places items in the spatial menu.
  */
-const spatialDispose = function() {
+export const spatialDispose = function() {
   var menu = mapMenu.getMenu();
   if (menu) {
     var group = menu.getRoot().find(spatial.Group.TOOLS);
@@ -418,7 +413,7 @@ const spatialDispose = function() {
  * @param {Object|undefined} context The menu context.
  * @return {boolean}
  */
-const spatialIsPlace = function(context) {
+export const spatialIsPlace = function(context) {
   var features = spatial.getFeaturesFromContext(context);
   if (features.length === 1) {
     var feature = features[0];
@@ -437,7 +432,7 @@ const spatialIsPlace = function(context) {
  * @param {Object|undefined} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfCanSaveSpatial = function(context) {
+export const visibleIfCanSaveSpatial = function(context) {
   this.visible = false;
 
   if (!spatialIsPlace(context)) {
@@ -455,7 +450,7 @@ const visibleIfCanSaveSpatial = function(context) {
  * @param {Object|undefined} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfIsPlace = function(context) {
+export const visibleIfIsPlace = function(context) {
   this.visible = spatialIsPlace(context);
 };
 
@@ -609,7 +604,7 @@ const onLayerEvent_ = function(event) {
  * @param {layerMenu.Context} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfCanSaveLayer = function(context) {
+export const visibleIfCanSaveLayer = function(context) {
   this.visible = false;
 
   if (context && context.length == 1) {
@@ -649,7 +644,7 @@ const visibleIfCanSaveLayer = function(context) {
  *
  * @param {MenuEvent<ol.Coordinate>} event The menu event.
  */
-const saveCoordinateToPlaces = function(event) {
+export const saveCoordinateToPlaces = function(event) {
   var context = event.getContext();
   if (context && event instanceof GoogEvent && !os.inIframe()) {
     // Here's a fun exploitation of the whole window context and instanceof problem.
@@ -671,7 +666,7 @@ const saveCoordinateToPlaces = function(event) {
  *
  * @param {MenuEvent<ol.Coordinate>} event The menu event.
  */
-const createAnnotationFromCoordinate = function(event) {
+export const createAnnotationFromCoordinate = function(event) {
   var context = event.getContext();
   if (context && event instanceof GoogEvent && !os.inIframe()) {
     // Here's a fun exploitation of the whole window context and instanceof problem.
@@ -694,7 +689,7 @@ const createAnnotationFromCoordinate = function(event) {
  *
  * @param {MenuEvent<ol.Coordinate>} event The menu event.
  */
-const quickAddFromCoordinate = function(event) {
+export const quickAddFromCoordinate = function(event) {
   var context = event.getContext();
   if (context && event instanceof GoogEvent && !os.inIframe()) {
     event.preventDefault();
@@ -709,7 +704,7 @@ const quickAddFromCoordinate = function(event) {
  *
  * @param {MenuEvent<Object>} event The menu event.
  */
-const quickAddFromSpatial = function(event) {
+export const quickAddFromSpatial = function(event) {
   var context = event.getContext();
   if (context) {
     var geom = /** @type {ol.geom.SimpleGeometry} */ (context['geometry']);
@@ -722,7 +717,7 @@ const quickAddFromSpatial = function(event) {
  *
  * @param {MenuEvent} event The menu event.
  */
-const saveSpatialToAnnotation = function(event) {
+export const saveSpatialToAnnotation = function(event) {
   saveSpatialToPlaces(event, true);
 };
 
@@ -732,7 +727,7 @@ const saveSpatialToAnnotation = function(event) {
  * @param {MenuEvent} event The menu event.
  * @param {boolean=} opt_annotation Whether the spatial save is an annotation.
  */
-const saveSpatialToPlaces = function(event, opt_annotation) {
+export const saveSpatialToPlaces = function(event, opt_annotation) {
   var context = event.getContext();
   if (context && event instanceof GoogEvent && !os.inIframe()) {
     // Here's a fun exploitation of the whole window context and instanceof problem.
@@ -786,7 +781,7 @@ const saveSpatialToPlaces = function(event, opt_annotation) {
  *
  * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  */
-const saveLayerToPlaces = function(event) {
+export const saveLayerToPlaces = function(event) {
   var context = event.getContext();
   if (context && event instanceof GoogEvent && !os.inIframe()) {
     // Here's a fun exploitation of the whole window context and instanceof problem.
@@ -829,7 +824,7 @@ const saveLayerToPlaces = function(event) {
  *
  * @param {!Array<KMLNode>|KMLNode} nodes The root KML node to save
  */
-const saveKMLToPlaces = function(nodes) {
+export const saveKMLToPlaces = function(nodes) {
   // don't allow this if the places root node doesn't exist
   var rootNode = PlacesManager.getInstance().getPlacesRoot();
   if (!rootNode) {
@@ -888,26 +883,4 @@ const copyNode_ = function(node) {
   }
 
   return clone;
-};
-
-exports = {
-  GROUP_LABEL,
-  layerSetup,
-  layerDispose,
-  mapSetup,
-  mapDispose,
-  spatialSetup,
-  spatialDispose,
-  spatialIsPlace,
-  visibleIfCanSaveSpatial,
-  visibleIfIsPlace,
-  visibleIfCanSaveLayer,
-  saveCoordinateToPlaces,
-  createAnnotationFromCoordinate,
-  quickAddFromCoordinate,
-  quickAddFromSpatial,
-  saveSpatialToAnnotation,
-  saveSpatialToPlaces,
-  saveLayerToPlaces,
-  saveKMLToPlaces
 };

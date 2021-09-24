@@ -3,7 +3,7 @@ goog.module('plugin.track');
 const log = goog.require('goog.log');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const osFeature = goog.require('os.feature');
-const PlacesManager = goog.require('plugin.places.PlacesManager');
+const {default: PlacesManager} = goog.require('plugin.places.PlacesManager');
 
 const AlertManager = goog.require('os.alert.AlertManager');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');

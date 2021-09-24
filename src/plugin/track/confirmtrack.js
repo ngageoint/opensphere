@@ -3,7 +3,7 @@ goog.module('plugin.track.ConfirmTrackUI');
 const {ROOT} = goog.require('os');
 const {default: KMLField} = goog.require('plugin.file.kml.KMLField');
 const Module = goog.require('os.ui.Module');
-const PlacesManager = goog.require('plugin.places.PlacesManager');
+const {default: PlacesManager} = goog.require('plugin.places.PlacesManager');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 
 const OlFeature = goog.requireType('ol.Feature');

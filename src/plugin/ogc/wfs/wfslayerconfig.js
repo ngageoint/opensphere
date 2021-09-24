@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.ogc.wfs.WFSLayerConfig');
 
-import {default as GeoJSONParser} from '../../file/geojson/geojsonparser.js';
+import GeoJSONParser from '../../file/geojson/geojsonparser.js';
 import {Controller as ChooseTimeColumnController} from '../ui/choosetimecolumn.js';
 import {directiveTag as ogcLayerNodeUi} from '../ui/ogclayernodeui.js';
 

@@ -1,14 +1,13 @@
-goog.module('plugin.places.PlacesLayerConfig');
+goog.declareModuleId('plugin.places.PlacesLayerConfig');
 
-const {default: KMLLayerConfig} = goog.require('plugin.file.kml.KMLLayerConfig');
-const PlacesLayer = goog.require('plugin.places.PlacesLayer');
-const PlacesSource = goog.require('plugin.places.PlacesSource');
-
+import KMLLayerConfig from '../file/kml/kmllayerconfig.js';
+import PlacesLayer from './placeslayer.js';
+import PlacesSource from './placessource.js';
 
 /**
  * Creates a KML layer for organizing Places.
  */
-class PlacesLayerConfig extends KMLLayerConfig {
+export default class PlacesLayerConfig extends KMLLayerConfig {
   /**
    * Constructor.
    */
@@ -40,6 +39,3 @@ class PlacesLayerConfig extends KMLLayerConfig {
  * @const
  */
 PlacesLayerConfig.ID = 'places';
-
-
-exports = PlacesLayerConfig;
