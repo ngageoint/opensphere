@@ -5,7 +5,7 @@ const TriState = goog.require('os.structs.TriState');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
 
 const ICommand = goog.requireType('os.command.ICommand');
-const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**

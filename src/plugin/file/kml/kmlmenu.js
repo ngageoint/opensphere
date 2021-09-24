@@ -1,15 +1,15 @@
 goog.declareModuleId('plugin.file.kml.menu');
 
-const asserts = goog.require('goog.asserts');
+import * as osFeature from '../../../os/feature/feature.js';
+import KMLNetworkLinkNode from './ui/kmlnetworklinknode.js';
+import KMLNode from './ui/kmlnode.js';
 
+const asserts = goog.require('goog.asserts');
 const buffer = goog.require('os.buffer');
 const BufferDialogUI = goog.require('os.ui.buffer.BufferDialogUI');
-const osFeature = goog.require('os.feature');
 const TriState = goog.require('os.structs.TriState');
 const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
 const layerMenu = goog.require('os.ui.menu.layer');
-const KMLNetworkLinkNode = goog.require('plugin.file.kml.ui.KMLNetworkLinkNode');
-const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
 
 const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 const MenuItem = goog.requireType('os.ui.menu.MenuItem');

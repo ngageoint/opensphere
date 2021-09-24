@@ -1,6 +1,6 @@
 goog.module('plugin.places.PlacesLayerConfig');
 
-const KMLLayerConfig = goog.require('plugin.file.kml.KMLLayerConfig');
+const {default: KMLLayerConfig} = goog.require('plugin.file.kml.KMLLayerConfig');
 const PlacesLayer = goog.require('plugin.places.PlacesLayer');
 const PlacesSource = goog.require('plugin.places.PlacesSource');
 

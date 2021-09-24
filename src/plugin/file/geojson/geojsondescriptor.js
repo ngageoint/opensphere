@@ -1,9 +1,10 @@
 goog.declareModuleId('plugin.file.geojson.GeoJSONDescriptor');
 
+import GeoJSONParserConfig from '../geojsonparserconfig.js';
+import GeoJSONExporter from './geojsonexporter.js';
+
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const LayerType = goog.require('os.layer.LayerType');
-const GeoJSONExporter = goog.require('plugin.file.geojson.GeoJSONExporter');
-const GeoJSONParserConfig = goog.require('plugin.file.geojson.GeoJSONParserConfig');
 
 
 /**

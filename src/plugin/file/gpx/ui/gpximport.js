@@ -1,11 +1,12 @@
 goog.declareModuleId('plugin.file.gpx.ui.GPXImport');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../../os/os.js';
+import GPXDescriptor from '../gpxdescriptor.js';
+import GPXProvider from '../gpxprovider.js';
+
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const Module = goog.require('os.ui.Module');
 const AbstractFileImportCtrl = goog.require('os.ui.file.ui.AbstractFileImportCtrl');
-const GPXDescriptor = goog.require('plugin.file.gpx.GPXDescriptor');
-const GPXProvider = goog.require('plugin.file.gpx.GPXProvider');
 
 
 /**

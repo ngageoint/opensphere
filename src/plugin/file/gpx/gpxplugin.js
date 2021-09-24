@@ -1,17 +1,17 @@
 goog.declareModuleId('plugin.file.gpx.GPXPlugin');
 
+import GPXDescriptor from './gpxdescriptor.js';
+import GPXLayerConfig from './gpxlayerconfig.js';
+import GPXParser from './gpxparser.js';
+import GPXProvider from './gpxprovider.js';
+import * as mime from './mime.js';
+import GPXImportUI from './ui/gpximportui.js';
+
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const ImportManager = goog.require('os.ui.im.ImportManager');
-const GPXDescriptor = goog.require('plugin.file.gpx.GPXDescriptor');
-const GPXLayerConfig = goog.require('plugin.file.gpx.GPXLayerConfig');
-const GPXParser = goog.require('plugin.file.gpx.GPXParser');
-const GPXProvider = goog.require('plugin.file.gpx.GPXProvider');
-const mime = goog.require('plugin.file.gpx.mime');
-const GPXImportUI = goog.require('plugin.file.gpx.ui.GPXImportUI');
-
 
 /**
  * Provides GPX support

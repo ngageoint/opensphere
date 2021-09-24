@@ -9,7 +9,7 @@ const AlertManager = goog.require('os.alert.AlertManager');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const {createTrack} = goog.require('os.track');
 const TrackField = goog.require('os.track.TrackField');
-const KMLNodeAdd = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
+const {default: KMLNodeAdd} = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
 const {updatePlacemark} = goog.require('plugin.file.kml.ui');
 
 const Promise = goog.requireType('goog.Promise');

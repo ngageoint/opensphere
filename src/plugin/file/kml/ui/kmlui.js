@@ -1,24 +1,25 @@
 goog.declareModuleId('plugin.file.kml.ui');
 
+import * as dispatcher from '../../../../os/dispatcher.js';
+import * as osFeature from '../../../../os/feature/feature.js';
+import KMLNodeAdd from '../cmd/kmlnodeaddcmd.js';
+import KMLNodeRemove from '../cmd/kmlnoderemovecmd.js';
+import KMLField from '../kmlfield.js';
+
 const GoogEvent = goog.require('goog.events.Event');
 const googString = goog.require('goog.string');
 const ol = goog.require('ol');
-const dispatcher = goog.require('os.Dispatcher');
 const EventType = goog.require('os.action.EventType');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
-const osFeature = goog.require('os.feature');
 const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
 const osWindow = goog.require('os.ui.window');
 const {launchConfirmText} = goog.require('os.ui.window.ConfirmTextUI');
-const KMLField = goog.require('plugin.file.kml.KMLField');
-const KMLNodeAdd = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
-const KMLNodeRemove = goog.require('plugin.file.kml.cmd.KMLNodeRemove');
 
-const KMLLayer = goog.requireType('plugin.file.kml.KMLLayer');
-const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
-const KMLSource = goog.requireType('plugin.file.kml.KMLSource');
-const KMLLayerNode = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
+const {default: KMLLayer} = goog.requireType('plugin.file.kml.KMLLayer');
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
+const {default: KMLSource} = goog.requireType('plugin.file.kml.KMLSource');
+const {default: KMLLayerNode} = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
 
 
 /**

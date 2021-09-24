@@ -1,9 +1,11 @@
 goog.declareModuleId('plugin.file.kml.KMLFeatureParser');
 
+import * as osMap from '../../../os/map/map.js';
+
 const KML = goog.require('ol.format.KML');
 const xml = goog.require('ol.xml');
 const text = goog.require('os.file.mime.text');
-const osMap = goog.require('os.map');
+
 const IParser = goog.requireType('os.parse.IParser');
 
 

@@ -1,10 +1,10 @@
 goog.declareModuleId('plugin.file.kml.tour.SoundCue');
 
+import Wait from './tourwait.js';
+
 const AudioManager = goog.require('os.audio.AudioManager');
 const AudioSetting = goog.require('os.audio.AudioSetting');
 const Settings = goog.require('os.config.Settings');
-const Wait = goog.require('plugin.file.kml.tour.Wait');
-
 
 /**
  * Plays an audio file during the tour.

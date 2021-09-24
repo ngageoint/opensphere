@@ -24,7 +24,7 @@ const PlacesManager = goog.require('plugin.places.PlacesManager');
 const ExportOptions = goog.requireType('os.ex.ExportOptions');
 const Menu = goog.requireType('os.ui.menu.Menu');
 const {FolderOptions} = goog.requireType('plugin.file.kml.ui');
-const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**

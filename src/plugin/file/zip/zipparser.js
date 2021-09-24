@@ -14,7 +14,7 @@ const AsyncZipParser = goog.require('os.parse.AsyncZipParser');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');
-const ZIPParserConfig = goog.requireType('plugin.file.zip.ZIPParserConfig');
+const {default: ZIPParserConfig} = goog.requireType('plugin.file.zip.ZIPParserConfig');
 
 
 /**

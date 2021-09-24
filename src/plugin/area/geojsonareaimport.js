@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.area.GeoJSONAreaImport');
 
+import GeoJSONParser from '../file/geojson/geojsonparser.js';
 import {processFeatures} from './area.js';
 
 const RecordField = goog.require('os.data.RecordField');
@@ -8,7 +9,6 @@ const Importer = goog.require('os.im.Importer');
 const Module = goog.require('os.ui.Module');
 const osWindow = goog.require('os.ui.window');
 const {directive: wizardDirective, Controller: WizardController} = goog.require('os.ui.wiz.WizardUI');
-const GeoJSONParser = goog.require('plugin.file.geojson.GeoJSONParser');
 
 
 /**

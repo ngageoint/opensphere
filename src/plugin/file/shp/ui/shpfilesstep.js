@@ -1,23 +1,23 @@
 goog.declareModuleId('plugin.file.shp.ui.SHPFilesStep');
 
+import {ROOT} from '../../../../os/os.js';
+import * as ui from '../../../../os/ui/ui.js';
+import * as shp from '../shp.js';
+
 const googEvents = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
-
 const log = goog.require('goog.log');
-const {ROOT} = goog.require('os');
 const EventType = goog.require('os.events.EventType');
 const osFile = goog.require('os.file');
 const FileStorage = goog.require('os.file.FileStorage');
 const MappingManager = goog.require('os.im.mapping.MappingManager');
-const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const UrlMethod = goog.require('os.ui.file.method.UrlMethod');
 const AbstractWizardStep = goog.require('os.ui.wiz.step.AbstractWizardStep');
 const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
-const shp = goog.require('plugin.file.shp');
 
 const OSFile = goog.requireType('os.file.File');
-const SHPParserConfig = goog.requireType('plugin.file.shp.SHPParserConfig');
+const {default: SHPParserConfig} = goog.requireType('plugin.file.shp.SHPParserConfig');
 
 
 /**

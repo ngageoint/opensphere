@@ -7,8 +7,8 @@ const StyleType = goog.require('os.style.StyleType');
 const Module = goog.require('os.ui.Module');
 const {Controller: ExportDialogCtrl, directive: exportDialogDirective} = goog.require('os.ui.file.ExportDialogUI');
 const {create: createWindow} = goog.require('os.ui.window');
-const KMLExporter = goog.require('plugin.file.kml.KMLExporter');
-const SHPExporter = goog.require('plugin.file.shp.SHPExporter');
+const {default: KMLExporter} = goog.require('plugin.file.kml.KMLExporter');
+const {default: SHPExporter} = goog.require('plugin.file.shp.SHPExporter');
 
 
 /**

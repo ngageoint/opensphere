@@ -13,7 +13,7 @@ const PlacesManager = goog.require('plugin.places.PlacesManager');
 const QuickAddPlacesUI = goog.require('plugin.places.ui.QuickAddPlacesUI');
 
 const {PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
-const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**

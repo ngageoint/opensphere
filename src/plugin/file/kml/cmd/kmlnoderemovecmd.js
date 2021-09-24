@@ -1,9 +1,10 @@
 goog.declareModuleId('plugin.file.kml.cmd.KMLNodeRemove');
 
-const State = goog.require('os.command.State');
-const AbstractKMLNode = goog.require('plugin.file.kml.cmd.AbstractKMLNode');
+import AbstractKMLNode from './abstractkmlnodecmd.js';
 
-const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
+const State = goog.require('os.command.State');
+
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**

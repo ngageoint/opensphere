@@ -1,12 +1,13 @@
 goog.declareModuleId('plugin.file.geojson.GeoJSONSimpleStyleParser');
 
+import {mergeConfig, setFeatureStyle} from '../../../os/style/style.js';
+import GeoJSONParser from './geojsonparser.js';
+
 const log = goog.require('goog.log');
 const osColor = goog.require('os.color');
-const osStyle = goog.require('os.style');
 const StyleManager = goog.require('os.style.StyleManager');
 const StyleType = goog.require('os.style.StyleType');
 const maki = goog.require('os.ui.file.maki');
-const GeoJSONParser = goog.require('plugin.file.geojson.GeoJSONParser');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');
@@ -148,11 +149,11 @@ export default class GeoJSONSimpleStyleParser extends GeoJSONParser {
       if (this.sourceId) {
         // merge in the layer config to set anything that wasn't provided by the simplestyle spec
         var layerConfig = StyleManager.getInstance().getLayerConfig(this.sourceId);
-        osStyle.mergeConfig(layerConfig, config);
+        mergeConfig(layerConfig, config);
       }
 
       feature.set(StyleType.FEATURE, config);
-      osStyle.setFeatureStyle(feature);
+      setFeatureStyle(feature);
     } catch (e) {
       log.error(logger, 'Failed to style the feature!', e);
     }

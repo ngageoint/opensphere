@@ -18,7 +18,7 @@ const TimeRange = goog.require('os.time.TimeRange');
 const kml = goog.require('os.ui.file.kml');
 const xml = goog.require('os.xml');
 const {OS_NS} = goog.require('plugin.file.kml');
-const JsonField = goog.require('plugin.file.kml.JsonField');
+const {default: JsonField} = goog.require('plugin.file.kml.JsonField');
 
 const ITime = goog.requireType('os.time.ITime');
 

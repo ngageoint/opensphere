@@ -3,7 +3,7 @@ goog.require('plugin.file.kml.tour.Tour');
 
 
 describe('plugin.file.kml.tour.Tour', function() {
-  const Tour = goog.module.get('plugin.file.kml.tour.Tour');
+  const {default: Tour} = goog.module.get('plugin.file.kml.tour.Tour');
   const MockTourPrimitive = goog.module.get('plugin.file.kml.tour.MockTourPrimitive');
 
   // test globals

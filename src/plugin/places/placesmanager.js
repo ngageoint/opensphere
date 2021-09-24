@@ -20,14 +20,14 @@ const ImportEvent = goog.require('os.ui.im.ImportEvent');
 const ImportEventType = goog.require('os.ui.im.ImportEventType');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const ImportProcess = goog.require('os.ui.im.ImportProcess');
-const AbstractKMLManager = goog.require('plugin.file.kml.AbstractKMLManager');
+const {default: AbstractKMLManager} = goog.require('plugin.file.kml.AbstractKMLManager');
 const places = goog.require('plugin.places');
 const PlacesLayerConfig = goog.require('plugin.places.PlacesLayerConfig');
 
 const OsFile = goog.requireType('os.file.File');
-const KMLLayer = goog.requireType('plugin.file.kml.KMLLayer');
-const KMLSource = goog.requireType('plugin.file.kml.KMLSource');
-const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
+const {default: KMLLayer} = goog.requireType('plugin.file.kml.KMLLayer');
+const {default: KMLSource} = goog.requireType('plugin.file.kml.KMLSource');
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**

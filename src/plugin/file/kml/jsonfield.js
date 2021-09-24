@@ -8,7 +8,9 @@ const RecordField = goog.require('os.data.RecordField');
  * Fields that are known to contain specialized JSON data.
  * @type {!Array<string>}
  */
-export default [
+const JsonField = [
   annotation.OPTIONS_FIELD,
   RecordField.RING_OPTIONS
 ];
+
+export default JsonField;

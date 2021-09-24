@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.shp.data.DBFHeader');
 
-const DBFField = goog.requireType('plugin.file.shp.data.DBFField');
+const {default: DBFField} = goog.requireType('plugin.file.shp.data.DBFField');
 
 
 /**

@@ -4,16 +4,16 @@
  */
 goog.declareModuleId('plugin.file.kml.tour.parseTour');
 
+import Tour from './tour.js';
+import TourControl from './tourcontrol.js';
+import FlyTo from './tourflyto.js';
+import SoundCue from './toursoundcue.js';
+import Wait from './tourwait.js';
+
 const KML = goog.require('ol.format.KML');
 const XSD = goog.require('ol.format.XSD');
 const xml = goog.require('ol.xml');
 const FlightMode = goog.require('os.map.FlightMode');
-const FlyTo = goog.require('plugin.file.kml.tour.FlyTo');
-const SoundCue = goog.require('plugin.file.kml.tour.SoundCue');
-const Tour = goog.require('plugin.file.kml.tour.Tour');
-const TourControl = goog.require('plugin.file.kml.tour.TourControl');
-const Wait = goog.require('plugin.file.kml.tour.Wait');
-
 
 /**
  * Parses a KML Tour element into a tour object.

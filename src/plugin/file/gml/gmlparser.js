@@ -1,12 +1,12 @@
 goog.declareModuleId('plugin.file.gml.GMLParser');
 
+import * as osFeature from '../../../os/feature/feature.js';
+import * as osMap from '../../../os/map/map.js';
+
 const ol = goog.require('ol');
 const Fields = goog.require('os.Fields');
-
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 const RecordField = goog.require('os.data.RecordField');
-const osFeature = goog.require('os.feature');
-const osMap = goog.require('os.map');
 const BaseGMLParser = goog.require('os.ui.file.gml.GMLParser');
 
 const Feature = goog.requireType('ol.Feature');

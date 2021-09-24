@@ -20,14 +20,14 @@ const TimeInstant = goog.require('os.time.TimeInstant');
 const TimeRange = goog.require('os.time.TimeRange');
 const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
 const kml = goog.require('plugin.file.kml');
-const KMLField = goog.require('plugin.file.kml.KMLField');
-const KMLTreeExporter = goog.require('plugin.file.kml.KMLTreeExporter');
-const KMLNodeAdd = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
+const {default: KMLField} = goog.require('plugin.file.kml.KMLField');
+const {default: KMLTreeExporter} = goog.require('plugin.file.kml.KMLTreeExporter');
+const {default: KMLNodeAdd} = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
 const {METHOD_FIELD} = goog.require('os.interpolate');
 const {getKMLRoot, updateFolder, updatePlacemark} = goog.require('plugin.file.kml.ui');
 
-const KMLLayerNode = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
-const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
+const {default: KMLLayerNode} = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 const PlacesManager = goog.requireType('plugin.places.PlacesManager');
 
 

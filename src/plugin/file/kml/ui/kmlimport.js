@@ -1,11 +1,12 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLImport');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../../os/os.js';
+import KMLDescriptor from '../kmldescriptor.js';
+import KMLProvider from '../kmlprovider.js';
+
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const Module = goog.require('os.ui.Module');
 const AbstractFileImportCtrl = goog.require('os.ui.file.ui.AbstractFileImportCtrl');
-const KMLDescriptor = goog.require('plugin.file.kml.KMLDescriptor');
-const KMLProvider = goog.require('plugin.file.kml.KMLProvider');
 
 
 /**

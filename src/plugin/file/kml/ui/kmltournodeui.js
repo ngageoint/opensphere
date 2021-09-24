@@ -1,10 +1,10 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLTourNodeUI');
 
-const ui = goog.require('os.ui');
+import * as ui from '../../../../os/ui/ui.js';
+import EventType from '../tour/eventtype.js';
 
 const Module = goog.require('os.ui.Module');
 const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
-const EventType = goog.require('plugin.file.kml.tour.EventType');
 
 
 /**

@@ -1,20 +1,20 @@
 goog.declareModuleId('plugin.file.geojson.GeoJSONPlugin');
 
+import GeoJSONDescriptor from './geojsondescriptor.js';
+import GeoJSONExporter from './geojsonexporter.js';
+import GeoJSONImportUI from './geojsonimportui.js';
+import GeoJSONLayerConfig from './geojsonlayerconfig.js';
+import * as GeoJSONMixin from './geojsonmixin.js';
+import GeoJSONProvider from './geojsonprovider.js';
+import GeoJSONSimpleStyleParser from './geojsonsimplestyleparser.js';
+import * as mime from './mime.js';
+
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const exportManager = goog.require('os.ui.exportManager');
 const ImportManager = goog.require('os.ui.im.ImportManager');
-const GeoJSONDescriptor = goog.require('plugin.file.geojson.GeoJSONDescriptor');
-const GeoJSONExporter = goog.require('plugin.file.geojson.GeoJSONExporter');
-const GeoJSONImportUI = goog.require('plugin.file.geojson.GeoJSONImportUI');
-const GeoJSONLayerConfig = goog.require('plugin.file.geojson.GeoJSONLayerConfig');
-const GeoJSONProvider = goog.require('plugin.file.geojson.GeoJSONProvider');
-const GeoJSONSimpleStyleParser = goog.require('plugin.file.geojson.GeoJSONSimpleStyleParser');
-const mime = goog.require('plugin.file.geojson.mime');
-const GeoJSONMixin = goog.require('plugin.file.geojson.mixin');
-
 
 // Initialize the GeoJSON mixin.
 GeoJSONMixin.init();

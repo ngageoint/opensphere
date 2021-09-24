@@ -11,8 +11,8 @@ const Module = goog.require('os.ui.Module');
 const {Controller: FileImportCtrl} = goog.require('os.ui.file.FileImportUI');
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const osWindow = goog.require('os.ui.window');
-const KMLParser = goog.require('plugin.file.kml.KMLParser');
-const KMLNodeAdd = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
+const {default: KMLParser} = goog.require('plugin.file.kml.KMLParser');
+const {default: KMLNodeAdd} = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
 const {updatePlacemark} = goog.require('plugin.file.kml.ui');
 const {getPlacesManager} = goog.require('plugin.places');
 

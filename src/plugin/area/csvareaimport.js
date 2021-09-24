@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.area.CSVAreaImport');
 
+import CSVParser from '../file/csv/csvparser.js';
 import {processFeatures} from './area.js';
 
 const RecordField = goog.require('os.data.RecordField');
@@ -8,7 +9,6 @@ const Importer = goog.require('os.im.Importer');
 const Module = goog.require('os.ui.Module');
 const osWindow = goog.require('os.ui.window');
 const {directive: wizardDirective, Controller: WizardController} = goog.require('os.ui.wiz.WizardUI');
-const CSVParser = goog.require('plugin.file.csv.CSVParser');
 
 
 /**

@@ -22,8 +22,8 @@ describe('plugin.file.kml.KMLParser', function() {
   const TriState = goog.module.get('os.structs.TriState');
   const TimeInstant = goog.module.get('os.time.TimeInstant');
   const UrlMethod = goog.module.get('os.ui.file.method.UrlMethod');
-  const KMLParser = goog.module.get('plugin.file.kml.KMLParser');
-  const KMLNode = goog.module.get('plugin.file.kml.ui.KMLNode');
+  const {default: KMLParser} = goog.module.get('plugin.file.kml.KMLParser');
+  const {default: KMLNode} = goog.module.get('plugin.file.kml.ui.KMLNode');
   var testUrl = '/base/test/plugin/file/kml/kml_test.xml';
   var parser = new KMLParser();
   var kmlSource;

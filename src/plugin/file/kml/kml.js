@@ -4,8 +4,10 @@
  */
 goog.declareModuleId('plugin.file.kml');
 
-const Uri = goog.require('goog.Uri');
+import * as osStyle from '../../../os/style/style.js';
+import KMLField from './kmlfield.js';
 
+const Uri = goog.require('goog.Uri');
 const asserts = goog.require('goog.asserts');
 const NodeType = goog.require('goog.dom.NodeType');
 const googObject = goog.require('goog.object');
@@ -33,7 +35,6 @@ const geo = goog.require('os.geo');
 const net = goog.require('os.net');
 const CrossOrigin = goog.require('os.net.CrossOrigin');
 const osObject = goog.require('os.object');
-const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
 const TimeInstant = goog.require('os.time.TimeInstant');
@@ -41,7 +42,6 @@ const TimeRange = goog.require('os.time.TimeRange');
 const kml = goog.require('os.ui.file.kml');
 const slickColumn = goog.require('os.ui.slick.column');
 const xml = goog.require('os.xml');
-const KMLField = goog.require('plugin.file.kml.KMLField');
 
 
 /**

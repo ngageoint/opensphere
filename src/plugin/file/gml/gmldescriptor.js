@@ -1,10 +1,10 @@
 goog.declareModuleId('plugin.file.gml.GMLDescriptor');
 
+import GMLParserConfig from './gmlparserconfig.js';
+
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const layer = goog.require('os.layer');
 const LayerType = goog.require('os.layer.LayerType');
-const GMLParserConfig = goog.require('plugin.file.gml.GMLParserConfig');
-
 
 /**
  * GML file descriptor.

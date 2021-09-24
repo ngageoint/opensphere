@@ -1,7 +1,7 @@
 goog.module('plugin.track.ConfirmTrackUI');
 
 const {ROOT} = goog.require('os');
-const KMLField = goog.require('plugin.file.kml.KMLField');
+const {default: KMLField} = goog.require('plugin.file.kml.KMLField');
 const Module = goog.require('os.ui.Module');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
 const WindowEventType = goog.require('os.ui.WindowEventType');

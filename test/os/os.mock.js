@@ -1,8 +1,6 @@
 goog.declareModuleId('os.mock');
 
 goog.require('goog.events.EventTarget');
-goog.require('os');
-goog.require('os.Dispatcher');
 goog.require('os.MapContainer');
 goog.require('os.config');
 goog.require('os.config.Settings');
@@ -43,15 +41,15 @@ goog.require('os.ui.config.SettingsManager');
 goog.require('os.ui.ogc.OGCDescriptor');
 goog.require('test.os.config.SettingsUtil');
 
+import * as Dispatcher from '../../src/os/dispatcher.js';
+import * as os from '../../src/os/os.js';
 
 angular.element(document.body).append('<div id="map-container"></div');
 
 beforeEach(function() {
   const EventTarget = goog.module.get('goog.events.EventTarget');
-  const os = goog.module.get('os');
   const osMock = goog.module.get('os.mock');
   const osConfig = goog.module.get('os.config');
-  const Dispatcher = goog.module.get('os.Dispatcher');
   const MapContainer = goog.module.get('os.MapContainer');
   const SettingsObjectStorage = goog.module.get('os.config.storage.SettingsObjectStorage');
   const DataManager = goog.module.get('os.data.DataManager');

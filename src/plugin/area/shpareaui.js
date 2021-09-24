@@ -4,15 +4,15 @@ goog.require('os.ui.im.MergeAreaOptionUI');
 
 import {ROOT} from '../../os/os.js';
 import {apply} from '../../os/ui/ui.js';
+import SHPParser from '../file/shp/shpparser.js';
 import AreaImportCtrl from './areaimportctrl.js';
 
 const EventType = goog.require('os.events.EventType');
 const Importer = goog.require('os.im.Importer');
 const Module = goog.require('os.ui.Module');
 const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
-const SHPParser = goog.require('plugin.file.shp.SHPParser');
 
-const SHPParserConfig = goog.requireType('plugin.file.shp.SHPParserConfig');
+const {default: SHPParserConfig} = goog.requireType('plugin.file.shp.SHPParserConfig');
 
 
 /**

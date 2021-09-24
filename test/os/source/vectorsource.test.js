@@ -59,7 +59,7 @@ describe('os.source.Vector', function() {
   const TimeRange = goog.module.get('os.time.TimeRange');
   const DescriptionFormatter = goog.module.get('os.ui.formatter.DescriptionFormatter');
   const PropertiesFormatter = goog.module.get('os.ui.formatter.PropertiesFormatter');
-  const GeoJSONParser = goog.module.get('plugin.file.geojson.GeoJSONParser');
+  const {default: GeoJSONParser} = goog.module.get('plugin.file.geojson.GeoJSONParser');
 
   var dynamicFeatures = null;
   var features = null;

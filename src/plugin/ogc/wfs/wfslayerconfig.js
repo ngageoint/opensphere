@@ -20,7 +20,7 @@ const OGCFilterCleaner = goog.require('os.ogc.filter.OGCFilterCleaner');
 const DescribeFeatureLoader = goog.require('os.ogc.wfs.DescribeFeatureLoader');
 const WFSFormatter = goog.require('os.ogc.wfs.WFSFormatter');
 const ImportManager = goog.require('os.ui.im.ImportManager');
-const GeoJSONParser = goog.require('plugin.file.geojson.GeoJSONParser');
+const {default: GeoJSONParser} = goog.require('plugin.file.geojson.GeoJSONParser');
 const {Controller: ChooseTimeColumnController} = goog.require('plugin.ogc.ui.ChooseTimeColumnUI');
 const {directiveTag: ogcLayerNodeUi} = goog.require('plugin.ogc.ui.OGCLayerNodeUI');
 

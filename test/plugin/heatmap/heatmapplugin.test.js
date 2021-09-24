@@ -30,7 +30,7 @@ describe('plugin.heatmap.HeatmapPlugin', function() {
   const HeatmapPlugin = goog.module.get('plugin.heatmap.HeatmapPlugin');
   const SynchronizerType = goog.module.get('plugin.heatmap.SynchronizerType');
   const heatmapMenu = goog.module.get('plugin.heatmap.menu');
-  const HeatmapSynchronizer = goog.module.get('plugin.cesium.sync.HeatmapSynchronizer');
+  const {default: HeatmapSynchronizer} = goog.module.get('plugin.cesium.sync.HeatmapSynchronizer');
 
   var createLayer = function() {
     var options = {

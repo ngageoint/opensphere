@@ -1,7 +1,12 @@
 goog.declareModuleId('plugin.file.kml.KMLExporter');
 
-const log = goog.require('goog.log');
+import * as osFeature from '../../../os/feature/feature.js';
+import * as osSource from '../../../os/source/source.js';
+import * as osStyle from '../../../os/style/style.js';
+import * as pluginFileKmlExport from './kmlexport.js';
+import {directiveTag as kmlExportUi} from './ui/kmlexportui.js';
 
+const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
 const googString = goog.require('goog.string');
 const olArray = goog.require('ol.array');
@@ -10,20 +15,15 @@ const GeometryType = goog.require('ol.geom.GeometryType');
 const Point = goog.require('ol.geom.Point');
 const DataManager = goog.require('os.data.DataManager');
 const RecordField = goog.require('os.data.RecordField');
-const osFeature = goog.require('os.feature');
 const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const osImplements = goog.require('os.implements');
 const LayerId = goog.require('os.layer.LayerId');
-const osSource = goog.require('os.source');
-const osStyle = goog.require('os.style');
 const StyleManager = goog.require('os.style.StyleManager');
 const StyleType = goog.require('os.style.StyleType');
 const ITime = goog.require('os.time.ITime');
 const kml = goog.require('os.ui.file.kml');
 const AbstractKMLExporter = goog.require('os.ui.file.kml.AbstractKMLExporter');
 const xml = goog.require('os.xml');
-const pluginFileKmlExport = goog.require('plugin.file.kml.export');
-const {directiveTag: kmlExportUi} = goog.require('plugin.file.kml.ui.KMLExportUI');
 
 const Feature = goog.requireType('ol.Feature');
 const VectorSource = goog.requireType('os.source.Vector');

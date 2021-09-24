@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.file.geojson.GeoJSONLayerConfig');
 
+import GeoJSONParserConfig from '../geojsonparserconfig.js';
+
 const AltMapping = goog.require('os.im.mapping.AltMapping');
 const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
 const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
@@ -9,9 +11,7 @@ const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
 const FeatureImporter = goog.requireType('os.im.FeatureImporter');
 const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
 const ImportManager = goog.require('os.ui.im.ImportManager');
-const GeoJSONParser = goog.requireType('plugin.file.geojson.GeoJSONParser');
-const GeoJSONParserConfig = goog.require('plugin.file.geojson.GeoJSONParserConfig');
-
+const {default: GeoJSONParser} = goog.requireType('plugin.file.geojson.GeoJSONParser');
 
 /**
  */

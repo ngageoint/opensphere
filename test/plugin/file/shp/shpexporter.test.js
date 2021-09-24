@@ -11,7 +11,7 @@ describe('plugin.file.shp.SHPExporter', function() {
   const LineString = goog.module.get('ol.geom.LineString');
   const Point = goog.module.get('ol.geom.Point');
   const Polygon = goog.module.get('ol.geom.Polygon');
-  const SHPExporter = goog.module.get('plugin.file.shp.SHPExporter');
+  const {default: SHPExporter} = goog.module.get('plugin.file.shp.SHPExporter');
   var ex = new SHPExporter();
   var lineFeature;
   var pointFeature;

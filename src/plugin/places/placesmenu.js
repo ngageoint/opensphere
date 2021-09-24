@@ -19,9 +19,9 @@ const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 const layerMenu = goog.require('os.ui.menu.layer');
 const mapMenu = goog.require('os.ui.menu.map');
 const spatial = goog.require('os.ui.menu.spatial');
-const KMLLayer = goog.require('plugin.file.kml.KMLLayer');
-const KMLNodeAdd = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
-const KMLNodeRemove = goog.require('plugin.file.kml.cmd.KMLNodeRemove');
+const {default: KMLLayer} = goog.require('plugin.file.kml.KMLLayer');
+const {default: KMLNodeAdd} = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
+const {default: KMLNodeRemove} = goog.require('plugin.file.kml.cmd.KMLNodeRemove');
 const {
   createOrEditFolder,
   createOrEditPlace,
@@ -29,8 +29,8 @@ const {
   updateFolder,
   updatePlacemark
 } = goog.require('plugin.file.kml.ui');
-const KMLLayerNode = goog.require('plugin.file.kml.ui.KMLLayerNode');
-const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
+const {default: KMLLayerNode} = goog.require('plugin.file.kml.ui.KMLLayerNode');
+const {default: KMLNode} = goog.require('plugin.file.kml.ui.KMLNode');
 const places = goog.require('plugin.places');
 const EventType = goog.require('plugin.places.EventType');
 const PlacesManager = goog.require('plugin.places.PlacesManager');

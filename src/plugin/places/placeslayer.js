@@ -1,7 +1,7 @@
 goog.module('plugin.places.PlacesLayer');
 
 const fn = goog.require('os.fn');
-const KMLLayer = goog.require('plugin.file.kml.KMLLayer');
+const {default: KMLLayer} = goog.require('plugin.file.kml.KMLLayer');
 
 
 /**

@@ -1,13 +1,13 @@
 goog.declareModuleId('plugin.file.geojson.GeoJSONExporter');
 
+import {PROJECTION} from '../../../os/map/map.js';
+
 const log = goog.require('goog.log');
 const GeoJSON = goog.require('ol.format.GeoJSON');
 const Fields = goog.require('os.Fields');
 const RecordField = goog.require('os.data.RecordField');
 const AbstractExporter = goog.require('os.ex.AbstractExporter');
 const instanceOf = goog.require('os.instanceOf');
-const osMap = goog.require('os.map');
-
 
 const osProj = goog.require('os.proj');
 const TimeRange = goog.require('os.time.TimeRange');
@@ -78,7 +78,7 @@ export default class GeoJSONExporter extends AbstractExporter {
 
     var format = new GeoJSON();
     this.output = format.writeFeatures(this.items, {
-      featureProjection: osMap.PROJECTION,
+      featureProjection: PROJECTION,
       dataProjection: osProj.EPSG4326,
       fields: this.fields
     });

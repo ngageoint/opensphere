@@ -1,12 +1,12 @@
 goog.declareModuleId('plugin.area.GeoJSONAreaImportUI');
 
+import GeoJSONParserConfig from '../file/geojsonparserconfig.js';
 import {directiveTag as areaImportUi} from './geojsonareaimport.js';
 
 const AreaOptionsStep = goog.require('os.query.ui.AreaOptionsStep');
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const osWindow = goog.require('os.ui.window');
 const windowSelector = goog.require('os.ui.windowSelector');
-const GeoJSONParserConfig = goog.require('plugin.file.geojson.GeoJSONParserConfig');
 
 
 /**

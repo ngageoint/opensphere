@@ -17,7 +17,7 @@ describe('plugin.file.zip.ZIPParser', function() {
   const googEvents = goog.module.get('goog.events');
   const EventType = goog.module.get('os.events.EventType');
   const UrlMethod = goog.module.get('os.ui.file.method.UrlMethod');
-  const ZIPParser = goog.module.get('plugin.file.zip.ZIPParser');
+  const {default: ZIPParser} = goog.module.get('plugin.file.zip.ZIPParser');
   var testUrl = '/base/test/resources/zip/test-csv.zip';
   var parser = new ZIPParser();
 

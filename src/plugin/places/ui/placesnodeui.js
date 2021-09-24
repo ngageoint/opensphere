@@ -7,7 +7,7 @@ const {Icon, getPlacesRoot} = goog.require('plugin.places');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
 
 const {FolderOptions, PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
-const KMLLayerNode = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
+const {default: KMLLayerNode} = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
 
 
 /**

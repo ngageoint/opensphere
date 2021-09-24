@@ -15,7 +15,7 @@ describe('plugin.file.kml.ui.placemarkedit', function() {
   const DynamicFeature = goog.module.get('os.feature.DynamicFeature');
   const AnyDateType = goog.module.get('os.ui.datetime.AnyDateType');
   const kmlUI = goog.module.get('plugin.file.kml.ui');
-  const KMLNode = goog.module.get('plugin.file.kml.ui.KMLNode');
+  const {default: KMLNode} = goog.module.get('plugin.file.kml.ui.KMLNode');
   const PlacesManager = goog.module.get('plugin.places.PlacesManager');
   const {Controller: PlacemarkEditController} = goog.module.get('plugin.file.kml.ui.PlacemarkEditUI');
 

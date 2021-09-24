@@ -1,17 +1,18 @@
 goog.declareModuleId('plugin.file.kml.KMLImporter');
 
+import * as osFeature from '../../../os/feature/feature.js';
+import * as osStyle from '../../../os/style/style.js';
+
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
-const osFeature = goog.require('os.feature');
 const FeatureImporter = goog.require('os.im.FeatureImporter');
-const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const KMLParser = goog.requireType('plugin.file.kml.KMLParser');
-const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
+const {default: KMLParser} = goog.requireType('plugin.file.kml.KMLParser');
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**

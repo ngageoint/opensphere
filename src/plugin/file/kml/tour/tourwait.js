@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.file.kml.tour.Wait');
 
-const Promise = goog.require('goog.Promise');
-const AbstractTourPrimitive = goog.require('plugin.file.kml.tour.AbstractTourPrimitive');
+import AbstractTourPrimitive from './abstracttourprimitive.js';
 
+const Promise = goog.require('goog.Promise');
 
 /**
  * Holds the camera still for a specified amount of time.

@@ -1,13 +1,16 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLTreeExportUI');
 
+import {ROOT} from '../../../../os/os.js';
+import KMLTreeExporter from '../kmltreeexporter.js';
+
 const asserts = goog.require('goog.asserts');
-const {ROOT} = goog.require('os');
 const config = goog.require('os.config');
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const exportManager = goog.require('os.ui.exportManager');
 const osWindow = goog.require('os.ui.window');
-const KMLTreeExporter = goog.require('plugin.file.kml.KMLTreeExporter');
+
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
@@ -41,7 +44,7 @@ Module.directive('kmltreeexport', [directive]);
 
 /**
  * Launch a KML tree export dialog.
- * @param {!plugin.file.kml.ui.KMLNode} rootNode The root node to export.
+ * @param {!KMLNode} rootNode The root node to export.
  * @param {string=} opt_winLabel The window label
  * @param {os.ex.ExportOptions=} opt_addOptions
  * @param {string=} opt_windowTooltip The tooltip for the window, if any.
@@ -97,7 +100,7 @@ export class Controller {
      */
     this.element = $element;
 
-    var root = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['rootNode']);
+    var root = /** @type {KMLNode} */ (this.scope['rootNode']);
 
     /**
      * @type {string}
@@ -192,7 +195,7 @@ export class Controller {
     asserts.assert(this['persister'] != null, 'persister is not defined');
     asserts.assert(!!this['title'], 'export title is empty/null');
 
-    var root = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['rootNode']);
+    var root = /** @type {KMLNode} */ (this.scope['rootNode']);
     if (root) {
       var items = root.getChildren() || [root];
       items = this['additionalOptions'] ? this.scope['exportData'] : items;

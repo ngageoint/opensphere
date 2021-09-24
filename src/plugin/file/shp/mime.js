@@ -1,11 +1,10 @@
 goog.declareModuleId('plugin.file.shp.mime');
 
-const Promise = goog.require('goog.Promise');
+import * as shp from './shp.js';
 
+const Promise = goog.require('goog.Promise');
 const mime = goog.require('os.file.mime');
 const zip = goog.require('os.file.mime.zip');
-const shp = goog.require('plugin.file.shp');
-
 
 /**
  * @type {string}

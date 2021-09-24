@@ -1,11 +1,12 @@
 goog.declareModuleId('plugin.file.kml.tour.Tour');
 
+import EventType from './eventtype.js';
+
 const nextTick = goog.require('goog.async.nextTick');
 const EventTarget = goog.require('goog.events.EventTarget');
-const EventType = goog.require('plugin.file.kml.tour.EventType');
 
 const Promise = goog.requireType('goog.Promise');
-const AbstractTourPrimitive = goog.requireType('plugin.file.kml.tour.AbstractTourPrimitive');
+const {default: AbstractTourPrimitive} = goog.requireType('plugin.file.kml.tour.AbstractTourPrimitive');
 
 
 /**

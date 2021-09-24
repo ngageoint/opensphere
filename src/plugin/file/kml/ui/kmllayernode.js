@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLLayerNode');
 
+import KMLSource from '../kmlsource.js';
+
 const googEvents = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
@@ -7,11 +9,10 @@ const olExtent = goog.require('ol.extent');
 const LayerNode = goog.require('os.data.LayerNode');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const PropertyChange = goog.require('os.source.PropertyChange');
-const KMLSource = goog.require('plugin.file.kml.KMLSource');
 
 const VectorLayer = goog.requireType('os.layer.Vector');
-const KMLLayer = goog.requireType('plugin.file.kml.KMLLayer');
-const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
+const {default: KMLLayer} = goog.requireType('plugin.file.kml.KMLLayer');
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**

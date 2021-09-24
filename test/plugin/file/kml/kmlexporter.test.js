@@ -24,7 +24,7 @@ describe('plugin.file.kml.KMLExporter', function() {
   const TimeInstant = goog.module.get('os.time.TimeInstant');
   const TimeRange = goog.module.get('os.time.TimeRange');
   const AbstractKMLExporter = goog.module.get('os.ui.file.kml.AbstractKMLExporter');
-  const KMLExporter = goog.module.get('plugin.file.kml.KMLExporter');
+  const {default: KMLExporter} = goog.module.get('plugin.file.kml.KMLExporter');
   // the layer/source identifier for these tests
   var testId = 'plugin_file_kml_KMLExporter';
   var delim = AbstractKMLExporter.LABEL_DELIMITER;

@@ -1,6 +1,6 @@
 goog.module('plugin.file.kml.tour.MockTourPrimitive');
 
-const AbstractTourPrimitive = goog.require('plugin.file.kml.tour.AbstractTourPrimitive');
+const {default: AbstractTourPrimitive} = goog.require('plugin.file.kml.tour.AbstractTourPrimitive');
 
 
 /**

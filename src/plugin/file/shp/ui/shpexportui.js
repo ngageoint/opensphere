@@ -1,6 +1,7 @@
 goog.declareModuleId('plugin.file.shp.ui.SHPExportUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../../os/os.js';
+
 const Module = goog.require('os.ui.Module');
 
 

@@ -14,10 +14,11 @@ const WindowEventType = goog.require('os.ui.WindowEventType');
 const osWindow = goog.require('os.ui.window');
 const windowSelector = goog.require('os.ui.windowSelector');
 const AltitudeMode = goog.require('os.webgl.AltitudeMode');
-const KMLNodeRemove = goog.require('plugin.file.kml.cmd.KMLNodeRemove');
+const {default: KMLNodeRemove} = goog.require('plugin.file.kml.cmd.KMLNodeRemove');
 const places = goog.require('plugin.places');
 
 const Method = goog.requireType('os.interpolate.Method');
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
@@ -81,7 +82,7 @@ class Controller extends Disposable {
 
     /**
      * The root node to add places to.
-     * @type {plugin.file.kml.ui.KMLNode}
+     * @type {KMLNode}
      */
     this.root = $scope['root'];
 
@@ -94,7 +95,7 @@ class Controller extends Disposable {
 
     /**
      * The array of added nodes. This reference is kept around for the cancel case.
-     * @type {Array<!plugin.file.kml.ui.KMLNode>}
+     * @type {Array<!KMLNode>}
      * @protected
      */
     this.added = [];
@@ -239,7 +240,7 @@ class Controller extends Disposable {
 
 /**
  * Launches the quick add places dialog (or brings it to the front if it already exists).
- * @param {plugin.file.kml.ui.KMLNode=} opt_root Optional root KML node.
+ * @param {KMLNode=} opt_root Optional root KML node.
  * @param {ol.geom.SimpleGeometry=} opt_initial Optional initial geometry to add to the set of places.
  */
 const launch = (opt_root, opt_initial) => {

@@ -10,11 +10,11 @@ goog.require('plugin.file.kml.tour.parseTour');
 describe('plugin.file.kml.tour.parseTour', function() {
   const xml = goog.module.get('ol.xml');
   const FlightMode = goog.module.get('os.map.FlightMode');
-  const FlyTo = goog.module.get('plugin.file.kml.tour.FlyTo');
-  const SoundCue = goog.module.get('plugin.file.kml.tour.SoundCue');
-  const TourControl = goog.module.get('plugin.file.kml.tour.TourControl');
-  const Wait = goog.module.get('plugin.file.kml.tour.Wait');
-  const parseTour = goog.module.get('plugin.file.kml.tour.parseTour');
+  const {default: FlyTo} = goog.module.get('plugin.file.kml.tour.FlyTo');
+  const {default: SoundCue} = goog.module.get('plugin.file.kml.tour.SoundCue');
+  const {default: TourControl} = goog.module.get('plugin.file.kml.tour.TourControl');
+  const {default: Wait} = goog.module.get('plugin.file.kml.tour.Wait');
+  const {default: parseTour} = goog.module.get('plugin.file.kml.tour.parseTour');
   // match opening/closing tags for a KML tour element, with a trailing space (has attributes) or GT (no attributes)
   var tourElRegexp = /(<\/?)(Tour|Playlist|FlyTo|SoundCue|TourControl|Wait|delayedStart|duration|flyToMode)([ >])/g;
 

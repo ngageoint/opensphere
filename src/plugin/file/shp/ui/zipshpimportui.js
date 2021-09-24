@@ -1,8 +1,13 @@
 goog.declareModuleId('plugin.file.shp.ui.ZipSHPImportUI');
 
+import * as mime from '../mime.js';
+import SHPDescriptor from '../shpdescriptor.js';
+import SHPParserConfig from '../shpparserconfig.js';
+import SHPProvider from '../shpprovider.js';
+import {directiveTag as shpImportUi} from './shpimport.js';
+
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
-
 const DataManager = goog.require('os.data.DataManager');
 const osFile = goog.require('os.file');
 const MappingManager = goog.require('os.im.mapping.MappingManager');
@@ -11,11 +16,6 @@ const osWindow = goog.require('os.ui.window');
 const windowSelector = goog.require('os.ui.windowSelector');
 const OptionsStep = goog.require('os.ui.wiz.OptionsStep');
 const TimeStep = goog.require('os.ui.wiz.step.TimeStep');
-const SHPDescriptor = goog.require('plugin.file.shp.SHPDescriptor');
-const SHPParserConfig = goog.require('plugin.file.shp.SHPParserConfig');
-const SHPProvider = goog.require('plugin.file.shp.SHPProvider');
-const mime = goog.require('plugin.file.shp.mime');
-const {directiveTag: shpImportUi} = goog.require('plugin.file.shp.ui.SHPImport');
 
 const OSFile = goog.requireType('os.file.File');
 

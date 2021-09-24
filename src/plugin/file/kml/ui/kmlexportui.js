@@ -2,7 +2,8 @@ goog.declareModuleId('plugin.file.kml.ui.KMLExportUI');
 
 goog.require('os.ui.icon.IconPickerUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../../os/os.js';
+
 const Module = goog.require('os.ui.Module');
 const kml = goog.require('os.ui.file.kml');
 

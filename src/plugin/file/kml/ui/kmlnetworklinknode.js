@@ -1,5 +1,9 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLNetworkLinkNode');
 
+import KMLSourceEvent from '../kmlsourceevent.js';
+import KMLNode from './kmlnode.js';
+import NetworkLinkIcons from './networklinkicons.js';
+
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
@@ -19,12 +23,9 @@ const TriState = goog.require('os.structs.TriState');
 const osThreadEventType = goog.require('os.thread.EventType');
 const time = goog.require('os.time');
 const kml = goog.require('os.ui.file.kml');
-const KMLSourceEvent = goog.require('plugin.file.kml.KMLSourceEvent');
-const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
-const NetworkLinkIcons = goog.require('plugin.file.kml.ui.NetworkLinkIcons');
 
 const Logger = goog.requireType('goog.log.Logger');
-const KMLImporter = goog.requireType('plugin.file.kml.KMLImporter');
+const {default: KMLImporter} = goog.requireType('plugin.file.kml.KMLImporter');
 
 
 /**

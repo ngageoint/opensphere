@@ -3,7 +3,7 @@ goog.module('plugin.places.PlacesSource');
 const osFeature = goog.require('os.feature');
 const interpolate = goog.require('os.interpolate');
 const track = goog.require('os.track');
-const KMLSource = goog.require('plugin.file.kml.KMLSource');
+const {default: KMLSource} = goog.require('plugin.file.kml.KMLSource');
 const {updatePlacemark} = goog.require('plugin.file.kml.ui');
 
 
