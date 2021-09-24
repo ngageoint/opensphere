@@ -33,9 +33,9 @@ describe('plugin.heatmap.Heatmap', function() {
   const LayerType = goog.module.get('os.layer.LayerType');
   const VectorSource = goog.module.get('os.source.Vector');
   const heatmap = goog.module.get('plugin.heatmap');
-  const HeatmapLayerConfig = goog.module.get('plugin.heatmap.HeatmapLayerConfig');
-  const HeatmapPropertyType = goog.module.get('plugin.heatmap.HeatmapPropertyType');
-  const SynchronizerType = goog.module.get('plugin.heatmap.SynchronizerType');
+  const {default: HeatmapLayerConfig} = goog.module.get('plugin.heatmap.HeatmapLayerConfig');
+  const {default: HeatmapPropertyType} = goog.module.get('plugin.heatmap.HeatmapPropertyType');
+  const {default: SynchronizerType} = goog.module.get('plugin.heatmap.SynchronizerType');
 
   var createLayer = function() {
     var options = {

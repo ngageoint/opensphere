@@ -31,8 +31,8 @@ describe('plugin.heatmap', function() {
   const VectorSource = goog.module.get('os.source.Vector');
   const style = goog.module.get('os.style');
   const heatmap = goog.module.get('plugin.heatmap');
-  const HeatmapField = goog.module.get('plugin.heatmap.HeatmapField');
-  const HeatmapLayerConfig = goog.module.get('plugin.heatmap.HeatmapLayerConfig');
+  const {default: HeatmapField} = goog.module.get('plugin.heatmap.HeatmapField');
+  const {default: HeatmapLayerConfig} = goog.module.get('plugin.heatmap.HeatmapLayerConfig');
 
   var createLayer = function() {
     var options = {

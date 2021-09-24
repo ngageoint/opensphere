@@ -1,14 +1,17 @@
 goog.declareModuleId('plugin.heatmap');
 
+import * as dispatcher from '../../os/dispatcher.js';
+import * as osFeature from '../../os/feature/feature.js';
+import {ROOT} from '../../os/os.js';
+import * as style from '../../os/style/style.js';
+import HeatmapField from './heatmapfield.js';
+
 const dispose = goog.require('goog.dispose');
 const googString = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
 const dom = goog.require('ol.dom');
 const olExtent = goog.require('ol.extent');
 const Point = goog.require('ol.geom.Point');
-
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
@@ -17,7 +20,6 @@ const RecordField = goog.require('os.data.RecordField');
 const LayerConfigEvent = goog.require('os.events.LayerConfigEvent');
 const LayerConfigEventType = goog.require('os.events.LayerConfigEventType');
 const ZipExporter = goog.require('os.ex.ZipExporter');
-const osFeature = goog.require('os.feature');
 const OSFile = goog.require('os.file.File');
 const FilePersistence = goog.require('os.file.persist.FilePersistence');
 const fn = goog.require('os.fn');
@@ -25,17 +27,15 @@ const Job = goog.require('os.job.Job');
 const JobEventType = goog.require('os.job.JobEventType');
 const LayerType = goog.require('os.layer.LayerType');
 const osOlFeature = goog.require('os.ol.feature');
-const style = goog.require('os.style');
 const exportManager = goog.require('os.ui.exportManager');
 const worker = goog.require('os.worker');
-const HeatmapField = goog.require('plugin.heatmap.HeatmapField');
 
 const OLLayer = goog.requireType('ol.layer.Layer');
 const ExportOptions = goog.requireType('os.ex.ExportOptions');
 const JobEvent = goog.requireType('os.job.JobEvent');
 const ILayer = goog.requireType('os.layer.ILayer');
 const ISource = goog.requireType('os.source.ISource');
-const HeatmapLayer = goog.requireType('plugin.heatmap.Heatmap');
+const {default: HeatmapLayer} = goog.requireType('plugin.heatmap.Heatmap');
 
 
 /**

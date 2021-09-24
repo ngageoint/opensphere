@@ -3,6 +3,7 @@ goog.declareModuleId('plugin.cesium.CesiumRenderer');
 import * as dispatcher from '../../os/dispatcher.js';
 import {getGeometries} from '../../os/feature/feature.js';
 import {WEBGL_CANVAS_CLASS} from '../../os/map/map.js';
+import HeatmapSynchronizerType from '../heatmap/heatmapsynchronizertype.js';
 import {
   DEFAULT_FOG_DENSITY,
   ID,
@@ -49,7 +50,6 @@ const terrain = goog.require('os.map.terrain');
 const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
 const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 const SynchronizerManager = goog.require('os.webgl.SynchronizerManager');
-const HeatmapSynchronizerType = goog.require('plugin.heatmap.SynchronizerType');
 
 const OLMap = goog.requireType('ol.Map');
 const AbstractSynchronizer = goog.requireType('olcs.AbstractSynchronizer');

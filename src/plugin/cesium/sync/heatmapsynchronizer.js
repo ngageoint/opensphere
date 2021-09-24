@@ -1,6 +1,9 @@
 goog.declareModuleId('plugin.cesium.sync.HeatmapSynchronizer');
 
 import * as dispatcher from '../../../os/dispatcher.js';
+import {EXTENT_SCALE_FACTOR} from '../../heatmap/heatmap.js';
+import HeatmapField from '../../heatmap/heatmapfield.js';
+import HeatmapPropertyType from '../../heatmap/heatmappropertytype.js';
 import {updateCesiumLayerProperties} from '../cesium.js';
 import CesiumSynchronizer from './cesiumsynchronizer.js';
 
@@ -15,15 +18,12 @@ const MapEvent = goog.require('os.MapEvent');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const PropertyChange = goog.require('os.layer.PropertyChange');
 const events = goog.require('os.ol.events');
-const {EXTENT_SCALE_FACTOR} = goog.require('plugin.heatmap');
-const HeatmapField = goog.require('plugin.heatmap.HeatmapField');
-const HeatmapPropertyType = goog.require('plugin.heatmap.HeatmapPropertyType');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const OLObject = goog.requireType('ol.Object');
 const PluggableMap = goog.requireType('ol.PluggableMap');
 const MapCanvasRenderer = goog.requireType('ol.renderer.canvas.Map');
-const Heatmap = goog.requireType('plugin.heatmap.Heatmap');
+const {default: Heatmap} = goog.requireType('plugin.heatmap.Heatmap');
 
 
 /**

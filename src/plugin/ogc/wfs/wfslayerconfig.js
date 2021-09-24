@@ -35,7 +35,7 @@ const WFSTypeConfig = goog.requireType('os.ogc.WFSTypeConfig');
 const IParser = goog.requireType('os.parse.IParser');
 const ISource = goog.requireType('os.source.ISource');
 const RequestSource = goog.requireType('os.source.Request');
-const GMLParser = goog.requireType('plugin.file.gml.GMLParser');
+const {default: GMLParser} = goog.requireType('plugin.file.gml.GMLParser');
 
 
 /**

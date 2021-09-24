@@ -1,16 +1,16 @@
 goog.declareModuleId('plugin.heatmap.HeatmapLayerUI');
 
+import {ROOT} from '../../os/os.js';
+import Gradient from './cmd/gradientcmd.js';
+import Intensity from './cmd/intensitycmd.js';
+import Size from './cmd/sizecmd.js';
+import HeatmapPropertyType from './heatmappropertytype.js';
 
 const googObject = goog.require('goog.object');
 const Delay = goog.require('goog.async.Delay');
-const {ROOT} = goog.require('os');
 const osColor = goog.require('os.color');
 const Module = goog.require('os.ui.Module');
 const {Controller: DefaultLayerUICtrl} = goog.require('os.ui.layer.DefaultLayerUI');
-const HeatmapPropertyType = goog.require('plugin.heatmap.HeatmapPropertyType');
-const Gradient = goog.require('plugin.heatmap.cmd.Gradient');
-const Intensity = goog.require('plugin.heatmap.cmd.Intensity');
-const Size = goog.require('plugin.heatmap.cmd.Size');
 
 
 /**
