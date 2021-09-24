@@ -1,10 +1,11 @@
-goog.module('plugin.openpage.Handler');
+goog.declareModuleId('plugin.openpage.Handler');
+
+import {TYPE} from './openpage.js';
 
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const googString = goog.require('goog.string');
 const LayerAdd = goog.require('os.command.LayerAdd');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
-const {TYPE} = goog.require('plugin.openpage');
 
 const IMessageHandler = goog.requireType('os.xt.IMessageHandler');
 
@@ -12,7 +13,7 @@ const IMessageHandler = goog.requireType('os.xt.IMessageHandler');
 /**
  * @implements {IMessageHandler}
  */
-class Handler {
+export default class Handler {
   /**
    * Constructor.
    */
@@ -55,5 +56,3 @@ class Handler {
     }
   }
 }
-
-exports = Handler;

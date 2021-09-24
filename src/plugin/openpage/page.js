@@ -1,10 +1,10 @@
-goog.module('plugin.openpage.Page');
+goog.declareModuleId('plugin.openpage.Page');
+
+import {NAMESPACE} from '../../os/os.js';
+import {TYPE} from './openpage.js';
 
 const safe = goog.require('goog.dom.safe');
-const {NAMESPACE} = goog.require('os');
 const Peer = goog.require('os.xt.Peer');
-const {TYPE} = goog.require('plugin.openpage');
-
 
 var type = TYPE;
 
