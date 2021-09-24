@@ -3,7 +3,6 @@ goog.require('ol.Feature');
 goog.require('os.annotation');
 goog.require('os.feature.DynamicFeature');
 goog.require('os.ui.datetime.AnyDateType');
-goog.require('plugin.file.kml.ui');
 goog.require('plugin.file.kml.ui.KMLNode');
 goog.require('plugin.file.kml.ui.PlacemarkEditUI');
 goog.require('plugin.places.PlacesManager');
@@ -14,7 +13,6 @@ describe('plugin.file.kml.ui.placemarkedit', function() {
   const osAnnotation = goog.module.get('os.annotation');
   const DynamicFeature = goog.module.get('os.feature.DynamicFeature');
   const AnyDateType = goog.module.get('os.ui.datetime.AnyDateType');
-  const kmlUI = goog.module.get('plugin.file.kml.ui');
   const {default: KMLNode} = goog.module.get('plugin.file.kml.ui.KMLNode');
   const PlacesManager = goog.module.get('plugin.places.PlacesManager');
   const {Controller: PlacemarkEditController} = goog.module.get('plugin.file.kml.ui.PlacemarkEditUI');
@@ -258,29 +256,28 @@ describe('plugin.file.kml.ui.placemarkedit', function() {
   });
 
   it('should accept new feature', function() {
-    spyOn(kmlUI, 'updatePlacemark');
     var formCtrl = new PlacemarkEditController(scope, element, timeout);
+    formCtrl.options.node = new KMLNode();
 
     formCtrl.accept();
 
     expect(formCtrl['annotationOptions'].editable).toBe(true);
-    expect(kmlUI.updatePlacemark).toHaveBeenCalled();
+    expect(formCtrl.options.node.getFeature()).toBe(formCtrl.options.feature);
   });
 
   it('should accept new feature with no labels', function() {
-    spyOn(kmlUI, 'updatePlacemark');
     var formCtrl = new PlacemarkEditController(scope, element, timeout);
+    formCtrl.options.node = new KMLNode();
 
     formCtrl['labels'] = null;
     formCtrl.accept();
 
     expect(formCtrl['annotationOptions'].editable).toBe(true);
-    expect(kmlUI.updatePlacemark).toHaveBeenCalled();
     expect(formCtrl['labels']).toBe(null);
+    expect(formCtrl.options.node.getFeature()).toBe(formCtrl.options.feature);
   });
 
   it('should accept new feature with no labels', function() {
-    spyOn(kmlUI, 'updatePlacemark');
     var feature = new Feature();
     feature.setId(getUid(feature));
     var options = {
@@ -290,10 +287,11 @@ describe('plugin.file.kml.ui.placemarkedit', function() {
     scope['options'] = options;
 
     var formCtrl = new PlacemarkEditController(scope, element, timeout);
+    formCtrl.options.node = new KMLNode();
 
     formCtrl.accept();
 
     expect(formCtrl['annotationOptions'].editable).toBe(true);
-    expect(kmlUI.updatePlacemark).toHaveBeenCalled();
+    expect(formCtrl.options.node.getFeature()).toBe(feature);
   });
 });
