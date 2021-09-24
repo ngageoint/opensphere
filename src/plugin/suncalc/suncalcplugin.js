@@ -1,6 +1,10 @@
-goog.module('plugin.suncalc.SunCalcPlugin');
+goog.declareModuleId('plugin.suncalc.SunCalcPlugin');
 
-goog.require('plugin.suncalc.LightStripUI');
+import './lightstrip.js';
+
+import LightStripSettings from './lightstripsettings.js';
+import {ID} from './suncalc.js';
+import {directiveTag as sunCalcEl} from './suncalcui.js';
 
 const MapContainer = goog.require('os.MapContainer');
 const DisplaySetting = goog.require('os.config.DisplaySetting');
@@ -10,9 +14,6 @@ const SettingsManager = goog.require('os.ui.config.SettingsManager');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 const mapMenu = goog.require('os.ui.menu.map');
 const osWindow = goog.require('os.ui.window');
-const {ID} = goog.require('plugin.suncalc');
-const LightStripSettings = goog.require('plugin.suncalc.LightStripSettings');
-const {directiveTag: sunCalcEl} = goog.require('plugin.suncalc.SunCalcUI');
 
 const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 const MenuItem = goog.requireType('os.ui.menu.MenuItem');
@@ -20,7 +21,7 @@ const MenuItem = goog.requireType('os.ui.menu.MenuItem');
 
 /**
  */
-class SunCalcPlugin extends AbstractPlugin {
+export default class SunCalcPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -155,5 +156,3 @@ const launchWindow = function(coord) {
   var template = `<${sunCalcEl}></${sunCalcEl}>`;
   osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
-
-exports = SunCalcPlugin;

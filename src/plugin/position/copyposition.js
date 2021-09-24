@@ -1,11 +1,12 @@
-goog.module('plugin.position.CopyPositionUI');
+goog.declareModuleId('plugin.position.CopyPositionUI');
+
+import {ROOT} from '../../os/os.js';
 
 const dispose = goog.require('goog.dispose');
 const dom = goog.require('goog.dom');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
-const {ROOT} = goog.require('os');
 const MapContainer = goog.require('os.MapContainer');
 const Metrics = goog.require('os.metrics.Metrics');
 const keys = goog.require('os.metrics.keys');
@@ -20,25 +21,22 @@ const osWindow = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
-
   scope: {
     'value': '='
   },
-
   templateUrl: ROOT + 'views/plugin/position/positionplugin.html',
   controller: Controller,
   controllerAs: 'copyPosition'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'copy-position';
+export const directiveTag = 'copy-position';
 
 
 /**
@@ -51,7 +49,7 @@ Module.directive('copyPosition', [directive]);
  * Create a popup with the current map (mouse) location information to be copied
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -104,13 +102,12 @@ class Controller {
   }
 }
 
-
 /**
  * Launch the copy coordinates window
  *
  * @param {string} value
  */
-const launchCopyPositionWindow = (value) => {
+export const launchCopyPositionWindow = (value) => {
   var id = 'copyPosition';
 
   if (osWindow.exists(id)) {
@@ -138,7 +135,7 @@ const launchCopyPositionWindow = (value) => {
 /**
  * @param {ol.Coordinate=} opt_coord The coordinate
  */
-const launchCopy = function(opt_coord) {
+export const launchCopy = function(opt_coord) {
   Metrics.getInstance().updateMetric(keys.Map.COPY_COORDINATES, 1);
   var controls = MapContainer.getInstance().getMap().getControls().getArray();
   var mousePos = null;
@@ -155,12 +152,4 @@ const launchCopy = function(opt_coord) {
       launchCopyPositionWindow(positionString);
     }
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchCopy,
-  launchCopyPositionWindow
 };

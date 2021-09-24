@@ -1,4 +1,6 @@
-goog.module('plugin.position.PositionInteraction');
+goog.declareModuleId('plugin.position.PositionInteraction');
+
+import {launchCopy} from './copyposition.js';
 
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const functions = goog.require('goog.functions');
@@ -9,15 +11,13 @@ const I3DSupport = goog.require('os.I3DSupport');
 const osImplements = goog.require('os.implements');
 const Metrics = goog.require('os.metrics.Metrics');
 const keys = goog.require('os.metrics.keys');
-const {launchCopy} = goog.require('plugin.position.CopyPositionUI');
-
 
 /**
  * Handles the behavior of clicking the PERIOD button or Copy Coordinates from the context menu.
  *
  * @implements {I3DSupport}
  */
-class PositionInteraction extends Interaction {
+export default class PositionInteraction extends Interaction {
   /**
    * Constructor.
    */
@@ -37,6 +37,7 @@ class PositionInteraction extends Interaction {
     return true;
   }
 }
+
 osImplements(PositionInteraction, I3DSupport.ID);
 
 
@@ -68,5 +69,3 @@ const handleEvent = function(mapBrowserEvent) {
 
   return !stopEvent;
 };
-
-exports = PositionInteraction;

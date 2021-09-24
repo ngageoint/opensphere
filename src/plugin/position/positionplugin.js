@@ -1,12 +1,13 @@
-goog.module('plugin.position.PositionPlugin');
+goog.declareModuleId('plugin.position.PositionPlugin');
+
+import {launchCopy} from './copyposition.js';
+import PositionInteraction from './positioninteraction.js';
 
 const MapContainer = goog.require('os.MapContainer');
 const EventType = goog.require('os.action.EventType');
 const keys = goog.require('os.metrics.keys');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const mapMenu = goog.require('os.ui.menu.map');
-const PositionInteraction = goog.require('plugin.position.PositionInteraction');
-const {launchCopy} = goog.require('plugin.position.CopyPositionUI');
 
 const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 
@@ -21,7 +22,7 @@ const ID = 'position';
 /**
  * Provides map layer support
  */
-class PositionPlugin extends AbstractPlugin {
+export default class PositionPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -90,5 +91,3 @@ let instance = null;
 const onCopy = function(evt) {
   launchCopy(/** @type {ol.Coordinate} */ (evt.getContext()));
 };
-
-exports = PositionPlugin;

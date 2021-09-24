@@ -1,4 +1,4 @@
-goog.module('plugin.storage.PersistPlugin');
+goog.declareModuleId('plugin.storage.PersistPlugin');
 
 const browser = goog.require('goog.labs.userAgent.browser');
 const log = goog.require('goog.log');
@@ -22,7 +22,7 @@ const PERSISTENCE_FAILED = 'storage.persistence.failed';
  * Plugin to check for persistent storage and ask the user
  * to give permission for persistent storage.
  */
-class PersistPlugin extends AbstractPlugin {
+export default class PersistPlugin extends AbstractPlugin {
   /**
    */
   constructor() {
@@ -166,6 +166,3 @@ const launchPersistentStorageDialog = (text) => {
     windowOptions: windowOptions
   }), scopeOptions);
 };
-
-
-exports = PersistPlugin;
