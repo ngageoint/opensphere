@@ -1,18 +1,18 @@
-goog.module('plugin.xyz.XYZPlugin');
+goog.declareModuleId('plugin.xyz.XYZPlugin');
+
+import XYZLayerConfig from './xyzlayerconfig.js';
+import * as XYZProviderHelpUI from './xyzproviderhelp.js';
+import * as XYZImportForm from './xyzproviderimportform.js';
 
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const ProviderImportUI = goog.require('os.ui.ProviderImportUI');
-const XYZImportForm = goog.require('plugin.xyz.XYZImportForm');
-const XYZLayerConfig = goog.require('plugin.xyz.XYZLayerConfig');
-const XYZProviderHelpUI = goog.require('plugin.xyz.XYZProviderHelpUI');
-
 
 /**
  * Provides map layer support
  */
-class XYZPlugin extends AbstractPlugin {
+export default class XYZPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -38,5 +38,3 @@ class XYZPlugin extends AbstractPlugin {
     });
   }
 }
-
-exports = XYZPlugin;

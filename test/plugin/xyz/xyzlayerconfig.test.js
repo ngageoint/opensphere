@@ -6,7 +6,7 @@ goog.require('plugin.xyz.XYZLayerConfig');
 describe('plugin.xyz.XYZLayerConfig', function() {
   const olProj = goog.module.get('ol.proj');
   const ProxyHandler = goog.module.get('os.net.ProxyHandler');
-  const XYZLayerConfig = goog.module.get('plugin.xyz.XYZLayerConfig');
+  const {default: XYZLayerConfig} = goog.module.get('plugin.xyz.XYZLayerConfig');
 
   it('should proxy URLs properly', function() {
     var options = {

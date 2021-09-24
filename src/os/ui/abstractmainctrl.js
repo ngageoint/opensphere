@@ -5,7 +5,8 @@ goog.require('os.ui.ListUI');
 goog.require('os.ui.alert.AlertPopupUI');
 goog.require('os.ui.onboarding.ContextOnboardingUI');
 goog.require('os.ui.onboarding.OnboardingUI');
-goog.require('polyfill.chardetng');
+
+import '../../polyfill/chardetng.js';
 
 import ElectronPlugin from '../../plugin/electron/electronplugin.js';
 import {browserVersion, operatingSystem, setPeer} from '../os.js';
