@@ -1,10 +1,11 @@
-goog.module('plugin.osm.nom.ResultCardUI');
+goog.declareModuleId('plugin.osm.nom.ResultCardUI');
+
+import {ROOT} from '../../../os/os.js';
+import * as nom from './nominatim.js';
 
 const googString = goog.require('goog.string');
-const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
 const FeatureResultCardCtrl = goog.require('os.ui.search.FeatureResultCardCtrl');
-const nom = goog.require('plugin.osm.nom');
 
 
 /**
@@ -12,7 +13,7 @@ const nom = goog.require('plugin.osm.nom');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/plugin/osm/nom/nominatimresultcard.html',
@@ -24,7 +25,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'nominatimresultcard';
+export const directiveTag = 'nominatimresultcard';
 
 
 /**
@@ -37,7 +38,7 @@ Module.directive('nominatimresultcard', [directive]);
  * Controller for the nominatimresultcard directive.
  * @unrestricted
  */
-class Controller extends FeatureResultCardCtrl {
+export class Controller extends FeatureResultCardCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -95,9 +96,3 @@ class Controller extends FeatureResultCardCtrl {
     return /** @type {string} */ (this.feature.get(nom.ResultField.DISPLAY_NAME)) || 'Unknown Result';
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

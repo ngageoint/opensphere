@@ -1,16 +1,16 @@
-goog.module('plugin.osm.nom.NominatimPlugin');
+goog.declareModuleId('plugin.osm.nom.NominatimPlugin');
+
+import {ID, SEARCH_NAME, SettingKey} from './nominatim.js';
+import NominatimSearch from './nominatimsearch.js';
 
 const Settings = goog.require('os.config.Settings');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const SearchManager = goog.require('os.search.SearchManager');
-const {ID, SEARCH_NAME, SettingKey} = goog.require('plugin.osm.nom');
-const NominatimSearch = goog.require('plugin.osm.nom.NominatimSearch');
-
 
 /**
  * Provides an interface to the OSM Nominatim API.
  */
-class NominatimPlugin extends AbstractPlugin {
+export default class NominatimPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -31,5 +31,3 @@ class NominatimPlugin extends AbstractPlugin {
     }
   }
 }
-
-exports = NominatimPlugin;

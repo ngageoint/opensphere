@@ -41,6 +41,8 @@ import ZIPPlugin from '../plugin/file/zip/zipplugin.js';
 import GooglePlacesPlugin from '../plugin/google/places/plugin.js';
 import HeatmapPlugin from '../plugin/heatmap/heatmapplugin.js';
 import OGCPlugin from '../plugin/ogc/ogcplugin.js';
+import OpenpagePlugin from '../plugin/openpage/openpageplugin.js';
+import NominatimPlugin from '../plugin/osm/nom/nominatimplugin.js';
 import * as dispatcher from './dispatcher.js';
 import * as os from './os.js';
 import AbstractMainCtrl from './ui/abstractmainctrl.js';
@@ -177,8 +179,6 @@ const osWindow = goog.require('os.ui.window');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const UrlManager = goog.require('os.url.UrlManager');
 
-const pluginOpenpagePlugin = goog.require('plugin.openpage.Plugin');
-const NominatimPlugin = goog.require('plugin.osm.nom.NominatimPlugin');
 const OverviewPlugin = goog.require('plugin.overview.OverviewPlugin');
 const ParamsPlugin = goog.require('plugin.params.ParamsPlugin');
 const Plugin = goog.require('plugin.pelias.geocoder.Plugin');
@@ -540,7 +540,7 @@ export default class Controller extends AbstractMainCtrl {
     pluginManager.addPlugin(ParamsPlugin.getInstance());
     pluginManager.addPlugin(SunCalcPlugin.getInstance());
     pluginManager.addPlugin(TrackPlugin.getInstance());
-    pluginManager.addPlugin(pluginOpenpagePlugin.getInstance());
+    pluginManager.addPlugin(OpenpagePlugin.getInstance());
     pluginManager.addPlugin(new PersistPlugin());
     pluginManager.addPlugin(VectorTilePlugin.getInstance());
   }

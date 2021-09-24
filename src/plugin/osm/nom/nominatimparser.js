@@ -1,4 +1,6 @@
-goog.module('plugin.osm.nom.NominatimParser');
+goog.declareModuleId('plugin.osm.nom.NominatimParser');
+
+import * as nom from './nominatim.js';
 
 const log = goog.require('goog.log');
 const {getUid} = goog.require('ol');
@@ -7,15 +9,13 @@ const GeoJSON = goog.require('ol.format.GeoJSON');
 const Point = goog.require('ol.geom.Point');
 const text = goog.require('os.file.mime.text');
 const IParser = goog.requireType('os.parse.IParser');
-const nom = goog.require('plugin.osm.nom');
-
 
 /**
  * Parses JSON results from the OSM Nominatim API.
  *
  * @implements {IParser<Feature|undefined>}
  */
-class NominatimParser {
+export default class NominatimParser {
   /**
    * Constructor.
    */
@@ -135,6 +135,3 @@ class NominatimParser {
  * @const
  */
 NominatimParser.LOGGER_ = log.getLogger('plugin.osm.nom.NominatimParser');
-
-
-exports = NominatimParser;
