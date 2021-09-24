@@ -2,7 +2,7 @@
  * @fileoverview KML Tour parser.
  * @suppress {accessControls}
  */
-goog.module('plugin.file.kml.tour.parseTour');
+goog.declareModuleId('plugin.file.kml.tour.parseTour');
 
 const KML = goog.require('ol.format.KML');
 const XSD = goog.require('ol.format.XSD');
@@ -276,4 +276,4 @@ const WAIT_PARSERS = xml.makeStructureNS(
       'duration': xml.makeObjectPropertySetter(XSD.readDecimal)
     });
 
-exports = parseTour;
+export default parseTour;

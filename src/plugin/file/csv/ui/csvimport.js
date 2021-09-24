@@ -1,4 +1,4 @@
-goog.module('plugin.file.csv.ui.CSVImport');
+goog.declareModuleId('plugin.file.csv.ui.CSVImport');
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const Module = goog.require('os.ui.Module');
@@ -15,7 +15,7 @@ const CSVParserConfig = goog.requireType('plugin.file.csv.CSVParserConfig');
  * @extends {FileImportWizard.<!CSVParserConfig,!CSVDescriptor>}
  * @unrestricted
  */
-class Controller extends FileImportWizard {
+export class Controller extends FileImportWizard {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -65,7 +65,7 @@ class Controller extends FileImportWizard {
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = wizardDirective();
   dir.controller = Controller;
   return dir;
@@ -75,16 +75,10 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'csvimport';
+export const directiveTag = 'csvimport';
 
 
 /**
  * Add the directive to the module
  */
 Module.directive('csvimport', [directive]);
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

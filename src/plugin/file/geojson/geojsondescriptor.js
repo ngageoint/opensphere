@@ -1,4 +1,4 @@
-goog.module('plugin.file.geojson.GeoJSONDescriptor');
+goog.declareModuleId('plugin.file.geojson.GeoJSONDescriptor');
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const LayerType = goog.require('os.layer.LayerType');
@@ -9,7 +9,7 @@ const GeoJSONParserConfig = goog.require('plugin.file.geojson.GeoJSONParserConfi
 /**
  * GeoJSON file descriptor.
  */
-class GeoJSONDescriptor extends FileDescriptor {
+export default class GeoJSONDescriptor extends FileDescriptor {
   /**
    * Constructor.
    * @param {GeoJSONParserConfig=} opt_config
@@ -43,5 +43,3 @@ class GeoJSONDescriptor extends FileDescriptor {
     return new GeoJSONExporter();
   }
 }
-
-exports = GeoJSONDescriptor;

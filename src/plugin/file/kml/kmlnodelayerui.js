@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.KMLNodeLayerUI');
+goog.declareModuleId('plugin.file.kml.KMLNodeLayerUI');
 
 goog.require('os.ui.UISwitchUI');
 goog.require('os.ui.layer.IconStyleControlsUI');
@@ -74,7 +74,7 @@ const supportedCenterShapes = [
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = vectorLayerUIDirective();
   dir.templateUrl = ROOT + 'views/plugin/kml/kmlnodelayerui.html';
   dir.controller = Controller;
@@ -85,7 +85,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'kmlnodelayerui';
+export const directiveTag = 'kmlnodelayerui';
 
 
 /**
@@ -99,7 +99,7 @@ Module.directive('kmlnodelayerui', [directive]);
  * Controller for the stream layer UI
  * @unrestricted
  */
-class Controller extends VectorLayerUICtrl {
+export class Controller extends VectorLayerUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -1116,9 +1116,3 @@ class Controller extends VectorLayerUICtrl {
     return !!osStyle.CENTER_LOOKUP[this['shape']] && osStyle.ICON_REGEXP.test(this['centerShape']);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

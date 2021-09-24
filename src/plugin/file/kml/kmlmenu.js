@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.menu');
+goog.declareModuleId('plugin.file.kml.menu');
 
 const asserts = goog.require('goog.asserts');
 
@@ -19,7 +19,7 @@ const MenuItem = goog.requireType('os.ui.menu.MenuItem');
  * KML menu event types.
  * @enum {string}
  */
-const EventType = {
+export const EventType = {
   LOAD: 'kml:load',
   REFRESH: 'kml:refresh',
   FEATURE_INFO: 'kml:featureInfo',
@@ -33,7 +33,7 @@ const EventType = {
 /**
  * Set up KML tree items in the layer menu.
  */
-const treeSetup = function() {
+export const treeSetup = function() {
   var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(EventType.GOTO)) {
     var menuRoot = menu.getRoot();
@@ -223,9 +223,4 @@ const onLayerEvent_ = function(event) {
       }
     }
   }
-};
-
-exports = {
-  EventType,
-  treeSetup
 };

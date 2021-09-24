@@ -1,4 +1,4 @@
-goog.module('plugin.file.csv.CSVParser');
+goog.declareModuleId('plugin.file.csv.CSVParser');
 
 const googString = goog.require('goog.string');
 const ol = goog.require('ol');
@@ -19,7 +19,7 @@ const AbstractCsvParser = goog.require('os.ui.file.csv.AbstractCsvParser');
  *
  * @extends {AbstractCsvParser.<Feature>}
  */
-class CSVParser extends AbstractCsvParser {
+export default class CSVParser extends AbstractCsvParser {
   /**
    * Constructor.
    * @param {plugin.file.csv.CSVParserConfig} config
@@ -142,5 +142,3 @@ class CSVParser extends AbstractCsvParser {
     }
   }
 }
-
-exports = CSVParser;

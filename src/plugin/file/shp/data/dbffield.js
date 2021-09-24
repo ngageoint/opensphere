@@ -1,9 +1,8 @@
-goog.module('plugin.file.shp.data.DBFField');
-
+goog.declareModuleId('plugin.file.shp.data.DBFField');
 
 /**
  */
-class DBFField {
+export default class DBFField {
   /**
    * Constructor.
    * @param {string} name
@@ -27,5 +26,3 @@ class DBFField {
     this.length = length;
   }
 }
-
-exports = DBFField;

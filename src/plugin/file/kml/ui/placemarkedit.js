@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.ui.PlacemarkEditUI');
+goog.declareModuleId('plugin.file.kml.ui.PlacemarkEditUI');
 
 goog.require('os.annotation.annotationOptionsDirective');
 
@@ -28,7 +28,7 @@ const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = featureEditDirective();
   dir.controller = Controller;
   return dir;
@@ -38,7 +38,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'placemarkedit';
+export const directiveTag = 'placemarkedit';
 
 
 /**
@@ -52,7 +52,7 @@ Module.directive('placemarkedit', [directive]);
  * Controller function for the placemarkedit directive
  * @unrestricted
  */
-class Controller extends FeatureEditCtrl {
+export class Controller extends FeatureEditCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -332,9 +332,3 @@ class Controller extends FeatureEditCtrl {
     this['annotationOptions'].bodyBG = color;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

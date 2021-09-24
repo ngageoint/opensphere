@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.ui.KMLImportUI');
+goog.declareModuleId('plugin.file.kml.ui.KMLImportUI');
 
 const DataManager = goog.require('os.data.DataManager');
 const FileDescriptor = goog.require('os.data.FileDescriptor');
@@ -12,7 +12,7 @@ const {directiveTag: importEl} = goog.require('plugin.file.kml.ui.KMLImport');
 
 /**
  */
-class KMLImportUI extends FileImportUI {
+export default class KMLImportUI extends FileImportUI {
   /**
    * Constructor.
    */
@@ -86,5 +86,3 @@ class KMLImportUI extends FileImportUI {
     }
   }
 }
-
-exports = KMLImportUI;

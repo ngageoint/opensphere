@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.ui.KMLTreeExportUI');
+goog.declareModuleId('plugin.file.kml.ui.KMLTreeExportUI');
 
 const asserts = goog.require('goog.asserts');
 const {ROOT} = goog.require('os');
@@ -15,7 +15,7 @@ const KMLTreeExporter = goog.require('plugin.file.kml.KMLTreeExporter');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: {
     'rootNode': '=',
@@ -30,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'kmltreeexport';
+export const directiveTag = 'kmltreeexport';
 
 
 /**
@@ -46,7 +46,7 @@ Module.directive('kmltreeexport', [directive]);
  * @param {os.ex.ExportOptions=} opt_addOptions
  * @param {string=} opt_windowTooltip The tooltip for the window, if any.
  */
-const launchTreeExport = function(rootNode, opt_winLabel, opt_addOptions, opt_windowTooltip) {
+export const launchTreeExport = function(rootNode, opt_winLabel, opt_addOptions, opt_windowTooltip) {
   var scopeOptions = {
     'rootNode': rootNode,
     'options': opt_addOptions
@@ -71,15 +71,13 @@ const launchTreeExport = function(rootNode, opt_winLabel, opt_addOptions, opt_wi
   osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
 
-
-
 /**
  * Controller function for the kmltreeexport directive
  *
  * @template T
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -234,10 +232,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchTreeExport
-};

@@ -1,4 +1,4 @@
-goog.module('plugin.file.csv.ui.CSVImportUI');
+goog.declareModuleId('plugin.file.csv.ui.CSVImportUI');
 
 const DataManager = goog.require('os.data.DataManager');
 const FileDescriptor = goog.require('os.data.FileDescriptor');
@@ -20,7 +20,7 @@ const {directiveTag: importUi} = goog.require('plugin.file.csv.ui.CSVImport');
 /**
  * @extends {FileImportUI.<CSVParserConfig>}
  */
-class CSVImportUI extends FileImportUI {
+export default class CSVImportUI extends FileImportUI {
   /**
    * Constructor.
    */
@@ -150,5 +150,3 @@ class CSVImportUI extends FileImportUI {
     }
   }
 }
-
-exports = CSVImportUI;

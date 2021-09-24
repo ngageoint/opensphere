@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.KMLImporter');
+goog.declareModuleId('plugin.file.kml.KMLImporter');
 
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
@@ -19,7 +19,7 @@ const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
  *
  * @extends {FeatureImporter<KMLNode>}
  */
-class KMLImporter extends FeatureImporter {
+export default class KMLImporter extends FeatureImporter {
   /**
    * Constructor.
    * @param {KMLParser} parser The parser
@@ -163,5 +163,3 @@ class KMLImporter extends FeatureImporter {
     }
   }
 }
-
-exports = KMLImporter;

@@ -2,7 +2,7 @@
  * @fileoverview Parser
  * @suppress {accessControls|duplicate|unusedPrivateMembers}
  */
-goog.module('plugin.file.gpx.GPXParser');
+goog.declareModuleId('plugin.file.gpx.GPXParser');
 
 const dom = goog.require('goog.dom');
 
@@ -25,7 +25,7 @@ const IParser = goog.requireType('os.parse.IParser');
  * @implements {IParser<Feature>}
  * @template T
  */
-class GPXParser {
+export default class GPXParser {
   /**
    * Constructor.
    * @param {Object<string, *>} options Layer configuration options.
@@ -244,4 +244,3 @@ GPX.appendCoordinate_ = function(flatCoordinates, layoutOptions, node, values) {
 
   return flatCoordinates;
 };
-exports = GPXParser;

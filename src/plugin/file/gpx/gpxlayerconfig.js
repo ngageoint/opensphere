@@ -1,4 +1,4 @@
-goog.module('plugin.file.gpx.GPXLayerConfig');
+goog.declareModuleId('plugin.file.gpx.GPXLayerConfig');
 
 const ResponseType = goog.require('goog.net.XhrIo.ResponseType');
 const userAgent = goog.require('goog.userAgent');
@@ -11,7 +11,7 @@ const FeatureImporter = goog.requireType('os.im.FeatureImporter');
 
 /**
  */
-class GPXLayerConfig extends AbstractDataSourceLayerConfig {
+export default class GPXLayerConfig extends AbstractDataSourceLayerConfig {
   /**
    * Constructor.
    */
@@ -62,5 +62,3 @@ class GPXLayerConfig extends AbstractDataSourceLayerConfig {
     return source;
   }
 }
-
-exports = GPXLayerConfig;

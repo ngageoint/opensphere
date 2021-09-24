@@ -1,4 +1,4 @@
-goog.module('plugin.file.gpx.ui.GPXImportUI');
+goog.declareModuleId('plugin.file.gpx.ui.GPXImportUI');
 
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
@@ -8,7 +8,7 @@ const {directiveTag: gpxImportUi} = goog.require('plugin.file.gpx.ui.GPXImport')
 
 /**
  */
-class GPXImportUI extends FileImportUI {
+export default class GPXImportUI extends FileImportUI {
   /**
    * Constructor.
    */
@@ -58,5 +58,3 @@ class GPXImportUI extends FileImportUI {
     osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 }
-
-exports = GPXImportUI;

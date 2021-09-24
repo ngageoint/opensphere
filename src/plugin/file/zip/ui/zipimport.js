@@ -1,4 +1,4 @@
-goog.module('plugin.file.zip.ui.ZIPImport');
+goog.declareModuleId('plugin.file.zip.ui.ZIPImport');
 
 const {ROOT} = goog.require('os');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
@@ -31,7 +31,7 @@ let ImporterPair;
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/plugin/zip/zipimport.html',
@@ -43,7 +43,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'zipimport';
+export const directiveTag = 'zipimport';
 
 Module.directive('zipimport', [directive]);
 
@@ -52,7 +52,7 @@ Module.directive('zipimport', [directive]);
  * Controller for the ZIP import dialog
  * @unrestricted
  */
-class Controller extends FileImportCtrl {
+export class Controller extends FileImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -340,9 +340,3 @@ class Controller extends FileImportCtrl {
       0;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

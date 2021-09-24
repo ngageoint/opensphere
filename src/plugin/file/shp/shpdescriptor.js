@@ -1,4 +1,4 @@
-goog.module('plugin.file.shp.SHPDescriptor');
+goog.declareModuleId('plugin.file.shp.SHPDescriptor');
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const osFile = goog.require('os.file');
@@ -11,7 +11,7 @@ const SHPParserConfig = goog.require('plugin.file.shp.SHPParserConfig');
 /**
  * SHP file descriptor.
  */
-class SHPDescriptor extends FileDescriptor {
+export default class SHPDescriptor extends FileDescriptor {
   /**
    * Constructor.
    * @param {SHPParserConfig=} opt_config
@@ -175,5 +175,3 @@ class SHPDescriptor extends FileDescriptor {
     }
   }
 }
-
-exports = SHPDescriptor;

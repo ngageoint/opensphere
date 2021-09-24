@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.tour.SoundCue');
+goog.declareModuleId('plugin.file.kml.tour.SoundCue');
 
 const AudioManager = goog.require('os.audio.AudioManager');
 const AudioSetting = goog.require('os.audio.AudioSetting');
@@ -9,7 +9,7 @@ const Wait = goog.require('plugin.file.kml.tour.Wait');
 /**
  * Plays an audio file during the tour.
  */
-class SoundCue extends Wait {
+export default class SoundCue extends Wait {
   /**
    * Constructor.
    * @param {string} href The URL to the audio file.
@@ -114,5 +114,3 @@ class SoundCue extends Wait {
     }
   }
 }
-
-exports = SoundCue;

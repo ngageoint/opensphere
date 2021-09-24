@@ -1,4 +1,4 @@
-goog.module('plugin.file.shp.SHPProvider');
+goog.declareModuleId('plugin.file.shp.SHPProvider');
 
 const FileProvider = goog.require('os.data.FileProvider');
 
@@ -6,7 +6,7 @@ const FileProvider = goog.require('os.data.FileProvider');
 /**
  * SHP file provider
  */
-class SHPProvider extends FileProvider {
+export default class SHPProvider extends FileProvider {
   /**
    * Constructor.
    */
@@ -23,7 +23,5 @@ class SHPProvider extends FileProvider {
     this.setLabel('SHP Files');
   }
 }
+
 goog.addSingletonGetter(SHPProvider);
-
-
-exports = SHPProvider;

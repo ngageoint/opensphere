@@ -1,4 +1,4 @@
-goog.module('plugin.file.shp.ui.SHPExportUI');
+goog.declareModuleId('plugin.file.shp.ui.SHPExportUI');
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
@@ -9,7 +9,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: {
     'exporter': '='
@@ -23,7 +23,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'shpexport';
+export const directiveTag = 'shpexport';
 
 
 /**
@@ -37,7 +37,7 @@ Module.directive('shpexport', [directive]);
  * Controller function for the shpexport directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -88,9 +88,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

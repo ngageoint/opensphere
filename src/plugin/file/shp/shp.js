@@ -1,10 +1,9 @@
-goog.module('plugin.file.shp');
-
+goog.declareModuleId('plugin.file.shp');
 
 /**
  * @enum {number}
  */
-const TYPE = {
+export const TYPE = {
   NULLRECORD: 0,
   POINT: 1,
   POLYLINE: 3,
@@ -26,7 +25,7 @@ const TYPE = {
  *   numRecords: number
  * }}
  */
-let DBFData;
+export let DBFData;
 
 /**
  * Tests if the supplied content is for a DBF file.
@@ -34,7 +33,7 @@ let DBFData;
  * @param {ArrayBuffer} content
  * @return {boolean}
  */
-const isDBFFileType = function(content) {
+export const isDBFFileType = function(content) {
   if (!content) {
     return false;
   }
@@ -60,18 +59,11 @@ const isDBFFileType = function(content) {
  * @param {ArrayBuffer} content
  * @return {boolean}
  */
-const isSHPFileType = function(content) {
+export const isSHPFileType = function(content) {
   var dv = new DataView(content.slice(0, 4));
   try {
     return dv.getUint32(0) == 9994;
   } catch (e) {
     return false;
   }
-};
-
-exports = {
-  TYPE,
-  isDBFFileType,
-  isSHPFileType,
-  DBFData
 };

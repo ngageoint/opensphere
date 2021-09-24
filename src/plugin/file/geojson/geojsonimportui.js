@@ -1,4 +1,4 @@
-goog.module('plugin.file.geojson.GeoJSONImportUI');
+goog.declareModuleId('plugin.file.geojson.GeoJSONImportUI');
 
 const DataManager = goog.require('os.data.DataManager');
 const FileDescriptor = goog.require('os.data.FileDescriptor');
@@ -19,7 +19,7 @@ const GeoJSONProvider = goog.require('plugin.file.geojson.GeoJSONProvider');
 /**
  * @extends {FileImportUI.<GeoJSONParserConfig>}
  */
-class GeoJSONImportUI extends FileImportUI {
+export default class GeoJSONImportUI extends FileImportUI {
   /**
    * Constructor.
    */
@@ -115,5 +115,3 @@ class GeoJSONImportUI extends FileImportUI {
     }
   }
 }
-
-exports = GeoJSONImportUI;

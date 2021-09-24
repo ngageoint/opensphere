@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.ui.KMLTourNode');
+goog.declareModuleId('plugin.file.kml.ui.KMLTourNode');
 
 const dispose = goog.require('goog.dispose');
 
@@ -9,7 +9,7 @@ const {directiveTag: kmlTourNodeUi} = goog.require('plugin.file.kml.ui.KMLTourNo
 /**
  * Tree node for a KML tour.
  */
-class KMLTourNode extends KMLNode {
+export default class KMLTourNode extends KMLNode {
   /**
    * Constructor.
    * @param {!plugin.file.kml.tour.Tour} tour The KML tour.
@@ -75,5 +75,3 @@ class KMLTourNode extends KMLNode {
     return '<i class="fa fa-video-camera fa-fw" title="KML Tour"></i>';
   }
 }
-
-exports = KMLTourNode;

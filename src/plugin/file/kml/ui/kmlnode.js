@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.ui.KMLNode');
+goog.declareModuleId('plugin.file.kml.ui.KMLNode');
 
 goog.require('os.ui.node.DefaultLayerNodeUI');
 
@@ -84,7 +84,7 @@ setCreatePlacemarkNodeFn(createPlacemarkNode);
  * @implements {IExtent}
  * @implements {ILayerUIProvider}
  */
-class KMLNode extends SlickTreeNode {
+export default class KMLNode extends SlickTreeNode {
   /**
    * Constructor.
    */
@@ -1002,6 +1002,3 @@ const logger = log.getLogger('plugin.file.kml.ui.KMLNode');
  * @type {!Array<string>}
  */
 const childLoadingEvents = ['children', 'state', 'collapsed'];
-
-
-exports = KMLNode;

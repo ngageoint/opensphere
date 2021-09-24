@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.ui.KMLNetworkLinkNode');
+goog.declareModuleId('plugin.file.kml.ui.KMLNetworkLinkNode');
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
@@ -30,7 +30,7 @@ const KMLImporter = goog.requireType('plugin.file.kml.KMLImporter');
 /**
  * Tree node for KML network links
  */
-class KMLNetworkLinkNode extends KMLNode {
+export default class KMLNetworkLinkNode extends KMLNode {
   /**
    * Constructor.
    * @param {string} uri The network link URI
@@ -576,6 +576,3 @@ class KMLNetworkLinkNode extends KMLNode {
  * @type {Logger}
  */
 const logger = log.getLogger('plugin.file.kml.ui.KMLNetworkLinkNode');
-
-
-exports = KMLNetworkLinkNode;

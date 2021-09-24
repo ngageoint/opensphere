@@ -1,4 +1,4 @@
-goog.module('plugin.file.shp.ui.ZipSHPImportUI');
+goog.declareModuleId('plugin.file.shp.ui.ZipSHPImportUI');
 
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
@@ -23,7 +23,7 @@ const OSFile = goog.requireType('os.file.File');
 /**
  * @extends {FileImportUI.<SHPParserConfig>}
  */
-class ZipSHPImportUI extends FileImportUI {
+export default class ZipSHPImportUI extends FileImportUI {
   /**
    * Constructor.
    */
@@ -252,5 +252,3 @@ class ZipSHPImportUI extends FileImportUI {
     }
   }
 }
-
-exports = ZipSHPImportUI;

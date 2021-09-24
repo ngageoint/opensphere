@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.KMLProvider');
+goog.declareModuleId('plugin.file.kml.KMLProvider');
 
 const FileProvider = goog.require('os.data.FileProvider');
 
@@ -6,7 +6,7 @@ const FileProvider = goog.require('os.data.FileProvider');
 /**
  * KML file provider
  */
-class KMLProvider extends FileProvider {
+export default class KMLProvider extends FileProvider {
   /**
    * Constructor.
    */
@@ -23,7 +23,5 @@ class KMLProvider extends FileProvider {
     this.setLabel('KML Files');
   }
 }
+
 goog.addSingletonGetter(KMLProvider);
-
-
-exports = KMLProvider;

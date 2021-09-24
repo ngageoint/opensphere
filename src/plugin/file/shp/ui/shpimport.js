@@ -1,4 +1,4 @@
-goog.module('plugin.file.shp.ui.SHPImport');
+goog.declareModuleId('plugin.file.shp.ui.SHPImport');
 
 const osFile = goog.require('os.file');
 
@@ -16,7 +16,7 @@ const SHPParserConfig = goog.requireType('plugin.file.shp.SHPParserConfig');
  * @extends {FileImportWizard.<!SHPParserConfig,!SHPDescriptor>}
  * @unrestricted
  */
-class Controller extends FileImportWizard {
+export class Controller extends FileImportWizard {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -114,7 +114,7 @@ class Controller extends FileImportWizard {
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = wizardDirective();
   dir.controller = Controller;
   return dir;
@@ -124,16 +124,10 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'shpimport';
+export const directiveTag = 'shpimport';
 
 
 /**
  * Add the directive to the module
  */
 Module.directive('shpimport', [directive]);
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

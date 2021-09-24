@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.KMLFeatureParser');
+goog.declareModuleId('plugin.file.kml.KMLFeatureParser');
 
 const KML = goog.require('ol.format.KML');
 const xml = goog.require('ol.xml');
@@ -12,7 +12,7 @@ const IParser = goog.requireType('os.parse.IParser');
  *
  * @implements {IParser<ol.Feature>}
  */
-class KMLFeatureParser {
+export default class KMLFeatureParser {
   /**
    * Constructor.
    */
@@ -80,5 +80,3 @@ class KMLFeatureParser {
     return features;
   }
 }
-
-exports = KMLFeatureParser;

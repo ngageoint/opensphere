@@ -1,4 +1,4 @@
-goog.module('plugin.file.geojson.GeoJSONProvider');
+goog.declareModuleId('plugin.file.geojson.GeoJSONProvider');
 
 const FileProvider = goog.require('os.data.FileProvider');
 
@@ -6,7 +6,7 @@ const FileProvider = goog.require('os.data.FileProvider');
 /**
  * GeoJSON file provider
  */
-class GeoJSONProvider extends FileProvider {
+export default class GeoJSONProvider extends FileProvider {
   /**
    * Constructor.
    */
@@ -23,7 +23,5 @@ class GeoJSONProvider extends FileProvider {
     this.setLabel('GeoJSON Files');
   }
 }
+
 goog.addSingletonGetter(GeoJSONProvider);
-
-
-exports = GeoJSONProvider;

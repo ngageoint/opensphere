@@ -1,4 +1,4 @@
-goog.module('plugin.file.zip.ZIPParserConfig');
+goog.declareModuleId('plugin.file.zip.ZIPParserConfig');
 
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
 
@@ -7,7 +7,7 @@ const FileParserConfig = goog.require('os.parse.FileParserConfig');
  * Configuration for a ZIP parser.
  * @unrestricted
  */
-class ZIPParserConfig extends FileParserConfig {
+export default class ZIPParserConfig extends FileParserConfig {
   /**
    * Constructor.
    */
@@ -36,5 +36,3 @@ class ZIPParserConfig extends FileParserConfig {
     this['status'] = -1; // uninitialized state
   }
 }
-
-exports = ZIPParserConfig;

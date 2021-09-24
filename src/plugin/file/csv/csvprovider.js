@@ -1,4 +1,4 @@
-goog.module('plugin.file.csv.CSVProvider');
+goog.declareModuleId('plugin.file.csv.CSVProvider');
 
 const FileProvider = goog.require('os.data.FileProvider');
 
@@ -6,7 +6,7 @@ const FileProvider = goog.require('os.data.FileProvider');
 /**
  * CSV file provider
  */
-class CSVProvider extends FileProvider {
+export default class CSVProvider extends FileProvider {
   /**
    * Constructor.
    */
@@ -23,7 +23,5 @@ class CSVProvider extends FileProvider {
     this.setLabel('CSV Files');
   }
 }
+
 goog.addSingletonGetter(CSVProvider);
-
-
-exports = CSVProvider;

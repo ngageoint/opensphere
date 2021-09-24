@@ -1,4 +1,4 @@
-goog.module('plugin.file.geojson.GeoJSONSimpleStyleParser');
+goog.declareModuleId('plugin.file.geojson.GeoJSONSimpleStyleParser');
 
 const log = goog.require('goog.log');
 const osColor = goog.require('os.color');
@@ -18,7 +18,7 @@ const Feature = goog.requireType('ol.Feature');
  *
  * @extends {GeoJSONParser<Feature>}
  */
-class GeoJSONSimpleStyleParser extends GeoJSONParser {
+export default class GeoJSONSimpleStyleParser extends GeoJSONParser {
   /**
    * Constructor.
    */
@@ -165,6 +165,3 @@ class GeoJSONSimpleStyleParser extends GeoJSONParser {
  * @type {Logger}
  */
 const logger = log.getLogger('plugin.file.geojson.GeoJSONSimpleStyleParser');
-
-
-exports = GeoJSONSimpleStyleParser;

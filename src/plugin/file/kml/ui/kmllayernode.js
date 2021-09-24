@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.ui.KMLLayerNode');
+goog.declareModuleId('plugin.file.kml.ui.KMLLayerNode');
 
 const googEvents = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -17,7 +17,7 @@ const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
 /**
  * Tree node for KML layers
  */
-class KMLLayerNode extends LayerNode {
+export default class KMLLayerNode extends LayerNode {
   /**
    * Constructor.
    * @param {VectorLayer} layer The KML layer
@@ -271,5 +271,3 @@ class KMLLayerNode extends LayerNode {
     return extent;
   }
 }
-
-exports = KMLLayerNode;

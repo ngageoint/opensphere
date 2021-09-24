@@ -1,4 +1,4 @@
-goog.module('plugin.file.geojson.GeoJSONParser');
+goog.declareModuleId('plugin.file.geojson.GeoJSONParser');
 
 const Disposable = goog.require('goog.Disposable');
 const googObject = goog.require('goog.object');
@@ -17,7 +17,7 @@ const IParser = goog.requireType('os.parse.IParser');
  *
  * @implements {IParser<ol.Feature>}
  */
-class GeoJSONParser extends Disposable {
+export default class GeoJSONParser extends Disposable {
   /**
    * Constructor.
    */
@@ -216,6 +216,3 @@ class GeoJSONParser extends Disposable {
  * @param {ol.Feature} feature
  */
 GeoJSONParser.prototype.process = fn.noop;
-
-
-exports = GeoJSONParser;

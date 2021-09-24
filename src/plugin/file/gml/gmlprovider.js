@@ -1,4 +1,4 @@
-goog.module('plugin.file.gml.GMLProvider');
+goog.declareModuleId('plugin.file.gml.GMLProvider');
 
 const FileProvider = goog.require('os.data.FileProvider');
 
@@ -6,7 +6,7 @@ const FileProvider = goog.require('os.data.FileProvider');
 /**
  * GML file provider
  */
-class GMLProvider extends FileProvider {
+export default class GMLProvider extends FileProvider {
   /**
    * Constructor.
    */
@@ -23,7 +23,5 @@ class GMLProvider extends FileProvider {
     this.setLabel('GML Files');
   }
 }
+
 goog.addSingletonGetter(GMLProvider);
-
-
-exports = GMLProvider;

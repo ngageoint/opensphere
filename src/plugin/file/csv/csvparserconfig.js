@@ -1,4 +1,4 @@
-goog.module('plugin.file.csv.CSVParserConfig');
+goog.declareModuleId('plugin.file.csv.CSVParserConfig');
 
 const CsvParserConfig = goog.require('os.parse.csv.CsvParserConfig');
 const osUiSlickColumn = goog.require('os.ui.slick.column');
@@ -11,7 +11,7 @@ const Feature = goog.requireType('ol.Feature');
  * @extends {CsvParserConfig<Feature>}
  * @unrestricted
  */
-class CSVParserConfig extends CsvParserConfig {
+export default class CSVParserConfig extends CsvParserConfig {
   /**
    * Constructor.
    */
@@ -38,5 +38,3 @@ class CSVParserConfig extends CsvParserConfig {
     parser.dispose();
   }
 }
-
-exports = CSVParserConfig;

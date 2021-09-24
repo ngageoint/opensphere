@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.tour.TourControl');
+goog.declareModuleId('plugin.file.kml.tour.TourControl');
 
 const Promise = goog.require('goog.Promise');
 const nextTick = goog.require('goog.async.nextTick');
@@ -8,7 +8,7 @@ const AbstractTourPrimitive = goog.require('plugin.file.kml.tour.AbstractTourPri
 /**
  * Enables the tour to be paused until a user takes action to continue the tour.
  */
-class TourControl extends AbstractTourPrimitive {
+export default class TourControl extends AbstractTourPrimitive {
   /**
    * Constructor.
    * @param {!plugin.file.kml.tour.Tour} tour The tour object.
@@ -56,5 +56,3 @@ class TourControl extends AbstractTourPrimitive {
     this.paused_ = false;
   }
 }
-
-exports = TourControl;

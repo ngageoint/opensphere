@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.tour.FlyTo');
+goog.declareModuleId('plugin.file.kml.tour.FlyTo');
 
 const olProj = goog.require('ol.proj');
 const MapContainer = goog.require('os.MapContainer');
@@ -12,7 +12,7 @@ const Wait = goog.require('plugin.file.kml.tour.Wait');
 /**
  * Flies to the specified location on the map/globe.
  */
-class FlyTo extends Wait {
+export default class FlyTo extends Wait {
   /**
    * Constructor.
    * @param {!osx.map.FlyToOptions} options Fly to options.
@@ -85,6 +85,3 @@ class FlyTo extends Wait {
  * @const
  */
 FlyTo.DEFAULT_DURATION = 5000;
-
-
-exports = FlyTo;

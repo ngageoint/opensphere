@@ -1,4 +1,4 @@
-goog.module('plugin.file.gml.GMLLayerConfig');
+goog.declareModuleId('plugin.file.gml.GMLLayerConfig');
 
 const AltMapping = goog.require('os.im.mapping.AltMapping');
 const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
@@ -14,7 +14,7 @@ const GMLParserConfig = goog.require('plugin.file.gml.GMLParserConfig');
 
 /**
  */
-class GMLLayerConfig extends AbstractDataSourceLayerConfig {
+export default class GMLLayerConfig extends AbstractDataSourceLayerConfig {
   /**
    * Constructor.
    */
@@ -64,5 +64,3 @@ class GMLLayerConfig extends AbstractDataSourceLayerConfig {
     return im.getParser('gml');
   }
 }
-
-exports = GMLLayerConfig;

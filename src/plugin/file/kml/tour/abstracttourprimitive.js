@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.tour.AbstractTourPrimitive');
+goog.declareModuleId('plugin.file.kml.tour.AbstractTourPrimitive');
 
 const fn = goog.require('os.fn');
 
@@ -8,7 +8,7 @@ const fn = goog.require('os.fn');
  *
  * @abstract
  */
-class AbstractTourPrimitive {
+export default class AbstractTourPrimitive {
   /**
    * Constructor.
    */
@@ -40,4 +40,3 @@ AbstractTourPrimitive.prototype.pause = fn.noop;
  * Reset the tour primitive.
  */
 AbstractTourPrimitive.prototype.reset = fn.noop;
-exports = AbstractTourPrimitive;

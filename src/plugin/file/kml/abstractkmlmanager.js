@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.AbstractKMLManager');
+goog.declareModuleId('plugin.file.kml.AbstractKMLManager');
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
@@ -28,7 +28,7 @@ const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
  * Abstract KML manager class for persistent layers (e.g. Places).
  * @abstract
  */
-class AbstractKMLManager extends GoogEventTarget {
+export default class AbstractKMLManager extends GoogEventTarget {
   /**
    * @param {Object<string, *>} options Layer options.
    */
@@ -469,6 +469,3 @@ class AbstractKMLManager extends GoogEventTarget {
     }
   }
 }
-
-
-exports = AbstractKMLManager;

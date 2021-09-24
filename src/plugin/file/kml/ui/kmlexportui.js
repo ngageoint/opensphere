@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.ui.KMLExportUI');
+goog.declareModuleId('plugin.file.kml.ui.KMLExportUI');
 
 goog.require('os.ui.icon.IconPickerUI');
 
@@ -14,7 +14,7 @@ const AbstractKMLExporter = goog.requireType('os.ui.file.kml.AbstractKMLExporter
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
 
   scope: {
@@ -31,7 +31,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'kmlexport';
+export const directiveTag = 'kmlexport';
 
 
 /**
@@ -45,7 +45,7 @@ Module.directive('kmlexport', [directive]);
  * Controller function for the kmlexport directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -166,9 +166,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

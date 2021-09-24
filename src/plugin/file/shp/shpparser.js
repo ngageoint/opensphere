@@ -1,4 +1,4 @@
-goog.module('plugin.file.shp.SHPParser');
+goog.declareModuleId('plugin.file.shp.SHPParser');
 
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
@@ -29,7 +29,7 @@ const SHPParserConfig = goog.requireType('plugin.file.shp.SHPParserConfig');
  *
  * @extends {AsyncZipParser<Feature>}
  */
-class SHPParser extends AsyncZipParser {
+export default class SHPParser extends AsyncZipParser {
   /**
    * Constructor.
    * @param {SHPParserConfig} config
@@ -660,6 +660,3 @@ class SHPParser extends AsyncZipParser {
  * @type {Logger}
  */
 const logger = log.getLogger('plugin.file.shp.SHPParser');
-
-
-exports = SHPParser;

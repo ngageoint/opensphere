@@ -1,4 +1,4 @@
-goog.module('plugin.file.shp.ui.SHPImportUI');
+goog.declareModuleId('plugin.file.shp.ui.SHPImportUI');
 
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const osWindow = goog.require('os.ui.window');
@@ -14,7 +14,7 @@ const {directiveTag: shpImportUi} = goog.require('plugin.file.shp.ui.SHPImport')
 /**
  * @extends {FileImportUI<SHPParserConfig>}
  */
-class SHPImportUI extends FileImportUI {
+export default class SHPImportUI extends FileImportUI {
   /**
    * Constructor.
    */
@@ -80,5 +80,3 @@ class SHPImportUI extends FileImportUI {
     osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 }
-
-exports = SHPImportUI;

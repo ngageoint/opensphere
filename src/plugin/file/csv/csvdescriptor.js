@@ -1,4 +1,4 @@
-goog.module('plugin.file.csv.CSVDescriptor');
+goog.declareModuleId('plugin.file.csv.CSVDescriptor');
 
 const Settings = goog.require('os.config.Settings');
 const FileDescriptor = goog.require('os.data.FileDescriptor');
@@ -12,7 +12,7 @@ const {ALLOW_ELLIPSE_CONFIG} = goog.require('os.ui.layer.EllipseColumnsUI');
 /**
  * CSV file descriptor.
  */
-class CSVDescriptor extends FileDescriptor {
+export default class CSVDescriptor extends FileDescriptor {
   /**
    * Constructor.
    * @param {CSVParserConfig=} opt_config
@@ -174,5 +174,3 @@ class CSVDescriptor extends FileDescriptor {
     super.restore(conf);
   }
 }
-
-exports = CSVDescriptor;

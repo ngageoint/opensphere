@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.tour.Wait');
+goog.declareModuleId('plugin.file.kml.tour.Wait');
 
 const Promise = goog.require('goog.Promise');
 const AbstractTourPrimitive = goog.require('plugin.file.kml.tour.AbstractTourPrimitive');
@@ -7,7 +7,7 @@ const AbstractTourPrimitive = goog.require('plugin.file.kml.tour.AbstractTourPri
 /**
  * Holds the camera still for a specified amount of time.
  */
-class Wait extends AbstractTourPrimitive {
+export default class Wait extends AbstractTourPrimitive {
   /**
    * Constructor.
    * @param {number} duration How long to wait, in milliseconds.
@@ -144,5 +144,3 @@ class Wait extends AbstractTourPrimitive {
     }
   }
 }
-
-exports = Wait;

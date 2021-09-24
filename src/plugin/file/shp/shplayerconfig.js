@@ -1,4 +1,4 @@
-goog.module('plugin.file.shp.SHPLayerConfig');
+goog.declareModuleId('plugin.file.shp.SHPLayerConfig');
 
 const log = goog.require('goog.log');
 const ResponseType = goog.require('goog.net.XhrIo.ResponseType');
@@ -15,7 +15,7 @@ const FeatureImporter = goog.requireType('os.im.FeatureImporter');
 
 /**
  */
-class SHPLayerConfig extends AbstractDataSourceLayerConfig {
+export default class SHPLayerConfig extends AbstractDataSourceLayerConfig {
   /**
    * Constructor.
    */
@@ -148,6 +148,3 @@ class SHPLayerConfig extends AbstractDataSourceLayerConfig {
  * @type {Logger}
  */
 const logger = log.getLogger('plugin.file.shp.SHPLayerConfig');
-
-
-exports = SHPLayerConfig;

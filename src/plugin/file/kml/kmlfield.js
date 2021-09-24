@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.KMLField');
+goog.declareModuleId('plugin.file.kml.KMLField');
 
 
 /**
@@ -11,4 +11,4 @@ const KMLField = {
   NAME: 'name'
 };
 
-exports = KMLField;
+export default KMLField;

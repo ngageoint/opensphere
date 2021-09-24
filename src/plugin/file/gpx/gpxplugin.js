@@ -1,4 +1,4 @@
-goog.module('plugin.file.gpx.GPXPlugin');
+goog.declareModuleId('plugin.file.gpx.GPXPlugin');
 
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
@@ -16,7 +16,7 @@ const GPXImportUI = goog.require('plugin.file.gpx.ui.GPXImportUI');
 /**
  * Provides GPX support
  */
-class GPXPlugin extends AbstractPlugin {
+export default class GPXPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -62,6 +62,3 @@ GPXPlugin.ID = 'gpx';
  * @const
  */
 GPXPlugin.TYPE = 'GPX Layers';
-
-
-exports = GPXPlugin;

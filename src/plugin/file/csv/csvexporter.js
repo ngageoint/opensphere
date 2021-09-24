@@ -1,4 +1,4 @@
-goog.module('plugin.file.csv.CSVExporter');
+goog.declareModuleId('plugin.file.csv.CSVExporter');
 
 const log = goog.require('goog.log');
 const Point = goog.require('ol.geom.Point');
@@ -24,7 +24,7 @@ const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
  *
  * @extends {AbstractCSVExporter.<Feature>}
  */
-class CSVExporter extends AbstractCSVExporter {
+export default class CSVExporter extends AbstractCSVExporter {
   /**
    * Constructor.
    */
@@ -212,7 +212,3 @@ CSVExporter.FIELDS = {
   START_TIME: 'START_TIME',
   END_TIME: 'END_TIME'
 };
-
-
-
-exports = CSVExporter;

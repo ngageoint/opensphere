@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.ui.KMLNodeUI');
+goog.declareModuleId('plugin.file.kml.ui.KMLNodeUI');
 
 const annotation = goog.require('os.annotation');
 
@@ -20,7 +20,7 @@ const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
 
@@ -54,7 +54,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'kmlnodeui';
+export const directiveTag = 'kmlnodeui';
 
 
 /**
@@ -68,7 +68,7 @@ Module.directive('kmlnodeui', [directive]);
  * Controller for KML tree node UI
  * @unrestricted
  */
-class Controller extends AbstractNodeUICtrl {
+export class Controller extends AbstractNodeUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -279,9 +279,3 @@ class Controller extends AbstractNodeUICtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

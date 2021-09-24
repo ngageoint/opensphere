@@ -1,4 +1,4 @@
-goog.module('plugin.file.gpx.GPXDescriptor');
+goog.declareModuleId('plugin.file.gpx.GPXDescriptor');
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const LayerType = goog.require('os.layer.LayerType');
@@ -7,7 +7,7 @@ const LayerType = goog.require('os.layer.LayerType');
 /**
  * GPX file descriptor.
  */
-class GPXDescriptor extends FileDescriptor {
+export default class GPXDescriptor extends FileDescriptor {
   /**
    * Constructor.
    */
@@ -32,5 +32,3 @@ class GPXDescriptor extends FileDescriptor {
     return options;
   }
 }
-
-exports = GPXDescriptor;

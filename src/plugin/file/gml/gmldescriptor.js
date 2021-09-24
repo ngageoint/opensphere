@@ -1,4 +1,4 @@
-goog.module('plugin.file.gml.GMLDescriptor');
+goog.declareModuleId('plugin.file.gml.GMLDescriptor');
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const layer = goog.require('os.layer');
@@ -9,7 +9,7 @@ const GMLParserConfig = goog.require('plugin.file.gml.GMLParserConfig');
 /**
  * GML file descriptor.
  */
-class GMLDescriptor extends FileDescriptor {
+export default class GMLDescriptor extends FileDescriptor {
   /**
    * Constructor.
    * @param {GMLParserConfig=} opt_config
@@ -39,5 +39,3 @@ class GMLDescriptor extends FileDescriptor {
     return options;
   }
 }
-
-exports = GMLDescriptor;

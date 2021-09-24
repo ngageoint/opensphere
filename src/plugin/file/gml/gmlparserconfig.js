@@ -1,4 +1,4 @@
-goog.module('plugin.file.gml.GMLParserConfig');
+goog.declareModuleId('plugin.file.gml.GMLParserConfig');
 
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const ImportManager = goog.require('os.ui.im.ImportManager');
@@ -9,7 +9,7 @@ const osUiSlickColumn = goog.require('os.ui.slick.column');
  * Configuration for a GML parser.
  * @unrestricted
  */
-class GMLParserConfig extends FileParserConfig {
+export default class GMLParserConfig extends FileParserConfig {
   /**
    * Constructor.
    */
@@ -37,5 +37,3 @@ class GMLParserConfig extends FileParserConfig {
     parser.dispose();
   }
 }
-
-exports = GMLParserConfig;

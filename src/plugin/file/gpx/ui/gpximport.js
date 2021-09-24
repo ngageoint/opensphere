@@ -1,4 +1,4 @@
-goog.module('plugin.file.gpx.ui.GPXImport');
+goog.declareModuleId('plugin.file.gpx.ui.GPXImport');
 
 const {ROOT} = goog.require('os');
 const FileDescriptor = goog.require('os.data.FileDescriptor');
@@ -13,7 +13,7 @@ const GPXProvider = goog.require('plugin.file.gpx.GPXProvider');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -26,7 +26,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'gpximport';
+export const directiveTag = 'gpximport';
 
 
 /**
@@ -42,7 +42,7 @@ Module.directive('gpximport', [directive]);
  * @extends {AbstractFileImportCtrl<!os.parse.FileParserConfig, !GPXDescriptor>}
  * @unrestricted
  */
-class Controller extends AbstractFileImportCtrl {
+export class Controller extends AbstractFileImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -79,9 +79,3 @@ class Controller extends AbstractFileImportCtrl {
     return GPXProvider.getInstance();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

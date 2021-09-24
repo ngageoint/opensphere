@@ -1,4 +1,4 @@
-goog.module('plugin.file.csv.CSVPlugin');
+goog.declareModuleId('plugin.file.csv.CSVPlugin');
 
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
@@ -18,7 +18,7 @@ const CSVImportUI = goog.require('plugin.file.csv.ui.CSVImportUI');
 /**
  * Provides CSV support
  */
-class CSVPlugin extends AbstractPlugin {
+export default class CSVPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -67,6 +67,3 @@ CSVPlugin.ID = 'csv';
  * @const
  */
 CSVPlugin.TYPE = 'CSV Layers';
-
-
-exports = CSVPlugin;

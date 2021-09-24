@@ -1,4 +1,4 @@
-goog.module('plugin.file.gml.GMLImportUI');
+goog.declareModuleId('plugin.file.gml.GMLImportUI');
 
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const osWindow = goog.require('os.ui.window');
@@ -9,7 +9,7 @@ const GMLParserConfig = goog.require('plugin.file.gml.GMLParserConfig');
 /**
  * @extends {FileImportUI.<GMLParserConfig>}
  */
-class GMLImportUI extends FileImportUI {
+export default class GMLImportUI extends FileImportUI {
   /**
    * Constructor.
    */
@@ -59,5 +59,3 @@ class GMLImportUI extends FileImportUI {
     osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 }
-
-exports = GMLImportUI;

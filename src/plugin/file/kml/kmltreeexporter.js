@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.KMLTreeExporter');
+goog.declareModuleId('plugin.file.kml.KMLTreeExporter');
 
 const log = goog.require('goog.log');
 
@@ -29,7 +29,7 @@ const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
  *
  * @extends {AbstractKMLExporter<!KMLNode>}
  */
-class KMLTreeExporter extends AbstractKMLExporter {
+export default class KMLTreeExporter extends AbstractKMLExporter {
   /**
    * Constructor.
    */
@@ -377,6 +377,3 @@ class KMLTreeExporter extends AbstractKMLExporter {
  * @type {goog.log.Logger}
  */
 const logger = log.getLogger('plugin.file.kml.KMLTreeExporter');
-
-
-exports = KMLTreeExporter;

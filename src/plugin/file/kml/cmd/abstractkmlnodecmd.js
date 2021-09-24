@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.cmd.AbstractKMLNode');
+goog.declareModuleId('plugin.file.kml.cmd.AbstractKMLNode');
 
 const Disposable = goog.require('goog.Disposable');
 const dispose = goog.require('goog.dispose');
@@ -13,7 +13,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class AbstractKMLNode extends Disposable {
+export default class AbstractKMLNode extends Disposable {
   /**
    * Constructor.
    * @param {!plugin.file.kml.ui.KMLNode} node The KML node
@@ -180,5 +180,3 @@ class AbstractKMLNode extends Disposable {
     return false;
   }
 }
-
-exports = AbstractKMLNode;

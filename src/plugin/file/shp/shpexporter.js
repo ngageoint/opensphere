@@ -1,4 +1,4 @@
-goog.module('plugin.file.shp.SHPExporter');
+goog.declareModuleId('plugin.file.shp.SHPExporter');
 
 const crypt = goog.require('goog.crypt');
 const log = goog.require('goog.log');
@@ -34,7 +34,7 @@ const VectorSource = goog.requireType('os.source.Vector');
  * @extends {ZipExporter.<T>}
  * @template T
  */
-class SHPExporter extends ZipExporter {
+export default class SHPExporter extends ZipExporter {
   /**
    * Constructor.
    */
@@ -1144,5 +1144,3 @@ SHPExporter.PRJ_WGS84 = 'GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",' +
  * @const
  */
 SHPExporter.CPG_UTF8 = 'UTF-8';
-
-exports = SHPExporter;

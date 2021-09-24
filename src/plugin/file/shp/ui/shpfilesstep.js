@@ -1,4 +1,4 @@
-goog.module('plugin.file.shp.ui.SHPFilesStep');
+goog.declareModuleId('plugin.file.shp.ui.SHPFilesStep');
 
 const googEvents = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -25,7 +25,7 @@ const SHPParserConfig = goog.requireType('plugin.file.shp.SHPParserConfig');
  *
  * @extends {AbstractWizardStep<SHPParserConfig>}
  */
-class SHPFilesStep extends AbstractWizardStep {
+export default class SHPFilesStep extends AbstractWizardStep {
   /**
    * Constructor.
    */
@@ -417,6 +417,3 @@ class Controller {
  * @type {log.Logger}
  */
 const logger = log.getLogger('plugin.file.shp.ui.SHPFilesStep');
-
-
-exports = SHPFilesStep;

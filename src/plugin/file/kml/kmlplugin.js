@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.KMLPlugin');
+goog.declareModuleId('plugin.file.kml.KMLPlugin');
 
 // Load to register directive with Angular.
 goog.require('plugin.file.kml.ui.PlacemarkEditUI');
@@ -26,7 +26,7 @@ const KMLImportUI = goog.require('plugin.file.kml.ui.KMLImportUI');
 /**
  * Provides KML support
  */
-class KMLPlugin extends AbstractPlugin {
+export default class KMLPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -102,6 +102,3 @@ KMLPlugin.TYPE = 'KML Layers';
  * @const
  */
 KMLPlugin.ICON_MIRROR = 'plugin.file.kml.icon.mirror';
-
-
-exports = KMLPlugin;

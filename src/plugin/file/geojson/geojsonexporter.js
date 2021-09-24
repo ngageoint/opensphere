@@ -1,4 +1,4 @@
-goog.module('plugin.file.geojson.GeoJSONExporter');
+goog.declareModuleId('plugin.file.geojson.GeoJSONExporter');
 
 const log = goog.require('goog.log');
 const GeoJSON = goog.require('ol.format.GeoJSON');
@@ -18,7 +18,7 @@ const TimeRange = goog.require('os.time.TimeRange');
  *
  * @extends {AbstractExporter.<ol.Feature>}
  */
-class GeoJSONExporter extends AbstractExporter {
+export default class GeoJSONExporter extends AbstractExporter {
   /**
    * Constructor.
    */
@@ -99,5 +99,3 @@ GeoJSONExporter.FIELDS = {
   START_TIME: 'START_TIME',
   END_TIME: 'END_TIME'
 };
-
-exports = GeoJSONExporter;

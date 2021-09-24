@@ -1,4 +1,4 @@
-goog.module('plugin.file.geojson.GeoJSONImport');
+goog.declareModuleId('plugin.file.geojson.GeoJSONImport');
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const Module = goog.require('os.ui.Module');
@@ -14,7 +14,7 @@ const GeoJSONProvider = goog.require('plugin.file.geojson.GeoJSONProvider');
  * @extends {FileImportWizard.<!plugin.file.geojson.GeoJSONParserConfig, !GeoJSONDescriptor>}
  * @unrestricted
  */
-class Controller extends FileImportWizard {
+export class Controller extends FileImportWizard {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -64,7 +64,7 @@ class Controller extends FileImportWizard {
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = wizardDirective();
   dir.controller = Controller;
   return dir;
@@ -74,16 +74,10 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'geojsonimport';
+export const directiveTag = 'geojsonimport';
 
 
 /**
  * Add the directive to the module
  */
 Module.directive('geojsonimport', [directive]);
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

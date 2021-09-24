@@ -1,4 +1,4 @@
-goog.module('plugin.file.geojson.GeoJSONPlugin');
+goog.declareModuleId('plugin.file.geojson.GeoJSONPlugin');
 
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
@@ -23,7 +23,7 @@ GeoJSONMixin.init();
 /**
  * Provides GeoJSON support
  */
-class GeoJSONPlugin extends AbstractPlugin {
+export default class GeoJSONPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -74,6 +74,3 @@ GeoJSONPlugin.ID = 'geojson';
  * @const
  */
 GeoJSONPlugin.TYPE = 'GeoJSON Layers';
-
-
-exports = GeoJSONPlugin;

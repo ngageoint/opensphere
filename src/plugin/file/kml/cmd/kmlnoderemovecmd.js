@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.cmd.KMLNodeRemove');
+goog.declareModuleId('plugin.file.kml.cmd.KMLNodeRemove');
 
 const State = goog.require('os.command.State');
 const AbstractKMLNode = goog.require('plugin.file.kml.cmd.AbstractKMLNode');
@@ -9,7 +9,7 @@ const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
 /**
  * Command to remove a KML node from its parent.
  */
-class KMLNodeRemove extends AbstractKMLNode {
+export default class KMLNodeRemove extends AbstractKMLNode {
   /**
    * Constructor.
    * @param {!KMLNode} node The KML node
@@ -54,5 +54,3 @@ class KMLNodeRemove extends AbstractKMLNode {
     return false;
   }
 }
-
-exports = KMLNodeRemove;

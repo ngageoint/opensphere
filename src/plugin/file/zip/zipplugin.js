@@ -1,4 +1,4 @@
-goog.module('plugin.file.zip.ZIPPlugin');
+goog.declareModuleId('plugin.file.zip.ZIPPlugin');
 
 const zip = goog.require('os.file.mime.zip');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
@@ -10,7 +10,7 @@ const ZIPImportUI = goog.require('plugin.file.zip.ui.ZIPImportUI');
 /**
  * Provides ZIP support
  */
-class ZIPPlugin extends AbstractPlugin {
+export default class ZIPPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -37,6 +37,3 @@ class ZIPPlugin extends AbstractPlugin {
  * @const
  */
 ZIPPlugin.ID = 'zip';
-
-
-exports = ZIPPlugin;

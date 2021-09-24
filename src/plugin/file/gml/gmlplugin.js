@@ -1,4 +1,4 @@
-goog.module('plugin.file.gml.GMLPlugin');
+goog.declareModuleId('plugin.file.gml.GMLPlugin');
 
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
@@ -21,7 +21,7 @@ GMLMixin.init();
 /**
  * Provides GML support
  */
-class GMLPlugin extends AbstractPlugin {
+export default class GMLPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -65,6 +65,3 @@ const ID = 'gml';
  * @type {string}
  */
 const TYPE = 'GML Layers';
-
-
-exports = GMLPlugin;

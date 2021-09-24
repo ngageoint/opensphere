@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.KMLExporter');
+goog.declareModuleId('plugin.file.kml.KMLExporter');
 
 const log = goog.require('goog.log');
 
@@ -34,7 +34,7 @@ const VectorSource = goog.requireType('os.source.Vector');
  *
  * @extends {AbstractKMLExporter<Feature>}
  */
-class KMLExporter extends AbstractKMLExporter {
+export default class KMLExporter extends AbstractKMLExporter {
   /**
    * Constructor.
    */
@@ -405,6 +405,3 @@ class KMLExporter extends AbstractKMLExporter {
  * @type {goog.log.Logger}
  */
 const logger = log.getLogger('plugin.file.kml.KMLExporter');
-
-
-exports = KMLExporter;

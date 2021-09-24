@@ -1,4 +1,4 @@
-goog.module('plugin.file.geojson.GeoJSONImportHandler');
+goog.declareModuleId('plugin.file.geojson.GeoJSONImportHandler');
 
 const DataManager = goog.require('os.data.DataManager');
 const FileDescriptor = goog.require('os.data.FileDescriptor');
@@ -13,7 +13,7 @@ const GeoJSONProvider = goog.require('plugin.file.geojson.GeoJSONProvider');
  * Import handler for GeoJSON. Skips showing a UI and just uses the default autodetected time mappings.
  * @extends {FileImportUI<GeoJSONParserConfig>}
  */
-class GeoJSONImportHandler extends FileImportUI {
+export default class GeoJSONImportHandler extends FileImportUI {
   /**
    * Constructor.
    */
@@ -76,5 +76,3 @@ class GeoJSONImportHandler extends FileImportUI {
     to['keepUrl'] = from['keepUrl'];
   }
 }
-
-exports = GeoJSONImportHandler;

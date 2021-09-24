@@ -1,4 +1,4 @@
-goog.module('plugin.file.gml.GMLParser');
+goog.declareModuleId('plugin.file.gml.GMLParser');
 
 const ol = goog.require('ol');
 const Fields = goog.require('os.Fields');
@@ -16,7 +16,7 @@ const IMapping = goog.requireType('os.im.mapping.IMapping');
 
 /**
  */
-class GMLParser extends BaseGMLParser {
+export default class GMLParser extends BaseGMLParser {
   /**
    * Constructor.
    */
@@ -134,6 +134,3 @@ class GMLParser extends BaseGMLParser {
  * @const
  */
 GMLParser.SKIPPED_COLUMNS_ = /^(geometry|recordtime|time|styleurl)$/i;
-
-
-exports = GMLParser;

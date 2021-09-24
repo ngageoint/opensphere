@@ -1,4 +1,4 @@
-goog.module('plugin.file.geojson.GeoJSONLayerConfig');
+goog.declareModuleId('plugin.file.geojson.GeoJSONLayerConfig');
 
 const AltMapping = goog.require('os.im.mapping.AltMapping');
 const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
@@ -15,7 +15,7 @@ const GeoJSONParserConfig = goog.require('plugin.file.geojson.GeoJSONParserConfi
 
 /**
  */
-class GeoJSONLayerConfig extends AbstractDataSourceLayerConfig {
+export default class GeoJSONLayerConfig extends AbstractDataSourceLayerConfig {
   /**
    * Constructor.
    */
@@ -67,5 +67,3 @@ class GeoJSONLayerConfig extends AbstractDataSourceLayerConfig {
     return parser;
   }
 }
-
-exports = GeoJSONLayerConfig;

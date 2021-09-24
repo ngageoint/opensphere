@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.KMLDescriptor');
+goog.declareModuleId('plugin.file.kml.KMLDescriptor');
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const layer = goog.require('os.layer');
@@ -11,7 +11,7 @@ const KMLExporter = goog.require('plugin.file.kml.KMLExporter');
 /**
  * KML file descriptor.
  */
-class KMLDescriptor extends FileDescriptor {
+export default class KMLDescriptor extends FileDescriptor {
   /**
    * Constructor.
    */
@@ -50,5 +50,3 @@ class KMLDescriptor extends FileDescriptor {
     return new KMLExporter();
   }
 }
-
-exports = KMLDescriptor;

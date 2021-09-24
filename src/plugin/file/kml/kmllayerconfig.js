@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.KMLLayerConfig');
+goog.declareModuleId('plugin.file.kml.KMLLayerConfig');
 
 const ResponseType = goog.require('goog.net.XhrIo.ResponseType');
 const userAgent = goog.require('goog.userAgent');
@@ -17,7 +17,7 @@ const KMLSource = goog.require('plugin.file.kml.KMLSource');
 /**
  * @extends {AbstractDataSourceLayerConfig.<plugin.file.kml.ui.KMLNode>}
  */
-class KMLLayerConfig extends AbstractDataSourceLayerConfig {
+export default class KMLLayerConfig extends AbstractDataSourceLayerConfig {
   /**
    * Constructor.
    */
@@ -82,5 +82,3 @@ class KMLLayerConfig extends AbstractDataSourceLayerConfig {
     return source;
   }
 }
-
-exports = KMLLayerConfig;

@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.KMLSource');
+goog.declareModuleId('plugin.file.kml.KMLSource');
 
 const Timer = goog.require('goog.Timer');
 const Delay = goog.require('goog.async.Delay');
@@ -31,7 +31,7 @@ const UIEvent = goog.requireType('os.ui.events.UIEvent');
 
 /**
  */
-class KMLSource extends RequestSource {
+export default class KMLSource extends RequestSource {
   /**
    * Constructor.
    * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
@@ -843,6 +843,3 @@ class KMLSource extends RequestSource {
  * @type {Logger}
  */
 const logger = log.getLogger('plugin.file.kml.KMLSource');
-
-
-exports = KMLSource;

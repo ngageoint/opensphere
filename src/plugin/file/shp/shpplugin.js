@@ -1,4 +1,4 @@
-goog.module('plugin.file.shp.SHPPlugin');
+goog.declareModuleId('plugin.file.shp.SHPPlugin');
 
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
@@ -19,7 +19,7 @@ const ZipSHPImportUI = goog.require('plugin.file.shp.ui.ZipSHPImportUI');
 /**
  * Provides SHP support
  */
-class SHPPlugin extends AbstractPlugin {
+export default class SHPPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -69,6 +69,3 @@ SHPPlugin.ID = 'shp';
  * @const
  */
 SHPPlugin.TYPE = 'SHP Layers';
-
-
-exports = SHPPlugin;

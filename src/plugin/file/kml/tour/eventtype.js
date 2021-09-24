@@ -1,10 +1,9 @@
-goog.module('plugin.file.kml.tour.EventType');
-
+goog.declareModuleId('plugin.file.kml.tour.EventType');
 
 /**
  * Tour event types.
  * @enum {string}
  */
-exports = {
+export default {
   PLAYING: 'playing'
 };

@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.KMLParser');
+goog.declareModuleId('plugin.file.kml.KMLParser');
 
 const Uri = goog.require('goog.Uri');
 const asserts = goog.require('goog.asserts');
@@ -81,7 +81,7 @@ let KMLParserStackObj;
  * @implements {IParser<KMLNode>}
  * @template T
  */
-class KMLParser extends AsyncZipParser {
+export default class KMLParser extends AsyncZipParser {
   /**
    * Constructor.
    * @param {Object<string, *>} options Layer configuration options.
@@ -1817,5 +1817,3 @@ const baseElementParsers = {
   'open': KMLParser.setNodeCollapsed_,
   'visibility': KMLParser.setNodeVisibility_
 };
-
-exports = KMLParser;
