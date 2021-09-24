@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.google.places.Result');
 
-const CoordinateResult = goog.require('os.ui.search.place.CoordinateResult');
-const {directiveTag: resultCardEl} = goog.require('plugin.google.places.ResultCardUI');
+import {directiveTag as resultCardEl} from './resultcard.js';
 
+const CoordinateResult = goog.require('os.ui.search.place.CoordinateResult');
 
 /**
  */

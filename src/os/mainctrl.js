@@ -38,6 +38,7 @@ import GPXPlugin from '../plugin/file/gpx/gpxplugin.js';
 import KMLPlugin from '../plugin/file/kml/kmlplugin.js';
 import SHPPlugin from '../plugin/file/shp/shpplugin.js';
 import ZIPPlugin from '../plugin/file/zip/zipplugin.js';
+import GooglePlacesPlugin from '../plugin/google/places/plugin.js';
 import * as dispatcher from './dispatcher.js';
 import * as os from './os.js';
 import AbstractMainCtrl from './ui/abstractmainctrl.js';
@@ -174,7 +175,6 @@ const osWindow = goog.require('os.ui.window');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const UrlManager = goog.require('os.url.UrlManager');
 
-const pluginGooglePlacesPlugin = goog.require('plugin.google.places.Plugin');
 const HeatmapPlugin = goog.require('plugin.heatmap.HeatmapPlugin');
 const OGCPlugin = goog.require('plugin.ogc.OGCPlugin');
 const pluginOpenpagePlugin = goog.require('plugin.openpage.Plugin');
@@ -520,7 +520,7 @@ export default class Controller extends AbstractMainCtrl {
     pluginManager.addPlugin(new OGCPlugin());
     pluginManager.addPlugin(new XYZPlugin());
     pluginManager.addPlugin(new BaseMapPlugin());
-    pluginManager.addPlugin(new pluginGooglePlacesPlugin());
+    pluginManager.addPlugin(new GooglePlacesPlugin());
     pluginManager.addPlugin(new Plugin());
     pluginManager.addPlugin(new NominatimPlugin());
     pluginManager.addPlugin(new CSVPlugin());
