@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.ui.GeoserverImportUI');
+goog.declareModuleId('plugin.ogc.ui.GeoserverImportUI');
 
 goog.require('os.ui.singleUrlFormDirective');
 
@@ -16,7 +16,7 @@ const OSFile = goog.requireType('os.file.File');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: os.ROOT + 'views/forms/singleurl.html',
@@ -28,7 +28,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'geoserver';
+export const directiveTag = 'geoserver';
 
 
 /**
@@ -41,7 +41,7 @@ Module.directive('geoserver', [directive]);
  * Controller for the geoserver import dialog
  * @unrestricted
  */
-class Controller extends SingleUrlProviderImportCtrl {
+export class Controller extends SingleUrlProviderImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -93,9 +93,3 @@ class Controller extends SingleUrlProviderImportCtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

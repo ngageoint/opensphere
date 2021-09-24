@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.wms.TileWMSSource');
+goog.declareModuleId('plugin.ogc.wms.TileWMSSource');
 
 const TileWMS = goog.require('ol.source.TileWMS');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
@@ -16,7 +16,7 @@ const ILoadingSource = goog.requireType('os.ol.source.ILoadingSource');
  * @implements {ILoadingSource}
  * @implements {IStyle}
  */
-class TileWMSSource extends TileWMS {
+export default class TileWMSSource extends TileWMS {
   /**
    * Constructor.
    * @param {olx.source.TileWMSOptions=} opt_options Tile WMS options.
@@ -63,6 +63,3 @@ class TileWMSSource extends TileWMS {
 }
 
 osImplements(TileWMSSource, IStyle.ID);
-
-
-exports = TileWMSSource;

@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.OGCLayerDescriptor');
+goog.declareModuleId('plugin.ogc.OGCLayerDescriptor');
 
 const QueryData = goog.require('goog.Uri.QueryData');
 const EventType = goog.require('goog.net.EventType');
@@ -48,7 +48,7 @@ const OGCServer = goog.requireType('os.ui.ogc.OGCServer');
  * @implements {IFilterable}
  * @implements {IAreaTest}
  */
-class OGCLayerDescriptor extends LayerSyncDescriptor {
+export default class OGCLayerDescriptor extends LayerSyncDescriptor {
   /**
    * Constructor.
    */
@@ -1317,6 +1317,3 @@ osImplements(OGCLayerDescriptor, IOGCDescriptor.ID);
  * @const
  */
 OGCLayerDescriptor.FILTERABLE_RE = /#features/;
-
-
-exports = OGCLayerDescriptor;

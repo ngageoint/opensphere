@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.mime');
+goog.declareModuleId('plugin.ogc.mime');
 
 const Promise = goog.require('goog.Promise');
 const mime = goog.require('os.file.mime');
@@ -36,7 +36,7 @@ const or_ = function(arr) {
  * @param {*=} opt_context
  * @return {!Promise<*|undefined>}
  */
-const detectOGC = function(buffer, file, opt_context) {
+export const detectOGC = function(buffer, file, opt_context) {
   return Promise.all([
     capTest_(buffer, file, opt_context),
     exTest_(buffer, file, opt_context)]).then(or_);
@@ -48,7 +48,7 @@ mime.register(ogc.ID, detectOGC, 0, xml.TYPE);
 /**
  * @type {string}
  */
-const GEOSERVER_TYPE = 'geoserver';
+export const GEOSERVER_TYPE = 'geoserver';
 
 /**
  * @param {ArrayBuffer} buffer
@@ -56,7 +56,7 @@ const GEOSERVER_TYPE = 'geoserver';
  * @param {*=} opt_context
  * @return {!Promise<*|undefined>}
  */
-const detectGeoserver = function(buffer, file, opt_context) {
+export const detectGeoserver = function(buffer, file, opt_context) {
   return /** @type {!Promise<*|undefined>} */ (Promise.resolve(file && GeoServer.URI_REGEXP.test(file.getUrl())));
 };
 
@@ -65,9 +65,3 @@ mime.register(GEOSERVER_TYPE, detectGeoserver, 0, ogc.ID);
 
 // we also allow users to paste the /geoserver/web url in
 mime.register(GEOSERVER_TYPE, detectGeoserver, 0, html.TYPE);
-
-exports = {
-  detectOGC,
-  GEOSERVER_TYPE,
-  detectGeoserver
-};

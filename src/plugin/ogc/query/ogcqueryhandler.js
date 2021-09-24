@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.query.OGCQueryHandler');
+goog.declareModuleId('plugin.ogc.query.OGCQueryHandler');
 
 const ParamModifier = goog.require('os.net.ParamModifier');
 const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');
@@ -10,7 +10,7 @@ const OGCSpatialFormatter = goog.require('plugin.ogc.query.OGCSpatialFormatter')
 
 /**
  */
-class OGCQueryHandler extends QueryHandler {
+export default class OGCQueryHandler extends QueryHandler {
   /**
    * Constructor.
    * @param {string=} opt_geomColumn
@@ -25,5 +25,3 @@ class OGCQueryHandler extends QueryHandler {
     this.spatialRequired = true;
   }
 }
-
-exports = OGCQueryHandler;

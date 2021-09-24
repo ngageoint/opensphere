@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.ui.OGCLayerNodeUI');
+goog.declareModuleId('plugin.ogc.ui.OGCLayerNodeUI');
 
 const Deferred = goog.require('goog.async.Deferred');
 const DataManager = goog.require('os.data.DataManager');
@@ -22,7 +22,7 @@ const template = '<span ng-if="chooseTime" ng-click="nodeUi.chooseTime()">' +
 /**
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = defaultLayerNodeUIDirective();
   dir.template = dir.template.replace('>', '>' + template);
   dir.controller = Controller;
@@ -33,7 +33,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'ogclayernodeui';
+export const directiveTag = 'ogclayernodeui';
 
 
 /**
@@ -45,7 +45,7 @@ Module.directive('ogclayernodeui', [directive]);
 /**
  * @unrestricted
  */
-class Controller extends DefaultLayerNodeUICtrl {
+export class Controller extends DefaultLayerNodeUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -88,9 +88,3 @@ class Controller extends DefaultLayerNodeUICtrl {
     ChooseTimeColumnController.launch(this.getLayerId(), deferred);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

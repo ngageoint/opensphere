@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.wfs.WFSLayerConfig');
+goog.declareModuleId('plugin.ogc.wfs.WFSLayerConfig');
 
 const Deferred = goog.require('goog.async.Deferred');
 const log = goog.require('goog.log');
@@ -42,7 +42,7 @@ const {default: GMLParser} = goog.requireType('plugin.file.gml.GMLParser');
  * This is a plain WFS layer config that handles DescribeFeatureType, altitude and time mappings,
  * and outputformat detection for GeoJSON, GML3, or GML2.
  */
-class WFSLayerConfig extends AbstractDataSourceLayerConfig {
+export default class WFSLayerConfig extends AbstractDataSourceLayerConfig {
   /**
    * Constructor.
    */
@@ -533,6 +533,3 @@ WFSLayerConfig.TYPE_CONFIGS = [
   WFSLayerConfig.GML3_CONFIG,
   WFSLayerConfig.GML2_CONFIG
 ];
-
-
-exports = WFSLayerConfig;

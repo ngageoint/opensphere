@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.wms.WMSLayerConfig');
+goog.declareModuleId('plugin.ogc.wms.WMSLayerConfig');
 
 const AnimatedTile = goog.require('os.layer.AnimatedTile');
 const AbstractTileLayerConfig = goog.require('os.layer.config.AbstractTileLayerConfig');
@@ -58,7 +58,7 @@ const TileWMSSource = goog.require('plugin.ogc.wms.TileWMSSource');
  *
  * This will produce a WMS layer which queries for TIME=&lt;formattedStartDate&gt;/&lt;formattedEndDate&gt;
  */
-class WMSLayerConfig extends AbstractTileLayerConfig {
+export default class WMSLayerConfig extends AbstractTileLayerConfig {
   /**
    * Constructor.
    */
@@ -164,5 +164,3 @@ class WMSLayerConfig extends AbstractTileLayerConfig {
     return super.getTileHeight(options);
   }
 }
-
-exports = WMSLayerConfig;

@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.ui.ChooseTimeColumnUI');
+goog.declareModuleId('plugin.ogc.ui.ChooseTimeColumnUI');
 
 goog.require('os.ui.util.ValidationMessageUI');
 
@@ -18,7 +18,7 @@ const OGCLayerDescriptor = goog.requireType('plugin.ogc.OGCLayerDescriptor');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
 
@@ -36,7 +36,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'choose-time-column';
+export const directiveTag = 'choose-time-column';
 
 
 /**
@@ -50,7 +50,7 @@ Module.directive('chooseTimeColumn', [directive]);
  * Allow the user to choose time columns and save it to the descriptor
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -168,9 +168,3 @@ class Controller extends Disposable {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

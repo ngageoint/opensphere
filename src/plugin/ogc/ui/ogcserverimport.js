@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.ui.OgcServerImportUI');
+goog.declareModuleId('plugin.ogc.ui.OgcServerImportUI');
 
 goog.require('os.ui.singleUrlFormDirective');
 
@@ -18,7 +18,7 @@ const OSFile = goog.requireType('os.file.File');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: os.ROOT + 'views/plugin/ogc/ui/ogcserverimport.html',
@@ -30,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'ogcserver';
+export const directiveTag = 'ogcserver';
 
 
 /**
@@ -43,7 +43,7 @@ Module.directive('ogcserver', [directive]);
  * Controller for the ogcserver import dialog
  * @unrestricted
  */
-class Controller extends ProviderImportCtrl {
+export class Controller extends ProviderImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -172,9 +172,3 @@ class Controller extends ProviderImportCtrl {
     super.saveAndClose();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

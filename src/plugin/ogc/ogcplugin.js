@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.OGCPlugin');
+goog.declareModuleId('plugin.ogc.OGCPlugin');
 
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
@@ -28,7 +28,7 @@ const WMTSServer = goog.require('plugin.ogc.wmts.WMTSServer');
 /**
  * Provides WMS/WFS layer support, both separately and as a grouped layer combination.
  */
-class OGCPlugin extends AbstractPlugin {
+export default class OGCPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -103,5 +103,3 @@ const getDefaultWfsOptions = function() {
 
   return options;
 };
-
-exports = OGCPlugin;

@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.wfs.QueryWFSLayerConfig');
+goog.declareModuleId('plugin.ogc.wfs.QueryWFSLayerConfig');
 
 const ParamModifier = goog.require('os.net.ParamModifier');
 const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');
@@ -20,7 +20,7 @@ const OGCFilterModifierOptions = goog.requireType('os.ogc.filter.OGCFilterModifi
  * The query version of the WFS layer config, which adds connections to various query managers
  * to automatically requery when combinations of areas, filters, and layers change.
  */
-class QueryWFSLayerConfig extends WFSLayerConfig {
+export default class QueryWFSLayerConfig extends WFSLayerConfig {
   /**
    * Constructor.
    */
@@ -107,5 +107,3 @@ class QueryWFSLayerConfig extends WFSLayerConfig {
     }
   }
 }
-
-exports = QueryWFSLayerConfig;
