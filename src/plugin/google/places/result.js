@@ -1,4 +1,4 @@
-goog.module('plugin.google.places.Result');
+goog.declareModuleId('plugin.google.places.Result');
 
 const CoordinateResult = goog.require('os.ui.search.place.CoordinateResult');
 const {directiveTag: resultCardEl} = goog.require('plugin.google.places.ResultCardUI');
@@ -6,7 +6,7 @@ const {directiveTag: resultCardEl} = goog.require('plugin.google.places.ResultCa
 
 /**
  */
-class Result extends CoordinateResult {
+export default class Result extends CoordinateResult {
   /**
    * Constructor.
    * @param {ol.Feature} result
@@ -23,5 +23,3 @@ class Result extends CoordinateResult {
     return `<${resultCardEl} result="result"></${resultCardEl}>`;
   }
 }
-
-exports = Result;

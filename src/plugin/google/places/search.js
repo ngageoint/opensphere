@@ -1,4 +1,4 @@
-goog.module('plugin.google.places.Search');
+goog.declareModuleId('plugin.google.places.Search');
 
 const Feature = goog.require('ol.Feature');
 const Point = goog.require('ol.geom.Point');
@@ -18,7 +18,7 @@ const Result = goog.require('plugin.google.places.Result');
 /**
  * Searches Google Places API
  */
-class Search extends AbstractUrlSearch {
+export default class Search extends AbstractUrlSearch {
   /**
    * Constructor.
    * @param {string} name
@@ -129,5 +129,3 @@ class Search extends AbstractUrlSearch {
     super.onSearchSuccess(evt);
   }
 }
-
-exports = Search;

@@ -1,4 +1,4 @@
-goog.module('plugin.google.places.ResultCardUI');
+goog.declareModuleId('plugin.google.places.ResultCardUI');
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
@@ -10,7 +10,7 @@ const FeatureResultCardCtrl = goog.require('os.ui.search.FeatureResultCardCtrl')
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   replace: true,
   restrict: 'E',
   templateUrl: ROOT + 'views/plugin/google/places/resultcard.html',
@@ -22,7 +22,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'googleplacesresultcard';
+export const directiveTag = 'googleplacesresultcard';
 
 
 /**
@@ -36,7 +36,7 @@ Module.directive('googleplacesresultcard', [directive]);
  * Controller for the beresultcard directive.
  * @unrestricted
  */
-class Controller extends FeatureResultCardCtrl {
+export class Controller extends FeatureResultCardCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -47,9 +47,3 @@ class Controller extends FeatureResultCardCtrl {
     super($scope, $element);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

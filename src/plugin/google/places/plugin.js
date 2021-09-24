@@ -1,4 +1,4 @@
-goog.module('plugin.google.places.Plugin');
+goog.declareModuleId('plugin.google.places.Plugin');
 
 const Settings = goog.require('os.config.Settings');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
@@ -10,7 +10,7 @@ const Search = goog.require('plugin.google.places.Search');
 /**
  * Provides GeoNames search
  */
-class Plugin extends AbstractPlugin {
+export default class Plugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -29,5 +29,3 @@ class Plugin extends AbstractPlugin {
     }
   }
 }
-
-exports = Plugin;

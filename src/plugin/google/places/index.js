@@ -1,9 +1,7 @@
-goog.module('plugin.google.places');
+goog.declareModuleId('plugin.google.places');
 
 /**
  * Identifier for plugin components.
  * @type {string}
  */
-const ID = 'google-places';
-
-exports = {ID};
+export const ID = 'google-places';

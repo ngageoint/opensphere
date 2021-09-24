@@ -1,4 +1,4 @@
-goog.module('plugin.google.places.AttrResult');
+goog.declareModuleId('plugin.google.places.AttrResult');
 
 const AbstractSearchResult = goog.require('os.search.AbstractSearchResult');
 const {directiveTag: attrCardEl} = goog.require('plugin.google.places.AttrCardUI');
@@ -9,7 +9,7 @@ const {directiveTag: attrCardEl} = goog.require('plugin.google.places.AttrCardUI
  *
  * @extends {AbstractSearchResult<Array<!string>>}
  */
-class AttrResult extends AbstractSearchResult {
+export default class AttrResult extends AbstractSearchResult {
   /**
    * Constructor.
    * @param {Array<!string>} attributions
@@ -25,5 +25,3 @@ class AttrResult extends AbstractSearchResult {
     return `<${attrCardEl} result="result"></${attrCardEl}>`;
   }
 }
-
-exports = AttrResult;
