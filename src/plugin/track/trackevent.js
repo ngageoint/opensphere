@@ -1,4 +1,4 @@
-goog.module('plugin.track.Event');
+goog.declareModuleId('plugin.track.Event');
 
 const googEventsEvent = goog.require('goog.events.Event');
 
@@ -10,7 +10,7 @@ const OlFeature = goog.requireType('ol.Feature');
 /**
  * Event for the track plugin.
  */
-class Event extends googEventsEvent {
+export default class Event extends googEventsEvent {
   /**
    * Constructor.
    * @param {string} type The event type
@@ -70,5 +70,3 @@ class Event extends googEventsEvent {
     return eventType != null && eventType.endsWith(':selected');
   }
 }
-
-exports = Event;

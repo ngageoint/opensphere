@@ -1,9 +1,10 @@
-goog.module('plugin.track.ConfirmTrackUI');
+goog.declareModuleId('plugin.track.ConfirmTrackUI');
 
-const {ROOT} = goog.require('os');
-const {default: KMLField} = goog.require('plugin.file.kml.KMLField');
+import {ROOT} from '../../os/os.js';
+import KMLField from '../file/kml/kmlfield.js';
+import PlacesManager from '../places/placesmanager.js';
+
 const Module = goog.require('os.ui.Module');
-const {default: PlacesManager} = goog.require('plugin.places.PlacesManager');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 
 const OlFeature = goog.requireType('ol.Feature');
@@ -14,7 +15,7 @@ const OlFeature = goog.requireType('ol.Feature');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   templateUrl: ROOT + 'views/plugin/track/confirmtrack.html',
   controller: Controller,
@@ -33,7 +34,7 @@ Module.directive('confirmtrack', [directive]);
  * Controller for the track selection window.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -77,8 +78,3 @@ class Controller {
     return trackName;
   }
 }
-
-exports = {
-  Controller,
-  directive
-};

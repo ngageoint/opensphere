@@ -1,16 +1,16 @@
-goog.module('plugin.track');
+goog.declareModuleId('plugin.track');
+
+import * as osFeature from '../../os/feature/feature.js';
+import KMLNodeAdd from '../file/kml/cmd/kmlnodeaddcmd.js';
+import {updatePlacemark} from '../file/kml/ui/kmlui.js';
+import PlacesManager from '../places/placesmanager.js';
 
 const log = goog.require('goog.log');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
-const osFeature = goog.require('os.feature');
-const {default: PlacesManager} = goog.require('plugin.places.PlacesManager');
-
 const AlertManager = goog.require('os.alert.AlertManager');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const {createTrack} = goog.require('os.track');
 const TrackField = goog.require('os.track.TrackField');
-const {default: KMLNodeAdd} = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
-const {updatePlacemark} = goog.require('plugin.file.kml.ui');
 
 const Promise = goog.requireType('goog.Promise');
 const OlFeature = goog.requireType('ol.Feature');
@@ -30,13 +30,13 @@ const LOGGER_ = log.getLogger('plugin.track');
  * Identifier for track plugin components.
  * @type {string}
  */
-const ID = 'track';
+export const ID = 'track';
 
 /**
  * Settings key to enable/disable the "Predicted" Tracks feature
  * @type {string}
  */
-const PREDICT = 'plugin.track.predict';
+export const PREDICT = 'plugin.track.predict';
 
 /**
  * Creates a track and adds it to the Saved Places layer.
@@ -79,7 +79,7 @@ let createAndAdd_ = function(options) {
  * @param {!CreateOptions} options The options object for the track.
  * @return {TrackFeatureLike|undefined} The track feature.
  */
-const createAndAdd = function(options) {
+export const createAndAdd = function(options) {
   return createAndAdd_(options);
 };
 
@@ -88,7 +88,7 @@ const createAndAdd = function(options) {
  *
  * @param {!function(!CreateOptions):(TrackFeatureLike|undefined)} f The new implementation
  */
-const setCreateAndAdd = function(f) {
+export const setCreateAndAdd = function(f) {
   createAndAdd_ = f;
 };
 
@@ -96,7 +96,7 @@ const setCreateAndAdd = function(f) {
  * Update the track source
  * @param {TrackFeatureLike|undefined} track
  */
-const updateTrackSource = function(track) {
+export const updateTrackSource = function(track) {
   if (track) {
     var source = osFeature.getSource(track);
     if (source) {
@@ -122,12 +122,4 @@ const updateTrackSource = function(track) {
       }
     }
   }
-};
-
-exports = {
-  ID,
-  PREDICT,
-  createAndAdd,
-  setCreateAndAdd,
-  updateTrackSource
 };
