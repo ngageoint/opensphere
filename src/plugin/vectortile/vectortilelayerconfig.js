@@ -1,4 +1,8 @@
-goog.module('plugin.vectortile.VectorTileLayerConfig');
+goog.declareModuleId('plugin.vectortile.VectorTileLayerConfig');
+
+import * as osMap from '../../os/map/map.js';
+import {DEFAULT_FONT} from '../../os/style/label.js';
+import {VectorTileFormat, getVectorTileFormat} from './vectortileformat.js';
 
 const log = goog.require('goog.log');
 const {DEFAULT_MAX_ZOOM, DEFAULT_MIN_ZOOM} = goog.require('ol');
@@ -14,7 +18,6 @@ const Settings = goog.require('os.config.Settings');
 const VectorTileLayer = goog.require('os.layer.VectorTile');
 const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
 const AbstractTileLayerConfig = goog.require('os.layer.config.AbstractTileLayerConfig');
-const osMap = goog.require('os.map');
 const net = goog.require('os.net');
 const CrossOrigin = goog.require('os.net.CrossOrigin');
 const Request = goog.require('os.net.Request');
@@ -22,8 +25,6 @@ const VectorTileSource = goog.require('os.ol.source.VectorTile');
 const {addProxyWrapper, autoProxyCheck} = goog.require('os.ol.source.tileimage');
 const {getBestSupportedProjection, EPSG4326} = goog.require('os.proj');
 const StyleManager = goog.require('os.style.StyleManager');
-const {DEFAULT_FONT} = goog.require('os.style.label');
-const {getVectorTileFormat, VectorTileFormat} = goog.require('plugin.vectortile.format');
 
 const Feature = goog.requireType('ol.Feature');
 const Projection = goog.requireType('ol.proj.Projection');
@@ -56,7 +57,7 @@ const getFonts = (fonts) => {
 
 /**
  */
-class VectorTileLayerConfig extends AbstractLayerConfig {
+export default class VectorTileLayerConfig extends AbstractLayerConfig {
   /**
    * Constructor.
    */
@@ -314,6 +315,3 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
     this.urls = AbstractTileLayerConfig.expandUrls(this.urls);
   }
 }
-
-
-exports = VectorTileLayerConfig;

@@ -1,4 +1,6 @@
-goog.module('plugin.vectortools.JoinLayer');
+goog.declareModuleId('plugin.vectortools.JoinLayer');
+
+import * as vectortools from './vectortools.js';
 
 const asserts = goog.require('goog.asserts');
 const MapContainer = goog.require('os.MapContainer');
@@ -7,12 +9,11 @@ const AbstractSource = goog.require('os.command.AbstractSource');
 const State = goog.require('os.command.State');
 const RecordField = goog.require('os.data.RecordField');
 const layer = goog.require('os.layer');
-const vectortools = goog.require('plugin.vectortools');
 
 const Feature = goog.requireType('ol.Feature');
 const ICommand = goog.requireType('os.command.ICommand');
 const VectorSource = goog.requireType('os.source.Vector');
-const Options = goog.requireType('plugin.vectortools.Options');
+const {default: Options} = goog.requireType('plugin.vectortools.Options');
 
 
 /**
@@ -20,7 +21,7 @@ const Options = goog.requireType('plugin.vectortools.Options');
  *
  * @implements {ICommand}
  */
-class JoinLayer extends AbstractSource {
+export default class JoinLayer extends AbstractSource {
   /**
    * Constructor.
    * @param {!Array<string>} sourceIds The data source ID to join
@@ -298,5 +299,3 @@ class JoinLayer extends AbstractSource {
     return val ? val.toString().toLowerCase() : val;
   }
 }
-
-exports = JoinLayer;

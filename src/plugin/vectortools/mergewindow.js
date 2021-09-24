@@ -1,26 +1,29 @@
-goog.module('plugin.vectortools.MergeUI');
+goog.declareModuleId('plugin.vectortools.MergeUI');
 
 goog.require('os.ui.util.ValidationMessageUI');
-goog.require('plugin.vectortools.MappingCounterUI');
+
+import './mappingcounter.js';
+
+import * as os from '../../os/os.js';
+import * as ui from '../../os/ui/ui.js';
+import MergeLayer from './mergelayercmd.js';
 
 const olArray = goog.require('ol.array');
-const os = goog.require('os');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const DataManager = goog.require('os.data.DataManager');
 const SourceManager = goog.require('os.data.SourceManager');
 const ogc = goog.require('os.ogc');
 const PropertyChange = goog.require('os.source.PropertyChange');
-const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const osWindow = goog.require('os.ui.window');
-const MergeLayer = goog.require('plugin.vectortools.MergeLayer');
+
 
 
 /**
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -33,7 +36,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'merge';
+export const directiveTag = 'merge';
 
 
 // add the directive to the module
@@ -44,7 +47,7 @@ Module.directive(directiveTag, [directive]);
 /**
  * @unrestricted
  */
-class Controller extends SourceManager {
+export class Controller extends SourceManager {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -182,9 +185,3 @@ class Controller extends SourceManager {
     this.close();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

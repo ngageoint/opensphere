@@ -1,4 +1,4 @@
-goog.module('plugin.vectortile.DoubleClick');
+goog.declareModuleId('plugin.vectortile.DoubleClick');
 
 goog.require('os.mixin.renderfeature');
 
@@ -134,7 +134,7 @@ const handleEvent = (mapBrowserEvent) => {
  * Handles the behavior of double clicking on a feature.
  * @implements {I3DSupport}
  */
-class DoubleClick extends Interaction {
+export default class DoubleClick extends Interaction {
   /**
    * Constructor.
    */
@@ -153,5 +153,3 @@ class DoubleClick extends Interaction {
 }
 
 osImplements(DoubleClick, I3DSupport.ID);
-
-exports = DoubleClick;

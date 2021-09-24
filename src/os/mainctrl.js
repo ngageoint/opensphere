@@ -39,6 +39,9 @@ import PositionPlugin from '../plugin/position/positionplugin.js';
 import PersistPlugin from '../plugin/storage/persistplugin.js';
 import SunCalcPlugin from '../plugin/suncalc/suncalcplugin.js';
 import TrackPlugin from '../plugin/track/trackplugin.js';
+import VectorTilePlugin from '../plugin/vectortile/vectortileplugin.js';
+import VectorToolsPlugin from '../plugin/vectortools/vectortoolsplugin.js';
+import WeatherPlugin from '../plugin/weather/weatherplugin.js';
 import * as dispatcher from './dispatcher.js';
 import * as os from './os.js';
 import AbstractMainCtrl from './ui/abstractmainctrl.js';
@@ -186,9 +189,6 @@ const osWindow = goog.require('os.ui.window');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const UrlManager = goog.require('os.url.UrlManager');
 
-const VectorTilePlugin = goog.require('plugin.vectortile.VectorTilePlugin');
-const VectorToolsPlugin = goog.require('plugin.vectortools.VectorToolsPlugin');
-const WeatherPlugin = goog.require('plugin.weather.WeatherPlugin');
 const XYZPlugin = goog.require('plugin.xyz.XYZPlugin');
 
 const LayerConfigEvent = goog.requireType('os.events.LayerConfigEvent');

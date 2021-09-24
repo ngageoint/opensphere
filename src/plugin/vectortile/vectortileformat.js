@@ -1,25 +1,23 @@
-goog.module('plugin.vectortile.format');
+goog.declareModuleId('plugin.vectortile.format');
 
 const MVT = goog.require('ol.format.MVT');
 
 const FeatureFormat = goog.requireType('ol.format.Feature');
 
-
 /**
  * Supported Vector Tile formats.
  * @enum {string}
  */
-const VectorTileFormat = {
+export const VectorTileFormat = {
   MVT: 'mvt'
 };
-
 
 /**
  * Get a Vector Tile format object from a type.
  * @param {VectorTileFormat} type The type.
  * @return {!FeatureFormat} [description]
  */
-const getVectorTileFormat = (type) => {
+export const getVectorTileFormat = (type) => {
   let format;
 
   switch (type) {
@@ -31,9 +29,4 @@ const getVectorTileFormat = (type) => {
   }
 
   return format;
-};
-
-exports = {
-  VectorTileFormat,
-  getVectorTileFormat
 };
