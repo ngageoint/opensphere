@@ -1,9 +1,10 @@
-goog.module('plugin.pelias.geocoder.AttrCardUI');
+goog.declareModuleId('plugin.pelias.geocoder.AttrCardUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os/os.js';
+
 const Module = goog.require('os.ui.Module');
 
-const AttrResult = goog.requireType('plugin.pelias.geocoder.AttrResult');
+const {default: AttrResult} = goog.requireType('plugin.pelias.geocoder.AttrResult');
 
 
 /**
@@ -11,7 +12,7 @@ const AttrResult = goog.requireType('plugin.pelias.geocoder.AttrResult');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   replace: true,
   restrict: 'E',
   templateUrl: ROOT + 'views/plugin/pelias/geocoder/attrcard.html',
@@ -23,7 +24,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'peliasgeocoderattrcard';
+export const directiveTag = 'peliasgeocoderattrcard';
 
 
 /**
@@ -35,7 +36,7 @@ Module.directive('peliasgeocoderattrcard', [directive]);
 /**
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -54,9 +55,3 @@ class Controller {
     $element.html(html);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

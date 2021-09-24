@@ -1,15 +1,15 @@
-goog.module('plugin.overview.OverviewPlugin');
+goog.declareModuleId('plugin.overview.OverviewPlugin');
+
+import OverviewMap from './overviewmapcontrol.js';
 
 const MapContainer = goog.require('os.MapContainer');
 const Settings = goog.require('os.config.Settings');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const OverviewMap = goog.require('plugin.overview.OverviewMap');
-
 
 /**
  * Adds an overview map to the map controls that syncs with the current base maps
  */
-class OverviewPlugin extends AbstractPlugin {
+export default class OverviewPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -43,5 +43,3 @@ class OverviewPlugin extends AbstractPlugin {
     MapContainer.getInstance().getMap().getControls().push(this.control);
   }
 }
-
-exports = OverviewPlugin;

@@ -43,6 +43,9 @@ import HeatmapPlugin from '../plugin/heatmap/heatmapplugin.js';
 import OGCPlugin from '../plugin/ogc/ogcplugin.js';
 import OpenpagePlugin from '../plugin/openpage/openpageplugin.js';
 import NominatimPlugin from '../plugin/osm/nom/nominatimplugin.js';
+import OverviewPlugin from '../plugin/overview/overviewplugin.js';
+import ParamsPlugin from '../plugin/params/paramsplugin.js';
+import PeliasGeocoderPlugin from '../plugin/pelias/geocoder/plugin.js';
 import * as dispatcher from './dispatcher.js';
 import * as os from './os.js';
 import AbstractMainCtrl from './ui/abstractmainctrl.js';
@@ -179,9 +182,6 @@ const osWindow = goog.require('os.ui.window');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const UrlManager = goog.require('os.url.UrlManager');
 
-const OverviewPlugin = goog.require('plugin.overview.OverviewPlugin');
-const ParamsPlugin = goog.require('plugin.params.ParamsPlugin');
-const Plugin = goog.require('plugin.pelias.geocoder.Plugin');
 const PlacesPlugin = goog.require('plugin.places.PlacesPlugin');
 const PositionPlugin = goog.require('plugin.position.PositionPlugin');
 const PersistPlugin = goog.require('plugin.storage.PersistPlugin');
@@ -521,7 +521,7 @@ export default class Controller extends AbstractMainCtrl {
     pluginManager.addPlugin(new XYZPlugin());
     pluginManager.addPlugin(new BaseMapPlugin());
     pluginManager.addPlugin(new GooglePlacesPlugin());
-    pluginManager.addPlugin(new Plugin());
+    pluginManager.addPlugin(new PeliasGeocoderPlugin());
     pluginManager.addPlugin(new NominatimPlugin());
     pluginManager.addPlugin(new CSVPlugin());
     pluginManager.addPlugin(new GMLPlugin());

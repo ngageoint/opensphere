@@ -1,14 +1,14 @@
-goog.module('plugin.params.ParamsPlugin');
+goog.declareModuleId('plugin.params.ParamsPlugin');
+
+import * as params from './params.js';
+import * as menu from './paramsmenu.js';
 
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const params = goog.require('plugin.params');
-const menu = goog.require('plugin.params.menu');
-
 
 /**
  * Allow changing request parameters for layers in opensphere
  */
-class ParamsPlugin extends AbstractPlugin {
+export default class ParamsPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -60,5 +60,3 @@ class ParamsPlugin extends AbstractPlugin {
  * @type {ParamsPlugin|undefined}
  */
 let instance;
-
-exports = ParamsPlugin;
