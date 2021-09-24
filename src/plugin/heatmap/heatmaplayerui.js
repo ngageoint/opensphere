@@ -1,4 +1,4 @@
-goog.module('plugin.heatmap.HeatmapLayerUI');
+goog.declareModuleId('plugin.heatmap.HeatmapLayerUI');
 
 
 const googObject = goog.require('goog.object');
@@ -18,7 +18,7 @@ const Size = goog.require('plugin.heatmap.cmd.Size');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   templateUrl: ROOT + 'views/plugin/heatmap/heatmap.html',
@@ -30,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'heatmaplayerui';
+export const directiveTag = 'heatmaplayerui';
 
 
 /**
@@ -44,7 +44,7 @@ Module.directive('heatmaplayerui', [directive]);
  * Controller for the vector layer UI
  * @unrestricted
  */
-class Controller extends DefaultLayerUICtrl {
+export class Controller extends DefaultLayerUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -222,9 +222,3 @@ class Controller extends DefaultLayerUICtrl {
     return this['maxIntensity'] / 2; // default to the middle of the slider - THIN-8618
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

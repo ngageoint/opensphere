@@ -1,9 +1,9 @@
-goog.module('plugin.heatmap.HeatmapPropertyType');
+goog.declareModuleId('plugin.heatmap.HeatmapPropertyType');
 
 /**
  * @enum {string}
  */
-exports = {
+export default {
   INTENSITY: 'intensity',
   SIZE: 'size',
   GRADIENT: 'gradient'

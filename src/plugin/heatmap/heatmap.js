@@ -1,4 +1,4 @@
-goog.module('plugin.heatmap');
+goog.declareModuleId('plugin.heatmap');
 
 const dispose = goog.require('goog.dispose');
 const googString = goog.require('goog.string');
@@ -42,13 +42,13 @@ const HeatmapLayer = goog.requireType('plugin.heatmap.Heatmap');
  * Identifier for heatmap plugin components.
  * @type {string}
  */
-const ID = 'heatmap';
+export const ID = 'heatmap';
 
 /**
  * Factor to use for scaling Openlayers extents to render the heatmap properly.
  * @type {number}
  */
-const EXTENT_SCALE_FACTOR = 1.5;
+export const EXTENT_SCALE_FACTOR = 1.5;
 
 /**
  * Clones a feature. This avoids copying style information since we handle styles very differently than base OL3.
@@ -56,7 +56,7 @@ const EXTENT_SCALE_FACTOR = 1.5;
  * @param {!Feature} feature The feature to clone
  * @return {?Feature} The cloned feature
  */
-const cloneFeature = function(feature) {
+export const cloneFeature = function(feature) {
   var clone = null;
   var geometry = feature.getGeometry();
 
@@ -94,7 +94,7 @@ const cloneFeature = function(feature) {
  * @param {string|undefined} sourceId The source id.
  * @return {Array<!Feature>|undefined} The features.
  */
-const getSourceFeatures = function(sourceId) {
+export const getSourceFeatures = function(sourceId) {
   var source = sourceId ? DataManager.getInstance().getSource(sourceId) : undefined;
   return source ? source.getFeatures().map(function(feature, idx, arr) {
     if (feature) {
@@ -115,7 +115,7 @@ const getSourceFeatures = function(sourceId) {
  * @param {Array<string>} colors
  * @return {Uint8ClampedArray} An array.
  */
-const createGradient = function(colors) {
+export const createGradient = function(colors) {
   var width = 1;
   var height = 256;
   var context = dom.createCanvasContext2D(width, height);
@@ -137,7 +137,7 @@ const createGradient = function(colors) {
  *
  * @param {ILayer} layer
  */
-const createHeatmap = function(layer) {
+export const createHeatmap = function(layer) {
   var options = {
     'id': googString.getRandomString(),
     'sourceId': /** @type {ISource} */ (/** @type {OLLayer} */ (layer).getSource()).getId(),
@@ -158,7 +158,7 @@ const createHeatmap = function(layer) {
  *
  * @param {HeatmapLayer} layer
  */
-const exportHeatmap = function(layer) {
+export const exportHeatmap = function(layer) {
   var lastImage = layer.getLastImage();
   var canvas = lastImage.getImage();
   var dataUrl = canvas.toDataURL();
@@ -178,7 +178,7 @@ const exportHeatmap = function(layer) {
  * @param {HeatmapLayer} layer
  * @param {JobEvent} event
  */
-const onImageComplete = function(layer, event) {
+export const onImageComplete = function(layer, event) {
   dispose(event.target);
 
   if (event.data instanceof Uint8Array) {
@@ -239,21 +239,9 @@ const onImageComplete = function(layer, event) {
  *
  * @param {JobEvent} event
  */
-const onImageError = function(event) {
+export const onImageError = function(event) {
   dispose(event.target);
 
   var msg = typeof event.data === 'string' ? event.data : 'Screen capture failed due to an unspecified error';
   AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.ERROR);
-};
-
-exports = {
-  ID,
-  EXTENT_SCALE_FACTOR,
-  cloneFeature,
-  createGradient,
-  createHeatmap,
-  exportHeatmap,
-  getSourceFeatures,
-  onImageComplete,
-  onImageError
 };

@@ -1,4 +1,4 @@
-goog.module('plugin.heatmap.menu');
+goog.declareModuleId('plugin.heatmap.menu');
 
 const asserts = goog.require('goog.asserts');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
@@ -19,13 +19,13 @@ const MenuItem = goog.requireType('os.ui.menu.MenuItem');
  * Heatmap event group label.
  * @type {string}
  */
-const GROUP_LABEL = 'Heatmap';
+export const GROUP_LABEL = 'Heatmap';
 
 /**
  * Heatmap menu events.
  * @enum {string}
  */
-const EventType = {
+export const EventType = {
   EXPORT: 'heatmap:export',
   GENERATE_HEATMAP: 'heatmap:generate'
 };
@@ -33,7 +33,7 @@ const EventType = {
 /**
  * Add heatmap menu items to the layer menu.
  */
-const setup = function() {
+export const setup = function() {
   var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(EventType.EXPORT)) {
     var menuRoot = menu.getRoot();
@@ -129,10 +129,4 @@ const generateHeatmap_ = function(event) {
       }
     }
   }
-};
-
-exports = {
-  GROUP_LABEL,
-  EventType,
-  setup
 };

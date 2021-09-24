@@ -1,4 +1,4 @@
-goog.module('plugin.heatmap.Heatmap');
+goog.declareModuleId('plugin.heatmap.Heatmap');
 
 const dom = goog.require('ol.dom');
 const olExtent = goog.require('ol.extent');
@@ -40,7 +40,7 @@ const RenderFeature = goog.requireType('ol.render.Feature');
  * then composited together and colored with a gradient (in the heatmap source). The more features that overlap in
  * a given area, the higher the alpha in that area and the more intense the color in the final image.
  */
-class Heatmap extends VectorLayer {
+export default class Heatmap extends VectorLayer {
   /**
    * Constructor.
    * @param {olx.layer.VectorOptions} options
@@ -629,6 +629,3 @@ class Heatmap extends VectorLayer {
 }
 
 osImplements(Heatmap, ILayer.ID);
-
-
-exports = Heatmap;
