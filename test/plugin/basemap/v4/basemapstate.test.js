@@ -23,11 +23,9 @@ describe('plugin.basemap.v4.BaseMapState', function() {
   const {setStateManager} = goog.module.get('os.state.instance');
   const xml = goog.module.get('os.xml');
   const basemap = goog.module.get('plugin.basemap');
-  const {
-    default: BaseMapState
-  } = goog.module.get('plugin.basemap.v4.BaseMapState');
-  const OGCLayerDescriptor = goog.module.get('plugin.ogc.OGCLayerDescriptor');
-  const WMSLayerConfig = goog.module.get('plugin.ogc.wms.WMSLayerConfig');
+  const {default: BaseMapState} = goog.module.get('plugin.basemap.v4.BaseMapState');
+  const {default: OGCLayerDescriptor} = goog.module.get('plugin.ogc.OGCLayerDescriptor');
+  const {default: WMSLayerConfig} = goog.module.get('plugin.ogc.wms.WMSLayerConfig');
 
   const {loadStateXsdFiles} = goog.module.get('os.test.xsd');
 

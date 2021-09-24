@@ -2,15 +2,16 @@ goog.declareModuleId('plugin.ogc.ui.ChooseTimeColumnUI');
 
 goog.require('os.ui.util.ValidationMessageUI');
 
+import * as os from '../../../os/os.js';
+
 const Disposable = goog.require('goog.Disposable');
-const os = goog.require('os');
 const DataManager = goog.require('os.data.DataManager');
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const osWindow = goog.require('os.ui.window');
 
 const IFeatureType = goog.requireType('os.ogc.IFeatureType');
-const OGCLayerDescriptor = goog.requireType('plugin.ogc.OGCLayerDescriptor');
+const {default: OGCLayerDescriptor} = goog.requireType('plugin.ogc.OGCLayerDescriptor');
 
 
 /**

@@ -1,12 +1,12 @@
 goog.declareModuleId('plugin.ogc.mime');
 
+import GeoServer from './geoserver.js';
+
 const Promise = goog.require('goog.Promise');
 const mime = goog.require('os.file.mime');
 const html = goog.require('os.file.mime.html');
 const xml = goog.require('os.file.mime.xml');
 const ogc = goog.require('os.ogc');
-const GeoServer = goog.require('plugin.ogc.GeoServer');
-
 
 /**
  */

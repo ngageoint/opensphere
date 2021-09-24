@@ -1,9 +1,9 @@
 goog.declareModuleId('plugin.ogc.wms.WMSLayerConfig');
 
+import TileWMSSource from './tilewmssource.js';
+
 const AnimatedTile = goog.require('os.layer.AnimatedTile');
 const AbstractTileLayerConfig = goog.require('os.layer.config.AbstractTileLayerConfig');
-const TileWMSSource = goog.require('plugin.ogc.wms.TileWMSSource');
-
 
 /**
  * Creates a WMS layer.

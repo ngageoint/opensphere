@@ -1,17 +1,18 @@
 goog.declareModuleId('plugin.ogc.wfs.QueryWFSLayerConfig');
 
+import FilterIDModifier from '../query/filteridmodifier.js';
+import OGCQueryHandler from '../query/ogcqueryhandler.js';
+import OGCTemporalFormatter from '../query/ogctemporalformatter.js';
+import getFilterColumns from './getfiltercolumns.js';
+import launchFilterManager from './launchfiltermanager.js';
+import WFSLayerConfig from './wfslayerconfig.js';
+
 const ParamModifier = goog.require('os.net.ParamModifier');
 const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');
 const OGCFilterModifier = goog.require('os.ogc.filter.OGCFilterModifier');
 const TemporalHandler = goog.require('os.query.TemporalHandler');
 const TemporalQueryManager = goog.require('os.query.TemporalQueryManager');
 const {getQueryManager} = goog.require('os.query.instance');
-const FilterIDModifier = goog.require('plugin.ogc.query.FilterIDModifier');
-const OGCQueryHandler = goog.require('plugin.ogc.query.OGCQueryHandler');
-const OGCTemporalFormatter = goog.require('plugin.ogc.query.OGCTemporalFormatter');
-const WFSLayerConfig = goog.require('plugin.ogc.wfs.WFSLayerConfig');
-const getFilterColumns = goog.require('plugin.ogc.wfs.getFilterColumns');
-const launchFilterManager = goog.require('plugin.ogc.wfs.launchFilterManager');
 
 const OGCFilterModifierOptions = goog.requireType('os.ogc.filter.OGCFilterModifierOptions');
 

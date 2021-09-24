@@ -40,6 +40,7 @@ import SHPPlugin from '../plugin/file/shp/shpplugin.js';
 import ZIPPlugin from '../plugin/file/zip/zipplugin.js';
 import GooglePlacesPlugin from '../plugin/google/places/plugin.js';
 import HeatmapPlugin from '../plugin/heatmap/heatmapplugin.js';
+import OGCPlugin from '../plugin/ogc/ogcplugin.js';
 import * as dispatcher from './dispatcher.js';
 import * as os from './os.js';
 import AbstractMainCtrl from './ui/abstractmainctrl.js';
@@ -176,7 +177,6 @@ const osWindow = goog.require('os.ui.window');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const UrlManager = goog.require('os.url.UrlManager');
 
-const OGCPlugin = goog.require('plugin.ogc.OGCPlugin');
 const pluginOpenpagePlugin = goog.require('plugin.openpage.Plugin');
 const NominatimPlugin = goog.require('plugin.osm.nom.NominatimPlugin');
 const OverviewPlugin = goog.require('plugin.overview.OverviewPlugin');

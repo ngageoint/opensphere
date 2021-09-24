@@ -4,8 +4,10 @@ const ParamModifier = goog.require('os.net.ParamModifier');
 const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');
 const OGCFilterFormatter = goog.require('os.ogc.filter.OGCFilterFormatter');
 const QueryHandler = goog.require('os.query.QueryHandler');
-const OGCExclusionFormatter = goog.require('plugin.ogc.query.OGCExclusionFormatter');
-const OGCSpatialFormatter = goog.require('plugin.ogc.query.OGCSpatialFormatter');
+
+
+import OGCExclusionFormatter from './ogcexclusionformatter.js';
+import OGCSpatialFormatter from './ogcspatialformatter.js';
 
 
 /**

@@ -1,5 +1,9 @@
 goog.declareModuleId('plugin.ogc.wfs.WFSLayerConfig');
 
+import {default as GeoJSONParser} from '../../file/geojson/geojsonparser.js';
+import {Controller as ChooseTimeColumnController} from '../ui/choosetimecolumn.js';
+import {directiveTag as ogcLayerNodeUi} from '../ui/ogclayernodeui.js';
+
 const Deferred = goog.require('goog.async.Deferred');
 const log = goog.require('goog.log');
 const EventType = goog.require('goog.net.EventType');
@@ -20,9 +24,6 @@ const OGCFilterCleaner = goog.require('os.ogc.filter.OGCFilterCleaner');
 const DescribeFeatureLoader = goog.require('os.ogc.wfs.DescribeFeatureLoader');
 const WFSFormatter = goog.require('os.ogc.wfs.WFSFormatter');
 const ImportManager = goog.require('os.ui.im.ImportManager');
-const {default: GeoJSONParser} = goog.require('plugin.file.geojson.GeoJSONParser');
-const {Controller: ChooseTimeColumnController} = goog.require('plugin.ogc.ui.ChooseTimeColumnUI');
-const {directiveTag: ogcLayerNodeUi} = goog.require('plugin.ogc.ui.OGCLayerNodeUI');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');

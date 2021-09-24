@@ -4,7 +4,7 @@ goog.require('plugin.ogc.GeoServer');
 
 
 describe('plugin.ogc.GeoServer', function() {
-  const GeoServer = goog.module.get('plugin.ogc.GeoServer');
+  const {default: GeoServer} = goog.module.get('plugin.ogc.GeoServer');
 
   var serverLabel = 'test-server';
   var serverUrl = 'http://im.a.test.server/wahoo/';

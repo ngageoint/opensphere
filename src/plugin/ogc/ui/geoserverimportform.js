@@ -1,8 +1,10 @@
 goog.declareModuleId('plugin.ogc.ui.GeoserverImportForm');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os/os.js';
+import {directive as geoserverDirective} from './geoserverimport.js';
+
 const Module = goog.require('os.ui.Module');
-const {directive: geoserverDirective} = goog.require('plugin.ogc.ui.GeoserverImportUI');
+
 
 
 /**

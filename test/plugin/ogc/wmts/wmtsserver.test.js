@@ -5,7 +5,7 @@ goog.require('plugin.ogc.wmts.WMTSServer');
 describe('plugin.ogc.wmts.WMTSServer', () => {
   const DataManager = goog.module.get('os.data.DataManager');
   const DataProviderEventType = goog.module.get('os.data.DataProviderEventType');
-  const WMTSServer = goog.module.get('plugin.ogc.wmts.WMTSServer');
+  const {default: WMTSServer} = goog.module.get('plugin.ogc.wmts.WMTSServer');
 
   const loadAndRun = function(server, config, func) {
     server.setId('testogc');

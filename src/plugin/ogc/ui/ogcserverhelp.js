@@ -1,6 +1,7 @@
 goog.declareModuleId('plugin.ogc.ui.OgcServerHelpUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os/os.js';
+
 const Module = goog.require('os.ui.Module');
 const {directive: baseDirective} = goog.require('os.ui.window.BaseWindowUI');
 
