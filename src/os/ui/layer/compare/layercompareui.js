@@ -3,6 +3,7 @@ goog.module('os.ui.layer.compare.LayerCompareUI');
 const dispose = goog.require('goog.dispose');
 const {listen, unlistenByKey} = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
+const Promise = goog.require('goog.Promise');
 const Collection = goog.require('ol.Collection');
 const OLMap = goog.require('ol.Map');
 const View = goog.require('ol.View');
@@ -20,8 +21,8 @@ const osMap = goog.require('os.map');
 const {getMapContainer} = goog.require('os.map.instance');
 const {getMaxFeatures} = goog.require('os.ogc');
 const {resize, removeResize} = goog.require('os.ui');
+const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
 const Module = goog.require('os.ui.Module');
-const launchLayerComparePerformanceDialog = goog.require('os.webgl.launchLayerComparePerformanceDialog');
 const {
   bringToFront,
   close: closeWindow,
@@ -86,6 +87,37 @@ const createControls = () => [
     className: 'c-layer-compare-control ol-zoom'
   })
 ];
+
+
+/**
+ * Launch a dialog warning users of the risks in using 2D with lots of data.
+ *
+ * @return {!Promise}
+ */
+const launchLayerComparePerformanceDialog = function() {
+  return new Promise(function(resolve, reject) {
+    var text = '<p>Using Layer Compare with the current data volume may degrade performance considerably or crash ' +
+        'the browser. Click OK to use Layer Compare, or Cancel to abort.</p>' +
+        '<p>If you would like to use Layer Compare safely, please consider narrowing your time range, applying ' +
+        'filters, shrinking your query areas, or removing some feature layers.</p>';
+
+    launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+      confirm: resolve,
+      cancel: reject,
+      prompt: text,
+      windowOptions: {
+        'label': 'Feature Limit Exceeded',
+        'icon': 'fa fa-warning',
+        'x': 'center',
+        'y': 'center',
+        'width': '425',
+        'height': 'auto',
+        'modal': 'true',
+        'headerClass': 'bg-warning u-bg-warning-text'
+      }
+    }));
+  });
+};
 
 
 /**
@@ -556,9 +588,10 @@ const launchLayerCompare = (options) => {
   const featureCount = countFeatures(options.left) + countFeatures(options.right);
   if (featureCount > getMaxFeatures('2d')) {
     launchLayerComparePerformanceDialog().then(() => {
+      // User decides to open the window despite the performance warning
       launchLayerCompareWindow(options);
     }, () => {
-      // This empty block prevents an undefined error from appearing
+      // User decides not to open the window, silently ignore the rejection
     });
   } else {
     launchLayerCompareWindow(options);
