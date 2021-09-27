@@ -900,9 +900,8 @@ class Controller extends Disposable {
       this.saveToFeature(this.previewFeature);
 
       var mapContainer = getMapContainer();
-      if (this.previewFeature.getId() === this.tempFeatureId && !mapContainer.containsFeature(this.previewFeature)) {
-        mapContainer.addFeature(this.previewFeature);
-      }
+      mapContainer.removeFeature(this.previewFeature);
+      mapContainer.addFeature(this.previewFeature);
 
       var layer = osFeature.getLayer(this.previewFeature);
       if (layer) {
