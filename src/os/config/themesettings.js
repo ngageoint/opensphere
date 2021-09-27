@@ -11,7 +11,7 @@ const {directiveTag: settingsUi} = goog.require('os.config.ThemeSettingsUI');
 const {getSettings} = goog.require('os.config.instance');
 const {DEFAULT_THEME, DEFAULT_THEMES, Keys} = goog.require('os.config.theme');
 const ui = goog.require('os.ui');
-const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
+const {default: SettingPlugin} = goog.require('os.ui.config.SettingPlugin');
 
 const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
 

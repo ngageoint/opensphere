@@ -3,7 +3,7 @@ goog.require('os.ui.config.SettingsManager');
 goog.require('plugin.suncalc.SunCalcPlugin');
 
 describe('plugin.suncalc.SunCalcPlugin', function() {
-  const SettingsManager = goog.module.get('os.ui.config.SettingsManager');
+  const {default: SettingsManager} = goog.module.get('os.ui.config.SettingsManager');
   const {default: SunCalcPlugin} = goog.module.get('plugin.suncalc.SunCalcPlugin');
 
   it('should add settings plugin on init()', function() {

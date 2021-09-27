@@ -1,10 +1,6 @@
-goog.module('os.ui.state');
+goog.declareModuleId('os.ui.state');
 
 /**
  * @type {string}
  */
-const EXPORT_WINDOW_ID = 'stateExport';
-
-exports = {
-  EXPORT_WINDOW_ID
-};
+export const EXPORT_WINDOW_ID = 'stateExport';

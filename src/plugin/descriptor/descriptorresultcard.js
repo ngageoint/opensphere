@@ -2,10 +2,10 @@ goog.declareModuleId('plugin.descriptor.ResultCardUI');
 
 import * as dispatcher from '../../os/dispatcher.js';
 import {ROOT} from '../../os/os.js';
+import Module from '../../os/ui/module.js';
 
 const DescriptorEvent = goog.require('os.data.DescriptorEvent');
 const DescriptorEventType = goog.require('os.data.DescriptorEventType');
-const Module = goog.require('os.ui.Module');
 
 
 /**

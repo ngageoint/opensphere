@@ -1,9 +1,9 @@
-goog.module('os.ui.filter.RuleExpressionUI');
+goog.declareModuleId('os.ui.filter.RuleExpressionUI');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const {Controller: ExpressionCtrl, directive: expressionDirective} = goog.require('os.ui.filter.ExpressionUI');
-const RuleExpression = goog.require('os.ui.filter.RuleExpression');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {Controller as ExpressionCtrl, directive as expressionDirective} from './expressionui.js';
+import RuleExpression from './ruleexpression.js';
 
 
 /**
@@ -11,7 +11,7 @@ const RuleExpression = goog.require('os.ui.filter.RuleExpression');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var directive = expressionDirective();
   directive.scope = {
     'expr': '='
@@ -25,7 +25,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'rule-expression';
+export const directiveTag = 'rule-expression';
 
 /**
  * Add the directive to the module
@@ -36,7 +36,7 @@ Module.directive('ruleExpression', [directive]);
  * Controller for the expression directive
  * @unrestricted
  */
-class Controller extends ExpressionCtrl {
+export class Controller extends ExpressionCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -58,9 +58,3 @@ class Controller extends ExpressionCtrl {
     $scope.$watch('expr.op', this.runValidation.bind(this));
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,10 +1,11 @@
-goog.module('os.ui.ListUI');
+goog.declareModuleId('os.ui.ListUI');
+
+import {get, getDispatcher} from './list.js';
+import ListEventType from './listeventtype.js';
+import Module from './module.js';
 
 const {removeNode} = goog.require('goog.dom');
 const GoogEventType = goog.require('goog.events.EventType');
-const Module = goog.require('os.ui.Module');
-const {get, getDispatcher} = goog.require('os.ui.list');
-const ListEventType = goog.require('os.ui.list.ListEventType');
 
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 const {ListEntry} = goog.requireType('os.ui.list');
@@ -22,7 +23,7 @@ const {ListEntry} = goog.requireType('os.ui.list');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'A',
   controller: Controller,
   link: listLink
@@ -32,7 +33,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'list';
+export const directiveTag = 'list';
 
 /**
  * Add the directive to the os.ui module
@@ -65,7 +66,7 @@ const listLink = function(scope, element, attr, ctrl) {
  * Controller for the list directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -201,9 +202,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

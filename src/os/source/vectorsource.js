@@ -72,7 +72,7 @@ const TimeRange = goog.require('os.time.TimeRange');
 const TimelineController = goog.require('os.time.TimelineController');
 const TimelineEventType = goog.require('os.time.TimelineEventType');
 const TimeModel = goog.require('os.time.xf.TimeModel');
-const OnboardingManager = goog.require('os.ui.onboarding.OnboardingManager');
+const {default: OnboardingManager} = goog.require('os.ui.onboarding.OnboardingManager');
 const {autoSizeAndSortColumns, isUserModified, restore: restoreColumns} = goog.require('os.ui.slick.column');
 const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
@@ -93,7 +93,7 @@ const ILayer = goog.requireType('os.layer.ILayer');
 const {FeatureHoverFn} = goog.requireType('os.source');
 const ITime = goog.requireType('os.time.ITime');
 const TimelineControllerEvent = goog.requireType('os.time.TimelineControllerEvent');
-const ActionEvent = goog.requireType('os.ui.action.ActionEvent');
+const {default: ActionEvent} = goog.requireType('os.ui.action.ActionEvent');
 
 
 /**

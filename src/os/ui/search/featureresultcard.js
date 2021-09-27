@@ -1,4 +1,6 @@
-goog.module('os.ui.search.FeatureResultCardCtrl');
+goog.declareModuleId('os.ui.search.FeatureResultCardCtrl');
+
+import {DEFAULT_HIGHLIGHT_CONFIG, DEFAULT_VECTOR_CONFIG, notifyStyleChange, setFeatureStyle} from '../../style/style.js';
 
 const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -13,7 +15,6 @@ const {noop} = goog.require('os.fn');
 const VectorLayer = goog.require('os.layer.Vector');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const VectorSource = goog.require('os.source.Vector');
-const {DEFAULT_HIGHLIGHT_CONFIG, DEFAULT_VECTOR_CONFIG, notifyStyleChange, setFeatureStyle} = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
 const StyleType = goog.require('os.style.StyleType');
@@ -25,7 +26,7 @@ const AbstractSearchResult = goog.requireType('os.search.AbstractSearchResult');
 /**
  * @unrestricted
  */
-class Controller extends Disposable {
+export default class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -354,5 +355,3 @@ Controller.SEARCH_LAYER_LABELS = {
  * @type {log.Logger}
  */
 const logger = log.getLogger('os.ui.search.FeatureResultCardCtrl');
-
-exports = Controller;

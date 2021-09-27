@@ -1,10 +1,12 @@
-goog.module('os.ui.header.ScrollHeaderEvents');
+goog.declareModuleId('os.ui.header.ScrollHeaderEvents');
 
 /**
  * @enum {string}
  */
-exports = {
+const ScrollHeaderEvents = {
   RESET: 'scrollheader.resetHeight',
   STICK: 'scrollheader.stick',
   UNSTICK: 'scrollheader.unstick'
 };
+
+export default ScrollHeaderEvents;

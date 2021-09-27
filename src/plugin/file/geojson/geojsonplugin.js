@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.file.geojson.GeoJSONPlugin');
 
+import exportManager from '../../../os/ui/file/uiexportmanager.js';
+import ImportManager from '../../../os/ui/im/importmanager.js';
 import GeoJSONDescriptor from './geojsondescriptor.js';
 import GeoJSONExporter from './geojsonexporter.js';
 import GeoJSONImportUI from './geojsonimportui.js';
@@ -13,8 +15,7 @@ const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const exportManager = goog.require('os.ui.exportManager');
-const ImportManager = goog.require('os.ui.im.ImportManager');
+
 
 // Initialize the GeoJSON mixin.
 GeoJSONMixin.init();

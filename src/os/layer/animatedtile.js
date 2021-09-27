@@ -13,8 +13,8 @@ const osTime = goog.require('os.time');
 const Duration = goog.require('os.time.Duration');
 const TimelineController = goog.require('os.time.TimelineController');
 const TimelineEventType = goog.require('os.time.TimelineEventType');
-const Icons = goog.require('os.ui.Icons');
-const IconsSVG = goog.require('os.ui.IconsSVG');
+const {default: Icons} = goog.require('os.ui.Icons');
+const {default: IconsSVG} = goog.require('os.ui.IconsSVG');
 const {launchScreenOverlay} = goog.require('os.ui.ScreenOverlayUI');
 const osWindow = goog.require('os.ui.window');
 

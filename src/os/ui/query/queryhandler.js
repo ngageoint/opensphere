@@ -1,4 +1,4 @@
-goog.module('os.ui.query.QueryHandler');
+goog.declareModuleId('os.ui.query.QueryHandler');
 
 const Disposable = goog.require('goog.Disposable');
 const {defaultCompare, removeDuplicates} = goog.require('goog.array');
@@ -11,14 +11,14 @@ const Feature = goog.requireType('ol.Feature');
 const IFilterFormatter = goog.requireType('os.filter.IFilterFormatter');
 const ISpatialFormatter = goog.requireType('os.filter.ISpatialFormatter');
 const ParamModifier = goog.requireType('os.net.ParamModifier');
-const ActiveEntries = goog.requireType('os.ui.query.ActiveEntries');
+const {default: ActiveEntries} = goog.requireType('os.ui.query.ActiveEntries');
 
 
 /**
  * Class for representing a query consisting of areas and filters. Contains no actual handling logic, just
  * area/filter writing.
  */
-class QueryHandler extends Disposable {
+export default class QueryHandler extends Disposable {
   /**
    * Constructor.
    */
@@ -505,5 +505,3 @@ class QueryHandler extends Disposable {
     return clone;
   }
 }
-
-exports = QueryHandler;

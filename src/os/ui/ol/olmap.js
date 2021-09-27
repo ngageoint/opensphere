@@ -1,4 +1,13 @@
-goog.module('os.ui.ol.OLMap');
+goog.declareModuleId('os.ui.ol.OLMap');
+
+import * as dispatcher from '../../dispatcher.js';
+import * as osMap from '../../map/map.js';
+import {setFeatureStyle} from '../../style/style.js';
+import EventType from '../action/actioneventtype.js';
+import LayerSwitcher from './control/layerswitcher.js';
+import AreaHover from './interaction/areahoverinteraction.js';
+import FocusInteraction from './interaction/focusinteraction.js';
+import MouseWheelZoom from './interaction/mousewheelzoominteraction.js';
 
 const {assert} = goog.require('goog.asserts');
 const EventTarget = goog.require('goog.events.EventTarget');
@@ -24,21 +33,13 @@ const Fill = goog.require('ol.style.Fill');
 const Stroke = goog.require('ol.style.Stroke');
 const Style = goog.require('ol.style.Style');
 const {createForProjection} = goog.require('ol.tilegrid');
-const dispatcher = goog.require('os.Dispatcher');
 const Settings = goog.require('os.config.Settings');
 const {ProviderKey} = goog.require('os.data');
 const {reduceExtentFromGeometries} = goog.require('os.fn');
-const osMap = goog.require('os.map');
 const {unsafeClone} = goog.require('os.object');
 const XYZ = goog.require('os.ol.source.XYZ');
 const BaseAreaManager = goog.require('os.query.BaseAreaManager');
-const {setFeatureStyle} = goog.require('os.style');
 const StyleType = goog.require('os.style.StyleType');
-const EventType = goog.require('os.ui.action.EventType');
-const LayerSwitcher = goog.require('os.ui.ol.control.LayerSwitcher');
-const AreaHover = goog.require('os.ui.ol.interaction.AreaHover');
-const FocusInteraction = goog.require('os.ui.ol.interaction.FocusInteraction');
-const MouseWheelZoom = goog.require('os.ui.ol.interaction.MouseWheelZoom');
 
 const Collection = goog.requireType('ol.Collection');
 const PluggableMap = goog.requireType('ol.PluggableMap');
@@ -48,7 +49,7 @@ const Layer = goog.requireType('ol.layer.Layer');
 const Projection = goog.requireType('ol.proj.Projection');
 const TileGrid = goog.requireType('ol.tilegrid.TileGrid');
 const IMapContainer = goog.requireType('os.map.IMapContainer');
-const ActionEvent = goog.requireType('os.ui.action.ActionEvent');
+const {default: ActionEvent} = goog.requireType('os.ui.action.ActionEvent');
 
 
 /**
@@ -57,7 +58,7 @@ const ActionEvent = goog.requireType('os.ui.action.ActionEvent');
  *
  * @implements {IMapContainer}
  */
-class OLMap extends EventTarget {
+export default class OLMap extends EventTarget {
   /**
    * Constructor.
    */
@@ -546,5 +547,3 @@ OLMap.DRAW_STYLE = new Style({
     })
   })
 });
-
-exports = OLMap;

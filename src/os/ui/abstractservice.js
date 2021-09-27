@@ -1,4 +1,4 @@
-goog.module('os.ui.AbstractService');
+goog.declareModuleId('os.ui.AbstractService');
 
 const {isValid} = goog.require('goog.json');
 const log = goog.require('goog.log');
@@ -16,7 +16,7 @@ const Logger = goog.requireType('goog.log.Logger');
  * Provides functions available to all services.
  * @unrestricted
  */
-class AbstractService {
+export default class AbstractService {
   /**
    * Constructor.
    * @ngInject
@@ -120,5 +120,3 @@ class AbstractService {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.AbstractService');
-
-exports = AbstractService;

@@ -1,4 +1,4 @@
-goog.module('os.ui.filter.parse.FilterParser');
+goog.declareModuleId('os.ui.filter.parse.FilterParser');
 
 const {getFirstElementChild, getChildren} = goog.require('goog.dom');
 const {loadXml, serialize} = goog.require('goog.dom.xml');
@@ -13,7 +13,7 @@ const IParser = goog.requireType('os.parse.IParser');
  *
  * @implements {IParser}
  */
-class FilterParser {
+export default class FilterParser {
   /**
    * Constructor.
    */
@@ -204,5 +204,3 @@ class FilterParser {
     return entry;
   }
 }
-
-exports = FilterParser;

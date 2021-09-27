@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.vectortools.VectorToolsPlugin');
 
+import * as layerMenu from '../../os/ui/menu/layermenu.js';
+import MenuItemType from '../../os/ui/menu/menuitemtype.js';
 import CopyLayer from './copylayercmd.js';
 import Icons from './icons.js';
 import * as vectortools from './vectortools.js';
@@ -11,21 +13,19 @@ const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const ParallelCommand = goog.require('os.command.ParallelCommand');
-const LayerNode = goog.require('os.data.LayerNode');
 const DataManager = goog.require('os.data.DataManager');
+const LayerNode = goog.require('os.data.LayerNode');
 const fn = goog.require('os.fn');
 const LayerType = goog.require('os.layer.LayerType');
 const VectorLayer = goog.require('os.layer.Vector');
 const ogc = goog.require('os.ogc');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const layerMenu = goog.require('os.ui.menu.layer');
 
 const ICommand = goog.requireType('os.command.ICommand');
 const ISource = goog.requireType('os.source.ISource');
 const ITreeNode = goog.requireType('os.structs.ITreeNode');
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 const {default: Options} = goog.requireType('plugin.vectortools.Options');
 
 

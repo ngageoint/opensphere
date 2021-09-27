@@ -1,19 +1,20 @@
-goog.module('os.ui.color.ColorPickerUI');
+goog.declareModuleId('os.ui.color.ColorPickerUI');
+
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import {Controller as ColorPaletteCtrl, directiveTag as colorPaletteUi} from './colorpalette.js';
+import ColorPaletteEventType from './colorpaletteeventtype.js';
 
 const {assert} = goog.require('goog.asserts');
 const {append, contains} = goog.require('goog.dom');
 const {listen, unlisten} = goog.require('goog.events');
 const {toHexString} = goog.require('os.color');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const ColorPaletteEventType = goog.require('os.ui.color.ColorPaletteEventType');
-const {Controller: ColorPaletteCtrl, directiveTag: colorPaletteUi} = goog.require('os.ui.color.ColorPaletteUI');
 
 
 /**
  * @type {string}
  */
-const selector = 'js-color-picker';
+export const selector = 'js-color-picker';
 
 /**
  * @type {string}
@@ -29,7 +30,7 @@ const template = '<button type="button" class="btn btn-sm bg-transparent border 
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -48,7 +49,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'colorpicker';
+export const directiveTag = 'colorpicker';
 
 /**
  * Add the directive to the module
@@ -59,7 +60,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the color picker directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -260,10 +261,3 @@ class Controller {
         `style="top:${menuOffset['top']}px;left:${menuOffset['left']}px;"></${colorPaletteUi}>`;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  selector
-};

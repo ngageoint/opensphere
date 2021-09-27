@@ -1,12 +1,12 @@
 goog.declareModuleId('plugin.cesium.tiles.Descriptor');
 
+import ColorControlType from '../../../os/ui/colorcontroltype.js';
+import ControlType from '../../../os/ui/controltype.js';
 import {getIonUrl} from '../cesium.js';
 import {ICON, ID} from './cesium3dtiles.js';
 import Provider from './cesium3dtilesprovider.js';
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
-const ColorControlType = goog.require('os.ui.ColorControlType');
-const ControlType = goog.require('os.ui.ControlType');
 
 const FileParserConfig = goog.requireType('os.parse.FileParserConfig');
 

@@ -1,8 +1,10 @@
-goog.module('os.ui.ex.ExportOptionsEvent');
+goog.declareModuleId('os.ui.ex.ExportOptionsEvent');
 
 /**
  * @enum {string}
  */
-exports = {
+const ExportOptionsEvent = {
   CHANGE: 'exportoptions:change'
 };
+
+export default ExportOptionsEvent;

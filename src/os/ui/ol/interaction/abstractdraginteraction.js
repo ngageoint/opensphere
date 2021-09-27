@@ -1,7 +1,8 @@
-goog.module('os.ui.ol.interaction.AbstractDrag');
+goog.declareModuleId('os.ui.ol.interaction.AbstractDrag');
+
+import AbstractDraw from './abstractdrawinteraction.js';
 
 const {mouseOnly} = goog.require('ol.events.condition');
-const AbstractDraw = goog.require('os.ui.ol.interaction.AbstractDraw');
 
 const MapBrowserPointerEvent = goog.requireType('ol.MapBrowserPointerEvent');
 
@@ -9,7 +10,7 @@ const MapBrowserPointerEvent = goog.requireType('ol.MapBrowserPointerEvent');
 /**
  * @abstract
  */
-class AbstractDrag extends AbstractDraw {
+export default class AbstractDrag extends AbstractDraw {
   /**
    * Constructor.
    * @param {olx.interaction.PointerOptions=} opt_options
@@ -119,5 +120,3 @@ class AbstractDrag extends AbstractDraw {
  * @const
  */
 AbstractDrag.MIN_AREA = 64;
-
-exports = AbstractDrag;

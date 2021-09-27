@@ -1,4 +1,4 @@
-goog.module('os.ui.ol.interaction');
+goog.declareModuleId('os.ui.ol.interaction');
 
 const userAgent = goog.require('goog.userAgent');
 const EventType = goog.require('ol.events.EventType');
@@ -14,7 +14,7 @@ const RenderFeature = goog.requireType('ol.render.Feature');
  * If true, keyboard interactions will fire on keydown. Otherwise, they will fire on keypress.
  * @type {boolean}
  */
-const USES_KEYDOWN = userAgent.IE ||
+export const USES_KEYDOWN = userAgent.IE ||
     userAgent.EDGE ||
     (userAgent.WEBKIT && userAgent.isVersionOrHigher('525')) ||
     (userAgent.GECKO && userAgent.isVersionOrHigher('65'));
@@ -23,7 +23,7 @@ const USES_KEYDOWN = userAgent.IE ||
  * The keyboard interaction event type.
  * @type {string}
  */
-const KEY_TYPE = USES_KEYDOWN ? EventType.KEYDOWN : EventType.KEYPRESS;
+export const KEY_TYPE = USES_KEYDOWN ? EventType.KEYDOWN : EventType.KEYPRESS;
 
 /**
  * Get the first feature under the pixel in a map browser event.
@@ -33,7 +33,7 @@ const KEY_TYPE = USES_KEYDOWN ? EventType.KEYDOWN : EventType.KEYPRESS;
  * @return {Feature} The first feature under the event pixel, or null if none was found.
  * @template T
  */
-const getEventFeature = function(event, opt_callback) {
+export const getEventFeature = function(event, opt_callback) {
   if (event && event.map && event.pixel) {
     var callback = opt_callback || getFirstFeature;
     return event.map.forEachFeatureAtPixel(event.pixel, callback);
@@ -49,7 +49,7 @@ const getEventFeature = function(event, opt_callback) {
  * @param {Layer} layer Layer
  * @return {Feature|RenderFeature}
  */
-const getFirstFeature = function(feature, layer) {
+export const getFirstFeature = function(feature, layer) {
   return feature;
 };
 
@@ -60,7 +60,7 @@ const getFirstFeature = function(feature, layer) {
  * @param {Layer} layer Layer
  * @return {Feature|RenderFeature}
  */
-const getFirstPolygon = function(feature, layer) {
+export const getFirstPolygon = function(feature, layer) {
   if (feature) {
     var geometry = feature.getGeometry();
     if (isGeometryPolygonal(geometry)) {
@@ -69,12 +69,4 @@ const getFirstPolygon = function(feature, layer) {
   }
 
   return null;
-};
-
-exports = {
-  USES_KEYDOWN,
-  KEY_TYPE,
-  getEventFeature,
-  getFirstFeature,
-  getFirstPolygon
 };

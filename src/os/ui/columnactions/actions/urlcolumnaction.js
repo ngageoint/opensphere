@@ -1,13 +1,14 @@
-goog.module('os.ui.columnactions.actions.UrlColumnAction');
+goog.declareModuleId('os.ui.columnactions.actions.UrlColumnAction');
+
+import AbstractColumnAction from '../abstractcolumnaction.js';
 
 const {buildString} = goog.require('goog.string');
 const {open} = goog.require('goog.window');
-const AbstractColumnAction = goog.require('os.ui.columnactions.AbstractColumnAction');
 
 
 /**
  */
-class UrlColumnAction extends AbstractColumnAction {
+export default class UrlColumnAction extends AbstractColumnAction {
   /**
    * Constructor.
    */
@@ -122,5 +123,3 @@ class UrlColumnAction extends AbstractColumnAction {
     return url;
   }
 }
-
-exports = UrlColumnAction;

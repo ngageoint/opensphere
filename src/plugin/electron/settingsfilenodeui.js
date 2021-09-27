@@ -1,12 +1,11 @@
 goog.declareModuleId('plugin.electron.SettingsFileNodeUI');
 
 import * as Dispatcher from '../../os/dispatcher.js';
+import Module from '../../os/ui/module.js';
+import AbstractNodeUICtrl from '../../os/ui/slick/abstractnodeui.js';
+import {launchConfirm} from '../../os/ui/window/confirm.js';
+import {launchConfirmText} from '../../os/ui/window/confirmtext.js';
 import {EventType} from './electron.js';
-
-const Module = goog.require('os.ui.Module');
-const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
-const {launchConfirmText} = goog.require('os.ui.window.ConfirmTextUI');
-const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
 
 const {default: SettingsFileNode} = goog.requireType('plugin.electron.SettingsFileNode');
 

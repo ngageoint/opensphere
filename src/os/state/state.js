@@ -4,8 +4,8 @@ const {defaultCompare} = goog.require('goog.array');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const DataManager = goog.require('os.data.DataManager');
 const Tag = goog.require('os.state.Tag');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
-const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
+const {default: BaseProvider} = goog.require('os.ui.data.BaseProvider');
+const {default: DescriptorProvider} = goog.require('os.ui.data.DescriptorProvider');
 
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 const IState = goog.requireType('os.state.IState');

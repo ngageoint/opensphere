@@ -1,7 +1,7 @@
 goog.module('os.metrics.MapMetrics');
 
 const {Map: MapKeys} = goog.require('os.metrics.keys');
-const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');
+const {default: MetricsPlugin} = goog.require('os.ui.metrics.MetricsPlugin');
 
 
 /**

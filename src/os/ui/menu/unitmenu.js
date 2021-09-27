@@ -1,19 +1,20 @@
-goog.module('os.ui.menu.unit');
+goog.declareModuleId('os.ui.menu.unit');
+
+import Menu from './menu.js';
+import MenuItem from './menuitem.js';
+import MenuItemType from './menuitemtype.js';
 
 const googDispose = goog.require('goog.dispose');
 const {Map: MapKeys} = goog.require('os.metrics.keys');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 const UnitManager = goog.require('os.unit.UnitManager');
 
-const ActionEvent = goog.requireType('os.ui.action.ActionEvent');
+const {default: ActionEvent} = goog.requireType('os.ui.action.ActionEvent');
 
 
 /**
  * @type {Menu<undefined>|undefined}
  */
-let MENU = new Menu(new MenuItem({
+export let MENU = new Menu(new MenuItem({
   type: MenuItemType.ROOT,
   children: []
 }));
@@ -21,7 +22,7 @@ let MENU = new Menu(new MenuItem({
 /**
  * Set up the menu
  */
-const setup = function() {
+export const setup = function() {
   var menu = MENU;
   if (menu) {
     var root = menu.getRoot();
@@ -66,7 +67,7 @@ const setup = function() {
 /**
  * Dispose unit actions.
  */
-const dispose = function() {
+export const dispose = function() {
   googDispose(MENU);
 
   MENU = undefined;
@@ -77,7 +78,7 @@ const dispose = function() {
  *
  * @param {ActionEvent} event
  */
-const toggleUnit = function(event) {
+export const toggleUnit = function(event) {
   UnitManager.getInstance().setSelectedSystem(event.type);
 };
 
@@ -86,19 +87,11 @@ const toggleUnit = function(event) {
  *
  * @this {MenuItem}
  */
-const updateIcons = function() {
+export const updateIcons = function() {
   var curSystem = UnitManager.getInstance().getSelectedSystem();
   if (this.eventType === curSystem) {
     this.icons = ['<i class="fa fa-fw fa-check-circle-o"></i>'];
   } else {
     this.icons = ['<i class="fa fa-fw fa-circle-o"></i>'];
   }
-};
-
-exports = {
-  MENU,
-  setup,
-  dispose,
-  toggleUnit,
-  updateIcons
 };

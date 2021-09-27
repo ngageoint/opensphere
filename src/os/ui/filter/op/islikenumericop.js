@@ -1,13 +1,13 @@
-goog.module('os.ui.filter.op.IsLikeNumeric');
+goog.declareModuleId('os.ui.filter.op.IsLikeNumeric');
 
-const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
-const {directiveTag} = goog.require('os.ui.filter.TextNoColCheckUI');
-const Op = goog.require('os.ui.filter.op.Op');
+import FilterPatterns from '../filterpatterns.js';
+import {directiveTag} from '../textnocolcheck.js';
+import Op from './op.js';
 
 
 /**
  */
-class IsLikeNumeric extends Op {
+export default class IsLikeNumeric extends Op {
   /**
    * Constructor.
    * @param {string=} opt_title
@@ -143,5 +143,3 @@ class IsLikeNumeric extends Op {
     return false;
   }
 }
-
-exports = IsLikeNumeric;

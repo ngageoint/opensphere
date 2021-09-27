@@ -1,14 +1,15 @@
-goog.module('os.ui.ProviderImportUI');
+goog.declareModuleId('os.ui.ProviderImportUI');
+
+import FileImportUI from './im/fileimportui.js';
+import * as osWindow from './window.js';
 
 const DataManager = goog.require('os.data.DataManager');
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
-const FileImportUI = goog.require('os.ui.im.FileImportUI');
-const osWindow = goog.require('os.ui.window');
 
 
 /**
  */
-class ProviderImportUI extends FileImportUI {
+export default class ProviderImportUI extends FileImportUI {
   /**
    * Constructor.
    * @param {string} ui The directive to launch
@@ -76,5 +77,3 @@ class ProviderImportUI extends FileImportUI {
     }
   }
 }
-
-exports = ProviderImportUI;

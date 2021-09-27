@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLImportUI');
 
+import FileImportUI from '../../../../os/ui/im/fileimportui.js';
+import * as osWindow from '../../../../os/ui/window.js';
 import KMLDescriptor from '../kmldescriptor.js';
 import KMLProvider from '../kmlprovider.js';
 import {directiveTag as importEl} from './kmlimport.js';
@@ -7,8 +9,7 @@ import {directiveTag as importEl} from './kmlimport.js';
 const DataManager = goog.require('os.data.DataManager');
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
-const FileImportUI = goog.require('os.ui.im.FileImportUI');
-const osWindow = goog.require('os.ui.window');
+
 
 /**
  */

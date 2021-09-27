@@ -1,8 +1,8 @@
-goog.module('os.ui.navBottomDirective');
+goog.declareModuleId('os.ui.navBottomDirective');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const NavBarCtrl = goog.require('os.ui.NavBarCtrl');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import NavBarCtrl from './navbarctrl.js';
 
 
 /**
@@ -10,7 +10,7 @@ const NavBarCtrl = goog.require('os.ui.NavBarCtrl');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -23,14 +23,9 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'nav-bottom';
+export const directiveTag = 'nav-bottom';
 
 /**
  * Add the directive to the module.
  */
 Module.directive('navBottom', [directive]);
-
-exports = {
-  directive,
-  directiveTag
-};

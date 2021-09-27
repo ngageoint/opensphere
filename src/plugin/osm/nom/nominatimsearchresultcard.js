@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.osm.nom.ResultCardUI');
 
 import {ROOT} from '../../../os/os.js';
+import Module from '../../../os/ui/module.js';
+import FeatureResultCardCtrl from '../../../os/ui/search/featureresultcard.js';
 import * as nom from './nominatim.js';
 
 const googString = goog.require('goog.string');
-const Module = goog.require('os.ui.Module');
-const FeatureResultCardCtrl = goog.require('os.ui.search.FeatureResultCardCtrl');
 
 
 /**

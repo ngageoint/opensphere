@@ -1,11 +1,10 @@
 goog.declareModuleId('plugin.places.ui.PlacesNodeUI');
 
+import Module from '../../../os/ui/module.js';
+import {Controller as DefaultLayerNodeUICtrl} from '../../../os/ui/node/defaultlayernodeui.js';
 import {createOrEditFolder, createOrEditPlace} from '../../file/kml/ui/kmlui.js';
 import {Icon, getPlacesRoot} from '../places.js';
 import PlacesManager from '../placesmanager.js';
-
-const Module = goog.require('os.ui.Module');
-const {Controller: DefaultLayerNodeUICtrl} = goog.require('os.ui.node.DefaultLayerNodeUI');
 
 const {FolderOptions, PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
 const {default: KMLLayerNode} = goog.requireType('plugin.file.kml.ui.KMLLayerNode');

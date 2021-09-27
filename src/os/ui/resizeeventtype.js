@@ -1,4 +1,4 @@
-goog.module('os.ui.ResizeEventType');
+goog.declareModuleId('os.ui.ResizeEventType');
 
 /**
  * Enumeration of resize event types.
@@ -8,4 +8,4 @@ const ResizeEventType = {
   UPDATE_RESIZE: 'updateResize'
 };
 
-exports = ResizeEventType;
+export default ResizeEventType;

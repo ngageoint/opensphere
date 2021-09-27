@@ -1,11 +1,13 @@
-goog.module('os.ui.location.Format');
+goog.declareModuleId('os.ui.location.Format');
 
 /**
  * @enum {string}
  */
-exports = {
+const Format = {
   DEG: 'deg',
   DMS: 'dms',
   DDM: 'ddm',
   MGRS: 'mgrs'
 };
+
+export default Format;

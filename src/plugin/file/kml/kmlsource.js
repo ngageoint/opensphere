@@ -2,6 +2,10 @@ goog.declareModuleId('plugin.file.kml.KMLSource');
 
 import * as dispatcher from '../../../os/dispatcher.js';
 import * as source from '../../../os/source/source.js';
+import UIEventType from '../../../os/ui/events/uieventtype.js';
+import {Controller as FeatureEditCtrl} from '../../../os/ui/featureedit.js';
+import * as column from '../../../os/ui/slick/column.js';
+import * as osWindow from '../../../os/ui/window.js';
 import KMLImporter from './kmlimporter.js';
 import KMLParser from './kmlparser.js';
 import KMLSourceEvent from './kmlsourceevent.js';
@@ -20,14 +24,10 @@ const osObject = goog.require('os.object');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const RequestSource = goog.require('os.source.Request');
 const TriState = goog.require('os.structs.TriState');
-const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
-const UIEventType = goog.require('os.ui.events.UIEventType');
-const column = goog.require('os.ui.slick.column');
-const osWindow = goog.require('os.ui.window');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Image = goog.requireType('os.layer.Image');
-const UIEvent = goog.requireType('os.ui.events.UIEvent');
+const {default: UIEvent} = goog.requireType('os.ui.events.UIEvent');
 
 
 /**

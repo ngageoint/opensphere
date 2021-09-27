@@ -1,16 +1,22 @@
 goog.declareModuleId('os.ui.AbstractMainCtrl');
 
-goog.require('os.ui.GlobalMenuUI');
-goog.require('os.ui.ListUI');
-goog.require('os.ui.alert.AlertPopupUI');
-goog.require('os.ui.onboarding.ContextOnboardingUI');
-goog.require('os.ui.onboarding.OnboardingUI');
-
 import '../../polyfill/chardetng.js';
+import './alert/alertpopup.js';
+import './globalmenu.js';
+import './listui.js';
+import './onboarding/contextonboarding.js';
+import './onboarding/onboarding.js';
 
 import ElectronPlugin from '../../plugin/electron/electronplugin.js';
 import {browserVersion, operatingSystem, setPeer} from '../os.js';
+import * as ConsentUI from './consent.js';
+import EventType from './help/helpeventtype.js';
+import MetricsManager from './metrics/metricsmanager.js';
+import NotificationManager from './notification/notificationmanager.js';
+import OnboardingManager from './onboarding/onboardingmanager.js';
 import {apply, injector, setInjector} from './ui.js';
+
+import * as ConfirmUI from './window/confirm.js';
 
 const Timer = goog.require('goog.Timer');
 const EventTarget = goog.require('goog.events.EventTarget');
@@ -34,12 +40,6 @@ const ProxyHandler = goog.require('os.net.ProxyHandler');
 const RequestHandlerFactory = goog.require('os.net.RequestHandlerFactory');
 const PluginManager = goog.require('os.plugin.PluginManager');
 const replacers = goog.require('os.time.replacers');
-const ConsentUI = goog.require('os.ui.ConsentUI');
-const EventType = goog.require('os.ui.help.EventType');
-const MetricsManager = goog.require('os.ui.metrics.MetricsManager');
-const NotificationManager = goog.require('os.ui.notification.NotificationManager');
-const OnboardingManager = goog.require('os.ui.onboarding.OnboardingManager');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const Peer = goog.require('os.xt.Peer');
 
 const GoogEvent = goog.requireType('goog.events.Event');

@@ -1,9 +1,10 @@
-goog.module('os.ui.timeline.BaseItem');
+goog.declareModuleId('os.ui.timeline.BaseItem');
+
+import ITimelineItem from './itimelineitem.js';// eslint-disable-line
 
 const EventTarget = goog.require('goog.events.EventTarget');
-const ITimelineItem = goog.require('os.ui.timeline.ITimelineItem'); // eslint-disable-line
 
-const Action = goog.requireType('os.ui.action.Action');
+const {default: Action} = goog.requireType('os.ui.action.Action');
 
 
 /**
@@ -12,7 +13,7 @@ const Action = goog.requireType('os.ui.action.Action');
  * @abstract
  * @implements {ITimelineItem}
  */
-class BaseItem extends EventTarget {
+export default class BaseItem extends EventTarget {
   /**
    * Constructor.
    */
@@ -150,5 +151,3 @@ class BaseItem extends EventTarget {
    */
   initSVG(container, height) {}
 }
-
-exports = BaseItem;

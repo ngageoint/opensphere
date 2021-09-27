@@ -1,12 +1,12 @@
-goog.module('os.ui.uniqueServerUrl');
+goog.declareModuleId('os.ui.uniqueServerUrl');
 
-const Module = goog.require('os.ui.Module');
+import Module from './module.js';
 
 
 /**
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   'require': 'ngModel',
   'link': uniqueServerUrl
 });
@@ -15,7 +15,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'unique-server-url';
+export const directiveTag = 'unique-server-url';
 
 /**
  * Link function for unique title directive
@@ -52,8 +52,3 @@ const uniqueServerUrl = function($scope, $element, $attrs, $ctrl) {
  * Add the unique title directive
  */
 Module.directive('uniqueServerUrl', [directive]);
-
-exports = {
-  directive,
-  directiveTag
-};

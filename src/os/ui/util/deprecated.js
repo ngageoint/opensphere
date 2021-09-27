@@ -1,8 +1,9 @@
-goog.module('os.ui.util.deprecated');
+goog.declareModuleId('os.ui.util.deprecated');
+
+import * as ConfirmUI from '../window/confirm.js';
 
 const Delay = goog.require('goog.async.Delay');
 const Settings = goog.require('os.config.Settings');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -11,7 +12,7 @@ const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
  * @param {?string} name
  * @return {boolean}
  */
-const isLayerDeprecated = function(name) {
+export const isLayerDeprecated = function(name) {
   var deprecatedLayers = /** @type {Object} */ (Settings.getInstance().get(['deprecatedLayers'], {}));
   return !!name && name in deprecatedLayers;
 };
@@ -23,7 +24,7 @@ const isLayerDeprecated = function(name) {
  *
  * @param {?string} name
  */
-const showDeprecatedWarning = function(name) {
+export const showDeprecatedWarning = function(name) {
   // don't insert duplicates (layer groups tend to cause this problem)
   if (name && notifyQueue.indexOf(name) === -1) {
     notifyQueue.push(name);
@@ -82,8 +83,3 @@ const notifyQueue = [];
  * @type {Delay}
  */
 const windowDelay = new Delay(launchDeprecatedLayersWindow, 500);
-
-exports = {
-  isLayerDeprecated,
-  showDeprecatedWarning
-};

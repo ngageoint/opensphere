@@ -1,12 +1,12 @@
-goog.module('os.ui.layer.EllipseOptionsUI');
+goog.declareModuleId('os.ui.layer.EllipseOptionsUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import AbstractLayerUICtrl from './abstractlayerui.js';
 const VectorLayerShowEllipsoids = goog.require('os.command.VectorLayerShowEllipsoids');
 const VectorLayerShowGroundReference = goog.require('os.command.VectorLayerShowGroundReference');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
-const Module = goog.require('os.ui.Module');
-const AbstractLayerUICtrl = goog.require('os.ui.layer.AbstractLayerUICtrl');
 
 
 /**
@@ -14,7 +14,7 @@ const AbstractLayerUICtrl = goog.require('os.ui.layer.AbstractLayerUICtrl');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/layer/ellipseoptions.html',
@@ -26,7 +26,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'ellipseoptions';
+export const directiveTag = 'ellipseoptions';
 
 /**
  * Add the directive to the module.
@@ -37,7 +37,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the ellipseoptions directive.
  * @unrestricted
  */
-class Controller extends AbstractLayerUICtrl {
+export class Controller extends AbstractLayerUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -162,9 +162,3 @@ class Controller extends AbstractLayerUICtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

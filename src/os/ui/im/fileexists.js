@@ -1,11 +1,11 @@
-goog.module('os.ui.im.FileExistsUI');
+goog.declareModuleId('os.ui.im.FileExistsUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import * as ConfirmUI from '../window/confirm.js';
+import WindowEventType from '../windoweventtype.js';
+import FileExistsChoice from './fileexistschoice.js';
 const {getAppName} = goog.require('os.config');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const FileExistsChoice = goog.require('os.ui.im.FileExistsChoice');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -13,7 +13,7 @@ const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   templateUrl: ROOT + 'views/im/fileexists.html',
   controller: Controller,
@@ -24,7 +24,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'fileexists';
+export const directiveTag = 'fileexists';
 
 /**
  * Add the directive to the os.ui module
@@ -35,7 +35,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the File Exists! window
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -59,7 +59,7 @@ class Controller {
  * @param {!os.file.File} file
  * @param {function(FileExistsChoice)} confirm
  */
-const launchFileExists = function(file, confirm) {
+export const launchFileExists = function(file, confirm) {
   var confirmOptions = /** @type {osx.window.ConfirmOptions} */ ({
     confirm: confirm,
     confirmValue: FileExistsChoice.SAVE_NEW,
@@ -81,11 +81,4 @@ const launchFileExists = function(file, confirm) {
   };
 
   ConfirmUI.launchConfirm(confirmOptions, scopeOptions);
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchFileExists
 };

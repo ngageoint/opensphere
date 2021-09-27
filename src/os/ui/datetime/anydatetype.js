@@ -1,10 +1,12 @@
-goog.module('os.ui.datetime.AnyDateType');
+goog.declareModuleId('os.ui.datetime.AnyDateType');
 
 /**
  * @enum {string}
  */
-exports = {
+const AnyDateType = {
   NOTIME: 'notime',
   INSTANT: 'instant',
   RANGE: 'range'
 };
+
+export default AnyDateType;

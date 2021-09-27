@@ -1,14 +1,14 @@
-goog.module('os.ui.columnactions.ColumnActionEvent');
+goog.declareModuleId('os.ui.columnactions.ColumnActionEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
-const IColumnActionModel = goog.requireType('os.ui.columnactions.IColumnActionModel');
+const {default: IColumnActionModel} = goog.requireType('os.ui.columnactions.IColumnActionModel');
 
 
 /**
  * Handle a column action event
  */
-class ColumnActionEvent extends GoogEvent {
+export default class ColumnActionEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -60,5 +60,3 @@ class ColumnActionEvent extends GoogEvent {
     return this.value_;
   }
 }
-
-exports = ColumnActionEvent;

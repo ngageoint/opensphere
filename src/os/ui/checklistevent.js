@@ -1,8 +1,10 @@
-goog.module('os.ui.ChecklistEvent');
+goog.declareModuleId('os.ui.ChecklistEvent');
 
 /**
  * @enum {string}
  */
-exports = {
+const ChecklistEvent = {
   CHANGE: 'checklist:change'
 };
+
+export default ChecklistEvent;

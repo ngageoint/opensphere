@@ -2,6 +2,11 @@ goog.declareModuleId('plugin.places.menu');
 
 import * as osFeature from '../../os/feature/feature.js';
 import * as os from '../../os/os.js';
+import {launchFeatureList} from '../../os/ui/featurelist.js';
+import * as layerMenu from '../../os/ui/menu/layermenu.js';
+import * as mapMenu from '../../os/ui/menu/mapmenu.js';
+import MenuItemType from '../../os/ui/menu/menuitemtype.js';
+import * as spatial from '../../os/ui/menu/spatial.js';
 import KMLNodeAdd from '../file/kml/cmd/kmlnodeaddcmd.js';
 import KMLNodeRemove from '../file/kml/cmd/kmlnoderemovecmd.js';
 import KMLLayer from '../file/kml/kmllayer.js';
@@ -27,14 +32,9 @@ const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
 const VectorLayer = goog.require('os.layer.Vector');
 const {Places: PlacesKeys} = goog.require('os.metrics.keys');
 const VectorSource = goog.require('os.source.Vector');
-const {launchFeatureList} = goog.require('os.ui.FeatureListUI');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const layerMenu = goog.require('os.ui.menu.layer');
-const mapMenu = goog.require('os.ui.menu.map');
-const spatial = goog.require('os.ui.menu.spatial');
 
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 const {FolderOptions, PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
 
 

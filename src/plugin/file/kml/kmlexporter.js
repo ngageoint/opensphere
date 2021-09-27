@@ -3,6 +3,8 @@ goog.declareModuleId('plugin.file.kml.KMLExporter');
 import * as osFeature from '../../../os/feature/feature.js';
 import * as osSource from '../../../os/source/source.js';
 import * as osStyle from '../../../os/style/style.js';
+import AbstractKMLExporter from '../../../os/ui/file/kml/abstractkmlexporter.js';
+import * as kml from '../../../os/ui/file/kml/kml.js';
 import * as pluginFileKmlExport from './kmlexport.js';
 import {directiveTag as kmlExportUi} from './ui/kmlexportui.js';
 
@@ -21,8 +23,6 @@ const LayerId = goog.require('os.layer.LayerId');
 const StyleManager = goog.require('os.style.StyleManager');
 const StyleType = goog.require('os.style.StyleType');
 const ITime = goog.require('os.time.ITime');
-const kml = goog.require('os.ui.file.kml');
-const AbstractKMLExporter = goog.require('os.ui.file.kml.AbstractKMLExporter');
 const xml = goog.require('os.xml');
 
 const Feature = goog.requireType('ol.Feature');

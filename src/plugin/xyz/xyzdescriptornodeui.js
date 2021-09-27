@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.xyz.XYZDescriptorNodeUI');
 
-const Module = goog.require('os.ui.Module');
-const {Controller: DescriptorNodeUICtrl} = goog.require('os.ui.data.DescriptorNodeUI');
-const uiWindow = goog.require('os.ui.window');
+import {Controller as DescriptorNodeUICtrl} from '../../os/ui/data/descriptornodeui.js';
+import Module from '../../os/ui/module.js';
+import * as uiWindow from '../../os/ui/window.js';
 
 const ConfigDescriptor = goog.requireType('os.data.ConfigDescriptor');
 

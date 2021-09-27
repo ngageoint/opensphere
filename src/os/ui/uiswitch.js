@@ -1,10 +1,11 @@
-goog.module('os.ui.UISwitchUI');
+goog.declareModuleId('os.ui.UISwitchUI');
+
+import Module from './module.js';
+import {apply} from './ui.js';
+import UISwitchEventType from './uiswitcheventtype.js';
 
 const Delay = goog.require('goog.async.Delay');
 const log = goog.require('goog.log');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const UISwitchEventType = goog.require('os.ui.UISwitchEventType');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -21,7 +22,7 @@ const Logger = goog.requireType('goog.log.Logger');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<div></div>',
@@ -41,7 +42,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'uiswitch';
+export const directiveTag = 'uiswitch';
 
 /**
  * Add the directive to the os.ui module
@@ -52,7 +53,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the UI switch directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -287,9 +288,3 @@ class Controller {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.UISwitchUI');
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

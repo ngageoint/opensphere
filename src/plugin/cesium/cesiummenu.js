@@ -1,10 +1,9 @@
 goog.declareModuleId('plugin.cesium.menu');
 
+import * as importMenu from '../../os/ui/menu/importmenu.js';
+import * as osWindow from '../../os/ui/window.js';
 import {isIonEnabled} from './cesium.js';
 import {directiveTag as importIonAssetTag} from './importionasset.js';
-
-const importMenu = goog.require('os.ui.menu.import');
-const osWindow = goog.require('os.ui.window');
 
 /**
  * Cesium menu event types.

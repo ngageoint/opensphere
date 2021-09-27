@@ -1,12 +1,11 @@
-goog.module('os.ui.wiz.WizardPreviewUI');
+goog.declareModuleId('os.ui.wiz.WizardPreviewUI');
 
-goog.require('os.ui.slick.SlickGridUI');
-goog.require('os.ui.slick.SlickHeaderButtonUI');
-
-const {ROOT} = goog.require('os');
+import '../slick/slickgrid.js';
+import '../slick/slickheaderbutton.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import * as ui from '../ui.js';
 const mapping = goog.require('os.im.mapping');
-const ui = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 
@@ -16,7 +15,7 @@ const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -28,12 +27,11 @@ const directive = () => ({
   controllerAs: 'wizPreview'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'wizardpreview';
+export const directiveTag = 'wizardpreview';
 
 
 /**
@@ -46,7 +44,7 @@ Module.directive('wizardpreview', [directive]);
  * Controller for the wizard preview directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -208,9 +206,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

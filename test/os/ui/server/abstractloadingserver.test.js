@@ -4,7 +4,7 @@ goog.require('os.ui.server.AbstractLoadingServer');
 
 describe('os.ui.server.AbstractLoadingServer', function() {
   const googArray = goog.module.get('goog.array');
-  const AbstractLoadingServer = goog.module.get('os.ui.server.AbstractLoadingServer');
+  const {default: AbstractLoadingServer} = goog.module.get('os.ui.server.AbstractLoadingServer');
 
   var server = new AbstractLoadingServer();
 

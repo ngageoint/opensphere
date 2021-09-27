@@ -1,14 +1,14 @@
-goog.module('os.ui.events.UIEvent');
+goog.declareModuleId('os.ui.events.UIEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
-const UIEventType = goog.requireType('os.ui.events.UIEventType');
+const {default: UIEventType} = goog.requireType('os.ui.events.UIEventType');
 
 
 /**
  * UI event
  */
-class UIEvent extends GoogEvent {
+export default class UIEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {UIEventType} type The event type
@@ -45,5 +45,3 @@ class UIEvent extends GoogEvent {
     this.metricKey = opt_metricKey || null;
   }
 }
-
-exports = UIEvent;

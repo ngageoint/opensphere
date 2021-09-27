@@ -1,10 +1,9 @@
-goog.module('os.ui.filter.op.time.NewerOlderThanUI');
+goog.declareModuleId('os.ui.filter.op.time.NewerOlderThanUI');
 
-goog.require('os.ui.datetime.DurationUI');
-goog.require('os.ui.popover.PopoverUI');
-
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
+import '../../../datetime/duration.js';
+import '../../../popover/popover.js';
+import {ROOT} from '../../../../os.js';
+import Module from '../../../module.js';
 
 
 /**
@@ -12,7 +11,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/filter/op/time/newerolderthan.html',
@@ -24,7 +23,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'newerolderthan';
+export const directiveTag = 'newerolderthan';
 
 /**
  * Add the directive to the module
@@ -35,7 +34,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the newerolderthan directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -88,9 +87,3 @@ class Controller {
     this.scope_['expr']['literal'] = val;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

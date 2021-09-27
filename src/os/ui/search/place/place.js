@@ -1,18 +1,19 @@
-goog.module('os.ui.search.place');
+goog.declareModuleId('os.ui.search.place');
+
+import {setFeatureStyle} from '../../../style/style.js';
+import {GOOGLE_EARTH_URL, GoogleEarthIcons} from '../../file/kml/kml.js';
 
 const {getUid} = goog.require('ol');
 const Feature = goog.require('ol.Feature');
 const {unsafeClone} = goog.require('os.object');
-const {setFeatureStyle} = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
-const {GOOGLE_EARTH_URL, GoogleEarthIcons} = goog.require('os.ui.file.kml');
 
 
 /**
  * @type {Object}
  */
-const FEATURE_CONFIG = {
+export const FEATURE_CONFIG = {
   'image': {
     'type': 'icon',
     'scale': 0.75,
@@ -28,7 +29,7 @@ const FEATURE_CONFIG = {
  * @param {Object.<string, *>=} opt_options Feature options.
  * @return {!Feature}
  */
-const createFeature = function(opt_options) {
+export const createFeature = function(opt_options) {
   // grab the label off the options if it exists. we don't want it on the feature.
   var label;
   if (opt_options && 'label' in opt_options) {
@@ -53,5 +54,3 @@ const createFeature = function(opt_options) {
   setFeatureStyle(feature);
   return feature;
 };
-
-exports = {createFeature, FEATURE_CONFIG};

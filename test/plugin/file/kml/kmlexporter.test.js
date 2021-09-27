@@ -23,7 +23,7 @@ describe('plugin.file.kml.KMLExporter', function() {
   const StyleManager = goog.module.get('os.style.StyleManager');
   const TimeInstant = goog.module.get('os.time.TimeInstant');
   const TimeRange = goog.module.get('os.time.TimeRange');
-  const AbstractKMLExporter = goog.module.get('os.ui.file.kml.AbstractKMLExporter');
+  const {default: AbstractKMLExporter} = goog.module.get('os.ui.file.kml.AbstractKMLExporter');
   const {default: KMLExporter} = goog.module.get('plugin.file.kml.KMLExporter');
   // the layer/source identifier for these tests
   var testId = 'plugin_file_kml_KMLExporter';

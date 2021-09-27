@@ -6,7 +6,7 @@ const {getSettings} = goog.require('os.config.instance');
 const SettingsFile = goog.require('os.config.storage.SettingsFile');
 const SettingsIDBStorage = goog.require('os.config.storage.SettingsIDBStorage');
 const SettingsLocalStorage = goog.require('os.config.storage.SettingsLocalStorage');
-const AngularAppSettingsInitializer = goog.require('os.ui.config.AngularAppSettingsInitializer');
+const {default: AngularAppSettingsInitializer} = goog.require('os.ui.config.AngularAppSettingsInitializer');
 
 
 /**

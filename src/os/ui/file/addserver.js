@@ -1,17 +1,17 @@
-goog.module('os.ui.file.AddServer');
+goog.declareModuleId('os.ui.file.AddServer');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const ImportManager = goog.require('os.ui.im.ImportManager');
-const osWindow = goog.require('os.ui.window');
+import {ROOT} from '../../os.js';
+import ImportManager from '../im/importmanager.js';
+import Module from '../module.js';
+import * as osWindow from '../window.js';
+import WindowEventType from '../windoweventtype.js';
 
 
 /**
  * The addserver directive.
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   return {
     restrict: 'E',
     replace: true,
@@ -40,7 +40,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the addserver directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -141,11 +141,10 @@ class Controller {
   }
 }
 
-
 /**
  * Launch a window that will add servers
  */
-const launchAddServerWindow = function() {
+export const launchAddServerWindow = function() {
   const id = 'addServer';
   if (osWindow.exists(id)) {
     osWindow.bringToFront(id);
@@ -164,11 +163,4 @@ const launchAddServerWindow = function() {
       'show-close': true
     }, 'addserver');
   }
-};
-
-
-exports = {
-  Controller,
-  directive,
-  launchAddServerWindow
 };

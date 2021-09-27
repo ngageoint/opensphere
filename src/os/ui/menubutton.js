@@ -1,16 +1,16 @@
-goog.module('os.ui.MenuButtonCtrl');
+goog.declareModuleId('os.ui.MenuButtonCtrl');
 
-const dispatcher = goog.require('os.Dispatcher');
-const ui = goog.require('os.ui');
-const GlobalMenuEventType = goog.require('os.ui.GlobalMenuEventType');
-const {openMenu} = goog.require('os.ui.GlobalMenuUI');
-const UIEvent = goog.require('os.ui.events.UIEvent');
-const UIEventType = goog.require('os.ui.events.UIEventType');
-const windows = goog.require('os.ui.menu.windows');
-const osWindow = goog.require('os.ui.window');
-const windowSelector = goog.require('os.ui.windowSelector');
+import * as dispatcher from '../dispatcher.js';
+import UIEvent from './events/uievent.js';
+import UIEventType from './events/uieventtype.js';
+import {openMenu} from './globalmenu.js';
+import GlobalMenuEventType from './globalmenueventtype.js';
+import * as windows from './menu/windowsmenu.js';
+import * as ui from './ui.js';
+import * as osWindow from './window.js';
+import windowSelector from './windowselector.js';
 
-const ActionManager = goog.requireType('os.ui.action.ActionManager');
+const {default: ActionManager} = goog.requireType('os.ui.action.ActionManager');
 
 
 /**
@@ -18,7 +18,7 @@ const ActionManager = goog.requireType('os.ui.action.ActionManager');
  * to pop up a menu should use a controller that extends this controller.
  * @unrestricted
  */
-class Controller {
+export default class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The scope
@@ -146,5 +146,3 @@ class Controller {
     return false;
   }
 }
-
-exports = Controller;

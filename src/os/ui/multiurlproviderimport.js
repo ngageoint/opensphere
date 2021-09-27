@@ -1,11 +1,11 @@
-goog.module('os.ui.MultiUrlProviderImportCtrl');
+goog.declareModuleId('os.ui.MultiUrlProviderImportCtrl');
 
-goog.require('os.ui.uniqueServerUrl');
+import './uniqueserverurl.js';
+import SingleUrlProviderImportCtrl from './singleurlproviderimport.js';
 
 const {equals} = goog.require('goog.array');
-const SingleUrlProviderImportCtrl = goog.require('os.ui.SingleUrlProviderImportCtrl');
 
-const AbstractLoadingServer = goog.requireType('os.ui.server.AbstractLoadingServer');
+const {default: AbstractLoadingServer} = goog.requireType('os.ui.server.AbstractLoadingServer');
 
 
 /**
@@ -14,7 +14,7 @@ const AbstractLoadingServer = goog.requireType('os.ui.server.AbstractLoadingServ
  * @abstract
  * @unrestricted
  */
-class Controller extends SingleUrlProviderImportCtrl {
+export default class Controller extends SingleUrlProviderImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -136,5 +136,3 @@ class Controller extends SingleUrlProviderImportCtrl {
     }
   }
 }
-
-exports = Controller;

@@ -9,7 +9,7 @@ const I3DSupport = goog.require('os.I3DSupport');
 const {getLayer} = goog.require('os.feature');
 const osImplements = goog.require('os.implements');
 const VectorLayer = goog.require('os.layer.Vector');
-const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
+const {default: launchMultiFeatureInfo} = goog.require('os.ui.feature.launchMultiFeatureInfo');
 
 
 /**

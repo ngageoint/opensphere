@@ -1,10 +1,10 @@
-goog.module('os.ui.filter.FilterPatterns');
+goog.declareModuleId('os.ui.filter.FilterPatterns');
 
 /**
  * Enum of validation regexes for different logical column types.
  * @type {Object<string, RegExp>}
  */
-exports = {
+const FilterPatterns = {
   'string': /.*/,
   'text': /.*/,
   'decimal': /^\-?\d+((\.|\,)\d+)?$/,
@@ -12,3 +12,5 @@ exports = {
   'real': /^\-?\d+((\.|\,)\d+)?$/,
   'recordtime': /^\-?\d+((\.|\,)\d+)?$/
 };
+
+export default FilterPatterns;

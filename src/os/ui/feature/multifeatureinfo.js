@@ -1,23 +1,23 @@
-goog.module('os.ui.feature.MultiFeatureInfoUI');
+goog.declareModuleId('os.ui.feature.MultiFeatureInfoUI');
 
-goog.require('os.ui.location.SimpleLocationUI');
+import '../location/simplelocation.js';
+import * as osFeature from '../../feature/feature.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import * as slickColumn from '../slick/column.js';
+import {urlNewTabFormatter} from '../slick/formatter.js';
+import {apply} from '../ui.js';
+import {directiveTag as featureInfoUi} from './featureinfo.js';
 
 const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const {caseInsensitiveContains} = goog.require('goog.string');
-const {ROOT} = goog.require('os');
 const {toHexString} = goog.require('os.color');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 const RecordField = goog.require('os.data.RecordField');
-const osFeature = goog.require('os.feature');
 const instanceOf = goog.require('os.instanceOf');
 const LayerClass = goog.require('os.layer.LayerClass');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const {directiveTag: featureInfoUi} = goog.require('os.ui.feature.FeatureInfoUI');
-const slickColumn = goog.require('os.ui.slick.column');
-const {urlNewTabFormatter} = goog.require('os.ui.slick.formatter');
 
 const Feature = goog.requireType('ol.Feature');
 const VectorLayer = goog.requireType('os.layer.Vector');
@@ -28,7 +28,7 @@ const VectorLayer = goog.requireType('os.layer.Vector');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -43,7 +43,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'multifeatureinfo';
+export const directiveTag = 'multifeatureinfo';
 
 /**
  * Add the directive to the module.
@@ -54,7 +54,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the featureinfo directive
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -217,9 +217,3 @@ class Controller extends Disposable {
     return feature.values_[col['field'] || col] || 'No time';
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

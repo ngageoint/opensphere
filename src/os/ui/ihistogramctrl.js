@@ -1,4 +1,4 @@
-goog.module('os.ui.IHistogramUI');
+goog.declareModuleId('os.ui.IHistogramUI');
 
 const Feature = goog.requireType('ol.Feature');
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
@@ -12,7 +12,7 @@ const VectorSource = goog.requireType('os.source.Vector');
  *
  * @interface
  */
-class IHistogramUI {
+export default class IHistogramUI {
   /**
    * Create an XML filter from the histogram.
    * @param {boolean=} opt_allowAll If all bins should be used in absence of a cascade/selection.
@@ -105,5 +105,3 @@ class IHistogramUI {
    */
   isDateMethod() {}
 }
-
-exports = IHistogramUI;

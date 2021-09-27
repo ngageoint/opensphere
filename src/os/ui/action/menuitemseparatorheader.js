@@ -1,7 +1,7 @@
-goog.module('os.ui.action.MenuItemSeparatorHeader');
+goog.declareModuleId('os.ui.action.MenuItemSeparatorHeader');
 
-const MenuItem = goog.require('os.ui.action.MenuItem');
-const IMenuItem = goog.requireType('os.ui.action.IMenuItem');
+import MenuItem from './menuitem.js';
+const {default: IMenuItem} = goog.requireType('os.ui.action.IMenuItem');
 
 
 /**
@@ -10,7 +10,7 @@ const IMenuItem = goog.requireType('os.ui.action.IMenuItem');
  * @implements {IMenuItem}
  * @deprecated Please use os.ui.menu.MenuItemType.SEPARATOR instead.
  */
-class MenuItemSeparatorHeader extends MenuItem {
+export default class MenuItemSeparatorHeader extends MenuItem {
   /**
    * Constructor.
    * @param {string} name The name of the header
@@ -27,5 +27,3 @@ class MenuItemSeparatorHeader extends MenuItem {
     this.isSeparatorHeader = true;
   }
 }
-
-exports = MenuItemSeparatorHeader;

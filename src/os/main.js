@@ -1,20 +1,19 @@
 goog.declareModuleId('osmain');
 
 goog.require('os.mixin');
-goog.require('os.ui.AddDataUI');
-goog.require('os.ui.GlobalMenuUI');
-goog.require('os.ui.LegendUI');
-goog.require('os.ui.Map');
-goog.require('os.ui.Module');
-goog.require('os.ui.SavedWindowUI');
-goog.require('os.ui.ServersUI');
-goog.require('os.ui.TriStateCheckboxUI');
-goog.require('os.ui.clear.ClearUI');
-goog.require('os.ui.config.SettingsWindowUI');
-goog.require('os.ui.metrics.MetricsContainerUI');
-goog.require('os.ui.modal.AboutModalUI');
-goog.require('os.ui.slick.SlickTreeUI');
-
+import './ui/adddata.js';
+import './ui/clear/clear.js';
+import './ui/config/settingswindow.js';
+import './ui/globalmenu.js';
+import './ui/legend.js';
+import './ui/map.js';
+import './ui/metrics/metricscontainer.js';
+import './ui/modal/aboutmodal.js';
+import './ui/module.js';
+import './ui/savedwindowui.js';
+import './ui/servers.js';
+import './ui/slick/slicktree.js';
+import './ui/tristatecheckbox.js';
 import MainCtrl from './mainctrl.js';
 import Module from './module.js';
 import {ROOT, isMainWindow, setLogWindow} from './os.js';

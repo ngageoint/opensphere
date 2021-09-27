@@ -1,4 +1,4 @@
-goog.module('os.ui.geo');
+goog.declareModuleId('os.ui.geo');
 
 /**
  * The title for the rings UIs.
@@ -10,17 +10,12 @@ let ringTitle = 'Ring';
  * Get the title for the rings UIs.
  * @return {string}
  */
-const getRingTitle = () => ringTitle;
+export const getRingTitle = () => ringTitle;
 
 /**
  * Set the title for the rings UIs.
  * @param {string} value The title.
  */
-const setRingTitle = (value) => {
+export const setRingTitle = (value) => {
   ringTitle = value;
-};
-
-exports = {
-  getRingTitle,
-  setRingTitle
 };

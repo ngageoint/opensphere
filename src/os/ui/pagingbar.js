@@ -1,7 +1,7 @@
-goog.module('os.ui.PagingBarUI');
+goog.declareModuleId('os.ui.PagingBarUI');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
+import {ROOT} from '../os.js';
+import Module from './module.js';
 
 
 /**
@@ -9,7 +9,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -30,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'pagingbar';
+export const directiveTag = 'pagingbar';
 
 /**
  * Add the directive to the module.
@@ -41,7 +41,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the pagingbar directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -175,9 +175,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

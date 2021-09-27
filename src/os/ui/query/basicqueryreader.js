@@ -1,4 +1,7 @@
-goog.module('os.ui.query.BasicQueryReader');
+goog.declareModuleId('os.ui.query.BasicQueryReader');
+
+import {OPERATIONS} from '../filter/filter.js';
+import AbstractQueryReader from './abstractqueryreader.js';
 
 const {some} = goog.require('goog.array');
 const {assert} = goog.require('goog.asserts');
@@ -10,15 +13,13 @@ const FilterEntry = goog.require('os.filter.FilterEntry');
 const {METHOD_FIELD} = goog.require('os.interpolate');
 const Method = goog.require('os.interpolate.Method');
 const {getAreaManager, getQueryManager} = goog.require('os.query.instance');
-const {OPERATIONS} = goog.require('os.ui.filter');
-const AbstractQueryReader = goog.require('os.ui.query.AbstractQueryReader');
 const {unescape: xmlUnescape} = goog.require('os.xml');
 
 
 /**
  * Reader for queries written out by the pre-combinator filter/area handlers.
  */
-class BasicQueryReader extends AbstractQueryReader {
+export default class BasicQueryReader extends AbstractQueryReader {
   /**
    * Constructor.
    */
@@ -179,5 +180,3 @@ class BasicQueryReader extends AbstractQueryReader {
     }
   }
 }
-
-exports = BasicQueryReader;

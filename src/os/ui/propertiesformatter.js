@@ -1,8 +1,8 @@
-goog.module('os.ui.formatter.PropertiesFormatter');
+goog.declareModuleId('os.ui.formatter.PropertiesFormatter');
 
-const SlickPropertiesAsyncRenderer = goog.require('os.ui.SlickPropertiesAsyncRenderer');
+import SlickPropertiesAsyncRenderer from './slickpropertiesasyncrenderer.js';
 
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -26,4 +26,4 @@ const PropertiesFormatter = function(row, cell, value, columnDef, node) {
   return '<div class="btn btn-link">Show Properties</div>';
 };
 
-exports = PropertiesFormatter;
+export default PropertiesFormatter;

@@ -1,7 +1,7 @@
-goog.module('os.ui.urlDragDropDirective');
+goog.declareModuleId('os.ui.urlDragDropDirective');
 
-const Module = goog.require('os.ui.Module');
-const UrlDragDrop = goog.require('os.ui.UrlDragDrop');
+import Module from '../module.js';
+import UrlDragDrop from './urldragdrop.js';
 
 
 /**
@@ -11,7 +11,7 @@ const UrlDragDrop = goog.require('os.ui.UrlDragDrop');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'A',
   replace: false,
   link: urlDragDropLink,
@@ -31,7 +31,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'url-drag-drop';
+export const directiveTag = 'url-drag-drop';
 
 /**
  * Register url-drag-drop directive.
@@ -47,9 +47,4 @@ Module.directive('urlDragDrop', [directive]);
 const urlDragDropLink = function($scope, $element) {
   const urlDragDrop = new UrlDragDrop($scope, $element);
   $scope.$on('$destroy', urlDragDrop.destroy.bind(urlDragDrop));
-};
-
-exports = {
-  directive,
-  directiveTag
 };

@@ -1,9 +1,10 @@
-goog.module('os.ui.file.csv.AbstractCsvParser');
+goog.declareModuleId('os.ui.file.csv.AbstractCsvParser');
+
+import {configurePapaParse} from './csv.js';
 
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 const {getText} = goog.require('os.file.mime.text');
 const AsyncParser = goog.require('os.parse.AsyncParser');
-const {configurePapaParse} = goog.require('os.ui.file.csv');
 
 const BaseParserConfig = goog.requireType('os.parse.BaseParserConfig');
 
@@ -14,7 +15,7 @@ const BaseParserConfig = goog.requireType('os.parse.BaseParserConfig');
  * @abstract
  * @template T
  */
-class AbstractCsvParser extends AsyncParser {
+export default class AbstractCsvParser extends AsyncParser {
   /**
    * Constructor.
    * @param {BaseParserConfig} config
@@ -261,5 +262,3 @@ class AbstractCsvParser extends AsyncParser {
  * @type {number}
  */
 AbstractCsvParser.PREVIEW_SIZE = 1000;
-
-exports = AbstractCsvParser;

@@ -1,6 +1,6 @@
-goog.module('os.ui.util.ScrollFocusUI');
+goog.declareModuleId('os.ui.util.ScrollFocusUI');
 
-const Module = goog.require('os.ui.Module');
+import Module from '../module.js';
 
 
 /**
@@ -16,7 +16,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'A',
   controllerAs: 'scrollFocusCtrl',
   controller: Controller,
@@ -27,7 +27,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'scroll-focus';
+export const directiveTag = 'scroll-focus';
 
 Module.directive('scrollFocus', [directive]);
 
@@ -35,7 +35,7 @@ Module.directive('scrollFocus', [directive]);
  * Controller for the scroll-focus directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.JQLite} $element
@@ -186,10 +186,4 @@ const linkFn = function(scope, element, attrs, scrollFocusCtrl) {
       }
     }
   });
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

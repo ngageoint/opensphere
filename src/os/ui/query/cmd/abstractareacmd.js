@@ -1,4 +1,4 @@
-goog.module('os.ui.query.cmd.AbstractArea');
+goog.declareModuleId('os.ui.query.cmd.AbstractArea');
 
 const Disposable = goog.require('goog.Disposable');
 const State = goog.require('os.command.State');
@@ -14,7 +14,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  * @abstract
  * @implements {ICommand}
  */
-class AbstractArea extends Disposable {
+export default class AbstractArea extends Disposable {
   /**
    * Constructor.
    * @param {!Feature} area
@@ -94,5 +94,3 @@ class AbstractArea extends Disposable {
     return true;
   }
 }
-
-exports = AbstractArea;

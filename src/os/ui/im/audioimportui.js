@@ -1,16 +1,17 @@
-goog.module('os.ui.im.AudioImportUI');
+goog.declareModuleId('os.ui.im.AudioImportUI');
+
+import AbstractImportUI from './abstractimportui.js';
 
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const AudioManager = goog.require('os.audio.AudioManager');
 const {isFileSystem, isFileUrlEnabled, isLocal} = goog.require('os.file');
-const AbstractImportUI = goog.require('os.ui.im.AbstractImportUI');
 
 
 /**
  * Used for importing sounds to the audio manager.
  */
-class AudioImportUI extends AbstractImportUI {
+export default class AudioImportUI extends AbstractImportUI {
   /**
    * Constructor.
    */
@@ -36,5 +37,3 @@ class AudioImportUI extends AbstractImportUI {
     }
   }
 }
-
-exports = AudioImportUI;

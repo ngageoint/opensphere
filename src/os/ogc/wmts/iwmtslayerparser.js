@@ -1,7 +1,6 @@
 goog.declareModuleId('os.ogc.wmts.IWMTSLayerParser');
 
-const IOGCDescriptor = goog.requireType('os.ui.ogc.IOGCDescriptor');
-
+const {default: IOGCDescriptor} = goog.requireType('os.ui.ogc.IOGCDescriptor');
 
 
 /**

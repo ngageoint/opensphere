@@ -1,7 +1,7 @@
-goog.module('os.ui.clear.ClearButtonUI');
+goog.declareModuleId('os.ui.clear.ClearButtonUI');
 
-const MenuButtonCtrl = goog.require('os.ui.MenuButtonCtrl');
-const Module = goog.require('os.ui.Module');
+import MenuButtonCtrl from '../menubutton.js';
+import Module from '../module.js';
 
 
 /**
@@ -9,7 +9,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   controller: Controller,
@@ -25,7 +25,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'clear-button';
+export const directiveTag = 'clear-button';
 
 /**
  * add the directive to the module
@@ -36,7 +36,7 @@ Module.directive('clearButton', [directive]);
  * Controller function for the nav-top directive
  * @unrestricted
  */
-class Controller extends MenuButtonCtrl {
+export class Controller extends MenuButtonCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -48,9 +48,3 @@ class Controller extends MenuButtonCtrl {
     this.flag = 'clear';
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

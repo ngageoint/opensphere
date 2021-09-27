@@ -1,10 +1,12 @@
-goog.module('os.ui.color.ColorPaletteEventType');
+goog.declareModuleId('os.ui.color.ColorPaletteEventType');
 
 /**
  * Base Angular event types for the color palette.
  * @enum {string}
  */
-exports = {
+const ColorPaletteEventType = {
   CHANGE: 'palette.change',
   RESET: 'palette.reset'
 };
+
+export default ColorPaletteEventType;

@@ -1,6 +1,6 @@
-goog.module('os.ui.location.degLatFilter');
+goog.declareModuleId('os.ui.location.degLatFilter');
 
-const Module = goog.require('os.ui.Module');
+import Module from '../module.js';
 
 
 /**
@@ -23,4 +23,4 @@ const filter = () => /** @type {angular.Filter} */ (filterFn);
  */
 Module.filter('deglat', [filter]);
 
-exports = filterFn;
+export default filterFn;

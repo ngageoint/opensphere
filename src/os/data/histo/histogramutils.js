@@ -8,7 +8,7 @@ const FilterEntry = goog.require('os.filter.FilterEntry');
 const {isCondition} = goog.require('os.ui.filter');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const IHistogramUI = goog.requireType('os.ui.IHistogramUI');
+const {default: IHistogramUI} = goog.requireType('os.ui.IHistogramUI');
 
 
 /**

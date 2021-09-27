@@ -1,7 +1,8 @@
-goog.module('os.ui.slick.AbstractGroupByTreeSearch');
+goog.declareModuleId('os.ui.slick.AbstractGroupByTreeSearch');
+
+import TreeSearch from './treesearch.js';
 
 const TreeNode = goog.require('os.structs.TreeNode');
-const TreeSearch = goog.require('os.ui.slick.TreeSearch');
 
 const ISearchable = goog.requireType('os.data.ISearchable');
 const ITreeNode = goog.requireType('os.structs.ITreeNode');
@@ -10,7 +11,7 @@ const ITreeNode = goog.requireType('os.structs.ITreeNode');
 /**
  * AbstractGroupByTreeSearch allows you to filter a tree and group the results
  */
-class AbstractGroupByTreeSearch extends TreeSearch {
+export default class AbstractGroupByTreeSearch extends TreeSearch {
   /**
    * Constructor.
    * @param {!Array<!ITreeNode>} search The original tree to search
@@ -99,5 +100,3 @@ class AbstractGroupByTreeSearch extends TreeSearch {
     return new TreeNode();
   }
 }
-
-exports = AbstractGroupByTreeSearch;

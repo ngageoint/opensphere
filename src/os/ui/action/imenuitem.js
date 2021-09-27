@@ -1,6 +1,6 @@
-goog.module('os.ui.action.IMenuItem');
+goog.declareModuleId('os.ui.action.IMenuItem');
 
-const MenuOptions = goog.requireType('os.ui.action.MenuOptions');
+const {default: MenuOptions} = goog.requireType('os.ui.action.MenuOptions');
 
 
 /**
@@ -9,7 +9,7 @@ const MenuOptions = goog.requireType('os.ui.action.MenuOptions');
  * @interface
  * @deprecated Please use {@link os.ui.menu.Menu} and {@link os.ui.menu.MenuItem} instead
  */
-class IMenuItem {
+export default class IMenuItem {
   /**
    * Get the display name for the menu item
    * @return {string}
@@ -28,5 +28,3 @@ class IMenuItem {
    */
   getMenuOptions() {}
 }
-
-exports = IMenuItem;

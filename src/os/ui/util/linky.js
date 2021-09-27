@@ -1,7 +1,8 @@
-goog.module('os.ui.util.LinkyFilter');
+goog.declareModuleId('os.ui.util.LinkyFilter');
+
+import Module from '../module.js';
 
 const {linkify} = goog.require('os.string');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -23,4 +24,4 @@ const linkyFilter = function($sanitize) {
  */
 Module.filter('osLinky', ['$sanitize', linkyFilter]);
 
-exports = linkyFilter;
+export default linkyFilter;

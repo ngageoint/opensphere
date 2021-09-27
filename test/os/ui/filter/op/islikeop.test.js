@@ -1,7 +1,7 @@
 goog.require('os.ui.filter.op.IsLike');
 
 describe('os.ui.filter.op.IsLike', function() {
-  const IsLike = goog.module.get('os.ui.filter.op.IsLike');
+  const {default: IsLike} = goog.module.get('os.ui.filter.op.IsLike');
 
   var op = new IsLike();
 

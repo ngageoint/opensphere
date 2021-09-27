@@ -29,8 +29,8 @@ const LayerClass = goog.require('os.layer.LayerClass');
 const SourceClass = goog.require('os.source.SourceClass');
 const TimeInstant = goog.require('os.time.TimeInstant');
 const TimelineController = goog.require('os.time.TimelineController');
-const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+const {default: AbstractLoadingServer} = goog.require('os.ui.server.AbstractLoadingServer');
+const {default: SlickTreeNode} = goog.require('os.ui.slick.SlickTreeNode');
 
 const IDataManager = goog.require('os.data.IDataManager'); // eslint-disable-line
 

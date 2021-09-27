@@ -9,19 +9,19 @@ const Metrics = goog.require('os.metrics.Metrics');
 const {Filters: FiltersKeys, Map: MapKeys} = goog.require('os.metrics.keys');
 const {getAreaManager} = goog.require('os.query.instance');
 const {WORLD_AREA} = goog.require('os.query.utils');
-const EventType = goog.require('os.ui.action.EventType');
-const ImportEvent = goog.require('os.ui.im.ImportEvent');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
-const ImportProcess = goog.require('os.ui.im.ImportProcess');
-const MenuEvent = goog.require('os.ui.menu.MenuEvent');
-const getUserArea = goog.require('os.ui.query.area.getUserArea');
-const uiLaunchChooseArea = goog.require('os.ui.query.area.launchChooseArea');
-const AreaAdd = goog.require('os.ui.query.cmd.AreaAdd');
+const {default: EventType} = goog.require('os.ui.action.EventType');
+const {default: ImportEvent} = goog.require('os.ui.im.ImportEvent');
+const {default: ImportEventType} = goog.require('os.ui.im.ImportEventType');
+const {default: ImportProcess} = goog.require('os.ui.im.ImportProcess');
+const {default: MenuEvent} = goog.require('os.ui.menu.MenuEvent');
+const {default: getUserArea} = goog.require('os.ui.query.area.getUserArea');
+const {default: uiLaunchChooseArea} = goog.require('os.ui.query.area.launchChooseArea');
+const {default: AreaAdd} = goog.require('os.ui.query.cmd.AreaAdd');
 
 const Feature = goog.requireType('ol.Feature');
 const OSFile = goog.requireType('os.file.File');
 const FileManager = goog.requireType('os.file.FileManager');
-const ImportManager = goog.requireType('os.ui.im.ImportManager');
+const {default: ImportManager} = goog.requireType('os.ui.im.ImportManager');
 
 
 /**

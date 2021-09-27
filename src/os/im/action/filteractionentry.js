@@ -41,7 +41,7 @@ class FilterActionEntry extends FilterEntry {
 
     /**
      * Function to get values from items.
-     * @type {fn.ValueGetter|undefined}
+     * @type {fn.ValueGetter|null|undefined}
      * @protected
      */
     this.filterGetter = undefined;

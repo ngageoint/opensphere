@@ -23,10 +23,10 @@ const Reset = goog.require('os.interaction.Reset');
 const Select = goog.require('os.interaction.Select');
 const mapMenu = goog.require('os.ui.menu.map');
 const spatial = goog.require('os.ui.menu.spatial');
-const MouseWheelZoom = goog.require('os.ui.ol.interaction.MouseWheelZoom');
+const {default: MouseWheelZoom} = goog.require('os.ui.ol.interaction.MouseWheelZoom');
 
 const interaction = goog.requireType('ol.interaction');
-const ContextMenuOptions = goog.requireType('os.ui.ol.interaction.ContextMenuOptions');
+const {default: ContextMenuOptions} = goog.requireType('os.ui.ol.interaction.ContextMenuOptions');
 
 
 /**

@@ -1,10 +1,11 @@
-goog.module('os.ui.query.cmd.AreaAdd');
+goog.declareModuleId('os.ui.query.cmd.AreaAdd');
+
+import {featureKeys} from '../query.js';
+import AbstractArea from './abstractareacmd.js';
 
 const State = goog.require('os.command.State');
 const {clone} = goog.require('os.ol.feature');
 const {getAreaManager, getQueryManager} = goog.require('os.query.instance');
-const {featureKeys} = goog.require('os.ui.query');
-const AbstractArea = goog.require('os.ui.query.cmd.AbstractArea');
 
 const ICommand = goog.requireType('os.command.ICommand');
 
@@ -14,7 +15,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class AreaAdd extends AbstractArea {
+export default class AreaAdd extends AbstractArea {
   /**
    * Constructor.
    * @param {!ol.Feature} area
@@ -117,5 +118,3 @@ class AreaAdd extends AbstractArea {
     return true;
   }
 }
-
-exports = AreaAdd;

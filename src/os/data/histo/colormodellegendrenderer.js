@@ -5,7 +5,7 @@ const googObject = goog.require('goog.object');
 const {ROOT} = goog.require('os');
 const NumericBinMethod = goog.require('os.histo.NumericBinMethod');
 const legend = goog.require('os.legend');
-const Module = goog.require('os.ui.Module');
+const {default: Module} = goog.require('os.ui.Module');
 
 const VectorLayer = goog.requireType('os.layer.Vector');
 const VectorSource = goog.requireType('os.source.Vector');

@@ -1,7 +1,7 @@
-goog.module('os.ui.filter.im.FilterImportModelUI');
+goog.declareModuleId('os.ui.filter.im.FilterImportModelUI');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
+import {ROOT} from '../../../os.js';
+import Module from '../../module.js';
 
 
 /**
@@ -9,7 +9,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   // this directive needs to be replace: false to display properly as it is recursive
   replace: false,
@@ -27,14 +27,9 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'filterimportmodel';
+export const directiveTag = 'filterimportmodel';
 
 /**
  * Add the directive to the module.
  */
 Module.directive('filterimportmodel', [directive]);
-
-exports = {
-  directive,
-  directiveTag
-};

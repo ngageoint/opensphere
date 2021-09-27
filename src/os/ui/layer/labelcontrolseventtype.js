@@ -1,9 +1,11 @@
-goog.module('os.ui.layer.LabelControlsEventType');
+goog.declareModuleId('os.ui.layer.LabelControlsEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const LabelControlsEventType = {
   COLUMN_CHANGE: 'labelcontrols:columnChange',
   SHOW_LABELS_CHANGE: 'labelcontrols:showLabelsChange'
 };
+
+export default LabelControlsEventType;

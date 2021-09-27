@@ -1,4 +1,7 @@
-goog.module('os.ui.file.ExportManager');
+goog.declareModuleId('os.ui.file.ExportManager');
+
+import ImportManager from '../im/importmanager.js';
+import * as osWindow from '../window.js';
 
 const {defaultCompare} = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');
@@ -12,8 +15,6 @@ const EventType = goog.require('os.events.EventType');
 const {getLocalUrl} = goog.require('os.file');
 const OSFile = goog.require('os.file.File');
 const FileStorage = goog.require('os.file.FileStorage');
-const ImportManager = goog.require('os.ui.im.ImportManager');
-const osWindow = goog.require('os.ui.window');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
@@ -24,7 +25,7 @@ const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
 
 /**
  */
-class ExportManager extends EventTarget {
+export default class ExportManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -374,5 +375,3 @@ let instance;
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.file.ExportManager');
-
-exports = ExportManager;

@@ -1,22 +1,23 @@
-goog.module('os.ui.data.DescriptorNodeUI');
+goog.declareModuleId('os.ui.data.DescriptorNodeUI');
+
+import Module from '../module.js';
+import AbstractNodeUICtrl from '../slick/abstractnodeui.js';
+import * as ConfirmUI from '../window/confirm.js';
+import DescriptorProvider from './descriptorprovider.js';
 
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const BaseDescriptor = goog.require('os.data.BaseDescriptor');
 const DataManager = goog.require('os.data.DataManager');
-const Module = goog.require('os.ui.Module');
-const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
-const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const DescriptorNode = goog.requireType('os.ui.data.DescriptorNode');
+const {default: DescriptorNode} = goog.requireType('os.ui.data.DescriptorNode');
 
 
 /**
  * Generic node UI for descriptors.
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<span ng-if="nodeUi.show()" class="flex-shrink-0" ng-click="nodeUi.tryRemove()">' +
@@ -30,7 +31,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'descriptornodeui';
+export const directiveTag = 'descriptornodeui';
 
 /**
  * Add the directive to the module
@@ -41,7 +42,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for descriptor node UI.
  * @unrestricted
  */
-class Controller extends AbstractNodeUICtrl {
+export class Controller extends AbstractNodeUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -146,9 +147,3 @@ class Controller extends AbstractNodeUICtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

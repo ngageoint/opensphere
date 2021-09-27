@@ -1,17 +1,18 @@
-goog.module('os.ui.wiz.step.TimeStep');
+goog.declareModuleId('os.ui.wiz.step.TimeStep');
+
+import TimeMappingModel from '../../im/mapping/time/timemappingmodel.js';
+import AbstractWizardStep from './abstractwizardstep.js';
+import {directiveTag as stepUi} from './timestepui.js';
 
 const TimeType = goog.require('os.im.mapping.TimeType');
 const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
-const TimeMappingModel = goog.require('os.ui.im.mapping.time.TimeMappingModel');
-const AbstractWizardStep = goog.require('os.ui.wiz.step.AbstractWizardStep');
-const {directiveTag: stepUi} = goog.require('os.ui.wiz.step.TimeStepUI');
 
 
 /**
  * Import wizard time step
  * @unrestricted
  */
-class TimeStep extends AbstractWizardStep {
+export default class TimeStep extends AbstractWizardStep {
   /**
    * Constructor.
    */
@@ -129,5 +130,3 @@ class TimeStep extends AbstractWizardStep {
     return true;
   }
 }
-
-exports = TimeStep;

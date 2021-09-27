@@ -1,15 +1,15 @@
-goog.module('os.ui.filter.BasicFilterTreeUI');
+goog.declareModuleId('os.ui.filter.BasicFilterTreeUI');
 
-const Module = goog.require('os.ui.Module');
-const {directiveTag: expressionUi} = goog.require('os.ui.filter.ExpressionUI');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
-const {Controller: SlickTreeCtrl, directive: slickTreeDirective} = goog.require('os.ui.slick.SlickTreeUI');
+import Module from '../module.js';
+import {Controller as SlickTreeCtrl, directive as slickTreeDirective} from '../slick/slicktree.js';
+import SlickTreeNode from '../slick/slicktreenode.js';
+import {directiveTag as expressionUi} from './expressionui.js';
 
 
 /**
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var conf = slickTreeDirective();
   conf.controller = Controller;
   conf.template = '<div class="c-slick-tree no-hover"></div>';
@@ -20,7 +20,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'basicfiltertree';
+export const directiveTag = 'basicfiltertree';
 
 Module.directive(directiveTag, [directive]);
 
@@ -28,7 +28,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for basic filter tree
  * @unrestricted
  */
-class Controller extends SlickTreeCtrl {
+export class Controller extends SlickTreeCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -99,9 +99,3 @@ class Controller extends SlickTreeCtrl {
     super.updateData(data);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

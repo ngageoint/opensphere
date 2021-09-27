@@ -1,9 +1,10 @@
-goog.module('os.ui.file.ui.csv.ConfigStep');
+goog.declareModuleId('os.ui.file.ui.csv.ConfigStep');
+
+import AbstractWizardStep from '../../../wiz/step/abstractwizardstep.js';
+import {directiveTag as stepUi} from './configstepui.js';
 
 const MappingManager = goog.require('os.im.mapping.MappingManager');
-const AbstractWizardStep = goog.require('os.ui.wiz.step.AbstractWizardStep');
 const CsvParserConfig = goog.requireType('os.parse.csv.CsvParserConfig');
-const {directiveTag: stepUi} = goog.require('os.ui.file.ui.csv.ConfigStepUI');
 
 
 /**
@@ -11,7 +12,7 @@ const {directiveTag: stepUi} = goog.require('os.ui.file.ui.csv.ConfigStepUI');
  *
  * @extends {AbstractWizardStep<CsvParserConfig>}
  */
-class ConfigStep extends AbstractWizardStep {
+export default class ConfigStep extends AbstractWizardStep {
   /**
    * Constructor.
    * @param {angular.$compile=} opt_compile Angular compile function
@@ -42,5 +43,3 @@ class ConfigStep extends AbstractWizardStep {
     }
   }
 }
-
-exports = ConfigStep;

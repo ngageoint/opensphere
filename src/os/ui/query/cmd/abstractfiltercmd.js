@@ -1,4 +1,4 @@
-goog.module('os.ui.query.cmd.AbstractFilter');
+goog.declareModuleId('os.ui.query.cmd.AbstractFilter');
 
 const State = goog.require('os.command.State');
 const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
@@ -13,7 +13,7 @@ const FilterEntry = goog.requireType('os.filter.FilterEntry');
  * @abstract
  * @implements {ICommand}
  */
-class AbstractFilter {
+export default class AbstractFilter {
   /**
    * Constructor.
    * @param {FilterEntry} filter
@@ -114,5 +114,3 @@ class AbstractFilter {
     }
   }
 }
-
-exports = AbstractFilter;

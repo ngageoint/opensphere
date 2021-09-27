@@ -1,8 +1,12 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLNode');
 
-goog.require('os.ui.node.DefaultLayerNodeUI');
-
+import '../../../../os/ui/node/defaultlayernodeui.js';
 import * as osFeature from '../../../../os/feature/feature.js';
+import launchMultiFeatureInfo from '../../../../os/ui/feature/launchmultifeatureinfo.js';
+import ILayerUIProvider from '../../../../os/ui/ilayeruiprovider.js';
+import {launchScreenOverlay} from '../../../../os/ui/screenoverlay.js';
+import SlickTreeNode from '../../../../os/ui/slick/slicktreenode.js';
+import * as osWindow from '../../../../os/ui/window.js';
 import {directiveTag as kmlNodeLayerUi} from '../kmlnodelayerui.js';
 import GeometryIcons from './geometryicons.js';
 import KMLNodeAction from './kmlnodeaction.js';
@@ -20,18 +24,13 @@ const ImageStatic = goog.require('ol.source.ImageStatic');
 const annotation = goog.require('os.annotation');
 const FeatureAnnotation = goog.require('os.annotation.FeatureAnnotation');
 const osColor = goog.require('os.color');
-const LayerNode = goog.require('os.data.LayerNode');
 const IExtent = goog.require('os.data.IExtent');
 const ISearchable = goog.require('os.data.ISearchable');
+const LayerNode = goog.require('os.data.LayerNode');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const fn = goog.require('os.fn');
 const osImplements = goog.require('os.implements');
 const TriState = goog.require('os.structs.TriState');
-const ILayerUIProvider = goog.require('os.ui.ILayerUIProvider');
-const {launchScreenOverlay} = goog.require('os.ui.ScreenOverlayUI');
-const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
-const osWindow = goog.require('os.ui.window');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {default: KMLSource} = goog.requireType('plugin.file.kml.KMLSource');

@@ -1,8 +1,8 @@
-goog.module('os.ui.icon.IconPaletteUI');
+goog.declareModuleId('os.ui.icon.IconPaletteUI');
 
-const {ROOT} = goog.require('os');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
 
 
 /**
@@ -10,7 +10,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: {
     'selected': '=',
@@ -28,7 +28,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'iconpalette';
+export const directiveTag = 'iconpalette';
 
 /**
  * Add the directive to the module.
@@ -39,7 +39,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the iconpalette directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -103,9 +103,3 @@ class Controller {
     apply(this.scope_);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

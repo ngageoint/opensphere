@@ -1,4 +1,4 @@
-goog.module('os.ui.timeline');
+goog.declareModuleId('os.ui.timeline');
 
 /**
  * The timeline axis height.
@@ -22,13 +22,13 @@ let handleHeight = 15;
  * Get the timeline axis height.
  * @return {number} The height.
  */
-const getAxisHeight = () => axisHeight;
+export const getAxisHeight = () => axisHeight;
 
 /**
  * Set the timeline axis height.
  * @param {number} value The height.
  */
-const setAxisHeight = (value) => {
+export const setAxisHeight = (value) => {
   axisHeight = value;
 };
 
@@ -36,13 +36,13 @@ const setAxisHeight = (value) => {
  * Get the timeline axis width.
  * @return {number} The width.
  */
-const getAxisWidth = () => axisWidth;
+export const getAxisWidth = () => axisWidth;
 
 /**
  * Set the timeline axis width.
  * @param {number} value The width.
  */
-const setAxisWidth = (value) => {
+export const setAxisWidth = (value) => {
   axisWidth = value;
 };
 
@@ -50,13 +50,13 @@ const setAxisWidth = (value) => {
  * Get the timeline handle height.
  * @return {number} The height.
  */
-const getHandleHeight = () => handleHeight;
+export const getHandleHeight = () => handleHeight;
 
 /**
  * Set the timeline handle height.
  * @param {number} value The height.
  */
-const setHandleHeight = (value) => {
+export const setHandleHeight = (value) => {
   handleHeight = value;
 };
 
@@ -64,7 +64,7 @@ const setHandleHeight = (value) => {
  * The scales used for snapping to "nice" values
  * @type {Array<number>}
  */
-const SNAP_SCALE = [
+export const SNAP_SCALE = [
   1, // 1 ms
   5, // 5 ms
   10, // 10 ms
@@ -101,7 +101,7 @@ const SNAP_SCALE = [
  * @param {Array<number|Date>} extent
  * @return {Array<number>} The normalized extent
  */
-const normalizeExtent = function(extent) {
+export const normalizeExtent = function(extent) {
   // D3 sometimes returns Array<Date> for the extent. This could be from
   // setting the extent with two dates. In any case, we will normalize that here.
   if (extent) {
@@ -116,7 +116,7 @@ const normalizeExtent = function(extent) {
 /**
  * @typedef {function(Date):(number|boolean)}
  */
-let FormatFn;
+export let FormatFn;
 
 /**
  * The format function
@@ -124,7 +124,7 @@ let FormatFn;
  * @param {Date} d The date
  * @return {number} The value
  */
-const formatMillis = function(d) {
+export const formatMillis = function(d) {
   return d.getUTCMilliseconds();
 };
 
@@ -134,7 +134,7 @@ const formatMillis = function(d) {
  * @param {Date} d The date
  * @return {number} The value
  */
-const formatSeconds = function(d) {
+export const formatSeconds = function(d) {
   return d.getUTCSeconds();
 };
 
@@ -144,7 +144,7 @@ const formatSeconds = function(d) {
  * @param {Date} d The date
  * @return {number} The value
  */
-const formatMinutes = function(d) {
+export const formatMinutes = function(d) {
   return d.getUTCMinutes();
 };
 
@@ -154,7 +154,7 @@ const formatMinutes = function(d) {
  * @param {Date} d The date
  * @return {number} The value
  */
-const formatHours = function(d) {
+export const formatHours = function(d) {
   return d.getUTCHours();
 };
 
@@ -164,7 +164,7 @@ const formatHours = function(d) {
  * @param {Date} d The date
  * @return {boolean} The value
  */
-const formatDate = function(d) {
+export const formatDate = function(d) {
   return d.getUTCDate() != 1;
 };
 
@@ -174,7 +174,7 @@ const formatDate = function(d) {
  * @param {Date} d The date
  * @return {number} The value
  */
-const formatMonth = function(d) {
+export const formatMonth = function(d) {
   return d.getUTCMonth();
 };
 
@@ -183,36 +183,15 @@ const formatMonth = function(d) {
  *
  * @return {boolean} The value
  */
-const trueFunction = function() {
+export const trueFunction = function() {
   return true;
 };
 
 /**
  * @enum {string}
  */
-const DragPan = {
+export const DragPan = {
   LEFT: 'dragpanleft',
   RIGHT: 'dragpanright',
   STOP: 'dragpanstop'
-};
-
-
-exports = {
-  getAxisHeight,
-  setAxisHeight,
-  getAxisWidth,
-  setAxisWidth,
-  getHandleHeight,
-  setHandleHeight,
-  SNAP_SCALE,
-  normalizeExtent,
-  formatMillis,
-  formatSeconds,
-  formatMinutes,
-  formatHours,
-  formatDate,
-  formatMonth,
-  trueFunction,
-  DragPan,
-  FormatFn
 };

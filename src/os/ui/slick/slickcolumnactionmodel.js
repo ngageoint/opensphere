@@ -1,12 +1,12 @@
-goog.module('os.ui.slick.SlickColumnActionModel');
+goog.declareModuleId('os.ui.slick.SlickColumnActionModel');
 
-const IColumnActionModel = goog.requireType('os.ui.columnactions.IColumnActionModel');
+const {default: IColumnActionModel} = goog.requireType('os.ui.columnactions.IColumnActionModel');
 
 
 /**
  * @implements {IColumnActionModel}
  */
-class SlickColumnActionModel {
+export default class SlickColumnActionModel {
   /**
    * Constructor.
    * @param {Object<string, *>} columnDef
@@ -40,5 +40,3 @@ class SlickColumnActionModel {
     return this.field_ || /** @type {string} */ (this.columnDef_['field']);
   }
 }
-
-exports = SlickColumnActionModel;

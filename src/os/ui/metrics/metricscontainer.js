@@ -1,17 +1,16 @@
-goog.module('os.ui.metrics.MetricsContainerUI');
+goog.declareModuleId('os.ui.metrics.MetricsContainerUI');
 
-goog.require('os.ui.metrics.MetricDetailsUI');
-
-const {ROOT} = goog.require('os');
+import './metricdetails.js';
+import {ROOT} from '../../os.js';
+import AddDataCtrl from '../data/adddatactrl.js';
+import Module from '../module.js';
+import TreeSearch from '../slick/treesearch.js';
+import MetricsManager from './metricsmanager.js';
+import MetricsManagerEventType from './metricsmanagereventtype.js';
 const Metrics = goog.require('os.metrics.Metrics');
-const Module = goog.require('os.ui.Module');
-const AddDataCtrl = goog.require('os.ui.data.AddDataCtrl');
-const MetricsManager = goog.require('os.ui.metrics.MetricsManager');
-const MetricsManagerEventType = goog.require('os.ui.metrics.MetricsManagerEventType');
-const TreeSearch = goog.require('os.ui.slick.TreeSearch');
 
-const MetricNode = goog.requireType('os.ui.metrics.MetricNode');
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: MetricNode} = goog.requireType('os.ui.metrics.MetricNode');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -19,7 +18,7 @@ const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
  *
  * @return {angular.Directive}
  */
-const directive = function() {
+export const directive = function() {
   return {
     restrict: 'E',
     replace: true,
@@ -33,7 +32,7 @@ const directive = function() {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'metrics';
+export const directiveTag = 'metrics';
 
 /**
  * Add the directive to the module.
@@ -44,7 +43,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the metrics container.
  * @unrestricted
  */
-class Controller extends AddDataCtrl {
+export class Controller extends AddDataCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -143,9 +142,3 @@ class Controller extends AddDataCtrl {
     }.bind(this));
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

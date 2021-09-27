@@ -1,9 +1,10 @@
-goog.module('os.ui.menu.MenuEventType');
-
+goog.declareModuleId('os.ui.menu.MenuEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const MenuEventType = {
   OPEN: 'menu:open'
 };
+
+export default MenuEventType;

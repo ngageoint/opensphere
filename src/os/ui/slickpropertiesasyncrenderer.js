@@ -1,9 +1,10 @@
-goog.module('os.ui.SlickPropertiesAsyncRenderer');
+goog.declareModuleId('os.ui.SlickPropertiesAsyncRenderer');
+
+import {inIframe} from '../os.js';
+import {launchPropertyInfo} from './propertyinfo.js';
 
 const {forEach} = goog.require('goog.object');
-const {inIframe} = goog.require('os');
 const Fields = goog.require('os.Fields');
-const {launchPropertyInfo} = goog.require('os.ui.PropertyInfoUI');
 
 
 /**
@@ -44,4 +45,4 @@ const processProperty = function(value, index, object) {
   }
 };
 
-exports = SlickPropertiesAsyncRenderer;
+export default SlickPropertiesAsyncRenderer;

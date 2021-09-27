@@ -1,10 +1,20 @@
-goog.module('os.ui.FiltersUI');
+goog.declareModuleId('os.ui.FiltersUI');
 
-goog.require('os.ui.AddFilterUI');
-goog.require('os.ui.slick.SlickTreeUI');
+import './addfilter.js';
+import './slick/slicktree.js';
+import {ROOT} from '../os.js';
+import FilterEventType from './filter/filtereventtype.js';
+import * as FilterExportUI from './filter/ui/filterexport.js';
+import FilterExportChoice from './filter/ui/filterexportchoice.js';
+import FilterLayerGroupBy from './filterlayergroupby.js';
+import {MENU} from './menu/filtermenu.js';
+import Module from './module.js';
+import FilterAdd from './query/cmd/filteraddcmd.js';
+import FilterRemove from './query/cmd/filterremovecmd.js';
+import * as CombinatorUI from './query/combinator.js';
+import AbstractGroupByTreeSearchCtrl from './slick/abstractgroupbytreesearchctrl.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const {ROOT} = goog.require('os');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
@@ -20,16 +30,6 @@ const Metrics = goog.require('os.metrics.Metrics');
 const {Filters} = goog.require('os.metrics.keys');
 const {launchQueryImport} = goog.require('os.query');
 const {getFilterManager} = goog.require('os.query.instance');
-const FilterLayerGroupBy = goog.require('os.ui.FilterLayerGroupBy');
-const Module = goog.require('os.ui.Module');
-const FilterEventType = goog.require('os.ui.filter.FilterEventType');
-const FilterExportChoice = goog.require('os.ui.filter.ui.FilterExportChoice');
-const FilterExportUI = goog.require('os.ui.filter.ui.FilterExportUI');
-const {MENU} = goog.require('os.ui.menu.filter');
-const CombinatorUI = goog.require('os.ui.query.CombinatorUI');
-const FilterAdd = goog.require('os.ui.query.cmd.FilterAdd');
-const FilterRemove = goog.require('os.ui.query.cmd.FilterRemove');
-const AbstractGroupByTreeSearchCtrl = goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
@@ -37,8 +37,8 @@ const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 const OSFile = goog.requireType('os.file.File');
 const FilterEntry = goog.requireType('os.filter.FilterEntry');
 const IFilterable = goog.requireType('os.filter.IFilterable');
-const FilterEvent = goog.requireType('os.ui.filter.FilterEvent');
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: FilterEvent} = goog.requireType('os.ui.filter.FilterEvent');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -46,7 +46,7 @@ const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -59,7 +59,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'filters';
+export const directiveTag = 'filters';
 
 /**
  * Add the directive to the module
@@ -70,7 +70,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for Filters window
  * @unrestricted
  */
-class Controller extends AbstractGroupByTreeSearchCtrl {
+export class Controller extends AbstractGroupByTreeSearchCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -364,10 +364,4 @@ Controller.VIEWS = {
   'Layer': new FilterLayerGroupBy(),
   'Layer Type': new FilterLayerGroupBy(true),
   'Source': new SourceGroupBy(true)
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

@@ -1,4 +1,4 @@
-goog.module('os.ui.search.NoResult');
+goog.declareModuleId('os.ui.search.NoResult');
 
 const AbstractSearchResult = goog.require('os.search.AbstractSearchResult');
 
@@ -8,7 +8,7 @@ const AbstractSearchResult = goog.require('os.search.AbstractSearchResult');
  *
  * @extends {AbstractSearchResult<number>}
  */
-class NoResult extends AbstractSearchResult {
+export default class NoResult extends AbstractSearchResult {
   /**
    * Constructor.
    */
@@ -23,5 +23,3 @@ class NoResult extends AbstractSearchResult {
     return '<div class="coord-result-card"><div class="result-card-header">No results found</div></div>';
   }
 }
-
-exports = NoResult;

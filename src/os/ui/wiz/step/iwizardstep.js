@@ -1,10 +1,10 @@
-goog.module('os.ui.wiz.step.IWizardStep');
+goog.declareModuleId('os.ui.wiz.step.IWizardStep');
 
 /**
  * @interface
  * @template T
  */
-class IWizardStep {
+export default class IWizardStep {
   /**
    * Constructor.
    */
@@ -62,5 +62,3 @@ class IWizardStep {
    */
   isValid(config) {}
 }
-
-exports = IWizardStep;

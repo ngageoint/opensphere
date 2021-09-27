@@ -2,7 +2,7 @@ goog.module('os.data.groupby.FavoriteGroupBy');
 
 const DataManager = goog.require('os.data.DataManager');
 const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+const {default: SlickTreeNode} = goog.require('os.ui.slick.SlickTreeNode');
 const FavoriteManager = goog.require('os.user.settings.FavoriteManager');
 
 

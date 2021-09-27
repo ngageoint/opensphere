@@ -1,11 +1,10 @@
-goog.module('os.ui.TwoColumnInfoUI');
+goog.declareModuleId('os.ui.TwoColumnInfoUI');
 
-goog.require('os.ui.slick.SlickGridUI');
-
-const {ROOT} = goog.require('os');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const SlickGridEvent = goog.require('os.ui.slick.SlickGridEvent');
+import './slick/slickgrid.js';
+import {ROOT} from '../os.js';
+import Module from './module.js';
+import SlickGridEvent from './slick/slickgridevent.js';
+import {apply} from './ui.js';
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 
@@ -15,7 +14,7 @@ const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: {
     'object': '=',
@@ -31,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'twocolumninfo';
+export const directiveTag = 'twocolumninfo';
 
 /**
  * Add the directive to the module.
@@ -42,7 +41,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the featureinfo directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -136,9 +135,3 @@ class Controller {
     }.bind(this));
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

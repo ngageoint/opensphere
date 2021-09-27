@@ -1,4 +1,4 @@
-goog.module('os.ui.ol.control.LayerSwitcher');
+goog.declareModuleId('os.ui.ol.control.LayerSwitcher');
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {setInnerHtml} = goog.require('goog.dom.safe');
@@ -15,7 +15,7 @@ const LayerBase = goog.requireType('ol.layer.Base');
  * OpenLayers Layer Switcher Control.
  * See [the examples](./examples) for usage.
  */
-class LayerSwitcher extends Control {
+export default class LayerSwitcher extends Control {
   /**
    * Constructor.
    * @param {Object=} opt_options Control options, extends olx.control.ControlOptions adding:
@@ -259,5 +259,3 @@ class LayerSwitcher extends Control {
     });
   }
 }
-
-exports = LayerSwitcher;

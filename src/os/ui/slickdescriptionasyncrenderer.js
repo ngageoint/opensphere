@@ -1,8 +1,8 @@
-goog.module('os.ui.SlickDescriptionAsyncRenderer');
+goog.declareModuleId('os.ui.SlickDescriptionAsyncRenderer');
 
-const {inIframe} = goog.require('os');
-const {sanitizeId} = goog.require('os.ui');
-const {launchDescriptionInfo} = goog.require('os.ui.DescriptionInfoUI');
+import {inIframe} from '../os.js';
+import {launchDescriptionInfo} from './descriptioninfo.js';
+import {sanitizeId} from './ui.js';
 
 
 /**
@@ -34,4 +34,4 @@ const SlickDescriptionAsyncRenderer = function(elem, row, dataContext, colDef) {
   }
 };
 
-exports = SlickDescriptionAsyncRenderer;
+export default SlickDescriptionAsyncRenderer;

@@ -2,18 +2,19 @@ goog.declareModuleId('plugin.suncalc.LightStripUI');
 
 import * as dispatcher from '../../os/dispatcher.js';
 import * as osMap from '../../os/map/map.js';
+import Module from '../../os/ui/module.js';
+import TimelineScaleEvent from '../../os/ui/timeline/timelinescaleevent.js';
 import * as ui from '../../os/ui/ui.js';
 import {SettingKey} from './suncalc.js';
 
+const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
+
 const dispose = goog.require('goog.dispose');
 const olProj = goog.require('ol.proj');
-const settings = goog.require('os.config.Settings');
-const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const MapContainer = goog.require('os.MapContainer');
-const Module = goog.require('os.ui.Module');
-const TimelineScaleEvent = goog.require('os.ui.timeline.TimelineScaleEvent');
+const settings = goog.require('os.config.Settings');
 
-const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
+const {default: TimelineScaleOptions} = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 
 /**

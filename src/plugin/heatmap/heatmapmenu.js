@@ -1,18 +1,18 @@
 goog.declareModuleId('plugin.heatmap.menu');
 
+import * as layerMenu from '../../os/ui/menu/layermenu.js';
+import MenuItemType from '../../os/ui/menu/menuitemtype.js';
 import * as heatmap from './heatmap.js';
 import Heatmap from './heatmaplayer.js';
 
 const asserts = goog.require('goog.asserts');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
 const LayerNode = goog.require('os.data.LayerNode');
 const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const AlertManager = goog.require('os.alert.AlertManager');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const layerMenu = goog.require('os.ui.menu.layer');
 
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 
 
 /**

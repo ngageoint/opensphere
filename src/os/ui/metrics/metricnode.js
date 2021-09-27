@@ -1,12 +1,12 @@
-goog.module('os.ui.metrics.MetricNode');
+goog.declareModuleId('os.ui.metrics.MetricNode');
 
-const {registerClass} = goog.require('os.classRegistry');
+import {registerClass} from '../../classregistry.js';
+import SlickTreeNode from '../slick/slicktreenode.js';
+import {directiveTag} from './metriccompletion.js';
+import {ClassName} from './metricsui.js';
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const {MetricsEventType} = goog.require('os.metrics');
 const Metrics = goog.require('os.metrics.Metrics');
-const {ClassName} = goog.require('os.ui.metrics');
-const {directiveTag} = goog.require('os.ui.metrics.MetricCompletionUI');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 const ISearchable = goog.requireType('os.data.ISearchable');
 
@@ -16,7 +16,7 @@ const ISearchable = goog.requireType('os.data.ISearchable');
  *
  * @implements {ISearchable}
  */
-class MetricNode extends SlickTreeNode {
+export default class MetricNode extends SlickTreeNode {
   /**
    * Constructor.
    * @param {string=} opt_key
@@ -213,6 +213,5 @@ class MetricNode extends SlickTreeNode {
     return false;
   }
 }
-registerClass(ClassName.METRIC_NODE, MetricNode);
 
-exports = MetricNode;
+registerClass(ClassName.METRIC_NODE, MetricNode);

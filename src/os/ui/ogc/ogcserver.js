@@ -1,4 +1,12 @@
-goog.module('os.ui.ogc.OGCServer');
+goog.declareModuleId('os.ui.ogc.OGCServer');
+
+import BaseProvider from '../data/baseprovider.js';
+import DescriptorNode from '../data/descriptornode.js';
+import AbstractLoadingServer from '../server/abstractloadingserver.js';
+import SlickTreeNode from '../slick/slicktreenode.js';
+import {isLayerDeprecated} from '../util/deprecated.js';
+import IOGCDescriptor from './iogcdescriptor.js';
+import LayerParsers from './wms/layerparsers.js';
 
 const Uri = goog.require('goog.Uri');
 const QueryData = goog.require('goog.Uri.QueryData');
@@ -22,19 +30,12 @@ const osImplements = goog.require('os.implements');
 const Request = goog.require('os.net.Request');
 const {ID, getException} = goog.require('os.ogc');
 const WMTSLayerParsers = goog.require('os.ogc.wmts.WMTSLayerParsers');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
-const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
-const IOGCDescriptor = goog.require('os.ui.ogc.IOGCDescriptor');
-const LayerParsers = goog.require('os.ui.ogc.wms.LayerParsers');
-const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
-const {isLayerDeprecated} = goog.require('os.ui.util.deprecated');
 
 const Logger = goog.requireType('goog.log.Logger');
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 const OSFile = goog.requireType('os.file.File');
 const {default: IWMTSLayerParser} = goog.requireType('os.ogc.wmts.IWMTSLayerParser');
-const IWMSLayerParser = goog.requireType('os.ui.ogc.wms.IWMSLayerParser');
+const {default: IWMSLayerParser} = goog.requireType('os.ui.ogc.wms.IWMSLayerParser');
 
 
 /**
@@ -51,7 +52,7 @@ const OGCFolderType = {
  *
  * @implements {IDataProvider}
  */
-class OGCServer extends AbstractLoadingServer {
+export default class OGCServer extends AbstractLoadingServer {
   /**
    * Constructor.
    */
@@ -1817,6 +1818,3 @@ OGCServer.URI_REGEXP_ = /(wms|wmts|wfs)/i;
  * @private
  */
 OGCServer.CONTENT_REGEXP_ = /(WMS|WMTS|WFS)_Capabilities/;
-
-
-exports = OGCServer;

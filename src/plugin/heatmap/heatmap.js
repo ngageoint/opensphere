@@ -4,6 +4,7 @@ import * as dispatcher from '../../os/dispatcher.js';
 import * as osFeature from '../../os/feature/feature.js';
 import {ROOT} from '../../os/os.js';
 import * as style from '../../os/style/style.js';
+import exportManager from '../../os/ui/file/uiexportmanager.js';
 import HeatmapField from './heatmapfield.js';
 
 const dispose = goog.require('goog.dispose');
@@ -27,7 +28,6 @@ const Job = goog.require('os.job.Job');
 const JobEventType = goog.require('os.job.JobEventType');
 const LayerType = goog.require('os.layer.LayerType');
 const osOlFeature = goog.require('os.ol.feature');
-const exportManager = goog.require('os.ui.exportManager');
 const worker = goog.require('os.worker');
 
 const OLLayer = goog.requireType('ol.layer.Layer');

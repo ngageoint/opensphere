@@ -1,8 +1,8 @@
-goog.module('os.ui.window.TimeHelpUI');
+goog.declareModuleId('os.ui.window.TimeHelpUI');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const {close, create} = goog.require('os.ui.window');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {close, create} from '../window.js';
 
 
 /**
@@ -10,7 +10,7 @@ const {close, create} = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/window/timehelp.html',
@@ -22,7 +22,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'timehelp';
+export const directiveTag = 'timehelp';
 
 /**
  * Add the directive to the os module
@@ -33,7 +33,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for date/time format help.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -71,7 +71,7 @@ class Controller {
 /**
  * Launches the date/time formatting help dialog if one isn't displayed already.
  */
-const launchTimeHelp = function() {
+export const launchTimeHelp = function() {
   if (!document.getElementById('time-help')) {
     create({
       'label': 'Custom Date/Time Formats',
@@ -88,11 +88,4 @@ const launchTimeHelp = function() {
       'modal': true
     }, `<${directiveTag}></${directiveTag}>`);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchTimeHelp
 };

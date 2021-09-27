@@ -1,22 +1,22 @@
-goog.module('os.ui.filter.ui.EditFiltersUI');
+goog.declareModuleId('os.ui.filter.ui.EditFiltersUI');
 
-goog.require('os.ui.filter.AdvancedFilterBuilderUI');
-goog.require('os.ui.filter.BasicFilterBuilderUI');
-goog.require('os.ui.util.ValidationMessageUI');
+import '../../util/validationmessage.js';
+import '../advancedfilterbuilder.js';
+import '../basicfilterbuilder.js';
+import {ROOT} from '../../../os.js';
+import Module from '../../module.js';
+import {exists, close} from '../../window.js';
+import * as ConfirmUI from '../../window/confirm.js';
+import {OPERATIONS} from '../filter.js';
+import ExpressionNode from './expressionnode.js';
+import GroupNode from './groupnode.js';
 
 const {getFirstElementChild, getNextElementSibling} = goog.require('goog.dom');
-const {ROOT} = goog.require('os');
 const DataManager = goog.require('os.data.DataManager');
 const Metrics = goog.require('os.metrics.Metrics');
 const {Filters} = goog.require('os.metrics.keys');
-const Module = goog.require('os.ui.Module');
-const {OPERATIONS} = goog.require('os.ui.filter');
-const ExpressionNode = goog.require('os.ui.filter.ui.ExpressionNode');
-const GroupNode = goog.require('os.ui.filter.ui.GroupNode');
-const {exists, close} = goog.require('os.ui.window');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -24,7 +24,7 @@ const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: true,
@@ -37,7 +37,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'editfilter';
+export const directiveTag = 'editfilter';
 
 /**
  * Add the directive to the module
@@ -48,7 +48,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the filters window.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -375,10 +375,4 @@ const closeRemoveMultipleWindow = () => {
   if (childWindow) {
     close(childWindow);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

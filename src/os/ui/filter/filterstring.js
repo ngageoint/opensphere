@@ -1,4 +1,4 @@
-goog.module('os.ui.filter.string');
+goog.declareModuleId('os.ui.filter.string');
 
 const {regExpEscape} = goog.require('goog.string');
 
@@ -9,7 +9,7 @@ const {regExpEscape} = goog.require('goog.string');
  * @param {*} s The value. If not a string, it will be casted to one.
  * @return {string} A double quoted, escaped copy of {@code s}.
  */
-const quoteString = function(s) {
+export const quoteString = function(s) {
   // this will both escape double quotes and backslashes, and wrap in double quotes
   return JSON.stringify(String(s));
 };
@@ -20,7 +20,7 @@ const quoteString = function(s) {
  * @param {*} s The value. If not a string, it will be casted to one.
  * @return {string} An escaped copy of {@code s}.
  */
-const escapeString = function(s) {
+export const escapeString = function(s) {
   // escape double quotes and backslashes, for use in an evaluated double quoted string
   return String(s).replace(/([\\"])/g, '\\$1');
 };
@@ -33,7 +33,7 @@ const escapeString = function(s) {
  * @param {string=} opt_singleChar The single wildcard character. Defaults to '.'.
  * @return {string} A RegExp-safe, escaped copy of {@code s}.
  */
-const escapeRegExp = function(s, opt_wildcard, opt_singleChar) {
+export const escapeRegExp = function(s, opt_wildcard, opt_singleChar) {
   // escape all RegExp characters that won't be used by the filter
   var result = String(s)
       .replace(/([-()/\[\]{}+?$\^|,:#<!\\])/g, '\\$1')
@@ -64,10 +64,4 @@ const escapeRegExp = function(s, opt_wildcard, opt_singleChar) {
   result = result.replace(wildcardRe, '.*');
 
   return result;
-};
-
-exports = {
-  quoteString,
-  escapeString,
-  escapeRegExp
 };

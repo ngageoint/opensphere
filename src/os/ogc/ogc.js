@@ -6,7 +6,7 @@ const Settings = goog.require('os.config.Settings');
 const {getText} = goog.require('os.file.mime.text');
 const {getMapContainer} = goog.require('os.map.instance');
 
-const IOGCDescriptor = goog.requireType('os.ui.ogc.IOGCDescriptor');
+const {default: IOGCDescriptor} = goog.requireType('os.ui.ogc.IOGCDescriptor');
 
 
 /**

@@ -1,10 +1,10 @@
 goog.declareModuleId('plugin.audio.AudioPlugin');
 
+import AudioImportUI from '../../os/ui/im/audioimportui.js';
+import ImportManager from '../../os/ui/im/importmanager.js';
 import {TYPE} from './mime.js';
 
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const AudioImportUI = goog.require('os.ui.im.AudioImportUI');
-const ImportManager = goog.require('os.ui.im.ImportManager');
 
 
 /**

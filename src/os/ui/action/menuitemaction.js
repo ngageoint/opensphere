@@ -1,9 +1,9 @@
-goog.module('os.ui.action.MenuItemAction');
+goog.declareModuleId('os.ui.action.MenuItemAction');
 
-const MenuItem = goog.require('os.ui.action.MenuItem');
+import MenuItem from './menuitem.js';
 
-const Action = goog.requireType('os.ui.action.Action');
-const IMenuItem = goog.requireType('os.ui.action.IMenuItem');
+const {default: Action} = goog.requireType('os.ui.action.Action');
+const {default: IMenuItem} = goog.requireType('os.ui.action.IMenuItem');
 
 
 /**
@@ -12,7 +12,7 @@ const IMenuItem = goog.requireType('os.ui.action.IMenuItem');
  * @implements {IMenuItem}
  * @deprecated Please use {@link os.ui.menu.Menu} and {@link os.ui.menu.MenuItem} instead
  */
-class MenuItemAction extends MenuItem {
+export default class MenuItemAction extends MenuItem {
   /**
    * Constructor.
    * @param {!Action} action The action to be applied when this menu item is selected
@@ -38,5 +38,3 @@ class MenuItemAction extends MenuItem {
     return this.action_;
   }
 }
-
-exports = MenuItemAction;

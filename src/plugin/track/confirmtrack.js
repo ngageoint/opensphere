@@ -1,11 +1,10 @@
 goog.declareModuleId('plugin.track.ConfirmTrackUI');
 
 import {ROOT} from '../../os/os.js';
+import Module from '../../os/ui/module.js';
+import WindowEventType from '../../os/ui/windoweventtype.js';
 import KMLField from '../file/kml/kmlfield.js';
 import PlacesManager from '../places/placesmanager.js';
-
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
 
 const OlFeature = goog.requireType('ol.Feature');
 

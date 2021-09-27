@@ -1,7 +1,7 @@
 goog.module('os.config.ServerSettings');
 
 const {directiveTag} = goog.require('os.ui.ServersUI');
-const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
+const {default: SettingPlugin} = goog.require('os.ui.config.SettingPlugin');
 
 
 /**

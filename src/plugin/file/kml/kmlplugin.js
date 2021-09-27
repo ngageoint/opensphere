@@ -1,6 +1,9 @@
 goog.declareModuleId('plugin.file.kml.KMLPlugin');
 
 import './ui/placemarkedit.js';
+import * as kml from '../../../os/ui/file/kml/kml.js';
+import exportManager from '../../../os/ui/file/uiexportmanager.js';
+import ImportManager from '../../../os/ui/im/importmanager.js';
 
 import KMLDescriptor from './kmldescriptor.js';
 import KMLExporter from './kmlexporter.js';
@@ -18,9 +21,6 @@ const ProviderEntry = goog.require('os.data.ProviderEntry');
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const Request = goog.require('os.net.Request');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const exportManager = goog.require('os.ui.exportManager');
-const kml = goog.require('os.ui.file.kml');
-const ImportManager = goog.require('os.ui.im.ImportManager');
 
 
 /**

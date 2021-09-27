@@ -1,10 +1,10 @@
 goog.module('os.metrics.TimelineMetrics');
 
 const {Timeline} = goog.require('os.metrics.keys');
-const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');
+const {default: MetricsPlugin} = goog.require('os.ui.metrics.MetricsPlugin');
 
-const MetricNode = goog.requireType('os.ui.metrics.MetricNode');
-const MetricNodeOptions = goog.requireType('os.ui.metrics.MetricNodeOptions');
+const {default: MetricNode} = goog.requireType('os.ui.metrics.MetricNode');
+const {default: MetricNodeOptions} = goog.requireType('os.ui.metrics.MetricNodeOptions');
 
 
 /**

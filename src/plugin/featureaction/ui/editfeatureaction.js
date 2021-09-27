@@ -1,13 +1,17 @@
 goog.declareModuleId('plugin.im.action.feature.ui.EditFeatureActionUI');
 
-goog.require('os.ui.filter.AdvancedFilterBuilderUI');
-goog.require('os.ui.filter.BasicFilterBuilderUI');
-goog.require('os.ui.util.ValidationMessageUI');
-
+import '../../../os/ui/filter/advancedfilterbuilder.js';
+import '../../../os/ui/filter/basicfilterbuilder.js';
+import '../../../os/ui/util/validationmessage.js';
 import * as dispatcher from '../../../os/dispatcher.js';
 import {ROOT} from '../../../os/os.js';
 import * as label from '../../../os/style/label.js';
 import * as osStyle from '../../../os/style/style.js';
+
+import {directive as editFiltersDirective} from '../../../os/ui/filter/ui/editfilters.js';
+import EditFilterActionCtrl from '../../../os/ui/im/action/editfilteraction.js';
+import EventType from '../../../os/ui/im/action/eventtype.js';
+import Module from '../../../os/ui/module.js';
 
 const Feature = goog.require('ol.Feature');
 const ImageState = goog.require('ol.ImageState');
@@ -18,23 +22,11 @@ const canvas = goog.require('os.ol.canvas');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
 const StyleType = goog.require('os.style.StyleType');
-const Module = goog.require('os.ui.Module');
-const {
-  directive: editFiltersDirective
-} = goog.require('os.ui.filter.ui.EditFiltersUI');
-const EditFilterActionCtrl = goog.require('os.ui.im.action.EditFilterActionCtrl');
-const EventType = goog.require('os.ui.im.action.EventType');
 
 const OLStyle = goog.requireType('ol.style.Style');
-const {
-  default: LabelAction
-} = goog.requireType('plugin.im.action.feature.LabelAction');
-const {
-  default: SoundAction
-} = goog.requireType('plugin.im.action.feature.SoundAction');
-const {
-  default: StyleAction
-} = goog.requireType('plugin.im.action.feature.StyleAction');
+const {default: LabelAction} = goog.requireType('plugin.im.action.feature.LabelAction');
+const {default: SoundAction} = goog.requireType('plugin.im.action.feature.SoundAction');
+const {default: StyleAction} = goog.requireType('plugin.im.action.feature.StyleAction');
 
 
 /**

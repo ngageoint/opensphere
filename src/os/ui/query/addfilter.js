@@ -1,4 +1,9 @@
-goog.module('os.ui.query.AddFilterUI');
+goog.declareModuleId('os.ui.query.AddFilterUI');
+
+import Menu from '../menu/menu.js';
+import MenuItem from '../menu/menuitem.js';
+import MenuItemType from '../menu/menuitemtype.js';
+import Module from '../module.js';
 
 const {insert} = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');
@@ -6,10 +11,6 @@ const GoogEventType = goog.require('goog.events.EventType');
 const {caseInsensitiveCompare} = goog.require('goog.string');
 const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
 const {getQueryManager} = goog.require('os.query.instance');
-const Module = goog.require('os.ui.Module');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 
 const FilterEntry = goog.requireType('os.filter.FilterEntry');
 const IFilterable = goog.requireType('os.filter.IFilterable');
@@ -21,7 +22,7 @@ const ILayer = goog.requireType('os.layer.ILayer');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -38,7 +39,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'addfilter';
+export const directiveTag = 'addfilter';
 
 /**
  * Add the directive to the module
@@ -49,7 +50,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for combinator window
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -229,9 +230,3 @@ class Controller {
     return caseInsensitiveCompare(a['label'], b['label']);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

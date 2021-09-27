@@ -1,13 +1,14 @@
-goog.module('os.ui.filter.ui.ExpressionNode');
+goog.declareModuleId('os.ui.filter.ui.ExpressionNode');
+
+import {findColumn} from '../../slick/column.js';
+import SlickTreeNode from '../../slick/slicktreenode.js';
+import Expression from '../expression.js';
+import Between from '../op/time/betweentimeop.js';
+import {directiveTag as nodeUi} from './expressionnodeui.js';
+import {directiveTag as nodeViewUi} from './expressionnodeviewui.js';
 
 const RecordField = goog.require('os.data.RecordField');
 const {humanize} = goog.require('os.time');
-const Expression = goog.require('os.ui.filter.Expression');
-const Between = goog.require('os.ui.filter.op.time.Between');
-const {directiveTag: nodeUi} = goog.require('os.ui.filter.ui.ExpressionNodeUI');
-const {directiveTag: nodeViewUi} = goog.require('os.ui.filter.ui.ExpressionNodeViewUI');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
-const {findColumn} = goog.require('os.ui.slick.column');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 
@@ -15,7 +16,7 @@ const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 /**
  * Tree node representing an expression in an advanced filter.
  */
-class ExpressionNode extends SlickTreeNode {
+export default class ExpressionNode extends SlickTreeNode {
   /**
    * Constructor.
    * @param {boolean=} opt_viewonly
@@ -160,5 +161,3 @@ class ExpressionNode extends SlickTreeNode {
     return node;
   }
 }
-
-exports = ExpressionNode;

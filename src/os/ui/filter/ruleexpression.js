@@ -1,13 +1,13 @@
-goog.module('os.ui.filter.RuleExpression');
+goog.declareModuleId('os.ui.filter.RuleExpression');
 
-const Expression = goog.require('os.ui.filter.Expression');
-const Rule = goog.require('os.ui.filter.op.Rule');
+import Expression from './expression.js';
+import Rule from './op/ruleop.js';
 
 
 /**
  * Rule expression object
  */
-class RuleExpression extends Expression {
+export default class RuleExpression extends Expression {
   /**
    * Constructor.
    */
@@ -57,5 +57,3 @@ RuleExpression.OPS = [
   new Rule('GreaterThan', 'more than', '>='),
   new Rule('LessThan', 'less than', '<=')
 ];
-
-exports = RuleExpression;

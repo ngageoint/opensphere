@@ -1,8 +1,16 @@
-goog.module('os.ui.ServersUI');
+goog.declareModuleId('os.ui.ServersUI');
+
+import {ROOT} from '../os.js';
+import BaseProvider from './data/baseprovider.js';
+import * as AddServer from './file/addserver.js';
+import ImportManager from './im/importmanager.js';
+import Module from './module.js';
+import AbstractLoadingServer from './server/abstractloadingserver.js';
+import {apply} from './ui.js';
+import * as ConfirmUI from './window/confirm.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
-const {ROOT} = goog.require('os');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const Settings = goog.require('os.config.Settings');
@@ -11,13 +19,6 @@ const DataManager = goog.require('os.data.DataManager');
 const DataProviderEventType = goog.require('os.data.DataProviderEventType');
 const Metrics = goog.require('os.metrics.Metrics');
 const {Servers: ServersKeys} = goog.require('os.metrics.keys');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
-const AddServer = goog.require('os.ui.file.AddServer');
-const ImportManager = goog.require('os.ui.im.ImportManager');
-const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 const Logger = goog.requireType('goog.log.Logger');
 const IDataProvider = goog.requireType('os.data.IDataProvider');
@@ -28,7 +29,7 @@ const IDataProvider = goog.requireType('os.data.IDataProvider');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: true,
@@ -41,7 +42,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'servers';
+export const directiveTag = 'servers';
 
 /**
  * Add the directive to the module
@@ -52,7 +53,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for Servers window
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -400,9 +401,3 @@ class Controller {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.ServersUI');
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

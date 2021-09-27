@@ -1,4 +1,4 @@
-goog.module('os.ui.text.TuiEditorMarkdownIt');
+goog.declareModuleId('os.ui.text.TuiEditorMarkdownIt');
 
 /**
  * @type {?Markdownit}
@@ -9,12 +9,12 @@ let TuiEditorMarkdownIt = null;
  * Get the Markdownit instance.
  * @return {?Markdownit}
  */
-const getMarkdownIt = () => TuiEditorMarkdownIt;
+export const getMarkdownIt = () => TuiEditorMarkdownIt;
 
 /**
  * Initialize the Markdownit instance, if not already initialized.
  */
-const initialize = () => {
+export const initialize = () => {
   // Do not initialize if the vendor library has not been loaded, or initialization has already been done.
   if (window.markdownit == null || TuiEditorMarkdownIt != null) {
     return;
@@ -132,8 +132,3 @@ const initialize = () => {
 
 // Attempt initialization on module load.
 initialize();
-
-exports = {
-  initialize,
-  getMarkdownIt
-};

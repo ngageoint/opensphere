@@ -12,8 +12,8 @@ const BaseStateManager = goog.require('os.state.BaseStateManager');
 const Tag = goog.require('os.state.Tag');
 const XMLStateOptions = goog.require('os.state.XMLStateOptions');
 const {xmlFromTags} = goog.require('os.tag');
-const ImportManager = goog.require('os.ui.im.ImportManager');
-const StateImportUI = goog.require('os.ui.state.StateImportUI');
+const {default: ImportManager} = goog.require('os.ui.im.ImportManager');
+const {default: StateImportUI} = goog.require('os.ui.state.StateImportUI');
 const {appendElement, createElementNS, serialize} = goog.require('os.xml');
 
 const Logger = goog.requireType('goog.log.Logger');

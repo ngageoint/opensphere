@@ -1,10 +1,9 @@
 goog.declareModuleId('plugin.vectortools.ui');
 
+import * as osWindow from '../../os/ui/window.js';
 import Icons from './icons.js';
 import {directiveTag as joinEl} from './joinwindow.js';
 import {directiveTag as mergeEl} from './mergewindow.js';
-
-const osWindow = goog.require('os.ui.window');
 
 /**
  * Launches the Join Layer window.

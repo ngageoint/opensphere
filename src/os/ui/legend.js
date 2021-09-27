@@ -1,12 +1,18 @@
-goog.module('os.ui.LegendUI');
+goog.declareModuleId('os.ui.LegendUI');
+
+import * as dispatcher from '../dispatcher.js';
+import {ROOT} from '../os.js';
+import SettingsManager from './config/settingsmanager.js';
+import UIEvent from './events/uievent.js';
+import UIEventType from './events/uieventtype.js';
+import Module from './module.js';
+import * as osWindow from './window.js';
 
 const Throttle = goog.require('goog.async.Throttle');
 const nextTick = goog.require('goog.async.nextTick');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
 const LegendSetting = goog.require('os.config.LegendSetting');
 const Settings = goog.require('os.config.Settings');
 const SourceManager = goog.require('os.data.SourceManager');
@@ -16,11 +22,6 @@ const LayerPropertyChange = goog.require('os.layer.PropertyChange');
 const legend = goog.require('os.legend');
 const {getMapContainer} = goog.require('os.map.instance');
 const SourcePropertyChange = goog.require('os.source.PropertyChange');
-const Module = goog.require('os.ui.Module');
-const SettingsManager = goog.require('os.ui.config.SettingsManager');
-const UIEvent = goog.require('os.ui.events.UIEvent');
-const UIEventType = goog.require('os.ui.events.UIEventType');
-const osWindow = goog.require('os.ui.window');
 
 
 /**
@@ -28,7 +29,7 @@ const osWindow = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -43,7 +44,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'legendguide';
+export const directiveTag = 'legendguide';
 
 /**
  * Add the directive to the module.
@@ -55,7 +56,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the legend directive
  * @unrestricted
  */
-class Controller extends SourceManager {
+export class Controller extends SourceManager {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -475,10 +476,3 @@ class Controller extends SourceManager {
  * @const
  */
 Controller.CONTAINER_SELECTOR = '#map-container';
-
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

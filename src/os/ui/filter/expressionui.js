@@ -1,14 +1,13 @@
-goog.module('os.ui.filter.ExpressionUI');
+goog.declareModuleId('os.ui.filter.ExpressionUI');
 
-goog.require('os.ui.filter.op.OPUISwitchUI');
+import './op/opuiswitch.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {findColumn} from '../slick/column.js';
+import {OPERATIONS} from './filter.js';
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const {OPERATIONS} = goog.require('os.ui.filter');
-const {findColumn} = goog.require('os.ui.slick.column');
-
-const Expression = goog.requireType('os.ui.filter.Expression');
-const Op = goog.requireType('os.ui.filter.op.Op');
+const {default: Expression} = goog.requireType('os.ui.filter.Expression');
+const {default: Op} = goog.requireType('os.ui.filter.op.Op');
 
 
 /**
@@ -16,7 +15,7 @@ const Op = goog.requireType('os.ui.filter.op.Op');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -32,7 +31,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'expression';
+export const directiveTag = 'expression';
 
 /**
  * Add the directive to the module
@@ -43,7 +42,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the expression directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -167,9 +166,3 @@ class Controller {
     return op ? op.getUi() : null;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

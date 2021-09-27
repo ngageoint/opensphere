@@ -2,6 +2,8 @@ goog.declareModuleId('plugin.vectortile.DoubleClick');
 
 goog.require('os.mixin.renderfeature');
 
+import launchMultiFeatureInfo from '../../os/ui/feature/launchmultifeatureinfo.js';
+
 const {getUid} = goog.require('ol');
 const OLMap = goog.require('ol.Map');
 const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
@@ -13,7 +15,6 @@ const I3DSupport = goog.require('os.I3DSupport');
 const MapContainer = goog.require('os.MapContainer');
 const osImplements = goog.require('os.implements');
 const VectorTile = goog.require('os.layer.VectorTile');
-const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
 
 const Feature = goog.requireType('ol.Feature');
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');

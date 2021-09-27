@@ -1,13 +1,15 @@
-goog.module('os.ui.menu.UnclickableTypes');
+goog.declareModuleId('os.ui.menu.UnclickableTypes');
 
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
+import MenuItemType from './menuitemtype.js';
 
 
 /**
  * @type {Array<MenuItemType>}
  */
-exports = [
+const UnclickableTypes = [
   MenuItemType.GROUP,
   MenuItemType.SUBMENU,
   MenuItemType.SEPARATOR
 ];
+
+export default UnclickableTypes;

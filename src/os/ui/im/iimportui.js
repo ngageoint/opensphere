@@ -1,4 +1,4 @@
-goog.module('os.ui.im.IImportUI');
+goog.declareModuleId('os.ui.im.IImportUI');
 
 const OSFile = goog.requireType('os.file.File');
 
@@ -9,7 +9,7 @@ const OSFile = goog.requireType('os.file.File');
  * @interface
  * @template T
  */
-class IImportUI {
+export default class IImportUI {
   /**
    * Constructor.
    */
@@ -56,5 +56,3 @@ class IImportUI {
    */
   handleDefaultImport(file, config) {}
 }
-
-exports = IImportUI;

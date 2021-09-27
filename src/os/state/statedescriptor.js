@@ -3,8 +3,8 @@ goog.module('os.state.StateDescriptor');
 const log = goog.require('goog.log');
 const StateType = goog.require('os.state.StateType');
 const {DEFAULT_LAYER_COLOR} = goog.require('os.style');
-const Icons = goog.require('os.ui.Icons');
-const AbstractStateDescriptor = goog.require('os.ui.state.AbstractStateDescriptor');
+const {default: Icons} = goog.require('os.ui.Icons');
+const {default: AbstractStateDescriptor} = goog.require('os.ui.state.AbstractStateDescriptor');
 
 const Logger = goog.requireType('goog.log.Logger');
 const OSFile = goog.requireType('os.file.File');

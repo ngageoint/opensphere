@@ -1,12 +1,11 @@
-goog.module('os.ui.wiz.step.TimeStepUI');
+goog.declareModuleId('os.ui.wiz.step.TimeStepUI');
 
-goog.require('os.ui.wiz.WizardPreviewUI');
-goog.require('os.ui.wiz.step.TimeInstantUI');
-
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const TimeHelpUI = goog.require('os.ui.window.TimeHelpUI');
-const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
+import '../wizardpreview.js';
+import './timeinstantui.js';
+import {ROOT} from '../../../os.js';
+import Module from '../../module.js';
+import * as TimeHelpUI from '../../window/timehelp.js';
+import WizardStepEvent from './wizardstepevent.js';
 
 
 /**
@@ -14,7 +13,7 @@ const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/wiz/timestep.html',
@@ -26,7 +25,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'timestep';
+export const directiveTag = 'timestep';
 
 
 /**
@@ -39,7 +38,7 @@ Module.directive('timestep', [directive]);
  * Controller for the import wizard time step
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -115,9 +114,3 @@ class Controller {
     TimeHelpUI.launchTimeHelp();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

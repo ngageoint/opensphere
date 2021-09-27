@@ -3,7 +3,7 @@ goog.module('os.config.UnitSettingsUI');
 const GoogEventType = goog.require('goog.events.EventType');
 const {ROOT} = goog.require('os');
 const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
+const {default: Module} = goog.require('os.ui.Module');
 const UnitManager = goog.require('os.unit.UnitManager');
 
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');

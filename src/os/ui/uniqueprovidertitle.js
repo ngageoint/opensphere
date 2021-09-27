@@ -1,7 +1,8 @@
-goog.module('os.ui.uniqueProviderTitle');
+goog.declareModuleId('os.ui.uniqueProviderTitle');
+
+import Module from './module.js';
 
 const DataManager = goog.require('os.data.DataManager');
-const Module = goog.require('os.ui.Module');
 
 const IDataProvider = goog.requireType('os.data.IDataProvider');
 
@@ -9,7 +10,7 @@ const IDataProvider = goog.requireType('os.data.IDataProvider');
 /**
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   'require': 'ngModel',
   'link': uniqueProviderTitle
 });
@@ -18,7 +19,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'unique-provider-title';
+export const directiveTag = 'unique-provider-title';
 
 /**
  * Link function for unique title directive
@@ -56,8 +57,3 @@ const uniqueProviderTitle = function($scope, $element, $attrs, $ctrl) {
  * Add the unique title directive
  */
 Module.directive('uniqueProviderTitle', [directive]);
-
-exports = {
-  directive,
-  directiveTag
-};

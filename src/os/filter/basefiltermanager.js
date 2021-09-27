@@ -17,12 +17,12 @@ const FilterEntry = goog.require('os.filter.FilterEntry');
 const FilterType = goog.require('os.filter.FilterType');
 const cloneToContext = goog.require('os.filter.cloneToContext');
 const {getFilterManager, setFilterManager, getQueryManager} = goog.require('os.query.instance');
-const FilterEvent = goog.require('os.ui.filter.FilterEvent');
-const FilterEventType = goog.require('os.ui.filter.FilterEventType');
+const {default: FilterEvent} = goog.require('os.ui.filter.FilterEvent');
+const {default: FilterEventType} = goog.require('os.ui.filter.FilterEventType');
 const {directiveTag: copyFilterUi} = goog.require('os.ui.filter.ui.CopyFilterUI');
 const {directiveTag: editFilterUi} = goog.require('os.ui.filter.ui.EditFiltersUI');
 const {directiveTag: viewFilterUi} = goog.require('os.ui.filter.ui.ViewFiltersUI');
-const FilterAdd = goog.require('os.ui.query.cmd.FilterAdd');
+const {default: FilterAdd} = goog.require('os.ui.query.cmd.FilterAdd');
 const osWindow = goog.require('os.ui.window');
 
 const IPersistable = goog.requireType('os.IPersistable');

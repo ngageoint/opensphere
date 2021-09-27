@@ -3,6 +3,7 @@ goog.declareModuleId('os.source');
 import * as dispatcher from '../dispatcher.js';
 import {isInternalField} from '../feature/feature.js';
 import {debounce} from '../os.js';
+import {numerateNameCompare} from '../ui/slick/column.js';
 
 const Timer = goog.require('goog.Timer');
 const {defaultCompare} = goog.require('goog.array');
@@ -23,7 +24,6 @@ const {getMapContainer} = goog.require('os.map.instance');
 const {getFilterManager} = goog.require('os.query.instance');
 const ITime = goog.require('os.time.ITime');
 const TimelineController = goog.require('os.time.TimelineController');
-const {numerateNameCompare} = goog.require('os.ui.slick.column');
 
 const OLSource = goog.requireType('ol.source.Source');
 const VectorLayer = goog.requireType('os.layer.Vector');

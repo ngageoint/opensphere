@@ -1,12 +1,11 @@
-goog.module('os.ui.datetime.AnyDateUI');
+goog.declareModuleId('os.ui.datetime.AnyDateUI');
 
-goog.require('os.ui.datetime.DateTimeUI');
+import './datetime.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import AnyDateType from './anydatetype.js';
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const AnyDateType = goog.require('os.ui.datetime.AnyDateType');
-
-const AnyDateHelp = goog.requireType('os.ui.datetime.AnyDateHelp');
+const {default: AnyDateHelp} = goog.requireType('os.ui.datetime.AnyDateHelp');
 
 
 /**
@@ -21,7 +20,7 @@ const AnyDateHelp = goog.requireType('os.ui.datetime.AnyDateHelp');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -40,7 +39,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'anydate';
+export const directiveTag = 'anydate';
 
 /**
  * Add the directive to the module.
@@ -51,7 +50,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the anydate directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -237,9 +236,3 @@ class Controller {
  * @const
  */
 Controller.CHANGE = 'anydate:change';
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

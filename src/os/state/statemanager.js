@@ -25,10 +25,10 @@ const LayerState = goog.require('os.state.v4.LayerState');
 const QueryArea = goog.require('os.state.v4.QueryArea');
 const TimeState = goog.require('os.state.v4.TimeState');
 const ViewState = goog.require('os.state.v4.ViewState');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
+const {default: BaseProvider} = goog.require('os.ui.data.BaseProvider');
 const {EXPORT_WINDOW_ID} = goog.require('os.ui.state');
-const IStateDescriptor = goog.require('os.ui.state.IStateDescriptor');
-const StateProvider = goog.require('os.ui.state.StateProvider');
+const {default: IStateDescriptor} = goog.require('os.ui.state.IStateDescriptor');
+const {default: StateProvider} = goog.require('os.ui.state.StateProvider');
 const osWindow = goog.require('os.ui.window');
 
 const Logger = goog.requireType('goog.log.Logger');

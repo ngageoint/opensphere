@@ -1,9 +1,8 @@
 goog.declareModuleId('plugin.ogc.ui.OgcServerImportForm');
 
 import {ROOT} from '../../../os/os.js';
+import Module from '../../../os/ui/module.js';
 import {directive as ogcServerDirective} from './ogcserverimport.js';
-
-const Module = goog.require('os.ui.Module');
 
 
 

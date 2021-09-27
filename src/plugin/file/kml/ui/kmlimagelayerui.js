@@ -1,9 +1,10 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLImageLayerUI');
 
+import * as ImageLayerUI from '../../../../os/ui/layer/imagelayerui.js';
+import Module from '../../../../os/ui/module.js';
+
 const {isLayerNode} = goog.require('os.data');
 const LayerGroup = goog.require('os.layer.LayerGroup');
-const Module = goog.require('os.ui.Module');
-const ImageLayerUI = goog.require('os.ui.layer.ImageLayerUI');
 
 const LayerNode = goog.requireType('os.data.LayerNode');
 

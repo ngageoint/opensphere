@@ -1,4 +1,8 @@
-goog.module('os.ui.file.kml.AbstractKMLExporter');
+goog.declareModuleId('os.ui.file.kml.AbstractKMLExporter');
+
+import JsonField from '../../../../plugin/file/kml/jsonfield.js';
+import {OS_NS} from '../../../../plugin/file/kml/kml.js';
+import * as kml from './kml.js';
 
 const {getFirstElementChild, insertSiblingBefore} = goog.require('goog.dom');
 const {createDocument, serialize} = goog.require('goog.dom.xml');
@@ -15,10 +19,7 @@ const {isPrimitive} = goog.require('os.object');
 const osTime = goog.require('os.time');
 const TimeInstant = goog.require('os.time.TimeInstant');
 const TimeRange = goog.require('os.time.TimeRange');
-const kml = goog.require('os.ui.file.kml');
 const xml = goog.require('os.xml');
-const {OS_NS} = goog.require('plugin.file.kml');
-const {default: JsonField} = goog.require('plugin.file.kml.JsonField');
 
 const ITime = goog.requireType('os.time.ITime');
 
@@ -30,7 +31,7 @@ const ITime = goog.requireType('os.time.ITime');
  * @extends {ZipExporter<T>}
  * @template T
  */
-class AbstractKMLExporter extends ZipExporter {
+export default class AbstractKMLExporter extends ZipExporter {
   /**
    * Constructor.
    */
@@ -1133,5 +1134,3 @@ const logger = log.getLogger('os.ui.file.kml.AbstractKMLExporter');
  * @const
  */
 AbstractKMLExporter.LABEL_DELIMITER = ' - ';
-
-exports = AbstractKMLExporter;

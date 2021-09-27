@@ -1,8 +1,8 @@
-goog.module('os.ui.window.GeoHelpUI');
+goog.declareModuleId('os.ui.window.GeoHelpUI');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const osWindow = goog.require('os.ui.window');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import * as osWindow from '../window.js';
 
 
 /**
@@ -10,7 +10,7 @@ const osWindow = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/window/geohelp.html',
@@ -22,7 +22,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'geohelp';
+export const directiveTag = 'geohelp';
 
 /**
  * Add the directive to the core module
@@ -33,7 +33,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for date/time format help.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -71,7 +71,7 @@ class Controller {
 /**
  * Launches the date/time formatting help dialog if one isn't displayed already.
  */
-const launchGeoHelp = function() {
+export const launchGeoHelp = function() {
   if (!document.getElementById('geo-help')) {
     osWindow.create({
       'label': 'Location Formats',
@@ -88,17 +88,4 @@ const launchGeoHelp = function() {
       'modal': true
     }, `<${directiveTag}></${directiveTag}>`);
   }
-};
-
-/**
- * @type {function()}
- * @deprecated Please use os.ui.window.GeoHelpUI.launchGeoHelp.
- */
-osWindow.launchGeoHelp = launchGeoHelp;
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchGeoHelp
 };

@@ -1,12 +1,12 @@
-goog.module('os.ui.notification.NotifyPulseUI');
+goog.declareModuleId('os.ui.notification.NotifyPulseUI');
 
-const Module = goog.require('os.ui.Module');
+import Module from '../module.js';
 
 
 /**
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'A',
   controller: Controller
 });
@@ -15,7 +15,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'notifypulse';
+export const directiveTag = 'notifypulse';
 
 /**
  * Add the directive to the os.ui module
@@ -25,7 +25,7 @@ Module.directive(directiveTag, [directive]);
 /**
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -47,9 +47,3 @@ class Controller {
  * @type {string}
  */
 Controller.FIRE = 'notification.indicator.fire';
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

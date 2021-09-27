@@ -1,5 +1,10 @@
 goog.declareModuleId('plugin.file.geojson.GeoJSONImportUI');
 
+import FileImportUI from '../../../os/ui/im/fileimportui.js';
+import * as osWindow from '../../../os/ui/window.js';
+import windowSelector from '../../../os/ui/windowselector.js';
+import OptionsStep from '../../../os/ui/wiz/optionsstep.js';
+import TimeStep from '../../../os/ui/wiz/step/timestep.js';
 import GeoJSONParserConfig from '../geojsonparserconfig.js';
 import GeoJSONDescriptor from './geojsondescriptor.js';
 import {directiveTag as geoJsonImportUi} from './geojsonimport.js';
@@ -8,11 +13,7 @@ import GeoJSONProvider from './geojsonprovider.js';
 const DataManager = goog.require('os.data.DataManager');
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const MappingManager = goog.require('os.im.mapping.MappingManager');
-const FileImportUI = goog.require('os.ui.im.FileImportUI');
-const osWindow = goog.require('os.ui.window');
-const windowSelector = goog.require('os.ui.windowSelector');
-const OptionsStep = goog.require('os.ui.wiz.OptionsStep');
-const TimeStep = goog.require('os.ui.wiz.step.TimeStep');
+
 
 /**
  * @extends {FileImportUI.<GeoJSONParserConfig>}

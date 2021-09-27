@@ -1,22 +1,22 @@
-goog.module('os.ui.ex.ExportOptionsUI');
+goog.declareModuleId('os.ui.ex.ExportOptionsUI');
 
-goog.require('os.ui.ChecklistUI');
+import '../checklist.js';
+import {ROOT} from '../../os.js';
+import ChecklistEvent from '../checklistevent.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import ExportOptionsEvent from './exportoptionsevent.js';
 
 const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
 const {htmlEscape} = goog.require('goog.string');
 const olEvents = goog.require('ol.events');
-const {ROOT} = goog.require('os');
 const DataManager = goog.require('os.data.DataManager');
 const DataEventType = goog.require('os.data.event.DataEventType');
 const SelectionType = goog.require('os.events.SelectionType');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const StyleManager = goog.require('os.style.StyleManager');
 const StyleType = goog.require('os.style.StyleType');
-const {apply} = goog.require('os.ui');
-const ChecklistEvent = goog.require('os.ui.ChecklistEvent');
-const Module = goog.require('os.ui.Module');
-const ExportOptionsEvent = goog.require('os.ui.ex.ExportOptionsEvent');
 
 const EventTarget = goog.requireType('ol.events.EventTarget');
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
@@ -29,7 +29,7 @@ const VectorSource = goog.requireType('os.source.Vector');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: {
     'allowMultiple': '=',
@@ -46,7 +46,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'exportoptions';
+export const directiveTag = 'exportoptions';
 
 /**
  * Add the directive to the module.
@@ -57,7 +57,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the exportoptions directive
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -404,9 +404,3 @@ const selectEvents = [
   SelectionType.CHANGED,
   SelectionType.REMOVED
 ];
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,20 +1,20 @@
-goog.module('os.ui.feature.tab.PropertiesTabUI');
+goog.declareModuleId('os.ui.feature.tab.PropertiesTabUI');
 
-goog.require('os.ui.feature.FeatureInfoCellUI');
+import '../featureinfocell.js';
+import * as osFeature from '../../../feature/feature.js';
+import {ROOT} from '../../../os.js';
+import Module from '../../module.js';
+import {apply} from '../../ui.js';
+import AbstractFeatureTabCtrl from './abstractfeaturetabctrl.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {numerateCompare} = goog.require('goog.string');
 const events = goog.require('ol.events');
-const {ROOT} = goog.require('os');
 const Fields = goog.require('os.Fields');
 const Settings = goog.require('os.config.Settings');
 const RecordField = goog.require('os.data.RecordField');
-const osFeature = goog.require('os.feature');
 const {isPrimitive} = goog.require('os.object');
 const PropertyChange = goog.require('os.source.PropertyChange');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const AbstractFeatureTabCtrl = goog.require('os.ui.feature.tab.AbstractFeatureTabCtrl');
 
 const Feature = goog.requireType('ol.Feature');
 const RenderFeature = goog.requireType('ol.render.Feature');
@@ -26,7 +26,7 @@ const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: false,
@@ -39,7 +39,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'propertiestab';
+export const directiveTag = 'propertiestab';
 
 /**
  * Add the directive to the module.
@@ -50,7 +50,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the propertiesTabDirective directive
  * @unrestricted
  */
-class Controller extends AbstractFeatureTabCtrl {
+export class Controller extends AbstractFeatureTabCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -304,9 +304,3 @@ class Controller extends AbstractFeatureTabCtrl {
  * @const
  */
 Controller.SHOW_EMPTY_KEY = 'ui.featureInfo.showEmptyProperties';
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

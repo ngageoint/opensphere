@@ -1,7 +1,7 @@
-goog.module('os.ui.onboarding.ContextOnboardingUI');
+goog.declareModuleId('os.ui.onboarding.ContextOnboardingUI');
 
-const Module = goog.require('os.ui.Module');
-const OnboardingManager = goog.require('os.ui.onboarding.OnboardingManager');
+import Module from '../module.js';
+import OnboardingManager from './onboardingmanager.js';
 
 
 /**
@@ -9,7 +9,7 @@ const OnboardingManager = goog.require('os.ui.onboarding.OnboardingManager');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -25,7 +25,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'context-onboarding';
+export const directiveTag = 'context-onboarding';
 
 /**
  * Register context-onboarding directive.
@@ -36,7 +36,7 @@ Module.directive('contextOnboarding', [directive]);
  * Controller function for the context-onboarding directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -69,9 +69,3 @@ class Controller {
     OnboardingManager.getInstance().showContextOnboarding(this.scope_['context']);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

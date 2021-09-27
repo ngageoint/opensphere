@@ -1,13 +1,13 @@
-goog.module('os.ui.Icons');
+goog.declareModuleId('os.ui.Icons');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../os.js';
 
 
 /**
  * Icon image markup
  * @enum {string}
  */
-exports = {
+const Icons = {
   DAYNIGHT: '<i class="fa fa-sun-o"></i><i class="fa fa-moon-o"></i>',
   FEATURES: '<img src="' + ROOT + 'images/features-base.png" title="Feature layer"/>',
   STATE: '<i class="fa fa-bookmark ml-1" title="State file"></i>',
@@ -21,3 +21,5 @@ exports = {
   FILTER: '<i class="fa fa-filter position-relative" title="This filter is active"></i>',
   FEATUREACTION: '<i class="fa fa-magic" title="This layer has an active feature action"></i>'
 };
+
+export default Icons;

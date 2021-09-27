@@ -1,15 +1,16 @@
-goog.module('os.ui.wiz.WizardUI');
+goog.declareModuleId('os.ui.wiz.WizardUI');
+
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import * as osWindow from '../window.js';
+import WindowEventType from '../windoweventtype.js';
+import WizardStepEvent from './step/wizardstepevent.js';
 
 const {clamp} = goog.require('goog.math');
-const {ROOT} = goog.require('os');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const osWindow = goog.require('os.ui.window');
-const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
 
 const FileParserConfig = goog.requireType('os.parse.FileParserConfig');
-const IWizardStep = goog.requireType('os.ui.wiz.step.IWizardStep');
+const {default: IWizardStep} = goog.requireType('os.ui.wiz.step.IWizardStep');
 
 
 /**
@@ -28,7 +29,7 @@ const StepState = {
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -41,7 +42,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'wizard';
+export const directiveTag = 'wizard';
 
 
 /**
@@ -56,7 +57,7 @@ Module.directive('wizard', [directive]);
  * @template T
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {angular.Scope} $scope
@@ -438,9 +439,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

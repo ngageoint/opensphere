@@ -1,13 +1,13 @@
-goog.module('os.ui.filter.op.LikeList');
+goog.declareModuleId('os.ui.filter.op.LikeList');
 
-const InList = goog.require('os.ui.filter.op.InList');
-const Op = goog.require('os.ui.filter.op.Op');
-const {escapeRegExp} = goog.require('os.ui.filter.string');
+import {escapeRegExp} from '../filterstring.js';
+import InList from './inlistop.js';
+import Op from './op.js';
 
 
 /**
  */
-class LikeList extends InList {
+export default class LikeList extends InList {
   /**
    * Constructor.
    */
@@ -58,5 +58,3 @@ class LikeList extends InList {
     return f;
   }
 }
-
-exports = LikeList;

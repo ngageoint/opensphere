@@ -1,4 +1,6 @@
-goog.module('os.ui.layer.AbstractLayerUICtrl');
+goog.declareModuleId('os.ui.layer.AbstractLayerUICtrl');
+
+import {apply} from '../ui.js';
 
 const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');
@@ -15,7 +17,6 @@ const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const LayerGroup = goog.require('os.layer.LayerGroup');
 const PropertyChange = goog.require('os.layer.PropertyChange');
 const {getMapContainer} = goog.require('os.map.instance');
-const {apply} = goog.require('os.ui');
 
 const ICommand = goog.requireType('os.command.ICommand');
 const LayerNode = goog.requireType('os.data.LayerNode');
@@ -26,7 +27,7 @@ const ILayer = goog.requireType('os.layer.ILayer');
  * Base controller for a layer node UI.
  * @unrestricted
  */
-class Controller extends Disposable {
+export default class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -291,5 +292,3 @@ class Controller extends Disposable {
     }
   }
 }
-
-exports = Controller;

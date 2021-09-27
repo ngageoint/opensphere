@@ -1,10 +1,10 @@
-goog.module('os.ui.draw.EventType');
+goog.declareModuleId('os.ui.draw.EventType');
 
 /**
  * This enumerates the drawing event type constants.
  * @enum {string}
  */
-exports = {
+const EventType = {
   ACTIVE: 'draw.active',
   CHANGE: 'draw.change',
   COMPLETE: 'draw.complete',
@@ -14,3 +14,5 @@ exports = {
   CALC_COMPLETE: 'draw.calc.complete',
   CALC_PROGRESS: 'draw.calc.progress'
 };
+
+export default EventType;

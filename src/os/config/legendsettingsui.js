@@ -6,9 +6,9 @@ const dispatcher = goog.require('os.Dispatcher');
 const LegendSetting = goog.require('os.config.LegendSetting');
 const {getSettings} = goog.require('os.config.instance');
 const legend = goog.require('os.legend');
-const Module = goog.require('os.ui.Module');
-const UIEvent = goog.require('os.ui.events.UIEvent');
-const UIEventType = goog.require('os.ui.events.UIEventType');
+const {default: Module} = goog.require('os.ui.Module');
+const {default: UIEvent} = goog.require('os.ui.events.UIEvent');
+const {default: UIEventType} = goog.require('os.ui.events.UIEventType');
 
 
 /**

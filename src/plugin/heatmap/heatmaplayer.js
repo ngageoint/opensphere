@@ -2,6 +2,7 @@ goog.declareModuleId('plugin.heatmap.Heatmap');
 
 import * as dispatcher from '../../os/dispatcher.js';
 import * as osStyle from '../../os/style/style.js';
+import * as renamelayer from '../../os/ui/renamelayer.js';
 import * as heatmap from './heatmap.js';
 import HeatmapField from './heatmapfield.js';
 import {directiveTag as layerUI} from './heatmaplayerui.js';
@@ -9,28 +10,27 @@ import HeatmapPropertyType from './heatmappropertytype.js';
 import SynchronizerType from './heatmapsynchronizertype.js';
 
 const dom = goog.require('ol.dom');
+const events = goog.require('ol.events');
 const olExtent = goog.require('ol.extent');
+const GeometryType = goog.require('ol.geom.GeometryType');
 const Point = goog.require('ol.geom.Point');
 const olRenderEventType = goog.require('ol.render.EventType');
+const Icon = goog.require('ol.style.Icon');
+const Style = goog.require('ol.style.Style');
 const MapContainer = goog.require('os.MapContainer');
 const EventType = goog.require('os.action.EventType');
 const color = goog.require('os.color');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const events = goog.require('ol.events');
-const GeometryType = goog.require('ol.geom.GeometryType');
-const Icon = goog.require('ol.style.Icon');
-const Style = goog.require('ol.style.Style');
 const LayerEvent = goog.require('os.events.LayerEvent');
+const LayerEventType = goog.require('os.events.LayerEventType');
 const osImplements = goog.require('os.implements');
 const ExplicitLayerType = goog.require('os.layer.ExplicitLayerType');
-const LayerType = goog.require('os.layer.LayerType');
 const ILayer = goog.require('os.layer.ILayer');
+const LayerType = goog.require('os.layer.LayerType');
 const VectorLayer = goog.require('os.layer.Vector');
 const RequestSource = goog.require('os.source.Request');
-const renamelayer = goog.require('os.ui.renamelayer');
+const Feature = goog.requireType('ol.Feature');
 
 const Event = goog.requireType('ol.render.Event');
-const Feature = goog.requireType('ol.Feature');
 const RenderFeature = goog.requireType('ol.render.Feature');
 
 

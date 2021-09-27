@@ -2,7 +2,7 @@ goog.module('os.data.FilterTreeSearch');
 
 const FilterNode = goog.require('os.data.FilterNode');
 const {getFilterManager} = goog.require('os.query.instance');
-const AbstractGroupByTreeSearch = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
+const {default: AbstractGroupByTreeSearch} = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
 
 const FilterEntry = goog.requireType('os.filter.FilterEntry');
 

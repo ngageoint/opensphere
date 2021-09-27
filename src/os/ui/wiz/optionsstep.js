@@ -1,13 +1,13 @@
-goog.module('os.ui.wiz.OptionsStep');
+goog.declareModuleId('os.ui.wiz.OptionsStep');
 
-const {directiveTag: stepUi} = goog.require('os.ui.wiz.OptionsStepUI');
-const AbstractWizardStep = goog.require('os.ui.wiz.step.AbstractWizardStep');
+import {directiveTag as stepUi} from './optionsstepui.js';
+import AbstractWizardStep from './step/abstractwizardstep.js';
 
 
 /**
  * Import wizard miscellaneous options step
  */
-class OptionsStep extends AbstractWizardStep {
+export default class OptionsStep extends AbstractWizardStep {
   /**
    * Constructor.
    */
@@ -24,5 +24,3 @@ class OptionsStep extends AbstractWizardStep {
     return this.valid && !!config['title'];
   }
 }
-
-exports = OptionsStep;

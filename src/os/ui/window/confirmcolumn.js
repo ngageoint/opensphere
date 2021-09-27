@@ -1,9 +1,9 @@
-goog.module('os.ui.window.ConfirmColumnUI');
+goog.declareModuleId('os.ui.window.ConfirmColumnUI');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import WindowEventType from '../windoweventtype.js';
+import * as ConfirmUI from './confirm.js';
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 
@@ -13,7 +13,7 @@ const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   replace: true,
   restrict: 'E',
   templateUrl: ROOT + 'views/window/confirmcolumn.html',
@@ -25,7 +25,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'confirmcolumn';
+export const directiveTag = 'confirmcolumn';
 
 /**
  * Add the directive to the os.ui module
@@ -36,7 +36,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the color confirmation window.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -63,7 +63,7 @@ class Controller {
  *
  * @param {!osx.window.ConfirmColumnOptions} options
  */
-const launchConfirmColumn = function(options) {
+export const launchConfirmColumn = function(options) {
   var scopeOptions = {
     'columns': options.columns,
     'prompt': options.prompt
@@ -80,11 +80,4 @@ const launchConfirmColumn = function(options) {
     prompt: `<${directiveTag}></${directiveTag}>`,
     windowOptions: windowOptions
   }), scopeOptions);
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchConfirmColumn
 };

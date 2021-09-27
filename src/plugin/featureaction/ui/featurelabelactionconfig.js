@@ -1,12 +1,17 @@
 goog.declareModuleId('plugin.im.action.feature.ui.LabelConfigUI');
 
-goog.require('os.ui.layer.LabelControlsUI');
-goog.require('os.ui.popover.PopoverUI');
-
+import '../../../os/ui/layer/labelcontrols.js';
+import '../../../os/ui/popover/popover.js';
 import * as dispatcher from '../../../os/dispatcher.js';
 import {ROOT} from '../../../os/os.js';
 import {DEFAULT_SIZE} from '../../../os/style/label.js';
 import {DEFAULT_LAYER_COLOR, toRgbaString} from '../../../os/style/style.js';
+import {isDuplicateColumn} from '../../../os/ui/data/addcolumnform.js';
+import EventType from '../../../os/ui/im/action/eventtype.js';
+import LabelControlsEventType from '../../../os/ui/layer/labelcontrolseventtype.js';
+import {getColumns} from '../../../os/ui/layer/layers.js';
+import Module from '../../../os/ui/module.js';
+import * as column from '../../../os/ui/slick/column.js';
 import {apply} from '../../../os/ui/ui.js';
 import ActionConfigCtrl from './featureactionconfig.js';
 
@@ -20,12 +25,6 @@ const DataManager = goog.require('os.data.DataManager');
 const osImplements = goog.require('os.implements');
 const ILayer = goog.require('os.layer.ILayer');
 const osObject = goog.require('os.object');
-const Module = goog.require('os.ui.Module');
-const {isDuplicateColumn} = goog.require('os.ui.data.AddColumnFormUI');
-const EventType = goog.require('os.ui.im.action.EventType');
-const {getColumns} = goog.require('os.ui.layer');
-const LabelControlsEventType = goog.require('os.ui.layer.LabelControlsEventType');
-const column = goog.require('os.ui.slick.column');
 
 const {default: LabelAction} = goog.requireType('plugin.im.action.feature.LabelAction');
 

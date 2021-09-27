@@ -1,7 +1,7 @@
 goog.module('os.filter.im.OSFilterImportUI');
 
 const {directiveTag: filterImportUi} = goog.require('os.filter.im.OSFilterImport');
-const FilterImportUI = goog.require('os.ui.filter.im.FilterImportUI');
+const {default: FilterImportUI} = goog.require('os.ui.filter.im.FilterImportUI');
 
 
 /**

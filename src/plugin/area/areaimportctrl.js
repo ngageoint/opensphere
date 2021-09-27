@@ -1,9 +1,9 @@
 goog.declareModuleId('plugin.area.AreaImportCtrl');
 
+import AreaImportCtrl from '../../os/ui/query/areaimportctrl.js';
 import {processFeatures} from './area.js';
 
 const RecordField = goog.require('os.data.RecordField');
-const AreaImportCtrl = goog.require('os.ui.query.AreaImportCtrl');
 
 
 /**

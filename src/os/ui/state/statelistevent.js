@@ -1,8 +1,10 @@
-goog.module('os.ui.state.StateListEvent');
+goog.declareModuleId('os.ui.state.StateListEvent');
 
 /**
  * @enum {string}
  */
-exports = {
+const StateListEvent = {
   CHANGE: 'statelist:change'
 };
+
+export default StateListEvent;

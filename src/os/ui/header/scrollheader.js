@@ -1,8 +1,9 @@
-goog.module('os.ui.header.ScrollHeaderUI');
+goog.declareModuleId('os.ui.header.ScrollHeaderUI');
+
+import Module from '../module.js';
+import ScrollHeaderEvents from './scrollheaderevents.js';
 
 const Throttle = goog.require('goog.async.Throttle');
-const Module = goog.require('os.ui.Module');
-const ScrollHeaderEvents = goog.require('os.ui.header.ScrollHeaderEvents');
 
 
 /**
@@ -10,7 +11,7 @@ const ScrollHeaderEvents = goog.require('os.ui.header.ScrollHeaderEvents');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'A',
   scope: {
     'parents': '@?',
@@ -23,7 +24,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'scroll-header';
+export const directiveTag = 'scroll-header';
 
 /**
  * Add the directive to the module.
@@ -34,7 +35,7 @@ Module.directive('scrollHeader', [directive]);
  * Controller function for the scrollHeader directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -188,9 +189,3 @@ class Controller {
     $(window).off('scroll');
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

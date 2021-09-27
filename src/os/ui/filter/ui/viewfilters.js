@@ -1,17 +1,17 @@
-goog.module('os.ui.filter.ui.ViewFiltersUI');
+goog.declareModuleId('os.ui.filter.ui.ViewFiltersUI');
 
-goog.require('os.ui.filter.AdvancedFilterBuilderUI');
+import '../advancedfilterbuilder.js';
+import {ROOT} from '../../../os.js';
+import Module from '../../module.js';
+import {close} from '../../window.js';
+import {OPERATIONS} from '../filter.js';
+import ExpressionNode from './expressionnode.js';
+import GroupNode from './groupnode.js';
 
 const {getFirstElementChild, getNextElementSibling} = goog.require('goog.dom');
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const {OPERATIONS} = goog.require('os.ui.filter');
-const ExpressionNode = goog.require('os.ui.filter.ui.ExpressionNode');
-const GroupNode = goog.require('os.ui.filter.ui.GroupNode');
-const {close} = goog.require('os.ui.window');
 
 const FilterEntry = goog.requireType('os.filter.FilterEntry');
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -19,7 +19,7 @@ const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: true,
@@ -32,7 +32,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'viewfilter';
+export const directiveTag = 'viewfilter';
 
 /**
  * Add the directive to the module
@@ -43,7 +43,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the filters window.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -187,10 +187,4 @@ const closeRemoveMultipleWindow = () => {
   if (childWindow) {
     close(childWindow);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

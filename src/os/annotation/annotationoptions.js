@@ -1,7 +1,7 @@
 goog.module('os.annotation.annotationOptionsDirective');
 
 const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
+const {default: Module} = goog.require('os.ui.Module');
 
 
 /**

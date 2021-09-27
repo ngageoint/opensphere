@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.basemap.BaseMapDescriptor');
 
 import {PROJECTION} from '../../os/map/map.js';
+import Icons from '../../os/ui/icons.js';
 import {ID, LAYER_TYPE} from './basemap.js';
 
 const googObject = goog.require('goog.object');
 const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
-const Icons = goog.require('os.ui.Icons');
 
 
 /**

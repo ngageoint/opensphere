@@ -37,9 +37,10 @@ goog.require('os.query.instance');
 goog.require('os.style.StyleManager');
 goog.require('os.style.instance');
 goog.require('os.time.replacers');
-goog.require('os.ui.config.SettingsManager');
-goog.require('os.ui.ogc.OGCDescriptor');
 goog.require('test.os.config.SettingsUtil');
+
+import '../../src/os/ui/config/settingsmanager.js';
+import '../../src/os/ui/ogc/ogcdescriptor.js';
 
 import * as Dispatcher from '../../src/os/dispatcher.js';
 import * as os from '../../src/os/os.js';
@@ -65,12 +66,12 @@ beforeEach(function() {
   const osQueryInstance = goog.module.get('os.query.instance');
   const osStyleInstance = goog.module.get('os.style.instance');
   const replacers = goog.module.get('os.time.replacers');
-  const SettingsManager = goog.module.get('os.ui.config.SettingsManager');
+  const {default: SettingsManager} = goog.module.get('os.ui.config.SettingsManager');
   const Settings = goog.module.get('os.config.Settings');
   const {resetCrossOriginCache, resetDefaultValidators} = goog.module.get('os.net');
   const StyleManager = goog.module.get('os.style.StyleManager');
   const osUi = goog.module.get('os.ui');
-  const OGCDescriptor = goog.module.get('os.ui.ogc.OGCDescriptor');
+  const {default: OGCDescriptor} = goog.module.get('os.ui.ogc.OGCDescriptor');
   const SettingsUtil = goog.module.get('test.os.config.SettingsUtil');
 
   const settings = Settings.getInstance();

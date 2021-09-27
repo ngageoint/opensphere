@@ -1,18 +1,18 @@
-goog.module('os.ui.layer.LabelControlsUI');
+goog.declareModuleId('os.ui.layer.LabelControlsUI');
 
-goog.require('os.ui.geo.PositionUI');
+import '../geo/position.js';
+import {ROOT} from '../../os.js';
+import {MAX_SIZE, MIN_SIZE, cloneConfig} from '../../style/label.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import LabelControlsEventType from './labelcontrolseventtype.js';
 
 const Disposable = goog.require('goog.Disposable');
 const {moveItem} = goog.require('goog.array');
 const {remove} = goog.require('ol.array');
-const {ROOT} = goog.require('os');
 const Settings = goog.require('os.config.Settings');
 const Metrics = goog.require('os.metrics.Metrics');
 const {Layer} = goog.require('os.metrics.keys');
-const {MAX_SIZE, MIN_SIZE, cloneConfig} = goog.require('os.style.label');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const LabelControlsEventType = goog.require('os.ui.layer.LabelControlsEventType');
 
 const {LabelConfig} = goog.requireType('os.style.label');
 
@@ -22,7 +22,7 @@ const {LabelConfig} = goog.requireType('os.style.label');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -43,7 +43,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'labelcontrols';
+export const directiveTag = 'labelcontrols';
 
 /**
  * Add the directive to the module.
@@ -54,7 +54,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the labelcontrols directive
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -281,9 +281,3 @@ class Controller extends Disposable {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

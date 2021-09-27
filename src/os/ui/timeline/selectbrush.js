@@ -1,20 +1,21 @@
-goog.module('os.ui.timeline.SelectBrush');
+goog.declareModuleId('os.ui.timeline.SelectBrush');
+
+import * as dispatcher from '../../dispatcher.js';
+import {openMenu} from '../globalmenu.js';
+import GlobalMenuEventType from '../globalmenueventtype.js';
+import Brush from './brush.js';
+import BrushEventType from './brusheventtype.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const dispatcher = goog.require('os.Dispatcher');
-const {openMenu} = goog.require('os.ui.GlobalMenuUI');
-const GlobalMenuEventType = goog.require('os.ui.GlobalMenuEventType');
-const Brush = goog.require('os.ui.timeline.Brush');
-const BrushEventType = goog.require('os.ui.timeline.BrushEventType');
 
-const ActionManager = goog.requireType('os.ui.action.ActionManager');
-const Menu = goog.requireType('os.ui.menu.Menu');
+const {default: ActionManager} = goog.requireType('os.ui.action.ActionManager');
+const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 
 
 /**
  * Implements shift+click to draw a brush selection
  */
-class SelectBrush extends Brush {
+export default class SelectBrush extends Brush {
   /**
    * Constructor.
    */
@@ -221,5 +222,3 @@ class SelectBrush extends Brush {
     }
   }
 }
-
-exports = SelectBrush;

@@ -1,7 +1,7 @@
-goog.module('os.ui.column.ColumnPickerUI');
+goog.declareModuleId('os.ui.column.ColumnPickerUI');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 
@@ -11,7 +11,7 @@ const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
 
@@ -33,7 +33,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'columnpicker';
+export const directiveTag = 'columnpicker';
 
 
 /**
@@ -48,7 +48,7 @@ Module.directive('columnpicker', [directive]);
  * The selected column will be saved in 'column'. If multiple is allowed it will be stored in 'columns' as an array.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -171,9 +171,3 @@ class Controller {
     this.scope_['columns'] = columns;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

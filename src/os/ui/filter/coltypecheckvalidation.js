@@ -1,7 +1,7 @@
-goog.module('os.ui.filter.colTypeCheckValidation');
+goog.declareModuleId('os.ui.filter.colTypeCheckValidation');
 
-const Module = goog.require('os.ui.Module');
-const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
+import Module from '../module.js';
+import FilterPatterns from './filterpatterns.js';
 
 
 /**
@@ -9,7 +9,7 @@ const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   require: 'ngModel',
   link: colTypeCheckLink
 });
@@ -18,7 +18,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'coltypecheck';
+export const directiveTag = 'coltypecheck';
 
 /**
  * The link for type check validation
@@ -52,8 +52,3 @@ const colTypeCheckLink = function($scope, $element, $attrs, $ctrl) {
  * Add directive to module
  */
 Module.directive(directiveTag, [directive]);
-
-exports = {
-  directive,
-  directiveTag
-};

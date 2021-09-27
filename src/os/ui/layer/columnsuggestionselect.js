@@ -1,12 +1,13 @@
-goog.module('os.ui.layer.ColumnSuggestionSelect');
-const Module = goog.require('os.ui.Module');
+goog.declareModuleId('os.ui.layer.ColumnSuggestionSelect');
+import Module from '../module.js';
+
 
 /**
  * An attribute directive to generate column suggestion option groups for select elements.
  * Simpler and easier "group" functionality from ngOptions.
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'A',
   scope: {
     'suggested': '=',
@@ -23,7 +24,3 @@ const directive = () => ({
 });
 
 Module.directive('columnSuggestion', [directive]);
-
-exports = {
-  directive
-};

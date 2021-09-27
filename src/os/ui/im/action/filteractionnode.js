@@ -1,10 +1,11 @@
-goog.module('os.ui.im.action.FilterActionNode');
+goog.declareModuleId('os.ui.im.action.FilterActionNode');
+
+import FilterNode from '../../filter/ui/filternode.js';
+import {directiveTag as nodeUi} from './filteractionnodeui.js';
 
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const {ICON} = goog.require('os.im.action.default');
 const TriState = goog.require('os.structs.TriState');
-const FilterNode = goog.require('os.ui.filter.ui.FilterNode');
-const {directiveTag: nodeUi} = goog.require('os.ui.im.action.FilterActionNodeUI');
 
 
 /**
@@ -12,7 +13,7 @@ const {directiveTag: nodeUi} = goog.require('os.ui.im.action.FilterActionNodeUI'
  *
  * @template T
  */
-class FilterActionNode extends FilterNode {
+export default class FilterActionNode extends FilterNode {
   /**
    * Constructor.
    * @param {!os.im.action.FilterActionEntry<T>} entry The entry.
@@ -135,5 +136,3 @@ class FilterActionNode extends FilterNode {
     return [];
   }
 }
-
-exports = FilterActionNode;

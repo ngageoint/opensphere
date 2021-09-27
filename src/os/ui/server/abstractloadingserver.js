@@ -1,4 +1,6 @@
-goog.module('os.ui.server.AbstractLoadingServer');
+goog.declareModuleId('os.ui.server.AbstractLoadingServer');
+
+import BaseProvider from '../data/baseprovider.js';
 
 const {remove} = goog.require('ol.array');
 const {getAuth} = goog.require('os.auth');
@@ -9,7 +11,6 @@ const ILoadingProvider = goog.require('os.data.ILoadingProvider');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const osImplements = goog.require('os.implements');
 const TriState = goog.require('os.structs.TriState');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
 
 
 /**
@@ -17,7 +18,7 @@ const BaseProvider = goog.require('os.ui.data.BaseProvider');
  *
  * @implements {ILoadingProvider}
  */
-class AbstractLoadingServer extends BaseProvider {
+export default class AbstractLoadingServer extends BaseProvider {
   /**
    * Constructor.
    */
@@ -320,7 +321,6 @@ class AbstractLoadingServer extends BaseProvider {
     return getAuth(this.getUrl());
   }
 }
+
 osImplements(AbstractLoadingServer, ILoadingProvider.ID);
 osImplements(AbstractLoadingServer, IDataProvider.ID);
-
-exports = AbstractLoadingServer;

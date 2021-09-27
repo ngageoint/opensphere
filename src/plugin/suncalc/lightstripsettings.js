@@ -1,8 +1,7 @@
 goog.declareModuleId('plugin.suncalc.LightStripSettings');
 
+import SettingPlugin from '../../os/ui/config/settingplugin.js';
 import {directiveTag as uiEl} from './lightstripsettingsui.js';
-
-const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
 
 /**
  * Settings plugin for the light strip.

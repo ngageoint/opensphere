@@ -12,7 +12,7 @@ const osMap = goog.require('os.map');
 const {getMapContainer} = goog.require('os.map.instance');
 const terrain = goog.require('os.map.terrain');
 const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
+const {default: Module} = goog.require('os.ui.Module');
 const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
 
 const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');

@@ -1,9 +1,10 @@
-goog.module('os.ui.AddFilterUI');
+goog.declareModuleId('os.ui.AddFilterUI');
+
+import Module from './module.js';
+import {Controller as AddFilterController, directive as addFilterDirective} from './query/addfilter.js';
 
 const LayerEventType = goog.require('os.events.LayerEventType');
 const {getMapContainer} = goog.require('os.map.instance');
-const Module = goog.require('os.ui.Module');
-const {Controller: AddFilterController, directive: addFilterDirective} = goog.require('os.ui.query.AddFilterUI');
 
 
 /**
@@ -11,7 +12,7 @@ const {Controller: AddFilterController, directive: addFilterDirective} = goog.re
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = addFilterDirective();
   dir.controller = Controller;
   return dir;
@@ -21,7 +22,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'osaddfilter';
+export const directiveTag = 'osaddfilter';
 
 /**
  * Add the directive to the module
@@ -32,7 +33,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for combinator window
  * @unrestricted
  */
-class Controller extends AddFilterController {
+export class Controller extends AddFilterController {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -60,9 +61,3 @@ class Controller extends AddFilterController {
     mapContainer.unlisten(LayerEventType.RENAME, this.updateLayers, false, this);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

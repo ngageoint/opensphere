@@ -1,13 +1,13 @@
-goog.module('os.ui.filter.op.NotNull');
+goog.declareModuleId('os.ui.filter.op.NotNull');
 
-const IsNull = goog.require('os.ui.filter.op.IsNull');
-const Not = goog.require('os.ui.filter.op.Not');
+import IsNull from './isnullop.js';
+import Not from './notop.js';
 
 
 /**
  * An inverse 'PropertyIsNull' operation class.
  */
-class NotNull extends Not {
+export default class NotNull extends Not {
   /**
    * Constructor.
    */
@@ -15,5 +15,3 @@ class NotNull extends Not {
     super(new IsNull());
   }
 }
-
-exports = NotNull;

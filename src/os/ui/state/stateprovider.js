@@ -1,8 +1,9 @@
-goog.module('os.ui.state.StateProvider');
+goog.declareModuleId('os.ui.state.StateProvider');
+
+import DescriptorProvider from '../data/descriptorprovider.js';
+import AbstractStateDescriptor from './abstractstatedescriptor.js';
 
 const {getAppName} = goog.require('os.config');
-const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
-const AbstractStateDescriptor = goog.require('os.ui.state.AbstractStateDescriptor');
 
 
 /**
@@ -10,7 +11,7 @@ const AbstractStateDescriptor = goog.require('os.ui.state.AbstractStateDescripto
  *
  * @extends {DescriptorProvider<!AbstractStateDescriptor>}
  */
-class StateProvider extends DescriptorProvider {
+export default class StateProvider extends DescriptorProvider {
   /**
    * Constructor.
    */
@@ -87,5 +88,3 @@ class StateProvider extends DescriptorProvider {
  * @type {StateProvider|undefined}
  */
 let instance;
-
-exports = StateProvider;

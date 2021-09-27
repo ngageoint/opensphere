@@ -5,10 +5,10 @@ const BearingSettingsKeys = goog.require('os.bearing.BearingSettingsKeys');
 const BearingType = goog.require('os.bearing.BearingType');
 const Settings = goog.require('os.config.Settings');
 const osUi = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
+const {default: Module} = goog.require('os.ui.Module');
 
 const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
-const LocationFormat = goog.requireType('os.ui.location.Format');
+const {default: LocationFormat} = goog.requireType('os.ui.location.Format');
 
 
 /**

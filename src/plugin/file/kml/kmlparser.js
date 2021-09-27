@@ -2,6 +2,9 @@ goog.declareModuleId('plugin.file.kml.KMLParser');
 
 import * as osMap from '../../../os/map/map.js';
 import * as osStyle from '../../../os/style/style.js';
+import ColorControlType from '../../../os/ui/colorcontroltype.js';
+import ControlType from '../../../os/ui/controltype.js';
+import * as osUiFileKml from '../../../os/ui/file/kml/kml.js';
 import * as ui from '../../../os/ui/ui.js';
 import JsonField from './jsonfield.js';
 import * as kml from './kml.js';
@@ -55,9 +58,6 @@ const TriState = goog.require('os.structs.TriState');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const track = goog.require('os.track');
-const ColorControlType = goog.require('os.ui.ColorControlType');
-const ControlType = goog.require('os.ui.ControlType');
-const osUiFileKml = goog.require('os.ui.file.kml');
 const xml = goog.require('os.xml');
 
 const GoogEvent = goog.requireType('goog.events.Event');

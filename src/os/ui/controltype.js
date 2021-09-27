@@ -1,8 +1,10 @@
-goog.module('os.ui.ControlType');
+goog.declareModuleId('os.ui.ControlType');
 
 /**
  * @enum {string}
  */
-exports = {
+const ControlType = {
   COLOR: 'colorControl'
 };
+
+export default ControlType;

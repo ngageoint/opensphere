@@ -1,11 +1,11 @@
-goog.module('os.ui.datetime.StartEndDateUI');
+goog.declareModuleId('os.ui.datetime.StartEndDateUI');
 
-goog.require('os.ui.datetime.DateTimeUI');
+import './datetime.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
 
 const log = goog.require('goog.log');
-const {ROOT} = goog.require('os');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -15,7 +15,7 @@ const Logger = goog.requireType('goog.log.Logger');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -42,7 +42,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'start-end-date';
+export const directiveTag = 'start-end-date';
 
 /**
  * Register start-end-date directive.
@@ -53,7 +53,7 @@ Module.directive('startEndDate', [directive]);
  * Controller function for the date-time directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {angular.Scope} $scope
@@ -322,9 +322,3 @@ class Controller {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.datetime.StartEndDateUI');
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

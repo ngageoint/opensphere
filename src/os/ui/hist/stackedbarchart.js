@@ -1,11 +1,12 @@
-goog.module('os.ui.hist.StackedBarChart');
+goog.declareModuleId('os.ui.hist.StackedBarChart');
+
+import IHistogramChart from './ihistogramchart.js';// eslint-disable-line
 
 const Disposable = goog.require('goog.Disposable');
 const {maxBinCount} = goog.require('os.hist');
-const IHistogramChart = goog.require('os.ui.hist.IHistogramChart'); // eslint-disable-line
 
 const HistogramData = goog.requireType('os.hist.HistogramData');
-const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
+const {default: TimelineScaleOptions} = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 
 /**
@@ -13,7 +14,7 @@ const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptio
  *
  * @implements {IHistogramChart}
  */
-class StackedBarChart extends Disposable {
+export default class StackedBarChart extends Disposable {
   /**
    * Constructor.
    * @param {!Element} parent The parent SVG container for the chart.
@@ -132,5 +133,3 @@ class StackedBarChart extends Disposable {
  * @type {number}
  */
 const defaultWidth = 10;
-
-exports = StackedBarChart;

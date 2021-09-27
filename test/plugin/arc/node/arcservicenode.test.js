@@ -5,16 +5,10 @@ goog.require('plugin.arc.node.ArcServiceNode');
 
 
 describe('plugin.arc.node.ArcServiceNode', function() {
-  const DescriptorNode = goog.module.get('os.ui.data.DescriptorNode');
-  const {
-    default: ArcServer
-  } = goog.module.get('plugin.arc.ArcServer');
-  const {
-    default: ArcLayerDescriptor
-  } = goog.module.get('plugin.arc.layer.ArcLayerDescriptor');
-  const {
-    default: ArcServiceNode
-  } = goog.module.get('plugin.arc.node.ArcServiceNode');
+  const {default: DescriptorNode} = goog.module.get('os.ui.data.DescriptorNode');
+  const {default: ArcServer} = goog.module.get('plugin.arc.ArcServer');
+  const {default: ArcLayerDescriptor} = goog.module.get('plugin.arc.layer.ArcLayerDescriptor');
+  const {default: ArcServiceNode} = goog.module.get('plugin.arc.node.ArcServiceNode');
 
   it('should add layer descriptors as children to itself', function() {
     var server = new ArcServer();

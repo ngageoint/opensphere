@@ -1,6 +1,6 @@
 goog.module('os.data.MockProvider');
 
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
+const {default: BaseProvider} = goog.require('os.ui.data.BaseProvider');
 
 
 /**

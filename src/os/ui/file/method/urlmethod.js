@@ -1,4 +1,8 @@
-goog.module('os.ui.file.method.UrlMethod');
+goog.declareModuleId('os.ui.file.method.UrlMethod');
+
+import * as dispatcher from '../../../dispatcher.js';
+import * as osWindow from '../../window.js';
+import {directiveTag as importUi} from '../urlimport.js';
 
 const dispose = goog.require('goog.dispose');
 const EventTarget = goog.require('goog.events.EventTarget');
@@ -6,7 +10,6 @@ const log = goog.require('goog.log');
 const NetEventType = goog.require('goog.net.EventType');
 const XhrIo = goog.require('goog.net.XhrIo');
 const {IE, isVersionOrHigher} = goog.require('goog.userAgent');
-const dispatcher = goog.require('os.Dispatcher');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const EventType = goog.require('os.events.EventType');
@@ -15,8 +18,6 @@ const IFileMethod = goog.require('os.file.IFileMethod'); // eslint-disable-line
 const Request = goog.require('os.net.Request');
 const RequestEvent = goog.require('os.net.RequestEvent');
 const RequestEventType = goog.require('os.net.RequestEventType');
-const {directiveTag: importUi} = goog.require('os.ui.file.UrlImportUI');
-const osWindow = goog.require('os.ui.window');
 
 const Logger = goog.requireType('goog.log.Logger');
 const OSFile = goog.requireType('os.file.File');
@@ -25,7 +26,7 @@ const OSFile = goog.requireType('os.file.File');
 /**
  * @implements {IFileMethod}
  */
-class UrlMethod extends EventTarget {
+export default class UrlMethod extends EventTarget {
   /**
    * Constructor.
    */
@@ -273,5 +274,3 @@ const logger = log.getLogger('os.ui.file.method.UrlMethod');
  * @type {string}
  */
 UrlMethod.ID = 'urlimport';
-
-exports = UrlMethod;

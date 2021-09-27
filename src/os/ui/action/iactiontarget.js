@@ -1,10 +1,9 @@
-goog.module('os.ui.action.IActionTarget');
-
+goog.declareModuleId('os.ui.action.IActionTarget');
 
 /**
  * @interface
  */
-class IActionTarget {
+export default class IActionTarget {
   /**
    * Calls the function associated with the provided action.
    * @param {string} type
@@ -20,5 +19,3 @@ class IActionTarget {
    */
   supportsAction(type, opt_actionArgs) {}
 }
-
-exports = IActionTarget;

@@ -1,9 +1,10 @@
-goog.module('os.ui.load.LoadingUI');
+goog.declareModuleId('os.ui.load.LoadingUI');
+
+import Module from '../module.js';
+import {apply} from '../ui.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const LoadingManager = goog.require('os.load.LoadingManager');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -11,7 +12,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   template: '<i title="Loading..." class="fa fa-spinner fa-smooth fa-spin" ' +
@@ -24,7 +25,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'loading';
+export const directiveTag = 'loading';
 
 /**
  * Add the directive to the module.
@@ -35,7 +36,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the loading directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -83,9 +84,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

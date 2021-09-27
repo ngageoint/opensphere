@@ -1,4 +1,18 @@
-goog.module('os.ui.menu.layer');
+goog.declareModuleId('os.ui.menu.layer');
+
+import {flyTo} from '../../feature/feature.js';
+import {getExportFields} from '../../source/source.js';
+import * as ExportUI from '../ex/exportdialog.js';
+import {launchFeatureList} from '../featurelist.js';
+import ExportManager from '../file/exportmanager.js';
+import * as LayerCompareUI from '../layer/compare/layercompareui.js';
+import * as EllipseColumnsUI from '../layer/ellipsecolumns.js';
+import * as ConfirmUI from '../window/confirm.js';
+import * as ConfirmTextUI from '../window/confirmtext.js';
+import {getSourcesFromContext} from './commonmenu.js';
+import Menu from './menu.js';
+import MenuItem from './menuitem.js';
+import MenuItemType from './menuitemtype.js';
 
 const Timer = goog.require('goog.Timer');
 const googDispose = goog.require('goog.dispose');
@@ -11,35 +25,22 @@ const CommandProcessor = goog.require('os.command.CommandProcessor');
 const FlyToExtent = goog.require('os.command.FlyToExtent');
 const DataManager = goog.require('os.data.DataManager');
 const FileDescriptor = goog.require('os.data.FileDescriptor');
-const {flyTo} = goog.require('os.feature');
 const {nodesToLayers, reduceExtentFromLayers} = goog.require('os.fn');
 const {getMapContainer} = goog.require('os.map.instance');
 const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const {getExportFields} = goog.require('os.source');
 const VectorSource = goog.require('os.source.Vector');
-const {launchFeatureList} = goog.require('os.ui.FeatureListUI');
-const ExportUI = goog.require('os.ui.ex.ExportUI');
-const ExportManager = goog.require('os.ui.file.ExportManager');
-const EllipseColumnsUI = goog.require('os.ui.layer.EllipseColumnsUI');
-const LayerCompareUI = goog.require('os.ui.layer.compare.LayerCompareUI');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const {getSourcesFromContext} = goog.require('os.ui.menu.common');
-const ConfirmTextUI = goog.require('os.ui.window.ConfirmTextUI');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 const ExportOptions = goog.requireType('os.ex.ExportOptions');
 const ILayer = goog.requireType('os.layer.ILayer');
 const VectorLayer = goog.requireType('os.layer.Vector');
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
  * @typedef {!Array<!SlickTreeNode>}
  */
-let Context;
+export let Context;
 
 /**
  * @type {Menu<Context>|undefined}
@@ -50,13 +51,13 @@ let MENU = undefined;
  * Get the menu.
  * @return {Menu<Context>|undefined}
  */
-const getMenu = () => MENU;
+export const getMenu = () => MENU;
 
 /**
  * Set the menu.
  * @param {Menu<Context>|undefined} menu The menu.
  */
-const setMenu = (menu) => {
+export const setMenu = (menu) => {
   MENU = menu;
 };
 
@@ -64,7 +65,7 @@ const setMenu = (menu) => {
  * Group labels for the layer menu.
  * @enum {string}
  */
-const GroupLabel = {
+export const GroupLabel = {
   LAYER: 'Layer',
   TOOLS: 'Tools'
 };
@@ -73,7 +74,7 @@ const GroupLabel = {
  * Last sort value used for each layer menu group.
  * @enum {number}
  */
-const GroupSort = {
+export const GroupSort = {
   GROUPS: 0,
   LAYER: 0,
   TOOLS: 0
@@ -82,7 +83,7 @@ const GroupSort = {
 /**
  * Set up the layer menu.
  */
-const setup = function() {
+export const setup = function() {
   if (MENU) {
     // already created
     return;
@@ -285,7 +286,7 @@ const setup = function() {
 /**
  * Dispose the layer menu.
  */
-const dispose = function() {
+export const dispose = function() {
   googDispose(MENU);
   MENU = undefined;
 };
@@ -296,7 +297,7 @@ const dispose = function() {
  * @param {Context} context The event context.
  * @return {!Array<!ILayer>}
  */
-const getLayersFromContext = function(context) {
+export const getLayersFromContext = function(context) {
   return nodesToLayers(context);
 };
 
@@ -306,7 +307,7 @@ const getLayersFromContext = function(context) {
  * @param {Context} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfSupported = function(context) {
+export const visibleIfSupported = function(context) {
   this.visible = false;
 
   if (this.eventType && context && context.length > 0) {
@@ -324,7 +325,7 @@ const visibleIfSupported = function(context) {
  *
  * @param {!MenuEvent<Context>} event The menu event.
  */
-const onLayerMenuEvent = function(event) {
+export const onLayerMenuEvent = function(event) {
   // call the action requested for each selected layer
   var layers = getLayersFromContext(event.getContext());
   for (var i = 0; i < layers.length; i++) {
@@ -462,7 +463,7 @@ const onSaveAs_ = function(event) {
  * @param {ExportOptions} options The folder options.
  * @param {string} title The chosen folder title.
  */
-const confirmSaveAs_ = function(options, title) {
+export const confirmSaveAs_ = function(options, title) {
   options.title = title;
   options.keepTitle = true;
   options.createDescriptor = true;
@@ -614,7 +615,7 @@ const onIdentify_ = function(event) {
  * @param {Context} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfCanCompare = function(context) {
+export const visibleIfCanCompare = function(context) {
   const layers = getLayersFromContext(context);
   this.visible = !!layers && layers.length === 2;
 };
@@ -623,7 +624,7 @@ const visibleIfCanCompare = function(context) {
  * Extract the feature from an event and launch the external link.
  * @param {!MenuEvent<Context>} event The menu event.
  */
-const handleCompareLayers = function(event) {
+export const handleCompareLayers = function(event) {
   var layers = getLayersFromContext(event.getContext());
   if (layers && layers.length === 2) {
     LayerCompareUI.launchLayerCompare({
@@ -631,20 +632,4 @@ const handleCompareLayers = function(event) {
       right: [layers[1]]
     });
   }
-};
-
-exports = {
-  getMenu,
-  setMenu,
-  GroupLabel,
-  GroupSort,
-  setup,
-  dispose,
-  getLayersFromContext,
-  visibleIfSupported,
-  onLayerMenuEvent,
-  confirmSaveAs_,
-  visibleIfCanCompare,
-  handleCompareLayers,
-  Context
 };

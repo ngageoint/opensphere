@@ -1,13 +1,14 @@
-goog.module('os.ui.onboarding.OnboardingUI');
+goog.declareModuleId('os.ui.onboarding.OnboardingUI');
+
+import EventType from '../eventtype.js';
+import Module from '../module.js';
+import {directiveTag as ngOnboarding} from './ngonboarding.js';
+import OnboardingManager from './onboardingmanager.js';
 
 const log = goog.require('goog.log');
-const EventType = goog.require('os.ui.EventType');
-const Module = goog.require('os.ui.Module');
-const {directiveTag: ngOnboarding} = goog.require('os.ui.onboarding.NgOnboardingUI');
-const OnboardingManager = goog.require('os.ui.onboarding.OnboardingManager');
 
 const Logger = goog.requireType('goog.log.Logger');
-const OnboardingEvent = goog.requireType('os.ui.onboarding.OnboardingEvent');
+const {default: OnboardingEvent} = goog.requireType('os.ui.onboarding.OnboardingEvent');
 
 
 /**
@@ -15,7 +16,7 @@ const OnboardingEvent = goog.requireType('os.ui.onboarding.OnboardingEvent');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: true,
   template: '<div></div>',
@@ -27,7 +28,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'onboarding';
+export const directiveTag = 'onboarding';
 
 /**
  * Register onboarding directive.
@@ -38,7 +39,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the onboarding directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -191,9 +192,3 @@ class Controller {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.onboarding.OnboardingUI');
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

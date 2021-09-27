@@ -2,7 +2,7 @@ goog.module('os.data.groupby.LayerProviderGroupBy');
 
 const googArray = goog.require('goog.array');
 const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+const {default: SlickTreeNode} = goog.require('os.ui.slick.SlickTreeNode');
 const LayerNode = goog.requireType('os.data.LayerNode');
 
 

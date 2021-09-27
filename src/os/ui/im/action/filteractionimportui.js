@@ -1,14 +1,15 @@
-goog.module('os.ui.im.action.FilterActionImportUI');
+goog.declareModuleId('os.ui.im.action.FilterActionImportUI');
+
+import FilterImportUI from '../../filter/im/filterimportui.js';
+import {directiveTag as importUi} from './filteractionimport.js';
 
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const FilterImportUI = goog.require('os.ui.filter.im.FilterImportUI');
-const {directiveTag: importUi} = goog.require('os.ui.im.action.FilterActionImport');
 
 
 /**
  * Filter action import UI.
  */
-class FilterActionImportUI extends FilterImportUI {
+export default class FilterActionImportUI extends FilterImportUI {
   /**
    * Constructor.
    */
@@ -26,5 +27,3 @@ class FilterActionImportUI extends FilterImportUI {
     return `<${importUi} filter-data="filterData" layer-id="layerId"></${importUi}>`;
   }
 }
-
-exports = FilterActionImportUI;

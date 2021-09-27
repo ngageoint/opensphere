@@ -1,12 +1,12 @@
-goog.module('os.ui.state.StateExportUI');
+goog.declareModuleId('os.ui.state.StateExportUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../os.js';
+import ExportManager from '../file/exportmanager.js';
+import Module from '../module.js';
+import WindowEventType from '../windoweventtype.js';
+import AbstractStateFormCtrl from './abstractstateform.js';
 const config = goog.require('os.config');
 const {getStateManager} = goog.require('os.state.instance');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const ExportManager = goog.require('os.ui.file.ExportManager');
-const AbstractStateFormCtrl = goog.require('os.ui.state.AbstractStateFormCtrl');
 
 const IState = goog.requireType('os.state.IState');
 
@@ -16,7 +16,7 @@ const IState = goog.requireType('os.state.IState');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -29,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'stateexport';
+export const directiveTag = 'stateexport';
 
 /**
  * Add the directive to the os.ui module
@@ -40,7 +40,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the save export window
  * @unrestricted
  */
-class Controller extends AbstractStateFormCtrl {
+export class Controller extends AbstractStateFormCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -118,9 +118,3 @@ class Controller extends AbstractStateFormCtrl {
     super.accept();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,11 +1,12 @@
-goog.module('os.ui.im.FileImportWizard');
+goog.declareModuleId('os.ui.im.FileImportWizard');
+
+import {Controller as WizardController} from '../wiz/wizard.js';
 
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const DataManager = goog.require('os.data.DataManager');
 const {isLocal} = goog.require('os.file');
 const FileStorage = goog.require('os.file.FileStorage');
-const {Controller: WizardController} = goog.require('os.ui.wiz.WizardUI');
 
 const DBError = goog.requireType('goog.db.Error');
 
@@ -18,7 +19,7 @@ const DBError = goog.requireType('goog.db.Error');
  * @template T,S
  * @unrestricted
  */
-class Controller extends WizardController {
+export default class Controller extends WizardController {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -145,5 +146,3 @@ class Controller extends WizardController {
    */
   updateFromConfig(descriptor, config) {}
 }
-
-exports = Controller;

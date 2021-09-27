@@ -1,4 +1,4 @@
-goog.module('os.ui.config.AngularAppSettingsInitializer');
+goog.declareModuleId('os.ui.config.AngularAppSettingsInitializer');
 
 const AbstractSettingsInitializer = goog.require('os.config.AbstractSettingsInitializer');
 const ThemeSettings = goog.require('os.config.ThemeSettings');
@@ -11,7 +11,7 @@ const URLModifier = goog.require('os.net.URLModifier');
 /**
  * @abstract
  */
-class AngularAppSettingsInitializer extends AbstractSettingsInitializer {
+export default class AngularAppSettingsInitializer extends AbstractSettingsInitializer {
   /**
    * Constructor.
    */
@@ -81,5 +81,3 @@ class AngularAppSettingsInitializer extends AbstractSettingsInitializer {
     });
   }
 }
-
-exports = AngularAppSettingsInitializer;

@@ -2,8 +2,8 @@ goog.require('os.ui.data.groupby.TagGroupBy');
 goog.require('os.ui.slick.SlickTreeNode');
 
 describe('os.ui.data.groupby.TagGroupBy', function() {
-  const TagGroupBy = goog.module.get('os.ui.data.groupby.TagGroupBy');
-  const SlickTreeNode = goog.module.get('os.ui.slick.SlickTreeNode');
+  const {default: TagGroupBy} = goog.module.get('os.ui.data.groupby.TagGroupBy');
+  const {default: SlickTreeNode} = goog.module.get('os.ui.slick.SlickTreeNode');
 
   it('should group nodes by tag', function() {
     var withTags = new SlickTreeNode();

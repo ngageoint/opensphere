@@ -2,8 +2,8 @@ goog.module('os.data.groupby.RecentGroupBy');
 
 const googArray = goog.require('goog.array');
 const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
-const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+const {default: DescriptorNode} = goog.require('os.ui.data.DescriptorNode');
+const {default: SlickTreeNode} = goog.require('os.ui.slick.SlickTreeNode');
 
 
 /**

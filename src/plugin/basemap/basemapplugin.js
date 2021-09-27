@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.basemap.BaseMapPlugin');
 
+import {Controller as LayersCtrl} from '../../os/ui/layers.js';
 import {ID, LAYER_TYPE, TERRAIN_ID, TYPE, isBaseMap} from './basemap.js';
 import BaseMapConfig from './basemapconfig.js';
 import BaseMapDescriptor from './basemapdescriptor.js';
@@ -16,7 +17,7 @@ const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const StateManager = goog.require('os.state.StateManager');
 const Versions = goog.require('os.state.Versions');
-const {Controller: LayersCtrl} = goog.require('os.ui.LayersUI');
+
 
 /**
  * <p>Base maps (a.k.a. map layers) comprise the background imagery for the map.</p>

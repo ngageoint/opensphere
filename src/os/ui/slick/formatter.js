@@ -1,16 +1,17 @@
-goog.module('os.ui.slick.formatter');
+goog.declareModuleId('os.ui.slick.formatter');
+
+import ColumnActionManager from '../columnactions/columnactionmanager.js';
+import {ANCHOR as BASE_ANCHOR, urlNewTabFormatter as baseUrlNewTabFormatter} from '../formatter.js';
+import * as ui from '../ui.js';
+import slickColActAsyncRenderer from './asyncrenderer.js';
+import SlickColumnActionModel from './slickcolumnactionmodel.js';
 
 const {buildString, htmlEscape} = goog.require('goog.string');
-const ui = goog.require('os.ui');
-const ColumnActionManager = goog.require('os.ui.columnactions.ColumnActionManager');
-const {ANCHOR: BASE_ANCHOR, urlNewTabFormatter: baseUrlNewTabFormatter} = goog.require('os.ui.formatter');
-const SlickColumnActionModel = goog.require('os.ui.slick.SlickColumnActionModel');
-const slickColActAsyncRenderer = goog.require('os.ui.slick.asyncrenderer.slickColActAsyncRenderer');
 const {URL_REGEXP} = goog.require('os.url');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const ColumnActionFormatterFn = goog.requireType('os.ui.columnactions.ColumnActionFormatterFn');
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: ColumnActionFormatterFn} = goog.requireType('os.ui.columnactions.ColumnActionFormatterFn');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -23,7 +24,7 @@ const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
  * @param {SlickTreeNode} node The node
  * @return {string} The HTML for the cell
  */
-const columnFormatter = function(row, cell, value, columnDef, node) {
+export const columnFormatter = function(row, cell, value, columnDef, node) {
   if (!value) {
     return '';
   }
@@ -40,7 +41,7 @@ const columnFormatter = function(row, cell, value, columnDef, node) {
  * @param {SlickTreeNode} node The node
  * @return {string} The HTML for the cell
  */
-const depthfulFormatter = function(row, cell, value, columnDef, node) {
+export const depthfulFormatter = function(row, cell, value, columnDef, node) {
   var field = columnDef['field'];
   var fields = field.split('.');
   var val = node;
@@ -65,7 +66,7 @@ const depthfulFormatter = function(row, cell, value, columnDef, node) {
  * @param {Object} item The item
  * @return {string} A dot colored based on the cell content
  */
-const color = function(row, cell, value, columnDef, item) {
+export const color = function(row, cell, value, columnDef, item) {
   return value ? '<i class="fa fa-circle" style="color:' + value + '"></i>' :
     '<i class="fa fa-adjust c-formatter__adjust" title="Multiple Colors Present"></i>';
 };
@@ -80,7 +81,7 @@ const color = function(row, cell, value, columnDef, item) {
  * @param {Object} item The item
  * @return {number} The row number
  */
-const rowNumber = function(row, cell, value, columnDef, item) {
+export const rowNumber = function(row, cell, value, columnDef, item) {
   return row + 1;
 };
 
@@ -88,7 +89,7 @@ const rowNumber = function(row, cell, value, columnDef, item) {
  * @type {RegExp}
  * @deprecated Please use os.ui.formatter.ANCHOR instead.
  */
-const ANCHOR = BASE_ANCHOR;
+export const ANCHOR = BASE_ANCHOR;
 
 /**
  * Formats the data to be a link if it passes the regex
@@ -102,7 +103,7 @@ const ANCHOR = BASE_ANCHOR;
  *        override the default one if provided.
  * @return {string} The HTML for the cell
  */
-const urlNewTabFormatter = function(row, cell, value, columnDef, node, opt_colFn) {
+export const urlNewTabFormatter = function(row, cell, value, columnDef, node, opt_colFn) {
   value = baseUrlNewTabFormatter(value);
 
   var colFn = opt_colFn || columnActionFormatter;
@@ -121,7 +122,7 @@ const urlNewTabFormatter = function(row, cell, value, columnDef, node, opt_colFn
  * @param {SlickTreeNode} node The node
  * @return {string} The HTML for the cell
  */
-const shortUrlFormatter = function(row, cell, value, columnDef, node) {
+export const shortUrlFormatter = function(row, cell, value, columnDef, node) {
   if (!value) {
     return '';
   }
@@ -154,7 +155,7 @@ const shortUrlFormatter = function(row, cell, value, columnDef, node) {
  * @param {SlickTreeNode} node The node
  * @return {string} The HTML for the cell
  */
-const urlFormatter = function(row, cell, value, columnDef, node) {
+export const urlFormatter = function(row, cell, value, columnDef, node) {
   if (!value) {
     return '';
   }
@@ -184,7 +185,7 @@ const urlFormatter = function(row, cell, value, columnDef, node) {
  *  the output of the calling formatter.  Dont include the value in the output.
  * @return {string} The HTML for the cell
  */
-const columnActionFormatter = function(row, cell, value, columnDef, node, opt_asDecorator) {
+export const columnActionFormatter = function(row, cell, value, columnDef, node, opt_asDecorator) {
   var formatted = '';
   if (opt_asDecorator !== true) {
     // escape the value or Slickgrid will attempt to render any valid HTML characters (and it will fail)
@@ -221,23 +222,10 @@ const columnActionFormatter = function(row, cell, value, columnDef, node, opt_as
  * @param {SlickTreeNode} node The node
  * @return {string} The HTML for the cell
  */
-const imgPreviewFormatter = function(row, cell, value, columnDef, node) {
+export const imgPreviewFormatter = function(row, cell, value, columnDef, node) {
   if (!value) {
     return '';
   }
 
   return buildString('<img class="h-100" src="', value, '"/>');
-};
-
-exports = {
-  columnFormatter,
-  depthfulFormatter,
-  color,
-  rowNumber,
-  ANCHOR,
-  urlNewTabFormatter,
-  shortUrlFormatter,
-  urlFormatter,
-  columnActionFormatter,
-  imgPreviewFormatter
 };

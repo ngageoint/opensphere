@@ -10,9 +10,9 @@ const {getQueryManager} = goog.require('os.query.instance');
 const {isStateFile} = goog.require('os.state');
 const TriState = goog.require('os.structs.TriState');
 const {toFilterString} = goog.require('os.ui.filter');
-const UIFilterNode = goog.require('os.ui.filter.ui.FilterNode');
+const {default: UIFilterNode} = goog.require('os.ui.filter.ui.FilterNode');
 const {directiveTag} = goog.require('os.ui.filter.ui.FilterNodeUI');
-const QueryEntries = goog.require('os.ui.query.cmd.QueryEntries');
+const {default: QueryEntries} = goog.require('os.ui.query.cmd.QueryEntries');
 
 const ISearchable = goog.requireType('os.data.ISearchable');
 

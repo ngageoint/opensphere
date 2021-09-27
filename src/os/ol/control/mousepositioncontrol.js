@@ -12,7 +12,7 @@ const {padCoordinate, toDegreesDecimalMinutes, toSexagesimal} = goog.require('os
 const {normalizeLongitude} = goog.require('os.geo2');
 const {EPSG4326} = goog.require('os.proj');
 const {LocationSetting} = goog.require('os.ui.location');
-const Format = goog.require('os.ui.location.Format');
+const {default: Format} = goog.require('os.ui.location.Format');
 const UnitManager = goog.require('os.unit.UnitManager');
 
 

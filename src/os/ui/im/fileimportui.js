@@ -1,15 +1,16 @@
-goog.module('os.ui.im.FileImportUI');
+goog.declareModuleId('os.ui.im.FileImportUI');
+
+import AbstractImportUI from './abstractimportui.js';
 
 const {getTypeChain} = goog.require('os.file.mime');
 const {TYPE} = goog.require('os.file.mime.text');
-const AbstractImportUI = goog.require('os.ui.im.AbstractImportUI');
 
 
 /**
  * @extends {AbstractImportUI<T>}
  * @template T
  */
-class FileImportUI extends AbstractImportUI {
+export default class FileImportUI extends AbstractImportUI {
   /**
    * Constructor.
    */
@@ -47,5 +48,3 @@ class FileImportUI extends AbstractImportUI {
     }
   }
 }
-
-exports = FileImportUI;

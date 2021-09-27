@@ -1,22 +1,23 @@
-goog.module('os.ui.im.action.FilterActionsCtrl');
+goog.declareModuleId('os.ui.im.action.FilterActionsCtrl');
+
+import * as dispatcher from '../../../dispatcher.js';
+import TagGroupBy from '../../data/groupby/taggroupby.js';
+import AbstractGroupByTreeSearchCtrl from '../../slick/abstractgroupbytreesearchctrl.js';
+import SlickGridEvent from '../../slick/slickgridevent.js';
+import * as osWindow from '../../window.js';
+import ImportEvent from '../importevent.js';
+import ImportEventType from '../importeventtype.js';
+import * as filter from './filteraction.js';
+import {launchFilterActionExport} from './filteractionexport.js';
+import FilterActionNode from './filteractionnode.js';
+import FilterActionTreeSearch from './filteractiontreesearch.js';
 
 const googArray = goog.require('goog.array');
-const dispatcher = goog.require('os.Dispatcher');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const {Metrics: ActionMetrics} = goog.require('os.im.action');
 const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const filter = goog.require('os.im.action.filter');
 const Metrics = goog.require('os.metrics.Metrics');
-const TagGroupBy = goog.require('os.ui.data.groupby.TagGroupBy');
-const ImportEvent = goog.require('os.ui.im.ImportEvent');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
-const FilterActionNode = goog.require('os.ui.im.action.FilterActionNode');
-const FilterActionTreeSearch = goog.require('os.ui.im.action.FilterActionTreeSearch');
-const AbstractGroupByTreeSearchCtrl = goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
-const SlickGridEvent = goog.require('os.ui.slick.SlickGridEvent');
-const osWindow = goog.require('os.ui.window');
-const {launchFilterActionExport} = goog.require('os.ui.im.action.FilterActionExportUI');
 
 
 /**
@@ -26,7 +27,7 @@ const {launchFilterActionExport} = goog.require('os.ui.im.action.FilterActionExp
  * @template T
  * @unrestricted
  */
-class Controller extends AbstractGroupByTreeSearchCtrl {
+export default class Controller extends AbstractGroupByTreeSearchCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -283,6 +284,3 @@ Controller.VIEWS = {
   'None': -1, // you can't use null because Angular treats that as the empty/unselected option
   'Tags': new TagGroupBy()
 };
-
-
-exports = Controller;

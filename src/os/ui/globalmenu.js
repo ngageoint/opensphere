@@ -1,15 +1,16 @@
-goog.module('os.ui.GlobalMenuUI');
+goog.declareModuleId('os.ui.GlobalMenuUI');
+
+import * as dispatcher from '../dispatcher.js';
+import {Controller as ActionMenuCtrl, directive as actionMenuDirective} from './actionmenu.js';
+import GlobalMenuEventType from './globalmenueventtype.js';
+import Module from './module.js';
+import * as ui from './ui.js';
 
 const Delay = goog.require('goog.async.Delay');
 const {getDocument, getViewportSize} = goog.require('goog.dom');
 const GoogEventType = goog.require('goog.events.EventType');
-const dispatcher = goog.require('os.Dispatcher');
-const ui = goog.require('os.ui');
-const {Controller: ActionMenuCtrl, directive: actionMenuDirective} = goog.require('os.ui.ActionMenuUI');
-const GlobalMenuEventType = goog.require('os.ui.GlobalMenuEventType');
-const Module = goog.require('os.ui.Module');
 
-const ActionManager = goog.requireType('os.ui.action.ActionManager');
+const {default: ActionManager} = goog.requireType('os.ui.action.ActionManager');
 
 
 /**
@@ -17,7 +18,7 @@ const ActionManager = goog.requireType('os.ui.action.ActionManager');
  *
  * @return {angular.Directive} the directive definition
  */
-const directive = () => {
+export const directive = () => {
   var dir = actionMenuDirective();
   dir['scope'] = true;
   dir['controller'] = Controller;
@@ -28,7 +29,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'global-menu';
+export const directiveTag = 'global-menu';
 
 Module.directive('globalMenu', directive);
 
@@ -36,7 +37,7 @@ Module.directive('globalMenu', directive);
  * Controller function for the ActionMenu directive
  * @unrestricted
  */
-class Controller extends ActionMenuCtrl {
+export class Controller extends ActionMenuCtrl {
   /**
    * Constructor.
    * @param {angular.Scope} $scope
@@ -240,7 +241,6 @@ class Controller extends ActionMenuCtrl {
   }
 }
 
-
 /**
  * Opens a menu
  *
@@ -257,7 +257,7 @@ class Controller extends ActionMenuCtrl {
  * @param {?angular.JQLite=} opt_root Optional root element containing the target
  * @param {?string=} opt_title Optional title html for the menu
  */
-const openMenu = function(provider, position, opt_target, opt_root, opt_title) {
+export const openMenu = function(provider, position, opt_target, opt_root, opt_title) {
   var menuEl = angular.element('#js-global-menu');
   var s = menuEl.scope();
   s['provider'] = provider;
@@ -349,11 +349,4 @@ const positionMenu = function(position, opt_target, opt_root) {
   // if we want to support animation in the future, this needs to be delayed by the amount of
   // time it takes the animation to finish
   ctrl.open();
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  openMenu
 };

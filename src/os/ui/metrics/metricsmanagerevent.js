@@ -1,12 +1,12 @@
-goog.module('os.ui.metrics.MetricsManagerEvent');
+goog.declareModuleId('os.ui.metrics.MetricsManagerEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
-const MetricsPlugin = goog.requireType('os.ui.metrics.MetricsPlugin');
+const {default: MetricsPlugin} = goog.requireType('os.ui.metrics.MetricsPlugin');
 
 
 /**
  */
-class MetricsManagerEvent extends GoogEvent {
+export default class MetricsManagerEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -21,5 +21,3 @@ class MetricsManagerEvent extends GoogEvent {
     this.plugin = opt_plugin || null;
   }
 }
-
-exports = MetricsManagerEvent;

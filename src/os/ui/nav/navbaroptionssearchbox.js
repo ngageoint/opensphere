@@ -1,6 +1,6 @@
-goog.module('os.ui.navbaroptions.searchbox');
+goog.declareModuleId('os.ui.navbaroptions.searchbox');
 
-const {directiveTag} = goog.require('os.ui.search.SearchBoxUI');
+import {directiveTag} from '../search/searchbox.js';
 
 
 /**
@@ -13,24 +13,18 @@ let searchBox = `<${directiveTag} show-clear="true"></${directiveTag}>`;
  * @type {string}
  * @deprecated Please use getSearchBox and setSearchBox instead.
  */
-const searchbox = searchBox;
+export const searchbox = searchBox;
 
 /**
  * Get the search box UI.
  * @return {string}
  */
-const getSearchBox = () => searchBox;
+export const getSearchBox = () => searchBox;
 
 /**
  * Set the search box UI.
  * @param {string} value
  */
-const setSearchBox = (value) => {
+export const setSearchBox = (value) => {
   searchBox = value;
-};
-
-exports = {
-  searchbox,
-  getSearchBox,
-  setSearchBox
 };

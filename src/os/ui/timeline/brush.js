@@ -1,4 +1,10 @@
-goog.module('os.ui.timeline.Brush');
+goog.declareModuleId('os.ui.timeline.Brush');
+
+import BaseItem from './baseitem.js';
+import BrushEventType from './brusheventtype.js';
+import DragPanEvent from './dragpanevent.js';
+import DragPanEventType from './dragpaneventtype.js';
+import * as timeline from './timeline.js';
 
 const googArray = goog.require('goog.array');
 const Throttle = goog.require('goog.async.Throttle');
@@ -11,21 +17,16 @@ const math = goog.require('goog.math');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const TimeRange = goog.require('os.time.TimeRange');
 const TimelineController = goog.require('os.time.TimelineController');
-const timeline = goog.require('os.ui.timeline');
-const BaseItem = goog.require('os.ui.timeline.BaseItem');
-const BrushEventType = goog.require('os.ui.timeline.BrushEventType');
-const DragPanEvent = goog.require('os.ui.timeline.DragPanEvent');
-const DragPanEventType = goog.require('os.ui.timeline.DragPanEventType');
 
-const IDragPanItem = goog.requireType('os.ui.timeline.IDragPanItem');
-const ITimelineItem = goog.requireType('os.ui.timeline.ITimelineItem');
+const {default: IDragPanItem} = goog.requireType('os.ui.timeline.IDragPanItem');
+const {default: ITimelineItem} = goog.requireType('os.ui.timeline.ITimelineItem');
 
 
 /**
  * @implements {ITimelineItem}
  * @implements {IDragPanItem}
  */
-class Brush extends BaseItem {
+export default class Brush extends BaseItem {
   /**
    * Constructor.
    */
@@ -858,6 +859,3 @@ class Brush extends BaseItem {
  * @type {boolean}
  */
 let isDragging = false;
-
-
-exports = Brush;

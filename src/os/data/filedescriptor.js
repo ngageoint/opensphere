@@ -17,11 +17,11 @@ const osSource = goog.require('os.source');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const VectorSource = goog.require('os.source.Vector');
 const osStyle = goog.require('os.style');
-const Icons = goog.require('os.ui.Icons');
-const ExportManager = goog.require('os.ui.file.ExportManager');
+const {default: Icons} = goog.require('os.ui.Icons');
+const {default: ExportManager} = goog.require('os.ui.file.ExportManager');
 const {directiveTag: nodeUi} = goog.require('os.ui.file.ui.DefaultFileNodeUI');
-const ImportEvent = goog.require('os.ui.im.ImportEvent');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
+const {default: ImportEvent} = goog.require('os.ui.im.ImportEvent');
+const {default: ImportEventType} = goog.require('os.ui.im.ImportEventType');
 
 const IReimport = goog.requireType('os.data.IReimport');
 const IExportMethod = goog.requireType('os.ex.IExportMethod');

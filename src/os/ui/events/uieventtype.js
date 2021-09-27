@@ -1,9 +1,11 @@
-goog.module('os.ui.events.UIEventType');
+goog.declareModuleId('os.ui.events.UIEventType');
 
 /**
  * UI event types
  * @enum {string}
  */
-exports = {
+const UIEventType = {
   TOGGLE_UI: 'toggleUI'
 };
+
+export default UIEventType;

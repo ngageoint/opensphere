@@ -1,14 +1,15 @@
-goog.module('os.ui.filter.FilterImportEvent');
+goog.declareModuleId('os.ui.filter.FilterImportEvent');
+
+import FilterEventType from './filtereventtype.js';
 
 const GoogEvent = goog.require('goog.events.Event');
-const FilterEventType = goog.require('os.ui.filter.FilterEventType');
 
 const FilterEntry = goog.requireType('os.filter.FilterEntry');
 
 
 /**
  */
-class FilterImportEvent extends GoogEvent {
+export default class FilterImportEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -23,5 +24,3 @@ class FilterImportEvent extends GoogEvent {
     this.filters = filters;
   }
 }
-
-exports = FilterImportEvent;

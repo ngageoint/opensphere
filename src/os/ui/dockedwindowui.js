@@ -1,16 +1,14 @@
-goog.module('os.ui.DockedWindowUI');
+goog.declareModuleId('os.ui.DockedWindowUI');
 
-const OsModule = goog.require('os.ui.Module');
-const {
-  Controller: SavedWindowCtrl,
-  directive: savedWindowDirective} = goog.require('os.ui.SavedWindowUI');
-const {ROOT} = goog.require('os');
-const windowSelector = goog.require('os.ui.windowSelector');
+import {ROOT} from '../os.js';
+import OsModule from './module.js';
+import {Controller as SavedWindowCtrl, directive as savedWindowDirective} from './savedwindowui.js';
+import windowSelector from './windowselector.js';
 
 
-const DOCKED_WINDOW_ATTR = 'dock';
-const DOCKED_WINDOW_BOTTOM_SELECTOR = '#js-dock-bottom__container';
-const DOCKED_WINDOW_BOTTOM_MICRO_SELECTOR = '#js-dock-bottom-micro__container';
+export const DOCKED_WINDOW_ATTR = 'dock';
+export const DOCKED_WINDOW_BOTTOM_SELECTOR = '#js-dock-bottom__container';
+export const DOCKED_WINDOW_BOTTOM_MICRO_SELECTOR = '#js-dock-bottom-micro__container';
 
 /**
  * Controller for the docked window directive.
@@ -26,7 +24,7 @@ const DOCKED_WINDOW_BOTTOM_MICRO_SELECTOR = '#js-dock-bottom-micro__container';
  *
  * @unrestricted
  */
-class Controller extends SavedWindowCtrl {
+export class Controller extends SavedWindowCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -64,7 +62,7 @@ class Controller extends SavedWindowCtrl {
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = savedWindowDirective();
   dir.scope['dock'] = '@';
   dir.templateUrl = ROOT + 'views/window/dockedwindow.html';
@@ -78,11 +76,3 @@ const directive = () => {
  * Add the directive to the os module
  */
 OsModule.directive('dockedWindow', [directive]);
-
-exports = {
-  Controller,
-  directive,
-  DOCKED_WINDOW_ATTR,
-  DOCKED_WINDOW_BOTTOM_SELECTOR,
-  DOCKED_WINDOW_BOTTOM_MICRO_SELECTOR
-};

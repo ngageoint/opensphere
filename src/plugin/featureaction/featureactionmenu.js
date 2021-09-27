@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.im.action.feature.menu');
 
+import * as layerMenu from '../../os/ui/menu/layermenu.js';
 import {EventType, Metrics, TITLE} from './featureaction.js';
 import launchForLayer from './ui/launchforlayer.js';
 
@@ -10,10 +11,10 @@ const AlertManager = goog.require('os.alert.AlertManager');
 const {ICON} = goog.require('os.im.action');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const LayerType = goog.require('os.layer.LayerType');
-const layerMenu = goog.require('os.ui.menu.layer');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 
-const MenuItem = goog.requireType('os.ui.menu.MenuItem');
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+
+const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 
 
 /**

@@ -1,13 +1,14 @@
-goog.module('os.ui.onboarding.OnboardingEvent');
+goog.declareModuleId('os.ui.onboarding.OnboardingEvent');
+
+import EventType from '../eventtype.js';
 
 const GoogEvent = goog.require('goog.events.Event');
-const EventType = goog.require('os.ui.EventType');
 
 
 /**
  * Configuration for user onboarding.
  */
-class OnboardingEvent extends GoogEvent {
+export default class OnboardingEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} title Onboarding set title.
@@ -35,5 +36,3 @@ class OnboardingEvent extends GoogEvent {
     this.config = opt_config || null;
   }
 }
-
-exports = OnboardingEvent;

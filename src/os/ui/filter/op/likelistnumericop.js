@@ -1,13 +1,13 @@
-goog.module('os.ui.filter.op.LikeListNumeric');
+goog.declareModuleId('os.ui.filter.op.LikeListNumeric');
 
-const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
-const {directiveTag} = goog.require('os.ui.filter.ListNoColCheckUI');
-const IsLikeNumeric = goog.require('os.ui.filter.op.IsLikeNumeric');
+import FilterPatterns from '../filterpatterns.js';
+import {directiveTag} from '../listnocolcheck.js';
+import IsLikeNumeric from './islikenumericop.js';
 
 
 /**
  */
-class LikeListNumeric extends IsLikeNumeric {
+export default class LikeListNumeric extends IsLikeNumeric {
   /**
    * Constructor.
    */
@@ -137,5 +137,3 @@ class LikeListNumeric extends IsLikeNumeric {
     return literals.join(', ');
   }
 }
-
-exports = LikeListNumeric;

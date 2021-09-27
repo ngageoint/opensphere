@@ -1,13 +1,12 @@
-goog.module('os.ui.SingleUrlProviderImportCtrl');
+goog.declareModuleId('os.ui.SingleUrlProviderImportCtrl');
 
-goog.require('os.ui.uniqueProviderTitle');
-goog.require('os.ui.uniqueServerUrl');
-
-const ProviderImportCtrl = goog.require('os.ui.ProviderImportCtrl');
+import './uniqueprovidertitle.js';
+import './uniqueserverurl.js';
+import ProviderImportCtrl from './providerimport.js';
 
 const OSFile = goog.requireType('os.file.File');
 const TreeNode = goog.requireType('os.structs.TreeNode');
-const AbstractLoadingServer = goog.requireType('os.ui.server.AbstractLoadingServer');
+const {default: AbstractLoadingServer} = goog.requireType('os.ui.server.AbstractLoadingServer');
 
 
 /**
@@ -16,7 +15,7 @@ const AbstractLoadingServer = goog.requireType('os.ui.server.AbstractLoadingServ
  * @abstract
  * @unrestricted
  */
-class Controller extends ProviderImportCtrl {
+export default class Controller extends ProviderImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -114,5 +113,3 @@ class Controller extends ProviderImportCtrl {
    */
   validateUrl() {}
 }
-
-exports = Controller;

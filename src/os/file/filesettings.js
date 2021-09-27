@@ -1,7 +1,7 @@
 goog.module('os.file.FileSettings');
 
 const {directiveTag} = goog.require('os.file.FileSettingsUI');
-const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
+const {default: SettingPlugin} = goog.require('os.ui.config.SettingPlugin');
 
 
 /**

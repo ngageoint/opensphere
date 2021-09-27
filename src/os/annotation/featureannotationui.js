@@ -10,8 +10,8 @@ const TailStyle = goog.require('os.annotation.TailStyle');
 const TailType = goog.require('os.annotation.TailType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const {apply} = goog.require('os.ui');
-const FeatureEditField = goog.require('os.ui.FeatureEditField');
-const Module = goog.require('os.ui.Module');
+const {default: FeatureEditField} = goog.require('os.ui.FeatureEditField');
+const {default: Module} = goog.require('os.ui.Module');
 const TuiEditor = goog.require('os.ui.text.TuiEditor');
 
 

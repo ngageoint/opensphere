@@ -1,4 +1,4 @@
-goog.module('os.ui.query');
+goog.declareModuleId('os.ui.query');
 
 const RenameMapping = goog.require('os.im.mapping.RenameMapping');
 const StaticMapping = goog.require('os.im.mapping.StaticMapping');
@@ -12,24 +12,24 @@ const IMapping = goog.requireType('os.im.mapping.IMapping');
  * Identifier used for all layers.
  * @type {string}
  */
-const ALL_ID = 'all';
+export const ALL_ID = 'all';
 
 /**
  * Label used for the save area dialog. Please update e2e tests if you change this!
  * @type {string}
  */
-const SAVE_WIN_LABEL = 'Save Area...';
+export const SAVE_WIN_LABEL = 'Save Area...';
 
 /**
  * Label used for the edit area dialog. Please update e2e tests if you change this!
  * @type {string}
  */
-const EDIT_WIN_LABEL = 'Edit Area Details...';
+export const EDIT_WIN_LABEL = 'Edit Area Details...';
 
 /**
  * @type {!Object<string, string>}
  */
-const AREA_IMPORT_HELP = {
+export const AREA_IMPORT_HELP = {
   'merge': 'Combines all imported areas into a single area.',
   'title': 'Custom title given to all imported areas.',
   'titleColumn': 'Column used to apply titles to all imported areas. If an imported item doesn\'t have this field ' +
@@ -49,7 +49,7 @@ const AREA_IMPORT_HELP = {
  * To prevent import errors, only accept these keys for features on import
  * @type {Array}
  */
-const featureKeys = ['title', 'name', 'description', 'tags', 'geometry', ORIGINAL_GEOM_FIELD, METHOD_FIELD];
+export const featureKeys = ['title', 'name', 'description', 'tags', 'geometry', ORIGINAL_GEOM_FIELD, METHOD_FIELD];
 
 /**
  * Apply query mappings to a feature and make sure a title is set.
@@ -57,7 +57,7 @@ const featureKeys = ['title', 'name', 'description', 'tags', 'geometry', ORIGINA
  * @param {!Feature} feature The feature
  * @param {!Array<!IMapping>} mappings The mappings
  */
-const applyMappings = function(feature, mappings) {
+export const applyMappings = function(feature, mappings) {
   mappings.forEach(function(m) {
     m.execute(feature);
 
@@ -79,7 +79,7 @@ const applyMappings = function(feature, mappings) {
  * @param {Object} config
  * @return {!Array<!IMapping>}
  */
-const createMappingsFromConfig = function(config) {
+export const createMappingsFromConfig = function(config) {
   var mappings = [];
   var mapping;
 
@@ -134,14 +134,4 @@ const createMappingsFromConfig = function(config) {
   }
 
   return mappings;
-};
-
-exports = {
-  ALL_ID,
-  SAVE_WIN_LABEL,
-  EDIT_WIN_LABEL,
-  AREA_IMPORT_HELP,
-  featureKeys,
-  applyMappings,
-  createMappingsFromConfig
 };

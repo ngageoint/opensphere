@@ -1,13 +1,12 @@
-goog.module('os.ui.buffer.BufferDialogUI');
+goog.declareModuleId('os.ui.buffer.BufferDialogUI');
 
-goog.require('os.ui.buffer.BufferFormUI');
-
-const {ROOT} = goog.require('os');
+import './bufferform.js';
+import {getSource} from '../../feature/feature.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import * as osWindow from '../window.js';
+import WindowEventType from '../windoweventtype.js';
 const {ICON, createFromConfig, getBaseConfig} = goog.require('os.buffer');
-const {getSource} = goog.require('os.feature');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const osWindow = goog.require('os.ui.window');
 
 const {BufferConfig} = goog.requireType('os.buffer');
 
@@ -17,7 +16,7 @@ const {BufferConfig} = goog.requireType('os.buffer');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/buffer/bufferdialog.html',
@@ -29,7 +28,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'bufferdialog';
+export const directiveTag = 'bufferdialog';
 
 /**
  * Add the directive to the module.
@@ -40,7 +39,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the bufferdialog directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -160,7 +159,7 @@ class Controller {
  *
  * @param {Object} options
  */
-const launchBufferDialog = function(options) {
+export const launchBufferDialog = function(options) {
   var windowId = 'Buffer';
   if (osWindow.exists(windowId)) {
     osWindow.bringToFront(windowId);
@@ -181,11 +180,4 @@ const launchBufferDialog = function(options) {
     var template = `<${directiveTag}></${directiveTag}>`;
     osWindow.create(windowOptions, template, undefined, undefined, undefined, options);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchBufferDialog
 };

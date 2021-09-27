@@ -1,4 +1,6 @@
-goog.module('os.ui.data.BaseProvider');
+goog.declareModuleId('os.ui.data.BaseProvider');
+
+import SlickTreeNode from '../slick/slicktreenode.js';
 
 const log = goog.require('goog.log');
 const {getRandomString} = goog.require('goog.string');
@@ -6,7 +8,6 @@ const {getAuth} = goog.require('os.auth');
 const IDataProvider = goog.require('os.data.IDataProvider');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const osImplements = goog.require('os.implements');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 const {AuthEntry} = goog.requireType('os.auth');
 
@@ -17,7 +18,7 @@ const {AuthEntry} = goog.requireType('os.auth');
  * @abstract
  * @implements {IDataProvider}
  */
-class BaseProvider extends SlickTreeNode {
+export default class BaseProvider extends SlickTreeNode {
   /**
    * Constructor.
    */
@@ -217,6 +218,7 @@ class BaseProvider extends SlickTreeNode {
     return 'default';
   }
 }
+
 osImplements(BaseProvider, IDataProvider.ID);
 
 /**
@@ -230,5 +232,3 @@ const logger = log.getLogger('os.ui.data.BaseProvider');
  * @const
  */
 BaseProvider.ID_DELIMITER = '#';
-
-exports = BaseProvider;

@@ -1,17 +1,30 @@
-goog.module('os.ui.layer.VectorLayerUI');
+goog.declareModuleId('os.ui.layer.VectorLayerUI');
 
-goog.require('os.ui.UISwitchUI');
-goog.require('os.ui.layer.EllipseOptionsUI');
-goog.require('os.ui.layer.IconStyleControlsUI');
-goog.require('os.ui.layer.LabelControlsUI');
-goog.require('os.ui.layer.LobOptionsUI');
-goog.require('os.ui.layer.VectorStyleControlsUI');
+import '../uiswitch.js';
+import './ellipseoptions.js';
+import './iconstylecontrols.js';
+import './labelcontrols.js';
+import './loboptions.js';
+import './vectorstylecontrols.js';
+import {ROOT} from '../../os.js';
+import * as osLabel from '../../style/label.js';
+import * as osStyle from '../../style/style.js';
+import ColorControlType from '../colorcontroltype.js';
+import {GOOGLE_EARTH_ICON_SET, getDefaultIcon, replaceGoogleUri} from '../file/kml/kml.js';
+import IconPickerEventType from '../icon/iconpickereventtype.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import UISwitchEventType from '../uiswitcheventtype.js';
+import {Controller as DefaultLayerUICtrl} from './defaultlayerui.js';
+import * as EllipseColumnsUI from './ellipsecolumns.js';
+import LabelControlsEventType from './labelcontrolseventtype.js';
+import * as osUiLayer from './layers.js';
+import VectorStyleControlsEventType from './vectorstylecontrolseventtype.js';
 
 const Delay = goog.require('goog.async.Delay');
 const {rgbArrayToHex} = goog.require('goog.color');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
-const {ROOT} = goog.require('os');
 const MapChange = goog.require('os.MapChange');
 const {toHexString, toRgbArray} = goog.require('os.color');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
@@ -44,21 +57,8 @@ const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
 const PresetMenuButton = goog.require('os.layer.preset.PresetMenuButton');
 const {getMapContainer} = goog.require('os.map.instance');
 const VectorSource = goog.require('os.source.Vector');
-const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
-const osLabel = goog.require('os.style.label');
-const {apply} = goog.require('os.ui');
-const ColorControlType = goog.require('os.ui.ColorControlType');
-const Module = goog.require('os.ui.Module');
-const UISwitchEventType = goog.require('os.ui.UISwitchEventType');
-const {GOOGLE_EARTH_ICON_SET, getDefaultIcon, replaceGoogleUri} = goog.require('os.ui.file.kml');
-const IconPickerEventType = goog.require('os.ui.icon.IconPickerEventType');
-const osUiLayer = goog.require('os.ui.layer');
-const EllipseColumnsUI = goog.require('os.ui.layer.EllipseColumnsUI');
-const LabelControlsEventType = goog.require('os.ui.layer.LabelControlsEventType');
-const {Controller: DefaultLayerUICtrl} = goog.require('os.ui.layer.DefaultLayerUI');
-const VectorStyleControlsEventType = goog.require('os.ui.layer.VectorStyleControlsEventType');
 const {mapAltitudeModeToName} = goog.require('os.webgl');
 const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
@@ -71,7 +71,7 @@ const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   templateUrl: ROOT + 'views/layer/vector.html',
@@ -83,7 +83,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'vectorlayerui';
+export const directiveTag = 'vectorlayerui';
 
 /**
  * Add the directive to the module
@@ -94,7 +94,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the vector layer UI
  * @unrestricted
  */
-class Controller extends DefaultLayerUICtrl {
+export class Controller extends DefaultLayerUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -1438,9 +1438,3 @@ class Controller extends DefaultLayerUICtrl {
     return mapAltitudeModeToName(altitudeMode);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

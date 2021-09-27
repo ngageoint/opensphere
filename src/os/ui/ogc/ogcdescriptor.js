@@ -1,4 +1,7 @@
-goog.module('os.ui.ogc.OGCDescriptor');
+goog.declareModuleId('os.ui.ogc.OGCDescriptor');
+
+import {FILTER_KEY_DELIMITER} from '../filter/filter.js';
+import IOGCDescriptor from './iogcdescriptor.js';
 
 const EventType = goog.require('goog.net.EventType');
 const {DEFAULT_WMS_VERSION} = goog.require('ol');
@@ -9,8 +12,6 @@ const IFilterable = goog.require('os.filter.IFilterable');
 const osImplements = goog.require('os.implements');
 const {ID} = goog.require('os.ogc');
 const DescribeFeatureLoader = goog.require('os.ogc.wfs.DescribeFeatureLoader');
-const {FILTER_KEY_DELIMITER} = goog.require('os.ui.filter');
-const IOGCDescriptor = goog.require('os.ui.ogc.IOGCDescriptor');
 
 const FeatureType = goog.requireType('os.ogc.wfs.FeatureType');
 
@@ -18,7 +19,7 @@ const FeatureType = goog.requireType('os.ogc.wfs.FeatureType');
 /**
  * @implements {IOGCDescriptor}
  */
-class OGCDescriptor extends BaseDescriptor {
+export default class OGCDescriptor extends BaseDescriptor {
   /**
    * Constructor.
    */
@@ -832,7 +833,6 @@ class OGCDescriptor extends BaseDescriptor {
     this.wmsSupportedCRS_ = values;
   }
 }
+
 osImplements(OGCDescriptor, IFilterable.ID);
 osImplements(OGCDescriptor, IOGCDescriptor.ID);
-
-exports = OGCDescriptor;

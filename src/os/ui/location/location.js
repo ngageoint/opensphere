@@ -1,14 +1,14 @@
-goog.module('os.ui.location');
+goog.declareModuleId('os.ui.location');
 
-goog.require('os.ui.location.ddmFilter');
-goog.require('os.ui.location.degFilter');
-goog.require('os.ui.location.dmsFilter');
-goog.require('os.ui.location.mgrsFilter');
+import './ddmfilter.js';
+import './degfilter.js';
+import './dmsfilter.js';
+import './mgrsfilter.js';
+import * as ui from '../ui.js';
+import Format from './locationformat.js';
 
 const log = goog.require('goog.log');
 const Settings = goog.require('os.config.Settings');
-const ui = goog.require('os.ui');
-const Format = goog.require('os.ui.location.Format');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -23,7 +23,7 @@ const logger = log.getLogger('os.ui.location');
  * Display settings keys.
  * @enum {string}
  */
-const LocationSetting = {
+export const LocationSetting = {
   POSITION: 'locationFormat',
   POSITIONOLD: 'os.map.mousePosition'
 };
@@ -33,7 +33,7 @@ const LocationSetting = {
  *
  * @return {string}
  */
-const getCurrentFormat = function() {
+export const getCurrentFormat = function() {
   return /** @type {string} */ (Settings.getInstance().get(LocationSetting.POSITION, Format.DEG));
 };
 
@@ -45,7 +45,7 @@ const getCurrentFormat = function() {
  * @param {number|string} lon
  * @return {string}
  */
-const formatAsCurrent = function(lat, lon) {
+export const formatAsCurrent = function(lat, lon) {
   lat = parseFloat(lat);
   lon = parseFloat(lon);
 
@@ -68,10 +68,4 @@ const formatAsCurrent = function(lat, lon) {
   }
 
   return lat + '°  ' + lon + '°';
-};
-
-exports = {
-  LocationSetting,
-  getCurrentFormat,
-  formatAsCurrent
 };

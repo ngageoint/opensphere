@@ -1,4 +1,8 @@
-goog.module('os.ui.search.FacetedSearchCtrl');
+goog.declareModuleId('os.ui.search.FacetedSearchCtrl');
+
+import SlickTreeNode from '../slick/slicktreenode.js';
+import {apply} from '../ui.js';
+import FacetNode from './facetnode.js';
 
 const {defaultCompare, sortObjectsByKey} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
@@ -6,9 +10,6 @@ const {caseInsensitiveCompare} = goog.require('goog.string');
 const Settings = goog.require('os.config.Settings');
 const SearchEventType = goog.require('os.search.SearchEventType');
 const TriState = goog.require('os.structs.TriState');
-const {apply} = goog.require('os.ui');
-const FacetNode = goog.require('os.ui.search.FacetNode');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 const AppliedFacets = goog.requireType('os.search.AppliedFacets');
 const IFacetedSearch = goog.requireType('os.search.IFacetedSearch');
@@ -19,7 +20,7 @@ const SearchEvent = goog.requireType('os.search.SearchEvent');
 /**
  * @unrestricted
  */
-class Controller {
+export default class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -430,5 +431,3 @@ class Controller {
  * @type {?IFacetedSearch}
  */
 Controller.provider = null;
-
-exports = Controller;

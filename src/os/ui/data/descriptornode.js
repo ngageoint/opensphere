@@ -1,4 +1,6 @@
-goog.module('os.ui.data.DescriptorNode');
+goog.declareModuleId('os.ui.data.DescriptorNode');
+
+import SlickTreeNode from '../slick/slicktreenode.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
@@ -6,7 +8,6 @@ const ActivateDescriptor = goog.require('os.data.ActivateDescriptor');
 const DeactivateDescriptor = goog.require('os.data.DeactivateDescriptor');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const TriState = goog.require('os.structs.TriState');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 const ISearchable = goog.requireType('os.data.ISearchable');
@@ -17,7 +18,7 @@ const ISearchable = goog.requireType('os.data.ISearchable');
  *
  * @implements {ISearchable}
  */
-class DescriptorNode extends SlickTreeNode {
+export default class DescriptorNode extends SlickTreeNode {
   /**
    * Constructor.
    */
@@ -197,5 +198,3 @@ class DescriptorNode extends SlickTreeNode {
     super.updateFrom(other);
   }
 }
-
-exports = DescriptorNode;

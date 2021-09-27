@@ -1,11 +1,11 @@
-goog.module('os.ui.alert.AlertBadgeUI');
+goog.declareModuleId('os.ui.alert.AlertBadgeUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const EventType = goog.require('os.alert.EventType');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
 const AlertEvent = goog.requireType('os.alert.AlertEvent');
 
@@ -15,7 +15,7 @@ const AlertEvent = goog.requireType('os.alert.AlertEvent');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -30,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'alertbadge';
+export const directiveTag = 'alertbadge';
 
 /**
  * Register alertbadge directive.
@@ -41,7 +41,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the alertbadge directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -133,10 +133,4 @@ class Controller {
 Controller.CLASSES = {
   'Error': 'badge-danger',
   'Warning': 'badge-warning'
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

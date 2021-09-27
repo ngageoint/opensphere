@@ -1,8 +1,8 @@
-goog.module('os.ui.WindowLauncherUI');
+goog.declareModuleId('os.ui.WindowLauncherUI');
 
-const Module = goog.require('os.ui.Module');
+import Module from './module.js';
 
-const DescriptorNode = goog.requireType('os.ui.data.DescriptorNode');
+const {default: DescriptorNode} = goog.requireType('os.ui.data.DescriptorNode');
 
 
 /**
@@ -18,7 +18,7 @@ const template = '<small><button ng-click="launchCtrl.click($event)" title="{{ch
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: template,
@@ -30,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'windowlauncher';
+export const directiveTag = 'windowlauncher';
 
 /**
  * Add the directive to the module
@@ -41,7 +41,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for window launcher
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -79,9 +79,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

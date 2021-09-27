@@ -1,4 +1,4 @@
-goog.module('os.ui.window.HeaderBtnConfig');
+goog.declareModuleId('os.ui.window.HeaderBtnConfig');
 
 /**
  * @typedef {{
@@ -10,4 +10,4 @@ goog.module('os.ui.window.HeaderBtnConfig');
  */
 let HeaderBtnConfig;
 
-exports = HeaderBtnConfig;
+export default HeaderBtnConfig;

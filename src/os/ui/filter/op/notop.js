@@ -1,12 +1,12 @@
-goog.module('os.ui.filter.op.Not');
+goog.declareModuleId('os.ui.filter.op.Not');
 
-const Op = goog.require('os.ui.filter.op.Op');
+import Op from './op.js';
 
 
 /**
  * @unrestricted
  */
-class Not extends Op {
+export default class Not extends Op {
   /**
    * Constructor.
    * @param {Op} op
@@ -136,5 +136,3 @@ class Not extends Op {
     return this.op.validate(value, key);
   }
 }
-
-exports = Not;

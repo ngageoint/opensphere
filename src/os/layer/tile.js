@@ -43,15 +43,15 @@ const SourcePropertyChange = goog.require('os.source.PropertyChange');
 const {isStateFile} = goog.require('os.state');
 const {notifyStyleChange} = goog.require('os.style');
 const TimeInstant = goog.require('os.time.TimeInstant');
-const Icons = goog.require('os.ui.Icons');
-const IconsSVG = goog.require('os.ui.IconsSVG');
+const {default: Icons} = goog.require('os.ui.Icons');
+const {default: IconsSVG} = goog.require('os.ui.IconsSVG');
 const {adjustIconSet, createIconSet} = goog.require('os.ui.icons');
 const {directiveTag: layerUi} = goog.require('os.ui.layer.TileLayerUI');
 const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
 const {launchRenameDialog} = goog.require('os.ui.renamelayer');
 
 const {TileFilterFn} = goog.requireType('os.tile');
-const IActionTarget = goog.requireType('os.ui.action.IActionTarget');
+const {default: IActionTarget} = goog.requireType('os.ui.action.IActionTarget');
 
 
 /**

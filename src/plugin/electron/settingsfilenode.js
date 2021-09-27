@@ -1,10 +1,10 @@
 goog.declareModuleId('plugin.electron.SettingsFileNode');
 
+import SlickTreeNode from '../../os/ui/slick/slicktreenode.js';
 import {directiveTag as nodeUi} from './settingsfilenodeui';
 
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const TriState = goog.require('os.structs.TriState');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 
 /**

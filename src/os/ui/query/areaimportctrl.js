@@ -1,11 +1,11 @@
-goog.module('os.ui.query.AreaImportCtrl');
+goog.declareModuleId('os.ui.query.AreaImportCtrl');
 
-goog.require('os.ui.im.BasicInfoUI');
+import '../im/basicinfo.js';
+import {close} from '../window.js';
+import WindowEventType from '../windoweventtype.js';
+import {AREA_IMPORT_HELP} from './query.js';
 
 const Disposable = goog.require('goog.Disposable');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {AREA_IMPORT_HELP} = goog.require('os.ui.query');
-const {close} = goog.require('os.ui.window');
 
 
 /**
@@ -14,7 +14,7 @@ const {close} = goog.require('os.ui.window');
  * @template T
  * @unrestricted
  */
-class Controller extends Disposable {
+export default class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -87,5 +87,3 @@ class Controller extends Disposable {
     this['loading'] = true;
   }
 }
-
-exports = Controller;

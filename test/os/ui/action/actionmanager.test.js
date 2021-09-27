@@ -7,9 +7,9 @@ goog.require('os.ui.action.EventType');
 describe('os.ui.action.ActionManager', function() {
   const googArray = goog.module.get('goog.array');
   const GoogEvent = goog.module.get('goog.events.Event');
-  const Action = goog.module.get('os.ui.action.Action');
-  const ActionManager = goog.module.get('os.ui.action.ActionManager');
-  const EventType = goog.module.get('os.ui.action.EventType');
+  const {default: Action} = goog.module.get('os.ui.action.Action');
+  const {default: ActionManager} = goog.module.get('os.ui.action.ActionManager');
+  const {default: EventType} = goog.module.get('os.ui.action.EventType');
 
   var player = new ActionManager();
 

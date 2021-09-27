@@ -1,14 +1,15 @@
-goog.module('os.ui.menu.windows');
+goog.declareModuleId('os.ui.menu.windows');
+
+import SettingsManager from '../config/settingsmanager.js';
+import * as osWindow from '../window.js';
+import GroupType from './grouptype.js';
+import Menu from './menu.js';
+import MenuItem from './menuitem.js';
+import MenuItemType from './menuitemtype.js';
 
 const googDispose = goog.require('goog.dispose');
-const SettingsManager = goog.require('os.ui.config.SettingsManager');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const GroupType = goog.require('os.ui.menu.windows.GroupType');
-const osWindow = goog.require('os.ui.window');
 
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 
 
 /**
@@ -21,13 +22,13 @@ let MENU = undefined;
  * Get the menu.
  * @return {Menu|undefined}
  */
-const getMenu = () => MENU;
+export const getMenu = () => MENU;
 
 /**
  * Set the menu.
  * @param {Menu|undefined} menu The menu.
  */
-const setMenu = (menu) => {
+export const setMenu = (menu) => {
   MENU = menu;
 };
 
@@ -50,7 +51,7 @@ const aliases_ = {};
  * @param {string=} opt_alias The id of the opened window, if different from `id`.
  * @return {MenuItem|undefined}
  */
-const addWindow = function(id, config, opt_isMajor, opt_func, opt_alias) {
+export const addWindow = function(id, config, opt_isMajor, opt_func, opt_alias) {
   // If theres no menu or this menu is already added
   if (!MENU || configs_[id]) {
     return;
@@ -89,7 +90,7 @@ const addWindow = function(id, config, opt_isMajor, opt_func, opt_alias) {
 /**
  * Set up the windows menu.
  */
-const setup = function() {
+export const setup = function() {
   if (!MENU) {
     MENU = new Menu(new MenuItem({
       type: MenuItemType.ROOT,
@@ -111,7 +112,7 @@ const setup = function() {
 /**
  * Dispose the windows menu.
  */
-const dispose = function() {
+export const dispose = function() {
   googDispose(MENU);
   MENU = undefined;
 };
@@ -122,7 +123,7 @@ const dispose = function() {
  * @param {string|MenuEvent} evt The menu event.
  * @return {boolean} If the open was successful.
  */
-const openWindow = function(evt) {
+export const openWindow = function(evt) {
   var id = typeof evt === 'string' ? evt : evt.type.split(/\./)[1];
 
   if (osWindow.exists(id)) {
@@ -154,7 +155,7 @@ const openWindow = function(evt) {
  * @param {string} id The window id.
  * @return {boolean} If the toggle was successful.
  */
-const toggleWindow = function(id) {
+export const toggleWindow = function(id) {
   var win = osWindow.getById(id);
 
   if (!win) {
@@ -178,18 +179,7 @@ const toggleWindow = function(id) {
  *
  * @param {string} id
  */
-const openSettingsTo = function(id) {
+export const openSettingsTo = function(id) {
   SettingsManager.getInstance().setSelectedPlugin(id);
   openWindow('settings');
-};
-
-exports = {
-  getMenu,
-  setMenu,
-  addWindow,
-  setup,
-  dispose,
-  openWindow,
-  toggleWindow,
-  openSettingsTo
 };

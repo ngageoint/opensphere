@@ -1,4 +1,4 @@
-goog.module('os.ui.windowSelector');
+goog.declareModuleId('os.ui.windowSelector');
 
 /**
  * Selectors for window compontents
@@ -16,4 +16,4 @@ const windowSelector = {
   WRAPPER: '.js-window__wrapper'
 };
 
-exports = windowSelector;
+export default windowSelector;

@@ -1,14 +1,14 @@
-goog.module('os.ui.filter.op.time.Between');
+goog.declareModuleId('os.ui.filter.op.time.Between');
 
-const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
-const {directiveTag} = goog.require('os.ui.filter.op.time.BetweenTimeUI');
-const Op = goog.require('os.ui.filter.op.Op');
+import FilterPatterns from '../../filterpatterns.js';
+import Op from '../op.js';
+import {directiveTag} from './betweentime.js';
 
 
 /**
  * Operator for times between a start and an end.
  */
-class Between extends Op {
+export default class Between extends Op {
   /**
    * Constructor.
    */
@@ -125,5 +125,3 @@ class Between extends Op {
     return false;
   }
 }
-
-exports = Between;

@@ -1,10 +1,10 @@
-goog.module('os.ui.tab.Tab');
+goog.declareModuleId('os.ui.tab.Tab');
 
 /**
  * Simple model class representing a pluggable tab.
  * @unrestricted
  */
-class Tab {
+export default class Tab {
   /**
    * Constructor.
    * @param {string} id The ID to track the element by
@@ -40,5 +40,3 @@ class Tab {
     this['data'] = opt_data || null;
   }
 }
-
-exports = Tab;

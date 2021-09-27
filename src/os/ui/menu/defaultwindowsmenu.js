@@ -1,32 +1,32 @@
-goog.module('os.ui.menu.windows.default');
+goog.declareModuleId('os.ui.menu.windows.default');
 
-const os = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
+import * as dispatcher from '../../dispatcher.js';
+import * as os from '../../os.js';
+import UIEvent from '../events/uievent.js';
+import UIEventType from '../events/uieventtype.js';
+import * as HistoryViewUI from '../history/historyview.js';
+import * as LayersWindowUI from '../layerswindow.js';
+import windowSelector from '../windowselector.js';
+import {showLegend} from './mapmenu.js';
+import * as windows from './windowsmenu.js';
 const ServerSettings = goog.require('os.config.ServerSettings');
 const Settings = goog.require('os.config.Settings');
 const legend = goog.require('os.legend');
 const {Map: MapKeys, Timeline: TimelineKeys} = goog.require('os.metrics.keys');
-const LayersWindowUI = goog.require('os.ui.LayersWindowUI');
-const UIEvent = goog.require('os.ui.events.UIEvent');
-const UIEventType = goog.require('os.ui.events.UIEventType');
-const HistoryViewUI = goog.require('os.ui.history.HistoryViewUI');
-const {showLegend} = goog.require('os.ui.menu.map');
-const windows = goog.require('os.ui.menu.windows');
-const windowSelector = goog.require('os.ui.windowSelector');
 
 
 /**
  * Settings keys for default windows.
  * @enum {string}
  */
-const SettingsKey = {
+export const SettingsKey = {
   LAYERS_DEFAULTS: 'os.layers.defaults'
 };
 
 /**
  * Add default windows to the Windows menu.
  */
-const setup = function() {
+export const setup = function() {
   const settings = Settings.getInstance();
 
   windows.setup();
@@ -195,10 +195,4 @@ const setup = function() {
 /**
  * @type {function()}
  */
-const openServers = goog.partial(windows.openSettingsTo, ServerSettings.ID);
-
-exports = {
-  SettingsKey,
-  setup,
-  openServers
-};
+export const openServers = goog.partial(windows.openSettingsTo, ServerSettings.ID);

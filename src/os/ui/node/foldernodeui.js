@@ -1,10 +1,11 @@
-goog.module('os.ui.node.FolderNodeUI');
+goog.declareModuleId('os.ui.node.FolderNodeUI');
+
+import Module from '../module.js';
+import AbstractNodeUICtrl from '../slick/abstractnodeui.js';
 
 const {getRandomString} = goog.require('goog.string');
 const FolderManager = goog.require('os.layer.FolderManager');
 const {launchRemoveFolder, createOrEditFolder} = goog.require('os.layer.folder');
-const Module = goog.require('os.ui.Module');
-const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
 
 const FolderNode = goog.requireType('os.data.FolderNode');
 
@@ -14,7 +15,7 @@ const FolderNode = goog.requireType('os.data.FolderNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   template: `<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">
@@ -28,12 +29,11 @@ const directive = () => ({
   controllerAs: 'nodeUi'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'foldernodeui';
+export const directiveTag = 'foldernodeui';
 
 
 /**
@@ -46,7 +46,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the folder node UI.
  * @unrestricted
  */
-class Controller extends AbstractNodeUICtrl {
+export class Controller extends AbstractNodeUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -134,10 +134,3 @@ class Controller extends AbstractNodeUICtrl {
     fm.createFolder(options);
   }
 }
-
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

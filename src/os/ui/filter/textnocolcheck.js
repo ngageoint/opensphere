@@ -1,7 +1,7 @@
-goog.module('os.ui.filter.TextNoColCheckUI');
+goog.declareModuleId('os.ui.filter.TextNoColCheckUI');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
 
 
 /**
@@ -11,7 +11,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   templateUrl: ROOT + 'views/filter/textnocolcheck.html',
@@ -23,7 +23,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'fb-text-no-col-check';
+export const directiveTag = 'fb-text-no-col-check';
 
 /**
  * Add the directive to the module
@@ -34,7 +34,7 @@ Module.directive('fbTextNoColCheck', [directive]);
  * Controller for the between UI
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -75,9 +75,3 @@ class Controller {
     this.scope_['expr']['literal'] = this['start'];
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,8 +1,7 @@
 goog.declareModuleId('plugin.pelias.geocoder.AttrCardUI');
 
 import {ROOT} from '../../../os/os.js';
-
-const Module = goog.require('os.ui.Module');
+import Module from '../../../os/ui/module.js';
 
 const {default: AttrResult} = goog.requireType('plugin.pelias.geocoder.AttrResult');
 

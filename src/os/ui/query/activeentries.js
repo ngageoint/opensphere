@@ -1,4 +1,4 @@
-goog.module('os.ui.query.ActiveEntries');
+goog.declareModuleId('os.ui.query.ActiveEntries');
 
 /**
  * @typedef {{
@@ -9,4 +9,4 @@ goog.module('os.ui.query.ActiveEntries');
  */
 let ActiveEntries;
 
-exports = ActiveEntries;
+export default ActiveEntries;

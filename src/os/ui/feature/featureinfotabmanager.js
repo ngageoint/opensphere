@@ -1,16 +1,16 @@
-goog.module('os.ui.feature.FeatureInfoTabManager');
+goog.declareModuleId('os.ui.feature.FeatureInfoTabManager');
 
-const DescriptionTabUI = goog.require('os.ui.feature.tab.DescriptionTabUI');
-const PropertiesTabUI = goog.require('os.ui.feature.tab.PropertiesTabUI');
-const descriptionEnableFunction = goog.require('os.ui.feature.tab.descriptionEnableFunction');
-const FeatureTab = goog.require('os.ui.tab.FeatureTab');
+import FeatureTab from '../tab/featuretab.js';
+import descriptionEnableFunction from './tab/descriptionenablefunction.js';
+import * as DescriptionTabUI from './tab/descriptiontab.js';
+import * as PropertiesTabUI from './tab/propertiestab.js';
 
 
 /**
  * Tab manager for the feature info
  * @unrestricted
  */
-class FeatureInfoTabManager {
+export default class FeatureInfoTabManager {
   /**
    * Constructor.
    */
@@ -90,5 +90,3 @@ FeatureInfoTabManager.TABS = [
   FeatureInfoTabManager.PROPERTIES_TAB,
   FeatureInfoTabManager.DESCRIPTION_TAB
 ];
-
-exports = FeatureInfoTabManager;

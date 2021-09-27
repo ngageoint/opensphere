@@ -1,5 +1,13 @@
 goog.declareModuleId('plugin.file.csv.ui.CSVImportUI');
 
+import * as csv from '../../../../os/ui/file/csv/csv.js';
+import ConfigStep from '../../../../os/ui/file/ui/csv/configstep.js';
+import FileImportUI from '../../../../os/ui/im/fileimportui.js';
+import * as osWindow from '../../../../os/ui/window.js';
+import windowSelector from '../../../../os/ui/windowselector.js';
+import GeometryStep from '../../../../os/ui/wiz/geometrystep.js';
+import OptionsStep from '../../../../os/ui/wiz/optionsstep.js';
+import TimeStep from '../../../../os/ui/wiz/step/timestep.js';
 import CSVDescriptor from '../csvdescriptor.js';
 import CSVParserConfig from '../csvparserconfig.js';
 import CSVProvider from '../csvprovider.js';
@@ -8,14 +16,7 @@ import {directiveTag as importUi} from './csvimport.js';
 const DataManager = goog.require('os.data.DataManager');
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const MappingManager = goog.require('os.im.mapping.MappingManager');
-const csv = goog.require('os.ui.file.csv');
-const ConfigStep = goog.require('os.ui.file.ui.csv.ConfigStep');
-const FileImportUI = goog.require('os.ui.im.FileImportUI');
-const osWindow = goog.require('os.ui.window');
-const windowSelector = goog.require('os.ui.windowSelector');
-const GeometryStep = goog.require('os.ui.wiz.GeometryStep');
-const OptionsStep = goog.require('os.ui.wiz.OptionsStep');
-const TimeStep = goog.require('os.ui.wiz.step.TimeStep');
+
 
 /**
  * @extends {FileImportUI.<CSVParserConfig>}

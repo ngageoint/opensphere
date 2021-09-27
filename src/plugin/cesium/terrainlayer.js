@@ -1,6 +1,7 @@
 goog.declareModuleId('plugin.cesium.TerrainLayer');
 
 import * as dispatcher from '../../os/dispatcher.js';
+import Icons from '../../os/ui/icons.js';
 import {directiveTag as terrainNodeUi} from '../basemap/terrainlayernodeui.js';
 import {CESIUM_ONLY_LAYER} from './cesium.js';
 import Layer from './layer.js';
@@ -9,7 +10,6 @@ const log = goog.require('goog.log');
 const MapEvent = goog.require('os.MapEvent');
 const LayerNode = goog.require('os.data.LayerNode');
 const LayerType = goog.require('os.layer.LayerType');
-const Icons = goog.require('os.ui.Icons');
 
 const ITreeNodeSupplier = goog.requireType('os.structs.ITreeNodeSupplier');
 

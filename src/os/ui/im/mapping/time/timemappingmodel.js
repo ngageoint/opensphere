@@ -1,4 +1,4 @@
-goog.module('os.ui.im.mapping.time.TimeMappingModel');
+goog.declareModuleId('os.ui.im.mapping.time.TimeMappingModel');
 
 const DateType = goog.require('os.im.mapping.DateType');
 const TimeType = goog.require('os.im.mapping.TimeType');
@@ -12,7 +12,7 @@ const {DATETIME_FORMATS, TIME_FORMATS} = goog.require('os.time');
  * Model for describing a time mapping.
  * @unrestricted
  */
-class TimeMappingModel {
+export default class TimeMappingModel {
   /**
    * Constructor.
    * @param {TimeType=} opt_type The type of time mapping (instant, start, end).
@@ -171,5 +171,3 @@ class TimeMappingModel {
     }
   }
 }
-
-exports = TimeMappingModel;

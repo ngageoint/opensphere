@@ -1,17 +1,18 @@
-goog.module('os.ui.ogc.wms.AbstractWMSLayerParser');
+goog.declareModuleId('os.ui.ogc.wms.AbstractWMSLayerParser');
+
+import {sanitize} from '../../ui.js';
 
 const {getValueByKeys} = goog.require('goog.object');
-const {sanitize} = goog.require('os.ui');
 
-const IWMSLayer = goog.requireType('os.ui.ogc.wms.IWMSLayer');
-const IWMSLayerParser = goog.requireType('os.ui.ogc.wms.IWMSLayerParser');
+const {default: IWMSLayer} = goog.requireType('os.ui.ogc.wms.IWMSLayer');
+const {default: IWMSLayerParser} = goog.requireType('os.ui.ogc.wms.IWMSLayerParser');
 
 
 /**
  * @abstract
  * @implements {IWMSLayerParser}
  */
-class AbstractWMSLayerParser {
+export default class AbstractWMSLayerParser {
   /**
    * Constructor.
    */
@@ -51,5 +52,3 @@ class AbstractWMSLayerParser {
     }
   }
 }
-
-exports = AbstractWMSLayerParser;

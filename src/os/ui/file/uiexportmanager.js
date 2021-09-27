@@ -1,10 +1,12 @@
-goog.module('os.ui.exportManager');
+goog.declareModuleId('os.ui.exportManager');
 
-const ExportManager = goog.require('os.ui.file.ExportManager');
+import ExportManager from './exportmanager.js';
 
 
 /**
  * Global export manager reference.
  * @type {ExportManager}
  */
-exports = ExportManager.getInstance();
+const exportManager = ExportManager.getInstance();
+
+export default exportManager;

@@ -1,9 +1,10 @@
-goog.module('os.ui.layer.IconStyleControlsUI');
+goog.declareModuleId('os.ui.layer.IconStyleControlsUI');
+
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import VectorStyleControlsEventType from './vectorstylecontrolseventtype.js';
 
 const Disposable = goog.require('goog.Disposable');
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const VectorStyleControlsEventType = goog.require('os.ui.layer.VectorStyleControlsEventType');
 
 
 /**
@@ -11,7 +12,7 @@ const VectorStyleControlsEventType = goog.require('os.ui.layer.VectorStyleContro
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -28,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'iconstylecontrols';
+export const directiveTag = 'iconstylecontrols';
 
 /**
  * Add the directive to the module.
@@ -39,7 +40,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the iconstyleoptions directive.
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -94,9 +95,3 @@ class Controller extends Disposable {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

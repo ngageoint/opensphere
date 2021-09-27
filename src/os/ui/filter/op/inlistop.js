@@ -1,14 +1,14 @@
-goog.module('os.ui.filter.op.InList');
+goog.declareModuleId('os.ui.filter.op.InList');
 
-const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
-const {directiveTag} = goog.require('os.ui.filter.ListUI');
-const Op = goog.require('os.ui.filter.op.Op');
-const {quoteString} = goog.require('os.ui.filter.string');
+import FilterPatterns from '../filterpatterns.js';
+import {quoteString} from '../filterstring.js';
+import {directiveTag} from '../list.js';
+import Op from './op.js';
 
 
 /**
  */
-class InList extends Op {
+export default class InList extends Op {
   /**
    * Constructor.
    * @param {string=} opt_title
@@ -167,5 +167,3 @@ class InList extends Op {
     return valid;
   }
 }
-
-exports = InList;

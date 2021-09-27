@@ -1,6 +1,6 @@
-goog.module('os.ui.help.Controls');
+goog.declareModuleId('os.ui.help.Controls');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../os.js';
 
 const KeyCodes = goog.requireType('goog.events.KeyCodes');
 
@@ -8,7 +8,7 @@ const KeyCodes = goog.requireType('goog.events.KeyCodes');
 /**
  * Singleton for application to add controls
  */
-class Controls {
+export default class Controls {
   /**
    * Constructor.
    */
@@ -152,5 +152,3 @@ Controls.FONT_CLASS = {
     'class': 'control-key'
   }
 };
-
-exports = Controls;

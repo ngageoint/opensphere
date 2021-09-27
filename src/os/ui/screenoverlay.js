@@ -1,10 +1,10 @@
-goog.module('os.ui.ScreenOverlayUI');
+goog.declareModuleId('os.ui.ScreenOverlayUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../os.js';
+import Module from './module.js';
+import {create, exists} from './window.js';
+import WindowEventType from './windoweventtype.js';
 const {getMapContainer} = goog.require('os.map.instance');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {create, exists} = goog.require('os.ui.window');
 
 
 /**
@@ -12,7 +12,7 @@ const {create, exists} = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   transclude: true,
   scope: true,
@@ -26,7 +26,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'screenoverlay';
+export const directiveTag = 'screenoverlay';
 
 /**
  * Add the directive to the os module
@@ -40,7 +40,7 @@ Module.directive(directiveTag, [directive]);
  * to true. It controls the button that runs the "confirmCallback"
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -59,7 +59,7 @@ class Controller {
  *
  * @param {!osx.window.ScreenOverlayOptions} options The overlay options.
  */
-const launchScreenOverlay = function(options) {
+export const launchScreenOverlay = function(options) {
   var scopeOptions = {
     'image': options.image
   };
@@ -96,11 +96,4 @@ const launchScreenOverlay = function(options) {
   if (!exists(options.id)) {
     create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchScreenOverlay
 };

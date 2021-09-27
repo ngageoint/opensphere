@@ -12,7 +12,7 @@ const osJsts = goog.require('os.geo.jsts');
 const math = goog.require('os.math');
 const Units = goog.require('os.math.Units');
 const osStyle = goog.require('os.style');
-const AreaAdd = goog.require('os.ui.query.cmd.AreaAdd');
+const {default: AreaAdd} = goog.require('os.ui.query.cmd.AreaAdd');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
 const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');

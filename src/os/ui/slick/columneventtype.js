@@ -1,9 +1,9 @@
-goog.module('os.ui.slick.ColumnEventType');
+goog.declareModuleId('os.ui.slick.ColumnEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const ColumnEventType = {
   CONTEXTMENU: 'column:contextMenu',
 
   // manager
@@ -20,3 +20,5 @@ exports = {
   SHOW_ALL: 'column:showAll',
   RESET: 'column:resetColumns'
 };
+
+export default ColumnEventType;

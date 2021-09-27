@@ -1,16 +1,16 @@
-goog.module('os.ui.ol.interaction.FocusInteraction');
+goog.declareModuleId('os.ui.ol.interaction.FocusInteraction');
 
 const Interaction = goog.require('ol.interaction.Interaction');
 const {getAreaManager} = goog.require('os.query.instance');
 
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
-const OLMap = goog.requireType('os.ui.ol.OLMap');
+const {default: OLMap} = goog.requireType('os.ui.ol.OLMap');
 
 
 /**
  * Handle if the map is focused or not
  */
-class FocusInteraction extends Interaction {
+export default class FocusInteraction extends Interaction {
   /**
    * Constructor.
    * @param {olx.interaction.InteractionOptions=} opt_options Options.
@@ -39,5 +39,3 @@ class FocusInteraction extends Interaction {
     return map.getFocused();
   }
 }
-
-exports = FocusInteraction;

@@ -11,11 +11,11 @@ const {filterFalsey, mapFeatureToGeometry} = goog.require('os.fn');
 const {merge} = goog.require('os.geo.jsts');
 const {getMapContainer} = goog.require('os.map.instance');
 const {PREVIEW_CONFIG} = goog.require('os.style');
-const Module = goog.require('os.ui.Module');
+const {default: Module} = goog.require('os.ui.Module');
 const {applyMappings, createMappingsFromConfig} = goog.require('os.ui.query');
 const {Controller: EditAreaCtrl} = goog.require('os.ui.query.EditAreaUI');
-const AreaAdd = goog.require('os.ui.query.cmd.AreaAdd');
-const AreaRemove = goog.require('os.ui.query.cmd.AreaRemove');
+const {default: AreaAdd} = goog.require('os.ui.query.cmd.AreaAdd');
+const {default: AreaRemove} = goog.require('os.ui.query.cmd.AreaRemove');
 
 const Logger = goog.requireType('goog.log.Logger');
 

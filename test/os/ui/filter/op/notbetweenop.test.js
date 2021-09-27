@@ -3,7 +3,7 @@ goog.require('os.ui.filter.op.Op');
 
 
 describe('os.ui.filter.op.NotBetween', function() {
-  const NotBetween = goog.module.get('os.ui.filter.op.NotBetween');
+  const {default: NotBetween} = goog.module.get('os.ui.filter.op.NotBetween');
 
   var between = new NotBetween();
 

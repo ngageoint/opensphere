@@ -1,8 +1,8 @@
-goog.module('os.ui.WindowsButtonUI');
+goog.declareModuleId('os.ui.WindowsButtonUI');
 
-const Module = goog.require('os.ui.Module');
-const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
-const windows = goog.require('os.ui.menu.windows');
+import MenuButtonCtrl from './menu/menubutton.js';
+import * as windows from './menu/windowsmenu.js';
+import Module from './module.js';
 
 
 /**
@@ -10,7 +10,7 @@ const windows = goog.require('os.ui.menu.windows');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -26,7 +26,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'windows-button';
+export const directiveTag = 'windows-button';
 
 /**
  * add the directive to the module
@@ -37,7 +37,7 @@ Module.directive('windowsButton', [directive]);
  * Controller function for the nav-top directive
  * @unrestricted
  */
-class Controller extends MenuButtonCtrl {
+export class Controller extends MenuButtonCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -49,9 +49,3 @@ class Controller extends MenuButtonCtrl {
     this.menu = windows.getMenu();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

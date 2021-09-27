@@ -1,9 +1,10 @@
-goog.module('os.ui.im.action.FilterActionImporter');
+goog.declareModuleId('os.ui.im.action.FilterActionImporter');
+
+import {toFilterString} from '../../filter/filter.js';
 
 const OSFilterImporter = goog.require('os.filter.im.OSFilterImporter');
 const {getColumnsFromFilterable} = goog.require('os.im.action');
 const FilterActionEntry = goog.require('os.im.action.FilterActionEntry');
-const {toFilterString} = goog.require('os.ui.filter');
 
 const FilterEntry = goog.requireType('os.filter.FilterEntry');
 
@@ -11,7 +12,7 @@ const FilterEntry = goog.requireType('os.filter.FilterEntry');
 /**
  * @template T
  */
-class FilterActionImporter extends OSFilterImporter {
+export default class FilterActionImporter extends OSFilterImporter {
   /**
    * Constructor.
    * @param {os.parse.IParser<T>} parser The parser.
@@ -70,5 +71,3 @@ class FilterActionImporter extends OSFilterImporter {
     return getColumnsFromFilterable(filterable);
   }
 }
-
-exports = FilterActionImporter;

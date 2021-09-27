@@ -1,11 +1,12 @@
-goog.module('os.ui.node.FeatureCountUI');
+goog.declareModuleId('os.ui.node.FeatureCountUI');
+
+import Module from '../module.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {listen, unlisten} = goog.require('ol.events');
 const VectorLayer = goog.require('os.layer.Vector');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const VectorSource = goog.require('os.source.Vector');
-const Module = goog.require('os.ui.Module');
 
 const LayerNode = goog.requireType('os.data.LayerNode');
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
@@ -16,7 +17,7 @@ const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<span></span>',
@@ -28,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'featurecount';
+export const directiveTag = 'featurecount';
 
 /**
  * Add the directive to the module
@@ -39,7 +40,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for selected/highlighted node UI
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -138,9 +139,3 @@ class Controller {
     return '';
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

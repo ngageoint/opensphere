@@ -26,7 +26,7 @@ describe('os.ui.query.BasicQueryReader', function() {
   const AreaManager = goog.module.get('os.query.AreaManager');
   const FilterManager = goog.module.get('os.query.FilterManager');
   const QueryManager = goog.module.get('os.query.QueryManager');
-  const BasicQueryReader = goog.module.get('os.ui.query.BasicQueryReader');
+  const {default: BasicQueryReader} = goog.module.get('os.ui.query.BasicQueryReader');
 
   var basicQueryUrl = '/base/test/os/ui/query/basicquery.xml';
 

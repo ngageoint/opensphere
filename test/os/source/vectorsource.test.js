@@ -57,8 +57,8 @@ describe('os.source.Vector', function() {
   const StyleField = goog.module.get('os.style.StyleField');
   const StyleManager = goog.module.get('os.style.StyleManager');
   const TimeRange = goog.module.get('os.time.TimeRange');
-  const DescriptionFormatter = goog.module.get('os.ui.formatter.DescriptionFormatter');
-  const PropertiesFormatter = goog.module.get('os.ui.formatter.PropertiesFormatter');
+  const {default: DescriptionFormatter} = goog.module.get('os.ui.formatter.DescriptionFormatter');
+  const {default: PropertiesFormatter} = goog.module.get('os.ui.formatter.PropertiesFormatter');
   const {default: GeoJSONParser} = goog.module.get('plugin.file.geojson.GeoJSONParser');
 
   var dynamicFeatures = null;

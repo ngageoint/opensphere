@@ -1,12 +1,13 @@
 goog.declareModuleId('plugin.file.kml.KMLDescriptor');
 
+import ColorControlType from '../../../os/ui/colorcontroltype.js';
+import ControlType from '../../../os/ui/controltype.js';
 import KMLExporter from './kmlexporter.js';
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const layer = goog.require('os.layer');
 const LayerType = goog.require('os.layer.LayerType');
-const ColorControlType = goog.require('os.ui.ColorControlType');
-const ControlType = goog.require('os.ui.ControlType');
+
 
 /**
  * KML file descriptor.

@@ -1,4 +1,10 @@
-goog.module('os.ui.im.action.FilterActionImport');
+goog.declareModuleId('os.ui.im.action.FilterActionImport');
+
+import {directive as filterImportDirective} from '../../filter/im/filterimport.js';
+import Module from '../../module.js';
+import {close} from '../../window.js';
+import FilterActionImporter from './filteractionimporter.js';
+import {getEntriesFromMatched} from './filteractionui.js';
 
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
@@ -8,18 +14,13 @@ const DataManager = goog.require('os.data.DataManager');
 const IDataDescriptor = goog.require('os.data.IDataDescriptor');
 const IFilterable = goog.require('os.filter.IFilterable');
 const {Controller: OSFilterImportCtrl} = goog.require('os.filter.im.OSFilterImport');
-const osImplements = goog.require('os.implements');
 const {ICON, getColumnsFromFilterable} = goog.require('os.im.action');
 const FilterActionParser = goog.require('os.im.action.FilterActionParser');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const FilterActionAdd = goog.require('os.im.action.cmd.FilterActionAdd');
+const osImplements = goog.require('os.implements');
 const DrawingLayer = goog.require('os.layer.Drawing');
 const {getMapContainer} = goog.require('os.map.instance');
-const Module = goog.require('os.ui.Module');
-const {directive: filterImportDirective} = goog.require('os.ui.filter.im.FilterImport');
-const {getEntriesFromMatched} = goog.require('os.ui.im.action');
-const FilterActionImporter = goog.require('os.ui.im.action.FilterActionImporter');
-const {close} = goog.require('os.ui.window');
 
 const ILayer = goog.requireType('os.layer.ILayer');
 
@@ -29,7 +30,7 @@ const ILayer = goog.requireType('os.layer.ILayer');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = filterImportDirective();
   dir.controller = Controller;
   return dir;
@@ -39,7 +40,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'filteractionimport';
+export const directiveTag = 'filteractionimport';
 
 
 /**
@@ -53,7 +54,7 @@ Module.directive('filteractionimport', [directive]);
  * Controller function for the filteractionimport directive.
  * @unrestricted
  */
-class Controller extends OSFilterImportCtrl {
+export class Controller extends OSFilterImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -176,9 +177,3 @@ class Controller extends OSFilterImportCtrl {
     close(this.element);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

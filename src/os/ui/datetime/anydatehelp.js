@@ -1,4 +1,4 @@
-goog.module('os.ui.datetime.AnyDateHelp');
+goog.declareModuleId('os.ui.datetime.AnyDateHelp');
 
 /**
  * @typedef {{
@@ -9,4 +9,4 @@ goog.module('os.ui.datetime.AnyDateHelp');
  */
 let AnyDateHelp;
 
-exports = AnyDateHelp;
+export default AnyDateHelp;

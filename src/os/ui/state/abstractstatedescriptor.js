@@ -1,4 +1,8 @@
-goog.module('os.ui.state.AbstractStateDescriptor');
+goog.declareModuleId('os.ui.state.AbstractStateDescriptor');
+
+import UrlMethod from '../file/method/urlmethod.js';
+import {directiveTag as nodeUi} from '../file/ui/defaultfilenodeui.js';
+import IStateDescriptor from './istatedescriptor.js';
 
 const {assertString} = goog.require('goog.asserts');
 const {loadXml} = goog.require('goog.dom.xml');
@@ -13,9 +17,6 @@ const osImplements = goog.require('os.implements');
 const StateParserConfig = goog.require('os.parse.StateParserConfig');
 const StateType = goog.require('os.state.StateType');
 const {getStateManager} = goog.require('os.state.instance');
-const UrlMethod = goog.require('os.ui.file.method.UrlMethod');
-const {directiveTag: nodeUi} = goog.require('os.ui.file.ui.DefaultFileNodeUI');
-const IStateDescriptor = goog.require('os.ui.state.IStateDescriptor');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
@@ -29,7 +30,7 @@ const OSFile = goog.requireType('os.file.File');
  * @implements {IUrlDescriptor}
  * @abstract
  */
-class AbstractStateDescriptor extends BaseDescriptor {
+export default class AbstractStateDescriptor extends BaseDescriptor {
   /**
    * Constructor.
    */
@@ -358,6 +359,7 @@ class AbstractStateDescriptor extends BaseDescriptor {
     return 'File';
   }
 }
+
 osImplements(AbstractStateDescriptor, IUrlDescriptor.ID);
 osImplements(AbstractStateDescriptor, IStateDescriptor.ID);
 
@@ -373,5 +375,3 @@ AbstractStateDescriptor.ID = 'state';
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.state.AbstractStateDescriptor');
-
-exports = AbstractStateDescriptor;

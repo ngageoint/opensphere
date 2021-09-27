@@ -2,6 +2,8 @@ goog.declareModuleId('plugin.cesium.Layer');
 
 import * as dispatcher from '../../os/dispatcher.js';
 import {DEFAULT_LAYER_COLOR, notifyStyleChange} from '../../os/style/style.js';
+import {adjustIconSet, createIconSet} from '../../os/ui/icons/index.js';
+import {directiveTag as nodeUi} from '../../os/ui/node/defaultlayernodeui.js';
 
 const Delay = goog.require('goog.async.Delay');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -20,11 +22,9 @@ const osImplements = goog.require('os.implements');
 const IColorableLayer = goog.require('os.layer.IColorableLayer');
 const ILayer = goog.require('os.layer.ILayer');
 const PropertyChange = goog.require('os.layer.PropertyChange');
-const {adjustIconSet, createIconSet} = goog.require('os.ui.icons');
-const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
 
 const LayerType = goog.requireType('ol.LayerType');
-const IActionTarget = goog.requireType('os.ui.action.IActionTarget');
+const {default: IActionTarget} = goog.requireType('os.ui.action.IActionTarget');
 const {default: CesiumRenderer} = goog.requireType('plugin.cesium.CesiumRenderer');
 
 

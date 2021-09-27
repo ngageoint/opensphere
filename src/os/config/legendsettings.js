@@ -2,7 +2,7 @@ goog.module('os.config.LegendSettings');
 
 const {ICON, ID} = goog.require('os.legend');
 const {directiveTag: settingsUi} = goog.require('os.config.LegendSettingsUI');
-const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
+const {default: SettingPlugin} = goog.require('os.ui.config.SettingPlugin');
 
 
 /**

@@ -8,7 +8,7 @@ const {getAreaManager, getQueryManager} = goog.require('os.query.instance');
 const {setFeatureStyle} = goog.require('os.style');
 const StyleType = goog.require('os.style.StyleType');
 const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
+const {default: Module} = goog.require('os.ui.Module');
 
 const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
 

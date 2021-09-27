@@ -3,7 +3,7 @@ goog.module('os.data.groupby.TagListGroupBy');
 const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
 const Settings = goog.require('os.config.Settings');
-const TagGroupBy = goog.require('os.ui.data.groupby.TagGroupBy');
+const {default: TagGroupBy} = goog.require('os.ui.data.groupby.TagGroupBy');
 
 
 /**

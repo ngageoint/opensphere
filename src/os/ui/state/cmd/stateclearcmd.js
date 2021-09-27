@@ -1,12 +1,13 @@
-goog.module('os.ui.state.cmd.StateClear');
+goog.declareModuleId('os.ui.state.cmd.StateClear');
+
+import AbstractStateDescriptor from '../abstractstatedescriptor.js';
 
 const State = goog.require('os.command.State');
 const DataManager = goog.require('os.data.DataManager');
 const {getStateManager} = goog.require('os.state.instance');
-const AbstractStateDescriptor = goog.require('os.ui.state.AbstractStateDescriptor');
 
 const ICommand = goog.requireType('os.command.ICommand');
-const IStateDescriptor = goog.requireType('os.ui.state.IStateDescriptor');
+const {default: IStateDescriptor} = goog.requireType('os.ui.state.IStateDescriptor');
 
 
 /**
@@ -14,7 +15,7 @@ const IStateDescriptor = goog.requireType('os.ui.state.IStateDescriptor');
  *
  * @implements {ICommand}
  */
-class StateClear {
+export default class StateClear {
   /**
    * Constructor.
    */
@@ -74,5 +75,3 @@ class StateClear {
     return true;
   }
 }
-
-exports = StateClear;

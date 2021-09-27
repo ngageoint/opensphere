@@ -1,9 +1,9 @@
-goog.module('os.ui.layer.VectorStyleControlsEventType');
+goog.declareModuleId('os.ui.layer.VectorStyleControlsEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const VectorStyleControlsEventType = {
   LINE_DASH_CHANGE: 'vector:lineDashChange',
   SHAPE_CHANGE: 'vector:shapeChange',
   CENTER_SHAPE_CHANGE: 'vector:centerShapeChange',
@@ -11,3 +11,5 @@ exports = {
   ROTATION_COLUMN_CHANGE: 'vector:rotationColumnChange',
   ELLIPSE_COLUMN_CHANGE: 'vector:ellipseColumnsChange'
 };
+
+export default VectorStyleControlsEventType;

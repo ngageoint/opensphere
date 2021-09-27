@@ -1,8 +1,9 @@
-goog.module('os.ui.route.RouteManager');
+goog.declareModuleId('os.ui.route.RouteManager');
+
+import * as ui from '../ui.js';
 
 const Uri = goog.require('goog.Uri');
 const {isEmpty} = goog.require('goog.object');
-const ui = goog.require('os.ui');
 
 const AbstractUrlHandler = goog.requireType('os.url.AbstractUrlHandler');
 
@@ -11,7 +12,7 @@ const AbstractUrlHandler = goog.requireType('os.url.AbstractUrlHandler');
  * Class for managing route handlers. Handlers can be registered by any part of the application to handle particular
  * key value pairs in the query data of the application.
  */
-class RouteManager {
+export default class RouteManager {
   /**
    * Constructor.
    */
@@ -163,5 +164,3 @@ class RouteManager {
  * @type {RouteManager|undefined}
  */
 let instance;
-
-exports = RouteManager;

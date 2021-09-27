@@ -13,7 +13,7 @@ describe('os.ui.search.place.CoordinateResult', function() {
   const SortType = goog.module.get('os.search.SortType');
   const TimeInstant = goog.module.get('os.time.TimeInstant');
   const TimeRange = goog.module.get('os.time.TimeRange');
-  const CoordinateResult = goog.module.get('os.ui.search.place.CoordinateResult');
+  const {default: CoordinateResult} = goog.module.get('os.ui.search.place.CoordinateResult');
 
   var createResult = function(opt_options) {
     var options = opt_options || {};

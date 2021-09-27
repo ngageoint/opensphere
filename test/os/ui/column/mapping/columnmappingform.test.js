@@ -14,7 +14,7 @@ describe('os.ui.column.mapping.ColumnMappingFormUI', function() {
   const ColumnMappingManager = goog.module.get('os.column.ColumnMappingManager');
   const ConfigDescriptor = goog.module.get('os.data.ConfigDescriptor');
   const DataManager = goog.module.get('os.data.DataManager');
-  const ColumnModelNode = goog.module.get('os.ui.column.mapping.ColumnModelNode');
+  const {default: ColumnModelNode} = goog.module.get('os.ui.column.mapping.ColumnModelNode');
   const osWindow = goog.module.get('os.ui.window');
   const {default: GeoServer} = goog.module.get('plugin.ogc.GeoServer');
   const {default: OGCLayerDescriptor} = goog.module.get('plugin.ogc.OGCLayerDescriptor');

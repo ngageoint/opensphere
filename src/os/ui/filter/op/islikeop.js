@@ -1,15 +1,16 @@
-goog.module('os.ui.filter.op.IsLike');
+goog.declareModuleId('os.ui.filter.op.IsLike');
+
+import {escapeRegExp} from '../filterstring.js';
+import Op from './op.js';
 
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const Op = goog.require('os.ui.filter.op.Op');
-const {escapeRegExp} = goog.require('os.ui.filter.string');
 const DataType = goog.require('os.xsd.DataType');
 
 
 /**
  * A 'PropertyIsLike' operation class.
  */
-class IsLike extends Op {
+export default class IsLike extends Op {
   /**
    * Constructor.
    */
@@ -44,5 +45,3 @@ class IsLike extends Op {
     return '';
   }
 }
-
-exports = IsLike;

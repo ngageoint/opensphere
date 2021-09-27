@@ -1,15 +1,14 @@
 goog.declareModuleId('plugin.ogc.ui.OgcServerImportUI');
 
-goog.require('os.ui.singleUrlFormDirective');
-
+import '../../../os/ui/singleurlform.js';
 import * as os from '../../../os/os.js';
+import Module from '../../../os/ui/module.js';
+import OGCServer from '../../../os/ui/ogc/ogcserver.js';
+import ProviderImportCtrl from '../../../os/ui/providerimport.js';
 import * as OgcServerHelpUI from './ogcserverhelp.js';
 
 const xml = goog.require('goog.dom.xml');
 const ogc = goog.require('os.ogc');
-const Module = goog.require('os.ui.Module');
-const ProviderImportCtrl = goog.require('os.ui.ProviderImportCtrl');
-const OGCServer = goog.require('os.ui.ogc.OGCServer');
 
 const OSFile = goog.requireType('os.file.File');
 
