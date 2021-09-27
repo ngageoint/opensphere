@@ -2,7 +2,7 @@ goog.module('os.command.AreaToggle');
 
 const State = goog.require('os.command.State');
 const {getAreaManager} = goog.require('os.query.instance');
-const AbstractArea = goog.require('os.ui.query.cmd.AbstractArea');
+const {default: AbstractArea} = goog.require('os.ui.query.cmd.AbstractArea');
 
 const ICommand = goog.requireType('os.command.ICommand');
 

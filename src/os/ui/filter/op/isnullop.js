@@ -1,12 +1,12 @@
-goog.module('os.ui.filter.op.IsNull');
+goog.declareModuleId('os.ui.filter.op.IsNull');
 
-const Op = goog.require('os.ui.filter.op.Op');
+import Op from './op.js';
 
 
 /**
  * A 'PropertyIsNull' operation class.
  */
-class IsNull extends Op {
+export default class IsNull extends Op {
   /**
    * Constructor.
    */
@@ -21,5 +21,3 @@ class IsNull extends Op {
     return '(' + varName + '==null||' + varName + '==="")';
   }
 }
-
-exports = IsNull;

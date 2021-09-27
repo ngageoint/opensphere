@@ -3,6 +3,7 @@ goog.declareModuleId('plugin.im.action.feature.LabelAction');
 import {getLayer, getSource} from '../../os/feature/feature.js';
 import * as osStyleLabel from '../../os/style/label.js';
 import * as osStyle from '../../os/style/style.js';
+import {Controller as FeatureEditCtrl} from '../../os/ui/featureedit.js';
 import {StyleType as FAStyleType} from './featureaction.js';
 import {directiveTag as configUi, setDefaultConfig} from './ui/featurelabelactionconfig.js';
 
@@ -14,7 +15,6 @@ const osObject = goog.require('os.object');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
-const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
 const osXml = goog.require('os.xml');
 
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');

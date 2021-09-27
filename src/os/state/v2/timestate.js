@@ -12,8 +12,8 @@ const {momentFormat, parseMoment} = goog.require('os.time');
 const Duration = goog.require('os.time.Duration');
 const {autoConfigureFromTimeRange, setDefaultOffsetForRange} = goog.require('os.time.timeline');
 const TimelineController = goog.require('os.time.TimelineController');
-const UIEvent = goog.require('os.ui.events.UIEvent');
-const UIEventType = goog.require('os.ui.events.UIEventType');
+const {default: UIEvent} = goog.require('os.ui.events.UIEvent');
+const {default: UIEventType} = goog.require('os.ui.events.UIEventType');
 const {appendElement} = goog.require('os.xml');
 
 const Logger = goog.requireType('goog.log.Logger');

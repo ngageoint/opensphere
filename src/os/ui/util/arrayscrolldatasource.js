@@ -1,4 +1,4 @@
-goog.module('os.ui.util.ArrayScrollDataSource');
+goog.declareModuleId('os.ui.util.ArrayScrollDataSource');
 
 const Disposable = goog.require('goog.Disposable');
 
@@ -9,7 +9,7 @@ const Disposable = goog.require('goog.Disposable');
  *
  * Example: var dataSource = new os.ui.util.ArrayScrollDataSource(myArrayOfItems);
  */
-class ArrayScrollDataSource extends Disposable {
+export default class ArrayScrollDataSource extends Disposable {
   /**
    * Constructor.
    * @param {Array} array
@@ -101,5 +101,3 @@ class ArrayScrollDataSource extends Disposable {
     this.scope_ = null;
   }
 }
-
-exports = ArrayScrollDataSource;

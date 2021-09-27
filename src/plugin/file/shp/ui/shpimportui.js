@@ -1,15 +1,14 @@
 goog.declareModuleId('plugin.file.shp.ui.SHPImportUI');
 
+import FileImportUI from '../../../../os/ui/im/fileimportui.js';
+import * as osWindow from '../../../../os/ui/window.js';
+import windowSelector from '../../../../os/ui/windowselector.js';
+import OptionsStep from '../../../../os/ui/wiz/optionsstep.js';
+import TimeStep from '../../../../os/ui/wiz/step/timestep.js';
 import * as mime from '../mime.js';
 import SHPParserConfig from '../shpparserconfig.js';
 import SHPFilesStep from './shpfilesstep.js';
 import {directiveTag as shpImportUi} from './shpimport.js';
-
-const FileImportUI = goog.require('os.ui.im.FileImportUI');
-const osWindow = goog.require('os.ui.window');
-const windowSelector = goog.require('os.ui.windowSelector');
-const OptionsStep = goog.require('os.ui.wiz.OptionsStep');
-const TimeStep = goog.require('os.ui.wiz.step.TimeStep');
 
 /**
  * @extends {FileImportUI<SHPParserConfig>}

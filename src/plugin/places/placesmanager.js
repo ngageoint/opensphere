@@ -2,6 +2,10 @@ goog.declareModuleId('plugin.places.PlacesManager');
 
 import * as dispatcher from '../../os/dispatcher.js';
 import {DEFAULT_LAYER_COLOR} from '../../os/style/style.js';
+import ImportEvent from '../../os/ui/im/importevent.js';
+import ImportEventType from '../../os/ui/im/importeventtype.js';
+import ImportManager from '../../os/ui/im/importmanager.js';
+import ImportProcess from '../../os/ui/im/importprocess.js';
 import AbstractKMLManager from '../file/kml/abstractkmlmanager.js';
 import * as places from './places.js';
 import PlacesLayerConfig from './placeslayerconfig.js';
@@ -19,10 +23,6 @@ const {noop} = goog.require('os.fn');
 const LayerType = goog.require('os.layer.LayerType');
 const {merge} = goog.require('os.object');
 const {incrementResetTasks, decrementResetTasks} = goog.require('os.storage');
-const ImportEvent = goog.require('os.ui.im.ImportEvent');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
-const ImportManager = goog.require('os.ui.im.ImportManager');
-const ImportProcess = goog.require('os.ui.im.ImportProcess');
 
 const OsFile = goog.requireType('os.file.File');
 const {default: KMLLayer} = goog.requireType('plugin.file.kml.KMLLayer');

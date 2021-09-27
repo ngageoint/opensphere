@@ -7,8 +7,8 @@ const {filterFalsey} = goog.require('os.fn');
 const {FolderEventType, launchRemoveFolder, createOrEditFolder, getFolderMenuEnabled} = goog.require('os.layer.folder');
 const {getRandomString} = goog.require('goog.string');
 
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 const {Context} = goog.requireType('os.ui.menu.layer');
 
 

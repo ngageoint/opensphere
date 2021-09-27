@@ -1,12 +1,11 @@
-goog.module('os.ui.config.SettingsWindowUI');
+goog.declareModuleId('os.ui.config.SettingsWindowUI');
 
-goog.require('os.ui.config.SettingDefaultUI');
-
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const AbstractSettingsCtrl = goog.require('os.ui.config.AbstractSettingsCtrl');
-const SettingsManager = goog.require('os.ui.config.SettingsManager');
-const {close} = goog.require('os.ui.window');
+import './settingdefaulttreeui.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {close} from '../window.js';
+import AbstractSettingsCtrl from './abstractsettings.js';
+import SettingsManager from './settingsmanager.js';
 
 
 /**
@@ -14,7 +13,7 @@ const {close} = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -29,7 +28,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'settings';
+export const directiveTag = 'settings';
 
 
 /**
@@ -42,7 +41,7 @@ Module.directive('settings', [directive]);
  * Controller for the save export window
  * @unrestricted
  */
-class Controller extends AbstractSettingsCtrl {
+export class Controller extends AbstractSettingsCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -99,9 +98,3 @@ class Controller extends AbstractSettingsCtrl {
     close(this.element_);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

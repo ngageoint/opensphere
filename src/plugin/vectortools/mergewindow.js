@@ -1,11 +1,13 @@
 goog.declareModuleId('plugin.vectortools.MergeUI');
 
-goog.require('os.ui.util.ValidationMessageUI');
-
+import '../../os/ui/util/validationmessage.js';
 import './mappingcounter.js';
 
 import * as os from '../../os/os.js';
+import Module from '../../os/ui/module.js';
 import * as ui from '../../os/ui/ui.js';
+import * as osWindow from '../../os/ui/window.js';
+import WindowEventType from '../../os/ui/windoweventtype.js';
 import MergeLayer from './mergelayercmd.js';
 
 const olArray = goog.require('ol.array');
@@ -14,10 +16,6 @@ const DataManager = goog.require('os.data.DataManager');
 const SourceManager = goog.require('os.data.SourceManager');
 const ogc = goog.require('os.ogc');
 const PropertyChange = goog.require('os.source.PropertyChange');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const osWindow = goog.require('os.ui.window');
-
 
 
 /**

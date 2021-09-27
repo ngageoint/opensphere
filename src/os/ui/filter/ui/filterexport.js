@@ -1,18 +1,17 @@
-goog.module('os.ui.filter.ui.FilterExportUI');
+goog.declareModuleId('os.ui.filter.ui.FilterExportUI');
 
-goog.require('os.ui.util.ValidationMessageUI');
-
-const {ROOT} = goog.require('os');
+import '../../util/validationmessage.js';
+import {ROOT} from '../../../os.js';
+import Module from '../../module.js';
+import {close, create} from '../../window.js';
+import WindowEventType from '../../windoweventtype.js';
+import {getFilterableByType} from '../filter.js';
+import FilterExportChoice from './filterexportchoice.js';
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const {saveFile} = goog.require('os.file.persist');
 const FilterEntry = goog.require('os.filter.FilterEntry');
 const {getFilterManager} = goog.require('os.query.instance');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {getFilterableByType} = goog.require('os.ui.filter');
-const FilterExportChoice = goog.require('os.ui.filter.ui.FilterExportChoice');
-const {close, create} = goog.require('os.ui.window');
 const {appendElement, clone, createElementNS, serialize} = goog.require('os.xml');
 
 
@@ -21,7 +20,7 @@ const {appendElement, clone, createElementNS, serialize} = goog.require('os.xml'
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -37,7 +36,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'filterexport';
+export const directiveTag = 'filterexport';
 
 /**
  * Add the directive to the module.
@@ -48,7 +47,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the filterexport directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -126,7 +125,7 @@ class Controller {
  * @param {function(string, FilterExportChoice)} confirm
  * @param {number=} opt_mode
  */
-const launchFilterExport = function(confirm, opt_mode) {
+export const launchFilterExport = function(confirm, opt_mode) {
   var scopeOptions = {
     'confirm': confirm,
     'mode': opt_mode
@@ -154,7 +153,7 @@ const launchFilterExport = function(confirm, opt_mode) {
  * @param {string} name of the file
  * @param {Array} filters
  */
-const exportFilters = function(name, filters) {
+export const exportFilters = function(name, filters) {
   if (filters.length > 0) {
     var root = createElementNS('filters', 'http://www.bit-sys.com/state/v2');
 
@@ -193,12 +192,4 @@ const exportFilters = function(name, filters) {
   } else {
     AlertManager.getInstance().sendAlert('No filters to export', AlertEventSeverity.WARNING);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchFilterExport,
-  exportFilters
 };

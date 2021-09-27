@@ -1,7 +1,7 @@
-goog.module('os.ui.column.columnRowDirective');
+goog.declareModuleId('os.ui.column.columnRowDirective');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
 
 
 /**
@@ -9,7 +9,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -22,15 +22,10 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'columnrow';
+export const directiveTag = 'columnrow';
 
 
 /**
  * Add the directive to the module.
  */
 Module.directive(directiveTag, [directive]);
-
-exports = {
-  directive,
-  directiveTag
-};

@@ -1,29 +1,30 @@
-goog.module('os.ui.menu.timeline');
+goog.declareModuleId('os.ui.menu.timeline');
+
+import {flyTo} from '../../feature/feature.js';
+import launchMultiFeatureInfo from '../feature/launchmultifeatureinfo.js';
+import * as layerMenu from './layermenu.js';
+import Menu from './menu.js';
+import MenuItem from './menuitem.js';
+import MenuItemType from './menuitemtype.js';
 
 const {assert} = goog.require('goog.asserts');
 const Range = goog.require('goog.math.Range');
 const DataManager = goog.require('os.data.DataManager');
-const {flyTo} = goog.require('os.feature');
 const Metrics = goog.require('os.metrics.Metrics');
 const {Timeline: TimelineKeys} = goog.require('os.metrics.keys');
 const VectorSource = goog.require('os.source.Vector');
 const TimeRange = goog.require('os.time.TimeRange');
 const TimelineActionEventType = goog.require('os.time.TimelineActionEventType');
 const TimelineController = goog.require('os.time.TimelineController');
-const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const layerMenu = goog.require('os.ui.menu.layer');
 
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const TimelineUI = goog.requireType('os.ui.timeline.TimelineUI');
 
 
 /**
  * @type {Menu<Array<number>>}
  */
-const MENU = new Menu(new MenuItem({
+export const MENU = new Menu(new MenuItem({
   type: MenuItemType.ROOT,
   children: [{
     label: layerMenu.GroupLabel.TOOLS,
@@ -125,7 +126,7 @@ const MENU = new Menu(new MenuItem({
 /**
  * Timeline menu setup
  */
-const setup = function() {
+export const setup = function() {
   var menu = MENU;
 
   menu.listen(TimelineActionEventType.SELECT, onTimeSelect);
@@ -147,7 +148,7 @@ const setup = function() {
 /**
  * Clean up menu
  */
-const dispose = function() {
+export const dispose = function() {
   if (MENU) {
     MENU.dispose();
   }
@@ -158,7 +159,7 @@ const dispose = function() {
  *
  * @param {MenuEvent<Array<number>>} event The menu event
  */
-const onTimeSelect = function(event) {
+export const onTimeSelect = function(event) {
   var extent = event.getContext();
   assert(extent);
 
@@ -206,7 +207,7 @@ const onTimeSelect = function(event) {
  *
  * @param {MenuEvent<Array<number>>} event The menu event
  */
-const onFeatureCollection = function(event) {
+export const onFeatureCollection = function(event) {
   var extent = event.getContext();
   assert(extent);
 
@@ -244,7 +245,7 @@ const onFeatureCollection = function(event) {
  *
  * @param {MenuEvent<Array<number>>} event The menu event
  */
-const onTimeLoad = function(event) {
+export const onTimeLoad = function(event) {
   var tlc = TimelineController.getInstance();
   var extent = event.getContext();
   assert(extent);
@@ -257,7 +258,7 @@ const onTimeLoad = function(event) {
  *
  * @param {MenuEvent<Array<number>>} event The menu event
  */
-const onTimeAdd = function(event) {
+export const onTimeAdd = function(event) {
   var tlc = TimelineController.getInstance();
   var extent = event.getContext();
   assert(extent);
@@ -270,7 +271,7 @@ const onTimeAdd = function(event) {
  *
  * @param {MenuEvent<Array<number>>} event The menu event
  */
-const onTimeSlice = function(event) {
+export const onTimeSlice = function(event) {
   var tlc = TimelineController.getInstance();
   var extent = event.getContext();
   assert(extent);
@@ -283,7 +284,7 @@ const onTimeSlice = function(event) {
  *
  * @param {MenuEvent<Array<number>>} event The menu event
  */
-const onTimeZoom = function(event) {
+export const onTimeZoom = function(event) {
   var ctl = /** @type {TimelineUI.Controller} */ (
     angular.element('.js-timeline').children().scope()['timeline']);
   ctl.zoomToItem('select');
@@ -295,7 +296,7 @@ const onTimeZoom = function(event) {
  *
  * @param {MenuEvent<Array<number>>} event The menu event
  */
-const onAddHold = function(event) {
+export const onAddHold = function(event) {
   var tlc = TimelineController.getInstance();
   var extent = event.getContext();
   assert(extent);
@@ -308,7 +309,7 @@ const onAddHold = function(event) {
  *
  * @param {MenuEvent<Array<number>>} event The menu event
  */
-const onAddAnimate = function(event) {
+export const onAddAnimate = function(event) {
   var tlc = TimelineController.getInstance();
   var extent = event.getContext();
   assert(extent);
@@ -322,7 +323,7 @@ const onAddAnimate = function(event) {
  *
  * @param {MenuEvent<Array<number>>} event The menu event
  */
-const onAddSkipAnimate = function(event) {
+export const onAddSkipAnimate = function(event) {
   var tlc = TimelineController.getInstance();
   var extent = event.getContext();
   assert(extent);
@@ -341,27 +342,11 @@ const onAddSkipAnimate = function(event) {
  *
  * @param {MenuEvent<Array<number>>} event The menu event
  */
-const onActiveWindow = function(event) {
+export const onActiveWindow = function(event) {
   var ctl = /** @type {TimelineUI.Controller} */ (
     angular.element('.js-timeline').children().scope()['timeline']);
   var window = ctl.getItem('window');
   var extent = event.getContext();
   assert(extent);
   window.setExtent(extent);
-};
-
-exports = {
-  MENU,
-  setup,
-  dispose,
-  onTimeSelect,
-  onFeatureCollection,
-  onTimeLoad,
-  onTimeAdd,
-  onTimeSlice,
-  onTimeZoom,
-  onAddHold,
-  onAddAnimate,
-  onAddSkipAnimate,
-  onActiveWindow
 };

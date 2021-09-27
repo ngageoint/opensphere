@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.position.PositionPlugin');
 
+import * as mapMenu from '../../os/ui/menu/mapmenu.js';
 import {launchCopy} from './copyposition.js';
 import PositionInteraction from './positioninteraction.js';
 
@@ -7,9 +8,8 @@ const MapContainer = goog.require('os.MapContainer');
 const EventType = goog.require('os.action.EventType');
 const keys = goog.require('os.metrics.keys');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const mapMenu = goog.require('os.ui.menu.map');
 
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 
 
 /**

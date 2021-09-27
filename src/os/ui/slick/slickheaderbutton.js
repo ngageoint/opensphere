@@ -1,7 +1,7 @@
-goog.module('os.ui.slick.SlickHeaderButtonUI');
+goog.declareModuleId('os.ui.slick.SlickHeaderButtonUI');
 
-const Module = goog.require('os.ui.Module');
-const {Controller: SlickGridCtrl, directive: slickGridDirective} = goog.require('os.ui.slick.SlickGridUI');
+import Module from '../module.js';
+import {Controller as SlickGridCtrl, directive as slickGridDirective} from './slickgrid.js';
 
 
 /**
@@ -9,7 +9,7 @@ const {Controller: SlickGridCtrl, directive: slickGridDirective} = goog.require(
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = slickGridDirective();
   dir['scope']['onCommand'] = '=?';
   dir['controller'] = Controller;
@@ -20,7 +20,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'slickheaderbutton';
+export const directiveTag = 'slickheaderbutton';
 
 /**
  * Add the directive
@@ -31,7 +31,7 @@ Module.directive(directiveTag, [directive]);
  * Controller class for SlickGrid with header buttons
  * @unrestricted
  */
-class Controller extends SlickGridCtrl {
+export class Controller extends SlickGridCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -56,9 +56,3 @@ class Controller extends SlickGridCtrl {
     this.grid.registerPlugin(headerButtonsPlugin);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

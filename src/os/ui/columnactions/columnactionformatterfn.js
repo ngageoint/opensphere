@@ -1,6 +1,6 @@
-goog.module('os.ui.columnactions.ColumnActionFormatterFn');
+goog.declareModuleId('os.ui.columnactions.ColumnActionFormatterFn');
 
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -9,4 +9,4 @@ const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
  */
 let ColumnActionFormatterFn;
 
-exports = ColumnActionFormatterFn;
+export default ColumnActionFormatterFn;

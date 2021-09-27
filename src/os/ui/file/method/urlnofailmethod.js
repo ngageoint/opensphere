@@ -1,9 +1,10 @@
-goog.module('os.ui.file.method.UrlNoFailMethod');
+goog.declareModuleId('os.ui.file.method.UrlNoFailMethod');
+
+import UrlMethod from './urlmethod.js';
 
 const log = goog.require('goog.log');
 const EventType = goog.require('os.events.EventType');
 const OSFile = goog.require('os.file.File');
-const UrlMethod = goog.require('os.ui.file.method.UrlMethod');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
@@ -19,7 +20,7 @@ const logger = log.getLogger('os.ui.file.method.UrlNoFailMethod');
 /**
  * @type {string}
  */
-const TYPE = 'unkown';
+export const TYPE = 'unkown';
 
 /**
  * Handle the file request failure.  Create file with name and URL but no contents.
@@ -47,8 +48,4 @@ UrlMethod.prototype.onError = function(event) {
   file.setType(TYPE);
   this.setFile(file);
   this.dispatchEvent(EventType.COMPLETE);
-};
-
-exports = {
-  TYPE
 };

@@ -1,19 +1,20 @@
-goog.module('os.ui.layer.DefaultLayerUI');
+goog.declareModuleId('os.ui.layer.DefaultLayerUI');
+
+import {ROOT} from '../../os.js';
+import ColorControlType from '../colorcontroltype.js';
+import ControlType from '../controltype.js';
+import Module from '../module.js';
+import AbstractLayerUICtrl from './abstractlayerui.js';
+import {REFRESH_DURATIONS} from './layers.js';
 
 const Layer = goog.require('ol.layer.Layer');
 const UrlTile = goog.require('ol.source.UrlTile');
-const {ROOT} = goog.require('os');
 const LayerAutoRefresh = goog.require('os.command.LayerAutoRefresh');
 const LayerStyle = goog.require('os.command.LayerStyle');
 const Settings = goog.require('os.config.Settings');
 const osLayer = goog.require('os.layer');
 const PropertyChange = goog.require('os.layer.PropertyChange');
 const VectorSource = goog.require('os.source.Vector');
-const ColorControlType = goog.require('os.ui.ColorControlType');
-const ControlType = goog.require('os.ui.ControlType');
-const Module = goog.require('os.ui.Module');
-const {REFRESH_DURATIONS} = goog.require('os.ui.layer');
-const AbstractLayerUICtrl = goog.require('os.ui.layer.AbstractLayerUICtrl');
 
 const ICommand = goog.requireType('os.command.ICommand');
 const ILayer = goog.requireType('os.layer.ILayer');
@@ -24,7 +25,7 @@ const ILayer = goog.requireType('os.layer.ILayer');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   templateUrl: ROOT + 'views/layer/default.html',
@@ -36,7 +37,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'defaultlayerui';
+export const directiveTag = 'defaultlayerui';
 
 /**
  * Add the directive to the module
@@ -47,7 +48,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the default layer UI.
  * @unrestricted
  */
-class Controller extends AbstractLayerUICtrl {
+export class Controller extends AbstractLayerUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -476,9 +477,3 @@ class Controller extends AbstractLayerUICtrl {
     Settings.getInstance().set('layercontrols', current != selector ? selector : '');
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

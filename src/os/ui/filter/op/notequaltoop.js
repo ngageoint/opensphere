@@ -1,13 +1,13 @@
-goog.module('os.ui.filter.op.NotEqualTo');
+goog.declareModuleId('os.ui.filter.op.NotEqualTo');
 
-const Op = goog.require('os.ui.filter.op.Op');
-const {quoteString} = goog.require('os.ui.filter.string');
+import {quoteString} from '../filterstring.js';
+import Op from './op.js';
 
 
 /**
  * A 'PropertyIsNotEqualTo' operation class.
  */
-class NotEqualTo extends Op {
+export default class NotEqualTo extends Op {
   /**
    * Constructor.
    */
@@ -38,5 +38,3 @@ class NotEqualTo extends Op {
     return '';
   }
 }
-
-exports = NotEqualTo;

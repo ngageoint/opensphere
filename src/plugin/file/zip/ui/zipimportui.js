@@ -1,11 +1,10 @@
 goog.declareModuleId('plugin.file.zip.ui.ZIPImportUI');
 
+import FileImportUI from '../../../../os/ui/im/fileimportui.js';
+import * as osWindow from '../../../../os/ui/window.js';
+import windowSelector from '../../../../os/ui/windowselector.js';
 import ZIPParserConfig from '../zipparserconfig.js';
 import {directiveTag as zipImportUi} from './zipimport.js';
-
-const FileImportUI = goog.require('os.ui.im.FileImportUI');
-const osWindow = goog.require('os.ui.window');
-const windowSelector = goog.require('os.ui.windowSelector');
 
 /**
  * @extends {FileImportUI.<ZIPParserConfig>}

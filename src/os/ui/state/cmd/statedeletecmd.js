@@ -1,4 +1,4 @@
-goog.module('os.ui.state.cmd.StateDelete');
+goog.declareModuleId('os.ui.state.cmd.StateDelete');
 
 const State = goog.require('os.command.State');
 const {getStateManager} = goog.require('os.state.instance');
@@ -11,7 +11,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class StateDelete {
+export default class StateDelete {
   /**
    * Constructor.
    */
@@ -49,5 +49,3 @@ class StateDelete {
     return false;
   }
 }
-
-exports = StateDelete;

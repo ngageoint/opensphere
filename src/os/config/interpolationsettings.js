@@ -1,7 +1,7 @@
 goog.module('os.config.InterpolationSettings');
 
 const {directiveTag: settingsUi} = goog.require('os.config.InterpolationSettingsUI');
-const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
+const {default: SettingPlugin} = goog.require('os.ui.config.SettingPlugin');
 
 
 /**

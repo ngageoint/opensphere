@@ -1,9 +1,10 @@
 goog.declareModuleId('plugin.basemap.TerrainNodeUI');
 
+import Module from '../../os/ui/module.js';
+import {Controller as DefaultLayerNodeUICtrl} from '../../os/ui/node/defaultlayernodeui.js';
+
 const DisplaySetting = goog.require('os.config.DisplaySetting');
 const Settings = goog.require('os.config.Settings');
-const Module = goog.require('os.ui.Module');
-const {Controller: DefaultLayerNodeUICtrl} = goog.require('os.ui.node.DefaultLayerNodeUI');
 
 
 /**

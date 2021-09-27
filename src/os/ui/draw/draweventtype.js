@@ -1,9 +1,9 @@
-goog.module('os.ui.draw.DrawEventType');
+goog.declareModuleId('os.ui.draw.DrawEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const DrawEventType = {
   DRAWSTART: 'drawstart',
   DRAWCHANGE: 'drawchange',
   DRAWEND: 'drawend',
@@ -13,3 +13,5 @@ exports = {
   DRAWPOLYGON: 'polygon',
   DRAWLINE: 'line'
 };
+
+export default DrawEventType;

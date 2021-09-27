@@ -1,10 +1,10 @@
-goog.module('os.ui.datetime.DateTimeUI');
+goog.declareModuleId('os.ui.datetime.DateTimeUI');
 
-goog.require('os.ui.datetime.WheelDateUI');
+import './wheeldate.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
 
 const log = goog.require('goog.log');
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
 const Logger = goog.requireType('goog.log.Logger');
 
 
@@ -21,7 +21,7 @@ const Logger = goog.requireType('goog.log.Logger');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -40,7 +40,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'date-time';
+export const directiveTag = 'date-time';
 
 /**
  * Register date-time directive.
@@ -51,7 +51,7 @@ Module.directive('dateTime', [directive]);
  * Controller function for the date-time directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -269,9 +269,3 @@ class Controller {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.datetime.DateTimeUI');
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

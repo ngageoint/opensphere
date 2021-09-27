@@ -1,7 +1,7 @@
 goog.module('os.layer.ILayer');
 
 const IPersistable = goog.require('os.IPersistable'); // eslint-disable-line
-const IActionTarget = goog.require('os.ui.action.IActionTarget'); // eslint-disable-line
+const {default: IActionTarget} = goog.require('os.ui.action.IActionTarget'); // eslint-disable-line
 
 const Source = goog.requireType('ol.source.Source');
 const osImplements = goog.requireType('os.implements');

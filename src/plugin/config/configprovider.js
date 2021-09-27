@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.config.Provider');
 
+import DescriptorProvider from '../../os/ui/data/descriptorprovider.js';
 import {ID} from './config.js';
 
 const log = goog.require('goog.log');
@@ -12,7 +13,6 @@ const DataProviderEvent = goog.require('os.data.DataProviderEvent');
 const DataProviderEventType = goog.require('os.data.DataProviderEventType');
 const IDataProvider = goog.require('os.data.IDataProvider');
 const osImplements = goog.require('os.implements');
-const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
 
 const Logger = goog.requireType('goog.log.Logger');
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');

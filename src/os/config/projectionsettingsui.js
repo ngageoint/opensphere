@@ -10,7 +10,7 @@ const {Settings: SettingsMetrics} = goog.require('os.metrics.keys');
 const {getProjections} = goog.require('os.proj');
 const SwitchProjection = goog.require('os.proj.switch.SwitchProjection');
 const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
+const {default: Module} = goog.require('os.ui.Module');
 
 
 /**

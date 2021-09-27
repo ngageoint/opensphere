@@ -1,12 +1,20 @@
-goog.module('os.ui.filter.im.FilterImport');
+goog.declareModuleId('os.ui.filter.im.FilterImport');
 
-goog.require('os.ui.filter.im.FilterImportModelUI');
-goog.require('os.ui.layer.LayerPickerUI');
+import '../../layer/layerpicker.js';
+import './filterimportmodel.js';
+import {ROOT} from '../../../os.js';
+import Module from '../../module.js';
+import IOGCDescriptor from '../../ogc/iogcdescriptor.js';
+import {Controller as ComboNodeUICtrl} from '../../query/combonodeui.js';
+import {apply} from '../../ui.js';
+import * as osWindow from '../../window.js';
+import {getFilterableByType} from '../filter.js';
+import FilterParser from '../parse/filterparser.js';
+import FilterImporter from './filterimporter.js';
 
 const {assert} = goog.require('goog.asserts');
 const dispose = goog.require('goog.dispose');
 const {getRandomString} = goog.require('goog.string');
-const {ROOT} = goog.require('os');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const DataManager = goog.require('os.data.DataManager');
@@ -14,14 +22,6 @@ const EventType = goog.require('os.events.EventType');
 const IFilterable = goog.require('os.filter.IFilterable');
 const osImplements = goog.require('os.implements');
 const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const {getFilterableByType} = goog.require('os.ui.filter');
-const FilterImporter = goog.require('os.ui.filter.im.FilterImporter');
-const FilterParser = goog.require('os.ui.filter.parse.FilterParser');
-const IOGCDescriptor = goog.require('os.ui.ogc.IOGCDescriptor');
-const {Controller: ComboNodeUICtrl} = goog.require('os.ui.query.ComboNodeUI');
-const osWindow = goog.require('os.ui.window');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
@@ -35,7 +35,7 @@ const IParser = goog.requireType('os.parse.IParser');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: {
     /**
@@ -59,7 +59,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'filterimport';
+export const directiveTag = 'filterimport';
 
 
 /**
@@ -73,7 +73,7 @@ Module.directive('filterimport', [directive]);
  * Controller function for the filterimport directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -514,9 +514,3 @@ class Controller {
     return this.filterTitle + plural;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

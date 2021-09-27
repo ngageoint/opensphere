@@ -1,7 +1,8 @@
 goog.declareModuleId('plugin.im.action.feature.ui.ActionConfigCtrl');
 
+import WindowEventType from '../../../os/ui/windoweventtype.js';
+
 const Disposable = goog.require('goog.Disposable');
-const WindowEventType = goog.require('os.ui.WindowEventType');
 
 
 /**

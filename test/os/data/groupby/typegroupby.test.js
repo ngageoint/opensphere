@@ -6,7 +6,7 @@ goog.require('os.ui.data.DescriptorNode');
 describe('os.data.groupby.TypeGroupBy', function() {
   const BaseDescriptor = goog.module.get('os.data.BaseDescriptor');
   const TypeGroupBy = goog.module.get('os.data.groupby.TypeGroupBy');
-  const DescriptorNode = goog.module.get('os.ui.data.DescriptorNode');
+  const {default: DescriptorNode} = goog.module.get('os.ui.data.DescriptorNode');
 
   it('should retrieve ids by type', function() {
     var d = new BaseDescriptor();

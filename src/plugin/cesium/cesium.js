@@ -2,6 +2,8 @@ goog.declareModuleId('plugin.cesium');
 
 import * as osMap from '../../os/map/map.js';
 import {ROOT} from '../../os/os.js';
+import * as ConfirmUI from '../../os/ui/window/confirm.js';
+import {launchConfirmText} from '../../os/ui/window/confirmtext.js';
 import ImageryProvider from './imageryprovider.js';
 
 const Promise = goog.require('goog.Promise');
@@ -23,8 +25,6 @@ const proj = goog.require('os.proj');
 const utils = goog.require('os.query.utils');
 const osString = goog.require('os.string');
 const TimelineController = goog.require('os.time.TimelineController');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
-const {launchConfirmText} = goog.require('os.ui.window.ConfirmTextUI');
 
 const Deferred = goog.requireType('goog.async.Deferred');
 const Geometry = goog.requireType('ol.geom.Geometry');

@@ -12,12 +12,12 @@ const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const {AreaState} = goog.require('os.query');
 const {getAreaManager, getFilterManager, getQueryManager, setQueryManager} = goog.require('os.query.instance');
 const {ALL_ID} = goog.require('os.ui.query');
-const ComboNode = goog.require('os.ui.query.ComboNode');
+const {default: ComboNode} = goog.require('os.ui.query.ComboNode');
 const Logger = goog.requireType('goog.log.Logger');
 
 const BaseFilterManager = goog.requireType('os.filter.BaseFilterManager');
 const BaseAreaManager = goog.requireType('os.query.BaseAreaManager');
-const QueryHandler = goog.requireType('os.ui.query.QueryHandler');
+const {default: QueryHandler} = goog.requireType('os.ui.query.QueryHandler');
 
 
 /**

@@ -1,7 +1,7 @@
 goog.module('os.config.DisplaySettings');
 
 const {directiveTag: settingsUi} = goog.require('os.config.DisplaySettingsUI');
-const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
+const {default: SettingPlugin} = goog.require('os.ui.config.SettingPlugin');
 
 
 /**

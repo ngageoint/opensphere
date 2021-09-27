@@ -1,4 +1,6 @@
-goog.module('os.ui.ol.interaction.DragBox');
+goog.declareModuleId('os.ui.ol.interaction.DragBox');
+
+import AbstractDrag from './abstractdraginteraction.js';
 
 const Polygon = goog.require('ol.geom.Polygon');
 const {toLonLat} = goog.require('ol.proj');
@@ -8,7 +10,6 @@ const GeometryField = goog.require('os.geom.GeometryField');
 const {METHOD_FIELD} = goog.require('os.interpolate');
 const Method = goog.require('os.interpolate.Method');
 const Box = goog.require('os.olm.render.Box');
-const AbstractDrag = goog.require('os.ui.ol.interaction.AbstractDrag');
 const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
 const Style = goog.requireType('ol.style.Style');
@@ -18,7 +19,7 @@ const Style = goog.requireType('ol.style.Style');
  * Draws a rectangluar query area on the map.
  * This interaction is only supported for mouse devices.
  */
-class DragBox extends AbstractDrag {
+export default class DragBox extends AbstractDrag {
   /**
    * Constructor.
    * @param {olx.interaction.PointerOptions=} opt_options
@@ -218,5 +219,3 @@ class DragBox extends AbstractDrag {
  * @type {string}
  */
 DragBox.TYPE = 'box';
-
-exports = DragBox;

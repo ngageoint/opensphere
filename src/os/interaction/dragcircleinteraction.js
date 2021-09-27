@@ -2,7 +2,7 @@ goog.module('os.interaction.DragCircle');
 
 const I3DSupport = goog.require('os.I3DSupport');
 const osImplements = goog.require('os.implements');
-const OLDragCircle = goog.require('os.ui.ol.interaction.DragCircle');
+const {default: OLDragCircle} = goog.require('os.ui.ol.interaction.DragCircle');
 
 const OSMap = goog.requireType('os.Map');
 

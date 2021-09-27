@@ -1,4 +1,4 @@
-goog.module('os.ui.icons');
+goog.declareModuleId('os.ui.icons');
 
 const {encodeString} = goog.require('goog.crypt.hash32');
 const {changeColor, toHexString, toRgbArray} = goog.require('os.color');
@@ -12,7 +12,7 @@ const white = [0xff, 0xff, 0xff];
 /**
  * @type {number}
  */
-const ICON_WIDTH = 16;
+export const ICON_WIDTH = 16;
 
 /**
  * @param {string} id The layer id
@@ -21,7 +21,7 @@ const ICON_WIDTH = 16;
  * @param {Array<number>|string} color The icon color
  * @return {string}
  */
-const createIconSet = function(id, svgIcons, faIcons, color) {
+export const createIconSet = function(id, svgIcons, faIcons, color) {
   var html = '';
   id = hashIconId(id);
 
@@ -62,7 +62,7 @@ const createIconSet = function(id, svgIcons, faIcons, color) {
  * @param {string} id
  * @return {string}
  */
-const hashIconId = function(id) {
+export const hashIconId = function(id) {
   return String(encodeString(id));
 };
 
@@ -88,7 +88,7 @@ const xReplace = function(match, p1, offset, whole) {
  * @param {string} id
  * @param {Array<number>|string} color
  */
-const adjustIconSet = function(id, color) {
+export const adjustIconSet = function(id, color) {
   if (typeof color === 'string') {
     color = toRgbArray(color);
   }
@@ -100,11 +100,4 @@ const adjustIconSet = function(id, color) {
 
   var hexColor = toHexString(color || white);
   angular.element('i.fa.layer-icon-' + id).css('color', hexColor);
-};
-
-exports = {
-  ICON_WIDTH,
-  createIconSet,
-  hashIconId,
-  adjustIconSet
 };

@@ -1,6 +1,9 @@
 goog.declareModuleId('plugin.im.action.feature.ui.FeatureActionsUI');
 
 import {ROOT} from '../../../os/os.js';
+import FilterActionsCtrl from '../../../os/ui/im/action/filteractionsui.js';
+import Module from '../../../os/ui/module.js';
+import TreeSearch from '../../../os/ui/slick/treesearch.js';
 import {apply} from '../../../os/ui/ui.js';
 import {editEntry, getColumns, getExportName} from '../featureaction.js';
 import FeatureActionManager from '../featureactionmanager.js';
@@ -8,13 +11,10 @@ import * as node from '../featureactionnodemenu.js';
 
 const DataManager = goog.require('os.data.DataManager');
 const DataEventType = goog.require('os.data.event.DataEventType');
-const Module = goog.require('os.ui.Module');
-const FilterActionsCtrl = goog.require('os.ui.im.action.FilterActionsCtrl');
-const TreeSearch = goog.require('os.ui.slick.TreeSearch');
 
 const Feature = goog.requireType('ol.Feature');
 const DataEvent = goog.requireType('os.data.event.DataEvent');
-const Menu = goog.requireType('os.ui.menu.Menu');
+const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 const layerMenu = goog.requireType('os.ui.menu.layer');
 
 

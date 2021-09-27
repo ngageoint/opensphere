@@ -1,8 +1,10 @@
-goog.module('os.ui.GlobalMenuEventType');
+goog.declareModuleId('os.ui.GlobalMenuEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const GlobalMenuEventType = {
   MENU_CLOSE: 'menuclose'
 };
+
+export default GlobalMenuEventType;

@@ -1,4 +1,7 @@
-goog.module('os.ui.data.DescriptorProvider');
+goog.declareModuleId('os.ui.data.DescriptorProvider');
+
+import BaseProvider from './baseprovider.js';
+import DescriptorNode from './descriptornode.js';
 
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const ActivateDescriptor = goog.require('os.data.ActivateDescriptor');
@@ -6,8 +9,6 @@ const DataManager = goog.require('os.data.DataManager');
 const DataProviderEvent = goog.require('os.data.DataProviderEvent');
 const DataProviderEventType = goog.require('os.data.DataProviderEventType');
 const TriState = goog.require('os.structs.TriState');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
-const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
 
 const Promise = goog.requireType('goog.Promise');
 
@@ -18,7 +19,7 @@ const Promise = goog.requireType('goog.Promise');
  * @abstract
  * @template T
  */
-class DescriptorProvider extends BaseProvider {
+export default class DescriptorProvider extends BaseProvider {
   /**
    * Constructor.
    */
@@ -139,5 +140,3 @@ class DescriptorProvider extends BaseProvider {
     this.dispatchEvent(new DataProviderEvent(DataProviderEventType.LOADED, this));
   }
 }
-
-exports = DescriptorProvider;

@@ -10,10 +10,10 @@ const query = goog.require('os.query');
 const {getAreaManager, getQueryManager} = goog.require('os.query.instance');
 const {isStateFile} = goog.require('os.state');
 const TriState = goog.require('os.structs.TriState');
-const IMenuSupplier = goog.require('os.ui.menu.IMenuSupplier');
+const {default: IMenuSupplier} = goog.require('os.ui.menu.IMenuSupplier');
 const spatial = goog.require('os.ui.menu.spatial');
 const {directiveTag: nodeUi} = goog.require('os.ui.node.AreaNodeUI');
-const QueryAreaNode = goog.require('os.ui.query.AreaNode');
+const {default: QueryAreaNode} = goog.require('os.ui.query.AreaNode');
 
 const ISearchable = goog.requireType('os.data.ISearchable');
 

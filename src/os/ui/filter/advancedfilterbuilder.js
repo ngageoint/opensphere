@@ -1,24 +1,25 @@
-goog.module('os.ui.filter.AdvancedFilterBuilderUI');
+goog.declareModuleId('os.ui.filter.AdvancedFilterBuilderUI');
+
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import SlickGridEvent from '../slick/slickgridevent.js';
+import {apply} from '../ui.js';
+import {close, exists} from '../window.js';
+import * as ConfirmUI from '../window/confirm.js';
+import Expression from './expression.js';
+import {directiveTag as expressionUi} from './expressionui.js';
+import ExpressionNode from './ui/expressionnode.js';
+import GroupNode from './ui/groupnode.js';
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
 const {caseInsensitiveCompare} = goog.require('goog.string');
-const {ROOT} = goog.require('os');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const Expression = goog.require('os.ui.filter.Expression');
-const ExpressionNode = goog.require('os.ui.filter.ui.ExpressionNode');
-const {directiveTag: expressionUi} = goog.require('os.ui.filter.ExpressionUI');
-const GroupNode = goog.require('os.ui.filter.ui.GroupNode');
-const SlickGridEvent = goog.require('os.ui.slick.SlickGridEvent');
-const {close, exists} = goog.require('os.ui.window');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 const Logger = goog.requireType('goog.log.Logger');
 const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
 const ITreeNode = goog.requireType('os.structs.ITreeNode');
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -26,7 +27,7 @@ const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -43,7 +44,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'advancedfilterbuilder';
+export const directiveTag = 'advancedfilterbuilder';
 
 /**
  * Add the directive to the module
@@ -54,7 +55,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the advanced filter builder
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -383,9 +384,3 @@ const logger = log.getLogger('os.ui.filter.AdvancedFilterBuilderUI');
  * @const
  */
 Controller.EXPR_WINDOW_ID = 'editExpr';
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

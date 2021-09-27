@@ -1,11 +1,12 @@
-goog.module('os.ui.hist.LineChart');
+goog.declareModuleId('os.ui.hist.LineChart');
+
+import IHistogramChart from './ihistogramchart.js';// eslint-disable-line
 
 const Disposable = goog.require('goog.Disposable');
 const {maxBinCount} = goog.require('os.hist');
-const IHistogramChart = goog.require('os.ui.hist.IHistogramChart'); // eslint-disable-line
 
 const HistogramData = goog.requireType('os.hist.HistogramData');
-const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
+const {default: TimelineScaleOptions} = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 
 /**
@@ -13,7 +14,7 @@ const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptio
  *
  * @implements {IHistogramChart}
  */
-class LineChart extends Disposable {
+export default class LineChart extends Disposable {
   /**
    * Constructor.
    * @param {!Element} parent The parent SVG container for the chart.
@@ -143,5 +144,3 @@ class LineChart extends Disposable {
         .on('mouseout', tooltip.hide);
   }
 }
-
-exports = LineChart;

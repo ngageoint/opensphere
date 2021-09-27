@@ -1,14 +1,14 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLTreeExportUI');
 
 import {ROOT} from '../../../../os/os.js';
+import exportManager from '../../../../os/ui/file/uiexportmanager.js';
+import Module from '../../../../os/ui/module.js';
+import * as osWindow from '../../../../os/ui/window.js';
+import WindowEventType from '../../../../os/ui/windoweventtype.js';
 import KMLTreeExporter from '../kmltreeexporter.js';
 
 const asserts = goog.require('goog.asserts');
 const config = goog.require('os.config');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const exportManager = goog.require('os.ui.exportManager');
-const osWindow = goog.require('os.ui.window');
 
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 

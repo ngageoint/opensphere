@@ -1,9 +1,20 @@
-goog.module('os.ui.state.menu');
+goog.declareModuleId('os.ui.state.menu');
+
+import * as dispatcher from '../../dispatcher.js';
+import DescriptorNode from '../data/descriptornode.js';
+import UIEvent from '../events/uievent.js';
+import UIEventParams from '../events/uieventparams.js';
+import UIEventType from '../events/uieventtype.js';
+import ImportEventType from '../im/importeventtype.js';
+import Menu from '../menu/menu.js';
+import MenuItem from '../menu/menuitem.js';
+import MenuItemType from '../menu/menuitemtype.js';
+import StateClear from './cmd/stateclearcmd.js';
+import IStateDescriptor from './istatedescriptor.js';
 
 const {removeAllIf} = goog.require('goog.array');
 const Throttle = goog.require('goog.async.Throttle');
 const googDispose = goog.require('goog.dispose');
-const dispatcher = goog.require('os.Dispatcher');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const BaseDescriptor = goog.require('os.data.BaseDescriptor');
 const DataManager = goog.require('os.data.DataManager');
@@ -11,20 +22,10 @@ const DescriptorEventType = goog.require('os.data.DescriptorEventType');
 const osImplements = goog.require('os.implements');
 const {Map: MapMetrics} = goog.require('os.metrics.keys');
 const {getStateManager} = goog.require('os.state.instance');
-const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
-const UIEvent = goog.require('os.ui.events.UIEvent');
-const UIEventParams = goog.require('os.ui.events.UIEventParams');
-const UIEventType = goog.require('os.ui.events.UIEventType');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const IStateDescriptor = goog.require('os.ui.state.IStateDescriptor');
-const StateClear = goog.require('os.ui.state.cmd.StateClear');
 
 const DescriptorEvent = goog.requireType('os.data.DescriptorEvent');
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const MenuItemOptions = goog.requireType('os.ui.menu.MenuItemOptions');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuItemOptions} = goog.requireType('os.ui.menu.MenuItemOptions');
 
 
 /**
@@ -37,31 +38,31 @@ let menu = undefined;
  * Get the menu instance.
  * @return {Menu|undefined} The menu.
  */
-const getMenu = () => menu;
+export const getMenu = () => menu;
 
 /**
  * Throttle how often the state menu is updated.
  * @type {Throttle|undefined}
  */
-let refreshThrottle = undefined;
+export let refreshThrottle = undefined;
 
 /**
  * The maximum number of items to display in each state menu group.
  * @type {number}
  */
-const DISPLAY_LIMIT = 7;
+export const DISPLAY_LIMIT = 7;
 
 /**
  * Prefix for all state menu event types.
  * @type {string}
  */
-const PREFIX = 'state:';
+export const PREFIX = 'state:';
 
 /**
  * State menu event types.
  * @enum {string}
  */
-const EventType = {
+export const EventType = {
   SAVE_STATE: PREFIX + 'save',
   CLEAR_STATES: PREFIX + 'clear'
 };
@@ -69,7 +70,7 @@ const EventType = {
 /**
  * Set up state menu.
  */
-const setup = function() {
+export const setup = function() {
   if (!menu) {
     menu = new Menu(new MenuItem({
       type: MenuItemType.ROOT,
@@ -115,7 +116,7 @@ const setup = function() {
 /**
  * Dispose the state menu.
  */
-const dispose = function() {
+export const dispose = function() {
   googDispose(menu);
   menu = undefined;
 
@@ -156,7 +157,7 @@ const onStateMenuEvent = function(event) {
 /**
  * Update the states displayed in the menu.
  */
-const refreshMenu = function() {
+export const refreshMenu = function() {
   if (!menu) {
     return;
   }
@@ -262,7 +263,7 @@ const getStateOptions_ = function(descriptor, index) {
  * @param {!IStateDescriptor} descriptor The clicked descriptor
  * @param {MenuEvent} event The menu event.
  */
-const toggleState = function(descriptor, event) {
+export const toggleState = function(descriptor, event) {
   descriptor.setActive(!descriptor.isActive());
 };
 
@@ -295,7 +296,7 @@ const getViewMoreOptions_ = function(descriptor) {
  * @param {string} typeName The descriptor type name.
  * @param {string} descriptorType The descriptor type.
  */
-const viewMoreEventEmitter = function(typeName, descriptorType) {
+export const viewMoreEventEmitter = function(typeName, descriptorType) {
   var filterFn = stateFilter.bind(undefined, typeName, descriptorType);
 
   var params = {};
@@ -314,7 +315,7 @@ const viewMoreEventEmitter = function(typeName, descriptorType) {
  * @param {os.structs.ITreeNode} node The tree node.
  * @return {boolean} If the node should be displayed.
  */
-const stateFilter = function(typeName, descriptorType, node) {
+export const stateFilter = function(typeName, descriptorType, node) {
   if (node instanceof DescriptorNode) {
     var descriptor = node.getDescriptor();
     if (osImplements(descriptor, IStateDescriptor.ID)) {
@@ -323,18 +324,4 @@ const stateFilter = function(typeName, descriptorType, node) {
   }
 
   return false;
-};
-
-exports = {
-  getMenu,
-  refreshThrottle,
-  DISPLAY_LIMIT,
-  PREFIX,
-  EventType,
-  setup,
-  dispose,
-  refreshMenu,
-  toggleState,
-  viewMoreEventEmitter,
-  stateFilter
 };

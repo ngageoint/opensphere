@@ -1,9 +1,9 @@
-goog.module('os.ui.ogc.wms.LayerParsers');
+goog.declareModuleId('os.ui.ogc.wms.LayerParsers');
 
-const WMSLayerParserV111 = goog.require('os.ui.ogc.wms.WMSLayerParserV111');
-const WMSLayerParserV130 = goog.require('os.ui.ogc.wms.WMSLayerParserV130');
+import WMSLayerParserV111 from './wmslayerparserv111.js';
+import WMSLayerParserV130 from './wmslayerparserv130.js';
 
-const IWMSLayerParser = goog.requireType('os.ui.ogc.wms.IWMSLayerParser');
+const {default: IWMSLayerParser} = goog.requireType('os.ui.ogc.wms.IWMSLayerParser');
 
 
 /**
@@ -14,4 +14,4 @@ const parsers = {
   '1.3.0': new WMSLayerParserV130()
 };
 
-exports = parsers;
+export default parsers;

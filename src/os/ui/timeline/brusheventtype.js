@@ -1,4 +1,4 @@
-goog.module('os.ui.timeline.BrushEventType');
+goog.declareModuleId('os.ui.timeline.BrushEventType');
 
 /**
  * @enum {string}
@@ -9,4 +9,4 @@ const BrushEventType = {
   BRUSH_END: 'brushend'
 };
 
-exports = BrushEventType;
+export default BrushEventType;

@@ -1,11 +1,11 @@
-goog.module('os.ui.nav.NavBarEvent');
+goog.declareModuleId('os.ui.nav.NavBarEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
 
 /**
  */
-class NavBarEvent extends GoogEvent {
+export default class NavBarEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type The event type
@@ -21,5 +21,3 @@ class NavBarEvent extends GoogEvent {
     this.state = state;
   }
 }
-
-exports = NavBarEvent;

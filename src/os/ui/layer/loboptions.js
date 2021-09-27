@@ -1,11 +1,15 @@
-goog.module('os.ui.layer.LobOptionsUI');
+goog.declareModuleId('os.ui.layer.LobOptionsUI');
 
-goog.require('os.ui.SliderUI');
-goog.require('os.ui.UISwitchUI');
-goog.require('os.ui.layer.EllipseOptionsUI');
+import '../slider.js';
+import '../uiswitch.js';
+import './ellipseoptions.js';
+import {ROOT} from '../../os.js';
+import * as osStyle from '../../style/style.js';
+import Module from '../module.js';
+import AbstractLayerUICtrl from './abstractlayerui.js';
+import {getColumns} from './layers.js';
 
 const Delay = goog.require('goog.async.Delay');
-const {ROOT} = goog.require('os');
 const Fields = goog.require('os.Fields');
 const VectorLayerArrowSize = goog.require('os.command.VectorLayerArrowSize');
 const VectorLayerArrowUnits = goog.require('os.command.VectorLayerArrowUnits');
@@ -29,12 +33,8 @@ const instanceOf = goog.require('os.instanceOf');
 const {convertUnits} = goog.require('os.math');
 const Units = goog.require('os.math.Units');
 const VectorSource = goog.require('os.source.Vector');
-const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
-const Module = goog.require('os.ui.Module');
-const {getColumns} = goog.require('os.ui.layer');
-const AbstractLayerUICtrl = goog.require('os.ui.layer.AbstractLayerUICtrl');
 
 
 /**
@@ -42,7 +42,7 @@ const AbstractLayerUICtrl = goog.require('os.ui.layer.AbstractLayerUICtrl');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/layer/loboptions.html',
@@ -54,7 +54,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'loboptions';
+export const directiveTag = 'loboptions';
 
 /**
  * Add the directive to the module.
@@ -65,7 +65,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the loboptions directive.
  * @unrestricted
  */
-class Controller extends AbstractLayerUICtrl {
+export class Controller extends AbstractLayerUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -894,9 +894,3 @@ class Controller extends AbstractLayerUICtrl {
     return 'ellipseoptions';
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

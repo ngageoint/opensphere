@@ -2,7 +2,7 @@ goog.module('os.command.FilterEnable');
 
 const State = goog.require('os.command.State');
 const filterManager = goog.require('os.query.FilterManager');
-const AbstractFilter = goog.require('os.ui.query.cmd.AbstractFilter');
+const {default: AbstractFilter} = goog.require('os.ui.query.cmd.AbstractFilter');
 
 const FilterEntry = goog.requireType('os.filter.FilterEntry');
 

@@ -1,18 +1,19 @@
-goog.module('os.ui.filter.ui.FilterGroupBy');
+goog.declareModuleId('os.ui.filter.ui.FilterGroupBy');
+
+import SlickTreeNode from '../../slick/slicktreenode.js';
+import {directiveTag} from './filtergroupui.js';
 
 const {insert} = goog.require('goog.array');
 const DataManager = goog.require('os.data.DataManager');
 const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
-const {directiveTag} = goog.require('os.ui.filter.ui.FilterGroupUI');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
-const FilterNode = goog.requireType('os.ui.filter.ui.FilterNode');
+const {default: FilterNode} = goog.requireType('os.ui.filter.ui.FilterNode');
 
 
 /**
  * Groups nodes by type
  */
-class FilterGroupBy extends BaseGroupBy {
+export default class FilterGroupBy extends BaseGroupBy {
   /**
    * Constructor.
    * @param {boolean=} opt_useUi
@@ -86,5 +87,3 @@ class FilterGroupBy extends BaseGroupBy {
     return group;
   }
 }
-
-exports = FilterGroupBy;

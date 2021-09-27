@@ -1,24 +1,25 @@
-goog.module('os.ui.help.HelpUI');
+goog.declareModuleId('os.ui.help.HelpUI');
+
+import * as dispatcher from '../../dispatcher.js';
+import UIEventType from '../eventtype.js';
+import MenuButtonCtrl from '../menu/menubutton.js';
+import MenuItemType from '../menu/menuitemtype.js';
+import {launchAboutModal} from '../modal/aboutmodal.js';
+import Module from '../module.js';
+import OnboardingManager from '../onboarding/onboardingmanager.js';
+import * as ResetSettings from '../util/resetsettings.js';
+import Controls from './controls.js';
+import {launchControlsHelp} from './controlsui.js';
+import {MENU, showWindow} from './help.js';
+import EventType from './helpeventtype.js';
 
 const log = goog.require('goog.log');
 const {isEmpty} = goog.require('goog.object');
-const dispatcher = goog.require('os.Dispatcher');
 const {getAppName} = goog.require('os.config');
 const Settings = goog.require('os.config.Settings');
-const UIEventType = goog.require('os.ui.EventType');
-const Module = goog.require('os.ui.Module');
-const {MENU, showWindow} = goog.require('os.ui.help');
-const Controls = goog.require('os.ui.help.Controls');
-const {launchControlsHelp} = goog.require('os.ui.help.ControlsUI');
-const EventType = goog.require('os.ui.help.EventType');
-const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const {launchAboutModal} = goog.require('os.ui.modal.AboutModalUI');
-const OnboardingManager = goog.require('os.ui.onboarding.OnboardingManager');
-const ResetSettings = goog.require('os.ui.util.ResetSettings');
 
 const Logger = goog.requireType('goog.log.Logger');
-const ActionEvent = goog.requireType('os.ui.action.ActionEvent');
+const {default: ActionEvent} = goog.requireType('os.ui.action.ActionEvent');
 
 
 /**
@@ -26,7 +27,7 @@ const ActionEvent = goog.requireType('os.ui.action.ActionEvent');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -43,7 +44,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'help';
+export const directiveTag = 'help';
 
 /**
  * Register the directive.
@@ -54,7 +55,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the help directive.
  * @unrestricted
  */
-class Controller extends MenuButtonCtrl {
+export class Controller extends MenuButtonCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -245,10 +246,4 @@ const showAlertsWindow = function() {
  */
 const getVideoCardHelpUrl = function() {
   return /** @type {string} */ (Settings.getInstance().get('helpVideoCardUrl'));
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

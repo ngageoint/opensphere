@@ -6,10 +6,10 @@ goog.require('os.ui.action.MenuOptions');
 
 describe('os.ui.ActionMenuUI', function() {
   const ActionMenuUI = goog.module.get('os.ui.ActionMenuUI');
-  const Action = goog.module.get('os.ui.action.Action');
-  const MenuItemAction = goog.module.get('os.ui.action.MenuItemAction');
-  const MenuItemList = goog.module.get('os.ui.action.MenuItemList');
-  const MenuOptions = goog.module.get('os.ui.action.MenuOptions');
+  const {default: Action} = goog.module.get('os.ui.action.Action');
+  const {default: MenuItemAction} = goog.module.get('os.ui.action.MenuItemAction');
+  const {default: MenuItemList} = goog.module.get('os.ui.action.MenuItemList');
+  const {default: MenuOptions} = goog.module.get('os.ui.action.MenuOptions');
 
   var actionMenu = new ActionMenuUI.Controller({
     provider: {

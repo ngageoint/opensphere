@@ -1,16 +1,17 @@
-goog.module('os.ui.column.mapping.ColumnMappingSettings');
+goog.declareModuleId('os.ui.column.mapping.ColumnMappingSettings');
+
+import SettingPlugin from '../../config/settingplugin.js';
+import ImportManager from '../../im/importmanager.js';
+import ColumnMappingImportUI from './columnmappingimportui.js';
+import {directiveTag as settingsUi} from './columnmappingsettingsui.js';
 
 const {TYPE} = goog.require('os.file.mime.columnmapping');
-const ColumnMappingImportUI = goog.require('os.ui.column.mapping.ColumnMappingImportUI');
-const {directiveTag: settingsUi} = goog.require('os.ui.column.mapping.ColumnMappingSettingsUI');
-const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
-const ImportManager = goog.require('os.ui.im.ImportManager');
 
 
 /**
  * Column mapping settings plugin.
  */
-class ColumnMappingSettings extends SettingPlugin {
+export default class ColumnMappingSettings extends SettingPlugin {
   /**
    * Constructor.
    */
@@ -39,5 +40,3 @@ class ColumnMappingSettings extends SettingPlugin {
  * @const
  */
 ColumnMappingSettings.ID = 'columnMappingSettings';
-
-exports = ColumnMappingSettings;

@@ -3,7 +3,7 @@ goog.module('os.file.FileSettingsUI');
 const {ROOT} = goog.require('os');
 const Settings = goog.require('os.config.Settings');
 const {BaseSettingKey, FileSetting, FileSettingDefault} = goog.require('os.file');
-const Module = goog.require('os.ui.Module');
+const {default: Module} = goog.require('os.ui.Module');
 
 
 /**

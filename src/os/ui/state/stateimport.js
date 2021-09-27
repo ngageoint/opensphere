@@ -1,20 +1,23 @@
-goog.module('os.ui.state.StateImport');
+goog.declareModuleId('os.ui.state.StateImport');
+
+import {ROOT} from '../../os.js';
+import ClearManager from '../clear/clearmanager.js';
+import Module from '../module.js';
+import WindowEventType from '../windoweventtype.js';
+import AbstractStateFormCtrl from './abstractstateform.js';
 
 const {assert} = goog.require('goog.asserts');
 const {clear, getCount} = goog.require('goog.object');
-const {ROOT} = goog.require('os');
 const Settings = goog.require('os.config.Settings');
 const JSONStateOptions = goog.require('os.state.JSONStateOptions');
-const {getStateManager} = goog.require('os.state.instance');
 const XMLStateOptions = goog.require('os.state.XMLStateOptions');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const ClearManager = goog.require('os.ui.clear.ClearManager');
-const AbstractStateFormCtrl = goog.require('os.ui.state.AbstractStateFormCtrl');
+const {getStateManager} = goog.require('os.state.instance');
 
 const OSFile = goog.requireType('os.file.File');
-const IState = goog.requireType('os.state.IState');
 const StateParserConfig = goog.requireType('os.parse.StateParserConfig');
+
+
+const IState = goog.requireType('os.state.IState');
 
 
 /**
@@ -22,7 +25,7 @@ const StateParserConfig = goog.requireType('os.parse.StateParserConfig');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -35,7 +38,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'stateimport';
+export const directiveTag = 'stateimport';
 
 /**
  * Add the directive to the os.ui module
@@ -46,7 +49,7 @@ Module.directive('stateimport', [directive]);
  * Controller for the save state window
  * @unrestricted
  */
-class Controller extends AbstractStateFormCtrl {
+export class Controller extends AbstractStateFormCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -153,9 +156,3 @@ class Controller extends AbstractStateFormCtrl {
     super.accept();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

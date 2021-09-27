@@ -7,8 +7,8 @@ const {priorityCompare, titleCompare} = goog.require('os.state');
 const BaseStateManager = goog.require('os.state.BaseStateManager');
 const JSONStateOptions = goog.require('os.state.JSONStateOptions');
 const Tag = goog.require('os.state.Tag');
-const ImportManager = goog.require('os.ui.im.ImportManager');
-const StateImportUI = goog.require('os.ui.state.StateImportUI');
+const {default: ImportManager} = goog.require('os.ui.im.ImportManager');
+const {default: StateImportUI} = goog.require('os.ui.state.StateImportUI');
 
 const Logger = goog.requireType('goog.log.Logger');
 

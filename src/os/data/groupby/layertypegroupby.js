@@ -6,7 +6,7 @@ const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
 const Group = goog.require('os.layer.Group');
 const LayerType = goog.require('os.layer.LayerType');
 const {getMapContainer} = goog.require('os.map.instance');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+const {default: SlickTreeNode} = goog.require('os.ui.slick.SlickTreeNode');
 
 const LayerNode = goog.requireType('os.data.LayerNode');
 

@@ -1,9 +1,11 @@
-goog.module('os.ui.im.ImportEventType');
+goog.declareModuleId('os.ui.im.ImportEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const ImportEventType = {
   FILE: 'importFile',
   URL: 'importUrl'
 };
+
+export default ImportEventType;

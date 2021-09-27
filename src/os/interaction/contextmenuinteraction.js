@@ -4,9 +4,9 @@ const I3DSupport = goog.require('os.I3DSupport');
 const {normalizeLongitude} = goog.require('os.geo2');
 const osImplements = goog.require('os.implements');
 const {getFeatureResult} = goog.require('os.interaction');
-const OLContextMenu = goog.require('os.ui.ol.interaction.ContextMenu');
+const {default: OLContextMenu} = goog.require('os.ui.ol.interaction.ContextMenu');
 
-const ContextMenuOptions = goog.requireType('os.ui.ol.interaction.ContextMenuOptions');
+const {default: ContextMenuOptions} = goog.requireType('os.ui.ol.interaction.ContextMenuOptions');
 
 
 /**

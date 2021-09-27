@@ -1,4 +1,4 @@
-goog.module('os.ui.draw.DrawEvent');
+goog.declareModuleId('os.ui.draw.DrawEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
@@ -8,7 +8,7 @@ const Geometry = goog.requireType('ol.geom.Geometry');
 
 /**
  */
-class DrawEvent extends GoogEvent {
+export default class DrawEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -58,5 +58,3 @@ class DrawEvent extends GoogEvent {
  * @suppress {duplicate}
  */
 DrawEvent.prototype.target;
-
-exports = DrawEvent;

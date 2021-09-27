@@ -1,22 +1,22 @@
-goog.module('os.ui.slick.SlickTreeNode');
+goog.declareModuleId('os.ui.slick.SlickTreeNode');
 
-const {registerClass} = goog.require('os.classRegistry');
+import {registerClass} from '../../classregistry.js';
+import {directiveTag as nodeIconsUi} from '../nodeicons.js';
+import {directiveTag as nodeSpinnerUi} from '../nodespinner.js';
+import {Controller as NodeToggleCtrl, directiveTag as nodeToggleUi} from '../nodetoggle.js';
+import {directiveTag as checkboxUi} from '../tristatecheckbox.js';
+import {sanitize} from '../ui.js';
+import {directiveTag as windowLauncherUi} from '../windowlauncher.js';
 const {NodeClass} = goog.require('os.data');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const TriStateTreeNode = goog.require('os.structs.TriStateTreeNode');
-const {sanitize} = goog.require('os.ui');
-const {directiveTag: nodeIconsUi} = goog.require('os.ui.NodeIconsUI');
-const {directiveTag: nodeSpinnerUi} = goog.require('os.ui.NodeSpinnerUI');
-const {Controller: NodeToggleCtrl, directiveTag: nodeToggleUi} = goog.require('os.ui.NodeToggleUI');
-const {directiveTag: checkboxUi} = goog.require('os.ui.TriStateCheckboxUI');
-const {directiveTag: windowLauncherUi} = goog.require('os.ui.WindowLauncherUI');
 
 
 /**
  * Extends the tri-state tree node to provide items that SlickGrid needs to render the tree.
  * @unrestricted
  */
-class SlickTreeNode extends TriStateTreeNode {
+export default class SlickTreeNode extends TriStateTreeNode {
   /**
    * Constructor.
    */
@@ -532,6 +532,7 @@ class SlickTreeNode extends TriStateTreeNode {
     this.disableFolder_ = value;
   }
 }
+
 registerClass(NodeClass.SLICK, SlickTreeNode);
 
 
@@ -545,6 +546,3 @@ SlickTreeNode.MOVE_MODE = {
   REPARENT_TO_ROOT: 'reparentToRoot',
   REPARENT_LOOKUP_PARENT: 'reparentLookupParent'
 };
-
-
-exports = SlickTreeNode;

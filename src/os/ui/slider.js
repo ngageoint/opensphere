@@ -1,7 +1,7 @@
-goog.module('os.ui.SliderUI');
+goog.declareModuleId('os.ui.SliderUI');
 
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
+import Module from './module.js';
+import {apply} from './ui.js';
 
 
 /**
@@ -9,7 +9,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -29,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'slider';
+export const directiveTag = 'slider';
 
 /**
  * Add the directive to the module
@@ -40,7 +40,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the slider directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -178,9 +178,3 @@ class Controller {
     return [slider['value']];
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

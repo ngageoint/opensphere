@@ -10,13 +10,13 @@ const osLayer = goog.require('os.layer');
 const FolderManager = goog.require('os.layer.FolderManager');
 const LayerGroup = goog.require('os.layer.LayerGroup');
 const {getMapContainer} = goog.require('os.map.instance');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
-const AbstractGroupByTreeSearch = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
-const TreeSearch = goog.require('os.ui.slick.TreeSearch');
+const {default: BaseProvider} = goog.require('os.ui.data.BaseProvider');
+const {default: AbstractGroupByTreeSearch} = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
+const {default: TreeSearch} = goog.require('os.ui.slick.TreeSearch');
 
 const ILayer = goog.requireType('os.layer.ILayer');
 const ITreeNodeSupplier = goog.requireType('os.structs.ITreeNodeSupplier');
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**

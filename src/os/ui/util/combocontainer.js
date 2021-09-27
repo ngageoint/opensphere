@@ -1,8 +1,9 @@
-goog.module('os.ui.util.comboContainerDirective');
+goog.declareModuleId('os.ui.util.comboContainerDirective');
+
+import Module from '../module.js';
+import {apply} from '../ui.js';
 
 const {getViewportSize} = goog.require('goog.dom');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -17,7 +18,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'C',
   link: linkFn
 });
@@ -26,7 +27,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'combo-container';
+export const directiveTag = 'combo-container';
 
 Module.directive('comboContainer', directive);
 
@@ -121,9 +122,4 @@ const linkFn = function($scope, $element, $attrs) {
     }
     comboEl.remove();
   });
-};
-
-exports = {
-  directive,
-  directiveTag
 };

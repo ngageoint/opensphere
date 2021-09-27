@@ -1,13 +1,14 @@
-goog.module('os.ui.filter.im.FilterImporter');
+goog.declareModuleId('os.ui.filter.im.FilterImporter');
+
+import BaseProvider from '../../data/baseprovider.js';
+import * as ui from '../../ui.js';
+import {getFilterableByType, getFilterableTypes, toFilterString} from '../filter.js';
 
 const {getRandomString, toTitleCase} = goog.require('goog.string');
 const {toHexString} = goog.require('os.color');
 const IDataDescriptor = goog.require('os.data.IDataDescriptor');
 const Importer = goog.require('os.im.Importer');
 const osImplements = goog.require('os.implements');
-const ui = goog.require('os.ui');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
-const {getFilterableByType, getFilterableTypes, toFilterString} = goog.require('os.ui.filter');
 
 const FilterEntry = goog.requireType('os.filter.FilterEntry');
 
@@ -16,7 +17,7 @@ const FilterEntry = goog.requireType('os.filter.FilterEntry');
  * Imports filters.
  * @template T
  */
-class FilterImporter extends Importer {
+export default class FilterImporter extends Importer {
   /**
    * Constructor.
    * @param {os.parse.IParser<T>} parser The parser.
@@ -335,5 +336,3 @@ class FilterImporter extends Importer {
     return count;
   }
 }
-
-exports = FilterImporter;

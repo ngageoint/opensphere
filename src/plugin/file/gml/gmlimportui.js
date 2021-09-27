@@ -1,10 +1,9 @@
 goog.declareModuleId('plugin.file.gml.GMLImportUI');
 
+import FileImportUI from '../../../os/ui/im/fileimportui.js';
+import * as osWindow from '../../../os/ui/window.js';
 import {directiveTag as gmlImportUi} from './gmlimport.js';
 import GMLParserConfig from './gmlparserconfig.js';
-
-const FileImportUI = goog.require('os.ui.im.FileImportUI');
-const osWindow = goog.require('os.ui.window');
 
 /**
  * @extends {FileImportUI.<GMLParserConfig>}

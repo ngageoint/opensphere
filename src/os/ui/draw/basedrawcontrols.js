@@ -1,29 +1,30 @@
-goog.module('os.ui.draw.BaseDrawControlsUI');
+goog.declareModuleId('os.ui.draw.BaseDrawControlsUI');
+
+import * as dispatcher from '../../dispatcher.js';
+import {ROOT} from '../../os.js';
+import GlobalMenuEventType from '../globalmenueventtype.js';
+import * as draw from '../menu/drawmenu.js';
+import Module from '../module.js';
+import AbstractDraw from '../ol/interaction/abstractdrawinteraction.js';
+import DragBox from '../ol/interaction/dragboxinteraction.js';
+import {apply} from '../ui.js';
+import DrawEventType from './draweventtype.js';
 
 const log = goog.require('goog.log');
 const {getRandomString} = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
 const Settings = goog.require('os.config.Settings');
 const RecordField = goog.require('os.data.RecordField');
 const DragZoom = goog.require('os.interaction.DragZoom');
 const Metrics = goog.require('os.metrics.Metrics');
 const {Map: MapMetrics} = goog.require('os.metrics.keys');
 const {addOGCMenuItems} = goog.require('os.ogc.registry');
-const {apply} = goog.require('os.ui');
-const GlobalMenuEventType = goog.require('os.ui.GlobalMenuEventType');
-const Module = goog.require('os.ui.Module');
-const DrawEventType = goog.require('os.ui.draw.DrawEventType');
-const draw = goog.require('os.ui.menu.draw');
-const AbstractDraw = goog.require('os.ui.ol.interaction.AbstractDraw');
-const DragBox = goog.require('os.ui.ol.interaction.DragBox');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
 const IMapContainer = goog.requireType('os.map.IMapContainer');
-const DrawEvent = goog.requireType('os.ui.draw.DrawEvent');
-const Menu = goog.requireType('os.ui.menu.Menu');
+const {default: DrawEvent} = goog.requireType('os.ui.draw.DrawEvent');
+const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 
 
 /**
@@ -31,7 +32,7 @@ const Menu = goog.requireType('os.ui.menu.Menu');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -48,7 +49,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'draw-controls';
+export const directiveTag = 'draw-controls';
 
 /**
  * Add the directive to the os.ui module.
@@ -60,7 +61,7 @@ Module.directive('drawControls', [directive]);
  * the os.ui version of the OL map.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -404,9 +405,3 @@ class Controller {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.draw.BaseDrawControlsUI');
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

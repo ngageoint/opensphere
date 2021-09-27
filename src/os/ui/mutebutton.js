@@ -1,7 +1,8 @@
-goog.module('os.ui.MuteButtonUI');
+goog.declareModuleId('os.ui.MuteButtonUI');
+
+import Module from './module.js';
 
 const AudioManager = goog.require('os.audio.AudioManager');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -9,7 +10,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive} The mute button directive
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -26,7 +27,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'mute-button';
+export const directiveTag = 'mute-button';
 
 // add the directive to the module
 Module.directive('muteButton', [directive]);
@@ -35,7 +36,7 @@ Module.directive('muteButton', [directive]);
  * The mute button controller
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The scope
@@ -61,9 +62,3 @@ class Controller {
     this.scope['mute'] = am.getMute();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

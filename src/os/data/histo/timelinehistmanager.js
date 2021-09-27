@@ -13,11 +13,11 @@ const fn = goog.require('os.fn');
 const hist = goog.require('os.hist');
 const {getMapContainer} = goog.require('os.map.instance');
 const PropertyChange = goog.require('os.source.PropertyChange');
-const HistogramEventType = goog.require('os.ui.hist.HistogramEventType');
+const {default: HistogramEventType} = goog.require('os.ui.hist.HistogramEventType');
 
 const DataEvent = goog.requireType('os.data.event.DataEvent');
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const IHistogramManager = goog.requireType('os.ui.hist.IHistogramManager');
+const {default: IHistogramManager} = goog.requireType('os.ui.hist.IHistogramManager');
 
 
 /**

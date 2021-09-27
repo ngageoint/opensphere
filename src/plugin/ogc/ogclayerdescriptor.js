@@ -1,5 +1,19 @@
 goog.declareModuleId('plugin.ogc.OGCLayerDescriptor');
 
+import ColorControlType from '../../os/ui/colorcontroltype.js';
+import ControlType from '../../os/ui/controltype.js';
+import BaseProvider from '../../os/ui/data/baseprovider.js';
+import * as filter from '../../os/ui/filter/filter.js';
+import {directiveTag as nodeUi} from '../../os/ui/filter/ui/filterabledescriptornodeui.js';
+import Icons from '../../os/ui/icons.js';
+import * as icons from '../../os/ui/icons/index.js';
+import IconsSVG from '../../os/ui/iconssvg.js';
+import IFeatureTypeDescriptor from '../../os/ui/ogc/ifeaturetypedescriptor.js';
+import IOGCDescriptor from '../../os/ui/ogc/iogcdescriptor.js';
+import {launchForLayer} from '../../os/ui/query/combinator.js';
+import AbstractLoadingServer from '../../os/ui/server/abstractloadingserver.js';
+import * as deprecated from '../../os/ui/util/deprecated.js';
+
 const QueryData = goog.require('goog.Uri.QueryData');
 const EventType = goog.require('goog.net.EventType');
 const googString = goog.require('goog.string');
@@ -14,8 +28,8 @@ const IAreaTest = goog.require('os.data.IAreaTest');
 const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const IFilterable = goog.require('os.filter.IFilterable');
-const osImplements = goog.require('os.implements');
 const MappingManager = goog.require('os.im.mapping.MappingManager');
+const osImplements = goog.require('os.implements');
 const LayerType = goog.require('os.layer.LayerType');
 const ogc = goog.require('os.ogc');
 const osOgcLayerType = goog.require('os.ogc.LayerType');
@@ -24,23 +38,10 @@ const wmts = goog.require('os.ogc.wmts');
 const osProj = goog.require('os.proj');
 const registerClass = goog.require('os.registerClass');
 const TimelineController = goog.require('os.time.TimelineController');
-const ColorControlType = goog.require('os.ui.ColorControlType');
-const ControlType = goog.require('os.ui.ControlType');
-const Icons = goog.require('os.ui.Icons');
-const IconsSVG = goog.require('os.ui.IconsSVG');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
-const filter = goog.require('os.ui.filter');
-const {directiveTag: nodeUi} = goog.require('os.ui.filter.ui.FilterableDescriptorNodeUI');
-const icons = goog.require('os.ui.icons');
-const IFeatureTypeDescriptor = goog.require('os.ui.ogc.IFeatureTypeDescriptor');
-const IOGCDescriptor = goog.require('os.ui.ogc.IOGCDescriptor');
-const {launchForLayer} = goog.require('os.ui.query.CombinatorUI');
-const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
-const deprecated = goog.require('os.ui.util.deprecated');
 
 const IMapping = goog.requireType('os.im.mapping.IMapping');
 const IFeatureType = goog.requireType('os.ogc.IFeatureType');
-const OGCServer = goog.requireType('os.ui.ogc.OGCServer');
+const {default: OGCServer} = goog.requireType('os.ui.ogc.OGCServer');
 
 
 /**

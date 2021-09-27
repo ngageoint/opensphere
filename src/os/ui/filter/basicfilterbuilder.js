@@ -1,14 +1,14 @@
-goog.module('os.ui.filter.BasicFilterBuilderUI');
+goog.declareModuleId('os.ui.filter.BasicFilterBuilderUI');
 
-goog.require('os.ui.filter.BasicFilterTreeUI');
+import './basicfiltertree.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import SlickGridEvent from '../slick/slickgridevent.js';
+import ExpressionNode from './ui/expressionnode.js';
 
 const Delay = goog.require('goog.async.Delay');
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const ExpressionNode = goog.require('os.ui.filter.ui.ExpressionNode');
-const SlickGridEvent = goog.require('os.ui.slick.SlickGridEvent');
 
-const GroupNode = goog.requireType('os.ui.filter.ui.GroupNode');
+const {default: GroupNode} = goog.requireType('os.ui.filter.ui.GroupNode');
 
 
 /**
@@ -16,7 +16,7 @@ const GroupNode = goog.requireType('os.ui.filter.ui.GroupNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -33,7 +33,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'basicfilterbuilder';
+export const directiveTag = 'basicfilterbuilder';
 
 /**
  * Add the directive to the module
@@ -44,7 +44,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the filter builder
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -123,9 +123,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

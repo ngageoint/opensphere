@@ -1,14 +1,16 @@
 goog.declareModuleId('plugin.track.TrackPlugin');
 
+import MetricsManager from '../../os/ui/metrics/metricsmanager.js';
 import * as track from './track.js';
 import TrackInteraction from './trackinteraction.js';
 import * as menu from './trackmenu.js';
 import Metrics from './trackmetrics.js';
 
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const MapContainer = goog.require('os.MapContainer');
-const MetricsManager = goog.require('os.ui.metrics.MetricsManager');
 const Settings = goog.require('os.config.Settings');
+
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+
 
 const settings = Settings.getInstance();
 

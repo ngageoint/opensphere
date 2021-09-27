@@ -1,4 +1,4 @@
-goog.module('os.ui.query.AbstractQueryReader');
+goog.declareModuleId('os.ui.query.AbstractQueryReader');
 
 const log = goog.require('goog.log');
 const {getRandomString} = goog.require('goog.string');
@@ -12,7 +12,7 @@ const {METHOD_FIELD} = goog.require('os.interpolate');
 const Method = goog.require('os.interpolate.Method');
 const {createElementNS, unescape: xmlUnescape} = goog.require('os.xml');
 
-const IQueryReader = goog.requireType('os.ui.query.IQueryReader');
+const {default: IQueryReader} = goog.requireType('os.ui.query.IQueryReader');
 
 
 /**
@@ -21,7 +21,7 @@ const IQueryReader = goog.requireType('os.ui.query.IQueryReader');
  * @abstract
  * @implements {IQueryReader}
  */
-class AbstractQueryReader {
+export default class AbstractQueryReader {
   /**
    * Constructor.
    */
@@ -108,5 +108,3 @@ AbstractQueryReader.GML_NAMESPACE = 'http://www.opengis.net/gml';
  * @const
  */
 AbstractQueryReader.GML_READER = new GML3();
-
-exports = AbstractQueryReader;

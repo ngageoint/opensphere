@@ -11,7 +11,7 @@ const LayerId = goog.require('os.layer.LayerId');
 const VectorLayer = goog.require('os.layer.Vector');
 
 const ITreeNodeSupplier = goog.requireType('os.structs.ITreeNodeSupplier');
-const ActionEvent = goog.requireType('os.ui.action.ActionEvent');
+const {default: ActionEvent} = goog.requireType('os.ui.action.ActionEvent');
 
 
 /**

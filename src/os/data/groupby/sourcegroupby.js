@@ -2,10 +2,10 @@ goog.module('os.data.groupby.SourceGroupBy');
 
 const RecordField = goog.require('os.data.RecordField');
 const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
-const FilterNode = goog.require('os.ui.filter.ui.FilterNode');
+const {default: FilterNode} = goog.require('os.ui.filter.ui.FilterNode');
 const {featureKeys} = goog.require('os.ui.query');
-const AreaNode = goog.require('os.ui.query.AreaNode');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+const {default: AreaNode} = goog.require('os.ui.query.AreaNode');
+const {default: SlickTreeNode} = goog.require('os.ui.slick.SlickTreeNode');
 
 
 // this field is used to track areas by source

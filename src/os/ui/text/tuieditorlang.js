@@ -1,11 +1,11 @@
-goog.module('os.ui.text.TuiEditorLang');
+goog.declareModuleId('os.ui.text.TuiEditorLang');
 
 /**
  * Since tui editor is lazy loaded, run after loading
  * No easy way to change button text. Opened issue #524 on github
  * @param {boolean=} opt_supportHotkeys
  */
-const setup = function(opt_supportHotkeys) {
+export const setup = function(opt_supportHotkeys) {
   // This is the language block for tui editor so we can modify words in their UI
   const languageOverrides = {
     'Markdown': 'Text',
@@ -25,8 +25,4 @@ const setup = function(opt_supportHotkeys) {
   }
 
   toastui.Editor.setLanguage('en-US', languageOverrides);
-};
-
-exports = {
-  setup
 };

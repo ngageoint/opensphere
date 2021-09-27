@@ -1,13 +1,14 @@
 goog.declareModuleId('plugin.xyz.XYZPlugin');
 
+import ImportManager from '../../os/ui/im/importmanager.js';
+import ProviderImportUI from '../../os/ui/providerimportui.js';
 import XYZLayerConfig from './xyzlayerconfig.js';
 import * as XYZProviderHelpUI from './xyzproviderhelp.js';
 import * as XYZImportForm from './xyzproviderimportform.js';
 
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const ImportManager = goog.require('os.ui.im.ImportManager');
-const ProviderImportUI = goog.require('os.ui.ProviderImportUI');
+
 
 /**
  * Provides map layer support

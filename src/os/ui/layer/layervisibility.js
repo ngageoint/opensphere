@@ -1,6 +1,6 @@
-goog.module('os.ui.layer.LayerVisibilityUI');
+goog.declareModuleId('os.ui.layer.LayerVisibilityUI');
 
-const Module = goog.require('os.ui.Module');
+import Module from '../module.js';
 
 const LayerNode = goog.requireType('os.data.LayerNode');
 const ILayer = goog.requireType('os.layer.ILayer');
@@ -20,7 +20,7 @@ const template = `
  * The layer visibility directive.
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: template,
@@ -32,7 +32,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'layervisibility';
+export const directiveTag = 'layervisibility';
 
 /**
  * Add the directive to the module
@@ -42,7 +42,7 @@ Module.directive(directiveTag, [directive]);
 /**
  * Controller for the layer visibility directive.
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -114,9 +114,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

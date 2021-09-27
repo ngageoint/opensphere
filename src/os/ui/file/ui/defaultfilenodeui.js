@@ -1,10 +1,7 @@
-goog.module('os.ui.file.ui.DefaultFileNodeUI');
+goog.declareModuleId('os.ui.file.ui.DefaultFileNodeUI');
 
-const Module = goog.require('os.ui.Module');
-const {
-  Controller: DescriptorNodeUICtrl,
-  directive: descriptorNodeUIDirective
-} = goog.require('os.ui.data.DescriptorNodeUI');
+import {Controller as DescriptorNodeUICtrl, directive as descriptorNodeUIDirective} from '../../data/descriptornodeui.js';
+import Module from '../../module.js';
 
 
 /**
@@ -12,7 +9,7 @@ const {
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var directive = descriptorNodeUIDirective();
   directive.controller = Controller;
   return directive;
@@ -22,7 +19,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'defaultfilenodeui';
+export const directiveTag = 'defaultfilenodeui';
 
 /**
  * Add the directive to the module.
@@ -33,7 +30,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for selected/highlighted file node UI.
  * @unrestricted
  */
-class Controller extends DescriptorNodeUICtrl {
+export class Controller extends DescriptorNodeUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -52,9 +49,3 @@ class Controller extends DescriptorNodeUICtrl {
         '<b>This action cannot be undone</b>, and will clear the application history.';
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,12 +1,12 @@
-goog.module('os.ui.PropertyInfoUI');
+goog.declareModuleId('os.ui.PropertyInfoUI');
 
-goog.require('os.ui.slick.SlickGridUI');
+import './slick/slickgrid.js';
+import {ROOT} from '../os.js';
+import Module from './module.js';
+import {urlNewTabFormatter} from './slick/formatter.js';
+import {bringToFront, create, exists} from './window.js';
 
 const {buildString} = goog.require('goog.string');
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const {urlNewTabFormatter} = goog.require('os.ui.slick.formatter');
-const {bringToFront, create, exists} = goog.require('os.ui.window');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 
@@ -16,7 +16,7 @@ const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -31,7 +31,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'propertyinfo';
+export const directiveTag = 'propertyinfo';
 
 /**
  * Add the directive to the module.
@@ -42,7 +42,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the featureinfo directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -120,7 +120,7 @@ Controller.GRID_COLUMNS_ = [
 /**
  * @typedef {function(!string, !Object, string=)}
  */
-let LaunchPropertyInfoFn;
+export let LaunchPropertyInfoFn;
 
 /**
  * Launches a feature info window for the provided feature.
@@ -173,7 +173,7 @@ let launchPropertyInfoFn = function(id, object, opt_titleDetail) {
  * @param {!Object} object The object to display.
  * @param {string=} opt_titleDetail Title of the containing layer
  */
-const launchPropertyInfo = function(id, object, opt_titleDetail) {
+export const launchPropertyInfo = function(id, object, opt_titleDetail) {
   launchPropertyInfoFn(id, object, opt_titleDetail);
 };
 
@@ -181,15 +181,6 @@ const launchPropertyInfo = function(id, object, opt_titleDetail) {
  * Set the launchPropertyInfo function.
  * @param {LaunchPropertyInfoFn} fn The function.
  */
-const setLaunchPropertyInfo = (fn) => {
+export const setLaunchPropertyInfo = (fn) => {
   launchPropertyInfoFn = fn;
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  LaunchPropertyInfoFn,
-  launchPropertyInfo,
-  setLaunchPropertyInfo
 };

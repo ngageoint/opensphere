@@ -2,7 +2,7 @@ goog.module('os.bearing.BearingSettings');
 
 const bearing = goog.require('os.bearing');
 const {directiveTag: settingsUi} = goog.require('os.bearing.BearingSettingsUI');
-const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
+const {default: SettingPlugin} = goog.require('os.ui.config.SettingPlugin');
 
 
 /**

@@ -1,7 +1,7 @@
-goog.module('os.ui.alert.alertLinkFilter');
+goog.declareModuleId('os.ui.alert.alertLinkFilter');
 
-const ui = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
+import Module from '../module.js';
+import * as ui from '../ui.js';
 
 
 /**
@@ -30,4 +30,4 @@ const alertLinkFilter = function($sce) {
 
 Module.filter('alertlink', ['$sce', alertLinkFilter]);
 
-exports = alertLinkFilter;
+export default alertLinkFilter;

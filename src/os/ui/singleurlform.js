@@ -1,7 +1,7 @@
-goog.module('os.ui.singleUrlFormDirective');
+goog.declareModuleId('os.ui.singleUrlFormDirective');
 
-const Module = goog.require('os.ui.Module');
-const {ROOT} = goog.require('os');
+import {ROOT} from '../os.js';
+import Module from './module.js';
 
 
 /**

@@ -1,14 +1,15 @@
-goog.module('os.ui.filter.ui.FilterableDescriptorNodeUI');
+goog.declareModuleId('os.ui.filter.ui.FilterableDescriptorNodeUI');
+
+import Module from '../../module.js';
+import AbstractNodeUICtrl from '../../slick/abstractnodeui.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
-const Module = goog.require('os.ui.Module');
-const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
 
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 const IFilterable = goog.requireType('os.filter.IFilterable');
-const DescriptorNode = goog.requireType('os.ui.data.DescriptorNode');
+const {default: DescriptorNode} = goog.requireType('os.ui.data.DescriptorNode');
 
 
 /**
@@ -16,7 +17,7 @@ const DescriptorNode = goog.requireType('os.ui.data.DescriptorNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: true,
   template,
@@ -28,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'filterabledescriptornodeui';
+export const directiveTag = 'filterabledescriptornodeui';
 
 /**
  * @type {string}
@@ -48,7 +49,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for selected/highlighted node UI
  * @unrestricted
  */
-class Controller extends AbstractNodeUICtrl {
+export class Controller extends AbstractNodeUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -116,9 +117,3 @@ class Controller extends AbstractNodeUICtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

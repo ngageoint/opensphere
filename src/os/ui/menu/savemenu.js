@@ -1,12 +1,13 @@
-goog.module('os.ui.menu.save');
+goog.declareModuleId('os.ui.menu.save');
+
+import {EventType} from '../state/statemenu.js';
+import Menu from './menu.js';
+import MenuItem from './menuitem.js';
+import MenuItemType from './menuitemtype.js';
 
 const googDispose = goog.require('goog.dispose');
 const {Map: MapKey} = goog.require('os.metrics.keys');
 const StateManager = goog.require('os.state.StateManager');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const {EventType} = goog.require('os.ui.state.menu');
 
 
 /**
@@ -19,20 +20,20 @@ let MENU = undefined;
  * Get the menu.
  * @return {Menu<undefined>|undefined}
  */
-const getMenu = () => MENU;
+export const getMenu = () => MENU;
 
 /**
  * Set the menu.
  * @param {Menu<undefined>|undefined} menu The menu.
  */
-const setMenu = (menu) => {
+export const setMenu = (menu) => {
   MENU = menu;
 };
 
 /**
  * Set up the menu.
  */
-const setup = function() {
+export const setup = function() {
   if (!MENU) {
     MENU = new Menu(new MenuItem({
       type: MenuItemType.ROOT,
@@ -53,7 +54,7 @@ const setup = function() {
 /**
  * Disposes layer actions
  */
-const dispose = function() {
+export const dispose = function() {
   googDispose(MENU);
   MENU = undefined;
 };
@@ -61,14 +62,6 @@ const dispose = function() {
 /**
  * Save the application state.
  */
-const onSaveState = function() {
+export const onSaveState = function() {
   StateManager.getInstance().startExport();
-};
-
-exports = {
-  getMenu,
-  setMenu,
-  setup,
-  dispose,
-  onSaveState
 };

@@ -2,6 +2,7 @@ goog.declareModuleId('plugin.file.csv.CSVExporter');
 
 import {createEllipse} from '../../../os/feature/feature.js';
 import {PROJECTION} from '../../../os/map/map.js';
+import AbstractCSVExporter from '../../../os/ui/file/csv/abstractcsvexporter.js';
 import {directiveTag as exportUi} from './ui/csvexportui.js';
 
 const log = goog.require('goog.log');
@@ -13,7 +14,6 @@ const osObject = goog.require('os.object');
 const wkt = goog.require('os.ol.wkt');
 const osProj = goog.require('os.proj');
 const TimeRange = goog.require('os.time.TimeRange');
-const AbstractCSVExporter = goog.require('os.ui.file.csv.AbstractCSVExporter');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');

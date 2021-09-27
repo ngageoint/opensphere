@@ -1,7 +1,7 @@
-goog.module('os.ui.query.area.launchChooseArea');
+goog.declareModuleId('os.ui.query.area.launchChooseArea');
 
-const {directiveTag} = goog.require('os.ui.query.area.ChooseAreaUI');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+import * as ConfirmUI from '../../window/confirm.js';
+import {directiveTag} from './choosearea.js';
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -10,7 +10,7 @@ const Feature = goog.requireType('ol.Feature');
  * @param {function(!Feature)} confirm
  * @param {Feature=} opt_default The default area to select
  */
-exports = function(confirm, opt_default) {
+const launchChooseArea = function(confirm, opt_default) {
   ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: confirm,
     confirmValue: opt_default,
@@ -27,3 +27,5 @@ exports = function(confirm, opt_default) {
     }
   }));
 };
+
+export default launchChooseArea;

@@ -1,12 +1,12 @@
-goog.module('os.ui.user.settings.LocationSettings');
+goog.declareModuleId('os.ui.user.settings.LocationSettings');
 
-const {directiveTag: settingsUi} = goog.require('os.ui.user.settings.LocationSettingsUI');
-const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
+import SettingPlugin from '../../config/settingplugin.js';
+import {directiveTag as settingsUi} from './locationsettingsui.js';
 
 
 /**
  */
-class LocationSettings extends SettingPlugin {
+export default class LocationSettings extends SettingPlugin {
   /**
    * Constructor.
    */
@@ -20,5 +20,3 @@ class LocationSettings extends SettingPlugin {
     this.setUI(settingsUi);
   }
 }
-
-exports = LocationSettings;

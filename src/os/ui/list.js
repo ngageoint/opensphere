@@ -1,4 +1,4 @@
-goog.module('os.ui.list');
+goog.declareModuleId('os.ui.list');
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
@@ -12,7 +12,7 @@ const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
  *    scope: (angular.Scope|undefined)
  *  }}
  */
-let ListEntry;
+export let ListEntry;
 
 /**
  * @type {!EventTarget}
@@ -28,14 +28,14 @@ const entryMap = {};
  * Get the list dispatcher.
  * @return {!EventTarget}
  */
-const getDispatcher = () => dispatcher;
+export const getDispatcher = () => dispatcher;
 
 /**
  * @param {string} id The list ID to which to add
  * @param {string} markup The directive or markup to add
  * @param {number=} opt_priority The sort priority (lowest to highest)
  */
-const add = function(id, markup, opt_priority) {
+export const add = function(id, markup, opt_priority) {
   var map = entryMap;
 
   if (!(id in map)) {
@@ -55,7 +55,7 @@ const add = function(id, markup, opt_priority) {
  * @param {string} id The list ID to which to check
  * @param {string} markup The directive or markup to delete
  */
-const remove = function(id, markup) {
+export const remove = function(id, markup) {
   var map = entryMap[id];
   if (map) {
     var itemIdx = map.findIndex(function(item) {
@@ -81,7 +81,7 @@ const remove = function(id, markup) {
  *
  * @param {string} id The list ID to remove
  */
-const removeList = function(id) {
+export const removeList = function(id) {
   var map = entryMap[id];
   if (map) {
     map.forEach(function(item) {
@@ -108,7 +108,7 @@ const removeList = function(id) {
  * @param {string} sourceId The original list ID.
  * @param {string} targetId The new list ID.
  */
-const copy = function(sourceId, targetId) {
+export const copy = function(sourceId, targetId) {
   if (sourceId !== targetId) {
     var items = get(sourceId);
     if (items) {
@@ -132,7 +132,7 @@ const sort_ = function(a, b) {
  * @param {string} id The list ID to get
  * @return {?Array<!ListEntry>} the list or null if not found
  */
-const get = function(id) {
+export const get = function(id) {
   return entryMap[id] || null;
 };
 
@@ -143,7 +143,7 @@ const get = function(id) {
  * @param {string} markup The directive or markup to check
  * @return {boolean} if the markup was found or not
  */
-const exists = function(id, markup) {
+export const exists = function(id, markup) {
   var found = null;
   var map = entryMap[id];
   if (map) {
@@ -152,15 +152,4 @@ const exists = function(id, markup) {
     });
   }
   return !!found;
-};
-
-exports = {
-  ListEntry,
-  getDispatcher,
-  add,
-  remove,
-  removeList,
-  copy,
-  get,
-  exists
 };

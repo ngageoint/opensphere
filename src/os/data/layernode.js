@@ -19,13 +19,13 @@ const {getQueryManager} = goog.require('os.query.instance');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const VectorSource = goog.require('os.source.Vector');
 const TriState = goog.require('os.structs.TriState');
-const ILayerUIProvider = goog.require('os.ui.ILayerUIProvider');
+const {default: ILayerUIProvider} = goog.require('os.ui.ILayerUIProvider');
 const {directiveTag: checkboxUi} = goog.require('os.ui.TriStateCheckboxUI');
 const {directiveTag: layerVisibility} = goog.require('os.ui.layer.LayerVisibilityUI');
 const {directiveTag: featureCount} = goog.require('os.ui.node.FeatureCountUI');
 const {directiveTag: layerType} = goog.require('os.ui.node.LayerTypeUI');
 const {directiveTag: tileLoading} = goog.require('os.ui.node.TileLoadingUI');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+const {default: SlickTreeNode} = goog.require('os.ui.slick.SlickTreeNode');
 
 const IExtent = goog.requireType('os.data.IExtent');
 const ISearchable = goog.requireType('os.data.ISearchable');

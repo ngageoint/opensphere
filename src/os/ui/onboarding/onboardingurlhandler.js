@@ -1,4 +1,4 @@
-goog.module('os.ui.onboarding.OnboardingUrlHandler');
+goog.declareModuleId('os.ui.onboarding.OnboardingUrlHandler');
 
 const Settings = goog.require('os.config.Settings');
 const AbstractUrlHandler = goog.require('os.url.AbstractUrlHandler');
@@ -7,7 +7,7 @@ const AbstractUrlHandler = goog.require('os.url.AbstractUrlHandler');
 /**
  * Handles URL parameters for onboarding.
  */
-class OnboardingUrlHandler extends AbstractUrlHandler {
+export default class OnboardingUrlHandler extends AbstractUrlHandler {
   /**
    * Constructor.
    * @param {string=} opt_omarId The ID of the OMAR server this handler handles.
@@ -34,5 +34,3 @@ class OnboardingUrlHandler extends AbstractUrlHandler {
  * @const
  */
 OnboardingUrlHandler.KEY = 'tips';
-
-exports = OnboardingUrlHandler;

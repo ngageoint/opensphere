@@ -1,11 +1,13 @@
 goog.declareModuleId('plugin.vectortools.JoinUI');
 
-goog.require('os.ui.util.ValidationMessageUI');
-
+import '../../os/ui/util/validationmessage.js';
 import './mappingcounter.js';
 
 import * as os from '../../os/os.js';
+import Module from '../../os/ui/module.js';
 import * as ui from '../../os/ui/ui.js';
+import * as osWindow from '../../os/ui/window.js';
+import WindowEventType from '../../os/ui/windoweventtype.js';
 import JoinLayer from './joinlayercmd.js';
 
 const googString = goog.require('goog.string');
@@ -15,9 +17,6 @@ const DataManager = goog.require('os.data.DataManager');
 const SourceManager = goog.require('os.data.SourceManager');
 const ogc = goog.require('os.ogc');
 const PropertyChange = goog.require('os.source.PropertyChange');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const osWindow = goog.require('os.ui.window');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 

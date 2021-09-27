@@ -1,6 +1,6 @@
-goog.module('os.ui.config.SettingDefaultUI');
+goog.declareModuleId('os.ui.config.SettingDefaultUI');
 
-const Module = goog.require('os.ui.Module');
+import Module from '../module.js';
 
 
 /**
@@ -8,7 +8,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<div></div>'
@@ -18,14 +18,9 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'defaultsettingui';
+export const directiveTag = 'defaultsettingui';
 
 /**
  * Add the directive to the module
  */
 Module.directive(directiveTag, [directive]);
-
-exports = {
-  directive,
-  directiveTag
-};

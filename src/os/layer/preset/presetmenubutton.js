@@ -2,11 +2,11 @@ goog.module('os.layer.preset.PresetMenuButton');
 
 const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
 const {getImportActionManager} = goog.require('os.im.action');
-const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const Module = goog.require('os.ui.Module');
+const {default: MenuButtonCtrl} = goog.require('os.ui.menu.MenuButtonCtrl');
+const {default: Menu} = goog.require('os.ui.menu.Menu');
+const {default: MenuItem} = goog.require('os.ui.menu.MenuItem');
+const {default: MenuItemType} = goog.require('os.ui.menu.MenuItemType');
+const {default: Module} = goog.require('os.ui.Module');
 const OsLayerPreset = goog.require('os.layer.preset');
 const {getMapContainer} = goog.require('os.map.instance');
 const OsXml = goog.require('os.xml');

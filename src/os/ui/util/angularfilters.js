@@ -1,6 +1,6 @@
-goog.module('os.ui.util.filters.ellipsisFilter');
+goog.declareModuleId('os.ui.util.filters.ellipsisFilter');
 
-const Module = goog.require('os.ui.Module');
+import Module from '../module.js';
 
 
 /**
@@ -28,4 +28,4 @@ const ellipsisFilter = () => /** @type {angular.Filter} */ (filterFn);
  */
 Module.filter('ellipsis', [ellipsisFilter]);
 
-exports = ellipsisFilter;
+export default ellipsisFilter;

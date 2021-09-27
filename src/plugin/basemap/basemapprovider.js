@@ -2,6 +2,7 @@ goog.declareModuleId('plugin.basemap.BaseMapProvider');
 
 import * as dispatcher from '../../os/dispatcher.js';
 import {PROJECTION} from '../../os/map/map.js';
+import DescriptorProvider from '../../os/ui/data/descriptorprovider.js';
 import {ID, LAYER_TYPE, TERRAIN_TYPE, TYPE} from './basemap.js';
 import BaseMapDescriptor from './basemapdescriptor.js';
 import BaseMap from './layer/basemaplayer.js';
@@ -19,7 +20,6 @@ const osImplements = goog.require('os.implements');
 const {addTerrainProvider, hasTerrain} = goog.require('os.map.terrain');
 const BinnedLayersEvent = goog.require('os.proj.switch.BinnedLayersEvent');
 const SwitchProjection = goog.require('os.proj.switch.SwitchProjection');
-const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
 
 
 /**

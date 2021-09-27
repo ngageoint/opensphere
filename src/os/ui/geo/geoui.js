@@ -1,8 +1,9 @@
-goog.module('os.ui.geo.GeoUI');
+goog.declareModuleId('os.ui.geo.GeoUI');
+
+import Module from '../module.js';
+import mgrs from './mgrs.js';
 
 const {parseLatLon} = goog.require('os.geo');
-const Module = goog.require('os.ui.Module');
-const mgrs = goog.require('os.ui.geo.mgrs');
 
 
 /**
@@ -10,7 +11,7 @@ const mgrs = goog.require('os.ui.geo.mgrs');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   require: 'ngModel',
   link: geoLinkFn
 });
@@ -19,7 +20,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'geo';
+export const directiveTag = 'geo';
 
 /**
  * Link function for the geo directive.
@@ -75,8 +76,3 @@ const geoLinkFn = function(scope, elm, attrs, ctrl) {
  * Add the directive to the module.
  */
 Module.directive(directiveTag, [directive]);
-
-exports = {
-  directive,
-  directiveTag
-};

@@ -1,6 +1,6 @@
-goog.module('os.ui.modal');
+goog.declareModuleId('os.ui.modal');
 
-const ui = goog.require('os.ui');
+import * as ui from '../ui.js';
 
 
 /**
@@ -8,7 +8,7 @@ const ui = goog.require('os.ui');
  * @param {string} markup The markup to compile
  * @param {Object=} opt_scopeOptions
  */
-const create = function(target, markup, opt_scopeOptions) {
+export const create = function(target, markup, opt_scopeOptions) {
   var compile = /** @type {!angular.$compile} */ (ui.injector.get('$compile'));
   var scope = /** @type {!angular.Scope} */ (ui.injector.get('$rootScope').$new());
 
@@ -31,7 +31,7 @@ const create = function(target, markup, opt_scopeOptions) {
  * @param {!angular.JQLite} el
  * @param {Object<string, *>=} opt_options
  */
-const open = function(el, opt_options) {
+export const open = function(el, opt_options) {
   // Tabindex -1 is required for the modal to close on the ESC key
   el.attr('tabindex', '-1');
   var options = opt_options || {};
@@ -46,9 +46,4 @@ const open = function(el, opt_options) {
     }
     el.remove();
   });
-};
-
-exports = {
-  create,
-  open
 };

@@ -1,14 +1,14 @@
-goog.module('os.ui.file.AnyTypeImport');
+goog.declareModuleId('os.ui.file.AnyTypeImport');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import * as osWindow from '../window.js';
+import WindowEventType from '../windoweventtype.js';
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const {isZip} = goog.require('os.file.mime.zip');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const osWindow = goog.require('os.ui.window');
 
-const IImportUI = goog.requireType('os.ui.im.IImportUI');
+const {default: IImportUI} = goog.requireType('os.ui.im.IImportUI');
 
 
 /**
@@ -16,7 +16,7 @@ const IImportUI = goog.requireType('os.ui.im.IImportUI');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -29,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'anytypeimport';
+export const directiveTag = 'anytypeimport';
 
 /**
  * Add the directive to the module
@@ -40,7 +40,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the KML import dialog
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -121,9 +121,3 @@ class Controller {
     return importer.getTitle();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

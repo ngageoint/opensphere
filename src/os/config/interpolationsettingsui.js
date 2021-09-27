@@ -6,7 +6,7 @@ const {ROOT} = goog.require('os');
 const InterpolateFeatures = goog.require('os.command.InterpolateFeatures');
 const {getSettings} = goog.require('os.config.instance');
 const {SettingsKey, getConfig, setConfig} = goog.require('os.interpolate');
-const Module = goog.require('os.ui.Module');
+const {default: Module} = goog.require('os.ui.Module');
 
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 

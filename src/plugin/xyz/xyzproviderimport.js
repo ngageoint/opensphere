@@ -2,6 +2,9 @@ goog.declareModuleId('plugin.xyz.XYZImport');
 
 import * as osMap from '../../os/map/map.js';
 import {ROOT} from '../../os/os.js';
+import BaseProvider from '../../os/ui/data/baseprovider.js';
+import Module from '../../os/ui/module.js';
+import SingleUrlProviderImportCtrl from '../../os/ui/singleurlproviderimport.js';
 import ConfigProvider from '../config/configprovider.js';
 import {directiveTag as uiDirectiveTag} from './xyzdescriptornodeui.js';
 import * as XYZProviderHelpUI from './xyzproviderhelp.js';
@@ -11,9 +14,6 @@ const ConfigDescriptor = goog.require('os.data.ConfigDescriptor');
 const DataManager = goog.require('os.data.DataManager');
 const {createFromOptions} = goog.require('os.layer');
 const {getProjections} = goog.require('os.proj');
-const Module = goog.require('os.ui.Module');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
-const SingleUrlProviderImportCtrl = goog.require('os.ui.SingleUrlProviderImportCtrl');
 
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 

@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.arc.query.ArcQueryHandler');
 
+import * as osUiFilter from '../../../os/ui/filter/filter.js';
 import ArcFilterModifier from './arcfiltermodifier.js';
 import ArcSpatialFormatter from './arcspatialformatter.js';
 import ArcSpatialModifier from './arcspatialmodifier.js';
@@ -11,9 +12,8 @@ const googObject = goog.require('goog.object');
 const Feature = goog.require('ol.Feature');
 const jsts = goog.require('os.geo.jsts');
 const QueryHandler = goog.require('os.query.QueryHandler');
-const osUiFilter = goog.require('os.ui.filter');
 
-const ActiveEntries = goog.requireType('os.ui.query.ActiveEntries');
+const {default: ActiveEntries} = goog.requireType('os.ui.query.ActiveEntries');
 
 
 /**

@@ -1,14 +1,15 @@
-goog.module('os.ui.ex.AreaExportUI');
+goog.declareModuleId('os.ui.ex.AreaExportUI');
+
+import KMLExporter from '../../../plugin/file/kml/kmlexporter.js';
+import SHPExporter from '../../../plugin/file/shp/shpexporter.js';
+import {DEFAULT_VECTOR_CONFIG, setFeatureStyle} from '../../style/style.js';
+import {Controller as ExportDialogCtrl, directive as exportDialogDirective} from '../file/exportdialog.js';
+import Module from '../module.js';
+import {create as createWindow} from '../window.js';
 
 const {removeDuplicates} = goog.require('goog.array');
 const {METHOD_FIELD} = goog.require('os.interpolate');
-const {DEFAULT_VECTOR_CONFIG, setFeatureStyle} = goog.require('os.style');
 const StyleType = goog.require('os.style.StyleType');
-const Module = goog.require('os.ui.Module');
-const {Controller: ExportDialogCtrl, directive: exportDialogDirective} = goog.require('os.ui.file.ExportDialogUI');
-const {create: createWindow} = goog.require('os.ui.window');
-const {default: KMLExporter} = goog.require('plugin.file.kml.KMLExporter');
-const {default: SHPExporter} = goog.require('plugin.file.shp.SHPExporter');
 
 
 /**
@@ -16,7 +17,7 @@ const {default: SHPExporter} = goog.require('plugin.file.shp.SHPExporter');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var directive = exportDialogDirective();
   directive.controller = Controller;
   return directive;
@@ -26,7 +27,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'areaexport';
+export const directiveTag = 'areaexport';
 
 /**
  * Add the directive to the module.
@@ -39,7 +40,7 @@ Module.directive('areaexport', [directive]);
  * @extends {ExportDialogCtrl.<!os.source.Vector>}
  * @unrestricted
  */
-class Controller extends ExportDialogCtrl {
+export class Controller extends ExportDialogCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -150,9 +151,3 @@ class Controller extends ExportDialogCtrl {
     createWindow(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

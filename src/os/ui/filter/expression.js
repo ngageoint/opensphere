@@ -1,16 +1,17 @@
-goog.module('os.ui.filter.Expression');
+goog.declareModuleId('os.ui.filter.Expression');
+
+import {OPERATIONS} from './filter.js';
 
 const {getFirstElementChild} = goog.require('goog.dom');
-const {OPERATIONS} = goog.require('os.ui.filter');
 
-const Op = goog.requireType('os.ui.filter.op.Op');
+const {default: Op} = goog.requireType('os.ui.filter.op.Op');
 
 
 /**
  * Expression object
  * @unrestricted
  */
-class Expression {
+export default class Expression {
   /**
    * Constructor.
    */
@@ -107,5 +108,3 @@ class Expression {
     return clone;
   }
 }
-
-exports = Expression;

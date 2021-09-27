@@ -7,7 +7,7 @@ const {getMapContainer} = goog.require('os.map.instance');
 const TailStyle = goog.require('os.annotation.TailStyle');
 const {nearestPoints} = goog.require('os.geo.jsts');
 const {measureText} = goog.require('os.ui');
-const FeatureEditField = goog.require('os.ui.FeatureEditField');
+const {default: FeatureEditField} = goog.require('os.ui.FeatureEditField');
 
 const Feature = goog.requireType('ol.Feature');
 const Overlay = goog.requireType('ol.Overlay');

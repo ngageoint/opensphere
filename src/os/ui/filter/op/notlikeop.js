@@ -1,13 +1,13 @@
-goog.module('os.ui.filter.op.NotLike');
+goog.declareModuleId('os.ui.filter.op.NotLike');
 
-const IsLike = goog.require('os.ui.filter.op.IsLike');
-const Not = goog.require('os.ui.filter.op.Not');
+import IsLike from './islikeop.js';
+import Not from './notop.js';
 
 
 /**
  * An inverse 'PropertyIsLike' operation class.
  */
-class NotLike extends Not {
+export default class NotLike extends Not {
   /**
    * Constructor.
    */
@@ -15,5 +15,3 @@ class NotLike extends Not {
     super(new IsLike());
   }
 }
-
-exports = NotLike;

@@ -2,6 +2,7 @@ goog.declareModuleId('os.feature');
 
 import * as osMap from '../map/map.js';
 import * as osStyle from '../style/style.js';
+import {quoteString} from '../ui/filter/filterstring.js';
 
 const {defaultCompare} = goog.require('goog.array');
 const {containsValue} = goog.require('goog.object');
@@ -47,13 +48,12 @@ const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const {getStyleManager} = goog.require('os.style.instance');
 const TimelineController = goog.require('os.time.TimelineController');
-const {quoteString} = goog.require('os.ui.filter.string');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
 const Layer = goog.requireType('ol.layer.Layer');
 const RenderFeature = goog.requireType('ol.render.Feature');
-const Style = goog.requireType('ol.style.Style');
 const Source = goog.requireType('ol.source.Source');
+const Style = goog.requireType('ol.style.Style');
 const ISource = goog.requireType('os.source.ISource');
 const VectorSource = goog.requireType('os.source.Vector');
 const ITime = goog.requireType('os.time.ITime');

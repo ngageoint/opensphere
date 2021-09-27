@@ -1,4 +1,6 @@
-goog.module('os.ui.file.gml.GMLParser');
+goog.declareModuleId('os.ui.file.gml.GMLParser');
+
+import * as osStyle from '../../../style/style.js';
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');
@@ -9,7 +11,6 @@ const GML3 = goog.require('ol.format.GML3');
 const {get: getProjection} = goog.require('ol.proj');
 const {isColorString} = goog.require('os.color');
 const {getText} = goog.require('os.file.mime.text');
-const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const {createElement} = goog.require('os.xml');
@@ -41,7 +42,7 @@ const DEFAULT_STYLE = {
  *
  * @implements {IParser<Feature>}
  */
-class GMLParser {
+export default class GMLParser {
   /**
    * Constructor.
    */
@@ -250,5 +251,3 @@ class GMLParser {
  * @type {log.Logger}
  */
 const logger = log.getLogger('os.ui.file.gml.GMLParser');
-
-exports = GMLParser;

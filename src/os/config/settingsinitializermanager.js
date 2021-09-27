@@ -2,7 +2,7 @@ goog.module('os.config.SettingsInitializerManager');
 
 const SettingsInitializer = goog.require('os.config.SettingsInitializer');
 
-const AngularAppSettingsInitializer = goog.requireType('os.ui.config.AngularAppSettingsInitializer');
+const {default: AngularAppSettingsInitializer} = goog.requireType('os.ui.config.AngularAppSettingsInitializer');
 
 
 /**

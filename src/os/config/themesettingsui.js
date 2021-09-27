@@ -7,7 +7,7 @@ const {getSettings} = goog.require('os.config.instance');
 const ThemeSettingsAccessibilityChangeEvent = goog.require('os.config.ThemeSettingsAccessibilityChangeEvent');
 const {DEFAULT_THEME, DEFAULT_THEMES, Keys} = goog.require('os.config.theme');
 const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
+const {default: Module} = goog.require('os.ui.Module');
 
 const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
 

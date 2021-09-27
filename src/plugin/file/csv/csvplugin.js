@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.file.csv.CSVPlugin');
 
+import exportManager from '../../../os/ui/file/uiexportmanager.js';
+import ImportManager from '../../../os/ui/im/importmanager.js';
 import CSVDescriptor from './csvdescriptor.js';
 import CSVExporter from './csvexporter.js';
 import CSVLayerConfig from './csvlayerconfig.js';
@@ -12,8 +14,6 @@ const ProviderEntry = goog.require('os.data.ProviderEntry');
 const csv = goog.require('os.file.mime.csv');
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const exportManager = goog.require('os.ui.exportManager');
-const ImportManager = goog.require('os.ui.im.ImportManager');
 
 
 /**

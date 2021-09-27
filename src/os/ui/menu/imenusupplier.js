@@ -1,6 +1,6 @@
-goog.module('os.ui.menu.IMenuSupplier');
+goog.declareModuleId('os.ui.menu.IMenuSupplier');
 
-const Menu = goog.requireType('os.ui.menu.Menu');
+const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 
 
 /**
@@ -8,7 +8,7 @@ const Menu = goog.requireType('os.ui.menu.Menu');
  *
  * @interface
  */
-class IMenuSupplier {
+export default class IMenuSupplier {
   /**
    * Get the context menu.
    * @return {Menu|undefined} The menu.
@@ -23,5 +23,3 @@ class IMenuSupplier {
  * @const
  */
 IMenuSupplier.ID = 'os.ui.menu.IMenuSupplier';
-
-exports = IMenuSupplier;

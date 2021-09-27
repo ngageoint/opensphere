@@ -1,8 +1,8 @@
-goog.module('os.ui.filter.ui.GroupNodeViewUI');
+goog.declareModuleId('os.ui.filter.ui.GroupNodeViewUI');
 
-const Module = goog.require('os.ui.Module');
+import Module from '../../module.js';
 
-const GroupNode = goog.requireType('os.ui.filter.ui.GroupNode');
+const {default: GroupNode} = goog.requireType('os.ui.filter.ui.GroupNode');
 
 
 /**
@@ -10,7 +10,7 @@ const GroupNode = goog.requireType('os.ui.filter.ui.GroupNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<span>' +
@@ -24,7 +24,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'groupnodeviewui';
+export const directiveTag = 'groupnodeviewui';
 
 /**
  * Add the directive to the os.ui module
@@ -35,7 +35,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for selected/highlighted node UI
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -63,10 +63,4 @@ Controller.GROUPS = {
   'And': 'All (AND)',
   'Or': 'Any (OR)',
   'Not': 'Not'
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

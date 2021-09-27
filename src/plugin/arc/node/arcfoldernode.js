@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.arc.node.ArcFolderNode');
 
+import LoadingNode from '../../../os/ui/slick/loadingnode.js';
+import SlickTreeNode from '../../../os/ui/slick/slicktreenode.js';
 import * as arc from '../arc.js';
 
 const dispose = goog.require('goog.dispose');
 const EventType = goog.require('goog.net.EventType');
-const LoadingNode = goog.require('os.ui.slick.LoadingNode');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const {default: ArcServer} = goog.requireType('plugin.arc.ArcServer');

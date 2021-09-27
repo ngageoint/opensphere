@@ -1,11 +1,11 @@
-goog.module('os.ui.AddDataButtonUI');
+goog.declareModuleId('os.ui.AddDataButtonUI');
 
-const dispatcher = goog.require('os.Dispatcher');
+import * as dispatcher from '../dispatcher.js';
+import ImportEventType from './im/importeventtype.js';
+import * as osUiMenuImport from './menu/importmenu.js';
+import MenuButtonCtrl from './menu/menubutton.js';
+import Module from './module.js';
 const {AddData} = goog.require('os.metrics.keys');
-const Module = goog.require('os.ui.Module');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
-const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
-const osUiMenuImport = goog.require('os.ui.menu.import');
 
 
 /**
@@ -13,7 +13,7 @@ const osUiMenuImport = goog.require('os.ui.menu.import');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -37,7 +37,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'add-data-button';
+export const directiveTag = 'add-data-button';
 
 /**
  * add the directive to the module
@@ -47,7 +47,7 @@ Module.directive('addDataButton', [directive]);
 /**
  * @unrestricted
  */
-class Controller extends MenuButtonCtrl {
+export class Controller extends MenuButtonCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -70,9 +70,3 @@ class Controller extends MenuButtonCtrl {
     dispatcher.getInstance().dispatchEvent(ImportEventType.FILE);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,4 +1,7 @@
-goog.module('os.ui.wiz.GeometryStep');
+goog.declareModuleId('os.ui.wiz.GeometryStep');
+
+import {directiveTag as stepUi} from './geometrystepui.js';
+import AbstractWizardStep from './step/abstractwizardstep.js';
 
 const {DEFAULT_ALT_UNIT} = goog.require('os.fields');
 const AltMapping = goog.require('os.im.mapping.AltMapping');
@@ -11,8 +14,6 @@ const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
 const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
 const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
 const WKTMapping = goog.require('os.im.mapping.WKTMapping');
-const {directiveTag: stepUi} = goog.require('os.ui.wiz.GeometryStepUI');
-const AbstractWizardStep = goog.require('os.ui.wiz.step.AbstractWizardStep');
 
 const IMapping = goog.requireType('os.im.mapping.IMapping');
 
@@ -21,7 +22,7 @@ const IMapping = goog.requireType('os.im.mapping.IMapping');
  * Import wizard geometry step
  * @unrestricted
  */
-class GeometryStep extends AbstractWizardStep {
+export default class GeometryStep extends AbstractWizardStep {
   /**
    * Constructor.
    */
@@ -313,5 +314,3 @@ class GeometryStep extends AbstractWizardStep {
     return this.valid;
   }
 }
-
-exports = GeometryStep;

@@ -1,4 +1,8 @@
-goog.module('os.ui.filter.ui.FilterNodeUI');
+goog.declareModuleId('os.ui.filter.ui.FilterNodeUI');
+
+import Module from '../../module.js';
+import FilterRemove from '../../query/cmd/filterremovecmd.js';
+import AbstractNodeUICtrl from '../../slick/abstractnodeui.js';
 
 const {getCount} = goog.require('goog.object');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
@@ -6,11 +10,8 @@ const DataManager = goog.require('os.data.DataManager');
 const Metrics = goog.require('os.metrics.Metrics');
 const {Filters} = goog.require('os.metrics.keys');
 const {getQueryManager} = goog.require('os.query.instance');
-const Module = goog.require('os.ui.Module');
-const FilterRemove = goog.require('os.ui.query.cmd.FilterRemove');
-const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
 
-const FilterNode = goog.requireType('os.ui.filter.ui.FilterNode');
+const {default: FilterNode} = goog.requireType('os.ui.filter.ui.FilterNode');
 
 
 /**
@@ -18,7 +19,7 @@ const FilterNode = goog.requireType('os.ui.filter.ui.FilterNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
@@ -38,7 +39,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'filternodeui';
+export const directiveTag = 'filternodeui';
 
 /**
  * Add the directive to the os.ui module
@@ -49,7 +50,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for selected/highlighted node UI
  * @unrestricted
  */
-class Controller extends AbstractNodeUICtrl {
+export class Controller extends AbstractNodeUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -130,9 +131,3 @@ class Controller extends AbstractNodeUICtrl {
     return !!entry && entry.isDefault();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

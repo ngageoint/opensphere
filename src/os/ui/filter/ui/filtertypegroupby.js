@@ -1,16 +1,17 @@
-goog.module('os.ui.filter.ui.FilterTypeGroupBy');
+goog.declareModuleId('os.ui.filter.ui.FilterTypeGroupBy');
+
+import FilterGroupBy from './filtergroupby.js';
 
 const {insert} = goog.require('goog.array');
 const {toTitleCase} = goog.require('goog.string');
-const FilterGroupBy = goog.require('os.ui.filter.ui.FilterGroupBy');
 
-const FilterNode = goog.requireType('os.ui.filter.ui.FilterNode');
+const {default: FilterNode} = goog.requireType('os.ui.filter.ui.FilterNode');
 
 
 /**
  * Groups nodes by type
  */
-class FilterTypeGroupBy extends FilterGroupBy {
+export default class FilterTypeGroupBy extends FilterGroupBy {
   /**
    * Constructor.
    */
@@ -55,5 +56,3 @@ class FilterTypeGroupBy extends FilterGroupBy {
     return ids;
   }
 }
-
-exports = FilterTypeGroupBy;

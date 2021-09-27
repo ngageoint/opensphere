@@ -12,10 +12,10 @@ const TriState = goog.require('os.structs.TriState');
 const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
-const IMenuSupplier = goog.require('os.ui.menu.IMenuSupplier');
+const {default: IMenuSupplier} = goog.require('os.ui.menu.IMenuSupplier');
 const spatial = goog.require('os.ui.menu.spatial');
 const {directiveTag: nodeUi} = goog.require('os.ui.node.DrawingFeatureNodeUI');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+const {default: SlickTreeNode} = goog.require('os.ui.slick.SlickTreeNode');
 
 
 /**

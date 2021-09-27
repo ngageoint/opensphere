@@ -1,25 +1,25 @@
-goog.module('os.ui.buffer.BufferFormUI');
+goog.declareModuleId('os.ui.buffer.BufferFormUI');
 
-goog.require('os.ui.im.BasicInfoUI');
+import '../im/basicinfo.js';
+import * as osMap from '../../map/map.js';
+import {ROOT} from '../../os.js';
+import {Controller as ExportOptionsCtrl} from '../ex/exportoptions.js';
+import ExportOptionsEvent from '../ex/exportoptionsevent.js';
+import Module from '../module.js';
+import {nameCompare} from '../slick/column.js';
+import WindowEventType from '../windoweventtype.js';
 
 const {clone} = goog.require('goog.object');
 const GeometryType = goog.require('ol.geom.GeometryType');
 const {transformExtent} = goog.require('ol.proj');
-const {ROOT} = goog.require('os');
 const MapContainer = goog.require('os.MapContainer');
 const buffer = goog.require('os.buffer');
 const {isGeometryPolygonal} = goog.require('os.geo');
 const osJsts = goog.require('os.geo.jsts');
-const osMap = goog.require('os.map');
 const {convertUnits} = goog.require('os.math');
 const UnitLabels = goog.require('os.math.UnitLabels');
 const Units = goog.require('os.math.Units');
 const {EPSG4326} = goog.require('os.proj');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {Controller: ExportOptionsCtrl} = goog.require('os.ui.ex.ExportOptionsUI');
-const ExportOptionsEvent = goog.require('os.ui.ex.ExportOptionsEvent');
-const {nameCompare} = goog.require('os.ui.slick.column');
 
 const {BufferConfig} = goog.requireType('os.buffer');
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
@@ -30,7 +30,7 @@ const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -48,7 +48,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'bufferform';
+export const directiveTag = 'bufferform';
 
 /**
  * Add the directive to the module
@@ -59,7 +59,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the buffer form.
  * @unrestricted
  */
-class Controller extends ExportOptionsCtrl {
+export class Controller extends ExportOptionsCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -327,9 +327,3 @@ class Controller extends ExportOptionsCtrl {
     return false;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

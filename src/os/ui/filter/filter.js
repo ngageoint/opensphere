@@ -1,4 +1,27 @@
-goog.module('os.ui.filter');
+goog.declareModuleId('os.ui.filter');
+
+import Between from './op/betweenop.js';
+import EqualTo from './op/equaltoop.js';
+import GreaterThan from './op/greaterthanop.js';
+import GreaterThanOrEqualTo from './op/greaterthanorequaltoop.js';
+import InList from './op/inlistop.js';
+import IsFalse from './op/isfalseop.js';
+import IsLikeNumeric from './op/islikenumericop.js';
+import IsLike from './op/islikeop.js';
+import IsNull from './op/isnullop.js';
+import IsTrue from './op/istrueop.js';
+import LessThan from './op/lessthanop.js';
+import LessThanOrEqualTo from './op/lessthanorequaltoop.js';
+import LikeListNumeric from './op/likelistnumericop.js';
+import LikeList from './op/likelistop.js';
+import NotBetween from './op/notbetweenop.js';
+import NotEqualTo from './op/notequaltoop.js';
+import NotLike from './op/notlikeop.js';
+import NotNull from './op/notnullop.js';
+import Not from './op/notop.js';
+import BetweenTime from './op/time/betweentimeop.js';
+import NewerThan from './op/time/newerthanop.js';
+import OlderThan from './op/time/olderthanop.js';
 
 const {getFirstElementChild, setTextContent} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');
@@ -9,36 +32,14 @@ const FilterEntry = goog.require('os.filter.FilterEntry');
 const IFilterable = goog.require('os.filter.IFilterable');
 const osImplements = goog.require('os.implements');
 const {getFilterManager} = goog.require('os.query.instance');
-const Between = goog.require('os.ui.filter.op.Between');
-const EqualTo = goog.require('os.ui.filter.op.EqualTo');
-const GreaterThan = goog.require('os.ui.filter.op.GreaterThan');
-const GreaterThanOrEqualTo = goog.require('os.ui.filter.op.GreaterThanOrEqualTo');
-const InList = goog.require('os.ui.filter.op.InList');
-const IsFalse = goog.require('os.ui.filter.op.IsFalse');
-const IsLike = goog.require('os.ui.filter.op.IsLike');
-const IsLikeNumeric = goog.require('os.ui.filter.op.IsLikeNumeric');
-const IsNull = goog.require('os.ui.filter.op.IsNull');
-const IsTrue = goog.require('os.ui.filter.op.IsTrue');
-const LessThan = goog.require('os.ui.filter.op.LessThan');
-const LessThanOrEqualTo = goog.require('os.ui.filter.op.LessThanOrEqualTo');
-const LikeList = goog.require('os.ui.filter.op.LikeList');
-const LikeListNumeric = goog.require('os.ui.filter.op.LikeListNumeric');
-const Not = goog.require('os.ui.filter.op.Not');
-const NotBetween = goog.require('os.ui.filter.op.NotBetween');
-const NotEqualTo = goog.require('os.ui.filter.op.NotEqualTo');
-const NotLike = goog.require('os.ui.filter.op.NotLike');
-const NotNull = goog.require('os.ui.filter.op.NotNull');
-const BetweenTime = goog.require('os.ui.filter.op.time.Between');
-const NewerThan = goog.require('os.ui.filter.op.time.NewerThan');
-const OlderThan = goog.require('os.ui.filter.op.time.OlderThan');
 
-const Op = goog.requireType('os.ui.filter.op.Op');
+const {default: Op} = goog.requireType('os.ui.filter.op.Op');
 
 
 /**
  * @enum {string}
  */
-const Condition = {
+export const Condition = {
   AND: 'And',
   OR: 'Or',
   NOT: 'Not'
@@ -48,7 +49,7 @@ const Condition = {
  * Filter conditions.
  * @type {!Array<!string>}
  */
-const CONDITIONS = [
+export const CONDITIONS = [
   Condition.AND,
   Condition.OR,
   Condition.NOT
@@ -58,7 +59,7 @@ const CONDITIONS = [
  * The set of all available filter operations in our tools.
  * @type {!Array<!Op>}
  */
-const OPERATIONS = [
+export const OPERATIONS = [
   new EqualTo(),
   new NotEqualTo(),
   new LessThan(),
@@ -88,7 +89,7 @@ const OPERATIONS = [
  * The delimiter used to separate filter keys.
  * @type {string}
  */
-const FILTER_KEY_DELIMITER = '!!';
+export const FILTER_KEY_DELIMITER = '!!';
 
 
 /**
@@ -103,7 +104,7 @@ window['currentFilterTimestamp'] = Date.now();
  * Spatial filter node names.
  * @type {!Array<string>}
  */
-const SPATIAL = ['Intersects', 'Disjoint', 'BBOX'];
+export const SPATIAL = ['Intersects', 'Disjoint', 'BBOX'];
 
 /**
  * Takes an individual element in a filter string and creates an SQL-like string to represent it. If the optional
@@ -113,7 +114,7 @@ const SPATIAL = ['Intersects', 'Disjoint', 'BBOX'];
  * @param {boolean=} opt_sql Whether to format as SQL-like rather than simple pretty print
  * @return {string}
  */
-const toElementString = function(node, opt_sql) {
+export const toElementString = function(node, opt_sql) {
   var label = '';
   if (node != null) {
     if (isExpression(node)) {
@@ -154,7 +155,7 @@ const toElementString = function(node, opt_sql) {
  * @param {boolean=} opt_sql Whether to format as SQL-like rather than simple pretty print
  * @return {string}
  */
-const toFilterString = function(node, opt_maxlen, opt_sql) {
+export const toFilterString = function(node, opt_maxlen, opt_sql) {
   var maxlen = opt_maxlen != null ? opt_maxlen : -1;
   var result = '';
 
@@ -206,7 +207,7 @@ const toFilterString = function(node, opt_maxlen, opt_sql) {
  * @param {boolean=} opt_sql Whether to format as SQL-like rather than simple pretty print
  * @return {string} The pretty filter
  */
-const prettyPrint = function(filters, opt_and, opt_noNewline, opt_sql) {
+export const prettyPrint = function(filters, opt_and, opt_noNewline, opt_sql) {
   var and = opt_and != null ? opt_and : true;
   var spaceOrNewline = opt_noNewline === true ? ' ' : '\n';
   var prettyStr = '';
@@ -251,7 +252,7 @@ const prettyPrint = function(filters, opt_and, opt_noNewline, opt_sql) {
  * @param {Node} node the filter node
  * @return {Node} the modified filter node
  */
-const makeCaseInsensitive = function(node) {
+export const makeCaseInsensitive = function(node) {
   var modNode = node;
   if (modNode) {
     // need to check if this is an "is like" or "is like list" filter for strings
@@ -287,7 +288,7 @@ const makeCaseInsensitive = function(node) {
  * @param {NodeList} children
  * @return {string}
  */
-const getColumnName = function(children) {
+export const getColumnName = function(children) {
   var s = '';
 
   if (children && children[0]) {
@@ -304,7 +305,7 @@ const getColumnName = function(children) {
  * @param {boolean=} opt_sql
  * @return {string}
  */
-const getPropertyName = function(children, opt_sql) {
+export const getPropertyName = function(children, opt_sql) {
   var s = '';
 
   if (children && children[1]) {
@@ -326,7 +327,7 @@ const getPropertyName = function(children, opt_sql) {
  * @param {Node} node The filter node
  * @return {boolean}
  */
-const isCondition = function(node) {
+export const isCondition = function(node) {
   return node != null && conditionFromNode(node) != null;
 };
 
@@ -336,7 +337,7 @@ const isCondition = function(node) {
  * @param {Node} node The filter node
  * @return {boolean}
  */
-const isExpression = function(node) {
+export const isExpression = function(node) {
   if (node) {
     var parent = node.parentNode;
     return parent != null && !isCondition(node) && isCondition(parent);
@@ -351,7 +352,7 @@ const isExpression = function(node) {
  * @param {Node} node The thing to check
  * @return {boolean}
  */
-const isOperation = function(node) {
+export const isOperation = function(node) {
   return operationFromNode(node) != null;
 };
 
@@ -361,7 +362,7 @@ const isOperation = function(node) {
  * @param {Node} node The filter node
  * @return {?string} The condition, or null if none found
  */
-const conditionFromNode = function(node) {
+export const conditionFromNode = function(node) {
   if (node) {
     var string = getString_(node);
     if (string) {
@@ -381,7 +382,7 @@ const conditionFromNode = function(node) {
  * @param {Node} node The node
  * @return {Op}
  */
-const operationFromNode = function(node) {
+export const operationFromNode = function(node) {
   if (node) {
     var el = angular.element(node);
     return OPERATIONS.find((op) => op.matches(el)) || null;
@@ -396,7 +397,7 @@ const operationFromNode = function(node) {
  * @param {Node} node The node
  * @return {?string}
  */
-const operationTitleFromNode = function(node) {
+export const operationTitleFromNode = function(node) {
   if (node) {
     for (var i = 0, j = OPERATIONS.length; i < j; i++) {
       if (OPERATIONS[i].getLocalName() == node.localName) {
@@ -432,7 +433,7 @@ const getString_ = function(something) {
  * @param {string} type
  * @return {?os.filter.IFilterable}
  */
-const getFilterableByType = function(type) {
+export const getFilterableByType = function(type) {
   return getFilterManager().getFilterable(type);
 };
 
@@ -442,7 +443,7 @@ const getFilterableByType = function(type) {
  * @param {string} key
  * @return {?os.filter.IFilterable}
  */
-const getFilterableByFilterKey = function(key) {
+export const getFilterableByFilterKey = function(key) {
   var descriptors = DataManager.getInstance().getDescriptors();
   var filterable = null;
 
@@ -468,7 +469,7 @@ const getFilterableByFilterKey = function(key) {
  * @param {string} type
  * @return {?string}
  */
-const getFilterKeyFromType = function(type) {
+export const getFilterKeyFromType = function(type) {
   var filterable = getFilterableByType(type);
   if (filterable) {
     return filterable.getFilterKey();
@@ -484,7 +485,7 @@ const getFilterKeyFromType = function(type) {
  * @param {Array} arr
  * @return {boolean} Whether or not the column is supported
  */
-const filterColumns = function(col, c, arr) {
+export const filterColumns = function(col, c, arr) {
   // see if there are any ops that support this column
   for (var i = 0, n = OPERATIONS.length; i < n; i++) {
     var op = OPERATIONS[i];
@@ -502,7 +503,7 @@ const filterColumns = function(col, c, arr) {
  * @param {string} type The type.
  * @return {!Array<string>}
  */
-const getFilterableTypes = function(type) {
+export const getFilterableTypes = function(type) {
   var types = [];
 
   if (!isEmptyOrWhitespace(type)) {
@@ -554,29 +555,4 @@ const getFilterableTypes = function(type) {
   }
 
   return types;
-};
-
-exports = {
-  Condition,
-  CONDITIONS,
-  OPERATIONS,
-  FILTER_KEY_DELIMITER,
-  SPATIAL,
-  toElementString,
-  toFilterString,
-  prettyPrint,
-  makeCaseInsensitive,
-  getColumnName,
-  getPropertyName,
-  isCondition,
-  isExpression,
-  isOperation,
-  conditionFromNode,
-  operationFromNode,
-  operationTitleFromNode,
-  getFilterableByType,
-  getFilterableByFilterKey,
-  getFilterKeyFromType,
-  filterColumns,
-  getFilterableTypes
 };

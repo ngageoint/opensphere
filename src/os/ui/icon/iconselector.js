@@ -1,13 +1,14 @@
-goog.module('os.ui.icon.IconSelectorUI');
+goog.declareModuleId('os.ui.icon.IconSelectorUI');
+
+import {ROOT} from '../../os.js';
+import {GMAPS_SEARCH, replaceGoogleUri} from '../file/kml/kml.js';
+import {add, exists} from '../list.js';
+import Module from '../module.js';
+import {close} from '../window.js';
+import WindowEventType from '../windoweventtype.js';
+import IconSelectorManager from './iconselectormanager.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {GMAPS_SEARCH, replaceGoogleUri} = goog.require('os.ui.file.kml');
-const IconSelectorManager = goog.require('os.ui.icon.IconSelectorManager');
-const {add, exists} = goog.require('os.ui.list');
-const {close} = goog.require('os.ui.window');
 
 
 /**
@@ -21,7 +22,7 @@ const iconSelectors = 'js-nav-icon__selectors';
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: {
     'selected': '=',
@@ -39,7 +40,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'iconselector';
+export const directiveTag = 'iconselector';
 
 /**
  * Add the directive to the module.
@@ -50,7 +51,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the iconselector directive
  * @unrestricted
  */
-class Controller extends EventTarget {
+export class Controller extends EventTarget {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -188,9 +189,3 @@ class Controller extends EventTarget {
     return GMAPS_SEARCH.test(path) ? replaceGoogleUri(path) : path;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

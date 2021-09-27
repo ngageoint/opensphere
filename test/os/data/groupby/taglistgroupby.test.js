@@ -10,7 +10,7 @@ describe('os.data.groupby.TagListGroupBy', function() {
   const BaseDescriptor = goog.module.get('os.data.BaseDescriptor');
   const TagListGroupBy = goog.module.get('os.data.groupby.TagListGroupBy');
   const TriStateTreeNode = goog.module.get('os.structs.TriStateTreeNode');
-  const DescriptorNode = goog.module.get('os.ui.data.DescriptorNode');
+  const {default: DescriptorNode} = goog.module.get('os.ui.data.DescriptorNode');
 
   var by = new TagListGroupBy();
 

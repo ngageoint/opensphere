@@ -1,9 +1,10 @@
-goog.module('os.ui.feature.tab.AbstractFeatureTabCtrl');
+goog.declareModuleId('os.ui.feature.tab.AbstractFeatureTabCtrl');
+
+import {apply} from '../../ui.js';
+import FeatureInfoEvent from '../featureinfoevent.js';
 
 const Feature = goog.require('ol.Feature');
 const RenderFeature = goog.require('ol.render.Feature');
-const {apply} = goog.require('os.ui');
-const FeatureInfoEvent = goog.require('os.ui.feature.FeatureInfoEvent');
 
 
 /**
@@ -11,7 +12,7 @@ const FeatureInfoEvent = goog.require('os.ui.feature.FeatureInfoEvent');
  *
  * @abstract
  */
-class AbstractFeatureTabCtrl {
+export default class AbstractFeatureTabCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -72,5 +73,3 @@ class AbstractFeatureTabCtrl {
    */
   updateTab(event, data) {}
 }
-
-exports = AbstractFeatureTabCtrl;

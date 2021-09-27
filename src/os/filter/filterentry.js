@@ -6,7 +6,7 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const {getRandomString} = goog.require('goog.string');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const registerClass = goog.require('os.registerClass');
-const PropertyChange = goog.require('os.ui.filter.PropertyChange');
+const {default: PropertyChange} = goog.require('os.ui.filter.PropertyChange');
 
 const IPersistable = goog.requireType('os.IPersistable');
 const IFilterEntry = goog.requireType('os.filter.IFilterEntry');

@@ -1,7 +1,9 @@
-goog.module('os.ui.config.SettingsWindowList');
+goog.declareModuleId('os.ui.config.SettingsWindowList');
 
 /**
  * Settings window button list
  * @type {string}
  */
-exports = 'settings-window-button';
+const SettingsWindowList = 'settings-window-button';
+
+export default SettingsWindowList;

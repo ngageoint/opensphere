@@ -1,8 +1,9 @@
 goog.declareModuleId('plugin.file.gml.GMLParserConfig');
 
+import ImportManager from '../../../os/ui/im/importmanager.js';
+import * as osUiSlickColumn from '../../../os/ui/slick/column.js';
+
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
-const ImportManager = goog.require('os.ui.im.ImportManager');
-const osUiSlickColumn = goog.require('os.ui.slick.column');
 
 
 /**

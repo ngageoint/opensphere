@@ -1,6 +1,6 @@
-goog.module('os.ui.file.kml');
+goog.declareModuleId('os.ui.file.kml');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os.js';
 
 
 /**
@@ -16,7 +16,7 @@ const {ROOT} = goog.require('os');
  *
  * @enum {string}
  */
-const RefreshMode = {
+export const RefreshMode = {
   CHANGE: 'onChange',
   EXPIRE: 'onExpire',
   INTERVAL: 'onInterval'
@@ -34,7 +34,7 @@ const RefreshMode = {
  *
  * @enum {string}
  */
-const ViewRefreshMode = {
+export const ViewRefreshMode = {
   NEVER: 'never',
   REGION: 'onRegion',
   REQUEST: 'onRequest',
@@ -44,7 +44,7 @@ const ViewRefreshMode = {
 /**
  * @enum {string}
  */
-const ElementType = {
+export const ElementType = {
   FOLDER: 'Folder',
   PLACEMARK: 'Placemark',
   NETWORK_LINK: 'NetworkLink'
@@ -54,7 +54,7 @@ const ElementType = {
  * Style type enumeration for KML.
  * @enum {string}
  */
-const StyleType = {
+export const StyleType = {
   DEFAULT: 'default',
   ICON: 'icon',
   POINT: 'point'
@@ -66,25 +66,25 @@ const StyleType = {
  *   scale: (number|undefined)
  * }}
  */
-let Icon;
+export let Icon;
 
 /**
  * Google Earth icon URL prefix.
  * @type {string}
  */
-const GOOGLE_EARTH_URL = 'https://maps.google.com/mapfiles/kml/';
+export const GOOGLE_EARTH_URL = 'https://maps.google.com/mapfiles/kml/';
 
 /**
  * Path to KML icons.
  * @type {string}
  */
-const ICON_PATH = ROOT + 'images/icons/kml/';
+export const ICON_PATH = ROOT + 'images/icons/kml/';
 
 /**
  * Google Earth icons.
  * @enum {string}
  */
-const GoogleEarthIcons = {
+export const GoogleEarthIcons = {
   NUM_01: 'paddle/1.png',
   NUM_02: 'paddle/2.png',
   NUM_03: 'paddle/3.png',
@@ -258,25 +258,25 @@ const GoogleEarthIcons = {
  * The default icon path (white circle).
  * @type {string}
  */
-const DEFAULT_ICON_PATH = GOOGLE_EARTH_URL + GoogleEarthIcons.PLACEMARK_CIRCLE;
+export const DEFAULT_ICON_PATH = GOOGLE_EARTH_URL + GoogleEarthIcons.PLACEMARK_CIRCLE;
 
 /**
  * The default icon title (white circle).
  * @type {string}
  */
-const DEFAULT_ICON_TITLE = 'PLACEMARK_CIRCLE';
+export const DEFAULT_ICON_TITLE = 'PLACEMARK_CIRCLE';
 
 /**
  * The default icon options (white circle).
  * @type {Object|undefined}
  */
-const DEFAULT_ICON_OPTIONS = undefined;
+export const DEFAULT_ICON_OPTIONS = undefined;
 
 /**
  * The default icon to use for KML placemarks.
  * @type {Icon}
  */
-const DEFAULT_ICON = {
+export const DEFAULT_ICON = {
   href: DEFAULT_ICON_PATH,
   options: DEFAULT_ICON_OPTIONS,
   scale: 1
@@ -285,14 +285,14 @@ const DEFAULT_ICON = {
 /**
  * @type {RegExp}
  */
-const GMAPS_SEARCH = /^(https?:)?\/\/maps\.google\.com\/mapfiles\/kml\//i;
+export const GMAPS_SEARCH = /^(https?:)?\/\/maps\.google\.com\/mapfiles\/kml\//i;
 
 /**
  * Get the default icon object.
  *
  * @return {!osx.icon.Icon} The default icon.
  */
-const getDefaultIcon = function() {
+export const getDefaultIcon = function() {
   return /** @type {!osx.icon.Icon} */ ({
     title: DEFAULT_ICON_TITLE,
     path: DEFAULT_ICON_PATH,
@@ -309,13 +309,13 @@ let googleMapsAccessible = true;
  * If the Google Maps API is accessible.
  * @return {boolean}
  */
-const isGoogleMapsAccessible = () => googleMapsAccessible;
+export const isGoogleMapsAccessible = () => googleMapsAccessible;
 
 /**
  * Set if the Google Maps API is accessible.
  * @param {boolean} value The value.
  */
-const setGoogleMapsAccessible = (value) => {
+export const setGoogleMapsAccessible = (value) => {
   googleMapsAccessible = value;
 };
 
@@ -329,13 +329,13 @@ let mirror = window.location.origin + window.location.pathname + 'images/icons/k
  * Get the KML icon mirror.
  * @return {string}
  */
-const getMirror = () => mirror;
+export const getMirror = () => mirror;
 
 /**
  * Set the KML icon mirror.
  * @param {string} value The mirror URL.
  */
-const setMirror = (value) => {
+export const setMirror = (value) => {
   mirror = value;
 };
 
@@ -344,7 +344,7 @@ const setMirror = (value) => {
  * @param {string|null|undefined} src The image source URL.
  * @return {!string} The icon src.
  */
-const replaceGoogleUri = function(src) {
+export const replaceGoogleUri = function(src) {
   if (GMAPS_SEARCH.test(src)) {
     const secureSource = 'https:' + src.replace(/^[a-z]*:\/\//, '//');
     const icon = GOOGLE_EARTH_ICON_SET.find((icon) => secureSource === icon.path);
@@ -364,7 +364,7 @@ const replaceGoogleUri = function(src) {
  * @param {string|null|undefined} src The image source URL.
  * @return {!string} The icon src.
  */
-const replaceExportableUri = function(src) {
+export const replaceExportableUri = function(src) {
   return src.replace(mirror, ICON_PATH);
 };
 
@@ -374,7 +374,7 @@ const replaceExportableUri = function(src) {
  * @param {string|null|undefined} src The image source URL.
  * @return {!string} The icon src.
  */
-const exportableIconUri = (function() {
+export const exportableIconUri = (function() {
   /**
    * Helper object to speed up src to exportable translations
    * @type {Object<string, string>}
@@ -406,7 +406,7 @@ const exportableIconUri = (function() {
  * The Google Earth icon set, ordered to match Google Earth.
  * @type {!Array<!osx.icon.Icon>}
  */
-const GOOGLE_EARTH_ICON_SET = [
+export const GOOGLE_EARTH_ICON_SET = [
   // push pins
   {
     title: 'Yellow Push Pin',
@@ -1101,28 +1101,3 @@ const GOOGLE_EARTH_ICON_SET = [
     path: GOOGLE_EARTH_URL + GoogleEarthIcons.WEBCAM
   }
 ];
-
-exports = {
-  RefreshMode,
-  ViewRefreshMode,
-  ElementType,
-  StyleType,
-  GOOGLE_EARTH_URL,
-  ICON_PATH,
-  GoogleEarthIcons,
-  DEFAULT_ICON_PATH,
-  DEFAULT_ICON_TITLE,
-  DEFAULT_ICON_OPTIONS,
-  DEFAULT_ICON,
-  GMAPS_SEARCH,
-  getDefaultIcon,
-  isGoogleMapsAccessible,
-  setGoogleMapsAccessible,
-  getMirror,
-  setMirror,
-  replaceGoogleUri,
-  replaceExportableUri,
-  exportableIconUri,
-  GOOGLE_EARTH_ICON_SET,
-  Icon
-};

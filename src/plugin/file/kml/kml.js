@@ -5,6 +5,8 @@
 goog.declareModuleId('plugin.file.kml');
 
 import * as osStyle from '../../../os/style/style.js';
+import * as kml from '../../../os/ui/file/kml/kml.js';
+import * as slickColumn from '../../../os/ui/slick/column.js';
 import KMLField from './kmlfield.js';
 
 const Uri = goog.require('goog.Uri');
@@ -39,8 +41,6 @@ const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
 const TimeInstant = goog.require('os.time.TimeInstant');
 const TimeRange = goog.require('os.time.TimeRange');
-const kml = goog.require('os.ui.file.kml');
-const slickColumn = goog.require('os.ui.slick.column');
 const xml = goog.require('os.xml');
 
 

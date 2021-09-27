@@ -12,7 +12,7 @@ describe('plugin.file.kml.ui.placemarkedit', function() {
   const Feature = goog.module.get('ol.Feature');
   const osAnnotation = goog.module.get('os.annotation');
   const DynamicFeature = goog.module.get('os.feature.DynamicFeature');
-  const AnyDateType = goog.module.get('os.ui.datetime.AnyDateType');
+  const {default: AnyDateType} = goog.module.get('os.ui.datetime.AnyDateType');
   const {default: KMLNode} = goog.module.get('plugin.file.kml.ui.KMLNode');
   const {default: PlacesManager} = goog.module.get('plugin.places.PlacesManager');
   const {Controller: PlacemarkEditController} = goog.module.get('plugin.file.kml.ui.PlacemarkEditUI');

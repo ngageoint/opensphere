@@ -1,14 +1,15 @@
-goog.module('os.ui.onboarding.OnboardingManager');
+goog.declareModuleId('os.ui.onboarding.OnboardingManager');
+
+import {ROOT} from '../../os.js';
+import RouteManager from '../route/routemanager.js';
+import OnboardingEvent from './onboardingevent.js';
+import OnboardingUrlHandler from './onboardingurlhandler.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const EventType = goog.require('goog.net.EventType');
-const {ROOT} = goog.require('os');
 const Settings = goog.require('os.config.Settings');
 const Request = goog.require('os.net.Request');
-const OnboardingEvent = goog.require('os.ui.onboarding.OnboardingEvent');
-const OnboardingUrlHandler = goog.require('os.ui.onboarding.OnboardingUrlHandler');
-const RouteManager = goog.require('os.ui.route.RouteManager');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
@@ -26,7 +27,7 @@ let OnboardingConfig;
 /**
  * Manager for user onboarding display.
  */
-class OnboardingManager extends EventTarget {
+export default class OnboardingManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -242,5 +243,3 @@ OnboardingManager.FOLDERS = ['images/'];
  * @type {string}
  */
 OnboardingManager.PATH = ROOT;
-
-exports = OnboardingManager;

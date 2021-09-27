@@ -1,8 +1,7 @@
-goog.module('os.ui.state.AbstractStateFormCtrl');
+goog.declareModuleId('os.ui.state.AbstractStateFormCtrl');
 
-goog.require('os.ui.state.stateTitleDirective');
-
-const {close} = goog.require('os.ui.window');
+import './statetitle.js';
+import {close} from '../window.js';
 
 const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
 const IState = goog.requireType('os.state.IState');
@@ -12,7 +11,7 @@ const IState = goog.requireType('os.state.IState');
  * Abstract controller for state forms.
  * @unrestricted
  */
-class Controller {
+export default class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -137,5 +136,3 @@ class Controller {
     return state.getTitle();
   }
 }
-
-exports = Controller;

@@ -1,8 +1,9 @@
-goog.module('os.ui.wiz.step.AbstractWizardStep');
+goog.declareModuleId('os.ui.wiz.step.AbstractWizardStep');
+
+import IWizardStep from './iwizardstep.js';// eslint-disable-line
+import WizardStepEvent from './wizardstepevent.js';
 
 const log = goog.require('goog.log');
-const IWizardStep = goog.require('os.ui.wiz.step.IWizardStep'); // eslint-disable-line
-const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -17,7 +18,7 @@ const Logger = goog.requireType('goog.log.Logger');
  * @implements {IWizardStep<T>}
  * @template T
  */
-class AbstractWizardStep {
+export default class AbstractWizardStep {
   /**
    * Constructor.
    * @param {angular.$compile=} opt_compile Angular compile function
@@ -200,5 +201,3 @@ class AbstractWizardStep {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.wiz.step.AbstractWizardStep');
-
-exports = AbstractWizardStep;

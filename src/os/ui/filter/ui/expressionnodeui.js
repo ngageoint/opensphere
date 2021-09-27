@@ -1,8 +1,8 @@
-goog.module('os.ui.filter.ui.ExpressionNodeUI');
+goog.declareModuleId('os.ui.filter.ui.ExpressionNodeUI');
 
-const Module = goog.require('os.ui.Module');
+import Module from '../../module.js';
 
-const ExpressionNode = goog.requireType('os.ui.filter.ui.ExpressionNode');
+const {default: ExpressionNode} = goog.requireType('os.ui.filter.ui.ExpressionNode');
 
 
 /**
@@ -10,7 +10,7 @@ const ExpressionNode = goog.requireType('os.ui.filter.ui.ExpressionNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
 
@@ -29,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'expressionnodeui';
+export const directiveTag = 'expressionnodeui';
 
 /**
  * Add the directive to the os.ui module
@@ -40,7 +40,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for selected/highlighted node UI
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -75,9 +75,3 @@ class Controller {
     this.scope_.$emit('advancedfilterbuilder.editExpr', node);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

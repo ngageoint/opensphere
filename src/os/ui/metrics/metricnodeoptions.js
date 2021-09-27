@@ -1,4 +1,4 @@
-goog.module('os.ui.metrics.MetricNodeOptions');
+goog.declareModuleId('os.ui.metrics.MetricNodeOptions');
 
 /**
  * @typedef {{
@@ -11,4 +11,4 @@ goog.module('os.ui.metrics.MetricNodeOptions');
  */
 let MetricNodeOptions;
 
-exports = MetricNodeOptions;
+export default MetricNodeOptions;

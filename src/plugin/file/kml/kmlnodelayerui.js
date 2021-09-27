@@ -1,15 +1,19 @@
 goog.declareModuleId('plugin.file.kml.KMLNodeLayerUI');
 
-goog.require('os.ui.UISwitchUI');
-goog.require('os.ui.layer.IconStyleControlsUI');
-goog.require('os.ui.layer.LabelControlsUI');
-goog.require('os.ui.layer.VectorStyleControlsUI');
-
+import '../../../os/ui/layer/iconstylecontrols.js';
+import '../../../os/ui/layer/labelcontrols.js';
+import '../../../os/ui/layer/vectorstylecontrols.js';
+import '../../../os/ui/uiswitch.js';
 import * as dispatcher from '../../../os/dispatcher.js';
 import * as osFeature from '../../../os/feature/feature.js';
 import {ROOT} from '../../../os/os.js';
 import * as label from '../../../os/style/label.js';
 import * as osStyle from '../../../os/style/style.js';
+
+import {Controller as FeatureEditCtrl} from '../../../os/ui/featureedit.js';
+import * as kml from '../../../os/ui/file/kml/kml.js';
+import {Controller as VectorLayerUICtrl, directive as vectorLayerUIDirective} from '../../../os/ui/layer/vectorlayerui.js';
+import Module from '../../../os/ui/module.js';
 
 const googArray = goog.require('goog.array');
 const olArray = goog.require('ol.array');
@@ -37,10 +41,6 @@ const geo = goog.require('os.geo');
 const VectorSource = goog.require('os.source.Vector');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
-const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
-const Module = goog.require('os.ui.Module');
-const kml = goog.require('os.ui.file.kml');
-const {Controller: VectorLayerUICtrl, directive: vectorLayerUIDirective} = goog.require('os.ui.layer.VectorLayerUI');
 
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 

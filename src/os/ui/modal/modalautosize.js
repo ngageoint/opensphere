@@ -1,9 +1,10 @@
-goog.module('os.ui.modal.ModalAutoSizeUI');
+goog.declareModuleId('os.ui.modal.ModalAutoSizeUI');
+
+import Module from '../module.js';
 
 const Throttle = goog.require('goog.async.Throttle');
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
 const GoogEventType = goog.require('goog.events.EventType');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -11,7 +12,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'C',
   link: modalAutoSizeLink
 });
@@ -20,7 +21,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'modal-auto-size';
+export const directiveTag = 'modal-auto-size';
 
 /**
  * Register modal-auto-size directive.
@@ -41,7 +42,7 @@ const modalAutoSizeLink = function($scope, $element) {
  * Object containing the link function used by the directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope angular scope
@@ -111,9 +112,3 @@ class Controller {
     this.element_ = null;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

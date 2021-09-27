@@ -1,9 +1,10 @@
-goog.module('os.ui.Map');
+goog.declareModuleId('os.ui.Map');
+
+import Module from './module.js';
+import {waitForAngular} from './ui.js';
 
 const log = goog.require('goog.log');
 const MapContainer = goog.require('os.MapContainer');
-const {waitForAngular} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -17,7 +18,7 @@ const logger = log.getLogger('os.ui.Map');
 /**
  * Controller for the map directive.
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @ngInject
@@ -64,7 +65,7 @@ class Controller {
  * The map directive.
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: true,
   replace: true,
@@ -77,5 +78,3 @@ const directive = () => ({
  * Add the directive to the module.
  */
 Module.directive('map', [directive]);
-
-exports = {Controller, directive};

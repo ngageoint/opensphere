@@ -1,14 +1,14 @@
 goog.declareModuleId('plugin.basemap.ui.BaseMapLayerUI');
 
-goog.require('os.ui.SpinnerUI');
-
+import '../../../os/ui/spinner.js';
 import {MAX_ZOOM, MIN_ZOOM} from '../../../os/map/map.js';
 import {ROOT} from '../../../os/os.js';
 
+import {Controller as TileLayerUICtrl} from '../../../os/ui/layer/tilelayerui.js';
+import Module from '../../../os/ui/module.js';
+
 const Delay = goog.require('goog.async.Delay');
 const MapContainer = goog.require('os.MapContainer');
-const Module = goog.require('os.ui.Module');
-const {Controller: TileLayerUICtrl} = goog.require('os.ui.layer.TileLayerUI');
 
 const LayerNode = goog.requireType('os.data.LayerNode');
 

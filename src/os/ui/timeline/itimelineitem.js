@@ -1,9 +1,9 @@
-goog.module('os.ui.timeline.ITimelineItem');
+goog.declareModuleId('os.ui.timeline.ITimelineItem');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const Listenable = goog.requireType('goog.events.Listenable');
 
-const Action = goog.requireType('os.ui.action.Action');
+const {default: Action} = goog.requireType('os.ui.action.Action');
 
 
 /**
@@ -11,7 +11,7 @@ const Action = goog.requireType('os.ui.action.Action');
  * @extends {Listenable}
  * @extends {IDisposable}
  */
-class ITimelineItem {
+export default class ITimelineItem {
   /**
    * Get the item's id.
    * @return {string}
@@ -105,5 +105,3 @@ class ITimelineItem {
    */
   render(opt_height) {}
 }
-
-exports = ITimelineItem;

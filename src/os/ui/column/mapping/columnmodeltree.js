@@ -1,8 +1,8 @@
-goog.module('os.ui.column.mapping.ColumnModelTreeUI');
+goog.declareModuleId('os.ui.column.mapping.ColumnModelTreeUI');
 
-const Module = goog.require('os.ui.Module');
-const {directiveTag: mappingExpressionUi} = goog.require('os.ui.column.mapping.MappingExpressionUI');
-const {Controller: SlickTreeCtrl, directive: slickTreeDirective} = goog.require('os.ui.slick.SlickTreeUI');
+import Module from '../../module.js';
+import {Controller as SlickTreeCtrl, directive as slickTreeDirective} from '../../slick/slicktree.js';
+import {directiveTag as mappingExpressionUi} from './mappingexpression.js';
 
 
 /**
@@ -10,7 +10,7 @@ const {Controller: SlickTreeCtrl, directive: slickTreeDirective} = goog.require(
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var conf = slickTreeDirective();
   conf.controller = Controller;
   return conf;
@@ -20,7 +20,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'columnmodeltree';
+export const directiveTag = 'columnmodeltree';
 
 /**
  * Add the directive to the module
@@ -31,7 +31,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the column mapping tree
  * @unrestricted
  */
-class Controller extends SlickTreeCtrl {
+export class Controller extends SlickTreeCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -60,9 +60,3 @@ class Controller extends SlickTreeCtrl {
     return opts;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

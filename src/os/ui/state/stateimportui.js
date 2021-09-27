@@ -1,19 +1,20 @@
-goog.module('os.ui.state.StateImportUI');
+goog.declareModuleId('os.ui.state.StateImportUI');
+
+import FileImportUI from '../im/fileimportui.js';
+import {create} from '../window.js';
+import {directiveTag as importUi} from './stateimport.js';
 
 const {loadXml} = goog.require('goog.dom.xml');
 const StateParserConfig = goog.require('os.parse.StateParserConfig');
 const Tag = goog.require('os.state.Tag');
 const {stringFromXML} = goog.require('os.tag');
-const FileImportUI = goog.require('os.ui.im.FileImportUI');
-const {directiveTag: importUi} = goog.require('os.ui.state.StateImport');
-const {create} = goog.require('os.ui.window');
 
 const OSFile = goog.requireType('os.file.File');
 
 
 /**
  */
-class StateImportUI extends FileImportUI {
+export default class StateImportUI extends FileImportUI {
   /**
    * Constructor.
    */
@@ -147,5 +148,3 @@ class StateImportUI extends FileImportUI {
     create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 }
-
-exports = StateImportUI;

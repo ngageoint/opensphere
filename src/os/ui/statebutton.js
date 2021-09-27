@@ -1,8 +1,8 @@
-goog.module('os.ui.StateButtonUI');
+goog.declareModuleId('os.ui.StateButtonUI');
 
-const Module = goog.require('os.ui.Module');
-const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
-const menu = goog.require('os.ui.state.menu');
+import MenuButtonCtrl from './menu/menubutton.js';
+import Module from './module.js';
+import * as menu from './state/statemenu.js';
 
 
 /**
@@ -10,7 +10,7 @@ const menu = goog.require('os.ui.state.menu');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -26,7 +26,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'state-button';
+export const directiveTag = 'state-button';
 
 /**
  * add the directive to the module
@@ -37,7 +37,7 @@ Module.directive('stateButton', [directive]);
  * Controller function for the nav-top directive
  * @unrestricted
  */
-class Controller extends MenuButtonCtrl {
+export class Controller extends MenuButtonCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -49,9 +49,3 @@ class Controller extends MenuButtonCtrl {
     this.menu = menu.getMenu();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

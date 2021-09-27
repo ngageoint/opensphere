@@ -1,4 +1,4 @@
-goog.module('os.ui.menu.common');
+goog.declareModuleId('os.ui.menu.common');
 
 const LayerNode = goog.require('os.data.LayerNode');
 const instanceOf = goog.require('os.instanceOf');
@@ -12,7 +12,7 @@ const VectorSource = goog.require('os.source.Vector');
  * @param {*} context
  * @return {!Array<!VectorSource>}
  */
-const getSourcesFromContext = function(context) {
+export const getSourcesFromContext = function(context) {
   var sources = [];
   if (context) {
     if (instanceOf(context, VectorSource.NAME)) {
@@ -38,8 +38,4 @@ const getSourcesFromContext = function(context) {
   }
 
   return sources;
-};
-
-exports = {
-  getSourcesFromContext
 };

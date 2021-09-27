@@ -1,14 +1,13 @@
-goog.module('os.ui.geo.PositionUI');
+goog.declareModuleId('os.ui.geo.PositionUI');
 
-goog.require('os.ui.geo.GeoUI');
-goog.require('os.ui.popover.PopoverUI');
-
-const {ROOT} = goog.require('os');
+import '../popover/popover.js';
+import './geoui.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import mgrs from './mgrs.js';
+import PositionEventType from './positioneventtype.js';
 const {EPSILON, parseLatLon} = goog.require('os.geo');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const PositionEventType = goog.require('os.ui.geo.PositionEventType');
-const mgrs = goog.require('os.ui.geo.mgrs');
 
 
 /**
@@ -32,7 +31,7 @@ const mgrs = goog.require('os.ui.geo.mgrs');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/geo/position.html',
@@ -58,7 +57,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'position';
+export const directiveTag = 'position';
 
 /**
  * Add the directive to the module.
@@ -69,7 +68,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the locationedit directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -321,9 +320,3 @@ class Controller {
  * @const
  */
 Controller.DEFAULT_COORD_PRECISION = 8;
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

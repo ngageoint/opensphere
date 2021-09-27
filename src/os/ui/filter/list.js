@@ -1,9 +1,8 @@
-goog.module('os.ui.filter.ListUI');
+goog.declareModuleId('os.ui.filter.ListUI');
 
-goog.require('os.ui.filter.ColTypeListUI');
-
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
+import './coltypelistui.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
 
 
 /**
@@ -11,7 +10,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   templateUrl: ROOT + 'views/filter/list.html'
@@ -21,14 +20,9 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'fb-list';
+export const directiveTag = 'fb-list';
 
 /**
  * Add the directive to the module
  */
 Module.directive('fbList', [directive]);
-
-exports = {
-  directive,
-  directiveTag
-};

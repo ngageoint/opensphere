@@ -1,9 +1,17 @@
-goog.module('os.ui.layer.compare.LayerCompareUI');
+goog.declareModuleId('os.ui.layer.compare.LayerCompareUI');
 
+import * as capture from '../../../capture/capture.js';
+import * as osMap from '../../../map/map.js';
+import {ROOT} from '../../../os.js';
+import Module from '../../module.js';
+import {resize, removeResize} from '../../ui.js';
+import {bringToFront, close as closeWindow, create as createWindow, getById as getWindowById} from '../../window.js';
+import {launchConfirm} from '../../window/confirm.js';
+
+const Promise = goog.require('goog.Promise');
 const dispose = goog.require('goog.dispose');
 const {listen, unlistenByKey} = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
-const Promise = goog.require('goog.Promise');
 const Collection = goog.require('ol.Collection');
 const OLMap = goog.require('ol.Map');
 const View = goog.require('ol.View');
@@ -11,24 +19,12 @@ const RotateControl = goog.require('ol.control.Rotate');
 const ZoomControl = goog.require('ol.control.Zoom');
 const {getCenter: getExtentCenter} = goog.require('ol.extent');
 
-const {ROOT} = goog.require('os');
-const capture = goog.require('os.capture');
 const osImplements = goog.require('os.implements');
 const instanceOf = goog.require('os.instanceOf');
 const ILayer = goog.require('os.layer.ILayer');
-const SourceClass = goog.require('os.source.SourceClass');
-const osMap = goog.require('os.map');
 const {getMapContainer} = goog.require('os.map.instance');
 const {getMaxFeatures} = goog.require('os.ogc');
-const {resize, removeResize} = goog.require('os.ui');
-const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
-const Module = goog.require('os.ui.Module');
-const {
-  bringToFront,
-  close: closeWindow,
-  create: createWindow,
-  getById: getWindowById
-} = goog.require('os.ui.window');
+const SourceClass = goog.require('os.source.SourceClass');
 
 const EventKey = goog.requireType('goog.events.Key');
 const Control = goog.requireType('ol.control.Control');
@@ -55,7 +51,7 @@ const Selector = {
  *   right: (Array<Layer>|undefined)
  * }}
  */
-let LayerCompareOptions;
+export let LayerCompareOptions;
 
 
 /**
@@ -124,7 +120,7 @@ const launchLayerComparePerformanceDialog = function() {
  * The layercompare directive.
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -133,12 +129,11 @@ const directive = () => ({
   controllerAs: 'ctrl'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'layercompare';
+export const directiveTag = 'layercompare';
 
 
 /**
@@ -151,7 +146,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the layercompare directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -535,13 +530,11 @@ class Controller {
   }
 }
 
-
 /**
  * Identifier for the layer compare window.
  * @type {string}
  */
-const windowId = 'compare-layers';
-
+export const windowId = 'compare-layers';
 
 /**
  * Launch the layer compare window.
@@ -579,12 +572,11 @@ const launchLayerCompareWindow = (options) => {
   }
 };
 
-
 /**
  * Launch the layer compare.
  * @param {!LayerCompareOptions} options The layer compare options.
  */
-const launchLayerCompare = (options) => {
+export const launchLayerCompare = (options) => {
   const featureCount = countFeatures(options.left) + countFeatures(options.right);
   if (featureCount > getMaxFeatures('2d')) {
     launchLayerComparePerformanceDialog().then(() => {
@@ -597,7 +589,6 @@ const launchLayerCompare = (options) => {
     launchLayerCompareWindow(options);
   }
 };
-
 
 /**
  * Count the features in an array of layers.
@@ -617,13 +608,4 @@ const countFeatures = (layerArray) => {
   } else {
     return 0;
   }
-};
-
-exports = {
-  LayerCompareOptions,
-  directive,
-  directiveTag,
-  Controller,
-  launchLayerCompare,
-  windowId
 };

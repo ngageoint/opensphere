@@ -2,7 +2,7 @@ goog.module('os.data.AreaTreeSearch');
 
 const AreaNode = goog.require('os.data.AreaNode');
 const instance = goog.require('os.query.instance');
-const AbstractGroupByTreeSearch = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
+const {default: AbstractGroupByTreeSearch} = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
 
 
 /**

@@ -1,7 +1,7 @@
 goog.require('os.ui.filter.op.Op');
 
 describe('os.ui.filter.op.Op', function() {
-  const Op = goog.module.get('os.ui.filter.op.Op');
+  const {default: Op} = goog.module.get('os.ui.filter.op.Op');
 
   var testOpName = 'TestOp';
   var op = new Op(testOpName);

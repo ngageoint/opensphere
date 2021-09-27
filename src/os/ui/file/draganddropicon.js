@@ -1,6 +1,6 @@
-goog.module('os.ui.file.dragAndDropIconDirective');
+goog.declareModuleId('os.ui.file.dragAndDropIconDirective');
 
-const Module = goog.require('os.ui.Module');
+import Module from '../module.js';
 
 
 /**
@@ -8,7 +8,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: false,
   replace: true,
@@ -24,14 +24,9 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'drag-and-drop-icon';
+export const directiveTag = 'drag-and-drop-icon';
 
 /**
  * Add the directive to the module.
  */
 Module.directive('dragAndDropIcon', [directive]);
-
-exports = {
-  directive,
-  directiveTag
-};

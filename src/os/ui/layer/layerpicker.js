@@ -1,15 +1,16 @@
-goog.module('os.ui.layer.LayerPickerUI');
+goog.declareModuleId('os.ui.layer.LayerPickerUI');
+
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {escapeHtml} from '../ui.js';
 
 const {caseInsensitiveContains} = goog.require('goog.string');
-const {ROOT} = goog.require('os');
 const {toHexString} = goog.require('os.color');
 const BaseDescriptor = goog.require('os.data.BaseDescriptor');
 const DataManager = goog.require('os.data.DataManager');
 const IFilterable = goog.require('os.filter.IFilterable');
 const osImplements = goog.require('os.implements');
 const VectorLayer = goog.require('os.layer.Vector');
-const {escapeHtml} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 
@@ -19,7 +20,7 @@ const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -43,7 +44,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'layerpicker';
+export const directiveTag = 'layerpicker';
 
 /**
  * Ass the directive to the module
@@ -55,7 +56,7 @@ Module.directive(directiveTag, [directive]);
  * The selected layer will be saved in 'layer'. If multiple is allowed it will be stored in 'layers' as an array.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -385,9 +386,3 @@ class Controller {
     return layer instanceof BaseDescriptor ? 'Inactive' : 'Active';
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

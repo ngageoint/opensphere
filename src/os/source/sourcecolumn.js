@@ -15,8 +15,8 @@ const {ALT_REGEXP, MGRSRegExp} = goog.require('os.geo');
 const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
 const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
 const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
-const DescriptionFormatter = goog.require('os.ui.formatter.DescriptionFormatter');
-const PropertiesFormatter = goog.require('os.ui.formatter.PropertiesFormatter');
+const {default: DescriptionFormatter} = goog.require('os.ui.formatter.DescriptionFormatter');
+const {default: PropertiesFormatter} = goog.require('os.ui.formatter.PropertiesFormatter');
 const {autoSizeColumn} = goog.require('os.ui.slick.column');
 
 const VectorSource = goog.requireType('os.source.Vector');

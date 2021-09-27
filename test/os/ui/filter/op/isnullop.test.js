@@ -1,7 +1,7 @@
 goog.require('os.ui.filter.op.IsNull');
 
 describe('os.ui.filter.op.IsNull', function() {
-  const IsNull = goog.module.get('os.ui.filter.op.IsNull');
+  const {default: IsNull} = goog.module.get('os.ui.filter.op.IsNull');
 
   var op = new IsNull();
 

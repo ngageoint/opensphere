@@ -1,32 +1,33 @@
 goog.declareModuleId('os.ui.layer.EllipseColumnsUI');
 
-goog.require('os.ui.layer.ColumnSuggestionSelect');
-
+import './columnsuggestionselect.js';
 import {ROOT} from '../../os.js';
 
+import Module from '../module.js';
+import {close as closeWindow} from '../window.js';
+import * as ConfirmUI from '../window/confirm.js';
+
 const {getValues} = goog.require('goog.object');
-const implementationOf = goog.require('os.implements');
+const Fields = goog.require('os.Fields');
 const Settings = goog.require('os.config.Settings');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 const DataManager = goog.require('os.data.DataManager');
 const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
-const Units = goog.require('os.math.Units');
-const Module = goog.require('os.ui.Module');
-const {close: closeWindow} = goog.require('os.ui.window');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
-const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
-const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
-const RenameMapping = goog.require('os.im.mapping.RenameMapping');
-const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
-const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
-const ILayer = goog.require('os.layer.ILayer');
-const Fields = goog.require('os.Fields');
 const {
   isDerived: isDerived,
   DEFAULT_RADIUS_COL_NAME: RADIUS,
   DEFAULT_SEMI_MAJ_COL_NAME: SEMI_MAJOR,
   DEFAULT_SEMI_MIN_COL_NAME: SEMI_MINOR
 } = goog.require('os.fields');
+
+const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
+const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
+const RenameMapping = goog.require('os.im.mapping.RenameMapping');
+const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
+const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
+const implementationOf = goog.require('os.implements');
+const ILayer = goog.require('os.layer.ILayer');
+const Units = goog.require('os.math.Units');
 
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 const AbstractMapping = goog.requireType('os.im.mapping.AbstractMapping');

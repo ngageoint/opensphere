@@ -2,7 +2,7 @@ goog.module('os.string.Pluralize');
 
 const Settings = goog.require('os.config.Settings');
 const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
+const {default: Module} = goog.require('os.ui.Module');
 
 
 /**

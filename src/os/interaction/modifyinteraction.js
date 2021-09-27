@@ -29,10 +29,10 @@ const Method = goog.require('os.interpolate.Method');
 const {getMapContainer} = goog.require('os.map.instance');
 const {notifyStyleChange} = goog.require('os.style');
 const {MODAL_SELECTOR} = goog.require('os.ui');
-const Controls = goog.require('os.ui.help.Controls');
+const {default: Controls} = goog.require('os.ui.help.Controls');
 const {directiveTag: controlBlock} = goog.require('os.ui.help.ControlBlockUI');
 const osWindow = goog.require('os.ui.window');
-const windowSelector = goog.require('os.ui.windowSelector');
+const {default: windowSelector} = goog.require('os.ui.windowSelector');
 
 const MapBrowserPointerEvent = goog.requireType('ol.MapBrowserPointerEvent');
 const Geometry = goog.requireType('ol.geom.Geometry');

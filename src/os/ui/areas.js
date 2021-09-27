@@ -1,10 +1,17 @@
-goog.module('os.ui.AreasUI');
+goog.declareModuleId('os.ui.AreasUI');
 
-goog.require('os.ui.urlDragDropDirective');
+import './dragdrop/urldragdropui.js';
+import {ROOT} from '../os.js';
+import TagGroupBy from './data/groupby/taggroupby.js';
+import * as AreaExportUI from './ex/areaexportdialog.js';
+import * as areaImport from './menu/areaimportmenu.js';
+import * as spatial from './menu/spatial.js';
+import Module from './module.js';
+import * as CombinatorUI from './query/combinator.js';
+import AbstractGroupByTreeSearchCtrl from './slick/abstractgroupbytreesearchctrl.js';
 
 const {flatten, removeDuplicates} = goog.require('goog.array');
 const GoogEventType = goog.require('goog.events.EventType');
-const {ROOT} = goog.require('os');
 const AlertManager = goog.require('os.alert.AlertManager');
 const AreaNode = goog.require('os.data.AreaNode');
 const AreaTreeSearch = goog.require('os.data.AreaTreeSearch');
@@ -14,13 +21,6 @@ const {filterFalsey} = goog.require('os.fn');
 const {launchQueryImport} = goog.require('os.query');
 const AreaManager = goog.require('os.query.AreaManager');
 const {getLeafNodes} = goog.require('os.structs');
-const Module = goog.require('os.ui.Module');
-const TagGroupBy = goog.require('os.ui.data.groupby.TagGroupBy');
-const AreaExportUI = goog.require('os.ui.ex.AreaExportUI');
-const areaImport = goog.require('os.ui.menu.areaImport');
-const spatial = goog.require('os.ui.menu.spatial');
-const CombinatorUI = goog.require('os.ui.query.CombinatorUI');
-const AbstractGroupByTreeSearchCtrl = goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Feature = goog.requireType('ol.Feature');
@@ -28,7 +28,7 @@ const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 const OSFile = goog.requireType('os.file.File');
 const ITreeNode = goog.requireType('os.structs.ITreeNode');
-const QueryAreaNode = goog.requireType('os.ui.query.AreaNode');
+const {default: QueryAreaNode} = goog.requireType('os.ui.query.AreaNode');
 
 
 /**
@@ -36,7 +36,7 @@ const QueryAreaNode = goog.requireType('os.ui.query.AreaNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -49,7 +49,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'areas';
+export const directiveTag = 'areas';
 
 /**
  * Add the directive to the module
@@ -60,7 +60,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for Areas window
  * @unrestricted
  */
-class Controller extends AbstractGroupByTreeSearchCtrl {
+export class Controller extends AbstractGroupByTreeSearchCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -286,11 +286,4 @@ Controller.VIEWS = {
   'None': -1, // you can't use null because Angular treats that as the empty/unselected option
   'Tag': new TagGroupBy(false),
   'Source': new SourceGroupBy(false)
-};
-
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

@@ -1,19 +1,18 @@
-goog.module('os.ui.state.StateListUI');
+goog.declareModuleId('os.ui.state.StateListUI');
 
-goog.require('os.ui.ChecklistUI');
-
-const {ROOT} = goog.require('os');
+import '../checklist.js';
+import {ROOT} from '../../os.js';
+import ChecklistEvent from '../checklistevent.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import AbstractStateDescriptor from './abstractstatedescriptor.js';
+import StateListEvent from './statelistevent.js';
 const {getAppName} = goog.require('os.config');
 const DataManager = goog.require('os.data.DataManager');
 const DescriptorEventType = goog.require('os.data.DescriptorEventType');
-const {apply} = goog.require('os.ui');
-const ChecklistEvent = goog.require('os.ui.ChecklistEvent');
-const Module = goog.require('os.ui.Module');
-const AbstractStateDescriptor = goog.require('os.ui.state.AbstractStateDescriptor');
-const StateListEvent = goog.require('os.ui.state.StateListEvent');
 
 const DescriptorEvent = goog.requireType('os.data.DescriptorEvent');
-const IStateDescriptor = goog.requireType('os.ui.state.IStateDescriptor');
+const {default: IStateDescriptor} = goog.requireType('os.ui.state.IStateDescriptor');
 
 
 /**
@@ -21,7 +20,7 @@ const IStateDescriptor = goog.requireType('os.ui.state.IStateDescriptor');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: {
     'initStates': '&',
@@ -36,7 +35,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'statelist';
+export const directiveTag = 'statelist';
 
 /**
  * Add the directive to the module.
@@ -47,7 +46,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the statelist directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -203,9 +202,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

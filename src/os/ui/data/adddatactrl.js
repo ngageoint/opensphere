@@ -1,6 +1,12 @@
-goog.module('os.ui.data.AddDataCtrl');
+goog.declareModuleId('os.ui.data.AddDataCtrl');
 
-goog.require('os.ui.bindDirectiveDirective');
+import '../binddirective.js';
+import SlickTreeNode from '../slick/slicktreenode.js';
+import TreeSearch from '../slick/treesearch.js';
+import * as ui from '../ui.js';
+import * as osWindow from '../window.js';
+import BaseProvider from './baseprovider.js';
+import DescriptorNode from './descriptornode.js';
 
 const Delay = goog.require('goog.async.Delay');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -13,12 +19,6 @@ const ILoadingProvider = goog.require('os.data.ILoadingProvider');
 const osImplements = goog.require('os.implements');
 const Metrics = goog.require('os.metrics.Metrics');
 const keys = goog.require('os.metrics.keys');
-const ui = goog.require('os.ui');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
-const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
-const TreeSearch = goog.require('os.ui.slick.TreeSearch');
-const osWindow = goog.require('os.ui.window');
 
 const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
@@ -29,7 +29,7 @@ const ITreeNode = goog.requireType('os.structs.ITreeNode');
  * Controller for Add Data Window
  * @unrestricted
  */
-class Controller {
+export default class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -354,5 +354,3 @@ class Controller {
     return (!!children && children.length > 0);
   }
 }
-
-exports = Controller;

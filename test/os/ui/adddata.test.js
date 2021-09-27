@@ -3,7 +3,7 @@ goog.require('os.ui.events.UIEventParams');
 
 describe('os.ui.AddDataUI', function() {
   const {Controller: AddDataCtrl} = goog.module.get('os.ui.AddDataUI');
-  const UIEventParams = goog.module.get('os.ui.events.UIEventParams');
+  const {default: UIEventParams} = goog.module.get('os.ui.events.UIEventParams');
 
   it('should handle parameters ', inject(function($rootScope) {
     var windowScope = $rootScope.$new();

@@ -5,7 +5,7 @@ const Stroke = goog.require('ol.style.Stroke');
 const Style = goog.require('ol.style.Style');
 const I3DSupport = goog.require('os.I3DSupport');
 const osImplements = goog.require('os.implements');
-const OLDragBox = goog.require('os.ui.ol.interaction.DragBox');
+const {default: OLDragBox} = goog.require('os.ui.ol.interaction.DragBox');
 
 const Polygon = goog.requireType('ol.geom.Polygon');
 const OSMap = goog.requireType('os.Map');

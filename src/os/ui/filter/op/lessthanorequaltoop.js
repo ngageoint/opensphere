@@ -1,14 +1,15 @@
-goog.module('os.ui.filter.op.LessThanOrEqualTo');
+goog.declareModuleId('os.ui.filter.op.LessThanOrEqualTo');
+
+import {quoteString} from '../filterstring.js';
+import Op from './op.js';
 
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const Op = goog.require('os.ui.filter.op.Op');
-const {quoteString} = goog.require('os.ui.filter.string');
 
 
 /**
  * A 'PropertyIsLessThanOrEqualTo' operation class.
  */
-class LessThanOrEqualTo extends Op {
+export default class LessThanOrEqualTo extends Op {
   /**
    * Constructor.
    */
@@ -28,5 +29,3 @@ class LessThanOrEqualTo extends Op {
     return '';
   }
 }
-
-exports = LessThanOrEqualTo;

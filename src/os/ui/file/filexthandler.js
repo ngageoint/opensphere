@@ -1,13 +1,14 @@
-goog.module('os.ui.file.FileXTHandler');
+goog.declareModuleId('os.ui.file.FileXTHandler');
+
+import * as dispatcher from '../../dispatcher.js';
+import {SHARED_DB_VERSION, SHARED_FILE_DB_NAME} from '../../os.js';
+import ImportEvent from '../im/importevent.js';
+import ImportEventType from '../im/importeventtype.js';
+import NotificationManager from '../notification/notificationmanager.js';
 
 const log = goog.require('goog.log');
-const {SHARED_DB_VERSION, SHARED_FILE_DB_NAME} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
 const {FileScheme} = goog.require('os.file');
 const FileStorage = goog.require('os.file.FileStorage');
-const ImportEvent = goog.require('os.ui.im.ImportEvent');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
-const NotificationManager = goog.require('os.ui.notification.NotificationManager');
 
 const Logger = goog.requireType('goog.log.Logger');
 const OSFile = goog.requireType('os.file.File');
@@ -19,7 +20,7 @@ const IMessageHandler = goog.requireType('os.xt.IMessageHandler');
  *
  * @implements {IMessageHandler}
  */
-class FileXTHandler {
+export default class FileXTHandler {
   /**
    * Constructor.
    */
@@ -96,5 +97,3 @@ const logger = log.getLogger('os.ui.file.FileXTHandler');
  * @const
  */
 FileXTHandler.TYPE = 'file.load';
-
-exports = FileXTHandler;

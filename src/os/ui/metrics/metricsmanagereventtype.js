@@ -1,9 +1,11 @@
-goog.module('os.ui.metrics.MetricsManagerEventType');
+goog.declareModuleId('os.ui.metrics.MetricsManagerEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const MetricsManagerEventType = {
   METRIC_CHANGE: 'metricsmanager:selectedchange',
   METRIC_ADDED: 'metricsmanager:pluginadded'
 };
+
+export default MetricsManagerEventType;

@@ -1,10 +1,11 @@
-goog.module('os.ui.util.OffsetMarginUI');
+goog.declareModuleId('os.ui.util.OffsetMarginUI');
+
+import * as dispatcher from '../../dispatcher.js';
+import Module from '../module.js';
+import {removeResize, resize} from '../ui.js';
 
 const Throttle = goog.require('goog.Throttle');
-const dispatcher = goog.require('os.Dispatcher');
 const ThemeSettingsChangeEvent = goog.require('os.config.ThemeSettingsChangeEvent');
-const {removeResize, resize} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -12,7 +13,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'A',
   scope: {
     'offsetTopEl': '@',
@@ -25,7 +26,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'offset-margin';
+export const directiveTag = 'offset-margin';
 
 /**
  * Add the directive to the ui module
@@ -35,7 +36,7 @@ Module.directive('offsetMargin', [directive]);
 /**
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -156,9 +157,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

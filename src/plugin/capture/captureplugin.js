@@ -3,6 +3,7 @@ goog.declareModuleId('plugin.capture.CapturePlugin');
 import {getMapPixelRatio, setPixelRatioFn} from '../../os/capture/capture.js';
 import AbstractCapturePlugin from '../../os/ui/capture/abstractcaptureplugin.js';
 import TimelineRenderer from '../../os/ui/capture/timelinerenderer.js';
+import * as saveMenu from '../../os/ui/menu/savemenu.js';
 import AnnotationTailRenderer from './annotationtailrenderer.js';
 import {WAIT_TIME, onReady, recordSupported} from './capture.js';
 import LegendRenderer from './legendrenderer.js';
@@ -18,9 +19,8 @@ const userAgent = goog.require('goog.userAgent');
 const MapContainer = goog.require('os.MapContainer');
 const keys = goog.require('os.metrics.keys');
 const TimelineEventType = goog.require('os.time.TimelineEventType');
-const saveMenu = goog.require('os.ui.menu.save');
 
-const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 
 
 /**

@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.arc.ArcPlugin');
 
+import ImportManager from '../../os/ui/im/importmanager.js';
+import ProviderImportUI from '../../os/ui/providerimportui.js';
 import * as arc from './arc.js';
 import ArcLoader from './arcloader.js';
 import ArcServer from './arcserver.js';
@@ -19,8 +21,6 @@ const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const net = goog.require('os.net');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const StateManager = goog.require('os.state.StateManager');
-const ImportManager = goog.require('os.ui.im.ImportManager');
-const ProviderImportUI = goog.require('os.ui.ProviderImportUI');
 
 
 /**

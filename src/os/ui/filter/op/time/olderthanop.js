@@ -1,14 +1,15 @@
-goog.module('os.ui.filter.op.time.OlderThan');
+goog.declareModuleId('os.ui.filter.op.time.OlderThan');
+
+import Op from '../op.js';
+import {directiveTag} from './newerolderthan.js';
 
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const Op = goog.require('os.ui.filter.op.Op');
-const {directiveTag} = goog.require('os.ui.filter.op.time.NewerOlderThanUI');
 
 
 /**
  * Operator for times older than a set value.
  */
-class OlderThan extends Op {
+export default class OlderThan extends Op {
   /**
    * Constructor.
    */
@@ -32,5 +33,3 @@ class OlderThan extends Op {
     return '';
   }
 }
-
-exports = OlderThan;

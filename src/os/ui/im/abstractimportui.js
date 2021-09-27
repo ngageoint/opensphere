@@ -1,6 +1,6 @@
-goog.module('os.ui.im.AbstractImportUI');
+goog.declareModuleId('os.ui.im.AbstractImportUI');
 
-const IImportUI = goog.require('os.ui.im.IImportUI'); // eslint-disable-line
+import IImportUI from './iimportui.js';// eslint-disable-line
 
 
 /**
@@ -8,7 +8,7 @@ const IImportUI = goog.require('os.ui.im.IImportUI'); // eslint-disable-line
  * @implements {IImportUI<T>}
  * @template T
  */
-class AbstractImportUI {
+export default class AbstractImportUI {
   /**
    * Constructor.
    */
@@ -55,5 +55,3 @@ class AbstractImportUI {
     // implemented by extending classes to support importing files with a known structure
   }
 }
-
-exports = AbstractImportUI;

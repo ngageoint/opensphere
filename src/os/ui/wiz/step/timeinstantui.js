@@ -1,12 +1,12 @@
-goog.module('os.ui.wiz.step.TimeInstantUI');
+goog.declareModuleId('os.ui.wiz.step.TimeInstantUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os.js';
+import Module from '../../module.js';
 const {getItemField} = goog.require('os.im.mapping');
 const osTime = goog.require('os.time');
-const Module = goog.require('os.ui.Module');
 
 const BaseParserConfig = goog.requireType('os.parse.BaseParserConfig');
-const TimeMappingModel = goog.requireType('os.ui.im.mapping.time.TimeMappingModel');
+const {default: TimeMappingModel} = goog.requireType('os.ui.im.mapping.time.TimeMappingModel');
 
 
 /**
@@ -14,7 +14,7 @@ const TimeMappingModel = goog.requireType('os.ui.im.mapping.time.TimeMappingMode
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -32,7 +32,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'timeinstantui';
+export const directiveTag = 'timeinstantui';
 
 
 /**
@@ -45,7 +45,7 @@ Module.directive('timeinstantui', [directive]);
  * Controller for the import wizard time instant ui
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -362,10 +362,3 @@ Controller.NO_DATETIME = 'Please choose Date and Time columns.';
  * @const
  */
 Controller.NO_PREVIEW = 'No preview data available. Please check the import configuration.';
-
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -12,8 +12,8 @@ const dispatcher = goog.require('os.Dispatcher');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const {createFromFile} = goog.require('os.file');
-const ImportEvent = goog.require('os.ui.im.ImportEvent');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
+const {default: ImportEvent} = goog.require('os.ui.im.ImportEvent');
+const {default: ImportEventType} = goog.require('os.ui.im.ImportEventType');
 
 const Logger = goog.requireType('goog.log.Logger');
 const OSFile = goog.requireType('os.file.File');

@@ -1,16 +1,17 @@
-goog.module('os.ui.menu.MenuButtonCtrl');
+goog.declareModuleId('os.ui.menu.MenuButtonCtrl');
+
+import * as dispatcher from '../../dispatcher.js';
+import UIEvent from '../events/uievent.js';
+import UIEventType from '../events/uieventtype.js';
+import GlobalMenuEventType from '../globalmenueventtype.js';
+import {apply} from '../ui.js';
+import * as osWindow from '../window.js';
+import windowSelector from '../windowselector.js';
+import {toggleWindow} from './windowsmenu.js';
 
 const Disposable = goog.require('goog.Disposable');
-const dispatcher = goog.require('os.Dispatcher');
-const {apply} = goog.require('os.ui');
-const GlobalMenuEventType = goog.require('os.ui.GlobalMenuEventType');
-const UIEvent = goog.require('os.ui.events.UIEvent');
-const UIEventType = goog.require('os.ui.events.UIEventType');
-const {toggleWindow} = goog.require('os.ui.menu.windows');
-const osWindow = goog.require('os.ui.window');
-const windowSelector = goog.require('os.ui.windowSelector');
 
-const Menu = goog.requireType('os.ui.menu.Menu');
+const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 
 
 /**
@@ -19,7 +20,7 @@ const Menu = goog.requireType('os.ui.menu.Menu');
  * @template T
  * @unrestricted
  */
-class Controller extends Disposable {
+export default class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -159,5 +160,3 @@ class Controller extends Disposable {
     return false;
   }
 }
-
-exports = Controller;

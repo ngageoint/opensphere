@@ -1,22 +1,22 @@
-goog.module('os.ui.DatePanelUI');
+goog.declareModuleId('os.ui.DatePanelUI');
 
-goog.require('os.ui.datetime.DateControlUI');
-goog.require('os.ui.popover.PopoverUI');
+import './datetime/datecontrol.js';
+import './popover/popover.js';
+import * as dispatcher from '../dispatcher.js';
+import {ROOT} from '../os.js';
+import UIEvent from './events/uievent.js';
+import UIEventType from './events/uieventtype.js';
+import Module from './module.js';
 
 const RangeSet = goog.require('goog.math.RangeSet');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
 const {getTimeOffsetLabel} = goog.require('os.time');
 const TimelineController = goog.require('os.time.TimelineController');
-const Module = goog.require('os.ui.Module');
-const UIEvent = goog.require('os.ui.events.UIEvent');
-const UIEventType = goog.require('os.ui.events.UIEventType');
 
 
 /**
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: true,
@@ -29,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'date-panel';
+export const directiveTag = 'date-panel';
 
 Module.directive('datePanel', [directive]);
 
@@ -37,7 +37,7 @@ Module.directive('datePanel', [directive]);
  * Controller for the date panel
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -200,9 +200,3 @@ class Controller {
     return start < end;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

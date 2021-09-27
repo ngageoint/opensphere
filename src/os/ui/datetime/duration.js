@@ -1,13 +1,13 @@
-goog.module('os.ui.datetime.DurationUI');
+goog.declareModuleId('os.ui.datetime.DurationUI');
 
-goog.require('os.ui.SpinnerUI');
-goog.require('os.ui.util.ValidationMessageUI');
+import '../spinner.js';
+import '../util/validationmessage.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
 
 const {isEmpty} = goog.require('goog.object');
 const {toNumber} = goog.require('goog.string');
-const {ROOT} = goog.require('os');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -15,7 +15,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -40,7 +40,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'duration';
+export const directiveTag = 'duration';
 
 /**
  * Add the directive to the module.
@@ -51,7 +51,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the duration directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -320,9 +320,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

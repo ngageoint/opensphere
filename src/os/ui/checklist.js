@@ -1,14 +1,15 @@
-goog.module('os.ui.ChecklistUI');
+goog.declareModuleId('os.ui.ChecklistUI');
+
+import * as dispatcher from '../dispatcher.js';
+import {ROOT} from '../os.js';
+import ChecklistEvent from './checklistevent.js';
+import Module from './module.js';
+import * as ui from './ui.js';
 
 const {defaultCompare} = goog.require('goog.array');
 const {getDocument} = goog.require('goog.dom');
 const GoogEvent = goog.require('goog.events.Event');
 const GoogEventType = goog.require('goog.events.EventType');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const ui = goog.require('os.ui');
-const ChecklistEvent = goog.require('os.ui.ChecklistEvent');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -16,7 +17,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -33,7 +34,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'checklist';
+export const directiveTag = 'checklist';
 
 /**
  * Add the directive to the module.
@@ -44,7 +45,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the checklist directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -333,9 +334,3 @@ let checklist = null;
  * @type {string}
  */
 Controller.CHECKLIST_CLOSE = 'checklistclose';
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

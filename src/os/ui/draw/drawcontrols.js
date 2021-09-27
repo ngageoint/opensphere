@@ -1,13 +1,14 @@
-goog.module('os.ui.draw.DrawControlsUI');
+goog.declareModuleId('os.ui.draw.DrawControlsUI');
+
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {Controller as BaseDrawControlsCtrl} from './basedrawcontrols.js';
+import {getMenu} from './draw.js';
 
 const googEvents = goog.require('goog.events');
 const log = goog.require('goog.log');
-const {ROOT} = goog.require('os');
-const {getIMapContainer} = goog.require('os.map.instance');
 const MapEvent = goog.require('os.MapEvent');
-const Module = goog.require('os.ui.Module');
-const {getMenu} = goog.require('os.ui.draw');
-const {Controller: BaseDrawControlsCtrl} = goog.require('os.ui.draw.BaseDrawControlsUI');
+const {getIMapContainer} = goog.require('os.map.instance');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -17,7 +18,7 @@ const Logger = goog.requireType('goog.log.Logger');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -34,7 +35,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'os-draw-controls';
+export const directiveTag = 'os-draw-controls';
 
 /**
  * Add the directive to the module.
@@ -45,7 +46,7 @@ Module.directive('osDrawControls', [directive]);
  * Controller for the draw-controls directive.
  * @unrestricted
  */
-class Controller extends BaseDrawControlsCtrl {
+export class Controller extends BaseDrawControlsCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -113,9 +114,3 @@ class Controller extends BaseDrawControlsCtrl {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.draw.DrawControlsUI');
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

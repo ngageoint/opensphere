@@ -1,16 +1,14 @@
 goog.declareModuleId('plugin.ogc.ui.OGCLayerNodeUI');
 
+import Module from '../../../os/ui/module.js';
+import {Controller as DefaultLayerNodeUICtrl, directive as defaultLayerNodeUIDirective} from '../../../os/ui/node/defaultlayernodeui.js';
+import IFeatureTypeDescriptor from '../../../os/ui/ogc/ifeaturetypedescriptor.js';
 import {Controller as ChooseTimeColumnController} from './choosetimecolumn.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 const DataManager = goog.require('os.data.DataManager');
 const osImplements = goog.require('os.implements');
-const Module = goog.require('os.ui.Module');
-const {
-  Controller: DefaultLayerNodeUICtrl,
-  directive: defaultLayerNodeUIDirective
-} = goog.require('os.ui.node.DefaultLayerNodeUI');
-const IFeatureTypeDescriptor = goog.require('os.ui.ogc.IFeatureTypeDescriptor');
+
 
 /**
  * @type {string}

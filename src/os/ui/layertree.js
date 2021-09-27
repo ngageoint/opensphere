@@ -1,4 +1,8 @@
-goog.module('os.ui.LayerTreeUI');
+goog.declareModuleId('os.ui.LayerTreeUI');
+
+import Module from './module.js';
+import {Controller as SlickTreeCtrl, directive as slickTreeDirective} from './slick/slicktree.js';
+import SlickTreeNode from './slick/slicktreenode.js';
 
 const FolderNode = goog.require('os.data.FolderNode');
 const LayerNode = goog.require('os.data.LayerNode');
@@ -6,9 +10,6 @@ const ZOrder = goog.require('os.data.ZOrder');
 const {mapLayersToIds} = goog.require('os.layer');
 const FolderManager = goog.require('os.layer.FolderManager');
 const LayerGroup = goog.require('os.layer.LayerGroup');
-const Module = goog.require('os.ui.Module');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
-const {Controller: SlickTreeCtrl, directive: slickTreeDirective} = goog.require('os.ui.slick.SlickTreeUI');
 
 const ITreeNode = goog.requireType('os.structs.ITreeNode');
 
@@ -18,7 +19,7 @@ const ITreeNode = goog.requireType('os.structs.ITreeNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = slickTreeDirective();
   dir.controller = Controller;
   dir.scope['groupBy'] = '=';
@@ -30,7 +31,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'layertree';
+export const directiveTag = 'layertree';
 
 /**
  * Add the directive to the ui module
@@ -41,7 +42,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for layers tree
  * @unrestricted
  */
-class Controller extends SlickTreeCtrl {
+export class Controller extends SlickTreeCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -312,9 +313,3 @@ class Controller extends SlickTreeCtrl {
     this.scope.$emit('search');
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,18 +1,21 @@
-goog.module('os.ui.datetime.WheelDateUI');
+goog.declareModuleId('os.ui.datetime.WheelDateUI');
+
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import windowSelector from '../windowselector.js';
 
 const Delay = goog.require('goog.async.Delay');
 const googEvents = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
 const MouseWheelHandler = goog.require('goog.events.MouseWheelHandler');
 const log = goog.require('goog.log');
-const {ROOT} = goog.require('os');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const windowSelector = goog.require('os.ui.windowSelector');
-const MouseWheelEvent = goog.requireType('goog.events.MouseWheelEvent');
-const Logger = goog.requireType('goog.log.Logger');
 
 const BrowserEvent = goog.requireType('goog.events.BrowserEvent');
+
+
+const MouseWheelEvent = goog.requireType('goog.events.MouseWheelEvent');
+const Logger = goog.requireType('goog.log.Logger');
 
 
 /**
@@ -22,7 +25,7 @@ const BrowserEvent = goog.requireType('goog.events.BrowserEvent');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -42,7 +45,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'wheel-date';
+export const directiveTag = 'wheel-date';
 
 /**
  * Add the directive to the os.ui module.
@@ -82,7 +85,7 @@ const fixToday = function() {
  * Controller function for the wheel-date directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -383,9 +386,3 @@ class Controller {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.datetime.WheelDateUI');
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

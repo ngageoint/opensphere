@@ -1,10 +1,9 @@
-goog.module('os.ui.menu.MenuItemType');
-
+goog.declareModuleId('os.ui.menu.MenuItemType');
 
 /**
  * @enum {string}
  */
-exports = {
+const MenuItemType = {
   ROOT: 'root',
   ITEM: 'item',
   SEPARATOR: 'separator',
@@ -13,3 +12,5 @@ exports = {
   CHECK: 'check',
   RADIO: 'radio'
 };
+
+export default MenuItemType;

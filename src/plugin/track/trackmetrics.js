@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.track.Metrics');
 
-const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');
+import MetricsPlugin from '../../os/ui/metrics/metricsplugin.js';
 
 /**
  */

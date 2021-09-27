@@ -1,12 +1,11 @@
 goog.declareModuleId('plugin.electron.CustomizeSettingsWindow');
 
 import './customizesettingsui';
-
 import {ROOT} from '../../os/os.js';
 
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {create: createWindow, close: closeWindow} = goog.require('os.ui.window');
+import Module from '../../os/ui/module.js';
+import {create as createWindow, close as closeWindow} from '../../os/ui/window.js';
+import WindowEventType from '../../os/ui/windoweventtype.js';
 
 
 /**

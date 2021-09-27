@@ -5,7 +5,7 @@ goog.require('os.ui.filter.op.time.OlderThan');
 describe('os.ui.filter.op.time.OlderThan', function() {
   const TimeInstant = goog.module.get('os.time.TimeInstant');
   const TimeRange = goog.module.get('os.time.TimeRange');
-  const OlderThan = goog.module.get('os.ui.filter.op.time.OlderThan');
+  const {default: OlderThan} = goog.module.get('os.ui.filter.op.time.OlderThan');
 
   var between = new OlderThan();
   currentFilterTimestamp = 120000;

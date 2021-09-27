@@ -1,9 +1,9 @@
-goog.module('os.ui.action.Action');
+goog.declareModuleId('os.ui.action.Action');
 
 const Disposable = goog.require('goog.Disposable');
 
 const GoogEvent = goog.requireType('goog.events.Event');
-const MenuOptions = goog.requireType('os.ui.action.MenuOptions');
+const {default: MenuOptions} = goog.requireType('os.ui.action.MenuOptions');
 
 
 /**
@@ -23,7 +23,7 @@ const MenuOptions = goog.requireType('os.ui.action.MenuOptions');
  * @todo support dispatching from other targets, e.g. toolbar, menus, etc?
  * @todo support capture/bubble phase and preventDefault()?
  */
-class Action extends Disposable {
+export default class Action extends Disposable {
   /**
    * Constructor.
    * @param {!string} eventType the type of event the action will dispatch
@@ -275,5 +275,3 @@ class Action extends Disposable {
     return this.menuOptions_;
   }
 }
-
-exports = Action;

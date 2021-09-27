@@ -1,4 +1,4 @@
-goog.module('os.ui.events.ScrollEvent');
+goog.declareModuleId('os.ui.events.ScrollEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
@@ -6,7 +6,7 @@ const GoogEvent = goog.require('goog.events.Event');
 /**
  * Event that carries a selector to tell a section to scroll.
  */
-class ScrollEvent extends GoogEvent {
+export default class ScrollEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} selector The selector to scroll to
@@ -42,5 +42,3 @@ class ScrollEvent extends GoogEvent {
     return this.focus_;
   }
 }
-
-exports = ScrollEvent;

@@ -1,7 +1,7 @@
 goog.module('os.hist.IHistogramProvider');
 
 const IHistogramData = goog.requireType('os.hist.IHistogramData');
-const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
+const {default: TimelineScaleOptions} = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 
 /**

@@ -7,7 +7,7 @@ const I3DSupport = goog.require('os.I3DSupport');
 const MapContainer = goog.require('os.MapContainer');
 const osImplements = goog.require('os.implements');
 const osMap = goog.require('os.map');
-const OLDrawPolygon = goog.require('os.ui.ol.interaction.DrawPolygon');
+const {default: OLDrawPolygon} = goog.require('os.ui.ol.interaction.DrawPolygon');
 
 const OSMap = goog.requireType('os.Map');
 

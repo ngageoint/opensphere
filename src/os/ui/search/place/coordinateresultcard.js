@@ -1,10 +1,11 @@
-goog.module('os.ui.search.place.CoordinateResultCardUI');
+goog.declareModuleId('os.ui.search.place.CoordinateResultCardUI');
+
+import * as osMap from '../../../map/map.js';
+import {ROOT} from '../../../os.js';
+import Module from '../../module.js';
+import FeatureResultCardCtrl from '../featureresultcard.js';
 
 const {toLonLat} = goog.require('ol.proj');
-const {ROOT} = goog.require('os');
-const osMap = goog.require('os.map');
-const Module = goog.require('os.ui.Module');
-const FeatureResultCardCtrl = goog.require('os.ui.search.FeatureResultCardCtrl');
 
 const Point = goog.requireType('ol.geom.Point');
 
@@ -14,7 +15,7 @@ const Point = goog.requireType('ol.geom.Point');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/search/place/coordinateresultcard.html',
@@ -26,7 +27,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'coordresultcard';
+export const directiveTag = 'coordresultcard';
 
 /**
  * Register the beresultcard directive.
@@ -37,7 +38,7 @@ Module.directive('coordresultcard', [directive]);
  * Controller for the beresultcard directive.
  * @unrestricted
  */
-class Controller extends FeatureResultCardCtrl {
+export class Controller extends FeatureResultCardCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -66,9 +67,3 @@ class Controller extends FeatureResultCardCtrl {
     this['mgrs'] = osasm.toMGRS(/** @type {Array<number>} */ ([this['lon'], this['lat']]));
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

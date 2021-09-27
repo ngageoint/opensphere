@@ -1,6 +1,6 @@
 goog.module('os.data.FileProvider');
 
-const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
+const {default: DescriptorProvider} = goog.require('os.ui.data.DescriptorProvider');
 
 
 /**

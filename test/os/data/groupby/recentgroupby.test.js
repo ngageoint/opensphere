@@ -6,7 +6,7 @@ goog.require('os.ui.data.DescriptorNode');
 describe('os.data.groupby.RecentGroupBy', function() {
   const BaseDescriptor = goog.module.get('os.data.BaseDescriptor');
   const RecentGroupBy = goog.module.get('os.data.groupby.RecentGroupBy');
-  const DescriptorNode = goog.module.get('os.ui.data.DescriptorNode');
+  const {default: DescriptorNode} = goog.module.get('os.ui.data.DescriptorNode');
 
   var d = new BaseDescriptor();
 

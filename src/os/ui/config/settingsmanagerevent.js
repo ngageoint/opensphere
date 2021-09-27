@@ -1,13 +1,13 @@
-goog.module('os.ui.config.SettingsManagerEvent');
+goog.declareModuleId('os.ui.config.SettingsManagerEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
-const SettingPlugin = goog.requireType('os.ui.config.SettingPlugin');
+const {default: SettingPlugin} = goog.requireType('os.ui.config.SettingPlugin');
 
 
 /**
  */
-class SettingsManagerEvent extends GoogEvent {
+export default class SettingsManagerEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -22,5 +22,3 @@ class SettingsManagerEvent extends GoogEvent {
     this.plugin = opt_plugin || null;
   }
 }
-
-exports = SettingsManagerEvent;

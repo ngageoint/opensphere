@@ -1,9 +1,8 @@
 goog.declareModuleId('plugin.pelias.geocoder.ResultCardUI');
 
 import {ROOT} from '../../../os/os.js';
-
-const Module = goog.require('os.ui.Module');
-const FeatureResultCardCtrl = goog.require('os.ui.search.FeatureResultCardCtrl');
+import Module from '../../../os/ui/module.js';
+import FeatureResultCardCtrl from '../../../os/ui/search/featureresultcard.js';
 
 
 /**

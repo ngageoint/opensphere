@@ -1,4 +1,18 @@
-goog.module('os.ui.slick.SlickGridUI');
+goog.declareModuleId('os.ui.slick.SlickGridUI');
+
+import ActionManager from '../action/actionmanager.js';
+import {launchColumnManager} from '../column/column.js';
+import {openMenu} from '../globalmenu.js';
+import IMenuSupplier from '../menu/imenusupplier.js';
+import Menu from '../menu/menu.js';
+import Module from '../module.js';
+import ResizeEventType from '../resizeeventtype.js';
+import {copy} from '../text/text.js';
+import * as ui from '../ui.js';
+import windowSelector from '../windowselector.js';
+import {createColumnActions, findByField} from './column.js';
+import ColumnEventType from './columneventtype.js';
+import SlickGridEvent from './slickgridevent.js';
 
 const Disposable = goog.require('goog.Disposable');
 const Timer = goog.require('goog.Timer');
@@ -20,26 +34,13 @@ const {killRightButton} = goog.require('os.events');
 const {filterFalsey} = goog.require('os.fn');
 const osImplements = goog.require('os.implements');
 const {FLOAT} = goog.require('os.string');
-const ui = goog.require('os.ui');
-const {openMenu} = goog.require('os.ui.GlobalMenuUI');
-const Module = goog.require('os.ui.Module');
-const ResizeEventType = goog.require('os.ui.ResizeEventType');
-const ActionManager = goog.require('os.ui.action.ActionManager');
-const {launchColumnManager} = goog.require('os.ui.column');
-const IMenuSupplier = goog.require('os.ui.menu.IMenuSupplier');
-const Menu = goog.require('os.ui.menu.Menu');
-const ColumnEventType = goog.require('os.ui.slick.ColumnEventType');
-const SlickGridEvent = goog.require('os.ui.slick.SlickGridEvent');
-const {createColumnActions, findByField} = goog.require('os.ui.slick.column');
-const {copy} = goog.require('os.ui.text');
-const windowSelector = goog.require('os.ui.windowSelector');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const EventLike = goog.requireType('goog.events.EventLike');
 const IComparable = goog.requireType('os.IComparable');
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const ColumnContext = goog.requireType('os.ui.slick.ColumnContext');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: ColumnContext} = goog.requireType('os.ui.slick.ColumnContext');
 
 
 /**
@@ -47,7 +48,7 @@ const ColumnContext = goog.requireType('os.ui.slick.ColumnContext');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<div class="slick-grid"></div>',
@@ -80,7 +81,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'slickgrid';
+export const directiveTag = 'slickgrid';
 
 /**
  * Add the directive to the ui module
@@ -91,7 +92,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for SlickGrid directive
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -1864,9 +1865,3 @@ const defaultOptions = {
  */
 Controller.COPY_LIMIT_MSG = 'Data exceeds the maximum copy limit. Please reduce the ' +
     'selected/displayed data and try again.';
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

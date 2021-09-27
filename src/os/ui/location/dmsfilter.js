@@ -1,8 +1,9 @@
-goog.module('os.ui.location.dmsFilter');
+goog.declareModuleId('os.ui.location.dmsFilter');
+
+import Module from '../module.js';
+import Format from './locationformat.js';
 
 const {toSexagesimal} = goog.require('os.geo');
-const Module = goog.require('os.ui.Module');
-const Format = goog.require('os.ui.location.Format');
 
 
 /**
@@ -26,4 +27,4 @@ const filter = () => /** @type {angular.Filter} */ (filterFn);
  */
 Module.filter(Format.DMS, [filter]);
 
-exports = filterFn;
+export default filterFn;

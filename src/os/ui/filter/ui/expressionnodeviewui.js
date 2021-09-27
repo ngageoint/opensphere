@@ -1,6 +1,6 @@
-goog.module('os.ui.filter.ui.ExpressionNodeViewUI');
+goog.declareModuleId('os.ui.filter.ui.ExpressionNodeViewUI');
 
-const Module = goog.require('os.ui.Module');
+import Module from '../../module.js';
 
 
 /**
@@ -8,7 +8,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<span class="c-glyph"></span>',
@@ -20,7 +20,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'expressionnodeviewui';
+export const directiveTag = 'expressionnodeviewui';
 
 /**
  * Add the directive to the os.ui module
@@ -31,16 +31,10 @@ Module.directive(directiveTag, [directive]);
  * Controller for selected/highlighted node UI
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @ngInject
    */
   constructor() {}
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,8 +1,8 @@
-goog.module('os.ui.menu.MenuItemOptions');
+goog.declareModuleId('os.ui.menu.MenuItemOptions');
 
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const MenuItem = goog.requireType('os.ui.menu.MenuItem');
-const MenuItemType = goog.requireType('os.ui.menu.MenuItemType');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
+const {default: MenuItemType} = goog.requireType('os.ui.menu.MenuItemType');
 
 
 /**
@@ -26,4 +26,4 @@ const MenuItemType = goog.requireType('os.ui.menu.MenuItemType');
  */
 let MenuItemOptions;
 
-exports = MenuItemOptions;
+export default MenuItemOptions;

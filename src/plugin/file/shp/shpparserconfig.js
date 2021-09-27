@@ -1,11 +1,12 @@
 goog.declareModuleId('plugin.file.shp.SHPParserConfig');
 
+import * as osUiSlickColumn from '../../../os/ui/slick/column.js';
 import SHPParser from './shpparser.js';
 
 const googEvents = goog.require('goog.events');
 const EventType = goog.require('os.events.EventType');
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
-const osUiSlickColumn = goog.require('os.ui.slick.column');
+
 
 /**
  * Configuration for a SHP parser.

@@ -1,7 +1,10 @@
-goog.module('os.ui.file.ui.AbstractFileImportCtrl');
+goog.declareModuleId('os.ui.file.ui.AbstractFileImportCtrl');
+
+import * as dispatcher from '../../../dispatcher.js';
+import * as osWindow from '../../window.js';
+import WindowEventType from '../../windoweventtype.js';
 
 const log = goog.require('goog.log');
-const dispatcher = goog.require('os.Dispatcher');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const DataManager = goog.require('os.data.DataManager');
@@ -9,10 +12,8 @@ const DescriptorEvent = goog.require('os.data.DescriptorEvent');
 const DescriptorEventType = goog.require('os.data.DescriptorEventType');
 const {getLocalUrl, isLocal} = goog.require('os.file');
 const FileStorage = goog.require('os.file.FileStorage');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const osWindow = goog.require('os.ui.window');
 
-const DescriptorProvider = goog.requireType('os.ui.data.DescriptorProvider');
+const {default: DescriptorProvider} = goog.requireType('os.ui.data.DescriptorProvider');
 
 
 /**
@@ -22,7 +23,7 @@ const DescriptorProvider = goog.requireType('os.ui.data.DescriptorProvider');
  * @template CONFIG,DESCRIPTOR
  * @unrestricted
  */
-class Controller {
+export default class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -210,5 +211,3 @@ class Controller {
  * @type {log.Logger}
  */
 const logger = log.getLogger('os.ui.file.ui.AbstractFileImportCtrl');
-
-exports = Controller;

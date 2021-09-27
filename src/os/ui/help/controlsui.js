@@ -1,11 +1,10 @@
-goog.module('os.ui.help.ControlsUI');
+goog.declareModuleId('os.ui.help.ControlsUI');
 
-goog.require('os.ui.help.ControlBlockUI');
-
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const Controls = goog.require('os.ui.help.Controls');
-const {bringToFront, create, exists} = goog.require('os.ui.window');
+import './controlblock.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {bringToFront, create, exists} from '../window.js';
+import Controls from './controls.js';
 
 
 /**
@@ -13,7 +12,7 @@ const {bringToFront, create, exists} = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -26,7 +25,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'controlshelp';
+export const directiveTag = 'controlshelp';
 
 /**
  * Register the directive.
@@ -37,7 +36,7 @@ Module.directive(directiveTag, [directive]);
  * Display the controls for this application
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -65,7 +64,7 @@ class Controller {
 /**
  * Launch the controls window
  */
-const launchControlsHelp = () => {
+export const launchControlsHelp = () => {
   var id = 'controlsHelp';
   if (exists(id)) {
     bringToFront(id);
@@ -86,11 +85,4 @@ const launchControlsHelp = () => {
       'icon': 'fa fa-keyboard-o'
     }, 'controlshelp');
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchControlsHelp
 };

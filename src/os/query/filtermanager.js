@@ -8,8 +8,8 @@ const FilterType = goog.require('os.filter.FilterType');
 const VectorLayer = goog.require('os.layer.Vector');
 const {getMapContainer} = goog.require('os.map.instance');
 const {getQueryManager} = goog.require('os.query.instance');
-const FilterEvent = goog.require('os.ui.filter.FilterEvent');
-const FilterEventType = goog.require('os.ui.filter.FilterEventType');
+const {default: FilterEvent} = goog.require('os.ui.filter.FilterEvent');
+const {default: FilterEventType} = goog.require('os.ui.filter.FilterEventType');
 const osWindow = goog.require('os.ui.window');
 
 const IFilterable = goog.requireType('os.filter.IFilterable');

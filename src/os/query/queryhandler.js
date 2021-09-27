@@ -5,7 +5,7 @@ const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const {listen, unlisten} = goog.require('ol.events');
 const {getQueryManager} = goog.require('os.query.instance');
-const UIQueryHandler = goog.require('os.ui.query.QueryHandler');
+const {default: UIQueryHandler} = goog.require('os.ui.query.QueryHandler');
 
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 const RequestSource = goog.requireType('os.source.Request');

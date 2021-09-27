@@ -1,8 +1,9 @@
-goog.module('os.ui.util.ValidationMessageUI');
+goog.declareModuleId('os.ui.util.ValidationMessageUI');
+
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
 
 const {isEmpty} = goog.require('goog.object');
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -11,7 +12,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -27,7 +28,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'validation-message';
+export const directiveTag = 'validation-message';
 
 /**
  * Add the directive to the os.ui module
@@ -38,7 +39,7 @@ Module.directive('validationMessage', [directive]);
  * Controller for the validation message
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -63,9 +64,3 @@ class Controller {
     return this.scope_['target'] && !isEmpty(this.scope_['target'].$error) && this.scope_['target'].$dirty;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

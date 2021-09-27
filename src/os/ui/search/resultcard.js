@@ -1,6 +1,6 @@
-goog.module('os.ui.search.ResultCardUI');
+goog.declareModuleId('os.ui.search.ResultCardUI');
 
-const Module = goog.require('os.ui.Module');
+import Module from '../module.js';
 
 const ISearchResult = goog.requireType('os.search.ISearchResult');
 
@@ -10,7 +10,7 @@ const ISearchResult = goog.requireType('os.search.ISearchResult');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -23,7 +23,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'resultcard';
+export const directiveTag = 'resultcard';
 
 /**
  * Register the resultcard directive.
@@ -34,7 +34,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the resultcard directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -66,9 +66,3 @@ class Controller {
     // nothing to do yet
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

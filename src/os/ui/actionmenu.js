@@ -1,25 +1,26 @@
-goog.module('os.ui.ActionMenuUI');
+goog.declareModuleId('os.ui.ActionMenuUI');
+
+import {ROOT} from '../os.js';
+import EventType from './action/actioneventtype.js';
+import MenuItemAction from './action/menuitemaction.js';
+import MenuItemList from './action/menuitemlist.js';
+import MenuItemSeparator from './action/menuitemseparator.js';
+import MenuItemSeparatorHeader from './action/menuitemseparatorheader.js';
+import MenuOptions from './action/menuoptions.js';
+import Module from './module.js';
+import {apply} from './ui.js';
 
 const {binaryInsert, insertAt} = goog.require('goog.array');
 const {getViewportSize} = goog.require('goog.dom');
 const {listen, unlistenByKey} = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
 const {getValueByKeys} = goog.require('goog.object');
-const {ROOT} = goog.require('os');
 const Metrics = goog.require('os.metrics.Metrics');
 const {set} = goog.require('os.object');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const EventType = goog.require('os.ui.action.EventType');
-const MenuItemAction = goog.require('os.ui.action.MenuItemAction');
-const MenuItemList = goog.require('os.ui.action.MenuItemList');
-const MenuItemSeparator = goog.require('os.ui.action.MenuItemSeparator');
-const MenuItemSeparatorHeader = goog.require('os.ui.action.MenuItemSeparatorHeader');
-const MenuOptions = goog.require('os.ui.action.MenuOptions');
 
-const Action = goog.requireType('os.ui.action.Action');
-const ActionManager = goog.requireType('os.ui.action.ActionManager');
-const MenuItem = goog.requireType('os.ui.action.MenuItem');
+const {default: Action} = goog.requireType('os.ui.action.Action');
+const {default: ActionManager} = goog.requireType('os.ui.action.ActionManager');
+const {default: MenuItem} = goog.requireType('os.ui.action.MenuItem');
 
 
 /**
@@ -30,7 +31,7 @@ const MenuItem = goog.requireType('os.ui.action.MenuItem');
  *
  * @return {angular.Directive} the directive definition
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/menu/actionmenu.html',
@@ -52,7 +53,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'action-menu';
+export const directiveTag = 'action-menu';
 
 Module.directive('actionMenu', directive);
 
@@ -60,7 +61,7 @@ Module.directive('actionMenu', directive);
  * Controller function for the ActionMenu directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {angular.Scope} $scope
@@ -515,9 +516,3 @@ class Controller {
     this.close();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

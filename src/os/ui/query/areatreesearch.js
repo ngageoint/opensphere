@@ -1,7 +1,7 @@
-goog.module('os.ui.query.AreaTreeSearch');
+goog.declareModuleId('os.ui.query.AreaTreeSearch');
 
-const AreaNode = goog.require('os.ui.query.AreaNode');
-const AbstractGroupByTreeSearch = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
+import AbstractGroupByTreeSearch from '../slick/abstractgroupbytreesearch.js';
+import AreaNode from './areanode.js';
 
 const Feature = goog.requireType('ol.Feature');
 const ITreeNode = goog.requireType('os.structs.ITreeNode');
@@ -10,7 +10,7 @@ const ITreeNode = goog.requireType('os.structs.ITreeNode');
 /**
  * Extends AbstractGroupByTreeSearch to search through saved areas
  */
-class AreaTreeSearch extends AbstractGroupByTreeSearch {
+export default class AreaTreeSearch extends AbstractGroupByTreeSearch {
   /**
    * Constructor.
    * @param {!Array<!ITreeNode>} search The original tree to search
@@ -45,5 +45,3 @@ class AreaTreeSearch extends AbstractGroupByTreeSearch {
     return node;
   }
 }
-
-exports = AreaTreeSearch;

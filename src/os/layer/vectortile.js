@@ -32,8 +32,8 @@ const math = goog.require('os.math');
 const registerClass = goog.require('os.registerClass');
 const SourcePropertyChange = goog.require('os.source.PropertyChange');
 const {isStateFile} = goog.require('os.state');
-const Icons = goog.require('os.ui.Icons');
-const IconsSVG = goog.require('os.ui.IconsSVG');
+const {default: Icons} = goog.require('os.ui.Icons');
+const {default: IconsSVG} = goog.require('os.ui.IconsSVG');
 const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
 const renamelayer = goog.require('os.ui.renamelayer');
 

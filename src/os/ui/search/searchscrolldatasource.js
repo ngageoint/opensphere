@@ -1,4 +1,4 @@
-goog.module('os.ui.search.SearchScrollDataSource');
+goog.declareModuleId('os.ui.search.SearchScrollDataSource');
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
@@ -6,14 +6,14 @@ const SearchEvent = goog.require('os.search.SearchEvent');
 const SearchEventType = goog.require('os.search.SearchEventType');
 
 const SearchManager = goog.requireType('os.search.SearchManager');
-const IScrollDataSource = goog.requireType('os.ui.IScrollDataSource');
+const {default: IScrollDataSource} = goog.requireType('os.ui.IScrollDataSource');
 
 
 /**
  * @implements {IScrollDataSource}
  * @unrestricted
  */
-class SearchScrollDataSource extends EventTarget {
+export default class SearchScrollDataSource extends EventTarget {
   /**
    * Constructor.
    */
@@ -191,5 +191,3 @@ class SearchScrollDataSource extends EventTarget {
     this.dispatchEvent(new SearchEvent(SearchEventType.ERROR, this.term_, [], 0));
   }
 }
-
-exports = SearchScrollDataSource;

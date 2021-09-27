@@ -1,7 +1,7 @@
-goog.module('os.ui.history.HistoryButtonUI');
+goog.declareModuleId('os.ui.history.HistoryButtonUI');
 
-const MenuButtonCtrl = goog.require('os.ui.MenuButtonCtrl');
-const Module = goog.require('os.ui.Module');
+import MenuButtonCtrl from '../menubutton.js';
+import Module from '../module.js';
 
 
 /**
@@ -9,7 +9,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -27,7 +27,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'history-button';
+export const directiveTag = 'history-button';
 
 /**
  * add the directive to the module
@@ -38,7 +38,7 @@ Module.directive('historyButton', [directive]);
  * Controller function for the nav-top directive
  * @unrestricted
  */
-class Controller extends MenuButtonCtrl {
+export class Controller extends MenuButtonCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -50,9 +50,3 @@ class Controller extends MenuButtonCtrl {
     this.flag = 'history';
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

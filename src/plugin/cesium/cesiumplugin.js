@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.cesium.Plugin');
 
+import ImportManager from '../../os/ui/im/importmanager.js';
 import {CESIUM_ONLY_LAYER, DEFAULT_ION_URL, ID, SettingsKey, setIonUrl} from './cesium.js';
 import CesiumRenderer from './cesiumrenderer.js';
 import {ID as TILE_ID, TYPE as TILE_TYPE} from './tiles/cesium3dtiles.js';
@@ -18,8 +19,8 @@ const Group = goog.require('os.layer.Group');
 const ILayer = goog.require('os.layer.ILayer');
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const ImportManager = goog.require('os.ui.im.ImportManager');
 const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
+
 
 /**
  * Provides a WebGL renderer for the map, powered by Cesium.

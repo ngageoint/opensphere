@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.arc.ArcServer');
 
+import AbstractLoadingServer from '../../os/ui/server/abstractloadingserver.js';
+import SlickTreeNode from '../../os/ui/slick/slicktreenode.js';
 import * as arc from './arc.js';
 
 const asserts = goog.require('goog.asserts');
@@ -11,8 +13,6 @@ const AlertManager = goog.require('os.alert.AlertManager');
 const IDataProvider = goog.require('os.data.IDataProvider');
 const osImplements = goog.require('os.implements');
 const ogc = goog.require('os.ogc');
-const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');

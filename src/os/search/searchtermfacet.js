@@ -1,7 +1,7 @@
 goog.module('os.search.SearchTermFacet');
 
 const BaseFacet = goog.require('os.search.BaseFacet');
-const TreeSearch = goog.require('os.ui.slick.TreeSearch');
+const {default: TreeSearch} = goog.require('os.ui.slick.TreeSearch');
 
 
 /**

@@ -1,8 +1,9 @@
-goog.module('os.ui.renamelayer');
+goog.declareModuleId('os.ui.renamelayer');
+
+import * as ConfirmTextUI from './window/confirmtext.js';
 
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const RenameLayer = goog.require('os.command.RenameLayer');
-const ConfirmTextUI = goog.require('os.ui.window.ConfirmTextUI');
 
 const ILayer = goog.requireType('os.layer.ILayer');
 
@@ -12,7 +13,7 @@ const ILayer = goog.requireType('os.layer.ILayer');
  *
  * @param {ILayer} layer
  */
-const launchRenameDialog = function(layer) {
+export const launchRenameDialog = function(layer) {
   if (layer) {
     ConfirmTextUI.launchConfirmText({
       confirm: goog.partial(addRenameLayer, layer),
@@ -33,12 +34,7 @@ const launchRenameDialog = function(layer) {
  * @param {!ILayer} layer
  * @param {string} newName
  */
-const addRenameLayer = function(layer, newName) {
+export const addRenameLayer = function(layer, newName) {
   var rename = new RenameLayer(layer, newName, layer.getTitle());
   CommandProcessor.getInstance().addCommand(rename);
-};
-
-exports = {
-  launchRenameDialog,
-  addRenameLayer
 };

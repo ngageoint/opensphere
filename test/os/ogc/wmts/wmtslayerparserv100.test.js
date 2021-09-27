@@ -17,7 +17,7 @@ describe('os.ogc.wmts.WMTSLayerParserV100', () => {
   const CrossOrigin = goog.module.get('os.net.CrossOrigin');
   const Request = goog.module.get('os.net.Request');
   const {default: WMTSLayerParserV100} = goog.module.get('os.ogc.wmts.WMTSLayerParserV100');
-  const OGCDescriptor = goog.module.get('os.ui.ogc.OGCDescriptor');
+  const {default: OGCDescriptor} = goog.module.get('os.ui.ogc.OGCDescriptor');
 
   let capabilities = undefined;
 

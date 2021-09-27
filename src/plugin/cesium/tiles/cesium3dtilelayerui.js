@@ -1,15 +1,15 @@
 goog.declareModuleId('plugin.cesium.tiles.Cesium3DTileLayerUI');
 
-goog.require('os.ui.SliderUI');
-
+import '../../../os/ui/slider.js';
 import {ROOT} from '../../../os/os.js';
+
+import {Controller as DefaultLayerUICtrl} from '../../../os/ui/layer/defaultlayerui.js';
+import Module from '../../../os/ui/module.js';
 
 const {toHexString} = goog.require('os.color');
 const LayerColor = goog.require('os.command.LayerColor');
 const osImplements = goog.require('os.implements');
 const IColorableLayer = goog.require('os.layer.IColorableLayer');
-const Module = goog.require('os.ui.Module');
-const {Controller: DefaultLayerUICtrl} = goog.require('os.ui.layer.DefaultLayerUI');
 
 const ICommand = goog.requireType('os.command.ICommand');
 const LayerNode = goog.requireType('os.data.LayerNode');

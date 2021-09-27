@@ -1,10 +1,11 @@
-goog.module('os.ui.list.ListEventType');
-
+goog.declareModuleId('os.ui.list.ListEventType');
 
 /**
  * List event types.
  * @enum {string}
  */
-exports = {
+const ListEventType = {
   CHANGE: 'list:change'
 };
+
+export default ListEventType;

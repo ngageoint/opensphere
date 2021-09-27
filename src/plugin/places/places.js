@@ -2,6 +2,7 @@ goog.declareModuleId('plugin.places');
 
 import * as osFeature from '../../os/feature/feature.js';
 import * as osStyle from '../../os/style/style.js';
+import {Controller as FeatureEditCtrl} from '../../os/ui/featureedit.js';
 import KMLNodeAdd from '../file/kml/cmd/kmlnodeaddcmd.js';
 import * as kml from '../file/kml/kml.js';
 import KMLField from '../file/kml/kmlfield.js';
@@ -18,14 +19,14 @@ const annotation = goog.require('os.annotation');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
 const RecordField = goog.require('os.data.RecordField');
+const {METHOD_FIELD} = goog.require('os.interpolate');
+
 const osObject = goog.require('os.object');
 const osOlFeature = goog.require('os.ol.feature');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const TimeInstant = goog.require('os.time.TimeInstant');
 const TimeRange = goog.require('os.time.TimeRange');
-const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
-const {METHOD_FIELD} = goog.require('os.interpolate');
 
 const {default: KMLLayerNode} = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');

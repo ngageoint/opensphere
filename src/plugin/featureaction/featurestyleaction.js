@@ -2,6 +2,7 @@ goog.declareModuleId('plugin.im.action.feature.StyleAction');
 
 import {getLayer} from '../../os/feature/feature.js';
 import * as osStyle from '../../os/style/style.js';
+import * as kml from '../../os/ui/file/kml/kml.js';
 import {StyleType as FAStyleType} from './featureaction.js';
 import {directiveTag as configUi} from './ui/featurestyleactionconfig.js';
 
@@ -15,7 +16,6 @@ const ILegendRenderer = goog.require('os.legend.ILegendRenderer');
 const osObject = goog.require('os.object');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
-const kml = goog.require('os.ui.file.kml');
 const osXml = goog.require('os.xml');
 
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');

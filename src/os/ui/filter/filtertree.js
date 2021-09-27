@@ -1,14 +1,14 @@
-goog.module('os.ui.filter.ui.FilterTreeUI');
+goog.declareModuleId('os.ui.filter.ui.FilterTreeUI');
 
-goog.require('os.ui.slick.SlickTreeUI');
+import '../slick/slicktree.js';
+import Module from '../module.js';
+import TreeSearch from '../slick/treesearch.js';
+import {apply} from '../ui.js';
+import FilterEventType from './filtereventtype.js';
+import FilterGroupBy from './ui/filtergroupby.js';
+import FilterNode from './ui/filternode.js';
 
 const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const FilterEventType = goog.require('os.ui.filter.FilterEventType');
-const FilterGroupBy = goog.require('os.ui.filter.ui.FilterGroupBy');
-const FilterNode = goog.require('os.ui.filter.ui.FilterNode');
-const TreeSearch = goog.require('os.ui.slick.TreeSearch');
 
 const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
 
@@ -18,7 +18,7 @@ const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -36,7 +36,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'filtertree';
+export const directiveTag = 'filtertree';
 
 /**
  * Add the directive to the ui module
@@ -47,7 +47,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the filter tree
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -115,9 +115,3 @@ class Controller {
  * @type {INodeGroupBy}
  */
 const typeGroupBy = new FilterGroupBy();
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

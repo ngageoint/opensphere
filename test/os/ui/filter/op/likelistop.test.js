@@ -1,7 +1,7 @@
 goog.require('os.ui.filter.op.LikeList');
 
 describe('os.ui.filter.op.LikeList', function() {
-  const LikeList = goog.module.get('os.ui.filter.op.LikeList');
+  const {default: LikeList} = goog.module.get('os.ui.filter.op.LikeList');
 
   var op = new LikeList();
 

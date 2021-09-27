@@ -1,12 +1,13 @@
-goog.module('os.ui.file.ExportDialogUI');
+goog.declareModuleId('os.ui.file.ExportDialogUI');
+
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import * as osWindow from '../window.js';
+import WindowEventType from '../windoweventtype.js';
+import {launch} from './exportstatus.js';
+import exportManager from './uiexportmanager.js';
 
 const {assert} = goog.require('goog.asserts');
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const {launch} = goog.require('os.ui.file.ExportStatusUI');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const exportManager = goog.require('os.ui.exportManager');
-const osWindow = goog.require('os.ui.window');
 
 const ExportOptions = goog.requireType('os.ex.ExportOptions');
 
@@ -16,7 +17,7 @@ const ExportOptions = goog.requireType('os.ex.ExportOptions');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   replace: true,
   restrict: 'E',
   templateUrl: ROOT + 'views/file/exportdialog.html',
@@ -28,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'exportdialog';
+export const directiveTag = 'exportdialog';
 
 /**
  * Add the directive to the module.
@@ -41,7 +42,7 @@ Module.directive(directiveTag, [directive]);
  * @template T
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -281,9 +282,3 @@ class Controller {
     osWindow.close(this.element);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

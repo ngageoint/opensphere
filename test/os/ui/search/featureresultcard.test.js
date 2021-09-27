@@ -19,8 +19,8 @@ describe('os.ui.search.FeatureResultCardCtrl', () => {
   const VectorLayer = goog.module.get('os.layer.Vector');
   const VectorSource = goog.module.get('os.source.Vector');
   const StyleType = goog.module.get('os.style.StyleType');
-  const Controller = goog.module.get('os.ui.search.FeatureResultCardCtrl');
-  const CoordinateResult = goog.module.get('os.ui.search.place.CoordinateResult');
+  const {default: Controller} = goog.module.get('os.ui.search.FeatureResultCardCtrl');
+  const {default: CoordinateResult} = goog.module.get('os.ui.search.place.CoordinateResult');
 
   let controller;
   let scope;

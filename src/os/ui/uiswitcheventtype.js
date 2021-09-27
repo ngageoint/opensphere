@@ -1,9 +1,11 @@
-goog.module('os.ui.UISwitchEventType');
+goog.declareModuleId('os.ui.UISwitchEventType');
 
 /**
  * UI switch event types.
  * @enum {string}
  */
-exports = {
+const UISwitchEventType = {
   UPDATE: 'uiSwitch:update'
 };
+
+export default UISwitchEventType;

@@ -1,20 +1,21 @@
-goog.module('os.ui.TextPromptUI');
+goog.declareModuleId('os.ui.TextPromptUI');
+
+import {ROOT} from '../os.js';
+import Module from './module.js';
+import {close, create} from './window.js';
+import WindowEventType from './windoweventtype.js';
 
 const Delay = goog.require('goog.async.Delay');
 const {getDocument} = goog.require('goog.dom');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {close, create} = goog.require('os.ui.window');
 
 
 /**
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -27,7 +28,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'textprompt';
+export const directiveTag = 'textprompt';
 
 /**
  * Add the directive to the os module
@@ -37,7 +38,7 @@ Module.directive(directiveTag, [directive]);
 /**
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -125,7 +126,7 @@ class Controller {
  *
  * @param {osx.window.TextPromptOptions=} opt_options The window options
  */
-const launchTextPrompt = function(opt_options) {
+export const launchTextPrompt = function(opt_options) {
   var options = /** @type {!osx.window.TextPromptOptions} */ (opt_options || {});
   var scopeOptions = {
     'title': options.title,
@@ -162,11 +163,4 @@ const launchTextPrompt = function(opt_options) {
   };
 
   create(windowOptions, 'textprompt', undefined, undefined, undefined, scopeOptions);
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchTextPrompt
 };

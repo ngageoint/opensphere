@@ -6,11 +6,11 @@ goog.require('os.ui.filter.op.Op');
 
 
 describe('os.ui.filter.op.Not', function() {
-  const EqualTo = goog.module.get('os.ui.filter.op.EqualTo');
-  const IsLike = goog.module.get('os.ui.filter.op.IsLike');
-  const IsNull = goog.module.get('os.ui.filter.op.IsNull');
-  const Not = goog.module.get('os.ui.filter.op.Not');
-  const Op = goog.module.get('os.ui.filter.op.Op');
+  const {default: EqualTo} = goog.module.get('os.ui.filter.op.EqualTo');
+  const {default: IsLike} = goog.module.get('os.ui.filter.op.IsLike');
+  const {default: IsNull} = goog.module.get('os.ui.filter.op.IsNull');
+  const {default: Not} = goog.module.get('os.ui.filter.op.Not');
+  const {default: Op} = goog.module.get('os.ui.filter.op.Op');
 
   var defaultOp = new Op();
   var notDefaultOp = new Not(defaultOp);

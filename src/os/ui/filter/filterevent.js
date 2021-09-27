@@ -1,4 +1,4 @@
-goog.module('os.ui.filter.FilterEvent');
+goog.declareModuleId('os.ui.filter.FilterEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
@@ -7,7 +7,7 @@ const FilterEntry = goog.requireType('os.filter.FilterEntry');
 
 /**
  */
-class FilterEvent extends GoogEvent {
+export default class FilterEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -28,5 +28,3 @@ class FilterEvent extends GoogEvent {
     this.entry = opt_entry || null;
   }
 }
-
-exports = FilterEvent;

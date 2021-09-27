@@ -1,4 +1,4 @@
-goog.module('os.ui.AbstractMainContent');
+goog.declareModuleId('os.ui.AbstractMainContent');
 
 /**
  * Key for injecting into the main-content list
@@ -6,4 +6,4 @@ goog.module('os.ui.AbstractMainContent');
  */
 const AbstractMainContent = 'main-content';
 
-exports = AbstractMainContent;
+export default AbstractMainContent;

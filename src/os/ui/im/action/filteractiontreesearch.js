@@ -1,9 +1,10 @@
-goog.module('os.ui.im.action.FilterActionTreeSearch');
+goog.declareModuleId('os.ui.im.action.FilterActionTreeSearch');
+
+import AbstractGroupByTreeSearch from '../../slick/abstractgroupbytreesearch.js';
+import TreeSearch from '../../slick/treesearch.js';
+import FilterActionNode from './filteractionnode.js';
 
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const FilterActionNode = goog.require('os.ui.im.action.FilterActionNode');
-const AbstractGroupByTreeSearch = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
-const TreeSearch = goog.require('os.ui.slick.TreeSearch');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 
@@ -11,7 +12,7 @@ const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 /**
  * Tree search for filter actions.
  */
-class FilterActionTreeSearch extends AbstractGroupByTreeSearch {
+export default class FilterActionTreeSearch extends AbstractGroupByTreeSearch {
   /**
    * Constructor.
    * @param {!string} property The property the search exists at.
@@ -206,5 +207,3 @@ class FilterActionTreeSearch extends AbstractGroupByTreeSearch {
     // do NOT sort if there isn't a group by
   }
 }
-
-exports = FilterActionTreeSearch;

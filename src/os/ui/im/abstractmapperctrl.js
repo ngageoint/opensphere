@@ -1,11 +1,12 @@
-goog.module('os.ui.im.AbstractMapperCtrl');
+goog.declareModuleId('os.ui.im.AbstractMapperCtrl');
+
+import * as osWindow from '../window.js';
 
 const {bucket} = goog.require('goog.array');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const osWindow = goog.require('os.ui.window');
 
 const Rule = goog.requireType('os.im.mapping.Rule');
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -28,7 +29,7 @@ const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
  * @template T
  * @unrestricted
  */
-class Controller {
+export default class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -283,5 +284,3 @@ class Controller {
    */
   validateRules() {}
 }
-
-exports = Controller;

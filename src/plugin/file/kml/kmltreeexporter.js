@@ -3,6 +3,8 @@ goog.declareModuleId('plugin.file.kml.KMLTreeExporter');
 import * as osFeature from '../../../os/feature/feature.js';
 import * as osSource from '../../../os/source/source.js';
 import * as osStyle from '../../../os/style/style.js';
+import AbstractKMLExporter from '../../../os/ui/file/kml/abstractkmlexporter.js';
+import * as osUiFileKml from '../../../os/ui/file/kml/kml.js';
 import * as pluginFileKmlExport from './kmlexport.js';
 
 const log = goog.require('goog.log');
@@ -16,8 +18,6 @@ const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
 const TriState = goog.require('os.structs.TriState');
 const StyleType = goog.require('os.style.StyleType');
-const osUiFileKml = goog.require('os.ui.file.kml');
-const AbstractKMLExporter = goog.require('os.ui.file.kml.AbstractKMLExporter');
 const xml = goog.require('os.xml');
 
 const Geometry = goog.requireType('ol.geom.Geometry');

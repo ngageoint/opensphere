@@ -1,12 +1,12 @@
-goog.module('os.ui.filter.op.Rule');
+goog.declareModuleId('os.ui.filter.op.Rule');
 
-const Op = goog.require('os.ui.filter.op.Op');
+import Op from './op.js';
 const DataType = goog.require('os.xsd.DataType');
 
 
 /**
  */
-class Rule extends Op {
+export default class Rule extends Op {
   /**
    * Constructor.
    * @param {string} localName
@@ -42,5 +42,3 @@ class Rule extends Op {
     return el.attr('value');
   }
 }
-
-exports = Rule;

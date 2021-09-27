@@ -1,7 +1,7 @@
 goog.module('os.data.FolderNode');
 
 const {directiveTag: folderNodeUi} = goog.require('os.ui.node.FolderNodeUI');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+const {default: SlickTreeNode} = goog.require('os.ui.slick.SlickTreeNode');
 const Vector = goog.requireType('os.layer.Vector');
 
 

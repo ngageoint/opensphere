@@ -1,6 +1,16 @@
-goog.module('os.ui.WindowUI');
+goog.declareModuleId('os.ui.WindowUI');
 
-goog.require('os.ui.onboarding.ContextOnboardingUI');
+import './onboarding/contextonboarding.js';
+import * as dispatcher from '../dispatcher.js';
+import {ROOT, isOSX} from '../os.js';
+import UIEvent from './events/uievent.js';
+import UIEventType from './events/uieventtype.js';
+import Module from './module.js';
+import {apply, removeResize, resize} from './ui.js';
+import {cascade, close, getById, getOpenWindows, registerWindow, sortByZIndex, stack, toggleVisibility, unregisterWindow} from './window.js';
+import windowCommonElements from './windowcommonelements.js';
+import WindowEventType from './windoweventtype.js';
+import windowSelector from './windowselector.js';
 
 const Disposable = goog.require('goog.Disposable');
 const {fail} = goog.require('goog.asserts');
@@ -14,29 +24,9 @@ const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
 const log = goog.require('goog.log');
 const {createUniqueString} = goog.require('goog.string');
-const {ROOT, isOSX} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const {apply, removeResize, resize} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const UIEvent = goog.require('os.ui.events.UIEvent');
-const UIEventType = goog.require('os.ui.events.UIEventType');
-const {
-  cascade,
-  close,
-  getById,
-  getOpenWindows,
-  registerWindow,
-  sortByZIndex,
-  stack,
-  toggleVisibility,
-  unregisterWindow
-} = goog.require('os.ui.window');
-const windowCommonElements = goog.require('os.ui.windowCommonElements');
-const windowSelector = goog.require('os.ui.windowSelector');
 
 const GoogEvent = goog.requireType('goog.events.Event');
-const HeaderBtnConfig = goog.requireType('os.ui.window.HeaderBtnConfig');
+const {default: HeaderBtnConfig} = goog.requireType('os.ui.window.HeaderBtnConfig');
 
 
 /**
@@ -45,7 +35,7 @@ const HeaderBtnConfig = goog.requireType('os.ui.window.HeaderBtnConfig');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   transclude: true,
@@ -86,7 +76,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'window';
+export const directiveTag = 'window';
 
 /**
  * Add the directive to the os module
@@ -98,7 +88,7 @@ Module.directive(directiveTag, [directive]);
  * with <code>id="js-window__container"</code>.
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -834,9 +824,3 @@ Controller.Z = 999;
  * @type {log.Logger}
  */
 const logger = log.getLogger('os.ui.WindowUI');
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

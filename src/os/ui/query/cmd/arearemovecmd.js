@@ -1,8 +1,9 @@
-goog.module('os.ui.query.cmd.AreaRemove');
+goog.declareModuleId('os.ui.query.cmd.AreaRemove');
+
+import AbstractArea from './abstractareacmd.js';
 
 const State = goog.require('os.command.State');
 const {getAreaManager, getQueryManager} = goog.require('os.query.instance');
-const AbstractArea = goog.require('os.ui.query.cmd.AbstractArea');
 
 const Feature = goog.requireType('ol.Feature');
 const ICommand = goog.requireType('os.command.ICommand');
@@ -13,7 +14,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class AreaRemove extends AbstractArea {
+export default class AreaRemove extends AbstractArea {
   /**
    * Constructor.
    * @param {!Feature} area
@@ -69,5 +70,3 @@ class AreaRemove extends AbstractArea {
     return true;
   }
 }
-
-exports = AreaRemove;

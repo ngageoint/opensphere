@@ -1,4 +1,13 @@
-goog.module('os.ui.timeline.TimelineUI');
+goog.declareModuleId('os.ui.timeline.TimelineUI');
+
+import * as dispatcher from '../../dispatcher.js';
+import Module from '../module.js';
+import * as ui from '../ui.js';
+import Brush from './brush.js';
+import DragPanEventType from './dragpaneventtype.js';
+import OffArrows from './offarrows.js';
+import * as timelineUi from './timeline.js';
+import TimelineScaleEvent from './timelinescaleevent.js';
 
 const Timer = goog.require('goog.Timer');
 const googArray = goog.require('goog.array');
@@ -8,7 +17,6 @@ const GoogEventType = goog.require('goog.events.EventType');
 const MouseWheelHandler = goog.require('goog.events.MouseWheelHandler');
 const log = goog.require('goog.log');
 const math = goog.require('goog.math');
-const dispatcher = goog.require('os.Dispatcher');
 const Settings = goog.require('os.config.Settings');
 const events = goog.require('os.events');
 const Metrics = goog.require('os.metrics.Metrics');
@@ -18,22 +26,15 @@ const Duration = goog.require('os.time.Duration');
 const TimeInstant = goog.require('os.time.TimeInstant');
 const TimeRange = goog.require('os.time.TimeRange');
 const TimelineController = goog.require('os.time.TimelineController');
-const ui = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const timelineUi = goog.require('os.ui.timeline');
-const Brush = goog.require('os.ui.timeline.Brush');
-const DragPanEventType = goog.require('os.ui.timeline.DragPanEventType');
-const OffArrows = goog.require('os.ui.timeline.OffArrows');
-const TimelineScaleEvent = goog.require('os.ui.timeline.TimelineScaleEvent');
 
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 const HistogramData = goog.requireType('os.hist.HistogramData');
 const ITime = goog.requireType('os.time.ITime');
-const IHistogramChart = goog.requireType('os.ui.hist.IHistogramChart');
-const DragPanEvent = goog.requireType('os.ui.timeline.DragPanEvent');
-const IDragPanItem = goog.requireType('os.ui.timeline.IDragPanItem');
-const ITimelineItem = goog.requireType('os.ui.timeline.ITimelineItem');
-const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
+const {default: IHistogramChart} = goog.requireType('os.ui.hist.IHistogramChart');
+const {default: DragPanEvent} = goog.requireType('os.ui.timeline.DragPanEvent');
+const {default: IDragPanItem} = goog.requireType('os.ui.timeline.IDragPanItem');
+const {default: ITimelineItem} = goog.requireType('os.ui.timeline.ITimelineItem');
+const {default: TimelineScaleOptions} = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 
 /**
@@ -55,7 +56,7 @@ const formats = [
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   template: '<div class="c-timeline js-timeline"></div>',
   restrict: 'AE',
   replace: true,
@@ -79,7 +80,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'timeline';
+export const directiveTag = 'timeline';
 
 
 /**
@@ -91,7 +92,7 @@ Module.directive('timeline', [directive]);
  * Controller function for the timeline directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -1478,9 +1479,3 @@ const elInTimeline = (el, type) => {
 
 // the timeline should be exempt from right-click prevention
 events.addExemption(elInTimeline);
-
-exports = {
-  directive,
-  directiveTag,
-  Controller
-};

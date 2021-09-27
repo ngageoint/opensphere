@@ -1,4 +1,4 @@
-goog.module('os.ui.SourceAware');
+goog.declareModuleId('os.ui.SourceAware');
 
 const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');
@@ -22,7 +22,7 @@ const ISource = goog.requireType('os.source.ISource');
  * @abstract
  * @deprecated Please use `os.data.SourceManager` instead.
  */
-class SourceAware extends Disposable {
+export default class SourceAware extends Disposable {
   /**
    * Constructor.
    */
@@ -252,5 +252,3 @@ SourceAware.UPDATE_EVENTS = [
   PropertyChange.TITLE,
   PropertyChange.VISIBLE
 ];
-
-exports = SourceAware;

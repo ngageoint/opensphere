@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.file.gml.GMLLayerConfig');
 
+import ImportManager from '../../../os/ui/im/importmanager.js';
 import GMLParserConfig from './gmlparserconfig.js';
 
 const AltMapping = goog.require('os.im.mapping.AltMapping');
@@ -8,9 +9,10 @@ const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
 const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
 const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
 
-const FeatureImporter = goog.requireType('os.im.FeatureImporter');
 const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
-const ImportManager = goog.require('os.ui.im.ImportManager');
+
+const FeatureImporter = goog.requireType('os.im.FeatureImporter');
+
 
 /**
  */

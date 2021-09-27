@@ -1,4 +1,12 @@
-goog.module('os.ui.SourceGridUI');
+goog.declareModuleId('os.ui.SourceGridUI');
+
+import {getColor} from '../feature/feature.js';
+import Module from './module.js';
+import {COLOR_ID, autoSizeAndSortColumns, color as colorColumn} from './slick/column.js';
+import ColumnEventType from './slick/columneventtype.js';
+import ColumnMenuGroup from './slick/columnmenugroup.js';
+import * as formatter from './slick/formatter.js';
+import {Controller as SlickGridCtrl} from './slick/slickgrid.js';
 
 const {equals} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
@@ -13,23 +21,16 @@ const {toHexString} = goog.require('os.color');
 const Settings = goog.require('os.config.Settings');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const SelectionType = goog.require('os.events.SelectionType');
-const {getColor} = goog.require('os.feature');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const {OFFSET_KEY} = goog.require('os.time');
-const Module = goog.require('os.ui.Module');
-const ColumnEventType = goog.require('os.ui.slick.ColumnEventType');
-const ColumnMenuGroup = goog.require('os.ui.slick.ColumnMenuGroup');
-const {Controller: SlickGridCtrl} = goog.require('os.ui.slick.SlickGridUI');
-const {COLOR_ID, autoSizeAndSortColumns, color: colorColumn} = goog.require('os.ui.slick.column');
-const formatter = goog.require('os.ui.slick.formatter');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Feature = goog.requireType('ol.Feature');
 const OLVectorSource = goog.requireType('ol.source.Vector');
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 const VectorSource = goog.requireType('os.source.Vector');
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const ColumnContext = goog.requireType('os.ui.slick.ColumnContext');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: ColumnContext} = goog.requireType('os.ui.slick.ColumnContext');
 
 
 /**
@@ -37,7 +38,7 @@ const ColumnContext = goog.requireType('os.ui.slick.ColumnContext');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -55,7 +56,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'sourcegrid';
+export const directiveTag = 'sourcegrid';
 
 /**
  * Add the directive to the module.
@@ -66,7 +67,7 @@ Module.directive(directiveTag, [directive]);
  * Controller class for the `sourcegrid` directive.
  * @unrestricted
  */
-class Controller extends SlickGridCtrl {
+export class Controller extends SlickGridCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -633,9 +634,3 @@ class Controller extends SlickGridCtrl {
  */
 Controller.COPY_LIMIT_MSG = 'Data exceeds the maximum copy limit. Please reduce the selected/displayed ' +
     'data and try again, or export the data to a file.';
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

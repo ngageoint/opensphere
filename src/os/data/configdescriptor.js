@@ -7,9 +7,9 @@ const ImportProcess = goog.require('os.im.ImportProcess');
 const osImplements = goog.require('os.implements');
 const LayerType = goog.require('os.layer.LayerType');
 const osString = goog.require('os.string');
-const Icons = goog.require('os.ui.Icons');
-const ImportEvent = goog.require('os.ui.im.ImportEvent');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
+const {default: Icons} = goog.require('os.ui.Icons');
+const {default: ImportEvent} = goog.require('os.ui.im.ImportEvent');
+const {default: ImportEventType} = goog.require('os.ui.im.ImportEventType');
 
 const IReimport = goog.requireType('os.data.IReimport');
 

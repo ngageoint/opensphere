@@ -1,15 +1,14 @@
-goog.module('os.ui.query.EditAreaUI');
+goog.declareModuleId('os.ui.query.EditAreaUI');
 
-goog.require('os.ui.im.BasicInfoUI');
-
-const {ROOT} = goog.require('os');
+import '../im/basicinfo.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import WindowEventType from '../windoweventtype.js';
+import AreaImportCtrl from './areaimportctrl.js';
+import AreaAdd from './cmd/areaaddcmd.js';
+import {applyMappings, createMappingsFromConfig} from './query.js';
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const {getAreaManager} = goog.require('os.query.instance');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {applyMappings, createMappingsFromConfig} = goog.require('os.ui.query');
-const AreaImportCtrl = goog.require('os.ui.query.AreaImportCtrl');
-const AreaAdd = goog.require('os.ui.query.cmd.AreaAdd');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -19,7 +18,7 @@ const Feature = goog.requireType('ol.Feature');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: true,
@@ -32,7 +31,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'editarea';
+export const directiveTag = 'editarea';
 
 /**
  * Add the directive to the os.ui module
@@ -43,7 +42,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for edit area window
  * @unrestricted
  */
-class Controller extends AreaImportCtrl {
+export class Controller extends AreaImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -109,9 +108,3 @@ class Controller extends AreaImportCtrl {
     this.close();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

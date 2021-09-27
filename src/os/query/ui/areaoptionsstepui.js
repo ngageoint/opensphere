@@ -3,9 +3,9 @@ goog.module('os.query.ui.AreaOptionsStepUI');
 goog.require('os.ui.im.MergeAreaOptionUI');
 
 const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
+const {default: Module} = goog.require('os.ui.Module');
 const {AREA_IMPORT_HELP} = goog.require('os.ui.query');
-const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
+const {default: WizardStepEvent} = goog.require('os.ui.wiz.step.WizardStepEvent');
 
 
 /**

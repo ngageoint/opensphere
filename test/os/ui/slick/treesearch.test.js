@@ -4,8 +4,8 @@ goog.require('os.ui.slick.TreeSearch');
 
 
 describe('os.ui.slick.TreeSearch', function() {
-  const SlickTreeNode = goog.module.get('os.ui.slick.SlickTreeNode');
-  const TreeSearch = goog.module.get('os.ui.slick.TreeSearch');
+  const {default: SlickTreeNode} = goog.module.get('os.ui.slick.SlickTreeNode');
+  const {default: TreeSearch} = goog.module.get('os.ui.slick.TreeSearch');
   const MockTypeGroupBy = goog.module.get('os.ui.MockTypeGroupBy');
 
   var list = [];

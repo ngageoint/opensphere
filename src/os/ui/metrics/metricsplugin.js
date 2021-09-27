@@ -1,11 +1,12 @@
-goog.module('os.ui.metrics.MetricsPlugin');
+goog.declareModuleId('os.ui.metrics.MetricsPlugin');
+
+import MetricNode from './metricnode.js';
 
 const Disposable = goog.require('goog.Disposable');
 const dispose = goog.require('goog.dispose');
-const MetricNode = goog.require('os.ui.metrics.MetricNode');
 
-const MetricNodeOptions = goog.requireType('os.ui.metrics.MetricNodeOptions');
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: MetricNodeOptions} = goog.requireType('os.ui.metrics.MetricNodeOptions');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -16,7 +17,7 @@ const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
  *   os.ui.metrics.MetricsManager.getInstance().addMetricsPlugin(new my.metrics.Plugin());
  * </pre>
  */
-class MetricsPlugin extends Disposable {
+export default class MetricsPlugin extends Disposable {
   /**
    * Constructor.
    */
@@ -284,5 +285,3 @@ class MetricsPlugin extends Disposable {
  * @const
  */
 MetricsPlugin.DEFAULT_ICON = '<i class="fa fa-gear"></i>';
-
-exports = MetricsPlugin;

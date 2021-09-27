@@ -1,12 +1,13 @@
-goog.module('os.ui.feature.tab.DescriptionTabUI');
+goog.declareModuleId('os.ui.feature.tab.DescriptionTabUI');
+
+import {ROOT} from '../../../os.js';
+import Module from '../../module.js';
+import AbstractFeatureTabCtrl from './abstractfeaturetabctrl.js';
 
 const {findValue} = goog.require('goog.object');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const {ROOT} = goog.require('os');
 const RecordField = goog.require('os.data.RecordField');
 const {DESC_REGEXP} = goog.require('os.fields');
-const Module = goog.require('os.ui.Module');
-const AbstractFeatureTabCtrl = goog.require('os.ui.feature.tab.AbstractFeatureTabCtrl');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -16,7 +17,7 @@ const Feature = goog.requireType('ol.Feature');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: false,
   replace: true,
@@ -29,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'descriptiontab';
+export const directiveTag = 'descriptiontab';
 
 /**
  * Add the directive to the module.
@@ -40,7 +41,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the descriptionTabDirective directive
  * @unrestricted
  */
-class Controller extends AbstractFeatureTabCtrl {
+export class Controller extends AbstractFeatureTabCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -81,9 +82,3 @@ class Controller extends AbstractFeatureTabCtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

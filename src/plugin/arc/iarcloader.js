@@ -3,7 +3,7 @@ goog.declareModuleId('plugin.arc.IArcLoader');
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const EventTarget = goog.requireType('goog.events.EventTarget');
 const Listenable = goog.requireType('goog.events.Listenable');
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 const {default: ArcServer} = goog.requireType('plugin.arc.ArcServer');
 
 

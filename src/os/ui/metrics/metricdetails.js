@@ -1,12 +1,13 @@
-goog.module('os.ui.metrics.MetricDetailsUI');
+goog.declareModuleId('os.ui.metrics.MetricDetailsUI');
+
+import {instanceOf} from '../../classregistry.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {ClassName} from './metricsui.js';
 
 const Disposable = goog.require('goog.Disposable');
-const {ROOT} = goog.require('os');
-const {instanceOf} = goog.require('os.classRegistry');
-const Module = goog.require('os.ui.Module');
-const {ClassName} = goog.require('os.ui.metrics');
 
-const MetricNode = goog.requireType('os.ui.metrics.MetricNode');
+const {default: MetricNode} = goog.requireType('os.ui.metrics.MetricNode');
 
 
 /**
@@ -14,7 +15,7 @@ const MetricNode = goog.requireType('os.ui.metrics.MetricNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -29,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'metricdetails';
+export const directiveTag = 'metricdetails';
 
 /**
  * Add the directive to the module.
@@ -40,7 +41,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the metricdetails directive
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -111,9 +112,3 @@ class Controller extends Disposable {
     return '';
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

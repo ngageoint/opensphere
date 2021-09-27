@@ -1,11 +1,10 @@
-goog.module('os.ui.im.BasicInfoUI');
+goog.declareModuleId('os.ui.im.BasicInfoUI');
 
-goog.require('os.ui.util.ValidationMessageUI');
-
-const {ROOT} = goog.require('os');
+import '../util/validationmessage.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {findByField} from '../slick/column.js';
 const {getItemField} = goog.require('os.im.mapping');
-const Module = goog.require('os.ui.Module');
-const {findByField} = goog.require('os.ui.slick.column');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 
@@ -15,7 +14,7 @@ const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -32,7 +31,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'basicinfo';
+export const directiveTag = 'basicinfo';
 
 /**
  * Add the directive to the os.ui module
@@ -55,7 +54,7 @@ Module.directive(directiveTag, [directive]);
  *   - tags: Explains the custom tags field.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -207,9 +206,3 @@ Controller.TITLE_REGEXP = /(name|title)$/i;
  * @const
  */
 Controller.DESC_REGEXP = /^desc(r(i(p(t(i(o(n)?)?)?)?)?)?)$/i;
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

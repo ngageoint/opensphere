@@ -15,14 +15,14 @@ const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const fn = goog.require('os.fn');
 const {getAreaManager} = goog.require('os.query.instance');
 const TriState = goog.require('os.structs.TriState');
-const osUiQueryAreaNode = goog.require('os.ui.query.AreaNode');
+const {default: osUiQueryAreaNode} = goog.require('os.ui.query.AreaNode');
 
 const Feature = goog.requireType('ol.Feature');
 const EventTarget = goog.requireType('ol.events.EventTarget');
 const OLVectorSource = goog.requireType('ol.source.Vector');
 const VectorLayer = goog.requireType('os.layer.Vector');
 const ITreeNode = goog.requireType('os.structs.ITreeNode');
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**

@@ -1,4 +1,6 @@
-goog.module('os.ui.ol.interaction.DragCircle');
+goog.declareModuleId('os.ui.ol.interaction.DragCircle');
+
+import AbstractDrag from './abstractdraginteraction.js';
 
 const {toLonLat} = goog.require('ol.proj');
 const RecordField = goog.require('os.data.RecordField');
@@ -6,7 +8,6 @@ const {normalizeGeometryCoordinates} = goog.require('os.geo2');
 const {METHOD_FIELD, getMethod} = goog.require('os.interpolate');
 const Units = goog.require('os.math.Units');
 const Circle = goog.require('os.olm.render.Circle');
-const AbstractDrag = goog.require('os.ui.ol.interaction.AbstractDrag');
 const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
 
@@ -14,7 +15,7 @@ const AltitudeMode = goog.require('os.webgl.AltitudeMode');
  * Draws a circular query area on the map.
  * This interaction is only supported for mouse devices.
  */
-class DragCircle extends AbstractDrag {
+export default class DragCircle extends AbstractDrag {
   /**
    * Constructor.
    */
@@ -150,5 +151,3 @@ class DragCircle extends AbstractDrag {
  * @type {string}
  */
 DragCircle.TYPE = 'circle';
-
-exports = DragCircle;

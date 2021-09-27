@@ -1,5 +1,6 @@
 goog.declareModuleId('os.style.IconReader');
 
+import {GMAPS_SEARCH, getMirror, replaceExportableUri, replaceGoogleUri} from '../ui/file/kml/kml.js';
 import AbstractReader from './abstractreader.js';
 
 const Uri = goog.require('goog.Uri');
@@ -14,12 +15,6 @@ const {getCrossOrigin} = goog.require('os.net');
 const CrossOrigin = goog.require('os.net.CrossOrigin');
 const Icon = goog.require('os.style.Icon');
 const {DEFAULT_ICON, DEFAULT_ICON_OPTIONS} = goog.require('os.style.defaults');
-const {
-  GMAPS_SEARCH,
-  getMirror,
-  replaceExportableUri,
-  replaceGoogleUri
-} = goog.require('os.ui.file.kml');
 
 
 /**

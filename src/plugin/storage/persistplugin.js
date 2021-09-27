@@ -1,13 +1,14 @@
 goog.declareModuleId('plugin.storage.PersistPlugin');
 
+import {launchConfirm} from '../../os/ui/window/confirm.js';
+
 const browser = goog.require('goog.labs.userAgent.browser');
 const log = goog.require('goog.log');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const alertManager = goog.require('os.alert.AlertManager');
 const settings = goog.require('os.config.Settings');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const Metrics = goog.require('os.metrics.Metrics');
-const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 
 
 const LOGGER_ = log.getLogger('PersistPlugin');

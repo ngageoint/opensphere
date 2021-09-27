@@ -1,4 +1,4 @@
-goog.module('os.ui.windowZIndexMax');
+goog.declareModuleId('os.ui.windowZIndexMax');
 
 /**
  * The max z-index for windows
@@ -9,4 +9,4 @@ const windowZIndexMax = {
   STANDARD: 990
 };
 
-exports = windowZIndexMax;
+export default windowZIndexMax;

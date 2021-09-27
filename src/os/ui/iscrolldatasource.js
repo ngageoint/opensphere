@@ -1,4 +1,4 @@
-goog.module('os.ui.IScrollDataSource');
+goog.declareModuleId('os.ui.IScrollDataSource');
 
 const SearchManager = goog.requireType('os.search.SearchManager');
 
@@ -8,7 +8,7 @@ const SearchManager = goog.requireType('os.search.SearchManager');
  *
  * @interface
  */
-class IScrollDataSource {
+export default class IScrollDataSource {
   /**
    * Set the data source from which to retrieve records
    * @param {SearchManager} dataSource
@@ -41,5 +41,3 @@ class IScrollDataSource {
    */
   isLoading() {}
 }
-
-exports = IScrollDataSource;

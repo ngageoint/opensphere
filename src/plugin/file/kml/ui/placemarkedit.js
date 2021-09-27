@@ -4,6 +4,10 @@ goog.require('os.annotation.annotationOptionsDirective');
 
 import * as osFeature from '../../../../os/feature/feature.js';
 import * as osStyle from '../../../../os/style/style.js';
+import AnyDateType from '../../../../os/ui/datetime/anydatetype.js';
+import {Controller as FeatureEditCtrl, directive as featureEditDirective} from '../../../../os/ui/featureedit.js';
+import * as list from '../../../../os/ui/list.js';
+import Module from '../../../../os/ui/module.js';
 import PlacesManager from '../../../places/placesmanager.js';
 import * as kml from '../kml.js';
 import * as kmlUI from './kmlui.js';
@@ -16,10 +20,6 @@ const FeatureAnnotation = goog.require('os.annotation.FeatureAnnotation');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 const osObject = goog.require('os.object');
 const structs = goog.require('os.structs');
-const Module = goog.require('os.ui.Module');
-const AnyDateType = goog.require('os.ui.datetime.AnyDateType');
-const {Controller: FeatureEditCtrl, directive: featureEditDirective} = goog.require('os.ui.FeatureEditUI');
-const list = goog.require('os.ui.list');
 
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 

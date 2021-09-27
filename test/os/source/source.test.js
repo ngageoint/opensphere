@@ -35,7 +35,7 @@ describe('os.source', function() {
   const TimeInstant = goog.module.get('os.time.TimeInstant');
   const TimeRange = goog.module.get('os.time.TimeRange');
   const TimelineController = goog.module.get('os.time.TimelineController');
-  const OGCDescriptor = goog.module.get('os.ui.ogc.OGCDescriptor');
+  const {default: OGCDescriptor} = goog.module.get('os.ui.ogc.OGCDescriptor');
   const {default: OGCLayerDescriptor} = goog.module.get('plugin.ogc.OGCLayerDescriptor');
 
   it('checks if a source is filterable', function() {

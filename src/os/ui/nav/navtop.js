@@ -1,10 +1,9 @@
-goog.module('os.ui.navTopDirective');
+goog.declareModuleId('os.ui.navTopDirective');
 
-goog.require('os.ui.util.PunyParentUI');
-
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const NavBarCtrl = goog.require('os.ui.NavBarCtrl');
+import '../util/punyparent.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import NavBarCtrl from './navbarctrl.js';
 
 
 /**
@@ -12,7 +11,7 @@ const NavBarCtrl = goog.require('os.ui.NavBarCtrl');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -27,14 +26,9 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'nav-top';
+export const directiveTag = 'nav-top';
 
 /**
  * Add the directive to the module.
  */
 Module.directive('navTop', [directive]);
-
-exports = {
-  directive,
-  directiveTag
-};

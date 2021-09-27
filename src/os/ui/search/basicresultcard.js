@@ -1,8 +1,9 @@
-goog.module('os.ui.search.BasicResultCardUI');
+goog.declareModuleId('os.ui.search.BasicResultCardUI');
+
+import Module from '../module.js';
+import * as TuiEditor from '../text/tuieditor.js';
 
 const Settings = goog.require('os.config.Settings');
-const Module = goog.require('os.ui.Module');
-const TuiEditor = goog.require('os.ui.text.TuiEditor');
 
 
 /**
@@ -10,7 +11,7 @@ const TuiEditor = goog.require('os.ui.text.TuiEditor');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -24,7 +25,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'basicresultcard';
+export const directiveTag = 'basicresultcard';
 
 /**
  * Register the resultcard directive.
@@ -35,7 +36,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the resultcard directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -89,9 +90,3 @@ class Controller {
     return !!this['url'] && this['url'].includes(fileDownloadUrl);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

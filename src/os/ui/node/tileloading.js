@@ -1,11 +1,12 @@
-goog.module('os.ui.node.TileLoadingUI');
+goog.declareModuleId('os.ui.node.TileLoadingUI');
+
+import Module from '../module.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {listen, unlisten} = goog.require('ol.events');
 const TileImage = goog.require('ol.source.TileImage');
 const LayerPropertyChange = goog.require('os.layer.PropertyChange');
 const PropertyChange = goog.require('os.source.PropertyChange');
-const Module = goog.require('os.ui.Module');
 
 const Layer = goog.requireType('ol.layer.Layer');
 const LayerNode = goog.requireType('os.data.LayerNode');
@@ -17,7 +18,7 @@ const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<span></span>',
@@ -29,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'tileloading';
+export const directiveTag = 'tileloading';
 
 /**
  * Add the directive to the module
@@ -40,7 +41,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for tile loading UI
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -122,9 +123,3 @@ class Controller {
     return '';
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

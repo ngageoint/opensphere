@@ -1,20 +1,21 @@
-goog.module('os.ui.timeline.OffArrows');
+goog.declareModuleId('os.ui.timeline.OffArrows');
+
+import BaseItem from './baseitem.js';
+import * as timelineUi from './timeline.js';
 
 const googArray = goog.require('goog.array');
 const GoogEventType = goog.require('goog.events.EventType');
 const olExtent = goog.require('ol.extent');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const timelineUi = goog.require('os.ui.timeline');
-const BaseItem = goog.require('os.ui.timeline.BaseItem');
 
-const ITimelineItem = goog.requireType('os.ui.timeline.ITimelineItem');
+const {default: ITimelineItem} = goog.requireType('os.ui.timeline.ITimelineItem');
 
 
 /**
  * Displays items that are off of the current timeline view as clickable arrows pointing
  * in the proper direction.
  */
-class OffArrows extends BaseItem {
+export default class OffArrows extends BaseItem {
   /**
    * Constructor.
    */
@@ -244,5 +245,3 @@ class OffArrows extends BaseItem {
     return -1 * googArray.defaultCompare(a.getExtent()[1], b.getExtent()[1]);
   }
 }
-
-exports = OffArrows;

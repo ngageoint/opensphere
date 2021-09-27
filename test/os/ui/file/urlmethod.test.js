@@ -14,7 +14,7 @@ describe('os.ui.file.method.UrlMethod', function() {
   const Request = goog.module.get('os.net.Request');
   const RequestHandlerFactory = goog.module.get('os.net.RequestHandlerFactory');
   const SameDomainHandler = goog.module.get('os.net.SameDomainHandler');
-  const UrlMethod = goog.module.get('os.ui.file.method.UrlMethod');
+  const {default: UrlMethod} = goog.module.get('os.ui.file.method.UrlMethod');
   const osWindow = goog.module.get('os.ui.window');
 
   RequestHandlerFactory.addHandler(SameDomainHandler);

@@ -1,4 +1,6 @@
-goog.module('os.ui.draw');
+goog.declareModuleId('os.ui.draw');
+
+import * as osMap from '../../map/map.js';
 
 const {getRandomString} = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
@@ -7,11 +9,10 @@ const {transformExtent} = goog.require('ol.proj');
 const RecordField = goog.require('os.data.RecordField');
 const {METHOD_FIELD} = goog.require('os.interpolate');
 const Method = goog.require('os.interpolate.Method');
-const osMap = goog.require('os.map');
 const {EPSG4326} = goog.require('os.proj');
 const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
-const Menu = goog.requireType('os.ui.menu.Menu');
+const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 
 
 /**
@@ -24,13 +25,13 @@ let drawMenu = undefined;
  * Get the draw menu.
  * @return {Menu|undefined}
  */
-const getMenu = () => drawMenu;
+export const getMenu = () => drawMenu;
 
 /**
  * Set the draw menu.
  * @param {Menu|undefined} value
  */
-const setMenu = (value) => {
+export const setMenu = (value) => {
   drawMenu = value;
 };
 
@@ -41,7 +42,7 @@ const setMenu = (value) => {
  * @param {osx.ui.draw.GridOptions} options Config object for grid generation
  * @return {Array<Feature>}
  */
-const getGridFromFeature = function(feature, options) {
+export const getGridFromFeature = function(feature, options) {
   if (!feature || !options || !gridOptionsValid(options)) return null;
 
   var detail = options.detail;
@@ -140,10 +141,4 @@ const gridFeatureFromExtent = function(extent, prop, options) {
   f.setStyle(options.style);
 
   return f;
-};
-
-exports = {
-  getMenu,
-  setMenu,
-  getGridFromFeature
 };

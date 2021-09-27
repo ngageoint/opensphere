@@ -1,19 +1,19 @@
-goog.module('os.ui.column.mapping.ColumnMappingFormUI');
+goog.declareModuleId('os.ui.column.mapping.ColumnMappingFormUI');
 
-goog.require('os.ui.column.mapping.ColumnModelTreeUI');
+import './columnmodeltree.js';
+import {ROOT} from '../../../os.js';
+import Module from '../../module.js';
+import * as ui from '../../ui.js';
+import * as osWindow from '../../window.js';
+import ColumnModelNode from './columnmodelnode.js';
 
 const {getRandomString} = goog.require('goog.string');
-const {ROOT} = goog.require('os');
 const osArray = goog.require('os.array');
 const ColumnMapping = goog.require('os.column.ColumnMapping');
 const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
 const DataManager = goog.require('os.data.DataManager');
 const IFilterable = goog.require('os.filter.IFilterable');
 const osImplements = goog.require('os.implements');
-const ui = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const ColumnModelNode = goog.require('os.ui.column.mapping.ColumnModelNode');
-const osWindow = goog.require('os.ui.window');
 
 const IColumnMapping = goog.requireType('os.column.IColumnMapping');
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
@@ -24,7 +24,7 @@ const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -39,7 +39,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'columnmappingform';
+export const directiveTag = 'columnmappingform';
 
 /**
  * Add the directive to the module.
@@ -50,7 +50,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the columnmappingform directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -316,7 +316,7 @@ class Controller {
  *
  * @param {IColumnMapping=} opt_cm
  */
-const launchColumnMappingWindow = (opt_cm) => {
+export const launchColumnMappingWindow = (opt_cm) => {
   var id = 'columnmappingform';
   if (osWindow.exists(id)) {
     osWindow.bringToFront(id);
@@ -342,11 +342,4 @@ const launchColumnMappingWindow = (opt_cm) => {
 
   var template = `<${directiveTag} column-mapping="columnMapping"></${directiveTag}>`;
   osWindow.create(options, template, undefined, undefined, undefined, scopeOptions);
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchColumnMappingWindow
 };

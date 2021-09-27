@@ -1,34 +1,35 @@
-goog.module('os.ui.slick.column');
+goog.declareModuleId('os.ui.slick.column');
+
+import Menu from '../menu/menu.js';
+import MenuItem from '../menu/menuitem.js';
+import MenuItemType from '../menu/menuitemtype.js';
+import {measureText} from '../ui.js';
+import ColumnEventType from './columneventtype.js';
+import ColumnMenuGroup from './columnmenugroup.js';
+import {color as formatterColor} from './formatter.js';
 
 const {defaultCompare} = goog.require('goog.array');
 const {numerateCompare} = goog.require('goog.string');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const {measureText} = goog.require('os.ui');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const ColumnEventType = goog.require('os.ui.slick.ColumnEventType');
-const ColumnMenuGroup = goog.require('os.ui.slick.ColumnMenuGroup');
-const {color: formatterColor} = goog.require('os.ui.slick.formatter');
 
-const ColumnContext = goog.requireType('os.ui.slick.ColumnContext');
+const {default: ColumnContext} = goog.requireType('os.ui.slick.ColumnContext');
 
 
 /**
  * @type {string}
  */
-const FIX_CELL = 'ui-widget';
+export const FIX_CELL = 'ui-widget';
 
 /**
  * @type {string}
  */
-const FIX_HEADER = 'ui-widget ui-state-default';
+export const FIX_HEADER = 'ui-widget ui-state-default';
 
 /**
  * Initial column width/order settings.
  * @type {!Object<string, !Object>}
  */
-const fix = {
+export const fix = {
   'TIME': {
     order: -95,
     width: measureText('0000-00-00 00:00:00Z', FIX_CELL).width + 10
@@ -93,7 +94,7 @@ const fix = {
  *
  * @param {ColumnDefinition} column
  */
-const autoSizeColumn = function(column) {
+export const autoSizeColumn = function(column) {
   var opt_header = column['header'] ? 20 : 0;
   if (!column['width']) {
     var fixOptions = fix[column['name']];
@@ -112,7 +113,7 @@ const autoSizeColumn = function(column) {
  * @param {ColumnDefinition} b
  * @return {number}
  */
-const autoSizeAndSortColumns = function(a, b) {
+export const autoSizeAndSortColumns = function(a, b) {
   autoSizeColumn(a);
   autoSizeColumn(b);
 
@@ -140,7 +141,7 @@ const autoSizeAndSortColumns = function(a, b) {
  * @param {ColumnDefinition} b
  * @return {number}
  */
-const nameCompare = function(a, b) {
+export const nameCompare = function(a, b) {
   return defaultCompare(a['name'], b['name']);
 };
 
@@ -149,7 +150,7 @@ const nameCompare = function(a, b) {
  * @param {ColumnDefinition} b
  * @return {number}
  */
-const numerateNameCompare = function(a, b) {
+export const numerateNameCompare = function(a, b) {
   return numerateCompare(a['name'], b['name']);
 };
 
@@ -157,14 +158,14 @@ const numerateNameCompare = function(a, b) {
  * Id used by color columns.
  * @type {string}
  */
-const COLOR_ID = '_color';
+export const COLOR_ID = '_color';
 
 /**
  * Creates a column to display color. The column's value should be a hex or rgba color string.
  *
  * @return {ColumnDefinition} The color column
  */
-const color = function() {
+export const color = function() {
   var column = new ColumnDefinition();
   column['id'] = COLOR_ID;
   column['field'] = 'COLOR';
@@ -188,7 +189,7 @@ const color = function() {
  *
  * @return {!Menu<ColumnContext>} The column menu.
  */
-const createColumnActions = function() {
+export const createColumnActions = function() {
   return new Menu(new MenuItem({
     type: MenuItemType.ROOT,
     children: [{
@@ -241,14 +242,13 @@ const createColumnActions = function() {
   }));
 };
 
-
 /**
  * Show a menu item if the context has a column.
  *
  * @param {ColumnContext} context The column menu context.
  * @this {MenuItem}
  */
-const visibleIfHasColumn = function(context) {
+export const visibleIfHasColumn = function(context) {
   this.visible = !!context && !!context.column;
 };
 
@@ -258,7 +258,7 @@ const visibleIfHasColumn = function(context) {
  * @param {ColumnContext} context The column menu context.
  * @this {MenuItem}
  */
-const visibleIfCanRemove = function(context) {
+export const visibleIfCanRemove = function(context) {
   this.visible = false;
 
   var foundOne = false;
@@ -283,7 +283,7 @@ const visibleIfCanRemove = function(context) {
  * @param {string} fieldOrName The column field or name value.
  * @return {ColumnDefinition}
  */
-const findColumn = function(columns, fieldOrName) {
+export const findColumn = function(columns, fieldOrName) {
   var column = null;
   for (var i = 0, n = columns.length; i < n; i++) {
     if (columns[i]['field'] == fieldOrName || columns[i]['name'] == fieldOrName) {
@@ -305,7 +305,7 @@ const findColumn = function(columns, fieldOrName) {
  * @param {Array<ColumnDefinition>} array
  * @return {boolean}
  */
-const findByField = function(key, value, column, index, array) {
+export const findByField = function(key, value, column, index, array) {
   return column[key] == value;
 };
 
@@ -317,7 +317,7 @@ const findByField = function(key, value, column, index, array) {
  * @param {ColumnDefinition} b
  * @return {number}
  */
-const sortByField = function(field, a, b) {
+export const sortByField = function(field, a, b) {
   return a[field] == b[field] || a[field] > b[field] ? 1 : -1;
 };
 
@@ -327,7 +327,7 @@ const sortByField = function(field, a, b) {
  * @param {ColumnDefinition} column The column.
  * @return {number}
  */
-const isUserModified = function(column) {
+export const isUserModified = function(column) {
   return column['userModified'];
 };
 
@@ -337,7 +337,7 @@ const isUserModified = function(column) {
  * @param {!Array<!ColumnDefinition>} from The source columns.
  * @param {!Array<!ColumnDefinition>} to The destination columns.
  */
-const restore = function(from, to) {
+export const restore = function(from, to) {
   var fromMap = {};
   from.forEach(function(column, idx, arr) {
     fromMap[column['name']] = {
@@ -381,27 +381,6 @@ const restore = function(from, to) {
  * @param {ColumnDefinition} column The column.
  * @return {string}
  */
-const mapField = function(column) {
+export const mapField = function(column) {
   return column['field'];
-};
-
-exports = {
-  FIX_CELL,
-  FIX_HEADER,
-  fix,
-  autoSizeColumn,
-  autoSizeAndSortColumns,
-  nameCompare,
-  numerateNameCompare,
-  COLOR_ID,
-  color,
-  createColumnActions,
-  findColumn,
-  findByField,
-  sortByField,
-  isUserModified,
-  restore,
-  mapField,
-  visibleIfHasColumn,
-  visibleIfCanRemove
 };

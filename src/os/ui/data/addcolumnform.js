@@ -1,9 +1,8 @@
-goog.module('os.ui.data.AddColumnFormUI');
+goog.declareModuleId('os.ui.data.AddColumnFormUI');
 
-goog.require('os.ui.util.ValidationMessageUI');
-
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
+import '../util/validationmessage.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
 
 const ISource = goog.requireType('os.source.ISource');
 
@@ -13,7 +12,7 @@ const ISource = goog.requireType('os.source.ISource');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -30,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'addcolumnform';
+export const directiveTag = 'addcolumnform';
 
 /**
  * Add the directive to the module.
@@ -41,7 +40,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the addcolumnform directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -113,7 +112,7 @@ class Controller {
  * @param {string} viewVal
  * @return {boolean}
  */
-const isDuplicateColumn = (source, modelVal, viewVal) => {
+export const isDuplicateColumn = (source, modelVal, viewVal) => {
   var columns = source.getColumnsArray();
   var value = modelVal || viewVal;
   if (value) {
@@ -128,11 +127,4 @@ const isDuplicateColumn = (source, modelVal, viewVal) => {
   }
 
   return true;
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  isDuplicateColumn
 };

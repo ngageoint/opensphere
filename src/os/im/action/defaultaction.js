@@ -10,7 +10,7 @@ const {filterFalsey} = goog.require('os.fn');
 const FilterActionParser = goog.require('os.im.action.FilterActionParser');
 const Request = goog.require('os.net.Request');
 const {getEntriesFromMatched} = goog.require('os.ui.im.action');
-const FilterActionImporter = goog.require('os.ui.im.action.FilterActionImporter');
+const {default: FilterActionImporter} = goog.require('os.ui.im.action.FilterActionImporter');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 

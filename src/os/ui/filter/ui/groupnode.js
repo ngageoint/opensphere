@@ -1,10 +1,10 @@
-goog.module('os.ui.filter.ui.GroupNode');
+goog.declareModuleId('os.ui.filter.ui.GroupNode');
 
-const {directiveTag: nodeIconsUi} = goog.require('os.ui.NodeIconsUI');
-const {directiveTag: nodeToggleFolderUi} = goog.require('os.ui.NodeToggleFolderUI');
-const {directiveTag: groupNodeUi} = goog.require('os.ui.filter.ui.GroupNodeUI');
-const {directiveTag: groupNodeViewUi} = goog.require('os.ui.filter.ui.GroupNodeViewUI');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+import {directiveTag as nodeIconsUi} from '../../nodeicons.js';
+import {directiveTag as nodeToggleFolderUi} from '../../nodetogglefolder.js';
+import SlickTreeNode from '../../slick/slicktreenode.js';
+import {directiveTag as groupNodeUi} from './groupnodeui.js';
+import {directiveTag as groupNodeViewUi} from './groupnodeviewui.js';
 const {escape: xmlEscape} = goog.require('os.xml');
 
 
@@ -12,7 +12,7 @@ const {escape: xmlEscape} = goog.require('os.xml');
  * Tree node representing a grouping in an advanced filter.
  * @unrestricted
  */
-class GroupNode extends SlickTreeNode {
+export default class GroupNode extends SlickTreeNode {
   /**
    * Constructor.
    * @param {boolean=} opt_viewonly
@@ -99,5 +99,3 @@ class GroupNode extends SlickTreeNode {
     return html;
   }
 }
-
-exports = GroupNode;

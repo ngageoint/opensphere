@@ -1,7 +1,8 @@
-goog.module('os.ui.state.stateTitleDirective');
+goog.declareModuleId('os.ui.state.stateTitleDirective');
+
+import Module from '../module.js';
 
 const {getStateManager} = goog.require('os.state.instance');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -9,7 +10,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   require: 'ngModel',
   link: linkFn
 });
@@ -18,7 +19,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'statetitle';
+export const directiveTag = 'statetitle';
 
 /**
  * Link function for the statetitle directive.
@@ -61,8 +62,3 @@ const linkFn = function(scope, element, attrs, ctrl) {
  * Add the directive to the module.
  */
 Module.directive(directiveTag, [directive]);
-
-exports = {
-  directive,
-  directiveTag
-};

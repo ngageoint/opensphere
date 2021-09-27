@@ -1,8 +1,8 @@
-goog.module('os.ui.columnactions.ColumnActionsUI');
+goog.declareModuleId('os.ui.columnactions.ColumnActionsUI');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const {close} = goog.require('os.ui.window');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {close} from '../window.js';
 
 
 /**
@@ -10,7 +10,7 @@ const {close} = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   transclude: true,
   templateUrl: ROOT + 'views/columnactions/columnactionprompt.html',
@@ -22,7 +22,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'columnactions';
+export const directiveTag = 'columnactions';
 
 /**
  * Add the directive to the ui module
@@ -33,7 +33,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the File Exists! window
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -93,9 +93,3 @@ class Controller {
     close(this.element_);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

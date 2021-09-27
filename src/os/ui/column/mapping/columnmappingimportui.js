@@ -1,4 +1,7 @@
-goog.module('os.ui.column.mapping.ColumnMappingImportUI');
+goog.declareModuleId('os.ui.column.mapping.ColumnMappingImportUI');
+
+import FileImportUI from '../../im/fileimportui.js';
+import * as ConfirmUI from '../../window/confirm.js';
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml, serialize} = goog.require('goog.dom.xml');
@@ -8,15 +11,13 @@ const AlertManager = goog.require('os.alert.AlertManager');
 const ColumnMapping = goog.require('os.column.ColumnMapping');
 const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
 const ColumnMappingTag = goog.require('os.column.ColumnMappingTag');
-const FileImportUI = goog.require('os.ui.im.FileImportUI');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 const OSFile = goog.requireType('os.file.File');
 
 
 /**
  */
-class ColumnMappingImportUI extends FileImportUI {
+export default class ColumnMappingImportUI extends FileImportUI {
   /**
    * Constructor.
    */
@@ -114,6 +115,3 @@ class ColumnMappingImportUI extends FileImportUI {
  * @type {log.Logger}
  */
 const logger = log.getLogger('os.ui.column.mapping.ColumnMappingImportUI');
-
-
-exports = ColumnMappingImportUI;

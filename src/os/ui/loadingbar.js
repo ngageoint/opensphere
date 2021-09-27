@@ -1,10 +1,11 @@
-goog.module('os.ui.LoadingBarUI');
+goog.declareModuleId('os.ui.LoadingBarUI');
+
+import {ROOT} from '../os.js';
+import Module from './module.js';
 
 const {getElementByClass} = goog.require('goog.dom');
 const {isNumeric, toNumber} = goog.require('goog.string');
 const {setWidth} = goog.require('goog.style');
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -12,7 +13,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   replace: true,
   restrict: 'E',
   scope: {
@@ -31,7 +32,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'loading-bar';
+export const directiveTag = 'loading-bar';
 
 /**
  * Register directive.
@@ -42,7 +43,7 @@ Module.directive('loadingBar', [directive]);
  * Controller function
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -166,10 +167,4 @@ class Controller {
 const loadingBarLink = function($scope, $element, $attr, ctrl) {
   // don't need to use watches for things that won't change
   ctrl.showDelay($attr['delay']);
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

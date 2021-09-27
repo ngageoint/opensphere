@@ -1,11 +1,11 @@
-goog.module('os.ui.clear.ClearEntry');
+goog.declareModuleId('os.ui.clear.ClearEntry');
 
 const ICommand = goog.requireType('os.command.ICommand');
 
 
 /**
  */
-class ClearEntry {
+export default class ClearEntry {
   /**
    * Constructor.
    * @param {string} id The clear type, used to persist/restore the state
@@ -55,5 +55,3 @@ class ClearEntry {
     return new this.clazz_();
   }
 }
-
-exports = ClearEntry;

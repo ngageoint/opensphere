@@ -1,8 +1,8 @@
-goog.module('os.ui.alert.AlertButtonUI');
+goog.declareModuleId('os.ui.alert.AlertButtonUI');
 
-const MenuButtonCtrl = goog.require('os.ui.MenuButtonCtrl');
-const Module = goog.require('os.ui.Module');
-const {directiveTag: alertBadgeUi} = goog.require('os.ui.alert.AlertBadgeUI');
+import MenuButtonCtrl from '../menubutton.js';
+import Module from '../module.js';
+import {directiveTag as alertBadgeUi} from './alertbadge.js';
 
 
 /**
@@ -10,7 +10,7 @@ const {directiveTag: alertBadgeUi} = goog.require('os.ui.alert.AlertBadgeUI');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -29,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'alert-button';
+export const directiveTag = 'alert-button';
 
 /**
  * add the directive to the module
@@ -40,7 +40,7 @@ Module.directive('alertButton', [directive]);
  * Controller function for the nav-top directive
  * @unrestricted
  */
-class Controller extends MenuButtonCtrl {
+export class Controller extends MenuButtonCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -52,9 +52,3 @@ class Controller extends MenuButtonCtrl {
     this.flag = 'alerts';
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,15 +1,16 @@
-goog.module('os.ui.util.AutoVHeightUI');
+goog.declareModuleId('os.ui.util.AutoVHeightUI');
+
+import * as dispatcher from '../../dispatcher.js';
+import Module from '../module.js';
+import {removeResize, resize, waitForAngular} from '../ui.js';
+import windowCommonElements from '../windowcommonelements.js';
+import windowCommonOptionalElements from '../windowcommonoptionalelements.js';
 
 const googArray = goog.require('goog.array');
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
 const GoogEventType = goog.require('goog.events.EventType');
 const googObject = goog.require('goog.object');
-const dispatcher = goog.require('os.Dispatcher');
 const ThemeSettingsChangeEvent = goog.require('os.config.ThemeSettingsChangeEvent');
-const {removeResize, resize, waitForAngular} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const windowCommonElements = goog.require('os.ui.windowCommonElements');
-const windowCommonOptionalElements = goog.require('os.ui.windowCommonOptionalElements');
 
 
 /**
@@ -34,7 +35,7 @@ const windowCommonOptionalElements = goog.require('os.ui.windowCommonOptionalEle
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'A',
   scope: {
     'siblings': '@',
@@ -51,7 +52,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'autovheight';
+export const directiveTag = 'autovheight';
 
 /**
  * Add the directive to the ui module
@@ -61,7 +62,7 @@ Module.directive(directiveTag, [directive]);
 /**
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -253,9 +254,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

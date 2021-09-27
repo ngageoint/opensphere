@@ -1,4 +1,4 @@
-goog.module('os.ui.help.supportMsg');
+goog.declareModuleId('os.ui.help.supportMsg');
 
 const {escapeString} = goog.require('goog.string');
 const userAgent = goog.require('goog.userAgent');
@@ -16,7 +16,7 @@ const Settings = goog.require('os.config.Settings');
  * a higher limit, not sure of the exact value so using an
  * arbitrary 3096 default.
  */
-class supportMsg {
+export default class supportMsg {
   /**
    * Constructor.
    * @param {Object=} opt_options optional default overrides
@@ -100,5 +100,3 @@ class supportMsg {
     return result;
   }
 }
-
-exports = supportMsg;

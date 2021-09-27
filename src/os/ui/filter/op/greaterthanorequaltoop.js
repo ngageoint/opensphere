@@ -1,14 +1,15 @@
-goog.module('os.ui.filter.op.GreaterThanOrEqualTo');
+goog.declareModuleId('os.ui.filter.op.GreaterThanOrEqualTo');
+
+import {quoteString} from '../filterstring.js';
+import Op from './op.js';
 
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const Op = goog.require('os.ui.filter.op.Op');
-const {quoteString} = goog.require('os.ui.filter.string');
 
 
 /**
  * A 'PropertyIsGreaterThanOrEqualTo' operation class.
  */
-class GreaterThanOrEqualTo extends Op {
+export default class GreaterThanOrEqualTo extends Op {
   /**
    * Constructor.
    */
@@ -28,5 +29,3 @@ class GreaterThanOrEqualTo extends Op {
     return '';
   }
 }
-
-exports = GreaterThanOrEqualTo;

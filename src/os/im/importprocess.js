@@ -3,7 +3,7 @@ goog.module('os.im.ImportProcess');
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const {getConfigColor} = goog.require('os.style');
 const StyleManager = goog.require('os.style.StyleManager');
-const DuplicateImportProcess = goog.require('os.ui.im.DuplicateImportProcess');
+const {default: DuplicateImportProcess} = goog.require('os.ui.im.DuplicateImportProcess');
 
 const FileDescriptor = goog.requireType('os.data.FileDescriptor');
 

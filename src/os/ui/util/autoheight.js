@@ -1,7 +1,7 @@
-goog.module('os.ui.util.AutoHeightUI');
+goog.declareModuleId('os.ui.util.AutoHeightUI');
 
-const ui = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
+import Module from '../module.js';
+import * as ui from '../ui.js';
 
 
 /**
@@ -31,7 +31,7 @@ const Module = goog.require('os.ui.Module');
  *       visible.
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'A',
   scope: {
     'parent': '@',
@@ -46,7 +46,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'autoheight';
+export const directiveTag = 'autoheight';
 
 /**
  * Add the directive to the ui module
@@ -56,7 +56,7 @@ Module.directive(directiveTag, [directive]);
 /**
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -208,9 +208,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

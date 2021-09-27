@@ -1,21 +1,21 @@
-goog.module('os.ui.MeasureButtonUI');
+goog.declareModuleId('os.ui.MeasureButtonUI');
 
-const dispatcher = goog.require('os.Dispatcher');
+import * as dispatcher from '../dispatcher.js';
+import DrawEventType from './draw/draweventtype.js';
+import Menu from './menu/menu.js';
+import MenuButtonCtrl from './menu/menubutton.js';
+import MenuItem from './menu/menuitem.js';
+import MenuItemType from './menu/menuitemtype.js';
+import Module from './module.js';
 const Settings = goog.require('os.config.Settings');
 const Measure = goog.require('os.interaction.Measure');
 const Method = goog.require('os.interpolate.Method');
 const {getMapContainer} = goog.require('os.map.instance');
 const Metrics = goog.require('os.metrics.Metrics');
 const {Map: MapKeys} = goog.require('os.metrics.keys');
-const Module = goog.require('os.ui.Module');
-const DrawEventType = goog.require('os.ui.draw.DrawEventType');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 
-const DrawEvent = goog.requireType('os.ui.draw.DrawEvent');
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const {default: DrawEvent} = goog.requireType('os.ui.draw.DrawEvent');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 
 
 /**
@@ -23,7 +23,7 @@ const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -46,7 +46,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'measure-button';
+export const directiveTag = 'measure-button';
 
 /**
  * add the directive to the module
@@ -57,7 +57,7 @@ Module.directive('measureButton', [directive]);
  * Controller function for the nav-top directive
  * @unrestricted
  */
-class Controller extends MenuButtonCtrl {
+export class Controller extends MenuButtonCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -171,9 +171,3 @@ Controller.MEASURE = new Menu(new MenuItem({
     beforeRender: Controller.updateIcons
   }]
 }));
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.basemap.TerrainDescriptor');
 
+import Icons from '../../os/ui/icons.js';
 import {TERRAIN_ID} from './basemap.js';
 
 const DisplaySetting = goog.require('os.config.DisplaySetting');
 const Settings = goog.require('os.config.Settings');
 const BaseDescriptor = goog.require('os.data.BaseDescriptor');
-const Icons = goog.require('os.ui.Icons');
 
 
 /**
