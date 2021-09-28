@@ -1,11 +1,9 @@
 goog.declareModuleId('os.ogc.registry');
 
 import Registry from '../data/registry.js';
+
 const Feature = goog.requireType('ol.Feature');
-
-
 const {default: OGCService} = goog.requireType('os.ogc.OGCService');
-
 const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 const {default: MenuItemOptions} = goog.requireType('os.ui.menu.MenuItemOptions');
 
@@ -80,8 +78,8 @@ let instance;
  * @param {number} sort
  * @param {function()=} opt_getCallback returns a function(feature, feature); deals with timing of angular scope, etc
  */
-exports.addOGCMenuItems = function(menu, sort, opt_getCallback) {
-  const registry = exports.getInstance();
+export const addOGCMenuItems = function(menu, sort, opt_getCallback) {
+  const registry = getInstance();
 
   // use a pass-by reference shenanigans to maintain the order which items are added to the registry
   let start = sort;
@@ -100,7 +98,7 @@ exports.addOGCMenuItems = function(menu, sort, opt_getCallback) {
  * Get the singleton of this Registry
  * @return {Registry<OGCService>}
  */
-exports.getInstance = function() {
+export const getInstance = function() {
   if (!instance) {
     instance = new Registry();
   }
@@ -112,8 +110,8 @@ exports.getInstance = function() {
  * @param {string} key
  * @return {boolean} Whether or not picking by a the service's Features is enabled
  */
-exports.isOGCServiceEnabled = function(key) {
-  const service = /** @type {?OGCService} */ (exports.getInstance().get(key));
+export const isOGCServiceEnabled = function(key) {
+  const service = /** @type {?OGCService} */ (getInstance().get(key));
   return (!!service && service.isConfigured() === true);
 };
 
@@ -122,8 +120,8 @@ exports.isOGCServiceEnabled = function(key) {
  * @param {string} key
  * @param {Function=} opt_callback Optional callback function for the chosen feature.
  */
-exports.launchOGCQueryPicker = function(key, opt_callback) {
-  const service = /** @type {?OGCService} */ (exports.getInstance().get(key));
+export const launchOGCQueryPicker = function(key, opt_callback) {
+  const service = /** @type {?OGCService} */ (getInstance().get(key));
   if (service && service.isConfigured()) {
     const query = service.getQuery();
     if (query) {

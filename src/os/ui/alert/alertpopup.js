@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.alert.AlertPopupUI');
 
 import './alertlinkfilter.js';
-import AlertEvent from '../../alert/alertevent.js';
+import AlertEvent, {DEFAULT_LIMIT} from '../../alert/alertevent.js';
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertEventTypes from '../../alert/alerteventtypes.js';
 import AlertManager from '../../alert/alertmanager.js';
@@ -141,7 +141,7 @@ export class Controller {
           this.dupeOverflow_ = true;
 
           // only display the duplicate alert message if the default limit was reached
-          if (limit == AlertEvent.DEFAULT_LIMIT) {
+          if (limit == DEFAULT_LIMIT) {
             var dupeEvent = new AlertEvent(
                 'Too many duplicate alerts received! Open the alert window for details.',
                 AlertEventSeverity.WARNING);

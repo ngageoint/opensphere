@@ -12,7 +12,7 @@ const {default: AlertEventSeverity} = goog.requireType('os.alert.AlertEventSever
 /**
  * @type {number}
  */
-const DEFAULT_LIMIT = 5;
+export const DEFAULT_LIMIT = 5;
 
 /**
  * @type {number}
@@ -115,5 +115,3 @@ export default class AlertEvent extends GoogEvent {
     return this.count_;
   }
 }
-
-exports.DEFAULT_LIMIT = DEFAULT_LIMIT;

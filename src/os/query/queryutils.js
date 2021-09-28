@@ -56,9 +56,9 @@ let worldArea_ = undefined;
  * @param {ol.geom.Geometry|undefined} geometry The geometry to verify.
  * @return {boolean} true the query matches WORLD_GEOM
  */
-exports.isWorldQuery = function(geometry) {
+export const isWorldQuery = function(geometry) {
   if (worldArea_ == null) {
-    exports.initWorldArea();
+    initWorldArea();
   }
 
   if (worldArea_ && geometry && geometry.getType() === GeometryType.POLYGON) {
@@ -76,7 +76,7 @@ exports.isWorldQuery = function(geometry) {
  *
  * @param {boolean=} opt_reset
  */
-exports.initWorldArea = function(opt_reset) {
+export const initWorldArea = function(opt_reset) {
   if (opt_reset) {
     worldArea_ = undefined;
   } else {
@@ -90,7 +90,7 @@ exports.initWorldArea = function(opt_reset) {
  * Feature representing the whole world.
  * @type {Feature}
  */
-exports.WORLD_AREA = new Feature({
+export const WORLD_AREA = new Feature({
   'geometry': WORLD_GEOM,
   'title': 'Whole World'
 });
@@ -100,15 +100,10 @@ exports.WORLD_AREA = new Feature({
  * Feature representing the area we want to zoom to when zooming to the whole world.
  * @type {Feature}
  */
-exports.WORLD_ZOOM_FEATURE = new Feature(new Polygon([[
+export const WORLD_ZOOM_FEATURE = new Feature(new Polygon([[
   [179, 90],
   [181, 90],
   [181, -90],
   [179, -90],
   [179, 90]
 ]]));
-
-
-exports.WORLD_EXTENT = WORLD_EXTENT;
-exports.WORLD_COORDS = WORLD_COORDS;
-exports.WORLD_GEOM = WORLD_GEOM;
