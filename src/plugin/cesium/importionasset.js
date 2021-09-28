@@ -1,12 +1,13 @@
-goog.module('plugin.cesium.ImportIonAssetUI');
+goog.declareModuleId('plugin.cesium.ImportIonAssetUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../os/os.js';
+import TilesDescriptor from './tiles/cesium3dtilesdescriptor.js';
+import TilesProvider from './tiles/cesium3dtilesprovider.js';
+
 const DataManager = goog.require('os.data.DataManager');
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const osWindow = goog.require('os.ui.window');
-const TilesDescriptor = goog.require('plugin.cesium.tiles.Descriptor');
-const TilesProvider = goog.require('plugin.cesium.tiles.Provider');
 
 
 /**
@@ -14,7 +15,7 @@ const TilesProvider = goog.require('plugin.cesium.tiles.Provider');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -23,12 +24,11 @@ const directive = () => ({
   controllerAs: 'ctrl'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'importionasset';
+export const directiveTag = 'importionasset';
 
 
 /**
@@ -42,7 +42,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the Ion asset import dialog.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -121,9 +121,3 @@ class Controller {
     osWindow.close(this.element_);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

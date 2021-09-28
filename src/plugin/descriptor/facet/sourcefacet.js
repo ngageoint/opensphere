@@ -1,4 +1,4 @@
-goog.module('plugin.descriptor.facet.Source');
+goog.declareModuleId('plugin.descriptor.facet.Source');
 
 const BaseFacet = goog.require('os.search.BaseFacet');
 
@@ -8,7 +8,7 @@ const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 /**
  * @extends {BaseFacet<!IDataDescriptor>}
  */
-class Source extends BaseFacet {
+export default class Source extends BaseFacet {
   /**
    * Constructor.
    */
@@ -40,5 +40,3 @@ class Source extends BaseFacet {
     }
   }
 }
-
-exports = Source;

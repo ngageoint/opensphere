@@ -1,13 +1,9 @@
-goog.module('plugin.areadata');
+goog.declareModuleId('plugin.areadata');
 
 /**
  * @enum {string}
  */
-const AreaImportType = {
+export const AreaImportType = {
   OGC: 'ogc'
   // CSV, REST, etc
-};
-
-exports = {
-  AreaImportType
 };

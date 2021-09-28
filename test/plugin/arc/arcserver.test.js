@@ -3,7 +3,9 @@ goog.require('plugin.arc.ArcServer');
 
 
 describe('plugin.arc.ArcServer', function() {
-  const ArcServer = goog.module.get('plugin.arc.ArcServer');
+  const {
+    default: ArcServer
+  } = goog.module.get('plugin.arc.ArcServer');
 
   it('should configure itself correctly', function() {
     var server = new ArcServer();

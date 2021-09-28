@@ -1,20 +1,21 @@
-goog.module('os.capture');
+goog.declareModuleId('os.capture');
+
+import {OPENLAYERS_CANVAS, WEBGL_CANVAS} from '../map/map.js';
+import {ROOT} from '../os.js';
+import ContentType from './contenttype.js';
 
 const Promise = goog.require('goog.Promise');
 const dispose = goog.require('goog.dispose');
 const dom = goog.require('goog.dom');
 const log = goog.require('goog.log');
 const webgl = goog.require('ol.webgl');
-const {ROOT} = goog.require('os');
 const MapContainer = goog.require('os.MapContainer');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
-const ContentType = goog.require('os.capture.ContentType');
 const config = goog.require('os.config');
 const {saveFile} = goog.require('os.file.persist');
 const Job = goog.require('os.job.Job');
 const JobEventType = goog.require('os.job.JobEventType');
-const osMap = goog.require('os.map');
 const osString = goog.require('os.string');
 const worker = goog.require('os.worker');
 
@@ -25,25 +26,25 @@ const JobEvent = goog.requireType('os.job.JobEvent');
  * Identifier for capture plugin components.
  * @type {string}
  */
-const ID = 'capture';
+export const ID = 'capture';
 
 /**
  * Function that returns the canvas
  * @typedef {function():!Promise<HTMLCanvasElement>}
  */
-let CanvasFn;
+export let CanvasFn;
 
 /**
  * Function that renders the canvas and returns a promise that is resolved when rendering completes.
  * @typedef {function():!Promise}
  */
-let RenderFn;
+export let RenderFn;
 
 /**
  * GIF content type
  * @type {string}
  */
-const BASE64_MARKER = ';base64,';
+export const BASE64_MARKER = ';base64,';
 
 /**
  * Logger
@@ -55,7 +56,7 @@ const logger = log.getLogger('os.capture');
  * 2D canvas for creating ImageData objects.
  * @type {HTMLCanvasElement}
  */
-let canvas2d = null;
+export let canvas2d = null;
 
 /**
  * Gets the current image data from a canvas. The canvas must have an initialized rendering context.
@@ -73,7 +74,7 @@ let canvas2d = null;
  * @param {number=} opt_height Pixel height to retrieve
  * @return {ImageData}
  */
-const getCanvasData = function(opt_canvas, opt_x, opt_y, opt_width, opt_height) {
+export const getCanvasData = function(opt_canvas, opt_x, opt_y, opt_width, opt_height) {
   var canvas = opt_canvas || document.querySelector('canvas');
   if (canvas instanceof HTMLCanvasElement && !isTainted(canvas)) {
     var x = opt_x || 0;
@@ -104,7 +105,7 @@ const getCanvasData = function(opt_canvas, opt_x, opt_y, opt_width, opt_height) 
  * @param {number} x The starting x position on the target canvas
  * @param {number} y The starting y position on the target canvas
  */
-const overlayCanvas = function(source, target, x, y) {
+export const overlayCanvas = function(source, target, x, y) {
   // don't try to write past the bounds of the target canvas. caller should resize/adjust position if necessary.
   var width = Math.min(source.width, target.width - x);
   var height = Math.min(source.height, target.height - y);
@@ -169,7 +170,7 @@ const overlayCanvas = function(source, target, x, y) {
  * @param {number} height The canvas height
  * @return {ImageData}
  */
-const getWebGLImageData = function(context, x, y, width, height) {
+export const getWebGLImageData = function(context, x, y, width, height) {
   var pixels = new Uint8Array(width * height * 4);
   context.readPixels(x, y, width, height, context.RGBA, context.UNSIGNED_BYTE, pixels);
 
@@ -207,7 +208,7 @@ const getWebGLImageData = function(context, x, y, width, height) {
  * @param {!HTMLCanvasElement} canvas The canvas to save
  * @param {string=} opt_fileName The file name of the screenshot
  */
-const saveCanvas = function(canvas, opt_fileName) {
+export const saveCanvas = function(canvas, opt_fileName) {
   var dataUrl;
   try {
     dataUrl = canvas.toDataURL();
@@ -231,7 +232,7 @@ const saveCanvas = function(canvas, opt_fileName) {
  * @param {string} dataUrl png image data url
  * @param {string=} opt_fileName file name
  */
-const saveDataUrl = function(dataUrl, opt_fileName) {
+export const saveDataUrl = function(dataUrl, opt_fileName) {
   if (dataUrl) {
     var jobUrl = ROOT + worker.DIR + 'dataurltoarray.js';
     var job = new Job(jobUrl, 'Canvas to Blob', 'Converting canvas data URL to a Blob.');
@@ -278,7 +279,7 @@ const saveDataUrl = function(dataUrl, opt_fileName) {
  *
  * @return {!Promise<HTMLCanvasElement>}
  */
-const getDefaultCanvas = function() {
+export const getDefaultCanvas = function() {
   var canvas = document.querySelector('canvas');
   return Promise.resolve(canvas instanceof HTMLCanvasElement ? canvas : null);
 };
@@ -289,7 +290,7 @@ const getDefaultCanvas = function() {
  *
  * @return {string}
  */
-const getTimestamp = function() {
+export const getTimestamp = function() {
   return moment().format('YYYY-MM-DD_HHmmss');
 };
 
@@ -304,7 +305,7 @@ const getTimestamp = function() {
  * @param {HTMLCanvasElement} canvas
  * @return {boolean}
  */
-const isTainted = function(canvas) {
+export const isTainted = function(canvas) {
   if (canvas) {
     var ctx = canvas.getContext('2d');
     if (ctx instanceof CanvasRenderingContext2D) {
@@ -332,14 +333,14 @@ let getPixelRatio_ = () => 1;
  *
  * @return {number} The pixel ratio for the output canvas.
  */
-const getPixelRatio = () => getPixelRatio_();
+export const getPixelRatio = () => getPixelRatio_();
 
 /**
  * Set the function used to get the capture pixel ratio.
  *
  * @param {function():number} fn The new function.
  */
-const setPixelRatioFn = function(fn) {
+export const setPixelRatioFn = function(fn) {
   getPixelRatio_ = fn;
 };
 
@@ -347,23 +348,22 @@ const setPixelRatioFn = function(fn) {
  * Get the map canvas element.
  * @return {HTMLCanvasElement} The map canvas element
  */
-const getMapCanvas = function() {
+export const getMapCanvas = function() {
   var mapCanvas;
   if (MapContainer.getInstance().is3DEnabled()) {
-    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(osMap.WEBGL_CANVAS));
+    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(WEBGL_CANVAS));
   } else {
-    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(osMap.OPENLAYERS_CANVAS));
+    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(OPENLAYERS_CANVAS));
   }
 
   return mapCanvas || null;
 };
 
-
 /**
  * Get the map canvas pixel ratio.
  * @return {number} The map canvas pixel ratio.
  */
-const getMapPixelRatio = function() {
+export const getMapPixelRatio = function() {
   var mapCanvas = getMapCanvas();
   if (mapCanvas) {
     var mapRect = mapCanvas.getBoundingClientRect();
@@ -371,24 +371,4 @@ const getMapPixelRatio = function() {
   }
 
   return 1;
-};
-
-exports = {
-  BASE64_MARKER,
-  ID,
-  CanvasFn,
-  RenderFn,
-  canvas2d,
-  getCanvasData,
-  getDefaultCanvas,
-  getMapCanvas,
-  getMapPixelRatio,
-  getPixelRatio,
-  getTimestamp,
-  getWebGLImageData,
-  isTainted,
-  overlayCanvas,
-  saveCanvas,
-  saveDataUrl,
-  setPixelRatioFn
 };

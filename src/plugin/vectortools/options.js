@@ -1,10 +1,9 @@
-goog.module('plugin.vectortools.Options');
-
+goog.declareModuleId('plugin.vectortools.Options');
 
 /**
  * @enum {number}
  */
-exports = {
+export default {
   ALL: 0,
   SHOWN: 1,
   SELECTED: 2,

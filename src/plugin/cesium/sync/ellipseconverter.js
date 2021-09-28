@@ -1,27 +1,29 @@
-goog.module('plugin.cesium.sync.EllipseConverter');
+goog.declareModuleId('plugin.cesium.sync.EllipseConverter');
+
+import BaseConverter from './baseconverter.js';
+import DynamicLineStringConverter from './dynamiclinestringconverter.js';
+import EllipsoidConverter from './ellipsoidconverter.js';
+import PolygonConverter from './polygonconverter.js';
+import {runConverter} from './runconverter.js';
 
 const LineString = goog.require('ol.geom.LineString');
 const implementz = goog.require('os.implements');
 const ILayer = goog.require('os.layer.ILayer');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
-const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
-const DynamicLineStringConverter = goog.require('plugin.cesium.sync.DynamicLineStringConverter');
-const EllipsoidConverter = goog.require('plugin.cesium.sync.EllipsoidConverter');
-const PolygonConverter = goog.require('plugin.cesium.sync.PolygonConverter');
-const {runConverter} = goog.require('plugin.cesium.sync.runConverter');
 
 const Feature = goog.requireType('ol.Feature');
 const Style = goog.requireType('ol.style.Style');
 const Ellipse = goog.requireType('os.geom.Ellipse');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
-const IConverter = goog.requireType('plugin.cesium.sync.IConverter');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
+const {default: IConverter} = goog.requireType('plugin.cesium.sync.IConverter');
+
 
 /**
  * Converter for Ellipses
  * @extends {BaseConverter<Ellipse, (Cesium.Polyline|Cesium.PolylineOptions)>}
  */
-class EllipseConverter extends BaseConverter {
+export default class EllipseConverter extends BaseConverter {
   /**
    * @inheritDoc
    */
@@ -121,6 +123,3 @@ const createOrUpdateGroundReference = (feature, geometry, style, context) => {
     runConverter(dynamicConverter, feature, groundRef, style, context);
   }
 };
-
-
-exports = EllipseConverter;

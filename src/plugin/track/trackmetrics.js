@@ -1,11 +1,10 @@
-goog.module('plugin.track.Metrics');
+goog.declareModuleId('plugin.track.Metrics');
 
 const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');
 
-
 /**
  */
-class Metrics extends MetricsPlugin {
+export default class Metrics extends MetricsPlugin {
   /**
    * Constructor.
    */
@@ -86,4 +85,3 @@ Metrics.Keys = {
   PREDICT_TRACK_GEODESIC: 'track.predictGeodesic',
   PREDICT_TRACK_RHUMB: 'track.predictRhumb'
 };
-exports = Metrics;

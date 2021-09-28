@@ -1,23 +1,23 @@
-goog.module('plugin.config.Plugin');
+goog.declareModuleId('plugin.config.Plugin');
+
+import {ID} from './config.js';
+import Provider from './configprovider.js';
 
 const ConfigDescriptor = goog.require('os.data.ConfigDescriptor');
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const config = goog.require('plugin.config');
-const Provider = goog.require('plugin.config.Provider');
-
 
 /**
  * Provides config support
  */
-class Plugin extends AbstractPlugin {
+export default class Plugin extends AbstractPlugin {
   /**
    * Constructor.
    */
   constructor() {
     super();
-    this.id = config.ID;
+    this.id = ID;
   }
 
   /**
@@ -27,7 +27,7 @@ class Plugin extends AbstractPlugin {
     const dm = DataManager.getInstance();
 
     dm.registerProviderType(new ProviderEntry(
-        config.ID, Provider, 'config Provider',
+        ID, Provider, 'config Provider',
         'config servers provide layers through layer configs'));
 
     dm.registerDescriptorType(ConfigDescriptor.ID, ConfigDescriptor);
@@ -59,5 +59,3 @@ class Plugin extends AbstractPlugin {
  * @type {Plugin|undefined}
  */
 let instance;
-
-exports = Plugin;

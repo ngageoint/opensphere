@@ -1,10 +1,10 @@
-goog.module('plugin.file.kml.ui.KMLTourNodeUI');
+goog.declareModuleId('plugin.file.kml.ui.KMLTourNodeUI');
 
-const ui = goog.require('os.ui');
+import * as ui from '../../../../os/ui/ui.js';
+import EventType from '../tour/eventtype.js';
 
 const Module = goog.require('os.ui.Module');
 const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
-const EventType = goog.require('plugin.file.kml.tour.EventType');
 
 
 /**
@@ -12,7 +12,7 @@ const EventType = goog.require('plugin.file.kml.tour.EventType');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
 
@@ -33,7 +33,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'kmltournodeui';
+export const directiveTag = 'kmltournodeui';
 
 
 /**
@@ -47,7 +47,7 @@ Module.directive('kmltournodeui', [directive]);
  * Controller for KML tour node UI.
  * @unrestricted
  */
-class Controller extends AbstractNodeUICtrl {
+export class Controller extends AbstractNodeUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -157,9 +157,3 @@ class Controller extends AbstractNodeUICtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

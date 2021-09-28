@@ -1,4 +1,4 @@
-goog.module('plugin.arc.layer.AnimatedArcTile');
+goog.declareModuleId('plugin.arc.layer.AnimatedArcTile');
 
 const AnimatedTile = goog.require('os.layer.AnimatedTile');
 const time = goog.require('os.time');
@@ -41,4 +41,4 @@ class AnimatedArcTile extends AnimatedTile {
   }
 }
 
-exports = AnimatedArcTile;
+export default AnimatedArcTile;

@@ -1,16 +1,17 @@
-goog.module('plugin.basemap.TerrainDescriptor');
+goog.declareModuleId('plugin.basemap.TerrainDescriptor');
+
+import {TERRAIN_ID} from './basemap.js';
 
 const DisplaySetting = goog.require('os.config.DisplaySetting');
 const Settings = goog.require('os.config.Settings');
 const BaseDescriptor = goog.require('os.data.BaseDescriptor');
 const Icons = goog.require('os.ui.Icons');
-const basemap = goog.require('plugin.basemap');
 
 
 /**
  * Descriptor to activate/deactivate terrain from the Add Data window.
  */
-class TerrainDescriptor extends BaseDescriptor {
+export default class TerrainDescriptor extends BaseDescriptor {
   /**
    * Constructor.
    */
@@ -21,7 +22,7 @@ class TerrainDescriptor extends BaseDescriptor {
     this.setTags(['GEOINT', 'Terrain', 'Elevation']);
     this.setTitle('Terrain');
     this.setType(null);
-    this.descriptorType = basemap.TERRAIN_ID;
+    this.descriptorType = TERRAIN_ID;
 
     Settings.getInstance().listen(DisplaySetting.ENABLE_TERRAIN, this.onTerrainChange_, false, this);
   }
@@ -79,6 +80,3 @@ class TerrainDescriptor extends BaseDescriptor {
  * @const
  */
 TerrainDescriptor.DESCRIPTION = 'Show terrain on the 3D globe.';
-
-
-exports = TerrainDescriptor;

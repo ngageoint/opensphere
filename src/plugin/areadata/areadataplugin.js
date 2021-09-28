@@ -1,11 +1,11 @@
-goog.module('plugin.areadata.AreaDataPlugin');
+goog.declareModuleId('plugin.areadata.AreaDataPlugin');
 
+import {AreaImportType} from './areadata.js';
 
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const registry = goog.require('os.ogc.registry');
 const services = goog.require('os.ogc.services');
 const OGCService = goog.require('os.ogc.OGCService');
-const {AreaImportType} = goog.require('plugin.areadata');
 const OSSettings = goog.require('os.config.Settings');
 
 const {Options: OGCListUIOptions} = goog.requireType('os.ui.ogc.OGCListUI');
@@ -71,7 +71,7 @@ const minifyListUIOptions_ = function(config) {
 /**
  * Plugin to read AreaData services configs into the registry for use by other plugins
  */
-class AreaDataPlugin extends AbstractPlugin {
+export default class AreaDataPlugin extends AbstractPlugin {
   /**
    * constructor
    */
@@ -145,6 +145,3 @@ class AreaDataPlugin extends AbstractPlugin {
     }
   }
 }
-
-
-exports = AreaDataPlugin;

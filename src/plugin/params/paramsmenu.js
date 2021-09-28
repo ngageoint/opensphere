@@ -1,12 +1,13 @@
-goog.module('plugin.params.menu');
+goog.declareModuleId('plugin.params.menu');
+
+import {launchParamsEdit} from './editrequestparams.js';
+import * as pluginParams from './params.js';
 
 const asserts = goog.require('goog.asserts');
 const Layer = goog.require('ol.layer.Layer');
 const AlertManager = goog.require('os.alert.AlertManager');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const layerMenu = goog.require('os.ui.menu.layer');
-const pluginParams = goog.require('plugin.params');
-const {launchParamsEdit} = goog.require('plugin.params.EditRequestParamsUI');
 
 const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 const MenuItem = goog.requireType('os.ui.menu.MenuItem');
@@ -15,7 +16,7 @@ const MenuItem = goog.requireType('os.ui.menu.MenuItem');
 /**
  * Set up params menu items in the layer menu.
  */
-const layerSetup = function() {
+export const layerSetup = function() {
   var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(pluginParams.EventType.EDIT_PARAMS)) {
     var group = menu.getRoot().find(layerMenu.GroupLabel.LAYER);
@@ -37,7 +38,7 @@ const layerSetup = function() {
 /**
  * Clean up params menu items in the layer menu.
  */
-const layerDispose = function() {
+export const layerDispose = function() {
   var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(pluginParams.EventType.EDIT_PARAMS)) {
     var group = menu.getRoot().find(layerMenu.GroupLabel.LAYER);
@@ -53,7 +54,7 @@ const layerDispose = function() {
  * @param {layerMenu.Context} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfSupported_ = function(context) {
+export const visibleIfSupported_ = function(context) {
   this.visible = false;
 
   // only allow editing parameters for one layer at a time
@@ -80,10 +81,4 @@ const handleLayerAction_ = function(event) {
     AlertManager.getInstance().sendAlert('Unexpected layer selection. Please select a single layer and try again.',
         AlertEventSeverity.WARNING);
   }
-};
-
-exports = {
-  layerSetup,
-  layerDispose,
-  visibleIfSupported_
 };

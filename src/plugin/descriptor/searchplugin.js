@@ -1,14 +1,14 @@
-goog.module('plugin.descriptor.SearchPlugin');
+goog.declareModuleId('plugin.descriptor.SearchPlugin');
+
+import DescriptorSearch from './descriptorsearch.js';
 
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const SearchManager = goog.require('os.search.SearchManager');
 const FacetedSearchCtrl = goog.require('os.ui.search.FacetedSearchCtrl');
-const DescriptorSearch = goog.require('plugin.descriptor.DescriptorSearch');
-
 
 /**
  */
-class SearchPlugin extends AbstractPlugin {
+export default class SearchPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -28,12 +28,8 @@ class SearchPlugin extends AbstractPlugin {
   }
 }
 
-
 /**
  * @type {string}
  * @const
  */
 SearchPlugin.ID = 'descriptorsearch';
-
-
-exports = SearchPlugin;

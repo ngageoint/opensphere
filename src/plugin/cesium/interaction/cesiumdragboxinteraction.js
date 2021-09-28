@@ -1,15 +1,16 @@
-goog.module('plugin.cesium.interaction.dragbox');
+goog.declareModuleId('plugin.cesium.interaction.dragbox');
+
+import * as Dispatcher from '../../../os/dispatcher.js';
+import {GeometryInstanceId} from '../cesium.js';
 
 const {ol4326CoordinateArrayToCsCartesians} = goog.require('olcs.core');
-const Dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const DrawPolygon = goog.require('os.interaction.DrawPolygon');
-const {GeometryInstanceId} = goog.require('plugin.cesium');
 
 const Polygon = goog.requireType('ol.geom.Polygon');
 const DragBox = goog.requireType('os.interaction.DragBox');
-const CesiumRenderer = goog.requireType('plugin.cesium.CesiumRenderer');
+const {default: CesiumRenderer} = goog.requireType('plugin.cesium.CesiumRenderer');
 
 
 /**
@@ -31,7 +32,7 @@ let cesiumColor = undefined;
  *
  * @this {DragBox}
  */
-const cleanupWebGL = function() {
+export const cleanupWebGL = function() {
   var webgl = /** @type {CesiumRenderer|undefined} */ (MapContainer.getInstance().getWebGLRenderer());
   var scene = webgl ? webgl.getCesiumScene() : undefined;
   if (scene && cesiumBox) {
@@ -46,7 +47,7 @@ const cleanupWebGL = function() {
  * @this {DragBox}
  * @suppress {accessControls}
  */
-const updateWebGL = function(geometry) {
+export const updateWebGL = function(geometry) {
   if (MapContainer.getInstance().is3DEnabled()) {
     if (!cesiumColor) {
       cesiumColor = new Cesium.ColorGeometryInstanceAttribute(
@@ -87,9 +88,4 @@ const updateWebGL = function(geometry) {
       Dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
-};
-
-exports = {
-  cleanupWebGL,
-  updateWebGL
 };

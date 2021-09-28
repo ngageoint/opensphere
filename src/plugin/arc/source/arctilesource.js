@@ -1,4 +1,4 @@
-goog.module('plugin.arc.source.ArcTileSource');
+goog.declareModuleId('plugin.arc.source.ArcTileSource');
 
 const TileArcGISRest = goog.require('ol.source.TileArcGISRest');
 const ILoadingSource = goog.requireType('os.ol.source.ILoadingSource');
@@ -46,4 +46,4 @@ class ArcTileSource extends TileArcGISRest {
   }
 }
 
-exports = ArcTileSource;
+export default ArcTileSource;

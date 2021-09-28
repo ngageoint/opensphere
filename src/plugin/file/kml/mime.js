@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.mime');
+goog.declareModuleId('plugin.file.kml.mime');
 
 const Promise = goog.require('goog.Promise');
 const mime = goog.require('os.file.mime');
@@ -9,7 +9,7 @@ const mimeZip = goog.require('os.file.mime.zip');
 /**
  * @type {string}
  */
-const TYPE = 'application/vnd.google-earth.kml+xml';
+export const TYPE = 'application/vnd.google-earth.kml+xml';
 
 /**
  * @param {ArrayBuffer} buffer
@@ -35,7 +35,7 @@ mime.register(TYPE, detect, 0, xml.TYPE);
 /**
  * @type {string}
  */
-const KMZ_TYPE = 'application/vnd.google-earth.kmz';
+export const KMZ_TYPE = 'application/vnd.google-earth.kmz';
 
 /**
  * Determine if this file is a KMZ file.  Currently, the logic is:
@@ -72,8 +72,3 @@ const detectKmz = function(buffer, opt_file, opt_context) {
 
 
 mime.register(KMZ_TYPE, detectKmz, 0, mimeZip.TYPE);
-
-exports = {
-  TYPE,
-  KMZ_TYPE
-};

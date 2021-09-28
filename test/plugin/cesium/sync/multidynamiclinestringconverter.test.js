@@ -21,8 +21,9 @@ describe('plugin.cesium.sync.MultiDynamicLineStringConverter', () => {
   const osMap = goog.module.get('os.map');
   const osProj = goog.module.get('os.proj');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
-  const VectorContext = goog.module.get('plugin.cesium.VectorContext');
-  const MultiDynamicLineStringConverter = goog.module.get('plugin.cesium.sync.MultiDynamicLineStringConverter');
+  const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');
+  const {default: MultiDynamicLineStringConverter} =
+    goog.module.get('plugin.cesium.sync.MultiDynamicLineStringConverter');
   const converter = new MultiDynamicLineStringConverter();
 
   let feature;

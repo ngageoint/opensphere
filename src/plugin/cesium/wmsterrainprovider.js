@@ -1,10 +1,10 @@
-goog.module('plugin.cesium.WMSTerrainProvider');
+goog.declareModuleId('plugin.cesium.WMSTerrainProvider');
+
+import AbstractTerrainProvider from './abstractterrainprovider.js';
 
 const Promise = goog.require('goog.Promise');
 const asserts = goog.require('goog.asserts');
 const ProxyHandler = goog.require('os.net.ProxyHandler');
-const AbstractTerrainProvider = goog.require('plugin.cesium.AbstractTerrainProvider');
-
 
 /**
  * Compare WMS terrain layer options in order of descending max level.
@@ -18,7 +18,7 @@ const wmsTerrainLayerCompare = (a, b) => b.maxLevel - a.maxLevel;
 /**
  * WMS Cesium terrain provider.
  */
-class WMSTerrainProvider extends AbstractTerrainProvider {
+export default class WMSTerrainProvider extends AbstractTerrainProvider {
   /**
    * Constructor.
    * @param {!osx.cesium.WMSTerrainProviderOptions} options
@@ -212,5 +212,3 @@ class WMSTerrainProvider extends AbstractTerrainProvider {
     return Promise.resolve(new WMSTerrainProvider(options));
   }
 }
-
-exports = WMSTerrainProvider;

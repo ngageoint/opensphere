@@ -1,8 +1,8 @@
-goog.module('os.capture.IRecorder');
+goog.declareModuleId('os.capture.IRecorder');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const Listenable = goog.requireType('goog.events.Listenable');
-const IVideoEncoder = goog.requireType('os.capture.IVideoEncoder');
+const {default: IVideoEncoder} = goog.requireType('os.capture.IVideoEncoder');
 
 
 /**
@@ -12,7 +12,7 @@ const IVideoEncoder = goog.requireType('os.capture.IVideoEncoder');
  * @extends {Listenable}
  * @interface
  */
-class IRecorder {
+export default class IRecorder {
   /**
    * Constructor.
    */
@@ -81,5 +81,3 @@ class IRecorder {
    */
   setEncoder(value) {}
 }
-
-exports = IRecorder;

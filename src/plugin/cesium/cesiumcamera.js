@@ -2,7 +2,9 @@
  * @fileoverview ol-cesium camera replacement.
  * @suppress {accessControls}
  */
-goog.module('plugin.cesium.Camera');
+goog.declareModuleId('plugin.cesium.Camera');
+
+import {PROJECTION, WEBGL_CANVAS, resolutionForDistance, resolutionToZoom} from '../../os/map/map.js';
 
 const asserts = goog.require('goog.asserts');
 const Throttle = goog.require('goog.async.Throttle');
@@ -11,7 +13,6 @@ const olProj = goog.require('ol.proj');
 const OLCSCamera = goog.require('olcs.Camera');
 const core = goog.require('olcs.core');
 const MapContainer = goog.require('os.MapContainer');
-const osMap = goog.require('os.map');
 const FlightMode = goog.require('os.map.FlightMode');
 const math = goog.require('os.math');
 const osProj = goog.require('os.proj');
@@ -19,7 +20,6 @@ const IWebGLCamera = goog.require('os.webgl.IWebGLCamera'); // eslint-disable-li
 
 const OLMap = goog.requireType('ol.Map');
 const View = goog.requireType('ol.View');
-
 
 
 /**
@@ -156,7 +156,7 @@ const worldToClip = (position, eyeOffset, camera, opt_result) => {
  *
  * @implements {IWebGLCamera}
  */
-class Camera extends OLCSCamera {
+export default class Camera extends OLCSCamera {
   /**
    * Constructor.
    * @param {!Cesium.Scene} scene
@@ -554,7 +554,7 @@ class Camera extends OLCSCamera {
 
       var target;
       if (options.center) {
-        var center = olProj.transform(options.center, osMap.PROJECTION, osProj.EPSG4326);
+        var center = olProj.transform(options.center, PROJECTION, osProj.EPSG4326);
         target = new Cesium.Cartographic(Cesium.Math.toRadians(center[0]), Cesium.Math.toRadians(center[1]));
       } else {
         // clone the current position or Cesium won't animate the change
@@ -607,7 +607,7 @@ class Camera extends OLCSCamera {
    */
   getDistanceToCenter() {
     var center;
-    var canvas = /** @type {HTMLCanvasElement} */ (document.querySelector(osMap.WEBGL_CANVAS));
+    var canvas = /** @type {HTMLCanvasElement} */ (document.querySelector(WEBGL_CANVAS));
     if (canvas) {
       center = this.cam_.pickEllipsoid(new Cesium.Cartesian2(canvas.width / 2, canvas.height / 2));
     }
@@ -631,7 +631,7 @@ class Camera extends OLCSCamera {
     var pixel = Cesium.SceneTransforms.wgs84ToWindowCoordinates(this.scene_, position);
     if (pixel && pixel.x > 0 && pixel.y > 0) {
       // make sure the pixel is within the bounds of the canvas
-      var canvas = /** @type {HTMLCanvasElement} */ (document.querySelector(osMap.WEBGL_CANVAS));
+      var canvas = /** @type {HTMLCanvasElement} */ (document.querySelector(WEBGL_CANVAS));
       if (pixel.x <= canvas.width && pixel.y <= canvas.height) {
         // get the distance to the position
         distance = Cesium.Cartesian3.distance(position, this.cam_.positionWC);
@@ -688,7 +688,7 @@ class Camera extends OLCSCamera {
     if (!center) {
       return;
     }
-    var ll = olProj.transform(center, osMap.PROJECTION, osProj.EPSG4326);
+    var ll = olProj.transform(center, PROJECTION, osProj.EPSG4326);
     asserts.assert(ll != null);
 
     var carto = new Cesium.Cartographic(Cesium.Math.toRadians(ll[0]),
@@ -730,7 +730,7 @@ class Camera extends OLCSCamera {
       return;
     }
 
-    var ll = olProj.transform(center, osMap.PROJECTION, osProj.EPSG4326);
+    var ll = olProj.transform(center, PROJECTION, osProj.EPSG4326);
     asserts.assert(ll != null);
 
     // determine distance at equator so the projection doesn't cause a large difference between 2d/3d
@@ -774,7 +774,7 @@ class Camera extends OLCSCamera {
 
     view.setCenter(olProj.transform([
       Cesium.Math.toDegrees(longitude),
-      Cesium.Math.toDegrees(latitude)], osProj.EPSG4326, osMap.PROJECTION));
+      Cesium.Math.toDegrees(latitude)], osProj.EPSG4326, PROJECTION));
 
     // determine distance at equator so the projection doesn't cause a large difference between 2d/3d
     var resolution = this.calcResolutionForDistance(this.distance_, 0);
@@ -903,8 +903,8 @@ class Camera extends OLCSCamera {
 
     var altitude = carto.height;
     var projection = this.map_.getView().getProjection();
-    var resolution = osMap.resolutionForDistance(this.map_, altitude);
-    var zoom = osMap.resolutionToZoom(resolution, projection, 1);
+    var resolution = resolutionForDistance(this.map_, altitude);
+    var zoom = resolutionToZoom(resolution, projection, 1);
 
     // Cesium heading and roll follow the KML spec
     var heading = googMath.toDegrees(this.cam_.heading);
@@ -953,5 +953,3 @@ class Camera extends OLCSCamera {
  * @param {?View} view New view to use.
  */
 OLCSCamera.prototype.setView_ = (view) => {};
-
-exports = Camera;

@@ -1,17 +1,18 @@
-goog.module('plugin.file.gpx.GPXLayerConfig');
+goog.declareModuleId('plugin.file.gpx.GPXLayerConfig');
+
+import GPXParser from './gpxparser.js';
 
 const ResponseType = goog.require('goog.net.XhrIo.ResponseType');
 const userAgent = goog.require('goog.userAgent');
 const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
 const RequestSource = goog.require('os.source.Request');
-const GPXParser = goog.require('plugin.file.gpx.GPXParser');
 
 const FeatureImporter = goog.requireType('os.im.FeatureImporter');
 
 
 /**
  */
-class GPXLayerConfig extends AbstractDataSourceLayerConfig {
+export default class GPXLayerConfig extends AbstractDataSourceLayerConfig {
   /**
    * Constructor.
    */
@@ -62,5 +63,3 @@ class GPXLayerConfig extends AbstractDataSourceLayerConfig {
     return source;
   }
 }
-
-exports = GPXLayerConfig;

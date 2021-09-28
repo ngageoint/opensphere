@@ -1,15 +1,15 @@
-goog.module('plugin.file.kml.menu');
+goog.declareModuleId('plugin.file.kml.menu');
+
+import * as osFeature from '../../../os/feature/feature.js';
+import KMLNetworkLinkNode from './ui/kmlnetworklinknode.js';
+import KMLNode from './ui/kmlnode.js';
 
 const asserts = goog.require('goog.asserts');
-
 const buffer = goog.require('os.buffer');
 const BufferDialogUI = goog.require('os.ui.buffer.BufferDialogUI');
-const osFeature = goog.require('os.feature');
 const TriState = goog.require('os.structs.TriState');
 const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
 const layerMenu = goog.require('os.ui.menu.layer');
-const KMLNetworkLinkNode = goog.require('plugin.file.kml.ui.KMLNetworkLinkNode');
-const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
 
 const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 const MenuItem = goog.requireType('os.ui.menu.MenuItem');
@@ -19,7 +19,7 @@ const MenuItem = goog.requireType('os.ui.menu.MenuItem');
  * KML menu event types.
  * @enum {string}
  */
-const EventType = {
+export const EventType = {
   LOAD: 'kml:load',
   REFRESH: 'kml:refresh',
   FEATURE_INFO: 'kml:featureInfo',
@@ -33,7 +33,7 @@ const EventType = {
 /**
  * Set up KML tree items in the layer menu.
  */
-const treeSetup = function() {
+export const treeSetup = function() {
   var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(EventType.GOTO)) {
     var menuRoot = menu.getRoot();
@@ -223,9 +223,4 @@ const onLayerEvent_ = function(event) {
       }
     }
   }
-};
-
-exports = {
-  EventType,
-  treeSetup
 };

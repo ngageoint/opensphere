@@ -1,4 +1,4 @@
-goog.module('plugin.basemap.TerrainNodeUI');
+goog.declareModuleId('plugin.basemap.TerrainNodeUI');
 
 const DisplaySetting = goog.require('os.config.DisplaySetting');
 const Settings = goog.require('os.config.Settings');
@@ -22,7 +22,7 @@ const template =
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: template,
@@ -34,7 +34,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'terrainnodeui';
+export const directiveTag = 'terrainnodeui';
 
 
 /**
@@ -48,7 +48,7 @@ Module.directive('terrainnodeui', [directive]);
  * Controller for the terrain layer node UI.
  * @unrestricted
  */
-class Controller extends DefaultLayerNodeUICtrl {
+export class Controller extends DefaultLayerNodeUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -70,9 +70,3 @@ class Controller extends DefaultLayerNodeUICtrl {
     Settings.getInstance().set(DisplaySetting.ENABLE_TERRAIN, false);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

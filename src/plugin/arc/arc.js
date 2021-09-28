@@ -1,30 +1,31 @@
-goog.module('plugin.arc');
+goog.declareModuleId('plugin.arc');
+
+import ArcFeatureType from './arcfeaturetype.js';
+import ESRIType from './esritype.js';
 
 const xml = goog.require('goog.dom.xml');
 const googString = goog.require('goog.string');
 const text = goog.require('os.file.mime.text');
 const {launchForLayer} = goog.require('os.ui.query.CombinatorUI');
-const ArcFeatureType = goog.require('plugin.arc.ArcFeatureType');
-const ESRIType = goog.require('plugin.arc.ESRIType');
 
 const VectorLayer = goog.requireType('os.layer.Vector');
 const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
 const IFeatureType = goog.requireType('os.ogc.IFeatureType');
 const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
-const ArcServer = goog.requireType('plugin.arc.ArcServer');
-const IArcLoader = goog.requireType('plugin.arc.IArcLoader');
+const {default: ArcServer} = goog.requireType('plugin.arc.ArcServer');
+const {default: IArcLoader} = goog.requireType('plugin.arc.IArcLoader');
 
 
 /**
  * @type {string}
  */
-const MAP_SERVER = 'MapServer';
+export const MAP_SERVER = 'MapServer';
 
 /**
  * Enum of supported server types.
  * @enum {string}
  */
-const ServerType = {
+export const ServerType = {
   MAP_SERVER: 'MapServer',
   IMAGE_SERVER: 'ImageServer',
   FEATURE_SERVER: 'FeatureServer'
@@ -33,7 +34,7 @@ const ServerType = {
 /**
  * @type {string}
  */
-const ID = 'arc';
+export const ID = 'arc';
 
 /**
  * Returns a more recognizable type from an ESRI Type.
@@ -41,7 +42,7 @@ const ID = 'arc';
  * @param {string} esriType
  * @return {?string}
  */
-const getColumnType = function(esriType) {
+export const getColumnType = function(esriType) {
   if (esriType === ESRIType.BOOLEAN || esriType === ESRIType.STRING) {
     return 'string';
   } else if (esriType === ESRIType.DATE) {
@@ -58,7 +59,7 @@ const getColumnType = function(esriType) {
  *
  * @param {!VectorLayer} layer The layer
  */
-const launchFilterManager = function(layer) {
+export const launchFilterManager = function(layer) {
   launchForLayer(layer.getId());
 };
 
@@ -68,7 +69,7 @@ const launchFilterManager = function(layer) {
  * @param {!VectorLayer} layer The layer
  * @return {?Array<FeatureTypeColumn>} the columns
  */
-const getFilterColumns = function(layer) {
+export const getFilterColumns = function(layer) {
   var layerOptions = layer.getLayerOptions();
   if (layerOptions && layerOptions['featureType']) {
     var featureType = /** @type {IFeatureType} */ (layerOptions['featureType']);
@@ -85,28 +86,28 @@ const getFilterColumns = function(layer) {
  * the top, and the error/code below.
  * @type {RegExp}
  */
-const ERROR_REGEXP = /ArcGIS[\s\S]+Error:[\s\S]+Code:/;
+export const ERROR_REGEXP = /ArcGIS[\s\S]+Error:[\s\S]+Code:/;
 
 /**
  * @type {RegExp}
  */
-const URI_REGEXP = /arcgis/i;
+export const URI_REGEXP = /arcgis/i;
 
 /**
  * @type {RegExp}
  */
-const WMS_URI_REGEXP = /(\/WMSServer|service=WMS)/i;
+export const WMS_URI_REGEXP = /(\/WMSServer|service=WMS)/i;
 
 /**
  * @type {RegExp}
  */
-const CONTENT_REGEXP = /ArcGIS REST Services Directory/i;
+export const CONTENT_REGEXP = /ArcGIS REST Services Directory/i;
 
 /**
  * The ArcGIS loader class.
  * @type {?function(new: IArcLoader, ...)}
  */
-let loaderClass_ = null;
+export let loaderClass_ = null;
 
 /**
  * Instantiates and returns a new Arc loader. This
@@ -116,7 +117,7 @@ let loaderClass_ = null;
  * @param {ArcServer} server The Arc server instance.
  * @return {IArcLoader}
  */
-const getArcLoader = function(node, url, server) {
+export const getArcLoader = function(node, url, server) {
   if (loaderClass_) {
     return new loaderClass_(node, url, server);
   }
@@ -128,7 +129,7 @@ const getArcLoader = function(node, url, server) {
  * Set the ArcGIS loader class.
  * @param {?function(new: IArcLoader, ...)} clazz The class.
  */
-const setLoaderClass = function(clazz) {
+export const setLoaderClass = function(clazz) {
   loaderClass_ = clazz;
 };
 
@@ -138,7 +139,7 @@ const setLoaderClass = function(clazz) {
  * @param {Object} config The layer metadata.
  * @return {ArcFeatureType} The feature type.
  */
-const createFeatureType = function(config) {
+export const createFeatureType = function(config) {
   var featureType = null;
 
   var fields = config ? /** @type {Array} */ (config['fields']) : null;
@@ -190,7 +191,7 @@ const createFeatureType = function(config) {
  * @param {Array<number>=} opt_codes Response codes, if available.
  * @return {?string} An error message if one was found, or null if the response is OK
  */
-const getException = function(response, opt_contentType, opt_codes) {
+export const getException = function(response, opt_contentType, opt_codes) {
   try {
     // Try to parse the response as HTML and determine if the response is an Arc error page.
     if (response && (!opt_contentType || opt_contentType.indexOf('text/html') != -1)) {
@@ -212,22 +213,4 @@ const getException = function(response, opt_contentType, opt_codes) {
   }
 
   return null;
-};
-
-exports = {
-  MAP_SERVER,
-  ServerType,
-  ID,
-  getColumnType,
-  launchFilterManager,
-  getFilterColumns,
-  ERROR_REGEXP,
-  URI_REGEXP,
-  WMS_URI_REGEXP,
-  CONTENT_REGEXP,
-  loaderClass_,
-  getArcLoader,
-  setLoaderClass,
-  createFeatureType,
-  getException
 };

@@ -1,4 +1,13 @@
-goog.module('plugin.cesium.Plugin');
+goog.declareModuleId('plugin.cesium.Plugin');
+
+import {CESIUM_ONLY_LAYER, DEFAULT_ION_URL, ID, SettingsKey, setIonUrl} from './cesium.js';
+import CesiumRenderer from './cesiumrenderer.js';
+import {ID as TILE_ID, TYPE as TILE_TYPE} from './tiles/cesium3dtiles.js';
+import Descriptor from './tiles/cesium3dtilesdescriptor.js';
+import TilesetImportUI from './tiles/cesium3dtilesimportui.js';
+import LayerConfig from './tiles/cesium3dtileslayerconfig.js';
+import Provider from './tiles/cesium3dtilesprovider.js';
+import {TYPE as MIME_TYPE} from './tiles/mime.js';
 
 const MapContainer = goog.require('os.MapContainer');
 const settings = goog.require('os.config.Settings');
@@ -11,26 +20,11 @@ const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
-const {
-  ID,
-  CESIUM_ONLY_LAYER,
-  DEFAULT_ION_URL,
-  SettingsKey,
-  setIonUrl
-} = goog.require('plugin.cesium');
-const CesiumRenderer = goog.require('plugin.cesium.CesiumRenderer');
-const tiles = goog.require('plugin.cesium.tiles');
-const Descriptor = goog.require('plugin.cesium.tiles.Descriptor');
-const LayerConfig = goog.require('plugin.cesium.tiles.LayerConfig');
-const Provider = goog.require('plugin.cesium.tiles.Provider');
-const TilesetImportUI = goog.require('plugin.cesium.tiles.TilesetImportUI');
-const mime = goog.require('plugin.cesium.tiles.mime');
-
 
 /**
  * Provides a WebGL renderer for the map, powered by Cesium.
  */
-class Plugin extends AbstractPlugin {
+export default class Plugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -67,15 +61,15 @@ class Plugin extends AbstractPlugin {
 
     // register 3D tiles layers
     var lcm = LayerConfigManager.getInstance();
-    lcm.registerLayerConfig(tiles.ID, LayerConfig);
+    lcm.registerLayerConfig(TILE_ID, LayerConfig);
 
     var dm = DataManager.getInstance();
     dm.registerProviderType(new ProviderEntry(
-        tiles.ID,
+        TILE_ID,
         Provider,
-        tiles.TYPE,
-        tiles.TYPE));
-    dm.registerDescriptorType(tiles.ID, Descriptor);
+        TILE_TYPE,
+        TILE_TYPE));
+    dm.registerDescriptorType(TILE_ID, Descriptor);
 
     // add 3D layer group
     var group = new Group();
@@ -91,9 +85,7 @@ class Plugin extends AbstractPlugin {
     mapContainer.addGroup(group);
 
     var im = ImportManager.getInstance();
-    im.registerImportDetails(tiles.TYPE, true);
-    im.registerImportUI(mime.TYPE, new TilesetImportUI());
+    im.registerImportDetails(TILE_TYPE, true);
+    im.registerImportUI(MIME_TYPE, new TilesetImportUI());
   }
 }
-
-exports = Plugin;

@@ -1,17 +1,18 @@
-goog.module('plugin.params.EditRequestParamsUI');
+goog.declareModuleId('plugin.params.EditRequestParamsUI');
 
 goog.require('os.ui.slick.SlickGridUI');
+
+import * as os from '../../os/os.js';
+import * as pluginParams from './params.js';
 
 const Disposable = goog.require('goog.Disposable');
 const googString = goog.require('goog.string');
 const olArray = goog.require('ol.array');
-const os = goog.require('os');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const SlickGridEvent = goog.require('os.ui.slick.SlickGridEvent');
 const osWindow = goog.require('os.ui.window');
-const pluginParams = goog.require('plugin.params');
 
 
 /**
@@ -19,7 +20,7 @@ const pluginParams = goog.require('plugin.params');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
 
@@ -37,7 +38,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'editrequestparams';
+export const directiveTag = 'editrequestparams';
 
 
 /**
@@ -51,7 +52,7 @@ Module.directive('editrequestparams', [directive]);
  * Controller function for the editrequestparams directive
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -331,14 +332,13 @@ class Controller extends Disposable {
   }
 }
 
-
 /**
  * Launches a layer params edit window.
  *
  * @param {!ol.layer.Layer} layer The layer.
  * @param {Object} params The current layer params.
  */
-const launchParamsEdit = function(layer, params) {
+export const launchParamsEdit = function(layer, params) {
   var winLabel = 'Edit Parameters';
   var windowId = 'editParams';
 
@@ -367,11 +367,4 @@ const launchParamsEdit = function(layer, params) {
 
   var template = '<editrequestparams layer="layer" params="params"></editrequestparams>';
   osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchParamsEdit
 };

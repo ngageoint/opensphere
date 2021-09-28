@@ -1,13 +1,13 @@
-goog.module('plugin.places.PlacesLayer');
+goog.declareModuleId('plugin.places.PlacesLayer');
+
+import KMLLayer from '../file/kml/kmllayer.js';
 
 const fn = goog.require('os.fn');
-const KMLLayer = goog.require('plugin.file.kml.KMLLayer');
-
 
 /**
  * KML Layer for organizing Places.
  */
-class PlacesLayer extends KMLLayer {
+export default class PlacesLayer extends KMLLayer {
   /**
    * Constructor.
    * @param {olx.layer.VectorOptions} options Vector layer options
@@ -19,5 +19,3 @@ class PlacesLayer extends KMLLayer {
     this.renderLegend = fn.noop;
   }
 }
-
-exports = PlacesLayer;

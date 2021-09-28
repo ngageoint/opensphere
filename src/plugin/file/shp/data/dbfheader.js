@@ -1,11 +1,11 @@
-goog.module('plugin.file.shp.data.DBFHeader');
+goog.declareModuleId('plugin.file.shp.data.DBFHeader');
 
-const DBFField = goog.requireType('plugin.file.shp.data.DBFField');
+const {default: DBFField} = goog.requireType('plugin.file.shp.data.DBFField');
 
 
 /**
  */
-class DBFHeader {
+export default class DBFHeader {
   /**
    * Constructor.
    */
@@ -47,5 +47,3 @@ class DBFHeader {
     this.position = 0;
   }
 }
-
-exports = DBFHeader;

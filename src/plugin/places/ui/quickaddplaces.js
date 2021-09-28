@@ -1,9 +1,12 @@
-goog.module('plugin.places.ui.QuickAddPlacesUI');
+goog.declareModuleId('plugin.places.ui.QuickAddPlacesUI');
 
 goog.require('os.ui.draw.DrawPickerUI');
 
+import {ROOT} from '../../../os/os.js';
+import KMLNodeRemove from '../../file/kml/cmd/kmlnoderemovecmd.js';
+import * as places from '../places.js';
+
 const Disposable = goog.require('goog.Disposable');
-const {ROOT} = goog.require('os');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const ParallelCommand = goog.require('os.command.ParallelCommand');
 const RecordField = goog.require('os.data.RecordField');
@@ -14,10 +17,9 @@ const WindowEventType = goog.require('os.ui.WindowEventType');
 const osWindow = goog.require('os.ui.window');
 const windowSelector = goog.require('os.ui.windowSelector');
 const AltitudeMode = goog.require('os.webgl.AltitudeMode');
-const KMLNodeRemove = goog.require('plugin.file.kml.cmd.KMLNodeRemove');
-const places = goog.require('plugin.places');
 
 const Method = goog.requireType('os.interpolate.Method');
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
@@ -25,7 +27,7 @@ const Method = goog.requireType('os.interpolate.Method');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -41,7 +43,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'quickaddplaces';
+export const directiveTag = 'quickaddplaces';
 
 
 /**
@@ -55,7 +57,7 @@ Module.directive('quickaddplaces', [directive]);
  * Controller function for the quickaddplaces directive
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -81,7 +83,7 @@ class Controller extends Disposable {
 
     /**
      * The root node to add places to.
-     * @type {plugin.file.kml.ui.KMLNode}
+     * @type {KMLNode}
      */
     this.root = $scope['root'];
 
@@ -94,7 +96,7 @@ class Controller extends Disposable {
 
     /**
      * The array of added nodes. This reference is kept around for the cancel case.
-     * @type {Array<!plugin.file.kml.ui.KMLNode>}
+     * @type {Array<!KMLNode>}
      * @protected
      */
     this.added = [];
@@ -137,7 +139,7 @@ class Controller extends Disposable {
       geometry.set(RecordField.ALTITUDE_MODE, AltitudeMode.CLAMP_TO_GROUND);
 
       if (!this.root || !this.root.getParent()) {
-        this.root = places.addFolder(/** @type {!plugin.places.FolderOptions} */ ({
+        this.root = places.addFolder(/** @type {!places.FolderOptions} */ ({
           name: this['name'] || 'New Place'
         }));
 
@@ -146,7 +148,7 @@ class Controller extends Disposable {
         }
       }
 
-      var place = places.addPlace(/** @type {plugin.places.PlaceOptions} */ ({
+      var place = places.addPlace(/** @type {places.PlaceOptions} */ ({
         geometry: geometry,
         name: this.getUniqueName(),
         parent: this.root,
@@ -236,13 +238,12 @@ class Controller extends Disposable {
   }
 }
 
-
 /**
  * Launches the quick add places dialog (or brings it to the front if it already exists).
- * @param {plugin.file.kml.ui.KMLNode=} opt_root Optional root KML node.
+ * @param {KMLNode=} opt_root Optional root KML node.
  * @param {ol.geom.SimpleGeometry=} opt_initial Optional initial geometry to add to the set of places.
  */
-const launch = (opt_root, opt_initial) => {
+export const launch = (opt_root, opt_initial) => {
   if (osWindow.exists(WINDOW_ID)) {
     osWindow.bringToFront(WINDOW_ID);
     return;
@@ -277,11 +278,3 @@ const launch = (opt_root, opt_initial) => {
  * @type {string}
  */
 const WINDOW_ID = 'quickAddPlaces';
-
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launch
-};

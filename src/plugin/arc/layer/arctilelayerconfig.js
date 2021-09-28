@@ -1,8 +1,9 @@
-goog.module('plugin.arc.layer.ArcTileLayerConfig');
+goog.declareModuleId('plugin.arc.layer.ArcTileLayerConfig');
+
+import ArcTileSource from '../source/arctilesource.js';
+import AnimatedArcTile from './animatedarctilelayer.js';
 
 const AbstractTileLayerConfig = goog.require('os.layer.config.AbstractTileLayerConfig');
-const AnimatedArcTile = goog.require('plugin.arc.layer.AnimatedArcTile');
-const ArcTileSource = goog.require('plugin.arc.source.ArcTileSource');
 
 
 /**
@@ -56,4 +57,4 @@ class ArcTileLayerConfig extends AbstractTileLayerConfig {
 ArcTileLayerConfig.ID = 'arctile';
 
 
-exports = ArcTileLayerConfig;
+export default ArcTileLayerConfig;

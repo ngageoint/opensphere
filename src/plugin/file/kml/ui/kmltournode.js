@@ -1,18 +1,19 @@
-goog.module('plugin.file.kml.ui.KMLTourNode');
+goog.declareModuleId('plugin.file.kml.ui.KMLTourNode');
+
+import KMLNode from './kmlnode.js';
+import {directiveTag as kmlTourNodeUi} from './kmltournodeui.js';
 
 const dispose = goog.require('goog.dispose');
 
-const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
-const {directiveTag: kmlTourNodeUi} = goog.require('plugin.file.kml.ui.KMLTourNodeUI');
-
+const {default: Tour} = goog.requireType('plugin.file.kml.tour.Tour');
 
 /**
  * Tree node for a KML tour.
  */
-class KMLTourNode extends KMLNode {
+export default class KMLTourNode extends KMLNode {
   /**
    * Constructor.
-   * @param {!plugin.file.kml.tour.Tour} tour The KML tour.
+   * @param {!Tour} tour The KML tour.
    */
   constructor(tour) {
     super();
@@ -21,7 +22,7 @@ class KMLTourNode extends KMLNode {
 
     /**
      * The KML tour.
-     * @type {plugin.file.kml.tour.Tour|undefined}
+     * @type {Tour|undefined}
      * @private
      */
     this.tour_ = tour;
@@ -40,7 +41,7 @@ class KMLTourNode extends KMLNode {
   /**
    * Get the KML tour object for the node.
    *
-   * @return {plugin.file.kml.tour.Tour|undefined}
+   * @return {Tour|undefined}
    */
   getTour() {
     return this.tour_;
@@ -75,5 +76,3 @@ class KMLTourNode extends KMLNode {
     return '<i class="fa fa-video-camera fa-fw" title="KML Tour"></i>';
   }
 }
-
-exports = KMLTourNode;

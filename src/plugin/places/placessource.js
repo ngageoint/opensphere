@@ -1,16 +1,17 @@
-goog.module('plugin.places.PlacesSource');
+goog.declareModuleId('plugin.places.PlacesSource');
 
-const osFeature = goog.require('os.feature');
+import * as osFeature from '../../os/feature/feature.js';
+import KMLSource from '../file/kml/kmlsource.js';
+import {updatePlacemark} from '../file/kml/ui/kmlui.js';
+
 const interpolate = goog.require('os.interpolate');
 const track = goog.require('os.track');
-const KMLSource = goog.require('plugin.file.kml.KMLSource');
-const {updatePlacemark} = goog.require('plugin.file.kml.ui');
 
 
 /**
  * Vector source to manage places created in the application. Also adds specialized handling for tracks.
  */
-class PlacesSource extends KMLSource {
+export default class PlacesSource extends KMLSource {
   /**
    * Constructor.
    * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
@@ -87,5 +88,3 @@ class PlacesSource extends KMLSource {
     }
   }
 }
-
-exports = PlacesSource;

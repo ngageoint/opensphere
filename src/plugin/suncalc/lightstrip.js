@@ -1,16 +1,17 @@
-goog.module('plugin.suncalc.LightStripUI');
+goog.declareModuleId('plugin.suncalc.LightStripUI');
+
+import * as dispatcher from '../../os/dispatcher.js';
+import * as osMap from '../../os/map/map.js';
+import * as ui from '../../os/ui/ui.js';
+import {SettingKey} from './suncalc.js';
 
 const dispose = goog.require('goog.dispose');
 const olProj = goog.require('ol.proj');
 const settings = goog.require('os.config.Settings');
-const dispatcher = goog.require('os.Dispatcher');
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const MapContainer = goog.require('os.MapContainer');
-const osMap = goog.require('os.map');
-const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const TimelineScaleEvent = goog.require('os.ui.timeline.TimelineScaleEvent');
-const {SettingKey} = goog.require('plugin.suncalc');
 
 const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
@@ -20,7 +21,7 @@ const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptio
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<canvas class="position-absolute" height="2" width=""></canvas>',
@@ -32,7 +33,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'lightstrip';
+export const directiveTag = 'lightstrip';
 
 
 /**
@@ -45,7 +46,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the LightStrip directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The scope
@@ -263,9 +264,3 @@ class Controller {
     return true;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

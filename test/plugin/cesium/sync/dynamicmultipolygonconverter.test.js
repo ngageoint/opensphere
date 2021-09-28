@@ -21,8 +21,8 @@ describe('plugin.cesium.sync.DynamicMultiPolygonConverter', () => {
   const Vector = goog.module.get('os.layer.Vector');
   const osMap = goog.module.get('os.map');
   const {EPSG4326} = goog.module.get('os.proj');
-  const VectorContext = goog.module.get('plugin.cesium.VectorContext');
-  const DynamicMultiPolygonConverter = goog.module.get('plugin.cesium.sync.DynamicMultiPolygonConverter');
+  const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');
+  const {default: DynamicMultiPolygonConverter} = goog.module.get('plugin.cesium.sync.DynamicMultiPolygonConverter');
 
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
 

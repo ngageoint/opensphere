@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.AbstractTerrainProvider');
+goog.declareModuleId('plugin.cesium.AbstractTerrainProvider');
 
 const asserts = goog.require('goog.asserts');
 
@@ -22,7 +22,7 @@ const DEFAULT_TILE_SIZE = 128;
  * @implements {Cesium.TerrainProvider}
  * @abstract
  */
-class AbstractTerrainProvider {
+export default class AbstractTerrainProvider {
   /**
    * Constructor.
    * @param {!osx.map.TerrainProviderOptions} options
@@ -236,5 +236,3 @@ class AbstractTerrainProvider {
     return this.hasWaterMask_;
   }
 }
-
-exports = AbstractTerrainProvider;

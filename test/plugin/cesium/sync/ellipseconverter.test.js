@@ -24,8 +24,8 @@ describe('plugin.cesium.sync.EllipseConverter', () => {
   const StyleManager = goog.module.get('os.style.StyleManager');
   const {getRealScene} = goog.module.get('test.plugin.cesium.scene');
   const {getLineRetriever, testLine} = goog.module.get('test.plugin.cesium.sync.linestring');
-  const VectorContext = goog.module.get('plugin.cesium.VectorContext');
-  const EllipseConverter = goog.module.get('plugin.cesium.sync.EllipseConverter');
+  const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');
+  const {default: EllipseConverter} = goog.module.get('plugin.cesium.sync.EllipseConverter');
   const ellipseConverter = new EllipseConverter();
 
   let feature;

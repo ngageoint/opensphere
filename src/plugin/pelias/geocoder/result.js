@@ -1,12 +1,12 @@
-goog.module('plugin.pelias.geocoder.Result');
+goog.declareModuleId('plugin.pelias.geocoder.Result');
+
+import {directiveTag as resultCardEl} from './resultcard.js';
 
 const CoordinateResult = goog.require('os.ui.search.place.CoordinateResult');
-const {directiveTag: resultCardEl} = goog.require('plugin.pelias.geocoder.ResultCardUI');
-
 
 /**
  */
-class Result extends CoordinateResult {
+export default class Result extends CoordinateResult {
   /**
    * Constructor.
    * @param {ol.Feature} result
@@ -23,5 +23,3 @@ class Result extends CoordinateResult {
     return `<${resultCardEl} result="result"></${resultCardEl}>`;
   }
 }
-
-exports = Result;

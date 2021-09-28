@@ -1,4 +1,9 @@
-goog.module('plugin.file.kml.KMLLayerConfig');
+goog.declareModuleId('plugin.file.kml.KMLLayerConfig');
+
+import KMLImporter from './kmlimporter.js';
+import KMLLayer from './kmllayer.js';
+import KMLParser from './kmlparser.js';
+import KMLSource from './kmlsource.js';
 
 const ResponseType = goog.require('goog.net.XhrIo.ResponseType');
 const userAgent = goog.require('goog.userAgent');
@@ -8,16 +13,11 @@ const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
 const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
 const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
 const net = goog.require('os.net');
-const KMLImporter = goog.require('plugin.file.kml.KMLImporter');
-const KMLLayer = goog.require('plugin.file.kml.KMLLayer');
-const KMLParser = goog.require('plugin.file.kml.KMLParser');
-const KMLSource = goog.require('plugin.file.kml.KMLSource');
-
 
 /**
  * @extends {AbstractDataSourceLayerConfig.<plugin.file.kml.ui.KMLNode>}
  */
-class KMLLayerConfig extends AbstractDataSourceLayerConfig {
+export default class KMLLayerConfig extends AbstractDataSourceLayerConfig {
   /**
    * Constructor.
    */
@@ -82,5 +82,3 @@ class KMLLayerConfig extends AbstractDataSourceLayerConfig {
     return source;
   }
 }
-
-exports = KMLLayerConfig;

@@ -2,10 +2,11 @@
  * @fileoverview Parser
  * @suppress {accessControls|duplicate|unusedPrivateMembers}
  */
-goog.module('plugin.file.gpx.GPXParser');
+goog.declareModuleId('plugin.file.gpx.GPXParser');
+
+import * as osMap from '../../../os/map/map.js';
 
 const dom = goog.require('goog.dom');
-
 const Feature = goog.require('ol.Feature');
 const GPX = goog.require('ol.format.GPX');
 const XSD = goog.require('ol.format.XSD');
@@ -15,7 +16,7 @@ const Point = goog.require('ol.geom.Point');
 const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
 const xml = goog.require('ol.xml');
 const text = goog.require('os.file.mime.text');
-const osMap = goog.require('os.map');
+
 const IParser = goog.requireType('os.parse.IParser');
 
 
@@ -25,7 +26,7 @@ const IParser = goog.requireType('os.parse.IParser');
  * @implements {IParser<Feature>}
  * @template T
  */
-class GPXParser {
+export default class GPXParser {
   /**
    * Constructor.
    * @param {Object<string, *>} options Layer configuration options.
@@ -244,4 +245,3 @@ GPX.appendCoordinate_ = function(flatCoordinates, layoutOptions, node, values) {
 
   return flatCoordinates;
 };
-exports = GPXParser;

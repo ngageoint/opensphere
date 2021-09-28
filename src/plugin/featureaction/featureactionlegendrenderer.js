@@ -1,9 +1,10 @@
-goog.module('plugin.im.action.feature.legend');
+goog.declareModuleId('plugin.im.action.feature.legend');
+
+import FeatureActionManager from './featureactionmanager.js';
 
 const osImplements = goog.require('os.implements');
 const legend = goog.require('os.legend');
 const ILegendRenderer = goog.require('os.legend.ILegendRenderer');
-const FeatureActionManager = goog.require('plugin.im.action.feature.Manager');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 const IImportAction = goog.requireType('os.im.action.IImportAction');
@@ -17,7 +18,7 @@ const VectorSource = goog.requireType('os.source.Vector');
  * @param {!VectorLayer} layer The vector layer.
  * @param {!osx.legend.LegendOptions} options The legend options.
  */
-const addToLegend = function(layer, options) {
+export const addToLegend = function(layer, options) {
   if (!options['showFeatureActions']) {
     return;
   }
@@ -42,17 +43,15 @@ const addToLegend = function(layer, options) {
   }
 };
 
-
 /**
  * Test if an entry contains actions that contribute to the legend.
  *
  * @param {!FilterActionEntry} entry The entry.
  * @return {boolean} If the entry has actions that contribute to the legend.
  */
-const hasLegendAction = function(entry) {
+export const hasLegendAction = function(entry) {
   return entry.actions.some(isLegendAction);
 };
-
 
 /**
  * Test if an import action contributes to the legend.
@@ -60,12 +59,6 @@ const hasLegendAction = function(entry) {
  * @param {!IImportAction} action The action.
  * @return {boolean} If the action contributes to the legend.
  */
-const isLegendAction = function(action) {
+export const isLegendAction = function(action) {
   return osImplements(action, ILegendRenderer.ID);
-};
-
-exports = {
-  addToLegend,
-  hasLegendAction,
-  isLegendAction
 };

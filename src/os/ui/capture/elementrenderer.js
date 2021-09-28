@@ -1,7 +1,8 @@
-goog.module('os.ui.capture.ElementRenderer');
+goog.declareModuleId('os.ui.capture.ElementRenderer');
+
+import {overlayCanvas} from '../../capture/capture.js';
 
 const Promise = goog.require('goog.Promise');
-const capture = goog.require('os.capture');
 
 
 /**
@@ -10,7 +11,7 @@ const capture = goog.require('os.capture');
  * @abstract
  * @template T
  */
-class ElementRenderer {
+export default class ElementRenderer {
   /**
    * Constructor.
    * @param {Object=} opt_options Options to configure the renderer
@@ -49,7 +50,7 @@ class ElementRenderer {
           var pos = this.getPosition(canvas);
           this.fillCanvas(canvas, pos[0], pos[1], source.width, source.height);
           this.beforeOverlay();
-          capture.overlayCanvas(source, canvas, pos[0], pos[1]);
+          overlayCanvas(source, canvas, pos[0], pos[1]);
         }
 
         resolve();
@@ -148,5 +149,3 @@ class ElementRenderer {
     return 0;
   }
 }
-
-exports = ElementRenderer;

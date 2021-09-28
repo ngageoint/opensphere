@@ -1,16 +1,18 @@
-goog.module('plugin.ogc.query.OGCQueryHandler');
+goog.declareModuleId('plugin.ogc.query.OGCQueryHandler');
 
 const ParamModifier = goog.require('os.net.ParamModifier');
 const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');
 const OGCFilterFormatter = goog.require('os.ogc.filter.OGCFilterFormatter');
 const QueryHandler = goog.require('os.query.QueryHandler');
-const OGCExclusionFormatter = goog.require('plugin.ogc.query.OGCExclusionFormatter');
-const OGCSpatialFormatter = goog.require('plugin.ogc.query.OGCSpatialFormatter');
+
+
+import OGCExclusionFormatter from './ogcexclusionformatter.js';
+import OGCSpatialFormatter from './ogcspatialformatter.js';
 
 
 /**
  */
-class OGCQueryHandler extends QueryHandler {
+export default class OGCQueryHandler extends QueryHandler {
   /**
    * Constructor.
    * @param {string=} opt_geomColumn
@@ -25,5 +27,3 @@ class OGCQueryHandler extends QueryHandler {
     this.spatialRequired = true;
   }
 }
-
-exports = OGCQueryHandler;

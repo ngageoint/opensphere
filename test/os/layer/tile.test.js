@@ -17,13 +17,13 @@ describe('os.layer.Tile', function() {
   const tilegrid = goog.module.get('ol.tilegrid');
   const Tile = goog.module.get('os.layer.Tile');
   const osMap = goog.module.get('os.map');
-  const TileWMSSource = goog.module.get('plugin.ogc.wms.TileWMSSource');
+  const {default: TileWMSSource} = goog.module.get('plugin.ogc.wms.TileWMSSource');
   var layer;
 
   it('initializes the layer', function() {
     layer = new Tile({
-      source: new TileWMS( ({
-        params: { 'LAYERS': 'dontcare' }
+      source: new TileWMS(({
+        params: {'LAYERS': 'dontcare'}
       }))
     });
   });
@@ -96,8 +96,8 @@ describe('os.layer.Tile', function() {
 
   it('should restore properly', function() {
     var layer = new Tile({
-      source: new TileWMSSource( ({
-        params: { 'LAYERS': 'dontcare' },
+      source: new TileWMSSource(({
+        params: {'LAYERS': 'dontcare'},
         tileGrid: tilegrid.createForProjection(osMap.PROJECTION, ol.DEFAULT_MAX_ZOOM, [256, 256])
       }))
     });

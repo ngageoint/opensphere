@@ -1,10 +1,10 @@
-goog.module('plugin.basemap.v4.BaseMapTag');
+goog.declareModuleId('plugin.basemap.v4.BaseMapTag');
 
 /**
  * XML tags for base map state
  * @enum {string}
  */
-exports = {
+export default {
   MAX_ZOOM: 'maxZoom',
   MIN_ZOOM: 'minZoom'
 };

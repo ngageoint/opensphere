@@ -1,4 +1,18 @@
-goog.module('plugin.ogc.OGCPlugin');
+goog.declareModuleId('plugin.ogc.OGCPlugin');
+
+import GeoServer from './geoserver.js';
+import * as mime from './mime.js';
+import OGCLayerDescriptor from './ogclayerdescriptor.js';
+import * as GeoServerHelpUI from './ui/geoserverhelp.js';
+import {directiveTag as geoserverImportUi} from './ui/geoserverimport.js';
+import * as GeoserverImportForm from './ui/geoserverimportform.js';
+import * as OgcServerHelpUI from './ui/ogcserverhelp.js';
+import {directiveTag as ogcImportUi} from './ui/ogcserverimport.js';
+import * as OgcServerImportForm from './ui/ogcserverimportform.js';
+import QueryWFSLayerConfig from './wfs/querywfslayerconfig.js';
+import WMSLayerConfig from './wms/wmslayerconfig.js';
+import WMTSLayerConfig from './wmts/wmtslayerconfig.js';
+import WMTSServer from './wmts/wmtsserver.js';
 
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
@@ -10,25 +24,11 @@ const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const ProviderImportUI = goog.require('os.ui.ProviderImportUI');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const OGCServer = goog.require('os.ui.ogc.OGCServer');
-const GeoServer = goog.require('plugin.ogc.GeoServer');
-const OGCLayerDescriptor = goog.require('plugin.ogc.OGCLayerDescriptor');
-const mime = goog.require('plugin.ogc.mime');
-const GeoServerHelpUI = goog.require('plugin.ogc.ui.GeoServerHelpUI');
-const GeoserverImportForm = goog.require('plugin.ogc.ui.GeoserverImportForm');
-const {directiveTag: geoserverImportUi} = goog.require('plugin.ogc.ui.GeoserverImportUI');
-const OgcServerHelpUI = goog.require('plugin.ogc.ui.OgcServerHelpUI');
-const OgcServerImportForm = goog.require('plugin.ogc.ui.OgcServerImportForm');
-const {directiveTag: ogcImportUi} = goog.require('plugin.ogc.ui.OgcServerImportUI');
-const QueryWFSLayerConfig = goog.require('plugin.ogc.wfs.QueryWFSLayerConfig');
-const WMSLayerConfig = goog.require('plugin.ogc.wms.WMSLayerConfig');
-const WMTSLayerConfig = goog.require('plugin.ogc.wmts.WMTSLayerConfig');
-const WMTSServer = goog.require('plugin.ogc.wmts.WMTSServer');
-
 
 /**
  * Provides WMS/WFS layer support, both separately and as a grouped layer combination.
  */
-class OGCPlugin extends AbstractPlugin {
+export default class OGCPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -103,5 +103,3 @@ const getDefaultWfsOptions = function() {
 
   return options;
 };
-
-exports = OGCPlugin;

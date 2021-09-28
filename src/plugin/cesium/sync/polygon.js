@@ -1,21 +1,22 @@
-goog.module('plugin.cesium.sync.polygon');
+goog.declareModuleId('plugin.cesium.sync.polygon');
+
+import {GeometryInstanceId} from '../cesium.js';
+import {createColoredPrimitive, createGeometryInstance} from '../primitive.js';
+import {getTransformFunction} from './gettransformfunction.js';
+import {getHeightReference} from './heightreference.js';
+import {getDashPattern} from './linestring.js';
+import {getColor, getLineWidthFromStyle} from './style.js';
 
 const asserts = goog.require('goog.asserts');
 const olcsCore = goog.require('olcs.core');
 const geo = goog.require('os.geo');
-const {GeometryInstanceId} = goog.require('plugin.cesium');
-const {createColoredPrimitive, createGeometryInstance} = goog.require('plugin.cesium.primitive');
-const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
-const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
-const {getDashPattern} = goog.require('plugin.cesium.sync.linestring');
-const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
 const Polygon = goog.requireType('ol.geom.Polygon');
 const Style = goog.requireType('ol.style.Style');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**
@@ -29,7 +30,7 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
  * @param {boolean=} opt_extrude
  * @param {number=} opt_index
  */
-const createAndAddPolygon = (feature, geometry, style, context, opt_polyFlats, opt_offset, opt_ringEnds,
+export const createAndAddPolygon = (feature, geometry, style, context, opt_polyFlats, opt_offset, opt_ringEnds,
     opt_extrude, opt_index) => {
   const poly = createPolygon(feature, geometry, style, context, opt_polyFlats, opt_offset, opt_ringEnds,
       opt_extrude, opt_index);
@@ -56,7 +57,7 @@ const groupPrimitive = [];
  * @param {number=} opt_index
  * @return {?Array<!Cesium.PrimitiveLike>} Note: this array is always the same scratch instance
  */
-const createPolygon = (feature, geometry, style, context, opt_polyFlats, opt_offset, opt_ringEnds,
+export const createPolygon = (feature, geometry, style, context, opt_polyFlats, opt_offset, opt_ringEnds,
     opt_extrude, opt_index) => {
   groupPrimitive.length = 0;
 
@@ -279,7 +280,7 @@ const scratchExtent1 = [Infinity, Infinity, -Infinity, -Infinity];
  * @param {boolean=} opt_extrude
  * @return {Cesium.PolygonHierarchy}
  */
-const createPolygonHierarchy = (geometry, opt_flats, opt_offset, opt_ringEnds, opt_extrude) => {
+export const createPolygonHierarchy = (geometry, opt_flats, opt_offset, opt_ringEnds, opt_extrude) => {
   const transform = getTransformFunction();
 
   const flats = opt_flats || geometry.getFlatCoordinates();
@@ -337,12 +338,4 @@ const createPolygonHierarchy = (geometry, opt_flats, opt_offset, opt_ringEnds, o
 
   // don't create a polygon if we don't have an outer ring
   return positions ? new Cesium.PolygonHierarchy(positions, holes) : null;
-};
-
-
-
-exports = {
-  createAndAddPolygon,
-  createPolygon,
-  createPolygonHierarchy
 };

@@ -25,8 +25,8 @@ describe('plugin.cesium.sync.PointConverter', () => {
   const osMap = goog.module.get('os.map');
   const osProj = goog.module.get('os.proj');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
-  const VectorContext = goog.module.get('plugin.cesium.VectorContext');
-  const PointConverter = goog.module.get('plugin.cesium.sync.PointConverter');
+  const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');
+  const {default: PointConverter} = goog.module.get('plugin.cesium.sync.PointConverter');
   const pointConverter = new PointConverter();
 
   let feature;

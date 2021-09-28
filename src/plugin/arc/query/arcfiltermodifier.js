@@ -1,4 +1,4 @@
-goog.module('plugin.arc.query.ArcFilterModifier');
+goog.declareModuleId('plugin.arc.query.ArcFilterModifier');
 
 const ParamModifier = goog.require('os.net.ParamModifier');
 
@@ -26,4 +26,4 @@ class ArcFilterModifier extends ParamModifier {
   }
 }
 
-exports = ArcFilterModifier;
+export default ArcFilterModifier;

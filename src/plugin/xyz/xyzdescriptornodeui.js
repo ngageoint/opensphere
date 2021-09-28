@@ -1,4 +1,4 @@
-goog.module('plugin.xyz.XYZDescriptorNodeUI');
+goog.declareModuleId('plugin.xyz.XYZDescriptorNodeUI');
 
 const Module = goog.require('os.ui.Module');
 const {Controller: DescriptorNodeUICtrl} = goog.require('os.ui.data.DescriptorNodeUI');
@@ -12,7 +12,7 @@ const ConfigDescriptor = goog.requireType('os.data.ConfigDescriptor');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   return {
     restrict: 'AE',
     replace: true,
@@ -30,12 +30,11 @@ const directive = () => {
   };
 };
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'xyzdescriptornodeui';
+export const directiveTag = 'xyzdescriptornodeui';
 
 
 /**
@@ -48,7 +47,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for descriptor node UI.
  *
  */
-class Controller extends DescriptorNodeUICtrl {
+export class Controller extends DescriptorNodeUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -92,9 +91,3 @@ class Controller extends DescriptorNodeUICtrl {
     uiWindow.create(windowOptions, editUi, undefined, undefined, undefined, scopeOptions);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

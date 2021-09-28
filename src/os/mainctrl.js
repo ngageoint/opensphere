@@ -1,4 +1,4 @@
-goog.module('os.MainCtrl');
+goog.declareModuleId('os.MainCtrl');
 
 goog.require('os.file.mime.any');
 goog.require('os.ui.AddExportOptionsUI');
@@ -8,6 +8,45 @@ goog.require('os.ui.alert.AlertsUI');
 goog.require('os.ui.file.AnyTypeImportUI');
 goog.require('os.ui.search.SearchResultsUI');
 goog.require('os.ui.urlDragDropDirective');
+
+import ArcPlugin from '../plugin/arc/arcplugin.js';
+import AreaPlugin from '../plugin/area/areaplugin.js';
+import AreaDataPlugin from '../plugin/areadata/areadataplugin.js';
+import AudioPlugin from '../plugin/audio/audioplugin.js';
+import BaseMapPlugin from '../plugin/basemap/basemapplugin.js';
+import CapturePlugin from '../plugin/capture/captureplugin.js';
+import CesiumPlugin from '../plugin/cesium/cesiumplugin.js';
+import ConfigPlugin from '../plugin/config/configplugin.js';
+import SearchPlugin from '../plugin/descriptor/searchplugin.js';
+import FeatureActionPlugin from '../plugin/featureaction/featureactionplugin.js';
+import CSVPlugin from '../plugin/file/csv/csvplugin.js';
+import GeoJSONPlugin from '../plugin/file/geojson/geojsonplugin.js';
+import GMLPlugin from '../plugin/file/gml/gmlplugin.js';
+import GPXPlugin from '../plugin/file/gpx/gpxplugin.js';
+import KMLPlugin from '../plugin/file/kml/kmlplugin.js';
+import SHPPlugin from '../plugin/file/shp/shpplugin.js';
+import ZIPPlugin from '../plugin/file/zip/zipplugin.js';
+import GooglePlacesPlugin from '../plugin/google/places/plugin.js';
+import HeatmapPlugin from '../plugin/heatmap/heatmapplugin.js';
+import OGCPlugin from '../plugin/ogc/ogcplugin.js';
+import OpenpagePlugin from '../plugin/openpage/openpageplugin.js';
+import NominatimPlugin from '../plugin/osm/nom/nominatimplugin.js';
+import OverviewPlugin from '../plugin/overview/overviewplugin.js';
+import ParamsPlugin from '../plugin/params/paramsplugin.js';
+import PeliasGeocoderPlugin from '../plugin/pelias/geocoder/plugin.js';
+import PlacesPlugin from '../plugin/places/placesplugin.js';
+import PositionPlugin from '../plugin/position/positionplugin.js';
+import PersistPlugin from '../plugin/storage/persistplugin.js';
+import SunCalcPlugin from '../plugin/suncalc/suncalcplugin.js';
+import TrackPlugin from '../plugin/track/trackplugin.js';
+import VectorTilePlugin from '../plugin/vectortile/vectortileplugin.js';
+import VectorToolsPlugin from '../plugin/vectortools/vectortoolsplugin.js';
+import WeatherPlugin from '../plugin/weather/weatherplugin.js';
+import XYZPlugin from '../plugin/xyz/xyzplugin.js';
+import * as dispatcher from './dispatcher.js';
+import * as os from './os.js';
+import AbstractMainCtrl from './ui/abstractmainctrl.js';
+import {MODAL_SELECTOR, apply, waitForAngular} from './ui/ui.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 const {getDocument} = goog.require('goog.dom');
@@ -20,11 +59,7 @@ const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
 const log = goog.require('goog.log');
 const {IE, GECKO, LINUX} = goog.require('goog.userAgent');
-
 const ViewHint = goog.require('ol.ViewHint');
-
-const os = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
@@ -110,9 +145,7 @@ const {decrementResetTasks, incrementResetTasks} = goog.require('os.storage');
 const StyleManager = goog.require('os.style.StyleManager');
 const {setStyleManager} = goog.require('os.style.instance');
 const {initOffset} = goog.require('os.time');
-const ui = goog.require('os.ui');
 const AbstractMainContent = goog.require('os.ui.AbstractMainContent');
-const AbstractMainCtrl = goog.require('os.ui.AbstractMainCtrl');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const ClearEntry = goog.require('os.ui.clear.ClearEntry');
 const ClearManager = goog.require('os.ui.clear.ClearManager');
@@ -157,40 +190,6 @@ const osWindow = goog.require('os.ui.window');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const UrlManager = goog.require('os.url.UrlManager');
 
-const ArcPlugin = goog.require('plugin.arc.ArcPlugin');
-const AreaPlugin = goog.require('plugin.area.AreaPlugin');
-const AreaDataPlugin = goog.require('plugin.areadata.AreaDataPlugin');
-const AudioPlugin = goog.require('plugin.audio.AudioPlugin');
-const BaseMapPlugin = goog.require('plugin.basemap.BaseMapPlugin');
-const CapturePlugin = goog.require('plugin.capture.CapturePlugin');
-const pluginCesiumPlugin = goog.require('plugin.cesium.Plugin');
-const pluginConfigPlugin = goog.require('plugin.config.Plugin');
-const SearchPlugin = goog.require('plugin.descriptor.SearchPlugin');
-const CSVPlugin = goog.require('plugin.file.csv.CSVPlugin');
-const GeoJSONPlugin = goog.require('plugin.file.geojson.GeoJSONPlugin');
-const GMLPlugin = goog.require('plugin.file.gml.GMLPlugin');
-const GPXPlugin = goog.require('plugin.file.gpx.GPXPlugin');
-const KMLPlugin = goog.require('plugin.file.kml.KMLPlugin');
-const SHPPlugin = goog.require('plugin.file.shp.SHPPlugin');
-const ZIPPlugin = goog.require('plugin.file.zip.ZIPPlugin');
-const pluginGooglePlacesPlugin = goog.require('plugin.google.places.Plugin');
-const HeatmapPlugin = goog.require('plugin.heatmap.HeatmapPlugin');
-const pluginImActionFeaturePlugin = goog.require('plugin.im.action.feature.Plugin');
-const OGCPlugin = goog.require('plugin.ogc.OGCPlugin');
-const pluginOpenpagePlugin = goog.require('plugin.openpage.Plugin');
-const NominatimPlugin = goog.require('plugin.osm.nom.NominatimPlugin');
-const OverviewPlugin = goog.require('plugin.overview.OverviewPlugin');
-const ParamsPlugin = goog.require('plugin.params.ParamsPlugin');
-const Plugin = goog.require('plugin.pelias.geocoder.Plugin');
-const PlacesPlugin = goog.require('plugin.places.PlacesPlugin');
-const PositionPlugin = goog.require('plugin.position.PositionPlugin');
-const PersistPlugin = goog.require('plugin.storage.PersistPlugin');
-const SunCalcPlugin = goog.require('plugin.suncalc.SunCalcPlugin');
-const TrackPlugin = goog.require('plugin.track.TrackPlugin');
-const VectorTilePlugin = goog.require('plugin.vectortile.VectorTilePlugin');
-const VectorToolsPlugin = goog.require('plugin.vectortools.VectorToolsPlugin');
-const WeatherPlugin = goog.require('plugin.weather.WeatherPlugin');
-const XYZPlugin = goog.require('plugin.xyz.XYZPlugin');
 
 const LayerConfigEvent = goog.requireType('os.events.LayerConfigEvent');
 const OSFile = goog.requireType('os.file.File');
@@ -202,7 +201,7 @@ const UIEvent = goog.requireType('os.ui.events.UIEvent');
  * Controller function for the Main directive
  * @unrestricted
  */
-class Controller extends AbstractMainCtrl {
+export default class Controller extends AbstractMainCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -298,7 +297,6 @@ class Controller extends AbstractMainCtrl {
     // set state manager global reference
     var stateManager = StateManager.getInstance();
     setStateManager(stateManager);
-    os.stateManager = stateManager;
 
     setStyleManager(StyleManager.getInstance());
 
@@ -510,19 +508,19 @@ class Controller extends AbstractMainCtrl {
 
     // Only "os" application plugins are added here
     const pluginManager = PluginManager.getInstance();
-    pluginManager.addPlugin(new pluginCesiumPlugin());
-    pluginManager.addPlugin(pluginImActionFeaturePlugin.getInstance());
+    pluginManager.addPlugin(new CesiumPlugin());
+    pluginManager.addPlugin(FeatureActionPlugin.getInstance());
     pluginManager.addPlugin(new SearchPlugin());
     pluginManager.addPlugin(new AreaPlugin());
     pluginManager.addPlugin(new AreaDataPlugin());
     pluginManager.addPlugin(new AudioPlugin());
     pluginManager.addPlugin(CapturePlugin.getInstance());
-    pluginManager.addPlugin(pluginConfigPlugin.getInstance());
+    pluginManager.addPlugin(ConfigPlugin.getInstance());
     pluginManager.addPlugin(new OGCPlugin());
     pluginManager.addPlugin(new XYZPlugin());
     pluginManager.addPlugin(new BaseMapPlugin());
-    pluginManager.addPlugin(new pluginGooglePlacesPlugin());
-    pluginManager.addPlugin(new Plugin());
+    pluginManager.addPlugin(new GooglePlacesPlugin());
+    pluginManager.addPlugin(new PeliasGeocoderPlugin());
     pluginManager.addPlugin(new NominatimPlugin());
     pluginManager.addPlugin(new CSVPlugin());
     pluginManager.addPlugin(new GMLPlugin());
@@ -541,7 +539,7 @@ class Controller extends AbstractMainCtrl {
     pluginManager.addPlugin(ParamsPlugin.getInstance());
     pluginManager.addPlugin(SunCalcPlugin.getInstance());
     pluginManager.addPlugin(TrackPlugin.getInstance());
-    pluginManager.addPlugin(pluginOpenpagePlugin.getInstance());
+    pluginManager.addPlugin(OpenpagePlugin.getInstance());
     pluginManager.addPlugin(new PersistPlugin());
     pluginManager.addPlugin(VectorTilePlugin.getInstance());
   }
@@ -719,7 +717,7 @@ class Controller extends AbstractMainCtrl {
     var target = /** @type {Element} */ (event.target);
     var ctrlOr = os.isOSX() ? event.metaKey : event.ctrlKey;
 
-    if (!document.querySelector(ui.MODAL_SELECTOR)) {
+    if (!document.querySelector(MODAL_SELECTOR)) {
       if (target.tagName !== TagName.INPUT.toString() &&
           target.tagName !== TagName.TEXTAREA.toString()) {
         switch (event.keyCode) {
@@ -768,7 +766,7 @@ class Controller extends AbstractMainCtrl {
             Metrics.getInstance().updateMetric(MapKeys.SAVE_STATE_KB, 1);
             event.preventDefault();
             StateManager.getInstance().startExport();
-            ui.apply(this.scope);
+            apply(this.scope);
           }
           break;
         default:
@@ -919,7 +917,7 @@ class Controller extends AbstractMainCtrl {
         var open = typeof event.value === 'boolean' ? event.value :
           (event.params != null ? true : !this[event.id]);
         this[event.id] = open;
-        ui.apply(this.scope);
+        apply(this.scope);
       }
     } else {
       openWindow(event.id);
@@ -933,7 +931,7 @@ class Controller extends AbstractMainCtrl {
       // timeout so Angular will start creating the window, then wait for it to finish initializing everything before
       // calling setParams
       this.timeout_(function() {
-        ui.waitForAngular(goog.partial(osWindow.setParams, event.id, event.params));
+        waitForAngular(goog.partial(osWindow.setParams, event.id, event.params));
       });
     }
   }
@@ -1090,6 +1088,3 @@ Controller.unsupportedBrowserCancelCallback = undefined;
 Controller.UNSUPPORTED_BROWSER_TEXT = 'Internet Explorer does not offer a satisfactory user experience and is ' +
     'unsupported by {APP}. The application may become unresponsive as a result, and we recommend using ' +
     'Google Chrome. <b>Continue at your own risk.</b>';
-
-
-exports = Controller;

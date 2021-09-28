@@ -1,11 +1,16 @@
-goog.module('os.ui.AbstractMainCtrl');
+goog.declareModuleId('os.ui.AbstractMainCtrl');
 
 goog.require('os.ui.GlobalMenuUI');
 goog.require('os.ui.ListUI');
 goog.require('os.ui.alert.AlertPopupUI');
 goog.require('os.ui.onboarding.ContextOnboardingUI');
 goog.require('os.ui.onboarding.OnboardingUI');
-goog.require('polyfill.chardetng');
+
+import '../../polyfill/chardetng.js';
+
+import ElectronPlugin from '../../plugin/electron/electronplugin.js';
+import {browserVersion, operatingSystem, setPeer} from '../os.js';
+import {apply, injector, setInjector} from './ui.js';
 
 const Timer = goog.require('goog.Timer');
 const EventTarget = goog.require('goog.events.EventTarget');
@@ -14,7 +19,6 @@ const {getVersion, isFirefox} = goog.require('goog.labs.userAgent.browser');
 const NetEventType = goog.require('goog.net.EventType');
 const {getRandomString} = goog.require('goog.string');
 const {IE} = goog.require('goog.userAgent');
-const os = goog.require('os');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const {getAppName} = goog.require('os.config');
@@ -30,7 +34,6 @@ const ProxyHandler = goog.require('os.net.ProxyHandler');
 const RequestHandlerFactory = goog.require('os.net.RequestHandlerFactory');
 const PluginManager = goog.require('os.plugin.PluginManager');
 const replacers = goog.require('os.time.replacers');
-const ui = goog.require('os.ui');
 const ConsentUI = goog.require('os.ui.ConsentUI');
 const EventType = goog.require('os.ui.help.EventType');
 const MetricsManager = goog.require('os.ui.metrics.MetricsManager');
@@ -38,7 +41,6 @@ const NotificationManager = goog.require('os.ui.notification.NotificationManager
 const OnboardingManager = goog.require('os.ui.onboarding.OnboardingManager');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const Peer = goog.require('os.xt.Peer');
-const ElectronPlugin = goog.require('plugin.electron.ElectronPlugin');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 
@@ -47,7 +49,7 @@ const GoogEvent = goog.requireType('goog.events.Event');
  * Controller function for the Main directive
  * @unrestricted
  */
-class Controller {
+export default class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -64,7 +66,7 @@ class Controller {
     this.scope = $scope;
 
     // Set injector for global use (for when things outside of Angular need to use services).
-    ui.setInjector($injector);
+    setInjector($injector);
     fixInjectorInvoke($injector);
 
     /**
@@ -96,7 +98,7 @@ class Controller {
     $scope['pluginsLoading'] = false;
     this.pluginLoadingTimer_ = Timer.callOnce(function() {
       $scope['pluginsLoading'] = true;
-      ui.apply($scope);
+      apply($scope);
     }, 1500);
 
     // add window close handler
@@ -204,7 +206,7 @@ class Controller {
     Metrics.getInstance();
     MetricsManager.getInstance();
 
-    os.setPeer(Peer.getInstance());
+    setPeer(Peer.getInstance());
 
     const notificationManager = NotificationManager.getInstance();
     notificationManager.setAppTitle(this.scope['appName']);
@@ -280,7 +282,7 @@ class Controller {
      *
      * @return {string}
      */
-    ui.injector.get('$rootScope')['getUniqueString'] = function() {
+    injector.get('$rootScope')['getUniqueString'] = function() {
       return getRandomString();
     };
   }
@@ -304,12 +306,12 @@ class Controller {
    */
   onPluginsLoaded(opt_e) {
     // send browser info metric
-    Metrics.getInstance().updateMetric(BROWSER + '.' + os.browserVersion(), 1);
-    Metrics.getInstance().updateMetric(os.operatingSystem(), 1);
+    Metrics.getInstance().updateMetric(BROWSER + '.' + browserVersion(), 1);
+    Metrics.getInstance().updateMetric(operatingSystem(), 1);
     this.scope['pluginsReady'] = true;
     Timer.clear(this.pluginLoadingTimer_);
     this.scope['pluginsLoading'] = false;
-    ui.apply(this.scope);
+    apply(this.scope);
 
     this.initXt();
   }
@@ -359,5 +361,3 @@ class Controller {
    */
   addMetricsPlugins() {}
 }
-
-exports = Controller;

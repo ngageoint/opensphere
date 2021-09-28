@@ -1,4 +1,4 @@
-goog.module('plugin.file.gml.GMLMixin');
+goog.declareModuleId('plugin.file.gml.GMLMixin');
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const GMLBase = goog.require('ol.format.GMLBase');
@@ -16,7 +16,7 @@ let initialized = false;
 /**
  * Initialize the mixin.
  */
-const init = () => {
+export const init = () => {
   if (!initialized) {
     initialized = true;
 
@@ -37,5 +37,3 @@ const init = () => {
     };
   }
 };
-
-exports = {init};

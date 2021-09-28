@@ -1,22 +1,21 @@
-goog.module('plugin.track.TrackPlugin');
+goog.declareModuleId('plugin.track.TrackPlugin');
 
-const menu = goog.require('plugin.track.menu');
-const track = goog.require('plugin.track');
+import * as track from './track.js';
+import TrackInteraction from './trackinteraction.js';
+import * as menu from './trackmenu.js';
+import Metrics from './trackmetrics.js';
+
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const MapContainer = goog.require('os.MapContainer');
-const Metrics = goog.require('plugin.track.Metrics');
 const MetricsManager = goog.require('os.ui.metrics.MetricsManager');
 const Settings = goog.require('os.config.Settings');
-const TrackInteraction = goog.require('plugin.track.TrackInteraction');
-
 
 const settings = Settings.getInstance();
-
 
 /**
  * Provides the ability to create tracks that can be animated over time.
  */
-class TrackPlugin extends AbstractPlugin {
+export default class TrackPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -43,6 +42,3 @@ class TrackPlugin extends AbstractPlugin {
 }
 
 goog.addSingletonGetter(TrackPlugin);
-
-
-exports = TrackPlugin;

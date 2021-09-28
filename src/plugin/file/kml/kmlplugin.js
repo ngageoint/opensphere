@@ -1,7 +1,16 @@
-goog.module('plugin.file.kml.KMLPlugin');
+goog.declareModuleId('plugin.file.kml.KMLPlugin');
 
-// Load to register directive with Angular.
-goog.require('plugin.file.kml.ui.PlacemarkEditUI');
+import './ui/placemarkedit.js';
+
+import KMLDescriptor from './kmldescriptor.js';
+import KMLExporter from './kmlexporter.js';
+import KMLFeatureParser from './kmlfeatureparser.js';
+import KMLLayerConfig from './kmllayerconfig.js';
+import * as menu from './kmlmenu.js';
+import KMLParser from './kmlparser.js';
+import KMLProvider from './kmlprovider.js';
+import * as mime from './mime.js';
+import KMLImportUI from './ui/kmlimportui.js';
 
 const Settings = goog.require('os.config.Settings');
 const DataManager = goog.require('os.data.DataManager');
@@ -12,21 +21,12 @@ const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const exportManager = goog.require('os.ui.exportManager');
 const kml = goog.require('os.ui.file.kml');
 const ImportManager = goog.require('os.ui.im.ImportManager');
-const KMLDescriptor = goog.require('plugin.file.kml.KMLDescriptor');
-const KMLExporter = goog.require('plugin.file.kml.KMLExporter');
-const KMLFeatureParser = goog.require('plugin.file.kml.KMLFeatureParser');
-const KMLLayerConfig = goog.require('plugin.file.kml.KMLLayerConfig');
-const KMLParser = goog.require('plugin.file.kml.KMLParser');
-const KMLProvider = goog.require('plugin.file.kml.KMLProvider');
-const menu = goog.require('plugin.file.kml.menu');
-const mime = goog.require('plugin.file.kml.mime');
-const KMLImportUI = goog.require('plugin.file.kml.ui.KMLImportUI');
 
 
 /**
  * Provides KML support
  */
-class KMLPlugin extends AbstractPlugin {
+export default class KMLPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -102,6 +102,3 @@ KMLPlugin.TYPE = 'KML Layers';
  * @const
  */
 KMLPlugin.ICON_MIRROR = 'plugin.file.kml.icon.mirror';
-
-
-exports = KMLPlugin;

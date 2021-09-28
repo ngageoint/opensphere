@@ -1,12 +1,13 @@
-goog.module('plugin.cesium.interaction.measure');
+goog.declareModuleId('plugin.cesium.interaction.measure');
+
+import {getFont} from '../../../os/style/label.js';
+import * as drawpolygon from './cesiumdrawpolygoninteraction.js';
 
 const MapContainer = goog.require('os.MapContainer');
 const DrawPolygon = goog.require('os.interaction.DrawPolygon');
 const Measure = goog.require('os.interaction.Measure');
-const osLabel = goog.require('os.style.label');
-const drawpolygon = goog.require('plugin.cesium.interaction.drawpolygon');
 
-const CesiumRenderer = goog.requireType('plugin.cesium.CesiumRenderer');
+const {default: CesiumRenderer} = goog.requireType('plugin.cesium.CesiumRenderer');
 
 
 /**
@@ -21,7 +22,7 @@ let cesiumLabels = undefined;
  *
  * @this {Measure}
  */
-const cleanupWebGL = function() {
+export const cleanupWebGL = function() {
   drawpolygon.cleanupWebGL.call(this);
 
   var webgl = /** @type {CesiumRenderer|undefined} */ (MapContainer.getInstance().getWebGLRenderer());
@@ -40,7 +41,7 @@ const cleanupWebGL = function() {
  * @this {Measure}
  * @suppress {accessControls}
  */
-const updateWebGL = function() {
+export const updateWebGL = function() {
   drawpolygon.updateWebGL.call(this);
 
   if (MapContainer.getInstance().is3DEnabled()) {
@@ -71,7 +72,7 @@ const updateWebGL = function() {
       var i = this.distances_.length - 1;
       label.show = false;
       label.eyeOffset = new Cesium.Cartesian3(0.0, 0.0, -(camera.getDistanceToCenter() / 5));
-      label.font = osLabel.getFont(Measure.LABEL_FONT_SIZE_);
+      label.font = getFont(Measure.LABEL_FONT_SIZE_);
       label.style = Cesium.LabelStyle.FILL_AND_OUTLINE;
       label.outlineWidth = 2;
       label.outlineColor = new Cesium.Color(0, 0, 0);
@@ -81,9 +82,4 @@ const updateWebGL = function() {
       label.show = true;
     }
   }
-};
-
-exports = {
-  cleanupWebGL,
-  updateWebGL
 };

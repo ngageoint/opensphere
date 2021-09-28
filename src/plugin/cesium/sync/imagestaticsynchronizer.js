@@ -1,4 +1,8 @@
-goog.module('plugin.cesium.sync.ImageStaticSynchronizer');
+goog.declareModuleId('plugin.cesium.sync.ImageStaticSynchronizer');
+
+import * as dispatcher from '../../../os/dispatcher.js';
+import {PROJECTION} from '../../../os/map/map.js';
+import CesiumSynchronizer from './cesiumsynchronizer.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const ImageState = goog.require('ol.ImageState');
@@ -7,13 +11,10 @@ const olEvents = goog.require('ol.events');
 const OLEventType = goog.require('ol.events.EventType');
 const olProj = goog.require('ol.proj');
 const olSourceImageStatic = goog.require('ol.source.ImageStatic');
-const dispatcher = goog.require('os.Dispatcher');
 const MapEvent = goog.require('os.MapEvent');
 const LayerPropertyChange = goog.require('os.layer.PropertyChange');
-const osMap = goog.require('os.map');
 const osProj = goog.require('os.proj');
 const ImageStatic = goog.require('os.source.ImageStatic');
-const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer');
 
 const ImageBase = goog.requireType('ol.ImageBase');
 const PluggableMap = goog.requireType('ol.PluggableMap');
@@ -28,7 +29,7 @@ const ImageLayer = goog.requireType('os.layer.Image');
  *
  * @extends {CesiumSynchronizer<ImageLayer>}
  */
-class ImageStaticSynchronizer extends CesiumSynchronizer {
+export default class ImageStaticSynchronizer extends CesiumSynchronizer {
   /**
    * Constructor.
    * @param {!OLImageLayer} layer The OpenLayers image layer
@@ -116,7 +117,7 @@ class ImageStaticSynchronizer extends CesiumSynchronizer {
       url = el.toDataURL();
     }
 
-    var extent = olProj.transformExtent(this.image.getExtent(), osMap.PROJECTION, osProj.EPSG4326);
+    var extent = olProj.transformExtent(this.image.getExtent(), PROJECTION, osProj.EPSG4326);
 
     if (!this.primitive && url && extent) {
       this.primitive = new Cesium.Primitive({
@@ -182,5 +183,3 @@ class ImageStaticSynchronizer extends CesiumSynchronizer {
     }
   }
 }
-
-exports = ImageStaticSynchronizer;

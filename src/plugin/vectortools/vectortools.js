@@ -1,4 +1,6 @@
-goog.module('plugin.vectortools');
+goog.declareModuleId('plugin.vectortools');
+
+import Options from './options.js';
 
 const googArray = goog.require('goog.array');
 const googString = goog.require('goog.string');
@@ -12,7 +14,6 @@ const layer = goog.require('os.layer');
 const VectorLayer = goog.require('os.layer.Vector');
 const VectorSource = goog.require('os.source.Vector');
 const StyleType = goog.require('os.style.StyleType');
-const Options = goog.require('plugin.vectortools.Options');
 
 const Feature = goog.requireType('ol.Feature');
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
@@ -30,24 +31,22 @@ let option = Options.SHOWN;
  * Get the currently selected option.
  * @return {Options}
  */
-const getOption = () => option;
-
+export const getOption = () => option;
 
 /**
  * Set the currently selected option.
  * @param {Options} value The option.
  */
-const setOption = (value) => {
+export const setOption = (value) => {
   option = value;
 };
-
 
 /**
  * @param {VectorSource} source The vector source
  * @param {Options=} opt_which Which features to retrieve
  * @return {Array<!Feature>} the features
  */
-const getFeatures = function(source, opt_which) {
+export const getFeatures = function(source, opt_which) {
   opt_which = opt_which || option;
 
   switch (opt_which) {
@@ -70,7 +69,7 @@ const getFeatures = function(source, opt_which) {
  * @param {string} sourceId
  * @return {function(Feature):Feature} map function used for cloning lists of features
  */
-const getFeatureCloneFunction = function(sourceId) {
+export const getFeatureCloneFunction = function(sourceId) {
   /**
    * @param {Feature} feature Original feature
    * @return {Feature} copied feature
@@ -94,7 +93,7 @@ const getFeatureCloneFunction = function(sourceId) {
  * @param {(string|Object)=} opt_restoreFromIdOrConfig An optional layerId or config to restore from
  * @return {VectorLayer}
  */
-const addNewLayer = function(opt_restoreFromIdOrConfig) {
+export const addNewLayer = function(opt_restoreFromIdOrConfig) {
   var mm = MapContainer.getInstance();
   var id = googString.getRandomString();
   var newSource = new VectorSource();
@@ -141,7 +140,7 @@ const addNewLayer = function(opt_restoreFromIdOrConfig) {
  * @param {!Array<string>} sourceIds The list of source ids
  * @return {!Object<string, !Object<string, string>>} map of sourceIds to columns that should change
  */
-const getColumnMappings = function(sourceIds) {
+export const getColumnMappings = function(sourceIds) {
   var filterKeys = sourceIds.map(mapIdToFilterKey_);
   var mappings = ColumnMappingManager.getInstance().getAll();
 
@@ -249,7 +248,7 @@ const mapIdToFilterKey_ = function(id) {
  * @param {Object<string, string>} mapping
  * @param {Feature} feature
  */
-const runColumnMapping = function(mapping, feature) {
+export const runColumnMapping = function(mapping, feature) {
   if (mapping) {
     for (var key in mapping) {
       var newKey = mapping[key];
@@ -271,7 +270,7 @@ const runColumnMapping = function(mapping, feature) {
  * @param {!Object<string, !Object<string, string>>} mappings
  * @return {!Array<!ColumnDefinition|string>}
  */
-const getCombinedColumns = function(sources, mappings) {
+export const getCombinedColumns = function(sources, mappings) {
   return sources.reduce(function(columns, source) {
     var filter = function(column) {
       if (typeof column === 'string') {
@@ -304,15 +303,4 @@ const getCombinedColumns = function(sources, mappings) {
     // clone every resulting column, otherwise they will be bound together by reference
     return column.clone();
   });
-};
-
-exports = {
-  getOption,
-  setOption,
-  getFeatures,
-  getFeatureCloneFunction,
-  addNewLayer,
-  getColumnMappings,
-  runColumnMapping,
-  getCombinedColumns
 };

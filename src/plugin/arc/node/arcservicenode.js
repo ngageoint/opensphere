@@ -1,4 +1,8 @@
-goog.module('plugin.arc.node.ArcServiceNode');
+goog.declareModuleId('plugin.arc.node.ArcServiceNode');
+
+import * as arc from '../arc.js';
+import ArcImageLayerConfig from '../layer/arcimagelayerconfig.js';
+import ArcLayerDescriptor from '../layer/arclayerdescriptor.js';
 
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
@@ -13,13 +17,10 @@ const Icons = goog.require('os.ui.Icons');
 const BaseProvider = goog.require('os.ui.data.BaseProvider');
 const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
 const LoadingNode = goog.require('os.ui.slick.LoadingNode');
-const arc = goog.require('plugin.arc');
-const ArcImageLayerConfig = goog.require('plugin.arc.layer.ArcImageLayerConfig');
-const ArcLayerDescriptor = goog.require('plugin.arc.layer.ArcLayerDescriptor');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
-const ArcServer = goog.requireType('plugin.arc.ArcServer');
+const {default: ArcServer} = goog.requireType('plugin.arc.ArcServer');
 
 
 /**
@@ -246,4 +247,4 @@ class ArcServiceNode extends LoadingNode {
 const logger = log.getLogger('plugin.arc.node.ArcServiceNode');
 
 
-exports = ArcServiceNode;
+export default ArcServiceNode;

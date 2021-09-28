@@ -1,12 +1,11 @@
-goog.module('plugin.im.action.feature.SoundAction');
+goog.declareModuleId('plugin.im.action.feature.SoundAction');
+
+import {directiveTag as configUi, setDefaultConfig} from './ui/featuresoundactionconfig.js';
 
 const AudioManager = goog.require('os.audio.AudioManager');
-
 const AbstractImportAction = goog.require('os.im.action.AbstractImportAction');
 const osObject = goog.require('os.object');
 const osXml = goog.require('os.xml');
-const {directiveTag: configUi, setDefaultConfig} = goog.require('plugin.im.action.feature.ui.SoundConfigUI');
-
 
 /**
  * Tag names used for XML persistence.
@@ -31,7 +30,7 @@ const DEFAULT_SOUND = 'Default';
  * @extends {AbstractImportAction<ol.Feature>}
  * @unrestricted
  */
-class SoundAction extends AbstractImportAction {
+export default class SoundAction extends AbstractImportAction {
   /**
    * Constructor.
    */
@@ -171,6 +170,3 @@ SoundAction.DEFAULT_CONFIG = {
   'playDelay': 30
 };
 setDefaultConfig(SoundAction.DEFAULT_CONFIG);
-
-
-exports = SoundAction;

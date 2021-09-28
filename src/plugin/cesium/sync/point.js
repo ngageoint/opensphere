@@ -1,22 +1,23 @@
-goog.module('plugin.cesium.sync.point');
+goog.declareModuleId('plugin.cesium.sync.point');
+
+import {ZoomScale} from '../../../os/map/map.js';
+import {getTransformFunction} from './gettransformfunction.js';
+import {getHeightReference} from './heightreference.js';
+import {drawShape} from './shape.js';
 
 const {hashCode} = goog.require('goog.string');
 const {getUid} = goog.require('ol');
 const OLIconStyle = goog.require('ol.style.Icon');
 const OLRegularShape = goog.require('ol.style.RegularShape');
 const olcsCore = goog.require('olcs.core');
-const osMap = goog.require('os.map');
 const OSIconStyle = goog.require('os.style.Icon');
-const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
-const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
-const {drawShape} = goog.require('plugin.cesium.sync.shape');
 
 const Feature = goog.requireType('ol.Feature');
 const MultiPoint = goog.requireType('ol.geom.MultiPoint');
 const Point = goog.requireType('ol.geom.Point');
 const OLImageStyle = goog.requireType('ol.style.Image');
 const Style = goog.requireType('ol.style.Style');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**
@@ -31,7 +32,7 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
  * @param {number=} opt_index
  * @return {Cesium.optionsBillboardCollectionAdd}
  */
-const createBillboard = (feature, geometry, style, context, opt_flatCoords, opt_offset, opt_index) => {
+export const createBillboard = (feature, geometry, style, context, opt_flatCoords, opt_offset, opt_index) => {
   const show = context.isFeatureShown(feature);
   const isIcon = style instanceof OLIconStyle;
   const distanceScalar = isIcon ? getDistanceScalar() : undefined;
@@ -46,7 +47,6 @@ const createBillboard = (feature, geometry, style, context, opt_flatCoords, opt_
   return options;
 };
 
-
 /**
  * Update a Cesium Billboard from an OpenLayers image style.
  *
@@ -59,7 +59,7 @@ const createBillboard = (feature, geometry, style, context, opt_flatCoords, opt_
  * @param {number=} opt_offset
  * @param {number=} opt_index
  */
-const updateBillboard = (feature, geometry, style, context, bb, opt_flatCoords, opt_offset, opt_index) => {
+export const updateBillboard = (feature, geometry, style, context, bb, opt_flatCoords, opt_offset, opt_index) => {
   // rotate on z-axis, so rotation references the cardinal direction.
   // note: Cesium doesn't handle this well when the camera is rotated more than +/- 90 degrees from north.
   bb.alignedAxis = Cesium.Cartesian3.UNIT_Z;
@@ -256,7 +256,7 @@ const updateBillboardImage = (bb, imageId, image) => {
  * @param {!Cesium.Billboard} bb
  * @param {OLImageStyle} style
  */
-const updateStyleAfterLoad = (bb, style) => {
+export const updateStyleAfterLoad = (bb, style) => {
   if (style instanceof OLIconStyle) {
     if (bb._imageIndexPromise) {
       bb._imageIndexPromise.then(() => updateStyleAfterLoad(bb, style));
@@ -281,8 +281,8 @@ const getDistanceScalar = () => {
   if (!distanceScalar) {
     // this sets up the constant after Cesium is initialized
     distanceScalar = new Cesium.NearFarScalar(
-        osMap.ZoomScale.NEAR, osMap.ZoomScale.NEAR_SCALE,
-        osMap.ZoomScale.FAR, osMap.ZoomScale.FAR_SCALE);
+        ZoomScale.NEAR, ZoomScale.NEAR_SCALE,
+        ZoomScale.FAR, ZoomScale.FAR_SCALE);
   }
   return distanceScalar;
 };
@@ -361,11 +361,4 @@ const updateStyleFromSize = (style, width, height) => {
       style.size_ = size;
     }
   }
-};
-
-
-exports = {
-  createBillboard,
-  updateBillboard,
-  updateStyleAfterLoad
 };

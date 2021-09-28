@@ -1,17 +1,22 @@
-goog.module('plugin.file.kml.KMLSource');
+goog.declareModuleId('plugin.file.kml.KMLSource');
+
+import * as dispatcher from '../../../os/dispatcher.js';
+import * as source from '../../../os/source/source.js';
+import KMLImporter from './kmlimporter.js';
+import KMLParser from './kmlparser.js';
+import KMLSourceEvent from './kmlsourceevent.js';
+import KMLNode from './ui/kmlnode.js';
 
 const Timer = goog.require('goog.Timer');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
 const olArray = goog.require('ol.array');
-const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const osObject = goog.require('os.object');
-const source = goog.require('os.source');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const RequestSource = goog.require('os.source.Request');
 const TriState = goog.require('os.structs.TriState');
@@ -19,10 +24,6 @@ const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
 const UIEventType = goog.require('os.ui.events.UIEventType');
 const column = goog.require('os.ui.slick.column');
 const osWindow = goog.require('os.ui.window');
-const KMLImporter = goog.require('plugin.file.kml.KMLImporter');
-const KMLParser = goog.require('plugin.file.kml.KMLParser');
-const KMLSourceEvent = goog.require('plugin.file.kml.KMLSourceEvent');
-const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Image = goog.requireType('os.layer.Image');
@@ -31,7 +32,7 @@ const UIEvent = goog.requireType('os.ui.events.UIEvent');
 
 /**
  */
-class KMLSource extends RequestSource {
+export default class KMLSource extends RequestSource {
   /**
    * Constructor.
    * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
@@ -843,6 +844,3 @@ class KMLSource extends RequestSource {
  * @type {Logger}
  */
 const logger = log.getLogger('plugin.file.kml.KMLSource');
-
-
-exports = KMLSource;

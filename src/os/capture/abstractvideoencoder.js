@@ -1,13 +1,14 @@
-goog.module('os.capture.AbstractVideoEncoder');
+goog.declareModuleId('os.capture.AbstractVideoEncoder');
+
+import CaptureEventType from './captureeventtype.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
 const log = goog.require('goog.log');
 const jsloader = goog.require('goog.net.jsloader');
-const CaptureEventType = goog.require('os.capture.CaptureEventType');
 const osString = goog.require('os.string');
 
-const IVideoEncoder = goog.requireType('os.capture.IVideoEncoder');
+const {default: IVideoEncoder} = goog.requireType('os.capture.IVideoEncoder');
 
 
 /**
@@ -16,7 +17,7 @@ const IVideoEncoder = goog.requireType('os.capture.IVideoEncoder');
  * @abstract
  * @implements {IVideoEncoder}
  */
-class AbstractVideoEncoder extends EventTarget {
+export default class AbstractVideoEncoder extends EventTarget {
   /**
    * Constructor.
    */
@@ -238,5 +239,3 @@ const logger = log.getLogger('os.capture.AbstractVideoEncoder');
  * @const
  */
 AbstractVideoEncoder.DEFAULT_QUALITY = 1.0;
-
-exports = AbstractVideoEncoder;

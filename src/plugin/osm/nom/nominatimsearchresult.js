@@ -1,16 +1,17 @@
-goog.module('plugin.osm.nom.SearchResult');
+goog.declareModuleId('plugin.osm.nom.SearchResult');
 
-const style = goog.require('os.style');
+import * as style from '../../../os/style/style.js';
+import {LABEL_FIELD, VECTOR_CONFIG, getSearchScore} from './nominatim.js';
+import {directiveTag as resultCardEl} from './nominatimsearchresultcard.js';
+
 const StyleType = goog.require('os.style.StyleType');
 const CoordinateResult = goog.require('os.ui.search.place.CoordinateResult');
-const {LABEL_FIELD, VECTOR_CONFIG, getSearchScore} = goog.require('plugin.osm.nom');
-const {directiveTag: resultCardEl} = goog.require('plugin.osm.nom.ResultCardUI');
 
 
 /**
  * Search result card for Nominatim results.
  */
-class SearchResult extends CoordinateResult {
+export default class SearchResult extends CoordinateResult {
   /**
    * Constructor.
    * @param {ol.Feature} result The result feature.
@@ -30,5 +31,3 @@ class SearchResult extends CoordinateResult {
     return `<${resultCardEl} result="result"></${resultCardEl}>`;
   }
 }
-
-exports = SearchResult;

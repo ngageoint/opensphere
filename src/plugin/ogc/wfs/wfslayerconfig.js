@@ -1,4 +1,8 @@
-goog.module('plugin.ogc.wfs.WFSLayerConfig');
+goog.declareModuleId('plugin.ogc.wfs.WFSLayerConfig');
+
+import GeoJSONParser from '../../file/geojson/geojsonparser.js';
+import {Controller as ChooseTimeColumnController} from '../ui/choosetimecolumn.js';
+import {directiveTag as ogcLayerNodeUi} from '../ui/ogclayernodeui.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 const log = goog.require('goog.log');
@@ -20,9 +24,6 @@ const OGCFilterCleaner = goog.require('os.ogc.filter.OGCFilterCleaner');
 const DescribeFeatureLoader = goog.require('os.ogc.wfs.DescribeFeatureLoader');
 const WFSFormatter = goog.require('os.ogc.wfs.WFSFormatter');
 const ImportManager = goog.require('os.ui.im.ImportManager');
-const GeoJSONParser = goog.require('plugin.file.geojson.GeoJSONParser');
-const {Controller: ChooseTimeColumnController} = goog.require('plugin.ogc.ui.ChooseTimeColumnUI');
-const {directiveTag: ogcLayerNodeUi} = goog.require('plugin.ogc.ui.OGCLayerNodeUI');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
@@ -35,14 +36,14 @@ const WFSTypeConfig = goog.requireType('os.ogc.WFSTypeConfig');
 const IParser = goog.requireType('os.parse.IParser');
 const ISource = goog.requireType('os.source.ISource');
 const RequestSource = goog.requireType('os.source.Request');
-const GMLParser = goog.requireType('plugin.file.gml.GMLParser');
+const {default: GMLParser} = goog.requireType('plugin.file.gml.GMLParser');
 
 
 /**
  * This is a plain WFS layer config that handles DescribeFeatureType, altitude and time mappings,
  * and outputformat detection for GeoJSON, GML3, or GML2.
  */
-class WFSLayerConfig extends AbstractDataSourceLayerConfig {
+export default class WFSLayerConfig extends AbstractDataSourceLayerConfig {
   /**
    * Constructor.
    */
@@ -533,6 +534,3 @@ WFSLayerConfig.TYPE_CONFIGS = [
   WFSLayerConfig.GML3_CONFIG,
   WFSLayerConfig.GML2_CONFIG
 ];
-
-
-exports = WFSLayerConfig;

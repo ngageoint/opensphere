@@ -1,14 +1,15 @@
-goog.module('plugin.vectortools.CopyLayer');
+goog.declareModuleId('plugin.vectortools.CopyLayer');
+
+import * as vectortools from './vectortools.js';
 
 const MapContainer = goog.require('os.MapContainer');
 const AbstractSource = goog.require('os.command.AbstractSource');
 const State = goog.require('os.command.State');
 const VectorSource = goog.require('os.source.Vector');
-const vectortools = goog.require('plugin.vectortools');
 
 const ICommand = goog.requireType('os.command.ICommand');
 const VectorSource1 = goog.requireType('os.source.Vector');
-const Options = goog.requireType('plugin.vectortools.Options');
+const {default: Options} = goog.requireType('plugin.vectortools.Options');
 
 
 /**
@@ -16,7 +17,7 @@ const Options = goog.requireType('plugin.vectortools.Options');
  *
  * @implements {ICommand}
  */
-class CopyLayer extends AbstractSource {
+export default class CopyLayer extends AbstractSource {
   /**
    * Constructor.
    * @param {!string} sourceId The data source ID to copy
@@ -72,5 +73,3 @@ class CopyLayer extends AbstractSource {
     return true;
   }
 }
-
-exports = CopyLayer;

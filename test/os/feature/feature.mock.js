@@ -1,6 +1,6 @@
 goog.module('os.feature.mock');
 
-const GeoJSONParser = goog.require('plugin.file.geojson.GeoJSONParser');
+const {default: GeoJSONParser} = goog.require('plugin.file.geojson.GeoJSONParser');
 
 
 const geoms = [{

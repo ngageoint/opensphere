@@ -1,11 +1,12 @@
-goog.module('plugin.cesium.TileGridTilingScheme');
+goog.declareModuleId('plugin.cesium.TileGridTilingScheme');
+
+import {PROJECTION} from '../../os/map/map.js';
 
 const asserts = goog.require('goog.asserts');
 const ol = goog.require('ol');
 const olProj = goog.require('ol.proj');
 const {toSize} = goog.require('ol.size');
 const geo = goog.require('os.geo');
-const map = goog.require('os.map');
 const osProj = goog.require('os.proj');
 
 const TileImageSource = goog.requireType('ol.source.TileImage');
@@ -15,7 +16,7 @@ const TileGrid = goog.requireType('ol.tilegrid.TileGrid');
 /**
  * @implements {Cesium.TilingScheme}
  */
-class TileGridTilingScheme {
+export default class TileGridTilingScheme {
   /**
    * Constructor.
    * @param {!TileImageSource} source The source.
@@ -31,7 +32,7 @@ class TileGridTilingScheme {
      */
     this.tilegrid_ = tg;
 
-    var proj = source.getProjection() || map.PROJECTION;
+    var proj = source.getProjection() || PROJECTION;
     asserts.assert(proj);
     var isGeographic = olProj.equivalent(proj, olProj.get(osProj.EPSG4326));
     var isWebMercator = olProj.equivalent(proj, olProj.get(osProj.EPSG3857));
@@ -225,5 +226,3 @@ class TileGridTilingScheme {
         position.longitude - rectangle.east > epsilon);
   }
 }
-
-exports = TileGridTilingScheme;

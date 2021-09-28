@@ -1,12 +1,13 @@
-goog.module('plugin.file.gml.GMLImport');
+goog.declareModuleId('plugin.file.gml.GMLImport');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os/os.js';
+import GMLDescriptor from './gmldescriptor.js';
+import GMLProvider from './gmlprovider.js';
+
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const Module = goog.require('os.ui.Module');
 const AbstractFileImportCtrl = goog.require('os.ui.file.ui.AbstractFileImportCtrl');
-const GMLDescriptor = goog.require('plugin.file.gml.GMLDescriptor');
-const GMLProvider = goog.require('plugin.file.gml.GMLProvider');
-const GMLParserConfig = goog.requireType('plugin.file.gml.GMLParserConfig');
+const {default: GMLParserConfig} = goog.requireType('plugin.file.gml.GMLParserConfig');
 
 
 /**
@@ -14,7 +15,7 @@ const GMLParserConfig = goog.requireType('plugin.file.gml.GMLParserConfig');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -27,7 +28,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'gmlimport';
+export const directiveTag = 'gmlimport';
 
 
 /**
@@ -43,7 +44,7 @@ Module.directive('gmlimport', [directive]);
  * @extends {AbstractFileImportCtrl<!GMLParserConfig,!GMLDescriptor>}
  * @unrestricted
  */
-class Controller extends AbstractFileImportCtrl {
+export class Controller extends AbstractFileImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -79,9 +80,3 @@ class Controller extends AbstractFileImportCtrl {
     return GMLProvider.getInstance();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

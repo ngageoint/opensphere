@@ -1,10 +1,11 @@
-goog.module('plugin.basemap.layer.BaseMap');
+goog.declareModuleId('plugin.basemap.layer.BaseMap');
+
+import {directiveTag as basemapLayerUi} from '../ui/basemaplayerui.js';
 
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const fn = goog.require('os.fn');
 const Tile = goog.require('os.layer.Tile');
-const {directiveTag: basemapLayerUi} = goog.require('plugin.basemap.ui.BaseMapLayerUI');
 
 
 /**
@@ -15,7 +16,7 @@ let warningShown = false;
 
 /**
  */
-class BaseMap extends Tile {
+export default class BaseMap extends Tile {
   /**
    * Constructor.
    * @param {olx.layer.TileOptions} options Tile layer options
@@ -49,5 +50,3 @@ class BaseMap extends Tile {
     }
   }
 }
-
-exports = BaseMap;

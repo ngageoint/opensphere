@@ -4,7 +4,9 @@ goog.require('plugin.basemap.BaseMapDescriptor');
 
 describe('plugin.basemap.BaseMapDescriptor', function() {
   const basemap = goog.module.get('plugin.basemap');
-  const BaseMapDescriptor = goog.module.get('plugin.basemap.BaseMapDescriptor');
+  const {
+    default: BaseMapDescriptor
+  } = goog.module.get('plugin.basemap.BaseMapDescriptor');
 
   it('should have the correct defaults', function() {
     var d = new BaseMapDescriptor();

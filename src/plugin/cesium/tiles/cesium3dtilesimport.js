@@ -1,10 +1,11 @@
-goog.module('plugin.cesium.tiles.TilesetImport');
+goog.declareModuleId('plugin.cesium.tiles.TilesetImport');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os/os.js';
+import Descriptor from './cesium3dtilesdescriptor.js';
+import Provider from './cesium3dtilesprovider.js';
+
 const Module = goog.require('os.ui.Module');
 const AbstractFileImportCtrl = goog.require('os.ui.file.ui.AbstractFileImportCtrl');
-const Descriptor = goog.require('plugin.cesium.tiles.Descriptor');
-const Provider = goog.require('plugin.cesium.tiles.Provider');
 
 const FileParserConfig = goog.requireType('os.parse.FileParserConfig');
 
@@ -14,7 +15,7 @@ const FileParserConfig = goog.requireType('os.parse.FileParserConfig');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -23,12 +24,11 @@ const directive = () => ({
   controllerAs: 'ctrl'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'tilesetimport';
+export const directiveTag = 'tilesetimport';
 
 
 /**
@@ -44,7 +44,7 @@ Module.directive(directiveTag, [directive]);
  * @extends {AbstractFileImportCtrl<!Object,!Descriptor>}
  * @unrestricted
  */
-class Controller extends AbstractFileImportCtrl {
+export class Controller extends AbstractFileImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -79,9 +79,3 @@ class Controller extends AbstractFileImportCtrl {
     return Provider.getInstance();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,17 +1,19 @@
-goog.module('plugin.file.kml.cmd.KMLNodeAdd');
+goog.declareModuleId('plugin.file.kml.cmd.KMLNodeAdd');
+
+import AbstractKMLNode from './abstractkmlnodecmd.js';
 
 const State = goog.require('os.command.State');
-const AbstractKMLNode = goog.require('plugin.file.kml.cmd.AbstractKMLNode');
 
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 /**
  * Command to add a KML node to a parent.
  */
-class KMLNodeAdd extends AbstractKMLNode {
+export default class KMLNodeAdd extends AbstractKMLNode {
   /**
    * Constructor.
-   * @param {!plugin.file.kml.ui.KMLNode} node The KML node
-   * @param {!plugin.file.kml.ui.KMLNode} parent The parent node
+   * @param {!KMLNode} node The KML node
+   * @param {!KMLNode} parent The parent node
    */
   constructor(node, parent) {
     super(node, parent);
@@ -53,5 +55,3 @@ class KMLNodeAdd extends AbstractKMLNode {
     return false;
   }
 }
-
-exports = KMLNodeAdd;

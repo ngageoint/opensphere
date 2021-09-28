@@ -2,10 +2,12 @@
  * @fileoverview KML parser convenience functions, parsers, etc.
  * @suppress {accessControls}
  */
-goog.module('plugin.file.kml');
+goog.declareModuleId('plugin.file.kml');
+
+import * as osStyle from '../../../os/style/style.js';
+import KMLField from './kmlfield.js';
 
 const Uri = goog.require('goog.Uri');
-
 const asserts = goog.require('goog.asserts');
 const NodeType = goog.require('goog.dom.NodeType');
 const googObject = goog.require('goog.object');
@@ -33,7 +35,6 @@ const geo = goog.require('os.geo');
 const net = goog.require('os.net');
 const CrossOrigin = goog.require('os.net.CrossOrigin');
 const osObject = goog.require('os.object');
-const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
 const TimeInstant = goog.require('os.time.TimeInstant');
@@ -41,38 +42,37 @@ const TimeRange = goog.require('os.time.TimeRange');
 const kml = goog.require('os.ui.file.kml');
 const slickColumn = goog.require('os.ui.slick.column');
 const xml = goog.require('os.xml');
-const KMLField = goog.require('plugin.file.kml.KMLField');
 
 
 /**
  * Key used to store the parsed KML style on features.
  * @type {string}
  */
-const STYLE_KEY = '_kmlStyle';
+export const STYLE_KEY = '_kmlStyle';
 
 /**
  * Namespace URI used for KML nodes.
  * @type {string}
  */
-const KML_NS = 'http://www.opengis.net/kml/2.2';
+export const KML_NS = 'http://www.opengis.net/kml/2.2';
 
 /**
  * Namespace URI used for gx nodes.
  * @type {string}
  */
-const GX_NS = 'http://www.google.com/kml/ext/2.2';
+export const GX_NS = 'http://www.google.com/kml/ext/2.2';
 
 /**
  * Namespace URI used for gx nodes.
  * @type {string}
  */
-const OS_NS = 'http://opensphere.io/kml/ext/1.0';
+export const OS_NS = 'http://opensphere.io/kml/ext/1.0';
 
 /**
  * The default KML style
  * @type {Object<string, *>}
  */
-const DEFAULT_STYLE = {
+export const DEFAULT_STYLE = {
   'image': {
     'type': 'icon',
     'anchorOrigin': IconOrigin.BOTTOM_LEFT,
@@ -94,14 +94,14 @@ const DEFAULT_STYLE = {
 /**
  * @type {Array<Object<string, *>>}
  */
-const DEFAULT_STYLE_ARRAY = [DEFAULT_STYLE];
+export const DEFAULT_STYLE_ARRAY = [DEFAULT_STYLE];
 
 /**
  * Fields that should be displayed on the source.
  *
  * @type {!Array<string>}
  */
-const SOURCE_FIELDS = [
+export const SOURCE_FIELDS = [
   KMLField.NAME,
   KMLField.DESCRIPTION,
   annotation.OPTIONS_FIELD,
@@ -158,7 +158,7 @@ const replaceParsers_ = function(obj, field, parser) {
  * Create default OpenLayers styles along with OpenSphere overrides.
  * @suppress {accessControls, const}
  */
-const createStyleDefaults = function() {
+export const createStyleDefaults = function() {
   if (!KML.DEFAULT_STYLE_ARRAY_) {
     KML.createStyleDefaults_();
   }
@@ -191,7 +191,7 @@ const createStyleDefaults = function() {
  * @return {function(this: T, *, Array<*>, (string|undefined)): (Node|undefined)}
  * @template T
  */
-const OL_GEOMETRY_NODE_FACTORY = function() {
+export const OL_GEOMETRY_NODE_FACTORY = function() {
   return KML.GEOMETRY_NODE_FACTORY_;
 };
 
@@ -201,7 +201,7 @@ const OL_GEOMETRY_NODE_FACTORY = function() {
  * @return {Object<string, Object<string, ol.XmlParser>>}
  * @template T
  */
-const OL_ICON_STYLE_PARSERS = function() {
+export const OL_ICON_STYLE_PARSERS = function() {
   return KML.ICON_STYLE_PARSERS_;
 };
 
@@ -210,7 +210,7 @@ const OL_ICON_STYLE_PARSERS = function() {
  *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
-const OL_LINK_PARSERS = function() {
+export const OL_LINK_PARSERS = function() {
   return KML.LINK_PARSERS_;
 };
 
@@ -219,7 +219,7 @@ const OL_LINK_PARSERS = function() {
  *
  * @return {Array<string>}
  */
-const OL_NAMESPACE_URIS = function() {
+export const OL_NAMESPACE_URIS = function() {
   return KML.NAMESPACE_URIS_;
 };
 
@@ -228,7 +228,7 @@ const OL_NAMESPACE_URIS = function() {
  *
  * @return {Array<string>}
  */
-const OL_GX_NAMESPACE_URIS = function() {
+export const OL_GX_NAMESPACE_URIS = function() {
   return KML.GX_NAMESPACE_URIS_;
 };
 
@@ -237,7 +237,7 @@ const OL_GX_NAMESPACE_URIS = function() {
  *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
-const OL_NETWORK_LINK_PARSERS = function() {
+export const OL_NETWORK_LINK_PARSERS = function() {
   return KML.NETWORK_LINK_PARSERS_;
 };
 
@@ -246,7 +246,7 @@ const OL_NETWORK_LINK_PARSERS = function() {
  *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
-const OL_PAIR_PARSERS = function() {
+export const OL_PAIR_PARSERS = function() {
   return KML.PAIR_PARSERS_;
 };
 
@@ -254,7 +254,7 @@ const OL_PAIR_PARSERS = function() {
  * Accessor for private Openlayers code.
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
-const OL_PLACEMARK_PARSERS = function() {
+export const OL_PLACEMARK_PARSERS = function() {
   return KML.PLACEMARK_PARSERS_;
 };
 
@@ -263,7 +263,7 @@ const OL_PLACEMARK_PARSERS = function() {
  *
  * @return {Object<string, Object<string, ol.XmlSerializer>>}
  */
-const OL_PLACEMARK_SERIALIZERS = function() {
+export const OL_PLACEMARK_SERIALIZERS = function() {
   return KML.PLACEMARK_SERIALIZERS_;
 };
 
@@ -272,7 +272,7 @@ const OL_PLACEMARK_SERIALIZERS = function() {
  *
  * @return {Object<string, Object<string, ol.XmlSerializer>>}
  */
-const OL_MULTI_GEOMETRY_SERIALIZERS = function() {
+export const OL_MULTI_GEOMETRY_SERIALIZERS = function() {
   return KML.MULTI_GEOMETRY_SERIALIZERS_;
 };
 
@@ -281,7 +281,7 @@ const OL_MULTI_GEOMETRY_SERIALIZERS = function() {
  *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
-const OL_STYLE_PARSERS = function() {
+export const OL_STYLE_PARSERS = function() {
   return KML.STYLE_PARSERS_;
 };
 
@@ -327,7 +327,7 @@ replaceParsers_(KML.POLY_STYLE_PARSERS_, 'color',
  * @param {Array<*>} objectStack Object stack.
  * @return {Object} style config
  */
-const readStyle = function(node, objectStack) {
+export const readStyle = function(node, objectStack) {
   var styleObject = olXml.pushParseAndPop(
       {}, KML.STYLE_PARSERS_, node, objectStack);
   if (!styleObject || googObject.isEmpty(styleObject)) {
@@ -379,7 +379,7 @@ const readStyle = function(node, objectStack) {
 /**
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
-const PAIR_PARSERS = olXml.makeStructureNS(
+export const PAIR_PARSERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       'Style': olXml.makeObjectPropertySetter(readStyle)
     });
@@ -390,7 +390,7 @@ osObject.merge(PAIR_PARSERS, OL_PAIR_PARSERS(), true);
 /**
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
-const PLACEMARK_PARSERS = olXml.makeStructureNS(
+export const PLACEMARK_PARSERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       'Style': olXml.makeObjectPropertySetter(readStyle)
     });
@@ -402,7 +402,7 @@ osObject.merge(PLACEMARK_PARSERS, OL_PLACEMARK_PARSERS(), true);
  * Property parsers for BalloonStyle Style.
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
-const BALLOON_PROPERTY_PARSERS = olXml.makeStructureNS(
+export const BALLOON_PROPERTY_PARSERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       'bgColor': olXml.makeObjectPropertySetter(readColor_),
       'textColor': olXml.makeObjectPropertySetter(readColor_),
@@ -431,7 +431,7 @@ const readJson = function(node) {
  * @param {Array<*>} objectStack Object stack.
  * @return {os.time.ITime} The parsed time, or null if none could be parsed
  */
-const readTime = function(node, objectStack) {
+export const readTime = function(node, objectStack) {
   asserts.assert(node.localName == 'TimeStamp' || node.localName == 'TimeSpan',
       'localName should be TimeStamp or TimeSpan');
 
@@ -449,7 +449,7 @@ const readTime = function(node, objectStack) {
 /**
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
-const LINK_PARSERS = olXml.makeStructureNS(
+export const LINK_PARSERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       'refreshInterval': olXml.makeObjectPropertySetter(XSD.readDecimal),
       'refreshMode': olXml.makeObjectPropertySetter(XSD.readString),
@@ -469,7 +469,7 @@ const OS_NAMESPACE_URIS = [OS_NS];
 /**
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
-const ICON_STYLE_PARSERS = olXml.makeStructureNS(
+export const ICON_STYLE_PARSERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       'color': olXml.makeObjectPropertySetter(readColor_)
     }, olXml.makeStructureNS(
@@ -489,7 +489,7 @@ osObject.merge(ICON_STYLE_PARSERS, OL_ICON_STYLE_PARSERS(), false);
  * Parse KML time nodes to a os.time.ITime object.
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
-const TIME_PARSERS = olXml.makeStructureNS(
+export const TIME_PARSERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       'TimeStamp': olXml.makeObjectPropertySetter(readTime, RecordField.TIME),
       'TimeSpan': olXml.makeObjectPropertySetter(readTime, RecordField.TIME)
@@ -499,7 +499,7 @@ const TIME_PARSERS = olXml.makeStructureNS(
  * Parse Date objects from KML.
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
-const TIMEFIELD_PARSERS = olXml.makeStructureNS(
+export const TIMEFIELD_PARSERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       'when': olXml.makeObjectPropertySetter(xml.readDateTime),
       'begin': olXml.makeObjectPropertySetter(xml.readDateTime),
@@ -521,7 +521,7 @@ osObject.merge(TIME_PARSERS, OL_PLACEMARK_PARSERS(), false);
  * @param {Array<*>} objectStack Object stack.
  * @return {ol.geom.MultiLineString|undefined} MultiLineString.
  */
-const readMultiTrack = function(node, objectStack) {
+export const readMultiTrack = function(node, objectStack) {
   var geometry = KML.readGxMultiTrack_(node, objectStack);
 
   var properties = olXml.pushParseAndPop({}, MULTITRACK_PROPERTY_PARSERS, node, objectStack);
@@ -536,7 +536,7 @@ const readMultiTrack = function(node, objectStack) {
  * Geometry parsers for MultiTrack nodes.
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
-const MULTITRACK_GEOMETRY_PARSERS = olXml.makeStructureNS(
+export const MULTITRACK_GEOMETRY_PARSERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       // add kml:Track parser to support the 2.3 spec
       'Track': olXml.makeArrayPusher(KML.readGxTrack_)
@@ -546,7 +546,7 @@ const MULTITRACK_GEOMETRY_PARSERS = olXml.makeStructureNS(
  * Property parsers for MultiTrack nodes.
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
-const MULTITRACK_PROPERTY_PARSERS = olXml.makeStructureNS(
+export const MULTITRACK_PROPERTY_PARSERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       'altitudeMode': olXml.makeObjectPropertySetter(XSD.readString),
       'interpolate': olXml.makeObjectPropertySetter(XSD.readBoolean)
@@ -561,7 +561,7 @@ const MULTITRACK_PROPERTY_PARSERS = olXml.makeStructureNS(
  * Track/MultiTrack parsers for Placemark nodes.
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
-const PLACEMARK_TRACK_PARSERS = olXml.makeStructureNS(
+export const PLACEMARK_TRACK_PARSERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       // add kml:Track and kml:MultiTrack parsers to support the 2.3 spec
       'MultiTrack': olXml.makeObjectPropertySetter(readMultiTrack, 'geometry'),
@@ -576,7 +576,7 @@ const PLACEMARK_TRACK_PARSERS = olXml.makeStructureNS(
 /**
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
-const GX_TRACK_PARSERS = olXml.makeStructureNS(
+export const GX_TRACK_PARSERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       'coord': KML.gxCoordParser_
     });
@@ -665,7 +665,7 @@ const readLatLonQuad_ = function(node, objectStack) {
  * Property parsers for GroundOverlay.
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
-const GROUND_OVERLAY_PARSERS = olXml.makeStructureNS(
+export const GROUND_OVERLAY_PARSERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       'Icon': olXml.makeObjectPropertySetter(KML.readIcon_),
       'color': olXml.makeObjectPropertySetter(readColor_),
@@ -687,7 +687,7 @@ const GROUND_OVERLAY_PARSERS = olXml.makeStructureNS(
  * Property parsers for LatLonBox.
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
-const LAT_LON_BOX_PARSERS = olXml.makeStructureNS(
+export const LAT_LON_BOX_PARSERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       'north': olXml.makeObjectPropertySetter(XSD.readDecimal),
       'south': olXml.makeObjectPropertySetter(XSD.readDecimal),
@@ -700,7 +700,7 @@ const LAT_LON_BOX_PARSERS = olXml.makeStructureNS(
  * Property parsers for LatLonQuad.
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
-const LAT_LON_QUAD_PARSERS = olXml.makeStructureNS(
+export const LAT_LON_QUAD_PARSERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       'coordinates': olXml.makeReplacer(KML.readFlatCoordinates_)
     });
@@ -709,7 +709,7 @@ const LAT_LON_QUAD_PARSERS = olXml.makeStructureNS(
  * Property parsers for ScreenOverlay.
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
-const SCREEN_OVERLAY_PARSERS = olXml.makeStructureNS(
+export const SCREEN_OVERLAY_PARSERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       'name': olXml.makeObjectPropertySetter(XSD.readString),
       'visibility': olXml.makeObjectPropertySetter(XSD.readBoolean),
@@ -771,7 +771,7 @@ KML.GEOMETRY_NODE_FACTORY_ = function(value, objectStack, opt_nodeName) {
  * @return {string} URI
  * @protected
  */
-const readURI = function(node) {
+export const readURI = function(node) {
   var s = olXml.getAllTextContent(node, false).trim();
 
   // find the asset map
@@ -805,7 +805,7 @@ replaceParsers_(KML.PLACEMARK_PARSERS_, 'styleUrl',
 /**
  * Override for HREF parsing so that it will use our own readURI function above
  */
-const HREF_OVERRIDE = olXml.makeStructureNS(
+export const HREF_OVERRIDE = olXml.makeStructureNS(
     KML.NAMESPACE_URIS_, {
       'href': olXml.makeObjectPropertySetter(readURI)
     });
@@ -896,7 +896,7 @@ const writeTrack_ = function(node, geometry, objectStack) {
  * Override the Openlayers Placemark serializers to add additional support.
  * @type {Object<string, Object<string, ol.XmlSerializer>>}
  */
-const PLACEMARK_SERIALIZERS = olXml.makeStructureNS(
+export const PLACEMARK_SERIALIZERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       'MultiGeometry': olXml.makeChildAppender(writeMultiGeometry_)
     }, olXml.makeStructureNS(
@@ -931,7 +931,7 @@ const writePolygon_ = function(node, polygon, objectStack) {
 /**
  * @type {Object<string, Object<string, ol.XmlSerializer>>}
  */
-const POLYGON_SERIALIZERS = olXml.makeStructureNS(
+export const POLYGON_SERIALIZERS = olXml.makeStructureNS(
     OL_NAMESPACE_URIS(), {
       'Polygon': olXml.makeChildAppender(writePolygon_)
     });
@@ -1110,47 +1110,3 @@ const IconStyleParser_ = function(node, objectStack) {
 };
 
 replaceParsers_(OL_STYLE_PARSERS(), 'IconStyle', IconStyleParser_);
-
-exports = {
-  BALLOON_PROPERTY_PARSERS,
-  DEFAULT_STYLE,
-  DEFAULT_STYLE_ARRAY,
-  GROUND_OVERLAY_PARSERS,
-  GX_NS,
-  GX_TRACK_PARSERS,
-  HREF_OVERRIDE,
-  ICON_STYLE_PARSERS,
-  KML_NS,
-  LAT_LON_BOX_PARSERS,
-  LAT_LON_QUAD_PARSERS,
-  LINK_PARSERS,
-  MULTITRACK_GEOMETRY_PARSERS,
-  MULTITRACK_PROPERTY_PARSERS,
-  OL_GEOMETRY_NODE_FACTORY,
-  OL_GX_NAMESPACE_URIS,
-  OL_ICON_STYLE_PARSERS,
-  OL_LINK_PARSERS,
-  OL_MULTI_GEOMETRY_SERIALIZERS,
-  OL_NAMESPACE_URIS,
-  OL_NETWORK_LINK_PARSERS,
-  OL_PAIR_PARSERS,
-  OL_PLACEMARK_PARSERS,
-  OL_PLACEMARK_SERIALIZERS,
-  OL_STYLE_PARSERS,
-  OS_NS,
-  PAIR_PARSERS,
-  PLACEMARK_PARSERS,
-  PLACEMARK_SERIALIZERS,
-  PLACEMARK_TRACK_PARSERS,
-  POLYGON_SERIALIZERS,
-  SCREEN_OVERLAY_PARSERS,
-  SOURCE_FIELDS,
-  STYLE_KEY,
-  TIMEFIELD_PARSERS,
-  TIME_PARSERS,
-  createStyleDefaults,
-  readMultiTrack,
-  readStyle,
-  readTime,
-  readURI
-};

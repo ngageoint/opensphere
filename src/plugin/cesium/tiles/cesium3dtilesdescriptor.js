@@ -1,11 +1,12 @@
-goog.module('plugin.cesium.tiles.Descriptor');
+goog.declareModuleId('plugin.cesium.tiles.Descriptor');
+
+import {getIonUrl} from '../cesium.js';
+import {ICON, ID} from './cesium3dtiles.js';
+import Provider from './cesium3dtilesprovider.js';
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const ColorControlType = goog.require('os.ui.ColorControlType');
 const ControlType = goog.require('os.ui.ControlType');
-const cesium = goog.require('plugin.cesium');
-const {ID, ICON} = goog.require('plugin.cesium.tiles');
-const Provider = goog.require('plugin.cesium.tiles.Provider');
 
 const FileParserConfig = goog.requireType('os.parse.FileParserConfig');
 
@@ -13,7 +14,7 @@ const FileParserConfig = goog.requireType('os.parse.FileParserConfig');
 /**
  * Cesium 3D tiles descriptor.
  */
-class Descriptor extends FileDescriptor {
+export default class Descriptor extends FileDescriptor {
   /**
    * Constructor.
    */
@@ -96,7 +97,7 @@ class Descriptor extends FileDescriptor {
     }
 
     // set a URL so the descriptor gets persisted
-    this.setUrl(cesium.getIonUrl());
+    this.setUrl(getIonUrl());
   }
 
   /**
@@ -159,5 +160,3 @@ class Descriptor extends FileDescriptor {
     return descriptor;
   }
 }
-
-exports = Descriptor;

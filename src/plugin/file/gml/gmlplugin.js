@@ -1,18 +1,18 @@
-goog.module('plugin.file.gml.GMLPlugin');
+goog.declareModuleId('plugin.file.gml.GMLPlugin');
+
+import GMLDescriptor from './gmldescriptor.js';
+import GMLImportUI from './gmlimportui.js';
+import GMLLayerConfig from './gmllayerconfig.js';
+import * as GMLMixin from './gmlmixin.js';
+import GMLParser from './gmlparser.js';
+import GMLProvider from './gmlprovider.js';
+import * as mime from './mime.js';
 
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const ImportManager = goog.require('os.ui.im.ImportManager');
-const GMLDescriptor = goog.require('plugin.file.gml.GMLDescriptor');
-const GMLImportUI = goog.require('plugin.file.gml.GMLImportUI');
-const GMLLayerConfig = goog.require('plugin.file.gml.GMLLayerConfig');
-const GMLMixin = goog.require('plugin.file.gml.GMLMixin');
-const GMLParser = goog.require('plugin.file.gml.GMLParser');
-const GMLProvider = goog.require('plugin.file.gml.GMLProvider');
-const mime = goog.require('plugin.file.gml.mime');
-
 
 // Initialize the GML mixin.
 GMLMixin.init();
@@ -21,7 +21,7 @@ GMLMixin.init();
 /**
  * Provides GML support
  */
-class GMLPlugin extends AbstractPlugin {
+export default class GMLPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -65,6 +65,3 @@ const ID = 'gml';
  * @type {string}
  */
 const TYPE = 'GML Layers';
-
-
-exports = GMLPlugin;

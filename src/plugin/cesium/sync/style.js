@@ -1,13 +1,15 @@
-goog.module('plugin.cesium.sync.style');
+goog.declareModuleId('plugin.cesium.sync.style');
+
+import {DEFAULT_FEATURE_SIZE, DEFAULT_HIGHLIGHT_CONFIG} from '../../../os/style/style.js';
+import {OUTLINE_REGEXP} from '../cesium.js';
 
 const {convertColorToCesium} = goog.require('olcs.core');
-const {DEFAULT_FEATURE_SIZE, DEFAULT_HIGHLIGHT_CONFIG} = goog.require('os.style');
-const {OUTLINE_REGEXP} = goog.require('plugin.cesium');
 
 const Style = goog.requireType('ol.style.Style');
 const Text = goog.requireType('ol.style.Text');
 const {GeometryInstanceId} = goog.requireType('plugin.cesium');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
+
 
 /**
  * @param {!(Style|Text)} style
@@ -15,7 +17,7 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
  * @param {!GeometryInstanceId} geometryInstanceId
  * @return {!Cesium.Color}
  */
-const getColor = (style, context, geometryInstanceId) => {
+export const getColor = (style, context, geometryInstanceId) => {
   const isOutline = OUTLINE_REGEXP.test(geometryInstanceId);
   const color = getColorFromStyle(style, isOutline);
 
@@ -29,14 +31,13 @@ const getColor = (style, context, geometryInstanceId) => {
   return color;
 };
 
-
 /**
  * Return the width of stroke from a plain ol style. Let Cesium handle system line width issues.
  *
  * @param {!Style|Text} style
  * @return {number}
  */
-const getLineWidthFromStyle = (style) => {
+export const getLineWidthFromStyle = (style) => {
   // make sure the width is at least 1px
   return Math.max(1, /** @type {number} */ (style.getStroke() && style.getStroke().getWidth() || DEFAULT_FEATURE_SIZE));
 };
@@ -73,10 +74,4 @@ const isHighlightStyle = (style) => {
     return (DEFAULT_HIGHLIGHT_CONFIG.stroke.color === style.getStroke().getColor());
   }
   return false;
-};
-
-
-exports = {
-  getColor,
-  getLineWidthFromStyle
 };

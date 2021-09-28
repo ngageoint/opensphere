@@ -1,16 +1,17 @@
-goog.module('plugin.cesium.sync.LineStringConverter');
+goog.declareModuleId('plugin.cesium.sync.LineStringConverter');
 
-const {updatePrimitive} = goog.require('plugin.cesium.primitive');
-const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
-const {createLineStringPrimitive, isLineWidthChanging, isDashChanging} = goog.require('plugin.cesium.sync.linestring');
+import {updatePrimitive} from '../primitive.js';
+import BaseConverter from './baseconverter.js';
+import {createLineStringPrimitive, isDashChanging, isLineWidthChanging} from './linestring.js';
 
 const LineString = goog.requireType('ol.geom.LineString');
+
 
 /**
  * Converter for LineStrings
  * @extends {BaseConverter<LineString, Cesium.Primitive>}
  */
-class LineStringConverter extends BaseConverter {
+export default class LineStringConverter extends BaseConverter {
   /**
    * @inheritDoc
    */
@@ -34,6 +35,3 @@ class LineStringConverter extends BaseConverter {
     return updatePrimitive(feature, geometry, style, context, primitive);
   }
 }
-
-
-exports = LineStringConverter;

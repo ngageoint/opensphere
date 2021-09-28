@@ -1,12 +1,8 @@
-goog.module('plugin.capture');
+goog.declareModuleId('plugin.capture');
 
 const Timer = goog.require('goog.Timer');
 const googArray = goog.require('goog.array');
 const MapContainer = goog.require('os.MapContainer');
-const {
-  getMapCanvas: getMapCanvasBase,
-  getMapPixelRatio: getMapPixelRatioBase
-} = goog.require('os.capture');
 const TimelineController = goog.require('os.time.TimelineController');
 
 const ILayer = goog.requireType('os.layer.ILayer');
@@ -16,27 +12,13 @@ const ILayer = goog.requireType('os.layer.ILayer');
  * Default wait time to check if the map is ready, in milliseconds.
  * @type {number}
  */
-const WAIT_TIME = 100;
-
-/**
- * Get the map canvas element.
- * @return {HTMLCanvasElement} The map canvas element
- * @deprecated Please use os.capture.getMapCanvas instead.
- */
-const getMapCanvas = getMapCanvasBase;
-
-/**
- * Get the map canvas pixel ratio.
- * @return {number} The map canvas pixel ratio.
- * @deprecated Please use os.capture.getMapPixelRatio instead.
- */
-const getMapPixelRatio = getMapPixelRatioBase;
+export const WAIT_TIME = 100;
 
 /**
  * Check if the application is ready to capture the screen.
  * @param {function()} callback The function to call when ready to capture
  */
-const onReady = function(callback) {
+export const onReady = function(callback) {
   // Check if we are ready to take picture
   var ready = googArray.every(MapContainer.getInstance().getLayers(), function(layer) {
     layer = /** @type {ILayer} */ (layer);
@@ -58,7 +40,7 @@ const onReady = function(callback) {
  * If recording is supported.
  * @return {boolean}
  */
-const recordSupported = function() {
+export const recordSupported = function() {
   var tlc = TimelineController.getInstance();
   // record is supported when the window is not the same as the loop
   var winRight = tlc.getCurrent();
@@ -67,12 +49,4 @@ const recordSupported = function() {
   var loopEnd = tlc.getLoopEnd();
 
   return winLeft != loopStart || winRight != loopEnd;
-};
-
-exports = {
-  WAIT_TIME,
-  getMapCanvas,
-  getMapPixelRatio,
-  onReady,
-  recordSupported
 };

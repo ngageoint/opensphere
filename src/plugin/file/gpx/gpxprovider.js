@@ -1,4 +1,4 @@
-goog.module('plugin.file.gpx.GPXProvider');
+goog.declareModuleId('plugin.file.gpx.GPXProvider');
 
 const FileProvider = goog.require('os.data.FileProvider');
 
@@ -6,7 +6,7 @@ const FileProvider = goog.require('os.data.FileProvider');
 /**
  * GPX file provider
  */
-class GPXProvider extends FileProvider {
+export default class GPXProvider extends FileProvider {
   /**
    * Constructor.
    */
@@ -23,7 +23,5 @@ class GPXProvider extends FileProvider {
     this.setLabel('GPX Files');
   }
 }
+
 goog.addSingletonGetter(GPXProvider);
-
-
-exports = GPXProvider;

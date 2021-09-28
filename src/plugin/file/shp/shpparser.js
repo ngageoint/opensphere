@@ -1,4 +1,9 @@
-goog.module('plugin.file.shp.SHPParser');
+goog.declareModuleId('plugin.file.shp.SHPParser');
+
+import DBFField from './data/dbffield.js';
+import SHPHeader from './data/shpheader.js';
+import {DBF_EXT_REGEXP, SHP_EXT_REGEXP} from './mime.js';
+import * as shp from './shp.js';
 
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
@@ -15,13 +20,9 @@ const text = goog.require('os.file.mime.text');
 const mimeZip = goog.require('os.file.mime.zip');
 const geo = goog.require('os.geo');
 const AsyncZipParser = goog.require('os.parse.AsyncZipParser');
-const shp = goog.require('plugin.file.shp');
-const {DBF_EXT_REGEXP, SHP_EXT_REGEXP} = goog.require('plugin.file.shp.mime');
-const DBFField = goog.require('plugin.file.shp.data.DBFField');
-const SHPHeader = goog.require('plugin.file.shp.data.SHPHeader');
 
 const Logger = goog.requireType('goog.log.Logger');
-const SHPParserConfig = goog.requireType('plugin.file.shp.SHPParserConfig');
+const {default: SHPParserConfig} = goog.requireType('plugin.file.shp.SHPParserConfig');
 
 
 /**
@@ -29,7 +30,7 @@ const SHPParserConfig = goog.requireType('plugin.file.shp.SHPParserConfig');
  *
  * @extends {AsyncZipParser<Feature>}
  */
-class SHPParser extends AsyncZipParser {
+export default class SHPParser extends AsyncZipParser {
   /**
    * Constructor.
    * @param {SHPParserConfig} config
@@ -660,6 +661,3 @@ class SHPParser extends AsyncZipParser {
  * @type {Logger}
  */
 const logger = log.getLogger('plugin.file.shp.SHPParser');
-
-
-exports = SHPParser;

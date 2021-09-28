@@ -1,4 +1,12 @@
-goog.module('plugin.cesium.sync.LabelConverter');
+goog.declareModuleId('plugin.cesium.sync.LabelConverter');
+
+import {getFont} from '../../../os/style/label.js';
+import {GeometryInstanceId} from '../cesium.js';
+import {isPrimitiveShown} from '../primitive.js';
+import BaseConverter from './baseconverter.js';
+import {getTransformFunction} from './gettransformfunction.js';
+import {getHeightReference} from './heightreference.js';
+import {getColor, getLineWidthFromStyle} from './style.js';
 
 const asserts = goog.require('goog.asserts');
 const olExtent = goog.require('ol.extent');
@@ -6,24 +14,17 @@ const Geometry = goog.require('ol.geom.Geometry');
 const GeometryType = goog.require('ol.geom.GeometryType');
 const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
 const olcsCore = goog.require('olcs.core');
-const osLabel = goog.require('os.style.label');
-const {GeometryInstanceId} = goog.require('plugin.cesium');
-const {isPrimitiveShown} = goog.require('plugin.cesium.primitive');
-const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
-const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
-const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
-const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
 
 const MultiPoint = goog.requireType('ol.geom.MultiPoint');
 const Point = goog.requireType('ol.geom.Point');
 const Text = goog.requireType('ol.style.Text');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**
  * Converter for Label styles
  */
-class LabelConverter extends BaseConverter {
+export default class LabelConverter extends BaseConverter {
   /**
    * @inheritDoc
    */
@@ -71,7 +72,7 @@ class LabelConverter extends BaseConverter {
     updateVerticalOrigin(label, textStyle);
     updateText(label, textStyle);
 
-    label.font = textStyle.getFont() || osLabel.getFont();
+    label.font = textStyle.getFont() || getFont();
     label.pixelOffset = new Cesium.Cartesian2(textStyle.getOffsetX(), textStyle.getOffsetY());
 
     // check if there is an associated primitive, and if it is shown
@@ -281,6 +282,3 @@ const updateText = (label, textStyle) => {
   const labelText = textStyle.getText() || '';
   label.text = labelText.replace(/[^\x0a\x0d\x20-\x7e\xa0-\xff]/g, '');
 };
-
-
-exports = LabelConverter;

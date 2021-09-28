@@ -1,4 +1,4 @@
-goog.module('plugin.area');
+goog.declareModuleId('plugin.area');
 
 const googString = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
@@ -18,7 +18,7 @@ const query = goog.require('os.ui.query');
  * @param {Array<Feature>} features
  * @param {Object} config
  */
-const processFeatures = function(features, config) {
+export const processFeatures = function(features, config) {
   const areaManager = getAreaManager();
 
   // filter only valid features
@@ -81,8 +81,4 @@ const processFeature_ = function(feature, config, mappings) {
   });
 
   feature.set(RecordField.SOURCE_NAME, config[RecordField.SOURCE_NAME], true);
-};
-
-exports = {
-  processFeatures
 };

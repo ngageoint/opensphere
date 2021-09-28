@@ -4,7 +4,7 @@ goog.require('plugin.suncalc.SunCalcPlugin');
 
 describe('plugin.suncalc.SunCalcPlugin', function() {
   const SettingsManager = goog.module.get('os.ui.config.SettingsManager');
-  const SunCalcPlugin = goog.module.get('plugin.suncalc.SunCalcPlugin');
+  const {default: SunCalcPlugin} = goog.module.get('plugin.suncalc.SunCalcPlugin');
 
   it('should add settings plugin on init()', function() {
     var mockSettingsManager = spyOn(SettingsManager, 'getInstance').andCallThrough();

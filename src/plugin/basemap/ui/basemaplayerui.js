@@ -1,11 +1,12 @@
-goog.module('plugin.basemap.ui.BaseMapLayerUI');
+goog.declareModuleId('plugin.basemap.ui.BaseMapLayerUI');
 
 goog.require('os.ui.SpinnerUI');
 
+import {MAX_ZOOM, MIN_ZOOM} from '../../../os/map/map.js';
+import {ROOT} from '../../../os/os.js';
+
 const Delay = goog.require('goog.async.Delay');
-const os = goog.require('os');
 const MapContainer = goog.require('os.MapContainer');
-const osMap = goog.require('os.map');
 const Module = goog.require('os.ui.Module');
 const {Controller: TileLayerUICtrl} = goog.require('os.ui.layer.TileLayerUI');
 
@@ -17,10 +18,10 @@ const LayerNode = goog.requireType('os.data.LayerNode');
  *
  * @return {!angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
-  templateUrl: os.ROOT + 'views/plugin/basemap/basemaplayerui.html',
+  templateUrl: ROOT + 'views/plugin/basemap/basemaplayerui.html',
   controller: Controller,
   controllerAs: 'basemap'
 });
@@ -29,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'basemaplayerui';
+export const directiveTag = 'basemaplayerui';
 
 
 /**
@@ -43,7 +44,7 @@ Module.directive('basemaplayerui', [directive]);
  * Controller for the base map layer UI
  * @unrestricted
  */
-class Controller extends TileLayerUICtrl {
+export class Controller extends TileLayerUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -59,8 +60,8 @@ class Controller extends TileLayerUICtrl {
     $scope.$on('maxZoom.spin', this.onMaxZoomChange.bind(this));
     $scope.$on('maxZoom.spinchange', this.onMaxZoomChange.bind(this));
 
-    this['mapMinZoom'] = osMap.MIN_ZOOM;
-    this['mapMaxZoom'] = osMap.MAX_ZOOM;
+    this['mapMinZoom'] = MIN_ZOOM;
+    this['mapMaxZoom'] = MAX_ZOOM;
 
     this.refreshDelay = new Delay(this.onRefresh, 1000, this);
   }
@@ -165,7 +166,7 @@ class Controller extends TileLayerUICtrl {
       }
     }
 
-    return osMap.MIN_ZOOM;
+    return MIN_ZOOM;
   }
 
   /**
@@ -190,7 +191,7 @@ class Controller extends TileLayerUICtrl {
       }
     }
 
-    return osMap.MAX_ZOOM;
+    return MAX_ZOOM;
   }
 
   /**
@@ -224,9 +225,3 @@ class Controller extends TileLayerUICtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

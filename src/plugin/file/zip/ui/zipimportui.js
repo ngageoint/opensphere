@@ -1,16 +1,16 @@
-goog.module('plugin.file.zip.ui.ZIPImportUI');
+goog.declareModuleId('plugin.file.zip.ui.ZIPImportUI');
+
+import ZIPParserConfig from '../zipparserconfig.js';
+import {directiveTag as zipImportUi} from './zipimport.js';
 
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const osWindow = goog.require('os.ui.window');
 const windowSelector = goog.require('os.ui.windowSelector');
-const ZIPParserConfig = goog.require('plugin.file.zip.ZIPParserConfig');
-const {directiveTag: zipImportUi} = goog.require('plugin.file.zip.ui.ZIPImport');
-
 
 /**
  * @extends {FileImportUI.<ZIPParserConfig>}
  */
-class ZIPImportUI extends FileImportUI {
+export default class ZIPImportUI extends FileImportUI {
   /**
    * Constructor.
    */
@@ -64,5 +64,3 @@ class ZIPImportUI extends FileImportUI {
     osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 }
-
-exports = ZIPImportUI;

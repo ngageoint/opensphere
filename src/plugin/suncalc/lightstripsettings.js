@@ -1,13 +1,13 @@
-goog.module('plugin.suncalc.LightStripSettings');
+goog.declareModuleId('plugin.suncalc.LightStripSettings');
+
+import {directiveTag as uiEl} from './lightstripsettingsui.js';
 
 const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
-const {directiveTag: uiEl} = goog.require('plugin.suncalc.LightStripSettingsUI');
-
 
 /**
  * Settings plugin for the light strip.
  */
-class LightStripSettings extends SettingPlugin {
+export default class LightStripSettings extends SettingPlugin {
   /**
    * Constructor.
    */
@@ -22,5 +22,3 @@ class LightStripSettings extends SettingPlugin {
     this.setUI(uiEl);
   }
 }
-
-exports = LightStripSettings;

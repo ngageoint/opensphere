@@ -1,4 +1,4 @@
-goog.module('plugin.descriptor.facet.TagSplit');
+goog.declareModuleId('plugin.descriptor.facet.TagSplit');
 
 const BaseFacet = goog.require('os.search.BaseFacet');
 
@@ -8,7 +8,7 @@ const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 /**
  * @extends {BaseFacet<!IDataDescriptor>}
  */
-class TagSplit extends BaseFacet {
+export default class TagSplit extends BaseFacet {
   /**
    * Constructor.
    */
@@ -57,5 +57,3 @@ class TagSplit extends BaseFacet {
     }
   }
 }
-
-exports = TagSplit;

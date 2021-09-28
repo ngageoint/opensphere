@@ -1,18 +1,17 @@
-goog.module('plugin.file.shp.SHPParserConfig');
+goog.declareModuleId('plugin.file.shp.SHPParserConfig');
+
+import SHPParser from './shpparser.js';
 
 const googEvents = goog.require('goog.events');
 const EventType = goog.require('os.events.EventType');
-
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const osUiSlickColumn = goog.require('os.ui.slick.column');
-const SHPParser = goog.require('plugin.file.shp.SHPParser');
-
 
 /**
  * Configuration for a SHP parser.
  * @unrestricted
  */
-class SHPParserConfig extends FileParserConfig {
+export default class SHPParserConfig extends FileParserConfig {
   /**
    * Constructor.
    */
@@ -123,6 +122,3 @@ SHPParserConfig.DEFAULT_FILL_ALPHA = 0.5;
  * @const
  */
 SHPParserConfig.DEFAULT_APPEND = true;
-
-
-exports = SHPParserConfig;

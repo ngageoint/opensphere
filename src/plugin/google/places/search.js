@@ -1,4 +1,9 @@
-goog.module('plugin.google.places.Search');
+goog.declareModuleId('plugin.google.places.Search');
+
+import * as osMap from '../../../os/map/map.js';
+import AttrResult from './attrresult.js';
+import Result from './result.js';
+import {ID} from './index.js';
 
 const Feature = goog.require('ol.Feature');
 const Point = goog.require('ol.geom.Point');
@@ -7,18 +12,15 @@ const MapContainer = goog.require('os.MapContainer');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const Settings = goog.require('os.config.Settings');
-const osMap = goog.require('os.map');
 const osProj = goog.require('os.proj');
 const AbstractUrlSearch = goog.require('os.search.AbstractUrlSearch');
-const {ID} = goog.require('plugin.google.places');
-const AttrResult = goog.require('plugin.google.places.AttrResult');
-const Result = goog.require('plugin.google.places.Result');
+
 
 
 /**
  * Searches Google Places API
  */
-class Search extends AbstractUrlSearch {
+export default class Search extends AbstractUrlSearch {
   /**
    * Constructor.
    * @param {string} name
@@ -129,5 +131,3 @@ class Search extends AbstractUrlSearch {
     super.onSearchSuccess(evt);
   }
 }
-
-exports = Search;

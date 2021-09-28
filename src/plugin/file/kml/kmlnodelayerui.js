@@ -1,15 +1,19 @@
-goog.module('plugin.file.kml.KMLNodeLayerUI');
+goog.declareModuleId('plugin.file.kml.KMLNodeLayerUI');
 
 goog.require('os.ui.UISwitchUI');
 goog.require('os.ui.layer.IconStyleControlsUI');
 goog.require('os.ui.layer.LabelControlsUI');
 goog.require('os.ui.layer.VectorStyleControlsUI');
 
+import * as dispatcher from '../../../os/dispatcher.js';
+import * as osFeature from '../../../os/feature/feature.js';
+import {ROOT} from '../../../os/os.js';
+import * as label from '../../../os/style/label.js';
+import * as osStyle from '../../../os/style/style.js';
+
 const googArray = goog.require('goog.array');
 const olArray = goog.require('ol.array');
 const UrlTile = goog.require('ol.source.UrlTile');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
 const EventType = goog.require('os.action.EventType');
 const osColor = goog.require('os.color');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
@@ -28,18 +32,17 @@ const ParallelCommand = goog.require('os.command.ParallelCommand');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
 const ColorChangeType = goog.require('os.command.style.ColorChangeType');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const osFeature = goog.require('os.feature');
 const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const geo = goog.require('os.geo');
 const VectorSource = goog.require('os.source.Vector');
-const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
-const label = goog.require('os.style.label');
 const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
 const Module = goog.require('os.ui.Module');
 const kml = goog.require('os.ui.file.kml');
 const {Controller: VectorLayerUICtrl, directive: vectorLayerUIDirective} = goog.require('os.ui.layer.VectorLayerUI');
+
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
@@ -74,7 +77,7 @@ const supportedCenterShapes = [
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = vectorLayerUIDirective();
   dir.templateUrl = ROOT + 'views/plugin/kml/kmlnodelayerui.html';
   dir.controller = Controller;
@@ -85,7 +88,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'kmlnodelayerui';
+export const directiveTag = 'kmlnodelayerui';
 
 
 /**
@@ -99,7 +102,7 @@ Module.directive('kmlnodelayerui', [directive]);
  * Controller for the stream layer UI
  * @unrestricted
  */
-class Controller extends VectorLayerUICtrl {
+export class Controller extends VectorLayerUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -161,7 +164,7 @@ class Controller extends VectorLayerUICtrl {
    * @inheritDoc
    */
   getColor() {
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
 
     if (items) {
       for (var i = 0, n = items.length; i < n; i++) {
@@ -190,7 +193,7 @@ class Controller extends VectorLayerUICtrl {
    * @inheritDoc
    */
   getFillColor() {
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
 
     if (items) {
       for (var i = 0, n = items.length; i < n; i++) {
@@ -219,7 +222,7 @@ class Controller extends VectorLayerUICtrl {
    * @inheritDoc
    */
   getFillOpacity() {
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
     var opacity = osStyle.DEFAULT_FILL_ALPHA;
 
     if (items) {
@@ -248,7 +251,7 @@ class Controller extends VectorLayerUICtrl {
    * @inheritDoc
    */
   getSize() {
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
     var size;
 
     if (items) {
@@ -274,7 +277,7 @@ class Controller extends VectorLayerUICtrl {
    * @inheritDoc
    */
   getLineDash() {
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
     var lineDash;
 
     if (items) {
@@ -300,7 +303,7 @@ class Controller extends VectorLayerUICtrl {
    * @inheritDoc
    */
   getIcon() {
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
     var icon = null;
 
     if (items) {
@@ -326,7 +329,7 @@ class Controller extends VectorLayerUICtrl {
    * @inheritDoc
    */
   getShape() {
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
     var shape;
 
     if (items && items.length > 0) {
@@ -345,7 +348,7 @@ class Controller extends VectorLayerUICtrl {
    * @inheritDoc
    */
   getShapes() {
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
     var shapes = supportedShapes;
 
     if (items && items.length > 0) {
@@ -364,7 +367,7 @@ class Controller extends VectorLayerUICtrl {
    * @inheritDoc
    */
   getCenterShape() {
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
     var shape;
 
     if (items && items.length > 0) {
@@ -383,7 +386,7 @@ class Controller extends VectorLayerUICtrl {
    * @inheritDoc
    */
   getCenterShapes() {
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
     var shapes = supportedCenterShapes;
 
     if (items && items.length > 0) {
@@ -402,7 +405,7 @@ class Controller extends VectorLayerUICtrl {
    * @inheritDoc
    */
   getOpacity() {
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
     var opacity = osStyle.DEFAULT_ALPHA;
 
     if (items) {
@@ -447,7 +450,7 @@ class Controller extends VectorLayerUICtrl {
    */
   getColumns() {
     var labelColumns = [];
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
     if (items) {
       for (var i = 0, n = items.length; i < n; i++) {
         var source = items[i].getSource();
@@ -465,7 +468,7 @@ class Controller extends VectorLayerUICtrl {
    */
   getColumn() {
     var labelColumns = [];
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
     if (items) {
       for (var i = 0, n = items.length; i < n; i++) {
         var feature = items[i].getFeature();
@@ -503,7 +506,7 @@ class Controller extends VectorLayerUICtrl {
     this['lock'] = false;
     // Only display lock option if all sources are lockable
     var lockable = true;
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
     if (items) {
       for (var i = 0, n = items.length; i < n; i++) {
         var source = items[i].getSource();
@@ -546,7 +549,7 @@ class Controller extends VectorLayerUICtrl {
    * @inheritDoc
    */
   onLockChange() {
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
     if (items) {
       for (var i = 0, n = items.length; i < n; i++) {
         var source = items[i].getSource();
@@ -929,7 +932,7 @@ class Controller extends VectorLayerUICtrl {
     this['showRefresh'] = false;
     this['refresh'] = null;
 
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var refreshInterval;
 
@@ -987,7 +990,7 @@ class Controller extends VectorLayerUICtrl {
    * @protected
    */
   getFeatures() {
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
     var features = [];
 
     if (items) {
@@ -1010,7 +1013,7 @@ class Controller extends VectorLayerUICtrl {
   createFeatureCommand(commandFunction) {
     var cmds = [];
 
-    var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!KMLNode>} */ (this.scope['items']);
     if (items) {
       for (var i = 0; i < items.length; i++) {
         var feature = items[i].getFeature();
@@ -1116,9 +1119,3 @@ class Controller extends VectorLayerUICtrl {
     return !!osStyle.CENTER_LOOKUP[this['shape']] && osStyle.ICON_REGEXP.test(this['centerShape']);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

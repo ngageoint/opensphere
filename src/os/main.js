@@ -1,4 +1,4 @@
-goog.module('osmain');
+goog.declareModuleId('osmain');
 
 goog.require('os.mixin');
 goog.require('os.ui.AddDataUI');
@@ -15,10 +15,11 @@ goog.require('os.ui.metrics.MetricsContainerUI');
 goog.require('os.ui.modal.AboutModalUI');
 goog.require('os.ui.slick.SlickTreeUI');
 
+import MainCtrl from './mainctrl.js';
+import Module from './module.js';
+import {ROOT, isMainWindow, setLogWindow} from './os.js';
+
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
-const {ROOT, isMainWindow, setLogWindow} = goog.require('os');
-const MainCtrl = goog.require('os.MainCtrl');
-const {default: Module} = goog.require('os.Module');
 const SettingsInitializerManager = goog.require('os.config.SettingsInitializerManager');
 const FancierWindow = goog.require('os.debug.FancierWindow');
 const addDefaultHandlers = goog.require('os.net.addDefaultHandlers');
@@ -29,7 +30,7 @@ const addDefaultHandlers = goog.require('os.net.addDefaultHandlers');
  *
  * @return {angular.Directive}
  */
-const mainDirective = function() {
+export const mainDirective = function() {
   return {
     restrict: 'E',
     replace: true,
@@ -46,7 +47,7 @@ Module.directive('osMain', [mainDirective]);
  * Load the settings, then manually bootstrap angular.
  * @todo should we display an informative error message if there are no settings?
  */
-var appWait = new ConditionalDelay(function() {
+const appWait = new ConditionalDelay(function() {
   return window.osasm && !!osasm.geodesicInverse;
 });
 
@@ -69,7 +70,7 @@ appWait.onSuccess = function() {
     addDefaultHandlers();
 
     // initialize settings for this app
-    var settingsInitializer = SettingsInitializerManager.getInstance().getSettingsInitializer();
+    const settingsInitializer = SettingsInitializerManager.getInstance().getSettingsInitializer();
     settingsInitializer.init();
   }
 };

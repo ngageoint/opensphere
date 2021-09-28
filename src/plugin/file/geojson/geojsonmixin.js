@@ -1,4 +1,4 @@
-goog.module('plugin.file.geojson.mixin');
+goog.declareModuleId('plugin.file.geojson.mixin');
 
 const GeoJSON = goog.require('ol.format.GeoJSON');
 
@@ -15,7 +15,7 @@ let initialized = false;
 /**
  * Initialize the mixin.
  */
-const init = () => {
+export const init = () => {
   if (!initialized) {
     initialized = true;
 
@@ -64,5 +64,3 @@ const init = () => {
     };
   }
 };
-
-exports = {init};

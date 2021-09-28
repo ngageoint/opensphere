@@ -1,11 +1,12 @@
-goog.module('plugin.overview.OverviewMap');
+goog.declareModuleId('plugin.overview.OverviewMap');
+
+import * as osMap from '../../os/map/map.js';
 
 const MapContainer = goog.require('os.MapContainer');
 const Settings = goog.require('os.config.Settings');
 const MapProperty = goog.require('ol.MapProperty');
 const View = goog.require('ol.View');
 const OLOverviewMap = goog.require('ol.control.OverviewMap');
-const osMap = goog.require('os.map');
 
 const Collection = goog.requireType('ol.Collection');
 const LayerBase = goog.requireType('ol.layer.Base');
@@ -14,7 +15,7 @@ const LayerBase = goog.requireType('ol.layer.Base');
 /**
  * Overview map control.
  */
-class OverviewMap extends OLOverviewMap {
+export default class OverviewMap extends OLOverviewMap {
   /**
    * Constructor.
    * @param {olx.control.OverviewMapOptions=} opt_opts
@@ -116,6 +117,3 @@ class OverviewMap extends OLOverviewMap {
  * @const
  */
 OverviewMap.SHOW_KEY = ['overview', 'show'];
-
-
-exports = OverviewMap;

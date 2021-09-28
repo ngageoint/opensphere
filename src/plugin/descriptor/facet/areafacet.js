@@ -1,4 +1,4 @@
-goog.module('plugin.descriptor.facet.Area');
+goog.declareModuleId('plugin.descriptor.facet.Area');
 
 const Promise = goog.require('goog.Promise');
 
@@ -13,7 +13,7 @@ const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 /**
  * @extends {BaseFacet<!IDataDescriptor>}
  */
-class Area extends BaseFacet {
+export default class Area extends BaseFacet {
   /**
    * Constructor.
    */
@@ -141,6 +141,3 @@ class Area extends BaseFacet {
  * @private
  */
 Area.cache_ = {};
-
-
-exports = Area;

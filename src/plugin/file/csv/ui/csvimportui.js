@@ -1,4 +1,9 @@
-goog.module('plugin.file.csv.ui.CSVImportUI');
+goog.declareModuleId('plugin.file.csv.ui.CSVImportUI');
+
+import CSVDescriptor from '../csvdescriptor.js';
+import CSVParserConfig from '../csvparserconfig.js';
+import CSVProvider from '../csvprovider.js';
+import {directiveTag as importUi} from './csvimport.js';
 
 const DataManager = goog.require('os.data.DataManager');
 const FileDescriptor = goog.require('os.data.FileDescriptor');
@@ -11,16 +16,11 @@ const windowSelector = goog.require('os.ui.windowSelector');
 const GeometryStep = goog.require('os.ui.wiz.GeometryStep');
 const OptionsStep = goog.require('os.ui.wiz.OptionsStep');
 const TimeStep = goog.require('os.ui.wiz.step.TimeStep');
-const CSVDescriptor = goog.require('plugin.file.csv.CSVDescriptor');
-const CSVParserConfig = goog.require('plugin.file.csv.CSVParserConfig');
-const CSVProvider = goog.require('plugin.file.csv.CSVProvider');
-const {directiveTag: importUi} = goog.require('plugin.file.csv.ui.CSVImport');
-
 
 /**
  * @extends {FileImportUI.<CSVParserConfig>}
  */
-class CSVImportUI extends FileImportUI {
+export default class CSVImportUI extends FileImportUI {
   /**
    * Constructor.
    */
@@ -150,5 +150,3 @@ class CSVImportUI extends FileImportUI {
     }
   }
 }
-
-exports = CSVImportUI;

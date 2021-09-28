@@ -14,8 +14,9 @@ describe('plugin.pelias.geocoder.Search', function() {
   const MapContainer = goog.module.get('os.MapContainer');
   const Settings = goog.module.get('os.config.Settings');
   const SearchEventType = goog.module.get('os.search.SearchEventType');
-  const Result = goog.module.get('plugin.pelias.geocoder.Result');
-  const Search = goog.module.get('plugin.pelias.geocoder.Search');
+  const {default: Result} = goog.module.get('plugin.pelias.geocoder.Result');
+  const {default: Search} = goog.module.get('plugin.pelias.geocoder.Search');
+
   var url = '/pelias.geocoder?text={s}';
   var boundary = '&boundary=true';
 

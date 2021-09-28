@@ -1,6 +1,13 @@
-goog.module('plugin.file.kml.ui.KMLNode');
+goog.declareModuleId('plugin.file.kml.ui.KMLNode');
 
 goog.require('os.ui.node.DefaultLayerNodeUI');
+
+import * as osFeature from '../../../../os/feature/feature.js';
+import {directiveTag as kmlNodeLayerUi} from '../kmlnodelayerui.js';
+import GeometryIcons from './geometryicons.js';
+import KMLNodeAction from './kmlnodeaction.js';
+import {directiveTag as kmlNodeUi} from './kmlnodeui.js';
+import {createOrEditPlace, setCreateFolderNodeFn, setCreatePlacemarkNodeFn, updatePlacemark} from './kmlui.js';
 
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -17,7 +24,6 @@ const LayerNode = goog.require('os.data.LayerNode');
 const IExtent = goog.require('os.data.IExtent');
 const ISearchable = goog.require('os.data.ISearchable');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osFeature = goog.require('os.feature');
 const fn = goog.require('os.fn');
 const osImplements = goog.require('os.implements');
 const TriState = goog.require('os.structs.TriState');
@@ -26,18 +32,9 @@ const {launchScreenOverlay} = goog.require('os.ui.ScreenOverlayUI');
 const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 const osWindow = goog.require('os.ui.window');
-const {directiveTag: kmlNodeLayerUi} = goog.require('plugin.file.kml.KMLNodeLayerUI');
-const {directiveTag: kmlNodeUi} = goog.require('plugin.file.kml.ui.KMLNodeUI');
-const {
-  createOrEditPlace,
-  setCreateFolderNodeFn,
-  setCreatePlacemarkNodeFn,
-  updatePlacemark
-} = goog.require('plugin.file.kml.ui');
-const GeometryIcons = goog.require('plugin.file.kml.ui.GeometryIcons');
-const KMLNodeAction = goog.require('plugin.file.kml.ui.KMLNodeAction');
 
 const Logger = goog.requireType('goog.log.Logger');
+const {default: KMLSource} = goog.requireType('plugin.file.kml.KMLSource');
 const {PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
 
 
@@ -84,7 +81,7 @@ setCreatePlacemarkNodeFn(createPlacemarkNode);
  * @implements {IExtent}
  * @implements {ILayerUIProvider}
  */
-class KMLNode extends SlickTreeNode {
+export default class KMLNode extends SlickTreeNode {
   /**
    * Constructor.
    */
@@ -181,7 +178,7 @@ class KMLNode extends SlickTreeNode {
 
     /**
      * The KML source
-     * @type {plugin.file.kml.KMLSource}
+     * @type {KMLSource}
      * @protected
      */
     this.source = null;
@@ -658,7 +655,7 @@ class KMLNode extends SlickTreeNode {
   /**
    * Get the KML source associated with the node.
    *
-   * @return {plugin.file.kml.KMLSource}
+   * @return {KMLSource}
    */
   getSource() {
     return this.source;
@@ -885,7 +882,7 @@ class KMLNode extends SlickTreeNode {
   /**
    * Set the KML source for this node.
    *
-   * @param {plugin.file.kml.KMLSource} source The source
+   * @param {KMLSource} source The source
    */
   setSource(source) {
     this.source = source;
@@ -1002,6 +999,3 @@ const logger = log.getLogger('plugin.file.kml.ui.KMLNode');
  * @type {!Array<string>}
  */
 const childLoadingEvents = ['children', 'state', 'collapsed'];
-
-
-exports = KMLNode;

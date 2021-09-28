@@ -1,16 +1,16 @@
-goog.module('plugin.pelias.geocoder.Plugin');
+goog.declareModuleId('plugin.pelias.geocoder.Plugin');
+
+import {ID} from './geocoder.js';
+import Search from './search.js';
 
 const settings = goog.require('os.config.Settings');
 const SearchManager = goog.require('os.search.SearchManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const {ID} = goog.require('plugin.pelias.geocoder');
-const Search = goog.require('plugin.pelias.geocoder.Search');
-
 
 /**
  * Provides Pelias Geocoder (text -> coordinates) search
  */
-class Plugin extends AbstractPlugin {
+export default class Plugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -30,5 +30,3 @@ class Plugin extends AbstractPlugin {
     }
   }
 }
-
-exports = Plugin;

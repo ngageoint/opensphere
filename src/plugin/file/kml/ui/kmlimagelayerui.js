@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.ui.KMLImageLayerUI');
+goog.declareModuleId('plugin.file.kml.ui.KMLImageLayerUI');
 
 const {isLayerNode} = goog.require('os.data');
 const LayerGroup = goog.require('os.layer.LayerGroup');
@@ -24,7 +24,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'kmlimagelayerui';
+export const directiveTag = 'kmlimagelayerui';
 
 
 /**
@@ -38,7 +38,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for KML image layer UI
  * @unrestricted
  */
-class Controller extends ImageLayerUI.Controller {
+export class Controller extends ImageLayerUI.Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -91,8 +91,3 @@ class Controller extends ImageLayerUI.Controller {
     return nodes;
   }
 }
-
-exports = {
-  Controller,
-  directiveTag
-};

@@ -1,10 +1,12 @@
-goog.module('plugin.suncalc.LightStripSettingsUI');
+goog.declareModuleId('plugin.suncalc.LightStripSettingsUI');
+
+import {ROOT} from '../../os/os.js';
+import {SettingKey, duskMode} from './suncalc.js';
 
 const EventType = goog.require('goog.events.EventType');
-const {ROOT} = goog.require('os');
 const settings = goog.require('os.config.Settings');
 const Module = goog.require('os.ui.Module');
-const {duskMode, SettingKey} = goog.require('plugin.suncalc');
+
 
 
 /**
@@ -12,7 +14,7 @@ const {duskMode, SettingKey} = goog.require('plugin.suncalc');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   templateUrl: ROOT + 'views/plugin/suncalc/lightstripsettings.html',
@@ -24,7 +26,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'lightstripsettings';
+export const directiveTag = 'lightstripsettings';
 
 
 /**
@@ -37,7 +39,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for Light Strip Controller settings
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -80,9 +82,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

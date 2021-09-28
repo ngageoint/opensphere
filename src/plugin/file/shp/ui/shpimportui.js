@@ -1,20 +1,20 @@
-goog.module('plugin.file.shp.ui.SHPImportUI');
+goog.declareModuleId('plugin.file.shp.ui.SHPImportUI');
+
+import * as mime from '../mime.js';
+import SHPParserConfig from '../shpparserconfig.js';
+import SHPFilesStep from './shpfilesstep.js';
+import {directiveTag as shpImportUi} from './shpimport.js';
 
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const osWindow = goog.require('os.ui.window');
 const windowSelector = goog.require('os.ui.windowSelector');
 const OptionsStep = goog.require('os.ui.wiz.OptionsStep');
 const TimeStep = goog.require('os.ui.wiz.step.TimeStep');
-const SHPParserConfig = goog.require('plugin.file.shp.SHPParserConfig');
-const mime = goog.require('plugin.file.shp.mime');
-const SHPFilesStep = goog.require('plugin.file.shp.ui.SHPFilesStep');
-const {directiveTag: shpImportUi} = goog.require('plugin.file.shp.ui.SHPImport');
-
 
 /**
  * @extends {FileImportUI<SHPParserConfig>}
  */
-class SHPImportUI extends FileImportUI {
+export default class SHPImportUI extends FileImportUI {
   /**
    * Constructor.
    */
@@ -80,5 +80,3 @@ class SHPImportUI extends FileImportUI {
     osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 }
-
-exports = SHPImportUI;

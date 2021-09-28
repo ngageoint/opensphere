@@ -1,15 +1,16 @@
-goog.module('plugin.file.csv.CSVLayerConfig');
+goog.declareModuleId('plugin.file.csv.CSVLayerConfig');
+
+import CSVParser from './csvparser.js';
+import CSVParserConfig from './csvparserconfig.js';
 
 const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
-const CSVParser = goog.require('plugin.file.csv.CSVParser');
-const CSVParserConfig = goog.require('plugin.file.csv.CSVParserConfig');
 
 const FeatureImporter = goog.requireType('os.im.FeatureImporter');
 
 
 /**
  */
-class CSVLayerConfig extends AbstractDataSourceLayerConfig {
+export default class CSVLayerConfig extends AbstractDataSourceLayerConfig {
   /**
    * Constructor.
    */
@@ -84,5 +85,3 @@ class CSVLayerConfig extends AbstractDataSourceLayerConfig {
     return new CSVParser(this.parserConfig);
   }
 }
-
-exports = CSVLayerConfig;

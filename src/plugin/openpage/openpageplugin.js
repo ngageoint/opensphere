@@ -1,15 +1,15 @@
-goog.module('plugin.openpage.Plugin');
+goog.declareModuleId('plugin.openpage.Plugin');
+
+import Handler from './handler.js';
+import {ID} from './openpage.js';
 
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const Peer = goog.require('os.xt.Peer');
-const {ID} = goog.require('plugin.openpage');
-const Handler = goog.require('plugin.openpage.Handler');
-
 
 /**
  * Adds layers from XT messages sent by the addlayer.html page.
  */
-class Plugin extends AbstractPlugin {
+export default class Plugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -51,5 +51,3 @@ class Plugin extends AbstractPlugin {
  * @type {Plugin|undefined}
  */
 let instance;
-
-exports = Plugin;

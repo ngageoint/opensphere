@@ -1,8 +1,8 @@
-goog.module('plugin.heatmap.SynchronizerType');
+goog.declareModuleId('plugin.heatmap.SynchronizerType');
 
 /**
  * @enum {string}
  */
-exports = {
+export default {
   HEATMAP: 'heatmap'
 };

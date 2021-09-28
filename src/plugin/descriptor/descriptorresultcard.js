@@ -1,7 +1,8 @@
-goog.module('plugin.descriptor.ResultCardUI');
+goog.declareModuleId('plugin.descriptor.ResultCardUI');
 
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
+import * as dispatcher from '../../os/dispatcher.js';
+import {ROOT} from '../../os/os.js';
+
 const DescriptorEvent = goog.require('os.data.DescriptorEvent');
 const DescriptorEventType = goog.require('os.data.DescriptorEventType');
 const Module = goog.require('os.ui.Module');
@@ -10,7 +11,7 @@ const Module = goog.require('os.ui.Module');
 /**
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/plugin/descriptor/resultcard.html',
@@ -22,7 +23,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'descriptorresultcard';
+export const directiveTag = 'descriptorresultcard';
 
 
 /**
@@ -36,7 +37,7 @@ Module.directive('descriptorresultcard', [directive]);
  * Controller for the beresultcard directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -150,10 +151,3 @@ class Controller {
     }
   }
 }
-
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

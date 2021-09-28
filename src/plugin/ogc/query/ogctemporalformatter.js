@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.query.OGCTemporalFormatter');
+goog.declareModuleId('plugin.ogc.query.OGCTemporalFormatter');
 
 const time = goog.require('os.time');
 const ITemporalFormatter = goog.requireType('os.query.ITemporalFormatter');
@@ -7,7 +7,7 @@ const ITemporalFormatter = goog.requireType('os.query.ITemporalFormatter');
 /**
  * @implements {ITemporalFormatter}
  */
-class OGCTemporalFormatter {
+export default class OGCTemporalFormatter {
   /**
    * Constructor.
    */
@@ -134,5 +134,3 @@ OGCTemporalFormatter.FILTER = '<PropertyIsGreaterThanOrEqualTo>' +
     '<PropertyName>{startColumn}</PropertyName>' +
     '<Literal>{end}</Literal>' +
     '</PropertyIsLessThan>';
-
-exports = OGCTemporalFormatter;

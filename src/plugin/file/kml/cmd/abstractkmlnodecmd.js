@@ -1,9 +1,11 @@
-goog.module('plugin.file.kml.cmd.AbstractKMLNode');
+goog.declareModuleId('plugin.file.kml.cmd.AbstractKMLNode');
 
 const Disposable = goog.require('goog.Disposable');
 const dispose = goog.require('goog.dispose');
 const State = goog.require('os.command.State');
 const ICommand = goog.requireType('os.command.ICommand');
+
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
@@ -13,11 +15,11 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class AbstractKMLNode extends Disposable {
+export default class AbstractKMLNode extends Disposable {
   /**
    * Constructor.
-   * @param {!plugin.file.kml.ui.KMLNode} node The KML node
-   * @param {plugin.file.kml.ui.KMLNode} parent The parent node
+   * @param {!KMLNode} node The KML node
+   * @param {KMLNode} parent The parent node
    */
   constructor(node, parent) {
     super();
@@ -48,14 +50,14 @@ class AbstractKMLNode extends Disposable {
 
     /**
      * The node to add/remove
-     * @type {plugin.file.kml.ui.KMLNode}
+     * @type {KMLNode}
      * @protected
      */
     this.node = node;
 
     /**
      * The parent of the node to add/remove
-     * @type {plugin.file.kml.ui.KMLNode}
+     * @type {KMLNode}
      * @protected
      */
     this.parent = parent;
@@ -180,5 +182,3 @@ class AbstractKMLNode extends Disposable {
     return false;
   }
 }
-
-exports = AbstractKMLNode;

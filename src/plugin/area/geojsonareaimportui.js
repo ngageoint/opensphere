@@ -1,11 +1,12 @@
-goog.module('plugin.area.GeoJSONAreaImportUI');
+goog.declareModuleId('plugin.area.GeoJSONAreaImportUI');
+
+import GeoJSONParserConfig from '../file/geojsonparserconfig.js';
+import {directiveTag as areaImportUi} from './geojsonareaimport.js';
 
 const AreaOptionsStep = goog.require('os.query.ui.AreaOptionsStep');
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const osWindow = goog.require('os.ui.window');
 const windowSelector = goog.require('os.ui.windowSelector');
-const {directiveTag: areaImportUi} = goog.require('plugin.area.GeoJSONAreaImport');
-const GeoJSONParserConfig = goog.require('plugin.file.geojson.GeoJSONParserConfig');
 
 
 /**
@@ -71,4 +72,4 @@ class GeoJSONAreaImportUI extends FileImportUI {
   }
 }
 
-exports = GeoJSONAreaImportUI;
+export default GeoJSONAreaImportUI;

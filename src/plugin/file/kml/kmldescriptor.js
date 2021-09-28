@@ -1,17 +1,17 @@
-goog.module('plugin.file.kml.KMLDescriptor');
+goog.declareModuleId('plugin.file.kml.KMLDescriptor');
+
+import KMLExporter from './kmlexporter.js';
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const layer = goog.require('os.layer');
 const LayerType = goog.require('os.layer.LayerType');
 const ColorControlType = goog.require('os.ui.ColorControlType');
 const ControlType = goog.require('os.ui.ControlType');
-const KMLExporter = goog.require('plugin.file.kml.KMLExporter');
-
 
 /**
  * KML file descriptor.
  */
-class KMLDescriptor extends FileDescriptor {
+export default class KMLDescriptor extends FileDescriptor {
   /**
    * Constructor.
    */
@@ -50,5 +50,3 @@ class KMLDescriptor extends FileDescriptor {
     return new KMLExporter();
   }
 }
-
-exports = KMLDescriptor;

@@ -1,10 +1,9 @@
-goog.module('plugin.file.kml.ui.KMLNodeAction');
-
+goog.declareModuleId('plugin.file.kml.ui.KMLNodeAction');
 
 /**
  * KML node actions
  * @enum {string}
  */
-exports = {
+export default {
   FEATURE_INFO: 'featureInfo'
 };

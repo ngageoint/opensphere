@@ -18,7 +18,7 @@ describe('plugin.file.csv.CSVExporter', function() {
   const Fields = goog.module.get('os.Fields');
   const TimeInstant = goog.module.get('os.time.TimeInstant');
   const TimeRange = goog.module.get('os.time.TimeRange');
-  const CSVExporter = goog.module.get('plugin.file.csv.CSVExporter');
+  const {default: CSVExporter} = goog.module.get('plugin.file.csv.CSVExporter');
   var ex = new CSVExporter();
   var lineFeature;
   var pointFeature;

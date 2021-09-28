@@ -1,20 +1,19 @@
-goog.module('plugin.heatmap.HeatmapPlugin');
+goog.declareModuleId('plugin.heatmap.HeatmapPlugin');
+
+import {ID} from './heatmap.js';
+import HeatmapLayerConfig from './heatmaplayerconfig.js';
+import * as heatmapMenu from './heatmapmenu.js';
 
 const DataEventType = goog.require('os.data.event.DataEventType');
 const VectorSource = goog.require('os.source.Vector');
-
 const DataManager = goog.require('os.data.DataManager');
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const {ID} = goog.require('plugin.heatmap');
-const HeatmapLayerConfig = goog.require('plugin.heatmap.HeatmapLayerConfig');
-const heatmapMenu = goog.require('plugin.heatmap.menu');
-
 
 /**
  * Adds the ability to generate a heatmap layer from any vector layer.
  */
-class HeatmapPlugin extends AbstractPlugin {
+export default class HeatmapPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -68,5 +67,3 @@ class HeatmapPlugin extends AbstractPlugin {
  * @type {HeatmapPlugin|undefined}
  */
 let instance;
-
-exports = HeatmapPlugin;

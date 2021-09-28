@@ -1,20 +1,20 @@
-goog.module('plugin.cesium.sync.DynamicPolygonConverter');
+goog.declareModuleId('plugin.cesium.sync.DynamicPolygonConverter');
 
-const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
-const {createOrUpdateSegment} = goog.require('plugin.cesium.sync.DynamicLineString');
+import BaseConverter from './baseconverter.js';
+import {createOrUpdateSegment} from './dynamiclinestring.js';
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const Polygon = goog.requireType('ol.geom.Polygon');
 const Style = goog.requireType('ol.style.Style');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**
  * Converter for DynamicFeature polygons.
  * @extends {BaseConverter<(Polygon), (Cesium.Polyline|Cesium.PolylineOptions)>}
  */
-class DynamicPolygonConverter extends BaseConverter {
+export default class DynamicPolygonConverter extends BaseConverter {
   /**
    * @inheritDoc
    */
@@ -51,6 +51,3 @@ const createOrUpdatePolygon = (feature, polygon, style, context, opt_primitives)
     offset = end;
   });
 };
-
-
-exports = DynamicPolygonConverter;

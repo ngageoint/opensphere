@@ -1,6 +1,7 @@
-goog.module('plugin.file.csv.ui.CSVExportUI');
+goog.declareModuleId('plugin.file.csv.ui.CSVExportUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../../os/os.js';
+
 const Module = goog.require('os.ui.Module');
 
 
@@ -11,7 +12,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: {
     'exporter': '='
@@ -25,7 +26,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'csvexport';
+export const directiveTag = 'csvexport';
 
 
 /**
@@ -39,7 +40,7 @@ Module.directive('csvexport', [directive]);
  * Controller function for the csvexport directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -97,9 +98,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,4 +1,17 @@
-goog.module('plugin.arc.ArcPlugin');
+goog.declareModuleId('plugin.arc.ArcPlugin');
+
+import * as arc from './arc.js';
+import ArcLoader from './arcloader.js';
+import ArcServer from './arcserver.js';
+import * as ArcServerHelpUI from './arcserverhelp.js';
+import {directiveTag as arcImportEl} from './arcserverimport.js';
+import * as ArcImportForm from './arcserverimportform.js';
+import ArcFeatureLayerConfig from './layer/arcfeaturelayerconfig.js';
+import ArcImageLayerConfig from './layer/arcimagelayerconfig.js';
+import ArcLayerDescriptor from './layer/arclayerdescriptor.js';
+import ArcTileLayerConfig from './layer/arctilelayerconfig.js';
+import {registerMimeTypes} from './mime.js';
+import * as arcstate from './state/v2/arcstate.js';
 
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
@@ -8,18 +21,6 @@ const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const StateManager = goog.require('os.state.StateManager');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const ProviderImportUI = goog.require('os.ui.ProviderImportUI');
-const arc = goog.require('plugin.arc');
-const ArcImportForm = goog.require('plugin.arc.ArcImportForm');
-const {directiveTag: arcImportEl} = goog.require('plugin.arc.ArcImportUI');
-const ArcLoader = goog.require('plugin.arc.ArcLoader');
-const ArcServer = goog.require('plugin.arc.ArcServer');
-const ArcServerHelpUI = goog.require('plugin.arc.ArcServerHelpUI');
-const ArcFeatureLayerConfig = goog.require('plugin.arc.layer.ArcFeatureLayerConfig');
-const ArcImageLayerConfig = goog.require('plugin.arc.layer.ArcImageLayerConfig');
-const ArcLayerDescriptor = goog.require('plugin.arc.layer.ArcLayerDescriptor');
-const {registerMimeTypes} = goog.require('plugin.arc.mime');
-const ArcTileLayerConfig = goog.require('plugin.arc.layer.ArcTileLayerConfig');
-const arcstate = goog.require('plugin.arc.state.v2.arcstate');
 
 
 /**
@@ -73,4 +74,4 @@ class ArcPlugin extends AbstractPlugin {
   }
 }
 
-exports = ArcPlugin;
+export default ArcPlugin;

@@ -1,4 +1,9 @@
-goog.module('plugin.arc.ArcLoader');
+goog.declareModuleId('plugin.arc.ArcLoader');
+
+import * as arc from './arc.js';
+import ArcServer from './arcserver.js';
+import ArcFolderNode from './node/arcfoldernode.js';
+import ArcServiceNode from './node/arcservicenode.js';
 
 const asserts = goog.require('goog.asserts');
 const dispose = goog.require('goog.dispose');
@@ -7,16 +12,12 @@ const log = goog.require('goog.log');
 const EventType = goog.require('goog.net.EventType');
 const olArray = goog.require('ol.array');
 const Request = goog.require('os.net.Request');
-const arc = goog.require('plugin.arc');
-const ArcServer = goog.require('plugin.arc.ArcServer');
-const ArcFolderNode = goog.require('plugin.arc.node.ArcFolderNode');
-const ArcServiceNode = goog.require('plugin.arc.node.ArcServiceNode');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
 const ITreeNode = goog.requireType('os.structs.ITreeNode');
 const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
-const IArcLoader = goog.requireType('plugin.arc.IArcLoader');
+const {default: IArcLoader} = goog.requireType('plugin.arc.IArcLoader');
 
 
 /**
@@ -380,4 +381,4 @@ const logger = log.getLogger('plugin.arc.ArcLoader');
 
 // Use this as the default class for loading an ArcGIS service/node.
 arc.setLoaderClass(ArcLoader);
-exports = ArcLoader;
+export default ArcLoader;

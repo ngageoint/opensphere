@@ -1,12 +1,7 @@
-goog.module('plugin.vectortile');
-
+goog.declareModuleId('plugin.vectortile');
 
 /**
  * Plugin identifier.
  * @type {string}
  */
-const ID = 'vectortile';
-
-exports = {
-  ID
-};
+export const ID = 'vectortile';

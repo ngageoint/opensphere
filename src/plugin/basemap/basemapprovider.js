@@ -1,7 +1,13 @@
-goog.module('plugin.basemap.BaseMapProvider');
+goog.declareModuleId('plugin.basemap.BaseMapProvider');
+
+import * as dispatcher from '../../os/dispatcher.js';
+import {PROJECTION} from '../../os/map/map.js';
+import {ID, LAYER_TYPE, TERRAIN_TYPE, TYPE} from './basemap.js';
+import BaseMapDescriptor from './basemapdescriptor.js';
+import BaseMap from './layer/basemaplayer.js';
+import TerrainDescriptor from './terraindescriptor.js';
 
 const dispose = goog.require('goog.dispose');
-const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const BaseDescriptor = goog.require('os.data.BaseDescriptor');
@@ -10,15 +16,10 @@ const DataProviderEvent = goog.require('os.data.DataProviderEvent');
 const DataProviderEventType = goog.require('os.data.DataProviderEventType');
 const IDataProvider = goog.require('os.data.IDataProvider');
 const osImplements = goog.require('os.implements');
-const osMap = goog.require('os.map');
 const {addTerrainProvider, hasTerrain} = goog.require('os.map.terrain');
 const BinnedLayersEvent = goog.require('os.proj.switch.BinnedLayersEvent');
 const SwitchProjection = goog.require('os.proj.switch.SwitchProjection');
 const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
-const basemap = goog.require('plugin.basemap');
-const BaseMapDescriptor = goog.require('plugin.basemap.BaseMapDescriptor');
-const TerrainDescriptor = goog.require('plugin.basemap.TerrainDescriptor');
-const BaseMap = goog.require('plugin.basemap.layer.BaseMap');
 
 
 /**
@@ -27,14 +28,14 @@ const BaseMap = goog.require('plugin.basemap.layer.BaseMap');
  * @implements {IDataProvider}
  * @see {@link basemap.BaseMapPlugin} for configuration instructions
  */
-class BaseMapProvider extends DescriptorProvider {
+export default class BaseMapProvider extends DescriptorProvider {
   /**
    * Constructor.
    */
   constructor() {
     super();
 
-    this.setId(basemap.ID);
+    this.setId(ID);
 
     /**
      * @type {Object<string, Array<string>>}
@@ -77,11 +78,11 @@ class BaseMapProvider extends DescriptorProvider {
    * @inheritDoc
    */
   configure(config) {
-    this.setLabel(basemap.LAYER_TYPE);
+    this.setLabel(LAYER_TYPE);
     this.defaultSets_ = /** @type {Object<string, Array<string>>} */ (config['defaults']);
 
     if (this.defaultSets_) {
-      this.defaults_ = this.defaultSets_[osMap.PROJECTION.getCode()];
+      this.defaults_ = this.defaultSets_[PROJECTION.getCode()];
     }
 
     var failSets = /** @type {Object<string, Array<!string>>} */ (config['failSet']);
@@ -107,7 +108,7 @@ class BaseMapProvider extends DescriptorProvider {
         var descriptor = list[i];
         this.addDescriptor(descriptor, false, false);
 
-        if (descriptor.getDescriptorType() == basemap.ID && descriptor.isActive()) {
+        if (descriptor.getDescriptorType() == ID && descriptor.isActive()) {
           anyActive = true;
         }
       }
@@ -133,7 +134,7 @@ class BaseMapProvider extends DescriptorProvider {
    * @protected
    */
   activateFailSet() {
-    var list = this.failSets_[osMap.PROJECTION.getCode()];
+    var list = this.failSets_[PROJECTION.getCode()];
 
     if (list) {
       var dm = DataManager.getInstance();
@@ -166,7 +167,7 @@ class BaseMapProvider extends DescriptorProvider {
 
         if (conf) {
           var type = conf['type'] ? conf['type'].toLowerCase() : null;
-          if (type == basemap.TERRAIN_TYPE) {
+          if (type == TERRAIN_TYPE) {
             var terrainOptions = /** @type {osx.map.TerrainProviderOptions|undefined} */ (conf['options']);
             var terrainType = /** @type {string|undefined} */ (conf['baseType']);
             if (terrainOptions && terrainType) {
@@ -176,7 +177,7 @@ class BaseMapProvider extends DescriptorProvider {
 
               addTerrainProvider(terrainOptions);
             }
-          } else if (type == basemap.TYPE) {
+          } else if (type == TYPE) {
             var mapId = this.getId() + BaseDescriptor.ID_DELIMITER + id;
             var d = /** @type {BaseMapDescriptor} */ (dm.getDescriptor(mapId));
 
@@ -228,7 +229,7 @@ class BaseMapProvider extends DescriptorProvider {
     }
 
     for (i = 0, n = bins.add.length; i < n; i++) {
-      if (bins.add[i]['type'].toLowerCase() === basemap.TYPE) {
+      if (bins.add[i]['type'].toLowerCase() === TYPE) {
         numBaseMaps++;
       }
     }
@@ -295,6 +296,5 @@ class BaseMapProvider extends DescriptorProvider {
     return null;
   }
 }
-osImplements(BaseMapProvider, IDataProvider.ID);
 
-exports = BaseMapProvider;
+osImplements(BaseMapProvider, IDataProvider.ID);

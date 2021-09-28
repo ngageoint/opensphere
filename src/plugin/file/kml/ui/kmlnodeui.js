@@ -1,18 +1,18 @@
-goog.module('plugin.file.kml.ui.KMLNodeUI');
+goog.declareModuleId('plugin.file.kml.ui.KMLNodeUI');
+
+import KMLNodeRemove from '../cmd/kmlnoderemovecmd.js';
+import {createOrEditFolder, createOrEditPlace} from './kmlui.js';
 
 const annotation = goog.require('os.annotation');
-
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const osObject = goog.require('os.object');
 const Module = goog.require('os.ui.Module');
 const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
-const KMLNodeRemove = goog.require('plugin.file.kml.cmd.KMLNodeRemove');
-const {createOrEditFolder, createOrEditPlace} = goog.require('plugin.file.kml.ui');
 
 const {FolderOptions, PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
-const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
@@ -20,7 +20,7 @@ const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
 
@@ -54,7 +54,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'kmlnodeui';
+export const directiveTag = 'kmlnodeui';
 
 
 /**
@@ -68,7 +68,7 @@ Module.directive('kmlnodeui', [directive]);
  * Controller for KML tree node UI
  * @unrestricted
  */
-class Controller extends AbstractNodeUICtrl {
+export class Controller extends AbstractNodeUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -279,9 +279,3 @@ class Controller extends AbstractNodeUICtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

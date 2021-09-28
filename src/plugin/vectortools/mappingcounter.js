@@ -1,14 +1,16 @@
-goog.module('plugin.vectortools.MappingCounterUI');
+goog.declareModuleId('plugin.vectortools.MappingCounterUI');
+
+import * as os from '../../os/os.js';
+import * as ui from '../../os/ui/ui.js';
+import * as vectortools from './vectortools.js';
 
 const EventType = goog.require('goog.events.EventType');
 const googObject = goog.require('goog.object');
-const os = goog.require('os');
 const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
-const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const ColumnMappingSettings = goog.require('os.ui.column.mapping.ColumnMappingSettings');
 const windows = goog.require('os.ui.menu.windows');
-const vectortools = goog.require('plugin.vectortools');
+
 
 
 /**
@@ -16,7 +18,7 @@ const vectortools = goog.require('plugin.vectortools');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
 
@@ -33,7 +35,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'mappingcounter';
+export const directiveTag = 'mappingcounter';
 
 
 /**
@@ -47,7 +49,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the mappingcounter directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -118,9 +120,3 @@ class Controller {
     windows.openSettingsTo(ColumnMappingSettings.ID);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

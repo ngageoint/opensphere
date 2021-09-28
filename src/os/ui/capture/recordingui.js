@@ -1,23 +1,24 @@
-goog.module('os.ui.capture.RecordingUI');
+goog.declareModuleId('os.ui.capture.RecordingUI');
 
 goog.require('os.ui.LoadingBarUI');
 
+import {getTimestamp} from '../../capture/capture.js';
+import CaptureEventType from '../../capture/captureeventtype.js';
+import ContentType from '../../capture/contenttype.js';
+import GifEncoder from '../../capture/gifencoder.js';
+import {ROOT} from '../../os.js';
+import {apply} from '../ui.js';
+
 const dispose = goog.require('goog.dispose');
-const {ROOT} = goog.require('os');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
-const capture = goog.require('os.capture');
-const CaptureEventType = goog.require('os.capture.CaptureEventType');
-const ContentType = goog.require('os.capture.ContentType');
-const GifEncoder = goog.require('os.capture.GifEncoder');
-const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
 const exportManager = goog.require('os.ui.exportManager');
 const osWindow = goog.require('os.ui.window');
 
-const IRecorder = goog.requireType('os.capture.IRecorder');
-const IVideoEncoder = goog.requireType('os.capture.IVideoEncoder');
+const {default: IRecorder} = goog.requireType('os.capture.IRecorder');
+const {default: IVideoEncoder} = goog.requireType('os.capture.IVideoEncoder');
 
 
 /**
@@ -32,7 +33,7 @@ const RECORDING_ID = 'recordUi';
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -47,7 +48,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'recordingui';
+export const directiveTag = 'recordingui';
 
 
 /**
@@ -60,7 +61,7 @@ Module.directive('recordingui', [directive]);
  * Controller function for the recordingui directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -109,7 +110,7 @@ class Controller {
     /**
      * @type {string}
      */
-    this['title'] = 'Recording ' + capture.getTimestamp();
+    this['title'] = 'Recording ' + getTimestamp();
 
     /**
      * @type {!Array<!IVideoEncoder>}
@@ -244,7 +245,7 @@ class Controller {
   onRecordingProgress_(event) {
     if (this.recorder_) {
       this['progress'] = this.recorder_.progress;
-      ui.apply(this.scope_);
+      apply(this.scope_);
     }
   }
 
@@ -258,7 +259,7 @@ class Controller {
     if (this.recorder_) {
       this['recordingCritical'] = false;
       osWindow.disableModality(RECORDING_ID);
-      ui.apply(this.scope_);
+      apply(this.scope_);
     }
   }
 
@@ -271,7 +272,7 @@ class Controller {
   onRecordingStatus_(event) {
     if (this.recorder_) {
       this['status'] = this.recorder_.status;
-      ui.apply(this.scope_);
+      apply(this.scope_);
     }
   }
 
@@ -328,7 +329,7 @@ class Controller {
  *
  * @param {!IRecorder} recorder The recorder
  */
-const launchRecordingUI = function(recorder) {
+export const launchRecordingUI = function(recorder) {
   if (recorder && !osWindow.exists(RECORDING_ID)) {
     var scopeOptions = {
       'recorder': recorder
@@ -351,11 +352,4 @@ const launchRecordingUI = function(recorder) {
     var template = `<${directiveTag} recorder="recorder"></${directiveTag}>`;
     osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchRecordingUI
 };

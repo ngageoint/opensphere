@@ -1,16 +1,16 @@
-goog.module('os.ui.capture.SvgRenderer');
+goog.declareModuleId('os.ui.capture.SvgRenderer');
+
+import {getPixelRatio} from '../../capture/capture.js';
+import ElementRenderer from './elementrenderer.js';
 
 const Promise = goog.require('goog.Promise');
-const capture = goog.require('os.capture');
-const ElementRenderer = goog.require('os.ui.capture.ElementRenderer');
-
 
 /**
  * Renders an SVG element to a canvas.
  *
  * @extends {ElementRenderer<Element>}
  */
-class SvgRenderer extends ElementRenderer {
+export default class SvgRenderer extends ElementRenderer {
   /**
    * Constructor.
    * @param {Object=} opt_options Options to configure the renderer
@@ -27,7 +27,7 @@ class SvgRenderer extends ElementRenderer {
       var svgElement = this.getRenderElement();
       if (svgElement) {
         svgAsDataUri(svgElement, {
-          'scale': capture.getPixelRatio()
+          'scale': getPixelRatio()
         }, this.onSvgUriReady_.bind(this, resolve, reject));
       } else {
         resolve(null);
@@ -79,5 +79,3 @@ class SvgRenderer extends ElementRenderer {
     resolve(svgCanvas || null);
   }
 }
-
-exports = SvgRenderer;

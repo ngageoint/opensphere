@@ -1,9 +1,9 @@
-goog.module('plugin.heatmap.HeatmapField');
+goog.declareModuleId('plugin.heatmap.HeatmapField');
 
 /**
  * @enum {string}
  */
-exports = {
+export default {
   GEOMETRY_TYPE: '_geometryType',
   HEATMAP_GEOMETRY: '_heatmapGeometry',
   CANVAS: '_canvas'

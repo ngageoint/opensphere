@@ -1,4 +1,10 @@
-goog.module('plugin.places.ui.PlacesButtonUI');
+goog.declareModuleId('plugin.places.ui.PlacesButtonUI');
+
+import {createOrEditPlace} from '../../file/kml/ui/kmlui.js';
+import EventType from '../eventtype.js';
+import * as places from '../places.js';
+import PlacesManager from '../placesmanager.js';
+import * as QuickAddPlacesUI from './quickaddplaces.js';
 
 const {Places: PlacesKeys} = goog.require('os.metrics.keys');
 const Module = goog.require('os.ui.Module');
@@ -6,21 +12,16 @@ const Menu = goog.require('os.ui.menu.Menu');
 const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
 const MenuItem = goog.require('os.ui.menu.MenuItem');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const {createOrEditPlace} = goog.require('plugin.file.kml.ui');
-const places = goog.require('plugin.places');
-const EventType = goog.require('plugin.places.EventType');
-const PlacesManager = goog.require('plugin.places.PlacesManager');
-const QuickAddPlacesUI = goog.require('plugin.places.ui.QuickAddPlacesUI');
 
 const {PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
-const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
  * The places button directive
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -39,7 +40,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'placesbutton';
+export const directiveTag = 'placesbutton';
 
 
 /**
@@ -52,7 +53,7 @@ Module.directive('placesbutton', [directive]);
  * Controller function for the places button directive
  * @unrestricted
  */
-class Controller extends MenuButtonCtrl {
+export class Controller extends MenuButtonCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The scope
@@ -125,9 +126,3 @@ class Controller extends MenuButtonCtrl {
     return parent;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

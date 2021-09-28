@@ -29,8 +29,8 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
   const {getRealScene} = goog.module.get('test.plugin.cesium.scene');
   const {getLineRetriever, testLine} = goog.module.get('test.plugin.cesium.sync.linestring');
   const {testPolygon} = goog.module.get('test.plugin.cesium.sync.polygon');
-  const VectorContext = goog.module.get('plugin.cesium.VectorContext');
-  const PolygonConverter = goog.module.get('plugin.cesium.sync.PolygonConverter');
+  const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');
+  const {default: PolygonConverter} = goog.module.get('plugin.cesium.sync.PolygonConverter');
   const polygonConverter = new PolygonConverter();
 
   let feature;

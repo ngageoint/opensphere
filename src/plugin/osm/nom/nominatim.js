@@ -1,6 +1,7 @@
-goog.module('plugin.osm.nom');
+goog.declareModuleId('plugin.osm.nom');
 
-const style = goog.require('os.style');
+import * as style from '../../../os/style/style.js';
+
 const kml = goog.require('os.ui.file.kml');
 
 
@@ -8,19 +9,19 @@ const kml = goog.require('os.ui.file.kml');
  * Plugin identifier.
  * @type {string}
  */
-const ID = 'nominatim';
+export const ID = 'nominatim';
 
 /**
  * User-facing name for the search provider.
  * @type {string}
  */
-const SEARCH_NAME = 'Places (OpenStreetMap)';
+export const SEARCH_NAME = 'Places (OpenStreetMap)';
 
 /**
  * Fields on OSM Nominatim response data.
  * @enum {string}
  */
-const ResultField = {
+export const ResultField = {
   BBOX: 'boundingbox',
   CATEGORY: 'category',
   DISPLAY_NAME: 'display_name',
@@ -37,7 +38,7 @@ const ResultField = {
  * Fields on OSM Nominatim `extradata` objects.
  * @enum {string}
  */
-const ExtraDataField = {
+export const ExtraDataField = {
   PLACE: 'place',
   POPULATION: 'population'
 };
@@ -46,19 +47,19 @@ const ExtraDataField = {
  * Field used to label search results.
  * @type {string}
  */
-const LABEL_FIELD = ResultField.DISPLAY_NAME;
+export const LABEL_FIELD = ResultField.DISPLAY_NAME;
 
 /**
  * Base search result score.
  * @type {number}
  */
-const BASE_SCORE = 100;
+export const BASE_SCORE = 100;
 
 /**
  * Multiplier to apply to search result importance based on OSM type.
  * @enum {number}
  */
-const OSMTypeMultiplier = {
+export const OSMTypeMultiplier = {
   'relation': 1.2,
   'way': 1.1
 };
@@ -67,13 +68,13 @@ const OSMTypeMultiplier = {
  * The base settings key for the plugin.
  * @type {string}
  */
-const BASE_SETTING_KEY = 'plugin.osm.nom';
+export const BASE_SETTING_KEY = 'plugin.osm.nom';
 
 /**
  * Settings keys for the plugin.
  * @enum {string}
  */
-const SettingKey = {
+export const SettingKey = {
   URL: BASE_SETTING_KEY + '.url'
 };
 
@@ -81,7 +82,7 @@ const SettingKey = {
  * Style config for search results.
  * @type {!Object}
  */
-const VECTOR_CONFIG = {
+export const VECTOR_CONFIG = {
   // show a white label with the place name
   'labelColor': 'rgba(255,255,255,1)',
   'labels': [{
@@ -113,7 +114,7 @@ const VECTOR_CONFIG = {
  * @param {ol.Feature} feature The feature result.
  * @return {number} The search score.
  */
-const getSearchScore = function(feature) {
+export const getSearchScore = function(feature) {
   var score = BASE_SCORE;
 
   if (feature) {
@@ -131,18 +132,4 @@ const getSearchScore = function(feature) {
   }
 
   return score;
-};
-
-exports = {
-  BASE_SCORE,
-  BASE_SETTING_KEY,
-  ID,
-  LABEL_FIELD,
-  SEARCH_NAME,
-  VECTOR_CONFIG,
-  ExtraDataField,
-  OSMTypeMultiplier,
-  ResultField,
-  SettingKey,
-  getSearchScore
 };

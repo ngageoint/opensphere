@@ -1,6 +1,13 @@
-goog.module('plugin.track.TrackManager');
+goog.declareModuleId('plugin.track.TrackManager');
 
-goog.require('plugin.track.ConfirmTrackUI');
+import './confirmtrack.js';
+
+import * as osFeature from '../../os/feature/feature.js';
+import * as osMap from '../../os/map/map.js';
+import * as osStyle from '../../os/style/style.js';
+import PlacesManager from '../places/placesmanager.js';
+import * as pluginTrack from './track.js';
+import TrackInteraction from './trackinteraction.js';
 
 const array = goog.require('ol.array');
 const asserts = goog.require('goog.asserts');
@@ -10,15 +17,11 @@ const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
 const olExtent = goog.require('ol.extent');
 const osColor = goog.require('os.color');
-const osFeature = goog.require('os.feature');
 const osInterpolate = goog.require('os.interpolate');
 const osObject = goog.require('os.object');
-const osMap = goog.require('os.map');
-const osStyle = goog.require('os.style');
 const osTrack = goog.require('os.track');
 const TrackField = goog.require('os.track.TrackField');
 const osWindow = goog.require('os.ui.window');
-const pluginTrack = goog.require('plugin.track');
 const AlertManager = goog.require('os.alert.AlertManager');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
@@ -26,7 +29,6 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const Fields = goog.require('os.Fields');
 const MapContainer = goog.require('os.MapContainer');
 const OsMeasure = goog.require('os.interaction.Measure');
-const PlacesManager = goog.require('plugin.places.PlacesManager');
 const RecordField = goog.require('os.data.RecordField');
 const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
@@ -34,7 +36,6 @@ const Throttle = goog.require('goog.async.Throttle');
 const TimelineController = goog.require('os.time.TimelineController');
 const TimeInstant = goog.require('os.time.TimeInstant');
 const TimeRange = goog.require('os.time.TimeRange');
-const TrackInteraction = goog.require('plugin.track.TrackInteraction');
 
 const Logger = goog.requireType('goog.log.Logger');
 const OlFeature = goog.requireType('ol.Feature');
@@ -53,7 +54,7 @@ const PREDICTED_TRACK_LABEL = '[Predicted';
 /**
  * Manager for handling tracks that are being followed during animation.
  */
-class TrackManager extends EventTarget {
+export default class TrackManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -551,6 +552,3 @@ goog.addSingletonGetter(TrackManager);
  * @const
  */
 TrackManager.LOGGER_ = log.getLogger('plugin.track.TrackManager');
-
-
-exports = TrackManager;

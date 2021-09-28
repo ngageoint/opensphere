@@ -1,9 +1,8 @@
-goog.module('plugin.file.shp.data.SHXHeader');
-
+goog.declareModuleId('plugin.file.shp.data.SHXHeader');
 
 /**
  */
-class SHXHeader {
+export default class SHXHeader {
   /**
    * Constructor.
    */
@@ -25,5 +24,3 @@ class SHXHeader {
     this.allocation = 0;
   }
 }
-
-exports = SHXHeader;

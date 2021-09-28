@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.tiles.mime');
+goog.declareModuleId('plugin.cesium.tiles.mime');
 
 const Promise = goog.require('goog.Promise');
 const {register} = goog.require('os.file.mime');
@@ -10,7 +10,7 @@ const OSFile = goog.requireType('os.file.File');
 /**
  * @type {string}
  */
-const TYPE = 'application/vnd.tileset+json';
+export const TYPE = 'application/vnd.tileset+json';
 
 /**
  * @param {ArrayBuffer} buffer
@@ -18,7 +18,7 @@ const TYPE = 'application/vnd.tileset+json';
  * @param {*=} opt_context
  * @return {!Promise<*|undefined>}
  */
-const isTilesetJSON = function(buffer, opt_file, opt_context) {
+export const isTilesetJSON = function(buffer, opt_file, opt_context) {
   var retVal;
 
   if (opt_context && testContext(/** @type {Object|null} */ (opt_context))) {
@@ -39,8 +39,3 @@ const testContext = function(obj) {
 };
 
 register(TYPE, isTilesetJSON, 1000, json.TYPE);
-
-exports = {
-  TYPE,
-  isTilesetJSON
-};

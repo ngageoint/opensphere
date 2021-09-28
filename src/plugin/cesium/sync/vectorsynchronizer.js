@@ -1,4 +1,11 @@
-goog.module('plugin.cesium.sync.VectorSynchronizer');
+goog.declareModuleId('plugin.cesium.sync.VectorSynchronizer');
+
+import * as dispatcher from '../../../os/dispatcher.js';
+import {ELLIPSE_REGEXP, LOB_REGEXP, SELECTED_REGEXP} from '../../../os/style/style.js';
+import {isPrimitiveShown, setPrimitiveShown} from '../primitive.js';
+import VectorContext from '../vectorcontext.js';
+import CesiumSynchronizer from './cesiumsynchronizer.js';
+import convert from './featureconverter.js';
 
 const asserts = goog.require('goog.asserts');
 const EventType = goog.require('goog.events.EventType');
@@ -6,7 +13,6 @@ const objectUtils = goog.require('goog.object');
 const events = goog.require('ol.events');
 const OLVectorLayer = goog.require('ol.layer.Vector');
 const VectorEventType = goog.require('ol.source.VectorEventType');
-const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const SelectionType = goog.require('os.events.SelectionType');
@@ -14,11 +20,6 @@ const LayerPropertyChange = goog.require('os.layer.PropertyChange');
 const VectorLayer = goog.require('os.layer.Vector');
 const SourcePropertyChange = goog.require('os.source.PropertyChange');
 const VectorSource = goog.require('os.source.Vector');
-const styleUtils = goog.require('os.style');
-const VectorContext = goog.require('plugin.cesium.VectorContext');
-const {isPrimitiveShown, setPrimitiveShown} = goog.require('plugin.cesium.primitive');
-const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer');
-const convert = goog.require('plugin.cesium.sync.convert');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Feature = goog.requireType('ol.Feature');
@@ -27,7 +28,8 @@ const PluggableMap = goog.requireType('ol.PluggableMap');
 const View = goog.requireType('ol.View');
 const OLVectorSource = goog.requireType('ol.source.Vector');
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const Camera = goog.requireType('plugin.cesium.Camera');
+const {default: Camera} = goog.requireType('plugin.cesium.Camera');
+
 
 /**
  * Layer properties that should trigger a refresh.
@@ -43,7 +45,7 @@ const REFRESH_PROPERTIES = {
  * Synchronizes a single OpenLayers vector layer to Cesium.
  * @extends {CesiumSynchronizer<OLVectorLayer>}
  */
-class VectorSynchronizer extends CesiumSynchronizer {
+export default class VectorSynchronizer extends CesiumSynchronizer {
   /**
    * Synchronizes a single OpenLayers vector layer to Cesium.
    *
@@ -414,7 +416,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
       case SelectionType.REMOVED:
       case SelectionType.CHANGED:
         const shape = source.getGeometryShape();
-        const isSelectedShape = shape.match(styleUtils.SELECTED_REGEXP);
+        const isSelectedShape = shape.match(SELECTED_REGEXP);
 
         let features = /** @type {Array<!Feature>} */ (event.getNewValue());
         if (isSelectedShape) {
@@ -436,8 +438,8 @@ class VectorSynchronizer extends CesiumSynchronizer {
       case SourcePropertyChange.GEOMETRY_CENTER_SHAPE:
         oldVal = /** @type {string|undefined} */ (event.getOldValue());
         newVal = /** @type {string|undefined} */ (event.getNewValue());
-        if (styleUtils.ELLIPSE_REGEXP.test(newVal) || styleUtils.ELLIPSE_REGEXP.test(oldVal) ||
-          styleUtils.LOB_REGEXP.test(newVal) || styleUtils.LOB_REGEXP.test(oldVal)) {
+        if (ELLIPSE_REGEXP.test(newVal) || ELLIPSE_REGEXP.test(oldVal) ||
+          LOB_REGEXP.test(newVal) || LOB_REGEXP.test(oldVal)) {
           // until we support something other than points in Cesium, only do this when changing to/from ellipse and lob
           this.resetFeatures_(source.getFeatures());
         }
@@ -778,5 +780,3 @@ class VectorSynchronizer extends CesiumSynchronizer {
     dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
   }
 }
-
-exports = VectorSynchronizer;

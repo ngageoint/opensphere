@@ -10,7 +10,7 @@ describe('plugin.im.action.feature.Entry', function() {
   const functions = goog.module.get('goog.functions');
   const Feature = goog.module.get('ol.Feature');
   const ImportActionManager = goog.module.get('os.im.action.ImportActionManager');
-  const Entry = goog.module.get('plugin.im.action.feature.Entry');
+  const {default: Entry} = goog.module.get('plugin.im.action.feature.Entry');
   const {getMockManager} = goog.module.get('plugin.im.action.feature.mock');
   const MockAction = goog.module.get('plugin.im.action.feature.mock.MockAction');
 

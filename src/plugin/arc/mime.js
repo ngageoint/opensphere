@@ -1,10 +1,11 @@
-goog.module('plugin.arc.mime');
+goog.declareModuleId('plugin.arc.mime');
+
+import * as arc from './arc.js';
 
 const Promise = goog.require('goog.Promise');
 const mime = goog.require('os.file.mime');
 const {TYPE: HTML_TYPE} = goog.require('os.file.mime.html');
 const {TYPE: XML_TYPE} = goog.require('os.file.mime.xml');
-const arc = goog.require('plugin.arc');
 
 const OSFile = goog.requireType('os.file.File');
 const XMLContext = goog.requireType('os.file.mime.xml.Context');
@@ -16,7 +17,7 @@ const XMLContext = goog.requireType('os.file.mime.xml.Context');
  * @param {*=} opt_context
  * @return {!Promise<*|undefined>}
  */
-const detectArc = function(buffer, file, opt_context) {
+export const detectArc = function(buffer, file, opt_context) {
   var url = file ? file.getUrl() : null;
   var content = typeof opt_context === 'string' ? opt_context :
   /** @type {XMLContext} */ (opt_context.content);
@@ -36,16 +37,10 @@ let registered = false;
 /**
  * Register Arc mime types.
  */
-const registerMimeTypes = () => {
+export const registerMimeTypes = () => {
   if (!registered) {
     mime.register(arc.ID, detectArc, 0, XML_TYPE);
     mime.register(arc.ID, detectArc, 0, HTML_TYPE);
     registered = true;
   }
-};
-
-
-exports = {
-  detectArc,
-  registerMimeTypes
 };

@@ -1,8 +1,8 @@
-goog.module('plugin.cesium.sync.DynamicLineString');
+goog.declareModuleId('plugin.cesium.sync.DynamicLineString');
 
-const {GeometryInstanceId} = goog.require('plugin.cesium');
-const {getDashPattern, getLineStringPositions} = goog.require('plugin.cesium.sync.linestring');
-const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
+import {GeometryInstanceId} from '../cesium.js';
+import {getDashPattern, getLineStringPositions} from './linestring.js';
+import {getColor, getLineWidthFromStyle} from './style.js';
 
 const Feature = goog.requireType('ol.Feature');
 const LineString = goog.requireType('ol.geom.LineString');
@@ -11,7 +11,7 @@ const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
 const Polygon = goog.requireType('ol.geom.Polygon');
 const Style = goog.requireType('ol.style.Style');
 const Ellipse = goog.requireType('os.geom.Ellipse');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**
@@ -24,12 +24,11 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
  * @param {number=} opt_end
  * @return {!Cesium.PolylineOptions}
  */
-const createPolyline = (feature, geometry, style, context, opt_flatCoords, opt_offset, opt_end) => {
+export const createPolyline = (feature, geometry, style, context, opt_flatCoords, opt_offset, opt_end) => {
   const polylineOptions = /** @type {Cesium.PolylineOptions} */ ({});
   updatePolyline(feature, geometry, style, context, polylineOptions, opt_flatCoords, opt_offset, opt_end);
   return polylineOptions;
 };
-
 
 /**
  * @param {!Feature} feature Ol3 feature..
@@ -41,7 +40,7 @@ const createPolyline = (feature, geometry, style, context, opt_flatCoords, opt_o
  * @param {number=} opt_offset
  * @param {number=} opt_end
  */
-const updatePolyline = (feature, geometry, style, context, polyline, opt_flatCoords, opt_offset, opt_end) => {
+export const updatePolyline = (feature, geometry, style, context, polyline, opt_flatCoords, opt_offset, opt_end) => {
   const geomRevision = geometry.getRevision();
   if (polyline.geomRevision != geomRevision) {
     polyline.positions = getLineStringPositions(geometry, opt_flatCoords, opt_offset, opt_end);
@@ -78,7 +77,6 @@ const updatePolyline = (feature, geometry, style, context, polyline, opt_flatCoo
   }
 };
 
-
 /**
  * Creates or updates an individual polygon/linestring segment as a Cesium.Polyline.
  * @param {!number} i Index representing the ring within the polygon
@@ -91,7 +89,7 @@ const updatePolyline = (feature, geometry, style, context, polyline, opt_flatCoo
  * @param {number} end Coordinate end index in the flat coordinates.
  * @param {Array<!Cesium.Polyline>=} opt_primitives
  */
-const createOrUpdateSegment = (i, feature, polygon, style, context, flatCoords, offset, end, opt_primitives) => {
+export const createOrUpdateSegment = (i, feature, polygon, style, context, flatCoords, offset, end, opt_primitives) => {
   let primitive;
   if (opt_primitives && i < opt_primitives.length) {
     primitive = opt_primitives[i];
@@ -106,11 +104,4 @@ const createOrUpdateSegment = (i, feature, polygon, style, context, flatCoords, 
   } else {
     updatePolyline(feature, polygon, style, context, primitive, flatCoords, offset, end);
   }
-};
-
-
-exports = {
-  createPolyline,
-  updatePolyline,
-  createOrUpdateSegment
 };

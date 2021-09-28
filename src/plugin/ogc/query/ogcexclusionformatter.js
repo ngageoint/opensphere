@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.query.OGCExclusionFormatter');
+goog.declareModuleId('plugin.ogc.query.OGCExclusionFormatter');
 
 const interpolate = goog.require('os.interpolate');
 const OSOGCExclusionFormatter = goog.require('os.ogc.filter.OGCExclusionFormatter');
@@ -9,7 +9,7 @@ const Geometry = goog.requireType('ol.geom.Geometry');
 /**
  * OGC exclusion formatter that converts the geometry to EPSG:4326.
  */
-class OGCExclusionFormatter extends OSOGCExclusionFormatter {
+export default class OGCExclusionFormatter extends OSOGCExclusionFormatter {
   /**
    * Constructor.
    * @param {string=} opt_column
@@ -31,5 +31,3 @@ class OGCExclusionFormatter extends OSOGCExclusionFormatter {
     return geom;
   }
 }
-
-exports = OGCExclusionFormatter;

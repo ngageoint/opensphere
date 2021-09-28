@@ -1,4 +1,4 @@
-goog.module('plugin.file.geojson.mime');
+goog.declareModuleId('plugin.file.geojson.mime');
 
 const Promise = goog.require('goog.Promise');
 const GeoJSON = goog.require('ol.format.GeoJSON');
@@ -9,7 +9,7 @@ const json = goog.require('os.file.mime.json');
 /**
  * @type {string}
  */
-const TYPE = 'application/vnd.geo+json';
+export const TYPE = 'application/vnd.geo+json';
 
 /**
  * @param {ArrayBuffer} buffer
@@ -17,7 +17,7 @@ const TYPE = 'application/vnd.geo+json';
  * @param {*=} opt_context
  * @return {!Promise<*|undefined>}
  */
-const isGeoJSON = function(buffer, opt_file, opt_context) {
+export const isGeoJSON = function(buffer, opt_file, opt_context) {
   var retVal;
 
   if (opt_context && find_(/** @type {Object|null} */ (opt_context))) {
@@ -55,8 +55,3 @@ const find_ = function(obj) {
 
 
 mime.register(TYPE, isGeoJSON, 0, json.TYPE);
-
-exports = {
-  TYPE,
-  isGeoJSON
-};

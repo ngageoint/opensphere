@@ -1,13 +1,15 @@
-goog.module('plugin.track.TrackInteraction');
+goog.declareModuleId('plugin.track.TrackInteraction');
+
+import {LINE_STYLE_OPTIONS} from '../../os/style/style.js';
 
 const osObject = goog.require('os.object');
-const {LINE_STYLE_OPTIONS} = goog.require('os.style');
 const MeasureInteraction = goog.require('os.interaction.Measure');
 const OlStroke = goog.require('ol.style.Stroke');
 const OlStyle = goog.require('ol.style.Style');
 
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 const OlLineString = goog.requireType('ol.geom.LineString');
+
 
 /**
  * @const
@@ -29,7 +31,7 @@ const DEFAULT_STYLE = new OlStyle({
  *
  * @extends {MeasureInteraction}
  */
-class TrackInteraction extends MeasureInteraction {
+export default class TrackInteraction extends MeasureInteraction {
   /**
    * @param {olx.interaction.PointerOptions=} opt_options
    */
@@ -139,5 +141,3 @@ class TrackInteraction extends MeasureInteraction {
 
 // export this constant
 TrackInteraction.DEFAULT_STYLE = DEFAULT_STYLE;
-
-exports = TrackInteraction;

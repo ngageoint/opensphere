@@ -15,7 +15,9 @@ describe('plugin.arc.query.ArcQueryHandler', function() {
   const AreaManager = goog.module.get('os.query.AreaManager');
   const FilterManager = goog.module.get('os.query.FilterManager');
   const QueryManager = goog.module.get('os.query.QueryManager');
-  const ArcQueryHandler = goog.module.get('plugin.arc.query.ArcQueryHandler');
+  const {
+    default: ArcQueryHandler
+  } = goog.module.get('plugin.arc.query.ArcQueryHandler');
 
   var filterXml = '<And xmlns="http://www.opengis.net/ogc" namehint="Test Keep Filter Name">' +
       '<PropertyIsLike escape="\\" singleChar="." wildCard="*">' +

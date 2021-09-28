@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.wmts.WMTSServer');
+goog.declareModuleId('plugin.ogc.wmts.WMTSServer');
 
 const QueryData = goog.require('goog.Uri.QueryData');
 const log = goog.require('goog.log');
@@ -22,7 +22,7 @@ const logger = log.getLogger('plugin.ogc.wmts.WMTSServer');
  *
  * @implements {IDataProvider}
  */
-class WMTSServer extends OGCServer {
+export default class WMTSServer extends OGCServer {
   /**
    * Constructor.
    */
@@ -62,6 +62,5 @@ class WMTSServer extends OGCServer {
     return 'wmts';
   }
 }
-osImplements(WMTSServer, IDataProvider.ID);
 
-exports = WMTSServer;
+osImplements(WMTSServer, IDataProvider.ID);

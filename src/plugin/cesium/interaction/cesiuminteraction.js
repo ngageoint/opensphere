@@ -1,16 +1,19 @@
-goog.module('plugin.cesium.interaction');
+goog.declareModuleId('plugin.cesium.interaction');
+
+import {PROJECTION, zoomToResolution} from '../../../os/map/map.js';
+import * as dragbox from './cesiumdragboxinteraction.js';
+import * as dragcircle from './cesiumdragcircleinteraction.js';
+import * as drawpolygon from './cesiumdrawpolygoninteraction.js';
+import * as measure from './cesiummeasureinteraction.js';
 
 const DragBox = goog.require('os.interaction.DragBox');
 const DragCircle = goog.require('os.interaction.DragCircle');
 const DrawPolygon = goog.require('os.interaction.DrawPolygon');
 const Measure = goog.require('os.interaction.Measure');
-const osMap = goog.require('os.map');
-const dragbox = goog.require('plugin.cesium.interaction.dragbox');
-const dragcircle = goog.require('plugin.cesium.interaction.dragcircle');
-const drawpolygon = goog.require('plugin.cesium.interaction.drawpolygon');
-const measure = goog.require('plugin.cesium.interaction.measure');
 
-const Camera = goog.requireType('plugin.cesium.Camera');
+const {
+  default: Camera
+} = goog.requireType('plugin.cesium.Camera');
 
 
 /**
@@ -19,9 +22,9 @@ const Camera = goog.requireType('plugin.cesium.Camera');
  * @param {!Camera} camera The camera.
  * @param {Cesium.ScreenSpaceCameraController} sscc The camera controller.
  */
-const configureCesium = function(camera, sscc) {
+export const configureCesium = function(camera, sscc) {
   // allow zooming out further in the 3D view
-  var maxResolution = osMap.zoomToResolution(0, osMap.PROJECTION);
+  var maxResolution = zoomToResolution(0, PROJECTION);
   sscc.maximumZoomDistance = camera.calcDistanceForResolution(maxResolution, 0);
 
   // shift + right drag to change the camera direction
@@ -62,7 +65,7 @@ const configureCesium = function(camera, sscc) {
 /**
  * Load Cesium mixins for OpenSphere interactions.
  */
-const loadInteractionMixins = function() {
+export const loadInteractionMixins = function() {
   DragBox.prototype.cleanupWebGL = dragbox.cleanupWebGL;
   DragBox.prototype.updateWebGL = dragbox.updateWebGL;
 
@@ -76,9 +79,4 @@ const loadInteractionMixins = function() {
   Measure.prototype.cleanupWebGL = measure.cleanupWebGL;
   /** @override */
   Measure.prototype.updateWebGL = measure.updateWebGL;
-};
-
-exports = {
-  configureCesium,
-  loadInteractionMixins
 };

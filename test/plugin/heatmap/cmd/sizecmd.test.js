@@ -9,8 +9,8 @@ describe('plugin.heatmap.cmd.Size', function() {
   const LayerType = goog.module.get('os.layer.LayerType');
   const VectorSource = goog.module.get('os.source.Vector');
   const heatmap = goog.module.get('plugin.heatmap');
-  const HeatmapLayerConfig = goog.module.get('plugin.heatmap.HeatmapLayerConfig');
-  const Size = goog.module.get('plugin.heatmap.cmd.Size');
+  const {default: HeatmapLayerConfig} = goog.module.get('plugin.heatmap.HeatmapLayerConfig');
+  const {default: Size} = goog.module.get('plugin.heatmap.cmd.Size');
 
   var createLayer = function() {
     var options = {

@@ -1,4 +1,4 @@
-goog.module('plugin.file.geojson.GeoJSONParserConfig');
+goog.declareModuleId('plugin.file.geojson.GeoJSONParserConfig');
 
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const ImportManager = goog.require('os.ui.im.ImportManager');
@@ -9,7 +9,7 @@ const osUiSlickColumn = goog.require('os.ui.slick.column');
  * Configuration for a GeoJSON parser.
  * @unrestricted
  */
-class GeoJSONParserConfig extends FileParserConfig {
+export default class GeoJSONParserConfig extends FileParserConfig {
   /**
    * Constructor.
    */
@@ -37,5 +37,3 @@ class GeoJSONParserConfig extends FileParserConfig {
     parser.dispose();
   }
 }
-
-exports = GeoJSONParserConfig;

@@ -1,14 +1,16 @@
-goog.module('plugin.file.kml.KMLLayer');
+goog.declareModuleId('plugin.file.kml.KMLLayer');
+
+import KMLLayerNode from './ui/kmllayernode.js';
 
 const VectorLayer = goog.require('os.layer.Vector');
-const KMLLayerNode = goog.require('plugin.file.kml.ui.KMLLayerNode');
+
 const ITreeNodeSupplier = goog.requireType('os.structs.ITreeNodeSupplier');
 
 
 /**
  * @implements {ITreeNodeSupplier}
  */
-class KMLLayer extends VectorLayer {
+export default class KMLLayer extends VectorLayer {
   /**
    * Constructor.
    * @param {olx.layer.VectorOptions} options Vector layer options
@@ -95,5 +97,3 @@ class KMLLayer extends VectorLayer {
     }
   }
 }
-
-exports = KMLLayer;

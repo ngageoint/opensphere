@@ -1,4 +1,10 @@
-goog.module('plugin.file.shp.SHPExporter');
+goog.declareModuleId('plugin.file.shp.SHPExporter');
+
+import * as osFeature from '../../../os/feature/feature.js';
+import SHPHeader from './data/shpheader.js';
+import * as mime from './mime.js';
+import * as shp from './shp.js';
+import {directiveTag as shpExportUi} from './ui/shpexportui.js';
 
 const crypt = goog.require('goog.crypt');
 const log = goog.require('goog.log');
@@ -14,14 +20,9 @@ const osArray = goog.require('os.array');
 const DataManager = goog.require('os.data.DataManager');
 const RecordField = goog.require('os.data.RecordField');
 const ZipExporter = goog.require('os.ex.ZipExporter');
-const osFeature = goog.require('os.feature');
 const OSFile = goog.require('os.file.File');
 const osImplements = goog.require('os.implements');
 const ITime = goog.require('os.time.ITime');
-const shp = goog.require('plugin.file.shp');
-const SHPHeader = goog.require('plugin.file.shp.data.SHPHeader');
-const mime = goog.require('plugin.file.shp.mime');
-const {directiveTag: shpExportUi} = goog.require('plugin.file.shp.ui.SHPExportUI');
 
 const Feature = goog.requireType('ol.Feature');
 const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
@@ -34,7 +35,7 @@ const VectorSource = goog.requireType('os.source.Vector');
  * @extends {ZipExporter.<T>}
  * @template T
  */
-class SHPExporter extends ZipExporter {
+export default class SHPExporter extends ZipExporter {
   /**
    * Constructor.
    */
@@ -1144,5 +1145,3 @@ SHPExporter.PRJ_WGS84 = 'GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",' +
  * @const
  */
 SHPExporter.CPG_UTF8 = 'UTF-8';
-
-exports = SHPExporter;

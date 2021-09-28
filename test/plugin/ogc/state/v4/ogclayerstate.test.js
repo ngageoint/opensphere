@@ -22,8 +22,8 @@ describe('OGC.v4.ArcLayerState', function() {
   const {setStateManager} = goog.module.get('os.state.instance');
   const LayerState = goog.module.get('os.state.v4.LayerState');
   const xml = goog.module.get('os.xml');
-  const OGCLayerDescriptor = goog.module.get('plugin.ogc.OGCLayerDescriptor');
-  const WMSLayerConfig = goog.module.get('plugin.ogc.wms.WMSLayerConfig');
+  const {default: OGCLayerDescriptor} = goog.module.get('plugin.ogc.OGCLayerDescriptor');
+  const {default: WMSLayerConfig} = goog.module.get('plugin.ogc.wms.WMSLayerConfig');
 
   const {loadStateXsdFiles} = goog.module.get('os.test.xsd');
 

@@ -1,18 +1,19 @@
-goog.module('plugin.basemap.BaseMapDescriptor');
+goog.declareModuleId('plugin.basemap.BaseMapDescriptor');
+
+import {PROJECTION} from '../../os/map/map.js';
+import {ID, LAYER_TYPE} from './basemap.js';
 
 const googObject = goog.require('goog.object');
 const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
-const osMap = goog.require('os.map');
 const Icons = goog.require('os.ui.Icons');
-const basemap = goog.require('plugin.basemap');
 
 
 /**
  * A descriptor for a base map (or "Map Layer")
  *
- * @see {@link basemap.BaseMapPlugin} for configuration instructions
+ * @see {@link BaseMapPlugin} for configuration instructions
  */
-class BaseMapDescriptor extends LayerSyncDescriptor {
+export default class BaseMapDescriptor extends LayerSyncDescriptor {
   /**
    * Constructor.
    */
@@ -32,8 +33,8 @@ class BaseMapDescriptor extends LayerSyncDescriptor {
     this.origConf_ = null;
 
     this.setTags(['GEOINT']);
-    this.setType(basemap.LAYER_TYPE);
-    this.descriptorType = basemap.ID;
+    this.setType(LAYER_TYPE);
+    this.descriptorType = ID;
   }
 
   /**
@@ -116,7 +117,7 @@ class BaseMapDescriptor extends LayerSyncDescriptor {
    * @override
    */
   updateActiveFromTemp() {
-    if (this.getLayerOptions()['projection'] === osMap.PROJECTION.getCode() && this.tempActive === true) {
+    if (this.getLayerOptions()['projection'] === PROJECTION.getCode() && this.tempActive === true) {
       this.setActive(this.tempActive);
     }
 
@@ -152,5 +153,3 @@ class BaseMapDescriptor extends LayerSyncDescriptor {
     }
   }
 }
-
-exports = BaseMapDescriptor;

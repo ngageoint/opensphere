@@ -1,18 +1,19 @@
-goog.module('plugin.file.csv.CSVDescriptor');
+goog.declareModuleId('plugin.file.csv.CSVDescriptor');
+
+import {ALLOW_ELLIPSE_CONFIG} from '../../../os/ui/layer/ellipsecolumns.js';
+import CSVExporter from './csvexporter.js';
+import CSVParserConfig from './csvparserconfig.js';
 
 const Settings = goog.require('os.config.Settings');
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const LayerType = goog.require('os.layer.LayerType');
 const csv = goog.require('os.ui.file.csv');
-const CSVExporter = goog.require('plugin.file.csv.CSVExporter');
-const CSVParserConfig = goog.require('plugin.file.csv.CSVParserConfig');
-const {ALLOW_ELLIPSE_CONFIG} = goog.require('os.ui.layer.EllipseColumnsUI');
 
 
 /**
  * CSV file descriptor.
  */
-class CSVDescriptor extends FileDescriptor {
+export default class CSVDescriptor extends FileDescriptor {
   /**
    * Constructor.
    * @param {CSVParserConfig=} opt_config
@@ -174,5 +175,3 @@ class CSVDescriptor extends FileDescriptor {
     super.restore(conf);
   }
 }
-
-exports = CSVDescriptor;

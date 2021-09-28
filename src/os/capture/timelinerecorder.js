@@ -1,24 +1,26 @@
-goog.module('os.capture.TimelineRecorder');
+goog.declareModuleId('os.capture.TimelineRecorder');
+
+import AbstractRecorder from './abstractrecorder.js';
+import * as capture from './capture.js';
+import CaptureEventType from './captureeventtype.js';
 
 const Promise = goog.require('goog.Promise');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
-const capture = goog.require('os.capture');
-const AbstractRecorder = goog.require('os.capture.AbstractRecorder');
-const CaptureEventType = goog.require('os.capture.CaptureEventType');
 const TimelineController = goog.require('os.time.TimelineController');
 
-const IVideoEncoder = goog.requireType('os.capture.IVideoEncoder');
+const {CanvasFn, RenderFn} = goog.requireType('os.capture');
+const {default: IVideoEncoder} = goog.requireType('os.capture.IVideoEncoder');
 
 
 /**
  * Records each frame of the timeline controller animation loop from a canvas.
  */
-class TimelineRecorder extends AbstractRecorder {
+export default class TimelineRecorder extends AbstractRecorder {
   /**
    * Constructor.
-   * @param {capture.CanvasFn=} opt_canvasFn Function to get the canvas
-   * @param {os.capture.RenderFn=} opt_renderFn Callback to render the canvas
+   * @param {CanvasFn=} opt_canvasFn Function to get the canvas
+   * @param {RenderFn=} opt_renderFn Callback to render the canvas
    */
   constructor(opt_canvasFn, opt_renderFn) {
     super();
@@ -27,14 +29,14 @@ class TimelineRecorder extends AbstractRecorder {
 
     /**
      * The function to get the canvas element
-     * @type {?capture.CanvasFn}
+     * @type {?CanvasFn}
      * @private
      */
     this.canvasFn_ = opt_canvasFn || capture.getDefaultCanvas;
 
     /**
      * Function to render the canvas
-     * @type {?capture.RenderFn}
+     * @type {?RenderFn}
      * @private
      */
     this.renderFn_ = opt_renderFn || null;
@@ -264,6 +266,3 @@ class TimelineRecorder extends AbstractRecorder {
  * @type {log.Logger}
  */
 const logger = log.getLogger('os.capture.TimelineRecorder');
-
-
-exports = TimelineRecorder;

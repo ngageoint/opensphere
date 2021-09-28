@@ -1,11 +1,12 @@
-goog.module('plugin.im.action.feature.ui.launchForLayer');
+goog.declareModuleId('plugin.im.action.feature.ui.launchForLayer');
+
+import {sanitizeId} from '../../../os/ui/ui.js';
+import {HELP_TEXT, TITLE} from '../featureaction.js';
+import {directiveTag as featureActionsUi} from './featureactionsui.js';
 
 const {ICON} = goog.require('os.im.action');
 const osLayer = goog.require('os.layer');
-const {sanitizeId} = goog.require('os.ui');
 const osWindow = goog.require('os.ui.window');
-const {HELP_TEXT, TITLE} = goog.require('plugin.im.action.feature');
-const {directiveTag: featureActionsUi} = goog.require('plugin.im.action.feature.ui.FeatureActionsUI');
 
 
 /**
@@ -54,4 +55,4 @@ const launchForLayer = function(layerId) {
   }
 };
 
-exports = launchForLayer;
+export default launchForLayer;

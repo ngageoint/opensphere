@@ -1,4 +1,4 @@
-goog.module('plugin.heatmap.cmd.Gradient');
+goog.declareModuleId('plugin.heatmap.cmd.Gradient');
 
 const AbstractStyle = goog.require('os.command.AbstractStyle');
 
@@ -6,7 +6,7 @@ const AbstractStyle = goog.require('os.command.AbstractStyle');
 /**
  * Changes the gradient of a heatmap.
  */
-class Gradient extends AbstractStyle {
+export default class Gradient extends AbstractStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -51,5 +51,3 @@ class Gradient extends AbstractStyle {
     return {};
   }
 }
-
-exports = Gradient;

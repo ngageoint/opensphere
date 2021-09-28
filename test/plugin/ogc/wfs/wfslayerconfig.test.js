@@ -5,7 +5,7 @@ goog.require('plugin.ogc.wfs.WFSLayerConfig');
 
 describe('plugin.ogc.wfs.WFSLayerConfig', function() {
   const ResponseType = goog.module.get('goog.net.XhrIo.ResponseType');
-  const WFSLayerConfig = goog.module.get('plugin.ogc.wfs.WFSLayerConfig');
+  const {default: WFSLayerConfig} = goog.module.get('plugin.ogc.wfs.WFSLayerConfig');
 
   const preferredTypes = WFSLayerConfig.TYPE_CONFIGS;
   const avroConfig = {

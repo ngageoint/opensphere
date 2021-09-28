@@ -1,4 +1,4 @@
-goog.module('plugin.arc.ArcJSONParser');
+goog.declareModuleId('plugin.arc.ArcJSONParser');
 
 const Disposable = goog.require('goog.Disposable');
 const googString = goog.require('goog.string');
@@ -229,4 +229,4 @@ class ArcJSONParser extends Disposable {
   }
 }
 
-exports = ArcJSONParser;
+export default ArcJSONParser;

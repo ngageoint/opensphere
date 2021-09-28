@@ -1,4 +1,4 @@
-goog.module('plugin.file.zip.ZIPParser');
+goog.declareModuleId('plugin.file.zip.ZIPParser');
 
 const googEvents = goog.require('goog.events');
 
@@ -14,7 +14,7 @@ const AsyncZipParser = goog.require('os.parse.AsyncZipParser');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');
-const ZIPParserConfig = goog.requireType('plugin.file.zip.ZIPParserConfig');
+const {default: ZIPParserConfig} = goog.requireType('plugin.file.zip.ZIPParserConfig');
 
 
 /**
@@ -22,7 +22,7 @@ const ZIPParserConfig = goog.requireType('plugin.file.zip.ZIPParserConfig');
  *
  * @extends {AsyncZipParser<Feature>}
  */
-class ZIPParser extends AsyncZipParser {
+export default class ZIPParser extends AsyncZipParser {
   /**
    * Constructor.
    * @param {ZIPParserConfig} config
@@ -408,6 +408,3 @@ class ZIPParser extends AsyncZipParser {
  * @type {Logger}
  */
 const logger = log.getLogger('plugin.file.zip.ZIPParser');
-
-
-exports = ZIPParser;

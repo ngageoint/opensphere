@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.GeoServer');
+goog.declareModuleId('plugin.ogc.GeoServer');
 
 const log = goog.require('goog.log');
 const IDataProvider = goog.require('os.data.IDataProvider');
@@ -12,7 +12,7 @@ const Logger = goog.requireType('goog.log.Logger');
  *
  * @implements {IDataProvider}
  */
-class GeoServer extends OGCServer {
+export default class GeoServer extends OGCServer {
   /**
    * Constructor.
    */
@@ -55,6 +55,7 @@ class GeoServer extends OGCServer {
     return 'geoserver';
   }
 }
+
 osImplements(GeoServer, IDataProvider.ID);
 
 /**
@@ -68,5 +69,3 @@ const logger = log.getLogger('plugin.ogc.GeoServer');
  * @const
  */
 GeoServer.URI_REGEXP = /\/(geoserver|.*?gs)(\/|(\/.*)?\/(ows|web)\/?)?([?#]|$)/i;
-
-exports = GeoServer;

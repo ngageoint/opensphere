@@ -11,8 +11,8 @@ describe('plugin.heatmap.cmd.Gradient', function() {
   const LayerType = goog.module.get('os.layer.LayerType');
   const VectorSource = goog.module.get('os.source.Vector');
   const heatmap = goog.module.get('plugin.heatmap');
-  const HeatmapLayerConfig = goog.module.get('plugin.heatmap.HeatmapLayerConfig');
-  const Gradient = goog.module.get('plugin.heatmap.cmd.Gradient');
+  const {default: HeatmapLayerConfig} = goog.module.get('plugin.heatmap.HeatmapLayerConfig');
+  const {default: Gradient} = goog.module.get('plugin.heatmap.cmd.Gradient');
 
   var createLayer = function() {
     var options = {

@@ -1,12 +1,11 @@
-goog.module('os.ui.capture.TimelineRenderer');
+goog.declareModuleId('os.ui.capture.TimelineRenderer');
 
-const capture = goog.require('os.capture');
-const SvgRenderer = goog.require('os.ui.capture.SvgRenderer');
-
+import {getPixelRatio} from '../../capture/capture.js';
+import SvgRenderer from './svgrenderer.js';
 
 /**
  */
-class TimelineRenderer extends SvgRenderer {
+export default class TimelineRenderer extends SvgRenderer {
   /**
    * Constructor.
    * @param {Object=} opt_options Options to configure the renderer
@@ -61,12 +60,10 @@ class TimelineRenderer extends SvgRenderer {
     if (timelineEl) {
       var rect = timelineEl.getBoundingClientRect();
       if (rect) {
-        return rect.height * capture.getPixelRatio();
+        return rect.height * getPixelRatio();
       }
     }
 
     return 0;
   }
 }
-
-exports = TimelineRenderer;

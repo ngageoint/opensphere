@@ -9,10 +9,18 @@ goog.require('plugin.arc.node.ArcServiceNode');
 describe('plugin.arc.ArcLoader', function() {
   const functions = goog.module.get('goog.functions');
   const EventType = goog.module.get('goog.net.EventType');
-  const ArcLoader = goog.module.get('plugin.arc.ArcLoader');
-  const ArcServer = goog.module.get('plugin.arc.ArcServer');
-  const ArcFolderNode = goog.module.get('plugin.arc.node.ArcFolderNode');
-  const ArcServiceNode = goog.module.get('plugin.arc.node.ArcServiceNode');
+  const {
+    default: ArcLoader
+  } = goog.module.get('plugin.arc.ArcLoader');
+  const {
+    default: ArcServer
+  } = goog.module.get('plugin.arc.ArcServer');
+  const {
+    default: ArcFolderNode
+  } = goog.module.get('plugin.arc.node.ArcFolderNode');
+  const {
+    default: ArcServiceNode
+  } = goog.module.get('plugin.arc.node.ArcServiceNode');
 
   it('should throw assertion errors if it doesnt have a URL or node', function() {
     var loader = new ArcLoader();

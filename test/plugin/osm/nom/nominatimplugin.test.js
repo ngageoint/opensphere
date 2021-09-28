@@ -8,8 +8,8 @@ describe('plugin.osm.nom.NominatimPlugin', function() {
   const Settings = goog.module.get('os.config.Settings');
   const SearchManager = goog.module.get('os.search.SearchManager');
   const nom = goog.module.get('plugin.osm.nom');
-  const NominatimPlugin = goog.module.get('plugin.osm.nom.NominatimPlugin');
-  const NominatimSearch = goog.module.get('plugin.osm.nom.NominatimSearch');
+  const {default: NominatimPlugin} = goog.module.get('plugin.osm.nom.NominatimPlugin');
+  const {default: NominatimSearch} = goog.module.get('plugin.osm.nom.NominatimSearch');
 
   it('should initialize properly', function() {
     var nomPlugin = new NominatimPlugin();

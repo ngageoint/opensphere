@@ -1,6 +1,7 @@
-goog.module('plugin.google.places.AttrCardUI');
+goog.declareModuleId('plugin.google.places.AttrCardUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os/os.js';
+
 const Module = goog.require('os.ui.Module');
 
 
@@ -9,7 +10,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   replace: true,
   restrict: 'E',
   templateUrl: ROOT + 'views/plugin/google/places/attrcard.html',
@@ -21,7 +22,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'googleplacesattrcard';
+export const directiveTag = 'googleplacesattrcard';
 
 
 /**
@@ -34,7 +35,7 @@ Module.directive('googleplacesattrcard', [directive]);
 /**
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -53,9 +54,3 @@ class Controller {
     $element.html(html);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

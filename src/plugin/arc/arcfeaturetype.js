@@ -1,4 +1,4 @@
-goog.module('plugin.arc.ArcFeatureType');
+goog.declareModuleId('plugin.arc.ArcFeatureType');
 
 const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
 const IFeatureType = goog.requireType('os.ogc.IFeatureType');
@@ -148,4 +148,4 @@ class ArcFeatureType {
   restore(config) {}
 }
 
-exports = ArcFeatureType;
+export default ArcFeatureType;

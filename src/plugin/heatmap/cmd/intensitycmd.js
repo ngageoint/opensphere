@@ -1,4 +1,4 @@
-goog.module('plugin.heatmap.cmd.Intensity');
+goog.declareModuleId('plugin.heatmap.cmd.Intensity');
 
 const AbstractStyle = goog.require('os.command.AbstractStyle');
 
@@ -6,7 +6,7 @@ const AbstractStyle = goog.require('os.command.AbstractStyle');
 /**
  * Changes the intensity of a heatmap.
  */
-class Intensity extends AbstractStyle {
+export default class Intensity extends AbstractStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -51,5 +51,3 @@ class Intensity extends AbstractStyle {
     return {};
   }
 }
-
-exports = Intensity;

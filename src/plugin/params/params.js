@@ -1,4 +1,4 @@
-goog.module('plugin.params');
+goog.declareModuleId('plugin.params');
 
 const QueryData = goog.require('goog.Uri.QueryData');
 const {split: splitUrl} = goog.require('goog.uri.utils');
@@ -17,13 +17,13 @@ const osUrl = goog.require('os.url');
  * Identifier for params plugin components.
  * @type {string}
  */
-const ID = 'params';
+export const ID = 'params';
 
 /**
  * Events for the params plugin.
  * @enum {string}
  */
-const EventType = {
+export const EventType = {
   EDIT_PARAMS: 'params:edit'
 };
 
@@ -31,7 +31,7 @@ const EventType = {
  * Metric keys for the params plugin.
  * @enum {string}
  */
-const Metrics = {
+export const Metrics = {
   EDIT_PARAMS: 'params.editParams'
 };
 
@@ -41,7 +41,7 @@ const Metrics = {
  * @param {!goog.Uri} uri The URI.
  * @return {boolean}
  */
-const isUriSupported = function(uri) {
+export const isUriSupported = function(uri) {
   return uri.getScheme() !== osFile.FileScheme.FILE && uri.getScheme() !== osFile.FileScheme.LOCAL;
 };
 
@@ -51,7 +51,7 @@ const isUriSupported = function(uri) {
  * @param {ol.layer.Layer} layer The layer.
  * @return {boolean} If the layer supports request parameter overrides.
  */
-const supportsParamOverrides = function(layer) {
+export const supportsParamOverrides = function(layer) {
   var source = layer.getSource();
   if (source instanceof RequestSource) {
     var request = source.getRequest();
@@ -72,7 +72,7 @@ const supportsParamOverrides = function(layer) {
  * @param {ol.layer.Layer} layer The layer.
  * @return {Object} The request parameters.
  */
-const getParamsFromLayer = function(layer) {
+export const getParamsFromLayer = function(layer) {
   var params = null;
 
   var source = layer.getSource();
@@ -104,7 +104,7 @@ const getParamsFromLayer = function(layer) {
  * @param {!Object} params The new parameters.
  * @param {Array<string>=} opt_remove Keys to remove.
  */
-const setParamsForLayer = function(layer, params, opt_remove) {
+export const setParamsForLayer = function(layer, params, opt_remove) {
   var source = layer.getSource();
   if (source instanceof RequestSource) {
     var request = source.getRequest();
@@ -155,7 +155,7 @@ const setParamsForLayer = function(layer, params, opt_remove) {
  * @return {Array<string>|string|null} An array if multiple URL's are supported, string for single-URL sources,
  *                                     null if the URL could not be resolved.
  */
-const getUrlsForLayer = function(layer) {
+export const getUrlsForLayer = function(layer) {
   var urls = null;
 
   if (layer) {
@@ -187,7 +187,7 @@ const getUrlsForLayer = function(layer) {
  * @param {ol.layer.Layer} layer The layer.
  * @param {!(Array<string>|string)} urls The URL's.
  */
-const setUrlsForLayer = function(layer, urls) {
+export const setUrlsForLayer = function(layer, urls) {
   if (layer) {
     var source = layer.getSource();
     if (source instanceof RequestSource) {
@@ -222,16 +222,4 @@ const setUrlsForLayer = function(layer, urls) {
       }
     }
   }
-};
-
-exports = {
-  ID,
-  EventType,
-  Metrics,
-  isUriSupported,
-  supportsParamOverrides,
-  getParamsFromLayer,
-  setParamsForLayer,
-  getUrlsForLayer,
-  setUrlsForLayer
 };

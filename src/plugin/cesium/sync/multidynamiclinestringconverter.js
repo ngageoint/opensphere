@@ -1,18 +1,18 @@
-goog.module('plugin.cesium.sync.MultiDynamicLineStringConverter');
+goog.declareModuleId('plugin.cesium.sync.MultiDynamicLineStringConverter');
 
-const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
-const {createOrUpdateSegment} = goog.require('plugin.cesium.sync.DynamicLineString');
+import BaseConverter from './baseconverter.js';
+import {createOrUpdateSegment} from './dynamiclinestring.js';
 
 const Feature = goog.requireType('ol.Feature');
 const MultiLineString = goog.requireType('ol.geom.MultiLineString');
 const Style = goog.requireType('ol.style.Style');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**
  * Converter for DynamicFeature instances with MultiLineStrings
  */
-class MultiDynamicLineStringConverter extends BaseConverter {
+export default class MultiDynamicLineStringConverter extends BaseConverter {
   /**
    * @inheritDoc
    */
@@ -50,6 +50,3 @@ const createOrUpdateDynamicMultiLineString = (feature, multiLine, style, context
     offset = end;
   });
 };
-
-
-exports = MultiDynamicLineStringConverter;

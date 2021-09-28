@@ -1,8 +1,10 @@
-goog.module('plugin.ogc.ui.OgcServerImportForm');
+goog.declareModuleId('plugin.ogc.ui.OgcServerImportForm');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os/os.js';
+import {directive as ogcServerDirective} from './ogcserverimport.js';
+
 const Module = goog.require('os.ui.Module');
-const {directive: ogcServerDirective} = goog.require('plugin.ogc.ui.OgcServerImportUI');
+
 
 
 /**
@@ -10,27 +12,20 @@ const {directive: ogcServerDirective} = goog.require('plugin.ogc.ui.OgcServerImp
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   const original = ogcServerDirective();
   original.templateUrl = ROOT + 'views/plugin/ogc/ui/ogcserverimportform.html';
   return original;
 };
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'ogcserverform';
+export const directiveTag = 'ogcserverform';
 
 
 /**
  * Add the directive to the os module
  */
 Module.directive(directiveTag, [directive]);
-
-
-exports = {
-  directive,
-  directiveTag
-};

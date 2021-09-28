@@ -25,7 +25,7 @@ describe('os.fn', function() {
   const osProj = goog.module.get('os.proj');
   const VectorSource = goog.module.get('os.source.Vector');
   const TreeNode = goog.module.get('os.structs.TreeNode');
-  const XYZLayerConfig = goog.module.get('plugin.xyz.XYZLayerConfig');
+  const {default: XYZLayerConfig} = goog.module.get('plugin.xyz.XYZLayerConfig');
 
   it('should filter falsey', function() {
     var list = [1, true, 'thing', {label: 'Test'}, /matchy/i, [0], 0, false, null, undefined, '']

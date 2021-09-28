@@ -1,12 +1,11 @@
-goog.module('plugin.file.shp.data.SHPHeader');
+goog.declareModuleId('plugin.file.shp.data.SHPHeader');
 
-const DBFHeader = goog.require('plugin.file.shp.data.DBFHeader');
-const SHXHeader = goog.require('plugin.file.shp.data.SHXHeader');
-
+import DBFHeader from './dbfheader.js';
+import SHXHeader from './shxheader.js';
 
 /**
  */
-class SHPHeader {
+export default class SHPHeader {
   /**
    * Constructor.
    */
@@ -43,5 +42,3 @@ class SHPHeader {
     this.allocation = 0;
   }
 }
-
-exports = SHPHeader;

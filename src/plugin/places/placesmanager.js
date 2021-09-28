@@ -1,6 +1,10 @@
-goog.module('plugin.places.PlacesManager');
+goog.declareModuleId('plugin.places.PlacesManager');
 
-const dispatcher = goog.require('os.Dispatcher');
+import * as dispatcher from '../../os/dispatcher.js';
+import {DEFAULT_LAYER_COLOR} from '../../os/style/style.js';
+import AbstractKMLManager from '../file/kml/abstractkmlmanager.js';
+import * as places from './places.js';
+import PlacesLayerConfig from './placeslayerconfig.js';
 const MapContainer = goog.require('os.MapContainer');
 const ActionEventType = goog.require('os.action.EventType');
 const config = goog.require('os.config');
@@ -15,19 +19,15 @@ const {noop} = goog.require('os.fn');
 const LayerType = goog.require('os.layer.LayerType');
 const {merge} = goog.require('os.object');
 const {incrementResetTasks, decrementResetTasks} = goog.require('os.storage');
-const {DEFAULT_LAYER_COLOR} = goog.require('os.style');
 const ImportEvent = goog.require('os.ui.im.ImportEvent');
 const ImportEventType = goog.require('os.ui.im.ImportEventType');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const ImportProcess = goog.require('os.ui.im.ImportProcess');
-const AbstractKMLManager = goog.require('plugin.file.kml.AbstractKMLManager');
-const places = goog.require('plugin.places');
-const PlacesLayerConfig = goog.require('plugin.places.PlacesLayerConfig');
 
 const OsFile = goog.requireType('os.file.File');
-const KMLLayer = goog.requireType('plugin.file.kml.KMLLayer');
-const KMLSource = goog.requireType('plugin.file.kml.KMLSource');
-const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
+const {default: KMLLayer} = goog.requireType('plugin.file.kml.KMLLayer');
+const {default: KMLSource} = goog.requireType('plugin.file.kml.KMLSource');
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
@@ -61,7 +61,7 @@ let PlacesManagerInstance;
 /**
  * Allows the user to manage saved features as a KML tree.
  */
-class PlacesManager extends AbstractKMLManager {
+export default class PlacesManager extends AbstractKMLManager {
   /**
    * @inheritDoc
    */
@@ -340,5 +340,3 @@ class PlacesManager extends AbstractKMLManager {
     PlacesManagerInstance = value;
   }
 }
-
-exports = PlacesManager;

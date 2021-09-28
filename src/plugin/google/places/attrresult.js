@@ -1,15 +1,15 @@
-goog.module('plugin.google.places.AttrResult');
+goog.declareModuleId('plugin.google.places.AttrResult');
+
+import {directiveTag as attrCardEl} from './attrcard.js';
 
 const AbstractSearchResult = goog.require('os.search.AbstractSearchResult');
-const {directiveTag: attrCardEl} = goog.require('plugin.google.places.AttrCardUI');
-
 
 /**
  * HTML Attribution result for Google Places API
  *
  * @extends {AbstractSearchResult<Array<!string>>}
  */
-class AttrResult extends AbstractSearchResult {
+export default class AttrResult extends AbstractSearchResult {
   /**
    * Constructor.
    * @param {Array<!string>} attributions
@@ -25,5 +25,3 @@ class AttrResult extends AbstractSearchResult {
     return `<${attrCardEl} result="result"></${attrCardEl}>`;
   }
 }
-
-exports = AttrResult;

@@ -1,5 +1,4 @@
-goog.module('plugin.track.EventType');
-
+goog.declareModuleId('plugin.track.EventType');
 
 /**
  * Events for the track plugin.
@@ -7,7 +6,7 @@ goog.module('plugin.track.EventType');
  * Track events operating on selected data only should be suffixed with ':selected'. See
  * @enum {string}
  */
-exports = {
+export default {
   CREATE_TRACK: 'track:create',
   CREATE_FROM_SELECTED: 'track:create:selected',
   ADD_TO: 'track:addTo',

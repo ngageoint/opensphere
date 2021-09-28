@@ -1,4 +1,4 @@
-goog.module('plugin.heatmap.cmd.Size');
+goog.declareModuleId('plugin.heatmap.cmd.Size');
 
 const AbstractStyle = goog.require('os.command.AbstractStyle');
 
@@ -6,7 +6,7 @@ const AbstractStyle = goog.require('os.command.AbstractStyle');
 /**
  * Changes the size of a heatmap.
  */
-class Size extends AbstractStyle {
+export default class Size extends AbstractStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -51,5 +51,3 @@ class Size extends AbstractStyle {
     return {};
   }
 }
-
-exports = Size;

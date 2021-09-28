@@ -11,7 +11,7 @@ describe('plugin.file.geojson.GeoJSONParser', function() {
   const EventType = goog.module.get('os.events.EventType');
   const Importer = goog.module.get('os.im.Importer');
   const Request = goog.module.get('os.net.Request');
-  const GeoJSONParser = goog.module.get('plugin.file.geojson.GeoJSONParser');
+  const {default: GeoJSONParser} = goog.module.get('plugin.file.geojson.GeoJSONParser');
   var gj1 = {
     'type': 'FeatureCollection',
     'features': [{

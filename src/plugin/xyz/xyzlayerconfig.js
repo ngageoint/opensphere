@@ -1,4 +1,4 @@
-goog.module('plugin.xyz.XYZLayerConfig');
+goog.declareModuleId('plugin.xyz.XYZLayerConfig');
 
 const AbstractTileLayerConfig = goog.require('os.layer.config.AbstractTileLayerConfig');
 const osObject = goog.require('os.object');
@@ -32,7 +32,7 @@ const XYZ = goog.require('os.ol.source.XYZ');
  *   "description": "This is an example of an Arc XYZ layer"
  * }
  */
-class XYZLayerConfig extends AbstractTileLayerConfig {
+export default class XYZLayerConfig extends AbstractTileLayerConfig {
   /**
    * Constructor.
    */
@@ -59,5 +59,3 @@ class XYZLayerConfig extends AbstractTileLayerConfig {
     return new XYZ(/** @type {olx.source.XYZOptions} */ (options));
   }
 }
-
-exports = XYZLayerConfig;

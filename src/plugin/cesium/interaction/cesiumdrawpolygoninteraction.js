@@ -1,7 +1,8 @@
-goog.module('plugin.cesium.interaction.drawpolygon');
+goog.declareModuleId('plugin.cesium.interaction.drawpolygon');
+
+import * as dispatcher from '../../../os/dispatcher.js';
 
 const core = goog.require('olcs.core');
-const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const DrawPolygon = goog.require('os.interaction.DrawPolygon');
@@ -9,7 +10,7 @@ const osInterpolate = goog.require('os.interpolate');
 const Method = goog.require('os.interpolate.Method');
 
 const LineString = goog.requireType('ol.geom.LineString');
-const CesiumRenderer = goog.requireType('plugin.cesium.CesiumRenderer');
+const {default: CesiumRenderer} = goog.requireType('plugin.cesium.CesiumRenderer');
 
 
 /**
@@ -33,7 +34,7 @@ let cesiumLine = undefined;
  *
  * @this {DrawPolygon}
  */
-const cleanupWebGL = function() {
+export const cleanupWebGL = function() {
   var webgl = /** @type {CesiumRenderer|undefined} */ (
     MapContainer.getInstance().getWebGLRenderer());
   var scene = webgl ? webgl.getCesiumScene() : undefined;
@@ -53,7 +54,7 @@ const cleanupWebGL = function() {
  * @this {DrawPolygon}
  * @suppress {accessControls}
  */
-const updateWebGL = function() {
+export const updateWebGL = function() {
   if (MapContainer.getInstance().is3DEnabled()) {
     if (!cesiumColor) {
       cesiumColor = new Cesium.ColorGeometryInstanceAttribute(
@@ -103,9 +104,4 @@ const updateWebGL = function() {
       dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
-};
-
-exports = {
-  cleanupWebGL,
-  updateWebGL
 };

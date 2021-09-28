@@ -8,7 +8,7 @@ describe('plugin.cesium.sync.getTransformFunction', () => {
   const olProj = goog.module.get('ol.proj');
   const osMap = goog.module.get('os.map');
   const osProj = goog.module.get('os.proj');
-  const getTransformFunction = goog.module.get('plugin.cesium.sync.getTransformFunction');
+  const {getTransformFunction} = goog.module.get('plugin.cesium.sync.getTransformFunction');
   const proj = osMap.PROJECTION;
 
   afterEach(() => {

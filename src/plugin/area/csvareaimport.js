@@ -1,4 +1,7 @@
-goog.module('plugin.area.CSVAreaImport');
+goog.declareModuleId('plugin.area.CSVAreaImport');
+
+import CSVParser from '../file/csv/csvparser.js';
+import {processFeatures} from './area.js';
 
 const RecordField = goog.require('os.data.RecordField');
 const EventType = goog.require('os.events.EventType');
@@ -6,8 +9,6 @@ const Importer = goog.require('os.im.Importer');
 const Module = goog.require('os.ui.Module');
 const osWindow = goog.require('os.ui.window');
 const {directive: wizardDirective, Controller: WizardController} = goog.require('os.ui.wiz.WizardUI');
-const area = goog.require('plugin.area');
-const CSVParser = goog.require('plugin.file.csv.CSVParser');
 
 
 /**
@@ -17,7 +18,7 @@ const CSVParser = goog.require('plugin.file.csv.CSVParser');
  * @template T,S
  * @unrestricted
  */
-class Controller extends WizardController {
+export class Controller extends WizardController {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -56,7 +57,7 @@ class Controller extends WizardController {
 
     if (features && features.length > 0) {
       this.scope['config'][RecordField.SOURCE_NAME] = this.scope['config']['file'].getFileName();
-      area.processFeatures(features, this.scope['config']);
+      processFeatures(features, this.scope['config']);
     }
 
     osWindow.close(this.element);
@@ -68,7 +69,7 @@ class Controller extends WizardController {
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = wizardDirective();
   dir.controller = Controller;
   return dir;
@@ -78,16 +79,10 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'csvareaimport';
+export const directiveTag = 'csvareaimport';
 
 
 /**
  * Add the directive to the module
  */
 Module.directive('csvareaimport', [directive]);
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

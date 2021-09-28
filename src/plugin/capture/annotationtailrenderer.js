@@ -1,7 +1,7 @@
-goog.module('plugin.capture.AnnotationTailRenderer');
+goog.declareModuleId('plugin.capture.AnnotationTailRenderer');
 
-const {getMapCanvas} = goog.require('os.capture');
-const SvgRenderer = goog.require('os.ui.capture.SvgRenderer');
+import {getMapCanvas} from '../../os/capture/capture.js';
+import SvgRenderer from '../../os/ui/capture/svgrenderer.js';
 
 const Overlay = goog.requireType('ol.Overlay');
 
@@ -9,7 +9,7 @@ const Overlay = goog.requireType('ol.Overlay');
 /**
  * Renders the SVG tail for a map annotation to a canvas.
  */
-class AnnotationTailRenderer extends SvgRenderer {
+export default class AnnotationTailRenderer extends SvgRenderer {
   /**
    * Constructor.
    * @param {!Overlay} overlay The annotation overlay.
@@ -67,5 +67,3 @@ class AnnotationTailRenderer extends SvgRenderer {
     return [x, y];
   }
 }
-
-exports = AnnotationTailRenderer;

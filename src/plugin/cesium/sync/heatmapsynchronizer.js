@@ -1,4 +1,11 @@
-goog.module('plugin.cesium.sync.HeatmapSynchronizer');
+goog.declareModuleId('plugin.cesium.sync.HeatmapSynchronizer');
+
+import * as dispatcher from '../../../os/dispatcher.js';
+import {EXTENT_SCALE_FACTOR} from '../../heatmap/heatmap.js';
+import HeatmapField from '../../heatmap/heatmapfield.js';
+import HeatmapPropertyType from '../../heatmap/heatmappropertytype.js';
+import {updateCesiumLayerProperties} from '../cesium.js';
+import CesiumSynchronizer from './cesiumsynchronizer.js';
 
 const asserts = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');
@@ -6,30 +13,25 @@ const dispose = goog.require('goog.dispose');
 const EventType = goog.require('goog.events.EventType');
 const olEvents = goog.require('ol.events');
 const {scaleFromCenter} = goog.require('ol.extent');
-const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const PropertyChange = goog.require('os.layer.PropertyChange');
 const events = goog.require('os.ol.events');
-const cesium = goog.require('plugin.cesium');
-const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer');
-const {EXTENT_SCALE_FACTOR} = goog.require('plugin.heatmap');
-const HeatmapField = goog.require('plugin.heatmap.HeatmapField');
-const HeatmapPropertyType = goog.require('plugin.heatmap.HeatmapPropertyType');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const OLObject = goog.requireType('ol.Object');
 const PluggableMap = goog.requireType('ol.PluggableMap');
 const MapCanvasRenderer = goog.requireType('ol.renderer.canvas.Map');
-const Heatmap = goog.requireType('plugin.heatmap.Heatmap');
+const {default: Heatmap} = goog.requireType('plugin.heatmap.Heatmap');
+
 
 /**
  * Synchronizes a single OpenLayers image layer to Cesium.
  *
  * @extends {CesiumSynchronizer<Heatmap>}
  */
-class HeatmapSynchronizer extends CesiumSynchronizer {
+export default class HeatmapSynchronizer extends CesiumSynchronizer {
   /**
    * Constructor.
    * @param {!Heatmap} layer The OpenLayers heatmap layer.
@@ -138,7 +140,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
 
       asserts.assert(this.activeLayer_);
       asserts.assert(this.layer);
-      cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
+      updateCesiumLayerProperties(this.layer, this.activeLayer_);
       dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
@@ -157,7 +159,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
         this.visible_ = /** @type {boolean} */ (event.getNewValue());
 
         if (this.layer && this.activeLayer_) {
-          cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
+          updateCesiumLayerProperties(this.layer, this.activeLayer_);
           dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
         }
       } else if (p == HeatmapPropertyType.INTENSITY ||
@@ -177,7 +179,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
   onStyleChange_(event) {
     asserts.assert(this.layer !== null);
     asserts.assert(this.activeLayer_ !== null);
-    cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
+    updateCesiumLayerProperties(this.layer, this.activeLayer_);
     dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
   }
 
@@ -272,6 +274,3 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
 HeatmapSynchronizer.STYLE_KEYS_ = [
   'change:opacity'
 ];
-
-
-exports = HeatmapSynchronizer;

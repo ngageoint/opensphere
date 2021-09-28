@@ -1,4 +1,6 @@
-goog.module('plugin.cesium.VectorContext');
+goog.declareModuleId('plugin.cesium.VectorContext');
+
+import {isGroundPrimitive, isPrimitiveShown, setPrimitiveShown} from './primitive.js';
 
 const Throttle = goog.require('goog.async.Throttle');
 const dispose = goog.require('goog.dispose');
@@ -6,7 +8,6 @@ const log = goog.require('goog.log');
 const {getUid} = goog.require('ol');
 const arrayUtils = goog.require('ol.array');
 const objectUtils = goog.require('os.object');
-const {isGroundPrimitive, isPrimitiveShown, setPrimitiveShown} = goog.require('plugin.cesium.primitive');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const Feature = goog.requireType('ol.Feature');
@@ -27,7 +28,7 @@ const LOGGER = log.getLogger('plugin.cesium.VectorContext');
  * Maintains references to all Cesium primitives
  * @implements {IDisposable}
  */
-class VectorContext {
+export default class VectorContext {
   /**
    * @param {!Cesium.Scene} scene The Cesium scene
    * @param {!OLVectorLayer} layer The OL3 layer
@@ -570,5 +571,3 @@ class VectorContext {
     return shown == null ? true : shown;
   }
 }
-
-exports = VectorContext;

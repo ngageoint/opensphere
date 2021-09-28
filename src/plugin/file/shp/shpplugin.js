@@ -1,4 +1,13 @@
-goog.module('plugin.file.shp.SHPPlugin');
+goog.declareModuleId('plugin.file.shp.SHPPlugin');
+
+import * as mime from './mime.js';
+import SHPDescriptor from './shpdescriptor.js';
+import SHPExporter from './shpexporter.js';
+import SHPLayerConfig from './shplayerconfig.js';
+import SHPParser from './shpparser.js';
+import SHPProvider from './shpprovider.js';
+import SHPImportUI from './ui/shpimportui.js';
+import ZipSHPImportUI from './ui/zipshpimportui.js';
 
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
@@ -6,20 +15,11 @@ const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const exportManager = goog.require('os.ui.exportManager');
 const ImportManager = goog.require('os.ui.im.ImportManager');
-const SHPDescriptor = goog.require('plugin.file.shp.SHPDescriptor');
-const SHPExporter = goog.require('plugin.file.shp.SHPExporter');
-const SHPLayerConfig = goog.require('plugin.file.shp.SHPLayerConfig');
-const SHPParser = goog.require('plugin.file.shp.SHPParser');
-const SHPProvider = goog.require('plugin.file.shp.SHPProvider');
-const mime = goog.require('plugin.file.shp.mime');
-const SHPImportUI = goog.require('plugin.file.shp.ui.SHPImportUI');
-const ZipSHPImportUI = goog.require('plugin.file.shp.ui.ZipSHPImportUI');
-
 
 /**
  * Provides SHP support
  */
-class SHPPlugin extends AbstractPlugin {
+export default class SHPPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -69,6 +69,3 @@ SHPPlugin.ID = 'shp';
  * @const
  */
 SHPPlugin.TYPE = 'SHP Layers';
-
-
-exports = SHPPlugin;

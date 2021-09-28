@@ -1,11 +1,12 @@
-goog.module('plugin.cesium.tiles.Provider');
+goog.declareModuleId('plugin.cesium.tiles.Provider');
+
+import {ID, TYPE} from './cesium3dtiles.js';
 
 const BaseDescriptor = goog.require('os.data.BaseDescriptor');
 const DataManager = goog.require('os.data.DataManager');
 const FileProvider = goog.require('os.data.FileProvider');
-const tiles = goog.require('plugin.cesium.tiles');
 
-const TilesDescriptor = goog.requireType('plugin.cesium.tiles.Descriptor');
+const {default: TilesDescriptor} = goog.requireType('plugin.cesium.tiles.Descriptor');
 
 
 /**
@@ -18,7 +19,7 @@ let instance;
 /**
  * Cesium 3D tiles provider.
  */
-class Provider extends FileProvider {
+export default class Provider extends FileProvider {
   /**
    * Constructor.
    */
@@ -31,8 +32,8 @@ class Provider extends FileProvider {
    */
   configure(config) {
     super.configure(config);
-    this.setId(tiles.ID);
-    this.setLabel(tiles.TYPE);
+    this.setId(ID);
+    this.setLabel(TYPE);
 
     var layers = config['layers'];
     if (layers) {
@@ -42,7 +43,7 @@ class Provider extends FileProvider {
         var d = /** @type {TilesDescriptor} */ (dm.getDescriptor(id));
 
         if (!d) {
-          d = /** @type {TilesDescriptor} */ (dm.createDescriptor(tiles.ID));
+          d = /** @type {TilesDescriptor} */ (dm.createDescriptor(ID));
           d.setId(id);
           dm.addDescriptor(d);
         }
@@ -73,5 +74,3 @@ class Provider extends FileProvider {
     instance = value;
   }
 }
-
-exports = Provider;

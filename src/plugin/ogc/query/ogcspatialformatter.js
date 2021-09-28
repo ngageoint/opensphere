@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.query.OGCSpatialFormatter');
+goog.declareModuleId('plugin.ogc.query.OGCSpatialFormatter');
 
 const interpolate = goog.require('os.interpolate');
 const OSOGCSpatialFormatter = goog.require('os.ogc.filter.OGCSpatialFormatter');
@@ -9,7 +9,7 @@ const Geometry = goog.requireType('ol.geom.Geometry');
 /**
  * OGC spatial formatter that converts the geometry to EPSG:4326.
  */
-class OGCSpatialFormatter extends OSOGCSpatialFormatter {
+export default class OGCSpatialFormatter extends OSOGCSpatialFormatter {
   /**
    * Constructor.
    * @param {string=} opt_column
@@ -31,5 +31,3 @@ class OGCSpatialFormatter extends OSOGCSpatialFormatter {
     return geom;
   }
 }
-
-exports = OGCSpatialFormatter;

@@ -1,12 +1,12 @@
-goog.module('plugin.cesium.sync.GeometryCollectionConverter');
+goog.declareModuleId('plugin.cesium.sync.GeometryCollectionConverter');
 
-const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
+import BaseConverter from './baseconverter.js';
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
 const Style = goog.requireType('ol.style.Style');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**
@@ -25,7 +25,7 @@ let convertFunction = undefined;
 /**
  * Converter for GeometryCollections
  */
-class GeometryCollectionConverter extends BaseConverter {
+export default class GeometryCollectionConverter extends BaseConverter {
   /**
    * @inheritDoc
    */
@@ -72,6 +72,3 @@ const convert = (feature, geometry, style, context) => {
 
   return false;
 };
-
-
-exports = GeometryCollectionConverter;

@@ -1,6 +1,7 @@
-goog.module('plugin.pelias.geocoder.ResultCardUI');
+goog.declareModuleId('plugin.pelias.geocoder.ResultCardUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os/os.js';
+
 const Module = goog.require('os.ui.Module');
 const FeatureResultCardCtrl = goog.require('os.ui.search.FeatureResultCardCtrl');
 
@@ -10,7 +11,7 @@ const FeatureResultCardCtrl = goog.require('os.ui.search.FeatureResultCardCtrl')
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   templateUrl: ROOT + 'views/plugin/pelias/geocoder/resultcard.html',
   controller: Controller,
@@ -21,7 +22,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'peliasgeocoderresultcard';
+export const directiveTag = 'peliasgeocoderresultcard';
 
 
 /**
@@ -34,7 +35,7 @@ Module.directive('peliasgeocoderresultcard', [directive]);
  * Controller for the resultcard directive.
  * @unrestricted
  */
-class Controller extends FeatureResultCardCtrl {
+export class Controller extends FeatureResultCardCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -45,9 +46,3 @@ class Controller extends FeatureResultCardCtrl {
     super($scope, $element);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,16 +1,20 @@
-goog.module('plugin.ogc.wfs.getFilterColumns');
+goog.declareModuleId('plugin.ogc.wfs.getFilterColumns');
+
+const Vector = goog.requireType('os.layer.Vector');
+const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
+const IFeatureType = goog.requireType('os.ogc.IFeatureType');
 
 
 /**
  * Get the filterable columns
  *
- * @param {!os.layer.Vector} layer The layer
- * @return {?Array<os.ogc.FeatureTypeColumn>} the columns
+ * @param {!Vector} layer The layer
+ * @return {?Array<FeatureTypeColumn>} the columns
  */
-exports = function(layer) {
+const getFilterColumns = function(layer) {
   var layerOptions = layer.getLayerOptions();
   if (layerOptions && layerOptions['featureType']) {
-    var featureType = /** @type {os.ogc.IFeatureType} */ (layerOptions['featureType']);
+    var featureType = /** @type {IFeatureType} */ (layerOptions['featureType']);
     if (featureType) {
       return featureType.getColumns();
     }
@@ -18,3 +22,5 @@ exports = function(layer) {
 
   return null;
 };
+
+export default getFilterColumns;

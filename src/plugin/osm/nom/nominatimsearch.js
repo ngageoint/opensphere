@@ -1,4 +1,8 @@
-goog.module('plugin.osm.nom.NominatimSearch');
+goog.declareModuleId('plugin.osm.nom.NominatimSearch');
+
+import * as nom from './nominatim.js';
+import NominatimParser from './nominatimparser.js';
+import SearchResult from './nominatimsearchresult.js';
 
 const Promise = goog.require('goog.Promise');
 const Settings = goog.require('os.config.Settings');
@@ -7,9 +11,8 @@ const osImplements = goog.require('os.implements');
 const Request = goog.require('os.net.Request');
 const AbstractUrlSearch = goog.require('os.search.AbstractUrlSearch');
 const IGeoSearch = goog.require('os.search.IGeoSearch');
-const nom = goog.require('plugin.osm.nom');
-const NominatimParser = goog.require('plugin.osm.nom.NominatimParser');
-const SearchResult = goog.require('plugin.osm.nom.SearchResult');
+
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
@@ -17,7 +20,7 @@ const SearchResult = goog.require('plugin.osm.nom.SearchResult');
  *
  * @implements {IGeoSearch}
  */
-class NominatimSearch extends AbstractUrlSearch {
+export default class NominatimSearch extends AbstractUrlSearch {
   /**
    * Constructor.
    * @param {string} name The search provider name.
@@ -135,15 +138,14 @@ class NominatimSearch extends AbstractUrlSearch {
 
 osImplements(NominatimSearch, IGeoSearch.ID);
 
-
 /**
  * Get the top result from Nominatim.
  *
  * @param {string} term The search term.
- * @return {!Promise<(ol.Feature|undefined)>} A promise that resolves to the resulting feature, or is rejected with
+ * @return {!Promise<(Feature|undefined)>} A promise that resolves to the resulting feature, or is rejected with
  *                                                 any errors.
  */
-nom.feelingLucky = function(term) {
+export const feelingLucky = function(term) {
   var url = /** @type {string} */ (Settings.getInstance().get(nom.SettingKey.URL, ''));
   if (url) {
     url = url.replace(/{s}/g, term);
@@ -152,20 +154,19 @@ nom.feelingLucky = function(term) {
     var request = new Request(url);
     request.setHeader('Accept', 'application/json, text/plain, */*');
 
-    return request.getPromise().then(nom.parseFirst);
+    return request.getPromise().then(parseFirst);
   }
 
   return Promise.reject('Nominatim service is not configured.');
 };
 
-
 /**
  * Parse the first object in a Nominatim response.
  *
  * @param {*} response The server response.
- * @return {ol.Feature|undefined} The parsed feature, or undefined if none could be parsed.
+ * @return {Feature|undefined} The parsed feature, or undefined if none could be parsed.
  */
-nom.parseFirst = function(response) {
+const parseFirst = function(response) {
   if (typeof response === 'string' || Array.isArray(response)) {
     var parser = new NominatimParser();
     parser.setSource(response);
@@ -182,4 +183,3 @@ nom.parseFirst = function(response) {
 
   return undefined;
 };
-exports = NominatimSearch;

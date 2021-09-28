@@ -5,10 +5,10 @@ goog.require('os.ui.slick.SlickTreeUI');
 import * as Dispatcher from '../../os/dispatcher.js';
 import {ROOT} from '../../os/os.js';
 import {apply} from '../../os/ui/ui.js';
+import {EventType, isElectron} from './electron.js';
 import SettingsFileNode from './settingsfilenode.js';
 import settingsImportManager from './settingsimportmanager.js';
 import SettingsImportUI from './settingsimportui.js';
-
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
@@ -20,8 +20,6 @@ const Module = goog.require('os.ui.Module');
 const ImportEvent = goog.require('os.ui.im.ImportEvent');
 const ImportEventType = goog.require('os.ui.im.ImportEventType');
 const ImportProcess = goog.require('os.ui.im.ImportProcess');
-
-const {EventType, isElectron} = goog.require('plugin.electron');
 
 
 /**

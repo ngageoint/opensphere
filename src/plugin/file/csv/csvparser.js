@@ -1,17 +1,19 @@
-goog.module('plugin.file.csv.CSVParser');
+goog.declareModuleId('plugin.file.csv.CSVParser');
+
+import {isInternalField} from '../../../os/feature/feature.js';
 
 const googString = goog.require('goog.string');
 const ol = goog.require('ol');
-
 const Feature = goog.require('ol.Feature');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 const RecordField = goog.require('os.data.RecordField');
-const osFeature = goog.require('os.feature');
 const LatMapping = goog.require('os.im.mapping.LatMapping');
 const LonMapping = goog.require('os.im.mapping.LonMapping');
 const PositionMapping = goog.require('os.im.mapping.PositionMapping');
 const WKTMapping = goog.require('os.im.mapping.WKTMapping');
 const AbstractCsvParser = goog.require('os.ui.file.csv.AbstractCsvParser');
+
+const {default: CSVParserConfig} = goog.requireType('plugin.file.csv.CSVParserConfig');
 
 
 /**
@@ -19,10 +21,10 @@ const AbstractCsvParser = goog.require('os.ui.file.csv.AbstractCsvParser');
  *
  * @extends {AbstractCsvParser.<Feature>}
  */
-class CSVParser extends AbstractCsvParser {
+export default class CSVParser extends AbstractCsvParser {
   /**
    * Constructor.
-   * @param {plugin.file.csv.CSVParserConfig} config
+   * @param {CSVParserConfig} config
    */
   constructor(config) {
     super(config);
@@ -133,7 +135,7 @@ class CSVParser extends AbstractCsvParser {
 
     var properties = feature.getProperties();
     for (var key in properties) {
-      if (!osFeature.isInternalField(key) && (!hasTime || key != 'TIME')) {
+      if (!isInternalField(key) && (!hasTime || key != 'TIME')) {
         var col = new ColumnDefinition(key);
         col['selectable'] = false;
         col['sortable'] = false;
@@ -142,5 +144,3 @@ class CSVParser extends AbstractCsvParser {
     }
   }
 }
-
-exports = CSVParser;

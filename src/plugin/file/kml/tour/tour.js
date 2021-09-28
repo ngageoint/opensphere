@@ -1,18 +1,19 @@
-goog.module('plugin.file.kml.tour.Tour');
+goog.declareModuleId('plugin.file.kml.tour.Tour');
+
+import EventType from './eventtype.js';
 
 const nextTick = goog.require('goog.async.nextTick');
 const EventTarget = goog.require('goog.events.EventTarget');
-const EventType = goog.require('plugin.file.kml.tour.EventType');
 
 const Promise = goog.requireType('goog.Promise');
-const AbstractTourPrimitive = goog.requireType('plugin.file.kml.tour.AbstractTourPrimitive');
+const {default: AbstractTourPrimitive} = goog.requireType('plugin.file.kml.tour.AbstractTourPrimitive');
 
 
 /**
  * Represents a KML tour, from a `gx:Tour` (KML 2.2) or `Tour` (KML 2.3) element.
  * @unrestricted
  */
-class Tour extends EventTarget {
+export default class Tour extends EventTarget {
   /**
    * Constructor.
    * @param {string=} opt_name The name of the tour.
@@ -220,5 +221,3 @@ class Tour extends EventTarget {
     }
   }
 }
-
-exports = Tour;

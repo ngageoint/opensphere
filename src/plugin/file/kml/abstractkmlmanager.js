@@ -1,4 +1,6 @@
-goog.module('plugin.file.kml.AbstractKMLManager');
+goog.declareModuleId('plugin.file.kml.AbstractKMLManager');
+
+import KMLLayerConfig from './kmllayerconfig.js';
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
@@ -13,22 +15,21 @@ const OsEventType = goog.require('os.events.EventType');
 const {createFromContent} = goog.require('os.file');
 const FileStorage = goog.require('os.file.FileStorage');
 const PropertyChange = goog.require('os.source.PropertyChange');
-const KMLLayerConfig = goog.require('plugin.file.kml.KMLLayerConfig');
 
 const Event = goog.requireType('goog.events.Event');
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 const osFile = goog.requireType('os.file.File');
-const KMLLayer = goog.requireType('plugin.file.kml.KMLLayer');
-const KMLSource = goog.requireType('plugin.file.kml.KMLSource');
-const KMLTreeExporter = goog.requireType('plugin.file.kml.KMLTreeExporter');
-const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
+const {default: KMLLayer} = goog.requireType('plugin.file.kml.KMLLayer');
+const {default: KMLSource} = goog.requireType('plugin.file.kml.KMLSource');
+const {default: KMLTreeExporter} = goog.requireType('plugin.file.kml.KMLTreeExporter');
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
  * Abstract KML manager class for persistent layers (e.g. Places).
  * @abstract
  */
-class AbstractKMLManager extends GoogEventTarget {
+export default class AbstractKMLManager extends GoogEventTarget {
   /**
    * @param {Object<string, *>} options Layer options.
    */
@@ -469,6 +470,3 @@ class AbstractKMLManager extends GoogEventTarget {
     }
   }
 }
-
-
-exports = AbstractKMLManager;

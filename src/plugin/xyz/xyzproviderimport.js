@@ -1,18 +1,19 @@
-goog.module('plugin.xyz.XYZImport');
+goog.declareModuleId('plugin.xyz.XYZImport');
+
+import * as osMap from '../../os/map/map.js';
+import {ROOT} from '../../os/os.js';
+import ConfigProvider from '../config/configprovider.js';
+import {directiveTag as uiDirectiveTag} from './xyzdescriptornodeui.js';
+import * as XYZProviderHelpUI from './xyzproviderhelp.js';
 
 const {getRandomString, numerateCompare} = goog.require('goog.string');
-const ConfigProvider = goog.require('plugin.config.Provider');
-const {ROOT} = goog.require('os');
 const ConfigDescriptor = goog.require('os.data.ConfigDescriptor');
 const DataManager = goog.require('os.data.DataManager');
 const {createFromOptions} = goog.require('os.layer');
-const osMap = goog.require('os.map');
 const {getProjections} = goog.require('os.proj');
 const Module = goog.require('os.ui.Module');
 const BaseProvider = goog.require('os.ui.data.BaseProvider');
 const SingleUrlProviderImportCtrl = goog.require('os.ui.SingleUrlProviderImportCtrl');
-const {directiveTag: uiDirectiveTag} = goog.require('plugin.xyz.XYZDescriptorNodeUI');
-const XYZProviderHelpUI = goog.require('plugin.xyz.XYZProviderHelpUI');
 
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 
@@ -22,7 +23,7 @@ const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   return {
     restrict: 'E',
     replace: true,
@@ -32,12 +33,11 @@ const directive = () => {
   };
 };
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'xyzprovider';
+export const directiveTag = 'xyzprovider';
 
 
 /**
@@ -50,7 +50,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the XYZ provider import dialog
  * @unrestricted
  */
-class Controller extends SingleUrlProviderImportCtrl {
+export class Controller extends SingleUrlProviderImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -239,9 +239,3 @@ class Controller extends SingleUrlProviderImportCtrl {
     this.populateZoomOffset(this.scope['config']['projection']);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

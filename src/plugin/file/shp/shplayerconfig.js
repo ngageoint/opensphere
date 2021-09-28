@@ -1,4 +1,7 @@
-goog.module('plugin.file.shp.SHPLayerConfig');
+goog.declareModuleId('plugin.file.shp.SHPLayerConfig');
+
+import SHPParser from './shpparser.js';
+import SHPParserConfig from './shpparserconfig.js';
 
 const log = goog.require('goog.log');
 const ResponseType = goog.require('goog.net.XhrIo.ResponseType');
@@ -6,8 +9,6 @@ const userAgent = goog.require('goog.userAgent');
 const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
 const MultiRequest = goog.require('os.source.MultiRequest');
 const RequestSource = goog.require('os.source.Request');
-const SHPParser = goog.require('plugin.file.shp.SHPParser');
-const SHPParserConfig = goog.require('plugin.file.shp.SHPParserConfig');
 
 const Logger = goog.requireType('goog.log.Logger');
 const FeatureImporter = goog.requireType('os.im.FeatureImporter');
@@ -15,7 +16,7 @@ const FeatureImporter = goog.requireType('os.im.FeatureImporter');
 
 /**
  */
-class SHPLayerConfig extends AbstractDataSourceLayerConfig {
+export default class SHPLayerConfig extends AbstractDataSourceLayerConfig {
   /**
    * Constructor.
    */
@@ -148,6 +149,3 @@ class SHPLayerConfig extends AbstractDataSourceLayerConfig {
  * @type {Logger}
  */
 const logger = log.getLogger('plugin.file.shp.SHPLayerConfig');
-
-
-exports = SHPLayerConfig;

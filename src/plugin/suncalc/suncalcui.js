@@ -1,21 +1,22 @@
-goog.module('plugin.suncalc.SunCalcUI');
+goog.declareModuleId('plugin.suncalc.SunCalcUI');
+
+import * as osMap from '../../os/map/map.js';
+import {ROOT} from '../../os/os.js';
+import * as ui from '../../os/ui/ui.js';
+import {SettingKey} from './suncalc.js';
 
 const googArray = goog.require('goog.array');
 const color = goog.require('goog.color');
 const olProj = goog.require('ol.proj');
-
-const {ROOT} = goog.require('os');
 const MapContainer = goog.require('os.MapContainer');
 const settings = goog.require('os.config.Settings');
 const geo = goog.require('os.geo');
-const osMap = goog.require('os.map');
 const time = goog.require('os.time');
 const TimelineController = goog.require('os.time.TimelineController');
 const TimelineEventType = goog.require('os.time.TimelineEventType');
-const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const osWindow = goog.require('os.ui.window');
-const {SettingKey} = goog.require('plugin.suncalc');
+
 
 
 /**
@@ -23,7 +24,7 @@ const {SettingKey} = goog.require('plugin.suncalc');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   templateUrl: ROOT + 'views/plugin/suncalc/suncalc.html',
@@ -35,7 +36,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'suncalc';
+export const directiveTag = 'suncalc';
 
 
 /**
@@ -48,7 +49,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the SunCalc directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -292,10 +293,3 @@ const PHASES = [
   {label: 'Waning Crescent', min: 0.78, max: 0.97},
   {label: 'New Moon', min: 0.97, max: 1}
 ];
-
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

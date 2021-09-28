@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.query.FilterIDModifier');
+goog.declareModuleId('plugin.ogc.query.FilterIDModifier');
 
 const googString = goog.require('goog.string');
 const ParamModifier = goog.require('os.net.ParamModifier');
@@ -8,7 +8,7 @@ const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');
 /**
  * Modifier for adding WFS relation filters to OGC queries.
  */
-class FilterIDModifier extends ParamModifier {
+export default class FilterIDModifier extends ParamModifier {
   /**
    * Constructor.
    * @param {Object} columnValueMap
@@ -43,5 +43,3 @@ class FilterIDModifier extends ParamModifier {
     super('relateLayer', 'filter', ModifierConstants.IDENTIFIERS, replacement);
   }
 }
-
-exports = FilterIDModifier;

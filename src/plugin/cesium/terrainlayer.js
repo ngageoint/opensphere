@@ -1,14 +1,15 @@
-goog.module('plugin.cesium.TerrainLayer');
+goog.declareModuleId('plugin.cesium.TerrainLayer');
+
+import * as dispatcher from '../../os/dispatcher.js';
+import {directiveTag as terrainNodeUi} from '../basemap/terrainlayernodeui.js';
+import {CESIUM_ONLY_LAYER} from './cesium.js';
+import Layer from './layer.js';
 
 const log = goog.require('goog.log');
-const dispatcher = goog.require('os.Dispatcher');
 const MapEvent = goog.require('os.MapEvent');
 const LayerNode = goog.require('os.data.LayerNode');
 const LayerType = goog.require('os.layer.LayerType');
 const Icons = goog.require('os.ui.Icons');
-const {directiveTag: terrainNodeUi} = goog.require('plugin.basemap.TerrainNodeUI');
-const {CESIUM_ONLY_LAYER} = goog.require('plugin.cesium');
-const Layer = goog.require('plugin.cesium.Layer');
 
 const ITreeNodeSupplier = goog.requireType('os.structs.ITreeNodeSupplier');
 
@@ -25,7 +26,7 @@ const logger = log.getLogger('plugin.cesium.TerrainLayer');
  *
  * @implements {ITreeNodeSupplier}
  */
-class TerrainLayer extends Layer {
+export default class TerrainLayer extends Layer {
   /**
    * Constructor.
    * @param {Cesium.TerrainProvider|undefined} provider The terrain provider.
@@ -197,5 +198,3 @@ class TerrainLayer extends Layer {
     this.synchronize();
   }
 }
-
-exports = TerrainLayer;

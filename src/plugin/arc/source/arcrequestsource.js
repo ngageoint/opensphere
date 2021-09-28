@@ -1,4 +1,4 @@
-goog.module('plugin.arc.source.ArcRequestSource');
+goog.declareModuleId('plugin.arc.source.ArcRequestSource');
 
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
@@ -186,4 +186,4 @@ ArcRequestSource.MAX = 1000;
 const logger = log.getLogger(className);
 
 
-exports = ArcRequestSource;
+export default ArcRequestSource;

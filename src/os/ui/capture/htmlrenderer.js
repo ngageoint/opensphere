@@ -1,16 +1,16 @@
-goog.module('os.ui.capture.HtmlRenderer');
+goog.declareModuleId('os.ui.capture.HtmlRenderer');
+
+import {getMapCanvas} from '../../capture/capture.js';
+import ElementRenderer from './elementrenderer.js';
 
 const Promise = goog.require('goog.Promise');
-const {getMapCanvas} = goog.require('os.capture');
-const ElementRenderer = goog.require('os.ui.capture.ElementRenderer');
-
 
 /**
  * Renders an HTML element to a canvas.
  *
  * @extends {ElementRenderer<Element>}
  */
-class HtmlRenderer extends ElementRenderer {
+export default class HtmlRenderer extends ElementRenderer {
   /**
    * Constructor.
    * @param {Object=} opt_options Options to configure the renderer
@@ -81,5 +81,3 @@ class HtmlRenderer extends ElementRenderer {
     return [x, y];
   }
 }
-
-exports = HtmlRenderer;

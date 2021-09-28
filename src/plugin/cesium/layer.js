@@ -1,12 +1,13 @@
-goog.module('plugin.cesium.Layer');
+goog.declareModuleId('plugin.cesium.Layer');
+
+import * as dispatcher from '../../os/dispatcher.js';
+import {DEFAULT_LAYER_COLOR, notifyStyleChange} from '../../os/style/style.js';
 
 const Delay = goog.require('goog.async.Delay');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
 const OLLayer = goog.require('ol.layer.Layer');
-
-const dispatcher = goog.require('os.Dispatcher');
 const IGroupable = goog.require('os.IGroupable');
 const MapChange = goog.require('os.MapChange');
 const MapContainer = goog.require('os.MapContainer');
@@ -19,13 +20,12 @@ const osImplements = goog.require('os.implements');
 const IColorableLayer = goog.require('os.layer.IColorableLayer');
 const ILayer = goog.require('os.layer.ILayer');
 const PropertyChange = goog.require('os.layer.PropertyChange');
-const osStyle = goog.require('os.style');
 const {adjustIconSet, createIconSet} = goog.require('os.ui.icons');
 const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
 
 const LayerType = goog.requireType('ol.LayerType');
 const IActionTarget = goog.requireType('os.ui.action.IActionTarget');
-const CesiumRenderer = goog.requireType('plugin.cesium.CesiumRenderer');
+const {default: CesiumRenderer} = goog.requireType('plugin.cesium.CesiumRenderer');
 
 
 /**
@@ -40,7 +40,7 @@ const logger = log.getLogger('plugin.cesium.Layer');
  * @implements {IColorableLayer}
  * @implements {IGroupable}
  */
-class Layer extends OLLayer {
+export default class Layer extends OLLayer {
   /**
    * Constructor.
    */
@@ -274,7 +274,7 @@ class Layer extends OLLayer {
       color = /** @type {string} */ (this.layerOptions_['color'] || this.layerOptions_['baseColor']);
     }
 
-    return color || osStyle.DEFAULT_LAYER_COLOR;
+    return color || DEFAULT_LAYER_COLOR;
   }
 
   /**
@@ -292,7 +292,7 @@ class Layer extends OLLayer {
 
       this.updateIcons_();
 
-      osStyle.notifyStyleChange(this);
+      notifyStyleChange(this);
     }
   }
 
@@ -755,9 +755,7 @@ class Layer extends OLLayer {
    */
   refresh() {}
 }
+
 osImplements(Layer, ILayer.ID);
 osImplements(Layer, IColorableLayer.ID);
 osImplements(Layer, IGroupable.ID);
-
-
-exports = Layer;

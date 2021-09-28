@@ -21,7 +21,7 @@ describe('plugin.cesium.sync.runConverter', () => {
   const {runConverter} = goog.module.get('plugin.cesium.sync.runConverter');
   const primitiveUtils = goog.module.get('test.plugin.cesium.primitive');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
-  const VectorContext = goog.module.get('plugin.cesium.VectorContext');
+  const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');
 
   let feature;
   let geometry;

@@ -1,10 +1,11 @@
-goog.module('plugin.heatmap.HeatmapLayerConfig');
+goog.declareModuleId('plugin.heatmap.HeatmapLayerConfig');
+
+import * as heatmap from './heatmap.js';
+import Heatmap from './heatmaplayer.js';
 
 const log = goog.require('goog.log');
 const OLVectorSource = goog.require('ol.source.Vector');
 const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
-const heatmap = goog.require('plugin.heatmap');
-const Heatmap = goog.require('plugin.heatmap.Heatmap');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -14,7 +15,7 @@ const Logger = goog.requireType('goog.log.Logger');
  *
  * @template T
  */
-class HeatmapLayerConfig extends AbstractLayerConfig {
+export default class HeatmapLayerConfig extends AbstractLayerConfig {
   /**
    * Constructor.
    */
@@ -82,6 +83,3 @@ class HeatmapLayerConfig extends AbstractLayerConfig {
  * @type {Logger}
  */
 const logger = log.getLogger('plugin.heatmap.HeatmapLayerConfig');
-
-
-exports = HeatmapLayerConfig;

@@ -1,20 +1,20 @@
-goog.module('plugin.cesium.sync.MultiLineStringConverter');
+goog.declareModuleId('plugin.cesium.sync.MultiLineStringConverter');
 
-const {updatePrimitive} = goog.require('plugin.cesium.primitive');
-const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
-const {createLineStringPrimitive, isLineWidthChanging, isDashChanging} = goog.require('plugin.cesium.sync.linestring');
+import {updatePrimitive} from '../primitive.js';
+import BaseConverter from './baseconverter.js';
+import {createLineStringPrimitive, isDashChanging, isLineWidthChanging} from './linestring.js';
 
 const Feature = goog.requireType('ol.Feature');
 const MultiLineString = goog.requireType('ol.geom.MultiLineString');
 const Style = goog.requireType('ol.style.Style');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**
  * Converter for MultiLineStrings
  * @extends {BaseConverter<MultiLineString, Cesium.Primitive>}
  */
-class MultiLineStringConverter extends BaseConverter {
+export default class MultiLineStringConverter extends BaseConverter {
   /**
    * @inheritDoc
    */
@@ -72,6 +72,3 @@ const createMultiLineString = (feature, multiLine, style, context) => {
     offset = lineEnd;
   }
 };
-
-
-exports = MultiLineStringConverter;

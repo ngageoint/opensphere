@@ -16,9 +16,9 @@ describe('os.ui.column.mapping.ColumnMappingFormUI', function() {
   const DataManager = goog.module.get('os.data.DataManager');
   const ColumnModelNode = goog.module.get('os.ui.column.mapping.ColumnModelNode');
   const osWindow = goog.module.get('os.ui.window');
-  const GeoServer = goog.module.get('plugin.ogc.GeoServer');
-  const OGCLayerDescriptor = goog.module.get('plugin.ogc.OGCLayerDescriptor');
-  const WMTSServer = goog.module.get('plugin.ogc.wmts.WMTSServer');
+  const {default: GeoServer} = goog.module.get('plugin.ogc.GeoServer');
+  const {default: OGCLayerDescriptor} = goog.module.get('plugin.ogc.OGCLayerDescriptor');
+  const {default: WMTSServer} = goog.module.get('plugin.ogc.wmts.WMTSServer');
   const {Controller} = goog.module.get('os.ui.column.mapping.ColumnMappingFormUI');
 
   var $scope;

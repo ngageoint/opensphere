@@ -1,10 +1,10 @@
-goog.module('os.capture.ContentType');
+goog.declareModuleId('os.capture.ContentType');
 
 /**
  * Capture content types.
  * @enum {string}
  */
-exports = {
+export default {
   GIF: 'image/gif',
   PNG: 'image/png'
 };

@@ -1,4 +1,8 @@
-goog.module('plugin.cesium.sync.ImageSynchronizer');
+goog.declareModuleId('plugin.cesium.sync.ImageSynchronizer');
+
+import * as dispatcher from '../../../os/dispatcher.js';
+import {PROJECTION, zoomToResolution} from '../../../os/map/map.js';
+import CesiumSynchronizer from './cesiumsynchronizer.js';
 
 const googEventsEventType = goog.require('goog.events.EventType');
 const ImageState = goog.require('ol.ImageState');
@@ -7,17 +11,13 @@ const events = goog.require('ol.events');
 const EventType = goog.require('ol.events.EventType');
 const olExtent = goog.require('ol.extent');
 const olProj = goog.require('ol.proj');
-
-const dispatcher = goog.require('os.Dispatcher');
 const mapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const osExtent = goog.require('os.extent');
 const geo = goog.require('os.geo');
 const {normalizeLongitude} = goog.require('os.geo2');
 const PropertyChange = goog.require('os.layer.PropertyChange');
-const osMap = goog.require('os.map');
 const osProj = goog.require('os.proj');
-const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer');
 
 const ImageBase = goog.requireType('ol.ImageBase');
 const PluggableMap = goog.requireType('ol.PluggableMap');
@@ -32,7 +32,7 @@ const ImageLayer = goog.requireType('os.layer.Image');
  *
  * @extends {CesiumSynchronizer<ImageLayer>}
  */
-class ImageSynchronizer extends CesiumSynchronizer {
+export default class ImageSynchronizer extends CesiumSynchronizer {
   /**
    * Constructor.
    * @param {!ImageLayer} layer The OpenLayers image layer.
@@ -156,7 +156,7 @@ class ImageSynchronizer extends CesiumSynchronizer {
         return;
       }
 
-      if (olExtent.containsExtent(viewExtent, osMap.PROJECTION.getWorldExtent())) {
+      if (olExtent.containsExtent(viewExtent, PROJECTION.getWorldExtent())) {
         // never allow an extent larger than the world to be requested
         return;
       }
@@ -164,11 +164,11 @@ class ImageSynchronizer extends CesiumSynchronizer {
       // We always want to use EPSG:4326 in Cesium so the image will be rendered properly on the map. Other projections
       // may shift the image so it appears in the wrong location. Transform the extent to degrees and normalize across
       // the antimeridian
-      viewExtent = olProj.transformExtent(viewExtent, osMap.PROJECTION, osProj.EPSG4326);
+      viewExtent = olProj.transformExtent(viewExtent, PROJECTION, osProj.EPSG4326);
       viewExtent = osExtent.normalize(viewExtent, -360, 0);
 
       var epsg4326 = olProj.get(osProj.EPSG4326);
-      var resolution = osMap.zoomToResolution(mapZoom, epsg4326);
+      var resolution = zoomToResolution(mapZoom, epsg4326);
 
       let img;
       if (!isNaN(resolution) && resolution != null) {
@@ -345,5 +345,3 @@ class ImageSynchronizer extends CesiumSynchronizer {
     }
   }
 }
-
-exports = ImageSynchronizer;

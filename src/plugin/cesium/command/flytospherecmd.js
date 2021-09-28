@@ -1,17 +1,19 @@
-goog.module('plugin.cesium.command.FlyToSphere');
+goog.declareModuleId('plugin.cesium.command.FlyToSphere');
+
+import {MAX_AUTO_ZOOM, PROJECTION, zoomToResolution} from '../../../os/map/map.js';
 
 const MapContainer = goog.require('os.MapContainer');
 const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
 const FlyToExtent = goog.require('os.command.FlyToExtent');
 const State = goog.require('os.command.State');
-const osMap = goog.require('os.map');
 
-const Camera = goog.requireType('plugin.cesium.Camera');
+const {default: Camera} = goog.requireType('plugin.cesium.Camera');
+
 
 /**
  * @suppress {accessControls}
  */
-class FlyToSphere extends AbstractSyncCommand {
+export default class FlyToSphere extends AbstractSyncCommand {
   /**
    * Constructor.
    * @param {!Cesium.BoundingSphere} sphere
@@ -35,7 +37,7 @@ class FlyToSphere extends AbstractSyncCommand {
 
     var cam = /** @type {Camera} */ (MapContainer.getInstance().getWebGLCamera());
     var minRange = cam.calcDistanceForResolution(
-        osMap.zoomToResolution(osMap.MAX_AUTO_ZOOM, osMap.PROJECTION), 0);
+        zoomToResolution(MAX_AUTO_ZOOM, PROJECTION), 0);
 
     sphere.radius = sphere.radius || 10;
 
@@ -90,5 +92,3 @@ class FlyToSphere extends AbstractSyncCommand {
     return super.revert();
   }
 }
-
-exports = FlyToSphere;

@@ -1,17 +1,18 @@
-goog.module('plugin.vectortools.MergeLayer');
+goog.declareModuleId('plugin.vectortools.MergeLayer');
+
+import * as osFeature from '../../os/feature/feature.js';
+import * as style from '../../os/style/style.js';
+import * as vectortools from './vectortools.js';
 
 const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');
 const DataManager = goog.require('os.data.DataManager');
-const osFeature = goog.require('os.feature');
 const layer = goog.require('os.layer');
-const style = goog.require('os.style');
-const vectortools = goog.require('plugin.vectortools');
 
 const ICommand = goog.requireType('os.command.ICommand');
 const ISource = goog.requireType('os.source.ISource');
 const VectorSource = goog.requireType('os.source.Vector');
-const Options = goog.requireType('plugin.vectortools.Options');
+const {default: Options} = goog.requireType('plugin.vectortools.Options');
 
 
 /**
@@ -19,7 +20,7 @@ const Options = goog.requireType('plugin.vectortools.Options');
  *
  * @implements {ICommand}
  */
-class MergeLayer {
+export default class MergeLayer {
   /**
    * Constructor.
    * @param {!Array<string>} sourceIds The data source IDs to merge
@@ -180,5 +181,3 @@ class MergeLayer {
     return true;
   }
 }
-
-exports = MergeLayer;

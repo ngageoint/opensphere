@@ -12,7 +12,9 @@ describe('plugin.arc.ArcJSONParser', function() {
   const MultiPolygon = goog.module.get('ol.geom.MultiPolygon');
   const Point = goog.module.get('ol.geom.Point');
   const Polygon = goog.module.get('ol.geom.Polygon');
-  const ArcJSONParser = goog.module.get('plugin.arc.ArcJSONParser');
+  const {
+    default: ArcJSONParser
+  } = goog.module.get('plugin.arc.ArcJSONParser');
 
   it('should add new features to its parse queue if they are added separately', function() {
     var parser = new ArcJSONParser();

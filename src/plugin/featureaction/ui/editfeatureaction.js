@@ -1,22 +1,23 @@
-goog.module('plugin.im.action.feature.ui.EditFeatureActionUI');
+goog.declareModuleId('plugin.im.action.feature.ui.EditFeatureActionUI');
 
 goog.require('os.ui.filter.AdvancedFilterBuilderUI');
 goog.require('os.ui.filter.BasicFilterBuilderUI');
 goog.require('os.ui.util.ValidationMessageUI');
 
+import * as dispatcher from '../../../os/dispatcher.js';
+import {ROOT} from '../../../os/os.js';
+import * as label from '../../../os/style/label.js';
+import * as osStyle from '../../../os/style/style.js';
+
 const Feature = goog.require('ol.Feature');
 const ImageState = goog.require('ol.ImageState');
 const Point = goog.require('ol.geom.Point');
 const render = goog.require('ol.render');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
 const osObject = goog.require('os.object');
 const canvas = goog.require('os.ol.canvas');
-const osStyle = goog.require('os.style');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
 const StyleType = goog.require('os.style.StyleType');
-const label = goog.require('os.style.label');
 const Module = goog.require('os.ui.Module');
 const {
   directive: editFiltersDirective
@@ -25,9 +26,15 @@ const EditFilterActionCtrl = goog.require('os.ui.im.action.EditFilterActionCtrl'
 const EventType = goog.require('os.ui.im.action.EventType');
 
 const OLStyle = goog.requireType('ol.style.Style');
-const LabelAction = goog.requireType('plugin.im.action.feature.LabelAction');
-const SoundAction = goog.requireType('plugin.im.action.feature.SoundAction');
-const StyleAction = goog.requireType('plugin.im.action.feature.StyleAction');
+const {
+  default: LabelAction
+} = goog.requireType('plugin.im.action.feature.LabelAction');
+const {
+  default: SoundAction
+} = goog.requireType('plugin.im.action.feature.SoundAction');
+const {
+  default: StyleAction
+} = goog.requireType('plugin.im.action.feature.StyleAction');
 
 
 /**
@@ -35,7 +42,7 @@ const StyleAction = goog.requireType('plugin.im.action.feature.StyleAction');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = editFiltersDirective();
   dir.templateUrl = ROOT + 'views/plugin/featureaction/editfeatureaction.html';
   dir.controller = Controller;
@@ -47,7 +54,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'editfeatureaction';
+export const directiveTag = 'editfeatureaction';
 
 /**
  * Add the directive to the module.
@@ -60,7 +67,7 @@ Module.directive('editfeatureaction', [directive]);
  * @template T
  * @unrestricted
  */
-class Controller extends EditFilterActionCtrl {
+export class Controller extends EditFilterActionCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -308,10 +315,4 @@ const onImageChange = function() {
     // if the image loaded, trigger a showPreview
     dispatcher.getInstance().dispatchEvent(EventType.UPDATE);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

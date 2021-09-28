@@ -26,11 +26,11 @@ describe('plugin.heatmap.HeatmapPlugin', function() {
   const layerMenu = goog.module.get('os.ui.menu.layer');
   const SynchronizerManager = goog.module.get('os.webgl.SynchronizerManager');
   const heatmap = goog.module.get('plugin.heatmap');
-  const HeatmapLayerConfig = goog.module.get('plugin.heatmap.HeatmapLayerConfig');
-  const HeatmapPlugin = goog.module.get('plugin.heatmap.HeatmapPlugin');
-  const SynchronizerType = goog.module.get('plugin.heatmap.SynchronizerType');
+  const {default: HeatmapLayerConfig} = goog.module.get('plugin.heatmap.HeatmapLayerConfig');
+  const {default: HeatmapPlugin} = goog.module.get('plugin.heatmap.HeatmapPlugin');
+  const {default: SynchronizerType} = goog.module.get('plugin.heatmap.SynchronizerType');
   const heatmapMenu = goog.module.get('plugin.heatmap.menu');
-  const HeatmapSynchronizer = goog.module.get('plugin.cesium.sync.HeatmapSynchronizer');
+  const {default: HeatmapSynchronizer} = goog.module.get('plugin.cesium.sync.HeatmapSynchronizer');
 
   var createLayer = function() {
     var options = {

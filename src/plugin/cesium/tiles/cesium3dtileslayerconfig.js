@@ -1,12 +1,12 @@
-goog.module('plugin.cesium.tiles.LayerConfig');
+goog.declareModuleId('plugin.cesium.tiles.LayerConfig');
+
+import Layer from './cesium3dtileslayer.js';
 
 const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
-const Layer = goog.require('plugin.cesium.tiles.Layer');
-
 
 /**
  */
-class LayerConfig extends AbstractLayerConfig {
+export default class LayerConfig extends AbstractLayerConfig {
   /**
    * Constructor.
    */
@@ -30,5 +30,3 @@ class LayerConfig extends AbstractLayerConfig {
     return layer;
   }
 }
-
-exports = LayerConfig;

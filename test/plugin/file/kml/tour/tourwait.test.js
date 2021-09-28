@@ -4,7 +4,7 @@ goog.require('plugin.file.kml.tour.Wait');
 
 describe('plugin.file.kml.tour.Wait', function() {
   const Promise = goog.module.get('goog.Promise');
-  const Wait = goog.module.get('plugin.file.kml.tour.Wait');
+  const {default: Wait} = goog.module.get('plugin.file.kml.tour.Wait');
   // default values for tests
   var duration = 4321;
   var timeoutId = 1234;

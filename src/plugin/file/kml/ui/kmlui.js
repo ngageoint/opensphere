@@ -1,24 +1,25 @@
-goog.module('plugin.file.kml.ui');
+goog.declareModuleId('plugin.file.kml.ui');
+
+import * as dispatcher from '../../../../os/dispatcher.js';
+import * as osFeature from '../../../../os/feature/feature.js';
+import KMLNodeAdd from '../cmd/kmlnodeaddcmd.js';
+import KMLNodeRemove from '../cmd/kmlnoderemovecmd.js';
+import KMLField from '../kmlfield.js';
 
 const GoogEvent = goog.require('goog.events.Event');
 const googString = goog.require('goog.string');
 const ol = goog.require('ol');
-const dispatcher = goog.require('os.Dispatcher');
 const EventType = goog.require('os.action.EventType');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
-const osFeature = goog.require('os.feature');
 const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
 const osWindow = goog.require('os.ui.window');
 const {launchConfirmText} = goog.require('os.ui.window.ConfirmTextUI');
-const KMLField = goog.require('plugin.file.kml.KMLField');
-const KMLNodeAdd = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
-const KMLNodeRemove = goog.require('plugin.file.kml.cmd.KMLNodeRemove');
 
-const KMLLayer = goog.requireType('plugin.file.kml.KMLLayer');
-const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
-const KMLSource = goog.requireType('plugin.file.kml.KMLSource');
-const KMLLayerNode = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
+const {default: KMLLayer} = goog.requireType('plugin.file.kml.KMLLayer');
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
+const {default: KMLSource} = goog.requireType('plugin.file.kml.KMLSource');
+const {default: KMLLayerNode} = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
 
 
 /**
@@ -29,7 +30,7 @@ const KMLLayerNode = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
  *   name: string
  * }}
  */
-let FolderOptions;
+export let FolderOptions;
 
 /**
  * @typedef {{
@@ -40,14 +41,14 @@ let FolderOptions;
  *   parent: (KMLNode|undefined)
  * }}
  */
-let PlacemarkOptions;
+export let PlacemarkOptions;
 
 /**
  * Launch a window to create or edit a place.
  *
  * @param {!PlacemarkOptions} options The place options.
  */
-const createOrEditPlace = function(options) {
+export const createOrEditPlace = function(options) {
   var windowId = 'placemarkEdit';
   windowId += options.feature ? ol.getUid(options.feature) : googString.getRandomString();
 
@@ -92,7 +93,7 @@ let createPlacemarkNode = () => null;
  * Set the default function used to create a placemark node.
  * @param {function():KMLNode} fn The function.
  */
-const setCreatePlacemarkNodeFn = (fn) => {
+export const setCreatePlacemarkNodeFn = (fn) => {
   createPlacemarkNode = fn;
 };
 
@@ -102,7 +103,7 @@ const setCreatePlacemarkNodeFn = (fn) => {
  * @param {!PlacemarkOptions} options The placemark options.
  * @return {KMLNode}
  */
-const updatePlacemark = function(options) {
+export const updatePlacemark = function(options) {
   var placemark = /** @type {KMLNode|undefined} */ (options['node']) || createPlacemarkNode();
 
   if (placemark) {
@@ -144,7 +145,7 @@ let createFolderNode = () => null;
  * Set the default function used to create a folder node.
  * @param {function():KMLNode} fn The function.
  */
-const setCreateFolderNodeFn = (fn) => {
+export const setCreateFolderNodeFn = (fn) => {
   createFolderNode = fn;
 };
 
@@ -153,7 +154,7 @@ const setCreateFolderNodeFn = (fn) => {
  *
  * @param {!FolderOptions} options The folder options.
  */
-const createOrEditFolder = function(options) {
+export const createOrEditFolder = function(options) {
   var node = options['node'];
   var label = node ? node.getLabel() : 'New Folder';
   var winLabel = (node ? 'Edit' : 'Add') + ' Folder';
@@ -179,7 +180,7 @@ const createOrEditFolder = function(options) {
  * @param {!FolderOptions} options The folder options.
  * @return {KMLNode} The folder node.
  */
-const updateFolder = function(options) {
+export const updateFolder = function(options) {
   var folder = /** @type {KMLNode|undefined} */ (options['node']) || createFolderNode();
   if (folder) {
     folder.setLabel(options['name'] || 'Unnamed Folder');
@@ -201,7 +202,7 @@ const updateFolder = function(options) {
  * @param {!KMLNode} node The node to verify
  * @return {!KMLNode} The same node if it's in the tree, otherwise the root of the tree.
  */
-const verifyNodeInTree = function(node) {
+export const verifyNodeInTree = function(node) {
   var result = node;
 
   // if the parent has a source defined, make sure the node's root is the same as the source root. if not, the node
@@ -224,21 +225,8 @@ const verifyNodeInTree = function(node) {
  * @param {!KMLLayerNode} layerNode The layer node
  * @return {KMLNode}
  */
-const getKMLRoot = function(layerNode) {
+export const getKMLRoot = function(layerNode) {
   var layer = /** @type {KMLLayer} */ (layerNode.getLayer());
   var source = layer ? /** @type {KMLSource} */ (layer.getSource()) : null;
   return source ? source.getRootNode() : null;
-};
-
-exports = {
-  createOrEditFolder,
-  createOrEditPlace,
-  getKMLRoot,
-  setCreateFolderNodeFn,
-  setCreatePlacemarkNodeFn,
-  updateFolder,
-  updatePlacemark,
-  verifyNodeInTree,
-  FolderOptions,
-  PlacemarkOptions
 };

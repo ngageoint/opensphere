@@ -1,17 +1,18 @@
-goog.module('plugin.area.SHPAreaUI');
+goog.declareModuleId('plugin.area.SHPAreaUI');
 
 goog.require('os.ui.im.MergeAreaOptionUI');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../os/os.js';
+import {apply} from '../../os/ui/ui.js';
+import SHPParser from '../file/shp/shpparser.js';
+import AreaImportCtrl from './areaimportctrl.js';
+
 const EventType = goog.require('os.events.EventType');
 const Importer = goog.require('os.im.Importer');
-const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
-const AreaImportCtrl = goog.require('plugin.area.AreaImportCtrl');
-const SHPParser = goog.require('plugin.file.shp.SHPParser');
 
-const SHPParserConfig = goog.requireType('plugin.file.shp.SHPParserConfig');
+const {default: SHPParserConfig} = goog.requireType('plugin.file.shp.SHPParserConfig');
 
 
 /**
@@ -19,7 +20,7 @@ const SHPParserConfig = goog.requireType('plugin.file.shp.SHPParserConfig');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/plugin/shp/shparea.html',
@@ -31,7 +32,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'shparea';
+export const directiveTag = 'shparea';
 
 
 /**
@@ -46,7 +47,7 @@ Module.directive('shparea', [directive]);
  * @extends {AreaImportCtrl<SHPParserConfig>}
  * @unrestricted
  */
-class Controller extends AreaImportCtrl {
+export class Controller extends AreaImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -61,7 +62,7 @@ class Controller extends AreaImportCtrl {
 
     // If this is the zip file, run the preview
     if (this.config['zipFile']) {
-      this.config.updateZipPreview(ui.apply.bind(this, this.scope));
+      this.config.updateZipPreview(apply.bind(this, this.scope));
     }
   }
 
@@ -74,7 +75,7 @@ class Controller extends AreaImportCtrl {
    */
   onFileChange_(event, valid) {
     this.config.updatePreview();
-    ui.apply(this.scope);
+    apply(this.scope);
   }
 
   /**
@@ -125,9 +126,3 @@ class Controller extends AreaImportCtrl {
     this.close();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

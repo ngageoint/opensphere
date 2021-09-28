@@ -1,4 +1,4 @@
-goog.module('plugin.ogc.wmts.WMTSLayerConfig');
+goog.declareModuleId('plugin.ogc.wmts.WMTSLayerConfig');
 
 const olProj = goog.require('ol.proj');
 const WMTSSource = goog.require('ol.source.WMTS');
@@ -10,7 +10,7 @@ const {getTimeKey} = goog.require('os.ogc.wmts');
 /**
  * Creates a WMTS layer.
  */
-class WMTSLayerConfig extends AbstractTileLayerConfig {
+export default class WMTSLayerConfig extends AbstractTileLayerConfig {
   /**
    * Constructor.
    */
@@ -104,5 +104,3 @@ class WMTSLayerConfig extends AbstractTileLayerConfig {
     }
   }
 }
-
-exports = WMTSLayerConfig;

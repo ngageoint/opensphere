@@ -1,4 +1,8 @@
-goog.module('plugin.basemap.v2.BaseMapState');
+goog.declareModuleId('plugin.basemap.v2.BaseMapState');
+
+import {LAYER_TYPE, TYPE} from '../basemap.js';
+import BaseMap from '../layer/basemaplayer.js';
+import BaseMapTag from './basemaptag.js';
 
 const googDomXml = goog.require('goog.dom.xml');
 const log = goog.require('goog.log');
@@ -7,16 +11,13 @@ const net = goog.require('os.net');
 const LayerState = goog.require('os.state.v2.LayerState');
 const BaseProvider = goog.require('os.ui.data.BaseProvider');
 const xml = goog.require('os.xml');
-const basemap = goog.require('plugin.basemap');
-const BaseMap = goog.require('plugin.basemap.layer.BaseMap');
-const BaseMapTag = goog.require('plugin.basemap.v2.BaseMapTag');
 
 
 /**
  * Basemap state v2.
  * @unrestricted
  */
-class BaseMapState extends LayerState {
+export default class BaseMapState extends LayerState {
   /**
    * Constructor.
    */
@@ -91,8 +92,8 @@ class BaseMapState extends LayerState {
   xmlToOptions(node) {
     var options = super.xmlToOptions(node);
     options['baseType'] = options['type'].toUpperCase();
-    options['layerType'] = basemap.LAYER_TYPE;
-    options['type'] = basemap.TYPE;
+    options['layerType'] = LAYER_TYPE;
+    options['type'] = TYPE;
     options['id'] = options['id'].replace(BaseProvider.ID_DELIMITER, '-');
 
     if (typeof options['url'] == 'string') {
@@ -118,6 +119,3 @@ class BaseMapState extends LayerState {
  * @type {goog.log.Logger}
  */
 logger = log.getLogger('plugin.basemap.v2.BaseMapState');
-
-
-exports = BaseMapState;

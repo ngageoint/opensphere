@@ -1,4 +1,8 @@
-goog.module('plugin.cesium');
+goog.declareModuleId('plugin.cesium');
+
+import * as osMap from '../../os/map/map.js';
+import {ROOT} from '../../os/os.js';
+import ImageryProvider from './imageryprovider.js';
 
 const Promise = goog.require('goog.Promise');
 const Uri = goog.require('goog.Uri');
@@ -8,13 +12,10 @@ const GeometryType = goog.require('ol.geom.GeometryType');
 const olProj = goog.require('ol.proj');
 const Tile = goog.require('ol.source.Tile');
 const core = goog.require('olcs.core');
-
-const {ROOT} = goog.require('os');
 const MapContainer = goog.require('os.MapContainer');
 const AlertManager = goog.require('os.alert.AlertManager');
 const DisplaySetting = goog.require('os.config.DisplaySetting');
 const settings = goog.require('os.config.Settings');
-const osMap = goog.require('os.map');
 const {TerrainType} = goog.require('os.map.terrain');
 const net = goog.require('os.net');
 const CrossOrigin = goog.require('os.net.CrossOrigin');
@@ -24,7 +25,6 @@ const osString = goog.require('os.string');
 const TimelineController = goog.require('os.time.TimelineController');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const {launchConfirmText} = goog.require('os.ui.window.ConfirmTextUI');
-const ImageryProvider = goog.require('plugin.cesium.ImageryProvider');
 
 const Deferred = goog.requireType('goog.async.Deferred');
 const Geometry = goog.requireType('ol.geom.Geometry');
@@ -39,12 +39,12 @@ const Projection = goog.requireType('ol.proj.Projection');
  * Constructor for a Cesium terrain provider.
  * @typedef {function(...):!Promise<Cesium.TerrainProvider>}
  */
-let TerrainProviderFn;
+export let TerrainProviderFn;
 
 /**
  * @enum {string}
  */
-const GeometryInstanceId = {
+export const GeometryInstanceId = {
   ELLIPSOID: 'ellipsoid',
   ELLIPSOID_OUTLINE: 'ellipsoidOutline',
   GEOM: 'geometry',
@@ -55,7 +55,7 @@ const GeometryInstanceId = {
  * Cesium setting keys.
  * @enum {string}
  */
-const SettingsKey = {
+export const SettingsKey = {
   ACCESS_TOKEN: 'cesium.accessToken',
   ION_URL: 'cesium.ionUrl',
   LOAD_TIMEOUT: 'cesium.loadTimeout',
@@ -66,48 +66,48 @@ const SettingsKey = {
  * Identifier for Cesium plugin components
  * @type {string}
  */
-const ID = 'cesium';
+export const ID = 'cesium';
 
 /**
  * @type {string}
  */
-const CESIUM_ONLY_LAYER = '3D Layers';
+export const CESIUM_ONLY_LAYER = '3D Layers';
 
 /**
  * Regular expression to match ellipsoid geometry instance id's.
  * @type {RegExp}
  */
-const ELLIPSOID_REGEXP = /ellipsoid/i;
+export const ELLIPSOID_REGEXP = /ellipsoid/i;
 
 /**
  * Regular expression to match outline geometry instance id's.
  * @type {RegExp}
  */
-const OUTLINE_REGEXP = /outline/i;
+export const OUTLINE_REGEXP = /outline/i;
 
 /**
  * The maximum Cesium fog density.
  * @type {number}
  */
-const MAX_FOG_DENSITY = 3e-4;
+export const MAX_FOG_DENSITY = 3e-4;
 
 /**
  * The default Cesium fog density, as a percentage of max density.
  * @type {number}
  */
-const DEFAULT_FOG_DENSITY = 0.5;
+export const DEFAULT_FOG_DENSITY = 0.5;
 
 /**
  * Default URL to use for Ion assets.
  * @type {string}
  */
-const DEFAULT_ION_URL = 'https://assets.cesium.com/';
+export const DEFAULT_ION_URL = 'https://assets.cesium.com/';
 
 /**
  * Default timeout for loading Cesium. Override by setting `cesium.loadTimeout` in the app configuration.
  * @type {number}
  */
-const DEFAULT_LOAD_TIMEOUT = 30000;
+export const DEFAULT_LOAD_TIMEOUT = 30000;
 
 /**
  * URL to use for Ion assets. Override to change/disable Ion service integration.
@@ -119,27 +119,27 @@ let ionUrl = '';
  * Get the URL to use for Ion assets.
  * @return {string}
  */
-const getIonUrl = () => ionUrl;
+export const getIonUrl = () => ionUrl;
 
 /**
  * Set the URL to use for Ion assets.
  * @param {string} value The URL.
  */
-const setIonUrl = (value) => {
+export const setIonUrl = (value) => {
   ionUrl = value;
 };
 
 /**
  * @define {string} Base path to the Cesium library, from the OpenSphere root.
  */
-const LIBRARY_BASE_PATH = goog.define('plugin.cesium.LIBRARY_BASE_PATH', 'vendor/cesium');
+export const LIBRARY_BASE_PATH = goog.define('plugin.cesium.LIBRARY_BASE_PATH', 'vendor/cesium');
 
 /**
  * Add a trusted server to Cesium.
  *
  * @param {string|undefined} url The server URL.
  */
-const addTrustedServer = function(url) {
+export const addTrustedServer = function(url) {
   if (url && net.getCrossOrigin(url) === CrossOrigin.USE_CREDENTIALS) {
     // add URL to Cesium.TrustedServers
     var uri = new Uri(url);
@@ -165,7 +165,7 @@ const addTrustedServer = function(url) {
  *
  * @return {boolean}
  */
-const isIonEnabled = function() {
+export const isIonEnabled = function() {
   return !!ionUrl;
 };
 
@@ -174,7 +174,7 @@ const isIonEnabled = function() {
  *
  * @return {!(Promise|Deferred)} A promise that resolves when Cesium has been loaded.
  */
-const loadCesium = function() {
+export const loadCesium = function() {
   if (window.Cesium === undefined) {
     // tell Cesium where to find its resources
     var cesiumPath = ROOT + LIBRARY_BASE_PATH;
@@ -200,7 +200,7 @@ const loadCesium = function() {
  *
  * @return {!Promise<string>}
  */
-const promptForAccessToken = function() {
+export const promptForAccessToken = function() {
   return new Promise(function(resolve, reject) {
     launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
       confirm: (accessToken) => {
@@ -241,7 +241,7 @@ let defaultTerrainProvider_ = undefined;
  *
  * @return {Cesium.EllipsoidTerrainProvider|undefined}
  */
-const getDefaultTerrainProvider = function() {
+export const getDefaultTerrainProvider = function() {
   // lazy init so Cesium isn't invoked by requiring this file
   if (!defaultTerrainProvider_ && window.Cesium !== undefined) {
     defaultTerrainProvider_ = new Cesium.EllipsoidTerrainProvider();
@@ -255,7 +255,7 @@ const getDefaultTerrainProvider = function() {
  *
  * @return {!Cesium.SkyBoxOptions}
  */
-const getDefaultSkyBoxOptions = function() {
+export const getDefaultSkyBoxOptions = function() {
   var baseUrl = ROOT + LIBRARY_BASE_PATH + '/Assets/Textures/SkyBox/';
   return /** @type {!Cesium.SkyBoxOptions} */ ({
     sources: {
@@ -280,7 +280,7 @@ let julianDate = undefined;
  *
  * @return {Cesium.JulianDate} The Julian date of the application.
  */
-const getJulianDate = function() {
+export const getJulianDate = function() {
   julianDate = Cesium.JulianDate.fromDate(new Date(TimelineController.getInstance().getCurrent()), julianDate);
   return julianDate;
 };
@@ -293,7 +293,7 @@ const getJulianDate = function() {
  * @param {number} radius
  * @return {Array<Cesium.Cartesian3>}
  */
-const generateCirclePositions = function(center, radius) {
+export const generateCirclePositions = function(center, radius) {
   var options = {
     'center': center,
     'semiMajorAxis': radius,
@@ -332,7 +332,7 @@ const generateCirclePositions = function(center, radius) {
  * @param {Cesium.Rectangle} rectangle The rectangle.
  * @return {ol.Extent|undefined}
  */
-const rectangleToExtent = function(rectangle) {
+export const rectangleToExtent = function(rectangle) {
   return rectangle ? [
     Cesium.Math.toDegrees(rectangle.west),
     Cesium.Math.toDegrees(rectangle.south),
@@ -349,7 +349,7 @@ const rectangleToExtent = function(rectangle) {
  * @param {?Projection} viewProj Projection of the view.
  * @return {?Cesium.ImageryLayer} null if not possible (or supported)
  */
-const tileLayerToImageryLayer = function(olLayer, viewProj) {
+export const tileLayerToImageryLayer = function(olLayer, viewProj) {
   var source = olLayer.getSource();
   var provider = null;
 
@@ -392,7 +392,7 @@ const tileLayerToImageryLayer = function(olLayer, viewProj) {
  * @param {!LayerBase} olLayer
  * @param {!Cesium.ImageryLayer} csLayer
  */
-const updateCesiumLayerProperties = function(olLayer, csLayer) {
+export const updateCesiumLayerProperties = function(olLayer, csLayer) {
   // call the ol3-cesium function first
   core.updateCesiumLayerProperties(/** @type {olcsx.LayerWithParents} */ ({
     layer: olLayer,
@@ -417,7 +417,7 @@ const updateCesiumLayerProperties = function(olLayer, csLayer) {
  * @param {Cesium.CesiumTerrainProviderOptions} options The Cesium terrain options.
  * @return {!Promise<!Cesium.CesiumTerrainProvider>}
  */
-const createCesiumTerrain = function(options) {
+export const createCesiumTerrain = function(options) {
   return Promise.resolve(new Cesium.CesiumTerrainProvider(options));
 };
 
@@ -427,7 +427,7 @@ const createCesiumTerrain = function(options) {
  * @param {Cesium.WorldTerrainOptions} options The Cesium World Terrain options.
  * @return {!Promise<!Cesium.CesiumTerrainProvider>}
  */
-const createWorldTerrain = function(options) {
+export const createWorldTerrain = function(options) {
   var assetId = options.assetId != null ? options.assetId : 1;
   var accessToken = options.accessToken || /** @type {string|undefined} */ (
     settings.getInstance().get(SettingsKey.ACCESS_TOKEN));
@@ -448,7 +448,7 @@ const createWorldTerrain = function(options) {
  * @param {string} accessToken The Ion access token.
  * @return {Cesium.Promise}
  */
-const createIonAssetUrl = function(assetId, accessToken) {
+export const createIonAssetUrl = function(assetId, accessToken) {
   const assetUrl = Cesium.IonResource.fromAssetId(assetId, {
     accessToken
   });
@@ -484,7 +484,7 @@ const createWorldTerrain_ = function(assetId, accessToken) {
  * Prompt the user to activate Cesium World Terrain.
  * @param {string} prompt The message to display.
  */
-const promptForWorldTerrain = function(prompt) {
+export const promptForWorldTerrain = function(prompt) {
   if (!isWorldTerrainActive() && hasWorldTerrain()) {
     ConfirmUI.launchConfirm(/** @type {!osx.window.ConfirmTextOptions} */ ({
       confirm: enableWorldTerrain,
@@ -505,7 +505,7 @@ const promptForWorldTerrain = function(prompt) {
  * If Cesium World Terrain is the active terrain provider.
  * @return {boolean}
  */
-const isWorldTerrainActive = function() {
+export const isWorldTerrainActive = function() {
   const terrainActive = settings.getInstance().get(DisplaySetting.ENABLE_TERRAIN);
   if (terrainActive) {
     const map = MapContainer.getInstance();
@@ -523,7 +523,7 @@ const isWorldTerrainActive = function() {
  * If Cesium World Terrain is available.
  * @return {boolean}
  */
-const hasWorldTerrain = function() {
+export const hasWorldTerrain = function() {
   const map = MapContainer.getInstance();
   const renderer = map.getWebGLRenderer();
   if (renderer) {
@@ -537,7 +537,7 @@ const hasWorldTerrain = function() {
 /**
  * Enable the Cesium World Terrain provider, if configured.
  */
-const enableWorldTerrain = function() {
+export const enableWorldTerrain = function() {
   const map = MapContainer.getInstance();
   const renderer = map.getWebGLRenderer();
   if (renderer) {
@@ -570,7 +570,7 @@ let scratchCoord_ = [];
  * @param {?Geometry|undefined} geom
  * @return {Cesium.BoundingSphere}
  */
-const reduceBoundingSphere = function(sphere, geom) {
+export const reduceBoundingSphere = function(sphere, geom) {
   if (geom) {
     var type = geom.getType();
     var scratchSphere = scratchSphere_;
@@ -624,40 +624,4 @@ const reduceBoundingSphere = function(sphere, geom) {
   }
 
   return sphere;
-};
-
-exports = {
-  GeometryInstanceId,
-  SettingsKey,
-  TerrainProviderFn,
-  ID,
-  CESIUM_ONLY_LAYER,
-  ELLIPSOID_REGEXP,
-  OUTLINE_REGEXP,
-  MAX_FOG_DENSITY,
-  DEFAULT_FOG_DENSITY,
-  DEFAULT_ION_URL,
-  DEFAULT_LOAD_TIMEOUT,
-  getIonUrl,
-  setIonUrl,
-  LIBRARY_BASE_PATH,
-  addTrustedServer,
-  isIonEnabled,
-  loadCesium,
-  promptForAccessToken,
-  getDefaultTerrainProvider,
-  getDefaultSkyBoxOptions,
-  getJulianDate,
-  generateCirclePositions,
-  rectangleToExtent,
-  tileLayerToImageryLayer,
-  updateCesiumLayerProperties,
-  createCesiumTerrain,
-  createWorldTerrain,
-  createIonAssetUrl,
-  promptForWorldTerrain,
-  isWorldTerrainActive,
-  hasWorldTerrain,
-  enableWorldTerrain,
-  reduceBoundingSphere
 };

@@ -1,6 +1,7 @@
-goog.module('plugin.im.action.feature.ui.legendSettingsDirective');
+goog.declareModuleId('plugin.im.action.feature.ui.legendSettingsDirective');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os/os.js';
+
 const Module = goog.require('os.ui.Module');
 
 
@@ -9,7 +10,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/plugin/featureaction/featureactionlegendsettings.html'
@@ -19,14 +20,9 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'featureactionlegendsettings';
+export const directiveTag = 'featureactionlegendsettings';
 
 /**
  * Add the directive to the module.
  */
 Module.directive('featureactionlegendsettings', [directive]);
-
-exports = {
-  directive,
-  directiveTag
-};

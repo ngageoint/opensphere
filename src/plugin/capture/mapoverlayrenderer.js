@@ -1,6 +1,6 @@
-goog.module('plugin.capture.MapOverlayRenderer');
+goog.declareModuleId('plugin.capture.MapOverlayRenderer');
 
-const HtmlRenderer = goog.require('os.ui.capture.HtmlRenderer');
+import HtmlRenderer from '../../os/ui/capture/htmlrenderer.js';
 
 const Overlay = goog.requireType('ol.Overlay');
 
@@ -8,7 +8,7 @@ const Overlay = goog.requireType('ol.Overlay');
 /**
  * Renders a map overlay to a canvas.
  */
-class MapOverlayRenderer extends HtmlRenderer {
+export default class MapOverlayRenderer extends HtmlRenderer {
   /**
    * Constructor.
    * @param {!Overlay} overlay The overlay to render.
@@ -38,5 +38,3 @@ class MapOverlayRenderer extends HtmlRenderer {
     return null;
   }
 }
-
-exports = MapOverlayRenderer;

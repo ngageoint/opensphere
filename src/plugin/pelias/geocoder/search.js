@@ -1,4 +1,8 @@
-goog.module('plugin.pelias.geocoder.Search');
+goog.declareModuleId('plugin.pelias.geocoder.Search');
+
+import * as osMap from '../../../os/map/map.js';
+import {ID} from './geocoder.js';
+import Result from './result.js';
 
 const log = goog.require('goog.log');
 const GeoJSON = goog.require('ol.format.GeoJSON');
@@ -6,11 +10,8 @@ const olProj = goog.require('ol.proj');
 const MapContainer = goog.require('os.MapContainer');
 const Settings = goog.require('os.config.Settings');
 const osExtent = goog.require('os.extent');
-const osMap = goog.require('os.map');
 const osProj = goog.require('os.proj');
 const AbstractUrlSearch = goog.require('os.search.AbstractUrlSearch');
-const {ID} = goog.require('plugin.pelias.geocoder');
-const Result = goog.require('plugin.pelias.geocoder.Result');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Request = goog.requireType('os.net.Request');
@@ -26,7 +27,7 @@ const logger = log.getLogger('plugin.pelias.geocoder.Search');
 /**
  * Searches via the Pelias Geocoder API
  */
-class Search extends AbstractUrlSearch {
+export default class Search extends AbstractUrlSearch {
   /**
    * Constructor.
    * @param {string} name
@@ -141,5 +142,3 @@ class Search extends AbstractUrlSearch {
     super.onSearchSuccess(evt);
   }
 }
-
-exports = Search;

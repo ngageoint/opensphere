@@ -7,7 +7,6 @@ const {assert} = goog.require('goog.asserts');
 const Deferred = goog.require('goog.async.Deferred');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
-const os = goog.require('os');
 const Settings = goog.require('os.config.Settings');
 const {getLocalUrl, isLocal} = goog.require('os.file');
 const OSFile = goog.require('os.file.File');
@@ -514,11 +513,5 @@ BaseStateManager.EventType = {
   DELETE: 'delete',
   LOADED: 'loaded'
 };
-
-/**
- * Global state manager reference. Set this in each application with the app-specific manager reference.
- * @type {BaseStateManager}
- */
-os.stateManager = null;
 
 exports = BaseStateManager;

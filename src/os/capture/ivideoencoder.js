@@ -1,4 +1,4 @@
-goog.module('os.capture.IVideoEncoder');
+goog.declareModuleId('os.capture.IVideoEncoder');
 
 const Listenable = goog.requireType('goog.events.Listenable');
 
@@ -9,7 +9,7 @@ const Listenable = goog.requireType('goog.events.Listenable');
  * @interface
  * @extends {Listenable}
  */
-class IVideoEncoder {
+export default class IVideoEncoder {
   /**
    * Constructor.
    */
@@ -85,5 +85,3 @@ class IVideoEncoder {
    */
   setFrames(frames) {}
 }
-
-exports = IVideoEncoder;

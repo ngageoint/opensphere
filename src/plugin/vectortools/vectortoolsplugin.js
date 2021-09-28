@@ -1,4 +1,9 @@
-goog.module('plugin.vectortools.VectorToolsPlugin');
+goog.declareModuleId('plugin.vectortools.VectorToolsPlugin');
+
+import CopyLayer from './copylayercmd.js';
+import Icons from './icons.js';
+import * as vectortools from './vectortools.js';
+import {launchJoinWindow, launchMergeWindow} from './vectortoolsui.js';
 
 const asserts = goog.require('goog.asserts');
 const MapContainer = goog.require('os.MapContainer');
@@ -15,22 +20,18 @@ const ogc = goog.require('os.ogc');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 const layerMenu = goog.require('os.ui.menu.layer');
-const vectortools = goog.require('plugin.vectortools');
-const CopyLayer = goog.require('plugin.vectortools.CopyLayer');
-const Icons = goog.require('plugin.vectortools.Icons');
-const {launchJoinWindow, launchMergeWindow} = goog.require('plugin.vectortools.ui');
 
 const ICommand = goog.requireType('os.command.ICommand');
 const ISource = goog.requireType('os.source.ISource');
 const ITreeNode = goog.requireType('os.structs.ITreeNode');
 const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 const MenuItem = goog.requireType('os.ui.menu.MenuItem');
-const Options = goog.requireType('plugin.vectortools.Options');
+const {default: Options} = goog.requireType('plugin.vectortools.Options');
 
 
 /**
  */
-class VectorToolsPlugin extends AbstractPlugin {
+export default class VectorToolsPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -261,5 +262,3 @@ const nodeToCopyCommand = function(node) {
   var layer = fn.mapNodeToLayer(node);
   return layer ? new CopyLayer(layer.getId()) : undefined;
 };
-
-exports = VectorToolsPlugin;

@@ -1,4 +1,4 @@
-goog.module('plugin.file.kml.model');
+goog.declareModuleId('plugin.file.kml.model');
 
 const Point = goog.require('ol.geom.Point');
 const AltitudeMode = goog.require('os.webgl.AltitudeMode');
@@ -18,14 +18,13 @@ const AltitudeMode = goog.require('os.webgl.AltitudeMode');
  *   scaleZ: number
  * }}
  */
-let KMLModel;
-
+export let KMLModel;
 
 /**
  * Field used to store Collada models on features.
  * @type {string}
  */
-const MODEL_FIELD = 'Model';
+export const MODEL_FIELD = 'Model';
 
 
 /**
@@ -52,7 +51,7 @@ const getDefaultModel = () => ({
  * @param {Element} el A placemark xml element.
  * @param {Object} object The object to add the model information to.
  */
-const parseModel = function(el, object) {
+export const parseModel = function(el, object) {
   for (let i = el.children.length - 1; i >= 0; i--) {
     if (el.children[i].localName == 'Model') {
       const modelElement = el.children[i];
@@ -179,6 +178,3 @@ const parseScale = function(el, object) {
     }
   }
 };
-
-
-exports = {parseModel, KMLModel, MODEL_FIELD};

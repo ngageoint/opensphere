@@ -2,7 +2,7 @@ goog.require('os.im.action.ImportActionCallbackConfig');
 goog.require('plugin.im.action.feature.Manager');
 
 describe('plugin.im.action.feature.Manager', function() {
-  const FeatureActionManager = goog.module.get('plugin.im.action.feature.Manager');
+  const {default: FeatureActionManager} = goog.module.get('plugin.im.action.feature.Manager');
 
   it('should simplify event roll-ups from callback configs...', function() {
     const dst = /* @type {ImportActionCallbackConfig} */ ({

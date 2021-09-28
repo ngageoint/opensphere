@@ -1,17 +1,20 @@
-goog.module('plugin.cesium.interaction.dragcircle');
+goog.declareModuleId('plugin.cesium.interaction.dragcircle');
+
+import * as Dispatcher from '../../../os/dispatcher.js';
+import {getFont} from '../../../os/style/label.js';
+import {generateCirclePositions} from '../cesium.js';
 
 const {toLonLat} = goog.require('ol.proj');
-const Dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const osInterpolate = goog.require('os.interpolate');
 const Method = goog.require('os.interpolate.Method');
-const osLabel = goog.require('os.style.label');
 const UnitManager = goog.require('os.unit.UnitManager');
-const {generateCirclePositions} = goog.require('plugin.cesium');
 
 const DragCircle = goog.requireType('os.interaction.DragCircle');
-const CesiumRenderer = goog.requireType('plugin.cesium.CesiumRenderer');
+const {
+  default: CesiumRenderer
+} = goog.requireType('plugin.cesium.CesiumRenderer');
 
 
 /**
@@ -44,7 +47,7 @@ let cesiumColor = undefined;
  *
  * @this {DragCircle}
  */
-const cleanupWebGL = function() {
+export const cleanupWebGL = function() {
   var webgl = /** @type {CesiumRenderer|undefined} */ (MapContainer.getInstance().getWebGLRenderer());
   var scene = webgl ? webgl.getCesiumScene() : undefined;
   if (scene) {
@@ -70,7 +73,7 @@ const cleanupWebGL = function() {
  * @this {DragCircle}
  * @suppress {accessControls}
  */
-const updateWebGL = function(start, end) {
+export const updateWebGL = function(start, end) {
   if (MapContainer.getInstance().is3DEnabled()) {
     if (!cesiumColor) {
       cesiumColor = new Cesium.ColorGeometryInstanceAttribute(0, 1, 1, 1);
@@ -105,7 +108,7 @@ const updateWebGL = function(start, end) {
           style: Cesium.LabelStyle.FILL_AND_OUTLINE,
           horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
           verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-          font: osLabel.getFont(),
+          font: getFont(),
           text: labelText
         }));
       }
@@ -138,9 +141,4 @@ const updateWebGL = function(start, end) {
       Dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
-};
-
-exports = {
-  cleanupWebGL,
-  updateWebGL
 };

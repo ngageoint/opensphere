@@ -6,7 +6,7 @@ goog.require('plugin.google.places.Search');
 describe('plugin.google.places.Search', function() {
   const MapContainer = goog.module.get('os.MapContainer');
   const Settings = goog.module.get('os.config.Settings');
-  const Search = goog.module.get('plugin.google.places.Search');
+  const {default: Search} = goog.module.get('plugin.google.places.Search');
 
   var url = '/google-places/text?text={s}';
   var nearby = '/google-places/nearby?keyword={s},location={pos:lat},{pos:lon}';

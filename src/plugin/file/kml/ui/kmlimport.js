@@ -1,11 +1,12 @@
-goog.module('plugin.file.kml.ui.KMLImport');
+goog.declareModuleId('plugin.file.kml.ui.KMLImport');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../../os/os.js';
+import KMLDescriptor from '../kmldescriptor.js';
+import KMLProvider from '../kmlprovider.js';
+
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const Module = goog.require('os.ui.Module');
 const AbstractFileImportCtrl = goog.require('os.ui.file.ui.AbstractFileImportCtrl');
-const KMLDescriptor = goog.require('plugin.file.kml.KMLDescriptor');
-const KMLProvider = goog.require('plugin.file.kml.KMLProvider');
 
 
 /**
@@ -13,7 +14,7 @@ const KMLProvider = goog.require('plugin.file.kml.KMLProvider');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -26,7 +27,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'kmlimport';
+export const directiveTag = 'kmlimport';
 
 
 /**
@@ -42,7 +43,7 @@ Module.directive('kmlimport', [directive]);
  * @extends {AbstractFileImportCtrl<!os.parse.FileParserConfig,!KMLDescriptor>}
  * @unrestricted
  */
-class Controller extends AbstractFileImportCtrl {
+export class Controller extends AbstractFileImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -78,9 +79,3 @@ class Controller extends AbstractFileImportCtrl {
     return KMLProvider.getInstance();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

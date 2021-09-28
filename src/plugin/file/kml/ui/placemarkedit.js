@@ -1,6 +1,12 @@
-goog.module('plugin.file.kml.ui.PlacemarkEditUI');
+goog.declareModuleId('plugin.file.kml.ui.PlacemarkEditUI');
 
 goog.require('os.annotation.annotationOptionsDirective');
+
+import * as osFeature from '../../../../os/feature/feature.js';
+import * as osStyle from '../../../../os/style/style.js';
+import PlacesManager from '../../../places/placesmanager.js';
+import * as kml from '../kml.js';
+import * as kmlUI from './kmlui.js';
 
 const dispose = goog.require('goog.dispose');
 const {getUid} = goog.require('ol');
@@ -8,19 +14,14 @@ const Feature = goog.require('ol.Feature');
 const annotation = goog.require('os.annotation');
 const FeatureAnnotation = goog.require('os.annotation.FeatureAnnotation');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const osFeature = goog.require('os.feature');
 const osObject = goog.require('os.object');
 const structs = goog.require('os.structs');
-const osStyle = goog.require('os.style');
 const Module = goog.require('os.ui.Module');
 const AnyDateType = goog.require('os.ui.datetime.AnyDateType');
 const {Controller: FeatureEditCtrl, directive: featureEditDirective} = goog.require('os.ui.FeatureEditUI');
 const list = goog.require('os.ui.list');
-const kml = goog.require('plugin.file.kml');
-const kmlUI = goog.require('plugin.file.kml.ui');
-const PlacesManager = goog.require('plugin.places.PlacesManager');
 
-const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
@@ -28,7 +29,7 @@ const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = featureEditDirective();
   dir.controller = Controller;
   return dir;
@@ -38,7 +39,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'placemarkedit';
+export const directiveTag = 'placemarkedit';
 
 
 /**
@@ -52,7 +53,7 @@ Module.directive('placemarkedit', [directive]);
  * Controller function for the placemarkedit directive
  * @unrestricted
  */
-class Controller extends FeatureEditCtrl {
+export class Controller extends FeatureEditCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -332,9 +333,3 @@ class Controller extends FeatureEditCtrl {
     this['annotationOptions'].bodyBG = color;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

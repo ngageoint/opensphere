@@ -19,8 +19,12 @@ describe('OMAR.v4.ArcLayerState', function() {
   const {setStateManager} = goog.module.get('os.state.instance');
   const LayerState = goog.module.get('os.state.v4.LayerState');
   const xml = goog.module.get('os.xml');
-  const ArcFeatureLayerConfig = goog.module.get('plugin.arc.layer.ArcFeatureLayerConfig');
-  const ArcLayerDescriptor = goog.module.get('plugin.arc.layer.ArcLayerDescriptor');
+  const {
+    default: ArcFeatureLayerConfig
+  } = goog.module.get('plugin.arc.layer.ArcFeatureLayerConfig');
+  const {
+    default: ArcLayerDescriptor
+  } = goog.module.get('plugin.arc.layer.ArcLayerDescriptor');
 
   const {loadStateXsdFiles} = goog.module.get('os.test.xsd');
 

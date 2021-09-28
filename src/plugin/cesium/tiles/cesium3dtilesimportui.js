@@ -1,17 +1,17 @@
-goog.module('plugin.cesium.tiles.TilesetImportUI');
+goog.declareModuleId('plugin.cesium.tiles.TilesetImportUI');
+
+import {TYPE} from './cesium3dtiles.js';
+import {directiveTag} from './cesium3dtilesimport.js';
 
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const osWindow = goog.require('os.ui.window');
-const {TYPE} = goog.require('plugin.cesium.tiles');
-const {directiveTag} = goog.require('plugin.cesium.tiles.TilesetImport');
-
 
 /**
  * Import UI for 3D tiles.
  *
  * @extends {FileImportUI<Object>}
  */
-class TilesetImportUI extends FileImportUI {
+export default class TilesetImportUI extends FileImportUI {
   /**
    * Constructor.
    */
@@ -59,5 +59,3 @@ class TilesetImportUI extends FileImportUI {
     osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 }
-
-exports = TilesetImportUI;

@@ -1,11 +1,12 @@
-goog.module('plugin.area.SHPAreaImportUI');
+goog.declareModuleId('plugin.area.SHPAreaImportUI');
+
+import * as mime from '../file/shp/mime.js';
+import SHPParserConfig from '../file/shp/shpparserconfig.js';
+import {directiveTag as areaImportUi} from './shpareaui.js';
 
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const osWindow = goog.require('os.ui.window');
 const windowSelector = goog.require('os.ui.windowSelector');
-const {directiveTag: areaImportUi} = goog.require('plugin.area.SHPAreaUI');
-const SHPParserConfig = goog.require('plugin.file.shp.SHPParserConfig');
-const mime = goog.require('plugin.file.shp.mime');
 
 
 /**
@@ -70,4 +71,4 @@ class SHPAreaImportUI extends FileImportUI {
   }
 }
 
-exports = SHPAreaImportUI;
+export default SHPAreaImportUI;
