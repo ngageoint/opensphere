@@ -1,15 +1,17 @@
 goog.require('os');
 goog.require('os.config.Settings');
-goog.require('os.ui.window');
 goog.require('plugin.suncalc');
+goog.require('plugin.suncalc.SunCalcPlugin');
 goog.require('plugin.suncalc.SunCalcUI');
 
 describe('plugin.suncalc.SunCalcUI', function() {
-  const osWindow = goog.module.get('os.ui.window');
   const {ROOT} = goog.module.get('os');
   const Settings = goog.module.get('os.config.Settings');
   const {SettingKey} = goog.module.get('plugin.suncalc');
+  const {launchWindow} = goog.module.get('plugin.suncalc.SunCalcPlugin');
   const {Controller, directive} = goog.module.get('plugin.suncalc.SunCalcUI');
+
+  const windowSelector = 'div[label="Sun and Moon Info"]';
 
   var windowScope;
   var ctrlScope;
@@ -79,14 +81,21 @@ describe('plugin.suncalc.SunCalcUI', function() {
     expect(ret['templateUrl']).toEqual(ROOT + 'views/plugin/suncalc/suncalc.html');
   });
 
-  it('should call os.ui.window.close() when closing', function() {
-    var sunCalcCtrl = new Controller(ctrlScope, element);
+  it('should close the window', function() {
+    launchWindow([0, 0]);
 
-    var mockOsUiWindow = spyOn(osWindow, 'close');
+    waitsFor(() => !!document.querySelector(windowSelector), 'window to open');
 
-    sunCalcCtrl.close();
+    runs(() => {
+      const bodyEl = document.querySelector(`${windowSelector} .modal-body`);
+      const scope = $(bodyEl).scope();
+      expect(scope).toBeDefined();
+      expect(scope.ctrl).toBeDefined();
 
-    expect(mockOsUiWindow).toHaveBeenCalledWith(element);
+      scope.ctrl.close();
+    });
+
+    waitsFor(() => !document.querySelector(windowSelector), 'window to close');
   });
 
   it('should return non-number when formatTime is called with a non-number', function() {

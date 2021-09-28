@@ -112,7 +112,9 @@ export class Controller {
     this.init_();
 
     $timeout(function() {
-      this.element_.find('input[name="name"]').focus();
+      if (this.element_) {
+        this.element_.find('input[name="name"]').focus();
+      }
     }.bind(this));
 
     $scope.$on('layerpicker.layerselected', this.validateLayers_.bind(this));
@@ -211,30 +213,32 @@ export class Controller {
    * @private
    */
   validateLayers_() {
-    this['duplicateLayerText'] = '';
-    var columns = this.cm_.getColumns();
+    if (this.scope_) {
+      this['duplicateLayerText'] = '';
+      var columns = this.cm_.getColumns();
 
-    var found = osArray.findDuplicates(columns, function(item) {
-      // find duplicate layers and for empty strings (i.e. user hasn't picker yet) just return a random
-      return item.layer || getRandomString();
-    });
+      var found = osArray.findDuplicates(columns, function(item) {
+        // find duplicate layers and for empty strings (i.e. user hasn't picker yet) just return a random
+        return item.layer || getRandomString();
+      });
 
-    var duplicates = columns.length > 1 && found.length > 0;
-    var enoughLayers = columns.length > 1;
+      var duplicates = columns.length > 1 && found.length > 0;
+      var enoughLayers = columns.length > 1;
 
-    if (duplicates) {
-      const node = this['tree'].find((item) => item.getInitialLayer().getFilterKey() === found[0]['layer']);
-      const dupeTitle = node.getInitialLayer().getTitle();
-      this['duplicateLayerText'] = `Duplicate layers are not supported (<b>${dupeTitle}</b>)`;
+      if (duplicates) {
+        const node = this['tree'].find((item) => item.getInitialLayer().getFilterKey() === found[0]['layer']);
+        const dupeTitle = node.getInitialLayer().getTitle();
+        this['duplicateLayerText'] = `Duplicate layers are not supported (<b>${dupeTitle}</b>)`;
+      }
+
+      var incompleteLayer = columns.find(function(item) {
+        return (!item.layer || item.layer.length == 0 || !item.column || item.column.length == 0);
+      });
+
+      this.scope_['cmForm'].$setValidity('duplicateLayer', !duplicates);
+      this.scope_['cmForm'].$setValidity('notEnoughLayers', enoughLayers);
+      this.scope_['cmForm'].$setValidity('incompleteLayers', (incompleteLayer == null));
     }
-
-    var incompleteLayer = columns.find(function(item) {
-      return (!item.layer || item.layer.length == 0 || !item.column || item.column.length == 0);
-    });
-
-    this.scope_['cmForm'].$setValidity('duplicateLayer', !duplicates);
-    this.scope_['cmForm'].$setValidity('notEnoughLayers', enoughLayers);
-    this.scope_['cmForm'].$setValidity('incompleteLayers', (incompleteLayer == null));
   }
 
   /**
@@ -259,24 +263,26 @@ export class Controller {
    * @export
    */
   validate() {
-    this['otherCMText'] = '';
-    var columns = this.cm_.getColumns();
-    var id = this.cm_.getId();
-    var columnsValid = true;
+    if (this.scope_) {
+      this['otherCMText'] = '';
+      var columns = this.cm_.getColumns();
+      var id = this.cm_.getId();
+      var columnsValid = true;
 
-    for (var i = 0, ii = columns.length; i < ii; i++) {
-      var c = columns[i];
-      var hash = ColumnMappingManager.hashColumn(c);
-      var ownerMapping = ColumnMappingManager.getInstance().getOwnerMapping(hash);
-      if (ownerMapping && ownerMapping.getId() !== id) {
-        columnsValid = false;
-        this['otherCMText'] = 'One of your columns (<b>' + c.column + '</b>) is currently in use on the <b>' +
-            ownerMapping.getName() + '</b> column association.';
-        break;
+      for (var i = 0, ii = columns.length; i < ii; i++) {
+        var c = columns[i];
+        var hash = ColumnMappingManager.hashColumn(c);
+        var ownerMapping = ColumnMappingManager.getInstance().getOwnerMapping(hash);
+        if (ownerMapping && ownerMapping.getId() !== id) {
+          columnsValid = false;
+          this['otherCMText'] = 'One of your columns (<b>' + c.column + '</b>) is currently in use on the <b>' +
+              ownerMapping.getName() + '</b> column association.';
+          break;
+        }
       }
-    }
 
-    this.scope_['cmForm'].$setValidity('reusedColumn', columnsValid);
+      this.scope_['cmForm'].$setValidity('reusedColumn', columnsValid);
+    }
   }
 
   /**

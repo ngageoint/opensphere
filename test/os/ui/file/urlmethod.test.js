@@ -5,7 +5,6 @@ goog.require('os.net.Request');
 goog.require('os.net.RequestHandlerFactory');
 goog.require('os.net.SameDomainHandler');
 goog.require('os.ui.file.method.UrlMethod');
-goog.require('os.ui.window');
 
 describe('os.ui.file.method.UrlMethod', function() {
   const AlertManager = goog.module.get('os.alert.AlertManager');
@@ -15,7 +14,8 @@ describe('os.ui.file.method.UrlMethod', function() {
   const RequestHandlerFactory = goog.module.get('os.net.RequestHandlerFactory');
   const SameDomainHandler = goog.module.get('os.net.SameDomainHandler');
   const {default: UrlMethod} = goog.module.get('os.ui.file.method.UrlMethod');
-  const osWindow = goog.module.get('os.ui.window');
+
+  const windowSelector = 'div[label="Import URL"]';
 
   RequestHandlerFactory.addHandler(SameDomainHandler);
   var testUrl = '/base/test/resources/foo.txt';
@@ -64,12 +64,20 @@ describe('os.ui.file.method.UrlMethod', function() {
 
   it('should prompt for a url if not available', function() {
     var method = new UrlMethod();
-    spyOn(osWindow, 'create');
-
     method.loadFile();
 
-    expect(osWindow.create).toHaveBeenCalled();
-    expect(osWindow.create.mostRecentCall.args[1]).toEqual('<urlimport></urlimport>');
+    waitsFor(() => !!document.querySelector(windowSelector), 'window to open');
+
+    runs(() => {
+      const bodyEl = document.querySelector(`${windowSelector} .modal-body`);
+      const scope = $(bodyEl).scope();
+      expect(scope).toBeDefined();
+      expect(scope.urlImport).toBeDefined();
+
+      scope.urlImport.close();
+    });
+
+    waitsFor(() => !document.querySelector(windowSelector), 'window to close');
   });
 
   it('should dispatch a cancel event if url is not defined', function() {

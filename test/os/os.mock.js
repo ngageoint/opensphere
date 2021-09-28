@@ -41,11 +41,16 @@ goog.require('test.os.config.SettingsUtil');
 
 import '../../src/os/ui/config/settingsmanager.js';
 import '../../src/os/ui/ogc/ogcdescriptor.js';
+import '../../src/os/ui/windowui.js';
 
 import * as Dispatcher from '../../src/os/dispatcher.js';
 import * as os from '../../src/os/os.js';
+import windowSelector from '../../src/os/ui/windowselector.js';
 
-angular.element(document.body).append('<div id="map-container"></div');
+const windowContainerId = windowSelector.CONTAINER.replace(/^#/, '');
+
+angular.element(document.body).append('<div id="map-container"></div>');
+angular.element(document.body).append(`<div id="${windowContainerId}"></div>`);
 
 beforeEach(function() {
   const EventTarget = goog.module.get('goog.events.EventTarget');
@@ -95,6 +100,8 @@ beforeEach(function() {
 
   if (!osUi.injector) {
     inject(function($injector) {
+      // Bootstrap the app using the window container and set the injector reference.
+      angular.bootstrap(document.querySelector(windowSelector.CONTAINER), ['app']);
       osUi.setInjector($injector);
     });
   }
