@@ -3,7 +3,7 @@ goog.declareModuleId('os.metrics.Metrics');
 import * as config from '../config/config.js';
 import {getSettings} from '../config/configinstance.js';
 import SettingChangeEvent from '../events/settingchangeevent.js';
-import {set} from '../object/object.js';
+import {setValue} from '../object/object.js';
 import GraphiteMetricsProvider from './graphitemetricsprovider.js';
 import {MAX_REGEXP, MIN_REGEXP, SUB_REGEX, MetricsEventType} from './index.js';
 
@@ -266,7 +266,7 @@ export default class Metrics extends EventTarget {
         }
 
         if (value != temp) {
-          set(this.allMetrics_, keys, value);
+          setValue(this.allMetrics_, keys, value);
 
           // strip off the delimiter since it isn't used to track feature usage
           var eventType = keys.join('.').replace(SUB_REGEX, '');

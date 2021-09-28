@@ -5,7 +5,7 @@ import * as dispatcher from '../dispatcher.js';
 import {noop} from '../fn/fn.js';
 import osImplements from '../implements.js';
 import {getMapContainer} from '../map/mapinstance.js';
-import {set, unsafeClone} from '../object/object.js';
+import {setValue, unsafeClone} from '../object/object.js';
 import {createEllipseGeometry} from '../ol/canvas.js';
 import VectorSource from '../source/vectorsource.js';
 import * as osStyle from '../style/style.js';
@@ -672,7 +672,7 @@ export const getSourceConfig = function(source, options) {
   config = /** @type {!Object} */ (unsafeClone(config));
 
   // scale the radius with font size
-  set(config, ['image', 'radius'], Math.round(options.fontSize / 3));
+  setValue(config, ['image', 'radius'], Math.round(options.fontSize / 3));
 
   var geomShape = source.getGeometryShape();
   config['shape'] = geomShape;

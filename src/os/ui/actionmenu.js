@@ -2,7 +2,7 @@
 goog.declareModuleId('os.ui.ActionMenuUI');
 
 import Metrics from '../metrics/metrics.js';
-import {set} from '../object/object.js';
+import {setValue} from '../object/object.js';
 import {ROOT} from '../os.js';
 import EventType from './action/actioneventtype.js';
 import MenuItemAction from './action/menuitemaction.js';
@@ -242,7 +242,7 @@ export class Controller {
           } else {
             var actionDef = {};
             actionDef[action.getTitle()] = action;
-            set(menuStructure, menuItemPlacement, actionDef);
+            setValue(menuStructure, menuItemPlacement, actionDef);
           }
         } else {
           menuStructure[action.getTitle()] = action;

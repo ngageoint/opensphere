@@ -604,7 +604,7 @@ export default class Settings extends EventTarget {
               !this.storageRegistry_.hasRemoteStorage) {
             this.set(Settings.WRITE_STORAGE_KEY, SettingsWritableStorageType.LOCAL, true);
           } else {
-            osObject.delete(this.mergedConfig_, ['storage', 'writeType']);
+            osObject.deleteValue(this.mergedConfig_, ['storage', 'writeType']);
             this.set(Settings.WRITE_STORAGE_KEY, type, true);
           }
 
@@ -710,19 +710,19 @@ export default class Settings extends EventTarget {
         value = osObject.unsafeClone(value);
       }
 
-      osObject.set(this.mergedConfig_, keys, value);
+      osObject.setValue(this.mergedConfig_, keys, value);
 
       var isAdminKey = this.isAdmin_(keys);
       var namespacedKeys = [];
 
       if (!isAdminKey) {
         namespacedKeys = osConfigNamespace.getPrefixedKeys(keys);
-        osObject.set(this.actualConfig_[ConfigType.PREFERENCE], namespacedKeys, value);
+        osObject.setValue(this.actualConfig_[ConfigType.PREFERENCE], namespacedKeys, value);
       }
 
       if (oldVal != value) {
         if (!isAdminKey) {
-          osObject.set(this.deltaConfig_, namespacedKeys, value);
+          osObject.setValue(this.deltaConfig_, namespacedKeys, value);
           this.markKeysForDelete_(keys, value, oldVal);
         }
 
@@ -746,10 +746,10 @@ export default class Settings extends EventTarget {
 
     var oldVal = this.get(keys);
 
-    osObject.delete(this.mergedConfig_, keys);
+    osObject.deleteValue(this.mergedConfig_, keys);
 
     var namespacedKeys = osConfigNamespace.getPrefixedKeys(keys);
-    osObject.delete(this.actualConfig_[ConfigType.PREFERENCE], namespacedKeys);
+    osObject.deleteValue(this.actualConfig_[ConfigType.PREFERENCE], namespacedKeys);
 
     if (goog.typeOf(oldVal) === 'object') {
       // delete elements of a deeply nested object

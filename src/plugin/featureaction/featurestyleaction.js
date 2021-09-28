@@ -390,9 +390,9 @@ export default class StyleAction extends AbstractImportAction {
           // scale with font size
           if (geomShape == osStyle.ShapeType.ICON) {
             // icons are normalized to 32px, so scale based on that
-            osObject.set(config, ['image', 'scale'], options.fontSize / 32);
+            osObject.setValue(config, ['image', 'scale'], options.fontSize / 32);
           } else {
-            osObject.set(config, ['image', 'radius'], Math.round(options.fontSize / 3));
+            osObject.setValue(config, ['image', 'radius'], Math.round(options.fontSize / 3));
           }
         }
 
