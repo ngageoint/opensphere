@@ -1,3 +1,4 @@
+/* eslint-disable import/no-deprecated */
 goog.declareModuleId('os.ui.action.MenuItem');
 
 import MenuOptions from './menuoptions.js';
