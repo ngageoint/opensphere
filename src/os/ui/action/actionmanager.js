@@ -1,3 +1,4 @@
+/* eslint-disable import/no-deprecated */
 goog.declareModuleId('os.ui.action.ActionManager');
 
 import * as dispatcher from '../../dispatcher.js';
