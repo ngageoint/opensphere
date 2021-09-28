@@ -1,6 +1,5 @@
 goog.declareModuleId('os.command.CommandProcessor');
 
-import * as os from '../os.js';
 import CommandEvent from './commandevent.js';
 import EventType from './eventtype.js';
 import State from './state.js';
@@ -486,9 +485,3 @@ let instance;
  * @type {Logger}
  */
 const logger = log.getLogger('os.command.CommandProcessor');
-
-/**
- * Global reference to the singleton.
- * @type {!CommandProcessor}
- */
-os.commandStack = CommandProcessor.getInstance();

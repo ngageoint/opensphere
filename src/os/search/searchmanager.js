@@ -5,7 +5,6 @@ import AlertManager from '../alert/alertmanager.js';
 import {getSupportContact} from '../config/config.js';
 import Metrics from '../metrics/metrics.js';
 import {Search as SearchKeys} from '../metrics/metricskeys.js';
-import * as os from '../os.js';
 import AbstractSearchManager from './abstractsearchmanager.js';
 import SearchEvent from './searchevent.js';
 import SearchEventType from './searcheventtype.js';
@@ -483,9 +482,3 @@ const logger = log.getLogger('os.search.SearchManager');
  * @const
  */
 SearchManager.SEARCH_ALL = 'Search All Sources';
-
-/**
- * Global search manager reference.
- * @type {!SearchManager}
- */
-os.searchManager = SearchManager.getInstance();

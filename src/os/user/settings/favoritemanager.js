@@ -5,7 +5,6 @@ import AlertManager from '../../alert/alertmanager.js';
 import * as osArray from '../../array/array.js';
 import Settings from '../../config/settings.js';
 import * as osObject from '../../object/object.js';
-import * as os from '../../os.js';
 import * as url from '../../url/url.js';
 import FavoriteType from './favoritetype.js';
 
@@ -639,10 +638,3 @@ let instance;
  * @type {string}
  */
 FavoriteManager.KEY = 'favorite';
-
-/**
- * Global reference to the favorite manager singleton.
- * @type {!FavoriteManager}
- * @deprecated Please use FavoriteManager.getInstance() instead of the global to access the favorite manager.
- */
-os.favoriteManager = FavoriteManager.getInstance();

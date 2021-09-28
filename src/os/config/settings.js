@@ -7,7 +7,6 @@ import SettingChangeEvent from '../events/settingchangeevent.js';
 import Metrics from '../metrics/metrics.js';
 import {Settings as SettingsMetrics} from '../metrics/metricskeys.js';
 import * as osObject from '../object/object.js';
-import * as os from '../os.js';
 import Peer from '../xt/peer.js';
 import {appNs, coreNs} from './config.js';
 import {getSettings, setSettings} from './configinstance.js';
@@ -950,7 +949,6 @@ export default class Settings extends EventTarget {
    */
   static setInstance(value) {
     setSettings(value);
-    os.settings = value;
   }
 }
 
@@ -981,11 +979,3 @@ Settings.WRITE_STORAGE_KEY = 'storage.writeType';
  * @const {string}
  */
 Settings.WRITE_STORAGE_BACKUP_KEY = 'opensphere.config.' + Settings.WRITE_STORAGE_KEY;
-
-
-/**
- * Legacy global settings reference. This should eventually be deprecated and removed.
- * @type {!Settings}
- * @deprecated Please use os.config.Settings.getInstance() instead.
- */
-os.settings = Settings.getInstance();
