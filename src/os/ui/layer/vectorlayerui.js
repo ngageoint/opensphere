@@ -6,6 +6,7 @@ import './iconstylecontrols.js';
 import './labelcontrols.js';
 import './loboptions.js';
 import './vectorstylecontrols.js';
+
 import {toHexString, toRgbArray} from '../../color.js';
 import ColorChangeType from '../../command/colorchangetype.js';
 import SequenceCommand from '../../command/sequencecommand.js';
@@ -25,7 +26,6 @@ import VectorLayerShowRotation from '../../command/vectorlayershowrotationcmd.js
 import VectorLayerSize from '../../command/vectorlayersizecmd.js';
 import VectorUniqueIdCmd from '../../command/vectoruniqueidcmd.js';
 import Settings from '../../config/settings.js';
-import DataManager1 from '../../data/datamanager.js';
 import DataManager from '../../data/datamanager.js';
 import PropertyChangeEvent from '../../events/propertychangeevent.js';
 import osImplements from '../../implements.js';
@@ -1046,7 +1046,7 @@ export class Controller extends DefaultLayerUICtrl {
     var shape;
 
     if (items && items.length > 0) {
-      var source = DataManager1.getInstance().getSource(items[0].getId());
+      var source = DataManager.getInstance().getSource(items[0].getId());
       if (source) {
         shape = source.getGeometryShape();
       }
@@ -1069,7 +1069,7 @@ export class Controller extends DefaultLayerUICtrl {
 
       if (items && items.length > 0) {
         for (var i = 0, n = items.length; i < n; i++) {
-          var source = DataManager1.getInstance().getSource(items[i].getId());
+          var source = DataManager.getInstance().getSource(items[i].getId());
           if (source && source instanceof VectorSource) {
             shapes = shapes.filter(source.supportsShape, source);
           }
@@ -1089,7 +1089,7 @@ export class Controller extends DefaultLayerUICtrl {
     var shape;
 
     if (items && items.length > 0) {
-      var source = DataManager1.getInstance().getSource(items[0].getId());
+      var source = DataManager.getInstance().getSource(items[0].getId());
       if (source) {
         var tempShape = source.getCenterGeometryShape();
         if (!osStyle.ELLIPSE_REGEXP.test(tempShape) && !osStyle.DEFAULT_REGEXP.test(tempShape)) {
@@ -1112,7 +1112,7 @@ export class Controller extends DefaultLayerUICtrl {
 
     if (items && items.length > 0) {
       for (var i = 0, n = items.length; i < n; i++) {
-        var source = DataManager1.getInstance().getSource(items[i].getId());
+        var source = DataManager.getInstance().getSource(items[i].getId());
         if (source && source instanceof VectorSource) {
           shapes = shapes.filter(source.isNotEllipseOrLOBOrDefault, source);
         }
@@ -1134,7 +1134,7 @@ export class Controller extends DefaultLayerUICtrl {
     var items = /** @type {Array} */ (this.scope['items']);
     if (items && items.length > 0) {
       for (var i = 0, n = items.length; i < n; i++) {
-        var source = DataManager1.getInstance().getSource(items[i].getId());
+        var source = DataManager.getInstance().getSource(items[i].getId());
         if (source && source instanceof VectorSource) {
           if (!source.isLockable()) {
             lockable = false;
@@ -1202,7 +1202,7 @@ export class Controller extends DefaultLayerUICtrl {
     var items = /** @type {Array} */ (this.scope['items']);
     if (items && items.length > 0) {
       for (var i = 0, n = items.length; i < n; i++) {
-        var source = DataManager1.getInstance().getSource(items[i].getId());
+        var source = DataManager.getInstance().getSource(items[i].getId());
         if (source && source instanceof VectorSource && source.isLockable()) {
           source.setLocked(this['lock']);
         }
@@ -1279,7 +1279,7 @@ export class Controller extends DefaultLayerUICtrl {
     var items = /** @type {Array} */ (this.scope['items']);
     if (items && items.length > 0) {
       for (var i = 0, n = items.length; i < n; i++) {
-        var source = DataManager1.getInstance().getSource(items[i].getId());
+        var source = DataManager.getInstance().getSource(items[i].getId());
         if (source && source instanceof VectorSource) {
           altitudeMode = source.getAltitudeMode();
           break;
@@ -1298,7 +1298,7 @@ export class Controller extends DefaultLayerUICtrl {
     var items = /** @type {Array} */ (this.scope['items']);
     if (items && items.length > 0) {
       for (var i = 0, n = items.length; i < n; i++) {
-        var source = DataManager1.getInstance().getSource(items[i].getId());
+        var source = DataManager.getInstance().getSource(items[i].getId());
         if (source && source instanceof VectorSource) {
           source.setAltitudeMode(this['altitudeMode']);
         }

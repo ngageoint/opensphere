@@ -1,13 +1,13 @@
 goog.declareModuleId('os.source.Vector');
 
 import '../mixin/rbushmixin.js';
+
 import EventType from '../action/eventtype.js';
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';
 import {registerClass} from '../classregistry.js';
 import {toHexString} from '../color.js';
 import ColumnDefinition from '../data/columndefinition.js';
-import DataManager1 from '../data/datamanager.js';
 import DataManager from '../data/datamanager.js';
 import ColorModel from '../data/histo/colormodel.js';
 import SourceHistogram from '../data/histo/sourcehistogram.js';
@@ -891,7 +891,7 @@ export default class Vector extends OLVectorSource {
       var colByName = /** @type {function((ColumnDefinition|string)):string} */ (getValueExtractor('name'));
       removeDuplicates(this.columns, this.columns, colByName);
 
-      var descriptor = DataManager1.getInstance().getDescriptor(this.getId());
+      var descriptor = DataManager.getInstance().getDescriptor(this.getId());
       if (descriptor) {
         // restore descriptor column information to the source columns
         var descriptorColumns = descriptor.getColumns();
