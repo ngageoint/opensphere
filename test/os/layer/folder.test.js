@@ -3,15 +3,18 @@ goog.require('os.data.ZOrder');
 goog.require('os.layer.FolderManager');
 goog.require('os.layer.folder');
 goog.require('os.mock');
-goog.require('os.ui.window.ConfirmTextUI');
-
 
 describe('os.layer.FolderManager', () => {
   const FolderManager = goog.module.get('os.layer.FolderManager');
   const {createOrEditFolder} = goog.module.get('os.layer.folder');
-  const ConfirmTextUI = goog.module.get('os.ui.window.ConfirmTextUI');
+
+  const formSelector = 'div[ng-form="textForm"]';
+  const windowSelector = 'div[label="Add Folder"]';
 
   let folder;
+
+  // Load the Angular module
+  beforeEach(module('app'));
 
   beforeEach(() => {
     // clean up the global instance before each
@@ -28,15 +31,31 @@ describe('os.layer.FolderManager', () => {
   });
 
   it('should launch the create window UI', () => {
-    let calledOptions;
-    const mockLaunch = (options) => {
-      calledOptions = options;
+    let called = false;
+
+    const callback = () => {
+      called = true;
     };
-    spyOn(ConfirmTextUI, 'launchConfirmText').andCallFake(mockLaunch);
 
-    createOrEditFolder(folder);
+    createOrEditFolder(folder, callback);
 
-    expect(calledOptions.defaultValue).toBe('My Folder');
-    expect(calledOptions.windowOptions.label).toBe('Add Folder');
+    waitsFor(() => !!document.querySelector(formSelector), 'confirm form to render');
+
+    runs(() => {
+      const windowEl = document.querySelector(windowSelector);
+      expect(windowEl).toBeDefined();
+
+      const inputEl = windowEl.querySelector('.js-confirm-input');
+      expect(inputEl).toBeDefined();
+      expect(inputEl.value).toBe('My Folder');
+
+      windowEl.querySelector('button[type="submit"]').click();
+    });
+
+    waitsFor(() => !document.querySelector(formSelector), 'confirm form to close');
+
+    runs(() => {
+      expect(called).toBe(true);
+    });
   });
 });

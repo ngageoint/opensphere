@@ -132,16 +132,18 @@ export class Controller {
     }
 
     $timeout(function() {
-      this.select2_ = $element.find('.js-layer-picker');
-      this.select2_.select2({
-        'placeholder': this.placeholderText_,
-        'maximumSelectionSize': this.maxNumLayers_,
-        'matcher': matcher,
-        'formatSelection': formatter,
-        'formatResult': formatter
-      });
+      if (this.scope_) {
+        this.select2_ = $element.find('.js-layer-picker');
+        this.select2_.select2({
+          'placeholder': this.placeholderText_,
+          'maximumSelectionSize': this.maxNumLayers_,
+          'matcher': matcher,
+          'formatSelection': formatter,
+          'formatResult': formatter
+        });
 
-      this.multiple() ? this.initLayers_() : this.initLayer_();
+        this.multiple() ? this.initLayers_() : this.initLayer_();
+      }
     }.bind(this));
 
     this.scope_.$watch('layer', this.initLayer_.bind(this));
@@ -179,7 +181,7 @@ export class Controller {
    * @private
    */
   initLayers_() {
-    if (this.select2_) {
+    if (this.scope_ && this.select2_) {
       var vals = [];
       if (this.scope_['layers']) {
         this.scope_['layers'].forEach(function(layer) {
@@ -203,7 +205,7 @@ export class Controller {
    * @private
    */
   initLayer_() {
-    if (this.select2_) {
+    if (this.scope_ && this.select2_) {
       var val = null;
       if (this.scope_['layer']) {
         var found = this['layersList'].find(function(l) {
@@ -224,8 +226,10 @@ export class Controller {
    * @export
    */
   layerPicked(layer) {
-    this.scope_['layer'] = layer;
-    this.scope_.$emit(this.emitName_ + '.layerselected', layer);
+    if (this.scope_) {
+      this.scope_['layer'] = layer;
+      this.scope_.$emit(this.emitName_ + '.layerselected', layer);
+    }
   }
 
   /**
@@ -233,10 +237,12 @@ export class Controller {
    * @export
    */
   layersChanged(layers) {
-    this.scope_['layers'] = layers;
-    this.timeout_(function() { // give the scope a chance to update
-      this.scope_.$emit(this.emitName_ + '.layerschanged', layers);
-    }.bind(this));
+    if (this.scope_) {
+      this.scope_['layers'] = layers;
+      this.timeout_(function() { // give the scope a chance to update
+        this.scope_.$emit(this.emitName_ + '.layerschanged', layers);
+      }.bind(this));
+    }
   }
 
   /**

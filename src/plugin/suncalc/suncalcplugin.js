@@ -133,7 +133,7 @@ const onMenuItem = function(evt) {
  *
  * @param {ol.Coordinate} coord
  */
-const launchWindow = function(coord) {
+export const launchWindow = function(coord) {
   var scopeOptions = {
     'coord': coord
   };
