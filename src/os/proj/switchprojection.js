@@ -167,7 +167,7 @@ export default class SwitchProjection extends EventTarget {
       var layerList = list[i].layers;
 
       if (layerList.length) {
-        var titles = layerList.map(osProj.mapTitle_);
+        var titles = layerList.map(mapLayerTitle);
         text += '<p>These layers will be <strong>' + title + '</strong></p>' + '<ul><li>' +
             titles.join('</li><li>') + '</li></ul>';
       }
@@ -410,14 +410,12 @@ export default class SwitchProjection extends EventTarget {
  */
 let instance;
 
-
 /**
  * @param {Object<string, *>} item
  * @param {number} i
  * @param {Array<Object<string, *>>} arr
  * @return {string}
- * @private
  */
-osProj.mapTitle_ = function(item, i, arr) {
+const mapLayerTitle = function(item, i, arr) {
   return /** @type {string} */ (item['title']);
 };
