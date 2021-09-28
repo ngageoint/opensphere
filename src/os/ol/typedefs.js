@@ -872,3 +872,5 @@ ol.XmlSerializer;
  *            value: (Object|undefined)}}
  */
 ol.RBushEntry;
+
+export default {};

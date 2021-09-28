@@ -8,16 +8,35 @@ const LinearRing = goog.requireType('ol.geom.LinearRing');
 const old = Polygon.prototype.getLinearRings;
 
 /**
- * Assigns polygon metadata values to each ring.
- * @return {Array<LinearRing>}
- * @suppress {accessControls}
+ * If the mixin has been initialized.
+ * @type {boolean}
  */
-Polygon.prototype.getLinearRings = function() {
-  var rings = old.call(this);
+let initialized = false;
 
-  for (var i = 0, n = rings.length; i < n; i++) {
-    Object.assign(rings[i].values_, this.values_);
+/**
+ * Initialize the mixin.
+ */
+export const init = () => {
+  if (initialized) {
+    return;
   }
 
-  return rings;
+  initialized = true;
+
+  /**
+   * Assigns polygon metadata values to each ring.
+   * @return {Array<LinearRing>}
+   * @suppress {accessControls}
+   */
+  Polygon.prototype.getLinearRings = function() {
+    var rings = old.call(this);
+
+    for (var i = 0, n = rings.length; i < n; i++) {
+      Object.assign(rings[i].values_, this.values_);
+    }
+
+    return rings;
+  };
 };
+
+init();

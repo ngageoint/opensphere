@@ -28,3 +28,5 @@
  * either expressed or implied, of OpenLayers Contributors.
  */
 goog.declareModuleId('os.ol.license');
+
+export default {};
