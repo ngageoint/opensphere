@@ -1,4 +1,4 @@
-goog.module('os.IComparable');
+goog.declareModuleId('os.IComparable');
 
 /**
  * Interface for objects that can be compared.
@@ -6,7 +6,7 @@ goog.module('os.IComparable');
  * @interface
  * @template T
  */
-class IComparable {
+export default class IComparable {
   /**
    * Compares this object to another object.
    * @param {T} other The other object
@@ -14,5 +14,3 @@ class IComparable {
    */
   compare(other) {}
 }
-
-exports = IComparable;

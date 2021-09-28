@@ -1,7 +1,14 @@
 goog.declareModuleId('os.ui.menu.list');
 
+import EventType from '../../action/eventtype.js';
 import {instanceOf} from '../../classregistry.js';
+import CommandProcessor from '../../command/commandprocessor.js';
+import FeaturesVisibility from '../../command/featuresvisibilitycmd.js';
+import ColorMethod from '../../data/histo/colormethod.js';
 import {flyTo, getFirstColor, removeFeatures} from '../../feature/feature.js';
+import Metrics from '../../metrics/metrics.js';
+import {FeatureList as FeatureListKeys} from '../../metrics/metricskeys.js';
+import VectorSource from '../../source/vectorsource.js';
 import {toRgbaString} from '../../style/style.js';
 import * as ExportUI from '../ex/exportdialog.js';
 import * as ConfirmColorUI from '../window/confirmcolor.js';
@@ -11,15 +18,8 @@ import MenuItem from './menuitem.js';
 import MenuItemType from './menuitemtype.js';
 
 const googDispose = goog.require('goog.dispose');
-const EventType = goog.require('os.action.EventType');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const FeaturesVisibility = goog.require('os.command.FeaturesVisibility');
-const ColorMethod = goog.require('os.data.histo.ColorMethod');
-const Metrics = goog.require('os.metrics.Metrics');
-const {FeatureList: FeatureListKeys} = goog.require('os.metrics.keys');
-const VectorSource = goog.require('os.source.Vector');
 
-const ISource = goog.requireType('os.source.ISource');
+const {default: ISource} = goog.requireType('os.source.ISource');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const SlickGridUI = goog.requireType('os.ui.slick.SlickGridUI');
 

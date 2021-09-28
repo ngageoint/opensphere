@@ -1,7 +1,11 @@
 goog.declareModuleId('plugin.cesium.sync.ImageStaticSynchronizer');
 
 import * as dispatcher from '../../../os/dispatcher.js';
+import LayerPropertyChange from '../../../os/layer/propertychange.js';
 import {PROJECTION} from '../../../os/map/map.js';
+import MapEvent from '../../../os/map/mapevent.js';
+import * as osProj from '../../../os/proj/proj.js';
+import ImageStatic from '../../../os/source/imagestatic.js';
 import CesiumSynchronizer from './cesiumsynchronizer.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
@@ -11,17 +15,13 @@ const olEvents = goog.require('ol.events');
 const OLEventType = goog.require('ol.events.EventType');
 const olProj = goog.require('ol.proj');
 const olSourceImageStatic = goog.require('ol.source.ImageStatic');
-const MapEvent = goog.require('os.MapEvent');
-const LayerPropertyChange = goog.require('os.layer.PropertyChange');
-const osProj = goog.require('os.proj');
-const ImageStatic = goog.require('os.source.ImageStatic');
 
 const ImageBase = goog.requireType('ol.ImageBase');
 const PluggableMap = goog.requireType('ol.PluggableMap');
 const OLImageLayer = goog.requireType('ol.layer.Image');
 const ImageSource = goog.requireType('ol.source.Image');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const ImageLayer = goog.requireType('os.layer.Image');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: ImageLayer} = goog.requireType('os.layer.Image');
 
 
 /**

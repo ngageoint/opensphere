@@ -1,4 +1,4 @@
-goog.module('os.net.CertNaziResult');
+goog.declareModuleId('os.net.CertNaziResult');
 
 /**
  * @typedef {{

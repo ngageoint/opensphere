@@ -1,17 +1,15 @@
 goog.declareModuleId('plugin.electron.ElectronPlugin');
 
 import './electronmemoryconfig.js';
+import Settings from '../../os/config/settings.js';
+import SettingsInitializerManager from '../../os/config/settingsinitializermanager.js';
+import ExtDomainHandler from '../../os/net/extdomainhandler.js';
+import Request from '../../os/net/request.js';
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
 import * as list from '../../os/ui/list.js';
-
 import {ID, SettingKey, isElectron} from './electron.js';
 import * as ElectronConfirmCertUI from './electronconfirmcert.js';
 import {initSupportMenu} from './electronmenu.js';
-
-const Settings = goog.require('os.config.Settings');
-const SettingsInitializerManager = goog.require('os.config.SettingsInitializerManager');
-const ExtDomainHandler = goog.require('os.net.ExtDomainHandler');
-const Request = goog.require('os.net.Request');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 
 
 /**

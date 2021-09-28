@@ -1,11 +1,12 @@
-goog.module('os.layer');
+goog.declareModuleId('os.layer');
+
+import osImplements from '../implements.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import LayerConfigManager from './config/layerconfigmanager.js';
+import ILayer from './ilayer.js';
 
 const Timer = goog.require('goog.Timer');
 const log = goog.require('goog.log');
-const osImplements = goog.require('os.implements');
-const ILayer = goog.require('os.layer.ILayer');
-const {getMapContainer} = goog.require('os.map.instance');
-const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Layer = goog.requireType('ol.layer.Layer');
@@ -15,7 +16,7 @@ const Layer = goog.requireType('ol.layer.Layer');
  * Layer option keys.
  * @enum {string}
  */
-const LayerOption = {
+export const LayerOption = {
   SHOW_FORCE_COLOR: 'showForceColor'
 };
 
@@ -31,7 +32,7 @@ const logger = log.getLogger('os.layer');
  * @param {!Object<string, *>} options The layer options
  * @return {ILayer}
  */
-const createFromOptions = function(options) {
+export const createFromOptions = function(options) {
   var layer;
   var layerType = /** @type {string} */ (options['type']);
   if (!layerType) {
@@ -62,7 +63,7 @@ const createFromOptions = function(options) {
  *
  * @param {ILayer} layer
  */
-const identifyLayer = function(layer) {
+export const identifyLayer = function(layer) {
   var tickCount = 0;
   var oldOpacity = layer.getOpacity() || 0;
   var oldVisibility = layer.getBaseVisible();
@@ -95,7 +96,7 @@ const identifyLayer = function(layer) {
  * @param {boolean=} opt_explicit If the explicit title should be included.
  * @return {string}
  */
-const getTitle = function(layerId, opt_explicit) {
+export const getTitle = function(layerId, opt_explicit) {
   var title = '';
 
   // no layer name specified, so try to assemble one to provide context
@@ -121,7 +122,7 @@ const getTitle = function(layerId, opt_explicit) {
  * @param {string} baseTitle The base layer title
  * @return {string}
  */
-const getUniqueTitle = function(baseTitle) {
+export const getUniqueTitle = function(baseTitle) {
   baseTitle = baseTitle.replace(/\s+\[\d+]$/, '');
   var title = baseTitle;
   var next = 1;
@@ -138,7 +139,7 @@ const getUniqueTitle = function(baseTitle) {
  * @param {string} title The layer title
  * @return {boolean}
  */
-const hasLayer = function(title) {
+export const hasLayer = function(title) {
   var layers = getMapContainer().getLayers();
   return layers.some(function(layer) {
     try {
@@ -158,7 +159,7 @@ const hasLayer = function(title) {
  * @param {Layer|ILayer} layer The layer.
  * @return {boolean} If the layer is shown.
  */
-const isShown = function(layer) {
+export const isShown = function(layer) {
   if (osImplements(layer, ILayer.ID)) {
     return !(/** @type {ILayer} */ (layer).getHidden());
   }
@@ -173,7 +174,7 @@ const isShown = function(layer) {
  * @param {ILayer} layer
  * @return {number|undefined} The brightness
  */
-const getBrightness = function(layer) {
+export const getBrightness = function(layer) {
   return layer.getBrightness();
 };
 
@@ -183,7 +184,7 @@ const getBrightness = function(layer) {
  * @param {ILayer} layer
  * @return {number|undefined} The contrast
  */
-const getContrast = function(layer) {
+export const getContrast = function(layer) {
   return layer.getContrast();
 };
 
@@ -193,7 +194,7 @@ const getContrast = function(layer) {
  * @param {ILayer} layer
  * @return {number|undefined} The hue
  */
-const getHue = function(layer) {
+export const getHue = function(layer) {
   return layer.getHue();
 };
 
@@ -203,7 +204,7 @@ const getHue = function(layer) {
  * @param {ILayer} layer
  * @return {number|undefined} The opacity
  */
-const getOpacity = function(layer) {
+export const getOpacity = function(layer) {
   return layer.getOpacity();
 };
 
@@ -213,7 +214,7 @@ const getOpacity = function(layer) {
  * @param {ILayer} layer
  * @return {number|undefined} The saturation
  */
-const getSaturation = function(layer) {
+export const getSaturation = function(layer) {
   return layer.getSaturation();
 };
 
@@ -223,7 +224,7 @@ const getSaturation = function(layer) {
  * @param {ILayer} layer
  * @return {number|undefined} The sharpness
  */
-const getSharpness = function(layer) {
+export const getSharpness = function(layer) {
   return layer.getSharpness();
 };
 
@@ -233,7 +234,7 @@ const getSharpness = function(layer) {
  * @param {ILayer} layer
  * @param {number} value
  */
-const setBrightness = function(layer, value) {
+export const setBrightness = function(layer, value) {
   layer.setBrightness(value);
 };
 
@@ -243,7 +244,7 @@ const setBrightness = function(layer, value) {
  * @param {ILayer} layer
  * @param {number} value
  */
-const setContrast = function(layer, value) {
+export const setContrast = function(layer, value) {
   layer.setContrast(value);
 };
 
@@ -253,7 +254,7 @@ const setContrast = function(layer, value) {
  * @param {ILayer} layer
  * @param {number} value
  */
-const setHue = function(layer, value) {
+export const setHue = function(layer, value) {
   layer.setHue(value);
 };
 
@@ -263,7 +264,7 @@ const setHue = function(layer, value) {
  * @param {ILayer} layer
  * @param {number} value
  */
-const setOpacity = function(layer, value) {
+export const setOpacity = function(layer, value) {
   layer.setOpacity(value);
 };
 
@@ -273,7 +274,7 @@ const setOpacity = function(layer, value) {
  * @param {ILayer} layer
  * @param {number} value
  */
-const setSaturation = function(layer, value) {
+export const setSaturation = function(layer, value) {
   layer.setSaturation(value);
 };
 
@@ -283,7 +284,7 @@ const setSaturation = function(layer, value) {
  * @param {ILayer} layer
  * @param {number} value
  */
-const setSharpness = function(layer, value) {
+export const setSharpness = function(layer, value) {
   layer.setSharpness(value);
 };
 
@@ -293,29 +294,6 @@ const setSharpness = function(layer, value) {
  * @param {Array} arr
  * @return {string}
  */
-const mapLayersToIds = function(layer, i, arr) {
+export const mapLayersToIds = function(layer, i, arr) {
   return layer.getId();
-};
-
-exports = {
-  LayerOption,
-  createFromOptions,
-  identifyLayer,
-  getTitle,
-  getUniqueTitle,
-  hasLayer,
-  isShown,
-  getBrightness,
-  getContrast,
-  getHue,
-  getOpacity,
-  getSaturation,
-  getSharpness,
-  setBrightness,
-  setContrast,
-  setHue,
-  setOpacity,
-  setSaturation,
-  setSharpness,
-  mapLayersToIds
 };

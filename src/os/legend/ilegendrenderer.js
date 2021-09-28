@@ -1,11 +1,11 @@
-goog.module('os.legend.ILegendRenderer');
+goog.declareModuleId('os.legend.ILegendRenderer');
 
 /**
  * Interface for layers that contribute to the legend.
  *
  * @interface
  */
-class ILegendRenderer {
+export default class ILegendRenderer {
   /**
    * Render items to a legend.
    * @param {!osx.legend.LegendOptions} options The legend options.
@@ -20,5 +20,3 @@ class ILegendRenderer {
  * @const
  */
 ILegendRenderer.ID = 'os.legend.ILegendRenderer';
-
-exports = ILegendRenderer;

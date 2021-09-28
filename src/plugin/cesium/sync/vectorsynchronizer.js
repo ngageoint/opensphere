@@ -1,6 +1,13 @@
 goog.declareModuleId('plugin.cesium.sync.VectorSynchronizer');
 
 import * as dispatcher from '../../../os/dispatcher.js';
+import SelectionType from '../../../os/events/selectiontype.js';
+import LayerPropertyChange from '../../../os/layer/propertychange.js';
+import VectorLayer from '../../../os/layer/vector.js';
+import MapEvent from '../../../os/map/mapevent.js';
+import MapContainer from '../../../os/mapcontainer.js';
+import SourcePropertyChange from '../../../os/source/propertychange.js';
+import VectorSource from '../../../os/source/vectorsource.js';
 import {ELLIPSE_REGEXP, LOB_REGEXP, SELECTED_REGEXP} from '../../../os/style/style.js';
 import {isPrimitiveShown, setPrimitiveShown} from '../primitive.js';
 import VectorContext from '../vectorcontext.js';
@@ -13,13 +20,6 @@ const objectUtils = goog.require('goog.object');
 const events = goog.require('ol.events');
 const OLVectorLayer = goog.require('ol.layer.Vector');
 const VectorEventType = goog.require('ol.source.VectorEventType');
-const MapContainer = goog.require('os.MapContainer');
-const MapEvent = goog.require('os.MapEvent');
-const SelectionType = goog.require('os.events.SelectionType');
-const LayerPropertyChange = goog.require('os.layer.PropertyChange');
-const VectorLayer = goog.require('os.layer.Vector');
-const SourcePropertyChange = goog.require('os.source.PropertyChange');
-const VectorSource = goog.require('os.source.Vector');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Feature = goog.requireType('ol.Feature');
@@ -27,7 +27,7 @@ const OLObject = goog.requireType('ol.Object');
 const PluggableMap = goog.requireType('ol.PluggableMap');
 const View = goog.requireType('ol.View');
 const OLVectorSource = goog.requireType('ol.source.Vector');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 const {default: Camera} = goog.requireType('plugin.cesium.Camera');
 
 

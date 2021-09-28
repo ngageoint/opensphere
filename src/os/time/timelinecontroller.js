@@ -1,4 +1,14 @@
-goog.module('os.time.TimelineController');
+goog.declareModuleId('os.time.TimelineController');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import Settings from '../config/settings.js';
+import Duration from './duration.js';
+import * as osTime from './time.js';
+import * as timeline from './timeline.js';
+import TimelineControllerEvent from './timelinecontrollerevent.js';
+import TimelineEventType from './timelineeventtype.js';
+import TimeRange from './timerange.js';
 
 const Timer = goog.require('goog.Timer');
 const googArray = goog.require('goog.array');
@@ -7,17 +17,8 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const iter = goog.require('goog.iter');
 const Range = goog.require('goog.math.Range');
 const RangeSet = goog.require('goog.math.RangeSet');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const Settings = goog.require('os.config.Settings');
-const osTime = goog.require('os.time');
-const Duration = goog.require('os.time.Duration');
-const TimeRange = goog.require('os.time.TimeRange');
-const TimelineControllerEvent = goog.require('os.time.TimelineControllerEvent');
-const TimelineEventType = goog.require('os.time.TimelineEventType');
-const timeline = goog.require('os.time.timeline');
 
-const IPersistable = goog.requireType('os.IPersistable');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
 
 
 /**
@@ -28,7 +29,7 @@ const IPersistable = goog.requireType('os.IPersistable');
  *    of using goog.addSingletonGetter. If you have a better idea on how to do that, go for it, but that was my
  *    initial thought.
  */
-class TimelineController extends EventTarget {
+export default class TimelineController extends EventTarget {
   /**
    * Constructor.
    */
@@ -1630,5 +1631,3 @@ class TimelineController extends EventTarget {
  * @type {TimelineController|undefined}
  */
 let instance;
-
-exports = TimelineController;

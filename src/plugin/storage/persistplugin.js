@@ -1,14 +1,14 @@
 goog.declareModuleId('plugin.storage.PersistPlugin');
 
+import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
+import alertManager from '../../os/alert/alertmanager.js';
+import settings from '../../os/config/settings.js';
+import Metrics from '../../os/metrics/metrics.js';
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
 import {launchConfirm} from '../../os/ui/window/confirm.js';
 
 const browser = goog.require('goog.labs.userAgent.browser');
 const log = goog.require('goog.log');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const alertManager = goog.require('os.alert.AlertManager');
-const settings = goog.require('os.config.Settings');
-const Metrics = goog.require('os.metrics.Metrics');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 
 
 const LOGGER_ = log.getLogger('PersistPlugin');

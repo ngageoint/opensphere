@@ -1,11 +1,10 @@
-goog.module('os.state.v3.LayerTag');
-
+goog.declareModuleId('os.state.v3.LayerTag');
 
 /**
  * XML tags for layer state
  * @enum {string}
  */
-exports = {
+const LayerTag = {
   ANIMATE: 'animate',
   BFS: 'basicFeatureStyle',
   COLOR: 'color',
@@ -39,3 +38,5 @@ exports = {
   OPACITY: 'opacity',
   ALPHA: 'alpha'
 };
+
+export default LayerTag;

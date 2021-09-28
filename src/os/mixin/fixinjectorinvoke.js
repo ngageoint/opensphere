@@ -1,4 +1,4 @@
-goog.module('os.mixin.fixInjectorInvoke');
+goog.declareModuleId('os.mixin.fixInjectorInvoke');
 
 /**
  * The isClass function in angular does not properly check
@@ -23,7 +23,7 @@ const fixNgIsClass = (fn) => {
 /**
  * @param {!angular.$injector} injector
  */
-exports = (injector) => {
+const fixInjectorInvoke = (injector) => {
   const oldInvoke = injector.invoke;
   injector.invoke = (input, self, locals, serviceName) => {
     const fn = Array.isArray(input) ? input[input.length - 1] : input;
@@ -31,3 +31,5 @@ exports = (injector) => {
     return oldInvoke(input, self, locals, serviceName);
   };
 };
+
+export default fixInjectorInvoke;

@@ -1,10 +1,9 @@
-goog.module('os.filter.IFilterEntry');
-
+goog.declareModuleId('os.filter.IFilterEntry');
 
 /**
  * @interface
  */
-class IFilterEntry {
+export default class IFilterEntry {
   /**
    * @return {string}
    */
@@ -35,5 +34,3 @@ class IFilterEntry {
    */
   setFilter(filter) {}
 }
-
-exports = IFilterEntry;

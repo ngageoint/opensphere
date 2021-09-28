@@ -1,18 +1,19 @@
-goog.module('os.file.mime.xml');
+goog.declareModuleId('os.file.mime.xml');
+
+import * as mime from '../mime.js';
+import * as text from './text.js';
+import Types from './types.js';
 
 const Promise = goog.require('goog.Promise');
-const mime = goog.require('os.file.mime');
-const text = goog.require('os.file.mime.text');
-const Types = goog.require('os.file.mime.xml.Types');
 
-const OSFile = goog.requireType('os.file.File');
-const Context = goog.requireType('os.file.mime.xml.Context');
+const {default: OSFile} = goog.requireType('os.file.File');
+const {default: Context} = goog.requireType('os.file.mime.xml.Context');
 
 
 /**
  * @type {string}
  */
-const TYPE = 'text/xml';
+export const TYPE = 'text/xml';
 
 /**
  * @param {ArrayBuffer} buffer
@@ -20,7 +21,7 @@ const TYPE = 'text/xml';
  * @param {*=} opt_context
  * @return {!Promise<{content: string, rootNS: string, rootTag: string}|undefined>}
  */
-const isXML = function(buffer, opt_file, opt_context) {
+export const isXML = function(buffer, opt_file, opt_context) {
   var retVal;
 
   if (opt_context && typeof opt_context === 'string') {
@@ -126,7 +127,7 @@ mime.register(TYPE, isXML, 0, text.TYPE);
  * @param {?RegExp} rootNSRegex Regular express for testing against root tag namespaces
  * @return {!function(ArrayBuffer, OSFile, *=):!Promise<*|undefined>} The detect function for registering with `mime`
  */
-const createDetect = function(rootTagRegex, rootNSRegex) {
+export const createDetect = function(rootTagRegex, rootNSRegex) {
   if (!rootTagRegex && !rootNSRegex) {
     throw new Error('At least one of the [rootTagRegex, rootNSRegex] must be defined and not null');
   }
@@ -149,10 +150,4 @@ const createDetect = function(rootTagRegex, rootNSRegex) {
       return Promise.resolve(retVal);
     }
   );
-};
-
-exports = {
-  TYPE,
-  isXML,
-  createDetect
 };

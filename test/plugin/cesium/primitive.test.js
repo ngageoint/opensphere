@@ -25,10 +25,10 @@ describe('plugin.cesium.primitive', () => {
   const Point = goog.module.get('ol.geom.Point');
   const olProj = goog.module.get('ol.proj');
   const Style = goog.module.get('ol.style.Style');
-  const RecordField = goog.module.get('os.data.RecordField');
-  const VectorLayer = goog.module.get('os.layer.Vector');
+  const {default: RecordField} = goog.module.get('os.data.RecordField');
+  const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osProj = goog.module.get('os.proj');
-  const AltitudeMode = goog.module.get('os.webgl.AltitudeMode');
+  const {default: AltitudeMode} = goog.module.get('os.webgl.AltitudeMode');
 
   const {GeometryInstanceId} = goog.module.get('plugin.cesium');
   const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');

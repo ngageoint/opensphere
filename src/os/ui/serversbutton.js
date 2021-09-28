@@ -1,11 +1,10 @@
 goog.declareModuleId('os.ui.ServersButtonUI');
 
+import DataManager from '../data/datamanager.js';
+import DataProviderEventType from '../data/dataprovidereventtype.js';
 import MenuButtonCtrl from './menubutton.js';
 import Module from './module.js';
 import {apply} from './ui.js';
-
-const DataManager = goog.require('os.data.DataManager');
-const DataProviderEventType = goog.require('os.data.DataProviderEventType');
 
 
 /**

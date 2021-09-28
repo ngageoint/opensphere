@@ -1,5 +1,4 @@
-goog.module('os.storage.IMechanism');
-
+goog.declareModuleId('os.storage.IMechanism');
 
 /**
  * Interface for a storage mechanism that expands on {@link goog.storage.mechanism.IterableMechanism}.
@@ -7,7 +6,7 @@ goog.module('os.storage.IMechanism');
  * @interface
  * @template T
  */
-class IMechanism {
+export default class IMechanism {
   /**
    * Get the value stored under a key.
    *
@@ -62,6 +61,3 @@ class IMechanism {
  * @type {string}
  */
 IMechanism.ID = 'os.storage.IMechanism';
-
-
-exports = IMechanism;

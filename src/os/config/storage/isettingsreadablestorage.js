@@ -1,7 +1,7 @@
-goog.module('os.config.storage.ISettingsReadableStorage');
+goog.declareModuleId('os.config.storage.ISettingsReadableStorage');
 
 const Deferred = goog.requireType('goog.async.Deferred');
-const ISettingsStorage = goog.requireType('os.config.storage.ISettingsStorage');
+const {default: ISettingsStorage} = goog.requireType('os.config.storage.ISettingsStorage');
 
 
 /**
@@ -9,7 +9,7 @@ const ISettingsStorage = goog.requireType('os.config.storage.ISettingsStorage');
  * @extends {ISettingsStorage}
  * @template T
  */
-class ISettingsReadableStorage {
+export default class ISettingsReadableStorage {
   /**
    * Retrieve all settings values from storage
    * @return {!Deferred<Object<string, T>>}
@@ -24,6 +24,3 @@ class ISettingsReadableStorage {
  * @const {string}
  */
 ISettingsReadableStorage.ID = 'os.config.storage.ISettingsReadableStorage';
-
-
-exports = ISettingsReadableStorage;

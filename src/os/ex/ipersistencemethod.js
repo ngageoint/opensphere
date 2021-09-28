@@ -1,11 +1,11 @@
-goog.module('os.ex.IPersistenceMethod');
+goog.declareModuleId('os.ex.IPersistenceMethod');
 
 /**
  * Interface for a method that persists data to a file, url, etc.
  *
  * @interface
  */
-class IPersistenceMethod {
+export default class IPersistenceMethod {
   /**
    * The human-readable label for this persistence method.
    * @return {string}
@@ -36,5 +36,3 @@ class IPersistenceMethod {
    */
   save(fileName, content, opt_mimeType, opt_title, opt_description, opt_tags) {}
 }
-
-exports = IPersistenceMethod;

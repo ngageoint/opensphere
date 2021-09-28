@@ -1,16 +1,17 @@
-goog.module('os.query.TemporalHandler');
+goog.declareModuleId('os.query.TemporalHandler');
+
+import {getQueryManager} from './queryinstance.js';
 
 const {assert} = goog.require('goog.asserts');
-const {getQueryManager} = goog.require('os.query.instance');
 
-const ParamModifier = goog.requireType('os.net.ParamModifier');
-const ITemporalFormatter = goog.requireType('os.query.ITemporalFormatter');
-const RequestSource = goog.requireType('os.source.Request');
+const {default: ParamModifier} = goog.requireType('os.net.ParamModifier');
+const {default: ITemporalFormatter} = goog.requireType('os.query.ITemporalFormatter');
+const {default: RequestSource} = goog.requireType('os.source.Request');
 
 
 /**
  */
-class TemporalHandler {
+export default class TemporalHandler {
   /**
    * Constructor.
    * @param {boolean=} opt_localRefresh Use if source has no query handlers in Query Manager
@@ -134,5 +135,3 @@ class TemporalHandler {
     }
   }
 }
-
-exports = TemporalHandler;

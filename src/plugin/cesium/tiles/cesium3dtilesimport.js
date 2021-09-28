@@ -6,7 +6,7 @@ import Module from '../../../os/ui/module.js';
 import Descriptor from './cesium3dtilesdescriptor.js';
 import Provider from './cesium3dtilesprovider.js';
 
-const FileParserConfig = goog.requireType('os.parse.FileParserConfig');
+const {default: FileParserConfig} = goog.requireType('os.parse.FileParserConfig');
 
 
 /**

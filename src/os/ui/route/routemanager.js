@@ -5,7 +5,7 @@ import * as ui from '../ui.js';
 const Uri = goog.require('goog.Uri');
 const {isEmpty} = goog.require('goog.object');
 
-const AbstractUrlHandler = goog.requireType('os.url.AbstractUrlHandler');
+const {default: AbstractUrlHandler} = goog.requireType('os.url.AbstractUrlHandler');
 
 
 /**

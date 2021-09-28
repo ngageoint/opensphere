@@ -1,14 +1,14 @@
-goog.module('os.plugin.AbstractPlugin');
+goog.declareModuleId('os.plugin.AbstractPlugin');
 
 const Disposable = goog.require('goog.Disposable');
-const IPlugin = goog.requireType('os.plugin.IPlugin');
+const {default: IPlugin} = goog.requireType('os.plugin.IPlugin');
 
 
 /**
  * @abstract
  * @implements {IPlugin}
  */
-class AbstractPlugin extends Disposable {
+export default class AbstractPlugin extends Disposable {
   /**
    * Constructor.
    */
@@ -42,5 +42,3 @@ class AbstractPlugin extends Disposable {
     return this.error;
   }
 }
-
-exports = AbstractPlugin;

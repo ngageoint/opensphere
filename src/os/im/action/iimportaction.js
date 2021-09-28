@@ -1,11 +1,12 @@
-goog.module('os.im.action.IImportAction');
+goog.declareModuleId('os.im.action.IImportAction');
 
 // The compiler has to process these first or @inheritDoc will not work properly on implementing classes.
 // @see https://github.com/google/closure-compiler/issues/3583
-const IPersistable = goog.require('os.IPersistable'); // eslint-disable-line opensphere/no-unused-vars
-const IXmlPersistable = goog.require('os.IXmlPersistable'); // eslint-disable-line opensphere/no-unused-vars
+import IPersistable from '../../ipersistable.js';// eslint-disable-line opensphere/no-unused-vars
 
-const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
+import IXmlPersistable from '../../ixmlpersistable.js';// eslint-disable-line opensphere/no-unused-vars
+
+const {default: ImportActionCallbackConfig} = goog.requireType('os.im.action.ImportActionCallbackConfig');
 
 
 /**
@@ -16,7 +17,7 @@ const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCa
  * @interface
  * @template T
  */
-class IImportAction {
+export default class IImportAction {
   /**
    * Get the import action identifier.
    * @return {string}
@@ -61,5 +62,3 @@ class IImportAction {
    */
   reset(items) {}
 }
-
-exports = IImportAction;

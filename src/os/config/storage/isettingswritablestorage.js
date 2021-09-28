@@ -1,7 +1,7 @@
-goog.module('os.config.storage.ISettingsWritableStorage');
+goog.declareModuleId('os.config.storage.ISettingsWritableStorage');
 
-const ISettingsReadableStorage = goog.requireType('os.config.storage.ISettingsReadableStorage');
-const SettingsWritableStorageType = goog.requireType('os.config.storage.SettingsWritableStorageType');
+const {default: ISettingsReadableStorage} = goog.requireType('os.config.storage.ISettingsReadableStorage');
+const {default: SettingsWritableStorageType} = goog.requireType('os.config.storage.SettingsWritableStorageType');
 
 
 /**
@@ -9,7 +9,7 @@ const SettingsWritableStorageType = goog.requireType('os.config.storage.Settings
  * @extends {ISettingsReadableStorage}
  * @template T
  */
-class ISettingsWritableStorage {
+export default class ISettingsWritableStorage {
   /**
    * Constructor.
    */
@@ -61,6 +61,3 @@ class ISettingsWritableStorage {
  * @const {string}
  */
 ISettingsWritableStorage.ID = 'os.config.storage.ISettingsWritableStorage';
-
-
-exports = ISettingsWritableStorage;

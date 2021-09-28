@@ -3,13 +3,13 @@ goog.declareModuleId('os.ui.wiz.OptionsStepUI');
 import '../color/colorpicker.js';
 import '../icon/iconpicker.js';
 import '../util/validationmessage.js';
+import FileStorage from '../../file/filestorage.js';
+import {getLocalUrl} from '../../file/index.js';
 import {ROOT} from '../../os.js';
 import {ShapeType} from '../../style/style.js';
 import {GOOGLE_EARTH_ICON_SET, replaceGoogleUri, getDefaultIcon} from '../file/kml/kml.js';
 import Module from '../module.js';
 import WizardStepEvent from './step/wizardstepevent.js';
-const {getLocalUrl} = goog.require('os.file');
-const FileStorage = goog.require('os.file.FileStorage');
 
 
 /**

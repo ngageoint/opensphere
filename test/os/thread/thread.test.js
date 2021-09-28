@@ -6,8 +6,8 @@ goog.require('os.thread.Thread');
 
 describe('os.thread.Thread', function() {
   const Timer = goog.module.get('goog.Timer');
-  const EventType = goog.module.get('os.thread.EventType');
-  const Thread = goog.module.get('os.thread.Thread');
+  const {default: EventType} = goog.module.get('os.thread.EventType');
+  const {default: Thread} = goog.module.get('os.thread.Thread');
 
   const Job = goog.module.get('mock.thread.Job');
 

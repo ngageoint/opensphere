@@ -1,16 +1,16 @@
 goog.declareModuleId('plugin.basemap.v3.BaseMapState');
 
+import MapContainer from '../../../os/mapcontainer.js';
+import * as net from '../../../os/net/net.js';
+import LayerState from '../../../os/state/v3/layerstate.js';
 import BaseProvider from '../../../os/ui/data/baseprovider.js';
+import * as xml from '../../../os/xml.js';
 import {LAYER_TYPE, TYPE} from '../basemap.js';
 import BaseMap from '../layer/basemaplayer.js';
 import BaseMapTag from './basemaptag.js';
 
 const googDomXml = goog.require('goog.dom.xml');
 const log = goog.require('goog.log');
-const MapContainer = goog.require('os.MapContainer');
-const net = goog.require('os.net');
-const LayerState = goog.require('os.state.v3.LayerState');
-const xml = goog.require('os.xml');
 
 
 /**

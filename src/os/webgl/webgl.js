@@ -1,8 +1,9 @@
-goog.module('os.webgl');
+goog.declareModuleId('os.webgl');
+
+import AltitudeMode from './altitudemode.js';
 
 const userAgent = goog.require('goog.userAgent');
 const webgl = goog.require('ol.webgl');
-const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
 
 /**
@@ -10,7 +11,7 @@ const AltitudeMode = goog.require('os.webgl.AltitudeMode');
  *
  * @return {boolean}
  */
-const isSupported = function() {
+export const isSupported = function() {
   if (Modernizr.webgl) {
     if (userAgent.IE) {
       // early versions of IE11 supported a minimal version of webgl, so check several extensions to make sure proper
@@ -34,7 +35,7 @@ const isSupported = function() {
  *
  * @return {?boolean}
  */
-const hasPerformanceCaveat = function() {
+export const hasPerformanceCaveat = function() {
   try {
     var contextOptions = {
       failIfMajorPerformanceCaveat: true
@@ -58,7 +59,7 @@ const hasPerformanceCaveat = function() {
  * @param {AltitudeMode} altitudeMode - The mode to map to a name
  * @return {string}
  */
-const mapAltitudeModeToName = function(altitudeMode) {
+export const mapAltitudeModeToName = function(altitudeMode) {
   switch (altitudeMode) {
     case AltitudeMode.ABSOLUTE:
       return 'Absolute';
@@ -73,10 +74,4 @@ const mapAltitudeModeToName = function(altitudeMode) {
     default:
       return '';
   }
-};
-
-exports = {
-  isSupported,
-  hasPerformanceCaveat,
-  mapAltitudeModeToName
 };

@@ -1,9 +1,8 @@
 goog.declareModuleId('os.ui.help.metricsOption');
 
+import Settings from '../../config/settings.js';
 import {MENU, showWindow} from './help.js';
 import EventType from './helpeventtype.js';
-
-const Settings = goog.require('os.config.Settings');
 
 
 /**

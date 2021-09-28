@@ -5,7 +5,7 @@ goog.require('plugin.ogc.wms.WMSLayerConfig');
 
 describe('plugin.ogc.wms.WMSLayerConfig', function() {
   const olProj = goog.module.get('ol.proj');
-  const ProxyHandler = goog.module.get('os.net.ProxyHandler');
+  const {default: ProxyHandler} = goog.module.get('os.net.ProxyHandler');
   const {default: WMSLayerConfig} = goog.module.get('plugin.ogc.wms.WMSLayerConfig');
 
   it('should proxy URLs properly', function() {

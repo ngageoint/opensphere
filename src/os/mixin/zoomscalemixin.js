@@ -4,15 +4,16 @@
  *
  * @suppress {accessControls} To allow access to private properties in OpenLayers classes.
  */
-goog.module('os.mixin.zoomscale');
+goog.declareModuleId('os.mixin.zoomscale');
+
+import * as osMap from '../map/map.js';
+import MapEvent from '../map/mapevent.js';
+import MapContainer from '../mapcontainer.js';
 
 const {lerp} = goog.require('goog.math');
 const events = goog.require('ol.events');
 const EventType = goog.require('ol.render.EventType');
 const ImageReplay = goog.require('ol.render.canvas.ImageReplay');
-const MapContainer = goog.require('os.MapContainer');
-const MapEvent = goog.require('os.MapEvent');
-const osMap = goog.require('os.map');
 
 const Icon = goog.requireType('ol.style.Icon');
 

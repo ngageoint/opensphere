@@ -2,8 +2,8 @@ goog.require('os.unit.Multiplier');
 goog.require('os.unit.UnitFactory');
 
 describe('os.unit.UnitFactory', function() {
-  const Multiplier = goog.module.get('os.unit.Multiplier');
-  const UnitFactory = goog.module.get('os.unit.UnitFactory');
+  const {default: Multiplier} = goog.module.get('os.unit.Multiplier');
+  const {default: UnitFactory} = goog.module.get('os.unit.UnitFactory');
 
   it('should function correctly', inject(function($rootScope) {
     var mult = new Multiplier('m', 1, true, 'meters');

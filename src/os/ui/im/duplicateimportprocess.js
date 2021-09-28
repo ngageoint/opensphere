@@ -1,5 +1,9 @@
 goog.declareModuleId('os.ui.im.DuplicateImportProcess');
 
+import CommandProcessor from '../../command/commandprocessor.js';
+import ActivateDescriptor from '../../data/activatedescriptorcmd.js';
+import DataManager from '../../data/datamanager.js';
+import FileStorage from '../../file/filestorage.js';
 import {launchFileExists} from './fileexists.js';
 import FileExistsChoice from './fileexistschoice.js';
 import ImportProcess from './importprocess.js';
@@ -7,15 +11,11 @@ import {launchURLExists} from './urlexists.js';
 import URLExistsChoice from './urlexistschoice.js';
 
 const {getLogger} = goog.require('goog.log');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const ActivateDescriptor = goog.require('os.data.ActivateDescriptor');
-const DataManager = goog.require('os.data.DataManager');
-const FileStorage = goog.require('os.file.FileStorage');
 
 const DBError = goog.requireType('goog.db.Error');
 const Logger = goog.requireType('goog.log.Logger');
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const OSFile = goog.requireType('os.file.File');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**

@@ -1,25 +1,20 @@
-goog.module('os.source.column');
+goog.declareModuleId('os.source.column');
+
+import ColumnDefinition from '../data/columndefinition.js';
+import RecordField from '../data/recordfield.js';
+import Fields from '../fields/fields.js';
+import {DEFAULT_ALT_COL_NAME, DEFAULT_RADIUS_COL_NAME, DEFAULT_SEMI_MAJ_COL_NAME, DEFAULT_SEMI_MIN_COL_NAME, DESC_REGEXP} from '../fields/index.js';
+import {ALT_REGEXP, MGRSRegExp} from '../geo/geo.js';
+import RadiusMapping from '../im/mapping/radiusmapping.js';
+import SemiMajorMapping from '../im/mapping/semimajormapping.js';
+import SemiMinorMapping from '../im/mapping/semiminormapping.js';
+import DescriptionFormatter from '../ui/descriptionformatter.js';
+import PropertiesFormatter from '../ui/propertiesformatter.js';
+import {autoSizeColumn} from '../ui/slick/column.js';
 
 const {caseInsensitiveEquals} = goog.require('goog.string');
-const Fields = goog.require('os.Fields');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const RecordField = goog.require('os.data.RecordField');
-const {
-  DEFAULT_ALT_COL_NAME,
-  DEFAULT_RADIUS_COL_NAME,
-  DEFAULT_SEMI_MAJ_COL_NAME,
-  DEFAULT_SEMI_MIN_COL_NAME,
-  DESC_REGEXP
-} = goog.require('os.fields');
-const {ALT_REGEXP, MGRSRegExp} = goog.require('os.geo');
-const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
-const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
-const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
-const {default: DescriptionFormatter} = goog.require('os.ui.formatter.DescriptionFormatter');
-const {default: PropertiesFormatter} = goog.require('os.ui.formatter.PropertiesFormatter');
-const {autoSizeColumn} = goog.require('os.ui.slick.column');
 
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**
@@ -30,7 +25,7 @@ const VectorSource = goog.requireType('os.source.Vector');
  * @param {boolean=} opt_temp Optional flag for temp columns. Defaults to false.
  * @return {!ColumnDefinition} The column definition.
  */
-const create = function(field, opt_header, opt_temp) {
+export const create = function(field, opt_header, opt_temp) {
   var header = opt_header || field;
   var columnDef = new ColumnDefinition(header, field);
   columnDef['sortable'] = true;
@@ -47,7 +42,7 @@ const create = function(field, opt_header, opt_temp) {
  * @param {!(ColumnDefinition|string)} column The column name or definition.
  * @return {!ColumnDefinition} The column definition.
  */
-const mapStringOrDef = function(column) {
+export const mapStringOrDef = function(column) {
   return typeof column === 'string' ? create(column) : column;
 };
 
@@ -56,7 +51,7 @@ const mapStringOrDef = function(column) {
  *
  * @param {!ColumnDefinition} column The column definition.
  */
-const addFormatter = function(column) {
+export const addFormatter = function(column) {
   var field = column['field'];
   if (field) {
     if (field.indexOf(Fields.PROPERTIES) > -1) {
@@ -76,7 +71,7 @@ const addFormatter = function(column) {
  *
  * @param {!VectorSource} source The vector source.
  */
-const addDefaults = function(source) {
+export const addDefaults = function(source) {
   var hasID = false;
   var hasMGRS = false;
   var hasLAT = false;
@@ -160,11 +155,4 @@ const addDefaults = function(source) {
   if (!hasID) {
     source.addColumn(Fields.ID);
   }
-};
-
-exports = {
-  create,
-  mapStringOrDef,
-  addFormatter,
-  addDefaults
 };

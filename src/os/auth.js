@@ -1,8 +1,8 @@
-goog.module('os.auth');
+goog.declareModuleId('os.auth');
 
-const Settings = goog.require('os.config.Settings');
-const AlertManager = goog.require('os.alert.AlertManager');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+import AlertEventSeverity from './alert/alerteventseverity.js';
+import AlertManager from './alert/alertmanager.js';
+import Settings from './config/settings.js';
 
 
 /**
@@ -14,7 +14,7 @@ const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
  *   link: string
  * }}
  */
-let AuthEntry;
+export let AuthEntry;
 
 
 /**
@@ -35,13 +35,12 @@ const alerts = {};
  * The settings key for the authentication entries.
  * @type {string}
  */
-const SettingKey = 'os.auth';
-
+export const SettingKey = 'os.auth';
 
 /**
  * Initializes the authentication entries from settings
  */
-const initAuth = () => {
+export const initAuth = () => {
   const authSettings = Settings.getInstance().get(SettingKey, {});
 
   for (const key in authSettings) {
@@ -57,13 +56,12 @@ const initAuth = () => {
   }
 };
 
-
 /**
  * Initializes the authentication entries from settings.
  * @param {?string} urlOrName The URL or name to test for authentication requirements.
  * @return {?AuthEntry}
  */
-const getAuth = (urlOrName) => {
+export const getAuth = (urlOrName) => {
   let authEntry = null;
 
   for (const key in registry) {
@@ -77,12 +75,11 @@ const getAuth = (urlOrName) => {
   return authEntry;
 };
 
-
 /**
  * Fires an alert message indicating that the user needs to authenticate with a given service..
  * @param {?string} urlOrName The URL or name to test for authentication requirements.
  */
-const alertAuth = (urlOrName) => {
+export const alertAuth = (urlOrName) => {
   const auth = getAuth(urlOrName);
 
   if (auth && !alerts[auth.title]) {
@@ -95,13 +92,4 @@ const alertAuth = (urlOrName) => {
     AlertManager.getInstance().sendAlert(message, AlertEventSeverity.INFO);
     alerts[auth.title] = true;
   }
-};
-
-
-exports = {
-  AuthEntry,
-  SettingKey,
-  initAuth,
-  getAuth,
-  alertAuth
 };

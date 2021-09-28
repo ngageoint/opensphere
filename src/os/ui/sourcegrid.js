@@ -1,6 +1,14 @@
 goog.declareModuleId('os.ui.SourceGridUI');
 
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import {toHexString} from '../color.js';
+import Settings from '../config/settings.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import SelectionType from '../events/selectiontype.js';
 import {getColor} from '../feature/feature.js';
+import PropertyChange from '../source/propertychange.js';
+import {OFFSET_KEY} from '../time/time.js';
 import Module from './module.js';
 import {COLOR_ID, autoSizeAndSortColumns, color as colorColumn} from './slick/column.js';
 import ColumnEventType from './slick/columneventtype.js';
@@ -15,20 +23,12 @@ const GoogEventType = goog.require('goog.events.EventType');
 const {makeSafe} = goog.require('goog.string');
 const {listen, unlisten} = goog.require('ol.events');
 const VectorEventType = goog.require('ol.source.VectorEventType');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {toHexString} = goog.require('os.color');
-const Settings = goog.require('os.config.Settings');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const SelectionType = goog.require('os.events.SelectionType');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const {OFFSET_KEY} = goog.require('os.time');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Feature = goog.requireType('ol.Feature');
 const OLVectorSource = goog.requireType('ol.source.Vector');
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: ColumnContext} = goog.requireType('os.ui.slick.ColumnContext');
 

@@ -1,12 +1,11 @@
-goog.module('os.thread.IThreadJob');
-
+goog.declareModuleId('os.thread.IThreadJob');
 
 /**
  * An interface that describes a job run by a thread
  *
  * @interface
  */
-class IThreadJob {
+export default class IThreadJob {
   /**
    * Executes a portion of the job. It is up to the implementation to determine
    * how much work to do.
@@ -31,5 +30,3 @@ class IThreadJob {
    */
   getTotal() {}
 }
-
-exports = IThreadJob;

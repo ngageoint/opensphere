@@ -5,8 +5,8 @@ goog.require('os.structs.EventType');
 
 describe('os.structs.ArrayCollection', function() {
   const googArray = goog.module.get('goog.array');
-  const ArrayCollection = goog.module.get('os.structs.ArrayCollection');
-  const EventType = goog.module.get('os.structs.EventType');
+  const {default: ArrayCollection} = goog.module.get('os.structs.ArrayCollection');
+  const {default: EventType} = goog.module.get('os.structs.EventType');
 
   /**
    * Mock filter function for unit tests

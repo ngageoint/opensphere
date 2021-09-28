@@ -15,7 +15,7 @@ describe('os.layer.Tile', function() {
   const events = goog.module.get('ol.events');
   const TileWMS = goog.module.get('ol.source.TileWMS');
   const tilegrid = goog.module.get('ol.tilegrid');
-  const Tile = goog.module.get('os.layer.Tile');
+  const {default: Tile} = goog.module.get('os.layer.Tile');
   const osMap = goog.module.get('os.map');
   const {default: TileWMSSource} = goog.module.get('plugin.ogc.wms.TileWMSSource');
   var layer;

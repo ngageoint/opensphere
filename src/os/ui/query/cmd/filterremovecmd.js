@@ -1,10 +1,9 @@
 goog.declareModuleId('os.ui.query.cmd.FilterRemove');
 
+import State from '../../../command/state.js';
 import AbstractFilter from './abstractfiltercmd.js';
 
-const State = goog.require('os.command.State');
-
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 
 
 /**

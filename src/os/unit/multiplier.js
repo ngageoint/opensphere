@@ -1,6 +1,6 @@
-goog.module('os.unit.Multiplier');
+goog.declareModuleId('os.unit.Multiplier');
 
-const IMultiplier = goog.requireType('os.unit.IMultiplier');
+const {default: IMultiplier} = goog.requireType('os.unit.IMultiplier');
 
 
 /**
@@ -8,7 +8,7 @@ const IMultiplier = goog.requireType('os.unit.IMultiplier');
  *
  * @implements {IMultiplier}
  */
-class Multiplier {
+export default class Multiplier {
   /**
    * Constructor.
    * @param {string} name
@@ -84,5 +84,3 @@ class Multiplier {
     return this.threshold_;
   }
 }
-
-exports = Multiplier;

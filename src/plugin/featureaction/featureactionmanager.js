@@ -1,6 +1,15 @@
 goog.declareModuleId('plugin.im.action.feature.Manager');
 
+import DataManager from '../../os/data/datamanager.js';
+import DataEventType from '../../os/data/event/dataeventtype.js';
+import RecordField from '../../os/data/recordfield.js';
 import {getLayer} from '../../os/feature/feature.js';
+import ImportActionManager from '../../os/im/action/importactionmanager.js';
+import osImplements from '../../os/implements.js';
+import LayerPresetManager from '../../os/layer/preset/layerpresetmanager.js';
+import IImportSource from '../../os/source/iimportsource.js';
+import PropertyChange from '../../os/source/propertychange.js';
+import * as state from '../../os/state/state.js';
 import {updateShown} from '../../os/style/label.js';
 import {notifyStyleChange, setFeaturesStyle} from '../../os/style/style.js';
 import {ENTRY_TITLE} from './featureaction.js';
@@ -12,18 +21,9 @@ const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const events = goog.require('ol.events');
-const DataManager = goog.require('os.data.DataManager');
-const RecordField = goog.require('os.data.RecordField');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const osImplements = goog.require('os.implements');
-const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
-const IImportSource = goog.require('os.source.IImportSource');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const state = goog.require('os.state');
 
 const Feature = goog.requireType('ol.Feature');
-const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
+const {default: ImportActionCallbackConfig} = goog.requireType('os.im.action.ImportActionCallbackConfig');
 
 
 /**

@@ -1,11 +1,12 @@
-goog.module('os.alert.AlertManager');
+goog.declareModuleId('os.alert.AlertManager');
+
+import AlertEvent from './alertevent.js';
+import AlertEventSeverity from './alerteventseverity.js';
+import AlertEventType from './eventtype.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const CircularBuffer = goog.require('goog.structs.CircularBuffer');
-const AlertEvent = goog.require('os.alert.AlertEvent');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertEventType = goog.require('os.alert.EventType');
 
 
 /**
@@ -29,7 +30,7 @@ const defaultThrottleTime_ = 500;
 /**
  * Responsible for receiving, logging and reporting alerts
  */
-class AlertManager extends EventTarget {
+export default class AlertManager extends EventTarget {
   /**
    */
   constructor() {
@@ -234,5 +235,3 @@ class AlertManager extends EventTarget {
  * @type {AlertManager}
  */
 let instance;
-
-exports = AlertManager;

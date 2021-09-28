@@ -3,7 +3,7 @@ goog.declareModuleId('os.ui.AddExportOptionsUI');
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 
-const ExportOptions = goog.requireType('os.ex.ExportOptions');
+const {default: ExportOptions} = goog.requireType('os.ex.ExportOptions');
 
 
 /**

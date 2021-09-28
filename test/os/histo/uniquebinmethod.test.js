@@ -4,10 +4,10 @@ goog.require('os.histo.FilterComponent');
 goog.require('os.histo.UniqueBinMethod');
 
 describe('os.histo.UniqueBinMethod', function() {
-  const ColorBin = goog.module.get('os.data.histo.ColorBin');
-  const Bin = goog.module.get('os.histo.Bin');
-  const FilterComponent = goog.module.get('os.histo.FilterComponent');
-  const UniqueBinMethod = goog.module.get('os.histo.UniqueBinMethod');
+  const {default: ColorBin} = goog.module.get('os.data.histo.ColorBin');
+  const {default: Bin} = goog.module.get('os.histo.Bin');
+  const {default: FilterComponent} = goog.module.get('os.histo.FilterComponent');
+  const {default: UniqueBinMethod} = goog.module.get('os.histo.UniqueBinMethod');
 
   var method = new UniqueBinMethod();
   method.setField('field');

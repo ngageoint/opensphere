@@ -1,10 +1,11 @@
-goog.module('os.storage');
+goog.declareModuleId('os.storage');
+
+import * as osConfig from '../config/config.js';
+import {getSettings} from '../config/configinstance.js';
+import * as dispatcher from '../dispatcher.js';
+import EventType from '../events/eventtype.js';
 
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
-const dispatcher = goog.require('os.Dispatcher');
-const osConfig = goog.require('os.config');
-const {getSettings} = goog.require('os.config.instance');
-const EventType = goog.require('os.events.EventType');
 
 const Promise = goog.requireType('goog.Promise');
 
@@ -18,12 +19,13 @@ const Promise = goog.requireType('goog.Promise');
  * @param {boolean=} opt_manualReload If the page will be manually reloaded. This is intended for use by Protractor.
  * @return {!Promise}
  */
-const clearStorage = function(opt_manualReload) {
+export const clearStorage = function(opt_manualReload) {
   // reset application settings
   return getSettings().reset().then(() => {
     resetInternal(opt_manualReload);
   }, reloadPage);
 };
+
 goog.exportSymbol('cls', clearStorage);
 
 /**
@@ -66,14 +68,14 @@ let pendingResetTasks = 0;
 /**
  * Increment the application reset task counter.
  */
-const incrementResetTasks = function() {
+export const incrementResetTasks = function() {
   pendingResetTasks++;
 };
 
 /**
  * Decrement the application reset task counter.
  */
-const decrementResetTasks = function() {
+export const decrementResetTasks = function() {
   pendingResetTasks--;
 };
 
@@ -100,10 +102,4 @@ const saveAndReload = function() {
 const reloadPage = function() {
   getSettings().setPersistenceEnabled(false);
   window.location.reload(true);
-};
-
-exports = {
-  clearStorage,
-  incrementResetTasks,
-  decrementResetTasks
 };

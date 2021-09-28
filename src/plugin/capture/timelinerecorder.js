@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.capture.TimelineRecorder');
 
 import OSTimelineRecorder from '../../os/capture/timelinerecorder.js';
+import DataManager from '../../os/data/datamanager.js';
+import PropertyChange from '../../os/data/propertychange.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
-const DataManager = goog.require('os.data.DataManager');
-const PropertyChange = goog.require('os.data.PropertyChange');
 
 const {CanvasFn, RenderFn} = goog.requireType('os.capture');
 

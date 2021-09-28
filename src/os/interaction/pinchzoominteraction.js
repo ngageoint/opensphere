@@ -1,8 +1,9 @@
-goog.module('os.interaction.PinchZoom');
+goog.declareModuleId('os.interaction.PinchZoom');
+
+import I3DSupport from '../i3dsupport.js';
+import osImplements from '../implements.js';
 
 const OLPinchZoom = goog.require('ol.interaction.PinchZoom');
-const I3DSupport = goog.require('os.I3DSupport');
-const osImplements = goog.require('os.implements');
 
 
 /**
@@ -10,7 +11,7 @@ const osImplements = goog.require('os.implements');
  *
  * @implements {I3DSupport}
  */
-class PinchZoom extends OLPinchZoom {
+export default class PinchZoom extends OLPinchZoom {
   /**
    * Constructor.
    * @param {olx.interaction.PinchZoomOptions=} opt_options Options.
@@ -29,5 +30,3 @@ class PinchZoom extends OLPinchZoom {
 }
 
 osImplements(PinchZoom, I3DSupport.ID);
-
-exports = PinchZoom;

@@ -2,8 +2,8 @@ goog.require('os.histo.Histogram');
 goog.require('os.histo.UniqueBinMethod');
 
 describe('os.histo.Histogram', function() {
-  const Histogram = goog.module.get('os.histo.Histogram');
-  const UniqueBinMethod = goog.module.get('os.histo.UniqueBinMethod');
+  const {default: Histogram} = goog.module.get('os.histo.Histogram');
+  const {default: UniqueBinMethod} = goog.module.get('os.histo.UniqueBinMethod');
 
   it('should bin items after the method is added', function() {
     var histogram = new Histogram();

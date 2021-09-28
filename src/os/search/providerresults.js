@@ -1,6 +1,6 @@
-goog.module('os.search.ProviderResults');
+goog.declareModuleId('os.search.ProviderResults');
 
-const ISearchResult = goog.requireType('os.search.ISearchResult');
+const {default: ISearchResult} = goog.requireType('os.search.ISearchResult');
 
 
 /**
@@ -11,4 +11,4 @@ const ISearchResult = goog.requireType('os.search.ISearchResult');
  */
 let ProviderResults;
 
-exports = ProviderResults;
+export default ProviderResults;

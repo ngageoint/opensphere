@@ -1,13 +1,13 @@
-goog.module('os.im.mapping.RadiusMapping');
+goog.declareModuleId('os.im.mapping.RadiusMapping');
 
-const Fields = goog.require('os.Fields');
-const {DEFAULT_RADIUS_COL_NAME, DEFAULT_RADIUS_UNIT} = goog.require('os.fields');
-const osMapping = goog.require('os.im.mapping');
-const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
-const RenameMapping = goog.require('os.im.mapping.RenameMapping');
-const {convertUnits, parseNumber} = goog.require('os.math');
-const Units = goog.require('os.math.Units');
-const {appendElement} = goog.require('os.xml');
+import Fields from '../../fields/fields.js';
+import {DEFAULT_RADIUS_COL_NAME, DEFAULT_RADIUS_UNIT} from '../../fields/index.js';
+import {convertUnits, parseNumber} from '../../math/math.js';
+import Units from '../../math/units.js';
+import {appendElement} from '../../xml.js';
+import * as osMapping from './mapping.js';
+import MappingRegistry from './mappingregistry.js';
+import RenameMapping from './renamemapping.js';
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -17,7 +17,7 @@ const Feature = goog.requireType('ol.Feature');
  *
  * @extends {RenameMapping<Feature>}
  */
-class RadiusMapping extends RenameMapping {
+export default class RadiusMapping extends RenameMapping {
   /**
    * Constructor.
    */
@@ -211,6 +211,3 @@ RadiusMapping.ID = 'Radius';
 
 // Register the mapping.
 MappingRegistry.getInstance().registerMapping(RadiusMapping.ID, RadiusMapping);
-
-
-exports = RadiusMapping;

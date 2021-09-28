@@ -2,7 +2,11 @@ goog.declareModuleId('os.ui.FeatureListUI');
 
 import './slider.js';
 import './sourcegrid.js';
+import LayerEventType from '../events/layereventtype.js';
+import SelectionType from '../events/selectiontype.js';
+import {getMapContainer} from '../map/mapinstance.js';
 import {ROOT} from '../os.js';
+import PropertyChange from '../source/propertychange.js';
 import * as list from './menu/listmenu.js';
 import Module from './module.js';
 import {apply, sanitizeId} from './ui.js';
@@ -12,14 +16,10 @@ const {assert} = goog.require('goog.asserts');
 const GoogEventType = goog.require('goog.events.EventType');
 const {containsValue} = goog.require('goog.object');
 const events = goog.require('ol.events');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const SelectionType = goog.require('os.events.SelectionType');
-const {getMapContainer} = goog.require('os.map.instance');
-const PropertyChange = goog.require('os.source.PropertyChange');
 
-const LayerEvent = goog.requireType('os.events.LayerEvent');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 
 

@@ -1,15 +1,16 @@
-goog.module('os.interaction.Reset');
+goog.declareModuleId('os.interaction.Reset');
+
+import I3DSupport from '../i3dsupport.js';
+import osImplements from '../implements.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import Metrics from '../metrics/metrics.js';
+import {Map as MapMetrics} from '../metrics/metricskeys.js';
 
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const {and} = goog.require('goog.functions');
 const EventType = goog.require('ol.events.EventType');
 const {noModifierKeys, targetNotEditable} = goog.require('ol.events.condition');
 const Interaction = goog.require('ol.interaction.Interaction');
-const I3DSupport = goog.require('os.I3DSupport');
-const osImplements = goog.require('os.implements');
-const {getMapContainer} = goog.require('os.map.instance');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Map: MapMetrics} = goog.require('os.metrics.keys');
 
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 
@@ -19,7 +20,7 @@ const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
  *
  * @implements {I3DSupport}
  */
-class Reset extends Interaction {
+export default class Reset extends Interaction {
   /**
    * Constructor.
    * @param {olx.interaction.MouseWheelZoomOptions=} opt_options Options.
@@ -83,5 +84,3 @@ class Reset extends Interaction {
 }
 
 osImplements(Reset, I3DSupport.ID);
-
-exports = Reset;

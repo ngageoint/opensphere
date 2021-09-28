@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.slick.formatter');
 
+import {URL_REGEXP} from '../../url/url.js';
 import ColumnActionManager from '../columnactions/columnactionmanager.js';
 import {ANCHOR as BASE_ANCHOR, urlNewTabFormatter as baseUrlNewTabFormatter} from '../formatter.js';
 import * as ui from '../ui.js';
@@ -7,9 +8,8 @@ import slickColActAsyncRenderer from './asyncrenderer.js';
 import SlickColumnActionModel from './slickcolumnactionmodel.js';
 
 const {buildString, htmlEscape} = goog.require('goog.string');
-const {URL_REGEXP} = goog.require('os.url');
 
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 const {default: ColumnActionFormatterFn} = goog.requireType('os.ui.columnactions.ColumnActionFormatterFn');
 const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 

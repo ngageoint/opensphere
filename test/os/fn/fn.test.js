@@ -17,14 +17,14 @@ describe('os.fn', function() {
   const olExtent = goog.module.get('ol.extent');
   const Point = goog.module.get('ol.geom.Point');
   const olSourceImage = goog.module.get('ol.source.Image');
-  const LayerNode = goog.module.get('os.data.LayerNode');
+  const {default: LayerNode} = goog.module.get('os.data.LayerNode');
   const fn = goog.module.get('os.fn');
-  const Image = goog.module.get('os.layer.Image');
-  const Tile = goog.module.get('os.layer.Tile');
-  const VectorLayer = goog.module.get('os.layer.Vector');
+  const {default: Image} = goog.module.get('os.layer.Image');
+  const {default: Tile} = goog.module.get('os.layer.Tile');
+  const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osProj = goog.module.get('os.proj');
-  const VectorSource = goog.module.get('os.source.Vector');
-  const TreeNode = goog.module.get('os.structs.TreeNode');
+  const {default: VectorSource} = goog.module.get('os.source.Vector');
+  const {default: TreeNode} = goog.module.get('os.structs.TreeNode');
   const {default: XYZLayerConfig} = goog.module.get('plugin.xyz.XYZLayerConfig');
 
   it('should filter falsey', function() {

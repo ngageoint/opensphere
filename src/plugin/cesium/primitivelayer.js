@@ -1,13 +1,13 @@
 goog.declareModuleId('plugin.cesium.PrimitiveLayer');
 
 import * as dispatcher from '../../os/dispatcher.js';
+import * as geo from '../../os/geo/geo.js';
 import {PROJECTION} from '../../os/map/map.js';
+import MapEvent from '../../os/map/mapevent.js';
+import * as osProj from '../../os/proj/proj.js';
 import Layer from './layer.js';
 
 const olProj = goog.require('ol.proj');
-const MapEvent = goog.require('os.MapEvent');
-const geo = goog.require('os.geo');
-const osProj = goog.require('os.proj');
 
 
 /**

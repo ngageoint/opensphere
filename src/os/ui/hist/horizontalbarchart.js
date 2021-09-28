@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ui.hist.HorizontalBarChart');
 
+import {getBinCounts} from '../../hist/hist.js';
 import IHistogramChart from './ihistogramchart.js';// eslint-disable-line
 
 const Disposable = goog.require('goog.Disposable');
-const {getBinCounts} = goog.require('os.hist');
 
-const HistogramData = goog.requireType('os.hist.HistogramData');
+const {default: HistogramData} = goog.requireType('os.hist.HistogramData');
 
 
 /**

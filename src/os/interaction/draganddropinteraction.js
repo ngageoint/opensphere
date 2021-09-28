@@ -1,4 +1,11 @@
-goog.module('os.interaction.DragAndDrop');
+goog.declareModuleId('os.interaction.DragAndDrop');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import * as dispatcher from '../dispatcher.js';
+import {createFromFile} from '../file/index.js';
+import ImportEvent from '../ui/im/importevent.js';
+import ImportEventType from '../ui/im/importeventtype.js';
 
 const {assert} = goog.require('goog.asserts');
 const dispose = goog.require('goog.dispose');
@@ -8,21 +15,15 @@ const EventType = goog.require('goog.events.FileDropHandler.EventType');
 const {TRUE} = goog.require('goog.functions');
 const log = goog.require('goog.log');
 const Interaction = goog.require('ol.interaction.Interaction');
-const dispatcher = goog.require('os.Dispatcher');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {createFromFile} = goog.require('os.file');
-const {default: ImportEvent} = goog.require('os.ui.im.ImportEvent');
-const {default: ImportEventType} = goog.require('os.ui.im.ImportEventType');
 
 const Logger = goog.requireType('goog.log.Logger');
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
  * Handles input of vector data by drag and drop.
  */
-class DragAndDrop extends Interaction {
+export default class DragAndDrop extends Interaction {
   /**
    * Constructor.
    */
@@ -119,5 +120,3 @@ class DragAndDrop extends Interaction {
  * @type {Logger}
  */
 const logger = log.getLogger('os.interaction.DragAndDrop');
-
-exports = DragAndDrop;

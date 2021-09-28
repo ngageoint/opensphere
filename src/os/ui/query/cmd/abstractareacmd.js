@@ -1,11 +1,12 @@
 goog.declareModuleId('os.ui.query.cmd.AbstractArea');
 
+import State from '../../../command/state.js';
+import {getQueryManager} from '../../../query/queryinstance.js';
+
 const Disposable = goog.require('goog.Disposable');
-const State = goog.require('os.command.State');
-const {getQueryManager} = goog.require('os.query.instance');
 
 const Feature = goog.requireType('ol.Feature');
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**

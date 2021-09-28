@@ -4,7 +4,7 @@ goog.require('os.ui');
 
 describe('os.im.FeatureImporter', function() {
   const Feature = goog.module.get('ol.Feature');
-  const FeatureImporter = goog.module.get('os.im.FeatureImporter');
+  const {default: FeatureImporter} = goog.module.get('os.im.FeatureImporter');
 
   it('should sanitize data to protect against XSS attacks', function() {
     var attack = new Feature({

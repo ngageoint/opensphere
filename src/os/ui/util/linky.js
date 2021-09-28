@@ -1,8 +1,7 @@
 goog.declareModuleId('os.ui.util.LinkyFilter');
 
+import {linkify} from '../../string/string.js';
 import Module from '../module.js';
-
-const {linkify} = goog.require('os.string');
 
 
 /**

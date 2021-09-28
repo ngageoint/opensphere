@@ -9,11 +9,11 @@ goog.require('os.mock');
 
 
 describe('os.layer.FolderManager', () => {
-  const FolderManager = goog.module.get('os.layer.FolderManager');
-  const Settings = goog.module.get('os.config.Settings');
+  const {default: FolderManager} = goog.module.get('os.layer.FolderManager');
+  const {default: Settings} = goog.module.get('os.config.Settings');
   const {FolderEventType, SettingsKey} = goog.module.get('os.layer.folder');
-  const MapContainer = goog.module.get('os.MapContainer');
-  const LayerConfigManager = goog.module.get('os.layer.config.LayerConfigManager');
+  const {default: MapContainer} = goog.module.get('os.MapContainer');
+  const {default: LayerConfigManager} = goog.module.get('os.layer.config.LayerConfigManager');
   const MockTileLayerConfig = goog.module.get('os.layer.config.MockTileLayerConfig');
   const MockVectorLayerConfig = goog.module.get('os.layer.config.MockVectorLayerConfig');
 

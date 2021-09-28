@@ -1,7 +1,7 @@
-goog.module('os.data.groupby.INodeGroupBy');
+goog.declareModuleId('os.data.groupby.INodeGroupBy');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**
@@ -10,7 +10,7 @@ const ITreeNode = goog.requireType('os.structs.ITreeNode');
  * @interface
  * @extends {IDisposable}
  */
-class INodeGroupBy {
+export default class INodeGroupBy {
   /**
    * Any initialization should be done here
    */
@@ -31,5 +31,3 @@ class INodeGroupBy {
    */
   count(node) {}
 }
-
-exports = INodeGroupBy;

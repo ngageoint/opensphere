@@ -1,9 +1,9 @@
-goog.module('os.data.DescriptorEventType');
+goog.declareModuleId('os.data.DescriptorEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const DescriptorEventType = {
   ADD_DESCRIPTOR: 'addDescriptor',
   REMOVE_DESCRIPTOR: 'removeDescriptor',
   UPDATE_DESCRIPTOR: 'updateDescriptor',
@@ -11,3 +11,5 @@ exports = {
   ACTIVATED: 'descriptorActivated',
   DEACTIVATED: 'descriptorDeactivated'
 };
+
+export default DescriptorEventType;

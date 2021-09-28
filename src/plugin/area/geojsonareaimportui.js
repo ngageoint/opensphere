@@ -1,12 +1,11 @@
 goog.declareModuleId('plugin.area.GeoJSONAreaImportUI');
 
+import AreaOptionsStep from '../../os/query/ui/areaoptionsstep.js';
 import FileImportUI from '../../os/ui/im/fileimportui.js';
 import * as osWindow from '../../os/ui/window.js';
 import windowSelector from '../../os/ui/windowselector.js';
 import GeoJSONParserConfig from '../file/geojsonparserconfig.js';
 import {directiveTag as areaImportUi} from './geojsonareaimport.js';
-
-const AreaOptionsStep = goog.require('os.query.ui.AreaOptionsStep');
 
 
 /**

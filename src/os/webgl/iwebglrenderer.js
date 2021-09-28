@@ -1,7 +1,7 @@
-goog.module('os.webgl.IWebGLRenderer');
+goog.declareModuleId('os.webgl.IWebGLRenderer');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
-const IWebGLCamera = goog.requireType('os.webgl.IWebGLCamera');
+const {default: IWebGLCamera} = goog.requireType('os.webgl.IWebGLCamera');
 
 
 /**
@@ -10,7 +10,7 @@ const IWebGLCamera = goog.requireType('os.webgl.IWebGLCamera');
  * @extends {IDisposable}
  * @interface
  */
-class IWebGLRenderer {
+export default class IWebGLRenderer {
   /**
    * The text id for the renderer
    * @return {string}
@@ -175,5 +175,3 @@ class IWebGLRenderer {
    */
   getSupportedTerrainProviders() {}
 }
-
-exports = IWebGLRenderer;

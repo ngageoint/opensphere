@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.im.IImportUI');
 
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**

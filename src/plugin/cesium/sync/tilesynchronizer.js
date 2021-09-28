@@ -1,7 +1,15 @@
 goog.declareModuleId('plugin.cesium.sync.TileSynchronizer');
 
 import * as Dispatcher from '../../../os/dispatcher.js';
+import PropertyChangeEvent from '../../../os/events/propertychangeevent.js';
+import AnimatedTile from '../../../os/layer/animatedtile.js';
+import * as osLayer from '../../../os/layer/layer.js';
+import PropertyChange from '../../../os/layer/propertychange.js';
 import {resolutionToZoom, zoomToResolution} from '../../../os/map/map.js';
+import MapEvent from '../../../os/map/mapevent.js';
+import MapContainer from '../../../os/mapcontainer.js';
+import * as events from '../../../os/ol/events.js';
+import * as osTime from '../../../os/time/time.js';
 import {tileLayerToImageryLayer, updateCesiumLayerProperties} from '../cesium.js';
 import ImageryProvider from '../imageryprovider.js';
 import CesiumSynchronizer from './cesiumsynchronizer.js';
@@ -14,19 +22,11 @@ const googObject = goog.require('goog.object');
 const googString = goog.require('goog.string');
 const olEvents = goog.require('ol.events');
 const TileWMS = goog.require('ol.source.TileWMS');
-const MapContainer = goog.require('os.MapContainer');
-const MapEvent = goog.require('os.MapEvent');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osLayer = goog.require('os.layer');
-const AnimatedTile = goog.require('os.layer.AnimatedTile');
-const PropertyChange = goog.require('os.layer.PropertyChange');
-const events = goog.require('os.ol.events');
-const osTime = goog.require('os.time');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const OLObject = goog.requireType('ol.Object');
 const PluggableMap = goog.requireType('ol.PluggableMap');
-const Tile = goog.requireType('os.layer.Tile');
+const {default: Tile} = goog.requireType('os.layer.Tile');
 
 
 /**

@@ -2,6 +2,10 @@ goog.declareModuleId('os.ui.datetime.DateControlUI');
 
 import './wheeldate.js';
 import {ROOT} from '../../os.js';
+import Duration from '../../time/duration.js';
+import * as time from '../../time/time.js';
+import TimelineController from '../../time/timelinecontroller.js';
+import TimelineEventType from '../../time/timelineeventtype.js';
 import Module from '../module.js';
 import {apply} from '../ui.js';
 
@@ -9,12 +13,8 @@ const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
-const time = goog.require('os.time');
-const Duration = goog.require('os.time.Duration');
-const TimelineController = goog.require('os.time.TimelineController');
-const TimelineEventType = goog.require('os.time.TimelineEventType');
 
-const TimelineControllerEvent = goog.requireType('os.time.TimelineControllerEvent');
+const {default: TimelineControllerEvent} = goog.requireType('os.time.TimelineControllerEvent');
 
 
 /**

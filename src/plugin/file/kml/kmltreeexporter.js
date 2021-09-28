@@ -1,10 +1,16 @@
 goog.declareModuleId('plugin.file.kml.KMLTreeExporter');
 
+import RecordField from '../../../os/data/recordfield.js';
+import DynamicFeature from '../../../os/feature/dynamicfeature.js';
 import * as osFeature from '../../../os/feature/feature.js';
+import {ORIGINAL_GEOM_FIELD} from '../../../os/interpolate.js';
 import * as osSource from '../../../os/source/source.js';
+import TriState from '../../../os/structs/tristate.js';
 import * as osStyle from '../../../os/style/style.js';
+import StyleType from '../../../os/style/styletype.js';
 import AbstractKMLExporter from '../../../os/ui/file/kml/abstractkmlexporter.js';
 import * as osUiFileKml from '../../../os/ui/file/kml/kml.js';
+import * as xml from '../../../os/xml.js';
 import * as pluginFileKmlExport from './kmlexport.js';
 
 const log = goog.require('goog.log');
@@ -13,12 +19,6 @@ const googString = goog.require('goog.string');
 const ol = goog.require('ol');
 const GeometryCollection = goog.require('ol.geom.GeometryCollection');
 const Point = goog.require('ol.geom.Point');
-const RecordField = goog.require('os.data.RecordField');
-const DynamicFeature = goog.require('os.feature.DynamicFeature');
-const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
-const TriState = goog.require('os.structs.TriState');
-const StyleType = goog.require('os.style.StyleType');
-const xml = goog.require('os.xml');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');

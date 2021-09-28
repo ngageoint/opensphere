@@ -1,13 +1,13 @@
-goog.module('os.config.AreaSettings');
+goog.declareModuleId('os.config.AreaSettings');
 
-const {directiveTag: settingsUi} = goog.require('os.config.AreaSettingsUI');
-const {default: SettingPlugin} = goog.require('os.ui.config.SettingPlugin');
+import SettingPlugin from '../ui/config/settingplugin.js';
+import {directiveTag as settingsUi} from './areasettingsui.js';
 
 
 /**
  * Area settings plugin.
  */
-class AreaSettings extends SettingPlugin {
+export default class AreaSettings extends SettingPlugin {
   /**
    * Constructor.
    */
@@ -22,5 +22,3 @@ class AreaSettings extends SettingPlugin {
     this.setUI(settingsUi);
   }
 }
-
-exports = AreaSettings;

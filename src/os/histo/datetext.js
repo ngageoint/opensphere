@@ -1,16 +1,16 @@
-goog.module('os.histo.datetext');
+goog.declareModuleId('os.histo.datetext');
 
 /**
  * @typedef {function(number,number):string}
  */
-let OpFunction;
+export let OpFunction;
 
 /**
  * @param {number} keyIndex
  * @param {number} fdoy
  * @return {string}
  */
-const week = function(keyIndex, fdoy) {
+export const week = function(keyIndex, fdoy) {
   return 'Day of Week: ' + moment().isoWeekday(keyIndex).format('dddd'); // day of week
 };
 
@@ -19,7 +19,7 @@ const week = function(keyIndex, fdoy) {
  * @param {number} fdoy
  * @return {string}
  */
-const month = function(keyIndex, fdoy) {
+export const month = function(keyIndex, fdoy) {
   return 'Day of Month: ' + (keyIndex + 1); // day of month
 };
 
@@ -28,7 +28,7 @@ const month = function(keyIndex, fdoy) {
  * @param {number} fdoy
  * @return {string}
  */
-const year = function(keyIndex, fdoy) {
+export const year = function(keyIndex, fdoy) {
   return 'Day of Year: ' + moment(fdoy + keyIndex * 86400000).format('YYYY-MM-DD'); // date string
 };
 
@@ -36,16 +36,8 @@ const year = function(keyIndex, fdoy) {
  * A map of datetext strings for use with the OpsClock
  * @type {Object<string, OpFunction> }
  */
-const TYPES = {
+export const TYPES = {
   'Hour of Week': week,
   'Hour of Month': month,
   'Hour of Year': year
-};
-
-exports = {
-  week,
-  month,
-  year,
-  TYPES,
-  OpFunction
 };

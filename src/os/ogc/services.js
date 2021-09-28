@@ -1,6 +1,6 @@
-goog.module('os.ogc.services');
+goog.declareModuleId('os.ogc.services');
 
-const Registry = goog.require('os.data.Registry');
+import Registry from '../data/registry.js';
 
 
 /**
@@ -11,7 +11,7 @@ let instance;
 /**
  * Lookup for Typed OGCServices
  */
-class Services extends Registry {
+export default class Services extends Registry {
   /**
    * Get the singleton of this Registry
    * @return {Registry<?>}
@@ -23,5 +23,3 @@ class Services extends Registry {
     return instance;
   }
 }
-
-exports = Services;

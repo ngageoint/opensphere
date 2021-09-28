@@ -1,15 +1,16 @@
-goog.module('os.metrics.GraphiteMetricsProvider');
+goog.declareModuleId('os.metrics.GraphiteMetricsProvider');
+
+import {getSettings} from '../config/configinstance.js';
+import Request from '../net/request.js';
 
 const Timer = goog.require('goog.Timer');
 const log = goog.require('goog.log');
 const EventType = goog.require('goog.net.EventType');
-const {getSettings} = goog.require('os.config.instance');
-const Request = goog.require('os.net.Request');
 const GoogEvent = goog.requireType('goog.events.Event');
 
 const Logger = goog.requireType('goog.log.Logger');
-const IMetricServiceProvider = goog.requireType('os.metrics.IMetricServiceProvider');
-const IDataFormatter = goog.requireType('os.net.IDataFormatter');
+const {default: IMetricServiceProvider} = goog.requireType('os.metrics.IMetricServiceProvider');
+const {default: IDataFormatter} = goog.requireType('os.net.IDataFormatter');
 
 
 /**
@@ -18,7 +19,7 @@ const IDataFormatter = goog.requireType('os.net.IDataFormatter');
  * @implements {IMetricServiceProvider}
  * @implements {IDataFormatter}
  */
-class GraphiteMetricsProvider {
+export default class GraphiteMetricsProvider {
   /**
    * Constructor.
    */
@@ -153,5 +154,3 @@ class GraphiteMetricsProvider {
  * @type {Logger}
  */
 const logger = log.getLogger('os.metrics.GraphiteMetricsProvider');
-
-exports = GraphiteMetricsProvider;

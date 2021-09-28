@@ -1,5 +1,16 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLNetworkLinkNode');
 
+import AlertEventSeverity from '../../../../os/alert/alerteventseverity.js';
+import AlertManager from '../../../../os/alert/alertmanager.js';
+import osEventsEventType from '../../../../os/events/eventtype.js';
+import PropertyChangeEvent from '../../../../os/events/propertychangeevent.js';
+import MapEvent from '../../../../os/map/mapevent.js';
+import MapContainer from '../../../../os/mapcontainer.js';
+import * as net from '../../../../os/net/net.js';
+import Request from '../../../../os/net/request.js';
+import TriState from '../../../../os/structs/tristate.js';
+import osThreadEventType from '../../../../os/thread/eventtype.js';
+import * as time from '../../../../os/time/time.js';
 import * as kml from '../../../../os/ui/file/kml/kml.js';
 import KMLSourceEvent from '../kmlsourceevent.js';
 import KMLNode from './kmlnode.js';
@@ -12,17 +23,6 @@ const EventType = goog.require('goog.net.EventType');
 const ResponseType = goog.require('goog.net.XhrIo.ResponseType');
 const userAgent = goog.require('goog.userAgent');
 const events = goog.require('ol.events');
-const MapContainer = goog.require('os.MapContainer');
-const MapEvent = goog.require('os.MapEvent');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const osEventsEventType = goog.require('os.events.EventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const net = goog.require('os.net');
-const Request = goog.require('os.net.Request');
-const TriState = goog.require('os.structs.TriState');
-const osThreadEventType = goog.require('os.thread.EventType');
-const time = goog.require('os.time');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {default: KMLImporter} = goog.requireType('plugin.file.kml.KMLImporter');

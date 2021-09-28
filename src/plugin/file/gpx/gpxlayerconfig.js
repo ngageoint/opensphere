@@ -1,13 +1,13 @@
 goog.declareModuleId('plugin.file.gpx.GPXLayerConfig');
 
+import AbstractDataSourceLayerConfig from '../../../os/layer/config/abstractdatasourcelayerconfig.js';
+import RequestSource from '../../../os/source/requestsource.js';
 import GPXParser from './gpxparser.js';
 
 const ResponseType = goog.require('goog.net.XhrIo.ResponseType');
 const userAgent = goog.require('goog.userAgent');
-const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
-const RequestSource = goog.require('os.source.Request');
 
-const FeatureImporter = goog.requireType('os.im.FeatureImporter');
+const {default: FeatureImporter} = goog.requireType('os.im.FeatureImporter');
 
 
 /**

@@ -13,12 +13,12 @@ goog.require('plugin.im.action.feature.StyleAction');
 
 
 describe('os.state.v4.FilterAction', function() {
-  const DataManager = goog.module.get('os.data.DataManager');
-  const FilterManager = goog.module.get('os.query.FilterManager');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: FilterManager} = goog.module.get('os.query.FilterManager');
   const source = goog.module.get('os.source');
-  const StateManager = goog.module.get('os.state.StateManager');
-  const Versions = goog.module.get('os.state.Versions');
-  const FilterAction = goog.module.get('os.state.v4.FilterAction');
+  const {default: StateManager} = goog.module.get('os.state.StateManager');
+  const {default: Versions} = goog.module.get('os.state.Versions');
+  const {default: FilterAction} = goog.module.get('os.state.v4.FilterAction');
   const xsd = goog.module.get('os.test.xsd');
   const xml = goog.module.get('os.xml');
   const {default: Entry} = goog.module.get('plugin.im.action.feature.Entry');

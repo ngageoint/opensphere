@@ -1,14 +1,14 @@
-goog.module('os.data.FolderNode');
+goog.declareModuleId('os.data.FolderNode');
 
-const {directiveTag: folderNodeUi} = goog.require('os.ui.node.FolderNodeUI');
-const {default: SlickTreeNode} = goog.require('os.ui.slick.SlickTreeNode');
-const Vector = goog.requireType('os.layer.Vector');
+import {directiveTag as folderNodeUi} from '../ui/node/foldernodeui.js';
+import SlickTreeNode from '../ui/slick/slicktreenode.js';
+const {default: Vector} = goog.requireType('os.layer.Vector');
 
 
 /**
  * Tree node representing a layer folder.
  */
-class FolderNode extends SlickTreeNode {
+export default class FolderNode extends SlickTreeNode {
   /**
    * @param {osx.layer.FolderOptions} options
    */
@@ -53,5 +53,3 @@ class FolderNode extends SlickTreeNode {
     return `<i class="fa fa-folder${open ? '-open' : ''} fa-fw"></i>`;
   }
 }
-
-exports = FolderNode;

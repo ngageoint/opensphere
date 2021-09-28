@@ -1,18 +1,18 @@
 goog.declareModuleId('os.ui.data.AddColumnUI');
 
+import FeatureEventType from '../../data/featureeventtype.js';
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import {getMapContainer} from '../../map/mapinstance.js';
 import {ROOT} from '../../os.js';
+import PropertyChange from '../../source/propertychange.js';
 import {notifyStyleChange, setFeatureStyle} from '../../style/style.js';
 import Module from '../module.js';
 import {close, create} from '../window.js';
 import WindowEventType from '../windoweventtype.js';
 import {isDuplicateColumn} from './addcolumnform.js';
-const FeatureEventType = goog.require('os.data.FeatureEventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {getMapContainer} = goog.require('os.map.instance');
-const PropertyChange = goog.require('os.source.PropertyChange');
 
 const Feature = goog.requireType('ol.Feature');
-const Vector = goog.requireType('os.source.Vector');
+const {default: Vector} = goog.requireType('os.source.Vector');
 
 
 /**

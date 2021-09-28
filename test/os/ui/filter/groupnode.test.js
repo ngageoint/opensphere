@@ -4,7 +4,7 @@ goog.require('os.ui.filter.ui.GroupNode');
 
 
 describe('os.ui.filter.ui.GroupNode', function() {
-  const ColumnDefinition = goog.module.get('os.data.ColumnDefinition');
+  const {default: ColumnDefinition} = goog.module.get('os.data.ColumnDefinition');
   const {default: ExpressionNode} = goog.module.get('os.ui.filter.ui.ExpressionNode');
   const {default: GroupNode} = goog.module.get('os.ui.filter.ui.GroupNode');
 

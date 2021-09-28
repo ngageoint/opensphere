@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ui.filter.ui.GroupNode');
 
+import {escape as xmlEscape} from '../../../xml.js';
 import {directiveTag as nodeIconsUi} from '../../nodeicons.js';
 import {directiveTag as nodeToggleFolderUi} from '../../nodetogglefolder.js';
 import SlickTreeNode from '../../slick/slicktreenode.js';
 import {directiveTag as groupNodeUi} from './groupnodeui.js';
 import {directiveTag as groupNodeViewUi} from './groupnodeviewui.js';
-const {escape: xmlEscape} = goog.require('os.xml');
 
 
 /**

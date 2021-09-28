@@ -1,10 +1,10 @@
-goog.module('os.command.AbstractVectorLayerLOB');
+goog.declareModuleId('os.command.AbstractVectorLayerLOB');
 
-const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const DataManager = goog.require('os.data.DataManager');
-const RecordField = goog.require('os.data.RecordField');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const PropertyChange = goog.require('os.source.PropertyChange');
+import DataManager from '../data/datamanager.js';
+import RecordField from '../data/recordfield.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import PropertyChange from '../source/propertychange.js';
+import AbstractVectorStyle from './abstractvectorstylecmd.js';
 
 
 /**
@@ -13,7 +13,7 @@ const PropertyChange = goog.require('os.source.PropertyChange');
  *
  * @template T
  */
-class AbstractVectorLayerLOB extends AbstractVectorStyle {
+export default class AbstractVectorLayerLOB extends AbstractVectorStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -55,5 +55,3 @@ class AbstractVectorLayerLOB extends AbstractVectorStyle {
     super.finish(config);
   }
 }
-
-exports = AbstractVectorLayerLOB;

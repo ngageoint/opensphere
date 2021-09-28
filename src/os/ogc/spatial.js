@@ -1,11 +1,12 @@
-goog.module('os.ogc.spatial');
+goog.declareModuleId('os.ogc.spatial');
+
+import {createPolarPolygon, isPolarPolygon} from '../geo/geo.js';
+import {interpolateGeom} from '../interpolate.js';
+import Format from './format.js';
 
 const GML = goog.require('ol.format.GML');
 const KML = goog.require('ol.format.KML');
 const {pushParseAndPop} = goog.require('ol.xml');
-const {createPolarPolygon, isPolarPolygon} = goog.require('os.geo');
-const {interpolateGeom} = goog.require('os.interpolate');
-const Format = goog.require('os.ogc.spatial.Format');
 
 const Feature = goog.requireType('ol.Feature');
 const LineString = goog.requireType('ol.geom.LineString');
@@ -20,7 +21,7 @@ const Polygon = goog.requireType('ol.geom.Polygon');
  *
  * @suppress {accessControls} Because OL3 decided not to let us use their code...
  */
-const readKMLGeometry = function(element) {
+export const readKMLGeometry = function(element) {
   if (element) {
     var obj = pushParseAndPop({'geometry': null}, KML.PLACEMARK_PARSERS_, element, []);
     if (obj && obj['geometry'] instanceof ol.geom.Geometry) {
@@ -39,7 +40,7 @@ const readKMLGeometry = function(element) {
  *
  * @suppress {accessControls} Because OL3 decided not to let us use their code...
  */
-const readGMLGeometry = function(element) {
+export const readGMLGeometry = function(element) {
   var geom = null;
   if (element) {
     var gmlFormat = new GML();
@@ -56,7 +57,7 @@ const readGMLGeometry = function(element) {
  * @param {string=} opt_separator The separator
  * @return {string} Serialized coordinates
  */
-const formatCoords = function(coords, opt_separator) {
+export const formatCoords = function(coords, opt_separator) {
   var separator = opt_separator || ',';
   var n = coords.length;
 
@@ -94,7 +95,7 @@ const formatCoords = function(coords, opt_separator) {
  *
  * @todo KML support?
  */
-const formatExtent = function(extent, column, opt_name, opt_description, opt_id) {
+export const formatExtent = function(extent, column, opt_name, opt_description, opt_id) {
   var bbox = '<BBOX';
   if (opt_name) {
     bbox += ' areanamehint="' + opt_name + '"';
@@ -122,7 +123,7 @@ const formatExtent = function(extent, column, opt_name, opt_description, opt_id)
  * @param {string=} opt_id The id
  * @return {?string} The serialized polygon, or null if the geometry is not supported
  */
-const formatGMLIntersection = function(geom, opt_column, opt_name, opt_description, opt_id) {
+export const formatGMLIntersection = function(geom, opt_column, opt_name, opt_description, opt_id) {
   interpolateGeom(geom);
 
   var parts = [];
@@ -153,7 +154,7 @@ const formatGMLIntersection = function(geom, opt_column, opt_name, opt_descripti
  * @param {string=} opt_format The output format, defaults to GML
  * @return {?string} The serialized polygon, or null if the geometry is not supported
  */
-const formatPolygon = function(geom, opt_format) {
+export const formatPolygon = function(geom, opt_format) {
   if (!geom) {
     return null;
   }
@@ -224,7 +225,7 @@ const formatPolygon = function(geom, opt_format) {
  * @param {string=} opt_format The output format, defaults to GML
  * @return {?string} The serialized polygon, or null if the geometry is not supported
  */
-const formatMultiPolygon = function(geom, opt_format) {
+export const formatMultiPolygon = function(geom, opt_format) {
   if (!geom) {
     return null;
   }
@@ -284,14 +285,4 @@ const formatMultiPolygon = function(geom, opt_format) {
   }
 
   return parts.length > 0 ? parts.join('') : null;
-};
-
-exports = {
-  readKMLGeometry,
-  readGMLGeometry,
-  formatCoords,
-  formatExtent,
-  formatGMLIntersection,
-  formatPolygon,
-  formatMultiPolygon
 };

@@ -1,11 +1,10 @@
 goog.declareModuleId('os.ui.wiz.step.TimeStep');
 
+import DateTimeMapping from '../../../im/mapping/time/datetimemapping.js';
+import TimeType from '../../../im/mapping/timetype.js';
 import TimeMappingModel from '../../im/mapping/time/timemappingmodel.js';
 import AbstractWizardStep from './abstractwizardstep.js';
 import {directiveTag as stepUi} from './timestepui.js';
-
-const TimeType = goog.require('os.im.mapping.TimeType');
-const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
 
 
 /**

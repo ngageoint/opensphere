@@ -1,6 +1,6 @@
-goog.module('os.alert.AlertEventSeverity');
+goog.declareModuleId('os.alert.AlertEventSeverity');
 
-const AlertEventLevel = goog.require('os.alert.AlertEventLevel');
+import AlertEventLevel from './alerteventlevel.js';
 
 
 /**
@@ -14,4 +14,4 @@ const AlertEventSeverity = {
   INFO: new AlertEventLevel('Info', 100)
 };
 
-exports = AlertEventSeverity;
+export default AlertEventSeverity;

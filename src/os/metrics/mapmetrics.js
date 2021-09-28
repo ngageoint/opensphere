@@ -1,12 +1,12 @@
-goog.module('os.metrics.MapMetrics');
+goog.declareModuleId('os.metrics.MapMetrics');
 
-const {Map: MapKeys} = goog.require('os.metrics.keys');
-const {default: MetricsPlugin} = goog.require('os.ui.metrics.MetricsPlugin');
+import MetricsPlugin from '../ui/metrics/metricsplugin.js';
+import {Map as MapKeys} from './metricskeys.js';
 
 
 /**
  */
-class MapMetrics extends MetricsPlugin {
+export default class MapMetrics extends MetricsPlugin {
   /**
    * Constructor.
    */
@@ -124,5 +124,3 @@ class MapMetrics extends MetricsPlugin {
     });
   }
 }
-
-exports = MapMetrics;

@@ -1,6 +1,6 @@
 goog.module('os.data.filter.OddFilter');
 
-const AbstractFilter = goog.require('os.filter.AbstractFilter');
+const {default: AbstractFilter} = goog.require('os.filter.AbstractFilter');
 
 
 /**

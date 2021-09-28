@@ -1,10 +1,10 @@
-goog.module('os.track.TrackField');
+goog.declareModuleId('os.track.TrackField');
 
 /**
  * Feature metadata fields used by tracks
  * @enum {string}
  */
-exports = {
+const TrackField = {
   ELAPSED_AVERAGE_SPEED: 'ELAPSED_AVERAGE_SPEED',
   ELAPSED_DISTANCE: 'ELAPSED_DISTANCE',
   ELAPSED_DURATION: 'ELAPSED_DURATION',
@@ -18,3 +18,5 @@ exports = {
   INTERPOLATE_MARKER: '_interpolateMarker',
   METADATA_MAP: '_trackMetadataMap'
 };
+
+export default TrackField;

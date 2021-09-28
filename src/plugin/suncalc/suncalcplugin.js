@@ -1,19 +1,17 @@
 goog.declareModuleId('plugin.suncalc.SunCalcPlugin');
 
 import './lightstrip.js';
+import DisplaySetting from '../../os/config/displaysetting.js';
+import settings from '../../os/config/settings.js';
+import MapContainer from '../../os/mapcontainer.js';
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
 import SettingsManager from '../../os/ui/config/settingsmanager.js';
 import * as mapMenu from '../../os/ui/menu/mapmenu.js';
 import MenuItemType from '../../os/ui/menu/menuitemtype.js';
 import * as osWindow from '../../os/ui/window.js';
-
 import LightStripSettings from './lightstripsettings.js';
 import {ID} from './suncalc.js';
 import {directiveTag as sunCalcEl} from './suncalcui.js';
-
-const MapContainer = goog.require('os.MapContainer');
-const DisplaySetting = goog.require('os.config.DisplaySetting');
-const settings = goog.require('os.config.Settings');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');

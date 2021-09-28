@@ -1,11 +1,13 @@
-goog.module('os.config.ConfigType');
+goog.declareModuleId('os.config.ConfigType');
 
 /**
  * Configuration types for settings
  * @enum {string}
  */
-exports = {
+const ConfigType = {
   CONFIG: 'admin',
   PREFERENCE: 'user',
   OVERRIDES: 'overrides'
 };
+
+export default ConfigType;

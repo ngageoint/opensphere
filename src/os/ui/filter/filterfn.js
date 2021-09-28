@@ -9,7 +9,7 @@ const {isEmpty} = goog.require('goog.object');
 const {isEmptyOrWhitespace} = goog.require('goog.string');
 const {getAllTextContent} = goog.require('ol.xml');
 
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 const {default: Op} = goog.requireType('os.ui.filter.op.Op');
 
 

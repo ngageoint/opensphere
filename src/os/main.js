@@ -1,6 +1,6 @@
 goog.declareModuleId('osmain');
 
-goog.require('os.mixin');
+import './mixin/mixin.js';
 import './ui/adddata.js';
 import './ui/clear/clear.js';
 import './ui/config/settingswindow.js';
@@ -14,14 +14,14 @@ import './ui/savedwindowui.js';
 import './ui/servers.js';
 import './ui/slick/slicktree.js';
 import './ui/tristatecheckbox.js';
+import SettingsInitializerManager from './config/settingsinitializermanager.js';
+import FancierWindow from './debug/fancierwindow.js';
 import MainCtrl from './mainctrl.js';
 import Module from './module.js';
+import addDefaultHandlers from './net/adddefaulthandlers.js';
 import {ROOT, isMainWindow, setLogWindow} from './os.js';
 
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
-const SettingsInitializerManager = goog.require('os.config.SettingsInitializerManager');
-const FancierWindow = goog.require('os.debug.FancierWindow');
-const addDefaultHandlers = goog.require('os.net.addDefaultHandlers');
 
 
 /**

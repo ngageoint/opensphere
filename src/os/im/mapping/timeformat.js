@@ -1,9 +1,11 @@
-goog.module('os.im.mapping.TimeFormat');
+goog.declareModuleId('os.im.mapping.TimeFormat');
 
 /**
  * @enum {string}
  */
-exports = {
+const TimeFormat = {
   ISO: 'ISO',
   TIMESTAMP: 'Timestamp'
 };
+
+export default TimeFormat;

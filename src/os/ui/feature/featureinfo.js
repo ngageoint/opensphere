@@ -3,10 +3,15 @@ goog.declareModuleId('os.ui.feature.FeatureInfoUI');
 import '../location/simplelocation.js';
 import '../uiswitch.js';
 import './simplepropertiesui.js';
+import FeatureEventType from '../../data/featureeventtype.js';
 import * as dispatcher from '../../dispatcher.js';
 import * as osFeature from '../../feature/feature.js';
+import {filterFalsey} from '../../fn/fn.js';
+import * as layer from '../../layer/layer.js';
 import * as osMap from '../../map/map.js';
+import Units from '../../math/units.js';
 import {ROOT} from '../../os.js';
+import UnitManager from '../../unit/unitmanager.js';
 import Module from '../module.js';
 import {apply} from '../ui.js';
 import FeatureInfoEvent from './featureinfoevent.js';
@@ -18,14 +23,9 @@ const Feature = goog.require('ol.Feature');
 const events = goog.require('ol.events');
 const Point = goog.require('ol.geom.Point');
 const {toLonLat} = goog.require('ol.proj');
-const FeatureEventType = goog.require('os.data.FeatureEventType');
-const {filterFalsey} = goog.require('os.fn');
-const layer = goog.require('os.layer');
-const Units = goog.require('os.math.Units');
-const UnitManager = goog.require('os.unit.UnitManager');
 
 const RenderFeature = goog.requireType('ol.render.Feature');
-const FeatureEvent = goog.requireType('os.data.FeatureEvent');
+const {default: FeatureEvent} = goog.requireType('os.data.FeatureEvent');
 const {default: FeatureTab} = goog.requireType('os.ui.tab.FeatureTab');
 
 

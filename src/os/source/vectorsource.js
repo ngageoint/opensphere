@@ -1,6 +1,62 @@
-goog.module('os.source.Vector');
+goog.declareModuleId('os.source.Vector');
 
-goog.require('os.mixin.rbush');
+import '../mixin/rbushmixin.js';
+import EventType from '../action/eventtype.js';
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import {registerClass} from '../classregistry.js';
+import {toHexString} from '../color.js';
+import ColumnDefinition from '../data/columndefinition.js';
+import DataManager1 from '../data/datamanager.js';
+import DataManager from '../data/datamanager.js';
+import ColorModel from '../data/histo/colormodel.js';
+import SourceHistogram from '../data/histo/sourcehistogram.js';
+import RecordField from '../data/recordfield.js';
+import * as dispatcher from '../dispatcher.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import SelectionType from '../events/selectiontype.js';
+import * as osExtent from '../extent.js';
+import DynamicFeature from '../feature/dynamicfeature.js';
+import DynamicPropertyChange from '../feature/dynamicpropertychange.js';
+import * as osFeature from '../feature/feature.js';
+import Fields from '../fields/fields.js';
+import * as fields from '../fields/index.js';
+import {filterFalsey} from '../fn/fn.js';
+import {isCoordInArea, isRectangular, splitOnDateLine} from '../geo/geo.js';
+import {normalizeGeometryCoordinates, normalizeLongitude} from '../geo/geo2.js';
+import OLParser from '../geo/olparser.js';
+import GeometryField from '../geom/geometryfield.js';
+import HistogramData from '../hist/histogramdata.js';
+import IHistogramProvider from '../hist/ihistogramprovider.js';
+import IAnimationSupport from '../ianimationsupport.js';
+import osImplements from '../implements.js';
+import {ORIGINAL_GEOM_FIELD, interpolateFeature} from '../interpolate.js';
+import AnimationOverlay from '../layer/animationoverlay.js';
+import LoadingManager from '../load/loadingmanager.js';
+import * as osMap from '../map/map.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {getValueExtractor, prune} from '../object/object.js';
+import {getMaxFeatures} from '../ogc/ogc.js';
+import {ROOT} from '../os.js';
+import {isFloat} from '../string/string.js';
+import {updateShown} from '../style/label.js';
+import * as osStyle from '../style/style.js';
+import StyleField from '../style/stylefield.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import StyleType from '../style/styletype.js';
+import TimelineController from '../time/timelinecontroller.js';
+import TimelineEventType from '../time/timelineeventtype.js';
+import TimeRange from '../time/timerange.js';
+import TimeModel from '../time/xf/timemodel.js';
+import OnboardingManager from '../ui/onboarding/onboardingmanager.js';
+import {autoSizeAndSortColumns, isUserModified, restore as restoreColumns} from '../ui/slick/column.js';
+import AltitudeMode from '../webgl/altitudemode.js';
+import IModifiableSource from './imodifiablesource.js';
+import ISource from './isource.js';
+import PropertyChange from './propertychange.js';
+import {RefreshTimers, getHoldRecordTime, getRecordTime, handleMaxFeatureCount} from './source.js';
+import SourceClass from './sourceclass.js';
+import * as sourceColumn from './sourcecolumn.js';
 
 const Timer = goog.require('goog.Timer');
 const {binaryInsert, binaryRemove, removeDuplicates} = goog.require('goog.array');
@@ -19,62 +75,6 @@ const olExtent = goog.require('ol.extent');
 const GeometryType = goog.require('ol.geom.GeometryType');
 const OLVectorSource = goog.require('ol.source.Vector');
 const VectorEventType = goog.require('ol.source.VectorEventType');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const Fields = goog.require('os.Fields');
-const IAnimationSupport = goog.require('os.IAnimationSupport');
-const EventType = goog.require('os.action.EventType');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {toHexString} = goog.require('os.color');
-const {registerClass} = goog.require('os.classRegistry');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const DataManager1 = goog.require('os.data.DataManager');
-const DataManager = goog.require('os.data.DataManager');
-const RecordField = goog.require('os.data.RecordField');
-const ColorModel = goog.require('os.data.histo.ColorModel');
-const SourceHistogram = goog.require('os.data.histo.SourceHistogram');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const SelectionType = goog.require('os.events.SelectionType');
-const osExtent = goog.require('os.extent');
-const osFeature = goog.require('os.feature');
-const DynamicFeature = goog.require('os.feature.DynamicFeature');
-const DynamicPropertyChange = goog.require('os.feature.DynamicPropertyChange');
-const fields = goog.require('os.fields');
-const {filterFalsey} = goog.require('os.fn');
-const {isCoordInArea, isRectangular, splitOnDateLine} = goog.require('os.geo');
-const OLParser = goog.require('os.geo.jsts.OLParser');
-const {normalizeGeometryCoordinates, normalizeLongitude} = goog.require('os.geo2');
-const GeometryField = goog.require('os.geom.GeometryField');
-const HistogramData = goog.require('os.hist.HistogramData');
-const IHistogramProvider = goog.require('os.hist.IHistogramProvider');
-const osImplements = goog.require('os.implements');
-const {ORIGINAL_GEOM_FIELD, interpolateFeature} = goog.require('os.interpolate');
-const AnimationOverlay = goog.require('os.layer.AnimationOverlay');
-const LoadingManager = goog.require('os.load.LoadingManager');
-const osMap = goog.require('os.map');
-const {getMapContainer} = goog.require('os.map.instance');
-const {getValueExtractor, prune} = goog.require('os.object');
-const {getMaxFeatures} = goog.require('os.ogc');
-const {RefreshTimers, getHoldRecordTime, getRecordTime, handleMaxFeatureCount} = goog.require('os.source');
-const IModifiableSource = goog.require('os.source.IModifiableSource');
-const ISource = goog.require('os.source.ISource');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const SourceClass = goog.require('os.source.SourceClass');
-const sourceColumn = goog.require('os.source.column');
-const {isFloat} = goog.require('os.string');
-const osStyle = goog.require('os.style');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
-const StyleType = goog.require('os.style.StyleType');
-const {updateShown} = goog.require('os.style.label');
-const TimeRange = goog.require('os.time.TimeRange');
-const TimelineController = goog.require('os.time.TimelineController');
-const TimelineEventType = goog.require('os.time.TimelineEventType');
-const TimeModel = goog.require('os.time.xf.TimeModel');
-const {default: OnboardingManager} = goog.require('os.ui.onboarding.OnboardingManager');
-const {autoSizeAndSortColumns, isUserModified, restore: restoreColumns} = goog.require('os.ui.slick.column');
-const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');
@@ -89,10 +89,10 @@ const Point = goog.requireType('ol.geom.Point');
 const Polygon = goog.requireType('ol.geom.Polygon');
 const histo = goog.requireType('os.data.histo');
 const {LOBOptions} = goog.requireType('os.feature');
-const ILayer = goog.requireType('os.layer.ILayer');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 const {FeatureHoverFn} = goog.requireType('os.source');
-const ITime = goog.requireType('os.time.ITime');
-const TimelineControllerEvent = goog.requireType('os.time.TimelineControllerEvent');
+const {default: ITime} = goog.requireType('os.time.ITime');
+const {default: TimelineControllerEvent} = goog.requireType('os.time.TimelineControllerEvent');
 const {default: ActionEvent} = goog.requireType('os.ui.action.ActionEvent');
 
 
@@ -102,7 +102,7 @@ const {default: ActionEvent} = goog.requireType('os.ui.action.ActionEvent');
  * @implements {IHistogramProvider}
  * @implements {IModifiableSource}
  */
-class Vector extends OLVectorSource {
+export default class Vector extends OLVectorSource {
   /**
    * Constructor.
    * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
@@ -3720,6 +3720,7 @@ class Vector extends OLVectorSource {
     }
   }
 }
+
 osImplements(Vector, IHistogramProvider.ID);
 osImplements(Vector, ISource.ID);
 osImplements(Vector, IAnimationSupport.ID);
@@ -3754,5 +3755,3 @@ Vector.VISIBLE = 'visible';
  * @type {ol.Extent}
  */
 const scratchExtent = olExtent.createEmpty();
-
-exports = Vector;

@@ -4,7 +4,7 @@ import AbstractGroupByTreeSearch from '../slick/abstractgroupbytreesearch.js';
 import AreaNode from './areanode.js';
 
 const Feature = goog.requireType('ol.Feature');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**

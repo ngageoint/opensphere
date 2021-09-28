@@ -1,8 +1,7 @@
-goog.module('os.histo.IBinMethod');
-goog.module.declareLegacyNamespace();
+goog.declareModuleId('os.histo.IBinMethod');
 
-const IPersistable = goog.requireType('os.IPersistable');
-const Bin = goog.requireType('os.histo.Bin');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
+const {default: Bin} = goog.requireType('os.histo.Bin');
 
 
 /**
@@ -10,7 +9,7 @@ const Bin = goog.requireType('os.histo.Bin');
  * @extends {IPersistable}
  * @template T,S
  */
-class IBinMethod {
+export default class IBinMethod {
   /**
    * @param {T} item
    * @return {*} The value. Must be naturally ordered!
@@ -132,5 +131,3 @@ class IBinMethod {
    */
   setIsDate(value) {}
 }
-
-exports = IBinMethod;

@@ -1,9 +1,9 @@
-goog.module('os.histo.DateBinType');
+goog.declareModuleId('os.histo.DateBinType');
 
 /**
  * @enum {string}
  */
-exports = {
+const DateBinType = {
   UNIQUE: 'Unique',
   MINUTE: 'Minute',
   HOUR: 'Hour',
@@ -18,3 +18,5 @@ exports = {
   MONTH_OF_YEAR: 'Month of Year',
   YEAR: 'Year'
 };
+
+export default DateBinType;

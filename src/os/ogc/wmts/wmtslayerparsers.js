@@ -1,6 +1,6 @@
-goog.module('os.ogc.wmts.WMTSLayerParsers');
+goog.declareModuleId('os.ogc.wmts.WMTSLayerParsers');
 
-const {default: WMTSLayerParserV100} = goog.require('os.ogc.wmts.WMTSLayerParserV100');
+import WMTSLayerParserV100 from './wmtslayerparserv100.js';
 
 const {default: IWMTSLayerParser} = goog.requireType('os.ogc.wmts.IWMTSLayerParser');
 
@@ -9,6 +9,8 @@ const {default: IWMTSLayerParser} = goog.requireType('os.ogc.wmts.IWMTSLayerPars
  * WMTS layer parsers.
  * @type {!Object<string, function(new: IWMTSLayerParser)>}
  */
-exports = {
+const WMTSLayerParsers = {
   '1.0.0': WMTSLayerParserV100
 };
+
+export default WMTSLayerParsers;

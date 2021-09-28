@@ -13,9 +13,9 @@ describe('os.alert.AlertManager', function() {
   const Level = goog.module.get('goog.log.Level');
   const LogBuffer = goog.module.get('goog.log.LogBuffer');
   const LogRecord = goog.module.get('goog.log.LogRecord');
-  const AlertEventSeverity = goog.module.get('os.alert.AlertEventSeverity');
-  const AlertManager = goog.module.get('os.alert.AlertManager');
-  const EventType = goog.module.get('os.structs.EventType');
+  const {default: AlertEventSeverity} = goog.module.get('os.alert.AlertEventSeverity');
+  const {default: AlertManager} = goog.module.get('os.alert.AlertManager');
+  const {default: EventType} = goog.module.get('os.structs.EventType');
 
   const loggerName = 'os.alert.AlertManagerTest';
   const logger = log.getLogger(loggerName);

@@ -1,13 +1,13 @@
-goog.module('os.command.VectorLayerCenterShape');
+goog.declareModuleId('os.command.VectorLayerCenterShape');
 
-const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const DataManager = goog.require('os.data.DataManager');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {SUB_DELIMITER} = goog.require('os.metrics');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const osStyle = goog.require('os.style');
-const kml = goog.require('os.ui.file.kml');
+import DataManager from '../data/datamanager.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import {SUB_DELIMITER} from '../metrics/index.js';
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import PropertyChange from '../source/propertychange.js';
+import * as osStyle from '../style/style.js';
+import * as kml from '../ui/file/kml/kml.js';
+import AbstractVectorStyle from './abstractvectorstylecmd.js';
 
 
 /**
@@ -15,7 +15,7 @@ const kml = goog.require('os.ui.file.kml');
  *
  * @extends {AbstractVectorStyle<string>}
  */
-class VectorLayerCenterShape extends AbstractVectorStyle {
+export default class VectorLayerCenterShape extends AbstractVectorStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -72,5 +72,3 @@ class VectorLayerCenterShape extends AbstractVectorStyle {
     super.finish(config);
   }
 }
-
-exports = VectorLayerCenterShape;

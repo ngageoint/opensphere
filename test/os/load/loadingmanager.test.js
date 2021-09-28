@@ -5,8 +5,8 @@ goog.require('os.load.LoadingManager');
 
 describe('os.load.LoadingManager', function() {
   const GoogEventType = goog.module.get('goog.events.EventType');
-  const LoadingEventType = goog.module.get('os.load.LoadingEventType');
-  const LoadingManager = goog.module.get('os.load.LoadingManager');
+  const {default: LoadingEventType} = goog.module.get('os.load.LoadingEventType');
+  const {default: LoadingManager} = goog.module.get('os.load.LoadingManager');
 
   it('should be able to add loading tasks', function() {
     var lm = new LoadingManager();

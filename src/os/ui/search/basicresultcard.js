@@ -1,9 +1,8 @@
 goog.declareModuleId('os.ui.search.BasicResultCardUI');
 
+import Settings from '../../config/settings.js';
 import Module from '../module.js';
 import * as TuiEditor from '../text/tuieditor.js';
-
-const Settings = goog.require('os.config.Settings');
 
 
 /**

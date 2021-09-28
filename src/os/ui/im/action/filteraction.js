@@ -1,22 +1,22 @@
 goog.declareModuleId('os.im.action.filter');
 
+import CommandProcessor from '../../../command/commandprocessor.js';
+import SequenceCommand from '../../../command/sequencecommand.js';
+import FilterActionAdd from '../../../im/action/cmd/filteractionaddcmd.js';
+import FilterActionRemove from '../../../im/action/cmd/filteractionremovecmd.js';
+import {getImportActionManager} from '../../../im/action/importaction.js';
+import TagName from '../../../im/action/tagname.js';
+import {getFilterManager} from '../../../query/queryinstance.js';
+import * as xml from '../../../xml.js';
 import * as filter from '../../filter/filter.js';
 import ExportTypeHint from './exporttypehint.js';
 import FilterActionNode from './filteractionnode.js';
 
 const olArray = goog.require('ol.array');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const {getImportActionManager} = goog.require('os.im.action');
-const TagName = goog.require('os.im.action.TagName');
-const FilterActionAdd = goog.require('os.im.action.cmd.FilterActionAdd');
-const FilterActionRemove = goog.require('os.im.action.cmd.FilterActionRemove');
-const {getFilterManager} = goog.require('os.query.instance');
-const xml = goog.require('os.xml');
 
-const ICommand = goog.requireType('os.command.ICommand');
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**

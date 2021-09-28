@@ -4,7 +4,7 @@ goog.require('os.layer.MockLayer');
 
 
 describe('os.layer', function() {
-  const MapContainer = goog.module.get('os.MapContainer');
+  const {default: MapContainer} = goog.module.get('os.MapContainer');
   const MockLayer = goog.module.get('os.layer.MockLayer');
   const osLayer = goog.module.get('os.layer');
 

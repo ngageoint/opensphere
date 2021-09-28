@@ -1,16 +1,16 @@
 goog.declareModuleId('os.ui.ol.interaction.DragBox');
 
+import RecordField from '../../../data/recordfield.js';
+import {normalizeLongitude} from '../../../geo/geo2.js';
+import GeometryField from '../../../geom/geometryfield.js';
+import {METHOD_FIELD} from '../../../interpolate.js';
+import Method from '../../../interpolatemethod.js';
+import Box from '../../../olm/render/box.js';
+import AltitudeMode from '../../../webgl/altitudemode.js';
 import AbstractDrag from './abstractdraginteraction.js';
 
 const Polygon = goog.require('ol.geom.Polygon');
 const {toLonLat} = goog.require('ol.proj');
-const RecordField = goog.require('os.data.RecordField');
-const {normalizeLongitude} = goog.require('os.geo2');
-const GeometryField = goog.require('os.geom.GeometryField');
-const {METHOD_FIELD} = goog.require('os.interpolate');
-const Method = goog.require('os.interpolate.Method');
-const Box = goog.require('os.olm.render.Box');
-const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
 const Style = goog.requireType('ol.style.Style');
 

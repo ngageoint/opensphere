@@ -1,10 +1,9 @@
-goog.module('os.source.PropertyChange');
-
+goog.declareModuleId('os.source.PropertyChange');
 
 /**
  * @enum {string}
  */
-exports = {
+const PropertyChange = {
   ALTITUDE: 'altitude',
   ANIMATION_ENABLED: 'animationEnabled',
   ANIMATION_FRAME: 'animationFrame',
@@ -37,3 +36,5 @@ exports = {
   UNIQUE_ID: 'uniqueId',
   VISIBLE: 'visible'
 };
+
+export default PropertyChange;

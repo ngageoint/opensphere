@@ -1,9 +1,8 @@
 goog.declareModuleId('os.ui.SavedWindowUI');
 
+import settings from '../config/settings.js';
 import Module from './module.js';
 import {Controller as WindowCtrl, directive as windowDirective} from './windowui.js';
-
-const settings = goog.require('os.config.Settings');
 
 
 /**

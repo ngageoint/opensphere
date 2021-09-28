@@ -6,7 +6,7 @@ import {apply} from './ui.js';
 const GoogEventType = goog.require('goog.events.EventType');
 
 const Listenable = goog.requireType('goog.events.Listenable');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**

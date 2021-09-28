@@ -1,9 +1,9 @@
-goog.module('os.map.instance');
+goog.declareModuleId('os.map.instance');
 
 const {assert} = goog.require('goog.asserts');
 
-const MapContainer = goog.requireType('os.MapContainer');
-const IMapContainer = goog.requireType('os.map.IMapContainer');
+const {default: MapContainer} = goog.requireType('os.MapContainer');
+const {default: IMapContainer} = goog.requireType('os.map.IMapContainer');
 
 
 /**
@@ -17,7 +17,7 @@ let iMapContainer = null;
  * implementation.
  * @return {!IMapContainer}
  */
-const getIMapContainer = () => {
+export const getIMapContainer = () => {
   assert(iMapContainer != null, 'IMapContainer instance is not defined! Use setIMapContainer to set the instance.');
   return iMapContainer;
 };
@@ -26,7 +26,7 @@ const getIMapContainer = () => {
  * Set the global IMapContainer instance.
  * @param {IMapContainer} value The instance.
  */
-const setIMapContainer = (value) => {
+export const setIMapContainer = (value) => {
   iMapContainer = value;
 };
 
@@ -40,7 +40,7 @@ let mapContainer = null;
  * Get the global MapContainer instance.
  * @return {!MapContainer}
  */
-const getMapContainer = () => {
+export const getMapContainer = () => {
   assert(mapContainer != null, 'MapContainer instance is not defined! Use setMapContainer to set the instance.');
   return mapContainer;
 };
@@ -49,13 +49,6 @@ const getMapContainer = () => {
  * Set the global MapContainer instance.
  * @param {MapContainer} value The instance.
  */
-const setMapContainer = (value) => {
+export const setMapContainer = (value) => {
   mapContainer = value;
-};
-
-exports = {
-  getIMapContainer,
-  setIMapContainer,
-  getMapContainer,
-  setMapContainer
 };

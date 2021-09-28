@@ -1,33 +1,34 @@
-goog.module('os.data.DrawingLayerNode');
+goog.declareModuleId('os.data.DrawingLayerNode');
+
+import {registerClass} from '../classregistry.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import * as fn from '../fn/fn.js';
+import {getAreaManager} from '../query/queryinstance.js';
+import TriState from '../structs/tristate.js';
+import osUiQueryAreaNode from '../ui/query/areanode.js';
+import AreaNode from './areanode.js';
+import {NodeClass} from './data.js';
+import DrawingFeatureNode from './drawingfeaturenode.js';
+import LayerNode from './layernode.js';
+import RecordField from './recordfield.js';
 
 const Delay = goog.require('goog.async.Delay');
 const GoogEventType = goog.require('goog.events.EventType');
 const googString = goog.require('goog.string');
 const events = goog.require('ol.events');
 const VectorEventType = goog.require('ol.source.VectorEventType');
-const {registerClass} = goog.require('os.classRegistry');
-const {NodeClass} = goog.require('os.data');
-const AreaNode = goog.require('os.data.AreaNode');
-const DrawingFeatureNode = goog.require('os.data.DrawingFeatureNode');
-const LayerNode = goog.require('os.data.LayerNode');
-const RecordField = goog.require('os.data.RecordField');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const fn = goog.require('os.fn');
-const {getAreaManager} = goog.require('os.query.instance');
-const TriState = goog.require('os.structs.TriState');
-const {default: osUiQueryAreaNode} = goog.require('os.ui.query.AreaNode');
 
 const Feature = goog.requireType('ol.Feature');
 const EventTarget = goog.requireType('ol.events.EventTarget');
 const OLVectorSource = goog.requireType('ol.source.Vector');
-const VectorLayer = goog.requireType('os.layer.Vector');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
  */
-class DrawingLayerNode extends LayerNode {
+export default class DrawingLayerNode extends LayerNode {
   /**
    * Constructor.
    */
@@ -279,6 +280,5 @@ class DrawingLayerNode extends LayerNode {
     return !node;
   }
 }
-registerClass(NodeClass.DRAW_FEATURE, DrawingLayerNode);
 
-exports = DrawingLayerNode;
+registerClass(NodeClass.DRAW_FEATURE, DrawingLayerNode);

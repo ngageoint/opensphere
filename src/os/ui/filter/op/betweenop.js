@@ -1,9 +1,9 @@
 goog.declareModuleId('os.ui.filter.op.Between');
 
+import DataType from '../../../xsd.js';
 import {directiveTag} from '../between.js';
 import FilterPatterns from '../filterpatterns.js';
 import Op from './op.js';
-const DataType = goog.require('os.xsd.DataType');
 
 
 /**

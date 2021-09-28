@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.layer.EllipseOptionsUI');
 
+import VectorLayerShowEllipsoids from '../../command/vectorlayershowellipsoidscmd.js';
+import VectorLayerShowGroundReference from '../../command/vectorlayershowgroundreferencecmd.js';
 import {ROOT} from '../../os.js';
+import StyleField from '../../style/stylefield.js';
+import StyleManager from '../../style/stylemanager_shim.js';
 import Module from '../module.js';
 import AbstractLayerUICtrl from './abstractlayerui.js';
-const VectorLayerShowEllipsoids = goog.require('os.command.VectorLayerShowEllipsoids');
-const VectorLayerShowGroundReference = goog.require('os.command.VectorLayerShowGroundReference');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**

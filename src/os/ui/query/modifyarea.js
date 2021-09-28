@@ -1,8 +1,20 @@
 goog.declareModuleId('os.ui.query.ModifyAreaUI');
 
 import '../util/validationmessage.js';
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import CommandProcessor from '../../command/commandprocessor.js';
+import RecordField from '../../data/recordfield.js';
 import {getSource} from '../../feature/feature.js';
+import * as osJsts from '../../geo/jsts.js';
+import osImplements from '../../implements.js';
+import {ModifyEventType} from '../../interaction/interaction.js';
+import Modify from '../../interaction/modifyinteraction.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import * as osOlFeature from '../../ol/feature.js';
 import {ROOT} from '../../os.js';
+import {getAreaManager} from '../../query/queryinstance.js';
+import IModifiableSource from '../../source/imodifiablesource.js';
 import {PREVIEW_CONFIG} from '../../style/style.js';
 import Controls from '../help/controls.js';
 import Module from '../module.js';
@@ -18,22 +30,10 @@ const KeyCodes = goog.require('goog.events.KeyCodes');
 const log = goog.require('goog.log');
 const Feature = goog.require('ol.Feature');
 const {listen} = goog.require('ol.events');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const RecordField = goog.require('os.data.RecordField');
-const osJsts = goog.require('os.geo.jsts');
-const osImplements = goog.require('os.implements');
-const {ModifyEventType} = goog.require('os.interaction');
-const Modify = goog.require('os.interaction.Modify');
-const {getMapContainer} = goog.require('os.map.instance');
-const osOlFeature = goog.require('os.ol.feature');
-const {getAreaManager} = goog.require('os.query.instance');
-const IModifiableSource = goog.require('os.source.IModifiableSource');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Vector = goog.requireType('ol.layer.Vector');
-const PayloadEvent = goog.requireType('os.events.PayloadEvent');
+const {default: PayloadEvent} = goog.requireType('os.events.PayloadEvent');
 
 
 /**

@@ -1,12 +1,12 @@
-goog.module('os.metrics.ServersMetrics');
+goog.declareModuleId('os.metrics.ServersMetrics');
 
-const {Servers} = goog.require('os.metrics.keys');
-const {default: MetricsPlugin} = goog.require('os.ui.metrics.MetricsPlugin');
+import MetricsPlugin from '../ui/metrics/metricsplugin.js';
+import {Servers} from './metricskeys.js';
 
 
 /**
  */
-class ServersMetrics extends MetricsPlugin {
+export default class ServersMetrics extends MetricsPlugin {
   /**
    * Constructor.
    */
@@ -46,5 +46,3 @@ class ServersMetrics extends MetricsPlugin {
     });
   }
 }
-
-exports = ServersMetrics;

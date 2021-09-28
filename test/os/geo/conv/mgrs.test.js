@@ -2,7 +2,7 @@ goog.require('os.geo.conv.MGRS');
 
 
 describe('os.geo.conv.MGRS', function() {
-  const MGRS = goog.module.get('os.geo.conv.MGRS');
+  const {default: MGRS} = goog.module.get('os.geo.conv.MGRS');
 
   // this tests the value causing THIN-2365
   xit('should not encounter rounding errors in coordinate conversion', function() {

@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.buffer.BufferDialogUI');
 
 import './bufferform.js';
+import {ICON, createFromConfig, getBaseConfig} from '../../buffer/buffer.js';
 import {getSource} from '../../feature/feature.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import * as osWindow from '../window.js';
 import WindowEventType from '../windoweventtype.js';
-const {ICON, createFromConfig, getBaseConfig} = goog.require('os.buffer');
 
 const {BufferConfig} = goog.requireType('os.buffer');
 

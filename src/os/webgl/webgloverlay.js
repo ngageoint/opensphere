@@ -1,17 +1,18 @@
-goog.module('os.webgl.WebGLOverlay');
+goog.declareModuleId('os.webgl.WebGLOverlay');
+
+import * as osMap from '../map/map.js';
+import MapChange from '../map/mapchange.js';
+import {getMapContainer} from '../map/mapinstance.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const Overlay = goog.require('ol.Overlay');
 const olProj = goog.require('ol.proj');
-const MapChange = goog.require('os.MapChange');
-const osMap = goog.require('os.map');
-const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
  * An OpenLayers overlay that supports positioning itself with a WebGL renderer.
  */
-class WebGLOverlay extends Overlay {
+export default class WebGLOverlay extends Overlay {
   /**
    * Constructor.
    * @param {olx.OverlayOptions} options Overlay options.
@@ -144,5 +145,3 @@ class WebGLOverlay extends Overlay {
     super.updatePixelPosition();
   }
 }
-
-exports = WebGLOverlay;

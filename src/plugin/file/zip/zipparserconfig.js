@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.zip.ZIPParserConfig');
 
-const FileParserConfig = goog.require('os.parse.FileParserConfig');
+import FileParserConfig from '../../../os/parse/fileparserconfig.js';
 
 
 /**

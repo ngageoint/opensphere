@@ -1,9 +1,9 @@
-goog.module('os.geo.ParseConf');
+goog.declareModuleId('os.geo.ParseConf');
 
 /**
  * The parse config for os.geo.
  */
-class ParseConf {
+export default class ParseConf {
   /**
    * Constructor.
    * @param {RegExp} regex The regular expression for parsing.
@@ -23,5 +23,3 @@ class ParseConf {
     this.coords = coords;
   }
 }
-
-exports = ParseConf;

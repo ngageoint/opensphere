@@ -4,7 +4,7 @@ import {FILTER_KEY_DELIMITER} from '../../filter/filter.js';
 import SlickTreeNode from '../../slick/slicktreenode.js';
 import {directiveTag as nodeUi} from './columnmappingnodeui.js';
 
-const IColumnMapping = goog.requireType('os.column.IColumnMapping');
+const {default: IColumnMapping} = goog.requireType('os.column.IColumnMapping');
 
 
 /**

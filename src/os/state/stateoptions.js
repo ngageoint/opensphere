@@ -1,13 +1,13 @@
-goog.module('os.state.StateOptions');
+goog.declareModuleId('os.state.StateOptions');
 
-const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
-const IState = goog.requireType('os.state.IState');
+const {default: IPersistenceMethod} = goog.requireType('os.ex.IPersistenceMethod');
+const {default: IState} = goog.requireType('os.state.IState');
 
 
 /**
  * Options for saving and loading state files.
  */
-class StateOptions {
+export default class StateOptions {
   /**
    * Constructor.
    * @param {string} title The state title
@@ -50,5 +50,3 @@ class StateOptions {
     this.title = title;
   }
 }
-
-exports = StateOptions;

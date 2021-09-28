@@ -1,12 +1,13 @@
-goog.module('os.parse.RssParser');
+goog.declareModuleId('os.parse.RssParser');
+
+import {getText} from '../../file/mime/text.js';
+import {getElementValueOrDefault} from '../../xml.js';
+import AsyncParser from '../asyncparser.js';
 
 const {getChildren} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');
-const {getText} = goog.require('os.file.mime.text');
-const AsyncParser = goog.require('os.parse.AsyncParser');
-const {getElementValueOrDefault} = goog.require('os.xml');
 
-const IParser = goog.requireType('os.parse.IParser');
+const {default: IParser} = goog.requireType('os.parse.IParser');
 
 
 /**
@@ -15,7 +16,7 @@ const IParser = goog.requireType('os.parse.IParser');
  * @implements {IParser<T>}
  * @template T
  */
-class RssParser extends AsyncParser {
+export default class RssParser extends AsyncParser {
   /**
    * Constructor.
    */
@@ -114,5 +115,3 @@ class RssParser extends AsyncParser {
     return result;
   }
 }
-
-exports = RssParser;

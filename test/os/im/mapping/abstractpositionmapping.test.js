@@ -1,7 +1,7 @@
 goog.require('os.im.mapping.AbstractPositionMapping');
 
 describe('os.im.mapping.AbstractPositionMapping', function() {
-  const AbstractPositionMapping = goog.module.get('os.im.mapping.AbstractPositionMapping');
+  const {default: AbstractPositionMapping} = goog.module.get('os.im.mapping.AbstractPositionMapping');
 
   var apm = new AbstractPositionMapping();
 

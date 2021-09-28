@@ -1,8 +1,7 @@
 goog.declareModuleId('os.ui.slick.LoadingNode');
 
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
 import SlickTreeNode from './slicktreenode.js';
-
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 
 
 /**

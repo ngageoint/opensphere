@@ -1,9 +1,9 @@
 goog.declareModuleId('os.ui.feature.SimplePropertiesUI');
 
+import OsSettings from '../../config/settings.js';
 import * as OsFeature from '../../feature/feature.js';
 import OsModule from '../module.js';
 import {directiveTag as cellUi} from './featureinfocell.js';
-const OsSettings = goog.require('os.config.Settings');
 
 const Feature = goog.requireType('ol.Feature');
 

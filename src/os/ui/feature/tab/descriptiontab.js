@@ -1,13 +1,13 @@
 goog.declareModuleId('os.ui.feature.tab.DescriptionTabUI');
 
+import RecordField from '../../../data/recordfield.js';
+import {DESC_REGEXP} from '../../../fields/index.js';
 import {ROOT} from '../../../os.js';
 import Module from '../../module.js';
 import AbstractFeatureTabCtrl from './abstractfeaturetabctrl.js';
 
 const {findValue} = goog.require('goog.object');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const RecordField = goog.require('os.data.RecordField');
-const {DESC_REGEXP} = goog.require('os.fields');
 
 const Feature = goog.requireType('ol.Feature');
 

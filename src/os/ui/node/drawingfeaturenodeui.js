@@ -1,11 +1,10 @@
 goog.declareModuleId('os.ui.node.DrawingFeatureNodeUI');
 
+import {getMapContainer} from '../../map/mapinstance.js';
 import Module from '../module.js';
 import AbstractNodeUICtrl from '../slick/abstractnodeui.js';
 
-const {getMapContainer} = goog.require('os.map.instance');
-
-const DrawingFeatureNode = goog.requireType('os.data.DrawingFeatureNode');
+const {default: DrawingFeatureNode} = goog.requireType('os.data.DrawingFeatureNode');
 
 
 /**

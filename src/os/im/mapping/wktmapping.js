@@ -1,12 +1,13 @@
-goog.module('os.im.mapping.WKTMapping');
+goog.declareModuleId('os.im.mapping.WKTMapping');
+
+import * as osMap from '../../map/map.js';
+import {FORMAT} from '../../ol/wkt.js';
+import {EPSG4326} from '../../proj/proj.js';
+import AbstractPositionMapping from './abstractpositionmapping.js';
+import {getItemField} from './mapping.js';
+import MappingRegistry from './mappingregistry.js';
 
 const log = goog.require('goog.log');
-const {getItemField} = goog.require('os.im.mapping');
-const AbstractPositionMapping = goog.require('os.im.mapping.AbstractPositionMapping');
-const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
-const osMap = goog.require('os.map');
-const {FORMAT} = goog.require('os.ol.wkt');
-const {EPSG4326} = goog.require('os.proj');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -14,7 +15,7 @@ const Feature = goog.requireType('ol.Feature');
 /**
  * @extends {AbstractPositionMapping<Feature>}
  */
-class WKTMapping extends AbstractPositionMapping {
+export default class WKTMapping extends AbstractPositionMapping {
   /**
    * Constructor.
    */
@@ -162,5 +163,3 @@ WKTMapping.WKT_REGEX =
  * @const
  */
 WKTMapping.CENTER_REGEXP = /(center|centroid)/i;
-
-exports = WKTMapping;

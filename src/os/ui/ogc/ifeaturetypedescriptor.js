@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.ogc.IFeatureTypeDescriptor');
 
-const IFeatureType = goog.requireType('os.ogc.IFeatureType');
+const {default: IFeatureType} = goog.requireType('os.ogc.IFeatureType');
 
 
 /**

@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.xyz.XYZLayerConfig');
 
-const AbstractTileLayerConfig = goog.require('os.layer.config.AbstractTileLayerConfig');
-const osObject = goog.require('os.object');
-const XYZ = goog.require('os.ol.source.XYZ');
+import AbstractTileLayerConfig from '../../os/layer/config/abstracttilelayerconfig.js';
+import * as osObject from '../../os/object/object.js';
+import XYZ from '../../os/ol/source/xyzsource.js';
 
 
 /**

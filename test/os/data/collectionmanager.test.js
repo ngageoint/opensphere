@@ -3,7 +3,7 @@ goog.require('os.data.CollectionManager');
 
 describe('os.data.CollectionManager', function() {
   const GoogEventType = goog.module.get('goog.events.EventType');
-  const CollectionManager = goog.module.get('os.data.CollectionManager');
+  const {default: CollectionManager} = goog.module.get('os.data.CollectionManager');
 
   var cm = new CollectionManager();
 

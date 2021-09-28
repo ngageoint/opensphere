@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.file.method.ImportMethod');
 
+import EventType from '../../../events/eventtype.js';
 import ImportManager from '../../im/importmanager.js';
 import * as osWindow from '../../window.js';
 import {directiveTag as importUi} from '../importdialog.js';
 import UrlMethod from './urlmethod.js';
 
 const log = goog.require('goog.log');
-const EventType = goog.require('os.events.EventType');
 
 const Logger = goog.requireType('goog.log.Logger');
 

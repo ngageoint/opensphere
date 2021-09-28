@@ -1,8 +1,8 @@
-goog.module('os.net.FormEncFormatter');
+goog.declareModuleId('os.net.FormEncFormatter');
 
 const XhrIo = goog.require('goog.net.XhrIo');
 
-const IDataFormatter = goog.requireType('os.net.IDataFormatter');
+const {default: IDataFormatter} = goog.requireType('os.net.IDataFormatter');
 
 
 /**
@@ -14,7 +14,7 @@ const IDataFormatter = goog.requireType('os.net.IDataFormatter');
  *
  * @implements {IDataFormatter}
  */
-class FormEncFormatter {
+export default class FormEncFormatter {
   /**
    * Constructor.
    */
@@ -37,5 +37,3 @@ class FormEncFormatter {
     return q;
   }
 }
-
-exports = FormEncFormatter;

@@ -1,8 +1,10 @@
-goog.module('os.data.ZOrderEventType');
+goog.declareModuleId('os.data.ZOrderEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const ZOrderEventType = {
   UPDATE: 'zOrderUpdate'
 };
+
+export default ZOrderEventType;

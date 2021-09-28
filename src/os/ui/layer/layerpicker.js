@@ -1,18 +1,18 @@
 goog.declareModuleId('os.ui.layer.LayerPickerUI');
 
+import {toHexString} from '../../color.js';
+import BaseDescriptor from '../../data/basedescriptor.js';
+import DataManager from '../../data/datamanager.js';
+import IFilterable from '../../filter/ifilterable.js';
+import osImplements from '../../implements.js';
+import VectorLayer from '../../layer/vector.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import {escapeHtml} from '../ui.js';
 
 const {caseInsensitiveContains} = goog.require('goog.string');
-const {toHexString} = goog.require('os.color');
-const BaseDescriptor = goog.require('os.data.BaseDescriptor');
-const DataManager = goog.require('os.data.DataManager');
-const IFilterable = goog.require('os.filter.IFilterable');
-const osImplements = goog.require('os.implements');
-const VectorLayer = goog.require('os.layer.Vector');
 
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 
 
 /**

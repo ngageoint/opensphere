@@ -1,10 +1,9 @@
 goog.declareModuleId('os.ui.timeline.TileAxis');
 
+import * as time from '../../time/time.js';
+import TimelineController from '../../time/timelinecontroller.js';
 import BaseItem from './baseitem.js';
 import * as timeline from './timeline.js';
-
-const time = goog.require('os.time');
-const TimelineController = goog.require('os.time.TimelineController');
 
 const {default: ITimelineItem} = goog.requireType('os.ui.timeline.ITimelineItem');
 

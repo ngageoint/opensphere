@@ -1,23 +1,23 @@
-goog.module('os.layer.Drawing');
+goog.declareModuleId('os.layer.Drawing');
 
-goog.require('os.mixin.layerbase');
+import '../mixin/layerbasemixin.js';
+import EventType from '../action/eventtype.js';
+import DrawingLayerNode from '../data/drawinglayernode.js';
+import * as dispatcher from '../dispatcher.js';
+import instanceOf from '../instanceof.js';
+import LayerId from './layerid.js';
+import VectorLayer from './vector.js';
 
 const Feature = goog.require('ol.Feature');
-const dispatcher = goog.require('os.Dispatcher');
-const EventType = goog.require('os.action.EventType');
-const DrawingLayerNode = goog.require('os.data.DrawingLayerNode');
-const instanceOf = goog.require('os.instanceOf');
-const LayerId = goog.require('os.layer.LayerId');
-const VectorLayer = goog.require('os.layer.Vector');
 
-const ITreeNodeSupplier = goog.requireType('os.structs.ITreeNodeSupplier');
+const {default: ITreeNodeSupplier} = goog.requireType('os.structs.ITreeNodeSupplier');
 const {default: ActionEvent} = goog.requireType('os.ui.action.ActionEvent');
 
 
 /**
  * @implements {ITreeNodeSupplier}
  */
-class Drawing extends VectorLayer {
+export default class Drawing extends VectorLayer {
   /**
    * Constructor.
    * @param {olx.layer.VectorOptions} options Vector layer options
@@ -65,5 +65,3 @@ class Drawing extends VectorLayer {
  * @const
  */
 Drawing.ID = LayerId.DRAW;
-
-exports = Drawing;

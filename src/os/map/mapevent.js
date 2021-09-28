@@ -1,10 +1,10 @@
-goog.module('os.MapEvent');
+goog.declareModuleId('os.MapEvent');
 
 /**
  * OpenSphere map events.
  * @enum {string}
  */
-exports = {
+const MapEvent = {
   GL_REPAINT: 'map:glRepaint',
   MAP_READY: 'map:ready',
   RENDER: 'map:render',
@@ -12,3 +12,5 @@ exports = {
   VIEW_CHANGE: 'map:viewChange',
   TERRAIN_DISABLED: 'map:terrainDisabled'
 };
+
+export default MapEvent;

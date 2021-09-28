@@ -1,8 +1,14 @@
 goog.declareModuleId('os.ui.layer.compare.LayerCompareUI');
 
 import * as capture from '../../../capture/capture.js';
+import osImplements from '../../../implements.js';
+import instanceOf from '../../../instanceof.js';
+import ILayer from '../../../layer/ilayer.js';
 import * as osMap from '../../../map/map.js';
+import {getMapContainer} from '../../../map/mapinstance.js';
+import {getMaxFeatures} from '../../../ogc/ogc.js';
 import {ROOT} from '../../../os.js';
+import SourceClass from '../../../source/sourceclass.js';
 import Module from '../../module.js';
 import {resize, removeResize} from '../../ui.js';
 import {bringToFront, close as closeWindow, create as createWindow, getById as getWindowById} from '../../window.js';
@@ -20,18 +26,11 @@ const RotateControl = goog.require('ol.control.Rotate');
 const ZoomControl = goog.require('ol.control.Zoom');
 const {getCenter: getExtentCenter} = goog.require('ol.extent');
 
-const osImplements = goog.require('os.implements');
-const instanceOf = goog.require('os.instanceOf');
-const ILayer = goog.require('os.layer.ILayer');
-const {getMapContainer} = goog.require('os.map.instance');
-const {getMaxFeatures} = goog.require('os.ogc');
-const SourceClass = goog.require('os.source.SourceClass');
-
 const EventKey = goog.requireType('goog.events.Key');
 const Control = goog.requireType('ol.control.Control');
 const Layer = goog.requireType('ol.layer.Layer');
-const ISource = goog.requireType('os.source.ISource');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: ISource} = goog.requireType('os.source.ISource');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**

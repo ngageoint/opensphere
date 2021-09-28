@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.ogc.query.OGCSpatialFormatter');
 
-const interpolate = goog.require('os.interpolate');
-const OSOGCSpatialFormatter = goog.require('os.ogc.filter.OGCSpatialFormatter');
+import * as interpolate from '../../../os/interpolate.js';
+import OSOGCSpatialFormatter from '../../../os/ogc/filter/ogcspatialformatter.js';
 
 const Geometry = goog.requireType('ol.geom.Geometry');
 

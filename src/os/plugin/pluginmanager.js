@@ -1,19 +1,20 @@
-goog.module('os.plugin.PluginManager');
+goog.declareModuleId('os.plugin.PluginManager');
+
+import Settings from '../config/settings.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
-const Settings = goog.require('os.config.Settings');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
-const IPlugin = goog.requireType('os.plugin.IPlugin');
+const {default: IPlugin} = goog.requireType('os.plugin.IPlugin');
 
 
 /**
  * The plugin manager helps initialize a group of plugins.
  */
-class PluginManager extends EventTarget {
+export default class PluginManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -286,5 +287,3 @@ const logger = log.getLogger('os.plugin.PluginManager');
  * @const
  */
 PluginManager.INIT_TIMEOUT = 10 * 1000;
-
-exports = PluginManager;

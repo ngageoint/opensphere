@@ -1,4 +1,4 @@
-goog.module('os.ol.mixin.Disposable');
+goog.declareModuleId('os.ol.mixin.Disposable');
 
 const Disposable = goog.require('ol.Disposable');
 

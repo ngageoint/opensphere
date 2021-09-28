@@ -1,8 +1,8 @@
-goog.module('os.query.TemporalFormatter');
+goog.declareModuleId('os.query.TemporalFormatter');
 
-const {format, momentFormat} = goog.require('os.time');
+import {format, momentFormat} from '../time/time.js';
 
-const ITemporalFormatter = goog.requireType('os.query.ITemporalFormatter');
+const {default: ITemporalFormatter} = goog.requireType('os.query.ITemporalFormatter');
 
 
 /**
@@ -10,7 +10,7 @@ const ITemporalFormatter = goog.requireType('os.query.ITemporalFormatter');
  *
  * @implements {ITemporalFormatter}
  */
-class TemporalFormatter {
+export default class TemporalFormatter {
   /**
    * Constructor.
    */
@@ -65,5 +65,3 @@ class TemporalFormatter {
     return start + '/' + end;
   }
 }
-
-exports = TemporalFormatter;

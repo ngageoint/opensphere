@@ -1,6 +1,13 @@
 goog.declareModuleId('os.ui.menu.timeline');
 
+import DataManager from '../../data/datamanager.js';
 import {flyTo} from '../../feature/feature.js';
+import Metrics from '../../metrics/metrics.js';
+import {Timeline as TimelineKeys} from '../../metrics/metricskeys.js';
+import VectorSource from '../../source/vectorsource.js';
+import TimelineActionEventType from '../../time/timelineactioneventtype.js';
+import TimelineController from '../../time/timelinecontroller.js';
+import TimeRange from '../../time/timerange.js';
 import launchMultiFeatureInfo from '../feature/launchmultifeatureinfo.js';
 import * as layerMenu from './layermenu.js';
 import Menu from './menu.js';
@@ -9,13 +16,6 @@ import MenuItemType from './menuitemtype.js';
 
 const {assert} = goog.require('goog.asserts');
 const Range = goog.require('goog.math.Range');
-const DataManager = goog.require('os.data.DataManager');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Timeline: TimelineKeys} = goog.require('os.metrics.keys');
-const VectorSource = goog.require('os.source.Vector');
-const TimeRange = goog.require('os.time.TimeRange');
-const TimelineActionEventType = goog.require('os.time.TimelineActionEventType');
-const TimelineController = goog.require('os.time.TimelineController');
 
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const TimelineUI = goog.requireType('os.ui.timeline.TimelineUI');

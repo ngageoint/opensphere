@@ -1,10 +1,10 @@
-goog.module('os.command.FeatureIcon');
+goog.declareModuleId('os.command.FeatureIcon');
 
-const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const osStyle = goog.require('os.style');
-const kml = goog.require('os.ui.file.kml');
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
+import * as osStyle from '../../style/style.js';
+import * as kml from '../../ui/file/kml/kml.js';
+import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -12,7 +12,7 @@ const Feature = goog.requireType('ol.Feature');
 /**
  * Configure a feature to display an icon.
  */
-class FeatureIcon extends AbstractFeatureStyle {
+export default class FeatureIcon extends AbstractFeatureStyle {
   /**
    * Constructor.
    * @param {string} layerId The layer id.
@@ -67,5 +67,3 @@ class FeatureIcon extends AbstractFeatureStyle {
     super.finish(configs);
   }
 }
-
-exports = FeatureIcon;

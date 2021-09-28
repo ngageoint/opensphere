@@ -1,11 +1,10 @@
 goog.declareModuleId('plugin.cesium.interaction.measure');
 
+import DrawPolygon from '../../../os/interaction/drawpolygoninteraction.js';
+import Measure from '../../../os/interaction/measureinteraction.js';
+import MapContainer from '../../../os/mapcontainer.js';
 import {getFont} from '../../../os/style/label.js';
 import * as drawpolygon from './cesiumdrawpolygoninteraction.js';
-
-const MapContainer = goog.require('os.MapContainer');
-const DrawPolygon = goog.require('os.interaction.DrawPolygon');
-const Measure = goog.require('os.interaction.Measure');
 
 const {default: CesiumRenderer} = goog.requireType('plugin.cesium.CesiumRenderer');
 

@@ -1,11 +1,11 @@
-goog.module('os.im.mapping.time.TimeMapping');
+goog.declareModuleId('os.im.mapping.time.TimeMapping');
 
-const {setItemField} = goog.require('os.im.mapping');
-const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
-const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
-const osTime = goog.require('os.time');
+import * as osTime from '../../../time/time.js';
+import {setItemField} from '../mapping.js';
+import MappingRegistry from '../mappingregistry.js';
+import DateTimeMapping from './datetimemapping.js';
 
-const TimeType = goog.requireType('os.im.mapping.TimeType');
+const {default: TimeType} = goog.requireType('os.im.mapping.TimeType');
 
 
 /**
@@ -14,7 +14,7 @@ const TimeType = goog.requireType('os.im.mapping.TimeType');
  * @extends {DateTimeMapping<T>}
  * @template T
  */
-class TimeMapping extends DateTimeMapping {
+export default class TimeMapping extends DateTimeMapping {
   /**
    * Constructor.
    * @param {TimeType} type The type of time mapping.
@@ -66,5 +66,3 @@ TimeMapping.ID = 'Time';
 
 // Register the mapping.
 MappingRegistry.getInstance().registerMapping(TimeMapping.ID, TimeMapping);
-
-exports = TimeMapping;

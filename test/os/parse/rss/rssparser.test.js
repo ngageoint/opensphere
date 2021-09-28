@@ -5,7 +5,7 @@ goog.require('os.parse.RssParser');
 describe('os.parse.RssParser', function() {
   const EventType = goog.module.get('goog.net.EventType');
   const XhrIo = goog.module.get('goog.net.XhrIo');
-  const RssParser = goog.module.get('os.parse.RssParser');
+  const {default: RssParser} = goog.module.get('os.parse.RssParser');
 
   var dataUrl = '/base/test/os/parse/rss/rsstest.xml';
   var rss = new RssParser();

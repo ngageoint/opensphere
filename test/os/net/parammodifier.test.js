@@ -3,7 +3,7 @@ goog.require('os.net.ParamModifier');
 
 describe('os.net.ParamModifier', function() {
   const Uri = goog.module.get('goog.Uri');
-  const ParamModifier = goog.module.get('os.net.ParamModifier');
+  const {default: ParamModifier} = goog.module.get('os.net.ParamModifier');
 
   var replaceParam = 'testParam';
   var replaceTerm = 'dumb';

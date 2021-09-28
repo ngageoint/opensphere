@@ -1,6 +1,11 @@
 goog.declareModuleId('os.ui.im.action.FilterActionsCtrl');
 
+import CommandProcessor from '../../../command/commandprocessor.js';
 import * as dispatcher from '../../../dispatcher.js';
+import {Metrics as ActionMetrics} from '../../../im/action/importaction.js';
+import ImportActionEventType from '../../../im/action/importactioneventtype.js';
+import ImportActionManager from '../../../im/action/importactionmanager.js';
+import Metrics from '../../../metrics/metrics.js';
 import TagGroupBy from '../../data/groupby/taggroupby.js';
 import AbstractGroupByTreeSearchCtrl from '../../slick/abstractgroupbytreesearchctrl.js';
 import SlickGridEvent from '../../slick/slickgridevent.js';
@@ -13,11 +18,6 @@ import FilterActionNode from './filteractionnode.js';
 import FilterActionTreeSearch from './filteractiontreesearch.js';
 
 const googArray = goog.require('goog.array');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const {Metrics: ActionMetrics} = goog.require('os.im.action');
-const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const Metrics = goog.require('os.metrics.Metrics');
 
 
 /**

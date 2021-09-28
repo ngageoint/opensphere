@@ -3,18 +3,19 @@
  * with manipulating appropriate namespaces.  Namespaces are prefixes applied to settings keys to keep them organized
  * and make them available to either an individual app or common to all apps.
  */
-goog.module('os.config.namespace');
+goog.declareModuleId('os.config.namespace');
+
+import * as osObject from '../object/object.js';
+import * as osConfig from './config.js';
 
 const googArray = goog.require('goog.array');
 const googObject = goog.require('goog.object');
-const osConfig = goog.require('os.config');
-const osObject = goog.require('os.object');
 
 
 /**
  * Mapping of settings keys to migrate to os. {Array.<string>}
  */
-const CORE_KEYS = [
+export const CORE_KEYS = [
   'consent',
   'areas',
   'filters',
@@ -34,7 +35,7 @@ const CORE_KEYS = [
  * E.G.: 'app.storage.writeType'
  * @type {!Array<!string>}
  */
-const keysToDelete = [];
+export const keysToDelete = [];
 
 /**
  * Keys that should be removed from storage if they're ever encountered.  This could be because they're no longer used
@@ -49,7 +50,7 @@ let obsoleteKeys_ = null;
  *
  * @return {!Array.<!string>}
  */
-const getObsoleteKeys = function() {
+export const getObsoleteKeys = function() {
   if (!obsoleteKeys_) {
     obsoleteKeys_ = [
       // This is left here as an example
@@ -63,7 +64,7 @@ const getObsoleteKeys = function() {
 /**
  * Clear obsolete keys
  */
-const clearObsoleteKeys = function() {
+export const clearObsoleteKeys = function() {
   getObsoleteKeys().length = 0;
 };
 
@@ -75,7 +76,7 @@ const clearObsoleteKeys = function() {
  * @param {Object} obj
  * @return {Object}
  */
-const removeObsoleteKeys = function(obj) {
+export const removeObsoleteKeys = function(obj) {
   if (obj) {
     var keys = getObsoleteKeys();
     var reduced = /** @type {!Object.<string, *>} */ (osObject.reduce(obj));
@@ -98,7 +99,7 @@ const removeObsoleteKeys = function(obj) {
  * @param {Object.<string, *>} config
  * @return {Object.<string, *>}
  */
-const addNamespaces = function(config) {
+export const addNamespaces = function(config) {
   var reduced = osObject.reduce(config);
 
   var namespaced = {};
@@ -116,7 +117,7 @@ const addNamespaces = function(config) {
  * @param {Object.<string, *>} config
  * @return {Object.<string, *>}
  */
-const removeNamespaces = function(config) {
+export const removeNamespaces = function(config) {
   var reduced = osObject.reduce(config);
 
   var startsWithNsRegex = new RegExp('^(' + osConfig.coreNs + '|' + osConfig.appNs + ')\\.');
@@ -135,7 +136,7 @@ const removeNamespaces = function(config) {
  * @param {string} key
  * @return {string}
  */
-const getPrefixedKey = function(key) {
+export const getPrefixedKey = function(key) {
   return [isCoreKey(key) ? osConfig.coreNs : osConfig.appNs, key].join('.');
 };
 
@@ -145,7 +146,7 @@ const getPrefixedKey = function(key) {
  * @param {Array.<string|number>} keys
  * @return {!Array.<string>}
  */
-const getPrefixedKeys = function(keys) {
+export const getPrefixedKeys = function(keys) {
   var namespaced;
   if (keys && keys.length > 0) {
     var reduced = keys.join('.');
@@ -162,19 +163,6 @@ const getPrefixedKeys = function(keys) {
  * @param {!string} key
  * @return {boolean}
  */
-const isCoreKey = function(key) {
+export const isCoreKey = function(key) {
   return CORE_KEYS.some((ck) => ck && ck.startsWith(key));
-};
-
-exports = {
-  CORE_KEYS,
-  keysToDelete,
-  getObsoleteKeys,
-  clearObsoleteKeys,
-  removeObsoleteKeys,
-  addNamespaces,
-  removeNamespaces,
-  getPrefixedKey,
-  getPrefixedKeys,
-  isCoreKey
 };

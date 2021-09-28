@@ -1,5 +1,8 @@
 goog.declareModuleId('plugin.file.kml.ui');
 
+import EventType from '../../../../os/action/eventtype.js';
+import CommandProcessor from '../../../../os/command/commandprocessor.js';
+import SequenceCommand from '../../../../os/command/sequencecommand.js';
 import * as dispatcher from '../../../../os/dispatcher.js';
 import * as osFeature from '../../../../os/feature/feature.js';
 import {Controller as FeatureEditCtrl} from '../../../../os/ui/featureedit.js';
@@ -12,9 +15,6 @@ import KMLField from '../kmlfield.js';
 const GoogEvent = goog.require('goog.events.Event');
 const googString = goog.require('goog.string');
 const ol = goog.require('ol');
-const EventType = goog.require('os.action.EventType');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
 
 const {default: KMLLayer} = goog.requireType('plugin.file.kml.KMLLayer');
 const {default: KMLSource} = goog.requireType('plugin.file.kml.KMLSource');

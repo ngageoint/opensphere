@@ -1,11 +1,12 @@
-goog.module('os.structs.TreeNode');
+goog.declareModuleId('os.structs.TreeNode');
+
+import ISearchable from '../data/isearchable.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import osImplements from '../implements.js';
+import ITreeNode from './itreenode.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
-const ISearchable = goog.require('os.data.ISearchable');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osImplements = goog.require('os.implements');
-const ITreeNode = goog.require('os.structs.ITreeNode');
 
 
 /**
@@ -14,7 +15,7 @@ const ITreeNode = goog.require('os.structs.ITreeNode');
  * @implements {ITreeNode}
  * @unrestricted
  */
-class TreeNode extends EventTarget {
+export default class TreeNode extends EventTarget {
   /**
    * Constructor.
    */
@@ -409,6 +410,7 @@ class TreeNode extends EventTarget {
     }
   }
 }
+
 osImplements(TreeNode, ISearchable.ID);
 osImplements(TreeNode, ITreeNode.ID);
 
@@ -417,5 +419,3 @@ osImplements(TreeNode, ITreeNode.ID);
  * @type {number}
  */
 let nodeId = 0;
-
-exports = TreeNode;

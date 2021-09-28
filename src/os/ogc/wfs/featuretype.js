@@ -1,16 +1,17 @@
-goog.module('os.ogc.wfs.FeatureType');
+goog.declareModuleId('os.ogc.wfs.FeatureType');
+
+import {registerClass} from '../../classregistry.js';
+import IFeatureType from '../ifeaturetype.js';// eslint-disable-line
 
 const {numerateCompare} = goog.require('goog.string');
-const {registerClass} = goog.require('os.classRegistry');
-const IFeatureType = goog.require('os.ogc.IFeatureType'); // eslint-disable-line
 
-const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
+const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
 
 
 /**
  * @implements {IFeatureType}
  */
-class FeatureType {
+export default class FeatureType {
   /**
    * Constructor.
    * @param {string=} opt_typeName
@@ -432,5 +433,3 @@ FeatureType.SUPPORTED_GEOMETRY_TYPES = [
  * @const
  */
 FeatureType.IGNORED_FIELDS = ['ID'];
-
-exports = FeatureType;

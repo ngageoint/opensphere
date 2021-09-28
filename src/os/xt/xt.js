@@ -1,5 +1,4 @@
-goog.module('os.xt');
-
+goog.declareModuleId('os.xt');
 
 /**
  * Check whether the given peer is master.
@@ -9,7 +8,7 @@ goog.module('os.xt');
  * @param {!Storage} storage the storage to examine
  * @return {boolean} True if this peer is the master, false otherwise
  */
-const isMaster = (peerId, group, storage) => {
+export const isMaster = (peerId, group, storage) => {
   return storage.getItem(getMasterKey(group)) === peerId;
 };
 
@@ -17,7 +16,7 @@ const isMaster = (peerId, group, storage) => {
  * @param {string=} opt_group the peer group of interest; defaults to 'default'
  * @return {!string} the local storage key of the master peer ID for the given group
  */
-const getMasterKey = (opt_group) => {
+export const getMasterKey = (opt_group) => {
   var group = opt_group || 'default';
   return 'xt.' + group + '.master';
 };
@@ -27,7 +26,7 @@ const getMasterKey = (opt_group) => {
  * @param {!string} peerId the peer ID
  * @return {!string} the storage key for the ping value of the given group and peer ID
  */
-const getPingKey = (group, peerId) => {
+export const getPingKey = (group, peerId) => {
   return 'xt.' + group + '.' + peerId + '.ping';
 };
 
@@ -37,7 +36,7 @@ const getPingKey = (group, peerId) => {
  * @param {!Storage} storage the peer communication storage
  * @return {?number} the millisecond timestamp of the last ping for the given peer, or null if there is no ping value
  */
-const getLastPing = (group, peerId, storage) => {
+export const getLastPing = (group, peerId, storage) => {
   var pingItem = storage.getItem(getPingKey(group, peerId));
   if (!pingItem) {
     return null;
@@ -53,7 +52,7 @@ const getLastPing = (group, peerId, storage) => {
  * @param {!string} id The peer ID
  * @param {!Storage} storage
  */
-const cleanupPeer = (group, id, storage) => {
+export const cleanupPeer = (group, id, storage) => {
   var needle = ['xt', group, id].join('.');
   var keyCount = storage.length;
   for (var cursor = keyCount - 1; cursor >= 0; cursor--) {
@@ -75,15 +74,6 @@ const cleanupPeer = (group, id, storage) => {
  * @param {*} data
  * @return {!string}
  */
-const prepareSendData = (type, data) => {
+export const prepareSendData = (type, data) => {
   return JSON.stringify({'type': type, 'data': data, 'time': Date.now()});
-};
-
-exports = {
-  isMaster,
-  getMasterKey,
-  getPingKey,
-  getLastPing,
-  cleanupPeer,
-  prepareSendData
 };

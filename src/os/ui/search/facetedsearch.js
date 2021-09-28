@@ -1,5 +1,8 @@
 goog.declareModuleId('os.ui.search.FacetedSearchCtrl');
 
+import Settings from '../../config/settings.js';
+import SearchEventType from '../../search/searcheventtype.js';
+import TriState from '../../structs/tristate.js';
 import SlickTreeNode from '../slick/slicktreenode.js';
 import {apply} from '../ui.js';
 import FacetNode from './facetnode.js';
@@ -7,14 +10,11 @@ import FacetNode from './facetnode.js';
 const {defaultCompare, sortObjectsByKey} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const {caseInsensitiveCompare} = goog.require('goog.string');
-const Settings = goog.require('os.config.Settings');
-const SearchEventType = goog.require('os.search.SearchEventType');
-const TriState = goog.require('os.structs.TriState');
 
-const AppliedFacets = goog.requireType('os.search.AppliedFacets');
-const IFacetedSearch = goog.requireType('os.search.IFacetedSearch');
-const ISearchResult = goog.requireType('os.search.ISearchResult');
-const SearchEvent = goog.requireType('os.search.SearchEvent');
+const {default: AppliedFacets} = goog.requireType('os.search.AppliedFacets');
+const {default: IFacetedSearch} = goog.requireType('os.search.IFacetedSearch');
+const {default: ISearchResult} = goog.requireType('os.search.ISearchResult');
+const {default: SearchEvent} = goog.requireType('os.search.SearchEvent');
 
 
 /**

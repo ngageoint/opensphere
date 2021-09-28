@@ -1,10 +1,9 @@
 goog.declareModuleId('os.ui.FilterLayerGroupBy');
 
+import BaseFilterManager from '../filter/basefiltermanager.js';
+import Vector from '../layer/vector.js';
+import {getFilterManager} from '../query/queryinstance.js';
 import FilterGroupBy from './filter/ui/filtergroupby.js';
-
-const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
-const Vector = goog.require('os.layer.Vector');
-const {getFilterManager} = goog.require('os.query.instance');
 
 const {default: FilterNode} = goog.requireType('os.ui.filter.ui.FilterNode');
 

@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.file.UrlImportUI');
 
 import '../util/validationmessage.js';
+import EventType from '../../events/eventtype.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import {apply} from '../ui.js';
 import * as osWindow from '../window.js';
 import WindowEventType from '../windoweventtype.js';
-const EventType = goog.require('os.events.EventType');
 
 const {default: UrlMethod} = goog.requireType('os.ui.file.method.UrlMethod');
 

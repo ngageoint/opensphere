@@ -4,7 +4,7 @@ goog.require('os.mock');
 
 
 describe('os.data.BaseDescriptor', function() {
-  const BaseDescriptor = goog.module.get('os.data.BaseDescriptor');
+  const {default: BaseDescriptor} = goog.module.get('os.data.BaseDescriptor');
 
   it('should generate HTML', function() {
     var d = new BaseDescriptor();

@@ -1,4 +1,9 @@
-goog.module('os.control.MapMode');
+goog.declareModuleId('os.control.MapMode');
+
+import osActionEventType from '../action/eventtype.js';
+import * as dispatcher from '../dispatcher.js';
+import MapChange from '../map/mapchange.js';
+import {getMapContainer} from '../map/mapinstance.js';
 
 const dom = goog.require('goog.dom');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -6,17 +11,13 @@ const Control = goog.require('ol.control.Control');
 const css = goog.require('ol.css');
 const events = goog.require('ol.events');
 const EventType = goog.require('ol.events.EventType');
-const dispatcher = goog.require('os.Dispatcher');
-const MapChange = goog.require('os.MapChange');
-const osActionEventType = goog.require('os.action.EventType');
-const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
  * A button control to toggle between 2D and 3D views.
  * To style this control use css selector `.ol-mapmode`.
  */
-class MapMode extends Control {
+export default class MapMode extends Control {
   /**
    * Constructor.
    * @param {osx.control.MapModeOptions=} opt_options Map mode options.
@@ -135,5 +136,3 @@ class MapMode extends Control {
     }
   }
 }
-
-exports = MapMode;

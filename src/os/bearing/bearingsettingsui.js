@@ -1,13 +1,13 @@
-goog.module('os.bearing.BearingSettingsUI');
+goog.declareModuleId('os.bearing.BearingSettingsUI');
 
-const {ROOT} = goog.require('os');
-const BearingSettingsKeys = goog.require('os.bearing.BearingSettingsKeys');
-const BearingType = goog.require('os.bearing.BearingType');
-const Settings = goog.require('os.config.Settings');
-const osUi = goog.require('os.ui');
-const {default: Module} = goog.require('os.ui.Module');
+import Settings from '../config/settings.js';
+import {ROOT} from '../os.js';
+import Module from '../ui/module.js';
+import * as osUi from '../ui/ui.js';
+import BearingSettingsKeys from './bearingsettingskeys.js';
+import BearingType from './bearingtype.js';
 
-const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
 const {default: LocationFormat} = goog.requireType('os.ui.location.Format');
 
 
@@ -15,7 +15,7 @@ const {default: LocationFormat} = goog.requireType('os.ui.location.Format');
  * The bearing settings directive
  * @return {angular.Directive}
  */
-const directive = function() {
+export const directive = function() {
   return {
     restrict: 'AE',
     replace: true,
@@ -25,12 +25,11 @@ const directive = function() {
   };
 };
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'bearing-setting';
+export const directiveTag = 'bearing-setting';
 
 
 /**
@@ -44,7 +43,7 @@ Module.directive('bearingSetting', [directive]);
  * Controller for bearing settings
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {angular.Scope} $scope
@@ -110,9 +109,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  directive,
-  directiveTag,
-  Controller
-};

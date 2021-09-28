@@ -1,26 +1,26 @@
-goog.module('os.file.persist');
+goog.declareModuleId('os.file.persist');
+
+import {BYTE_ORDER_MARKER} from '../../arraybuf.js';
+import * as dispatcher from '../../dispatcher.js';
+import {SHARED_DB_VERSION} from '../../os.js';
+import OSFile from '../file.js';
+import FileStorage from '../filestorage.js';
+import {getLocalUrl} from '../index.js';
 
 const GoogEvent = goog.require('goog.events.Event');
-const {SHARED_DB_VERSION} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const {BYTE_ORDER_MARKER} = goog.require('os.arraybuf');
-const {getLocalUrl} = goog.require('os.file');
-const OSFile = goog.require('os.file.File');
-const FileStorage = goog.require('os.file.FileStorage');
 
 
 /**
  * local file event
  * @type {string}
  */
-const SAVE_COMPLETE = 'local.file.save.complete';
-
+export const SAVE_COMPLETE = 'local.file.save.complete';
 
 /**
  * local file event
  * @type {string}
  */
-const SAVE_FAILED = 'local.file.save.fail';
+export const SAVE_FAILED = 'local.file.save.fail';
 
 /**
  * Static function to save a file, so it can be used without the persistence
@@ -30,7 +30,7 @@ const SAVE_FAILED = 'local.file.save.fail';
  * @param {string=} opt_mimeType The mime type of the content
  * @return {boolean} Whether or not the save action was successfull
  */
-const saveFile = function(fileName, content, opt_mimeType) {
+export const saveFile = function(fileName, content, opt_mimeType) {
   var type = opt_mimeType || 'text/plain;charset=utf-8';
 
   if (typeof (saveAs) != 'undefined') {
@@ -67,7 +67,7 @@ const saveFile = function(fileName, content, opt_mimeType) {
  * @param {string=} opt_dbStore The local db name to store in
  * @return {boolean} Whether or not the save action was successfull
  */
-const saveLocal = function(fileName, content, opt_mimeType, opt_dbStore) {
+export const saveLocal = function(fileName, content, opt_mimeType, opt_dbStore) {
   var type = opt_mimeType || 'text/plain;charset=utf-8';
   var file = new OSFile();
   file.setFileName(fileName);
@@ -102,11 +102,4 @@ const onFileError = (error) => {
     msg += ' ' + error;
   }
   dispatcher.getInstance().dispatchEvent(new GoogEvent(SAVE_FAILED, {'error': msg}));
-};
-
-exports = {
-  SAVE_COMPLETE,
-  SAVE_FAILED,
-  saveFile,
-  saveLocal
 };

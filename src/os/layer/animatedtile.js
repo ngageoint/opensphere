@@ -1,22 +1,23 @@
-goog.module('os.layer.AnimatedTile');
+goog.declareModuleId('os.layer.AnimatedTile');
+
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import IAnimationSupport from '../ianimationsupport.js';
+import osImplements from '../implements.js';
+import {getIMapContainer} from '../map/mapinstance.js';
+import Duration from '../time/duration.js';
+import * as osTime from '../time/time.js';
+import TimelineController from '../time/timelinecontroller.js';
+import TimelineEventType from '../time/timelineeventtype.js';
+import Icons from '../ui/icons.js';
+import IconsSVG from '../ui/iconssvg.js';
+import {launchScreenOverlay} from '../ui/screenoverlay.js';
+import * as osWindow from '../ui/window.js';
+import PropertyChange from './propertychange.js';
+import Tile from './tile.js';
 
 const Delay = goog.require('goog.async.Delay');
 const {hashCode} = goog.require('goog.string');
 const UrlTile = goog.require('ol.source.UrlTile');
-const IAnimationSupport = goog.require('os.IAnimationSupport');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osImplements = goog.require('os.implements');
-const PropertyChange = goog.require('os.layer.PropertyChange');
-const Tile = goog.require('os.layer.Tile');
-const {getIMapContainer} = goog.require('os.map.instance');
-const osTime = goog.require('os.time');
-const Duration = goog.require('os.time.Duration');
-const TimelineController = goog.require('os.time.TimelineController');
-const TimelineEventType = goog.require('os.time.TimelineEventType');
-const {default: Icons} = goog.require('os.ui.Icons');
-const {default: IconsSVG} = goog.require('os.ui.IconsSVG');
-const {launchScreenOverlay} = goog.require('os.ui.ScreenOverlayUI');
-const osWindow = goog.require('os.ui.window');
 
 const TileArcGISRest = goog.requireType('ol.source.TileArcGISRest');
 const TileWMS = goog.requireType('ol.source.TileWMS');
@@ -25,7 +26,7 @@ const TileWMS = goog.requireType('ol.source.TileWMS');
 /**
  * @implements {IAnimationSupport}
  */
-class AnimatedTile extends Tile {
+export default class AnimatedTile extends Tile {
   /**
    * Constructor.
    * @param {olx.layer.TileOptions} options Tile layer options
@@ -429,6 +430,5 @@ class AnimatedTile extends Tile {
     return null;
   }
 }
-osImplements(AnimatedTile, IAnimationSupport.ID);
 
-exports = AnimatedTile;
+osImplements(AnimatedTile, IAnimationSupport.ID);

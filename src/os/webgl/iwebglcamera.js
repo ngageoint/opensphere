@@ -1,6 +1,6 @@
-goog.module('os.webgl.IWebGLCamera');
+goog.declareModuleId('os.webgl.IWebGLCamera');
 
-const IPersistable = goog.requireType('os.IPersistable');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
 
 
 /**
@@ -9,7 +9,7 @@ const IPersistable = goog.requireType('os.IPersistable');
  * @extends {IPersistable<osx.map.CameraState>}
  * @interface
  */
-class IWebGLCamera {
+export default class IWebGLCamera {
   /**
    * Calculate the distance between the camera and center point based on the resolution and latitude value.
    * @param {number} resolution Number of map units per pixel.
@@ -138,5 +138,3 @@ class IWebGLCamera {
    */
   twistRight(opt_value) {}
 }
-
-exports = IWebGLCamera;

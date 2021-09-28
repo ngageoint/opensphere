@@ -1,9 +1,9 @@
-goog.module('os.command.FeatureLabelSize');
+goog.declareModuleId('os.command.FeatureLabelSize');
 
-const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const StyleField = goog.require('os.style.StyleField');
-const label = goog.require('os.style.label');
+import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
+import * as label from '../../style/label.js';
+import StyleField from '../../style/stylefield.js';
+import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -13,7 +13,7 @@ const Feature = goog.requireType('ol.Feature');
  *
  * @extends {AbstractFeatureStyle<number>}
  */
-class FeatureLabelSize extends AbstractFeatureStyle {
+export default class FeatureLabelSize extends AbstractFeatureStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -63,5 +63,3 @@ class FeatureLabelSize extends AbstractFeatureStyle {
     super.finish(config);
   }
 }
-
-exports = FeatureLabelSize;

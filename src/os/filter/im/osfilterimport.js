@@ -1,11 +1,11 @@
-goog.module('os.filter.im.OSFilterImport');
+goog.declareModuleId('os.filter.im.OSFilterImport');
 
-const IFilterable = goog.require('os.filter.IFilterable');
-const OSFilterImporter = goog.require('os.filter.im.OSFilterImporter');
-const osImplements = goog.require('os.implements');
-const {getMapContainer} = goog.require('os.map.instance');
-const {default: Module} = goog.require('os.ui.Module');
-const {directive: filterImportDirective, Controller: FilterImportCtrl} = goog.require('os.ui.filter.im.FilterImport');
+import osImplements from '../../implements.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import {directive as filterImportDirective, Controller as FilterImportCtrl} from '../../ui/filter/im/filterimport.js';
+import Module from '../../ui/module.js';
+import IFilterable from '../ifilterable.js';
+import OSFilterImporter from './osfilterimporter.js';
 
 
 /**
@@ -13,7 +13,7 @@ const {directive: filterImportDirective, Controller: FilterImportCtrl} = goog.re
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = filterImportDirective();
   dir.controller = Controller;
   return dir;
@@ -23,7 +23,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'osfilterimport';
+export const directiveTag = 'osfilterimport';
 
 /**
  * Add the directive to the module.
@@ -34,7 +34,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the filter import directive
  * @unrestricted
  */
-class Controller extends FilterImportCtrl {
+export class Controller extends FilterImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -77,9 +77,3 @@ class Controller extends FilterImportCtrl {
     return filterables;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

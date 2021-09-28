@@ -1,13 +1,14 @@
-goog.module('os.url.UrlEvent');
+goog.declareModuleId('os.url.UrlEvent');
+
+import EventType from './eventtype.js';
 
 const GoogEvent = goog.require('goog.events.Event');
-const EventType = goog.require('os.url.EventType');
 
 
 /**
  * Reference to the object that is the target of this event
  */
-class UrlEvent extends GoogEvent {
+export default class UrlEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {Object} params The parameters for the url import
@@ -30,5 +31,3 @@ class UrlEvent extends GoogEvent {
     return this.params_;
   }
 }
-
-exports = UrlEvent;

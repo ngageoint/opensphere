@@ -2,9 +2,9 @@ goog.module('os.file.storage.mock');
 
 const dispose = goog.require('goog.dispose');
 const os = goog.require('os');
-const OSFile = goog.require('os.file.File');
-const FileStorage = goog.require('os.file.FileStorage');
-const AsyncStorageWrapper = goog.require('os.storage.AsyncStorageWrapper');
+const {default: OSFile} = goog.require('os.file.File');
+const {default: FileStorage} = goog.require('os.file.FileStorage');
+const {default: AsyncStorageWrapper} = goog.require('os.storage.AsyncStorageWrapper');
 
 
 /**

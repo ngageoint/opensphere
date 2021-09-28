@@ -1,21 +1,22 @@
-goog.module('os.query.QueryManager');
+goog.declareModuleId('os.query.QueryManager');
+
+import Settings from '../config/settings.js';
+import DataManager from '../data/datamanager.js';
+import DataEventType from '../data/event/dataeventtype.js';
+import BaseQueryManager from './basequerymanager.js';
 
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
-const Settings = goog.require('os.config.Settings');
-const DataManager = goog.require('os.data.DataManager');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const BaseQueryManager = goog.require('os.query.BaseQueryManager');
 
 const Logger = goog.requireType('goog.log.Logger');
-const BaseFilterManager = goog.requireType('os.filter.BaseFilterManager');
-const BaseAreaManager = goog.requireType('os.query.BaseAreaManager');
+const {default: BaseFilterManager} = goog.requireType('os.filter.BaseFilterManager');
+const {default: BaseAreaManager} = goog.requireType('os.query.BaseAreaManager');
 
 
 /**
  * Implementation of the query manager that hooks up to the OS data manager.
  */
-class QueryManager extends BaseQueryManager {
+export default class QueryManager extends BaseQueryManager {
   /**
    * Constructor.
    * @param {BaseAreaManager=} opt_areaManager Optional area manager reference. Defaults to the singleton.
@@ -137,5 +138,3 @@ let instance;
  * @type {Logger}
  */
 const logger = log.getLogger('os.query.QueryManager');
-
-exports = QueryManager;

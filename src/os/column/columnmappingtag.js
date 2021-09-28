@@ -1,11 +1,13 @@
-goog.module('os.column.ColumnMappingTag');
+goog.declareModuleId('os.column.ColumnMappingTag');
 
 /**
  * Enumeration of column mapping tags
  * @enum {string}
  */
-exports = {
+const ColumnMappingTag = {
   COLUMN_MAPPING: 'columnMapping',
   COLUMN_MAPPINGS: 'columnMappings',
   COLUMN: 'column'
 };
+
+export default ColumnMappingTag;

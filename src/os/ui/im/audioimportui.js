@@ -1,11 +1,10 @@
 goog.declareModuleId('os.ui.im.AudioImportUI');
 
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import AudioManager from '../../audio/audiomanager.js';
+import {isFileSystem, isFileUrlEnabled, isLocal} from '../../file/index.js';
 import AbstractImportUI from './abstractimportui.js';
-
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const AudioManager = goog.require('os.audio.AudioManager');
-const {isFileSystem, isFileUrlEnabled, isLocal} = goog.require('os.file');
 
 
 /**

@@ -36,10 +36,10 @@ describe('plugin.cesium.sync.converter', () => {
 
   const {convertGeometry, getConverter} = goog.module.get('plugin.cesium.sync.converter');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
-  const DynamicFeature = goog.module.get('os.feature.DynamicFeature');
+  const {default: DynamicFeature} = goog.module.get('os.feature.DynamicFeature');
   const {default: DynamicLineStringConverter} = goog.module.get('plugin.cesium.sync.DynamicLineStringConverter');
-  const Ellipse = goog.module.get('os.geom.Ellipse');
-  const Vector = goog.module.get('os.layer.Vector');
+  const {default: Ellipse} = goog.module.get('os.geom.Ellipse');
+  const {default: Vector} = goog.module.get('os.layer.Vector');
   const {EPSG4326} = goog.module.get('os.proj');
 
   const {default: EllipseConverter} = goog.module.get('plugin.cesium.sync.EllipseConverter');

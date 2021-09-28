@@ -1,14 +1,15 @@
-goog.module('os.interaction.DragBox');
+goog.declareModuleId('os.interaction.DragBox');
+
+import I3DSupport from '../i3dsupport.js';
+import osImplements from '../implements.js';
+import OLDragBox from '../ui/ol/interaction/dragboxinteraction.js';
 
 const {asArray} = goog.require('ol.color');
 const Stroke = goog.require('ol.style.Stroke');
 const Style = goog.require('ol.style.Style');
-const I3DSupport = goog.require('os.I3DSupport');
-const osImplements = goog.require('os.implements');
-const {default: OLDragBox} = goog.require('os.ui.ol.interaction.DragBox');
 
 const Polygon = goog.requireType('ol.geom.Polygon');
-const OSMap = goog.requireType('os.Map');
+const {default: OSMap} = goog.requireType('os.Map');
 
 
 /**
@@ -16,7 +17,7 @@ const OSMap = goog.requireType('os.Map');
  *
  * @implements {I3DSupport}
  */
-class DragBox extends OLDragBox {
+export default class DragBox extends OLDragBox {
   /**
    * Constructor.
    * @param {olx.interaction.PointerOptions=} opt_options
@@ -98,6 +99,3 @@ class DragBox extends OLDragBox {
 }
 
 osImplements(DragBox, I3DSupport.ID);
-
-
-exports = DragBox;

@@ -1,13 +1,13 @@
 goog.declareModuleId('os.ui.alert.AlertBadgeUI');
 
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import EventType from '../../alert/eventtype.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import {apply} from '../ui.js';
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const EventType = goog.require('os.alert.EventType');
 
-const AlertEvent = goog.requireType('os.alert.AlertEvent');
+const {default: AlertEvent} = goog.requireType('os.alert.AlertEvent');
 
 
 /**

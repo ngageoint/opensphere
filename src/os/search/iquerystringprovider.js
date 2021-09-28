@@ -1,17 +1,14 @@
-goog.module('os.search.IQueryStringProvider');
-
+goog.declareModuleId('os.search.IQueryStringProvider');
 
 /**
  *  The base interface for query providers
  *
  *  @interface
  */
-class IQueryStringProvider {
+export default class IQueryStringProvider {
   /**
    * Retruns a query sting
    * @return {string}
    */
   toQueryString() {}
 }
-
-exports = IQueryStringProvider;

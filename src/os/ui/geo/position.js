@@ -2,12 +2,12 @@ goog.declareModuleId('os.ui.geo.PositionUI');
 
 import '../popover/popover.js';
 import './geoui.js';
+import {EPSILON, parseLatLon} from '../../geo/geo.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import {apply} from '../ui.js';
 import mgrs from './mgrs.js';
 import PositionEventType from './positioneventtype.js';
-const {EPSILON, parseLatLon} = goog.require('os.geo');
 
 
 /**

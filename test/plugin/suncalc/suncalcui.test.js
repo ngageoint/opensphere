@@ -6,7 +6,7 @@ goog.require('plugin.suncalc.SunCalcUI');
 
 describe('plugin.suncalc.SunCalcUI', function() {
   const {ROOT} = goog.module.get('os');
-  const Settings = goog.module.get('os.config.Settings');
+  const {default: Settings} = goog.module.get('os.config.Settings');
   const {SettingKey} = goog.module.get('plugin.suncalc');
   const {launchWindow} = goog.module.get('plugin.suncalc.SunCalcPlugin');
   const {Controller, directive} = goog.module.get('plugin.suncalc.SunCalcUI');

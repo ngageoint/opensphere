@@ -1,9 +1,9 @@
-goog.module('os.I3DSupport');
+goog.declareModuleId('os.I3DSupport');
 
 /**
  * @interface
  */
-class I3DSupport {
+export default class I3DSupport {
   /**
    * Whether or not 3D is supported
    * @return {boolean}
@@ -16,5 +16,3 @@ class I3DSupport {
  * @type {string}
  */
 I3DSupport.ID = 'os.I3DSupport';
-
-exports = I3DSupport;

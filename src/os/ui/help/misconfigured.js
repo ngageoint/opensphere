@@ -1,10 +1,10 @@
 goog.declareModuleId('os.ui.help.MisconfiguredUI');
 
+import Settings from '../../config/settings.js';
+import * as ConnectionConstants from '../../net/connectionconstants.js';
 import {ROOT} from '../../os.js';
 import {add} from '../list.js';
 import Module from '../module.js';
-const Settings = goog.require('os.config.Settings');
-const ConnectionConstants = goog.require('os.net.ConnectionConstants');
 
 
 /**

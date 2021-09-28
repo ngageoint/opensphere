@@ -1,5 +1,10 @@
 goog.declareModuleId('plugin.arc.ArcServer');
 
+import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
+import AlertManager from '../../os/alert/alertmanager.js';
+import IDataProvider from '../../os/data/idataprovider.js';
+import osImplements from '../../os/implements.js';
+import * as ogc from '../../os/ogc/ogc.js';
 import AbstractLoadingServer from '../../os/ui/server/abstractloadingserver.js';
 import SlickTreeNode from '../../os/ui/slick/slicktreenode.js';
 import * as arc from './arc.js';
@@ -8,11 +13,6 @@ const asserts = goog.require('goog.asserts');
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
 const EventType = goog.require('goog.net.EventType');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const IDataProvider = goog.require('os.data.IDataProvider');
-const osImplements = goog.require('os.implements');
-const ogc = goog.require('os.ogc');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');

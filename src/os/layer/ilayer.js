@@ -1,10 +1,10 @@
-goog.module('os.layer.ILayer');
+goog.declareModuleId('os.layer.ILayer');
 
-const IPersistable = goog.require('os.IPersistable'); // eslint-disable-line
-const {default: IActionTarget} = goog.require('os.ui.action.IActionTarget'); // eslint-disable-line
+import IPersistable from '../ipersistable.js';// eslint-disable-line
+import IActionTarget from '../ui/action/iactiontarget.js';// eslint-disable-line
 
 const Source = goog.requireType('ol.source.Source');
-const osImplements = goog.requireType('os.implements');
+const {default: osImplements} = goog.requireType('os.implements');
 
 
 /**
@@ -15,7 +15,7 @@ const osImplements = goog.requireType('os.implements');
  * @extends {IPersistable}
  * @extends {IActionTarget}
  */
-class ILayer {
+export default class ILayer {
   /**
    * Gets the layer ID
    * @return {!string} The ID
@@ -304,5 +304,3 @@ class ILayer {
  * @const {string}
  */
 ILayer.ID = 'os.layer.ILayer';
-
-exports = ILayer;

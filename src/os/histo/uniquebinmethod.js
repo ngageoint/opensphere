@@ -1,20 +1,14 @@
-goog.module('os.histo.UniqueBinMethod');
+goog.declareModuleId('os.histo.UniqueBinMethod');
 
-const DataModel = goog.require('os.data.xf.DataModel');
-const FilterComponent = goog.require('os.histo.FilterComponent');
-const IBinMethod = goog.require('os.histo.IBinMethod'); // eslint-disable-line
-const {
-  MAGIC_EMPTY,
-  sortByLabel,
-  sortByLabelDesc,
-  sortByCount,
-  sortByCountDesc
-} = goog.require('os.histo.bin');
-const {STRING_VAL} = goog.require('os.object');
+import DataModel from '../data/xf/datamodel.js';
+import {STRING_VAL} from '../object/object.js';
+import {MAGIC_EMPTY, sortByLabel, sortByLabelDesc, sortByCount, sortByCountDesc} from './binutils.js';
+import FilterComponent from './filtercomponent.js';
+import IBinMethod from './ibinmethod.js';// eslint-disable-line
 
-const IPersistable = goog.requireType('os.IPersistable');
-const Bin = goog.requireType('os.histo.Bin');
-const BinMethodStats = goog.requireType('os.histo.BinMethodStats');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
+const {default: Bin} = goog.requireType('os.histo.Bin');
+const {default: BinMethodStats} = goog.requireType('os.histo.BinMethodStats');
 
 
 /**
@@ -22,7 +16,7 @@ const BinMethodStats = goog.requireType('os.histo.BinMethodStats');
  * @implements {IPersistable}
  * @template T,S
  */
-class UniqueBinMethod {
+export default class UniqueBinMethod {
   /**
    * Constructor.
    */
@@ -421,5 +415,3 @@ UniqueBinMethod.TYPE = 'Unique';
  * @const
  */
 UniqueBinMethod.INVALID_VALUE = 'Invalid Value';
-
-exports = UniqueBinMethod;

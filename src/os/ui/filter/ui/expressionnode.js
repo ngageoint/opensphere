@@ -1,5 +1,7 @@
 goog.declareModuleId('os.ui.filter.ui.ExpressionNode');
 
+import RecordField from '../../../data/recordfield.js';
+import {humanize} from '../../../time/time.js';
 import {findColumn} from '../../slick/column.js';
 import SlickTreeNode from '../../slick/slicktreenode.js';
 import Expression from '../expression.js';
@@ -7,10 +9,7 @@ import Between from '../op/time/betweentimeop.js';
 import {directiveTag as nodeUi} from './expressionnodeui.js';
 import {directiveTag as nodeViewUi} from './expressionnodeviewui.js';
 
-const RecordField = goog.require('os.data.RecordField');
-const {humanize} = goog.require('os.time');
-
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 
 
 /**

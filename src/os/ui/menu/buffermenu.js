@@ -1,6 +1,11 @@
 goog.declareModuleId('os.ui.menu.buffer');
 
+import EventType from '../../action/eventtype.js';
+import {ICON} from '../../buffer/buffer.js';
+import {isGeometryPolygonal} from '../../geo/geo.js';
+import {Layer as LayerMetrics} from '../../metrics/metricskeys.js';
 import {inIframe} from '../../os.js';
+import AreaManager from '../../query/areamanager.js';
 import * as BufferDialogUI from '../buffer/bufferdialog.js';
 import {getSourcesFromContext} from './commonmenu.js';
 import * as layerMenu from './layermenu.js';
@@ -12,11 +17,6 @@ const GoogEvent = goog.require('goog.events.Event');
 const {toTitleCase} = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
 const Point = goog.require('ol.geom.Point');
-const EventType = goog.require('os.action.EventType');
-const {ICON} = goog.require('os.buffer');
-const {isGeometryPolygonal} = goog.require('os.geo');
-const {Layer: LayerMetrics} = goog.require('os.metrics.keys');
-const AreaManager = goog.require('os.query.AreaManager');
 
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');

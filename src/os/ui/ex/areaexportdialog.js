@@ -2,14 +2,14 @@ goog.declareModuleId('os.ui.ex.AreaExportUI');
 
 import KMLExporter from '../../../plugin/file/kml/kmlexporter.js';
 import SHPExporter from '../../../plugin/file/shp/shpexporter.js';
+import {METHOD_FIELD} from '../../interpolate.js';
 import {DEFAULT_VECTOR_CONFIG, setFeatureStyle} from '../../style/style.js';
+import StyleType from '../../style/styletype.js';
 import {Controller as ExportDialogCtrl, directive as exportDialogDirective} from '../file/exportdialog.js';
 import Module from '../module.js';
 import {create as createWindow} from '../window.js';
 
 const {removeDuplicates} = goog.require('goog.array');
-const {METHOD_FIELD} = goog.require('os.interpolate');
-const StyleType = goog.require('os.style.StyleType');
 
 
 /**

@@ -1,6 +1,10 @@
 goog.declareModuleId('os.ui.im.FileSupportUI');
 
+import {getAppName, getSupportContact} from '../../config/config.js';
+import EventType from '../../events/eventtype.js';
+import {getUploadFile} from '../../file/fileupload.js';
 import {ROOT} from '../../os.js';
+import {linkify} from '../../string/string.js';
 import Module from '../module.js';
 import * as osWindow from '../window.js';
 import WindowEventType from '../windoweventtype.js';
@@ -13,12 +17,8 @@ const {getDocument} = goog.require('goog.dom');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
-const {getAppName, getSupportContact} = goog.require('os.config');
-const EventType = goog.require('os.events.EventType');
-const {getUploadFile} = goog.require('os.file.upload');
-const {linkify} = goog.require('os.string');
 
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**

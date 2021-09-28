@@ -5,7 +5,7 @@ goog.require('os.ui.onboarding.OnboardingUrlHandler');
 
 
 describe('os.ui.onboarding.OnboardingUrlHandler', function() {
-  const Settings = goog.module.get('os.config.Settings');
+  const {default: Settings} = goog.module.get('os.config.Settings');
   const {default: OnboardingUrlHandler} = goog.module.get('os.ui.onboarding.OnboardingUrlHandler');
 
   var handler;

@@ -1,29 +1,30 @@
-goog.module('os.state.v4.TimeState');
+goog.declareModuleId('os.state.v4.TimeState');
+
+import * as dispatcher from '../../dispatcher.js';
+import Duration from '../../time/duration.js';
+import {isRelativeDuration, momentFormat, parseMoment} from '../../time/time.js';
+import {autoConfigureFromTimeRange, setDefaultOffsetForRange} from '../../time/timeline.js';
+import TimelineController from '../../time/timelinecontroller.js';
+import TimeRange from '../../time/timerange.js';
+import UIEvent from '../../ui/events/uievent.js';
+import UIEventType from '../../ui/events/uieventtype.js';
+import AbstractTimelineCtrl from '../../ui/timeline/abstracttimelinectrl.js';
+import {appendElement, createElement} from '../../xml.js';
+import XMLState from '../xmlstate.js';
+import TimeTag from './timetag.js';
 
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const {getElementByClass} = goog.require('goog.dom');
 const log = goog.require('goog.log');
 const Range = goog.require('goog.math.Range');
 const RangeSet = goog.require('goog.math.RangeSet');
-const dispatcher = goog.require('os.Dispatcher');
-const XMLState = goog.require('os.state.XMLState');
-const TimeTag = goog.require('os.state.v4.TimeTag');
-const {isRelativeDuration, momentFormat, parseMoment} = goog.require('os.time');
-const Duration = goog.require('os.time.Duration');
-const {autoConfigureFromTimeRange, setDefaultOffsetForRange} = goog.require('os.time.timeline');
-const TimeRange = goog.require('os.time.TimeRange');
-const TimelineController = goog.require('os.time.TimelineController');
-const {default: UIEvent} = goog.require('os.ui.events.UIEvent');
-const {default: UIEventType} = goog.require('os.ui.events.UIEventType');
-const {default: AbstractTimelineCtrl} = goog.require('os.ui.timeline.AbstractTimelineCtrl');
-const {appendElement, createElement} = goog.require('os.xml');
 
 const Logger = goog.requireType('goog.log.Logger');
 
 
 /**
  */
-class TimeState extends XMLState {
+export default class TimeState extends XMLState {
   /**
    * Constructor.
    */
@@ -707,5 +708,3 @@ const logger = log.getLogger('os.state.v4.TimeState');
  * @const
  */
 TimeState.DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ss[Z]';
-
-exports = TimeState;

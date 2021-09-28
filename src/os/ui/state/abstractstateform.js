@@ -3,8 +3,8 @@ goog.declareModuleId('os.ui.state.AbstractStateFormCtrl');
 import './statetitle.js';
 import {close} from '../window.js';
 
-const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
-const IState = goog.requireType('os.state.IState');
+const {default: IPersistenceMethod} = goog.requireType('os.ex.IPersistenceMethod');
+const {default: IState} = goog.requireType('os.state.IState');
 
 
 /**

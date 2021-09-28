@@ -1,18 +1,18 @@
 goog.declareModuleId('os.ui.file.FileXTHandler');
 
 import * as dispatcher from '../../dispatcher.js';
+import FileStorage from '../../file/filestorage.js';
+import {FileScheme} from '../../file/index.js';
 import {SHARED_DB_VERSION, SHARED_FILE_DB_NAME} from '../../os.js';
 import ImportEvent from '../im/importevent.js';
 import ImportEventType from '../im/importeventtype.js';
 import NotificationManager from '../notification/notificationmanager.js';
 
 const log = goog.require('goog.log');
-const {FileScheme} = goog.require('os.file');
-const FileStorage = goog.require('os.file.FileStorage');
 
 const Logger = goog.requireType('goog.log.Logger');
-const OSFile = goog.requireType('os.file.File');
-const IMessageHandler = goog.requireType('os.xt.IMessageHandler');
+const {default: OSFile} = goog.requireType('os.file.File');
+const {default: IMessageHandler} = goog.requireType('os.xt.IMessageHandler');
 
 
 /**

@@ -1,4 +1,68 @@
-goog.module('os.MapContainer');
+goog.declareModuleId('os.MapContainer');
+
+import EventType from './action/eventtype.js';
+import {isColorString} from './color.js';
+import CommandProcessor from './command/commandprocessor.js';
+import FlyToExtent from './command/flytoextentcmd.js';
+import LayerRemove from './command/layerremovecmd.js';
+import ToggleWebGL from './command/togglewebglcmd.js';
+import {getAppName} from './config/config.js';
+import DisplaySetting from './config/displaysetting.js';
+import Settings from './config/settings.js';
+import DataManager from './data/datamanager.js';
+import DeactivateDescriptor from './data/deactivatedescriptorcmd.js';
+import RecordField from './data/recordfield.js';
+import ZOrder from './data/zorder.js';
+import * as dispatcher from './dispatcher.js';
+import {killEvent} from './events/events.js';
+import OSEventType from './events/eventtype.js';
+import LayerEvent from './events/layerevent.js';
+import LayerEventType from './events/layereventtype.js';
+import PropertyChangeEvent from './events/propertychangeevent.js';
+import {normalize as normalizeExtent, normalizeToCenter} from './extent.js';
+import * as osFeature from './feature/feature.js';
+import {filterFalsey, noop, reduceExtentFromGeometries} from './fn/fn.js';
+import {normalizeLongitude} from './geo/geo2.js';
+import instanceOf from './instanceof.js';
+import {setConfig as setInterpolateConfig, interpolateFeature} from './interpolate.js';
+import AnimatedTile from './layer/animatedtile.js';
+import Drawing from './layer/drawinglayer.js';
+import Group from './layer/group.js';
+import LayerType from './layer/layertype.js';
+import SynchronizerType from './layer/synchronizertype.js';
+import VectorLayer from './layer/vector.js';
+import OSMap from './map.js';
+import CameraMode from './map/cameramode.js';
+import FlightMode from './map/flightmode.js';
+import IMapContainer from './map/imapcontainer.js';// eslint-disable-line
+import * as osMap from './map/map.js';
+import MapChange from './map/mapchange.js';
+import MapEvent from './map/mapevent.js';
+import MapMode from './map/mapmode.js';
+import Metrics from './metrics/metrics.js';
+import {Map as MapKeys} from './metrics/metricskeys.js';
+import VariableReplacer from './net/variablereplacer.js';
+import {unsafeClone} from './object/object.js';
+import {clone as cloneFeature} from './ol/feature.js';
+import {ROOT} from './os.js';
+import {EPSG3857, EPSG4326, loadProjections} from './proj/proj.js';
+import * as projSwitch from './proj/projswitch.js';
+import {setEnableRasterReprojection} from './proj/reprojection.js';
+import * as queryUtils from './query/queryutils.js';
+import {randomString} from './string/string.js';
+import * as label from './style/label.js';
+import * as osStyle from './style/style.js';
+import StyleManager from './style/stylemanager_shim.js';
+import StyleType from './style/styletype.js';
+import ActionEventType from './ui/action/actioneventtype.js';
+import Controls from './ui/help/controls.js';
+import {launchWebGLPerfCaveatDialog} from './ui/help/webglperfcaveat.js';
+import {launchWebGLSupportDialog} from './ui/help/webglsupport.js';
+import OnboardingManager from './ui/onboarding/onboardingmanager.js';
+import * as ui from './ui/ui.js';
+import AbstractWebGLRenderer from './webgl/abstractwebglrenderer.js';
+import AltitudeMode from './webgl/altitudemode.js';
+import {isSupported as isWebglSupported, hasPerformanceCaveat} from './webgl/webgl.js';
 
 const Promise = goog.require('goog.Promise');
 const {binarySelect, defaultCompare} = goog.require('goog.array');
@@ -37,76 +101,12 @@ const Type = goog.require('ol.renderer.Type');
 const OLVectorSource = goog.require('ol.source.Vector');
 const {createForProjection} = goog.require('ol.tilegrid');
 
-const {ROOT} = goog.require('os');
-const CameraMode = goog.require('os.CameraMode');
-const dispatcher = goog.require('os.Dispatcher');
-const OSMap = goog.require('os.Map');
-const MapChange = goog.require('os.MapChange');
-const MapEvent = goog.require('os.MapEvent');
-const MapMode = goog.require('os.MapMode');
-const EventType = goog.require('os.action.EventType');
-const {isColorString} = goog.require('os.color');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const FlyToExtent = goog.require('os.command.FlyToExtent');
-const LayerRemove = goog.require('os.command.LayerRemove');
-const ToggleWebGL = goog.require('os.command.ToggleWebGL');
-const {getAppName} = goog.require('os.config');
-const DisplaySetting = goog.require('os.config.DisplaySetting');
-const Settings = goog.require('os.config.Settings');
-const DataManager = goog.require('os.data.DataManager');
-const DeactivateDescriptor = goog.require('os.data.DeactivateDescriptor');
-const RecordField = goog.require('os.data.RecordField');
-const ZOrder = goog.require('os.data.ZOrder');
-const {killEvent} = goog.require('os.events');
-const OSEventType = goog.require('os.events.EventType');
-const LayerEvent = goog.require('os.events.LayerEvent');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {normalize: normalizeExtent, normalizeToCenter} = goog.require('os.extent');
-const osFeature = goog.require('os.feature');
-const {filterFalsey, noop, reduceExtentFromGeometries} = goog.require('os.fn');
-const {normalizeLongitude} = goog.require('os.geo2');
-const instanceOf = goog.require('os.instanceOf');
-const {setConfig: setInterpolateConfig, interpolateFeature} = goog.require('os.interpolate');
-const AnimatedTile = goog.require('os.layer.AnimatedTile');
-const Drawing = goog.require('os.layer.Drawing');
-const Group = goog.require('os.layer.Group');
-const LayerType = goog.require('os.layer.LayerType');
-const SynchronizerType = goog.require('os.layer.SynchronizerType');
-const VectorLayer = goog.require('os.layer.Vector');
-const osMap = goog.require('os.map');
-const FlightMode = goog.require('os.map.FlightMode');
-const IMapContainer = goog.require('os.map.IMapContainer'); // eslint-disable-line
-const Metrics = goog.require('os.metrics.Metrics');
-const {Map: MapKeys} = goog.require('os.metrics.keys');
-const VariableReplacer = goog.require('os.net.VariableReplacer');
-const {unsafeClone} = goog.require('os.object');
-const {clone: cloneFeature} = goog.require('os.ol.feature');
-const {EPSG3857, EPSG4326, loadProjections} = goog.require('os.proj');
-const {setEnableRasterReprojection} = goog.require('os.proj.reprojection');
-const projSwitch = goog.require('os.proj.switch');
-const queryUtils = goog.require('os.query.utils');
-const {randomString} = goog.require('os.string');
-const osStyle = goog.require('os.style');
-const StyleManager = goog.require('os.style.StyleManager');
-const StyleType = goog.require('os.style.StyleType');
-const label = goog.require('os.style.label');
-const ui = goog.require('os.ui');
-const {default: ActionEventType} = goog.require('os.ui.action.EventType');
-const {launchWebGLPerfCaveatDialog} = goog.require('os.ui.help.WebGLPerfCaveatUI');
-const {launchWebGLSupportDialog} = goog.require('os.ui.help.WebGLSupportUI');
-const {default: Controls} = goog.require('os.ui.help.Controls');
-const {default: OnboardingManager} = goog.require('os.ui.onboarding.OnboardingManager');
-const {isSupported: isWebglSupported, hasPerformanceCaveat} = goog.require('os.webgl');
-const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
-const AltitudeMode = goog.require('os.webgl.AltitudeMode');
-
 const Logger = goog.requireType('goog.log.Logger');
-const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
-const ILayer = goog.requireType('os.layer.ILayer');
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 const {default: ActionEvent} = goog.requireType('os.ui.action.ActionEvent');
-const IWebGLCamera = goog.requireType('os.webgl.IWebGLCamera');
-const IWebGLRenderer = goog.requireType('os.webgl.IWebGLRenderer');
+const {default: IWebGLCamera} = goog.requireType('os.webgl.IWebGLCamera');
+const {default: IWebGLRenderer} = goog.requireType('os.webgl.IWebGLRenderer');
 
 
 /**
@@ -114,7 +114,7 @@ const IWebGLRenderer = goog.requireType('os.webgl.IWebGLRenderer');
  *
  * @implements {IMapContainer}
  */
-class MapContainer extends EventTarget {
+export default class MapContainer extends EventTarget {
   /**
    * Constructor.
    */
@@ -2055,6 +2055,3 @@ MapContainer.FLY_ZOOM_BUFFER_ = 0.025;
  * @type {Logger}
  */
 const logger = log.getLogger('os.MapContainer');
-
-
-exports = MapContainer;

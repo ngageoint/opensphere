@@ -1,10 +1,9 @@
 goog.declareModuleId('plugin.capture.LegendRenderer');
 
 import {getMapCanvas} from '../../os/capture/capture.js';
+import LegendSetting from '../../os/config/legendsetting.js';
+import Settings from '../../os/config/settings.js';
 import CanvasRenderer from '../../os/ui/capture/canvasrenderer.js';
-
-const LegendSetting = goog.require('os.config.LegendSetting');
-const Settings = goog.require('os.config.Settings');
 
 
 /**

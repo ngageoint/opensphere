@@ -1,13 +1,14 @@
-goog.module('os.config.storage.SettingsFile');
+goog.declareModuleId('os.config.storage.SettingsFile');
+
+import osImplements from '../../implements.js';
+import Request from '../../net/request.js';
+import ConfigType from '../configtype.js';
+import {addNamespaces} from '../namespace.js';
+import ISettingsReadableStorage from './isettingsreadablestorage.js';
+import ISettingsStorage from './isettingsstorage.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 const NetEventType = goog.require('goog.net.EventType');
-const ConfigType = goog.require('os.config.ConfigType');
-const {addNamespaces} = goog.require('os.config.namespace');
-const ISettingsReadableStorage = goog.require('os.config.storage.ISettingsReadableStorage');
-const ISettingsStorage = goog.require('os.config.storage.ISettingsStorage');
-const osImplements = goog.require('os.implements');
-const Request = goog.require('os.net.Request');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 
@@ -18,7 +19,7 @@ const GoogEvent = goog.requireType('goog.events.Event');
  * @implements {ISettingsStorage}
  * @implements {ISettingsReadableStorage}
  */
-class SettingsFile {
+export default class SettingsFile {
   /**
    * Constructor.
    * @param {!string} uri
@@ -118,8 +119,6 @@ class SettingsFile {
     }
   }
 }
+
 osImplements(SettingsFile, ISettingsStorage.ID);
 osImplements(SettingsFile, ISettingsReadableStorage.ID);
-
-
-exports = SettingsFile;

@@ -16,11 +16,11 @@ describe('os.command.InvertSelect', function() {
   const Feature = goog.module.get('ol.Feature');
   const events = goog.module.get('ol.events');
   const Point = goog.module.get('ol.geom.Point');
-  const InvertSelect = goog.module.get('os.command.InvertSelect');
-  const State = goog.module.get('os.command.State');
-  const DataManager = goog.module.get('os.data.DataManager');
-  const PropertyChange = goog.module.get('os.source.PropertyChange');
-  const VectorSource = goog.module.get('os.source.Vector');
+  const {default: InvertSelect} = goog.module.get('os.command.InvertSelect');
+  const {default: State} = goog.module.get('os.command.State');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: PropertyChange} = goog.module.get('os.source.PropertyChange');
+  const {default: VectorSource} = goog.module.get('os.source.Vector');
 
   it('should fail when the source is not provided', function() {
     var cmd = new InvertSelect(null);

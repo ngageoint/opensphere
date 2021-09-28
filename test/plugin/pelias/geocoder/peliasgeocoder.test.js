@@ -11,9 +11,9 @@ goog.require('plugin.pelias.geocoder.Search');
 describe('plugin.pelias.geocoder.Search', function() {
   const Feature = goog.module.get('ol.Feature');
   const olProj = goog.module.get('ol.proj');
-  const MapContainer = goog.module.get('os.MapContainer');
-  const Settings = goog.module.get('os.config.Settings');
-  const SearchEventType = goog.module.get('os.search.SearchEventType');
+  const {default: MapContainer} = goog.module.get('os.MapContainer');
+  const {default: Settings} = goog.module.get('os.config.Settings');
+  const {default: SearchEventType} = goog.module.get('os.search.SearchEventType');
   const {default: Result} = goog.module.get('plugin.pelias.geocoder.Result');
   const {default: Search} = goog.module.get('plugin.pelias.geocoder.Search');
 

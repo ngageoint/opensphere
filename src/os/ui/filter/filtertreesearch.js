@@ -1,12 +1,11 @@
 goog.declareModuleId('os.ui.filter.FilterTreeSearch');
 
+import {getFilterManager} from '../../query/queryinstance.js';
 import AbstractGroupByTreeSearch from '../slick/abstractgroupbytreesearch.js';
 import FilterNode from './ui/filternode.js';
 
-const {getFilterManager} = goog.require('os.query.instance');
-
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**

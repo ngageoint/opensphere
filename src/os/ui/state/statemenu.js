@@ -1,6 +1,13 @@
 goog.declareModuleId('os.ui.state.menu');
 
+import CommandProcessor from '../../command/commandprocessor.js';
+import BaseDescriptor from '../../data/basedescriptor.js';
+import DataManager from '../../data/datamanager.js';
+import DescriptorEventType from '../../data/descriptoreventtype.js';
 import * as dispatcher from '../../dispatcher.js';
+import osImplements from '../../implements.js';
+import {Map as MapMetrics} from '../../metrics/metricskeys.js';
+import {getStateManager} from '../../state/stateinstance.js';
 import DescriptorNode from '../data/descriptornode.js';
 import UIEvent from '../events/uievent.js';
 import UIEventParams from '../events/uieventparams.js';
@@ -15,15 +22,8 @@ import IStateDescriptor from './istatedescriptor.js';
 const {removeAllIf} = goog.require('goog.array');
 const Throttle = goog.require('goog.async.Throttle');
 const googDispose = goog.require('goog.dispose');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const BaseDescriptor = goog.require('os.data.BaseDescriptor');
-const DataManager = goog.require('os.data.DataManager');
-const DescriptorEventType = goog.require('os.data.DescriptorEventType');
-const osImplements = goog.require('os.implements');
-const {Map: MapMetrics} = goog.require('os.metrics.keys');
-const {getStateManager} = goog.require('os.state.instance');
 
-const DescriptorEvent = goog.requireType('os.data.DescriptorEvent');
+const {default: DescriptorEvent} = goog.requireType('os.data.DescriptorEvent');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: MenuItemOptions} = goog.requireType('os.ui.menu.MenuItemOptions');
 

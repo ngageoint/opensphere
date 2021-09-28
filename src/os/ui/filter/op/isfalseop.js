@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.filter.op.IsFalse');
 
+import DataType from '../../../xsd.js';
 import Op from './op.js';
-const DataType = goog.require('os.xsd.DataType');
 
 
 /**

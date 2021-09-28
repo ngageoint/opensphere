@@ -8,10 +8,10 @@ goog.require('os.style.StyleManager');
 
 
 describe('os.command.LayerAdd', function() {
-  const MapContainer = goog.module.get('os.MapContainer');
-  const LayerAdd = goog.module.get('os.command.LayerAdd');
-  const State = goog.module.get('os.command.State');
-  const LayerConfigManager = goog.module.get('os.layer.config.LayerConfigManager');
+  const {default: MapContainer} = goog.module.get('os.MapContainer');
+  const {default: LayerAdd} = goog.module.get('os.command.LayerAdd');
+  const {default: State} = goog.module.get('os.command.State');
+  const {default: LayerConfigManager} = goog.module.get('os.layer.config.LayerConfigManager');
 
   const MockTileLayerConfig = goog.module.get('os.layer.config.MockTileLayerConfig');
 

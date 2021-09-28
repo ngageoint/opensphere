@@ -4,7 +4,7 @@ goog.require('os.net.URLModifier');
 
 describe('os.net.URLModifier', function() {
   const Uri = goog.module.get('goog.Uri');
-  const URLModifier = goog.module.get('os.net.URLModifier');
+  const {default: URLModifier} = goog.module.get('os.net.URLModifier');
 
   afterEach(() => {
     URLModifier.replace_.length = 0;

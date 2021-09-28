@@ -1,4 +1,8 @@
-goog.module('os.mixin.ImageSource');
+goog.declareModuleId('os.mixin.ImageSource');
+
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import osImplements from '../implements.js';
+import ILoadingSource from '../ol/source/iloadingsource.js';
 
 const {insert} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
@@ -6,9 +10,6 @@ const ImageState = goog.require('ol.ImageState');
 const {remove} = goog.require('ol.array');
 const ImageSource = goog.require('ol.source.Image');
 const Source = goog.require('ol.source.Source');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osImplements = goog.require('os.implements');
-const ILoadingSource = goog.require('os.ol.source.ILoadingSource');
 
 const OLImage = goog.requireType('ol.Image');
 const ImageBase = goog.requireType('ol.ImageBase');

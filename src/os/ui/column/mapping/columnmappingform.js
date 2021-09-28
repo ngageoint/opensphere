@@ -1,6 +1,12 @@
 goog.declareModuleId('os.ui.column.mapping.ColumnMappingFormUI');
 
 import './columnmodeltree.js';
+import * as osArray from '../../../array/array.js';
+import ColumnMapping from '../../../column/columnmapping.js';
+import ColumnMappingManager from '../../../column/columnmappingmanager.js';
+import DataManager from '../../../data/datamanager.js';
+import IFilterable from '../../../filter/ifilterable.js';
+import osImplements from '../../../implements.js';
 import {ROOT} from '../../../os.js';
 import Module from '../../module.js';
 import * as ui from '../../ui.js';
@@ -8,15 +14,9 @@ import * as osWindow from '../../window.js';
 import ColumnModelNode from './columnmodelnode.js';
 
 const {getRandomString} = goog.require('goog.string');
-const osArray = goog.require('os.array');
-const ColumnMapping = goog.require('os.column.ColumnMapping');
-const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
-const DataManager = goog.require('os.data.DataManager');
-const IFilterable = goog.require('os.filter.IFilterable');
-const osImplements = goog.require('os.implements');
 
-const IColumnMapping = goog.requireType('os.column.IColumnMapping');
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const {default: IColumnMapping} = goog.requireType('os.column.IColumnMapping');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 
 
 /**

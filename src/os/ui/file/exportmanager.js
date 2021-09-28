@@ -1,5 +1,13 @@
 goog.declareModuleId('os.ui.file.ExportManager');
 
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import Settings from '../../config/settings.js';
+import DataManager from '../../data/datamanager.js';
+import EventType from '../../events/eventtype.js';
+import OSFile from '../../file/file.js';
+import FileStorage from '../../file/filestorage.js';
+import {getLocalUrl} from '../../file/index.js';
 import ImportManager from '../im/importmanager.js';
 import * as osWindow from '../window.js';
 
@@ -7,20 +15,12 @@ const {defaultCompare} = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const Settings = goog.require('os.config.Settings');
-const DataManager = goog.require('os.data.DataManager');
-const EventType = goog.require('os.events.EventType');
-const {getLocalUrl} = goog.require('os.file');
-const OSFile = goog.require('os.file.File');
-const FileStorage = goog.require('os.file.FileStorage');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
-const ExportOptions = goog.requireType('os.ex.ExportOptions');
-const IExportMethod = goog.requireType('os.ex.IExportMethod');
-const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
+const {default: ExportOptions} = goog.requireType('os.ex.ExportOptions');
+const {default: IExportMethod} = goog.requireType('os.ex.IExportMethod');
+const {default: IPersistenceMethod} = goog.requireType('os.ex.IPersistenceMethod');
 
 
 /**

@@ -1,13 +1,13 @@
-goog.module('os.unit.MileUnits');
+goog.declareModuleId('os.unit.MileUnits');
 
-const BaseUnit = goog.require('os.unit.BaseUnit');
-const Multiplier = goog.require('os.unit.Multiplier');
+import BaseUnit from './baseunit.js';
+import Multiplier from './multiplier.js';
 
 
 /**
  * Responsible for receiving, logging and reporting alerts
  */
-class MileUnits extends BaseUnit {
+export default class MileUnits extends BaseUnit {
   /**
    * Constructor.
    */
@@ -57,5 +57,3 @@ class MileUnits extends BaseUnit {
     this.multipliers.push(new Multiplier('mi', 1, true, 'miles', .1));
   }
 }
-
-exports = MileUnits;

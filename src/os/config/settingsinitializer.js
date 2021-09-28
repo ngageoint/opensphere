@@ -1,18 +1,18 @@
-goog.module('os.config.SettingsInitializer');
+goog.declareModuleId('os.config.SettingsInitializer');
 
-const {SETTINGS} = goog.require('os');
-const osConfig = goog.require('os.config');
-const {getSettings} = goog.require('os.config.instance');
-const SettingsFile = goog.require('os.config.storage.SettingsFile');
-const SettingsIDBStorage = goog.require('os.config.storage.SettingsIDBStorage');
-const SettingsLocalStorage = goog.require('os.config.storage.SettingsLocalStorage');
-const {default: AngularAppSettingsInitializer} = goog.require('os.ui.config.AngularAppSettingsInitializer');
+import {SETTINGS} from '../os.js';
+import AngularAppSettingsInitializer from '../ui/config/angularappsettingsinitializer.js';
+import * as osConfig from './config.js';
+import {getSettings} from './configinstance.js';
+import SettingsFile from './storage/settingsfile.js';
+import SettingsIDBStorage from './storage/settingsidbstorage.js';
+import SettingsLocalStorage from './storage/settingslocalstorage.js';
 
 
 /**
  * Initialize settings for OpenSphere.
  */
-class SettingsInitializer extends AngularAppSettingsInitializer {
+export default class SettingsInitializer extends AngularAppSettingsInitializer {
   /**
    * Constructor.
    */
@@ -40,5 +40,3 @@ class SettingsInitializer extends AngularAppSettingsInitializer {
     settingsRegistry.addStorage(new SettingsIDBStorage(this.namespace));
   }
 }
-
-exports = SettingsInitializer;

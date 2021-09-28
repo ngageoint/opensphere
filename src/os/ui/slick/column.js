@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.slick.column');
 
+import ColumnDefinition from '../../data/columndefinition.js';
 import Menu from '../menu/menu.js';
 import MenuItem from '../menu/menuitem.js';
 import MenuItemType from '../menu/menuitemtype.js';
@@ -10,7 +11,6 @@ import {color as formatterColor} from './formatter.js';
 
 const {defaultCompare} = goog.require('goog.array');
 const {numerateCompare} = goog.require('goog.string');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 
 const {default: ColumnContext} = goog.requireType('os.ui.slick.ColumnContext');
 

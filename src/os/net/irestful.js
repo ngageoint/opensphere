@@ -1,12 +1,11 @@
-goog.module('os.net.IRestful');
-
+goog.declareModuleId('os.net.IRestful');
 
 /**
  * Interface which enables an object to declare its REST URLs.
  *
  * @interface
  */
-class IRestful {
+export default class IRestful {
   /**
    * Retrieve read REST relative URL.
    * @return {!string}
@@ -31,5 +30,3 @@ class IRestful {
    */
   getDeleteUrl() {}
 }
-
-exports = IRestful;

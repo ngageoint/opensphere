@@ -6,7 +6,7 @@ import Module from './module.js';
 import SlickGridEvent from './slick/slickgridevent.js';
 import {apply} from './ui.js';
 
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 
 
 /**

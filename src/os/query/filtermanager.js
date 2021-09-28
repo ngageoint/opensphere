@@ -1,26 +1,27 @@
-goog.module('os.query.FilterManager');
+goog.declareModuleId('os.query.FilterManager');
+
+import Settings from '../config/settings.js';
+import BaseFilterManager from '../filter/basefiltermanager.js';
+import FilterType from '../filter/filtertype.js';
+import VectorLayer from '../layer/vector.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {FILTER_STORAGE_KEY} from '../os.js';
+import FilterEvent from '../ui/filter/filterevent.js';
+import FilterEventType from '../ui/filter/filtereventtype.js';
+import * as osWindow from '../ui/window.js';
+import {getQueryManager} from './queryinstance.js';
 
 const {hashCode} = goog.require('goog.string');
-const {FILTER_STORAGE_KEY} = goog.require('os');
-const Settings = goog.require('os.config.Settings');
-const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
-const FilterType = goog.require('os.filter.FilterType');
-const VectorLayer = goog.require('os.layer.Vector');
-const {getMapContainer} = goog.require('os.map.instance');
-const {getQueryManager} = goog.require('os.query.instance');
-const {default: FilterEvent} = goog.require('os.ui.filter.FilterEvent');
-const {default: FilterEventType} = goog.require('os.ui.filter.FilterEventType');
-const osWindow = goog.require('os.ui.window');
 
-const IFilterable = goog.requireType('os.filter.IFilterable');
-const ILayer = goog.requireType('os.layer.ILayer');
-const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
+const {default: IFilterable} = goog.requireType('os.filter.IFilterable');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
 
 
 /**
  * OS implementation of the filter manager.
  */
-class FilterManager extends BaseFilterManager {
+export default class FilterManager extends BaseFilterManager {
   /**
    * Constructor.
    */
@@ -179,5 +180,3 @@ class FilterManager extends BaseFilterManager {
  * @type {BaseFilterManager|undefined}
  */
 let instance;
-
-exports = FilterManager;

@@ -1,8 +1,9 @@
-goog.module('os.job.JobManager');
+goog.declareModuleId('os.job.JobManager');
+
+import Job from './job.js';
+import JobEventType from './jobeventtype.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
-const Job = goog.require('os.job.Job');
-const JobEventType = goog.require('os.job.JobEventType');
 
 
 /**
@@ -11,7 +12,7 @@ const JobEventType = goog.require('os.job.JobEventType');
  *
  * SEE testWorker.js FOR THE BEST EXAMPLE of how to use this class.
  */
-class JobManager extends EventTarget {
+export default class JobManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -98,5 +99,3 @@ class JobManager extends EventTarget {
     }
   }
 }
-
-exports = JobManager;

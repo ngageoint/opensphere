@@ -1,9 +1,9 @@
 goog.declareModuleId('plugin.track.TrackInteraction');
 
+import MeasureInteraction from '../../os/interaction/measureinteraction.js';
+import * as osObject from '../../os/object/object.js';
 import {LINE_STYLE_OPTIONS} from '../../os/style/style.js';
 
-const osObject = goog.require('os.object');
-const MeasureInteraction = goog.require('os.interaction.Measure');
 const OlStroke = goog.require('ol.style.Stroke');
 const OlStyle = goog.require('ol.style.Style');
 

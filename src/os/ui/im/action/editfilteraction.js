@@ -1,17 +1,17 @@
 goog.declareModuleId('os.ui.im.action.EditFilterActionCtrl');
 
+import DataManager from '../../../data/datamanager.js';
+import DataEventType from '../../../data/event/dataeventtype.js';
 import * as dispatcher from '../../../dispatcher.js';
+import {sortByLabel} from '../../../im/action/importaction.js';
+import ImportActionManager from '../../../im/action/importactionmanager.js';
 import {Controller as EditFiltersCtrl} from '../../filter/ui/editfilters.js';
 import {apply} from '../../ui.js';
 import * as osWindow from '../../window.js';
 import EventType from './eventtype.js';
-const DataManager = goog.require('os.data.DataManager');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const {sortByLabel} = goog.require('os.im.action');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
-const IImportAction = goog.requireType('os.im.action.IImportAction');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
+const {default: IImportAction} = goog.requireType('os.im.action.IImportAction');
 
 
 /**

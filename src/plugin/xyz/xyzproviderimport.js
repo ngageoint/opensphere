@@ -1,7 +1,11 @@
 goog.declareModuleId('plugin.xyz.XYZImport');
 
+import ConfigDescriptor from '../../os/data/configdescriptor.js';
+import DataManager from '../../os/data/datamanager.js';
+import {createFromOptions} from '../../os/layer/layer.js';
 import * as osMap from '../../os/map/map.js';
 import {ROOT} from '../../os/os.js';
+import {getProjections} from '../../os/proj/proj.js';
 import BaseProvider from '../../os/ui/data/baseprovider.js';
 import Module from '../../os/ui/module.js';
 import SingleUrlProviderImportCtrl from '../../os/ui/singleurlproviderimport.js';
@@ -10,12 +14,8 @@ import {directiveTag as uiDirectiveTag} from './xyzdescriptornodeui.js';
 import * as XYZProviderHelpUI from './xyzproviderhelp.js';
 
 const {getRandomString, numerateCompare} = goog.require('goog.string');
-const ConfigDescriptor = goog.require('os.data.ConfigDescriptor');
-const DataManager = goog.require('os.data.DataManager');
-const {createFromOptions} = goog.require('os.layer');
-const {getProjections} = goog.require('os.proj');
 
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 
 
 /**

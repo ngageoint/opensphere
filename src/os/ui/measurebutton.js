@@ -1,18 +1,18 @@
 goog.declareModuleId('os.ui.MeasureButtonUI');
 
+import Settings from '../config/settings.js';
 import * as dispatcher from '../dispatcher.js';
+import Measure from '../interaction/measureinteraction.js';
+import Method from '../interpolatemethod.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import Metrics from '../metrics/metrics.js';
+import {Map as MapKeys} from '../metrics/metricskeys.js';
 import DrawEventType from './draw/draweventtype.js';
 import Menu from './menu/menu.js';
 import MenuButtonCtrl from './menu/menubutton.js';
 import MenuItem from './menu/menuitem.js';
 import MenuItemType from './menu/menuitemtype.js';
 import Module from './module.js';
-const Settings = goog.require('os.config.Settings');
-const Measure = goog.require('os.interaction.Measure');
-const Method = goog.require('os.interpolate.Method');
-const {getMapContainer} = goog.require('os.map.instance');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Map: MapKeys} = goog.require('os.metrics.keys');
 
 const {default: DrawEvent} = goog.requireType('os.ui.draw.DrawEvent');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');

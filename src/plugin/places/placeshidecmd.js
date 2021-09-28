@@ -1,11 +1,10 @@
 goog.declareModuleId('plugin.places.PlacesHide');
 
+import State from '../../os/command/state.js';
+import TriState from '../../os/structs/tristate.js';
 import PlacesManager from './placesmanager.js';
 
-const State = goog.require('os.command.State');
-const TriState = goog.require('os.structs.TriState');
-
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 

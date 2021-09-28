@@ -1,14 +1,14 @@
-goog.module('os.ogc.IFeatureType');
+goog.declareModuleId('os.ogc.IFeatureType');
 
-const IPersistable = goog.requireType('os.IPersistable');
-const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
+const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
 
 
 /**
  * @interface
  * @extends {IPersistable}
  */
-class IFeatureType {
+export default class IFeatureType {
   /**
    * @return {?string}
    */
@@ -69,5 +69,3 @@ class IFeatureType {
    */
   getNeedsTimeColumns() {}
 }
-
-exports = IFeatureType;

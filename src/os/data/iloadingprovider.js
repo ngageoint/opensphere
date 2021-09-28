@@ -1,6 +1,6 @@
-goog.module('os.data.ILoadingProvider');
+goog.declareModuleId('os.data.ILoadingProvider');
 
-const IDataProvider = goog.requireType('os.data.IDataProvider');
+const {default: IDataProvider} = goog.requireType('os.data.IDataProvider');
 
 
 /**
@@ -9,7 +9,7 @@ const IDataProvider = goog.requireType('os.data.IDataProvider');
  * @interface
  * @extends {IDataProvider}
  */
-class ILoadingProvider {
+export default class ILoadingProvider {
   /**
    * If the provider is currently in a loading state.
    * @return {boolean}
@@ -29,6 +29,3 @@ class ILoadingProvider {
  * @const {string}
  */
 ILoadingProvider.ID = 'os.data.ILoadingProvider';
-
-
-exports = ILoadingProvider;

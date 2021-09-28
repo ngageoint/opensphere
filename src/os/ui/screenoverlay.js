@@ -1,10 +1,10 @@
 goog.declareModuleId('os.ui.ScreenOverlayUI');
 
+import {getMapContainer} from '../map/mapinstance.js';
 import {ROOT} from '../os.js';
 import Module from './module.js';
 import {create, exists} from './window.js';
 import WindowEventType from './windoweventtype.js';
-const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**

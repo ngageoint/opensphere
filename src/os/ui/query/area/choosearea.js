@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.query.area.ChooseAreaUI');
 
 import {ROOT} from '../../../os.js';
+import {getAreaManager} from '../../../query/queryinstance.js';
 import Module from '../../module.js';
 import {apply} from '../../ui.js';
 
 const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
-const {getAreaManager} = goog.require('os.query.instance');
 
 
 /**

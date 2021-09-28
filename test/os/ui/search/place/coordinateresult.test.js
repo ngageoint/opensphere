@@ -8,11 +8,11 @@ goog.require('os.ui.search.place.CoordinateResult');
 
 describe('os.ui.search.place.CoordinateResult', function() {
   const Feature = goog.module.get('ol.Feature');
-  const osImplements = goog.module.get('os.implements');
-  const ISortableResult = goog.module.get('os.search.ISortableResult');
-  const SortType = goog.module.get('os.search.SortType');
-  const TimeInstant = goog.module.get('os.time.TimeInstant');
-  const TimeRange = goog.module.get('os.time.TimeRange');
+  const {default: osImplements} = goog.module.get('os.implements');
+  const {default: ISortableResult} = goog.module.get('os.search.ISortableResult');
+  const {default: SortType} = goog.module.get('os.search.SortType');
+  const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');
+  const {default: TimeRange} = goog.module.get('os.time.TimeRange');
   const {default: CoordinateResult} = goog.module.get('os.ui.search.place.CoordinateResult');
 
   var createResult = function(opt_options) {

@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.onboarding.OnboardingUrlHandler');
 
-const Settings = goog.require('os.config.Settings');
-const AbstractUrlHandler = goog.require('os.url.AbstractUrlHandler');
+import Settings from '../../config/settings.js';
+import AbstractUrlHandler from '../../url/abstracturlhandler.js';
 
 
 /**

@@ -2,20 +2,20 @@ goog.declareModuleId('os.ui.layer.TileLayerUI');
 
 import '../slider.js';
 import {instanceOf} from '../../classregistry.js';
+import {toHexString} from '../../color.js';
+import LayerColor from '../../command/layercolorcmd.js';
+import TileLayerColorize from '../../command/tilelayercolorizecmd.js';
+import TileLayerStyle from '../../command/tilelayerstylecmd.js';
+import LayerClass from '../../layer/layerclass.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import {Controller as DefaultLayerUICtrl} from './defaultlayerui.js';
 import {getColorize, getStyle, getStyles} from './layers.js';
-const {toHexString} = goog.require('os.color');
-const LayerColor = goog.require('os.command.LayerColor');
-const TileLayerColorize = goog.require('os.command.TileLayerColorize');
-const TileLayerStyle = goog.require('os.command.TileLayerStyle');
-const LayerClass = goog.require('os.layer.LayerClass');
 
-const ICommand = goog.requireType('os.command.ICommand');
-const LayerNode = goog.requireType('os.data.LayerNode');
-const ILayer = goog.requireType('os.layer.ILayer');
-const Tile = goog.requireType('os.layer.Tile');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: LayerNode} = goog.requireType('os.data.LayerNode');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: Tile} = goog.requireType('os.layer.Tile');
 
 
 /**

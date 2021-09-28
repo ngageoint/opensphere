@@ -1,12 +1,13 @@
-goog.module('os.command.ParallelCommand');
+goog.declareModuleId('os.command.ParallelCommand');
+
+import AbstractCommandSet from './abstractcommandset.js';
+import EventType from './eventtype.js';
+import State from './state.js';
 
 const GoogEvent = goog.require('goog.events.Event');
-const AbstractCommandSet = goog.require('os.command.AbstractCommandSet');
-const EventType = goog.require('os.command.EventType');
-const State = goog.require('os.command.State');
 
 const EventTarget = goog.requireType('goog.events.EventTarget');
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -16,7 +17,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @todo needs to handle sub-command exceptions and error state
  */
-class ParallelCommand extends AbstractCommandSet {
+export default class ParallelCommand extends AbstractCommandSet {
   /**
    * Constructor.
    */
@@ -116,5 +117,3 @@ class ParallelCommand extends AbstractCommandSet {
     }
   }
 }
-
-exports = ParallelCommand;

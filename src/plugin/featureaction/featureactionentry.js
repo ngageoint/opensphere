@@ -1,8 +1,7 @@
 goog.declareModuleId('plugin.im.action.feature.Entry');
 
 import {filterFnGetter} from '../../os/feature/feature.js';
-
-const FilterActionEntry = goog.require('os.im.action.FilterActionEntry');
+import FilterActionEntry from '../../os/im/action/filteractionentry.js';
 
 const Feature = goog.requireType('ol.Feature');
 

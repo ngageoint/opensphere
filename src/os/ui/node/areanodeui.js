@@ -1,13 +1,12 @@
 goog.declareModuleId('os.ui.node.AreaNodeUI');
 
+import CommandProcessor from '../../command/commandprocessor.js';
+import BaseAreaManager from '../../query/baseareamanager.js';
 import Module from '../module.js';
 import AreaRemove from '../query/cmd/arearemovecmd.js';
 import AbstractNodeUICtrl from '../slick/abstractnodeui.js';
 
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const BaseAreaManager = goog.require('os.query.BaseAreaManager');
-
-const AreaNode = goog.requireType('os.data.AreaNode');
+const {default: AreaNode} = goog.requireType('os.data.AreaNode');
 
 
 /**

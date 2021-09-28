@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.arc.source.ArcTileSource');
 
 const TileArcGISRest = goog.require('ol.source.TileArcGISRest');
-const ILoadingSource = goog.requireType('os.ol.source.ILoadingSource');
+const {default: ILoadingSource} = goog.requireType('os.ol.source.ILoadingSource');
 
 
 /**

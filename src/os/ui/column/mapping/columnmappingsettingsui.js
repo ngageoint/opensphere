@@ -1,5 +1,7 @@
 goog.declareModuleId('os.ui.column.mapping.ColumnMappingSettingsUI');
 
+import ColumnMappingEventType from '../../../column/columnmappingeventtype.js';
+import ColumnMappingManager from '../../../column/columnmappingmanager.js';
 import {ROOT} from '../../../os.js';
 import ImportEvent from '../../im/importevent.js';
 import ImportEventType from '../../im/importeventtype.js';
@@ -12,8 +14,6 @@ import {launchColumnMappingWindow} from './columnmappingform.js';
 import ColumnMappingNode from './columnmappingnode.js';
 
 const {defaultCompare, insert} = goog.require('goog.array');
-const ColumnMappingEventType = goog.require('os.column.ColumnMappingEventType');
-const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
 
 
 /**

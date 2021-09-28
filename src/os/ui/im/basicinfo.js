@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.im.BasicInfoUI');
 
 import '../util/validationmessage.js';
+import {getItemField} from '../../im/mapping/mapping.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import {findByField} from '../slick/column.js';
-const {getItemField} = goog.require('os.im.mapping');
 
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 
 
 /**

@@ -1,6 +1,7 @@
 goog.declareModuleId('plugin.params.EditRequestParamsUI');
 
 import '../../os/ui/slick/slickgrid.js';
+import ColumnDefinition from '../../os/data/columndefinition.js';
 import * as os from '../../os/os.js';
 import Module from '../../os/ui/module.js';
 import SlickGridEvent from '../../os/ui/slick/slickgridevent.js';
@@ -11,7 +12,6 @@ import * as pluginParams from './params.js';
 const Disposable = goog.require('goog.Disposable');
 const googString = goog.require('goog.string');
 const olArray = goog.require('ol.array');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 
 
 /**

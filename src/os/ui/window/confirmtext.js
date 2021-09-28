@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.window.ConfirmTextUI');
 
 import '../util/validationmessage.js';
+import * as fn from '../../fn/fn.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import * as osWindow from '../window.js';
 import WindowEventType from '../windoweventtype.js';
 import {directiveTag as confirmUi} from './confirm.js';
-const fn = goog.require('os.fn');
 
 
 /**

@@ -1,4 +1,27 @@
-goog.module('os.state.v3.LayerState');
+goog.declareModuleId('os.state.v3.LayerState');
+
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import {isColorString, padHexColor, toHexString} from '../../color.js';
+import LayerAdd from '../../command/layeraddcmd.js';
+import DataManager from '../../data/datamanager.js';
+import {isLocal} from '../../file/index.js';
+import MappingManager from '../../im/mapping/mappingmanager.js';
+import LayerConfigManager from '../../layer/config/layerconfigmanager.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import VectorSource from '../../source/vectorsource.js';
+import {isBoolean, isFloat, isHex} from '../../string/string.js';
+import * as osLabel from '../../style/label.js';
+import * as osStyle from '../../style/style.js';
+import StyleField from '../../style/stylefield.js';
+import {tagsFromXML} from '../../tag/tag.js';
+import {isLayerDeprecated, showDeprecatedWarning} from '../../ui/util/deprecated.js';
+import {addBase} from '../../uri/uri.js';
+import {appendElement, createElement} from '../../xml.js';
+import AbstractState from '../abstractstate.js';
+import {getStateManager} from '../stateinstance.js';
+import XMLState from '../xmlstate.js';
+import LayerTag from './layertag.js';
 
 const QueryData = goog.require('goog.Uri.QueryData');
 const {getChildren} = goog.require('goog.dom');
@@ -6,39 +29,17 @@ const {setAttributes} = goog.require('goog.dom.xml');
 const log = goog.require('goog.log');
 const {clamp} = goog.require('goog.math');
 const {isEmptyOrWhitespace, isNumeric, makeSafe} = goog.require('goog.string');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {isColorString, padHexColor, toHexString} = goog.require('os.color');
-const LayerAdd = goog.require('os.command.LayerAdd');
-const DataManager = goog.require('os.data.DataManager');
-const {isLocal} = goog.require('os.file');
-const MappingManager = goog.require('os.im.mapping.MappingManager');
-const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
-const {getMapContainer} = goog.require('os.map.instance');
-const VectorSource = goog.require('os.source.Vector');
-const AbstractState = goog.require('os.state.AbstractState');
-const {getStateManager} = goog.require('os.state.instance');
-const XMLState = goog.require('os.state.XMLState');
-const LayerTag = goog.require('os.state.v3.LayerTag');
-const {isBoolean, isFloat, isHex} = goog.require('os.string');
-const osStyle = goog.require('os.style');
-const StyleField = goog.require('os.style.StyleField');
-const osLabel = goog.require('os.style.label');
-const {tagsFromXML} = goog.require('os.tag');
-const {isLayerDeprecated, showDeprecatedWarning} = goog.require('os.ui.util.deprecated');
-const {addBase} = goog.require('os.uri');
-const {appendElement, createElement} = goog.require('os.xml');
 
 const Logger = goog.requireType('goog.log.Logger');
-const IMapping = goog.requireType('os.im.mapping.IMapping');
-const ILayer = goog.requireType('os.layer.ILayer');
-const XMLStateOptions = goog.requireType('os.state.XMLStateOptions');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: XMLStateOptions} = goog.requireType('os.state.XMLStateOptions');
 const {LabelConfig} = goog.requireType('os.style.label');
 
 
 /**
  */
-class LayerState extends XMLState {
+export default class LayerState extends XMLState {
   /**
    * Constructor.
    */
@@ -835,5 +836,3 @@ class LayerState extends XMLState {
  * @type {Logger}
  */
 const logger = log.getLogger('os.state.v3.LayerState');
-
-exports = LayerState;

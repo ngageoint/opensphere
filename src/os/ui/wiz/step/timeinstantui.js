@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ui.wiz.step.TimeInstantUI');
 
+import {getItemField} from '../../../im/mapping/mapping.js';
 import {ROOT} from '../../../os.js';
+import * as osTime from '../../../time/time.js';
 import Module from '../../module.js';
-const {getItemField} = goog.require('os.im.mapping');
-const osTime = goog.require('os.time');
 
-const BaseParserConfig = goog.requireType('os.parse.BaseParserConfig');
+const {default: BaseParserConfig} = goog.requireType('os.parse.BaseParserConfig');
 const {default: TimeMappingModel} = goog.requireType('os.ui.im.mapping.time.TimeMappingModel');
 
 

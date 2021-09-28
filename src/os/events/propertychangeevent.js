@@ -1,4 +1,4 @@
-goog.module('os.events.PropertyChangeEvent');
+goog.declareModuleId('os.events.PropertyChangeEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -9,7 +9,7 @@ const OLEventTarget = goog.requireType('ol.events.EventTarget');
 /**
  * A property change event.
  */
-class PropertyChangeEvent extends GoogEvent {
+export default class PropertyChangeEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string=} opt_property The property that changed
@@ -80,6 +80,3 @@ class PropertyChangeEvent extends GoogEvent {
  * @suppress {duplicate}
  */
 PropertyChangeEvent.prototype.target;
-
-
-exports = PropertyChangeEvent;

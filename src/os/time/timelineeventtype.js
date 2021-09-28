@@ -1,9 +1,9 @@
-goog.module('os.time.TimelineEventType');
+goog.declareModuleId('os.time.TimelineEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const TimelineEventType = {
   DURATION_CHANGE: 'timeline.durationChange',
   FPS_CHANGE: 'timeline.fpsChange',
   LOOPING_TOGGLE: 'timeline.loopingToggle',
@@ -22,3 +22,5 @@ exports = {
   HOLD_RANGE_CHANGED: 'timeline.animate.holdRangeChanged',
   REFRESH_LOAD: 'timeline.refreshLoad'
 };
+
+export default TimelineEventType;

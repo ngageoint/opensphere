@@ -1,16 +1,17 @@
-goog.module('os.command.SwitchView');
+goog.declareModuleId('os.command.SwitchView');
+
+import Settings from '../config/settings.js';
+import * as osMap from '../map/map.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import State from './state.js';
 
 const {DEFAULT_MAX_ZOOM} = goog.require('ol');
 const View = goog.require('ol.View');
 const olExtent = goog.require('ol.extent');
 const olProj = goog.require('ol.proj');
 const tilegrid = goog.require('ol.tilegrid');
-const State = goog.require('os.command.State');
-const Settings = goog.require('os.config.Settings');
-const osMap = goog.require('os.map');
-const {getMapContainer} = goog.require('os.map.instance');
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -18,7 +19,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class SwitchView {
+export default class SwitchView {
   /**
    * Constructor.
    * @param {!ol.ProjectionLike} projection
@@ -145,5 +146,3 @@ class SwitchView {
     return true;
   }
 }
-
-exports = SwitchView;

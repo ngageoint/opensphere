@@ -1,4 +1,4 @@
-goog.module('os.xt.events');
+goog.declareModuleId('os.xt.events');
 
 const EventTarget = goog.require('goog.events.EventTarget');
 
@@ -7,13 +7,13 @@ const EventTarget = goog.require('goog.events.EventTarget');
  * Dispatches global events for XT
  * @type {!EventTarget}
  */
-const DISPATCHER = new EventTarget();
+export const DISPATCHER = new EventTarget();
 
 /**
  * Event types for XT
  * @enum {string}
  */
-const EventType = {
+export const EventType = {
   MASTER_APPOINTED: 'os.xt.events.masterAppointed'
 };
 
@@ -27,9 +27,4 @@ const EventType = {
  */
 EventType.forGroup = function(type, group) {
   return [type, group].join('.');
-};
-
-exports = {
-  DISPATCHER,
-  EventType
 };

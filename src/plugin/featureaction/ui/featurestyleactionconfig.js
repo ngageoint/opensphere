@@ -2,8 +2,15 @@ goog.declareModuleId('plugin.im.action.feature.ui.StyleConfigUI');
 
 import '../../../os/ui/layer/iconstylecontrols.js';
 import '../../../os/ui/layer/vectorstylecontrols.js';
+import * as osColor from '../../../os/color.js';
+import DataManager from '../../../os/data/datamanager.js';
 import * as dispatcher from '../../../os/dispatcher.js';
+import Fields from '../../../os/fields/fields.js';
+import instanceOf from '../../../os/instanceof.js';
+import * as osObject from '../../../os/object/object.js';
+import VectorSource from '../../../os/source/vectorsource.js';
 import * as osStyle from '../../../os/style/style.js';
+import StyleField from '../../../os/style/stylefield.js';
 import * as kml from '../../../os/ui/file/kml/kml.js';
 import IconPickerEventType from '../../../os/ui/icon/iconpickereventtype.js';
 import EventType from '../../../os/ui/im/action/eventtype.js';
@@ -15,13 +22,6 @@ import ActionConfigCtrl from './featureactionconfig.js';
 const googArray = goog.require('goog.array');
 const googObject = goog.require('goog.object');
 const googString = goog.require('goog.string');
-const Fields = goog.require('os.Fields');
-const osColor = goog.require('os.color');
-const DataManager = goog.require('os.data.DataManager');
-const instanceOf = goog.require('os.instanceOf');
-const osObject = goog.require('os.object');
-const VectorSource = goog.require('os.source.Vector');
-const StyleField = goog.require('os.style.StyleField');
 
 const {default: StyleAction} = goog.requireType('plugin.im.action.feature.StyleAction');
 

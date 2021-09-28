@@ -1,5 +1,11 @@
 goog.declareModuleId('os.ui.query.BasicQueryReader');
 
+import BaseFilterManager from '../../filter/basefiltermanager.js';
+import FilterEntry from '../../filter/filterentry.js';
+import {METHOD_FIELD} from '../../interpolate.js';
+import Method from '../../interpolatemethod.js';
+import {getAreaManager, getQueryManager} from '../../query/queryinstance.js';
+import {unescape as xmlUnescape} from '../../xml.js';
 import {OPERATIONS} from '../filter/filter.js';
 import AbstractQueryReader from './abstractqueryreader.js';
 
@@ -8,12 +14,6 @@ const {assert} = goog.require('goog.asserts');
 const {assertIsElement} = goog.require('goog.asserts.dom');
 const {getChildren, getFirstElementChild, getNextElementSibling, getParentElement} = goog.require('goog.dom');
 const {serialize} = goog.require('goog.dom.xml');
-const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
-const FilterEntry = goog.require('os.filter.FilterEntry');
-const {METHOD_FIELD} = goog.require('os.interpolate');
-const Method = goog.require('os.interpolate.Method');
-const {getAreaManager, getQueryManager} = goog.require('os.query.instance');
-const {unescape: xmlUnescape} = goog.require('os.xml');
 
 
 /**

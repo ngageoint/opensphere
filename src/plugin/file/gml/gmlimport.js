@@ -1,12 +1,12 @@
 goog.declareModuleId('plugin.file.gml.GMLImport');
 
+import FileDescriptor from '../../../os/data/filedescriptor.js';
 import {ROOT} from '../../../os/os.js';
 import AbstractFileImportCtrl from '../../../os/ui/file/ui/abstractfileimport.js';
 import Module from '../../../os/ui/module.js';
 import GMLDescriptor from './gmldescriptor.js';
 import GMLProvider from './gmlprovider.js';
 
-const FileDescriptor = goog.require('os.data.FileDescriptor');
 const {default: GMLParserConfig} = goog.requireType('plugin.file.gml.GMLParserConfig');
 
 

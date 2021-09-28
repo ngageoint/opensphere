@@ -1,15 +1,15 @@
-goog.module('os.filter.impl.ecql.FilterFormatter');
+goog.declareModuleId('os.filter.impl.ecql.FilterFormatter');
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');
 
-const IFilterFormatter = goog.requireType('os.filter.IFilterFormatter');
+const {default: IFilterFormatter} = goog.requireType('os.filter.IFilterFormatter');
 
 
 /**
  * @implements {IFilterFormatter}
  */
-class FilterFormatter {
+export default class FilterFormatter {
   /**
    * Constructor.
    */
@@ -217,5 +217,3 @@ FilterFormatter.CLOSE_PAREN_ = /[)]/g;
  * @private
  */
 FilterFormatter.CLOSE_PAREN_REPLACEMENT_ = '{closeParen}';
-
-exports = FilterFormatter;

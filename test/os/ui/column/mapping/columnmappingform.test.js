@@ -9,10 +9,10 @@ goog.require('plugin.ogc.OGCLayerDescriptor');
 goog.require('plugin.ogc.wmts.WMTSServer');
 
 describe('os.ui.column.mapping.ColumnMappingFormUI', function() {
-  const ColumnMapping = goog.module.get('os.column.ColumnMapping');
-  const ColumnMappingManager = goog.module.get('os.column.ColumnMappingManager');
-  const ConfigDescriptor = goog.module.get('os.data.ConfigDescriptor');
-  const DataManager = goog.module.get('os.data.DataManager');
+  const {default: ColumnMapping} = goog.module.get('os.column.ColumnMapping');
+  const {default: ColumnMappingManager} = goog.module.get('os.column.ColumnMappingManager');
+  const {default: ConfigDescriptor} = goog.module.get('os.data.ConfigDescriptor');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
   const {default: ColumnModelNode} = goog.module.get('os.ui.column.mapping.ColumnModelNode');
   const {default: GeoServer} = goog.module.get('plugin.ogc.GeoServer');
   const {default: OGCLayerDescriptor} = goog.module.get('plugin.ogc.OGCLayerDescriptor');

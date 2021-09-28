@@ -1,10 +1,11 @@
 /**
  * @fileoverview Abstract interface for asynchonously storing and retrieving data using some persistence mechanism.
  */
-goog.module('os.storage.AsyncStorage');
+goog.declareModuleId('os.storage.AsyncStorage');
+
+import IAsyncStorage from './iasyncstorage.js';// eslint-disable-line
 
 const Disposable = goog.require('goog.Disposable');
-const IAsyncStorage = goog.require('os.storage.IAsyncStorage'); // eslint-disable-line
 
 const Deferred = goog.requireType('goog.async.Deferred');
 
@@ -16,7 +17,7 @@ const Deferred = goog.requireType('goog.async.Deferred');
  * @implements {IAsyncStorage}
  * @template T
  */
-class AsyncStorage extends Disposable {
+export default class AsyncStorage extends Disposable {
   /**
    * Constructor.
    */
@@ -33,5 +34,3 @@ class AsyncStorage extends Disposable {
    */
   getAll() {}
 }
-
-exports = AsyncStorage;

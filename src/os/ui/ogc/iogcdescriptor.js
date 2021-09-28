@@ -3,9 +3,9 @@ goog.declareModuleId('os.ui.ogc.IOGCDescriptor');
 import IWMSLayer from './wms/iwmslayer.js';// eslint-disable-line
 
 const QueryData = goog.requireType('goog.Uri.QueryData');
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const IServerDescriptor = goog.requireType('os.data.IServerDescriptor');
-const IFilterable = goog.requireType('os.filter.IFilterable');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: IServerDescriptor} = goog.requireType('os.data.IServerDescriptor');
+const {default: IFilterable} = goog.requireType('os.filter.IFilterable');
 const {default: IFeatureTypeDescriptor} = goog.requireType('os.ui.ogc.IFeatureTypeDescriptor');
 
 

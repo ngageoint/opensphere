@@ -1,13 +1,14 @@
-goog.module('os.feature.measure');
+goog.declareModuleId('os.feature.measure');
+
+import {modifyBearing, getFormattedBearing} from '../bearing/bearing.js';
+import {ORIGINAL_GEOM_FIELD} from '../interpolate.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {notifyStyleChange} from '../style/style.js';
+import TimelineController from '../time/timelinecontroller.js';
+import UnitManager from '../unit/unitmanager.js';
+import {getLayer} from './feature.js';
 
 const LineString = goog.require('ol.geom.LineString');
-const {modifyBearing, getFormattedBearing} = goog.require('os.bearing');
-const {getLayer} = goog.require('os.feature');
-const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
-const {getMapContainer} = goog.require('os.map.instance');
-const {notifyStyleChange} = goog.require('os.style');
-const TimelineController = goog.require('os.time.TimelineController');
-const UnitManager = goog.require('os.unit.UnitManager');
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
@@ -17,7 +18,7 @@ const Style = goog.requireType('ol.style.Style');
 /**
  * Updates all the current measure features
  */
-const updateAll = function() {
+export const updateAll = function() {
   getMapContainer().getFeatures().filter(function(item) {
     var title = item.get('title');
     return title && title.indexOf('Measure') > -1;
@@ -28,13 +29,13 @@ const updateAll = function() {
  * The decimal precision (number of digits after the decimal place) to use in formatting.
  * @type {number}
  */
-const numDecimalPlaces = 3;
+export const numDecimalPlaces = 3;
 
 /**
  * @param {Feature} feature
  * @suppress {accessControls}
  */
-const update = function(feature) {
+export const update = function(feature) {
   if (!feature) {
     return;
   }
@@ -103,10 +104,4 @@ const update = function(feature) {
       }
     }
   }
-};
-
-exports = {
-  updateAll,
-  numDecimalPlaces,
-  update
 };

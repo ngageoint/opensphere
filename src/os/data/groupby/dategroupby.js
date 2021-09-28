@@ -1,17 +1,18 @@
-goog.module('os.data.groupby.DateGroupBy');
+goog.declareModuleId('os.data.groupby.DateGroupBy');
+
+import DescriptorNode from '../../ui/data/descriptornode.js';
+import SlickTreeNode from '../../ui/slick/slicktreenode.js';
+import DataManager from '../datamanager.js';
+import BaseGroupBy from './basegroupby.js';
 
 const googArray = goog.require('goog.array');
 const googString = goog.require('goog.string');
-const DataManager = goog.require('os.data.DataManager');
-const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
-const {default: DescriptorNode} = goog.require('os.ui.data.DescriptorNode');
-const {default: SlickTreeNode} = goog.require('os.ui.slick.SlickTreeNode');
 
 
 /**
  * Groups nodes by their max date
  */
-class DateGroupBy extends BaseGroupBy {
+export default class DateGroupBy extends BaseGroupBy {
   /**
    * Constructor.
    * @param {boolean=} opt_open Whether or not to keep the category open by default
@@ -158,6 +159,3 @@ const periods = [{
   label: 'Last 60 Days',
   offset: 60 * 24 * 60 * 60 * 1000
 }];
-
-
-exports = DateGroupBy;

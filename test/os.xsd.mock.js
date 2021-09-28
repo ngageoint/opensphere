@@ -3,7 +3,9 @@ goog.declareModuleId('os.test.xsd');
 goog.require('goog.Promise');
 goog.require('goog.dom.xml');
 goog.require('goog.labs.net.xhr');
-goog.require('os.xml');
+
+
+import '../src/os/xml.js';
 
 
 /**

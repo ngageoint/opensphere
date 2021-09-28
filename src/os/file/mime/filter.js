@@ -1,16 +1,12 @@
-goog.module('os.file.mime.filter');
+goog.declareModuleId('os.file.mime.filter');
 
-const mime = goog.require('os.file.mime');
-const xml = goog.require('os.file.mime.xml');
+import * as mime from '../mime.js';
+import * as xml from './xml.js';
 
 
 /**
  * @type {string}
  */
-const TYPE = xml.TYPE + '; subtype=FILTER';
+export const TYPE = xml.TYPE + '; subtype=FILTER';
 
 mime.register(TYPE, xml.createDetect(/^filters$/i, /\/state\//i), 0, xml.TYPE);
-
-exports = {
-  TYPE
-};

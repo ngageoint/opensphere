@@ -2,7 +2,7 @@ goog.require('os.math.Circle');
 
 
 describe('os.math.Circle', function() {
-  const Circle = goog.module.get('os.math.Circle');
+  const {default: Circle} = goog.module.get('os.math.Circle');
 
   it('should create with defaults', function() {
     var circle = new Circle();

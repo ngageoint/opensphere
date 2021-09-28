@@ -2,7 +2,7 @@ goog.declareModuleId('os.ui.search.ResultCardUI');
 
 import Module from '../module.js';
 
-const ISearchResult = goog.requireType('os.search.ISearchResult');
+const {default: ISearchResult} = goog.requireType('os.search.ISearchResult');
 
 
 /**

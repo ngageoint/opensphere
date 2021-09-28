@@ -1,13 +1,14 @@
-goog.module('os.ogc.filter.ModifierConstants');
-
+goog.declareModuleId('os.ogc.filter.ModifierConstants');
 
 /**
  * @enum {string}
  */
-exports = {
+const ModifierConstants = {
   EXCLUSIONS: '{exclusions}',
   FILTER: '{customFilter}',
   IDENTIFIERS: '{identifiers}',
   SPATIAL: '{spatial}',
   TEMPORAL: '{temporal}'
 };
+
+export default ModifierConstants;

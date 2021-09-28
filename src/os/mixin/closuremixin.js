@@ -2,7 +2,7 @@
  * @fileoverview Replacing Closure googObject functions to check hasOwnProperty. This makes the functions work with
  *               polyfills to Array and Object.
  */
-goog.module('os.mixin.closure');
+goog.declareModuleId('os.mixin.closure');
 
 const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
 const googObject = goog.require('goog.object');

@@ -1,5 +1,10 @@
 goog.declareModuleId('plugin.im.action.feature.node');
 
+import CommandProcessor from '../../os/command/commandprocessor.js';
+import ParallelCommand from '../../os/command/parallelcommand.js';
+import * as action from '../../os/im/action/importaction.js';
+import * as structs from '../../os/structs/structs.js';
+import TriState from '../../os/structs/tristate.js';
 import * as filterAction from '../../os/ui/im/action/filteraction.js';
 import {launchFilterActionExport} from '../../os/ui/im/action/filteractionexport.js';
 import FilterActionExportType from '../../os/ui/im/action/filteractionexporttype.js';
@@ -9,14 +14,9 @@ import MenuItemType from '../../os/ui/menu/menuitemtype.js';
 import {Metrics as FeatureActionMetrics, editEntry, getExportName} from './featureaction.js';
 
 const googDispose = goog.require('goog.dispose');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const ParallelCommand = goog.require('os.command.ParallelCommand');
-const action = goog.require('os.im.action');
-const structs = goog.require('os.structs');
-const TriState = goog.require('os.structs.TriState');
 
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 const {default: FilterActionNode} = goog.requireType('os.ui.im.action.FilterActionNode');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const layerMenu = goog.requireType('os.ui.menu.layer');

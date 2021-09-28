@@ -1,13 +1,13 @@
-goog.module('os.filter.AbstractFilter');
+goog.declareModuleId('os.filter.AbstractFilter');
 
-const IFilter = goog.requireType('os.filter.IFilter');
+const {default: IFilter} = goog.requireType('os.filter.IFilter');
 
 
 /**
  * @implements {IFilter}
  * @template T
  */
-class AbstractFilter {
+export default class AbstractFilter {
   /**
    * Constructor.
    */
@@ -40,5 +40,3 @@ class AbstractFilter {
     this.id_ = id;
   }
 }
-
-exports = AbstractFilter;

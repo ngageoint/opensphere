@@ -1,13 +1,13 @@
-goog.module('os.unit.FeetUnits');
+goog.declareModuleId('os.unit.FeetUnits');
 
-const BaseUnit = goog.require('os.unit.BaseUnit');
-const Multiplier = goog.require('os.unit.Multiplier');
+import BaseUnit from './baseunit.js';
+import Multiplier from './multiplier.js';
 
 
 /**
  * Responsible for receiving, logging and reporting alerts
  */
-class FeetUnits extends BaseUnit {
+export default class FeetUnits extends BaseUnit {
   /**
    * Constructor.
    */
@@ -57,5 +57,3 @@ class FeetUnits extends BaseUnit {
     this.multipliers.push(new Multiplier('ft', 1, true, 'feet'));
   }
 }
-
-exports = FeetUnits;

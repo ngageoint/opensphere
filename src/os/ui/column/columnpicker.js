@@ -3,7 +3,7 @@ goog.declareModuleId('os.ui.column.ColumnPickerUI');
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 
 
 /**

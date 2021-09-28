@@ -1,12 +1,11 @@
 goog.declareModuleId('os.ui.query.ComboNode');
 
+import DataManager from '../../data/datamanager.js';
+import {getAreaManager, getFilterManager} from '../../query/queryinstance.js';
+import TriState from '../../structs/tristate.js';
 import {toFilterString} from '../filter/filter.js';
 import SlickTreeNode from '../slick/slicktreenode.js';
 import {directiveTag} from './combonodeui.js';
-
-const DataManager = goog.require('os.data.DataManager');
-const {getAreaManager, getFilterManager} = goog.require('os.query.instance');
-const TriState = goog.require('os.structs.TriState');
 
 
 /**

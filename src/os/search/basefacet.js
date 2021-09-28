@@ -1,15 +1,15 @@
-goog.module('os.search.BaseFacet');
+goog.declareModuleId('os.search.BaseFacet');
 
 const Promise = goog.requireType('goog.Promise');
-const AppliedFacets = goog.requireType('os.search.AppliedFacets');
-const FacetSet = goog.requireType('os.search.FacetSet');
+const {default: AppliedFacets} = goog.requireType('os.search.AppliedFacets');
+const {default: FacetSet} = goog.requireType('os.search.FacetSet');
 
 
 /**
  * Base implementation of a local search facet.
  * @abstract
  */
-class BaseFacet {
+export default class BaseFacet {
   /**
    * Constructor.
    */
@@ -88,5 +88,3 @@ class BaseFacet {
     results[key] += opt_increment;
   }
 }
-
-exports = BaseFacet;

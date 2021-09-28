@@ -1,15 +1,16 @@
-goog.module('os.data.groupby.LayerProviderGroupBy');
+goog.declareModuleId('os.data.groupby.LayerProviderGroupBy');
+
+import SlickTreeNode from '../../ui/slick/slicktreenode.js';
+import BaseGroupBy from './basegroupby.js';
 
 const googArray = goog.require('goog.array');
-const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
-const {default: SlickTreeNode} = goog.require('os.ui.slick.SlickTreeNode');
-const LayerNode = goog.requireType('os.data.LayerNode');
+const {default: LayerNode} = goog.requireType('os.data.LayerNode');
 
 
 /**
  * Groups layers by provider
  */
-class LayerProviderGroupBy extends BaseGroupBy {
+export default class LayerProviderGroupBy extends BaseGroupBy {
   /**
    * Constructor.
    */
@@ -49,5 +50,3 @@ class LayerProviderGroupBy extends BaseGroupBy {
     return group;
   }
 }
-
-exports = LayerProviderGroupBy;

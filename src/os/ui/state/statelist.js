@@ -1,17 +1,17 @@
 goog.declareModuleId('os.ui.state.StateListUI');
 
 import '../checklist.js';
+import {getAppName} from '../../config/config.js';
+import DataManager from '../../data/datamanager.js';
+import DescriptorEventType from '../../data/descriptoreventtype.js';
 import {ROOT} from '../../os.js';
 import ChecklistEvent from '../checklistevent.js';
 import Module from '../module.js';
 import {apply} from '../ui.js';
 import AbstractStateDescriptor from './abstractstatedescriptor.js';
 import StateListEvent from './statelistevent.js';
-const {getAppName} = goog.require('os.config');
-const DataManager = goog.require('os.data.DataManager');
-const DescriptorEventType = goog.require('os.data.DescriptorEventType');
 
-const DescriptorEvent = goog.requireType('os.data.DescriptorEvent');
+const {default: DescriptorEvent} = goog.requireType('os.data.DescriptorEvent');
 const {default: IStateDescriptor} = goog.requireType('os.ui.state.IStateDescriptor');
 
 

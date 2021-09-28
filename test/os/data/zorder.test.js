@@ -12,9 +12,9 @@ goog.require('os.mock');
 
 describe('os.data.ZOrder', function() {
   const googObject = goog.module.get('goog.object');
-  const ZOrder = goog.module.get('os.data.ZOrder');
-  const ZOrderEventType = goog.module.get('os.data.ZOrderEventType');
-  const LayerConfigManager = goog.module.get('os.layer.config.LayerConfigManager');
+  const {default: ZOrder} = goog.module.get('os.data.ZOrder');
+  const {default: ZOrderEventType} = goog.module.get('os.data.ZOrderEventType');
+  const {default: LayerConfigManager} = goog.module.get('os.layer.config.LayerConfigManager');
   const MockTileLayerConfig = goog.module.get('os.layer.config.MockTileLayerConfig');
   const MockVectorLayerConfig = goog.module.get('os.layer.config.MockVectorLayerConfig');
   const {getMapContainer} = goog.module.get('os.map.instance');

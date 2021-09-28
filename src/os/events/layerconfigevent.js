@@ -1,11 +1,11 @@
-goog.module('os.events.LayerConfigEvent');
+goog.declareModuleId('os.events.LayerConfigEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
 
 /**
  */
-class LayerConfigEvent extends GoogEvent {
+export default class LayerConfigEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -20,5 +20,3 @@ class LayerConfigEvent extends GoogEvent {
     this.options = options;
   }
 }
-
-exports = LayerConfigEvent;

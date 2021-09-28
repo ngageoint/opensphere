@@ -1,25 +1,26 @@
-goog.module('os.data.histo');
+goog.declareModuleId('os.data.histo');
+
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import FilterEntry from '../../filter/filterentry.js';
+import {isCondition} from '../../ui/filter/filter.js';
 
 const dom = goog.require('goog.dom');
 const olArray = goog.require('ol.array');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const FilterEntry = goog.require('os.filter.FilterEntry');
-const {isCondition} = goog.require('os.ui.filter');
 
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 const {default: IHistogramUI} = goog.requireType('os.ui.IHistogramUI');
 
 
 /**
  * @typedef {function(number):!Array<string>}
  */
-let GradientFn;
+export let GradientFn;
 
 /**
  * @enum {string}
  */
-const HistoEventType = {
+export const HistoEventType = {
   // UI events
   REMOVE_CASCADE: 'histo:removeCascade',
   TOGGLE_CASCADE: 'histo:toggleCascade',
@@ -33,7 +34,7 @@ const HistoEventType = {
  * The label used for manual overrides to feature colors
  * @type {string}
  */
-const OVERRIDE_LABEL = 'Manual';
+export const OVERRIDE_LABEL = 'Manual';
 
 /**
  * Create a filter from an array of histogram controllers.
@@ -43,7 +44,7 @@ const OVERRIDE_LABEL = 'Manual';
  * @param {boolean=} opt_allowAll If all bins should be used in absence of a cascade/selection.
  * @return {FilterEntry}
  */
-const createFilter = function(controllers, columns, opt_allowAll) {
+export const createFilter = function(controllers, columns, opt_allowAll) {
   var entry = null;
   var filter = [];
 
@@ -87,7 +88,7 @@ const createFilter = function(controllers, columns, opt_allowAll) {
  * @param {boolean=} opt_allowAll If all bins should be used in absence of a cascade/selection.
  * @return {!Array<!IHistogramUI>}
  */
-const filterValidControllers = function(controllers, columns, opt_allowAll) {
+export const filterValidControllers = function(controllers, columns, opt_allowAll) {
   var valid = [];
   var errorMsg;
   var errorLevel;
@@ -144,12 +145,4 @@ const filterValidControllers = function(controllers, columns, opt_allowAll) {
   }
 
   return valid;
-};
-
-exports = {
-  GradientFn,
-  HistoEventType,
-  OVERRIDE_LABEL,
-  createFilter,
-  filterValidControllers
 };

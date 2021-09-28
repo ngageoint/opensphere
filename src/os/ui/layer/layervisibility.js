@@ -2,8 +2,8 @@ goog.declareModuleId('os.ui.layer.LayerVisibilityUI');
 
 import Module from '../module.js';
 
-const LayerNode = goog.requireType('os.data.LayerNode');
-const ILayer = goog.requireType('os.layer.ILayer');
+const {default: LayerNode} = goog.requireType('os.data.LayerNode');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**

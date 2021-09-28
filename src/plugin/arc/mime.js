@@ -1,14 +1,14 @@
 goog.declareModuleId('plugin.arc.mime');
 
+import * as mime from '../../os/file/mime.js';
+import {TYPE as HTML_TYPE} from '../../os/file/mime/html.js';
+import {TYPE as XML_TYPE} from '../../os/file/mime/xml.js';
 import * as arc from './arc.js';
 
 const Promise = goog.require('goog.Promise');
-const mime = goog.require('os.file.mime');
-const {TYPE: HTML_TYPE} = goog.require('os.file.mime.html');
-const {TYPE: XML_TYPE} = goog.require('os.file.mime.xml');
 
-const OSFile = goog.requireType('os.file.File');
-const XMLContext = goog.requireType('os.file.mime.xml.Context');
+const {default: OSFile} = goog.requireType('os.file.File');
+const {default: XMLContext} = goog.requireType('os.file.mime.xml.Context');
 
 
 /**

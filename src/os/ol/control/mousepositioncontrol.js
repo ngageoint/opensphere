@@ -1,25 +1,26 @@
-goog.module('os.ol.control.MousePosition');
+goog.declareModuleId('os.ol.control.MousePosition');
+
+import BearingSettingsKeys from '../../bearing/bearingsettingskeys.js';
+import DisplaySetting from '../../config/displaysetting.js';
+import Settings from '../../config/settings.js';
+import {padCoordinate, toDegreesDecimalMinutes, toSexagesimal} from '../../geo/geo.js';
+import {normalizeLongitude} from '../../geo/geo2.js';
+import {EPSG4326} from '../../proj/proj.js';
+import {LocationSetting} from '../../ui/location/location.js';
+import Format from '../../ui/location/locationformat.js';
+import UnitManager from '../../unit/unitmanager.js';
 
 const {listen, unlistenByKey} = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
 const ViewHint = goog.require('ol.ViewHint');
 const OLMousePosition = goog.require('ol.control.MousePosition');
 const {toLonLat} = goog.require('ol.proj');
-const BearingSettingsKeys = goog.require('os.bearing.BearingSettingsKeys');
-const DisplaySetting = goog.require('os.config.DisplaySetting');
-const Settings = goog.require('os.config.Settings');
-const {padCoordinate, toDegreesDecimalMinutes, toSexagesimal} = goog.require('os.geo');
-const {normalizeLongitude} = goog.require('os.geo2');
-const {EPSG4326} = goog.require('os.proj');
-const {LocationSetting} = goog.require('os.ui.location');
-const {default: Format} = goog.require('os.ui.location.Format');
-const UnitManager = goog.require('os.unit.UnitManager');
 
 
 /**
  * Extends the OpenLayers 3 MousePosition control to allow switching between different coordinate formats.
  */
-class MousePosition extends OLMousePosition {
+export default class MousePosition extends OLMousePosition {
   /**
    * Constructor.
    * @param {olx.control.MousePositionOptions=} opt_options Mouse position options.
@@ -308,6 +309,3 @@ MousePosition.FormatMap = {
   'ddm': MousePosition.DDM,
   'mgrs': MousePosition.MGRS_FORMAT
 };
-
-
-exports = MousePosition;

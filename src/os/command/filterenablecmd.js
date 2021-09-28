@@ -1,15 +1,15 @@
-goog.module('os.command.FilterEnable');
+goog.declareModuleId('os.command.FilterEnable');
 
-const State = goog.require('os.command.State');
-const filterManager = goog.require('os.query.FilterManager');
-const {default: AbstractFilter} = goog.require('os.ui.query.cmd.AbstractFilter');
+import filterManager from '../query/filtermanager.js';
+import AbstractFilter from '../ui/query/cmd/abstractfiltercmd.js';
+import State from './state.js';
 
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 
 
 /**
  */
-class FilterEnable extends AbstractFilter {
+export default class FilterEnable extends AbstractFilter {
   /**
    * Constructor.
    * @param {FilterEntry} filter
@@ -71,5 +71,3 @@ class FilterEnable extends AbstractFilter {
     return false;
   }
 }
-
-exports = FilterEnable;

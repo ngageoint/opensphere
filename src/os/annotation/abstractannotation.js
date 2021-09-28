@@ -1,8 +1,8 @@
-goog.module('os.annotation.AbstractAnnotation');
+goog.declareModuleId('os.annotation.AbstractAnnotation');
 
 const Disposable = goog.require('goog.Disposable');
 
-const IAnnotation = goog.requireType('os.annotation.IAnnotation');
+const {default: IAnnotation} = goog.requireType('os.annotation.IAnnotation');
 
 
 /**
@@ -11,7 +11,7 @@ const IAnnotation = goog.requireType('os.annotation.IAnnotation');
  * @abstract
  * @implements {IAnnotation}
  */
-class AbstractAnnotation extends Disposable {
+export default class AbstractAnnotation extends Disposable {
   /**
    * Constructor.
    */
@@ -80,5 +80,3 @@ class AbstractAnnotation extends Disposable {
    */
   setVisibleInternal() {}
 }
-
-exports = AbstractAnnotation;

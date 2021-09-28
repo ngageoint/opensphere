@@ -1,7 +1,42 @@
-goog.module('os.layer.Tile');
+goog.declareModuleId('os.layer.Tile');
 
-goog.require('os.mixin.TileImage');
-goog.require('os.mixin.UrlTileSource');
+import '../mixin/tileimagemixin.js';
+import '../mixin/urltilemixin.js';
+import EventType from '../action/eventtype.js';
+import * as osColor from '../color.js';
+import DataManager from '../data/datamanager.js';
+import * as dispatcher from '../dispatcher.js';
+import LayerEvent from '../events/layerevent.js';
+import LayerEventType from '../events/layereventtype.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import {reduceExtentFromLayers} from '../fn/fn.js';
+import IGroupable from '../igroupable.js';
+import osImplements from '../implements.js';
+import ILegendRenderer from '../legend/ilegendrenderer.js';
+import {drawTileLayer} from '../legend/legend.js';
+import * as osMap from '../map/map.js';
+import {precision} from '../math/math.js';
+import {DEFAULT_TILE_STYLE} from '../ogc/ogc.js';
+import registerClass from '../registerclass.js';
+import IStyle from '../source/istylesource.js';
+import SourcePropertyChange from '../source/propertychange.js';
+import {isStateFile} from '../state/state.js';
+import {notifyStyleChange} from '../style/style.js';
+import TimeInstant from '../time/timeinstant.js';
+import Icons from '../ui/icons.js';
+import {adjustIconSet, createIconSet} from '../ui/icons/index.js';
+import IconsSVG from '../ui/iconssvg.js';
+import {directiveTag as layerUi} from '../ui/layer/tilelayerui.js';
+import {directiveTag as nodeUi} from '../ui/node/defaultlayernodeui.js';
+import {launchRenameDialog} from '../ui/renamelayer.js';
+import ExplicitLayerType from './explicitlayertype.js';
+import IColorableLayer from './icolorablelayer.js';
+import ILayer from './ilayer.js';
+import {identifyLayer} from './layer.js';
+import LayerClass from './layerclass.js';
+import LayerType from './layertype.js';
+import PropertyChange from './propertychange.js';
+import SynchronizerType from './synchronizertype.js';
 
 const {assert} = goog.require('goog.asserts');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -14,42 +49,6 @@ const OLTileLayer = goog.require('ol.layer.Tile');
 const TileImage = goog.require('ol.source.TileImage');
 const UrlTile = goog.require('ol.source.UrlTile');
 
-const dispatcher = goog.require('os.Dispatcher');
-const IGroupable = goog.require('os.IGroupable');
-const EventType = goog.require('os.action.EventType');
-const osColor = goog.require('os.color');
-const DataManager = goog.require('os.data.DataManager');
-const LayerEvent = goog.require('os.events.LayerEvent');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {reduceExtentFromLayers} = goog.require('os.fn');
-const osImplements = goog.require('os.implements');
-const {identifyLayer} = goog.require('os.layer');
-const ExplicitLayerType = goog.require('os.layer.ExplicitLayerType');
-const IColorableLayer = goog.require('os.layer.IColorableLayer');
-const ILayer = goog.require('os.layer.ILayer');
-const LayerClass = goog.require('os.layer.LayerClass');
-const LayerType = goog.require('os.layer.LayerType');
-const PropertyChange = goog.require('os.layer.PropertyChange');
-const SynchronizerType = goog.require('os.layer.SynchronizerType');
-const {drawTileLayer} = goog.require('os.legend');
-const ILegendRenderer = goog.require('os.legend.ILegendRenderer');
-const osMap = goog.require('os.map');
-const {precision} = goog.require('os.math');
-const {DEFAULT_TILE_STYLE} = goog.require('os.ogc');
-const registerClass = goog.require('os.registerClass');
-const IStyle = goog.require('os.source.IStyle');
-const SourcePropertyChange = goog.require('os.source.PropertyChange');
-const {isStateFile} = goog.require('os.state');
-const {notifyStyleChange} = goog.require('os.style');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const {default: Icons} = goog.require('os.ui.Icons');
-const {default: IconsSVG} = goog.require('os.ui.IconsSVG');
-const {adjustIconSet, createIconSet} = goog.require('os.ui.icons');
-const {directiveTag: layerUi} = goog.require('os.ui.layer.TileLayerUI');
-const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
-const {launchRenameDialog} = goog.require('os.ui.renamelayer');
-
 const {TileFilterFn} = goog.requireType('os.tile');
 const {default: IActionTarget} = goog.requireType('os.ui.action.IActionTarget');
 
@@ -60,7 +59,7 @@ const {default: IActionTarget} = goog.requireType('os.ui.action.IActionTarget');
  * @implements {IGroupable}
  * @implements {ILegendRenderer}
  */
-class Tile extends OLTileLayer {
+export default class Tile extends OLTileLayer {
   /**
    * Constructor.
    * @param {olx.layer.TileOptions} options Tile layer options
@@ -1179,6 +1178,3 @@ osImplements(Tile, IColorableLayer.ID);
 osImplements(Tile, IGroupable.ID);
 osImplements(Tile, ILegendRenderer.ID);
 registerClass(LayerClass.TILE, Tile);
-
-
-exports = Tile;

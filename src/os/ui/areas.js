@@ -1,7 +1,16 @@
 goog.declareModuleId('os.ui.AreasUI');
 
 import './dragdrop/urldragdropui.js';
+import AlertManager from '../alert/alertmanager.js';
+import AreaNode from '../data/areanode.js';
+import AreaTreeSearch from '../data/areatreesearch.js';
+import SourceGroupBy from '../data/groupby/sourcegroupby.js';
+import {createFromFile} from '../file/index.js';
+import {filterFalsey} from '../fn/fn.js';
 import {ROOT} from '../os.js';
+import AreaManager from '../query/areamanager.js';
+import {launchQueryImport} from '../query/query.js';
+import {getLeafNodes} from '../structs/structs.js';
 import TagGroupBy from './data/groupby/taggroupby.js';
 import * as AreaExportUI from './ex/areaexportdialog.js';
 import * as areaImport from './menu/areaimportmenu.js';
@@ -12,22 +21,13 @@ import AbstractGroupByTreeSearchCtrl from './slick/abstractgroupbytreesearchctrl
 
 const {flatten, removeDuplicates} = goog.require('goog.array');
 const GoogEventType = goog.require('goog.events.EventType');
-const AlertManager = goog.require('os.alert.AlertManager');
-const AreaNode = goog.require('os.data.AreaNode');
-const AreaTreeSearch = goog.require('os.data.AreaTreeSearch');
-const SourceGroupBy = goog.require('os.data.groupby.SourceGroupBy');
-const {createFromFile} = goog.require('os.file');
-const {filterFalsey} = goog.require('os.fn');
-const {launchQueryImport} = goog.require('os.query');
-const AreaManager = goog.require('os.query.AreaManager');
-const {getLeafNodes} = goog.require('os.structs');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Feature = goog.requireType('ol.Feature');
-const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const OSFile = goog.requireType('os.file.File');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: INodeGroupBy} = goog.requireType('os.data.groupby.INodeGroupBy');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: OSFile} = goog.requireType('os.file.File');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 const {default: QueryAreaNode} = goog.requireType('os.ui.query.AreaNode');
 
 

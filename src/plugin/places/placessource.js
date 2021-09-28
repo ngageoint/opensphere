@@ -1,11 +1,10 @@
 goog.declareModuleId('plugin.places.PlacesSource');
 
 import * as osFeature from '../../os/feature/feature.js';
+import * as interpolate from '../../os/interpolate.js';
+import * as track from '../../os/track/track.js';
 import KMLSource from '../file/kml/kmlsource.js';
 import {updatePlacemark} from '../file/kml/ui/kmlui.js';
-
-const interpolate = goog.require('os.interpolate');
-const track = goog.require('os.track');
 
 
 /**

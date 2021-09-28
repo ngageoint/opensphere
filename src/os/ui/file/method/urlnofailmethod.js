@@ -1,14 +1,14 @@
 goog.declareModuleId('os.ui.file.method.UrlNoFailMethod');
 
+import EventType from '../../../events/eventtype.js';
+import OSFile from '../../../file/file.js';
 import UrlMethod from './urlmethod.js';
 
 const log = goog.require('goog.log');
-const EventType = goog.require('os.events.EventType');
-const OSFile = goog.require('os.file.File');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
-const Request = goog.requireType('os.net.Request');
+const {default: Request} = goog.requireType('os.net.Request');
 
 
 /**

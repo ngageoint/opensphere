@@ -1,5 +1,13 @@
 goog.declareModuleId('os.ui.ServersUI');
 
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import Settings from '../config/settings.js';
+import {ProviderKey} from '../data/data.js';
+import DataManager from '../data/datamanager.js';
+import DataProviderEventType from '../data/dataprovidereventtype.js';
+import Metrics from '../metrics/metrics.js';
+import {Servers as ServersKeys} from '../metrics/metricskeys.js';
 import {ROOT} from '../os.js';
 import BaseProvider from './data/baseprovider.js';
 import * as AddServer from './file/addserver.js';
@@ -11,17 +19,9 @@ import * as ConfirmUI from './window/confirm.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const Settings = goog.require('os.config.Settings');
-const {ProviderKey} = goog.require('os.data');
-const DataManager = goog.require('os.data.DataManager');
-const DataProviderEventType = goog.require('os.data.DataProviderEventType');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Servers: ServersKeys} = goog.require('os.metrics.keys');
 
 const Logger = goog.requireType('goog.log.Logger');
-const IDataProvider = goog.requireType('os.data.IDataProvider');
+const {default: IDataProvider} = goog.requireType('os.data.IDataProvider');
 
 
 /**

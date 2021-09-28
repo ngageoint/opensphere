@@ -4,7 +4,7 @@ goog.require('os.ogc.wfs.DescribeFeatureLoader');
 
 describe('os.ogc.wfs.DescribeFeatureLoader', function() {
   const EventType = goog.module.get('goog.net.EventType');
-  const DescribeFeatureLoader = goog.module.get('os.ogc.wfs.DescribeFeatureLoader');
+  const {default: DescribeFeatureLoader} = goog.module.get('os.ogc.wfs.DescribeFeatureLoader');
 
   var dftType = 'testNS:TEST';
   var dftUrl = '/base/test/os/ogc/wfs/dft.xml';

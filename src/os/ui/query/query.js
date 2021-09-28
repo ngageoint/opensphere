@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ui.query');
 
-const RenameMapping = goog.require('os.im.mapping.RenameMapping');
-const StaticMapping = goog.require('os.im.mapping.StaticMapping');
-const {ORIGINAL_GEOM_FIELD, METHOD_FIELD} = goog.require('os.interpolate');
+import RenameMapping from '../../im/mapping/renamemapping.js';
+import StaticMapping from '../../im/mapping/staticmapping.js';
+import {ORIGINAL_GEOM_FIELD, METHOD_FIELD} from '../../interpolate.js';
 
 const Feature = goog.requireType('ol.Feature');
-const IMapping = goog.requireType('os.im.mapping.IMapping');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
 
 
 /**

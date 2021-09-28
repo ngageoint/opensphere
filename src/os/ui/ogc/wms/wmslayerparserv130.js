@@ -1,10 +1,10 @@
 goog.declareModuleId('os.ui.ogc.wms.WMSLayerParserV130');
 
+import {COLOR_STYLE_REGEX, DEFAULT_TILE_STYLE} from '../../../ogc/ogc.js';
 import AbstractWMSLayerParser from './abstractwmslayerparser.js';
 
 const {clone: cloneArray} = goog.require('goog.array');
 const {clone: cloneObject, getValueByKeys} = goog.require('goog.object');
-const {COLOR_STYLE_REGEX, DEFAULT_TILE_STYLE} = goog.require('os.ogc');
 
 
 /**

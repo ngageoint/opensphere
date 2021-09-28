@@ -227,7 +227,7 @@ var runMultiDimFilter = function(features, field1, type1, field2, type2) {
 
 xdescribe('os.data.xf.binningperf', function() {
   const Feature = goog.module.get('ol.Feature');
-  const TimeRange = goog.module.get('os.time.TimeRange');
+  const {default: TimeRange} = goog.module.get('os.time.TimeRange');
 
   it('should test the performance for multidimensional binning', function() {
     var stringBank = initRandomStrings(50);

@@ -1,14 +1,14 @@
 goog.declareModuleId('os.ui.UrlDragDrop');
 
 import * as dispatcher from '../../dispatcher.js';
+import {URL_REGEXP} from '../../url/url.js';
+import UrlManager from '../../url/urlmanager.js';
 import windowSelector from '../windowselector.js';
 import DragDropStyle from './dragdropstyle.js';
 
 const classlist = goog.require('goog.dom.classlist');
 const googEvents = goog.require('goog.events');
 const GoogEvent = goog.require('goog.events.Event');
-const {URL_REGEXP} = goog.require('os.url');
-const UrlManager = goog.require('os.url.UrlManager');
 
 const BrowserEvent = goog.requireType('goog.events.BrowserEvent');
 

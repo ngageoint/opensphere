@@ -1,11 +1,10 @@
-goog.module('os.metrics.keys');
-
+goog.declareModuleId('os.metrics.keys');
 
 /**
  * Timeline metrics
  * @enum {string}
  */
-const Timeline = {
+export const Timeline = {
   // features
   OPEN: 'timeline.features.open',
 
@@ -56,7 +55,7 @@ const Timeline = {
  * AddData metrics
  * @enum {string}
  */
-const AddData = {
+export const AddData = {
   OPEN: 'addData.open',
   SEARCH: 'addData.search',
   GROUP_BY: 'addData.groupBy',
@@ -74,7 +73,7 @@ const AddData = {
  * Filters metrics
  * @enum {string}
  */
-const Filters = {
+export const Filters = {
   ADVANCED: 'filters.advancedOpen',
   SEARCH: 'filters.search',
   GROUP_BY: 'filters.groupBy',
@@ -102,7 +101,7 @@ const Filters = {
  * Map metrics
  * @enum {string}
  */
-const Map = {
+export const Map = {
   ADD_FEATURE: 'map.features.addFeature',
   ADD_FEATURES: 'map.features.addFeatures',
   ADD_LABEL: 'map.features.addLabel',
@@ -171,7 +170,7 @@ const Map = {
  * Descriptor metrics tracked
  * @enum {string}
  */
-const Descriptor = {
+export const Descriptor = {
   ACTIVATE: 'descriptor.activate',
   DEACTIVATE: 'descriptor.de-activate'
 };
@@ -180,7 +179,7 @@ const Descriptor = {
  * Settings metrics tracked
  * @enum {string}
  */
-const Settings = {
+export const Settings = {
   RESET_SETTINGS: 'settings.reset',
   STORAGE_REMOTE: 'settings.storage.remote',
   STORAGE_LOCAL: 'settings.storage.local',
@@ -191,7 +190,7 @@ const Settings = {
  * Search metrics tracked
  * @enum {string}
  */
-const Search = {
+export const Search = {
   SEARCH_TYPE: 'type'
 };
 
@@ -199,13 +198,13 @@ const Search = {
  * Create a metric key based on the browser version
  * @type {string}
  */
-const BROWSER = 'browser';
+export const BROWSER = 'browser';
 
 /**
  * Create a metric key based on the OS version
  * @enum {string}
  */
-const OS = {
+export const OS = {
   WINDOWS: 'os.windows',
   LINUX: 'os.linux',
   MAC: 'os.mac',
@@ -217,7 +216,7 @@ const OS = {
  * Layer metrics
  * @enum {string}
  */
-const Layer = {
+export const Layer = {
   PRESET: 'layers.features.preset',
   FORCE_LAYER_COLOR: 'layers.features.forceLayerColor',
   VECTOR_COLOR: 'layers.features.changeVectorColor',
@@ -295,7 +294,7 @@ const Layer = {
  * Preset metrics
  * @enum {string}
  */
-const Presets = {
+export const Presets = {
   OPEN: 'preset.menu.open',
   REMOVE: 'preset.remove',
   SAVE: 'preset.saveupdate',
@@ -307,14 +306,14 @@ const Presets = {
  * Feature metrics
  * @enum {string}
  */
-const Feature = {
+export const Feature = {
 };
 
 /**
  * Feature list metrics
  * @enum {string}
  */
-const FeatureList = {
+export const FeatureList = {
   EXPORT: 'featureList.export',
   GOTO: 'featureList.goTo',
   SORT_SELECTED: 'featureList.sortSelected',
@@ -329,7 +328,7 @@ const FeatureList = {
  * Places metrics
  * @enum {string}
  */
-const Places = {
+export const Places = {
   ADD_ANNOTATION: 'places.addAnnotation',
   ADD_FOLDER: 'places.addFolder',
   ADD_PLACE: 'places.addPlace',
@@ -352,28 +351,10 @@ const Places = {
  * Servers metrics
  * @enum {string}
  */
-const Servers = {
+export const Servers = {
   ADD_SERVER: 'servers.addServer',
   VIEW: 'servers.view',
   REFRESH: 'servers.refresh',
   EDIT: 'servers.edit',
   REMOVE: 'servers.delete'
-};
-
-exports = {
-  AddData,
-  BROWSER,
-  Descriptor,
-  Feature,
-  FeatureList,
-  Filters,
-  Layer,
-  Map,
-  OS,
-  Places,
-  Presets,
-  Search,
-  Servers,
-  Settings,
-  Timeline
 };

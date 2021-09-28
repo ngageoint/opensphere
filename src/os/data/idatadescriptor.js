@@ -1,8 +1,8 @@
-goog.module('os.data.IDataDescriptor');
+goog.declareModuleId('os.data.IDataDescriptor');
 
 const Listenable = goog.requireType('goog.events.Listenable');
-const IPersistable = goog.requireType('os.IPersistable');
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 
 
 /**
@@ -10,7 +10,7 @@ const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
  * @extends {Listenable}
  * @interface
  */
-class IDataDescriptor {
+export default class IDataDescriptor {
   /**
    * Gets the ID of the descriptor
    * @return {!string} The ID
@@ -251,6 +251,3 @@ class IDataDescriptor {
  * @const {string}
  */
 IDataDescriptor.ID = 'os.data.IDataDescriptor';
-
-
-exports = IDataDescriptor;

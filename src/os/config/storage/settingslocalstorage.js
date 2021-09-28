@@ -1,15 +1,16 @@
-goog.module('os.config.storage.SettingsLocalStorage');
+goog.declareModuleId('os.config.storage.SettingsLocalStorage');
+
+import osImplements from '../../implements.js';
+import AsyncStorageWrapper from '../../storage/asyncstoragewrapper.js';
+import PrefixedMechanism from '../../storage/prefixedmechanism.js';
+import {addNamespaces} from '../namespace.js';
+import BaseLocalSettingsStorage from './baselocalsettingsstorage.js';
+import ISettingsReadableStorage from './isettingsreadablestorage.js';
+import ISettingsStorage from './isettingsstorage.js';
+import ISettingsWritableStorage from './isettingswritablestorage.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 const {create} = goog.require('goog.storage.mechanism.mechanismfactory');
-const {addNamespaces} = goog.require('os.config.namespace');
-const BaseLocalSettingsStorage = goog.require('os.config.storage.BaseLocalSettingsStorage');
-const ISettingsReadableStorage = goog.require('os.config.storage.ISettingsReadableStorage');
-const ISettingsStorage = goog.require('os.config.storage.ISettingsStorage');
-const ISettingsWritableStorage = goog.require('os.config.storage.ISettingsWritableStorage');
-const osImplements = goog.require('os.implements');
-const AsyncStorageWrapper = goog.require('os.storage.AsyncStorageWrapper');
-const PrefixedMechanism = goog.require('os.storage.PrefixedMechanism');
 
 const GoogPrefixedMechanism = goog.requireType('goog.storage.mechanism.PrefixedMechanism');
 
@@ -21,7 +22,7 @@ const GoogPrefixedMechanism = goog.requireType('goog.storage.mechanism.PrefixedM
  * @implements {ISettingsReadableStorage}
  * @implements {ISettingsWritableStorage}
  */
-class SettingsLocalStorage extends BaseLocalSettingsStorage {
+export default class SettingsLocalStorage extends BaseLocalSettingsStorage {
   /**
    * Constructor.
    * @param {!string} prefix The storage mechanism prefix
@@ -70,6 +71,7 @@ class SettingsLocalStorage extends BaseLocalSettingsStorage {
     }
   }
 }
+
 osImplements(SettingsLocalStorage, ISettingsStorage.ID);
 osImplements(SettingsLocalStorage, ISettingsReadableStorage.ID);
 osImplements(SettingsLocalStorage, ISettingsWritableStorage.ID);
@@ -79,6 +81,3 @@ osImplements(SettingsLocalStorage, ISettingsWritableStorage.ID);
  * @const {string}
  */
 SettingsLocalStorage.LEGACY_STORE_NAME = 'settings';
-
-
-exports = SettingsLocalStorage;

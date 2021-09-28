@@ -1,11 +1,12 @@
-goog.module('os.state.v2.QueryEntriesTag');
-
+goog.declareModuleId('os.state.v2.QueryEntriesTag');
 
 /**
  * XML tags for filter state
  * @enum {string}
  */
-exports = {
+const QueryEntriesTag = {
   QUERY_ENTRIES: 'queryEntries',
   QUERY_ENTRY: 'queryEntry'
 };
+
+export default QueryEntriesTag;

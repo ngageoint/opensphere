@@ -6,8 +6,8 @@ goog.require('os.xt.events');
 
 describe('Peer', function() {
   const {MockHandler} = goog.module.get('os.xt.MockHandler');
-  const Peer = goog.module.get('os.xt.Peer');
-  const PeerInfo = goog.module.get('os.xt.PeerInfo');
+  const {default: Peer} = goog.module.get('os.xt.Peer');
+  const {default: PeerInfo} = goog.module.get('os.xt.PeerInfo');
   const {DISPATCHER, EventType} = goog.module.get('os.xt.events');
 
   // mock storage

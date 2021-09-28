@@ -1,6 +1,12 @@
 goog.declareModuleId('os.ui.alert.AlertPopupUI');
 
 import './alertlinkfilter.js';
+import AlertEvent from '../../alert/alertevent.js';
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertEventTypes from '../../alert/alerteventtypes.js';
+import AlertManager from '../../alert/alertmanager.js';
+import EventType from '../../alert/eventtype.js';
+import Settings from '../../config/settings.js';
 import * as dispatcher from '../../dispatcher.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
@@ -10,12 +16,6 @@ const Delay = goog.require('goog.async.Delay');
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
 const {getRandomString} = goog.require('goog.string');
-const AlertEvent = goog.require('os.alert.AlertEvent');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertEventTypes = goog.require('os.alert.AlertEventTypes');
-const AlertManager = goog.require('os.alert.AlertManager');
-const EventType = goog.require('os.alert.EventType');
-const Settings = goog.require('os.config.Settings');
 
 
 /**

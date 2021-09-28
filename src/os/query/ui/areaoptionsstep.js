@@ -1,13 +1,13 @@
-goog.module('os.query.ui.AreaOptionsStep');
+goog.declareModuleId('os.query.ui.AreaOptionsStep');
 
-const {directiveTag: stepUi} = goog.require('os.query.ui.AreaOptionsStepUI');
-const {default: AbstractWizardStep} = goog.require('os.ui.wiz.step.AbstractWizardStep');
+import AbstractWizardStep from '../../ui/wiz/step/abstractwizardstep.js';
+import {directiveTag as stepUi} from './areaoptionsstepui.js';
 
 
 /**
  * Area import wizard options step
  */
-class AreaOptionsStep extends AbstractWizardStep {
+export default class AreaOptionsStep extends AbstractWizardStep {
   /**
    * Constructor.
    */
@@ -27,5 +27,3 @@ class AreaOptionsStep extends AbstractWizardStep {
     }
   }
 }
-
-exports = AreaOptionsStep;

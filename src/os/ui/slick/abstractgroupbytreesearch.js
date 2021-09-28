@@ -1,11 +1,10 @@
 goog.declareModuleId('os.ui.slick.AbstractGroupByTreeSearch');
 
+import TreeNode from '../../structs/treenode.js';
 import TreeSearch from './treesearch.js';
 
-const TreeNode = goog.require('os.structs.TreeNode');
-
-const ISearchable = goog.requireType('os.data.ISearchable');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: ISearchable} = goog.requireType('os.data.ISearchable');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**

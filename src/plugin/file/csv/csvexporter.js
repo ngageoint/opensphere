@@ -1,19 +1,19 @@
 goog.declareModuleId('plugin.file.csv.CSVExporter');
 
+import RecordField from '../../../os/data/recordfield.js';
 import {createEllipse} from '../../../os/feature/feature.js';
+import Fields from '../../../os/fields/fields.js';
+import instanceOf from '../../../os/instanceof.js';
 import {PROJECTION} from '../../../os/map/map.js';
+import * as osObject from '../../../os/object/object.js';
+import * as wkt from '../../../os/ol/wkt.js';
+import * as osProj from '../../../os/proj/proj.js';
+import TimeRange from '../../../os/time/timerange.js';
 import AbstractCSVExporter from '../../../os/ui/file/csv/abstractcsvexporter.js';
 import {directiveTag as exportUi} from './ui/csvexportui.js';
 
 const log = goog.require('goog.log');
 const Point = goog.require('ol.geom.Point');
-const Fields = goog.require('os.Fields');
-const RecordField = goog.require('os.data.RecordField');
-const instanceOf = goog.require('os.instanceOf');
-const osObject = goog.require('os.object');
-const wkt = goog.require('os.ol.wkt');
-const osProj = goog.require('os.proj');
-const TimeRange = goog.require('os.time.TimeRange');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');

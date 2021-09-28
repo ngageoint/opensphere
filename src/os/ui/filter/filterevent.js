@@ -2,7 +2,7 @@ goog.declareModuleId('os.ui.filter.FilterEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 
 
 /**

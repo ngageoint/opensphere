@@ -12,12 +12,12 @@ goog.require('os.time.TimelineEventType');
 describe('os.time.TimelineController', function() {
   const Timer = goog.module.get('goog.Timer');
   const Range = goog.module.get('goog.math.Range');
-  const Settings = goog.module.get('os.config.Settings');
+  const {default: Settings} = goog.module.get('os.config.Settings');
   const time = goog.module.get('os.time');
-  const Duration = goog.module.get('os.time.Duration');
-  const TimelineController = goog.module.get('os.time.TimelineController');
-  const TimelineControllerEvent = goog.module.get('os.time.TimelineControllerEvent');
-  const TimelineEventType = goog.module.get('os.time.TimelineEventType');
+  const {default: Duration} = goog.module.get('os.time.Duration');
+  const {default: TimelineController} = goog.module.get('os.time.TimelineController');
+  const {default: TimelineControllerEvent} = goog.module.get('os.time.TimelineControllerEvent');
+  const {default: TimelineEventType} = goog.module.get('os.time.TimelineEventType');
 
   var controller;
   var defaultStart;

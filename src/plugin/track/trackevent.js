@@ -2,9 +2,9 @@ goog.declareModuleId('plugin.track.Event');
 
 const googEventsEvent = goog.require('goog.events.Event');
 
-const ColorBin = goog.requireType('os.data.histo.ColorBin');
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
 const OlFeature = goog.requireType('ol.Feature');
+const {default: ColorBin} = goog.requireType('os.data.histo.ColorBin');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 
 
 /**

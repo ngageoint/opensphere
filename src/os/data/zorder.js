@@ -1,21 +1,22 @@
-goog.module('os.data.ZOrder');
+goog.declareModuleId('os.data.ZOrder');
+
+import Settings from '../config/settings.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import ZOrderEventType from './zordereventtype.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const olArray = goog.require('ol.array');
-const Settings = goog.require('os.config.Settings');
-const ZOrderEventType = goog.require('os.data.ZOrderEventType');
-const {getMapContainer} = goog.require('os.map.instance');
 
 const BaseLayer = goog.requireType('ol.layer.Base');
-const ZOrderEntry = goog.requireType('os.data.ZOrderEntry');
-const LayerGroup = goog.requireType('os.layer.Group');
-const ILayer = goog.requireType('os.layer.ILayer');
+const {default: ZOrderEntry} = goog.requireType('os.data.ZOrderEntry');
+const {default: LayerGroup} = goog.requireType('os.layer.Group');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
  * Maintains Z-Order for layers between sessions
  */
-class ZOrder extends EventTarget {
+export default class ZOrder extends EventTarget {
   /**
    * Constructor.
    */
@@ -444,6 +445,3 @@ let instance;
  * @type {number}
  */
 ZOrder.MAX_AGE_ = 30 * 24 * 60 * 60 * 1000;
-
-
-exports = ZOrder;

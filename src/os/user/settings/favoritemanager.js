@@ -1,26 +1,27 @@
-goog.module('os.user.settings.FavoriteManager');
+goog.declareModuleId('os.user.settings.FavoriteManager');
+
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import * as osArray from '../../array/array.js';
+import Settings from '../../config/settings.js';
+import * as osObject from '../../object/object.js';
+import * as os from '../../os.js';
+import * as url from '../../url/url.js';
+import FavoriteType from './favoritetype.js';
 
 const googArray = goog.require('goog.array');
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const googString = goog.require('goog.string');
-const os = goog.require('os');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const osArray = goog.require('os.array');
-const Settings = goog.require('os.config.Settings');
-const osObject = goog.require('os.object');
-const url = goog.require('os.url');
-const FavoriteType = goog.require('os.user.settings.FavoriteType');
 
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
-const FavoriteSetting = goog.requireType('os.user.settings.favorite');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
+const {default: FavoriteSetting} = goog.requireType('os.user.settings.favorite');
 
 
 /**
  * Manage favorite actions and other favorite related stuff!
  */
-class FavoriteManager extends EventTarget {
+export default class FavoriteManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -645,5 +646,3 @@ FavoriteManager.KEY = 'favorite';
  * @deprecated Please use FavoriteManager.getInstance() instead of the global to access the favorite manager.
  */
 os.favoriteManager = FavoriteManager.getInstance();
-
-exports = FavoriteManager;

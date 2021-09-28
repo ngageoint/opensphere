@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.color.ColorPaletteUI');
 
+import {toHexString} from '../../color.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import ColorPaletteEventType from './colorpaletteeventtype.js';
 
 const {getViewportSize} = goog.require('goog.dom');
 const ColorPicker = goog.require('goog.ui.ColorPicker');
-const {toHexString} = goog.require('os.color');
 
 
 /**

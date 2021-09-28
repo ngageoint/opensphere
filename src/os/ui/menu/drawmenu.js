@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.menu.draw');
 
 import * as dispatcher from '../../dispatcher.js';
+import {launchChooseArea, launchCoordinates, queryWorld} from '../../query/query.js';
 import DrawEventType from '../draw/draweventtype.js';
 import Menu from './menu.js';
 import MenuItem from './menuitem.js';
@@ -8,7 +9,6 @@ import MenuItemType from './menuitemtype.js';
 
 const googDispose = goog.require('goog.dispose');
 const GoogEvent = goog.require('goog.events.Event');
-const {launchChooseArea, launchCoordinates, queryWorld} = goog.require('os.query');
 
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 

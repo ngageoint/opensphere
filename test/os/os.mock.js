@@ -1,43 +1,44 @@
 goog.declareModuleId('os.mock');
 
 goog.require('goog.events.EventTarget');
-goog.require('os.MapContainer');
-goog.require('os.config');
-goog.require('os.config.Settings');
-goog.require('os.config.storage.SettingsObjectStorage');
-goog.require('os.data.DataManager');
-goog.require('os.im.mapping.AltMapping');
-goog.require('os.im.mapping.BearingMapping');
-goog.require('os.im.mapping.LatMapping');
-goog.require('os.im.mapping.LonMapping');
-goog.require('os.im.mapping.MappingManager');
-goog.require('os.im.mapping.OrientationMapping');
-goog.require('os.im.mapping.PositionMapping');
-goog.require('os.im.mapping.RadiusMapping');
-goog.require('os.im.mapping.SemiMajorMapping');
-goog.require('os.im.mapping.SemiMinorMapping');
-goog.require('os.im.mapping.TimeType');
-goog.require('os.im.mapping.WKTMapping');
-goog.require('os.im.mapping.time.DateMapping');
-goog.require('os.im.mapping.time.DateTimeMapping');
-goog.require('os.im.mapping.time.TimeMapping');
-goog.require('os.interpolate');
-goog.require('os.map.instance');
-goog.require('os.mixin');
-goog.require('os.mixin.closure');
-goog.require('os.net');
-goog.require('os.net.ExtDomainHandler');
-goog.require('os.net.RequestHandlerFactory');
-goog.require('os.net.SameDomainHandler');
-goog.require('os.ogc');
-goog.require('os.query.AreaManager');
-goog.require('os.query.FilterManager');
-goog.require('os.query.QueryManager');
-goog.require('os.query.instance');
-goog.require('os.style.StyleManager');
-goog.require('os.style.instance');
-goog.require('os.time.replacers');
 goog.require('test.os.config.SettingsUtil');
+
+import '../../src/os/config/config.js';
+import '../../src/os/config/settings.js';
+import '../../src/os/config/storage/settingsobjectstorage.js';
+import '../../src/os/data/datamanager.js';
+import '../../src/os/im/mapping/altmapping.js';
+import '../../src/os/im/mapping/bearingmapping.js';
+import '../../src/os/im/mapping/latmapping.js';
+import '../../src/os/im/mapping/lonmapping.js';
+import '../../src/os/im/mapping/mappingmanager.js';
+import '../../src/os/im/mapping/orientationmapping.js';
+import '../../src/os/im/mapping/positionmapping.js';
+import '../../src/os/im/mapping/radiusmapping.js';
+import '../../src/os/im/mapping/semimajormapping.js';
+import '../../src/os/im/mapping/semiminormapping.js';
+import '../../src/os/im/mapping/time/datemapping.js';
+import '../../src/os/im/mapping/time/datetimemapping.js';
+import '../../src/os/im/mapping/time/timemapping.js';
+import '../../src/os/im/mapping/timetype.js';
+import '../../src/os/im/mapping/wktmapping.js';
+import '../../src/os/interpolate.js';
+import '../../src/os/map/mapinstance.js';
+import '../../src/os/mapcontainer.js';
+import '../../src/os/mixin/closuremixin.js';
+import '../../src/os/mixin/mixin.js';
+import '../../src/os/net/extdomainhandler.js';
+import '../../src/os/net/net.js';
+import '../../src/os/net/requesthandlerfactory.js';
+import '../../src/os/net/samedomainhandler.js';
+import '../../src/os/ogc/ogc.js';
+import '../../src/os/query/areamanager.js';
+import '../../src/os/query/filtermanager.js';
+import '../../src/os/query/queryinstance.js';
+import '../../src/os/query/querymanager.js';
+import '../../src/os/style/styleinstance.js';
+import '../../src/os/style/stylemanager_shim.js';
+import '../../src/os/time/timereplacers.js';
 
 import '../../src/os/ui/config/settingsmanager.js';
 import '../../src/os/ui/ogc/ogcdescriptor.js';
@@ -56,25 +57,25 @@ beforeEach(function() {
   const EventTarget = goog.module.get('goog.events.EventTarget');
   const osMock = goog.module.get('os.mock');
   const osConfig = goog.module.get('os.config');
-  const MapContainer = goog.module.get('os.MapContainer');
-  const SettingsObjectStorage = goog.module.get('os.config.storage.SettingsObjectStorage');
-  const DataManager = goog.module.get('os.data.DataManager');
+  const {default: MapContainer} = goog.module.get('os.MapContainer');
+  const {default: SettingsObjectStorage} = goog.module.get('os.config.storage.SettingsObjectStorage');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
   const interpolate = goog.module.get('os.interpolate');
   const osMapInstance = goog.module.get('os.map.instance');
-  const ExtDomainHandler = goog.module.get('os.net.ExtDomainHandler');
+  const {default: ExtDomainHandler} = goog.module.get('os.net.ExtDomainHandler');
   const RequestHandlerFactory = goog.module.get('os.net.RequestHandlerFactory');
-  const SameDomainHandler = goog.module.get('os.net.SameDomainHandler');
+  const {default: SameDomainHandler} = goog.module.get('os.net.SameDomainHandler');
   const ogc = goog.module.get('os.ogc');
-  const AreaManager = goog.module.get('os.query.AreaManager');
-  const FilterManager = goog.module.get('os.query.FilterManager');
-  const QueryManager = goog.module.get('os.query.QueryManager');
+  const {default: AreaManager} = goog.module.get('os.query.AreaManager');
+  const {default: FilterManager} = goog.module.get('os.query.FilterManager');
+  const {default: QueryManager} = goog.module.get('os.query.QueryManager');
   const osQueryInstance = goog.module.get('os.query.instance');
   const osStyleInstance = goog.module.get('os.style.instance');
   const replacers = goog.module.get('os.time.replacers');
   const {default: SettingsManager} = goog.module.get('os.ui.config.SettingsManager');
-  const Settings = goog.module.get('os.config.Settings');
+  const {default: Settings} = goog.module.get('os.config.Settings');
   const {resetCrossOriginCache, resetDefaultValidators} = goog.module.get('os.net');
-  const StyleManager = goog.module.get('os.style.StyleManager');
+  const {default: StyleManager} = goog.module.get('os.style.StyleManager');
   const osUi = goog.module.get('os.ui');
   const {default: OGCDescriptor} = goog.module.get('os.ui.ogc.OGCDescriptor');
   const SettingsUtil = goog.module.get('test.os.config.SettingsUtil');
@@ -178,7 +179,7 @@ beforeEach(function() {
 // If UI tests are using ddescribe or iit, this must also be included to ensure angular.mock.module calls succeed.
 //
 describe('OpenSphere Test Initialization', () => {
-  const Settings = goog.module.get('os.config.Settings');
+  const {default: Settings} = goog.module.get('os.config.Settings');
   const osUi = goog.module.get('os.ui');
 
   const settings = Settings.getInstance();
@@ -196,21 +197,21 @@ describe('OpenSphere Test Initialization', () => {
  * @return {os.im.mapping.MappingManager}
  */
 export const getMockMappingManager = function() {
-  const AltMapping = goog.module.get('os.im.mapping.AltMapping');
-  const BearingMapping = goog.module.get('os.im.mapping.BearingMapping');
-  const LatMapping = goog.module.get('os.im.mapping.LatMapping');
-  const LonMapping = goog.module.get('os.im.mapping.LonMapping');
-  const MappingManager = goog.module.get('os.im.mapping.MappingManager');
-  const OrientationMapping = goog.module.get('os.im.mapping.OrientationMapping');
-  const PositionMapping = goog.module.get('os.im.mapping.PositionMapping');
-  const RadiusMapping = goog.module.get('os.im.mapping.RadiusMapping');
-  const SemiMajorMapping = goog.module.get('os.im.mapping.SemiMajorMapping');
-  const SemiMinorMapping = goog.module.get('os.im.mapping.SemiMinorMapping');
-  const TimeType = goog.module.get('os.im.mapping.TimeType');
-  const WKTMapping = goog.module.get('os.im.mapping.WKTMapping');
-  const DateMapping = goog.module.get('os.im.mapping.time.DateMapping');
-  const DateTimeMapping = goog.module.get('os.im.mapping.time.DateTimeMapping');
-  const TimeMapping = goog.module.get('os.im.mapping.time.TimeMapping');
+  const {default: AltMapping} = goog.module.get('os.im.mapping.AltMapping');
+  const {default: BearingMapping} = goog.module.get('os.im.mapping.BearingMapping');
+  const {default: LatMapping} = goog.module.get('os.im.mapping.LatMapping');
+  const {default: LonMapping} = goog.module.get('os.im.mapping.LonMapping');
+  const {default: MappingManager} = goog.module.get('os.im.mapping.MappingManager');
+  const {default: OrientationMapping} = goog.module.get('os.im.mapping.OrientationMapping');
+  const {default: PositionMapping} = goog.module.get('os.im.mapping.PositionMapping');
+  const {default: RadiusMapping} = goog.module.get('os.im.mapping.RadiusMapping');
+  const {default: SemiMajorMapping} = goog.module.get('os.im.mapping.SemiMajorMapping');
+  const {default: SemiMinorMapping} = goog.module.get('os.im.mapping.SemiMinorMapping');
+  const {default: TimeType} = goog.module.get('os.im.mapping.TimeType');
+  const {default: WKTMapping} = goog.module.get('os.im.mapping.WKTMapping');
+  const {default: DateMapping} = goog.module.get('os.im.mapping.time.DateMapping');
+  const {default: DateTimeMapping} = goog.module.get('os.im.mapping.time.DateTimeMapping');
+  const {default: TimeMapping} = goog.module.get('os.im.mapping.time.TimeMapping');
 
   var mm = new MappingManager();
 

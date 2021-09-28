@@ -1,13 +1,14 @@
-goog.module('os.annotation');
+goog.declareModuleId('os.annotation');
+
+import {nearestPoints} from '../geo/jsts.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import FeatureEditField from '../ui/featureeditfield.js';
+import {measureText} from '../ui/ui.js';
+import TailStyle from './tailstyle.js';
 
 const {getUid} = goog.require('ol');
 const GeometryType = goog.require('ol.geom.GeometryType');
 const Point = goog.require('ol.geom.Point');
-const {getMapContainer} = goog.require('os.map.instance');
-const TailStyle = goog.require('os.annotation.TailStyle');
-const {nearestPoints} = goog.require('os.geo.jsts');
-const {measureText} = goog.require('os.ui');
-const {default: FeatureEditField} = goog.require('os.ui.FeatureEditField');
 
 const Feature = goog.requireType('ol.Feature');
 const Overlay = goog.requireType('ol.Overlay');
@@ -17,7 +18,7 @@ const Overlay = goog.requireType('ol.Overlay');
  * Default annotation options.
  * @type {osx.annotation.Options}
  */
-const DEFAULT_OPTIONS = {
+export const DEFAULT_OPTIONS = {
   editable: true,
   show: true,
   showBackground: true,
@@ -34,7 +35,7 @@ const DEFAULT_OPTIONS = {
  * Maximum annotation height when computing size from text.
  * @type {number}
  */
-const MAX_DEFAULT_HEIGHT = 350;
+export const MAX_DEFAULT_HEIGHT = 350;
 
 /**
  * Maximum annotation width when computing size from text.
@@ -43,27 +44,27 @@ const MAX_DEFAULT_HEIGHT = 350;
  *
  * @type {number}
  */
-const MAX_DEFAULT_WIDTH = 350;
+export const MAX_DEFAULT_WIDTH = 350;
 
 /**
  * Height of an annotation being edited inline.
  *
  * @type {number}
  */
-const EDIT_HEIGHT = 340;
+export const EDIT_HEIGHT = 340;
 
 /**
  * Width of an annotation being edited inline.
  *
  * @type {number}
  */
-const EDIT_WIDTH = 570;
+export const EDIT_WIDTH = 570;
 
 /**
  * Annotation event types.
  * @enum {string}
  */
-const EventType = {
+export const EventType = {
   CHANGE: 'annotation:change',
   EDIT: 'annotation:edit',
   HIDE: 'annotation:hide',
@@ -75,7 +76,7 @@ const EventType = {
  * Feature field for storing annotation options.
  * @type {string}
  */
-const OPTIONS_FIELD = '_annotationOptions';
+export const OPTIONS_FIELD = '_annotationOptions';
 
 /**
  * Generate annotation options to display the given text.
@@ -83,7 +84,7 @@ const OPTIONS_FIELD = '_annotationOptions';
  * @param {osx.annotation.Options} options The options.
  * @param {string} text The annotation text.
  */
-const scaleToText = function(options, text) {
+export const scaleToText = function(options, text) {
   // compute the annotation size from the text. the height/width must include the text size, plus the header/padding.
   var size = measureText(text, 'u-annotation__measure');
 
@@ -103,7 +104,7 @@ const scaleToText = function(options, text) {
  * @param {Feature} feature The feature.
  * @return {string} The text.
  */
-const getNameText = function(feature) {
+export const getNameText = function(feature) {
   if (feature) {
     return (
       /** @type {string|undefined} */ (feature.get(FeatureEditField.NAME)) || ''
@@ -119,7 +120,7 @@ const getNameText = function(feature) {
  * @param {Feature} feature The feature.
  * @return {string} The text.
  */
-const getDescriptionText = function(feature) {
+export const getDescriptionText = function(feature) {
   if (feature) {
     return (
       /** @type {string|undefined} */ (feature.get(FeatureEditField.MD_DESCRIPTION)) ||
@@ -136,7 +137,7 @@ const getDescriptionText = function(feature) {
  * @param {Feature} feature The feature.
  * @return {boolean}
  */
-const hasOverlay = function(feature) {
+export const hasOverlay = function(feature) {
   if (feature) {
     var map = getMapContainer().getMap();
     if (map) {
@@ -153,7 +154,7 @@ const hasOverlay = function(feature) {
  * @param {!Overlay} overlay The overlay.
  * @param {Feature} feature The feature. Use null to hide the overlay.
  */
-const setPosition = function(overlay, feature) {
+export const setPosition = function(overlay, feature) {
   var position;
 
   if (feature) {
@@ -200,7 +201,7 @@ const setPosition = function(overlay, feature) {
  * @param {Overlay} overlay The overlay to get the map rectangle from.
  * @return {ClientRect|undefined} The map bounding rectangle, or undefined if the map/overlay are not defined.
  */
-const getMapRect = function(overlay) {
+export const getMapRect = function(overlay) {
   if (overlay) {
     var map = overlay.getMap();
     if (map) {
@@ -212,20 +213,4 @@ const getMapRect = function(overlay) {
   }
 
   return undefined;
-};
-
-exports = {
-  DEFAULT_OPTIONS,
-  MAX_DEFAULT_HEIGHT,
-  MAX_DEFAULT_WIDTH,
-  EDIT_HEIGHT,
-  EDIT_WIDTH,
-  EventType,
-  OPTIONS_FIELD,
-  scaleToText,
-  getNameText,
-  getDescriptionText,
-  hasOverlay,
-  setPosition,
-  getMapRect
 };

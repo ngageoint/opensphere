@@ -1,17 +1,18 @@
 goog.declareModuleId('plugin.arc.query.ArcSpatialFormatter');
 
+import * as geo from '../../../os/geo/geo.js';
+import * as interpolate from '../../../os/interpolate.js';
+import * as osProj from '../../../os/proj/proj.js';
+
 const googString = goog.require('goog.string');
 const GeometryType = goog.require('ol.geom.GeometryType');
 const Polygon = goog.require('ol.geom.Polygon');
-const geo = goog.require('os.geo');
-const interpolate = goog.require('os.interpolate');
-const osProj = goog.require('os.proj');
 
 const Circle = goog.requireType('ol.geom.Circle');
 const LineString = goog.requireType('ol.geom.LineString');
 const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
-const ISpatialFormatter = goog.requireType('os.filter.ISpatialFormatter');
-const Method = goog.requireType('os.interpolate.Method');
+const {default: ISpatialFormatter} = goog.requireType('os.filter.ISpatialFormatter');
+const {default: Method} = goog.requireType('os.interpolate.Method');
 
 
 /**

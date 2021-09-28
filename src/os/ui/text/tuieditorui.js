@@ -1,7 +1,11 @@
 goog.declareModuleId('os.ui.text.TuiEditorUI');
 
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import Settings from '../../config/settings.js';
 import * as dispatcher from '../../dispatcher.js';
 import {ROOT} from '../../os.js';
+import {createConstant} from '../../string/string.js';
 import Module from '../module.js';
 import {apply} from '../ui.js';
 import * as TuiEditor from './tuieditor.js';
@@ -11,10 +15,6 @@ const Promise = goog.require('goog.Promise');
 const Timer = goog.require('goog.Timer');
 const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
 const {safeLoad} = goog.require('goog.net.jsloader');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const Settings = goog.require('os.config.Settings');
-const {createConstant} = goog.require('os.string');
 
 
 /**

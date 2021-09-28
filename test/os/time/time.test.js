@@ -6,9 +6,9 @@ goog.require('os.time.Duration');
  * Tests for os.time utility functions.
  */
 describe('os.time', function() {
-  const Settings = goog.module.get('os.config.Settings');
+  const {default: Settings} = goog.module.get('os.config.Settings');
   const time = goog.module.get('os.time');
-  const Duration = goog.module.get('os.time.Duration');
+  const {default: Duration} = goog.module.get('os.time.Duration');
 
   it('should format dates properly', function() {
     var date = new Date('2010-01-20T01:02:03Z');

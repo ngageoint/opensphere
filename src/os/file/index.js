@@ -1,19 +1,20 @@
-goog.module('os.file');
+goog.declareModuleId('os.file');
+
+import {ROOT} from '../os.js';
+import OSFile from './file.js';
+import * as mimeZip from './mime/zip.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 const GoogFileReader = goog.require('goog.fs.FileReader');
 const {safeLoad} = goog.require('goog.net.jsloader');
 const userAgent = goog.require('goog.userAgent');
-const {ROOT} = goog.require('os');
-const OSFile = goog.require('os.file.File');
-const mimeZip = goog.require('os.file.mime.zip');
 
 
 /**
  * File URL schemes.
  * @enum {string}
  */
-const FileScheme = {
+export const FileScheme = {
   FILE: 'file',
   LOCAL: 'local'
 };
@@ -28,20 +29,20 @@ let fileUrlEnabled = false;
  * Get if file URL's are enabled.
  * @return {boolean}
  */
-const isFileUrlEnabled = () => fileUrlEnabled;
+export const isFileUrlEnabled = () => fileUrlEnabled;
 
 /**
  * Set if file URL's are enabled.
  * @param {boolean} value The value.
  */
-const setFileUrlEnabled = (value) => {
+export const setFileUrlEnabled = (value) => {
   fileUrlEnabled = value;
 };
 
 /**
  * @define {string}
  */
-const ZIP_PATH = goog.define('os.file.ZIP_PATH', 'vendor/zip-js');
+export const ZIP_PATH = goog.define('os.file.ZIP_PATH', 'vendor/zip-js');
 
 
 /**
@@ -75,7 +76,7 @@ const ZIP_PATH = goog.define('os.file.ZIP_PATH', 'vendor/zip-js');
  * @return {boolean}
  * @deprecated Please use mimeZip.isZip() instead.
  */
-const isZipFile = mimeZip.isZip;
+export const isZipFile = mimeZip.isZip;
 
 /**
  * Creates a new OSFile instance from a system file. The content will be read as a string if it's determined
@@ -85,7 +86,7 @@ const isZipFile = mimeZip.isZip;
  * @return {!Deferred} A promise passing the new file instance to the success callback, or the error message
  *   on failure.
  */
-const createFromFile = function(file) {
+export const createFromFile = function(file) {
   var deferred = new Deferred();
 
   if (file.path && fileUrlEnabled) {
@@ -113,7 +114,7 @@ const createFromFile = function(file) {
  * @param {?(ArrayBuffer|string)} content The file content
  * @return {!OSFile}
  */
-const createFromContent = function(fileName, url, originalFile, content) {
+export const createFromContent = function(fileName, url, originalFile, content) {
   var file = new OSFile();
   file.setContent(content);
   file.setFileName(fileName);
@@ -133,7 +134,7 @@ const createFromContent = function(fileName, url, originalFile, content) {
  * @param {string} path The path to the file.
  * @return {string}
  */
-const getFileUrl = function(path) {
+export const getFileUrl = function(path) {
   if (userAgent.WINDOWS) {
     return FileScheme.FILE + ':///' + path.replace(/\\/g, '/');
   } else {
@@ -147,7 +148,7 @@ const getFileUrl = function(path) {
  * @param {string} fileName The file name to use in generating the url.
  * @return {string}
  */
-const getLocalUrl = function(fileName) {
+export const getLocalUrl = function(fileName) {
   return FileScheme.LOCAL + '://' + fileName;
 };
 
@@ -157,7 +158,7 @@ const getLocalUrl = function(fileName) {
  * @param {OSFile|string|undefined} file The file or file's url
  * @return {boolean}
  */
-const isFileSystem = function(file) {
+export const isFileSystem = function(file) {
   if (!file) {
     return false;
   }
@@ -172,7 +173,7 @@ const isFileSystem = function(file) {
  * @param {OSFile|string|undefined} file The file or file's url.
  * @return {boolean}
  */
-const isLocal = function(file) {
+export const isLocal = function(file) {
   if (!file) {
     return false;
   }
@@ -187,7 +188,7 @@ const isLocal = function(file) {
  * @param {*} data The serialized file
  * @return {OSFile}
  */
-const deserializeFile = function(data) {
+export const deserializeFile = function(data) {
   var file = null;
   if (data && goog.isObject(data)) {
     file = new OSFile();
@@ -203,7 +204,7 @@ const deserializeFile = function(data) {
  * @param {OSFile} file The file to serialize
  * @return {*} The persisted file
  */
-const serializeFile = function(file) {
+export const serializeFile = function(file) {
   return file ? file.persist() : undefined;
 };
 
@@ -211,13 +212,13 @@ const serializeFile = function(file) {
  * Base file setting key.
  * @type {string}
  */
-const BaseSettingKey = 'os.file';
+export const BaseSettingKey = 'os.file';
 
 /**
  * File settings keys.
  * @enum {string}
  */
-const FileSetting = {
+export const FileSetting = {
   AUTO_SAVE: BaseSettingKey + '.autoSaveFiles'
 };
 
@@ -225,25 +226,6 @@ const FileSetting = {
  * Default file setting values.
  * @type {Object<string, *>}
  */
-const FileSettingDefault = {
+export const FileSettingDefault = {
   [FileSetting.AUTO_SAVE]: false
-};
-
-exports = {
-  FileScheme,
-  isFileUrlEnabled,
-  setFileUrlEnabled,
-  ZIP_PATH,
-  isZipFile,
-  createFromFile,
-  createFromContent,
-  getFileUrl,
-  getLocalUrl,
-  isFileSystem,
-  isLocal,
-  deserializeFile,
-  serializeFile,
-  BaseSettingKey,
-  FileSetting,
-  FileSettingDefault
 };

@@ -1,11 +1,11 @@
-goog.module('os.im.action.cmd.AbstractFilterAction');
+goog.declareModuleId('os.im.action.cmd.AbstractFilterAction');
 
-const State = goog.require('os.command.State');
-const {getImportActionManager} = goog.require('os.im.action');
+import State from '../../../command/state.js';
+import {getImportActionManager} from '../importaction.js';
 
-const ICommand = goog.requireType('os.command.ICommand');
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
-const ImportActionManager = goog.requireType('os.im.action.ImportActionManager');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
+const {default: ImportActionManager} = goog.requireType('os.im.action.ImportActionManager');
 
 
 /**
@@ -14,7 +14,7 @@ const ImportActionManager = goog.requireType('os.im.action.ImportActionManager')
  * @abstract
  * @implements {ICommand}
  */
-class AbstractFilterAction {
+export default class AbstractFilterAction {
   /**
    * Constructor.
    * @param {!FilterActionEntry} entry The filter action.
@@ -149,5 +149,3 @@ class AbstractFilterAction {
     }
   }
 }
-
-exports = AbstractFilterAction;

@@ -5,10 +5,10 @@ goog.require('os.time.TimeRange');
 
 
 describe('os.time.TimeRange', function() {
-  const osImplements = goog.module.get('os.implements');
-  const ITime = goog.module.get('os.time.ITime');
-  const TimeInstant = goog.module.get('os.time.TimeInstant');
-  const TimeRange = goog.module.get('os.time.TimeRange');
+  const {default: osImplements} = goog.module.get('os.implements');
+  const {default: ITime} = goog.module.get('os.time.ITime');
+  const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');
+  const {default: TimeRange} = goog.module.get('os.time.TimeRange');
 
   var h = 12 * 60 * 60 * 1000;
 

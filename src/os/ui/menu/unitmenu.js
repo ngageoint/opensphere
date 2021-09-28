@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.menu.unit');
 
+import {Map as MapKeys} from '../../metrics/metricskeys.js';
+import UnitManager from '../../unit/unitmanager.js';
 import Menu from './menu.js';
 import MenuItem from './menuitem.js';
 import MenuItemType from './menuitemtype.js';
 
 const googDispose = goog.require('goog.dispose');
-const {Map: MapKeys} = goog.require('os.metrics.keys');
-const UnitManager = goog.require('os.unit.UnitManager');
 
 const {default: ActionEvent} = goog.requireType('os.ui.action.ActionEvent');
 

@@ -1,10 +1,10 @@
 goog.declareModuleId('os.ui.file.ui.csv.ConfigStep');
 
+import MappingManager from '../../../../im/mapping/mappingmanager.js';
 import AbstractWizardStep from '../../../wiz/step/abstractwizardstep.js';
 import {directiveTag as stepUi} from './configstepui.js';
 
-const MappingManager = goog.require('os.im.mapping.MappingManager');
-const CsvParserConfig = goog.requireType('os.parse.csv.CsvParserConfig');
+const {default: CsvParserConfig} = goog.requireType('os.parse.csv.CsvParserConfig');
 
 
 /**

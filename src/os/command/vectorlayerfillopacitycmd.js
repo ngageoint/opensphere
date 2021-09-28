@@ -1,16 +1,16 @@
-goog.module('os.command.VectorLayerFillOpacity');
+goog.declareModuleId('os.command.VectorLayerFillOpacity');
 
-const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const osStyle = goog.require('os.style');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import * as osStyle from '../style/style.js';
+import StyleField from '../style/stylefield.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import AbstractVectorStyle from './abstractvectorstylecmd.js';
 
 
 /**
  * Changes the fill opacity of a vector layer.
  */
-class VectorLayerFillOpacity extends AbstractVectorStyle {
+export default class VectorLayerFillOpacity extends AbstractVectorStyle {
   /**
    * Constructor.
    * @param {string} layerId The layer id.
@@ -53,5 +53,3 @@ class VectorLayerFillOpacity extends AbstractVectorStyle {
     super.applyValue(config, value);
   }
 }
-
-exports = VectorLayerFillOpacity;

@@ -1,10 +1,9 @@
 goog.declareModuleId('os.ui.LegendButtonUI');
 
+import {ID} from '../legend/legend.js';
+import {Map as MapKeys} from '../metrics/metricskeys.js';
 import MenuButtonCtrl from './menu/menubutton.js';
 import Module from './module.js';
-
-const {ID} = goog.require('os.legend');
-const {Map: MapKeys} = goog.require('os.metrics.keys');
 
 
 /**

@@ -1,6 +1,6 @@
-goog.module('os.structs.ITreeNodeSupplier');
+goog.declareModuleId('os.structs.ITreeNodeSupplier');
 
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**
@@ -8,12 +8,10 @@ const ITreeNode = goog.requireType('os.structs.ITreeNode');
  *
  * @interface
  */
-class ITreeNodeSupplier {
+export default class ITreeNodeSupplier {
   /**
    * Get a tree node to represent the object.
    * @return {!ITreeNode} The tree node
    */
   getTreeNode() {}
 }
-
-exports = ITreeNodeSupplier;

@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.state.IStateDescriptor');
 
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const IUrlDescriptor = goog.requireType('os.data.IUrlDescriptor');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: IUrlDescriptor} = goog.requireType('os.data.IUrlDescriptor');
 
 
 /**

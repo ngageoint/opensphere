@@ -13,11 +13,11 @@ describe('os.state.v2.QueryEntries', function() {
   const dom = goog.module.get('goog.dom');
   const googDomXml = goog.module.get('goog.dom.xml');
   const googString = goog.module.get('goog.string');
-  const AreaManager = goog.module.get('os.query.AreaManager');
-  const FilterManager = goog.module.get('os.query.FilterManager');
-  const QueryManager = goog.module.get('os.query.QueryManager');
-  const QueryEntries = goog.module.get('os.state.v2.QueryEntries');
-  const QueryEntriesTag = goog.module.get('os.state.v2.QueryEntriesTag');
+  const {default: AreaManager} = goog.module.get('os.query.AreaManager');
+  const {default: FilterManager} = goog.module.get('os.query.FilterManager');
+  const {default: QueryManager} = goog.module.get('os.query.QueryManager');
+  const {default: QueryEntries} = goog.module.get('os.state.v2.QueryEntries');
+  const {default: QueryEntriesTag} = goog.module.get('os.state.v2.QueryEntriesTag');
   const xml = goog.module.get('os.xml');
 
   var queryEntries = '<queryEntries>' +

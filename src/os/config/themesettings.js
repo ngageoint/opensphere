@@ -1,19 +1,20 @@
-goog.module('os.config.ThemeSettings');
+goog.declareModuleId('os.config.ThemeSettings');
+
+import * as dispatcher from '../dispatcher.js';
+import SettingPlugin from '../ui/config/settingplugin.js';
+import * as ui from '../ui/ui.js';
+import {getSettings} from './configinstance.js';
+import {DEFAULT_THEME, DEFAULT_THEMES, Keys} from './theme.js';
+import ThemeSettingsChangeEvent from './themesettingschangeevent.js';
+import {directiveTag as settingsUi} from './themesettingsui.js';
 
 const Promise = goog.require('goog.Promise');
 const {filter} = goog.require('goog.array');
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const GoogEvent = goog.require('goog.events.Event');
 const {findValue} = goog.require('goog.object');
-const dispatcher = goog.require('os.Dispatcher');
-const ThemeSettingsChangeEvent = goog.require('os.config.ThemeSettingsChangeEvent');
-const {directiveTag: settingsUi} = goog.require('os.config.ThemeSettingsUI');
-const {getSettings} = goog.require('os.config.instance');
-const {DEFAULT_THEME, DEFAULT_THEMES, Keys} = goog.require('os.config.theme');
-const ui = goog.require('os.ui');
-const {default: SettingPlugin} = goog.require('os.ui.config.SettingPlugin');
 
-const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
 
 
 /**
@@ -39,7 +40,7 @@ let loadingPromise = null;
 
 /**
  */
-class ThemeSettings extends SettingPlugin {
+export default class ThemeSettings extends SettingPlugin {
   /**
    * Constructor.
    */
@@ -289,6 +290,3 @@ const ThemeSettingsChangeEventTheme = function(cssFile, theme) {
     delay.start(50, 15000);
   });
 };
-
-
-exports = ThemeSettings;

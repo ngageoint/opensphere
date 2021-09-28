@@ -1,10 +1,11 @@
-goog.module('os.command.AbstractAsyncCommand');
+goog.declareModuleId('os.command.AbstractAsyncCommand');
+
+import EventType from './eventtype.js';
+import State from './state.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
-const EventType = goog.require('os.command.EventType');
-const State = goog.require('os.command.State');
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -13,7 +14,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  * @abstract
  * @implements {ICommand}
  */
-class AbstractAsyncCommand extends EventTarget {
+export default class AbstractAsyncCommand extends EventTarget {
   /**
    * Constructor.
    */
@@ -86,5 +87,3 @@ class AbstractAsyncCommand extends EventTarget {
     return true;
   }
 }
-
-exports = AbstractAsyncCommand;

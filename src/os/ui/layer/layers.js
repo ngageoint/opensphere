@@ -1,18 +1,18 @@
 goog.declareModuleId('os.ui.layer');
 
 import {instanceOf} from '../../classregistry.js';
+import SourceClass from '../../source/sourceclass.js';
 import {cloneConfig} from '../../style/label.js';
 import {getConfigColor} from '../../style/style.js';
+import StyleField from '../../style/stylefield.js';
+import StyleManager from '../../style/stylemanager_shim.js';
 import {nameCompare} from '../slick/column.js';
-const SourceClass = goog.require('os.source.SourceClass');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
 
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const ILayer = goog.requireType('os.layer.ILayer');
-const TileLayer = goog.requireType('os.layer.Tile');
-const VectorLayer = goog.requireType('os.layer.Vector');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: TileLayer} = goog.requireType('os.layer.Tile');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 const {LabelConfig} = goog.requireType('os.style.label');
 
 

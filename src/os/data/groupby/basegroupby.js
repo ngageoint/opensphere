@@ -1,17 +1,18 @@
-goog.module('os.data.groupby.BaseGroupBy');
+goog.declareModuleId('os.data.groupby.BaseGroupBy');
+
+import TreeNode from '../../structs/treenode.js';
+import INodeGroupBy from './inodegroupby.js';// eslint-disable-line
 
 const Disposable = goog.require('goog.Disposable');
 const log = goog.require('goog.log');
-const INodeGroupBy = goog.require('os.data.groupby.INodeGroupBy'); // eslint-disable-line
-const TreeNode = goog.require('os.structs.TreeNode');
 
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**
  * @implements {INodeGroupBy}
  */
-class BaseGroupBy extends Disposable {
+export default class BaseGroupBy extends Disposable {
   /**
    * Constructor.
    */
@@ -173,6 +174,3 @@ class BaseGroupBy extends Disposable {
  * @type {log.Logger}
  */
 const logger = log.getLogger('os.data.groupby.BaseGroupBy');
-
-
-exports = BaseGroupBy;

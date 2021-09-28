@@ -1,7 +1,7 @@
-goog.module('os.source.IImportSource');
+goog.declareModuleId('os.source.IImportSource');
 
 const Feature = goog.requireType('ol.Feature');
-const IImporter = goog.requireType('os.im.IImporter');
+const {default: IImporter} = goog.requireType('os.im.IImporter');
 
 
 /**
@@ -9,7 +9,7 @@ const IImporter = goog.requireType('os.im.IImporter');
  *
  * @interface
  */
-class IImportSource {
+export default class IImportSource {
   /**
    * Get the importer.
    * @return {IImporter<Feature>} The importer.
@@ -28,5 +28,3 @@ class IImportSource {
  * @const {string}
  */
 IImportSource.ID = 'os.source.IImportSource';
-
-exports = IImportSource;

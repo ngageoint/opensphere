@@ -2,6 +2,9 @@ goog.declareModuleId('os.ui.layer.VectorStyleControlsUI');
 
 import '../icon/iconpicker.js';
 import '../slider.js';
+import DataManager from '../../data/datamanager.js';
+import IMappingDescriptor from '../../data/imappingdescriptor.js';
+import osImplements from '../../implements.js';
 import {ROOT} from '../../os.js';
 import {CENTER_LOOKUP, LINE_STYLE_OPTIONS, ShapeType, dashPatternToOptions} from '../../style/style.js';
 import Module from '../module.js';
@@ -9,9 +12,6 @@ import * as EllipseColumnsUI from './ellipsecolumns.js';
 import VectorStyleControlsEventType from './vectorstylecontrolseventtype.js';
 
 const Disposable = goog.require('goog.Disposable');
-const DataManager = goog.require('os.data.DataManager');
-const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
-const osImplements = goog.require('os.implements');
 
 const {styleLineDashOption} = goog.requireType('os.style');
 

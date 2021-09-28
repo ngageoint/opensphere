@@ -3,8 +3,8 @@ goog.require('os.data.DataProviderEventType');
 goog.require('plugin.ogc.wmts.WMTSServer');
 
 describe('plugin.ogc.wmts.WMTSServer', () => {
-  const DataManager = goog.module.get('os.data.DataManager');
-  const DataProviderEventType = goog.module.get('os.data.DataProviderEventType');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: DataProviderEventType} = goog.module.get('os.data.DataProviderEventType');
   const {default: WMTSServer} = goog.module.get('plugin.ogc.wmts.WMTSServer');
 
   const loadAndRun = function(server, config, func) {

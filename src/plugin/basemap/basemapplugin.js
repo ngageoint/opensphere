@@ -1,5 +1,12 @@
 goog.declareModuleId('plugin.basemap.BaseMapPlugin');
 
+import DataManager from '../../os/data/datamanager.js';
+import ProviderEntry from '../../os/data/providerentry.js';
+import LayerConfigManager from '../../os/layer/config/layerconfigmanager.js';
+import MapContainer from '../../os/mapcontainer.js';
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
+import StateManager from '../../os/state/statemanager.js';
+import Versions from '../../os/state/versions.js';
 import {Controller as LayersCtrl} from '../../os/ui/layers.js';
 import {ID, LAYER_TYPE, TERRAIN_ID, TYPE, isBaseMap} from './basemap.js';
 import BaseMapConfig from './basemapconfig.js';
@@ -9,14 +16,6 @@ import BaseMapProvider from './basemapprovider.js';
 import TerrainDescriptor from './terraindescriptor.js';
 import pluginBasemapV3BaseMapState from './v3/basemapstate.js';
 import BaseMapState from './v4/basemapstate.js';
-
-const MapContainer = goog.require('os.MapContainer');
-const DataManager = goog.require('os.data.DataManager');
-const ProviderEntry = goog.require('os.data.ProviderEntry');
-const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const StateManager = goog.require('os.state.StateManager');
-const Versions = goog.require('os.state.Versions');
 
 
 /**

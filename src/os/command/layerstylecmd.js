@@ -1,15 +1,16 @@
-goog.module('os.command.LayerStyle');
+goog.declareModuleId('os.command.LayerStyle');
+
+import osImplements from '../implements.js';
+import instanceOf from '../instanceof.js';
+import ILayer from '../layer/ilayer.js';
+import LayerClass from '../layer/layerclass.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import * as osStyle from '../style/style.js';
+import AbstractStyle from './abstractstylecmd.js';
 
 const asserts = goog.require('goog.asserts');
-const AbstractStyle = goog.require('os.command.AbstractStyle');
-const osImplements = goog.require('os.implements');
-const instanceOf = goog.require('os.instanceOf');
-const LayerClass = goog.require('os.layer.LayerClass');
-const ILayer = goog.require('os.layer.ILayer');
-const {getMapContainer} = goog.require('os.map.instance');
-const osStyle = goog.require('os.style');
 
-const VectorLayer = goog.requireType('os.layer.Vector');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 
 
 /**
@@ -17,7 +18,7 @@ const VectorLayer = goog.requireType('os.layer.Vector');
  *
  * @template T
  */
-class LayerStyle extends AbstractStyle {
+export default class LayerStyle extends AbstractStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -90,5 +91,3 @@ class LayerStyle extends AbstractStyle {
     this.finish(config);
   }
 }
-
-exports = LayerStyle;

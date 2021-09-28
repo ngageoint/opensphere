@@ -1,21 +1,21 @@
 goog.declareModuleId('os.ui.wiz.GeometryStepUI');
 
 import './wizardpreview.js';
+import LatMapping from '../../im/mapping/latmapping.js';
+import LonMapping from '../../im/mapping/lonmapping.js';
+import PositionMapping from '../../im/mapping/positionmapping.js';
+import WKTMapping from '../../im/mapping/wktmapping.js';
+import Units from '../../math/units.js';
 import {ROOT} from '../../os.js';
 import AbstractCsvParser from '../file/csv/abstractcsvparser.js';
 import Module from '../module.js';
 import {numerateNameCompare} from '../slick/column.js';
 import * as GeoHelpUI from '../window/geohelp.js';
 import WizardStepEvent from './step/wizardstepevent.js';
-const LatMapping = goog.require('os.im.mapping.LatMapping');
-const LonMapping = goog.require('os.im.mapping.LonMapping');
-const PositionMapping = goog.require('os.im.mapping.PositionMapping');
-const WKTMapping = goog.require('os.im.mapping.WKTMapping');
-const Units = goog.require('os.math.Units');
 
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const AbstractPositionMapping = goog.requireType('os.im.mapping.AbstractPositionMapping');
-const IMapping = goog.requireType('os.im.mapping.IMapping');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
+const {default: AbstractPositionMapping} = goog.requireType('os.im.mapping.AbstractPositionMapping');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
 const {default: GeometryStep} = goog.requireType('os.ui.wiz.GeometryStep');
 
 

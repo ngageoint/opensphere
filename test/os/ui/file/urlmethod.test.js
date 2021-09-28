@@ -7,12 +7,12 @@ goog.require('os.net.SameDomainHandler');
 goog.require('os.ui.file.method.UrlMethod');
 
 describe('os.ui.file.method.UrlMethod', function() {
-  const AlertManager = goog.module.get('os.alert.AlertManager');
-  const EventType = goog.module.get('os.events.EventType');
-  const OSFile = goog.module.get('os.file.File');
-  const Request = goog.module.get('os.net.Request');
+  const {default: AlertManager} = goog.module.get('os.alert.AlertManager');
+  const {default: EventType} = goog.module.get('os.events.EventType');
+  const {default: OSFile} = goog.module.get('os.file.File');
+  const {default: Request} = goog.module.get('os.net.Request');
   const RequestHandlerFactory = goog.module.get('os.net.RequestHandlerFactory');
-  const SameDomainHandler = goog.module.get('os.net.SameDomainHandler');
+  const {default: SameDomainHandler} = goog.module.get('os.net.SameDomainHandler');
   const {default: UrlMethod} = goog.module.get('os.ui.file.method.UrlMethod');
 
   const windowSelector = 'div[label="Import URL"]';

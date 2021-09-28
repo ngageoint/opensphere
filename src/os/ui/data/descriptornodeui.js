@@ -1,15 +1,14 @@
 goog.declareModuleId('os.ui.data.DescriptorNodeUI');
 
+import CommandProcessor from '../../command/commandprocessor.js';
+import BaseDescriptor from '../../data/basedescriptor.js';
+import DataManager from '../../data/datamanager.js';
 import Module from '../module.js';
 import AbstractNodeUICtrl from '../slick/abstractnodeui.js';
 import * as ConfirmUI from '../window/confirm.js';
 import DescriptorProvider from './descriptorprovider.js';
 
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const BaseDescriptor = goog.require('os.data.BaseDescriptor');
-const DataManager = goog.require('os.data.DataManager');
-
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 const {default: DescriptorNode} = goog.requireType('os.ui.data.DescriptorNode');
 
 

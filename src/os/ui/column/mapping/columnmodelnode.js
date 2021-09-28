@@ -2,8 +2,8 @@ goog.declareModuleId('os.ui.column.mapping.ColumnModelNode');
 
 import SlickTreeNode from '../../slick/slicktreenode.js';
 
-const IColumnMapping = goog.requireType('os.column.IColumnMapping');
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const {default: IColumnMapping} = goog.requireType('os.column.IColumnMapping');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 const {default: IOGCDescriptor} = goog.requireType('os.ui.ogc.IOGCDescriptor');
 
 

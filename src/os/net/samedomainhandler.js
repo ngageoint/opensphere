@@ -1,15 +1,16 @@
-goog.module('os.net.SameDomainHandler');
+goog.declareModuleId('os.net.SameDomainHandler');
+
+import {FileScheme} from '../file/index.js';
+import AbstractRequestHandler from './abstractrequesthandler.js';
+import FormEncFormatter from './formencformatter.js';
+import HandlerType from './handlertype.js';
+import Request from './request.js';
 
 const Uri = goog.require('goog.Uri');
 const log = goog.require('goog.log');
 const EventType = goog.require('goog.net.EventType');
 const XhrIo = goog.require('goog.net.XhrIo');
 const ResponseType = goog.require('goog.net.XhrIo.ResponseType');
-const {FileScheme} = goog.require('os.file');
-const AbstractRequestHandler = goog.require('os.net.AbstractRequestHandler');
-const FormEncFormatter = goog.require('os.net.FormEncFormatter');
-const HandlerType = goog.require('os.net.HandlerType');
-const Request = goog.require('os.net.Request');
 
 const EventLike = goog.requireType('goog.events.EventLike');
 const Logger = goog.requireType('goog.log.Logger');
@@ -18,7 +19,7 @@ const Logger = goog.requireType('goog.log.Logger');
 /**
  * Handles requests to the same domain with a simple XHR.
  */
-class SameDomainHandler extends AbstractRequestHandler {
+export default class SameDomainHandler extends AbstractRequestHandler {
   /**
    * Constructor.
    */
@@ -211,5 +212,3 @@ class SameDomainHandler extends AbstractRequestHandler {
  * @type {Logger}
  */
 const logger = log.getLogger('os.net.SameDomainHandler');
-
-exports = SameDomainHandler;

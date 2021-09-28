@@ -16,11 +16,11 @@ goog.require('plugin.ogc.wms.WMSLayerConfig');
 
 describe('OGC.v4.ArcLayerState', function() {
   const QueryData = goog.module.get('goog.Uri.QueryData');
-  const FeatureType = goog.module.get('os.ogc.wfs.FeatureType');
-  const StateManager = goog.module.get('os.state.StateManager');
-  const StateVersions = goog.module.get('os.state.Versions');
+  const {default: FeatureType} = goog.module.get('os.ogc.wfs.FeatureType');
+  const {default: StateManager} = goog.module.get('os.state.StateManager');
+  const {default: StateVersions} = goog.module.get('os.state.Versions');
   const {setStateManager} = goog.module.get('os.state.instance');
-  const LayerState = goog.module.get('os.state.v4.LayerState');
+  const {default: LayerState} = goog.module.get('os.state.v4.LayerState');
   const xml = goog.module.get('os.xml');
   const {default: OGCLayerDescriptor} = goog.module.get('plugin.ogc.OGCLayerDescriptor');
   const {default: WMSLayerConfig} = goog.module.get('plugin.ogc.wms.WMSLayerConfig');

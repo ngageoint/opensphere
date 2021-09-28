@@ -1,9 +1,9 @@
-goog.module('os.command.InvertSelect');
+goog.declareModuleId('os.command.InvertSelect');
 
-const AbstractSource = goog.require('os.command.AbstractSource');
-const State = goog.require('os.command.State');
+import AbstractSource from './abstractsourcecmd.js';
+import State from './state.js';
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -11,7 +11,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class InvertSelect extends AbstractSource {
+export default class InvertSelect extends AbstractSource {
   /**
    * Constructor.
    * @param {!string} sourceId
@@ -61,5 +61,3 @@ class InvertSelect extends AbstractSource {
     return true;
   }
 }
-
-exports = InvertSelect;

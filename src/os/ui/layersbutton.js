@@ -1,9 +1,8 @@
 goog.declareModuleId('os.ui.LayersButtonUI');
 
+import {Map as MapKeys} from '../metrics/metricskeys.js';
 import MenuButtonCtrl from './menu/menubutton.js';
 import Module from './module.js';
-
-const {Map: MapKeys} = goog.require('os.metrics.keys');
 
 
 /**

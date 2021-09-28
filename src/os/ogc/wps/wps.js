@@ -1,4 +1,4 @@
-goog.module('os.ogc.wps');
+goog.declareModuleId('os.ogc.wps');
 
 const QueryData = goog.requireType('goog.Uri.QueryData');
 
@@ -12,7 +12,7 @@ const QueryData = goog.requireType('goog.Uri.QueryData');
  * @param {*} value The value
  * @param {boolean=} opt_replace If an existing param should be replaced. Defaults to true.
  */
-const setParam = function(params, key, value, opt_replace) {
+export const setParam = function(params, key, value, opt_replace) {
   var replace = opt_replace != null ? opt_replace : true;
   var lcKey = key.toLowerCase();
   var keys = params.getKeys();
@@ -29,8 +29,4 @@ const setParam = function(params, key, value, opt_replace) {
   } else if (!foundKey) {
     params.set(key, value);
   }
-};
-
-exports = {
-  setParam
 };

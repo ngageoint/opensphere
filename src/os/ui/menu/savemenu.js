@@ -1,13 +1,13 @@
 goog.declareModuleId('os.ui.menu.save');
 
+import {Map as MapKey} from '../../metrics/metricskeys.js';
+import StateManager from '../../state/statemanager.js';
 import {EventType} from '../state/statemenu.js';
 import Menu from './menu.js';
 import MenuItem from './menuitem.js';
 import MenuItemType from './menuitemtype.js';
 
 const googDispose = goog.require('goog.dispose');
-const {Map: MapKey} = goog.require('os.metrics.keys');
-const StateManager = goog.require('os.state.StateManager');
 
 
 /**

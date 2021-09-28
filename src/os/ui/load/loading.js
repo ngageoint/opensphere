@@ -1,10 +1,10 @@
 goog.declareModuleId('os.ui.load.LoadingUI');
 
+import LoadingManager from '../../load/loadingmanager.js';
 import Module from '../module.js';
 import {apply} from '../ui.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const LoadingManager = goog.require('os.load.LoadingManager');
 
 
 /**

@@ -1,12 +1,13 @@
-goog.module('os.state.XMLState');
+goog.declareModuleId('os.state.XMLState');
+
+import {createElement} from '../xml.js';
+import AbstractState from './abstractstate.js';
+import Tag from './tag.js';
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');
-const Tag = goog.require('os.state.Tag');
-const AbstractState = goog.require('os.state.AbstractState');
-const {createElement} = goog.require('os.xml');
 
-const XMLStateOptions = goog.requireType('os.state.XMLStateOptions');
+const {default: XMLStateOptions} = goog.requireType('os.state.XMLStateOptions');
 
 
 /**
@@ -15,7 +16,7 @@ const XMLStateOptions = goog.requireType('os.state.XMLStateOptions');
  * @abstract
  * @extends {AbstractState<!Element, XMLStateOptions>}
  */
-class XMLState extends AbstractState {
+export default class XMLState extends AbstractState {
   /**
    * Constructor.
    */
@@ -75,5 +76,3 @@ class XMLState extends AbstractState {
     return /** @type {!Element} */ (elOrString);
   }
 }
-
-exports = XMLState;

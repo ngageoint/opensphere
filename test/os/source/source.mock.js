@@ -1,6 +1,6 @@
 goog.module('os.source.MockSource');
 
-const ISource = goog.requireType('os.source.ISource');
+const {default: ISource} = goog.requireType('os.source.ISource');
 
 
 /**

@@ -5,11 +5,11 @@ goog.require('os.search.SearchManager');
 goog.require('os.structs.EventType');
 
 describe('os.search.SearchManager', function() {
-  const AlertManager = goog.module.get('os.alert.AlertManager');
+  const {default: AlertManager} = goog.module.get('os.alert.AlertManager');
   const MockSearch = goog.module.get('os.search.MockSearch');
-  const SearchEventType = goog.module.get('os.search.SearchEventType');
-  const SearchManager = goog.module.get('os.search.SearchManager');
-  const EventType = goog.module.get('os.structs.EventType');
+  const {default: SearchEventType} = goog.module.get('os.search.SearchEventType');
+  const {default: SearchManager} = goog.module.get('os.search.SearchManager');
+  const {default: EventType} = goog.module.get('os.structs.EventType');
 
   var alertManager = AlertManager.getInstance();
 

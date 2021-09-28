@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.slick.ColumnContext');
 
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 const {Controller: SlickGridCtrl} = goog.requireType('os.ui.slick.SlickGridUI');
 
 

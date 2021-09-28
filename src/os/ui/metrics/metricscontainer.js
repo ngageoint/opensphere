@@ -1,13 +1,13 @@
 goog.declareModuleId('os.ui.metrics.MetricsContainerUI');
 
 import './metricdetails.js';
+import Metrics from '../../metrics/metrics.js';
 import {ROOT} from '../../os.js';
 import AddDataCtrl from '../data/adddatactrl.js';
 import Module from '../module.js';
 import TreeSearch from '../slick/treesearch.js';
 import MetricsManager from './metricsmanager.js';
 import MetricsManagerEventType from './metricsmanagereventtype.js';
-const Metrics = goog.require('os.metrics.Metrics');
 
 const {default: MetricNode} = goog.requireType('os.ui.metrics.MetricNode');
 const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');

@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.alert.AlertsUI');
 
+import AlertManager from '../alert/alertmanager.js';
+import EventType from '../alert/eventtype.js';
+import Settings from '../config/settings.js';
 import * as dispatcher from '../dispatcher.js';
 import {ROOT} from '../os.js';
 import Module from './module.js';
 import {apply} from './ui.js';
-const AlertManager = goog.require('os.alert.AlertManager');
-const EventType = goog.require('os.alert.EventType');
-const Settings = goog.require('os.config.Settings');
 
 
 /**

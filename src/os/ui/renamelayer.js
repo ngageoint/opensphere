@@ -1,11 +1,10 @@
 goog.declareModuleId('os.ui.renamelayer');
 
+import CommandProcessor from '../command/commandprocessor.js';
+import RenameLayer from '../command/renamelayercmd.js';
 import * as ConfirmTextUI from './window/confirmtext.js';
 
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const RenameLayer = goog.require('os.command.RenameLayer');
-
-const ILayer = goog.requireType('os.layer.ILayer');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**

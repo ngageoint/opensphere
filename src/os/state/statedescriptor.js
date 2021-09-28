@@ -1,20 +1,21 @@
-goog.module('os.state.StateDescriptor');
+goog.declareModuleId('os.state.StateDescriptor');
+
+import {DEFAULT_LAYER_COLOR} from '../style/style.js';
+import Icons from '../ui/icons.js';
+import AbstractStateDescriptor from '../ui/state/abstractstatedescriptor.js';
+import StateType from './statetype.js';
 
 const log = goog.require('goog.log');
-const StateType = goog.require('os.state.StateType');
-const {DEFAULT_LAYER_COLOR} = goog.require('os.style');
-const {default: Icons} = goog.require('os.ui.Icons');
-const {default: AbstractStateDescriptor} = goog.require('os.ui.state.AbstractStateDescriptor');
 
 const Logger = goog.requireType('goog.log.Logger');
-const OSFile = goog.requireType('os.file.File');
-const XMLStateOptions = goog.requireType('os.state.XMLStateOptions');
+const {default: OSFile} = goog.requireType('os.file.File');
+const {default: XMLStateOptions} = goog.requireType('os.state.XMLStateOptions');
 
 
 /**
  * Descriptor for state files.
  */
-class StateDescriptor extends AbstractStateDescriptor {
+export default class StateDescriptor extends AbstractStateDescriptor {
   /**
    * Constructor.
    */
@@ -77,5 +78,3 @@ class StateDescriptor extends AbstractStateDescriptor {
  * @type {Logger}
  */
 const logger = log.getLogger('os.state.StateDescriptor');
-
-exports = StateDescriptor;

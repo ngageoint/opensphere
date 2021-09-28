@@ -1,5 +1,17 @@
 goog.declareModuleId('plugin.vectortools.VectorToolsPlugin');
 
+import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
+import AlertManager from '../../os/alert/alertmanager.js';
+import CommandProcessor from '../../os/command/commandprocessor.js';
+import ParallelCommand from '../../os/command/parallelcommand.js';
+import DataManager from '../../os/data/datamanager.js';
+import LayerNode from '../../os/data/layernode.js';
+import * as fn from '../../os/fn/fn.js';
+import LayerType from '../../os/layer/layertype.js';
+import VectorLayer from '../../os/layer/vector.js';
+import MapContainer from '../../os/mapcontainer.js';
+import * as ogc from '../../os/ogc/ogc.js';
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
 import * as layerMenu from '../../os/ui/menu/layermenu.js';
 import MenuItemType from '../../os/ui/menu/menuitemtype.js';
 import CopyLayer from './copylayercmd.js';
@@ -8,22 +20,10 @@ import * as vectortools from './vectortools.js';
 import {launchJoinWindow, launchMergeWindow} from './vectortoolsui.js';
 
 const asserts = goog.require('goog.asserts');
-const MapContainer = goog.require('os.MapContainer');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const ParallelCommand = goog.require('os.command.ParallelCommand');
-const DataManager = goog.require('os.data.DataManager');
-const LayerNode = goog.require('os.data.LayerNode');
-const fn = goog.require('os.fn');
-const LayerType = goog.require('os.layer.LayerType');
-const VectorLayer = goog.require('os.layer.Vector');
-const ogc = goog.require('os.ogc');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 
-const ICommand = goog.requireType('os.command.ICommand');
-const ISource = goog.requireType('os.source.ISource');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: ISource} = goog.requireType('os.source.ISource');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 const {default: Options} = goog.requireType('plugin.vectortools.Options');

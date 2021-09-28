@@ -1,19 +1,20 @@
-goog.module('os.command.FitLayerByID');
+goog.declareModuleId('os.command.FitLayerByID');
+
+import * as dispatcher from '../dispatcher.js';
+import LayerEventType from '../events/layereventtype.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import AbstractSyncCommand from './abstractsynccommand.js';
+import State from './state.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
-const dispatcher = goog.require('os.Dispatcher');
-const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
-const State = goog.require('os.command.State');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
  * Fits the map to the layer that is specified by the passeed id. If the layer
  * is not yet created listeners will be set up to fit once the layer is loaded.
  */
-class FitLayerByID extends AbstractSyncCommand {
+export default class FitLayerByID extends AbstractSyncCommand {
   /**
    * Constructor.
    * @param {!string} id
@@ -168,5 +169,3 @@ class FitLayerByID extends AbstractSyncCommand {
     }
   }
 }
-
-exports = FitLayerByID;

@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.arc.query.ArcTemporalFormatter');
 
-const ITemporalFormatter = goog.requireType('os.query.ITemporalFormatter');
+const {default: ITemporalFormatter} = goog.requireType('os.query.ITemporalFormatter');
 
 
 /**

@@ -1,28 +1,27 @@
 goog.declareModuleId('os.ui.im.action.FilterActionImport');
 
+import AlertEventSeverity from '../../../alert/alerteventseverity.js';
+import AlertManager from '../../../alert/alertmanager.js';
+import CommandProcessor from '../../../command/commandprocessor.js';
+import SequenceCommand from '../../../command/sequencecommand.js';
+import DataManager from '../../../data/datamanager.js';
+import IDataDescriptor from '../../../data/idatadescriptor.js';
+import IFilterable from '../../../filter/ifilterable.js';
+import {Controller as OSFilterImportCtrl} from '../../../filter/im/osfilterimport.js';
+import FilterActionAdd from '../../../im/action/cmd/filteractionaddcmd.js';
+import FilterActionParser from '../../../im/action/filteractionparser.js';
+import {ICON, getColumnsFromFilterable} from '../../../im/action/importaction.js';
+import ImportActionManager from '../../../im/action/importactionmanager.js';
+import osImplements from '../../../implements.js';
+import DrawingLayer from '../../../layer/drawinglayer.js';
+import {getMapContainer} from '../../../map/mapinstance.js';
 import {directive as filterImportDirective} from '../../filter/im/filterimport.js';
 import Module from '../../module.js';
 import {close} from '../../window.js';
 import FilterActionImporter from './filteractionimporter.js';
 import {getEntriesFromMatched} from './filteractionui.js';
 
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const DataManager = goog.require('os.data.DataManager');
-const IDataDescriptor = goog.require('os.data.IDataDescriptor');
-const IFilterable = goog.require('os.filter.IFilterable');
-const {Controller: OSFilterImportCtrl} = goog.require('os.filter.im.OSFilterImport');
-const {ICON, getColumnsFromFilterable} = goog.require('os.im.action');
-const FilterActionParser = goog.require('os.im.action.FilterActionParser');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const FilterActionAdd = goog.require('os.im.action.cmd.FilterActionAdd');
-const osImplements = goog.require('os.implements');
-const DrawingLayer = goog.require('os.layer.Drawing');
-const {getMapContainer} = goog.require('os.map.instance');
-
-const ILayer = goog.requireType('os.layer.ILayer');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**

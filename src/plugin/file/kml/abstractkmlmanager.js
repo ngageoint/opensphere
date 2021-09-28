@@ -1,5 +1,12 @@
 goog.declareModuleId('plugin.file.kml.AbstractKMLManager');
 
+import AlertManager from '../../../os/alert/alertmanager.js';
+import ConfigEventType from '../../../os/config/eventtype.js';
+import OsEventType from '../../../os/events/eventtype.js';
+import FileStorage from '../../../os/file/filestorage.js';
+import {createFromContent} from '../../../os/file/index.js';
+import MapContainer from '../../../os/mapcontainer.js';
+import PropertyChange from '../../../os/source/propertychange.js';
 import KMLLayerConfig from './kmllayerconfig.js';
 
 const Delay = goog.require('goog.async.Delay');
@@ -8,17 +15,10 @@ const GoogEventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const events = goog.require('ol.events');
-const MapContainer = goog.require('os.MapContainer');
-const AlertManager = goog.require('os.alert.AlertManager');
-const ConfigEventType = goog.require('os.config.EventType');
-const OsEventType = goog.require('os.events.EventType');
-const {createFromContent} = goog.require('os.file');
-const FileStorage = goog.require('os.file.FileStorage');
-const PropertyChange = goog.require('os.source.PropertyChange');
 
 const Event = goog.requireType('goog.events.Event');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const osFile = goog.requireType('os.file.File');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: osFile} = goog.requireType('os.file.File');
 const {default: KMLLayer} = goog.requireType('plugin.file.kml.KMLLayer');
 const {default: KMLSource} = goog.requireType('plugin.file.kml.KMLSource');
 const {default: KMLTreeExporter} = goog.requireType('plugin.file.kml.KMLTreeExporter');

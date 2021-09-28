@@ -1,10 +1,11 @@
-goog.module('os.math.AngleUnits');
-
+goog.declareModuleId('os.math.AngleUnits');
 
 /**
  * Supported unit types.
  * @enum {string}
  */
-exports = {
+const AngleUnits = {
   DEGREES: 'degrees'
 };
+
+export default AngleUnits;

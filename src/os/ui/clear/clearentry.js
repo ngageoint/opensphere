@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.clear.ClearEntry');
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**

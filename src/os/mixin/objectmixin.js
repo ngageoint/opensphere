@@ -1,7 +1,7 @@
 /**
  * @fileoverview Modifications to {@link OLObject}.
  */
-goog.module('os.mixin.object');
+goog.declareModuleId('os.mixin.object');
 
 const {getUid} = goog.require('ol');
 const OLObject = goog.require('ol.Object');

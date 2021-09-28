@@ -27,4 +27,4 @@
  * of the authors and should not be interpreted as representing official policies,
  * either expressed or implied, of OpenLayers Contributors.
  */
-goog.module('os.ol.license');
+goog.declareModuleId('os.ol.license');

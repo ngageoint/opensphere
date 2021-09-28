@@ -1,4 +1,4 @@
-goog.module('os.layer.preset.IPresetService');
+goog.declareModuleId('os.layer.preset.IPresetService');
 
 const {PresetServiceAction} = goog.requireType('os.layer.preset');
 
@@ -7,7 +7,7 @@ const {PresetServiceAction} = goog.requireType('os.layer.preset');
  * Interface for CRUD operations for Presets
  * @interface
  */
-class IPresetService {
+export default class IPresetService {
   /**
    * Saves a preset
    *
@@ -65,6 +65,3 @@ class IPresetService {
    */
   supports(action) {}
 }
-
-
-exports = IPresetService;

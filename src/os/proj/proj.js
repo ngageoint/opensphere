@@ -1,10 +1,11 @@
-goog.module('os.proj');
+goog.declareModuleId('os.proj');
+
+import Settings from '../config/settings.js';
+import * as osMap from '../map/map.js';
 
 const asserts = goog.require('goog.asserts');
 const log = goog.require('goog.log');
 const olProj = goog.require('ol.proj');
-const Settings = goog.require('os.config.Settings');
-const osMap = goog.require('os.map');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Projection = goog.requireType('ol.proj.Projection');
@@ -13,32 +14,32 @@ const Projection = goog.requireType('ol.proj.Projection');
 /**
  * @type {string}
  */
-const EPSG4326 = 'EPSG:4326';
+export const EPSG4326 = 'EPSG:4326';
 
 /**
  * @type {string}
  */
-const EPSG3857 = 'EPSG:3857';
+export const EPSG3857 = 'EPSG:3857';
 
 /**
  * @type {string}
  */
-const EPSG3031 = 'EPSG:3031';
+export const EPSG3031 = 'EPSG:3031';
 
 /**
  * @type {string}
  */
-const EPSG3413 = 'EPSG:3413';
+export const EPSG3413 = 'EPSG:3413';
 
 /**
  * @type {string}
  */
-const CRS84 = 'CRS:84';
+export const CRS84 = 'CRS:84';
 
 /**
  * @type {string}
  */
-const GOOGLE = 'EPSG:900913';
+export const GOOGLE = 'EPSG:900913';
 
 /**
  * The logger.
@@ -50,7 +51,7 @@ const logger = log.getLogger('os.proj');
  * @param {boolean=} opt_all
  * @return {Array<Object<string, *>>}
  */
-const getProjections = function(opt_all) {
+export const getProjections = function(opt_all) {
   var settings = Settings.getInstance();
   var projections = /** @type {Array<Object<string, *>>} */ (settings.get('projections', []));
   projections = projections.concat(/** @type {Array<Object<string, *>>} */ (
@@ -78,7 +79,7 @@ const getProjections = function(opt_all) {
 /**
  * Loads projections from settings
  */
-const loadProjections = function() {
+export const loadProjections = function() {
   var projections = getProjections();
 
   for (var i = 0, n = projections.length; i < n; i++) {
@@ -129,7 +130,7 @@ const loadProjections = function() {
  *    null if none could be found. If projection(s) are not explicitly provided in the layer options, the
  *    current application projection will be returned.
  */
-const getBestSupportedProjection = function(options) {
+export const getBestSupportedProjection = function(options) {
   var appProj = osMap.PROJECTION;
   var desiredProjection = /** @type {string|undefined} */ (options['projection']);
   var supportedProjections = /** @type {Array<!string>} */ (options['projections'] || []);
@@ -179,7 +180,7 @@ const getBestSupportedProjection = function(options) {
  * @return {Projection}
  * @suppress {accessControls}
  */
-const getBestEquivalent = function(proj) {
+export const getBestEquivalent = function(proj) {
   var projection = olProj.get(proj);
   var projMap = olProj.projections.cache_;
   var shortest = '';
@@ -191,17 +192,4 @@ const getBestEquivalent = function(proj) {
   }
 
   return olProj.get(shortest);
-};
-
-exports = {
-  EPSG4326,
-  EPSG3857,
-  EPSG3031,
-  EPSG3413,
-  CRS84,
-  GOOGLE,
-  getProjections,
-  loadProjections,
-  getBestSupportedProjection,
-  getBestEquivalent
 };

@@ -1,29 +1,29 @@
-goog.module('os.search');
+goog.declareModuleId('os.search');
 
-const osImplements = goog.require('os.implements');
-const IGeoSearch = goog.require('os.search.IGeoSearch');
-const ITemporalSearch = goog.require('os.search.ITemporalSearch');
-const SortOrder = goog.require('os.search.SortOrder');
+import osImplements from '../implements.js';
+import IGeoSearch from './igeosearch.js';
+import ITemporalSearch from './itemporalsearch.js';
+import SortOrder from './sortorder.js';
 
-const ISearch = goog.requireType('os.search.ISearch');
+const {default: ISearch} = goog.requireType('os.search.ISearch');
 
 
 /**
  * The base key for search settings.
  * @type {string}
  */
-const BASE_KEY = 'search';
+export const BASE_KEY = 'search';
 
 /**
  * Legacy name used to search all sources. Keeping this around for the purpose of migrating old recent searches.
  * @type {string}
  */
-const SEARCH_ALL = 'Search All Sources';
+export const SEARCH_ALL = 'Search All Sources';
 
 /**
  * @enum {string}
  */
-const SearchSetting = {
+export const SearchSetting = {
   // global search settings
   RECENT: BASE_KEY + '.recentlocal',
 
@@ -34,7 +34,7 @@ const SearchSetting = {
 /**
  * @enum {string}
  */
-const SubSearchSetting = {
+export const SubSearchSetting = {
   ENABLED: 'ss'
 };
 
@@ -45,7 +45,7 @@ const SubSearchSetting = {
  * @param {string} key The setting
  * @return {string}
  */
-const getSettingKey = function(search, key) {
+export const getSettingKey = function(search, key) {
   return [BASE_KEY, search.getId(), key].join('.');
 };
 
@@ -55,7 +55,7 @@ const getSettingKey = function(search, key) {
  * @param {!ISearch} search The search provider
  * @return {string}
  */
-const getSearchId = function(search) {
+export const getSearchId = function(search) {
   return search.getId();
 };
 
@@ -65,7 +65,7 @@ const getSearchId = function(search) {
  * @param {!ISearch} search The search provider
  * @return {string}
  */
-const getSearchName = function(search) {
+export const getSearchName = function(search) {
   return search.getName();
 };
 
@@ -76,7 +76,7 @@ const getSearchName = function(search) {
  * @param {!ISearch} search The search provider
  * @return {boolean}
  */
-const isNameEqual = function(name, search) {
+export const isNameEqual = function(name, search) {
   return search.getName() == name;
 };
 
@@ -88,7 +88,7 @@ const isNameEqual = function(name, search) {
  * @param {number=} opt_pageSize
  * @return {!Array}
  */
-const pageResults = function(results, opt_start, opt_pageSize) {
+export const pageResults = function(results, opt_start, opt_pageSize) {
   if (opt_start !== undefined && opt_pageSize !== undefined) {
     var startIndex = opt_start * opt_pageSize;
     if (startIndex > results.length) {
@@ -112,7 +112,7 @@ const pageResults = function(results, opt_start, opt_pageSize) {
  * @param {string} order
  * @return {number}
  */
-const dateScore = function(time, order) {
+export const dateScore = function(time, order) {
   if (time || time == 0) {
     if (order == SortOrder.DESC) {
       return time;
@@ -129,7 +129,7 @@ const dateScore = function(time, order) {
  * @param {ISearch} search The search.
  * @return {boolean} Whether it implements and supports geosearch.
  */
-const supportsGeoSearch = function(search) {
+export const supportsGeoSearch = function(search) {
   if (search && osImplements(search, IGeoSearch.ID)) {
     var s = /** @type {os.search.IGeoSearch} */ (search);
     return s.supportsGeoDistance() || s.supportsGeoExtent() || s.supportsGeoShape();
@@ -143,26 +143,11 @@ const supportsGeoSearch = function(search) {
  * @param {ISearch} search The search.
  * @return {boolean} Whether it implements and supports temporal search.
  */
-const supportsTemporalSearch = function(search) {
+export const supportsTemporalSearch = function(search) {
   if (search && osImplements(search, ITemporalSearch.ID)) {
     var s = /** @type {ITemporalSearch} */ (search);
     return s.supportsDateRange() || s.supportsStartDate() || s.supportsEndDate();
   }
 
   return false;
-};
-
-exports = {
-  BASE_KEY,
-  SEARCH_ALL,
-  SearchSetting,
-  SubSearchSetting,
-  getSettingKey,
-  getSearchId,
-  getSearchName,
-  isNameEqual,
-  pageResults,
-  dateScore,
-  supportsGeoSearch,
-  supportsTemporalSearch
 };

@@ -1,12 +1,11 @@
-goog.module('os.search.ITemporalSearch');
-
+goog.declareModuleId('os.search.ITemporalSearch');
 
 /**
  * Interface for a search provider that supports filtering by date range.
  *
  * @interface
  */
-class ITemporalSearch {
+export default class ITemporalSearch {
   /**
    * Set the date range to apply to the query
    * @param {Date|null|undefined} startDate The start date to apply to the query.
@@ -51,5 +50,3 @@ class ITemporalSearch {
  * @const
  */
 ITemporalSearch.ID = 'os.search.ITemporalSearch';
-
-exports = ITemporalSearch;

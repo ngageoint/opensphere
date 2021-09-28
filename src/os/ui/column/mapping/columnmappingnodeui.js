@@ -1,10 +1,9 @@
 goog.declareModuleId('os.ui.column.mapping.ColumnMappingNodeUI');
 
+import ColumnMappingManager from '../../../column/columnmappingmanager.js';
 import Module from '../../module.js';
 import * as ConfirmUI from '../../window/confirm.js';
 import {launchColumnMappingWindow} from './columnmappingform.js';
-
-const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
 
 const {default: ColumnMappingNode} = goog.requireType('os.ui.column.mapping.ColumnMappingNode');
 

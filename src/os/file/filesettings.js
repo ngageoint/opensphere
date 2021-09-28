@@ -1,12 +1,12 @@
-goog.module('os.file.FileSettings');
+goog.declareModuleId('os.file.FileSettings');
 
-const {directiveTag} = goog.require('os.file.FileSettingsUI');
-const {default: SettingPlugin} = goog.require('os.ui.config.SettingPlugin');
+import SettingPlugin from '../ui/config/settingplugin.js';
+import {directiveTag} from './filesettingsui.js';
 
 
 /**
  */
-class FileSettings extends SettingPlugin {
+export default class FileSettings extends SettingPlugin {
   /**
    * Constructor.
    */
@@ -20,5 +20,3 @@ class FileSettings extends SettingPlugin {
     this.setUI(directiveTag);
   }
 }
-
-exports = FileSettings;

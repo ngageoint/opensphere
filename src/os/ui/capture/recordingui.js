@@ -1,6 +1,8 @@
 goog.declareModuleId('os.ui.capture.RecordingUI');
 
 import '../loadingbar.js';
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
 import {getTimestamp} from '../../capture/capture.js';
 import CaptureEventType from '../../capture/captureeventtype.js';
 import ContentType from '../../capture/contenttype.js';
@@ -9,13 +11,10 @@ import {ROOT} from '../../os.js';
 import exportManager from '../file/uiexportmanager.js';
 import Module from '../module.js';
 import {apply} from '../ui.js';
-
 import * as osWindow from '../window.js';
 import WindowEventType from '../windoweventtype.js';
 
 const dispose = goog.require('goog.dispose');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
 
 const {default: IRecorder} = goog.requireType('os.capture.IRecorder');
 const {default: IVideoEncoder} = goog.requireType('os.capture.IVideoEncoder');

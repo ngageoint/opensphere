@@ -5,7 +5,7 @@ goog.require('os.layer.folder');
 goog.require('os.mock');
 
 describe('os.layer.FolderManager', () => {
-  const FolderManager = goog.module.get('os.layer.FolderManager');
+  const {default: FolderManager} = goog.module.get('os.layer.FolderManager');
   const {createOrEditFolder} = goog.module.get('os.layer.folder');
 
   const formSelector = 'div[ng-form="textForm"]';

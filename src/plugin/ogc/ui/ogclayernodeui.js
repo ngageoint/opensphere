@@ -1,13 +1,13 @@
 goog.declareModuleId('plugin.ogc.ui.OGCLayerNodeUI');
 
+import DataManager from '../../../os/data/datamanager.js';
+import osImplements from '../../../os/implements.js';
 import Module from '../../../os/ui/module.js';
 import {Controller as DefaultLayerNodeUICtrl, directive as defaultLayerNodeUIDirective} from '../../../os/ui/node/defaultlayernodeui.js';
 import IFeatureTypeDescriptor from '../../../os/ui/ogc/ifeaturetypedescriptor.js';
 import {Controller as ChooseTimeColumnController} from './choosetimecolumn.js';
 
 const Deferred = goog.require('goog.async.Deferred');
-const DataManager = goog.require('os.data.DataManager');
-const osImplements = goog.require('os.implements');
 
 
 /**

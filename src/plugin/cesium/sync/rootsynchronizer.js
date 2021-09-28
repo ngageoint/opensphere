@@ -1,22 +1,22 @@
 goog.declareModuleId('plugin.cesium.sync.RootSynchronizer');
 
 import * as dispatcher from '../../../os/dispatcher.js';
+import Image from '../../../os/layer/image.js';
+import Tile from '../../../os/layer/tile.js';
+import Vector from '../../../os/layer/vector.js';
+import VectorTile from '../../../os/layer/vectortile.js';
+import MapEvent from '../../../os/map/mapevent.js';
+import MapContainer from '../../../os/mapcontainer.js';
+import AbstractRootSynchronizer from '../../../os/webgl/abstractrootsynchronizer.js';
 import TileSynchronizer from './tilesynchronizer.js';
 
 const asserts = goog.require('goog.asserts');
-const MapContainer = goog.require('os.MapContainer');
-const MapEvent = goog.require('os.MapEvent');
-const Image = goog.require('os.layer.Image');
-const Tile = goog.require('os.layer.Tile');
-const Vector = goog.require('os.layer.Vector');
-const VectorTile = goog.require('os.layer.VectorTile');
-const AbstractRootSynchronizer = goog.require('os.webgl.AbstractRootSynchronizer');
 
 const PluggableMap = goog.requireType('ol.PluggableMap');
 const OLLayer = goog.requireType('ol.layer.Layer');
-const Group = goog.requireType('os.layer.Group');
-const ILayer = goog.requireType('os.layer.ILayer');
-const AbstractWebGLSynchronizer = goog.requireType('os.webgl.AbstractWebGLSynchronizer');
+const {default: Group} = goog.requireType('os.layer.Group');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: AbstractWebGLSynchronizer} = goog.requireType('os.webgl.AbstractWebGLSynchronizer');
 
 
 /**

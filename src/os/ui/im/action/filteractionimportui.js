@@ -1,9 +1,8 @@
 goog.declareModuleId('os.ui.im.action.FilterActionImportUI');
 
+import ImportActionManager from '../../../im/action/importactionmanager.js';
 import FilterImportUI from '../../filter/im/filterimportui.js';
 import {directiveTag as importUi} from './filteractionimport.js';
-
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 
 
 /**

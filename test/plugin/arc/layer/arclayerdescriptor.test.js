@@ -4,7 +4,7 @@ goog.require('plugin.arc.layer.ArcLayerDescriptor');
 
 
 describe('plugin.arc.layer.ArcLayerDescriptor', function() {
-  const LayerType = goog.module.get('os.layer.LayerType');
+  const {default: LayerType} = goog.module.get('os.layer.LayerType');
   const {default: Icons} = goog.module.get('os.ui.Icons');
   const {default: ArcLayerDescriptor} = goog.module.get('plugin.arc.layer.ArcLayerDescriptor');
 

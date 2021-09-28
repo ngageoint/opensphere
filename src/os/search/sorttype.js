@@ -1,12 +1,13 @@
-goog.module('os.search.SortType');
-
+goog.declareModuleId('os.search.SortType');
 
 /**
  * @enum {string}
  */
-exports = {
+const SortType = {
   DATE: 'Date',
   RECENTLY_USED: 'Recently Used',
   RELEVANCE: 'Relevance',
   TITLE: 'Title'
 };
+
+export default SortType;

@@ -7,7 +7,7 @@ import Module from './module.js';
 const {removeNode} = goog.require('goog.dom');
 const GoogEventType = goog.require('goog.events.EventType');
 
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 const {ListEntry} = goog.requireType('os.ui.list');
 
 

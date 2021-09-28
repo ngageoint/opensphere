@@ -1,7 +1,8 @@
-goog.module('os.tile.ColorableTile');
+goog.declareModuleId('os.tile.ColorableTile');
+
+import {filterImage} from './tile.js';
 
 const ImageTile = goog.require('ol.ImageTile');
-const {filterImage} = goog.require('os.tile');
 
 const TileState = goog.requireType('ol.TileState');
 const TileImage = goog.requireType('ol.source.TileImage');
@@ -10,7 +11,7 @@ const TileImage = goog.requireType('ol.source.TileImage');
 /**
  * Implementation of a tile that is colorable.
  */
-class ColorableTile extends ImageTile {
+export default class ColorableTile extends ImageTile {
   /**
    * Constructor.
    * @param {ol.TileCoord} tileCoord Tile coordinate.
@@ -84,6 +85,3 @@ class ColorableTile extends ImageTile {
     this.olSource_ = value;
   }
 }
-
-
-exports = ColorableTile;

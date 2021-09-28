@@ -1,15 +1,15 @@
-goog.module('os.filter.im.OSFilterImporter');
+goog.declareModuleId('os.filter.im.OSFilterImporter');
 
-const {toHexString} = goog.require('os.color');
-const osImplements = goog.require('os.implements');
-const ILayer = goog.require('os.layer.ILayer');
-const {default: FilterImporter} = goog.require('os.ui.filter.im.FilterImporter');
+import {toHexString} from '../../color.js';
+import osImplements from '../../implements.js';
+import ILayer from '../../layer/ilayer.js';
+import FilterImporter from '../../ui/filter/im/filterimporter.js';
 
 
 /**
  * @template T
  */
-class OSFilterImporter extends FilterImporter {
+export default class OSFilterImporter extends FilterImporter {
   /**
    * Constructor.
    * @param {os.parse.IParser<T>} parser The parser.
@@ -49,5 +49,3 @@ class OSFilterImporter extends FilterImporter {
     return super.getIconsFromFilterable(filterable);
   }
 }
-
-exports = OSFilterImporter;

@@ -1,4 +1,4 @@
-goog.module('os.math.Circle');
+goog.declareModuleId('os.math.Circle');
 
 const Coordinate = goog.require('goog.math.Coordinate');
 const math = goog.requireType('goog.math');
@@ -7,7 +7,7 @@ const math = goog.requireType('goog.math');
 /**
  * Class for representing circles
  */
-class Circle extends Coordinate {
+export default class Circle extends Coordinate {
   /**
    * Constructor.
    * @param {number=} opt_x Circle center x, defaults to 0
@@ -108,5 +108,3 @@ class Circle extends Coordinate {
     return a.x == b.x && a.y == b.y && a.radius == b.radius;
   }
 }
-
-exports = Circle;

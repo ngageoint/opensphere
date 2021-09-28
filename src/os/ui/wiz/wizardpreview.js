@@ -2,12 +2,12 @@ goog.declareModuleId('os.ui.wiz.WizardPreviewUI');
 
 import '../slick/slickgrid.js';
 import '../slick/slickheaderbutton.js';
+import * as mapping from '../../im/mapping/mapping.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import * as ui from '../ui.js';
-const mapping = goog.require('os.im.mapping');
 
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 
 
 /**

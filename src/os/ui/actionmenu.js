@@ -1,6 +1,8 @@
 /* eslint-disable import/no-deprecated */
 goog.declareModuleId('os.ui.ActionMenuUI');
 
+import Metrics from '../metrics/metrics.js';
+import {set} from '../object/object.js';
 import {ROOT} from '../os.js';
 import EventType from './action/actioneventtype.js';
 import MenuItemAction from './action/menuitemaction.js';
@@ -16,8 +18,6 @@ const {getViewportSize} = goog.require('goog.dom');
 const {listen, unlistenByKey} = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
 const {getValueByKeys} = goog.require('goog.object');
-const Metrics = goog.require('os.metrics.Metrics');
-const {set} = goog.require('os.object');
 
 const {default: Action} = goog.requireType('os.ui.action.Action');
 const {default: ActionManager} = goog.requireType('os.ui.action.ActionManager');

@@ -4,7 +4,7 @@ import FilterEventType from './filtereventtype.js';
 
 const GoogEvent = goog.require('goog.events.Event');
 
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 
 
 /**

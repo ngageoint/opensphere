@@ -1,21 +1,22 @@
-goog.module('os.config.DisplaySettingsUI');
+goog.declareModuleId('os.config.DisplaySettingsUI');
+
+import * as dispatcher from '../dispatcher.js';
+import CameraMode from '../map/cameramode.js';
+import * as osMap from '../map/map.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import MapMode from '../map/mapmode.js';
+import * as terrain from '../map/terrain.js';
+import {ROOT} from '../os.js';
+import Module from '../ui/module.js';
+import {apply} from '../ui/ui.js';
+import AbstractWebGLRenderer from '../webgl/abstractwebglrenderer.js';
+import {getAppName} from './config.js';
+import {getSettings} from './configinstance.js';
+import DisplaySetting from './displaysetting.js';
 
 const {clamp} = goog.require('goog.math');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const CameraMode = goog.require('os.CameraMode');
-const MapMode = goog.require('os.MapMode');
-const {getAppName} = goog.require('os.config');
-const DisplaySetting = goog.require('os.config.DisplaySetting');
-const {getSettings} = goog.require('os.config.instance');
-const osMap = goog.require('os.map');
-const {getMapContainer} = goog.require('os.map.instance');
-const terrain = goog.require('os.map.terrain');
-const {apply} = goog.require('os.ui');
-const {default: Module} = goog.require('os.ui.Module');
-const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
 
-const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
 
 
 /**
@@ -23,7 +24,7 @@ const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
  *
  * @return {angular.Directive}
  */
-const directive = function() {
+export const directive = function() {
   return {
     restrict: 'AE',
     replace: true,
@@ -33,12 +34,11 @@ const directive = function() {
   };
 };
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'displaysettings';
+export const directiveTag = 'displaysettings';
 
 
 /**
@@ -51,7 +51,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for location settings
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -639,10 +639,3 @@ class Controller {
  * @const
  */
 Controller.DEFAULT_RENDERER_ID = 'unknown';
-
-
-exports = {
-  directive,
-  directiveTag,
-  Controller
-};

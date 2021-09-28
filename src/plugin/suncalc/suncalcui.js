@@ -1,7 +1,13 @@
 goog.declareModuleId('plugin.suncalc.SunCalcUI');
 
+import settings from '../../os/config/settings.js';
+import * as geo from '../../os/geo/geo.js';
 import * as osMap from '../../os/map/map.js';
+import MapContainer from '../../os/mapcontainer.js';
 import {ROOT} from '../../os/os.js';
+import * as time from '../../os/time/time.js';
+import TimelineController from '../../os/time/timelinecontroller.js';
+import TimelineEventType from '../../os/time/timelineeventtype.js';
 import Module from '../../os/ui/module.js';
 import * as ui from '../../os/ui/ui.js';
 import * as osWindow from '../../os/ui/window.js';
@@ -10,12 +16,6 @@ import {SettingKey} from './suncalc.js';
 const googArray = goog.require('goog.array');
 const color = goog.require('goog.color');
 const olProj = goog.require('ol.proj');
-const MapContainer = goog.require('os.MapContainer');
-const settings = goog.require('os.config.Settings');
-const geo = goog.require('os.geo');
-const time = goog.require('os.time');
-const TimelineController = goog.require('os.time.TimelineController');
-const TimelineEventType = goog.require('os.time.TimelineEventType');
 
 
 /**

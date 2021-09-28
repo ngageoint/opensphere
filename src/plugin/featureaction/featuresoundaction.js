@@ -1,11 +1,10 @@
 goog.declareModuleId('plugin.im.action.feature.SoundAction');
 
+import AudioManager from '../../os/audio/audiomanager.js';
+import AbstractImportAction from '../../os/im/action/abstractimportaction.js';
+import * as osObject from '../../os/object/object.js';
+import * as osXml from '../../os/xml.js';
 import {directiveTag as configUi, setDefaultConfig} from './ui/featuresoundactionconfig.js';
-
-const AudioManager = goog.require('os.audio.AudioManager');
-const AbstractImportAction = goog.require('os.im.action.AbstractImportAction');
-const osObject = goog.require('os.object');
-const osXml = goog.require('os.xml');
 
 /**
  * Tag names used for XML persistence.

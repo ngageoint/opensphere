@@ -1,7 +1,13 @@
 goog.declareModuleId('plugin.cesium.tiles.Layer');
 
+import ActionEventType from '../../../os/action/eventtype.js';
+import settings from '../../../os/config/settings.js';
 import * as dispatcher from '../../../os/dispatcher.js';
+import LayerEvent from '../../../os/events/layerevent.js';
+import LayerEventType from '../../../os/events/layereventtype.js';
 import {PROJECTION} from '../../../os/map/map.js';
+import MapEvent from '../../../os/map/mapevent.js';
+import {EPSG4326} from '../../../os/proj/proj.js';
 import {DEFAULT_LAYER_COLOR} from '../../../os/style/style.js';
 import {CESIUM_ONLY_LAYER, SettingsKey, createIonAssetUrl, promptForAccessToken, promptForWorldTerrain, rectangleToExtent} from '../cesium.js';
 import PrimitiveLayer from '../primitivelayer.js';
@@ -10,12 +16,6 @@ import {ICON, TYPE} from './cesium3dtiles.js';
 
 const log = goog.require('goog.log');
 const {transformExtent} = goog.require('ol.proj');
-const MapEvent = goog.require('os.MapEvent');
-const ActionEventType = goog.require('os.action.EventType');
-const settings = goog.require('os.config.Settings');
-const LayerEvent = goog.require('os.events.LayerEvent');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const {EPSG4326} = goog.require('os.proj');
 
 const Logger = goog.requireType('goog.log.Logger');
 

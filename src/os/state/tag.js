@@ -1,11 +1,10 @@
-goog.module('os.state.Tag');
-
+goog.declareModuleId('os.state.Tag');
 
 /**
  * XML tags for time state
  * @enum {string}
  */
-exports = {
+const Tag = {
   DESCRIPTION: 'description',
   NAME: 'name',
   SOURCE: 'source',
@@ -15,3 +14,5 @@ exports = {
   TYPE: 'type',
   VERSION: 'version'
 };
+
+export default Tag;

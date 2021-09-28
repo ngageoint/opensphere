@@ -5,7 +5,20 @@
  * See /license-notice.txt for the full text of the license notice.
  * See /license.txt for the full text of the license.
  */
-goog.module('os.geo.jsts');
+goog.declareModuleId('os.geo.jsts');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import {filterFalsey} from '../fn/fn.js';
+import GeometryField from '../geom/geometryfield.js';
+import {METHOD_FIELD} from '../interpolate.js';
+import Method from '../interpolatemethod.js';
+import * as osMap from '../map/map.js';
+import {init as initJstsMixin} from '../mixin/jstsmixin.js';
+import {EPSG3031, EPSG3413, EPSG4326} from '../proj/proj.js';
+import * as geo from './geo.js';
+import {normalizeGeometryCoordinates} from './geo2.js';
+import OLParser from './olparser.js';
 
 const log = goog.require('goog.log');
 const Feature = goog.require('ol.Feature');
@@ -14,20 +27,8 @@ const GeometryType = goog.require('ol.geom.GeometryType');
 const MultiPolygon = goog.require('ol.geom.MultiPolygon');
 const Polygon = goog.require('ol.geom.Polygon');
 const {get: getProjection} = goog.require('ol.proj');
-const {remove: removeTransform} = goog.require('ol.proj.transforms');
 const Projection = goog.require('ol.proj.Projection');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {filterFalsey} = goog.require('os.fn');
-const geo = goog.require('os.geo');
-const OLParser = goog.require('os.geo.jsts.OLParser');
-const {normalizeGeometryCoordinates} = goog.require('os.geo2');
-const GeometryField = goog.require('os.geom.GeometryField');
-const {METHOD_FIELD} = goog.require('os.interpolate');
-const Method = goog.require('os.interpolate.Method');
-const osMap = goog.require('os.map');
-const {init: initJstsMixin} = goog.require('os.mixin.jsts');
-const {EPSG3031, EPSG3413, EPSG4326} = goog.require('os.proj');
+const {remove: removeTransform} = goog.require('ol.proj.transforms');
 
 const Circle = goog.requireType('ol.geom.Circle');
 const Geometry = goog.requireType('ol.geom.Geometry');
@@ -49,7 +50,7 @@ const logger = log.getLogger('os.geo.jsts');
 /**
  * @enum {string}
  */
-const ErrorMessage = {
+export const ErrorMessage = {
   NO_OP: 'Result geometry is unchanged',
   EMPTY: 'Result geometry is empty'
 };
@@ -58,19 +59,19 @@ const ErrorMessage = {
  * Regular expression for geometries that should use an absolute value as the buffer distance.
  * @type {RegExp}
  */
-const ABS_BUFFER_REGEX = /(point|linestring)/i;
+export const ABS_BUFFER_REGEX = /(point|linestring)/i;
 
 /**
  * Regular expression for line string geometries.
  * @type {RegExp}
  */
-const LINE_REGEX = /linestring/i;
+export const LINE_REGEX = /linestring/i;
 
 /**
  * Regular expression for polygonal geometries.
  * @type {RegExp}
  */
-const POLYGON_REGEX = /polygon/i;
+export const POLYGON_REGEX = /polygon/i;
 
 /**
  * Width of a UTM zone in degrees.
@@ -82,14 +83,14 @@ const POLYGON_REGEX = /polygon/i;
  *
  * @type {number}
  */
-const UTM_WIDTH_DEGREES = 6;
+export const UTM_WIDTH_DEGREES = 6;
 
 /**
  * Maximum number of splits to perform on a geometry when buffering. This is only necessary when performing an inverse
  * buffer, where split zones need to be overlapped.
  * @type {number}
  */
-const UTM_SPLIT_LIMIT = 500;
+export const UTM_SPLIT_LIMIT = 500;
 
 /**
  * Buffer radius limit for Transverse Mercator projections before accuracy drops below 0.5%.
@@ -101,7 +102,7 @@ const UTM_SPLIT_LIMIT = 500;
  *
  * @type {number}
  */
-const TMERC_BUFFER_LIMIT = 663469.9375;
+export const TMERC_BUFFER_LIMIT = 663469.9375;
 
 /**
  * Converts an ol.geom.Geometry to an Polygon or MultiPolygon, if possible.
@@ -109,7 +110,7 @@ const TMERC_BUFFER_LIMIT = 663469.9375;
  * @param {Geometry} geometry The geometry to convert
  * @return {Geometry}
  */
-const toPolygon = function(geometry) {
+export const toPolygon = function(geometry) {
   var polygon = null;
 
   if (geometry) {
@@ -197,7 +198,7 @@ const toPolygon = function(geometry) {
  * @return {Feature} The feature with the new geometry
  * @throws {Error} If the add does nothing
  */
-const addTo = function(source, target, opt_replace) {
+export const addTo = function(source, target, opt_replace) {
   var feature = null;
   if (source && target) {
     var geometry = source.getGeometry();
@@ -237,7 +238,7 @@ const addTo = function(source, target, opt_replace) {
  * @return {Feature} The feature with the new geometry
  * @throws {Error} If the remove creates an empty geometry or does nothing
  */
-const removeFrom = function(source, target, opt_replace) {
+export const removeFrom = function(source, target, opt_replace) {
   var feature = null;
   if (source && target) {
     var geometry = source.getGeometry();
@@ -286,7 +287,7 @@ const removeFrom = function(source, target, opt_replace) {
  * @return {Feature} The feature with the new geometry
  * @throws {Error} If the remove creates an empty geometry or does nothing
  */
-const intersect = function(source, target, opt_replace) {
+export const intersect = function(source, target, opt_replace) {
   var feature = null;
   if (source && target) {
     var geometry = source.getGeometry();
@@ -329,7 +330,7 @@ const intersect = function(source, target, opt_replace) {
  * @param {ol.ProjectionLike=} opt_proj The geometry projection.
  * @return {Geometry} The split geometry, or the original if it was already within the extent.
  */
-const splitWithinWorldExtent = function(geometry, opt_proj) {
+export const splitWithinWorldExtent = function(geometry, opt_proj) {
   if (geometry) {
     var olp = OLParser.getInstance();
     var jstsGeometry = olp.read(geometry);
@@ -392,7 +393,7 @@ const splitWithinWorldExtent = function(geometry, opt_proj) {
  * @param {Array<Geometry>} geometries The geometries.
  * @return {Geometry} The merged geometry.
  */
-const merge = function(geometries) {
+export const merge = function(geometries) {
   var result = null;
   if (geometries) {
     try {
@@ -437,7 +438,7 @@ const merge = function(geometries) {
  * @param {Array<Polygon>} polygons The polygons.
  * @return {Array<Polygon>} The flattened polygon/multi-polygon.
  */
-const flattenPolygons = function(polygons) {
+export const flattenPolygons = function(polygons) {
   if (polygons) {
     polygons = polygons.filter(filterFalsey);
 
@@ -476,7 +477,7 @@ const flattenPolygons = function(polygons) {
  * @param {boolean=} opt_skipTransform If the lon/lat transform should be skipped.
  * @return {Geometry} The buffered geometry.
  */
-const buffer = function(geometry, distance, opt_skipTransform) {
+export const buffer = function(geometry, distance, opt_skipTransform) {
   // abort now if a buffer won't be created
   if (!geometry) {
     return null;
@@ -607,7 +608,7 @@ const bufferPoint_ = function(point, distance) {
  * @param {number} distance The buffer distance.
  * @return {number} The offset between boxes to accurately buffer the geometry.
  */
-const getSplitOffset = function(extent, distance) {
+export const getSplitOffset = function(extent, distance) {
   var boxWidth = UTM_WIDTH_DEGREES;
   if (extent && extent[2] - extent[0] > boxWidth) {
     if (distance < 0) {
@@ -844,7 +845,7 @@ const fromBufferProjection_ = function(geometry, projection, opt_normalizeLon) {
  *
  * @see https://stackoverflow.com/questions/31473553
  */
-const validate = function(geometry, opt_quiet, opt_undefinedIfInvalid) {
+export const validate = function(geometry, opt_quiet, opt_undefinedIfInvalid) {
   if (!geometry) {
     return undefined;
   }
@@ -914,12 +915,11 @@ const validate = function(geometry, opt_quiet, opt_undefinedIfInvalid) {
  * @return {jsts.geom.Polygon|jsts.geom.MultiPolygon} null if there were no polygons, the polygon if there was only one,
  *                                                     or a MultiPolygon containing all polygons otherwise.
  */
-const polygonize = function(polygon) {
+export const polygonize = function(polygon) {
   var polygonizer = new jsts.operation.polygonize.Polygonizer();
   addPolygon(polygon, polygonizer);
   return toPolygonGeometry(polygonizer.getPolygons(), polygon.getFactory());
 };
-
 
 /**
  * Add all line strings from the polygon given to the polygonizer given
@@ -929,7 +929,7 @@ const polygonize = function(polygon) {
  *
  * @see https://stackoverflow.com/questions/31473553
  */
-const addPolygon = function(polygon, polygonizer) {
+export const addPolygon = function(polygon, polygonizer) {
   addLineString(polygon.getExteriorRing(), polygonizer);
 
   for (var n = polygon.getNumInteriorRing(); n-- > 0;) {
@@ -945,7 +945,7 @@ const addPolygon = function(polygon, polygonizer) {
  *
  * @see https://stackoverflow.com/questions/31473553
  */
-const addLineString = function(lineString, polygonizer) {
+export const addLineString = function(lineString, polygonizer) {
   // LinearRings are treated differently to line strings : we need a LineString NOT a LinearRing
   if (lineString instanceof jsts.geom.LinearRing) {
     lineString = lineString.getFactory().createLineString(lineString.getCoordinates());
@@ -968,7 +968,7 @@ const addLineString = function(lineString, polygonizer) {
  *                                                    or a MultiPolygon containing all polygons otherwise.
  * @see https://stackoverflow.com/questions/31473553
  */
-const toPolygonGeometry = function(polygons, factory) {
+export const toPolygonGeometry = function(polygons, factory) {
   switch (polygons.size()) {
     case 0:
       // no valid polygons
@@ -995,7 +995,7 @@ const toPolygonGeometry = function(polygons, factory) {
  * @return {Array<ol.Coordinate>} The ordered list of point coordinates, the first one being the nearest point
  *                                on geom1, the second the nearest point on geom2.
  */
-const nearestPoints = function(geom1, geom2) {
+export const nearestPoints = function(geom1, geom2) {
   var jstsParser = OLParser.getInstance();
   var jstsGeom1 = jstsParser.read(geom1);
   var jsts2Geom2 = jstsParser.read(geom2);
@@ -1010,32 +1010,6 @@ const nearestPoints = function(geom1, geom2) {
  * @param {jsts.geom.Coordinate} jstsCoord The JSTS coordinate.
  * @return {ol.Coordinate} The OL coordinate.
  */
-const jstsCoordToOlCoord = function(jstsCoord) {
+export const jstsCoordToOlCoord = function(jstsCoord) {
   return [jstsCoord.x, jstsCoord.y, jstsCoord.z];
-};
-
-exports = {
-  ErrorMessage,
-  ABS_BUFFER_REGEX,
-  LINE_REGEX,
-  POLYGON_REGEX,
-  UTM_WIDTH_DEGREES,
-  UTM_SPLIT_LIMIT,
-  TMERC_BUFFER_LIMIT,
-  polygonize,
-  toPolygon,
-  addTo,
-  removeFrom,
-  intersect,
-  splitWithinWorldExtent,
-  merge,
-  flattenPolygons,
-  buffer,
-  getSplitOffset,
-  validate,
-  addPolygon,
-  addLineString,
-  toPolygonGeometry,
-  nearestPoints,
-  jstsCoordToOlCoord
 };

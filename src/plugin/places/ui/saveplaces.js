@@ -1,6 +1,8 @@
 goog.declareModuleId('plugin.places.ui.SavePlacesUI');
 
 import '../../../os/ui/im/basicinfo.js';
+import AlertEventSeverity from '../../../os/alert/alerteventseverity.js';
+import AlertManager from '../../../os/alert/alertmanager.js';
 import {ROOT} from '../../../os/os.js';
 import {Controller as ExportOptionsCtrl} from '../../../os/ui/ex/exportoptions.js';
 import ExportOptionsEvent from '../../../os/ui/ex/exportoptionsevent.js';
@@ -10,10 +12,7 @@ import * as osWindow from '../../../os/ui/window.js';
 import WindowEventType from '../../../os/ui/windoweventtype.js';
 import * as places from '../places.js';
 
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 
 
 /**

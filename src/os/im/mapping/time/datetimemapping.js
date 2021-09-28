@@ -1,17 +1,17 @@
-goog.module('os.im.mapping.time.DateTimeMapping');
+goog.declareModuleId('os.im.mapping.time.DateTimeMapping');
 
-const RecordField = goog.require('os.data.RecordField');
-const osMapping = goog.require('os.im.mapping');
-const AbstractMapping = goog.require('os.im.mapping.AbstractMapping');
-const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
-const TimeFormat = goog.require('os.im.mapping.TimeFormat');
-const TimeType = goog.require('os.im.mapping.TimeType');
-const osImplements = goog.require('os.implements');
-const osTime = goog.require('os.time');
-const ITime = goog.require('os.time.ITime');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const TimeRange = goog.require('os.time.TimeRange');
-const {appendElement} = goog.require('os.xml');
+import RecordField from '../../../data/recordfield.js';
+import osImplements from '../../../implements.js';
+import ITime from '../../../time/itime.js';
+import * as osTime from '../../../time/time.js';
+import TimeInstant from '../../../time/timeinstant.js';
+import TimeRange from '../../../time/timerange.js';
+import {appendElement} from '../../../xml.js';
+import AbstractMapping from '../abstractmapping.js';
+import * as osMapping from '../mapping.js';
+import MappingRegistry from '../mappingregistry.js';
+import TimeFormat from '../timeformat.js';
+import TimeType from '../timetype.js';
 
 
 /**
@@ -20,7 +20,7 @@ const {appendElement} = goog.require('os.xml');
  * @extends {AbstractMapping<T>}
  * @template T
  */
-class DateTimeMapping extends AbstractMapping {
+export default class DateTimeMapping extends AbstractMapping {
   /**
    * Constructor.
    * @param {TimeType} type The type of time mapping.
@@ -429,5 +429,3 @@ MappingRegistry.getInstance().registerMapping(DateTimeMapping.ID, DateTimeMappin
  * @const
  */
 DateTimeMapping.TIMEZONE_REGEX = /(Z|UTC|[+-]\d\d+:?\d\d)$/;
-
-exports = DateTimeMapping;

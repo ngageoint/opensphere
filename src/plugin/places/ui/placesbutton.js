@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.places.ui.PlacesButtonUI');
 
+import {Places as PlacesKeys} from '../../../os/metrics/metricskeys.js';
 import Menu from '../../../os/ui/menu/menu.js';
 import MenuButtonCtrl from '../../../os/ui/menu/menubutton.js';
 import MenuItem from '../../../os/ui/menu/menuitem.js';
@@ -10,8 +11,6 @@ import EventType from '../eventtype.js';
 import * as places from '../places.js';
 import PlacesManager from '../placesmanager.js';
 import * as QuickAddPlacesUI from './quickaddplaces.js';
-
-const {Places: PlacesKeys} = goog.require('os.metrics.keys');
 
 const {PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');

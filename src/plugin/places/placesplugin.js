@@ -2,10 +2,11 @@ goog.declareModuleId('plugin.places.PlacesPlugin');
 
 import './ui/placesnodeui.js';
 import './ui/placesui.js';
+import LayerConfigManager from '../../os/layer/config/layerconfigmanager.js';
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
 import ClearEntry from '../../os/ui/clear/clearentry.js';
 import ClearManager from '../../os/ui/clear/clearmanager.js';
 import ImportMethod from '../../os/ui/file/method/importmethod.js';
-
 import * as mime from '../file/kml/mime.js';
 import KMLPlacesImportUI from './kmlplacesimportui.js';
 import * as places from './places.js';
@@ -15,8 +16,6 @@ import PlacesManager from './placesmanager.js';
 import * as menu from './placesmenu.js';
 
 const log = goog.require('goog.log');
-const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 
 const Logger = goog.requireType('goog.log.Logger');
 

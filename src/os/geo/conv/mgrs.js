@@ -1,10 +1,11 @@
-goog.module('os.geo.conv.MGRS');
+goog.declareModuleId('os.geo.conv.MGRS');
+
+import {MGRS_REGEXP} from '../geo.js';
+import LatitudeBand from './latitudeband.js';
+import UTM from './utm.js';
 
 const Coordinate = goog.require('goog.math.Coordinate');
 const {buildString, isAlpha, isNumeric} = goog.require('goog.string');
-const {MGRS_REGEXP} = goog.require('os.geo');
-const LatitudeBand = goog.require('os.geo.conv.LatitudeBand');
-const UTM = goog.require('os.geo.conv.UTM');
 
 
 /**
@@ -19,7 +20,7 @@ const UTM = goog.require('os.geo.conv.UTM');
  *
  * @deprecated Use osasm.toMGRS() and osasm.toLonLat(). This implementation does not support polar regions.
  */
-class MGRS {
+export default class MGRS {
   /**
    * Constructor.
    * @param {string} mgrs
@@ -771,6 +772,3 @@ MGRS.LATITUDE_BANDS = [
   new LatitudeBand(MGRS.LETTER.W, 7000000.0, 72.0, 64.0, 6000000.0),
   new LatitudeBand(MGRS.LETTER.X, 7900000.0, 84.5, 72.0, 6000000.0)
 ];
-
-
-exports = MGRS;

@@ -1,13 +1,13 @@
 goog.declareModuleId('plugin.descriptor.facet.Area');
 
+import IAreaTest from '../../../os/data/iareatest.js';
+import osImplements from '../../../os/implements.js';
+import {getAreaManager} from '../../../os/query/queryinstance.js';
+import BaseFacet from '../../../os/search/basefacet.js';
+
 const Promise = goog.require('goog.Promise');
 
-const IAreaTest = goog.require('os.data.IAreaTest');
-const osImplements = goog.require('os.implements');
-const {getAreaManager} = goog.require('os.query.instance');
-const BaseFacet = goog.require('os.search.BaseFacet');
-
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 
 
 /**

@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.area.CSVAreaImportUI');
 
+import AreaOptionsStep from '../../os/query/ui/areaoptionsstep.js';
 import ConfigStep from '../../os/ui/file/ui/csv/configstep.js';
 import FileImportUI from '../../os/ui/im/fileimportui.js';
 import * as osWindow from '../../os/ui/window.js';
@@ -7,8 +8,6 @@ import windowSelector from '../../os/ui/windowselector.js';
 import GeometryStep from '../../os/ui/wiz/geometrystep.js';
 import CSVParserConfig from '../file/csv/csvparserconfig.js';
 import {directiveTag as areaImportUi} from './csvareaimport.js';
-
-const AreaOptionsStep = goog.require('os.query.ui.AreaOptionsStep');
 
 
 /**

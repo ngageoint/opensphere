@@ -1,20 +1,18 @@
 goog.declareModuleId('plugin.cesium.interaction.dragcircle');
 
 import * as Dispatcher from '../../../os/dispatcher.js';
+import * as osInterpolate from '../../../os/interpolate.js';
+import Method from '../../../os/interpolatemethod.js';
+import MapEvent from '../../../os/map/mapevent.js';
+import MapContainer from '../../../os/mapcontainer.js';
 import {getFont} from '../../../os/style/label.js';
+import UnitManager from '../../../os/unit/unitmanager.js';
 import {generateCirclePositions} from '../cesium.js';
 
 const {toLonLat} = goog.require('ol.proj');
-const MapContainer = goog.require('os.MapContainer');
-const MapEvent = goog.require('os.MapEvent');
-const osInterpolate = goog.require('os.interpolate');
-const Method = goog.require('os.interpolate.Method');
-const UnitManager = goog.require('os.unit.UnitManager');
 
-const DragCircle = goog.requireType('os.interaction.DragCircle');
-const {
-  default: CesiumRenderer
-} = goog.requireType('plugin.cesium.CesiumRenderer');
+const {default: DragCircle} = goog.requireType('os.interaction.DragCircle');
+const {default: CesiumRenderer} = goog.requireType('plugin.cesium.CesiumRenderer');
 
 
 /**

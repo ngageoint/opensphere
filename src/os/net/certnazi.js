@@ -1,4 +1,4 @@
-goog.module('os.net.CertNazi');
+goog.declareModuleId('os.net.CertNazi');
 
 const {assert} = goog.require('goog.asserts');
 const GoogEvent = goog.require('goog.events.Event');
@@ -13,7 +13,7 @@ const {IE} = goog.require('goog.userAgent');
  * configured properly. By "fingerprinting", we mean checking several URLs to see if we can get to them. These
  * URLs must (A) be HTTPS, and (B) support CORS.
  */
-class CertNazi extends EventTarget {
+export default class CertNazi extends EventTarget {
   /**
    * Constructor.
    * @param {Array<string>=} opt_urls Optional GET URLs to check
@@ -241,5 +241,3 @@ CertNazi.POST_SUCCESS = 'postSuccess';
  * @const
  */
 CertNazi.POST_ERROR = 'postError';
-
-exports = CertNazi;

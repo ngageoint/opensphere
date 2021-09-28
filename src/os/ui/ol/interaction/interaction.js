@@ -1,8 +1,9 @@
 goog.declareModuleId('os.ui.ol.interaction');
 
+import {isGeometryPolygonal} from '../../../geo/geo.js';
+
 const userAgent = goog.require('goog.userAgent');
 const EventType = goog.require('ol.events.EventType');
-const {isGeometryPolygonal} = goog.require('os.geo');
 
 const Feature = goog.requireType('ol.Feature');
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');

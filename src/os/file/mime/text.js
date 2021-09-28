@@ -1,45 +1,46 @@
-goog.module('os.file.mime.text');
+goog.declareModuleId('os.file.mime.text');
+
+import * as mime from '../mime.js';
 
 const Promise = goog.require('goog.Promise');
 const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
-const mime = goog.require('os.file.mime');
 
 const Logger = goog.requireType('goog.log.Logger');
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
  * @type {string}
  */
-const TYPE = 'text/plain';
+export const TYPE = 'text/plain';
 
 /**
  * Priority for text detection.
  * @type {number}
  */
-const PRIORITY = 1000;
+export const PRIORITY = 1000;
 
 /**
  * The Byte Order Marker (BOM) sequence.
  * @type {!Array<number>}
  */
-const UTF8_BYTE_ORDER_MARKER = [0xef, 0xbb, 0xbf];
+export const UTF8_BYTE_ORDER_MARKER = [0xef, 0xbb, 0xbf];
 
 /**
  * @type {!Array<number>}
  */
-const UTF16_BYTE_ORDER_MARKER_BE = [0xfe, 0xff];
+export const UTF16_BYTE_ORDER_MARKER_BE = [0xfe, 0xff];
 
 /**
  * @type {!Array<number>}
  */
-const UTF16_BYTE_ORDER_MARKER_LE = [0xff, 0xfe];
+export const UTF16_BYTE_ORDER_MARKER_LE = [0xff, 0xfe];
 
 /**
  * @type {!Array<!Array<number>>}
  */
-const BOMS_ = [UTF8_BYTE_ORDER_MARKER, UTF16_BYTE_ORDER_MARKER_LE, UTF16_BYTE_ORDER_MARKER_BE];
+export const BOMS_ = [UTF8_BYTE_ORDER_MARKER, UTF16_BYTE_ORDER_MARKER_LE, UTF16_BYTE_ORDER_MARKER_BE];
 
 /**
  * The logger.
@@ -52,7 +53,7 @@ const logger = log.getLogger('os.file.mime.text');
  * @param {OSFile=} opt_file
  * @return {string|undefined}
  */
-const getText = function(buffer, opt_file) {
+export const getText = function(buffer, opt_file) {
   if (buffer) {
     var s = hasDeclaredEncoding_(buffer, opt_file);
 
@@ -92,7 +93,7 @@ const getText = function(buffer, opt_file) {
  * @param {string} text
  * @return {ArrayBuffer|undefined}
  */
-const getArrayBuffer = function(text) {
+export const getArrayBuffer = function(text) {
   try {
     var encoder = new TextEncoder();
     var arr = encoder.encode(text);
@@ -107,7 +108,7 @@ const getArrayBuffer = function(text) {
  * @param {OSFile=} opt_file
  * @return {!Promise<string|undefined>}
  */
-const detectText = function(buffer, opt_file) {
+export const detectText = function(buffer, opt_file) {
   return Promise.resolve(getText(buffer, opt_file));
 };
 
@@ -140,16 +141,4 @@ const hasDeclaredEncoding_ = function(buffer, opt_file) {
       return decode_(buffer, encoding);
     }
   }
-};
-
-exports = {
-  TYPE,
-  PRIORITY,
-  UTF8_BYTE_ORDER_MARKER,
-  UTF16_BYTE_ORDER_MARKER_BE,
-  UTF16_BYTE_ORDER_MARKER_LE,
-  BOMS_,
-  getText,
-  getArrayBuffer,
-  detectText
 };

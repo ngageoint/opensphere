@@ -1,4 +1,8 @@
-goog.module('os.debug.FancierWindow');
+goog.declareModuleId('os.debug.FancierWindow');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import {saveFile} from '../file/persist/persist.js';
 
 const FancyWindow = goog.require('goog.debug.FancyWindow');
 const googEvents = goog.require('goog.events');
@@ -6,9 +10,6 @@ const GoogEventType = goog.require('goog.events.EventType');
 const SafeHtml = goog.require('goog.html.SafeHtml');
 const SafeStyleSheet = goog.require('goog.html.SafeStyleSheet');
 const Const = goog.require('goog.string.Const');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {saveFile} = goog.require('os.file.persist');
 
 
 /**
@@ -33,7 +34,7 @@ const styleRules = Const.from(
 /**
  * Makes FancyWindow fancier by making the window close button do the same thing as clicking the exit button
  */
-class FancierWindow extends FancyWindow {
+export default class FancierWindow extends FancyWindow {
   /**
    * Constructor.
    * @param {string=} opt_identifier Identifier for this logging class
@@ -143,5 +144,3 @@ class FancierWindow extends FancyWindow {
     super.addLogRecord(logRecord);
   }
 }
-
-exports = FancierWindow;

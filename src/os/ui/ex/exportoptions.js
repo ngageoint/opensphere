@@ -1,7 +1,13 @@
 goog.declareModuleId('os.ui.ex.ExportOptionsUI');
 
 import '../checklist.js';
+import DataManager from '../../data/datamanager.js';
+import DataEventType from '../../data/event/dataeventtype.js';
+import SelectionType from '../../events/selectiontype.js';
 import {ROOT} from '../../os.js';
+import PropertyChange from '../../source/propertychange.js';
+import StyleManager from '../../style/stylemanager_shim.js';
+import StyleType from '../../style/styletype.js';
 import ChecklistEvent from '../checklistevent.js';
 import Module from '../module.js';
 import {apply} from '../ui.js';
@@ -11,17 +17,11 @@ const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
 const {htmlEscape} = goog.require('goog.string');
 const olEvents = goog.require('ol.events');
-const DataManager = goog.require('os.data.DataManager');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const SelectionType = goog.require('os.events.SelectionType');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const StyleManager = goog.require('os.style.StyleManager');
-const StyleType = goog.require('os.style.StyleType');
 
 const EventTarget = goog.requireType('ol.events.EventTarget');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const ISource = goog.requireType('os.source.ISource');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: ISource} = goog.requireType('os.source.ISource');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**

@@ -1,10 +1,10 @@
-goog.module('os.interaction.ContextMenu');
+goog.declareModuleId('os.interaction.ContextMenu');
 
-const I3DSupport = goog.require('os.I3DSupport');
-const {normalizeLongitude} = goog.require('os.geo2');
-const osImplements = goog.require('os.implements');
-const {getFeatureResult} = goog.require('os.interaction');
-const {default: OLContextMenu} = goog.require('os.ui.ol.interaction.ContextMenu');
+import {normalizeLongitude} from '../geo/geo2.js';
+import I3DSupport from '../i3dsupport.js';
+import osImplements from '../implements.js';
+import OLContextMenu from '../ui/ol/interaction/contextmenuinteraction.js';
+import {getFeatureResult} from './interaction.js';
 
 const {default: ContextMenuOptions} = goog.requireType('os.ui.ol.interaction.ContextMenuOptions');
 
@@ -14,7 +14,7 @@ const {default: ContextMenuOptions} = goog.requireType('os.ui.ol.interaction.Con
  *
  * @implements {I3DSupport}
  */
-class ContextMenu extends OLContextMenu {
+export default class ContextMenu extends OLContextMenu {
   /**
    * Constructor.
    * @param {ContextMenuOptions=} opt_options Options.
@@ -68,5 +68,3 @@ class ContextMenu extends OLContextMenu {
 }
 
 osImplements(ContextMenu, I3DSupport.ID);
-
-exports = ContextMenu;

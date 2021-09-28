@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.IScrollDataSource');
 
-const SearchManager = goog.requireType('os.search.SearchManager');
+const {default: SearchManager} = goog.requireType('os.search.SearchManager');
 
 
 /**

@@ -1,13 +1,14 @@
 goog.declareModuleId('plugin.cesium.TileGridTilingScheme');
 
+import * as geo from '../../os/geo/geo.js';
 import {PROJECTION} from '../../os/map/map.js';
+
+import * as osProj from '../../os/proj/proj.js';
 
 const asserts = goog.require('goog.asserts');
 const ol = goog.require('ol');
 const olProj = goog.require('ol.proj');
 const {toSize} = goog.require('ol.size');
-const geo = goog.require('os.geo');
-const osProj = goog.require('os.proj');
 
 const TileImageSource = goog.requireType('ol.source.TileImage');
 const TileGrid = goog.requireType('ol.tilegrid.TileGrid');

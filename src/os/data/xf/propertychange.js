@@ -1,9 +1,11 @@
-goog.module('os.data.xf.PropertyChange');
+goog.declareModuleId('os.data.xf.PropertyChange');
 
 /**
  * Time model event types
  * @enum {string}
  */
-exports = {
+const PropertyChange = {
   DIMENSION: 'xf:dimension'
 };
+
+export default PropertyChange;

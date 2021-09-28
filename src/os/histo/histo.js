@@ -1,8 +1,8 @@
-goog.module('os.histo');
+goog.declareModuleId('os.histo');
 
-const BinMethod = goog.require('os.histo.BinMethod');
+import BinMethod from './binmethod.js';
 
-const IBinMethod = goog.requireType('os.histo.IBinMethod');
+const {default: IBinMethod} = goog.requireType('os.histo.IBinMethod');
 
 
 /**
@@ -11,7 +11,7 @@ const IBinMethod = goog.requireType('os.histo.IBinMethod');
  * @param {IBinMethod} method The method
  * @return {IBinMethod}
  */
-const cloneMethod = function(method) {
+export const cloneMethod = function(method) {
   var clone = null;
   if (method && method.getBinType() in BinMethod) {
     var clazz = BinMethod[method.getBinType()];
@@ -28,7 +28,7 @@ const cloneMethod = function(method) {
  * @param {Object} config The bin method config
  * @return {IBinMethod|undefined} The bin method if the type was registered, or undefined if not
  */
-const restoreMethod = function(config) {
+export const restoreMethod = function(config) {
   var method;
   if (config) {
     var type = /** @type {string|undefined} */ (config['type']);
@@ -42,9 +42,4 @@ const restoreMethod = function(config) {
   }
 
   return method;
-};
-
-exports = {
-  cloneMethod,
-  restoreMethod
 };

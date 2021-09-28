@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.weather.WeatherPlugin');
 
+import settings from '../../os/config/settings.js';
 import * as osMap from '../../os/map/map.js';
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
 import * as mapMenu from '../../os/ui/menu/mapmenu.js';
 
 const olProj = goog.require('ol.proj');
-const settings = goog.require('os.config.Settings');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 

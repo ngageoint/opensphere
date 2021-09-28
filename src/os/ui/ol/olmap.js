@@ -1,8 +1,15 @@
 goog.declareModuleId('os.ui.ol.OLMap');
 
+import Settings from '../../config/settings.js';
+import {ProviderKey} from '../../data/data.js';
 import * as dispatcher from '../../dispatcher.js';
+import {reduceExtentFromGeometries} from '../../fn/fn.js';
 import * as osMap from '../../map/map.js';
+import {unsafeClone} from '../../object/object.js';
+import XYZ from '../../ol/source/xyzsource.js';
+import BaseAreaManager from '../../query/baseareamanager.js';
 import {setFeatureStyle} from '../../style/style.js';
+import StyleType from '../../style/styletype.js';
 import EventType from '../action/actioneventtype.js';
 import LayerSwitcher from './control/layerswitcher.js';
 import AreaHover from './interaction/areahoverinteraction.js';
@@ -33,13 +40,6 @@ const Fill = goog.require('ol.style.Fill');
 const Stroke = goog.require('ol.style.Stroke');
 const Style = goog.require('ol.style.Style');
 const {createForProjection} = goog.require('ol.tilegrid');
-const Settings = goog.require('os.config.Settings');
-const {ProviderKey} = goog.require('os.data');
-const {reduceExtentFromGeometries} = goog.require('os.fn');
-const {unsafeClone} = goog.require('os.object');
-const XYZ = goog.require('os.ol.source.XYZ');
-const BaseAreaManager = goog.require('os.query.BaseAreaManager');
-const StyleType = goog.require('os.style.StyleType');
 
 const Collection = goog.requireType('ol.Collection');
 const PluggableMap = goog.requireType('ol.PluggableMap');
@@ -48,7 +48,7 @@ const LayerBase = goog.requireType('ol.layer.Base');
 const Layer = goog.requireType('ol.layer.Layer');
 const Projection = goog.requireType('ol.proj.Projection');
 const TileGrid = goog.requireType('ol.tilegrid.TileGrid');
-const IMapContainer = goog.requireType('os.map.IMapContainer');
+const {default: IMapContainer} = goog.requireType('os.map.IMapContainer');
 const {default: ActionEvent} = goog.requireType('os.ui.action.ActionEvent');
 
 

@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.arc.query.ArcSpatialModifier');
 
-const ParamModifier = goog.require('os.net.ParamModifier');
+import ParamModifier from '../../../os/net/parammodifier.js';
 
 
 /**

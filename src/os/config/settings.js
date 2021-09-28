@@ -1,4 +1,22 @@
-goog.module('os.config.Settings');
+goog.declareModuleId('os.config.Settings');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertEventTypes from '../alert/alerteventtypes.js';
+import AlertManager from '../alert/alertmanager.js';
+import SettingChangeEvent from '../events/settingchangeevent.js';
+import Metrics from '../metrics/metrics.js';
+import {Settings as SettingsMetrics} from '../metrics/metricskeys.js';
+import * as osObject from '../object/object.js';
+import * as os from '../os.js';
+import Peer from '../xt/peer.js';
+import {appNs, coreNs} from './config.js';
+import {getSettings, setSettings} from './configinstance.js';
+import ConfigType from './configtype.js';
+import ConfigEventType from './eventtype.js';
+import * as osConfigNamespace from './namespace.js';
+import SettingsStorageLoader from './storage/settingsstorageloader.js';
+import SettingsStorageRegistry from './storage/settingsstorageregistry.js';
+import SettingsWritableStorageType from './storage/settingswritablestoragetype.js';
 
 const Promise = goog.require('goog.Promise');
 const Timer = goog.require('goog.Timer');
@@ -10,26 +28,8 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
 
-const os = goog.require('os');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertEventTypes = goog.require('os.alert.AlertEventTypes');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {appNs, coreNs} = goog.require('os.config');
-const ConfigType = goog.require('os.config.ConfigType');
-const ConfigEventType = goog.require('os.config.EventType');
-const {getSettings, setSettings} = goog.require('os.config.instance');
-const osConfigNamespace = goog.require('os.config.namespace');
-const SettingsStorageLoader = goog.require('os.config.storage.SettingsStorageLoader');
-const SettingsStorageRegistry = goog.require('os.config.storage.SettingsStorageRegistry');
-const SettingsWritableStorageType = goog.require('os.config.storage.SettingsWritableStorageType');
-const SettingChangeEvent = goog.require('os.events.SettingChangeEvent');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Settings: SettingsMetrics} = goog.require('os.metrics.keys');
-const osObject = goog.require('os.object');
-const Peer = goog.require('os.xt.Peer');
-
-const IMessageHandler = goog.requireType('os.xt.IMessageHandler');
-const PeerInfo = goog.requireType('os.xt.PeerInfo');
+const {default: IMessageHandler} = goog.requireType('os.xt.IMessageHandler');
+const {default: PeerInfo} = goog.requireType('os.xt.PeerInfo');
 
 
 /**
@@ -50,7 +50,7 @@ let SettingsMessage;
  *
  * @implements {IMessageHandler}
  */
-class Settings extends EventTarget {
+export default class Settings extends EventTarget {
   /**
    * Constructor.
    */
@@ -989,6 +989,3 @@ Settings.WRITE_STORAGE_BACKUP_KEY = 'opensphere.config.' + Settings.WRITE_STORAG
  * @deprecated Please use os.config.Settings.getInstance() instead.
  */
 os.settings = Settings.getInstance();
-
-
-exports = Settings;

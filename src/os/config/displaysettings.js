@@ -1,13 +1,13 @@
-goog.module('os.config.DisplaySettings');
+goog.declareModuleId('os.config.DisplaySettings');
 
-const {directiveTag: settingsUi} = goog.require('os.config.DisplaySettingsUI');
-const {default: SettingPlugin} = goog.require('os.ui.config.SettingPlugin');
+import SettingPlugin from '../ui/config/settingplugin.js';
+import {directiveTag as settingsUi} from './displaysettingsui.js';
 
 
 /**
  * Display settings plugin.
  */
-class DisplaySettings extends SettingPlugin {
+export default class DisplaySettings extends SettingPlugin {
   /**
    * Constructor.
    */
@@ -22,5 +22,3 @@ class DisplaySettings extends SettingPlugin {
     this.setUI(settingsUi);
   }
 }
-
-exports = DisplaySettings;

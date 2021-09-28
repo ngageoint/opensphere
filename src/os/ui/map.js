@@ -1,10 +1,10 @@
 goog.declareModuleId('os.ui.Map');
 
+import MapContainer from '../mapcontainer.js';
 import Module from './module.js';
 import {waitForAngular} from './ui.js';
 
 const log = goog.require('goog.log');
-const MapContainer = goog.require('os.MapContainer');
 
 const Logger = goog.requireType('goog.log.Logger');
 

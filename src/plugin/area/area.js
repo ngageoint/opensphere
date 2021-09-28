@@ -1,16 +1,16 @@
 goog.declareModuleId('plugin.area');
 
+import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
+import AlertManager from '../../os/alert/alertmanager.js';
+import RecordField from '../../os/data/recordfield.js';
+import * as fn from '../../os/fn/fn.js';
+import * as jsts from '../../os/geo/jsts.js';
+import {getAreaManager} from '../../os/query/queryinstance.js';
 import * as query from '../../os/ui/query/query.js';
 
 const googString = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
 const olArray = goog.require('ol.array');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const RecordField = goog.require('os.data.RecordField');
-const fn = goog.require('os.fn');
-const jsts = goog.require('os.geo.jsts');
-const {getAreaManager} = goog.require('os.query.instance');
 
 
 /**

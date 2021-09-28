@@ -9,9 +9,9 @@ goog.require('plugin.suncalc.LightStripUI');
 describe('plugin.suncalc.LightStripUI', function() {
   const dispose = goog.module.get('goog.dispose');
   const PluggableMap = goog.module.get('ol.PluggableMap');
-  const MapContainer = goog.module.get('os.MapContainer');
+  const {default: MapContainer} = goog.module.get('os.MapContainer');
   const {default: TimelineScaleEvent} = goog.module.get('os.ui.timeline.TimelineScaleEvent');
-  const Settings = goog.module.get('os.config.Settings');
+  const {default: Settings} = goog.module.get('os.config.Settings');
   const {SettingKey} = goog.module.get('plugin.suncalc');
   const {Controller, directive} = goog.module.get('plugin.suncalc.LightStripUI');
 

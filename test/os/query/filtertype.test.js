@@ -3,8 +3,8 @@ goog.require('os.filter.FilterType');
 
 
 describe('os.filter.FilterType', function() {
-  const FilterEntry = goog.module.get('os.filter.FilterEntry');
-  const FilterType = goog.module.get('os.filter.FilterType');
+  const {default: FilterEntry} = goog.module.get('os.filter.FilterEntry');
+  const {default: FilterType} = goog.module.get('os.filter.FilterType');
 
   it('should persist and restore properly', function() {
     var a = new FilterType();

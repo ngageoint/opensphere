@@ -1,12 +1,11 @@
 goog.declareModuleId('os.ui.im.FileImportWizard');
 
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import DataManager from '../../data/datamanager.js';
+import FileStorage from '../../file/filestorage.js';
+import {isLocal} from '../../file/index.js';
 import {Controller as WizardController} from '../wiz/wizard.js';
-
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const DataManager = goog.require('os.data.DataManager');
-const {isLocal} = goog.require('os.file');
-const FileStorage = goog.require('os.file.FileStorage');
 
 const DBError = goog.requireType('goog.db.Error');
 

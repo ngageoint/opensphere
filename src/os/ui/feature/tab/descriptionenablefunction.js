@@ -1,9 +1,10 @@
 goog.declareModuleId('os.ui.feature.tab.descriptionEnableFunction');
 
+import RecordField from '../../../data/recordfield.js';
+import {DESC_REGEXP} from '../../../fields/index.js';
+
 const {findValue} = goog.require('goog.object');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const RecordField = goog.require('os.data.RecordField');
-const {DESC_REGEXP} = goog.require('os.fields');
 
 
 /**

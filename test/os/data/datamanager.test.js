@@ -5,9 +5,9 @@ goog.require('os.mock');
 
 
 describe('os.data.DataManager', function() {
-  const Settings = goog.module.get('os.config.Settings');
-  const BaseDescriptor = goog.module.get('os.data.BaseDescriptor');
-  const DataManager = goog.module.get('os.data.DataManager');
+  const {default: Settings} = goog.module.get('os.config.Settings');
+  const {default: BaseDescriptor} = goog.module.get('os.data.BaseDescriptor');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
 
   var dm;
 

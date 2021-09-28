@@ -1,12 +1,12 @@
-goog.module('os.metrics.FiltersMetrics');
+goog.declareModuleId('os.metrics.FiltersMetrics');
 
-const {Filters} = goog.require('os.metrics.keys');
-const {default: MetricsPlugin} = goog.require('os.ui.metrics.MetricsPlugin');
+import MetricsPlugin from '../ui/metrics/metricsplugin.js';
+import {Filters} from './metricskeys.js';
 
 
 /**
  */
-class FiltersMetrics extends MetricsPlugin {
+export default class FiltersMetrics extends MetricsPlugin {
   /**
    * Constructor.
    */
@@ -110,5 +110,3 @@ class FiltersMetrics extends MetricsPlugin {
     });
   }
 }
-
-exports = FiltersMetrics;

@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ui.im.FileExistsUI');
 
+import {getAppName} from '../../config/config.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import * as ConfirmUI from '../window/confirm.js';
 import WindowEventType from '../windoweventtype.js';
 import FileExistsChoice from './fileexistschoice.js';
-const {getAppName} = goog.require('os.config');
 
 
 /**

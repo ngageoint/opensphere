@@ -1,16 +1,16 @@
 goog.declareModuleId('os.ui.filter.im.FilterImporter');
 
+import {toHexString} from '../../../color.js';
+import IDataDescriptor from '../../../data/idatadescriptor.js';
+import Importer from '../../../im/importer.js';
+import osImplements from '../../../implements.js';
 import BaseProvider from '../../data/baseprovider.js';
 import * as ui from '../../ui.js';
 import {getFilterableByType, getFilterableTypes, toFilterString} from '../filter.js';
 
 const {getRandomString, toTitleCase} = goog.require('goog.string');
-const {toHexString} = goog.require('os.color');
-const IDataDescriptor = goog.require('os.data.IDataDescriptor');
-const Importer = goog.require('os.im.Importer');
-const osImplements = goog.require('os.implements');
 
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 
 
 /**

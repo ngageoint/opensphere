@@ -10,10 +10,10 @@ goog.require('os.math.Units');
 describe('os.im.mapping.RadiusMapping', function() {
   const Feature = goog.module.get('ol.Feature');
   const Point = goog.module.get('ol.geom.Point');
-  const Fields = goog.module.get('os.Fields');
+  const {default: Fields} = goog.module.get('os.Fields');
   const fields = goog.module.get('os.fields');
   const mapping = goog.module.get('os.im.mapping');
-  const RadiusMapping = goog.module.get('os.im.mapping.RadiusMapping');
+  const {default: RadiusMapping} = goog.module.get('os.im.mapping.RadiusMapping');
 
   it('should auto detect radius string types', function() {
     // test with a feature (WFS layer or csv import)

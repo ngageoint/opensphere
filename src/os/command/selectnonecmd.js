@@ -1,12 +1,12 @@
-goog.module('os.command.SelectNone');
+goog.declareModuleId('os.command.SelectNone');
 
-const AbstractSelect = goog.require('os.command.AbstractSelect');
+import AbstractSelect from './abstractselectcmd.js';
 
 
 /**
  * Command for selecting all features in a source
  */
-class SelectNone extends AbstractSelect {
+export default class SelectNone extends AbstractSelect {
   /**
    * Constructor.
    * @param {!string} sourceId
@@ -36,5 +36,3 @@ class SelectNone extends AbstractSelect {
     }
   }
 }
-
-exports = SelectNone;

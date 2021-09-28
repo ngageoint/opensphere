@@ -1,15 +1,14 @@
 goog.declareModuleId('os.ui.data.LayerCheckboxUI');
 
+import LayerSyncDescriptor from '../../data/layersyncdescriptor.js';
+import TriState from '../../structs/tristate.js';
 import Module from '../module.js';
 import {Controller as TriStateCheckboxCtrl, directive as triStateCheckboxDirective} from '../tristatecheckbox.js';
 import * as ConfirmUI from '../window/confirm.js';
 import DescriptorNode from './descriptornode.js';
 
-const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
-const TriState = goog.require('os.structs.TriState');
-
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
-const TriStateTreeNode = goog.requireType('os.structs.TriStateTreeNode');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
+const {default: TriStateTreeNode} = goog.requireType('os.structs.TriStateTreeNode');
 
 
 /**

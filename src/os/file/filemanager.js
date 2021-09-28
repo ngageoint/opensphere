@@ -1,20 +1,21 @@
-goog.module('os.file.FileManager');
+goog.declareModuleId('os.file.FileManager');
+
+import {detect, getTypeChain} from './mime.js';
+import * as text from './mime/text.js';
 
 const {defaultCompare} = goog.require('goog.array');
 const GoogFileReader = goog.require('goog.fs.FileReader');
 const log = goog.require('goog.log');
-const {detect, getTypeChain} = goog.require('os.file.mime');
-const text = goog.require('os.file.mime.text');
 
 const Logger = goog.requireType('goog.log.Logger');
-const OSFile = goog.requireType('os.file.File');
-const IFileMethod = goog.requireType('os.file.IFileMethod');
+const {default: OSFile} = goog.requireType('os.file.File');
+const {default: IFileMethod} = goog.requireType('os.file.IFileMethod');
 
 
 /**
  * Keeps a registry of methods for reading a file ({@link IFileMethod})
  */
-class FileManager {
+export default class FileManager {
   /**
    * Constructor.
    */
@@ -177,5 +178,3 @@ let instance;
  * @type {Logger}
  */
 const logger = log.getLogger('os.file.FileManager');
-
-exports = FileManager;

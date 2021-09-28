@@ -1,6 +1,8 @@
 goog.declareModuleId('os.ui.feature.FeatureInfoCellUI');
 
 import '../location/simplelocation.js';
+import Fields from '../../fields/fields.js';
+import * as fields from '../../fields/index.js';
 import {ROOT} from '../../os.js';
 import ColumnActionManager from '../columnactions/columnactionmanager.js';
 import launchColumnActionPrompt from '../columnactions/launchcolumnactionprompt.js';
@@ -10,8 +12,6 @@ import Module from '../module.js';
 import {launchPropertyInfo} from '../propertyinfo.js';
 import {copy as copyText} from '../text/text.js';
 import FeatureInfoEvent from './featureinfoevent.js';
-const Fields = goog.require('os.Fields');
-const fields = goog.require('os.fields');
 
 
 /**

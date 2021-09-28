@@ -15,13 +15,13 @@ goog.require('os.xml');
 
 describe('os.state.v4.LayerState', function() {
   const QueryData = goog.module.get('goog.Uri.QueryData');
-  const VectorLayer = goog.module.get('os.layer.Vector');
-  const FeatureType = goog.module.get('os.ogc.wfs.FeatureType');
-  const BaseStateManager = goog.module.get('os.state.BaseStateManager');
-  const StateManager = goog.module.get('os.state.StateManager');
-  const Versions = goog.module.get('os.state.Versions');
+  const {default: VectorLayer} = goog.module.get('os.layer.Vector');
+  const {default: FeatureType} = goog.module.get('os.ogc.wfs.FeatureType');
+  const {default: BaseStateManager} = goog.module.get('os.state.BaseStateManager');
+  const {default: StateManager} = goog.module.get('os.state.StateManager');
+  const {default: Versions} = goog.module.get('os.state.Versions');
   const instance = goog.module.get('os.state.instance');
-  const LayerState = goog.module.get('os.state.v4.LayerState');
+  const {default: LayerState} = goog.module.get('os.state.v4.LayerState');
   const state = goog.module.get('os.ui.state');
   const xml = goog.module.get('os.xml');
 

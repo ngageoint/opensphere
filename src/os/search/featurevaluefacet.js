@@ -1,13 +1,13 @@
-goog.module('os.search.FeatureValueFacet');
+goog.declareModuleId('os.search.FeatureValueFacet');
 
-const ValueFacet = goog.require('os.search.ValueFacet');
+import ValueFacet from './valuefacet.js';
 
 
 /**
  * A facet based off a feature value.
  * @extends {ValueFacet<!ol.Feature>}
  */
-class FeatureValueFacet extends ValueFacet {
+export default class FeatureValueFacet extends ValueFacet {
   /**
    * Constructor.
    * @param {string} id The facet identifier.
@@ -32,5 +32,3 @@ class FeatureValueFacet extends ValueFacet {
     return value != null ? String(value) : null;
   }
 }
-
-exports = FeatureValueFacet;

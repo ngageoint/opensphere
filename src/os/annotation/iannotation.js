@@ -1,4 +1,4 @@
-goog.module('os.annotation.IAnnotation');
+goog.declareModuleId('os.annotation.IAnnotation');
 
 /**
  * Interface representing an annotation.
@@ -6,7 +6,7 @@ goog.module('os.annotation.IAnnotation');
  * @interface
  * @template T
  */
-class IAnnotation {
+export default class IAnnotation {
   /**
    * Get the annotation options.
    * @return {osx.annotation.Options|undefined} The annotation options or undefined.
@@ -41,5 +41,3 @@ class IAnnotation {
    */
   setVisible(value) {}
 }
-
-exports = IAnnotation;

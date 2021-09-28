@@ -1,18 +1,19 @@
 goog.declareModuleId('os.ui.SourceAware');
 
+import DataManager from '../data/datamanager.js';
+import DataEventType from '../data/event/dataeventtype.js';
+import PropertyChange from '../source/propertychange.js';
+
 const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const {remove} = goog.require('ol.array');
 const events = goog.require('ol.events');
-const DataManager = goog.require('os.data.DataManager');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const PropertyChange = goog.require('os.source.PropertyChange');
 
 const ObjectEvent = goog.requireType('ol.Object.Event');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const ISource = goog.requireType('os.source.ISource');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: ISource} = goog.requireType('os.source.ISource');
 
 
 /**

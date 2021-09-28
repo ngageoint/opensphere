@@ -1,7 +1,18 @@
 goog.declareModuleId('os.ui.menu.layer');
 
+import EventType from '../../action/eventtype.js';
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import CommandProcessor from '../../command/commandprocessor.js';
+import FlyToExtent from '../../command/flytoextentcmd.js';
+import DataManager from '../../data/datamanager.js';
+import FileDescriptor from '../../data/filedescriptor.js';
 import {flyTo} from '../../feature/feature.js';
+import {nodesToLayers, reduceExtentFromLayers} from '../../fn/fn.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
 import {getExportFields} from '../../source/source.js';
+import VectorSource from '../../source/vectorsource.js';
 import * as ExportUI from '../ex/exportdialog.js';
 import {launchFeatureList} from '../featurelist.js';
 import ExportManager from '../file/exportmanager.js';
@@ -18,21 +29,10 @@ const Timer = goog.require('goog.Timer');
 const googDispose = goog.require('goog.dispose');
 const {createEmpty, isEmpty} = goog.require('ol.extent');
 const OLVectorSource = goog.require('ol.source.Vector');
-const EventType = goog.require('os.action.EventType');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const FlyToExtent = goog.require('os.command.FlyToExtent');
-const DataManager = goog.require('os.data.DataManager');
-const FileDescriptor = goog.require('os.data.FileDescriptor');
-const {nodesToLayers, reduceExtentFromLayers} = goog.require('os.fn');
-const {getMapContainer} = goog.require('os.map.instance');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const VectorSource = goog.require('os.source.Vector');
 
-const ExportOptions = goog.requireType('os.ex.ExportOptions');
-const ILayer = goog.requireType('os.layer.ILayer');
-const VectorLayer = goog.requireType('os.layer.Vector');
+const {default: ExportOptions} = goog.requireType('os.ex.ExportOptions');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 

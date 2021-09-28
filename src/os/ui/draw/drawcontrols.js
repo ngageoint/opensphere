@@ -1,28 +1,27 @@
 goog.declareModuleId('os.ui.draw.DrawControlsUI');
 
+import Settings from '../../config/settings.js';
+import * as dispatcher from '../../dispatcher.js';
+import Measure from '../../interaction/measureinteraction.js';
+import Method from '../../interpolatemethod.js';
+import MapEvent from '../../map/mapevent.js';
+import {getIMapContainer, getMapContainer} from '../../map/mapinstance.js';
+import {Map as MapKeys} from '../../metrics/metricskeys.js';
 import {ROOT} from '../../os.js';
+import MenuItemType from '../menu/menuitemtype.js';
 import Module from '../module.js';
 import {Controller as BaseDrawControlsCtrl} from './basedrawcontrols.js';
 import {getMenu} from './draw.js';
+import DrawEventType from './draweventtype.js';
 
 const googEvents = goog.require('goog.events');
 const log = goog.require('goog.log');
 const {MAC} = goog.require('ol.has');
-const {getIMapContainer} = goog.require('os.map.instance');
-const MapEvent = goog.require('os.MapEvent');
-const dispatcher = goog.require('os.Dispatcher');
-const Settings = goog.require('os.config.Settings');
-const Measure = goog.require('os.interaction.Measure');
-const Method = goog.require('os.interpolate.Method');
-const {getMapContainer} = goog.require('os.map.instance');
-const {Map: MapKeys} = goog.require('os.metrics.keys');
-const DrawEventType = goog.require('os.ui.draw.DrawEventType');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 
 const Logger = goog.requireType('goog.log.Logger');
-const DrawEvent = goog.requireType('os.ui.draw.DrawEvent');
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+const {default: DrawEvent} = goog.requireType('os.ui.draw.DrawEvent');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 
 
 /**

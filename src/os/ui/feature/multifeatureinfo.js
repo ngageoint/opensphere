@@ -1,7 +1,12 @@
 goog.declareModuleId('os.ui.feature.MultiFeatureInfoUI');
 
 import '../location/simplelocation.js';
+import {toHexString} from '../../color.js';
+import ColumnDefinition from '../../data/columndefinition.js';
+import RecordField from '../../data/recordfield.js';
 import * as osFeature from '../../feature/feature.js';
+import instanceOf from '../../instanceof.js';
+import LayerClass from '../../layer/layerclass.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import * as slickColumn from '../slick/column.js';
@@ -13,14 +18,9 @@ const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const {caseInsensitiveContains} = goog.require('goog.string');
-const {toHexString} = goog.require('os.color');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const RecordField = goog.require('os.data.RecordField');
-const instanceOf = goog.require('os.instanceOf');
-const LayerClass = goog.require('os.layer.LayerClass');
 
 const Feature = goog.requireType('ol.Feature');
-const VectorLayer = goog.requireType('os.layer.Vector');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 
 
 /**

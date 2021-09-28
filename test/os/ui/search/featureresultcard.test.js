@@ -15,10 +15,10 @@ describe('os.ui.search.FeatureResultCardCtrl', () => {
   const Feature = goog.module.get('ol.Feature');
   const {getListeners} = goog.module.get('ol.events');
   const Point = goog.module.get('ol.geom.Point');
-  const MapContainer = goog.module.get('os.MapContainer');
-  const VectorLayer = goog.module.get('os.layer.Vector');
-  const VectorSource = goog.module.get('os.source.Vector');
-  const StyleType = goog.module.get('os.style.StyleType');
+  const {default: MapContainer} = goog.module.get('os.MapContainer');
+  const {default: VectorLayer} = goog.module.get('os.layer.Vector');
+  const {default: VectorSource} = goog.module.get('os.source.Vector');
+  const {default: StyleType} = goog.module.get('os.style.StyleType');
   const {default: Controller} = goog.module.get('os.ui.search.FeatureResultCardCtrl');
   const {default: CoordinateResult} = goog.module.get('os.ui.search.place.CoordinateResult');
 

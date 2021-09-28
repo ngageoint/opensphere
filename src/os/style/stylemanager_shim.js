@@ -1,5 +1,6 @@
-goog.module('os.style.StyleManager');
+goog.declareModuleId('os.style.StyleManager');
 
-const {default: StyleManager} = goog.require('os.style.StyleManagerES');
+import StyleManager from './stylemanager.js';
 
-exports = StyleManager;
+
+export default StyleManager;

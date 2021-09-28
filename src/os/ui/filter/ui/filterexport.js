@@ -1,18 +1,18 @@
 goog.declareModuleId('os.ui.filter.ui.FilterExportUI');
 
 import '../../util/validationmessage.js';
+import AlertEventSeverity from '../../../alert/alerteventseverity.js';
+import AlertManager from '../../../alert/alertmanager.js';
+import {saveFile} from '../../../file/persist/persist.js';
+import FilterEntry from '../../../filter/filterentry.js';
 import {ROOT} from '../../../os.js';
+import {getFilterManager} from '../../../query/queryinstance.js';
+import {appendElement, clone, createElementNS, serialize} from '../../../xml.js';
 import Module from '../../module.js';
 import {close, create} from '../../window.js';
 import WindowEventType from '../../windoweventtype.js';
 import {getFilterableByType} from '../filter.js';
 import FilterExportChoice from './filterexportchoice.js';
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {saveFile} = goog.require('os.file.persist');
-const FilterEntry = goog.require('os.filter.FilterEntry');
-const {getFilterManager} = goog.require('os.query.instance');
-const {appendElement, clone, createElementNS, serialize} = goog.require('os.xml');
 
 
 /**

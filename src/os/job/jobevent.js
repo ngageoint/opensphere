@@ -1,4 +1,4 @@
-goog.module('os.job.JobEvent');
+goog.declareModuleId('os.job.JobEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
@@ -6,7 +6,7 @@ const GoogEvent = goog.require('goog.events.Event');
 /**
  * Job event
  */
-class JobEvent extends GoogEvent {
+export default class JobEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type The event type
@@ -22,5 +22,3 @@ class JobEvent extends GoogEvent {
     this.data = opt_data;
   }
 }
-
-exports = JobEvent;

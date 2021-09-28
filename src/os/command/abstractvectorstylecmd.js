@@ -1,11 +1,12 @@
-goog.module('os.command.AbstractVectorStyle');
+goog.declareModuleId('os.command.AbstractVectorStyle');
+
+import DataManager from '../data/datamanager.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import * as osStyle from '../style/style.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import AbstractStyle from './abstractstylecmd.js';
 
 const asserts = goog.require('goog.asserts');
-const AbstractStyle = goog.require('os.command.AbstractStyle');
-const DataManager = goog.require('os.data.DataManager');
-const {getMapContainer} = goog.require('os.map.instance');
-const osStyle = goog.require('os.style');
-const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**
@@ -14,7 +15,7 @@ const StyleManager = goog.require('os.style.StyleManager');
  *
  * @template T
  */
-class AbstractVectorStyle extends AbstractStyle {
+export default class AbstractVectorStyle extends AbstractStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -57,5 +58,3 @@ class AbstractVectorStyle extends AbstractStyle {
     osStyle.notifyStyleChange(layer);
   }
 }
-
-exports = AbstractVectorStyle;

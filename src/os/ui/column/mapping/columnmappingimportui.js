@@ -1,18 +1,18 @@
 goog.declareModuleId('os.ui.column.mapping.ColumnMappingImportUI');
 
+import AlertEventSeverity from '../../../alert/alerteventseverity.js';
+import AlertManager from '../../../alert/alertmanager.js';
+import ColumnMapping from '../../../column/columnmapping.js';
+import ColumnMappingManager from '../../../column/columnmappingmanager.js';
+import ColumnMappingTag from '../../../column/columnmappingtag.js';
 import FileImportUI from '../../im/fileimportui.js';
 import * as ConfirmUI from '../../window/confirm.js';
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml, serialize} = goog.require('goog.dom.xml');
 const log = goog.require('goog.log');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const ColumnMapping = goog.require('os.column.ColumnMapping');
-const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
-const ColumnMappingTag = goog.require('os.column.ColumnMappingTag');
 
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**

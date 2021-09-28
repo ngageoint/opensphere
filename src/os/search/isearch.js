@@ -1,4 +1,4 @@
-goog.module('os.search.ISearch');
+goog.declareModuleId('os.search.ISearch');
 
 const Listenable = goog.requireType('goog.events.Listenable');
 
@@ -9,7 +9,7 @@ const Listenable = goog.requireType('goog.events.Listenable');
  *  @extends {Listenable}
  *  @interface
  */
-class ISearch {
+export default class ISearch {
   /**
    * Execute a keyword search against a repository.
    * @param {string} term The keyword to use in the search
@@ -99,5 +99,3 @@ class ISearch {
    */
   setExternal(external) {}
 }
-
-exports = ISearch;

@@ -1,10 +1,9 @@
 goog.declareModuleId('plugin.descriptor.SearchPlugin');
 
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
+import SearchManager from '../../os/search/searchmanager.js';
 import FacetedSearchCtrl from '../../os/ui/search/facetedsearch.js';
 import DescriptorSearch from './descriptorsearch.js';
-
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const SearchManager = goog.require('os.search.SearchManager');
 
 
 /**

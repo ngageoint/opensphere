@@ -1,10 +1,10 @@
-goog.module('os.ogc.wps.WPSParams');
+goog.declareModuleId('os.ogc.wps.WPSParams');
 
 /**
  * WPS parameter names
  * @enum {string}
  */
-exports = {
+const WPSParams = {
   AREA: 'area',
   AREA_NAMES: 'areanames',
   DATA: 'data',
@@ -17,3 +17,5 @@ exports = {
   VERSION: 'version',
   ROOT_NAME: 'exposedWpsProcesses'
 };
+
+export default WPSParams;

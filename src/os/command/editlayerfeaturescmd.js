@@ -1,15 +1,15 @@
-goog.module('os.command.EditLayerFeatures');
+goog.declareModuleId('os.command.EditLayerFeatures');
 
-const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
-const State = goog.require('os.command.State');
-const {getMapContainer} = goog.require('os.map.instance');
+import {getMapContainer} from '../map/mapinstance.js';
+import AbstractSyncCommand from './abstractsynccommand.js';
+import State from './state.js';
 
 const Feature = goog.requireType('ol.Feature');
 
 
 /**
  */
-class EditLayerFeatures extends AbstractSyncCommand {
+export default class EditLayerFeatures extends AbstractSyncCommand {
   /**
    * Constructor.
    * @param {string} layerId
@@ -130,5 +130,3 @@ class EditLayerFeatures extends AbstractSyncCommand {
     return true;
   }
 }
-
-exports = EditLayerFeatures;

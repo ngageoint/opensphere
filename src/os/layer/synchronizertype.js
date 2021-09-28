@@ -1,11 +1,11 @@
-goog.module('os.layer.SynchronizerType');
+goog.declareModuleId('os.layer.SynchronizerType');
 
 /**
  * Enumeration of available base synchronizer types.
  * @enum {string}
  * @const
  */
-exports = {
+const SynchronizerType = {
   VECTOR: 'vector',
   VECTOR_TILE: 'vectortile',
   TILE: 'tile',
@@ -13,3 +13,5 @@ exports = {
   IMAGE_STATIC: 'imageStatic',
   DRAW: 'draw'
 };
+
+export default SynchronizerType;

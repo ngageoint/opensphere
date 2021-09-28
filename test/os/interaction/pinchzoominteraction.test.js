@@ -1,7 +1,7 @@
 goog.require('os.interaction.PinchZoom');
 
 describe('os.interaction.PinchZoom', function() {
-  const PinchZoom = goog.module.get('os.interaction.PinchZoom');
+  const {default: PinchZoom} = goog.module.get('os.interaction.PinchZoom');
 
   it('should initialise without error', function() {
     var fn = () => new PinchZoom();

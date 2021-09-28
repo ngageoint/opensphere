@@ -1,8 +1,8 @@
 goog.module('os.layer.config.MockVectorLayerConfig');
 
-const VectorLayer = goog.require('os.layer.Vector');
-const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
-const VectorSource = goog.require('os.source.Vector');
+const {default: VectorLayer} = goog.require('os.layer.Vector');
+const {default: AbstractLayerConfig} = goog.require('os.layer.config.AbstractLayerConfig');
+const {default: VectorSource} = goog.require('os.source.Vector');
 
 
 /**

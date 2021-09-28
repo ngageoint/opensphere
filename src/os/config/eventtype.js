@@ -1,10 +1,10 @@
-goog.module('os.config.EventType');
+goog.declareModuleId('os.config.EventType');
 
 /**
  * Event types for settings
  * @enum {string}
  */
-exports = {
+const EventType = {
   INITIALIZED: 'initialized',
   LOADED: 'loaded',
   WILL_CLEAR: 'willClear',
@@ -14,3 +14,5 @@ exports = {
   UPDATED: 'updated',
   RELOADED: 'reloaded'
 };
+
+export default EventType;

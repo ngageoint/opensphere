@@ -1,6 +1,16 @@
 goog.declareModuleId('plugin.cesium.Plugin');
 
+import settings from '../../os/config/settings.js';
+import DataManager from '../../os/data/datamanager.js';
+import ProviderEntry from '../../os/data/providerentry.js';
+import osImplements from '../../os/implements.js';
+import LayerConfigManager from '../../os/layer/config/layerconfigmanager.js';
+import Group from '../../os/layer/group.js';
+import ILayer from '../../os/layer/ilayer.js';
+import MapContainer from '../../os/mapcontainer.js';
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
 import ImportManager from '../../os/ui/im/importmanager.js';
+import AbstractWebGLRenderer from '../../os/webgl/abstractwebglrenderer.js';
 import {CESIUM_ONLY_LAYER, DEFAULT_ION_URL, ID, SettingsKey, setIonUrl} from './cesium.js';
 import CesiumRenderer from './cesiumrenderer.js';
 import {ID as TILE_ID, TYPE as TILE_TYPE} from './tiles/cesium3dtiles.js';
@@ -9,17 +19,6 @@ import TilesetImportUI from './tiles/cesium3dtilesimportui.js';
 import LayerConfig from './tiles/cesium3dtileslayerconfig.js';
 import Provider from './tiles/cesium3dtilesprovider.js';
 import {TYPE as MIME_TYPE} from './tiles/mime.js';
-
-const MapContainer = goog.require('os.MapContainer');
-const settings = goog.require('os.config.Settings');
-const DataManager = goog.require('os.data.DataManager');
-const ProviderEntry = goog.require('os.data.ProviderEntry');
-const osImplements = goog.require('os.implements');
-const Group = goog.require('os.layer.Group');
-const ILayer = goog.require('os.layer.ILayer');
-const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
 
 
 /**

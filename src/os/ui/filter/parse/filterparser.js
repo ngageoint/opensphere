@@ -1,11 +1,12 @@
 goog.declareModuleId('os.ui.filter.parse.FilterParser');
 
+import {getText} from '../../../file/mime/text.js';
+import FilterEntry from '../../../filter/filterentry.js';
+
 const {getFirstElementChild, getChildren} = goog.require('goog.dom');
 const {loadXml, serialize} = goog.require('goog.dom.xml');
-const {getText} = goog.require('os.file.mime.text');
-const FilterEntry = goog.require('os.filter.FilterEntry');
 
-const IParser = goog.requireType('os.parse.IParser');
+const {default: IParser} = goog.requireType('os.parse.IParser');
 
 
 /**

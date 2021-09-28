@@ -1,5 +1,11 @@
 goog.declareModuleId('os.ui.draw.DrawPickerUI');
 
+import DragBox from '../../interaction/dragboxinteraction.js';
+import DragCircle from '../../interaction/dragcircleinteraction.js';
+import DrawLine from '../../interaction/drawlineinteraction.js';
+import DrawPolygon from '../../interaction/drawpolygoninteraction.js';
+import {getIMapContainer} from '../../map/mapinstance.js';
+import {addOGCMenuItems} from '../../ogc/registry.js';
 import {ROOT} from '../../os.js';
 import * as draw from '../menu/drawmenu.js';
 import Module from '../module.js';
@@ -19,16 +25,10 @@ const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
 const events = goog.require('ol.events');
 const Point = goog.require('ol.geom.Point');
 const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
-const DragBox = goog.require('os.interaction.DragBox');
-const DragCircle = goog.require('os.interaction.DragCircle');
-const DrawLine = goog.require('os.interaction.DrawLine');
-const DrawPolygon = goog.require('os.interaction.DrawPolygon');
-const {getIMapContainer} = goog.require('os.map.instance');
-const {addOGCMenuItems} = goog.require('os.ogc.registry');
 
 const Feature = goog.requireType('ol.Feature');
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
-const OSMap = goog.requireType('os.Map');
+const {default: OSMap} = goog.requireType('os.Map');
 const {default: DrawEvent} = goog.requireType('os.ui.draw.DrawEvent');
 const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');

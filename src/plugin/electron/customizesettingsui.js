@@ -1,7 +1,9 @@
 goog.declareModuleId('plugin.electron.CustomizeSettingsUI');
 
 import '../../os/ui/slick/slicktree.js';
+import AlertManager from '../../os/alert/alertmanager.js';
 import * as Dispatcher from '../../os/dispatcher.js';
+import {createFromFile} from '../../os/file/index.js';
 import {ROOT} from '../../os/os.js';
 import ImportEvent from '../../os/ui/im/importevent.js';
 import ImportEventType from '../../os/ui/im/importeventtype.js';
@@ -16,9 +18,6 @@ import SettingsImportUI from './settingsimportui.js';
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
-
-const AlertManager = goog.require('os.alert.AlertManager');
-const {createFromFile} = goog.require('os.file');
 
 
 /**

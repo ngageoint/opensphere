@@ -1,10 +1,10 @@
 goog.declareModuleId('os.ui.SlickPropertiesAsyncRenderer');
 
+import Fields from '../fields/fields.js';
 import {inIframe} from '../os.js';
 import {launchPropertyInfo} from './propertyinfo.js';
 
 const {forEach} = goog.require('goog.object');
-const Fields = goog.require('os.Fields');
 
 
 /**

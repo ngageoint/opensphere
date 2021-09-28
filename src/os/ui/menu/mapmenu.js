@@ -1,6 +1,15 @@
 goog.declareModuleId('os.ui.menu.map');
 
+import EventType from '../../action/eventtype.js';
+import DisplaySetting from '../../config/displaysetting.js';
+import Settings from '../../config/settings.js';
+import DataManager from '../../data/datamanager.js';
 import * as dispatcher from '../../dispatcher.js';
+import * as legend from '../../legend/legend.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import {hasTerrain} from '../../map/terrain.js';
+import {Map as MapKeys} from '../../metrics/metricskeys.js';
+import VectorSource from '../../source/vectorsource.js';
 import UIEvent from '../events/uievent.js';
 import UIEventType from '../events/uieventtype.js';
 import * as ConfirmColorUI from '../window/confirmcolor.js';
@@ -9,15 +18,6 @@ import MenuItem from './menuitem.js';
 import MenuItemType from './menuitemtype.js';
 
 const googDispose = goog.require('goog.dispose');
-const EventType = goog.require('os.action.EventType');
-const DisplaySetting = goog.require('os.config.DisplaySetting');
-const Settings = goog.require('os.config.Settings');
-const DataManager = goog.require('os.data.DataManager');
-const legend = goog.require('os.legend');
-const {getMapContainer} = goog.require('os.map.instance');
-const {hasTerrain} = goog.require('os.map.terrain');
-const {Map: MapKeys} = goog.require('os.metrics.keys');
-const VectorSource = goog.require('os.source.Vector');
 
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 

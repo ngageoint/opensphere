@@ -1,8 +1,22 @@
 goog.declareModuleId('os.source');
 
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import ColumnDefinition from '../data/columndefinition.js';
+import DataManager from '../data/datamanager.js';
+import DataEventType from '../data/event/dataeventtype.js';
+import RecordField from '../data/recordfield.js';
 import * as dispatcher from '../dispatcher.js';
 import {isInternalField} from '../feature/feature.js';
+import Fields from '../fields/fields.js';
+import IFilterable from '../filter/ifilterable.js';
+import osImplements from '../implements.js';
+import {identifyLayer} from '../layer/layer.js';
+import {getMapContainer} from '../map/mapinstance.js';
 import {debounce} from '../os.js';
+import {getFilterManager} from '../query/queryinstance.js';
+import ITime from '../time/itime.js';
+import TimelineController from '../time/timelinecontroller.js';
 import {numerateNameCompare} from '../ui/slick/column.js';
 
 const Timer = goog.require('goog.Timer');
@@ -10,26 +24,12 @@ const {defaultCompare} = goog.require('goog.array');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
 const Property = goog.require('ol.layer.Property');
-const Fields = goog.require('os.Fields');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const DataManager = goog.require('os.data.DataManager');
-const RecordField = goog.require('os.data.RecordField');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const IFilterable = goog.require('os.filter.IFilterable');
-const osImplements = goog.require('os.implements');
-const {identifyLayer} = goog.require('os.layer');
-const {getMapContainer} = goog.require('os.map.instance');
-const {getFilterManager} = goog.require('os.query.instance');
-const ITime = goog.require('os.time.ITime');
-const TimelineController = goog.require('os.time.TimelineController');
 
 const OLSource = goog.requireType('ol.source.Source');
-const VectorLayer = goog.requireType('os.layer.Vector');
-const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
-const ISource = goog.requireType('os.source.ISource');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
+const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
+const {default: ISource} = goog.requireType('os.source.ISource');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**

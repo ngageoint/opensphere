@@ -1,13 +1,13 @@
 goog.declareModuleId('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 
+import Settings from '../../config/settings.js';
 import * as ui from '../ui.js';
 
 const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
-const Settings = goog.require('os.config.Settings');
 
-const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
+const {default: INodeGroupBy} = goog.requireType('os.data.groupby.INodeGroupBy');
 const {default: ActionManager} = goog.requireType('os.ui.action.ActionManager');
 const {default: TreeSearch} = goog.requireType('os.ui.slick.TreeSearch');
 

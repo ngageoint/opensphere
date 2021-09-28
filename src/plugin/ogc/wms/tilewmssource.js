@@ -1,12 +1,13 @@
 goog.declareModuleId('plugin.ogc.wms.TileWMSSource');
 
-const TileWMS = goog.require('ol.source.TileWMS');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osImplements = goog.require('os.implements');
-const IStyle = goog.require('os.source.IStyle');
-const PropertyChange = goog.require('os.source.PropertyChange');
+import PropertyChangeEvent from '../../../os/events/propertychangeevent.js';
+import osImplements from '../../../os/implements.js';
+import IStyle from '../../../os/source/istylesource.js';
+import PropertyChange from '../../../os/source/propertychange.js';
 
-const ILoadingSource = goog.requireType('os.ol.source.ILoadingSource');
+const TileWMS = goog.require('ol.source.TileWMS');
+
+const {default: ILoadingSource} = goog.requireType('os.ol.source.ILoadingSource');
 
 
 /**

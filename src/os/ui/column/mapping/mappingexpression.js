@@ -2,12 +2,12 @@ goog.declareModuleId('os.ui.column.mapping.MappingExpressionUI');
 
 import '../../layer/layerpicker.js';
 import {ROOT} from '../../../os.js';
+import DataType from '../../../xsd.js';
 import Module from '../../module.js';
-const DataType = goog.require('os.xsd.DataType');
 
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const IFilterable = goog.requireType('os.filter.IFilterable');
-const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: IFilterable} = goog.requireType('os.filter.IFilterable');
+const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
 const {default: ColumnModelNode} = goog.requireType('os.ui.column.mapping.ColumnModelNode');
 const {default: IOGCDescriptor} = goog.requireType('os.ui.ogc.IOGCDescriptor');
 

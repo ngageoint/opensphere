@@ -1,7 +1,7 @@
-goog.module('os.parse.FileParserConfig');
+goog.declareModuleId('os.parse.FileParserConfig');
 
-const BaseParserConfig = goog.require('os.parse.BaseParserConfig');
-const OSFile = goog.requireType('os.file.File');
+import BaseParserConfig from './baseparserconfig.js';
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
@@ -11,7 +11,7 @@ const OSFile = goog.requireType('os.file.File');
  * @unrestricted
  * @template T
  */
-class FileParserConfig extends BaseParserConfig {
+export default class FileParserConfig extends BaseParserConfig {
   /**
    * Constructor.
    * @param {OSFile=} opt_file
@@ -32,5 +32,3 @@ class FileParserConfig extends BaseParserConfig {
     this['replace'] = false;
   }
 }
-
-exports = FileParserConfig;

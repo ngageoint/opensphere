@@ -1,7 +1,8 @@
 goog.declareModuleId('os.ui.file.csv.AbstractCSVExporter');
 
+import AbstractExporter from '../../../ex/abstractexporter.js';
+
 const log = goog.require('goog.log');
-const AbstractExporter = goog.require('os.ex.AbstractExporter');
 
 
 /**

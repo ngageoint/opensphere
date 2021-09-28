@@ -1,10 +1,10 @@
 goog.declareModuleId('os.ui.filter.op.IsLike');
 
+import DataType from '../../../xsd.js';
 import {escapeRegExp} from '../filterstring.js';
 import Op from './op.js';
 
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const DataType = goog.require('os.xsd.DataType');
 
 
 /**

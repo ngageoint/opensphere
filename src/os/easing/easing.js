@@ -1,10 +1,9 @@
-goog.module('os.easing');
-
+goog.declareModuleId('os.easing');
 
 /**
  * @typedef {function(number, number, number, number)}
  */
-let EasingFunction;
+export let EasingFunction;
 
 /**
  * Linear easing function
@@ -15,7 +14,7 @@ let EasingFunction;
  * @param {number} d The duration or total number of steps
  * @return {number}
  */
-const easeLinear = function(t, b, c, d) {
+export const easeLinear = function(t, b, c, d) {
   t /= d;
   return c * t + b;
 };
@@ -29,7 +28,7 @@ const easeLinear = function(t, b, c, d) {
  * @param {number} d The duration or total number of steps
  * @return {number}
  */
-const easeQuintic = function(t, b, c, d) {
+export const easeQuintic = function(t, b, c, d) {
   t /= d;
   t--;
   return c * (t * t * t * t * t + 1) + b;
@@ -44,7 +43,7 @@ const easeQuintic = function(t, b, c, d) {
  * @param {number} d The duration or total number of steps
  * @return {number}
  */
-const easeQuartic = function(t, b, c, d) {
+export const easeQuartic = function(t, b, c, d) {
   t = t / (d / 2);
   if (t < 1) {
     return c * t * t * t * t / 2 + b;
@@ -62,7 +61,7 @@ const easeQuartic = function(t, b, c, d) {
  * @param {number} d The duration or total number of steps
  * @return {number}
  */
-const easeCubic = function(t, b, c, d) {
+export const easeCubic = function(t, b, c, d) {
   t = t / (d / 2);
   if (t < 1) {
     return c * t * t / 2 + b;
@@ -80,7 +79,7 @@ const easeCubic = function(t, b, c, d) {
  * @param {number} d The duration or total number of steps
  * @return {number}
  */
-const easeExpo = function(t, b, c, d) {
+export const easeExpo = function(t, b, c, d) {
   t = t / (d / 2);
   if (t < 1) {
     return c * Math.pow(2, 10 * (t - 1)) / 2 + b;
@@ -98,7 +97,7 @@ const easeExpo = function(t, b, c, d) {
  * @param {number} d The duration or total number of steps
  * @return {number}
  */
-const easeCircular = function(t, b, c, d) {
+export const easeCircular = function(t, b, c, d) {
   t /= d;
   return -c * (Math.sqrt(1 - t * t) - 1) + b;
 };
@@ -112,17 +111,6 @@ const easeCircular = function(t, b, c, d) {
  * @param {number} d The duration or total number of steps
  * @return {number}
  */
-const easeSinusoidal = function(t, b, c, d) {
+export const easeSinusoidal = function(t, b, c, d) {
   return (b + c) * (1 - Math.cos(Math.PI * t / d)) / 2;
-};
-
-exports = {
-  easeLinear,
-  easeQuintic,
-  easeQuartic,
-  easeCubic,
-  easeExpo,
-  easeCircular,
-  easeSinusoidal,
-  EasingFunction
 };

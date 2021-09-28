@@ -1,10 +1,9 @@
 goog.declareModuleId('os.ui.uniqueProviderTitle');
 
+import DataManager from '../data/datamanager.js';
 import Module from './module.js';
 
-const DataManager = goog.require('os.data.DataManager');
-
-const IDataProvider = goog.requireType('os.data.IDataProvider');
+const {default: IDataProvider} = goog.requireType('os.data.IDataProvider');
 
 
 /**

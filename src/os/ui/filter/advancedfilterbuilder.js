@@ -17,8 +17,8 @@ const log = goog.require('goog.log');
 const {caseInsensitiveCompare} = goog.require('goog.string');
 
 const Logger = goog.requireType('goog.log.Logger');
-const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 

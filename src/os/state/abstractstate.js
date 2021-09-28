@@ -1,9 +1,10 @@
-goog.module('os.state.AbstractState');
+goog.declareModuleId('os.state.AbstractState');
+
+import IState from './istate.js';// eslint-disable-line
+import {ID_SEPARATOR, stateToString} from './state.js';
+import Tag from './tag.js';
 
 const Deferred = goog.require('goog.async.Deferred');
-const {ID_SEPARATOR, stateToString} = goog.require('os.state');
-const IState = goog.require('os.state.IState'); // eslint-disable-line
-const Tag = goog.require('os.state.Tag');
 
 
 /**
@@ -12,7 +13,7 @@ const Tag = goog.require('os.state.Tag');
  * @unrestricted
  * @template T,S
  */
-class AbstractState {
+export default class AbstractState {
   /**
    * Constructor.
    */
@@ -259,5 +260,3 @@ class AbstractState {
     return newId;
   }
 }
-
-exports = AbstractState;

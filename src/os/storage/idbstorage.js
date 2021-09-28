@@ -1,4 +1,9 @@
-goog.module('os.storage.IDBStorage');
+goog.declareModuleId('os.storage.IDBStorage');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import {SHARED_DB_NAME} from '../os.js';
+import AsyncStorage from './asyncstorage.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 const {deleteDatabase, openDatabase} = goog.require('goog.db');
@@ -7,10 +12,6 @@ const KeyRange = goog.require('goog.db.KeyRange');
 const TransactionMode = goog.require('goog.db.Transaction.TransactionMode');
 const {listen, listenOnce, unlistenByKey} = goog.require('goog.events');
 const log = goog.require('goog.log');
-const {SHARED_DB_NAME} = goog.require('os');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const AsyncStorage = goog.require('os.storage.AsyncStorage');
 
 const DBError = goog.requireType('goog.db.Error');
 const IndexedDb = goog.requireType('goog.db.IndexedDb');
@@ -25,7 +26,7 @@ const Logger = goog.requireType('goog.log.Logger');
  * @extends {AsyncStorage<T>}
  * @template T
  */
-class IDBStorage extends AsyncStorage {
+export default class IDBStorage extends AsyncStorage {
   /**
    * Constructor.
    * @param {string} storeName The object store name in the database
@@ -573,6 +574,3 @@ IDBStorage.NOT_SUPPORTED =
  */
 IDBStorage.UNKNOWN_ERROR = 'There has been an error accessing the in-browser database. For assistance, ' +
     'use the "Help" menu to contact support.';
-
-
-exports = IDBStorage;

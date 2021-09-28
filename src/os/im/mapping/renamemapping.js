@@ -1,9 +1,9 @@
-goog.module('os.im.mapping.RenameMapping');
+goog.declareModuleId('os.im.mapping.RenameMapping');
 
-const {getItemField, setItemField} = goog.require('os.im.mapping');
-const AbstractMapping = goog.require('os.im.mapping.AbstractMapping');
-const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
-const {appendElement} = goog.require('os.xml');
+import {appendElement} from '../../xml.js';
+import AbstractMapping from './abstractmapping.js';
+import {getItemField, setItemField} from './mapping.js';
+import MappingRegistry from './mappingregistry.js';
 
 
 /**
@@ -12,7 +12,7 @@ const {appendElement} = goog.require('os.xml');
  * @extends {AbstractMapping<T>}
  * @template T
  */
-class RenameMapping extends AbstractMapping {
+export default class RenameMapping extends AbstractMapping {
   /**
    * Constructor.
    */
@@ -147,5 +147,3 @@ RenameMapping.ID = 'Rename';
 
 // Register the mapping.
 MappingRegistry.getInstance().registerMapping(RenameMapping.ID, RenameMapping);
-
-exports = RenameMapping;

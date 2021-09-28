@@ -1,9 +1,9 @@
-goog.module('os.net.RequestHandlerFactory');
+goog.declareModuleId('os.net.RequestHandlerFactory');
 
 const {defaultCompare} = goog.require('goog.array');
 const {remove} = goog.require('ol.array');
 
-const IRequestHandler = goog.requireType('os.net.IRequestHandler');
+const {default: IRequestHandler} = goog.requireType('os.net.IRequestHandler');
 
 
 /**
@@ -17,7 +17,7 @@ const handlerClasses = [];
  *
  * @param {function(new: IRequestHandler, ...)} clazz The constructor for the class
  */
-const addHandler = function(clazz) {
+export const addHandler = function(clazz) {
   if (handlerClasses.indexOf(clazz) == -1) {
     handlerClasses.push(clazz);
   }
@@ -26,14 +26,14 @@ const addHandler = function(clazz) {
 /**
  * @param {function(new: IRequestHandler, ...)} clazz The class to remove
  */
-const removeHandler = function(clazz) {
+export const removeHandler = function(clazz) {
   remove(handlerClasses, clazz);
 };
 
 /**
  * Reset handlers registered with the module.
  */
-const resetHandlers = function() {
+export const resetHandlers = function() {
   handlerClasses.length = 0;
 };
 
@@ -41,7 +41,7 @@ const resetHandlers = function() {
  * Get all handlers registered with the module.
  * @return {!Array<function(new: IRequestHandler, ...)>}
  */
-const getAllHandlers = () => handlerClasses;
+export const getAllHandlers = () => handlerClasses;
 
 /**
  * Gets an array of handlers that support the given method and uri.
@@ -51,7 +51,7 @@ const getAllHandlers = () => handlerClasses;
  * @param {number=} opt_timeout The timeout
  * @return {?Array<IRequestHandler>}
  */
-const getHandlers = function(method, uri, opt_timeout) {
+export const getHandlers = function(method, uri, opt_timeout) {
   var handlers = null;
 
   for (var i = 0, n = handlerClasses.length; i < n; i++) {
@@ -82,12 +82,4 @@ const getHandlers = function(method, uri, opt_timeout) {
   }
 
   return handlers;
-};
-
-exports = {
-  addHandler,
-  removeHandler,
-  resetHandlers,
-  getAllHandlers,
-  getHandlers
 };

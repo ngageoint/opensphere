@@ -8,7 +8,7 @@ import {bringToFront, create, exists} from './window.js';
 
 const {buildString} = goog.require('goog.string');
 
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 
 
 /**

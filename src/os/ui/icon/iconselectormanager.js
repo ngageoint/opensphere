@@ -1,8 +1,7 @@
 goog.declareModuleId('os.ui.icon.IconSelectorManager');
 
+import CollectionManager from '../../data/collectionmanager.js';
 import {directiveTag as iconPalette} from './iconpalette.js';
-
-const CollectionManager = goog.require('os.data.CollectionManager');
 
 
 /**

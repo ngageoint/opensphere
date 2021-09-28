@@ -1,18 +1,18 @@
-goog.module('os.command.VectorLayerPreset');
+goog.declareModuleId('os.command.VectorLayerPreset');
 
-const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const State = goog.require('os.command.State');
-const DataManager = goog.require('os.data.DataManager');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const action = goog.require('os.im.action');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const PropertyChange = goog.require('os.source.PropertyChange');
+import DataManager from '../data/datamanager.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import * as action from '../im/action/importaction.js';
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import PropertyChange from '../source/propertychange.js';
+import AbstractVectorStyle from './abstractvectorstylecmd.js';
+import State from './state.js';
 
 
 /**
  * Sets a layer style preset for a layer.
  */
-class VectorLayerPreset extends AbstractVectorStyle {
+export default class VectorLayerPreset extends AbstractVectorStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -119,5 +119,3 @@ class VectorLayerPreset extends AbstractVectorStyle {
     super.finish(config);
   }
 }
-
-exports = VectorLayerPreset;

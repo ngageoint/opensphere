@@ -4,16 +4,9 @@
  *               compatibility. They should eventually be deprecated and removed, but for now we'll avoid adding noise
  *               to the build warnings.
  */
-goog.module('os.registerClass');
+goog.declareModuleId('os.registerClass');
 
-const {registerClass} = goog.require('os.classRegistry');
+import {registerClass} from './classregistry.js';
 
 
-/**
- * Registers a class by name.
- *
- * @param {string} name The class name
- * @param {!function(new: Object, ...?)} clazz The constructor
- * @template T
- */
-exports = registerClass;
+export default registerClass;

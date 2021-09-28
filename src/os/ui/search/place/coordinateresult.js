@@ -1,23 +1,23 @@
 goog.declareModuleId('os.ui.search.place.CoordinateResult');
 
+import RecordField from '../../../data/recordfield.js';
 import {flyTo, getTitle} from '../../../feature/feature.js';
+import osImplements from '../../../implements.js';
 import * as osMap from '../../../map/map.js';
+import MapContainer from '../../../mapcontainer.js';
+import {unsafeClone} from '../../../object/object.js';
+import {EPSG4326} from '../../../proj/proj.js';
+import AbstractSearchResult from '../../../search/abstractsearchresult.js';
+import ISortableResult from '../../../search/isortableresult.js';
+import SortType from '../../../search/sorttype.js';
 import {setFeatureStyle} from '../../../style/style.js';
+import StyleField from '../../../style/stylefield.js';
+import StyleType from '../../../style/styletype.js';
+import ITime from '../../../time/itime.js';
 import {directiveTag as searchUi} from './coordinateresultcard.js';
 import {FEATURE_CONFIG} from './place.js';
 
 const {transformExtent} = goog.require('ol.proj');
-const MapContainer = goog.require('os.MapContainer');
-const RecordField = goog.require('os.data.RecordField');
-const osImplements = goog.require('os.implements');
-const {unsafeClone} = goog.require('os.object');
-const {EPSG4326} = goog.require('os.proj');
-const AbstractSearchResult = goog.require('os.search.AbstractSearchResult');
-const ISortableResult = goog.require('os.search.ISortableResult');
-const SortType = goog.require('os.search.SortType');
-const StyleField = goog.require('os.style.StyleField');
-const StyleType = goog.require('os.style.StyleType');
-const ITime = goog.require('os.time.ITime');
 
 const Feature = goog.requireType('ol.Feature');
 

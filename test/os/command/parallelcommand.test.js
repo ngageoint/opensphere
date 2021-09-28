@@ -8,8 +8,8 @@ goog.require('os.command.ParallelCommand');
 goog.require('os.command.State');
 
 describe('os.command.ParallelCommand', function() {
-  const ParallelCommand = goog.module.get('os.command.ParallelCommand');
-  const State = goog.module.get('os.command.State');
+  const {default: ParallelCommand} = goog.module.get('os.command.ParallelCommand');
+  const {default: State} = goog.module.get('os.command.State');
 
   const AsyncMockCommandString = goog.module.get('os.command.AsyncMockCommandString');
   const MockCommand = goog.module.get('os.command.MockCommand');
@@ -141,9 +141,9 @@ describe('os.command.ParallelCommand', function() {
 
 describe('os.command.ParallelCommand error handling', function() {
   const osArray = goog.module.get('os.array');
-  const EventType = goog.module.get('os.command.EventType');
-  const ParallelCommand = goog.module.get('os.command.ParallelCommand');
-  const State = goog.module.get('os.command.State');
+  const {default: EventType} = goog.module.get('os.command.EventType');
+  const {default: ParallelCommand} = goog.module.get('os.command.ParallelCommand');
+  const {default: State} = goog.module.get('os.command.State');
 
   const AsyncMockCommand = goog.module.get('os.command.AsyncMockCommand');
   const MockCommand = goog.module.get('os.command.MockCommand');

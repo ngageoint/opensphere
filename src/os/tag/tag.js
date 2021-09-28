@@ -1,21 +1,22 @@
-goog.module('os.tag');
+goog.declareModuleId('os.tag');
+
+import {appendElement, createElement} from '../xml.js';
 
 const {getChildren} = goog.require('goog.dom');
 const {getAllTextContent} = goog.require('ol.xml');
-const {appendElement, createElement} = goog.require('os.xml');
 
 
 /**
  * The default root node to use when converting to XML.
  * @type {string}
  */
-const DEFAULT_XML_ROOT = 'tags';
+export const DEFAULT_XML_ROOT = 'tags';
 
 /**
  * The default tag node to use when converting to XML.
  * @type {string}
  */
-const DEFAULT_XML_TAG = 'tag';
+export const DEFAULT_XML_TAG = 'tag';
 
 /**
  * Converts a string to an array of tags.
@@ -23,7 +24,7 @@ const DEFAULT_XML_TAG = 'tag';
  * @param {?string} str The string
  * @return {Array<string>} The tag array
  */
-const tagsFromString = function(str) {
+export const tagsFromString = function(str) {
   // trim the string first to remove leading/trailing whitespace from the tags. the regex will remove intermediate
   // whitespace around the commas.
   return str ? str.trim().split(/\s*,\s*/) : null;
@@ -35,7 +36,7 @@ const tagsFromString = function(str) {
  * @param {Array<string>} tags The tag array
  * @return {string} The tag string
  */
-const stringFromTags = function(tags) {
+export const stringFromTags = function(tags) {
   if (tags) {
     return tags.join(', ');
   }
@@ -49,7 +50,7 @@ const stringFromTags = function(tags) {
  * @param {Element} node The element
  * @return {string} The tag string
  */
-const stringFromXML = function(node) {
+export const stringFromXML = function(node) {
   return stringFromTags(tagsFromXML(node));
 };
 
@@ -59,7 +60,7 @@ const stringFromXML = function(node) {
  * @param {Element} node The element
  * @return {Array<string>} The tag array
  */
-const tagsFromXML = function(node) {
+export const tagsFromXML = function(node) {
   var tags = null;
 
   if (node) {
@@ -82,7 +83,7 @@ const tagsFromXML = function(node) {
  * @param {Document=} opt_doc The root document
  * @return {Element} The element
  */
-const xmlFromTags = function(tags, opt_tagName, opt_doc) {
+export const xmlFromTags = function(tags, opt_tagName, opt_doc) {
   var t;
   if (typeof tags === 'string') {
     t = tagsFromString(tags);
@@ -101,14 +102,4 @@ const xmlFromTags = function(tags, opt_tagName, opt_doc) {
   }
 
   return null;
-};
-
-exports = {
-  DEFAULT_XML_ROOT,
-  DEFAULT_XML_TAG,
-  tagsFromString,
-  stringFromTags,
-  stringFromXML,
-  tagsFromXML,
-  xmlFromTags
 };

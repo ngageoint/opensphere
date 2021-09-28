@@ -1,12 +1,11 @@
 goog.declareModuleId('plugin.config.Plugin');
 
+import ConfigDescriptor from '../../os/data/configdescriptor.js';
+import DataManager from '../../os/data/datamanager.js';
+import ProviderEntry from '../../os/data/providerentry.js';
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
 import {ID} from './config.js';
 import Provider from './configprovider.js';
-
-const ConfigDescriptor = goog.require('os.data.ConfigDescriptor');
-const DataManager = goog.require('os.data.DataManager');
-const ProviderEntry = goog.require('os.data.ProviderEntry');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 
 /**
  * Provides config support

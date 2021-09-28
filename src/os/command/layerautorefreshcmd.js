@@ -1,14 +1,15 @@
-goog.module('os.command.LayerAutoRefresh');
+goog.declareModuleId('os.command.LayerAutoRefresh');
+
+import {getMapContainer} from '../map/mapinstance.js';
+import Metrics from '../metrics/metrics.js';
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import VectorSource from '../source/vectorsource.js';
+import State from './state.js';
 
 const UrlTile = goog.require('ol.source.UrlTile');
-const State = goog.require('os.command.State');
-const {getMapContainer} = goog.require('os.map.instance');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const Metrics = goog.require('os.metrics.Metrics');
-const VectorSource = goog.require('os.source.Vector');
 
 const Source = goog.requireType('ol.source.Source');
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -17,7 +18,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class LayerAutoRefresh {
+export default class LayerAutoRefresh {
   /**
    * Constructor.
    * @param {string} layerId
@@ -112,5 +113,3 @@ class LayerAutoRefresh {
     return false;
   }
 }
-
-exports = LayerAutoRefresh;

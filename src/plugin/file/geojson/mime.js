@@ -1,9 +1,10 @@
 goog.declareModuleId('plugin.file.geojson.mime');
 
+import * as mime from '../../../os/file/mime.js';
+import * as json from '../../../os/file/mime/json.js';
+
 const Promise = goog.require('goog.Promise');
 const GeoJSON = goog.require('ol.format.GeoJSON');
-const mime = goog.require('os.file.mime');
-const json = goog.require('os.file.mime.json');
 
 
 /**

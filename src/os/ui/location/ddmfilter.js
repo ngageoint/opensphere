@@ -1,9 +1,8 @@
 goog.declareModuleId('os.ui.location.ddmFilter');
 
+import {toDegreesDecimalMinutes} from '../../geo/geo.js';
 import Module from '../module.js';
 import Format from './locationformat.js';
-
-const {toDegreesDecimalMinutes} = goog.require('os.geo');
 
 
 /**

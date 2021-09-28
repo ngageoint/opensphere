@@ -1,6 +1,15 @@
 goog.declareModuleId('plugin.file.shp.SHPExporter');
 
+import AlertEventSeverity from '../../../os/alert/alerteventseverity.js';
+import AlertManager from '../../../os/alert/alertmanager.js';
+import * as osArray from '../../../os/array/array.js';
+import DataManager from '../../../os/data/datamanager.js';
+import RecordField from '../../../os/data/recordfield.js';
+import ZipExporter from '../../../os/ex/zipexporter.js';
 import * as osFeature from '../../../os/feature/feature.js';
+import OSFile from '../../../os/file/file.js';
+import osImplements from '../../../os/implements.js';
+import ITime from '../../../os/time/itime.js';
 import SHPHeader from './data/shpheader.js';
 import * as mime from './mime.js';
 import * as shp from './shp.js';
@@ -14,19 +23,10 @@ const olExtent = goog.require('ol.extent');
 const GeometryCollection = goog.require('ol.geom.GeometryCollection');
 const GeometryType = goog.require('ol.geom.GeometryType');
 const Point = goog.require('ol.geom.Point');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const osArray = goog.require('os.array');
-const DataManager = goog.require('os.data.DataManager');
-const RecordField = goog.require('os.data.RecordField');
-const ZipExporter = goog.require('os.ex.ZipExporter');
-const OSFile = goog.require('os.file.File');
-const osImplements = goog.require('os.implements');
-const ITime = goog.require('os.time.ITime');
 
 const Feature = goog.requireType('ol.Feature');
 const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**

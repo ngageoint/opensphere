@@ -1,4 +1,25 @@
-goog.module('os.layer.Image');
+goog.declareModuleId('os.layer.Image');
+
+import EventType from '../action/eventtype.js';
+import {adjustColor, adjustSharpness} from '../color.js';
+import * as dispatcher from '../dispatcher.js';
+import LayerEvent from '../events/layerevent.js';
+import LayerEventType from '../events/layereventtype.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import IGroupable from '../igroupable.js';
+import osImplements from '../implements.js';
+import SourcePropertyChange from '../source/propertychange.js';
+import Icons from '../ui/icons.js';
+import IconsSVG from '../ui/iconssvg.js';
+import * as ImageLayerUI from '../ui/layer/imagelayerui.js';
+import {directiveTag as nodeUi} from '../ui/node/defaultlayernodeui.js';
+import {launchRenameDialog} from '../ui/renamelayer.js';
+import ExplicitLayerType from './explicitlayertype.js';
+import ILayer from './ilayer.js';
+import {identifyLayer} from './layer.js';
+import LayerType from './layertype.js';
+import PropertyChange from './propertychange.js';
+import SynchronizerType from './synchronizertype.js';
 
 const {assert} = goog.require('goog.asserts');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -9,27 +30,6 @@ const ImageLayer = goog.require('ol.layer.Image');
 const ImageSource = goog.require('ol.source.Image');
 const ImageStatic = goog.require('ol.source.ImageStatic');
 
-const dispatcher = goog.require('os.Dispatcher');
-const IGroupable = goog.require('os.IGroupable');
-const EventType = goog.require('os.action.EventType');
-const {adjustColor, adjustSharpness} = goog.require('os.color');
-const LayerEvent = goog.require('os.events.LayerEvent');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osImplements = goog.require('os.implements');
-const {identifyLayer} = goog.require('os.layer');
-const ExplicitLayerType = goog.require('os.layer.ExplicitLayerType');
-const ILayer = goog.require('os.layer.ILayer');
-const LayerType = goog.require('os.layer.LayerType');
-const PropertyChange = goog.require('os.layer.PropertyChange');
-const SynchronizerType = goog.require('os.layer.SynchronizerType');
-const SourcePropertyChange = goog.require('os.source.PropertyChange');
-const {default: Icons} = goog.require('os.ui.Icons');
-const {default: IconsSVG} = goog.require('os.ui.IconsSVG');
-const ImageLayerUI = goog.require('os.ui.layer.ImageLayerUI');
-const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
-const {launchRenameDialog} = goog.require('os.ui.renamelayer');
-
 const {default: IActionTarget} = goog.requireType('os.ui.action.IActionTarget');
 
 
@@ -37,7 +37,7 @@ const {default: IActionTarget} = goog.requireType('os.ui.action.IActionTarget');
  * @implements {ILayer}
  * @implements {IGroupable}
  */
-class Image extends ImageLayer {
+export default class Image extends ImageLayer {
   /**
    * Constructor.
    * @param {olx.layer.ImageOptions} options image layer options
@@ -802,7 +802,6 @@ class Image extends ImageLayer {
     this.setMaxResolution(config['maxResolution'] || this.getMaxResolution());
   }
 }
+
 osImplements(Image, ILayer.ID);
 osImplements(Image, IGroupable.ID);
-
-exports = Image;

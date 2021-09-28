@@ -1,8 +1,7 @@
 goog.declareModuleId('os.ui.state.stateTitleDirective');
 
+import {getStateManager} from '../../state/stateinstance.js';
 import Module from '../module.js';
-
-const {getStateManager} = goog.require('os.state.instance');
 
 
 /**

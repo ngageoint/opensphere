@@ -1,17 +1,17 @@
 goog.declareModuleId('os.ui.file.ui.AbstractFileImportCtrl');
 
+import AlertEventSeverity from '../../../alert/alerteventseverity.js';
+import AlertManager from '../../../alert/alertmanager.js';
+import DataManager from '../../../data/datamanager.js';
+import DescriptorEvent from '../../../data/descriptorevent.js';
+import DescriptorEventType from '../../../data/descriptoreventtype.js';
 import * as dispatcher from '../../../dispatcher.js';
+import FileStorage from '../../../file/filestorage.js';
+import {getLocalUrl, isLocal} from '../../../file/index.js';
 import * as osWindow from '../../window.js';
 import WindowEventType from '../../windoweventtype.js';
 
 const log = goog.require('goog.log');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const DataManager = goog.require('os.data.DataManager');
-const DescriptorEvent = goog.require('os.data.DescriptorEvent');
-const DescriptorEventType = goog.require('os.data.DescriptorEventType');
-const {getLocalUrl, isLocal} = goog.require('os.file');
-const FileStorage = goog.require('os.file.FileStorage');
 
 const {default: DescriptorProvider} = goog.requireType('os.ui.data.DescriptorProvider');
 

@@ -1,13 +1,13 @@
 goog.declareModuleId('os.ui.NodeToggleUI');
 
 import {instanceOf} from '../classregistry.js';
+import {NodeClass} from '../data/data.js';
 import Module from './module.js';
 import {apply} from './ui.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const {NodeClass} = goog.require('os.data');
 
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 

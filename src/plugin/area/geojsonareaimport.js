@@ -1,14 +1,13 @@
 goog.declareModuleId('plugin.area.GeoJSONAreaImport');
 
+import RecordField from '../../os/data/recordfield.js';
+import EventType from '../../os/events/eventtype.js';
+import Importer from '../../os/im/importer.js';
 import Module from '../../os/ui/module.js';
 import * as osWindow from '../../os/ui/window.js';
 import {directive as wizardDirective, Controller as WizardController} from '../../os/ui/wiz/wizard.js';
 import GeoJSONParser from '../file/geojson/geojsonparser.js';
 import {processFeatures} from './area.js';
-
-const RecordField = goog.require('os.data.RecordField');
-const EventType = goog.require('os.events.EventType');
-const Importer = goog.require('os.im.Importer');
 
 
 /**

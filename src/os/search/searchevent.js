@@ -1,12 +1,12 @@
-goog.module('os.search.SearchEvent');
+goog.declareModuleId('os.search.SearchEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
-const ISearchResult = goog.requireType('os.search.ISearchResult');
+const {default: ISearchResult} = goog.requireType('os.search.ISearchResult');
 
 
 /**
  */
-class SearchEvent extends GoogEvent {
+export default class SearchEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type The event type
@@ -68,5 +68,3 @@ class SearchEvent extends GoogEvent {
     return this.total_;
   }
 }
-
-exports = SearchEvent;

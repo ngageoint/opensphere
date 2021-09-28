@@ -1,13 +1,13 @@
 goog.declareModuleId('os.ui.query.ComboNodeUI');
 
+import DataManager from '../../data/datamanager.js';
+import Metrics from '../../metrics/metrics.js';
+import {Filters} from '../../metrics/metricskeys.js';
+import {getQueryManager} from '../../query/queryinstance.js';
+import TriState from '../../structs/tristate.js';
 import Module from '../module.js';
 
 const {getCount} = goog.require('goog.object');
-const DataManager = goog.require('os.data.DataManager');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Filters} = goog.require('os.metrics.keys');
-const {getQueryManager} = goog.require('os.query.instance');
-const TriState = goog.require('os.structs.TriState');
 
 const {default: ComboNode} = goog.requireType('os.ui.query.ComboNode');
 

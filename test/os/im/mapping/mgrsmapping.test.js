@@ -4,7 +4,7 @@ goog.require('os.osasm.wait');
 
 describe('os.im.mapping.MGRSMapping', function() {
   const Feature = goog.module.get('ol.Feature');
-  const MGRSMapping = goog.module.get('os.im.mapping.MGRSMapping');
+  const {default: MGRSMapping} = goog.module.get('os.im.mapping.MGRSMapping');
 
   it('should test MGRS position strings correctly', function() {
     var m = new MGRSMapping();

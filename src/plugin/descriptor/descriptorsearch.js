@@ -1,5 +1,12 @@
 goog.declareModuleId('plugin.descriptor.DescriptorSearch');
 
+import DataManager from '../../os/data/datamanager.js';
+import osImplements from '../../os/implements.js';
+import AbstractSearch from '../../os/search/abstractsearch.js';
+import IFacetedSearch from '../../os/search/ifacetedsearch.js';
+import * as search from '../../os/search/search.js';
+import SearchEvent from '../../os/search/searchevent.js';
+import SearchEventType from '../../os/search/searcheventtype.js';
 import DescriptorResult from './descriptorresult.js';
 import SearchTerm from './facet/searchtermfacet.js';
 import Source from './facet/sourcefacet.js';
@@ -10,18 +17,11 @@ import Type from './facet/typefacet.js';
 const Promise = goog.require('goog.Promise');
 const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
-const DataManager = goog.require('os.data.DataManager');
-const osImplements = goog.require('os.implements');
-const search = goog.require('os.search');
-const AbstractSearch = goog.require('os.search.AbstractSearch');
-const IFacetedSearch = goog.require('os.search.IFacetedSearch');
-const SearchEvent = goog.require('os.search.SearchEvent');
-const SearchEventType = goog.require('os.search.SearchEventType');
 
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const BaseFacet = goog.requireType('os.search.BaseFacet');
-const AppliedFacets = goog.requireType('os.search.AppliedFacets');
-const FacetSet = goog.requireType('os.search.FacetSet');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: AppliedFacets} = goog.requireType('os.search.AppliedFacets');
+const {default: BaseFacet} = goog.requireType('os.search.BaseFacet');
+const {default: FacetSet} = goog.requireType('os.search.FacetSet');
 
 
 /**

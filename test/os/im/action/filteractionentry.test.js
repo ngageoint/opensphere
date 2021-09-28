@@ -7,8 +7,8 @@ goog.require('os.im.action.mock.MockAction');
 
 describe('os.im.action.FilterActionEntry', function() {
   const functions = goog.module.get('goog.functions');
-  const FilterActionEntry = goog.module.get('os.im.action.FilterActionEntry');
-  const ImportActionManager = goog.module.get('os.im.action.ImportActionManager');
+  const {default: FilterActionEntry} = goog.module.get('os.im.action.FilterActionEntry');
+  const {default: ImportActionManager} = goog.module.get('os.im.action.ImportActionManager');
   const {getMockManager} = goog.module.get('os.im.action.mock');
   const MockAction = goog.module.get('os.im.action.mock.MockAction');
 

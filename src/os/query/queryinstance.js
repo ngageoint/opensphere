@@ -1,10 +1,10 @@
-goog.module('os.query.instance');
+goog.declareModuleId('os.query.instance');
 
 const {assert} = goog.require('goog.asserts');
 
-const BaseFilterManager = goog.requireType('os.filter.BaseFilterManager');
-const BaseAreaManager = goog.requireType('os.query.BaseAreaManager');
-const BaseQueryManager = goog.requireType('os.query.BaseQueryManager');
+const {default: BaseFilterManager} = goog.requireType('os.filter.BaseFilterManager');
+const {default: BaseAreaManager} = goog.requireType('os.query.BaseAreaManager');
+const {default: BaseQueryManager} = goog.requireType('os.query.BaseQueryManager');
 
 
 /**
@@ -17,7 +17,7 @@ let areaManager = null;
  * Get the global area manager instance.
  * @return {!BaseAreaManager}
  */
-const getAreaManager = () => {
+export const getAreaManager = () => {
   assert(areaManager != null, 'Area manager instance is not defined! Use setAreaManager to set the instance.');
   return areaManager;
 };
@@ -26,7 +26,7 @@ const getAreaManager = () => {
  * Set the global area manager instance.
  * @param {BaseAreaManager} value The instance.
  */
-const setAreaManager = (value) => {
+export const setAreaManager = (value) => {
   areaManager = value;
 };
 
@@ -40,7 +40,7 @@ let filterManager = null;
  * Get the global filter manager instance.
  * @return {!BaseFilterManager}
  */
-const getFilterManager = () => {
+export const getFilterManager = () => {
   assert(filterManager != null, 'Filter manager instance is not defined! Use setFilterManager to set the instance.');
   return filterManager;
 };
@@ -49,7 +49,7 @@ const getFilterManager = () => {
  * Set the global filter manager instance.
  * @param {BaseFilterManager} value The instance.
  */
-const setFilterManager = (value) => {
+export const setFilterManager = (value) => {
   filterManager = value;
 };
 
@@ -63,7 +63,7 @@ let queryManager = null;
  * Get the global query manager instance.
  * @return {!BaseQueryManager}
  */
-const getQueryManager = () => {
+export const getQueryManager = () => {
   assert(queryManager != null, 'Query manager instance is not defined! Use setQueryManager to set the instance.');
   return queryManager;
 };
@@ -72,15 +72,6 @@ const getQueryManager = () => {
  * Set the global query manager instance.
  * @param {BaseQueryManager} value The instance.
  */
-const setQueryManager = (value) => {
+export const setQueryManager = (value) => {
   queryManager = value;
-};
-
-exports = {
-  getAreaManager,
-  setAreaManager,
-  getFilterManager,
-  setFilterManager,
-  getQueryManager,
-  setQueryManager
 };

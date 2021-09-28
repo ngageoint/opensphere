@@ -1,6 +1,6 @@
 goog.declareModuleId('os.mixin.jsts');
 
-const {EPSILON} = goog.require('os.geo');
+import {EPSILON} from '../geo/geo.js';
 
 /**
  * If the mixin has been initialized.

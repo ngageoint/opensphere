@@ -1,5 +1,8 @@
 goog.declareModuleId('os.ui.timeline.Brush');
 
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import TimelineController from '../../time/timelinecontroller.js';
+import TimeRange from '../../time/timerange.js';
 import BaseItem from './baseitem.js';
 import BrushEventType from './brusheventtype.js';
 import DragPanEvent from './dragpanevent.js';
@@ -14,9 +17,6 @@ const GoogEvent = goog.require('goog.events.Event');
 const GoogEventType = goog.require('goog.events.EventType');
 const {TRUE} = goog.require('goog.functions');
 const math = goog.require('goog.math');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const TimeRange = goog.require('os.time.TimeRange');
-const TimelineController = goog.require('os.time.TimelineController');
 
 const {default: IDragPanItem} = goog.requireType('os.ui.timeline.IDragPanItem');
 const {default: ITimelineItem} = goog.requireType('os.ui.timeline.ITimelineItem');

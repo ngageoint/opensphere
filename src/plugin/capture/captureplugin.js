@@ -1,6 +1,9 @@
 goog.declareModuleId('plugin.capture.CapturePlugin');
 
 import {getMapPixelRatio, setPixelRatioFn} from '../../os/capture/capture.js';
+import MapContainer from '../../os/mapcontainer.js';
+import * as keys from '../../os/metrics/metricskeys.js';
+import TimelineEventType from '../../os/time/timelineeventtype.js';
 import AbstractCapturePlugin from '../../os/ui/capture/abstractcaptureplugin.js';
 import TimelineRenderer from '../../os/ui/capture/timelinerenderer.js';
 import * as stateMenu from '../../os/ui/state/statemenu.js';
@@ -16,9 +19,6 @@ const Promise = goog.require('goog.Promise');
 const Timer = goog.require('goog.Timer');
 const log = goog.require('goog.log');
 const userAgent = goog.require('goog.userAgent');
-const MapContainer = goog.require('os.MapContainer');
-const keys = goog.require('os.metrics.keys');
-const TimelineEventType = goog.require('os.time.TimelineEventType');
 
 const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 

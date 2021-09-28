@@ -1,24 +1,25 @@
-goog.module('os.file.mime.pdf');
+goog.declareModuleId('os.file.mime.pdf');
+
+import * as mime from '../mime.js';
 
 const Promise = goog.require('goog.Promise');
-const mime = goog.require('os.file.mime');
 
 
 /**
  * @type {number}
  */
-const MAGIC_BYTES_BIG_ENDIAN = 0x25504446;
+export const MAGIC_BYTES_BIG_ENDIAN = 0x25504446;
 
 /**
  * @type {string}
  */
-const TYPE = 'application/pdf';
+export const TYPE = 'application/pdf';
 
 /**
  * @param {ArrayBuffer} buffer
  * @return {!Promise<boolean>}
  */
-const isPDF = function(buffer) {
+export const isPDF = function(buffer) {
   if (buffer && buffer.byteLength > 3) {
     // PDF magic number can occur anywhere in the first 1024 bytes
     var dv = new DataView(buffer);
@@ -37,9 +38,3 @@ const isPDF = function(buffer) {
 // not want to accidentally detect PDF documents as text since they tend
 // to contain a large amount of text content.
 mime.register(TYPE, isPDF);
-
-exports = {
-  MAGIC_BYTES_BIG_ENDIAN,
-  TYPE,
-  isPDF
-};

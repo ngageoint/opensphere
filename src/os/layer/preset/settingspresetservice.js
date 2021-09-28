@@ -1,9 +1,9 @@
-goog.module('os.layer.preset.SettingsPresetService');
+goog.declareModuleId('os.layer.preset.SettingsPresetService');
 
-const Settings = goog.require('os.config.Settings');
-const AbstractPresetService = goog.require('os.layer.preset.AbstractPresetService');
-const {PresetServiceAction, SettingKey} = goog.require('os.layer.preset');
-const {getImportActionManager} = goog.require('os.im.action');
+import Settings from '../../config/settings.js';
+import {getImportActionManager} from '../../im/action/importaction.js';
+import AbstractPresetService from './abstractpresetservice.js';
+import {PresetServiceAction, SettingKey} from './preset.js';
 
 
 /**
@@ -15,7 +15,7 @@ const ID = 'os.layer.preset.SettingsPresetService';
 /**
  * @extends {AbstractPresetService}
  */
-class SettingsPresetService extends AbstractPresetService {
+export default class SettingsPresetService extends AbstractPresetService {
   /**
    * @inheritDoc
    */
@@ -66,6 +66,3 @@ class SettingsPresetService extends AbstractPresetService {
 }
 
 SettingsPresetService.ID = ID;
-
-
-exports = SettingsPresetService;

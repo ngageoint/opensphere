@@ -2,7 +2,13 @@ goog.declareModuleId('os.ui.AnimationSettingsUI');
 
 import './datetime/datetime.js';
 import './popover/popover.js';
+import Metrics from '../metrics/metrics.js';
+import {Timeline as TimelineKeys} from '../metrics/metricskeys.js';
 import {ROOT} from '../os.js';
+import Duration from '../time/duration.js';
+import {getTimeOffset, parse} from '../time/time.js';
+import {DAY, MIN} from '../time/timeline.js';
+import TimelineController from '../time/timelinecontroller.js';
 import Module from './module.js';
 import * as TimelineUI from './timeline/timelineui.js';
 import {close} from './window.js';
@@ -14,12 +20,6 @@ const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
 const Range = goog.require('goog.math.Range');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Timeline: TimelineKeys} = goog.require('os.metrics.keys');
-const {getTimeOffset, parse} = goog.require('os.time');
-const Duration = goog.require('os.time.Duration');
-const TimelineController = goog.require('os.time.TimelineController');
-const {DAY, MIN} = goog.require('os.time.timeline');
 
 
 /**

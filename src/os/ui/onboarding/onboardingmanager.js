@@ -1,5 +1,7 @@
 goog.declareModuleId('os.ui.onboarding.OnboardingManager');
 
+import Settings from '../../config/settings.js';
+import Request from '../../net/request.js';
 import {ROOT} from '../../os.js';
 import RouteManager from '../route/routemanager.js';
 import OnboardingEvent from './onboardingevent.js';
@@ -8,8 +10,6 @@ import OnboardingUrlHandler from './onboardingurlhandler.js';
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const EventType = goog.require('goog.net.EventType');
-const Settings = goog.require('os.config.Settings');
-const Request = goog.require('os.net.Request');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');

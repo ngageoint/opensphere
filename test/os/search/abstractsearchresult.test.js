@@ -1,7 +1,7 @@
 goog.require('os.search.AbstractSearchResult');
 
 describe('os.search.AbstractSearchResult', function() {
-  const AbstractSearchResult = goog.module.get('os.search.AbstractSearchResult');
+  const {default: AbstractSearchResult} = goog.module.get('os.search.AbstractSearchResult');
 
   it('auto increments ids when not specified', function() {
     AbstractSearchResult.nextId_ = 0;

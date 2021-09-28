@@ -17,13 +17,13 @@ describe('os.state.v2.Filter', function() {
   const googDomXml = goog.module.get('goog.dom.xml');
   const googObject = goog.module.get('goog.object');
   const googString = goog.module.get('goog.string');
-  const DataManager = goog.module.get('os.data.DataManager');
-  const FilterEntry = goog.module.get('os.filter.FilterEntry');
-  const AreaManager = goog.module.get('os.query.AreaManager');
-  const FilterManager = goog.module.get('os.query.FilterManager');
-  const QueryManager = goog.module.get('os.query.QueryManager');
-  const Filter = goog.module.get('os.state.v2.Filter');
-  const FilterTag = goog.module.get('os.state.v2.FilterTag');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: FilterEntry} = goog.module.get('os.filter.FilterEntry');
+  const {default: AreaManager} = goog.module.get('os.query.AreaManager');
+  const {default: FilterManager} = goog.module.get('os.query.FilterManager');
+  const {default: QueryManager} = goog.module.get('os.query.QueryManager');
+  const {default: Filter} = goog.module.get('os.state.v2.Filter');
+  const {default: FilterTag} = goog.module.get('os.state.v2.FilterTag');
   const xml = goog.module.get('os.xml');
 
   var filters = '<filters xmlns:ogc="http://www.opengis.net/ogc">' +

@@ -1,4 +1,4 @@
-goog.module('os.ol.source.XYZ');
+goog.declareModuleId('os.ol.source.XYZ');
 
 const TileUrlFunction = goog.require('ol.TileUrlFunction');
 const OLXYZ = goog.require('ol.source.XYZ');
@@ -9,7 +9,7 @@ const Projection = goog.requireType('ol.proj.Projection');
 /**
  * Layer source for tile data with URLs in a set XYZ format.
  */
-class XYZ extends OLXYZ {
+export default class XYZ extends OLXYZ {
   /**
    * Constructor.
    * @param {olx.source.XYZOptions} options XYZ options.
@@ -93,5 +93,3 @@ class XYZ extends OLXYZ {
     return TileUrlFunction.createFromTileUrlFunctions(templates.map(this.createFromTemplate, this));
   }
 }
-
-exports = XYZ;

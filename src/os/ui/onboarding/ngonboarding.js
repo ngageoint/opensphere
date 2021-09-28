@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ui.onboarding.NgOnboardingUI');
 
+import Settings from '../../config/settings.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
 const GoogEventType = goog.require('goog.events.EventType');
-const Settings = goog.require('os.config.Settings');
 
 
 /**

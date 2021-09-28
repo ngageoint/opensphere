@@ -7,10 +7,10 @@ goog.require('os.mock');
 
 describe('os.data.FileProvider', function() {
   const googArray = goog.module.get('goog.array');
-  const BaseDescriptor = goog.module.get('os.data.BaseDescriptor');
-  const DataManager = goog.module.get('os.data.DataManager');
-  const FileDescriptor = goog.module.get('os.data.FileDescriptor');
-  const FileProvider = goog.module.get('os.data.FileProvider');
+  const {default: BaseDescriptor} = goog.module.get('os.data.BaseDescriptor');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: FileDescriptor} = goog.module.get('os.data.FileDescriptor');
+  const {default: FileProvider} = goog.module.get('os.data.FileProvider');
 
   it('should load file descriptors from the data manager', function() {
     var desc1 = new FileDescriptor();

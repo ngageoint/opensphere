@@ -1,15 +1,15 @@
-goog.module('os.unit.UnitFactory');
+goog.declareModuleId('os.unit.UnitFactory');
 
-const {UNIT_TYPE_DISTANCE, UnitSystem} = goog.require('os.unit');
-const EnglishDistanceUnits = goog.require('os.unit.EnglishDistanceUnits');
-const FeetUnits = goog.require('os.unit.FeetUnits');
-const MetricUnits = goog.require('os.unit.MetricUnits');
-const MileUnits = goog.require('os.unit.MileUnits');
-const NauticalMileUnits = goog.require('os.unit.NauticalMileUnits');
-const NauticalUnits = goog.require('os.unit.NauticalUnits');
-const YardUnits = goog.require('os.unit.YardUnits');
+import EnglishDistanceUnits from './englishdistanceunits.js';
+import FeetUnits from './feetunits.js';
+import MetricUnits from './metricunits.js';
+import MileUnits from './mileunits.js';
+import NauticalMileUnits from './nauticalmileunits.js';
+import NauticalUnits from './nauticalunits.js';
+import {UNIT_TYPE_DISTANCE, UnitSystem} from './unit.js';
+import YardUnits from './yardunits.js';
 
-const IUnit = goog.requireType('os.unit.IUnit');
+const {default: IUnit} = goog.requireType('os.unit.IUnit');
 
 
 /**
@@ -22,7 +22,7 @@ const IUnit = goog.requireType('os.unit.IUnit');
  * application's default
  * A 'multiplier' defines how to convert values within a unit (milli, kilo, mega, tera, etc)
  */
-class UnitFactory {
+export default class UnitFactory {
   /**
    * Constructor.
    */
@@ -103,5 +103,3 @@ class UnitFactory {
     return this.systems_;
   }
 }
-
-exports = UnitFactory;

@@ -1,13 +1,14 @@
-goog.module('os.im.action.FilterActionParser');
+goog.declareModuleId('os.im.action.FilterActionParser');
+
+import * as text from '../../file/mime/text.js';
+import {getImportActionManager} from './importaction.js';
+import TagName from './tagname.js';
 
 const dom = goog.require('goog.dom');
 const xml = goog.require('goog.dom.xml');
-const text = goog.require('os.file.mime.text');
-const {getImportActionManager} = goog.require('os.im.action');
-const TagName = goog.require('os.im.action.TagName');
 
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
-const IParser = goog.requireType('os.parse.IParser');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
+const {default: IParser} = goog.requireType('os.parse.IParser');
 
 
 /**
@@ -15,7 +16,7 @@ const IParser = goog.requireType('os.parse.IParser');
  *
  * @implements {IParser}
  */
-class FilterActionParser {
+export default class FilterActionParser {
   /**
    * Constructor.
    */
@@ -166,5 +167,3 @@ class FilterActionParser {
     return entries;
   }
 }
-
-exports = FilterActionParser;

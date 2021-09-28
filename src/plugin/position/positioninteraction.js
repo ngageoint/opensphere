@@ -1,5 +1,9 @@
 goog.declareModuleId('plugin.position.PositionInteraction');
 
+import I3DSupport from '../../os/i3dsupport.js';
+import osImplements from '../../os/implements.js';
+import Metrics from '../../os/metrics/metrics.js';
+import * as keys from '../../os/metrics/metricskeys.js';
 import {launchCopy} from './copyposition.js';
 
 const KeyCodes = goog.require('goog.events.KeyCodes');
@@ -7,10 +11,7 @@ const functions = goog.require('goog.functions');
 const EventType = goog.require('ol.events.EventType');
 const {noModifierKeys, targetNotEditable} = goog.require('ol.events.condition');
 const Interaction = goog.require('ol.interaction.Interaction');
-const I3DSupport = goog.require('os.I3DSupport');
-const osImplements = goog.require('os.implements');
-const Metrics = goog.require('os.metrics.Metrics');
-const keys = goog.require('os.metrics.keys');
+
 
 /**
  * Handles the behavior of clicking the PERIOD button or Copy Coordinates from the context menu.

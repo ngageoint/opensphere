@@ -3,8 +3,8 @@ goog.require('os.unit.FeetUnits');
 goog.require('os.unit.Multiplier');
 
 describe('os.unit.FeetUnits', function() {
-  const Multiplier = goog.module.get('os.unit.Multiplier');
-  const FeetUnits = goog.module.get('os.unit.FeetUnits');
+  const {default: Multiplier} = goog.module.get('os.unit.Multiplier');
+  const {default: FeetUnits} = goog.module.get('os.unit.FeetUnits');
   const {UNIT_TYPE_DISTANCE, UnitSystem} = goog.module.get('os.unit');
 
   it('should function correctly', inject(function($rootScope) {

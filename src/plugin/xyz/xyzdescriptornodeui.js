@@ -4,7 +4,7 @@ import {Controller as DescriptorNodeUICtrl} from '../../os/ui/data/descriptornod
 import Module from '../../os/ui/module.js';
 import * as uiWindow from '../../os/ui/window.js';
 
-const ConfigDescriptor = goog.requireType('os.data.ConfigDescriptor');
+const {default: ConfigDescriptor} = goog.requireType('os.data.ConfigDescriptor');
 
 
 /**

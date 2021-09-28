@@ -1,19 +1,19 @@
-goog.module('os.command.VectorLayerIcon');
+goog.declareModuleId('os.command.VectorLayerIcon');
 
-const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const DataManager = goog.require('os.data.DataManager');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const osStyle = goog.require('os.style');
-const StyleManager = goog.require('os.style.StyleManager');
-const kml = goog.require('os.ui.file.kml');
+import DataManager from '../data/datamanager.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import PropertyChange from '../source/propertychange.js';
+import * as osStyle from '../style/style.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import * as kml from '../ui/file/kml/kml.js';
+import AbstractVectorStyle from './abstractvectorstylecmd.js';
 
 
 /**
  * Configure a vector layer to display an icon.
  */
-class VectorLayerIcon extends AbstractVectorStyle {
+export default class VectorLayerIcon extends AbstractVectorStyle {
   /**
    * Constructor.
    * @param {string} layerId The layer id.
@@ -57,5 +57,3 @@ class VectorLayerIcon extends AbstractVectorStyle {
     super.finish(config);
   }
 }
-
-exports = VectorLayerIcon;

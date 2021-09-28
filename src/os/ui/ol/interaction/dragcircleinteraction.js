@@ -1,14 +1,14 @@
 goog.declareModuleId('os.ui.ol.interaction.DragCircle');
 
+import RecordField from '../../../data/recordfield.js';
+import {normalizeGeometryCoordinates} from '../../../geo/geo2.js';
+import {METHOD_FIELD, getMethod} from '../../../interpolate.js';
+import Units from '../../../math/units.js';
+import Circle from '../../../olm/render/circle.js';
+import AltitudeMode from '../../../webgl/altitudemode.js';
 import AbstractDrag from './abstractdraginteraction.js';
 
 const {toLonLat} = goog.require('ol.proj');
-const RecordField = goog.require('os.data.RecordField');
-const {normalizeGeometryCoordinates} = goog.require('os.geo2');
-const {METHOD_FIELD, getMethod} = goog.require('os.interpolate');
-const Units = goog.require('os.math.Units');
-const Circle = goog.require('os.olm.render.Circle');
-const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
 
 /**

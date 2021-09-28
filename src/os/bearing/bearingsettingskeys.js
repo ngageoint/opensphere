@@ -1,4 +1,4 @@
-goog.module('os.bearing.BearingSettingsKeys');
+goog.declareModuleId('os.bearing.BearingSettingsKeys');
 
 
 /**
@@ -11,9 +11,11 @@ const baseKey = 'bearing.';
  * Bearing settings keys.
  * @enum {string}
  */
-exports = {
+const BearingSettingsKeys = {
   COF_URL: baseKey + 'cofUrl',
   COF_VERSION: baseKey + 'cofVersion',
   BEARING_TYPE: baseKey + 'type',
   MAGNETIC_NORTH_HELP_URL: baseKey + 'magneticNorthHelpUrl'
 };
+
+export default BearingSettingsKeys;

@@ -1,6 +1,6 @@
-goog.module('os.ogc.wmts');
+goog.declareModuleId('os.ogc.wmts');
 
-const {DATETIME_FORMATS} = goog.require('os.time');
+import {DATETIME_FORMATS} from '../../time/time.js';
 
 
 /**
@@ -16,15 +16,14 @@ const preferredFormats = ['image/vnd.jpeg-png', 'image/png', 'image/jpeg'];
  *   timeFormat: string
  * }}
  */
-let WMTSDateTimeFormats;
-
+export let WMTSDateTimeFormats;
 
 /**
  * Detect WMTS date/time formats.
  * @param {Array<Object>} dimensions Dimensions from the capabilities document.
  * @return {!WMTSDateTimeFormats} config The WMTS config object.
  */
-const detectDateTimeFormats = (dimensions) => {
+export const detectDateTimeFormats = (dimensions) => {
   const result = {
     dateFormat: '',
     timeFormat: ''
@@ -53,13 +52,12 @@ const detectDateTimeFormats = (dimensions) => {
   return result;
 };
 
-
 /**
  * Get the time key from a set of WMTS dimensions.
  * @param {Object} dimensions The dimensions.
  * @return {?string} The key, or null if not found.
  */
-const getTimeKey = (dimensions) => {
+export const getTimeKey = (dimensions) => {
   if (dimensions) {
     for (const key in dimensions) {
       if (/time/i.test(key)) {
@@ -71,25 +69,22 @@ const getTimeKey = (dimensions) => {
   return null;
 };
 
-
 /**
  * If a dimension has a time extent.
  * @param {Object} dimension The dimension.
  * @return {boolean}
  */
-const hasTimeExtent = (dimension) => {
+export const hasTimeExtent = (dimension) => {
   return !!dimension && /time/i.test(dimension['Identifier']);
 };
-
 
 /**
  * Get the projection from WMTS options.
  * @param {?olx.source.WMTSOptions} options The options.
  * @return {?string} The projection, or null if not defined.
  */
-const optionsToProjection = (options) =>
+export const optionsToProjection = (options) =>
     options && options.projection ? options.projection.getCode() : null;
-
 
 /**
  * Sort formats based on the preferred order.
@@ -97,20 +92,10 @@ const optionsToProjection = (options) =>
  * @param {string} b Format b
  * @return {number} per typical compare function
  */
-const sortFormats = (a, b) => {
+export const sortFormats = (a, b) => {
   let ax = preferredFormats.indexOf(a);
   ax = ax < 0 ? Number.MAX_SAFE_INTEGER : ax;
   let bx = preferredFormats.indexOf(b);
   bx = bx < 0 ? Number.MAX_SAFE_INTEGER : bx;
   return ax - bx;
-};
-
-
-exports = {
-  WMTSDateTimeFormats,
-  detectDateTimeFormats,
-  getTimeKey,
-  hasTimeExtent,
-  optionsToProjection,
-  sortFormats
 };

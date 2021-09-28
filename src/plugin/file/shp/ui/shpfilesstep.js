@@ -1,5 +1,9 @@
 goog.declareModuleId('plugin.file.shp.ui.SHPFilesStep');
 
+import EventType from '../../../../os/events/eventtype.js';
+import FileStorage from '../../../../os/file/filestorage.js';
+import * as osFile from '../../../../os/file/index.js';
+import MappingManager from '../../../../os/im/mapping/mappingmanager.js';
 import {ROOT} from '../../../../os/os.js';
 import UrlMethod from '../../../../os/ui/file/method/urlmethod.js';
 import Module from '../../../../os/ui/module.js';
@@ -11,12 +15,8 @@ import * as shp from '../shp.js';
 const googEvents = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
-const EventType = goog.require('os.events.EventType');
-const osFile = goog.require('os.file');
-const FileStorage = goog.require('os.file.FileStorage');
-const MappingManager = goog.require('os.im.mapping.MappingManager');
 
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 const {default: SHPParserConfig} = goog.requireType('plugin.file.shp.SHPParserConfig');
 
 

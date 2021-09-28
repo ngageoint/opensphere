@@ -1,10 +1,10 @@
 goog.declareModuleId('os.ui.help.WebGLPerfCaveatUI');
 
+import {getAppName, getSupportContact} from '../../config/config.js';
+import Settings from '../../config/settings.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import * as osWindow from '../window.js';
-const {getAppName, getSupportContact} = goog.require('os.config');
-const Settings = goog.require('os.config.Settings');
 
 
 /**

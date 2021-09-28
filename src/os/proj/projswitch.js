@@ -1,24 +1,25 @@
-goog.module('os.proj.switch');
+goog.declareModuleId('os.proj.switch');
+
+import AbstractCommandSet from '../command/abstractcommandset.js';
+import LayerAdd from '../command/layeraddcmd.js';
+import ActivateDescriptor from '../data/activatedescriptorcmd.js';
+import LayerSyncDescriptor from '../data/layersyncdescriptor.js';
+import * as osMap from '../map/map.js';
+import {isRasterReprojectionEnabled} from './reprojection.js';
+import ReprojectionWarning from './reprojectionwarning.js';
+import SwitchProjection from './switchprojection.js';
 
 const Tile = goog.require('ol.layer.Tile');
 const olProj = goog.require('ol.proj');
-const AbstractCommandSet = goog.require('os.command.AbstractCommandSet');
-const LayerAdd = goog.require('os.command.LayerAdd');
-const ActivateDescriptor = goog.require('os.data.ActivateDescriptor');
-const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
-const osMap = goog.require('os.map');
-const {isRasterReprojectionEnabled} = goog.require('os.proj.reprojection');
-const ReprojectionWarning = goog.require('os.proj.switch.ReprojectionWarning');
-const SwitchProjection = goog.require('os.proj.switch.SwitchProjection');
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
  * @param {!ol.layer.Layer} layer
  * @return {boolean}
  */
-const checkLayer = function(layer) {
+export const checkLayer = function(layer) {
   var source = layer.getSource();
 
   if (source) {
@@ -47,7 +48,7 @@ let rootCommand = null;
  * @param {ICommand} command
  * @return {boolean}
  */
-const checkCommand = function(command) {
+export const checkCommand = function(command) {
   var sp = SwitchProjection.getInstance();
 
   if (!command.title || command.title.indexOf('Switch projection') === 0) {
@@ -114,9 +115,4 @@ const checkCommand = function(command) {
   }
 
   return retVal;
-};
-
-exports = {
-  checkLayer,
-  checkCommand
 };

@@ -1,7 +1,17 @@
 goog.declareModuleId('os.ui.TimelinePanelUI');
 
+import TimelineHistManager from '../data/histo/timelinehistmanager.js';
 import * as dispatcher from '../dispatcher.js';
+import LayerEventType from '../events/layereventtype.js';
+import IAnimationSupport from '../ianimationsupport.js';
+import osImplements from '../implements.js';
+import MapEvent from '../map/mapevent.js';
+import MapContainer from '../mapcontainer.js';
+import Metrics from '../metrics/metrics.js';
+import * as keys from '../metrics/metricskeys.js';
 import {ROOT} from '../os.js';
+import TimelineController from '../time/timelinecontroller.js';
+import TimelineEventType from '../time/timelineeventtype.js';
 import {directiveTag as animationSettingsUi} from './animationsettings.js';
 import HistogramEventType from './hist/histogrameventtype.js';
 import * as timelineMenu from './menu/timelinemenu.js';
@@ -10,16 +20,6 @@ import AbstractTimelineCtrl from './timeline/abstracttimelinectrl.js';
 import {directiveTag as timeSettingsUi} from './timelinesettings.js';
 import * as ui from './ui.js';
 import * as osWindow from './window.js';
-const IAnimationSupport = goog.require('os.IAnimationSupport');
-const MapContainer = goog.require('os.MapContainer');
-const MapEvent = goog.require('os.MapEvent');
-const TimelineHistManager = goog.require('os.data.histo.TimelineHistManager');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const osImplements = goog.require('os.implements');
-const Metrics = goog.require('os.metrics.Metrics');
-const keys = goog.require('os.metrics.keys');
-const TimelineController = goog.require('os.time.TimelineController');
-const TimelineEventType = goog.require('os.time.TimelineEventType');
 
 const OLLayer = goog.requireType('ol.layer.Layer');
 

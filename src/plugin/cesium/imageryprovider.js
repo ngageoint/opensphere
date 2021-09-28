@@ -1,7 +1,6 @@
 goog.declareModuleId('plugin.cesium.ImageryProvider');
 
-goog.require('os.mixin.VectorImageTile');
-
+import '../../os/mixin/vectorimagetilemixin.js';
 import TileGridTilingScheme from './tilegridtilingscheme.js';
 
 const ol = goog.require('ol');

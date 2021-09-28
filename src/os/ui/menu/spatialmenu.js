@@ -1,13 +1,13 @@
 goog.declareModuleId('os.ui.menu.SpatialMenu');
 
 import {instanceOf} from '../../classregistry.js';
+import {NodeClass} from '../../data/data.js';
+import RecordField from '../../data/recordfield.js';
+import {getMapContainer} from '../../map/mapinstance.js';
 import AreaNode from '../query/areanode.js';
 import Menu from './menu.js';
-const {NodeClass} = goog.require('os.data');
-const RecordField = goog.require('os.data.RecordField');
-const {getMapContainer} = goog.require('os.map.instance');
 
-const DrawingFeatureNode = goog.requireType('os.data.DrawingFeatureNode');
+const {default: DrawingFeatureNode} = goog.requireType('os.data.DrawingFeatureNode');
 const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 
 

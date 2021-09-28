@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ui.AddDataButtonUI');
 
 import * as dispatcher from '../dispatcher.js';
+import {AddData} from '../metrics/metricskeys.js';
 import ImportEventType from './im/importeventtype.js';
 import * as osUiMenuImport from './menu/importmenu.js';
 import MenuButtonCtrl from './menu/menubutton.js';
 import Module from './module.js';
-const {AddData} = goog.require('os.metrics.keys');
 
 
 /**

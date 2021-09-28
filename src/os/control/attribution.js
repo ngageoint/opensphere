@@ -1,4 +1,4 @@
-goog.module('os.control.Attribution');
+goog.declareModuleId('os.control.Attribution');
 
 const dom = goog.require('goog.dom');
 const SafeHtml = goog.require('goog.html.SafeHtml');
@@ -8,7 +8,7 @@ const OLAttribution = goog.require('ol.control.Attribution');
 
 /**
  */
-class Attribution extends OLAttribution {
+export default class Attribution extends OLAttribution {
   /**
    * Constructor.
    * @param {olx.control.AttributionOptions=} opt_options Attribution options.
@@ -149,6 +149,3 @@ const checkVisibleAtResolution = true;
  * @suppress {accessControls}
  */
 OLAttribution.prototype.insertLogos_ = () => {};
-
-
-exports = Attribution;

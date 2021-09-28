@@ -1,28 +1,29 @@
-goog.module('os.search.SearchManager');
+goog.declareModuleId('os.search.SearchManager');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import {getSupportContact} from '../config/config.js';
+import Metrics from '../metrics/metrics.js';
+import {Search as SearchKeys} from '../metrics/metricskeys.js';
+import * as os from '../os.js';
+import AbstractSearchManager from './abstractsearchmanager.js';
+import SearchEvent from './searchevent.js';
+import SearchEventType from './searcheventtype.js';
 
 const GoogEvent = goog.require('goog.events.Event');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
-const os = goog.require('os');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {getSupportContact} = goog.require('os.config');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Search: SearchKeys} = goog.require('os.metrics.keys');
-const AbstractSearchManager = goog.require('os.search.AbstractSearchManager');
-const SearchEvent = goog.require('os.search.SearchEvent');
-const SearchEventType = goog.require('os.search.SearchEventType');
 
-const ISearch = goog.requireType('os.search.ISearch');
-const ISearchResult = goog.requireType('os.search.ISearchResult');
-const ProviderResults = goog.requireType('os.search.ProviderResults');
+const {default: ISearch} = goog.requireType('os.search.ISearch');
+const {default: ISearchResult} = goog.requireType('os.search.ISearchResult');
+const {default: ProviderResults} = goog.requireType('os.search.ProviderResults');
 
 
 /**
  * Responsible for executing search terms against the registered searches
  */
-class SearchManager extends AbstractSearchManager {
+export default class SearchManager extends AbstractSearchManager {
   /**
    * Constructor.
    * @param {string=} opt_id
@@ -488,5 +489,3 @@ SearchManager.SEARCH_ALL = 'Search All Sources';
  * @type {!SearchManager}
  */
 os.searchManager = SearchManager.getInstance();
-
-exports = SearchManager;

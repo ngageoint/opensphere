@@ -1,12 +1,11 @@
 goog.declareModuleId('os.ui.state.cmd.StateClear');
 
+import State from '../../../command/state.js';
+import DataManager from '../../../data/datamanager.js';
+import {getStateManager} from '../../../state/stateinstance.js';
 import AbstractStateDescriptor from '../abstractstatedescriptor.js';
 
-const State = goog.require('os.command.State');
-const DataManager = goog.require('os.data.DataManager');
-const {getStateManager} = goog.require('os.state.instance');
-
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 const {default: IStateDescriptor} = goog.requireType('os.ui.state.IStateDescriptor');
 
 

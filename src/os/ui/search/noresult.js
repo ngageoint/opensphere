@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.search.NoResult');
 
-const AbstractSearchResult = goog.require('os.search.AbstractSearchResult');
+import AbstractSearchResult from '../../search/abstractsearchresult.js';
 
 
 /**

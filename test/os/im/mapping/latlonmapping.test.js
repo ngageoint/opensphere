@@ -5,7 +5,7 @@ goog.require('os.im.mapping.LatLonMapping');
 describe('os.im.mapping.LatLonMapping', function() {
   const Feature = goog.module.get('ol.Feature');
   const geo = goog.module.get('os.geo');
-  const LatLonMapping = goog.module.get('os.im.mapping.LatLonMapping');
+  const {default: LatLonMapping} = goog.module.get('os.im.mapping.LatLonMapping');
 
   it('should test position strings correctly', function() {
     var m = new LatLonMapping();

@@ -1,7 +1,8 @@
-goog.module('os.geom.Ellipse');
+goog.declareModuleId('os.geom.Ellipse');
+
+import * as geo from '../geo/geo.js';
 
 const Polygon = goog.require('ol.geom.Polygon');
-const geo = goog.require('os.geo');
 
 
 /**
@@ -9,7 +10,7 @@ const geo = goog.require('os.geo');
  *
  * The Ellipse coordinates are generated in the map projection.
  */
-class Ellipse extends Polygon {
+export default class Ellipse extends Polygon {
   /**
    * Constructor.
    * @param {!ol.Coordinate} center The ellipse center point, in longitude / latitude.
@@ -156,6 +157,3 @@ class Ellipse extends Polygon {
  * @const {string}
  */
 Ellipse.TYPE = 'ellipse';
-
-
-exports = Ellipse;

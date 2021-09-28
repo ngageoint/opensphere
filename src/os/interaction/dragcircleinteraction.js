@@ -1,10 +1,10 @@
-goog.module('os.interaction.DragCircle');
+goog.declareModuleId('os.interaction.DragCircle');
 
-const I3DSupport = goog.require('os.I3DSupport');
-const osImplements = goog.require('os.implements');
-const {default: OLDragCircle} = goog.require('os.ui.ol.interaction.DragCircle');
+import I3DSupport from '../i3dsupport.js';
+import osImplements from '../implements.js';
+import OLDragCircle from '../ui/ol/interaction/dragcircleinteraction.js';
 
-const OSMap = goog.requireType('os.Map');
+const {default: OSMap} = goog.requireType('os.Map');
 
 
 /**
@@ -13,7 +13,7 @@ const OSMap = goog.requireType('os.Map');
  *
  * @implements {I3DSupport}
  */
-class DragCircle extends OLDragCircle {
+export default class DragCircle extends OLDragCircle {
   /**
    * Constructor.
    */
@@ -78,5 +78,3 @@ class DragCircle extends OLDragCircle {
 }
 
 osImplements(DragCircle, I3DSupport.ID);
-
-exports = DragCircle;

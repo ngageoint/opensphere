@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.kml.tour.AbstractTourPrimitive');
 
-const fn = goog.require('os.fn');
+import * as fn from '../../../../os/fn/fn.js';
 
 
 /**

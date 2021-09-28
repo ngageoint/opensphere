@@ -2,7 +2,7 @@ goog.declareModuleId('os.ui.column');
 
 import {create} from '../window.js';
 import {directiveTag as columnManagerUi} from './columnmanager.js';
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 
 
 /**

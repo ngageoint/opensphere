@@ -3,8 +3,8 @@ goog.require('os.time.TimeRange');
 goog.require('os.ui.filter.op.time.OlderThan');
 
 describe('os.ui.filter.op.time.OlderThan', function() {
-  const TimeInstant = goog.module.get('os.time.TimeInstant');
-  const TimeRange = goog.module.get('os.time.TimeRange');
+  const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');
+  const {default: TimeRange} = goog.module.get('os.time.TimeRange');
   const {default: OlderThan} = goog.module.get('os.ui.filter.op.time.OlderThan');
 
   var between = new OlderThan();

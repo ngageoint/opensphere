@@ -24,18 +24,18 @@ describe('os.feature', function() {
   const Point = goog.module.get('ol.geom.Point');
   const Polygon = goog.module.get('ol.geom.Polygon');
   const {getMockMappingManager} = goog.module.get('os.mock');
-  const Fields = goog.module.get('os.Fields');
-  const DataManager = goog.module.get('os.data.DataManager');
-  const RecordField = goog.module.get('os.data.RecordField');
+  const {default: Fields} = goog.module.get('os.Fields');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: RecordField} = goog.module.get('os.data.RecordField');
   const osFeature = goog.module.get('os.feature');
   const fields = goog.module.get('os.fields');
   const geo = goog.module.get('os.geo');
-  const MappingManager = goog.module.get('os.im.mapping.MappingManager');
+  const {default: MappingManager} = goog.module.get('os.im.mapping.MappingManager');
   const math = goog.module.get('os.math');
-  const Units = goog.module.get('os.math.Units');
-  const VectorSource = goog.module.get('os.source.Vector');
+  const {default: Units} = goog.module.get('os.math.Units');
+  const {default: VectorSource} = goog.module.get('os.source.Vector');
   const osStyle = goog.module.get('os.style');
-  const StyleType = goog.module.get('os.style.StyleType');
+  const {default: StyleType} = goog.module.get('os.style.StyleType');
 
   var testCoords = function(coordinates, opt_expected) {
     for (var i = 0; i < coordinates.length; i++) {

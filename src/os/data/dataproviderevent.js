@@ -1,13 +1,13 @@
-goog.module('os.data.DataProviderEvent');
+goog.declareModuleId('os.data.DataProviderEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
-const IDataProvider = goog.requireType('os.data.IDataProvider');
+const {default: IDataProvider} = goog.requireType('os.data.IDataProvider');
 
 
 /**
  */
-class DataProviderEvent extends GoogEvent {
+export default class DataProviderEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -34,5 +34,3 @@ class DataProviderEvent extends GoogEvent {
     this.message = opt_message || null;
   }
 }
-
-exports = DataProviderEvent;

@@ -1,10 +1,10 @@
-goog.module('os.ex.AbstractExporter');
+goog.declareModuleId('os.ex.AbstractExporter');
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const Logger = goog.requireType('goog.log.Logger');
 
-const IExportMethod = goog.requireType('os.ex.IExportMethod');
+const {default: IExportMethod} = goog.requireType('os.ex.IExportMethod');
 
 
 /**
@@ -14,7 +14,7 @@ const IExportMethod = goog.requireType('os.ex.IExportMethod');
  * @implements {IExportMethod}
  * @template T
  */
-class AbstractExporter extends EventTarget {
+export default class AbstractExporter extends EventTarget {
   /**
    * Constructor.
    */
@@ -179,5 +179,3 @@ class AbstractExporter extends EventTarget {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ex.AbstractExporter');
-
-exports = AbstractExporter;

@@ -1,10 +1,10 @@
-goog.module('os.histo.DateRangeBinType');
+goog.declareModuleId('os.histo.DateRangeBinType');
 
 /**
  * Provide the bin types that are capable of binning overlapping time ranges
  * @enum {boolean}
  */
-exports = {
+const DateRangeBinType = {
   'Hour of Day': true,
   'Hour of Week': true,
   'Hour of Month': true,
@@ -19,3 +19,5 @@ exports = {
   'Month': false,
   'Year': false
 };
+
+export default DateRangeBinType;

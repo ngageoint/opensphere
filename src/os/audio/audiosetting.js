@@ -1,9 +1,11 @@
-goog.module('os.audio.AudioSetting');
+goog.declareModuleId('os.audio.AudioSetting');
 
 /**
  * Audio settings keys.
  * @enum {string}
  */
-exports = {
+const AudioSetting = {
   MUTE: 'mute'
 };
+
+export default AudioSetting;

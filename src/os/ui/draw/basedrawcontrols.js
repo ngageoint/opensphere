@@ -1,6 +1,12 @@
 goog.declareModuleId('os.ui.draw.BaseDrawControlsUI');
 
+import Settings from '../../config/settings.js';
+import RecordField from '../../data/recordfield.js';
 import * as dispatcher from '../../dispatcher.js';
+import DragZoom from '../../interaction/dragzoominteraction.js';
+import Metrics from '../../metrics/metrics.js';
+import {Map as MapMetrics} from '../../metrics/metricskeys.js';
+import {addOGCMenuItems} from '../../ogc/registry.js';
 import {ROOT} from '../../os.js';
 import GlobalMenuEventType from '../globalmenueventtype.js';
 import * as draw from '../menu/drawmenu.js';
@@ -13,16 +19,10 @@ import DrawEventType from './draweventtype.js';
 const log = goog.require('goog.log');
 const {getRandomString} = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
-const Settings = goog.require('os.config.Settings');
-const RecordField = goog.require('os.data.RecordField');
-const DragZoom = goog.require('os.interaction.DragZoom');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Map: MapMetrics} = goog.require('os.metrics.keys');
-const {addOGCMenuItems} = goog.require('os.ogc.registry');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
-const IMapContainer = goog.requireType('os.map.IMapContainer');
+const {default: IMapContainer} = goog.requireType('os.map.IMapContainer');
 const {default: DrawEvent} = goog.requireType('os.ui.draw.DrawEvent');
 const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 

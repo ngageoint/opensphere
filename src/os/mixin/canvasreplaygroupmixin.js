@@ -1,8 +1,9 @@
-goog.module('os.mixin.canvasreplaygroup');
+goog.declareModuleId('os.mixin.canvasreplaygroup');
+
+import * as osMap from '../map/map.js';
 
 const {getWidth} = goog.require('ol.extent');
 const ReplayGroup = goog.require('ol.render.canvas.ReplayGroup');
-const osMap = goog.require('os.map');
 
 const Feature = goog.requireType('ol.Feature');
 const RenderFeature = goog.requireType('ol.render.Feature');

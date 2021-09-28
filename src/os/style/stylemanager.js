@@ -1,5 +1,6 @@
 goog.declareModuleId('os.style.StyleManagerES');
 
+import {unsafeClone} from '../object/object.js';
 import CircleReader from './circlereader.js';
 import FillReader from './fillreader.js';
 import IconReader from './iconreader.js';
@@ -10,11 +11,7 @@ import * as osStyle from './style.js';
 import StyleReader from './stylereader.js';
 import TextReader from './textreader.js';
 
-const {unsafeClone} = goog.require('os.object');
-
-const {
-  default: IStyleReader
-} = goog.requireType('os.style.IStyleReader');
+const {default: IStyleReader} = goog.requireType('os.style.IStyleReader');
 
 
 /**

@@ -1,8 +1,16 @@
 goog.declareModuleId('os.ui.buffer.BufferFormUI');
 
 import '../im/basicinfo.js';
+import * as buffer from '../../buffer/buffer.js';
+import {isGeometryPolygonal} from '../../geo/geo.js';
+import * as osJsts from '../../geo/jsts.js';
 import * as osMap from '../../map/map.js';
+import MapContainer from '../../mapcontainer.js';
+import {convertUnits} from '../../math/math.js';
+import UnitLabels from '../../math/unitlabels.js';
+import Units from '../../math/units.js';
 import {ROOT} from '../../os.js';
+import {EPSG4326} from '../../proj/proj.js';
 import {Controller as ExportOptionsCtrl} from '../ex/exportoptions.js';
 import ExportOptionsEvent from '../ex/exportoptionsevent.js';
 import Module from '../module.js';
@@ -12,17 +20,9 @@ import WindowEventType from '../windoweventtype.js';
 const {clone} = goog.require('goog.object');
 const GeometryType = goog.require('ol.geom.GeometryType');
 const {transformExtent} = goog.require('ol.proj');
-const MapContainer = goog.require('os.MapContainer');
-const buffer = goog.require('os.buffer');
-const {isGeometryPolygonal} = goog.require('os.geo');
-const osJsts = goog.require('os.geo.jsts');
-const {convertUnits} = goog.require('os.math');
-const UnitLabels = goog.require('os.math.UnitLabels');
-const Units = goog.require('os.math.Units');
-const {EPSG4326} = goog.require('os.proj');
 
 const {BufferConfig} = goog.requireType('os.buffer');
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 
 
 /**

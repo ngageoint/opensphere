@@ -1,4 +1,4 @@
-goog.module('os.mixin.ResolutionConstraint');
+goog.declareModuleId('os.mixin.ResolutionConstraint');
 
 const ResolutionConstraint = goog.require('ol.ResolutionConstraint');
 

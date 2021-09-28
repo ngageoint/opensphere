@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.im.action.feature.ui.FeatureActionsUI');
 
+import DataManager from '../../../os/data/datamanager.js';
+import DataEventType from '../../../os/data/event/dataeventtype.js';
 import {ROOT} from '../../../os/os.js';
 import FilterActionsCtrl from '../../../os/ui/im/action/filteractionsui.js';
 import Module from '../../../os/ui/module.js';
@@ -9,11 +11,8 @@ import {editEntry, getColumns, getExportName} from '../featureaction.js';
 import FeatureActionManager from '../featureactionmanager.js';
 import * as node from '../featureactionnodemenu.js';
 
-const DataManager = goog.require('os.data.DataManager');
-const DataEventType = goog.require('os.data.event.DataEventType');
-
 const Feature = goog.requireType('ol.Feature');
-const DataEvent = goog.requireType('os.data.event.DataEvent');
+const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
 const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 const layerMenu = goog.requireType('os.ui.menu.layer');
 

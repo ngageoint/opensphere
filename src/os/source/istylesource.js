@@ -1,12 +1,11 @@
-goog.module('os.source.IStyle');
-
+goog.declareModuleId('os.source.IStyle');
 
 /**
  * Interface for marking sources which support style changes
  *
  * @interface
  */
-class IStyle {
+export default class IStyle {
   /**
    * @return {?(string|osx.ogc.TileStyle)}
    */
@@ -23,5 +22,3 @@ class IStyle {
  * @type {string}
  */
 IStyle.ID = 'os.source.IStyle';
-
-exports = IStyle;

@@ -1,13 +1,14 @@
-goog.module('os.search.AbstractSearch');
+goog.declareModuleId('os.search.AbstractSearch');
+
+import Settings from '../config/settings.js';
+import ISearch from './isearch.js';// eslint-disable-line
+import {SearchSetting, getSettingKey} from './search.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
-const Settings = goog.require('os.config.Settings');
-const {SearchSetting, getSettingKey} = goog.require('os.search');
-const ISearch = goog.require('os.search.ISearch'); // eslint-disable-line
 
 const Logger = goog.requireType('goog.log.Logger');
-const Favorite = goog.requireType('os.search.Favorite');
+const {default: Favorite} = goog.requireType('os.search.Favorite');
 
 
 /**
@@ -17,7 +18,7 @@ const Favorite = goog.requireType('os.search.Favorite');
  * @implements {ISearch}
  * @unrestricted
  */
-class AbstractSearch extends EventTarget {
+export default class AbstractSearch extends EventTarget {
   /**
    * Constructor.
    * @param {string} id The unique identifier for the search provider.
@@ -214,5 +215,3 @@ class AbstractSearch extends EventTarget {
  * @type {Logger}
  */
 const logger = log.getLogger('os.search.AbstractSearch');
-
-exports = AbstractSearch;

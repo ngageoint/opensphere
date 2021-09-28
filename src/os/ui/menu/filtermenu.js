@@ -1,5 +1,12 @@
 goog.declareModuleId('os.ui.menu.filter');
 
+import EventType from '../../action/eventtype.js';
+import CommandProcessor from '../../command/commandprocessor.js';
+import FilterEnable from '../../command/filterenablecmd.js';
+import SequenceCommand from '../../command/sequencecommand.js';
+import FilterNode from '../../data/filternode.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import {getFilterManager, getQueryManager} from '../../query/queryinstance.js';
 import FilterEvent from '../filter/filterevent.js';
 import FilterEventType from '../filter/filtereventtype.js';
 import FilterRemove from '../query/cmd/filterremovecmd.js';
@@ -11,15 +18,8 @@ import MenuItemType from './menuitemtype.js';
 
 const {removeDuplicates} = goog.require('goog.array');
 const {remove} = goog.require('ol.array');
-const EventType = goog.require('os.action.EventType');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const FilterEnable = goog.require('os.command.FilterEnable');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const FilterNode = goog.require('os.data.FilterNode');
-const {getMapContainer} = goog.require('os.map.instance');
-const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
 
-const TreeNode = goog.requireType('os.structs.TreeNode');
+const {default: TreeNode} = goog.requireType('os.structs.TreeNode');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 
 

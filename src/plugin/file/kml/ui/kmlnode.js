@@ -1,7 +1,17 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLNode');
 
 import '../../../../os/ui/node/defaultlayernodeui.js';
+import * as annotation from '../../../../os/annotation/annotation.js';
+import FeatureAnnotation from '../../../../os/annotation/featureannotation.js';
+import * as osColor from '../../../../os/color.js';
+import IExtent from '../../../../os/data/iextent.js';
+import ISearchable from '../../../../os/data/isearchable.js';
+import LayerNode from '../../../../os/data/layernode.js';
+import PropertyChangeEvent from '../../../../os/events/propertychangeevent.js';
 import * as osFeature from '../../../../os/feature/feature.js';
+import * as fn from '../../../../os/fn/fn.js';
+import osImplements from '../../../../os/implements.js';
+import TriState from '../../../../os/structs/tristate.js';
 import launchMultiFeatureInfo from '../../../../os/ui/feature/launchmultifeatureinfo.js';
 import ILayerUIProvider from '../../../../os/ui/ilayeruiprovider.js';
 import {launchScreenOverlay} from '../../../../os/ui/screenoverlay.js';
@@ -21,16 +31,6 @@ const events = goog.require('ol.events');
 const olExtent = goog.require('ol.extent');
 const Polygon = goog.require('ol.geom.Polygon');
 const ImageStatic = goog.require('ol.source.ImageStatic');
-const annotation = goog.require('os.annotation');
-const FeatureAnnotation = goog.require('os.annotation.FeatureAnnotation');
-const osColor = goog.require('os.color');
-const IExtent = goog.require('os.data.IExtent');
-const ISearchable = goog.require('os.data.ISearchable');
-const LayerNode = goog.require('os.data.LayerNode');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const fn = goog.require('os.fn');
-const osImplements = goog.require('os.implements');
-const TriState = goog.require('os.structs.TriState');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {default: KMLSource} = goog.requireType('plugin.file.kml.KMLSource');

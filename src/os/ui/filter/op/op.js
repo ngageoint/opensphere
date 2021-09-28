@@ -3,7 +3,7 @@ goog.declareModuleId('os.ui.filter.op.Op');
 import FilterPatterns from '../filterpatterns.js';
 import {directiveTag as textUi} from '../text.js';
 
-const DataType = goog.requireType('os.xsd.DataType');
+const {default: DataType} = goog.requireType('os.xsd.DataType');
 
 
 /**

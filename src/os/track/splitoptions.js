@@ -1,4 +1,4 @@
-goog.module('os.track.SplitOptions');
+goog.declareModuleId('os.track.SplitOptions');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -14,4 +14,4 @@ const Feature = goog.requireType('ol.Feature');
  */
 let SplitOptions;
 
-exports = SplitOptions;
+export default SplitOptions;

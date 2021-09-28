@@ -1,10 +1,11 @@
-goog.module('os.net.OnlineEventType');
-
+goog.declareModuleId('os.net.OnlineEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const OnlineEventType = {
   ONLINE: 'online',
   OFFLINE: 'offline'
 };
+
+export default OnlineEventType;

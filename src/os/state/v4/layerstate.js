@@ -1,12 +1,12 @@
-goog.module('os.state.v4.LayerState');
+goog.declareModuleId('os.state.v4.LayerState');
 
-const {getMapContainer} = goog.require('os.map.instance');
-const BaseLayerState = goog.require('os.state.v4.BaseLayerState');
+import {getMapContainer} from '../../map/mapinstance.js';
+import BaseLayerState from './baselayerstate.js';
 
 
 /**
  */
-class LayerState extends BaseLayerState {
+export default class LayerState extends BaseLayerState {
   /**
    * Constructor.
    */
@@ -44,5 +44,3 @@ class LayerState extends BaseLayerState {
     super.saveInternal(options, rootObj);
   }
 }
-
-exports = LayerState;

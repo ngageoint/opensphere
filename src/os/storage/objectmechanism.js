@@ -1,14 +1,15 @@
 /**
  * @fileoverview Mechanism for storing and retrieving data using a local object cache.
  */
-goog.module('os.storage.ObjectMechanism');
+goog.declareModuleId('os.storage.ObjectMechanism');
+
+import osImplements from '../implements.js';
+import IMechanism from './imechanism.js';
 
 const Iterator = goog.require('goog.iter.Iterator');
 const StopIteration = goog.require('goog.iter.StopIteration');
 const googObject = goog.require('goog.object');
 const IterableMechanism = goog.require('goog.storage.mechanism.IterableMechanism');
-const osImplements = goog.require('os.implements');
-const IMechanism = goog.require('os.storage.IMechanism');
 
 
 /**
@@ -17,7 +18,7 @@ const IMechanism = goog.require('os.storage.IMechanism');
  * @implements {IMechanism<T>}
  * @template T
  */
-class ObjectMechanism extends IterableMechanism {
+export default class ObjectMechanism extends IterableMechanism {
   /**
    * Constructor.
    */
@@ -100,6 +101,3 @@ class ObjectMechanism extends IterableMechanism {
 }
 
 osImplements(ObjectMechanism, IMechanism.ID);
-
-
-exports = ObjectMechanism;

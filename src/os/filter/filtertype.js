@@ -1,8 +1,8 @@
-goog.module('os.filter.FilterType');
+goog.declareModuleId('os.filter.FilterType');
 
-const FilterEntry = goog.require('os.filter.FilterEntry');
+import FilterEntry from './filterentry.js';
 
-const IPersistable = goog.requireType('os.IPersistable');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
 
 
 /**
@@ -10,7 +10,7 @@ const IPersistable = goog.requireType('os.IPersistable');
  *
  * @implements {IPersistable}
  */
-class FilterType {
+export default class FilterType {
   /**
    * Constructor.
    */
@@ -69,5 +69,3 @@ class FilterType {
     }
   }
 }
-
-exports = FilterType;

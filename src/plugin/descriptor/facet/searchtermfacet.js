@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.descriptor.facet.SearchTerm');
 
-const SearchTermFacet = goog.require('os.search.SearchTermFacet');
+import SearchTermFacet from '../../../os/search/searchtermfacet.js';
 
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 
 
 /**

@@ -1,5 +1,15 @@
 goog.declareModuleId('plugin.track.menu');
 
+import Settings from '../../os/config/settings.js';
+import LayerNode from '../../os/data/layernode.js';
+import DynamicFeature from '../../os/feature/dynamicfeature.js';
+import instanceOf from '../../os/instanceof.js';
+import OsMeasure from '../../os/interaction/measureinteraction.js';
+import OsInterpolateMethod from '../../os/interpolatemethod.js';
+import VectorLayer from '../../os/layer/vector.js';
+import VectorSource from '../../os/source/vectorsource.js';
+import * as osTrack from '../../os/track/track.js';
+import TrackField from '../../os/track/trackfield.js';
 import * as osUiMenuLayer from '../../os/ui/menu/layermenu.js';
 import MenuItemType from '../../os/ui/menu/menuitemtype.js';
 import * as spatial from '../../os/ui/menu/spatial.js';
@@ -13,20 +23,9 @@ import Metrics from './trackmetrics.js';
 
 const asserts = goog.require('goog.asserts');
 const OLVectorLayer = goog.require('ol.layer.Vector');
-const Settings = goog.require('os.config.Settings');
-
-const LayerNode = goog.require('os.data.LayerNode');
-const DynamicFeature = goog.require('os.feature.DynamicFeature');
-const instanceOf = goog.require('os.instanceOf');
-const OsMeasure = goog.require('os.interaction.Measure');
-const OsInterpolateMethod = goog.require('os.interpolate.Method');
-const VectorLayer = goog.require('os.layer.Vector');
-const VectorSource = goog.require('os.source.Vector');
-const osTrack = goog.require('os.track');
-const TrackField = goog.require('os.track.TrackField');
 
 const OlFeature = goog.requireType('ol.Feature');
-const CreateOptions = goog.requireType('os.track.CreateOptions');
+const {default: CreateOptions} = goog.requireType('os.track.CreateOptions');
 const {default: ActionEvent} = goog.requireType('os.ui.action.ActionEvent');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: OsMenuItem} = goog.requireType('os.ui.menu.MenuItem');

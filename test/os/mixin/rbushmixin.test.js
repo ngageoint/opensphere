@@ -22,7 +22,7 @@ describe('os.mixin.rbush', function() {
 
   const {getFeatures} = goog.module.get('os.feature.mock');
   const geo2 = goog.module.get('os.geo2');
-  const VectorSource = goog.module.get('os.source.Vector');
+  const {default: VectorSource} = goog.module.get('os.source.Vector');
   const {normalizeAntiLeft, normalizeAntiRight} = goog.module.get('os.extent');
   const osMap = goog.module.get('os.map');
   const {EPSG4326} = goog.module.get('os.proj');

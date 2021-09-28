@@ -1,16 +1,17 @@
-goog.module('os.interaction.Select');
+goog.declareModuleId('os.interaction.Select');
+
+import Settings from '../config/settings.js';
+import {getSource} from '../feature/feature.js';
+import I3DSupport from '../i3dsupport.js';
+import osImplements from '../implements.js';
+import VectorSource from '../source/vectorsource.js';
+import {defaultLayerFilter} from './interaction.js';
 
 const Feature = goog.require('ol.Feature');
 const ViewHint = goog.require('ol.ViewHint');
 const {singleClick} = goog.require('ol.events.condition');
 const GeometryType = goog.require('ol.geom.GeometryType');
 const Interaction = goog.require('ol.interaction.Interaction');
-const I3DSupport = goog.require('os.I3DSupport');
-const Settings = goog.require('os.config.Settings');
-const {getSource} = goog.require('os.feature');
-const osImplements = goog.require('os.implements');
-const {defaultLayerFilter} = goog.require('os.interaction');
-const VectorSource = goog.require('os.source.Vector');
 
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 const Layer = goog.requireType('ol.layer.Layer');
@@ -22,7 +23,7 @@ const RenderFeature = goog.requireType('ol.render.Feature');
  *
  * @implements {I3DSupport}
  */
-class Select extends Interaction {
+export default class Select extends Interaction {
   /**
    * Constructor.
    * @param {olx.interaction.SelectOptions=} opt_options Options.
@@ -151,5 +152,3 @@ class Select extends Interaction {
 }
 
 osImplements(Select, I3DSupport.ID);
-
-exports = Select;

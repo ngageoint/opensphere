@@ -1,7 +1,8 @@
 goog.declareModuleId('os.ui.list');
 
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+
 const EventTarget = goog.require('goog.events.EventTarget');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 
 
 /**

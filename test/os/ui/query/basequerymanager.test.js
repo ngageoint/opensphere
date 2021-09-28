@@ -16,10 +16,10 @@ describe('os.query.BaseQueryManager', function() {
   const GeometryLayout = goog.module.get('ol.geom.GeometryLayout');
   const Polygon = goog.module.get('ol.geom.Polygon');
   const osQuery = goog.module.get('os.query');
-  const AreaManager = goog.module.get('os.query.AreaManager');
-  const BaseAreaManager = goog.module.get('os.query.BaseAreaManager');
-  const BaseQueryManager = goog.module.get('os.query.BaseQueryManager');
-  const QueryManager = goog.module.get('os.query.QueryManager');
+  const {default: AreaManager} = goog.module.get('os.query.AreaManager');
+  const {default: BaseAreaManager} = goog.module.get('os.query.BaseAreaManager');
+  const {default: BaseQueryManager} = goog.module.get('os.query.BaseQueryManager');
+  const {default: QueryManager} = goog.module.get('os.query.QueryManager');
   const {MockHandler} = goog.module.get('os.ui.query.MockHandler');
 
   var am;

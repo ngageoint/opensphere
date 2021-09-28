@@ -1,5 +1,8 @@
 goog.declareModuleId('plugin.file.csv.ui.CSVImportUI');
 
+import DataManager from '../../../../os/data/datamanager.js';
+import FileDescriptor from '../../../../os/data/filedescriptor.js';
+import MappingManager from '../../../../os/im/mapping/mappingmanager.js';
 import * as csv from '../../../../os/ui/file/csv/csv.js';
 import ConfigStep from '../../../../os/ui/file/ui/csv/configstep.js';
 import FileImportUI from '../../../../os/ui/im/fileimportui.js';
@@ -12,10 +15,6 @@ import CSVDescriptor from '../csvdescriptor.js';
 import CSVParserConfig from '../csvparserconfig.js';
 import CSVProvider from '../csvprovider.js';
 import {directiveTag as importUi} from './csvimport.js';
-
-const DataManager = goog.require('os.data.DataManager');
-const FileDescriptor = goog.require('os.data.FileDescriptor');
-const MappingManager = goog.require('os.im.mapping.MappingManager');
 
 
 /**

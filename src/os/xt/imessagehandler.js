@@ -1,12 +1,11 @@
-goog.module('os.xt.IMessageHandler');
-
+goog.declareModuleId('os.xt.IMessageHandler');
 
 /**
  * The message handler interface
  *
  * @interface
  */
-class IMessageHandler {
+export default class IMessageHandler {
   /**
    * Gets the type (or types) of messages that this handler handles
    * @return {Array.<string>}
@@ -22,5 +21,3 @@ class IMessageHandler {
    */
   process(data, type, sender, time) {}
 }
-
-exports = IMessageHandler;

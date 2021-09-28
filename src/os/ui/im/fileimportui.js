@@ -1,9 +1,8 @@
 goog.declareModuleId('os.ui.im.FileImportUI');
 
+import {getTypeChain} from '../../file/mime.js';
+import {TYPE} from '../../file/mime/text.js';
 import AbstractImportUI from './abstractimportui.js';
-
-const {getTypeChain} = goog.require('os.file.mime');
-const {TYPE} = goog.require('os.file.mime.text');
 
 
 /**

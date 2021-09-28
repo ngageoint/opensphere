@@ -1,15 +1,16 @@
-goog.module('os.command.AbstractFeatureStyle');
+goog.declareModuleId('os.command.AbstractFeatureStyle');
+
+import EventType from '../../action/eventtype.js';
+import DataManager from '../../data/datamanager.js';
+import * as dispatcher from '../../dispatcher.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import * as osStyle from '../../style/style.js';
+import StyleType from '../../style/styletype.js';
+import AbstractStyle from '../abstractstylecmd.js';
+import State from '../state.js';
 
 const asserts = goog.require('goog.asserts');
 const GoogEvent = goog.require('goog.events.Event');
-const dispatcher = goog.require('os.Dispatcher');
-const EventType = goog.require('os.action.EventType');
-const AbstractStyle = goog.require('os.command.AbstractStyle');
-const State = goog.require('os.command.State');
-const DataManager = goog.require('os.data.DataManager');
-const {getMapContainer} = goog.require('os.map.instance');
-const osStyle = goog.require('os.style');
-const StyleType = goog.require('os.style.StyleType');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -18,7 +19,7 @@ const Feature = goog.requireType('ol.Feature');
  * Commands for feature style changes should extend this class
  * @template T
  */
-class AbstractFeatureStyle extends AbstractStyle {
+export default class AbstractFeatureStyle extends AbstractStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -130,5 +131,3 @@ class AbstractFeatureStyle extends AbstractStyle {
     return feature;
   }
 }
-
-exports = AbstractFeatureStyle;

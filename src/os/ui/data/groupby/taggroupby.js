@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.data.groupby.TagGroupBy');
 
+import BaseGroupBy from '../../../data/groupby/basegroupby.js';
 import SlickTreeNode from '../../slick/slicktreenode.js';
 
 const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
-const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
 
-const ISearchable = goog.requireType('os.data.ISearchable');
+const {default: ISearchable} = goog.requireType('os.data.ISearchable');
 
 
 /**

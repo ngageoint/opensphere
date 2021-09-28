@@ -1,10 +1,10 @@
 goog.declareModuleId('os.ui.query.cmd.AbstractFilter');
 
-const State = goog.require('os.command.State');
-const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
+import State from '../../../command/state.js';
+import {getFilterManager, getQueryManager} from '../../../query/queryinstance.js';
 
-const ICommand = goog.requireType('os.command.ICommand');
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 
 
 /**

@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.menu.Menu');
 
 import * as dispatcher from '../../dispatcher.js';
+import Metrics from '../../metrics/metrics.js';
 import GlobalMenuEventType from '../globalmenueventtype.js';
 import * as osUi from '../ui.js';
 import MenuEvent from './menuevent.js';
@@ -13,7 +14,6 @@ const classlist = goog.require('goog.dom.classlist');
 const {listen, unlisten} = goog.require('goog.events');
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
-const Metrics = goog.require('os.metrics.Metrics');
 
 const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 

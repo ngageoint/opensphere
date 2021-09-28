@@ -1,16 +1,16 @@
 goog.declareModuleId('plugin.file.geojson.GeoJSONParser');
 
+import ColumnDefinition from '../../../os/data/columndefinition.js';
 import * as osFeature from '../../../os/feature/feature.js';
+import * as text from '../../../os/file/mime/text.js';
+import * as fn from '../../../os/fn/fn.js';
 import * as osMap from '../../../os/map/map.js';
 
 const Disposable = goog.require('goog.Disposable');
 const googObject = goog.require('goog.object');
 const ol = goog.require('ol');
 const GeoJSON = goog.require('ol.format.GeoJSON');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const text = goog.require('os.file.mime.text');
-const fn = goog.require('os.fn');
-const IParser = goog.requireType('os.parse.IParser');
+const {default: IParser} = goog.requireType('os.parse.IParser');
 
 
 /**

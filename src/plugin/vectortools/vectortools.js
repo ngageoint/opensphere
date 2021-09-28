@@ -1,23 +1,23 @@
 goog.declareModuleId('plugin.vectortools');
 
+import ColumnMappingManager from '../../os/column/columnmappingmanager.js';
+import DataManager from '../../os/data/datamanager.js';
+import RecordField from '../../os/data/recordfield.js';
+import IFilterable from '../../os/filter/ifilterable.js';
+import osImplements from '../../os/implements.js';
+import * as layer from '../../os/layer/layer.js';
+import VectorLayer from '../../os/layer/vector.js';
+import MapContainer from '../../os/mapcontainer.js';
+import VectorSource from '../../os/source/vectorsource.js';
+import StyleType from '../../os/style/styletype.js';
 import Options from './options.js';
 
 const googArray = goog.require('goog.array');
 const googString = goog.require('goog.string');
-const MapContainer = goog.require('os.MapContainer');
-const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
-const DataManager = goog.require('os.data.DataManager');
-const RecordField = goog.require('os.data.RecordField');
-const IFilterable = goog.require('os.filter.IFilterable');
-const osImplements = goog.require('os.implements');
-const layer = goog.require('os.layer');
-const VectorLayer = goog.require('os.layer.Vector');
-const VectorSource = goog.require('os.source.Vector');
-const StyleType = goog.require('os.style.StyleType');
 
 const Feature = goog.requireType('ol.Feature');
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const ILayer = goog.requireType('os.layer.ILayer');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**

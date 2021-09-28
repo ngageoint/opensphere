@@ -1,14 +1,15 @@
-goog.module('os.proj.switch.ReprojectionWarning');
+goog.declareModuleId('os.proj.switch.ReprojectionWarning');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
 
 const Delay = goog.require('goog.async.Delay');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
 
 
 /**
  * Displays a warning when tile layers will be reprojected.
  */
-class ReprojectionWarning {
+export default class ReprojectionWarning {
   /**
    * Constructor.
    */
@@ -74,5 +75,3 @@ class ReprojectionWarning {
  * @type {ReprojectionWarning|undefined}
  */
 let instance;
-
-exports = ReprojectionWarning;

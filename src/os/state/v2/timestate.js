@@ -1,27 +1,28 @@
-goog.module('os.state.v2.TimeState');
+goog.declareModuleId('os.state.v2.TimeState');
+
+import * as dispatcher from '../../dispatcher.js';
+import Duration from '../../time/duration.js';
+import {momentFormat, parseMoment} from '../../time/time.js';
+import {autoConfigureFromTimeRange, setDefaultOffsetForRange} from '../../time/timeline.js';
+import TimelineController from '../../time/timelinecontroller.js';
+import UIEvent from '../../ui/events/uievent.js';
+import UIEventType from '../../ui/events/uieventtype.js';
+import {appendElement} from '../../xml.js';
+import XMLState from '../xmlstate.js';
+import TimeTag from './timetag.js';
 
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const {getElementByClass} = goog.require('goog.dom');
 const log = goog.require('goog.log');
 const Range = goog.require('goog.math.Range');
 const RangeSet = goog.require('goog.math.RangeSet');
-const dispatcher = goog.require('os.Dispatcher');
-const XMLState = goog.require('os.state.XMLState');
-const TimeTag = goog.require('os.state.v2.TimeTag');
-const {momentFormat, parseMoment} = goog.require('os.time');
-const Duration = goog.require('os.time.Duration');
-const {autoConfigureFromTimeRange, setDefaultOffsetForRange} = goog.require('os.time.timeline');
-const TimelineController = goog.require('os.time.TimelineController');
-const {default: UIEvent} = goog.require('os.ui.events.UIEvent');
-const {default: UIEventType} = goog.require('os.ui.events.UIEventType');
-const {appendElement} = goog.require('os.xml');
 
 const Logger = goog.requireType('goog.log.Logger');
 
 
 /**
  */
-class TimeState extends XMLState {
+export default class TimeState extends XMLState {
   /**
    * Constructor.
    */
@@ -458,5 +459,3 @@ const logger = log.getLogger('os.state.v2.TimeState');
  * @const
  */
 TimeState.DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ss[Z]';
-
-exports = TimeState;

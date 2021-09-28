@@ -1,7 +1,7 @@
 goog.module('os.plugin.MockPlugin');
 
 const Promise = goog.require('goog.Promise');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const {default: AbstractPlugin} = goog.require('os.plugin.AbstractPlugin');
 
 
 /**

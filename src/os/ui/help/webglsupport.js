@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.help.WebGLSupportUI');
 
+import {getAppName, getSupportContact} from '../../config/config.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import * as ConfirmUI from '../window/confirm.js';
 import WindowEventType from '../windoweventtype.js';
 
 const userAgent = goog.require('goog.userAgent');
-const {getAppName, getSupportContact} = goog.require('os.config');
 
 
 /**

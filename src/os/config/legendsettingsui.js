@@ -1,14 +1,15 @@
-goog.module('os.config.LegendSettingsUI');
+goog.declareModuleId('os.config.LegendSettingsUI');
+
+import * as dispatcher from '../dispatcher.js';
+import * as legend from '../legend/legend.js';
+import {ROOT} from '../os.js';
+import UIEvent from '../ui/events/uievent.js';
+import UIEventType from '../ui/events/uieventtype.js';
+import Module from '../ui/module.js';
+import {getSettings} from './configinstance.js';
+import LegendSetting from './legendsetting.js';
 
 const Disposable = goog.require('goog.Disposable');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const LegendSetting = goog.require('os.config.LegendSetting');
-const {getSettings} = goog.require('os.config.instance');
-const legend = goog.require('os.legend');
-const {default: Module} = goog.require('os.ui.Module');
-const {default: UIEvent} = goog.require('os.ui.events.UIEvent');
-const {default: UIEventType} = goog.require('os.ui.events.UIEventType');
 
 
 /**
@@ -16,7 +17,7 @@ const {default: UIEventType} = goog.require('os.ui.events.UIEventType');
  *
  * @return {angular.Directive}
  */
-const directive = function() {
+export const directive = function() {
   return {
     restrict: 'E',
     replace: true,
@@ -27,12 +28,11 @@ const directive = function() {
   };
 };
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'legendsettings';
+export const directiveTag = 'legendsettings';
 
 
 /**
@@ -46,7 +46,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the legendsettings directive
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -263,10 +263,3 @@ class Controller extends Disposable {
  * @const
  */
 Controller.FONT_SIZES = [12, 14, 16, 20, 24, 32, 48, 64];
-
-
-exports = {
-  directive,
-  directiveTag,
-  Controller
-};

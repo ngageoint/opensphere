@@ -1,18 +1,18 @@
-goog.module('os.command.VectorLayerShowEllipsoids');
+goog.declareModuleId('os.command.VectorLayerShowEllipsoids');
 
-const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const DataManager = goog.require('os.data.DataManager');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
+import DataManager from '../data/datamanager.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import PropertyChange from '../source/propertychange.js';
+import StyleField from '../style/stylefield.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import AbstractVectorStyle from './abstractvectorstylecmd.js';
 
 
 /**
  * Changes if ellipsoids are shown in 3D mode.
  */
-class VectorLayerShowEllipsoids extends AbstractVectorStyle {
+export default class VectorLayerShowEllipsoids extends AbstractVectorStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -57,5 +57,3 @@ class VectorLayerShowEllipsoids extends AbstractVectorStyle {
     super.finish(config);
   }
 }
-
-exports = VectorLayerShowEllipsoids;

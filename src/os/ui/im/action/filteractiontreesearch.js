@@ -1,12 +1,11 @@
 goog.declareModuleId('os.ui.im.action.FilterActionTreeSearch');
 
+import ImportActionManager from '../../../im/action/importactionmanager.js';
 import AbstractGroupByTreeSearch from '../../slick/abstractgroupbytreesearch.js';
 import TreeSearch from '../../slick/treesearch.js';
 import FilterActionNode from './filteractionnode.js';
 
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
 
 
 /**

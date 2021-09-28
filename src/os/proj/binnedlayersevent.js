@@ -1,14 +1,14 @@
-goog.module('os.proj.switch.BinnedLayersEvent');
+goog.declareModuleId('os.proj.switch.BinnedLayersEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 const GoogEventType = goog.require('goog.events.EventType');
 
-const BinnedLayersType = goog.requireType('os.proj.switch.BinnedLayersType');
+const {default: BinnedLayersType} = goog.requireType('os.proj.switch.BinnedLayersType');
 
 
 /**
  */
-class BinnedLayersEvent extends GoogEvent {
+export default class BinnedLayersEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {BinnedLayersType} layers
@@ -28,5 +28,3 @@ class BinnedLayersEvent extends GoogEvent {
  * @const
  */
 BinnedLayersEvent.TYPE = GoogEventType.LOAD;
-
-exports = BinnedLayersEvent;

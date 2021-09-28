@@ -1,20 +1,21 @@
 /* FIXME add rotation */
-goog.module('os.olm.render.Circle');
+goog.declareModuleId('os.olm.render.Circle');
+
+import {interpolateGeom} from '../../interpolate.js';
+import UnitManager from '../../unit/unitmanager.js';
+import BaseShape from './baseshape.js';
 
 const {assert} = goog.require('goog.asserts');
 const Sphere = goog.require('ol.Sphere');
 const Polygon = goog.require('ol.geom.Polygon');
 const {toLonLat} = goog.require('ol.proj');
-const {interpolateGeom} = goog.require('os.interpolate');
-const BaseShape = goog.require('os.olm.render.BaseShape');
-const UnitManager = goog.require('os.unit.UnitManager');
 
 const Style = goog.requireType('ol.style.Style');
 
 
 /**
  */
-class Circle extends BaseShape {
+export default class Circle extends BaseShape {
   /**
    * Constructor.
    * @param {Array<Style>|Style} style Style.
@@ -128,5 +129,3 @@ class Circle extends BaseShape {
  * @const
  */
 Circle.WGS84_SPHERE = new Sphere(6378137);
-
-exports = Circle;

@@ -1,11 +1,10 @@
 goog.declareModuleId('os.ui.util.ResetSettings');
 
+import * as osConfig from '../../config/config.js';
+import {getSettings} from '../../config/configinstance.js';
+import {clearStorage} from '../../storage/storage.js';
 import EventType from '../eventtype.js';
 import * as ConfirmUI from '../window/confirm.js';
-
-const osConfig = goog.require('os.config');
-const {getSettings} = goog.require('os.config.instance');
-const {clearStorage} = goog.require('os.storage');
 
 const {default: MenuItemOptions} = goog.requireType('os.ui.menu.MenuItemOptions');
 

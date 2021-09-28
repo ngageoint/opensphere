@@ -1,4 +1,4 @@
-goog.module('os.source.IModifiableSource');
+goog.declareModuleId('os.source.IModifiableSource');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -6,7 +6,7 @@ const Feature = goog.requireType('ol.Feature');
 /**
  * @interface
  */
-class IModifiableSource {
+export default class IModifiableSource {
   /**
    * Get whether the source supports modify.
    * @return {boolean}
@@ -26,5 +26,3 @@ class IModifiableSource {
  * @type {string}
  */
 IModifiableSource.ID = 'os.source.IModifiableSource';
-
-exports = IModifiableSource;

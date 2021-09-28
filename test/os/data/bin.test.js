@@ -3,7 +3,7 @@ goog.require('os.histo.bin');
 
 
 describe('os.histo.Bin', function() {
-  const Bin = goog.module.get('os.histo.Bin');
+  const {default: Bin} = goog.module.get('os.histo.Bin');
   const osHistoBin = goog.module.get('os.histo.bin');
 
   var item = {

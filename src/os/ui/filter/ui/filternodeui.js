@@ -1,15 +1,15 @@
 goog.declareModuleId('os.ui.filter.ui.FilterNodeUI');
 
+import CommandProcessor from '../../../command/commandprocessor.js';
+import DataManager from '../../../data/datamanager.js';
+import Metrics from '../../../metrics/metrics.js';
+import {Filters} from '../../../metrics/metricskeys.js';
+import {getQueryManager} from '../../../query/queryinstance.js';
 import Module from '../../module.js';
 import FilterRemove from '../../query/cmd/filterremovecmd.js';
 import AbstractNodeUICtrl from '../../slick/abstractnodeui.js';
 
 const {getCount} = goog.require('goog.object');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const DataManager = goog.require('os.data.DataManager');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Filters} = goog.require('os.metrics.keys');
-const {getQueryManager} = goog.require('os.query.instance');
 
 const {default: FilterNode} = goog.requireType('os.ui.filter.ui.FilterNode');
 

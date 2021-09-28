@@ -1,11 +1,10 @@
 goog.declareModuleId('plugin.google.places.Plugin');
 
+import Settings from '../../../os/config/settings.js';
+import AbstractPlugin from '../../../os/plugin/abstractplugin.js';
+import SearchManager from '../../../os/search/searchmanager.js';
 import Search from './search.js';
 import {ID} from './index.js';
-
-const Settings = goog.require('os.config.Settings');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const SearchManager = goog.require('os.search.SearchManager');
 
 /**
  * Provides GeoNames search

@@ -1,10 +1,10 @@
 goog.declareModuleId('os.ui.columnactions.ColumnActionManager');
 
+import Settings from '../../config/settings.js';
 import UrlColumnAction from './actions/urlcolumnaction.js';
 import launchColumnActionPrompt from './launchcolumnactionprompt.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
-const Settings = goog.require('os.config.Settings');
 
 const {default: AbstractColumnAction} = goog.requireType('os.ui.columnactions.AbstractColumnAction');
 const {default: IColumnActionModel} = goog.requireType('os.ui.columnactions.IColumnActionModel');

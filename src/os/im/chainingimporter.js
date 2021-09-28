@@ -1,11 +1,12 @@
-goog.module('os.im.ChainingImporter');
+goog.declareModuleId('os.im.ChainingImporter');
+
+import EventType from '../events/eventtype.js';
 
 const {assert} = goog.require('goog.asserts');
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
-const EventType = goog.require('os.events.EventType');
 
-const IImporter = goog.requireType('os.im.IImporter');
+const {default: IImporter} = goog.requireType('os.im.IImporter');
 
 
 /**
@@ -14,7 +15,7 @@ const IImporter = goog.requireType('os.im.IImporter');
  * @implements {IImporter}
  * @template T
  */
-class ChainingImporter extends EventTarget {
+export default class ChainingImporter extends EventTarget {
   /**
    * Constructor.
    * @param {!Array<!IImporter>} chain The chain of importers to execute
@@ -163,5 +164,3 @@ class ChainingImporter extends EventTarget {
     this.current_ = -1;
   }
 }
-
-exports = ChainingImporter;

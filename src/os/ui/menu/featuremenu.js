@@ -1,8 +1,7 @@
 goog.declareModuleId('os.ui.menu.feature');
 
+import EventType from '../../action/eventtype.js';
 import MenuItemType from './menuitemtype.js';
-
-const EventType = goog.require('os.action.EventType');
 
 const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');

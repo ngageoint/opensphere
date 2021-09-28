@@ -1,11 +1,12 @@
-goog.module('os.layer.config.StaticLayerConfig');
+goog.declareModuleId('os.layer.config.StaticLayerConfig');
+
+import VectorSource from '../../source/vectorsource.js';
+import VectorLayer from '../vector.js';
+import AbstractLayerConfig from './abstractlayerconfig.js';
+import {LayerConfigId} from './layerconfig.js';
 
 const {clone} = goog.require('goog.array');
 const {getLogger} = goog.require('goog.log');
-const VectorLayer = goog.require('os.layer.Vector');
-const {LayerConfigId} = goog.require('os.layer.config');
-const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
-const VectorSource = goog.require('os.source.Vector');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');
@@ -16,7 +17,7 @@ const Feature = goog.requireType('ol.Feature');
  *
  * @template T
  */
-class StaticLayerConfig extends AbstractLayerConfig {
+export default class StaticLayerConfig extends AbstractLayerConfig {
   /**
    * Constructor.
    */
@@ -126,5 +127,3 @@ StaticLayerConfig.ID = LayerConfigId.STATIC;
  * @type {Logger}
  */
 const logger = getLogger('os.layer.config.StaticLayerConfig');
-
-exports = StaticLayerConfig;

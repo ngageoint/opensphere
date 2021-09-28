@@ -1,4 +1,4 @@
-goog.module('os.events.LayerEvent');
+goog.declareModuleId('os.events.LayerEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
@@ -7,7 +7,7 @@ const OLEventTarget = goog.requireType('ol.events.EventTarget');
 
 /**
  */
-class LayerEvent extends GoogEvent {
+export default class LayerEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -36,5 +36,3 @@ class LayerEvent extends GoogEvent {
  * @suppress {duplicate}
  */
 LayerEvent.prototype.target;
-
-exports = LayerEvent;

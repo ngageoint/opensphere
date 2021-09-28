@@ -1,11 +1,12 @@
-goog.module('os.state.v2.ExclusionTag');
-
+goog.declareModuleId('os.state.v2.ExclusionTag');
 
 /**
  * XML tags for exclusion area state
  * @enum {string}
  */
-exports = {
+const ExclusionTag = {
   AREA: 'exclusionArea',
   LAYER: 'layer'
 };
+
+export default ExclusionTag;

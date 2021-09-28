@@ -1,6 +1,9 @@
 goog.declareModuleId('os.ui.layer.LabelControlsUI');
 
 import '../geo/position.js';
+import Settings from '../../config/settings.js';
+import Metrics from '../../metrics/metrics.js';
+import {Layer} from '../../metrics/metricskeys.js';
 import {ROOT} from '../../os.js';
 import {MAX_SIZE, MIN_SIZE, cloneConfig} from '../../style/label.js';
 import Module from '../module.js';
@@ -10,9 +13,6 @@ import LabelControlsEventType from './labelcontrolseventtype.js';
 const Disposable = goog.require('goog.Disposable');
 const {moveItem} = goog.require('goog.array');
 const {remove} = goog.require('ol.array');
-const Settings = goog.require('os.config.Settings');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Layer} = goog.require('os.metrics.keys');
 
 const {LabelConfig} = goog.requireType('os.style.label');
 

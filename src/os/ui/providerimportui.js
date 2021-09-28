@@ -1,10 +1,9 @@
 goog.declareModuleId('os.ui.ProviderImportUI');
 
+import DataManager from '../data/datamanager.js';
+import FileParserConfig from '../parse/fileparserconfig.js';
 import FileImportUI from './im/fileimportui.js';
 import * as osWindow from './window.js';
-
-const DataManager = goog.require('os.data.DataManager');
-const FileParserConfig = goog.require('os.parse.FileParserConfig');
 
 
 /**

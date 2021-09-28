@@ -1,8 +1,8 @@
-goog.module('os.state.instance');
+goog.declareModuleId('os.state.instance');
 
 const {assert} = goog.require('goog.asserts');
 
-const BaseStateManager = goog.requireType('os.state.BaseStateManager');
+const {default: BaseStateManager} = goog.requireType('os.state.BaseStateManager');
 
 
 /**
@@ -15,7 +15,7 @@ let stateManager = null;
  * Get the global state manager instance.
  * @return {!BaseStateManager}
  */
-const getStateManager = () => {
+export const getStateManager = () => {
   assert(stateManager != null, 'StateManager instance is not defined! Use setStateManager to set the instance.');
   return stateManager;
 };
@@ -24,11 +24,6 @@ const getStateManager = () => {
  * Set the global state manager instance.
  * @param {BaseStateManager} value The instance.
  */
-const setStateManager = (value) => {
+export const setStateManager = (value) => {
   stateManager = value;
-};
-
-exports = {
-  getStateManager,
-  setStateManager
 };

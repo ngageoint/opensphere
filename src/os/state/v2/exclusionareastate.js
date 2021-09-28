@@ -1,27 +1,27 @@
-goog.module('os.state.v2.ExclusionArea');
+goog.declareModuleId('os.state.v2.ExclusionArea');
 
-goog.require('os.mixin.geometry');
+import '../../mixin/geometrymixin.js';
+import RecordField from '../../data/recordfield.js';
+import Format from '../../ogc/format.js';
+import {formatPolygon, readKMLGeometry} from '../../ogc/spatial.js';
+import {getAreaManager, getQueryManager} from '../../query/queryinstance.js';
+import {appendElement, createElement} from '../../xml.js';
+import AbstractState from '../abstractstate.js';
+import XMLState from '../xmlstate.js';
+import ExclusionTag from './exclusiontag.js';
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');
 const log = goog.require('goog.log');
 const {getRandomString} = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
-const RecordField = goog.require('os.data.RecordField');
-const {formatPolygon, readKMLGeometry} = goog.require('os.ogc.spatial');
-const Format = goog.require('os.ogc.spatial.Format');
-const {getAreaManager, getQueryManager} = goog.require('os.query.instance');
-const AbstractState = goog.require('os.state.AbstractState');
-const XMLState = goog.require('os.state.XMLState');
-const ExclusionTag = goog.require('os.state.v2.ExclusionTag');
-const {appendElement, createElement} = goog.require('os.xml');
 
 const Logger = goog.requireType('goog.log.Logger');
 
 
 /**
  */
-class ExclusionArea extends XMLState {
+export default class ExclusionArea extends XMLState {
   /**
    * Constructor.
    */
@@ -235,5 +235,3 @@ const logger = log.getLogger('os.state.v2.ExclusionArea');
  * @type {Object<string, !Array<!Feature>>}
  */
 const addedAreas = {};
-
-exports = ExclusionArea;

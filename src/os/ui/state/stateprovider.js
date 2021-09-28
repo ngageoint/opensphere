@@ -1,9 +1,8 @@
 goog.declareModuleId('os.ui.state.StateProvider');
 
+import {getAppName} from '../../config/config.js';
 import DescriptorProvider from '../data/descriptorprovider.js';
 import AbstractStateDescriptor from './abstractstatedescriptor.js';
-
-const {getAppName} = goog.require('os.config');
 
 
 /**

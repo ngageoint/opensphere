@@ -1,13 +1,14 @@
-goog.module('os.net.URLModifier');
+goog.declareModuleId('os.net.URLModifier');
+
+import AbstractModifier from './abstractmodifier.js';
 
 const Uri = goog.require('goog.Uri');
-const AbstractModifier = goog.require('os.net.AbstractModifier');
 
 
 /**
  * URI parameter replacement modifier.
  */
-class URLModifier extends AbstractModifier {
+export default class URLModifier extends AbstractModifier {
   /**
    * Constructor.
    * @param {string=} opt_id
@@ -98,6 +99,3 @@ class URLModifier extends AbstractModifier {
  * @private
  */
 URLModifier.replace_ = [];
-
-
-exports = URLModifier;

@@ -1,35 +1,35 @@
-goog.module('os.im.action');
+goog.declareModuleId('os.im.action');
 
-const {instanceOf} = goog.require('os.classRegistry');
-const LayerClass = goog.require('os.layer.LayerClass');
-const osSource = goog.require('os.source');
+import {instanceOf} from '../../classregistry.js';
+import LayerClass from '../../layer/layerclass.js';
+import * as osSource from '../../source/source.js';
 
-const IFilterable = goog.requireType('os.filter.IFilterable');
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
-const ImportActionManager = goog.requireType('os.im.action.ImportActionManager');
-const IImportAction = goog.requireType('os.im.action.IImportAction');
-const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
-const Vector = goog.requireType('os.layer.Vector');
-const ISource = goog.requireType('os.source.ISource');
+const {default: IFilterable} = goog.requireType('os.filter.IFilterable');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
+const {default: IImportAction} = goog.requireType('os.im.action.IImportAction');
+const {default: ImportActionManager} = goog.requireType('os.im.action.ImportActionManager');
+const {default: Vector} = goog.requireType('os.layer.Vector');
+const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
+const {default: ISource} = goog.requireType('os.source.ISource');
 
 
 /**
  * Identifier for import action components.
  * @type {string}
  */
-const ID = 'importAction';
+export const ID = 'importAction';
 
 /**
  * Icon to represent import actions.
  * @type {string}
  */
-const ICON = 'fa-magic';
+export const ICON = 'fa-magic';
 
 /**
  * Timeline metrics tracked by OpenSphere.
  * @enum {string}
  */
-const Metrics = {
+export const Metrics = {
   COPY: 'importAction.copy',
   CREATE: 'importAction.create',
   EDIT: 'importAction.edit',
@@ -47,13 +47,13 @@ let importActionManager = null;
  * Set the global ImportActionManager instance.
  * @return {ImportActionManager}
  */
-const getImportActionManager = () => importActionManager;
+export const getImportActionManager = () => importActionManager;
 
 /**
  * Set the global ImportActionManager instance.
  * @param {ImportActionManager} value The instance.
  */
-const setImportActionManager = (value) => {
+export const setImportActionManager = (value) => {
   importActionManager = value;
 };
 
@@ -62,7 +62,7 @@ const setImportActionManager = (value) => {
  * @param {FilterActionEntry} entry The entry.
  * @param {Object<string, boolean>} enabled Map of entry id to enabled state. Defaults to false for undefined id's.
  */
-const enableFromMap = function(entry, enabled) {
+export const enableFromMap = function(entry, enabled) {
   entry.setEnabled(!!enabled[entry.getId()]);
 
   var children = entry.getChildren();
@@ -79,7 +79,7 @@ const enableFromMap = function(entry, enabled) {
  * @param {IFilterable} filterable
  * @return {Array<FeatureTypeColumn>} columns of the  filterable
  */
-const getColumnsFromFilterable = function(filterable) {
+export const getColumnsFromFilterable = function(filterable) {
   var columns = null;
 
   if (instanceOf(filterable, LayerClass.VECTOR)) {
@@ -100,7 +100,7 @@ const getColumnsFromFilterable = function(filterable) {
  * @param {Object<string, boolean>=} opt_result Object to store the result.
  * @return {!Object<string, boolean>} Map of entry id's to the enabled state.
  */
-const getEnabledMap = function(entry, opt_result) {
+export const getEnabledMap = function(entry, opt_result) {
   var result = opt_result || {};
   if (entry) {
     if (entry.isEnabled()) {
@@ -124,7 +124,7 @@ const getEnabledMap = function(entry, opt_result) {
  * @param {FilterActionEntry} entry The entry.
  * @return {!Array<string>} Array of enabled entry id's.
  */
-const reduceEnabled = function(ids, entry) {
+export const reduceEnabled = function(ids, entry) {
   if (entry) {
     if (entry.isEnabled()) {
       ids.push(entry.getId());
@@ -146,7 +146,7 @@ const reduceEnabled = function(ids, entry) {
  * @param {IImportAction} b Second action.
  * @return {number} Sort order of the actions, by label.
  */
-const sortByLabel = function(a, b) {
+export const sortByLabel = function(a, b) {
   var aLabel = a ? a.getLabel() : '';
   var bLabel = b ? b.getLabel() : '';
   return goog.array.defaultCompare(aLabel, bLabel);
@@ -158,20 +158,6 @@ const sortByLabel = function(a, b) {
  * @param {FilterActionEntry} entry The entry.
  * @return {boolean} If the entry is enabled.
  */
-const testFilterActionEnabled = function(entry) {
+export const testFilterActionEnabled = function(entry) {
   return entry.isEnabled();
-};
-
-exports = {
-  ID,
-  ICON,
-  Metrics,
-  getImportActionManager,
-  setImportActionManager,
-  enableFromMap,
-  getColumnsFromFilterable,
-  getEnabledMap,
-  reduceEnabled,
-  sortByLabel,
-  testFilterActionEnabled
 };

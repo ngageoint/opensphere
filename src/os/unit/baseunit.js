@@ -1,15 +1,15 @@
-goog.module('os.unit.BaseUnit');
+goog.declareModuleId('os.unit.BaseUnit');
 
 const googArray = goog.require('goog.array');
 
-const IMultiplier = goog.requireType('os.unit.IMultiplier');
-const IUnit = goog.requireType('os.unit.IUnit');
+const {default: IMultiplier} = goog.requireType('os.unit.IMultiplier');
+const {default: IUnit} = goog.requireType('os.unit.IUnit');
 
 
 /**
  * @implements {IUnit}
  */
-class BaseUnit {
+export default class BaseUnit {
   /**
    * Constructor.
    */
@@ -142,5 +142,3 @@ class BaseUnit {
     });
   }
 }
-
-exports = BaseUnit;

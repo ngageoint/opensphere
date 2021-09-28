@@ -1,9 +1,8 @@
 goog.declareModuleId('os.ui.filter.ui.FilterGroupUI');
 
+import BaseFilterManager from '../../../filter/basefiltermanager.js';
 import Module from '../../module.js';
 import FilterEventType from '../filtereventtype.js';
-
-const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
 
 const {default: FilterEvent} = goog.requireType('os.ui.filter.FilterEvent');
 

@@ -1,9 +1,9 @@
-goog.module('os.Fields');
+goog.declareModuleId('os.Fields');
 
 /**
  * @enum {string}
  */
-exports = {
+const Fields = {
   ALT: 'ALTITUDE',
   ALT_UNITS: 'ALTITUDE_UNITS',
   BEARING: 'BEARING',
@@ -37,3 +37,5 @@ exports = {
   TIME: 'TIME',
   URL: 'URL'
 };
+
+export default Fields;

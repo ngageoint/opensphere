@@ -1,6 +1,12 @@
 goog.declareModuleId('os.ui.layer.DefaultLayerUI');
 
+import LayerAutoRefresh from '../../command/layerautorefreshcmd.js';
+import LayerStyle from '../../command/layerstylecmd.js';
+import Settings from '../../config/settings.js';
+import * as osLayer from '../../layer/layer.js';
+import PropertyChange from '../../layer/propertychange.js';
 import {ROOT} from '../../os.js';
+import VectorSource from '../../source/vectorsource.js';
 import ColorControlType from '../colorcontroltype.js';
 import ControlType from '../controltype.js';
 import Module from '../module.js';
@@ -9,15 +15,9 @@ import {REFRESH_DURATIONS} from './layers.js';
 
 const Layer = goog.require('ol.layer.Layer');
 const UrlTile = goog.require('ol.source.UrlTile');
-const LayerAutoRefresh = goog.require('os.command.LayerAutoRefresh');
-const LayerStyle = goog.require('os.command.LayerStyle');
-const Settings = goog.require('os.config.Settings');
-const osLayer = goog.require('os.layer');
-const PropertyChange = goog.require('os.layer.PropertyChange');
-const VectorSource = goog.require('os.source.Vector');
 
-const ICommand = goog.requireType('os.command.ICommand');
-const ILayer = goog.requireType('os.layer.ILayer');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**

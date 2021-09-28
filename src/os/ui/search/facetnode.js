@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.search.FacetNode');
 
+import TriState from '../../structs/tristate.js';
 import SlickTreeNode from '../slick/slicktreenode.js';
 import {sanitize} from '../ui.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const TriState = goog.require('os.structs.TriState');
 
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**

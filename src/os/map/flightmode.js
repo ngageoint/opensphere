@@ -1,10 +1,12 @@
-goog.module('os.map.FlightMode');
+goog.declareModuleId('os.map.FlightMode');
 
 /**
  * Modes for flying to positions on the map.
  * @enum {string}
  */
-exports = {
+const FlightMode = {
   BOUNCE: 'bounce',
   SMOOTH: 'smooth'
 };
+
+export default FlightMode;

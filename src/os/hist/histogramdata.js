@@ -1,7 +1,7 @@
-goog.module('os.hist.HistogramData');
+goog.declareModuleId('os.hist.HistogramData');
 
-const AbstractHistogramData = goog.require('os.hist.AbstractHistogramData');
-const IHistogramData = goog.requireType('os.hist.IHistogramData');
+import AbstractHistogramData from './abstracthistogramdata.js';
+const {default: IHistogramData} = goog.requireType('os.hist.IHistogramData');
 
 
 /**
@@ -9,7 +9,7 @@ const IHistogramData = goog.requireType('os.hist.IHistogramData');
  *
  * @implements {IHistogramData}
  */
-class HistogramData extends AbstractHistogramData {
+export default class HistogramData extends AbstractHistogramData {
   /**
    * Constructor.
    */
@@ -37,5 +37,3 @@ class HistogramData extends AbstractHistogramData {
     this.counts_ = value;
   }
 }
-
-exports = HistogramData;

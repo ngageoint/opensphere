@@ -1,7 +1,13 @@
 goog.declareModuleId('os.ui.filter.ui.CopyFilterUI');
 
 import './copyfilterpicker.js';
+import ColumnMapping from '../../../column/columnmapping.js';
+import ColumnMappingManager from '../../../column/columnmappingmanager.js';
+import CommandProcessor from '../../../command/commandprocessor.js';
+import SequenceCommand from '../../../command/sequencecommand.js';
+import DataManager from '../../../data/datamanager.js';
 import {ROOT} from '../../../os.js';
+import {getFilterManager, getQueryManager} from '../../../query/queryinstance.js';
 import ChecklistEvent from '../../checklistevent.js';
 import Module from '../../module.js';
 import FilterAdd from '../../query/cmd/filteraddcmd.js';
@@ -13,15 +19,9 @@ const {insert} = goog.require('goog.array');
 const {assertString} = goog.require('goog.asserts');
 const {getCount} = goog.require('goog.object');
 const {caseInsensitiveCompare, getRandomString} = goog.require('goog.string');
-const ColumnMapping = goog.require('os.column.ColumnMapping');
-const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const DataManager = goog.require('os.data.DataManager');
-const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
 
-const IColumnMapping = goog.requireType('os.column.IColumnMapping');
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const {default: IColumnMapping} = goog.requireType('os.column.IColumnMapping');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 const {default: CopyFilterPickerModel} = goog.requireType('os.ui.filter.ui.CopyFilterPickerModel');
 
 

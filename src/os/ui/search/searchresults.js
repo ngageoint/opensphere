@@ -3,15 +3,15 @@ goog.declareModuleId('os.ui.search.SearchResultsUI');
 import '../util/autoheight.js';
 import './resultcard.js';
 import {ROOT} from '../../os.js';
+import SearchEventType from '../../search/searcheventtype.js';
+import SearchManager from '../../search/searchmanager.js';
 import Module from '../module.js';
 import {apply} from '../ui.js';
-const SearchEventType = goog.require('os.search.SearchEventType');
-const SearchManager = goog.require('os.search.SearchManager');
 
-const ISearchResult = goog.requireType('os.search.ISearchResult');
+const {default: ISearchResult} = goog.requireType('os.search.ISearchResult');
 
 
-const SearchEvent = goog.requireType('os.search.SearchEvent');
+const {default: SearchEvent} = goog.requireType('os.search.SearchEvent');
 
 
 /**

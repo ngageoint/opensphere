@@ -1,13 +1,14 @@
-goog.module('os.histo.Histogram');
+goog.declareModuleId('os.histo.Histogram');
+
+import Bin from './bin.js';
 
 const asserts = goog.require('goog.asserts');
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
-const Bin = goog.require('os.histo.Bin');
 
-const IGroupable = goog.requireType('os.data.xf.IGroupable');
-const IBinMethod = goog.requireType('os.histo.IBinMethod');
-const Result = goog.requireType('os.histo.Result');
+const {default: IGroupable} = goog.requireType('os.data.xf.IGroupable');
+const {default: IBinMethod} = goog.requireType('os.histo.IBinMethod');
+const {default: Result} = goog.requireType('os.histo.Result');
 
 
 /**
@@ -24,7 +25,7 @@ const defaultDimFunction = (item) => item['id'];
  * @implements {IGroupable<T>}
  * @template T
  */
-class Histogram extends EventTarget {
+export default class Histogram extends EventTarget {
   /**
    * Constructor.
    */
@@ -271,5 +272,3 @@ class Histogram extends EventTarget {
     return new Bin();
   }
 }
-
-exports = Histogram;

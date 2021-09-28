@@ -1,15 +1,16 @@
-goog.module('os.data.groupby.TypeGroupBy');
+goog.declareModuleId('os.data.groupby.TypeGroupBy');
+
+import DescriptorNode from '../../ui/data/descriptornode.js';
+import SlickTreeNode from '../../ui/slick/slicktreenode.js';
+import BaseGroupBy from './basegroupby.js';
 
 const googArray = goog.require('goog.array');
-const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
-const {default: DescriptorNode} = goog.require('os.ui.data.DescriptorNode');
-const {default: SlickTreeNode} = goog.require('os.ui.slick.SlickTreeNode');
 
 
 /**
  * Groups nodes by type
  */
-class TypeGroupBy extends BaseGroupBy {
+export default class TypeGroupBy extends BaseGroupBy {
   /**
    * Constructor.
    */
@@ -67,5 +68,3 @@ class TypeGroupBy extends BaseGroupBy {
     return group;
   }
 }
-
-exports = TypeGroupBy;

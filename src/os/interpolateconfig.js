@@ -1,4 +1,4 @@
-goog.module('os.interpolate.Config');
+goog.declareModuleId('os.interpolate.Config');
 
 /**
  * @typedef {{
@@ -8,4 +8,4 @@ goog.module('os.interpolate.Config');
  */
 let Config;
 
-exports = Config;
+export default Config;

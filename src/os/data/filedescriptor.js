@@ -1,31 +1,32 @@
-goog.module('os.data.FileDescriptor');
+goog.declareModuleId('os.data.FileDescriptor');
+
+import Settings from '../config/settings.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import FileStorage from '../file/filestorage.js';
+import * as osFile from '../file/index.js';
+import ImportProcess from '../im/importprocess.js';
+import MappingManager from '../im/mapping/mappingmanager.js';
+import osImplements from '../implements.js';
+import VectorLayer from '../layer/vector.js';
+import FileParserConfig from '../parse/fileparserconfig.js';
+import PropertyChange from '../source/propertychange.js';
+import * as osSource from '../source/source.js';
+import VectorSource from '../source/vectorsource.js';
+import * as osStyle from '../style/style.js';
+import ExportManager from '../ui/file/exportmanager.js';
+import {directiveTag as nodeUi} from '../ui/file/ui/defaultfilenodeui.js';
+import Icons from '../ui/icons.js';
+import ImportEvent from '../ui/im/importevent.js';
+import ImportEventType from '../ui/im/importeventtype.js';
+import IMappingDescriptor from './imappingdescriptor.js';
+import IUrlDescriptor from './iurldescriptor.js';
+import LayerSyncDescriptor from './layersyncdescriptor.js';
 
 const log = goog.require('goog.log');
-const Settings = goog.require('os.config.Settings');
-const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
-const IUrlDescriptor = goog.require('os.data.IUrlDescriptor');
-const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osFile = goog.require('os.file');
-const FileStorage = goog.require('os.file.FileStorage');
-const ImportProcess = goog.require('os.im.ImportProcess');
-const MappingManager = goog.require('os.im.mapping.MappingManager');
-const osImplements = goog.require('os.implements');
-const VectorLayer = goog.require('os.layer.Vector');
-const FileParserConfig = goog.require('os.parse.FileParserConfig');
-const osSource = goog.require('os.source');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const VectorSource = goog.require('os.source.Vector');
-const osStyle = goog.require('os.style');
-const {default: Icons} = goog.require('os.ui.Icons');
-const {default: ExportManager} = goog.require('os.ui.file.ExportManager');
-const {directiveTag: nodeUi} = goog.require('os.ui.file.ui.DefaultFileNodeUI');
-const {default: ImportEvent} = goog.require('os.ui.im.ImportEvent');
-const {default: ImportEventType} = goog.require('os.ui.im.ImportEventType');
 
-const IReimport = goog.requireType('os.data.IReimport');
-const IExportMethod = goog.requireType('os.ex.IExportMethod');
-const RequestSource = goog.requireType('os.source.Request');
+const {default: IReimport} = goog.requireType('os.data.IReimport');
+const {default: IExportMethod} = goog.requireType('os.ex.IExportMethod');
+const {default: RequestSource} = goog.requireType('os.source.Request');
 
 
 /**
@@ -36,7 +37,7 @@ const RequestSource = goog.requireType('os.source.Request');
  * @implements {IUrlDescriptor}
  * @implements {IReimport}
  */
-class FileDescriptor extends LayerSyncDescriptor {
+export default class FileDescriptor extends LayerSyncDescriptor {
   /**
    * Constructor.
    */
@@ -485,6 +486,7 @@ class FileDescriptor extends LayerSyncDescriptor {
     descriptor.updateFromConfig(config);
   }
 }
+
 osImplements(FileDescriptor, IMappingDescriptor.ID);
 osImplements(FileDescriptor, 'os.data.IReimport');
 osImplements(FileDescriptor, IUrlDescriptor.ID);
@@ -494,6 +496,3 @@ osImplements(FileDescriptor, IUrlDescriptor.ID);
  * @type {goog.log.Logger}
  */
 const logger = log.getLogger('os.data.FileDescriptor');
-
-
-exports = FileDescriptor;

@@ -4,7 +4,7 @@ import '../util/validationmessage.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 
-const ISource = goog.requireType('os.source.ISource');
+const {default: ISource} = goog.requireType('os.source.ISource');
 
 
 /**

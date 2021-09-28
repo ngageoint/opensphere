@@ -2,7 +2,7 @@ goog.require('os.data.ColumnDefinition');
 goog.require('os.ui.slick.column');
 
 describe('os.ui.slick.column', function() {
-  const ColumnDefinition = goog.module.get('os.data.ColumnDefinition');
+  const {default: ColumnDefinition} = goog.module.get('os.data.ColumnDefinition');
   const column = goog.module.get('os.ui.slick.column');
 
   it('should properly enable/disable the remove action', function() {

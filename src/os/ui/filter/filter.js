@@ -1,5 +1,10 @@
 goog.declareModuleId('os.ui.filter');
 
+import DataManager from '../../data/datamanager.js';
+import FilterEntry from '../../filter/filterentry.js';
+import IFilterable from '../../filter/ifilterable.js';
+import osImplements from '../../implements.js';
+import {getFilterManager} from '../../query/queryinstance.js';
 import Between from './op/betweenop.js';
 import EqualTo from './op/equaltoop.js';
 import GreaterThan from './op/greaterthanop.js';
@@ -27,11 +32,6 @@ const {getFirstElementChild, setTextContent} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');
 const {contains, isEmptyOrWhitespace, stripQuotes} = goog.require('goog.string');
 const {getAllTextContent} = goog.require('ol.xml');
-const DataManager = goog.require('os.data.DataManager');
-const FilterEntry = goog.require('os.filter.FilterEntry');
-const IFilterable = goog.require('os.filter.IFilterable');
-const osImplements = goog.require('os.implements');
-const {getFilterManager} = goog.require('os.query.instance');
 
 const {default: Op} = goog.requireType('os.ui.filter.op.Op');
 

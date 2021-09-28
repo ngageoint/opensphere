@@ -1,6 +1,6 @@
-goog.module('os.config.SettingsInitializerManager');
+goog.declareModuleId('os.config.SettingsInitializerManager');
 
-const SettingsInitializer = goog.require('os.config.SettingsInitializer');
+import SettingsInitializer from './settingsinitializer.js';
 
 const {default: AngularAppSettingsInitializer} = goog.requireType('os.ui.config.AngularAppSettingsInitializer');
 
@@ -8,7 +8,7 @@ const {default: AngularAppSettingsInitializer} = goog.requireType('os.ui.config.
 /**
  * Initialize settings for OpenSphere.
  */
-class SettingsInitializerManager {
+export default class SettingsInitializerManager {
   /**
    * Constructor.
    */
@@ -62,5 +62,3 @@ class SettingsInitializerManager {
  * @type {SettingsInitializerManager|undefined}
  */
 let instance;
-
-exports = SettingsInitializerManager;

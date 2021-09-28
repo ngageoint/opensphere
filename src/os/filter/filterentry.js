@@ -1,15 +1,16 @@
-goog.module('os.filter.FilterEntry');
+goog.declareModuleId('os.filter.FilterEntry');
+
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import registerClass from '../registerclass.js';
+import PropertyChange from '../ui/filter/propertychange.js';
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');
 const EventTarget = goog.require('goog.events.EventTarget');
 const {getRandomString} = goog.require('goog.string');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const registerClass = goog.require('os.registerClass');
-const {default: PropertyChange} = goog.require('os.ui.filter.PropertyChange');
 
-const IPersistable = goog.requireType('os.IPersistable');
-const IFilterEntry = goog.requireType('os.filter.IFilterEntry');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
+const {default: IFilterEntry} = goog.requireType('os.filter.IFilterEntry');
 
 
 /**
@@ -17,7 +18,7 @@ const IFilterEntry = goog.requireType('os.filter.IFilterEntry');
  * @implements {IFilterEntry}
  * @unrestricted
  */
-class FilterEntry extends EventTarget {
+export default class FilterEntry extends EventTarget {
   /**
    * Constructor.
    */
@@ -400,6 +401,3 @@ class FilterEntry extends EventTarget {
  */
 FilterEntry.NAME = 'os.filter.FilterEntry';
 registerClass(FilterEntry.NAME, FilterEntry);
-
-
-exports = FilterEntry;

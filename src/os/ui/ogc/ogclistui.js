@@ -1,14 +1,14 @@
 goog.declareModuleId('os.ui.ogc.OGCListUI');
 
+import Settings from '../../config/settings.js';
+import * as registry from '../../ogc/registry.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import {apply} from '../ui.js';
-const Settings = goog.require('os.config.Settings');
-const registry = goog.require('os.ogc.registry');
 
 const GoogPromise = goog.requireType('goog.Promise');
 const Feature = goog.requireType('ol.Feature');
-const OGCService = goog.requireType('os.ogc.OGCService');
+const {default: OGCService} = goog.requireType('os.ogc.OGCService');
 
 
 /**

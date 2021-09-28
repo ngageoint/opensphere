@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.cesium.command.FlyToSphere');
 
+import AbstractSyncCommand from '../../../os/command/abstractsynccommand.js';
+import FlyToExtent from '../../../os/command/flytoextentcmd.js';
+import State from '../../../os/command/state.js';
 import {MAX_AUTO_ZOOM, PROJECTION, zoomToResolution} from '../../../os/map/map.js';
 
-const MapContainer = goog.require('os.MapContainer');
-const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
-const FlyToExtent = goog.require('os.command.FlyToExtent');
-const State = goog.require('os.command.State');
+import MapContainer from '../../../os/mapcontainer.js';
 
 const {default: Camera} = goog.requireType('plugin.cesium.Camera');
 

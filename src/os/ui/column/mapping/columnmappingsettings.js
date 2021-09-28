@@ -1,11 +1,10 @@
 goog.declareModuleId('os.ui.column.mapping.ColumnMappingSettings');
 
+import {TYPE} from '../../../file/mime/columnmapping.js';
 import SettingPlugin from '../../config/settingplugin.js';
 import ImportManager from '../../im/importmanager.js';
 import ColumnMappingImportUI from './columnmappingimportui.js';
 import {directiveTag as settingsUi} from './columnmappingsettingsui.js';
-
-const {TYPE} = goog.require('os.file.mime.columnmapping');
 
 
 /**

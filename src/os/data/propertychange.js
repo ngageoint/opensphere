@@ -1,8 +1,10 @@
-goog.module('os.data.PropertyChange');
+goog.declareModuleId('os.data.PropertyChange');
 
 /**
  * @enum {string}
  */
-exports = {
+const PropertyChange = {
   TIME_FILTER_ENABLED: 'timeFilterEnabled'
 };
+
+export default PropertyChange;

@@ -1,6 +1,12 @@
 goog.declareModuleId('os.ui.im.action.FilterActionExportUI');
 
+import AlertEventSeverity from '../../../alert/alerteventseverity.js';
+import AlertManager from '../../../alert/alertmanager.js';
+import {saveFile} from '../../../file/persist/persist.js';
+import {testFilterActionEnabled} from '../../../im/action/importaction.js';
+import ImportActionManager from '../../../im/action/importactionmanager.js';
 import {ROOT} from '../../../os.js';
+import {createElementNS, serialize} from '../../../xml.js';
 import Module from '../../module.js';
 import {close, create} from '../../window.js';
 import WindowEventType from '../../windoweventtype.js';
@@ -8,14 +14,8 @@ import {exportEntries} from './filteraction.js';
 import FilterActionExportType from './filteractionexporttype.js';
 
 const Disposable = goog.require('goog.Disposable');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {saveFile} = goog.require('os.file.persist');
-const {testFilterActionEnabled} = goog.require('os.im.action');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const {createElementNS, serialize} = goog.require('os.xml');
 
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
 
 
 /**

@@ -2,7 +2,7 @@ goog.require('os.net.CertNazi');
 
 
 describe('os.net.CertNazi', function() {
-  const CertNazi = goog.module.get('os.net.CertNazi');
+  const {default: CertNazi} = goog.module.get('os.net.CertNazi');
 
   it('should blow up if you try to set http urls', function() {
     var urls = [

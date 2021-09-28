@@ -1,15 +1,16 @@
-goog.module('os.state.v4.BaseViewState');
+goog.declareModuleId('os.state.v4.BaseViewState');
+
+import {KMLNS, XMLNS, appendElement, appendElementNS} from '../../xml.js';
+import XMLState from '../xmlstate.js';
+import ViewProjection from './viewprojection.js';
+import ViewTag from './viewtag.js';
 
 const {setAttributeNS} = goog.require('ol.xml');
-const XMLState = goog.require('os.state.XMLState');
-const ViewProjection = goog.require('os.state.v4.ViewProjection');
-const ViewTag = goog.require('os.state.v4.ViewTag');
-const {KMLNS, XMLNS, appendElement, appendElementNS} = goog.require('os.xml');
 
 
 /**
  */
-class BaseViewState extends XMLState {
+export default class BaseViewState extends XMLState {
   /**
    * Constructor.
    */
@@ -104,5 +105,3 @@ class BaseViewState extends XMLState {
     }
   }
 }
-
-exports = BaseViewState;

@@ -1,7 +1,7 @@
 /**
  * Namespace for color utilities.
  */
-goog.module('os.color');
+goog.declareModuleId('os.color');
 
 goog.require('goog.array');
 goog.require('goog.color');
@@ -17,35 +17,31 @@ goog.require('goog.math.Matrix');
  *   ratio: number
  * }}
  */
-let GradientColor;
-
+export let GradientColor;
 
 /**
  * Regular expression to detect hex color strings. Supports arbitrary whitespace before/after the string, but not in
  * the middle of the string.
  * @type {RegExp}
  */
-const HEX_REGEX = /^\s*(0x|#)?[0-9a-f]{2,6}\s*$/i;
-
+export const HEX_REGEX = /^\s*(0x|#)?[0-9a-f]{2,6}\s*$/i;
 
 /**
  * Regular expression to detect RGBA color strings. Supports arbitrary whitespace between parts and decimal opacity.
  * @type {RegExp}
  */
-const RGBA_REGEX = /rgba\s*\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*(,\s*\d?(\.\d+)?)?\s*\)/i;
-
+export const RGBA_REGEX = /rgba\s*\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*(,\s*\d?(\.\d+)?)?\s*\)/i;
 
 /**
  * Regex for capturing the components of an rgb/rgba color string.
  * @type {RegExp}
  */
-const RGBA_MATCH_REGEX = /\s*rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*(\d?(\.\d+)?)\s*)?\)/i;
-
+export const RGBA_MATCH_REGEX = /\s*rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*(\d?(\.\d+)?)\s*)?\)/i;
 
 /**
  * @type {Array<GradientColor>}
  */
-const COLOR_WHEEL = [
+export const COLOR_WHEEL = [
   {
     alpha: 1.0,
     color: [255, 0, 255],
@@ -73,11 +69,10 @@ const COLOR_WHEEL = [
   }
 ];
 
-
 /**
  * @type {Array<GradientColor>}
  */
-const DEFAULT_GRADIENT = [
+export const DEFAULT_GRADIENT = [
   {
     alpha: 1.0,
     color: [255, 136, 0], // orange 000000 FFCC00
@@ -109,12 +104,11 @@ const DEFAULT_GRADIENT = [
   }
 ];
 
-
 /**
  * If you need to change the gradient, change the hex array as well
  * @type {Array<!GradientColor>}
  */
-const HEATMAP_GRADIENT = [
+export const HEATMAP_GRADIENT = [
   {
     alpha: 1.0,
     color: [0, 0, 255],
@@ -138,18 +132,16 @@ const HEATMAP_GRADIENT = [
   }
 ];
 
-
 /**
  * If you need to change the gradient, change the above map as well
  * @type {Array<string>}
  */
-const HEATMAP_GRADIENT_HEX = ['#0000ff', '#00ffff', '#00ff00', '#ffff00', '#ff0000'];
-
+export const HEATMAP_GRADIENT_HEX = ['#0000ff', '#00ffff', '#00ff00', '#ffff00', '#ff0000'];
 
 /**
  * @type {Array<string>}
  */
-const THERMAL_HEATMAP_GRADIENT = ['#00000000', '#0a000066', '#140d0073', '#1e110077', '#28190073', '#331e0578',
+export const THERMAL_HEATMAP_GRADIENT = ['#00000000', '#0a000066', '#140d0073', '#1e110077', '#28190073', '#331e0578',
   '#3d1d0479', '#4724047a', '#5126037b', '#5b2a037e', '#662d057f', '#7032057f', '#7a340482', '#84380685', '#8e3b0586',
   '#993f0587', '#a3420589', '#ad45068c', '#b74a068c', '#c14d058f', '#cc500591', '#d6530693', '#e0560694', '#ea5a0595',
   '#f45d0597', '#ff62079a', '#ff640699', '#ff660699', '#ff680699', '#ff6a0699', '#ff6d0599', '#ff6f0599', '#ff710599',
@@ -179,11 +171,10 @@ const THERMAL_HEATMAP_GRADIENT = ['#00000000', '#0a000066', '#140d0073', '#1e110
   '#fffef4cc', '#fffef5d1', '#fffef6d6', '#fffef7db', '#fffef8e0', '#fffef9e5', '#fffefaea', '#fffefbef', '#fffefcf4',
   '#fffefdf9', '#ffffffff'];
 
-
 /**
  * @type {Array<string>}
  */
-const THERMAL_HEATMAP_GRADIENT_HEX = ['#000000', '#000066', '#0d0073', '#110077', '#190073', '#1e0578',
+export const THERMAL_HEATMAP_GRADIENT_HEX = ['#000000', '#000066', '#0d0073', '#110077', '#190073', '#1e0578',
   '#1d0479', '#24047a', '#26037b', '#2a037e', '#2d057f', '#32057f', '#340482', '#380685', '#3b0586',
   '#3f0587', '#420589', '#45068c', '#4a068c', '#4d058f', '#500591', '#530693', '#560694', '#5a0595',
   '#5d0597', '#62079a', '#640699', '#660699', '#680699', '#6a0699', '#6d0599', '#6f0599', '#710599',
@@ -213,11 +204,10 @@ const THERMAL_HEATMAP_GRADIENT_HEX = ['#000000', '#000066', '#0d0073', '#110077'
   '#fef4cc', '#fef5d1', '#fef6d6', '#fef7db', '#fef8e0', '#fef9e5', '#fefaea', '#fefbef', '#fefcf4',
   '#fefdf9', '#ffffff'];
 
-
 /**
  * @type {Array<string>}
  */
-const RAINBOW_HEATMAP_GRADIENT = ['#00000000', '#0a0000ff', '#140000ff', '#1e0000f6', '#280000f9', '#330000f5',
+export const RAINBOW_HEATMAP_GRADIENT = ['#00000000', '#0a0000ff', '#140000ff', '#1e0000f6', '#280000f9', '#330000f5',
   '#3d0000f7', '#470000f8', '#510000f5', '#5b0000f6', '#660000f5', '#700000f6', '#7a0000f7', '#840000f5', '#8e0000f6',
   '#990000f5', '#a30000f5', '#ad0000f6', '#b70000f5', '#c10000f6', '#cc0000f5', '#d60000f5', '#e00000f6', '#ea0000f4',
   '#f40000f5', '#ff0000f6', '#ff0006f6', '#ff000cf6', '#ff0013f6', '#ff0019f6', '#ff0020f6', '#ff0026f6', '#ff002cf6',
@@ -247,11 +237,10 @@ const RAINBOW_HEATMAP_GRADIENT = ['#00000000', '#0a0000ff', '#140000ff', '#1e000
   '#ffffcccc', '#ffffd1d1', '#ffffd6d6', '#ffffdbdb', '#ffffe0e0', '#ffffe5e5', '#ffffeaea', '#ffffefef', '#fffff4f4',
   '#fffff9f9', '#ffffffff'];
 
-
 /**
  * @type {Array<string>}
  */
-const RAINBOW_HEATMAP_GRADIENT_HEX = ['#000000', '#0000ff', '#0000ff', '#0000f6', '#0000f9', '#0000f5',
+export const RAINBOW_HEATMAP_GRADIENT_HEX = ['#000000', '#0000ff', '#0000ff', '#0000f6', '#0000f9', '#0000f5',
   '#0000f7', '#0000f8', '#0000f5', '#0000f6', '#0000f5', '#0000f6', '#0000f7', '#0000f5', '#0000f6',
   '#0000f5', '#0000f5', '#0000f6', '#0000f5', '#0000f6', '#0000f5', '#0000f5', '#0000f6', '#0000f4',
   '#0000f5', '#0000f6', '#0006f6', '#000cf6', '#0013f6', '#0019f6', '#0020f6', '#0026f6', '#002cf6',
@@ -281,35 +270,32 @@ const RAINBOW_HEATMAP_GRADIENT_HEX = ['#000000', '#0000ff', '#0000ff', '#0000f6'
   '#ffcccc', '#ffd1d1', '#ffd6d6', '#ffdbdb', '#ffe0e0', '#ffe5e5', '#ffeaea', '#ffefef', '#fff4f4',
   '#fff9f9', '#ffffff'];
 
-
 /**
  * Matrix for converting RGB to YIQ.
  * @type {!goog.math.Matrix}
  */
-const RGB_TO_YIQ = new goog.math.Matrix([
+export const RGB_TO_YIQ = new goog.math.Matrix([
   [0.299, 0.587, 0.114],
   [0.595716, -0.274453, -0.321263],
   [0.211456, -0.522591, 0.311135]
 ]);
 
-
 /**
  * Matrix for converting YIQ to RGB
  * @type {!goog.math.Matrix}
  */
-const YIQ_TO_RGB = new goog.math.Matrix([
+export const YIQ_TO_RGB = new goog.math.Matrix([
   [1.0, 0.9563, 0.6210],
   [1.0, -0.2721, -0.6474],
   [1.0, -1.107, 1.7046]
 ]);
-
 
 /**
  * @param {number} ratio
  * @param {Array<GradientColor>=} opt_gradient
  * @return {goog.color.Rgb}
  */
-const getGradientColor = function(ratio, opt_gradient) {
+export const getGradientColor = function(ratio, opt_gradient) {
   const gradient = opt_gradient || DEFAULT_GRADIENT;
 
   // if the ratio is outside the bounds of the gradient, return the boundary color.
@@ -350,7 +336,6 @@ const getGradientColor = function(ratio, opt_gradient) {
   return [0, 0, 0];
 };
 
-
 /**
  * Creates a uniform hue gradient across the HSL spectrum.
  *
@@ -360,7 +345,7 @@ const getGradientColor = function(ratio, opt_gradient) {
  * @param {boolean=} opt_distinct If true, makes adjustments to the gradient colors to try making them more distinct.
  * @return {!Array<string>} An array of colors as hex strings.
  */
-const getHslGradient = function(size, opt_min, opt_max, opt_distinct) {
+export const getHslGradient = function(size, opt_min, opt_max, opt_distinct) {
   const gradient = [];
   const min = opt_min !== undefined ? goog.math.clamp(opt_min, 0, 360) : 0;
   const max = opt_max !== undefined ? goog.math.clamp(opt_max, min, 360) : 360;
@@ -390,20 +375,18 @@ const getHslGradient = function(size, opt_min, opt_max, opt_distinct) {
   return gradient;
 };
 
-
 /**
  * @return {goog.color.Rgb}
  */
-const getRandomColor = function() {
+export const getRandomColor = function() {
   return getGradientColor(Math.floor(Math.random() * 255), COLOR_WHEEL);
 };
-
 
 /**
  * @param {boolean=} opt_rgba If the string should be in rgba format, otherwise returns hex.
  * @return {string}
  */
-const getRandomColorString = function(opt_rgba) {
+export const getRandomColorString = function(opt_rgba) {
   const color = getRandomColor();
   if (opt_rgba) {
     return 'rgba(' + color[0] + ',' + color[1] + ',' + color[2] + ',1)';
@@ -412,7 +395,6 @@ const getRandomColorString = function(opt_rgba) {
   return goog.color.rgbArrayToHex(color);
 };
 
-
 /**
  * @param {number} begin
  * @param {number} end
@@ -420,14 +402,13 @@ const getRandomColorString = function(opt_rgba) {
  * @param {number} max
  * @return {number}
  */
-const interpolate = function(begin, end, step, max) {
+export const interpolate = function(begin, end, step, max) {
   if (begin < end) {
     return Math.floor(((end - begin) * (step / max)) + begin);
   } else {
     return Math.floor(((begin - end) * (1 - (step / max))) + end);
   }
 };
-
 
 /**
  * Hex color wrapper for goog.color.darken.
@@ -436,12 +417,11 @@ const interpolate = function(begin, end, step, max) {
  * @param {number} factor
  * @return {string}
  */
-const darken = function(color, factor) {
+export const darken = function(color, factor) {
   const rgb = goog.color.hexToRgb(color);
   const darker = goog.color.darken(rgb, factor);
   return goog.color.rgbArrayToHex(darker);
 };
-
 
 /**
  * Hex color wrapper for goog.color.lighten.
@@ -450,12 +430,11 @@ const darken = function(color, factor) {
  * @param {number} factor
  * @return {string}
  */
-const lighten = function(color, factor) {
+export const lighten = function(color, factor) {
   const rgb = goog.color.hexToRgb(color);
   const lighter = goog.color.lighten(rgb, factor);
   return goog.color.rgbArrayToHex(lighter);
 };
-
 
 /**
  * Gets a color change matrix
@@ -464,7 +443,7 @@ const lighten = function(color, factor) {
  * @param {!goog.color.Rgb} to
  * @return {!Array<number>} The matrix
  */
-const changeColor = function(from, to) {
+export const changeColor = function(from, to) {
   const matrix = [
     0, 0, 0, 0, 0,
     0, 0, 0, 0, 0,
@@ -494,7 +473,6 @@ const changeColor = function(from, to) {
   return matrix;
 };
 
-
 /**
  * Pads a hex color string to the correct number of digits in case it is lacking leading 0's.
  *
@@ -503,7 +481,7 @@ const changeColor = function(from, to) {
  * @param {string=} opt_default The default color ('ffffff' if not provided)
  * @return {string} The padded hex color string
  */
-const padHexColor = function(str, opt_prefix, opt_default) {
+export const padHexColor = function(str, opt_prefix, opt_default) {
   const prefix = opt_prefix || '';
   str = str.trim().replace(/^(0x|#)/, '');
 
@@ -518,17 +496,15 @@ const padHexColor = function(str, opt_prefix, opt_default) {
   return prefix + str;
 };
 
-
 /**
  * Check if a value contains a valid color string.
  *
  * @param {*} value
  * @return {boolean}
  */
-const isColorString = function(value) {
+export const isColorString = function(value) {
   return typeof value == 'string' && HEX_REGEX.test(value) || RGBA_REGEX.test(value);
 };
-
 
 /**
  * Converts all color types to a standard hex string.
@@ -536,10 +512,9 @@ const isColorString = function(value) {
  * @param {Array<number>|string} color
  * @return {string}
  */
-const toHexString = function(color) {
+export const toHexString = function(color) {
   return goog.color.rgbArrayToHex(typeof color === 'string' ? toRgbArray(color) : color);
 };
-
 
 /**
  * Convert a color to the server format. This ensures a consistent format/case for caching purposes.
@@ -547,17 +522,16 @@ const toHexString = function(color) {
  * @param {Array<number>|string} value The color
  * @return {string} A color in the format "0xAABBCC"
  */
-const toServerString = function(value) {
+export const toServerString = function(value) {
   const hexColor = toHexString(value);
   return hexColor.toUpperCase().replace(/^#/, '0x');
 };
-
 
 /**
  * @param {Array<number>|string} color
  * @return {Array<number>}
  */
-const toRgbArray = function(color) {
+export const toRgbArray = function(color) {
   if (typeof color == 'string') {
     let colorStr = /** @type {string} */ (color);
 
@@ -587,7 +561,6 @@ const toRgbArray = function(color) {
   return color;
 };
 
-
 /**
  * Converts passed in hex string colors to HSL to sort them.
  *
@@ -595,7 +568,7 @@ const toRgbArray = function(color) {
  * @param {string} c2
  * @return {number}
  */
-const colorSort = function(c1, c2) {
+export const colorSort = function(c1, c2) {
   const hsl1 = goog.color.hexToHsl(c1);
   const hsl2 = goog.color.hexToHsl(c2);
 
@@ -605,7 +578,6 @@ const colorSort = function(c1, c2) {
   return goog.array.defaultCompare(val2, val1);
 };
 
-
 /**
  * Helper for determining if two color values are equal. Handy if you want to compare an RGB array with a string, or
  * have strings with differing capitalization, etc.
@@ -614,7 +586,7 @@ const colorSort = function(c1, c2) {
  * @param {string|goog.color.Rgb} color2
  * @return {boolean} [description]
  */
-const equals = function(color1, color2) {
+export const equals = function(color1, color2) {
   if (color1 == color2) {
     // skip any further checks, this also handles null/undefined comparisons
     return true;
@@ -631,17 +603,15 @@ const equals = function(color1, color2) {
   return goog.array.equals(color1, color2);
 };
 
-
 /**
  * Normalize an opacity value between 0 and 1 with up to two decimal places.
  *
  * @param {number} opacity The opacity.
  * @return {number} The normalized opacity.
  */
-const normalizeOpacity = function(opacity) {
+export const normalizeOpacity = function(opacity) {
   return Math.round(goog.math.clamp(opacity, 0, 1) * 100) / 100;
 };
-
 
 /**
  * Converts a color in RGB to YIQ.
@@ -651,11 +621,10 @@ const normalizeOpacity = function(opacity) {
  *
  * @return {!Array<number>}
  */
-const rgbToYiq = function(rgb, opt_result) {
+export const rgbToYiq = function(rgb, opt_result) {
   const mat = new goog.math.Matrix([rgb]);
   return RGB_TO_YIQ.multiply(mat).toArray()[0];
 };
-
 
 /**
  * Converts a color in YIQ to RGB.
@@ -665,11 +634,10 @@ const rgbToYiq = function(rgb, opt_result) {
  *
  * @return {!Array<number>}
  */
-const yiqToRgb = function(yiq, opt_result) {
+export const yiqToRgb = function(yiq, opt_result) {
   const mat = new goog.math.Matrix([yiq]);
   return YIQ_TO_RGB.multiply(mat).toArray()[0];
 };
-
 
 /**
  * Converts an integer color representation to a hex string
@@ -677,11 +645,10 @@ const yiqToRgb = function(yiq, opt_result) {
  * @param {number} num The integer color.
  * @return {string} The hex representation.
  */
-const intToHex = function(num) {
+export const intToHex = function(num) {
   num = goog.math.clamp(num | 0, 0, 0xffffff);
   return '#' + ('00000' + (num | 0).toString(16)).substr(-6);
 };
-
 
 /**
  * Transforms the hue of a color in the YIQ color space.
@@ -691,7 +658,7 @@ const intToHex = function(num) {
  *
  * @return {Array<number>} The adjusted color in RGB
  */
-const transformHue = function(rgb, hue) {
+export const transformHue = function(rgb, hue) {
   const yiq = rgbToYiq(rgb);
   hue = Math.atan2(yiq[2], yiq[1]) + goog.math.toRadians(hue);
   const chroma = Math.sqrt(yiq[2] * yiq[2] + yiq[1] * yiq[1]);
@@ -699,7 +666,6 @@ const transformHue = function(rgb, hue) {
   const newYiq = [yiq[0], chroma * Math.cos(hue), chroma * Math.sin(hue)];
   return yiqToRgb(newYiq);
 };
-
 
 /**
  * Calculates the hue offset, in radians, to transform a source color to another color using the YIQ color space.
@@ -710,7 +676,7 @@ const transformHue = function(rgb, hue) {
  *
  * @return {number} The hue offset, in radians
  */
-const calculateHueTransform = function(src, target, opt_normalize) {
+export const calculateHueTransform = function(src, target, opt_normalize) {
   if (opt_normalize) {
     // translating from grayscale won't produce an accurate hue offset because grayscale is really an absence of
     // saturation with varying lightness, not a color. treating grayscale as blue (#0000ff) will mostly resolve this.
@@ -736,7 +702,6 @@ const calculateHueTransform = function(src, target, opt_normalize) {
   return hue2 - hue1;
 };
 
-
 /**
  * Applies a colorize transform to an array of image data. This changes every non-zero channel in the array to the
  * passed in color.
@@ -744,7 +709,7 @@ const calculateHueTransform = function(src, target, opt_normalize) {
  * @param {Uint8ClampedArray} data The image data to colorize
  * @param {string|Array<number>} tgtColor The target color either as an rgba string or array
  */
-const colorize = function(data, tgtColor) {
+export const colorize = function(data, tgtColor) {
   let rgbaColor;
   if (Array.isArray(tgtColor)) {
     rgbaColor = tgtColor;
@@ -768,7 +733,7 @@ const colorize = function(data, tgtColor) {
  * @param {number} contrast The target contrast. The range is 0 to 2.
  * @param {number} saturation The target saturation. The range is 0 to 1.
  */
-const adjustColor = function(data, brightness, contrast, saturation) {
+export const adjustColor = function(data, brightness, contrast, saturation) {
   const intercept = (1 - contrast) / 2;
   const sr = (1 - saturation) * 0.3086;
   const sg = (1 - saturation) * 0.6094;
@@ -820,7 +785,7 @@ const sharpnessMatrix = [
  *
  * @see https://www.html5rocks.com/en/tutorials/canvas/imagefilters/
  */
-const adjustSharpness = function(data, width, height, value) {
+export const adjustSharpness = function(data, width, height, value) {
   const side = Math.round(Math.sqrt(sharpnessMatrix.length));
   const halfSide = Math.floor(side / 2);
   const adjacentPx = sharpnessMatrix[halfSide];
@@ -880,7 +845,6 @@ const adjustSharpness = function(data, width, height, value) {
   }
 };
 
-
 /**
  * Applies a color transform to an array of image data. This transform takes a source and target color and blends
  * the alpha using a color transform matrix to produce a more natural version of the target color.
@@ -889,7 +853,7 @@ const adjustSharpness = function(data, width, height, value) {
  * @param {string|Array<number>} srcColor The source color either as an rgba string or array
  * @param {string|Array<number>} tgtColor The target color either as an rgba string or array
  */
-const transformColor = function(data, srcColor, tgtColor) {
+export const transformColor = function(data, srcColor, tgtColor) {
   let srcRgb;
   let tgtRgb;
 
@@ -940,46 +904,4 @@ const transformColor = function(data, srcColor, tgtColor) {
       data[i + 2] = r * m[10] + g * m[11] + b * m[12] + a * m[13] + m[14];
     }
   }
-};
-
-exports = {
-  GradientColor,
-  COLOR_WHEEL,
-  DEFAULT_GRADIENT,
-  HEATMAP_GRADIENT,
-  HEATMAP_GRADIENT_HEX,
-  HEX_REGEX,
-  RAINBOW_HEATMAP_GRADIENT,
-  RAINBOW_HEATMAP_GRADIENT_HEX,
-  RGBA_MATCH_REGEX,
-  RGBA_REGEX,
-  RGB_TO_YIQ,
-  THERMAL_HEATMAP_GRADIENT,
-  THERMAL_HEATMAP_GRADIENT_HEX,
-  YIQ_TO_RGB,
-  adjustColor,
-  adjustSharpness,
-  calculateHueTransform,
-  changeColor,
-  colorSort,
-  colorize,
-  darken,
-  equals,
-  getGradientColor,
-  getHslGradient,
-  getRandomColor,
-  getRandomColorString,
-  intToHex,
-  interpolate,
-  isColorString,
-  lighten,
-  normalizeOpacity,
-  padHexColor,
-  rgbToYiq,
-  toHexString,
-  toRgbArray,
-  toServerString,
-  transformColor,
-  transformHue,
-  yiqToRgb
 };

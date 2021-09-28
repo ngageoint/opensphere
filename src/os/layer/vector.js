@@ -1,4 +1,52 @@
-goog.module('os.layer.Vector');
+goog.declareModuleId('os.layer.Vector');
+
+import ActionEventType from '../action/eventtype.js';
+import {toRgbArray} from '../color.js';
+import DataManager from '../data/datamanager.js';
+import IMappingDescriptor from '../data/imappingdescriptor.js';
+import * as dispatcher from '../dispatcher.js';
+import LayerEvent from '../events/layerevent.js';
+import LayerEventType from '../events/layereventtype.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import {getTitle} from '../feature/feature.js';
+import IFilterable from '../filter/ifilterable.js';
+import IGroupable from '../igroupable.js';
+import ImportActionManager from '../im/action/importactionmanager.js';
+import osImplements from '../implements.js';
+import ILegendRenderer from '../legend/ilegendrenderer.js';
+import {drawVectorLayer} from '../legend/legend.js';
+import MapChange from '../map/mapchange.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {paramsToQueryData} from '../net/net.js';
+import {getQueryManager} from '../query/queryinstance.js';
+import registerClass from '../registerclass.js';
+import ISource from '../source/isource.js';
+import SourcePropertyChange from '../source/propertychange.js';
+import {identifySource} from '../source/source.js';
+import VectorSource from '../source/vectorsource.js';
+import {isStateFile} from '../state/state.js';
+import {DEFAULT_SIZE, cloneConfig, updateShown} from '../style/label.js';
+import * as osStyle from '../style/style.js';
+import StyleField from '../style/stylefield.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import TimeInstant from '../time/timeinstant.js';
+import TimelineController from '../time/timelinecontroller.js';
+import launchMultiFeatureInfo from '../ui/feature/launchmultifeatureinfo.js';
+import {FILTER_KEY_DELIMITER} from '../ui/filter/filter.js';
+import Icons from '../ui/icons.js';
+import {createIconSet} from '../ui/icons/index.js';
+import IconsSVG from '../ui/iconssvg.js';
+import {directiveTag as layerUi} from '../ui/layer/vectorlayerui.js';
+import {directiveTag as nodeUi} from '../ui/node/defaultlayernodeui.js';
+import {launchRenameDialog} from '../ui/renamelayer.js';
+import * as TimelineUI from '../ui/timeline/timelineui.js';
+import ExplicitLayerType from './explicitlayertype.js';
+import ILayer from './ilayer.js';
+import {identifyLayer} from './layer.js';
+import LayerClass from './layerclass.js';
+import LayerType from './layertype.js';
+import PropertyChange from './propertychange.js';
+import SynchronizerType from './synchronizertype.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');
@@ -7,56 +55,8 @@ const events = goog.require('ol.events');
 const Property = goog.require('ol.layer.Property');
 const OLVectorLayer = goog.require('ol.layer.Vector');
 
-const dispatcher = goog.require('os.Dispatcher');
-const IGroupable = goog.require('os.IGroupable');
-const MapChange = goog.require('os.MapChange');
-const ActionEventType = goog.require('os.action.EventType');
-const {toRgbArray} = goog.require('os.color');
-const DataManager = goog.require('os.data.DataManager');
-const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
-const LayerEvent = goog.require('os.events.LayerEvent');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {getTitle} = goog.require('os.feature');
-const IFilterable = goog.require('os.filter.IFilterable');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const osImplements = goog.require('os.implements');
-const {identifyLayer} = goog.require('os.layer');
-const ExplicitLayerType = goog.require('os.layer.ExplicitLayerType');
-const ILayer = goog.require('os.layer.ILayer');
-const LayerClass = goog.require('os.layer.LayerClass');
-const LayerType = goog.require('os.layer.LayerType');
-const PropertyChange = goog.require('os.layer.PropertyChange');
-const SynchronizerType = goog.require('os.layer.SynchronizerType');
-const {drawVectorLayer} = goog.require('os.legend');
-const ILegendRenderer = goog.require('os.legend.ILegendRenderer');
-const {getMapContainer} = goog.require('os.map.instance');
-const {paramsToQueryData} = goog.require('os.net');
-const {getQueryManager} = goog.require('os.query.instance');
-const registerClass = goog.require('os.registerClass');
-const {identifySource} = goog.require('os.source');
-const ISource = goog.require('os.source.ISource');
-const SourcePropertyChange = goog.require('os.source.PropertyChange');
-const VectorSource = goog.require('os.source.Vector');
-const {isStateFile} = goog.require('os.state');
-const osStyle = goog.require('os.style');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
-const {DEFAULT_SIZE, cloneConfig, updateShown} = goog.require('os.style.label');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const TimelineController = goog.require('os.time.TimelineController');
-const {default: Icons} = goog.require('os.ui.Icons');
-const {default: IconsSVG} = goog.require('os.ui.IconsSVG');
-const {default: launchMultiFeatureInfo} = goog.require('os.ui.feature.launchMultiFeatureInfo');
-const {FILTER_KEY_DELIMITER} = goog.require('os.ui.filter');
-const {createIconSet} = goog.require('os.ui.icons');
-const {directiveTag: layerUi} = goog.require('os.ui.layer.VectorLayerUI');
-const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
-const {launchRenameDialog} = goog.require('os.ui.renamelayer');
-const TimelineUI = goog.require('os.ui.timeline.TimelineUI');
-
 const Feature = goog.requireType('ol.Feature');
-const IPersistable = goog.requireType('os.IPersistable');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
 const filter = goog.requireType('os.filter');
 
 
@@ -66,7 +66,7 @@ const filter = goog.requireType('os.filter');
  * @implements {IFilterable}
  * @implements {ILegendRenderer}
  */
-class Vector extends OLVectorLayer {
+export default class Vector extends OLVectorLayer {
   /**
    * Constructor.
    * @param {olx.layer.VectorOptions} options Vector layer options
@@ -1339,6 +1339,7 @@ class Vector extends OLVectorLayer {
     }
   }
 }
+
 osImplements(Vector, ILayer.ID);
 osImplements(Vector, IGroupable.ID);
 osImplements(Vector, IFilterable.ID);
@@ -1351,5 +1352,3 @@ osImplements(Vector, ILegendRenderer.ID);
  */
 Vector.NAME = LayerClass.VECTOR;
 registerClass(LayerClass.VECTOR, Vector);
-
-exports = Vector;

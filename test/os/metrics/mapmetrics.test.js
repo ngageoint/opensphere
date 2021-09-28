@@ -2,7 +2,7 @@ goog.require('os.metrics.MapMetrics');
 goog.require('os.metrics.Metrics');
 
 describe('os.metrics.MapMetrics', function() {
-  const MapMetrics = goog.module.get('os.metrics.MapMetrics');
+  const {default: MapMetrics} = goog.module.get('os.metrics.MapMetrics');
 
   it('should have map metrics', function() {
     var target = new MapMetrics();

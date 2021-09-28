@@ -2,11 +2,11 @@ goog.declareModuleId('os.ui.datetime.DateCustomUI');
 
 import './wheeldate.js';
 import {ROOT} from '../../os.js';
+import Duration from '../../time/duration.js';
+import * as time from '../../time/time.js';
 import Module from '../module.js';
 
 const Disposable = goog.require('goog.Disposable');
-const time = goog.require('os.time');
-const Duration = goog.require('os.time.Duration');
 
 
 /**

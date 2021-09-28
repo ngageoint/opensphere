@@ -1,10 +1,10 @@
-goog.module('os.time.TimelineActionEventType');
+goog.declareModuleId('os.time.TimelineActionEventType');
 
 /**
  * timeline actions
  * @enum {string}
  */
-exports = {
+const TimelineActionEventType = {
   LOAD: 'timeline.load',
   ADD: 'timeline.add',
   SLICE: 'timeline.slice',
@@ -20,3 +20,5 @@ exports = {
   FEATURE_INFO: 'timeline.featureInfo',
   GO_TO: 'timeline.goTo'
 };
+
+export default TimelineActionEventType;

@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ui.menu.areaImport');
 
+import * as osQuery from '../../query/query.js';
 import Menu from './menu.js';
 import MenuItem from './menuitem.js';
 import MenuItemType from './menuitemtype.js';
 
 const googDispose = goog.require('goog.dispose');
-const osQuery = goog.require('os.query');
 
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 

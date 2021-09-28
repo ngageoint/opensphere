@@ -1,4 +1,4 @@
-goog.module('os.ol.source.VectorTile');
+goog.declareModuleId('os.ol.source.VectorTile');
 
 const OLVectorTileSource = goog.require('ol.source.VectorTile');
 const {expandUrl, createFromTileUrlFunctions} = goog.require('ol.TileUrlFunction');
@@ -9,7 +9,7 @@ const Projection = goog.requireType('ol.proj.Projection');
 /**
  * Layer source for vector tile data.
  */
-class VectorTile extends OLVectorTileSource {
+export default class VectorTile extends OLVectorTileSource {
   /**
    * Constructor.
    * @param {olx.source.VectorTileOptions} options Vector tile options.
@@ -103,5 +103,3 @@ class VectorTile extends OLVectorTileSource {
     return createFromTileUrlFunctions(templates.map(this.createFromTemplate, this));
   }
 }
-
-exports = VectorTile;

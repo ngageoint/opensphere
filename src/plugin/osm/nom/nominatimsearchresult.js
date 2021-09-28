@@ -1,11 +1,10 @@
 goog.declareModuleId('plugin.osm.nom.SearchResult');
 
 import * as style from '../../../os/style/style.js';
+import StyleType from '../../../os/style/styletype.js';
 import CoordinateResult from '../../../os/ui/search/place/coordinateresult.js';
 import {LABEL_FIELD, VECTOR_CONFIG, getSearchScore} from './nominatim.js';
 import {directiveTag as resultCardEl} from './nominatimsearchresultcard.js';
-
-const StyleType = goog.require('os.style.StyleType');
 
 
 /**

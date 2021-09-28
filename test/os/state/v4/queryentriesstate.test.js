@@ -18,11 +18,11 @@ goog.require('os.xml');
 
 
 describe('QueryArea XSD State Test', function() {
-  const QueryManager = goog.module.get('os.query.QueryManager');
-  const BaseStateManager = goog.module.get('os.state.BaseStateManager');
-  const StateManager = goog.module.get('os.state.StateManager');
-  const Versions = goog.module.get('os.state.Versions');
-  const QueryEntries = goog.module.get('os.state.v2.QueryEntries');
+  const {default: QueryManager} = goog.module.get('os.query.QueryManager');
+  const {default: BaseStateManager} = goog.module.get('os.state.BaseStateManager');
+  const {default: StateManager} = goog.module.get('os.state.StateManager');
+  const {default: Versions} = goog.module.get('os.state.Versions');
+  const {default: QueryEntries} = goog.module.get('os.state.v2.QueryEntries');
   const osUiState = goog.module.get('os.ui.state');
   const xml = goog.module.get('os.xml');
 

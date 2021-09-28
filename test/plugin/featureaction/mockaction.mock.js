@@ -1,6 +1,6 @@
 goog.module('plugin.im.action.feature.mock.MockAction');
 
-const AbstractImportAction = goog.require('os.im.action.AbstractImportAction');
+const {default: AbstractImportAction} = goog.require('os.im.action.AbstractImportAction');
 
 const Feature = goog.requireType('ol.Feature');
 

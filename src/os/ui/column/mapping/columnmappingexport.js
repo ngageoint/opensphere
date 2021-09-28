@@ -1,15 +1,15 @@
 goog.declareModuleId('os.ui.column.mapping.ColumnMappingExportUI');
 
+import ColumnMappingTag from '../../../column/columnmappingtag.js';
+import * as columnmapping from '../../../file/mime/columnmapping.js';
+import FilePersistence from '../../../file/persist/filepersistence.js';
 import {ROOT} from '../../../os.js';
 import Module from '../../module.js';
 import {close} from '../../window.js';
 import WindowEventType from '../../windoweventtype.js';
-const ColumnMappingTag = goog.require('os.column.ColumnMappingTag');
-const columnmapping = goog.require('os.file.mime.columnmapping');
-const FilePersistence = goog.require('os.file.persist.FilePersistence');
 
-const IColumnMapping = goog.requireType('os.column.IColumnMapping');
-const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
+const {default: IColumnMapping} = goog.requireType('os.column.IColumnMapping');
+const {default: IPersistenceMethod} = goog.requireType('os.ex.IPersistenceMethod');
 
 
 /**

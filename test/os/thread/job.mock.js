@@ -2,7 +2,7 @@ goog.module('mock.thread.Job');
 
 const Disposable = goog.require('goog.Disposable');
 
-const IThreadJob = goog.requireType('os.thread.IThreadJob');
+const {default: IThreadJob} = goog.requireType('os.thread.IThreadJob');
 
 
 /**

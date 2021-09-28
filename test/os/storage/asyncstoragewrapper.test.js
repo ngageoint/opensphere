@@ -8,10 +8,10 @@ goog.require('os.storage.mock');
 
 describe('os.storage.AsyncStorageWrapper', function() {
   const mechanismfactory = goog.module.get('goog.storage.mechanism.mechanismfactory');
-  const AsyncStorageWrapper = goog.module.get('os.storage.AsyncStorageWrapper');
-  const HTML5LocalStorage = goog.module.get('os.storage.HTML5LocalStorage');
-  const ObjectMechanism = goog.module.get('os.storage.ObjectMechanism');
-  const PrefixedMechanism = goog.module.get('os.storage.PrefixedMechanism');
+  const {default: AsyncStorageWrapper} = goog.module.get('os.storage.AsyncStorageWrapper');
+  const {default: HTML5LocalStorage} = goog.module.get('os.storage.HTML5LocalStorage');
+  const {default: ObjectMechanism} = goog.module.get('os.storage.ObjectMechanism');
+  const {default: PrefixedMechanism} = goog.module.get('os.storage.PrefixedMechanism');
 
   const mock = goog.module.get('os.storage.mock');
 

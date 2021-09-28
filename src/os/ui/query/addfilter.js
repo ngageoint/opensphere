@@ -1,5 +1,7 @@
 goog.declareModuleId('os.ui.query.AddFilterUI');
 
+import BaseFilterManager from '../../filter/basefiltermanager.js';
+import {getQueryManager} from '../../query/queryinstance.js';
 import Menu from '../menu/menu.js';
 import MenuItem from '../menu/menuitem.js';
 import MenuItemType from '../menu/menuitemtype.js';
@@ -9,12 +11,10 @@ const {insert} = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const {caseInsensitiveCompare} = goog.require('goog.string');
-const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
-const {getQueryManager} = goog.require('os.query.instance');
 
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
-const IFilterable = goog.requireType('os.filter.IFilterable');
-const ILayer = goog.requireType('os.layer.ILayer');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
+const {default: IFilterable} = goog.requireType('os.filter.IFilterable');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**

@@ -1,16 +1,16 @@
 goog.declareModuleId('os.ui.node.TileLoadingUI');
 
+import LayerPropertyChange from '../../layer/propertychange.js';
+import PropertyChange from '../../source/propertychange.js';
 import Module from '../module.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {listen, unlisten} = goog.require('ol.events');
 const TileImage = goog.require('ol.source.TileImage');
-const LayerPropertyChange = goog.require('os.layer.PropertyChange');
-const PropertyChange = goog.require('os.source.PropertyChange');
 
 const Layer = goog.requireType('ol.layer.Layer');
-const LayerNode = goog.requireType('os.data.LayerNode');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const {default: LayerNode} = goog.requireType('os.data.LayerNode');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**

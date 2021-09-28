@@ -1,16 +1,17 @@
 goog.declareModuleId('plugin.params');
 
+import osActionEventType from '../../os/action/eventtype.js';
+import * as osFile from '../../os/file/index.js';
+import osImplements from '../../os/implements.js';
+import ILayer from '../../os/layer/ilayer.js';
+import * as osObject from '../../os/object/object.js';
+import IUrlSource from '../../os/ol/source/iurlsource.js';
+import RequestSource from '../../os/source/requestsource.js';
+import * as osUrl from '../../os/url/url.js';
+
 const QueryData = goog.require('goog.Uri.QueryData');
 const {split: splitUrl} = goog.require('goog.uri.utils');
 const ComponentIndex = goog.require('goog.uri.utils.ComponentIndex');
-const osActionEventType = goog.require('os.action.EventType');
-const osFile = goog.require('os.file');
-const osImplements = goog.require('os.implements');
-const ILayer = goog.require('os.layer.ILayer');
-const osObject = goog.require('os.object');
-const IUrlSource = goog.require('os.ol.source.IUrlSource');
-const RequestSource = goog.require('os.source.Request');
-const osUrl = goog.require('os.url');
 
 
 /**

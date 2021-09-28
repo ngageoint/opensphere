@@ -1,7 +1,12 @@
 goog.declareModuleId('os.ui.ol.interaction.DrawPolygon');
 
+import RecordField from '../../../data/recordfield.js';
+import {normalizeGeometryCoordinates} from '../../../geo/geo2.js';
+import {validate} from '../../../geo/jsts.js';
+import * as interpolate from '../../../interpolate.js';
 import * as osMap from '../../../map/map.js';
 import * as os from '../../../os.js';
+import AltitudeMode from '../../../webgl/altitudemode.js';
 import {MODAL_SELECTOR} from '../../ui.js';
 import AbstractDraw from './abstractdrawinteraction.js';
 
@@ -20,11 +25,6 @@ const LineString = goog.require('ol.geom.LineString');
 const Polygon = goog.require('ol.geom.Polygon');
 const OLVectorLayer = goog.require('ol.layer.Vector');
 const OLVectorSource = goog.require('ol.source.Vector');
-const RecordField = goog.require('os.data.RecordField');
-const {validate} = goog.require('os.geo.jsts');
-const {normalizeGeometryCoordinates} = goog.require('os.geo2');
-const interpolate = goog.require('os.interpolate');
-const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
 

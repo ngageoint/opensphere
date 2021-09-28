@@ -1,13 +1,14 @@
 goog.declareModuleId('os.ui.im.ImportManager');
 
+import Importer from '../../im/importer.js';
+
 const {defaultCompare, removeDuplicates} = goog.require('goog.array');
 const log = goog.require('goog.log');
 const {forEach} = goog.require('goog.object');
-const Importer = goog.require('os.im.Importer');
 
 const Logger = goog.requireType('goog.log.Logger');
-const IImporter = goog.requireType('os.im.IImporter');
-const IParser = goog.requireType('os.parse.IParser');
+const {default: IImporter} = goog.requireType('os.im.IImporter');
+const {default: IParser} = goog.requireType('os.parse.IParser');
 const {default: IImportUI} = goog.requireType('os.ui.im.IImportUI');
 
 

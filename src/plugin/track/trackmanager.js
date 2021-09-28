@@ -1,9 +1,25 @@
 goog.declareModuleId('plugin.track.TrackManager');
 
 import './confirmtrack.js';
+import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
+import AlertManager from '../../os/alert/alertmanager.js';
+import * as osColor from '../../os/color.js';
+import RecordField from '../../os/data/recordfield.js';
 import * as osFeature from '../../os/feature/feature.js';
+import Fields from '../../os/fields/fields.js';
+import OsMeasure from '../../os/interaction/measureinteraction.js';
+import * as osInterpolate from '../../os/interpolate.js';
 import * as osMap from '../../os/map/map.js';
+import MapContainer from '../../os/mapcontainer.js';
+import * as osObject from '../../os/object/object.js';
 import * as osStyle from '../../os/style/style.js';
+import StyleField from '../../os/style/stylefield.js';
+import StyleType from '../../os/style/styletype.js';
+import TimeInstant from '../../os/time/timeinstant.js';
+import TimelineController from '../../os/time/timelinecontroller.js';
+import TimeRange from '../../os/time/timerange.js';
+import * as osTrack from '../../os/track/track.js';
+import TrackField from '../../os/track/trackfield.js';
 import * as osWindow from '../../os/ui/window.js';
 import PlacesManager from '../places/placesmanager.js';
 import * as pluginTrack from './track.js';
@@ -20,30 +36,13 @@ const log = goog.require('goog.log');
 const array = goog.require('ol.array');
 const events = goog.require('ol.events');
 const olExtent = goog.require('ol.extent');
-const Fields = goog.require('os.Fields');
-const MapContainer = goog.require('os.MapContainer');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const osColor = goog.require('os.color');
-const RecordField = goog.require('os.data.RecordField');
-const OsMeasure = goog.require('os.interaction.Measure');
-const osInterpolate = goog.require('os.interpolate');
-const osObject = goog.require('os.object');
-const StyleField = goog.require('os.style.StyleField');
-const StyleType = goog.require('os.style.StyleType');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const TimeRange = goog.require('os.time.TimeRange');
-
-const TimelineController = goog.require('os.time.TimelineController');
-const osTrack = goog.require('os.track');
-const TrackField = goog.require('os.track.TrackField');
 
 const Logger = goog.requireType('goog.log.Logger');
 const OlFeature = goog.requireType('ol.Feature');
 const OlMapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
-const OsInterpolateConfig = goog.requireType('os.interpolate.Config');
-const AddOptions = goog.requireType('os.track.AddOptions');
-const CreateOptions = goog.requireType('os.track.CreateOptions');
+const {default: OsInterpolateConfig} = goog.requireType('os.interpolate.Config');
+const {default: AddOptions} = goog.requireType('os.track.AddOptions');
+const {default: CreateOptions} = goog.requireType('os.track.CreateOptions');
 
 
 /**

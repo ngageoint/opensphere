@@ -1,10 +1,9 @@
 goog.declareModuleId('plugin.overview.OverviewPlugin');
 
+import Settings from '../../os/config/settings.js';
+import MapContainer from '../../os/mapcontainer.js';
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
 import OverviewMap from './overviewmapcontrol.js';
-
-const MapContainer = goog.require('os.MapContainer');
-const Settings = goog.require('os.config.Settings');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 
 /**
  * Adds an overview map to the map controls that syncs with the current base maps

@@ -1,12 +1,12 @@
-goog.module('os.config.InterpolationSettings');
+goog.declareModuleId('os.config.InterpolationSettings');
 
-const {directiveTag: settingsUi} = goog.require('os.config.InterpolationSettingsUI');
-const {default: SettingPlugin} = goog.require('os.ui.config.SettingPlugin');
+import SettingPlugin from '../ui/config/settingplugin.js';
+import {directiveTag as settingsUi} from './interpolationsettingsui.js';
 
 
 /**
  */
-class InterpolationSettings extends SettingPlugin {
+export default class InterpolationSettings extends SettingPlugin {
   /**
    * Constructor.
    */
@@ -21,5 +21,3 @@ class InterpolationSettings extends SettingPlugin {
     this.setUI(settingsUi);
   }
 }
-
-exports = InterpolationSettings;

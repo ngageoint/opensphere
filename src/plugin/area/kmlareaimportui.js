@@ -1,13 +1,13 @@
 goog.declareModuleId('plugin.area.KMLAreaImportUI');
 
+import EventType from '../../os/events/eventtype.js';
+import FileParserConfig from '../../os/parse/fileparserconfig.js';
 import FileImportUI from '../../os/ui/im/fileimportui.js';
 import * as osWindow from '../../os/ui/window.js';
 import KMLAreaParser from './kmlareaparser.js';
 import {directiveTag as areaImportUi} from './kmlareaui.js';
 
 const dispose = goog.require('goog.dispose');
-const EventType = goog.require('os.events.EventType');
-const FileParserConfig = goog.require('os.parse.FileParserConfig');
 
 
 /**

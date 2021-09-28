@@ -1,13 +1,14 @@
-goog.module('os.command.FeatureOpacity');
+goog.declareModuleId('os.command.FeatureOpacity');
+
+import * as osColor from '../../color.js';
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
+import * as osStyle from '../../style/style.js';
+import StyleField from '../../style/stylefield.js';
+import ColorChangeType from '../colorchangetype.js';
+import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
 const asserts = goog.require('goog.asserts');
-const osColor = goog.require('os.color');
-const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
-const ColorChangeType = goog.require('os.command.style.ColorChangeType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const osStyle = goog.require('os.style');
-const StyleField = goog.require('os.style.StyleField');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -15,7 +16,7 @@ const Feature = goog.requireType('ol.Feature');
 /**
  * Changes the opacity of a feature
  */
-class FeatureOpacity extends AbstractFeatureStyle {
+export default class FeatureOpacity extends AbstractFeatureStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -189,5 +190,3 @@ class FeatureOpacity extends AbstractFeatureStyle {
     super.finish(configs);
   }
 }
-
-exports = FeatureOpacity;

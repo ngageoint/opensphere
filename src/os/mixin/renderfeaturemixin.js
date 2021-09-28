@@ -1,6 +1,7 @@
-goog.module('os.mixin.renderfeature');
+goog.declareModuleId('os.mixin.renderfeature');
 
 const RenderFeature = goog.require('ol.render.Feature');
+
 
 Object.defineProperties(RenderFeature.prototype, {
   values_: {

@@ -1,15 +1,16 @@
-goog.module('os.layer.LayerGroup');
+goog.declareModuleId('os.layer.LayerGroup');
+
+import {registerClass} from '../classregistry.js';
+import IGroupable from '../igroupable.js';
+import osImplements from '../implements.js';
+import {directiveTag as nodeUi} from '../ui/node/defaultlayernodeui.js';
+import ILayer from './ilayer.js';
+import LayerClass from './layerclass.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const {clamp} = goog.require('goog.math');
 const {getRandomString} = goog.require('goog.string');
 const {remove} = goog.require('ol.array');
-const IGroupable = goog.require('os.IGroupable');
-const {registerClass} = goog.require('os.classRegistry');
-const osImplements = goog.require('os.implements');
-const LayerClass = goog.require('os.layer.LayerClass');
-const ILayer = goog.require('os.layer.ILayer');
-const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
 
 
 /**
@@ -18,7 +19,7 @@ const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
  * @implements {ILayer}
  * @implements {IGroupable}
  */
-class LayerGroup extends EventTarget {
+export default class LayerGroup extends EventTarget {
   /**
    * Constructor.
    */
@@ -663,8 +664,7 @@ class LayerGroup extends EventTarget {
     // intentionally empty
   }
 }
+
 osImplements(LayerGroup, ILayer.ID);
 osImplements(LayerGroup, IGroupable.ID);
 registerClass(LayerClass.GROUP, LayerGroup);
-
-exports = LayerGroup;

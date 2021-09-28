@@ -1,25 +1,26 @@
-goog.module('os.source.Request');
+goog.declareModuleId('os.source.Request');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import {registerClass} from '../classregistry.js';
+import DataEventType from '../data/event/dataeventtype.js';
+import * as dispatcher from '../dispatcher.js';
+import EventType from '../events/eventtype.js';
+import osImplements from '../implements.js';
+import ThreadEventType from '../thread/eventtype.js';
+import {formatDate} from '../time/time.js';
+import IImportSource from './iimportsource.js';
+import SourceClass from './sourceclass.js';
+import VectorSource from './vectorsource.js';
 
 const log = goog.require('goog.log');
 const NetEventType = goog.require('goog.net.EventType');
-const dispatcher = goog.require('os.Dispatcher');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {registerClass} = goog.require('os.classRegistry');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const EventType = goog.require('os.events.EventType');
-const osImplements = goog.require('os.implements');
-const IImportSource = goog.require('os.source.IImportSource');
-const SourceClass = goog.require('os.source.SourceClass');
-const VectorSource = goog.require('os.source.Vector');
-const ThreadEventType = goog.require('os.thread.EventType');
-const {formatDate} = goog.require('os.time');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');
-const IImporter = goog.requireType('os.im.IImporter');
-const NetRequest = goog.requireType('os.net.Request');
+const {default: IImporter} = goog.requireType('os.im.IImporter');
+const {default: NetRequest} = goog.requireType('os.net.Request');
 
 
 /**
@@ -27,7 +28,7 @@ const NetRequest = goog.requireType('os.net.Request');
  *
  * @implements {IImportSource}
  */
-class Request extends VectorSource {
+export default class Request extends VectorSource {
   /**
    * Constructor.
    * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
@@ -392,6 +393,7 @@ class Request extends VectorSource {
     this.useCache_ = value;
   }
 }
+
 osImplements(Request, IImportSource.ID);
 
 /**
@@ -407,5 +409,3 @@ registerClass(SourceClass.REQUEST, Request);
  * @type {Logger}
  */
 const logger = log.getLogger(SourceClass.REQUEST);
-
-exports = Request;

@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.file.AnyTypeImport');
 
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import {isZip} from '../../file/mime/zip.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import * as osWindow from '../window.js';
 import WindowEventType from '../windoweventtype.js';
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {isZip} = goog.require('os.file.mime.zip');
 
 const {default: IImportUI} = goog.requireType('os.ui.im.IImportUI');
 

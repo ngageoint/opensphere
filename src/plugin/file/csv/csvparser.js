@@ -1,17 +1,17 @@
 goog.declareModuleId('plugin.file.csv.CSVParser');
 
+import ColumnDefinition from '../../../os/data/columndefinition.js';
+import RecordField from '../../../os/data/recordfield.js';
 import {isInternalField} from '../../../os/feature/feature.js';
+import LatMapping from '../../../os/im/mapping/latmapping.js';
+import LonMapping from '../../../os/im/mapping/lonmapping.js';
+import PositionMapping from '../../../os/im/mapping/positionmapping.js';
+import WKTMapping from '../../../os/im/mapping/wktmapping.js';
 import AbstractCsvParser from '../../../os/ui/file/csv/abstractcsvparser.js';
 
 const googString = goog.require('goog.string');
 const ol = goog.require('ol');
 const Feature = goog.require('ol.Feature');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const RecordField = goog.require('os.data.RecordField');
-const LatMapping = goog.require('os.im.mapping.LatMapping');
-const LonMapping = goog.require('os.im.mapping.LonMapping');
-const PositionMapping = goog.require('os.im.mapping.PositionMapping');
-const WKTMapping = goog.require('os.im.mapping.WKTMapping');
 
 const {default: CSVParserConfig} = goog.requireType('plugin.file.csv.CSVParserConfig');
 

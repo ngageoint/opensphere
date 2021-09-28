@@ -1,13 +1,14 @@
-goog.module('os.thread.ThreadProgressEvent');
+goog.declareModuleId('os.thread.ThreadProgressEvent');
+
+import EventType from './eventtype.js';
 
 const GoogEvent = goog.require('goog.events.Event');
-const EventType = goog.require('os.thread.EventType');
 
 
 /**
  * A thread event
  */
-class ThreadProgressEvent extends GoogEvent {
+export default class ThreadProgressEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {number} loaded
@@ -43,5 +44,3 @@ class ThreadProgressEvent extends GoogEvent {
     return this.total_;
   }
 }
-
-exports = ThreadProgressEvent;

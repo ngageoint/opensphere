@@ -1,9 +1,8 @@
 goog.declareModuleId('os.ui.geo.GeoUI');
 
+import {parseLatLon} from '../../geo/geo.js';
 import Module from '../module.js';
 import mgrs from './mgrs.js';
-
-const {parseLatLon} = goog.require('os.geo');
 
 
 /**

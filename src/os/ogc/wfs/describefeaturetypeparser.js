@@ -1,9 +1,10 @@
-goog.module('os.ogc.wfs.DescribeFeatureTypeParser');
+goog.declareModuleId('os.ogc.wfs.DescribeFeatureTypeParser');
+
+import FeatureType from './featuretype.js';
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const NodeType = goog.require('goog.dom.NodeType');
 const {loadXml} = goog.require('goog.dom.xml');
-const FeatureType = goog.require('os.ogc.wfs.FeatureType');
 
 
 /**
@@ -13,7 +14,7 @@ let DescribeFeatureType;
 
 /**
  */
-class DescribeFeatureTypeParser {
+export default class DescribeFeatureTypeParser {
   /**
    * Constructor.
    */
@@ -188,5 +189,3 @@ const typeTests = {
   'integer': /^(int|long)$/i,
   'string': /^bool(ean)?$/i
 };
-
-exports = DescribeFeatureTypeParser;

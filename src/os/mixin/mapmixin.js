@@ -1,7 +1,7 @@
 /**
  * @fileoverview Modifications to {@link PluggableMap}.
  */
-goog.module('os.mixin.map');
+goog.declareModuleId('os.mixin.map');
 
 const {getUid} = goog.require('ol');
 const PluggableMap = goog.require('ol.PluggableMap');

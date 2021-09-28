@@ -1,11 +1,11 @@
-goog.module('os.ogc.filter.OGCFilterOverride');
+goog.declareModuleId('os.ogc.filter.OGCFilterOverride');
 
-const AbstractModifier = goog.require('os.net.AbstractModifier');
-const OGCFilterModifier = goog.require('os.ogc.filter.OGCFilterModifier');
-const {format} = goog.require('os.time');
+import AbstractModifier from '../../net/abstractmodifier.js';
+import {format} from '../../time/time.js';
+import OGCFilterModifier from './ogcfiltermodifier.js';
 
-const IModifier = goog.requireType('os.net.IModifier');
-const TimeRange = goog.requireType('os.time.TimeRange');
+const {default: IModifier} = goog.requireType('os.net.IModifier');
+const {default: TimeRange} = goog.requireType('os.time.TimeRange');
 
 
 /**
@@ -13,7 +13,7 @@ const TimeRange = goog.requireType('os.time.TimeRange');
  *
  * @implements {IModifier}
  */
-class OGCFilterOverride extends AbstractModifier {
+export default class OGCFilterOverride extends AbstractModifier {
   /**
    * Constructor.
    * @param {(Object<string, !Array<string>>|string)} filter Filter string, or a map of data fields/values to match
@@ -135,5 +135,3 @@ class OGCFilterOverride extends AbstractModifier {
  * @const
  */
 OGCFilterOverride.ID = 'OGCFilterOverride';
-
-exports = OGCFilterOverride;

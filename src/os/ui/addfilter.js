@@ -1,10 +1,9 @@
 goog.declareModuleId('os.ui.AddFilterUI');
 
+import LayerEventType from '../events/layereventtype.js';
+import {getMapContainer} from '../map/mapinstance.js';
 import Module from './module.js';
 import {Controller as AddFilterController, directive as addFilterDirective} from './query/addfilter.js';
-
-const LayerEventType = goog.require('os.events.LayerEventType');
-const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**

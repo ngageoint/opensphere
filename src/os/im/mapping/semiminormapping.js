@@ -1,15 +1,15 @@
-goog.module('os.im.mapping.SemiMinorMapping');
+goog.declareModuleId('os.im.mapping.SemiMinorMapping');
 
-const Fields = goog.require('os.Fields');
-const fields = goog.require('os.fields');
-const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
-const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
+import Fields from '../../fields/fields.js';
+import * as fields from '../../fields/index.js';
+import MappingRegistry from './mappingregistry.js';
+import RadiusMapping from './radiusmapping.js';
 
 
 /**
  * Ellipse semi-minor mapping.
  */
-class SemiMinorMapping extends RadiusMapping {
+export default class SemiMinorMapping extends RadiusMapping {
   /**
    * Constructor.
    */
@@ -51,6 +51,3 @@ SemiMinorMapping.ID = 'SemiMinor';
 
 // Register the mapping.
 MappingRegistry.getInstance().registerMapping(SemiMinorMapping.ID, SemiMinorMapping);
-
-
-exports = SemiMinorMapping;

@@ -1,7 +1,7 @@
-goog.module('os.time.ITime');
+goog.declareModuleId('os.time.ITime');
 
 const DateLike = goog.requireType('goog.date.DateLike');
-const IComparable = goog.requireType('os.IComparable');
+const {default: IComparable} = goog.requireType('os.IComparable');
 
 
 /**
@@ -10,7 +10,7 @@ const IComparable = goog.requireType('os.IComparable');
  * @extends {IComparable<ITime>}
  * @interface
  */
-class ITime {
+export default class ITime {
   /**
    * Gets the start date time in ms UTC
    * @return {number}
@@ -60,5 +60,3 @@ class ITime {
  * @type {string}
  */
 ITime.ID = 'os.time.ITime';
-
-exports = ITime;

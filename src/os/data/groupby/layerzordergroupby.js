@@ -1,18 +1,19 @@
-goog.module('os.data.groupby.LayerZOrderGroupBy');
+goog.declareModuleId('os.data.groupby.LayerZOrderGroupBy');
+
+import Group from '../../layer/group.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import SlickTreeNode from '../../ui/slick/slicktreenode.js';
+import BaseGroupBy from './basegroupby.js';
 
 const googArray = goog.require('goog.array');
 const googString = goog.require('goog.string');
-const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
-const Group = goog.require('os.layer.Group');
-const {getMapContainer} = goog.require('os.map.instance');
-const {default: SlickTreeNode} = goog.require('os.ui.slick.SlickTreeNode');
-const LayerNode = goog.requireType('os.data.LayerNode');
+const {default: LayerNode} = goog.requireType('os.data.LayerNode');
 
 
 /**
  * Groups layers by z-order
  */
-class LayerZOrderGroupBy extends BaseGroupBy {
+export default class LayerZOrderGroupBy extends BaseGroupBy {
   /**
    * Constructor.
    */
@@ -61,5 +62,3 @@ class LayerZOrderGroupBy extends BaseGroupBy {
     return group;
   }
 }
-
-exports = LayerZOrderGroupBy;

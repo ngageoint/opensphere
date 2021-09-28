@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.window.ConfirmUI');
 
+import {noop} from '../../fn/fn.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import {create as createWindow, close as closeWindow} from '../window.js';
@@ -10,7 +11,6 @@ const {getDocument} = goog.require('goog.dom');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
-const {noop} = goog.require('os.fn');
 
 
 /**

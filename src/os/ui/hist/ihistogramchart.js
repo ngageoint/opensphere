@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.hist.IHistogramChart');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
-const IHistogramData = goog.requireType('os.hist.IHistogramData');
+const {default: IHistogramData} = goog.requireType('os.hist.IHistogramData');
 
 
 /**

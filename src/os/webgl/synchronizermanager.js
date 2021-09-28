@@ -1,4 +1,4 @@
-goog.module('os.webgl.SynchronizerManager');
+goog.declareModuleId('os.webgl.SynchronizerManager');
 
 const log = goog.require('goog.log');
 
@@ -10,7 +10,7 @@ goog.requireType('os.webgl.AbstractWebGLSynchronizer');
  * synchronizers, it allows plugins to register their own via {@code registerSynchronizer}. The root
  * synchronizer then gets synchronizers for layers via the {@code getSynchronizer} method.
  */
-class SynchronizerManager {
+export default class SynchronizerManager {
   /**
    * Constructor.
    */
@@ -58,6 +58,3 @@ goog.addSingletonGetter(SynchronizerManager);
  * @private
  */
 SynchronizerManager.LOGGER_ = log.getLogger('os.webgl.SynchronizerManager');
-
-
-exports = SynchronizerManager;

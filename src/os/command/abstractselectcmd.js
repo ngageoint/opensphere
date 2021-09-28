@@ -1,9 +1,9 @@
-goog.module('os.command.AbstractSelect');
+goog.declareModuleId('os.command.AbstractSelect');
 
-const AbstractSource = goog.require('os.command.AbstractSource');
-const State = goog.require('os.command.State');
+import AbstractSource from './abstractsourcecmd.js';
+import State from './state.js';
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -12,7 +12,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  * @abstract
  * @implements {ICommand}
  */
-class AbstractSelect extends AbstractSource {
+export default class AbstractSelect extends AbstractSource {
   /**
    * Constructor.
    * @param {!string} sourceId
@@ -88,5 +88,3 @@ class AbstractSelect extends AbstractSource {
     return true;
   }
 }
-
-exports = AbstractSelect;

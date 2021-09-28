@@ -4,12 +4,12 @@ import './areas.js';
 import './filters.js';
 import './layers.js';
 import {ROOT} from '../os.js';
+import {AreaState} from '../query/query.js';
+import {getFilterManager, getQueryManager} from '../query/queryinstance.js';
 import Module from './module.js';
 import {apply} from './ui.js';
 
 const Disposable = goog.require('goog.Disposable');
-const {AreaState} = goog.require('os.query');
-const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
 
 
 /**

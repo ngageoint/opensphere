@@ -1,7 +1,7 @@
 goog.require('os.implements');
 
 describe('os.implements', function() {
-  const osImplements = goog.module.get('os.implements');
+  const {default: osImplements} = goog.module.get('os.implements');
 
   var FLYABLE_ID = 'interface.flyable.id';
   var SWIMABLE_ID = 'interface.swimable.id';

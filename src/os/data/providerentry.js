@@ -1,12 +1,12 @@
-goog.module('os.data.ProviderEntry');
+goog.declareModuleId('os.data.ProviderEntry');
 
-const IDataProvider = goog.requireType('os.data.IDataProvider');
+const {default: IDataProvider} = goog.requireType('os.data.IDataProvider');
 
 
 /**
  * An entry for the provider registry in the data manager
  */
-class ProviderEntry {
+export default class ProviderEntry {
   /**
    * Constructor.
    * @param {!string} type The type
@@ -40,5 +40,3 @@ class ProviderEntry {
     this.desc = desc;
   }
 }
-
-exports = ProviderEntry;

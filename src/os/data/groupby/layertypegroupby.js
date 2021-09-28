@@ -1,20 +1,21 @@
-goog.module('os.data.groupby.LayerTypeGroupBy');
+goog.declareModuleId('os.data.groupby.LayerTypeGroupBy');
+
+import Group from '../../layer/group.js';
+import LayerType from '../../layer/layertype.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import SlickTreeNode from '../../ui/slick/slicktreenode.js';
+import BaseGroupBy from './basegroupby.js';
 
 const googArray = goog.require('goog.array');
 const googString = goog.require('goog.string');
-const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
-const Group = goog.require('os.layer.Group');
-const LayerType = goog.require('os.layer.LayerType');
-const {getMapContainer} = goog.require('os.map.instance');
-const {default: SlickTreeNode} = goog.require('os.ui.slick.SlickTreeNode');
 
-const LayerNode = goog.requireType('os.data.LayerNode');
+const {default: LayerNode} = goog.requireType('os.data.LayerNode');
 
 
 /**
  * Groups layers by provider
  */
-class LayerTypeGroupBy extends BaseGroupBy {
+export default class LayerTypeGroupBy extends BaseGroupBy {
   /**
    * Constructor.
    */
@@ -66,5 +67,3 @@ class LayerTypeGroupBy extends BaseGroupBy {
     return group;
   }
 }
-
-exports = LayerTypeGroupBy;

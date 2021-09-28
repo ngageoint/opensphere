@@ -1,7 +1,8 @@
-goog.module('os.parse.AsyncZipParser');
+goog.declareModuleId('os.parse.AsyncZipParser');
+
+import AsyncParser from './asyncparser.js';
 
 const log = goog.require('goog.log');
-const AsyncParser = goog.require('os.parse.AsyncParser');
 
 
 /**
@@ -9,7 +10,7 @@ const AsyncParser = goog.require('os.parse.AsyncParser');
  * @extends {AsyncParser<T>}
  * @template T
  */
-class AsyncZipParser extends AsyncParser {
+export default class AsyncZipParser extends AsyncParser {
   /**
    * Constructor.
    */
@@ -103,5 +104,3 @@ class AsyncZipParser extends AsyncParser {
  * @type {goog.log.Logger}
  */
 const logger = log.getLogger('os.parse.AsyncZipParser');
-
-exports = AsyncZipParser;

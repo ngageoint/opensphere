@@ -11,10 +11,10 @@ goog.require('os.source.Vector');
 describe('os.command.FeaturesVisibility', function() {
   const Feature = goog.module.get('ol.Feature');
   const Point = goog.module.get('ol.geom.Point');
-  const FeaturesVisibility = goog.module.get('os.command.FeaturesVisibility');
-  const State = goog.module.get('os.command.State');
-  const DataManager = goog.module.get('os.data.DataManager');
-  const VectorSource = goog.module.get('os.source.Vector');
+  const {default: FeaturesVisibility} = goog.module.get('os.command.FeaturesVisibility');
+  const {default: State} = goog.module.get('os.command.State');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: VectorSource} = goog.module.get('os.source.Vector');
 
   var src;
 

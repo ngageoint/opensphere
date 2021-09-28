@@ -1,10 +1,10 @@
-goog.module('os.command.VectorLayerLabelSize');
+goog.declareModuleId('os.command.VectorLayerLabelSize');
 
-const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
-const label = goog.require('os.style.label');
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import * as label from '../style/label.js';
+import StyleField from '../style/stylefield.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import AbstractVectorStyle from './abstractvectorstylecmd.js';
 
 
 /**
@@ -12,7 +12,7 @@ const label = goog.require('os.style.label');
  *
  * @extends {AbstractVectorStyle<number>}
  */
-class VectorLayerLabelSize extends AbstractVectorStyle {
+export default class VectorLayerLabelSize extends AbstractVectorStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -51,5 +51,3 @@ class VectorLayerLabelSize extends AbstractVectorStyle {
     super.finish(config);
   }
 }
-
-exports = VectorLayerLabelSize;

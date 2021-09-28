@@ -1,14 +1,14 @@
-goog.module('os.data.IMappingDescriptor');
+goog.declareModuleId('os.data.IMappingDescriptor');
 
-const IMapping = goog.requireType('os.im.mapping.IMapping');
-const ILayer = goog.requireType('os.layer.ILayer');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
  * An interface for descriptors that support mappings
  * @interface
  */
-class IMappingDescriptor {
+export default class IMappingDescriptor {
   /**
    * Returns if the layer supports mapping
    * @return {boolean}
@@ -44,5 +44,3 @@ class IMappingDescriptor {
  * @const {string}
  */
 IMappingDescriptor.ID = 'os.data.IMappingDescriptor';
-
-exports = IMappingDescriptor;

@@ -1,15 +1,15 @@
-goog.module('os.net.CredentialsHandler');
+goog.declareModuleId('os.net.CredentialsHandler');
 
-const {getCrossOrigin} = goog.require('os.net');
-const CrossOrigin = goog.require('os.net.CrossOrigin');
-const ExtDomainHandler = goog.require('os.net.ExtDomainHandler');
-const HandlerType = goog.require('os.net.HandlerType');
+import CrossOrigin from './crossorigin.js';
+import ExtDomainHandler from './extdomainhandler.js';
+import HandlerType from './handlertype.js';
+import {getCrossOrigin} from './net.js';
 
 
 /**
  * Handles requests to an external domain with a simple XHR and no credentials
  */
-class CredentialsHandler extends ExtDomainHandler {
+export default class CredentialsHandler extends ExtDomainHandler {
   /**
    * Constructor.
    */
@@ -39,5 +39,3 @@ class CredentialsHandler extends ExtDomainHandler {
     return HandlerType.CREDENTIALS;
   }
 }
-
-exports = CredentialsHandler;

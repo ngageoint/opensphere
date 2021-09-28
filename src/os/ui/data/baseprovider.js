@@ -1,13 +1,13 @@
 goog.declareModuleId('os.ui.data.BaseProvider');
 
+import {getAuth} from '../../auth.js';
+import IDataProvider from '../../data/idataprovider.js';
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import osImplements from '../../implements.js';
 import SlickTreeNode from '../slick/slicktreenode.js';
 
 const log = goog.require('goog.log');
 const {getRandomString} = goog.require('goog.string');
-const {getAuth} = goog.require('os.auth');
-const IDataProvider = goog.require('os.data.IDataProvider');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osImplements = goog.require('os.implements');
 
 const {AuthEntry} = goog.requireType('os.auth');
 

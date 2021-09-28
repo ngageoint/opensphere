@@ -8,9 +8,9 @@ goog.require('os.command.State');
 
 describe('os.command.CommandProcessor', function() {
   const GoogEvent = goog.module.get('goog.events.Event');
-  const CommandProcessor = goog.module.get('os.command.CommandProcessor');
-  const EventType = goog.module.get('os.command.EventType');
-  const State = goog.module.get('os.command.State');
+  const {default: CommandProcessor} = goog.module.get('os.command.CommandProcessor');
+  const {default: EventType} = goog.module.get('os.command.EventType');
+  const {default: State} = goog.module.get('os.command.State');
 
   const AsyncMockCommand = goog.module.get('os.command.AsyncMockCommand');
   const MockCommand = goog.module.get('os.command.MockCommand');

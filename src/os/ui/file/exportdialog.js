@@ -9,7 +9,7 @@ import exportManager from './uiexportmanager.js';
 
 const {assert} = goog.require('goog.asserts');
 
-const ExportOptions = goog.requireType('os.ex.ExportOptions');
+const {default: ExportOptions} = goog.requireType('os.ex.ExportOptions');
 
 
 /**

@@ -1,10 +1,9 @@
 goog.declareModuleId('plugin.cesium.tiles.Provider');
 
+import BaseDescriptor from '../../../os/data/basedescriptor.js';
+import DataManager from '../../../os/data/datamanager.js';
+import FileProvider from '../../../os/data/fileprovider.js';
 import {ID, TYPE} from './cesium3dtiles.js';
-
-const BaseDescriptor = goog.require('os.data.BaseDescriptor');
-const DataManager = goog.require('os.data.DataManager');
-const FileProvider = goog.require('os.data.FileProvider');
 
 const {default: TilesDescriptor} = goog.requireType('plugin.cesium.tiles.Descriptor');
 

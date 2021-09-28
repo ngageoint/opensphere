@@ -1,8 +1,7 @@
 goog.declareModuleId('plugin.cesium.tiles.LayerConfig');
 
+import AbstractLayerConfig from '../../../os/layer/config/abstractlayerconfig.js';
 import Layer from './cesium3dtileslayer.js';
-
-const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
 
 /**
  */

@@ -1,12 +1,11 @@
 goog.declareModuleId('os.ui.im.action.FilterActionImporter');
 
+import OSFilterImporter from '../../../filter/im/osfilterimporter.js';
+import FilterActionEntry from '../../../im/action/filteractionentry.js';
+import {getColumnsFromFilterable} from '../../../im/action/importaction.js';
 import {toFilterString} from '../../filter/filter.js';
 
-const OSFilterImporter = goog.require('os.filter.im.OSFilterImporter');
-const {getColumnsFromFilterable} = goog.require('os.im.action');
-const FilterActionEntry = goog.require('os.im.action.FilterActionEntry');
-
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 
 
 /**

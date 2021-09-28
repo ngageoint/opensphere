@@ -8,9 +8,9 @@ goog.require('plugin.file.geojson.GeoJSONParser');
 
 describe('plugin.file.geojson.GeoJSONParser', function() {
   const googNetEventType = goog.module.get('goog.net.EventType');
-  const EventType = goog.module.get('os.events.EventType');
-  const Importer = goog.module.get('os.im.Importer');
-  const Request = goog.module.get('os.net.Request');
+  const {default: EventType} = goog.module.get('os.events.EventType');
+  const {default: Importer} = goog.module.get('os.im.Importer');
+  const {default: Request} = goog.module.get('os.net.Request');
   const {default: GeoJSONParser} = goog.module.get('plugin.file.geojson.GeoJSONParser');
   var gj1 = {
     'type': 'FeatureCollection',

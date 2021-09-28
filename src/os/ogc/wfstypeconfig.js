@@ -1,4 +1,4 @@
-goog.module('os.ogc.WFSTypeConfig');
+goog.declareModuleId('os.ogc.WFSTypeConfig');
 
 /**
  * Typedef describing available WFS format types (GML, GeoJSON, etc.)
@@ -12,4 +12,4 @@ goog.module('os.ogc.WFSTypeConfig');
  */
 let WFSTypeConfig;
 
-exports = WFSTypeConfig;
+export default WFSTypeConfig;

@@ -6,7 +6,7 @@ goog.require('os.ui.filter.fn');
 describe('os.ui.filter.fn', function() {
   const googDomXml = goog.module.get('goog.dom.xml');
   const googObject = goog.module.get('goog.object');
-  const FilterEntry = goog.module.get('os.filter.FilterEntry');
+  const {default: FilterEntry} = goog.module.get('os.filter.FilterEntry');
   const osUiFilterFn = goog.module.get('os.ui.filter.fn');
 
   var andXml =

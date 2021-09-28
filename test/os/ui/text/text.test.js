@@ -2,7 +2,7 @@ goog.require('os.alert.AlertManager');
 goog.require('os.ui.text');
 
 describe('os.ui.text', () => {
-  const AlertManager = goog.module.get('os.alert.AlertManager');
+  const {default: AlertManager} = goog.module.get('os.alert.AlertManager');
   const text = goog.module.get('os.ui.text');
 
   const windowSelector = 'div[label="Copy"]';

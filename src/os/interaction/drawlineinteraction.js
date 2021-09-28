@@ -1,10 +1,11 @@
-goog.module('os.interaction.DrawLine');
+goog.declareModuleId('os.interaction.DrawLine');
+
+import {normalizeGeometryCoordinates} from '../geo/geo2.js';
+import DrawPolygon from './drawpolygoninteraction.js';
 
 const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
 const {squaredDistance} = goog.require('ol.coordinate');
 const LineString = goog.require('ol.geom.LineString');
-const {normalizeGeometryCoordinates} = goog.require('os.geo2');
-const DrawPolygon = goog.require('os.interaction.DrawPolygon');
 
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 
@@ -20,7 +21,7 @@ let DrawLineClick;
 /**
  * Interaction to draw a line on the map/globe.
  */
-class DrawLine extends DrawPolygon {
+export default class DrawLine extends DrawPolygon {
   /**
    * Constructor.
    * @param {olx.interaction.PointerOptions=} opt_options
@@ -128,5 +129,3 @@ DrawLine.FINISH_DISTANCE = 5;
  * @const
  */
 DrawLine.FINISH_INTERVAL = 250;
-
-exports = DrawLine;

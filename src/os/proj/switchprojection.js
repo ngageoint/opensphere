@@ -1,35 +1,36 @@
-goog.module('os.proj.switch.SwitchProjection');
+goog.declareModuleId('os.proj.switch.SwitchProjection');
+
+import CommandProcessor from '../command/commandprocessor.js';
+import LayerAdd from '../command/layeraddcmd.js';
+import LayerRemove from '../command/layerremovecmd.js';
+import SequenceCommand from '../command/sequencecommand.js';
+import SwitchView from '../command/switchviewcmd.js';
+import ToggleWebGL from '../command/togglewebglcmd.js';
+import TransformVectors from '../command/transformvectorscmd.js';
+import DataManager from '../data/datamanager.js';
+import osImplements from '../implements.js';
+import ILayer from '../layer/ilayer.js';
+import * as osMap from '../map/map.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {initWorldArea} from '../query/queryutils.js';
+import * as ConfirmUI from '../ui/window/confirm.js';
+import BinnedLayersEvent from './binnedlayersevent.js';
+import CommandListEvent from './commandlistevent.js';
+import * as osProj from './proj.js';
+import {isRasterReprojectionEnabled} from './reprojection.js';
 
 const Delay = goog.require('goog.async.Delay');
 const EventTarget = goog.require('goog.events.EventTarget');
 const Tile = goog.require('ol.layer.Tile');
 const VectorTile = goog.require('ol.layer.VectorTile');
 const olProj = goog.require('ol.proj');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const LayerAdd = goog.require('os.command.LayerAdd');
-const LayerRemove = goog.require('os.command.LayerRemove');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const SwitchView = goog.require('os.command.SwitchView');
-const ToggleWebGL = goog.require('os.command.ToggleWebGL');
-const TransformVectors = goog.require('os.command.TransformVectors');
-const DataManager = goog.require('os.data.DataManager');
-const osImplements = goog.require('os.implements');
-const ILayer = goog.require('os.layer.ILayer');
-const osMap = goog.require('os.map');
-const {getMapContainer} = goog.require('os.map.instance');
-const osProj = goog.require('os.proj');
-const {isRasterReprojectionEnabled} = goog.require('os.proj.reprojection');
-const BinnedLayersEvent = goog.require('os.proj.switch.BinnedLayersEvent');
-const CommandListEvent = goog.require('os.proj.switch.CommandListEvent');
-const {initWorldArea} = goog.require('os.query.utils');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
-const BinnedLayersType = goog.requireType('os.proj.switch.BinnedLayersType');
+const {default: BinnedLayersType} = goog.requireType('os.proj.switch.BinnedLayersType');
 
 
 /**
  */
-class SwitchProjection extends EventTarget {
+export default class SwitchProjection extends EventTarget {
   /**
    * Constructor.
    */
@@ -420,6 +421,3 @@ let instance;
 osProj.mapTitle_ = function(item, i, arr) {
   return /** @type {string} */ (item['title']);
 };
-
-
-exports = SwitchProjection;

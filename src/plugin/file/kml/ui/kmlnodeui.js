@@ -1,15 +1,14 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLNodeUI');
 
+import * as annotation from '../../../../os/annotation/annotation.js';
+import CommandProcessor from '../../../../os/command/commandprocessor.js';
+import PropertyChangeEvent from '../../../../os/events/propertychangeevent.js';
+import * as osObject from '../../../../os/object/object.js';
 import Module from '../../../../os/ui/module.js';
 import AbstractNodeUICtrl from '../../../../os/ui/slick/abstractnodeui.js';
 import * as ConfirmUI from '../../../../os/ui/window/confirm.js';
 import KMLNodeRemove from '../cmd/kmlnoderemovecmd.js';
 import {createOrEditFolder, createOrEditPlace} from './kmlui.js';
-
-const annotation = goog.require('os.annotation');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osObject = goog.require('os.object');
 
 const {FolderOptions, PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');

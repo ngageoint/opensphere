@@ -1,6 +1,10 @@
 goog.declareModuleId('os.ui.menu.windows.default');
 
+import ServerSettings from '../../config/serversettings.js';
+import Settings from '../../config/settings.js';
 import * as dispatcher from '../../dispatcher.js';
+import * as legend from '../../legend/legend.js';
+import {Map as MapKeys, Timeline as TimelineKeys} from '../../metrics/metricskeys.js';
 import * as os from '../../os.js';
 import UIEvent from '../events/uievent.js';
 import UIEventType from '../events/uieventtype.js';
@@ -9,10 +13,6 @@ import * as LayersWindowUI from '../layerswindow.js';
 import windowSelector from '../windowselector.js';
 import {showLegend} from './mapmenu.js';
 import * as windows from './windowsmenu.js';
-const ServerSettings = goog.require('os.config.ServerSettings');
-const Settings = goog.require('os.config.Settings');
-const legend = goog.require('os.legend');
-const {Map: MapKeys, Timeline: TimelineKeys} = goog.require('os.metrics.keys');
 
 
 /**

@@ -1,6 +1,6 @@
-goog.module('os.filter.IFilterFormatter');
+goog.declareModuleId('os.filter.IFilterFormatter');
 
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 
 
 /**
@@ -8,7 +8,7 @@ const FilterEntry = goog.requireType('os.filter.FilterEntry');
  *
  * @interface
  */
-class IFilterFormatter {
+export default class IFilterFormatter {
   /**
    * Formats a filter
    * @param {!FilterEntry} filter
@@ -31,5 +31,3 @@ class IFilterFormatter {
    */
   wrapAll(filter) {}
 }
-
-exports = IFilterFormatter;

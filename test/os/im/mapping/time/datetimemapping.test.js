@@ -6,12 +6,12 @@ goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 
 describe('os.im.mapping.time.DateTimeMapping', function() {
-  const TimeFormat = goog.module.get('os.im.mapping.TimeFormat');
-  const TimeType = goog.module.get('os.im.mapping.TimeType');
-  const DateTimeMapping = goog.module.get('os.im.mapping.time.DateTimeMapping');
+  const {default: TimeFormat} = goog.module.get('os.im.mapping.TimeFormat');
+  const {default: TimeType} = goog.module.get('os.im.mapping.TimeType');
+  const {default: DateTimeMapping} = goog.module.get('os.im.mapping.time.DateTimeMapping');
   const osTime = goog.module.get('os.time');
-  const TimeInstant = goog.module.get('os.time.TimeInstant');
-  const TimeRange = goog.module.get('os.time.TimeRange');
+  const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');
+  const {default: TimeRange} = goog.module.get('os.time.TimeRange');
 
   var dtm = null;
   var dtItem = null;

@@ -1,14 +1,13 @@
 goog.declareModuleId('os.ui.query.cmd.AreaModify');
 
+import State from '../../../command/state.js';
+import {ORIGINAL_GEOM_FIELD} from '../../../interpolate.js';
+import {getAreaManager} from '../../../query/queryinstance.js';
 import AbstractArea from './abstractareacmd.js';
-
-const State = goog.require('os.command.State');
-const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
-const {getAreaManager} = goog.require('os.query.instance');
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**

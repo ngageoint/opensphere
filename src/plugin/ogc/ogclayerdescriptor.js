@@ -1,5 +1,24 @@
 goog.declareModuleId('plugin.ogc.OGCLayerDescriptor');
 
+import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
+import AlertManager from '../../os/alert/alertmanager.js';
+import * as osColor from '../../os/color.js';
+import Settings from '../../os/config/settings.js';
+import * as data from '../../os/data/data.js';
+import IAreaTest from '../../os/data/iareatest.js';
+import LayerSyncDescriptor from '../../os/data/layersyncdescriptor.js';
+import PropertyChangeEvent from '../../os/events/propertychangeevent.js';
+import IFilterable from '../../os/filter/ifilterable.js';
+import MappingManager from '../../os/im/mapping/mappingmanager.js';
+import osImplements from '../../os/implements.js';
+import LayerType from '../../os/layer/layertype.js';
+import osOgcLayerType from '../../os/ogc/layertype.js';
+import * as ogc from '../../os/ogc/ogc.js';
+import DescribeFeatureLoader from '../../os/ogc/wfs/describefeatureloader.js';
+import * as wmts from '../../os/ogc/wmts/wmts.js';
+import * as osProj from '../../os/proj/proj.js';
+import registerClass from '../../os/registerclass.js';
+import TimelineController from '../../os/time/timelinecontroller.js';
 import ColorControlType from '../../os/ui/colorcontroltype.js';
 import ControlType from '../../os/ui/controltype.js';
 import BaseProvider from '../../os/ui/data/baseprovider.js';
@@ -19,28 +38,9 @@ const EventType = goog.require('goog.net.EventType');
 const googString = goog.require('goog.string');
 const ol = goog.require('ol');
 const olExtent = goog.require('ol.extent');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const osColor = goog.require('os.color');
-const Settings = goog.require('os.config.Settings');
-const data = goog.require('os.data');
-const IAreaTest = goog.require('os.data.IAreaTest');
-const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const IFilterable = goog.require('os.filter.IFilterable');
-const MappingManager = goog.require('os.im.mapping.MappingManager');
-const osImplements = goog.require('os.implements');
-const LayerType = goog.require('os.layer.LayerType');
-const ogc = goog.require('os.ogc');
-const osOgcLayerType = goog.require('os.ogc.LayerType');
-const DescribeFeatureLoader = goog.require('os.ogc.wfs.DescribeFeatureLoader');
-const wmts = goog.require('os.ogc.wmts');
-const osProj = goog.require('os.proj');
-const registerClass = goog.require('os.registerClass');
-const TimelineController = goog.require('os.time.TimelineController');
 
-const IMapping = goog.requireType('os.im.mapping.IMapping');
-const IFeatureType = goog.requireType('os.ogc.IFeatureType');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
+const {default: IFeatureType} = goog.requireType('os.ogc.IFeatureType');
 const {default: OGCServer} = goog.requireType('os.ui.ogc.OGCServer');
 
 

@@ -1,15 +1,15 @@
 goog.declareModuleId('os.ui.node.FeatureCountUI');
 
+import VectorLayer from '../../layer/vector.js';
+import PropertyChange from '../../source/propertychange.js';
+import VectorSource from '../../source/vectorsource.js';
 import Module from '../module.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {listen, unlisten} = goog.require('ol.events');
-const VectorLayer = goog.require('os.layer.Vector');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const VectorSource = goog.require('os.source.Vector');
 
-const LayerNode = goog.requireType('os.data.LayerNode');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const {default: LayerNode} = goog.requireType('os.data.LayerNode');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**

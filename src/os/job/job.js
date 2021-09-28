@@ -1,12 +1,13 @@
-goog.module('os.job.Job');
+goog.declareModuleId('os.job.Job');
+
+import JobCommand from './jobcommand.js';
+import JobEvent from './jobevent.js';
+import JobEventType from './jobeventtype.js';
+import JobState from './jobstate.js';
 
 const Timer = goog.require('goog.Timer');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
-const JobCommand = goog.require('os.job.JobCommand');
-const JobEvent = goog.require('os.job.JobEvent');
-const JobEventType = goog.require('os.job.JobEventType');
-const JobState = goog.require('os.job.JobState');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -35,7 +36,7 @@ const Logger = goog.requireType('goog.log.Logger');
  * The Job will send a JobEvent.DATAREADY event so listeners can display data
  * as it is processed.
  */
-class Job extends EventTarget {
+export default class Job extends EventTarget {
   /**
    * Constructor.
    * @param {string} src Worker source URI.
@@ -237,5 +238,3 @@ class Job extends EventTarget {
  * @type {Logger}
  */
 const logger = log.getLogger('os.job.Job');
-
-exports = Job;

@@ -1,4 +1,4 @@
-goog.module('os.data.xf.IGroupable');
+goog.declareModuleId('os.data.xf.IGroupable');
 
 const Listenable = goog.requireType('goog.events.Listenable');
 
@@ -10,7 +10,7 @@ const Listenable = goog.requireType('goog.events.Listenable');
  * @template T
  * @interface
  */
-class IGroupable {
+export default class IGroupable {
   /**
    * Get the name.
    * @return {?string}
@@ -57,5 +57,3 @@ class IGroupable {
    */
   reduceInit() {}
 }
-
-exports = IGroupable;

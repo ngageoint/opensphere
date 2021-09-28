@@ -1,12 +1,12 @@
 goog.module('os.layer.MockLayer');
 
 const {getRandomString} = goog.require('goog.string');
-const osImplements = goog.require('os.implements');
-const ILayer = goog.require('os.layer.ILayer');
+const {default: osImplements} = goog.require('os.implements');
+const {default: ILayer} = goog.require('os.layer.ILayer');
 
-const SynchronizerType = goog.require('os.layer.SynchronizerType');
+const {default: SynchronizerType} = goog.require('os.layer.SynchronizerType');
 
-const IGroupable = goog.requireType('os.IGroupable');
+const {default: IGroupable} = goog.requireType('os.IGroupable');
 
 
 /**

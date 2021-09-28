@@ -1,27 +1,28 @@
-goog.module('os.im.Importer');
+goog.declareModuleId('os.im.Importer');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import * as dispatcher from '../dispatcher.js';
+import OSEventType from '../events/eventtype.js';
+import osImplements from '../implements.js';
+import AsyncParser from '../parse/asyncparser.js';
+import ThreadEventType from '../thread/eventtype.js';
+import Thread from '../thread/thread.js';
+import IImporter from './iimporter.js';// eslint-disable-line
+import ImporterEvent from './importerevent.js';
+import AltMappingId from './mapping/altmappingid.js';
+import MappingManager from './mapping/mappingmanager.js';
 
 const dispose = goog.require('goog.dispose');
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
-const dispatcher = goog.require('os.Dispatcher');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const OSEventType = goog.require('os.events.EventType');
-const IImporter = goog.require('os.im.IImporter'); // eslint-disable-line
-const ImporterEvent = goog.require('os.im.ImporterEvent');
-const AltMappingId = goog.require('os.im.mapping.AltMappingId');
-const MappingManager = goog.require('os.im.mapping.MappingManager');
-const osImplements = goog.require('os.implements');
-const AsyncParser = goog.require('os.parse.AsyncParser');
-const ThreadEventType = goog.require('os.thread.EventType');
-const Thread = goog.require('os.thread.Thread');
 
 const Logger = goog.requireType('goog.log.Logger');
-const IMapping = goog.requireType('os.im.mapping.IMapping');
-const IParser = goog.requireType('os.parse.IParser');
-const IThreadJob = goog.requireType('os.thread.IThreadJob');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
+const {default: IParser} = goog.requireType('os.parse.IParser');
+const {default: IThreadJob} = goog.requireType('os.thread.IThreadJob');
 
 
 /**
@@ -31,7 +32,7 @@ const IThreadJob = goog.requireType('os.thread.IThreadJob');
  * @implements {IThreadJob}
  * @template T
  */
-class Importer extends EventTarget {
+export default class Importer extends EventTarget {
   /**
    * Constructor.
    * @param {IParser<T>} parser The parser
@@ -556,5 +557,3 @@ class Importer extends EventTarget {
  * @type {Logger}
  */
 const logger = log.getLogger('os.im.Importer');
-
-exports = Importer;

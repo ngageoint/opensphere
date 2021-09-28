@@ -1,9 +1,10 @@
-goog.module('os.url.EventType');
-
+goog.declareModuleId('os.url.EventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const EventType = {
   URL_IMPORTED: 'urlImported'
 };
+
+export default EventType;

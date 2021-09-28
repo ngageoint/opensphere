@@ -1,9 +1,11 @@
-goog.module('os.im.ImporterEvent');
+goog.declareModuleId('os.im.ImporterEvent');
 
 /**
  * @enum {string}
  */
-exports = {
+const ImporterEvent = {
   START: 'importer:startImport',
   STOP: 'importer:stopImport'
 };
+
+export default ImporterEvent;

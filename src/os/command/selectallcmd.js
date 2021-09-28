@@ -1,12 +1,12 @@
-goog.module('os.command.SelectAll');
+goog.declareModuleId('os.command.SelectAll');
 
-const AbstractSelect = goog.require('os.command.AbstractSelect');
+import AbstractSelect from './abstractselectcmd.js';
 
 
 /**
  * Command for selecting all features in a source
  */
-class SelectAll extends AbstractSelect {
+export default class SelectAll extends AbstractSelect {
   /**
    * Constructor.
    * @param {!string} sourceId
@@ -36,5 +36,3 @@ class SelectAll extends AbstractSelect {
     }
   }
 }
-
-exports = SelectAll;

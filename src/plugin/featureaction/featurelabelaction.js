@@ -1,23 +1,22 @@
 goog.declareModuleId('plugin.im.action.feature.LabelAction');
 
+import * as osColor from '../../os/color.js';
+import FeatureEventType from '../../os/data/featureeventtype.js';
+import PropertyChangeEvent from '../../os/events/propertychangeevent.js';
 import {getLayer, getSource} from '../../os/feature/feature.js';
+import AbstractImportAction from '../../os/im/action/abstractimportaction.js';
+import * as osObject from '../../os/object/object.js';
+import PropertyChange from '../../os/source/propertychange.js';
 import * as osStyleLabel from '../../os/style/label.js';
 import * as osStyle from '../../os/style/style.js';
+import StyleField from '../../os/style/stylefield.js';
+import StyleType from '../../os/style/styletype.js';
 import {Controller as FeatureEditCtrl} from '../../os/ui/featureedit.js';
+import * as osXml from '../../os/xml.js';
 import {StyleType as FAStyleType} from './featureaction.js';
 import {directiveTag as configUi, setDefaultConfig} from './ui/featurelabelactionconfig.js';
 
-const osColor = goog.require('os.color');
-const FeatureEventType = goog.require('os.data.FeatureEventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const AbstractImportAction = goog.require('os.im.action.AbstractImportAction');
-const osObject = goog.require('os.object');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const StyleField = goog.require('os.style.StyleField');
-const StyleType = goog.require('os.style.StyleType');
-const osXml = goog.require('os.xml');
-
-const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
+const {default: ImportActionCallbackConfig} = goog.requireType('os.im.action.ImportActionCallbackConfig');
 
 
 /**

@@ -1,9 +1,9 @@
-goog.module('os.command.FeatureShowLabel');
+goog.declareModuleId('os.command.FeatureShowLabel');
 
-const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const StyleField = goog.require('os.style.StyleField');
-const label = goog.require('os.style.label');
+import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
+import * as label from '../../style/label.js';
+import StyleField from '../../style/stylefield.js';
+import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -11,7 +11,7 @@ const Feature = goog.requireType('ol.Feature');
 /**
  * Changes if labels are always shown for a feature, or on highlight only.
  */
-class FeatureShowLabel extends AbstractFeatureStyle {
+export default class FeatureShowLabel extends AbstractFeatureStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -58,5 +58,3 @@ class FeatureShowLabel extends AbstractFeatureStyle {
     super.finish(configs);
   }
 }
-
-exports = FeatureShowLabel;

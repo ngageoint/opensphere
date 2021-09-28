@@ -1,5 +1,7 @@
 goog.declareModuleId('os.ui.help.HelpUI');
 
+import {getAppName} from '../../config/config.js';
+import Settings from '../../config/settings.js';
 import * as dispatcher from '../../dispatcher.js';
 import UIEventType from '../eventtype.js';
 import MenuButtonCtrl from '../menu/menubutton.js';
@@ -15,8 +17,6 @@ import EventType from './helpeventtype.js';
 
 const log = goog.require('goog.log');
 const {isEmpty} = goog.require('goog.object');
-const {getAppName} = goog.require('os.config');
-const Settings = goog.require('os.config.Settings');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {default: ActionEvent} = goog.requireType('os.ui.action.ActionEvent');

@@ -1,14 +1,14 @@
 goog.declareModuleId('os.ui.state.StateExportUI');
 
+import * as config from '../../config/config.js';
 import {ROOT} from '../../os.js';
+import {getStateManager} from '../../state/stateinstance.js';
 import ExportManager from '../file/exportmanager.js';
 import Module from '../module.js';
 import WindowEventType from '../windoweventtype.js';
 import AbstractStateFormCtrl from './abstractstateform.js';
-const config = goog.require('os.config');
-const {getStateManager} = goog.require('os.state.instance');
 
-const IState = goog.requireType('os.state.IState');
+const {default: IState} = goog.requireType('os.state.IState');
 
 
 /**

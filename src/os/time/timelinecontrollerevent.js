@@ -1,13 +1,14 @@
-goog.module('os.time.TimelineControllerEvent');
+goog.declareModuleId('os.time.TimelineControllerEvent');
+
+import TimeRange from './timerange.js';
 
 const GoogEvent = goog.require('goog.events.Event');
-const TimeRange = goog.require('os.time.TimeRange');
 
 
 /**
  * Event for os.time.TimelineController.
  */
-class TimelineControllerEvent extends GoogEvent {
+export default class TimelineControllerEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -92,5 +93,3 @@ class TimelineControllerEvent extends GoogEvent {
     return super.toString();
   }
 }
-
-exports = TimelineControllerEvent;

@@ -1,5 +1,11 @@
 goog.declareModuleId('os.ui.slick.SlickGridUI');
 
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import {killRightButton} from '../../events/events.js';
+import {filterFalsey} from '../../fn/fn.js';
+import osImplements from '../../implements.js';
+import {FLOAT} from '../../string/string.js';
 import ActionManager from '../action/actionmanager.js';
 import {launchColumnManager} from '../column/column.js';
 import {openMenu} from '../globalmenu.js';
@@ -28,17 +34,11 @@ const GoogEventType = goog.require('goog.events.EventType');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const {createSet} = goog.require('goog.object');
 const {makeSafe} = goog.require('goog.string');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {killRightButton} = goog.require('os.events');
-const {filterFalsey} = goog.require('os.fn');
-const osImplements = goog.require('os.implements');
-const {FLOAT} = goog.require('os.string');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const EventLike = goog.requireType('goog.events.EventLike');
-const IComparable = goog.requireType('os.IComparable');
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: IComparable} = goog.requireType('os.IComparable');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: ColumnContext} = goog.requireType('os.ui.slick.ColumnContext');
 

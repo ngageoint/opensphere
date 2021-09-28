@@ -1,9 +1,9 @@
 goog.declareModuleId('os.ui.menu.common');
 
-const LayerNode = goog.require('os.data.LayerNode');
-const instanceOf = goog.require('os.instanceOf');
-const VectorLayer = goog.require('os.layer.Vector');
-const VectorSource = goog.require('os.source.Vector');
+import LayerNode from '../../data/layernode.js';
+import instanceOf from '../../instanceof.js';
+import VectorLayer from '../../layer/vector.js';
+import VectorSource from '../../source/vectorsource.js';
 
 
 /**

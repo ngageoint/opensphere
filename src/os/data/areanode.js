@@ -1,21 +1,22 @@
-goog.module('os.data.AreaNode');
+goog.declareModuleId('os.data.AreaNode');
+
+import AreaToggle from '../command/areatogglecmd.js';
+import CommandProcessor from '../command/commandprocessor.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import osImplements from '../implements.js';
+import * as query from '../query/query.js';
+import {getAreaManager, getQueryManager} from '../query/queryinstance.js';
+import {isStateFile} from '../state/state.js';
+import TriState from '../structs/tristate.js';
+import IMenuSupplier from '../ui/menu/imenusupplier.js';
+import * as spatial from '../ui/menu/spatial.js';
+import {directiveTag as nodeUi} from '../ui/node/areanodeui.js';
+import QueryAreaNode from '../ui/query/areanode.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
-const AreaToggle = goog.require('os.command.AreaToggle');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osImplements = goog.require('os.implements');
-const query = goog.require('os.query');
-const {getAreaManager, getQueryManager} = goog.require('os.query.instance');
-const {isStateFile} = goog.require('os.state');
-const TriState = goog.require('os.structs.TriState');
-const {default: IMenuSupplier} = goog.require('os.ui.menu.IMenuSupplier');
-const spatial = goog.require('os.ui.menu.spatial');
-const {directiveTag: nodeUi} = goog.require('os.ui.node.AreaNodeUI');
-const {default: QueryAreaNode} = goog.require('os.ui.query.AreaNode');
 
-const ISearchable = goog.requireType('os.data.ISearchable');
+const {default: ISearchable} = goog.requireType('os.data.ISearchable');
 
 
 /**
@@ -24,7 +25,7 @@ const ISearchable = goog.requireType('os.data.ISearchable');
  * @implements {ISearchable}
  * @implements {IMenuSupplier}
  */
-class AreaNode extends QueryAreaNode {
+export default class AreaNode extends QueryAreaNode {
   /**
    * Constructor.
    * @param {!ol.Feature=} opt_area
@@ -169,7 +170,5 @@ class AreaNode extends QueryAreaNode {
     return super.formatIcons();
   }
 }
+
 osImplements(AreaNode, IMenuSupplier.ID);
-
-
-exports = AreaNode;

@@ -1,32 +1,31 @@
-goog.module('os.map.terrain');
+goog.declareModuleId('os.map.terrain');
+
+import * as dispatcher from '../dispatcher.js';
 
 const log = goog.require('goog.log');
-const dispatcher = goog.require('os.Dispatcher');
 
 
 /**
  * Terrain event types.
  * @enum {string}
  */
-const TerrainEventType = {
+export const TerrainEventType = {
   PROVIDERS: 'terrain:providers'
 };
-
 
 /**
  * Terrain settings keys.
  * @enum {string}
  */
-const TerrainSetting = {
+export const TerrainSetting = {
   ACTIVE_TERRAIN: 'os.map.terrain.activeTerrainId'
 };
-
 
 /**
  * Supported terrain types.
  * @enum {string}
  */
-const TerrainType = {
+export const TerrainType = {
   CESIUM: 'cesium',
   ION: 'cesium-ion',
   WMS: 'wms'
@@ -51,7 +50,7 @@ const providers = [];
  * If a terrain provider is available.
  * @return {boolean}
  */
-const hasTerrain = () => providers.length > 0;
+export const hasTerrain = () => providers.length > 0;
 
 
 /**
@@ -66,7 +65,7 @@ const isValidProvider = (options) => options != null && !!options.id && !!option
  * Add a terrain provider to the application.
  * @param {!osx.map.TerrainProviderOptions} options The terrain provider options.
  */
-const addTerrainProvider = (options) => {
+export const addTerrainProvider = (options) => {
   if (isValidProvider(options)) {
     if (!options.name) {
       options.name = 'Unknown Terrain Provider';
@@ -83,19 +82,8 @@ const addTerrainProvider = (options) => {
   }
 };
 
-
 /**
  * Get terrain providers registered with the application.
  * @return {!Array<!osx.map.TerrainProviderOptions>}
  */
-const getTerrainProviders = () => providers;
-
-
-exports = {
-  TerrainEventType,
-  TerrainSetting,
-  TerrainType,
-  hasTerrain,
-  addTerrainProvider,
-  getTerrainProviders
-};
+export const getTerrainProviders = () => providers;

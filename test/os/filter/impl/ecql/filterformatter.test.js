@@ -2,8 +2,8 @@ goog.require('os.filter.FilterEntry');
 goog.require('os.filter.impl.ecql.FilterFormatter');
 
 describe('os.filter.impl.ecql.FilterFormatter', function() {
-  const FilterEntry = goog.module.get('os.filter.FilterEntry');
-  const FilterFormatter = goog.module.get('os.filter.impl.ecql.FilterFormatter');
+  const {default: FilterEntry} = goog.module.get('os.filter.FilterEntry');
+  const {default: FilterFormatter} = goog.module.get('os.filter.impl.ecql.FilterFormatter');
 
   var filters = [
     '<PropertyIsEqualTo><PropertyName>boolField</PropertyName><Literal>true</Literal></PropertyIsEqualTo>',

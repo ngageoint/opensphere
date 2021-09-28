@@ -1,4 +1,4 @@
-goog.module('os.mixin.canvasreplay');
+goog.declareModuleId('os.mixin.canvasreplay');
 
 const {getUid} = goog.require('ol');
 const {equals} = goog.require('ol.array');

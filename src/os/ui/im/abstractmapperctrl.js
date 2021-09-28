@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ui.im.AbstractMapperCtrl');
 
+import ColumnDefinition from '../../data/columndefinition.js';
 import * as osWindow from '../window.js';
 
 const {bucket} = goog.require('goog.array');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 
-const Rule = goog.requireType('os.im.mapping.Rule');
+const {default: Rule} = goog.requireType('os.im.mapping.Rule');
 const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 

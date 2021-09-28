@@ -1,12 +1,11 @@
-goog.module('os.ol.source.IUrlSource');
-
+goog.declareModuleId('os.ol.source.IUrlSource');
 
 /**
  * Interface for openlayers sources supporting changing URLs and request parameters.
  *
  * @interface
  */
-class IUrlSource {
+export default class IUrlSource {
   /**
    * Get the user-provided params, i.e. those passed to the constructor through
    * the "params" option, and possibly updated using the updateParams method.
@@ -44,5 +43,3 @@ class IUrlSource {
  * @type {string}
  */
 IUrlSource.ID = 'os.ol.source.IUrlSource';
-
-exports = IUrlSource;

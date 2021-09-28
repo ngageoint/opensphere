@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ui.util.OffsetMarginUI');
 
+import ThemeSettingsChangeEvent from '../../config/themesettingschangeevent.js';
 import * as dispatcher from '../../dispatcher.js';
 import Module from '../module.js';
 import {removeResize, resize} from '../ui.js';
 
 const Throttle = goog.require('goog.Throttle');
-const ThemeSettingsChangeEvent = goog.require('os.config.ThemeSettingsChangeEvent');
 
 
 /**

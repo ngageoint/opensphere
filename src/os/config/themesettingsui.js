@@ -1,15 +1,16 @@
-goog.module('os.config.ThemeSettingsUI');
+goog.declareModuleId('os.config.ThemeSettingsUI');
+
+import * as dispatcher from '../dispatcher.js';
+import {ROOT} from '../os.js';
+import Module from '../ui/module.js';
+import {apply} from '../ui/ui.js';
+import {getSettings} from './configinstance.js';
+import {DEFAULT_THEME, DEFAULT_THEMES, Keys} from './theme.js';
+import ThemeSettingsAccessibilityChangeEvent from './themesettingsaccessibilitychangeevent.js';
 
 const GoogEvent = goog.require('goog.events.Event');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const {getSettings} = goog.require('os.config.instance');
-const ThemeSettingsAccessibilityChangeEvent = goog.require('os.config.ThemeSettingsAccessibilityChangeEvent');
-const {DEFAULT_THEME, DEFAULT_THEMES, Keys} = goog.require('os.config.theme');
-const {apply} = goog.require('os.ui');
-const {default: Module} = goog.require('os.ui.Module');
 
-const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
 
 
 /**
@@ -17,7 +18,7 @@ const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
  *
  * @return {angular.Directive}
  */
-const directive = function() {
+export const directive = function() {
   return {
     restrict: 'E',
     templateUrl: ROOT + 'views/config/themesettings.html',
@@ -26,12 +27,11 @@ const directive = function() {
   };
 };
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'themesettings';
+export const directiveTag = 'themesettings';
 
 
 /**
@@ -44,7 +44,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for unit settings
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -158,9 +158,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  directive,
-  directiveTag,
-  Controller
-};

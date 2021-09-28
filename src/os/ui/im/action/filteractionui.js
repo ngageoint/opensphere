@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.im.action');
 
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
 
 
 /**

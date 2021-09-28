@@ -17,14 +17,14 @@ goog.require('plugin.heatmap.menu');
 
 describe('plugin.heatmap.HeatmapPlugin', function() {
   const googString = goog.module.get('goog.string');
-  const DataManager = goog.module.get('os.data.DataManager');
-  const DataEvent = goog.module.get('os.data.event.DataEvent');
-  const DataEventType = goog.module.get('os.data.event.DataEventType');
-  const LayerType = goog.module.get('os.layer.LayerType');
-  const LayerConfigManager = goog.module.get('os.layer.config.LayerConfigManager');
-  const VectorSource = goog.module.get('os.source.Vector');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: DataEvent} = goog.module.get('os.data.event.DataEvent');
+  const {default: DataEventType} = goog.module.get('os.data.event.DataEventType');
+  const {default: LayerType} = goog.module.get('os.layer.LayerType');
+  const {default: LayerConfigManager} = goog.module.get('os.layer.config.LayerConfigManager');
+  const {default: VectorSource} = goog.module.get('os.source.Vector');
   const layerMenu = goog.module.get('os.ui.menu.layer');
-  const SynchronizerManager = goog.module.get('os.webgl.SynchronizerManager');
+  const {default: SynchronizerManager} = goog.module.get('os.webgl.SynchronizerManager');
   const heatmap = goog.module.get('plugin.heatmap');
   const {default: HeatmapLayerConfig} = goog.module.get('plugin.heatmap.HeatmapLayerConfig');
   const {default: HeatmapPlugin} = goog.module.get('plugin.heatmap.HeatmapPlugin');

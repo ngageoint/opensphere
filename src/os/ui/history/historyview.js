@@ -1,14 +1,14 @@
 goog.declareModuleId('os.ui.history.HistoryViewUI');
 
+import CommandProcessor from '../../command/commandprocessor.js';
+import EventType from '../../command/eventtype.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import * as ConfirmUI from '../window/confirm.js';
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const EventType = goog.require('os.command.EventType');
 
 const GoogEvent = goog.requireType('goog.events.Event');
-const CommandEvent = goog.requireType('os.command.CommandEvent');
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: CommandEvent} = goog.requireType('os.command.CommandEvent');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**

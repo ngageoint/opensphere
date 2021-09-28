@@ -1,9 +1,9 @@
 goog.declareModuleId('plugin.overview.OverviewMap');
 
+import Settings from '../../os/config/settings.js';
 import * as osMap from '../../os/map/map.js';
 
-const MapContainer = goog.require('os.MapContainer');
-const Settings = goog.require('os.config.Settings');
+import MapContainer from '../../os/mapcontainer.js';
 const MapProperty = goog.require('ol.MapProperty');
 const View = goog.require('ol.View');
 const OLOverviewMap = goog.require('ol.control.OverviewMap');

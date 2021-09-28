@@ -1,14 +1,14 @@
-goog.module('os.im.mapping.BearingMapping');
+goog.declareModuleId('os.im.mapping.BearingMapping');
 
-const Fields = goog.require('os.Fields');
-const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
-const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
+import Fields from '../../fields/fields.js';
+import MappingRegistry from './mappingregistry.js';
+import RadiusMapping from './radiusmapping.js';
 
 
 /**
  * Bearing mapping.
  */
-class BearingMapping extends RadiusMapping {
+export default class BearingMapping extends RadiusMapping {
   /**
    * Constructor.
    */
@@ -41,6 +41,3 @@ BearingMapping.ID = 'Bearing';
 
 // Register the mapping.
 MappingRegistry.getInstance().registerMapping(BearingMapping.ID, BearingMapping);
-
-
-exports = BearingMapping;

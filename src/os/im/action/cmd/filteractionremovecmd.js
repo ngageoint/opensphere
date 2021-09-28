@@ -1,15 +1,15 @@
-goog.module('os.im.action.cmd.FilterActionRemove');
+goog.declareModuleId('os.im.action.cmd.FilterActionRemove');
 
-const State = goog.require('os.command.State');
-const AbstractFilterAction = goog.require('os.im.action.cmd.AbstractFilterAction');
+import State from '../../../command/state.js';
+import AbstractFilterAction from './abstractfilteractioncmd.js';
 
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
 
 
 /**
  * Command for removing filter actions.
  */
-class FilterActionRemove extends AbstractFilterAction {
+export default class FilterActionRemove extends AbstractFilterAction {
   /**
    * Constructor.
    * @param {!FilterActionEntry} entry The filter action.
@@ -50,5 +50,3 @@ class FilterActionRemove extends AbstractFilterAction {
     return true;
   }
 }
-
-exports = FilterActionRemove;

@@ -1,12 +1,11 @@
 goog.declareModuleId('os.ui.query.cmd.AreaRemove');
 
+import State from '../../../command/state.js';
+import {getAreaManager, getQueryManager} from '../../../query/queryinstance.js';
 import AbstractArea from './abstractareacmd.js';
 
-const State = goog.require('os.command.State');
-const {getAreaManager, getQueryManager} = goog.require('os.query.instance');
-
 const Feature = goog.requireType('ol.Feature');
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**

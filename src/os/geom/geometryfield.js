@@ -1,10 +1,12 @@
-goog.module('os.geom.GeometryField');
+goog.declareModuleId('os.geom.GeometryField');
 
 /**
  * Fields used on `ol.geom.Geometry` objects.
  * @enum {string}
  */
-exports = {
+const GeometryField = {
   NORMALIZED: '_normalized',
   PROJECTION: '_projection'
 };
+
+export default GeometryField;

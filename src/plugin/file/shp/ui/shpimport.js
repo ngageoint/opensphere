@@ -1,12 +1,11 @@
 goog.declareModuleId('plugin.file.shp.ui.SHPImport');
 
+import * as osFile from '../../../../os/file/index.js';
 import FileImportWizard from '../../../../os/ui/im/fileimportwizard.js';
 import Module from '../../../../os/ui/module.js';
 import {directive as wizardDirective} from '../../../../os/ui/wiz/wizard.js';
 import SHPDescriptor from '../shpdescriptor.js';
 import SHPProvider from '../shpprovider.js';
-
-const osFile = goog.require('os.file');
 
 const {default: SHPParserConfig} = goog.requireType('plugin.file.shp.SHPParserConfig');
 

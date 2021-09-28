@@ -1,6 +1,15 @@
 goog.declareModuleId('os.ui.timeline.TimelineUI');
 
+import Settings from '../../config/settings.js';
 import * as dispatcher from '../../dispatcher.js';
+import * as events from '../../events/events.js';
+import Metrics from '../../metrics/metrics.js';
+import * as keys from '../../metrics/metricskeys.js';
+import Duration from '../../time/duration.js';
+import * as osTime from '../../time/time.js';
+import TimeInstant from '../../time/timeinstant.js';
+import TimelineController from '../../time/timelinecontroller.js';
+import TimeRange from '../../time/timerange.js';
 import Module from '../module.js';
 import * as ui from '../ui.js';
 import Brush from './brush.js';
@@ -17,19 +26,10 @@ const GoogEventType = goog.require('goog.events.EventType');
 const MouseWheelHandler = goog.require('goog.events.MouseWheelHandler');
 const log = goog.require('goog.log');
 const math = goog.require('goog.math');
-const Settings = goog.require('os.config.Settings');
-const events = goog.require('os.events');
-const Metrics = goog.require('os.metrics.Metrics');
-const keys = goog.require('os.metrics.keys');
-const osTime = goog.require('os.time');
-const Duration = goog.require('os.time.Duration');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const TimeRange = goog.require('os.time.TimeRange');
-const TimelineController = goog.require('os.time.TimelineController');
 
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const HistogramData = goog.requireType('os.hist.HistogramData');
-const ITime = goog.requireType('os.time.ITime');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: HistogramData} = goog.requireType('os.hist.HistogramData');
+const {default: ITime} = goog.requireType('os.time.ITime');
 const {default: IHistogramChart} = goog.requireType('os.ui.hist.IHistogramChart');
 const {default: DragPanEvent} = goog.requireType('os.ui.timeline.DragPanEvent');
 const {default: IDragPanItem} = goog.requireType('os.ui.timeline.IDragPanItem');

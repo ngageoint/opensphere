@@ -1,15 +1,16 @@
-goog.module('os.data.groupby.TagListGroupBy');
+goog.declareModuleId('os.data.groupby.TagListGroupBy');
+
+import Settings from '../../config/settings.js';
+import TagGroupBy from '../../ui/data/groupby/taggroupby.js';
 
 const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
-const Settings = goog.require('os.config.Settings');
-const {default: TagGroupBy} = goog.require('os.ui.data.groupby.TagGroupBy');
 
 
 /**
  * Groups nodes by a given list of tags
  */
-class TagListGroupBy extends TagGroupBy {
+export default class TagListGroupBy extends TagGroupBy {
   /**
    * Constructor.
    * @param {boolean=} opt_open Keeps groups open by default
@@ -82,5 +83,3 @@ class TagListGroupBy extends TagGroupBy {
     return ids;
   }
 }
-
-exports = TagListGroupBy;

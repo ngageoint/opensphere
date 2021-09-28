@@ -1,8 +1,8 @@
-goog.module('os.im.action.ImportActionEvent');
+goog.declareModuleId('os.im.action.ImportActionEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
 
 
 /**
@@ -10,7 +10,7 @@ const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
  *
  * @template T
  */
-class ImportActionEvent extends GoogEvent {
+export default class ImportActionEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type The event type.
@@ -33,5 +33,3 @@ class ImportActionEvent extends GoogEvent {
     this.execute = opt_execute || false;
   }
 }
-
-exports = ImportActionEvent;

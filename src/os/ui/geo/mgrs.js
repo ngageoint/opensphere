@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.geo.mgrs');
 
-const {MGRS_REGEXP} = goog.require('os.geo');
+import {MGRS_REGEXP} from '../../geo/geo.js';
 
 
 /**

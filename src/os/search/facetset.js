@@ -1,4 +1,4 @@
-goog.module('os.search.FacetSet');
+goog.declareModuleId('os.search.FacetSet');
 
 
 /**
@@ -6,4 +6,4 @@ goog.module('os.search.FacetSet');
  */
 let FacetSet;
 
-exports = FacetSet;
+export default FacetSet;

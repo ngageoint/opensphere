@@ -1,5 +1,15 @@
 goog.declareModuleId('os.ui.ogc.OGCServer');
 
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import Settings from '../../config/settings.js';
+import DataManager from '../../data/datamanager.js';
+import IDataProvider from '../../data/idataprovider.js';
+import {isLocal} from '../../file/index.js';
+import osImplements from '../../implements.js';
+import Request from '../../net/request.js';
+import {ID, getException} from '../../ogc/ogc.js';
+import WMTSLayerParsers from '../../ogc/wmts/wmtslayerparsers.js';
 import BaseProvider from '../data/baseprovider.js';
 import DescriptorNode from '../data/descriptornode.js';
 import AbstractLoadingServer from '../server/abstractloadingserver.js';
@@ -20,20 +30,10 @@ const {contains: stringContains, unescapeEntities} = goog.require('goog.string')
 const WMSCapabilities = goog.require('ol.format.WMSCapabilities');
 const WMTSCapabilities = goog.require('ol.format.WMTSCapabilities');
 const XLink = goog.require('ol.format.XLink');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const Settings = goog.require('os.config.Settings');
-const DataManager = goog.require('os.data.DataManager');
-const IDataProvider = goog.require('os.data.IDataProvider');
-const {isLocal} = goog.require('os.file');
-const osImplements = goog.require('os.implements');
-const Request = goog.require('os.net.Request');
-const {ID, getException} = goog.require('os.ogc');
-const WMTSLayerParsers = goog.require('os.ogc.wmts.WMTSLayerParsers');
 
 const Logger = goog.requireType('goog.log.Logger');
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const OSFile = goog.requireType('os.file.File');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: OSFile} = goog.requireType('os.file.File');
 const {default: IWMTSLayerParser} = goog.requireType('os.ogc.wmts.IWMTSLayerParser');
 const {default: IWMSLayerParser} = goog.requireType('os.ui.ogc.wms.IWMSLayerParser');
 

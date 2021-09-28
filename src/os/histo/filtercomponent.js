@@ -1,4 +1,4 @@
-goog.module('os.histo.FilterComponent');
+goog.declareModuleId('os.histo.FilterComponent');
 
 /**
  * Strings used to create OGC filters from a histogram.
@@ -6,7 +6,7 @@ goog.module('os.histo.FilterComponent');
  * These were primarily put here so tests won't immediately break if we need to tweak a filter.
  * @enum {string}
  */
-exports = {
+const FilterComponent = {
   IS_EMPTY_HEAD: '<PropertyIsNull><PropertyName>',
   IS_EMPTY_TAIL: '</PropertyName></PropertyIsNull>',
 
@@ -22,3 +22,5 @@ exports = {
   LT_MID: '</PropertyName><Literal><![CDATA[',
   LT_TAIL: ']]></Literal></PropertyIsLessThan>'
 };
+
+export default FilterComponent;

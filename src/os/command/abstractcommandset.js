@@ -1,12 +1,13 @@
-goog.module('os.command.AbstractCommandSet');
+goog.declareModuleId('os.command.AbstractCommandSet');
+
+import * as osArray from '../array/array.js';
+import State from './state.js';
 
 const disposeAll = goog.require('goog.disposeAll');
 const EventTarget = goog.require('goog.events.EventTarget');
-const osArray = goog.require('os.array');
-const State = goog.require('os.command.State');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -16,7 +17,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {IDisposable}
  */
-class AbstractCommandSet extends EventTarget {
+export default class AbstractCommandSet extends EventTarget {
   /**
    * Constructor.
    */
@@ -105,5 +106,3 @@ class AbstractCommandSet extends EventTarget {
     }
   }
 }
-
-exports = AbstractCommandSet;

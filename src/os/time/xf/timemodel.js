@@ -1,18 +1,19 @@
-goog.module('os.time.xf.TimeModel');
+goog.declareModuleId('os.time.xf.TimeModel');
+
+import DataModel from '../../data/xf/datamodel.js';
+import PropertyChange from '../../data/xf/propertychange.js';
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import osImplements from '../../implements.js';
+import ITime from '../itime.js';
+import TimeInstant from '../timeinstant.js';
+import TimelineController from '../timelinecontroller.js';
+import TimeRange from '../timerange.js';
 
 const googArray = goog.require('goog.array');
 const functions = goog.require('goog.functions');
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
 const olArray = goog.require('ol.array');
-const DataModel = goog.require('os.data.xf.DataModel');
-const PropertyChange = goog.require('os.data.xf.PropertyChange');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osImplements = goog.require('os.implements');
-const ITime = goog.require('os.time.ITime');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const TimeRange = goog.require('os.time.TimeRange');
-const TimelineController = goog.require('os.time.TimelineController');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {GetTimeFn} = goog.requireType('os.time.xf');
@@ -29,7 +30,7 @@ const {GetTimeFn} = goog.requireType('os.time.xf');
  *
  * @template T,S,BIN
  */
-class TimeModel extends DataModel {
+export default class TimeModel extends DataModel {
   /**
    * Constructor.
    * @param {GetTimeFn} getTimeFn
@@ -571,6 +572,3 @@ const logger = log.getLogger('os.time.xf.TimeModel');
  * @type {!TimeRange}
  */
 const emptyRange = new TimeRange(NaN, NaN);
-
-
-exports = TimeModel;

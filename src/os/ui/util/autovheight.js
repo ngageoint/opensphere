@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.util.AutoVHeightUI');
 
+import ThemeSettingsChangeEvent from '../../config/themesettingschangeevent.js';
 import * as dispatcher from '../../dispatcher.js';
 import Module from '../module.js';
 import {removeResize, resize, waitForAngular} from '../ui.js';
@@ -10,7 +11,6 @@ const googArray = goog.require('goog.array');
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
 const GoogEventType = goog.require('goog.events.EventType');
 const googObject = goog.require('goog.object');
-const ThemeSettingsChangeEvent = goog.require('os.config.ThemeSettingsChangeEvent');
 
 
 /**

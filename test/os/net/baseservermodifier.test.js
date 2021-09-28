@@ -6,7 +6,7 @@ goog.require('os.net.URLModifier');
 describe('os.net.BaseServerModifier', function() {
   const Uri = goog.module.get('goog.Uri');
   const BaseServerModifier = goog.module.get('os.net.BaseServerModifier');
-  const URLModifier = goog.module.get('os.net.URLModifier');
+  const {default: URLModifier} = goog.module.get('os.net.URLModifier');
 
   it('should not modify if not configured', function() {
     var mod = new URLModifier();

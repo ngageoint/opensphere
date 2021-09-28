@@ -1,6 +1,10 @@
 goog.declareModuleId('os.ui.file.ImportDialogUI');
 
 import '../popover/popover.js';
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import EventType from '../../events/eventtype.js';
+import {createFromFile} from '../../file/index.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import {apply} from '../ui.js';
@@ -13,14 +17,10 @@ const TagName = goog.require('goog.dom.TagName');
 const googEvents = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const EventType = goog.require('os.events.EventType');
-const {createFromFile} = goog.require('os.file');
 
 const Logger = goog.requireType('goog.log.Logger');
-const OSFile = goog.requireType('os.file.File');
-const IFileMethod = goog.requireType('os.file.IFileMethod');
+const {default: OSFile} = goog.requireType('os.file.File');
+const {default: IFileMethod} = goog.requireType('os.file.IFileMethod');
 const {default: ImportMethod} = goog.requireType('os.ui.file.method.ImportMethod');
 const {default: ImportManager} = goog.requireType('os.ui.im.ImportManager');
 

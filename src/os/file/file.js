@@ -1,9 +1,10 @@
-goog.module('os.file.File');
+goog.declareModuleId('os.file.File');
+
+import IPersistable from '../ipersistable.js';// eslint-disable-line
+import {getText} from './mime/text.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 const GoogFileReader = goog.require('goog.fs.FileReader');
-const IPersistable = goog.require('os.IPersistable'); // eslint-disable-line
-const {getText} = goog.require('os.file.mime.text');
 
 
 /**
@@ -11,7 +12,7 @@ const {getText} = goog.require('os.file.mime.text');
  *
  * @implements {IPersistable}
  */
-class OSFile {
+export default class OSFile {
   /**
    * Constructor.
    */
@@ -224,5 +225,3 @@ class OSFile {
  * @const
  */
 OSFile.MAX_CONTENT_LEN = 1024 * 1024 * 100;
-
-exports = OSFile;

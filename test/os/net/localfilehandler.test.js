@@ -7,9 +7,9 @@ goog.require('os.net.LocalFileHandler');
 describe('os.net.LocalFileHandler', function() {
   const Uri = goog.module.get('goog.Uri');
   const EventType = goog.module.get('goog.net.EventType');
-  const OSFile = goog.module.get('os.file.File');
-  const FileStorage = goog.module.get('os.file.FileStorage');
-  const LocalFileHandler = goog.module.get('os.net.LocalFileHandler');
+  const {default: OSFile} = goog.module.get('os.file.File');
+  const {default: FileStorage} = goog.module.get('os.file.FileStorage');
+  const {default: LocalFileHandler} = goog.module.get('os.net.LocalFileHandler');
 
   var file = new OSFile();
   file.setFileName('testFile.xml');

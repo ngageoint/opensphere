@@ -1,21 +1,22 @@
-goog.module('os.state.v2.BaseFilter');
+goog.declareModuleId('os.state.v2.BaseFilter');
+
+import FilterEntry from '../../filter/filterentry.js';
+import {getFilterManager, getQueryManager} from '../../query/queryinstance.js';
+import {XMLNS, appendElement, clone as cloneXml} from '../../xml.js';
+import AbstractState from '../abstractstate.js';
+import XMLState from '../xmlstate.js';
+import FilterTag from './filtertag.js';
 
 const {getChildren, getFirstElementChild} = goog.require('goog.dom');
 const {loadXml, serialize} = goog.require('goog.dom.xml');
 const {find} = goog.require('ol.array');
-const FilterEntry = goog.require('os.filter.FilterEntry');
-const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
-const AbstractState = goog.require('os.state.AbstractState');
-const XMLState = goog.require('os.state.XMLState');
-const FilterTag = goog.require('os.state.v2.FilterTag');
-const {XMLNS, appendElement, clone: cloneXml} = goog.require('os.xml');
 
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**
  */
-class BaseFilter extends XMLState {
+export default class BaseFilter extends XMLState {
   /**
    * Constructor.
    */
@@ -202,5 +203,3 @@ class BaseFilter extends XMLState {
  * @const
  */
 BaseFilter.OGC_NS = 'http://www.opengis.net/ogc';
-
-exports = BaseFilter;

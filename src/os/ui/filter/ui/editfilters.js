@@ -3,6 +3,9 @@ goog.declareModuleId('os.ui.filter.ui.EditFiltersUI');
 import '../../util/validationmessage.js';
 import '../advancedfilterbuilder.js';
 import '../basicfilterbuilder.js';
+import DataManager from '../../../data/datamanager.js';
+import Metrics from '../../../metrics/metrics.js';
+import {Filters} from '../../../metrics/metricskeys.js';
 import {ROOT} from '../../../os.js';
 import Module from '../../module.js';
 import {exists, close} from '../../window.js';
@@ -12,9 +15,6 @@ import ExpressionNode from './expressionnode.js';
 import GroupNode from './groupnode.js';
 
 const {getFirstElementChild, getNextElementSibling} = goog.require('goog.dom');
-const DataManager = goog.require('os.data.DataManager');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Filters} = goog.require('os.metrics.keys');
 
 const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 

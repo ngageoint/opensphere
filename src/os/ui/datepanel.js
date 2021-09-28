@@ -4,13 +4,13 @@ import './datetime/datecontrol.js';
 import './popover/popover.js';
 import * as dispatcher from '../dispatcher.js';
 import {ROOT} from '../os.js';
+import {getTimeOffsetLabel} from '../time/time.js';
+import TimelineController from '../time/timelinecontroller.js';
 import UIEvent from './events/uievent.js';
 import UIEventType from './events/uieventtype.js';
 import Module from './module.js';
 
 const RangeSet = goog.require('goog.math.RangeSet');
-const {getTimeOffsetLabel} = goog.require('os.time');
-const TimelineController = goog.require('os.time.TimelineController');
 
 
 /**

@@ -1,7 +1,15 @@
 goog.declareModuleId('plugin.file.kml.KMLSource');
 
+import AlertEventSeverity from '../../../os/alert/alerteventseverity.js';
+import AlertManager from '../../../os/alert/alertmanager.js';
 import * as dispatcher from '../../../os/dispatcher.js';
+import PropertyChangeEvent from '../../../os/events/propertychangeevent.js';
+import MapContainer from '../../../os/mapcontainer.js';
+import * as osObject from '../../../os/object/object.js';
+import PropertyChange from '../../../os/source/propertychange.js';
+import RequestSource from '../../../os/source/requestsource.js';
 import * as source from '../../../os/source/source.js';
+import TriState from '../../../os/structs/tristate.js';
 import UIEventType from '../../../os/ui/events/uieventtype.js';
 import {Controller as FeatureEditCtrl} from '../../../os/ui/featureedit.js';
 import * as column from '../../../os/ui/slick/column.js';
@@ -16,17 +24,9 @@ const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
 const olArray = goog.require('ol.array');
-const MapContainer = goog.require('os.MapContainer');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osObject = goog.require('os.object');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const RequestSource = goog.require('os.source.Request');
-const TriState = goog.require('os.structs.TriState');
 
 const Logger = goog.requireType('goog.log.Logger');
-const Image = goog.requireType('os.layer.Image');
+const {default: Image} = goog.requireType('os.layer.Image');
 const {default: UIEvent} = goog.requireType('os.ui.events.UIEvent');
 
 

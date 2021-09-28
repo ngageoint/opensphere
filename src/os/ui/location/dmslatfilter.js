@@ -1,8 +1,7 @@
 goog.declareModuleId('os.ui.location.dmsLatFilter');
 
+import {toSexagesimal} from '../../geo/geo.js';
 import Module from '../module.js';
-
-const {toSexagesimal} = goog.require('os.geo');
 
 
 /**

@@ -1,4 +1,4 @@
-goog.module('os.proj.switch.CommandListEvent');
+goog.declareModuleId('os.proj.switch.CommandListEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -6,7 +6,7 @@ const GoogEventType = goog.require('goog.events.EventType');
 
 /**
  */
-class CommandListEvent extends GoogEvent {
+export default class CommandListEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {Array<os.command.ICommand>} commands
@@ -26,5 +26,3 @@ class CommandListEvent extends GoogEvent {
  * @const
  */
 CommandListEvent.TYPE = GoogEventType.SUBMIT;
-
-exports = CommandListEvent;

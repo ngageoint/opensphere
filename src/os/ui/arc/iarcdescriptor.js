@@ -1,8 +1,8 @@
 goog.declareModuleId('os.ui.arc.IARCDescriptor');
 
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const IServerDescriptor = goog.requireType('os.data.IServerDescriptor');
-const IFilterable = goog.requireType('os.filter.IFilterable');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: IServerDescriptor} = goog.requireType('os.data.IServerDescriptor');
+const {default: IFilterable} = goog.requireType('os.filter.IFilterable');
 const {default: IFeatureTypeDescriptor} = goog.requireType('os.ui.ogc.IFeatureTypeDescriptor');
 
 

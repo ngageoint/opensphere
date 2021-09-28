@@ -1,15 +1,15 @@
 goog.declareModuleId('os.ui.ProviderImportCtrl');
 
+import Settings from '../config/settings.js';
+import {ProviderKey} from '../data/data.js';
+import DataManager from '../data/datamanager.js';
 import {close, create, exists, getById} from './window.js';
 import WindowEventType from './windoweventtype.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');
-const Settings = goog.require('os.config.Settings');
-const {ProviderKey} = goog.require('os.data');
-const DataManager = goog.require('os.data.DataManager');
 
-const IDataProvider = goog.requireType('os.data.IDataProvider');
+const {default: IDataProvider} = goog.requireType('os.data.IDataProvider');
 
 
 /**

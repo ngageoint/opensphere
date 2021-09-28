@@ -1,13 +1,13 @@
-goog.module('os.data');
+goog.declareModuleId('os.data');
 
-const {instanceOf} = goog.require('os.classRegistry');
+import {instanceOf} from '../classregistry.js';
 
 
 /**
  * Descriptor class names used with os.classRegistry.
  * @type {Object}
  */
-const DescriptorClass = {
+export const DescriptorClass = {
   LAYER_SYNC: 'os.data.LayerSyncDescriptor'
 };
 
@@ -15,7 +15,7 @@ const DescriptorClass = {
  * Node class names used with os.classRegistry.
  * @type {Object}
  */
-const NodeClass = {
+export const NodeClass = {
   DRAW_FEATURE: 'os.data.DrawingFeatureNode',
   DRAW_LAYER: 'os.data.DrawingLayerNode',
   LAYER: 'os.data.LayerNode',
@@ -26,7 +26,7 @@ const NodeClass = {
  * Settings keys for data providers.
  * @enum {string}
  */
-const ProviderKey = {
+export const ProviderKey = {
   ADMIN: 'providers',
   USER: 'userProviders'
 };
@@ -36,11 +36,4 @@ const ProviderKey = {
  * @param {*} item The item.
  * @return {boolean}
  */
-const isLayerNode = (item) => instanceOf(item, NodeClass.LAYER);
-
-exports = {
-  DescriptorClass,
-  NodeClass,
-  ProviderKey,
-  isLayerNode
-};
+export const isLayerNode = (item) => instanceOf(item, NodeClass.LAYER);

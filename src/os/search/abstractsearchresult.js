@@ -1,6 +1,6 @@
-goog.module('os.search.AbstractSearchResult');
+goog.declareModuleId('os.search.AbstractSearchResult');
 
-const ISearchResult = goog.requireType('os.search.ISearchResult');
+const {default: ISearchResult} = goog.requireType('os.search.ISearchResult');
 
 
 /**
@@ -10,7 +10,7 @@ const ISearchResult = goog.requireType('os.search.ISearchResult');
  * @implements {ISearchResult<T>}
  * @template T
  */
-class AbstractSearchResult {
+export default class AbstractSearchResult {
   /**
    * Constructor.
    * @param {T} result The result.
@@ -93,5 +93,3 @@ class AbstractSearchResult {
  * @private
  */
 AbstractSearchResult.nextId_ = 0;
-
-exports = AbstractSearchResult;

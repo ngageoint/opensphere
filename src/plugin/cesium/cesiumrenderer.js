@@ -1,8 +1,18 @@
 goog.declareModuleId('plugin.cesium.CesiumRenderer');
 
+import CommandProcessor from '../../os/command/commandprocessor.js';
+import DisplaySetting from '../../os/config/displaysetting.js';
+import settings from '../../os/config/settings.js';
 import * as dispatcher from '../../os/dispatcher.js';
 import {getGeometries} from '../../os/feature/feature.js';
+import SynchronizerType from '../../os/layer/synchronizertype.js';
 import {WEBGL_CANVAS_CLASS} from '../../os/map/map.js';
+import MapEvent from '../../os/map/mapevent.js';
+import * as terrain from '../../os/map/terrain.js';
+import MapContainer from '../../os/mapcontainer.js';
+import AbstractWebGLRenderer from '../../os/webgl/abstractwebglrenderer.js';
+import AltitudeMode from '../../os/webgl/altitudemode.js';
+import SynchronizerManager from '../../os/webgl/synchronizermanager.js';
 import HeatmapSynchronizerType from '../heatmap/heatmapsynchronizertype.js';
 import {
   DEFAULT_FOG_DENSITY,
@@ -40,16 +50,6 @@ const {clamp} = goog.require('goog.math');
 const userAgent = goog.require('goog.userAgent');
 const ViewHint = goog.require('ol.ViewHint');
 const OLCesium = goog.require('olcs.OLCesium');
-const MapContainer = goog.require('os.MapContainer');
-const MapEvent = goog.require('os.MapEvent');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const DisplaySetting = goog.require('os.config.DisplaySetting');
-const settings = goog.require('os.config.Settings');
-const SynchronizerType = goog.require('os.layer.SynchronizerType');
-const terrain = goog.require('os.map.terrain');
-const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
-const AltitudeMode = goog.require('os.webgl.AltitudeMode');
-const SynchronizerManager = goog.require('os.webgl.SynchronizerManager');
 
 const OLMap = goog.requireType('ol.Map');
 const AbstractSynchronizer = goog.requireType('olcs.AbstractSynchronizer');

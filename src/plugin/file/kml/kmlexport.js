@@ -1,9 +1,9 @@
 goog.declareModuleId('plugin.file.kml.export');
 
+import * as annotation from '../../../os/annotation/annotation.js';
 import * as osStyle from '../../../os/style/style.js';
 
-const annotation = goog.require('os.annotation');
-const StyleField = goog.require('os.style.StyleField');
+import StyleField from '../../../os/style/stylefield.js';
 
 
 /**

@@ -1,13 +1,12 @@
 goog.declareModuleId('plugin.vectortile.VectorTilePlugin');
 
+import OLDoubleClick from '../../os/interaction/doubleclickinteraction.js';
+import LayerConfigManager from '../../os/layer/config/layerconfigmanager.js';
+import MapContainer from '../../os/mapcontainer.js';
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
 import DoubleClick from './doubleclickinteraction.js';
 import {ID} from './vectortile.js';
 import VectorTileLayerConfig from './vectortilelayerconfig.js';
-
-const MapContainer = goog.require('os.MapContainer');
-const OLDoubleClick = goog.require('os.interaction.DoubleClick');
-const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 
 /**
  * Plugin to add vector tile support to OpenSphere.

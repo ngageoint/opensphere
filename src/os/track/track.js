@@ -1,4 +1,31 @@
-goog.module('os.track');
+goog.declareModuleId('os.track');
+
+import * as osArray from '../array/array.js';
+import RecordField from '../data/recordfield.js';
+import EventType from '../events/eventtype.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import DynamicFeature from '../feature/dynamicfeature.js';
+import DynamicPropertyChange from '../feature/dynamicpropertychange.js';
+import * as osFeature from '../feature/feature.js';
+import Fields from '../fields/fields.js';
+import * as fn from '../fn/fn.js';
+import * as geo from '../geo/geo.js';
+import GeometryField from '../geom/geometryfield.js';
+import * as interpolate from '../interpolate.js';
+import Method from '../interpolatemethod.js';
+import * as osObject from '../object/object.js';
+import * as osStyle from '../style/style.js';
+import StyleField from '../style/stylefield.js';
+import StyleType from '../style/styletype.js';
+import TimelineController from '../time/timelinecontroller.js';
+import TimeRange from '../time/timerange.js';
+import {Controller as FeatureEditCtrl} from '../ui/featureedit.js';
+import * as kml from '../ui/file/kml/kml.js';
+import * as column from '../ui/slick/column.js';
+import * as ConfirmColumnUI from '../ui/window/confirmcolumn.js';
+import * as ConfirmTextUI from '../ui/window/confirmtext.js';
+import UnitManager from '../unit/unitmanager.js';
+import TrackField from './trackfield.js';
 
 const Promise = goog.require('goog.Promise');
 const googArray = goog.require('goog.array');
@@ -16,39 +43,12 @@ const MultiPoint = goog.require('ol.geom.MultiPoint');
 const Point = goog.require('ol.geom.Point');
 const olObj = goog.require('ol.obj');
 
-const Fields = goog.require('os.Fields');
-const osArray = goog.require('os.array');
-const RecordField = goog.require('os.data.RecordField');
-const EventType = goog.require('os.events.EventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osFeature = goog.require('os.feature');
-const DynamicFeature = goog.require('os.feature.DynamicFeature');
-const DynamicPropertyChange = goog.require('os.feature.DynamicPropertyChange');
-const fn = goog.require('os.fn');
-const geo = goog.require('os.geo');
-const GeometryField = goog.require('os.geom.GeometryField');
-const interpolate = goog.require('os.interpolate');
-const Method = goog.require('os.interpolate.Method');
-const osObject = goog.require('os.object');
-const osStyle = goog.require('os.style');
-const StyleField = goog.require('os.style.StyleField');
-const StyleType = goog.require('os.style.StyleType');
-const TimeRange = goog.require('os.time.TimeRange');
-const TimelineController = goog.require('os.time.TimelineController');
-const TrackField = goog.require('os.track.TrackField');
-const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
-const kml = goog.require('os.ui.file.kml');
-const column = goog.require('os.ui.slick.column');
-const ConfirmColumnUI = goog.require('os.ui.window.ConfirmColumnUI');
-const ConfirmTextUI = goog.require('os.ui.window.ConfirmTextUI');
-const UnitManager = goog.require('os.unit.UnitManager');
-
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const AddOptions = goog.requireType('os.track.AddOptions');
-const CreateOptions = goog.requireType('os.track.CreateOptions');
-const SplitOptions = goog.requireType('os.track.SplitOptions');
-const TrackFeatureLike = goog.requireType('os.track.TrackFeatureLike');
-const TrackLike = goog.requireType('os.track.TrackLike');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
+const {default: AddOptions} = goog.requireType('os.track.AddOptions');
+const {default: CreateOptions} = goog.requireType('os.track.CreateOptions');
+const {default: SplitOptions} = goog.requireType('os.track.SplitOptions');
+const {default: TrackFeatureLike} = goog.requireType('os.track.TrackFeatureLike');
+const {default: TrackLike} = goog.requireType('os.track.TrackLike');
 
 
 /**
@@ -61,31 +61,31 @@ const logger = log.getLogger('os.track');
  * Identifier for track components.
  * @type {string}
  */
-const ID = 'track';
+export const ID = 'track';
 
 /**
  * The FontAwesome track icon.
  * @type {string}
  */
-const ICON = 'fa-share-alt';
+export const ICON = 'fa-share-alt';
 
 /**
  * Text to display when elapsed distance/duration is zero.
  * @type {number}
  */
-const ELAPSED_ZERO = 0;
+export const ELAPSED_ZERO = 0;
 
 /**
  * Text to display when total distance/duration is zero.
  * @type {string}
  */
-const TOTAL_ZERO = 'Unknown';
+export const TOTAL_ZERO = 'Unknown';
 
 /**
  * Style config for the track.
  * @type {!Object<string, *>}
  */
-const TRACK_CONFIG = {
+export const TRACK_CONFIG = {
   'stroke': {
     'width': osStyle.DEFAULT_STROKE_WIDTH
   },
@@ -96,7 +96,7 @@ const TRACK_CONFIG = {
  * Style config for the track current position marker.
  * @type {!Object<string, *>}
  */
-const CURRENT_CONFIG = {
+export const CURRENT_CONFIG = {
   'geometry': TrackField.CURRENT_POSITION,
   'image': {
     'type': 'icon',
@@ -108,7 +108,7 @@ const CURRENT_CONFIG = {
 /**
  * Style used for hiding geometries such as the line and marker
  */
-const HIDE_GEOMETRY = '__hidden__';
+export const HIDE_GEOMETRY = '__hidden__';
 
 /**
  * Test if a feature is a track.
@@ -116,7 +116,7 @@ const HIDE_GEOMETRY = '__hidden__';
  * @param {Feature} feature The feature.
  * @return {boolean} If the feature is a track.
  */
-const isTrackFeature = function(feature) {
+export const isTrackFeature = function(feature) {
   return !!feature && feature.get(RecordField.FEATURE_TYPE) === ID;
 };
 
@@ -127,7 +127,7 @@ const isTrackFeature = function(feature) {
  * @param {Feature} feature
  * @return {*} The value
  */
-const getFeatureValue = function(field, feature) {
+export const getFeatureValue = function(field, feature) {
   return feature ? feature.get(field) : undefined;
 };
 
@@ -137,7 +137,7 @@ const getFeatureValue = function(field, feature) {
  * @param {Feature} feature
  * @return {number|undefined} The value
  */
-const getStartTime = function(feature) {
+export const getStartTime = function(feature) {
   var time = feature ? /** @type {os.time.ITime|undefined} */ (feature.get(RecordField.TIME)) : undefined;
   if (time) {
     return time.getStart();
@@ -153,7 +153,7 @@ const getStartTime = function(feature) {
  * @param {!ol.Coordinate} b The second coordinate to be compared.
  * @return {number} The sort value.
  */
-const sortCoordinatesByValue = function(a, b) {
+export const sortCoordinatesByValue = function(a, b) {
   var aValue = a[a.length - 1];
   var bValue = b[b.length - 1];
   return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
@@ -171,7 +171,7 @@ const sortCoordinatesByValue = function(a, b) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const getTrackCoordinates = function(features, sortField, opt_metadataMap) {
+export const getTrackCoordinates = function(features, sortField, opt_metadataMap) {
   var getValueFn = sortField == RecordField.TIME ? getStartTime :
     getFeatureValue.bind(null, sortField);
 
@@ -364,7 +364,7 @@ let createTrack_ = function(options) {
  * @param {!CreateOptions} options The track creation options.
  * @return {TrackFeatureLike|undefined} The track feature.
  */
-const createTrack = function(options) {
+export const createTrack = function(options) {
   return createTrack_(options);
 };
 
@@ -373,7 +373,7 @@ const createTrack = function(options) {
  *
  * @param {!function(!CreateOptions):(TrackFeatureLike|undefined)} f The new implementation
  */
-const setCreateTrack = function(f) {
+export const setCreateTrack = function(f) {
   createTrack_ = f;
 };
 
@@ -480,7 +480,7 @@ let addToTrack_ = function(options) {
  * @param {!AddOptions} options The options.
  * @return {!Array<!(ol.Coordinate|Feature)>} The added coordinates or features, depending on the options.
  */
-const addToTrack = function(options) {
+export const addToTrack = function(options) {
   return addToTrack_(options);
 };
 
@@ -489,7 +489,7 @@ const addToTrack = function(options) {
  *
  * @param {!function(!AddOptions):!Array<!(ol.Coordinate|Feature)>} f The new implementation
  */
-const setAddToTrack = function(f) {
+export const setAddToTrack = function(f) {
   addToTrack_ = f;
 };
 
@@ -502,7 +502,7 @@ const setAddToTrack = function(f) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata and line coordinates.
  */
-const clamp = function(track, start, end) {
+export const clamp = function(track, start, end) {
   // add point(s) to the original geometry, in case the track was interpolated
   var geometry = /** @type {!(TrackLike)} */ (track.values_[interpolate.ORIGINAL_GEOM_FIELD] ||
       track.getGeometry());
@@ -558,7 +558,7 @@ const clamp = function(track, start, end) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata and line coordinates.
  */
-const truncate = function(track, size) {
+export const truncate = function(track, size) {
   // ensure size is >= 0
   size = Math.max(0, size);
 
@@ -616,7 +616,7 @@ const pruneMetadata_ = function(track, values, opt_stride) {
  *
  * @param {!Feature} track The track
  */
-const disposeAnimationGeometries = function(track) {
+export const disposeAnimationGeometries = function(track) {
   var currentPosition = track.get(TrackField.CURRENT_POSITION);
   track.set(TrackField.CURRENT_POSITION, undefined);
   dispose(currentPosition);
@@ -637,7 +637,7 @@ const disposeAnimationGeometries = function(track) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const setShowLine = function(track, show, opt_update) {
+export const setShowLine = function(track, show, opt_update) {
   var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[StyleType.FEATURE]);
   if (trackStyles.length > 1) {
     var lineConfig = trackStyles[0];
@@ -661,7 +661,7 @@ const setShowLine = function(track, show, opt_update) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const getShowLine = function(track) {
+export const getShowLine = function(track) {
   var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[StyleType.FEATURE]);
   return trackStyles.length > 0 && trackStyles[0]['geometry'] != HIDE_GEOMETRY;
 };
@@ -675,7 +675,7 @@ const getShowLine = function(track) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const setShowMarker = function(track, show, opt_update) {
+export const setShowMarker = function(track, show, opt_update) {
   var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[StyleType.FEATURE]);
   if (trackStyles.length > 1) { // recreate marker style
     var currentGeometry = show ? TrackField.CURRENT_POSITION : HIDE_GEOMETRY;
@@ -700,7 +700,7 @@ const setShowMarker = function(track, show, opt_update) {
  * @param {!Feature} track The track
  * @param {boolean} doInterpolation
  */
-const setInterpolateMarker = function(track, doInterpolation) {
+export const setInterpolateMarker = function(track, doInterpolation) {
   track.set(TrackField.INTERPOLATE_MARKER, doInterpolation);
   var range = TimelineController.getInstance().getCurrentRange();
   updateDynamic(track, range.start, range.end);
@@ -712,7 +712,7 @@ const setInterpolateMarker = function(track, doInterpolation) {
  * @param {!Feature} track The track
  * @return {boolean}
  */
-const getInterpolateMarker = function(track) {
+export const getInterpolateMarker = function(track) {
   return track.get(TrackField.INTERPOLATE_MARKER) !== false;
 };
 
@@ -722,7 +722,7 @@ const getInterpolateMarker = function(track) {
  * @param {!Feature} track The track
  * @param {!ol.geom.Geometry} geometry The track geometry.
  */
-const setGeometry = function(track, geometry) {
+export const setGeometry = function(track, geometry) {
   // split across the date line again
   geometry.toLonLat();
   geometry = geo.splitOnDateLine(geometry);
@@ -756,7 +756,7 @@ const setGeometry = function(track, geometry) {
  *
  * @suppress {accessControls} To allow direct access to line coordinates.
  */
-const updateCurrentPosition = function(track) {
+export const updateCurrentPosition = function(track) {
   var geometry = track.get(TrackField.CURRENT_LINE) || track.getGeometry();
   if (geometry) {
     var flatCoordinates = geometry.flatCoordinates;
@@ -793,7 +793,7 @@ const updateCurrentPosition = function(track) {
  * @param {boolean=} opt_updateTotal If the total distance should be updated.
  * @return {number} applied distance
  */
-const updateDistance = function(track, opt_updateTotal) {
+export const updateDistance = function(track, opt_updateTotal) {
   var um = UnitManager.getInstance();
   var distance = 0;
   if (opt_updateTotal) {
@@ -838,7 +838,7 @@ const updateDistance = function(track, opt_updateTotal) {
  * @param {!Feature} track The track to update
  * @return {number} the elapsed duration
  */
-const updateDuration = function(track) {
+export const updateDuration = function(track) {
   var trackGeometry = /** @type {LineString} */ (track.getGeometry());
   var sortField = track.get(TrackField.SORT_FIELD);
   var duration = 0;
@@ -880,7 +880,7 @@ const updateDuration = function(track) {
  * @param {number} distance
  * @param {number} duration
  */
-const updateAverageSpeed = function(track, distance, duration) {
+export const updateAverageSpeed = function(track, distance, duration) {
   var distanceString = ELAPSED_ZERO;
   if (distance > 0) {
     var dist = distance / (duration / 3600);
@@ -894,7 +894,7 @@ const updateAverageSpeed = function(track, distance, duration) {
  *
  * @param {!Feature} track The track to update
  */
-const updateTime = function(track) {
+export const updateTime = function(track) {
   var sortField = track.get(TrackField.SORT_FIELD);
   if (sortField == RecordField.TIME) {
     var oldTime = /** @type {os.time.ITime|undefined} */ (track.get(RecordField.TIME));
@@ -929,7 +929,7 @@ const updateTime = function(track) {
  * @param {ol.geom.Geometry|undefined} geometry The geometry.
  * @return {number} The distance.
  */
-const getGeometryDistance = function(geometry) {
+export const getGeometryDistance = function(geometry) {
   var distance = 0;
 
   if (geometry instanceof LineString) {
@@ -951,7 +951,7 @@ const getGeometryDistance = function(geometry) {
  * @param {Array<ol.Coordinate>} coords The line coordinates
  * @return {number} The distance in meters
  */
-const getLineDistance = function(coords) {
+export const getLineDistance = function(coords) {
   var distance = 0;
   if (coords && coords.length > 1) {
     for (var i = 1; i < coords.length; i++) {
@@ -968,7 +968,7 @@ const getLineDistance = function(coords) {
  * @param {Array<Array<ol.Coordinate>>} coords The multi-line coordinates
  * @return {number} The distance in meters
  */
-const getMultiLineDistance = function(coords) {
+export const getMultiLineDistance = function(coords) {
   var distance = 0;
   if (coords) {
     coords.forEach(function(c) {
@@ -985,7 +985,7 @@ const getMultiLineDistance = function(coords) {
  * @param {ol.geom.Geometry|undefined} geometry The geometry.
  * @return {number} The time
  */
-const getGeometryTime = function(geometry) {
+export const getGeometryTime = function(geometry) {
   var time = 0;
 
   if (geometry instanceof LineString) {
@@ -1003,7 +1003,7 @@ const getGeometryTime = function(geometry) {
  * @param {Array<ol.Coordinate>} coords The line coordinates
  * @return {number} The time
  */
-const getLineTime = function(coords) {
+export const getLineTime = function(coords) {
   var time = 0;
   if (coords && coords.length > 1) {
     var first = coords[0];
@@ -1020,7 +1020,7 @@ const getLineTime = function(coords) {
  * @param {Array<Array<ol.Coordinate>>} coords The multi-line coordinates
  * @return {number} The time
  */
-const getMultiLineTime = function(coords) {
+export const getMultiLineTime = function(coords) {
   var time = 0;
   if (coords) {
     coords.forEach(function(c) {
@@ -1038,7 +1038,7 @@ const getMultiLineTime = function(coords) {
  * @param {string=} opt_sortField The sort field
  * @return {!Promise}
  */
-const getSortField = function(feature, opt_sortField) {
+export const getSortField = function(feature, opt_sortField) {
   return new Promise(function(resolve, reject) {
     var sortField = opt_sortField || RecordField.TIME;
     var getValueFn = sortField == RecordField.TIME ? getStartTime :
@@ -1083,7 +1083,7 @@ const getSortField = function(feature, opt_sortField) {
  * @param {string=} opt_default The default value
  * @return {!Promise}
  */
-const promptForTitle = function(opt_default) {
+export const promptForTitle = function(opt_default) {
   return new Promise(function(resolve, reject) {
     ConfirmTextUI.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
       confirm: resolve,
@@ -1107,7 +1107,7 @@ const promptForTitle = function(opt_default) {
  * @param {boolean=} opt_includeMetadata If metadata should be included. Defaults to false.
  * @return {!Promise}
  */
-const promptForTitleAndMetadata = function(opt_default = '', opt_includeMetadata = false) {
+export const promptForTitleAndMetadata = function(opt_default = '', opt_includeMetadata = false) {
   let includeMetadata = opt_includeMetadata;
   const setIncludeMetadata = (value) => {
     includeMetadata = value;
@@ -1141,7 +1141,7 @@ const promptForTitleAndMetadata = function(opt_default = '', opt_includeMetadata
  * @param {string} prompt The dialog prompt
  * @return {!Promise}
  */
-const promptForField = function(columns, prompt) {
+export const promptForField = function(columns, prompt) {
   return new Promise(function(resolve, reject) {
     ConfirmColumnUI.launchConfirmColumn(/** @type {!osx.window.ConfirmColumnOptions} */ ({
       confirm: resolve,
@@ -1163,7 +1163,7 @@ const promptForField = function(columns, prompt) {
  *
  * @param {!Feature} track The track feature.
  */
-const initDynamic = function(track) {
+export const initDynamic = function(track) {
   // switch the displayed track geometry to show the "current" line
   var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(StyleType.FEATURE));
   var trackStyle = trackStyles ? trackStyles[0] : null;
@@ -1183,7 +1183,7 @@ const initDynamic = function(track) {
  * @param {!Feature} track The track feature.
  * @param {boolean=} opt_disposing If the feature is being disposed.
  */
-const disposeDynamic = function(track, opt_disposing) {
+export const disposeDynamic = function(track, opt_disposing) {
   // dispose of the current track geometry and remove it from the feature
   disposeAnimationGeometries(track);
 
@@ -1214,7 +1214,7 @@ const disposeDynamic = function(track, opt_disposing) {
  * @param {number} startTime The start timestamp.
  * @param {number} endTime The end timestamp.
  */
-const updateDynamic = function(track, startTime, endTime) {
+export const updateDynamic = function(track, startTime, endTime) {
   var sortField = track.get(TrackField.SORT_FIELD);
   if (sortField !== RecordField.TIME) {
     // isn't sorted by time - can't create a current track
@@ -1254,7 +1254,7 @@ const updateDynamic = function(track, startTime, endTime) {
  *
  * @suppress {accessControls} For direct access to track metadata.
  */
-const updateMetadata = function(track, coordinates, stride) {
+export const updateMetadata = function(track, coordinates, stride) {
   var metadataMap = track.get(TrackField.METADATA_MAP);
   if (metadataMap) {
     // use metadata for the last sort value (end of the track)
@@ -1281,7 +1281,7 @@ const updateMetadata = function(track, coordinates, stride) {
  * @param {number} stride The coordinate array stride.
  * @return {number}
  */
-const getTimeIndex = function(coordinates, value, stride) {
+export const getTimeIndex = function(coordinates, value, stride) {
   // find the closest timestamp to the current timeline position
   var index = osArray.binaryStrideSearch(coordinates, value, stride, stride - 1);
   if (index < 0) {
@@ -1303,7 +1303,7 @@ const getTimeIndex = function(coordinates, value, stride) {
  * @param {number} stride The stride of the coordinate array.
  * @return {ol.Coordinate|undefined}
  */
-const getTrackPositionAt = function(track, timestamp, index, coordinates, stride) {
+export const getTrackPositionAt = function(track, timestamp, index, coordinates, stride) {
   var position;
 
   if (index === 0) {
@@ -1362,7 +1362,7 @@ const getTrackPositionAt = function(track, timestamp, index, coordinates, stride
  *
  * @suppress {accessControls} To allow direct access to line string coordinates.
  */
-const updateCurrentLine = function(track, startTime, startIndex, endTime, endIndex, coordinates, stride,
+export const updateCurrentLine = function(track, startTime, startIndex, endTime, endIndex, coordinates, stride,
     opt_ends) {
   var currentLine = /** @type {TrackLike|undefined} */ (track.get(TrackField.CURRENT_LINE));
   var layout = stride === 4 ? GeometryLayout.XYZM : GeometryLayout.XYM;
@@ -1480,7 +1480,7 @@ const updateCurrentLine = function(track, startTime, startIndex, endTime, endInd
  *
  * @param {!Array<!Feature>} tracks The track features.
  */
-const updateTrackZIndex = function(tracks) {
+export const updateTrackZIndex = function(tracks) {
   // save the top z-index so current position icons can be displayed above tracks
   var topTrackZIndex = tracks.length + 1;
   for (var i = 0; i < tracks.length; i++) {
@@ -1514,7 +1514,7 @@ const updateTrackZIndex = function(tracks) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const bucketByField = function(field, feature) {
+export const bucketByField = function(field, feature) {
   if (feature) {
     // if the feature does not have a value for the field, add it to the ignore bucket so it can be included in the
     // result. this avoids dropping features that aren't added to a track.
@@ -1530,7 +1530,7 @@ const bucketByField = function(field, feature) {
  * @param {SplitOptions} options The options.
  * @return {!Array<!Feature>} The resulting tracks. Also contains any features not used to create tracks.
  */
-const splitIntoTracks = function(options) {
+export const splitIntoTracks = function(options) {
   var features = options.features;
   var result = options.result || [];
   var bucketFn = options.bucketFn || (options.field ? bucketByField.bind(undefined, options.field) : null);
@@ -1574,57 +1574,4 @@ const splitIntoTracks = function(options) {
   }
 
   return result;
-};
-
-exports = {
-  ID,
-  ICON,
-  ELAPSED_ZERO,
-  TOTAL_ZERO,
-  TRACK_CONFIG,
-  CURRENT_CONFIG,
-  HIDE_GEOMETRY,
-  isTrackFeature,
-  getFeatureValue,
-  getStartTime,
-  sortCoordinatesByValue,
-  getTrackCoordinates,
-  createTrack,
-  setCreateTrack,
-  addToTrack,
-  setAddToTrack,
-  clamp,
-  truncate,
-  disposeAnimationGeometries,
-  setShowLine,
-  getShowLine,
-  setShowMarker,
-  setInterpolateMarker,
-  getInterpolateMarker,
-  setGeometry,
-  updateCurrentPosition,
-  updateDistance,
-  updateDuration,
-  updateAverageSpeed,
-  updateTime,
-  getGeometryDistance,
-  getLineDistance,
-  getMultiLineDistance,
-  getGeometryTime,
-  getLineTime,
-  getMultiLineTime,
-  getSortField,
-  promptForTitle,
-  promptForTitleAndMetadata,
-  promptForField,
-  initDynamic,
-  disposeDynamic,
-  updateDynamic,
-  updateMetadata,
-  getTimeIndex,
-  getTrackPositionAt,
-  updateCurrentLine,
-  updateTrackZIndex,
-  bucketByField,
-  splitIntoTracks
 };

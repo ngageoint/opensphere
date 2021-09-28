@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.filter.ui.FilterTreeUI');
 
 import '../slick/slicktree.js';
+import BaseFilterManager from '../../filter/basefiltermanager.js';
 import Module from '../module.js';
 import TreeSearch from '../slick/treesearch.js';
 import {apply} from '../ui.js';
@@ -8,9 +9,7 @@ import FilterEventType from './filtereventtype.js';
 import FilterGroupBy from './ui/filtergroupby.js';
 import FilterNode from './ui/filternode.js';
 
-const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
-
-const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
+const {default: INodeGroupBy} = goog.requireType('os.data.groupby.INodeGroupBy');
 
 
 /**

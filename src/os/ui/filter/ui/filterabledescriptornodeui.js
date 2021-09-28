@@ -1,14 +1,14 @@
 goog.declareModuleId('os.ui.filter.ui.FilterableDescriptorNodeUI');
 
+import {getFilterManager, getQueryManager} from '../../../query/queryinstance.js';
 import Module from '../../module.js';
 import AbstractNodeUICtrl from '../../slick/abstractnodeui.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
 
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const IFilterable = goog.requireType('os.filter.IFilterable');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: IFilterable} = goog.requireType('os.filter.IFilterable');
 const {default: DescriptorNode} = goog.requireType('os.ui.data.DescriptorNode');
 
 

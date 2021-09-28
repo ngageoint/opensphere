@@ -1,4 +1,19 @@
-goog.module('os.interaction.Measure');
+goog.declareModuleId('os.interaction.Measure');
+
+import {getFormattedBearing, modifyBearing} from '../bearing/bearing.js';
+import BearingSettingsKeys from '../bearing/bearingsettingskeys.js';
+import Settings from '../config/settings.js';
+import {numDecimalPlaces, updateAll} from '../feature/measurefeature.js';
+import {normalizeGeometryCoordinates} from '../geo/geo2.js';
+import {METHOD_FIELD, getMethod} from '../interpolate.js';
+import Method from '../interpolatemethod.js';
+import * as osMap from '../map/map.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {getFont} from '../style/label.js';
+import TimelineController from '../time/timelinecontroller.js';
+import UnitChange from '../unit/unitchange.js';
+import UnitManager from '../unit/unitmanager.js';
+import DrawPolygon from './drawpolygoninteraction.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const LineString = goog.require('ol.geom.LineString');
@@ -9,29 +24,14 @@ const Fill = goog.require('ol.style.Fill');
 const Stroke = goog.require('ol.style.Stroke');
 const Style = goog.require('ol.style.Style');
 const Text = goog.require('ol.style.Text');
-const {getFormattedBearing, modifyBearing} = goog.require('os.bearing');
-const BearingSettingsKeys = goog.require('os.bearing.BearingSettingsKeys');
-const Settings = goog.require('os.config.Settings');
-const {numDecimalPlaces, updateAll} = goog.require('os.feature.measure');
-const {normalizeGeometryCoordinates} = goog.require('os.geo2');
-const DrawPolygon = goog.require('os.interaction.DrawPolygon');
-const {METHOD_FIELD, getMethod} = goog.require('os.interpolate');
-const Method = goog.require('os.interpolate.Method');
-const osMap = goog.require('os.map');
-const {getMapContainer} = goog.require('os.map.instance');
-const {getFont} = goog.require('os.style.label');
-const TimelineController = goog.require('os.time.TimelineController');
-const UnitChange = goog.require('os.unit.UnitChange');
-const UnitManager = goog.require('os.unit.UnitManager');
 
-
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
  * Interaction to measure the distance between drawn points on the map.
  */
-class Measure extends DrawPolygon {
+export default class Measure extends DrawPolygon {
   /**
    * Constructor.
    * @param {olx.interaction.PointerOptions=} opt_options
@@ -366,5 +366,3 @@ Measure.LABEL_FONT_SIZE_ = 14;
  * @type {Method}
  */
 Measure.method = getMethod();
-
-exports = Measure;

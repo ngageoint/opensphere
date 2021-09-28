@@ -1,11 +1,12 @@
 goog.declareModuleId('os.ui.search.SearchScrollDataSource');
 
+import SearchEvent from '../../search/searchevent.js';
+import SearchEventType from '../../search/searcheventtype.js';
+
 const EventTarget = goog.require('goog.events.EventTarget');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const SearchEvent = goog.require('os.search.SearchEvent');
-const SearchEventType = goog.require('os.search.SearchEventType');
 
-const SearchManager = goog.requireType('os.search.SearchManager');
+const {default: SearchManager} = goog.requireType('os.search.SearchManager');
 const {default: IScrollDataSource} = goog.requireType('os.ui.IScrollDataSource');
 
 

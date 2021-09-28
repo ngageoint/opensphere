@@ -1,10 +1,11 @@
 goog.declareModuleId('os.file.mime.jsonsettings');
 
-const Promise = goog.require('goog.Promise');
-const mime = goog.require('os.file.mime');
-const jsonMime = goog.require('os.file.mime.json');
+import * as mime from '../mime.js';
+import * as jsonMime from './json.js';
 
-const OSFile = goog.requireType('os.file.File');
+const Promise = goog.require('goog.Promise');
+
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**

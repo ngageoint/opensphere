@@ -1,9 +1,9 @@
-goog.module('os.im.mapping.RuleMapping');
+goog.declareModuleId('os.im.mapping.RuleMapping');
 
-const {getBestFieldMatch, getItemField} = goog.require('os.im.mapping');
-const AbstractMapping = goog.require('os.im.mapping.AbstractMapping');
-const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
-const Rule = goog.require('os.im.mapping.Rule');
+import AbstractMapping from './abstractmapping.js';
+import {getBestFieldMatch, getItemField} from './mapping.js';
+import MappingRegistry from './mappingregistry.js';
+import Rule from './rule.js';
 
 
 /**
@@ -13,7 +13,7 @@ const Rule = goog.require('os.im.mapping.Rule');
  * @template S
  * @unrestricted
  */
-class RuleMapping extends AbstractMapping {
+export default class RuleMapping extends AbstractMapping {
   /**
    * Constructor.
    */
@@ -282,5 +282,3 @@ class RuleMapping extends AbstractMapping {
 RuleMapping.ID = 'Rule';
 
 MappingRegistry.getInstance().registerMapping(RuleMapping.ID, Rule);
-
-exports = RuleMapping;

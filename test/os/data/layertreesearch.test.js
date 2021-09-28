@@ -11,10 +11,10 @@ goog.require('os.mock');
 describe('os.data.LayerTreeSearch', function() {
   const TileWMS = goog.module.get('ol.source.TileWMS');
   const OLVectorSource = goog.module.get('ol.source.Vector');
-  const LayerTreeSearch = goog.module.get('os.data.LayerTreeSearch');
-  const LayerZOrderGroupBy = goog.module.get('os.data.groupby.LayerZOrderGroupBy');
-  const Tile = goog.module.get('os.layer.Tile');
-  const VectorLayer = goog.module.get('os.layer.Vector');
+  const {default: LayerTreeSearch} = goog.module.get('os.data.LayerTreeSearch');
+  const {default: LayerZOrderGroupBy} = goog.module.get('os.data.groupby.LayerZOrderGroupBy');
+  const {default: Tile} = goog.module.get('os.layer.Tile');
+  const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const {getMapContainer} = goog.module.get('os.map.instance');
 
   beforeEach(function() {

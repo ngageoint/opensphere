@@ -1,14 +1,13 @@
 goog.declareModuleId('os.ui.ol.interaction.ContextMenu');
 
-goog.require('os.ol.mixin.render');
-
+import '../../../ol/mixin/rendermixin.js';
+import {rightClick} from '../../../ol/events/condition.js';
+import {getAreaManager} from '../../../query/queryinstance.js';
 import {getEventFeature, getFirstPolygon} from './interaction.js';
 
 const Line = goog.require('goog.math.Line');
 const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
 const Interaction = goog.require('ol.interaction.Interaction');
-const {rightClick} = goog.require('os.ol.events.condition');
-const {getAreaManager} = goog.require('os.query.instance');
 
 const Feature = goog.requireType('ol.Feature');
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');

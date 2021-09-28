@@ -1,14 +1,14 @@
-goog.module('os.command.LayerVisibility');
+goog.declareModuleId('os.command.LayerVisibility');
 
-const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
-const State = goog.require('os.command.State');
-const {getMapContainer} = goog.require('os.map.instance');
+import {getMapContainer} from '../map/mapinstance.js';
+import AbstractSyncCommand from './abstractsynccommand.js';
+import State from './state.js';
 
 
 /**
  * Sets the visibility for a layer.
  */
-class LayerVisibility extends AbstractSyncCommand {
+export default class LayerVisibility extends AbstractSyncCommand {
   /**
    * Constructor.
    * @param {string} id Layer ID
@@ -77,5 +77,3 @@ class LayerVisibility extends AbstractSyncCommand {
     return true;
   }
 }
-
-exports = LayerVisibility;

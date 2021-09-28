@@ -1,16 +1,16 @@
 goog.declareModuleId('plugin.osm.nom.NominatimSearch');
 
+import Settings from '../../../os/config/settings.js';
+import * as fn from '../../../os/fn/fn.js';
+import osImplements from '../../../os/implements.js';
+import Request from '../../../os/net/request.js';
+import AbstractUrlSearch from '../../../os/search/abstracturlsearch.js';
+import IGeoSearch from '../../../os/search/igeosearch.js';
 import * as nom from './nominatim.js';
 import NominatimParser from './nominatimparser.js';
 import SearchResult from './nominatimsearchresult.js';
 
 const Promise = goog.require('goog.Promise');
-const Settings = goog.require('os.config.Settings');
-const fn = goog.require('os.fn');
-const osImplements = goog.require('os.implements');
-const Request = goog.require('os.net.Request');
-const AbstractUrlSearch = goog.require('os.search.AbstractUrlSearch');
-const IGeoSearch = goog.require('os.search.IGeoSearch');
 
 const Feature = goog.requireType('ol.Feature');
 

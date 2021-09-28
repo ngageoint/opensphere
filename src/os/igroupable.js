@@ -1,10 +1,10 @@
-goog.module('os.IGroupable');
+goog.declareModuleId('os.IGroupable');
 
 /**
  * Interface representing a thing that supports advanced grouping options.
  * @interface
  */
-class IGroupable {
+export default class IGroupable {
   /**
    * Gets the group ID.
    * @return {!string} The ID
@@ -23,5 +23,3 @@ class IGroupable {
  * @const {string}
  */
 IGroupable.ID = 'os.IGroupable';
-
-exports = IGroupable;

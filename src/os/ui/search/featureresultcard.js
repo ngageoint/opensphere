@@ -1,26 +1,27 @@
 goog.declareModuleId('os.ui.search.FeatureResultCardCtrl');
 
+import EventType from '../../action/eventtype.js';
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import SelectionType from '../../events/selectiontype.js';
+import Fields from '../../fields/fields.js';
+import {noop} from '../../fn/fn.js';
+import VectorLayer from '../../layer/vector.js';
+import MapContainer from '../../mapcontainer.js';
+import PropertyChange from '../../source/propertychange.js';
+import VectorSource from '../../source/vectorsource.js';
 import {DEFAULT_HIGHLIGHT_CONFIG, DEFAULT_VECTOR_CONFIG, notifyStyleChange, setFeatureStyle} from '../../style/style.js';
+
+import StyleField from '../../style/stylefield.js';
+import StyleManager from '../../style/stylemanager_shim.js';
+import StyleType from '../../style/styletype.js';
 
 const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const {listen, unlisten} = goog.require('ol.events');
-const Fields = goog.require('os.Fields');
-const MapContainer = goog.require('os.MapContainer');
-const EventType = goog.require('os.action.EventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const SelectionType = goog.require('os.events.SelectionType');
-const {noop} = goog.require('os.fn');
-const VectorLayer = goog.require('os.layer.Vector');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const VectorSource = goog.require('os.source.Vector');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
-const StyleType = goog.require('os.style.StyleType');
 
 const Feature = goog.requireType('ol.Feature');
-const AbstractSearchResult = goog.requireType('os.search.AbstractSearchResult');
+const {default: AbstractSearchResult} = goog.requireType('os.search.AbstractSearchResult');
 
 
 /**

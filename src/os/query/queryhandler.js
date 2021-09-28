@@ -1,20 +1,21 @@
-goog.module('os.query.QueryHandler');
+goog.declareModuleId('os.query.QueryHandler');
+
+import UIQueryHandler from '../ui/query/queryhandler.js';
+import {getQueryManager} from './queryinstance.js';
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const {listen, unlisten} = goog.require('ol.events');
-const {getQueryManager} = goog.require('os.query.instance');
-const {default: UIQueryHandler} = goog.require('os.ui.query.QueryHandler');
 
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const RequestSource = goog.requireType('os.source.Request');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: RequestSource} = goog.requireType('os.source.Request');
 
 
 /**
  * Query handler implementation. Adds source, refresh and request functionality to the base handler class.
  */
-class QueryHandler extends UIQueryHandler {
+export default class QueryHandler extends UIQueryHandler {
   /**
    * Constructor.
    */
@@ -243,5 +244,3 @@ class QueryHandler extends UIQueryHandler {
     }
   }
 }
-
-exports = QueryHandler;

@@ -1,7 +1,8 @@
-goog.module('os.feature.DynamicFeature');
+goog.declareModuleId('os.feature.DynamicFeature');
+
+import registerClass from '../registerclass.js';
 
 const Feature = goog.require('ol.Feature');
-const registerClass = goog.require('os.registerClass');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
 
@@ -9,7 +10,7 @@ const Geometry = goog.requireType('ol.geom.Geometry');
 /**
  * A dynamic feature that changes with time.
  */
-class DynamicFeature extends Feature {
+export default class DynamicFeature extends Feature {
   /**
    * Constructor.
    * @param {Geometry|Object<string, *>=} opt_geometryOrProperties
@@ -102,5 +103,3 @@ class DynamicFeature extends Feature {
  */
 DynamicFeature.NAME = 'os.feature.DynamicFeature';
 registerClass(DynamicFeature.NAME, DynamicFeature);
-
-exports = DynamicFeature;

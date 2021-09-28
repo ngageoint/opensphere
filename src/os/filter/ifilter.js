@@ -1,5 +1,4 @@
-goog.module('os.filter.IFilter');
-
+goog.declareModuleId('os.filter.IFilter');
 
 /**
  * An interface for describing an array filter.
@@ -7,7 +6,7 @@ goog.module('os.filter.IFilter');
  * @template T
  * @interface
  */
-class IFilter {
+export default class IFilter {
   /**
    * @param {T} item The item being evaluated
    * @param {number} index The item's index in its array
@@ -28,5 +27,3 @@ class IFilter {
    */
   setId(id) {}
 }
-
-exports = IFilter;

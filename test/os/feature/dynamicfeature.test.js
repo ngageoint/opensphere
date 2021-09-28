@@ -5,7 +5,7 @@ goog.require('os.feature.DynamicFeature');
 describe('os.feature.DynamicFeature', function() {
   const Feature = goog.module.get('ol.Feature');
   const Point = goog.module.get('ol.geom.Point');
-  const DynamicFeature = goog.module.get('os.feature.DynamicFeature');
+  const {default: DynamicFeature} = goog.module.get('os.feature.DynamicFeature');
 
   it('initializes properly', function() {
     var df = new DynamicFeature();

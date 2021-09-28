@@ -1,10 +1,10 @@
-goog.module('os.command.VectorLayerLabelColor');
+goog.declareModuleId('os.command.VectorLayerLabelColor');
 
-const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const osStyle = goog.require('os.style');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import * as osStyle from '../style/style.js';
+import StyleField from '../style/stylefield.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import AbstractVectorStyle from './abstractvectorstylecmd.js';
 
 
 /**
@@ -12,7 +12,7 @@ const StyleManager = goog.require('os.style.StyleManager');
  *
  * @extends {AbstractVectorStyle<string>}
  */
-class VectorLayerLabelColor extends AbstractVectorStyle {
+export default class VectorLayerLabelColor extends AbstractVectorStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -46,5 +46,3 @@ class VectorLayerLabelColor extends AbstractVectorStyle {
     super.applyValue(config, value);
   }
 }
-
-exports = VectorLayerLabelColor;

@@ -4,8 +4,8 @@ import './uniqueprovidertitle.js';
 import './uniqueserverurl.js';
 import ProviderImportCtrl from './providerimport.js';
 
-const OSFile = goog.requireType('os.file.File');
-const TreeNode = goog.requireType('os.structs.TreeNode');
+const {default: OSFile} = goog.requireType('os.file.File');
+const {default: TreeNode} = goog.requireType('os.structs.TreeNode');
 const {default: AbstractLoadingServer} = goog.requireType('os.ui.server.AbstractLoadingServer');
 
 

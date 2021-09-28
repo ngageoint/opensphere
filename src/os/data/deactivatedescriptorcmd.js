@@ -1,16 +1,17 @@
-goog.module('os.data.DeactivateDescriptor');
+goog.declareModuleId('os.data.DeactivateDescriptor');
+
+import EventType from '../command/eventtype.js';
+import State from '../command/state.js';
+import AbstractDescriptor from './abstractdescriptorcmd.js';
 
 const GoogEvent = goog.require('goog.events.Event');
 const log = goog.require('goog.log');
-const EventType = goog.require('os.command.EventType');
-const State = goog.require('os.command.State');
-const AbstractDescriptor = goog.require('os.data.AbstractDescriptor');
 
 
 /**
  * Command to deactivate a descriptor.
  */
-class DeactivateDescriptor extends AbstractDescriptor {
+export default class DeactivateDescriptor extends AbstractDescriptor {
   /**
    * Constructor.
    * @param {!os.data.IDataDescriptor} descriptor The descriptor
@@ -67,6 +68,3 @@ class DeactivateDescriptor extends AbstractDescriptor {
  * @type {log.Logger}
  */
 const logger = log.getLogger('os.data.DeactivateDescriptor');
-
-
-exports = DeactivateDescriptor;

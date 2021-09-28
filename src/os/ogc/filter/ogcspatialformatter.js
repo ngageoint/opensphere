@@ -1,15 +1,16 @@
-goog.module('os.ogc.filter.OGCSpatialFormatter');
+goog.declareModuleId('os.ogc.filter.OGCSpatialFormatter');
+
+import {interpolateCircle, isRectangular} from '../../geo/geo.js';
+import {splitWithinWorldExtent} from '../../geo/jsts.js';
+import {beginTempInterpolation, endTempInterpolation, interpolateGeom} from '../../interpolate.js';
+import {EPSG4326} from '../../proj/proj.js';
+import {escape as xmlEscape} from '../../xml.js';
+import {formatExtent, formatGMLIntersection} from '../spatial.js';
 
 const GeometryType = goog.require('ol.geom.GeometryType');
 const Polygon = goog.require('ol.geom.Polygon');
-const {interpolateCircle, isRectangular} = goog.require('os.geo');
-const {splitWithinWorldExtent} = goog.require('os.geo.jsts');
-const {beginTempInterpolation, endTempInterpolation, interpolateGeom} = goog.require('os.interpolate');
-const {formatExtent, formatGMLIntersection} = goog.require('os.ogc.spatial');
-const {EPSG4326} = goog.require('os.proj');
-const {escape: xmlEscape} = goog.require('os.xml');
 
-const ISpatialFormatter = goog.requireType('os.filter.ISpatialFormatter');
+const {default: ISpatialFormatter} = goog.requireType('os.filter.ISpatialFormatter');
 
 
 /**
@@ -17,7 +18,7 @@ const ISpatialFormatter = goog.requireType('os.filter.ISpatialFormatter');
  *
  * @implements {ISpatialFormatter}
  */
-class OGCSpatialFormatter {
+export default class OGCSpatialFormatter {
   /**
    * Constructor.
    * @param {string=} opt_column
@@ -122,5 +123,3 @@ class OGCSpatialFormatter {
  * @type {string}
  */
 const defaultColumn = 'GEOM';
-
-exports = OGCSpatialFormatter;

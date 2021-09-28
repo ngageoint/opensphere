@@ -9,7 +9,7 @@ import WizardStepEvent from './step/wizardstepevent.js';
 
 const {clamp} = goog.require('goog.math');
 
-const FileParserConfig = goog.requireType('os.parse.FileParserConfig');
+const {default: FileParserConfig} = goog.requireType('os.parse.FileParserConfig');
 const {default: IWizardStep} = goog.requireType('os.ui.wiz.step.IWizardStep');
 
 

@@ -1,13 +1,13 @@
 goog.declareModuleId('os.ui.node.FolderNodeUI');
 
+import {launchRemoveFolder, createOrEditFolder} from '../../layer/folder.js';
+import FolderManager from '../../layer/foldermanager.js';
 import Module from '../module.js';
 import AbstractNodeUICtrl from '../slick/abstractnodeui.js';
 
 const {getRandomString} = goog.require('goog.string');
-const FolderManager = goog.require('os.layer.FolderManager');
-const {launchRemoveFolder, createOrEditFolder} = goog.require('os.layer.folder');
 
-const FolderNode = goog.requireType('os.data.FolderNode');
+const {default: FolderNode} = goog.requireType('os.data.FolderNode');
 
 
 /**

@@ -4,11 +4,11 @@ import './ddmfilter.js';
 import './degfilter.js';
 import './dmsfilter.js';
 import './mgrsfilter.js';
+import Settings from '../../config/settings.js';
 import * as ui from '../ui.js';
 import Format from './locationformat.js';
 
 const log = goog.require('goog.log');
-const Settings = goog.require('os.config.Settings');
 
 const Logger = goog.requireType('goog.log.Logger');
 

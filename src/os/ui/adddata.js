@@ -1,7 +1,16 @@
 goog.declareModuleId('os.ui.AddDataUI');
 
+import Settings from '../config/settings.js';
+import DataManager from '../data/datamanager.js';
+import DataProviderEventType from '../data/dataprovidereventtype.js';
+import DateGroupBy from '../data/groupby/dategroupby.js';
+import RecentGroupBy from '../data/groupby/recentgroupby.js';
+import TypeGroupBy from '../data/groupby/typegroupby.js';
 import * as dispatcher from '../dispatcher.js';
+import Metrics from '../metrics/metrics.js';
+import {AddData} from '../metrics/metricskeys.js';
 import {ROOT} from '../os.js';
+import FavoriteManager from '../user/settings/favoritemanager.js';
 import AddDataCtrl from './data/adddatactrl.js';
 import TagGroupBy from './data/groupby/taggroupby.js';
 import UIEventParams from './events/uieventparams.js';
@@ -11,18 +20,9 @@ import {openWindow} from './menu/windowsmenu.js';
 import Module from './module.js';
 import OnboardingManager from './onboarding/onboardingmanager.js';
 import {apply} from './ui.js';
-const Settings = goog.require('os.config.Settings');
-const DataManager = goog.require('os.data.DataManager');
-const DataProviderEventType = goog.require('os.data.DataProviderEventType');
-const DateGroupBy = goog.require('os.data.groupby.DateGroupBy');
-const RecentGroupBy = goog.require('os.data.groupby.RecentGroupBy');
-const TypeGroupBy = goog.require('os.data.groupby.TypeGroupBy');
-const Metrics = goog.require('os.metrics.Metrics');
-const {AddData} = goog.require('os.metrics.keys');
-const FavoriteManager = goog.require('os.user.settings.FavoriteManager');
 
-const DataProviderEvent = goog.requireType('os.data.DataProviderEvent');
-const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
+const {default: DataProviderEvent} = goog.requireType('os.data.DataProviderEvent');
+const {default: INodeGroupBy} = goog.requireType('os.data.groupby.INodeGroupBy');
 
 
 /**

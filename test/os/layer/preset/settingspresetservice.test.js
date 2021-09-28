@@ -3,7 +3,7 @@ goog.require('os.layer.preset.SettingsPresetService');
 
 
 describe('os.layer.preset.SettingsPresetService', function() {
-  const SettingsPresetService = goog.module.get('os.layer.preset.SettingsPresetService');
+  const {default: SettingsPresetService} = goog.module.get('os.layer.preset.SettingsPresetService');
   const {PresetServiceAction} = goog.module.get('os.layer.preset');
 
   it('should instantiate', function() {

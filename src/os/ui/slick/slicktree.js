@@ -12,8 +12,8 @@ const GoogEventType = goog.require('goog.events.EventType');
 const {remove} = goog.require('ol.array');
 
 const GoogEvent = goog.requireType('goog.events.Event');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**

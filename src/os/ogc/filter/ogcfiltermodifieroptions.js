@@ -1,4 +1,4 @@
-goog.module('os.ogc.filter.OGCFilterModifierOptions');
+goog.declareModuleId('os.ogc.filter.OGCFilterModifierOptions');
 
 
 /**
@@ -11,4 +11,4 @@ goog.module('os.ogc.filter.OGCFilterModifierOptions');
  */
 let OGCFilterModifierOptions;
 
-exports = OGCFilterModifierOptions;
+export default OGCFilterModifierOptions;

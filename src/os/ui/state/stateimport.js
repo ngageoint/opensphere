@@ -1,6 +1,10 @@
 goog.declareModuleId('os.ui.state.StateImport');
 
+import Settings from '../../config/settings.js';
 import {ROOT} from '../../os.js';
+import JSONStateOptions from '../../state/jsonstateoptions.js';
+import {getStateManager} from '../../state/stateinstance.js';
+import XMLStateOptions from '../../state/xmlstateoptions.js';
 import ClearManager from '../clear/clearmanager.js';
 import Module from '../module.js';
 import WindowEventType from '../windoweventtype.js';
@@ -8,16 +12,12 @@ import AbstractStateFormCtrl from './abstractstateform.js';
 
 const {assert} = goog.require('goog.asserts');
 const {clear, getCount} = goog.require('goog.object');
-const Settings = goog.require('os.config.Settings');
-const JSONStateOptions = goog.require('os.state.JSONStateOptions');
-const XMLStateOptions = goog.require('os.state.XMLStateOptions');
-const {getStateManager} = goog.require('os.state.instance');
 
-const OSFile = goog.requireType('os.file.File');
-const StateParserConfig = goog.requireType('os.parse.StateParserConfig');
+const {default: OSFile} = goog.requireType('os.file.File');
+const {default: StateParserConfig} = goog.requireType('os.parse.StateParserConfig');
 
 
-const IState = goog.requireType('os.state.IState');
+const {default: IState} = goog.requireType('os.state.IState');
 
 
 /**

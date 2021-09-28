@@ -1,15 +1,15 @@
 goog.declareModuleId('os.ui.slick.SlickTreeNode');
 
 import {registerClass} from '../../classregistry.js';
+import {NodeClass} from '../../data/data.js';
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import TriStateTreeNode from '../../structs/tristatetreenode.js';
 import {directiveTag as nodeIconsUi} from '../nodeicons.js';
 import {directiveTag as nodeSpinnerUi} from '../nodespinner.js';
 import {Controller as NodeToggleCtrl, directiveTag as nodeToggleUi} from '../nodetoggle.js';
 import {directiveTag as checkboxUi} from '../tristatecheckbox.js';
 import {sanitize} from '../ui.js';
 import {directiveTag as windowLauncherUi} from '../windowlauncher.js';
-const {NodeClass} = goog.require('os.data');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const TriStateTreeNode = goog.require('os.structs.TriStateTreeNode');
 
 
 /**

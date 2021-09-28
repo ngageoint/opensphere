@@ -1,11 +1,11 @@
-goog.module('os.data.DescriptorEvent');
+goog.declareModuleId('os.data.DescriptorEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
 
 /**
  */
-class DescriptorEvent extends GoogEvent {
+export default class DescriptorEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -26,5 +26,3 @@ class DescriptorEvent extends GoogEvent {
     this.descriptor2 = opt_descriptor2 || null;
   }
 }
-
-exports = DescriptorEvent;

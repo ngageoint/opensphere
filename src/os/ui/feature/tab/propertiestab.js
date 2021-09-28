@@ -1,8 +1,13 @@
 goog.declareModuleId('os.ui.feature.tab.PropertiesTabUI');
 
 import '../featureinfocell.js';
+import Settings from '../../../config/settings.js';
+import RecordField from '../../../data/recordfield.js';
 import * as osFeature from '../../../feature/feature.js';
+import Fields from '../../../fields/fields.js';
+import {isPrimitive} from '../../../object/object.js';
 import {ROOT} from '../../../os.js';
+import PropertyChange from '../../../source/propertychange.js';
 import Module from '../../module.js';
 import {apply} from '../../ui.js';
 import AbstractFeatureTabCtrl from './abstractfeaturetabctrl.js';
@@ -10,15 +15,10 @@ import AbstractFeatureTabCtrl from './abstractfeaturetabctrl.js';
 const GoogEventType = goog.require('goog.events.EventType');
 const {numerateCompare} = goog.require('goog.string');
 const events = goog.require('ol.events');
-const Fields = goog.require('os.Fields');
-const Settings = goog.require('os.config.Settings');
-const RecordField = goog.require('os.data.RecordField');
-const {isPrimitive} = goog.require('os.object');
-const PropertyChange = goog.require('os.source.PropertyChange');
 
 const Feature = goog.requireType('ol.Feature');
 const RenderFeature = goog.requireType('ol.render.Feature');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**

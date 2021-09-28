@@ -1,6 +1,7 @@
 /* eslint-disable import/no-deprecated */
 goog.declareModuleId('os.ui.action.ActionManager');
 
+import * as osArray from '../../array/array.js';
 import * as dispatcher from '../../dispatcher.js';
 import ActionEvent from './actionevent.js';
 import EventType from './actioneventtype.js';
@@ -8,7 +9,6 @@ import EventType from './actioneventtype.js';
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
 const LinkedMap = goog.require('goog.structs.LinkedMap');
-const osArray = goog.require('os.array');
 
 const {default: Action} = goog.requireType('os.ui.action.Action');
 

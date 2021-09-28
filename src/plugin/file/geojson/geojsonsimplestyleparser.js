@@ -1,13 +1,13 @@
 goog.declareModuleId('plugin.file.geojson.GeoJSONSimpleStyleParser');
 
+import * as osColor from '../../../os/color.js';
 import {mergeConfig, setFeatureStyle} from '../../../os/style/style.js';
+import StyleManager from '../../../os/style/stylemanager_shim.js';
+import StyleType from '../../../os/style/styletype.js';
 import * as maki from '../../../os/ui/file/maki/maki.js';
 import GeoJSONParser from './geojsonparser.js';
 
 const log = goog.require('goog.log');
-const osColor = goog.require('os.color');
-const StyleManager = goog.require('os.style.StyleManager');
-const StyleType = goog.require('os.style.StyleType');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');

@@ -1,16 +1,17 @@
-goog.module('os.file.mime.json');
+goog.declareModuleId('os.file.mime.json');
+
+import * as mime from '../mime.js';
+import * as text from './text.js';
 
 const Promise = goog.require('goog.Promise');
-const mime = goog.require('os.file.mime');
-const text = goog.require('os.file.mime.text');
 
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
  * @type {string}
  */
-const TYPE = 'application/json';
+export const TYPE = 'application/json';
 
 /**
  * @param {ArrayBuffer} buffer
@@ -20,7 +21,7 @@ const TYPE = 'application/json';
  *    single falsy values such as `null`, `0`, `""`, and `false` will not be detected as
  *    JSON
  */
-const isJSON = function(buffer, opt_file, opt_context) {
+export const isJSON = function(buffer, opt_file, opt_context) {
   var retVal;
 
   if (opt_context && typeof opt_context === 'string') {
@@ -41,8 +42,3 @@ const isJSON = function(buffer, opt_file, opt_context) {
 };
 
 mime.register(TYPE, isJSON, 0, text.TYPE);
-
-exports = {
-  TYPE,
-  isJSON
-};

@@ -1,6 +1,25 @@
-goog.module('os.query.AreaManager');
+goog.declareModuleId('os.query.AreaManager');
 
-goog.require('os.mixin.object');
+import '../mixin/objectmixin.js';
+import {toRgbArray} from '../color.js';
+import TransformAreas from '../command/transformareascmd.js';
+import Settings from '../config/settings.js';
+import {isRectangular} from '../geo/geo.js';
+import {normalizeGeometryCoordinates} from '../geo/geo2.js';
+import GeometryField from '../geom/geometryfield.js';
+import {METHOD_FIELD, ORIGINAL_GEOM_FIELD, getMethod} from '../interpolate.js';
+import Method from '../interpolatemethod.js';
+import DrawingLayer from '../layer/drawinglayer.js';
+import * as osMap from '../map/map.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {AREA_STORAGE_KEY, ALL_AREA_STORAGE_KEY} from '../os.js';
+import CommandListEvent from '../proj/commandlistevent.js';
+import SwitchProjection from '../proj/switchprojection.js';
+import {setFeatureStyle} from '../style/style.js';
+import StyleType from '../style/styletype.js';
+import BaseAreaManager from './baseareamanager.js';
+import {getQueryManager} from './queryinstance.js';
+import {isWorldQuery} from './queryutils.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 const {unsafeClone} = goog.require('goog.object');
@@ -9,34 +28,15 @@ const GeoJSON = goog.require('ol.format.GeoJSON');
 const Polygon = goog.require('ol.geom.Polygon');
 const OLVectorSource = goog.require('ol.source.Vector');
 const VectorEventType = goog.require('ol.source.VectorEventType');
-const {AREA_STORAGE_KEY, ALL_AREA_STORAGE_KEY} = goog.require('os');
-const {toRgbArray} = goog.require('os.color');
-const TransformAreas = goog.require('os.command.TransformAreas');
-const Settings = goog.require('os.config.Settings');
-const {isRectangular} = goog.require('os.geo');
-const {normalizeGeometryCoordinates} = goog.require('os.geo2');
-const GeometryField = goog.require('os.geom.GeometryField');
-const {METHOD_FIELD, ORIGINAL_GEOM_FIELD, getMethod} = goog.require('os.interpolate');
-const Method = goog.require('os.interpolate.Method');
-const DrawingLayer = goog.require('os.layer.Drawing');
-const osMap = goog.require('os.map');
-const {getMapContainer} = goog.require('os.map.instance');
-const CommandListEvent = goog.require('os.proj.switch.CommandListEvent');
-const SwitchProjection = goog.require('os.proj.switch.SwitchProjection');
-const BaseAreaManager = goog.require('os.query.BaseAreaManager');
-const {getQueryManager} = goog.require('os.query.instance');
-const {isWorldQuery} = goog.require('os.query.utils');
-const {setFeatureStyle} = goog.require('os.style');
-const StyleType = goog.require('os.style.StyleType');
 
 const Feature = goog.requireType('ol.Feature');
-const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
 
 
 /**
  * Manages spatial areas
  */
-class AreaManager extends BaseAreaManager {
+export default class AreaManager extends BaseAreaManager {
   /**
    * Constructor.
    */
@@ -431,6 +431,3 @@ AreaManager.FULL_EXCLUSION_STYLE = {
     'width': 2
   }
 };
-
-
-exports = AreaManager;

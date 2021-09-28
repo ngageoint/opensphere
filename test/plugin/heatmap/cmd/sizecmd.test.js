@@ -6,8 +6,8 @@ goog.require('plugin.heatmap.cmd.Size');
 
 
 describe('plugin.heatmap.cmd.Size', function() {
-  const LayerType = goog.module.get('os.layer.LayerType');
-  const VectorSource = goog.module.get('os.source.Vector');
+  const {default: LayerType} = goog.module.get('os.layer.LayerType');
+  const {default: VectorSource} = goog.module.get('os.source.Vector');
   const heatmap = goog.module.get('plugin.heatmap');
   const {default: HeatmapLayerConfig} = goog.module.get('plugin.heatmap.HeatmapLayerConfig');
   const {default: Size} = goog.module.get('plugin.heatmap.cmd.Size');

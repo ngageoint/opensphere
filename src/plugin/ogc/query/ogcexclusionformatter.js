@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.ogc.query.OGCExclusionFormatter');
 
-const interpolate = goog.require('os.interpolate');
-const OSOGCExclusionFormatter = goog.require('os.ogc.filter.OGCExclusionFormatter');
+import * as interpolate from '../../../os/interpolate.js';
+import OSOGCExclusionFormatter from '../../../os/ogc/filter/ogcexclusionformatter.js';
 
 const Geometry = goog.requireType('ol.geom.Geometry');
 

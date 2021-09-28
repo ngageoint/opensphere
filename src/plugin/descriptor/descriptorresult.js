@@ -1,10 +1,9 @@
 goog.declareModuleId('plugin.descriptor.DescriptorResult');
 
+import AbstractSearchResult from '../../os/search/abstractsearchresult.js';
 import {directiveTag as cardUi} from './descriptorresultcard.js';
 
-const AbstractSearchResult = goog.require('os.search.AbstractSearchResult');
-
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 
 
 /**

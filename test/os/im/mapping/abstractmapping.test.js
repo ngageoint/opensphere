@@ -3,7 +3,7 @@ goog.require('os.im.mapping.AbstractMapping');
 
 describe('os.im.mapping.AbstractMapping', function() {
   const mapping = goog.module.get('os.im.mapping');
-  const AbstractMapping = goog.module.get('os.im.mapping.AbstractMapping');
+  const {default: AbstractMapping} = goog.module.get('os.im.mapping.AbstractMapping');
 
   var am = new AbstractMapping();
 

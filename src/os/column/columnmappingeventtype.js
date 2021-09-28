@@ -1,10 +1,12 @@
-goog.module('os.column.ColumnMappingEventType');
+goog.declareModuleId('os.column.ColumnMappingEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const ColumnMappingEventType = {
   MAPPINGS_CHANGE: 'mappingsChange',
   COLUMN_ADDED: 'columnAdded',
   COLUMN_REMOVED: 'columnRemoved'
 };
+
+export default ColumnMappingEventType;

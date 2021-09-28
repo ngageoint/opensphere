@@ -2,8 +2,8 @@ goog.require('os.unit.BaseUnit');
 goog.require('os.unit.Multiplier');
 
 describe('os.unit.BaseUnit', function() {
-  const BaseUnit = goog.module.get('os.unit.BaseUnit');
-  const Multiplier = goog.module.get('os.unit.Multiplier');
+  const {default: BaseUnit} = goog.module.get('os.unit.BaseUnit');
+  const {default: Multiplier} = goog.module.get('os.unit.Multiplier');
 
   it('should function correctly', inject(function($rootScope) {
     var name = 'min';

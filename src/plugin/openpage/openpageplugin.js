@@ -1,10 +1,9 @@
 goog.declareModuleId('plugin.openpage.Plugin');
 
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
+import Peer from '../../os/xt/peer.js';
 import Handler from './handler.js';
 import {ID} from './openpage.js';
-
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const Peer = goog.require('os.xt.Peer');
 
 /**
  * Adds layers from XT messages sent by the addlayer.html page.

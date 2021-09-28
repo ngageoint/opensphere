@@ -1,15 +1,15 @@
 goog.declareModuleId('os.ui.state.StateImportUI');
 
+import StateParserConfig from '../../parse/stateparserconfig.js';
+import Tag from '../../state/tag.js';
+import {stringFromXML} from '../../tag/tag.js';
 import FileImportUI from '../im/fileimportui.js';
 import {create} from '../window.js';
 import {directiveTag as importUi} from './stateimport.js';
 
 const {loadXml} = goog.require('goog.dom.xml');
-const StateParserConfig = goog.require('os.parse.StateParserConfig');
-const Tag = goog.require('os.state.Tag');
-const {stringFromXML} = goog.require('os.tag');
 
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**

@@ -1,8 +1,7 @@
-goog.module('os.config.AbstractSettingsInitializer');
+goog.declareModuleId('os.config.AbstractSettingsInitializer');
 
-const EventType = goog.require('os.config.EventType');
-
-const {getSettings} = goog.require('os.config.instance');
+import {getSettings} from './configinstance.js';
+import EventType from './eventtype.js';
 
 
 /**
@@ -11,7 +10,7 @@ const {getSettings} = goog.require('os.config.instance');
  *
  * @abstract
  */
-class AbstractSettingsInitializer {
+export default class AbstractSettingsInitializer {
   /**
    * Constructor.
    */
@@ -83,5 +82,3 @@ class AbstractSettingsInitializer {
     this.fileUri = value;
   }
 }
-
-exports = AbstractSettingsInitializer;

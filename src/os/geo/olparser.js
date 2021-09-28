@@ -1,4 +1,4 @@
-goog.module('os.geo.jsts.OLParser');
+goog.declareModuleId('os.geo.jsts.OLParser');
 
 const GeometryCollection = goog.require('ol.geom.GeometryCollection');
 const GeometryType = goog.require('ol.geom.GeometryType');
@@ -17,7 +17,7 @@ const Geometry = goog.requireType('ol.geom.Geometry');
  * Utility class to translate between OL and JSTS geometries. This was copied from JSTS so the instanceof calls would
  * still work with compiled code.
  */
-class OLParser {
+export default class OLParser {
   /**
    * Constructor.
    * @param {jsts.geom.GeometryFactory=} opt_geometryFactory
@@ -353,5 +353,3 @@ class OLParser {
  * @type {OLParser|undefined}
  */
 let instance;
-
-exports = OLParser;

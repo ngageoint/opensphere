@@ -1,10 +1,10 @@
-goog.module('os.state.JSONState');
+goog.declareModuleId('os.state.JSONState');
 
-const {merge} = goog.require('os.object');
-const Tag = goog.require('os.state.Tag');
-const AbstractState = goog.require('os.state.AbstractState');
+import {merge} from '../object/object.js';
+import AbstractState from './abstractstate.js';
+import Tag from './tag.js';
 
-const JSONStateOptions = goog.requireType('os.state.JSONStateOptions');
+const {default: JSONStateOptions} = goog.requireType('os.state.JSONStateOptions');
 
 
 /**
@@ -12,7 +12,7 @@ const JSONStateOptions = goog.requireType('os.state.JSONStateOptions');
  *
  * @extends {AbstractState<!Object<string, *>, JSONStateOptions>}
  */
-class JSONState extends AbstractState {
+export default class JSONState extends AbstractState {
   /**
    * Constructor.
    */
@@ -54,5 +54,3 @@ class JSONState extends AbstractState {
     super.saveComplete(options, rootObj);
   }
 }
-
-exports = JSONState;

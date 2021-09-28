@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ui.modal.AboutModalUI');
 
+import {getAppName} from '../../config/config.js';
+import Settings from '../../config/settings.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import windowSelector from '../windowselector.js';
 import {create, open} from './modal.js';
-const {getAppName} = goog.require('os.config');
-const Settings = goog.require('os.config.Settings');
 
 
 /**

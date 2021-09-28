@@ -1,12 +1,11 @@
 goog.declareModuleId('os.ui.file.csv.AbstractCsvParser');
 
+import ColumnDefinition from '../../../data/columndefinition.js';
+import {getText} from '../../../file/mime/text.js';
+import AsyncParser from '../../../parse/asyncparser.js';
 import {configurePapaParse} from './csv.js';
 
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const {getText} = goog.require('os.file.mime.text');
-const AsyncParser = goog.require('os.parse.AsyncParser');
-
-const BaseParserConfig = goog.requireType('os.parse.BaseParserConfig');
+const {default: BaseParserConfig} = goog.requireType('os.parse.BaseParserConfig');
 
 
 /**

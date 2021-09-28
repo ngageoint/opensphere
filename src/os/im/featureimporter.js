@@ -1,22 +1,23 @@
-goog.module('os.im.FeatureImporter');
+goog.declareModuleId('os.im.FeatureImporter');
+
+import DataEventType from '../data/event/dataeventtype.js';
+import RecordField from '../data/recordfield.js';
+import * as dispatcher from '../dispatcher.js';
+import {simplifyGeometry} from '../feature/feature.js';
+import Fields from '../fields/fields.js';
+import {DESC_REGEXP} from '../fields/index.js';
+import osImplements from '../implements.js';
+import ITime from '../time/itime.js';
+import {sanitize} from '../ui/ui.js';
+import Importer from './importer.js';
 
 const log = goog.require('goog.log');
 const {getUid} = goog.require('ol');
 const Feature = goog.require('ol.Feature');
-const dispatcher = goog.require('os.Dispatcher');
-const Fields = goog.require('os.Fields');
-const RecordField = goog.require('os.data.RecordField');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const {simplifyGeometry} = goog.require('os.feature');
-const {DESC_REGEXP} = goog.require('os.fields');
-const Importer = goog.require('os.im.Importer');
-const osImplements = goog.require('os.implements');
-const ITime = goog.require('os.time.ITime');
-const {sanitize} = goog.require('os.ui');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
-const IParser = goog.requireType('os.parse.IParser');
+const {default: IParser} = goog.requireType('os.parse.IParser');
 
 
 /**
@@ -24,7 +25,7 @@ const IParser = goog.requireType('os.parse.IParser');
  *
  * @template T
  */
-class FeatureImporter extends Importer {
+export default class FeatureImporter extends Importer {
   /**
    * Constructor.
    * @param {IParser<T>} parser The parser
@@ -163,5 +164,3 @@ const logger = log.getLogger('os.im.FeatureImporter');
  * @type {RegExp}
  */
 const needsSanitize = /[<>]/;
-
-exports = FeatureImporter;

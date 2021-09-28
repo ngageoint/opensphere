@@ -2,7 +2,14 @@ goog.declareModuleId('plugin.im.action.feature.ui.LabelConfigUI');
 
 import '../../../os/ui/layer/labelcontrols.js';
 import '../../../os/ui/popover/popover.js';
+import * as osColor from '../../../os/color.js';
+import ColumnDefinition from '../../../os/data/columndefinition.js';
+import DataManager from '../../../os/data/datamanager.js';
 import * as dispatcher from '../../../os/dispatcher.js';
+import osImplements from '../../../os/implements.js';
+import ILayer from '../../../os/layer/ilayer.js';
+import MapContainer from '../../../os/mapcontainer.js';
+import * as osObject from '../../../os/object/object.js';
 import {ROOT} from '../../../os/os.js';
 import {DEFAULT_SIZE} from '../../../os/style/label.js';
 import {DEFAULT_LAYER_COLOR, toRgbaString} from '../../../os/style/style.js';
@@ -18,13 +25,6 @@ import ActionConfigCtrl from './featureactionconfig.js';
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const olArray = goog.require('ol.array');
-const MapContainer = goog.require('os.MapContainer');
-const osColor = goog.require('os.color');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const DataManager = goog.require('os.data.DataManager');
-const osImplements = goog.require('os.implements');
-const ILayer = goog.require('os.layer.ILayer');
-const osObject = goog.require('os.object');
 
 const {default: LabelAction} = goog.requireType('plugin.im.action.feature.LabelAction');
 

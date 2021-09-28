@@ -3,8 +3,8 @@ goog.require('os.layer.LayerType');
 goog.require('os.ui.Icons');
 
 describe('os.data.ConfigDescriptor', function() {
-  const ConfigDescriptor = goog.module.get('os.data.ConfigDescriptor');
-  const LayerType = goog.module.get('os.layer.LayerType');
+  const {default: ConfigDescriptor} = goog.module.get('os.data.ConfigDescriptor');
+  const {default: LayerType} = goog.module.get('os.layer.LayerType');
   const {default: Icons} = goog.module.get('os.ui.Icons');
 
   var tileConfig = {

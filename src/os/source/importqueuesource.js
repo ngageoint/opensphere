@@ -1,9 +1,10 @@
-goog.module('os.source.ImportQueue');
+goog.declareModuleId('os.source.ImportQueue');
+
+import RequestSource from './requestsource.js';
 
 const {assert} = goog.require('goog.asserts');
 const nextTick = goog.require('goog.async.nextTick');
 const log = goog.require('goog.log');
-const RequestSource = goog.require('os.source.Request');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -11,7 +12,7 @@ const Logger = goog.requireType('goog.log.Logger');
 /**
  * A source designed to import one-off data to a source.
  */
-class ImportQueue extends RequestSource {
+export default class ImportQueue extends RequestSource {
   /**
    * Constructor.
    * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
@@ -120,5 +121,3 @@ class ImportQueue extends RequestSource {
  * @type {Logger}
  */
 const logger = log.getLogger('os.source.ImportQueue');
-
-exports = ImportQueue;

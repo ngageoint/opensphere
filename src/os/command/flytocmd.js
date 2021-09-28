@@ -1,15 +1,16 @@
-goog.module('os.command.FlyTo');
+goog.declareModuleId('os.command.FlyTo');
+
+import {getMapContainer} from '../map/mapinstance.js';
+import AbstractSyncCommand from './abstractsynccommand.js';
+import State from './state.js';
 
 const asserts = goog.require('goog.asserts');
-const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
-const State = goog.require('os.command.State');
-const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
  * Command to fly the map.
  */
-class FlyTo extends AbstractSyncCommand {
+export default class FlyTo extends AbstractSyncCommand {
   /**
    * Constructor.
    * @param {osx.map.FlyToOptions=} opt_options The fly to options
@@ -78,5 +79,3 @@ class FlyTo extends AbstractSyncCommand {
     return super.revert();
   }
 }
-
-exports = FlyTo;

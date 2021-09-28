@@ -1,12 +1,13 @@
 goog.declareModuleId('os.ui.file.method.FileMethod');
 
+import EventType from '../../../events/eventtype.js';
+import IFileMethod from '../../../file/ifilemethod.js';// eslint-disable-line
+
 import * as osWindow from '../../window.js';
 import windowSelector from '../../windowselector.js';
 import {directiveTag as fileImportUi} from '../fileimport.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
-const EventType = goog.require('os.events.EventType');
-const IFileMethod = goog.require('os.file.IFileMethod'); // eslint-disable-line
 
 
 /**

@@ -1,14 +1,14 @@
 goog.declareModuleId('os.ui.query.EditAreaUI');
 
 import '../im/basicinfo.js';
+import CommandProcessor from '../../command/commandprocessor.js';
 import {ROOT} from '../../os.js';
+import {getAreaManager} from '../../query/queryinstance.js';
 import Module from '../module.js';
 import WindowEventType from '../windoweventtype.js';
 import AreaImportCtrl from './areaimportctrl.js';
 import AreaAdd from './cmd/areaaddcmd.js';
 import {applyMappings, createMappingsFromConfig} from './query.js';
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const {getAreaManager} = goog.require('os.query.instance');
 
 const Feature = goog.requireType('ol.Feature');
 

@@ -1,11 +1,12 @@
-goog.module('os.im.mapping.LatMapping');
+goog.declareModuleId('os.im.mapping.LatMapping');
+
+import Fields from '../../fields/fields.js';
+import {COORD_CLEANER, parseLat} from '../../geo/geo.js';
+import AbstractPositionMapping from './abstractpositionmapping.js';
+import {getBestFieldMatch, getItemField, setItemField} from './mapping.js';
+import MappingRegistry from './mappingregistry.js';
 
 const Point = goog.require('ol.geom.Point');
-const Fields = goog.require('os.Fields');
-const {COORD_CLEANER, parseLat} = goog.require('os.geo');
-const {getBestFieldMatch, getItemField, setItemField} = goog.require('os.im.mapping');
-const AbstractPositionMapping = goog.require('os.im.mapping.AbstractPositionMapping');
-const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -13,7 +14,7 @@ const Feature = goog.requireType('ol.Feature');
 /**
  * @extends {AbstractPositionMapping<Feature>}
  */
-class LatMapping extends AbstractPositionMapping {
+export default class LatMapping extends AbstractPositionMapping {
   /**
    * Constructor.
    */
@@ -186,5 +187,3 @@ MappingRegistry.getInstance().registerMapping(LatMapping.ID, LatMapping);
  * @type {RegExp}
  */
 LatMapping.LAT_REGEX = /(\b|_)lat(i(t(u(d(e)?)?)?)?)?(\b|_)/i;
-
-exports = LatMapping;

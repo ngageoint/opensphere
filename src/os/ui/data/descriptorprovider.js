@@ -1,14 +1,13 @@
 goog.declareModuleId('os.ui.data.DescriptorProvider');
 
+import CommandProcessor from '../../command/commandprocessor.js';
+import ActivateDescriptor from '../../data/activatedescriptorcmd.js';
+import DataManager from '../../data/datamanager.js';
+import DataProviderEvent from '../../data/dataproviderevent.js';
+import DataProviderEventType from '../../data/dataprovidereventtype.js';
+import TriState from '../../structs/tristate.js';
 import BaseProvider from './baseprovider.js';
 import DescriptorNode from './descriptornode.js';
-
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const ActivateDescriptor = goog.require('os.data.ActivateDescriptor');
-const DataManager = goog.require('os.data.DataManager');
-const DataProviderEvent = goog.require('os.data.DataProviderEvent');
-const DataProviderEventType = goog.require('os.data.DataProviderEventType');
-const TriState = goog.require('os.structs.TriState');
 
 const Promise = goog.requireType('goog.Promise');
 

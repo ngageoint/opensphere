@@ -1,11 +1,10 @@
-goog.module('os.state.v4.TimeTag');
-
+goog.declareModuleId('os.state.v4.TimeTag');
 
 /**
  * XML tags for time state
  * @enum {string}
  */
-exports = {
+const TimeTag = {
   ADVANCE: 'advance',
   ANIMATION: 'animation',
   CURRENT: 'current',
@@ -34,3 +33,5 @@ exports = {
   COLLAPSED: 'timelineCollapsed',
   VISIBLE_RANGE: 'visibleRange'
 };
+
+export default TimeTag;

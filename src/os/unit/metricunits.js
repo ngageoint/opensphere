@@ -1,13 +1,13 @@
-goog.module('os.unit.MetricUnits');
+goog.declareModuleId('os.unit.MetricUnits');
 
-const BaseUnit = goog.require('os.unit.BaseUnit');
-const Multiplier = goog.require('os.unit.Multiplier');
+import BaseUnit from './baseunit.js';
+import Multiplier from './multiplier.js';
 
 
 /**
  * Responsible for receiving, logging and reporting alerts
  */
-class MetricUnits extends BaseUnit {
+export default class MetricUnits extends BaseUnit {
   /**
    * Constructor.
    */
@@ -68,5 +68,3 @@ class MetricUnits extends BaseUnit {
     this.multipliers.push(new Multiplier('Tm', 1E12, false, 'Terameters'));
   }
 }
-
-exports = MetricUnits;

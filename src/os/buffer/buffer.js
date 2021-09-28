@@ -1,18 +1,19 @@
-goog.module('os.buffer');
+goog.declareModuleId('os.buffer');
+
+import CommandProcessor from '../command/commandprocessor.js';
+import ParallelCommand from '../command/parallelcommand.js';
+import Settings from '../config/settings.js';
+import RecordField from '../data/recordfield.js';
+import * as osFeature from '../feature/feature.js';
+import * as osJsts from '../geo/jsts.js';
+import * as math from '../math/math.js';
+import Units from '../math/units.js';
+import * as osStyle from '../style/style.js';
+import AreaAdd from '../ui/query/cmd/areaaddcmd.js';
 
 const userAgent = goog.require('goog.userAgent');
 const Feature = goog.require('ol.Feature');
 const GeometryType = goog.require('ol.geom.GeometryType');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const ParallelCommand = goog.require('os.command.ParallelCommand');
-const Settings = goog.require('os.config.Settings');
-const RecordField = goog.require('os.data.RecordField');
-const osFeature = goog.require('os.feature');
-const osJsts = goog.require('os.geo.jsts');
-const math = goog.require('os.math');
-const Units = goog.require('os.math.Units');
-const osStyle = goog.require('os.style');
-const {default: AreaAdd} = goog.require('os.ui.query.cmd.AreaAdd');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
 const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
@@ -32,24 +33,24 @@ const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
  *   features: !Array<!Feature>
  * }}
  */
-let BufferConfig;
+export let BufferConfig;
 
 /**
  * Icon used for the buffer region feature.
  * @type {string}
  */
-const ICON = 'fa-dot-circle-o';
+export const ICON = 'fa-dot-circle-o';
 
 /**
  * The base settings key to use for buffer region configuration.
  * @type {string}
  */
-const BASE_KEY = 'bufferRegion.';
+export const BASE_KEY = 'bufferRegion.';
 
 /**
  * @enum {string}
  */
-const BufferSetting = {
+export const BufferSetting = {
   DISTANCE: BASE_KEY + 'distance',
   UNITS: BASE_KEY + 'units'
 };
@@ -58,7 +59,7 @@ const BufferSetting = {
  * Style config for buffer previews.
  * @type {Object}
  */
-const PREVIEW_STYLE = {
+export const PREVIEW_STYLE = {
   'fill': {
     'color': 'rgba(0,255,255,.15)'
   },
@@ -72,26 +73,26 @@ const PREVIEW_STYLE = {
  * Default title for buffer areas.
  * @type {string}
  */
-const DEFAULT_TITLE = 'Buffer Region';
+export const DEFAULT_TITLE = 'Buffer Region';
 
 /**
  * Limitation on the number of features that can be buffered in live preview mode.
  * @type {number}
  */
-const FEATURE_LIMIT = userAgent.WEBKIT ? 500 : 100;
+export const FEATURE_LIMIT = userAgent.WEBKIT ? 500 : 100;
 
 /**
  * Limitation on the number of source verticies that can be buffered in live preview mode.
  * @type {number}
  */
-const VERTEX_LIMIT = userAgent.WEBKIT ? 5000 : 2000;
+export const VERTEX_LIMIT = userAgent.WEBKIT ? 5000 : 2000;
 
 /**
  * Create a default configuration object for a buffer region.
  *
  * @return {!BufferConfig}
  */
-const getBaseConfig = function() {
+export const getBaseConfig = function() {
   const settings = Settings.getInstance();
   return {
     'distance': /** @type {number} */ (settings.get(BufferSetting.DISTANCE, 5)),
@@ -110,7 +111,7 @@ const getBaseConfig = function() {
  *
  * @param {!BufferConfig} config
  */
-const saveConfig = function(config) {
+export const saveConfig = function(config) {
   const settings = Settings.getInstance();
   settings.set(BufferSetting.DISTANCE, config['distance']);
   settings.set(BufferSetting.UNITS, config['units']);
@@ -122,7 +123,7 @@ const saveConfig = function(config) {
  * @param {BufferConfig} config The buffer config
  * @return {boolean}
  */
-const isConfigValid = function(config) {
+export const isConfigValid = function(config) {
   return config['features'] && config['features'].length > 0 && config['distance'] != null;
 };
 
@@ -132,7 +133,7 @@ const isConfigValid = function(config) {
  * @param {BufferConfig} config The buffer config
  * @return {boolean}
  */
-const allowLivePreview = function(config) {
+export const allowLivePreview = function(config) {
   if (config['features']) {
     if (config['features'].length > FEATURE_LIMIT) {
       return false;
@@ -268,7 +269,7 @@ let createFromConfig_ = function(config, opt_preview) {
  * @param {boolean=} opt_preview If the features should only be returned for preview
  * @return {Array<!Feature>} The new areas
  */
-const createFromConfig = function(config, opt_preview) {
+export const createFromConfig = function(config, opt_preview) {
   return createFromConfig_(config, opt_preview);
 };
 
@@ -277,23 +278,6 @@ const createFromConfig = function(config, opt_preview) {
  *
  * @param {!function(BufferConfig, boolean=):Array<!Feature>} f The new implementation
  */
-const setCreateFromConfig = function(f) {
+export const setCreateFromConfig = function(f) {
   createFromConfig_ = f;
-};
-
-exports = {
-  ICON,
-  BASE_KEY,
-  BufferSetting,
-  PREVIEW_STYLE,
-  DEFAULT_TITLE,
-  FEATURE_LIMIT,
-  VERTEX_LIMIT,
-  getBaseConfig,
-  saveConfig,
-  isConfigValid,
-  allowLivePreview,
-  createFromConfig,
-  setCreateFromConfig,
-  BufferConfig
 };

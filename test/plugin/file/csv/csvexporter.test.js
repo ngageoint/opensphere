@@ -15,9 +15,9 @@ describe('plugin.file.csv.CSVExporter', function() {
   const LineString = goog.module.get('ol.geom.LineString');
   const Point = goog.module.get('ol.geom.Point');
   const Polygon = goog.module.get('ol.geom.Polygon');
-  const Fields = goog.module.get('os.Fields');
-  const TimeInstant = goog.module.get('os.time.TimeInstant');
-  const TimeRange = goog.module.get('os.time.TimeRange');
+  const {default: Fields} = goog.module.get('os.Fields');
+  const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');
+  const {default: TimeRange} = goog.module.get('os.time.TimeRange');
   const {default: CSVExporter} = goog.module.get('plugin.file.csv.CSVExporter');
   var ex = new CSVExporter();
   var lineFeature;

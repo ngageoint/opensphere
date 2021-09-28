@@ -3,9 +3,9 @@ goog.require('os.job.JobEventType');
 goog.require('os.job.JobState');
 
 xdescribe('os.job.Job', function() {
-  const Job = goog.module.get('os.job.Job');
-  const JobEventType = goog.module.get('os.job.JobEventType');
-  const JobState = goog.module.get('os.job.JobState');
+  const {default: Job} = goog.module.get('os.job.Job');
+  const {default: JobEventType} = goog.module.get('os.job.JobEventType');
+  const {default: JobState} = goog.module.get('os.job.JobState');
 
   var testJob;
   var jobName = 'Karma Job';

@@ -1,17 +1,16 @@
 goog.declareModuleId('os.ui.LayerTreeUI');
 
+import FolderNode from '../data/foldernode.js';
+import LayerNode from '../data/layernode.js';
+import ZOrder from '../data/zorder.js';
+import FolderManager from '../layer/foldermanager.js';
+import {mapLayersToIds} from '../layer/layer.js';
+import LayerGroup from '../layer/layergroup.js';
 import Module from './module.js';
 import {Controller as SlickTreeCtrl, directive as slickTreeDirective} from './slick/slicktree.js';
 import SlickTreeNode from './slick/slicktreenode.js';
 
-const FolderNode = goog.require('os.data.FolderNode');
-const LayerNode = goog.require('os.data.LayerNode');
-const ZOrder = goog.require('os.data.ZOrder');
-const {mapLayersToIds} = goog.require('os.layer');
-const FolderManager = goog.require('os.layer.FolderManager');
-const LayerGroup = goog.require('os.layer.LayerGroup');
-
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**

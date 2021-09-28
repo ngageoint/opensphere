@@ -6,10 +6,10 @@ goog.require('os.ui.data.DescriptorNode');
 
 
 describe('os.data.groupby.TagListGroupBy', function() {
-  const Settings = goog.module.get('os.config.Settings');
-  const BaseDescriptor = goog.module.get('os.data.BaseDescriptor');
-  const TagListGroupBy = goog.module.get('os.data.groupby.TagListGroupBy');
-  const TriStateTreeNode = goog.module.get('os.structs.TriStateTreeNode');
+  const {default: Settings} = goog.module.get('os.config.Settings');
+  const {default: BaseDescriptor} = goog.module.get('os.data.BaseDescriptor');
+  const {default: TagListGroupBy} = goog.module.get('os.data.groupby.TagListGroupBy');
+  const {default: TriStateTreeNode} = goog.module.get('os.structs.TriStateTreeNode');
   const {default: DescriptorNode} = goog.module.get('os.ui.data.DescriptorNode');
 
   var by = new TagListGroupBy();

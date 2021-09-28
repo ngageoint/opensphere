@@ -1,9 +1,9 @@
-goog.module('os.file.persist.LocalFilePersistence');
+goog.declareModuleId('os.file.persist.LocalFilePersistence');
 
-const {SAVE_COMPLETE, SAVE_FAILED, saveLocal} = goog.require('os.file.persist');
-const FilePersistence = goog.require('os.file.persist.FilePersistence');
+import FilePersistence from './filepersistence.js';
+import {SAVE_COMPLETE, SAVE_FAILED, saveLocal} from './persist.js';
 
-const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
+const {default: IPersistenceMethod} = goog.requireType('os.ex.IPersistenceMethod');
 
 
 /**
@@ -11,7 +11,7 @@ const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
  *
  * @implements {IPersistenceMethod}
  */
-class LocalFilePersistence extends FilePersistence {
+export default class LocalFilePersistence extends FilePersistence {
   /**
    * Constructor.
    * @param {string=} opt_dbStore
@@ -55,5 +55,3 @@ LocalFilePersistence.SAVE_COMPLETE = SAVE_COMPLETE;
  * @deprecated Please use os.file.persist.SAVE_FAILED instead.
  */
 LocalFilePersistence.SAVE_FAILED = SAVE_FAILED;
-
-exports = LocalFilePersistence;

@@ -1,8 +1,9 @@
 goog.declareModuleId('plugin.ogc.query.FilterIDModifier');
 
+import ParamModifier from '../../../os/net/parammodifier.js';
+import ModifierConstants from '../../../os/ogc/filter/modifierconstants.js';
+
 const googString = goog.require('goog.string');
-const ParamModifier = goog.require('os.net.ParamModifier');
-const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');
 
 
 /**

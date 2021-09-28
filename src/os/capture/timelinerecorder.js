@@ -1,5 +1,6 @@
 goog.declareModuleId('os.capture.TimelineRecorder');
 
+import TimelineController from '../time/timelinecontroller.js';
 import AbstractRecorder from './abstractrecorder.js';
 import * as capture from './capture.js';
 import CaptureEventType from './captureeventtype.js';
@@ -7,7 +8,6 @@ import CaptureEventType from './captureeventtype.js';
 const Promise = goog.require('goog.Promise');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
-const TimelineController = goog.require('os.time.TimelineController');
 
 const {CanvasFn, RenderFn} = goog.requireType('os.capture');
 const {default: IVideoEncoder} = goog.requireType('os.capture.IVideoEncoder');

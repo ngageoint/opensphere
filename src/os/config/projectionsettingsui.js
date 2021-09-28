@@ -1,16 +1,17 @@
-goog.module('os.config.ProjectionSettingsUI');
+goog.declareModuleId('os.config.ProjectionSettingsUI');
+
+import * as osMap from '../map/map.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import Metrics from '../metrics/metrics.js';
+import {Settings as SettingsMetrics} from '../metrics/metricskeys.js';
+import {ROOT} from '../os.js';
+import {getProjections} from '../proj/proj.js';
+import SwitchProjection from '../proj/switchprojection.js';
+import Module from '../ui/module.js';
+import {apply} from '../ui/ui.js';
 
 const {numerateCompare} = goog.require('goog.string');
 const {listen, unlisten} = goog.require('ol.events');
-const {ROOT} = goog.require('os');
-const osMap = goog.require('os.map');
-const {getMapContainer} = goog.require('os.map.instance');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Settings: SettingsMetrics} = goog.require('os.metrics.keys');
-const {getProjections} = goog.require('os.proj');
-const SwitchProjection = goog.require('os.proj.switch.SwitchProjection');
-const {apply} = goog.require('os.ui');
-const {default: Module} = goog.require('os.ui.Module');
 
 
 /**
@@ -18,7 +19,7 @@ const {default: Module} = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = function() {
+export const directive = function() {
   return {
     restrict: 'AE',
     replace: true,
@@ -28,12 +29,11 @@ const directive = function() {
   };
 };
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'projectionsettings';
+export const directiveTag = 'projectionsettings';
 
 
 /**
@@ -46,7 +46,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for unit settings
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -116,9 +116,3 @@ class Controller {
     SwitchProjection.getInstance().start(this['projection']['code']);
   }
 }
-
-exports = {
-  directive,
-  directiveTag,
-  Controller
-};

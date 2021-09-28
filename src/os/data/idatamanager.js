@@ -1,11 +1,11 @@
-goog.module('os.data.IDataManager');
+goog.declareModuleId('os.data.IDataManager');
 
 const Listenable = goog.requireType('goog.events.Listenable');
-const Settings = goog.requireType('os.config.Settings');
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const IDataProvider = goog.requireType('os.data.IDataProvider');
-const ProviderEntry = goog.requireType('os.data.ProviderEntry');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: Settings} = goog.requireType('os.config.Settings');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: IDataProvider} = goog.requireType('os.data.IDataProvider');
+const {default: ProviderEntry} = goog.requireType('os.data.ProviderEntry');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**
@@ -14,7 +14,7 @@ const VectorSource = goog.requireType('os.source.Vector');
  * @extends {Listenable}
  * @interface
  */
-class IDataManager {
+export default class IDataManager {
   /**
    * Registers a provider type
    * @param {!ProviderEntry} entry The provider type entry
@@ -197,5 +197,3 @@ class IDataManager {
    */
   setTimeFilterEnabled(value) {}
 }
-
-exports = IDataManager;

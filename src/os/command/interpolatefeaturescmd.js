@@ -1,11 +1,12 @@
-goog.module('os.command.InterpolateFeatures');
+goog.declareModuleId('os.command.InterpolateFeatures');
+
+import * as interpolate from '../interpolate.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import State from './state.js';
 
 const OLVectorLayer = goog.require('ol.layer.Vector');
-const State = goog.require('os.command.State');
-const interpolate = goog.require('os.interpolate');
-const {getMapContainer} = goog.require('os.map.instance');
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -13,7 +14,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class InterpolateFeatures {
+export default class InterpolateFeatures {
   /**
    * Constructor.
    */
@@ -100,5 +101,3 @@ class InterpolateFeatures {
     return true;
   }
 }
-
-exports = InterpolateFeatures;

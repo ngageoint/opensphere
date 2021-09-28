@@ -1,4 +1,4 @@
-goog.module('os.storage.IAsyncStorage');
+goog.declareModuleId('os.storage.IAsyncStorage');
 
 const Deferred = goog.requireType('goog.async.Deferred');
 
@@ -9,7 +9,7 @@ const Deferred = goog.requireType('goog.async.Deferred');
  * @interface
  * @template T
  */
-class IAsyncStorage {
+export default class IAsyncStorage {
   /**
    * Initialize storage
    * @return {!Deferred}
@@ -53,5 +53,3 @@ class IAsyncStorage {
    */
   clear() {}
 }
-
-exports = IAsyncStorage;

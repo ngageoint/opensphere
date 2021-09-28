@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ui.filter.ui.CopyFilterPickerUI');
 
+import {findDuplicates} from '../../../array/array.js';
+import ColumnMappingManager from '../../../column/columnmappingmanager.js';
 import {ROOT} from '../../../os.js';
 import Module from '../../module.js';
 
 const {getRandomString} = goog.require('goog.string');
-const {findDuplicates} = goog.require('os.array');
-const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
 
 const {default: CopyFilterPickerModel} = goog.requireType('os.ui.filter.ui.CopyFilterPickerModel');
 

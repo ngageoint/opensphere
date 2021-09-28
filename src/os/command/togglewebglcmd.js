@@ -1,19 +1,19 @@
-goog.module('os.command.ToggleWebGL');
+goog.declareModuleId('os.command.ToggleWebGL');
 
-const MapMode = goog.require('os.MapMode');
-const AbstractAsyncCommand = goog.require('os.command.AbstractAsyncCommand');
-const EventType = goog.require('os.command.EventType');
-const State = goog.require('os.command.State');
-const DataManager = goog.require('os.data.DataManager');
-const {getMapContainer} = goog.require('os.map.instance');
-const ogc = goog.require('os.ogc');
-const launch2DPerformanceDialog = goog.require('os.webgl.launch2DPerformanceDialog');
+import DataManager from '../data/datamanager.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import MapMode from '../map/mapmode.js';
+import * as ogc from '../ogc/ogc.js';
+import launch2DPerformanceDialog from '../webgl/launch2dperfdialog.js';
+import AbstractAsyncCommand from './abstractasynccommand.js';
+import EventType from './eventtype.js';
+import State from './state.js';
 
 
 /**
  * Command to switch between 2D/3D map modes.
  */
-class ToggleWebGL extends AbstractAsyncCommand {
+export default class ToggleWebGL extends AbstractAsyncCommand {
   /**
    * Constructor.
    * @param {boolean} toggle If WebGL should be enabled.
@@ -125,5 +125,3 @@ class ToggleWebGL extends AbstractAsyncCommand {
     return true;
   }
 }
-
-exports = ToggleWebGL;

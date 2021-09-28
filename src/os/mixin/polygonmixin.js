@@ -1,4 +1,4 @@
-goog.module('os.mixin.polygon');
+goog.declareModuleId('os.mixin.polygon');
 
 const Polygon = goog.require('ol.geom.Polygon');
 

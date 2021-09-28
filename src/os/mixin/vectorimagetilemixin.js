@@ -1,8 +1,9 @@
-goog.module('os.mixin.VectorImageTile');
+goog.declareModuleId('os.mixin.VectorImageTile');
+
+import VectorTile from '../layer/vectortile.js';
+import MapContainer from '../mapcontainer.js';
 
 const VectorImageTile = goog.require('ol.VectorImageTile');
-const MapContainer = goog.require('os.MapContainer');
-const VectorTile = goog.require('os.layer.VectorTile');
 
 const OLLayer = goog.requireType('ol.layer.Layer');
 

@@ -4,9 +4,21 @@
  */
 goog.declareModuleId('plugin.file.kml');
 
+import * as annotation from '../../../os/annotation/annotation.js';
+import RecordField from '../../../os/data/recordfield.js';
+import Fields from '../../../os/fields/fields.js';
+import * as geo from '../../../os/geo/geo.js';
+import CrossOrigin from '../../../os/net/crossorigin.js';
+import * as net from '../../../os/net/net.js';
+import * as osObject from '../../../os/object/object.js';
 import * as osStyle from '../../../os/style/style.js';
+import StyleField from '../../../os/style/stylefield.js';
+import StyleManager from '../../../os/style/stylemanager_shim.js';
+import TimeInstant from '../../../os/time/timeinstant.js';
+import TimeRange from '../../../os/time/timerange.js';
 import * as kml from '../../../os/ui/file/kml/kml.js';
 import * as slickColumn from '../../../os/ui/slick/column.js';
+import * as xml from '../../../os/xml.js';
 import KMLField from './kmlfield.js';
 
 const Uri = goog.require('goog.Uri');
@@ -30,18 +42,6 @@ const IconAnchorUnits = goog.require('ol.style.IconAnchorUnits');
 const IconOrigin = goog.require('ol.style.IconOrigin');
 const Style = goog.require('ol.style.Style');
 const olXml = goog.require('ol.xml');
-const Fields = goog.require('os.Fields');
-const annotation = goog.require('os.annotation');
-const RecordField = goog.require('os.data.RecordField');
-const geo = goog.require('os.geo');
-const net = goog.require('os.net');
-const CrossOrigin = goog.require('os.net.CrossOrigin');
-const osObject = goog.require('os.object');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const TimeRange = goog.require('os.time.TimeRange');
-const xml = goog.require('os.xml');
 
 
 /**

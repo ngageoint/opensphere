@@ -1,11 +1,10 @@
 goog.declareModuleId('os.ui.TriStateCheckboxUI');
 
+import TriState from '../structs/tristate.js';
 import Module from './module.js';
 import {apply} from './ui.js';
 
-const TriState = goog.require('os.structs.TriState');
-
-const TriStateTreeNode = goog.requireType('os.structs.TriStateTreeNode');
+const {default: TriStateTreeNode} = goog.requireType('os.structs.TriStateTreeNode');
 
 
 /**

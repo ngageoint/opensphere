@@ -1,7 +1,8 @@
 goog.declareModuleId('os.ui.icons');
 
+import {changeColor, toHexString, toRgbArray} from '../../color.js';
+
 const {encodeString} = goog.require('goog.crypt.hash32');
-const {changeColor, toHexString, toRgbArray} = goog.require('os.color');
 
 
 /**

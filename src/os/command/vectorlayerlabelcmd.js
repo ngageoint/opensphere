@@ -1,13 +1,13 @@
-goog.module('os.command.VectorLayerLabel');
+goog.declareModuleId('os.command.VectorLayerLabel');
 
-const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const DataManager = goog.require('os.data.DataManager');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
-const label = goog.require('os.style.label');
+import DataManager from '../data/datamanager.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import PropertyChange from '../source/propertychange.js';
+import * as label from '../style/label.js';
+import StyleField from '../style/stylefield.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import AbstractVectorStyle from './abstractvectorstylecmd.js';
 
 
 /**
@@ -15,7 +15,7 @@ const label = goog.require('os.style.label');
  *
  * @extends {AbstractVectorStyle<string>}
  */
-class VectorLayerLabel extends AbstractVectorStyle {
+export default class VectorLayerLabel extends AbstractVectorStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -62,5 +62,3 @@ class VectorLayerLabel extends AbstractVectorStyle {
     super.finish(config);
   }
 }
-
-exports = VectorLayerLabel;

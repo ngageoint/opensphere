@@ -1,10 +1,9 @@
 goog.declareModuleId('os.ui.config.SettingNode');
 
+import TriState from '../../structs/tristate.js';
 import SlickTreeNode from '../slick/slicktreenode.js';
 
-const TriState = goog.require('os.structs.TriState');
-
-const ISearchable = goog.requireType('os.data.ISearchable');
+const {default: ISearchable} = goog.requireType('os.data.ISearchable');
 const {default: SettingPlugin} = goog.requireType('os.ui.config.SettingPlugin');
 
 

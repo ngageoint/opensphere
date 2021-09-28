@@ -1,9 +1,8 @@
 goog.declareModuleId('plugin.file.geojson.GeoJSONParserConfig');
 
+import FileParserConfig from '../../os/parse/fileparserconfig.js';
 import ImportManager from '../../os/ui/im/importmanager.js';
 import * as osUiSlickColumn from '../../os/ui/slick/column.js';
-
-const FileParserConfig = goog.require('os.parse.FileParserConfig');
 
 
 /**

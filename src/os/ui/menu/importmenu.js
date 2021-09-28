@@ -1,5 +1,9 @@
 goog.declareModuleId('os.ui.menu.import');
 
+import BaseDescriptor from '../../data/basedescriptor.js';
+import DataManager from '../../data/datamanager.js';
+import LayerType from '../../layer/layertype.js';
+import {AddData as AddDataKeys} from '../../metrics/metricskeys.js';
 import {isOSX} from '../../os.js';
 import ImportEventType from '../im/importeventtype.js';
 import Menu from './menu.js';
@@ -8,12 +12,8 @@ import MenuItemType from './menuitemtype.js';
 import {openWindow} from './windowsmenu.js';
 
 const googDispose = goog.require('goog.dispose');
-const BaseDescriptor = goog.require('os.data.BaseDescriptor');
-const DataManager = goog.require('os.data.DataManager');
-const LayerType = goog.require('os.layer.LayerType');
-const {AddData: AddDataKeys} = goog.require('os.metrics.keys');
 
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 
 
 /**

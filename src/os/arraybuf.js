@@ -1,4 +1,4 @@
-goog.module('os.arraybuf');
+goog.declareModuleId('os.arraybuf');
 
 goog.require('goog.array');
 
@@ -7,14 +7,13 @@ goog.require('goog.array');
  * The Byte Order Marker (BOM) sequence.
  * @type {!Array<number>}
  */
-const BYTE_ORDER_MARKER = [0xef, 0xbb, 0xbf];
-
+export const BYTE_ORDER_MARKER = [0xef, 0xbb, 0xbf];
 
 /**
  * Enumeration of magic numbers for array buffer type checking.
  * @enum {number}
  */
-const MagicNumber = {
+export const MagicNumber = {
   ZIP: 0x504b0304,
   PDF: 0x25504446,
   PNG: 0x89504E47,
@@ -22,7 +21,6 @@ const MagicNumber = {
   JPG2: 0xFFD8FFDB,
   GIF: 0x47494638
 };
-
 
 /**
  * Looks at the content of an ArrayBuffer to determine if it is likely to be text. Only considers the first 64k bytes
@@ -37,7 +35,7 @@ const MagicNumber = {
  * @return {boolean}
  * @deprecated Please use Boolean(os.file.mime.text.getText()) instead
  */
-const isText = function(ab) {
+export const isText = function(ab) {
   // If UTF-8 Byte Order Mark exists
   if (goog.array.equals(new Uint8Array(ab.slice(0, 3)), BYTE_ORDER_MARKER)) {
     // just assume it is text
@@ -89,7 +87,6 @@ const isText = function(ab) {
   return true;
 };
 
-
 /**
  * Checks if a byte is a text character. Text characters are defined as \n, \r, \t, \b, or within the ASCII
  * printable range.
@@ -98,10 +95,9 @@ const isText = function(ab) {
  * @return {boolean}
  * @deprecated Please see the os.file.mime.text package instead
  */
-const isTextCharacter = function(b) {
+export const isTextCharacter = function(b) {
   return b == 10 || b == 13 || b == 9 || b == 8 || (b >= 32 && b <= 127);
 };
-
 
 /**
  * Converts an ArrayBuffer into a UTF-8 string.
@@ -110,7 +106,7 @@ const isTextCharacter = function(b) {
  * @return {string} The string
  * @deprecated Please use os.file.mime.text.getText() instead
  */
-const toString = function(ab) {
+export const toString = function(ab) {
   let s = '';
   // strip the BOM if the content has one
   if (goog.array.equals(new Uint8Array(ab.slice(0, 3)), BYTE_ORDER_MARKER)) {
@@ -137,13 +133,12 @@ const toString = function(ab) {
   return s.replace(/(^\x00+)|(\x00+$)/g, '');
 };
 
-
 /**
  * Get the file type based on **MAGIC**
  * @param {ArrayBuffer} ab
  * @return {string}
  */
-const getMimeType = function(ab) {
+export const getMimeType = function(ab) {
   const dv = new DataView(ab);
   const n = Math.min(64000, dv.byteLength);
   if (n >= 4) {
@@ -167,5 +162,3 @@ const getMimeType = function(ab) {
     return '';
   }
 };
-
-exports = {BYTE_ORDER_MARKER, MagicNumber, isText, isTextCharacter, toString, getMimeType};

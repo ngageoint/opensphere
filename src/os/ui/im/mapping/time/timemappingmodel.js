@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ui.im.mapping.time.TimeMappingModel');
 
-const DateType = goog.require('os.im.mapping.DateType');
-const TimeType = goog.require('os.im.mapping.TimeType');
-const DateMapping = goog.require('os.im.mapping.time.DateMapping');
-const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
-const TimeMapping = goog.require('os.im.mapping.time.TimeMapping');
-const {DATETIME_FORMATS, TIME_FORMATS} = goog.require('os.time');
+import DateType from '../../../../im/mapping/datetype.js';
+import DateMapping from '../../../../im/mapping/time/datemapping.js';
+import DateTimeMapping from '../../../../im/mapping/time/datetimemapping.js';
+import TimeMapping from '../../../../im/mapping/time/timemapping.js';
+import TimeType from '../../../../im/mapping/timetype.js';
+import {DATETIME_FORMATS, TIME_FORMATS} from '../../../../time/time.js';
 
 
 /**

@@ -4,9 +4,14 @@ import '../../../os/ui/filter/advancedfilterbuilder.js';
 import '../../../os/ui/filter/basicfilterbuilder.js';
 import '../../../os/ui/util/validationmessage.js';
 import * as dispatcher from '../../../os/dispatcher.js';
+import * as osObject from '../../../os/object/object.js';
+import * as canvas from '../../../os/ol/canvas.js';
 import {ROOT} from '../../../os/os.js';
 import * as label from '../../../os/style/label.js';
 import * as osStyle from '../../../os/style/style.js';
+import StyleField from '../../../os/style/stylefield.js';
+import StyleManager from '../../../os/style/stylemanager_shim.js';
+import StyleType from '../../../os/style/styletype.js';
 
 import {directive as editFiltersDirective} from '../../../os/ui/filter/ui/editfilters.js';
 import EditFilterActionCtrl from '../../../os/ui/im/action/editfilteraction.js';
@@ -17,11 +22,6 @@ const Feature = goog.require('ol.Feature');
 const ImageState = goog.require('ol.ImageState');
 const Point = goog.require('ol.geom.Point');
 const render = goog.require('ol.render');
-const osObject = goog.require('os.object');
-const canvas = goog.require('os.ol.canvas');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
-const StyleType = goog.require('os.style.StyleType');
 
 const OLStyle = goog.requireType('ol.style.Style');
 const {default: LabelAction} = goog.requireType('plugin.im.action.feature.LabelAction');

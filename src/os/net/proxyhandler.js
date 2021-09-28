@@ -1,8 +1,9 @@
-goog.module('os.net.ProxyHandler');
+goog.declareModuleId('os.net.ProxyHandler');
+
+import HandlerType from './handlertype.js';
+import SameDomainHandler from './samedomainhandler.js';
 
 const log = goog.require('goog.log');
-const HandlerType = goog.require('os.net.HandlerType');
-const SameDomainHandler = goog.require('os.net.SameDomainHandler');
 const Logger = goog.requireType('goog.log.Logger');
 
 
@@ -14,7 +15,7 @@ const Logger = goog.requireType('goog.log.Logger');
  * os.net.ProxyHandler.SCHEMES = ['http', https', ...];
  * </pre>
  */
-class ProxyHandler extends SameDomainHandler {
+export default class ProxyHandler extends SameDomainHandler {
   /**
    * Constructor.
    */
@@ -136,5 +137,3 @@ ProxyHandler.METHODS = ['GET'];
  * @type {boolean}
  */
 ProxyHandler.ENCODE = true;
-
-exports = ProxyHandler;

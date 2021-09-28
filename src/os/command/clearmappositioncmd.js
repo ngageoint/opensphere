@@ -1,9 +1,9 @@
-goog.module('os.command.ClearMapPosition');
+goog.declareModuleId('os.command.ClearMapPosition');
 
-const State = goog.require('os.command.State');
-const {getMapContainer} = goog.require('os.map.instance');
+import {getMapContainer} from '../map/mapinstance.js';
+import State from './state.js';
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -11,7 +11,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class ClearMapPosition {
+export default class ClearMapPosition {
   /**
    * Constructor.
    */
@@ -71,5 +71,3 @@ class ClearMapPosition {
     return false;
   }
 }
-
-exports = ClearMapPosition;

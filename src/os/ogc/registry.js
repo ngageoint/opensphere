@@ -1,11 +1,13 @@
-goog.module('os.ogc.registry');
+goog.declareModuleId('os.ogc.registry');
 
-const Registry = goog.require('os.data.Registry');
+import Registry from '../data/registry.js';
+const Feature = goog.requireType('ol.Feature');
+
+
+const {default: OGCService} = goog.requireType('os.ogc.OGCService');
 
 const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 const {default: MenuItemOptions} = goog.requireType('os.ui.menu.MenuItemOptions');
-const OGCService = goog.requireType('os.ogc.OGCService');
-const Feature = goog.requireType('ol.Feature');
 
 
 /**

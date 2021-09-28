@@ -1,9 +1,10 @@
 goog.declareModuleId('plugin.file.kml.mime');
 
+import * as mime from '../../../os/file/mime.js';
+import * as xml from '../../../os/file/mime/xml.js';
+import * as mimeZip from '../../../os/file/mime/zip.js';
+
 const Promise = goog.require('goog.Promise');
-const mime = goog.require('os.file.mime');
-const xml = goog.require('os.file.mime.xml');
-const mimeZip = goog.require('os.file.mime.zip');
 
 
 /**

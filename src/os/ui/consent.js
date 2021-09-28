@@ -1,6 +1,8 @@
 goog.declareModuleId('os.ui.ConsentUI');
 
+import Settings from '../config/settings.js';
 import {ROOT} from '../os.js';
+import Peer from '../xt/peer.js';
 import {create, open} from './modal/modal.js';
 import Module from './module.js';
 import windowSelector from './windowselector.js';
@@ -8,10 +10,8 @@ import windowSelector from './windowselector.js';
 const Timer = goog.require('goog.Timer');
 const dispose = goog.require('goog.dispose');
 const Cookies = goog.require('goog.net.Cookies');
-const Settings = goog.require('os.config.Settings');
-const Peer = goog.require('os.xt.Peer');
 
-const IMessageHandler = goog.requireType('os.xt.IMessageHandler');
+const {default: IMessageHandler} = goog.requireType('os.xt.IMessageHandler');
 
 
 /**

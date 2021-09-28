@@ -1,6 +1,6 @@
-goog.module('os.im.mapping.Rule');
+goog.declareModuleId('os.im.mapping.Rule');
 
-const IPersistable = goog.requireType('os.IPersistable');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
 
 
 /**
@@ -10,7 +10,7 @@ const IPersistable = goog.requireType('os.IPersistable');
  * @template T
  * @unrestricted
  */
-class Rule {
+export default class Rule {
   /**
    * Constructor.
    * @param {string=} opt_initialValue The initial field value
@@ -48,5 +48,3 @@ class Rule {
     this['mappedValue'] = config['mappedValue'];
   }
 }
-
-exports = Rule;

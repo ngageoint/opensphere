@@ -1,13 +1,15 @@
-goog.module('os.command.State');
+goog.declareModuleId('os.command.State');
 
 /**
  * The states of commands
  * @enum {string}
  */
-exports = {
+const State = {
   READY: 'ready',
   EXECUTING: 'executing',
   SUCCESS: 'success',
   ERROR: 'error',
   REVERTING: 'reverting'
 };
+
+export default State;

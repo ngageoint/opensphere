@@ -1,17 +1,17 @@
-goog.module('os.command.TileLayerStyle');
+goog.declareModuleId('os.command.TileLayerStyle');
 
-const AbstractLayerStyle = goog.require('os.command.AbstractLayerStyle');
-const instanceOf = goog.require('os.instanceOf');
-const LayerClass = goog.require('os.layer.LayerClass');
-const {getMapContainer} = goog.require('os.map.instance');
+import instanceOf from '../instanceof.js';
+import LayerClass from '../layer/layerclass.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import AbstractLayerStyle from './abstractlayerstylecmd.js';
 
-const Tile = goog.requireType('os.layer.Tile');
+const {default: Tile} = goog.requireType('os.layer.Tile');
 
 
 /**
  * Changes the style of a tile layer
  */
-class TileLayerStyle extends AbstractLayerStyle {
+export default class TileLayerStyle extends AbstractLayerStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -43,5 +43,3 @@ class TileLayerStyle extends AbstractLayerStyle {
     super.applyValue(config, value);
   }
 }
-
-exports = TileLayerStyle;

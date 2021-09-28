@@ -1,6 +1,6 @@
-goog.module('os.net.CustomFormatter');
+goog.declareModuleId('os.net.CustomFormatter');
 
-const IDataFormatter = goog.requireType('os.net.IDataFormatter');
+const {default: IDataFormatter} = goog.requireType('os.net.IDataFormatter');
 
 
 /**
@@ -8,7 +8,7 @@ const IDataFormatter = goog.requireType('os.net.IDataFormatter');
  *
  * @implements {IDataFormatter}
  */
-class CustomFormatter {
+export default class CustomFormatter {
   /**
    * Constructor.
    * @param {string=} opt_contentType the MIME type of the string data; default is 'text'
@@ -57,5 +57,3 @@ class CustomFormatter {
     return this.content_;
   }
 }
-
-exports = CustomFormatter;

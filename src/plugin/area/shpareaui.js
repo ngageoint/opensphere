@@ -1,15 +1,14 @@
 goog.declareModuleId('plugin.area.SHPAreaUI');
 
 import '../../os/ui/im/mergeareaoption.js';
+import EventType from '../../os/events/eventtype.js';
+import Importer from '../../os/im/importer.js';
 import {ROOT} from '../../os/os.js';
 import Module from '../../os/ui/module.js';
 import {apply} from '../../os/ui/ui.js';
 import WizardStepEvent from '../../os/ui/wiz/step/wizardstepevent.js';
 import SHPParser from '../file/shp/shpparser.js';
 import AreaImportCtrl from './areaimportctrl.js';
-
-const EventType = goog.require('os.events.EventType');
-const Importer = goog.require('os.im.Importer');
 
 const {default: SHPParserConfig} = goog.requireType('plugin.file.shp.SHPParserConfig');
 

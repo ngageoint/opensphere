@@ -1,7 +1,8 @@
-goog.module('os.unit.UnitChange');
-
+goog.declareModuleId('os.unit.UnitChange');
 
 /**
  * @type {string}
  */
-exports = 'unit:change';
+const UnitChange = 'unit:change';
+
+export default UnitChange;

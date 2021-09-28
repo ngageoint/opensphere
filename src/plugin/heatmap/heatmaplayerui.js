@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.heatmap.HeatmapLayerUI');
 
+import * as osColor from '../../os/color.js';
 import {ROOT} from '../../os/os.js';
 import {Controller as DefaultLayerUICtrl} from '../../os/ui/layer/defaultlayerui.js';
 import Module from '../../os/ui/module.js';
@@ -11,7 +12,6 @@ import HeatmapPropertyType from './heatmappropertytype.js';
 const Delay = goog.require('goog.async.Delay');
 
 const googObject = goog.require('goog.object');
-const osColor = goog.require('os.color');
 
 
 /**

@@ -1,18 +1,19 @@
-goog.module('os.im.mapping.AltMapping');
+goog.declareModuleId('os.im.mapping.AltMapping');
+
+import {setAltitude} from '../../feature/feature.js';
+import Fields from '../../fields/fields.js';
+import {DEFAULT_ALT_COL_NAME, DEFAULT_ALT_UNIT} from '../../fields/index.js';
+import * as geo from '../../geo/geo.js';
+import {convertUnits} from '../../math/math.js';
+import UnitLabels from '../../math/unitlabels.js';
+import Units from '../../math/units.js';
+import AltMappingId from './altmappingid.js';
+import * as osMapping from './mapping.js';
+import MappingRegistry from './mappingregistry.js';
+import RenameMapping from './renamemapping.js';
 
 const googObject = goog.require('goog.object');
 const {toTitleCase} = goog.require('goog.string');
-const Fields = goog.require('os.Fields');
-const {setAltitude} = goog.require('os.feature');
-const {DEFAULT_ALT_COL_NAME, DEFAULT_ALT_UNIT} = goog.require('os.fields');
-const geo = goog.require('os.geo');
-const osMapping = goog.require('os.im.mapping');
-const AltMappingId = goog.require('os.im.mapping.AltMappingId');
-const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
-const RenameMapping = goog.require('os.im.mapping.RenameMapping');
-const {convertUnits} = goog.require('os.math');
-const UnitLabels = goog.require('os.math.UnitLabels');
-const Units = goog.require('os.math.Units');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -22,7 +23,7 @@ const Feature = goog.requireType('ol.Feature');
  *
  * @extends {RenameMapping<Feature>}
  */
-class AltMapping extends RenameMapping {
+export default class AltMapping extends RenameMapping {
   /**
    * Constructor.
    */
@@ -313,5 +314,3 @@ AltMapping.ID = AltMappingId;
 
 // Register the mapping.
 MappingRegistry.getInstance().registerMapping(AltMapping.ID, AltMapping);
-
-exports = AltMapping;

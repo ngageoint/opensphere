@@ -1,23 +1,24 @@
-goog.module('os.data.ConfigDescriptor');
+goog.declareModuleId('os.data.ConfigDescriptor');
+
+import * as osArray from '../array/array.js';
+import ImportProcess from '../im/importprocess.js';
+import osImplements from '../implements.js';
+import LayerType from '../layer/layertype.js';
+import * as osString from '../string/string.js';
+import Icons from '../ui/icons.js';
+import ImportEvent from '../ui/im/importevent.js';
+import ImportEventType from '../ui/im/importeventtype.js';
+import LayerSyncDescriptor from './layersyncdescriptor.js';
 
 const googObject = goog.require('goog.object');
-const osArray = goog.require('os.array');
-const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
-const ImportProcess = goog.require('os.im.ImportProcess');
-const osImplements = goog.require('os.implements');
-const LayerType = goog.require('os.layer.LayerType');
-const osString = goog.require('os.string');
-const {default: Icons} = goog.require('os.ui.Icons');
-const {default: ImportEvent} = goog.require('os.ui.im.ImportEvent');
-const {default: ImportEventType} = goog.require('os.ui.im.ImportEventType');
 
-const IReimport = goog.requireType('os.data.IReimport');
+const {default: IReimport} = goog.requireType('os.data.IReimport');
 
 
 /**
  * @implements {IReimport}
  */
-class ConfigDescriptor extends LayerSyncDescriptor {
+export default class ConfigDescriptor extends LayerSyncDescriptor {
   /**
    * Constructor.
    */
@@ -326,6 +327,7 @@ class ConfigDescriptor extends LayerSyncDescriptor {
     }
   }
 }
+
 osImplements(ConfigDescriptor, 'os.data.IReimport');
 
 /**
@@ -405,6 +407,3 @@ const reduceConfigIcons = (icons, config) => {
  * @const
  */
 ConfigDescriptor.ID = 'config';
-
-
-exports = ConfigDescriptor;

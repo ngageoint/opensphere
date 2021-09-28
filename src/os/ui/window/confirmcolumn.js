@@ -5,7 +5,7 @@ import Module from '../module.js';
 import WindowEventType from '../windoweventtype.js';
 import * as ConfirmUI from './confirm.js';
 
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 
 
 /**

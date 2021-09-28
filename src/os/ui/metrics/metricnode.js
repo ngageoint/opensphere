@@ -1,14 +1,14 @@
 goog.declareModuleId('os.ui.metrics.MetricNode');
 
 import {registerClass} from '../../classregistry.js';
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import {MetricsEventType} from '../../metrics/index.js';
+import Metrics from '../../metrics/metrics.js';
 import SlickTreeNode from '../slick/slicktreenode.js';
 import {directiveTag} from './metriccompletion.js';
 import {ClassName} from './metricsui.js';
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {MetricsEventType} = goog.require('os.metrics');
-const Metrics = goog.require('os.metrics.Metrics');
 
-const ISearchable = goog.requireType('os.data.ISearchable');
+const {default: ISearchable} = goog.requireType('os.data.ISearchable');
 
 
 /**

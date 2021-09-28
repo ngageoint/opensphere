@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.hist.IHistogramManager');
 
-const HistogramData = goog.requireType('os.hist.HistogramData');
+const {default: HistogramData} = goog.requireType('os.hist.HistogramData');
 const {default: TimelineScaleOptions} = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 

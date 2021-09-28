@@ -1,5 +1,4 @@
-goog.module('os.unit.IMultiplier');
-
+goog.declareModuleId('os.unit.IMultiplier');
 
 /**
  * Defines information required to convert values within a certain unit.
@@ -7,7 +6,7 @@ goog.module('os.unit.IMultiplier');
  *
  * @interface
  */
-class IMultiplier {
+export default class IMultiplier {
   /**
    * Retrieve the name of the multiplier (e.g.:'ft')
    * @return {string}
@@ -40,5 +39,3 @@ class IMultiplier {
    */
   getThreshold() {}
 }
-
-exports = IMultiplier;

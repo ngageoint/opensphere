@@ -1,11 +1,12 @@
 goog.declareModuleId('os.ogc.wmts.WMTSLayerParserV100');
 
+import {getCrossOrigin} from '../../net/net.js';
 import AbstractWMTSLayerParser from './abstractwmtslayerparser';
+
+import {detectDateTimeFormats, sortFormats} from './wmts.js';
 
 const olProj = goog.require('ol.proj');
 const {optionsFromCapabilities} = goog.require('ol.source.WMTS');
-const {detectDateTimeFormats, sortFormats} = goog.require('os.ogc.wmts');
-const {getCrossOrigin} = goog.require('os.net');
 
 
 /**

@@ -1,10 +1,10 @@
-goog.module('os.structs.TriStateTreeNode');
+goog.declareModuleId('os.structs.TriStateTreeNode');
 
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const TreeNode = goog.require('os.structs.TreeNode');
-const TriState = goog.require('os.structs.TriState');
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import TreeNode from './treenode.js';
+import TriState from './tristate.js';
 
-const IStateTreeNode = goog.requireType('os.structs.IStateTreeNode');
+const {default: IStateTreeNode} = goog.requireType('os.structs.IStateTreeNode');
 
 
 /**
@@ -12,7 +12,7 @@ const IStateTreeNode = goog.requireType('os.structs.IStateTreeNode');
  *
  * @implements {IStateTreeNode}
  */
-class TriStateTreeNode extends TreeNode {
+export default class TriStateTreeNode extends TreeNode {
   /**
    * Constructor.
    */
@@ -242,5 +242,3 @@ class TriStateTreeNode extends TreeNode {
     super.updateFrom(other);
   }
 }
-
-exports = TriStateTreeNode;

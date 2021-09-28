@@ -1,4 +1,4 @@
-goog.module('os.uri');
+goog.declareModuleId('os.uri');
 
 const Uri = goog.require('goog.Uri');
 const QueryData = goog.requireType('goog.Uri.QueryData');
@@ -10,7 +10,7 @@ const QueryData = goog.requireType('goog.Uri.QueryData');
  * @param {!string} uri
  * @return {string}
  */
-const addBase = function(uri) {
+export const addBase = function(uri) {
   if (window && window.location) {
     if (!window.location.origin) {
       window.location.origin = window.location.protocol + '//' + window.location.hostname + (window.location.port ?
@@ -30,7 +30,7 @@ const addBase = function(uri) {
  * @param {QueryData} queryData The query params
  * @return {string}
  */
-const getParamUri = function(queryData) {
+export const getParamUri = function(queryData) {
   return new Uri(window.location.toString()).setQueryData(queryData).toString();
 };
 
@@ -44,7 +44,7 @@ const getParamUri = function(queryData) {
  * @param {goog.Uri.QueryData} to The target params
  * @param {boolean=} opt_overwrite If params should be replaced
  */
-const mergeParams = function(from, to, opt_overwrite) {
+export const mergeParams = function(from, to, opt_overwrite) {
   var fromKeys = from.getKeys();
   var toKeys = to.getKeys();
   for (var i = 0, n = fromKeys.length; i < n; i++) {
@@ -64,10 +64,4 @@ const mergeParams = function(from, to, opt_overwrite) {
       to.set(found, from.get(fromKeys[i]));
     }
   }
-};
-
-exports = {
-  addBase,
-  getParamUri,
-  mergeParams
 };

@@ -7,7 +7,7 @@ goog.require('os.ui.file.MockPersistMethod');
 
 describe('os.ui.file.ExportManager', function() {
   const log = goog.module.get('goog.log');
-  const Settings = goog.module.get('os.config.Settings');
+  const {default: Settings} = goog.module.get('os.config.Settings');
   const {default: ExportManager} = goog.module.get('os.ui.file.ExportManager');
   const MockExportMethod = goog.module.get('os.ui.file.MockExportMethod');
   const MockPersistMethod = goog.module.get('os.ui.file.MockPersistMethod');

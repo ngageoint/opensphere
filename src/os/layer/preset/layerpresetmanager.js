@@ -1,32 +1,33 @@
-goog.module('os.layer.preset.LayerPresetManager');
+goog.declareModuleId('os.layer.preset.LayerPresetManager');
+
+import VectorLayerPreset from '../../command/vectorlayerpresetcmd.js';
+import settings from '../../config/settings.js';
+import Registry from '../../data/registry.js';
+import * as Dispatcher from '../../dispatcher.js';
+import LayerEventType from '../../events/layereventtype.js';
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import IFilterable from '../../filter/ifilterable.js';
+import {getImportActionManager} from '../../im/action/importaction.js';
+import osImplements from '../../implements.js';
+import {getIMapContainer} from '../../map/mapinstance.js';
+import * as osState from '../../state/state.js';
+import * as OsStyle from '../../style/style.js';
+import ILayer from '../ilayer.js';
+import * as OsLayerPreset from './preset.js';
+import SettingsPresetService from './settingspresetservice.js';
+const Disposable = goog.require('goog.Disposable');
+const Promise = goog.require('goog.Promise');
 
 const Debouncer = goog.require('goog.async.Debouncer');
-const Dispatcher = goog.require('os.Dispatcher');
-const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const IFilterable = goog.require('os.filter.IFilterable');
-const {getImportActionManager} = goog.require('os.im.action');
-const ILayer = goog.require('os.layer.ILayer');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const OsLayerPreset = goog.require('os.layer.preset');
-const {getIMapContainer} = goog.require('os.map.instance');
-const OsStyle = goog.require('os.style');
-const Promise = goog.require('goog.Promise');
-const Registry = goog.require('os.data.Registry');
-const SettingsPresetService = goog.require('os.layer.preset.SettingsPresetService');
-const VectorLayerPreset = goog.require('os.command.VectorLayerPreset');
-
-const settings = goog.require('os.config.Settings');
 const olEvents = goog.require('ol.events');
-const osImplements = goog.require('os.implements');
-
-const osState = goog.require('os.state');
-
-const IPresetService = goog.requireType('os.layer.preset.IPresetService');
-const LayerEvent = goog.requireType('os.events.LayerEvent');
 const {EventsKey: OlEventsKey} = goog.requireType('ol');
 const OlLayer = goog.requireType('ol.layer.Layer');
+
+
+const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
+
+const {default: IPresetService} = goog.requireType('os.layer.preset.IPresetService');
 
 
 /**
@@ -42,7 +43,7 @@ let LayerPresetsMetaData;
  * Manager for keeping track of available layer presets. These presets consist of a layer options object and a
  * reference to a set of default feature actions.
  */
-class LayerPresetManager extends Disposable {
+export default class LayerPresetManager extends Disposable {
   /**
    * Constructor.
    */
@@ -523,6 +524,3 @@ goog.addSingletonGetter(LayerPresetManager);
 
 // export it so it's used
 LayerPresetManager.LayerPresetsMetaData = LayerPresetsMetaData;
-
-
-exports = LayerPresetManager;

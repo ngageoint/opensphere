@@ -1,9 +1,9 @@
 goog.declareModuleId('os.ui.util.deprecated');
 
+import Settings from '../../config/settings.js';
 import * as ConfirmUI from '../window/confirm.js';
 
 const Delay = goog.require('goog.async.Delay');
-const Settings = goog.require('os.config.Settings');
 
 
 /**

@@ -1,6 +1,17 @@
 goog.declareModuleId('plugin.heatmap.Heatmap');
 
+import EventType from '../../os/action/eventtype.js';
+import * as color from '../../os/color.js';
 import * as dispatcher from '../../os/dispatcher.js';
+import LayerEvent from '../../os/events/layerevent.js';
+import LayerEventType from '../../os/events/layereventtype.js';
+import osImplements from '../../os/implements.js';
+import ExplicitLayerType from '../../os/layer/explicitlayertype.js';
+import ILayer from '../../os/layer/ilayer.js';
+import LayerType from '../../os/layer/layertype.js';
+import VectorLayer from '../../os/layer/vector.js';
+import MapContainer from '../../os/mapcontainer.js';
+import RequestSource from '../../os/source/requestsource.js';
 import * as osStyle from '../../os/style/style.js';
 import * as renamelayer from '../../os/ui/renamelayer.js';
 import * as heatmap from './heatmap.js';
@@ -17,17 +28,6 @@ const Point = goog.require('ol.geom.Point');
 const olRenderEventType = goog.require('ol.render.EventType');
 const Icon = goog.require('ol.style.Icon');
 const Style = goog.require('ol.style.Style');
-const MapContainer = goog.require('os.MapContainer');
-const EventType = goog.require('os.action.EventType');
-const color = goog.require('os.color');
-const LayerEvent = goog.require('os.events.LayerEvent');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const osImplements = goog.require('os.implements');
-const ExplicitLayerType = goog.require('os.layer.ExplicitLayerType');
-const ILayer = goog.require('os.layer.ILayer');
-const LayerType = goog.require('os.layer.LayerType');
-const VectorLayer = goog.require('os.layer.Vector');
-const RequestSource = goog.require('os.source.Request');
 const Feature = goog.requireType('ol.Feature');
 
 const Event = goog.requireType('ol.render.Event');

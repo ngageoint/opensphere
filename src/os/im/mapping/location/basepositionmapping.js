@@ -1,16 +1,16 @@
-goog.module('os.im.mapping.location.BasePositionMapping');
+goog.declareModuleId('os.im.mapping.location.BasePositionMapping');
 
-const AbstractPositionMapping = goog.require('os.im.mapping.AbstractPositionMapping');
-const {appendElement} = goog.require('os.xml');
+import {appendElement} from '../../../xml.js';
+import AbstractPositionMapping from '../abstractpositionmapping.js';
 
-const IMapping = goog.requireType('os.im.mapping.IMapping');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
 
 
 /**
  * @extends {AbstractPositionMapping<T>}
  * @template T
  */
-class BasePositionMapping extends AbstractPositionMapping {
+export default class BasePositionMapping extends AbstractPositionMapping {
   /**
    * Constructor.
    */
@@ -214,5 +214,3 @@ BasePositionMapping.ID = 'Position';
  * @type {Object<string, IMapping>}
  */
 BasePositionMapping.TYPES = {};
-
-exports = BasePositionMapping;

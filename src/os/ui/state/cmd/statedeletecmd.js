@@ -1,9 +1,9 @@
 goog.declareModuleId('os.ui.state.cmd.StateDelete');
 
-const State = goog.require('os.command.State');
-const {getStateManager} = goog.require('os.state.instance');
+import State from '../../../command/state.js';
+import {getStateManager} from '../../../state/stateinstance.js';
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**

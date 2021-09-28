@@ -1,8 +1,8 @@
-goog.module('os.ogc.wfs.WFSFormatter');
+goog.declareModuleId('os.ogc.wfs.WFSFormatter');
 
-const {getMaxFeatures, defaultProjection} = goog.require('os.ogc');
+import {getMaxFeatures, defaultProjection} from '../ogc.js';
 
-const IDataFormatter = goog.requireType('os.net.IDataFormatter');
+const {default: IDataFormatter} = goog.requireType('os.net.IDataFormatter');
 
 
 /**
@@ -10,7 +10,7 @@ const IDataFormatter = goog.requireType('os.net.IDataFormatter');
  *
  * @implements {IDataFormatter}
  */
-class WFSFormatter {
+export default class WFSFormatter {
   /**
    * Constructor.
    */
@@ -117,5 +117,3 @@ WFSFormatter.WFS_PARAMS = [
   'typename',
   'version'
 ];
-
-exports = WFSFormatter;

@@ -1,20 +1,20 @@
 goog.declareModuleId('plugin.pelias.geocoder.Search');
 
+import Settings from '../../../os/config/settings.js';
+import * as osExtent from '../../../os/extent.js';
 import * as osMap from '../../../os/map/map.js';
+import MapContainer from '../../../os/mapcontainer.js';
+import * as osProj from '../../../os/proj/proj.js';
+import AbstractUrlSearch from '../../../os/search/abstracturlsearch.js';
 import {ID} from './geocoder.js';
 import Result from './result.js';
 
 const log = goog.require('goog.log');
 const GeoJSON = goog.require('ol.format.GeoJSON');
 const olProj = goog.require('ol.proj');
-const MapContainer = goog.require('os.MapContainer');
-const Settings = goog.require('os.config.Settings');
-const osExtent = goog.require('os.extent');
-const osProj = goog.require('os.proj');
-const AbstractUrlSearch = goog.require('os.search.AbstractUrlSearch');
 
 const Logger = goog.requireType('goog.log.Logger');
-const Request = goog.requireType('os.net.Request');
+const {default: Request} = goog.requireType('os.net.Request');
 
 
 /**

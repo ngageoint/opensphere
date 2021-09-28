@@ -1,11 +1,11 @@
-goog.module('os.command.FeatureShape');
+goog.declareModuleId('os.command.FeatureShape');
 
-const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
-const {SUB_DELIMITER} = goog.require('os.metrics');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const osStyle = goog.require('os.style');
-const StyleField = goog.require('os.style.StyleField');
-const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
+import {SUB_DELIMITER} from '../../metrics/index.js';
+import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
+import * as osStyle from '../../style/style.js';
+import StyleField from '../../style/stylefield.js';
+import {Controller as FeatureEditCtrl} from '../../ui/featureedit.js';
+import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -13,7 +13,7 @@ const Feature = goog.requireType('ol.Feature');
 /**
  * Changes the style of a feature
  */
-class FeatureShape extends AbstractFeatureStyle {
+export default class FeatureShape extends AbstractFeatureStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -61,5 +61,3 @@ class FeatureShape extends AbstractFeatureStyle {
     super.applyValue(configs, value);
   }
 }
-
-exports = FeatureShape;

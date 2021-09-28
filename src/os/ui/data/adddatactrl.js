@@ -1,6 +1,14 @@
 goog.declareModuleId('os.ui.data.AddDataCtrl');
 
 import '../binddirective.js';
+import * as config from '../../config/config.js';
+import Settings from '../../config/settings.js';
+import DataManager from '../../data/datamanager.js';
+import IDataProvider from '../../data/idataprovider.js';
+import ILoadingProvider from '../../data/iloadingprovider.js';
+import osImplements from '../../implements.js';
+import Metrics from '../../metrics/metrics.js';
+import * as keys from '../../metrics/metricskeys.js';
 import SlickTreeNode from '../slick/slicktreenode.js';
 import TreeSearch from '../slick/treesearch.js';
 import * as ui from '../ui.js';
@@ -11,18 +19,10 @@ import DescriptorNode from './descriptornode.js';
 const Delay = goog.require('goog.async.Delay');
 const GoogEventType = goog.require('goog.events.EventType');
 const googString = goog.require('goog.string');
-const config = goog.require('os.config');
-const Settings = goog.require('os.config.Settings');
-const DataManager = goog.require('os.data.DataManager');
-const IDataProvider = goog.require('os.data.IDataProvider');
-const ILoadingProvider = goog.require('os.data.ILoadingProvider');
-const osImplements = goog.require('os.implements');
-const Metrics = goog.require('os.metrics.Metrics');
-const keys = goog.require('os.metrics.keys');
 
-const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: INodeGroupBy} = goog.requireType('os.data.groupby.INodeGroupBy');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**

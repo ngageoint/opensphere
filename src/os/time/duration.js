@@ -1,9 +1,9 @@
-goog.module('os.time.Duration');
+goog.declareModuleId('os.time.Duration');
 
 /**
  * @enum {string}
  */
-exports = {
+const Duration = {
   HOURS: 'hours',
   DAY: 'day',
   WEEK: 'week',
@@ -16,3 +16,5 @@ exports = {
   LAST30DAYS: 'last 30 days',
   CUSTOM: 'custom'
 };
+
+export default Duration;

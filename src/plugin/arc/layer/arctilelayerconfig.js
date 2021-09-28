@@ -1,9 +1,8 @@
 goog.declareModuleId('plugin.arc.layer.ArcTileLayerConfig');
 
+import AbstractTileLayerConfig from '../../../os/layer/config/abstracttilelayerconfig.js';
 import ArcTileSource from '../source/arctilesource.js';
 import AnimatedArcTile from './animatedarctilelayer.js';
-
-const AbstractTileLayerConfig = goog.require('os.layer.config.AbstractTileLayerConfig');
 
 
 /**

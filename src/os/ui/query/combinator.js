@@ -1,5 +1,10 @@
 goog.declareModuleId('os.ui.query.CombinatorUI');
 
+import CommandProcessor from '../../command/commandprocessor.js';
+import SequenceCommand from '../../command/sequencecommand.js';
+import LayerEventType from '../../events/layereventtype.js';
+import {getTitle} from '../../layer/layer.js';
+import {getMapContainer} from '../../map/mapinstance.js';
 import FilterEventType from '../filter/filtereventtype.js';
 import Module from '../module.js';
 import {sanitizeId} from '../ui.js';
@@ -7,12 +12,6 @@ import {bringToFront, create, exists} from '../window.js';
 import {Controller as BaseCombinatorCtrl, directive as baseCombinatorDirective} from './basecombinator.js';
 import FilterAdd from './cmd/filteraddcmd.js';
 import FilterRemove from './cmd/filterremovecmd.js';
-
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const {getTitle} = goog.require('os.layer');
-const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**

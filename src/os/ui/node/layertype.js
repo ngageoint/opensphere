@@ -1,10 +1,9 @@
 goog.declareModuleId('os.ui.node.LayerTypeUI');
 
+import Settings from '../../config/settings.js';
 import Module from '../module.js';
 
-const Settings = goog.require('os.config.Settings');
-
-const LayerNode = goog.requireType('os.data.LayerNode');
+const {default: LayerNode} = goog.requireType('os.data.LayerNode');
 
 
 /**

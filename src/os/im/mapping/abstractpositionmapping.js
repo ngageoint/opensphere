@@ -1,14 +1,14 @@
-goog.module('os.im.mapping.AbstractPositionMapping');
+goog.declareModuleId('os.im.mapping.AbstractPositionMapping');
 
-const {localFieldToXmlField, xmlFieldToLocalField} = goog.require('os.im.mapping');
-const AbstractMapping = goog.require('os.im.mapping.AbstractMapping');
-const {appendElement} = goog.require('os.xml');
+import {appendElement} from '../../xml.js';
+import AbstractMapping from './abstractmapping.js';
+import {localFieldToXmlField, xmlFieldToLocalField} from './mapping.js';
 
 
 /**
  * @abstract
  */
-class AbstractPositionMapping extends AbstractMapping {
+export default class AbstractPositionMapping extends AbstractMapping {
   /**
    * Constructor.
    */
@@ -78,5 +78,3 @@ class AbstractPositionMapping extends AbstractMapping {
     return this.testField(value) ? value : null;
   }
 }
-
-exports = AbstractPositionMapping;

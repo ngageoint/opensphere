@@ -1,6 +1,14 @@
 goog.declareModuleId('os.ui.file.method.UrlMethod');
 
+import AlertEventSeverity from '../../../alert/alerteventseverity.js';
+import AlertManager from '../../../alert/alertmanager.js';
 import * as dispatcher from '../../../dispatcher.js';
+import EventType from '../../../events/eventtype.js';
+import IFileMethod from '../../../file/ifilemethod.js';// eslint-disable-line
+import {createFromContent} from '../../../file/index.js';
+import Request from '../../../net/request.js';
+import RequestEvent from '../../../net/requestevent.js';
+import RequestEventType from '../../../net/requesteventtype.js';
 import * as osWindow from '../../window.js';
 import {directiveTag as importUi} from '../urlimport.js';
 
@@ -10,17 +18,9 @@ const log = goog.require('goog.log');
 const NetEventType = goog.require('goog.net.EventType');
 const XhrIo = goog.require('goog.net.XhrIo');
 const {IE, isVersionOrHigher} = goog.require('goog.userAgent');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const EventType = goog.require('os.events.EventType');
-const {createFromContent} = goog.require('os.file');
-const IFileMethod = goog.require('os.file.IFileMethod'); // eslint-disable-line
-const Request = goog.require('os.net.Request');
-const RequestEvent = goog.require('os.net.RequestEvent');
-const RequestEventType = goog.require('os.net.RequestEventType');
 
 const Logger = goog.requireType('goog.log.Logger');
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**

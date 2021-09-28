@@ -1,16 +1,16 @@
 goog.declareModuleId('os.ui.slick.TreeSearch');
 
+import ISearchable from '../../data/isearchable.js';
+import osImplements from '../../implements.js';
+import {merge} from '../../object/object.js';
 import SlickTreeNode from './slicktreenode.js';
 
 const Disposable = goog.require('goog.Disposable');
 const {defaultCompare} = goog.require('goog.array');
 const {numerateCompare, regExpEscape} = goog.require('goog.string');
-const ISearchable = goog.require('os.data.ISearchable');
-const osImplements = goog.require('os.implements');
-const {merge} = goog.require('os.object');
 
-const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: INodeGroupBy} = goog.requireType('os.data.groupby.INodeGroupBy');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**

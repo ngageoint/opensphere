@@ -1,16 +1,17 @@
-goog.module('os.column.ColumnMappingManager');
+goog.declareModuleId('os.column.ColumnMappingManager');
+
+import Settings from '../config/settings.js';
+import CollectionManager from '../data/collectionmanager.js';
+import {COLUMN_MAPPINGS_STORAGE_KEY} from '../os.js';
+import ColumnMapping from './columnmapping.js';
+import ColumnMappingEventType from './columnmappingeventtype.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 const Delay = goog.require('goog.async.Delay');
 const log = goog.require('goog.log');
-const {COLUMN_MAPPINGS_STORAGE_KEY} = goog.require('os');
-const ColumnMapping = goog.require('os.column.ColumnMapping');
-const ColumnMappingEventType = goog.require('os.column.ColumnMappingEventType');
-const Settings = goog.require('os.config.Settings');
-const CollectionManager = goog.require('os.data.CollectionManager');
 
-const ColumnMappingEvent = goog.requireType('os.column.ColumnMappingEvent');
-const IColumnMapping = goog.requireType('os.column.IColumnMapping');
+const {default: ColumnMappingEvent} = goog.requireType('os.column.ColumnMappingEvent');
+const {default: IColumnMapping} = goog.requireType('os.column.IColumnMapping');
 
 
 /**
@@ -18,7 +19,7 @@ const IColumnMapping = goog.requireType('os.column.IColumnMapping');
  *
  * @extends {CollectionManager<IColumnMapping>}
  */
-class ColumnMappingManager extends CollectionManager {
+export default class ColumnMappingManager extends CollectionManager {
   /**
    * Constructor.
    */
@@ -330,6 +331,3 @@ let instance;
  * @type {goog.log.Logger}
  */
 const logger = log.getLogger('os.column.ColumnMappingManager');
-
-
-exports = ColumnMappingManager;

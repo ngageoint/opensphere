@@ -1,7 +1,8 @@
 goog.declareModuleId('os.ui.im.ImportEvent');
 
+import OSFile from '../../file/file.js';
+
 const GoogEvent = goog.require('goog.events.Event');
-const OSFile = goog.require('os.file.File');
 
 
 /**

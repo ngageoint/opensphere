@@ -2,8 +2,8 @@ goog.require('os.alert.AlertEvent');
 goog.require('os.alert.AlertEventSeverity');
 
 describe('os.alert.AlertEvent', function() {
-  const AlertEvent = goog.module.get('os.alert.AlertEvent');
-  const AlertEventSeverity = goog.module.get('os.alert.AlertEventSeverity');
+  const {default: AlertEvent} = goog.module.get('os.alert.AlertEvent');
+  const {default: AlertEventSeverity} = goog.module.get('os.alert.AlertEventSeverity');
 
   const msg = 'This is a test';
 

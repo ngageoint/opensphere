@@ -1,14 +1,14 @@
-goog.module('os.im.mapping.location.BaseLatMapping');
+goog.declareModuleId('os.im.mapping.location.BaseLatMapping');
 
-const {parseLat} = goog.require('os.geo');
-const AbstractBaseLatOrLonMapping = goog.require('os.im.mapping.location.AbstractBaseLatOrLonMapping');
+import {parseLat} from '../../../geo/geo.js';
+import AbstractBaseLatOrLonMapping from './abstractbaselatorlonmapping.js';
 
 
 /**
  * @extends {AbstractBaseLatOrLonMapping<T, S>}
  * @template T, S
  */
-class BaseLatMapping extends AbstractBaseLatOrLonMapping {
+export default class BaseLatMapping extends AbstractBaseLatOrLonMapping {
   /**
    * Constructor.
    */
@@ -50,5 +50,3 @@ BaseLatMapping.ID = 'Latitude';
  * @type {RegExp}
  */
 BaseLatMapping.LAT_REGEX = /lat(i(t(u(d(e)?)?)?)?)?\b/i;
-
-exports = BaseLatMapping;

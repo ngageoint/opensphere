@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.arc.layer.AnimatedArcTile');
 
-const AnimatedTile = goog.require('os.layer.AnimatedTile');
-const time = goog.require('os.time');
-const TimelineController = goog.require('os.time.TimelineController');
+import AnimatedTile from '../../../os/layer/animatedtile.js';
+import * as time from '../../../os/time/time.js';
+import TimelineController from '../../../os/time/timelinecontroller.js';
 
 
 /**

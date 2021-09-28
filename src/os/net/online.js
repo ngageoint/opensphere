@@ -1,8 +1,9 @@
-goog.module('os.net.Online');
+goog.declareModuleId('os.net.Online');
+
+import * as dispatcher from '../dispatcher.js';
+import OnlineEventType from './onlineeventtype.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
-const dispatcher = goog.require('os.Dispatcher');
-const OnlineEventType = goog.require('os.net.OnlineEventType');
 
 
 /**
@@ -10,7 +11,7 @@ const OnlineEventType = goog.require('os.net.OnlineEventType');
  * If status is false, there is no network connection (good to know)
  * If status is true, the browser is reporting that the OS is connected to a local network (not the same as internet)
  */
-class Online extends EventTarget {
+export default class Online extends EventTarget {
   /**
    * Constructor.
    */
@@ -100,5 +101,3 @@ class Online extends EventTarget {
  * @type {Online|undefined}
  */
 let instance;
-
-exports = Online;

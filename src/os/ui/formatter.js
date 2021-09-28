@@ -1,11 +1,10 @@
 goog.declareModuleId('os.ui.formatter');
 
+import instanceOf from '../instanceof.js';
+import {linkify} from '../string/string.js';
+import TimeInstant from '../time/timeinstant.js';
+import {URL_REGEXP_LINKY} from '../url/url.js';
 import {sanitize} from './ui.js';
-
-const instanceOf = goog.require('os.instanceOf');
-const {linkify} = goog.require('os.string');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const {URL_REGEXP_LINKY} = goog.require('os.url');
 
 
 /**

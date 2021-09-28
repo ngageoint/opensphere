@@ -1,17 +1,17 @@
 goog.declareModuleId('os');
 
-goog.require('ol.typedefs');
-goog.require('os.mixin.closure');
-goog.require('os.ol.license');
+import './mixin/closuremixin.js';
+import './ol/license.js';
+import './ol/typedefs.js';
+import * as keys from './metrics/metricskeys.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const userAgent = goog.require('goog.userAgent');
 const product = goog.require('goog.userAgent.product');
-const keys = goog.require('os.metrics.keys');
 
-const DataManager = goog.requireType('os.data.DataManager');
-const FancierWindow = goog.requireType('os.debug.FancierWindow');
-const Peer = goog.requireType('os.xt.Peer');
+const {default: DataManager} = goog.requireType('os.data.DataManager');
+const {default: FancierWindow} = goog.requireType('os.debug.FancierWindow');
+const {default: Peer} = goog.requireType('os.xt.Peer');
 
 
 /**

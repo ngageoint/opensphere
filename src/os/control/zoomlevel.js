@@ -1,4 +1,8 @@
-goog.module('os.control.ZoomLevel');
+goog.declareModuleId('os.control.ZoomLevel');
+
+import * as osMap from '../map/map.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import UnitManager from '../unit/unitmanager.js';
 
 const dom = goog.require('goog.dom');
 const TagName = goog.require('goog.dom.TagName');
@@ -8,18 +12,15 @@ const SafeHtml = goog.require('goog.html.SafeHtml');
 const style = goog.require('goog.style');
 const Control = goog.require('ol.control.Control');
 const css = goog.require('ol.css');
-const osMap = goog.require('os.map');
-const {getMapContainer} = goog.require('os.map.instance');
-const UnitManager = goog.require('os.unit.UnitManager');
 const ScaleLineUnits = goog.requireType('ol.control.ScaleLineUnits');
 
-const ZoomLevelOptions = goog.requireType('os.control.ZoomLevelOptions');
+const {default: ZoomLevelOptions} = goog.requireType('os.control.ZoomLevelOptions');
 
 
 /**
  * Displays the current zoom level and altitude.
  */
-class ZoomLevel extends Control {
+export default class ZoomLevel extends Control {
   /**
    * Constructor.
    * @param {ZoomLevelOptions=} opt_options Scale line options.
@@ -310,6 +311,3 @@ const render = function(mapEvent) {
 const Property = {
   UNITS: 'units'
 };
-
-
-exports = ZoomLevel;

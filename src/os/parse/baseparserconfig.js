@@ -1,7 +1,7 @@
-goog.module('os.parse.BaseParserConfig');
+goog.declareModuleId('os.parse.BaseParserConfig');
 
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const IMapping = goog.requireType('os.im.mapping.IMapping');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
 
 
 /**
@@ -10,7 +10,7 @@ const IMapping = goog.requireType('os.im.mapping.IMapping');
  * @unrestricted
  * @template T
  */
-class BaseParserConfig {
+export default class BaseParserConfig {
   /**
    * Constructor.
    */
@@ -73,5 +73,3 @@ class BaseParserConfig {
    */
   updatePreview(opt_mappings) {}
 }
-
-exports = BaseParserConfig;

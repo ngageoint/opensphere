@@ -1,10 +1,10 @@
-goog.module('os.command.AreaToggle');
+goog.declareModuleId('os.command.AreaToggle');
 
-const State = goog.require('os.command.State');
-const {getAreaManager} = goog.require('os.query.instance');
-const {default: AbstractArea} = goog.require('os.ui.query.cmd.AbstractArea');
+import {getAreaManager} from '../query/queryinstance.js';
+import AbstractArea from '../ui/query/cmd/abstractareacmd.js';
+import State from './state.js';
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -12,7 +12,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class AreaToggle extends AbstractArea {
+export default class AreaToggle extends AbstractArea {
   /**
    * Constructor.
    * @param {!ol.Feature} area
@@ -59,5 +59,3 @@ class AreaToggle extends AbstractArea {
     return true;
   }
 }
-
-exports = AreaToggle;

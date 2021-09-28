@@ -1,23 +1,24 @@
-goog.module('os.config.storage.SettingsStorageLoader');
+goog.declareModuleId('os.config.storage.SettingsStorageLoader');
+
+import {expand, merge, reduce, unsafeClone} from '../../object/object.js';
+import {appNs, coreNs} from '../config.js';
+import ConfigType from '../configtype.js';
+import SettingsFile from './settingsfile.js';
 
 const {insertArrayAt} = goog.require('goog.array');
 const Deferred = goog.require('goog.async.Deferred');
 const DeferredList = goog.require('goog.async.DeferredList');
 const log = goog.require('goog.log');
 const {containsKey, forEach, getValueByKeys} = goog.require('goog.object');
-const {appNs, coreNs} = goog.require('os.config');
-const ConfigType = goog.require('os.config.ConfigType');
-const SettingsFile = goog.require('os.config.storage.SettingsFile');
-const {expand, merge, reduce, unsafeClone} = goog.require('os.object');
 
 const Logger = goog.requireType('goog.log.Logger');
-const SettingsStorageRegistry = goog.requireType('os.config.storage.SettingsStorageRegistry');
+const {default: SettingsStorageRegistry} = goog.requireType('os.config.storage.SettingsStorageRegistry');
 
 
 /**
  * Class used to manage loading  settings from each of the registered storage
  */
-class SettingsStorageLoader {
+export default class SettingsStorageLoader {
   /**
    * Constructor.
    * @param {!SettingsStorageRegistry} registry
@@ -189,6 +190,3 @@ class SettingsStorageLoader {
  * @type {Logger}
  */
 const logger = log.getLogger('os.config.storage.SettingsStorageLoader');
-
-
-exports = SettingsStorageLoader;

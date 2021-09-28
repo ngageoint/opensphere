@@ -1,10 +1,26 @@
 goog.declareModuleId('plugin.heatmap');
 
+import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
+import AlertManager from '../../os/alert/alertmanager.js';
+import DataManager from '../../os/data/datamanager.js';
+import RecordField from '../../os/data/recordfield.js';
 import * as dispatcher from '../../os/dispatcher.js';
+import LayerConfigEvent from '../../os/events/layerconfigevent.js';
+import LayerConfigEventType from '../../os/events/layerconfigeventtype.js';
+import ZipExporter from '../../os/ex/zipexporter.js';
 import * as osFeature from '../../os/feature/feature.js';
+import OSFile from '../../os/file/file.js';
+import FilePersistence from '../../os/file/persist/filepersistence.js';
+import * as fn from '../../os/fn/fn.js';
+import Job from '../../os/job/job.js';
+import JobEventType from '../../os/job/jobeventtype.js';
+import LayerType from '../../os/layer/layertype.js';
+import MapContainer from '../../os/mapcontainer.js';
+import * as osOlFeature from '../../os/ol/feature.js';
 import {ROOT} from '../../os/os.js';
 import * as style from '../../os/style/style.js';
 import exportManager from '../../os/ui/file/uiexportmanager.js';
+import * as worker from '../../os/worker.js';
 import HeatmapField from './heatmapfield.js';
 
 const dispose = goog.require('goog.dispose');
@@ -13,28 +29,12 @@ const Feature = goog.require('ol.Feature');
 const dom = goog.require('ol.dom');
 const olExtent = goog.require('ol.extent');
 const Point = goog.require('ol.geom.Point');
-const MapContainer = goog.require('os.MapContainer');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const DataManager = goog.require('os.data.DataManager');
-const RecordField = goog.require('os.data.RecordField');
-const LayerConfigEvent = goog.require('os.events.LayerConfigEvent');
-const LayerConfigEventType = goog.require('os.events.LayerConfigEventType');
-const ZipExporter = goog.require('os.ex.ZipExporter');
-const OSFile = goog.require('os.file.File');
-const FilePersistence = goog.require('os.file.persist.FilePersistence');
-const fn = goog.require('os.fn');
-const Job = goog.require('os.job.Job');
-const JobEventType = goog.require('os.job.JobEventType');
-const LayerType = goog.require('os.layer.LayerType');
-const osOlFeature = goog.require('os.ol.feature');
-const worker = goog.require('os.worker');
 
 const OLLayer = goog.requireType('ol.layer.Layer');
-const ExportOptions = goog.requireType('os.ex.ExportOptions');
-const JobEvent = goog.requireType('os.job.JobEvent');
-const ILayer = goog.requireType('os.layer.ILayer');
-const ISource = goog.requireType('os.source.ISource');
+const {default: ExportOptions} = goog.requireType('os.ex.ExportOptions');
+const {default: JobEvent} = goog.requireType('os.job.JobEvent');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: ISource} = goog.requireType('os.source.ISource');
 const {default: HeatmapLayer} = goog.requireType('plugin.heatmap.Heatmap');
 
 

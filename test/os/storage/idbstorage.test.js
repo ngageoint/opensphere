@@ -5,7 +5,7 @@ goog.require('os.storage.mock');
 
 describe('os.storage.IDBStorage', function() {
   const {deleteDatabase} = goog.module.get('goog.db');
-  const IDBStorage = goog.module.get('os.storage.IDBStorage');
+  const {default: IDBStorage} = goog.module.get('os.storage.IDBStorage');
 
   const mock = goog.module.get('os.storage.mock');
 

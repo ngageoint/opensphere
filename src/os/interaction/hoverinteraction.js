@@ -1,4 +1,19 @@
-goog.module('os.interaction.Hover');
+goog.declareModuleId('os.interaction.Hover');
+
+import DataManager from '../data/datamanager.js';
+import DataEventType from '../data/event/dataeventtype.js';
+import RecordField from '../data/recordfield.js';
+import * as osFeature from '../feature/feature.js';
+import AnimationOverlay from '../layer/animationoverlay.js';
+import AnimationVector from '../layer/animationvector.js';
+import LayerId from '../layer/layerid.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {getAreaManager, getQueryManager} from '../query/queryinstance.js';
+import PropertyChange from '../source/propertychange.js';
+import VectorSource from '../source/vectorsource.js';
+import * as osStyle from '../style/style.js';
+import StyleType from '../style/styletype.js';
+import Select from './selectinteraction.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const Feature = goog.require('ol.Feature');
@@ -6,35 +21,21 @@ const ViewHint = goog.require('ol.ViewHint');
 const {listen, unlisten} = goog.require('ol.events');
 const EventType = goog.require('ol.events.EventType');
 const {pointerMove} = goog.require('ol.events.condition');
-const DataManager = goog.require('os.data.DataManager');
-const RecordField = goog.require('os.data.RecordField');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const osFeature = goog.require('os.feature');
-const Select = goog.require('os.interaction.Select');
-const AnimationOverlay = goog.require('os.layer.AnimationOverlay');
-const AnimationVector = goog.require('os.layer.AnimationVector');
-const LayerId = goog.require('os.layer.LayerId');
-const {getMapContainer} = goog.require('os.map.instance');
-const {getAreaManager, getQueryManager} = goog.require('os.query.instance');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const VectorSource = goog.require('os.source.Vector');
-const osStyle = goog.require('os.style');
-const StyleType = goog.require('os.style.StyleType');
 
 const OLEvent = goog.requireType('ol.events.Event');
-const Layer = goog.requireType('ol.layer.Layer');
-const OLVectorSource = goog.requireType('ol.source.Vector');
 const OLEventTarget = goog.requireType('ol.events.EventTarget');
+const Layer = goog.requireType('ol.layer.Layer');
 const RenderFeature = goog.requireType('ol.render.Feature');
-const DataEvent = goog.requireType('os.data.event.DataEvent');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const ISource = goog.requireType('os.source.ISource');
+const OLVectorSource = goog.requireType('ol.source.Vector');
+const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: ISource} = goog.requireType('os.source.ISource');
 
 
 /**
  * Handles hover/highlight of vector features
  */
-class Hover extends Select {
+export default class Hover extends Select {
   /**
    * Constructor.
    * @param {olx.interaction.SelectOptions=} opt_options Options.
@@ -379,5 +380,3 @@ class Hover extends Select {
     }
   }
 }
-
-exports = Hover;

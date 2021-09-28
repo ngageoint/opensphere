@@ -1,11 +1,12 @@
-goog.module('os.ex.ZipExporter');
+goog.declareModuleId('os.ex.ZipExporter');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import EventType from '../events/eventtype.js';
+import AbstractExporter from './abstractexporter.js';
 
 const GoogEvent = goog.require('goog.events.Event');
 const log = goog.require('goog.log');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const EventType = goog.require('os.events.EventType');
-const AbstractExporter = goog.require('os.ex.AbstractExporter');
 
 
 /**
@@ -14,7 +15,7 @@ const AbstractExporter = goog.require('os.ex.AbstractExporter');
  * @extends {AbstractExporter<T>}
  * @template T
  */
-class ZipExporter extends AbstractExporter {
+export default class ZipExporter extends AbstractExporter {
   /**
    * Constructor.
    */
@@ -215,5 +216,3 @@ class ZipExporter extends AbstractExporter {
  * @type {goog.log.Logger}
  */
 const logger = log.getLogger('os.ex.ZipExporter');
-
-exports = ZipExporter;

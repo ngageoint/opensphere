@@ -1,12 +1,13 @@
 goog.declareModuleId('os.ui.AbstractService');
 
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import Settings from '../config/settings.js';
+import Peer from '../xt/peer.js';
+
 const {isValid} = goog.require('goog.json');
 const log = goog.require('goog.log');
 const {newLineToBr} = goog.require('goog.string');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const Settings = goog.require('os.config.Settings');
-const Peer = goog.require('os.xt.Peer');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');

@@ -1,8 +1,7 @@
 goog.declareModuleId('os.ui.location.ddmLonFilter');
 
+import {toDegreesDecimalMinutes} from '../../geo/geo.js';
 import Module from '../module.js';
-
-const {toDegreesDecimalMinutes} = goog.require('os.geo');
 
 
 /**

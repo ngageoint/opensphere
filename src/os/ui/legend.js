@@ -1,7 +1,16 @@
 goog.declareModuleId('os.ui.LegendUI');
 
+import LegendSetting from '../config/legendsetting.js';
+import Settings from '../config/settings.js';
+import SourceManager from '../data/sourcemanager.js';
 import * as dispatcher from '../dispatcher.js';
+import LayerEventType from '../events/layereventtype.js';
+import AnimatedTile from '../layer/animatedtile.js';
+import LayerPropertyChange from '../layer/propertychange.js';
+import * as legend from '../legend/legend.js';
+import {getMapContainer} from '../map/mapinstance.js';
 import {ROOT} from '../os.js';
+import SourcePropertyChange from '../source/propertychange.js';
 import SettingsManager from './config/settingsmanager.js';
 import UIEvent from './events/uievent.js';
 import UIEventType from './events/uieventtype.js';
@@ -13,15 +22,6 @@ const nextTick = goog.require('goog.async.nextTick');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
-const LegendSetting = goog.require('os.config.LegendSetting');
-const Settings = goog.require('os.config.Settings');
-const SourceManager = goog.require('os.data.SourceManager');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const AnimatedTile = goog.require('os.layer.AnimatedTile');
-const LayerPropertyChange = goog.require('os.layer.PropertyChange');
-const legend = goog.require('os.legend');
-const {getMapContainer} = goog.require('os.map.instance');
-const SourcePropertyChange = goog.require('os.source.PropertyChange');
 
 
 /**

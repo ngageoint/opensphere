@@ -1,6 +1,29 @@
-goog.module('os.layer.VectorTile');
+goog.declareModuleId('os.layer.VectorTile');
 
-goog.require('os.ui.layer.DefaultLayerUI');
+import '../ui/layer/defaultlayerui.js';
+import ActionEventType from '../action/eventtype.js';
+import LayerEvent from '../events/layerevent.js';
+import LayerEventType from '../events/layereventtype.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import {reduceExtentFromLayers} from '../fn/fn.js';
+import IGroupable from '../igroupable.js';
+import osImplements from '../implements.js';
+import * as osMap from '../map/map.js';
+import * as math from '../math/math.js';
+import {dispatcher} from '../os.js';
+import registerClass from '../registerclass.js';
+import SourcePropertyChange from '../source/propertychange.js';
+import {isStateFile} from '../state/state.js';
+import Icons from '../ui/icons.js';
+import IconsSVG from '../ui/iconssvg.js';
+import {directiveTag as nodeUi} from '../ui/node/defaultlayernodeui.js';
+import * as renamelayer from '../ui/renamelayer.js';
+import ExplicitLayerType from './explicitlayertype.js';
+import ILayer from './ilayer.js';
+import {identifyLayer} from './layer.js';
+import LayerType from './layertype.js';
+import LayerPropertyChange from './propertychange.js';
+import SynchronizerType from './synchronizertype.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');
@@ -13,30 +36,6 @@ const VectorTileLayer = goog.require('ol.layer.VectorTile');
 const VectorTileLayerRenderer = goog.require('ol.renderer.canvas.VectorTileLayer');
 const UrlTileSource = goog.require('ol.source.UrlTile');
 
-const {dispatcher} = goog.require('os');
-const IGroupable = goog.require('os.IGroupable');
-const ActionEventType = goog.require('os.action.EventType');
-const LayerEvent = goog.require('os.events.LayerEvent');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {reduceExtentFromLayers} = goog.require('os.fn');
-const osImplements = goog.require('os.implements');
-const {identifyLayer} = goog.require('os.layer');
-const ExplicitLayerType = goog.require('os.layer.ExplicitLayerType');
-const ILayer = goog.require('os.layer.ILayer');
-const LayerType = goog.require('os.layer.LayerType');
-const LayerPropertyChange = goog.require('os.layer.PropertyChange');
-const SynchronizerType = goog.require('os.layer.SynchronizerType');
-const osMap = goog.require('os.map');
-const math = goog.require('os.math');
-const registerClass = goog.require('os.registerClass');
-const SourcePropertyChange = goog.require('os.source.PropertyChange');
-const {isStateFile} = goog.require('os.state');
-const {default: Icons} = goog.require('os.ui.Icons');
-const {default: IconsSVG} = goog.require('os.ui.IconsSVG');
-const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
-const renamelayer = goog.require('os.ui.renamelayer');
-
 
 /**
  * OpenSphere vector tile layer.
@@ -44,7 +43,7 @@ const renamelayer = goog.require('os.ui.renamelayer');
  * @implements {ILayer}
  * @implements {IGroupable}
  */
-class VectorTile extends VectorTileLayer {
+export default class VectorTile extends VectorTileLayer {
   /**
    * Constructor.
    * @param {olx.layer.VectorTileOptions} options Tile layer options
@@ -722,5 +721,3 @@ class VectorTile extends VectorTileLayer {
 registerClass(VectorTile.NAME, VectorTile);
 osImplements(VectorTile, ILayer.ID);
 osImplements(VectorTile, IGroupable.ID);
-
-exports = VectorTile;

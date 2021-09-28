@@ -1,10 +1,10 @@
 goog.declareModuleId('os.ui.IHistogramUI');
 
 const Feature = goog.requireType('ol.Feature');
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const ColorBin = goog.requireType('os.data.histo.ColorBin');
-const SourceHistogram = goog.requireType('os.data.histo.SourceHistogram');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
+const {default: ColorBin} = goog.requireType('os.data.histo.ColorBin');
+const {default: SourceHistogram} = goog.requireType('os.data.histo.SourceHistogram');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**

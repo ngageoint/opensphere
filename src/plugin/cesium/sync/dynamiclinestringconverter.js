@@ -5,7 +5,7 @@ import {createPolyline, updatePolyline} from './dynamiclinestring.js';
 
 const LineString = goog.requireType('ol.geom.LineString');
 const MultiLineString = goog.requireType('ol.geom.MultiLineString');
-const Ellipse = goog.requireType('os.geom.Ellipse');
+const {default: Ellipse} = goog.requireType('os.geom.Ellipse');
 
 
 /**

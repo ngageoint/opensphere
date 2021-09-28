@@ -4,7 +4,7 @@ goog.require('os.ogc.filter.OGCFilterModifier');
 
 describe('os.ogc.filter.OGCFilterModifier', function() {
   const Uri = goog.module.get('goog.Uri');
-  const OGCFilterModifier = goog.module.get('os.ogc.filter.OGCFilterModifier');
+  const {default: OGCFilterModifier} = goog.module.get('os.ogc.filter.OGCFilterModifier');
 
   it('initializes with defaults', function() {
     var modifier = new OGCFilterModifier();

@@ -1,11 +1,13 @@
-goog.module('os.ogc.LayerType');
+goog.declareModuleId('os.ogc.LayerType');
 
 /**
  * @enum {string}
  */
-exports = {
+const LayerType = {
   WFS: 'wfs',
   WMS: 'wms',
   WMTS: 'wmts',
   WPS: 'wps'
 };
+
+export default LayerType;

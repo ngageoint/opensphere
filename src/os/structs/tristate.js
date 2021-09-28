@@ -1,12 +1,13 @@
-goog.module('os.structs.TriState');
-
+goog.declareModuleId('os.structs.TriState');
 
 /**
  * State names for tri-state trees
  * @enum {string}
  */
-exports = {
+const TriState = {
   ON: 'on',
   OFF: 'off',
   BOTH: 'both'
 };
+
+export default TriState;

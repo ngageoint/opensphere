@@ -1,4 +1,8 @@
-goog.module('os.data.SourceManager');
+goog.declareModuleId('os.data.SourceManager');
+
+import PropertyChange from '../source/propertychange.js';
+import DataManager from './datamanager.js';
+import DataEventType from './event/dataeventtype.js';
 
 const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');
@@ -6,9 +10,6 @@ const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const olArray = goog.require('ol.array');
 const events = goog.require('ol.events');
-const DataManager = goog.require('os.data.DataManager');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const PropertyChange = goog.require('os.source.PropertyChange');
 
 
 /**
@@ -18,7 +19,7 @@ const PropertyChange = goog.require('os.source.PropertyChange');
  *
  * To start watching sources, `init` must be called on the manager.
  */
-class SourceManager extends Disposable {
+export default class SourceManager extends Disposable {
   /**
    * Constructor.
    */
@@ -257,6 +258,3 @@ SourceManager.UPDATE_EVENTS = [
   PropertyChange.TITLE,
   PropertyChange.VISIBLE
 ];
-
-
-exports = SourceManager;

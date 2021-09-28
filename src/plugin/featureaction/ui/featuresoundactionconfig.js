@@ -2,12 +2,11 @@ goog.declareModuleId('plugin.im.action.feature.ui.SoundConfigUI');
 
 import '../../../os/ui/popover/popover.js';
 import '../../../os/ui/spinner.js';
+import AudioManager from '../../../os/audio/audiomanager.js';
+import * as osObject from '../../../os/object/object.js';
 import {ROOT} from '../../../os/os.js';
 import Module from '../../../os/ui/module.js';
 import ActionConfigCtrl from './featureactionconfig.js';
-
-const AudioManager = goog.require('os.audio.AudioManager');
-const osObject = goog.require('os.object');
 
 const {default: SoundAction} = goog.requireType('plugin.im.action.feature.SoundAction');
 

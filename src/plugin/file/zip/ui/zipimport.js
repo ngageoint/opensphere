@@ -1,5 +1,8 @@
 goog.declareModuleId('plugin.file.zip.ui.ZIPImport');
 
+import AlertEventSeverity from '../../../../os/alert/alerteventseverity.js';
+import AlertManager from '../../../../os/alert/alertmanager.js';
+import ImportProcess from '../../../../os/im/importprocess.js';
 import {ROOT} from '../../../../os/os.js';
 import {Controller as FileImportCtrl} from '../../../../os/ui/file/fileimport.js';
 import ImportEvent from '../../../../os/ui/im/importevent.js';
@@ -9,11 +12,7 @@ import Module from '../../../../os/ui/module.js';
 import WindowEventType from '../../../../os/ui/windoweventtype.js';
 import ZIPParser from '../zipparser.js';
 
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const ImportProcess = goog.require('os.im.ImportProcess');
-
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 const {default: IImportUI} = goog.requireType('os.ui.im.IImportUI');
 const {default: ZIPParserConfig} = goog.requireType('plugin.file.zip.ZIPParserConfig');
 

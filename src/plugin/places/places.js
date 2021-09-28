@@ -1,7 +1,20 @@
 goog.declareModuleId('plugin.places');
 
+import * as annotation from '../../os/annotation/annotation.js';
+import CommandProcessor from '../../os/command/commandprocessor.js';
+import SequenceCommand from '../../os/command/sequencecommand.js';
+import RecordField from '../../os/data/recordfield.js';
 import * as osFeature from '../../os/feature/feature.js';
+import Fields from '../../os/fields/fields.js';
+import {METHOD_FIELD} from '../../os/interpolate.js';
+import MapContainer from '../../os/mapcontainer.js';
+import * as osObject from '../../os/object/object.js';
+import * as osOlFeature from '../../os/ol/feature.js';
 import * as osStyle from '../../os/style/style.js';
+import StyleField from '../../os/style/stylefield.js';
+import StyleType from '../../os/style/styletype.js';
+import TimeInstant from '../../os/time/timeinstant.js';
+import TimeRange from '../../os/time/timerange.js';
 import {Controller as FeatureEditCtrl} from '../../os/ui/featureedit.js';
 import KMLNodeAdd from '../file/kml/cmd/kmlnodeaddcmd.js';
 import * as kml from '../file/kml/kml.js';
@@ -13,20 +26,6 @@ const {removeDuplicates} = goog.require('goog.array');
 const {getUid} = goog.require('ol');
 const Feature = goog.require('ol.Feature');
 const Geometry = goog.require('ol.geom.Geometry');
-const Fields = goog.require('os.Fields');
-const MapContainer = goog.require('os.MapContainer');
-const annotation = goog.require('os.annotation');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const RecordField = goog.require('os.data.RecordField');
-const {METHOD_FIELD} = goog.require('os.interpolate');
-
-const osObject = goog.require('os.object');
-const osOlFeature = goog.require('os.ol.feature');
-const StyleField = goog.require('os.style.StyleField');
-const StyleType = goog.require('os.style.StyleType');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const TimeRange = goog.require('os.time.TimeRange');
 
 const {default: KMLLayerNode} = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');

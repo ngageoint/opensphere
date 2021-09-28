@@ -8,10 +8,10 @@ goog.require('os.state.v4.ViewState');
 goog.require('os.xml');
 
 describe('os.state.v4.ViewState', function() {
-  const MapContainer = goog.module.get('os.MapContainer');
-  const StateManager = goog.module.get('os.state.StateManager');
-  const Versions = goog.module.get('os.state.Versions');
-  const ViewState = goog.module.get('os.state.v4.ViewState');
+  const {default: MapContainer} = goog.module.get('os.MapContainer');
+  const {default: StateManager} = goog.module.get('os.state.StateManager');
+  const {default: Versions} = goog.module.get('os.state.Versions');
+  const {default: ViewState} = goog.module.get('os.state.v4.ViewState');
   const xml = goog.module.get('os.xml');
 
   const {loadStateXsdFiles} = goog.module.get('os.test.xsd');

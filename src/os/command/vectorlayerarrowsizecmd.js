@@ -1,10 +1,10 @@
-goog.module('os.command.VectorLayerArrowSize');
+goog.declareModuleId('os.command.VectorLayerArrowSize');
 
-const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const osStyle = goog.require('os.style');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import * as osStyle from '../style/style.js';
+import StyleField from '../style/stylefield.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import AbstractVectorLayerLOB from './abstractvectorlayerlob.js';
 
 
 /**
@@ -12,7 +12,7 @@ const StyleManager = goog.require('os.style.StyleManager');
  *
  * @extends {AbstractVectorLayerLOB<number>}
  */
-class VectorLayerArrowSize extends AbstractVectorLayerLOB {
+export default class VectorLayerArrowSize extends AbstractVectorLayerLOB {
   /**
    * Constructor.
    * @param {string} layerId
@@ -42,5 +42,3 @@ class VectorLayerArrowSize extends AbstractVectorLayerLOB {
     super.applyValue(config, value);
   }
 }
-
-exports = VectorLayerArrowSize;

@@ -7,7 +7,7 @@ import SingleUrlProviderImportCtrl from '../../os/ui/singleurlproviderimport.js'
 import ArcServer from './arcserver.js';
 import * as ArcServerHelpUI from './arcserverhelp.js';
 
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**

@@ -3,7 +3,7 @@ goog.require('os.im.mapping.StaticMapping');
 
 describe('os.im.mapping.StaticMapping', function() {
   const osImMapping = goog.module.get('os.im.mapping');
-  const StaticMapping = goog.module.get('os.im.mapping.StaticMapping');
+  const {default: StaticMapping} = goog.module.get('os.im.mapping.StaticMapping');
 
   var mapping = new StaticMapping();
   var field = 'testField';

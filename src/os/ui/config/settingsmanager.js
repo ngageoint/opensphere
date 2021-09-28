@@ -11,7 +11,7 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const Logger = goog.requireType('goog.log.Logger');
 
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**

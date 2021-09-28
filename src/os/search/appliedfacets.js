@@ -1,4 +1,4 @@
-goog.module('os.search.AppliedFacets');
+goog.declareModuleId('os.search.AppliedFacets');
 
 
 /**
@@ -6,4 +6,4 @@ goog.module('os.search.AppliedFacets');
  */
 let AppliedFacets;
 
-exports = AppliedFacets;
+export default AppliedFacets;

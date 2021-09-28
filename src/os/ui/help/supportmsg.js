@@ -1,8 +1,9 @@
 goog.declareModuleId('os.ui.help.supportMsg');
 
+import Settings from '../../config/settings.js';
+
 const {escapeString} = goog.require('goog.string');
 const userAgent = goog.require('goog.userAgent');
-const Settings = goog.require('os.config.Settings');
 
 
 /**

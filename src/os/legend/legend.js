@@ -1,4 +1,17 @@
-goog.module('os.legend');
+goog.declareModuleId('os.legend');
+
+import Settings from '../config/settings.js';
+import * as dispatcher from '../dispatcher.js';
+import {noop} from '../fn/fn.js';
+import osImplements from '../implements.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {set, unsafeClone} from '../object/object.js';
+import {createEllipseGeometry} from '../ol/canvas.js';
+import VectorSource from '../source/vectorsource.js';
+import * as osStyle from '../style/style.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import {measureText} from '../ui/ui.js';
+import ILegendRenderer from './ilegendrenderer.js';
 
 const {defaultCompare} = goog.require('goog.array');
 const {clamp} = goog.require('goog.math');
@@ -14,18 +27,6 @@ const Icon = goog.require('ol.style.Icon');
 const Stroke = goog.require('ol.style.Stroke');
 const Style = goog.require('ol.style.Style');
 const Text = goog.require('ol.style.Text');
-const dispatcher = goog.require('os.Dispatcher');
-const Settings = goog.require('os.config.Settings');
-const {noop} = goog.require('os.fn');
-const osImplements = goog.require('os.implements');
-const ILegendRenderer = goog.require('os.legend.ILegendRenderer');
-const {getMapContainer} = goog.require('os.map.instance');
-const {set, unsafeClone} = goog.require('os.object');
-const {createEllipseGeometry} = goog.require('os.ol.canvas');
-const VectorSource = goog.require('os.source.Vector');
-const osStyle = goog.require('os.style');
-const StyleManager = goog.require('os.style.StyleManager');
-const {measureText} = goog.require('os.ui');
 
 const Layer = goog.requireType('ol.layer.Layer');
 
@@ -33,40 +34,40 @@ const Layer = goog.requireType('ol.layer.Layer');
 /**
  * @type {string}
  */
-const ID = 'legend';
+export const ID = 'legend';
 
 /**
  * @type {string}
  */
-const ICON = 'fa-map-signs';
+export const ICON = 'fa-map-signs';
 
 /**
  * The base key used by all legend settings.
  * @type {string}
  */
-const BASE_KEY = 'os.legend';
+export const BASE_KEY = 'os.legend';
 
 /**
  * The key used for legend draw options.
  * @type {string}
  */
-const DRAW_OPTIONS_KEY = BASE_KEY + '.options';
+export const DRAW_OPTIONS_KEY = BASE_KEY + '.options';
 
 /**
  * The key used for legend draw options.
  * @type {string}
  */
-const POSITION_KEY = BASE_KEY + '.position';
+export const POSITION_KEY = BASE_KEY + '.position';
 
 /**
  * @type {number}
  */
-const SETTINGS_VERSION = 0;
+export const SETTINGS_VERSION = 0;
 
 /**
  * @type {!osx.legend.LegendOptions}
  */
-const DEFAULT_OPTIONS = {
+export const DEFAULT_OPTIONS = {
   bgColor: '#333333',
   bold: true,
   fontSize: 16,
@@ -83,13 +84,13 @@ const DEFAULT_OPTIONS = {
  * Legend border width.
  * @type {number}
  */
-const BORDER_WIDTH = 3;
+export const BORDER_WIDTH = 3;
 
 /**
  * The legend border style. The lineJoin: 'bevel' creates a border with rounded edges (rounder than 'round').
  * @type {!Style}
  */
-const BORDER_STYLE = new Style({
+export const BORDER_STYLE = new Style({
   stroke: new Stroke({
     color: '#111',
     lineJoin: 'bevel',
@@ -101,7 +102,7 @@ const BORDER_STYLE = new Style({
  * The legend dash style.
  * @type {!Style}
  */
-const DASH_STYLE = new Style({
+export const DASH_STYLE = new Style({
   fill: new Fill({
     color: '#fff'
   }),
@@ -115,7 +116,7 @@ const DASH_STYLE = new Style({
  * Legend label fill style.
  * @type {!Fill}
  */
-const LABEL_FILL_STYLE = new Fill({
+export const LABEL_FILL_STYLE = new Fill({
   color: '#fff'
 });
 
@@ -123,7 +124,7 @@ const LABEL_FILL_STYLE = new Fill({
  * Legend label stroke style.
  * @type {!Stroke}
  */
-const LABEL_STROKE_STYLE = new Stroke({
+export const LABEL_STROKE_STYLE = new Stroke({
   color: '#000',
   width: 2
 });
@@ -131,7 +132,7 @@ const LABEL_STROKE_STYLE = new Stroke({
 /**
  * @enum {string}
  */
-const Label = {
+export const Label = {
   EMPTY: 'Nothing to Display',
   HEADER: 'Legend',
   LIMIT: '- Too many legend items -'
@@ -141,13 +142,13 @@ const Label = {
  * Regular expression to split numbers from a numeric bin method.
  * @type {RegExp}
  */
-const NUMERIC_REGEX = /^([\d.+-]+) to [\d.+-]+$/;
+export const NUMERIC_REGEX = /^([\d.+-]+) to [\d.+-]+$/;
 
 /**
  * Legend event types.
  * @enum {string}
  */
-const EventType = {
+export const EventType = {
   UPDATE: 'legend:update'
 };
 
@@ -155,14 +156,14 @@ const EventType = {
  * Callbacks to add layer specific items to the legend.
  * @type {!Array<!osx.legend.PluginOptions>}
  */
-const layerPlugins = [];
+export const layerPlugins = [];
 
 /**
  * Register a function that adds layer-relevant items to the legend.
  *
  * @param {!osx.legend.PluginOptions} options The plugin options.
  */
-const registerLayerPlugin = function(options) {
+export const registerLayerPlugin = function(options) {
   // default priority to 0
   options.priority = options.priority || 0;
 
@@ -191,7 +192,7 @@ const registerLayerPlugin = function(options) {
  * @param {!osx.legend.PluginOptions} b Second legend plugin.
  * @return {number} The sort order.
  */
-const sortPluginByPriority = function(a, b) {
+export const sortPluginByPriority = function(a, b) {
   // sort in descending order
   return -defaultCompare(a.priority || 0, b.priority || 0);
 };
@@ -201,7 +202,7 @@ const sortPluginByPriority = function(a, b) {
  *
  * @return {!osx.legend.LegendOptions}
  */
-const getOptionsFromSettings = function() {
+export const getOptionsFromSettings = function() {
   var options = Settings.getInstance().get(DRAW_OPTIONS_KEY);
   if (!options || options.version != SETTINGS_VERSION) {
     // options are probably not compatible, so just start over
@@ -220,7 +221,7 @@ const getOptionsFromSettings = function() {
  * @param {!Array<!Layer>} layers The layers array
  * @return {boolean}
  */
-const layerFilter = function(layer, idx, layers) {
+export const layerFilter = function(layer, idx, layers) {
   return osImplements(layer, ILegendRenderer.ID) && /** @type {!ILegendRenderer} */ (layer).renderLegend !== noop;
 };
 
@@ -245,7 +246,7 @@ const initializeOptions_ = function(options) {
  * @param {number=} opt_maxHeight The maximum height for the canvas
  * @param {number=} opt_maxWidth The maximum height for the canvas
  */
-const drawToCanvas = function(canvas, opt_maxHeight, opt_maxWidth) {
+export const drawToCanvas = function(canvas, opt_maxHeight, opt_maxWidth) {
   var options = getOptionsFromSettings();
   options.maxHeight = opt_maxHeight || Infinity;
   options.maxWidth = opt_maxWidth || Infinity;
@@ -424,7 +425,7 @@ const addNoItemsText_ = function(options) {
  * @param {!osx.legend.LegendOptions} options The legend options.
  * @return {boolean} If another row can be added to the legend.
  */
-const canDraw = function(options) {
+export const canDraw = function(options) {
   return !options.stopDrawing && !(options.stopDrawing = options.maxHeight < options.offsetY + options.fontSize + 5);
 };
 
@@ -434,7 +435,7 @@ const canDraw = function(options) {
  * @param {!os.layer.Tile} layer The tile layer.
  * @param {!osx.legend.LegendOptions} options The legend options.
  */
-const drawTileLayer = function(layer, options) {
+export const drawTileLayer = function(layer, options) {
   if (options.showTile && canDraw(options) && layer.getLayerVisible()) {
     var labelStyle = getLabelStyle_(layer.getTitle(), options);
     var labelFeature = new Feature(new Point([options.offsetX, options.offsetY]));
@@ -462,7 +463,7 @@ const drawTileLayer = function(layer, options) {
  * @param {ol.Feature=} opt_labelFeature [description]
  * @param {ol.style.Style=} opt_labelStyle [description]
  */
-const queueItem = function(options, opt_feature, opt_style, opt_labelFeature, opt_labelStyle) {
+export const queueItem = function(options, opt_feature, opt_style, opt_labelFeature, opt_labelStyle) {
   var rowWidth = 0;
 
   // determine the x offset of the row based on the feature used to position the feature/label. prefer the label feature
@@ -507,7 +508,7 @@ const queueItem = function(options, opt_feature, opt_style, opt_labelFeature, op
  * @param {!os.layer.Vector} layer The vector layer.
  * @param {!osx.legend.LegendOptions} options The legend options.
  */
-const drawVectorLayer = function(layer, options) {
+export const drawVectorLayer = function(layer, options) {
   if (options.showVector && canDraw(options)) {
     var source = /** @type {VectorSource} */ (layer.getSource());
     if (source && shouldDrawSource(source)) {
@@ -528,7 +529,7 @@ const drawVectorLayer = function(layer, options) {
  * @param {!ol.source.Vector} source The vector source.
  * @return {boolean} If the source should be included.
  */
-const shouldDrawSource = function(source) {
+export const shouldDrawSource = function(source) {
   return source instanceof VectorSource && source.isEnabled() && source.getVisible() &&
       source.getFeatureCount() > 0;
 };
@@ -540,7 +541,7 @@ const shouldDrawSource = function(source) {
  * @param {string} labelB The second numeric bin label to be compared.
  * @return {number}
  */
-const numericCompare = function(labelA, labelB) {
+export const numericCompare = function(labelA, labelB) {
   var aMatch = labelA.match(NUMERIC_REGEX);
   var bMatch = labelB.match(NUMERIC_REGEX);
 
@@ -567,7 +568,7 @@ const numericCompare = function(labelA, labelB) {
  * @param {boolean=} opt_useDash If a dash icon should be used
  * @return {boolean} If the item was queued.
  */
-const queueVectorConfig = function(config, options, label, offsetX, opt_useDash) {
+export const queueVectorConfig = function(config, options, label, offsetX, opt_useDash) {
   if (!canDraw(options)) {
     return false;
   }
@@ -617,7 +618,7 @@ const queueVectorConfig = function(config, options, label, offsetX, opt_useDash)
  * @param {number} size The size of the dash.
  * @return {Polygon}
  */
-const createDashGeometry = function(center, size) {
+export const createDashGeometry = function(center, size) {
   // scale the dash appropriately with the font size
   var xRadius = size / 3;
   var yRadius = xRadius / 3;
@@ -631,7 +632,7 @@ const createDashGeometry = function(center, size) {
  * @param {!osx.legend.LegendOptions} options
  * @return {!GeometryCollection}
  */
-const createTileGeometry = function(options) {
+export const createTileGeometry = function(options) {
   // what magic numbers? these were carefully calculated using math (certainly not trial and error) to draw a really
   // awesome scalable tile icon. vector graphics, yo.
   var dim = Math.ceil(options.fontSize * 0.8);
@@ -663,7 +664,7 @@ const createTileGeometry = function(options) {
  * @param {!osx.legend.LegendOptions} options
  * @return {!Object}
  */
-const getSourceConfig = function(source, options) {
+export const getSourceConfig = function(source, options) {
   var config = StyleManager.getInstance().getLayerConfig(source.getId()) ||
       osStyle.DEFAULT_VECTOR_CONFIG;
 
@@ -716,38 +717,4 @@ const getLabelStyle_ = function(text, options, opt_font, opt_offsetX) {
       stroke: LABEL_STROKE_STYLE
     })
   });
-};
-
-exports = {
-  ID,
-  ICON,
-  BASE_KEY,
-  DRAW_OPTIONS_KEY,
-  POSITION_KEY,
-  SETTINGS_VERSION,
-  DEFAULT_OPTIONS,
-  BORDER_WIDTH,
-  BORDER_STYLE,
-  DASH_STYLE,
-  LABEL_FILL_STYLE,
-  LABEL_STROKE_STYLE,
-  Label,
-  NUMERIC_REGEX,
-  EventType,
-  layerPlugins,
-  registerLayerPlugin,
-  sortPluginByPriority,
-  getOptionsFromSettings,
-  layerFilter,
-  drawToCanvas,
-  canDraw,
-  drawTileLayer,
-  queueItem,
-  drawVectorLayer,
-  shouldDrawSource,
-  numericCompare,
-  queueVectorConfig,
-  createDashGeometry,
-  createTileGeometry,
-  getSourceConfig
 };

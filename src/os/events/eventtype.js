@@ -1,13 +1,14 @@
-goog.module('os.events.EventType');
-
+goog.declareModuleId('os.events.EventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const EventType = {
   CANCEL: 'cancel',
   COMPLETE: 'complete',
   ERROR: 'error',
   RESET: 'reset',
   MAP_MODE: 'mapmode'
 };
+
+export default EventType;

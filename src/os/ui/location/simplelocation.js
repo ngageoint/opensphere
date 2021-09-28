@@ -1,14 +1,14 @@
 goog.declareModuleId('os.ui.location.SimpleLocationUI');
 
+import Settings from '../../config/settings.js';
 import Module from '../module.js';
 import {apply} from '../ui.js';
 import {LocationSetting, getCurrentFormat} from './location.js';
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
-const Settings = goog.require('os.config.Settings');
 
-const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
 const {default: Format} = goog.requireType('os.ui.location.Format');
 
 

@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ui.text');
 
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
 import {directiveTag} from '../textprompt.js';
 import * as osWindow from '../window.js';
 
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
 
 
 /**

@@ -1,28 +1,29 @@
-goog.module('os.data.LayerTreeSearch');
+goog.declareModuleId('os.data.LayerTreeSearch');
+
+import IGroupable from '../igroupable.js';
+import osImplements from '../implements.js';
+import FolderManager from '../layer/foldermanager.js';
+import * as osLayer from '../layer/layer.js';
+import LayerGroup from '../layer/layergroup.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import BaseProvider from '../ui/data/baseprovider.js';
+import AbstractGroupByTreeSearch from '../ui/slick/abstractgroupbytreesearch.js';
+import TreeSearch from '../ui/slick/treesearch.js';
+import FolderNode from './foldernode.js';
+import LayerZOrderGroupBy from './groupby/layerzordergroupby.js';
+import LayerNode from './layernode.js';
 
 const googArray = goog.require('goog.array');
-const IGroupable = goog.require('os.IGroupable');
-const FolderNode = goog.require('os.data.FolderNode');
-const LayerNode = goog.require('os.data.LayerNode');
-const LayerZOrderGroupBy = goog.require('os.data.groupby.LayerZOrderGroupBy');
-const osImplements = goog.require('os.implements');
-const osLayer = goog.require('os.layer');
-const FolderManager = goog.require('os.layer.FolderManager');
-const LayerGroup = goog.require('os.layer.LayerGroup');
-const {getMapContainer} = goog.require('os.map.instance');
-const {default: BaseProvider} = goog.require('os.ui.data.BaseProvider');
-const {default: AbstractGroupByTreeSearch} = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
-const {default: TreeSearch} = goog.require('os.ui.slick.TreeSearch');
 
-const ILayer = goog.requireType('os.layer.ILayer');
-const ITreeNodeSupplier = goog.requireType('os.structs.ITreeNodeSupplier');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: ITreeNodeSupplier} = goog.requireType('os.structs.ITreeNodeSupplier');
 const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
  * Extends AbstractGroupByTreeSearch to search through layers on the map
  */
-class LayerTreeSearch extends AbstractGroupByTreeSearch {
+export default class LayerTreeSearch extends AbstractGroupByTreeSearch {
   /**
    * Constructor.
    * @param {!string} setAs The field to set on...
@@ -302,5 +303,3 @@ class LayerTreeSearch extends AbstractGroupByTreeSearch {
     return id && id.length > 1 ? id.join(BaseProvider.ID_DELIMITER) : groupId;
   }
 }
-
-exports = LayerTreeSearch;

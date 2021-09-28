@@ -8,8 +8,8 @@ goog.require('os.plugin.PluginManager');
 
 describe('os.plugin.PluginManager', function() {
   const GoogEventType = goog.module.get('goog.events.EventType');
-  const Settings = goog.module.get('os.config.Settings');
-  const PluginManager = goog.module.get('os.plugin.PluginManager');
+  const {default: Settings} = goog.module.get('os.config.Settings');
+  const {default: PluginManager} = goog.module.get('os.plugin.PluginManager');
 
   const MockErrorPlugin = goog.module.get('os.plugin.MockErrorPlugin');
   const MockPlugin = goog.module.get('os.plugin.MockPlugin');

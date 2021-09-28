@@ -1,12 +1,12 @@
-goog.module('os.xt.PeerInfo');
+goog.declareModuleId('os.xt.PeerInfo');
 
-const {getLastPing} = goog.require('os.xt');
+import {getLastPing} from './xt.js';
 
 
 /**
  * A small structure that represents info about other peers
  */
-class PeerInfo {
+export default class PeerInfo {
   /**
    * Constructor.
    * @param {string} group The group to which the peer belongs
@@ -70,6 +70,3 @@ class PeerInfo {
     return new PeerInfo(group, id, title, details, types);
   }
 }
-
-
-exports = PeerInfo;

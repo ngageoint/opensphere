@@ -1,9 +1,9 @@
 goog.declareModuleId('plugin.ogc.query.OGCQueryHandler');
 
-const ParamModifier = goog.require('os.net.ParamModifier');
-const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');
-const OGCFilterFormatter = goog.require('os.ogc.filter.OGCFilterFormatter');
-const QueryHandler = goog.require('os.query.QueryHandler');
+import ParamModifier from '../../../os/net/parammodifier.js';
+import ModifierConstants from '../../../os/ogc/filter/modifierconstants.js';
+import OGCFilterFormatter from '../../../os/ogc/filter/ogcfilterformatter.js';
+import QueryHandler from '../../../os/query/queryhandler.js';
 
 
 import OGCExclusionFormatter from './ogcexclusionformatter.js';

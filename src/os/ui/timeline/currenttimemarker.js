@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.timeline.CurrentTimeMarker');
 
+import TimeInstant from '../../time/timeinstant.js';
 import BaseItem from './baseitem.js';
 import * as timelineUi from './timeline.js';
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
-const TimeInstant = goog.require('os.time.TimeInstant');
 
 const {default: ITimelineItem} = goog.requireType('os.ui.timeline.ITimelineItem');
 

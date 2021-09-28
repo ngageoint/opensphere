@@ -1,10 +1,9 @@
 goog.declareModuleId('plugin.basemap.TerrainNodeUI');
 
+import DisplaySetting from '../../os/config/displaysetting.js';
+import Settings from '../../os/config/settings.js';
 import Module from '../../os/ui/module.js';
 import {Controller as DefaultLayerNodeUICtrl} from '../../os/ui/node/defaultlayernodeui.js';
-
-const DisplaySetting = goog.require('os.config.DisplaySetting');
-const Settings = goog.require('os.config.Settings');
 
 
 /**

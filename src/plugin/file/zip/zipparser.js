@@ -1,16 +1,17 @@
 goog.declareModuleId('plugin.file.zip.ZIPParser');
 
+import EventType from '../../../os/events/eventtype.js';
+import OSFile from '../../../os/file/file.js';
+import * as mime from '../../../os/file/mime.js';
+import * as text from '../../../os/file/mime/text.js';
+import * as mimeZip from '../../../os/file/mime/zip.js';
+import AsyncZipParser from '../../../os/parse/asynczipparser.js';
+
 const googEvents = goog.require('goog.events');
 
 const GoogEvent = goog.require('goog.events.Event');
 const log = goog.require('goog.log');
 const ol = goog.require('ol');
-const EventType = goog.require('os.events.EventType');
-const OSFile = goog.require('os.file.File');
-const mime = goog.require('os.file.mime');
-const text = goog.require('os.file.mime.text');
-const mimeZip = goog.require('os.file.mime.zip');
-const AsyncZipParser = goog.require('os.parse.AsyncZipParser');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');

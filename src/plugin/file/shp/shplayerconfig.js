@@ -1,17 +1,17 @@
 goog.declareModuleId('plugin.file.shp.SHPLayerConfig');
 
+import AbstractDataSourceLayerConfig from '../../../os/layer/config/abstractdatasourcelayerconfig.js';
+import MultiRequest from '../../../os/source/multirequestsource.js';
+import RequestSource from '../../../os/source/requestsource.js';
 import SHPParser from './shpparser.js';
 import SHPParserConfig from './shpparserconfig.js';
 
 const log = goog.require('goog.log');
 const ResponseType = goog.require('goog.net.XhrIo.ResponseType');
 const userAgent = goog.require('goog.userAgent');
-const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
-const MultiRequest = goog.require('os.source.MultiRequest');
-const RequestSource = goog.require('os.source.Request');
 
 const Logger = goog.requireType('goog.log.Logger');
-const FeatureImporter = goog.requireType('os.im.FeatureImporter');
+const {default: FeatureImporter} = goog.requireType('os.im.FeatureImporter');
 
 
 /**

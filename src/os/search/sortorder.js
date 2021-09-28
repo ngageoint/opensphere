@@ -1,10 +1,11 @@
-goog.module('os.search.SortOrder');
-
+goog.declareModuleId('os.search.SortOrder');
 
 /**
  * @enum {string}
  */
-exports = {
+const SortOrder = {
   ASC: 'asc',
   DESC: 'desc'
 };
+
+export default SortOrder;

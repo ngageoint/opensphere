@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.ex.ExportUI');
 
+import {getAppName} from '../../config/config.js';
 import {getExportFields} from '../../source/source.js';
 import {Controller as ExportDialogCtrl, directive as exportDialogDirective} from '../file/exportdialog.js';
 import Module from '../module.js';
@@ -7,10 +8,8 @@ import * as osWindow from '../window.js';
 import {directiveTag as exportOptionsUi} from './exportoptions.js';
 import ExportOptionsEvent from './exportoptionsevent.js';
 
-const {getAppName} = goog.require('os.config');
-
 const Feature = goog.requireType('ol.Feature');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**

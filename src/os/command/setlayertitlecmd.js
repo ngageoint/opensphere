@@ -1,14 +1,14 @@
-goog.module('os.command.SetLayerTitle');
+goog.declareModuleId('os.command.SetLayerTitle');
 
-const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
-const State = goog.require('os.command.State');
-const {getMapContainer} = goog.require('os.map.instance');
+import {getMapContainer} from '../map/mapinstance.js';
+import AbstractSyncCommand from './abstractsynccommand.js';
+import State from './state.js';
 
 
 /**
  * Set the title of a layer retrieved from the passed ID.
  */
-class SetLayerTitle extends AbstractSyncCommand {
+export default class SetLayerTitle extends AbstractSyncCommand {
   /**
    * Constructor.
    * @param {string} overlayId
@@ -68,5 +68,3 @@ class SetLayerTitle extends AbstractSyncCommand {
     return super.revert();
   }
 }
-
-exports = SetLayerTitle;

@@ -1,20 +1,21 @@
-goog.module('os.layer.config');
+goog.declareModuleId('os.layer.config');
 
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const {autoSizeColumn} = goog.require('os.ui.slick.column');
+import ColumnDefinition from '../../data/columndefinition.js';
+import {autoSizeColumn} from '../../ui/slick/column.js';
 
-const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
+const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
+
 
 /**
  * @typedef {function():!Object<string, *>}
  */
-let DefaultFn;
+export let DefaultFn;
 
 /**
  * Layer config identifiers.
  * @enum {string}
  */
-const LayerConfigId = {
+export const LayerConfigId = {
   STATIC: 'static'
 };
 
@@ -24,7 +25,7 @@ const LayerConfigId = {
  * @param {!FeatureTypeColumn} ftColumn The feature type column.
  * @return {!ColumnDefinition} The column definition.
  */
-const mapFeatureTypeColumn = function(ftColumn) {
+export const mapFeatureTypeColumn = function(ftColumn) {
   var name = ftColumn.name.toUpperCase();
 
   var columnDef = new ColumnDefinition();
@@ -36,10 +37,4 @@ const mapFeatureTypeColumn = function(ftColumn) {
   autoSizeColumn(columnDef);
 
   return columnDef;
-};
-
-exports = {
-  DefaultFn,
-  mapFeatureTypeColumn,
-  LayerConfigId
 };

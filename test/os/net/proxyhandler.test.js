@@ -3,7 +3,7 @@ goog.require('os.net.ProxyHandler');
 
 describe('os.net.ProxyHandler', function() {
   const Uri = goog.module.get('goog.Uri');
-  const ProxyHandler = goog.module.get('os.net.ProxyHandler');
+  const {default: ProxyHandler} = goog.module.get('os.net.ProxyHandler');
 
   it('should refuse handling URIs if the proxy is not set up properly', function() {
     // do something stupid to the proxy URL

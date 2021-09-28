@@ -2,6 +2,16 @@ goog.declareModuleId('os.ui.file.kml.AbstractKMLExporter');
 
 import JsonField from '../../../../plugin/file/kml/jsonfield.js';
 import {OS_NS} from '../../../../plugin/file/kml/kml.js';
+import ZipExporter from '../../../ex/zipexporter.js';
+import Fields from '../../../fields/fields.js';
+import {DESC_REGEXP} from '../../../fields/index.js';
+import OSFile from '../../../file/file.js';
+import instanceOf from '../../../instanceof.js';
+import {isPrimitive} from '../../../object/object.js';
+import * as osTime from '../../../time/time.js';
+import TimeInstant from '../../../time/timeinstant.js';
+import TimeRange from '../../../time/timerange.js';
+import * as xml from '../../../xml.js';
 import * as kml from './kml.js';
 
 const {getFirstElementChild, insertSiblingBefore} = goog.require('goog.dom');
@@ -10,18 +20,8 @@ const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
 const KML = goog.require('ol.format.KML');
 const olXml = goog.require('ol.xml');
-const Fields = goog.require('os.Fields');
-const ZipExporter = goog.require('os.ex.ZipExporter');
-const {DESC_REGEXP} = goog.require('os.fields');
-const OSFile = goog.require('os.file.File');
-const instanceOf = goog.require('os.instanceOf');
-const {isPrimitive} = goog.require('os.object');
-const osTime = goog.require('os.time');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const TimeRange = goog.require('os.time.TimeRange');
-const xml = goog.require('os.xml');
 
-const ITime = goog.requireType('os.time.ITime');
+const {default: ITime} = goog.requireType('os.time.ITime');
 
 
 /**

@@ -1,9 +1,11 @@
-goog.module('os.layer.LayerId');
+goog.declareModuleId('os.layer.LayerId');
 
 /**
  * Layer ID's used by the application.
  * @enum {string}
  */
-exports = {
+const LayerId = {
   DRAW: 'draw'
 };
+
+export default LayerId;

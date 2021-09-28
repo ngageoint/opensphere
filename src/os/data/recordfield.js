@@ -1,4 +1,4 @@
-goog.module('os.data.RecordField');
+goog.declareModuleId('os.data.RecordField');
 
 const googObject = goog.require('goog.object');
 
@@ -43,4 +43,4 @@ RecordField.REGEXP = (function() {
   return new RegExp('^(_.*|' + values.join('|') + ')$');
 })();
 
-exports = RecordField;
+export default RecordField;

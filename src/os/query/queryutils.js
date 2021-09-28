@@ -1,4 +1,7 @@
-goog.module('os.query.utils');
+goog.declareModuleId('os.query.utils');
+
+import * as osMap from '../map/map.js';
+import {EPSG4326} from '../proj/proj.js';
 
 const {nearlyEquals} = goog.require('goog.math');
 const Feature = goog.require('ol.Feature');
@@ -6,8 +9,6 @@ const {getArea} = goog.require('ol.extent');
 const GeometryType = goog.require('ol.geom.GeometryType');
 const Polygon = goog.require('ol.geom.Polygon');
 const {transformExtent} = goog.require('ol.proj');
-const osMap = goog.require('os.map');
-const {EPSG4326} = goog.require('os.proj');
 
 
 /**

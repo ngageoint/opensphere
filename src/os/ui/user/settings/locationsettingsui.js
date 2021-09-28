@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ui.user.settings.LocationSettingsUI');
 
+import {getSettings} from '../../../config/configinstance.js';
 import {ROOT} from '../../../os.js';
 import {LocationSetting} from '../../location/location.js';
 import LocationFormat from '../../location/locationformat.js';
 import Module from '../../module.js';
 import {apply} from '../../ui.js';
-const {getSettings} = goog.require('os.config.instance');
 
 
 /**

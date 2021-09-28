@@ -1,14 +1,14 @@
-goog.module('os.thread.ThreadEvent');
+goog.declareModuleId('os.thread.ThreadEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
-const IThreadJob = goog.requireType('os.thread.IThreadJob');
+const {default: IThreadJob} = goog.requireType('os.thread.IThreadJob');
 
 
 /**
  * A thread event
  */
-class ThreadEvent extends GoogEvent {
+export default class ThreadEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type The event type
@@ -33,5 +33,3 @@ class ThreadEvent extends GoogEvent {
     return this.job_;
   }
 }
-
-exports = ThreadEvent;

@@ -1,12 +1,12 @@
-goog.module('os.config.UnitSettings');
+goog.declareModuleId('os.config.UnitSettings');
 
-const {directiveTag: settingsUi} = goog.require('os.config.UnitSettingsUI');
-const {default: SettingPlugin} = goog.require('os.ui.config.SettingPlugin');
+import SettingPlugin from '../ui/config/settingplugin.js';
+import {directiveTag as settingsUi} from './unitsettingsui.js';
 
 
 /**
  */
-class UnitSettings extends SettingPlugin {
+export default class UnitSettings extends SettingPlugin {
   /**
    * Constructor.
    */
@@ -21,5 +21,3 @@ class UnitSettings extends SettingPlugin {
     this.setUI(settingsUi);
   }
 }
-
-exports = UnitSettings;

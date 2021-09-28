@@ -3,12 +3,12 @@ goog.declareModuleId('os.ui.file.ui.csv.ConfigStepUI');
 import '../../../spinner.js';
 import '../../../wiz/wizardpreview.js';
 import {ROOT} from '../../../../os.js';
+import {COMMENT_CHARS, DELIMITERS} from '../../../../parse/csv/csv.js';
 import Module from '../../../module.js';
 import SlickGridEvent from '../../../slick/slickgridevent.js';
 import {measureText} from '../../../ui.js';
-const {COMMENT_CHARS, DELIMITERS} = goog.require('os.parse.csv');
 
-const CsvParserConfig = goog.requireType('os.parse.csv.CsvParserConfig');
+const {default: CsvParserConfig} = goog.requireType('os.parse.csv.CsvParserConfig');
 
 
 /**

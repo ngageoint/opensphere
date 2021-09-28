@@ -11,10 +11,10 @@ goog.require('os.time.xf.TimeModel');
 describe('os.time.xf.TimeModel', function() {
   const functions = goog.module.get('goog.functions');
   const Range = goog.module.get('goog.math.Range');
-  const TimeInstant = goog.module.get('os.time.TimeInstant');
-  const TimeRange = goog.module.get('os.time.TimeRange');
-  const TimelineController = goog.module.get('os.time.TimelineController');
-  const TimeModel = goog.module.get('os.time.xf.TimeModel');
+  const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');
+  const {default: TimeRange} = goog.module.get('os.time.TimeRange');
+  const {default: TimelineController} = goog.module.get('os.time.TimelineController');
+  const {default: TimeModel} = goog.module.get('os.time.xf.TimeModel');
 
   var getTimeFn = function(item) {
     return item.time;

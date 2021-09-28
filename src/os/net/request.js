@@ -1,4 +1,12 @@
-goog.module('os.net.Request');
+goog.declareModuleId('os.net.Request');
+
+import * as dispatcher from '../dispatcher.js';
+import {getDefaultValidators} from './net.js';
+import RequestEvent from './requestevent.js';
+import RequestEventType from './requesteventtype.js';
+import * as RequestHandlerFactory from './requesthandlerfactory.js';
+import URLModifier from './urlmodifier.js';
+import VariableReplacer from './variablereplacer.js';
 
 const Promise = goog.require('goog.Promise');
 const Uri = goog.require('goog.Uri');
@@ -7,22 +15,15 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const Level = goog.require('goog.log.Level');
 const EventType = goog.require('goog.net.EventType');
-const dispatcher = goog.require('os.Dispatcher');
-const {getDefaultValidators} = goog.require('os.net');
-const RequestEvent = goog.require('os.net.RequestEvent');
-const RequestEventType = goog.require('os.net.RequestEventType');
-const RequestHandlerFactory = goog.require('os.net.RequestHandlerFactory');
-const URLModifier = goog.require('os.net.URLModifier');
-const VariableReplacer = goog.require('os.net.VariableReplacer');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const EventLike = goog.requireType('goog.events.EventLike');
 const Logger = goog.requireType('goog.log.Logger');
 const ResponseType = goog.requireType('goog.net.XhrIo.ResponseType');
 const {RequestValidator} = goog.requireType('os.net');
-const IDataFormatter = goog.requireType('os.net.IDataFormatter');
-const IModifier = goog.requireType('os.net.IModifier');
-const IRequestHandler = goog.requireType('os.net.IRequestHandler');
+const {default: IDataFormatter} = goog.requireType('os.net.IDataFormatter');
+const {default: IModifier} = goog.requireType('os.net.IModifier');
+const {default: IRequestHandler} = goog.requireType('os.net.IRequestHandler');
 
 
 /**
@@ -31,7 +32,7 @@ const IRequestHandler = goog.requireType('os.net.IRequestHandler');
  * be registered with the <code>RequestHandlerFactory</code> to determine
  * how the requests are retrieved.
  */
-class Request extends EventTarget {
+export default class Request extends EventTarget {
   /**
    * Constructor.
    * @param {Uri|string=} opt_uri The uri
@@ -875,5 +876,3 @@ Request.METHOD_DELETE = 'DELETE';
  * @type {string}
  */
 Request.METHOD_HEAD = 'HEAD';
-
-exports = Request;

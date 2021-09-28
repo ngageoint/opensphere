@@ -1,10 +1,10 @@
-goog.module('os.menu.folder');
+goog.declareModuleId('os.menu.folder');
 
-const FolderManager = goog.require('os.layer.FolderManager');
-const FolderNode = goog.require('os.data.FolderNode');
-const layerMenu = goog.require('os.ui.menu.layer');
-const {filterFalsey} = goog.require('os.fn');
-const {FolderEventType, launchRemoveFolder, createOrEditFolder, getFolderMenuEnabled} = goog.require('os.layer.folder');
+import FolderNode from '../data/foldernode.js';
+import {filterFalsey} from '../fn/fn.js';
+import * as layerMenu from '../ui/menu/layermenu.js';
+import {FolderEventType, launchRemoveFolder, createOrEditFolder, getFolderMenuEnabled} from './folder.js';
+import FolderManager from './foldermanager.js';
 const {getRandomString} = goog.require('goog.string');
 
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
@@ -150,7 +150,7 @@ const showUnfolder = function(context) {
 /**
  * Sets up analyze actions
  */
-const setup = function() {
+export const setup = function() {
   layerMenu.setup();
   const menu = layerMenu.getMenu();
 
@@ -180,9 +180,4 @@ const setup = function() {
       sort: 10
     });
   }
-};
-
-
-exports = {
-  setup
 };

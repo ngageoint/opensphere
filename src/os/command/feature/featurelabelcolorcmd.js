@@ -1,9 +1,9 @@
-goog.module('os.command.FeatureLabelColor');
+goog.declareModuleId('os.command.FeatureLabelColor');
 
-const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const osStyle = goog.require('os.style');
-const StyleField = goog.require('os.style.StyleField');
+import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
+import * as osStyle from '../../style/style.js';
+import StyleField from '../../style/stylefield.js';
+import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -13,7 +13,7 @@ const Feature = goog.requireType('ol.Feature');
  *
  * @extends {AbstractFeatureStyle<string>}
  */
-class FeatureLabelColor extends AbstractFeatureStyle {
+export default class FeatureLabelColor extends AbstractFeatureStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -58,5 +58,3 @@ class FeatureLabelColor extends AbstractFeatureStyle {
     super.applyValue(configs, value);
   }
 }
-
-exports = FeatureLabelColor;

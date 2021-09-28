@@ -1,16 +1,16 @@
-goog.module('os.data.FilterTreeSearch');
+goog.declareModuleId('os.data.FilterTreeSearch');
 
-const FilterNode = goog.require('os.data.FilterNode');
-const {getFilterManager} = goog.require('os.query.instance');
-const {default: AbstractGroupByTreeSearch} = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
+import {getFilterManager} from '../query/queryinstance.js';
+import AbstractGroupByTreeSearch from '../ui/slick/abstractgroupbytreesearch.js';
+import FilterNode from './filternode.js';
 
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 
 
 /**
  * Extends AbstractGroupByTreeSearch to search through saved areas
  */
-class FilterTreeSearch extends AbstractGroupByTreeSearch {
+export default class FilterTreeSearch extends AbstractGroupByTreeSearch {
   /**
    * Constructor.
    * @param {!string} setAs The field to set on ...
@@ -51,5 +51,3 @@ class FilterTreeSearch extends AbstractGroupByTreeSearch {
     }
   }
 }
-
-exports = FilterTreeSearch;

@@ -1,5 +1,8 @@
 goog.declareModuleId('os.ui.ol.interaction.AreaHover');
 
+import {getAreaManager} from '../../../query/queryinstance.js';
+import * as area from '../../../style/areastyle.js';
+import TimelineController from '../../../time/timelinecontroller.js';
 import OLMap from '../olmap.js';
 import {getEventFeature, getFirstPolygon} from './interaction.js';
 
@@ -7,9 +10,6 @@ const ViewHint = goog.require('ol.ViewHint');
 const {pointerMove} = goog.require('ol.events.condition');
 const Select = goog.require('ol.interaction.Select');
 const OLVectorLayer = goog.require('ol.layer.Vector');
-const {getAreaManager} = goog.require('os.query.instance');
-const area = goog.require('os.style.area');
-const TimelineController = goog.require('os.time.TimelineController');
 
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 

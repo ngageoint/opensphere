@@ -1,8 +1,7 @@
 goog.declareModuleId('os.ui.MuteButtonUI');
 
+import AudioManager from '../audio/audiomanager.js';
 import Module from './module.js';
-
-const AudioManager = goog.require('os.audio.AudioManager');
 
 
 /**

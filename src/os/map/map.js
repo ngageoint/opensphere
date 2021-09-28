@@ -1,6 +1,6 @@
 goog.declareModuleId('os.map');
 
-goog.require('os.ol');
+import '../ol/ol.js';
 
 const {assert} = goog.require('goog.asserts');
 const {DEFAULT_MAX_ZOOM} = goog.require('ol');

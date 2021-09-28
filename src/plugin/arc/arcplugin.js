@@ -1,5 +1,11 @@
 goog.declareModuleId('plugin.arc.ArcPlugin');
 
+import DataManager from '../../os/data/datamanager.js';
+import ProviderEntry from '../../os/data/providerentry.js';
+import LayerConfigManager from '../../os/layer/config/layerconfigmanager.js';
+import * as net from '../../os/net/net.js';
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
+import StateManager from '../../os/state/statemanager.js';
 import ImportManager from '../../os/ui/im/importmanager.js';
 import ProviderImportUI from '../../os/ui/providerimportui.js';
 import * as arc from './arc.js';
@@ -14,13 +20,6 @@ import ArcLayerDescriptor from './layer/arclayerdescriptor.js';
 import ArcTileLayerConfig from './layer/arctilelayerconfig.js';
 import {registerMimeTypes} from './mime.js';
 import * as arcstate from './state/v2/arcstate.js';
-
-const DataManager = goog.require('os.data.DataManager');
-const ProviderEntry = goog.require('os.data.ProviderEntry');
-const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
-const net = goog.require('os.net');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const StateManager = goog.require('os.state.StateManager');
 
 
 /**

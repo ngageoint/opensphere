@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ui.filter.ui.FilterGroupBy');
 
+import DataManager from '../../../data/datamanager.js';
+import BaseGroupBy from '../../../data/groupby/basegroupby.js';
 import SlickTreeNode from '../../slick/slicktreenode.js';
 import {directiveTag} from './filtergroupui.js';
 
 const {insert} = goog.require('goog.array');
-const DataManager = goog.require('os.data.DataManager');
-const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
 
 const {default: FilterNode} = goog.requireType('os.ui.filter.ui.FilterNode');
 

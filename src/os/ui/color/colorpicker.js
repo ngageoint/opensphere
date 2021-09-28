@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.color.ColorPickerUI');
 
+import {toHexString} from '../../color.js';
 import Module from '../module.js';
 import {apply} from '../ui.js';
 import {Controller as ColorPaletteCtrl, directiveTag as colorPaletteUi} from './colorpalette.js';
@@ -8,7 +9,6 @@ import ColorPaletteEventType from './colorpaletteeventtype.js';
 const {assert} = goog.require('goog.asserts');
 const {append, contains} = goog.require('goog.dom');
 const {listen, unlisten} = goog.require('goog.events');
-const {toHexString} = goog.require('os.color');
 
 
 /**

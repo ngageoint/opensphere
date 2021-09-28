@@ -1,25 +1,26 @@
-goog.module('os.file.FileStorage');
+goog.declareModuleId('os.file.FileStorage');
+
+import {FILE_DB_NAME, FILE_DB_VERSION, FILE_STORE_NAME} from '../os.js';
+import AsyncStorageWrapper from '../storage/asyncstoragewrapper.js';
+import IDBStorage from '../storage/idbstorage.js';
+import ObjectMechanism from '../storage/objectmechanism.js';
+import * as osFile from './index.js';
 
 const Disposable = goog.require('goog.Disposable');
 const Deferred = goog.require('goog.async.Deferred');
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
 const path = goog.require('goog.string.path');
-const {FILE_DB_NAME, FILE_DB_VERSION, FILE_STORE_NAME} = goog.require('os');
-const osFile = goog.require('os.file');
-const AsyncStorageWrapper = goog.require('os.storage.AsyncStorageWrapper');
-const IDBStorage = goog.require('os.storage.IDBStorage');
-const ObjectMechanism = goog.require('os.storage.ObjectMechanism');
 
 const Error = goog.requireType('goog.db.Error');
 const Logger = goog.requireType('goog.log.Logger');
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
  * Stores local files using IndexedDB when available, or a local cache if IDB is not supported.
  */
-class FileStorage extends Disposable {
+export default class FileStorage extends Disposable {
   /**
    * Constructor.
    * @param {string=} opt_dbName
@@ -264,5 +265,3 @@ let instance;
  * @type {Logger}
  */
 const logger = log.getLogger('os.file.FileStorage');
-
-exports = FileStorage;

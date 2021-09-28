@@ -1,11 +1,12 @@
-goog.module('os.data.xf.DataModel');
+goog.declareModuleId('os.data.xf.DataModel');
+
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import PropertyChange from './propertychange.js';
 
 const googArray = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
-const PropertyChange = goog.require('os.data.xf.PropertyChange');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -21,7 +22,7 @@ const Logger = goog.requireType('goog.log.Logger');
  *
  * @template T,S,BIN
  */
-class DataModel extends EventTarget {
+export default class DataModel extends EventTarget {
   /**
    * Constructor.
    */
@@ -448,6 +449,3 @@ DataModel.SEPARATOR = '$%';
  * @type {Logger}
  */
 const logger = log.getLogger('os.data.xf.DataModel');
-
-
-exports = DataModel;

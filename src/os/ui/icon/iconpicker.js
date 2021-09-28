@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.icon.IconPickerUI');
 
+import {unsafeClone} from '../../object/object.js';
 import {ROOT} from '../../os.js';
 import {GMAPS_SEARCH, replaceGoogleUri} from '../file/kml/kml.js';
 import Module from '../module.js';
 import {bringToFront, create, exists} from '../window.js';
 import IconPickerEventType from './iconpickereventtype.js';
 import {directiveTag as iconSelector} from './iconselector.js';
-const {unsafeClone} = goog.require('os.object');
 
 
 /**

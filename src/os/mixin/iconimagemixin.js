@@ -1,10 +1,12 @@
-goog.module('os.mixin.IconImageMixin');
+goog.declareModuleId('os.mixin.IconImageMixin');
+
+import FallbackIconImage from '../style/fallbackiconimage.js';
 
 const {iconImageCache} = goog.require('ol.style');
 
-const ImageState = goog.requireType('ol.ImageState');
 const IconImage = goog.require('ol.style.IconImage');
-const FallbackIconImage = goog.require('os.style.FallbackIconImage');
+
+const ImageState = goog.requireType('ol.ImageState');
 
 
 /**

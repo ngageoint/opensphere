@@ -1,11 +1,12 @@
-goog.module('os.state.StateType');
-
+goog.declareModuleId('os.state.StateType');
 
 /**
  * State types.
  * @enum {string}
  */
-exports = {
+const StateType = {
   OPENSPHERE: 'opensphere',
   UNKNOWN: 'UNKNOWN'
 };
+
+export default StateType;

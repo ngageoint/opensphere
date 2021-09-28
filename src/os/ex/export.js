@@ -1,7 +1,7 @@
-goog.module('os.ex.ExportOptions');
+goog.declareModuleId('os.ex.ExportOptions');
 
-const IExportMethod = goog.requireType('os.ex.IExportMethod');
-const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
+const {default: IExportMethod} = goog.requireType('os.ex.IExportMethod');
+const {default: IPersistenceMethod} = goog.requireType('os.ex.IPersistenceMethod');
 
 
 /**
@@ -22,4 +22,4 @@ const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
  */
 let ExportOptions;
 
-exports = ExportOptions;
+export default ExportOptions;
