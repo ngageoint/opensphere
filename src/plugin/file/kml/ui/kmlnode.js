@@ -33,6 +33,7 @@ const Polygon = goog.require('ol.geom.Polygon');
 const ImageStatic = goog.require('ol.source.ImageStatic');
 
 const Logger = goog.requireType('goog.log.Logger');
+const {default: ImageLayer} = goog.requireType('os.layer.Image');
 const {default: KMLSource} = goog.requireType('plugin.file.kml.KMLSource');
 const {PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
 
@@ -149,7 +150,7 @@ export default class KMLNode extends SlickTreeNode {
 
     /**
      * The kml ground image
-     * @type {os.layer.Image}
+     * @type {ImageLayer}
      * @private
      */
     this.image_ = null;
@@ -388,7 +389,7 @@ export default class KMLNode extends SlickTreeNode {
   /**
    * Get the image layer for this node.
    *
-   * @return {os.layer.Image} The feature
+   * @return {ImageLayer} The feature
    */
   getImage() {
     return this.image_;
@@ -397,7 +398,7 @@ export default class KMLNode extends SlickTreeNode {
   /**
    * Set the image layer for this node.
    *
-   * @param {os.layer.Image} image The feature
+   * @param {ImageLayer} image The feature
    */
   setImage(image) {
     goog.dispose(this.layerNode);
@@ -493,7 +494,7 @@ export default class KMLNode extends SlickTreeNode {
    * Get the images(s) associated with this node.
    *
    * @param {boolean=} opt_unchecked If unchecked nodes should be included, defaults to false
-   * @return {!Array<!os.layer.Image>} The image layers
+   * @return {!Array<!ImageLayer>} The image layers
    */
   getImages(opt_unchecked) {
     if (this.image_) {

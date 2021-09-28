@@ -4,6 +4,7 @@ import BaseFilterManager from '../../../filter/basefiltermanager.js';
 import Module from '../../module.js';
 import FilterEventType from '../filtereventtype.js';
 
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 const {default: FilterEvent} = goog.requireType('os.ui.filter.FilterEvent');
 
 
@@ -55,7 +56,7 @@ export class Controller {
 
     var fqm = BaseFilterManager.getInstance();
     fqm.listen(FilterEventType.GROUPING_CHANGED, this.onGroupChanged_, false, this);
-    var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
+    var node = /** @type {ITreeNode} */ (this.scope_['item']);
 
     this['group'] = fqm.getGrouping(node.getId());
     this['groups'] = Controller.GROUPS;
@@ -80,7 +81,7 @@ export class Controller {
    * @private
    */
   onGroupChanged_(event) {
-    var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
+    var node = /** @type {ITreeNode} */ (this.scope_['item']);
 
     if (event.key == node.getId()) {
       var fqm = BaseFilterManager.getInstance();
@@ -95,7 +96,7 @@ export class Controller {
    */
   onGroup() {
     var fqm = BaseFilterManager.getInstance();
-    var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
+    var node = /** @type {ITreeNode} */ (this.scope_['item']);
     fqm.setGrouping(node.getId(), /** @type {boolean} */ (this['group']));
   }
 }

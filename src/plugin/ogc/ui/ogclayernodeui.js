@@ -9,6 +9,8 @@ import {Controller as ChooseTimeColumnController} from './choosetimecolumn.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+
 
 /**
  * @type {string}
@@ -55,7 +57,7 @@ export class Controller extends DefaultLayerNodeUICtrl {
 
     /**
      * The descriptor for this layer
-     * @type {os.data.IDataDescriptor}
+     * @type {IDataDescriptor}
      * @private
      */
     this.descriptor_ = DataManager.getInstance().getDescriptor(this.getLayerId());

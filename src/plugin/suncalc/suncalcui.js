@@ -75,7 +75,7 @@ export class Controller {
     this.coord_ = $scope['coord'] || null;
 
     /**
-     * @type {os.time.TimelineController}
+     * @type {TimelineController}
      * @private
      */
     this.tlc_ = TimelineController.getInstance();

@@ -22,7 +22,7 @@ export default class LayerStyle extends AbstractStyle {
   /**
    * Constructor.
    * @param {string} layerId
-   * @param {function(os.layer.ILayer, ?)} callback Callback to actually do the set on the layer.
+   * @param {function(ILayer, ?)} callback Callback to actually do the set on the layer.
    * @param {number} value The new value to set.
    * @param {number=} opt_oldValue Optional old value. If not provided, the command pulls the old value off the layer.
    */
@@ -31,7 +31,7 @@ export default class LayerStyle extends AbstractStyle {
 
     /**
      * The setter callback to set the value on the layer.
-     * @type {function(os.layer.ILayer, ?)}
+     * @type {function(ILayer, ?)}
      * @protected
      */
     this.callback = callback;
@@ -45,7 +45,7 @@ export default class LayerStyle extends AbstractStyle {
   getOldValue() {
     var layer = getMapContainer().getLayer(this.layerId);
     if (osImplements(layer, ILayer.ID)) {
-      return /** @type {os.layer.ILayer} */ (layer).getOpacity();
+      return /** @type {ILayer} */ (layer).getOpacity();
     }
 
     return null;
@@ -57,7 +57,7 @@ export default class LayerStyle extends AbstractStyle {
   applyValue(config, value) {
     var layer = getMapContainer().getLayer(this.layerId);
     if (osImplements(layer, ILayer.ID)) {
-      this.callback(/** @type {os.layer.ILayer} */ (layer), value);
+      this.callback(/** @type {ILayer} */ (layer), value);
     }
   }
 
@@ -82,7 +82,7 @@ export default class LayerStyle extends AbstractStyle {
   setValue(value) {
     asserts.assert(value != null, 'style value must be defined');
 
-    var layer = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.layerId));
+    var layer = /** @type {VectorLayer} */ (getMapContainer().getLayer(this.layerId));
     asserts.assert(layer, 'layer must be defined');
 
     var config = this.getLayerConfig(layer) || {};

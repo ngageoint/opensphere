@@ -7,6 +7,8 @@ import SHPParser from './shpparser.js';
 
 const googEvents = goog.require('goog.events');
 
+const {default: OSFile} = goog.requireType('os.file.File');
+
 
 /**
  * Configuration for a SHP parser.
@@ -20,12 +22,12 @@ export default class SHPParserConfig extends FileParserConfig {
     super();
 
     /**
-     * @type {os.file.File}
+     * @type {OSFile}
      */
     this['file2'] = null;
 
     /**
-     * @type {os.file.File}
+     * @type {OSFile}
      */
     this['zipFile'] = null;
 

@@ -10,6 +10,7 @@ import {apply} from '../../ui.js';
 import * as osWindow from '../../window.js';
 import EventType from './eventtype.js';
 
+const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
 const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
 const {default: IImportAction} = goog.requireType('os.im.action.IImportAction');
 
@@ -182,7 +183,7 @@ export default class Controller extends EditFiltersCtrl {
   /**
    * Close the edit filter action window if the source was removed
    *
-   * @param {os.data.event.DataEvent} event
+   * @param {DataEvent} event
    * @private
    */
   onSourceRemoved_(event) {

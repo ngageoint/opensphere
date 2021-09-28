@@ -11,6 +11,7 @@ import Heatmap from './heatmaplayer.js';
 
 const asserts = goog.require('goog.asserts');
 
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 
@@ -119,7 +120,7 @@ const generateHeatmap_ = function(event) {
     if (layers.length) {
       for (var i = 0; i < layers.length; i++) {
         var layer = layers[i];
-        var source = /** @type {os.source.Vector} */ (layer.getSource());
+        var source = /** @type {VectorSource} */ (layer.getSource());
         if (!source || source.getFeatureCount() <= 0) {
           AlertManager.getInstance().sendAlert('No features in selected layer. Unable to generate heatmap.',
               AlertEventSeverity.WARNING);

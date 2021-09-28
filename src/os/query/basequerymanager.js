@@ -17,7 +17,9 @@ const {caseInsensitiveCompare} = goog.require('goog.string');
 const Logger = goog.requireType('goog.log.Logger');
 
 const {default: BaseFilterManager} = goog.requireType('os.filter.BaseFilterManager');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 const {default: BaseAreaManager} = goog.requireType('os.query.BaseAreaManager');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 const {default: QueryHandler} = goog.requireType('os.ui.query.QueryHandler');
 
 
@@ -475,7 +477,7 @@ export default class BaseQueryManager extends EventTarget {
   }
 
   /**
-   * @param {!(string|os.filter.FilterEntry)} filterOrId
+   * @param {!(string|FilterEntry)} filterOrId
    * @return {boolean}
    */
   hasFilter(filterOrId) {
@@ -526,7 +528,7 @@ export default class BaseQueryManager extends EventTarget {
    * Asks if a filter is an And or an Or grouping for a particular layer. If the filter is in a complex state with
    * respect to areas, it will not account for the "both" case.
    *
-   * @param {!(string|os.filter.FilterEntry)} filterOrId
+   * @param {!(string|FilterEntry)} filterOrId
    * @param {string=} opt_layerId
    * @return {boolean} true for and, false for or
    */
@@ -680,7 +682,7 @@ export default class BaseQueryManager extends EventTarget {
 
     if (prop === 'toggle') {
       var value = event.getNewValue();
-      var filter = /** @type {os.filter.FilterEntry} */ (value);
+      var filter = /** @type {FilterEntry} */ (value);
       assert(!!filter);
       var id = /** @type {string} */ (filter.getId());
       this.onToggle(this.getEntries(null, null, id));
@@ -1109,8 +1111,8 @@ export default class BaseQueryManager extends EventTarget {
     } else if (children) {
       children.sort(
           /**
-           * @param {os.structs.ITreeNode} a
-           * @param {os.structs.ITreeNode} b
+           * @param {ITreeNode} a
+           * @param {ITreeNode} b
            * @return {number} per compare function
            */
           function(a, b) {

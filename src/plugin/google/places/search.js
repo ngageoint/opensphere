@@ -15,6 +15,8 @@ const Feature = goog.require('ol.Feature');
 const Point = goog.require('ol.geom.Point');
 const olProj = goog.require('ol.proj');
 
+const {default: Request} = goog.requireType('os.net.Request');
+
 
 /**
  * Searches Google Places API
@@ -60,7 +62,7 @@ export default class Search extends AbstractUrlSearch {
    * @inheritDoc
    */
   onSearchSuccess(evt) {
-    var request = /** @type {os.net.Request} */ (evt.target);
+    var request = /** @type {Request} */ (evt.target);
 
     try {
       var resp = /** @type {Object} */ (JSON.parse(/** @type {string} */ (request.getResponse())));

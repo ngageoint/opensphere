@@ -62,6 +62,7 @@ const olXml = goog.require('ol.xml');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
+const {default: DynamicFeature} = goog.requireType('os.feature.DynamicFeature');
 const {default: IParser} = goog.requireType('os.parse.IParser');
 const {default: CreateOptions} = goog.requireType('os.track.CreateOptions');
 
@@ -1102,7 +1103,7 @@ export default class KMLParser extends AsyncZipParser {
    * Parses a KML Placemark element into a map feature
    *
    * @param {Element} el The XML element
-   * @return {os.feature.DynamicFeature|Feature|undefined} The map feature
+   * @return {DynamicFeature|Feature|undefined} The map feature
    * @private
    *
    * I don't care what you think, compiler.

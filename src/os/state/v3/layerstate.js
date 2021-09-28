@@ -31,6 +31,7 @@ const {clamp} = goog.require('goog.math');
 const {isEmptyOrWhitespace, isNumeric, makeSafe} = goog.require('goog.string');
 
 const Logger = goog.requireType('goog.log.Logger');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
 const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
 const {default: ILayer} = goog.requireType('os.layer.ILayer');
 const {default: XMLStateOptions} = goog.requireType('os.state.XMLStateOptions');
@@ -484,7 +485,7 @@ export default class LayerState extends XMLState {
       if (persistable) {
         // only try this if the key is registered with the state manager
         try {
-          var obj = /** @type {os.IPersistable} */ (value).persist();
+          var obj = /** @type {IPersistable} */ (value).persist();
           appendElement(key, layerEl, JSON.stringify(obj));
         } catch (e) {
           // don't persist it

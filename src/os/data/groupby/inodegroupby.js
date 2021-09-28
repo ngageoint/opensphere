@@ -19,7 +19,7 @@ export default class INodeGroupBy {
   /**
    * Adds the node to the proper group or creates it if it does not yet exist
    * @param {!ITreeNode} node
-   * @param {!Array.<!os.structs.ITreeNode>} results
+   * @param {!Array<!ITreeNode>} results
    * @param {boolean=} opt_doCount Whether to count this node
    * @param {boolean=} opt_skipClone Whether to skip cloning the node
    */

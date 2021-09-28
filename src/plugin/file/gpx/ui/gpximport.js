@@ -7,6 +7,8 @@ import Module from '../../../../os/ui/module.js';
 import GPXDescriptor from '../gpxdescriptor.js';
 import GPXProvider from '../gpxprovider.js';
 
+const {default: FileParserConfig} = goog.requireType('os.parse.FileParserConfig');
+
 
 /**
  * The GPX import directive.
@@ -39,7 +41,7 @@ Module.directive('gpximport', [directive]);
 /**
  * Controller for the GPX import dialog.
  *
- * @extends {AbstractFileImportCtrl<!os.parse.FileParserConfig, !GPXDescriptor>}
+ * @extends {AbstractFileImportCtrl<!FileParserConfig, !GPXDescriptor>}
  * @unrestricted
  */
 export class Controller extends AbstractFileImportCtrl {

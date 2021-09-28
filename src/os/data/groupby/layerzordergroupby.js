@@ -36,7 +36,7 @@ export default class LayerZOrderGroupBy extends BaseGroupBy {
 
       for (var i = 0, n = layers.length; i < n; i++) {
         if (layers[i] instanceof Group) {
-          var group = /** @type {os.layer.Group} */ (layers[i]);
+          var group = /** @type {Group} */ (layers[i]);
 
           if (group.getLayers().getArray().indexOf(/** @type {ol.layer.Base} */ (layer)) > -1) {
             googArray.insert(ids, googString.padNumber(99 - i, 2) + group.getOSType());

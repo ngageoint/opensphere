@@ -15,6 +15,7 @@ const path = goog.require('goog.string.path');
 const Error = goog.requireType('goog.db.Error');
 const Logger = goog.requireType('goog.log.Logger');
 const {default: OSFile} = goog.requireType('os.file.File');
+const {default: AsyncStorage} = goog.requireType('os.storage.AsyncStorage');
 
 
 /**
@@ -38,7 +39,7 @@ export default class FileStorage extends Disposable {
     this.files_ = {};
 
     /**
-     * @type {os.storage.AsyncStorage<!OSFile>}
+     * @type {AsyncStorage<!OSFile>}
      * @protected
      */
     this.storage = new IDBStorage(FILE_STORE_NAME, opt_dbName || FILE_DB_NAME,

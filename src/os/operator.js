@@ -79,7 +79,7 @@ export const notSimilarTo = function(a, b) {
 
 /**
  * A map of comparison operator functions to use with quick filters
- * @type {Object<string, os.operator.OpFunction>}
+ * @type {Object<string, OpFunction>}
  */
 export const TYPES = {
   '=': equalTo,

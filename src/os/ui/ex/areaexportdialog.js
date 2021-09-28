@@ -11,6 +11,9 @@ import {create as createWindow} from '../window.js';
 
 const {removeDuplicates} = goog.require('goog.array');
 
+const {default: ExportOptions} = goog.requireType('os.ex.ExportOptions');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
+
 
 /**
  * The areaexport directive
@@ -37,7 +40,7 @@ Module.directive('areaexport', [directive]);
 /**
  * Controller function for the areaexport directive
  *
- * @extends {ExportDialogCtrl.<!os.source.Vector>}
+ * @extends {ExportDialogCtrl<!VectorSource>}
  * @unrestricted
  */
 export class Controller extends ExportDialogCtrl {
@@ -122,7 +125,7 @@ export class Controller extends ExportDialogCtrl {
 
     var title = areas.length == 1 ? areas[0].get('title') : null;
     var scopeOptions = {
-      'options': /** @type {os.ex.ExportOptions} */ ({
+      'options': /** @type {ExportOptions} */ ({
         allData: areas,
         selectedData: opt_selected,
         activeData: opt_active,

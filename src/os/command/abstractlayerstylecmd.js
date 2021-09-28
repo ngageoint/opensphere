@@ -28,7 +28,7 @@ export default class AbstractLayerStyle extends AbstractStyle {
    */
   getLayerConfig(layer) {
     if (osImplements(layer, ILayer.ID)) {
-      return /** @type {os.layer.ILayer} */ (layer).getLayerOptions();
+      return /** @type {ILayer} */ (layer).getLayerOptions();
     }
     return null;
   }

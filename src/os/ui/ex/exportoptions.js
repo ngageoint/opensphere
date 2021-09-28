@@ -19,6 +19,7 @@ const {htmlEscape} = goog.require('goog.string');
 const olEvents = goog.require('ol.events');
 
 const EventTarget = goog.requireType('ol.events.EventTarget');
+const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 const {default: ISource} = goog.requireType('os.source.ISource');
 const {default: VectorSource} = goog.requireType('os.source.Vector');
@@ -216,7 +217,7 @@ export class Controller extends Disposable {
   /**
    * Handle a source being added to the data manager.
    *
-   * @param {os.data.event.DataEvent} event The event
+   * @param {DataEvent} event The event
    * @private
    */
   onSourceAdded_(event) {
@@ -238,7 +239,7 @@ export class Controller extends Disposable {
   /**
    * Handle a source being removed from the data manager.
    *
-   * @param {os.data.event.DataEvent} event The event
+   * @param {DataEvent} event The event
    * @private
    */
   onSourceRemoved_(event) {

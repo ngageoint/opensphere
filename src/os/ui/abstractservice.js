@@ -11,6 +11,7 @@ const {newLineToBr} = goog.require('goog.string');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
+const {default: Request} = goog.requireType('os.net.Request');
 
 
 /**
@@ -43,7 +44,7 @@ export default class AbstractService {
    * @protected
    */
   onSuccess(event, resolve) {
-    var request = /** @type {os.net.Request} */ (event.target);
+    var request = /** @type {Request} */ (event.target);
     var response = /** @type {string} */ (request.getResponse());
     request.dispose();
 
@@ -65,7 +66,7 @@ export default class AbstractService {
    * @protected
    */
   onError(event, message, silent, opt_reject) {
-    var request = /** @type {os.net.Request} */ (event.target);
+    var request = /** @type {Request} */ (event.target);
     var rejectMessage = message;
     var errors = request.getErrors();
     request.dispose();

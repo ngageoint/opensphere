@@ -44,6 +44,7 @@ const Point = goog.require('ol.geom.Point');
 const olObj = goog.require('ol.obj');
 
 const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
+const {default: ITime} = goog.requireType('os.time.ITime');
 const {default: AddOptions} = goog.requireType('os.track.AddOptions');
 const {default: CreateOptions} = goog.requireType('os.track.CreateOptions');
 const {default: SplitOptions} = goog.requireType('os.track.SplitOptions');
@@ -138,7 +139,7 @@ export const getFeatureValue = function(field, feature) {
  * @return {number|undefined} The value
  */
 export const getStartTime = function(feature) {
-  var time = feature ? /** @type {os.time.ITime|undefined} */ (feature.get(RecordField.TIME)) : undefined;
+  var time = feature ? /** @type {ITime|undefined} */ (feature.get(RecordField.TIME)) : undefined;
   if (time) {
     return time.getStart();
   }
@@ -897,7 +898,7 @@ export const updateAverageSpeed = function(track, distance, duration) {
 export const updateTime = function(track) {
   var sortField = track.get(TrackField.SORT_FIELD);
   if (sortField == RecordField.TIME) {
-    var oldTime = /** @type {os.time.ITime|undefined} */ (track.get(RecordField.TIME));
+    var oldTime = /** @type {ITime|undefined} */ (track.get(RecordField.TIME));
     var trackTime;
 
     var trackGeometry = /** @type {LineString} */ (track.getGeometry());

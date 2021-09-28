@@ -6,6 +6,8 @@ import * as json from '../../../os/file/mime/json.js';
 const Promise = goog.require('goog.Promise');
 const GeoJSON = goog.require('ol.format.GeoJSON');
 
+const {default: OSFile} = goog.requireType('os.file.File');
+
 
 /**
  * @type {string}
@@ -14,7 +16,7 @@ export const TYPE = 'application/vnd.geo+json';
 
 /**
  * @param {ArrayBuffer} buffer
- * @param {os.file.File=} opt_file
+ * @param {OSFile=} opt_file
  * @param {*=} opt_context
  * @return {!Promise<*|undefined>}
  */

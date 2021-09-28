@@ -7,6 +7,8 @@ import AbstractDescriptor from './abstractdescriptorcmd.js';
 const GoogEvent = goog.require('goog.events.Event');
 const log = goog.require('goog.log');
 
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+
 
 /**
  * Command to activate a descriptor.
@@ -14,7 +16,7 @@ const log = goog.require('goog.log');
 export default class ActivateDescriptor extends AbstractDescriptor {
   /**
    * Constructor.
-   * @param {!os.data.IDataDescriptor} descriptor The descriptor
+   * @param {!IDataDescriptor} descriptor The descriptor
    */
   constructor(descriptor) {
     super(descriptor);

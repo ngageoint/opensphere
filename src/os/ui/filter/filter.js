@@ -33,6 +33,7 @@ const {loadXml} = goog.require('goog.dom.xml');
 const {contains, isEmptyOrWhitespace, stripQuotes} = goog.require('goog.string');
 const {getAllTextContent} = goog.require('ol.xml');
 
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 const {default: Op} = goog.requireType('os.ui.filter.op.Op');
 
 
@@ -201,7 +202,7 @@ export const toFilterString = function(node, opt_maxlen, opt_sql) {
 /**
  * Converts an array of filters to a pretty-printed string.
  *
- * @param {Array<!os.filter.FilterEntry>|os.filter.FilterEntry} filters The filters
+ * @param {Array<!FilterEntry>|FilterEntry} filters The filters
  * @param {boolean=} opt_and If the filters are ANDed together
  * @param {boolean=} opt_noNewline Whether to use a newline or a space
  * @param {boolean=} opt_sql Whether to format as SQL-like rather than simple pretty print
@@ -431,7 +432,7 @@ const getString_ = function(something) {
  * Gets a filterable item by its type ID.
  *
  * @param {string} type
- * @return {?os.filter.IFilterable}
+ * @return {?IFilterable}
  */
 export const getFilterableByType = function(type) {
   return getFilterManager().getFilterable(type);
@@ -441,14 +442,14 @@ export const getFilterableByType = function(type) {
  * Gets a filterable item by its filter key.
  *
  * @param {string} key
- * @return {?os.filter.IFilterable}
+ * @return {?IFilterable}
  */
 export const getFilterableByFilterKey = function(key) {
   var descriptors = DataManager.getInstance().getDescriptors();
   var filterable = null;
 
   for (var i = 0, ii = descriptors.length; i < ii; i++) {
-    var f = /** @type {os.filter.IFilterable} */ (descriptors[i]);
+    var f = /** @type {IFilterable} */ (descriptors[i]);
     try {
       var filterKey = f.getFilterKey();
       if (filterKey === key) {
@@ -509,14 +510,14 @@ export const getFilterableTypes = function(type) {
   if (!isEmptyOrWhitespace(type)) {
     // find the filterable descriptor to which that filter belongs
     var descriptors = DataManager.getInstance().getDescriptors();
-    var filterables = /** @type {!Array<!os.filter.IFilterable>} */ (descriptors.filter(
+    var filterables = /** @type {!Array<!IFilterable>} */ (descriptors.filter(
         /**
-         * @param {!os.data.IDataDescriptor} item The descriptor item
+         * @param {!IDataDescriptor} item The descriptor item
          * @return {boolean} whether or not it matches our key
          */
         function(item) {
           if (osImplements(item, IFilterable.ID)) {
-            var f = /** @type {os.filter.IFilterable} */ (item);
+            var f = /** @type {IFilterable} */ (item);
             return f.getFilterKey() === type;
           }
 
@@ -527,7 +528,7 @@ export const getFilterableTypes = function(type) {
       types = filterables.reduce(
           /**
            * @param {!Array<!string>} types the list of types
-           * @param {!os.filter.IFilterable} item The IFilterable instance
+           * @param {!IFilterable} item The IFilterable instance
            * @return {!Array<!string>} the list of types
            */
           function(types, item) {

@@ -13,6 +13,7 @@ const Tile = goog.require('ol.layer.Tile');
 const olProj = goog.require('ol.proj');
 
 const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
@@ -28,7 +29,7 @@ export const checkLayer = function(layer) {
 
     if (layer instanceof Tile && p1 && p2 && !olProj.equivalent(p1, p2)) {
       if (isRasterReprojectionEnabled()) {
-        ReprojectionWarning.getInstance().addTitle(/** @type {os.layer.ILayer} */ (layer).getTitle());
+        ReprojectionWarning.getInstance().addTitle(/** @type {ILayer} */ (layer).getTitle());
       } else {
         SwitchProjection.getInstance().addLayer(layer);
         return false;
@@ -54,7 +55,7 @@ export const checkCommand = function(command) {
   if (!command.title || command.title.indexOf('Switch projection') === 0) {
     return true;
   } else if (command instanceof AbstractCommandSet) {
-    var cmds = /** @type {os.command.AbstractCommandSet} */ (command).getCommands();
+    var cmds = /** @type {AbstractCommandSet} */ (command).getCommands();
     var setRoot = !rootCommand;
 
     if (setRoot) {

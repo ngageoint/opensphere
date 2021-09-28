@@ -9,6 +9,7 @@ const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 
 const {default: IRecorder} = goog.requireType('os.capture.IRecorder');
+const {default: IVideoEncoder} = goog.requireType('os.capture.IVideoEncoder');
 
 
 /**
@@ -62,7 +63,7 @@ export default class AbstractRecorder extends EventTarget {
 
     /**
      * The video encoder.
-     * @type {os.capture.IVideoEncoder}
+     * @type {IVideoEncoder}
      * @protected
      */
     this.encoder = null;

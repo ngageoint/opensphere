@@ -6,6 +6,7 @@ import {getColumnsFromFilterable} from '../../../im/action/importaction.js';
 import {toFilterString} from '../../filter/filter.js';
 
 const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
+const {default: IParser} = goog.requireType('os.parse.IParser');
 
 
 /**
@@ -14,7 +15,7 @@ const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 export default class FilterActionImporter extends OSFilterImporter {
   /**
    * Constructor.
-   * @param {os.parse.IParser<T>} parser The parser.
+   * @param {IParser<T>} parser The parser.
    * @param {string=} opt_layerId The layer id.
    * @param {boolean=} opt_keepId If the original entry id should be preserved. Defaults to false.
    */

@@ -25,6 +25,7 @@ const Tile = goog.require('ol.layer.Tile');
 const VectorTile = goog.require('ol.layer.VectorTile');
 const olProj = goog.require('ol.proj');
 
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 const {default: BinnedLayersType} = goog.requireType('os.proj.switch.BinnedLayersType');
 
 
@@ -207,7 +208,7 @@ export default class SwitchProjection extends EventTarget {
     var dm = DataManager.getInstance();
 
     for (var i = 0, n = this.layers_.length; i < n; i++) {
-      var layer = /** @type {os.layer.ILayer} */ (this.layers_[i]);
+      var layer = /** @type {ILayer} */ (this.layers_[i]);
       var d = dm.getDescriptor(layer.getId());
 
       if (d) {
@@ -280,7 +281,7 @@ export default class SwitchProjection extends EventTarget {
   /**
    * @param {Array<Object<string, *>>} layers
    * @param {boolean} remove
-   * @param {Array<os.command.ICommand>} cmdList
+   * @param {Array<ICommand>} cmdList
    * @protected
    */
   addLayerSequence(layers, remove, cmdList) {
@@ -339,13 +340,13 @@ export default class SwitchProjection extends EventTarget {
            * @return {Object<string, *>}
            */
           function(layer, i, arr) {
-            return /** @type {os.layer.ILayer} */ (layer).getLayerOptions();
+            return /** @type {ILayer} */ (layer).getLayerOptions();
           }).concat(this.configs_)
     };
 
     var i = layers.length;
     while (i--) {
-      var layer = /** @type {os.layer.ILayer} */ (layers[i]);
+      var layer = /** @type {ILayer} */ (layers[i]);
       var options = layer.getLayerOptions();
 
       if (layer instanceof Tile || layer instanceof VectorTile) {

@@ -13,6 +13,7 @@ import WindowEventType from '../../../os/ui/windoweventtype.js';
 import * as places from '../places.js';
 
 const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**
@@ -160,7 +161,7 @@ export class Controller extends ExportOptionsCtrl {
    *
    * @param {angular.Scope.Event} event
    * @param {Array<!ol.Feature>} items
-   * @param {Array<!os.source.Vector>} sources
+   * @param {Array<!VectorSource>} sources
    * @private
    */
   onOptionsChange_(event, items, sources) {

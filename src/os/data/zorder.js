@@ -11,6 +11,7 @@ const BaseLayer = goog.requireType('ol.layer.Base');
 const {default: ZOrderEntry} = goog.requireType('os.data.ZOrderEntry');
 const {default: LayerGroup} = goog.requireType('os.layer.Group');
 const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 
 
 /**
@@ -308,7 +309,7 @@ export default class ZOrder extends EventTarget {
     var moveAfterID = undefined;
     var searchLayers = addedGroup.getLayers().getArray();
     for (var m = searchLayers.length - 2; m >= 0; m--) {
-      var searchLayer = /** @type {os.layer.Vector} */ (searchLayers[m]);
+      var searchLayer = /** @type {VectorLayer} */ (searchLayers[m]);
       if (!searchLayer.isSticky()) {
         moveAfterID = searchLayer.getId();
         break;
@@ -316,7 +317,7 @@ export default class ZOrder extends EventTarget {
     }
 
     if (moveAfterID === undefined) {
-      this.moveBefore(id, /** @type {os.layer.Vector} */ (searchLayers[0]).getId());
+      this.moveBefore(id, /** @type {VectorLayer} */ (searchLayers[0]).getId());
     } else {
       this.moveAfter(id, moveAfterID);
     }

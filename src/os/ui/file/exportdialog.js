@@ -10,6 +10,8 @@ import exportManager from './uiexportmanager.js';
 const {assert} = goog.require('goog.asserts');
 
 const {default: ExportOptions} = goog.requireType('os.ex.ExportOptions');
+const {default: IExportMethod} = goog.requireType('os.ex.IExportMethod');
+const {default: IPersistenceMethod} = goog.requireType('os.ex.IPersistenceMethod');
 
 
 /**
@@ -80,7 +82,7 @@ export class Controller {
     this.options = /** @type {ExportOptions.<T>} */ (this.scope['options']);
 
     /**
-     * @type {Object.<string, os.ex.IExportMethod>}
+     * @type {Object.<string, IExportMethod>}
      */
     this['exporters'] = {};
 
@@ -103,7 +105,7 @@ export class Controller {
     }
 
     /**
-     * @type {Object.<string, os.ex.IPersistenceMethod>}
+     * @type {Object.<string, IPersistenceMethod>}
      */
     this['persisters'] = {};
 
@@ -211,8 +213,8 @@ export class Controller {
   /**
    * Handle exporter change.
    *
-   * @param {os.ex.IExportMethod=} opt_new The new value
-   * @param {os.ex.IExportMethod=} opt_old The old value
+   * @param {IExportMethod=} opt_new The new value
+   * @param {IExportMethod=} opt_old The old value
    * @protected
    */
   onExporterChange(opt_new, opt_old) {
@@ -237,8 +239,8 @@ export class Controller {
   /**
    * Handle exporter change.
    *
-   * @param {os.ex.IPersistenceMethod=} opt_new The new value
-   * @param {os.ex.IPersistenceMethod=} opt_old The old value
+   * @param {IPersistenceMethod=} opt_new The new value
+   * @param {IPersistenceMethod=} opt_old The old value
    * @protected
    */
   onPersisterChange(opt_new, opt_old) {

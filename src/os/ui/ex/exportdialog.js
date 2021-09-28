@@ -9,6 +9,8 @@ import {directiveTag as exportOptionsUi} from './exportoptions.js';
 import ExportOptionsEvent from './exportoptionsevent.js';
 
 const Feature = goog.requireType('ol.Feature');
+const {default: ExportOptions} = goog.requireType('os.ex.ExportOptions');
+const {default: IExportMethod} = goog.requireType('os.ex.IExportMethod');
 const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
@@ -79,10 +81,10 @@ export class Controller extends ExportDialogCtrl {
     var sources = $scope['initSources'] = this.options.sources;
 
     // if passed multiple sources, try to default to an exporter that supports it
-    var scopeEx = /** @type {os.ex.IExportMethod} */ (this.scope['exporter']);
+    var scopeEx = /** @type {IExportMethod} */ (this.scope['exporter']);
     if (sources && sources.length > 1 && (!scopeEx || !scopeEx.supportsMultiple())) {
       for (var key in this['exporters']) {
-        var exporter = /** @type {os.ex.IExportMethod} */ (this['exporters'][key]);
+        var exporter = /** @type {IExportMethod} */ (this['exporters'][key]);
         if (exporter.supportsMultiple()) {
           this.scope['exporter'] = exporter;
         }
@@ -162,7 +164,7 @@ export const startExport = function(opt_sources) {
   } else {
     var title = sources.length == 1 ? sources[0].getTitle() : null;
     var scopeOptions = {
-      'options': /** @type {os.ex.ExportOptions} */ ({
+      'options': /** @type {ExportOptions} */ ({
         exporter: null,
         fields: [],
         items: [],

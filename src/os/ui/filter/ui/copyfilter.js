@@ -21,6 +21,7 @@ const {getCount} = goog.require('goog.object');
 const {caseInsensitiveCompare, getRandomString} = goog.require('goog.string');
 
 const {default: IColumnMapping} = goog.requireType('os.column.IColumnMapping');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 const {default: CopyFilterPickerModel} = goog.requireType('os.ui.filter.ui.CopyFilterPickerModel');
 
@@ -216,7 +217,7 @@ export class Controller {
         var targetColumns = targetFilterable.getFilterColumns();
         if (targetColumns) {
           targetColumns = targetColumns.filter(filterColumns);
-          var targetLayerName = /** @type {os.data.IDataDescriptor} */ (targetFilterable).getTitle();
+          var targetLayerName = /** @type {IDataDescriptor} */ (targetFilterable).getTitle();
           assertString(targetLayerName);
 
           for (var j = 0, jj = this.sourceColumnNames_.length; j < jj; j++) {

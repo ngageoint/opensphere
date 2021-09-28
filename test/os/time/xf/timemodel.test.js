@@ -387,7 +387,7 @@ describe('os.time.xf.TimeModel', function() {
      * For holds to work correctly, the main time model get time function should return null for items that are held,
      * e.g. held items should be treated as timeless.
      * @param {Object} item The item
-     * @return {?os.time.ITime}
+     * @return {?ITime}
      */
     var getTimeWithHoldSupportFn = function(item) {
       if (tlc.holdRangeContainsTime(item.time)) {
@@ -399,7 +399,7 @@ describe('os.time.xf.TimeModel', function() {
     /**
      * Inverse of the main getTime function in that it only returns times for items in a held range.
      * @param {Object} item The item
-     * @return {?os.time.ITime}
+     * @return {?ITime}
      */
     var getHoldTimeFn = function(item) {
       if (tlc.holdRangeContainsTime(item.time)) {

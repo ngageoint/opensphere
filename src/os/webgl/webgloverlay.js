@@ -8,6 +8,8 @@ const GoogEventType = goog.require('goog.events.EventType');
 const Overlay = goog.require('ol.Overlay');
 const olProj = goog.require('ol.proj');
 
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+
 
 /**
  * An OpenLayers overlay that supports positioning itself with a WebGL renderer.
@@ -86,7 +88,7 @@ export default class WebGLOverlay extends Overlay {
   /**
    * Handle map property change events.
    *
-   * @param {os.events.PropertyChangeEvent} event The event.
+   * @param {PropertyChangeEvent} event The event.
    * @protected
    */
   onMapChange(event) {

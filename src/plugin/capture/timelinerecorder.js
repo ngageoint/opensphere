@@ -8,6 +8,7 @@ const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 
 const {CanvasFn, RenderFn} = goog.requireType('os.capture');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
@@ -66,7 +67,7 @@ export default class TimelineRecorder extends OSTimelineRecorder {
   }
 
   /**
-   * @param {os.events.PropertyChangeEvent} event The change event
+   * @param {PropertyChangeEvent} event The change event
    * @private
    */
   onDataManagerChange_(event) {

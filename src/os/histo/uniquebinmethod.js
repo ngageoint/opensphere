@@ -221,7 +221,7 @@ export default class UniqueBinMethod {
   /**
    * Clones the bin method.
    *
-   * @return {os.histo.UniqueBinMethod}
+   * @return {UniqueBinMethod}
    */
   clone() {
     var clone = new this.constructor();
@@ -397,7 +397,7 @@ export default class UniqueBinMethod {
    * @param {string} value
    * @return {boolean}
    *
-   * @this os.histo.UniqueBinMethod
+   * @this UniqueBinMethod
    */
   static uniqueContains(values, value) {
     return !!values && values.indexOf(value) >= 0;

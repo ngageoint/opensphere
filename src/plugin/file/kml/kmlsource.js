@@ -26,6 +26,7 @@ const log = goog.require('goog.log');
 const olArray = goog.require('ol.array');
 
 const Logger = goog.requireType('goog.log.Logger');
+const {default: OSFile} = goog.requireType('os.file.File');
 const {default: Image} = goog.requireType('os.layer.Image');
 const {default: UIEvent} = goog.requireType('os.ui.events.UIEvent');
 
@@ -88,7 +89,7 @@ export default class KMLSource extends RequestSource {
 
     /**
      * The initial file, set by the layer config when constructing a new KML layer.
-     * @type {?os.file.File}
+     * @type {?OSFile}
      * @protected
      */
     this.file = null;
@@ -606,7 +607,7 @@ export default class KMLSource extends RequestSource {
   /**
    * Sets the initial file on the source.
    *
-   * @param {?os.file.File} file
+   * @param {?OSFile} file
    */
   setFile(file) {
     this.file = file;

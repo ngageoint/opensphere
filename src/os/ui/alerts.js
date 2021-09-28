@@ -8,6 +8,8 @@ import {ROOT} from '../os.js';
 import Module from './module.js';
 import {apply} from './ui.js';
 
+const {default: AlertEvent} = goog.requireType('os.alert.AlertEvent');
+
 
 /**
  * The alerts directive
@@ -83,7 +85,7 @@ export class Controller {
   /**
    * Registers received alerts and tests to see if we have received a flood
    *
-   * @param {os.alert.AlertEvent} event The event to register
+   * @param {AlertEvent} event The event to register
    * @private
    */
   registerAlert_(event) {

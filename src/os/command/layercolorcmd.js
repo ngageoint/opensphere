@@ -31,7 +31,7 @@ export default class LayerColor extends AbstractLayerStyle {
     } else {
       var layer = getMapContainer().getLayer(layerId);
       if (osImplements(layer, ILayer.ID)) {
-        var options = /** @type {os.layer.ILayer} */ (layer).getLayerOptions();
+        var options = /** @type {ILayer} */ (layer).getLayerOptions();
         this.value = /** @type {string} */ (options && options['baseColor'] || osStyle.DEFAULT_LAYER_COLOR);
       }
     }

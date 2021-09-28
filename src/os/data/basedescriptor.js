@@ -18,6 +18,7 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const {caseInsensitiveCompare, endsWith} = goog.require('goog.string');
 
+const {default: IDataProvider} = goog.requireType('os.data.IDataProvider');
 const {default: ISearchable} = goog.requireType('os.data.ISearchable');
 
 
@@ -149,7 +150,7 @@ export default class BaseDescriptor extends EventTarget {
     this.descriptorType = 'base';
 
     /**
-     * @type {os.data.IDataProvider}
+     * @type {IDataProvider}
      * @protected
      */
     this.dataProvider = null;
@@ -707,7 +708,7 @@ export default class BaseDescriptor extends EventTarget {
    * Compares descriptors by title.
    *
    * @param {IDataDescriptor} a A descriptor
-   * @param {os.data.IDataDescriptor} b Another descriptor
+   * @param {IDataDescriptor} b Another descriptor
    * @return {number} The comparison
    */
   static titleCompare(a, b) {
@@ -718,7 +719,7 @@ export default class BaseDescriptor extends EventTarget {
    * Compares descriptors by title.
    *
    * @param {IDataDescriptor} a A descriptor
-   * @param {os.data.IDataDescriptor} b Another descriptor
+   * @param {IDataDescriptor} b Another descriptor
    * @return {number} The comparison
    */
   static lastActive(a, b) {
@@ -737,7 +738,7 @@ export default class BaseDescriptor extends EventTarget {
    * Compares descriptors by title.
    *
    * @param {IDataDescriptor} a A descriptor
-   * @param {os.data.IDataDescriptor} b Another descriptor
+   * @param {IDataDescriptor} b Another descriptor
    * @return {number} The comparison
    */
   static lastActiveReverse(a, b) {

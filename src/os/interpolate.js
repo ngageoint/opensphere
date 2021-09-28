@@ -271,12 +271,12 @@ const interpolateGeomInternal_ = function(geom) {
 };
 
 /**
- * @type {?os.interpolate.TransformSet}
+ * @type {?TransformSet}
  */
 let localTransforms = null;
 
 /**
- * @type {?os.interpolate.TransformSet}
+ * @type {?TransformSet}
  */
 let tmpTransforms = null;
 

@@ -26,7 +26,7 @@ export class Controller {
   constructor() {
     /**
      * The map instance.
-     * @type {os.MapContainer}
+     * @type {MapContainer}
      * @private
      */
     this.map_ = MapContainer.getInstance();

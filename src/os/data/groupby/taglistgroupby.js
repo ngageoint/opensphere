@@ -6,6 +6,8 @@ import TagGroupBy from '../../ui/data/groupby/taggroupby.js';
 const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
 
+const {default: ISearchable} = goog.requireType('os.data.ISearchable');
+
 
 /**
  * Groups nodes by a given list of tags
@@ -50,11 +52,11 @@ export default class TagListGroupBy extends TagGroupBy {
     var tags = null;
 
     try {
-      tags = /** @type {os.data.ISearchable} */ (node).getTags();
+      tags = /** @type {ISearchable} */ (node).getTags();
 
       if (!tags) {
         // try the parent
-        tags = /** @type {os.data.ISearchable} */ (node.getParent()).getTags();
+        tags = /** @type {ISearchable} */ (node.getParent()).getTags();
       }
     } catch (e) {
     }

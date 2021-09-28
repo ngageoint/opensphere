@@ -17,7 +17,7 @@ export default class TimeRange extends TimeInstant {
   /**
    * Constructor.
    * @param {ITime|DateLike|string|number=} opt_start The start time
-   * @param {os.time.ITime|DateLike|string|number=} opt_end The end time
+   * @param {ITime|DateLike|string|number=} opt_end The end time
    */
   constructor(opt_start, opt_end) {
     super(opt_start);

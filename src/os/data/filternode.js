@@ -16,6 +16,7 @@ import QueryEntries from '../ui/query/cmd/queryentriescmd.js';
 const GoogEventType = goog.require('goog.events.EventType');
 
 const {default: ISearchable} = goog.requireType('os.data.ISearchable');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 
 
 /**
@@ -26,7 +27,7 @@ const {default: ISearchable} = goog.requireType('os.data.ISearchable');
 export default class FilterNode extends UIFilterNode {
   /**
    * Constructor.
-   * @param {os.filter.FilterEntry=} opt_filter
+   * @param {FilterEntry=} opt_filter
    */
   constructor(opt_filter) {
     super(opt_filter);

@@ -6,6 +6,8 @@ import BaseGroupBy from './basegroupby.js';
 
 const googArray = goog.require('goog.array');
 
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+
 
 /**
  * Groups nodes by how recently they have been activated
@@ -70,7 +72,7 @@ export default class RecentGroupBy extends BaseGroupBy {
      */
     var ids = [];
 
-    /** @type {os.data.IDataDescriptor} */
+    /** @type {IDataDescriptor} */
     var d = null;
 
     if (node instanceof DescriptorNode) {

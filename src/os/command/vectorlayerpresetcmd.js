@@ -8,6 +8,9 @@ import PropertyChange from '../source/propertychange.js';
 import AbstractVectorStyle from './abstractvectorstylecmd.js';
 import State from './state.js';
 
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
+
 
 /**
  * Sets a layer style preset for a layer.
@@ -44,7 +47,7 @@ export default class VectorLayerPreset extends AbstractVectorStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var layer = /** @type {os.layer.Vector} */ (this.getLayer());
+    var layer = /** @type {VectorLayer} */ (this.getLayer());
     return layer ? layer.persist() : undefined;
   }
 
@@ -55,7 +58,7 @@ export default class VectorLayerPreset extends AbstractVectorStyle {
    */
   getOldFeatureActionIds() {
     var oldIds = [];
-    var layer = /** @type {os.layer.Vector} */ (this.getLayer());
+    var layer = /** @type {VectorLayer} */ (this.getLayer());
     if (layer) {
       // save the old enabled feature action id's
       var iam = action.getImportActionManager();
@@ -85,7 +88,7 @@ export default class VectorLayerPreset extends AbstractVectorStyle {
 
   /**
    * Update enabled feature actions.
-   * @param {!os.layer.ILayer} layer The layer.
+   * @param {!ILayer} layer The layer.
    * @protected
    */
   applyFeatureActions(layer) {

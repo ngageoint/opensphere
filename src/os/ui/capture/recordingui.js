@@ -18,6 +18,7 @@ const dispose = goog.require('goog.dispose');
 
 const {default: IRecorder} = goog.requireType('os.capture.IRecorder');
 const {default: IVideoEncoder} = goog.requireType('os.capture.IVideoEncoder');
+const {default: IPersistenceMethod} = goog.requireType('os.ex.IPersistenceMethod');
 
 
 /**
@@ -122,12 +123,12 @@ export class Controller {
     this['encoder'] = this['encoders'][0];
 
     /**
-     * @type {os.ex.IPersistenceMethod}
+     * @type {IPersistenceMethod}
      */
     this['persister'] = null;
 
     /**
-     * @type {!Object<string, !os.ex.IPersistenceMethod>}
+     * @type {!Object<string, !IPersistenceMethod>}
      */
     this['persisters'] = {};
     var persisters = exportManager.getPersistenceMethods();

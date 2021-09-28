@@ -4,6 +4,7 @@ import '../../../os/ui/layer/iconstylecontrols.js';
 import '../../../os/ui/layer/labelcontrols.js';
 import '../../../os/ui/layer/vectorstylecontrols.js';
 import '../../../os/ui/uiswitch.js';
+
 import EventType from '../../../os/action/eventtype.js';
 import * as osColor from '../../../os/color.js';
 import ColorChangeType from '../../../os/command/colorchangetype.js';
@@ -32,7 +33,6 @@ import * as label from '../../../os/style/label.js';
 import * as osStyle from '../../../os/style/style.js';
 import StyleField from '../../../os/style/stylefield.js';
 import StyleType from '../../../os/style/styletype.js';
-
 import {Controller as FeatureEditCtrl} from '../../../os/ui/featureedit.js';
 import * as kml from '../../../os/ui/file/kml/kml.js';
 import {Controller as VectorLayerUICtrl, directive as vectorLayerUIDirective} from '../../../os/ui/layer/vectorlayerui.js';
@@ -42,6 +42,7 @@ const googArray = goog.require('goog.array');
 const olArray = goog.require('ol.array');
 const UrlTile = goog.require('ol.source.UrlTile');
 
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
@@ -584,7 +585,7 @@ export class Controller extends VectorLayerUICtrl {
           /**
            * @param {string} layerId
            * @param {string} featureId
-           * @return {os.command.ICommand}
+           * @return {ICommand}
            */
           function(layerId, featureId) {
             return new FeatureColor(layerId, featureId, colorValue);
@@ -605,7 +606,7 @@ export class Controller extends VectorLayerUICtrl {
           /**
            * @param {string} layerId
            * @param {string} featureId
-           * @return {os.command.ICommand}
+           * @return {ICommand}
            */
           function(layerId, featureId) {
             var cmds = [];
@@ -631,7 +632,7 @@ export class Controller extends VectorLayerUICtrl {
           /**
            * @param {string} layerId
            * @param {string} featureId
-           * @return {os.command.ICommand}
+           * @return {ICommand}
            */
           function(layerId, featureId) {
             return new FeatureColor(layerId, featureId, colorValue, null,
@@ -646,7 +647,7 @@ export class Controller extends VectorLayerUICtrl {
         /**
          * @param {string} layerId
          * @param {string} featureId
-         * @return {os.command.ICommand}
+         * @return {ICommand}
          */
         function(layerId, featureId) {
           return new FeatureColor(layerId, featureId, colorValue);
@@ -675,7 +676,7 @@ export class Controller extends VectorLayerUICtrl {
       /**
        * @param {string} layerId
        * @param {string} featureId
-       * @return {os.command.ICommand}
+       * @return {ICommand}
        */
       function(layerId, featureId) {
         return new FeatureColor(layerId, featureId, colorValue, null, ColorChangeType.FILL);
@@ -694,7 +695,7 @@ export class Controller extends VectorLayerUICtrl {
         /**
          * @param {string} layerId
          * @param {string} featureId
-         * @return {os.command.ICommand}
+         * @return {ICommand}
          */
         function(layerId, featureId) {
           return new FeatureSize(layerId, featureId, value);
@@ -713,7 +714,7 @@ export class Controller extends VectorLayerUICtrl {
         /**
          * @param {string} layerId
          * @param {string} featureId
-         * @return {os.command.ICommand}
+         * @return {ICommand}
          */
         function(layerId, featureId) {
           return new FeatureLineDash(layerId, featureId, value);
@@ -733,7 +734,7 @@ export class Controller extends VectorLayerUICtrl {
           /**
            * @param {string} layerId
            * @param {string} featureId
-           * @return {os.command.ICommand}
+           * @return {ICommand}
            */
           function(layerId, featureId) {
             return new FeatureIcon(layerId, featureId, value);
@@ -753,7 +754,7 @@ export class Controller extends VectorLayerUICtrl {
           /**
            * @param {string} layerId
            * @param {string} featureId
-           * @return {os.command.ICommand}
+           * @return {ICommand}
            */
           function(layerId, featureId) {
             return new FeatureShape(layerId, featureId, value);
@@ -773,7 +774,7 @@ export class Controller extends VectorLayerUICtrl {
           /**
            * @param {string} layerId
            * @param {string} featureId
-           * @return {os.command.ICommand}
+           * @return {ICommand}
            */
           function(layerId, featureId) {
             return new FeatureCenterShape(layerId, featureId, value);
@@ -798,7 +799,7 @@ export class Controller extends VectorLayerUICtrl {
         /**
          * @param {string} layerId
          * @param {string} featureId
-         * @return {os.command.ICommand}
+         * @return {ICommand}
          */
         function(layerId, featureId) {
           return new FeatureOpacity(layerId, featureId, value, null, ColorChangeType.STROKE);
@@ -823,7 +824,7 @@ export class Controller extends VectorLayerUICtrl {
           /**
            * @param {string} layerId
            * @param {string} featureId
-           * @return {os.command.ICommand}
+           * @return {ICommand}
            */
           function(layerId, featureId) {
             return new FeatureOpacity(layerId, featureId, value, null, ColorChangeType.FILL);
@@ -842,7 +843,7 @@ export class Controller extends VectorLayerUICtrl {
         /**
          * @param {string} layerId
          * @param {string} featureId
-         * @return {os.command.ICommand}
+         * @return {ICommand}
          */
         function(layerId, featureId) {
           return new FeatureLabelSize(layerId, featureId, value);
@@ -862,7 +863,7 @@ export class Controller extends VectorLayerUICtrl {
           /**
            * @param {string} layerId
            * @param {string} featureId
-           * @return {os.command.ICommand}
+           * @return {ICommand}
            */
           function(layerId, featureId) {
             return new FeatureLabelColor(layerId, featureId, value);
@@ -896,7 +897,7 @@ export class Controller extends VectorLayerUICtrl {
       /**
        * @param {string} layerId
        * @param {string} featureId
-       * @return {os.command.ICommand}
+       * @return {ICommand}
        */
       var fn = function(layerId, featureId) {
         return new FeatureLabel(layerId, featureId, this.scope['labels']);
@@ -916,7 +917,7 @@ export class Controller extends VectorLayerUICtrl {
         /**
          * @param {string} layerId
          * @param {string} featureId
-         * @return {os.command.ICommand}
+         * @return {ICommand}
          */
         function(layerId, featureId) {
           return new FeatureShowLabel(layerId, featureId, value);
@@ -1008,7 +1009,7 @@ export class Controller extends VectorLayerUICtrl {
   /**
    * Creates a command to run on each feature
    *
-   * @param {function(string, string):os.command.ICommand} commandFunction
+   * @param {function(string, string):ICommand} commandFunction
    */
   createFeatureCommand(commandFunction) {
     var cmds = [];

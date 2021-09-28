@@ -41,6 +41,7 @@ const Range = goog.require('goog.math.Range');
 const googObject = goog.require('goog.object');
 const googString = goog.require('goog.string');
 
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 const {default: HistogramData} = goog.requireType('os.hist.HistogramData');
 const {default: TimelineControllerEvent} = goog.requireType('os.time.TimelineControllerEvent');
 const {default: IHistogramManager} = goog.requireType('os.ui.hist.IHistogramManager');
@@ -932,7 +933,7 @@ export default class Controller {
   /**
    * Handler for brush property changes.
    *
-   * @param {os.events.PropertyChangeEvent} e
+   * @param {PropertyChangeEvent} e
    * @private
    */
   animateBrushPropertyChanged_(e) {
@@ -957,7 +958,7 @@ export default class Controller {
   /**
    * Handler for brush property changes.
    *
-   * @param {os.events.PropertyChangeEvent} e
+   * @param {PropertyChangeEvent} e
    * @private
    */
   sliceBrushPropertyChanged_(e) {
@@ -984,7 +985,7 @@ export default class Controller {
   /**
    * Handler for brush property changes.
    *
-   * @param {os.events.PropertyChangeEvent} e
+   * @param {PropertyChangeEvent} e
    * @private
    */
   loadBrushPropertyChanged_(e) {
@@ -1269,7 +1270,7 @@ export default class Controller {
   /**
    * Handler for hold brush property changes.
    *
-   * @param {os.events.PropertyChangeEvent} e
+   * @param {PropertyChangeEvent} e
    * @private
    */
   holdBrushPropertyChanged_(e) {

@@ -3,6 +3,8 @@ goog.declareModuleId('os.state.v4.LayerState');
 import {getMapContainer} from '../../map/mapinstance.js';
 import BaseLayerState from './baselayerstate.js';
 
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+
 
 /**
  */
@@ -25,7 +27,7 @@ export default class LayerState extends BaseLayerState {
       var layer = layers[i];
       if (layer) {
         try {
-          var layerId = /** @type {os.layer.ILayer} */ (layer).getId();
+          var layerId = /** @type {ILayer} */ (layer).getId();
           if (layerId && layerId.startsWith(id)) {
             getMapContainer().removeLayer(layer);
           }

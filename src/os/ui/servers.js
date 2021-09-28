@@ -22,6 +22,7 @@ const log = goog.require('goog.log');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {default: IDataProvider} = goog.requireType('os.data.IDataProvider');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
@@ -151,7 +152,7 @@ export class Controller {
   }
 
   /**
-   * @param {os.events.PropertyChangeEvent} event
+   * @param {PropertyChangeEvent} event
    * @private
    */
   onItemChanged_(event) {

@@ -16,6 +16,9 @@ const ViewHint = goog.require('ol.ViewHint');
 const OLMousePosition = goog.require('ol.control.MousePosition');
 const {toLonLat} = goog.require('ol.proj');
 
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
+
 
 /**
  * Extends the OpenLayers 3 MousePosition control to allow switching between different coordinate formats.
@@ -89,7 +92,7 @@ export default class MousePosition extends OLMousePosition {
   }
 
   /**
-   * @param {os.events.SettingChangeEvent} event
+   * @param {SettingChangeEvent} event
    * @private
    */
   onFormatChange_(event) {
@@ -101,7 +104,7 @@ export default class MousePosition extends OLMousePosition {
   /**
    * Updates the UI to reflect the new unit system.
    *
-   * @param {os.events.PropertyChangeEvent} event
+   * @param {PropertyChangeEvent} event
    * @private
    */
   onUnitChange_(event) {

@@ -8,6 +8,8 @@ import {apply} from '../../ui.js';
 const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
 
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+
 
 /**
  * @return {angular.Directive}
@@ -85,7 +87,7 @@ export class Controller extends Disposable {
   }
 
   /**
-   * @param {os.events.PropertyChangeEvent} event
+   * @param {PropertyChangeEvent} event
    * @private
    */
   onAreasChanged_(event) {

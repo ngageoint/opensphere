@@ -10,6 +10,7 @@ const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');
 
 const {default: IDataProvider} = goog.requireType('os.data.IDataProvider');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
@@ -156,7 +157,7 @@ export default class Controller {
   /**
    * Test finished handler
    *
-   * @param {os.events.PropertyChangeEvent} event
+   * @param {PropertyChangeEvent} event
    */
   onTestFinished(event) {
     if (event.getProperty() == 'loading' && !event.getNewValue()) {

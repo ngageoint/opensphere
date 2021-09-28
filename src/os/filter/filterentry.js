@@ -11,6 +11,7 @@ const {getRandomString} = goog.require('goog.string');
 
 const {default: IPersistable} = goog.requireType('os.IPersistable');
 const {default: IFilterEntry} = goog.requireType('os.filter.IFilterEntry');
+const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
 
 
 /**
@@ -291,7 +292,7 @@ export default class FilterEntry extends EventTarget {
   }
 
   /**
-   * @param {?Array<os.ogc.FeatureTypeColumn>} columns
+   * @param {?Array<FeatureTypeColumn>} columns
    * @return {boolean}
    */
   matches(columns) {
@@ -349,7 +350,7 @@ export default class FilterEntry extends EventTarget {
   /**
    * Clones the entry
    *
-   * @return {os.filter.FilterEntry} The new entry
+   * @return {FilterEntry} The new entry
    */
   clone() {
     var conf = this.persist();

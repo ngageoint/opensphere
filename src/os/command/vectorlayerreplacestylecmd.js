@@ -10,6 +10,8 @@ import AbstractVectorStyle from './abstractvectorstylecmd.js';
 
 const asserts = goog.require('goog.asserts');
 
+const {default: VectorSource} = goog.requireType('os.source.Vector');
+
 
 /**
  * Set if a layer style should override feature style.
@@ -42,7 +44,7 @@ export default class VectorLayerReplaceStyle extends AbstractVectorStyle {
 
     super.applyValue(config, value);
 
-    var source = /** @type {os.source.Vector} */ (DataManager.getInstance().getSource(this.layerId));
+    var source = /** @type {VectorSource} */ (DataManager.getInstance().getSource(this.layerId));
     asserts.assert(source, 'source must be defined');
 
     source.setHighlightedItems(source.getHighlightedItems());

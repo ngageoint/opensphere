@@ -36,6 +36,11 @@ import {getColumns} from './layers.js';
 
 const Delay = goog.require('goog.async.Delay');
 
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: LayerNode} = goog.requireType('os.data.LayerNode');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
+
 
 /**
  * The lob options directive.
@@ -232,12 +237,12 @@ export class Controller extends AbstractLayerUICtrl {
    * @protected
    */
   supportsEllipse() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     var layer = items[0].getLayer();
     if (layer) {
-      var source = /** @type {os.layer.Vector} */ (layer).getSource();
+      var source = /** @type {VectorLayer} */ (layer).getSource();
       if (source && instanceOf(source, VectorSource.NAME)) {
-        source = /** @type {!os.source.Vector} */ (source);
+        source = /** @type {!VectorSource} */ (source);
         if (!source.hasColumn(Fields.RADIUS) && !source.hasColumn(DEFAULT_RADIUS_COL_NAME) &&
             (!source.hasColumn(Fields.SEMI_MAJOR) || !source.hasColumn(Fields.SEMI_MINOR)) &&
             (!source.hasColumn(DEFAULT_SEMI_MAJ_COL_NAME) ||
@@ -257,7 +262,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getSize_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -275,7 +280,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getLOBLength_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -293,7 +298,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getLOBColumnLength_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -311,7 +316,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getLengthErrorMultiplier_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -329,7 +334,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getLengthErrorUnits_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -347,7 +352,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getBearingErrorMultiplier_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -365,7 +370,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getLengthType_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -383,7 +388,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getLengthColumn_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -401,7 +406,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getLengthUnits_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -419,7 +424,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getLengthErrorColumn_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -437,7 +442,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getBearingColumn_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -455,7 +460,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getBearingErrorColumn_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -473,7 +478,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getShowArrow_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -491,7 +496,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getArrowUnits_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -509,7 +514,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getShowError_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -527,7 +532,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getShowEllipse_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -549,8 +554,8 @@ export class Controller extends AbstractLayerUICtrl {
       var value = this['showArrow'];
       var fn =
           /**
-           * @param {os.layer.ILayer} layer
-           * @return {os.command.ICommand}
+           * @param {ILayer} layer
+           * @return {ICommand}
            */
           function(layer) {
             return new VectorLayerShowArrow(layer.getId(), value);
@@ -571,8 +576,8 @@ export class Controller extends AbstractLayerUICtrl {
       var value = this['showError'];
       var fn =
           /**
-           * @param {os.layer.ILayer} layer
-           * @return {os.command.ICommand}
+           * @param {ILayer} layer
+           * @return {ICommand}
            */
           function(layer) {
             return new VectorLayerShowError(layer.getId(), value);
@@ -593,8 +598,8 @@ export class Controller extends AbstractLayerUICtrl {
       var value = this['showEllipse'];
       var fn =
           /**
-           * @param {os.layer.ILayer} layer
-           * @return {os.command.ICommand}
+           * @param {ILayer} layer
+           * @return {ICommand}
            */
           function(layer) {
             return new VectorLayerShowEllipse(layer.getId(), value);
@@ -624,8 +629,8 @@ export class Controller extends AbstractLayerUICtrl {
    */
   onSizeDelay_() {
     /**
-     * @param {os.layer.ILayer} layer
-     * @return {os.command.ICommand}
+     * @param {ILayer} layer
+     * @return {ICommand}
      */
     var fn = function(layer) {
       return new VectorLayerArrowSize(layer.getId(), this.scope['size']);
@@ -648,8 +653,8 @@ export class Controller extends AbstractLayerUICtrl {
     var result = value !== undefined ? value : this.scope['length'];
     this.scope['length'] = result == 0 ? 1 : result;
     /**
-     * @param {os.layer.ILayer} layer
-     * @return {os.command.ICommand}
+     * @param {ILayer} layer
+     * @return {ICommand}
      */
     var fn = function(layer) {
       return new VectorLayerLOBLength(layer.getId(), this.scope['length']);
@@ -678,8 +683,8 @@ export class Controller extends AbstractLayerUICtrl {
    */
   onColumnLengthDelay_() {
     /**
-     * @param {os.layer.ILayer} layer
-     * @return {os.command.ICommand}
+     * @param {ILayer} layer
+     * @return {ICommand}
      */
     var fn = function(layer) {
       return new VectorLayerLOBColumnLength(layer.getId(), this.scope['columnLength']);
@@ -708,8 +713,8 @@ export class Controller extends AbstractLayerUICtrl {
    */
   onBearingErrorDelay_() {
     /**
-     * @param {os.layer.ILayer} layer
-     * @return {os.command.ICommand}
+     * @param {ILayer} layer
+     * @return {ICommand}
      */
     var fn = function(layer) {
       return new VectorLayerBearingError(layer.getId(), this.scope['bearingErrorMultiplier']);
@@ -738,8 +743,8 @@ export class Controller extends AbstractLayerUICtrl {
    */
   onLengthErrorDelay_() {
     /**
-     * @param {os.layer.ILayer} layer
-     * @return {os.command.ICommand}
+     * @param {ILayer} layer
+     * @return {ICommand}
      */
     var fn = function(layer) {
       return new VectorLayerLOBLengthError(layer.getId(), this.scope['lengthErrorMultiplier']);
@@ -755,8 +760,8 @@ export class Controller extends AbstractLayerUICtrl {
    */
   onLengthColumnChange() {
     /**
-     * @param {os.layer.ILayer} layer
-     * @return {os.command.ICommand}
+     * @param {ILayer} layer
+     * @return {ICommand}
      */
     var fn = function(layer) {
       return new VectorLayerLOBMultiplier(layer.getId(), this['lengthColumn']);
@@ -772,8 +777,8 @@ export class Controller extends AbstractLayerUICtrl {
    */
   onLengthErrorColumnChange() {
     /**
-     * @param {os.layer.ILayer} layer
-     * @return {os.command.ICommand}
+     * @param {ILayer} layer
+     * @return {ICommand}
      */
     var fn = function(layer) {
       return new VectorLayerLOBError(layer.getId(), this['lengthErrorColumn']);
@@ -789,8 +794,8 @@ export class Controller extends AbstractLayerUICtrl {
    */
   onLengthTypeChange() {
     /**
-     * @param {os.layer.ILayer} layer
-     * @return {os.command.ICommand}
+     * @param {ILayer} layer
+     * @return {ICommand}
      */
     var fn = function(layer) {
       return new VectorLayerLOBType(layer.getId(), this['lengthType']);
@@ -806,8 +811,8 @@ export class Controller extends AbstractLayerUICtrl {
    */
   onBearingColumnChange() {
     /**
-     * @param {os.layer.ILayer} layer
-     * @return {os.command.ICommand}
+     * @param {ILayer} layer
+     * @return {ICommand}
      */
     var fn = function(layer) {
       return new VectorLayerBearing(layer.getId(), this['bearingColumn']);
@@ -823,8 +828,8 @@ export class Controller extends AbstractLayerUICtrl {
    */
   onBearingErrorColumnChange() {
     /**
-     * @param {os.layer.ILayer} layer
-     * @return {os.command.ICommand}
+     * @param {ILayer} layer
+     * @return {ICommand}
      */
     var fn = function(layer) {
       return new VectorLayerBearingErrorColumn(layer.getId(), this['bearingErrorColumn']);
@@ -840,8 +845,8 @@ export class Controller extends AbstractLayerUICtrl {
    */
   onLengthUnitChange() {
     /**
-     * @param {os.layer.ILayer} layer
-     * @return {os.command.ICommand}
+     * @param {ILayer} layer
+     * @return {ICommand}
      */
     var fn = function(layer) {
       return new VectorLayerLOBLengthUnits(layer.getId(), this['lengthUnits']);
@@ -857,8 +862,8 @@ export class Controller extends AbstractLayerUICtrl {
    */
   onArrowUnitChange() {
     /**
-     * @param {os.layer.ILayer} layer
-     * @return {os.command.ICommand}
+     * @param {ILayer} layer
+     * @return {ICommand}
      */
     var fn = function(layer) {
       return new VectorLayerArrowUnits(layer.getId(), this['arrowUnits']);
@@ -874,8 +879,8 @@ export class Controller extends AbstractLayerUICtrl {
    */
   onLengthErrorUnitChange() {
     /**
-     * @param {os.layer.ILayer} layer
-     * @return {os.command.ICommand}
+     * @param {ILayer} layer
+     * @return {ICommand}
      */
     var fn = function(layer) {
       return new VectorLayerLOBLengthErrorUnits(layer.getId(), this['lengthErrorUnits']);

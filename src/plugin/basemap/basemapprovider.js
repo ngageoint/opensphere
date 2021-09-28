@@ -21,6 +21,8 @@ import TerrainDescriptor from './terraindescriptor.js';
 
 const dispose = goog.require('goog.dispose');
 
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+
 
 /**
  * The base map provider provides access to pre-configured map layers
@@ -235,7 +237,7 @@ export default class BaseMapProvider extends DescriptorProvider {
     }
 
     for (i = 0, n = layers.length; i < n; i++) {
-      var ilayer = /** @type {os.layer.ILayer} */ (layers[i]);
+      var ilayer = /** @type {ILayer} */ (layers[i]);
 
       if (!(ilayer.getId() in map) && ilayer instanceof BaseMap) {
         numBaseMaps++;

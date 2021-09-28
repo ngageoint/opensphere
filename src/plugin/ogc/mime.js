@@ -8,6 +8,8 @@ import GeoServer from './geoserver.js';
 
 const Promise = goog.require('goog.Promise');
 
+const {default: OSFile} = goog.requireType('os.file.File');
+
 
 /**
  */
@@ -33,7 +35,7 @@ const or_ = function(arr) {
 
 /**
  * @param {ArrayBuffer} buffer
- * @param {os.file.File} file
+ * @param {OSFile} file
  * @param {*=} opt_context
  * @return {!Promise<*|undefined>}
  */
@@ -53,7 +55,7 @@ export const GEOSERVER_TYPE = 'geoserver';
 
 /**
  * @param {ArrayBuffer} buffer
- * @param {os.file.File} file
+ * @param {OSFile} file
  * @param {*=} opt_context
  * @return {!Promise<*|undefined>}
  */

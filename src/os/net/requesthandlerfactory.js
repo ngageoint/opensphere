@@ -73,7 +73,7 @@ export const getHandlers = function(method, uri, opt_timeout) {
     handlers.sort(
         /**
          * @param {IRequestHandler} a
-         * @param {os.net.IRequestHandler} b
+         * @param {IRequestHandler} b
          * @return {number} per compare functions
          */
         function(a, b) {

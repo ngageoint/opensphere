@@ -9,6 +9,7 @@ const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
 
 const Logger = goog.requireType('goog.log.Logger');
+const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
 const {default: BaseFilterManager} = goog.requireType('os.filter.BaseFilterManager');
 const {default: BaseAreaManager} = goog.requireType('os.query.BaseAreaManager');
 
@@ -30,7 +31,7 @@ export default class QueryManager extends BaseQueryManager {
   }
 
   /**
-   * @param {os.data.event.DataEvent} event
+   * @param {DataEvent} event
    * @private
    */
   onDataSourceRemoved_(event) {

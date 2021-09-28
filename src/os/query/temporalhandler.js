@@ -7,6 +7,7 @@ const {assert} = goog.require('goog.asserts');
 const {default: ParamModifier} = goog.requireType('os.net.ParamModifier');
 const {default: ITemporalFormatter} = goog.requireType('os.query.ITemporalFormatter');
 const {default: RequestSource} = goog.requireType('os.source.Request');
+const {default: TimelineController} = goog.requireType('os.time.TimelineController');
 
 
 /**
@@ -99,7 +100,7 @@ export default class TemporalHandler {
   /**
    * Handler for timeline reset.
    *
-   * @param {os.time.TimelineController} controller
+   * @param {TimelineController} controller
    * @param {boolean=} opt_refresh
    */
   handleTimelineReset(controller, opt_refresh) {

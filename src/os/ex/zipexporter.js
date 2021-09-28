@@ -7,6 +7,7 @@ import AbstractExporter from './abstractexporter.js';
 
 const GoogEvent = goog.require('goog.events.Event');
 const log = goog.require('goog.log');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
@@ -32,7 +33,7 @@ export default class ZipExporter extends AbstractExporter {
 
     /**
      * The files to add to the zip
-     * @type {!Array<!os.file.File>}
+     * @type {!Array<!OSFile>}
      * @protected
      */
     this.files = [];
@@ -142,7 +143,7 @@ export default class ZipExporter extends AbstractExporter {
   /**
    * Adds a file to the files array.
    *
-   * @param {!os.file.File} file The file to add
+   * @param {!OSFile} file The file to add
    */
   addFile(file) {
     this.files.push(file);
@@ -151,7 +152,7 @@ export default class ZipExporter extends AbstractExporter {
   /**
    * Returns the files array.
    *
-   * @return {Array<!os.file.File>}
+   * @return {Array<!OSFile>}
    */
   getFiles() {
     return this.files;

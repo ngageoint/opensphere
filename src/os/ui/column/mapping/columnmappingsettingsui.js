@@ -15,6 +15,8 @@ import ColumnMappingNode from './columnmappingnode.js';
 
 const {defaultCompare, insert} = goog.require('goog.array');
 
+const {default: IColumnMapping} = goog.requireType('os.column.IColumnMapping');
+
 
 /**
  * The column mapping settings UI directive
@@ -178,7 +180,7 @@ export class Controller {
 /**
  * Mapping function for column mappings to nodes.
  *
- * @param {os.column.IColumnMapping} mapping
+ * @param {IColumnMapping} mapping
  * @return {ColumnMappingNode}
  */
 const mappingToNode = function(mapping) {
@@ -190,8 +192,8 @@ const mappingToNode = function(mapping) {
 /**
  * Sorting function for column mappings.
  *
- * @param {os.column.IColumnMapping} a
- * @param {os.column.IColumnMapping} b
+ * @param {IColumnMapping} a
+ * @param {IColumnMapping} b
  * @return {number}
  */
 const sortMappings = function(a, b) {

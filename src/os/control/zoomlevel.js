@@ -15,6 +15,7 @@ const css = goog.require('ol.css');
 const ScaleLineUnits = goog.requireType('ol.control.ScaleLineUnits');
 
 const {default: ZoomLevelOptions} = goog.requireType('os.control.ZoomLevelOptions');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
@@ -137,7 +138,7 @@ export default class ZoomLevel extends Control {
   }
 
   /**
-   * @param {os.events.PropertyChangeEvent} event
+   * @param {PropertyChangeEvent} event
    * @protected
    */
   onUnitsChange(event) {

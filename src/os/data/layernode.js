@@ -30,6 +30,7 @@ const events = goog.require('ol.events');
 
 const {default: IExtent} = goog.requireType('os.data.IExtent');
 const {default: ISearchable} = goog.requireType('os.data.ISearchable');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 
 
@@ -49,7 +50,7 @@ export default class LayerNode extends SlickTreeNode {
     super();
 
     /**
-     * @type {os.layer.ILayer}
+     * @type {ILayer}
      * @private
      */
     this.layer_ = null;
@@ -137,7 +138,7 @@ export default class LayerNode extends SlickTreeNode {
   /**
    * Sets the layer
    *
-   * @param {os.layer.ILayer} value
+   * @param {ILayer} value
    */
   setLayer(value) {
     if (value !== this.layer_) {
@@ -366,7 +367,7 @@ export default class LayerNode extends SlickTreeNode {
    */
   getLayerUI(item) {
     if (item && item instanceof LayerNode) {
-      var node = /** @type {os.data.LayerNode} */ (item);
+      var node = /** @type {LayerNode} */ (item);
       var l = node.getLayer();
 
       return l.getLayerUI() || 'defaultlayerui';

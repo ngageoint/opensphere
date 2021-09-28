@@ -1905,7 +1905,7 @@ export default class MapContainer extends EventTarget {
    * Compares groups by priority
    *
    * @param {Group} a
-   * @param {os.layer.Group} b
+   * @param {Group} b
    * @return {number}
    * @private
    */

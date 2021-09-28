@@ -14,6 +14,8 @@ import TailType from './tailtype.js';
 const olEvents = goog.require('ol.events');
 const EventType = goog.require('ol.events.EventType');
 
+const {default: WebGLOverlay} = goog.requireType('os.webgl.WebGLOverlay');
+
 
 /**
  * The annotation template. This must be inline to avoid timing issues between template load and positioning the
@@ -140,7 +142,7 @@ export class Controller extends AbstractAnnotationCtrl {
 
     /**
      * The OpenLayers overlay.
-     * @type {os.webgl.WebGLOverlay}
+     * @type {WebGLOverlay}
      * @protected
      */
     this.overlay = $scope['overlay'];

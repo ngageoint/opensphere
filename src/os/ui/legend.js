@@ -23,6 +23,10 @@ const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
 
+const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+
 
 /**
  * The legend directive
@@ -193,7 +197,7 @@ export class Controller extends SourceManager {
     map.listen(LayerEventType.ADD, this.onLayerAdded_, false, this);
     map.listen(LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
 
-    var tileLayers = /** @type {!Array<!os.layer.AnimatedTile>} */ (map.getLayers().filter(function(layer) {
+    var tileLayers = /** @type {!Array<!AnimatedTile>} */ (map.getLayers().filter(function(layer) {
       return layer instanceof AnimatedTile;
     }));
 
@@ -251,7 +255,7 @@ export class Controller extends SourceManager {
   /**
    * Handle a layer being added to the map.
    *
-   * @param {os.events.LayerEvent} event The layer event
+   * @param {LayerEvent} event The layer event
    * @private
    */
   onLayerAdded_(event) {
@@ -265,7 +269,7 @@ export class Controller extends SourceManager {
   /**
    * Handle a layer being remove from the map.
    *
-   * @param {os.events.LayerEvent} event The layer event
+   * @param {LayerEvent} event The layer event
    * @private
    */
   onLayerRemoved_(event) {
@@ -279,7 +283,7 @@ export class Controller extends SourceManager {
   /**
    * Registers change listener on a layer.
    *
-   * @param {os.layer.ILayer} layer
+   * @param {ILayer} layer
    * @private
    */
   addLayerListener_(layer) {
@@ -293,7 +297,7 @@ export class Controller extends SourceManager {
   /**
    * Removes change listener on a layer.
    *
-   * @param {os.layer.ILayer} layer
+   * @param {ILayer} layer
    * @private
    */
   removeLayerListener_(layer) {
@@ -307,7 +311,7 @@ export class Controller extends SourceManager {
   /**
    * Handle property change events from a source.
    *
-   * @param {os.events.PropertyChangeEvent|ol.Object.Event} event
+   * @param {PropertyChangeEvent|ol.Object.Event} event
    * @protected
    */
   onTilePropertyChange(event) {

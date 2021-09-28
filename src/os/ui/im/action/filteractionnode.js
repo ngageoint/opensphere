@@ -6,6 +6,8 @@ import TriState from '../../../structs/tristate.js';
 import FilterNode from '../../filter/ui/filternode.js';
 import {directiveTag as nodeUi} from './filteractionnodeui.js';
 
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
+
 
 /**
  * Tree node for filter actions.
@@ -15,7 +17,7 @@ import {directiveTag as nodeUi} from './filteractionnodeui.js';
 export default class FilterActionNode extends FilterNode {
   /**
    * Constructor.
-   * @param {!os.im.action.FilterActionEntry<T>} entry The entry.
+   * @param {!FilterActionEntry<T>} entry The entry.
    */
   constructor(entry) {
     super(entry);
@@ -102,7 +104,7 @@ export default class FilterActionNode extends FilterNode {
   /**
    * Translate filter action entries to nodes.
    *
-   * @param {Array<!os.im.action.FilterActionEntry>} entries The filter action entries.
+   * @param {Array<!FilterActionEntry>} entries The filter action entries.
    * @return {!Array<!FilterActionNode>} The filter action nodes.
    */
   static fromEntries(entries) {
@@ -121,7 +123,7 @@ export default class FilterActionNode extends FilterNode {
    * Translate filter action nodes to entries.
    *
    * @param {Array<!FilterActionNode>} nodes The filter action nodes.
-   * @return {!Array<!os.im.action.FilterActionEntry>} The filter action entries.
+   * @return {!Array<!FilterActionEntry>} The filter action entries.
    */
   static toEntries(nodes) {
     if (nodes) {

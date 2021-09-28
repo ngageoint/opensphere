@@ -11,6 +11,10 @@ import {getFilterableByType, getFilterableTypes, toFilterString} from '../filter
 const {getRandomString, toTitleCase} = goog.require('goog.string');
 
 const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
+const {default: IFilterable} = goog.requireType('os.filter.IFilterable');
+const {default: IFilterEntry} = goog.requireType('os.filter.IFilterEntry');
+const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
+const {default: IParser} = goog.requireType('os.parse.IParser');
 
 
 /**
@@ -20,7 +24,7 @@ const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 export default class FilterImporter extends Importer {
   /**
    * Constructor.
-   * @param {os.parse.IParser<T>} parser The parser.
+   * @param {IParser<T>} parser The parser.
    * @param {string=} opt_layerId The layer id.
    * @param {boolean=} opt_keepId If the original entry id should be preserved. Defaults to false.
    * @param {boolean=} opt_ignoreColumns If the parser should ignore checking if the columns match the filters.
@@ -103,8 +107,8 @@ export default class FilterImporter extends Importer {
   }
 
   /**
-   * @param {os.filter.IFilterable} filterable
-   * @return {Array<os.ogc.FeatureTypeColumn>}
+   * @param {IFilterable} filterable
+   * @return {Array<FeatureTypeColumn>}
    */
   getFilterColumnsFromFilterable(filterable) {
     return filterable ? filterable.getFilterColumns() : null;
@@ -203,7 +207,7 @@ export default class FilterImporter extends Importer {
   /**
    * Get the tooltip to display for a filter entry.
    *
-   * @param {!os.filter.IFilterEntry} entry The filter entry.
+   * @param {!IFilterEntry} entry The filter entry.
    * @return {string}
    * @protected
    */
@@ -215,7 +219,7 @@ export default class FilterImporter extends Importer {
    * Gets a filter model for the UI.
    *
    * @param {string} title
-   * @param {os.filter.IFilterEntry} filter
+   * @param {IFilterEntry} filter
    * @param {string} tooltip
    * @param {?string=} opt_type
    * @param {?boolean=} opt_match
@@ -254,14 +258,14 @@ export default class FilterImporter extends Importer {
   /**
    * Gets icons from a filterable item.
    *
-   * @param {!os.filter.IFilterable} filterable
+   * @param {!IFilterable} filterable
    * @return {string}
    */
   getIconsFromFilterable(filterable) {
     var icons = '';
 
     if (osImplements(filterable, IDataDescriptor.ID)) {
-      var color = /** @type {!os.data.IDataDescriptor} */ (filterable).getColor();
+      var color = /** @type {!IDataDescriptor} */ (filterable).getColor();
       if (color) {
         color = toHexString(color);
       } else {
@@ -277,14 +281,14 @@ export default class FilterImporter extends Importer {
   /**
    * Get the parent provider of a filterable, if available.
    *
-   * @param {!os.filter.IFilterable} filterable The filterable object.
+   * @param {!IFilterable} filterable The filterable object.
    * @return {?string} The provider name, or null if not available.
    */
   getProviderFromFilterable(filterable) {
     var provider = null;
 
     if (osImplements(filterable, IDataDescriptor.ID)) {
-      provider = /** @type {!os.data.IDataDescriptor} */ (filterable).getProvider();
+      provider = /** @type {!IDataDescriptor} */ (filterable).getProvider();
     }
 
     return provider;
@@ -293,7 +297,7 @@ export default class FilterImporter extends Importer {
   /**
    * Gets as descriptive a title as possible from a filterable item.
    *
-   * @param {!os.filter.IFilterable} filterable
+   * @param {!IFilterable} filterable
    * @param {string} type
    * @return {?string}
    */

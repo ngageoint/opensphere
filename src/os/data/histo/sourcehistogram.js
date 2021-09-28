@@ -25,6 +25,7 @@ const {default: IGroupable} = goog.requireType('os.data.xf.IGroupable');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 const {default: DateBinMethod} = goog.requireType('os.histo.DateBinMethod');
 const {default: IBinMethod} = goog.requireType('os.histo.IBinMethod');
+const {default: Result} = goog.requireType('os.histo.Result');
 const osHistoBin = goog.requireType('os.histo.bin');
 const {default: Vector} = goog.requireType('os.source.Vector');
 const {default: TimeModel} = goog.requireType('os.time.xf.TimeModel');
@@ -578,11 +579,11 @@ export default class SourceHistogram extends EventTarget {
       }
 
       if (this.secondaryBinMethod) {
-        results = /** @type {!Array<!os.histo.Result<!Feature>>} */ (this.timeModel_.groupData(this.multiId_,
+        results = /** @type {!Array<!Result<!Feature>>} */ (this.timeModel_.groupData(this.multiId_,
             this.combinedKeyMethod.bind(this), this.reduceAdd.bind(this),
             this.reduceRemove.bind(this), this.reduceInit.bind(this)));
       } else {
-        results = /** @type {!Array<!os.histo.Result<!Feature>>} */ (this.timeModel_.groupData(this.id_,
+        results = /** @type {!Array<!Result<!Feature>>} */ (this.timeModel_.groupData(this.id_,
             this.binMethod.getBinKey.bind(this.binMethod), this.reduceAdd.bind(this),
             this.reduceRemove.bind(this), this.reduceInit.bind(this)));
       }
@@ -612,9 +613,9 @@ export default class SourceHistogram extends EventTarget {
   }
 
   /**
-   * @param {!os.histo.Result<!Feature>} item
+   * @param {!Result<!Feature>} item
    * @param {number} i
-   * @param {!Array<!os.histo.Result<!Feature>>} arr
+   * @param {!Array<!Result<!Feature>>} arr
    * @return {ColorBin}
    * @protected
    */

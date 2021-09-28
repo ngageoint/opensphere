@@ -9,6 +9,10 @@ import State from './state.js';
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
 
+const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
+
 
 /**
  * Fits the map to the layer that is specified by the passeed id. If the layer
@@ -80,7 +84,7 @@ export default class FitLayerByID extends AbstractSyncCommand {
     this.savedCenter_ = view.getCenter();
     this.savedRotation_ = view.getRotation();
 
-    var layer = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.layerId_));
+    var layer = /** @type {VectorLayer} */ (getMapContainer().getLayer(this.layerId_));
     if (layer) {
       // If layer is still loading we need to wait until it finishes to get the extent
       if (layer.isLoading()) {
@@ -115,11 +119,11 @@ export default class FitLayerByID extends AbstractSyncCommand {
   /**
    * Method that will be registered to the layer add event
    *
-   * @param {os.events.LayerEvent} e
+   * @param {LayerEvent} e
    * @private
    */
   onAdd_(e) {
-    var layer = /** @type {os.layer.Vector} */ (e.layer);
+    var layer = /** @type {VectorLayer} */ (e.layer);
     // make sure its the right layer
     if (layer.getId() != this.layerId_) {
       return;
@@ -138,11 +142,11 @@ export default class FitLayerByID extends AbstractSyncCommand {
   /**
    * Method that will be registered to the layer property change event
    *
-   * @param {os.events.PropertyChangeEvent} e
+   * @param {PropertyChangeEvent} e
    * @private
    */
   onPropChange_(e) {
-    var layer = /** @type {os.layer.Vector} */ (e.currentTarget);
+    var layer = /** @type {VectorLayer} */ (e.currentTarget);
     if (!layer.isLoading()) {
       this.cleanup_();
       this.fit_(layer);

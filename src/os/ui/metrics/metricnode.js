@@ -9,6 +9,7 @@ import {directiveTag} from './metriccompletion.js';
 import {ClassName} from './metricsui.js';
 
 const {default: ISearchable} = goog.requireType('os.data.ISearchable');
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
 
 
 /**
@@ -78,7 +79,7 @@ export default class MetricNode extends SlickTreeNode {
   }
 
   /**
-   * @param {os.events.SettingChangeEvent} event
+   * @param {SettingChangeEvent} event
    * @private
    */
   onMetricChange_(event) {
@@ -88,7 +89,7 @@ export default class MetricNode extends SlickTreeNode {
   }
 
   /**
-   * @param {os.events.SettingChangeEvent} event
+   * @param {SettingChangeEvent} event
    * @private
    */
   onMetricsReset_(event) {

@@ -7,6 +7,7 @@ import VectorSource from '../source/vectorsource.js';
 import State from './state.js';
 
 const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 
 
 /**
@@ -52,11 +53,11 @@ export default class VectorLayerAutoRefresh {
   /**
    * Get the source from the layer id.
    *
-   * @return {os.source.Vector}
+   * @return {VectorSource}
    * @protected
    */
   getSource() {
-    var layer = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.layerId));
+    var layer = /** @type {VectorLayer} */ (getMapContainer().getLayer(this.layerId));
     if (!layer) {
       this.state = State.ERROR;
       this.details = 'Unable to locate layer with id "' + this.layerId + '".';

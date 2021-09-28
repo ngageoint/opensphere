@@ -141,7 +141,7 @@ export const launchCopy = function(opt_coord) {
   var mousePos = null;
   for (var i = 0, n = controls.length; i < n; i++) {
     if (controls[i] instanceof MousePosition) {
-      mousePos = /** @type {os.ol.control.MousePosition} */ (controls[i]);
+      mousePos = /** @type {MousePosition} */ (controls[i]);
       break;
     }
   }

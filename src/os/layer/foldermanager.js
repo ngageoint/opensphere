@@ -4,12 +4,13 @@ import Settings from '../config/settings.js';
 import LayerEventType from '../events/layereventtype.js';
 import MapContainer from '../mapcontainer.js';
 import {FolderEventType, SettingsKey} from './folder.js';
-const {remove} = goog.require('goog.array');
 
+const {remove} = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 
 const Logger = goog.requireType('goog.log.Logger');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
@@ -63,7 +64,7 @@ export default class FolderManager extends EventTarget {
     const layers = MapContainer.getInstance().getLayers();
 
     for (let j = 0, m = layers.length; j < m; j++) {
-      const layer = /** @type {os.layer.ILayer} */ (layers[j]);
+      const layer = /** @type {ILayer} */ (layers[j]);
       const found = this.getItem(layer.getId());
 
       if (!found) {

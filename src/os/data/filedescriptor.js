@@ -24,7 +24,9 @@ import LayerSyncDescriptor from './layersyncdescriptor.js';
 
 const log = goog.require('goog.log');
 
+const {default: FileProvider} = goog.requireType('os.data.FileProvider');
 const {default: IReimport} = goog.requireType('os.data.IReimport');
+const {default: ExportOptions} = goog.requireType('os.ex.ExportOptions');
 const {default: IExportMethod} = goog.requireType('os.ex.IExportMethod');
 const {default: RequestSource} = goog.requireType('os.source.Request');
 
@@ -343,7 +345,7 @@ export default class FileDescriptor extends LayerSyncDescriptor {
     super.onLayerChange(e);
 
     if (e instanceof PropertyChangeEvent) {
-      const layer = /** @type {os.layer.Vector} */ (e.target);
+      const layer = /** @type {VectorLayer} */ (e.target);
       const p = e.getProperty() || '';
       const newVal = e.getNewValue();
 
@@ -354,7 +356,7 @@ export default class FileDescriptor extends LayerSyncDescriptor {
           const key = osFile.FileSetting.AUTO_SAVE;
 
           if (settings.get(key, osFile.FileSettingDefault[key]) && source instanceof VectorSource) {
-            const options = /** @type {os.ex.ExportOptions} */ ({
+            const options = /** @type {ExportOptions} */ ({
               sources: [source],
               items: source.getFeatures(),
               fields: null
@@ -369,7 +371,7 @@ export default class FileDescriptor extends LayerSyncDescriptor {
 
   /**
    * Updates to the underlying layer data. Updates the file in storage.
-   * @param {os.ex.ExportOptions} options
+   * @param {ExportOptions} options
    */
   updateFile(options) {
     const source = /** @type {VectorSource} */ (options.sources[0]);
@@ -392,7 +394,7 @@ export default class FileDescriptor extends LayerSyncDescriptor {
 
   /**
    * Handles changes to the underlying layer data. Updates the file in storage.
-   * @param {os.ex.ExportOptions} options
+   * @param {ExportOptions} options
    */
   onFileChange(options) {
     // update this descriptor's URL to point to the file, set the source back to having no modifications
@@ -468,8 +470,8 @@ export default class FileDescriptor extends LayerSyncDescriptor {
   /**
    * Creates a new descriptor from a parser configuration.
    *
-   * @param {!os.data.FileDescriptor} descriptor
-   * @param {!os.data.FileProvider} provider
+   * @param {!FileDescriptor} descriptor
+   * @param {!FileProvider} provider
    * @param {!FileParserConfig} config
    * @param {?string=} opt_useDefaultColor
    */

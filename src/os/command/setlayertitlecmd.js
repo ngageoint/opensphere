@@ -4,6 +4,8 @@ import {getMapContainer} from '../map/mapinstance.js';
 import AbstractSyncCommand from './abstractsynccommand.js';
 import State from './state.js';
 
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
+
 
 /**
  * Set the title of a layer retrieved from the passed ID.
@@ -43,7 +45,7 @@ export default class SetLayerTitle extends AbstractSyncCommand {
   execute() {
     this.state = State.EXECUTING;
 
-    var l = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.overlayId_));
+    var l = /** @type {VectorLayer} */ (getMapContainer().getLayer(this.overlayId_));
     if (l == null) {
       return this.handleError('Layer not found for passed ID.');
     }
@@ -59,7 +61,7 @@ export default class SetLayerTitle extends AbstractSyncCommand {
   revert() {
     this.state = State.REVERTING;
 
-    var l = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.overlayId_));
+    var l = /** @type {VectorLayer} */ (getMapContainer().getLayer(this.overlayId_));
     if (l == null) {
       return this.handleError('Layer not found for passed ID.');
     }

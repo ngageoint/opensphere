@@ -19,6 +19,8 @@ import FilterActionTreeSearch from './filteractiontreesearch.js';
 
 const googArray = goog.require('goog.array');
 
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
+
 
 /**
  * Base controller for viewing/editing filter action entries.
@@ -168,7 +170,7 @@ export default class Controller extends AbstractGroupByTreeSearchCtrl {
   /**
    * Edit an action entry. If no entry is provided, a new one will be created.
    *
-   * @param {os.im.action.FilterActionEntry<T>=} opt_entry The import action entry.
+   * @param {FilterActionEntry<T>=} opt_entry The import action entry.
    * @abstract
    * @export
    */
@@ -178,7 +180,7 @@ export default class Controller extends AbstractGroupByTreeSearchCtrl {
    * Handle node event to copy an entry.
    *
    * @param {angular.Scope.Event} event The Angular event.
-   * @param {os.im.action.FilterActionEntry<T>} entry The import action entry.
+   * @param {FilterActionEntry<T>} entry The import action entry.
    * @param {number} parentIndex The parent index.
    */
   onCopyEvent(event, entry, parentIndex) {
@@ -194,7 +196,7 @@ export default class Controller extends AbstractGroupByTreeSearchCtrl {
    * Handle node event to edit an entry.
    *
    * @param {angular.Scope.Event} event The Angular event.
-   * @param {os.im.action.FilterActionEntry<T>} entry The import action entry.
+   * @param {FilterActionEntry<T>} entry The import action entry.
    */
   onEditEvent(event, entry) {
     event.stopPropagation();
@@ -219,7 +221,7 @@ export default class Controller extends AbstractGroupByTreeSearchCtrl {
    * Handle node event to remove an entry.
    *
    * @param {angular.Scope.Event} event The Angular event.
-   * @param {os.im.action.FilterActionEntry<T>} entry The import action entry.
+   * @param {FilterActionEntry<T>} entry The import action entry.
    */
   onRemoveEvent(event, entry) {
     event.stopPropagation();

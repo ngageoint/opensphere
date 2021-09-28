@@ -10,6 +10,7 @@ import ImportManager from '../../../os/ui/im/importmanager.js';
 import GMLParserConfig from './gmlparserconfig.js';
 
 const {default: FeatureImporter} = goog.requireType('os.im.FeatureImporter');
+const {default: FileParserConfig} = goog.requireType('os.parse.FileParserConfig');
 
 
 /**
@@ -22,7 +23,7 @@ export default class GMLLayerConfig extends AbstractDataSourceLayerConfig {
     super();
 
     /**
-     * @type {os.parse.FileParserConfig}
+     * @type {FileParserConfig}
      * @protected
      */
     this.parserConfig = new GMLParserConfig();

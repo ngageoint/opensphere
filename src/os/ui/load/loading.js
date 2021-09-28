@@ -6,6 +6,8 @@ import {apply} from '../ui.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+
 
 /**
  * The loading directive
@@ -74,7 +76,7 @@ export class Controller {
   /**
    * Handler for loading change events.
    *
-   * @param {os.events.PropertyChangeEvent} event
+   * @param {PropertyChangeEvent} event
    * @private
    */
   onLoadingChange_(event) {

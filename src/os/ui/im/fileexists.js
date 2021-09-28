@@ -7,6 +7,8 @@ import * as ConfirmUI from '../window/confirm.js';
 import WindowEventType from '../windoweventtype.js';
 import FileExistsChoice from './fileexistschoice.js';
 
+const {default: OSFile} = goog.requireType('os.file.File');
+
 
 /**
  * Dialog used when a user tries importing a duplicate file.
@@ -56,7 +58,7 @@ export class Controller {
 /**
  * Launch a dialog prompting the user the file they're importing already exists and requesting action.
  *
- * @param {!os.file.File} file
+ * @param {!OSFile} file
  * @param {function(FileExistsChoice)} confirm
  */
 export const launchFileExists = function(file, confirm) {

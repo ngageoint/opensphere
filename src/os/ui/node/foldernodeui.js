@@ -62,7 +62,7 @@ export class Controller extends AbstractNodeUICtrl {
    * @export
    */
   addFolder() {
-    var node = /** @type {os.data.FolderNode} */ (this.scope['item']);
+    var node = /** @type {FolderNode} */ (this.scope['item']);
     if (node) {
       const options = {
         name: 'New Folder',

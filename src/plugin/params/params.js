@@ -219,7 +219,7 @@ export const setUrlsForLayer = function(layer, urls) {
       }
 
       if (osImplements(layer, ILayer.ID)) {
-        /** @type {!os.layer.ILayer} */ (layer).callAction(osActionEventType.REFRESH);
+        /** @type {!ILayer} */ (layer).callAction(osActionEventType.REFRESH);
       }
     }
   }

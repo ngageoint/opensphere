@@ -9,6 +9,8 @@ import LayerRemove from './layerremovecmd.js';
 import SequenceCommand from './sequencecommand.js';
 import State from './state.js';
 
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+
 
 /**
  * Command for clearing layers on the map.
@@ -42,7 +44,7 @@ export default class LayerClear extends SequenceCommand {
 
     var layers = getMapContainer().getLayers();
     for (var i = 0, n = layers.length; i < n; i++) {
-      var layer = /** @type {os.layer.ILayer} */ (layers[i]);
+      var layer = /** @type {ILayer} */ (layers[i]);
       try {
         var layerOptions = layer.getLayerOptions();
         if (layer.isRemovable() && layerOptions && !layerOptions['noClear']) {

@@ -9,6 +9,7 @@ import * as osWindow from '../window.js';
 import WindowEventType from '../windoweventtype.js';
 
 const {default: IImportUI} = goog.requireType('os.ui.im.IImportUI');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
@@ -93,7 +94,7 @@ export class Controller {
    */
   accept() {
     try {
-      this['import'].launchUI(/** @type {os.file.File} */ (this.scope_['file']), this.scope_['config']);
+      this['import'].launchUI(/** @type {OSFile} */ (this.scope_['file']), this.scope_['config']);
     } catch (e) {
       AlertManager.getInstance().sendAlert(
           'Error loading file: <b>' + this.scope_['file'].getFileName() + '</b>', AlertEventSeverity.ERROR);

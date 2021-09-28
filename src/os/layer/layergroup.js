@@ -617,7 +617,6 @@ export default class LayerGroup extends EventTarget {
 
   /**
    * @inheritDoc
-   * @see {os.ui.action.IActionTarget}
    */
   supportsAction(type, opt_actionArgs) {
     return false;

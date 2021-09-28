@@ -2,6 +2,7 @@ goog.declareModuleId('os.ui.query.BaseCombinatorUI');
 
 import '../slick/slicktree.js';
 import './addfilter.js';
+
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';
 import SequenceCommand from '../../command/sequencecommand.js';
@@ -32,7 +33,9 @@ const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const {caseInsensitiveCompare} = goog.require('goog.string');
 
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
+const {default: IFilterable} = goog.requireType('os.filter.IFilterable');
 const {default: BaseQueryManager} = goog.requireType('os.query.BaseQueryManager');
 const {default: ComboNode} = goog.requireType('os.ui.query.ComboNode');
 const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
@@ -288,7 +291,7 @@ export class Controller {
   /**
    * Performs a command. Useful for extending classes that may want to use the command stack.
    *
-   * @param {os.command.ICommand} cmd
+   * @param {ICommand} cmd
    * @protected
    */
   doCommand(cmd) {
@@ -492,7 +495,7 @@ export class Controller {
       this.scope['layerId'] : (this.scope['layer'] || this.scope['layerId']);
 
     for (var key in set) {
-      var filterable = /** @type {os.filter.IFilterable} */ (this.fm.getFilterable(key));
+      var filterable = /** @type {IFilterable} */ (this.fm.getFilterable(key));
 
       try {
         if (filterable) {

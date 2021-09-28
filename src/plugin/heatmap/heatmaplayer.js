@@ -560,7 +560,6 @@ export default class Heatmap extends VectorLayer {
 
   /**
    * @inheritDoc
-   * @see {os.ui.action.IActionTarget}
    */
   supportsAction(type, opt_actionArgs) {
     var source = this.getSource();

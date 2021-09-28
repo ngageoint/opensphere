@@ -33,8 +33,10 @@ const XLink = goog.require('ol.format.XLink');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: IServerDescriptor} = goog.requireType('os.data.IServerDescriptor');
 const {default: OSFile} = goog.requireType('os.file.File');
 const {default: IWMTSLayerParser} = goog.requireType('os.ogc.wmts.IWMTSLayerParser');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 const {default: IWMSLayerParser} = goog.requireType('os.ui.ogc.wms.IWMSLayerParser');
 
 
@@ -93,7 +95,7 @@ export default class OGCServer extends AbstractLoadingServer {
     this.wfsOnlyFolder = new SlickTreeNode();
 
     /**
-     * @type {!Array<!os.structs.ITreeNode>}
+     * @type {!Array<!ITreeNode>}
      * @private
      */
     this.toAdd_ = [];
@@ -1461,7 +1463,7 @@ export default class OGCServer extends AbstractLoadingServer {
    * @param {string} version
    * @param {undefined|Array<!string>|null} crsList
    * @param {?string=} opt_attribution
-   * @return {?os.structs.ITreeNode}
+   * @return {?ITreeNode}
    * @protected
    */
   parseLayer(node, version, crsList, opt_attribution) {
@@ -1592,7 +1594,7 @@ export default class OGCServer extends AbstractLoadingServer {
   }
 
   /**
-   * @param {!os.structs.ITreeNode} folder
+   * @param {!ITreeNode} folder
    * @protected
    */
   addFolder(folder) {
@@ -1616,7 +1618,7 @@ export default class OGCServer extends AbstractLoadingServer {
   }
 
   /**
-   * @param {os.structs.ITreeNode} node
+   * @param {ITreeNode} node
    * @param {Array<string>=} opt_tags
    * @private
    */
@@ -1666,7 +1668,7 @@ export default class OGCServer extends AbstractLoadingServer {
   }
 
   /**
-   * @param {os.structs.ITreeNode=} opt_node
+   * @param {ITreeNode=} opt_node
    * @protected
    */
   markAllDescriptors(opt_node) {
@@ -1674,7 +1676,7 @@ export default class OGCServer extends AbstractLoadingServer {
 
     if (node instanceof DescriptorNode) {
       var dn = /** @type {DescriptorNode} */ (node);
-      var descriptor = /** @type {os.data.IServerDescriptor} */ (dn.getDescriptor());
+      var descriptor = /** @type {IServerDescriptor} */ (dn.getDescriptor());
       if (descriptor) {
         try {
           descriptor.updatedFromServer();
@@ -1721,8 +1723,8 @@ export default class OGCServer extends AbstractLoadingServer {
 
   /**
    * @param {IDataDescriptor} descriptor
-   * @param {?Array<!os.structs.ITreeNode>} children
-   * @return {?os.structs.ITreeNode}
+   * @param {?Array<!ITreeNode>} children
+   * @return {?ITreeNode}
    * @private
    */
   findNode_(descriptor, children) {

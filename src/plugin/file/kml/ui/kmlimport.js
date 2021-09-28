@@ -7,6 +7,8 @@ import Module from '../../../../os/ui/module.js';
 import KMLDescriptor from '../kmldescriptor.js';
 import KMLProvider from '../kmlprovider.js';
 
+const {default: FileParserConfig} = goog.requireType('os.parse.FileParserConfig');
+
 
 /**
  * The KML import directive
@@ -39,7 +41,7 @@ Module.directive('kmlimport', [directive]);
 /**
  * Controller for the KML import dialog
  *
- * @extends {AbstractFileImportCtrl<!os.parse.FileParserConfig,!KMLDescriptor>}
+ * @extends {AbstractFileImportCtrl<!FileParserConfig,!KMLDescriptor>}
  * @unrestricted
  */
 export class Controller extends AbstractFileImportCtrl {

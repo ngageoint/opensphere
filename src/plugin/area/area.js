@@ -12,6 +12,8 @@ const googString = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
 const olArray = goog.require('ol.array');
 
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
+
 
 /**
  * Process imported features.
@@ -62,7 +64,7 @@ export const processFeatures = function(features, config) {
  *
  * @param {!Feature} feature
  * @param {Object} config
- * @param {!Array<!os.im.mapping.IMapping>} mappings
+ * @param {!Array<!IMapping>} mappings
  */
 const processFeature_ = function(feature, config, mappings) {
   // apply mappings to the feature

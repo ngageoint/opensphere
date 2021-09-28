@@ -992,7 +992,6 @@ export default class Vector extends OLVectorLayer {
 
   /**
    * @inheritDoc
-   * @see {os.ui.action.IActionTarget}
    */
   supportsAction(type, opt_actionArgs) {
     const source = /** @type {VectorSource} */ (this.getSource());

@@ -1,6 +1,7 @@
 goog.declareModuleId('os.webgl.IWebGLRenderer');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
+const {default: AltitudeMode} = goog.requireType('os.webgl.AltitudeMode');
 const {default: IWebGLCamera} = goog.requireType('os.webgl.IWebGLCamera');
 
 
@@ -128,7 +129,7 @@ export default class IWebGLRenderer {
 
   /**
    * Get the altitude modes the WebGL renderer supports.
-   * @return {Array<os.webgl.AltitudeMode>} The supported modes
+   * @return {Array<AltitudeMode>} The supported modes
    */
   getAltitudeModes() {}
 

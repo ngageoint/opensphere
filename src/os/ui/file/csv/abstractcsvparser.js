@@ -5,6 +5,7 @@ import {getText} from '../../../file/mime/text.js';
 import AsyncParser from '../../../parse/asyncparser.js';
 import {configurePapaParse} from './csv.js';
 
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
 const {default: BaseParserConfig} = goog.requireType('os.parse.BaseParserConfig');
 
 
@@ -116,7 +117,7 @@ export default class AbstractCsvParser extends AsyncParser {
    * @abstract
    * @protected
    * @param {Object<string, *>} result The result to process
-   * @param {Array<os.im.mapping.IMapping>=} opt_mappings The set of mappings to apply to parsed features.
+   * @param {Array<IMapping>=} opt_mappings The set of mappings to apply to parsed features.
    * @return {!T}
    */
   processResult(result, opt_mappings) {}
@@ -190,7 +191,7 @@ export default class AbstractCsvParser extends AsyncParser {
    *
    * @abstract
    * @param {string} source The CSV source.
-   * @param {Array<os.im.mapping.IMapping>=} opt_mappings The set of mappings to apply to parsed features.
+   * @param {Array<IMapping>=} opt_mappings The set of mappings to apply to parsed features.
    * @return {Array<!T>}
    */
   parsePreview(source, opt_mappings) {}

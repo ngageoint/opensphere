@@ -385,7 +385,7 @@ export class Controller extends SlickGridCtrl {
       // prune root nodes without children
       //    var i = newVal.length;
       //    while (i--) {
-      //      var node = /** @type {os.structs.TreeNode} */ (newVal[i]);
+      //      var node = /** @type {TreeNode} */ (newVal[i]);
       //      if ((node.getChildren() || []).length == 0) {
       //        newVal.splice(i, 1);
       //      }

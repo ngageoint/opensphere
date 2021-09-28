@@ -1,13 +1,14 @@
 goog.declareModuleId('os.ui.file.method.FileMethod');
 
 import EventType from '../../../events/eventtype.js';
-import IFileMethod from '../../../file/ifilemethod.js';// eslint-disable-line
-
+import IFileMethod from '../../../file/ifilemethod.js'; // eslint-disable-line
 import * as osWindow from '../../window.js';
 import windowSelector from '../../windowselector.js';
 import {directiveTag as fileImportUi} from '../fileimport.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
+
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
@@ -24,7 +25,7 @@ export default class FileMethod extends EventTarget {
     super();
 
     /**
-     * @type {os.file.File}
+     * @type {OSFile}
      * @private
      */
     this.file_ = null;

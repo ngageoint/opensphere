@@ -194,7 +194,7 @@ describe('OpenSphere Test Initialization', () => {
 
 /**
  * Creates and returns a new mapping manager configured the same as within the app
- * @return {os.im.mapping.MappingManager}
+ * @return {MappingManager}
  */
 export const getMockMappingManager = function() {
   const {default: AltMapping} = goog.module.get('os.im.mapping.AltMapping');

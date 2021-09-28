@@ -12,6 +12,7 @@ const userAgent = goog.require('goog.userAgent');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {default: FeatureImporter} = goog.requireType('os.im.FeatureImporter');
+const {default: Request} = goog.requireType('os.net.Request');
 
 
 /**
@@ -126,8 +127,8 @@ export default class SHPLayerConfig extends AbstractDataSourceLayerConfig {
   /**
    * Assembles an array of requests for the SHP/DBF files.
    *
-   * @param {Object.<string, *>} options Layer configuration options.
-   * @return {!Array.<!os.net.Request>}
+   * @param {Object<string, *>} options Layer configuration options.
+   * @return {!Array<!Request>}
    */
   getRequests(options) {
     var requests = [];

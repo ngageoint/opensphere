@@ -5,6 +5,8 @@ import osImplements from '../../implements.js';
 import ILayer from '../../layer/ilayer.js';
 import FilterImporter from '../../ui/filter/im/filterimporter.js';
 
+const {default: IParser} = goog.requireType('os.parse.IParser');
+
 
 /**
  * @template T
@@ -12,7 +14,7 @@ import FilterImporter from '../../ui/filter/im/filterimporter.js';
 export default class OSFilterImporter extends FilterImporter {
   /**
    * Constructor.
-   * @param {os.parse.IParser<T>} parser The parser.
+   * @param {IParser<T>} parser The parser.
    * @param {string=} opt_layerId The layer id.
    * @param {boolean=} opt_keepId If the original entry id should be preserved. Defaults to false.
    */

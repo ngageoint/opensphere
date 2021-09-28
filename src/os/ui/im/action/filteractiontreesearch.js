@@ -6,6 +6,7 @@ import TreeSearch from '../../slick/treesearch.js';
 import FilterActionNode from './filteractionnode.js';
 
 const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**
@@ -53,7 +54,7 @@ export default class FilterActionTreeSearch extends AbstractGroupByTreeSearch {
    * @inheritDoc
    */
   beginSearch(term, groupBy) {
-    var oldSearch = /** @type {!Array<!os.structs.ITreeNode>} */ (this.target[this.field].slice());
+    var oldSearch = /** @type {!Array<!ITreeNode>} */ (this.target[this.field].slice());
     super.beginSearch(term, groupBy);
     if (Array.isArray(oldSearch)) {
       // dispose the old nodes, otherwise they will be retained in memory due to listeners on the filter action entries

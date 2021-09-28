@@ -71,7 +71,7 @@ const pauseExecution = function() {
 };
 
 onmessage = function(event) {
-  // handle messages from the parent {os.job.Job}
+  // handle messages from the parent job
   if (event && event.data) {
     const data = event.data;
     if (data.command == JobCommand.START) {

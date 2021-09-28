@@ -3,6 +3,7 @@ goog.declareModuleId('os.command.CommandEvent');
 const GoogEvent = goog.require('goog.events.Event');
 
 const {default: EventType} = goog.requireType('os.command.EventType');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -12,7 +13,7 @@ export default class CommandEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {EventType} type the event type
-   * @param {os.command.ICommand} command The command
+   * @param {ICommand} command The command
    * @param {Object=} opt_target
    */
   constructor(type, command, opt_target) {
@@ -20,13 +21,13 @@ export default class CommandEvent extends GoogEvent {
 
     /**
      * @private
-     * @type {os.command.ICommand}
+     * @type {ICommand}
      */
     this.command_ = command;
   }
 
   /**
-   * @return {os.command.ICommand}
+   * @return {ICommand}
    */
   getCommand() {
     return this.command_;

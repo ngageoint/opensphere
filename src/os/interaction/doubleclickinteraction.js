@@ -66,7 +66,7 @@ export default class DoubleClick extends Interaction {
             }
 
             if (layer instanceof VectorLayer) {
-              var vector = /** @type {os.layer.Vector} */ (layer);
+              var vector = /** @type {VectorLayer} */ (layer);
               var id = vector.getId();
 
               if (vector && id) {

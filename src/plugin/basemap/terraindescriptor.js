@@ -6,6 +6,8 @@ import BaseDescriptor from '../../os/data/basedescriptor.js';
 import Icons from '../../os/ui/icons.js';
 import {TERRAIN_ID} from './basemap.js';
 
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
+
 
 /**
  * Descriptor to activate/deactivate terrain from the Add Data window.
@@ -62,7 +64,7 @@ export default class TerrainDescriptor extends BaseDescriptor {
   /**
    * Handle changes to the terrain enabled setting.
    *
-   * @param {os.events.SettingChangeEvent} event
+   * @param {SettingChangeEvent} event
    * @private
    */
   onTerrainChange_(event) {

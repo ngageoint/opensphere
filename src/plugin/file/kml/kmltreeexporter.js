@@ -21,6 +21,7 @@ const GeometryCollection = goog.require('ol.geom.GeometryCollection');
 const Point = goog.require('ol.geom.Point');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
+const {default: ITime} = goog.requireType('os.time.ITime');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
@@ -272,7 +273,7 @@ export default class KMLTreeExporter extends AbstractKMLExporter {
     var feature = item.getFeature();
     if (feature) {
       return (
-        /** @type {os.time.ITime|undefined} */ (feature.get(RecordField.TIME)) || null
+        /** @type {ITime|undefined} */ (feature.get(RecordField.TIME)) || null
       );
     }
 

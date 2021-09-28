@@ -18,6 +18,7 @@ const Point = goog.require('ol.geom.Point');
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');
 const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
+const {default: ITime} = goog.requireType('os.time.ITime');
 
 
 /**
@@ -161,7 +162,7 @@ export default class CSVExporter extends AbstractCSVExporter {
    * @template T
    */
   writeTime(item, result) {
-    var time = item ? /** @type {os.time.ITime|undefined} */ (item.get(RecordField.TIME)) : null;
+    var time = item ? /** @type {ITime|undefined} */ (item.get(RecordField.TIME)) : null;
     if (time != null) {
       if (instanceOf(time, TimeRange.NAME)) {
         // time ranges need to be put into two separate fields so that we can reimport our own exports

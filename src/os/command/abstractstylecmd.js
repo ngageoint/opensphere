@@ -200,7 +200,7 @@ export default class AbstractStyle {
   setValue(value) {
     asserts.assert(value != null, 'style value must be defined');
 
-    var layer = /** @type {os.layer.Vector} */ (this.getLayer());
+    var layer = /** @type {VectorLayer} */ (this.getLayer());
     asserts.assert(layer, 'layer must be defined');
 
     var config = this.getLayerConfig(layer);

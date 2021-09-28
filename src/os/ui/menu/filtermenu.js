@@ -19,6 +19,7 @@ import MenuItemType from './menuitemtype.js';
 const {removeDuplicates} = goog.require('goog.array');
 const {remove} = goog.require('ol.array');
 
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 const {default: TreeNode} = goog.requireType('os.structs.TreeNode');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 
@@ -141,7 +142,7 @@ export const dispose = function() {
 
 /**
  * @param {Array<!TreeNode>} nodes
- * @return {Array<!os.filter.FilterEntry>}
+ * @return {Array<!FilterEntry>}
  */
 export const getFilters = function(nodes) {
   var filters = [];
@@ -150,7 +151,7 @@ export const getFilters = function(nodes) {
       var node = nodes[i];
 
       if (node instanceof FilterNode) {
-        filters.push(/** @type {os.data.FilterNode} */ (node).getEntry());
+        filters.push(/** @type {FilterNode} */ (node).getEntry());
       } else {
         filters = filters.concat(getFilters(node.getChildren()));
       }
@@ -246,7 +247,7 @@ const isFilter_ = function(context) {
 /**
  * Remove all entries for these filters
  *
- * @param {Array<!os.filter.FilterEntry>} filters
+ * @param {Array<!FilterEntry>} filters
  * @return {QueryEntries}
  */
 export const fixEntries = function(filters) {

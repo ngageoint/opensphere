@@ -12,6 +12,7 @@ const {remove} = goog.require('ol.array');
 const events = goog.require('ol.events');
 
 const ObjectEvent = goog.requireType('ol.Object.Event');
+const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 const {default: ISource} = goog.requireType('os.source.ISource');
 
@@ -153,7 +154,7 @@ export default class SourceAware extends Disposable {
   }
 
   /**
-   * @param {os.data.event.DataEvent} event
+   * @param {DataEvent} event
    * @private
    */
   onSourceAdded_(event) {
@@ -164,7 +165,7 @@ export default class SourceAware extends Disposable {
   }
 
   /**
-   * @param {os.data.event.DataEvent} event
+   * @param {DataEvent} event
    * @private
    */
   onSourceRemoved_(event) {

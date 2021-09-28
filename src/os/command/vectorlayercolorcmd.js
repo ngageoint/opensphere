@@ -14,6 +14,8 @@ import * as icons from '../ui/icons/index.js';
 import AbstractVectorStyle from './abstractvectorstylecmd.js';
 import ColorChangeType from './colorchangetype.js';
 
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
+
 
 /**
  * Changes the color of a layer
@@ -48,7 +50,7 @@ export default class VectorLayerColor extends AbstractVectorStyle {
     }
 
     if (!color) {
-      var layer = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.layerId));
+      var layer = /** @type {VectorLayer} */ (getMapContainer().getLayer(this.layerId));
       if (layer) {
         var options = layer.getLayerOptions();
         color = /** @type {string} */ (options && options['baseColor'] || osStyle.DEFAULT_LAYER_COLOR);

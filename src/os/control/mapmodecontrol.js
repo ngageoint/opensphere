@@ -12,6 +12,8 @@ const css = goog.require('ol.css');
 const events = goog.require('ol.events');
 const EventType = goog.require('ol.events.EventType');
 
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+
 
 /**
  * A button control to toggle between 2D and 3D views.
@@ -106,7 +108,7 @@ export default class MapMode extends Control {
   /**
    * Handle property change events from the map container.
    *
-   * @param {os.events.PropertyChangeEvent} event The event.
+   * @param {PropertyChangeEvent} event The event.
    * @private
    */
   onMapChange_(event) {

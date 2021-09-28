@@ -29,6 +29,8 @@ const Style = goog.require('ol.style.Style');
 const Text = goog.require('ol.style.Text');
 
 const Layer = goog.requireType('ol.layer.Layer');
+const {default: TileLayer} = goog.requireType('os.layer.Tile');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 
 
 /**
@@ -432,7 +434,7 @@ export const canDraw = function(options) {
 /**
  * Add a tile layer to the legend canvas.
  *
- * @param {!os.layer.Tile} layer The tile layer.
+ * @param {!TileLayer} layer The tile layer.
  * @param {!osx.legend.LegendOptions} options The legend options.
  */
 export const drawTileLayer = function(layer, options) {
@@ -505,7 +507,7 @@ export const queueItem = function(options, opt_feature, opt_style, opt_labelFeat
 /**
  * Add a vector layer to the legend canvas.
  *
- * @param {!os.layer.Vector} layer The vector layer.
+ * @param {!VectorLayer} layer The vector layer.
  * @param {!osx.legend.LegendOptions} options The legend options.
  */
 export const drawVectorLayer = function(layer, options) {

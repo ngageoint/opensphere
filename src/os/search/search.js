@@ -131,7 +131,7 @@ export const dateScore = function(time, order) {
  */
 export const supportsGeoSearch = function(search) {
   if (search && osImplements(search, IGeoSearch.ID)) {
-    var s = /** @type {os.search.IGeoSearch} */ (search);
+    var s = /** @type {IGeoSearch} */ (search);
     return s.supportsGeoDistance() || s.supportsGeoExtent() || s.supportsGeoShape();
   }
 

@@ -10,6 +10,7 @@ const Disposable = goog.require('goog.Disposable');
 const googObject = goog.require('goog.object');
 const ol = goog.require('ol');
 const GeoJSON = goog.require('ol.format.GeoJSON');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
 const {default: IParser} = goog.requireType('os.parse.IParser');
 
 
@@ -163,7 +164,7 @@ export default class GeoJSONParser extends Disposable {
    * Parse a limited set of results from the source
    *
    * @param {Object|null|string} source
-   * @param {Array<os.im.mapping.IMapping>=} opt_mappings The set of mappings to apply to parsed features
+   * @param {Array<IMapping>=} opt_mappings The set of mappings to apply to parsed features
    * @return {!Array<!ol.Feature>}
    */
   parsePreview(source, opt_mappings) {

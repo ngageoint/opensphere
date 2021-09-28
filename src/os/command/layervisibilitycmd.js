@@ -4,6 +4,8 @@ import {getMapContainer} from '../map/mapinstance.js';
 import AbstractSyncCommand from './abstractsynccommand.js';
 import State from './state.js';
 
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
+
 
 /**
  * Sets the visibility for a layer.
@@ -66,7 +68,7 @@ export default class LayerVisibility extends AbstractSyncCommand {
    * @return {boolean}
    */
   set(vis) {
-    var layer = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.id_));
+    var layer = /** @type {VectorLayer} */ (getMapContainer().getLayer(this.id_));
     if (layer == null) {
       return this.handleError('No layer found with passed ID.');
     }

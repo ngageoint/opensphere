@@ -19,6 +19,7 @@ const events = goog.require('ol.events');
 const Feature = goog.requireType('ol.Feature');
 const RenderFeature = goog.requireType('ol.render.Feature');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**
@@ -72,7 +73,7 @@ export class Controller extends AbstractFeatureTabCtrl {
 
     /**
      * The source.
-     * @type {os.source.Vector}
+     * @type {VectorSource}
      */
     this.source = null;
 

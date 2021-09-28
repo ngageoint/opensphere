@@ -24,6 +24,7 @@ const Throttle = goog.require('goog.async.Throttle');
 const googDispose = goog.require('goog.dispose');
 
 const {default: DescriptorEvent} = goog.requireType('os.data.DescriptorEvent');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: MenuItemOptions} = goog.requireType('os.ui.menu.MenuItemOptions');
 
@@ -271,7 +272,7 @@ export const toggleState = function(descriptor, event) {
 /**
  * Create menu item options for a "View More" item.
  *
- * @param {!os.data.BaseDescriptor} descriptor A descriptor to provide input on the how the menu item should be built.
+ * @param {!BaseDescriptor} descriptor A descriptor to provide input on the how the menu item should be built.
  * @return {MenuItemOptions|undefined} Options to create the menu item.
  */
 const getViewMoreOptions_ = function(descriptor) {
@@ -313,7 +314,7 @@ export const viewMoreEventEmitter = function(typeName, descriptorType) {
  *
  * @param {string} typeName The descriptor type name.
  * @param {string} descriptorType The descriptor type.
- * @param {os.structs.ITreeNode} node The tree node.
+ * @param {ITreeNode} node The tree node.
  * @return {boolean} If the node should be displayed.
  */
 export const stateFilter = function(typeName, descriptorType, node) {

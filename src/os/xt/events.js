@@ -21,7 +21,7 @@ export const EventType = {
 /**
  * Retrieve an event type string customized for a peer group.
  *
- * @param {!os.xt.events.EventType} type
+ * @param {!EventType} type
  * @param {!string} group
  * @return {!string}
  */

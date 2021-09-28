@@ -19,6 +19,7 @@ const Range = goog.require('goog.math.Range');
 const RangeSet = goog.require('goog.math.RangeSet');
 
 const {default: IPersistable} = goog.requireType('os.IPersistable');
+const {default: ITime} = goog.requireType('os.time.ITime');
 
 
 /**
@@ -1591,7 +1592,7 @@ export default class TimelineController extends EventTarget {
   /**
    * Returns true if the hold ranges contain the time
    *
-   * @param {?os.time.ITime} time
+   * @param {?ITime} time
    * @return {boolean}
    */
   holdRangeContainsTime(time) {

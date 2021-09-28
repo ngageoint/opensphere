@@ -19,6 +19,7 @@ import {directiveTag as configUi} from './ui/featurestyleactionconfig.js';
 const math = goog.require('goog.math');
 
 const {default: ImportActionCallbackConfig} = goog.requireType('os.im.action.ImportActionCallbackConfig');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**
@@ -161,7 +162,7 @@ export default class StyleAction extends AbstractImportAction {
 
     var layer = getLayer(items[0]);
     if (layer) {
-      var source = /** @type {os.source.Vector} */ (layer.getSource());
+      var source = /** @type {VectorSource} */ (layer.getSource());
       var color = (this.styleConfig['stroke']) ? this.styleConfig['stroke']['color'] : null;
 
       if (source && color) {

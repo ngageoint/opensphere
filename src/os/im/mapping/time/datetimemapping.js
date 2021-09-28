@@ -331,7 +331,7 @@ export default class DateTimeMapping extends AbstractMapping {
     } else if (this.type == TimeType.END) {
       // make sure the time object is a range
       if (!(time instanceof TimeRange)) {
-        time = new TimeRange(/** @type {os.time.ITime|string|number} */ (time));
+        time = new TimeRange(/** @type {ITime|string|number} */ (time));
       }
 
       if (time.getEnd()) {

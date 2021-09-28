@@ -24,7 +24,7 @@ export const MAGIC_EMPTY = 999999999999999998;
 export const MAGIC_NAN = 9999999998;
 
 /**
- * @typedef {function(Bin, os.histo.Bin):number}
+ * @typedef {function(Bin, Bin):number}
  */
 export let SortFn;
 
@@ -32,7 +32,7 @@ export let SortFn;
  * Sorts bins by the number of items in the bin, in ascending order
  *
  * @param {Bin} a A bin
- * @param {os.histo.Bin} b Another bin
+ * @param {Bin} b Another bin
  * @return {number}
  */
 export const sortByCount = function(a, b) {
@@ -43,7 +43,7 @@ export const sortByCount = function(a, b) {
  * Sorts bins by the number of items in the bin, in descending order
  *
  * @param {Bin} a A bin
- * @param {os.histo.Bin} b Another bin
+ * @param {Bin} b Another bin
  * @return {number}
  */
 export const sortByCountDesc = function(a, b) {
@@ -54,7 +54,7 @@ export const sortByCountDesc = function(a, b) {
  * Sorts bins by key
  *
  * @param {Bin} a A bin
- * @param {os.histo.Bin} b Another bin
+ * @param {Bin} b Another bin
  * @return {number}
  */
 export const sortByKey = function(a, b) {
@@ -65,7 +65,7 @@ export const sortByKey = function(a, b) {
  * Sorts bins by key in descending order
  *
  * @param {Bin} a A bin
- * @param {os.histo.Bin} b Another bin
+ * @param {Bin} b Another bin
  * @return {number}
  */
 export const sortByKeyDesc = function(a, b) {
@@ -76,7 +76,7 @@ export const sortByKeyDesc = function(a, b) {
  * Sorts bins by label in ascending order
  *
  * @param {Bin} a A bin
- * @param {os.histo.Bin} b Another bin
+ * @param {Bin} b Another bin
  * @return {number}
  */
 export const sortByLabel = function(a, b) {
@@ -95,7 +95,7 @@ export const sortByLabel = function(a, b) {
  * Sorts bins by label in descending order
  *
  * @param {Bin} a A bin
- * @param {os.histo.Bin} b Another bin
+ * @param {Bin} b Another bin
  * @return {number}
  */
 export const sortByLabelDesc = function(a, b) {

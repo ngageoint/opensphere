@@ -1,8 +1,10 @@
 goog.declareModuleId('os.interpolate.Config');
 
+const {default: Method} = goog.requireType('os.interpolate.Method');
+
 /**
  * @typedef {{
- *  method: os.interpolate.Method,
+ *  method: Method,
  *  distance: number
  * }}
  */

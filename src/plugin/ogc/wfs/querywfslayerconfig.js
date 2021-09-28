@@ -14,6 +14,7 @@ import launchFilterManager from './launchfiltermanager.js';
 import WFSLayerConfig from './wfslayerconfig.js';
 
 const {default: OGCFilterModifierOptions} = goog.requireType('os.ogc.filter.OGCFilterModifierOptions');
+const {default: RequestSource} = goog.requireType('os.source.Request');
 
 
 /**
@@ -34,7 +35,7 @@ export default class QueryWFSLayerConfig extends WFSLayerConfig {
   addMappings(layer, options) {
     super.addMappings(layer, options);
 
-    var source = /** @type {os.source.Request} */ (layer.getSource());
+    var source = /** @type {RequestSource} */ (layer.getSource());
     var useExclusions = options['exclusions'] != null ? options['exclusions'] : false;
     var useFilter = options['filter'] != null ? options['filter'] : false;
     var useSpatial = options['spatial'] != null ? options['spatial'] : false;

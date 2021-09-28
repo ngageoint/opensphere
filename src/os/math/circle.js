@@ -23,7 +23,7 @@ export default class Circle extends Coordinate {
    * Returns a new copy of the circle
    *
    * @override
-   * @return {!os.math.Circle} A clone of this circle
+   * @return {!Circle} A clone of this circle
    */
   clone() {
     return new Circle(this.x, this.y, this.radius);
@@ -94,8 +94,8 @@ export default class Circle extends Coordinate {
   /**
    * Compares circles for equality
    *
-   * @param {os.math.Circle} a A circle
-   * @param {os.math.Circle} b A circle
+   * @param {Circle} a A circle
+   * @param {Circle} b A circle
    * @return {boolean} True iff the coordinates are equal or if both are null.
    */
   static equals(a, b) {

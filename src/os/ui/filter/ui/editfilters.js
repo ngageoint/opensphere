@@ -3,6 +3,7 @@ goog.declareModuleId('os.ui.filter.ui.EditFiltersUI');
 import '../../util/validationmessage.js';
 import '../advancedfilterbuilder.js';
 import '../basicfilterbuilder.js';
+
 import DataManager from '../../../data/datamanager.js';
 import Metrics from '../../../metrics/metrics.js';
 import {Filters} from '../../../metrics/metricskeys.js';
@@ -16,6 +17,8 @@ import GroupNode from './groupnode.js';
 
 const {getFirstElementChild, getNextElementSibling} = goog.require('goog.dom');
 
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
@@ -69,10 +72,10 @@ export class Controller {
     this.element = $element;
 
     /**
-     * @type {os.filter.FilterEntry}
+     * @type {FilterEntry}
      * @protected
      */
-    this.entry = /** @type {os.filter.FilterEntry} */ ($scope['entry']);
+    this.entry = /** @type {FilterEntry} */ ($scope['entry']);
 
     /**
      * @type {?GroupNode}
@@ -230,7 +233,7 @@ export class Controller {
    * Handles node remove events
    *
    * @param {angular.Scope.Event} event
-   * @param {os.structs.ITreeNode} node The node to remove
+   * @param {ITreeNode} node The node to remove
    * @private
    */
   onRemove_(event, node) {
@@ -269,7 +272,7 @@ export class Controller {
   /**
    * Removes a node.
    *
-   * @param {os.structs.ITreeNode} node The node to remove
+   * @param {ITreeNode} node The node to remove
    * @private
    */
   doRemove_(node) {

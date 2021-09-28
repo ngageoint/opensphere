@@ -10,6 +10,7 @@ import {createFromOptions} from '../layer.js';
 const {unsafeClone} = goog.require('goog.object');
 
 const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
@@ -152,7 +153,7 @@ export const setSavedPresetId = function(id, opt_presetId) {
 
 /**
  * Update the default preset for a layer.
- * @param {os.layer.ILayer} layer The layer.
+ * @param {ILayer} layer The layer.
  * @param {osx.layer.Preset} preset The default preset.
  */
 export const updateDefault = function(layer, preset) {

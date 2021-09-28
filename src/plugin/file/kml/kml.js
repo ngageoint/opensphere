@@ -43,6 +43,8 @@ const IconOrigin = goog.require('ol.style.IconOrigin');
 const Style = goog.require('ol.style.Style');
 const olXml = goog.require('ol.xml');
 
+const {default: ITime} = goog.requireType('os.time.ITime');
+
 
 /**
  * Key used to store the parsed KML style on features.
@@ -429,7 +431,7 @@ const readJson = function(node) {
  *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
- * @return {os.time.ITime} The parsed time, or null if none could be parsed
+ * @return {ITime} The parsed time, or null if none could be parsed
  */
 export const readTime = function(node, objectStack) {
   asserts.assert(node.localName == 'TimeStamp' || node.localName == 'TimeSpan',

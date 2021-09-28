@@ -143,7 +143,7 @@ export const loadCrossOriginCache = function() {
 
 /**
  * @param {CrossOriginEntry} a Thing 1
- * @param {os.net.CrossOriginEntry} b Thing 2
+ * @param {CrossOriginEntry} b Thing 2
  * @return {number} per typical compare functions
  */
 const sortCache_ = function(a, b) {

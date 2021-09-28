@@ -10,6 +10,7 @@ import ImportManager from '../../../os/ui/im/importmanager.js';
 import GeoJSONParserConfig from '../geojsonparserconfig.js';
 
 const {default: FeatureImporter} = goog.requireType('os.im.FeatureImporter');
+const {default: FileParserConfig} = goog.requireType('os.parse.FileParserConfig');
 const {default: GeoJSONParser} = goog.requireType('plugin.file.geojson.GeoJSONParser');
 
 
@@ -23,7 +24,7 @@ export default class GeoJSONLayerConfig extends AbstractDataSourceLayerConfig {
     super();
 
     /**
-     * @type {os.parse.FileParserConfig}
+     * @type {FileParserConfig}
      * @protected
      */
     this.parserConfig = new GeoJSONParserConfig();

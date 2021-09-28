@@ -14,6 +14,8 @@ const asserts = goog.require('goog.asserts');
 const UtcDateTime = goog.require('goog.date.UtcDateTime');
 const DateTimeFormat = goog.require('goog.i18n.DateTimeFormat');
 
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+
 
 /**
  * Preconfigured date formats.
@@ -700,7 +702,7 @@ const updateOffset_ = function() {
 };
 
 /**
- * @param {os.events.PropertyChangeEvent} e
+ * @param {PropertyChangeEvent} e
  */
 const onOffsetChange_ = function(e) {
   updateOffset_();

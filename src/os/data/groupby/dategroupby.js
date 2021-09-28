@@ -8,6 +8,8 @@ import BaseGroupBy from './basegroupby.js';
 const googArray = goog.require('goog.array');
 const googString = goog.require('goog.string');
 
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+
 
 /**
  * Groups nodes by their max date
@@ -50,7 +52,7 @@ export default class DateGroupBy extends BaseGroupBy {
 
     var max = Number.NEGATIVE_INFINITY;
 
-    /** @type {os.data.IDataDescriptor} */
+    /** @type {IDataDescriptor} */
     var d = null;
 
     if (node instanceof DescriptorNode) {

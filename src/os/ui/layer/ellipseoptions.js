@@ -8,6 +8,10 @@ import StyleManager from '../../style/stylemanager_shim.js';
 import Module from '../module.js';
 import AbstractLayerUICtrl from './abstractlayerui.js';
 
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: LayerNode} = goog.requireType('os.data.LayerNode');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+
 
 /**
  * The ellipseoptions directive.
@@ -89,7 +93,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getShowEllipsoids_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -107,7 +111,7 @@ export class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getShowGroundReference_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -129,8 +133,8 @@ export class Controller extends AbstractLayerUICtrl {
       var value = this['showEllipsoids'];
       var fn =
           /**
-           * @param {os.layer.ILayer} layer
-           * @return {os.command.ICommand}
+           * @param {ILayer} layer
+           * @return {ICommand}
            */
           function(layer) {
             return new VectorLayerShowEllipsoids(layer.getId(), value);
@@ -151,8 +155,8 @@ export class Controller extends AbstractLayerUICtrl {
       var value = this['showGroundReference'];
       var fn =
           /**
-           * @param {os.layer.ILayer} layer
-           * @return {os.command.ICommand}
+           * @param {ILayer} layer
+           * @return {ICommand}
            */
           function(layer) {
             return new VectorLayerShowGroundReference(layer.getId(), value);

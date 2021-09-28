@@ -6,6 +6,7 @@ const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 const {default: IDataProvider} = goog.requireType('os.data.IDataProvider');
 const {default: ProviderEntry} = goog.requireType('os.data.ProviderEntry');
 const {default: VectorSource} = goog.requireType('os.source.Vector');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**
@@ -60,7 +61,7 @@ export default class IDataManager {
    * Updates a data descriptor by replacing it.
    * The update was created because some providers on a REMOVE event would execute a delete on the server.
    * @param {!IDataDescriptor} oldDescriptor The old descriptor
-   * @param {!os.data.IDataDescriptor} newDescriptor The new descriptor
+   * @param {!IDataDescriptor} newDescriptor The new descriptor
    */
   updateDescriptor(oldDescriptor, newDescriptor) {}
 
@@ -92,7 +93,7 @@ export default class IDataManager {
 
   /**
    * Gets the data provider root node
-   * @return {!os.structs.ITreeNode} The root node
+   * @return {!ITreeNode} The root node
    */
   getProviderRoot() {}
 

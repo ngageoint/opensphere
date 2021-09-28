@@ -821,7 +821,7 @@ export default class Request extends EventTarget {
    * Static compare function for sorting the modifiers list.
    *
    * @param {IModifier} a
-   * @param {os.net.IModifier} b
+   * @param {IModifier} b
    * @return {number} The compare result
    * @private
    */

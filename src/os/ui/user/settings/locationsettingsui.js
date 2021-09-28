@@ -7,6 +7,8 @@ import LocationFormat from '../../location/locationformat.js';
 import Module from '../../module.js';
 import {apply} from '../../ui.js';
 
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
+
 
 /**
  * The layers window directive
@@ -75,7 +77,7 @@ export class Controller {
   /**
    * Listen for changes from the system and update the setting display
    *
-   * @param {os.events.SettingChangeEvent} event
+   * @param {SettingChangeEvent} event
    * @private
    */
   onFormatChange_(event) {
