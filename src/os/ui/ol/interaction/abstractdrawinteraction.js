@@ -43,12 +43,20 @@ class AbstractDraw extends Pointer {
      */
     this.drawing = false;
 
+    const condition = opt_options && opt_options.condition ? opt_options.condition : shiftKeyOnly;
     /**
+     * The current condition function. Change this to change the interaction condition.
      * @type {ol.EventsConditionType}
      * @protected
      */
-    this.condition = opt_options !== undefined && opt_options.condition !== undefined ?
-      opt_options.condition : shiftKeyOnly;
+    this.condition = condition;
+
+    /**
+     * The default condition. This should not be changed and gets set back on completion of the interaction.
+     * @type {ol.EventsConditionType}
+     * @protected
+     */
+    this.defaultCondition = condition;
 
     /**
      * @type {string}
@@ -169,15 +177,14 @@ class AbstractDraw extends Pointer {
     if (value) {
       this.setCondition(always);
     } else {
-      this.setCondition(shiftKeyOnly);
+      this.setCondition(this.defaultCondition);
 
       if (this.drawing) {
         this.cancel();
       }
     }
 
-    log.fine(logger, this.getType() + ' interaction ' +
-        (value ? 'enabled' : 'disabled'));
+    log.fine(logger, this.getType() + ' interaction ' + (value ? 'enabled' : 'disabled'));
   }
 
   /**

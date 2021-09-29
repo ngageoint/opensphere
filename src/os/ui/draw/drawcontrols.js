@@ -71,6 +71,11 @@ class Controller extends BaseDrawControlsCtrl {
     this.log = logger;
 
     /**
+     * @type {?Measure}
+     */
+    this.measureInteraction = null;
+
+    /**
      * Flag for whether we are currently measuring.
      * @type {boolean}
      * @protected
@@ -82,6 +87,7 @@ class Controller extends BaseDrawControlsCtrl {
      * @private
      */
     this.key_ = 'measureMethod';
+
     Measure.method = /** @type {Method} */ (Settings.getInstance().get(this.key_, Measure.method));
 
     dispatcher.getInstance().listen(DrawEventType.DRAWEND, this.onDrawEnd_, false, this);
@@ -103,39 +109,50 @@ class Controller extends BaseDrawControlsCtrl {
   /**
    * @inheritDoc
    */
+  onMapReady(event) {
+    super.onMapReady(event);
+
+    this.measureInteraction = this.getMeasureInteraction_();
+    if (this.measureInteraction) {
+      // always leave the interaction enabled so it can respond to click events
+      this.measureInteraction.setActive(true);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
   initControlMenu() {
     super.initControlMenu();
 
+    // the main draw control UI should contribute the measure controls group if it isn't there already
     var mi = this.controlMenu.getRoot();
-    mi.addChild({
-      type: MenuItemType.SEPARATOR,
-      label: 'Draw',
-      tooltip: 'Options for drawing new areas',
-      sort: 0
-    });
-    mi.addChild({
-      type: MenuItemType.SEPARATOR,
-      label: 'Measure',
-      tooltip: 'Options for measuring distances',
-      sort: 50
-    });
+    const measureGroup = mi.find('Measure');
 
-    mi.addChild({
-      label: 'Measure Geodesic',
-      eventType: Method.GEODESIC,
-      tooltip: 'Measures the shortest distance between two points (variable bearing).',
-      metricKey: MapKeys.MEASURE_TOGGLE,
-      beforeRender: updateIcons,
-      sort: 60
-    });
-    mi.addChild({
-      label: 'Measure Rhumb Line',
-      eventType: Method.RHUMB,
-      tooltip: 'Measures the path of constant bearing between two points.',
-      metricKey: MapKeys.MEASURE_TOGGLE,
-      beforeRender: updateIcons,
-      sort: 70
-    });
+    if (!measureGroup) {
+      mi.addChild({
+        type: MenuItemType.GROUP,
+        label: 'Measure',
+        tooltip: 'Options for measuring distances',
+        shortcut: 'Ctrl+Shift+click',
+        sort: 50,
+        children: [{
+          label: 'Measure Rhumb Line',
+          eventType: Method.RHUMB,
+          tooltip: 'Measures the path of constant bearing between two points.',
+          metricKey: MapKeys.MEASURE_TOGGLE,
+          beforeRender: updateIcons,
+          sort: 70
+        }, {
+          label: 'Measure Geodesic',
+          eventType: Method.GEODESIC,
+          tooltip: 'Measures the shortest distance between two points (variable bearing).',
+          metricKey: MapKeys.MEASURE_TOGGLE,
+          beforeRender: updateIcons,
+          sort: 60
+        }]
+      });
+    }
 
     this.controlMenu.listen(Method.GEODESIC, this.onMeasureTypeChange_, false, this);
     this.controlMenu.listen(Method.RHUMB, this.onMeasureTypeChange_, false, this);
@@ -184,7 +201,7 @@ class Controller extends BaseDrawControlsCtrl {
    * @export
    */
   isActive() {
-    return super.isActive() || this.measuring;
+    return super.isActive() || this.measureInteraction ? this.measureInteraction.getEnabled() : false;
   }
 
   /**
@@ -193,14 +210,11 @@ class Controller extends BaseDrawControlsCtrl {
    * @export
    */
   toggleMeasure(opt_value) {
-    var measure = this.getMeasureInteraction_();
+    var measure = this.measureInteraction;
 
     if (measure) {
       opt_value = opt_value !== undefined ? opt_value : !measure.getActive();
-
       measure.setEnabled(opt_value);
-      measure.setActive(opt_value);
-      this.measuring = opt_value;
     }
   }
 
@@ -241,7 +255,7 @@ class Controller extends BaseDrawControlsCtrl {
 }
 
 /**
- * Helper function for changiing the icons on measure options.
+ * Helper function for changing the icons on measure options.
  * @this {MenuItem}
  */
 const updateIcons = function() {

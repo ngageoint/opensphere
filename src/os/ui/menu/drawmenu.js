@@ -56,50 +56,58 @@ const create = function(handler) {
   var mi = new MenuItem({
     type: MenuItemType.ROOT,
     children: [{
-      label: 'Box',
-      eventType: EventType.BOX,
-      tooltip: 'Draw a box for query, selection, and zoom',
-      icons: ['<i class="fa fa-fw fa-square-o"></i> '],
-      handler: handler,
-      sort: 10
+      label: 'Draw',
+      type: MenuItemType.GROUP,
+      shortcut: 'Shift+click',
+      sort: 0,
+      children: [{
+        label: 'Box',
+        eventType: EventType.BOX,
+        tooltip: 'Draw a box for query, selection, and zoom',
+        icons: ['<i class="fa fa-fw fa-square-o"></i> '],
+        handler: handler,
+        sort: 10
+      }, {
+        label: 'Circle',
+        eventType: EventType.CIRCLE,
+        tooltip: 'Draw a circle for query, selection, and zoom',
+        icons: ['<i class="fa fa-fw fa-circle-o"></i> '],
+        handler: handler,
+        sort: 20
+      }, {
+        label: 'Polygon',
+        eventType: EventType.POLYGON,
+        tooltip: 'Draw a polygon for query, selection, and zoom',
+        icons: ['<i class="fa fa-fw fa-star-o"></i> '],
+        handler: handler,
+        sort: 30
+      }]
     }, {
-      label: 'Circle',
-      eventType: EventType.CIRCLE,
-      tooltip: 'Draw a circle for query, selection, and zoom',
-      icons: ['<i class="fa fa-fw fa-circle-o"></i> '],
-      handler: handler,
-      sort: 20
-    }, {
-      label: 'Polygon',
-      eventType: EventType.POLYGON,
-      tooltip: 'Draw a polygon for query, selection, and zoom',
-      icons: ['<i class="fa fa-fw fa-star-o"></i> '],
-      handler: handler,
-      sort: 30
-    }, {
-      type: MenuItemType.SEPARATOR,
-      sort: 100
-    }, {
-      label: 'Choose Area',
-      eventType: EventType.CHOOSE_AREA,
-      tooltip: 'Load data for a specific area',
-      icons: ['<i class="fa fa-fw fa-list-ul"></i> '],
-      handler: handler,
-      sort: 110
-    }, {
-      label: 'Enter Coordinates',
-      eventType: EventType.ENTER_COORDINATES,
-      tooltip: 'Enter coordinates to load data',
-      icons: ['<i class="fa fa-fw fa-calculator"></i> '],
-      handler: handler,
-      sort: 120
-    }, {
-      label: 'Whole World',
-      eventType: EventType.WHOLE_WORLD,
-      tooltip: 'Load data for the whole world',
-      icons: ['<i class="fa fa-fw fa-map-o"></i> '],
-      handler: handler,
-      sort: 140
+      label: 'Areas',
+      type: MenuItemType.GROUP,
+      sort: 100,
+      children: [{
+        label: 'Choose Area',
+        eventType: EventType.CHOOSE_AREA,
+        tooltip: 'Load data for a specific area',
+        icons: ['<i class="fa fa-fw fa-list-ul"></i> '],
+        handler: handler,
+        sort: 110
+      }, {
+        label: 'Enter Coordinates',
+        eventType: EventType.ENTER_COORDINATES,
+        tooltip: 'Enter coordinates to load data',
+        icons: ['<i class="fa fa-fw fa-calculator"></i> '],
+        handler: handler,
+        sort: 120
+      }, {
+        label: 'Whole World',
+        eventType: EventType.WHOLE_WORLD,
+        tooltip: 'Load data for the whole world',
+        icons: ['<i class="fa fa-fw fa-map-o"></i> '],
+        handler: handler,
+        sort: 140
+      }]
     }]
   });
 

@@ -36,6 +36,8 @@ class Measure extends DrawPolygon {
    */
   constructor(opt_options) {
     super();
+    this.condition = measureCondition;
+    this.defaultCondition = measureCondition;
     this.color = [255, 0, 0, 1];
     this.type = 'measure';
 
@@ -335,6 +337,18 @@ class Measure extends DrawPolygon {
     });
   }
 }
+
+/**
+ * Return `true` if only the ctrl-key and shift-key is pressed, `false` otherwise
+ * (e.g. when additionally the platform-modifier-key is pressed).
+ *
+ * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
+ * @return {boolean} True if only the alt and shift keys are pressed.
+ */
+const measureCondition = function(mapBrowserEvent) {
+  var originalEvent = mapBrowserEvent.originalEvent;
+  return (originalEvent.ctrlKey && originalEvent.shiftKey && !(originalEvent.metaKey || originalEvent.altKey));
+};
 
 /**
  * @type {number}

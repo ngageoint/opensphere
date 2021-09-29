@@ -2,7 +2,7 @@ goog.module('os.ui.SaveButtonUI');
 
 const Module = goog.require('os.ui.Module');
 const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
-const menu = goog.require('os.ui.state.menu');
+const stateMenu = goog.require('os.ui.state.menu');
 
 
 /**
@@ -46,7 +46,7 @@ class Controller extends MenuButtonCtrl {
    */
   constructor($scope, $element) {
     super($scope, $element);
-    this.menu = menu.getMenu();
+    this.menu = stateMenu.getMenu();
   }
 }
 

@@ -275,7 +275,8 @@ class Controller {
   initControlMenu() {
     var mi = this.controlMenu.getRoot();
     if (this['supportsLines']) {
-      mi.addChild({
+      const drawGroup = mi.find('Draw');
+      drawGroup.addChild({
         label: 'Line',
         eventType: draw.EventType.LINE,
         tooltip: 'Draw a line on the map',
