@@ -6,6 +6,7 @@ import WindowEventType from '../windoweventtype.js';
 import * as ConfirmUI from './confirm.js';
 
 const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
+const {default: ConfirmColumnOptions} = goog.requireType('os.ui.window.ConfirmColumnOptions');
 
 
 /**
@@ -61,7 +62,7 @@ export class Controller {
 /**
  * Launch a dialog prompting the user to pick a column.
  *
- * @param {!osx.window.ConfirmColumnOptions} options
+ * @param {!ConfirmColumnOptions} options
  */
 export const launchConfirmColumn = function(options) {
   var scopeOptions = {

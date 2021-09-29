@@ -450,20 +450,6 @@ osx.window.TextPromptOptions;
 
 /**
  * @typedef {{
- *   confirm: (Function|undefined),
- *   cancel: (Function|undefined),
- *   columns: (Array<os.data.ColumnDefinition>|undefined),
- *   prompt: (string|undefined),
- *   defaultValue: (os.data.ColumnDefinition|undefined),
- *
- *   windowOptions: (osx.window.WindowOptions|undefined)
- * }}
- */
-osx.window.ConfirmColumnOptions;
-
-
-/**
- * @typedef {{
  *   id: string,
  *   name: string,
  *   image: string,

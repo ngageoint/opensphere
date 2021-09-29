@@ -50,6 +50,7 @@ const {default: CreateOptions} = goog.requireType('os.track.CreateOptions');
 const {default: SplitOptions} = goog.requireType('os.track.SplitOptions');
 const {default: TrackFeatureLike} = goog.requireType('os.track.TrackFeatureLike');
 const {default: TrackLike} = goog.requireType('os.track.TrackLike');
+const {default: ConfirmColumnOptions} = goog.requireType('os.ui.window.ConfirmColumnOptions');
 
 
 /**
@@ -1144,7 +1145,7 @@ export const promptForTitleAndMetadata = function(opt_default = '', opt_includeM
  */
 export const promptForField = function(columns, prompt) {
   return new Promise(function(resolve, reject) {
-    ConfirmColumnUI.launchConfirmColumn(/** @type {!osx.window.ConfirmColumnOptions} */ ({
+    ConfirmColumnUI.launchConfirmColumn(/** @type {!ConfirmColumnOptions} */ ({
       confirm: resolve,
       cancel: reject,
       columns: columns,
