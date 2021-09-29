@@ -2,6 +2,7 @@ goog.require('ol');
 goog.require('ol.Feature');
 goog.require('os.annotation');
 goog.require('os.feature.DynamicFeature');
+goog.require('os.map.instance');
 goog.require('os.ui.datetime.AnyDateType');
 goog.require('plugin.file.kml.ui.KMLNode');
 goog.require('plugin.file.kml.ui.PlacemarkEditUI');
@@ -12,6 +13,7 @@ describe('plugin.file.kml.ui.placemarkedit', function() {
   const Feature = goog.module.get('ol.Feature');
   const osAnnotation = goog.module.get('os.annotation');
   const {default: DynamicFeature} = goog.module.get('os.feature.DynamicFeature');
+  const {getMapContainer} = goog.module.get('os.map.instance');
   const {default: AnyDateType} = goog.module.get('os.ui.datetime.AnyDateType');
   const {default: KMLNode} = goog.module.get('plugin.file.kml.ui.KMLNode');
   const {default: PlacesManager} = goog.module.get('plugin.places.PlacesManager');
@@ -190,7 +192,9 @@ describe('plugin.file.kml.ui.placemarkedit', function() {
   });
 
   it('should not update previewAnnotation', function() {
-    spyOn(osAnnotation, 'hasOverlay').andReturn(true);
+    const map = getMapContainer().getMap();
+    spyOn(map, 'getOverlayById').andReturn(true);
+
     var annotation = {
       'show': true
     };
@@ -208,7 +212,9 @@ describe('plugin.file.kml.ui.placemarkedit', function() {
   });
 
   it('should not update previewAnnotation with null previewFeature', function() {
-    spyOn(osAnnotation, 'hasOverlay').andReturn(true);
+    const map = getMapContainer().getMap();
+    spyOn(map, 'getOverlayById').andReturn(true);
+
     var annotation = {
       'show': true
     };

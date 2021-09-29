@@ -72,15 +72,15 @@ describe('os.object', function() {
       var abc = {};
 
       // test assigning a key to a path that doesn't exist
-      osObject.set(abc, ['a', 'b', 'c'], 3);
+      osObject.setValue(abc, ['a', 'b', 'c'], 3);
       expect(abc.a).toBeDefined();
       expect(abc.a.b).toBeDefined();
       expect(abc.a.b.c).toBe(3);
 
       // test assigning muliple keys to the same root path
-      osObject.set(abc, ['a', 'b', 'c', 'x'], 'ex');
-      osObject.set(abc, ['a', 'b', 'c', 'y'], 'why');
-      osObject.set(abc, ['a', 'b', 'c', 'z'], 'zzz');
+      osObject.setValue(abc, ['a', 'b', 'c', 'x'], 'ex');
+      osObject.setValue(abc, ['a', 'b', 'c', 'y'], 'why');
+      osObject.setValue(abc, ['a', 'b', 'c', 'z'], 'zzz');
       expect(abc.a).toBeDefined();
       expect(abc.a.b).toBeDefined();
       expect(abc.a.b.c).toBeDefined();
@@ -90,14 +90,14 @@ describe('os.object', function() {
 
 
       // test assignment of falsy values
-      osObject.set(abc, ['a', 'b', 'c', 'd'], null);
+      osObject.setValue(abc, ['a', 'b', 'c', 'd'], null);
       expect(abc.a).toBeDefined();
       expect(abc.a.b).toBeDefined();
       expect(abc.a.b.c).toBeDefined();
       expect(abc.a.b.c.d).toBeNull();
 
       // test unchanged after empty array
-      osObject.set(abc, [], 'bogus');
+      osObject.setValue(abc, [], 'bogus');
       expect(abc.a).toBeDefined();
       expect(abc.a.b).toBeDefined();
       expect(abc.a.b.c).toBeDefined();
@@ -107,21 +107,21 @@ describe('os.object', function() {
       expect(abc.a.b.c.z).toBe('zzz');
 
       // test overwriting a key
-      osObject.set(abc, ['a', 'b'], 2);
+      osObject.setValue(abc, ['a', 'b'], 2);
       expect(abc.a).toBeDefined();
       expect(abc.a.b).toBe(2);
       expect(abc.a.b.c).toBeUndefined();
 
-      osObject.set(abc, ['a'], 'AYE');
+      osObject.setValue(abc, ['a'], 'AYE');
       expect(abc.a).toBe('AYE');
 
       // test assigning as an object
-      osObject.set(abc, ['some', 'object', 'path'], {deeply: {nested: 'here'}});
+      osObject.setValue(abc, ['some', 'object', 'path'], {deeply: {nested: 'here'}});
       expect(abc.some.object.path).toBeDefined();
       expect(abc.some.object.path.deeply.nested).toBe('here');
 
       // test assigning a key as a number
-      osObject.set(abc, [1, 2], 'twelve');
+      osObject.setValue(abc, [1, 2], 'twelve');
       expect(abc[1][2]).toBe('twelve');
     });
 
@@ -399,7 +399,7 @@ describe('os.object', function() {
         }
       }
     };
-    osObject.delete(o1, 'a.b.c.d');
+    osObject.deleteValue(o1, 'a.b.c.d');
     expect(o1).toBeDefined();
     expect(googObject.getCount(o1)).toBe(0);
 
@@ -413,7 +413,7 @@ describe('os.object', function() {
         }
       }
     };
-    osObject.delete(o2, 'a.b.c.d');
+    osObject.deleteValue(o2, 'a.b.c.d');
     expect(o2).toBeDefined();
     expect(o2.a).toBeDefined();
     expect(o2.a.b).toBeDefined();
@@ -432,7 +432,7 @@ describe('os.object', function() {
         }
       }
     };
-    osObject.delete(o3, 'a.b.c');
+    osObject.deleteValue(o3, 'a.b.c');
     expect(o3).toBeDefined();
     expect(o3.a).toBeDefined();
     expect(o3.a.b).toBeDefined();

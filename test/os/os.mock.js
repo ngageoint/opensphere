@@ -83,7 +83,7 @@ beforeEach(function() {
   const settings = Settings.getInstance();
 
   // the bracket notation gets the compiler to quit complaining about this
-  osConfig.appNs = 'unittest';
+  osConfig.setAppNs('unittest');
 
   // register request handlers
   RequestHandlerFactory.addHandler(ExtDomainHandler);

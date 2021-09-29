@@ -3,17 +3,44 @@ goog.declareModuleId('os.config');
 import {NAMESPACE} from '../os.js';
 import {getSettings} from './configinstance.js';
 
+/**
+ * @define {string} Namespace used by settings to indicate which application is making updates, assigned by
+ * compile-time defines.
+ */
+const definedAppNs = goog.define('os.config.appNs', NAMESPACE);
 
 /**
- * @define {string} Namespace used by settings to indicate which application is making updates.
- * Will be assigned by each app.
+ * Namespace used by settings to indicate which application is making updates.
+ * @type {string}
  */
-export const appNs = goog.define('os.config.appNs', NAMESPACE);
+export let appNs = definedAppNs;
 
 /**
- * @define {string} Namespace for common settings - those to be rememberred across all applications
+ * Set the app settings namespace.
+ * @param {string} value The new value.
  */
-export const coreNs = goog.define('os.config.coreNs', 'core');
+export const setAppNs = (value) => {
+  appNs = value;
+};
+
+/**
+ * @define {string} Namespace for common settings used between related applications, assigned by compile-time defines.
+ */
+const definedCoreNs = goog.define('os.config.coreNs', 'core');
+
+/**
+ * Namespace for common settings used between related applications.
+ * @type {string}
+ */
+export let coreNs = definedCoreNs;
+
+/**
+ * Set the namespace for common settings.
+ * @param {string} value The new value.
+ */
+export const setCoreNs = (value) => {
+  coreNs = value;
+};
 
 /**
  * Get the application name from settings.
