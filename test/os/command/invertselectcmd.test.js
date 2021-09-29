@@ -5,7 +5,6 @@ goog.require('ol.geom.Point');
 goog.require('os.command.InvertSelect');
 goog.require('os.command.State');
 goog.require('os.data.DataManager');
-goog.require('os.data.DataManager');
 goog.require('os.mock');
 goog.require('os.source.PropertyChange');
 goog.require('os.source.Vector');

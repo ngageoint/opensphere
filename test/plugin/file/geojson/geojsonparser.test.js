@@ -14,12 +14,14 @@ describe('plugin.file.geojson.GeoJSONParser', function() {
   const {default: GeoJSONParser} = goog.module.get('plugin.file.geojson.GeoJSONParser');
   var gj1 = {
     'type': 'FeatureCollection',
-    'features': [{
-      'type': 'Feature',
-      'geometry': {'type': 'Point', 'coordinates': [102.0, 0.5]},
-      'properties': {'prop0': 'value0'}
-    },
-      42, {
+    'features': [
+      {
+        'type': 'Feature',
+        'geometry': {'type': 'Point', 'coordinates': [102.0, 0.5]},
+        'properties': {'prop0': 'value0'}
+      },
+      42,
+      {
         'type': 'Feature',
         'geometry': {
           'type': 'LineString',
@@ -31,7 +33,8 @@ describe('plugin.file.geojson.GeoJSONParser', function() {
           'prop0': 'value0',
           'prop1': 0.0
         }
-      }, {
+      },
+      {
         'type': 'Feature',
         'geometry': {
           'type': 'Polygon',
@@ -41,7 +44,8 @@ describe('plugin.file.geojson.GeoJSONParser', function() {
           'prop0': 'value0',
           'prop1': {'this': 'that'}
         }
-      }]
+      }
+    ]
   };
 
   it('should handle object sources', function() {

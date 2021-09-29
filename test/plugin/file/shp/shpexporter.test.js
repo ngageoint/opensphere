@@ -1,6 +1,5 @@
 goog.require('goog.object');
 goog.require('ol.Feature');
-goog.require('ol.geom.LineString');
 goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
 goog.require('plugin.file.shp.SHPExporter');
@@ -8,17 +7,14 @@ goog.require('plugin.file.shp.SHPExporter');
 describe('plugin.file.shp.SHPExporter', function() {
   const googObject = goog.module.get('goog.object');
   const Feature = goog.module.get('ol.Feature');
-  const LineString = goog.module.get('ol.geom.LineString');
   const Point = goog.module.get('ol.geom.Point');
   const Polygon = goog.module.get('ol.geom.Polygon');
   const {default: SHPExporter} = goog.module.get('plugin.file.shp.SHPExporter');
   var ex = new SHPExporter();
-  var lineFeature;
   var pointFeature;
   var polygonFeature;
 
   beforeEach(function() {
-    lineFeature = new Feature(new LineString([[12, 34], [56, 78]]));
     pointFeature = new Feature(new Point([12, 34]));
     polygonFeature = new Feature(new Polygon([[[1, 2], [3, 4], [5, 6], [7, 8], [1, 2]]]));
 
@@ -43,41 +39,41 @@ describe('plugin.file.shp.SHPExporter', function() {
   });
 
   it('should process Point features', function() {
-      ex.setItems([pointFeature]);
-      ex.process();
-      var output = ex.getFiles();
-      expect(output).not.toBeNull();
-      expect(output.length).toBe(5);
-      var shpFound = false;
-      var dbfFound = false;
-      var shxFound = false;
-      var cpgFound = false;
-      var prjFound = false;
-      for (var i = 0; i < output.length; i++) {
-        var file = output[i];
-        if (file.getFileName().endsWith("shp")) {
-            shpFound = true;
-        }
-        if (file.getFileName().endsWith("dbf")) {
-            dbfFound = true;
-        }
-        if (file.getFileName().endsWith("shx")) {
-            shxFound = true;
-        }
-        if (file.getFileName().endsWith("prj")) {
-            prjFound = true;
-            expect(file.getContent()).toBe(SHPExporter.PRJ_WGS84);
-        }
-        if (file.getFileName().endsWith("cpg")) {
-            cpgFound = true;
-            expect(file.getContent()).toBe("UTF-8");
-        }
+    ex.setItems([pointFeature]);
+    ex.process();
+    var output = ex.getFiles();
+    expect(output).not.toBeNull();
+    expect(output.length).toBe(5);
+    var shpFound = false;
+    var dbfFound = false;
+    var shxFound = false;
+    var cpgFound = false;
+    var prjFound = false;
+    for (var i = 0; i < output.length; i++) {
+      var file = output[i];
+      if (file.getFileName().endsWith('shp')) {
+        shpFound = true;
       }
-      expect(shpFound).toBe(true);
-      expect(cpgFound).toBe(true);
-      expect(prjFound).toBe(true);
-      expect(shxFound).toBe(true);
-      expect(dbfFound).toBe(true);
+      if (file.getFileName().endsWith('dbf')) {
+        dbfFound = true;
+      }
+      if (file.getFileName().endsWith('shx')) {
+        shxFound = true;
+      }
+      if (file.getFileName().endsWith('prj')) {
+        prjFound = true;
+        expect(file.getContent()).toBe(SHPExporter.PRJ_WGS84);
+      }
+      if (file.getFileName().endsWith('cpg')) {
+        cpgFound = true;
+        expect(file.getContent()).toBe('UTF-8');
+      }
+    }
+    expect(shpFound).toBe(true);
+    expect(cpgFound).toBe(true);
+    expect(prjFound).toBe(true);
+    expect(shxFound).toBe(true);
+    expect(dbfFound).toBe(true);
   });
 
   it('should process LineString features', function() {
@@ -107,6 +103,6 @@ describe('plugin.file.shp.SHPExporter', function() {
   });
 
   it('should compress by default', function() {
-      expect(ex.getCompress()).toBe(true);
-  })
+    expect(ex.getCompress()).toBe(true);
+  });
 });

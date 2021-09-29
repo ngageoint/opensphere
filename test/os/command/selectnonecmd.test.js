@@ -3,7 +3,6 @@ goog.require('ol.geom.Point');
 goog.require('os.command.SelectNone');
 goog.require('os.command.State');
 goog.require('os.data.DataManager');
-goog.require('os.data.DataManager');
 goog.require('os.source.Vector');
 
 describe('os.command.SelectNone', function() {

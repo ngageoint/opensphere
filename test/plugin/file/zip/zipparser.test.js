@@ -44,29 +44,26 @@ describe('plugin.file.zip.ZIPParser', function() {
 
     googEvents.listenOnce(parser, EventType.COMPLETE, onParseComplete);
 
-    runs(function( ){
+    runs(function() {
       var file = urlMethod.getFile();
       expect(parser.processingZip_).toBe(false);
       expect(parser.getFiles().length).toBe(0);
-        
-      parser.setSource(file.getContent()); //will fire the COMPLETE for onParseComplete
-  
+
+      parser.setSource(file.getContent()); // will fire the COMPLETE for onParseComplete
+
       expect(parser.processingZip_).toBe(true);
-      
+
       waitsFor(
-        function() {
+          function() {
           // test document/folder parsing
           // make sure we can parse multiple files
-          if (parseComplete) expect(parser.getFiles().length).toBe(4);
-          return parseComplete;
-        }, 
-        'parser to finish', 
-        15000
+            if (parseComplete) expect(parser.getFiles().length).toBe(4);
+            return parseComplete;
+          },
+          'parser to finish',
+          15000
       );
-
-  
     });
-
   });
 
   it('cleans up the parser', function() {

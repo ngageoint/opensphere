@@ -39,7 +39,7 @@ describe('os.mixin.closure', function() {
   };
 
   it('works with array polyfills', function() {
-    Array.prototype.testFn = myFn;
+    Array.prototype.testFn = myFn; // eslint-disable-line no-extend-native
 
     var original = [1, 2, 3];
     testArray(original);
@@ -55,7 +55,7 @@ describe('os.mixin.closure', function() {
   // any for-in loop on objects will fail if we use polyfills, so it's actually not supported by our code. we don't
   // currently have object polyfills, so this test is disabled.
   xit('works with object polyfills', function() {
-    Object.prototype.testFn = myFn;
+    Object.prototype.testFn = myFn; // eslint-disable-line no-extend-native
     expect(goog.object.isEmpty({})).toBe(true);
 
     var original = {

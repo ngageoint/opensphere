@@ -107,7 +107,7 @@
     "init": "npm-run-all -p init:base init:debug -s init:version init:vfolder",
     "lint:html": "html-validate 'views/**/*.html'",
     "lint:css": "sass-lint -v -s scss -i 'scss/nolint/**/*.scss' 'scss/**/*.scss'",
-    "lint:js": "eslint --cache 'src/**/*.js' 'tasks/**/*.js'",
+    "lint:js": "eslint --cache 'src/**/*.js' 'tasks/**/*.js' 'test/**/*.js'",
     "lint": "npm run lint:js && npm run lint:css",
     "precompile:resolve": "cp addlayer.js .build",
     "compile:resolve": "os-resolve --outputDir .build --defineRoots $(cat .build/version)",
