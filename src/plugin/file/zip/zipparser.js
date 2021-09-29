@@ -15,6 +15,7 @@ const ol = goog.require('ol');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');
+const {default: FileWrapper} = goog.requireType('os.file.FileWrapper');
 const {default: ZIPParserConfig} = goog.requireType('plugin.file.zip.ZIPParserConfig');
 
 
@@ -38,7 +39,7 @@ export default class ZIPParser extends AsyncZipParser {
     this.config_ = config;
 
     /**
-     * @type {Array<osx.import.FileWrapper>}
+     * @type {Array<FileWrapper>}
      * @private
      */
     this.files_ = [];
@@ -95,7 +96,7 @@ export default class ZIPParser extends AsyncZipParser {
   }
 
   /**
-   * @return {Array<osx.import.FileWrapper>}
+   * @return {Array<FileWrapper>}
    */
   getFiles() {
     return this.files_;
@@ -300,7 +301,7 @@ export default class ZIPParser extends AsyncZipParser {
   }
 
   /**
-   * @param {osx.import.FileWrapper} uio
+   * @param {FileWrapper} uio
    * @param {Event} event
    * @private
    */
@@ -308,7 +309,7 @@ export default class ZIPParser extends AsyncZipParser {
     var content = (event && event.target) ? event.target.result : null;
 
     if (content && typeof content === 'string') {
-      if (uio) uio['file'].setContent(content);
+      if (uio) uio.file.setContent(content);
       this.onComplete_(uio);
     } else {
       this.logError_('There was a problem reading the ZIP content!');
@@ -351,7 +352,7 @@ export default class ZIPParser extends AsyncZipParser {
     var onFile = function(file) {
       if (file) {
         // turn this into a better object for the UI
-        return /** @type {osx.import.FileWrapper} */ ({
+        return /** @type {FileWrapper} */ ({
           id: ol.getUid(file),
           label: entry.filename,
           valid: true,
@@ -372,7 +373,7 @@ export default class ZIPParser extends AsyncZipParser {
   /**
    * Add to UI list, and let UI know that files are unzipped
    *
-   * @param {osx.import.FileWrapper|null} uio
+   * @param {FileWrapper|null} uio
    * @private
    */
   onComplete_(uio) {

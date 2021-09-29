@@ -2,6 +2,8 @@ goog.declareModuleId('plugin.file.zip.ZIPParserConfig');
 
 import FileParserConfig from '../../../os/parse/fileparserconfig.js';
 
+const {default: FileWrapper} = goog.requireType('os.file.FileWrapper');
+
 
 /**
  * Configuration for a ZIP parser.
@@ -21,7 +23,7 @@ export default class ZIPParserConfig extends FileParserConfig {
 
     /**
      * The destination where ZIPParser drops the unzipped files
-     * @type {Array.<osx.import.FileWrapper>}
+     * @type {Array<FileWrapper>}
      */
     this['files'] = [];
   }

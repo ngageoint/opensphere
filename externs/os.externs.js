@@ -545,19 +545,6 @@ osx.import;
 
 /**
  * @typedef {{
- *   id: string,
- *   label: string,
- *   valid: boolean,
- *   enabled: boolean,
- *   msg: (string|undefined),
- *   file: os.file.File
- * }}
- */
-osx.import.FileWrapper;
-
-
-/**
- * @typedef {{
  *   type: string,
  *   helpUi: (string|undefined),
  *   formUi: string,
