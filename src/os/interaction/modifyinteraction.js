@@ -11,6 +11,7 @@ const Feature = goog.require('ol.Feature');
 const olEvents = goog.require('ol.events');
 const OLEventType = goog.require('ol.events.EventType');
 const Point = goog.require('ol.geom.Point');
+const Polygon = goog.require('ol.geom.Polygon');
 const OLModify = goog.require('ol.interaction.Modify');
 const olModifyEventType = goog.require('ol.interaction.ModifyEventType');
 const RBush = goog.require('ol.structs.RBush');
@@ -409,6 +410,21 @@ class Modify extends OLModify {
     if (this.clone_) {
       const originalGeom = this.clone_.getGeometry();
       if (originalGeom) {
+        // While handling events, OpenLayers may add a new Z (altitude) coordinate to a set of XY
+        // coordinates. Since it is not intended for XY coordinates to have a Z coordinate, these
+        // new values can potentially be undefined and cause problems with Cesium. To prevent this,
+        // set all undefined values to zero.
+        if (originalGeom instanceof Polygon) {
+          var flatCoordinates = originalGeom.getFlatCoordinates();
+          const isUndefined = (item) => item === undefined;
+          if (flatCoordinates && flatCoordinates.some(isUndefined)) {
+            while (flatCoordinates.some(isUndefined)) {
+              flatCoordinates[flatCoordinates.findIndex(isUndefined)] = 0;
+            }
+            originalGeom.setFlatCoordinates(originalGeom.getLayout(), flatCoordinates, originalGeom.getEnds());
+          }
+        }
+
         const interpolatedGeom = originalGeom.clone();
         interpolatedGeom.unset(interpolate.METHOD_FIELD, true);
 
