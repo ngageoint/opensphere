@@ -3,6 +3,7 @@ goog.module('os.interaction.Measure');
 const GoogEventType = goog.require('goog.events.EventType');
 const LineString = goog.require('ol.geom.LineString');
 const Point = goog.require('ol.geom.Point');
+const {MAC} = goog.require('ol.has');
 const {toLonLat} = goog.require('ol.proj');
 const Fill = goog.require('ol.style.Fill');
 const Stroke = goog.require('ol.style.Stroke');
@@ -23,6 +24,7 @@ const TimelineController = goog.require('os.time.TimelineController');
 const UnitChange = goog.require('os.unit.UnitChange');
 const UnitManager = goog.require('os.unit.UnitManager');
 
+
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 
 
@@ -36,6 +38,8 @@ class Measure extends DrawPolygon {
    */
   constructor(opt_options) {
     super();
+    this.condition = measureCondition;
+    this.defaultCondition = measureCondition;
     this.color = [255, 0, 0, 1];
     this.type = 'measure';
 
@@ -335,6 +339,17 @@ class Measure extends DrawPolygon {
     });
   }
 }
+
+/**
+ * Return true if only the ctrl or cmd-key and shift-key is pressed, false otherwise.
+ *
+ * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
+ * @return {boolean} Whether the condition is met.
+ */
+const measureCondition = function(mapBrowserEvent) {
+  var originalEvent = mapBrowserEvent.originalEvent;
+  return originalEvent.shiftKey && (MAC ? originalEvent.metaKey : originalEvent.ctrlKey) && !originalEvent.altKey;
+};
 
 /**
  * @type {number}

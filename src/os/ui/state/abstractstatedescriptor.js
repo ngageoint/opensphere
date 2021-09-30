@@ -348,7 +348,7 @@ class AbstractStateDescriptor extends BaseDescriptor {
    * @inheritDoc
    */
   getMenuGroup() {
-    return '1:Saved States';
+    return '200:Saved States';
   }
 
   /**

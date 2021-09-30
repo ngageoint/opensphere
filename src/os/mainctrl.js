@@ -170,7 +170,6 @@ const importMenu = goog.require('os.ui.menu.import');
 const layerMenu = goog.require('os.ui.menu.layer');
 const listMenu = goog.require('os.ui.menu.list');
 const mapMenu = goog.require('os.ui.menu.map');
-const saveMenu = goog.require('os.ui.menu.save');
 const spatialMenu = goog.require('os.ui.menu.spatial');
 const timelineMenu = goog.require('os.ui.menu.timeline');
 const unitMenu = goog.require('os.ui.menu.unit');
@@ -335,7 +334,6 @@ export default class Controller extends AbstractMainCtrl {
     mapMenu.setup();
     layerMenu.setup();
     listMenu.setup();
-    saveMenu.setup();
     spatialMenu.setup();
     unitMenu.setup();
     timelineMenu.setup();
@@ -398,7 +396,6 @@ export default class Controller extends AbstractMainCtrl {
     filterMenu.dispose();
     mapMenu.dispose();
     layerMenu.dispose();
-    saveMenu.dispose();
     spatialMenu.dispose();
     timelineMenu.dispose();
     unitMenu.dispose();

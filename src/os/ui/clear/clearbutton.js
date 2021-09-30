@@ -14,7 +14,7 @@ const directive = () => ({
   replace: true,
   controller: Controller,
   controllerAs: 'ctrl',
-  template: '<button class="btn btn-danger" ng-click="ctrl.toggle()" ' +
+  template: '<button class="btn btn-secondary" ng-click="ctrl.toggle()" ' +
       'title="Select items to clear/reset">' +
       '<i class="fa fa-fw fa-times"></i>' +
       '<span ng-class="{\'d-none\': puny}">Clear</span>' +

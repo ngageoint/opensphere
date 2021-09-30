@@ -70,15 +70,15 @@ class Controller {
   constructor($scope, $element) {
     /**
      * @type {?angular.Scope}
-     * @private
+     * @protected
      */
-    this.scope_ = $scope;
+    this.scope = $scope;
 
     /**
      * @type {?angular.JQLite}
-     * @private
+     * @protected
      */
-    this.element_ = $element;
+    this.element = $element;
 
     /**
      * @type {AbstractDraw}
@@ -94,6 +94,14 @@ class Controller {
     this.feature = undefined;
 
     /**
+     * The menu containing the available draw interactions (displayed from the button dropdown).
+     * @type {Menu|undefined}
+     * @protected
+     */
+    this.controlMenu = draw.getMenu();
+
+    /**
+     * The menu to display when drawing completes.
      * @type {Menu|undefined}
      * @protected
      */
@@ -128,11 +136,6 @@ class Controller {
      * @type {boolean}
      */
     this['hideExtraControls'] = false;
-
-    /**
-     * @type {Menu|undefined}
-     */
-    this['controlMenu'] = draw.getMenu();
   }
 
   /**
@@ -167,8 +170,8 @@ class Controller {
     dispatcher.getInstance().unlisten(DrawEventType.DRAWPOLYGON, this.onDrawType, false, this);
     dispatcher.getInstance().unlisten(DrawEventType.DRAWLINE, this.onDrawType, false, this);
 
-    this.scope_ = null;
-    this.element_ = null;
+    this.scope = null;
+    this.element = null;
   }
 
   /**
@@ -263,16 +266,17 @@ class Controller {
    * @protected
    */
   apply(opt_event) {
-    apply(this.scope_);
+    apply(this.scope);
   }
 
   /**
    * @protected
    */
   initControlMenu() {
-    var mi = this['controlMenu'].getRoot();
+    var mi = this.controlMenu.getRoot();
     if (this['supportsLines']) {
-      mi.addChild({
+      const drawGroup = mi.find('Draw');
+      drawGroup.addChild({
         label: 'Line',
         eventType: draw.EventType.LINE,
         tooltip: 'Draw a line on the map',
@@ -288,7 +292,7 @@ class Controller {
       mi.removeChild('Whole World');
       mi.removeChild('drawMenuSeparator');
     } else {
-      addOGCMenuItems(this['controlMenu'], 130);
+      addOGCMenuItems(this.controlMenu, 130);
     }
   }
 
@@ -380,9 +384,9 @@ class Controller {
    * @export
    */
   toggleMenu(opt_value) {
-    var menu = this['controlMenu'];
+    var menu = this.controlMenu;
 
-    var target = this.element_.find('.draw-controls-group');
+    var target = this.element.find('.draw-controls-group');
     menu.open(undefined, {
       my: 'left top+4',
       at: 'left bottom',

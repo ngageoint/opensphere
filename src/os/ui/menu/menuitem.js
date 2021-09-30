@@ -187,14 +187,18 @@ class MenuItem {
       return html;
     }
 
+    var classes = [];
+    var isItem = type !== types.SUBMENU && type !== types.GROUP && type !== types.SEPARATOR;
+
     html += '<li';
     if (type === types.SEPARATOR) {
-      html += '>-</li>';
-      return html;
+      if (this.label) {
+        classes.push('dropdown-header');
+      } else {
+        html += '>-</li>';
+        return html;
+      }
     }
-
-    var classes = [];
-    var isItem = type !== types.SUBMENU && type !== types.GROUP;
 
     // group/category
     if (type === types.GROUP) {

@@ -7,14 +7,12 @@ const AddDataButtonUI = goog.require('os.ui.AddDataButtonUI');
 const DatePanelUI = goog.require('os.ui.DatePanelUI');
 const LayersButtonUI = goog.require('os.ui.LayersButtonUI');
 const LegendButtonUI = goog.require('os.ui.LegendButtonUI');
-const MeasureButtonUI = goog.require('os.ui.MeasureButtonUI');
 const MuteButtonUI = goog.require('os.ui.MuteButtonUI');
 const OSNavTopUI = goog.require('os.ui.OSNavTopUI');
-const SaveButtonUI = goog.require('os.ui.SaveButtonUI');
 const ScaleLine = goog.require('os.ui.ScaleLine');
 const ServersButtonUI = goog.require('os.ui.ServersButtonUI');
 const SettingsButtonUI = goog.require('os.ui.SettingsButtonUI');
-const StateButtonUI = goog.require('os.ui.StateButtonUI');
+const SaveButtonUI = goog.require('os.ui.SaveButtonUI');
 const AlertButtonUI = goog.require('os.ui.alert.AlertButtonUI');
 const ClearButtonUI = goog.require('os.ui.clear.ClearButtonUI');
 const DrawControlsUI = goog.require('os.ui.draw.DrawControlsUI');
@@ -64,14 +62,11 @@ const init = function() {
   list.add(Location.TOP_LEFT, LayersButtonUI.directiveTag, 200);
   list.add(Location.TOP_LEFT,
       `<${DrawControlsUI.directiveTag} show-label="!puny"></${DrawControlsUI.directiveTag}>`, 300);
-  list.add(Location.TOP_LEFT,
-      `<${MeasureButtonUI.directiveTag} show-label="!puny"></${MeasureButtonUI.directiveTag}>`, 400);
   list.add(Location.TOP_LEFT, ClearButtonUI.directiveTag, 500);
 
   list.add(Location.TOP_CENTER, DatePanelUI.directiveTag, 1);
 
-  list.add(Location.TOP_RIGHT, SaveButtonUI.directiveTag, 200);
-  list.add(Location.TOP_RIGHT, StateButtonUI.directiveTag, 300);
+  list.add(Location.TOP_RIGHT, SaveButtonUI.directiveTag, 300);
   list.add(Location.TOP_RIGHT, getSearchBox(), 900);
   list.add(Location.TOP_RIGHT, HelpUI.directiveTag, 1000);
 
