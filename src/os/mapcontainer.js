@@ -777,7 +777,7 @@ class MapContainer extends EventTarget {
     controls.addControl(genMapGrp, 1, 'Draw Geometry',
         [KeyCodes.SHIFT, '+'], [Controls.MOUSE.LEFT_MOUSE, '+', Controls.FONT.ALL]);
     controls.addControl(genMapGrp, 1, 'Measure',
-        [platformModifier, '+', KeyCodes.SHIFT, '+'], [Controls.MOUSE.LEFT_MOUSE, '+', Controls.FONT.ALL]);
+        [platformModifier, '+', KeyCodes.SHIFT, '+'], [Controls.MOUSE.LEFT_MOUSE]);
     controls.addControl(genMapGrp, 1, 'Context Menu', null, [Controls.MOUSE.RIGHT_MOUSE]);
     controls.addControl(genMapGrp, 1, 'Reset View', [KeyCodes.V]);
     controls.addControl(genMapGrp, 1, 'Reset Rotation', [KeyCodes.R]);

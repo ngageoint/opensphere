@@ -2,6 +2,7 @@ goog.module('os.ui.draw.DrawControlsUI');
 
 const googEvents = goog.require('goog.events');
 const log = goog.require('goog.log');
+const {MAC} = goog.require('ol.has');
 const {ROOT} = goog.require('os');
 const {getIMapContainer} = goog.require('os.map.instance');
 const MapEvent = goog.require('os.MapEvent');
@@ -126,15 +127,17 @@ class Controller extends BaseDrawControlsCtrl {
     super.initControlMenu();
 
     // the main draw control UI should contribute the measure controls group if it isn't there already
-    var mi = this.controlMenu.getRoot();
+    const mi = this.controlMenu.getRoot();
     const measureGroup = mi.find('Measure');
 
     if (!measureGroup) {
+      const platformModifier = MAC ? 'Cmd' : 'Ctrl';
+
       mi.addChild({
         type: MenuItemType.GROUP,
         label: 'Measure',
         tooltip: 'Options for measuring distances',
-        shortcut: 'Ctrl+Shift+click',
+        shortcut: `${platformModifier}+Shift+click`,
         sort: 50,
         children: [{
           label: 'Measure Rhumb Line',
