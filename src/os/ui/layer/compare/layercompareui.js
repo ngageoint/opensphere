@@ -1,6 +1,7 @@
 goog.module('os.ui.layer.compare.LayerCompareUI');
 
 const dispose = goog.require('goog.dispose');
+const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
 const {listen, unlistenByKey} = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
 const Promise = goog.require('goog.Promise');
@@ -237,8 +238,16 @@ class Controller {
      */
     this.resizeFn = this.updateMapSize.bind(this);
 
-    // Updates the map sizes when the window is resized.
+    /**
+     * Browser window size monitor for handling browser resizes.
+     * @type {ViewportSizeMonitor}
+     * @protected
+     */
+    this.vsm = new ViewportSizeMonitor();
+
+    // Updates the map sizes when the window or browser is resized.
     resize(this.element, this.resizeFn);
+    this.vsm.listen(GoogEventType.RESIZE, this.handleBrowserResize, false, this);
   }
 
   /**
@@ -257,6 +266,7 @@ class Controller {
     dispose(this.leftMap);
     dispose(this.rightMap);
     dispose(this.view);
+    dispose(this.vsm);
 
     this.scope = null;
     this.element = null;
@@ -532,6 +542,16 @@ class Controller {
       this.leftMap.setSize(size);
       this.rightMap.setSize(size);
     }
+  }
+
+  /**
+   * Handler for browser window resize events. Requests an update to the map sizes on the next animation frame.
+   * These updates won't happen on browser resize without the requestAnimationFrame call due to the OL map render
+   * being tied to animation frames.
+   * @protected
+   */
+  handleBrowserResize() {
+    requestAnimationFrame(this.resizeFn);
   }
 }
 
