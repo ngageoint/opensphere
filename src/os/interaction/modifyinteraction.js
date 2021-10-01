@@ -11,7 +11,6 @@ const Feature = goog.require('ol.Feature');
 const olEvents = goog.require('ol.events');
 const OLEventType = goog.require('ol.events.EventType');
 const Point = goog.require('ol.geom.Point');
-const Polygon = goog.require('ol.geom.Polygon');
 const OLModify = goog.require('ol.interaction.Modify');
 const olModifyEventType = goog.require('ol.interaction.ModifyEventType');
 const RBush = goog.require('ol.structs.RBush');
@@ -37,6 +36,7 @@ const windowSelector = goog.require('os.ui.windowSelector');
 
 const MapBrowserPointerEvent = goog.requireType('ol.MapBrowserPointerEvent');
 const Geometry = goog.requireType('ol.geom.Geometry');
+const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
 const OSMap = goog.requireType('os.Map');
 
 
@@ -410,21 +410,6 @@ class Modify extends OLModify {
     if (this.clone_) {
       const originalGeom = this.clone_.getGeometry();
       if (originalGeom) {
-        // While handling events, OpenLayers may add a new Z (altitude) coordinate to a set of XY
-        // coordinates. Since it is not intended for XY coordinates to have a Z coordinate, these
-        // new values can potentially be undefined and cause problems with Cesium. To prevent this,
-        // set all undefined values to zero.
-        if (originalGeom instanceof Polygon) {
-          var flatCoordinates = originalGeom.getFlatCoordinates();
-          const isUndefined = (item) => item === undefined;
-          if (flatCoordinates && flatCoordinates.some(isUndefined)) {
-            while (flatCoordinates.some(isUndefined)) {
-              flatCoordinates[flatCoordinates.findIndex(isUndefined)] = 0;
-            }
-            originalGeom.setFlatCoordinates(originalGeom.getLayout(), flatCoordinates, originalGeom.getEnds());
-          }
-        }
-
         const interpolatedGeom = originalGeom.clone();
         interpolatedGeom.unset(interpolate.METHOD_FIELD, true);
 
@@ -541,6 +526,17 @@ const oldHandleDownEvent = OLModify.handleDownEvent_;
  */
 OLModify.handleDownEvent_ = function(evt) {
   this.inDownEvent_ = true;
+  const geometry = /** @type {SimpleGeometry} */ (this.clone_.getGeometry());
+  const stride = geometry.getStride();
+
+  //
+  // Event coordinates in 3D moded have a Z component, which conflicts with OL's assumption that the event coordinate
+  // layout will match the modify geometry's layout. Make sure the layouts are consistent by setting the coordinate
+  // length equal to the stride.
+  //
+  if (stride && evt.coordinate.length > stride) {
+    evt.coordinate.length = stride;
+  }
 
   //
   // The vertex is displayed along the rendered geometry, but on mouse down we want to target the original geometry so
@@ -550,7 +546,6 @@ OLModify.handleDownEvent_ = function(evt) {
   // This is only done if a vertex is displayed, indicating we're ready to modify.
   //
   if (this.vertexFeature_) {
-    const geometry = this.clone_.getGeometry();
     const vertexGeometry = /** @type {Point} */ (this.vertexFeature_.getGeometry());
     if (geometry && vertexGeometry) {
       const vertexCoord = vertexGeometry.getCoordinates();
@@ -569,6 +564,39 @@ OLModify.handleDownEvent_ = function(evt) {
   this.inDownEvent_ = false;
 
   return result;
+};
+
+
+/**
+ * The original OL drag event handler.
+ * @type {function(MapBrowserPointerEvent)}
+ * @suppress {accessControls} Access to the original OL function.
+ */
+const oldHandleDragEvent = OLModify.handleDragEvent_;
+
+
+/**
+ * Mixin to the OL drag event handler.
+ * @param {MapBrowserPointerEvent} evt Event.
+ * @this {Modify}
+ * @private
+ *
+ * @suppress {accessControls} Replace OL function and access vertex feature.
+ */
+OLModify.handleDragEvent_ = function(evt) {
+  const geometry = /** @type {SimpleGeometry} */ (this.clone_.getGeometry());
+  const stride = geometry.getStride();
+
+  //
+  // Event coordinates in 3D moded have a Z component, which conflicts with OL's assumption that the event coordinate
+  // layout will match the modify geometry's layout. Make sure the layouts are consistent by setting the coordinate
+  // length equal to the stride.
+  //
+  if (stride && evt.coordinate.length > stride) {
+    evt.coordinate.length = stride;
+  }
+
+  oldHandleDragEvent.call(this, evt);
 };
 
 exports = Modify;
