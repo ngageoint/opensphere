@@ -227,7 +227,11 @@ class DataManager extends EventTarget {
         var clazz = this.providerTypes_[type].clazz;
 
         if (clazz.getInstance) {
+          // Class uses goog.addSingletonGetter getInstance function.
           dp = clazz.getInstance();
+        } else if (clazz['getInstance']) {
+          // Class uses a static exported getInstance function.
+          dp = /** @type {IDataProvider} */ (clazz['getInstance']());
         } else {
           dp = /** @type {IDataProvider} */ (new clazz());
         }

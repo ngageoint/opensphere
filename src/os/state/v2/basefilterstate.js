@@ -2,6 +2,7 @@ goog.module('os.state.v2.BaseFilter');
 
 const {getChildren, getFirstElementChild} = goog.require('goog.dom');
 const {loadXml, serialize} = goog.require('goog.dom.xml');
+const {find} = goog.require('ol.array');
 const FilterEntry = goog.require('os.filter.FilterEntry');
 const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
 const AbstractState = goog.require('os.state.AbstractState');
@@ -174,12 +175,12 @@ class BaseFilter extends XMLState {
 
         var filters = /** @type {Array} */ (filtersNode ? filtersNode.getElementsByTagName('filter') : []);
         // Does this filterid exist for this layer
-        var found = filters.find(function(filter) {
+        var found = find(filters, function(filter) {
           return filter.getAttribute('id') == filterId && filter.getAttribute('type') == layerId ||
               filter.getAttribute('id') == cloneId && filter.getAttribute('type') == layerId;
         });
         if (!found) {
-          var similiar = filters.find(function(filter) {
+          var similiar = find(filters, function(filter) {
             return filter.getAttribute('id') == filterId;
           });
           if (similiar) {

@@ -63,6 +63,7 @@ class StateProvider extends DescriptorProvider {
   /**
    * Get the global instance.
    * @return {!StateProvider}
+   * @export
    */
   static getInstance() {
     if (!instance) {
