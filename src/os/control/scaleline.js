@@ -1,4 +1,8 @@
-goog.module('os.control.ScaleLine');
+goog.declareModuleId('os.control.ScaleLine');
+
+import * as osMap from '../map/map.js';
+import {UnitSystem} from '../unit/unit.js';
+import UnitManager from '../unit/unitmanager.js';
 
 const safe = goog.require('goog.dom.safe');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -7,16 +11,13 @@ const asserts = goog.require('ol.asserts');
 const OLScaleLine = goog.require('ol.control.ScaleLine');
 const ScaleLineUnits = goog.require('ol.control.ScaleLineUnits');
 const olProj = goog.require('ol.proj');
-const osMap = goog.require('os.map');
-const {UnitSystem} = goog.require('os.unit');
-const UnitManager = goog.require('os.unit.UnitManager');
 
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
  */
-class ScaleLine extends OLScaleLine {
+export default class ScaleLine extends OLScaleLine {
   /**
    * Constructor.
    * @param {olx.control.ScaleLineOptions=} opt_options
@@ -213,5 +214,3 @@ class ScaleLine extends OLScaleLine {
     return this.element_;
   }
 }
-
-exports = ScaleLine;

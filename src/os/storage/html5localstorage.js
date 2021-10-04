@@ -1,9 +1,10 @@
-goog.module('os.storage.HTML5LocalStorage');
+goog.declareModuleId('os.storage.HTML5LocalStorage');
+
+import osImplements from '../implements.js';
+import IMechanism from './imechanism.js';
 
 const iter = goog.require('goog.iter');
 const googStorageMechanismHtml5LocalStorage = goog.require('goog.storage.mechanism.HTML5LocalStorage');
-const osImplements = goog.require('os.implements');
-const IMechanism = goog.require('os.storage.IMechanism');
 
 
 /**
@@ -12,7 +13,7 @@ const IMechanism = goog.require('os.storage.IMechanism');
  *
  * @implements {IMechanism}
  */
-class HTML5LocalStorage extends googStorageMechanismHtml5LocalStorage {
+export default class HTML5LocalStorage extends googStorageMechanismHtml5LocalStorage {
   /**
    * Constructor.
    */
@@ -31,6 +32,5 @@ class HTML5LocalStorage extends googStorageMechanismHtml5LocalStorage {
     return values;
   }
 }
-osImplements(HTML5LocalStorage, IMechanism.ID);
 
-exports = HTML5LocalStorage;
+osImplements(HTML5LocalStorage, IMechanism.ID);

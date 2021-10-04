@@ -1,22 +1,25 @@
-goog.module('os.ui.filter.ui.EditFiltersUI');
+goog.declareModuleId('os.ui.filter.ui.EditFiltersUI');
 
-goog.require('os.ui.filter.AdvancedFilterBuilderUI');
-goog.require('os.ui.filter.BasicFilterBuilderUI');
-goog.require('os.ui.util.ValidationMessageUI');
+import '../../util/validationmessage.js';
+import '../advancedfilterbuilder.js';
+import '../basicfilterbuilder.js';
+
+import DataManager from '../../../data/datamanager.js';
+import Metrics from '../../../metrics/metrics.js';
+import {Filters} from '../../../metrics/metricskeys.js';
+import {ROOT} from '../../../os.js';
+import Module from '../../module.js';
+import {exists, close} from '../../window.js';
+import * as ConfirmUI from '../../window/confirm.js';
+import {OPERATIONS} from '../filter.js';
+import ExpressionNode from './expressionnode.js';
+import GroupNode from './groupnode.js';
 
 const {getFirstElementChild, getNextElementSibling} = goog.require('goog.dom');
-const {ROOT} = goog.require('os');
-const DataManager = goog.require('os.data.DataManager');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Filters} = goog.require('os.metrics.keys');
-const Module = goog.require('os.ui.Module');
-const {OPERATIONS} = goog.require('os.ui.filter');
-const ExpressionNode = goog.require('os.ui.filter.ui.ExpressionNode');
-const GroupNode = goog.require('os.ui.filter.ui.GroupNode');
-const {exists, close} = goog.require('os.ui.window');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -24,7 +27,7 @@ const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: true,
@@ -37,7 +40,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'editfilter';
+export const directiveTag = 'editfilter';
 
 /**
  * Add the directive to the module
@@ -48,7 +51,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the filters window.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -69,10 +72,10 @@ class Controller {
     this.element = $element;
 
     /**
-     * @type {os.filter.FilterEntry}
+     * @type {FilterEntry}
      * @protected
      */
-    this.entry = /** @type {os.filter.FilterEntry} */ ($scope['entry']);
+    this.entry = /** @type {FilterEntry} */ ($scope['entry']);
 
     /**
      * @type {?GroupNode}
@@ -230,7 +233,7 @@ class Controller {
    * Handles node remove events
    *
    * @param {angular.Scope.Event} event
-   * @param {os.structs.ITreeNode} node The node to remove
+   * @param {ITreeNode} node The node to remove
    * @private
    */
   onRemove_(event, node) {
@@ -269,7 +272,7 @@ class Controller {
   /**
    * Removes a node.
    *
-   * @param {os.structs.ITreeNode} node The node to remove
+   * @param {ITreeNode} node The node to remove
    * @private
    */
   doRemove_(node) {
@@ -375,10 +378,4 @@ const closeRemoveMultipleWindow = () => {
   if (childWindow) {
     close(childWindow);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

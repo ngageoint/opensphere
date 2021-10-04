@@ -1,27 +1,29 @@
-goog.module('os.layer.preset');
+goog.declareModuleId('os.layer.preset');
+
+import {toRgbArray} from '../../color.js';
+import Settings from '../../config/settings.js';
+import {DEFAULT_FILL_ALPHA, toRgbaString} from '../../style/style.js';
+import StyleField from '../../style/stylefield.js';
+import {LayerConfigId} from '../config/layerconfig.js';
+import {createFromOptions} from '../layer.js';
 
 const {unsafeClone} = goog.require('goog.object');
-const {DEFAULT_FILL_ALPHA, toRgbaString} = goog.require('os.style');
-const {toRgbArray} = goog.require('os.color');
-const {createFromOptions} = goog.require('os.layer');
-const {LayerConfigId} = goog.require('os.layer.config');
-const Settings = goog.require('os.config.Settings');
-const StyleField = goog.require('os.style.StyleField');
 
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
  * Base settings key for layer presets.
  * @type {string}
  */
-const BASE_KEY = 'os.layerPreset.';
+export const BASE_KEY = 'os.layerPreset.';
 
 /**
  * ID for the default preset.
  * @type {string}
  */
-const DEFAULT_PRESET_ID = '__default__';
+export const DEFAULT_PRESET_ID = '__default__';
 
 /**
  * The default preset.
@@ -32,7 +34,7 @@ let defaultPreset_ = undefined;
 /**
  * @enum {string}
  */
-const PresetServiceAction = {
+export const PresetServiceAction = {
   INSERT: 'insert',
   UPDATE: 'update',
   FIND: 'find',
@@ -45,7 +47,7 @@ const PresetServiceAction = {
  * Settings keys for layer presets.
  * @enum {string}
  */
-const SettingKey = {
+export const SettingKey = {
   APPLIED_DEFAULTS: BASE_KEY + 'appliedDefaults',
   PRESETS: BASE_KEY + 'presets',
   SAVED_PRESET_IDS: BASE_KEY + 'saved.presetIds',
@@ -58,7 +60,7 @@ const SettingKey = {
  * @param {string=} opt_layerId
  * @param {string=} opt_layerFilterKey
  */
-const addDefault = function(presets, opt_layerId, opt_layerFilterKey) {
+export const addDefault = function(presets, opt_layerId, opt_layerFilterKey) {
   if (presets) {
     if (!defaultPreset_) {
       // create a temporary vector layer to produce a default layer config
@@ -105,7 +107,7 @@ const addDefault = function(presets, opt_layerId, opt_layerFilterKey) {
  * @param {string} id The layer ID
  * @return {!boolean}
  */
-const getSavedPresetClean = function(id) {
+export const getSavedPresetClean = function(id) {
   const lookup = /** @type {!Object<string, boolean>} */
       (Settings.getInstance().get(SettingKey.SAVED_PRESET_CLEANS, {}));
   return (lookup[id] === false) ? false : true;
@@ -117,7 +119,7 @@ const getSavedPresetClean = function(id) {
  * @param {string} id The layer ID
  * @return {?string}
  */
-const getSavedPresetId = function(id) {
+export const getSavedPresetId = function(id) {
   const lookup = /** @type {!Object<string, ?string>} */
       (Settings.getInstance().get(SettingKey.SAVED_PRESET_IDS, {}));
   return lookup[id];
@@ -129,7 +131,7 @@ const getSavedPresetId = function(id) {
  * @param {string} id The layer ID
  * @param {boolean} clean Is clean
  */
-const setSavedPresetClean = function(id, clean) {
+export const setSavedPresetClean = function(id, clean) {
   const lookup = /** @type {!Object<string, boolean>} */
       (Settings.getInstance().get(SettingKey.SAVED_PRESET_CLEANS, {}));
   lookup[id] = clean;
@@ -142,7 +144,7 @@ const setSavedPresetClean = function(id, clean) {
  * @param {string} id The layer ID
  * @param {?string=} opt_presetId
  */
-const setSavedPresetId = function(id, opt_presetId) {
+export const setSavedPresetId = function(id, opt_presetId) {
   const lookup = /** @type {!Object<string, ?string>} */
       (Settings.getInstance().get(SettingKey.SAVED_PRESET_IDS, {}));
   lookup[id] = opt_presetId || null;
@@ -151,10 +153,10 @@ const setSavedPresetId = function(id, opt_presetId) {
 
 /**
  * Update the default preset for a layer.
- * @param {os.layer.ILayer} layer The layer.
+ * @param {ILayer} layer The layer.
  * @param {osx.layer.Preset} preset The default preset.
  */
-const updateDefault = function(layer, preset) {
+export const updateDefault = function(layer, preset) {
   if (layer && preset && preset.layerConfig) {
     const config = preset.layerConfig;
     const layerOptions = layer.getLayerOptions();
@@ -167,18 +169,4 @@ const updateDefault = function(layer, preset) {
       config[StyleField.FILL_COLOR] = toRgbaString(color);
     }
   }
-};
-
-
-exports = {
-  BASE_KEY,
-  DEFAULT_PRESET_ID,
-  PresetServiceAction,
-  SettingKey,
-  addDefault,
-  getSavedPresetClean,
-  getSavedPresetId,
-  setSavedPresetClean,
-  setSavedPresetId,
-  updateDefault
 };

@@ -1,14 +1,16 @@
-goog.module('os.ui.ProviderImportCtrl');
+goog.declareModuleId('os.ui.ProviderImportCtrl');
+
+import Settings from '../config/settings.js';
+import {ProviderKey} from '../data/data.js';
+import DataManager from '../data/datamanager.js';
+import {close, create, exists, getById} from './window.js';
+import WindowEventType from './windoweventtype.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');
-const Settings = goog.require('os.config.Settings');
-const {ProviderKey} = goog.require('os.data');
-const DataManager = goog.require('os.data.DataManager');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {close, create, exists, getById} = goog.require('os.ui.window');
 
-const IDataProvider = goog.requireType('os.data.IDataProvider');
+const {default: IDataProvider} = goog.requireType('os.data.IDataProvider');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
@@ -17,7 +19,7 @@ const IDataProvider = goog.requireType('os.data.IDataProvider');
  * @abstract
  * @unrestricted
  */
-class Controller {
+export default class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -155,7 +157,7 @@ class Controller {
   /**
    * Test finished handler
    *
-   * @param {os.events.PropertyChangeEvent} event
+   * @param {PropertyChangeEvent} event
    */
   onTestFinished(event) {
     if (event.getProperty() == 'loading' && !event.getNewValue()) {
@@ -291,5 +293,3 @@ class Controller {
    */
   getConfig() {}
 }
-
-exports = Controller;

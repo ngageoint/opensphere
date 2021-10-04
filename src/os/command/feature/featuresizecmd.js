@@ -1,8 +1,8 @@
-goog.module('os.command.FeatureSize');
+goog.declareModuleId('os.command.FeatureSize');
 
-const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const osStyle = goog.require('os.style');
+import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
+import * as osStyle from '../../style/style.js';
+import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -10,7 +10,7 @@ const Feature = goog.requireType('ol.Feature');
 /**
  * Changes the size of a feature
  */
-class FeatureSize extends AbstractFeatureStyle {
+export default class FeatureSize extends AbstractFeatureStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -53,5 +53,3 @@ class FeatureSize extends AbstractFeatureStyle {
     super.applyValue(configs, value);
   }
 }
-
-exports = FeatureSize;

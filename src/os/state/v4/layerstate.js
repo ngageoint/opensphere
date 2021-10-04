@@ -1,12 +1,14 @@
-goog.module('os.state.v4.LayerState');
+goog.declareModuleId('os.state.v4.LayerState');
 
-const {getMapContainer} = goog.require('os.map.instance');
-const BaseLayerState = goog.require('os.state.v4.BaseLayerState');
+import {getMapContainer} from '../../map/mapinstance.js';
+import BaseLayerState from './baselayerstate.js';
+
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
  */
-class LayerState extends BaseLayerState {
+export default class LayerState extends BaseLayerState {
   /**
    * Constructor.
    */
@@ -25,7 +27,7 @@ class LayerState extends BaseLayerState {
       var layer = layers[i];
       if (layer) {
         try {
-          var layerId = /** @type {os.layer.ILayer} */ (layer).getId();
+          var layerId = /** @type {ILayer} */ (layer).getId();
           if (layerId && layerId.startsWith(id)) {
             getMapContainer().removeLayer(layer);
           }
@@ -44,5 +46,3 @@ class LayerState extends BaseLayerState {
     super.saveInternal(options, rootObj);
   }
 }
-
-exports = LayerState;

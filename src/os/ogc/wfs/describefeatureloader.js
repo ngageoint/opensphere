@@ -1,4 +1,8 @@
-goog.module('os.ogc.wfs.DescribeFeatureLoader');
+goog.declareModuleId('os.ogc.wfs.DescribeFeatureLoader');
+
+import Request from '../../net/request.js';
+import {getException} from '../ogc.js';
+import DescribeFeatureTypeParser from './describefeaturetypeparser.js';
 
 const Uri = goog.require('goog.Uri');
 const QueryData = goog.require('goog.Uri.QueryData');
@@ -6,17 +10,14 @@ const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const EventType = goog.require('goog.net.EventType');
-const Request = goog.require('os.net.Request');
-const {getException} = goog.require('os.ogc');
-const DescribeFeatureTypeParser = goog.require('os.ogc.wfs.DescribeFeatureTypeParser');
 
 const Logger = goog.requireType('goog.log.Logger');
-const FeatureType = goog.requireType('os.ogc.wfs.FeatureType');
+const {default: FeatureType} = goog.requireType('os.ogc.wfs.FeatureType');
 
 
 /**
  */
-class DescribeFeatureLoader extends EventTarget {
+export default class DescribeFeatureLoader extends EventTarget {
   /**
    * Constructor.
    */
@@ -191,5 +192,3 @@ class DescribeFeatureLoader extends EventTarget {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ogc.wfs.DescribeFeatureLoader');
-
-exports = DescribeFeatureLoader;

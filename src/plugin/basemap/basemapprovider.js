@@ -1,25 +1,27 @@
 goog.declareModuleId('plugin.basemap.BaseMapProvider');
 
+import BaseDescriptor from '../../os/data/basedescriptor.js';
+import DataManager from '../../os/data/datamanager.js';
+import DataProviderEvent from '../../os/data/dataproviderevent.js';
+import DataProviderEventType from '../../os/data/dataprovidereventtype.js';
+import IDataProvider from '../../os/data/idataprovider.js';
 import * as dispatcher from '../../os/dispatcher.js';
+import osImplements from '../../os/implements.js';
 import {PROJECTION} from '../../os/map/map.js';
+import MapEvent from '../../os/map/mapevent.js';
+import {addTerrainProvider, hasTerrain} from '../../os/map/terrain.js';
+import MapContainer from '../../os/mapcontainer.js';
+import BinnedLayersEvent from '../../os/proj/binnedlayersevent.js';
+import SwitchProjection from '../../os/proj/switchprojection.js';
+import DescriptorProvider from '../../os/ui/data/descriptorprovider.js';
 import {ID, LAYER_TYPE, TERRAIN_TYPE, TYPE} from './basemap.js';
 import BaseMapDescriptor from './basemapdescriptor.js';
 import BaseMap from './layer/basemaplayer.js';
 import TerrainDescriptor from './terraindescriptor.js';
 
 const dispose = goog.require('goog.dispose');
-const MapContainer = goog.require('os.MapContainer');
-const MapEvent = goog.require('os.MapEvent');
-const BaseDescriptor = goog.require('os.data.BaseDescriptor');
-const DataManager = goog.require('os.data.DataManager');
-const DataProviderEvent = goog.require('os.data.DataProviderEvent');
-const DataProviderEventType = goog.require('os.data.DataProviderEventType');
-const IDataProvider = goog.require('os.data.IDataProvider');
-const osImplements = goog.require('os.implements');
-const {addTerrainProvider, hasTerrain} = goog.require('os.map.terrain');
-const BinnedLayersEvent = goog.require('os.proj.switch.BinnedLayersEvent');
-const SwitchProjection = goog.require('os.proj.switch.SwitchProjection');
-const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
+
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
@@ -235,7 +237,7 @@ export default class BaseMapProvider extends DescriptorProvider {
     }
 
     for (i = 0, n = layers.length; i < n; i++) {
-      var ilayer = /** @type {os.layer.ILayer} */ (layers[i]);
+      var ilayer = /** @type {ILayer} */ (layers[i]);
 
       if (!(ilayer.getId() in map) && ilayer instanceof BaseMap) {
         numBaseMaps++;

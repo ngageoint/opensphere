@@ -1,20 +1,21 @@
-goog.module('os.ui.im.action.FilterActionImporter');
+goog.declareModuleId('os.ui.im.action.FilterActionImporter');
 
-const OSFilterImporter = goog.require('os.filter.im.OSFilterImporter');
-const {getColumnsFromFilterable} = goog.require('os.im.action');
-const FilterActionEntry = goog.require('os.im.action.FilterActionEntry');
-const {toFilterString} = goog.require('os.ui.filter');
+import OSFilterImporter from '../../../filter/im/osfilterimporter.js';
+import FilterActionEntry from '../../../im/action/filteractionentry.js';
+import {getColumnsFromFilterable} from '../../../im/action/importaction.js';
+import {toFilterString} from '../../filter/filter.js';
 
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
+const {default: IParser} = goog.requireType('os.parse.IParser');
 
 
 /**
  * @template T
  */
-class FilterActionImporter extends OSFilterImporter {
+export default class FilterActionImporter extends OSFilterImporter {
   /**
    * Constructor.
-   * @param {os.parse.IParser<T>} parser The parser.
+   * @param {IParser<T>} parser The parser.
    * @param {string=} opt_layerId The layer id.
    * @param {boolean=} opt_keepId If the original entry id should be preserved. Defaults to false.
    */
@@ -70,5 +71,3 @@ class FilterActionImporter extends OSFilterImporter {
     return getColumnsFromFilterable(filterable);
   }
 }
-
-exports = FilterActionImporter;

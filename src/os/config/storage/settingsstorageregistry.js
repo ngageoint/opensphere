@@ -1,16 +1,16 @@
-goog.module('os.config.storage.SettingsStorageRegistry');
+goog.declareModuleId('os.config.storage.SettingsStorageRegistry');
 
-const ISettingsWritableStorage = goog.require('os.config.storage.ISettingsWritableStorage');
-const SettingsWritableStorageType = goog.require('os.config.storage.SettingsWritableStorageType');
-const osImplements = goog.require('os.implements');
+import osImplements from '../../implements.js';
+import ISettingsWritableStorage from './isettingswritablestorage.js';
+import SettingsWritableStorageType from './settingswritablestoragetype.js';
 
-const ISettingsReadableStorage = goog.requireType('os.config.storage.ISettingsReadableStorage');
+const {default: ISettingsReadableStorage} = goog.requireType('os.config.storage.ISettingsReadableStorage');
 
 
 /**
  * Registry for which storage types are supported for settings
  */
-class SettingsStorageRegistry {
+export default class SettingsStorageRegistry {
   /**
    * Constructor.
    */
@@ -191,6 +191,3 @@ class SettingsStorageRegistry {
  * @type {SettingsStorageRegistry|undefined}
  */
 let instance;
-
-
-exports = SettingsStorageRegistry;

@@ -1,5 +1,4 @@
-goog.module('os.parse.IParser');
-
+goog.declareModuleId('os.parse.IParser');
 
 /**
  * A simple interface for describing a parser.
@@ -7,7 +6,7 @@ goog.module('os.parse.IParser');
  * @template T
  * @interface
  */
-class IParser {
+export default class IParser {
   /**
    * @return {boolean} If there is another item to os.parse.
    */
@@ -30,5 +29,3 @@ class IParser {
    */
   cleanup() {}
 }
-
-exports = IParser;

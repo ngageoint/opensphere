@@ -1,22 +1,22 @@
-goog.module('os.Map');
+goog.declareModuleId('os.Map');
 
-goog.require('os.mixin.canvasreplay');
-goog.require('os.mixin.canvasreplaygroup');
+import './mixin/canvasreplaygroupmixin.js';
+import './mixin/canvasreplaymixin.js';
+import * as osMap from './map/map.js';
+import {getMapContainer} from './map/mapinstance.js';
+import {EPSG4326} from './proj/proj.js';
+import {MODAL_SELECTOR} from './ui/ui.js';
 
 const TagName = goog.require('goog.dom.TagName');
 const {IE} = goog.require('goog.userAgent');
 const OLMap = goog.require('ol.Map');
 const {fromLonLat, toLonLat, transformExtent} = goog.require('ol.proj');
-const osMap = goog.require('os.map');
-const {getMapContainer} = goog.require('os.map.instance');
-const {EPSG4326} = goog.require('os.proj');
-const {MODAL_SELECTOR} = goog.require('os.ui');
 
 
 /**
  * The OpenSphere map.
  */
-class Map extends OLMap {
+export default class Map extends OLMap {
   /**
    * Constructor.
    * @param {olx.MapOptions} options Map options
@@ -191,5 +191,3 @@ class Map extends OLMap {
     }
   }
 }
-
-exports = Map;

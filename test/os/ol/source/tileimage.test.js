@@ -4,7 +4,7 @@ goog.require('os.ol.source.tileimage');
 
 describe('os.ol.source.tileimage', function() {
   const TileImage = goog.module.get('ol.source.TileImage');
-  const ProxyHandler = goog.module.get('os.net.ProxyHandler');
+  const {default: ProxyHandler} = goog.module.get('os.net.ProxyHandler');
   const tileimage = goog.module.get('os.ol.source.tileimage');
 
   it('should wrap sources with proxies', function() {

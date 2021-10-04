@@ -1,19 +1,17 @@
 goog.declareModuleId('plugin.cesium.primitive');
 
+import {unsafeClone} from '../../os/object/object.js';
 import {GeometryInstanceId} from './cesium.js';
 import {getHeightReference, isPrimitiveClassTypeChanging} from './sync/heightreference.js';
 import {getColor} from './sync/style.js';
 
 const Delay = goog.require('goog.async.Delay');
 const {clamp} = goog.require('goog.math');
-const {unsafeClone} = goog.require('os.object');
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const Style = goog.requireType('ol.style.Style');
-const {
-  default: VectorContext
-} = goog.requireType('plugin.cesium.VectorContext');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**

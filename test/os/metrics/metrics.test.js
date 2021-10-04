@@ -2,7 +2,7 @@ goog.require('os.metrics.Metrics');
 goog.require('os.mock');
 
 describe('os.metrics.Metrics', function() {
-  const Metrics = goog.module.get('os.metrics.Metrics');
+  const {default: Metrics} = goog.module.get('os.metrics.Metrics');
 
   it('should update a metric', function() {
     var target = new Metrics();

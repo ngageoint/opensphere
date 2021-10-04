@@ -1,4 +1,23 @@
-goog.module('os.query.BaseAreaManager');
+goog.declareModuleId('os.query.BaseAreaManager');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import * as osArray from '../array/array.js';
+import Settings from '../config/settings.js';
+import CollectionManager from '../data/collectionmanager.js';
+import RecordField from '../data/recordfield.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import {normalizeGeometryCoordinates} from '../geo/geo2.js';
+import {toPolygon, validate} from '../geo/jsts.js';
+import GeometryField from '../geom/geometryfield.js';
+import {ORIGINAL_GEOM_FIELD} from '../interpolate.js';
+import * as osMap from '../map/map.js';
+import {AREA_STORAGE_KEY} from '../os.js';
+import * as osStyleArea from '../style/areastyle.js';
+import {directiveTag as editArea} from '../ui/query/editarea.js';
+import {EDIT_WIN_LABEL, SAVE_WIN_LABEL} from '../ui/query/query.js';
+import {create} from '../ui/window.js';
+import {getAreaManager, setAreaManager, getQueryManager} from './queryinstance.js';
 
 const {assert} = goog.require('goog.asserts');
 const Deferred = goog.require('goog.async.Deferred');
@@ -11,27 +30,9 @@ const GeoJSON = goog.require('ol.format.GeoJSON');
 const GeometryType = goog.require('ol.geom.GeometryType');
 const OLVectorSource = goog.require('ol.source.Vector');
 const VectorEventType = goog.require('ol.source.VectorEventType');
-const {AREA_STORAGE_KEY} = goog.require('os');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const osArray = goog.require('os.array');
-const Settings = goog.require('os.config.Settings');
-const CollectionManager = goog.require('os.data.CollectionManager');
-const RecordField = goog.require('os.data.RecordField');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {toPolygon, validate} = goog.require('os.geo.jsts');
-const {normalizeGeometryCoordinates} = goog.require('os.geo2');
-const GeometryField = goog.require('os.geom.GeometryField');
-const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
-const osMap = goog.require('os.map');
-const {getAreaManager, setAreaManager, getQueryManager} = goog.require('os.query.instance');
-const osStyleArea = goog.require('os.style.area');
-const {EDIT_WIN_LABEL, SAVE_WIN_LABEL} = goog.require('os.ui.query');
-const {directiveTag: editArea} = goog.require('os.ui.query.EditAreaUI');
-const {create} = goog.require('os.ui.window');
 
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const IMapContainer = goog.requireType('os.map.IMapContainer');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
+const {default: IMapContainer} = goog.requireType('os.map.IMapContainer');
 
 
 /**
@@ -39,7 +40,7 @@ const IMapContainer = goog.requireType('os.map.IMapContainer');
  *
  * @extends {CollectionManager<!Feature>}
  */
-class BaseAreaManager extends CollectionManager {
+export default class BaseAreaManager extends CollectionManager {
   /**
    * Constructor.
    */
@@ -767,6 +768,3 @@ BaseAreaManager.FEATURE_PREFIX = 'area_';
  * @private
  */
 BaseAreaManager.tempId_ = 1;
-
-
-exports = BaseAreaManager;

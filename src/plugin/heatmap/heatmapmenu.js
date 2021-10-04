@@ -1,18 +1,19 @@
 goog.declareModuleId('plugin.heatmap.menu');
 
+import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
+import AlertManager from '../../os/alert/alertmanager.js';
+import LayerNode from '../../os/data/layernode.js';
+import {Layer as LayerKeys} from '../../os/metrics/metricskeys.js';
+import * as layerMenu from '../../os/ui/menu/layermenu.js';
+import MenuItemType from '../../os/ui/menu/menuitemtype.js';
 import * as heatmap from './heatmap.js';
 import Heatmap from './heatmaplayer.js';
 
 const asserts = goog.require('goog.asserts');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const LayerNode = goog.require('os.data.LayerNode');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const AlertManager = goog.require('os.alert.AlertManager');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const layerMenu = goog.require('os.ui.menu.layer');
 
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 
 
 /**
@@ -119,7 +120,7 @@ const generateHeatmap_ = function(event) {
     if (layers.length) {
       for (var i = 0; i < layers.length; i++) {
         var layer = layers[i];
-        var source = /** @type {os.source.Vector} */ (layer.getSource());
+        var source = /** @type {VectorSource} */ (layer.getSource());
         if (!source || source.getFeatureCount() <= 0) {
           AlertManager.getInstance().sendAlert('No features in selected layer. Unable to generate heatmap.',
               AlertEventSeverity.WARNING);

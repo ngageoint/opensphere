@@ -1,8 +1,8 @@
 goog.module('os.data.groupby.MockTypeGroupBy');
 
 const googArray = goog.require('goog.array');
-const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
-const TriStateTreeNode = goog.require('os.structs.TriStateTreeNode');
+const {default: BaseGroupBy} = goog.require('os.data.groupby.BaseGroupBy');
+const {default: TriStateTreeNode} = goog.require('os.structs.TriStateTreeNode');
 
 
 /**

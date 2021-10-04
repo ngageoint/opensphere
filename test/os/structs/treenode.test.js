@@ -7,7 +7,7 @@ describe('os.structs.TreeNode', function() {
   const googEvents = goog.module.get('goog.events');
   const GoogEventType = goog.module.get('goog.events.EventType');
   const olArray = goog.module.get('ol.array');
-  const TreeNode = goog.module.get('os.structs.TreeNode');
+  const {default: TreeNode} = goog.module.get('os.structs.TreeNode');
 
   it('should default everything to null except ID', function() {
     var node = new TreeNode();

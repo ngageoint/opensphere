@@ -14,17 +14,13 @@ goog.require('plugin.file.kml.KMLField');
 
 
 describe('OMAR.v4.ArcLayerState', function() {
-  const StateManager = goog.module.get('os.state.StateManager');
-  const StateVersions = goog.module.get('os.state.Versions');
+  const {default: StateManager} = goog.module.get('os.state.StateManager');
+  const {default: StateVersions} = goog.module.get('os.state.Versions');
   const {setStateManager} = goog.module.get('os.state.instance');
-  const LayerState = goog.module.get('os.state.v4.LayerState');
+  const {default: LayerState} = goog.module.get('os.state.v4.LayerState');
   const xml = goog.module.get('os.xml');
-  const {
-    default: ArcFeatureLayerConfig
-  } = goog.module.get('plugin.arc.layer.ArcFeatureLayerConfig');
-  const {
-    default: ArcLayerDescriptor
-  } = goog.module.get('plugin.arc.layer.ArcLayerDescriptor');
+  const {default: ArcFeatureLayerConfig} = goog.module.get('plugin.arc.layer.ArcFeatureLayerConfig');
+  const {default: ArcLayerDescriptor} = goog.module.get('plugin.arc.layer.ArcLayerDescriptor');
 
   const {loadStateXsdFiles} = goog.module.get('os.test.xsd');
 

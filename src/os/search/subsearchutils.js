@@ -1,12 +1,12 @@
-goog.module('os.search.SubSearchUtils');
+goog.declareModuleId('os.search.SubSearchUtils');
 
-const SearchFacetDepartment = goog.requireType('os.search.SearchFacetDepartment');
+const {default: SearchFacetDepartment} = goog.requireType('os.search.SearchFacetDepartment');
 
 
 /**
  * Sub Search Utilities
  */
-class SubSearchUtils {
+export default class SubSearchUtils {
   /**
    * Remove a list and sub-lists from a list of lists
    * @param {Array<!Array<string>>} lists
@@ -154,5 +154,3 @@ class SubSearchUtils {
     return false;
   }
 }
-
-exports = SubSearchUtils;

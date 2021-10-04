@@ -1,9 +1,9 @@
-goog.module('os.command.VectorLayerLOBError');
+goog.declareModuleId('os.command.VectorLayerLOBError');
 
-const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import StyleField from '../style/stylefield.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import AbstractVectorLayerLOB from './abstractvectorlayerlob.js';
 
 
 /**
@@ -11,7 +11,7 @@ const StyleManager = goog.require('os.style.StyleManager');
  *
  * @extends {AbstractVectorLayerLOB<string>}
  */
-class VectorLayerLOBError extends AbstractVectorLayerLOB {
+export default class VectorLayerLOBError extends AbstractVectorLayerLOB {
   /**
    * Constructor.
    * @param {string} layerId
@@ -41,5 +41,3 @@ class VectorLayerLOBError extends AbstractVectorLayerLOB {
     super.applyValue(config, value);
   }
 }
-
-exports = VectorLayerLOBError;

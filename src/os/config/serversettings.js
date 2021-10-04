@@ -1,12 +1,12 @@
-goog.module('os.config.ServerSettings');
+goog.declareModuleId('os.config.ServerSettings');
 
-const {directiveTag} = goog.require('os.ui.ServersUI');
-const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
+import SettingPlugin from '../ui/config/settingplugin.js';
+import {directiveTag} from '../ui/servers.js';
 
 
 /**
  */
-class ServerSettings extends SettingPlugin {
+export default class ServerSettings extends SettingPlugin {
   /**
    * Constructor.
    */
@@ -34,6 +34,3 @@ class ServerSettings extends SettingPlugin {
  * @const
  */
 ServerSettings.ID = 'servers';
-
-
-exports = ServerSettings;

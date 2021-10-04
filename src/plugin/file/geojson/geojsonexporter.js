@@ -1,16 +1,17 @@
 goog.declareModuleId('plugin.file.geojson.GeoJSONExporter');
 
+import RecordField from '../../../os/data/recordfield.js';
+import AbstractExporter from '../../../os/ex/abstractexporter.js';
+import Fields from '../../../os/fields/fields.js';
+import instanceOf from '../../../os/instanceof.js';
 import {PROJECTION} from '../../../os/map/map.js';
+import * as osProj from '../../../os/proj/proj.js';
+import TimeRange from '../../../os/time/timerange.js';
 
 const log = goog.require('goog.log');
 const GeoJSON = goog.require('ol.format.GeoJSON');
-const Fields = goog.require('os.Fields');
-const RecordField = goog.require('os.data.RecordField');
-const AbstractExporter = goog.require('os.ex.AbstractExporter');
-const instanceOf = goog.require('os.instanceOf');
 
-const osProj = goog.require('os.proj');
-const TimeRange = goog.require('os.time.TimeRange');
+const {default: ITime} = goog.requireType('os.time.ITime');
 
 
 /**
@@ -56,7 +57,7 @@ export default class GeoJSONExporter extends AbstractExporter {
     var timeAdded = false;
     var timeRangeAdded = false;
     for (var i = 0, n = this.items.length; i < n; i++) {
-      var time = /** @type {os.time.ITime|undefined} */ (this.items[i].get(RecordField.TIME));
+      var time = /** @type {ITime|undefined} */ (this.items[i].get(RecordField.TIME));
       if (time) {
         if (instanceOf(time, TimeRange.NAME)) {
           this.items[i].set(GeoJSONExporter.FIELDS.START_TIME, /** @type {TimeRange} */ (time).getStartISOString());

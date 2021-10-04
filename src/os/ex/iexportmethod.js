@@ -1,4 +1,4 @@
-goog.module('os.ex.IExportMethod');
+goog.declareModuleId('os.ex.IExportMethod');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const Listenable = goog.requireType('goog.events.Listenable');
@@ -10,7 +10,7 @@ const Listenable = goog.requireType('goog.events.Listenable');
  * @extends {Listenable}
  * @template T
  */
-class IExportMethod {
+export default class IExportMethod {
   /**
    * The file extension for this export type.
    * @return {string}
@@ -116,5 +116,3 @@ class IExportMethod {
    */
   supportsLabelExport() {}
 }
-
-exports = IExportMethod;

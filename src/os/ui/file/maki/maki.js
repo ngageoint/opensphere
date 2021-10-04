@@ -1,14 +1,10 @@
-goog.module('os.ui.file.maki');
+goog.declareModuleId('os.ui.file.maki');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../../../os.js';
 
 
 /**
  * Path to KML icons.
  * @type {string}
  */
-const ICON_PATH = ROOT + 'images/icons/maki/v1/';
-
-exports = {
-  ICON_PATH
-};
+export const ICON_PATH = ROOT + 'images/icons/maki/v1/';

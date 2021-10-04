@@ -1,10 +1,10 @@
-goog.module('os.file.mime');
+goog.declareModuleId('os.file.mime');
 
 const Promise = goog.require('goog.Promise');
 const log = goog.require('goog.log');
 
 const Logger = goog.requireType('goog.log.Logger');
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
@@ -15,7 +15,7 @@ const OSFile = goog.requireType('os.file.File');
  *  children: (Array<Node>|undefined)
  * }}
  */
-let Node;
+export let Node;
 
 /**
  * The logger.
@@ -26,7 +26,7 @@ const logger = log.getLogger('os.file.mime');
 /**
  * @type {string}
  */
-const BASE_TYPE = 'application/octet-stream';
+export const BASE_TYPE = 'application/octet-stream';
 
 /**
  * @type {Node}
@@ -46,7 +46,7 @@ const rootNode = {
  * @param {string=} opt_parentType The parent mime type (e.g. "text/xml" has a parent of "text/plain")
  * @return {boolean} True if successful, false otherwise
  */
-const register = function(mimeType, detectFunc, opt_priority, opt_parentType) {
+export const register = function(mimeType, detectFunc, opt_priority, opt_parentType) {
   var msg;
   if (!mimeType) {
     msg = 'Cannot register an undefined type!';
@@ -112,7 +112,7 @@ const sortNodes = function(a, b) {
  * @param {Node=} opt_node
  * @return {Node|undefined}
  */
-const findNode = function(type, opt_node) {
+export const findNode = function(type, opt_node) {
   opt_node = opt_node || rootNode;
   if (opt_node.type === type) {
     return opt_node;
@@ -135,7 +135,7 @@ const findNode = function(type, opt_node) {
  * @param {*=} opt_context The current context from the parent node
  * @return {!Promise<string|undefined>} A promise resolving to the mime type detected from the buffer/file
  */
-const detect = function(buffer, file, opt_node, opt_context) {
+export const detect = function(buffer, file, opt_node, opt_context) {
   opt_node = opt_node || rootNode;
   var promise = opt_node.detect(buffer, file, opt_context);
   if (!(promise instanceof Promise)) {
@@ -180,7 +180,7 @@ const detect = function(buffer, file, opt_node, opt_context) {
  * @param {Array<!string>=} opt_chain
  * @return {Array<!string>|undefined} The chain
  */
-const getTypeChain = function(type, opt_node, opt_chain) {
+export const getTypeChain = function(type, opt_node, opt_chain) {
   opt_node = opt_node || rootNode;
   opt_chain = opt_chain || [];
 
@@ -198,13 +198,4 @@ const getTypeChain = function(type, opt_node, opt_chain) {
   }
 
   opt_chain.pop();
-};
-
-exports = {
-  BASE_TYPE,
-  register,
-  findNode,
-  detect,
-  getTypeChain,
-  Node
 };

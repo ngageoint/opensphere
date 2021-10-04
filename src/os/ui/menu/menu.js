@@ -1,4 +1,12 @@
-goog.module('os.ui.menu.Menu');
+goog.declareModuleId('os.ui.menu.Menu');
+
+import * as dispatcher from '../../dispatcher.js';
+import Metrics from '../../metrics/metrics.js';
+import GlobalMenuEventType from '../globalmenueventtype.js';
+import * as osUi from '../ui.js';
+import MenuEvent from './menuevent.js';
+import MenuEventType from './menueventtype.js';
+import UnclickableTypes from './unclickabletypes.js';
 
 const Delay = goog.require('goog.async.Delay');
 const {getAncestorByClass, getDocument} = goog.require('goog.dom');
@@ -6,15 +14,8 @@ const classlist = goog.require('goog.dom.classlist');
 const {listen, unlisten} = goog.require('goog.events');
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
-const dispatcher = goog.require('os.Dispatcher');
-const Metrics = goog.require('os.metrics.Metrics');
-const osUi = goog.require('os.ui');
-const GlobalMenuEventType = goog.require('os.ui.GlobalMenuEventType');
-const MenuEvent = goog.require('os.ui.menu.MenuEvent');
-const MenuEventType = goog.require('os.ui.menu.MenuEventType');
-const UnclickableTypes = goog.require('os.ui.menu.UnclickableTypes');
 
-const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 
 
 /**
@@ -22,7 +23,7 @@ const MenuItem = goog.requireType('os.ui.menu.MenuItem');
  *
  * @template T
  */
-class Menu extends EventTarget {
+export default class Menu extends EventTarget {
   /**
    * Constructor.
    * @param {!MenuItem<T>} root The menu item data
@@ -335,5 +336,3 @@ class Menu extends EventTarget {
       );
   }
 }
-
-exports = Menu;

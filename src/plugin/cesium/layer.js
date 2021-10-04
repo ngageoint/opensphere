@@ -1,30 +1,30 @@
 goog.declareModuleId('plugin.cesium.Layer');
 
+import ActionEventType from '../../os/action/eventtype.js';
+import * as osColor from '../../os/color.js';
 import * as dispatcher from '../../os/dispatcher.js';
+import LayerEvent from '../../os/events/layerevent.js';
+import LayerEventType from '../../os/events/layereventtype.js';
+import PropertyChangeEvent from '../../os/events/propertychangeevent.js';
+import IGroupable from '../../os/igroupable.js';
+import osImplements from '../../os/implements.js';
+import IColorableLayer from '../../os/layer/icolorablelayer.js';
+import ILayer from '../../os/layer/ilayer.js';
+import PropertyChange from '../../os/layer/propertychange.js';
+import MapChange from '../../os/map/mapchange.js';
+import MapContainer from '../../os/mapcontainer.js';
 import {DEFAULT_LAYER_COLOR, notifyStyleChange} from '../../os/style/style.js';
+import {adjustIconSet, createIconSet} from '../../os/ui/icons/index.js';
+import {directiveTag as nodeUi} from '../../os/ui/node/defaultlayernodeui.js';
 
 const Delay = goog.require('goog.async.Delay');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
 const OLLayer = goog.require('ol.layer.Layer');
-const IGroupable = goog.require('os.IGroupable');
-const MapChange = goog.require('os.MapChange');
-const MapContainer = goog.require('os.MapContainer');
-const ActionEventType = goog.require('os.action.EventType');
-const osColor = goog.require('os.color');
-const LayerEvent = goog.require('os.events.LayerEvent');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osImplements = goog.require('os.implements');
-const IColorableLayer = goog.require('os.layer.IColorableLayer');
-const ILayer = goog.require('os.layer.ILayer');
-const PropertyChange = goog.require('os.layer.PropertyChange');
-const {adjustIconSet, createIconSet} = goog.require('os.ui.icons');
-const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
 
 const LayerType = goog.requireType('ol.LayerType');
-const IActionTarget = goog.requireType('os.ui.action.IActionTarget');
+const {default: IActionTarget} = goog.requireType('os.ui.action.IActionTarget');
 const {default: CesiumRenderer} = goog.requireType('plugin.cesium.CesiumRenderer');
 
 

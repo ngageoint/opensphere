@@ -1,11 +1,10 @@
-goog.module('os.ui.slick.AbstractNodeUICtrl');
-
+goog.declareModuleId('os.ui.slick.AbstractNodeUICtrl');
 
 /**
  * Abstract UI controller for tree nodes.
  * @unrestricted
  */
-class Controller {
+export default class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -51,5 +50,3 @@ class Controller {
         this.cellEl.parent().hasClass('selected');
   }
 }
-
-exports = Controller;

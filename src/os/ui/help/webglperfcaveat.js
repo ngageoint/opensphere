@@ -1,10 +1,10 @@
-goog.module('os.ui.help.WebGLPerfCaveatUI');
+goog.declareModuleId('os.ui.help.WebGLPerfCaveatUI');
 
-const {ROOT} = goog.require('os');
-const {getAppName, getSupportContact} = goog.require('os.config');
-const Settings = goog.require('os.config.Settings');
-const Module = goog.require('os.ui.Module');
-const osWindow = goog.require('os.ui.window');
+import {getAppName, getSupportContact} from '../../config/config.js';
+import Settings from '../../config/settings.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import * as osWindow from '../window.js';
 
 
 /**
@@ -12,7 +12,7 @@ const osWindow = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   templateUrl: ROOT + 'views/help/webglperfcaveat.html'
 });
@@ -21,7 +21,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'webglperfcaveat';
+export const directiveTag = 'webglperfcaveat';
 
 /**
  * Add the directive to the module.
@@ -34,7 +34,7 @@ Module.directive(directiveTag, [directive]);
  * @param {string=} opt_title The window title
  * @param {function()=} opt_overrideCallback The function to call if user decides to override
  */
-const launchWebGLPerfCaveatDialog = function(opt_title, opt_overrideCallback) {
+export const launchWebGLPerfCaveatDialog = function(opt_title, opt_overrideCallback) {
   var scopeOptions = {
     'confirmCallback': () => {},
     'cancelCallback': opt_overrideCallback || (() => {}),
@@ -69,10 +69,4 @@ const launchWebGLPerfCaveatDialog = function(opt_title, opt_overrideCallback) {
 
   var template = '<confirm><webglperfcaveat></webglperfcaveat></confirm>';
   osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-};
-
-exports = {
-  directive,
-  directiveTag,
-  launchWebGLPerfCaveatDialog
 };

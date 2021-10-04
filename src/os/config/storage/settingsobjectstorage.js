@@ -1,13 +1,14 @@
-goog.module('os.config.storage.SettingsObjectStorage');
+goog.declareModuleId('os.config.storage.SettingsObjectStorage');
+
+import osImplements from '../../implements.js';
+import ConfigType from '../configtype.js';
+import ISettingsReadableStorage from './isettingsreadablestorage.js';
+import ISettingsStorage from './isettingsstorage.js';
+import ISettingsWritableStorage from './isettingswritablestorage.js';
+import SettingsWritableStorageType from './settingswritablestoragetype.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 const googObject = goog.require('goog.object');
-const ConfigType = goog.require('os.config.ConfigType');
-const ISettingsReadableStorage = goog.require('os.config.storage.ISettingsReadableStorage');
-const ISettingsStorage = goog.require('os.config.storage.ISettingsStorage');
-const ISettingsWritableStorage = goog.require('os.config.storage.ISettingsWritableStorage');
-const SettingsWritableStorageType = goog.require('os.config.storage.SettingsWritableStorageType');
-const osImplements = goog.require('os.implements');
 
 
 /**
@@ -18,7 +19,7 @@ const osImplements = goog.require('os.implements');
  * @implements {ISettingsReadableStorage<*>}
  * @implements {ISettingsWritableStorage<*>}
  */
-class SettingsObjectStorage {
+export default class SettingsObjectStorage {
   /**
    * Constructor.
    * @param {!Array<!string>} namespaces
@@ -128,9 +129,7 @@ class SettingsObjectStorage {
     }
   }
 }
+
 osImplements(SettingsObjectStorage, ISettingsStorage.ID);
 osImplements(SettingsObjectStorage, ISettingsReadableStorage.ID);
 osImplements(SettingsObjectStorage, ISettingsWritableStorage.ID);
-
-
-exports = SettingsObjectStorage;

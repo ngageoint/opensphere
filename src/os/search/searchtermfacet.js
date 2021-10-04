@@ -1,14 +1,14 @@
-goog.module('os.search.SearchTermFacet');
+goog.declareModuleId('os.search.SearchTermFacet');
 
-const BaseFacet = goog.require('os.search.BaseFacet');
-const TreeSearch = goog.require('os.ui.slick.TreeSearch');
+import TreeSearch from '../ui/slick/treesearch.js';
+import BaseFacet from './basefacet.js';
 
 
 /**
  * @extends {BaseFacet<T>}
  * @template T
  */
-class SearchTermFacet extends BaseFacet {
+export default class SearchTermFacet extends BaseFacet {
   /**
    * Constructor.
    */
@@ -175,5 +175,3 @@ class SearchTermFacet extends BaseFacet {
     return 0;
   }
 }
-
-exports = SearchTermFacet;

@@ -1,17 +1,17 @@
 goog.declareModuleId('plugin.arc');
 
+import * as text from '../../os/file/mime/text.js';
+import {launchForLayer} from '../../os/ui/query/combinator.js';
 import ArcFeatureType from './arcfeaturetype.js';
 import ESRIType from './esritype.js';
 
 const xml = goog.require('goog.dom.xml');
 const googString = goog.require('goog.string');
-const text = goog.require('os.file.mime.text');
-const {launchForLayer} = goog.require('os.ui.query.CombinatorUI');
 
-const VectorLayer = goog.requireType('os.layer.Vector');
-const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
-const IFeatureType = goog.requireType('os.ogc.IFeatureType');
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
+const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
+const {default: IFeatureType} = goog.requireType('os.ogc.IFeatureType');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 const {default: ArcServer} = goog.requireType('plugin.arc.ArcServer');
 const {default: IArcLoader} = goog.requireType('plugin.arc.IArcLoader');
 

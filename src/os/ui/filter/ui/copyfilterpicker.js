@@ -1,12 +1,13 @@
-goog.module('os.ui.filter.ui.CopyFilterPickerUI');
+goog.declareModuleId('os.ui.filter.ui.CopyFilterPickerUI');
+
+import {findDuplicates} from '../../../array/array.js';
+import ColumnMappingManager from '../../../column/columnmappingmanager.js';
+import {ROOT} from '../../../os.js';
+import Module from '../../module.js';
 
 const {getRandomString} = goog.require('goog.string');
-const {ROOT} = goog.require('os');
-const {findDuplicates} = goog.require('os.array');
-const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
-const Module = goog.require('os.ui.Module');
 
-const CopyFilterPickerModel = goog.requireType('os.ui.filter.ui.CopyFilterPickerModel');
+const {default: CopyFilterPickerModel} = goog.requireType('os.ui.filter.ui.CopyFilterPickerModel');
 
 
 /**
@@ -14,7 +15,7 @@ const CopyFilterPickerModel = goog.requireType('os.ui.filter.ui.CopyFilterPicker
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -40,7 +41,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'copyfilterpicker';
+export const directiveTag = 'copyfilterpicker';
 
 /**
  * Add the directive to the module.
@@ -51,7 +52,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the copyfilterpicker directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -136,9 +137,3 @@ class Controller {
     this.scope_['copyFilterPickerForm'].$setValidity('inUse', !inUse);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

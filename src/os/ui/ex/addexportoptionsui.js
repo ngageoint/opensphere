@@ -1,16 +1,16 @@
-goog.module('os.ui.AddExportOptionsUI');
+goog.declareModuleId('os.ui.AddExportOptionsUI');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
 
-const ExportOptions = goog.requireType('os.ex.ExportOptions');
+const {default: ExportOptions} = goog.requireType('os.ex.ExportOptions');
 
 
 /**
  * Directive
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -33,7 +33,7 @@ Module.directive('addexportoptions', [directive]);
  * Controller function for the addExportOptions directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -90,9 +90,3 @@ class Controller {
     }.bind(this));
   }
 }
-
-
-exports = {
-  Controller,
-  directive
-};

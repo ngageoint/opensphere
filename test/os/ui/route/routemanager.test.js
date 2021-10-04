@@ -7,9 +7,9 @@ goog.require('os.ui.route.RouteManager');
 
 describe('os.ui.route.RouteManager', function() {
   const googObject = goog.module.get('goog.object');
-  const FileUrlHandler = goog.module.get('os.file.FileUrlHandler');
+  const {default: FileUrlHandler} = goog.module.get('os.file.FileUrlHandler');
   const ui = goog.module.get('os.ui');
-  const RouteManager = goog.module.get('os.ui.route.RouteManager');
+  const {default: RouteManager} = goog.module.get('os.ui.route.RouteManager');
 
   let rm;
   let handler;

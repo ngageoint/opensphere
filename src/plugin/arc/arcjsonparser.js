@@ -1,5 +1,8 @@
 goog.declareModuleId('plugin.arc.ArcJSONParser');
 
+import * as text from '../../os/file/mime/text.js';
+import * as geo2 from '../../os/geo/geo2.js';
+
 const Disposable = goog.require('goog.Disposable');
 const googString = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
@@ -9,10 +12,8 @@ const MultiPoint = goog.require('ol.geom.MultiPoint');
 const MultiPolygon = goog.require('ol.geom.MultiPolygon');
 const Point = goog.require('ol.geom.Point');
 const Polygon = goog.require('ol.geom.Polygon');
-const text = goog.require('os.file.mime.text');
-const geo2 = goog.require('os.geo2');
 
-const IParser = goog.requireType('os.parse.IParser');
+const {default: IParser} = goog.requireType('os.parse.IParser');
 
 
 /**

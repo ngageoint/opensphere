@@ -1,7 +1,7 @@
-goog.module('os.ui.hist.IHistogramManager');
+goog.declareModuleId('os.ui.hist.IHistogramManager');
 
-const HistogramData = goog.requireType('os.hist.HistogramData');
-const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
+const {default: HistogramData} = goog.requireType('os.hist.HistogramData');
+const {default: TimelineScaleOptions} = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 
 /**
@@ -9,7 +9,7 @@ const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptio
  *
  * @interface
  */
-class IHistogramManager {
+export default class IHistogramManager {
   /**
    * Gets the histogram
    * @param {TimelineScaleOptions} options Histogram options
@@ -17,5 +17,3 @@ class IHistogramManager {
    */
   getHistograms(options) {}
 }
-
-exports = IHistogramManager;

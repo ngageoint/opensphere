@@ -1,19 +1,18 @@
-goog.module('os.ogc.query.OGCQuery');
+goog.declareModuleId('os.ogc.query.OGCQuery');
 
-goog.require('os.ui.ogc.OGCListUI'); // touch the <ogclist> directive to get it to inject...
-
-const query = goog.require('os.query');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+import '../../ui/ogc/ogclistui.js';
+import * as query from '../../query/query.js';
+import * as ConfirmUI from '../../ui/window/confirm.js';
 
 const Feature = goog.requireType('ol.Feature');
-const OGCService = goog.requireType('os.ogc.OGCService');
+const {default: OGCService} = goog.requireType('os.ogc.OGCService');
 const {Options: OGCListUIOptions} = goog.requireType('os.ui.ogc.OGCListUI');
 
 
 /**
  * Generic UI and handlers for an OGC Query
  */
-class OGCQuery {
+export default class OGCQuery {
   /**
    * @param {!OGCService} service
    */
@@ -136,5 +135,3 @@ class OGCQuery {
     this.eventType_ = eventType;
   }
 }
-
-exports = OGCQuery;

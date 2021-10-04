@@ -8,9 +8,9 @@ goog.require('os.im.mapping.BearingMapping');
 describe('os.im.mapping.BearingMapping', function() {
   const Feature = goog.module.get('ol.Feature');
   const Point = goog.module.get('ol.geom.Point');
-  const Fields = goog.module.get('os.Fields');
+  const {default: Fields} = goog.module.get('os.Fields');
   const mapping = goog.module.get('os.im.mapping');
-  const BearingMapping = goog.module.get('os.im.mapping.BearingMapping');
+  const {default: BearingMapping} = goog.module.get('os.im.mapping.BearingMapping');
 
   it('should auto detect bearing string types', function() {
     // test with a feature (WFS layer or csv import)

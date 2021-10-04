@@ -1,9 +1,9 @@
-goog.module('os.command.VectorLayerShowArrow');
+goog.declareModuleId('os.command.VectorLayerShowArrow');
 
-const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import StyleField from '../style/stylefield.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import AbstractVectorLayerLOB from './abstractvectorlayerlob.js';
 
 
 /**
@@ -11,7 +11,7 @@ const StyleManager = goog.require('os.style.StyleManager');
  *
  * @extends {AbstractVectorLayerLOB<boolean>}
  */
-class VectorLayerShowArrow extends AbstractVectorLayerLOB {
+export default class VectorLayerShowArrow extends AbstractVectorLayerLOB {
   /**
    * Constructor.
    * @param {string} layerId
@@ -43,5 +43,3 @@ class VectorLayerShowArrow extends AbstractVectorLayerLOB {
     super.applyValue(config, value);
   }
 }
-
-exports = VectorLayerShowArrow;

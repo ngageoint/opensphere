@@ -1,14 +1,14 @@
-goog.module('os.ui.filter.op.Between');
+goog.declareModuleId('os.ui.filter.op.Between');
 
-const {directiveTag} = goog.require('os.ui.filter.BetweenUI');
-const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
-const Op = goog.require('os.ui.filter.op.Op');
-const DataType = goog.require('os.xsd.DataType');
+import DataType from '../../../xsd.js';
+import {directiveTag} from '../between.js';
+import FilterPatterns from '../filterpatterns.js';
+import Op from './op.js';
 
 
 /**
  */
-class Between extends Op {
+export default class Between extends Op {
   /**
    * Constructor.
    */
@@ -128,5 +128,3 @@ class Between extends Op {
     return false;
   }
 }
-
-exports = Between;

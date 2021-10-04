@@ -1,12 +1,11 @@
-goog.module('os.data.ISearchable');
-
+goog.declareModuleId('os.data.ISearchable');
 
 /**
  * An interface for searchable objects
  *
  * @interface
  */
-class ISearchable {
+export default class ISearchable {
   /**
    * Returns the text to be used in searches
    * @return {string} The text to search
@@ -26,6 +25,3 @@ class ISearchable {
  * @const {string}
  */
 ISearchable.ID = 'os.data.ISearchable';
-
-
-exports = ISearchable;

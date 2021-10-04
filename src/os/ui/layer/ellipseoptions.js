@@ -1,12 +1,16 @@
-goog.module('os.ui.layer.EllipseOptionsUI');
+goog.declareModuleId('os.ui.layer.EllipseOptionsUI');
 
-const {ROOT} = goog.require('os');
-const VectorLayerShowEllipsoids = goog.require('os.command.VectorLayerShowEllipsoids');
-const VectorLayerShowGroundReference = goog.require('os.command.VectorLayerShowGroundReference');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
-const Module = goog.require('os.ui.Module');
-const AbstractLayerUICtrl = goog.require('os.ui.layer.AbstractLayerUICtrl');
+import VectorLayerShowEllipsoids from '../../command/vectorlayershowellipsoidscmd.js';
+import VectorLayerShowGroundReference from '../../command/vectorlayershowgroundreferencecmd.js';
+import {ROOT} from '../../os.js';
+import StyleField from '../../style/stylefield.js';
+import StyleManager from '../../style/stylemanager_shim.js';
+import Module from '../module.js';
+import AbstractLayerUICtrl from './abstractlayerui.js';
+
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: LayerNode} = goog.requireType('os.data.LayerNode');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
@@ -14,7 +18,7 @@ const AbstractLayerUICtrl = goog.require('os.ui.layer.AbstractLayerUICtrl');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/layer/ellipseoptions.html',
@@ -26,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'ellipseoptions';
+export const directiveTag = 'ellipseoptions';
 
 /**
  * Add the directive to the module.
@@ -37,7 +41,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the ellipseoptions directive.
  * @unrestricted
  */
-class Controller extends AbstractLayerUICtrl {
+export class Controller extends AbstractLayerUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -89,7 +93,7 @@ class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getShowEllipsoids_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -107,7 +111,7 @@ class Controller extends AbstractLayerUICtrl {
    * @private
    */
   getShowGroundReference_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items && items.length > 0) {
       var config = StyleManager.getInstance().getLayerConfig(items[0].getId());
       if (config) {
@@ -129,8 +133,8 @@ class Controller extends AbstractLayerUICtrl {
       var value = this['showEllipsoids'];
       var fn =
           /**
-           * @param {os.layer.ILayer} layer
-           * @return {os.command.ICommand}
+           * @param {ILayer} layer
+           * @return {ICommand}
            */
           function(layer) {
             return new VectorLayerShowEllipsoids(layer.getId(), value);
@@ -151,8 +155,8 @@ class Controller extends AbstractLayerUICtrl {
       var value = this['showGroundReference'];
       var fn =
           /**
-           * @param {os.layer.ILayer} layer
-           * @return {os.command.ICommand}
+           * @param {ILayer} layer
+           * @return {ICommand}
            */
           function(layer) {
             return new VectorLayerShowGroundReference(layer.getId(), value);
@@ -162,9 +166,3 @@ class Controller extends AbstractLayerUICtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -14,14 +14,14 @@ goog.require('test.os.config.SettingsUtil');
 describe('os.config.Settings', function() {
   const Deferred = goog.module.get('goog.async.Deferred');
   const osConfig = goog.module.get('os.config');
-  const EventType = goog.module.get('os.config.EventType');
-  const Settings = goog.module.get('os.config.Settings');
-  const SettingsFile = goog.module.get('os.config.storage.SettingsFile');
-  const SettingsLocalStorage = goog.module.get('os.config.storage.SettingsLocalStorage');
-  const SettingsObjectStorage = goog.module.get('os.config.storage.SettingsObjectStorage');
-  const SettingsWritableStorageType = goog.module.get('os.config.storage.SettingsWritableStorageType');
+  const {default: EventType} = goog.module.get('os.config.EventType');
+  const {default: Settings} = goog.module.get('os.config.Settings');
+  const {default: SettingsFile} = goog.module.get('os.config.storage.SettingsFile');
+  const {default: SettingsLocalStorage} = goog.module.get('os.config.storage.SettingsLocalStorage');
+  const {default: SettingsObjectStorage} = goog.module.get('os.config.storage.SettingsObjectStorage');
+  const {default: SettingsWritableStorageType} = goog.module.get('os.config.storage.SettingsWritableStorageType');
   const RequestHandlerFactory = goog.module.get('os.net.RequestHandlerFactory');
-  const SameDomainHandler = goog.module.get('os.net.SameDomainHandler');
+  const {default: SameDomainHandler} = goog.module.get('os.net.SameDomainHandler');
   const SettingsUtil = goog.module.get('test.os.config.SettingsUtil');
 
   window.localStorage.clear();

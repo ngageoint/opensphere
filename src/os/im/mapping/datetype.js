@@ -1,11 +1,12 @@
-goog.module('os.im.mapping.DateType');
-
+goog.declareModuleId('os.im.mapping.DateType');
 
 /**
  * @enum {string}
  */
-exports = {
+const DateType = {
   COMBINED: 'combined',
   SEPARATE: 'separate',
   DATE_ONLY: 'dateonly'
 };
+
+export default DateType;

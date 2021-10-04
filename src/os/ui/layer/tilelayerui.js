@@ -1,22 +1,21 @@
-goog.module('os.ui.layer.TileLayerUI');
+goog.declareModuleId('os.ui.layer.TileLayerUI');
 
-goog.require('os.ui.SliderUI');
+import '../slider.js';
+import {instanceOf} from '../../classregistry.js';
+import {toHexString} from '../../color.js';
+import LayerColor from '../../command/layercolorcmd.js';
+import TileLayerColorize from '../../command/tilelayercolorizecmd.js';
+import TileLayerStyle from '../../command/tilelayerstylecmd.js';
+import LayerClass from '../../layer/layerclass.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {Controller as DefaultLayerUICtrl} from './defaultlayerui.js';
+import {getColorize, getStyle, getStyles} from './layers.js';
 
-const {ROOT} = goog.require('os');
-const {instanceOf} = goog.require('os.classRegistry');
-const {toHexString} = goog.require('os.color');
-const LayerColor = goog.require('os.command.LayerColor');
-const TileLayerColorize = goog.require('os.command.TileLayerColorize');
-const TileLayerStyle = goog.require('os.command.TileLayerStyle');
-const LayerClass = goog.require('os.layer.LayerClass');
-const Module = goog.require('os.ui.Module');
-const {getColorize, getStyle, getStyles} = goog.require('os.ui.layer');
-const {Controller: DefaultLayerUICtrl} = goog.require('os.ui.layer.DefaultLayerUI');
-
-const ICommand = goog.requireType('os.command.ICommand');
-const LayerNode = goog.requireType('os.data.LayerNode');
-const ILayer = goog.requireType('os.layer.ILayer');
-const Tile = goog.requireType('os.layer.Tile');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: LayerNode} = goog.requireType('os.data.LayerNode');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: Tile} = goog.requireType('os.layer.Tile');
 
 
 /**
@@ -24,7 +23,7 @@ const Tile = goog.requireType('os.layer.Tile');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   templateUrl: ROOT + 'views/layer/tile.html',
@@ -36,7 +35,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'tilelayerui';
+export const directiveTag = 'tilelayerui';
 
 /**
  * Add the directive to the module
@@ -47,7 +46,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the tile layer UI
  * @unrestricted
  */
-class Controller extends DefaultLayerUICtrl {
+export class Controller extends DefaultLayerUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -176,9 +175,3 @@ class Controller extends DefaultLayerUICtrl {
     this.createCommand(fn);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

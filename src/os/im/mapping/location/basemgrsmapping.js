@@ -1,8 +1,8 @@
-goog.module('os.im.mapping.location.BaseMGRSMapping');
+goog.declareModuleId('os.im.mapping.location.BaseMGRSMapping');
 
-const {MGRS_REGEXP} = goog.require('os.geo');
-const {getItemField} = goog.require('os.im.mapping');
-const AbstractPositionMapping = goog.require('os.im.mapping.AbstractPositionMapping');
+import {MGRS_REGEXP} from '../../../geo/geo.js';
+import AbstractPositionMapping from '../abstractpositionmapping.js';
+import {getItemField} from '../mapping.js';
 
 
 /**
@@ -11,7 +11,7 @@ const AbstractPositionMapping = goog.require('os.im.mapping.AbstractPositionMapp
  * @extends {AbstractPositionMapping<T, S>}
  * @template T, S
  */
-class BaseMGRSMapping extends AbstractPositionMapping {
+export default class BaseMGRSMapping extends AbstractPositionMapping {
   /**
    * Constructor.
    */
@@ -56,5 +56,3 @@ class BaseMGRSMapping extends AbstractPositionMapping {
     return false;
   }
 }
-
-exports = BaseMGRSMapping;

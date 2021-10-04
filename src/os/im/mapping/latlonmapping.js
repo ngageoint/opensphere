@@ -1,10 +1,11 @@
-goog.module('os.im.mapping.LatLonMapping');
+goog.declareModuleId('os.im.mapping.LatLonMapping');
+
+import {COORD_CLEANER} from '../../geo/geo.js';
+import BaseLatLonMapping from './location/baselatlonmapping.js';
+import {getItemField} from './mapping.js';
+import MappingRegistry from './mappingregistry.js';
 
 const Point = goog.require('ol.geom.Point');
-const {COORD_CLEANER} = goog.require('os.geo');
-const {getItemField} = goog.require('os.im.mapping');
-const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
-const BaseLatLonMapping = goog.require('os.im.mapping.location.BaseLatLonMapping');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -14,7 +15,7 @@ const Feature = goog.requireType('ol.Feature');
  *
  * @extends {BaseLatLonMapping<Feature>}
  */
-class LatLonMapping extends BaseLatLonMapping {
+export default class LatLonMapping extends BaseLatLonMapping {
   /**
    * Constructor.
    * @param {number=} opt_order
@@ -60,5 +61,3 @@ LatLonMapping.ID = 'LatLon';
 
 // Register the mapping.
 MappingRegistry.getInstance().registerMapping(LatLonMapping.ID, LatLonMapping);
-
-exports = LatLonMapping;

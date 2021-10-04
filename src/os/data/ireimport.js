@@ -1,10 +1,9 @@
-goog.module('os.data.IReimport');
-
+goog.declareModuleId('os.data.IReimport');
 
 /**
  * @interface
  */
-class IReimport {
+export default class IReimport {
   /**
    * @return {boolean}
    */
@@ -15,5 +14,3 @@ class IReimport {
    */
   reimport() {}
 }
-
-exports = IReimport;

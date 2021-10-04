@@ -14,10 +14,10 @@ describe('os.state.v2.TimeState', function() {
   const googDomXml = goog.module.get('goog.dom.xml');
   const Range = goog.module.get('goog.math.Range');
   const googString = goog.module.get('goog.string');
-  const TimeState = goog.module.get('os.state.v2.TimeState');
-  const TimeTag = goog.module.get('os.state.v2.TimeTag');
+  const {default: TimeState} = goog.module.get('os.state.v2.TimeState');
+  const {default: TimeTag} = goog.module.get('os.state.v2.TimeTag');
   const osTime = goog.module.get('os.time');
-  const TimelineController = goog.module.get('os.time.TimelineController');
+  const {default: TimelineController} = goog.module.get('os.time.TimelineController');
   const xml = goog.module.get('os.xml');
 
   var time = '<time>' +

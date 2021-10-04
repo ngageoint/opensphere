@@ -1,4 +1,4 @@
-goog.module('os.data.FeatureEvent');
+goog.declareModuleId('os.data.FeatureEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
@@ -10,7 +10,7 @@ const GoogEvent = goog.require('goog.events.Event');
  * in the same application context as the feature. This ensures 'instanceof GoogEvent' returns true and Closure
  * won't create a new event and extend it off this one (which is expensive).
  */
-class FeatureEvent extends GoogEvent {
+export default class FeatureEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type The event type to fire
@@ -41,5 +41,3 @@ class FeatureEvent extends GoogEvent {
     this.oldVal = oldVal;
   }
 }
-
-exports = FeatureEvent;

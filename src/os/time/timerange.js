@@ -1,22 +1,23 @@
-goog.module('os.time.TimeRange');
+goog.declareModuleId('os.time.TimeRange');
+
+import registerClass from '../registerclass.js';
+import * as time from './time.js';
+import TimeInstant from './timeinstant.js';
 
 const UtcDateTime = goog.require('goog.date.UtcDateTime');
-const registerClass = goog.require('os.registerClass');
-const time = goog.require('os.time');
-const TimeInstant = goog.require('os.time.TimeInstant');
 
 const DateLike = goog.requireType('goog.date.DateLike');
-const ITime = goog.requireType('os.time.ITime');
+const {default: ITime} = goog.requireType('os.time.ITime');
 
 
 /**
  * A time range
  */
-class TimeRange extends TimeInstant {
+export default class TimeRange extends TimeInstant {
   /**
    * Constructor.
    * @param {ITime|DateLike|string|number=} opt_start The start time
-   * @param {os.time.ITime|DateLike|string|number=} opt_end The end time
+   * @param {ITime|DateLike|string|number=} opt_end The end time
    */
   constructor(opt_start, opt_end) {
     super(opt_start);
@@ -158,6 +159,3 @@ registerClass(TimeRange.NAME, TimeRange);
  * @type {!TimeRange}
  */
 TimeRange.UNBOUNDED = new TimeRange(-Infinity, Infinity);
-
-
-exports = TimeRange;

@@ -3,8 +3,8 @@ goog.require('os.data.Registry');
 goog.require('os.data.RegistryPropertyChange');
 
 describe('os.data.Registry', function() {
-  const Registry = goog.module.get('os.data.Registry');
-  const RegistryPropertyChange = goog.module.get('os.data.RegistryPropertyChange');
+  const {default: Registry} = goog.module.get('os.data.Registry');
+  const {default: RegistryPropertyChange} = goog.module.get('os.data.RegistryPropertyChange');
   const {PROPERTYCHANGE} = goog.module.get('goog.events.EventType');
 
   var item1 = {

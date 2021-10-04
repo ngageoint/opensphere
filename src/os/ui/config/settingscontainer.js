@@ -1,9 +1,9 @@
-goog.module('os.ui.config.SettingsContainerUI');
+goog.declareModuleId('os.ui.config.SettingsContainerUI');
 
-const Module = goog.require('os.ui.Module');
-const AbstractSettingsCtrl = goog.require('os.ui.config.AbstractSettingsCtrl');
-const SettingsManager = goog.require('os.ui.config.SettingsManager');
-const {directive: settingsWindowDirective} = goog.require('os.ui.config.SettingsWindowUI');
+import Module from '../module.js';
+import AbstractSettingsCtrl from './abstractsettings.js';
+import SettingsManager from './settingsmanager.js';
+import {directive as settingsWindowDirective} from './settingswindow.js';
 
 
 /**
@@ -28,7 +28,7 @@ Module.directive('settingscontainer', [directive]);
  * Controller for the save export window
  * @unrestricted
  */
-class Controller extends AbstractSettingsCtrl {
+export default class Controller extends AbstractSettingsCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -81,5 +81,3 @@ class Controller extends AbstractSettingsCtrl {
     }
   }
 }
-
-exports = Controller;

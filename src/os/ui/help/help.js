@@ -1,12 +1,12 @@
-goog.module('os.ui.help');
+goog.declareModuleId('os.ui.help');
 
-const dispatcher = goog.require('os.Dispatcher');
-const UIEvent = goog.require('os.ui.events.UIEvent');
-const UIEventType = goog.require('os.ui.events.UIEventType');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const {openWindow} = goog.require('os.ui.menu.windows');
+import * as dispatcher from '../../dispatcher.js';
+import UIEvent from '../events/uievent.js';
+import UIEventType from '../events/uieventtype.js';
+import Menu from '../menu/menu.js';
+import MenuItem from '../menu/menuitem.js';
+import MenuItemType from '../menu/menuitemtype.js';
+import {openWindow} from '../menu/windowsmenu.js';
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -15,7 +15,7 @@ const Logger = goog.requireType('goog.log.Logger');
  * Application help menu.
  * @type {Menu<undefined>}
  */
-const MENU = new Menu(new MenuItem({
+export const MENU = new Menu(new MenuItem({
   type: MenuItemType.ROOT,
   children: []
 }));
@@ -23,14 +23,9 @@ const MENU = new Menu(new MenuItem({
 /**
  * @param {string} flag
  */
-const showWindow = function(flag) {
+export const showWindow = function(flag) {
   if (flag && !openWindow(flag)) {
     var evt = new UIEvent(UIEventType.TOGGLE_UI, flag);
     dispatcher.getInstance().dispatchEvent(evt);
   }
-};
-
-exports = {
-  MENU,
-  showWindow
 };

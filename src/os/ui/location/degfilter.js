@@ -1,7 +1,7 @@
-goog.module('os.ui.location.degFilter');
+goog.declareModuleId('os.ui.location.degFilter');
 
-const Module = goog.require('os.ui.Module');
-const Format = goog.require('os.ui.location.Format');
+import Module from '../module.js';
+import Format from './locationformat.js';
 
 
 /**
@@ -28,4 +28,4 @@ const filter = () => /** @type {angular.Filter} */ (filterFn);
  */
 Module.filter(Format.DEG, [filter]);
 
-exports = filterFn;
+export default filterFn;

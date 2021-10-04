@@ -1,4 +1,22 @@
-goog.module('os.ui.ogc.OGCServer');
+goog.declareModuleId('os.ui.ogc.OGCServer');
+
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import Settings from '../../config/settings.js';
+import DataManager from '../../data/datamanager.js';
+import IDataProvider from '../../data/idataprovider.js';
+import {isLocal} from '../../file/index.js';
+import osImplements from '../../implements.js';
+import Request from '../../net/request.js';
+import {ID, getException} from '../../ogc/ogc.js';
+import WMTSLayerParsers from '../../ogc/wmts/wmtslayerparsers.js';
+import BaseProvider from '../data/baseprovider.js';
+import DescriptorNode from '../data/descriptornode.js';
+import AbstractLoadingServer from '../server/abstractloadingserver.js';
+import SlickTreeNode from '../slick/slicktreenode.js';
+import {isLayerDeprecated} from '../util/deprecated.js';
+import IOGCDescriptor from './iogcdescriptor.js';
+import LayerParsers from './wms/layerparsers.js';
 
 const Uri = goog.require('goog.Uri');
 const QueryData = goog.require('goog.Uri.QueryData');
@@ -12,29 +30,14 @@ const {contains: stringContains, unescapeEntities} = goog.require('goog.string')
 const WMSCapabilities = goog.require('ol.format.WMSCapabilities');
 const WMTSCapabilities = goog.require('ol.format.WMTSCapabilities');
 const XLink = goog.require('ol.format.XLink');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const Settings = goog.require('os.config.Settings');
-const DataManager = goog.require('os.data.DataManager');
-const IDataProvider = goog.require('os.data.IDataProvider');
-const {isLocal} = goog.require('os.file');
-const osImplements = goog.require('os.implements');
-const Request = goog.require('os.net.Request');
-const {ID, getException} = goog.require('os.ogc');
-const WMTSLayerParsers = goog.require('os.ogc.wmts.WMTSLayerParsers');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
-const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
-const IOGCDescriptor = goog.require('os.ui.ogc.IOGCDescriptor');
-const LayerParsers = goog.require('os.ui.ogc.wms.LayerParsers');
-const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
-const {isLayerDeprecated} = goog.require('os.ui.util.deprecated');
 
 const Logger = goog.requireType('goog.log.Logger');
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const OSFile = goog.requireType('os.file.File');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: IServerDescriptor} = goog.requireType('os.data.IServerDescriptor');
+const {default: OSFile} = goog.requireType('os.file.File');
 const {default: IWMTSLayerParser} = goog.requireType('os.ogc.wmts.IWMTSLayerParser');
-const IWMSLayerParser = goog.requireType('os.ui.ogc.wms.IWMSLayerParser');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
+const {default: IWMSLayerParser} = goog.requireType('os.ui.ogc.wms.IWMSLayerParser');
 
 
 /**
@@ -51,7 +54,7 @@ const OGCFolderType = {
  *
  * @implements {IDataProvider}
  */
-class OGCServer extends AbstractLoadingServer {
+export default class OGCServer extends AbstractLoadingServer {
   /**
    * Constructor.
    */
@@ -92,7 +95,7 @@ class OGCServer extends AbstractLoadingServer {
     this.wfsOnlyFolder = new SlickTreeNode();
 
     /**
-     * @type {!Array<!os.structs.ITreeNode>}
+     * @type {!Array<!ITreeNode>}
      * @private
      */
     this.toAdd_ = [];
@@ -1460,7 +1463,7 @@ class OGCServer extends AbstractLoadingServer {
    * @param {string} version
    * @param {undefined|Array<!string>|null} crsList
    * @param {?string=} opt_attribution
-   * @return {?os.structs.ITreeNode}
+   * @return {?ITreeNode}
    * @protected
    */
   parseLayer(node, version, crsList, opt_attribution) {
@@ -1591,7 +1594,7 @@ class OGCServer extends AbstractLoadingServer {
   }
 
   /**
-   * @param {!os.structs.ITreeNode} folder
+   * @param {!ITreeNode} folder
    * @protected
    */
   addFolder(folder) {
@@ -1615,7 +1618,7 @@ class OGCServer extends AbstractLoadingServer {
   }
 
   /**
-   * @param {os.structs.ITreeNode} node
+   * @param {ITreeNode} node
    * @param {Array<string>=} opt_tags
    * @private
    */
@@ -1665,7 +1668,7 @@ class OGCServer extends AbstractLoadingServer {
   }
 
   /**
-   * @param {os.structs.ITreeNode=} opt_node
+   * @param {ITreeNode=} opt_node
    * @protected
    */
   markAllDescriptors(opt_node) {
@@ -1673,7 +1676,7 @@ class OGCServer extends AbstractLoadingServer {
 
     if (node instanceof DescriptorNode) {
       var dn = /** @type {DescriptorNode} */ (node);
-      var descriptor = /** @type {os.data.IServerDescriptor} */ (dn.getDescriptor());
+      var descriptor = /** @type {IServerDescriptor} */ (dn.getDescriptor());
       if (descriptor) {
         try {
           descriptor.updatedFromServer();
@@ -1720,8 +1723,8 @@ class OGCServer extends AbstractLoadingServer {
 
   /**
    * @param {IDataDescriptor} descriptor
-   * @param {?Array<!os.structs.ITreeNode>} children
-   * @return {?os.structs.ITreeNode}
+   * @param {?Array<!ITreeNode>} children
+   * @return {?ITreeNode}
    * @private
    */
   findNode_(descriptor, children) {
@@ -1817,6 +1820,3 @@ OGCServer.URI_REGEXP_ = /(wms|wmts|wfs)/i;
  * @private
  */
 OGCServer.CONTENT_REGEXP_ = /(WMS|WMTS|WFS)_Capabilities/;
-
-
-exports = OGCServer;

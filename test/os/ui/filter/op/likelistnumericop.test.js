@@ -2,7 +2,7 @@ goog.require('os.ui.filter.op.LikeListNumeric');
 goog.require('os.ui.filter.op.Op');
 
 describe('os.ui.filter.op.LikeListNumeric', function() {
-  const LikeListNumeric = goog.module.get('os.ui.filter.op.LikeListNumeric');
+  const {default: LikeListNumeric} = goog.module.get('os.ui.filter.op.LikeListNumeric');
 
   var op = new LikeListNumeric();
 

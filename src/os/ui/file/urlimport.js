@@ -1,15 +1,14 @@
-goog.module('os.ui.file.UrlImportUI');
+goog.declareModuleId('os.ui.file.UrlImportUI');
 
-goog.require('os.ui.util.ValidationMessageUI');
+import '../util/validationmessage.js';
+import EventType from '../../events/eventtype.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import * as osWindow from '../window.js';
+import WindowEventType from '../windoweventtype.js';
 
-const {ROOT} = goog.require('os');
-const EventType = goog.require('os.events.EventType');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const osWindow = goog.require('os.ui.window');
-
-const UrlMethod = goog.requireType('os.ui.file.method.UrlMethod');
+const {default: UrlMethod} = goog.requireType('os.ui.file.method.UrlMethod');
 
 
 /**
@@ -17,7 +16,7 @@ const UrlMethod = goog.requireType('os.ui.file.method.UrlMethod');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -30,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'urlimport';
+export const directiveTag = 'urlimport';
 
 /**
  * Add the directive to the os.ui module
@@ -41,7 +40,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the URL import dialog
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -179,9 +178,3 @@ class Controller {
     apply(this.scope_);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

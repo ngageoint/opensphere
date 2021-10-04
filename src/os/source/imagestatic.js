@@ -1,9 +1,10 @@
-goog.module('os.source.ImageStatic');
+goog.declareModuleId('os.source.ImageStatic');
+
+import {rotate} from '../ol/image.js';
 
 const ImageState = goog.require('ol.ImageState');
 const {intersects} = goog.require('ol.extent');
 const OLImageStatic = goog.require('ol.source.ImageStatic');
-const {rotate} = goog.require('os.ol.image');
 
 const ImageBase = goog.requireType('ol.ImageBase');
 
@@ -11,7 +12,7 @@ const ImageBase = goog.requireType('ol.ImageBase');
 /**
  * @suppress {accessControls}
  */
-class ImageStatic extends OLImageStatic {
+export default class ImageStatic extends OLImageStatic {
   /**
    * Constructor.
    * @param {olx.source.ImageStaticOptions} options
@@ -60,5 +61,3 @@ class ImageStatic extends OLImageStatic {
     }
   }
 }
-
-exports = ImageStatic;

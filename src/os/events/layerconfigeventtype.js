@@ -1,9 +1,10 @@
-goog.module('os.events.LayerConfigEventType');
-
+goog.declareModuleId('os.events.LayerConfigEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const LayerConfigEventType = {
   CONFIGURE_AND_ADD: 'configureAndAddLayer'
 };
+
+export default LayerConfigEventType;

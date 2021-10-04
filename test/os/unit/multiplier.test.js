@@ -2,7 +2,7 @@ goog.require('os.unit.Multiplier');
 
 describe('os.unit.Multiplier', function() {
   it('should function correctly', inject(function($rootScope) {
-    const Multiplier = goog.module.get('os.unit.Multiplier');
+    const {default: Multiplier} = goog.module.get('os.unit.Multiplier');
 
     var name = 'min';
     var ratio = 1 / 60;

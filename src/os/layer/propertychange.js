@@ -1,9 +1,9 @@
-goog.module('os.layer.PropertyChange');
+goog.declareModuleId('os.layer.PropertyChange');
 
 /**
  * @enum {string}
  */
-exports = {
+const PropertyChange = {
   ALTITUDE: 'altitude',
   ANIMATION_ENABLED: 'animationEnabled',
   COLOR_MODEL: 'colorModel',
@@ -22,3 +22,5 @@ exports = {
   TITLE: 'title',
   VISIBLE: 'visible'
 };
+
+export default PropertyChange;

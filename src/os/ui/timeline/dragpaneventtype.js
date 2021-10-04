@@ -1,9 +1,11 @@
-goog.module('os.ui.timeline.DragPanEventType');
+goog.declareModuleId('os.ui.timeline.DragPanEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const DragPanEventType = {
   START: 'dragpanstart',
   STOP: 'dragpanstop'
 };
+
+export default DragPanEventType;

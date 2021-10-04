@@ -450,20 +450,6 @@ osx.window.TextPromptOptions;
 
 /**
  * @typedef {{
- *   confirm: (Function|undefined),
- *   cancel: (Function|undefined),
- *   columns: (Array<os.data.ColumnDefinition>|undefined),
- *   prompt: (string|undefined),
- *   defaultValue: (os.data.ColumnDefinition|undefined),
- *
- *   windowOptions: (osx.window.WindowOptions|undefined)
- * }}
- */
-osx.window.ConfirmColumnOptions;
-
-
-/**
- * @typedef {{
  *   id: string,
  *   name: string,
  *   image: string,
@@ -555,19 +541,6 @@ osx.ui.draw.GridOptions;
  * @type {Object}
  */
 osx.import;
-
-
-/**
- * @typedef {{
- *   id: string,
- *   label: string,
- *   valid: boolean,
- *   enabled: boolean,
- *   msg: (string|undefined),
- *   file: os.file.File
- * }}
- */
-osx.import.FileWrapper;
 
 
 /**

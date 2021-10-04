@@ -1,8 +1,8 @@
-goog.module('os.ui.help.MisconfiguredWindowUI');
+goog.declareModuleId('os.ui.help.MisconfiguredWindowUI');
 
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {directiveTag: misconfigured} = goog.require('os.ui.help.MisconfiguredUI');
+import Module from '../module.js';
+import WindowEventType from '../windoweventtype.js';
+import {directiveTag as misconfigured} from './misconfigured.js';
 
 
 /**
@@ -22,7 +22,7 @@ const template = [
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -38,7 +38,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'misconfigured-ui';
+export const directiveTag = 'misconfigured-ui';
 
 /**
  * Add the directive to the module.
@@ -49,7 +49,7 @@ Module.directive('misconfiguredUi', [directive]);
  * Controller function for the misconfiguredUi directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -60,9 +60,3 @@ class Controller {
     $scope.$emit(WindowEventType.READY);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

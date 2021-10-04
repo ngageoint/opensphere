@@ -1,4 +1,4 @@
-goog.module('os.ui.action.MenuOptions');
+goog.declareModuleId('os.ui.action.MenuOptions');
 
 /**
  * Options for defining an item in a menu.
@@ -22,7 +22,7 @@ goog.module('os.ui.action.MenuOptions');
  * @struct
  * @deprecated Please use {@link os.ui.menu.Menu} and {@link os.ui.menu.MenuItem} instead
  */
-class MenuOptions {
+export default class MenuOptions {
   /**
    * Constructor.
    * @param {?string=} opt_menu The sub-menu into which this item will be placed
@@ -35,5 +35,3 @@ class MenuOptions {
     this.order = opt_order != null ? opt_order : Number.MAX_VALUE;
   }
 }
-
-exports = MenuOptions;

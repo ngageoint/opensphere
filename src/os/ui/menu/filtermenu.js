@@ -1,31 +1,33 @@
-goog.module('os.ui.menu.filter');
+goog.declareModuleId('os.ui.menu.filter');
+
+import EventType from '../../action/eventtype.js';
+import CommandProcessor from '../../command/commandprocessor.js';
+import FilterEnable from '../../command/filterenablecmd.js';
+import SequenceCommand from '../../command/sequencecommand.js';
+import FilterNode from '../../data/filternode.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import {getFilterManager, getQueryManager} from '../../query/queryinstance.js';
+import FilterEvent from '../filter/filterevent.js';
+import FilterEventType from '../filter/filtereventtype.js';
+import FilterRemove from '../query/cmd/filterremovecmd.js';
+import QueryEntries from '../query/cmd/queryentriescmd.js';
+import {ALL_ID} from '../query/query.js';
+import Menu from './menu.js';
+import MenuItem from './menuitem.js';
+import MenuItemType from './menuitemtype.js';
 
 const {removeDuplicates} = goog.require('goog.array');
 const {remove} = goog.require('ol.array');
-const EventType = goog.require('os.action.EventType');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const FilterEnable = goog.require('os.command.FilterEnable');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const FilterNode = goog.require('os.data.FilterNode');
-const {getMapContainer} = goog.require('os.map.instance');
-const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
-const FilterEvent = goog.require('os.ui.filter.FilterEvent');
-const FilterEventType = goog.require('os.ui.filter.FilterEventType');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const {ALL_ID} = goog.require('os.ui.query');
-const FilterRemove = goog.require('os.ui.query.cmd.FilterRemove');
-const QueryEntries = goog.require('os.ui.query.cmd.QueryEntries');
 
-const TreeNode = goog.requireType('os.structs.TreeNode');
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
+const {default: TreeNode} = goog.requireType('os.structs.TreeNode');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 
 
 /**
  * @type {Menu<!Array<!TreeNode>>}
  */
-const MENU = new Menu(new MenuItem({
+export const MENU = new Menu(new MenuItem({
   type: MenuItemType.ROOT,
   children: [{
     label: 'Show',
@@ -69,7 +71,7 @@ const MENU = new Menu(new MenuItem({
 /**
  * Sets up the dynamic portions of the menu
  */
-const setup = function() {
+export const setup = function() {
   var menu = MENU;
 
   var genVisible = genVisibility;
@@ -117,7 +119,7 @@ const setup = function() {
  * @param {function(Array<!TreeNode>):boolean} func The visibility function
  * @return {function(this:MenuItem, Array<!TreeNode>)}
  */
-const genVisibility = function(func) {
+export const genVisibility = function(func) {
   /**
    * @param {Array<!TreeNode>} nodes
    * @this {MenuItem}
@@ -132,7 +134,7 @@ const genVisibility = function(func) {
 /**
  * Disposes filter menu
  */
-const dispose = function() {
+export const dispose = function() {
   if (MENU) {
     MENU.dispose();
   }
@@ -140,16 +142,16 @@ const dispose = function() {
 
 /**
  * @param {Array<!TreeNode>} nodes
- * @return {Array<!os.filter.FilterEntry>}
+ * @return {Array<!FilterEntry>}
  */
-const getFilters = function(nodes) {
+export const getFilters = function(nodes) {
   var filters = [];
   if (nodes) {
     for (var i = 0, n = nodes.length; i < n; i++) {
       var node = nodes[i];
 
       if (node instanceof FilterNode) {
-        filters.push(/** @type {os.data.FilterNode} */ (node).getEntry());
+        filters.push(/** @type {FilterNode} */ (node).getEntry());
       } else {
         filters = filters.concat(getFilters(node.getChildren()));
       }
@@ -245,10 +247,10 @@ const isFilter_ = function(context) {
 /**
  * Remove all entries for these filters
  *
- * @param {Array<!os.filter.FilterEntry>} filters
+ * @param {Array<!FilterEntry>} filters
  * @return {QueryEntries}
  */
-const fixEntries = function(filters) {
+export const fixEntries = function(filters) {
   var allEntries = getQueryManager().getEntries(null, null, null, false);
 
   // Remove the entry for this filter if it exists
@@ -351,13 +353,4 @@ const onFilter_ = function(event) {
       CommandProcessor.getInstance().addCommand(cmd);
     }
   }
-};
-
-exports = {
-  MENU,
-  setup,
-  genVisibility,
-  dispose,
-  getFilters,
-  fixEntries
 };

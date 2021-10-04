@@ -1,12 +1,12 @@
-goog.module('os.ui.query.cmd.QueryEntriesClear');
+goog.declareModuleId('os.ui.query.cmd.QueryEntriesClear');
 
-const QueryEntries = goog.require('os.ui.query.cmd.QueryEntries');
+import QueryEntries from './queryentriescmd.js';
 
 
 /**
  * Command to clear all query entries
  */
-class QueryEntriesClear extends QueryEntries {
+export default class QueryEntriesClear extends QueryEntries {
   /**
    * Constructor.
    */
@@ -15,5 +15,3 @@ class QueryEntriesClear extends QueryEntries {
     this.title = 'Clear query entries';
   }
 }
-
-exports = QueryEntriesClear;

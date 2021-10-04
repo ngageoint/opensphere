@@ -1,11 +1,12 @@
 goog.declareModuleId('plugin.basemap.TerrainDescriptor');
 
+import DisplaySetting from '../../os/config/displaysetting.js';
+import Settings from '../../os/config/settings.js';
+import BaseDescriptor from '../../os/data/basedescriptor.js';
+import Icons from '../../os/ui/icons.js';
 import {TERRAIN_ID} from './basemap.js';
 
-const DisplaySetting = goog.require('os.config.DisplaySetting');
-const Settings = goog.require('os.config.Settings');
-const BaseDescriptor = goog.require('os.data.BaseDescriptor');
-const Icons = goog.require('os.ui.Icons');
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
 
 
 /**
@@ -63,7 +64,7 @@ export default class TerrainDescriptor extends BaseDescriptor {
   /**
    * Handle changes to the terrain enabled setting.
    *
-   * @param {os.events.SettingChangeEvent} event
+   * @param {SettingChangeEvent} event
    * @private
    */
   onTerrainChange_(event) {

@@ -1,21 +1,22 @@
-goog.module('os.im.action.filter');
+goog.declareModuleId('os.im.action.filter');
+
+import CommandProcessor from '../../../command/commandprocessor.js';
+import SequenceCommand from '../../../command/sequencecommand.js';
+import FilterActionAdd from '../../../im/action/cmd/filteractionaddcmd.js';
+import FilterActionRemove from '../../../im/action/cmd/filteractionremovecmd.js';
+import {getImportActionManager} from '../../../im/action/importaction.js';
+import TagName from '../../../im/action/tagname.js';
+import {getFilterManager} from '../../../query/queryinstance.js';
+import * as xml from '../../../xml.js';
+import * as filter from '../../filter/filter.js';
+import ExportTypeHint from './exporttypehint.js';
+import FilterActionNode from './filteractionnode.js';
 
 const olArray = goog.require('ol.array');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const {getImportActionManager} = goog.require('os.im.action');
-const TagName = goog.require('os.im.action.TagName');
-const FilterActionAdd = goog.require('os.im.action.cmd.FilterActionAdd');
-const FilterActionNode = goog.require('os.ui.im.action.FilterActionNode');
-const FilterActionRemove = goog.require('os.im.action.cmd.FilterActionRemove');
-const ExportTypeHint = goog.require('os.im.action.filter.ExportTypeHint');
-const {getFilterManager} = goog.require('os.query.instance');
-const filter = goog.require('os.ui.filter');
-const xml = goog.require('os.xml');
 
-const ICommand = goog.requireType('os.command.ICommand');
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**
@@ -25,7 +26,7 @@ const ITreeNode = goog.requireType('os.structs.ITreeNode');
  * @param {boolean=} opt_exactType If true, use the type from the entry. If false, use the filterable key.
  * @return {!Array<!Element>} The entry XML elements.
  */
-const exportEntries = function(entries, opt_exactType) {
+export const exportEntries = function(entries, opt_exactType) {
   var iam = getImportActionManager();
   var result = [];
 
@@ -99,7 +100,7 @@ const exportEntries = function(entries, opt_exactType) {
  * @param {number=} opt_parentIndex Optional parent index to add the entry to.
  * @return {ICommand} The copy entry command.
  */
-const copyEntryCmd = function(entry, opt_parentIndex) {
+export const copyEntryCmd = function(entry, opt_parentIndex) {
   /**
    * Sets up the new titles and IDs on copies recursively.
    *
@@ -134,7 +135,7 @@ const copyEntryCmd = function(entry, opt_parentIndex) {
  *
  * @return {string} The file name.
  */
-const getExportName = function() {
+export const getExportName = function() {
   return getImportActionManager().entryTitle + 's';
 };
 
@@ -144,7 +145,7 @@ const getExportName = function() {
  * @param {string=} opt_entryType The filter action entry type.
  * @return {!Array} The columns.
  */
-const getColumns = function(opt_entryType) {
+export const getColumns = function(opt_entryType) {
   var columns;
 
   if (opt_entryType) {
@@ -163,7 +164,7 @@ const getColumns = function(opt_entryType) {
  * @param {FilterActionEntry|undefined} original The orignial filter entry, for edits.
  * @param {FilterActionEntry} entry The edited filter entry.
  */
-const onEditComplete = function(original, entry) {
+export const onEditComplete = function(original, entry) {
   // don't do anything if there was no change
   if (entry && (!original || entry.compare(original) !== 0)) {
     var cmds = [];
@@ -212,7 +213,7 @@ const onEditComplete = function(original, entry) {
  * @param {!FilterActionEntry} entry The import action entry to remove.
  * @return {ICommand} The remove entry command.
  */
-const removeEntryCmd = function(entry) {
+export const removeEntryCmd = function(entry) {
   var iam = getImportActionManager();
   var entries = iam.getActionEntries(entry.getType());
   var parent = entry.getParent();
@@ -240,20 +241,10 @@ const removeEntryCmd = function(entry) {
  * @param {Array<FilterActionNode>} targetArr The target array.
  * @param {ITreeNode} node The current node.
  */
-const isFilterActionNode = function(targetArr, node) {
+export const isFilterActionNode = function(targetArr, node) {
   if (node instanceof FilterActionNode) {
     goog.array.insert(targetArr, node);
   } else if (node.getChildren()) {
     node.getChildren().forEach(isFilterActionNode.bind(undefined, targetArr));
   }
-};
-
-exports = {
-  exportEntries,
-  copyEntryCmd,
-  getExportName,
-  getColumns,
-  onEditComplete,
-  removeEntryCmd,
-  isFilterActionNode
 };

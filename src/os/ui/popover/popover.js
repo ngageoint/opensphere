@@ -1,8 +1,9 @@
-goog.module('os.ui.popover.PopoverUI');
+goog.declareModuleId('os.ui.popover.PopoverUI');
+
+import Module from '../module.js';
+import {apply} from '../ui.js';
 
 const {truncate} = goog.require('goog.string');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -10,7 +11,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -29,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'popover';
+export const directiveTag = 'popover';
 
 /**
  * Add the directive to the os.ui module
@@ -40,7 +41,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the popover directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -168,9 +169,3 @@ class Controller {
     apply(this.scope_);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

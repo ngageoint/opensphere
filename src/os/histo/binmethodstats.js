@@ -1,4 +1,4 @@
-goog.module('os.histo.BinMethodStats');
+goog.declareModuleId('os.histo.BinMethodStats');
 
 /**
  * @typedef {{
@@ -10,4 +10,4 @@ goog.module('os.histo.BinMethodStats');
  */
 let BinMethodStats;
 
-exports = BinMethodStats;
+export default BinMethodStats;

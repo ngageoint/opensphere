@@ -1,12 +1,12 @@
-goog.module('os.ui.util.ArrayScrollDataSourceFactory');
+goog.declareModuleId('os.ui.util.ArrayScrollDataSourceFactory');
 
-const AbstractService = goog.require('os.ui.AbstractService');
-const ArrayScrollDataSource = goog.require('os.ui.util.ArrayScrollDataSource');
+import AbstractService from '../abstractservice.js';
+import ArrayScrollDataSource from './arrayscrolldatasource.js';
 
 
 /**
  */
-class ArrayScrollDataSourceFactory extends AbstractService {
+export default class ArrayScrollDataSourceFactory extends AbstractService {
   /**
    * Constructor.
    */
@@ -57,6 +57,3 @@ ArrayScrollDataSourceFactory.ID = 'arrayScrollDataSourceFactory';
 
 // load it into angular.
 angular.module('ui.scroll').service(ArrayScrollDataSourceFactory.ID, ArrayScrollDataSourceFactory);
-
-
-exports = ArrayScrollDataSourceFactory;

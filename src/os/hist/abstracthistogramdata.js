@@ -1,7 +1,7 @@
-goog.module('os.hist.AbstractHistogramData');
+goog.declareModuleId('os.hist.AbstractHistogramData');
 
-const IHistogramData = goog.requireType('os.hist.IHistogramData');
-const TimeRange = goog.requireType('os.time.TimeRange');
+const {default: IHistogramData} = goog.requireType('os.hist.IHistogramData');
+const {default: TimeRange} = goog.requireType('os.time.TimeRange');
 
 
 /**
@@ -16,7 +16,7 @@ const defaultColor = '#ffffff';
  * @abstract
  * @implements {IHistogramData}
  */
-class AbstractHistogramData {
+export default class AbstractHistogramData {
   /**
    * Constructor.
    */
@@ -158,5 +158,3 @@ class AbstractHistogramData {
     this.range_ = value;
   }
 }
-
-exports = AbstractHistogramData;

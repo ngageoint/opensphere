@@ -1,10 +1,10 @@
-goog.module('os.ui.im.URLExistsUI');
+goog.declareModuleId('os.ui.im.URLExistsUI');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const URLExistsChoice = goog.require('os.ui.im.URLExistsChoice');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import * as ConfirmUI from '../window/confirm.js';
+import WindowEventType from '../windoweventtype.js';
+import URLExistsChoice from './urlexistschoice.js';
 
 
 /**
@@ -12,7 +12,7 @@ const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   templateUrl: ROOT + 'views/im/urlexists.html',
   controller: Controller,
@@ -23,7 +23,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'urlexists';
+export const directiveTag = 'urlexists';
 
 /**
  * Add the directive to the os.ui module
@@ -34,7 +34,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the URL Exists! window
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -58,7 +58,7 @@ class Controller {
  * @param {string} current
  * @param {function(URLExistsChoice)} confirm
  */
-const launchURLExists = function(url, current, confirm) {
+export const launchURLExists = function(url, current, confirm) {
   var confirmOptions = /** @type {osx.window.ConfirmOptions} */ ({
     confirm: confirm,
     confirmValue: URLExistsChoice.ACTIVATE,
@@ -81,11 +81,4 @@ const launchURLExists = function(url, current, confirm) {
   };
 
   ConfirmUI.launchConfirm(confirmOptions, scopeOptions);
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchURLExists
 };

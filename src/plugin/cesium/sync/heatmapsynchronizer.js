@@ -1,6 +1,11 @@
 goog.declareModuleId('plugin.cesium.sync.HeatmapSynchronizer');
 
 import * as dispatcher from '../../../os/dispatcher.js';
+import PropertyChangeEvent from '../../../os/events/propertychangeevent.js';
+import PropertyChange from '../../../os/layer/propertychange.js';
+import MapEvent from '../../../os/map/mapevent.js';
+import MapContainer from '../../../os/mapcontainer.js';
+import * as events from '../../../os/ol/events.js';
 import {EXTENT_SCALE_FACTOR} from '../../heatmap/heatmap.js';
 import HeatmapField from '../../heatmap/heatmapfield.js';
 import HeatmapPropertyType from '../../heatmap/heatmappropertytype.js';
@@ -13,11 +18,6 @@ const dispose = goog.require('goog.dispose');
 const EventType = goog.require('goog.events.EventType');
 const olEvents = goog.require('ol.events');
 const {scaleFromCenter} = goog.require('ol.extent');
-const MapContainer = goog.require('os.MapContainer');
-const MapEvent = goog.require('os.MapEvent');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const PropertyChange = goog.require('os.layer.PropertyChange');
-const events = goog.require('os.ol.events');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const OLObject = goog.requireType('ol.Object');

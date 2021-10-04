@@ -8,9 +8,9 @@ goog.require('os.net.CrossOrigin');
 describe('os.net', function() {
   const Uri = goog.module.get('goog.Uri');
   const QueryData = goog.module.get('goog.Uri.QueryData');
-  const Settings = goog.module.get('os.config.Settings');
+  const {default: Settings} = goog.module.get('os.config.Settings');
   const net = goog.module.get('os.net');
-  const CrossOrigin = goog.module.get('os.net.CrossOrigin');
+  const {default: CrossOrigin} = goog.module.get('os.net.CrossOrigin');
 
   it('detects valid crossOrigin values', function() {
     expect(net.isValidCrossOrigin('anonymous')).toBe(true);

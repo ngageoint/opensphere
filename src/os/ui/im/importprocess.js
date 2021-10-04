@@ -1,32 +1,33 @@
-goog.module('os.ui.im.ImportProcess');
+goog.declareModuleId('os.ui.im.ImportProcess');
+
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import IUrlDescriptor from '../../data/iurldescriptor.js';
+import EventType from '../../events/eventtype.js';
+import FileManager from '../../file/filemanager.js';
+import FileStorage from '../../file/filestorage.js';
+import {isLocal} from '../../file/index.js';
+import osImplements from '../../implements.js';
+import AnyTypeImportUI from '../file/anytypeimportui.js';
+import UrlMethod from '../file/method/urlmethod.js';
+import {launchFileSupport} from './filesupport.js';
+import ImportEventType from './importeventtype.js';
+import ImportManager from './importmanager.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 const log = goog.require('goog.log');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const IUrlDescriptor = goog.require('os.data.IUrlDescriptor');
-const EventType = goog.require('os.events.EventType');
-const {isLocal} = goog.require('os.file');
-const FileManager = goog.require('os.file.FileManager');
-const FileStorage = goog.require('os.file.FileStorage');
-const osImplements = goog.require('os.implements');
-const AnyTypeImportUI = goog.require('os.ui.file.AnyTypeImportUI');
-const UrlMethod = goog.require('os.ui.file.method.UrlMethod');
-const {launchFileSupport} = goog.require('os.ui.im.FileSupportUI');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
-const ImportManager = goog.require('os.ui.im.ImportManager');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
-const OSFile = goog.requireType('os.file.File');
-const IFileMethod = goog.requireType('os.file.IFileMethod');
-const ImportEvent = goog.requireType('os.ui.im.ImportEvent');
+const {default: OSFile} = goog.requireType('os.file.File');
+const {default: IFileMethod} = goog.requireType('os.file.IFileMethod');
+const {default: ImportEvent} = goog.requireType('os.ui.im.ImportEvent');
 
 
 /**
  * @template T
  */
-class ImportProcess {
+export default class ImportProcess {
   /**
    * Constructor.
    * @param {ImportManager=} opt_im
@@ -444,5 +445,3 @@ class ImportProcess {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.im.ImportProcess');
-
-exports = ImportProcess;

@@ -1,4 +1,4 @@
-goog.module('os.layer.AnimationVector');
+goog.declareModuleId('os.layer.AnimationVector');
 
 const {getUid} = goog.require('ol');
 const {listen, unlistenByKey} = goog.require('ol.events');
@@ -11,7 +11,7 @@ const RenderEventType = goog.require('ol.render.EventType');
 /**
  * Vector layer extension created solely for the purpose of z-indexing unmanaged animation layers against each other.
  */
-class AnimationVector extends OLVectorLayer {
+export default class AnimationVector extends OLVectorLayer {
   /**
    * Constructor.
    * @param {olx.layer.VectorOptions} options Vector layer options
@@ -64,5 +64,3 @@ class AnimationVector extends OLVectorLayer {
  * @const
  */
 AnimationVector.Z_OFFSET = 100000;
-
-exports = AnimationVector;

@@ -8,13 +8,13 @@ goog.require('os.time.TimeRange');
 
 
 describe('os.histo.NumericBinMethod', function() {
-  const ColorBin = goog.module.get('os.data.histo.ColorBin');
-  const Bin = goog.module.get('os.histo.Bin');
-  const FilterComponent = goog.module.get('os.histo.FilterComponent');
-  const NumericBinMethod = goog.module.get('os.histo.NumericBinMethod');
+  const {default: ColorBin} = goog.module.get('os.data.histo.ColorBin');
+  const {default: Bin} = goog.module.get('os.histo.Bin');
+  const {default: FilterComponent} = goog.module.get('os.histo.FilterComponent');
+  const {default: NumericBinMethod} = goog.module.get('os.histo.NumericBinMethod');
   const osHistoBin = goog.module.get('os.histo.bin');
-  const TimeInstant = goog.module.get('os.time.TimeInstant');
-  const TimeRange = goog.module.get('os.time.TimeRange');
+  const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');
+  const {default: TimeRange} = goog.module.get('os.time.TimeRange');
 
   var method = new NumericBinMethod();
   method.setField('field');

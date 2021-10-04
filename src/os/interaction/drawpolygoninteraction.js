@@ -1,15 +1,16 @@
-goog.module('os.interaction.DrawPolygon');
+goog.declareModuleId('os.interaction.DrawPolygon');
+
+import I3DSupport from '../i3dsupport.js';
+import osImplements from '../implements.js';
+import * as osMap from '../map/map.js';
+import MapContainer from '../mapcontainer.js';
+import OLDrawPolygon from '../ui/ol/interaction/drawpolygoninteraction.js';
 
 const ViewHint = goog.require('ol.ViewHint');
 const {getWidth} = goog.require('ol.extent');
 const {toLonLat} = goog.require('ol.proj');
-const I3DSupport = goog.require('os.I3DSupport');
-const MapContainer = goog.require('os.MapContainer');
-const osImplements = goog.require('os.implements');
-const osMap = goog.require('os.map');
-const OLDrawPolygon = goog.require('os.ui.ol.interaction.DrawPolygon');
 
-const OSMap = goog.requireType('os.Map');
+const {default: OSMap} = goog.requireType('os.Map');
 
 
 /**
@@ -17,7 +18,7 @@ const OSMap = goog.requireType('os.Map');
  *
  * @implements {I3DSupport}
  */
-class DrawPolygon extends OLDrawPolygon {
+export default class DrawPolygon extends OLDrawPolygon {
   /**
    * Constructor.
    */
@@ -123,5 +124,3 @@ class DrawPolygon extends OLDrawPolygon {
 }
 
 osImplements(DrawPolygon, I3DSupport.ID);
-
-exports = DrawPolygon;

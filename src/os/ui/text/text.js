@@ -1,10 +1,11 @@
-goog.module('os.ui.text');
+goog.declareModuleId('os.ui.text');
+
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import {directiveTag} from '../textprompt.js';
+import * as osWindow from '../window.js';
 
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {directiveTag} = goog.require('os.ui.TextPromptUI');
-const osWindow = goog.require('os.ui.window');
 
 
 /**
@@ -13,7 +14,7 @@ const osWindow = goog.require('os.ui.window');
  * @param {string} text The string to copy.
  * @param {string=} opt_msg Optional message to send as an alert.
  */
-const copy = function(text, opt_msg) {
+export const copy = function(text, opt_msg) {
   if (text && !isEmptyOrWhitespace(makeSafe(text))) {
     var textArea = document.createElement('textarea');
     textArea.style.top = '-2000px';
@@ -56,8 +57,4 @@ const copy = function(text, opt_msg) {
       });
     }
   }
-};
-
-exports = {
-  copy
 };

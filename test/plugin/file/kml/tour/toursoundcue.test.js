@@ -4,7 +4,7 @@ goog.require('plugin.file.kml.tour.SoundCue');
 
 describe('plugin.file.kml.tour.SoundCue', function() {
   const Promise = goog.module.get('goog.Promise');
-  const AudioManager = goog.module.get('os.audio.AudioManager');
+  const {default: AudioManager} = goog.module.get('os.audio.AudioManager');
   const {default: SoundCue} = goog.module.get('plugin.file.kml.tour.SoundCue');
   // default values for tests
   var href = 'https://test.com/test.mp3';

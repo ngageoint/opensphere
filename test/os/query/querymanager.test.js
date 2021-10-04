@@ -8,11 +8,11 @@ goog.require('os.query.QueryManager');
 
 
 describe('os.query.QueryManager', function() {
-  const DataManager = goog.module.get('os.data.DataManager');
-  const DataEvent = goog.module.get('os.data.event.DataEvent');
-  const DataEventType = goog.module.get('os.data.event.DataEventType');
-  const AreaManager = goog.module.get('os.query.AreaManager');
-  const QueryManager = goog.module.get('os.query.QueryManager');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: DataEvent} = goog.module.get('os.data.event.DataEvent');
+  const {default: DataEventType} = goog.module.get('os.data.event.DataEventType');
+  const {default: AreaManager} = goog.module.get('os.query.AreaManager');
+  const {default: QueryManager} = goog.module.get('os.query.QueryManager');
 
   const {MockHandler} = goog.module.get('os.query.MockHandler');
 

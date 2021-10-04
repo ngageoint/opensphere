@@ -1,17 +1,18 @@
 /**
  * Histogram utility functions.
  */
-goog.module('os.hist');
+goog.declareModuleId('os.hist');
+
+import osImplements from '../implements.js';
+import IHistogramProvider from './ihistogramprovider.js';
 
 const {binaryInsert, defaultCompare} = goog.require('goog.array');
 const googObject = goog.require('goog.object');
-const IHistogramProvider = goog.require('os.hist.IHistogramProvider');
-const osImplements = goog.require('os.implements');
 
 const Layer = goog.requireType('ol.layer.Layer');
 const Source = goog.requireType('ol.source.Source');
-const IHistogramData = goog.requireType('os.hist.IHistogramData');
-const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
+const {default: IHistogramData} = goog.requireType('os.hist.IHistogramData');
+const {default: TimelineScaleOptions} = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 
 /**
@@ -21,7 +22,7 @@ const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptio
  * @param {boolean=} opt_combine If the counts should be combined for like bins.
  * @return {number}
  */
-const maxBinCount = function(histograms, opt_combine) {
+export const maxBinCount = function(histograms, opt_combine) {
   var combine = opt_combine !== undefined ? opt_combine : false;
   var max = 0;
 
@@ -63,7 +64,7 @@ const maxBinCount = function(histograms, opt_combine) {
  * @param {boolean=} opt_skipCompare Whether to skip the compare function.
  * @return {Array<!Object>}
  */
-const getBinCounts = function(histograms, opt_combine, opt_skipCompare) {
+export const getBinCounts = function(histograms, opt_combine, opt_skipCompare) {
   var combine = opt_combine !== undefined ? opt_combine : false;
   var sortedCounts = [];
 
@@ -106,7 +107,7 @@ const getBinCounts = function(histograms, opt_combine, opt_skipCompare) {
  * @param {Object} obj The object.
  * @return {boolean}
  */
-const isHistogramProvider = (obj) => osImplements(obj, IHistogramProvider.ID);
+export const isHistogramProvider = (obj) => osImplements(obj, IHistogramProvider.ID);
 
 /**
  * Convenience function to map a layer or its source to a histogram.
@@ -114,7 +115,7 @@ const isHistogramProvider = (obj) => osImplements(obj, IHistogramProvider.ID);
  * @param {TimelineScaleOptions} options The histogram options.
  * @return {?IHistogramData} The histogram, or null if unavailable. May be found on the layer or source.
  */
-const mapLayerToHistogram = (layer, options) => {
+export const mapLayerToHistogram = (layer, options) => {
   if (layer) {
     if (isHistogramProvider(layer)) {
       return (
@@ -135,7 +136,7 @@ const mapLayerToHistogram = (layer, options) => {
  * @param {TimelineScaleOptions} options The histogram options.
  * @return {?IHistogramData} The histogram, or null if unavailable.
  */
-const mapSourceToHistogram = (source, options) => {
+export const mapSourceToHistogram = (source, options) => {
   if (isHistogramProvider(source)) {
     return (
       /** @type {IHistogramProvider} */
@@ -144,12 +145,4 @@ const mapSourceToHistogram = (source, options) => {
   }
 
   return null;
-};
-
-exports = {
-  maxBinCount,
-  getBinCounts,
-  isHistogramProvider,
-  mapLayerToHistogram,
-  mapSourceToHistogram
 };

@@ -1,11 +1,10 @@
 goog.declareModuleId('plugin.electron.ElectronConfirmCertUI');
 
 import {ROOT} from '../../os/os.js';
-
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const windowSelector = goog.require('os.ui.windowSelector');
-const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
+import Module from '../../os/ui/module.js';
+import {launchConfirm} from '../../os/ui/window/confirm.js';
+import WindowEventType from '../../os/ui/windoweventtype.js';
+import windowSelector from '../../os/ui/windowselector.js';
 
 
 /**

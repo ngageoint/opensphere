@@ -1,24 +1,26 @@
-goog.module('os.proj.switch');
+goog.declareModuleId('os.proj.switch');
+
+import AbstractCommandSet from '../command/abstractcommandset.js';
+import LayerAdd from '../command/layeraddcmd.js';
+import ActivateDescriptor from '../data/activatedescriptorcmd.js';
+import LayerSyncDescriptor from '../data/layersyncdescriptor.js';
+import * as osMap from '../map/map.js';
+import {isRasterReprojectionEnabled} from './reprojection.js';
+import ReprojectionWarning from './reprojectionwarning.js';
+import SwitchProjection from './switchprojection.js';
 
 const Tile = goog.require('ol.layer.Tile');
 const olProj = goog.require('ol.proj');
-const AbstractCommandSet = goog.require('os.command.AbstractCommandSet');
-const LayerAdd = goog.require('os.command.LayerAdd');
-const ActivateDescriptor = goog.require('os.data.ActivateDescriptor');
-const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
-const osMap = goog.require('os.map');
-const {isRasterReprojectionEnabled} = goog.require('os.proj.reprojection');
-const ReprojectionWarning = goog.require('os.proj.switch.ReprojectionWarning');
-const SwitchProjection = goog.require('os.proj.switch.SwitchProjection');
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
  * @param {!ol.layer.Layer} layer
  * @return {boolean}
  */
-const checkLayer = function(layer) {
+export const checkLayer = function(layer) {
   var source = layer.getSource();
 
   if (source) {
@@ -27,7 +29,7 @@ const checkLayer = function(layer) {
 
     if (layer instanceof Tile && p1 && p2 && !olProj.equivalent(p1, p2)) {
       if (isRasterReprojectionEnabled()) {
-        ReprojectionWarning.getInstance().addTitle(/** @type {os.layer.ILayer} */ (layer).getTitle());
+        ReprojectionWarning.getInstance().addTitle(/** @type {ILayer} */ (layer).getTitle());
       } else {
         SwitchProjection.getInstance().addLayer(layer);
         return false;
@@ -47,13 +49,13 @@ let rootCommand = null;
  * @param {ICommand} command
  * @return {boolean}
  */
-const checkCommand = function(command) {
+export const checkCommand = function(command) {
   var sp = SwitchProjection.getInstance();
 
   if (!command.title || command.title.indexOf('Switch projection') === 0) {
     return true;
   } else if (command instanceof AbstractCommandSet) {
-    var cmds = /** @type {os.command.AbstractCommandSet} */ (command).getCommands();
+    var cmds = /** @type {AbstractCommandSet} */ (command).getCommands();
     var setRoot = !rootCommand;
 
     if (setRoot) {
@@ -114,9 +116,4 @@ const checkCommand = function(command) {
   }
 
   return retVal;
-};
-
-exports = {
-  checkLayer,
-  checkCommand
 };

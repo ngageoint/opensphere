@@ -1,11 +1,10 @@
-goog.module('os.query.ui.AreaOptionsStepUI');
+goog.declareModuleId('os.query.ui.AreaOptionsStepUI');
 
-goog.require('os.ui.im.MergeAreaOptionUI');
-
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const {AREA_IMPORT_HELP} = goog.require('os.ui.query');
-const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
+import '../../ui/im/mergeareaoption.js';
+import {ROOT} from '../../os.js';
+import Module from '../../ui/module.js';
+import {AREA_IMPORT_HELP} from '../../ui/query/query.js';
+import WizardStepEvent from '../../ui/wiz/step/wizardstepevent.js';
 
 
 /**
@@ -13,7 +12,7 @@ const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/query/areaoptionsstep.html',
@@ -21,12 +20,11 @@ const directive = () => ({
   controllerAs: 'areaoptions'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'areaoptionsstep';
+export const directiveTag = 'areaoptionsstep';
 
 
 /**
@@ -39,7 +37,7 @@ Module.directive('areaoptionsstep', [directive]);
  * Controller for the import wizard options step
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -78,9 +76,3 @@ class Controller {
     this.scope_.$emit(WizardStepEvent.VALIDATE, valid);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

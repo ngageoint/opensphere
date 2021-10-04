@@ -1,12 +1,13 @@
-goog.module('os.command.VectorUniqueIdCmd');
+goog.declareModuleId('os.command.VectorUniqueIdCmd');
+
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import AbstractVectorStyle from './abstractvectorstylecmd.js';
 
 const asserts = goog.require('goog.asserts');
-const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
 
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const VectorLayer = goog.requireType('os.layer.Vector');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**
@@ -14,7 +15,7 @@ const VectorSource = goog.requireType('os.source.Vector');
  *
  * @extends {AbstractVectorStyle<string>}
  */
-class VectorUniqueIdCmd extends AbstractVectorStyle {
+export default class VectorUniqueIdCmd extends AbstractVectorStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -64,5 +65,3 @@ class VectorUniqueIdCmd extends AbstractVectorStyle {
     source.setUniqueId(value);
   }
 }
-
-exports = VectorUniqueIdCmd;

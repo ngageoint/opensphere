@@ -1,15 +1,16 @@
-goog.module('os.ui.window.ConfirmUI');
+goog.declareModuleId('os.ui.window.ConfirmUI');
+
+import {noop} from '../../fn/fn.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {create as createWindow, close as closeWindow} from '../window.js';
+import WindowEventType from '../windoweventtype.js';
 
 const dispose = goog.require('goog.dispose');
 const {getDocument} = goog.require('goog.dom');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
-const {ROOT} = goog.require('os');
-const {noop} = goog.require('os.fn');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {create: createWindow, close: closeWindow} = goog.require('os.ui.window');
 
 
 /**
@@ -17,7 +18,7 @@ const {create: createWindow, close: closeWindow} = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   transclude: true,
@@ -27,12 +28,11 @@ const directive = () => ({
   controllerAs: 'confirm'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'confirm';
+export const directiveTag = 'confirm';
 
 
 /**
@@ -47,7 +47,7 @@ Module.directive(directiveTag, [directive]);
  * @param {osx.window.ConfirmOptions=} opt_options The window options
  * @param {Object=} opt_scopeOptions
  */
-const launchConfirm = function(opt_options, opt_scopeOptions) {
+export const launchConfirm = function(opt_options, opt_scopeOptions) {
   var options = /** @type {!osx.window.ConfirmOptions} */ (opt_options || {});
   var scopeOptions = (opt_scopeOptions || {});
 
@@ -104,8 +104,6 @@ const launchConfirm = function(opt_options, opt_scopeOptions) {
   createWindow(windowOptions, template, windowOverrides.parent, undefined, undefined, scopeOptions);
 };
 
-
-
 /**
  * Controller for the confirmation window directive.
  *
@@ -113,7 +111,7 @@ const launchConfirm = function(opt_options, opt_scopeOptions) {
  * to true. It controls the button that runs the "confirmCallback"
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -230,10 +228,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchConfirm
-};

@@ -1,15 +1,16 @@
-goog.module('os.ui.query.AreaNode');
+goog.declareModuleId('os.ui.query.AreaNode');
+
+import {getAreaManager} from '../../query/queryinstance.js';
+import TriState from '../../structs/tristate.js';
+import {HOVER_STYLE} from '../../style/areastyle.js';
+import {tagsFromString} from '../../tag/tag.js';
+import SlickTreeNode from '../slick/slicktreenode.js';
 
 const {listen, unlisten} = goog.require('ol.events');
-const {getAreaManager} = goog.require('os.query.instance');
-const TriState = goog.require('os.structs.TriState');
-const {HOVER_STYLE} = goog.require('os.style.area');
-const {tagsFromString} = goog.require('os.tag');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Feature = goog.requireType('ol.Feature');
-const ISearchable = goog.requireType('os.data.ISearchable');
+const {default: ISearchable} = goog.requireType('os.data.ISearchable');
 
 
 /**
@@ -17,7 +18,7 @@ const ISearchable = goog.requireType('os.data.ISearchable');
  *
  * @implements {ISearchable}
  */
-class AreaNode extends SlickTreeNode {
+export default class AreaNode extends SlickTreeNode {
   /**
    * Constructor.
    * @param {Feature=} opt_area
@@ -206,5 +207,3 @@ class AreaNode extends SlickTreeNode {
     super.updateFrom(other);
   }
 }
-
-exports = AreaNode;

@@ -1,5 +1,15 @@
 goog.declareModuleId('plugin.ogc.OGCPlugin');
 
+import DataManager from '../../os/data/datamanager.js';
+import ProviderEntry from '../../os/data/providerentry.js';
+import LayerConfigManager from '../../os/layer/config/layerconfigmanager.js';
+import * as net from '../../os/net/net.js';
+import LayerType from '../../os/ogc/layertype.js';
+import * as osOgc from '../../os/ogc/ogc.js';
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
+import ImportManager from '../../os/ui/im/importmanager.js';
+import OGCServer from '../../os/ui/ogc/ogcserver.js';
+import ProviderImportUI from '../../os/ui/providerimportui.js';
 import GeoServer from './geoserver.js';
 import * as mime from './mime.js';
 import OGCLayerDescriptor from './ogclayerdescriptor.js';
@@ -14,16 +24,6 @@ import WMSLayerConfig from './wms/wmslayerconfig.js';
 import WMTSLayerConfig from './wmts/wmtslayerconfig.js';
 import WMTSServer from './wmts/wmtsserver.js';
 
-const DataManager = goog.require('os.data.DataManager');
-const ProviderEntry = goog.require('os.data.ProviderEntry');
-const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
-const net = goog.require('os.net');
-const osOgc = goog.require('os.ogc');
-const LayerType = goog.require('os.ogc.LayerType');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const ProviderImportUI = goog.require('os.ui.ProviderImportUI');
-const ImportManager = goog.require('os.ui.im.ImportManager');
-const OGCServer = goog.require('os.ui.ogc.OGCServer');
 
 /**
  * Provides WMS/WFS layer support, both separately and as a grouped layer combination.

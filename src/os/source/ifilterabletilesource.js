@@ -1,4 +1,4 @@
-goog.module('os.source.IFilterableTileSource');
+goog.declareModuleId('os.source.IFilterableTileSource');
 
 const {TileFilterFn} = goog.requireType('os.tile');
 
@@ -8,7 +8,7 @@ const {TileFilterFn} = goog.requireType('os.tile');
  *
  * @interface
  */
-class IFilterableTileSource {
+export default class IFilterableTileSource {
   /**
    * Adds a tile filter function to the source.
    * @param {TileFilterFn} fn
@@ -38,5 +38,3 @@ class IFilterableTileSource {
  * @const {string}
  */
 IFilterableTileSource.ID = 'os.source.IFilterableTileSource';
-
-exports = IFilterableTileSource;

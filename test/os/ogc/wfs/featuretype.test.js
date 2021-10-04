@@ -2,7 +2,7 @@ goog.require('os.ogc.wfs.FeatureType');
 
 
 describe('os.ogc.wfs.FeatureType', function() {
-  const FeatureType = goog.module.get('os.ogc.wfs.FeatureType');
+  const {default: FeatureType} = goog.module.get('os.ogc.wfs.FeatureType');
 
   it('should detect geometry columns', function() {
     var cols = [

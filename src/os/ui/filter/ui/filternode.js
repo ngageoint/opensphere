@@ -1,17 +1,18 @@
-goog.module('os.ui.filter.ui.FilterNode');
+goog.declareModuleId('os.ui.filter.ui.FilterNode');
+
+import PropertyChangeEvent from '../../../events/propertychangeevent.js';
+import {ICON} from '../../../filter/defaultfilter.js';
+import TriState from '../../../structs/tristate.js';
+import {tagsFromString} from '../../../tag/tag.js';
+import SlickTreeNode from '../../slick/slicktreenode.js';
+import {toFilterString} from '../filter.js';
+import PropertyChange from '../propertychange.js';
+import {directiveTag} from './filternodeui.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {ICON} = goog.require('os.filter.default');
-const TriState = goog.require('os.structs.TriState');
-const {tagsFromString} = goog.require('os.tag');
-const {toFilterString} = goog.require('os.ui.filter');
-const PropertyChange = goog.require('os.ui.filter.PropertyChange');
-const {directiveTag} = goog.require('os.ui.filter.ui.FilterNodeUI');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
-const ISearchable = goog.requireType('os.data.ISearchable');
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const {default: ISearchable} = goog.requireType('os.data.ISearchable');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 
 
 /**
@@ -19,7 +20,7 @@ const FilterEntry = goog.requireType('os.filter.FilterEntry');
  *
  * @implements {ISearchable}
  */
-class FilterNode extends SlickTreeNode {
+export default class FilterNode extends SlickTreeNode {
   /**
    * Constructor.
    * @param {FilterEntry=} opt_entry
@@ -200,5 +201,3 @@ class FilterNode extends SlickTreeNode {
     }
   }
 }
-
-exports = FilterNode;

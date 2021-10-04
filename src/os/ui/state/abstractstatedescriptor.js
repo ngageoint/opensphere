@@ -1,25 +1,26 @@
-goog.module('os.ui.state.AbstractStateDescriptor');
+goog.declareModuleId('os.ui.state.AbstractStateDescriptor');
+
+import BaseDescriptor from '../../data/basedescriptor.js';
+import IUrlDescriptor from '../../data/iurldescriptor.js';
+import OSEventType from '../../events/eventtype.js';
+import FileStorage from '../../file/filestorage.js';
+import {isLocal} from '../../file/index.js';
+import osImplements from '../../implements.js';
+import StateParserConfig from '../../parse/stateparserconfig.js';
+import {getStateManager} from '../../state/stateinstance.js';
+import StateType from '../../state/statetype.js';
+import UrlMethod from '../file/method/urlmethod.js';
+import {directiveTag as nodeUi} from '../file/ui/defaultfilenodeui.js';
+import IStateDescriptor from './istatedescriptor.js';
 
 const {assertString} = goog.require('goog.asserts');
 const {loadXml} = goog.require('goog.dom.xml');
 const {isValid} = goog.require('goog.json');
 const log = goog.require('goog.log');
-const BaseDescriptor = goog.require('os.data.BaseDescriptor');
-const IUrlDescriptor = goog.require('os.data.IUrlDescriptor');
-const OSEventType = goog.require('os.events.EventType');
-const {isLocal} = goog.require('os.file');
-const FileStorage = goog.require('os.file.FileStorage');
-const osImplements = goog.require('os.implements');
-const StateParserConfig = goog.require('os.parse.StateParserConfig');
-const StateType = goog.require('os.state.StateType');
-const {getStateManager} = goog.require('os.state.instance');
-const UrlMethod = goog.require('os.ui.file.method.UrlMethod');
-const {directiveTag: nodeUi} = goog.require('os.ui.file.ui.DefaultFileNodeUI');
-const IStateDescriptor = goog.require('os.ui.state.IStateDescriptor');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
@@ -29,7 +30,7 @@ const OSFile = goog.requireType('os.file.File');
  * @implements {IUrlDescriptor}
  * @abstract
  */
-class AbstractStateDescriptor extends BaseDescriptor {
+export default class AbstractStateDescriptor extends BaseDescriptor {
   /**
    * Constructor.
    */
@@ -358,6 +359,7 @@ class AbstractStateDescriptor extends BaseDescriptor {
     return 'File';
   }
 }
+
 osImplements(AbstractStateDescriptor, IUrlDescriptor.ID);
 osImplements(AbstractStateDescriptor, IStateDescriptor.ID);
 
@@ -373,5 +375,3 @@ AbstractStateDescriptor.ID = 'state';
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.state.AbstractStateDescriptor');
-
-exports = AbstractStateDescriptor;

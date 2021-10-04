@@ -1,16 +1,16 @@
-goog.module('os.ui.file.AnyTypeImportUI');
+goog.declareModuleId('os.ui.file.AnyTypeImportUI');
 
-const {directiveTag: importUi} = goog.require('os.ui.file.AnyTypeImport');
-const AbstractImportUI = goog.require('os.ui.im.AbstractImportUI');
-const ImportManager = goog.require('os.ui.im.ImportManager');
-const osWindow = goog.require('os.ui.window');
+import AbstractImportUI from '../im/abstractimportui.js';
+import ImportManager from '../im/importmanager.js';
+import * as osWindow from '../window.js';
+import {directiveTag as importUi} from './anytypeimport.js';
 
 
 /**
  * @extends {AbstractImportUI<T>}
  * @template T
  */
-class AnyTypeImportUI extends AbstractImportUI {
+export default class AnyTypeImportUI extends AbstractImportUI {
   /**
    * Constructor.
    */
@@ -55,5 +55,3 @@ class AnyTypeImportUI extends AbstractImportUI {
     }
   }
 }
-
-exports = AnyTypeImportUI;

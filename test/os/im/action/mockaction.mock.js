@@ -1,6 +1,6 @@
 goog.module('os.im.action.mock.MockAction');
 
-const AbstractImportAction = goog.require('os.im.action.AbstractImportAction');
+const {default: AbstractImportAction} = goog.require('os.im.action.AbstractImportAction');
 
 
 /**

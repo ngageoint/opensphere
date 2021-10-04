@@ -1,14 +1,16 @@
-goog.module('os.ui.action.ActionManager');
+/* eslint-disable import/no-deprecated */
+goog.declareModuleId('os.ui.action.ActionManager');
+
+import * as osArray from '../../array/array.js';
+import * as dispatcher from '../../dispatcher.js';
+import ActionEvent from './actionevent.js';
+import EventType from './actioneventtype.js';
 
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
 const LinkedMap = goog.require('goog.structs.LinkedMap');
-const dispatcher = goog.require('os.Dispatcher');
-const osArray = goog.require('os.array');
-const ActionEvent = goog.require('os.ui.action.ActionEvent');
-const EventType = goog.require('os.ui.action.EventType');
 
-const Action = goog.requireType('os.ui.action.Action');
+const {default: Action} = goog.requireType('os.ui.action.Action');
 
 
 /**
@@ -26,7 +28,7 @@ const Action = goog.requireType('os.ui.action.Action');
  * @todo add a name/label to the action manager?
  * @deprecated Please use {@link os.ui.menu.Menu} and {@link os.ui.menu.MenuItem} instead
  */
-class ActionManager extends EventTarget {
+export default class ActionManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -385,5 +387,3 @@ class ActionManager extends EventTarget {
     this.moreResultsAction_(menu);
   }
 }
-
-exports = ActionManager;

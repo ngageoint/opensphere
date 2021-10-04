@@ -1,6 +1,6 @@
-goog.module('os.data.IDataProvider');
+goog.declareModuleId('os.data.IDataProvider');
 
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**
@@ -10,7 +10,7 @@ const ITreeNode = goog.requireType('os.structs.ITreeNode');
  * @extends {ITreeNode}
  * @interface
  */
-class IDataProvider {
+export default class IDataProvider {
   /**
    * Configures the data provider from the given config object.
    * @param {Object.<string, *>} config The config object
@@ -76,5 +76,3 @@ class IDataProvider {
  * @const {string}
  */
 IDataProvider.ID = 'os.data.IDataProvider';
-
-exports = IDataProvider;

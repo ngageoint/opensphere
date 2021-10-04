@@ -2,18 +2,19 @@
  * @fileoverview Helper to {@code CertNazi}.  Runs the standard sequence required to test
  * all connections, including IE weirdness, and reports success or failure with a reason.
  */
-goog.module('os.net.CertNaziHelper');
+goog.declareModuleId('os.net.CertNaziHelper');
+
+import CertNazi from './certnazi.js';
+import * as ConnectionConstants from './connectionconstants.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 const EventType = goog.require('goog.net.EventType');
 const {IE} = goog.require('goog.userAgent');
-const CertNazi = goog.require('os.net.CertNazi');
-const ConnectionConstants = goog.require('os.net.ConnectionConstants');
 
 
 /**
  */
-class CertNaziHelper {
+export default class CertNaziHelper {
   /**
    * Constructor.
    * @param {Array<string>} urls
@@ -143,5 +144,3 @@ class CertNaziHelper {
     this.resultsDeferred_.cancel();
   }
 }
-
-exports = CertNaziHelper;

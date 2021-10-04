@@ -15,13 +15,13 @@ describe('plugin.vectortools', function() {
   const googObject = goog.module.get('goog.object');
   const Feature = goog.module.get('ol.Feature');
   const Point = goog.module.get('ol.geom.Point');
-  const ColumnMapping = goog.module.get('os.column.ColumnMapping');
-  const ColumnMappingManager = goog.module.get('os.column.ColumnMappingManager');
-  const ColumnDefinition = goog.module.get('os.data.ColumnDefinition');
-  const DataManager = goog.module.get('os.data.DataManager');
-  const RecordField = goog.module.get('os.data.RecordField');
-  const VectorSource = goog.module.get('os.source.Vector');
-  const StyleType = goog.module.get('os.style.StyleType');
+  const {default: ColumnMapping} = goog.module.get('os.column.ColumnMapping');
+  const {default: ColumnMappingManager} = goog.module.get('os.column.ColumnMappingManager');
+  const {default: ColumnDefinition} = goog.module.get('os.data.ColumnDefinition');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: RecordField} = goog.module.get('os.data.RecordField');
+  const {default: VectorSource} = goog.module.get('os.source.Vector');
+  const {default: StyleType} = goog.module.get('os.style.StyleType');
   const vectortools = goog.module.get('plugin.vectortools');
 
   it('should clear selected and highlighted styles on feature clone', function() {

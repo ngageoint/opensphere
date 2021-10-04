@@ -1,4 +1,18 @@
-goog.module('os.ui.file.kml.AbstractKMLExporter');
+goog.declareModuleId('os.ui.file.kml.AbstractKMLExporter');
+
+import JsonField from '../../../../plugin/file/kml/jsonfield.js';
+import {OS_NS} from '../../../../plugin/file/kml/kml.js';
+import ZipExporter from '../../../ex/zipexporter.js';
+import Fields from '../../../fields/fields.js';
+import {DESC_REGEXP} from '../../../fields/index.js';
+import OSFile from '../../../file/file.js';
+import instanceOf from '../../../instanceof.js';
+import {isPrimitive} from '../../../object/object.js';
+import * as osTime from '../../../time/time.js';
+import TimeInstant from '../../../time/timeinstant.js';
+import TimeRange from '../../../time/timerange.js';
+import * as xml from '../../../xml.js';
+import * as kml from './kml.js';
 
 const {getFirstElementChild, insertSiblingBefore} = goog.require('goog.dom');
 const {createDocument, serialize} = goog.require('goog.dom.xml');
@@ -6,21 +20,8 @@ const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
 const KML = goog.require('ol.format.KML');
 const olXml = goog.require('ol.xml');
-const Fields = goog.require('os.Fields');
-const ZipExporter = goog.require('os.ex.ZipExporter');
-const {DESC_REGEXP} = goog.require('os.fields');
-const OSFile = goog.require('os.file.File');
-const instanceOf = goog.require('os.instanceOf');
-const {isPrimitive} = goog.require('os.object');
-const osTime = goog.require('os.time');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const TimeRange = goog.require('os.time.TimeRange');
-const kml = goog.require('os.ui.file.kml');
-const xml = goog.require('os.xml');
-const {OS_NS} = goog.require('plugin.file.kml');
-const {default: JsonField} = goog.require('plugin.file.kml.JsonField');
 
-const ITime = goog.requireType('os.time.ITime');
+const {default: ITime} = goog.requireType('os.time.ITime');
 
 
 /**
@@ -30,7 +31,7 @@ const ITime = goog.requireType('os.time.ITime');
  * @extends {ZipExporter<T>}
  * @template T
  */
-class AbstractKMLExporter extends ZipExporter {
+export default class AbstractKMLExporter extends ZipExporter {
   /**
    * Constructor.
    */
@@ -1133,5 +1134,3 @@ const logger = log.getLogger('os.ui.file.kml.AbstractKMLExporter');
  * @const
  */
 AbstractKMLExporter.LABEL_DELIMITER = ' - ';
-
-exports = AbstractKMLExporter;

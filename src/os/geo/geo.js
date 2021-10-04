@@ -1,6 +1,14 @@
-goog.module('os.geo');
+goog.declareModuleId('os.geo');
 
-goog.require('os.mixin.geometry');
+import '../mixin/geometrymixin.js';
+import {arrayCopy} from '../array/array.js';
+import * as easing from '../easing/easing.js';
+import {getFunctionalExtent} from '../extent.js';
+import GeometryField from '../geom/geometryfield.js';
+import {getMethod as getInterpolateMethod} from '../interpolate.js';
+import Method from '../interpolatemethod.js';
+import {isWorldQuery} from '../query/queryutils.js';
+import ParseConf from './parseconf.js';
 
 const {buildString, padNumber} = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
@@ -10,14 +18,6 @@ const GeometryType = goog.require('ol.geom.GeometryType');
 const LineString = goog.require('ol.geom.LineString');
 const MultiLineString = goog.require('ol.geom.MultiLineString');
 const Point = goog.require('ol.geom.Point');
-const {arrayCopy} = goog.require('os.array');
-const easing = goog.require('os.easing');
-const {getFunctionalExtent} = goog.require('os.extent');
-const ParseConf = goog.require('os.geo.ParseConf');
-const GeometryField = goog.require('os.geom.GeometryField');
-const {getMethod: getInterpolateMethod} = goog.require('os.interpolate');
-const Method = goog.require('os.interpolate.Method');
-const {isWorldQuery} = goog.require('os.query.utils');
 
 const Circle = goog.requireType('ol.geom.Circle');
 const GeometryLayout = goog.requireType('ol.geom.GeometryLayout');
@@ -31,7 +31,7 @@ const RenderFeature = goog.requireType('ol.render.Feature');
  * @typedef {function(number, number, number, number)}
  * @deprecated Please use easing.EasingFunction instead
  */
-let EasingFunction;
+export let EasingFunction;
 
 /**
  * @typedef {{
@@ -40,13 +40,13 @@ let EasingFunction;
  *   f: number
  * }}
  */
-let Ellipsoid;
+export let Ellipsoid;
 
 /**
  * @enum {Ellipsoid}
  * @deprecated Please use osasm library
  */
-const VINCENTY_ELLIPSOIDS = {
+export const VINCENTY_ELLIPSOIDS = {
   WGS84: {
     a: 6378137,
     b: 6356752.3142,
@@ -57,60 +57,60 @@ const VINCENTY_ELLIPSOIDS = {
 /**
  * @type {!RegExp}
  */
-const MGRS_REGEXP = /^(([\d]{1,2}[C-X][A-Z]{2}([0-9][0-9]){0,5})|([ABYZ][A-Z]{2}([0-9][0-9]){0,5}))$/;
+export const MGRS_REGEXP = /^(([\d]{1,2}[C-X][A-Z]{2}([0-9][0-9]){0,5})|([ABYZ][A-Z]{2}([0-9][0-9]){0,5}))$/;
 
 /**
  * @type {number}
  */
-const EPSILON = 1E-12;
+export const EPSILON = 1E-12;
 
 /**
  * @type {number}
  */
-const MAX_LINE_LENGTH = 19000000; // meters
+export const MAX_LINE_LENGTH = 19000000;// meters
 
 /**
  * @type {!RegExp}
  */
-const ALT_REGEXP = /(ele(v(a(t(i(o(n)?)?)?)?)?)|alt(i(t(u(d(e)?)?)?)?)?)\b/i;
+export const ALT_REGEXP = /(ele(v(a(t(i(o(n)?)?)?)?)?)|alt(i(t(u(d(e)?)?)?)?)?)\b/i;
 
 /**
  * @type {!RegExp}
  */
-const ALT_UNITS_REGEXP = /((ele(v(a(t(i(o(n)?)?)?)?)?)|alt(i(t(u(d(e)?)?)?)?)?))_units\b/i;
+export const ALT_UNITS_REGEXP = /((ele(v(a(t(i(o(n)?)?)?)?)?)|alt(i(t(u(d(e)?)?)?)?)?))_units\b/i;
 
 /**
  * Regular expression to detect an inverse altitude field.
  * @type {!RegExp}
  */
-const ALT_INVERSE_REGEXP = /(depth)\b/i;
+export const ALT_INVERSE_REGEXP = /(depth)\b/i;
 
 /**
  * Regular expression to detect an inverse altitude units field.
  * @type {!RegExp}
  */
-const ALT_INVERSE_UNITS_REGEXP = /(depth)_units\b/i;
+export const ALT_INVERSE_UNITS_REGEXP = /(depth)_units\b/i;
 
 /**
  * @type {!RegExp}
  */
-const MGRSRegExp = /^mgrs\s*(d(e(r(i(v(e(d?)?)?)?)?)?)?)?$/i;
+export const MGRSRegExp = /^mgrs\s*(d(e(r(i(v(e(d?)?)?)?)?)?)?)?$/i;
 
 /**
  * Attempting to idiot proof coordinates.
  * @type {!RegExp}
  */
-const COORD_CLEANER = /[^NEWSnews\d\s.\-,]/g;
+export const COORD_CLEANER = /[^NEWSnews\d\s.\-,]/g;
 
 /**
  * @type {number}
  */
-const PREFER_LAT_FIRST = 0;
+export const PREFER_LAT_FIRST = 0;
 
 /**
  * @type {number}
  */
-const PREFER_LON_FIRST = 1;
+export const PREFER_LON_FIRST = 1;
 
 /**
  * @type {string}
@@ -613,7 +613,7 @@ const parseConfigs_ = [
  * @return {?osx.geo.Location} The lat/lon object, or null if the
  * value could not be parsed.
  */
-const parseLatLon = function(str, opt_order, opt_format) {
+export const parseLatLon = function(str, opt_order, opt_format) {
   if (str) {
     var lon = NaN;
     var lat = NaN;
@@ -713,7 +713,7 @@ const parseLatLon = function(str, opt_order, opt_format) {
  * @param {string=} opt_format Custom format string
  * @return {Array<ParseConf>}
  */
-const getLatLonFormatConfiguration = function(order, opt_format) {
+export const getLatLonFormatConfiguration = function(order, opt_format) {
   if (opt_format !== undefined) { // only allow relaxed in manual override
     switch (opt_format) {
       case 'DD':
@@ -738,7 +738,7 @@ const getLatLonFormatConfiguration = function(order, opt_format) {
  * @param {string=} opt_format Custom format string
  * @return {?number} The lat/lon parsed from the string, or NaN if a lat/lon could not be parsed.
  */
-const parseLon = function(str, opt_format) {
+export const parseLon = function(str, opt_format) {
   if (!str) {
     return NaN; // this fixes a bug where 0 is returned if str is an empty string
   }
@@ -832,7 +832,7 @@ const parseLon = function(str, opt_format) {
  * @param {string=} opt_format Custom format string
  * @return {?number} The lat/lon parsed from the string, or NaN if a lat/lon could not be parsed.
  */
-const parseLat = function(str, opt_format) {
+export const parseLat = function(str, opt_format) {
   if (!str) {
     return NaN; // this fixes a bug where 0 is returned if str is an empty string
   }
@@ -1024,7 +1024,7 @@ const parse_ = function(deg, min, sec, dir) {
  * @param {string=} opt_method Optional interpolation method for the arcs.
  * @return {Array<Array<number>>} Array of locations as [[x1, y1], [x2, y2] ... [xn, yn]]
  */
-const interpolateArc = function(center, radius, angleRange, opt_startAngle, opt_points, opt_method) {
+export const interpolateArc = function(center, radius, angleRange, opt_startAngle, opt_points, opt_method) {
   var altitude = center.length > 2 ? center[2] : 0;
   angleRange = angleRange > 360 ? angleRange % 360 : angleRange;
   var points = opt_points || 20;
@@ -1052,7 +1052,7 @@ const interpolateArc = function(center, radius, angleRange, opt_startAngle, opt_
  * @param {number=} opt_pointsPerQuad Number of points per quadrant, defaulting to 10.
  * @return {Array<Array<number>>} Array of locations as [[x1, y1], [x2, y2] ... [xn, yn]]
  */
-const interpolateCircle = function(center, radius, opt_pointsPerQuad) {
+export const interpolateCircle = function(center, radius, opt_pointsPerQuad) {
   var pointsPerQuad = opt_pointsPerQuad || 10;
   var angleDelta = Math.PI / pointsPerQuad / 2;
   var unitCircle = [[1, 0]];
@@ -1088,7 +1088,7 @@ const interpolateCircle = function(center, radius, opt_pointsPerQuad) {
  * @param {number=} opt_steps Number of points per each half of the ellipse, defaulting to 32.
  * @return {Array<Array<number>>} Array of locations as [[x1, y1], [x2, y2] ... [xn, yn]]
  */
-const interpolateEllipse = function(center, a, b, t, opt_steps) {
+export const interpolateEllipse = function(center, a, b, t, opt_steps) {
   var altitude = center.length > 2 ? center[2] : 0;
   var change = Math.PI;
   var easingFunc = getEllipseEasingFunction_(a, b);
@@ -1131,7 +1131,7 @@ const interpolateEllipse = function(center, a, b, t, opt_steps) {
  * @param {number} value
  * @return {number}
  */
-const convertEllipseValue = function(value) {
+export const convertEllipseValue = function(value) {
   if (value < 250) {
     // assume we were given nautical miles, convert to m
     value *= 1852;
@@ -1152,7 +1152,7 @@ const convertEllipseValue = function(value) {
  * @deprecated Please use osasm.geodesicDirect(location, bearing, distance) instead. NOTE: The units for the new one are
  *  meters and not kilometers
  */
-const calculateEndLocation = function(location, distance, bearing, opt_ellipsoid) {
+export const calculateEndLocation = function(location, distance, bearing, opt_ellipsoid) {
   var ellipsoid = opt_ellipsoid || VINCENTY_ELLIPSOIDS.WGS84;
   var a = ellipsoid.a;
   var b = ellipsoid.b;
@@ -1210,7 +1210,7 @@ const calculateEndLocation = function(location, distance, bearing, opt_ellipsoid
  * @return {{distance: number, initialBearing: number, finalBearing: number}} Vincenty.
  * @deprecated Please use the osasm.geodesicInverse(c1, c2) instead
  */
-const vincenty = function(c1, c2, opt_ellipsoid, opt_minDeltaLambda, opt_maxIterations) {
+export const vincenty = function(c1, c2, opt_ellipsoid, opt_minDeltaLambda, opt_maxIterations) {
   var ellipsoid = opt_ellipsoid || VINCENTY_ELLIPSOIDS.WGS84;
   var minDeltaLambda = opt_minDeltaLambda != null ? opt_minDeltaLambda : 1e-12;
   var maxIterations = opt_maxIterations != null ? opt_maxIterations : 100;
@@ -1309,7 +1309,7 @@ const vincenty = function(c1, c2, opt_ellipsoid, opt_minDeltaLambda, opt_maxIter
  * @return {number} Vincenty distance.
  * @deprecated Please use osasm.geodesicInverse(c1, c2).distance instead
  */
-const vincentyDistance = function(c1, c2, opt_ellipsoid, opt_minDeltaLambda, opt_maxIterations) {
+export const vincentyDistance = function(c1, c2, opt_ellipsoid, opt_minDeltaLambda, opt_maxIterations) {
   var vincentyResult = vincenty(c1, c2, opt_ellipsoid, opt_minDeltaLambda, opt_maxIterations);
   return vincentyResult.distance;
 };
@@ -1325,7 +1325,7 @@ const vincentyDistance = function(c1, c2, opt_ellipsoid, opt_minDeltaLambda, opt
  * @return {number} Initial bearing.
  * @deprecated Please use the osasm.geodesicInverse(c1, c2).finalBearing instead
  */
-const vincentyFinalBearing = function(c1, c2, opt_ellipsoid, opt_minDeltaLambda, opt_maxIterations) {
+export const vincentyFinalBearing = function(c1, c2, opt_ellipsoid, opt_minDeltaLambda, opt_maxIterations) {
   var vincentyResult = vincenty(c1, c2, opt_ellipsoid, opt_minDeltaLambda, opt_maxIterations);
   return vincentyResult.finalBearing;
 };
@@ -1341,7 +1341,7 @@ const vincentyFinalBearing = function(c1, c2, opt_ellipsoid, opt_minDeltaLambda,
  * @return {number} Initial bearing.
  * @deprecated Please use the osasm.geodesicInverse(c1, c2).initialBearing instead
  */
-const vincentyInitialBearing = function(c1, c2, opt_ellipsoid, opt_minDeltaLambda, opt_maxIterations) {
+export const vincentyInitialBearing = function(c1, c2, opt_ellipsoid, opt_minDeltaLambda, opt_maxIterations) {
   var vincentyResult = vincenty(c1, c2, opt_ellipsoid, opt_minDeltaLambda, opt_maxIterations);
   return vincentyResult.initialBearing;
 };
@@ -1369,7 +1369,7 @@ const getEllipseEasingFunction_ = function(a, b) {
  * @param {Array<Array<number>>} coords The coordinate array
  * @return {boolean} If the first coordinate is the same as the last
  */
-const isClosed = function(coords) {
+export const isClosed = function(coords) {
   if (coords && coords.length > 0) {
     var first = coords[0];
     var last = coords[coords.length - 1];
@@ -1388,7 +1388,7 @@ const isClosed = function(coords) {
  * @param {Array<Array<number>>} coords The coordinate array
  * @return {boolean} If the set of coordinates represent a polygon
  */
-const isPolygon = function(coords) {
+export const isPolygon = function(coords) {
   var closed = isClosed(coords);
   return coords != null && ((closed && coords.length > 3) || (!closed && coords.length > 2));
 };
@@ -1399,7 +1399,7 @@ const isPolygon = function(coords) {
  * @param {Array<Array<number>>} coords The coordinate array
  * @return {Array<number>} If the set of coordinates represent a polygon
  */
-const calculateCenter = function(coords) {
+export const calculateCenter = function(coords) {
   if (isPolygon(coords)) {
     var center = [0, 0];
     var i = isClosed(coords) ? coords.length - 1 : coords.length;
@@ -1423,7 +1423,7 @@ const calculateCenter = function(coords) {
  * @param {Array<number>} extent The extent of the os.geometry as [minx, miny, maxx, maxy]
  * @return {boolean} If the set of coordinates is rectangular
  */
-const isRectangular = function(coords, extent) {
+export const isRectangular = function(coords, extent) {
   var closed = isClosed(coords);
   var polygon = isPolygon(coords);
 
@@ -1460,7 +1460,7 @@ const isRectangular = function(coords, extent) {
  * @param {Geometry|undefined} geometry The geometry to test
  * @return {boolean} If the geometry is rectangular.
  */
-const isGeometryRectangular = function(geometry) {
+export const isGeometryRectangular = function(geometry) {
   if (geometry && geometry.getType() == GeometryType.POLYGON) {
     var polygon = /** @type {Polygon} */ (geometry);
     var rings = polygon.getLinearRings();
@@ -1479,7 +1479,7 @@ const isGeometryRectangular = function(geometry) {
  * @param {boolean=} opt_testCollections If geometry collections should be inspected for polygons.
  * @return {boolean} If the feature/geometry is a polygon or multipolygon.
  */
-const isGeometryPolygonal = function(geometry, opt_testCollections) {
+export const isGeometryPolygonal = function(geometry, opt_testCollections) {
   if (geometry) {
     var geomType = geometry.getType();
     if (geomType == GeometryType.POLYGON || geomType == GeometryType.MULTI_POLYGON) {
@@ -1506,7 +1506,7 @@ const isGeometryPolygonal = function(geometry, opt_testCollections) {
  * @param {boolean=} opt_quick if true, only the 1st coordinate is checked.
  * @return {boolean} If coords has an element with altitude.
  */
-const hasAltitude = function(coords, opt_quick) {
+export const hasAltitude = function(coords, opt_quick) {
   var ce;
   if (coords && coords.length > 0) {
     for (var i = 0; i < coords.length; i = i + 1) {
@@ -1529,7 +1529,7 @@ const hasAltitude = function(coords, opt_quick) {
  * @param {boolean=} opt_quick if true, only the 1st coordinate is checked.
  * @return {boolean} If geometry has coordinates with altitude.
  */
-const hasAltitudeGeometry = function(geometry, opt_quick) {
+export const hasAltitudeGeometry = function(geometry, opt_quick) {
   var /** @type {boolean} */ result = false;
   var i;
   var x;
@@ -1641,7 +1641,7 @@ const hasAltitudeGeometry = function(geometry, opt_quick) {
  * @param {Array<Array<number>>} coords The coordinate array of the geometry
  * @return {number} Average of altitude compoments.
  */
-const getAverageAltitude = function(coords) {
+export const getAverageAltitude = function(coords) {
   var ce;
   var ttl = 0;
   var count = 0;
@@ -1666,7 +1666,7 @@ const getAverageAltitude = function(coords) {
  * @param {Array<number>} c2 The second coordinate
  * @return {boolean} If the coordinates are the same
  */
-const isSameCoordinate = function(c1, c2) {
+export const isSameCoordinate = function(c1, c2) {
   if (c1 == null || c2 == null || !c1.length == 2 || !c2.length == 2) {
     return false;
   }
@@ -1682,7 +1682,7 @@ const isSameCoordinate = function(c1, c2) {
  * @param {number=} opt_precision Decimal precision
  * @return {string} The padded value
  */
-const padCoordinate = function(n, opt_isLon, opt_precision) {
+export const padCoordinate = function(n, opt_isLon, opt_precision) {
   var isLon = opt_isLon !== undefined ? opt_isLon : false;
   var length = isLon ? 3 : 2;
   // padNumber does not handle negative numbers
@@ -1700,7 +1700,7 @@ const padCoordinate = function(n, opt_isLon, opt_precision) {
  * @param {number=} opt_decimalSeconds Number of decimals to display for seconds, default is 2
  * @return {string} The formatted coordinate
  */
-const toSexagesimal = function(coordinate, opt_isLon, opt_symbols, opt_decimalSeconds) {
+export const toSexagesimal = function(coordinate, opt_isLon, opt_symbols, opt_decimalSeconds) {
   var isLon = opt_isLon !== undefined ? opt_isLon : true;
   var symbols = opt_symbols !== undefined ? opt_symbols : true;
   var isNegative = coordinate < 0;
@@ -1735,7 +1735,7 @@ const toSexagesimal = function(coordinate, opt_isLon, opt_symbols, opt_decimalSe
  * @param {boolean=} opt_symbols If symbols should be displayed (default true)
  * @return {string} The formatted coordinate
  */
-const toDegreesDecimalMinutes = function(coordinate, opt_isLon, opt_symbols) {
+export const toDegreesDecimalMinutes = function(coordinate, opt_isLon, opt_symbols) {
   var isLon = opt_isLon !== undefined ? opt_isLon : true;
   var symbols = opt_symbols !== undefined ? opt_symbols : true;
   var isNegative = coordinate < 0;
@@ -1761,7 +1761,7 @@ const toDegreesDecimalMinutes = function(coordinate, opt_isLon, opt_symbols) {
  * @return {number}
  * @deprecated Please use os.geo2.normalizeLatitude instead as it does not require conversion to/from lonlat before/after
  */
-const normalizeLatitude = function(lat) {
+export const normalizeLatitude = function(lat) {
   return lat > 90 ? 90 : lat < -90 ? -90 : lat;
 };
 
@@ -1771,7 +1771,7 @@ const normalizeLatitude = function(lat) {
  * @param {!Array<number>} extent
  * @return {!Array<!Array<number>>}
  */
-const extentToCoordinates = function(extent) {
+export const extentToCoordinates = function(extent) {
   var topLeft = [extent[0], extent[3]];
   var topRight = [extent[2], extent[3]];
   var bottomLeft = [extent[0], extent[1]];
@@ -1788,7 +1788,7 @@ const extentToCoordinates = function(extent) {
  * @return {number}
  * @deprecated Please use os.geo2.normalizeLongitude instead as it does not require conversion to/from lonlat before/after
  */
-const normalizeLongitude = function(lon, opt_min, opt_max) {
+export const normalizeLongitude = function(lon, opt_min, opt_max) {
   if (opt_min !== undefined && opt_max !== undefined) {
     // todo: the modulo version below is a bit faster, so
     // verify if that also works with an arbitrary range.
@@ -1816,7 +1816,7 @@ const normalizeLongitude = function(lon, opt_min, opt_max) {
  * @return {boolean}
  * @suppress {deprecated}
  */
-const crossesDateLine = function(target) {
+export const crossesDateLine = function(target) {
   if (target) {
     var extent;
 
@@ -1881,7 +1881,7 @@ const crossesDateLine = function(target) {
  * @deprecated Please use os.geo2.noralizeCoordinates instead as it does not require conversion to/from lonlat before/after
  * @suppress {deprecated}
  */
-const normalizeCoordinates = function(coordinates, opt_to) {
+export const normalizeCoordinates = function(coordinates, opt_to) {
   if (coordinates && coordinates.length > 0) {
     var to = opt_to != null ? opt_to : normalizeLongitude(coordinates[0][0]);
 
@@ -1900,7 +1900,7 @@ const normalizeCoordinates = function(coordinates, opt_to) {
  * @param {number=} opt_to The longitude to normalize to.
  * @deprecated Please use os.geo2.normalizeRings instead as it does not require conversion to/from lonlat before/after
  */
-const normalizeRings = function(rings, opt_to) {
+export const normalizeRings = function(rings, opt_to) {
   if (rings) {
     for (var i = 0; i < rings.length; i++) {
       normalizeCoordinates(rings[i], opt_to);
@@ -1913,7 +1913,7 @@ const normalizeRings = function(rings, opt_to) {
  * @param {number=} opt_to The longitude to normalize to.
  * @deprecated Please use os.geo2.normalizePolygons instead as it does not require conversion to/from lonlat before/after
  */
-const normalizePolygons = function(polys, opt_to) {
+export const normalizePolygons = function(polys, opt_to) {
   if (polys) {
     for (var i = 0; i < polys.length; i++) {
       normalizeRings(polys[i], opt_to);
@@ -1930,7 +1930,7 @@ const normalizePolygons = function(polys, opt_to) {
  * @deprecated Please use os.geo2.normalizeGeometryCoordinates instead as it does not require conversion to/from lonlat before/after
  * @suppress {deprecated}
  */
-const normalizeGeometryCoordinates = function(geometry, opt_to) {
+export const normalizeGeometryCoordinates = function(geometry, opt_to) {
   if (geometry) {
     if (geometry.get(GeometryField.NORMALIZED) || isWorldQuery(geometry)) {
       return false;
@@ -1996,7 +1996,7 @@ const normalizeGeometryCoordinates = function(geometry, opt_to) {
  * @return {number}
  * @deprecated Please use easing.easeLinear instead
  */
-const easeLinear = function(t, b, c, d) {
+export const easeLinear = function(t, b, c, d) {
   return easing.easeLinear(t, b, c, d);
 };
 
@@ -2010,7 +2010,7 @@ const easeLinear = function(t, b, c, d) {
  * @return {number}
  * @deprecated Please use easing.easeQuintic instead
  */
-const easeQuintic = function(t, b, c, d) {
+export const easeQuintic = function(t, b, c, d) {
   return easing.easeQuintic(t, b, c, d);
 };
 
@@ -2024,7 +2024,7 @@ const easeQuintic = function(t, b, c, d) {
  * @return {number}
  * @deprecated Please use easing.easeQuartic instead
  */
-const easeQuartic = function(t, b, c, d) {
+export const easeQuartic = function(t, b, c, d) {
   return easing.easeQuartic(t, b, c, d);
 };
 
@@ -2038,7 +2038,7 @@ const easeQuartic = function(t, b, c, d) {
  * @return {number}
  * @deprecated Please use easing.easeExpo instead
  */
-const easeExpo = function(t, b, c, d) {
+export const easeExpo = function(t, b, c, d) {
   return easing.easeExpo(t, b, c, d);
 };
 
@@ -2052,7 +2052,7 @@ const easeExpo = function(t, b, c, d) {
  * @return {number}
  * @deprecated Please use easing.easeCircular instead
  */
-const easeCircular = function(t, b, c, d) {
+export const easeCircular = function(t, b, c, d) {
   return easing.easeCircular(t, b, c, d);
 };
 
@@ -2066,7 +2066,7 @@ const easeCircular = function(t, b, c, d) {
  * @param {number} nVert The number of vertices.
  * @return {boolean}
  */
-const isCoordInArea = function(x, y, vertX, vertY, nVert) {
+export const isCoordInArea = function(x, y, vertX, vertY, nVert) {
   var inArea = false;
   for (var i = 0, j = nVert - 1; i < nVert; j = i++) {
     if (((vertY[i] > y) != (vertY[j] > y)) &&
@@ -2087,7 +2087,7 @@ const isCoordInArea = function(x, y, vertX, vertY, nVert) {
  * @todo currently this only works for polygons which have no holes.
  * @suppress {deprecated}
  */
-const createPolarPolygon = function(coordinates) {
+export const createPolarPolygon = function(coordinates) {
   var newCoords = [coordinates.length + 4];
 
   // normalize longitudes first or the correction could be made at the wrong index
@@ -2125,7 +2125,7 @@ const createPolarPolygon = function(coordinates) {
  * @param {Array<Array<number>>} coordinates The polygon's exterior ring.
  * @return {boolean} If the polygon caps a pole
  */
-const isPolarPolygon = function(coordinates) {
+export const isPolarPolygon = function(coordinates) {
   var total = 0;
   if (coordinates) {
     for (var i = 1; i < coordinates.length; i++) {
@@ -2149,7 +2149,7 @@ const isPolarPolygon = function(coordinates) {
  * @return {boolean}
  * @suppress {deprecated}
  */
-const isValidExtent = function(extent) {
+export const isValidExtent = function(extent) {
   var invalid = false;
 
   invalid = extent[0] == extent[1] == extent[2] == extent[3];
@@ -2167,7 +2167,7 @@ const isValidExtent = function(extent) {
  * @param {number=} opt_precision
  * @return {string}
  */
-const stringifyExtent = function(extent, opt_precision) {
+export const stringifyExtent = function(extent, opt_precision) {
   var s = '';
 
   if (opt_precision != null && opt_precision > 0) {
@@ -2187,7 +2187,7 @@ const stringifyExtent = function(extent, opt_precision) {
  * @param {!Array<ol.Coordinate>} coords Coordinates in the ring.
  * @return {boolean}
  */
-const isCCW = function(coords) {
+export const isCCW = function(coords) {
   var diff = 0;
 
   if (coords.length > 3 && isClosed(coords)) {
@@ -2209,7 +2209,7 @@ const isCCW = function(coords) {
  * @param {Array<Array<number>>} coords
  * @return {boolean} - if true, normalize the polygon
  */
-const shouldNormalize = function(coords) {
+export const shouldNormalize = function(coords) {
   if (coords && coords.length > 0) {
     var outsideOfNormal = undefined;
     return coords.every(function(coord) {
@@ -2234,12 +2234,12 @@ const shouldNormalize = function(coords) {
 /**
  * @type {number}
  */
-const R2D = 180 / Math.PI;
+export const R2D = 180 / Math.PI;
 
 /**
  * @type {number}
  */
-const D2R = Math.PI / 180;
+export const D2R = Math.PI / 180;
 
 /**
  * Flatten geometry collections containing a single geometry.
@@ -2247,7 +2247,7 @@ const D2R = Math.PI / 180;
  * @param {Geometry} geometry The original geometry.
  * @return {Geometry} The flattened geometry.
  */
-const flattenGeometry = function(geometry) {
+export const flattenGeometry = function(geometry) {
   if (geometry instanceof GeometryCollection) {
     var geometries = geometry.getGeometriesArray();
     if (geometries.length === 1) {
@@ -2265,7 +2265,7 @@ const flattenGeometry = function(geometry) {
  * @param {!(LineString|MultiLineString)} geometry The line geometry.
  * @return {!LineString} The merged line.
  */
-const mergeLineGeometry = function(geometry) {
+export const mergeLineGeometry = function(geometry) {
   if (geometry instanceof LineString) {
     return geometry;
   }
@@ -2301,7 +2301,7 @@ const mergeLineGeometry = function(geometry) {
  * @param {!Geometry} geometry The geometry.
  * @return {!Geometry} The split geometry, or the original if it couldn't be split.
  */
-const splitOnDateLine = function(geometry) {
+export const splitOnDateLine = function(geometry) {
   // only supports lines and multi-lines right now
   var geometryType = geometry.getType();
   if (geometryType !== GeometryType.LINE_STRING &&
@@ -2404,72 +2404,4 @@ const splitMultiLineOnDateLine_ = function(geometry) {
     var splitCoordinates = line ? splitLineOnDateLine_(line) : [];
     return result.concat(splitCoordinates);
   }, []);
-};
-
-exports = {
-  VINCENTY_ELLIPSOIDS,
-  MGRS_REGEXP,
-  EPSILON,
-  MAX_LINE_LENGTH,
-  ALT_REGEXP,
-  ALT_UNITS_REGEXP,
-  ALT_INVERSE_REGEXP,
-  ALT_INVERSE_UNITS_REGEXP,
-  MGRSRegExp,
-  COORD_CLEANER,
-  PREFER_LAT_FIRST,
-  PREFER_LON_FIRST,
-  parseLatLon,
-  getLatLonFormatConfiguration,
-  parseLon,
-  parseLat,
-  interpolateArc,
-  interpolateCircle,
-  interpolateEllipse,
-  convertEllipseValue,
-  calculateEndLocation,
-  vincenty,
-  vincentyDistance,
-  vincentyFinalBearing,
-  vincentyInitialBearing,
-  isClosed,
-  isPolygon,
-  calculateCenter,
-  isRectangular,
-  isGeometryRectangular,
-  isGeometryPolygonal,
-  hasAltitude,
-  hasAltitudeGeometry,
-  getAverageAltitude,
-  isSameCoordinate,
-  padCoordinate,
-  toSexagesimal,
-  toDegreesDecimalMinutes,
-  normalizeLatitude,
-  extentToCoordinates,
-  normalizeLongitude,
-  crossesDateLine,
-  normalizeCoordinates,
-  normalizeRings,
-  normalizePolygons,
-  normalizeGeometryCoordinates,
-  easeLinear,
-  easeQuintic,
-  easeQuartic,
-  easeExpo,
-  easeCircular,
-  isCoordInArea,
-  createPolarPolygon,
-  isPolarPolygon,
-  isValidExtent,
-  stringifyExtent,
-  isCCW,
-  shouldNormalize,
-  R2D,
-  D2R,
-  flattenGeometry,
-  mergeLineGeometry,
-  splitOnDateLine,
-  EasingFunction,
-  Ellipsoid
 };

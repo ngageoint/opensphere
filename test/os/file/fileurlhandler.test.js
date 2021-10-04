@@ -9,11 +9,11 @@ goog.require('os.ui.im.ImportEventType');
 
 describe('os.file.FileUrlHandler', function() {
   const Dispatcher = goog.module.get('os.Dispatcher');
-  const DataManager = goog.module.get('os.data.DataManager');
-  const FileDescriptor = goog.module.get('os.data.FileDescriptor');
-  const FileUrlHandler = goog.module.get('os.file.FileUrlHandler');
-  const ImportEvent = goog.module.get('os.ui.im.ImportEvent');
-  const ImportEventType = goog.module.get('os.ui.im.ImportEventType');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: FileDescriptor} = goog.module.get('os.data.FileDescriptor');
+  const {default: FileUrlHandler} = goog.module.get('os.file.FileUrlHandler');
+  const {default: ImportEvent} = goog.module.get('os.ui.im.ImportEvent');
+  const {default: ImportEventType} = goog.module.get('os.ui.im.ImportEventType');
 
   var handler;
   var url = 'https://file.com/file.csv';

@@ -1,20 +1,23 @@
-goog.module('os.time.xf.TimeModel');
+goog.declareModuleId('os.time.xf.TimeModel');
+
+import DataModel from '../../data/xf/datamodel.js';
+import PropertyChange from '../../data/xf/propertychange.js';
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import osImplements from '../../implements.js';
+import ITime from '../itime.js';
+import TimeInstant from '../timeinstant.js';
+import TimelineController from '../timelinecontroller.js';
+import TimeRange from '../timerange.js';
 
 const googArray = goog.require('goog.array');
 const functions = goog.require('goog.functions');
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
 const olArray = goog.require('ol.array');
-const DataModel = goog.require('os.data.xf.DataModel');
-const PropertyChange = goog.require('os.data.xf.PropertyChange');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osImplements = goog.require('os.implements');
-const ITime = goog.require('os.time.ITime');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const TimeRange = goog.require('os.time.TimeRange');
-const TimelineController = goog.require('os.time.TimelineController');
 
 const Logger = goog.requireType('goog.log.Logger');
+const {default: Bin} = goog.requireType('os.histo.Bin');
+const {default: Result} = goog.requireType('os.histo.Result');
 const {GetTimeFn} = goog.requireType('os.time.xf');
 
 
@@ -29,7 +32,7 @@ const {GetTimeFn} = goog.requireType('os.time.xf');
  *
  * @template T,S,BIN
  */
-class TimeModel extends DataModel {
+export default class TimeModel extends DataModel {
   /**
    * Constructor.
    * @param {GetTimeFn} getTimeFn
@@ -267,15 +270,15 @@ class TimeModel extends DataModel {
 
         // merge groups into the set created from data with time, ignore timeless data (no results)
         for (var i = 0, ii = groups.length; i < ii; i++) {
-          var group = /** @type {!os.histo.Result} */ (groups[i]);
-          var existing = /** @type {os.histo.Result|undefined} */ (olArray.find(results, function(result) {
+          var group = /** @type {!Result} */ (groups[i]);
+          var existing = /** @type {Result|undefined} */ (olArray.find(results, function(result) {
             return result['key'] == group['key'];
           }));
 
           if (existing) {
             // bin already exists, so merge the results
-            var existingBin = /** @type {!os.histo.Bin} */ (existing['value']);
-            var groupBin = /** @type {!os.histo.Bin} */ (group['value']);
+            var existingBin = /** @type {!Bin} */ (existing['value']);
+            var groupBin = /** @type {!Bin} */ (group['value']);
             var items = groupBin.getItems().slice();
             for (var j = 0; j < items.length; j++) {
               var item = items[j];
@@ -571,6 +574,3 @@ const logger = log.getLogger('os.time.xf.TimeModel');
  * @type {!TimeRange}
  */
 const emptyRange = new TimeRange(NaN, NaN);
-
-
-exports = TimeModel;

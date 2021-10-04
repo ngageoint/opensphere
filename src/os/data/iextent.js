@@ -1,10 +1,9 @@
-goog.module('os.data.IExtent');
-
+goog.declareModuleId('os.data.IExtent');
 
 /**
  * @interface
  */
-class IExtent {
+export default class IExtent {
   /**
    * @return {?ol.Extent} The extent or null
    */
@@ -16,6 +15,3 @@ class IExtent {
  * @type {string}
  */
 IExtent.ID = 'os.data.IExtent';
-
-
-exports = IExtent;

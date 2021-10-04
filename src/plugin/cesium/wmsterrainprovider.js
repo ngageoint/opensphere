@@ -1,10 +1,11 @@
 goog.declareModuleId('plugin.cesium.WMSTerrainProvider');
 
+import ProxyHandler from '../../os/net/proxyhandler.js';
 import AbstractTerrainProvider from './abstractterrainprovider.js';
 
 const Promise = goog.require('goog.Promise');
 const asserts = goog.require('goog.asserts');
-const ProxyHandler = goog.require('os.net.ProxyHandler');
+
 
 /**
  * Compare WMS terrain layer options in order of descending max level.

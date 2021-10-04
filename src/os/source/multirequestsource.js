@@ -1,21 +1,22 @@
-goog.module('os.source.MultiRequest');
+goog.declareModuleId('os.source.MultiRequest');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import EventType from '../events/eventtype.js';
+import osImplements from '../implements.js';
+import ThreadEventType from '../thread/eventtype.js';
+import {formatDate} from '../time/time.js';
+import IImportSource from './iimportsource.js';
+import VectorSource from './vectorsource.js';
 
 const log = goog.require('goog.log');
 const NetEventType = goog.require('goog.net.EventType');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const EventType = goog.require('os.events.EventType');
-const osImplements = goog.require('os.implements');
-const IImportSource = goog.require('os.source.IImportSource');
-const VectorSource = goog.require('os.source.Vector');
-const ThreadEventType = goog.require('os.thread.EventType');
-const {formatDate} = goog.require('os.time');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');
-const IImporter = goog.requireType('os.im.IImporter');
-const Request = goog.requireType('os.net.Request');
+const {default: IImporter} = goog.requireType('os.im.IImporter');
+const {default: Request} = goog.requireType('os.net.Request');
 
 
 /**
@@ -23,7 +24,7 @@ const Request = goog.requireType('os.net.Request');
  *
  * @implements {IImportSource}
  */
-class MultiRequest extends VectorSource {
+export default class MultiRequest extends VectorSource {
   /**
    * Constructor.
    * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
@@ -384,6 +385,7 @@ class MultiRequest extends VectorSource {
     this.useCache_ = value;
   }
 }
+
 osImplements(MultiRequest, IImportSource.ID);
 
 /**
@@ -391,5 +393,3 @@ osImplements(MultiRequest, IImportSource.ID);
  * @type {Logger}
  */
 const logger = log.getLogger('os.source.MultiRequest');
-
-exports = MultiRequest;

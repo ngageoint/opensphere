@@ -1,12 +1,12 @@
-goog.module('os.metrics.LayersMetrics');
+goog.declareModuleId('os.metrics.LayersMetrics');
 
-const {Layer} = goog.require('os.metrics.keys');
-const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');
+import MetricsPlugin from '../ui/metrics/metricsplugin.js';
+import {Layer} from './metricskeys.js';
 
 
 /**
  */
-class LayersMetrics extends MetricsPlugin {
+export default class LayersMetrics extends MetricsPlugin {
   /**
    * Constructor.
    */
@@ -374,5 +374,3 @@ class LayersMetrics extends MetricsPlugin {
     });
   }
 }
-
-exports = LayersMetrics;

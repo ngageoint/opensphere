@@ -1,7 +1,7 @@
 goog.require('os.metrics.GraphiteMetricsProvider');
 
 describe('os.metrics.GraphiteMetricsProvider', function() {
-  const GraphiteMetricsProvider = goog.module.get('os.metrics.GraphiteMetricsProvider');
+  const {default: GraphiteMetricsProvider} = goog.module.get('os.metrics.GraphiteMetricsProvider');
 
   it('should instantiate', function() {
     var provider = new GraphiteMetricsProvider();

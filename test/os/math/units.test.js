@@ -4,7 +4,7 @@ goog.require('os.math.Units');
 
 describe('os.math.Units', function() {
   const math = goog.module.get('os.math');
-  const Units = goog.module.get('os.math.Units');
+  const {default: Units} = goog.module.get('os.math.Units');
 
   it('should convert meters to other units', function() {
     // implied meters

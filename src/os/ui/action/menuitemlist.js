@@ -1,9 +1,10 @@
-goog.module('os.ui.action.MenuItemList');
+/* eslint-disable import/no-deprecated */
+goog.declareModuleId('os.ui.action.MenuItemList');
 
-const MenuItem = goog.require('os.ui.action.MenuItem');
+import MenuItem from './menuitem.js';
 
-const IMenuItem = goog.requireType('os.ui.action.IMenuItem');
-const MenuOptions = goog.requireType('os.ui.action.MenuOptions');
+const {default: IMenuItem} = goog.requireType('os.ui.action.IMenuItem');
+const {default: MenuOptions} = goog.requireType('os.ui.action.MenuOptions');
 
 
 /**
@@ -12,7 +13,7 @@ const MenuOptions = goog.requireType('os.ui.action.MenuOptions');
  * @implements {IMenuItem}
  * @deprecated Please use {@link os.ui.menu.Menu} and {@link os.ui.menu.MenuItem} instead
  */
-class MenuItemList extends MenuItem {
+export default class MenuItemList extends MenuItem {
   /**
    * Constructor.
    * @param {!string} name
@@ -49,5 +50,3 @@ class MenuItemList extends MenuItem {
     return this.menuItems_;
   }
 }
-
-exports = MenuItemList;

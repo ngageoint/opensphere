@@ -6,9 +6,9 @@ goog.require('os.job.JobState');
 
 
 describe('os.job.JobManager', function() {
-  const JobEventType = goog.module.get('os.job.JobEventType');
-  const JobManager = goog.module.get('os.job.JobManager');
-  const JobState = goog.module.get('os.job.JobState');
+  const {default: JobEventType} = goog.module.get('os.job.JobEventType');
+  const {default: JobManager} = goog.module.get('os.job.JobManager');
+  const {default: JobState} = goog.module.get('os.job.JobState');
 
   var jobManager;
   var job1;

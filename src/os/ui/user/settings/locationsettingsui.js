@@ -1,11 +1,13 @@
-goog.module('os.ui.user.settings.LocationSettingsUI');
+goog.declareModuleId('os.ui.user.settings.LocationSettingsUI');
 
-const {ROOT} = goog.require('os');
-const {getSettings} = goog.require('os.config.instance');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const {LocationSetting} = goog.require('os.ui.location');
-const LocationFormat = goog.require('os.ui.location.Format');
+import {getSettings} from '../../../config/configinstance.js';
+import {ROOT} from '../../../os.js';
+import {LocationSetting} from '../../location/location.js';
+import LocationFormat from '../../location/locationformat.js';
+import Module from '../../module.js';
+import {apply} from '../../ui.js';
+
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
 
 
 /**
@@ -13,7 +15,7 @@ const LocationFormat = goog.require('os.ui.location.Format');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   templateUrl: ROOT + 'views/config/locationsettings.html',
@@ -21,12 +23,11 @@ const directive = () => ({
   controllerAs: 'locSet'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'location-setting';
+export const directiveTag = 'location-setting';
 
 
 /**
@@ -39,7 +40,7 @@ Module.directive('locationSetting', [directive]);
  * Controller for location settings
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {angular.Scope} $scope
@@ -76,7 +77,7 @@ class Controller {
   /**
    * Listen for changes from the system and update the setting display
    *
-   * @param {os.events.SettingChangeEvent} event
+   * @param {SettingChangeEvent} event
    * @private
    */
   onFormatChange_(event) {
@@ -99,9 +100,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

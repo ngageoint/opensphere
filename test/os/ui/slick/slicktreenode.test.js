@@ -1,7 +1,7 @@
 goog.require('os.ui.slick.SlickTreeNode');
 
 describe('os.ui.slick.SlickTreeNode', function() {
-  const SlickTreeNode = goog.module.get('os.ui.slick.SlickTreeNode');
+  const {default: SlickTreeNode} = goog.module.get('os.ui.slick.SlickTreeNode');
 
   it('should set/export label for SlickGrid', function() {
     var node = new SlickTreeNode();

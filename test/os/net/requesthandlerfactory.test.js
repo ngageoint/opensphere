@@ -7,7 +7,7 @@ goog.require('os.net.SameDomainHandler');
 describe('os.net.RequestHandlerFactory', function() {
   const Uri = goog.module.get('goog.Uri');
   const RequestHandlerFactory = goog.module.get('os.net.RequestHandlerFactory');
-  const SameDomainHandler = goog.module.get('os.net.SameDomainHandler');
+  const {default: SameDomainHandler} = goog.module.get('os.net.SameDomainHandler');
 
   let originalList = null;
 

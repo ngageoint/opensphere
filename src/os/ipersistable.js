@@ -1,4 +1,4 @@
-goog.module('os.IPersistable');
+goog.declareModuleId('os.IPersistable');
 
 /**
  * An interface for persistable/restorable objects
@@ -6,7 +6,7 @@ goog.module('os.IPersistable');
  * @interface
  * @template T
  */
-class IPersistable {
+export default class IPersistable {
   /**
    * Persists this object
    * @param {T=} opt_to An optional object to persist to. By default a new object is created.
@@ -20,5 +20,3 @@ class IPersistable {
    */
   restore(config) {}
 }
-
-exports = IPersistable;

@@ -3,7 +3,7 @@ goog.require('os.net.NDJsonEncFormatter');
 
 
 describe('os.net.NDJsonEncFormatter', function() {
-  const NDJsonEncFormatter = goog.module.get('os.net.NDJsonEncFormatter');
+  const {default: NDJsonEncFormatter} = goog.module.get('os.net.NDJsonEncFormatter');
 
   it('should encode an array of json payloads with new lines', function() {
     var formatter = new NDJsonEncFormatter();

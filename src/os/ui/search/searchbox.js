@@ -1,6 +1,20 @@
-goog.module('os.ui.search.SearchBoxUI');
+goog.declareModuleId('os.ui.search.SearchBoxUI');
 
-goog.require('os.ui.dragDropDirective');
+import '../dragdrop/dragdropui.js';
+import Settings from '../../config/settings.js';
+import * as dispatcher from '../../dispatcher.js';
+import osImplements from '../../implements.js';
+import {ROOT} from '../../os.js';
+import PluginManager from '../../plugin/pluginmanager.js';
+import ISubSearch from '../../search/isubsearch.js';
+import * as osSearch from '../../search/search.js';
+import SearchEventType from '../../search/searcheventtype.js';
+import SearchManager from '../../search/searchmanager.js';
+import SubSearchUtils from '../../search/subsearchutils.js';
+import TriState from '../../structs/tristate.js';
+import FavoriteManager from '../../user/settings/favoritemanager.js';
+import Module from '../module.js';
+import {TypeaheadEventType, apply} from '../ui.js';
 
 const googArray = goog.require('goog.array');
 const {contains: domContains, getAncestorByClass} = goog.require('goog.dom');
@@ -8,25 +22,11 @@ const googEvents = goog.require('goog.events');
 const GoogEvent = goog.require('goog.events.Event');
 const GoogEventType = goog.require('goog.events.EventType');
 const olArray = goog.require('ol.array');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const Settings = goog.require('os.config.Settings');
-const osImplements = goog.require('os.implements');
-const PluginManager = goog.require('os.plugin.PluginManager');
-const osSearch = goog.require('os.search');
-const ISubSearch = goog.require('os.search.ISubSearch');
-const SearchEventType = goog.require('os.search.SearchEventType');
-const SearchManager = goog.require('os.search.SearchManager');
-const SubSearchUtils = goog.require('os.search.SubSearchUtils');
-const TriState = goog.require('os.structs.TriState');
-const {TypeaheadEventType, apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const FavoriteManager = goog.require('os.user.settings.FavoriteManager');
 
-const Favorite = goog.requireType('os.search.Favorite');
-const ISearch = goog.requireType('os.search.ISearch');
-const SearchEvent = goog.requireType('os.search.SearchEvent');
-const SearchScrollDataSource = goog.requireType('os.ui.search.SearchScrollDataSource');
+const {default: Favorite} = goog.requireType('os.search.Favorite');
+const {default: ISearch} = goog.requireType('os.search.ISearch');
+const {default: SearchEvent} = goog.requireType('os.search.SearchEvent');
+const {default: SearchScrollDataSource} = goog.requireType('os.ui.search.SearchScrollDataSource');
 
 
 /**
@@ -34,7 +34,7 @@ const SearchScrollDataSource = goog.requireType('os.ui.search.SearchScrollDataSo
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -55,7 +55,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'search-box';
+export const directiveTag = 'search-box';
 
 
 /**
@@ -69,7 +69,7 @@ Module.directive('searchBox', [directive]);
  * Controller function for the search-box directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -1060,10 +1060,3 @@ class Controller {
  * @type {number}
  */
 Controller.MAX_RECENT_ = 5;
-
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

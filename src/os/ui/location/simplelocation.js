@@ -1,14 +1,15 @@
-goog.module('os.ui.location.SimpleLocationUI');
+goog.declareModuleId('os.ui.location.SimpleLocationUI');
+
+import Settings from '../../config/settings.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import {LocationSetting, getCurrentFormat} from './location.js';
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
-const Settings = goog.require('os.config.Settings');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const {LocationSetting, getCurrentFormat} = goog.require('os.ui.location');
 
-const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
-const Format = goog.requireType('os.ui.location.Format');
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
+const {default: Format} = goog.requireType('os.ui.location.Format');
 
 
 /**
@@ -28,7 +29,7 @@ const Format = goog.requireType('os.ui.location.Format');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'EA',
   replace: true,
   template,
@@ -45,7 +46,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'simple-location';
+export const directiveTag = 'simple-location';
 
 // Register the directive
 Module.directive('simpleLocation', [directive]);
@@ -65,7 +66,7 @@ const template =
  * The directive controller
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -176,9 +177,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,13 +1,13 @@
 goog.declareModuleId('plugin.openpage.Handler');
 
+import CommandProcessor from '../../os/command/commandprocessor.js';
+import LayerAdd from '../../os/command/layeraddcmd.js';
+import SequenceCommand from '../../os/command/sequencecommand.js';
 import {TYPE} from './openpage.js';
 
-const CommandProcessor = goog.require('os.command.CommandProcessor');
 const googString = goog.require('goog.string');
-const LayerAdd = goog.require('os.command.LayerAdd');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
 
-const IMessageHandler = goog.requireType('os.xt.IMessageHandler');
+const {default: IMessageHandler} = goog.requireType('os.xt.IMessageHandler');
 
 
 /**

@@ -1,14 +1,15 @@
-goog.module('os.ui.filter.op.LessThan');
+goog.declareModuleId('os.ui.filter.op.LessThan');
+
+import {quoteString} from '../filterstring.js';
+import Op from './op.js';
 
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const Op = goog.require('os.ui.filter.op.Op');
-const {quoteString} = goog.require('os.ui.filter.string');
 
 
 /**
  * A 'PropertyIsLessThan' operation class.
  */
-class LessThan extends Op {
+export default class LessThan extends Op {
   /**
    * Constructor.
    */
@@ -28,5 +29,3 @@ class LessThan extends Op {
     return '';
   }
 }
-
-exports = LessThan;

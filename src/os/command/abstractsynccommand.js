@@ -1,9 +1,10 @@
-goog.module('os.command.AbstractSyncCommand');
+goog.declareModuleId('os.command.AbstractSyncCommand');
+
+import State from './state.js';
 
 const Disposable = goog.require('goog.Disposable');
-const State = goog.require('os.command.State');
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -12,7 +13,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  * @abstract
  * @implements {ICommand}
  */
-class AbstractSyncCommand extends Disposable {
+export default class AbstractSyncCommand extends Disposable {
   /**
    * Constructor.
    */
@@ -79,5 +80,3 @@ class AbstractSyncCommand extends Disposable {
     return true;
   }
 }
-
-exports = AbstractSyncCommand;

@@ -5,7 +5,7 @@ goog.require('os.source.ImportQueue');
 
 describe('os.source.ImportQueue', function() {
   const AsyncImporter = goog.module.get('os.im.AsyncImporter');
-  const ImportQueue = goog.module.get('os.source.ImportQueue');
+  const {default: ImportQueue} = goog.module.get('os.source.ImportQueue');
 
   it('lets the importer fully complete before parsing the next queue item', function() {
     var queue1 = ['a', 'b', 'c'];

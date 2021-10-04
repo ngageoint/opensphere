@@ -1,8 +1,7 @@
 goog.declareModuleId('plugin.places.PlacesLayer');
 
+import * as fn from '../../os/fn/fn.js';
 import KMLLayer from '../file/kml/kmllayer.js';
-
-const fn = goog.require('os.fn');
 
 /**
  * KML Layer for organizing Places.

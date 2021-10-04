@@ -1,21 +1,22 @@
-goog.module('os.query.TemporalQueryManager');
+goog.declareModuleId('os.query.TemporalQueryManager');
+
+import DataManager from '../data/datamanager.js';
+import DataEventType from '../data/event/dataeventtype.js';
+import TimelineController from '../time/timelinecontroller.js';
+import TimelineEventType from '../time/timelineeventtype.js';
 
 const Disposable = goog.require('goog.Disposable');
 const {assert} = goog.require('goog.asserts');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const DataManager = goog.require('os.data.DataManager');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const TimelineController = goog.require('os.time.TimelineController');
-const TimelineEventType = goog.require('os.time.TimelineEventType');
 
-const DataEvent = goog.requireType('os.data.event.DataEvent');
-const TemporalHandler = goog.requireType('os.query.TemporalHandler');
-const TimelineControllerEvent = goog.requireType('os.time.TimelineControllerEvent');
+const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
+const {default: TemporalHandler} = goog.requireType('os.query.TemporalHandler');
+const {default: TimelineControllerEvent} = goog.requireType('os.time.TimelineControllerEvent');
 
 
 /**
  */
-class TemporalQueryManager extends Disposable {
+export default class TemporalQueryManager extends Disposable {
   /**
    * Constructor.
    */
@@ -137,5 +138,3 @@ class TemporalQueryManager extends Disposable {
  * @type {TemporalQueryManager|undefined}
  */
 let instance;
-
-exports = TemporalQueryManager;

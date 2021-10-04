@@ -1,4 +1,4 @@
-goog.module('os.config.storage.ISettingsStorage');
+goog.declareModuleId('os.config.storage.ISettingsStorage');
 
 const Deferred = goog.requireType('goog.async.Deferred');
 
@@ -8,7 +8,7 @@ const Deferred = goog.requireType('goog.async.Deferred');
  *
  * @interface
  */
-class ISettingsStorage {
+export default class ISettingsStorage {
   /**
    * Constructor.
    */
@@ -40,6 +40,3 @@ class ISettingsStorage {
  * @const {string}
  */
 ISettingsStorage.ID = 'os.config.storage.ISettingsStorage';
-
-
-exports = ISettingsStorage;

@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.file.zip.ZIPPlugin');
 
+import * as zip from '../../../os/file/mime/zip.js';
+import AbstractPlugin from '../../../os/plugin/abstractplugin.js';
+import ImportManager from '../../../os/ui/im/importmanager.js';
 import ZIPImportUI from './ui/zipimportui.js';
 import ZIPParser from './zipparser.js';
 
-const zip = goog.require('os.file.mime.zip');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const ImportManager = goog.require('os.ui.im.ImportManager');
 
 /**
  * Provides ZIP support

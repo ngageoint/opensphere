@@ -1,11 +1,11 @@
-goog.module('os.data.groupby.SourceGroupBy');
+goog.declareModuleId('os.data.groupby.SourceGroupBy');
 
-const RecordField = goog.require('os.data.RecordField');
-const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
-const FilterNode = goog.require('os.ui.filter.ui.FilterNode');
-const {featureKeys} = goog.require('os.ui.query');
-const AreaNode = goog.require('os.ui.query.AreaNode');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+import FilterNode from '../../ui/filter/ui/filternode.js';
+import AreaNode from '../../ui/query/areanode.js';
+import {featureKeys} from '../../ui/query/query.js';
+import SlickTreeNode from '../../ui/slick/slicktreenode.js';
+import RecordField from '../recordfield.js';
+import BaseGroupBy from './basegroupby.js';
 
 
 // this field is used to track areas by source
@@ -17,7 +17,7 @@ if (!featureKeys.includes(RecordField.SOURCE_NAME)) {
 /**
  * Groups nodes by their source when available.
  */
-class SourceGroupBy extends BaseGroupBy {
+export default class SourceGroupBy extends BaseGroupBy {
   /**
    * Constructor.
    * @param {boolean=} opt_open Keeps groups open by default
@@ -76,5 +76,3 @@ class SourceGroupBy extends BaseGroupBy {
     return group;
   }
 }
-
-exports = SourceGroupBy;

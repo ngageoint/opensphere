@@ -1,9 +1,10 @@
 goog.declareModuleId('plugin.file.kml.cmd.AbstractKMLNode');
 
+import State from '../../../../os/command/state.js';
+
 const Disposable = goog.require('goog.Disposable');
 const dispose = goog.require('goog.dispose');
-const State = goog.require('os.command.State');
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 

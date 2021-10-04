@@ -1,7 +1,7 @@
 goog.require('os.search.SearchTermFacet');
 
 describe('os.search.SearchTermFacet', () => {
-  const SearchTermFacet = goog.module.get('os.search.SearchTermFacet');
+  const {default: SearchTermFacet} = goog.module.get('os.search.SearchTermFacet');
 
   const texts = [
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',

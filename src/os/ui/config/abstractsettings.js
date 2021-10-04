@@ -1,17 +1,17 @@
-goog.module('os.ui.config.AbstractSettingsCtrl');
+goog.declareModuleId('os.ui.config.AbstractSettingsCtrl');
 
-const SettingNode = goog.require('os.ui.config.SettingNode');
-const SettingsManager = goog.require('os.ui.config.SettingsManager');
-const SettingsManagerEventType = goog.require('os.ui.config.SettingsManagerEventType');
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
-const {resetSettings} = goog.require('os.ui.util.ResetSettings');
+import {resetSettings} from '../util/resetsettings.js';
+import SettingNode from './settingnode.js';
+import SettingsManager from './settingsmanager.js';
+import SettingsManagerEventType from './settingsmanagereventtype.js';
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
  * Controller for the save export window
  * @unrestricted
  */
-class Controller {
+export default class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -121,5 +121,3 @@ class Controller {
     }.bind(this));
   }
 }
-
-exports = Controller;

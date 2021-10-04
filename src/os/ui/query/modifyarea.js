@@ -1,39 +1,39 @@
-goog.module('os.ui.query.ModifyAreaUI');
+goog.declareModuleId('os.ui.query.ModifyAreaUI');
 
-goog.require('os.ui.util.ValidationMessageUI');
+import '../util/validationmessage.js';
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import CommandProcessor from '../../command/commandprocessor.js';
+import RecordField from '../../data/recordfield.js';
+import {getSource} from '../../feature/feature.js';
+import * as osJsts from '../../geo/jsts.js';
+import osImplements from '../../implements.js';
+import {ModifyEventType} from '../../interaction/interaction.js';
+import Modify from '../../interaction/modifyinteraction.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import * as osOlFeature from '../../ol/feature.js';
+import {ROOT} from '../../os.js';
+import {getAreaManager} from '../../query/queryinstance.js';
+import IModifiableSource from '../../source/imodifiablesource.js';
+import {PREVIEW_CONFIG} from '../../style/style.js';
+import Controls from '../help/controls.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import {bringToFront, close, create, exists} from '../window.js';
+import WindowEventType from '../windoweventtype.js';
+import windowSelector from '../windowselector.js';
+import AreaAdd from './cmd/areaaddcmd.js';
+import AreaModify from './cmd/areamodifycmd.js';
 
 const dispose = goog.require('goog.dispose');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const log = goog.require('goog.log');
 const Feature = goog.require('ol.Feature');
 const {listen} = goog.require('ol.events');
-const {ROOT} = goog.require('os');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const RecordField = goog.require('os.data.RecordField');
-const {getSource} = goog.require('os.feature');
-const osJsts = goog.require('os.geo.jsts');
-const osImplements = goog.require('os.implements');
-const {ModifyEventType} = goog.require('os.interaction');
-const Modify = goog.require('os.interaction.Modify');
-const {getMapContainer} = goog.require('os.map.instance');
-const osOlFeature = goog.require('os.ol.feature');
-const {getAreaManager} = goog.require('os.query.instance');
-const IModifiableSource = goog.require('os.source.IModifiableSource');
-const {PREVIEW_CONFIG} = goog.require('os.style');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const Controls = goog.require('os.ui.help.Controls');
-const AreaAdd = goog.require('os.ui.query.cmd.AreaAdd');
-const AreaModify = goog.require('os.ui.query.cmd.AreaModify');
-const {bringToFront, close, create, exists} = goog.require('os.ui.window');
-const windowSelector = goog.require('os.ui.windowSelector');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Vector = goog.requireType('ol.layer.Vector');
-const PayloadEvent = goog.requireType('os.events.PayloadEvent');
+const {default: PayloadEvent} = goog.requireType('os.events.PayloadEvent');
 
 
 /**
@@ -41,7 +41,7 @@ const PayloadEvent = goog.requireType('os.events.PayloadEvent');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -58,7 +58,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'modifyarea';
+export const directiveTag = 'modifyarea';
 
 /**
  * Add the directive to the module.
@@ -69,7 +69,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the modifyarea directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -583,12 +583,12 @@ const logger = log.getLogger('os.ui.query.ModifyAreaUI');
  *    targetArea: (Feature|undefined)
  * }}
  */
-let ModifyAreaConfig;
+export let ModifyAreaConfig;
 
 /**
  * @enum {string}
  */
-const ModifyOp = {
+export const ModifyOp = {
   ADD: 'Add',
   REMOVE: 'Remove',
   INTERSECT: 'Intersect'
@@ -598,7 +598,7 @@ const ModifyOp = {
  * Modify type enum.
  * @enum {string}
  */
-const ModifyType = {
+export const ModifyType = {
   ADD_REMOVE: 'addRemoveIntersect',
   FREEFORM: 'freeform'
 };
@@ -608,7 +608,7 @@ const ModifyType = {
  *
  * @param {!ModifyAreaConfig} config
  */
-const launchModifyArea = function(config) {
+export const launchModifyArea = function(config) {
   var windowId = 'modifyArea';
   var container = angular.element(windowSelector.CONTAINER);
   var width = 400;
@@ -645,14 +645,4 @@ const launchModifyArea = function(config) {
     var template = '<modifyarea feature="feature" target-area="targetArea" op="op"></modifyarea>';
     create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  ModifyAreaConfig,
-  ModifyOp,
-  ModifyType,
-  launchModifyArea
 };

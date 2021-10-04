@@ -1,4 +1,4 @@
-goog.module('os.search.FacetResult');
+goog.declareModuleId('os.search.FacetResult');
 
 
 /**
@@ -10,4 +10,4 @@ goog.module('os.search.FacetResult');
  */
 let FacetResult;
 
-exports = FacetResult;
+export default FacetResult;

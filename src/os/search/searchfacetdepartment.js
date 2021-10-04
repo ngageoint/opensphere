@@ -1,4 +1,4 @@
-goog.module('os.search.SearchFacetDepartment');
+goog.declareModuleId('os.search.SearchFacetDepartment');
 
 
 /**
@@ -10,4 +10,4 @@ goog.module('os.search.SearchFacetDepartment');
  */
 let SearchFacetDepartment;
 
-exports = SearchFacetDepartment;
+export default SearchFacetDepartment;

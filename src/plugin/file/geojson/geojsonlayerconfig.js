@@ -1,17 +1,18 @@
 goog.declareModuleId('plugin.file.geojson.GeoJSONLayerConfig');
 
+import AltMapping from '../../../os/im/mapping/altmapping.js';
+import OrientationMapping from '../../../os/im/mapping/orientationmapping.js';
+import SemiMajorMapping from '../../../os/im/mapping/semimajormapping.js';
+import SemiMinorMapping from '../../../os/im/mapping/semiminormapping.js';
+import DateTimeMapping from '../../../os/im/mapping/time/datetimemapping.js';
+import AbstractDataSourceLayerConfig from '../../../os/layer/config/abstractdatasourcelayerconfig.js';
+import ImportManager from '../../../os/ui/im/importmanager.js';
 import GeoJSONParserConfig from '../geojsonparserconfig.js';
 
-const AltMapping = goog.require('os.im.mapping.AltMapping');
-const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
-const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
-const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
-const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
-
-const FeatureImporter = goog.requireType('os.im.FeatureImporter');
-const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
-const ImportManager = goog.require('os.ui.im.ImportManager');
+const {default: FeatureImporter} = goog.requireType('os.im.FeatureImporter');
+const {default: FileParserConfig} = goog.requireType('os.parse.FileParserConfig');
 const {default: GeoJSONParser} = goog.requireType('plugin.file.geojson.GeoJSONParser');
+
 
 /**
  */
@@ -23,7 +24,7 @@ export default class GeoJSONLayerConfig extends AbstractDataSourceLayerConfig {
     super();
 
     /**
-     * @type {os.parse.FileParserConfig}
+     * @type {FileParserConfig}
      * @protected
      */
     this.parserConfig = new GeoJSONParserConfig();

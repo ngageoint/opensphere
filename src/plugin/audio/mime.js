@@ -1,10 +1,11 @@
 goog.declareModuleId('plugin.audio.mime');
 
-const Promise = goog.require('goog.Promise');
-const mime = goog.require('os.file.mime');
-const mimeText = goog.require('os.file.mime.text');
+import * as mime from '../../os/file/mime.js';
+import * as mimeText from '../../os/file/mime/text.js';
 
-const OSFile = goog.requireType('os.file.File');
+const Promise = goog.require('goog.Promise');
+
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**

@@ -1,14 +1,15 @@
-goog.module('os.ui.filter.op.GreaterThan');
+goog.declareModuleId('os.ui.filter.op.GreaterThan');
+
+import {quoteString} from '../filterstring.js';
+import Op from './op.js';
 
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const Op = goog.require('os.ui.filter.op.Op');
-const {quoteString} = goog.require('os.ui.filter.string');
 
 
 /**
  * A 'PropertyIsGreaterThan' operation class.
  */
-class GreaterThan extends Op {
+export default class GreaterThan extends Op {
   /**
    * Constructor.
    */
@@ -28,5 +29,3 @@ class GreaterThan extends Op {
     return '';
   }
 }
-
-exports = GreaterThan;

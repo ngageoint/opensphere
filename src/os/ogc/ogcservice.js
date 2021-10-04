@@ -1,22 +1,23 @@
-goog.module('os.ogc.OGCService');
+goog.declareModuleId('os.ogc.OGCService');
+
+import OSSettings from '../config/settings.js';
+import * as geo2 from '../geo/geo2.js';
+import Request from '../net/request.js';
+import * as OSFeature from '../ol/feature.js';
+import AbstractService from '../ui/abstractservice.js';
+import GMLParser from '../ui/file/gml/gmlparser.js';
+import {loadXml} from '../xml.js';
+import OGCFilterModifier from './filter/ogcfiltermodifier.js';
+import OGCFilterOverride from './filter/ogcfilteroverride.js';
+import Format from './format.js';
+import {getDefaultWfsParams, getException} from './ogc.js';
+import OGCQuery from './query/ogcquery.js';
+import {formatPolygon, readKMLGeometry} from './spatial.js';
+import WFSFormatter from './wfs/wfsformatter.js';
 
 const GoogPromise = goog.require('goog.Promise');
 const Uri = goog.require('goog.Uri');
 const GeoJSON = goog.require('ol.format.GeoJSON');
-const Request = goog.require('os.net.Request');
-const OGCFilterModifier = goog.require('os.ogc.filter.OGCFilterModifier');
-const OGCFilterOverride = goog.require('os.ogc.filter.OGCFilterOverride');
-const WFSFormatter = goog.require('os.ogc.wfs.WFSFormatter');
-const OSFeature = goog.require('os.ol.feature');
-const AbstractService = goog.require('os.ui.AbstractService');
-const GMLParser = goog.require('os.ui.file.gml.GMLParser');
-const geo2 = goog.require('os.geo2');
-const {getDefaultWfsParams, getException} = goog.require('os.ogc');
-const {formatPolygon, readKMLGeometry} = goog.require('os.ogc.spatial');
-const Format = goog.require('os.ogc.spatial.Format');
-const OGCQuery = goog.require('os.ogc.query.OGCQuery');
-const OSSettings = goog.require('os.config.Settings');
-const {loadXml} = goog.require('os.xml');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -36,7 +37,7 @@ const DEFAULT_ID_FIELD = 'NAME';
  * Provides a service to get a data from a WFS layer.
  * @template T
  */
-class OGCService extends AbstractService {
+export default class OGCService extends AbstractService {
   /**
    * Constructor.
    */
@@ -395,5 +396,3 @@ class OGCService extends AbstractService {
     }
   }
 }
-
-exports = OGCService;

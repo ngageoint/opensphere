@@ -1,12 +1,12 @@
-goog.module('os.ui.node.AreaNodeUI');
+goog.declareModuleId('os.ui.node.AreaNodeUI');
 
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const BaseAreaManager = goog.require('os.query.BaseAreaManager');
-const Module = goog.require('os.ui.Module');
-const AreaRemove = goog.require('os.ui.query.cmd.AreaRemove');
-const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
+import CommandProcessor from '../../command/commandprocessor.js';
+import BaseAreaManager from '../../query/baseareamanager.js';
+import Module from '../module.js';
+import AreaRemove from '../query/cmd/arearemovecmd.js';
+import AbstractNodeUICtrl from '../slick/abstractnodeui.js';
 
-const AreaNode = goog.requireType('os.data.AreaNode');
+const {default: AreaNode} = goog.requireType('os.data.AreaNode');
 
 
 /**
@@ -14,7 +14,7 @@ const AreaNode = goog.requireType('os.data.AreaNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
@@ -32,7 +32,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'areanodeui';
+export const directiveTag = 'areanodeui';
 
 /**
  * Add the directive to the module
@@ -43,7 +43,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for selected/highlighted node UI
  * @unrestricted
  */
-class Controller extends AbstractNodeUICtrl {
+export class Controller extends AbstractNodeUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -90,9 +90,3 @@ class Controller extends AbstractNodeUICtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

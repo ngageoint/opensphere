@@ -5,7 +5,7 @@ goog.require('os.file.mime.text');
 goog.require('os.file.mime.xml');
 
 describe('os.file.mime.xml', function() {
-  const OSFile = goog.module.get('os.file.File');
+  const {default: OSFile} = goog.module.get('os.file.File');
   const mime = goog.module.get('os.file.mime');
   const text = goog.module.get('os.file.mime.text');
   const xml = goog.module.get('os.file.mime.xml');

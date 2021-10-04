@@ -1,16 +1,17 @@
-goog.module('os.annotation.FeatureAnnotation');
+goog.declareModuleId('os.annotation.FeatureAnnotation');
+
+import {getMapContainer} from '../map/mapinstance.js';
+import * as ui from '../ui/ui.js';
+import WebGLOverlay from '../webgl/webgloverlay.js';
+import AbstractAnnotation from './abstractannotation.js';
+import {OPTIONS_FIELD} from './annotation.js';
+import {directiveTag as annotationUi} from './featureannotationui.js';
 
 const {getUid} = goog.require('ol');
 const OverlayPositioning = goog.require('ol.OverlayPositioning');
 const {listen, unlisten} = goog.require('ol.events');
 const EventType = goog.require('ol.events.EventType');
 const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
-const {getMapContainer} = goog.require('os.map.instance');
-const {OPTIONS_FIELD} = goog.require('os.annotation');
-const AbstractAnnotation = goog.require('os.annotation.AbstractAnnotation');
-const {directiveTag: annotationUi} = goog.require('os.annotation.FeatureAnnotationUI');
-const ui = goog.require('os.ui');
-const WebGLOverlay = goog.require('os.webgl.WebGLOverlay');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -18,7 +19,7 @@ const Feature = goog.requireType('ol.Feature');
 /**
  * An annotation tied to an OpenLayers feature.
  */
-class FeatureAnnotation extends AbstractAnnotation {
+export default class FeatureAnnotation extends AbstractAnnotation {
   /**
    * Constructor.
    * @param {!Feature} feature The OpenLayers feature.
@@ -165,5 +166,3 @@ class FeatureAnnotation extends AbstractAnnotation {
     this.setVisibleInternal();
   }
 }
-
-exports = FeatureAnnotation;

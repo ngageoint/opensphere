@@ -1,16 +1,16 @@
-goog.module('os.time.TimeRangePresets');
+goog.declareModuleId('os.time.TimeRangePresets');
 
-const VariableReplacer = goog.require('os.net.VariableReplacer');
-const time = goog.require('os.time');
-const TimeRange = goog.require('os.time.TimeRange');
-const TimelineController = goog.require('os.time.TimelineController');
+import VariableReplacer from '../net/variablereplacer.js';
+import * as time from './time.js';
+import TimelineController from './timelinecontroller.js';
+import TimeRange from './timerange.js';
 
 
 /**
  * Time range presets for relative times
  * @enum {string}
  */
-const RANGES = {
+export const RANGES = {
   TIMELINE: 'Timeline',
   LAST24: 'Last 24 Hours',
   LAST48: 'Last 48 Hours',
@@ -33,7 +33,7 @@ const RANGES = {
  * @param {!string} range
  * @return {TimeRange}
  */
-const getDateFromRange = function(range) {
+export const getDateFromRange = function(range) {
   var now = new Date();
   var begin;
   var end;
@@ -114,15 +114,9 @@ const getDateFromRange = function(range) {
  * @param {string} str The total string
  * @return {string} The replacement
  */
-const replaceTime = function(match, p1, offset, str) {
+export const replaceTime = function(match, p1, offset, str) {
   var parts = VariableReplacer.getParts(p1);
   var range = getDateFromRange(parts[1]);
   var date = new Date(parts[0] == 'start' ? range.getStart() : range.getEnd());
   return time.momentFormat(date, parts[2] || time.DEFAULT_TIME_FORMAT, true);
-};
-
-exports = {
-  RANGES,
-  getDateFromRange,
-  replaceTime
 };

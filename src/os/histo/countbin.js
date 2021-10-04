@@ -1,12 +1,12 @@
-goog.module('os.data.CountBin');
+goog.declareModuleId('os.data.CountBin');
 
-const ColorBin = goog.require('os.data.histo.ColorBin');
+import ColorBin from '../data/histo/colorbin.js';
 
 
 /**
  * Histogram bin that only manages a count.
  */
-class CountBin extends ColorBin {
+export default class CountBin extends ColorBin {
   /**
    * Constructor.
    * @param {string} baseColor The base color of the layer represented by this bin
@@ -65,5 +65,3 @@ class CountBin extends ColorBin {
     return counts;
   }
 }
-
-exports = CountBin;

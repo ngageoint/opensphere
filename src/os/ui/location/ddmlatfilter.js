@@ -1,7 +1,7 @@
-goog.module('os.ui.location.ddmLatFilter');
+goog.declareModuleId('os.ui.location.ddmLatFilter');
 
-const {toDegreesDecimalMinutes} = goog.require('os.geo');
-const Module = goog.require('os.ui.Module');
+import {toDegreesDecimalMinutes} from '../../geo/geo.js';
+import Module from '../module.js';
 
 
 /**
@@ -24,4 +24,4 @@ const filter = () => /** @type {angular.Filter} */ (filterFn);
  */
 Module.filter('ddmlat', [filter]);
 
-exports = filterFn;
+export default filterFn;

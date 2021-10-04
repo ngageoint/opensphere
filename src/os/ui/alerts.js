@@ -1,12 +1,14 @@
-goog.module('os.ui.alert.AlertsUI');
+goog.declareModuleId('os.ui.alert.AlertsUI');
 
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const AlertManager = goog.require('os.alert.AlertManager');
-const EventType = goog.require('os.alert.EventType');
-const Settings = goog.require('os.config.Settings');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
+import AlertManager from '../alert/alertmanager.js';
+import EventType from '../alert/eventtype.js';
+import Settings from '../config/settings.js';
+import * as dispatcher from '../dispatcher.js';
+import {ROOT} from '../os.js';
+import Module from './module.js';
+import {apply} from './ui.js';
+
+const {default: AlertEvent} = goog.requireType('os.alert.AlertEvent');
 
 
 /**
@@ -14,7 +16,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: true,
@@ -27,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'alerts';
+export const directiveTag = 'alerts';
 
 /**
  * Add the directive to the module
@@ -38,7 +40,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the AlertViewer directive.  Will be instantiated by angular upon directive creation.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -83,7 +85,7 @@ class Controller {
   /**
    * Registers received alerts and tests to see if we have received a flood
    *
-   * @param {os.alert.AlertEvent} event The event to register
+   * @param {AlertEvent} event The event to register
    * @private
    */
   registerAlert_(event) {
@@ -125,9 +127,3 @@ class Controller {
     dispatcher.getInstance().dispatchEvent(type);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

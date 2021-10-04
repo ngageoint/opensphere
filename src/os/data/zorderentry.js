@@ -1,8 +1,8 @@
-goog.module('os.data.ZOrderEntry');
+goog.declareModuleId('os.data.ZOrderEntry');
 
 /**
  * @typedef {{id: string, time: number}}
  */
 let ZOrderEntry;
 
-exports = ZOrderEntry;
+export default ZOrderEntry;

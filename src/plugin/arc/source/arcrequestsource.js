@@ -1,11 +1,12 @@
 goog.declareModuleId('plugin.arc.source.ArcRequestSource');
 
+import Request from '../../../os/net/request.js';
+import registerClass from '../../../os/registerclass.js';
+import RequestSource from '../../../os/source/requestsource.js';
+
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
 const EventType = goog.require('goog.net.EventType');
-const Request = goog.require('os.net.Request');
-const registerClass = goog.require('os.registerClass');
-const RequestSource = goog.require('os.source.Request');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');

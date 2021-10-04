@@ -6,7 +6,7 @@ goog.require('os.ogc.wfs.DescribeFeatureTypeParser');
 describe('os.ogc.wfs.DescribeFeatureTypeParser', function() {
   const EventType = goog.module.get('goog.net.EventType');
   const XhrIo = goog.module.get('goog.net.XhrIo');
-  const DescribeFeatureTypeParser = goog.module.get('os.ogc.wfs.DescribeFeatureTypeParser');
+  const {default: DescribeFeatureTypeParser} = goog.module.get('os.ogc.wfs.DescribeFeatureTypeParser');
 
   var dftUrl = '/base/test/os/ogc/wfs/dft.xml';
   var errorUrl = '/base/test/os/ogc/wfs/dftError.xml';

@@ -1,11 +1,11 @@
-goog.module('os.hist.IHistogramData');
+goog.declareModuleId('os.hist.IHistogramData');
 
 /**
  * Interface that should be implemented by all histogram data classes.
  *
  * @interface
  */
-class IHistogramData {
+export default class IHistogramData {
   /**
    * Get the color of the histogram.
    * @return {string}
@@ -42,5 +42,3 @@ class IHistogramData {
    */
   setOptions(value) {}
 }
-
-exports = IHistogramData;

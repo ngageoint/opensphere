@@ -4,11 +4,9 @@ goog.require('plugin.arc.layer.ArcLayerDescriptor');
 
 
 describe('plugin.arc.layer.ArcLayerDescriptor', function() {
-  const LayerType = goog.module.get('os.layer.LayerType');
-  const Icons = goog.module.get('os.ui.Icons');
-  const {
-    default: ArcLayerDescriptor
-  } = goog.module.get('plugin.arc.layer.ArcLayerDescriptor');
+  const {default: LayerType} = goog.module.get('os.layer.LayerType');
+  const {default: Icons} = goog.module.get('os.ui.Icons');
+  const {default: ArcLayerDescriptor} = goog.module.get('plugin.arc.layer.ArcLayerDescriptor');
 
   var config = {
     'name': 'My Little Arc Layer',

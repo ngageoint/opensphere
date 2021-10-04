@@ -1,7 +1,7 @@
-goog.module('os.command.LayerRemove');
+goog.declareModuleId('os.command.LayerRemove');
 
-const AbstractLayer = goog.require('os.command.AbstractLayer');
-const State = goog.require('os.command.State');
+import AbstractLayer from './abstractlayercmd.js';
+import State from './state.js';
 
 
 /**
@@ -10,7 +10,7 @@ const State = goog.require('os.command.State');
  * This should only be used for layers that do not have a descriptor. Layers will a synchronized descriptor should use
  * {@link os.data.DeactivateDescriptor} instead.
  */
-class LayerRemove extends AbstractLayer {
+export default class LayerRemove extends AbstractLayer {
   /**
    * Constructor.
    * @param {Object.<string, *>} options The configuration for the map layer.
@@ -50,5 +50,3 @@ class LayerRemove extends AbstractLayer {
     return false;
   }
 }
-
-exports = LayerRemove;

@@ -1,17 +1,17 @@
-goog.module('os.ui.layer.VectorStyleControlsUI');
+goog.declareModuleId('os.ui.layer.VectorStyleControlsUI');
 
-goog.require('os.ui.SliderUI');
-goog.require('os.ui.icon.IconPickerUI');
+import '../icon/iconpicker.js';
+import '../slider.js';
+import DataManager from '../../data/datamanager.js';
+import IMappingDescriptor from '../../data/imappingdescriptor.js';
+import osImplements from '../../implements.js';
+import {ROOT} from '../../os.js';
+import {CENTER_LOOKUP, LINE_STYLE_OPTIONS, ShapeType, dashPatternToOptions} from '../../style/style.js';
+import Module from '../module.js';
+import * as EllipseColumnsUI from './ellipsecolumns.js';
+import VectorStyleControlsEventType from './vectorstylecontrolseventtype.js';
 
 const Disposable = goog.require('goog.Disposable');
-const {ROOT} = goog.require('os');
-const DataManager = goog.require('os.data.DataManager');
-const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
-const osImplements = goog.require('os.implements');
-const {CENTER_LOOKUP, LINE_STYLE_OPTIONS, ShapeType, dashPatternToOptions} = goog.require('os.style');
-const Module = goog.require('os.ui.Module');
-const EllipseColumnsUI = goog.require('os.ui.layer.EllipseColumnsUI');
-const VectorStyleControlsEventType = goog.require('os.ui.layer.VectorStyleControlsEventType');
 
 const {styleLineDashOption} = goog.requireType('os.style');
 
@@ -21,7 +21,7 @@ const {styleLineDashOption} = goog.requireType('os.style');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -55,7 +55,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'vectorstylecontrols';
+export const directiveTag = 'vectorstylecontrols';
 
 /**
  * Add the directive to the module.
@@ -66,7 +66,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the vectorstylecontrols directive.
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -274,9 +274,3 @@ class Controller extends Disposable {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

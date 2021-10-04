@@ -18,8 +18,8 @@ goog.require('plugin.ogc.wfs.WFSLayerConfig');
 goog.require('plugin.ogc.wms.WMSLayerConfig');
 
 describe('plugin.basemap.v4.BaseMapState', function() {
-  const StateManager = goog.module.get('os.state.StateManager');
-  const StateVersions = goog.module.get('os.state.Versions');
+  const {default: StateManager} = goog.module.get('os.state.StateManager');
+  const {default: StateVersions} = goog.module.get('os.state.Versions');
   const {setStateManager} = goog.module.get('os.state.instance');
   const xml = goog.module.get('os.xml');
   const basemap = goog.module.get('plugin.basemap');

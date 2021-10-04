@@ -1,16 +1,15 @@
-goog.module('os.ui.column.mapping.MappingExpressionUI');
+goog.declareModuleId('os.ui.column.mapping.MappingExpressionUI');
 
-goog.require('os.ui.layer.LayerPickerUI');
+import '../../layer/layerpicker.js';
+import {ROOT} from '../../../os.js';
+import DataType from '../../../xsd.js';
+import Module from '../../module.js';
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const DataType = goog.require('os.xsd.DataType');
-
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const IFilterable = goog.requireType('os.filter.IFilterable');
-const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
-const ColumnModelNode = goog.requireType('os.ui.column.mapping.ColumnModelNode');
-const IOGCDescriptor = goog.requireType('os.ui.ogc.IOGCDescriptor');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: IFilterable} = goog.requireType('os.filter.IFilterable');
+const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
+const {default: ColumnModelNode} = goog.requireType('os.ui.column.mapping.ColumnModelNode');
+const {default: IOGCDescriptor} = goog.requireType('os.ui.ogc.IOGCDescriptor');
 
 
 /**
@@ -18,7 +17,7 @@ const IOGCDescriptor = goog.requireType('os.ui.ogc.IOGCDescriptor');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -33,7 +32,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'mappingexpression';
+export const directiveTag = 'mappingexpression';
 
 /**
  * Add the directive to the module
@@ -44,7 +43,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the mappingexpression directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -221,9 +220,3 @@ class Controller {
     return '';
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

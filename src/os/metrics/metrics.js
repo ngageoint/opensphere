@@ -1,4 +1,11 @@
-goog.module('os.metrics.Metrics');
+goog.declareModuleId('os.metrics.Metrics');
+
+import * as config from '../config/config.js';
+import {getSettings} from '../config/configinstance.js';
+import SettingChangeEvent from '../events/settingchangeevent.js';
+import {setValue} from '../object/object.js';
+import GraphiteMetricsProvider from './graphitemetricsprovider.js';
+import {MAX_REGEXP, MIN_REGEXP, SUB_REGEX, MetricsEventType} from './index.js';
 
 const {getDocument} = goog.require('goog.dom');
 const {listen} = goog.require('goog.events');
@@ -7,21 +14,15 @@ const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const {getValueByKeys} = goog.require('goog.object');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const config = goog.require('os.config');
-const {MAX_REGEXP, MIN_REGEXP, SUB_REGEX, MetricsEventType} = goog.require('os.metrics');
-const {getSettings} = goog.require('os.config.instance');
-const SettingChangeEvent = goog.require('os.events.SettingChangeEvent');
-const GraphiteMetricsProvider = goog.require('os.metrics.GraphiteMetricsProvider');
-const {set} = goog.require('os.object');
 
 const Logger = goog.requireType('goog.log.Logger');
-const IMetricServiceProvider = goog.requireType('os.metrics.IMetricServiceProvider');
+const {default: IMetricServiceProvider} = goog.requireType('os.metrics.IMetricServiceProvider');
 
 
 /**
  * Maintains all application metrics for a user.
  */
-class Metrics extends EventTarget {
+export default class Metrics extends EventTarget {
   /**
    * Constructor.
    */
@@ -265,7 +266,7 @@ class Metrics extends EventTarget {
         }
 
         if (value != temp) {
-          set(this.allMetrics_, keys, value);
+          setValue(this.allMetrics_, keys, value);
 
           // strip off the delimiter since it isn't used to track feature usage
           var eventType = keys.join('.').replace(SUB_REGEX, '');
@@ -337,5 +338,3 @@ const logger = log.getLogger('os.metrics.Metrics');
  * @const
  */
 Metrics.STORAGE_KEY = 'metrics.values';
-
-exports = Metrics;

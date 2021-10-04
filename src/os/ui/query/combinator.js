@@ -1,20 +1,17 @@
-goog.module('os.ui.query.CombinatorUI');
+goog.declareModuleId('os.ui.query.CombinatorUI');
 
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const {getTitle} = goog.require('os.layer');
-const {getMapContainer} = goog.require('os.map.instance');
-const {sanitizeId} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const FilterEventType = goog.require('os.ui.filter.FilterEventType');
-const {
-  Controller: BaseCombinatorCtrl,
-  directive: baseCombinatorDirective
-} = goog.require('os.ui.query.BaseCombinatorUI');
-const FilterAdd = goog.require('os.ui.query.cmd.FilterAdd');
-const FilterRemove = goog.require('os.ui.query.cmd.FilterRemove');
-const {bringToFront, create, exists} = goog.require('os.ui.window');
+import CommandProcessor from '../../command/commandprocessor.js';
+import SequenceCommand from '../../command/sequencecommand.js';
+import LayerEventType from '../../events/layereventtype.js';
+import {getTitle} from '../../layer/layer.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import FilterEventType from '../filter/filtereventtype.js';
+import Module from '../module.js';
+import {sanitizeId} from '../ui.js';
+import {bringToFront, create, exists} from '../window.js';
+import {Controller as BaseCombinatorCtrl, directive as baseCombinatorDirective} from './basecombinator.js';
+import FilterAdd from './cmd/filteraddcmd.js';
+import FilterRemove from './cmd/filterremovecmd.js';
 
 
 /**
@@ -22,7 +19,7 @@ const {bringToFront, create, exists} = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = baseCombinatorDirective();
   dir.controller = Controller;
   return dir;
@@ -32,7 +29,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'combinator';
+export const directiveTag = 'combinator';
 
 /**
  * Add the directive to the module
@@ -43,7 +40,7 @@ Module.directive(directiveTag, [directive]);
  * The controller for the combinator window. This implements the combinator's interface with the map container.
  * @unrestricted
  */
-class Controller extends BaseCombinatorCtrl {
+export class Controller extends BaseCombinatorCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -137,7 +134,7 @@ class Controller extends BaseCombinatorCtrl {
 /**
  * Launches the filter/combinator dialog if it is not already open.
  */
-const launch = () => {
+export const launch = () => {
   var label = 'Advanced';
   var openWindows = angular.element('div[label="' + label + '"].window');
 
@@ -174,7 +171,7 @@ const launch = () => {
  * @param {string} layerId Layer ID for the combinator
  * @param {string=} opt_layerName Optional name to include
  */
-const launchForLayer = (layerId, opt_layerName) => {
+export const launchForLayer = (layerId, opt_layerName) => {
   var label = 'Filters';
   var windowId = sanitizeId('filters-' + layerId);
 
@@ -215,12 +212,4 @@ const launchForLayer = (layerId, opt_layerName) => {
   } else {
     bringToFront(windowId);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launch,
-  launchForLayer
 };

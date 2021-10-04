@@ -1,24 +1,26 @@
-goog.module('os.unit.UnitManager');
+goog.declareModuleId('os.unit.UnitManager');
+
+import Settings from '../config/settings.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import {UNITS, UnitSystem} from './unit.js';
+import UnitChange from './unitchange.js';
+import UnitFactory from './unitfactory.js';
 
 const googArray = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
-const Settings = goog.require('os.config.Settings');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {UNITS, UnitSystem} = goog.require('os.unit');
-const UnitChange = goog.require('os.unit.UnitChange');
-const UnitFactory = goog.require('os.unit.UnitFactory');
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
 
-const IMultiplier = goog.requireType('os.unit.IMultiplier');
-const IUnit = goog.requireType('os.unit.IUnit');
-const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
+
+const {default: IMultiplier} = goog.requireType('os.unit.IMultiplier');
+const {default: IUnit} = goog.requireType('os.unit.IUnit');
 
 
 /**
  * Handles conversion between unit systems (metric, imperial, etc)
  * Provides formatting convenience functions
  */
-class UnitManager extends EventTarget {
+export default class UnitManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -252,6 +254,3 @@ goog.addSingletonGetter(UnitManager);
  * @const
  */
 UnitManager.LOGGER_ = log.getLogger('os.unit.UnitManager');
-
-
-exports = UnitManager;

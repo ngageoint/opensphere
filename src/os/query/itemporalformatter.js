@@ -1,6 +1,6 @@
-goog.module('os.query.ITemporalFormatter');
+goog.declareModuleId('os.query.ITemporalFormatter');
 
-const TimelineController = goog.requireType('os.time.TimelineController');
+const {default: TimelineController} = goog.requireType('os.time.TimelineController');
 
 
 /**
@@ -8,7 +8,7 @@ const TimelineController = goog.requireType('os.time.TimelineController');
  *
  * @interface
  */
-class ITemporalFormatter {
+export default class ITemporalFormatter {
   /**
    * Format the start/end date of the timeline controller.
    * @param {TimelineController} controller
@@ -16,5 +16,3 @@ class ITemporalFormatter {
    */
   format(controller) {}
 }
-
-exports = ITemporalFormatter;

@@ -1,12 +1,53 @@
-goog.module('os.ui.FeatureEditUI');
+goog.declareModuleId('os.ui.FeatureEditUI');
 
-goog.require('os.ui.ListUI');
-goog.require('os.ui.geo.PositionUI');
-goog.require('os.ui.geo.RingOptionsUI');
-goog.require('os.ui.layer.LabelControlsUI');
-goog.require('os.ui.layer.VectorStyleControlsUI');
-goog.require('os.ui.text.TuiEditorUI');
-goog.require('os.ui.util.ValidationMessageUI');
+import './geo/position.js';
+import './geo/ringoptions.js';
+import './layer/labelcontrols.js';
+import './layer/vectorstylecontrols.js';
+import './listui.js';
+import './text/tuieditorui.js';
+import './util/validationmessage.js';
+import EventType from '../action/eventtype.js';
+import {EventType as AnnotationEventType} from '../annotation/annotation.js';
+import {normalizeOpacity, toHexString, toRgbArray} from '../color.js';
+import ColumnDefinition from '../data/columndefinition.js';
+import RecordField from '../data/recordfield.js';
+import * as dispatcher from '../dispatcher.js';
+import {getFunctionalExtent} from '../extent.js';
+import DynamicFeature from '../feature/dynamicfeature.js';
+import * as osFeature from '../feature/feature.js';
+import Fields from '../fields/fields.js';
+import {ModifyEventType} from '../interaction/interaction.js';
+import Modify from '../interaction/modifyinteraction.js';
+import * as interpolate from '../interpolate.js';
+import * as osMap from '../map/map.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {convertUnits} from '../math/math.js';
+import Units from '../math/units.js';
+import {merge, unsafeClone} from '../object/object.js';
+import {ROOT} from '../os.js';
+import {EPSG4326} from '../proj/proj.js';
+import {DEFAULT_SIZE, cloneConfig} from '../style/label.js';
+import * as osStyle from '../style/style.js';
+import StyleField from '../style/stylefield.js';
+import StyleType from '../style/styletype.js';
+import TimeInstant from '../time/timeinstant.js';
+import TimeRange from '../time/timerange.js';
+import AltitudeMode from '../webgl/altitudemode.js';
+import {mapAltitudeModeToName} from '../webgl/webgl.js';
+import * as AnyDateUI from './datetime/anydate.js';
+import AnyDateType from './datetime/anydatetype.js';
+import FeatureEditField from './featureeditfield.js';
+import {GOOGLE_EARTH_ICON_SET, getDefaultIcon, replaceGoogleUri} from './file/kml/kml.js';
+import {getRingTitle} from './geo/geo.js';
+import PositionEventType from './geo/positioneventtype.js';
+import IconPickerEventType from './icon/iconpickereventtype.js';
+import LabelControlsEventType from './layer/labelcontrolseventtype.js';
+import Module from './module.js';
+import * as TuiEditor from './text/tuieditor.js';
+import * as osWindow from './window.js';
+import WindowEventType from './windoweventtype.js';
+import windowSelector from './windowselector.js';
 
 const Disposable = goog.require('goog.Disposable');
 const {assert} = goog.require('goog.asserts');
@@ -28,56 +69,15 @@ const GeometryType = goog.require('ol.geom.GeometryType');
 const Point = goog.require('ol.geom.Point');
 const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
 const {transform} = goog.require('ol.proj');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const Fields = goog.require('os.Fields');
-const EventType = goog.require('os.action.EventType');
-const {EventType: AnnotationEventType} = goog.require('os.annotation');
-const {normalizeOpacity, toHexString, toRgbArray} = goog.require('os.color');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const RecordField = goog.require('os.data.RecordField');
-const {getFunctionalExtent} = goog.require('os.extent');
-const osFeature = goog.require('os.feature');
-const DynamicFeature = goog.require('os.feature.DynamicFeature');
-const {ModifyEventType} = goog.require('os.interaction');
-const Modify = goog.require('os.interaction.Modify');
-const interpolate = goog.require('os.interpolate');
-const osMap = goog.require('os.map');
-const {getMapContainer} = goog.require('os.map.instance');
-const {convertUnits} = goog.require('os.math');
-const Units = goog.require('os.math.Units');
-const {merge, unsafeClone} = goog.require('os.object');
-const {EPSG4326} = goog.require('os.proj');
-const osStyle = goog.require('os.style');
-const StyleField = goog.require('os.style.StyleField');
-const StyleType = goog.require('os.style.StyleType');
-const {DEFAULT_SIZE, cloneConfig} = goog.require('os.style.label');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const TimeRange = goog.require('os.time.TimeRange');
-const FeatureEditField = goog.require('os.ui.FeatureEditField');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const AnyDateType = goog.require('os.ui.datetime.AnyDateType');
-const AnyDateUI = goog.require('os.ui.datetime.AnyDateUI');
-const {GOOGLE_EARTH_ICON_SET, getDefaultIcon, replaceGoogleUri} = goog.require('os.ui.file.kml');
-const {getRingTitle} = goog.require('os.ui.geo');
-const PositionEventType = goog.require('os.ui.geo.PositionEventType');
-const IconPickerEventType = goog.require('os.ui.icon.IconPickerEventType');
-const LabelControlsEventType = goog.require('os.ui.layer.LabelControlsEventType');
-const TuiEditor = goog.require('os.ui.text.TuiEditor');
-const osWindow = goog.require('os.ui.window');
-const windowSelector = goog.require('os.ui.windowSelector');
-const {mapAltitudeModeToName} = goog.require('os.webgl');
-const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
 const VectorLayer = goog.requireType('ol.layer.Vector');
-const PayloadEvent = goog.requireType('os.events.PayloadEvent');
-const Method = goog.requireType('os.interpolate.Method');
+const {default: PayloadEvent} = goog.requireType('os.events.PayloadEvent');
+const {default: Method} = goog.requireType('os.interpolate.Method');
 const {LabelConfig} = goog.requireType('os.style.label');
-const AnyDateHelp = goog.requireType('os.ui.datetime.AnyDateHelp');
+const {default: AnyDateHelp} = goog.requireType('os.ui.datetime.AnyDateHelp');
 
 
 /**
@@ -85,7 +85,7 @@ const AnyDateHelp = goog.requireType('os.ui.datetime.AnyDateHelp');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -98,7 +98,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'featureedit';
+export const directiveTag = 'featureedit';
 
 /**
  * Add the directive to the module.
@@ -120,7 +120,7 @@ let FeatureEditOptions;
  * Controller function for the featureedit directive
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -1946,7 +1946,7 @@ Controller.HIDE_GEOMETRY = '__hidden__';
  *
  * @param {!FeatureEditOptions} options
  */
-const launchFeatureEdit = function(options) {
+export const launchFeatureEdit = function(options) {
   var windowId = 'featureEdit';
   if (osWindow.exists(windowId)) {
     osWindow.bringToFront(windowId);
@@ -1976,11 +1976,4 @@ const launchFeatureEdit = function(options) {
     var template = `<${directiveTag}></${directiveTag}>`;
     osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchFeatureEdit
 };

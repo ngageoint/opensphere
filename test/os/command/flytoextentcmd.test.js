@@ -5,7 +5,7 @@ goog.require('os.map');
 
 describe('os.command.FlyToExtent', function() {
   const olExtent = goog.module.get('ol.extent');
-  const FlyToExtent = goog.module.get('os.command.FlyToExtent');
+  const {default: FlyToExtent} = goog.module.get('os.command.FlyToExtent');
   const osMap = goog.module.get('os.map');
 
   it('initializes parameters correctly', function() {

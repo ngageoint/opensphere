@@ -1,4 +1,21 @@
-goog.module('os.config.Settings');
+goog.declareModuleId('os.config.Settings');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertEventTypes from '../alert/alerteventtypes.js';
+import AlertManager from '../alert/alertmanager.js';
+import SettingChangeEvent from '../events/settingchangeevent.js';
+import Metrics from '../metrics/metrics.js';
+import {Settings as SettingsMetrics} from '../metrics/metricskeys.js';
+import * as osObject from '../object/object.js';
+import Peer from '../xt/peer.js';
+import {appNs, coreNs} from './config.js';
+import {getSettings, setSettings} from './configinstance.js';
+import ConfigType from './configtype.js';
+import ConfigEventType from './eventtype.js';
+import * as osConfigNamespace from './namespace.js';
+import SettingsStorageLoader from './storage/settingsstorageloader.js';
+import SettingsStorageRegistry from './storage/settingsstorageregistry.js';
+import SettingsWritableStorageType from './storage/settingswritablestoragetype.js';
 
 const Promise = goog.require('goog.Promise');
 const Timer = goog.require('goog.Timer');
@@ -10,26 +27,8 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
 
-const os = goog.require('os');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertEventTypes = goog.require('os.alert.AlertEventTypes');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {appNs, coreNs} = goog.require('os.config');
-const ConfigType = goog.require('os.config.ConfigType');
-const ConfigEventType = goog.require('os.config.EventType');
-const {getSettings, setSettings} = goog.require('os.config.instance');
-const osConfigNamespace = goog.require('os.config.namespace');
-const SettingsStorageLoader = goog.require('os.config.storage.SettingsStorageLoader');
-const SettingsStorageRegistry = goog.require('os.config.storage.SettingsStorageRegistry');
-const SettingsWritableStorageType = goog.require('os.config.storage.SettingsWritableStorageType');
-const SettingChangeEvent = goog.require('os.events.SettingChangeEvent');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Settings: SettingsMetrics} = goog.require('os.metrics.keys');
-const osObject = goog.require('os.object');
-const Peer = goog.require('os.xt.Peer');
-
-const IMessageHandler = goog.requireType('os.xt.IMessageHandler');
-const PeerInfo = goog.requireType('os.xt.PeerInfo');
+const {default: IMessageHandler} = goog.requireType('os.xt.IMessageHandler');
+const {default: PeerInfo} = goog.requireType('os.xt.PeerInfo');
 
 
 /**
@@ -50,7 +49,7 @@ let SettingsMessage;
  *
  * @implements {IMessageHandler}
  */
-class Settings extends EventTarget {
+export default class Settings extends EventTarget {
   /**
    * Constructor.
    */
@@ -604,7 +603,7 @@ class Settings extends EventTarget {
               !this.storageRegistry_.hasRemoteStorage) {
             this.set(Settings.WRITE_STORAGE_KEY, SettingsWritableStorageType.LOCAL, true);
           } else {
-            osObject.delete(this.mergedConfig_, ['storage', 'writeType']);
+            osObject.deleteValue(this.mergedConfig_, ['storage', 'writeType']);
             this.set(Settings.WRITE_STORAGE_KEY, type, true);
           }
 
@@ -710,19 +709,19 @@ class Settings extends EventTarget {
         value = osObject.unsafeClone(value);
       }
 
-      osObject.set(this.mergedConfig_, keys, value);
+      osObject.setValue(this.mergedConfig_, keys, value);
 
       var isAdminKey = this.isAdmin_(keys);
       var namespacedKeys = [];
 
       if (!isAdminKey) {
         namespacedKeys = osConfigNamespace.getPrefixedKeys(keys);
-        osObject.set(this.actualConfig_[ConfigType.PREFERENCE], namespacedKeys, value);
+        osObject.setValue(this.actualConfig_[ConfigType.PREFERENCE], namespacedKeys, value);
       }
 
       if (oldVal != value) {
         if (!isAdminKey) {
-          osObject.set(this.deltaConfig_, namespacedKeys, value);
+          osObject.setValue(this.deltaConfig_, namespacedKeys, value);
           this.markKeysForDelete_(keys, value, oldVal);
         }
 
@@ -746,10 +745,10 @@ class Settings extends EventTarget {
 
     var oldVal = this.get(keys);
 
-    osObject.delete(this.mergedConfig_, keys);
+    osObject.deleteValue(this.mergedConfig_, keys);
 
     var namespacedKeys = osConfigNamespace.getPrefixedKeys(keys);
-    osObject.delete(this.actualConfig_[ConfigType.PREFERENCE], namespacedKeys);
+    osObject.deleteValue(this.actualConfig_[ConfigType.PREFERENCE], namespacedKeys);
 
     if (goog.typeOf(oldVal) === 'object') {
       // delete elements of a deeply nested object
@@ -950,7 +949,6 @@ class Settings extends EventTarget {
    */
   static setInstance(value) {
     setSettings(value);
-    os.settings = value;
   }
 }
 
@@ -981,14 +979,3 @@ Settings.WRITE_STORAGE_KEY = 'storage.writeType';
  * @const {string}
  */
 Settings.WRITE_STORAGE_BACKUP_KEY = 'opensphere.config.' + Settings.WRITE_STORAGE_KEY;
-
-
-/**
- * Legacy global settings reference. This should eventually be deprecated and removed.
- * @type {!Settings}
- * @deprecated Please use os.config.Settings.getInstance() instead.
- */
-os.settings = Settings.getInstance();
-
-
-exports = Settings;

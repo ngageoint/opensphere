@@ -1,16 +1,16 @@
 goog.declareModuleId('plugin.params.menu');
 
+import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
+import AlertManager from '../../os/alert/alertmanager.js';
+import * as layerMenu from '../../os/ui/menu/layermenu.js';
 import {launchParamsEdit} from './editrequestparams.js';
 import * as pluginParams from './params.js';
 
 const asserts = goog.require('goog.asserts');
 const Layer = goog.require('ol.layer.Layer');
-const AlertManager = goog.require('os.alert.AlertManager');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const layerMenu = goog.require('os.ui.menu.layer');
 
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 
 
 /**

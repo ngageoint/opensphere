@@ -1,19 +1,21 @@
-goog.module('os.ui.column.mapping.ColumnMappingSettingsUI');
+goog.declareModuleId('os.ui.column.mapping.ColumnMappingSettingsUI');
+
+import ColumnMappingEventType from '../../../column/columnmappingeventtype.js';
+import ColumnMappingManager from '../../../column/columnmappingmanager.js';
+import {ROOT} from '../../../os.js';
+import ImportEvent from '../../im/importevent.js';
+import ImportEventType from '../../im/importeventtype.js';
+import ImportProcess from '../../im/importprocess.js';
+import Module from '../../module.js';
+import {apply} from '../../ui.js';
+import * as osWindow from '../../window.js';
+import {directiveTag as columnMappingExportUi} from './columnmappingexport.js';
+import {launchColumnMappingWindow} from './columnmappingform.js';
+import ColumnMappingNode from './columnmappingnode.js';
 
 const {defaultCompare, insert} = goog.require('goog.array');
-const {ROOT} = goog.require('os');
-const ColumnMappingEventType = goog.require('os.column.ColumnMappingEventType');
-const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const {directiveTag: columnMappingExportUi} = goog.require('os.ui.column.mapping.ColumnMappingExportUI');
-const {launchColumnMappingWindow} = goog.require('os.ui.column.mapping.ColumnMappingFormUI');
-const ColumnMappingNode = goog.require('os.ui.column.mapping.ColumnMappingNode');
-const ImportEvent = goog.require('os.ui.im.ImportEvent');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
-const ImportProcess = goog.require('os.ui.im.ImportProcess');
 
-const osWindow = goog.require('os.ui.window');
+const {default: IColumnMapping} = goog.requireType('os.column.IColumnMapping');
 
 
 /**
@@ -21,7 +23,7 @@ const osWindow = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/column/mapping/columnmappingsettings.html',
@@ -33,7 +35,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'columnmappingsettings';
+export const directiveTag = 'columnmappingsettings';
 
 /**
  * Add the directive to the os.ui module
@@ -44,7 +46,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for location settings
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -178,7 +180,7 @@ class Controller {
 /**
  * Mapping function for column mappings to nodes.
  *
- * @param {os.column.IColumnMapping} mapping
+ * @param {IColumnMapping} mapping
  * @return {ColumnMappingNode}
  */
 const mappingToNode = function(mapping) {
@@ -190,16 +192,10 @@ const mappingToNode = function(mapping) {
 /**
  * Sorting function for column mappings.
  *
- * @param {os.column.IColumnMapping} a
- * @param {os.column.IColumnMapping} b
+ * @param {IColumnMapping} a
+ * @param {IColumnMapping} b
  * @return {number}
  */
 const sortMappings = function(a, b) {
   return defaultCompare(a.getName(), b.getName());
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

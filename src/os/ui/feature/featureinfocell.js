@@ -1,18 +1,17 @@
-goog.module('os.ui.feature.FeatureInfoCellUI');
+goog.declareModuleId('os.ui.feature.FeatureInfoCellUI');
 
-goog.require('os.ui.location.SimpleLocationUI');
-
-const {ROOT} = goog.require('os');
-const Fields = goog.require('os.Fields');
-const fields = goog.require('os.fields');
-const Module = goog.require('os.ui.Module');
-const {launchPropertyInfo} = goog.require('os.ui.PropertyInfoUI');
-const ColumnActionManager = goog.require('os.ui.columnactions.ColumnActionManager');
-const SimpleColumnActionModel = goog.require('os.ui.columnactions.SimpleColumnActionModel');
-const launchColumnActionPrompt = goog.require('os.ui.columnactions.launchColumnActionPrompt');
-const FeatureInfoEvent = goog.require('os.ui.feature.FeatureInfoEvent');
-const {urlNewTabFormatter} = goog.require('os.ui.formatter');
-const {copy: copyText} = goog.require('os.ui.text');
+import '../location/simplelocation.js';
+import Fields from '../../fields/fields.js';
+import * as fields from '../../fields/index.js';
+import {ROOT} from '../../os.js';
+import ColumnActionManager from '../columnactions/columnactionmanager.js';
+import launchColumnActionPrompt from '../columnactions/launchcolumnactionprompt.js';
+import SimpleColumnActionModel from '../columnactions/simplecolumnactionmodel.js';
+import {urlNewTabFormatter} from '../formatter.js';
+import Module from '../module.js';
+import {launchPropertyInfo} from '../propertyinfo.js';
+import {copy as copyText} from '../text/text.js';
+import FeatureInfoEvent from './featureinfoevent.js';
 
 
 /**
@@ -20,7 +19,7 @@ const {copy: copyText} = goog.require('os.ui.text');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: {
     'property': '='
@@ -35,7 +34,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'featureinfocell';
+export const directiveTag = 'featureinfocell';
 
 /**
  * Add the directive to the module.
@@ -46,7 +45,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the featureinfo directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -182,9 +181,3 @@ class Controller {
     copyText(this.copyValue_);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

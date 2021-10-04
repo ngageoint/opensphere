@@ -1,9 +1,9 @@
-goog.module('os.time.TimeInstant');
+goog.declareModuleId('os.time.TimeInstant');
 
-const osImplements = goog.require('os.implements');
-const registerClass = goog.require('os.registerClass');
-const time = goog.require('os.time');
-const ITime = goog.require('os.time.ITime');
+import osImplements from '../implements.js';
+import registerClass from '../registerclass.js';
+import ITime from './itime.js';
+import * as time from './time.js';
 
 const DateLike = goog.requireType('goog.date.DateLike');
 
@@ -13,7 +13,7 @@ const DateLike = goog.requireType('goog.date.DateLike');
  *
  * @implements {ITime}
  */
-class TimeInstant {
+export default class TimeInstant {
   /**
    * Constructor.
    * @param {ITime|DateLike|string|number=} opt_time A date, string, or number with the time
@@ -158,6 +158,7 @@ class TimeInstant {
     return isNaN(v) ? 0 : Math.min(Math.max(v, TimeInstant.MIN_TIME), TimeInstant.MAX_TIME);
   }
 }
+
 osImplements(TimeInstant, ITime.ID);
 
 
@@ -186,6 +187,3 @@ TimeInstant.MIN_TIME = moment.utc('1753-01-01T00:00:00Z').valueOf();
  * @type {number}
  */
 TimeInstant.MAX_TIME = moment.utc('9999-12-31T23:59:59Z').valueOf();
-
-
-exports = TimeInstant;

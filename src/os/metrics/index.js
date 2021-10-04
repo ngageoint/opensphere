@@ -1,22 +1,19 @@
-goog.module('os.metrics');
+goog.declareModuleId('os.metrics');
+
+import {Layer as LayerKeys, Places as PlacesKeys, Servers as ServersKeys} from './metricskeys.js';
 
 const log = goog.require('goog.log');
-const {
-  Layer: LayerKeys,
-  Places: PlacesKeys,
-  Servers: ServersKeys
-} = goog.require('os.metrics.keys');
 
 const Timer = goog.requireType('goog.Timer');
 const {GradientColor} = goog.requireType('os.color');
-const IMetricServiceProvider = goog.requireType('os.metrics.IMetricServiceProvider');
+const {default: IMetricServiceProvider} = goog.requireType('os.metrics.IMetricServiceProvider');
 
 
 /**
  * Metrics events.
  * @enum {string}
  */
-const MetricsEventType = {
+export const MetricsEventType = {
   RESET: 'metrics:reset'
 };
 
@@ -25,27 +22,27 @@ const MetricsEventType = {
  * @enum {string}
  * @deprecated Please use os.metrics.keys.Layer instead.
  */
-const Layer = LayerKeys;
+export const Layer = LayerKeys;
 
 /**
  * Places metrics
  * @enum {string}
  * @deprecated Please use os.metrics.keys.Places instead.
  */
-const Places = PlacesKeys;
+export const Places = PlacesKeys;
 
 /**
  * Servers metrics
  * @enum {string}
  * @deprecated Please use os.metrics.keys.Servers instead.
  */
-const Servers = ServersKeys;
+export const Servers = ServersKeys;
 
 /**
  * Gray-orange-yellow-green gradient for metrics completion.
  * @type {Array<GradientColor>}
  */
-const METRIC_GRADIENT = [
+export const METRIC_GRADIENT = [
   {
     alpha: 1.0,
     color: [187, 187, 187],
@@ -77,13 +74,13 @@ const METRIC_GRADIENT = [
  * Delimiter used to sub-group a key.
  * @type {string}
  */
-const SUB_DELIMITER = '#';
+export const SUB_DELIMITER = '#';
 
 /**
  * Delimiter used to sub-group a key.
  * @type {RegExp}
  */
-const SUB_REGEX = new RegExp(SUB_DELIMITER + '(.*)');
+export const SUB_REGEX = new RegExp(SUB_DELIMITER + '(.*)');
 
 /**
  * Logger for os.metrics
@@ -94,12 +91,12 @@ const logger = log.getLogger('os.metrics');
 /**
  * @type {RegExp}
  */
-const MAX_REGEXP = /^max-/;
+export const MAX_REGEXP = /^max-/;
 
 /**
  * @type {RegExp}
  */
-const MIN_REGEXP = /^min-/;
+export const MIN_REGEXP = /^min-/;
 
 /**
  * Merges metrics objects, taking min/max values into account.
@@ -107,7 +104,7 @@ const MIN_REGEXP = /^min-/;
  * @param {Object} from The metrics object to merge
  * @param {Object} to The metrics object to merge into
  */
-const mergeMetrics = function(from, to) {
+export const mergeMetrics = function(from, to) {
   for (var key in from) {
     if (key in to) {
       var fval = from[key];
@@ -140,17 +137,4 @@ const mergeMetrics = function(from, to) {
       to[key] = from[key];
     }
   }
-};
-
-exports = {
-  MetricsEventType,
-  Layer,
-  Places,
-  Servers,
-  METRIC_GRADIENT,
-  SUB_DELIMITER,
-  SUB_REGEX,
-  MAX_REGEXP,
-  MIN_REGEXP,
-  mergeMetrics
 };

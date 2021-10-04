@@ -1,16 +1,16 @@
-goog.module('os.operator');
+goog.declareModuleId('os.operator');
 
 /**
  * @typedef {function(*,*):boolean}
  */
-let OpFunction;
+export let OpFunction;
 
 /**
  * @param {*} a Left hand side of the operator
  * @param {*} b Right hand side of the operator
  * @return {boolean}
  */
-const equalTo = function(a, b) {
+export const equalTo = function(a, b) {
   return a == b;
 };
 
@@ -19,7 +19,7 @@ const equalTo = function(a, b) {
  * @param {*} b Right hand side of the operator
  * @return {boolean}
  */
-const notEqualTo = function(a, b) {
+export const notEqualTo = function(a, b) {
   return a === undefined || a != b;
 };
 
@@ -28,7 +28,7 @@ const notEqualTo = function(a, b) {
  * @param {*} b Right hand side of the operator
  * @return {boolean}
  */
-const greaterThan = function(a, b) {
+export const greaterThan = function(a, b) {
   return a > b;
 };
 
@@ -37,7 +37,7 @@ const greaterThan = function(a, b) {
  * @param {*} b Right hand side of the operator
  * @return {boolean}
  */
-const greaterThanOrEqualTo = function(a, b) {
+export const greaterThanOrEqualTo = function(a, b) {
   return a >= b;
 };
 
@@ -46,7 +46,7 @@ const greaterThanOrEqualTo = function(a, b) {
  * @param {*} b Right hand side of the operator
  * @return {boolean}
  */
-const lessThan = function(a, b) {
+export const lessThan = function(a, b) {
   return a < b;
 };
 
@@ -55,7 +55,7 @@ const lessThan = function(a, b) {
  * @param {*} b Right hand side of the operator
  * @return {boolean}
  */
-const lessThanOrEqualTo = function(a, b) {
+export const lessThanOrEqualTo = function(a, b) {
   return a <= b;
 };
 
@@ -64,7 +64,7 @@ const lessThanOrEqualTo = function(a, b) {
  * @param {*} b Right hand side of the operator
  * @return {boolean}
  */
-const similarTo = function(a, b) {
+export const similarTo = function(a, b) {
   return a !== undefined && a.toString().toLowerCase().indexOf(b.toString().toLowerCase()) !== -1;
 };
 
@@ -73,15 +73,15 @@ const similarTo = function(a, b) {
  * @param {*} b Right hand side of the operator
  * @return {boolean}
  */
-const notSimilarTo = function(a, b) {
+export const notSimilarTo = function(a, b) {
   return a === undefined || a.toString().toLowerCase().indexOf(b.toString().toLowerCase()) === -1;
 };
 
 /**
  * A map of comparison operator functions to use with quick filters
- * @type {Object<string, os.operator.OpFunction>}
+ * @type {Object<string, OpFunction>}
  */
-const TYPES = {
+export const TYPES = {
   '=': equalTo,
   '!=': notEqualTo,
   '>': greaterThan,
@@ -90,17 +90,4 @@ const TYPES = {
   '<=': lessThanOrEqualTo,
   '~': similarTo,
   '!~': notSimilarTo
-};
-
-exports = {
-  equalTo,
-  notEqualTo,
-  greaterThan,
-  greaterThanOrEqualTo,
-  lessThan,
-  lessThanOrEqualTo,
-  similarTo,
-  notSimilarTo,
-  TYPES,
-  OpFunction
 };

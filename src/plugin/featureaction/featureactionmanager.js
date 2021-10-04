@@ -1,6 +1,15 @@
 goog.declareModuleId('plugin.im.action.feature.Manager');
 
+import DataManager from '../../os/data/datamanager.js';
+import DataEventType from '../../os/data/event/dataeventtype.js';
+import RecordField from '../../os/data/recordfield.js';
 import {getLayer} from '../../os/feature/feature.js';
+import ImportActionManager from '../../os/im/action/importactionmanager.js';
+import osImplements from '../../os/implements.js';
+import LayerPresetManager from '../../os/layer/preset/layerpresetmanager.js';
+import IImportSource from '../../os/source/iimportsource.js';
+import PropertyChange from '../../os/source/propertychange.js';
+import * as state from '../../os/state/state.js';
 import {updateShown} from '../../os/style/label.js';
 import {notifyStyleChange, setFeaturesStyle} from '../../os/style/style.js';
 import {ENTRY_TITLE} from './featureaction.js';
@@ -12,18 +21,13 @@ const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const events = goog.require('ol.events');
-const DataManager = goog.require('os.data.DataManager');
-const RecordField = goog.require('os.data.RecordField');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const osImplements = goog.require('os.implements');
-const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
-const IImportSource = goog.require('os.source.IImportSource');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const state = goog.require('os.state');
 
 const Feature = goog.requireType('ol.Feature');
-const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
+const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: ImportActionCallbackConfig} = goog.requireType('os.im.action.ImportActionCallbackConfig');
+const {default: ISource} = goog.requireType('os.source.ISource');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**
@@ -143,7 +147,7 @@ export default class Manager extends ImportActionManager {
   /**
    * Add a source to manager if it supports import actions.
    *
-   * @param {os.source.ISource} source The source.
+   * @param {ISource} source The source.
    * @private
    */
   addSource_(source) {
@@ -169,7 +173,7 @@ export default class Manager extends ImportActionManager {
   /**
    * Handle source added event from the data manager.
    *
-   * @param {os.data.event.DataEvent} event The data manager event.
+   * @param {DataEvent} event The data manager event.
    * @private
    */
   onSourceAdded_(event) {
@@ -181,7 +185,7 @@ export default class Manager extends ImportActionManager {
   /**
    * Handle source removed event from the data manager.
    *
-   * @param {os.data.event.DataEvent} event
+   * @param {DataEvent} event
    * @private
    */
   onSourceRemoved_(event) {
@@ -197,7 +201,7 @@ export default class Manager extends ImportActionManager {
   /**
    * Handle property change events from a source.
    *
-   * @param {os.events.PropertyChangeEvent|ol.Object.Event} event
+   * @param {PropertyChangeEvent|ol.Object.Event} event
    * @private
    */
   onSourcePropertyChange_(event) {
@@ -210,7 +214,7 @@ export default class Manager extends ImportActionManager {
       return;
     }
 
-    var source = /** @type {os.source.ISource} */ (event.target);
+    var source = /** @type {ISource} */ (event.target);
     if (source) {
       switch (p) {
         case PropertyChange.PREPROCESS_FEATURES:
@@ -253,7 +257,7 @@ export default class Manager extends ImportActionManager {
    * Consolidate results of desired notification(s) from multiple FeatureActions
    *
    * @param {ImportActionCallbackConfig} target
-   * @param {os.im.action.ImportActionCallbackConfig} source
+   * @param {ImportActionCallbackConfig} source
    * @private
    */
   static mergeNotify_(target, source) {
@@ -346,7 +350,7 @@ export default class Manager extends ImportActionManager {
       // notify that the layer needs to be updated
       var layer = getLayer(items[0]);
       if (layer) {
-        var source = /** @type {os.source.Vector} */ (layer.getSource());
+        var source = /** @type {VectorSource} */ (layer.getSource());
         if (source && config.setColor && config.color && config.color.length > 0) {
           var colors = (config.color != null) ? config.color : []; // useless assign to get past the closure compiler
           colors.forEach(([coloritems, color]) => {

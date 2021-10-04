@@ -1,4 +1,4 @@
-goog.module('os.ui.notification.NotificationManager');
+goog.declareModuleId('os.ui.notification.NotificationManager');
 
 const Promise = goog.require('goog.Promise');
 const Timer = goog.require('goog.Timer');
@@ -10,7 +10,7 @@ const GoogEventType = goog.require('goog.events.EventType');
 
 /**
  */
-class NotificationManager {
+export default class NotificationManager {
   /**
    * Constructor.
    */
@@ -337,5 +337,3 @@ class NotificationManager {
  * @type {NotificationManager|undefined}
  */
 let instance;
-
-exports = NotificationManager;

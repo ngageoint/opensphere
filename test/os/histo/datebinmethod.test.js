@@ -9,14 +9,14 @@ goog.require('os.time.TimeRange');
 
 
 describe('os.histo.DateBinMethod', function() {
-  const ColorBin = goog.module.get('os.data.histo.ColorBin');
-  const DateBinMethod = goog.module.get('os.histo.DateBinMethod');
-  const DateBinType = goog.module.get('os.histo.DateBinType');
-  const DateRangeBinType = goog.module.get('os.histo.DateRangeBinType');
+  const {default: ColorBin} = goog.module.get('os.data.histo.ColorBin');
+  const {default: DateBinMethod} = goog.module.get('os.histo.DateBinMethod');
+  const {default: DateBinType} = goog.module.get('os.histo.DateBinType');
+  const {default: DateRangeBinType} = goog.module.get('os.histo.DateRangeBinType');
   const osHistoBin = goog.module.get('os.histo.bin');
   const time = goog.module.get('os.time');
-  const TimeInstant = goog.module.get('os.time.TimeInstant');
-  const TimeRange = goog.module.get('os.time.TimeRange');
+  const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');
+  const {default: TimeRange} = goog.module.get('os.time.TimeRange');
 
   var method = new DateBinMethod();
   method.setField('field');

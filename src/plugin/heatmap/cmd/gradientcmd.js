@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.heatmap.cmd.Gradient');
 
-const AbstractStyle = goog.require('os.command.AbstractStyle');
+import AbstractStyle from '../../../os/command/abstractstylecmd.js';
 
 
 /**

@@ -4,8 +4,8 @@ goog.require('os.search.SearchEventType');
 goog.require('plugin.google.places.Search');
 
 describe('plugin.google.places.Search', function() {
-  const MapContainer = goog.module.get('os.MapContainer');
-  const Settings = goog.module.get('os.config.Settings');
+  const {default: MapContainer} = goog.module.get('os.MapContainer');
+  const {default: Settings} = goog.module.get('os.config.Settings');
   const {default: Search} = goog.module.get('plugin.google.places.Search');
 
   var url = '/google-places/text?text={s}';

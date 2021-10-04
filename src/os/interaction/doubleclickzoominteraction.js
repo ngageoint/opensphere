@@ -1,12 +1,13 @@
-goog.module('os.interaction.DoubleClickZoom');
+goog.declareModuleId('os.interaction.DoubleClickZoom');
+
+import I3DSupport from '../i3dsupport.js';
+import osImplements from '../implements.js';
+import MapContainer from '../mapcontainer.js';
 
 const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
 const {platformModifierKeyOnly} = goog.require('ol.events.condition');
 const OLDoubleClickZoom = goog.require('ol.interaction.DoubleClickZoom');
 const Interaction = goog.require('ol.interaction.Interaction');
-const I3DSupport = goog.require('os.I3DSupport');
-const MapContainer = goog.require('os.MapContainer');
-const osImplements = goog.require('os.implements');
 
 
 /**
@@ -14,7 +15,7 @@ const osImplements = goog.require('os.implements');
  *
  * @implements {I3DSupport}
  */
-class DoubleClickZoom extends OLDoubleClickZoom {
+export default class DoubleClickZoom extends OLDoubleClickZoom {
   /**
    * Constructor.
    * @param {olx.interaction.DoubleClickZoomOptions=} opt_options Options.
@@ -75,6 +76,3 @@ OLDoubleClickZoom.handleEvent = function(mapBrowserEvent) {
   }
   return !stopEvent;
 };
-
-
-exports = DoubleClickZoom;

@@ -1,8 +1,7 @@
 goog.declareModuleId('plugin.osm.nom');
 
 import * as style from '../../../os/style/style.js';
-
-const kml = goog.require('os.ui.file.kml');
+import * as kml from '../../../os/ui/file/kml/kml.js';
 
 
 /**

@@ -1,7 +1,27 @@
-goog.module('os.ui.query.area.UserAreaUI');
+goog.declareModuleId('os.ui.query.area.UserAreaUI');
 
-goog.require('os.ui.geo.PositionUI');
-goog.require('os.ui.util.ValidationMessageUI');
+import '../../geo/position.js';
+import '../../util/validationmessage.js';
+import Settings from '../../../config/settings.js';
+import RecordField from '../../../data/recordfield.js';
+import EventType from '../../../events/eventtype.js';
+import {getFunctionalExtent} from '../../../extent.js';
+import {filterFalsey} from '../../../fn/fn.js';
+import {PREFER_LON_FIRST, isRectangular, parseLatLon} from '../../../geo/geo.js';
+import {normalizeLongitude} from '../../../geo/geo2.js';
+import {buffer, validate} from '../../../geo/jsts.js';
+import GeometryField from '../../../geom/geometryfield.js';
+import * as interpolate from '../../../interpolate.js';
+import Method from '../../../interpolatemethod.js';
+import {getIMapContainer} from '../../../map/mapinstance.js';
+import {convertUnits} from '../../../math/math.js';
+import Units from '../../../math/units.js';
+import {ROOT} from '../../../os.js';
+import {PREVIEW_CONFIG} from '../../../style/style.js';
+import Module from '../../module.js';
+import {apply} from '../../ui.js';
+import {close} from '../../window.js';
+import WindowEventType from '../../windoweventtype.js';
 
 const Disposable = goog.require('goog.Disposable');
 const {equals} = goog.require('goog.array');
@@ -18,26 +38,6 @@ const {getArea} = goog.require('ol.extent');
 const GeometryType = goog.require('ol.geom.GeometryType');
 const Point = goog.require('ol.geom.Point');
 const Polygon = goog.require('ol.geom.Polygon');
-const {ROOT} = goog.require('os');
-const Settings = goog.require('os.config.Settings');
-const RecordField = goog.require('os.data.RecordField');
-const EventType = goog.require('os.events.EventType');
-const {getFunctionalExtent} = goog.require('os.extent');
-const {filterFalsey} = goog.require('os.fn');
-const {PREFER_LON_FIRST, isRectangular, parseLatLon} = goog.require('os.geo');
-const {buffer, validate} = goog.require('os.geo.jsts');
-const {normalizeLongitude} = goog.require('os.geo2');
-const GeometryField = goog.require('os.geom.GeometryField');
-const interpolate = goog.require('os.interpolate');
-const Method = goog.require('os.interpolate.Method');
-const {getIMapContainer} = goog.require('os.map.instance');
-const {convertUnits} = goog.require('os.math');
-const Units = goog.require('os.math.Units');
-const {PREVIEW_CONFIG} = goog.require('os.style');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {close} = goog.require('os.ui.window');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
 
@@ -79,7 +79,7 @@ const AreaTypeDetails = {
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -92,7 +92,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'userarea';
+export const directiveTag = 'userarea';
 
 /**
  * Add the directive to the Angular module.
@@ -103,7 +103,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the userarea directive.
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -724,9 +724,3 @@ class Controller extends Disposable {
     return coord.toFixed(14).replace(/\.?0+$/, '');
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

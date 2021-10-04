@@ -1,12 +1,14 @@
-goog.module('os.im.action.ImportActionEventType');
+goog.declareModuleId('os.im.action.ImportActionEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const ImportActionEventType = {
   ADD_ENTRY: 'importAction:addEntry',
   COPY_ENTRY: 'importAction:copyEntry',
   EDIT_ENTRY: 'importAction:editEntry',
   REMOVE_ENTRY: 'importAction:removeEntry',
   REFRESH: 'importAction:refresh'
 };
+
+export default ImportActionEventType;

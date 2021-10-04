@@ -1,9 +1,8 @@
 goog.declareModuleId('plugin.arc.ArcServerHelpUI');
 
 import {ROOT} from '../../os/os.js';
-
-const Module = goog.require('os.ui.Module');
-const {directive: baseDirective} = goog.require('os.ui.window.BaseWindowUI');
+import Module from '../../os/ui/module.js';
+import {directive as baseDirective} from '../../os/ui/window/basewindowui.js';
 
 
 /**

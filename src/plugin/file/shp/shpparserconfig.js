@@ -1,11 +1,14 @@
 goog.declareModuleId('plugin.file.shp.SHPParserConfig');
 
+import EventType from '../../../os/events/eventtype.js';
+import FileParserConfig from '../../../os/parse/fileparserconfig.js';
+import * as osUiSlickColumn from '../../../os/ui/slick/column.js';
 import SHPParser from './shpparser.js';
 
 const googEvents = goog.require('goog.events');
-const EventType = goog.require('os.events.EventType');
-const FileParserConfig = goog.require('os.parse.FileParserConfig');
-const osUiSlickColumn = goog.require('os.ui.slick.column');
+
+const {default: OSFile} = goog.requireType('os.file.File');
+
 
 /**
  * Configuration for a SHP parser.
@@ -19,12 +22,12 @@ export default class SHPParserConfig extends FileParserConfig {
     super();
 
     /**
-     * @type {os.file.File}
+     * @type {OSFile}
      */
     this['file2'] = null;
 
     /**
-     * @type {os.file.File}
+     * @type {OSFile}
      */
     this['zipFile'] = null;
 

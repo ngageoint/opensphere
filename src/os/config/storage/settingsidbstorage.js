@@ -1,12 +1,12 @@
-goog.module('os.config.storage.SettingsIDBStorage');
+goog.declareModuleId('os.config.storage.SettingsIDBStorage');
 
-const {SETTINGS_DB_NAME} = goog.require('os');
-const BaseLocalSettingsStorage = goog.require('os.config.storage.BaseLocalSettingsStorage');
-const ISettingsReadableStorage = goog.require('os.config.storage.ISettingsReadableStorage');
-const ISettingsStorage = goog.require('os.config.storage.ISettingsStorage');
-const ISettingsWritableStorage = goog.require('os.config.storage.ISettingsWritableStorage');
-const osImplements = goog.require('os.implements');
-const IDBStorage = goog.require('os.storage.IDBStorage');
+import osImplements from '../../implements.js';
+import {SETTINGS_DB_NAME} from '../../os.js';
+import IDBStorage from '../../storage/idbstorage.js';
+import BaseLocalSettingsStorage from './baselocalsettingsstorage.js';
+import ISettingsReadableStorage from './isettingsreadablestorage.js';
+import ISettingsStorage from './isettingsstorage.js';
+import ISettingsWritableStorage from './isettingswritablestorage.js';
 
 
 /**
@@ -16,7 +16,7 @@ const IDBStorage = goog.require('os.storage.IDBStorage');
  * @implements {ISettingsReadableStorage}
  * @implements {ISettingsWritableStorage}
  */
-class SettingsIDBStorage extends BaseLocalSettingsStorage {
+export default class SettingsIDBStorage extends BaseLocalSettingsStorage {
   /**
    * Constructor.
    * @param {!Array<!string>} namespaces The namespaces of the settings
@@ -32,6 +32,7 @@ class SettingsIDBStorage extends BaseLocalSettingsStorage {
     this.name = 'IndexedDb';
   }
 }
+
 osImplements(SettingsIDBStorage, ISettingsStorage.ID);
 osImplements(SettingsIDBStorage, ISettingsReadableStorage.ID);
 osImplements(SettingsIDBStorage, ISettingsWritableStorage.ID);
@@ -41,6 +42,3 @@ osImplements(SettingsIDBStorage, ISettingsWritableStorage.ID);
  * @type {string}
  */
 SettingsIDBStorage.STORE_NAME = 'settings';
-
-
-exports = SettingsIDBStorage;

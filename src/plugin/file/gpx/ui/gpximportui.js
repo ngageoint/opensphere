@@ -1,10 +1,10 @@
 goog.declareModuleId('plugin.file.gpx.ui.GPXImportUI');
 
+import FileParserConfig from '../../../../os/parse/fileparserconfig.js';
+import FileImportUI from '../../../../os/ui/im/fileimportui.js';
+import * as osWindow from '../../../../os/ui/window.js';
 import {directiveTag as gpxImportUi} from './gpximport.js';
 
-const FileParserConfig = goog.require('os.parse.FileParserConfig');
-const FileImportUI = goog.require('os.ui.im.FileImportUI');
-const osWindow = goog.require('os.ui.window');
 
 /**
  */

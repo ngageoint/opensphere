@@ -1,9 +1,12 @@
 goog.declareModuleId('plugin.file.kml.mime');
 
+import * as mime from '../../../os/file/mime.js';
+import * as xml from '../../../os/file/mime/xml.js';
+import * as mimeZip from '../../../os/file/mime/zip.js';
+
 const Promise = goog.require('goog.Promise');
-const mime = goog.require('os.file.mime');
-const xml = goog.require('os.file.mime.xml');
-const mimeZip = goog.require('os.file.mime.zip');
+
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
@@ -13,7 +16,7 @@ export const TYPE = 'application/vnd.google-earth.kml+xml';
 
 /**
  * @param {ArrayBuffer} buffer
- * @param {os.file.File=} opt_file
+ * @param {OSFile=} opt_file
  * @param {*=} opt_context
  * @return {!Promise<*|undefined>}
  */
@@ -43,7 +46,7 @@ export const KMZ_TYPE = 'application/vnd.google-earth.kmz';
  * 2. Must have a *.kmz filename OR have the kmz application-type
  *
  * @param {ArrayBuffer} buffer
- * @param {os.file.File=} opt_file
+ * @param {OSFile=} opt_file
  * @param {*=} opt_context
  * @return {!Promise<*|undefined>}
  */

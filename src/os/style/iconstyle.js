@@ -1,10 +1,10 @@
-goog.module('os.style.Icon');
+goog.declareModuleId('os.style.Icon');
 
-goog.require('os.mixin.IconImageMixin');
+import '../mixin/iconimagemixin.js';
+import {toRgbArray} from '../color.js';
 
 const ImageState = goog.require('ol.ImageState');
 const IconStyle = goog.require('ol.style.Icon');
-const {toRgbArray} = goog.require('os.color');
 
 const OLEvent = goog.requireType('ol.events.Event');
 
@@ -13,7 +13,7 @@ const OLEvent = goog.requireType('ol.events.Event');
  * This is to handle icon styles like Google Earth. Google Earth (and also Maps) normalizes the minimum dimension
  * to 32px at scale 1.0 (16px at 0.5, 64px at 2.0, etc.).
  */
-class Icon extends IconStyle {
+export default class Icon extends IconStyle {
   /**
    * Constructor.
    * @param {olx.style.IconOptions=} opt_options Options.
@@ -90,5 +90,3 @@ class Icon extends IconStyle {
     return this.iconImage_.image_;
   }
 }
-
-exports = Icon;

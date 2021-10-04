@@ -1,4 +1,4 @@
-goog.module('os.net.LongPoll');
+goog.declareModuleId('os.net.LongPoll');
 
 const Timer = goog.require('goog.Timer');
 const Uri = goog.require('goog.Uri');
@@ -24,7 +24,7 @@ const Logger = goog.requireType('goog.log.Logger');
  *  the next reconnect based on the given attempt count.
  * @suppress {accessControls}
  */
-class LongPoll extends EventTarget {
+export default class LongPoll extends EventTarget {
   /**
    * Constructor.
    * @param {boolean=} opt_autoReconnect Defaults to true
@@ -353,6 +353,3 @@ LongPoll.prototype.reconnectTimer_ = null;
  * @protected
  */
 LongPoll.prototype.logger = log.getLogger('os.net.LongPoll');
-
-
-exports = LongPoll;

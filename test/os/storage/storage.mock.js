@@ -1,5 +1,5 @@
 /**
- * @fileoverview Base tests for any classes extending os.storage.AsyncStorage.
+ * @fileoverview Base tests for any classes extending AsyncStorage.
  */
 goog.module('os.storage.mock');
 
@@ -127,7 +127,7 @@ beforeEach(function() {
 
 /**
  * Base set tests for all asynchronous storage classes.
- * @param {os.storage.AsyncStorage} storage The asynchronous storage object
+ * @param {AsyncStorage} storage The asynchronous storage object
  */
 const runAsyncSetTests = function(storage) {
   describe('set', function() {
@@ -192,7 +192,7 @@ const runAsyncSetTests = function(storage) {
 
 /**
  * Base get tests for all asynchronous storage classes.
- * @param {os.storage.AsyncStorage} storage The asynchronous storage object
+ * @param {AsyncStorage} storage The asynchronous storage object
  */
 const runAsyncGetTests = function(storage) {
   describe('get', function() {
@@ -276,7 +276,7 @@ const runAsyncGetTests = function(storage) {
 
 /**
  * Base get tests for all asynchronous storage classes.
- * @param {os.storage.AsyncStorage} storage The asynchronous storage object
+ * @param {AsyncStorage} storage The asynchronous storage object
  * @param {boolean=} opt_supportsInterface If {@link os.storage.IMechanism} is supported.
  */
 const runAsyncGetAllTests = function(storage, opt_supportsInterface) {
@@ -304,7 +304,7 @@ const runAsyncGetAllTests = function(storage, opt_supportsInterface) {
 
 /**
  * Base replace tests for all asynchronous storage classes.
- * @param {os.storage.AsyncStorage} storage The asynchronous storage object
+ * @param {AsyncStorage} storage The asynchronous storage object
  */
 const runAsyncReplaceTests = function(storage) {
   describe('replace', function() {
@@ -395,7 +395,7 @@ const runAsyncReplaceTests = function(storage) {
 
 /**
  * Base remove tests for all asynchronous storage classes.
- * @param {os.storage.AsyncStorage} storage The asynchronous storage object
+ * @param {AsyncStorage} storage The asynchronous storage object
  */
 const runAsyncRemoveTests = function(storage) {
   describe('remove', function() {
@@ -450,7 +450,7 @@ const runAsyncRemoveTests = function(storage) {
 
 /**
  * Base clear tests for all asynchronous storage classes.
- * @param {os.storage.AsyncStorage} storage The asynchronous storage object
+ * @param {AsyncStorage} storage The asynchronous storage object
  */
 const runAsyncClearTests = function(storage) {
   describe('clear', function() {
@@ -487,7 +487,7 @@ const runAsyncClearTests = function(storage) {
 
 /**
  * Base dispose tests for all asynchronous storage classes.
- * @param {os.storage.AsyncStorage} storage The asynchronous storage object
+ * @param {AsyncStorage} storage The asynchronous storage object
  */
 const runAsyncDisposeTests = function(storage) {
   describe('dispose', function() {

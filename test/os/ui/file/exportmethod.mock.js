@@ -1,6 +1,6 @@
 goog.module('os.ui.file.MockExportMethod');
 
-const AbstractExporter = goog.require('os.ex.AbstractExporter');
+const {default: AbstractExporter} = goog.require('os.ex.AbstractExporter');
 
 
 /**

@@ -1,26 +1,27 @@
-goog.module('os.ui.filter.fn');
+goog.declareModuleId('os.ui.filter.fn');
+
+import Expression from './expression.js';
+import {Condition, operationFromNode, conditionFromNode} from './filter.js';
+import {quoteString} from './filterstring.js';
 
 const {FALSE} = goog.require('goog.functions');
 const {isEmpty} = goog.require('goog.object');
 const {isEmptyOrWhitespace} = goog.require('goog.string');
 const {getAllTextContent} = goog.require('ol.xml');
-const {Condition, operationFromNode, conditionFromNode} = goog.require('os.ui.filter');
-const {quoteString} = goog.require('os.ui.filter.string');
-const Expression = goog.require('os.ui.filter.Expression');
 
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
-const Op = goog.requireType('os.ui.filter.op.Op');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
+const {default: Op} = goog.requireType('os.ui.filter.op.Op');
 
 
 /**
  * @typedef {function(...):boolean}
  */
-let FilterFn;
+export let FilterFn;
 
 /**
  * @typedef {function(string, string):string}
  */
-let ValueGetter;
+export let ValueGetter;
 
 /**
  * Default value getter for objects.
@@ -29,7 +30,7 @@ let ValueGetter;
  * @param {string} field The field to get from the item.
  * @return {string} The get expression.
  */
-const defaultGetter = function(itemVar, field) {
+export const defaultGetter = function(itemVar, field) {
   // create the string: itemVar["column_name"]
   // make the field safe for use as an object property name, to prevent injection attacks
   return itemVar + '[' + quoteString(field) + ']';
@@ -42,7 +43,7 @@ const defaultGetter = function(itemVar, field) {
  * @param {string} getExpr The value get expression.
  * @return {string} The variable expression.
  */
-const varDeclaration = function(varName, getExpr) {
+export const varDeclaration = function(varName, getExpr) {
   return 'var ' + varName + '=' + String(getExpr) + ';';
 };
 
@@ -50,10 +51,10 @@ const varDeclaration = function(varName, getExpr) {
  * Create a function to evaluate a filter from a filter entry.
  *
  * @param {!FilterEntry} entry The filter entry.
- * @param {ValueGetter=} opt_getter Function to get field values.
+ * @param {?ValueGetter=} opt_getter Function to get field values.
  * @return {!FilterFn} The filter function.
  */
-const createFromEntry = function(entry, opt_getter) {
+export const createFromEntry = function(entry, opt_getter) {
   var rootNode = entry.getFilterNode();
   if (rootNode) {
     return createFromNode(rootNode, opt_getter);
@@ -67,10 +68,10 @@ const createFromEntry = function(entry, opt_getter) {
  * Create a function to evaluate a filter from an XML node.
  *
  * @param {!Node} node The filter node.
- * @param {ValueGetter=} opt_getter Function to get field values.
+ * @param {?ValueGetter=} opt_getter Function to get field values.
  * @return {!FilterFn} The filter function.
  */
-const createFromNode = function(node, opt_getter) {
+export const createFromNode = function(node, opt_getter) {
   var getter = opt_getter || defaultGetter;
   var itemVar = 'item';
   var fnParts = [];
@@ -108,7 +109,7 @@ const createFromNode = function(node, opt_getter) {
  * @param {!Node} node The node.
  * @return {!Object<string, string>} Map of property names to variable names.
  */
-const createVarMap = function(node) {
+export const createVarMap = function(node) {
   var vars = {};
 
   // get all property names used in the filter
@@ -138,7 +139,7 @@ const createVarMap = function(node) {
  * @param {!Object<string, string>} vars Map of property names to variable names.
  * @return {string} The filter function expression for the node.
  */
-const getNodeExpression = function(node, vars) {
+export const getNodeExpression = function(node, vars) {
   // try to get an operation first. some ops will match condition nodes (in list, like list) via hint.
   var op = operationFromNode(node);
   if (op) {
@@ -163,7 +164,7 @@ const getNodeExpression = function(node, vars) {
  * @param {string} condition The condition value.
  * @return {string} The filter function expression for the node.
  */
-const createFromConditionNode = function(node, vars, condition) {
+export const createFromConditionNode = function(node, vars, condition) {
   var children = node.childNodes;
   if (children && children.length > 0) {
     var fnParts = [];
@@ -200,7 +201,7 @@ const createFromConditionNode = function(node, vars, condition) {
  * @param {!Object<string, string>} vars Map of property names to variable names.
  * @return {string} The filter function expression for the node.
  */
-const createFromExpressionNode = function(node, vars) {
+export const createFromExpressionNode = function(node, vars) {
   var expr = new Expression();
   expr.setFilter(node);
 
@@ -213,17 +214,4 @@ const createFromExpressionNode = function(node, vars) {
   }
 
   return '';
-};
-
-exports = {
-  defaultGetter,
-  varDeclaration,
-  createFromEntry,
-  createFromNode,
-  createVarMap,
-  getNodeExpression,
-  createFromConditionNode,
-  createFromExpressionNode,
-  FilterFn,
-  ValueGetter
 };

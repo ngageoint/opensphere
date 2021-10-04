@@ -1,7 +1,7 @@
-goog.module('os.track.CreateOptions');
+goog.declareModuleId('os.track.CreateOptions');
 
 const Feature = goog.requireType('ol.Feature');
-const TrackLike = goog.requireType('os.track.TrackLike');
+const {default: TrackLike} = goog.requireType('os.track.TrackLike');
 
 
 /**
@@ -20,4 +20,4 @@ const TrackLike = goog.requireType('os.track.TrackLike');
  */
 let CreateOptions;
 
-exports = CreateOptions;
+export default CreateOptions;

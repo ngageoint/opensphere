@@ -1,17 +1,18 @@
-goog.module('os.file.mime.jsonstate');
+goog.declareModuleId('os.file.mime.jsonstate');
+
+import Tag from '../../state/tag.js';
+import * as mime from '../mime.js';
+import * as json from './json.js';
 
 const Promise = goog.require('goog.Promise');
-const mime = goog.require('os.file.mime');
-const json = goog.require('os.file.mime.json');
-const Tag = goog.require('os.state.Tag');
 
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
  * @type {string}
  */
-const TYPE = 'application/vnd.state+json';
+export const TYPE = 'application/vnd.state+json';
 
 /**
  * @param {ArrayBuffer} buffer
@@ -19,7 +20,7 @@ const TYPE = 'application/vnd.state+json';
  * @param {*=} opt_context
  * @return {!Promise<*|undefined>}
  */
-const detect = function(buffer, file, opt_context) {
+export const detect = function(buffer, file, opt_context) {
   var retVal;
 
   if (opt_context && goog.isObject(opt_context) && Array.isArray(opt_context[Tag.STATE])) {
@@ -30,8 +31,3 @@ const detect = function(buffer, file, opt_context) {
 };
 
 mime.register(TYPE, detect, 0, json.TYPE);
-
-exports = {
-  TYPE,
-  detect
-};

@@ -1,10 +1,10 @@
-goog.module('os.metrics.TimelineMetrics');
+goog.declareModuleId('os.metrics.TimelineMetrics');
 
-const {Timeline} = goog.require('os.metrics.keys');
-const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');
+import MetricsPlugin from '../ui/metrics/metricsplugin.js';
+import {Timeline} from './metricskeys.js';
 
-const MetricNode = goog.requireType('os.ui.metrics.MetricNode');
-const MetricNodeOptions = goog.requireType('os.ui.metrics.MetricNodeOptions');
+const {default: MetricNode} = goog.requireType('os.ui.metrics.MetricNode');
+const {default: MetricNodeOptions} = goog.requireType('os.ui.metrics.MetricNodeOptions');
 
 
 /**
@@ -132,7 +132,7 @@ const timeSettingsMetrics = [
 
 /**
  */
-class TimelineMetrics extends MetricsPlugin {
+export default class TimelineMetrics extends MetricsPlugin {
   /**
    * Constructor.
    */
@@ -174,5 +174,3 @@ class TimelineMetrics extends MetricsPlugin {
     this.addChildren(settings, timeSettingsMetrics);
   }
 }
-
-exports = TimelineMetrics;

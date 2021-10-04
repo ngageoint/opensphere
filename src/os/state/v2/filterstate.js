@@ -1,20 +1,21 @@
-goog.module('os.state.v2.Filter');
+goog.declareModuleId('os.state.v2.Filter');
+
+import DataManager from '../../data/datamanager.js';
+import {getFilterManager, getQueryManager} from '../../query/queryinstance.js';
+import AbstractState from '../abstractstate.js';
+import XMLState from '../xmlstate.js';
+import BaseFilter from './basefilterstate.js';
 
 const {getChildren} = goog.require('goog.dom');
 const log = goog.require('goog.log');
-const DataManager = goog.require('os.data.DataManager');
-const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
-const AbstractState = goog.require('os.state.AbstractState');
-const XMLState = goog.require('os.state.XMLState');
-const BaseFilter = goog.require('os.state.v2.BaseFilter');
 
 const Logger = goog.requireType('goog.log.Logger');
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 
 
 /**
  */
-class Filter extends BaseFilter {
+export default class Filter extends BaseFilter {
   /**
    * Constructor.
    */
@@ -124,5 +125,3 @@ const logger = log.getLogger('os.state.v2.Filter');
  * @type {Object<string, !Array<!FilterEntry>>}
  */
 const addedEntries = {};
-
-exports = Filter;

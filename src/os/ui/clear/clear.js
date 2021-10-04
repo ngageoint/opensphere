@@ -1,10 +1,10 @@
-goog.module('os.ui.clear.ClearUI');
+goog.declareModuleId('os.ui.clear.ClearUI');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const ClearManager = goog.require('os.ui.clear.ClearManager');
-const {close} = goog.require('os.ui.window');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {close} from '../window.js';
+import WindowEventType from '../windoweventtype.js';
+import ClearManager from './clearmanager.js';
 
 
 /**
@@ -12,7 +12,7 @@ const {close} = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: true,
@@ -25,7 +25,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'clear';
+export const directiveTag = 'clear';
 
 /**
  * Add the directive to the os.ui module
@@ -36,7 +36,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the Clear Window
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -125,9 +125,3 @@ class Controller {
     this.close_();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

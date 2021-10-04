@@ -1,6 +1,6 @@
-goog.module('os.load.LoadingTask');
+goog.declareModuleId('os.load.LoadingTask');
 
-const ILoadingTask = goog.requireType('os.load.ILoadingTask');
+const {default: ILoadingTask} = goog.requireType('os.load.ILoadingTask');
 
 
 /**
@@ -8,7 +8,7 @@ const ILoadingTask = goog.requireType('os.load.ILoadingTask');
  *
  * @implements {ILoadingTask}
  */
-class LoadingTask {
+export default class LoadingTask {
   /**
    * Constructor.
    * @param {string} id
@@ -103,5 +103,3 @@ class LoadingTask {
     this.title = value;
   }
 }
-
-exports = LoadingTask;

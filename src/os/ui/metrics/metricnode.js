@@ -1,14 +1,15 @@
-goog.module('os.ui.metrics.MetricNode');
+goog.declareModuleId('os.ui.metrics.MetricNode');
 
-const {registerClass} = goog.require('os.classRegistry');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {MetricsEventType} = goog.require('os.metrics');
-const Metrics = goog.require('os.metrics.Metrics');
-const {ClassName} = goog.require('os.ui.metrics');
-const {directiveTag} = goog.require('os.ui.metrics.MetricCompletionUI');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+import {registerClass} from '../../classregistry.js';
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import {MetricsEventType} from '../../metrics/index.js';
+import Metrics from '../../metrics/metrics.js';
+import SlickTreeNode from '../slick/slicktreenode.js';
+import {directiveTag} from './metriccompletion.js';
+import {ClassName} from './metricsui.js';
 
-const ISearchable = goog.requireType('os.data.ISearchable');
+const {default: ISearchable} = goog.requireType('os.data.ISearchable');
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
 
 
 /**
@@ -16,7 +17,7 @@ const ISearchable = goog.requireType('os.data.ISearchable');
  *
  * @implements {ISearchable}
  */
-class MetricNode extends SlickTreeNode {
+export default class MetricNode extends SlickTreeNode {
   /**
    * Constructor.
    * @param {string=} opt_key
@@ -78,7 +79,7 @@ class MetricNode extends SlickTreeNode {
   }
 
   /**
-   * @param {os.events.SettingChangeEvent} event
+   * @param {SettingChangeEvent} event
    * @private
    */
   onMetricChange_(event) {
@@ -88,7 +89,7 @@ class MetricNode extends SlickTreeNode {
   }
 
   /**
-   * @param {os.events.SettingChangeEvent} event
+   * @param {SettingChangeEvent} event
    * @private
    */
   onMetricsReset_(event) {
@@ -213,6 +214,5 @@ class MetricNode extends SlickTreeNode {
     return false;
   }
 }
-registerClass(ClassName.METRIC_NODE, MetricNode);
 
-exports = MetricNode;
+registerClass(ClassName.METRIC_NODE, MetricNode);

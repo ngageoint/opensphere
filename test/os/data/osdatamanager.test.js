@@ -17,14 +17,14 @@ goog.require('test.os.config.SettingsUtil');
 
 
 describe('os.data.DataManager', function() {
-  const Settings = goog.module.get('os.config.Settings');
-  const SettingsObjectStorage = goog.module.get('os.config.storage.SettingsObjectStorage');
+  const {default: Settings} = goog.module.get('os.config.Settings');
+  const {default: SettingsObjectStorage} = goog.module.get('os.config.storage.SettingsObjectStorage');
   const data = goog.module.get('os.data');
-  const BaseDescriptor = goog.module.get('os.data.BaseDescriptor');
-  const DataManager = goog.module.get('os.data.DataManager');
-  const ProviderEntry = goog.module.get('os.data.ProviderEntry');
-  const VectorLayer = goog.module.get('os.layer.Vector');
-  const VectorSource = goog.module.get('os.source.Vector');
+  const {default: BaseDescriptor} = goog.module.get('os.data.BaseDescriptor');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: ProviderEntry} = goog.module.get('os.data.ProviderEntry');
+  const {default: VectorLayer} = goog.module.get('os.layer.Vector');
+  const {default: VectorSource} = goog.module.get('os.source.Vector');
   const {getMapContainer} = goog.module.get('os.map.instance');
 
   const MockProvider = goog.module.get('os.data.MockProvider');

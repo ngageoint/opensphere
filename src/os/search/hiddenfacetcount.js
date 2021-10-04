@@ -1,4 +1,4 @@
-goog.module('os.search.HiddenFacetCount');
+goog.declareModuleId('os.search.HiddenFacetCount');
 
 
 /**
@@ -7,4 +7,4 @@ goog.module('os.search.HiddenFacetCount');
  */
 const HiddenFacetCount = '_missingFacets';
 
-exports = HiddenFacetCount;
+export default HiddenFacetCount;

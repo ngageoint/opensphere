@@ -1,14 +1,15 @@
-goog.module('os.net');
+goog.declareModuleId('os.net');
+
+import {registerClass} from '../classregistry.js';
+import {getSettings} from '../config/configinstance.js';
+import instanceOf from '../instanceof.js';
+import {merge} from '../object/object.js';
+import CrossOrigin from './crossorigin.js';
 
 const Uri = goog.require('goog.Uri');
 const QueryData = goog.require('goog.Uri.QueryData');
 const {defaultCompare} = goog.require('goog.array');
 const {hashCode} = goog.require('goog.string');
-const {registerClass} = goog.require('os.classRegistry');
-const {getSettings} = goog.require('os.config.instance');
-const instanceOf = goog.require('os.instanceOf');
-const CrossOrigin = goog.require('os.net.CrossOrigin');
-const {merge} = goog.require('os.object');
 
 
 /**
@@ -27,12 +28,12 @@ registerClass(QueryData.NAME, QueryData);
  *   priority: number
  * }}
  */
-let CrossOriginEntry;
+export let CrossOriginEntry;
 
 /**
  * @typedef {function((ArrayBuffer|string), ?string=, Array<number>=):?string}
  */
-let RequestValidator;
+export let RequestValidator;
 
 /**
  * @typedef {{
@@ -40,7 +41,7 @@ let RequestValidator;
  *   priority: number
  * }}
  */
-let RequestValidatorEntry;
+export let RequestValidatorEntry;
 
 /**
  * @type {!Array<CrossOriginEntry>}
@@ -51,25 +52,25 @@ const crossOriginCache_ = [];
  * List of default request validators.
  * @type {!Array<!RequestValidatorEntry>}
  */
-const defaultValidators = [];
+export const defaultValidators = [];
 
 /**
  * Map of trusted URI regular expressions.
  * @type {!Array<!RegExp>}
  */
-const trustedURICache = [];
+export const trustedURICache = [];
 
 /**
  * The URI of the local page when it was launched.
  * @type {!Uri}
  */
-const LOCAL_URI = new Uri(window.location);
+export const LOCAL_URI = new Uri(window.location);
 
 /**
  * Get the default request validators.
  * @return {!Array<!RequestValidator>}
  */
-const getDefaultValidators = function() {
+export const getDefaultValidators = function() {
   return defaultValidators.map((entry) => entry.validator);
 };
 
@@ -80,7 +81,7 @@ const getDefaultValidators = function() {
  * @param {number=} opt_priority The priority. Defaults to 0, higher priority will execute first.
  * @param {boolean=} opt_skipSort If sorting should be skipped.
  */
-const registerDefaultValidator = function(validator, opt_priority = 0, opt_skipSort = false) {
+export const registerDefaultValidator = function(validator, opt_priority = 0, opt_skipSort = false) {
   defaultValidators.push({
     validator,
     priority: opt_priority
@@ -94,7 +95,7 @@ const registerDefaultValidator = function(validator, opt_priority = 0, opt_skipS
 /**
  * Reset the default request validators.
  */
-const resetDefaultValidators = function() {
+export const resetDefaultValidators = function() {
   defaultValidators.length = 0;
 };
 
@@ -114,7 +115,7 @@ const sortValidators_ = function(a, b) {
  * @param {*} crossOrigin The value to check
  * @return {boolean} If the value is a valid crossOrigin
  */
-const isValidCrossOrigin = function(crossOrigin) {
+export const isValidCrossOrigin = function(crossOrigin) {
   for (var key in CrossOrigin) {
     if (crossOrigin === CrossOrigin[key]) {
       return true;
@@ -127,7 +128,7 @@ const isValidCrossOrigin = function(crossOrigin) {
 /**
  * Load the crossOrigin cache from config.
  */
-const loadCrossOriginCache = function() {
+export const loadCrossOriginCache = function() {
   resetCrossOriginCache();
 
   var crossOrigin = /** @type {!Object} */ (getSettings().get('crossOrigin', {}));
@@ -142,7 +143,7 @@ const loadCrossOriginCache = function() {
 
 /**
  * @param {CrossOriginEntry} a Thing 1
- * @param {os.net.CrossOriginEntry} b Thing 2
+ * @param {CrossOriginEntry} b Thing 2
  * @return {number} per typical compare functions
  */
 const sortCache_ = function(a, b) {
@@ -177,7 +178,7 @@ let getCrossOriginFn = function(uri) {
  * Set the function used to get the cross origin.
  * @param {function((Uri|string)):!CrossOrigin} fn The function.
  */
-const setGetCrossOriginFn = (fn) => {
+export const setGetCrossOriginFn = (fn) => {
   getCrossOriginFn = fn;
 };
 
@@ -188,7 +189,7 @@ const setGetCrossOriginFn = (fn) => {
  * @param {Uri|string} uri The uri
  * @return {!CrossOrigin} The cross origin value to use for the URI
  */
-const getCrossOrigin = function(uri) {
+export const getCrossOrigin = function(uri) {
   return getCrossOriginFn(uri);
 };
 
@@ -198,7 +199,7 @@ const getCrossOrigin = function(uri) {
  * @param {number=} opt_priority
  * @param {boolean=} opt_skipSort
  */
-const registerCrossOrigin = function(pattern, crossOrigin, opt_priority, opt_skipSort) {
+export const registerCrossOrigin = function(pattern, crossOrigin, opt_priority, opt_skipSort) {
   opt_priority = opt_priority || 0;
 
   crossOriginCache_.push({
@@ -215,7 +216,7 @@ const registerCrossOrigin = function(pattern, crossOrigin, opt_priority, opt_ski
 /**
  * Reset the cross origin cache.
  */
-const resetCrossOriginCache = function() {
+export const resetCrossOriginCache = function() {
   crossOriginCache_.length = 0;
 };
 
@@ -225,7 +226,7 @@ const resetCrossOriginCache = function() {
  * @param {number=} opt_priority
  * @param {boolean=} opt_skipSort
  */
-const saveCrossOrigin = function(pattern, crossOrigin, opt_priority, opt_skipSort) {
+export const saveCrossOrigin = function(pattern, crossOrigin, opt_priority, opt_skipSort) {
   registerCrossOrigin(pattern, crossOrigin, opt_priority, opt_skipSort);
 
   // save to user settings
@@ -258,7 +259,7 @@ const getCrossOriginInternal = function(url) {
 /**
  * Load trusted URI patterns from config.
  */
-const loadTrustedUris = function() {
+export const loadTrustedUris = function() {
   var trustedUris = /** @type {!Object<string, boolean>} */ (getSettings().get('trustedUris', {}));
   var userTrustedUris = /** @type {!Object<string, boolean>} */ (getSettings().get('userTrustedUris', {}));
   merge(userTrustedUris, trustedUris, true);
@@ -276,7 +277,7 @@ const loadTrustedUris = function() {
  * @param {Uri|string|undefined} uri The uri.
  * @return {boolean} If content from the URI should be trusted.
  */
-const isTrustedUri = function(uri) {
+export const isTrustedUri = function(uri) {
   if (uri) {
     var cache = trustedURICache;
     if (cache) {
@@ -295,7 +296,7 @@ const isTrustedUri = function(uri) {
  *
  * @param {string} uri The uri.
  */
-const addTrustedUri = function(uri) {
+export const addTrustedUri = function(uri) {
   trustedURICache.push(new RegExp(uri));
 };
 
@@ -304,7 +305,7 @@ const addTrustedUri = function(uri) {
  *
  * @param {Uri|string} uri The uri.
  */
-const registerTrustedUri = function(uri) {
+export const registerTrustedUri = function(uri) {
   if (uri) {
     var url = typeof uri === 'string' ? uri : uri.toString();
     if (url) {
@@ -323,7 +324,7 @@ const registerTrustedUri = function(uri) {
  *
  * @return {boolean}
  */
-const supportsBeacon = function() {
+export const supportsBeacon = function() {
   return typeof navigator.sendBeacon == 'function';
 };
 
@@ -334,7 +335,7 @@ const supportsBeacon = function() {
  * @param {ArrayBufferView|Blob|FormData|null|string|undefined} data The data to send
  * @param {string=} opt_contentType The content type
  */
-const sendBeacon = function(url, data, opt_contentType) {
+export const sendBeacon = function(url, data, opt_contentType) {
   if (supportsBeacon()) {
     try {
       if (opt_contentType) {
@@ -354,7 +355,7 @@ const sendBeacon = function(url, data, opt_contentType) {
  * @param {string|QueryData|Object|undefined} params The params.
  * @return {!Uri.QueryData} The query data.
  */
-const paramsToQueryData = function(params) {
+export const paramsToQueryData = function(params) {
   var qd;
 
   if (typeof params === 'string') {
@@ -367,30 +368,4 @@ const paramsToQueryData = function(params) {
   }
 
   return qd || new QueryData();
-};
-
-exports = {
-  defaultValidators,
-  trustedURICache,
-  LOCAL_URI,
-  getDefaultValidators,
-  registerDefaultValidator,
-  resetDefaultValidators,
-  isValidCrossOrigin,
-  loadCrossOriginCache,
-  getCrossOrigin,
-  setGetCrossOriginFn,
-  registerCrossOrigin,
-  resetCrossOriginCache,
-  saveCrossOrigin,
-  loadTrustedUris,
-  isTrustedUri,
-  addTrustedUri,
-  registerTrustedUri,
-  supportsBeacon,
-  sendBeacon,
-  paramsToQueryData,
-  CrossOriginEntry,
-  RequestValidator,
-  RequestValidatorEntry
 };

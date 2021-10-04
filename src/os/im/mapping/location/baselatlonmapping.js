@@ -1,8 +1,8 @@
-goog.module('os.im.mapping.location.BaseLatLonMapping');
+goog.declareModuleId('os.im.mapping.location.BaseLatLonMapping');
 
-const {COORD_CLEANER, PREFER_LAT_FIRST, parseLatLon} = goog.require('os.geo');
-const {getItemField} = goog.require('os.im.mapping');
-const AbstractPositionMapping = goog.require('os.im.mapping.AbstractPositionMapping');
+import {COORD_CLEANER, PREFER_LAT_FIRST, parseLatLon} from '../../../geo/geo.js';
+import AbstractPositionMapping from '../abstractpositionmapping.js';
+import {getItemField} from '../mapping.js';
 
 
 /**
@@ -11,7 +11,7 @@ const AbstractPositionMapping = goog.require('os.im.mapping.AbstractPositionMapp
  * @extends {AbstractPositionMapping<T, S>}
  * @template T, S
  */
-class BaseLatLonMapping extends AbstractPositionMapping {
+export default class BaseLatLonMapping extends AbstractPositionMapping {
   /**
    * Constructor.
    * @param {number=} opt_order
@@ -102,5 +102,3 @@ class BaseLatLonMapping extends AbstractPositionMapping {
     return parseLatLon(value, this.order_, opt_format);
   }
 }
-
-exports = BaseLatLonMapping;

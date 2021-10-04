@@ -18,13 +18,13 @@ goog.require('os.xml');
 
 
 describe('Filter XSD State Test', function() {
-  const DataManager = goog.module.get('os.data.DataManager');
-  const FilterEntry = goog.module.get('os.filter.FilterEntry');
-  const FilterManager = goog.module.get('os.query.FilterManager');
-  const BaseStateManager = goog.module.get('os.state.BaseStateManager');
-  const StateManager = goog.module.get('os.state.StateManager');
-  const Versions = goog.module.get('os.state.Versions');
-  const Filter = goog.module.get('os.state.v2.Filter');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: FilterEntry} = goog.module.get('os.filter.FilterEntry');
+  const {default: FilterManager} = goog.module.get('os.query.FilterManager');
+  const {default: BaseStateManager} = goog.module.get('os.state.BaseStateManager');
+  const {default: StateManager} = goog.module.get('os.state.StateManager');
+  const {default: Versions} = goog.module.get('os.state.Versions');
+  const {default: Filter} = goog.module.get('os.state.v2.Filter');
   const osUiState = goog.module.get('os.ui.state');
   const xml = goog.module.get('os.xml');
 

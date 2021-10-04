@@ -1,17 +1,18 @@
-goog.module('os.ui.data.groupby.TagGroupBy');
+goog.declareModuleId('os.ui.data.groupby.TagGroupBy');
+
+import BaseGroupBy from '../../../data/groupby/basegroupby.js';
+import SlickTreeNode from '../../slick/slicktreenode.js';
 
 const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
-const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
-const ISearchable = goog.requireType('os.data.ISearchable');
+const {default: ISearchable} = goog.requireType('os.data.ISearchable');
 
 
 /**
  * Groups nodes by tag
  */
-class TagGroupBy extends BaseGroupBy {
+export default class TagGroupBy extends BaseGroupBy {
   /**
    * Constructor.
    * @param {boolean=} opt_open Keeps groups open by default
@@ -80,5 +81,3 @@ class TagGroupBy extends BaseGroupBy {
     return group;
   }
 }
-
-exports = TagGroupBy;

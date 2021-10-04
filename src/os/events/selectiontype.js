@@ -1,12 +1,13 @@
-goog.module('os.events.SelectionType');
-
+goog.declareModuleId('os.events.SelectionType');
 
 /**
  * @enum {string}
  */
-exports = {
+const SelectionType = {
   ADDED: 'selectedItemsAdded',
   CHANGED: 'selectedItemsChanged',
   REMOVED: 'selectedItemsRemoved',
   CLEAR: 'selectedItemsCleared'
 };
+
+export default SelectionType;

@@ -1,4 +1,4 @@
-goog.module('os.data.RegistryPropertyChange');
+goog.declareModuleId('os.data.RegistryPropertyChange');
 
 /**
  * @enum {string}
@@ -10,4 +10,4 @@ const PropertyChange = {
   UPDATE: 'registry:update'
 };
 
-exports = PropertyChange;
+export default PropertyChange;

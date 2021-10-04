@@ -1,12 +1,12 @@
-goog.module('os.ui.icon.IconPickerUI');
+goog.declareModuleId('os.ui.icon.IconPickerUI');
 
-const {ROOT} = goog.require('os');
-const {unsafeClone} = goog.require('os.object');
-const Module = goog.require('os.ui.Module');
-const {GMAPS_SEARCH, replaceGoogleUri} = goog.require('os.ui.file.kml');
-const IconPickerEventType = goog.require('os.ui.icon.IconPickerEventType');
-const {directiveTag: iconSelector} = goog.require('os.ui.icon.IconSelectorUI');
-const {bringToFront, create, exists} = goog.require('os.ui.window');
+import {unsafeClone} from '../../object/object.js';
+import {ROOT} from '../../os.js';
+import {GMAPS_SEARCH, replaceGoogleUri} from '../file/kml/kml.js';
+import Module from '../module.js';
+import {bringToFront, create, exists} from '../window.js';
+import IconPickerEventType from './iconpickereventtype.js';
+import {directiveTag as iconSelector} from './iconselector.js';
 
 
 /**
@@ -14,7 +14,7 @@ const {bringToFront, create, exists} = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -32,7 +32,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'iconpicker';
+export const directiveTag = 'iconpicker';
 
 /**
  * Add the directive to the module
@@ -43,7 +43,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the icon picker directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -132,9 +132,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

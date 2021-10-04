@@ -1,22 +1,23 @@
-goog.module('os.ui.config.SettingsManager');
+goog.declareModuleId('os.ui.config.SettingsManager');
+
+import SlickTreeNode from '../slick/slicktreenode.js';
+import SettingNode from './settingnode.js';
+import SettingPlugin from './settingplugin.js';
+import SettingsManagerEvent from './settingsmanagerevent.js';
+import SettingsManagerEventType from './settingsmanagereventtype.js';
 
 const {defaultCompare} = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
-const SettingNode = goog.require('os.ui.config.SettingNode');
-const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
-const SettingsManagerEvent = goog.require('os.ui.config.SettingsManagerEvent');
-const SettingsManagerEventType = goog.require('os.ui.config.SettingsManagerEventType');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 const Logger = goog.requireType('goog.log.Logger');
 
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**
  * Base settings manager. Applications should extend this to fill in the abstract methods.
  */
-class SettingsManager extends EventTarget {
+export default class SettingsManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -225,6 +226,3 @@ let instance;
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.config.SettingsManager');
-
-
-exports = SettingsManager;

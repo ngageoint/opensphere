@@ -1,5 +1,14 @@
 goog.declareModuleId('plugin.arc.node.ArcServiceNode');
 
+import ConfigDescriptor from '../../../os/data/configdescriptor.js';
+import DataManager from '../../../os/data/datamanager.js';
+import LayerType from '../../../os/layer/layertype.js';
+import Request from '../../../os/net/request.js';
+import ColorControlType from '../../../os/ui/colorcontroltype.js';
+import BaseProvider from '../../../os/ui/data/baseprovider.js';
+import DescriptorNode from '../../../os/ui/data/descriptornode.js';
+import Icons from '../../../os/ui/icons.js';
+import LoadingNode from '../../../os/ui/slick/loadingnode.js';
 import * as arc from '../arc.js';
 import ArcImageLayerConfig from '../layer/arcimagelayerconfig.js';
 import ArcLayerDescriptor from '../layer/arclayerdescriptor.js';
@@ -8,15 +17,6 @@ const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
 const EventType = goog.require('goog.net.EventType');
 const googString = goog.require('goog.string');
-const ConfigDescriptor = goog.require('os.data.ConfigDescriptor');
-const DataManager = goog.require('os.data.DataManager');
-const LayerType = goog.require('os.layer.LayerType');
-const Request = goog.require('os.net.Request');
-const ColorControlType = goog.require('os.ui.ColorControlType');
-const Icons = goog.require('os.ui.Icons');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
-const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
-const LoadingNode = goog.require('os.ui.slick.LoadingNode');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');

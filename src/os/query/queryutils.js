@@ -1,4 +1,7 @@
-goog.module('os.query.utils');
+goog.declareModuleId('os.query.utils');
+
+import * as osMap from '../map/map.js';
+import {EPSG4326} from '../proj/proj.js';
 
 const {nearlyEquals} = goog.require('goog.math');
 const Feature = goog.require('ol.Feature');
@@ -6,8 +9,6 @@ const {getArea} = goog.require('ol.extent');
 const GeometryType = goog.require('ol.geom.GeometryType');
 const Polygon = goog.require('ol.geom.Polygon');
 const {transformExtent} = goog.require('ol.proj');
-const osMap = goog.require('os.map');
-const {EPSG4326} = goog.require('os.proj');
 
 
 /**
@@ -55,9 +56,9 @@ let worldArea_ = undefined;
  * @param {ol.geom.Geometry|undefined} geometry The geometry to verify.
  * @return {boolean} true the query matches WORLD_GEOM
  */
-exports.isWorldQuery = function(geometry) {
+export const isWorldQuery = function(geometry) {
   if (worldArea_ == null) {
-    exports.initWorldArea();
+    initWorldArea();
   }
 
   if (worldArea_ && geometry && geometry.getType() === GeometryType.POLYGON) {
@@ -75,7 +76,7 @@ exports.isWorldQuery = function(geometry) {
  *
  * @param {boolean=} opt_reset
  */
-exports.initWorldArea = function(opt_reset) {
+export const initWorldArea = function(opt_reset) {
   if (opt_reset) {
     worldArea_ = undefined;
   } else {
@@ -89,7 +90,7 @@ exports.initWorldArea = function(opt_reset) {
  * Feature representing the whole world.
  * @type {Feature}
  */
-exports.WORLD_AREA = new Feature({
+export const WORLD_AREA = new Feature({
   'geometry': WORLD_GEOM,
   'title': 'Whole World'
 });
@@ -99,15 +100,10 @@ exports.WORLD_AREA = new Feature({
  * Feature representing the area we want to zoom to when zooming to the whole world.
  * @type {Feature}
  */
-exports.WORLD_ZOOM_FEATURE = new Feature(new Polygon([[
+export const WORLD_ZOOM_FEATURE = new Feature(new Polygon([[
   [179, 90],
   [181, 90],
   [181, -90],
   [179, -90],
   [179, 90]
 ]]));
-
-
-exports.WORLD_EXTENT = WORLD_EXTENT;
-exports.WORLD_COORDS = WORLD_COORDS;
-exports.WORLD_GEOM = WORLD_GEOM;

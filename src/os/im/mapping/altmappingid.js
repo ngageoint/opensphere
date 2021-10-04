@@ -1,7 +1,9 @@
-goog.module('os.im.mapping.AltMappingId');
+goog.declareModuleId('os.im.mapping.AltMappingId');
 
 /**
  * @type {string}
  * @const
  */
-exports = 'Altitude';
+const AltMappingId = 'Altitude';
+
+export default AltMappingId;

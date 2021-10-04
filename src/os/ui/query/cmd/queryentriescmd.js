@@ -1,9 +1,9 @@
-goog.module('os.ui.query.cmd.QueryEntries');
+goog.declareModuleId('os.ui.query.cmd.QueryEntries');
 
-const State = goog.require('os.command.State');
-const {getQueryManager} = goog.require('os.query.instance');
+import State from '../../../command/state.js';
+import {getQueryManager} from '../../../query/queryinstance.js';
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -11,7 +11,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class QueryEntries {
+export default class QueryEntries {
   /**
    * Constructor.
    * @param {!Array<!Object<string, string|boolean>>} entries
@@ -178,5 +178,3 @@ class QueryEntries {
     return layerSet;
   }
 }
-
-exports = QueryEntries;

@@ -4,22 +4,22 @@ goog.require('os.data.ConfigDescriptor');
 goog.require('os.data.DataManager');
 goog.require('os.ui.column.mapping.ColumnMappingFormUI');
 goog.require('os.ui.column.mapping.ColumnModelNode');
-goog.require('os.ui.window');
 goog.require('plugin.ogc.GeoServer');
 goog.require('plugin.ogc.OGCLayerDescriptor');
 goog.require('plugin.ogc.wmts.WMTSServer');
 
 describe('os.ui.column.mapping.ColumnMappingFormUI', function() {
-  const ColumnMapping = goog.module.get('os.column.ColumnMapping');
-  const ColumnMappingManager = goog.module.get('os.column.ColumnMappingManager');
-  const ConfigDescriptor = goog.module.get('os.data.ConfigDescriptor');
-  const DataManager = goog.module.get('os.data.DataManager');
-  const ColumnModelNode = goog.module.get('os.ui.column.mapping.ColumnModelNode');
-  const osWindow = goog.module.get('os.ui.window');
+  const {default: ColumnMapping} = goog.module.get('os.column.ColumnMapping');
+  const {default: ColumnMappingManager} = goog.module.get('os.column.ColumnMappingManager');
+  const {default: ConfigDescriptor} = goog.module.get('os.data.ConfigDescriptor');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: ColumnModelNode} = goog.module.get('os.ui.column.mapping.ColumnModelNode');
   const {default: GeoServer} = goog.module.get('plugin.ogc.GeoServer');
   const {default: OGCLayerDescriptor} = goog.module.get('plugin.ogc.OGCLayerDescriptor');
   const {default: WMTSServer} = goog.module.get('plugin.ogc.wmts.WMTSServer');
-  const {Controller} = goog.module.get('os.ui.column.mapping.ColumnMappingFormUI');
+  const {Controller, launchColumnMappingWindow} = goog.module.get('os.ui.column.mapping.ColumnMappingFormUI');
+
+  const windowSelector = 'div[label="Create Column Association"]';
 
   var $scope;
   var cmForm;
@@ -174,14 +174,21 @@ describe('os.ui.column.mapping.ColumnMappingFormUI', function() {
     expect(formCtrl.cancel).toHaveBeenCalled();
   });
 
-  it('should call window close', function() {
-    var formCtrl = new Controller($scope, element, timeout);
+  it('should close the window', function() {
+    launchColumnMappingWindow();
 
-    spyOn(osWindow, 'close');
+    waitsFor(() => !!document.querySelector(windowSelector), 'window to open');
 
-    formCtrl.cancel();
+    runs(() => {
+      const bodyEl = document.querySelector(`${windowSelector} .modal-body`);
+      const scope = $(bodyEl).scope();
+      expect(scope).toBeDefined();
+      expect(scope.cmFormCtrl).toBeDefined();
 
-    expect(osWindow.close).toHaveBeenCalled();
+      scope.cmFormCtrl.cancel();
+    });
+
+    waitsFor(() => !document.querySelector(windowSelector), 'window to close');
   });
 
   it('should remove a column from the tree', function() {

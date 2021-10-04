@@ -1,24 +1,24 @@
 goog.declareModuleId('os.ui.capture.RecordingUI');
 
-goog.require('os.ui.LoadingBarUI');
-
+import '../loadingbar.js';
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
 import {getTimestamp} from '../../capture/capture.js';
 import CaptureEventType from '../../capture/captureeventtype.js';
 import ContentType from '../../capture/contenttype.js';
 import GifEncoder from '../../capture/gifencoder.js';
 import {ROOT} from '../../os.js';
+import exportManager from '../file/uiexportmanager.js';
+import Module from '../module.js';
 import {apply} from '../ui.js';
+import * as osWindow from '../window.js';
+import WindowEventType from '../windoweventtype.js';
 
 const dispose = goog.require('goog.dispose');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const exportManager = goog.require('os.ui.exportManager');
-const osWindow = goog.require('os.ui.window');
 
 const {default: IRecorder} = goog.requireType('os.capture.IRecorder');
 const {default: IVideoEncoder} = goog.requireType('os.capture.IVideoEncoder');
+const {default: IPersistenceMethod} = goog.requireType('os.ex.IPersistenceMethod');
 
 
 /**
@@ -123,12 +123,12 @@ export class Controller {
     this['encoder'] = this['encoders'][0];
 
     /**
-     * @type {os.ex.IPersistenceMethod}
+     * @type {IPersistenceMethod}
      */
     this['persister'] = null;
 
     /**
-     * @type {!Object<string, !os.ex.IPersistenceMethod>}
+     * @type {!Object<string, !IPersistenceMethod>}
      */
     this['persisters'] = {};
     var persisters = exportManager.getPersistenceMethods();

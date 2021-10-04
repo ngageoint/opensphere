@@ -1,4 +1,4 @@
-goog.module('os.style.StyleType');
+goog.declareModuleId('os.style.StyleType');
 
 
 /**
@@ -26,4 +26,4 @@ StyleType.REGEXP = (function() {
   return new RegExp('^(' + values.join('|') + ')$');
 })();
 
-exports = StyleType;
+export default StyleType;

@@ -1,6 +1,6 @@
-goog.module('os.ui.im.MergeAreaOptionUI');
+goog.declareModuleId('os.ui.im.MergeAreaOptionUI');
 
-const Module = goog.require('os.ui.Module');
+import Module from '../module.js';
 
 
 /**
@@ -8,7 +8,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -29,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'mergeareaoption';
+export const directiveTag = 'mergeareaoption';
 
 /**
  * Add the directive to the os.ui module
@@ -40,7 +40,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for showing the merge area checkbox that sometimes compliments basicinfo
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -54,9 +54,3 @@ class Controller {
     this.scope = $scope;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

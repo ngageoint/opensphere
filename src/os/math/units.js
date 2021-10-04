@@ -1,11 +1,10 @@
-goog.module('os.math.Units');
-
+goog.declareModuleId('os.math.Units');
 
 /**
  * Supported unit types.
  * @enum {string}
  */
-exports = {
+const Units = {
   KILOMETERS: 'km',
   METERS: 'm',
   NAUTICAL_MILES: 'nmi',
@@ -13,3 +12,5 @@ exports = {
   FEET: 'ft',
   YARD: 'yd'
 };
+
+export default Units;

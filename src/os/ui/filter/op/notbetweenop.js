@@ -1,13 +1,13 @@
-goog.module('os.ui.filter.op.NotBetween');
+goog.declareModuleId('os.ui.filter.op.NotBetween');
 
-const Between = goog.require('os.ui.filter.op.Between');
-const Not = goog.require('os.ui.filter.op.Not');
+import Between from './betweenop.js';
+import Not from './notop.js';
 
 
 /**
  * An inverse 'between' operation class.
  */
-class NotBetween extends Not {
+export default class NotBetween extends Not {
   /**
    * Constructor.
    */
@@ -15,5 +15,3 @@ class NotBetween extends Not {
     super(new Between());
   }
 }
-
-exports = NotBetween;

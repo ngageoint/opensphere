@@ -6,8 +6,8 @@ goog.require('os.feature');
 
 describe('os.data.histo.ColorBin', function() {
   const Feature = goog.module.get('ol.Feature');
-  const RecordField = goog.module.get('os.data.RecordField');
-  const ColorBin = goog.module.get('os.data.histo.ColorBin');
+  const {default: RecordField} = goog.module.get('os.data.RecordField');
+  const {default: ColorBin} = goog.module.get('os.data.histo.ColorBin');
   const osFeature = goog.module.get('os.feature');
 
   var red = new Feature();

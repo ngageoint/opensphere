@@ -1,7 +1,8 @@
-goog.module('os.ui.file.csv.AbstractCSVExporter');
+goog.declareModuleId('os.ui.file.csv.AbstractCSVExporter');
+
+import AbstractExporter from '../../../ex/abstractexporter.js';
 
 const log = goog.require('goog.log');
-const AbstractExporter = goog.require('os.ex.AbstractExporter');
 
 
 /**
@@ -11,7 +12,7 @@ const AbstractExporter = goog.require('os.ex.AbstractExporter');
  * @extends {AbstractExporter<T>}
  * @template T
  */
-class AbstractCSVExporter extends AbstractExporter {
+export default class AbstractCSVExporter extends AbstractExporter {
   /**
    * Constructor.
    */
@@ -98,5 +99,3 @@ class AbstractCSVExporter extends AbstractExporter {
  * @type {log.Logger}
  */
 const logger = log.getLogger('os.ui.file.csv.AbstractCSVExporter');
-
-exports = AbstractCSVExporter;

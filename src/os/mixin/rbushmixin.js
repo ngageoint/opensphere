@@ -1,10 +1,11 @@
-goog.module('os.mixin.rbush');
+goog.declareModuleId('os.mixin.rbush');
+
+import {removeDuplicates} from '../array/array.js';
+import {normalizeAntiLeft, normalizeAntiRight} from '../extent.js';
 
 const {getUid} = goog.require('ol');
 const {extend, intersects, returnOrUpdate} = goog.require('ol.extent');
 const RBush = goog.require('ol.structs.RBush');
-const {removeDuplicates} = goog.require('os.array');
-const {normalizeAntiLeft, normalizeAntiRight} = goog.require('os.extent');
 
 
 var oldGetInExtent = RBush.prototype.getInExtent;

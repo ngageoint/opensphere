@@ -1,18 +1,17 @@
 goog.declareModuleId('plugin.params.EditRequestParamsUI');
 
-goog.require('os.ui.slick.SlickGridUI');
-
+import '../../os/ui/slick/slickgrid.js';
+import ColumnDefinition from '../../os/data/columndefinition.js';
 import * as os from '../../os/os.js';
+import Module from '../../os/ui/module.js';
+import SlickGridEvent from '../../os/ui/slick/slickgridevent.js';
+import * as osWindow from '../../os/ui/window.js';
+import WindowEventType from '../../os/ui/windoweventtype.js';
 import * as pluginParams from './params.js';
 
 const Disposable = goog.require('goog.Disposable');
 const googString = goog.require('goog.string');
 const olArray = goog.require('ol.array');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const SlickGridEvent = goog.require('os.ui.slick.SlickGridEvent');
-const osWindow = goog.require('os.ui.window');
 
 
 /**

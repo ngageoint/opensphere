@@ -1,6 +1,6 @@
-goog.module('os.unit.IUnit');
+goog.declareModuleId('os.unit.IUnit');
 
-const IMultiplier = goog.requireType('os.unit.IMultiplier');
+const {default: IMultiplier} = goog.requireType('os.unit.IMultiplier');
 
 
 /**
@@ -8,7 +8,7 @@ const IMultiplier = goog.requireType('os.unit.IMultiplier');
  *
  * @interface
  */
-class IUnit {
+export default class IUnit {
   /**
    * Constructor.
    */
@@ -89,5 +89,3 @@ class IUnit {
    */
   format(value, multiplier, fixed) {}
 }
-
-exports = IUnit;

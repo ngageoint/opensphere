@@ -1,13 +1,13 @@
-goog.module('os.ui.slick.LoadingNode');
+goog.declareModuleId('os.ui.slick.LoadingNode');
 
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import SlickTreeNode from './slicktreenode.js';
 
 
 /**
  * Tree node implementing loading behavior.
  */
-class LoadingNode extends SlickTreeNode {
+export default class LoadingNode extends SlickTreeNode {
   /**
    * Constructor.
    */
@@ -60,5 +60,3 @@ class LoadingNode extends SlickTreeNode {
     super.updateFrom(other);
   }
 }
-
-exports = LoadingNode;

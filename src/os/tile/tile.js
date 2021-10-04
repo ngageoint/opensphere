@@ -1,4 +1,4 @@
-goog.module('os.tile');
+goog.declareModuleId('os.tile');
 
 const {createCanvasContext2D} = goog.require('ol.dom');
 
@@ -6,7 +6,7 @@ const {createCanvasContext2D} = goog.require('ol.dom');
 /**
  * @typedef {function(Uint8ClampedArray, number, number)}
  */
-let TileFilterFn;
+export let TileFilterFn;
 
 /**
  * Applies a set of filter functions to an image and returns a new, filtered copy.
@@ -15,7 +15,7 @@ let TileFilterFn;
  * @param {Array<TileFilterFn>} filterFns The filter functions to apply
  * @return {HTMLCanvasElement} A new, filtered copy of the image canvas
  */
-const filterImage = function(image, filterFns) {
+export const filterImage = function(image, filterFns) {
   var context = createCanvasContext2D(image.width, image.height);
   context.drawImage(image, 0, 0);
 
@@ -29,9 +29,4 @@ const filterImage = function(image, filterFns) {
   });
   context.putImageData(imageData, 0, 0);
   return canvas;
-};
-
-exports = {
-  filterImage,
-  TileFilterFn
 };

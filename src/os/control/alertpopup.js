@@ -1,15 +1,16 @@
-goog.module('os.control.AlertPopup');
+goog.declareModuleId('os.control.AlertPopup');
+
+import {directiveTag as alertPopupUi} from '../ui/alert/alertpopup.js';
+import * as osUi from '../ui/ui.js';
 
 const Control = goog.require('ol.control.Control');
-const osUi = goog.require('os.ui');
-const {directiveTag: alertPopupUi} = goog.require('os.ui.alert.AlertPopupUI');
 
 
 /**
  * Make the alert popups a map control so we can position it properly within
  * the map bounds
  */
-class AlertPopup extends Control {
+export default class AlertPopup extends Control {
   /**
    * Constructor.
    */
@@ -24,5 +25,3 @@ class AlertPopup extends Control {
     });
   }
 }
-
-exports = AlertPopup;

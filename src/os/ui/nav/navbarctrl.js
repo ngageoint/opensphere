@@ -1,18 +1,19 @@
-goog.module('os.ui.NavBarCtrl');
+goog.declareModuleId('os.ui.NavBarCtrl');
+
+import * as dispatcher from '../../dispatcher.js';
+import {get} from '../list.js';
+import {resize, removeResize} from '../ui.js';
+import EventType from './navbareventtype.js';
 
 const Disposable = goog.require('goog.Disposable');
 const GoogEvent = goog.require('goog.events.Event');
-const dispatcher = goog.require('os.Dispatcher');
-const {resize, removeResize} = goog.require('os.ui');
-const {get} = goog.require('os.ui.list');
-const EventType = goog.require('os.ui.nav.EventType');
 
 
 /**
  * Controller for NavBars
  * @unrestricted
  */
-class Controller extends Disposable {
+export default class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -148,5 +149,3 @@ class Controller extends Disposable {
     dispatcher.getInstance().dispatchEvent(new GoogEvent(EventType.RESIZE));
   }
 }
-
-exports = Controller;

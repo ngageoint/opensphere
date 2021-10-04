@@ -1,47 +1,48 @@
 goog.declareModuleId('plugin.file.kml.KMLNodeLayerUI');
 
-goog.require('os.ui.UISwitchUI');
-goog.require('os.ui.layer.IconStyleControlsUI');
-goog.require('os.ui.layer.LabelControlsUI');
-goog.require('os.ui.layer.VectorStyleControlsUI');
+import '../../../os/ui/layer/iconstylecontrols.js';
+import '../../../os/ui/layer/labelcontrols.js';
+import '../../../os/ui/layer/vectorstylecontrols.js';
+import '../../../os/ui/uiswitch.js';
 
+import EventType from '../../../os/action/eventtype.js';
+import * as osColor from '../../../os/color.js';
+import ColorChangeType from '../../../os/command/colorchangetype.js';
+import CommandProcessor from '../../../os/command/commandprocessor.js';
+import FeatureCenterShape from '../../../os/command/feature/featurecentershapecmd.js';
+import FeatureColor from '../../../os/command/feature/featurecolorcmd.js';
+import FeatureIcon from '../../../os/command/feature/featureiconcmd.js';
+import FeatureLabel from '../../../os/command/feature/featurelabelcmd.js';
+import FeatureLabelColor from '../../../os/command/feature/featurelabelcolorcmd.js';
+import FeatureLabelSize from '../../../os/command/feature/featurelabelsizecmd.js';
+import FeatureLineDash from '../../../os/command/feature/featurelinedashcmd.js';
+import FeatureOpacity from '../../../os/command/feature/featureopacitycmd.js';
+import FeatureShape from '../../../os/command/feature/featureshapecmd.js';
+import FeatureShowLabel from '../../../os/command/feature/featureshowlabelcmd.js';
+import FeatureSize from '../../../os/command/feature/featuresizecmd.js';
+import ParallelCommand from '../../../os/command/parallelcommand.js';
+import SequenceCommand from '../../../os/command/sequencecommand.js';
+import ColumnDefinition from '../../../os/data/columndefinition.js';
 import * as dispatcher from '../../../os/dispatcher.js';
+import DynamicFeature from '../../../os/feature/dynamicfeature.js';
 import * as osFeature from '../../../os/feature/feature.js';
+import * as geo from '../../../os/geo/geo.js';
 import {ROOT} from '../../../os/os.js';
+import VectorSource from '../../../os/source/vectorsource.js';
 import * as label from '../../../os/style/label.js';
 import * as osStyle from '../../../os/style/style.js';
+import StyleField from '../../../os/style/stylefield.js';
+import StyleType from '../../../os/style/styletype.js';
+import {Controller as FeatureEditCtrl} from '../../../os/ui/featureedit.js';
+import * as kml from '../../../os/ui/file/kml/kml.js';
+import {Controller as VectorLayerUICtrl, directive as vectorLayerUIDirective} from '../../../os/ui/layer/vectorlayerui.js';
+import Module from '../../../os/ui/module.js';
 
 const googArray = goog.require('goog.array');
 const olArray = goog.require('ol.array');
 const UrlTile = goog.require('ol.source.UrlTile');
-const EventType = goog.require('os.action.EventType');
-const osColor = goog.require('os.color');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const FeatureCenterShape = goog.require('os.command.FeatureCenterShape');
-const FeatureColor = goog.require('os.command.FeatureColor');
-const FeatureIcon = goog.require('os.command.FeatureIcon');
-const FeatureLabel = goog.require('os.command.FeatureLabel');
-const FeatureLabelColor = goog.require('os.command.FeatureLabelColor');
-const FeatureLabelSize = goog.require('os.command.FeatureLabelSize');
-const FeatureLineDash = goog.require('os.command.FeatureLineDash');
-const FeatureOpacity = goog.require('os.command.FeatureOpacity');
-const FeatureShape = goog.require('os.command.FeatureShape');
-const FeatureShowLabel = goog.require('os.command.FeatureShowLabel');
-const FeatureSize = goog.require('os.command.FeatureSize');
-const ParallelCommand = goog.require('os.command.ParallelCommand');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const ColorChangeType = goog.require('os.command.style.ColorChangeType');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const DynamicFeature = goog.require('os.feature.DynamicFeature');
-const geo = goog.require('os.geo');
-const VectorSource = goog.require('os.source.Vector');
-const StyleField = goog.require('os.style.StyleField');
-const StyleType = goog.require('os.style.StyleType');
-const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
-const Module = goog.require('os.ui.Module');
-const kml = goog.require('os.ui.file.kml');
-const {Controller: VectorLayerUICtrl, directive: vectorLayerUIDirective} = goog.require('os.ui.layer.VectorLayerUI');
 
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
@@ -584,7 +585,7 @@ export class Controller extends VectorLayerUICtrl {
           /**
            * @param {string} layerId
            * @param {string} featureId
-           * @return {os.command.ICommand}
+           * @return {ICommand}
            */
           function(layerId, featureId) {
             return new FeatureColor(layerId, featureId, colorValue);
@@ -605,7 +606,7 @@ export class Controller extends VectorLayerUICtrl {
           /**
            * @param {string} layerId
            * @param {string} featureId
-           * @return {os.command.ICommand}
+           * @return {ICommand}
            */
           function(layerId, featureId) {
             var cmds = [];
@@ -631,7 +632,7 @@ export class Controller extends VectorLayerUICtrl {
           /**
            * @param {string} layerId
            * @param {string} featureId
-           * @return {os.command.ICommand}
+           * @return {ICommand}
            */
           function(layerId, featureId) {
             return new FeatureColor(layerId, featureId, colorValue, null,
@@ -646,7 +647,7 @@ export class Controller extends VectorLayerUICtrl {
         /**
          * @param {string} layerId
          * @param {string} featureId
-         * @return {os.command.ICommand}
+         * @return {ICommand}
          */
         function(layerId, featureId) {
           return new FeatureColor(layerId, featureId, colorValue);
@@ -675,7 +676,7 @@ export class Controller extends VectorLayerUICtrl {
       /**
        * @param {string} layerId
        * @param {string} featureId
-       * @return {os.command.ICommand}
+       * @return {ICommand}
        */
       function(layerId, featureId) {
         return new FeatureColor(layerId, featureId, colorValue, null, ColorChangeType.FILL);
@@ -694,7 +695,7 @@ export class Controller extends VectorLayerUICtrl {
         /**
          * @param {string} layerId
          * @param {string} featureId
-         * @return {os.command.ICommand}
+         * @return {ICommand}
          */
         function(layerId, featureId) {
           return new FeatureSize(layerId, featureId, value);
@@ -713,7 +714,7 @@ export class Controller extends VectorLayerUICtrl {
         /**
          * @param {string} layerId
          * @param {string} featureId
-         * @return {os.command.ICommand}
+         * @return {ICommand}
          */
         function(layerId, featureId) {
           return new FeatureLineDash(layerId, featureId, value);
@@ -733,7 +734,7 @@ export class Controller extends VectorLayerUICtrl {
           /**
            * @param {string} layerId
            * @param {string} featureId
-           * @return {os.command.ICommand}
+           * @return {ICommand}
            */
           function(layerId, featureId) {
             return new FeatureIcon(layerId, featureId, value);
@@ -753,7 +754,7 @@ export class Controller extends VectorLayerUICtrl {
           /**
            * @param {string} layerId
            * @param {string} featureId
-           * @return {os.command.ICommand}
+           * @return {ICommand}
            */
           function(layerId, featureId) {
             return new FeatureShape(layerId, featureId, value);
@@ -773,7 +774,7 @@ export class Controller extends VectorLayerUICtrl {
           /**
            * @param {string} layerId
            * @param {string} featureId
-           * @return {os.command.ICommand}
+           * @return {ICommand}
            */
           function(layerId, featureId) {
             return new FeatureCenterShape(layerId, featureId, value);
@@ -798,7 +799,7 @@ export class Controller extends VectorLayerUICtrl {
         /**
          * @param {string} layerId
          * @param {string} featureId
-         * @return {os.command.ICommand}
+         * @return {ICommand}
          */
         function(layerId, featureId) {
           return new FeatureOpacity(layerId, featureId, value, null, ColorChangeType.STROKE);
@@ -823,7 +824,7 @@ export class Controller extends VectorLayerUICtrl {
           /**
            * @param {string} layerId
            * @param {string} featureId
-           * @return {os.command.ICommand}
+           * @return {ICommand}
            */
           function(layerId, featureId) {
             return new FeatureOpacity(layerId, featureId, value, null, ColorChangeType.FILL);
@@ -842,7 +843,7 @@ export class Controller extends VectorLayerUICtrl {
         /**
          * @param {string} layerId
          * @param {string} featureId
-         * @return {os.command.ICommand}
+         * @return {ICommand}
          */
         function(layerId, featureId) {
           return new FeatureLabelSize(layerId, featureId, value);
@@ -862,7 +863,7 @@ export class Controller extends VectorLayerUICtrl {
           /**
            * @param {string} layerId
            * @param {string} featureId
-           * @return {os.command.ICommand}
+           * @return {ICommand}
            */
           function(layerId, featureId) {
             return new FeatureLabelColor(layerId, featureId, value);
@@ -896,7 +897,7 @@ export class Controller extends VectorLayerUICtrl {
       /**
        * @param {string} layerId
        * @param {string} featureId
-       * @return {os.command.ICommand}
+       * @return {ICommand}
        */
       var fn = function(layerId, featureId) {
         return new FeatureLabel(layerId, featureId, this.scope['labels']);
@@ -916,7 +917,7 @@ export class Controller extends VectorLayerUICtrl {
         /**
          * @param {string} layerId
          * @param {string} featureId
-         * @return {os.command.ICommand}
+         * @return {ICommand}
          */
         function(layerId, featureId) {
           return new FeatureShowLabel(layerId, featureId, value);
@@ -1008,7 +1009,7 @@ export class Controller extends VectorLayerUICtrl {
   /**
    * Creates a command to run on each feature
    *
-   * @param {function(string, string):os.command.ICommand} commandFunction
+   * @param {function(string, string):ICommand} commandFunction
    */
   createFeatureCommand(commandFunction) {
     var cmds = [];

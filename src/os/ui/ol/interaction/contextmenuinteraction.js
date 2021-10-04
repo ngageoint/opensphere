@@ -1,25 +1,25 @@
-goog.module('os.ui.ol.interaction.ContextMenu');
+goog.declareModuleId('os.ui.ol.interaction.ContextMenu');
 
-goog.require('os.ol.mixin.render');
+import '../../../ol/mixin/rendermixin.js';
+import {rightClick} from '../../../ol/events/condition.js';
+import {getAreaManager} from '../../../query/queryinstance.js';
+import {getEventFeature, getFirstPolygon} from './interaction.js';
 
 const Line = goog.require('goog.math.Line');
 const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
 const Interaction = goog.require('ol.interaction.Interaction');
-const {rightClick} = goog.require('os.ol.events.condition');
-const {getAreaManager} = goog.require('os.query.instance');
-const {getEventFeature, getFirstPolygon} = goog.require('os.ui.ol.interaction');
 
 const Feature = goog.requireType('ol.Feature');
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 const Layer = goog.requireType('ol.layer.Layer');
-const Menu = goog.requireType('os.ui.menu.Menu');
-const ContextMenuOptions = goog.requireType('os.ui.ol.interaction.ContextMenuOptions');
+const {default: Menu} = goog.requireType('os.ui.menu.Menu');
+const {default: ContextMenuOptions} = goog.requireType('os.ui.ol.interaction.ContextMenuOptions');
 
 
 /**
  * Creates the menu when spatial areas are clicked
  */
-class ContextMenu extends Interaction {
+export default class ContextMenu extends Interaction {
   /**
    * Constructor.
    * @param {ContextMenuOptions=} opt_options
@@ -151,5 +151,3 @@ class ContextMenu extends Interaction {
     }
   }
 }
-
-exports = ContextMenu;

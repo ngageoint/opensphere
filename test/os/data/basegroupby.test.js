@@ -3,7 +3,7 @@ goog.require('os.structs.TriStateTreeNode');
 
 describe('os.data.groupby.BaseGroupBy', function() {
   const MockTypeGroupBy = goog.module.get('os.data.groupby.MockTypeGroupBy');
-  const TriStateTreeNode = goog.module.get('os.structs.TriStateTreeNode');
+  const {default: TriStateTreeNode} = goog.module.get('os.structs.TriStateTreeNode');
 
   it('should create groups and keep track of counts', function() {
     var by = new MockTypeGroupBy();

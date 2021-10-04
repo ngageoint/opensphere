@@ -1,8 +1,17 @@
-goog.module('os.ui.TimeSettingsUI');
+goog.declareModuleId('os.ui.TimeSettingsUI');
 
-goog.require('os.ui.datetime.DateTimeUI');
-goog.require('os.ui.popover.PopoverUI');
-goog.require('os.ui.time.timeDirective');
+import './datetime/datetime.js';
+import './popover/popover.js';
+import './time/time.js';
+import Metrics from '../metrics/metrics.js';
+import * as keys from '../metrics/metricskeys.js';
+import {ROOT} from '../os.js';
+import * as time from '../time/time.js';
+import TimelineController from '../time/timelinecontroller.js';
+import TimelineEventType from '../time/timelineeventtype.js';
+import Module from './module.js';
+import * as osWindow from './window.js';
+import WindowEventType from './windoweventtype.js';
 
 const dispose = goog.require('goog.dispose');
 const dom = goog.require('goog.dom');
@@ -10,15 +19,6 @@ const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
 const RangeSet = goog.require('goog.math.RangeSet');
-const {ROOT} = goog.require('os');
-const Metrics = goog.require('os.metrics.Metrics');
-const keys = goog.require('os.metrics.keys');
-const time = goog.require('os.time');
-const TimelineController = goog.require('os.time.TimelineController');
-const TimelineEventType = goog.require('os.time.TimelineEventType');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const osWindow = goog.require('os.ui.window');
 
 const Range = goog.requireType('goog.math.Range');
 const TimelineUI = goog.requireType('os.ui.timeline.TimelineUI');
@@ -29,7 +29,7 @@ const TimelineUI = goog.requireType('os.ui.timeline.TimelineUI');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: true,
@@ -42,7 +42,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'timesettings';
+export const directiveTag = 'timesettings';
 
 
 /**
@@ -56,7 +56,7 @@ Module.directive('timesettings', [directive]);
  * Controller for the timeline settings dialog
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -355,9 +355,3 @@ class Controller {
     return /** @type {boolean} */ (valid);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

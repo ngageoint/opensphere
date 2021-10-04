@@ -1,18 +1,18 @@
 goog.declareModuleId('plugin.file.kml.menu');
 
+import * as buffer from '../../../os/buffer/buffer.js';
 import * as osFeature from '../../../os/feature/feature.js';
+import TriState from '../../../os/structs/tristate.js';
+import * as BufferDialogUI from '../../../os/ui/buffer/bufferdialog.js';
+import launchMultiFeatureInfo from '../../../os/ui/feature/launchmultifeatureinfo.js';
+import * as layerMenu from '../../../os/ui/menu/layermenu.js';
 import KMLNetworkLinkNode from './ui/kmlnetworklinknode.js';
 import KMLNode from './ui/kmlnode.js';
 
 const asserts = goog.require('goog.asserts');
-const buffer = goog.require('os.buffer');
-const BufferDialogUI = goog.require('os.ui.buffer.BufferDialogUI');
-const TriState = goog.require('os.structs.TriState');
-const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
-const layerMenu = goog.require('os.ui.menu.layer');
 
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 
 
 /**

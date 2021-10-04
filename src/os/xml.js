@@ -1,4 +1,4 @@
-goog.module('os.xml');
+goog.declareModuleId('os.xml');
 
 const googArray = goog.require('goog.array');
 const dom = goog.require('goog.dom');
@@ -12,19 +12,19 @@ const olXml = goog.require('ol.xml');
  * Default document used when creating new elements.
  * @type {Document}
  */
-const DOCUMENT = googDomXml.createDocument();
+export const DOCUMENT = googDomXml.createDocument();
 
 /**
  * KML namespace URI
  * @type {string}
  */
-const KMLNS = 'http://www.opengis.net/kml/2.2';
+export const KMLNS = 'http://www.opengis.net/kml/2.2';
 
 /**
  * KML namespace URI
  * @type {string}
  */
-const XMLNS = 'http://www.w3.org/2000/xmlns/';
+export const XMLNS = 'http://www.w3.org/2000/xmlns/';
 
 /**
  * Escape invalid xml chars
@@ -32,7 +32,7 @@ const XMLNS = 'http://www.w3.org/2000/xmlns/';
  * @param {string} text
  * @return {string} The escaped string
  */
-const escape = function(text) {
+export const escape = function(text) {
   if (typeof text === 'string') {
     text = text.replace(/\&/g, '&amp;');
     text = text.replace(/</g, '&lt;');
@@ -50,7 +50,7 @@ const escape = function(text) {
  * @param {string} text
  * @return {string} The escaped string
  */
-const unescape = function(text) {
+export const unescape = function(text) {
   if (typeof text === 'string') {
     text = text.replace(/\&amp;/g, '&');
     text = text.replace(/&lt;/g, '<');
@@ -72,7 +72,7 @@ const unescape = function(text) {
  * @param {Object.<string, string>=} opt_attr Attributes to add to the element
  * @return {!Element} The element
  */
-const appendElement = function(tag, parent, opt_content, opt_attr) {
+export const appendElement = function(tag, parent, opt_content, opt_attr) {
   var el = createElement(tag, parent.ownerDocument, opt_content, opt_attr);
   parent.appendChild(el);
   return el;
@@ -89,7 +89,7 @@ const appendElement = function(tag, parent, opt_content, opt_attr) {
  * @param {Object.<string, string>=} opt_attr Attributes to add to the element
  * @return {!Element} The element
  */
-const appendElementNS = function(tag, nsUri, parent, opt_content, opt_attr) {
+export const appendElementNS = function(tag, nsUri, parent, opt_content, opt_attr) {
   var el = createElementNS(tag, nsUri, parent.ownerDocument, opt_content, opt_attr);
   parent.appendChild(el);
   return el;
@@ -104,7 +104,7 @@ const appendElementNS = function(tag, nsUri, parent, opt_content, opt_attr) {
  * @param {Object.<string, string>=} opt_attr Attributes to add to the element
  * @return {!Element} The element
  */
-const createElement = function(tag, opt_doc, opt_content, opt_attr) {
+export const createElement = function(tag, opt_doc, opt_content, opt_attr) {
   var doc = opt_doc || DOCUMENT;
   var el = doc.createElement(tag);
 
@@ -129,7 +129,7 @@ const createElement = function(tag, opt_doc, opt_content, opt_attr) {
  * @param {Object.<string, string>=} opt_attr Attributes to add to the element
  * @return {!Element} The element
  */
-const createElementNS = function(tag, nsUri, opt_doc, opt_content, opt_attr) {
+export const createElementNS = function(tag, nsUri, opt_doc, opt_content, opt_attr) {
   var doc = opt_doc || DOCUMENT;
   var el = doc.createElementNS(nsUri, tag);
 
@@ -151,7 +151,7 @@ const createElementNS = function(tag, nsUri, opt_doc, opt_content, opt_attr) {
  * @param {string} tag The tag name to match
  * @return {!Array} The matched children
  */
-const getChildrenByTagName = function(element, tag) {
+export const getChildrenByTagName = function(element, tag) {
   var children = dom.getChildren(element);
   return googArray.filter(children, function(node) {
     return node.localName == tag;
@@ -164,7 +164,7 @@ const getChildrenByTagName = function(element, tag) {
  * @param {Node} node Node.
  * @return {Date} The parsed Date object, or null if the value could not be parsed.
  */
-const readDateTime = function(node) {
+export const readDateTime = function(node) {
   // this should handle any ISO strings and is by far the fastest way to parse dates. if we run into time fields that
   // aren't being parsed correctly, be VERY careful with changes to this function and compare the difference in the
   // browser's CPU profiler. use a large (5MB+) KML with time fields as a test case.
@@ -183,7 +183,7 @@ const readDateTime = function(node) {
  * @param {string=} opt_nsUri The namespace uri
  * @return {Element} The element
  */
-const clone = function(node, parent, opt_ns, opt_nsUri) {
+export const clone = function(node, parent, opt_ns, opt_nsUri) {
   if (node.nodeType === NodeType.TEXT) {
     var text = parent.ownerDocument.createTextNode(node.textContent);
     parent.appendChild(text);
@@ -228,7 +228,7 @@ const clone = function(node, parent, opt_ns, opt_nsUri) {
  * @param {!(Document|Element)} xml The document or the root node of the subtree.
  * @return {string} The serialized document.
  */
-const serialize = function(xml) {
+export const serialize = function(xml) {
   // the XMLSerializer in FF adds empty xmlns attributes that cause problems with some XML parsers
   return googDomXml.serialize(xml).replace(/ xmlns=""/g, '');
 };
@@ -240,7 +240,7 @@ const serialize = function(xml) {
  * @param {*} defaultValue
  * @return {*}
  */
-const getElementValueOrDefault = function(element, defaultValue) {
+export const getElementValueOrDefault = function(element, defaultValue) {
   if (element && !googString.isEmptyOrWhitespace(googString.makeSafe(element.textContent))) {
     return element.textContent;
   }
@@ -254,7 +254,7 @@ const getElementValueOrDefault = function(element, defaultValue) {
  * @param {string} selector The child selector.
  * @return {?string} The value.
  */
-const getChildValue = function(element, selector) {
+export const getChildValue = function(element, selector) {
   var child = element.querySelector(selector);
   if (child) {
     var value = googString.makeSafe(child.textContent);
@@ -270,7 +270,7 @@ const getChildValue = function(element, selector) {
  * Regex to globally find and replace all elements that look like xsi:*="*"
  * @type {RegExp}
  */
-const XSI_REGEX = /xsi:.*?=".*?"/gm;
+export const XSI_REGEX = /xsi:.*?=".*?"/gm;
 
 /**
  * Wrapper for parsing XML documents for strings. This is needed for Firefox's overly anal interpretation of the
@@ -280,27 +280,7 @@ const XSI_REGEX = /xsi:.*?=".*?"/gm;
  * @param {string} xml The text.
  * @return {Document} XML document from the text.
  */
-const loadXml = function(xml) {
+export const loadXml = function(xml) {
   xml = xml.replace(XSI_REGEX, '');
   return googDomXml.loadXml(xml);
-};
-
-exports = {
-  DOCUMENT,
-  KMLNS,
-  XMLNS,
-  escape,
-  unescape,
-  appendElement,
-  appendElementNS,
-  createElement,
-  createElementNS,
-  getChildrenByTagName,
-  readDateTime,
-  clone,
-  serialize,
-  getElementValueOrDefault,
-  getChildValue,
-  XSI_REGEX,
-  loadXml
 };

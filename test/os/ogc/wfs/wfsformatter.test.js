@@ -5,7 +5,7 @@ goog.require('os.ogc.wfs.WFSFormatter');
 describe('os.ogc.wfs.WFSFormatter', function() {
   const Uri = goog.module.get('goog.Uri');
   const QueryData = goog.module.get('goog.Uri.QueryData');
-  const WFSFormatter = goog.module.get('os.ogc.wfs.WFSFormatter');
+  const {default: WFSFormatter} = goog.module.get('os.ogc.wfs.WFSFormatter');
 
   it('gets the content type', function() {
     var formatter = new WFSFormatter();

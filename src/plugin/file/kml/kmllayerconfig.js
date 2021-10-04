@@ -1,5 +1,11 @@
 goog.declareModuleId('plugin.file.kml.KMLLayerConfig');
 
+import AltMapping from '../../../os/im/mapping/altmapping.js';
+import OrientationMapping from '../../../os/im/mapping/orientationmapping.js';
+import SemiMajorMapping from '../../../os/im/mapping/semimajormapping.js';
+import SemiMinorMapping from '../../../os/im/mapping/semiminormapping.js';
+import AbstractDataSourceLayerConfig from '../../../os/layer/config/abstractdatasourcelayerconfig.js';
+import * as net from '../../../os/net/net.js';
 import KMLImporter from './kmlimporter.js';
 import KMLLayer from './kmllayer.js';
 import KMLParser from './kmlparser.js';
@@ -7,12 +13,7 @@ import KMLSource from './kmlsource.js';
 
 const ResponseType = goog.require('goog.net.XhrIo.ResponseType');
 const userAgent = goog.require('goog.userAgent');
-const AltMapping = goog.require('os.im.mapping.AltMapping');
-const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
-const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
-const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
-const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
-const net = goog.require('os.net');
+
 
 /**
  * @extends {AbstractDataSourceLayerConfig.<plugin.file.kml.ui.KMLNode>}

@@ -1,4 +1,4 @@
-goog.module('os.action.EventType');
+goog.declareModuleId('os.action.EventType');
 
 const GoogEventType = goog.require('goog.events.EventType');
 
@@ -6,7 +6,7 @@ const GoogEventType = goog.require('goog.events.EventType');
 /**
  * @enum {string}
  */
-exports = {
+const EventType = {
 
   // layer
   IDENTIFY: 'identify',
@@ -93,3 +93,5 @@ exports = {
   REMOVE_UNSELECTED: 'removeUnselected',
   SORT_SELECTED: 'sortSelected'
 };
+
+export default EventType;

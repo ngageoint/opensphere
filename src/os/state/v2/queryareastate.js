@@ -1,20 +1,20 @@
-goog.module('os.state.v2.QueryArea');
+goog.declareModuleId('os.state.v2.QueryArea');
 
-goog.require('os.mixin.geometry');
+import '../../mixin/geometrymixin.js';
+import RecordField from '../../data/recordfield.js';
+import Format from '../../ogc/format.js';
+import {formatPolygon, readKMLGeometry} from '../../ogc/spatial.js';
+import {getAreaManager, getQueryManager} from '../../query/queryinstance.js';
+import {appendElement} from '../../xml.js';
+import AbstractState from '../abstractstate.js';
+import XMLState from '../xmlstate.js';
+import QueryTag from './querytag.js';
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');
 const log = goog.require('goog.log');
 const {getRandomString} = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
-const RecordField = goog.require('os.data.RecordField');
-const {formatPolygon, readKMLGeometry} = goog.require('os.ogc.spatial');
-const Format = goog.require('os.ogc.spatial.Format');
-const {getAreaManager, getQueryManager} = goog.require('os.query.instance');
-const AbstractState = goog.require('os.state.AbstractState');
-const XMLState = goog.require('os.state.XMLState');
-const QueryTag = goog.require('os.state.v2.QueryTag');
-const {appendElement} = goog.require('os.xml');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -22,7 +22,7 @@ const Logger = goog.requireType('goog.log.Logger');
 /**
  * @todo Query areas added via state file should only apply to the layers specified in the file.
  */
-class QueryArea extends XMLState {
+export default class QueryArea extends XMLState {
   /**
    * Constructor.
    */
@@ -232,5 +232,3 @@ const logger = log.getLogger('os.state.v2.QueryArea');
  * @type {Object<string, !Array<!Feature>>}
  */
 const addedAreas = {};
-
-exports = QueryArea;

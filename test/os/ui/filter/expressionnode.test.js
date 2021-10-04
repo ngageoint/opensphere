@@ -4,9 +4,9 @@ goog.require('os.ui.filter.ui.ExpressionNode');
 
 
 describe('os.ui.filter.ui.ExpressionNode', function() {
-  const ColumnDefinition = goog.module.get('os.data.ColumnDefinition');
-  const Op = goog.module.get('os.ui.filter.op.Op');
-  const ExpressionNode = goog.module.get('os.ui.filter.ui.ExpressionNode');
+  const {default: ColumnDefinition} = goog.module.get('os.data.ColumnDefinition');
+  const {default: Op} = goog.module.get('os.ui.filter.op.Op');
+  const {default: ExpressionNode} = goog.module.get('os.ui.filter.ui.ExpressionNode');
 
   var cols = [
     new ColumnDefinition('ALT'),

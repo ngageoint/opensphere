@@ -1,18 +1,21 @@
-goog.module('os.command.VectorLayerPreset');
+goog.declareModuleId('os.command.VectorLayerPreset');
 
-const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const State = goog.require('os.command.State');
-const DataManager = goog.require('os.data.DataManager');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const action = goog.require('os.im.action');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const PropertyChange = goog.require('os.source.PropertyChange');
+import DataManager from '../data/datamanager.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import * as action from '../im/action/importaction.js';
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import PropertyChange from '../source/propertychange.js';
+import AbstractVectorStyle from './abstractvectorstylecmd.js';
+import State from './state.js';
+
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 
 
 /**
  * Sets a layer style preset for a layer.
  */
-class VectorLayerPreset extends AbstractVectorStyle {
+export default class VectorLayerPreset extends AbstractVectorStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -44,7 +47,7 @@ class VectorLayerPreset extends AbstractVectorStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var layer = /** @type {os.layer.Vector} */ (this.getLayer());
+    var layer = /** @type {VectorLayer} */ (this.getLayer());
     return layer ? layer.persist() : undefined;
   }
 
@@ -55,7 +58,7 @@ class VectorLayerPreset extends AbstractVectorStyle {
    */
   getOldFeatureActionIds() {
     var oldIds = [];
-    var layer = /** @type {os.layer.Vector} */ (this.getLayer());
+    var layer = /** @type {VectorLayer} */ (this.getLayer());
     if (layer) {
       // save the old enabled feature action id's
       var iam = action.getImportActionManager();
@@ -85,7 +88,7 @@ class VectorLayerPreset extends AbstractVectorStyle {
 
   /**
    * Update enabled feature actions.
-   * @param {!os.layer.ILayer} layer The layer.
+   * @param {!ILayer} layer The layer.
    * @protected
    */
   applyFeatureActions(layer) {
@@ -119,5 +122,3 @@ class VectorLayerPreset extends AbstractVectorStyle {
     super.finish(config);
   }
 }
-
-exports = VectorLayerPreset;

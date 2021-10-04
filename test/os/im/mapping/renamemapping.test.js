@@ -3,7 +3,7 @@ goog.require('os.im.mapping.RenameMapping');
 
 describe('os.im.mapping.RenameMapping', function() {
   const mapping = goog.module.get('os.im.mapping');
-  const RenameMapping = goog.module.get('os.im.mapping.RenameMapping');
+  const {default: RenameMapping} = goog.module.get('os.im.mapping.RenameMapping');
 
   var rm = new RenameMapping();
 

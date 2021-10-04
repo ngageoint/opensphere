@@ -1,14 +1,15 @@
-goog.module('os.config.InterpolationSettingsUI');
+goog.declareModuleId('os.config.InterpolationSettingsUI');
+
+import InterpolateFeatures from '../command/interpolatefeaturescmd.js';
+import {SettingsKey, getConfig, setConfig} from '../interpolate.js';
+import {ROOT} from '../os.js';
+import Module from '../ui/module.js';
+import {getSettings} from './configinstance.js';
 
 const Delay = goog.require('goog.async.Delay');
 const GoogEventType = goog.require('goog.events.EventType');
-const {ROOT} = goog.require('os');
-const InterpolateFeatures = goog.require('os.command.InterpolateFeatures');
-const {getSettings} = goog.require('os.config.instance');
-const {SettingsKey, getConfig, setConfig} = goog.require('os.interpolate');
-const Module = goog.require('os.ui.Module');
 
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
@@ -16,7 +17,7 @@ const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
  *
  * @return {angular.Directive}
  */
-const directive = function() {
+export const directive = function() {
   return {
     restrict: 'AE',
     replace: true,
@@ -26,12 +27,11 @@ const directive = function() {
   };
 };
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'interpolationsettings';
+export const directiveTag = 'interpolationsettings';
 
 
 /**
@@ -44,7 +44,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for interpolation settings
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -140,9 +140,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  directive,
-  directiveTag,
-  Controller
-};

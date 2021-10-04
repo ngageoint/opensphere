@@ -1,9 +1,9 @@
-goog.module('os.ui.modal.ConfirmationModalUI');
+goog.declareModuleId('os.ui.modal.ConfirmationModalUI');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {close, create, exists, getById} = goog.require('os.ui.window');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {close, create, exists, getById} from '../window.js';
+import WindowEventType from '../windoweventtype.js';
 
 
 /**
@@ -18,7 +18,7 @@ const {close, create, exists, getById} = goog.require('os.ui.window');
  *   onCancel: function()
  * }}
  */
-let ConfirmationModalOptions;
+export let ConfirmationModalOptions;
 
 /**
  * The confirmation-modal directive is a catch-all modal display for the main page. This modal dialog is controlled via
@@ -29,7 +29,7 @@ let ConfirmationModalOptions;
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -44,7 +44,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'confirmation-modal';
+export const directiveTag = 'confirmation-modal';
 
 /**
  * Register directive.
@@ -55,7 +55,7 @@ Module.directive('confirmationModal', [directive]);
  * Controller function for the confirmation-modal directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -195,10 +195,3 @@ class Controller {
  * @const {string}
  */
 Controller.ID = 'confirmModal';
-
-exports = {
-  ConfirmationModalOptions,
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,11 +1,10 @@
 goog.declareModuleId('plugin.places.ui.launchSavePlaces');
 
+import * as osWindow from '../../../os/ui/window.js';
 import * as places from '../places.js';
 import {directiveTag as savePlacesUi} from './saveplaces.js';
 
-const osWindow = goog.require('os.ui.window');
-
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**

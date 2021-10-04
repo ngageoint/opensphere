@@ -1,12 +1,11 @@
-goog.module('os.search.IGeoSearch');
-
+goog.declareModuleId('os.search.IGeoSearch');
 
 /**
  * Interface for a search provider that supports filtering by GeoJSON shape.
  *
  * @interface
  */
-class IGeoSearch {
+export default class IGeoSearch {
   /**
    * Set the extent to apply to the query. The extent should be in the format `[minx, miny, maxx, maxy]`.
    * @param {Array<number>|undefined} center The center point, as `[lon, lat]`.
@@ -55,5 +54,3 @@ class IGeoSearch {
  * @const
  */
 IGeoSearch.ID = 'os.search.IGeoSearch';
-
-exports = IGeoSearch;

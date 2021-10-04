@@ -1,13 +1,12 @@
 goog.declareModuleId('plugin.file.csv.CSVDescriptor');
 
+import Settings from '../../../os/config/settings.js';
+import FileDescriptor from '../../../os/data/filedescriptor.js';
+import LayerType from '../../../os/layer/layertype.js';
+import * as csv from '../../../os/ui/file/csv/csv.js';
 import {ALLOW_ELLIPSE_CONFIG} from '../../../os/ui/layer/ellipsecolumns.js';
 import CSVExporter from './csvexporter.js';
 import CSVParserConfig from './csvparserconfig.js';
-
-const Settings = goog.require('os.config.Settings');
-const FileDescriptor = goog.require('os.data.FileDescriptor');
-const LayerType = goog.require('os.layer.LayerType');
-const csv = goog.require('os.ui.file.csv');
 
 
 /**

@@ -1,17 +1,20 @@
-goog.module('os.ui.query.area.ChooseAreaUI');
+goog.declareModuleId('os.ui.query.area.ChooseAreaUI');
+
+import {ROOT} from '../../../os.js';
+import {getAreaManager} from '../../../query/queryinstance.js';
+import Module from '../../module.js';
+import {apply} from '../../ui.js';
 
 const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
-const {ROOT} = goog.require('os');
-const {getAreaManager} = goog.require('os.query.instance');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
+
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: {
     'area': '=?',
@@ -29,7 +32,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'choosearea';
+export const directiveTag = 'choosearea';
 
 /**
  * Add the directive to the os module
@@ -39,7 +42,7 @@ Module.directive(directiveTag, [directive]);
 /**
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -84,7 +87,7 @@ class Controller extends Disposable {
   }
 
   /**
-   * @param {os.events.PropertyChangeEvent} event
+   * @param {PropertyChangeEvent} event
    * @private
    */
   onAreasChanged_(event) {
@@ -113,9 +116,3 @@ class Controller extends Disposable {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

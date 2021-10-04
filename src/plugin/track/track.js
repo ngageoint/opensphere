@@ -1,23 +1,23 @@
 goog.declareModuleId('plugin.track');
 
+import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
+import AlertManager from '../../os/alert/alertmanager.js';
+import CommandProcessor from '../../os/command/commandprocessor.js';
 import * as osFeature from '../../os/feature/feature.js';
+import {createTrack} from '../../os/track/track.js';
+import TrackField from '../../os/track/trackfield.js';
 import KMLNodeAdd from '../file/kml/cmd/kmlnodeaddcmd.js';
 import {updatePlacemark} from '../file/kml/ui/kmlui.js';
 import PlacesManager from '../places/placesmanager.js';
 
 const log = goog.require('goog.log');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const AlertManager = goog.require('os.alert.AlertManager');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const {createTrack} = goog.require('os.track');
-const TrackField = goog.require('os.track.TrackField');
 
 const Promise = goog.requireType('goog.Promise');
 const OlFeature = goog.requireType('ol.Feature');
 const OlGeometry = goog.requireType('ol.geom.Geometry');
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const CreateOptions = goog.requireType('os.track.CreateOptions');
-const TrackFeatureLike = goog.requireType('os.track.TrackFeatureLike');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
+const {default: CreateOptions} = goog.requireType('os.track.CreateOptions');
+const {default: TrackFeatureLike} = goog.requireType('os.track.TrackFeatureLike');
 
 
 /**

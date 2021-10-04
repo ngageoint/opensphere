@@ -1,16 +1,16 @@
-goog.module('os.im.ImportProcess');
+goog.declareModuleId('os.im.ImportProcess');
 
-const FileParserConfig = goog.require('os.parse.FileParserConfig');
-const {getConfigColor} = goog.require('os.style');
-const StyleManager = goog.require('os.style.StyleManager');
-const DuplicateImportProcess = goog.require('os.ui.im.DuplicateImportProcess');
+import FileParserConfig from '../parse/fileparserconfig.js';
+import {getConfigColor} from '../style/style.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import DuplicateImportProcess from '../ui/im/duplicateimportprocess.js';
 
-const FileDescriptor = goog.requireType('os.data.FileDescriptor');
+const {default: FileDescriptor} = goog.requireType('os.data.FileDescriptor');
 
 
 /**
  */
-class ImportProcess extends DuplicateImportProcess {
+export default class ImportProcess extends DuplicateImportProcess {
   /**
    * Constructor.
    */
@@ -80,5 +80,3 @@ class ImportProcess extends DuplicateImportProcess {
     this.importFile(config);
   }
 }
-
-exports = ImportProcess;

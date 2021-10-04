@@ -1,10 +1,11 @@
-goog.module('os.olm.render.BaseShape');
+goog.declareModuleId('os.olm.render.BaseShape');
+
+import * as osMap from '../../map/map.js';
 
 const Disposable = goog.require('goog.Disposable');
 const Feature = goog.require('ol.Feature');
 const OLVectorLayer = goog.require('ol.layer.Vector');
 const OLVectorSource = goog.require('ol.source.Vector');
-const osMap = goog.require('os.map');
 
 const PluggableMap = goog.requireType('ol.PluggableMap');
 const Geometry = goog.requireType('ol.geom.Geometry');
@@ -14,7 +15,7 @@ const Style = goog.requireType('ol.style.Style');
 /**
  * @abstract
  */
-class BaseShape extends Disposable {
+export default class BaseShape extends Disposable {
   /**
    * Constructor.
    * @param {Style|Array<Style>} style Style.
@@ -111,5 +112,3 @@ class BaseShape extends Disposable {
     return this.style_;
   }
 }
-
-exports = BaseShape;

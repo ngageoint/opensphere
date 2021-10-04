@@ -1,7 +1,7 @@
-goog.module('os.ui.location.dmsLonFilter');
+goog.declareModuleId('os.ui.location.dmsLonFilter');
 
-const {toSexagesimal} = goog.require('os.geo');
-const Module = goog.require('os.ui.Module');
+import {toSexagesimal} from '../../geo/geo.js';
+import Module from '../module.js';
 
 
 /**
@@ -24,4 +24,4 @@ const filter = () => /** @type {angular.Filter} */ (filterFn);
  */
 Module.filter('dmslon', [filter]);
 
-exports = filterFn;
+export default filterFn;

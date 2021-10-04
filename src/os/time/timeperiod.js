@@ -1,5 +1,4 @@
-goog.module('os.time.period');
-
+goog.declareModuleId('os.time.period');
 
 /**
  * Takes an ISO-8601 period and converts it to milliseconds.
@@ -8,7 +7,7 @@ goog.module('os.time.period');
  * @return {number} The number of milliseconds represented by the period
  * @deprecated Please use {@link moment.duration(period).asMilliseconds()} instead
  */
-const toMillis = function(period) {
+export const toMillis = function(period) {
   return moment.duration(period).asMilliseconds();
 };
 
@@ -19,11 +18,6 @@ const toMillis = function(period) {
  * @return {string} An ISO-8601 formatted period string
  * @deprecated Please use {@link moment.duration(ms).toISOString()} instead
  */
-const toTimePeriod = function(ms) {
+export const toTimePeriod = function(ms) {
   return moment.duration(ms).toISOString();
-};
-
-exports = {
-  toMillis,
-  toTimePeriod
 };

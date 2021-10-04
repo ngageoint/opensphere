@@ -1,7 +1,7 @@
 goog.require('os.ui.filter.op.IsTrue');
 
 describe('os.ui.filter.op.IsTrue', function() {
-  const IsTrue = goog.module.get('os.ui.filter.op.IsTrue');
+  const {default: IsTrue} = goog.module.get('os.ui.filter.op.IsTrue');
 
   var op = new IsTrue();
 

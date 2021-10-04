@@ -1,20 +1,21 @@
-goog.module('os.thread.Thread');
+goog.declareModuleId('os.thread.Thread');
+
+import EventType from './eventtype.js';
+import ThreadEvent from './threadevent.js';
+import ThreadProgressEvent from './threadprogressevent.js';
 
 const Delay = goog.require('goog.async.Delay');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
-const EventType = goog.require('os.thread.EventType');
-const ThreadEvent = goog.require('os.thread.ThreadEvent');
-const ThreadProgressEvent = goog.require('os.thread.ThreadProgressEvent');
 
 const Logger = goog.requireType('goog.log.Logger');
-const IThreadJob = goog.requireType('os.thread.IThreadJob');
+const {default: IThreadJob} = goog.requireType('os.thread.IThreadJob');
 
 
 /**
  * A "pseudo-thread" that facilitates chunked processing
  */
-class Thread extends EventTarget {
+export default class Thread extends EventTarget {
   /**
    * Constructor.
    * @param {IThreadJob} job The job to run
@@ -108,5 +109,3 @@ class Thread extends EventTarget {
  * @type {Logger}
  */
 const logger = log.getLogger('os.thread.Thread');
-
-exports = Thread;

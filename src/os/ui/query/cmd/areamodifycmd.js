@@ -1,13 +1,13 @@
-goog.module('os.ui.query.cmd.AreaModify');
+goog.declareModuleId('os.ui.query.cmd.AreaModify');
 
-const State = goog.require('os.command.State');
-const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
-const {getAreaManager} = goog.require('os.query.instance');
-const AbstractArea = goog.require('os.ui.query.cmd.AbstractArea');
+import State from '../../../command/state.js';
+import {ORIGINAL_GEOM_FIELD} from '../../../interpolate.js';
+import {getAreaManager} from '../../../query/queryinstance.js';
+import AbstractArea from './abstractareacmd.js';
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -15,7 +15,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class AreaModify extends AbstractArea {
+export default class AreaModify extends AbstractArea {
   /**
    * Constructor.
    * @param {!Feature} area
@@ -104,5 +104,3 @@ class AreaModify extends AbstractArea {
     return super.canExecute();
   }
 }
-
-exports = AreaModify;

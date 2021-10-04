@@ -1,4 +1,4 @@
-goog.module('os.net.IModifier');
+goog.declareModuleId('os.net.IModifier');
 
 const Uri = goog.requireType('goog.Uri');
 
@@ -8,7 +8,7 @@ const Uri = goog.requireType('goog.Uri');
  *
  * @interface
  */
-class IModifier {
+export default class IModifier {
   /**
    * Gets the ID of the modifier
    * @return {string}
@@ -41,5 +41,3 @@ class IModifier {
    */
   modify(uri) {}
 }
-
-exports = IModifier;

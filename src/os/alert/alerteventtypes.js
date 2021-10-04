@@ -1,4 +1,4 @@
-goog.module('os.alert.AlertEventTypes');
+goog.declareModuleId('os.alert.AlertEventTypes');
 
 /**
  * @enum {string}
@@ -7,4 +7,4 @@ const AlertEventTypes = {
   DISMISS_ALERT: 'dismissAlert'
 };
 
-exports = AlertEventTypes;
+export default AlertEventTypes;

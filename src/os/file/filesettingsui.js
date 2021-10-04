@@ -1,16 +1,16 @@
-goog.module('os.file.FileSettingsUI');
+goog.declareModuleId('os.file.FileSettingsUI');
 
-const {ROOT} = goog.require('os');
-const Settings = goog.require('os.config.Settings');
-const {BaseSettingKey, FileSetting, FileSettingDefault} = goog.require('os.file');
-const Module = goog.require('os.ui.Module');
+import Settings from '../config/settings.js';
+import {ROOT} from '../os.js';
+import Module from '../ui/module.js';
+import {BaseSettingKey, FileSetting, FileSettingDefault} from './index.js';
 
 
 /**
  * The column mapping settings UI directive
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/file/filesettings.html',
@@ -18,12 +18,11 @@ const directive = () => ({
   controllerAs: 'ctrl'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'filesettings';
+export const directiveTag = 'filesettings';
 
 
 Module.directive(directiveTag, [directive]);
@@ -33,7 +32,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for file settings.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -71,9 +70,3 @@ class Controller {
     Settings.getInstance().set(settingKey, this['autoSaveFiles']);
   }
 }
-
-exports = {
-  directive,
-  Controller,
-  directiveTag
-};

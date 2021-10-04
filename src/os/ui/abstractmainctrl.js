@@ -1,16 +1,37 @@
 goog.declareModuleId('os.ui.AbstractMainCtrl');
 
-goog.require('os.ui.GlobalMenuUI');
-goog.require('os.ui.ListUI');
-goog.require('os.ui.alert.AlertPopupUI');
-goog.require('os.ui.onboarding.ContextOnboardingUI');
-goog.require('os.ui.onboarding.OnboardingUI');
-
 import '../../polyfill/chardetng.js';
-
+import './alert/alertpopup.js';
+import './globalmenu.js';
+import './listui.js';
+import './onboarding/contextonboarding.js';
+import './onboarding/onboarding.js';
 import ElectronPlugin from '../../plugin/electron/electronplugin.js';
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import {getAppName} from '../config/config.js';
+import Settings from '../config/settings.js';
+import {setFileUrlEnabled} from '../file/index.js';
+import Metrics from '../metrics/metrics.js';
+import {BROWSER} from '../metrics/metricskeys.js';
+import fixInjectorInvoke from '../mixin/fixinjectorinvoke.js';
+import CertNazi from '../net/certnazi.js';
+import ExtDomainHandler from '../net/extdomainhandler.js';
+import {loadCrossOriginCache, loadTrustedUris} from '../net/net.js';
+import ProxyHandler from '../net/proxyhandler.js';
+import * as RequestHandlerFactory from '../net/requesthandlerfactory.js';
 import {browserVersion, operatingSystem, setPeer} from '../os.js';
+import PluginManager from '../plugin/pluginmanager.js';
+import * as replacers from '../time/timereplacers.js';
+import Peer from '../xt/peer.js';
+import * as ConsentUI from './consent.js';
+import EventType from './help/helpeventtype.js';
+import MetricsManager from './metrics/metricsmanager.js';
+import NotificationManager from './notification/notificationmanager.js';
+import OnboardingManager from './onboarding/onboardingmanager.js';
 import {apply, injector, setInjector} from './ui.js';
+
+import * as ConfirmUI from './window/confirm.js';
 
 const Timer = goog.require('goog.Timer');
 const EventTarget = goog.require('goog.events.EventTarget');
@@ -19,28 +40,6 @@ const {getVersion, isFirefox} = goog.require('goog.labs.userAgent.browser');
 const NetEventType = goog.require('goog.net.EventType');
 const {getRandomString} = goog.require('goog.string');
 const {IE} = goog.require('goog.userAgent');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {getAppName} = goog.require('os.config');
-const Settings = goog.require('os.config.Settings');
-const {setFileUrlEnabled} = goog.require('os.file');
-const Metrics = goog.require('os.metrics.Metrics');
-const {BROWSER} = goog.require('os.metrics.keys');
-const fixInjectorInvoke = goog.require('os.mixin.fixInjectorInvoke');
-const {loadCrossOriginCache, loadTrustedUris} = goog.require('os.net');
-const CertNazi = goog.require('os.net.CertNazi');
-const ExtDomainHandler = goog.require('os.net.ExtDomainHandler');
-const ProxyHandler = goog.require('os.net.ProxyHandler');
-const RequestHandlerFactory = goog.require('os.net.RequestHandlerFactory');
-const PluginManager = goog.require('os.plugin.PluginManager');
-const replacers = goog.require('os.time.replacers');
-const ConsentUI = goog.require('os.ui.ConsentUI');
-const EventType = goog.require('os.ui.help.EventType');
-const MetricsManager = goog.require('os.ui.metrics.MetricsManager');
-const NotificationManager = goog.require('os.ui.notification.NotificationManager');
-const OnboardingManager = goog.require('os.ui.onboarding.OnboardingManager');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
-const Peer = goog.require('os.xt.Peer');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 

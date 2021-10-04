@@ -1,4 +1,4 @@
-goog.module('os.layer.AnimationOverlayOptions');
+goog.declareModuleId('os.layer.AnimationOverlayOptions');
 
 const Feature = goog.requireType('ol.Feature');
 const OLMap = goog.requireType('ol.Map');
@@ -16,4 +16,4 @@ const Style = goog.requireType('ol.style.Style');
  */
 let AnimationOverlayOptions;
 
-exports = AnimationOverlayOptions;
+export default AnimationOverlayOptions;

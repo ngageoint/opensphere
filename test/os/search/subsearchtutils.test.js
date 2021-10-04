@@ -3,7 +3,7 @@ goog.require('os.search.SubSearchUtils');
 
 
 describe('os.search.SubSearchUtils', function() {
-  const SubSearchUtils = goog.module.get('os.search.SubSearchUtils');
+  const {default: SubSearchUtils} = goog.module.get('os.search.SubSearchUtils');
 
   it('removes a path and it\'s children from list', () => {
     let list = [['a', 'b'], ['a', 'b', 'c'], ['d']];

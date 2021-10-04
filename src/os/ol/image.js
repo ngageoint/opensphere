@@ -1,9 +1,10 @@
-goog.module('os.ol.image');
+goog.declareModuleId('os.ol.image');
+
+import {D2R} from '../geo/geo.js';
 
 const ImageCanvas = goog.require('ol.ImageCanvas');
 const {createCanvasContext2D} = goog.require('ol.dom');
 const olExtent = goog.require('ol.extent');
-const {D2R} = goog.require('os.geo');
 
 const ImageBase = goog.requireType('ol.ImageBase');
 
@@ -15,7 +16,7 @@ const ImageBase = goog.requireType('ol.ImageBase');
  * @param {number} rotation degrees clockwise
  * @return {ImageCanvas} The rotated image
  */
-const rotate = function(image, rotation) {
+export const rotate = function(image, rotation) {
   var rad = rotation * D2R;
   var origExtent = image.getExtent();
   var center = olExtent.getCenter(origExtent);
@@ -69,8 +70,4 @@ const rotate_ = function(rotation, x, y) {
   var sin = Math.sin(rotation);
   var cos = Math.cos(rotation);
   return [x * cos - y * sin, y * cos + x * sin];
-};
-
-exports = {
-  rotate
 };

@@ -1,7 +1,8 @@
-goog.module('os.net.VariableReplacer');
+goog.declareModuleId('os.net.VariableReplacer');
+
+import AbstractModifier from './abstractmodifier.js';
 
 const log = goog.require('goog.log');
-const AbstractModifier = goog.require('os.net.AbstractModifier');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -20,7 +21,7 @@ const Logger = goog.requireType('goog.log.Logger');
  *    return submatch;
  *  });
  */
-class VariableReplacer extends AbstractModifier {
+export default class VariableReplacer extends AbstractModifier {
   /**
    * Constructor.
    */
@@ -107,5 +108,3 @@ const logger = log.getLogger('os.net.VariableReplacer');
  * @private
  */
 const replacers = {};
-
-exports = VariableReplacer;

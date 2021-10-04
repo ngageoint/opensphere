@@ -1,4 +1,4 @@
-goog.module('os.ui.columnactions.IColumnActionModel');
+goog.declareModuleId('os.ui.columnactions.IColumnActionModel');
 
 /**
  * The interface that should be implemented by all column types that want to use a column action.
@@ -6,7 +6,7 @@ goog.module('os.ui.columnactions.IColumnActionModel');
  *
  * @interface
  */
-class IColumnActionModel {
+export default class IColumnActionModel {
   /**
    * Get the column title
    * @return {string}
@@ -19,5 +19,3 @@ class IColumnActionModel {
    */
   getDataField() {}
 }
-
-exports = IColumnActionModel;

@@ -1,9 +1,9 @@
-goog.module('os.ui.arc.IARCDescriptor');
+goog.declareModuleId('os.ui.arc.IARCDescriptor');
 
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const IServerDescriptor = goog.requireType('os.data.IServerDescriptor');
-const IFilterable = goog.requireType('os.filter.IFilterable');
-const IFeatureTypeDescriptor = goog.requireType('os.ui.ogc.IFeatureTypeDescriptor');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: IServerDescriptor} = goog.requireType('os.data.IServerDescriptor');
+const {default: IFilterable} = goog.requireType('os.filter.IFilterable');
+const {default: IFeatureTypeDescriptor} = goog.requireType('os.ui.ogc.IFeatureTypeDescriptor');
 
 
 /**
@@ -15,7 +15,7 @@ const IFeatureTypeDescriptor = goog.requireType('os.ui.ogc.IFeatureTypeDescripto
  * @extends {IFilterable}
  * @extends {IFeatureTypeDescriptor}
  */
-class IARCDescriptor {
+export default class IARCDescriptor {
   /**
    * Get the url
    * @return {?string}
@@ -46,5 +46,3 @@ class IARCDescriptor {
  * @const
  */
 IARCDescriptor.ID = 'os.ui.arc.IARCDescriptor';
-
-exports = IARCDescriptor;

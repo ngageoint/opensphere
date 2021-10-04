@@ -1,16 +1,15 @@
 goog.declareModuleId('plugin.vectortools.MappingCounterUI');
 
+import ColumnMappingManager from '../../os/column/columnmappingmanager.js';
 import * as os from '../../os/os.js';
+import ColumnMappingSettings from '../../os/ui/column/mapping/columnmappingsettings.js';
+import * as windows from '../../os/ui/menu/windowsmenu.js';
+import Module from '../../os/ui/module.js';
 import * as ui from '../../os/ui/ui.js';
 import * as vectortools from './vectortools.js';
 
 const EventType = goog.require('goog.events.EventType');
 const googObject = goog.require('goog.object');
-const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
-const Module = goog.require('os.ui.Module');
-const ColumnMappingSettings = goog.require('os.ui.column.mapping.ColumnMappingSettings');
-const windows = goog.require('os.ui.menu.windows');
-
 
 
 /**

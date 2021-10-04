@@ -1,12 +1,13 @@
-goog.module('os.config.UnitSettingsUI');
+goog.declareModuleId('os.config.UnitSettingsUI');
+
+import {ROOT} from '../os.js';
+import Module from '../ui/module.js';
+import {apply} from '../ui/ui.js';
+import UnitManager from '../unit/unitmanager.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const {ROOT} = goog.require('os');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const UnitManager = goog.require('os.unit.UnitManager');
 
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
@@ -14,7 +15,7 @@ const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
  *
  * @return {angular.Directive}
  */
-const directive = function() {
+export const directive = function() {
   return {
     restrict: 'AE',
     replace: true,
@@ -24,12 +25,11 @@ const directive = function() {
   };
 };
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'unitsettings';
+export const directiveTag = 'unitsettings';
 
 
 /**
@@ -42,7 +42,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for unit settings
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -115,9 +115,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  directive,
-  directiveTag,
-  Controller
-};

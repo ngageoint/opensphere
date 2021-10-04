@@ -1,16 +1,13 @@
-goog.module('os.data.IServerDescriptor');
-
+goog.declareModuleId('os.data.IServerDescriptor');
 
 /**
  * Interface for descriptors loaded from a server.
  *
  * @interface
  */
-class IServerDescriptor {
+export default class IServerDescriptor {
   /**
    * Mark the descriptor as updated.
    */
   updatedFromServer() {}
 }
-
-exports = IServerDescriptor;

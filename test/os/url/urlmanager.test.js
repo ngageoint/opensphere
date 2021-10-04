@@ -5,8 +5,8 @@ goog.require('os.url.UrlManager');
 
 describe('os.url.UrlManager', function() {
   const {getCount} = goog.module.get('goog.object');
-  const EventType = goog.module.get('os.structs.EventType');
-  const UrlManager = goog.module.get('os.url.UrlManager');
+  const {default: EventType} = goog.module.get('os.structs.EventType');
+  const {default: UrlManager} = goog.module.get('os.url.UrlManager');
 
   var urlman = UrlManager.getInstance();
   var baseUrl1 = 'https://example.com/services/';

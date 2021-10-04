@@ -1,11 +1,12 @@
-goog.module('os.ui.file.method.ImportMethod');
+goog.declareModuleId('os.ui.file.method.ImportMethod');
+
+import EventType from '../../../events/eventtype.js';
+import ImportManager from '../../im/importmanager.js';
+import * as osWindow from '../../window.js';
+import {directiveTag as importUi} from '../importdialog.js';
+import UrlMethod from './urlmethod.js';
 
 const log = goog.require('goog.log');
-const EventType = goog.require('os.events.EventType');
-const {directiveTag: importUi} = goog.require('os.ui.file.ImportDialogUI');
-const UrlMethod = goog.require('os.ui.file.method.UrlMethod');
-const ImportManager = goog.require('os.ui.im.ImportManager');
-const osWindow = goog.require('os.ui.window');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -13,7 +14,7 @@ const Logger = goog.requireType('goog.log.Logger');
 /**
  * Import method handling both local files and URL's.
  */
-class ImportMethod extends UrlMethod {
+export default class ImportMethod extends UrlMethod {
   /**
    * Constructor.
    * @param {boolean=} opt_keepFile Whether the file method will keep the original File reference around
@@ -105,5 +106,3 @@ class ImportMethod extends UrlMethod {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.file.method.ImportMethod');
-
-exports = ImportMethod;

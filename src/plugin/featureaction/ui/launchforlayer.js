@@ -1,12 +1,11 @@
 goog.declareModuleId('plugin.im.action.feature.ui.launchForLayer');
 
+import {ICON} from '../../../os/im/action/importaction.js';
+import * as osLayer from '../../../os/layer/layer.js';
 import {sanitizeId} from '../../../os/ui/ui.js';
+import * as osWindow from '../../../os/ui/window.js';
 import {HELP_TEXT, TITLE} from '../featureaction.js';
 import {directiveTag as featureActionsUi} from './featureactionsui.js';
-
-const {ICON} = goog.require('os.im.action');
-const osLayer = goog.require('os.layer');
-const osWindow = goog.require('os.ui.window');
 
 
 /**

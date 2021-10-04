@@ -1,13 +1,13 @@
-goog.module('os.config.ProjectionSettings');
+goog.declareModuleId('os.config.ProjectionSettings');
 
-const {directiveTag: settingsUi} = goog.require('os.config.ProjectionSettingsUI');
-const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
+import SettingPlugin from '../ui/config/settingplugin.js';
+import {directiveTag as settingsUi} from './projectionsettingsui.js';
 
 
 /**
  * Projection settings plugin.
  */
-class ProjectionSettings extends SettingPlugin {
+export default class ProjectionSettings extends SettingPlugin {
   /**
    * Constructor.
    */
@@ -22,5 +22,3 @@ class ProjectionSettings extends SettingPlugin {
     this.setUI(settingsUi);
   }
 }
-
-exports = ProjectionSettings;

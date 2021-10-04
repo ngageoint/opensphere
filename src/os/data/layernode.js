@@ -1,35 +1,37 @@
-goog.module('os.data.LayerNode');
+goog.declareModuleId('os.data.LayerNode');
+
+import {instanceOf, registerClass} from '../classregistry.js';
+import LayerEventType from '../events/layereventtype.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import ImportActionEventType from '../im/action/importactioneventtype.js';
+import ImportActionManager from '../im/action/importactionmanager.js';
+import osImplements from '../implements.js';
+import ILayerProvider from '../layer/ilayerprovider.js';
+import LayerClass from '../layer/layerclass.js';
+import LayerGroup from '../layer/layergroup.js';
+import LayerPropertyChange from '../layer/propertychange.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {getQueryManager} from '../query/queryinstance.js';
+import PropertyChange from '../source/propertychange.js';
+import VectorSource from '../source/vectorsource.js';
+import TriState from '../structs/tristate.js';
+import ILayerUIProvider from '../ui/ilayeruiprovider.js';
+import {directiveTag as layerVisibility} from '../ui/layer/layervisibility.js';
+import {directiveTag as featureCount} from '../ui/node/featurecount.js';
+import {directiveTag as layerType} from '../ui/node/layertype.js';
+import {directiveTag as tileLoading} from '../ui/node/tileloading.js';
+import SlickTreeNode from '../ui/slick/slicktreenode.js';
+import {directiveTag as checkboxUi} from '../ui/tristatecheckbox.js';
+import {NodeClass} from './data.js';
+import DataManager from './datamanager.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
-const {instanceOf, registerClass} = goog.require('os.classRegistry');
-const {NodeClass} = goog.require('os.data');
-const DataManager = goog.require('os.data.DataManager');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const osImplements = goog.require('os.implements');
-const ILayerProvider = goog.require('os.layer.ILayerProvider');
-const LayerClass = goog.require('os.layer.LayerClass');
-const LayerGroup = goog.require('os.layer.LayerGroup');
-const LayerPropertyChange = goog.require('os.layer.PropertyChange');
-const {getMapContainer} = goog.require('os.map.instance');
-const {getQueryManager} = goog.require('os.query.instance');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const VectorSource = goog.require('os.source.Vector');
-const TriState = goog.require('os.structs.TriState');
-const ILayerUIProvider = goog.require('os.ui.ILayerUIProvider');
-const {directiveTag: checkboxUi} = goog.require('os.ui.TriStateCheckboxUI');
-const {directiveTag: layerVisibility} = goog.require('os.ui.layer.LayerVisibilityUI');
-const {directiveTag: featureCount} = goog.require('os.ui.node.FeatureCountUI');
-const {directiveTag: layerType} = goog.require('os.ui.node.LayerTypeUI');
-const {directiveTag: tileLoading} = goog.require('os.ui.node.TileLoadingUI');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
-const IExtent = goog.requireType('os.data.IExtent');
-const ISearchable = goog.requireType('os.data.ISearchable');
-const VectorLayer = goog.requireType('os.layer.Vector');
+const {default: IExtent} = goog.requireType('os.data.IExtent');
+const {default: ISearchable} = goog.requireType('os.data.ISearchable');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 
 
 /**
@@ -40,7 +42,7 @@ const VectorLayer = goog.requireType('os.layer.Vector');
  * @implements {ILayerProvider}
  * @implements {ILayerUIProvider}
  */
-class LayerNode extends SlickTreeNode {
+export default class LayerNode extends SlickTreeNode {
   /**
    * Constructor.
    */
@@ -48,7 +50,7 @@ class LayerNode extends SlickTreeNode {
     super();
 
     /**
-     * @type {os.layer.ILayer}
+     * @type {ILayer}
      * @private
      */
     this.layer_ = null;
@@ -136,7 +138,7 @@ class LayerNode extends SlickTreeNode {
   /**
    * Sets the layer
    *
-   * @param {os.layer.ILayer} value
+   * @param {ILayer} value
    */
   setLayer(value) {
     if (value !== this.layer_) {
@@ -365,7 +367,7 @@ class LayerNode extends SlickTreeNode {
    */
   getLayerUI(item) {
     if (item && item instanceof LayerNode) {
-      var node = /** @type {os.data.LayerNode} */ (item);
+      var node = /** @type {LayerNode} */ (item);
       var l = node.getLayer();
 
       return l.getLayerUI() || 'defaultlayerui';
@@ -386,5 +388,3 @@ class LayerNode extends SlickTreeNode {
 osImplements(LayerNode, ILayerProvider.ID);
 osImplements(LayerNode, ILayerUIProvider.ID);
 registerClass(NodeClass.LAYER, LayerNode);
-
-exports = LayerNode;

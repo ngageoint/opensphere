@@ -1,11 +1,12 @@
-goog.module('os.state.v2.QueryTag');
-
+goog.declareModuleId('os.state.v2.QueryTag');
 
 /**
  * XML tags for query area state
  * @enum {string}
  */
-exports = {
+const QueryTag = {
   AREA: 'queryArea',
   LAYER: 'layer'
 };
+
+export default QueryTag;

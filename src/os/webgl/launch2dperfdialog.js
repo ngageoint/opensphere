@@ -1,7 +1,8 @@
-goog.module('os.webgl.launch2DPerformanceDialog');
+goog.declareModuleId('os.webgl.launch2DPerformanceDialog');
+
+import {launchConfirm} from '../ui/window/confirm.js';
 
 const Promise = goog.require('goog.Promise');
-const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -34,4 +35,4 @@ const launch2DPerformanceDialog = function() {
   });
 };
 
-exports = launch2DPerformanceDialog;
+export default launch2DPerformanceDialog;

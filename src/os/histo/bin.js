@@ -1,6 +1,6 @@
-goog.module('os.histo.Bin');
+goog.declareModuleId('os.histo.Bin');
 
-const Result = goog.requireType('os.histo.Result');
+const {default: Result} = goog.requireType('os.histo.Result');
 
 
 /**
@@ -9,7 +9,7 @@ const Result = goog.requireType('os.histo.Result');
  * @template T
  * @unrestricted
  */
-class Bin {
+export default class Bin {
   /**
    * Constructor.
    */
@@ -171,5 +171,3 @@ class Bin {
     return this['id'];
   }
 }
-
-exports = Bin;

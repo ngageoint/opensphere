@@ -1,4 +1,4 @@
-goog.module('os.job.JobState');
+goog.declareModuleId('os.job.JobState');
 
 /**
  * Worker execution states.
@@ -16,4 +16,4 @@ const JobState = {
 
 goog.exportSymbol('os.job.JobState', JobState);
 
-exports = JobState;
+export default JobState;

@@ -1,12 +1,13 @@
-goog.module('os.interaction.MouseRotate');
+goog.declareModuleId('os.interaction.MouseRotate');
+
+import I3DSupport from '../i3dsupport.js';
+import osImplements from '../implements.js';
+import {ROTATE_DELTA} from './interaction.js';
 
 const {assert} = goog.require('goog.asserts');
 const BrowserEvent = goog.require('goog.events.BrowserEvent');
 const {noModifierKeys} = goog.require('ol.events.condition');
 const Interaction = goog.require('ol.interaction.Interaction');
-const I3DSupport = goog.require('os.I3DSupport');
-const osImplements = goog.require('os.implements');
-const {ROTATE_DELTA} = goog.require('os.interaction');
 
 
 /**
@@ -21,7 +22,7 @@ const tolerance = 3;
  *
  * @implements {I3DSupport}
  */
-class MouseRotate extends Interaction {
+export default class MouseRotate extends Interaction {
   /**
    * Constructor.
    * @param {olx.interaction.DragPanOptions=} opt_options Options.
@@ -99,5 +100,3 @@ class MouseRotate extends Interaction {
 }
 
 osImplements(MouseRotate, I3DSupport.ID);
-
-exports = MouseRotate;

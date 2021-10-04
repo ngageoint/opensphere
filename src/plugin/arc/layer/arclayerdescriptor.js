@@ -1,5 +1,21 @@
 goog.declareModuleId('plugin.arc.layer.ArcLayerDescriptor');
 
+import LayerSyncDescriptor from '../../../os/data/layersyncdescriptor.js';
+import PropertyChangeEvent from '../../../os/events/propertychangeevent.js';
+import IFilterable from '../../../os/filter/ifilterable.js';
+import DateTimeMapping from '../../../os/im/mapping/time/datetimemapping.js';
+import TimeFormat from '../../../os/im/mapping/timeformat.js';
+import TimeType from '../../../os/im/mapping/timetype.js';
+import osImplements from '../../../os/implements.js';
+import LayerType from '../../../os/layer/layertype.js';
+import registerClass from '../../../os/registerclass.js';
+import IARCDescriptor from '../../../os/ui/arc/iarcdescriptor.js';
+import ColorControlType from '../../../os/ui/colorcontroltype.js';
+import ControlType from '../../../os/ui/controltype.js';
+import BaseProvider from '../../../os/ui/data/baseprovider.js';
+import Icons from '../../../os/ui/icons.js';
+import IFeatureTypeDescriptor from '../../../os/ui/ogc/ifeaturetypedescriptor.js';
+import {launchForLayer} from '../../../os/ui/query/combinator.js';
 import * as arc from '../arc.js';
 import ArcFeatureLayerConfig from './arcfeaturelayerconfig.js';
 import ArcTileLayerConfig from './arctilelayerconfig.js';
@@ -7,22 +23,6 @@ import ArcTileLayerConfig from './arctilelayerconfig.js';
 const QueryData = goog.require('goog.Uri.QueryData');
 const googColor = goog.require('goog.color');
 const googObject = goog.require('goog.object');
-const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const IFilterable = goog.require('os.filter.IFilterable');
-const TimeFormat = goog.require('os.im.mapping.TimeFormat');
-const TimeType = goog.require('os.im.mapping.TimeType');
-const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
-const osImplements = goog.require('os.implements');
-const LayerType = goog.require('os.layer.LayerType');
-const registerClass = goog.require('os.registerClass');
-const ControlType = goog.require('os.ui.ControlType');
-const Icons = goog.require('os.ui.Icons');
-const ColorControlType = goog.require('os.ui.ColorControlType');
-const IARCDescriptor = goog.require('os.ui.arc.IARCDescriptor');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
-const IFeatureTypeDescriptor = goog.require('os.ui.ogc.IFeatureTypeDescriptor');
-const {launchForLayer} = goog.require('os.ui.query.CombinatorUI');
 
 const {default: ArcFeatureType} = goog.requireType('plugin.arc.ArcFeatureType');
 

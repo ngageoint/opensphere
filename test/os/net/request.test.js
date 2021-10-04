@@ -14,11 +14,11 @@ describe('os.net.Request', function() {
   const Uri = goog.module.get('goog.Uri');
   const EventType = goog.module.get('goog.net.EventType');
   const net = goog.module.get('os.net');
-  const ExtDomainHandler = goog.module.get('os.net.ExtDomainHandler');
+  const {default: ExtDomainHandler} = goog.module.get('os.net.ExtDomainHandler');
   const MockModifier = goog.module.get('os.net.MockModifier');
-  const Request = goog.module.get('os.net.Request');
+  const {default: Request} = goog.module.get('os.net.Request');
   const RequestHandlerFactory = goog.module.get('os.net.RequestHandlerFactory');
-  const SameDomainHandler = goog.module.get('os.net.SameDomainHandler');
+  const {default: SameDomainHandler} = goog.module.get('os.net.SameDomainHandler');
 
   RequestHandlerFactory.addHandler(SameDomainHandler);
 

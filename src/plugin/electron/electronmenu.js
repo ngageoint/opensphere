@@ -1,8 +1,7 @@
 goog.declareModuleId('plugin.electron.menu');
 
+import {MENU as helpMenu} from '../../os/ui/help/help.js';
 import {launchCustomizeSettings} from './customizesettingswindow';
-
-const {MENU: helpMenu} = goog.require('os.ui.help');
 
 
 /**

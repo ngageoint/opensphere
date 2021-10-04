@@ -1,18 +1,19 @@
-goog.module('os.ui.menu.import');
+goog.declareModuleId('os.ui.menu.import');
+
+import BaseDescriptor from '../../data/basedescriptor.js';
+import DataManager from '../../data/datamanager.js';
+import LayerType from '../../layer/layertype.js';
+import {AddData as AddDataKeys} from '../../metrics/metricskeys.js';
+import {isOSX} from '../../os.js';
+import ImportEventType from '../im/importeventtype.js';
+import Menu from './menu.js';
+import MenuItem from './menuitem.js';
+import MenuItemType from './menuitemtype.js';
+import {openWindow} from './windowsmenu.js';
 
 const googDispose = goog.require('goog.dispose');
-const {isOSX} = goog.require('os');
-const BaseDescriptor = goog.require('os.data.BaseDescriptor');
-const DataManager = goog.require('os.data.DataManager');
-const LayerType = goog.require('os.layer.LayerType');
-const {AddData: AddDataKeys} = goog.require('os.metrics.keys');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const {openWindow} = goog.require('os.ui.menu.windows');
 
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 
 
 /**
@@ -25,20 +26,20 @@ let MENU = undefined;
  * Get the menu.
  * @return {Menu|undefined}
  */
-const getMenu = () => MENU;
+export const getMenu = () => MENU;
 
 /**
  * Set the menu.
  * @param {Menu|undefined} menu The menu.
  */
-const setMenu = (menu) => {
+export const setMenu = (menu) => {
   MENU = menu;
 };
 
 /**
  * Default groups in the import menu
  */
-const GroupType = {
+export const GroupType = {
   MAJOR: 'Major',
   MINOR: 'Minor',
   RECENT: 'Recent'
@@ -47,7 +48,7 @@ const GroupType = {
 /**
  * Default groups in the import menu
  */
-const GroupSort = {
+export const GroupSort = {
   MAJOR: 0,
   MINOR: 100,
   RECENT: 200
@@ -57,12 +58,12 @@ const GroupSort = {
  * Event type prefix for recent menu items.
  * @type {string}
  */
-const RECENT_PREFIX = 'recent.';
+export const RECENT_PREFIX = 'recent.';
 
 /**
  * Set up the import menu.
  */
-const setup = function() {
+export const setup = function() {
   if (!MENU) {
     MENU = new Menu(new MenuItem({
       type: MenuItemType.ROOT,
@@ -108,7 +109,7 @@ const setup = function() {
 /**
  * Dispose the import menu.
  */
-const dispose = function() {
+export const dispose = function() {
   googDispose(MENU);
   MENU = undefined;
 };
@@ -185,14 +186,4 @@ const refreshRecent = function() {
       handler: descriptor.setActive.bind(descriptor, !enabled)
     });
   }
-};
-
-exports = {
-  getMenu,
-  setMenu,
-  GroupType,
-  GroupSort,
-  RECENT_PREFIX,
-  setup,
-  dispose
 };

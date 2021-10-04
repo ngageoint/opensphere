@@ -1,20 +1,20 @@
 goog.declareModuleId('plugin.file.zip.ui.ZIPImport');
 
+import AlertEventSeverity from '../../../../os/alert/alerteventseverity.js';
+import AlertManager from '../../../../os/alert/alertmanager.js';
+import ImportProcess from '../../../../os/im/importprocess.js';
 import {ROOT} from '../../../../os/os.js';
+import {Controller as FileImportCtrl} from '../../../../os/ui/file/fileimport.js';
+import ImportEvent from '../../../../os/ui/im/importevent.js';
+import ImportEventType from '../../../../os/ui/im/importeventtype.js';
+import ImportManager from '../../../../os/ui/im/importmanager.js';
+import Module from '../../../../os/ui/module.js';
+import WindowEventType from '../../../../os/ui/windoweventtype.js';
 import ZIPParser from '../zipparser.js';
 
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const ImportProcess = goog.require('os.im.ImportProcess');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {Controller: FileImportCtrl} = goog.require('os.ui.file.FileImportUI');
-const ImportEvent = goog.require('os.ui.im.ImportEvent');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
-const ImportManager = goog.require('os.ui.im.ImportManager');
-
-const OSFile = goog.requireType('os.file.File');
-const IImportUI = goog.requireType('os.ui.im.IImportUI');
+const {default: OSFile} = goog.requireType('os.file.File');
+const {default: FileWrapper} = goog.requireType('os.file.FileWrapper');
+const {default: IImportUI} = goog.requireType('os.ui.im.IImportUI');
 const {default: ZIPParserConfig} = goog.requireType('plugin.file.zip.ZIPParserConfig');
 
 
@@ -59,7 +59,7 @@ export class Controller extends FileImportCtrl {
    * @param {!angular.Scope} $scope
    * @param {!angular.JQLite} $element
    * @param {!angular.$timeout} $timeout
-   * @param {!Object.<string, string>} $attrs
+   * @param {!Object<string, string>} $attrs
    * @ngInject
    */
   constructor($scope, $element, $timeout, $attrs) {
@@ -120,7 +120,7 @@ export class Controller extends FileImportCtrl {
     this.wait_ = 0;
 
     /**
-     * @type {Array.<osx.import.FileWrapper>|null}
+     * @type {Array<FileWrapper>|null}
      */
     this['files'] = this.config_['files'];
 
@@ -168,7 +168,7 @@ export class Controller extends FileImportCtrl {
     var keys = Object.keys(unsupported);
 
     if (keys && keys.length > 0) {
-      var err = 'Unsupported filetype(s).<br />' + keys.join(', ');
+      var err = 'Unsupported filetype(s)<br />' + keys.join(', ');
       AlertManager.getInstance().sendAlert(err, AlertEventSeverity.ERROR);
     }
 

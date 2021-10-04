@@ -11,10 +11,10 @@ goog.require('os.time.xf.TimeModel');
 describe('os.time.xf.TimeModel', function() {
   const functions = goog.module.get('goog.functions');
   const Range = goog.module.get('goog.math.Range');
-  const TimeInstant = goog.module.get('os.time.TimeInstant');
-  const TimeRange = goog.module.get('os.time.TimeRange');
-  const TimelineController = goog.module.get('os.time.TimelineController');
-  const TimeModel = goog.module.get('os.time.xf.TimeModel');
+  const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');
+  const {default: TimeRange} = goog.module.get('os.time.TimeRange');
+  const {default: TimelineController} = goog.module.get('os.time.TimelineController');
+  const {default: TimeModel} = goog.module.get('os.time.xf.TimeModel');
 
   var getTimeFn = function(item) {
     return item.time;
@@ -387,7 +387,7 @@ describe('os.time.xf.TimeModel', function() {
      * For holds to work correctly, the main time model get time function should return null for items that are held,
      * e.g. held items should be treated as timeless.
      * @param {Object} item The item
-     * @return {?os.time.ITime}
+     * @return {?ITime}
      */
     var getTimeWithHoldSupportFn = function(item) {
       if (tlc.holdRangeContainsTime(item.time)) {
@@ -399,7 +399,7 @@ describe('os.time.xf.TimeModel', function() {
     /**
      * Inverse of the main getTime function in that it only returns times for items in a held range.
      * @param {Object} item The item
-     * @return {?os.time.ITime}
+     * @return {?ITime}
      */
     var getHoldTimeFn = function(item) {
       if (tlc.holdRangeContainsTime(item.time)) {

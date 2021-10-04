@@ -1,6 +1,6 @@
-goog.module('os.structs.IStateTreeNode');
+goog.declareModuleId('os.structs.IStateTreeNode');
 
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**
@@ -9,7 +9,7 @@ const ITreeNode = goog.requireType('os.structs.ITreeNode');
  * @interface
  * @extends {ITreeNode}
  */
-class IStateTreeNode {
+export default class IStateTreeNode {
   /**
    * Gets the state of the node
    * @return {string}
@@ -22,5 +22,3 @@ class IStateTreeNode {
    */
   setState(value) {}
 }
-
-exports = IStateTreeNode;

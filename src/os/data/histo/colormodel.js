@@ -1,25 +1,26 @@
-goog.module('os.data.histo.ColorModel');
+goog.declareModuleId('os.data.histo.ColorModel');
+
+import * as osColor from '../../color.js';
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import * as osFeature from '../../feature/feature.js';
+import * as histo from '../../histo/histo.js';
+import PropertyChange from '../../source/propertychange.js';
+import * as osStyle from '../../style/style.js';
+import FeatureEventType from '../featureeventtype.js';
+import RecordField from '../recordfield.js';
+import ColorMethod from './colormethod.js';
+import * as osDataHisto from './histogramutils.js';
 
 const googArray = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const googObject = goog.require('goog.object');
-const osColor = goog.require('os.color');
-const FeatureEventType = goog.require('os.data.FeatureEventType');
-const RecordField = goog.require('os.data.RecordField');
-const osDataHisto = goog.require('os.data.histo');
-const ColorMethod = goog.require('os.data.histo.ColorMethod');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osFeature = goog.require('os.feature');
-const histo = goog.require('os.histo');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const osStyle = goog.require('os.style');
 
 const Feature = goog.requireType('ol.Feature');
-const IPersistable = goog.requireType('os.IPersistable');
-const ColorBin = goog.requireType('os.data.histo.ColorBin');
-const SourceHistogram = goog.requireType('os.data.histo.SourceHistogram');
-const IBinMethod = goog.requireType('os.histo.IBinMethod');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
+const {default: ColorBin} = goog.requireType('os.data.histo.ColorBin');
+const {default: SourceHistogram} = goog.requireType('os.data.histo.SourceHistogram');
+const {default: IBinMethod} = goog.requireType('os.histo.IBinMethod');
 
 
 /**
@@ -39,7 +40,7 @@ const defaultGradientFn = (size) => osColor.getHslGradient(size, 30, 330, true);
  *
  * @implements {IPersistable}
  */
-class ColorModel extends EventTarget {
+export default class ColorModel extends EventTarget {
   /**
    * Constructor.
    * @param {osDataHisto.GradientFn=} opt_gradientFn The gradient function to use when auto coloring
@@ -532,5 +533,3 @@ class ColorModel extends EventTarget {
     this.setColorMethod(colorMethod);
   }
 }
-
-exports = ColorModel;

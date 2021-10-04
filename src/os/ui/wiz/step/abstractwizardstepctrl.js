@@ -1,7 +1,8 @@
-goog.module('os.ui.wiz.step.AbstractWizardStepCtrl');
+goog.declareModuleId('os.ui.wiz.step.AbstractWizardStepCtrl');
+
+import WizardStepEvent from './wizardstepevent.js';
 
 const {assert} = goog.require('goog.asserts');
-const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
 
 
 /**
@@ -10,7 +11,7 @@ const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
  * @template T,S
  * @unrestricted
  */
-class Controller {
+export default class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -72,5 +73,3 @@ class Controller {
     return true;
   }
 }
-
-exports = Controller;

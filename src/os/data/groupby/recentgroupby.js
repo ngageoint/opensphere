@@ -1,15 +1,18 @@
-goog.module('os.data.groupby.RecentGroupBy');
+goog.declareModuleId('os.data.groupby.RecentGroupBy');
+
+import DescriptorNode from '../../ui/data/descriptornode.js';
+import SlickTreeNode from '../../ui/slick/slicktreenode.js';
+import BaseGroupBy from './basegroupby.js';
 
 const googArray = goog.require('goog.array');
-const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
-const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 
 
 /**
  * Groups nodes by how recently they have been activated
  */
-class RecentGroupBy extends BaseGroupBy {
+export default class RecentGroupBy extends BaseGroupBy {
   /**
    * Constructor.
    */
@@ -69,7 +72,7 @@ class RecentGroupBy extends BaseGroupBy {
      */
     var ids = [];
 
-    /** @type {os.data.IDataDescriptor} */
+    /** @type {IDataDescriptor} */
     var d = null;
 
     if (node instanceof DescriptorNode) {
@@ -101,5 +104,3 @@ class RecentGroupBy extends BaseGroupBy {
     return group;
   }
 }
-
-exports = RecentGroupBy;

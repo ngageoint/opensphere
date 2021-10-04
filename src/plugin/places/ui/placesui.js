@@ -1,30 +1,29 @@
 goog.declareModuleId('plugin.places.ui.PlacesUI');
 
-goog.require('os.ui.LayerTreeUI');
-goog.require('os.ui.UISwitchUI');
-
+import '../../../os/ui/layertree.js';
+import '../../../os/ui/uiswitch.js';
 import './placesbutton.js';
+import AlertEventSeverity from '../../../os/alert/alerteventseverity.js';
+import AlertManager from '../../../os/alert/alertmanager.js';
+import EventType from '../../../os/config/eventtype.js';
+import osImplements from '../../../os/implements.js';
+import Metrics from '../../../os/metrics/metrics.js';
+import {Places as PlacesKeys} from '../../../os/metrics/metricskeys.js';
 
 import {ROOT} from '../../../os/os.js';
+import ILayerUIProvider from '../../../os/ui/ilayeruiprovider.js';
+import * as layerMenu from '../../../os/ui/menu/layermenu.js';
+import Module from '../../../os/ui/module.js';
+import SlickGridEvent from '../../../os/ui/slick/slickgridevent.js';
 import * as ui from '../../../os/ui/ui.js';
 import * as KMLTreeExportUI from '../../file/kml/ui/kmltreeexportui.js';
 import {createOrEditFolder} from '../../file/kml/ui/kmlui.js';
 import PlacesManager from '../placesmanager.js';
 
 const Disposable = goog.require('goog.Disposable');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const EventType = goog.require('os.config.EventType');
-const osImplements = goog.require('os.implements');
-const {Places: PlacesKeys} = goog.require('os.metrics.keys');
-const Metrics = goog.require('os.metrics.Metrics');
-const ILayerUIProvider = goog.require('os.ui.ILayerUIProvider');
-const Module = goog.require('os.ui.Module');
-const layerMenu = goog.require('os.ui.menu.layer');
-const SlickGridEvent = goog.require('os.ui.slick.SlickGridEvent');
 
-const ExportOptions = goog.requireType('os.ex.ExportOptions');
-const Menu = goog.requireType('os.ui.menu.Menu');
+const {default: ExportOptions} = goog.requireType('os.ex.ExportOptions');
+const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 const {FolderOptions} = goog.requireType('plugin.file.kml.ui');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 

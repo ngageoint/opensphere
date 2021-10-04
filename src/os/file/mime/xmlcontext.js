@@ -1,4 +1,4 @@
-goog.module('os.file.mime.xml.Context');
+goog.declareModuleId('os.file.mime.xml.Context');
 
 /**
  * @typedef {{
@@ -10,4 +10,4 @@ goog.module('os.file.mime.xml.Context');
  */
 let Context;
 
-exports = Context;
+export default Context;

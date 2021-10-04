@@ -1,10 +1,9 @@
-goog.module('os.events.LayerEventType');
-
+goog.declareModuleId('os.events.LayerEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const LayerEventType = {
   ADD: 'addLayer',
   CHANGE: 'layer:change',
   REMOVE: 'removeLayer',
@@ -15,3 +14,5 @@ exports = {
   COLOR_CHANGE: 'layerColorChange',
   BASELAYER_CHANGE: 'baseLayerChange'
 };
+
+export default LayerEventType;

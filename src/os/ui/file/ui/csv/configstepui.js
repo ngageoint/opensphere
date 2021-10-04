@@ -1,15 +1,14 @@
-goog.module('os.ui.file.ui.csv.ConfigStepUI');
+goog.declareModuleId('os.ui.file.ui.csv.ConfigStepUI');
 
-goog.require('os.ui.SpinnerUI');
-goog.require('os.ui.wiz.WizardPreviewUI');
+import '../../../spinner.js';
+import '../../../wiz/wizardpreview.js';
+import {ROOT} from '../../../../os.js';
+import {COMMENT_CHARS, DELIMITERS} from '../../../../parse/csv/csv.js';
+import Module from '../../../module.js';
+import SlickGridEvent from '../../../slick/slickgridevent.js';
+import {measureText} from '../../../ui.js';
 
-const {ROOT} = goog.require('os');
-const {COMMENT_CHARS, DELIMITERS} = goog.require('os.parse.csv');
-const {measureText} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const SlickGridEvent = goog.require('os.ui.slick.SlickGridEvent');
-
-const CsvParserConfig = goog.requireType('os.parse.csv.CsvParserConfig');
+const {default: CsvParserConfig} = goog.requireType('os.parse.csv.CsvParserConfig');
 
 
 /**
@@ -17,7 +16,7 @@ const CsvParserConfig = goog.requireType('os.parse.csv.CsvParserConfig');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/file/csv/configstep.html',
@@ -29,7 +28,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'csvconfigstep';
+export const directiveTag = 'csvconfigstep';
 
 
 /**
@@ -42,7 +41,7 @@ Module.directive('csvconfigstep', [directive]);
  * Controller for the CSV import data step
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -175,9 +174,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

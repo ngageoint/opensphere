@@ -2,8 +2,8 @@ goog.require('os.alert.AlertEvent');
 goog.require('os.alert.AlertEventSeverity');
 
 describe('os.alert.AlertEvent', function() {
-  const AlertEvent = goog.module.get('os.alert.AlertEvent');
-  const AlertEventSeverity = goog.module.get('os.alert.AlertEventSeverity');
+  const {default: AlertEvent, DEFAULT_LIMIT} = goog.module.get('os.alert.AlertEvent');
+  const {default: AlertEventSeverity} = goog.module.get('os.alert.AlertEventSeverity');
 
   const msg = 'This is a test';
 
@@ -12,7 +12,7 @@ describe('os.alert.AlertEvent', function() {
 
     expect(evt.getMessage()).toBe(msg);
     expect(evt.getSeverity()).toBe(AlertEventSeverity.INFO);
-    expect(evt.getLimit()).toBe(AlertEvent.DEFAULT_LIMIT);
+    expect(evt.getLimit()).toBe(DEFAULT_LIMIT);
     expect(evt.getDismissDispatcher()).toBe(null);
     expect(evt.getCount()).toBe(1);
   });

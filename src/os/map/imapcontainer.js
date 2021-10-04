@@ -1,4 +1,4 @@
-goog.module('os.map.IMapContainer');
+goog.declareModuleId('os.map.IMapContainer');
 
 const Listenable = goog.requireType('goog.events.Listenable');
 const Collection = goog.requireType('ol.Collection');
@@ -13,7 +13,7 @@ const Layer = goog.requireType('ol.layer.Layer');
  * @extends {Listenable}
  * @interface
  */
-class IMapContainer {
+export default class IMapContainer {
   /**
    * Checks whether the drawing layer contains a feature.
    * @param {Feature|number|string|undefined} feature
@@ -75,5 +75,3 @@ class IMapContainer {
    */
   flyToExtent(extent, opt_buffer, opt_maxZoom) {}
 }
-
-exports = IMapContainer;

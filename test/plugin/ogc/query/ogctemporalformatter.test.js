@@ -5,7 +5,7 @@ goog.require('plugin.ogc.query.OGCTemporalFormatter');
 
 describe('plugin.ogc.query.OGCTemporalFormatter', function() {
   const time = goog.module.get('os.time');
-  const TimelineController = goog.module.get('os.time.TimelineController');
+  const {default: TimelineController} = goog.module.get('os.time.TimelineController');
   const {default: OGCTemporalFormatter} = goog.module.get('plugin.ogc.query.OGCTemporalFormatter');
 
   it('sets start/end columns with defaults', function() {

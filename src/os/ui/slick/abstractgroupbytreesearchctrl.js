@@ -1,21 +1,22 @@
-goog.module('os.ui.slick.AbstractGroupByTreeSearchCtrl');
+goog.declareModuleId('os.ui.slick.AbstractGroupByTreeSearchCtrl');
+
+import Settings from '../../config/settings.js';
+import * as ui from '../ui.js';
 
 const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
-const Settings = goog.require('os.config.Settings');
-const ui = goog.require('os.ui');
 
-const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
-const ActionManager = goog.requireType('os.ui.action.ActionManager');
-const TreeSearch = goog.requireType('os.ui.slick.TreeSearch');
+const {default: INodeGroupBy} = goog.requireType('os.data.groupby.INodeGroupBy');
+const {default: ActionManager} = goog.requireType('os.ui.action.ActionManager');
+const {default: TreeSearch} = goog.requireType('os.ui.slick.TreeSearch');
 
 
 /**
  * Controller for Layers window
  * @unrestricted
  */
-class Controller extends Disposable {
+export default class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -206,5 +207,3 @@ class Controller extends Disposable {
     ui.apply(this.scope);
   }
 }
-
-exports = Controller;

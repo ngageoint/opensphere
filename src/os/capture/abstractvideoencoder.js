@@ -1,12 +1,12 @@
 goog.declareModuleId('os.capture.AbstractVideoEncoder');
 
+import * as osString from '../string/string.js';
 import CaptureEventType from './captureeventtype.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
 const log = goog.require('goog.log');
 const jsloader = goog.require('goog.net.jsloader');
-const osString = goog.require('os.string');
 
 const {default: IVideoEncoder} = goog.requireType('os.capture.IVideoEncoder');
 

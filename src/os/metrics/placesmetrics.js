@@ -1,12 +1,12 @@
-goog.module('os.metrics.PlacesMetrics');
+goog.declareModuleId('os.metrics.PlacesMetrics');
 
-const {Places} = goog.require('os.metrics.keys');
-const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');
+import MetricsPlugin from '../ui/metrics/metricsplugin.js';
+import {Places} from './metricskeys.js';
 
 
 /**
  */
-class PlacesMetrics extends MetricsPlugin {
+export default class PlacesMetrics extends MetricsPlugin {
   /**
    * Constructor.
    */
@@ -69,5 +69,3 @@ class PlacesMetrics extends MetricsPlugin {
     });
   }
 }
-
-exports = PlacesMetrics;

@@ -1,15 +1,17 @@
-goog.module('os.ui.ex.ExportUI');
+goog.declareModuleId('os.ui.ex.ExportUI');
 
-const {getAppName} = goog.require('os.config');
-const {getExportFields} = goog.require('os.source');
-const Module = goog.require('os.ui.Module');
-const ExportOptionsEvent = goog.require('os.ui.ex.ExportOptionsEvent');
-const {directiveTag: exportOptionsUi} = goog.require('os.ui.ex.ExportOptionsUI');
-const {Controller: ExportDialogCtrl, directive: exportDialogDirective} = goog.require('os.ui.file.ExportDialogUI');
-const osWindow = goog.require('os.ui.window');
+import {getAppName} from '../../config/config.js';
+import {getExportFields} from '../../source/source.js';
+import {Controller as ExportDialogCtrl, directive as exportDialogDirective} from '../file/exportdialog.js';
+import Module from '../module.js';
+import * as osWindow from '../window.js';
+import {directiveTag as exportOptionsUi} from './exportoptions.js';
+import ExportOptionsEvent from './exportoptionsevent.js';
 
 const Feature = goog.requireType('ol.Feature');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: ExportOptions} = goog.requireType('os.ex.ExportOptions');
+const {default: IExportMethod} = goog.requireType('os.ex.IExportMethod');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**
@@ -17,7 +19,7 @@ const VectorSource = goog.requireType('os.source.Vector');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var directive = exportDialogDirective();
   directive.controller = Controller;
   return directive;
@@ -27,7 +29,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'export';
+export const directiveTag = 'export';
 
 /**
  * Add the directive to the module.
@@ -40,7 +42,7 @@ Module.directive(directiveTag, [directive]);
  * @extends {ExportDialogCtrl<!VectorSource>}
  * @unrestricted
  */
-class Controller extends ExportDialogCtrl {
+export class Controller extends ExportDialogCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -79,10 +81,10 @@ class Controller extends ExportDialogCtrl {
     var sources = $scope['initSources'] = this.options.sources;
 
     // if passed multiple sources, try to default to an exporter that supports it
-    var scopeEx = /** @type {os.ex.IExportMethod} */ (this.scope['exporter']);
+    var scopeEx = /** @type {IExportMethod} */ (this.scope['exporter']);
     if (sources && sources.length > 1 && (!scopeEx || !scopeEx.supportsMultiple())) {
       for (var key in this['exporters']) {
-        var exporter = /** @type {os.ex.IExportMethod} */ (this['exporters'][key]);
+        var exporter = /** @type {IExportMethod} */ (this['exporters'][key]);
         if (exporter.supportsMultiple()) {
           this.scope['exporter'] = exporter;
         }
@@ -154,7 +156,7 @@ class Controller extends ExportDialogCtrl {
  *
  * @param {Array<!VectorSource>=} opt_sources The sources.
  */
-const startExport = function(opt_sources) {
+export const startExport = function(opt_sources) {
   var sources = opt_sources || [];
   var windowId = 'export';
   if (osWindow.exists(windowId)) {
@@ -162,7 +164,7 @@ const startExport = function(opt_sources) {
   } else {
     var title = sources.length == 1 ? sources[0].getTitle() : null;
     var scopeOptions = {
-      'options': /** @type {os.ex.ExportOptions} */ ({
+      'options': /** @type {ExportOptions} */ ({
         exporter: null,
         fields: [],
         items: [],
@@ -190,11 +192,4 @@ const startExport = function(opt_sources) {
     var template = `<${directiveTag}></${directiveTag}>`;
     osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  startExport
 };

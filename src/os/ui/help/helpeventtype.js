@@ -1,9 +1,9 @@
-goog.module('os.ui.help.EventType');
+goog.declareModuleId('os.ui.help.EventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const EventType = {
   ABOUT: 'about',
   CAPABILITIES: 'metrics',
   CONTROLS: 'controlsHelp',
@@ -14,3 +14,5 @@ exports = {
   VIEW_ALERTS: 'viewAlerts',
   VIEW_LOG: 'viewLog'
 };
+
+export default EventType;

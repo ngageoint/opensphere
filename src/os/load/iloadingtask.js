@@ -1,11 +1,11 @@
-goog.module('os.load.ILoadingTask');
+goog.declareModuleId('os.load.ILoadingTask');
 
 /**
  * Interface representing loading tasks.
  *
  * @interface
  */
-class ILoadingTask {
+export default class ILoadingTask {
   /**
    * Increments the count of things of this type loading
    */
@@ -52,5 +52,3 @@ class ILoadingTask {
    */
   setTitle(value) {}
 }
-
-exports = ILoadingTask;

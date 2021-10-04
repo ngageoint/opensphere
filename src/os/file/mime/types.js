@@ -1,11 +1,13 @@
-goog.module('os.file.mime.xml.Types');
+goog.declareModuleId('os.file.mime.xml.Types');
 
 /**
  * @enum {string}
  */
-exports = {
+const Types = {
   OPEN_TAG: 'open-tag',
   CLOSE_TAG: 'close-tag',
   ATTRIBUTE_NAME: 'attribute-name',
   ATTRIBUTE_VALUE: 'attribute-value'
 };
+
+export default Types;

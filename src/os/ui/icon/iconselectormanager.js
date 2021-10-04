@@ -1,7 +1,7 @@
-goog.module('os.ui.icon.IconSelectorManager');
+goog.declareModuleId('os.ui.icon.IconSelectorManager');
 
-const CollectionManager = goog.require('os.data.CollectionManager');
-const {directiveTag: iconPalette} = goog.require('os.ui.icon.IconPaletteUI');
+import CollectionManager from '../../data/collectionmanager.js';
+import {directiveTag as iconPalette} from './iconpalette.js';
 
 
 /**
@@ -9,7 +9,7 @@ const {directiveTag: iconPalette} = goog.require('os.ui.icon.IconPaletteUI');
  *
  * @extends {CollectionManager<osx.icon.iconSelector>}
  */
-class IconSelectorManager extends CollectionManager {
+export default class IconSelectorManager extends CollectionManager {
   /**
    * Constructor.
    */
@@ -50,5 +50,3 @@ class IconSelectorManager extends CollectionManager {
  * @type {IconSelectorManager|undefined}
  */
 let instance;
-
-exports = IconSelectorManager;

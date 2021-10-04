@@ -1,6 +1,6 @@
-goog.module('os.ui.tab.FeatureTab');
+goog.declareModuleId('os.ui.tab.FeatureTab');
 
-const Tab = goog.require('os.ui.tab.Tab');
+import Tab from './tab.js';
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -9,7 +9,7 @@ const Feature = goog.requireType('ol.Feature');
  * Model class representing a pluggable feature tab.
  * @unrestricted
  */
-class FeatureTab extends Tab {
+export default class FeatureTab extends Tab {
   /**
    * Constructor.
    * @param {string} id The ID to track the element by
@@ -47,5 +47,3 @@ class FeatureTab extends Tab {
     return this['isShown'];
   }
 }
-
-exports = FeatureTab;

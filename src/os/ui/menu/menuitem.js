@@ -1,16 +1,17 @@
-goog.module('os.ui.menu.MenuItem');
+goog.declareModuleId('os.ui.menu.MenuItem');
+
+import MenuItemType from './menuitemtype.js';
 
 const {defaultCompare, removeIf} = goog.require('goog.array');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const MenuItemOptions = goog.requireType('os.ui.menu.MenuItemOptions');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuItemOptions} = goog.requireType('os.ui.menu.MenuItemOptions');
 
 
 /**
  * @template T
  */
-class MenuItem {
+export default class MenuItem {
   /**
    * Constructor.
    * @param {MenuItemOptions} options The options
@@ -282,5 +283,3 @@ class MenuItem {
     return defaultCompare(a.sort, b.sort) || defaultCompare(a.label, b.label);
   }
 }
-
-exports = MenuItem;

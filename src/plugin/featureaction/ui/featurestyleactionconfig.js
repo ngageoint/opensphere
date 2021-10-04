@@ -1,32 +1,29 @@
 goog.declareModuleId('plugin.im.action.feature.ui.StyleConfigUI');
 
-goog.require('os.ui.layer.IconStyleControlsUI');
-goog.require('os.ui.layer.VectorStyleControlsUI');
-
+import '../../../os/ui/layer/iconstylecontrols.js';
+import '../../../os/ui/layer/vectorstylecontrols.js';
+import * as osColor from '../../../os/color.js';
+import DataManager from '../../../os/data/datamanager.js';
 import * as dispatcher from '../../../os/dispatcher.js';
+import Fields from '../../../os/fields/fields.js';
+import instanceOf from '../../../os/instanceof.js';
+import * as osObject from '../../../os/object/object.js';
+import VectorSource from '../../../os/source/vectorsource.js';
 import * as osStyle from '../../../os/style/style.js';
+import StyleField from '../../../os/style/stylefield.js';
+import * as kml from '../../../os/ui/file/kml/kml.js';
+import IconPickerEventType from '../../../os/ui/icon/iconpickereventtype.js';
+import EventType from '../../../os/ui/im/action/eventtype.js';
+import * as layer from '../../../os/ui/layer/layers.js';
+import VectorStyleControlsEventType from '../../../os/ui/layer/vectorstylecontrolseventtype.js';
+import Module from '../../../os/ui/module.js';
 import ActionConfigCtrl from './featureactionconfig.js';
 
 const googArray = goog.require('goog.array');
 const googObject = goog.require('goog.object');
 const googString = goog.require('goog.string');
-const Fields = goog.require('os.Fields');
-const osColor = goog.require('os.color');
-const DataManager = goog.require('os.data.DataManager');
-const instanceOf = goog.require('os.instanceOf');
-const osObject = goog.require('os.object');
-const VectorSource = goog.require('os.source.Vector');
-const StyleField = goog.require('os.style.StyleField');
-const Module = goog.require('os.ui.Module');
-const kml = goog.require('os.ui.file.kml');
-const IconPickerEventType = goog.require('os.ui.icon.IconPickerEventType');
-const EventType = goog.require('os.ui.im.action.EventType');
-const layer = goog.require('os.ui.layer');
-const VectorStyleControlsEventType = goog.require('os.ui.layer.VectorStyleControlsEventType');
 
-const {
-  default: StyleAction
-} = goog.requireType('plugin.im.action.feature.StyleAction');
+const {default: StyleAction} = goog.requireType('plugin.im.action.feature.StyleAction');
 
 
 /**

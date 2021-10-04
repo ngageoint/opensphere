@@ -1,18 +1,18 @@
-goog.module('os.ui.data.AddColumnUI');
+goog.declareModuleId('os.ui.data.AddColumnUI');
 
-const {ROOT} = goog.require('os');
-const FeatureEventType = goog.require('os.data.FeatureEventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {getMapContainer} = goog.require('os.map.instance');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const {notifyStyleChange, setFeatureStyle} = goog.require('os.style');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {isDuplicateColumn} = goog.require('os.ui.data.AddColumnFormUI');
-const {close, create} = goog.require('os.ui.window');
+import FeatureEventType from '../../data/featureeventtype.js';
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import {ROOT} from '../../os.js';
+import PropertyChange from '../../source/propertychange.js';
+import {notifyStyleChange, setFeatureStyle} from '../../style/style.js';
+import Module from '../module.js';
+import {close, create} from '../window.js';
+import WindowEventType from '../windoweventtype.js';
+import {isDuplicateColumn} from './addcolumnform.js';
 
 const Feature = goog.requireType('ol.Feature');
-const Vector = goog.requireType('os.source.Vector');
+const {default: Vector} = goog.requireType('os.source.Vector');
 
 
 /**
@@ -20,7 +20,7 @@ const Vector = goog.requireType('os.source.Vector');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -35,7 +35,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'addcolumn';
+export const directiveTag = 'addcolumn';
 
 /**
  * Add the directive to the module.
@@ -46,7 +46,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the addcolumn directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -170,7 +170,7 @@ class Controller {
  *
  * @param {Vector} source
  */
-const launchAddColumn = (source) => {
+export const launchAddColumn = (source) => {
   var options = {
     'id': 'addcolumn',
     'x': 'center',
@@ -189,11 +189,4 @@ const launchAddColumn = (source) => {
 
   var template = '<addcolumn source="source"></addcolumn>';
   create(options, template, undefined, undefined, undefined, scopeOptions);
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchAddColumn
 };

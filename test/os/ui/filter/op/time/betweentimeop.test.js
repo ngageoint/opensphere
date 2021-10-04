@@ -3,9 +3,9 @@ goog.require('os.time.TimeRange');
 goog.require('os.ui.filter.op.time.Between');
 
 describe('os.ui.filter.op.time.Between', function() {
-  const TimeInstant = goog.module.get('os.time.TimeInstant');
-  const TimeRange = goog.module.get('os.time.TimeRange');
-  const Between = goog.module.get('os.ui.filter.op.time.Between');
+  const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');
+  const {default: TimeRange} = goog.module.get('os.time.TimeRange');
+  const {default: Between} = goog.module.get('os.ui.filter.op.time.Between');
 
   var between = new Between();
   currentFilterTimestamp = 120000;

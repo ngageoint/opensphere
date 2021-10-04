@@ -1,14 +1,14 @@
-goog.module('os.column.ColumnMappingEvent');
+goog.declareModuleId('os.column.ColumnMappingEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
-const ColumnMappingEventType = goog.requireType('os.column.ColumnMappingEventType');
+const {default: ColumnMappingEventType} = goog.requireType('os.column.ColumnMappingEventType');
 
 
 /**
  * Event representing changes to column mappings.
  */
-class ColumnMappingEvent extends GoogEvent {
+export default class ColumnMappingEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {ColumnMappingEventType} type
@@ -31,5 +31,3 @@ class ColumnMappingEvent extends GoogEvent {
     return this.column_;
   }
 }
-
-exports = ColumnMappingEvent;

@@ -1,16 +1,17 @@
-goog.module('os.interaction.DragZoom');
+goog.declareModuleId('os.interaction.DragZoom');
+
+import FlyToExtent from '../command/flytoextentcmd.js';
+import I3DSupport from '../i3dsupport.js';
+import osImplements from '../implements.js';
+import DragBox from './dragboxinteraction.js';
 
 const {platformModifierKeyOnly} = goog.require('ol.events.condition');
-const I3DSupport = goog.require('os.I3DSupport');
-const FlyToExtent = goog.require('os.command.FlyToExtent');
-const osImplements = goog.require('os.implements');
-const DragBox = goog.require('os.interaction.DragBox');
 
 
 /**
  * @implements {I3DSupport}
  */
-class DragZoom extends DragBox {
+export default class DragZoom extends DragBox {
   /**
    * Constructor.
    * @param {olx.interaction.DragZoomOptions=} opt_options Options.
@@ -58,5 +59,3 @@ class DragZoom extends DragBox {
 }
 
 osImplements(DragZoom, I3DSupport.ID);
-
-exports = DragZoom;

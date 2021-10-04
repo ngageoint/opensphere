@@ -1,6 +1,6 @@
-goog.module('os.data.FileProvider');
+goog.declareModuleId('os.data.FileProvider');
 
-const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
+import DescriptorProvider from '../ui/data/descriptorprovider.js';
 
 
 /**
@@ -10,7 +10,7 @@ const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
  * @extends {DescriptorProvider<!T>}
  * @template T
  */
-class FileProvider extends DescriptorProvider {
+export default class FileProvider extends DescriptorProvider {
   /**
    * Constructor.
    */
@@ -45,5 +45,3 @@ class FileProvider extends DescriptorProvider {
     return null;
   }
 }
-
-exports = FileProvider;

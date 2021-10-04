@@ -1,9 +1,8 @@
 goog.declareModuleId('plugin.electron.settingsImportManager');
 
 import * as jsonMime from '../../os/file/mime/jsonsettings';
+import ImportManager from '../../os/ui/im/importmanager.js';
 import SettingsImportUI from './settingsimportui';
-
-const ImportManager = goog.require('os.ui.im.ImportManager');
 
 /**
  * Reusable settings import UI for the module.

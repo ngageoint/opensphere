@@ -1,15 +1,15 @@
-goog.module('os.command.VectorLayerShowGroundReference');
+goog.declareModuleId('os.command.VectorLayerShowGroundReference');
 
-const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import StyleField from '../style/stylefield.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import AbstractVectorLayerLOB from './abstractvectorlayerlob.js';
 
 
 /**
  * Changes if ellipse ground reference is shown in 3D mode.
  */
-class VectorLayerShowGroundReference extends AbstractVectorLayerLOB {
+export default class VectorLayerShowGroundReference extends AbstractVectorLayerLOB {
   /**
    * Constructor.
    * @param {string} layerId
@@ -41,5 +41,3 @@ class VectorLayerShowGroundReference extends AbstractVectorLayerLOB {
     super.applyValue(config, value);
   }
 }
-
-exports = VectorLayerShowGroundReference;

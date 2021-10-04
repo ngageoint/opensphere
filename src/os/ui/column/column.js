@@ -1,14 +1,14 @@
-goog.module('os.ui.column');
+goog.declareModuleId('os.ui.column');
 
-const {create} = goog.require('os.ui.window');
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const {directiveTag: columnManagerUi} = goog.require('os.ui.column.ColumnManagerUI');
+import {create} from '../window.js';
+import {directiveTag as columnManagerUi} from './columnmanager.js';
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 
 
 /**
  * @typedef {function(Array<ColumnDefinition>, Function)}
  */
-let LaunchColumnManagerFn;
+export let LaunchColumnManagerFn;
 
 /**
  * Launches a column manager window with the given columns
@@ -47,7 +47,7 @@ let launchColumnManagerFn = function(columns, callback) {
  * @param {Array<ColumnDefinition>} columns
  * @param {Function} callback
  */
-const launchColumnManager = function(columns, callback) {
+export const launchColumnManager = function(columns, callback) {
   launchColumnManagerFn(columns, callback);
 };
 
@@ -55,7 +55,7 @@ const launchColumnManager = function(columns, callback) {
  * Set the launchColumnManager function.
  * @param {LaunchColumnManagerFn} fn The function.
  */
-const setLaunchColumnManagerFn = (fn) => {
+export const setLaunchColumnManagerFn = (fn) => {
   launchColumnManagerFn = fn;
 };
 
@@ -66,7 +66,7 @@ const setLaunchColumnManagerFn = (fn) => {
  * @param {string} header Dialog header
  * @param {Function} callback
  */
-const launchColumnManagerWithShownCallback = function(columns, header, callback) {
+export const launchColumnManagerWithShownCallback = function(columns, header, callback) {
   var scopeOptions = {
     'columns': columns,
     'shownCallback': callback
@@ -89,11 +89,4 @@ const launchColumnManagerWithShownCallback = function(columns, header, callback)
 
   var template = `<${columnManagerUi} columns="columns" shown-callback="shownCallback"></${columnManagerUi}>`;
   create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-};
-
-exports = {
-  LaunchColumnManagerFn,
-  launchColumnManager,
-  launchColumnManagerWithShownCallback,
-  setLaunchColumnManagerFn
 };

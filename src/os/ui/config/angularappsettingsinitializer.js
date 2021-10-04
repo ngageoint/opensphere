@@ -1,17 +1,17 @@
-goog.module('os.ui.config.AngularAppSettingsInitializer');
+goog.declareModuleId('os.ui.config.AngularAppSettingsInitializer');
 
-const AbstractSettingsInitializer = goog.require('os.config.AbstractSettingsInitializer');
-const ThemeSettings = goog.require('os.config.ThemeSettings');
-const {getSettings} = goog.require('os.config.instance');
-const {Keys} = goog.require('os.config.theme');
-const BaseServerModifier = goog.require('os.net.BaseServerModifier');
-const URLModifier = goog.require('os.net.URLModifier');
+import AbstractSettingsInitializer from '../../config/abstractsettingsinitializer.js';
+import {getSettings} from '../../config/configinstance.js';
+import {Keys} from '../../config/theme.js';
+import ThemeSettings from '../../config/themesettings.js';
+import * as BaseServerModifier from '../../net/baseservermodifier.js';
+import URLModifier from '../../net/urlmodifier.js';
 
 
 /**
  * @abstract
  */
-class AngularAppSettingsInitializer extends AbstractSettingsInitializer {
+export default class AngularAppSettingsInitializer extends AbstractSettingsInitializer {
   /**
    * Constructor.
    */
@@ -81,5 +81,3 @@ class AngularAppSettingsInitializer extends AbstractSettingsInitializer {
     });
   }
 }
-
-exports = AngularAppSettingsInitializer;

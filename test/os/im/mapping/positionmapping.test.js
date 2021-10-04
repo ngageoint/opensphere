@@ -3,7 +3,7 @@ goog.require('os.im.mapping.PositionMapping');
 
 describe('os.im.mapping.PositionMapping', function() {
   const Feature = goog.module.get('ol.Feature');
-  const PositionMapping = goog.module.get('os.im.mapping.PositionMapping');
+  const {default: PositionMapping} = goog.module.get('os.im.mapping.PositionMapping');
 
   it('should auto detect position string types correctly', function() {
     var a = new Feature();

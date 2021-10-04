@@ -1,24 +1,24 @@
-goog.module('os.state.BaseStateManager');
+goog.declareModuleId('os.state.BaseStateManager');
 
-goog.require('os.ui.state.StateExportUI');
-goog.require('os.ui.state.StateImportUI');
+import '../ui/state/stateexport.js';
+import '../ui/state/stateimportui.js';
+import Settings from '../config/settings.js';
+import OSFile from '../file/file.js';
+import FileStorage from '../file/filestorage.js';
+import {getLocalUrl, isLocal} from '../file/index.js';
+import {EXPORT_WINDOW_ID} from '../ui/state/state.js';
+import * as osWindow from '../ui/window.js';
+import {stateToString, supportCompare, titleCompare} from './state.js';
 
 const {assert} = goog.require('goog.asserts');
 const Deferred = goog.require('goog.async.Deferred');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
-const Settings = goog.require('os.config.Settings');
-const {getLocalUrl, isLocal} = goog.require('os.file');
-const OSFile = goog.require('os.file.File');
-const FileStorage = goog.require('os.file.FileStorage');
-const {stateToString, supportCompare, titleCompare} = goog.require('os.state');
-const {EXPORT_WINDOW_ID} = goog.require('os.ui.state');
-const osWindow = goog.require('os.ui.window');
 
 const Logger = goog.requireType('goog.log.Logger');
-const IPersistable = goog.requireType('os.IPersistable');
-const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
-const IState = goog.requireType('os.state.IState');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
+const {default: IPersistenceMethod} = goog.requireType('os.ex.IPersistenceMethod');
+const {default: IState} = goog.requireType('os.state.IState');
 
 
 /**
@@ -27,7 +27,7 @@ const IState = goog.requireType('os.state.IState');
  * @abstract
  * @template T,S
  */
-class BaseStateManager extends EventTarget {
+export default class BaseStateManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -513,5 +513,3 @@ BaseStateManager.EventType = {
   DELETE: 'delete',
   LOADED: 'loaded'
 };
-
-exports = BaseStateManager;

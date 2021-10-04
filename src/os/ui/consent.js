@@ -1,16 +1,17 @@
-goog.module('os.ui.ConsentUI');
+goog.declareModuleId('os.ui.ConsentUI');
+
+import Settings from '../config/settings.js';
+import {ROOT} from '../os.js';
+import Peer from '../xt/peer.js';
+import {create, open} from './modal/modal.js';
+import Module from './module.js';
+import windowSelector from './windowselector.js';
 
 const Timer = goog.require('goog.Timer');
 const dispose = goog.require('goog.dispose');
 const Cookies = goog.require('goog.net.Cookies');
-const {ROOT} = goog.require('os');
-const Settings = goog.require('os.config.Settings');
-const Module = goog.require('os.ui.Module');
-const {create, open} = goog.require('os.ui.modal');
-const windowSelector = goog.require('os.ui.windowSelector');
-const Peer = goog.require('os.xt.Peer');
 
-const IMessageHandler = goog.requireType('os.xt.IMessageHandler');
+const {default: IMessageHandler} = goog.requireType('os.xt.IMessageHandler');
 
 
 /**
@@ -18,7 +19,7 @@ const IMessageHandler = goog.requireType('os.xt.IMessageHandler');
  *
  * @return {angular.Directive} the directive definition
  */
-const directive = () => ({
+export const directive = () => ({
   replace: true,
   restrict: 'E',
   templateUrl: ROOT + 'views/consent.html',
@@ -30,7 +31,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'consent';
+export const directiveTag = 'consent';
 
 Module.directive(directiveTag, directive);
 
@@ -40,7 +41,7 @@ Module.directive(directiveTag, directive);
  * @implements {IMessageHandler}
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {angular.Scope} $scope
@@ -177,18 +178,11 @@ class Controller {
 /**
  * Check consent
  */
-const launch = () => {
+export const launch = () => {
   var consent = Settings.getInstance().get(['consent']);
   var cookie = new Cookies(window.document);
 
   if (consent && consent['text'] && !cookie.get('consent')) {
     create(windowSelector.CONTAINER, '<consent></consent>');
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launch
 };

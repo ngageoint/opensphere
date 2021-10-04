@@ -1,17 +1,17 @@
-goog.module('os.source.ISource');
+goog.declareModuleId('os.source.ISource');
 
 const Feature = goog.requireType('ol.Feature');
-const IPersistable = goog.requireType('os.IPersistable');
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const osImplements = goog.requireType('os.implements');
-const TimeModel = goog.requireType('os.time.xf.TimeModel');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
+const {default: osImplements} = goog.requireType('os.implements');
+const {default: TimeModel} = goog.requireType('os.time.xf.TimeModel');
 
 
 /**
  * @interface
  * @extends {IPersistable}
  */
-class ISource {
+export default class ISource {
   /**
    * Adds a feature
    * @param {Feature} feature Feature
@@ -314,5 +314,3 @@ class ISource {
  * @const {string}
  */
 ISource.ID = 'os.source.ISource';
-
-exports = ISource;

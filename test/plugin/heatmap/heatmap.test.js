@@ -25,10 +25,10 @@ describe('plugin.heatmap', function() {
   const Stroke = goog.module.get('ol.style.Stroke');
   const Style = goog.module.get('ol.style.Style');
   const Dispatcher = goog.module.get('os.Dispatcher');
-  const RecordField = goog.module.get('os.data.RecordField');
-  const LayerConfigEventType = goog.module.get('os.events.LayerConfigEventType');
-  const LayerType = goog.module.get('os.layer.LayerType');
-  const VectorSource = goog.module.get('os.source.Vector');
+  const {default: RecordField} = goog.module.get('os.data.RecordField');
+  const {default: LayerConfigEventType} = goog.module.get('os.events.LayerConfigEventType');
+  const {default: LayerType} = goog.module.get('os.layer.LayerType');
+  const {default: VectorSource} = goog.module.get('os.source.Vector');
   const style = goog.module.get('os.style');
   const heatmap = goog.module.get('plugin.heatmap');
   const {default: HeatmapField} = goog.module.get('plugin.heatmap.HeatmapField');

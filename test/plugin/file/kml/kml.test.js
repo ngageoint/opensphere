@@ -18,8 +18,8 @@ describe('plugin.file.kml', function() {
   const LineString = goog.module.get('ol.geom.LineString');
   const MultiLineString = goog.module.get('ol.geom.MultiLineString');
   const xml = goog.module.get('ol.xml');
-  const TimeInstant = goog.module.get('os.time.TimeInstant');
-  const TimeRange = goog.module.get('os.time.TimeRange');
+  const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');
+  const {default: TimeRange} = goog.module.get('os.time.TimeRange');
   const kml = goog.module.get('plugin.file.kml');
   it('reads a kml:TimeStamp element', function() {
     var when = new Date();

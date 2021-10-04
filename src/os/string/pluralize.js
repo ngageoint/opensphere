@@ -1,8 +1,8 @@
-goog.module('os.string.Pluralize');
+goog.declareModuleId('os.string.Pluralize');
 
-const Settings = goog.require('os.config.Settings');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
+import Settings from '../config/settings.js';
+import Module from '../ui/module.js';
+import {apply} from '../ui/ui.js';
 
 
 /**
@@ -31,7 +31,7 @@ const initialize = function() {
  * Controller for pluralize
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Controller for the pluralize directive.
    * @param {!angular.Scope} $scope
@@ -69,7 +69,7 @@ class Controller {
  * The marking directive. This control is used in forms to choose a classification value.
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -86,5 +86,3 @@ const directive = () => ({
  * Add the directive to the module.
  */
 Module.directive('pluralize', [directive]);
-
-exports = {Controller, directive};

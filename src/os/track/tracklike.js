@@ -1,4 +1,4 @@
-goog.module('os.track.TrackLike');
+goog.declareModuleId('os.track.TrackLike');
 
 const LineString = goog.requireType('ol.geom.LineString');
 const MultiLineString = goog.requireType('ol.geom.MultiLineString');
@@ -11,4 +11,4 @@ const MultiLineString = goog.requireType('ol.geom.MultiLineString');
  */
 let TrackLike;
 
-exports = TrackLike;
+export default TrackLike;

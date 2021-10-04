@@ -1,17 +1,18 @@
-goog.module('os.command.AbstractStyle');
+goog.declareModuleId('os.command.AbstractStyle');
+
+import instanceOf from '../instanceof.js';
+import LayerClass from '../layer/layerclass.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import Metrics from '../metrics/metrics.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import State from './state.js';
 
 const asserts = goog.require('goog.asserts');
-const State = goog.require('os.command.State');
-const instanceOf = goog.require('os.instanceOf');
-const LayerClass = goog.require('os.layer.LayerClass');
-const {getMapContainer} = goog.require('os.map.instance');
-const Metrics = goog.require('os.metrics.Metrics');
-const StyleManager = goog.require('os.style.StyleManager');
 
-const ICommand = goog.requireType('os.command.ICommand');
-const ILayer = goog.requireType('os.layer.ILayer');
-const TileLayer = goog.requireType('os.layer.Tile');
-const VectorLayer = goog.requireType('os.layer.Vector');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: TileLayer} = goog.requireType('os.layer.Tile');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 
 
 /**
@@ -21,7 +22,7 @@ const VectorLayer = goog.requireType('os.layer.Vector');
  * @implements {ICommand}
  * @template T
  */
-class AbstractStyle {
+export default class AbstractStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -199,7 +200,7 @@ class AbstractStyle {
   setValue(value) {
     asserts.assert(value != null, 'style value must be defined');
 
-    var layer = /** @type {os.layer.Vector} */ (this.getLayer());
+    var layer = /** @type {VectorLayer} */ (this.getLayer());
     asserts.assert(layer, 'layer must be defined');
 
     var config = this.getLayerConfig(layer);
@@ -219,5 +220,3 @@ class AbstractStyle {
     return map ? /** @type {ILayer} */ (map.getLayer(this.layerId)) : null;
   }
 }
-
-exports = AbstractStyle;

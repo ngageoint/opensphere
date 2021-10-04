@@ -1,7 +1,7 @@
-goog.module('os.data.ColumnDefinition');
+goog.declareModuleId('os.data.ColumnDefinition');
 
-const IPersistable = goog.require('os.IPersistable'); // eslint-disable-line
-const DataType = goog.require('os.xsd.DataType');
+import IPersistable from '../ipersistable.js';// eslint-disable-line
+import DataType from '../xsd.js';
 
 
 /**
@@ -10,7 +10,7 @@ const DataType = goog.require('os.xsd.DataType');
  * @implements {IPersistable}
  * @unrestricted
  */
-class ColumnDefinition {
+export default class ColumnDefinition {
   /**
    * Constructor.
    * @param {string=} opt_name
@@ -329,5 +329,3 @@ class ColumnDefinition {
     return clone;
   }
 }
-
-exports = ColumnDefinition;

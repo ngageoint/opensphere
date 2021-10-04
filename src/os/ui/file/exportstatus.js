@@ -1,16 +1,17 @@
 goog.declareModuleId('os.ui.file.ExportStatusUI');
 
+import OSEventType from '../../events/eventtype.js';
+import ThreadEventType from '../../thread/eventtype.js';
+import Module from '../module.js';
 import {apply} from '../ui.js';
 
-const Module = goog.require('os.ui.Module');
-const OSEventType = goog.require('os.events.EventType');
-const ThreadEventType = goog.require('os.thread.EventType');
-const {close, create} = goog.require('os.ui.window');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-
-const ThreadProgressEvent = goog.requireType('os.thread.ThreadProgressEvent');
+import {close, create} from '../window.js';
+import WindowEventType from '../windoweventtype.js';
 const GoogEvent = goog.requireType('goog.events.Event');
-const IExportMethod = goog.requireType('os.ex.IExportMethod');
+const {default: IExportMethod} = goog.requireType('os.ex.IExportMethod');
+
+
+const {default: ThreadProgressEvent} = goog.requireType('os.thread.ThreadProgressEvent');
 
 
 /**

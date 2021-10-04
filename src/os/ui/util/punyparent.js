@@ -1,12 +1,13 @@
-goog.module('os.ui.util.PunyParentUI');
+goog.declareModuleId('os.ui.util.PunyParentUI');
+
+import Module from '../module.js';
+import {apply, removeResize, resize} from '../ui.js';
 
 const Throttle = goog.require('goog.Throttle');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
 const GoogEventType = goog.require('goog.events.EventType');
-const {apply, removeResize, resize} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -14,7 +15,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'A',
   scope: true,
   controller: Controller
@@ -24,7 +25,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'punyparent';
+export const directiveTag = 'punyparent';
 
 /**
  * Add the directive to the ui module
@@ -35,7 +36,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the punyparent directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -218,9 +219,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

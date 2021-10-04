@@ -3,16 +3,15 @@ goog.require('ol.geom.Point');
 goog.require('os.command.SelectNone');
 goog.require('os.command.State');
 goog.require('os.data.DataManager');
-goog.require('os.data.DataManager');
 goog.require('os.source.Vector');
 
 describe('os.command.SelectNone', function() {
   const Feature = goog.module.get('ol.Feature');
   const Point = goog.module.get('ol.geom.Point');
-  const SelectNone = goog.module.get('os.command.SelectNone');
-  const State = goog.module.get('os.command.State');
-  const DataManager = goog.module.get('os.data.DataManager');
-  const VectorSource = goog.module.get('os.source.Vector');
+  const {default: SelectNone} = goog.module.get('os.command.SelectNone');
+  const {default: State} = goog.module.get('os.command.State');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: VectorSource} = goog.module.get('os.source.Vector');
 
   it('should fail when the source is not provided', function() {
     var cmd = new SelectNone(null);

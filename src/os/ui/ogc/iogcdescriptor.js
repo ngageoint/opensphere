@@ -1,12 +1,12 @@
-goog.module('os.ui.ogc.IOGCDescriptor');
+goog.declareModuleId('os.ui.ogc.IOGCDescriptor');
 
-const IWMSLayer = goog.require('os.ui.ogc.wms.IWMSLayer'); // eslint-disable-line
+import IWMSLayer from './wms/iwmslayer.js';// eslint-disable-line
 
 const QueryData = goog.requireType('goog.Uri.QueryData');
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const IServerDescriptor = goog.requireType('os.data.IServerDescriptor');
-const IFilterable = goog.requireType('os.filter.IFilterable');
-const IFeatureTypeDescriptor = goog.requireType('os.ui.ogc.IFeatureTypeDescriptor');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: IServerDescriptor} = goog.requireType('os.data.IServerDescriptor');
+const {default: IFilterable} = goog.requireType('os.filter.IFilterable');
+const {default: IFeatureTypeDescriptor} = goog.requireType('os.ui.ogc.IFeatureTypeDescriptor');
 
 
 /**
@@ -19,7 +19,7 @@ const IFeatureTypeDescriptor = goog.requireType('os.ui.ogc.IFeatureTypeDescripto
  * @extends {IFeatureTypeDescriptor}
  * @extends {IWMSLayer}
  */
-class IOGCDescriptor {
+export default class IOGCDescriptor {
   /**
    * @param {?function()} fn The callback to call when the DescribeFeatureType completes.
    */
@@ -280,5 +280,3 @@ class IOGCDescriptor {
  * @const
  */
 IOGCDescriptor.ID = 'os.ui.ogc.IOGCDescriptor';
-
-exports = IOGCDescriptor;

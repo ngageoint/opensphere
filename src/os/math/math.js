@@ -1,14 +1,14 @@
-goog.module('os.math');
+goog.declareModuleId('os.math');
 
-const Units = goog.require('os.math.Units');
-const OLUnits = goog.require('os.math.OLUnits');
+import OLUnits from './olunits.js';
+import Units from './units.js';
 
 
 /**
  * default decimal precision
  * @type {number}
  */
-const DEFAULT_DECIMAL_PRECISION = 3;
+export const DEFAULT_DECIMAL_PRECISION = 3;
 
 /**
  * Rounds a number to opt_fixed decimal points
@@ -17,7 +17,7 @@ const DEFAULT_DECIMAL_PRECISION = 3;
  * @param {number=} opt_fixed Optional precision, defaults to 3
  * @return {string}
  */
-const toFixed = function(num, opt_fixed) {
+export const toFixed = function(num, opt_fixed) {
   opt_fixed = opt_fixed != null ? opt_fixed : DEFAULT_DECIMAL_PRECISION;
   return num.toFixed(opt_fixed);
 };
@@ -29,7 +29,7 @@ const toFixed = function(num, opt_fixed) {
  * @param {number=} opt_precision Optional precision, defaults to 6
  * @return {string}
  */
-const toPrecision = function(num, opt_precision) {
+export const toPrecision = function(num, opt_precision) {
   opt_precision = opt_precision || 6;
   return num.toPrecision(opt_precision);
 };
@@ -41,7 +41,7 @@ const toPrecision = function(num, opt_precision) {
  * @param {number} precision
  * @return {number}
  */
-const roundWithPrecision = function(num, precision) {
+export const roundWithPrecision = function(num, precision) {
   var multiplier = Math.pow(10, precision);
   return Math.round(num * multiplier) / multiplier;
 };
@@ -52,7 +52,7 @@ const roundWithPrecision = function(num, precision) {
  * @param {!Array.<!number>} values
  * @return {?number} the max value, or null if the array is empty
  */
-const max = function(values) {
+export const max = function(values) {
   var max = values.length > 0 ? values[0] : null;
   for (var i = 1, ii = values.length; i < ii; i++) {
     max = Math.max(values[i], max);
@@ -66,7 +66,7 @@ const max = function(values) {
  * @param {!Array.<!number>} values
  * @return {?number} the min value, or null if the array is empty
  */
-const min = function(values) {
+export const min = function(values) {
   var min = values.length > 0 ? values[0] : null;
   for (var i = 1, ii = values.length; i < ii; i++) {
     min = Math.min(values[i], min);
@@ -80,7 +80,7 @@ const min = function(values) {
  * @param {number} value The number
  * @return {number} The precision. Returns 0 for integer, NaN, and infinite values.
  */
-const precision = function(value) {
+export const precision = function(value) {
   if (!isFinite(value)) {
     return 0;
   }
@@ -102,7 +102,7 @@ const precision = function(value) {
  * @param {!Array.<!number>} values
  * @return {?Array.<!number>} An array of size 2 in the form of [min, max], or null if the input is an empty array.
  */
-const range = function(values) {
+export const range = function(values) {
   var range = null;
   if (values.length > 0) {
     range = [min(values), max(values)];
@@ -116,7 +116,7 @@ const range = function(values) {
  * @param {*} value The value.
  * @return {number} The numeric value, or NaN.
  */
-const parseNumber = function(value) {
+export const parseNumber = function(value) {
   if (typeof value === 'number') {
     return value;
   } else if (typeof value === 'string') {
@@ -137,22 +137,19 @@ const parseNumber = function(value) {
  * @param {(string|number)} val The number to truncate
  * @return {number}
  */
-const trunc = function(val) {
+export const trunc = function(val) {
   return val < 0 ? Math.ceil(val) : Math.floor(val);
 };
-
 
 /**
  * TODO: Units related math code. This should be in an os.units namespace, but it's referenced in hundreds
  * of places on os.math. At some point we should clean this up.
  */
-
-
 /**
  * Readable number formats.
  * @type {Array<string>}
  */
-const ReadableNumbers = [
+export const ReadableNumbers = [
   '',
   'k',
   ' Million',
@@ -163,27 +160,27 @@ const ReadableNumbers = [
 /**
  * @type {number}
  */
-const METERS_TO_FEET = 3.28084;
+export const METERS_TO_FEET = 3.28084;
 
 /**
  * @type {number}
  */
-const METERS_TO_MILES = METERS_TO_FEET / 5280;
+export const METERS_TO_MILES = METERS_TO_FEET / 5280;
 
 /**
  * @type {number}
  */
-const METERS_TO_NAUTICAL_MILES = METERS_TO_FEET / 6076;
+export const METERS_TO_NAUTICAL_MILES = METERS_TO_FEET / 6076;
 
 /**
  * @type {number}
  */
-const METERS_TO_KILOMETERS = .001;
+export const METERS_TO_KILOMETERS = .001;
 
 /**
  * @type {number}
  */
-const METERS_TO_YARDS = 1.09361;
+export const METERS_TO_YARDS = 1.09361;
 
 /**
  * function to simplify unit conversion
@@ -193,7 +190,7 @@ const METERS_TO_YARDS = 1.09361;
  * @param {string=} opt_oldUnit
  * @return {number} new unit
  */
-const convertUnits = function(value, newUnit, opt_oldUnit) {
+export const convertUnits = function(value, newUnit, opt_oldUnit) {
   var oldUnit = opt_oldUnit || Units.METERS;
   if (oldUnit == newUnit) {
     // short circuit if the units aren't changing
@@ -258,7 +255,7 @@ const convertUnits = function(value, newUnit, opt_oldUnit) {
  * @param {string=} opt_oldUnit
  * @return {string} new unit
  */
-const stringifyUnits = function(value, newUnit, opt_oldUnit) {
+export const stringifyUnits = function(value, newUnit, opt_oldUnit) {
   var oldUnit = opt_oldUnit || Units.METERS;
   var newVal = convertUnits(value, newUnit, oldUnit);
   if (isNaN(newVal)) {
@@ -290,7 +287,7 @@ const stringifyUnits = function(value, newUnit, opt_oldUnit) {
  * @param {string} current
  * @return {string} next key
  */
-const getNextUnit = function(current) {
+export const getNextUnit = function(current) {
   var found = false;
   for (var key in OLUnits) {
     if (found) {
@@ -309,35 +306,11 @@ const getNextUnit = function(current) {
  * @param {number} num
  * @return {string}
  */
-const readableNumber = function(num) {
+export const readableNumber = function(num) {
   var e = Math.floor(Math.log(num) / Math.log(1000));
   if (num >= 1000) {
     return (num / Math.pow(1000, e)).toFixed(2) + ReadableNumbers[e];
   } else {
     return num.toString();
   }
-};
-
-
-exports = {
-  DEFAULT_DECIMAL_PRECISION,
-  toFixed,
-  toPrecision,
-  roundWithPrecision,
-  max,
-  min,
-  precision,
-  range,
-  parseNumber,
-  trunc,
-  ReadableNumbers,
-  METERS_TO_FEET,
-  METERS_TO_KILOMETERS,
-  METERS_TO_MILES,
-  METERS_TO_NAUTICAL_MILES,
-  METERS_TO_YARDS,
-  convertUnits,
-  stringifyUnits,
-  getNextUnit,
-  readableNumber
 };

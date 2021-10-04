@@ -1,9 +1,11 @@
-goog.module('os.ui.im.FileSupportChoice');
+goog.declareModuleId('os.ui.im.FileSupportChoice');
 
 /**
  * @enum {string}
  */
-exports = {
+const FileSupportChoice = {
   LOCAL: 'local',
   UPLOAD: 'upload'
 };
+
+export default FileSupportChoice;

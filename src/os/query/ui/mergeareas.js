@@ -1,21 +1,22 @@
-goog.module('os.query.ui.MergeAreasUI');
+goog.declareModuleId('os.query.ui.MergeAreasUI');
+
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import CommandProcessor from '../../command/commandprocessor.js';
+import SequenceCommand from '../../command/sequencecommand.js';
+import {filterFalsey, mapFeatureToGeometry} from '../../fn/fn.js';
+import {merge} from '../../geo/jsts.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import {ROOT} from '../../os.js';
+import {PREVIEW_CONFIG} from '../../style/style.js';
+import Module from '../../ui/module.js';
+import AreaAdd from '../../ui/query/cmd/areaaddcmd.js';
+import AreaRemove from '../../ui/query/cmd/arearemovecmd.js';
+import {Controller as EditAreaCtrl} from '../../ui/query/editarea.js';
+import {applyMappings, createMappingsFromConfig} from '../../ui/query/query.js';
 
 const log = goog.require('goog.log');
 const Feature = goog.require('ol.Feature');
-const {ROOT} = goog.require('os');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const {filterFalsey, mapFeatureToGeometry} = goog.require('os.fn');
-const {merge} = goog.require('os.geo.jsts');
-const {getMapContainer} = goog.require('os.map.instance');
-const {PREVIEW_CONFIG} = goog.require('os.style');
-const Module = goog.require('os.ui.Module');
-const {applyMappings, createMappingsFromConfig} = goog.require('os.ui.query');
-const {Controller: EditAreaCtrl} = goog.require('os.ui.query.EditAreaUI');
-const AreaAdd = goog.require('os.ui.query.cmd.AreaAdd');
-const AreaRemove = goog.require('os.ui.query.cmd.AreaRemove');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -25,7 +26,7 @@ const Logger = goog.requireType('goog.log.Logger');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -38,7 +39,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'mergeareas';
+export const directiveTag = 'mergeareas';
 
 /**
  * Add the directive to the module.
@@ -48,7 +49,7 @@ Module.directive(directiveTag, [directive]);
 /**
  * @unrestricted
  */
-class Controller extends EditAreaCtrl {
+export class Controller extends EditAreaCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -164,9 +165,3 @@ class Controller extends EditAreaCtrl {
  * @type {Logger}
  */
 const logger = log.getLogger('os.query.ui.MergeAreasUI');
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

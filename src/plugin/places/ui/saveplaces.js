@@ -1,20 +1,19 @@
 goog.declareModuleId('plugin.places.ui.SavePlacesUI');
 
-goog.require('os.ui.im.BasicInfoUI');
-
+import '../../../os/ui/im/basicinfo.js';
+import AlertEventSeverity from '../../../os/alert/alerteventseverity.js';
+import AlertManager from '../../../os/alert/alertmanager.js';
 import {ROOT} from '../../../os/os.js';
+import {Controller as ExportOptionsCtrl} from '../../../os/ui/ex/exportoptions.js';
+import ExportOptionsEvent from '../../../os/ui/ex/exportoptionsevent.js';
+import Module from '../../../os/ui/module.js';
+import * as column from '../../../os/ui/slick/column.js';
+import * as osWindow from '../../../os/ui/window.js';
+import WindowEventType from '../../../os/ui/windoweventtype.js';
 import * as places from '../places.js';
 
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {Controller: ExportOptionsCtrl} = goog.require('os.ui.ex.ExportOptionsUI');
-const ExportOptionsEvent = goog.require('os.ui.ex.ExportOptionsEvent');
-const column = goog.require('os.ui.slick.column');
-const osWindow = goog.require('os.ui.window');
-
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**
@@ -162,7 +161,7 @@ export class Controller extends ExportOptionsCtrl {
    *
    * @param {angular.Scope.Event} event
    * @param {Array<!ol.Feature>} items
-   * @param {Array<!os.source.Vector>} sources
+   * @param {Array<!VectorSource>} sources
    * @private
    */
   onOptionsChange_(event, items, sources) {

@@ -1,8 +1,9 @@
-goog.module('os.webgl.SynchronizerManager');
+goog.declareModuleId('os.webgl.SynchronizerManager');
 
 const log = goog.require('goog.log');
 
-goog.requireType('os.webgl.AbstractWebGLSynchronizer');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: AbstractWebGLSynchronizer} = goog.requireType('os.webgl.AbstractWebGLSynchronizer');
 
 
 /**
@@ -10,13 +11,13 @@ goog.requireType('os.webgl.AbstractWebGLSynchronizer');
  * synchronizers, it allows plugins to register their own via {@code registerSynchronizer}. The root
  * synchronizer then gets synchronizers for layers via the {@code getSynchronizer} method.
  */
-class SynchronizerManager {
+export default class SynchronizerManager {
   /**
    * Constructor.
    */
   constructor() {
     /**
-     * @type {!Object<string, function(new:os.webgl.AbstractWebGLSynchronizer, ...?)>}
+     * @type {!Object<string, function(new:AbstractWebGLSynchronizer, ...?)>}
      * @private
      */
     this.synchronizers_ = {};
@@ -26,7 +27,7 @@ class SynchronizerManager {
    * Registers a synchronizer constructor by type.
    *
    * @param {string} type The synchronizer type. Should match the types provided by layers that need to be synced.
-   * @param {function(new:os.webgl.AbstractWebGLSynchronizer, ...?)} synchronizer The synchronizer constructor
+   * @param {function(new:AbstractWebGLSynchronizer, ...?)} synchronizer The synchronizer constructor
    */
   registerSynchronizer(type, synchronizer) {
     if (!(type in this.synchronizers_)) {
@@ -40,8 +41,8 @@ class SynchronizerManager {
   /**
    * Gets a synchronizer for a layer.
    *
-   * @param {os.layer.ILayer} layer
-   * @return {?function(new:os.webgl.AbstractWebGLSynchronizer, ...?)}
+   * @param {ILayer} layer
+   * @return {?function(new:AbstractWebGLSynchronizer, ...?)}
    */
   getSynchronizer(layer) {
     var type = layer.getSynchronizerType();
@@ -58,6 +59,3 @@ goog.addSingletonGetter(SynchronizerManager);
  * @private
  */
 SynchronizerManager.LOGGER_ = log.getLogger('os.webgl.SynchronizerManager');
-
-
-exports = SynchronizerManager;

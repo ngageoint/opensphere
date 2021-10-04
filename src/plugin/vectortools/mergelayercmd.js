@@ -1,17 +1,16 @@
 goog.declareModuleId('plugin.vectortools.MergeLayer');
 
+import State from '../../os/command/state.js';
+import DataManager from '../../os/data/datamanager.js';
 import * as osFeature from '../../os/feature/feature.js';
+import * as layer from '../../os/layer/layer.js';
+import MapContainer from '../../os/mapcontainer.js';
 import * as style from '../../os/style/style.js';
 import * as vectortools from './vectortools.js';
 
-const MapContainer = goog.require('os.MapContainer');
-const State = goog.require('os.command.State');
-const DataManager = goog.require('os.data.DataManager');
-const layer = goog.require('os.layer');
-
-const ICommand = goog.requireType('os.command.ICommand');
-const ISource = goog.requireType('os.source.ISource');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: ISource} = goog.requireType('os.source.ISource');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 const {default: Options} = goog.requireType('plugin.vectortools.Options');
 
 

@@ -1,5 +1,11 @@
 goog.declareModuleId('plugin.ogc.wfs.QueryWFSLayerConfig');
 
+import ParamModifier from '../../../os/net/parammodifier.js';
+import ModifierConstants from '../../../os/ogc/filter/modifierconstants.js';
+import OGCFilterModifier from '../../../os/ogc/filter/ogcfiltermodifier.js';
+import {getQueryManager} from '../../../os/query/queryinstance.js';
+import TemporalHandler from '../../../os/query/temporalhandler.js';
+import TemporalQueryManager from '../../../os/query/temporalquerymanager.js';
 import FilterIDModifier from '../query/filteridmodifier.js';
 import OGCQueryHandler from '../query/ogcqueryhandler.js';
 import OGCTemporalFormatter from '../query/ogctemporalformatter.js';
@@ -7,14 +13,8 @@ import getFilterColumns from './getfiltercolumns.js';
 import launchFilterManager from './launchfiltermanager.js';
 import WFSLayerConfig from './wfslayerconfig.js';
 
-const ParamModifier = goog.require('os.net.ParamModifier');
-const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');
-const OGCFilterModifier = goog.require('os.ogc.filter.OGCFilterModifier');
-const TemporalHandler = goog.require('os.query.TemporalHandler');
-const TemporalQueryManager = goog.require('os.query.TemporalQueryManager');
-const {getQueryManager} = goog.require('os.query.instance');
-
-const OGCFilterModifierOptions = goog.requireType('os.ogc.filter.OGCFilterModifierOptions');
+const {default: OGCFilterModifierOptions} = goog.requireType('os.ogc.filter.OGCFilterModifierOptions');
+const {default: RequestSource} = goog.requireType('os.source.Request');
 
 
 /**
@@ -35,7 +35,7 @@ export default class QueryWFSLayerConfig extends WFSLayerConfig {
   addMappings(layer, options) {
     super.addMappings(layer, options);
 
-    var source = /** @type {os.source.Request} */ (layer.getSource());
+    var source = /** @type {RequestSource} */ (layer.getSource());
     var useExclusions = options['exclusions'] != null ? options['exclusions'] : false;
     var useFilter = options['filter'] != null ? options['filter'] : false;
     var useSpatial = options['spatial'] != null ? options['spatial'] : false;

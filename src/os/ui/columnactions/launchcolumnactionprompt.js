@@ -1,10 +1,11 @@
-goog.module('os.ui.columnactions.launchColumnActionPrompt');
+goog.declareModuleId('os.ui.columnactions.launchColumnActionPrompt');
+
+import {create} from '../window.js';
 
 const {buildString} = goog.require('goog.string');
-const {create} = goog.require('os.ui.window');
 
-const AbstractColumnAction = goog.requireType('os.ui.columnactions.AbstractColumnAction');
-const IColumnActionModel = goog.requireType('os.ui.columnactions.IColumnActionModel');
+const {default: AbstractColumnAction} = goog.requireType('os.ui.columnactions.AbstractColumnAction');
+const {default: IColumnActionModel} = goog.requireType('os.ui.columnactions.IColumnActionModel');
 
 
 /**
@@ -14,7 +15,7 @@ const IColumnActionModel = goog.requireType('os.ui.columnactions.IColumnActionMo
  * @param {*} value from the column
  * @param {IColumnActionModel} colDef
  */
-exports = function(matched, value, colDef) {
+const launchColumnActionPrompt = function(matched, value, colDef) {
   var scopeOptions = {
     'matched': matched,
     'colDef': colDef,
@@ -37,3 +38,5 @@ exports = function(matched, value, colDef) {
   var template = '<columnactions class="d-flex flex-fill"></columnactions>';
   create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
+
+export default launchColumnActionPrompt;

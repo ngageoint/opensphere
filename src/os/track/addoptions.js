@@ -1,4 +1,4 @@
-goog.module('os.track.AddOptions');
+goog.declareModuleId('os.track.AddOptions');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -13,4 +13,4 @@ const Feature = goog.requireType('ol.Feature');
  */
 let AddOptions;
 
-exports = AddOptions;
+export default AddOptions;

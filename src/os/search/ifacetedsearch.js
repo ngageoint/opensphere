@@ -1,15 +1,15 @@
-goog.module('os.search.IFacetedSearch');
+goog.declareModuleId('os.search.IFacetedSearch');
 
-const AppliedFacets = goog.requireType('os.search.AppliedFacets');
-const FacetSet = goog.requireType('os.search.FacetSet');
-const ISearch = goog.requireType('os.search.ISearch');
+const {default: AppliedFacets} = goog.requireType('os.search.AppliedFacets');
+const {default: FacetSet} = goog.requireType('os.search.FacetSet');
+const {default: ISearch} = goog.requireType('os.search.ISearch');
 
 
 /**
  * @interface
  * @extends {ISearch}
  */
-class IFacetedSearch {
+export default class IFacetedSearch {
   /**
    * Loads the facets. Depending on the implementation, the results may be affected
    * by the applied facets.
@@ -45,5 +45,3 @@ class IFacetedSearch {
  * @const
  */
 IFacetedSearch.ID = 'os.search.IFacetedSearch';
-
-exports = IFacetedSearch;

@@ -1,12 +1,12 @@
-goog.module('os.state.JSONStateOptions');
+goog.declareModuleId('os.state.JSONStateOptions');
 
-const StateOptions = goog.require('os.state.StateOptions');
+import StateOptions from './stateoptions.js';
 
 
 /**
  * Options for saving and loading state files as JSON.
  */
-class JSONStateOptions extends StateOptions {
+export default class JSONStateOptions extends StateOptions {
   /**
    * Constructor.
    * @param {string} title The state title
@@ -22,5 +22,3 @@ class JSONStateOptions extends StateOptions {
     this.obj = opt_obj || null;
   }
 }
-
-exports = JSONStateOptions;

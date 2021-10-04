@@ -1,10 +1,10 @@
-goog.module('os.ui.help.MisconfiguredUI');
+goog.declareModuleId('os.ui.help.MisconfiguredUI');
 
-const {ROOT} = goog.require('os');
-const Settings = goog.require('os.config.Settings');
-const ConnectionConstants = goog.require('os.net.ConnectionConstants');
-const Module = goog.require('os.ui.Module');
-const {add} = goog.require('os.ui.list');
+import Settings from '../../config/settings.js';
+import * as ConnectionConstants from '../../net/connectionconstants.js';
+import {ROOT} from '../../os.js';
+import {add} from '../list.js';
+import Module from '../module.js';
 
 
 /**
@@ -12,7 +12,7 @@ const {add} = goog.require('os.ui.list');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   // "The system is unable to connect to <name>..."
   scope: {
@@ -28,7 +28,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'misconfigured';
+export const directiveTag = 'misconfigured';
 
 /**
  * Add the directive to the module.
@@ -39,7 +39,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the login directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -74,9 +74,3 @@ add(MISCONFIGURED_KEY,
     'adjust your browser\'s settings so those services will be available.</p>' +
     '<p>Please follow <a target="_blank" ng-href="{{ieSecurity}}">the steps listed here</a> to correct the problem.' +
     '</p></div>');
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

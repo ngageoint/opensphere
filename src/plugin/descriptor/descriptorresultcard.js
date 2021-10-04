@@ -1,11 +1,12 @@
 goog.declareModuleId('plugin.descriptor.ResultCardUI');
 
+import DescriptorEvent from '../../os/data/descriptorevent.js';
+import DescriptorEventType from '../../os/data/descriptoreventtype.js';
 import * as dispatcher from '../../os/dispatcher.js';
 import {ROOT} from '../../os/os.js';
+import Module from '../../os/ui/module.js';
 
-const DescriptorEvent = goog.require('os.data.DescriptorEvent');
-const DescriptorEventType = goog.require('os.data.DescriptorEventType');
-const Module = goog.require('os.ui.Module');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 
 
 /**
@@ -96,7 +97,7 @@ export class Controller {
   }
 
   /**
-   * @return {os.data.IDataDescriptor} the descriptor
+   * @return {IDataDescriptor} the descriptor
    */
   getDescriptor() {
     var result = /** @type {plugin.descriptor.DescriptorResult} */ (this.scope_['result']);

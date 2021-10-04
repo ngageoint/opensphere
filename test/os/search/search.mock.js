@@ -1,9 +1,9 @@
 goog.module('os.search.MockSearch');
 
 const GoogEvent = goog.require('goog.events.Event');
-const AbstractSearch = goog.require('os.search.AbstractSearch');
-const SearchEvent = goog.require('os.search.SearchEvent');
-const SearchEventType = goog.require('os.search.SearchEventType');
+const {default: AbstractSearch} = goog.require('os.search.AbstractSearch');
+const {default: SearchEvent} = goog.require('os.search.SearchEvent');
+const {default: SearchEventType} = goog.require('os.search.SearchEventType');
 
 
 /**

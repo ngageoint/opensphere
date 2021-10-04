@@ -1,17 +1,17 @@
-goog.module('os.ui.timeline.TileAxis');
+goog.declareModuleId('os.ui.timeline.TileAxis');
 
-const time = goog.require('os.time');
-const TimelineController = goog.require('os.time.TimelineController');
-const timeline = goog.require('os.ui.timeline');
-const BaseItem = goog.require('os.ui.timeline.BaseItem');
+import * as time from '../../time/time.js';
+import TimelineController from '../../time/timelinecontroller.js';
+import BaseItem from './baseitem.js';
+import * as timeline from './timeline.js';
 
-const ITimelineItem = goog.requireType('os.ui.timeline.ITimelineItem');
+const {default: ITimelineItem} = goog.requireType('os.ui.timeline.ITimelineItem');
 
 
 /**
  * @implements {ITimelineItem}
  */
-class TileAxis extends BaseItem {
+export default class TileAxis extends BaseItem {
   /**
    * Constructor.
    */
@@ -108,5 +108,3 @@ class TileAxis extends BaseItem {
     return (times[1] + times[0]) / 2;
   }
 }
-
-exports = TileAxis;

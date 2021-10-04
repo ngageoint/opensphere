@@ -1,26 +1,27 @@
-goog.module('os.ui.im.DuplicateImportProcess');
+goog.declareModuleId('os.ui.im.DuplicateImportProcess');
+
+import CommandProcessor from '../../command/commandprocessor.js';
+import ActivateDescriptor from '../../data/activatedescriptorcmd.js';
+import DataManager from '../../data/datamanager.js';
+import FileStorage from '../../file/filestorage.js';
+import {launchFileExists} from './fileexists.js';
+import FileExistsChoice from './fileexistschoice.js';
+import ImportProcess from './importprocess.js';
+import {launchURLExists} from './urlexists.js';
+import URLExistsChoice from './urlexistschoice.js';
 
 const {getLogger} = goog.require('goog.log');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const ActivateDescriptor = goog.require('os.data.ActivateDescriptor');
-const DataManager = goog.require('os.data.DataManager');
-const FileStorage = goog.require('os.file.FileStorage');
-const FileExistsChoice = goog.require('os.ui.im.FileExistsChoice');
-const ImportProcess = goog.require('os.ui.im.ImportProcess');
-const URLExistsChoice = goog.require('os.ui.im.URLExistsChoice');
-const {launchFileExists} = goog.require('os.ui.im.FileExistsUI');
-const {launchURLExists} = goog.require('os.ui.im.URLExistsUI');
 
 const DBError = goog.requireType('goog.db.Error');
 const Logger = goog.requireType('goog.log.Logger');
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const OSFile = goog.requireType('os.file.File');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
  * Import process that detects and handles duplicate files by asking the user what to do.
  */
-class DuplicateImportProcess extends ImportProcess {
+export default class DuplicateImportProcess extends ImportProcess {
   /**
    * Constructor.
    */
@@ -174,5 +175,3 @@ class DuplicateImportProcess extends ImportProcess {
  * @type {Logger}
  */
 const logger = getLogger('os.ui.im.DuplicateImportProcess');
-
-exports = DuplicateImportProcess;

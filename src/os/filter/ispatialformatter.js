@@ -1,4 +1,4 @@
-goog.module('os.filter.ISpatialFormatter');
+goog.declareModuleId('os.filter.ISpatialFormatter');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -8,7 +8,7 @@ const Feature = goog.requireType('ol.Feature');
  *
  * @interface
  */
-class ISpatialFormatter {
+export default class ISpatialFormatter {
   /**
    * Formats a spatial region.
    * @param {Feature} feature
@@ -29,5 +29,3 @@ class ISpatialFormatter {
    */
   wrapMultiple(value) {}
 }
-
-exports = ISpatialFormatter;

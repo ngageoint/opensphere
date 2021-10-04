@@ -1,6 +1,12 @@
 goog.declareModuleId('plugin.area.KMLAreaParser');
 
+import ColumnDefinition from '../../os/data/columndefinition.js';
+import * as text from '../../os/file/mime/text.js';
+import * as mimeZip from '../../os/file/mime/zip.js';
 import {PROJECTION} from '../../os/map/map.js';
+
+import AsyncZipParser from '../../os/parse/asynczipparser.js';
+import * as osXml from '../../os/xml.js';
 
 const dom = goog.require('goog.dom');
 const googDomXml = goog.require('goog.dom.xml');
@@ -8,13 +14,8 @@ const GoogFileReader = goog.require('goog.fs.FileReader');
 const log = goog.require('goog.log');
 const KML = goog.require('ol.format.KML');
 const xml = goog.require('ol.xml');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const text = goog.require('os.file.mime.text');
-const mimeZip = goog.require('os.file.mime.zip');
-const AsyncZipParser = goog.require('os.parse.AsyncZipParser');
-const osXml = goog.require('os.xml');
 
-const IParser = goog.requireType('os.parse.IParser');
+const {default: IParser} = goog.requireType('os.parse.IParser');
 
 
 /**

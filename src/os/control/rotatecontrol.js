@@ -1,15 +1,16 @@
-goog.module('os.control.Rotate');
+goog.declareModuleId('os.control.Rotate');
+
+import {getMapContainer} from '../map/mapinstance.js';
 
 const classlist = goog.require('goog.dom.classlist');
 const OLRotate = goog.require('ol.control.Rotate');
 const css = goog.require('ol.css');
-const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
  * Overrides the OpenLayers rotate control to allow resetting rotation in WebGL.
  */
-class Rotate extends OLRotate {
+export default class Rotate extends OLRotate {
   /**
    * Constructor.
    * @param {olx.control.RotateOptions=} opt_options Rotate options.
@@ -77,5 +78,3 @@ const render = function(mapEvent) {
 
   this.rotation_ = rotation;
 };
-
-exports = Rotate;

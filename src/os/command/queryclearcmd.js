@@ -1,9 +1,9 @@
-goog.module('os.command.QueryClear');
+goog.declareModuleId('os.command.QueryClear');
 
-const State = goog.require('os.command.State');
-const {getAreaManager} = goog.require('os.query.instance');
+import {getAreaManager} from '../query/queryinstance.js';
+import State from './state.js';
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -11,7 +11,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class QueryClear {
+export default class QueryClear {
   /**
    * Constructor.
    */
@@ -88,5 +88,3 @@ class QueryClear {
     return true;
   }
 }
-
-exports = QueryClear;

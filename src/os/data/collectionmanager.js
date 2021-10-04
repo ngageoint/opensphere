@@ -1,13 +1,14 @@
-goog.module('os.data.CollectionManager');
+goog.declareModuleId('os.data.CollectionManager');
+
+import PropertyChangeEvent from '../events/propertychangeevent.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 
 
 /**
  * @template T
  */
-class CollectionManager extends EventTarget {
+export default class CollectionManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -134,5 +135,3 @@ class CollectionManager extends EventTarget {
     return item;
   }
 }
-
-exports = CollectionManager;

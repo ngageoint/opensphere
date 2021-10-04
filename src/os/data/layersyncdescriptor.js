@@ -1,6 +1,21 @@
-goog.module('os.data.LayerSyncDescriptor');
+goog.declareModuleId('os.data.LayerSyncDescriptor');
 
-goog.require('os.ui.layer.EllipseColumnsUI');
+import '../ui/layer/ellipsecolumns.js';
+import {registerClass} from '../classregistry.js';
+import * as dispatcher from '../dispatcher.js';
+import LayerEventType from '../events/layereventtype.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import osImplements from '../implements.js';
+import {createFromOptions} from '../layer/layer.js';
+import PropertyChange from '../layer/propertychange.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import Online from '../net/online.js';
+import {merge} from '../object/object.js';
+import {directiveTag as nodeUi} from '../ui/node/defaultlayernodeui.js';
+import BaseDescriptor from './basedescriptor.js';
+import {DescriptorClass} from './data.js';
+import DataManager from './datamanager.js';
+import IMappingDescriptor from './imappingdescriptor.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
@@ -8,26 +23,13 @@ const googObject = goog.require('goog.object');
 const OLObject = goog.require('ol.Object');
 const olArray = goog.require('ol.array');
 const events = goog.require('ol.events');
-const dispatcher = goog.require('os.Dispatcher');
-const {registerClass} = goog.require('os.classRegistry');
-const {DescriptorClass} = goog.require('os.data');
-const BaseDescriptor = goog.require('os.data.BaseDescriptor');
-const DataManager = goog.require('os.data.DataManager');
-const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osImplements = goog.require('os.implements');
-const {createFromOptions} = goog.require('os.layer');
-const PropertyChange = goog.require('os.layer.PropertyChange');
-const {getMapContainer} = goog.require('os.map.instance');
-const Online = goog.require('os.net.Online');
-const {merge} = goog.require('os.object');
-const {directiveTag: nodeUi} = goog.require('os.ui.node.DefaultLayerNodeUI');
 
 const Logger = goog.requireType('goog.log.Logger');
-const LayerEvent = goog.requireType('os.events.LayerEvent');
-const ILayer = goog.requireType('os.layer.ILayer');
-const IMapping = goog.requireType('os.im.mapping.IMapping');
+const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
+
+
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
@@ -38,7 +40,7 @@ const IMapping = goog.requireType('os.im.mapping.IMapping');
  * @implements {IMappingDescriptor}
  * @abstract
  */
-class LayerSyncDescriptor extends BaseDescriptor {
+export default class LayerSyncDescriptor extends BaseDescriptor {
   /**
    * Constructor.
    */
@@ -461,6 +463,7 @@ class LayerSyncDescriptor extends BaseDescriptor {
     return config;
   }
 }
+
 osImplements(LayerSyncDescriptor, IMappingDescriptor.ID);
 registerClass(DescriptorClass.LAYER_SYNC, LayerSyncDescriptor);
 
@@ -500,6 +503,3 @@ const styleChangeEvents = [
   PropertyChange.TIME_ENABLED,
   PropertyChange.VISIBLE
 ];
-
-
-exports = LayerSyncDescriptor;

@@ -1,9 +1,9 @@
-goog.module('os.im.mapping.AbstractMapping');
+goog.declareModuleId('os.im.mapping.AbstractMapping');
 
-const IXmlPersistable = goog.require('os.IXmlPersistable'); // eslint-disable-line
-const osMapping = goog.require('os.im.mapping');
-const IMapping = goog.require('os.im.mapping.IMapping'); // eslint-disable-line
-const {appendElement, createElement} = goog.require('os.xml');
+import IXmlPersistable from '../../ixmlpersistable.js';// eslint-disable-line
+import {appendElement, createElement} from '../../xml.js';
+import IMapping from './imapping.js';// eslint-disable-line
+import * as osMapping from './mapping.js';
 
 
 /**
@@ -12,7 +12,7 @@ const {appendElement, createElement} = goog.require('os.xml');
  * @implements {IXmlPersistable}
  * @template T,S
  */
-class AbstractMapping {
+export default class AbstractMapping {
   /**
    * Constructor.
    */
@@ -179,5 +179,3 @@ class AbstractMapping {
     return null;
   }
 }
-
-exports = AbstractMapping;

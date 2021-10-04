@@ -1,7 +1,18 @@
-goog.module('os.ui.AnimationSettingsUI');
+goog.declareModuleId('os.ui.AnimationSettingsUI');
 
-goog.require('os.ui.datetime.DateTimeUI');
-goog.require('os.ui.popover.PopoverUI');
+import './datetime/datetime.js';
+import './popover/popover.js';
+import Metrics from '../metrics/metrics.js';
+import {Timeline as TimelineKeys} from '../metrics/metricskeys.js';
+import {ROOT} from '../os.js';
+import Duration from '../time/duration.js';
+import {getTimeOffset, parse} from '../time/time.js';
+import {DAY, MIN} from '../time/timeline.js';
+import TimelineController from '../time/timelinecontroller.js';
+import Module from './module.js';
+import * as TimelineUI from './timeline/timelineui.js';
+import {close} from './window.js';
+import WindowEventType from './windoweventtype.js';
 
 const dispose = goog.require('goog.dispose');
 const {getDocument} = goog.require('goog.dom');
@@ -9,17 +20,6 @@ const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
 const Range = goog.require('goog.math.Range');
-const {ROOT} = goog.require('os');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Timeline: TimelineKeys} = goog.require('os.metrics.keys');
-const {getTimeOffset, parse} = goog.require('os.time');
-const Duration = goog.require('os.time.Duration');
-const {DAY, MIN} = goog.require('os.time.timeline');
-const TimelineController = goog.require('os.time.TimelineController');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const TimelineUI = goog.require('os.ui.timeline.TimelineUI');
-const {close} = goog.require('os.ui.window');
 
 
 /**
@@ -27,7 +27,7 @@ const {close} = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: true,
@@ -40,7 +40,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'animationsettings';
+export const directiveTag = 'animationsettings';
 
 /**
  * Add the directive to the module
@@ -51,7 +51,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the animation settings dialog
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -403,9 +403,3 @@ Controller.UNITS = [{
   label: 'weeks',
   value: 7 * 24 * 60 * 60 * 1000
 }];
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

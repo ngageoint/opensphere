@@ -1,10 +1,10 @@
-goog.module('os.ui.TriStateCheckboxUI');
+goog.declareModuleId('os.ui.TriStateCheckboxUI');
 
-const TriState = goog.require('os.structs.TriState');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
+import TriState from '../structs/tristate.js';
+import Module from './module.js';
+import {apply} from './ui.js';
 
-const TriStateTreeNode = goog.requireType('os.structs.TriStateTreeNode');
+const {default: TriStateTreeNode} = goog.requireType('os.structs.TriStateTreeNode');
 
 
 /**
@@ -12,7 +12,7 @@ const TriStateTreeNode = goog.requireType('os.structs.TriStateTreeNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<span ng-class="chkClass + \' \' + chkClass + \'-\' + item.state"' +
@@ -26,7 +26,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'tristatecheckbox';
+export const directiveTag = 'tristatecheckbox';
 
 /**
  * Add the directive to the module
@@ -37,7 +37,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for tri-state checkbox
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -138,9 +138,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

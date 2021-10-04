@@ -1,11 +1,11 @@
-goog.module('os.command.LayerColor');
+goog.declareModuleId('os.command.LayerColor');
 
-const AbstractLayerStyle = goog.require('os.command.AbstractLayerStyle');
-const osImplements = goog.require('os.implements');
-const IColorableLayer = goog.require('os.layer.IColorableLayer');
-const ILayer = goog.require('os.layer.ILayer');
-const {getMapContainer} = goog.require('os.map.instance');
-const osStyle = goog.require('os.style');
+import osImplements from '../implements.js';
+import IColorableLayer from '../layer/icolorablelayer.js';
+import ILayer from '../layer/ilayer.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import * as osStyle from '../style/style.js';
+import AbstractLayerStyle from './abstractlayerstylecmd.js';
 
 
 /**
@@ -14,7 +14,7 @@ const osStyle = goog.require('os.style');
  *
  * @extends {AbstractLayerStyle<Array<number>|string>}
  */
-class LayerColor extends AbstractLayerStyle {
+export default class LayerColor extends AbstractLayerStyle {
   /**
    * Constructor.
    * @param {string} layerId The layer id.
@@ -31,7 +31,7 @@ class LayerColor extends AbstractLayerStyle {
     } else {
       var layer = getMapContainer().getLayer(layerId);
       if (osImplements(layer, ILayer.ID)) {
-        var options = /** @type {os.layer.ILayer} */ (layer).getLayerOptions();
+        var options = /** @type {ILayer} */ (layer).getLayerOptions();
         this.value = /** @type {string} */ (options && options['baseColor'] || osStyle.DEFAULT_LAYER_COLOR);
       }
     }
@@ -63,5 +63,3 @@ class LayerColor extends AbstractLayerStyle {
     super.applyValue(config, value);
   }
 }
-
-exports = LayerColor;

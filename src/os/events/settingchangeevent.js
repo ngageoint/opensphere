@@ -1,4 +1,4 @@
-goog.module('os.events.SettingChangeEvent');
+goog.declareModuleId('os.events.SettingChangeEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
@@ -6,7 +6,7 @@ const GoogEvent = goog.require('goog.events.Event');
 /**
  * A setting change event.
  */
-class SettingChangeEvent extends GoogEvent {
+export default class SettingChangeEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type The setting that changed
@@ -33,5 +33,3 @@ class SettingChangeEvent extends GoogEvent {
     this.oldVal = opt_oldVal != undefined ? opt_oldVal : null;
   }
 }
-
-exports = SettingChangeEvent;

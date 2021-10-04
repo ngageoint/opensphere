@@ -1,11 +1,12 @@
-goog.module('os.ui.file.csv.AbstractCsvParser');
+goog.declareModuleId('os.ui.file.csv.AbstractCsvParser');
 
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const {getText} = goog.require('os.file.mime.text');
-const AsyncParser = goog.require('os.parse.AsyncParser');
-const {configurePapaParse} = goog.require('os.ui.file.csv');
+import ColumnDefinition from '../../../data/columndefinition.js';
+import {getText} from '../../../file/mime/text.js';
+import AsyncParser from '../../../parse/asyncparser.js';
+import {configurePapaParse} from './csv.js';
 
-const BaseParserConfig = goog.requireType('os.parse.BaseParserConfig');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
+const {default: BaseParserConfig} = goog.requireType('os.parse.BaseParserConfig');
 
 
 /**
@@ -14,7 +15,7 @@ const BaseParserConfig = goog.requireType('os.parse.BaseParserConfig');
  * @abstract
  * @template T
  */
-class AbstractCsvParser extends AsyncParser {
+export default class AbstractCsvParser extends AsyncParser {
   /**
    * Constructor.
    * @param {BaseParserConfig} config
@@ -116,7 +117,7 @@ class AbstractCsvParser extends AsyncParser {
    * @abstract
    * @protected
    * @param {Object<string, *>} result The result to process
-   * @param {Array<os.im.mapping.IMapping>=} opt_mappings The set of mappings to apply to parsed features.
+   * @param {Array<IMapping>=} opt_mappings The set of mappings to apply to parsed features.
    * @return {!T}
    */
   processResult(result, opt_mappings) {}
@@ -190,7 +191,7 @@ class AbstractCsvParser extends AsyncParser {
    *
    * @abstract
    * @param {string} source The CSV source.
-   * @param {Array<os.im.mapping.IMapping>=} opt_mappings The set of mappings to apply to parsed features.
+   * @param {Array<IMapping>=} opt_mappings The set of mappings to apply to parsed features.
    * @return {Array<!T>}
    */
   parsePreview(source, opt_mappings) {}
@@ -261,5 +262,3 @@ class AbstractCsvParser extends AsyncParser {
  * @type {number}
  */
 AbstractCsvParser.PREVIEW_SIZE = 1000;
-
-exports = AbstractCsvParser;

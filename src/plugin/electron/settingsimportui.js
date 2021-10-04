@@ -1,16 +1,15 @@
 goog.declareModuleId('plugin.electron.SettingsImportUI');
 
+import AlertManager from '../../os/alert/alertmanager.js';
 import * as Dispatcher from '../../os/dispatcher.js';
+import {FileScheme} from '../../os/file/index.js';
 import {detect} from '../../os/file/mime/jsonsettings';
+import FileImportUI from '../../os/ui/im/fileimportui.js';
+import {launchConfirm} from '../../os/ui/window/confirm.js';
+import {launchConfirmText} from '../../os/ui/window/confirmtext.js';
 import {EventType} from './electron.js';
 
-const AlertManager = goog.require('os.alert.AlertManager');
-const {FileScheme} = goog.require('os.file');
-const FileImportUI = goog.require('os.ui.im.FileImportUI');
-const {launchConfirmText} = goog.require('os.ui.window.ConfirmTextUI');
-const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
-
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**

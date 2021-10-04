@@ -1,21 +1,21 @@
 goog.declareModuleId('plugin.config.Provider');
 
+import Settings from '../../os/config/settings.js';
+import BaseDescriptor from '../../os/data/basedescriptor.js';
+import ConfigDescriptor from '../../os/data/configdescriptor.js';
+import {ProviderKey} from '../../os/data/data.js';
+import DataManager from '../../os/data/datamanager.js';
+import DataProviderEvent from '../../os/data/dataproviderevent.js';
+import DataProviderEventType from '../../os/data/dataprovidereventtype.js';
+import IDataProvider from '../../os/data/idataprovider.js';
+import osImplements from '../../os/implements.js';
+import DescriptorProvider from '../../os/ui/data/descriptorprovider.js';
 import {ID} from './config.js';
 
 const log = goog.require('goog.log');
-const Settings = goog.require('os.config.Settings');
-const {ProviderKey} = goog.require('os.data');
-const BaseDescriptor = goog.require('os.data.BaseDescriptor');
-const ConfigDescriptor = goog.require('os.data.ConfigDescriptor');
-const DataManager = goog.require('os.data.DataManager');
-const DataProviderEvent = goog.require('os.data.DataProviderEvent');
-const DataProviderEventType = goog.require('os.data.DataProviderEventType');
-const IDataProvider = goog.require('os.data.IDataProvider');
-const osImplements = goog.require('os.implements');
-const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
 
 const Logger = goog.requireType('goog.log.Logger');
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 
 
 /**

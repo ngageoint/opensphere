@@ -1,4 +1,4 @@
-goog.module('os.metrics.IMetricServiceProvider');
+goog.declareModuleId('os.metrics.IMetricServiceProvider');
 
 /**
  * Interface for sending metic date to metric service provider,
@@ -6,7 +6,7 @@ goog.module('os.metrics.IMetricServiceProvider');
  *
  * @interface
  */
-class IMetricServiceProvider {
+export default class IMetricServiceProvider {
   /**
    * Records a specifc metric.
    * @param {?string} key metric key
@@ -14,5 +14,3 @@ class IMetricServiceProvider {
    */
   recordMetric(key, value) {}
 }
-
-exports = IMetricServiceProvider;

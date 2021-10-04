@@ -1,9 +1,11 @@
-goog.module('os.ui.icon.IconPickerEventType');
+goog.declareModuleId('os.ui.icon.IconPickerEventType');
 
 /**
  * Icon picker event types.
  * @enum {string}
  */
-exports = {
+const IconPickerEventType = {
   CHANGE: 'icon:change'
 };
+
+export default IconPickerEventType;

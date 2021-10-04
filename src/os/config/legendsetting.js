@@ -1,6 +1,6 @@
-goog.module('os.config.LegendSetting');
+goog.declareModuleId('os.config.LegendSetting');
 
-const {DRAW_OPTIONS_KEY, POSITION_KEY} = goog.require('os.legend');
+import {DRAW_OPTIONS_KEY, POSITION_KEY} from '../legend/legend.js';
 
 
 /**
@@ -24,4 +24,4 @@ const LegendSetting = {
   LEFT: POSITION_KEY + '.left'
 };
 
-exports = LegendSetting;
+export default LegendSetting;

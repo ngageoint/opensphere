@@ -1,16 +1,16 @@
-goog.module('os.ui.node.DrawingFeatureNodeUI');
+goog.declareModuleId('os.ui.node.DrawingFeatureNodeUI');
 
-const {getMapContainer} = goog.require('os.map.instance');
-const Module = goog.require('os.ui.Module');
-const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
+import {getMapContainer} from '../../map/mapinstance.js';
+import Module from '../module.js';
+import AbstractNodeUICtrl from '../slick/abstractnodeui.js';
 
-const DrawingFeatureNode = goog.requireType('os.data.DrawingFeatureNode');
+const {default: DrawingFeatureNode} = goog.requireType('os.data.DrawingFeatureNode');
 
 
 /**
  * @type {string}
  */
-const template = '<span ng-if="nodeUi.show()">' +
+export const template = '<span ng-if="nodeUi.show()">' +
     '<span ng-click="nodeUi.remove()"><i class="fa fa-times fa-fw c-glyph"' +
     'title="Remove the feature"></i></span></span>';
 
@@ -19,7 +19,7 @@ const template = '<span ng-if="nodeUi.show()">' +
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template,
@@ -31,7 +31,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'drawingfeaturenodeui';
+export const directiveTag = 'drawingfeaturenodeui';
 
 /**
  * Add the directive to the module
@@ -42,7 +42,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for selected/highlighted node UI
  * @unrestricted
  */
-class Controller extends AbstractNodeUICtrl {
+export class Controller extends AbstractNodeUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -69,10 +69,3 @@ class Controller extends AbstractNodeUICtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  template
-};

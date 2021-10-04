@@ -1,11 +1,10 @@
-goog.module('os.webgl.AltitudeMode');
-
+goog.declareModuleId('os.webgl.AltitudeMode');
 
 /**
  * Represents altitude value relative to terrain.
  * @enum {string}
  */
-exports = {
+const AltitudeMode = {
   /** Altitude value is ignored and value is clamped to terrain */
   CLAMP_TO_GROUND: 'clampToGround',
   /** Altitude value is absolute to mean sea level */
@@ -17,3 +16,5 @@ exports = {
   /** Altitude value is relative to the sea floor */
   RELATIVE_TO_SEAFLOOR: 'relativeToSeaFloor'
 };
+
+export default AltitudeMode;

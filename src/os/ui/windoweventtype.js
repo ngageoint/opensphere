@@ -1,9 +1,9 @@
-goog.module('os.ui.WindowEventType');
+goog.declareModuleId('os.ui.WindowEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const WindowEventType = {
   CANCEL: 'windowCancel',
   CLOSING: 'windowClosing',
   CLOSE: 'windowClose',
@@ -14,3 +14,5 @@ exports = {
   RECONSTRAIN: 'windowReConstrain',
   READY: 'window.ready'
 };
+
+export default WindowEventType;

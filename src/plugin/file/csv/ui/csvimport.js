@@ -1,12 +1,12 @@
 goog.declareModuleId('plugin.file.csv.ui.CSVImport');
 
+import FileDescriptor from '../../../../os/data/filedescriptor.js';
+import FileImportWizard from '../../../../os/ui/im/fileimportwizard.js';
+import Module from '../../../../os/ui/module.js';
+import {directive as wizardDirective} from '../../../../os/ui/wiz/wizard.js';
 import CSVDescriptor from '../csvdescriptor.js';
 import CSVProvider from '../csvprovider.js';
 
-const FileDescriptor = goog.require('os.data.FileDescriptor');
-const Module = goog.require('os.ui.Module');
-const FileImportWizard = goog.require('os.ui.im.FileImportWizard');
-const {directive: wizardDirective} = goog.require('os.ui.wiz.WizardUI');
 const {default: CSVParserConfig} = goog.requireType('plugin.file.csv.CSVParserConfig');
 
 

@@ -1,23 +1,24 @@
-goog.module('os.webgl.AbstractWebGLRenderer');
+goog.declareModuleId('os.webgl.AbstractWebGLRenderer');
+
+import * as osColor from '../color.js';
+import DisplaySetting from '../config/displaysetting.js';
+import Settings from '../config/settings.js';
+import * as dispatcher from '../dispatcher.js';
+import MapEvent from '../map/mapevent.js';
+import * as terrain from '../map/terrain.js';
+import AltitudeMode from './altitudemode.js';
+
+// The compiler has to process this first or @inheritDoc will not work properly on implementing classes.
+// @see https://github.com/google/closure-compiler/issues/3583
+import IWebGLRenderer from './iwebglrenderer.js';// eslint-disable-line opensphere/no-unused-vars
 
 const Disposable = goog.require('goog.Disposable');
 const Promise = goog.require('goog.Promise');
 const log = goog.require('goog.log');
-const dispatcher = goog.require('os.Dispatcher');
-const MapEvent = goog.require('os.MapEvent');
-const osColor = goog.require('os.color');
-const DisplaySetting = goog.require('os.config.DisplaySetting');
-const Settings = goog.require('os.config.Settings');
-const terrain = goog.require('os.map.terrain');
-const AltitudeMode = goog.require('os.webgl.AltitudeMode');
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
 
-const AbstractRootSynchronizer = goog.requireType('os.webgl.AbstractRootSynchronizer');
-const IWebGLCamera = goog.requireType('os.webgl.IWebGLCamera');
-const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
-
-// The compiler has to process this first or @inheritDoc will not work properly on implementing classes.
-// @see https://github.com/google/closure-compiler/issues/3583
-const IWebGLRenderer = goog.require('os.webgl.IWebGLRenderer'); // eslint-disable-line opensphere/no-unused-vars
+const {default: AbstractRootSynchronizer} = goog.requireType('os.webgl.AbstractRootSynchronizer');
+const {default: IWebGLCamera} = goog.requireType('os.webgl.IWebGLCamera');
 
 
 /**
@@ -26,7 +27,7 @@ const IWebGLRenderer = goog.require('os.webgl.IWebGLRenderer'); // eslint-disabl
  * @abstract
  * @implements {IWebGLRenderer}
  */
-class AbstractWebGLRenderer extends Disposable {
+export default class AbstractWebGLRenderer extends Disposable {
   /**
    * Constructor.
    */
@@ -502,5 +503,3 @@ AbstractWebGLRenderer.LOGGER_ = log.getLogger('os.webgl.AbstractWebGLRenderer');
  * @const
  */
 AbstractWebGLRenderer.ACTIVE_SETTINGS_KEY = 'activeWebGLRenderer';
-
-exports = AbstractWebGLRenderer;

@@ -1,4 +1,4 @@
-goog.module('os.url.AbstractUrlHandler');
+goog.declareModuleId('os.url.AbstractUrlHandler');
 
 const Disposable = goog.require('goog.Disposable');
 
@@ -13,7 +13,7 @@ const Disposable = goog.require('goog.Disposable');
  *
  * @abstract
  */
-class AbstractUrlHandler extends Disposable {
+export default class AbstractUrlHandler extends Disposable {
   /**
    * Constructor.
    */
@@ -137,5 +137,3 @@ class AbstractUrlHandler extends Disposable {
     }
   }
 }
-
-exports = AbstractUrlHandler;

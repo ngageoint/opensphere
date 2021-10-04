@@ -1,20 +1,20 @@
-goog.module('os.im.mapping.PositionMapping');
+goog.declareModuleId('os.im.mapping.PositionMapping');
 
-const Fields = goog.require('os.Fields');
-const {PREFER_LAT_FIRST, PREFER_LON_FIRST} = goog.require('os.geo');
-const LatLonMapping = goog.require('os.im.mapping.LatLonMapping');
-const MGRSMapping = goog.require('os.im.mapping.MGRSMapping');
-const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
-const BasePositionMapping = goog.require('os.im.mapping.location.BasePositionMapping');
+import Fields from '../../fields/fields.js';
+import {PREFER_LAT_FIRST, PREFER_LON_FIRST} from '../../geo/geo.js';
+import LatLonMapping from './latlonmapping.js';
+import BasePositionMapping from './location/basepositionmapping.js';
+import MappingRegistry from './mappingregistry.js';
+import MGRSMapping from './mgrsmapping.js';
 
 const Feature = goog.requireType('ol.Feature');
-const IMapping = goog.requireType('os.im.mapping.IMapping');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
 
 
 /**
  * @extends {BasePositionMapping<Feature>}
  */
-class PositionMapping extends BasePositionMapping {
+export default class PositionMapping extends BasePositionMapping {
   /**
    * Constructor.
    */
@@ -92,5 +92,3 @@ PositionMapping.TYPES = {
   'Lon/Lat': new LatLonMapping(PREFER_LON_FIRST),
   'MGRS': new MGRSMapping()
 };
-
-exports = PositionMapping;

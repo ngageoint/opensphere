@@ -10,11 +10,11 @@ goog.require('os.xml');
 describe('os.state.v4.TimeState', function() {
   const Range = goog.module.get('goog.math.Range');
   const RangeSet = goog.module.get('goog.math.RangeSet');
-  const StateManager = goog.module.get('os.state.StateManager');
-  const Versions = goog.module.get('os.state.Versions');
-  const TimeState = goog.module.get('os.state.v4.TimeState');
+  const {default: StateManager} = goog.module.get('os.state.StateManager');
+  const {default: Versions} = goog.module.get('os.state.Versions');
+  const {default: TimeState} = goog.module.get('os.state.v4.TimeState');
   const time = goog.module.get('os.time');
-  const TimelineController = goog.module.get('os.time.TimelineController');
+  const {default: TimelineController} = goog.module.get('os.time.TimelineController');
   const xml = goog.module.get('os.xml');
 
   const {loadStateXsdFiles} = goog.module.get('os.test.xsd');

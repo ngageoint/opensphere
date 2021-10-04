@@ -1,35 +1,36 @@
-goog.module('os.state.StateManager');
+goog.declareModuleId('os.state.StateManager');
+
+import DataManager from '../data/datamanager.js';
+import ProviderEntry from '../data/providerentry.js';
+import osImplements from '../implements.js';
+import BaseProvider from '../ui/data/baseprovider.js';
+import IStateDescriptor from '../ui/state/istatedescriptor.js';
+import {EXPORT_WINDOW_ID} from '../ui/state/state.js';
+import StateProvider from '../ui/state/stateprovider.js';
+import * as osWindow from '../ui/window.js';
+import BaseStateManager from './basestatemanager.js';
+import {deleteStates} from './state.js';
+import StateDescriptor from './statedescriptor.js';
+import BaseFilter from './v2/basefilterstate.js';
+import ExclusionArea from './v2/exclusionareastate.js';
+import Filter from './v2/filterstate.js';
+import V2LayerState from './v2/layerstate.js';
+import V2QueryArea from './v2/queryareastate.js';
+import QueryEntries from './v2/queryentriesstate.js';
+import V2TimeState from './v2/timestate.js';
+import V2ViewState from './v2/viewstate.js';
+import V3LayerState from './v3/layerstate.js';
+import LayerState from './v4/layerstate.js';
+import QueryArea from './v4/queryareastate.js';
+import TimeState from './v4/timestate.js';
+import ViewState from './v4/viewstate.js';
+import Versions from './versions.js';
+import XMLStateManager from './xmlstatemanager.js';
 
 const {defaultCompare, insert} = goog.require('goog.array');
 const {getFirstElementChild} = goog.require('goog.dom');
 const log = goog.require('goog.log');
 const {remove} = goog.require('ol.array');
-const DataManager = goog.require('os.data.DataManager');
-const ProviderEntry = goog.require('os.data.ProviderEntry');
-const osImplements = goog.require('os.implements');
-const {deleteStates} = goog.require('os.state');
-const BaseStateManager = goog.require('os.state.BaseStateManager');
-const StateDescriptor = goog.require('os.state.StateDescriptor');
-const Versions = goog.require('os.state.Versions');
-const XMLStateManager = goog.require('os.state.XMLStateManager');
-const BaseFilter = goog.require('os.state.v2.BaseFilter');
-const ExclusionArea = goog.require('os.state.v2.ExclusionArea');
-const Filter = goog.require('os.state.v2.Filter');
-const V2LayerState = goog.require('os.state.v2.LayerState');
-const V2QueryArea = goog.require('os.state.v2.QueryArea');
-const QueryEntries = goog.require('os.state.v2.QueryEntries');
-const V2TimeState = goog.require('os.state.v2.TimeState');
-const V2ViewState = goog.require('os.state.v2.ViewState');
-const V3LayerState = goog.require('os.state.v3.LayerState');
-const LayerState = goog.require('os.state.v4.LayerState');
-const QueryArea = goog.require('os.state.v4.QueryArea');
-const TimeState = goog.require('os.state.v4.TimeState');
-const ViewState = goog.require('os.state.v4.ViewState');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
-const {EXPORT_WINDOW_ID} = goog.require('os.ui.state');
-const IStateDescriptor = goog.require('os.ui.state.IStateDescriptor');
-const StateProvider = goog.require('os.ui.state.StateProvider');
-const osWindow = goog.require('os.ui.window');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -37,7 +38,7 @@ const Logger = goog.requireType('goog.log.Logger');
 /**
  * State manager.
  */
-class StateManager extends XMLStateManager {
+export default class StateManager extends XMLStateManager {
   /**
    * Constructor.
    */
@@ -384,5 +385,3 @@ let instance;
  * @type {Logger}
  */
 const logger = log.getLogger('os.state.StateManager');
-
-exports = StateManager;

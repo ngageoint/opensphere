@@ -1,8 +1,8 @@
-goog.module('os.ui.location.ddmFilter');
+goog.declareModuleId('os.ui.location.ddmFilter');
 
-const {toDegreesDecimalMinutes} = goog.require('os.geo');
-const Module = goog.require('os.ui.Module');
-const Format = goog.require('os.ui.location.Format');
+import {toDegreesDecimalMinutes} from '../../geo/geo.js';
+import Module from '../module.js';
+import Format from './locationformat.js';
 
 
 /**
@@ -26,4 +26,4 @@ const filter = () => /** @type {angular.Filter} */ (filterFn);
  */
 Module.filter(Format.DDM, [filter]);
 
-exports = filterFn;
+export default filterFn;

@@ -1,12 +1,12 @@
-goog.module('os.ui.columnactions.AbstractColumnAction');
+goog.declareModuleId('os.ui.columnactions.AbstractColumnAction');
 
-const IColumnActionModel = goog.requireType('os.ui.columnactions.IColumnActionModel');
+const {default: IColumnActionModel} = goog.requireType('os.ui.columnactions.IColumnActionModel');
 
 
 /**
  * @abstract
  */
-class AbstractColumnAction {
+export default class AbstractColumnAction {
   /**
    * Constructor.
    */
@@ -109,5 +109,3 @@ class AbstractColumnAction {
    */
   matches(context, a, value) {}
 }
-
-exports = AbstractColumnAction;

@@ -1,12 +1,12 @@
-goog.module('os.ui.NgRightClickUI');
+goog.declareModuleId('os.ui.NgRightClickUI');
 
-const Module = goog.require('os.ui.Module');
+import Module from './module.js';
 
 
 /**
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'A',
   controller: Controller
 });
@@ -15,14 +15,14 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'ng-right-click';
+export const directiveTag = 'ng-right-click';
 
 Module.directive('ngRightClick', [directive]);
 
 /**
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -90,9 +90,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

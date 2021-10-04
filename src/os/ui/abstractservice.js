@@ -1,22 +1,24 @@
-goog.module('os.ui.AbstractService');
+goog.declareModuleId('os.ui.AbstractService');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import Settings from '../config/settings.js';
+import Peer from '../xt/peer.js';
 
 const {isValid} = goog.require('goog.json');
 const log = goog.require('goog.log');
 const {newLineToBr} = goog.require('goog.string');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const Settings = goog.require('os.config.Settings');
-const Peer = goog.require('os.xt.Peer');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
+const {default: Request} = goog.requireType('os.net.Request');
 
 
 /**
  * Provides functions available to all services.
  * @unrestricted
  */
-class AbstractService {
+export default class AbstractService {
   /**
    * Constructor.
    * @ngInject
@@ -42,7 +44,7 @@ class AbstractService {
    * @protected
    */
   onSuccess(event, resolve) {
-    var request = /** @type {os.net.Request} */ (event.target);
+    var request = /** @type {Request} */ (event.target);
     var response = /** @type {string} */ (request.getResponse());
     request.dispose();
 
@@ -64,7 +66,7 @@ class AbstractService {
    * @protected
    */
   onError(event, message, silent, opt_reject) {
-    var request = /** @type {os.net.Request} */ (event.target);
+    var request = /** @type {Request} */ (event.target);
     var rejectMessage = message;
     var errors = request.getErrors();
     request.dispose();
@@ -120,5 +122,3 @@ class AbstractService {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.AbstractService');
-
-exports = AbstractService;

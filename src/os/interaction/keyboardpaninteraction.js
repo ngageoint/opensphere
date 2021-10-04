@@ -1,19 +1,20 @@
-goog.module('os.interaction.KeyboardPan');
+goog.declareModuleId('os.interaction.KeyboardPan');
+
+import I3DSupport from '../i3dsupport.js';
+import osImplements from '../implements.js';
+import {KEY_TYPE} from '../ui/ol/interaction/interaction.js';
 
 const {rotate} = goog.require('ol.coordinate');
 const EventType = goog.require('ol.events.EventType');
 const KeyCode = goog.require('ol.events.KeyCode');
 const Interaction = goog.require('ol.interaction.Interaction');
 const OLKeyboardPan = goog.require('ol.interaction.KeyboardPan');
-const I3DSupport = goog.require('os.I3DSupport');
-const osImplements = goog.require('os.implements');
-const {KEY_TYPE} = goog.require('os.ui.ol.interaction');
 
 
 /**
  * @implements {I3DSupport}
  */
-class KeyboardPan extends OLKeyboardPan {
+export default class KeyboardPan extends OLKeyboardPan {
   /**
    * Constructor.
    * @param {olx.interaction.KeyboardPanOptions=} opt_options Options.
@@ -90,4 +91,3 @@ OLKeyboardPan.handleEvent = function(mapBrowserEvent) {
   }
   return !stopEvent;
 };
-exports = KeyboardPan;

@@ -1,12 +1,12 @@
-goog.module('os.ui.ogc.wms.IWMSLayerParser');
+goog.declareModuleId('os.ui.ogc.wms.IWMSLayerParser');
 
-const IWMSLayer = goog.requireType('os.ui.ogc.wms.IWMSLayer');
+const {default: IWMSLayer} = goog.requireType('os.ui.ogc.wms.IWMSLayer');
 
 
 /**
  * @interface
  */
-class IWMSLayerParser {
+export default class IWMSLayerParser {
   /**
    * @param {Object} node
    * @return {?string}
@@ -25,5 +25,3 @@ class IWMSLayerParser {
    */
   parseLayer(node, layer) {}
 }
-
-exports = IWMSLayerParser;

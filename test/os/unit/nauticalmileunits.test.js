@@ -3,8 +3,8 @@ goog.require('os.unit.Multiplier');
 goog.require('os.unit.NauticalMileUnits');
 
 describe('os.unit.NauticalMileUnits', function() {
-  const Multiplier = goog.module.get('os.unit.Multiplier');
-  const NauticalMileUnits = goog.module.get('os.unit.NauticalMileUnits');
+  const {default: Multiplier} = goog.module.get('os.unit.Multiplier');
+  const {default: NauticalMileUnits} = goog.module.get('os.unit.NauticalMileUnits');
   const {UNIT_TYPE_DISTANCE, UnitSystem} = goog.module.get('os.unit');
 
   it('should function correctly', inject(function($rootScope) {

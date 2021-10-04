@@ -1,4 +1,14 @@
-goog.module('os.ui.layer.AbstractLayerUICtrl');
+goog.declareModuleId('os.ui.layer.AbstractLayerUICtrl');
+
+import CommandProcessor from '../../command/commandprocessor.js';
+import ParallelCommand from '../../command/parallelcommand.js';
+import {isLayerNode} from '../../data/data.js';
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import LayerGroup from '../../layer/layergroup.js';
+import PropertyChange from '../../layer/propertychange.js';
+import MapChange from '../../map/mapchange.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import {apply} from '../ui.js';
 
 const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');
@@ -7,26 +17,17 @@ const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const OLObject = goog.require('ol.Object');
 const {listen, unlistenByKey} = goog.require('ol.events');
-const MapChange = goog.require('os.MapChange');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const ParallelCommand = goog.require('os.command.ParallelCommand');
-const {isLayerNode} = goog.require('os.data');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const LayerGroup = goog.require('os.layer.LayerGroup');
-const PropertyChange = goog.require('os.layer.PropertyChange');
-const {getMapContainer} = goog.require('os.map.instance');
-const {apply} = goog.require('os.ui');
 
-const ICommand = goog.requireType('os.command.ICommand');
-const LayerNode = goog.requireType('os.data.LayerNode');
-const ILayer = goog.requireType('os.layer.ILayer');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: LayerNode} = goog.requireType('os.data.LayerNode');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
  * Base controller for a layer node UI.
  * @unrestricted
  */
-class Controller extends Disposable {
+export default class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -291,5 +292,3 @@ class Controller extends Disposable {
     }
   }
 }
-
-exports = Controller;

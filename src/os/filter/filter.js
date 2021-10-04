@@ -1,19 +1,14 @@
-goog.module('os.filter');
+goog.declareModuleId('os.filter');
 
-const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
+const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
 
 
 /**
  * @typedef {function(...)}
  */
-let FilterLauncherFn;
+export let FilterLauncherFn;
 
 /**
  * @typedef {function(...):?Array<FeatureTypeColumn>}
  */
-let FilterColumnsFn;
-
-exports = {
-  FilterLauncherFn,
-  FilterColumnsFn
-};
+export let FilterColumnsFn;

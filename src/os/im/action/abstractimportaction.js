@@ -1,10 +1,10 @@
-goog.module('os.im.action.AbstractImportAction');
+goog.declareModuleId('os.im.action.AbstractImportAction');
 
-const osXml = goog.require('os.xml');
+import * as osXml from '../../xml.js';
 
 // The compiler has to process this first or @inheritDoc will not work properly on implementing classes.
 // @see https://github.com/google/closure-compiler/issues/3583
-const IImportAction = goog.require('os.im.action.IImportAction'); // eslint-disable-line opensphere/no-unused-vars
+import IImportAction from './iimportaction.js';// eslint-disable-line opensphere/no-unused-vars
 
 
 /**
@@ -14,7 +14,7 @@ const IImportAction = goog.require('os.im.action.IImportAction'); // eslint-disa
  * @implements {IImportAction<T>}
  * @template T
  */
-class AbstractImportAction {
+export default class AbstractImportAction {
   /**
    * Constructor.
    */
@@ -154,6 +154,3 @@ class AbstractImportAction {
  * @const
  */
 AbstractImportAction.XML_TYPE = 'AbstractImportAction';
-
-
-exports = AbstractImportAction;

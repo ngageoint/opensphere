@@ -1,7 +1,7 @@
-goog.module('os.parse.StateParserConfig');
+goog.declareModuleId('os.parse.StateParserConfig');
 
-const FileParserConfig = goog.require('os.parse.FileParserConfig');
-const OSFile = goog.requireType('os.file.File');
+import FileParserConfig from './fileparserconfig.js';
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
@@ -11,7 +11,7 @@ const OSFile = goog.requireType('os.file.File');
  * @unrestricted
  * @template T
  */
-class StateParserConfig extends FileParserConfig {
+export default class StateParserConfig extends FileParserConfig {
   /**
    * Constructor.
    * @param {OSFile=} opt_file
@@ -32,5 +32,3 @@ class StateParserConfig extends FileParserConfig {
     this['state'] = null;
   }
 }
-
-exports = StateParserConfig;

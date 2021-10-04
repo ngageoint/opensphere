@@ -1,24 +1,26 @@
-goog.module('os.command.VectorLayerColor');
+goog.declareModuleId('os.command.VectorLayerColor');
 
-const osColor = goog.require('os.color');
-const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const ColorChangeType = goog.require('os.command.style.ColorChangeType');
-const DataManager = goog.require('os.data.DataManager');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {getMapContainer} = goog.require('os.map.instance');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const VectorSource = goog.require('os.source.Vector');
-const osStyle = goog.require('os.style');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
-const icons = goog.require('os.ui.icons');
+import * as osColor from '../color.js';
+import DataManager from '../data/datamanager.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import PropertyChange from '../source/propertychange.js';
+import VectorSource from '../source/vectorsource.js';
+import * as osStyle from '../style/style.js';
+import StyleField from '../style/stylefield.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import * as icons from '../ui/icons/index.js';
+import AbstractVectorStyle from './abstractvectorstylecmd.js';
+import ColorChangeType from './colorchangetype.js';
+
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 
 
 /**
  * Changes the color of a layer
  */
-class VectorLayerColor extends AbstractVectorStyle {
+export default class VectorLayerColor extends AbstractVectorStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -48,7 +50,7 @@ class VectorLayerColor extends AbstractVectorStyle {
     }
 
     if (!color) {
-      var layer = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.layerId));
+      var layer = /** @type {VectorLayer} */ (getMapContainer().getLayer(this.layerId));
       if (layer) {
         var options = layer.getLayerOptions();
         color = /** @type {string} */ (options && options['baseColor'] || osStyle.DEFAULT_LAYER_COLOR);
@@ -128,5 +130,3 @@ class VectorLayerColor extends AbstractVectorStyle {
     super.finish(config);
   }
 }
-
-exports = VectorLayerColor;

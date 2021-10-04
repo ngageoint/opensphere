@@ -1,49 +1,49 @@
-goog.module('os.data.DataManager');
+goog.declareModuleId('os.data.DataManager');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import Settings from '../config/settings.js';
+import * as dispatcher from '../dispatcher.js';
+import LayerEventType from '../events/layereventtype.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import FileStorage from '../file/filestorage.js';
+import * as osFile from '../file/index.js';
+import osImplements from '../implements.js';
+import instanceOf from '../instanceof.js';
+import LayerClass from '../layer/layerclass.js';
+import {NAMESPACE} from '../os.js';
+import SourceClass from '../source/sourceclass.js';
+import TimeInstant from '../time/timeinstant.js';
+import TimelineController from '../time/timelinecontroller.js';
+import AbstractLoadingServer from '../ui/server/abstractloadingserver.js';
+import SlickTreeNode from '../ui/slick/slicktreenode.js';
+import {ProviderKey} from './data.js';
+import DataProviderEvent from './dataproviderevent.js';
+import DataProviderEventType from './dataprovidereventtype.js';
+import DescriptorEvent from './descriptorevent.js';
+import DescriptorEventType from './descriptoreventtype.js';
+import DataEvent from './event/dataevent.js';
+import DataEventType from './event/dataeventtype.js';
+import IDataManager from './idatamanager.js';// eslint-disable-line
+import IUrlDescriptor from './iurldescriptor.js';
+import PropertyChange from './propertychange.js';
 
 const googArray = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
-const {NAMESPACE} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const Settings = goog.require('os.config.Settings');
-const {ProviderKey} = goog.require('os.data');
-const DataProviderEvent = goog.require('os.data.DataProviderEvent');
-const DataProviderEventType = goog.require('os.data.DataProviderEventType');
-const DescriptorEvent = goog.require('os.data.DescriptorEvent');
-const DescriptorEventType = goog.require('os.data.DescriptorEventType');
-const IUrlDescriptor = goog.require('os.data.IUrlDescriptor');
-const PropertyChange = goog.require('os.data.PropertyChange');
-const DataEvent = goog.require('os.data.event.DataEvent');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osFile = goog.require('os.file');
-const FileStorage = goog.require('os.file.FileStorage');
-const osImplements = goog.require('os.implements');
-const instanceOf = goog.require('os.instanceOf');
-const LayerClass = goog.require('os.layer.LayerClass');
-const SourceClass = goog.require('os.source.SourceClass');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const TimelineController = goog.require('os.time.TimelineController');
-const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
-
-const IDataManager = goog.require('os.data.IDataManager'); // eslint-disable-line
 
 const Logger = goog.requireType('goog.log.Logger');
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const IDataProvider = goog.requireType('os.data.IDataProvider');
-const ILoadingProvider = goog.requireType('os.data.ILoadingProvider');
-const ProviderEntry = goog.requireType('os.data.ProviderEntry');
-const LayerEvent = goog.requireType('os.events.LayerEvent');
-const VectorLayer = goog.requireType('os.layer.Vector');
-const IMapContainer = goog.requireType('os.map.IMapContainer');
-const VectorSource = goog.requireType('os.source.Vector');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: IDataProvider} = goog.requireType('os.data.IDataProvider');
+const {default: ILoadingProvider} = goog.requireType('os.data.ILoadingProvider');
+const {default: ProviderEntry} = goog.requireType('os.data.ProviderEntry');
+const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
+const {default: IMapContainer} = goog.requireType('os.map.IMapContainer');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**
@@ -51,7 +51,7 @@ const ITreeNode = goog.requireType('os.structs.ITreeNode');
  *
  * @implements {IDataManager}
  */
-class DataManager extends EventTarget {
+export default class DataManager extends EventTarget {
   /**
    * Constructor.
    * @param {boolean=} opt_init If the data manager should be initialized. This is intended to allow extending classes
@@ -827,6 +827,3 @@ DataManager.BASE_KEY = 'dataManager';
 const DataManagerSetting = {
   FILTER_TIME: DataManager.BASE_KEY + '.filterTime'
 };
-
-
-exports = DataManager;

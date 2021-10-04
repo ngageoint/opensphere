@@ -1,10 +1,11 @@
 goog.declareModuleId('plugin.ogc.wmts.WMTSServer');
 
+import IDataProvider from '../../../os/data/idataprovider.js';
+import osImplements from '../../../os/implements.js';
+import OGCServer from '../../../os/ui/ogc/ogcserver.js';
+
 const QueryData = goog.require('goog.Uri.QueryData');
 const log = goog.require('goog.log');
-const IDataProvider = goog.require('os.data.IDataProvider');
-const osImplements = goog.require('os.implements');
-const OGCServer = goog.require('os.ui.ogc.OGCServer');
 
 const Logger = goog.requireType('goog.log.Logger');
 

@@ -1,14 +1,15 @@
-goog.module('os.data.histo.legend');
+goog.declareModuleId('os.data.histo.legend');
+
+import NumericBinMethod from '../../histo/numericbinmethod.js';
+import * as legend from '../../legend/legend.js';
+import {ROOT} from '../../os.js';
+import Module from '../../ui/module.js';
 
 const googArray = goog.require('goog.array');
 const googObject = goog.require('goog.object');
-const {ROOT} = goog.require('os');
-const NumericBinMethod = goog.require('os.histo.NumericBinMethod');
-const legend = goog.require('os.legend');
-const Module = goog.require('os.ui.Module');
 
-const VectorLayer = goog.requireType('os.layer.Vector');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**
@@ -17,7 +18,7 @@ const VectorSource = goog.requireType('os.source.Vector');
  * @param {!VectorLayer} layer The vector layer.
  * @param {!osx.legend.LegendOptions} options The legend options.
  */
-const addVectorColorModel = function(layer, options) {
+export const addVectorColorModel = function(layer, options) {
   var source = /** @type {VectorSource} */ (layer.getSource());
   if (source && legend.shouldDrawSource(source)) {
     var config = legend.getSourceConfig(source, options);
@@ -104,7 +105,7 @@ const addVectorColorModel = function(layer, options) {
  *
  * @return {angular.Directive}
  */
-const legendSettingsDirective = function() {
+export const legendSettingsDirective = function() {
   return {
     restrict: 'E',
     replace: true,
@@ -122,7 +123,7 @@ Module.directive('colormodellegendsettings', [legendSettingsDirective]);
 /**
  * Register a legend plugin to render the color model.
  */
-const registerLegendPlugin = function() {
+export const registerLegendPlugin = function() {
   legend.registerLayerPlugin(/** @type {!osx.legend.PluginOptions} */ ({
     render: addVectorColorModel,
     priority: -100,
@@ -133,10 +134,4 @@ const registerLegendPlugin = function() {
       'showColumn': true
     }
   }));
-};
-
-exports = {
-  addVectorColorModel,
-  legendSettingsDirective,
-  registerLegendPlugin
 };

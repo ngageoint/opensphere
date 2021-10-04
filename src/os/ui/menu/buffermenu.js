@@ -1,30 +1,31 @@
-goog.module('os.ui.menu.buffer');
+goog.declareModuleId('os.ui.menu.buffer');
+
+import EventType from '../../action/eventtype.js';
+import {ICON} from '../../buffer/buffer.js';
+import {isGeometryPolygonal} from '../../geo/geo.js';
+import {Layer as LayerMetrics} from '../../metrics/metricskeys.js';
+import {inIframe} from '../../os.js';
+import AreaManager from '../../query/areamanager.js';
+import * as BufferDialogUI from '../buffer/bufferdialog.js';
+import {getSourcesFromContext} from './commonmenu.js';
+import * as layerMenu from './layermenu.js';
+import * as mapMenu from './mapmenu.js';
+import * as spatialMenu from './spatial.js';
 
 const {assert} = goog.require('goog.asserts');
 const GoogEvent = goog.require('goog.events.Event');
 const {toTitleCase} = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
 const Point = goog.require('ol.geom.Point');
-const {inIframe} = goog.require('os');
-const EventType = goog.require('os.action.EventType');
-const {ICON} = goog.require('os.buffer');
-const {isGeometryPolygonal} = goog.require('os.geo');
-const {Layer: LayerMetrics} = goog.require('os.metrics.keys');
-const AreaManager = goog.require('os.query.AreaManager');
-const BufferDialogUI = goog.require('os.ui.buffer.BufferDialogUI');
-const {getSourcesFromContext} = goog.require('os.ui.menu.common');
-const layerMenu = goog.require('os.ui.menu.layer');
-const mapMenu = goog.require('os.ui.menu.map');
-const spatialMenu = goog.require('os.ui.menu.spatial');
 
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 
 
 /**
  * Set up buffer region listeners.
  */
-const setup = function() {
+export const setup = function() {
   layerSetup();
   mapSetup();
   spatialSetup();
@@ -33,7 +34,7 @@ const setup = function() {
 /**
  * Clean up buffer region listeners.
  */
-const dispose = function() {
+export const dispose = function() {
   layerDispose();
   mapDispose();
   spatialDispose();
@@ -42,7 +43,7 @@ const dispose = function() {
 /**
  * Set up buffer region listeners in the layers window.
  */
-const layerSetup = function() {
+export const layerSetup = function() {
   var menu = layerMenu.getMenu();
   if (menu && !menu.getRoot().find(EventType.BUFFER)) {
     var group = menu.getRoot().find(layerMenu.GroupLabel.TOOLS);
@@ -63,7 +64,7 @@ const layerSetup = function() {
 /**
  * Clean up buffer region listeners in the layers window.
  */
-const layerDispose = function() {
+export const layerDispose = function() {
   var menu = layerMenu.getMenu();
   var group = menu ? menu.getRoot().find(layerMenu.GroupLabel.TOOLS) : undefined;
   if (group) {
@@ -74,7 +75,7 @@ const layerDispose = function() {
 /**
  * Set up buffer region listeners on the map.
  */
-const mapSetup = function() {
+export const mapSetup = function() {
   var menu = mapMenu.getMenu();
   if (menu && !menu.getRoot().find(EventType.BUFFER)) {
     var group = menu.getRoot().find(mapMenu.GroupLabel.COORDINATE);
@@ -93,7 +94,7 @@ const mapSetup = function() {
 /**
  * Clean up buffer region listeners on the map.
  */
-const mapDispose = function() {
+export const mapDispose = function() {
   var menu = mapMenu.getMenu();
   if (menu) {
     var group = menu.getRoot().find(mapMenu.GroupLabel.COORDINATE);
@@ -106,7 +107,7 @@ const mapDispose = function() {
 /**
  * Set up buffer region listeners on the spatial menu.
  */
-const spatialSetup = function() {
+export const spatialSetup = function() {
   var menu = spatialMenu.getMenu();
   if (menu) {
     var root = menu.getRoot();
@@ -127,7 +128,7 @@ const spatialSetup = function() {
 /**
  * Clean up buffer region listeners on the spatial menu.
  */
-const spatialDispose = function() {
+export const spatialDispose = function() {
   var menu = spatialMenu.getMenu();
   if (menu) {
     var root = menu.getRoot();
@@ -144,7 +145,7 @@ const spatialDispose = function() {
  * @param {Object|undefined} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfCanBuffer = function(context) {
+export const visibleIfCanBuffer = function(context) {
   // polygonal geometries are generally drawn as areas, so don't clutter the menu with the buffer option
   this.visible = false;
 
@@ -166,7 +167,7 @@ const visibleIfCanBuffer = function(context) {
  *
  * @param {!MenuEvent<ol.Coordinate>} event
  */
-const handleCoordinateBufferEvent = function(event) {
+export const handleCoordinateBufferEvent = function(event) {
   event.preventDefault();
 
   BufferDialogUI.launchBufferDialog({
@@ -179,7 +180,7 @@ const handleCoordinateBufferEvent = function(event) {
  *
  * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  */
-const handleLayerBufferEvent = function(event) {
+export const handleLayerBufferEvent = function(event) {
   var context = event.getContext();
   if (context && event instanceof GoogEvent && !inIframe()) {
     // Here's a fun exploitation of the whole window context and instanceof problem.
@@ -201,7 +202,7 @@ const handleLayerBufferEvent = function(event) {
  *
  * @param {!MenuEvent} event The event.
  */
-const handleSpatialBufferEvent = function(event) {
+export const handleSpatialBufferEvent = function(event) {
   var context = event.getContext();
   if (context && event instanceof GoogEvent && !inIframe()) {
     // Here's a fun exploitation of the whole window context and instanceof problem.
@@ -239,19 +240,4 @@ const handleSpatialBufferEvent = function(event) {
       BufferDialogUI.launchBufferDialog(config);
     }
   }
-};
-
-exports = {
-  setup,
-  dispose,
-  layerSetup,
-  layerDispose,
-  mapSetup,
-  mapDispose,
-  spatialSetup,
-  spatialDispose,
-  visibleIfCanBuffer,
-  handleCoordinateBufferEvent,
-  handleLayerBufferEvent,
-  handleSpatialBufferEvent
 };

@@ -1,6 +1,6 @@
 goog.module('os.im.action.mock');
 
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const {default: ImportActionManager} = goog.require('os.im.action.ImportActionManager');
 const MockAction = goog.require('os.im.action.mock.MockAction');
 
 

@@ -1,13 +1,12 @@
-goog.module('os.ui.window.ConfirmTextUI');
+goog.declareModuleId('os.ui.window.ConfirmTextUI');
 
-goog.require('os.ui.util.ValidationMessageUI');
-
-const {ROOT} = goog.require('os');
-const fn = goog.require('os.fn');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const osWindow = goog.require('os.ui.window');
-const {directiveTag: confirmUi} = goog.require('os.ui.window.ConfirmUI');
+import '../util/validationmessage.js';
+import * as fn from '../../fn/fn.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import * as osWindow from '../window.js';
+import WindowEventType from '../windoweventtype.js';
+import {directiveTag as confirmUi} from './confirm.js';
 
 
 /**
@@ -15,7 +14,7 @@ const {directiveTag: confirmUi} = goog.require('os.ui.window.ConfirmUI');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   templateUrl: ROOT + 'views/window/confirmtext.html',
   controller: Controller,
@@ -26,7 +25,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'confirmtext';
+export const directiveTag = 'confirmtext';
 
 /**
  * Add the directive to the os.ui module
@@ -37,7 +36,7 @@ Module.directive('confirmtext', [directive]);
  * Controller for the text confirmation window.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -83,7 +82,7 @@ class Controller {
  *
  * @param {osx.window.ConfirmTextOptions=} opt_options The window options
  */
-const launchConfirmText = function(opt_options) {
+export const launchConfirmText = function(opt_options) {
   var options = /** @type {!osx.window.ConfirmTextOptions} */ (opt_options || {});
   var scopeOptions = {
     'confirmCallback': options.confirm || fn.noop,
@@ -124,17 +123,4 @@ const launchConfirmText = function(opt_options) {
 
   var template = `<${confirmUi}><${directiveTag}></${directiveTag}></${confirmUi}>`;
   osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-};
-
-/**
- * @type {function(osx.window.ConfirmTextOptions=)}
- * @deprecated Please use os.ui.window.ConfirmTextUI.launchConfirmText.
- */
-osWindow.launchConfirmText = launchConfirmText;
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchConfirmText
 };

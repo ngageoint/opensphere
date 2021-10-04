@@ -1,22 +1,22 @@
-goog.module('os.ui.LayersWindowUI');
+goog.declareModuleId('os.ui.LayersWindowUI');
 
-goog.require('os.ui.AreasUI');
-goog.require('os.ui.FiltersUI');
-goog.require('os.ui.LayersUI');
+import './areas.js';
+import './filters.js';
+import './layers.js';
+import {ROOT} from '../os.js';
+import {AreaState} from '../query/query.js';
+import {getFilterManager, getQueryManager} from '../query/queryinstance.js';
+import Module from './module.js';
+import {apply} from './ui.js';
 
 const Disposable = goog.require('goog.Disposable');
-const {ROOT} = goog.require('os');
-const {AreaState} = goog.require('os.query');
-const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
 
 /**
  * The layers window directive
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -30,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'layerswin';
+export const directiveTag = 'layerswin';
 
 /**
  * Add the directive to the module
@@ -41,7 +41,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for area count directive.
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -102,9 +102,3 @@ class Controller extends Disposable {
     apply(this.scope_);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

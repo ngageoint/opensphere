@@ -4,7 +4,7 @@ goog.require('os.net.FormEncFormatter');
 
 describe('os.net.FormEncFormatter', function() {
   const Uri = goog.module.get('goog.Uri');
-  const FormEncFormatter = goog.module.get('os.net.FormEncFormatter');
+  const {default: FormEncFormatter} = goog.module.get('os.net.FormEncFormatter');
 
   it('should encode URIs', function() {
     // If this breaks, you've directly ignored the warning at the top of the class.

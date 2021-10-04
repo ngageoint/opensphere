@@ -1,28 +1,31 @@
-goog.module('os.data.LayerTreeSearch');
+goog.declareModuleId('os.data.LayerTreeSearch');
+
+import IGroupable from '../igroupable.js';
+import osImplements from '../implements.js';
+import FolderManager from '../layer/foldermanager.js';
+import * as osLayer from '../layer/layer.js';
+import LayerGroup from '../layer/layergroup.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import BaseProvider from '../ui/data/baseprovider.js';
+import AbstractGroupByTreeSearch from '../ui/slick/abstractgroupbytreesearch.js';
+import TreeSearch from '../ui/slick/treesearch.js';
+import FolderNode from './foldernode.js';
+import LayerZOrderGroupBy from './groupby/layerzordergroupby.js';
+import LayerNode from './layernode.js';
 
 const googArray = goog.require('goog.array');
-const IGroupable = goog.require('os.IGroupable');
-const FolderNode = goog.require('os.data.FolderNode');
-const LayerNode = goog.require('os.data.LayerNode');
-const LayerZOrderGroupBy = goog.require('os.data.groupby.LayerZOrderGroupBy');
-const osImplements = goog.require('os.implements');
-const osLayer = goog.require('os.layer');
-const FolderManager = goog.require('os.layer.FolderManager');
-const LayerGroup = goog.require('os.layer.LayerGroup');
-const {getMapContainer} = goog.require('os.map.instance');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
-const AbstractGroupByTreeSearch = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
-const TreeSearch = goog.require('os.ui.slick.TreeSearch');
 
-const ILayer = goog.requireType('os.layer.ILayer');
-const ITreeNodeSupplier = goog.requireType('os.structs.ITreeNodeSupplier');
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: INodeGroupBy} = goog.requireType('os.data.groupby.INodeGroupBy');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
+const {default: ITreeNodeSupplier} = goog.requireType('os.structs.ITreeNodeSupplier');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
  * Extends AbstractGroupByTreeSearch to search through layers on the map
  */
-class LayerTreeSearch extends AbstractGroupByTreeSearch {
+export default class LayerTreeSearch extends AbstractGroupByTreeSearch {
   /**
    * Constructor.
    * @param {!string} setAs The field to set on...
@@ -49,7 +52,7 @@ class LayerTreeSearch extends AbstractGroupByTreeSearch {
    * Overridden in inheriting class
    *
    * @param {Object} item - search item to setup as a node
-   * @return {!os.structs.ITreeNode}
+   * @return {!ITreeNode}
    * @override
    */
   setupNode(item) {
@@ -70,7 +73,7 @@ class LayerTreeSearch extends AbstractGroupByTreeSearch {
   /**
    * Overridden for post result processing
    *
-   * @param {os.data.groupby.INodeGroupBy} groupBy
+   * @param {INodeGroupBy} groupBy
    * @param {!Array} results
    * @override
    */
@@ -130,14 +133,14 @@ class LayerTreeSearch extends AbstractGroupByTreeSearch {
   /**
    * Creates groupings from layer id which have the same prefix: <providerId>#<sourceId>#
    *
-   * @param {?Array<!os.structs.ITreeNode>} results
+   * @param {?Array<!ITreeNode>} results
    * @param {!SlickTreeNode} parent
    * @private
    */
   makeGroups_(results, parent) {
     if (results && results.length > 0) {
       // if there are no user-created folders, fall back to grouping them automatically
-      var idBuckets = /** @type {!Object<string, !Array<!os.structs.ITreeNode>>} */
+      var idBuckets = /** @type {!Object<string, !Array<!ITreeNode>>} */
           (googArray.bucket(results, this.getNodeGroup.bind(this)));
       results.length = 0;
 
@@ -153,7 +156,7 @@ class LayerTreeSearch extends AbstractGroupByTreeSearch {
             var node = /** @type {LayerNode} */ (bucket[i]);
             var layer = node.getLayer();
             var t = osImplements(layer, IGroupable.ID) ?
-              /** @type {os.IGroupable} */ (layer).getGroupLabel() : layer.getTitle();
+              /** @type {IGroupable} */ (layer).getGroupLabel() : layer.getTitle();
 
             if (t.length < min) {
               title = t;
@@ -222,8 +225,8 @@ class LayerTreeSearch extends AbstractGroupByTreeSearch {
   /**
    * Creates the final results.
    *
-   * @param {!Array<!os.structs.ITreeNode>} results
-   * @param {!Array<!os.structs.ITreeNode>} layerNodes
+   * @param {!Array<!ITreeNode>} results
+   * @param {!Array<!ITreeNode>} layerNodes
    * @private
    */
   createResults(results, layerNodes) {
@@ -272,9 +275,9 @@ class LayerTreeSearch extends AbstractGroupByTreeSearch {
   }
 
   /**
-   * @param {!os.structs.ITreeNode} node
+   * @param {!ITreeNode} node
    * @param {number} index
-   * @param {!IArrayLike<!os.structs.ITreeNode>} array
+   * @param {!IArrayLike<!ITreeNode>} array
    * @return {string}
    * @protected
    */
@@ -286,7 +289,7 @@ class LayerTreeSearch extends AbstractGroupByTreeSearch {
       var layer = node.getLayer();
 
       if (osImplements(layer, IGroupable.ID)) {
-        groupId = /** @type {os.IGroupable} */ (layer).getGroupId();
+        groupId = /** @type {IGroupable} */ (layer).getGroupId();
       }
 
       if (this.getGroupBy() instanceof LayerZOrderGroupBy && groupId == node.getId()) {
@@ -302,5 +305,3 @@ class LayerTreeSearch extends AbstractGroupByTreeSearch {
     return id && id.length > 1 ? id.join(BaseProvider.ID_DELIMITER) : groupId;
   }
 }
-
-exports = LayerTreeSearch;

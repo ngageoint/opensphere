@@ -1,4 +1,4 @@
-goog.module('os.ol.feature');
+goog.declareModuleId('os.ol.feature');
 
 const Feature = goog.require('ol.Feature');
 const Circle = goog.require('ol.geom.Circle');
@@ -15,7 +15,7 @@ const Polygon = goog.require('ol.geom.Polygon');
  * OL3 geometry classes supported by {@link os.ol.feature.cloneGeometry}.
  * @enum {function (new:ol.geom.SimpleGeometry, ?)}
  */
-const GEOMETRIES = {
+export const GEOMETRIES = {
   'Point': Point,
   'LineString': LineString,
   'LinearRing': LinearRing,
@@ -35,7 +35,7 @@ const GEOMETRIES = {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const clone = function(feature, opt_propertyKeys) {
+export const clone = function(feature, opt_propertyKeys) {
   var clone = new Feature();
   var geometryName = feature.getGeometryName();
   clone.setGeometryName(geometryName);
@@ -66,7 +66,7 @@ const clone = function(feature, opt_propertyKeys) {
  * @return {T}
  * @template T
  */
-const cloneGeometry = function(geometry) {
+export const cloneGeometry = function(geometry) {
   var type = geometry.getType();
   var clazz = GEOMETRIES[type];
   if (clazz && !(geometry instanceof clazz)) {
@@ -88,15 +88,8 @@ const cloneGeometry = function(geometry) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const fieldSort = function(field, a, b) {
+export const fieldSort = function(field, a, b) {
   var av = a.values_[field];
   var bv = b.values_[field];
   return av > bv ? 1 : av < bv ? -1 : 0;
-};
-
-exports = {
-  GEOMETRIES,
-  clone,
-  cloneGeometry,
-  fieldSort
 };

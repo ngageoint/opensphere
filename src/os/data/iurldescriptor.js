@@ -1,10 +1,9 @@
-goog.module('os.data.IUrlDescriptor');
-
+goog.declareModuleId('os.data.IUrlDescriptor');
 
 /**
  * @interface
  */
-class IUrlDescriptor {
+export default class IUrlDescriptor {
   /**
    * Get the URL for the descriptor.
    * @return {?string}
@@ -25,6 +24,3 @@ class IUrlDescriptor {
  * @const
  */
 IUrlDescriptor.ID = 'os.data.IUrlDescriptor';
-
-
-exports = IUrlDescriptor;

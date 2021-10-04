@@ -1,8 +1,8 @@
-goog.module('os.im.IImporter');
+goog.declareModuleId('os.im.IImporter');
 
 const Listenable = goog.requireType('goog.events.Listenable');
-const IMapping = goog.requireType('os.im.mapping.IMapping');
-const IParser = goog.requireType('os.parse.IParser');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
+const {default: IParser} = goog.requireType('os.parse.IParser');
 
 
 /**
@@ -12,7 +12,7 @@ const IParser = goog.requireType('os.parse.IParser');
  * @interface
  * @template T
  */
-class IImporter {
+export default class IImporter {
   /**
    * Gets the data
    * @param {boolean=} opt_reset Whether or not to reset the data as well. Defaults to <code>true</code>
@@ -54,5 +54,3 @@ class IImporter {
    */
   setMappings(value) {}
 }
-
-exports = IImporter;

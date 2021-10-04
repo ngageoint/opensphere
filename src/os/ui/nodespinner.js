@@ -1,11 +1,12 @@
-goog.module('os.ui.NodeSpinnerUI');
+goog.declareModuleId('os.ui.NodeSpinnerUI');
+
+import Module from './module.js';
+import {apply} from './ui.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
 const Listenable = goog.requireType('goog.events.Listenable');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
@@ -13,7 +14,7 @@ const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<span ng-show="item.isLoading()" class="ng-hide"><i class="fa fa-fw" ng-class="spinClass" ' +
@@ -26,7 +27,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'nodespinner';
+export const directiveTag = 'nodespinner';
 
 /**
  * Add the directive to the os.ui module
@@ -37,7 +38,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the node spinner directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -98,9 +99,3 @@ class Controller {
  * @const
  */
 Controller.DEFAULT_CLASS = 'fa-spin fa-spinner';
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

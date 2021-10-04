@@ -1,11 +1,11 @@
 goog.require('os.alert.AlertManager');
 goog.require('os.ui.text');
-goog.require('os.ui.window');
 
 describe('os.ui.text', () => {
-  const AlertManager = goog.module.get('os.alert.AlertManager');
+  const {default: AlertManager} = goog.module.get('os.alert.AlertManager');
   const text = goog.module.get('os.ui.text');
-  const osWindow = goog.module.get('os.ui.window');
+
+  const windowSelector = 'div[label="Copy"]';
 
   it('should copy blank text', () => {
     spyOn(document, 'createElement').andCallThrough();
@@ -23,19 +23,29 @@ describe('os.ui.text', () => {
   });
 
   it('should copy valid text', () => {
-    spyOn(osWindow, 'create');
     spyOn(document, 'execCommand').andReturn(true);
     spyOn(AlertManager.getInstance(), 'sendAlert');
 
     text.copy('test');
 
     expect(AlertManager.getInstance().sendAlert).toHaveBeenCalled();
-    expect(osWindow.create).not.toHaveBeenCalled();
+    expect(document.querySelector(windowSelector)).toBeNull();
 
     document.execCommand.andReturn(false);
 
     text.copy('test');
 
-    expect(osWindow.create).toHaveBeenCalled();
+    waitsFor(() => !!document.querySelector(windowSelector), 'window to open');
+
+    runs(() => {
+      const bodyEl = document.querySelector(`${windowSelector} .modal-body`);
+      const scope = $(bodyEl).scope();
+      expect(scope).toBeDefined();
+      expect(scope.textPrompt).toBeDefined();
+
+      scope.textPrompt.close();
+    });
+
+    waitsFor(() => !document.querySelector(windowSelector), 'window to close');
   });
 });

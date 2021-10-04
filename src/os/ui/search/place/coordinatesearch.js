@@ -1,17 +1,18 @@
-goog.module('os.ui.search.place.CoordinateSearch');
+goog.declareModuleId('os.ui.search.place.CoordinateSearch');
+
+import {parseLatLon} from '../../../geo/geo.js';
+import {normalizeLongitude} from '../../../geo/geo2.js';
+import {EPSG4326} from '../../../proj/proj.js';
+import AbstractSearch from '../../../search/abstractsearch.js';
+import {pageResults} from '../../../search/search.js';
+import SearchEvent from '../../../search/searchevent.js';
+import SearchEventType from '../../../search/searcheventtype.js';
+import mgrs from '../../geo/mgrs.js';
+import CoordinateResult from './coordinateresult.js';
+import {createFeature} from './place.js';
 
 const log = goog.require('goog.log');
 const Point = goog.require('ol.geom.Point');
-const {parseLatLon} = goog.require('os.geo');
-const {normalizeLongitude} = goog.require('os.geo2');
-const {EPSG4326} = goog.require('os.proj');
-const {pageResults} = goog.require('os.search');
-const AbstractSearch = goog.require('os.search.AbstractSearch');
-const SearchEvent = goog.require('os.search.SearchEvent');
-const SearchEventType = goog.require('os.search.SearchEventType');
-const mgrs = goog.require('os.ui.geo.mgrs');
-const {createFeature} = goog.require('os.ui.search.place');
-const CoordinateResult = goog.require('os.ui.search.place.CoordinateResult');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -19,7 +20,7 @@ const Logger = goog.requireType('goog.log.Logger');
 /**
  * Checks if a search term is a coordinate.
  */
-class CoordinateSearch extends AbstractSearch {
+export default class CoordinateSearch extends AbstractSearch {
   /**
    * Constructor.
    */
@@ -99,5 +100,3 @@ const logger = log.getLogger('os.ui.search.place.CoordinateSearch');
  * @const
  */
 CoordinateSearch.ID = 'coord';
-
-exports = CoordinateSearch;

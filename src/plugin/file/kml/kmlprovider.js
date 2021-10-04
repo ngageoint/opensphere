@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.kml.KMLProvider');
 
-const FileProvider = goog.require('os.data.FileProvider');
+import FileProvider from '../../../os/data/fileprovider.js';
 
 
 /**

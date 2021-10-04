@@ -1,28 +1,28 @@
-goog.module('os.ui.AddDataUI');
+goog.declareModuleId('os.ui.AddDataUI');
 
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const Settings = goog.require('os.config.Settings');
-const DataManager = goog.require('os.data.DataManager');
-const DataProviderEventType = goog.require('os.data.DataProviderEventType');
-const DateGroupBy = goog.require('os.data.groupby.DateGroupBy');
-const RecentGroupBy = goog.require('os.data.groupby.RecentGroupBy');
-const TypeGroupBy = goog.require('os.data.groupby.TypeGroupBy');
-const Metrics = goog.require('os.metrics.Metrics');
-const {AddData} = goog.require('os.metrics.keys');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const AddDataCtrl = goog.require('os.ui.data.AddDataCtrl');
-const TagGroupBy = goog.require('os.ui.data.groupby.TagGroupBy');
-const UIEventParams = goog.require('os.ui.events.UIEventParams');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
-const {openWindow} = goog.require('os.ui.menu.windows');
-const {openServers} = goog.require('os.ui.menu.windows.default');
-const OnboardingManager = goog.require('os.ui.onboarding.OnboardingManager');
-const FavoriteManager = goog.require('os.user.settings.FavoriteManager');
+import Settings from '../config/settings.js';
+import DataManager from '../data/datamanager.js';
+import DataProviderEventType from '../data/dataprovidereventtype.js';
+import DateGroupBy from '../data/groupby/dategroupby.js';
+import RecentGroupBy from '../data/groupby/recentgroupby.js';
+import TypeGroupBy from '../data/groupby/typegroupby.js';
+import * as dispatcher from '../dispatcher.js';
+import Metrics from '../metrics/metrics.js';
+import {AddData} from '../metrics/metricskeys.js';
+import {ROOT} from '../os.js';
+import FavoriteManager from '../user/settings/favoritemanager.js';
+import AddDataCtrl from './data/adddatactrl.js';
+import TagGroupBy from './data/groupby/taggroupby.js';
+import UIEventParams from './events/uieventparams.js';
+import ImportEventType from './im/importeventtype.js';
+import {openServers} from './menu/defaultwindowsmenu.js';
+import {openWindow} from './menu/windowsmenu.js';
+import Module from './module.js';
+import OnboardingManager from './onboarding/onboardingmanager.js';
+import {apply} from './ui.js';
 
-const DataProviderEvent = goog.requireType('os.data.DataProviderEvent');
-const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
+const {default: DataProviderEvent} = goog.requireType('os.data.DataProviderEvent');
+const {default: INodeGroupBy} = goog.requireType('os.data.groupby.INodeGroupBy');
 
 
 /**
@@ -30,7 +30,7 @@ const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: true,
@@ -43,7 +43,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'adddata';
+export const directiveTag = 'adddata';
 
 /**
  * Add the directive to the module
@@ -54,7 +54,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for Add Data Window
  * @unrestricted
  */
-class Controller extends AddDataCtrl {
+export class Controller extends AddDataCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -189,10 +189,4 @@ Controller.VIEWS = {
   'Tag': new TagGroupBy(),
   'Type': new TypeGroupBy(),
   'Source': -1 // you can't use null because Angular treats that as the empty/unselected option
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

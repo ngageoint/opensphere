@@ -2,7 +2,7 @@ goog.module('os.im.AsyncImporter');
 
 const nextTick = goog.require('goog.async.nextTick');
 const EventTarget = goog.require('goog.events.EventTarget');
-const EventType = goog.require('os.events.EventType');
+const {default: EventType} = goog.require('os.events.EventType');
 
 
 /**

@@ -1,4 +1,20 @@
-goog.module('os.interaction.Modify');
+goog.declareModuleId('os.interaction.Modify');
+
+import RecordField from '../data/recordfield.js';
+import PayloadEvent from '../events/payloadevent.js';
+import DynamicFeature from '../feature/dynamicfeature.js';
+import I3DSupport from '../i3dsupport.js';
+import osImplements from '../implements.js';
+import * as interpolate from '../interpolate.js';
+import Method from '../interpolatemethod.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {notifyStyleChange} from '../style/style.js';
+import {directiveTag as controlBlock} from '../ui/help/controlblock.js';
+import Controls from '../ui/help/controls.js';
+import {MODAL_SELECTOR} from '../ui/ui.js';
+import * as osWindow from '../ui/window.js';
+import windowSelector from '../ui/windowselector.js';
+import {ModifyEventType} from './interaction.js';
 
 const dispose = goog.require('goog.dispose');
 const KeyCodes = goog.require('goog.events.KeyCodes');
@@ -18,26 +34,11 @@ const Circle = goog.require('ol.style.Circle');
 const Fill = goog.require('ol.style.Fill');
 const Stroke = goog.require('ol.style.Stroke');
 const Style = goog.require('ol.style.Style');
-const I3DSupport = goog.require('os.I3DSupport');
-const RecordField = goog.require('os.data.RecordField');
-const PayloadEvent = goog.require('os.events.PayloadEvent');
-const DynamicFeature = goog.require('os.feature.DynamicFeature');
-const osImplements = goog.require('os.implements');
-const {ModifyEventType} = goog.require('os.interaction');
-const interpolate = goog.require('os.interpolate');
-const Method = goog.require('os.interpolate.Method');
-const {getMapContainer} = goog.require('os.map.instance');
-const {notifyStyleChange} = goog.require('os.style');
-const {MODAL_SELECTOR} = goog.require('os.ui');
-const Controls = goog.require('os.ui.help.Controls');
-const {directiveTag: controlBlock} = goog.require('os.ui.help.ControlBlockUI');
-const osWindow = goog.require('os.ui.window');
-const windowSelector = goog.require('os.ui.windowSelector');
 
 const MapBrowserPointerEvent = goog.requireType('ol.MapBrowserPointerEvent');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
-const OSMap = goog.requireType('os.Map');
+const {default: OSMap} = goog.requireType('os.Map');
 
 
 /**
@@ -110,7 +111,7 @@ const VERTEX_STYLE = [
  */
 const cloneFeature = (feature) => {
   // Use the original geom, interpolated coordinates make for a weird UX.
-  const originalGeom = /** @type {!ol.geom.Geometry} */ (feature.get(interpolate.ORIGINAL_GEOM_FIELD) ||
+  const originalGeom = /** @type {!Geometry} */ (feature.get(interpolate.ORIGINAL_GEOM_FIELD) ||
       feature.getGeometry());
 
   // Clone the feature so we don't modify the existing geom.
@@ -138,7 +139,7 @@ const cloneFeature = (feature) => {
  *
  * @implements {I3DSupport}
  */
-class Modify extends OLModify {
+export default class Modify extends OLModify {
   /**
    * Constructor.
    * @param {!Feature} feature The feature to modify.
@@ -566,14 +567,12 @@ OLModify.handleDownEvent_ = function(evt) {
   return result;
 };
 
-
 /**
  * The original OL drag event handler.
  * @type {function(MapBrowserPointerEvent)}
  * @suppress {accessControls} Access to the original OL function.
  */
 const oldHandleDragEvent = OLModify.handleDragEvent_;
-
 
 /**
  * Mixin to the OL drag event handler.
@@ -598,5 +597,3 @@ OLModify.handleDragEvent_ = function(evt) {
 
   oldHandleDragEvent.call(this, evt);
 };
-
-exports = Modify;

@@ -1,19 +1,20 @@
-goog.module('os.ui.help.ControlBlockUI');
+goog.declareModuleId('os.ui.help.ControlBlockUI');
+
+import {ROOT, isOSX} from '../../os.js';
+import Module from '../module.js';
+import * as OSWindow from '../window.js';
+import Controls from './controls.js';
 
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyNames = goog.require('goog.events.KeyNames');
 const {toTitleCase} = goog.require('goog.string');
-const {ROOT, isOSX} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const Controls = goog.require('os.ui.help.Controls');
-const OSWindow = goog.require('os.ui.window');
 
 
 /**
  * The controlblock directive
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -28,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'controlblock';
+export const directiveTag = 'controlblock';
 
 /**
  * Add the directive to the module.
@@ -48,7 +49,7 @@ const osxKeyCodeMap = {
  * Controller function for the controlblock directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -134,9 +135,3 @@ class Controller {
     return null;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

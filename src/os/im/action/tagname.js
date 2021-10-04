@@ -1,11 +1,13 @@
-goog.module('os.im.action.TagName');
+goog.declareModuleId('os.im.action.TagName');
 
 /**
  * XML tags used by import actions.
  * @enum {string}
  */
-exports = {
+const TagName = {
   ACTIONS: 'actions',
   IMPORT_ACTIONS: 'importActions',
   IMPORT_ACTION: 'importAction'
 };
+
+export default TagName;

@@ -1,16 +1,17 @@
-goog.module('os.ui.search.SearchResultsUI');
+goog.declareModuleId('os.ui.search.SearchResultsUI');
 
-goog.require('os.ui.search.ResultCardUI');
-goog.require('os.ui.util.AutoHeightUI');
+import '../util/autoheight.js';
+import './resultcard.js';
+import {ROOT} from '../../os.js';
+import SearchEventType from '../../search/searcheventtype.js';
+import SearchManager from '../../search/searchmanager.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
 
-const {ROOT} = goog.require('os');
-const SearchEventType = goog.require('os.search.SearchEventType');
-const SearchManager = goog.require('os.search.SearchManager');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const SearchEvent = goog.requireType('os.search.SearchEvent');
+const {default: ISearchResult} = goog.requireType('os.search.ISearchResult');
 
-const ISearchResult = goog.requireType('os.search.ISearchResult');
+
+const {default: SearchEvent} = goog.requireType('os.search.SearchEvent');
 
 
 /**
@@ -18,7 +19,7 @@ const ISearchResult = goog.requireType('os.search.ISearchResult');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: {
     'parent': '@'
@@ -34,7 +35,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'searchresults';
+export const directiveTag = 'searchresults';
 
 /**
  * Register the searchresults directive.
@@ -45,7 +46,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the searchresults directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -157,9 +158,3 @@ class Controller {
     return result.getId();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

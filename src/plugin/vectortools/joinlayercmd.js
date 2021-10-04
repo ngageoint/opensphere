@@ -1,18 +1,18 @@
 goog.declareModuleId('plugin.vectortools.JoinLayer');
 
+import * as osArray from '../../os/array/array.js';
+import AbstractSource from '../../os/command/abstractsourcecmd.js';
+import State from '../../os/command/state.js';
+import RecordField from '../../os/data/recordfield.js';
+import * as layer from '../../os/layer/layer.js';
+import MapContainer from '../../os/mapcontainer.js';
 import * as vectortools from './vectortools.js';
 
 const asserts = goog.require('goog.asserts');
-const MapContainer = goog.require('os.MapContainer');
-const osArray = goog.require('os.array');
-const AbstractSource = goog.require('os.command.AbstractSource');
-const State = goog.require('os.command.State');
-const RecordField = goog.require('os.data.RecordField');
-const layer = goog.require('os.layer');
 
 const Feature = goog.requireType('ol.Feature');
-const ICommand = goog.requireType('os.command.ICommand');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 const {default: Options} = goog.requireType('plugin.vectortools.Options');
 
 

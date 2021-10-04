@@ -1,17 +1,18 @@
-goog.module('os.ui.im.action.EditFilterActionCtrl');
+goog.declareModuleId('os.ui.im.action.EditFilterActionCtrl');
 
-const dispatcher = goog.require('os.Dispatcher');
-const DataManager = goog.require('os.data.DataManager');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const {sortByLabel} = goog.require('os.im.action');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const {apply} = goog.require('os.ui');
-const {Controller: EditFiltersCtrl} = goog.require('os.ui.filter.ui.EditFiltersUI');
-const EventType = goog.require('os.ui.im.action.EventType');
-const osWindow = goog.require('os.ui.window');
+import DataManager from '../../../data/datamanager.js';
+import DataEventType from '../../../data/event/dataeventtype.js';
+import * as dispatcher from '../../../dispatcher.js';
+import {sortByLabel} from '../../../im/action/importaction.js';
+import ImportActionManager from '../../../im/action/importactionmanager.js';
+import {Controller as EditFiltersCtrl} from '../../filter/ui/editfilters.js';
+import {apply} from '../../ui.js';
+import * as osWindow from '../../window.js';
+import EventType from './eventtype.js';
 
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
-const IImportAction = goog.requireType('os.im.action.IImportAction');
+const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
+const {default: IImportAction} = goog.requireType('os.im.action.IImportAction');
 
 
 /**
@@ -20,7 +21,7 @@ const IImportAction = goog.requireType('os.im.action.IImportAction');
  * @template T
  * @unrestricted
  */
-class Controller extends EditFiltersCtrl {
+export default class Controller extends EditFiltersCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -182,7 +183,7 @@ class Controller extends EditFiltersCtrl {
   /**
    * Close the edit filter action window if the source was removed
    *
-   * @param {os.data.event.DataEvent} event
+   * @param {DataEvent} event
    * @private
    */
   onSourceRemoved_(event) {
@@ -360,5 +361,3 @@ const launchActionConfig = function(action, type) {
     osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 };
-
-exports = Controller;

@@ -1,14 +1,14 @@
-goog.module('os.ogc.filter.OGCFilterModifier');
+goog.declareModuleId('os.ogc.filter.OGCFilterModifier');
 
-const AbstractModifier = goog.require('os.net.AbstractModifier');
-const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');
+import AbstractModifier from '../../net/abstractmodifier.js';
+import ModifierConstants from './modifierconstants.js';
 
-const OGCFilterModifierOptions = goog.requireType('os.ogc.filter.OGCFilterModifierOptions');
+const {default: OGCFilterModifierOptions} = goog.requireType('os.ogc.filter.OGCFilterModifierOptions');
 
 
 /**
  */
-class OGCFilterModifier extends AbstractModifier {
+export default class OGCFilterModifier extends AbstractModifier {
   /**
    * Constructor.
    * @param {OGCFilterModifierOptions=} opt_options
@@ -77,5 +77,3 @@ OGCFilterModifier.FILTER_BEGIN = '<Filter xmlns="http://www.opengis.net/ogc" xml
  * @const
  */
 OGCFilterModifier.FILTER_END = '</Filter>';
-
-exports = OGCFilterModifier;

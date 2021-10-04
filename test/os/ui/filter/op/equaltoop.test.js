@@ -1,7 +1,7 @@
 goog.require('os.ui.filter.op.EqualTo');
 
 describe('os.ui.filter.op.EqualTo', function() {
-  const EqualTo = goog.module.get('os.ui.filter.op.EqualTo');
+  const {default: EqualTo} = goog.module.get('os.ui.filter.op.EqualTo');
 
   var op = new EqualTo();
 

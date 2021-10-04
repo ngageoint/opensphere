@@ -2,8 +2,8 @@ goog.require('os.layer.preset');
 goog.require('os.layer.preset.SettingsPresetService');
 
 describe('os.layer.preset.LayerPresetManager', function() {
-  const LayerPresetManager = goog.module.get('os.layer.preset.LayerPresetManager');
-  const SettingsPresetService = goog.module.get('os.layer.preset.SettingsPresetService');
+  const {default: LayerPresetManager} = goog.module.get('os.layer.preset.LayerPresetManager');
+  const {default: SettingsPresetService} = goog.module.get('os.layer.preset.SettingsPresetService');
   const lpm = LayerPresetManager.getInstance();
 
   it('should instantiate', function() {

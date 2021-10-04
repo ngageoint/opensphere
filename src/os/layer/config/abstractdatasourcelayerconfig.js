@@ -1,32 +1,33 @@
-goog.module('os.layer.config.AbstractDataSourceLayerConfig');
+goog.declareModuleId('os.layer.config.AbstractDataSourceLayerConfig');
+
+import DataManager from '../../data/datamanager.js';
+import FeatureImporter from '../../im/featureimporter.js';
+import {isTrustedUri} from '../../net/net.js';
+import Request from '../../net/request.js';
+import RequestSource from '../../source/requestsource.js';
+import VectorLayer from '../vector.js';
+import AbstractLayerConfig from './abstractlayerconfig.js';
+import {mapFeatureTypeColumn} from './layerconfig.js';
 
 const Uri = goog.require('goog.Uri');
 const {removeIf} = goog.require('goog.array');
 const {assert} = goog.require('goog.asserts');
 const {getLogger} = goog.require('goog.log');
 const VectorRenderType = goog.require('ol.layer.VectorRenderType');
-const DataManager = goog.require('os.data.DataManager');
-const FeatureImporter = goog.require('os.im.FeatureImporter');
-const {mapFeatureTypeColumn} = goog.require('os.layer.config');
-const VectorLayer = goog.require('os.layer.Vector');
-const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
-const {isTrustedUri} = goog.require('os.net');
-const Request = goog.require('os.net.Request');
-const RequestSource = goog.require('os.source.Request');
 
 const Logger = goog.requireType('goog.log.Logger');
 const OLVectorSource = goog.requireType('ol.source.Vector');
-const IImporter = goog.requireType('os.im.IImporter');
-const IFeatureType = goog.requireType('os.ogc.IFeatureType');
-const IParser = goog.requireType('os.parse.IParser');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: IImporter} = goog.requireType('os.im.IImporter');
+const {default: IFeatureType} = goog.requireType('os.ogc.IFeatureType');
+const {default: IParser} = goog.requireType('os.parse.IParser');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**
  * @abstract
  * @template T
  */
-class AbstractDataSourceLayerConfig extends AbstractLayerConfig {
+export default class AbstractDataSourceLayerConfig extends AbstractLayerConfig {
   /**
    * Constructor.
    */
@@ -229,5 +230,3 @@ class AbstractDataSourceLayerConfig extends AbstractLayerConfig {
  * @type {Logger}
  */
 const logger = getLogger('os.layer.config.AbstractDataSourceLayerConfig');
-
-exports = AbstractDataSourceLayerConfig;

@@ -1,12 +1,13 @@
-goog.module('os.command.VectorLayerAutoRefresh');
+goog.declareModuleId('os.command.VectorLayerAutoRefresh');
 
-const State = goog.require('os.command.State');
-const {getMapContainer} = goog.require('os.map.instance');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const VectorSource = goog.require('os.source.Vector');
+import {getMapContainer} from '../map/mapinstance.js';
+import Metrics from '../metrics/metrics.js';
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import VectorSource from '../source/vectorsource.js';
+import State from './state.js';
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 
 
 /**
@@ -15,7 +16,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class VectorLayerAutoRefresh {
+export default class VectorLayerAutoRefresh {
   /**
    * Constructor.
    * @param {string} layerId
@@ -52,11 +53,11 @@ class VectorLayerAutoRefresh {
   /**
    * Get the source from the layer id.
    *
-   * @return {os.source.Vector}
+   * @return {VectorSource}
    * @protected
    */
   getSource() {
-    var layer = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.layerId));
+    var layer = /** @type {VectorLayer} */ (getMapContainer().getLayer(this.layerId));
     if (!layer) {
       this.state = State.ERROR;
       this.details = 'Unable to locate layer with id "' + this.layerId + '".';
@@ -109,5 +110,3 @@ class VectorLayerAutoRefresh {
     return false;
   }
 }
-
-exports = VectorLayerAutoRefresh;

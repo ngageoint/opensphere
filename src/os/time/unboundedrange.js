@@ -1,12 +1,12 @@
-goog.module('os.time.UnboundedRange');
+goog.declareModuleId('os.time.UnboundedRange');
 
-const TimeInstant = goog.require('os.time.TimeInstant');
+import TimeInstant from './timeinstant.js';
 
 
 /**
  * A time range for all time
  */
-class UnboundedRange extends TimeInstant {
+export default class UnboundedRange extends TimeInstant {
   /**
    * Constructor.
    */
@@ -34,5 +34,3 @@ class UnboundedRange extends TimeInstant {
     return TimeInstant.MAX_TIME;
   }
 }
-
-exports = UnboundedRange;

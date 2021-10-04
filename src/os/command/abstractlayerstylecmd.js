@@ -1,8 +1,8 @@
-goog.module('os.command.AbstractLayerStyle');
+goog.declareModuleId('os.command.AbstractLayerStyle');
 
-const AbstractStyle = goog.require('os.command.AbstractStyle');
-const osImplements = goog.require('os.implements');
-const ILayer = goog.require('os.layer.ILayer');
+import osImplements from '../implements.js';
+import ILayer from '../layer/ilayer.js';
+import AbstractStyle from './abstractstylecmd.js';
 
 
 /**
@@ -11,7 +11,7 @@ const ILayer = goog.require('os.layer.ILayer');
  *
  * @template T
  */
-class AbstractLayerStyle extends AbstractStyle {
+export default class AbstractLayerStyle extends AbstractStyle {
   /**
    * Constructor.
    * @param {string} layerId The layer id.
@@ -28,7 +28,7 @@ class AbstractLayerStyle extends AbstractStyle {
    */
   getLayerConfig(layer) {
     if (osImplements(layer, ILayer.ID)) {
-      return /** @type {os.layer.ILayer} */ (layer).getLayerOptions();
+      return /** @type {ILayer} */ (layer).getLayerOptions();
     }
     return null;
   }
@@ -40,5 +40,3 @@ class AbstractLayerStyle extends AbstractStyle {
     // nothing to do right now
   }
 }
-
-exports = AbstractLayerStyle;

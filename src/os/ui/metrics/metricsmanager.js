@@ -1,22 +1,23 @@
-goog.module('os.ui.metrics.MetricsManager');
+goog.declareModuleId('os.ui.metrics.MetricsManager');
+
+import SlickTreeNode from '../slick/slicktreenode.js';
+import TreeSearch from '../slick/treesearch.js';
+import MetricNode from './metricnode.js';
+import MetricsManagerEvent from './metricsmanagerevent.js';
+import MetricsManagerEventType from './metricsmanagereventtype.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
-const MetricNode = goog.require('os.ui.metrics.MetricNode');
-const MetricsManagerEvent = goog.require('os.ui.metrics.MetricsManagerEvent');
-const MetricsManagerEventType = goog.require('os.ui.metrics.MetricsManagerEventType');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
-const TreeSearch = goog.require('os.ui.slick.TreeSearch');
 const Logger = goog.requireType('goog.log.Logger');
 
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
-const MetricsPlugin = goog.requireType('os.ui.metrics.MetricsPlugin');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
+const {default: MetricsPlugin} = goog.requireType('os.ui.metrics.MetricsPlugin');
 
 
 /**
  * Base metrics manager. Applications should extend this to fill in the abstract methods.
  */
-class MetricsManager extends EventTarget {
+export default class MetricsManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -209,5 +210,3 @@ let instance;
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.metrics.MetricsManager');
-
-exports = MetricsManager;

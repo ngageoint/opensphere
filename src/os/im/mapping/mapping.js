@@ -1,18 +1,18 @@
-goog.module('os.im.mapping');
+goog.declareModuleId('os.im.mapping');
 
-goog.require('os.mixin.feature');
+import '../../mixin/featuremixin.js';
+import instanceOf from '../../instanceof.js';
+import TimeType from './timetype.js';
 
 const Feature = goog.require('ol.Feature');
-const TimeType = goog.require('os.im.mapping.TimeType');
-const instanceOf = goog.require('os.instanceOf');
 
-const IMapping = goog.requireType('os.im.mapping.IMapping');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
 
 
 /**
  * @type {string}
  */
-const DEFAULT_SCORETYPE = 'default';
+export const DEFAULT_SCORETYPE = 'default';
 
 /**
  * Returns the enum for the string
@@ -20,7 +20,7 @@ const DEFAULT_SCORETYPE = 'default';
  * @param {string} input A string that matches an enum value from TimeType
  * @return {TimeType} A TimeType
  */
-const getTimeTypeForString = function(input) {
+export const getTimeTypeForString = function(input) {
   if ('start' === input) {
     return TimeType.START;
   } else if ('end' === input) {
@@ -41,7 +41,7 @@ const getTimeTypeForString = function(input) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const getItemField = function(item, field) {
+export const getItemField = function(item, field) {
   if (item && field) {
     if (instanceOf(item, Feature.NAME)) {
       return /** @type {!Feature} */ (item).values_[field];
@@ -57,7 +57,7 @@ const getItemField = function(item, field) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const getItemFields = function(item) {
+export const getItemFields = function(item) {
   if (instanceOf(item, Feature.NAME)) {
     return Object.keys(/** @type {!Feature} */ (item).values_);
   } else if (item) {
@@ -74,7 +74,7 @@ const getItemFields = function(item) {
  * @param {?string|undefined} field
  * @param {*} value
  */
-const setItemField = function(item, field, value) {
+export const setItemField = function(item, field, value) {
   if (field) {
     if (instanceOf(item, Feature.NAME)) {
       var feature = /** @type {!Feature} */ (item);
@@ -104,7 +104,7 @@ const setItemField = function(item, field, value) {
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-const getBestFieldMatch = function(item, regex, opt_currentField) {
+export const getBestFieldMatch = function(item, regex, opt_currentField) {
   var f = undefined;
   var currentFieldIndex = Number.MAX_VALUE;
   var fIndex = Number.MAX_VALUE;
@@ -136,7 +136,7 @@ const getBestFieldMatch = function(item, regex, opt_currentField) {
  * @return {Array<IMapping<T>>}
  * @template T
  */
-const reduceMappings = function(mappings) {
+export const reduceMappings = function(mappings) {
   var highScore = 0;
 
   // score the mappings
@@ -164,7 +164,7 @@ const reduceMappings = function(mappings) {
  * @param {?string} input moment time format
  * @return {?string} java time format.
  */
-const momentFormatToJavaFormat = function(input) {
+export const momentFormatToJavaFormat = function(input) {
   if (!input) {
     return null;
   }
@@ -183,7 +183,7 @@ const momentFormatToJavaFormat = function(input) {
  * @param {?string} input moment time format
  * @return {?string} java time format.
  */
-const javaFormatToMomentFormat = function(input) {
+export const javaFormatToMomentFormat = function(input) {
   if (!input) {
     return null;
   }
@@ -202,7 +202,7 @@ const javaFormatToMomentFormat = function(input) {
  * @param {?string|undefined} input moment time format
  * @return {?string} java time format.
  */
-const localFieldToXmlField = function(input) {
+export const localFieldToXmlField = function(input) {
   if (!input) {
     return null;
   }
@@ -225,7 +225,7 @@ const localFieldToXmlField = function(input) {
  * @param {?string|undefined} input moment time format
  * @return {?string} java time format.
  */
-const xmlFieldToLocalField = function(input) {
+export const xmlFieldToLocalField = function(input) {
   if (!input) {
     return null;
   }
@@ -239,18 +239,4 @@ const xmlFieldToLocalField = function(input) {
     // This should occur when there is a header.
     return input;
   }
-};
-
-exports = {
-  DEFAULT_SCORETYPE,
-  getTimeTypeForString,
-  getItemField,
-  getItemFields,
-  setItemField,
-  getBestFieldMatch,
-  reduceMappings,
-  momentFormatToJavaFormat,
-  javaFormatToMomentFormat,
-  localFieldToXmlField,
-  xmlFieldToLocalField
 };

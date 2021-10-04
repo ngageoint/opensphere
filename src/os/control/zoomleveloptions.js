@@ -1,4 +1,4 @@
-goog.module('os.control.ZoomLevelOptions');
+goog.declareModuleId('os.control.ZoomLevelOptions');
 
 /**
  * @typedef {{
@@ -8,4 +8,4 @@ goog.module('os.control.ZoomLevelOptions');
  */
 let ZoomLevelOptions;
 
-exports = ZoomLevelOptions;
+export default ZoomLevelOptions;

@@ -10,10 +10,10 @@ goog.require('os.math.Units');
 describe('os.im.mapping.AltMapping', function() {
   const Feature = goog.module.get('ol.Feature');
   const Point = goog.module.get('ol.geom.Point');
-  const Fields = goog.module.get('os.Fields');
+  const {default: Fields} = goog.module.get('os.Fields');
   const fields = goog.module.get('os.fields');
   const mapping = goog.module.get('os.im.mapping');
-  const AltMapping = goog.module.get('os.im.mapping.AltMapping');
+  const {default: AltMapping} = goog.module.get('os.im.mapping.AltMapping');
 
   it('should auto detect altitude string types', function() {
     // test with a feature (WFS layer or csv import)

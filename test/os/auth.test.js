@@ -12,8 +12,8 @@ describe('plugin.imagery.menu', () => {
     getAuth,
     alertAuth
   } = goog.module.get('os.auth');
-  const Settings = goog.module.get('os.config.Settings');
-  const AlertManager = goog.module.get('os.alert.AlertManager');
+  const {default: Settings} = goog.module.get('os.config.Settings');
+  const {default: AlertManager} = goog.module.get('os.alert.AlertManager');
 
   const settingsAuth = {
     'test': {

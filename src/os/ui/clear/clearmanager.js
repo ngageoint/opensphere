@@ -1,18 +1,19 @@
-goog.module('os.ui.clear.ClearManager');
+goog.declareModuleId('os.ui.clear.ClearManager');
+
+import CommandProcessor from '../../command/commandprocessor.js';
+import SequenceCommand from '../../command/sequencecommand.js';
+import Settings from '../../config/settings.js';
 
 const log = goog.require('goog.log');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const Settings = goog.require('os.config.Settings');
 
 const Logger = goog.requireType('goog.log.Logger');
-const ClearEntry = goog.requireType('os.ui.clear.ClearEntry');
+const {default: ClearEntry} = goog.requireType('os.ui.clear.ClearEntry');
 
 
 /**
  * Manages clearing/resetting parts of the application.
  */
-class ClearManager {
+export default class ClearManager {
   /**
    * Constructor.
    */
@@ -143,6 +144,3 @@ let instance;
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.clear.ClearManager');
-
-
-exports = ClearManager;

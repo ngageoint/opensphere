@@ -1,13 +1,14 @@
-goog.module('os.ui.UrlDragDrop');
+goog.declareModuleId('os.ui.UrlDragDrop');
+
+import * as dispatcher from '../../dispatcher.js';
+import {URL_REGEXP} from '../../url/url.js';
+import UrlManager from '../../url/urlmanager.js';
+import windowSelector from '../windowselector.js';
+import DragDropStyle from './dragdropstyle.js';
 
 const classlist = goog.require('goog.dom.classlist');
 const googEvents = goog.require('goog.events');
 const GoogEvent = goog.require('goog.events.Event');
-const dispatcher = goog.require('os.Dispatcher');
-const DragDropStyle = goog.require('os.ui.DragDropStyle');
-const windowSelector = goog.require('os.ui.windowSelector');
-const {URL_REGEXP} = goog.require('os.url');
-const UrlManager = goog.require('os.url.UrlManager');
 
 const BrowserEvent = goog.requireType('goog.events.BrowserEvent');
 
@@ -15,7 +16,7 @@ const BrowserEvent = goog.requireType('goog.events.BrowserEvent');
 /**
  * Object containing the link function used by the URL drag drop directive.
  */
-class UrlDragDrop {
+export default class UrlDragDrop {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope angular scope
@@ -212,5 +213,3 @@ UrlDragDrop.CLEAR = 'urldragdrop.clear';
  * @type {string}
  */
 UrlDragDrop.LOCAL = 'urldragdrop-local-element';
-
-exports = UrlDragDrop;

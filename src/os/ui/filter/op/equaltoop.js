@@ -1,13 +1,13 @@
-goog.module('os.ui.filter.op.EqualTo');
+goog.declareModuleId('os.ui.filter.op.EqualTo');
 
-const Op = goog.require('os.ui.filter.op.Op');
-const {quoteString} = goog.require('os.ui.filter.string');
+import {quoteString} from '../filterstring.js';
+import Op from './op.js';
 
 
 /**
  * A 'PropertyIsEqualTo' operation class.
  */
-class EqualTo extends Op {
+export default class EqualTo extends Op {
   /**
    * Constructor.
    */
@@ -38,5 +38,3 @@ class EqualTo extends Op {
     return '';
   }
 }
-
-exports = EqualTo;

@@ -1,7 +1,8 @@
-goog.module('os.ui.action.MenuItemSeparator');
+/* eslint-disable import/no-deprecated */
+goog.declareModuleId('os.ui.action.MenuItemSeparator');
 
-const MenuItem = goog.require('os.ui.action.MenuItem');
-const IMenuItem = goog.requireType('os.ui.action.IMenuItem');
+import MenuItem from './menuitem.js';
+const {default: IMenuItem} = goog.requireType('os.ui.action.IMenuItem');
 
 
 /**
@@ -10,7 +11,7 @@ const IMenuItem = goog.requireType('os.ui.action.IMenuItem');
  * @implements {IMenuItem}
  * @deprecated Please use {@link os.ui.menu.Menu} and {@link os.ui.menu.MenuItem} instead
  */
-class MenuItemSeparator extends MenuItem {
+export default class MenuItemSeparator extends MenuItem {
   /**
    * Constructor.
    */
@@ -26,5 +27,3 @@ class MenuItemSeparator extends MenuItem {
     this.isSeparator = true;
   }
 }
-
-exports = MenuItemSeparator;

@@ -1,10 +1,12 @@
-goog.module('os.ui.im.action.FilterActionNode');
+goog.declareModuleId('os.ui.im.action.FilterActionNode');
 
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const {ICON} = goog.require('os.im.action.default');
-const TriState = goog.require('os.structs.TriState');
-const FilterNode = goog.require('os.ui.filter.ui.FilterNode');
-const {directiveTag: nodeUi} = goog.require('os.ui.im.action.FilterActionNodeUI');
+import {ICON} from '../../../im/action/defaultaction.js';
+import ImportActionManager from '../../../im/action/importactionmanager.js';
+import TriState from '../../../structs/tristate.js';
+import FilterNode from '../../filter/ui/filternode.js';
+import {directiveTag as nodeUi} from './filteractionnodeui.js';
+
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
 
 
 /**
@@ -12,10 +14,10 @@ const {directiveTag: nodeUi} = goog.require('os.ui.im.action.FilterActionNodeUI'
  *
  * @template T
  */
-class FilterActionNode extends FilterNode {
+export default class FilterActionNode extends FilterNode {
   /**
    * Constructor.
-   * @param {!os.im.action.FilterActionEntry<T>} entry The entry.
+   * @param {!FilterActionEntry<T>} entry The entry.
    */
   constructor(entry) {
     super(entry);
@@ -102,7 +104,7 @@ class FilterActionNode extends FilterNode {
   /**
    * Translate filter action entries to nodes.
    *
-   * @param {Array<!os.im.action.FilterActionEntry>} entries The filter action entries.
+   * @param {Array<!FilterActionEntry>} entries The filter action entries.
    * @return {!Array<!FilterActionNode>} The filter action nodes.
    */
   static fromEntries(entries) {
@@ -121,7 +123,7 @@ class FilterActionNode extends FilterNode {
    * Translate filter action nodes to entries.
    *
    * @param {Array<!FilterActionNode>} nodes The filter action nodes.
-   * @return {!Array<!os.im.action.FilterActionEntry>} The filter action entries.
+   * @return {!Array<!FilterActionEntry>} The filter action entries.
    */
   static toEntries(nodes) {
     if (nodes) {
@@ -135,5 +137,3 @@ class FilterActionNode extends FilterNode {
     return [];
   }
 }
-
-exports = FilterActionNode;

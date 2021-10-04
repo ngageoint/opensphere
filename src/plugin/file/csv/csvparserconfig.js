@@ -1,9 +1,8 @@
 goog.declareModuleId('plugin.file.csv.CSVParserConfig');
 
+import CsvParserConfig from '../../../os/parse/csv/csvparserconfig.js';
+import * as osUiSlickColumn from '../../../os/ui/slick/column.js';
 import CSVParser from './csvparser.js';
-
-const CsvParserConfig = goog.require('os.parse.csv.CsvParserConfig');
-const osUiSlickColumn = goog.require('os.ui.slick.column');
 
 const Feature = goog.requireType('ol.Feature');
 

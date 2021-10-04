@@ -1,13 +1,14 @@
-goog.module('os.events.ErrorEvent');
+goog.declareModuleId('os.events.ErrorEvent');
+
+import EventType from './eventtype.js';
 
 const GoogEvent = goog.require('goog.events.Event');
-const EventType = goog.require('os.events.EventType');
 
 
 /**
  * Event object which contains error message
  */
-class ErrorEvent extends GoogEvent {
+export default class ErrorEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {?string} message
@@ -31,5 +32,3 @@ class ErrorEvent extends GoogEvent {
     return this.message_;
   }
 }
-
-exports = ErrorEvent;

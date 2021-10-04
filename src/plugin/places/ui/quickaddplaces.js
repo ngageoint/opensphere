@@ -1,24 +1,23 @@
 goog.declareModuleId('plugin.places.ui.QuickAddPlacesUI');
 
-goog.require('os.ui.draw.DrawPickerUI');
-
+import '../../../os/ui/draw/drawpicker.js';
+import CommandProcessor from '../../../os/command/commandprocessor.js';
+import ParallelCommand from '../../../os/command/parallelcommand.js';
+import RecordField from '../../../os/data/recordfield.js';
+import * as interpolate from '../../../os/interpolate.js';
 import {ROOT} from '../../../os/os.js';
+import {Controller as FeatureEditCtrl} from '../../../os/ui/featureedit.js';
+import Module from '../../../os/ui/module.js';
+import * as osWindow from '../../../os/ui/window.js';
+import WindowEventType from '../../../os/ui/windoweventtype.js';
+import windowSelector from '../../../os/ui/windowselector.js';
+import AltitudeMode from '../../../os/webgl/altitudemode.js';
 import KMLNodeRemove from '../../file/kml/cmd/kmlnoderemovecmd.js';
 import * as places from '../places.js';
 
 const Disposable = goog.require('goog.Disposable');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const ParallelCommand = goog.require('os.command.ParallelCommand');
-const RecordField = goog.require('os.data.RecordField');
-const interpolate = goog.require('os.interpolate');
-const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const osWindow = goog.require('os.ui.window');
-const windowSelector = goog.require('os.ui.windowSelector');
-const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
-const Method = goog.requireType('os.interpolate.Method');
+const {default: Method} = goog.requireType('os.interpolate.Method');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 

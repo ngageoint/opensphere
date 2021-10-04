@@ -1,4 +1,4 @@
-goog.module('os.proj.switch.BinnedLayersType');
+goog.declareModuleId('os.proj.switch.BinnedLayersType');
 
 /**
  * @typedef {{
@@ -10,4 +10,4 @@ goog.module('os.proj.switch.BinnedLayersType');
  */
 let BinnedLayersType;
 
-exports = BinnedLayersType;
+export default BinnedLayersType;

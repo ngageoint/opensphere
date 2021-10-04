@@ -1,15 +1,16 @@
-goog.module('os.interaction.DoubleClick');
+goog.declareModuleId('os.interaction.DoubleClick');
+
+import {getLayer} from '../feature/feature.js';
+import I3DSupport from '../i3dsupport.js';
+import osImplements from '../implements.js';
+import VectorLayer from '../layer/vector.js';
+import launchMultiFeatureInfo from '../ui/feature/launchmultifeatureinfo.js';
 
 const {insert} = goog.require('goog.array');
 const Feature = goog.require('ol.Feature');
 const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
 const ViewHint = goog.require('ol.ViewHint');
 const Interaction = goog.require('ol.interaction.Interaction');
-const I3DSupport = goog.require('os.I3DSupport');
-const {getLayer} = goog.require('os.feature');
-const osImplements = goog.require('os.implements');
-const VectorLayer = goog.require('os.layer.Vector');
-const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
 
 
 /**
@@ -17,7 +18,7 @@ const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInf
  *
  * @implements {I3DSupport}
  */
-class DoubleClick extends Interaction {
+export default class DoubleClick extends Interaction {
   /**
    * Constructor.
    */
@@ -65,7 +66,7 @@ class DoubleClick extends Interaction {
             }
 
             if (layer instanceof VectorLayer) {
-              var vector = /** @type {os.layer.Vector} */ (layer);
+              var vector = /** @type {VectorLayer} */ (layer);
               var id = vector.getId();
 
               if (vector && id) {
@@ -87,5 +88,3 @@ class DoubleClick extends Interaction {
 }
 
 osImplements(DoubleClick, I3DSupport.ID);
-
-exports = DoubleClick;

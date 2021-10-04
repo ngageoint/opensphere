@@ -1,12 +1,12 @@
-goog.module('os.filter.IFilterable');
+goog.declareModuleId('os.filter.IFilterable');
 
-const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
+const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
 
 
 /**
  * @interface
  */
-class IFilterable {
+export default class IFilterable {
   /**
    * @return {?string} The title of the filterable.
    */
@@ -45,5 +45,3 @@ class IFilterable {
  * @const
  */
 IFilterable.ID = 'os.filter.IFilterable';
-
-exports = IFilterable;

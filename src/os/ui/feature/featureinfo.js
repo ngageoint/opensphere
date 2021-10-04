@@ -1,8 +1,21 @@
-goog.module('os.ui.feature.FeatureInfoUI');
+goog.declareModuleId('os.ui.feature.FeatureInfoUI');
 
-goog.require('os.ui.UISwitchUI');
-goog.require('os.ui.feature.SimplePropertiesUI');
-goog.require('os.ui.location.SimpleLocationUI');
+import '../location/simplelocation.js';
+import '../uiswitch.js';
+import './simplepropertiesui.js';
+import FeatureEventType from '../../data/featureeventtype.js';
+import * as dispatcher from '../../dispatcher.js';
+import * as osFeature from '../../feature/feature.js';
+import {filterFalsey} from '../../fn/fn.js';
+import * as layer from '../../layer/layer.js';
+import * as osMap from '../../map/map.js';
+import Units from '../../math/units.js';
+import {ROOT} from '../../os.js';
+import UnitManager from '../../unit/unitmanager.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import FeatureInfoEvent from './featureinfoevent.js';
+import FeatureInfoTabManager from './featureinfotabmanager.js';
 
 const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -10,23 +23,10 @@ const Feature = goog.require('ol.Feature');
 const events = goog.require('ol.events');
 const Point = goog.require('ol.geom.Point');
 const {toLonLat} = goog.require('ol.proj');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const FeatureEventType = goog.require('os.data.FeatureEventType');
-const osFeature = goog.require('os.feature');
-const {filterFalsey} = goog.require('os.fn');
-const layer = goog.require('os.layer');
-const osMap = goog.require('os.map');
-const Units = goog.require('os.math.Units');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const FeatureInfoEvent = goog.require('os.ui.feature.FeatureInfoEvent');
-const FeatureInfoTabManager = goog.require('os.ui.feature.FeatureInfoTabManager');
-const UnitManager = goog.require('os.unit.UnitManager');
 
 const RenderFeature = goog.requireType('ol.render.Feature');
-const FeatureEvent = goog.requireType('os.data.FeatureEvent');
-const FeatureTab = goog.requireType('os.ui.tab.FeatureTab');
+const {default: FeatureEvent} = goog.requireType('os.data.FeatureEvent');
+const {default: FeatureTab} = goog.requireType('os.ui.tab.FeatureTab');
 
 
 /**
@@ -34,7 +34,7 @@ const FeatureTab = goog.requireType('os.ui.tab.FeatureTab');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/feature/featureinfo.html',
@@ -46,7 +46,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'featureinfo';
+export const directiveTag = 'featureinfo';
 
 /**
  * Add the directive to the module.
@@ -57,7 +57,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the featureinfo directive
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -322,9 +322,3 @@ class Controller extends Disposable {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

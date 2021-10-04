@@ -1,6 +1,6 @@
-goog.module('os.record.Record');
+goog.declareModuleId('os.record.Record');
 
-const IRecord = goog.requireType('os.record.IRecord');
+const {default: IRecord} = goog.requireType('os.record.IRecord');
 
 
 /**
@@ -8,7 +8,7 @@ const IRecord = goog.requireType('os.record.IRecord');
  *
  * @implements {IRecord}
  */
-class Record {
+export default class Record {
   /**
    * Constructor.
    */
@@ -36,5 +36,3 @@ class Record {
  * @private
  */
 Record.RECORD_ID_ = 0;
-
-exports = Record;

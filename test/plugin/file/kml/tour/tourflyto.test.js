@@ -7,8 +7,8 @@ goog.require('plugin.file.kml.tour.FlyTo');
 
 describe('plugin.file.kml.tour.FlyTo', function() {
   const Promise = goog.module.get('goog.Promise');
-  const MapContainer = goog.module.get('os.MapContainer');
-  const FlightMode = goog.module.get('os.map.FlightMode');
+  const {default: MapContainer} = goog.module.get('os.MapContainer');
+  const {default: FlightMode} = goog.module.get('os.map.FlightMode');
   const {default: FlyTo} = goog.module.get('plugin.file.kml.tour.FlyTo');
   // default values for tests
   var duration = 4321;

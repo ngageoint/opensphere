@@ -1,6 +1,6 @@
-goog.module('os.net.JsonEncFormatter');
+goog.declareModuleId('os.net.JsonEncFormatter');
 
-const IDataFormatter = goog.requireType('os.net.IDataFormatter');
+const {default: IDataFormatter} = goog.requireType('os.net.IDataFormatter');
 
 
 /**
@@ -8,7 +8,7 @@ const IDataFormatter = goog.requireType('os.net.IDataFormatter');
  *
  * @implements {IDataFormatter}
  */
-class JsonEncFormatter {
+export default class JsonEncFormatter {
   /**
    * Constructor.
    * @param {Object=} opt_content The JSON object to format.
@@ -67,5 +67,3 @@ class JsonEncFormatter {
     return JSON.stringify(this.content_, this.replacer_);
   }
 }
-
-exports = JsonEncFormatter;

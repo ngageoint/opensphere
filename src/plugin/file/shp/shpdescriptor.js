@@ -1,12 +1,11 @@
 goog.declareModuleId('plugin.file.shp.SHPDescriptor');
 
+import FileDescriptor from '../../../os/data/filedescriptor.js';
+import FileStorage from '../../../os/file/filestorage.js';
+import * as osFile from '../../../os/file/index.js';
+import LayerType from '../../../os/layer/layertype.js';
 import SHPExporter from './shpexporter.js';
 import SHPParserConfig from './shpparserconfig.js';
-
-const FileDescriptor = goog.require('os.data.FileDescriptor');
-const osFile = goog.require('os.file');
-const FileStorage = goog.require('os.file.FileStorage');
-const LayerType = goog.require('os.layer.LayerType');
 
 /**
  * SHP file descriptor.

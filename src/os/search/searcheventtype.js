@@ -1,11 +1,10 @@
-goog.module('os.search.SearchEventType');
-
+goog.declareModuleId('os.search.SearchEventType');
 
 /**
  * Event types for search events
  * @enum {string}
  */
-exports = {
+const SearchEventType = {
   SUCCESS: 'success',
   ERROR: 'error',
   START: 'start',
@@ -20,3 +19,5 @@ exports = {
   SEARCH_TERM: 'change:searchTerm',
   GEO_SEARCH_CHANGE: 'change:geoSearch'
 };
+
+export default SearchEventType;

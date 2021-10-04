@@ -1,19 +1,20 @@
 goog.declareModuleId('plugin.im.action.feature.menu');
 
+import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
+import AlertManager from '../../os/alert/alertmanager.js';
+import {ICON} from '../../os/im/action/importaction.js';
+import ImportActionManager from '../../os/im/action/importactionmanager.js';
+import LayerType from '../../os/layer/layertype.js';
+import MapContainer from '../../os/mapcontainer.js';
+import * as layerMenu from '../../os/ui/menu/layermenu.js';
 import {EventType, Metrics, TITLE} from './featureaction.js';
 import launchForLayer from './ui/launchforlayer.js';
 
 const asserts = goog.require('goog.asserts');
-const MapContainer = goog.require('os.MapContainer');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {ICON} = goog.require('os.im.action');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const LayerType = goog.require('os.layer.LayerType');
-const layerMenu = goog.require('os.ui.menu.layer');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 
-const MenuItem = goog.requireType('os.ui.menu.MenuItem');
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+
+const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 
 
 /**

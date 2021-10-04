@@ -1,15 +1,15 @@
-goog.module('os.im.mapping.LonMapping');
+goog.declareModuleId('os.im.mapping.LonMapping');
 
-const Fields = goog.require('os.Fields');
-const {COORD_CLEANER, parseLon} = goog.require('os.geo');
-const {getItemField, setItemField} = goog.require('os.im.mapping');
-const LatMapping = goog.require('os.im.mapping.LatMapping');
-const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
+import Fields from '../../fields/fields.js';
+import {COORD_CLEANER, parseLon} from '../../geo/geo.js';
+import LatMapping from './latmapping.js';
+import {getItemField, setItemField} from './mapping.js';
+import MappingRegistry from './mappingregistry.js';
 
 
 /**
  */
-class LonMapping extends LatMapping {
+export default class LonMapping extends LatMapping {
   /**
    * Constructor.
    */
@@ -79,5 +79,3 @@ MappingRegistry.getInstance().registerMapping(LonMapping.ID, LonMapping);
  * @type {RegExp}
  */
 LonMapping.LON_REGEX = /(\b|_)lon(g(i(t(u(d(e)?)?)?)?)?)?(\b|_)/i;
-
-exports = LonMapping;

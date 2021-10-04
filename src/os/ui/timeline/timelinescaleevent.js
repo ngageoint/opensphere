@@ -1,13 +1,13 @@
-goog.module('os.ui.timeline.TimelineScaleEvent');
+goog.declareModuleId('os.ui.timeline.TimelineScaleEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
-const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
+const {default: TimelineScaleOptions} = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 
 /**
  */
-class TimelineScaleEvent extends GoogEvent {
+export default class TimelineScaleEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {TimelineScaleOptions} options
@@ -24,4 +24,3 @@ class TimelineScaleEvent extends GoogEvent {
 
 
 TimelineScaleEvent.TYPE = 'timeline.Scale';
-exports = TimelineScaleEvent;

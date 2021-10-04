@@ -1,19 +1,19 @@
-goog.module('os.style.defaults');
+goog.declareModuleId('os.style.defaults');
 
-const {DEFAULT_ICON_PATH, replaceGoogleUri} = goog.require('os.ui.file.kml');
+import {DEFAULT_ICON_PATH, replaceGoogleUri} from '../ui/file/kml/kml.js';
 
 
 /**
  * The default icon (white circle).
  * @type {string}
  */
-const DEFAULT_ICON = replaceGoogleUri(DEFAULT_ICON_PATH);
+export const DEFAULT_ICON = replaceGoogleUri(DEFAULT_ICON_PATH);
 
 /**
  * Default icon options.
  * @type {!olx.style.IconOptions}
  */
-const DEFAULT_ICON_OPTIONS = {
+export const DEFAULT_ICON_OPTIONS = {
   src: DEFAULT_ICON,
   // clear these out so the default icon displays correctly
   anchorOrigin: undefined,
@@ -25,9 +25,4 @@ const DEFAULT_ICON_OPTIONS = {
   rotation: undefined,
   size: undefined,
   imgSize: undefined
-};
-
-exports = {
-  DEFAULT_ICON,
-  DEFAULT_ICON_OPTIONS
 };

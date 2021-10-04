@@ -1,11 +1,11 @@
-goog.module('os.filter.impl.ecql.ExclusionFormatter');
+goog.declareModuleId('os.filter.impl.ecql.ExclusionFormatter');
 
-const AreaFormatter = goog.require('os.filter.impl.ecql.AreaFormatter');
+import AreaFormatter from './areaformatter.js';
 
 
 /**
  */
-class ExclusionFormatter extends AreaFormatter {
+export default class ExclusionFormatter extends AreaFormatter {
   /**
    * Constructor.
    * @param {string=} opt_column Optional geometry column name
@@ -16,5 +16,3 @@ class ExclusionFormatter extends AreaFormatter {
     this.group = 'AND';
   }
 }
-
-exports = ExclusionFormatter;

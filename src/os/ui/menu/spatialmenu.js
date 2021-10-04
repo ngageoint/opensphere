@@ -1,14 +1,14 @@
-goog.module('os.ui.menu.SpatialMenu');
+goog.declareModuleId('os.ui.menu.SpatialMenu');
 
-const {instanceOf} = goog.require('os.classRegistry');
-const {NodeClass} = goog.require('os.data');
-const RecordField = goog.require('os.data.RecordField');
-const {getMapContainer} = goog.require('os.map.instance');
-const Menu = goog.require('os.ui.menu.Menu');
-const AreaNode = goog.require('os.ui.query.AreaNode');
+import {instanceOf} from '../../classregistry.js';
+import {NodeClass} from '../../data/data.js';
+import RecordField from '../../data/recordfield.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import AreaNode from '../query/areanode.js';
+import Menu from './menu.js';
 
-const DrawingFeatureNode = goog.requireType('os.data.DrawingFeatureNode');
-const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+const {default: DrawingFeatureNode} = goog.requireType('os.data.DrawingFeatureNode');
+const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
 
 
 /**
@@ -17,7 +17,7 @@ const MenuItem = goog.requireType('os.ui.menu.MenuItem');
  * @extends {Menu<T>}
  * @template T
  */
-class SpatialMenu extends Menu {
+export default class SpatialMenu extends Menu {
   /**
    * Constructor.
    * @param {!MenuItem<T>} root The menu item data
@@ -66,5 +66,3 @@ class SpatialMenu extends Menu {
     }
   }
 }
-
-exports = SpatialMenu;

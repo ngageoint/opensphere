@@ -1,14 +1,14 @@
-goog.module('os.ui.history.HistoryViewUI');
+goog.declareModuleId('os.ui.history.HistoryViewUI');
 
-const {ROOT} = goog.require('os');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const EventType = goog.require('os.command.EventType');
-const Module = goog.require('os.ui.Module');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+import CommandProcessor from '../../command/commandprocessor.js';
+import EventType from '../../command/eventtype.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import * as ConfirmUI from '../window/confirm.js';
 
 const GoogEvent = goog.requireType('goog.events.Event');
-const CommandEvent = goog.requireType('os.command.CommandEvent');
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: CommandEvent} = goog.requireType('os.command.CommandEvent');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -16,7 +16,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: true,
@@ -29,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'history';
+export const directiveTag = 'history';
 
 /**
  * Add the directive to the module
@@ -40,7 +40,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the history-view directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {angular.Scope} $scope
@@ -283,9 +283,3 @@ class Controller {
     }.bind(this));
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

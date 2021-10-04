@@ -1,10 +1,10 @@
-goog.module('os.ui.ServersButtonUI');
+goog.declareModuleId('os.ui.ServersButtonUI');
 
-const DataManager = goog.require('os.data.DataManager');
-const DataProviderEventType = goog.require('os.data.DataProviderEventType');
-const {apply} = goog.require('os.ui');
-const MenuButtonCtrl = goog.require('os.ui.MenuButtonCtrl');
-const Module = goog.require('os.ui.Module');
+import DataManager from '../data/datamanager.js';
+import DataProviderEventType from '../data/dataprovidereventtype.js';
+import MenuButtonCtrl from './menubutton.js';
+import Module from './module.js';
+import {apply} from './ui.js';
 
 
 /**
@@ -12,7 +12,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -31,7 +31,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'servers-button';
+export const directiveTag = 'servers-button';
 
 /**
  * add the directive to the module
@@ -42,7 +42,7 @@ Module.directive('serversButton', [directive]);
  * Controller function for the nav-top directive
  * @unrestricted
  */
-class Controller extends MenuButtonCtrl {
+export class Controller extends MenuButtonCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -82,9 +82,3 @@ class Controller extends MenuButtonCtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,5 +1,12 @@
 goog.declareModuleId('plugin.im.action.feature.Plugin');
 
+import * as legend from '../../os/legend/legend.js';
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
+import StateManager from '../../os/state/statemanager.js';
+import FilterAction from '../../os/state/v4/filteractionstate.js';
+import Versions from '../../os/state/versions.js';
+import FilterActionImportUI from '../../os/ui/im/action/filteractionimportui.js';
+import ImportManager from '../../os/ui/im/importmanager.js';
 import {ID} from './featureaction.js';
 import {addToLegend} from './featureactionlegendrenderer.js';
 import FeatureActionManager from './featureactionmanager.js';
@@ -11,13 +18,6 @@ import StyleAction from './featurestyleaction.js';
 import * as mime from './mime.js';
 import {directiveTag as legendSettingsUi} from './ui/featureactionlegendsettings.js';
 
-const legend = goog.require('os.legend');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const StateManager = goog.require('os.state.StateManager');
-const Versions = goog.require('os.state.Versions');
-const FilterAction = goog.require('os.state.v4.FilterAction');
-const ImportManager = goog.require('os.ui.im.ImportManager');
-const FilterActionImportUI = goog.require('os.ui.im.action.FilterActionImportUI');
 
 /**
  * Plugin to create actions that apply to imported features.

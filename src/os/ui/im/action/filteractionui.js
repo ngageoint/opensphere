@@ -1,6 +1,6 @@
-goog.module('os.ui.im.action');
+goog.declareModuleId('os.ui.im.action');
 
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
 
 
 /**
@@ -8,7 +8,7 @@ const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
  * @param {Object} matched The matched entries.
  * @return {!Array<!FilterActionEntry>}
  */
-const getEntriesFromMatched = function(matched) {
+export const getEntriesFromMatched = function(matched) {
   var entries = [];
   if (matched) {
     for (var key in matched) {
@@ -21,7 +21,6 @@ const getEntriesFromMatched = function(matched) {
   return entries;
 };
 
-
 /**
  * Reduce matched filter models to filter entries.
  * @param {!Array<!FilterActionEntry>} result The parsed entries.
@@ -30,7 +29,7 @@ const getEntriesFromMatched = function(matched) {
  * @param {Array} arr The array.
  * @return {!Array<!FilterActionEntry>}
  */
-const reduceEntriesFromFilterModels = function(result, item, idx, arr) {
+export const reduceEntriesFromFilterModels = function(result, item, idx, arr) {
   if (item) {
     // add each filter and create a query entry for it
     var entry = /** @type {FilterActionEntry} */ (item['filter']);
@@ -39,9 +38,4 @@ const reduceEntriesFromFilterModels = function(result, item, idx, arr) {
     }
   }
   return result;
-};
-
-exports = {
-  getEntriesFromMatched,
-  reduceEntriesFromFilterModels
 };

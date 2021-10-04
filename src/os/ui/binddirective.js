@@ -1,6 +1,6 @@
-goog.module('os.ui.bindDirectiveDirective');
+goog.declareModuleId('os.ui.bindDirectiveDirective');
 
-const Module = goog.require('os.ui.Module');
+import Module from './module.js';
 
 
 /**
@@ -11,7 +11,7 @@ const Module = goog.require('os.ui.Module');
  * @param {!angular.$compile} $compile
  * @return {angular.Directive}
  */
-const directive = ($parse, $compile) => {
+export const directive = ($parse, $compile) => {
   /**
    * @param {angular.JQLite} tElement The element.
    * @param {angular.Attributes=} tAttrs The attributes.
@@ -43,7 +43,7 @@ const directive = ($parse, $compile) => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'bind-directive';
+export const directiveTag = 'bind-directive';
 
 /**
  * The injectable object that we will register with Angular.
@@ -55,8 +55,3 @@ const bindDirectiveInjectable = ['$parse', '$compile', directive];
  * Add the injectable to the module.
  */
 Module.directive('bindDirective', bindDirectiveInjectable);
-
-exports = {
-  directive,
-  directiveTag
-};

@@ -1,10 +1,10 @@
-goog.module('os.ui.nav.Location');
+goog.declareModuleId('os.ui.nav.Location');
 
 /**
  * Nav bar locations.
  * @enum {string}
  */
-exports = {
+const Location = {
   HEADER: 'nav-top-header',
   BOTTOM_LEFT: 'nav-bottom-left',
   BOTTOM_MIDDLE: 'nav-bottom-middle',
@@ -13,3 +13,5 @@ exports = {
   TOP_CENTER: 'nav-top-center',
   TOP_RIGHT: 'nav-top-right'
 };
+
+export default Location;

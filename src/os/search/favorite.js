@@ -1,4 +1,4 @@
-goog.module('os.search.Favorite');
+goog.declareModuleId('os.search.Favorite');
 
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 
@@ -7,7 +7,7 @@ const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
  * Favorite
  * @unrestricted
  */
-class Favorite {
+export default class Favorite {
   /**
    * Constructor.
    * @param {string} name
@@ -49,5 +49,3 @@ class Favorite {
     return index > 0 ? url.substring(0, index) : url;
   }
 }
-
-exports = Favorite;

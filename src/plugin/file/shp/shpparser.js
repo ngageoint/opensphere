@@ -1,5 +1,11 @@
 goog.declareModuleId('plugin.file.shp.SHPParser');
 
+import ColumnDefinition from '../../../os/data/columndefinition.js';
+import Fields from '../../../os/fields/fields.js';
+import * as text from '../../../os/file/mime/text.js';
+import * as mimeZip from '../../../os/file/mime/zip.js';
+import * as geo from '../../../os/geo/geo.js';
+import AsyncZipParser from '../../../os/parse/asynczipparser.js';
 import DBFField from './data/dbffield.js';
 import SHPHeader from './data/shpheader.js';
 import {DBF_EXT_REGEXP, SHP_EXT_REGEXP} from './mime.js';
@@ -14,12 +20,6 @@ const MultiLineString = goog.require('ol.geom.MultiLineString');
 const MultiPolygon = goog.require('ol.geom.MultiPolygon');
 const Point = goog.require('ol.geom.Point');
 const Polygon = goog.require('ol.geom.Polygon');
-const Fields = goog.require('os.Fields');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const text = goog.require('os.file.mime.text');
-const mimeZip = goog.require('os.file.mime.zip');
-const geo = goog.require('os.geo');
-const AsyncZipParser = goog.require('os.parse.AsyncZipParser');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {default: SHPParserConfig} = goog.requireType('plugin.file.shp.SHPParserConfig');

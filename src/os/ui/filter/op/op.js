@@ -1,16 +1,16 @@
-goog.module('os.ui.filter.op.Op');
+goog.declareModuleId('os.ui.filter.op.Op');
 
-const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
-const {directiveTag: textUi} = goog.require('os.ui.filter.TextUI');
+import FilterPatterns from '../filterpatterns.js';
+import {directiveTag as textUi} from '../text.js';
 
-const DataType = goog.requireType('os.xsd.DataType');
+const {default: DataType} = goog.requireType('os.xsd.DataType');
 
 
 /**
  * Model class representing operations. Operations can be a single expression or multiple (generally subclasses).
  * @unrestricted
  */
-class Op {
+export default class Op {
   /**
    * Constructor.
    * @param {string} localName Element name for the expression it creates
@@ -312,5 +312,3 @@ Op.TEXT = {
   CASE_SENSITIVE_TITLE: 'Additional Info',
   CASE_SENSITIVE: '  (INFO: case-sensitive)'
 };
-
-exports = Op;

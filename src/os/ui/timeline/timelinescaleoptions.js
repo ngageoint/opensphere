@@ -1,4 +1,4 @@
-goog.module('os.ui.timeline.TimelineScaleOptions');
+goog.declareModuleId('os.ui.timeline.TimelineScaleOptions');
 
 /**
  * @typedef {{
@@ -9,4 +9,4 @@ goog.module('os.ui.timeline.TimelineScaleOptions');
  */
 let TimelineScaleOptions;
 
-exports = TimelineScaleOptions;
+export default TimelineScaleOptions;

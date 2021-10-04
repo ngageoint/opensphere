@@ -1,17 +1,20 @@
-goog.module('os.ui.file.method.FileMethod');
+goog.declareModuleId('os.ui.file.method.FileMethod');
+
+import EventType from '../../../events/eventtype.js';
+import IFileMethod from '../../../file/ifilemethod.js'; // eslint-disable-line
+import * as osWindow from '../../window.js';
+import windowSelector from '../../windowselector.js';
+import {directiveTag as fileImportUi} from '../fileimport.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
-const EventType = goog.require('os.events.EventType');
-const IFileMethod = goog.require('os.file.IFileMethod'); // eslint-disable-line
-const {directiveTag: fileImportUi} = goog.require('os.ui.file.FileImportUI');
-const osWindow = goog.require('os.ui.window');
-const windowSelector = goog.require('os.ui.windowSelector');
+
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
  * @implements {IFileMethod}
  */
-class FileMethod extends EventTarget {
+export default class FileMethod extends EventTarget {
   /**
    * Constructor.
    * @param {boolean=} opt_keepFile Whether the file method will keep the original File reference around.
@@ -22,7 +25,7 @@ class FileMethod extends EventTarget {
     super();
 
     /**
-     * @type {os.file.File}
+     * @type {OSFile}
      * @private
      */
     this.file_ = null;
@@ -148,5 +151,3 @@ class FileMethod extends EventTarget {
     }
   }
 }
-
-exports = FileMethod;

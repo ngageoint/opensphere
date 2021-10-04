@@ -12,9 +12,9 @@ describe('os.command.SequenceCommand', function() {
   const Timer = goog.module.get('goog.Timer');
   const GoogEvent = goog.module.get('goog.events.Event');
   const osArray = goog.module.get('os.array');
-  const EventType = goog.module.get('os.command.EventType');
-  const SequenceCommand = goog.module.get('os.command.SequenceCommand');
-  const State = goog.module.get('os.command.State');
+  const {default: EventType} = goog.module.get('os.command.EventType');
+  const {default: SequenceCommand} = goog.module.get('os.command.SequenceCommand');
+  const {default: State} = goog.module.get('os.command.State');
 
   const AsyncMockCommand = goog.module.get('os.command.AsyncMockCommand');
   const AsyncMockCommandString = goog.module.get('os.command.AsyncMockCommandString');

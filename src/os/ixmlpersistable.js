@@ -1,11 +1,11 @@
-goog.module('os.IXmlPersistable');
+goog.declareModuleId('os.IXmlPersistable');
 
 /**
  * An interface for XML persistable/restorable objects.
  *
  * @interface
  */
-class IXmlPersistable {
+export default class IXmlPersistable {
   /**
    * Constructor.
    */
@@ -29,5 +29,3 @@ class IXmlPersistable {
    */
   fromXml(xml) {}
 }
-
-exports = IXmlPersistable;

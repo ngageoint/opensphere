@@ -1,13 +1,13 @@
-goog.module('os.ui.im.action.FilterActionNodeUI');
+goog.declareModuleId('os.ui.im.action.FilterActionNodeUI');
 
-const {Metrics: ActionMetrics} = goog.require('os.im.action');
-const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
-const Metrics = goog.require('os.metrics.Metrics');
-const {getIndexInParent} = goog.require('os.structs');
-const Module = goog.require('os.ui.Module');
-const {directive: filterNodeUIDirective, Controller: FilterNodeUICtrl} = goog.require('os.ui.filter.ui.FilterNodeUI');
+import {Metrics as ActionMetrics} from '../../../im/action/importaction.js';
+import ImportActionEventType from '../../../im/action/importactioneventtype.js';
+import Metrics from '../../../metrics/metrics.js';
+import {getIndexInParent} from '../../../structs/structs.js';
+import {directive as filterNodeUIDirective, Controller as FilterNodeUICtrl} from '../../filter/ui/filternodeui.js';
+import Module from '../../module.js';
 
-const FilterActionNode = goog.requireType('os.ui.im.action.FilterActionNode');
+const {default: FilterActionNode} = goog.requireType('os.ui.im.action.FilterActionNode');
 
 
 /**
@@ -15,7 +15,7 @@ const FilterActionNode = goog.requireType('os.ui.im.action.FilterActionNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var directive = filterNodeUIDirective();
   directive.controller = Controller;
   directive.template = '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
@@ -33,7 +33,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'filteractionnodeui';
+export const directiveTag = 'filteractionnodeui';
 
 
 /**
@@ -47,7 +47,7 @@ Module.directive('filteractionnodeui', [directive]);
  * Controller for selected/highlighted node UI.
  * @unrestricted
  */
-class Controller extends FilterNodeUICtrl {
+export class Controller extends FilterNodeUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -103,9 +103,3 @@ class Controller extends FilterNodeUICtrl {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

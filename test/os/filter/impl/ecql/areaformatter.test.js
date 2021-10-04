@@ -6,7 +6,7 @@ goog.require('os.mock');
 describe('os.filter.impl.ecql.AreaFormatter', function() {
   const Feature = goog.module.get('ol.Feature');
   const Polygon = goog.module.get('ol.geom.Polygon');
-  const AreaFormatter = goog.module.get('os.filter.impl.ecql.AreaFormatter');
+  const {default: AreaFormatter} = goog.module.get('os.filter.impl.ecql.AreaFormatter');
 
   it('should format geometries', function() {
     var f = new Feature(Polygon.fromExtent([0, 1, 2, 3]));

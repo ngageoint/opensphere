@@ -1,4 +1,20 @@
-goog.module('os.ui.draw.DrawPickerUI');
+goog.declareModuleId('os.ui.draw.DrawPickerUI');
+
+import DragBox from '../../interaction/dragboxinteraction.js';
+import DragCircle from '../../interaction/dragcircleinteraction.js';
+import DrawLine from '../../interaction/drawlineinteraction.js';
+import DrawPolygon from '../../interaction/drawpolygoninteraction.js';
+import {getIMapContainer} from '../../map/mapinstance.js';
+import {addOGCMenuItems} from '../../ogc/registry.js';
+import {ROOT} from '../../os.js';
+import * as draw from '../menu/drawmenu.js';
+import Module from '../module.js';
+import DragBoxInteraction from '../ol/interaction/dragboxinteraction.js';
+import DragCircleInteraction from '../ol/interaction/dragcircleinteraction.js';
+import DrawPolygonInteraction from '../ol/interaction/drawpolygoninteraction.js';
+import launchChooseArea from '../query/area/launchchoosearea.js';
+import {apply} from '../ui.js';
+import DrawEventType from './draweventtype.js';
 
 const Disposable = goog.require('goog.Disposable');
 const dispose = goog.require('goog.dispose');
@@ -9,28 +25,13 @@ const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
 const events = goog.require('ol.events');
 const Point = goog.require('ol.geom.Point');
 const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
-const {ROOT} = goog.require('os');
-const {getIMapContainer} = goog.require('os.map.instance');
-const DragBox = goog.require('os.interaction.DragBox');
-const DragCircle = goog.require('os.interaction.DragCircle');
-const DrawLine = goog.require('os.interaction.DrawLine');
-const DrawPolygon = goog.require('os.interaction.DrawPolygon');
-const {addOGCMenuItems} = goog.require('os.ogc.registry');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const DrawEventType = goog.require('os.ui.draw.DrawEventType');
-const draw = goog.require('os.ui.menu.draw');
-const DragBoxInteraction = goog.require('os.ui.ol.interaction.DragBox');
-const DragCircleInteraction = goog.require('os.ui.ol.interaction.DragCircle');
-const DrawPolygonInteraction = goog.require('os.ui.ol.interaction.DrawPolygon');
-const launchChooseArea = goog.require('os.ui.query.area.launchChooseArea');
 
 const Feature = goog.requireType('ol.Feature');
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
-const OSMap = goog.requireType('os.Map');
-const DrawEvent = goog.requireType('os.ui.draw.DrawEvent');
-const Menu = goog.requireType('os.ui.menu.Menu');
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const {default: OSMap} = goog.requireType('os.Map');
+const {default: DrawEvent} = goog.requireType('os.ui.draw.DrawEvent');
+const {default: Menu} = goog.requireType('os.ui.menu.Menu');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 
 
 /**
@@ -38,7 +39,7 @@ const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -57,7 +58,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'drawpicker';
+export const directiveTag = 'drawpicker';
 
 /**
  * Add the directive to the module.
@@ -68,7 +69,7 @@ Module.directive('drawpicker', [directive]);
  * Controller function for the drawpicker directive
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -440,9 +441,3 @@ class Controller extends Disposable {
     this.onAreaChosen(feature);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

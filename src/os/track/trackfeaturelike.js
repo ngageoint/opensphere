@@ -1,7 +1,7 @@
-goog.module('os.track.TrackFeatureLike');
+goog.declareModuleId('os.track.TrackFeatureLike');
 
 const Feature = goog.requireType('ol.Feature');
-const DynamicFeature = goog.requireType('os.feature.DynamicFeature');
+const {default: DynamicFeature} = goog.requireType('os.feature.DynamicFeature');
 
 
 /**
@@ -11,4 +11,4 @@ const DynamicFeature = goog.requireType('os.feature.DynamicFeature');
  */
 let TrackFeatureLike;
 
-exports = TrackFeatureLike;
+export default TrackFeatureLike;

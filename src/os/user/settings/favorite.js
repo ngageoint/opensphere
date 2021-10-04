@@ -1,4 +1,4 @@
-goog.module('os.user.settings.favorite');
+goog.declareModuleId('os.user.settings.favorite');
 
 
 /**
@@ -13,4 +13,4 @@ goog.module('os.user.settings.favorite');
  */
 let favorite;
 
-exports = favorite;
+export default favorite;

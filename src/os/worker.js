@@ -1,4 +1,4 @@
-goog.module('os.worker');
+goog.declareModuleId('os.worker');
 
 /**
  * @define {string} The path to os workers.
@@ -11,5 +11,4 @@ goog.module('os.worker');
  *
  * Note the above must be executed prior to loading base.js.
  */
-const DIR = goog.define('os.worker.DIR', 'src/worker/');
-exports = {DIR};
+export const DIR = goog.define('os.worker.DIR', 'src/worker/');

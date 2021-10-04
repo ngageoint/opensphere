@@ -1,10 +1,10 @@
-goog.module('os.command.FeatureCenterShape');
+goog.declareModuleId('os.command.FeatureCenterShape');
 
-const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
-const {SUB_DELIMITER} = goog.require('os.metrics');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const osStyle = goog.require('os.style');
-const StyleField = goog.require('os.style.StyleField');
+import {SUB_DELIMITER} from '../../metrics/index.js';
+import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
+import * as osStyle from '../../style/style.js';
+import StyleField from '../../style/stylefield.js';
+import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -12,7 +12,7 @@ const Feature = goog.requireType('ol.Feature');
 /**
  * Changes the center style of a feature
  */
-class FeatureCenterShape extends AbstractFeatureStyle {
+export default class FeatureCenterShape extends AbstractFeatureStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -50,5 +50,3 @@ class FeatureCenterShape extends AbstractFeatureStyle {
     super.applyValue(configs, value);
   }
 }
-
-exports = FeatureCenterShape;

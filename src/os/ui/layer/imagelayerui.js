@@ -1,8 +1,8 @@
-goog.module('os.ui.layer.ImageLayerUI');
+goog.declareModuleId('os.ui.layer.ImageLayerUI');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const {Controller: DefaultLayerUICtrl} = goog.require('os.ui.layer.DefaultLayerUI');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {Controller as DefaultLayerUICtrl} from './defaultlayerui.js';
 
 
 /**
@@ -10,7 +10,7 @@ const {Controller: DefaultLayerUICtrl} = goog.require('os.ui.layer.DefaultLayerU
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   return {
     restrict: 'AE',
     replace: true,
@@ -20,12 +20,11 @@ const directive = () => {
   };
 };
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'imagelayerui';
+export const directiveTag = 'imagelayerui';
 
 
 /**
@@ -38,7 +37,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the image layer UI directive.
  * @unrestricted
  */
-class Controller extends DefaultLayerUICtrl {
+export class Controller extends DefaultLayerUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -50,10 +49,3 @@ class Controller extends DefaultLayerUICtrl {
     super($scope, $element, $timeout);
   }
 }
-
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

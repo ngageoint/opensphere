@@ -1,11 +1,12 @@
 goog.declareModuleId('plugin.capture');
 
+import MapContainer from '../../os/mapcontainer.js';
+import TimelineController from '../../os/time/timelinecontroller.js';
+
 const Timer = goog.require('goog.Timer');
 const googArray = goog.require('goog.array');
-const MapContainer = goog.require('os.MapContainer');
-const TimelineController = goog.require('os.time.TimelineController');
 
-const ILayer = goog.requireType('os.layer.ILayer');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**

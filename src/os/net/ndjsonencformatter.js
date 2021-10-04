@@ -1,6 +1,6 @@
-goog.module('os.net.NDJsonEncFormatter');
+goog.declareModuleId('os.net.NDJsonEncFormatter');
 
-const IDataFormatter = goog.requireType('os.net.IDataFormatter');
+const {default: IDataFormatter} = goog.requireType('os.net.IDataFormatter');
 
 
 /**
@@ -8,7 +8,7 @@ const IDataFormatter = goog.requireType('os.net.IDataFormatter');
  *
  * @implements {IDataFormatter}
  */
-class NDJsonEncFormatter {
+export default class NDJsonEncFormatter {
   /**
    * Constructor.
    * @param {Array<Object>} content The JSON objects to format.
@@ -61,5 +61,3 @@ class NDJsonEncFormatter {
     return payload;
   }
 }
-
-exports = NDJsonEncFormatter;

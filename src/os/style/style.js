@@ -4,30 +4,31 @@
  */
 goog.declareModuleId('os.style');
 
+import {toRgbArray} from '../color.js';
+import RecordField from '../data/recordfield.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
 import * as osFeature from '../feature/feature.js';
+import instanceOf from '../instanceof.js';
+import LayerPropertyChange from '../layer/propertychange.js';
+import Units from '../math/units.js';
+import {IGNORE_VAL, isPrimitive} from '../object/object.js';
 import {ROOT} from '../os.js';
+import PropertyChange from '../source/propertychange.js';
+import SourceClass from '../source/sourceclass.js';
 import * as osLabel from './label.js';
+import StyleField from './stylefield.js';
 import StyleManager from './stylemanager.js';
+
+import StyleType from './styletype.js';
 
 const {equals} = goog.require('goog.array');
 const {toRadians} = goog.require('goog.math');
 const {asArray, asString, toString} = goog.require('ol.color');
-const {toRgbArray} = goog.require('os.color');
-const RecordField = goog.require('os.data.RecordField');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const instanceOf = goog.require('os.instanceOf');
-const LayerPropertyChange = goog.require('os.layer.PropertyChange');
-const Units = goog.require('os.math.Units');
-const {IGNORE_VAL, isPrimitive} = goog.require('os.object');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const SourceClass = goog.require('os.source.SourceClass');
-const StyleField = goog.require('os.style.StyleField');
-const StyleType = goog.require('os.style.StyleType');
 
 const Feature = goog.requireType('ol.Feature');
 const Layer = goog.requireType('ol.layer.Layer');
 const Style = goog.requireType('ol.style.Style');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**

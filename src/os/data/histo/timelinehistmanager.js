@@ -1,23 +1,24 @@
-goog.module('os.data.histo.TimelineHistManager');
+goog.declareModuleId('os.data.histo.TimelineHistManager');
+
+import * as dispatcher from '../../dispatcher.js';
+import LayerEventType from '../../events/layereventtype.js';
+import * as fn from '../../fn/fn.js';
+import * as hist from '../../hist/hist.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import {setDataManager} from '../../os.js';
+import PropertyChange from '../../source/propertychange.js';
+import HistogramEventType from '../../ui/hist/histogrameventtype.js';
+import DataManager from '../datamanager.js';
+import DataEventType from '../event/dataeventtype.js';
 
 const Throttle = goog.require('goog.async.Throttle');
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
-const {setDataManager} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const DataManager = goog.require('os.data.DataManager');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const fn = goog.require('os.fn');
-const hist = goog.require('os.hist');
-const {getMapContainer} = goog.require('os.map.instance');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const HistogramEventType = goog.require('os.ui.hist.HistogramEventType');
 
-const DataEvent = goog.requireType('os.data.event.DataEvent');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const IHistogramManager = goog.requireType('os.ui.hist.IHistogramManager');
+const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: IHistogramManager} = goog.requireType('os.ui.hist.IHistogramManager');
 
 
 /**
@@ -26,7 +27,7 @@ const IHistogramManager = goog.requireType('os.ui.hist.IHistogramManager');
  *
  * @implements {IHistogramManager}
  */
-class TimelineHistManager extends EventTarget {
+export default class TimelineHistManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -193,5 +194,3 @@ class TimelineHistManager extends EventTarget {
  * @type {TimelineHistManager|undefined}
  */
 let instance;
-
-exports = TimelineHistManager;

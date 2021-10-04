@@ -1,12 +1,12 @@
 goog.declareModuleId('plugin.file.kml.KMLFeatureParser');
 
+import * as text from '../../../os/file/mime/text.js';
 import * as osMap from '../../../os/map/map.js';
 
 const KML = goog.require('ol.format.KML');
 const xml = goog.require('ol.xml');
-const text = goog.require('os.file.mime.text');
 
-const IParser = goog.requireType('os.parse.IParser');
+const {default: IParser} = goog.requireType('os.parse.IParser');
 
 
 /**

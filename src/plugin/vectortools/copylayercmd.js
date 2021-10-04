@@ -1,14 +1,13 @@
 goog.declareModuleId('plugin.vectortools.CopyLayer');
 
+import AbstractSource from '../../os/command/abstractsourcecmd.js';
+import State from '../../os/command/state.js';
+import MapContainer from '../../os/mapcontainer.js';
+import VectorSource from '../../os/source/vectorsource.js';
 import * as vectortools from './vectortools.js';
 
-const MapContainer = goog.require('os.MapContainer');
-const AbstractSource = goog.require('os.command.AbstractSource');
-const State = goog.require('os.command.State');
-const VectorSource = goog.require('os.source.Vector');
-
-const ICommand = goog.requireType('os.command.ICommand');
-const VectorSource1 = goog.requireType('os.source.Vector');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: VectorSource1} = goog.requireType('os.source.Vector');
 const {default: Options} = goog.requireType('plugin.vectortools.Options');
 
 

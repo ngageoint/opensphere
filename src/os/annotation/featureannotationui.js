@@ -1,18 +1,20 @@
-goog.module('os.annotation.FeatureAnnotationUI');
+goog.declareModuleId('os.annotation.FeatureAnnotationUI');
 
-goog.require('os.ui.text.TuiEditorUI');
+import '../ui/text/tuieditorui.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import FeatureEditField from '../ui/featureeditfield.js';
+import Module from '../ui/module.js';
+import * as TuiEditor from '../ui/text/tuieditor.js';
+import {apply} from '../ui/ui.js';
+import AbstractAnnotationCtrl from './abstractannotationctrl.js';
+import * as annotation from './annotation.js';
+import TailStyle from './tailstyle.js';
+import TailType from './tailtype.js';
 
 const olEvents = goog.require('ol.events');
 const EventType = goog.require('ol.events.EventType');
-const annotation = goog.require('os.annotation');
-const AbstractAnnotationCtrl = goog.require('os.annotation.AbstractAnnotationCtrl');
-const TailStyle = goog.require('os.annotation.TailStyle');
-const TailType = goog.require('os.annotation.TailType');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {apply} = goog.require('os.ui');
-const FeatureEditField = goog.require('os.ui.FeatureEditField');
-const Module = goog.require('os.ui.Module');
-const TuiEditor = goog.require('os.ui.text.TuiEditor');
+
+const {default: WebGLOverlay} = goog.requireType('os.webgl.WebGLOverlay');
 
 
 /**
@@ -90,7 +92,7 @@ const template =
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -106,7 +108,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'featureannotation';
+export const directiveTag = 'featureannotation';
 
 
 /**
@@ -120,7 +122,7 @@ Module.directive('featureannotation', [directive]);
  * Controller for the featureannotation directive.
  * @unrestricted
  */
-class Controller extends AbstractAnnotationCtrl {
+export class Controller extends AbstractAnnotationCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -140,7 +142,7 @@ class Controller extends AbstractAnnotationCtrl {
 
     /**
      * The OpenLayers overlay.
-     * @type {os.webgl.WebGLOverlay}
+     * @type {WebGLOverlay}
      * @protected
      */
     this.overlay = $scope['overlay'];
@@ -486,9 +488,3 @@ class Controller extends AbstractAnnotationCtrl {
     return true;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

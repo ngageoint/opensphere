@@ -1,4 +1,4 @@
-goog.module('os.query.SpatialQueryEvent');
+goog.declareModuleId('os.query.SpatialQueryEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 const Feature = goog.requireType('ol.Feature');
@@ -6,7 +6,7 @@ const Feature = goog.requireType('ol.Feature');
 
 /**
  */
-class SpatialQueryEvent extends GoogEvent {
+export default class SpatialQueryEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -27,5 +27,3 @@ class SpatialQueryEvent extends GoogEvent {
     this.append = opt_append !== undefined ? opt_append : false;
   }
 }
-
-exports = SpatialQueryEvent;

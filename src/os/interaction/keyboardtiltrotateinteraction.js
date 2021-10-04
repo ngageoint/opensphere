@@ -1,4 +1,12 @@
-goog.module('os.interaction.KeyboardTiltRotate');
+goog.declareModuleId('os.interaction.KeyboardTiltRotate');
+
+import I3DSupport from '../i3dsupport.js';
+import osImplements from '../implements.js';
+import * as osMap from '../map/map.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {EPSG4326} from '../proj/proj.js';
+import {KEY_TYPE} from '../ui/ol/interaction/interaction.js';
+import {ROTATE_DELTA} from './interaction.js';
 
 const {assert} = goog.require('goog.asserts');
 const KeyCodes = goog.require('goog.events.KeyCodes');
@@ -8,13 +16,6 @@ const EventType = goog.require('ol.events.EventType');
 const {noModifierKeys, shiftKeyOnly, targetNotEditable} = goog.require('ol.events.condition');
 const Interaction = goog.require('ol.interaction.Interaction');
 const {transform} = goog.require('ol.proj');
-const I3DSupport = goog.require('os.I3DSupport');
-const osImplements = goog.require('os.implements');
-const {ROTATE_DELTA} = goog.require('os.interaction');
-const osMap = goog.require('os.map');
-const {getMapContainer} = goog.require('os.map.instance');
-const {EPSG4326} = goog.require('os.proj');
-const {KEY_TYPE} = goog.require('os.ui.ol.interaction');
 
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 
@@ -24,7 +25,7 @@ const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
  *
  * @implements {I3DSupport}
  */
-class KeyboardTiltRotate extends Interaction {
+export default class KeyboardTiltRotate extends Interaction {
   /**
    * Constructor.
    * @param {olx.interaction.MouseWheelZoomOptions=} opt_options Options.
@@ -230,5 +231,3 @@ osImplements(KeyboardTiltRotate, I3DSupport.ID);
  * @const
  */
 KeyboardTiltRotate.SPIN_DELTA = 100;
-
-exports = KeyboardTiltRotate;

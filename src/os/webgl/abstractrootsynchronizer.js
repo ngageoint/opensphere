@@ -1,4 +1,12 @@
-goog.module('os.webgl.AbstractRootSynchronizer');
+goog.declareModuleId('os.webgl.AbstractRootSynchronizer');
+
+import ZOrderEventType from '../data/zordereventtype.js';
+import * as dispatcher from '../dispatcher.js';
+import LayerEventType from '../events/layereventtype.js';
+import Group from '../layer/group.js';
+import MapEvent from '../map/mapevent.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import SynchronizerManager from './synchronizermanager.js';
 
 const Disposable = goog.require('goog.Disposable');
 const asserts = goog.require('goog.asserts');
@@ -6,21 +14,16 @@ const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const events = goog.require('ol.events');
 const Layer = goog.require('ol.layer.Layer');
-const dispatcher = goog.require('os.Dispatcher');
-const MapEvent = goog.require('os.MapEvent');
-const {getMapContainer} = goog.require('os.map.instance');
-const ZOrderEventType = goog.require('os.data.ZOrderEventType');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const Group = goog.require('os.layer.Group');
-const SynchronizerManager = goog.require('os.webgl.SynchronizerManager');
 
-goog.requireType('os.webgl.AbstractWebGLSynchronizer');
+const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: AbstractWebGLSynchronizer} = goog.requireType('os.webgl.AbstractWebGLSynchronizer');
 
 
 /**
  * An abstract root synchronizer for a WebGL renderer.
  */
-class AbstractRootSynchronizer extends Disposable {
+export default class AbstractRootSynchronizer extends Disposable {
   /**
    * Constructor.
    * @param {!ol.PluggableMap} map The OpenLayers map.
@@ -58,7 +61,7 @@ class AbstractRootSynchronizer extends Disposable {
 
     /**
      * Map of layer id to WebGL synchronizer.
-     * @type {!Object<string, !os.webgl.AbstractWebGLSynchronizer>}
+     * @type {!Object<string, !AbstractWebGLSynchronizer>}
      * @protected
      */
     this.synchronizers = {};
@@ -157,7 +160,7 @@ class AbstractRootSynchronizer extends Disposable {
     asserts.assert(!!this.map);
     asserts.assert(!!layer);
 
-    var osLayer = /** @type {os.layer.ILayer} */ (layer);
+    var osLayer = /** @type {ILayer} */ (layer);
     var layerId = osLayer.getId();
     if (layerId) {
       var synchronizer = this.synchronizers[layerId];
@@ -182,14 +185,14 @@ class AbstractRootSynchronizer extends Disposable {
   /**
    * Create an instance of a synchronizer.
    *
-   * @param {function(new:os.webgl.AbstractWebGLSynchronizer, ...?)} constructor The synchronizer constructor.
+   * @param {function(new:AbstractWebGLSynchronizer, ...?)} constructor The synchronizer constructor.
    * @param {!ol.layer.Layer} layer The layer to synchronize.
-   * @return {!os.webgl.AbstractWebGLSynchronizer} The synchronizer instance.
+   * @return {!AbstractWebGLSynchronizer} The synchronizer instance.
    */
   createSynchronizer(constructor, layer) {
     asserts.assert(!!this.map);
 
-    return /** @type {!os.webgl.AbstractWebGLSynchronizer} */ (new
+    return /** @type {!AbstractWebGLSynchronizer} */ (new
     /** @type {function(new: Object, ol.layer.Layer, ol.PluggableMap)} */ (constructor)(layer, this.map));
   }
 
@@ -234,12 +237,12 @@ class AbstractRootSynchronizer extends Disposable {
   /**
    * Handles a layer being added to a group, synchronizing the group to ensure proper z-index.
    *
-   * @param {os.events.LayerEvent} event
+   * @param {LayerEvent} event
    * @private
    */
   onLayerAdd_(event) {
     if (event && event.layer) {
-      var layer = /** @type {os.layer.ILayer} */ (typeof event.layer === 'string' ?
+      var layer = /** @type {ILayer} */ (typeof event.layer === 'string' ?
           getMapContainer().getLayer(event.layer) : event.layer);
 
       if (layer instanceof Layer) {
@@ -255,12 +258,12 @@ class AbstractRootSynchronizer extends Disposable {
   /**
    * Handles a layer being removed from a group, destroying its WebGL counterpart.
    *
-   * @param {os.events.LayerEvent} event
+   * @param {LayerEvent} event
    * @private
    */
   onLayerRemove_(event) {
     if (event && event.layer) {
-      var layer = /** @type {os.layer.ILayer} */ (typeof event.layer === 'string' ?
+      var layer = /** @type {ILayer} */ (typeof event.layer === 'string' ?
           getMapContainer().getLayer(event.layer) : event.layer);
 
       if (layer) {
@@ -287,5 +290,3 @@ class AbstractRootSynchronizer extends Disposable {
     }
   }
 }
-
-exports = AbstractRootSynchronizer;

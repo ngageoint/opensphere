@@ -2,7 +2,7 @@ goog.require('os.net.CustomFormatter');
 
 
 describe('os.net.CustomFormatter', function() {
-  const CustomFormatter = goog.module.get('os.net.CustomFormatter');
+  const {default: CustomFormatter} = goog.module.get('os.net.CustomFormatter');
 
   it('should default content type when undefined', function() {
     var cf = new CustomFormatter();

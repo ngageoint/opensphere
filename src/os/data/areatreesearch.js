@@ -1,14 +1,14 @@
-goog.module('os.data.AreaTreeSearch');
+goog.declareModuleId('os.data.AreaTreeSearch');
 
-const AreaNode = goog.require('os.data.AreaNode');
-const instance = goog.require('os.query.instance');
-const AbstractGroupByTreeSearch = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
+import * as instance from '../query/queryinstance.js';
+import AbstractGroupByTreeSearch from '../ui/slick/abstractgroupbytreesearch.js';
+import AreaNode from './areanode.js';
 
 
 /**
  * Extends AbstractGroupByTreeSearch to search through saved areas
  */
-class AreaTreeSearch extends AbstractGroupByTreeSearch {
+export default class AreaTreeSearch extends AbstractGroupByTreeSearch {
   /**
    * Constructor.
    * @param {!string} setAs The field to set on ...
@@ -51,5 +51,3 @@ class AreaTreeSearch extends AbstractGroupByTreeSearch {
     }
   }
 }
-
-exports = AreaTreeSearch;

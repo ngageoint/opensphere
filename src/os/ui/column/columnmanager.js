@@ -1,4 +1,12 @@
-goog.module('os.ui.column.ColumnManagerUI');
+goog.declareModuleId('os.ui.column.ColumnManagerUI');
+
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {findByField, numerateNameCompare} from '../slick/column.js';
+import {columnFormatter} from '../slick/formatter.js';
+import SlickGridEvent from '../slick/slickgridevent.js';
+import {close} from '../window.js';
+import {directiveTag as columnRowUi} from './columnrow.js';
 
 const {moveItem} = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');
@@ -8,15 +16,7 @@ const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
 const {findIndex, remove} = goog.require('ol.array');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const {directiveTag: columnRowUi} = goog.require('os.ui.column.columnRowDirective');
-const SlickGridEvent = goog.require('os.ui.slick.SlickGridEvent');
-const {findByField, numerateNameCompare} = goog.require('os.ui.slick.column');
-const {columnFormatter} = goog.require('os.ui.slick.formatter');
-const {close} = goog.require('os.ui.window');
-
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 
 
 /**
@@ -24,7 +24,7 @@ const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -41,7 +41,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'column-manager';
+export const directiveTag = 'column-manager';
 
 /**
  * Add the directive to the module.
@@ -52,7 +52,7 @@ Module.directive('columnManager', [directive]);
  * Controller function for the columnManager directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -463,9 +463,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

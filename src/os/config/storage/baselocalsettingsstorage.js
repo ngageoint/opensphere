@@ -1,14 +1,15 @@
-goog.module('os.config.storage.BaseLocalSettingsStorage');
+goog.declareModuleId('os.config.storage.BaseLocalSettingsStorage');
+
+import ConfigType from '../configtype.js';
+import SettingsWritableStorageType from './settingswritablestoragetype.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 const DeferredList = goog.require('goog.async.DeferredList');
-const ConfigType = goog.require('os.config.ConfigType');
-const SettingsWritableStorageType = goog.require('os.config.storage.SettingsWritableStorageType');
 
-const ISettingsReadableStorage = goog.requireType('os.config.storage.ISettingsReadableStorage');
-const ISettingsStorage = goog.requireType('os.config.storage.ISettingsStorage');
-const ISettingsWritableStorage = goog.requireType('os.config.storage.ISettingsWritableStorage');
-const AsyncStorage = goog.requireType('os.storage.AsyncStorage');
+const {default: ISettingsReadableStorage} = goog.requireType('os.config.storage.ISettingsReadableStorage');
+const {default: ISettingsStorage} = goog.requireType('os.config.storage.ISettingsStorage');
+const {default: ISettingsWritableStorage} = goog.requireType('os.config.storage.ISettingsWritableStorage');
+const {default: AsyncStorage} = goog.requireType('os.storage.AsyncStorage');
 
 
 /**
@@ -18,7 +19,7 @@ const AsyncStorage = goog.requireType('os.storage.AsyncStorage');
  * @implements {ISettingsReadableStorage}
  * @implements {ISettingsWritableStorage}
  */
-class BaseLocalSettingsStorage {
+export default class BaseLocalSettingsStorage {
   /**
    * Constructor.
    * @param {!Array<!string>} namespaces The namespaces of the settings
@@ -187,5 +188,3 @@ class BaseLocalSettingsStorage {
     }
   }
 }
-
-exports = BaseLocalSettingsStorage;

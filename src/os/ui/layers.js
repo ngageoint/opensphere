@@ -1,45 +1,45 @@
-goog.module('os.ui.LayersUI');
+goog.declareModuleId('os.ui.LayersUI');
 
-goog.require('os.ui.LayerTreeUI');
-goog.require('os.ui.UISwitchUI');
-goog.require('os.ui.layer.DefaultLayerUI');
+import './layer/defaultlayerui.js';
+import './layertree.js';
+import './uiswitch.js';
+import Settings from '../config/settings.js';
+import DateGroupBy from '../data/groupby/dategroupby.js';
+import LayerProviderGroupBy from '../data/groupby/layerprovidergroupby.js';
+import LayerTypeGroupBy from '../data/groupby/layertypegroupby.js';
+import LayerZOrderGroupBy from '../data/groupby/layerzordergroupby.js';
+import LayerTreeSearch from '../data/layertreesearch.js';
+import * as dispatcher from '../dispatcher.js';
+import LayerEventType from '../events/layereventtype.js';
+import osImplements from '../implements.js';
+import Drawing from '../layer/drawinglayer.js';
+import * as folder from '../layer/folder.js';
+import FolderManager from '../layer/foldermanager.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import Metrics from '../metrics/metrics.js';
+import {AddData} from '../metrics/metricskeys.js';
+import {ROOT} from '../os.js';
+import FavoriteManager from '../user/settings/favoritemanager.js';
+import TagGroupBy from './data/groupby/taggroupby.js';
+import UIEvent from './events/uievent.js';
+import UIEventType from './events/uieventtype.js';
+import ILayerUIProvider from './ilayeruiprovider.js';
+import * as importMenu from './menu/importmenu.js';
+import * as layerMenu from './menu/layermenu.js';
+import {toggleWindow} from './menu/windowsmenu.js';
+import Module from './module.js';
+import AbstractGroupByTreeSearchCtrl from './slick/abstractgroupbytreesearchctrl.js';
+import {apply} from './ui.js';
+import {close} from './window.js';
+import windowSelector from './windowselector.js';
 
 const {getRandomString} = goog.require('goog.string');
 const LayerType = goog.require('ol.LayerType');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const Settings = goog.require('os.config.Settings');
-const LayerTreeSearch = goog.require('os.data.LayerTreeSearch');
-const DateGroupBy = goog.require('os.data.groupby.DateGroupBy');
-const LayerProviderGroupBy = goog.require('os.data.groupby.LayerProviderGroupBy');
-const LayerTypeGroupBy = goog.require('os.data.groupby.LayerTypeGroupBy');
-const LayerZOrderGroupBy = goog.require('os.data.groupby.LayerZOrderGroupBy');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const osImplements = goog.require('os.implements');
-const Drawing = goog.require('os.layer.Drawing');
-const FolderManager = goog.require('os.layer.FolderManager');
-const folder = goog.require('os.layer.folder');
-const {getMapContainer} = goog.require('os.map.instance');
-const Metrics = goog.require('os.metrics.Metrics');
-const {AddData} = goog.require('os.metrics.keys');
-const {apply} = goog.require('os.ui');
-const ILayerUIProvider = goog.require('os.ui.ILayerUIProvider');
-const Module = goog.require('os.ui.Module');
-const TagGroupBy = goog.require('os.ui.data.groupby.TagGroupBy');
-const UIEvent = goog.require('os.ui.events.UIEvent');
-const UIEventType = goog.require('os.ui.events.UIEventType');
-const importMenu = goog.require('os.ui.menu.import');
-const layerMenu = goog.require('os.ui.menu.layer');
-const {toggleWindow} = goog.require('os.ui.menu.windows');
-const AbstractGroupByTreeSearchCtrl = goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
-const {close} = goog.require('os.ui.window');
-const windowSelector = goog.require('os.ui.windowSelector');
-const FavoriteManager = goog.require('os.user.settings.FavoriteManager');
 
 const Layer = goog.requireType('ol.layer.Layer');
-const INodeGroupBy = goog.requireType('os.data.groupby.INodeGroupBy');
-const ILayer = goog.requireType('os.layer.ILayer');
-const Menu = goog.requireType('os.ui.menu.Menu');
+const {default: INodeGroupBy} = goog.requireType('os.data.groupby.INodeGroupBy');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 
 
 /**
@@ -47,7 +47,7 @@ const Menu = goog.requireType('os.ui.menu.Menu');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: true,
@@ -60,7 +60,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'layers';
+export const directiveTag = 'layers';
 
 /**
  * Add the directive to the module
@@ -71,7 +71,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for Layers window
  * @unrestricted
  */
-class Controller extends AbstractGroupByTreeSearchCtrl {
+export class Controller extends AbstractGroupByTreeSearchCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -343,10 +343,4 @@ Controller.VIEWS = {
   'Tag': new TagGroupBy(true),
   'Type': new LayerTypeGroupBy(),
   'Z-Order': new LayerZOrderGroupBy()
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

@@ -1,27 +1,27 @@
-goog.module('os.ui.im.action.FilterActionImport');
+goog.declareModuleId('os.ui.im.action.FilterActionImport');
 
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const DataManager = goog.require('os.data.DataManager');
-const IDataDescriptor = goog.require('os.data.IDataDescriptor');
-const IFilterable = goog.require('os.filter.IFilterable');
-const {Controller: OSFilterImportCtrl} = goog.require('os.filter.im.OSFilterImport');
-const osImplements = goog.require('os.implements');
-const {ICON, getColumnsFromFilterable} = goog.require('os.im.action');
-const FilterActionParser = goog.require('os.im.action.FilterActionParser');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const FilterActionAdd = goog.require('os.im.action.cmd.FilterActionAdd');
-const DrawingLayer = goog.require('os.layer.Drawing');
-const {getMapContainer} = goog.require('os.map.instance');
-const Module = goog.require('os.ui.Module');
-const {directive: filterImportDirective} = goog.require('os.ui.filter.im.FilterImport');
-const {getEntriesFromMatched} = goog.require('os.ui.im.action');
-const FilterActionImporter = goog.require('os.ui.im.action.FilterActionImporter');
-const {close} = goog.require('os.ui.window');
+import AlertEventSeverity from '../../../alert/alerteventseverity.js';
+import AlertManager from '../../../alert/alertmanager.js';
+import CommandProcessor from '../../../command/commandprocessor.js';
+import SequenceCommand from '../../../command/sequencecommand.js';
+import DataManager from '../../../data/datamanager.js';
+import IDataDescriptor from '../../../data/idatadescriptor.js';
+import IFilterable from '../../../filter/ifilterable.js';
+import {Controller as OSFilterImportCtrl} from '../../../filter/im/osfilterimport.js';
+import FilterActionAdd from '../../../im/action/cmd/filteractionaddcmd.js';
+import FilterActionParser from '../../../im/action/filteractionparser.js';
+import {ICON, getColumnsFromFilterable} from '../../../im/action/importaction.js';
+import ImportActionManager from '../../../im/action/importactionmanager.js';
+import osImplements from '../../../implements.js';
+import DrawingLayer from '../../../layer/drawinglayer.js';
+import {getMapContainer} from '../../../map/mapinstance.js';
+import {directive as filterImportDirective} from '../../filter/im/filterimport.js';
+import Module from '../../module.js';
+import {close} from '../../window.js';
+import FilterActionImporter from './filteractionimporter.js';
+import {getEntriesFromMatched} from './filteractionui.js';
 
-const ILayer = goog.requireType('os.layer.ILayer');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
@@ -29,7 +29,7 @@ const ILayer = goog.requireType('os.layer.ILayer');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = filterImportDirective();
   dir.controller = Controller;
   return dir;
@@ -39,7 +39,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'filteractionimport';
+export const directiveTag = 'filteractionimport';
 
 
 /**
@@ -53,7 +53,7 @@ Module.directive('filteractionimport', [directive]);
  * Controller function for the filteractionimport directive.
  * @unrestricted
  */
-class Controller extends OSFilterImportCtrl {
+export class Controller extends OSFilterImportCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -176,9 +176,3 @@ class Controller extends OSFilterImportCtrl {
     close(this.element);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

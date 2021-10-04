@@ -1,26 +1,26 @@
-goog.module('os.ui.FeatureListUI');
+goog.declareModuleId('os.ui.FeatureListUI');
 
-goog.require('os.ui.SliderUI');
-goog.require('os.ui.SourceGridUI');
+import './slider.js';
+import './sourcegrid.js';
+import LayerEventType from '../events/layereventtype.js';
+import SelectionType from '../events/selectiontype.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {ROOT} from '../os.js';
+import PropertyChange from '../source/propertychange.js';
+import * as list from './menu/listmenu.js';
+import Module from './module.js';
+import {apply, sanitizeId} from './ui.js';
+import {bringToFront, close, create, exists} from './window.js';
 
 const {assert} = goog.require('goog.asserts');
 const GoogEventType = goog.require('goog.events.EventType');
 const {containsValue} = goog.require('goog.object');
 const events = goog.require('ol.events');
-const {ROOT} = goog.require('os');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const SelectionType = goog.require('os.events.SelectionType');
-const {getMapContainer} = goog.require('os.map.instance');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const {apply, sanitizeId} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const list = goog.require('os.ui.menu.list');
-const {bringToFront, close, create, exists} = goog.require('os.ui.window');
 
-const LayerEvent = goog.requireType('os.events.LayerEvent');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const VectorSource = goog.requireType('os.source.Vector');
-const Menu = goog.requireType('os.ui.menu.Menu');
+const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
+const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 
 
 /**
@@ -28,7 +28,7 @@ const Menu = goog.requireType('os.ui.menu.Menu');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -43,7 +43,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'featurelist';
+export const directiveTag = 'featurelist';
 
 /**
  * Add the directive to the module
@@ -54,7 +54,7 @@ Module.directive(directiveTag, [directive]);
  * Controller class for the feature list.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -252,7 +252,7 @@ Controller.DEFAULT_ROW_HEIGHT = 21;
  *
  * @param {!VectorSource} source The source.
  */
-const launchFeatureList = function(source) {
+export const launchFeatureList = function(source) {
   // only launch a single window per source
   var windowId = sanitizeId('featureList-' + source.getId());
   if (exists(windowId)) {
@@ -281,11 +281,4 @@ const launchFeatureList = function(source) {
     var template = `<${directiveTag} source="source"></${directiveTag}>`;
     create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchFeatureList
 };

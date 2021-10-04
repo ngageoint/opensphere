@@ -1,12 +1,13 @@
-goog.module('os.structs.EventType');
-
+goog.declareModuleId('os.structs.EventType');
 
 /**
  * The event types for collections
  * @enum {string}
  */
-exports = {
+const EventType = {
   DATA_CHANGED: 'dataChanged',
   VIEW_DATA_CHANGED: 'viewDataChanged',
   SOURCE_DATA_CHANGED: 'sourceDataChanged'
 };
+
+export default EventType;

@@ -1,4 +1,4 @@
-goog.module('os.ui.query.IQueryReader');
+goog.declareModuleId('os.ui.query.IQueryReader');
 
 /**
  * Interface for classes capable of reading queries we have written out and parsing them into areas, filters and
@@ -6,7 +6,7 @@ goog.module('os.ui.query.IQueryReader');
  *
  * @interface
  */
-class IQueryReader {
+export default class IQueryReader {
   /**
    * Sets the filter on the query reader
    * @param {!Element} filter
@@ -24,5 +24,3 @@ class IQueryReader {
    */
   parseEntries() {}
 }
-
-exports = IQueryReader;

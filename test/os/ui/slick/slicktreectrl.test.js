@@ -2,7 +2,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 goog.require('os.ui.slick.SlickTreeUI');
 
 describe('os.ui.slick.SlickTreeUI', function() {
-  const SlickTreeNode = goog.module.get('os.ui.slick.SlickTreeNode');
+  const {default: SlickTreeNode} = goog.module.get('os.ui.slick.SlickTreeNode');
   const {Controller} = goog.module.get('os.ui.slick.SlickTreeUI');
 
   it('should flatten trees properly', function() {

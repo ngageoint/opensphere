@@ -10,10 +10,10 @@ goog.require('os.proj');
 
 describe('os.layer.config.AbstractTileLayerConfig', function() {
   const XYZ = goog.module.get('ol.source.XYZ');
-  const AbstractTileLayerConfig = goog.module.get('os.layer.config.AbstractTileLayerConfig');
-  const LayerConfigManager = goog.module.get('os.layer.config.LayerConfigManager');
+  const {default: AbstractTileLayerConfig} = goog.module.get('os.layer.config.AbstractTileLayerConfig');
+  const {default: LayerConfigManager} = goog.module.get('os.layer.config.LayerConfigManager');
   const net = goog.module.get('os.net');
-  const CrossOrigin = goog.module.get('os.net.CrossOrigin');
+  const {default: CrossOrigin} = goog.module.get('os.net.CrossOrigin');
   const osProj = goog.module.get('os.proj');
 
   const MockLayer = goog.module.get('os.layer.MockLayer');

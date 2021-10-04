@@ -1,4 +1,4 @@
-goog.module('os.data.IAreaTest');
+goog.declareModuleId('os.data.IAreaTest');
 
 const Listenable = goog.requireType('goog.events.Listenable');
 
@@ -7,7 +7,7 @@ const Listenable = goog.requireType('goog.events.Listenable');
  * @interface
  * @extends {Listenable}
  */
-class IAreaTest {
+export default class IAreaTest {
   /**
    * @param {ol.Feature} area
    * @return {!string} key
@@ -31,6 +31,3 @@ class IAreaTest {
  * @const
  */
 IAreaTest.ID = 'os.data.IAreaTest';
-
-
-exports = IAreaTest;

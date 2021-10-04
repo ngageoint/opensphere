@@ -1,11 +1,12 @@
-goog.module('os.layer.Group');
+goog.declareModuleId('os.layer.Group');
+
+import LayerEvent from '../events/layerevent.js';
+import LayerEventType from '../events/layereventtype.js';
 
 const CollectionEventType = goog.require('ol.CollectionEventType');
 const {listen, unlisten} = goog.require('ol.events');
 const OLLayerGroup = goog.require('ol.layer.Group');
 const Layer = goog.require('ol.layer.Layer');
-const LayerEvent = goog.require('os.events.LayerEvent');
-const LayerEventType = goog.require('os.events.LayerEventType');
 
 const Collection = goog.requireType('ol.Collection');
 
@@ -13,7 +14,7 @@ const Collection = goog.requireType('ol.Collection');
 /**
  * Adds priority support and a function that checks if a layer belongs in this group
  */
-class Group extends OLLayerGroup {
+export default class Group extends OLLayerGroup {
   /**
    * Constructor.
    * @param {olx.layer.GroupOptions=} opt_options
@@ -157,5 +158,3 @@ class Group extends OLLayerGroup {
     }
   }
 }
-
-exports = Group;

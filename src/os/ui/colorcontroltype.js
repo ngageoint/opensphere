@@ -1,15 +1,17 @@
-goog.module('os.ui.ColorControlType');
+goog.declareModuleId('os.ui.ColorControlType');
 
-const ControlType = goog.require('os.ui.ControlType');
+import ControlType from './controltype.js';
 
 
 /**
  * @enum {string}
  */
-exports = {
+const ColorControlType = {
   PICKER_RESET: ControlType.COLOR + ':pickerReset',
   PICKER: ControlType.COLOR + ':picker',
   HUE: ControlType.COLOR + ':hue',
   BASIC: ControlType.COLOR + ':basic',
   NONE: ControlType.COLOR + ':none'
 };
+
+export default ColorControlType;

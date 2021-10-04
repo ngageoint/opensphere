@@ -1,14 +1,15 @@
-goog.module('os.state.JSONStateManager');
+goog.declareModuleId('os.state.JSONStateManager');
+
+import {getAppName, getAppVersion} from '../config/config.js';
+import {TYPE} from '../file/mime/jsonstate.js';
+import ImportManager from '../ui/im/importmanager.js';
+import StateImportUI from '../ui/state/stateimportui.js';
+import BaseStateManager from './basestatemanager.js';
+import JSONStateOptions from './jsonstateoptions.js';
+import {priorityCompare, titleCompare} from './state.js';
+import Tag from './tag.js';
 
 const log = goog.require('goog.log');
-const {getAppName, getAppVersion} = goog.require('os.config');
-const {TYPE} = goog.require('os.file.mime.jsonstate');
-const {priorityCompare, titleCompare} = goog.require('os.state');
-const BaseStateManager = goog.require('os.state.BaseStateManager');
-const JSONStateOptions = goog.require('os.state.JSONStateOptions');
-const Tag = goog.require('os.state.Tag');
-const ImportManager = goog.require('os.ui.im.ImportManager');
-const StateImportUI = goog.require('os.ui.state.StateImportUI');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -18,7 +19,7 @@ const Logger = goog.requireType('goog.log.Logger');
  *
  * @extends {BaseStateManager<!Object<string, *>, !JSONStateOptions>}
  */
-class JSONStateManager extends BaseStateManager {
+export default class JSONStateManager extends BaseStateManager {
   /**
    * Constructor.
    */
@@ -157,5 +158,3 @@ class JSONStateManager extends BaseStateManager {
  * @type {Logger}
  */
 const logger = log.getLogger('os.state.JSONStateManager');
-
-exports = JSONStateManager;

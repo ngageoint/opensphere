@@ -1,10 +1,11 @@
-goog.module('os.parse.AsyncParser');
+goog.declareModuleId('os.parse.AsyncParser');
+
+import EventType from '../events/eventtype.js';
 
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
-const EventType = goog.require('os.events.EventType');
 
-const IParser = goog.requireType('os.parse.IParser');
+const {default: IParser} = goog.requireType('os.parse.IParser');
 
 
 /**
@@ -15,7 +16,7 @@ const IParser = goog.requireType('os.parse.IParser');
  * @implements {IParser<T>}
  * @template T
  */
-class AsyncParser extends EventTarget {
+export default class AsyncParser extends EventTarget {
   /**
    * Constructor.
    */
@@ -41,5 +42,3 @@ class AsyncParser extends EventTarget {
     this.dispatchEvent(new GoogEvent(EventType.COMPLETE));
   }
 }
-
-exports = AsyncParser;

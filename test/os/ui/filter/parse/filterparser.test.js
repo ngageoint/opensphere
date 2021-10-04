@@ -8,7 +8,7 @@ describe('os.ui.filter.parse.FilterParser', function() {
   const xml = goog.module.get('goog.dom.xml');
   const EventType = goog.module.get('goog.net.EventType');
   const XhrIo = goog.module.get('goog.net.XhrIo');
-  const FilterParser = goog.module.get('os.ui.filter.parse.FilterParser');
+  const {default: FilterParser} = goog.module.get('os.ui.filter.parse.FilterParser');
 
   var filtersUrl = '/base/test/os/ui/filter/parse/filters.xml';
   var stateUrl = '/base/test/os/ui/filter/parse/state.xml';

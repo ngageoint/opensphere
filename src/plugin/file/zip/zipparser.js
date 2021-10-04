@@ -1,19 +1,21 @@
 goog.declareModuleId('plugin.file.zip.ZIPParser');
 
+import EventType from '../../../os/events/eventtype.js';
+import OSFile from '../../../os/file/file.js';
+import * as mime from '../../../os/file/mime.js';
+import * as text from '../../../os/file/mime/text.js';
+import * as mimeZip from '../../../os/file/mime/zip.js';
+import AsyncZipParser from '../../../os/parse/asynczipparser.js';
+
 const googEvents = goog.require('goog.events');
 
 const GoogEvent = goog.require('goog.events.Event');
 const log = goog.require('goog.log');
 const ol = goog.require('ol');
-const EventType = goog.require('os.events.EventType');
-const OSFile = goog.require('os.file.File');
-const mime = goog.require('os.file.mime');
-const text = goog.require('os.file.mime.text');
-const mimeZip = goog.require('os.file.mime.zip');
-const AsyncZipParser = goog.require('os.parse.AsyncZipParser');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');
+const {default: FileWrapper} = goog.requireType('os.file.FileWrapper');
 const {default: ZIPParserConfig} = goog.requireType('plugin.file.zip.ZIPParserConfig');
 
 
@@ -37,7 +39,7 @@ export default class ZIPParser extends AsyncZipParser {
     this.config_ = config;
 
     /**
-     * @type {Array<osx.import.FileWrapper>}
+     * @type {Array<FileWrapper>}
      * @private
      */
     this.files_ = [];
@@ -94,7 +96,7 @@ export default class ZIPParser extends AsyncZipParser {
   }
 
   /**
-   * @return {Array<osx.import.FileWrapper>}
+   * @return {Array<FileWrapper>}
    */
   getFiles() {
     return this.files_;
@@ -299,7 +301,7 @@ export default class ZIPParser extends AsyncZipParser {
   }
 
   /**
-   * @param {osx.import.FileWrapper} uio
+   * @param {FileWrapper} uio
    * @param {Event} event
    * @private
    */
@@ -307,7 +309,7 @@ export default class ZIPParser extends AsyncZipParser {
     var content = (event && event.target) ? event.target.result : null;
 
     if (content && typeof content === 'string') {
-      if (uio) uio['file'].setContent(content);
+      if (uio) uio.file.setContent(content);
       this.onComplete_(uio);
     } else {
       this.logError_('There was a problem reading the ZIP content!');
@@ -350,7 +352,7 @@ export default class ZIPParser extends AsyncZipParser {
     var onFile = function(file) {
       if (file) {
         // turn this into a better object for the UI
-        return /** @type {osx.import.FileWrapper} */ ({
+        return /** @type {FileWrapper} */ ({
           id: ol.getUid(file),
           label: entry.filename,
           valid: true,
@@ -371,7 +373,7 @@ export default class ZIPParser extends AsyncZipParser {
   /**
    * Add to UI list, and let UI know that files are unzipped
    *
-   * @param {osx.import.FileWrapper|null} uio
+   * @param {FileWrapper|null} uio
    * @private
    */
   onComplete_(uio) {

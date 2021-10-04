@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.cesium.sync.polygon');
 
+import * as geo from '../../../os/geo/geo.js';
 import {GeometryInstanceId} from '../cesium.js';
 import {createColoredPrimitive, createGeometryInstance} from '../primitive.js';
 import {getTransformFunction} from './gettransformfunction.js';
@@ -9,7 +10,6 @@ import {getColor, getLineWidthFromStyle} from './style.js';
 
 const asserts = goog.require('goog.asserts');
 const olcsCore = goog.require('olcs.core');
-const geo = goog.require('os.geo');
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');

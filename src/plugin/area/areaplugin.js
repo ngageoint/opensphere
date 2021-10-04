@@ -1,5 +1,9 @@
 goog.declareModuleId('plugin.area.AreaPlugin');
 
+import * as csv from '../../os/file/mime/csv.js';
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
+import {getAreaImportManager, getAreaFileManager} from '../../os/query/query.js';
+import ImportMethod from '../../os/ui/file/method/importmethod.js';
 import * as pluginFileGeojsonMime from '../file/geojson/mime.js';
 import * as pluginFileKmlMime from '../file/kml/mime.js';
 import * as mime from '../file/shp/mime.js';
@@ -7,11 +11,6 @@ import CSVAreaImportUI from './csvareaimportui.js';
 import GeoJSONAreaImportUI from './geojsonareaimportui.js';
 import KMLAreaImportUI from './kmlareaimportui.js';
 import SHPAreaImportUI from './shpareaimportui.js';
-
-const csv = goog.require('os.file.mime.csv');
-const {getAreaImportManager, getAreaFileManager} = goog.require('os.query');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const ImportMethod = goog.require('os.ui.file.method.ImportMethod');
 
 
 /**

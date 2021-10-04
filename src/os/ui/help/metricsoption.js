@@ -1,14 +1,14 @@
-goog.module('os.ui.help.metricsOption');
+goog.declareModuleId('os.ui.help.metricsOption');
 
-const Settings = goog.require('os.config.Settings');
-const {MENU, showWindow} = goog.require('os.ui.help');
-const EventType = goog.require('os.ui.help.EventType');
+import Settings from '../../config/settings.js';
+import {MENU, showWindow} from './help.js';
+import EventType from './helpeventtype.js';
 
 
 /**
  * Add the What's New link
  */
-const addToNav = function() {
+export const addToNav = function() {
   if (Settings.getInstance().get('metrics.enabled', false)) {
     var menu = MENU;
     menu.getRoot().addChild({
@@ -27,8 +27,4 @@ const addToNav = function() {
  */
 const showMetricsWindow = function() {
   showWindow('metrics');
-};
-
-exports = {
-  addToNav
 };

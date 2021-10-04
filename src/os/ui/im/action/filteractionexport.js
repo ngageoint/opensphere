@@ -1,20 +1,21 @@
-goog.module('os.ui.im.action.FilterActionExportUI');
+goog.declareModuleId('os.ui.im.action.FilterActionExportUI');
+
+import AlertEventSeverity from '../../../alert/alerteventseverity.js';
+import AlertManager from '../../../alert/alertmanager.js';
+import {saveFile} from '../../../file/persist/persist.js';
+import {testFilterActionEnabled} from '../../../im/action/importaction.js';
+import ImportActionManager from '../../../im/action/importactionmanager.js';
+import {ROOT} from '../../../os.js';
+import {createElementNS, serialize} from '../../../xml.js';
+import Module from '../../module.js';
+import {close, create} from '../../window.js';
+import WindowEventType from '../../windoweventtype.js';
+import {exportEntries} from './filteraction.js';
+import FilterActionExportType from './filteractionexporttype.js';
 
 const Disposable = goog.require('goog.Disposable');
-const {ROOT} = goog.require('os');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {saveFile} = goog.require('os.file.persist');
-const {testFilterActionEnabled} = goog.require('os.im.action');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const {exportEntries} = goog.require('os.im.action.filter');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const FilterActionExportType = goog.require('os.ui.im.action.FilterActionExportType');
-const {close, create} = goog.require('os.ui.window');
-const {createElementNS, serialize} = goog.require('os.xml');
 
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
 
 
 /**
@@ -22,7 +23,7 @@ const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   templateUrl: ROOT + 'views/im/action/filteractionexport.html',
   controller: Controller,
@@ -33,7 +34,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'filteractionexport';
+export const directiveTag = 'filteractionexport';
 
 
 /**
@@ -47,7 +48,7 @@ Module.directive('filteractionexport', [directive]);
  * Controller function for the filteractionexport directive
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -189,7 +190,7 @@ class Controller extends Disposable {
  * @param {string=} opt_fileName The export file name.
  * @param {string=} opt_exportType The FilterActionExportType.
  */
-const launchFilterActionExport = function(entries, opt_selected, opt_fileName, opt_exportType) {
+export const launchFilterActionExport = function(entries, opt_selected, opt_fileName, opt_exportType) {
   var scopeOptions = {
     'entries': entries,
     'selected': opt_selected,
@@ -214,14 +215,13 @@ const launchFilterActionExport = function(entries, opt_selected, opt_fileName, o
   create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
 
-
 /**
  * Export the provided filter actions.
  *
  * @param {string} fileName The name of the exported file.
  * @param {!Array<!FilterActionEntry>} entries
  */
-const exportFilterActionEntries = function(fileName, entries) {
+export const exportFilterActionEntries = function(fileName, entries) {
   if (entries.length > 0) {
     var iam = ImportActionManager.getInstance();
     var rootNode = createElementNS(iam.xmlGroup, 'http://www.bit-sys.com/state/v4');
@@ -236,12 +236,4 @@ const exportFilterActionEntries = function(fileName, entries) {
   } else {
     AlertManager.getInstance().sendAlert('No actions to export.', AlertEventSeverity.WARNING);
   }
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchFilterActionExport,
-  exportFilterActionEntries
 };

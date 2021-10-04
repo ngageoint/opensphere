@@ -5,14 +5,13 @@
 goog.declareModuleId('plugin.cesium.mixin');
 
 import * as dispatcher from '../../../os/dispatcher.js';
+import MapEvent from '../../../os/map/mapevent.js';
+import CrossOrigin from '../../../os/net/crossorigin.js';
+import {getCrossOrigin} from '../../../os/net/net.js';
+import Request from '../../../os/net/request.js';
+import {prune} from '../../../os/object/object.js';
 import {load as loadOLCesiumMixin} from './olcesiummixin';
 import {load as loadRenderLoopMixin} from './renderloopmixin';
-
-const MapEvent = goog.require('os.MapEvent');
-const {getCrossOrigin} = goog.require('os.net');
-const CrossOrigin = goog.require('os.net.CrossOrigin');
-const Request = goog.require('os.net.Request');
-const {prune} = goog.require('os.object');
 
 
 /**

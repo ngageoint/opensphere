@@ -1,8 +1,8 @@
-goog.module('os.config.instance');
+goog.declareModuleId('os.config.instance');
 
 const {assert} = goog.require('goog.asserts');
 
-const Settings = goog.requireType('os.config.Settings');
+const {default: Settings} = goog.requireType('os.config.Settings');
 
 
 /**
@@ -16,7 +16,7 @@ let settings;
  * @param {boolean=} opt_skipAssert If the null check assertion should be skipped. Use during initialization only.
  * @return {Settings}
  */
-const getSettings = (opt_skipAssert = false) => {
+export const getSettings = (opt_skipAssert = false) => {
   assert(opt_skipAssert || settings != null, 'Settings instance is not defined! Use setSettings to set the instance.');
   return settings;
 };
@@ -25,11 +25,6 @@ const getSettings = (opt_skipAssert = false) => {
  * Set the global Settings instance.
  * @param {Settings} value The instance.
  */
-const setSettings = (value) => {
+export const setSettings = (value) => {
   settings = value;
-};
-
-exports = {
-  getSettings,
-  setSettings
 };

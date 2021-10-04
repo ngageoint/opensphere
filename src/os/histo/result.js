@@ -1,6 +1,6 @@
-goog.module('os.histo.Result');
+goog.declareModuleId('os.histo.Result');
 
-const Bin = goog.requireType('os.histo.Bin');
+const {default: Bin} = goog.requireType('os.histo.Bin');
 
 
 /**
@@ -11,4 +11,4 @@ const Bin = goog.requireType('os.histo.Bin');
  */
 let Result;
 
-exports = Result;
+export default Result;

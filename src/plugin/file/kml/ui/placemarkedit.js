@@ -1,9 +1,17 @@
 goog.declareModuleId('plugin.file.kml.ui.PlacemarkEditUI');
 
-goog.require('os.annotation.annotationOptionsDirective');
-
+import '../../../../os/annotation/annotationoptions.js';
+import * as annotation from '../../../../os/annotation/annotation.js';
+import FeatureAnnotation from '../../../../os/annotation/featureannotation.js';
+import ColumnDefinition from '../../../../os/data/columndefinition.js';
 import * as osFeature from '../../../../os/feature/feature.js';
+import * as osObject from '../../../../os/object/object.js';
+import * as structs from '../../../../os/structs/structs.js';
 import * as osStyle from '../../../../os/style/style.js';
+import AnyDateType from '../../../../os/ui/datetime/anydatetype.js';
+import {Controller as FeatureEditCtrl, directive as featureEditDirective} from '../../../../os/ui/featureedit.js';
+import * as list from '../../../../os/ui/list.js';
+import Module from '../../../../os/ui/module.js';
 import PlacesManager from '../../../places/placesmanager.js';
 import * as kml from '../kml.js';
 import * as kmlUI from './kmlui.js';
@@ -11,15 +19,6 @@ import * as kmlUI from './kmlui.js';
 const dispose = goog.require('goog.dispose');
 const {getUid} = goog.require('ol');
 const Feature = goog.require('ol.Feature');
-const annotation = goog.require('os.annotation');
-const FeatureAnnotation = goog.require('os.annotation.FeatureAnnotation');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const osObject = goog.require('os.object');
-const structs = goog.require('os.structs');
-const Module = goog.require('os.ui.Module');
-const AnyDateType = goog.require('os.ui.datetime.AnyDateType');
-const {Controller: FeatureEditCtrl, directive: featureEditDirective} = goog.require('os.ui.FeatureEditUI');
-const list = goog.require('os.ui.list');
 
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 

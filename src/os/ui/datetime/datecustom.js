@@ -1,12 +1,12 @@
-goog.module('os.ui.datetime.DateCustomUI');
+goog.declareModuleId('os.ui.datetime.DateCustomUI');
 
-goog.require('os.ui.datetime.WheelDateUI');
+import './wheeldate.js';
+import {ROOT} from '../../os.js';
+import Duration from '../../time/duration.js';
+import * as time from '../../time/time.js';
+import Module from '../module.js';
 
 const Disposable = goog.require('goog.Disposable');
-const {ROOT} = goog.require('os');
-const time = goog.require('os.time');
-const Duration = goog.require('os.time.Duration');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -14,7 +14,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -31,7 +31,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'date-custom';
+export const directiveTag = 'date-custom';
 
 /**
  * Add the directive to the module.
@@ -43,7 +43,7 @@ Module.directive('dateCustom', [directive]);
  * Start date will have time set to 00:00:00z, and end date will have a time of 23:59:59z.
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -215,9 +215,3 @@ class Controller extends Disposable {
     this.scope_['endDate'] = time.offset(this.scope_['endDate'], this['duration'], direction, true);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

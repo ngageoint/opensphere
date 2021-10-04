@@ -1,7 +1,7 @@
-goog.module('os.ui.hist.IHistogramChart');
+goog.declareModuleId('os.ui.hist.IHistogramChart');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
-const IHistogramData = goog.requireType('os.hist.IHistogramData');
+const {default: IHistogramData} = goog.requireType('os.hist.IHistogramData');
 
 
 /**
@@ -10,7 +10,7 @@ const IHistogramData = goog.requireType('os.hist.IHistogramData');
  * @extends {IDisposable}
  * @interface
  */
-class IHistogramChart {
+export default class IHistogramChart {
   /**
    * Clears the chart if one is currently drawn.
    */
@@ -31,5 +31,3 @@ class IHistogramChart {
    */
   tooltip(tooltip) {}
 }
-
-exports = IHistogramChart;

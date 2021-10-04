@@ -1,14 +1,14 @@
-goog.module('os.config.LegendSettings');
+goog.declareModuleId('os.config.LegendSettings');
 
-const {ICON, ID} = goog.require('os.legend');
-const {directiveTag: settingsUi} = goog.require('os.config.LegendSettingsUI');
-const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
+import {ICON, ID} from '../legend/legend.js';
+import SettingPlugin from '../ui/config/settingplugin.js';
+import {directiveTag as settingsUi} from './legendsettingsui.js';
 
 
 /**
  * Legend settings plugin.
  */
-class LegendSettings extends SettingPlugin {
+export default class LegendSettings extends SettingPlugin {
   /**
    * Constructor.
    */
@@ -29,5 +29,3 @@ class LegendSettings extends SettingPlugin {
     return ID;
   }
 }
-
-exports = LegendSettings;

@@ -1,9 +1,9 @@
-goog.module('os.ui.filter.FilterEventType');
+goog.declareModuleId('os.ui.filter.FilterEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const FilterEventType = {
   FILTERS_CHANGED: 'filtersChanged',
   GROUPING_CHANGED: 'filterGroupingChanged',
   HANDLERS_CHANGED: 'filterHandlersChanged',
@@ -12,3 +12,5 @@ exports = {
   ADD_FILTER: 'addFilter',
   EXPORT_FILTER: 'exportFilter'
 };
+
+export default FilterEventType;

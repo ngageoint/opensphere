@@ -1,15 +1,15 @@
-goog.module('os.ui.column.mapping.ColumnMappingExportUI');
+goog.declareModuleId('os.ui.column.mapping.ColumnMappingExportUI');
 
-const {ROOT} = goog.require('os');
-const ColumnMappingTag = goog.require('os.column.ColumnMappingTag');
-const columnmapping = goog.require('os.file.mime.columnmapping');
-const FilePersistence = goog.require('os.file.persist.FilePersistence');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {close} = goog.require('os.ui.window');
+import ColumnMappingTag from '../../../column/columnmappingtag.js';
+import * as columnmapping from '../../../file/mime/columnmapping.js';
+import FilePersistence from '../../../file/persist/filepersistence.js';
+import {ROOT} from '../../../os.js';
+import Module from '../../module.js';
+import {close} from '../../window.js';
+import WindowEventType from '../../windoweventtype.js';
 
-const IColumnMapping = goog.requireType('os.column.IColumnMapping');
-const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
+const {default: IColumnMapping} = goog.requireType('os.column.IColumnMapping');
+const {default: IPersistenceMethod} = goog.requireType('os.ex.IPersistenceMethod');
 
 
 /**
@@ -17,7 +17,7 @@ const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -30,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'columnmappingexport';
+export const directiveTag = 'columnmappingexport';
 
 /**
  * Add the directive to the module.
@@ -41,7 +41,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the columnmappingexport directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -146,9 +146,3 @@ class Controller {
  * @type {Object<string, !IPersistenceMethod>}
  */
 const persisters = {};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

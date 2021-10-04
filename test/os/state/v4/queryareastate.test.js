@@ -21,12 +21,12 @@ goog.require('os.xml');
 describe('QueryArea XSD State Test', function() {
   const Feature = goog.module.get('ol.Feature');
   const Polygon = goog.module.get('ol.geom.Polygon');
-  const AreaManager = goog.module.get('os.query.AreaManager');
-  const QueryManager = goog.module.get('os.query.QueryManager');
-  const BaseStateManager = goog.module.get('os.state.BaseStateManager');
-  const StateManager = goog.module.get('os.state.StateManager');
-  const Versions = goog.module.get('os.state.Versions');
-  const QueryArea = goog.module.get('os.state.v4.QueryArea');
+  const {default: AreaManager} = goog.module.get('os.query.AreaManager');
+  const {default: QueryManager} = goog.module.get('os.query.QueryManager');
+  const {default: BaseStateManager} = goog.module.get('os.state.BaseStateManager');
+  const {default: StateManager} = goog.module.get('os.state.StateManager');
+  const {default: Versions} = goog.module.get('os.state.Versions');
+  const {default: QueryArea} = goog.module.get('os.state.v4.QueryArea');
   const osUiState = goog.module.get('os.ui.state');
   const xml = goog.module.get('os.xml');
 

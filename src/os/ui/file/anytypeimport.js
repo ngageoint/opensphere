@@ -1,14 +1,15 @@
-goog.module('os.ui.file.AnyTypeImport');
+goog.declareModuleId('os.ui.file.AnyTypeImport');
 
-const {ROOT} = goog.require('os');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {isZip} = goog.require('os.file.mime.zip');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const osWindow = goog.require('os.ui.window');
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import {isZip} from '../../file/mime/zip.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import * as osWindow from '../window.js';
+import WindowEventType from '../windoweventtype.js';
 
-const IImportUI = goog.requireType('os.ui.im.IImportUI');
+const {default: IImportUI} = goog.requireType('os.ui.im.IImportUI');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
@@ -16,7 +17,7 @@ const IImportUI = goog.requireType('os.ui.im.IImportUI');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -29,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'anytypeimport';
+export const directiveTag = 'anytypeimport';
 
 /**
  * Add the directive to the module
@@ -40,7 +41,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the KML import dialog
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -93,7 +94,7 @@ class Controller {
    */
   accept() {
     try {
-      this['import'].launchUI(/** @type {os.file.File} */ (this.scope_['file']), this.scope_['config']);
+      this['import'].launchUI(/** @type {OSFile} */ (this.scope_['file']), this.scope_['config']);
     } catch (e) {
       AlertManager.getInstance().sendAlert(
           'Error loading file: <b>' + this.scope_['file'].getFileName() + '</b>', AlertEventSeverity.ERROR);
@@ -121,9 +122,3 @@ class Controller {
     return importer.getTitle();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

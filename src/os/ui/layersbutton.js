@@ -1,8 +1,8 @@
-goog.module('os.ui.LayersButtonUI');
+goog.declareModuleId('os.ui.LayersButtonUI');
 
-const {Map: MapKeys} = goog.require('os.metrics.keys');
-const Module = goog.require('os.ui.Module');
-const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
+import {Map as MapKeys} from '../metrics/metricskeys.js';
+import MenuButtonCtrl from './menu/menubutton.js';
+import Module from './module.js';
 
 
 /**
@@ -10,7 +10,7 @@ const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -28,7 +28,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'layers-button';
+export const directiveTag = 'layers-button';
 
 /**
  * add the directive to the module
@@ -38,7 +38,7 @@ Module.directive('layersButton', [directive]);
 /**
  * @unrestricted
  */
-class Controller extends MenuButtonCtrl {
+export class Controller extends MenuButtonCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -51,9 +51,3 @@ class Controller extends MenuButtonCtrl {
     this.metricKey = MapKeys.SHOW_LAYER_WINDOW;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

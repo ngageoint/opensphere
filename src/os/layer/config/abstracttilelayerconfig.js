@@ -1,34 +1,34 @@
-goog.module('os.layer.config.AbstractTileLayerConfig');
+goog.declareModuleId('os.layer.config.AbstractTileLayerConfig');
 
-goog.require('os.mixin.TileImage');
-goog.require('os.mixin.UrlTileSource');
+import '../../mixin/tileimagemixin.js';
+import '../../mixin/urltilemixin.js';
+import Settings from '../../config/settings.js';
+import osImplements from '../../implements.js';
+import CrossOrigin from '../../net/crossorigin.js';
+import {getCrossOrigin, isValidCrossOrigin, registerCrossOrigin} from '../../net/net.js';
+import {addProxyWrapper, autoProxyCheck} from '../../ol/source/tileimage.js';
+import {EPSG4326, getBestSupportedProjection} from '../../proj/proj.js';
+import IFilterableTileSource from '../../source/ifilterabletilesource.js';
+import ColorableTile from '../../tile/colorabletile.js';
+import Tile from '../tile.js';
+import AbstractLayerConfig from './abstractlayerconfig.js';
 
 const log = goog.require('goog.log');
 const {DEFAULT_MAX_ZOOM} = goog.require('ol');
 const {transformExtent} = goog.require('ol.proj');
 const {createForProjection} = goog.require('ol.tilegrid');
-const Settings = goog.require('os.config.Settings');
-const osImplements = goog.require('os.implements');
-const Tile = goog.require('os.layer.Tile');
-const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
-const {getCrossOrigin, isValidCrossOrigin, registerCrossOrigin} = goog.require('os.net');
-const CrossOrigin = goog.require('os.net.CrossOrigin');
-const {addProxyWrapper, autoProxyCheck} = goog.require('os.ol.source.tileimage');
-const {EPSG4326, getBestSupportedProjection} = goog.require('os.proj');
-const IFilterableTileSource = goog.require('os.source.IFilterableTileSource');
-const ColorableTile = goog.require('os.tile.ColorableTile');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Projection = goog.requireType('ol.proj.Projection');
 const TileImage = goog.requireType('ol.source.TileImage');
 const TileGrid = goog.requireType('ol.tilegrid.TileGrid');
-const TileClass = goog.requireType('os.TileClass');
+const {default: TileClass} = goog.requireType('os.TileClass');
 
 
 /**
  * @abstract
  */
-class AbstractTileLayerConfig extends AbstractLayerConfig {
+export default class AbstractTileLayerConfig extends AbstractLayerConfig {
   /**
    * Constructor.
    */
@@ -376,5 +376,3 @@ AbstractTileLayerConfig.RotatingAlphaRegexp = new RegExp(/{[a-zA-Z]-[a-zA-Z]}/g)
  * @const
  */
 AbstractTileLayerConfig.RotatingNumericRegexp = new RegExp(/{\d-\d}/g);
-
-exports = AbstractTileLayerConfig;

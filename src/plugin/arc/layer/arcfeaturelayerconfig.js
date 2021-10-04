@@ -1,5 +1,16 @@
 goog.declareModuleId('plugin.arc.layer.ArcFeatureLayerConfig');
 
+import FeatureImporter from '../../../os/im/featureimporter.js';
+import OrientationMapping from '../../../os/im/mapping/orientationmapping.js';
+import RadiusMapping from '../../../os/im/mapping/radiusmapping.js';
+import SemiMajorMapping from '../../../os/im/mapping/semimajormapping.js';
+import SemiMinorMapping from '../../../os/im/mapping/semiminormapping.js';
+import AbstractDataSourceLayerConfig from '../../../os/layer/config/abstractdatasourcelayerconfig.js';
+import ParamModifier from '../../../os/net/parammodifier.js';
+import Request from '../../../os/net/request.js';
+import {getQueryManager} from '../../../os/query/queryinstance.js';
+import TemporalHandler from '../../../os/query/temporalhandler.js';
+import TemporalQueryManager from '../../../os/query/temporalquerymanager.js';
 import * as arc from '../arc.js';
 import ArcJSONParser from '../arcjsonparser.js';
 import ArcFilterModifier from '../query/arcfiltermodifier.js';
@@ -8,20 +19,9 @@ import ArcTemporalFormatter from '../query/arctemporalformatter.js';
 import ArcRequestSource from '../source/arcrequestsource.js';
 
 const log = goog.require('goog.log');
-const FeatureImporter = goog.require('os.im.FeatureImporter');
-const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
-const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
-const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
-const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
-const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
-const ParamModifier = goog.require('os.net.ParamModifier');
-const Request = goog.require('os.net.Request');
-const TemporalHandler = goog.require('os.query.TemporalHandler');
-const TemporalQueryManager = goog.require('os.query.TemporalQueryManager');
-const {getQueryManager} = goog.require('os.query.instance');
 
-const IMapping = goog.requireType('os.im.mapping.IMapping');
-const VectorLayer = goog.requireType('os.layer.Vector');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 const {default: ArcFeatureType} = goog.requireType('plugin.arc.ArcFeatureType');
 
 

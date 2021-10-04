@@ -1,14 +1,15 @@
-goog.module('os.net.LocalFileHandler');
+goog.declareModuleId('os.net.LocalFileHandler');
+
+import FileStorage from '../file/filestorage.js';
+import {FileScheme} from '../file/index.js';
+import HandlerType from './handlertype.js';
 
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
 const EventType = goog.require('goog.net.EventType');
-const {FileScheme} = goog.require('os.file');
-const FileStorage = goog.require('os.file.FileStorage');
-const HandlerType = goog.require('os.net.HandlerType');
 
-const OSFile = goog.requireType('os.file.File');
-const IRequestHandler = goog.requireType('os.net.IRequestHandler');
+const {default: OSFile} = goog.requireType('os.file.File');
+const {default: IRequestHandler} = goog.requireType('os.net.IRequestHandler');
 
 
 /**
@@ -16,7 +17,7 @@ const IRequestHandler = goog.requireType('os.net.IRequestHandler');
  *
  * @implements {IRequestHandler}
  */
-class LocalFileHandler extends EventTarget {
+export default class LocalFileHandler extends EventTarget {
   /**
    * Constructor.
    */
@@ -190,5 +191,3 @@ class LocalFileHandler extends EventTarget {
     // timeout not supported
   }
 }
-
-exports = LocalFileHandler;

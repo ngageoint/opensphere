@@ -1,4 +1,9 @@
-goog.module('os.column.ColumnMapping');
+goog.declareModuleId('os.column.ColumnMapping');
+
+import ColumnMappingEvent from './columnmappingevent.js';
+import ColumnMappingEventType from './columnmappingeventtype.js';
+import ColumnMappingTag from './columnmappingtag.js';
+import IColumnMapping from './icolumnmapping.js';// eslint-disable-line
 
 const asserts = goog.require('goog.asserts');
 const dom = goog.require('goog.dom');
@@ -7,10 +12,6 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
 const olArray = goog.require('ol.array');
-const ColumnMappingEvent = goog.require('os.column.ColumnMappingEvent');
-const ColumnMappingEventType = goog.require('os.column.ColumnMappingEventType');
-const ColumnMappingTag = goog.require('os.column.ColumnMappingTag');
-const IColumnMapping = goog.require('os.column.IColumnMapping'); // eslint-disable-line
 
 
 /**
@@ -31,7 +32,7 @@ const ColumnMappingAttr = {
  * @implements {IColumnMapping}
  * @unrestricted
  */
-class ColumnMapping extends EventTarget {
+export default class ColumnMapping extends EventTarget {
   /**
    * Constructor.
    */
@@ -282,6 +283,3 @@ class ColumnMapping extends EventTarget {
  * @type {log.Logger}
  */
 const logger = log.getLogger('os.column.ColumnMapping');
-
-
-exports = ColumnMapping;

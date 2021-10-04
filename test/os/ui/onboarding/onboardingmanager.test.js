@@ -7,11 +7,11 @@ goog.require('os.ui.onboarding.OnboardingManager');
 
 
 describe('os.ui.onboarding.OnboardingManager', function() {
-  const Settings = goog.module.get('os.config.Settings');
+  const {default: Settings} = goog.module.get('os.config.Settings');
   const RequestHandlerFactory = goog.module.get('os.net.RequestHandlerFactory');
-  const SameDomainHandler = goog.module.get('os.net.SameDomainHandler');
-  const EventType = goog.module.get('os.ui.EventType');
-  const OnboardingManager = goog.module.get('os.ui.onboarding.OnboardingManager');
+  const {default: SameDomainHandler} = goog.module.get('os.net.SameDomainHandler');
+  const {default: EventType} = goog.module.get('os.ui.EventType');
+  const {default: OnboardingManager} = goog.module.get('os.ui.onboarding.OnboardingManager');
 
   RequestHandlerFactory.addHandler(SameDomainHandler);
 

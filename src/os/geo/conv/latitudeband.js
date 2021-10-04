@@ -1,8 +1,8 @@
-goog.module('os.geo.conv.LatitudeBand');
+goog.declareModuleId('os.geo.conv.LatitudeBand');
 
 /**
  */
-class LatitudeBand {
+export default class LatitudeBand {
   /**
    * Constructor.
    * @param {number} l Letter representing latitude band
@@ -19,5 +19,3 @@ class LatitudeBand {
     this.northingOffset = no;
   }
 }
-
-exports = LatitudeBand;

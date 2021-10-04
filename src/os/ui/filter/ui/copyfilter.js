@@ -1,28 +1,29 @@
-goog.module('os.ui.filter.ui.CopyFilterUI');
+goog.declareModuleId('os.ui.filter.ui.CopyFilterUI');
 
-goog.require('os.ui.filter.ui.CopyFilterPickerUI');
+import './copyfilterpicker.js';
+import ColumnMapping from '../../../column/columnmapping.js';
+import ColumnMappingManager from '../../../column/columnmappingmanager.js';
+import CommandProcessor from '../../../command/commandprocessor.js';
+import SequenceCommand from '../../../command/sequencecommand.js';
+import DataManager from '../../../data/datamanager.js';
+import {ROOT} from '../../../os.js';
+import {getFilterManager, getQueryManager} from '../../../query/queryinstance.js';
+import ChecklistEvent from '../../checklistevent.js';
+import Module from '../../module.js';
+import FilterAdd from '../../query/cmd/filteraddcmd.js';
+import {close} from '../../window.js';
+import WindowEventType from '../../windoweventtype.js';
+import {filterColumns, getFilterKeyFromType} from '../filter.js';
 
 const {insert} = goog.require('goog.array');
 const {assertString} = goog.require('goog.asserts');
 const {getCount} = goog.require('goog.object');
 const {caseInsensitiveCompare, getRandomString} = goog.require('goog.string');
-const {ROOT} = goog.require('os');
-const ColumnMapping = goog.require('os.column.ColumnMapping');
-const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const DataManager = goog.require('os.data.DataManager');
-const {getFilterManager, getQueryManager} = goog.require('os.query.instance');
-const ChecklistEvent = goog.require('os.ui.ChecklistEvent');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const {filterColumns, getFilterKeyFromType} = goog.require('os.ui.filter');
-const FilterAdd = goog.require('os.ui.query.cmd.FilterAdd');
-const {close} = goog.require('os.ui.window');
 
-const IColumnMapping = goog.requireType('os.column.IColumnMapping');
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
-const CopyFilterPickerModel = goog.requireType('os.ui.filter.ui.CopyFilterPickerModel');
+const {default: IColumnMapping} = goog.requireType('os.column.IColumnMapping');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
+const {default: CopyFilterPickerModel} = goog.requireType('os.ui.filter.ui.CopyFilterPickerModel');
 
 
 /**
@@ -30,7 +31,7 @@ const CopyFilterPickerModel = goog.requireType('os.ui.filter.ui.CopyFilterPicker
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -46,7 +47,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'copyfilter';
+export const directiveTag = 'copyfilter';
 
 /**
  * Add the directive to the module
@@ -57,7 +58,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the copyfilter directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -216,7 +217,7 @@ class Controller {
         var targetColumns = targetFilterable.getFilterColumns();
         if (targetColumns) {
           targetColumns = targetColumns.filter(filterColumns);
-          var targetLayerName = /** @type {os.data.IDataDescriptor} */ (targetFilterable).getTitle();
+          var targetLayerName = /** @type {IDataDescriptor} */ (targetFilterable).getTitle();
           assertString(targetLayerName);
 
           for (var j = 0, jj = this.sourceColumnNames_.length; j < jj; j++) {
@@ -453,10 +454,4 @@ const createPickerModel = (targetLayerName, targetFilterKey, sourceColumnName, t
     'mapping': opt_mapping
   });
   return model;
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

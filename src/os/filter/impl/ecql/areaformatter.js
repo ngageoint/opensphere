@@ -1,17 +1,18 @@
-goog.module('os.filter.impl.ecql.AreaFormatter');
+goog.declareModuleId('os.filter.impl.ecql.AreaFormatter');
+
+import {normalizeGeometryCoordinates} from '../../../geo/geo.js';
+import {ORIGINAL_GEOM_FIELD} from '../../../interpolate.js';
+import FilterFormatter from './filterformatter.js';
 
 const WKT = goog.require('ol.format.WKT');
-const FilterFormatter = goog.require('os.filter.impl.ecql.FilterFormatter');
-const {normalizeGeometryCoordinates} = goog.require('os.geo');
-const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
 
-const ISpatialFormatter = goog.requireType('os.filter.ISpatialFormatter');
+const {default: ISpatialFormatter} = goog.requireType('os.filter.ISpatialFormatter');
 
 
 /**
  * @implements {ISpatialFormatter}
  */
-class AreaFormatter {
+export default class AreaFormatter {
   /**
    * Constructor.
    * @param {string=} opt_column The geometry column name
@@ -112,5 +113,3 @@ class AreaFormatter {
     }
   }
 }
-
-exports = AreaFormatter;

@@ -1,7 +1,7 @@
 goog.require('os.ogc.filter.OGCFilterCleaner');
 
 describe('os.ogc.filter.OGCFilterCleaner', function() {
-  const OGCFilterCleaner = goog.module.get('os.ogc.filter.OGCFilterCleaner');
+  const {default: OGCFilterCleaner} = goog.module.get('os.ogc.filter.OGCFilterCleaner');
 
   it('should clean filters', function() {
     var dirty = '<filter>' +

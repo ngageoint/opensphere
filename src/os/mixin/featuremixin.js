@@ -1,13 +1,14 @@
 /**
  * @fileoverview Modifications to {@link Feature}.
  */
-goog.module('os.mixin.feature');
+goog.declareModuleId('os.mixin.feature');
+
+import {registerClass} from '../classregistry.js';
+import FeatureEvent from '../data/featureevent.js';
+import * as dispatcher from '../dispatcher.js';
 
 const Feature = goog.require('ol.Feature');
 const Style = goog.require('ol.style.Style');
-const dispatcher = goog.require('os.Dispatcher');
-const {registerClass} = goog.require('os.classRegistry');
-const FeatureEvent = goog.require('os.data.FeatureEvent');
 
 
 /**

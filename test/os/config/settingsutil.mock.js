@@ -1,6 +1,6 @@
 goog.module('test.os.config.SettingsUtil');
 
-const Settings = goog.requireType('os.config.Settings');
+const {default: Settings} = goog.requireType('os.config.Settings');
 
 
 /**

@@ -1,10 +1,11 @@
-goog.module('os.ui.DescriptionInfoUI');
+goog.declareModuleId('os.ui.DescriptionInfoUI');
+
+import {ROOT} from '../os.js';
+import Module from './module.js';
+import {sanitize} from './ui.js';
+import * as osWindow from './window.js';
 
 const {buildString, isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const {ROOT} = goog.require('os');
-const {sanitize} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const osWindow = goog.require('os.ui.window');
 
 
 /**
@@ -12,7 +13,7 @@ const osWindow = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -27,7 +28,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'descriptioninfo';
+export const directiveTag = 'descriptioninfo';
 
 /**
  * Add the directive to the module.
@@ -38,7 +39,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the descriptioninfo directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -86,7 +87,6 @@ class Controller {
   }
 }
 
-
 /**
  * Launches a feature info window for the provided feature.
  *
@@ -94,7 +94,7 @@ class Controller {
  * @param {!string} description The description string to display.
  * @param {string=} opt_titleDetail Title of the containing layer
  */
-const launchDescriptionInfo = function(id, description, opt_titleDetail) {
+export const launchDescriptionInfo = function(id, description, opt_titleDetail) {
   var winLabel = 'Description';
 
   if (opt_titleDetail) {
@@ -131,11 +131,5 @@ const launchDescriptionInfo = function(id, description, opt_titleDetail) {
     osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 };
-goog.exportSymbol('os.ui.launchDescriptionInfo', launchDescriptionInfo);
 
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchDescriptionInfo
-};
+goog.exportSymbol('os.ui.launchDescriptionInfo', launchDescriptionInfo);

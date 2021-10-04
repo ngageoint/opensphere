@@ -1,19 +1,20 @@
-goog.module('os.search.AbstractUrlSearch');
+goog.declareModuleId('os.search.AbstractUrlSearch');
+
+import Request from '../net/request.js';
+import AbstractSearch from './abstractsearch.js';
+import SearchEvent from './searchevent.js';
+import SearchEventType from './searcheventtype.js';
 
 const EventType = goog.require('goog.net.EventType');
-const Request = goog.require('os.net.Request');
-const AbstractSearch = goog.require('os.search.AbstractSearch');
-const SearchEvent = goog.require('os.search.SearchEvent');
-const SearchEventType = goog.require('os.search.SearchEventType');
 
 const GoogEvent = goog.requireType('goog.events.Event');
-const ISearchResult = goog.requireType('os.search.ISearchResult');
+const {default: ISearchResult} = goog.requireType('os.search.ISearchResult');
 
 
 /**
  * @abstract
  */
-class AbstractUrlSearch extends AbstractSearch {
+export default class AbstractUrlSearch extends AbstractSearch {
   /**
    * Constructor.
    * @param {string} id The unique identifier for the search provider.
@@ -256,5 +257,3 @@ class AbstractUrlSearch extends AbstractSearch {
     this.finish_(evt);
   }
 }
-
-exports = AbstractUrlSearch;

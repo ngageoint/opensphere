@@ -1,15 +1,15 @@
-goog.module('os.bearing.BearingSettings');
+goog.declareModuleId('os.bearing.BearingSettings');
 
-const bearing = goog.require('os.bearing');
-const {directiveTag: settingsUi} = goog.require('os.bearing.BearingSettingsUI');
-const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
+import SettingPlugin from '../ui/config/settingplugin.js';
+import * as bearing from './bearing.js';
+import {directiveTag as settingsUi} from './bearingsettingsui.js';
 
 
 /**
  * Settings plugin for controlling bearing settings. When it is instantiated, it lazy loads the geomagnetic
  * data needed for calculating magnetic north bearings.
  */
-class BearingSettings extends SettingPlugin {
+export default class BearingSettings extends SettingPlugin {
   /**
    * Constructor.
    */
@@ -26,5 +26,3 @@ class BearingSettings extends SettingPlugin {
     bearing.loadGeomag();
   }
 }
-
-exports = BearingSettings;

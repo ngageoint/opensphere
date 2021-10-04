@@ -1,16 +1,17 @@
-goog.module('os.command.TransformVectors');
+goog.declareModuleId('os.command.TransformVectors');
+
+import RecordField from '../data/recordfield.js';
+import * as osFeature from '../feature/feature.js';
+import * as geo2 from '../geo/geo2.js';
+import * as interpolate from '../interpolate.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import State from './state.js';
 
 const Geometry = goog.require('ol.geom.Geometry');
 const OLVectorLayer = goog.require('ol.layer.Vector');
 const olProj = goog.require('ol.proj');
-const State = goog.require('os.command.State');
-const RecordField = goog.require('os.data.RecordField');
-const osFeature = goog.require('os.feature');
-const geo2 = goog.require('os.geo2');
-const interpolate = goog.require('os.interpolate');
-const {getMapContainer} = goog.require('os.map.instance');
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -18,7 +19,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class TransformVectors {
+export default class TransformVectors {
   /**
    * Constructor.
    * @param {!ol.ProjectionLike} source
@@ -174,5 +175,3 @@ class TransformVectors {
     }
   }
 }
-
-exports = TransformVectors;

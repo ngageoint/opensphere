@@ -1,24 +1,25 @@
-goog.module('os.state.v4.FilterAction');
+goog.declareModuleId('os.state.v4.FilterAction');
+
+import DataManager from '../../data/datamanager.js';
+import FilterActionParser from '../../im/action/filteractionparser.js';
+import {testFilterActionEnabled} from '../../im/action/importaction.js';
+import ImportActionManager from '../../im/action/importactionmanager.js';
+import {exportEntries} from '../../ui/im/action/filteraction.js';
+import {XMLNS} from '../../xml.js';
+import AbstractState from '../abstractstate.js';
+import XMLState from '../xmlstate.js';
 
 const {getChildren} = goog.require('goog.dom');
 const log = goog.require('goog.log');
-const DataManager = goog.require('os.data.DataManager');
-const {testFilterActionEnabled} = goog.require('os.im.action');
-const FilterActionParser = goog.require('os.im.action.FilterActionParser');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const {exportEntries} = goog.require('os.im.action.filter');
-const AbstractState = goog.require('os.state.AbstractState');
-const XMLState = goog.require('os.state.XMLState');
-const {XMLNS} = goog.require('os.xml');
 
 const Logger = goog.requireType('goog.log.Logger');
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
 
 
 /**
  * State implementation to save filter actions.
  */
-class FilterAction extends XMLState {
+export default class FilterAction extends XMLState {
   /**
    * Constructor.
    */
@@ -155,5 +156,3 @@ const addedEntries = {};
  * @const
  */
 FilterAction.OGC_NS = 'http://www.opengis.net/ogc';
-
-exports = FilterAction;

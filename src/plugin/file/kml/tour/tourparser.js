@@ -4,6 +4,7 @@
  */
 goog.declareModuleId('plugin.file.kml.tour.parseTour');
 
+import FlightMode from '../../../../os/map/flightmode.js';
 import Tour from './tour.js';
 import TourControl from './tourcontrol.js';
 import FlyTo from './tourflyto.js';
@@ -13,7 +14,7 @@ import Wait from './tourwait.js';
 const KML = goog.require('ol.format.KML');
 const XSD = goog.require('ol.format.XSD');
 const xml = goog.require('ol.xml');
-const FlightMode = goog.require('os.map.FlightMode');
+
 
 /**
  * Parses a KML Tour element into a tour object.

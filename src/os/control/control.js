@@ -1,21 +1,22 @@
-goog.module('os.control');
+goog.declareModuleId('os.control');
+
+import MousePosition from '../ol/control/mousepositioncontrol.js';
+import * as osProj from '../proj/proj.js';
+import AlertPopup from './alertpopup.js';
+import Attribution from './attribution.js';
+import MapMode from './mapmodecontrol.js';
+import Rotate from './rotatecontrol.js';
+import ScaleLine from './scaleline.js';
+import Zoom from './zoomcontrol.js';
+import ZoomLevel from './zoomlevel.js';
 
 const Collection = goog.require('ol.Collection');
-const AlertPopup = goog.require('os.control.AlertPopup');
-const Attribution = goog.require('os.control.Attribution');
-const MapMode = goog.require('os.control.MapMode');
-const Rotate = goog.require('os.control.Rotate');
-const ScaleLine = goog.require('os.control.ScaleLine');
-const Zoom = goog.require('os.control.Zoom');
-const ZoomLevel = goog.require('os.control.ZoomLevel');
-const MousePosition = goog.require('os.ol.control.MousePosition');
-const osProj = goog.require('os.proj');
 
 
 /**
  * @return {Collection}
  */
-const getControls = function() {
+export const getControls = function() {
   var controls = [];
 
   var scaleLine = new ScaleLine({
@@ -66,8 +67,4 @@ const getControls = function() {
   controls.push(attributions);
 
   return new Collection(controls);
-};
-
-exports = {
-  getControls
 };

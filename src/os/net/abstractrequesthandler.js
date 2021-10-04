@@ -1,9 +1,10 @@
-goog.module('os.net.AbstractRequestHandler');
+goog.declareModuleId('os.net.AbstractRequestHandler');
+
+import IRequestHandler from './irequesthandler.js';// eslint-disable-line
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const ErrorCode = goog.require('goog.net.ErrorCode');
-const IRequestHandler = goog.require('os.net.IRequestHandler'); // eslint-disable-line
 
 const Logger = goog.requireType('goog.log.Logger');
 const XhrIo = goog.requireType('goog.net.XhrIo');
@@ -15,7 +16,7 @@ const XhrIo = goog.requireType('goog.net.XhrIo');
  * @abstract
  * @implements {IRequestHandler}
  */
-class AbstractRequestHandler extends EventTarget {
+export default class AbstractRequestHandler extends EventTarget {
   /**
    * Constructor.
    */
@@ -201,5 +202,3 @@ class AbstractRequestHandler extends EventTarget {
  * @type {Logger}
  */
 const logger = log.getLogger('os.net.AbstractRequestHandler');
-
-exports = AbstractRequestHandler;

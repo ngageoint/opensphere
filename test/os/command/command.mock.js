@@ -1,7 +1,7 @@
 goog.module('os.command.MockCommand');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
-const State = goog.require('os.command.State');
+const {default: State} = goog.require('os.command.State');
 
 
 /**

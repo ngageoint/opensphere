@@ -1,7 +1,7 @@
-goog.module('os.im.mapping.StaticMapping');
+goog.declareModuleId('os.im.mapping.StaticMapping');
 
-const {getItemField, setItemField} = goog.require('os.im.mapping');
-const AbstractMapping = goog.require('os.im.mapping.AbstractMapping');
+import AbstractMapping from './abstractmapping.js';
+import {getItemField, setItemField} from './mapping.js';
 
 
 /**
@@ -9,7 +9,7 @@ const AbstractMapping = goog.require('os.im.mapping.AbstractMapping');
  *
  * @extends {AbstractMapping<Object>}
  */
-class StaticMapping extends AbstractMapping {
+export default class StaticMapping extends AbstractMapping {
   /**
    * Constructor.
    */
@@ -87,5 +87,3 @@ class StaticMapping extends AbstractMapping {
  * @type {string}
  */
 StaticMapping.ID = 'Static';
-
-exports = StaticMapping;

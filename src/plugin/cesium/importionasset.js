@@ -1,13 +1,12 @@
 goog.declareModuleId('plugin.cesium.ImportIonAssetUI');
 
+import DataManager from '../../os/data/datamanager.js';
 import {ROOT} from '../../os/os.js';
+import Module from '../../os/ui/module.js';
+import * as osWindow from '../../os/ui/window.js';
+import WindowEventType from '../../os/ui/windoweventtype.js';
 import TilesDescriptor from './tiles/cesium3dtilesdescriptor.js';
 import TilesProvider from './tiles/cesium3dtilesprovider.js';
-
-const DataManager = goog.require('os.data.DataManager');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const osWindow = goog.require('os.ui.window');
 
 
 /**

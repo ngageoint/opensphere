@@ -1,21 +1,22 @@
-goog.module('os.load.LoadingManager');
+goog.declareModuleId('os.load.LoadingManager');
+
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import LoadingEvent from './loadingevent.js';
+import LoadingEventType from './loadingeventtype.js';
+import LoadingTask from './loadingtask.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const {isEmpty} = goog.require('goog.object');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const LoadingEvent = goog.require('os.load.LoadingEvent');
-const LoadingEventType = goog.require('os.load.LoadingEventType');
-const LoadingTask = goog.require('os.load.LoadingTask');
 
 const Logger = goog.requireType('goog.log.Logger');
-const ILoadingTask = goog.requireType('os.load.ILoadingTask');
+const {default: ILoadingTask} = goog.requireType('os.load.ILoadingTask');
 
 
 /**
  * Manages loading tasks within an application.
  */
-class LoadingManager extends EventTarget {
+export default class LoadingManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -157,5 +158,3 @@ const logger = log.getLogger('os.load.LoadingManager');
  * @const
  */
 LoadingManager.LOADING = 'loadingManager:loading';
-
-exports = LoadingManager;

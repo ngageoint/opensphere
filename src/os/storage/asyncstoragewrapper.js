@@ -1,15 +1,16 @@
-goog.module('os.storage.AsyncStorageWrapper');
+goog.declareModuleId('os.storage.AsyncStorageWrapper');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import {getAppName, getSupportContact} from '../config/config.js';
+import osImplements from '../implements.js';
+import AsyncStorage from './asyncstorage.js';
+import IMechanism from './imechanism.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 const log = goog.require('goog.log');
 const ErrorCode = goog.require('goog.storage.mechanism.ErrorCode');
 const IterableMechanism = goog.require('goog.storage.mechanism.IterableMechanism');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const {getAppName, getSupportContact} = goog.require('os.config');
-const osImplements = goog.require('os.implements');
-const AsyncStorage = goog.require('os.storage.AsyncStorage');
-const IMechanism = goog.require('os.storage.IMechanism');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -23,7 +24,7 @@ const Logger = goog.requireType('goog.log.Logger');
  *
  * @template T,S
  */
-class AsyncStorageWrapper extends AsyncStorage {
+export default class AsyncStorageWrapper extends AsyncStorage {
   /**
    * Constructor.
    * @param {!IMechanism} mechanism The underlying storage mechanism.
@@ -191,6 +192,3 @@ class AsyncStorageWrapper extends AsyncStorage {
  * @type {Logger}
  */
 const logger = log.getLogger('os.storage.AsyncStorageWrapper');
-
-
-exports = AsyncStorageWrapper;

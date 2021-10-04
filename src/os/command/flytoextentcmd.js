@@ -1,16 +1,17 @@
-goog.module('os.command.FlyToExtent');
+goog.declareModuleId('os.command.FlyToExtent');
+
+import * as osMap from '../map/map.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import AbstractSyncCommand from './abstractsynccommand.js';
+import State from './state.js';
 
 const math = goog.require('goog.math');
-const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
-const State = goog.require('os.command.State');
-const osMap = goog.require('os.map');
-const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
  * Command to fit map to extent.
  */
-class FlyToExtent extends AbstractSyncCommand {
+export default class FlyToExtent extends AbstractSyncCommand {
   /**
    * Constructor.
    * @param {ol.Extent} extent Array of the extent box [minx, miny, maxx, maxy].
@@ -102,6 +103,3 @@ class FlyToExtent extends AbstractSyncCommand {
  * @const
  */
 FlyToExtent.DEFAULT_BUFFER = 1.5;
-
-
-exports = FlyToExtent;

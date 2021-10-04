@@ -1,4 +1,4 @@
-goog.module('os.config.DisplaySetting');
+goog.declareModuleId('os.config.DisplaySetting');
 
 /**
  * The base key used by all display settings.
@@ -10,7 +10,7 @@ const baseKey = 'os.map.';
  * Display settings keys.
  * @enum {string}
  */
-exports = {
+const DisplaySetting = {
   // intetionally not prefixed (old setting)
   BG_COLOR: 'bgColor',
 
@@ -25,3 +25,5 @@ exports = {
   ENABLE_TERRAIN: baseKey + 'enableTerrain',
   RESET_ROTATION_2D: baseKey + 'resetRotation2d'
 };
+
+export default DisplaySetting;

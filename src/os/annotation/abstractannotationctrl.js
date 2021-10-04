@@ -1,11 +1,12 @@
-goog.module('os.annotation.AbstractAnnotationCtrl');
+goog.declareModuleId('os.annotation.AbstractAnnotationCtrl');
+
+import * as dispatcher from '../dispatcher.js';
+import {EDIT_HEIGHT, EDIT_WIDTH, EventType} from './annotation.js';
+import TailStyle from './tailstyle.js';
+import TailType from './tailtype.js';
 
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const dispose = goog.require('goog.dispose');
-const dispatcher = goog.require('os.Dispatcher');
-const {EDIT_HEIGHT, EDIT_WIDTH, EventType} = goog.require('os.annotation');
-const TailStyle = goog.require('os.annotation.TailStyle');
-const TailType = goog.require('os.annotation.TailType');
 
 
 /**
@@ -22,7 +23,7 @@ const selectors = {
  * @abstract
  * @unrestricted
  */
-class Controller {
+export default class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -462,5 +463,3 @@ class Controller {
     return anchor;
   }
 }
-
-exports = Controller;

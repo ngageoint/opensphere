@@ -1,14 +1,15 @@
-goog.module('os.ui.ol.interaction.AreaHover');
+goog.declareModuleId('os.ui.ol.interaction.AreaHover');
+
+import {getAreaManager} from '../../../query/queryinstance.js';
+import * as area from '../../../style/areastyle.js';
+import TimelineController from '../../../time/timelinecontroller.js';
+import OLMap from '../olmap.js';
+import {getEventFeature, getFirstPolygon} from './interaction.js';
 
 const ViewHint = goog.require('ol.ViewHint');
 const {pointerMove} = goog.require('ol.events.condition');
 const Select = goog.require('ol.interaction.Select');
 const OLVectorLayer = goog.require('ol.layer.Vector');
-const {getAreaManager} = goog.require('os.query.instance');
-const area = goog.require('os.style.area');
-const TimelineController = goog.require('os.time.TimelineController');
-const OLMap = goog.require('os.ui.ol.OLMap');
-const {getEventFeature, getFirstPolygon} = goog.require('os.ui.ol.interaction');
 
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 
@@ -16,7 +17,7 @@ const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 /**
  * Handles hover/highlight of areas
  */
-class AreaHover extends Select {
+export default class AreaHover extends Select {
   /**
    * Constructor.
    * @param {olx.interaction.SelectOptions=} opt_options Options.
@@ -80,5 +81,3 @@ class AreaHover extends Select {
     return true;
   }
 }
-
-exports = AreaHover;

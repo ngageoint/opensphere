@@ -1,15 +1,14 @@
 goog.declareModuleId('plugin.im.action.feature.legend');
 
+import osImplements from '../../os/implements.js';
+import ILegendRenderer from '../../os/legend/ilegendrenderer.js';
+import * as legend from '../../os/legend/legend.js';
 import FeatureActionManager from './featureactionmanager.js';
 
-const osImplements = goog.require('os.implements');
-const legend = goog.require('os.legend');
-const ILegendRenderer = goog.require('os.legend.ILegendRenderer');
-
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
-const IImportAction = goog.requireType('os.im.action.IImportAction');
-const VectorLayer = goog.requireType('os.layer.Vector');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
+const {default: IImportAction} = goog.requireType('os.im.action.IImportAction');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**

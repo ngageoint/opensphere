@@ -1,11 +1,10 @@
 goog.declareModuleId('plugin.file.csv.CSVLayerConfig');
 
+import AbstractDataSourceLayerConfig from '../../../os/layer/config/abstractdatasourcelayerconfig.js';
 import CSVParser from './csvparser.js';
 import CSVParserConfig from './csvparserconfig.js';
 
-const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
-
-const FeatureImporter = goog.requireType('os.im.FeatureImporter');
+const {default: FeatureImporter} = goog.requireType('os.im.FeatureImporter');
 
 
 /**

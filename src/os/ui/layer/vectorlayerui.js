@@ -1,69 +1,69 @@
-goog.module('os.ui.layer.VectorLayerUI');
+goog.declareModuleId('os.ui.layer.VectorLayerUI');
 
-goog.require('os.ui.UISwitchUI');
-goog.require('os.ui.layer.EllipseOptionsUI');
-goog.require('os.ui.layer.IconStyleControlsUI');
-goog.require('os.ui.layer.LabelControlsUI');
-goog.require('os.ui.layer.LobOptionsUI');
-goog.require('os.ui.layer.VectorStyleControlsUI');
+import '../uiswitch.js';
+import './ellipseoptions.js';
+import './iconstylecontrols.js';
+import './labelcontrols.js';
+import './loboptions.js';
+import './vectorstylecontrols.js';
+
+import {toHexString, toRgbArray} from '../../color.js';
+import ColorChangeType from '../../command/colorchangetype.js';
+import SequenceCommand from '../../command/sequencecommand.js';
+import VectorLayerCenterShape from '../../command/vectorlayercentershapecmd.js';
+import VectorLayerColor from '../../command/vectorlayercolorcmd.js';
+import VectorLayerFillOpacity from '../../command/vectorlayerfillopacitycmd.js';
+import VectorLayerIcon from '../../command/vectorlayericoncmd.js';
+import VectorLayerLabel from '../../command/vectorlayerlabelcmd.js';
+import VectorLayerLabelColor from '../../command/vectorlayerlabelcolorcmd.js';
+import VectorLayerLabelSize from '../../command/vectorlayerlabelsizecmd.js';
+import VectorLayerLineDash from '../../command/vectorlayerlinedashcmd.js';
+import VectorLayerReplaceStyle from '../../command/vectorlayerreplacestylecmd.js';
+import VectorLayerRotation from '../../command/vectorlayerrotationcmd.js';
+import VectorLayerShape from '../../command/vectorlayershapecmd.js';
+import VectorLayerShowLabel from '../../command/vectorlayershowlabelcmd.js';
+import VectorLayerShowRotation from '../../command/vectorlayershowrotationcmd.js';
+import VectorLayerSize from '../../command/vectorlayersizecmd.js';
+import VectorUniqueIdCmd from '../../command/vectoruniqueidcmd.js';
+import Settings from '../../config/settings.js';
+import DataManager from '../../data/datamanager.js';
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import osImplements from '../../implements.js';
+import ILayer from '../../layer/ilayer.js';
+import * as osLayer from '../../layer/layer.js';
+import LayerPresetManager from '../../layer/preset/layerpresetmanager.js';
+import {getSavedPresetId, getSavedPresetClean} from '../../layer/preset/preset.js';
+import * as PresetMenuButton from '../../layer/preset/presetmenubutton.js';
+import PropertyChange from '../../layer/propertychange.js';
+import MapChange from '../../map/mapchange.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import {ROOT} from '../../os.js';
+import VectorSource from '../../source/vectorsource.js';
+import * as osLabel from '../../style/label.js';
+import * as osStyle from '../../style/style.js';
+import StyleField from '../../style/stylefield.js';
+import StyleManager from '../../style/stylemanager_shim.js';
+import AltitudeMode from '../../webgl/altitudemode.js';
+import {mapAltitudeModeToName} from '../../webgl/webgl.js';
+import ColorControlType from '../colorcontroltype.js';
+import {GOOGLE_EARTH_ICON_SET, getDefaultIcon, replaceGoogleUri} from '../file/kml/kml.js';
+import IconPickerEventType from '../icon/iconpickereventtype.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import UISwitchEventType from '../uiswitcheventtype.js';
+import {Controller as DefaultLayerUICtrl} from './defaultlayerui.js';
+import * as EllipseColumnsUI from './ellipsecolumns.js';
+import LabelControlsEventType from './labelcontrolseventtype.js';
+import * as osUiLayer from './layers.js';
+import VectorStyleControlsEventType from './vectorstylecontrolseventtype.js';
 
 const Delay = goog.require('goog.async.Delay');
 const {rgbArrayToHex} = goog.require('goog.color');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
-const {ROOT} = goog.require('os');
-const MapChange = goog.require('os.MapChange');
-const {toHexString, toRgbArray} = goog.require('os.color');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const VectorLayerCenterShape = goog.require('os.command.VectorLayerCenterShape');
-const VectorLayerColor = goog.require('os.command.VectorLayerColor');
-const VectorLayerFillOpacity = goog.require('os.command.VectorLayerFillOpacity');
-const VectorLayerIcon = goog.require('os.command.VectorLayerIcon');
-const VectorLayerLabel = goog.require('os.command.VectorLayerLabel');
-const VectorLayerLabelColor = goog.require('os.command.VectorLayerLabelColor');
-const VectorLayerLabelSize = goog.require('os.command.VectorLayerLabelSize');
-const VectorLayerLineDash = goog.require('os.command.VectorLayerLineDash');
-const VectorLayerReplaceStyle = goog.require('os.command.VectorLayerReplaceStyle');
-const VectorLayerRotation = goog.require('os.command.VectorLayerRotation');
-const VectorLayerShape = goog.require('os.command.VectorLayerShape');
-const VectorLayerShowLabel = goog.require('os.command.VectorLayerShowLabel');
-const VectorLayerShowRotation = goog.require('os.command.VectorLayerShowRotation');
-const VectorLayerSize = goog.require('os.command.VectorLayerSize');
-const VectorUniqueIdCmd = goog.require('os.command.VectorUniqueIdCmd');
-const ColorChangeType = goog.require('os.command.style.ColorChangeType');
-const Settings = goog.require('os.config.Settings');
-const DataManager1 = goog.require('os.data.DataManager');
-const DataManager = goog.require('os.data.DataManager');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osImplements = goog.require('os.implements');
-const osLayer = goog.require('os.layer');
-const ILayer = goog.require('os.layer.ILayer');
-const PropertyChange = goog.require('os.layer.PropertyChange');
-const {getSavedPresetId, getSavedPresetClean} = goog.require('os.layer.preset');
-const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
-const PresetMenuButton = goog.require('os.layer.preset.PresetMenuButton');
-const {getMapContainer} = goog.require('os.map.instance');
-const VectorSource = goog.require('os.source.Vector');
-const osStyle = goog.require('os.style');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
-const osLabel = goog.require('os.style.label');
-const {apply} = goog.require('os.ui');
-const ColorControlType = goog.require('os.ui.ColorControlType');
-const Module = goog.require('os.ui.Module');
-const UISwitchEventType = goog.require('os.ui.UISwitchEventType');
-const {GOOGLE_EARTH_ICON_SET, getDefaultIcon, replaceGoogleUri} = goog.require('os.ui.file.kml');
-const IconPickerEventType = goog.require('os.ui.icon.IconPickerEventType');
-const osUiLayer = goog.require('os.ui.layer');
-const EllipseColumnsUI = goog.require('os.ui.layer.EllipseColumnsUI');
-const LabelControlsEventType = goog.require('os.ui.layer.LabelControlsEventType');
-const {Controller: DefaultLayerUICtrl} = goog.require('os.ui.layer.DefaultLayerUI');
-const VectorStyleControlsEventType = goog.require('os.ui.layer.VectorStyleControlsEventType');
-const {mapAltitudeModeToName} = goog.require('os.webgl');
-const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
-const ICommand = goog.requireType('os.command.ICommand');
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 
 
 /**
@@ -71,7 +71,7 @@ const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   templateUrl: ROOT + 'views/layer/vector.html',
@@ -83,7 +83,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'vectorlayerui';
+export const directiveTag = 'vectorlayerui';
 
 /**
  * Add the directive to the module
@@ -94,7 +94,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the vector layer UI
  * @unrestricted
  */
-class Controller extends DefaultLayerUICtrl {
+export class Controller extends DefaultLayerUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -1046,7 +1046,7 @@ class Controller extends DefaultLayerUICtrl {
     var shape;
 
     if (items && items.length > 0) {
-      var source = DataManager1.getInstance().getSource(items[0].getId());
+      var source = DataManager.getInstance().getSource(items[0].getId());
       if (source) {
         shape = source.getGeometryShape();
       }
@@ -1069,7 +1069,7 @@ class Controller extends DefaultLayerUICtrl {
 
       if (items && items.length > 0) {
         for (var i = 0, n = items.length; i < n; i++) {
-          var source = DataManager1.getInstance().getSource(items[i].getId());
+          var source = DataManager.getInstance().getSource(items[i].getId());
           if (source && source instanceof VectorSource) {
             shapes = shapes.filter(source.supportsShape, source);
           }
@@ -1089,7 +1089,7 @@ class Controller extends DefaultLayerUICtrl {
     var shape;
 
     if (items && items.length > 0) {
-      var source = DataManager1.getInstance().getSource(items[0].getId());
+      var source = DataManager.getInstance().getSource(items[0].getId());
       if (source) {
         var tempShape = source.getCenterGeometryShape();
         if (!osStyle.ELLIPSE_REGEXP.test(tempShape) && !osStyle.DEFAULT_REGEXP.test(tempShape)) {
@@ -1112,7 +1112,7 @@ class Controller extends DefaultLayerUICtrl {
 
     if (items && items.length > 0) {
       for (var i = 0, n = items.length; i < n; i++) {
-        var source = DataManager1.getInstance().getSource(items[i].getId());
+        var source = DataManager.getInstance().getSource(items[i].getId());
         if (source && source instanceof VectorSource) {
           shapes = shapes.filter(source.isNotEllipseOrLOBOrDefault, source);
         }
@@ -1134,7 +1134,7 @@ class Controller extends DefaultLayerUICtrl {
     var items = /** @type {Array} */ (this.scope['items']);
     if (items && items.length > 0) {
       for (var i = 0, n = items.length; i < n; i++) {
-        var source = DataManager1.getInstance().getSource(items[i].getId());
+        var source = DataManager.getInstance().getSource(items[i].getId());
         if (source && source instanceof VectorSource) {
           if (!source.isLockable()) {
             lockable = false;
@@ -1202,7 +1202,7 @@ class Controller extends DefaultLayerUICtrl {
     var items = /** @type {Array} */ (this.scope['items']);
     if (items && items.length > 0) {
       for (var i = 0, n = items.length; i < n; i++) {
-        var source = DataManager1.getInstance().getSource(items[i].getId());
+        var source = DataManager.getInstance().getSource(items[i].getId());
         if (source && source instanceof VectorSource && source.isLockable()) {
           source.setLocked(this['lock']);
         }
@@ -1279,7 +1279,7 @@ class Controller extends DefaultLayerUICtrl {
     var items = /** @type {Array} */ (this.scope['items']);
     if (items && items.length > 0) {
       for (var i = 0, n = items.length; i < n; i++) {
-        var source = DataManager1.getInstance().getSource(items[i].getId());
+        var source = DataManager.getInstance().getSource(items[i].getId());
         if (source && source instanceof VectorSource) {
           altitudeMode = source.getAltitudeMode();
           break;
@@ -1298,7 +1298,7 @@ class Controller extends DefaultLayerUICtrl {
     var items = /** @type {Array} */ (this.scope['items']);
     if (items && items.length > 0) {
       for (var i = 0, n = items.length; i < n; i++) {
-        var source = DataManager1.getInstance().getSource(items[i].getId());
+        var source = DataManager.getInstance().getSource(items[i].getId());
         if (source && source instanceof VectorSource) {
           source.setAltitudeMode(this['altitudeMode']);
         }
@@ -1438,9 +1438,3 @@ class Controller extends DefaultLayerUICtrl {
     return mapAltitudeModeToName(altitudeMode);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

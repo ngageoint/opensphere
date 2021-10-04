@@ -1,55 +1,56 @@
-goog.module('os.ui.menu.spatial');
+goog.declareModuleId('os.ui.menu.spatial');
+
+import EventType from '../../action/eventtype.js';
+import AreaToggle from '../../command/areatogglecmd.js';
+import CommandProcessor from '../../command/commandprocessor.js';
+import SequenceCommand from '../../command/sequencecommand.js';
+import RecordField from '../../data/recordfield.js';
+import * as dispatcher from '../../dispatcher.js';
+import PayloadEvent from '../../events/payloadevent.js';
+import {getSource} from '../../feature/feature.js';
+import {filterFalsey} from '../../fn/fn.js';
+import {isGeometryPolygonal, isGeometryRectangular} from '../../geo/geo.js';
+import {normalizeRings} from '../../geo/geo2.js';
+import osImplements from '../../implements.js';
+import {ORIGINAL_GEOM_FIELD} from '../../interpolate.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import {ROOT} from '../../os.js';
+import BaseAreaManager from '../../query/baseareamanager.js';
+import {getAreaManager, getQueryManager} from '../../query/queryinstance.js';
+import * as MergeAreasUI from '../../query/ui/mergeareas.js';
+import {supportsGeoSearch} from '../../search/search.js';
+import SearchEventType from '../../search/searcheventtype.js';
+import SearchManager from '../../search/searchmanager.js';
+import IModifiableSource from '../../source/imodifiablesource.js';
+import ActionEventType from '../action/actioneventtype.js';
+import * as AreaExportUI from '../ex/areaexportdialog.js';
+import launchMultiFeatureInfo from '../feature/launchmultifeatureinfo.js';
+import Module from '../module.js';
+import AreaAdd from '../query/cmd/areaaddcmd.js';
+import AreaRemove from '../query/cmd/arearemovecmd.js';
+import * as ModifyAreaUI from '../query/modifyarea.js';
+import {EDIT_WIN_LABEL, SAVE_WIN_LABEL} from '../query/query.js';
+import * as osWindow from '../window.js';
+import MenuItem from './menuitem.js';
+import MenuItemType from './menuitemtype.js';
+import SpatialMenu from './spatialmenu.js';
 
 const googDispose = goog.require('goog.dispose');
 const {caseInsensitiveCompare, toTitleCase} = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
 const Polygon = goog.require('ol.geom.Polygon');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const EventType = goog.require('os.action.EventType');
-const AreaToggle = goog.require('os.command.AreaToggle');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const RecordField = goog.require('os.data.RecordField');
-const PayloadEvent = goog.require('os.events.PayloadEvent');
-const {getSource} = goog.require('os.feature');
-const {filterFalsey} = goog.require('os.fn');
-const {isGeometryPolygonal, isGeometryRectangular} = goog.require('os.geo');
-const {normalizeRings} = goog.require('os.geo2');
-const osImplements = goog.require('os.implements');
-const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
-const {getMapContainer} = goog.require('os.map.instance');
-const {getAreaManager, getQueryManager} = goog.require('os.query.instance');
-const BaseAreaManager = goog.require('os.query.BaseAreaManager');
-const MergeAreasUI = goog.require('os.query.ui.MergeAreasUI');
-const {supportsGeoSearch} = goog.require('os.search');
-const SearchEventType = goog.require('os.search.SearchEventType');
-const SearchManager = goog.require('os.search.SearchManager');
-const IModifiableSource = goog.require('os.source.IModifiableSource');
-const Module = goog.require('os.ui.Module');
-const ActionEventType = goog.require('os.ui.action.EventType');
-const AreaExportUI = goog.require('os.ui.ex.AreaExportUI');
-const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const SpatialMenu = goog.require('os.ui.menu.SpatialMenu');
-const {EDIT_WIN_LABEL, SAVE_WIN_LABEL} = goog.require('os.ui.query');
-const ModifyAreaUI = goog.require('os.ui.query.ModifyAreaUI');
-const AreaAdd = goog.require('os.ui.query.cmd.AreaAdd');
-const AreaRemove = goog.require('os.ui.query.cmd.AreaRemove');
-const osWindow = goog.require('os.ui.window');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
-const ILayer = goog.requireType('os.layer.ILayer');
-const Menu = goog.requireType('os.ui.menu.Menu');
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: Menu} = goog.requireType('os.ui.menu.Menu');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 
 
 /**
  * Default groups in the spatial menu.
  * @enum {string}
  */
-const Group = {
+export const Group = {
   QUERY: 'Query',
   EXCLUDE: 'Exclude',
   FEATURES: 'Features',
@@ -66,20 +67,20 @@ let MENU = undefined;
  * Get the menu.
  * @return {SpatialMenu|undefined}
  */
-const getMenu = () => MENU;
+export const getMenu = () => MENU;
 
 /**
  * Set the menu.
  * @param {SpatialMenu|undefined} menu The menu.
  */
-const setMenu = (menu) => {
+export const setMenu = (menu) => {
   MENU = menu;
 };
 
 /**
  * Set up the menu.
  */
-const setup = function() {
+export const setup = function() {
   var menu = MENU;
   if (!menu) {
     menu = MENU = new SpatialMenu(new MenuItem({
@@ -272,7 +273,7 @@ const setup = function() {
 /**
  * Dispose the menu.
  */
-const dispose = function() {
+export const dispose = function() {
   googDispose(MENU);
   MENU = undefined;
 };
@@ -283,7 +284,7 @@ const dispose = function() {
  * @param {Object|undefined} context The menu context.
  * @return {!Array<!Geometry>}
  */
-const getGeometriesFromContext = function(context) {
+export const getGeometriesFromContext = function(context) {
   if (context) {
     var list = !Array.isArray(context) ? [context] : context;
     var geometries = list.map(function(item) {
@@ -312,7 +313,7 @@ const getGeometriesFromContext = function(context) {
  * @param {Object|undefined} context The menu context.
  * @return {!Array<Feature>}
  */
-const getFeaturesFromContext = function(context) {
+export const getFeaturesFromContext = function(context) {
   if (context) {
     var list = !Array.isArray(context) ? [context] : context;
     var features = list.map(function(item) {
@@ -333,7 +334,7 @@ const getFeaturesFromContext = function(context) {
  * @param {!Array<Feature>} features The features
  * @return {boolean} If all features are in the area manager
  */
-const featuresInAreaManager = function(features) {
+export const featuresInAreaManager = function(features) {
   if (features.length > 0) {
     for (var i = 0, n = features.length; i < n; i++) {
       var feature = features[i];
@@ -357,7 +358,7 @@ const featuresInAreaManager = function(features) {
  * @param {Object|undefined} context The menu context.
  * @return {boolean}
  */
-const hasMultiple = function(context) {
+export const hasMultiple = function(context) {
   return !!(context && context.length > 1);
 };
 
@@ -367,7 +368,7 @@ const hasMultiple = function(context) {
  * @param {Object|undefined} context The menu context.
  * @return {boolean}
  */
-const hasSingle = function(context) {
+export const hasSingle = function(context) {
   return !!(context && (context.length === 1 || !Array.isArray(context)));
 };
 
@@ -377,7 +378,7 @@ const hasSingle = function(context) {
  * @param {Object|undefined} context The menu context.
  * @return {boolean}
  */
-const inAreaManager = function(context) {
+export const inAreaManager = function(context) {
   if (!isPolygonal(context)) {
     return false;
   }
@@ -392,7 +393,7 @@ const inAreaManager = function(context) {
  * @param {Object|undefined} context The menu context.
  * @return {boolean} If all objects have a polygonal geometry.
  */
-const isPolygonal = function(context) {
+export const isPolygonal = function(context) {
   var geometries = getGeometriesFromContext(context);
   if (geometries.length) {
     for (var i = 0; i < geometries.length; i++) {
@@ -413,7 +414,7 @@ const isPolygonal = function(context) {
  * @param {Object|undefined} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfHasMultiple = function(context) {
+export const visibleIfHasMultiple = function(context) {
   this.visible = hasMultiple(context);
 };
 
@@ -423,7 +424,7 @@ const visibleIfHasMultiple = function(context) {
  * @param {Object|undefined} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfMultiplePolygonal = function(context) {
+export const visibleIfMultiplePolygonal = function(context) {
   this.visible = hasMultiple(context) && isPolygonal(context);
 };
 
@@ -433,7 +434,7 @@ const visibleIfMultiplePolygonal = function(context) {
  * @param {Object|undefined} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfPolygonal = function(context) {
+export const visibleIfPolygonal = function(context) {
   this.visible = isPolygonal(context);
 };
 
@@ -443,7 +444,7 @@ const visibleIfPolygonal = function(context) {
  * @param {Object|undefined} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfInLayer = function(context) {
+export const visibleIfInLayer = function(context) {
   this.visible = isInLayer(context);
 };
 
@@ -451,7 +452,7 @@ const visibleIfInLayer = function(context) {
  * @param {Object|undefined} context The menu context
  * @return {boolean}
  */
-const isInLayer = function(context) {
+export const isInLayer = function(context) {
   if (Array.isArray(context)) {
     for (var i = 0, n = context.length; i < n; i++) {
       if (!isInLayer(context[i])) {
@@ -468,7 +469,7 @@ const isInLayer = function(context) {
 /**
  * @param {MenuEvent<Object|undefined>} evt The menu event
  */
-const removeItems = function(evt) {
+export const removeItems = function(evt) {
   var context = evt.getContext();
   if (!Array.isArray(context)) {
     context = [context];
@@ -490,7 +491,7 @@ const removeItems = function(evt) {
  * @param {Object|undefined} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfInAreaManager = function(context) {
+export const visibleIfInAreaManager = function(context) {
   this.visible = inAreaManager(context);
 };
 
@@ -500,7 +501,7 @@ const visibleIfInAreaManager = function(context) {
  * @param {Object|undefined} context The menu context.
  * @this {MenuItem}
  */
-const notVisibleIfInAreaManager = function(context) {
+export const notVisibleIfInAreaManager = function(context) {
   this.visible = !inAreaManager(context);
 };
 
@@ -510,7 +511,7 @@ const notVisibleIfInAreaManager = function(context) {
  * @param {Object|undefined} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfCanModifyGeometry = function(context) {
+export const visibleIfCanModifyGeometry = function(context) {
   let supportsModify = false;
   const features = getFeaturesFromContext(context);
   const am = getAreaManager();
@@ -548,7 +549,7 @@ const visibleIfCanModifyGeometry = function(context) {
  * @param {Object|undefined} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfCanSave = function(context) {
+export const visibleIfCanSave = function(context) {
   this.visible = isPolygonal(context) && !inAreaManager(context);
 };
 
@@ -558,7 +559,7 @@ const visibleIfCanSave = function(context) {
  * @param {Object|undefined} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfShown = function(context) {
+export const visibleIfShown = function(context) {
   var features = getFeaturesFromContext(context);
   if (!features.length) {
     this.visible = false;
@@ -583,7 +584,7 @@ const visibleIfShown = function(context) {
  * @param {Object|undefined} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfNotShown = function(context) {
+export const visibleIfNotShown = function(context) {
   var features = getFeaturesFromContext(context);
   if (!features.length) {
     this.visible = false;
@@ -608,7 +609,7 @@ const visibleIfNotShown = function(context) {
  * @param {MenuEvent} event The menu event.
  * @param {Array<string>=} opt_layerIds - apply to only these ids
  */
-const onMenuEvent = function(event, opt_layerIds) {
+export const onMenuEvent = function(event, opt_layerIds) {
   var context = event.getContext();
   if (context) {
     if (!Array.isArray(context)) {
@@ -755,7 +756,7 @@ const onMenuEvent = function(event, opt_layerIds) {
  * @param {?string=} opt_areaId - set the enabled state based on this area
  * @return {Array}
  */
-const getLayers = function(opt_areaId) {
+export const getLayers = function(opt_areaId) {
   var set = getQueryManager().getLayerSet();
   var layers = [];
 
@@ -798,7 +799,7 @@ const getLayers = function(opt_areaId) {
  * @param {Object|undefined} context The menu context.
  * @this {MenuItem}
  */
-const updateTemporaryItems = function(context) {
+export const updateTemporaryItems = function(context) {
   var queryGroup = this.find(Group.QUERY);
   var excludeGroup = this.find(Group.EXCLUDE);
 
@@ -848,7 +849,7 @@ const updateTemporaryItems = function(context) {
  * @param {string} eventType The base event type.
  * @param {!Object<string, number>} types Map of layer type to count.
  */
-const addLayerSubMenu = function(group, eventType, types) {
+export const addLayerSubMenu = function(group, eventType, types) {
   var subGroup = group.addChild({
     label: 'Choose Layers',
     type: MenuItemType.SUBMENU,
@@ -889,7 +890,7 @@ const addLayerSubMenu = function(group, eventType, types) {
  * @param {Object|undefined} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfSearchable = function(context) {
+export const visibleIfSearchable = function(context) {
   // check if there are any registered geosearches
   var searches = SearchManager.getInstance().getRegisteredSearches();
   var some = searches.some((s) => s && supportsGeoSearch(s));
@@ -949,7 +950,7 @@ const searchArea = function(event) {
  * @param {Array<Feature>} features The features to get a shape query from.
  * @return {Geometry|undefined} The shape query.
  */
-const getSearchGeometry = function(features) {
+export const getSearchGeometry = function(features) {
   var geometry;
 
   if (features && features.length > 0) {
@@ -1121,36 +1122,3 @@ class LayerChooserCtrl {
     osWindow.close(this.element_);
   }
 }
-
-exports = {
-  Group,
-  getMenu,
-  setMenu,
-  setup,
-  dispose,
-  getGeometriesFromContext,
-  getFeaturesFromContext,
-  featuresInAreaManager,
-  hasMultiple,
-  hasSingle,
-  inAreaManager,
-  isPolygonal,
-  visibleIfHasMultiple,
-  visibleIfMultiplePolygonal,
-  visibleIfPolygonal,
-  visibleIfInLayer,
-  isInLayer,
-  removeItems,
-  visibleIfInAreaManager,
-  notVisibleIfInAreaManager,
-  visibleIfCanModifyGeometry,
-  visibleIfCanSave,
-  visibleIfShown,
-  visibleIfNotShown,
-  onMenuEvent,
-  getLayers,
-  updateTemporaryItems,
-  addLayerSubMenu,
-  visibleIfSearchable,
-  getSearchGeometry
-};

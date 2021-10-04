@@ -1,10 +1,10 @@
-goog.module('os.command.NonQueryClear');
+goog.declareModuleId('os.command.NonQueryClear');
 
-const State = goog.require('os.command.State');
-const {getMapContainer} = goog.require('os.map.instance');
-const {getAreaManager} = goog.require('os.query.instance');
+import {getMapContainer} from '../map/mapinstance.js';
+import {getAreaManager} from '../query/queryinstance.js';
+import State from './state.js';
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -12,7 +12,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class NonQueryClear {
+export default class NonQueryClear {
   /**
    * Constructor.
    */
@@ -81,5 +81,3 @@ class NonQueryClear {
     return true;
   }
 }
-
-exports = NonQueryClear;

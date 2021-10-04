@@ -1,7 +1,8 @@
-goog.module('os.layer.preset.AbstractPresetService');
+goog.declareModuleId('os.layer.preset.AbstractPresetService');
 
 
-const IPresetService = goog.requireType('os.layer.preset.IPresetService');
+const {default: IPresetService} = goog.requireType('os.layer.preset.IPresetService');
+
 
 /**
  * Class to provide stubs and simple implementation of setDefault() and setPublished()
@@ -9,7 +10,7 @@ const IPresetService = goog.requireType('os.layer.preset.IPresetService');
  * @abstract
  * @implements {IPresetService}
  */
-class AbstractPresetService {
+export default class AbstractPresetService {
   /**
    * @inheritDoc
    */
@@ -209,5 +210,3 @@ class AbstractPresetService {
     return false;
   }
 }
-
-exports = AbstractPresetService;

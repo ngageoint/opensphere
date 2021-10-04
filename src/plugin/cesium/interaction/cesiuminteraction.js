@@ -1,19 +1,16 @@
 goog.declareModuleId('plugin.cesium.interaction');
 
+import DragBox from '../../../os/interaction/dragboxinteraction.js';
+import DragCircle from '../../../os/interaction/dragcircleinteraction.js';
+import DrawPolygon from '../../../os/interaction/drawpolygoninteraction.js';
+import Measure from '../../../os/interaction/measureinteraction.js';
 import {PROJECTION, zoomToResolution} from '../../../os/map/map.js';
 import * as dragbox from './cesiumdragboxinteraction.js';
 import * as dragcircle from './cesiumdragcircleinteraction.js';
 import * as drawpolygon from './cesiumdrawpolygoninteraction.js';
 import * as measure from './cesiummeasureinteraction.js';
 
-const DragBox = goog.require('os.interaction.DragBox');
-const DragCircle = goog.require('os.interaction.DragCircle');
-const DrawPolygon = goog.require('os.interaction.DrawPolygon');
-const Measure = goog.require('os.interaction.Measure');
-
-const {
-  default: Camera
-} = goog.requireType('plugin.cesium.Camera');
+const {default: Camera} = goog.requireType('plugin.cesium.Camera');
 
 
 /**

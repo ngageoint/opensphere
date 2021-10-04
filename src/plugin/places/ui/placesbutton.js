@@ -1,17 +1,16 @@
 goog.declareModuleId('plugin.places.ui.PlacesButtonUI');
 
+import {Places as PlacesKeys} from '../../../os/metrics/metricskeys.js';
+import Menu from '../../../os/ui/menu/menu.js';
+import MenuButtonCtrl from '../../../os/ui/menu/menubutton.js';
+import MenuItem from '../../../os/ui/menu/menuitem.js';
+import MenuItemType from '../../../os/ui/menu/menuitemtype.js';
+import Module from '../../../os/ui/module.js';
 import {createOrEditPlace} from '../../file/kml/ui/kmlui.js';
 import EventType from '../eventtype.js';
 import * as places from '../places.js';
 import PlacesManager from '../placesmanager.js';
 import * as QuickAddPlacesUI from './quickaddplaces.js';
-
-const {Places: PlacesKeys} = goog.require('os.metrics.keys');
-const Module = goog.require('os.ui.Module');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 
 const {PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');

@@ -7,9 +7,9 @@ goog.require('os.mock');
 
 describe('os.column.ColumnMappingManager', function() {
   const googObject = goog.module.get('goog.object');
-  const ColumnMapping = goog.module.get('os.column.ColumnMapping');
-  const ColumnMappingEventType = goog.module.get('os.column.ColumnMappingEventType');
-  const ColumnMappingManager = goog.module.get('os.column.ColumnMappingManager');
+  const {default: ColumnMapping} = goog.module.get('os.column.ColumnMapping');
+  const {default: ColumnMappingEventType} = goog.module.get('os.column.ColumnMappingEventType');
+  const {default: ColumnMappingManager} = goog.module.get('os.column.ColumnMappingManager');
 
   var cmm;
   var mappingString = '<columnMapping name="My Mapping" type="decimal" description="some description">' +

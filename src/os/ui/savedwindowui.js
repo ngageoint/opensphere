@@ -1,8 +1,8 @@
-goog.module('os.ui.SavedWindowUI');
+goog.declareModuleId('os.ui.SavedWindowUI');
 
-const settings = goog.require('os.config.Settings');
-const Module = goog.require('os.ui.Module');
-const {Controller: WindowCtrl, directive: windowDirective} = goog.require('os.ui.WindowUI');
+import settings from '../config/settings.js';
+import Module from './module.js';
+import {Controller as WindowCtrl, directive as windowDirective} from './windowui.js';
 
 
 /**
@@ -18,7 +18,7 @@ const {Controller: WindowCtrl, directive: windowDirective} = goog.require('os.ui
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = windowDirective();
   dir.scope['key'] = '@';
   dir.controller = Controller;
@@ -38,7 +38,7 @@ Module.directive('savedwindow', [directive]);
  * Controller for the saved window directive
  * @unrestricted
  */
-class Controller extends WindowCtrl {
+export class Controller extends WindowCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -116,8 +116,3 @@ class Controller extends WindowCtrl {
     settings.getInstance().set(['windows'], wins);
   }
 }
-
-exports = {
-  Controller,
-  directive
-};

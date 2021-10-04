@@ -1,7 +1,7 @@
 goog.require('os.mixin.fixInjectorInvoke');
 
 describe('fixInjectorInvoke', () => {
-  const fixInjectorInvoke = goog.module.get('os.mixin.fixInjectorInvoke');
+  const {default: fixInjectorInvoke} = goog.module.get('os.mixin.fixInjectorInvoke');
 
   let injector;
   beforeEach(() => {

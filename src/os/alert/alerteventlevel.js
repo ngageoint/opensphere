@@ -1,10 +1,9 @@
-goog.module('os.alert.AlertEventLevel');
-
+goog.declareModuleId('os.alert.AlertEventLevel');
 
 /**
  * An alert level.
  */
-class AlertEventLevel {
+export default class AlertEventLevel {
   /**
    * @param {string} name The name of the level.
    * @param {number} value The numeric value of the level.
@@ -31,5 +30,3 @@ class AlertEventLevel {
     return this.name;
   }
 }
-
-exports = AlertEventLevel;

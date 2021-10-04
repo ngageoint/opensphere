@@ -1,17 +1,17 @@
-goog.module('os.ui.FilterLayerGroupBy');
+goog.declareModuleId('os.ui.FilterLayerGroupBy');
 
-const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
-const {getFilterManager} = goog.require('os.query.instance');
-const Vector = goog.require('os.layer.Vector');
-const FilterGroupBy = goog.require('os.ui.filter.ui.FilterGroupBy');
+import BaseFilterManager from '../filter/basefiltermanager.js';
+import Vector from '../layer/vector.js';
+import {getFilterManager} from '../query/queryinstance.js';
+import FilterGroupBy from './filter/ui/filtergroupby.js';
 
-const FilterNode = goog.requireType('os.ui.filter.ui.FilterNode');
+const {default: FilterNode} = goog.requireType('os.ui.filter.ui.FilterNode');
 
 
 /**
  * Groups nodes by type
  */
-class FilterLayerGroupBy extends FilterGroupBy {
+export default class FilterLayerGroupBy extends FilterGroupBy {
   /**
    * Constructor.
    * @param {boolean=} opt_type
@@ -61,5 +61,3 @@ class FilterLayerGroupBy extends FilterGroupBy {
     return ids;
   }
 }
-
-exports = FilterLayerGroupBy;

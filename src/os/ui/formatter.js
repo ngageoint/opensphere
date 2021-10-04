@@ -1,16 +1,16 @@
-goog.module('os.ui.formatter');
+goog.declareModuleId('os.ui.formatter');
 
-const instanceOf = goog.require('os.instanceOf');
-const {linkify} = goog.require('os.string');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const {sanitize} = goog.require('os.ui');
-const {URL_REGEXP_LINKY} = goog.require('os.url');
+import instanceOf from '../instanceof.js';
+import {linkify} from '../string/string.js';
+import TimeInstant from '../time/timeinstant.js';
+import {URL_REGEXP_LINKY} from '../url/url.js';
+import {sanitize} from './ui.js';
 
 
 /**
  * @type {RegExp}
  */
-const ANCHOR = /<a /;
+export const ANCHOR = /<a /;
 
 /**
  * Formats the data to be a link if it passes the regex
@@ -18,7 +18,7 @@ const ANCHOR = /<a /;
  * @param {string} value The value
  * @return {string} The HTML for the cell
  */
-const urlNewTabFormatter = function(value) {
+export const urlNewTabFormatter = function(value) {
   if (typeof value !== 'object') {
     if (value != null) {
       // does this even have a URL?
@@ -58,9 +58,4 @@ const urlNewTabFormatter = function(value) {
   }
 
   return value;
-};
-
-exports = {
-  ANCHOR,
-  urlNewTabFormatter
 };

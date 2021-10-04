@@ -1,14 +1,15 @@
-goog.module('os.control.Zoom');
+goog.declareModuleId('os.control.Zoom');
+
+import * as interaction from '../interaction/interaction.js';
+import {getMapContainer} from '../map/mapinstance.js';
 
 const OLZoom = goog.require('ol.control.Zoom');
-const interaction = goog.require('os.interaction');
-const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
  * Overrides the OpenLayers zoom control to allow zooming in/out in WebGL.
  */
-class Zoom extends OLZoom {
+export default class Zoom extends OLZoom {
   /**
    * Constructor.
    * @param {olx.control.ZoomOptions=} opt_options Zoom options.
@@ -34,5 +35,3 @@ class Zoom extends OLZoom {
     }
   }
 }
-
-exports = Zoom;

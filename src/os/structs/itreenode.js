@@ -1,8 +1,8 @@
-goog.module('os.structs.ITreeNode');
+goog.declareModuleId('os.structs.ITreeNode');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const Listenable = goog.requireType('goog.events.Listenable');
-const ISearchable = goog.requireType('os.data.ISearchable');
+const {default: ISearchable} = goog.requireType('os.data.ISearchable');
 
 
 /**
@@ -13,7 +13,7 @@ const ISearchable = goog.requireType('os.data.ISearchable');
  * @extends {Listenable}
  * @extends {ISearchable}
  */
-class ITreeNode {
+export default class ITreeNode {
   /**
    * Gets the ID of the node
    * @return {!string} The node ID
@@ -131,5 +131,3 @@ class ITreeNode {
  * @const {string}
  */
 ITreeNode.ID = 'os.structs.ITreeNode';
-
-exports = ITreeNode;

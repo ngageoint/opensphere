@@ -1,15 +1,15 @@
-goog.module('os.layer.config.LayerConfigManager');
+goog.declareModuleId('os.layer.config.LayerConfigManager');
 
 const log = goog.require('goog.log');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {DefaultFn} = goog.requireType('os.layer.config');
-const ILayerConfig = goog.requireType('os.layer.config.ILayerConfig');
+const {default: ILayerConfig} = goog.requireType('os.layer.config.ILayerConfig');
 
 
 /**
  */
-class LayerConfigManager {
+export default class LayerConfigManager {
   /**
    * Constructor.
    */
@@ -123,5 +123,3 @@ let instance;
  * @type {Logger}
  */
 const logger = log.getLogger('os.layer.config.LayerConfigManager');
-
-exports = LayerConfigManager;

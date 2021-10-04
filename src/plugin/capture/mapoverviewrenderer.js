@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.capture.MapOverviewRenderer');
 
 import {getMapCanvas, getPixelRatio, isTainted} from '../../os/capture/capture.js';
+import Settings from '../../os/config/settings.js';
 import CanvasRenderer from '../../os/ui/capture/canvasrenderer.js';
 
 const Promise = goog.require('goog.Promise');
 const has = goog.require('ol.has');
-const Settings = goog.require('os.config.Settings');
 
 
 /**

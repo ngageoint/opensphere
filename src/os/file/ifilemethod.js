@@ -1,8 +1,8 @@
-goog.module('os.file.IFileMethod');
+goog.declareModuleId('os.file.IFileMethod');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const Listenable = goog.requireType('goog.events.Listenable');
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
@@ -10,7 +10,7 @@ const OSFile = goog.requireType('os.file.File');
  * @extends {Listenable}
  * @interface
  */
-class IFileMethod {
+export default class IFileMethod {
   /**
    * Gets the priority of this method. The higher the priority, the earlier the method is tried.
    * @return {number}
@@ -53,5 +53,3 @@ class IFileMethod {
    */
   clone() {}
 }
-
-exports = IFileMethod;

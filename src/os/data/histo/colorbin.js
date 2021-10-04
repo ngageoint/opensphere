@@ -1,7 +1,7 @@
-goog.module('os.data.histo.ColorBin');
+goog.declareModuleId('os.data.histo.ColorBin');
 
-const osColor = goog.require('os.color');
-const Bin = goog.require('os.histo.Bin');
+import * as osColor from '../../color.js';
+import Bin from '../../histo/bin.js';
 
 
 /**
@@ -11,7 +11,7 @@ const Bin = goog.require('os.histo.Bin');
  * @template S,T
  * @unrestricted
  */
-class ColorBin extends Bin {
+export default class ColorBin extends Bin {
   /**
    * Constructor.
    * @param {string} baseColor The base color of the layer represented by this bin
@@ -154,5 +154,3 @@ class ColorBin extends Bin {
     }
   }
 }
-
-exports = ColorBin;

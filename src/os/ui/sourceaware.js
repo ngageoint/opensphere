@@ -1,4 +1,8 @@
-goog.module('os.ui.SourceAware');
+goog.declareModuleId('os.ui.SourceAware');
+
+import DataManager from '../data/datamanager.js';
+import DataEventType from '../data/event/dataeventtype.js';
+import PropertyChange from '../source/propertychange.js';
 
 const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');
@@ -6,13 +10,11 @@ const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const {remove} = goog.require('ol.array');
 const events = goog.require('ol.events');
-const DataManager = goog.require('os.data.DataManager');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const PropertyChange = goog.require('os.source.PropertyChange');
 
 const ObjectEvent = goog.requireType('ol.Object.Event');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const ISource = goog.requireType('os.source.ISource');
+const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: ISource} = goog.requireType('os.source.ISource');
 
 
 /**
@@ -22,7 +24,7 @@ const ISource = goog.requireType('os.source.ISource');
  * @abstract
  * @deprecated Please use `os.data.SourceManager` instead.
  */
-class SourceAware extends Disposable {
+export default class SourceAware extends Disposable {
   /**
    * Constructor.
    */
@@ -152,7 +154,7 @@ class SourceAware extends Disposable {
   }
 
   /**
-   * @param {os.data.event.DataEvent} event
+   * @param {DataEvent} event
    * @private
    */
   onSourceAdded_(event) {
@@ -163,7 +165,7 @@ class SourceAware extends Disposable {
   }
 
   /**
-   * @param {os.data.event.DataEvent} event
+   * @param {DataEvent} event
    * @private
    */
   onSourceRemoved_(event) {
@@ -252,5 +254,3 @@ SourceAware.UPDATE_EVENTS = [
   PropertyChange.TITLE,
   PropertyChange.VISIBLE
 ];
-
-exports = SourceAware;

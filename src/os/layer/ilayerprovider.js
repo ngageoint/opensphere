@@ -1,12 +1,12 @@
-goog.module('os.layer.ILayerProvider');
+goog.declareModuleId('os.layer.ILayerProvider');
 
-const ILayer = goog.requireType('os.layer.ILayer');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
  * @interface
  */
-class ILayerProvider {
+export default class ILayerProvider {
   /**
    * Get the layer associated with this class.
    * @return {ILayer} The layer.
@@ -20,5 +20,3 @@ class ILayerProvider {
  * @const
  */
 ILayerProvider.ID = 'os.layer.ILayerProvider';
-
-exports = ILayerProvider;

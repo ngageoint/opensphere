@@ -1,14 +1,15 @@
-goog.module('os.ui.metrics.MetricCompletionUI');
+goog.declareModuleId('os.ui.metrics.MetricCompletionUI');
+
+import {instanceOf} from '../../classregistry.js';
+import {getGradientColor} from '../../color.js';
+import {METRIC_GRADIENT} from '../../metrics/index.js';
+import {getLeafNodes} from '../../structs/structs.js';
+import Module from '../module.js';
+import {ClassName} from './metricsui.js';
 
 const {toString} = goog.require('ol.color');
-const {instanceOf} = goog.require('os.classRegistry');
-const {getGradientColor} = goog.require('os.color');
-const {METRIC_GRADIENT} = goog.require('os.metrics');
-const {getLeafNodes} = goog.require('os.structs');
-const Module = goog.require('os.ui.Module');
-const {ClassName} = goog.require('os.ui.metrics');
 
-const MetricNode = goog.requireType('os.ui.metrics.MetricNode');
+const {default: MetricNode} = goog.requireType('os.ui.metrics.MetricNode');
 
 
 /**
@@ -16,7 +17,7 @@ const MetricNode = goog.requireType('os.ui.metrics.MetricNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<span class="pl-1 c-slick-grid__hover-color" ng-style="mc.style" ' +
@@ -29,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'metriccompletion';
+export const directiveTag = 'metriccompletion';
 
 /**
  * Add the directive to the module
@@ -40,7 +41,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for selected/highlighted node UI
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -128,9 +129,3 @@ class Controller {
     return 0;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

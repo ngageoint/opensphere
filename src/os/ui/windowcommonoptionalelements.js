@@ -1,4 +1,4 @@
-goog.module('os.ui.windowCommonOptionalElements');
+goog.declareModuleId('os.ui.windowCommonOptionalElements');
 
 /**
  * Common selectors for elements which are optionally considered for positioning application UI's.
@@ -9,4 +9,4 @@ goog.module('os.ui.windowCommonOptionalElements');
  */
 const windowCommonOptionalElements = [];
 
-exports = windowCommonOptionalElements;
+export default windowCommonOptionalElements;

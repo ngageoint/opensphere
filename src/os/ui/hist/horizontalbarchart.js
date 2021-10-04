@@ -1,10 +1,11 @@
-goog.module('os.ui.hist.HorizontalBarChart');
+goog.declareModuleId('os.ui.hist.HorizontalBarChart');
+
+import {getBinCounts} from '../../hist/hist.js';
+import IHistogramChart from './ihistogramchart.js';// eslint-disable-line
 
 const Disposable = goog.require('goog.Disposable');
-const {getBinCounts} = goog.require('os.hist');
-const IHistogramChart = goog.require('os.ui.hist.IHistogramChart'); // eslint-disable-line
 
-const HistogramData = goog.requireType('os.hist.HistogramData');
+const {default: HistogramData} = goog.requireType('os.hist.HistogramData');
 
 
 /**
@@ -12,7 +13,7 @@ const HistogramData = goog.requireType('os.hist.HistogramData');
  *
  * @implements {IHistogramChart}
  */
-class HorizontalBarChart extends Disposable {
+export default class HorizontalBarChart extends Disposable {
   /**
    * Constructor.
    * @param {!Element} parent The parent SVG container for the chart.
@@ -186,6 +187,3 @@ class HorizontalBarChart extends Disposable {
  * @private
  */
 HorizontalBarChart.DEFAULT_HEIGHT_ = 19;
-
-
-exports = HorizontalBarChart;

@@ -1,8 +1,8 @@
-goog.module('os.ui.slick.asyncrenderer.slickColActAsyncRenderer');
+goog.declareModuleId('os.ui.slick.asyncrenderer.slickColActAsyncRenderer');
 
-const ColumnActionManager = goog.require('os.ui.columnactions.ColumnActionManager');
-const launchColumnActionPrompt = goog.require('os.ui.columnactions.launchColumnActionPrompt');
-const SlickColumnActionModel = goog.require('os.ui.slick.SlickColumnActionModel');
+import ColumnActionManager from '../columnactions/columnactionmanager.js';
+import launchColumnActionPrompt from '../columnactions/launchcolumnactionprompt.js';
+import SlickColumnActionModel from './slickcolumnactionmodel.js';
 
 
 /**
@@ -36,4 +36,4 @@ const openDialog = function(value, colDef, colActContext, node) {
   launchColumnActionPrompt(matched, value, col);
 };
 
-exports = slickColActAsyncRenderer;
+export default slickColActAsyncRenderer;

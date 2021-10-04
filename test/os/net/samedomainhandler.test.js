@@ -7,7 +7,7 @@ describe('os.net.SameDomainHandler', function() {
   const Uri = goog.module.get('goog.Uri');
   const GoogEventType = goog.module.get('goog.events.EventType');
   const EventType = goog.module.get('goog.net.EventType');
-  const SameDomainHandler = goog.module.get('os.net.SameDomainHandler');
+  const {default: SameDomainHandler} = goog.module.get('os.net.SameDomainHandler');
 
   var sdh = new SameDomainHandler();
 

@@ -1,10 +1,10 @@
-goog.module('os.xsd.DataType');
+goog.declareModuleId('os.xsd.DataType');
 
 /**
  * @enum {string}
  * @const
  */
-exports = {
+const DataType = {
   DECIMAL: 'decimal',
   FLOAT: 'float',
   INTEGER: 'integer',
@@ -12,3 +12,5 @@ exports = {
   BOOLEAN: 'boolean',
   DATE: 'dateTime'
 };
+
+export default DataType;

@@ -1,6 +1,12 @@
 goog.declareModuleId('plugin.google.places.Search');
 
+import AlertEventSeverity from '../../../os/alert/alerteventseverity.js';
+import AlertManager from '../../../os/alert/alertmanager.js';
+import Settings from '../../../os/config/settings.js';
 import * as osMap from '../../../os/map/map.js';
+import MapContainer from '../../../os/mapcontainer.js';
+import * as osProj from '../../../os/proj/proj.js';
+import AbstractUrlSearch from '../../../os/search/abstracturlsearch.js';
 import AttrResult from './attrresult.js';
 import Result from './result.js';
 import {ID} from './index.js';
@@ -8,13 +14,8 @@ import {ID} from './index.js';
 const Feature = goog.require('ol.Feature');
 const Point = goog.require('ol.geom.Point');
 const olProj = goog.require('ol.proj');
-const MapContainer = goog.require('os.MapContainer');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const Settings = goog.require('os.config.Settings');
-const osProj = goog.require('os.proj');
-const AbstractUrlSearch = goog.require('os.search.AbstractUrlSearch');
 
+const {default: Request} = goog.requireType('os.net.Request');
 
 
 /**
@@ -61,7 +62,7 @@ export default class Search extends AbstractUrlSearch {
    * @inheritDoc
    */
   onSearchSuccess(evt) {
-    var request = /** @type {os.net.Request} */ (evt.target);
+    var request = /** @type {Request} */ (evt.target);
 
     try {
       var resp = /** @type {Object} */ (JSON.parse(/** @type {string} */ (request.getResponse())));

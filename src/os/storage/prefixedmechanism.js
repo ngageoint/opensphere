@@ -16,12 +16,13 @@
  * namespaces using a prefix in the global namespace.
  *
  */
-goog.module('os.storage.PrefixedMechanism');
+goog.declareModuleId('os.storage.PrefixedMechanism');
+
+import osImplements from '../implements.js';
+import IMechanism from './imechanism.js';
 
 const iter = goog.require('goog.iter');
 const GoogPrefixedMechanism = goog.require('goog.storage.mechanism.PrefixedMechanism');
-const osImplements = goog.require('os.implements');
-const IMechanism = goog.require('os.storage.IMechanism');
 
 
 /**
@@ -32,7 +33,7 @@ const IMechanism = goog.require('os.storage.IMechanism');
  *
  * @suppress {accessControls} To ignore the final tag on the parent class.
  */
-class PrefixedMechanism extends GoogPrefixedMechanism {
+export default class PrefixedMechanism extends GoogPrefixedMechanism {
   /**
    * Constructor.
    * @param {!GoogPrefixedMechanism} mechanism Underlying
@@ -54,6 +55,5 @@ class PrefixedMechanism extends GoogPrefixedMechanism {
     return values;
   }
 }
-osImplements(PrefixedMechanism, IMechanism.ID);
 
-exports = PrefixedMechanism;
+osImplements(PrefixedMechanism, IMechanism.ID);

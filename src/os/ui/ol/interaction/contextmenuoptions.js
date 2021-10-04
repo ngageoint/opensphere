@@ -1,7 +1,7 @@
-goog.module('os.ui.ol.interaction.ContextMenuOptions');
+goog.declareModuleId('os.ui.ol.interaction.ContextMenuOptions');
 
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
-const Menu = goog.requireType('os.ui.menu.Menu');
+const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 
 
 /**
@@ -13,4 +13,4 @@ const Menu = goog.requireType('os.ui.menu.Menu');
  */
 let ContextMenuOptions;
 
-exports = ContextMenuOptions;
+export default ContextMenuOptions;

@@ -1,11 +1,10 @@
 goog.declareModuleId('plugin.pelias.geocoder.Plugin');
 
+import settings from '../../../os/config/settings.js';
+import AbstractPlugin from '../../../os/plugin/abstractplugin.js';
+import SearchManager from '../../../os/search/searchmanager.js';
 import {ID} from './geocoder.js';
 import Search from './search.js';
-
-const settings = goog.require('os.config.Settings');
-const SearchManager = goog.require('os.search.SearchManager');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 
 /**
  * Provides Pelias Geocoder (text -> coordinates) search

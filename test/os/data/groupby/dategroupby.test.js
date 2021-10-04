@@ -4,9 +4,9 @@ goog.require('os.ui.data.DescriptorNode');
 
 
 describe('os.data.groupby.DateGroupBy', function() {
-  const BaseDescriptor = goog.module.get('os.data.BaseDescriptor');
-  const DateGroupBy = goog.module.get('os.data.groupby.DateGroupBy');
-  const DescriptorNode = goog.module.get('os.ui.data.DescriptorNode');
+  const {default: BaseDescriptor} = goog.module.get('os.data.BaseDescriptor');
+  const {default: DateGroupBy} = goog.module.get('os.data.groupby.DateGroupBy');
+  const {default: DescriptorNode} = goog.module.get('os.ui.data.DescriptorNode');
 
   var by = new DateGroupBy();
 

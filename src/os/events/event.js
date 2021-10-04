@@ -1,4 +1,4 @@
-goog.module('os.events.Event');
+goog.declareModuleId('os.events.Event');
 
 const GoogEvent = goog.require('goog.events.Event');
 
@@ -6,7 +6,7 @@ const GoogEvent = goog.require('goog.events.Event');
 /**
  * Simple event extension designed to carry anything as a payload.
  */
-class Event extends GoogEvent {
+export default class Event extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -40,5 +40,3 @@ class Event extends GoogEvent {
     this.data = value;
   }
 }
-
-exports = Event;

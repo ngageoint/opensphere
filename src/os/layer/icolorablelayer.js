@@ -1,11 +1,11 @@
-goog.module('os.layer.IColorableLayer');
+goog.declareModuleId('os.layer.IColorableLayer');
 
 /**
  * Interface for layers that support coloring.
  *
  * @interface
  */
-class IColorableLayer {
+export default class IColorableLayer {
   /**
    * Get the layer color.
    * @return {?string} The layer color.
@@ -25,5 +25,3 @@ class IColorableLayer {
  * @const {string}
  */
 IColorableLayer.ID = 'os.layer.IColorableLayer';
-
-exports = IColorableLayer;

@@ -1,19 +1,20 @@
-goog.module('os.ui.text.TuiEditorUI');
+goog.declareModuleId('os.ui.text.TuiEditorUI');
+
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import Settings from '../../config/settings.js';
+import * as dispatcher from '../../dispatcher.js';
+import {ROOT} from '../../os.js';
+import {createConstant} from '../../string/string.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import * as TuiEditor from './tuieditor.js';
+import * as TuiEditorLang from './tuieditorlang.js';
 
 const Promise = goog.require('goog.Promise');
 const Timer = goog.require('goog.Timer');
 const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
 const {safeLoad} = goog.require('goog.net.jsloader');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const Settings = goog.require('os.config.Settings');
-const {createConstant} = goog.require('os.string');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const TuiEditor = goog.require('os.ui.text.TuiEditor');
-const TuiEditorLang = goog.require('os.ui.text.TuiEditorLang');
 
 
 /**
@@ -25,7 +26,7 @@ let stopLoading = false;
 /**
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -46,7 +47,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'tuieditor';
+export const directiveTag = 'tuieditor';
 
 /**
  * Add the directive to the tools module
@@ -56,7 +57,7 @@ Module.directive(directiveTag, [directive]);
 /**
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -506,9 +507,3 @@ class Controller {
    */
   addEventTypes() {}
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

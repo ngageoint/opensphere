@@ -1,28 +1,29 @@
-goog.module('os.layer.preset.PresetMenuButton');
+goog.declareModuleId('os.layer.preset.PresetMenuButton');
 
-const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
-const {getImportActionManager} = goog.require('os.im.action');
-const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const Module = goog.require('os.ui.Module');
-const OsLayerPreset = goog.require('os.layer.preset');
-const {getMapContainer} = goog.require('os.map.instance');
-const OsXml = goog.require('os.xml');
-const OsFilter = goog.require('os.im.action.filter');
-const {Presets: OsMetrics} = goog.require('os.metrics.keys');
-const AlertManager = goog.require('os.alert.AlertManager');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
-const OsUi = goog.require('os.ui');
-const {DEFAULT_PRESET_ID} = goog.require('os.layer.preset');
-
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
-const ILayer = goog.requireType('os.layer.ILayer');
-const IPresetService = goog.requireType('os.layer.preset.IPresetService');
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import {getImportActionManager} from '../../im/action/importaction.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import {Presets as OsMetrics} from '../../metrics/metricskeys.js';
+import * as OsFilter from '../../ui/im/action/filteraction.js';
+import Menu from '../../ui/menu/menu.js';
+import MenuButtonCtrl from '../../ui/menu/menubutton.js';
+import MenuItem from '../../ui/menu/menuitem.js';
+import MenuItemType from '../../ui/menu/menuitemtype.js';
+import Module from '../../ui/module.js';
+import * as OsUi from '../../ui/ui.js';
+import * as ConfirmUI from '../../ui/window/confirm.js';
+import * as OsXml from '../../xml.js';
+import LayerPresetManager from './layerpresetmanager.js';
+import * as OsLayerPreset from './preset.js';
+import {DEFAULT_PRESET_ID} from './preset.js';
 
 const GoogLog = goog.require('goog.log');
+
+
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: IPresetService} = goog.requireType('os.layer.preset.IPresetService');
 
 
 /**
@@ -35,7 +36,7 @@ const MENU_FLAG = 'presets';
  * Preset events
  * @enum {string}
  */
-const EventType = {
+export const EventType = {
   APPLY_PRESET: 'apply-preset',
   REMOVE: 'remove',
   SAVE: 'save',
@@ -56,7 +57,7 @@ const LOGGER = GoogLog.getLogger('os.layer.preset.PresetMenuButton');
  * The controller for the preset directive; make use of the MenuButtonController
  * @unrestricted
  */
-class Controller extends MenuButtonCtrl {
+export class Controller extends MenuButtonCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -484,7 +485,7 @@ class Controller extends MenuButtonCtrl {
  * The preset directive.
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -516,6 +517,3 @@ const directive = () => ({
  * Add the directive to the module.
  */
 Module.directive('presetmenubutton', [directive]);
-
-
-exports = {directive, Controller, EventType};

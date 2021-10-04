@@ -17,16 +17,16 @@ describe('os.track', function() {
   const object = goog.module.get('goog.object');
   const Feature = goog.module.get('ol.Feature');
   const Point = goog.module.get('ol.geom.Point');
-  const Fields = goog.module.get('os.Fields');
-  const RecordField = goog.module.get('os.data.RecordField');
-  const DynamicFeature = goog.module.get('os.feature.DynamicFeature');
+  const {default: Fields} = goog.module.get('os.Fields');
+  const {default: RecordField} = goog.module.get('os.data.RecordField');
+  const {default: DynamicFeature} = goog.module.get('os.feature.DynamicFeature');
   const style = goog.module.get('os.style');
-  const StyleField = goog.module.get('os.style.StyleField');
-  const StyleType = goog.module.get('os.style.StyleType');
-  const TimeInstant = goog.module.get('os.time.TimeInstant');
-  const TimeRange = goog.module.get('os.time.TimeRange');
+  const {default: StyleField} = goog.module.get('os.style.StyleField');
+  const {default: StyleType} = goog.module.get('os.style.StyleType');
+  const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');
+  const {default: TimeRange} = goog.module.get('os.time.TimeRange');
   const osTrack = goog.module.get('os.track');
-  const TrackField = goog.module.get('os.track.TrackField');
+  const {default: TrackField} = goog.module.get('os.track.TrackField');
 
   var metadataField = 'testField';
   var sortIncrement = 1000;

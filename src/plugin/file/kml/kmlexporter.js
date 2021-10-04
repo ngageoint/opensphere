@@ -1,8 +1,19 @@
 goog.declareModuleId('plugin.file.kml.KMLExporter');
 
+import DataManager from '../../../os/data/datamanager.js';
+import RecordField from '../../../os/data/recordfield.js';
+import DynamicFeature from '../../../os/feature/dynamicfeature.js';
 import * as osFeature from '../../../os/feature/feature.js';
+import osImplements from '../../../os/implements.js';
+import LayerId from '../../../os/layer/layerid.js';
 import * as osSource from '../../../os/source/source.js';
 import * as osStyle from '../../../os/style/style.js';
+import StyleManager from '../../../os/style/stylemanager_shim.js';
+import StyleType from '../../../os/style/styletype.js';
+import ITime from '../../../os/time/itime.js';
+import AbstractKMLExporter from '../../../os/ui/file/kml/abstractkmlexporter.js';
+import * as kml from '../../../os/ui/file/kml/kml.js';
+import * as xml from '../../../os/xml.js';
 import * as pluginFileKmlExport from './kmlexport.js';
 import {directiveTag as kmlExportUi} from './ui/kmlexportui.js';
 
@@ -13,20 +24,9 @@ const olArray = goog.require('ol.array');
 const GeometryCollection = goog.require('ol.geom.GeometryCollection');
 const GeometryType = goog.require('ol.geom.GeometryType');
 const Point = goog.require('ol.geom.Point');
-const DataManager = goog.require('os.data.DataManager');
-const RecordField = goog.require('os.data.RecordField');
-const DynamicFeature = goog.require('os.feature.DynamicFeature');
-const osImplements = goog.require('os.implements');
-const LayerId = goog.require('os.layer.LayerId');
-const StyleManager = goog.require('os.style.StyleManager');
-const StyleType = goog.require('os.style.StyleType');
-const ITime = goog.require('os.time.ITime');
-const kml = goog.require('os.ui.file.kml');
-const AbstractKMLExporter = goog.require('os.ui.file.kml.AbstractKMLExporter');
-const xml = goog.require('os.xml');
 
 const Feature = goog.requireType('ol.Feature');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**

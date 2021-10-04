@@ -1,13 +1,13 @@
 goog.declareModuleId('plugin.file.kml.tour.FlyTo');
 
+import FlightMode from '../../../../os/map/flightmode.js';
 import * as osMap from '../../../../os/map/map.js';
+import MapContainer from '../../../../os/mapcontainer.js';
+import * as osObject from '../../../../os/object/object.js';
+import * as osProj from '../../../../os/proj/proj.js';
 import Wait from './tourwait.js';
 
 const olProj = goog.require('ol.proj');
-const MapContainer = goog.require('os.MapContainer');
-const FlightMode = goog.require('os.map.FlightMode');
-const osObject = goog.require('os.object');
-const osProj = goog.require('os.proj');
 
 
 /**

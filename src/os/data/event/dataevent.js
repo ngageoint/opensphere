@@ -1,15 +1,15 @@
-goog.module('os.data.event.DataEvent');
+goog.declareModuleId('os.data.event.DataEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
-const IFilter = goog.requireType('os.filter.IFilter');
-const ISource = goog.requireType('os.source.ISource');
+const {default: IFilter} = goog.requireType('os.filter.IFilter');
+const {default: ISource} = goog.requireType('os.source.ISource');
 
 
 /**
  * @template T
  */
-class DataEvent extends GoogEvent {
+export default class DataEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -36,5 +36,3 @@ class DataEvent extends GoogEvent {
     this.items = opt_items || null;
   }
 }
-
-exports = DataEvent;

@@ -1,9 +1,10 @@
-goog.module('os.events');
+goog.declareModuleId('os.events');
+
+import SelectionType from './selectiontype.js';
 
 const googArray = goog.require('goog.array');
 const GoogEventType = goog.require('goog.events.EventType');
 const googObject = goog.require('goog.object');
-const SelectionType = goog.require('os.events.SelectionType');
 
 const EventLike = goog.requireType('goog.events.EventLike');
 
@@ -16,7 +17,7 @@ const EventLike = goog.requireType('goog.events.EventLike');
  *
  * @param {(Document|Element)=} opt_el
  */
-const preventBrowserContextMenu = function(opt_el) {
+export const preventBrowserContextMenu = function(opt_el) {
   opt_el = opt_el || document;
 
   opt_el.addEventListener(GoogEventType.MOUSEDOWN, wrapExempt(killRightButton));
@@ -47,7 +48,7 @@ const wrapExempt = function(listener) {
  * @param {string} type The event type
  * @return {boolean} Whether or not the element is exempt from right-click prevention
  */
-const isExempt = function(el, type) {
+export const isExempt = function(el, type) {
   var list = exemptionFunctions;
   for (var i = 0, n = list.length; i < n; i++) {
     if (list[i](el, type)) {
@@ -68,7 +69,7 @@ const exemptionFunctions = [];
  *
  * @param {function((Document|Element), string):boolean} checker The exemption check function
  */
-const addExemption = function(checker) {
+export const addExemption = function(checker) {
   googArray.insert(exemptionFunctions, checker);
 };
 
@@ -77,7 +78,7 @@ const addExemption = function(checker) {
  *
  * @param {EventLike} evt
  */
-const killEvent = function(evt) {
+export const killEvent = function(evt) {
   evt.preventDefault();
   evt.stopPropagation();
 };
@@ -87,7 +88,7 @@ const killEvent = function(evt) {
  *
  * @param {EventLike} evt
  */
-const killRightButton = function(evt) {
+export const killRightButton = function(evt) {
   if (evt.button === 2) {
     killEvent(evt);
   }
@@ -99,7 +100,7 @@ const killRightButton = function(evt) {
  * @param {?string} type The event type
  * @return {boolean}
  */
-const isSelectionType = function(type) {
+export const isSelectionType = function(type) {
   return !!type && googObject.containsValue(SelectionType, type);
 };
 
@@ -113,12 +114,3 @@ addExemption(
     function(el, type) {
       return el instanceof HTMLInputElement;
     });
-
-exports = {
-  preventBrowserContextMenu,
-  isExempt,
-  addExemption,
-  killEvent,
-  killRightButton,
-  isSelectionType
-};

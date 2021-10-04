@@ -2,7 +2,7 @@ goog.require('os.layer.config.AbstractLayerConfig');
 goog.require('os.mock');
 
 describe('os.layer.config.AbstractLayerConfig', function() {
-  const AbstractLayerConfig = goog.module.get('os.layer.config.AbstractLayerConfig');
+  const {default: AbstractLayerConfig} = goog.module.get('os.layer.config.AbstractLayerConfig');
 
   it('has a default size option', function() {
     var lc = new AbstractLayerConfig();

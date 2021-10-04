@@ -1,19 +1,22 @@
-goog.module('os.command.VectorLayerReplaceStyle');
+goog.declareModuleId('os.command.VectorLayerReplaceStyle');
+
+import DataManager from '../data/datamanager.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import PropertyChange from '../source/propertychange.js';
+import StyleField from '../style/stylefield.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import AbstractVectorStyle from './abstractvectorstylecmd.js';
 
 const asserts = goog.require('goog.asserts');
-const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const DataManager = goog.require('os.data.DataManager');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const StyleField = goog.require('os.style.StyleField');
-const StyleManager = goog.require('os.style.StyleManager');
+
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**
  * Set if a layer style should override feature style.
  */
-class VectorLayerReplaceStyle extends AbstractVectorStyle {
+export default class VectorLayerReplaceStyle extends AbstractVectorStyle {
   /**
    * Constructor.
    * @param {string} layerId The layer id.
@@ -41,7 +44,7 @@ class VectorLayerReplaceStyle extends AbstractVectorStyle {
 
     super.applyValue(config, value);
 
-    var source = /** @type {os.source.Vector} */ (DataManager.getInstance().getSource(this.layerId));
+    var source = /** @type {VectorSource} */ (DataManager.getInstance().getSource(this.layerId));
     asserts.assert(source, 'source must be defined');
 
     source.setHighlightedItems(source.getHighlightedItems());
@@ -57,5 +60,3 @@ class VectorLayerReplaceStyle extends AbstractVectorStyle {
     super.finish(config);
   }
 }
-
-exports = VectorLayerReplaceStyle;

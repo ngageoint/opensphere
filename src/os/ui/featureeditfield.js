@@ -1,10 +1,12 @@
-goog.module('os.ui.FeatureEditField');
+goog.declareModuleId('os.ui.FeatureEditField');
 
 /**
  * @enum {string}
  */
-exports = {
+const FeatureEditField = {
   DESCRIPTION: 'description',
   MD_DESCRIPTION: '_mdDescription',
   NAME: 'name'
 };
+
+export default FeatureEditField;

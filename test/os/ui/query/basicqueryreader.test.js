@@ -22,11 +22,11 @@ describe('os.ui.query.BasicQueryReader', function() {
   const googObject = goog.module.get('goog.object');
   const Polygon = goog.module.get('ol.geom.Polygon');
   const interpolate = goog.module.get('os.interpolate');
-  const Method = goog.module.get('os.interpolate.Method');
-  const AreaManager = goog.module.get('os.query.AreaManager');
-  const FilterManager = goog.module.get('os.query.FilterManager');
-  const QueryManager = goog.module.get('os.query.QueryManager');
-  const BasicQueryReader = goog.module.get('os.ui.query.BasicQueryReader');
+  const {default: Method} = goog.module.get('os.interpolate.Method');
+  const {default: AreaManager} = goog.module.get('os.query.AreaManager');
+  const {default: FilterManager} = goog.module.get('os.query.FilterManager');
+  const {default: QueryManager} = goog.module.get('os.query.QueryManager');
+  const {default: BasicQueryReader} = goog.module.get('os.ui.query.BasicQueryReader');
 
   var basicQueryUrl = '/base/test/os/ui/query/basicquery.xml';
 

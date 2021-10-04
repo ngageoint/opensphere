@@ -1,7 +1,7 @@
-goog.module('os.file.upload');
+goog.declareModuleId('os.file.upload');
 
 const Promise = goog.requireType('goog.Promise');
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
@@ -16,17 +16,12 @@ let uploadFile = null;
  * Get the file upload function.
  * @return {?function(OSFile):!Promise<string>}
  */
-const getUploadFile = () => uploadFile;
+export const getUploadFile = () => uploadFile;
 
 /**
  * Set the upload file function.
  * @param {?function(OSFile):!Promise<string>} fn The function.
  */
-const setUploadFile = (fn) => {
+export const setUploadFile = (fn) => {
   uploadFile = fn;
-};
-
-exports = {
-  getUploadFile,
-  setUploadFile
 };

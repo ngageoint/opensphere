@@ -1,13 +1,14 @@
-goog.module('os.ui.im.ImportEvent');
+goog.declareModuleId('os.ui.im.ImportEvent');
+
+import OSFile from '../../file/file.js';
 
 const GoogEvent = goog.require('goog.events.Event');
-const OSFile = goog.require('os.file.File');
 
 
 /**
  * File/URL import event.
  */
-class ImportEvent extends GoogEvent {
+export default class ImportEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -39,5 +40,3 @@ class ImportEvent extends GoogEvent {
     this.config = opt_config || null;
   }
 }
-
-exports = ImportEvent;

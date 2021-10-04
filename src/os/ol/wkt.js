@@ -1,4 +1,4 @@
-goog.module('os.ol.wkt');
+goog.declareModuleId('os.ol.wkt');
 
 const WKT = goog.require('ol.format.WKT');
 
@@ -7,8 +7,4 @@ const WKT = goog.require('ol.format.WKT');
  * Global reusable instance of the OpenLayers WKT format.
  * @type {!WKT}
  */
-const FORMAT = new WKT();
-
-exports = {
-  FORMAT
-};
+export const FORMAT = new WKT();

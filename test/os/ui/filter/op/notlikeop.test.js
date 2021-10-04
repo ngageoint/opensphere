@@ -2,8 +2,8 @@ goog.require('os.ui.filter.op.IsLike');
 goog.require('os.ui.filter.op.NotLike');
 
 describe('os.ui.filter.op.NotLike', function() {
-  const IsLike = goog.module.get('os.ui.filter.op.IsLike');
-  const NotLike = goog.module.get('os.ui.filter.op.NotLike');
+  const {default: IsLike} = goog.module.get('os.ui.filter.op.IsLike');
+  const {default: NotLike} = goog.module.get('os.ui.filter.op.NotLike');
 
   var op = new NotLike();
   var innerOp = op.op;

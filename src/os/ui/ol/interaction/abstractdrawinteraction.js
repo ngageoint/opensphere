@@ -1,4 +1,8 @@
-goog.module('os.ui.ol.interaction.AbstractDraw');
+goog.declareModuleId('os.ui.ol.interaction.AbstractDraw');
+
+import * as dispatcher from '../../../dispatcher.js';
+import DrawEvent from '../../draw/drawevent.js';
+import DrawEventType from '../../draw/draweventtype.js';
 
 const {getDocument} = goog.require('goog.dom');
 const BrowserEvent = goog.require('goog.events.BrowserEvent');
@@ -14,9 +18,6 @@ const Fill = goog.require('ol.style.Fill');
 const Stroke = goog.require('ol.style.Stroke');
 const Style = goog.require('ol.style.Style');
 const Text = goog.require('ol.style.Text');
-const dispatcher = goog.require('os.Dispatcher');
-const DrawEvent = goog.require('os.ui.draw.DrawEvent');
-const DrawEventType = goog.require('os.ui.draw.DrawEventType');
 
 const Logger = goog.requireType('goog.log.Logger');
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
@@ -29,7 +30,7 @@ const Geometry = goog.requireType('ol.geom.Geometry');
  *
  * @abstract
  */
-class AbstractDraw extends Pointer {
+export default class AbstractDraw extends Pointer {
   /**
    * Constructor.
    * @param {olx.interaction.PointerOptions=} opt_options
@@ -343,5 +344,3 @@ class AbstractDraw extends Pointer {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.ol.interaction.AbstractDraw');
-
-exports = AbstractDraw;

@@ -8,10 +8,8 @@ const {ol4326CoordinateToCesiumCartesian} = goog.require('olcs.core');
 
 const Feature = goog.requireType('ol.Feature');
 const Style = goog.requireType('ol.style.Style');
-const Ellipse = goog.requireType('os.geom.Ellipse');
-const {
-  default: VectorContext
-} = goog.requireType('plugin.cesium.VectorContext');
+const {default: Ellipse} = goog.requireType('os.geom.Ellipse');
+const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**

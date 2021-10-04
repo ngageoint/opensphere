@@ -1,18 +1,19 @@
-goog.module('os.search.AbstractSearchManager');
+goog.declareModuleId('os.search.AbstractSearchManager');
+
+import FavoriteManager from '../user/settings/favoritemanager.js';
+import FavoriteType from '../user/settings/favoritetype.js';
+import SearchEventType from './searcheventtype.js';
 
 const {defaultCompare} = goog.require('goog.array');
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
 const {hashCode} = goog.require('goog.string');
-const SearchEventType = goog.require('os.search.SearchEventType');
-const FavoriteManager = goog.require('os.user.settings.FavoriteManager');
-const FavoriteType = goog.require('os.user.settings.FavoriteType');
 
-const Favorite = goog.requireType('os.search.Favorite');
-const ISearch = goog.requireType('os.search.ISearch');
-const ISearchResult = goog.requireType('os.search.ISearchResult');
-const SearchEvent = goog.requireType('os.search.SearchEvent');
-const FavoriteSetting = goog.requireType('os.user.settings.favorite');
+const {default: Favorite} = goog.requireType('os.search.Favorite');
+const {default: ISearch} = goog.requireType('os.search.ISearch');
+const {default: ISearchResult} = goog.requireType('os.search.ISearchResult');
+const {default: SearchEvent} = goog.requireType('os.search.SearchEvent');
+const {default: FavoriteSetting} = goog.requireType('os.user.settings.favorite');
 
 
 /**
@@ -20,7 +21,7 @@ const FavoriteSetting = goog.requireType('os.user.settings.favorite');
  *
  * @abstract
  */
-class AbstractSearchManager extends EventTarget {
+export default class AbstractSearchManager extends EventTarget {
   /**
    * Constructor.
    * @param {string=} opt_id
@@ -304,5 +305,3 @@ class AbstractSearchManager extends EventTarget {
    */
   isLoading() {}
 }
-
-exports = AbstractSearchManager;

@@ -1,27 +1,28 @@
-goog.module('os.ui.TimelinePanelUI');
+goog.declareModuleId('os.ui.TimelinePanelUI');
 
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const IAnimationSupport = goog.require('os.IAnimationSupport');
-const MapContainer = goog.require('os.MapContainer');
-const MapEvent = goog.require('os.MapEvent');
-const TimelineHistManager = goog.require('os.data.histo.TimelineHistManager');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const osImplements = goog.require('os.implements');
-const Metrics = goog.require('os.metrics.Metrics');
-const keys = goog.require('os.metrics.keys');
-const TimelineController = goog.require('os.time.TimelineController');
-const TimelineEventType = goog.require('os.time.TimelineEventType');
-const ui = goog.require('os.ui');
-const {directiveTag: animationSettingsUi} = goog.require('os.ui.AnimationSettingsUI');
-const Module = goog.require('os.ui.Module');
-const {directiveTag: timeSettingsUi} = goog.require('os.ui.TimeSettingsUI');
-const HistogramEventType = goog.require('os.ui.hist.HistogramEventType');
-const timelineMenu = goog.require('os.ui.menu.timeline');
-const AbstractTimelineCtrl = goog.require('os.ui.timeline.AbstractTimelineCtrl');
-const osWindow = goog.require('os.ui.window');
+import TimelineHistManager from '../data/histo/timelinehistmanager.js';
+import * as dispatcher from '../dispatcher.js';
+import LayerEventType from '../events/layereventtype.js';
+import IAnimationSupport from '../ianimationsupport.js';
+import osImplements from '../implements.js';
+import MapEvent from '../map/mapevent.js';
+import MapContainer from '../mapcontainer.js';
+import Metrics from '../metrics/metrics.js';
+import * as keys from '../metrics/metricskeys.js';
+import {ROOT} from '../os.js';
+import TimelineController from '../time/timelinecontroller.js';
+import TimelineEventType from '../time/timelineeventtype.js';
+import {directiveTag as animationSettingsUi} from './animationsettings.js';
+import HistogramEventType from './hist/histogrameventtype.js';
+import * as timelineMenu from './menu/timelinemenu.js';
+import Module from './module.js';
+import AbstractTimelineCtrl from './timeline/abstracttimelinectrl.js';
+import {directiveTag as timeSettingsUi} from './timelinesettings.js';
+import * as ui from './ui.js';
+import * as osWindow from './window.js';
 
 const OLLayer = goog.requireType('ol.layer.Layer');
+const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
 
 
 /**
@@ -29,7 +30,7 @@ const OLLayer = goog.requireType('ol.layer.Layer');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -42,7 +43,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'timeline-panel';
+export const directiveTag = 'timeline-panel';
 
 
 /**
@@ -55,7 +56,7 @@ Module.directive('timelinePanel', [directive]);
  * Controller function for the timeline-panel directive.
  * @unrestricted
  */
-class Controller extends AbstractTimelineCtrl {
+export class Controller extends AbstractTimelineCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -105,7 +106,7 @@ class Controller extends AbstractTimelineCtrl {
   /**
    * Toggle new layers into the animation state.
    *
-   * @param {os.events.LayerEvent} event
+   * @param {LayerEvent} event
    * @private
    */
   onLayerAdded_(event) {
@@ -282,9 +283,3 @@ class Controller extends AbstractTimelineCtrl {
     ui.apply(this.scope);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

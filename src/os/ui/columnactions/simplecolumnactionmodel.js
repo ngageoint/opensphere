@@ -1,12 +1,12 @@
-goog.module('os.ui.columnactions.SimpleColumnActionModel');
+goog.declareModuleId('os.ui.columnactions.SimpleColumnActionModel');
 
-const IColumnActionModel = goog.requireType('os.ui.columnactions.IColumnActionModel');
+const {default: IColumnActionModel} = goog.requireType('os.ui.columnactions.IColumnActionModel');
 
 
 /**
  * @implements {IColumnActionModel}
  */
-class SimpleColumnActionModel {
+export default class SimpleColumnActionModel {
   /**
    * Constructor.
    * @param {!string} field The field
@@ -33,5 +33,3 @@ class SimpleColumnActionModel {
     return this.field_;
   }
 }
-
-exports = SimpleColumnActionModel;

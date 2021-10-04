@@ -1,21 +1,22 @@
-goog.module('os.histo.NumericBinMethod');
+goog.declareModuleId('os.histo.NumericBinMethod');
+
+import DataModel from '../data/xf/datamodel.js';
+import TimeInstant from '../time/timeinstant.js';
+import {MAGIC_EMPTY, MAGIC_NAN, sortByKey, sortByKeyDesc} from './binutils.js';
+import FilterComponent from './filtercomponent.js';
+import UniqueBinMethod from './uniquebinmethod.js';
 
 const iter = goog.require('goog.iter');
 const Range = goog.require('goog.math.Range');
 const RangeSet = goog.require('goog.math.RangeSet');
 const {toNumber} = goog.require('goog.string');
-const DataModel = goog.require('os.data.xf.DataModel');
-const FilterComponent = goog.require('os.histo.FilterComponent');
-const UniqueBinMethod = goog.require('os.histo.UniqueBinMethod');
-const {MAGIC_EMPTY, MAGIC_NAN, sortByKey, sortByKeyDesc} = goog.require('os.histo.bin');
-const TimeInstant = goog.require('os.time.TimeInstant');
 
 
 /**
  * @extends {UniqueBinMethod<T,number>}
  * @template T
  */
-class NumericBinMethod extends UniqueBinMethod {
+export default class NumericBinMethod extends UniqueBinMethod {
   /**
    * Constructor.
    */
@@ -458,5 +459,3 @@ NumericBinMethod.NAN_LABEL = 'Not a Number';
  * @const
  */
 NumericBinMethod.LABEL_RANGE_SEP = ' to ';
-
-exports = NumericBinMethod;

@@ -1,25 +1,26 @@
-goog.module('os.ui.menu.list');
+goog.declareModuleId('os.ui.menu.list');
+
+import EventType from '../../action/eventtype.js';
+import {instanceOf} from '../../classregistry.js';
+import CommandProcessor from '../../command/commandprocessor.js';
+import FeaturesVisibility from '../../command/featuresvisibilitycmd.js';
+import ColorMethod from '../../data/histo/colormethod.js';
+import {flyTo, getFirstColor, removeFeatures} from '../../feature/feature.js';
+import Metrics from '../../metrics/metrics.js';
+import {FeatureList as FeatureListKeys} from '../../metrics/metricskeys.js';
+import VectorSource from '../../source/vectorsource.js';
+import {toRgbaString} from '../../style/style.js';
+import * as ExportUI from '../ex/exportdialog.js';
+import * as ConfirmColorUI from '../window/confirmcolor.js';
+import {GroupLabel, addFeatureItems} from './featuremenu.js';
+import Menu from './menu.js';
+import MenuItem from './menuitem.js';
+import MenuItemType from './menuitemtype.js';
 
 const googDispose = goog.require('goog.dispose');
-const EventType = goog.require('os.action.EventType');
-const {instanceOf} = goog.require('os.classRegistry');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const FeaturesVisibility = goog.require('os.command.FeaturesVisibility');
-const ColorMethod = goog.require('os.data.histo.ColorMethod');
-const {flyTo, getFirstColor, removeFeatures} = goog.require('os.feature');
-const Metrics = goog.require('os.metrics.Metrics');
-const {FeatureList: FeatureListKeys} = goog.require('os.metrics.keys');
-const VectorSource = goog.require('os.source.Vector');
-const {toRgbaString} = goog.require('os.style');
-const ExportUI = goog.require('os.ui.ex.ExportUI');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const {GroupLabel, addFeatureItems} = goog.require('os.ui.menu.feature');
-const ConfirmColorUI = goog.require('os.ui.window.ConfirmColorUI');
 
-const ISource = goog.requireType('os.source.ISource');
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const {default: ISource} = goog.requireType('os.source.ISource');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const SlickGridUI = goog.requireType('os.ui.slick.SlickGridUI');
 
 
@@ -27,13 +28,13 @@ const SlickGridUI = goog.requireType('os.ui.slick.SlickGridUI');
  * Prefix used on feature list events.
  * @type {string}
  */
-const PREFIX = 'featureList::';
+export const PREFIX = 'featureList::';
 
 /**
  * RegExp to remove prefix from feature list events.
  * @type {RegExp}
  */
-const PREFIX_REGEXP = /^.*?::/;
+export const PREFIX_REGEXP = /^.*?::/;
 
 /**
  * The feature list menu.
@@ -45,13 +46,13 @@ let MENU = null;
  * Get the menu.
  * @return {Menu}
  */
-const getMenu = () => MENU;
+export const getMenu = () => MENU;
 
 /**
  * Set the menu.
  * @param {Menu} menu The menu.
  */
-const setMenu = (menu) => {
+export const setMenu = (menu) => {
   MENU = menu;
 };
 
@@ -59,7 +60,7 @@ const setMenu = (menu) => {
  * menu list strings
  * @enum {string}
  */
-const Strings = {
+export const Strings = {
   COLOR_RESET_LABEL: 'Reset Color',
   COLOR_RESET_TOOLTIP: 'Reset all item(s) to the default color from the Layer\'s Style',
   COLOR_SELECTED_LABEL: 'Color Selected',
@@ -69,7 +70,7 @@ const Strings = {
 /**
  * Sets up the feature list menu.
  */
-const setup = function() {
+export const setup = function() {
   MENU = new Menu(new MenuItem({
     type: MenuItemType.ROOT,
     children: [{
@@ -138,7 +139,7 @@ const setup = function() {
 /**
  * Disposes the feature list menu.
  */
-const dispose = function() {
+export const dispose = function() {
   googDispose(MENU);
   MENU = null;
 };
@@ -148,7 +149,7 @@ const dispose = function() {
  *
  * @param {MenuEvent} event The menu event.
  */
-const handleListEvent = function(event) {
+export const handleListEvent = function(event) {
   var source = event ? /** @type {ISource} */ (event.getContext()) : undefined;
   if (source) {
     var cmd;
@@ -220,7 +221,7 @@ const handleListEvent = function(event) {
  *
  * @param {MenuEvent} event The menu event.
  */
-const onExport = function(event) {
+export const onExport = function(event) {
   var context = event.getContext();
   if (instanceOf(context, VectorSource.NAME)) {
     var source = /** @type {!VectorSource} */ (context);
@@ -233,7 +234,7 @@ const onExport = function(event) {
  *
  * @param {MenuEvent} event The menu event.
  */
-const onSortSelected = function(event) {
+export const onSortSelected = function(event) {
   var target = /** @type {SlickGridUI.Controller} */ (event.target);
   if (target && target.onSortBySelectionChange) {
     target.onSortBySelectionChange();
@@ -245,7 +246,7 @@ const onSortSelected = function(event) {
  *
  * @param {MenuEvent} event The menu event.
  */
-const onColorSelected = function(event) {
+export const onColorSelected = function(event) {
   var context = event.getContext();
   if (instanceOf(context, VectorSource.NAME)) {
     var source = /** @type {!VectorSource} */ (context);
@@ -265,7 +266,7 @@ const onColorSelected = function(event) {
  *
  * @param {MenuEvent} event The menu event.
  */
-const onResetColor = function(event) {
+export const onResetColor = function(event) {
   var context = event.getContext();
   if (instanceOf(context, VectorSource.NAME)) {
     var source = /** @type {!VectorSource} */ (context);
@@ -284,7 +285,7 @@ const onResetColor = function(event) {
  * @param {VectorSource} context
  * @this {MenuItem}
  */
-const canExport = function(context) {
+export const canExport = function(context) {
   this.visible = false;
 
   if (instanceOf(context, VectorSource.NAME)) {
@@ -301,7 +302,7 @@ const canExport = function(context) {
  * @param {*} context The menu context.
  * @return {boolean} If the source has a selection.
  */
-const hasSelected = function(context) {
+export const hasSelected = function(context) {
   if (instanceOf(context, VectorSource.NAME)) {
     var source = /** @type {!VectorSource} */ (context);
     var selected = source.getSelectedItems();
@@ -317,24 +318,6 @@ const hasSelected = function(context) {
  * @param {*} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfHasSelected = function(context) {
+export const visibleIfHasSelected = function(context) {
   this.visible = hasSelected(context);
-};
-
-exports = {
-  PREFIX,
-  PREFIX_REGEXP,
-  getMenu,
-  setMenu,
-  Strings,
-  setup,
-  dispose,
-  handleListEvent,
-  onExport,
-  onSortSelected,
-  onColorSelected,
-  onResetColor,
-  canExport,
-  hasSelected,
-  visibleIfHasSelected
 };

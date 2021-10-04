@@ -1,4 +1,4 @@
-goog.module('os.array');
+goog.declareModuleId('os.array');
 
 const googArray = goog.require('goog.array');
 const math = goog.require('goog.math');
@@ -18,7 +18,7 @@ const math = goog.require('goog.math');
  * @return {number} The insertion index, or -1 if the value was already in the array.
  * @template VALUE
  */
-const binaryInsert = function(array, value, opt_compareFn) {
+export const binaryInsert = function(array, value, opt_compareFn) {
   var index = googArray.binarySearch(array, value, opt_compareFn);
   if (index < 0) {
     index = -index - 1;
@@ -34,7 +34,7 @@ const binaryInsert = function(array, value, opt_compareFn) {
  *
  * @param {IArrayLike<?>} arr The array or array-like object.
  */
-const clear = function(arr) {
+export const clear = function(arr) {
   if (Array.isArray(arr)) {
     arr.length = 0;
   } else if (arr && arr.length != null) {
@@ -53,7 +53,7 @@ const clear = function(arr) {
  * @param {S=} opt_obj The object to be used as the value of 'this' within f.
  * @template T,S
  */
-const forEach = function(arr, f, opt_obj) {
+export const forEach = function(arr, f, opt_obj) {
   if (arr && arr.length != null) {
     Array.prototype.forEach.call(arr, f, opt_obj);
   }
@@ -68,7 +68,7 @@ const forEach = function(arr, f, opt_obj) {
  * @return {number}
  * @template VALUE
  */
-const sortByField = function(field, a, b) {
+export const sortByField = function(field, a, b) {
   return googArray.defaultCompare(a[field], b[field]);
 };
 
@@ -81,7 +81,7 @@ const sortByField = function(field, a, b) {
  * @return {number}
  * @template VALUE
  */
-const sortByFieldDesc = function(field, a, b) {
+export const sortByFieldDesc = function(field, a, b) {
   return googArray.defaultCompare(b[field], a[field]);
 };
 
@@ -95,7 +95,7 @@ const sortByFieldDesc = function(field, a, b) {
  * @template T,S
  * @deprecated Please use {@link os.array.forEach} instead.
  */
-const forEachSafe = forEach;
+export const forEachSafe = forEach;
 
 /**
  * Copies array elements from a source array to a destination array.
@@ -106,7 +106,7 @@ const forEachSafe = forEach;
  * @param {number} destPos Destination start index
  * @param {number} length Number of elements to copy
  */
-const arrayCopy = function(src, srcPos, dest, destPos, length) {
+export const arrayCopy = function(src, srcPos, dest, destPos, length) {
   for (var i = srcPos; i < srcPos + length; i += 1) {
     dest[destPos++] = src[i];
   }
@@ -119,7 +119,7 @@ const arrayCopy = function(src, srcPos, dest, destPos, length) {
  * @param {Array} arr2 first array to check interesection
  * @return {Array} an array with only the items present that are in both arrays
  */
-const intersection = function(arr1, arr2) {
+export const intersection = function(arr1, arr2) {
   var t;
   // Optimization so that indexOf loops over smaller array
   if (arr1.length > arr2.length) {
@@ -141,7 +141,7 @@ const intersection = function(arr1, arr2) {
  * @return {Array<T>}
  * @template T
  */
-const findDuplicates = function(arr, opt_hashFn) {
+export const findDuplicates = function(arr, opt_hashFn) {
   var returnArray = [];
   var defaultHashFn = function(item) {
     return goog.isObject(current) ? 'o' + goog.getUid(current) :
@@ -176,7 +176,7 @@ const findDuplicates = function(arr, opt_hashFn) {
  * @return {boolean} returns true if a duplicate was found
  * @template T
  */
-const removeDuplicates = function(arr, opt_rv, opt_hashFn) {
+export const removeDuplicates = function(arr, opt_rv, opt_hashFn) {
   var returnArray = opt_rv || arr;
   // this default function is different from the googArray one
   // it checks if an object is also an array before just checking the uid, if it is an array then allow comparison of
@@ -216,7 +216,7 @@ const removeDuplicates = function(arr, opt_rv, opt_hashFn) {
  *  indexer: function(Object, boolean):(string|number)
  * }}
  */
-let JoinSet;
+export let JoinSet;
 
 /**
  * @typedef {{
@@ -224,12 +224,12 @@ let JoinSet;
  *  key: ?(string|number)
  * }}
  */
-let JoinSubset;
+export let JoinSubset;
 
 /**
  * @typedef {Object<string|number, Array<Object>>}
  */
-let JoinIndex;
+export let JoinIndex;
 
 /**
  * Sorts {@link JoinSet}'s by their crossProduct.
@@ -238,7 +238,7 @@ let JoinIndex;
  * @param {JoinSet} b
  * @return {number}
  */
-const crossProductSort = function(a, b) {
+export const crossProductSort = function(a, b) {
   return -1 * googArray.defaultCompare(a.crossProduct, b.crossProduct);
 };
 
@@ -249,7 +249,7 @@ const crossProductSort = function(a, b) {
  * @throws {Error} If two sets with <code>crossProduct = true</code> are given
  * @return {Array}
  */
-const join = function(sets, copyFunction) {
+export const join = function(sets, copyFunction) {
   var joined = [];
   sets = sets.sort(crossProductSort);
 
@@ -331,7 +331,7 @@ const join = function(sets, copyFunction) {
  *                  >= 0 iff target is found, and the return value will be the first index of the found <b>group</b>.
  * @template TARGET, VALUE
  */
-const binaryStrideSearch = function(arr, target, stride, offset, opt_compareFn) {
+export const binaryStrideSearch = function(arr, target, stride, offset, opt_compareFn) {
   var compareFn = opt_compareFn || googArray.defaultCompare;
 
   // ensure the offset is within the group bounds
@@ -361,23 +361,4 @@ const binaryStrideSearch = function(arr, target, stride, offset, opt_compareFn) 
   // left is the index if found, or the insertion point otherwise.
   // ~left is a shorthand for -left - 1.
   return found ? left : ~left;
-};
-
-exports = {
-  binaryInsert,
-  clear,
-  forEach,
-  sortByField,
-  sortByFieldDesc,
-  forEachSafe,
-  arrayCopy,
-  intersection,
-  findDuplicates,
-  removeDuplicates,
-  crossProductSort,
-  join,
-  binaryStrideSearch,
-  JoinSet,
-  JoinSubset,
-  JoinIndex
 };

@@ -1,6 +1,6 @@
-goog.module('os.search.FacetResults');
+goog.declareModuleId('os.search.FacetResults');
 
-const FacetResult = goog.requireType('os.search.FacetResult');
+const {default: FacetResult} = goog.requireType('os.search.FacetResult');
 
 
 /**
@@ -11,4 +11,4 @@ const FacetResult = goog.requireType('os.search.FacetResult');
  */
 let FacetResults;
 
-exports = FacetResults;
+export default FacetResults;

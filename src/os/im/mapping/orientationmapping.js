@@ -1,14 +1,14 @@
-goog.module('os.im.mapping.OrientationMapping');
+goog.declareModuleId('os.im.mapping.OrientationMapping');
 
-const Fields = goog.require('os.Fields');
-const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
-const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
+import Fields from '../../fields/fields.js';
+import MappingRegistry from './mappingregistry.js';
+import RadiusMapping from './radiusmapping.js';
 
 
 /**
  * Ellipse orientation mapping.
  */
-class OrientationMapping extends RadiusMapping {
+export default class OrientationMapping extends RadiusMapping {
   /**
    * Constructor.
    */
@@ -41,6 +41,3 @@ OrientationMapping.ID = 'Orientation';
 
 // Register the mapping.
 MappingRegistry.getInstance().registerMapping(OrientationMapping.ID, OrientationMapping);
-
-
-exports = OrientationMapping;

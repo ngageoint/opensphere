@@ -1,17 +1,15 @@
-goog.module('os.ui.timeline.IDragPanItem');
+goog.declareModuleId('os.ui.timeline.IDragPanItem');
 
-const ITimelineItem = goog.requireType('os.ui.timeline.ITimelineItem');
+const {default: ITimelineItem} = goog.requireType('os.ui.timeline.ITimelineItem');
 
 
 /**
  * @interface
  * @extends {ITimelineItem}
  */
-class IDragPanItem {
+export default class IDragPanItem {
   /**
    * @param {number} t
    */
   dragPanTo(t) {}
 }
-
-exports = IDragPanItem;

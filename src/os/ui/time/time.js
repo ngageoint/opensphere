@@ -1,7 +1,7 @@
-goog.module('os.ui.time.timeDirective');
+goog.declareModuleId('os.ui.time.timeDirective');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
 
 
 /**
@@ -9,7 +9,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -26,14 +26,9 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'time';
+export const directiveTag = 'time';
 
 /**
  * Add the directive to the module.
  */
 Module.directive('time', [directive]);
-
-exports = {
-  directive,
-  directiveTag
-};

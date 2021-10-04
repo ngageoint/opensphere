@@ -1,7 +1,7 @@
 goog.require('os.ui.filter.op.GreaterThanOrEqualTo');
 
 describe('os.ui.filter.op.GreaterThanOrEqualTo', function() {
-  const GreaterThanOrEqualTo = goog.module.get('os.ui.filter.op.GreaterThanOrEqualTo');
+  const {default: GreaterThanOrEqualTo} = goog.module.get('os.ui.filter.op.GreaterThanOrEqualTo');
 
   var op = new GreaterThanOrEqualTo();
 

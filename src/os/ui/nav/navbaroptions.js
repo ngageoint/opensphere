@@ -1,27 +1,27 @@
-goog.module('os.ui.navbaroptions');
+goog.declareModuleId('os.ui.navbaroptions');
 
-goog.require('os.ui.navBottomDirective');
-goog.require('os.ui.navTopDirective');
+import './navbottom.js';
+import './navtop.js';
 
-const AddDataButtonUI = goog.require('os.ui.AddDataButtonUI');
-const DatePanelUI = goog.require('os.ui.DatePanelUI');
-const LayersButtonUI = goog.require('os.ui.LayersButtonUI');
-const LegendButtonUI = goog.require('os.ui.LegendButtonUI');
-const MuteButtonUI = goog.require('os.ui.MuteButtonUI');
-const OSNavTopUI = goog.require('os.ui.OSNavTopUI');
-const ScaleLine = goog.require('os.ui.ScaleLine');
-const ServersButtonUI = goog.require('os.ui.ServersButtonUI');
-const SettingsButtonUI = goog.require('os.ui.SettingsButtonUI');
-const SaveButtonUI = goog.require('os.ui.SaveButtonUI');
-const AlertButtonUI = goog.require('os.ui.alert.AlertButtonUI');
-const ClearButtonUI = goog.require('os.ui.clear.ClearButtonUI');
-const DrawControlsUI = goog.require('os.ui.draw.DrawControlsUI');
-const HelpUI = goog.require('os.ui.help.HelpUI');
-const HistoryButtonUI = goog.require('os.ui.history.HistoryButtonUI');
-const list = goog.require('os.ui.list');
-const Location = goog.require('os.ui.nav.Location');
-const {getSearchBox} = goog.require('os.ui.navbaroptions.searchbox');
-const SearchResultsUI = goog.require('os.ui.search.SearchResultsUI');
+import * as AddDataButtonUI from '../adddatabutton.js';
+import * as AlertButtonUI from '../alert/alertbutton.js';
+import * as ClearButtonUI from '../clear/clearbutton.js';
+import * as DatePanelUI from '../datepanel.js';
+import * as DrawControlsUI from '../draw/drawcontrols.js';
+import * as HelpUI from '../help/helpui.js';
+import * as HistoryButtonUI from '../history/historybutton.js';
+import * as LayersButtonUI from '../layersbutton.js';
+import * as LegendButtonUI from '../legendbutton.js';
+import * as list from '../list.js';
+import * as MuteButtonUI from '../mutebutton.js';
+import * as SaveButtonUI from '../savebutton.js';
+import * as ScaleLine from '../scaleline.js';
+import * as SearchResultsUI from '../search/searchresults.js';
+import * as ServersButtonUI from '../serversbutton.js';
+import * as SettingsButtonUI from '../settingsbutton.js';
+import {getSearchBox} from './navbaroptionssearchbox.js';
+import Location from './navlocation.js';
+import * as OSNavTopUI from './osnavtop.js';
 
 
 /**
@@ -34,26 +34,26 @@ let searchResults = `<${SearchResultsUI.directiveTag} parent="#js-main"></${Sear
  * @type {string}
  * @deprecated Please use getSearchResults and setSearchResults instead.
  */
-const searchresults = searchResults;
+export const searchresults = searchResults;
 
 /**
  * Get the search results UI.
  * @return {string}
  */
-const getSearchResults = () => searchResults;
+export const getSearchResults = () => searchResults;
 
 /**
  * Set the search results UI.
  * @param {string} value
  */
-const setSearchResults = (value) => {
+export const setSearchResults = (value) => {
   searchResults = value;
 };
 
 /**
  * Initialize the nav bars.
  */
-const init = function() {
+export const init = function() {
   // Add the top nav bar
   list.add(Location.HEADER, OSNavTopUI.directiveTag, 100);
 
@@ -84,11 +84,4 @@ const init = function() {
   list.add(Location.BOTTOM_RIGHT, AlertButtonUI.directiveTag, 400);
   list.add(Location.BOTTOM_RIGHT, HistoryButtonUI.directiveTag, 500);
   list.add(Location.BOTTOM_RIGHT, MuteButtonUI.directiveTag, 600);
-};
-
-exports = {
-  searchresults,
-  getSearchResults,
-  setSearchResults,
-  init
 };

@@ -1,4 +1,4 @@
-goog.module('os.ui.action.ActionEvent');
+goog.declareModuleId('os.ui.action.ActionEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 const GoogEventId = goog.requireType('goog.events.EventId');
@@ -9,7 +9,7 @@ const GoogEventId = goog.requireType('goog.events.EventId');
  *
  * @deprecated Please use {@link os.ui.menu.Menu} and {@link os.ui.menu.MenuItem} instead
  */
-class ActionEvent extends GoogEvent {
+export default class ActionEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {!(string|GoogEventId)} type Event type.
@@ -35,5 +35,3 @@ class ActionEvent extends GoogEvent {
     return this.context_;
   }
 }
-
-exports = ActionEvent;

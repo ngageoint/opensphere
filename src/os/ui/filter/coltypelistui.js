@@ -1,10 +1,11 @@
-goog.module('os.ui.filter.ColTypeListUI');
+goog.declareModuleId('os.ui.filter.ColTypeListUI');
+
+import * as clipboard from '../clipboard/clipboard.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import FilterPatterns from './filterpatterns.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const clipboard = goog.require('os.ui.clipboard');
-const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
 
 
 /**
@@ -12,7 +13,7 @@ const FilterPatterns = goog.require('os.ui.filter.FilterPatterns');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   require: 'ngModel',
   controller: Controller,
   link: colTypeListLink
@@ -22,13 +23,13 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'coltypelist';
+export const directiveTag = 'coltypelist';
 
 /**
  * Controller function for the colTypeListValidation directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -139,9 +140,3 @@ const colTypeListLink = function($scope, $element, $attrs, $ctrl) {
  * Add directive to module
  */
 Module.directive(directiveTag, [directive]);
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -25,11 +25,11 @@ describe('os.style', function() {
   const Stroke = goog.module.get('ol.style.Stroke');
   const Style = goog.module.get('ol.style.Style');
   const osColor = goog.module.get('os.color');
-  const PropertyChange = goog.module.get('os.source.PropertyChange');
-  const VectorSource = goog.module.get('os.source.Vector');
+  const {default: PropertyChange} = goog.module.get('os.source.PropertyChange');
+  const {default: VectorSource} = goog.module.get('os.source.Vector');
   const osStyle = goog.module.get('os.style');
-  const StyleField = goog.module.get('os.style.StyleField');
-  const StyleType = goog.module.get('os.style.StyleType');
+  const {default: StyleField} = goog.module.get('os.style.StyleField');
+  const {default: StyleType} = goog.module.get('os.style.StyleType');
 
   it('should convert colors properly', function() {
     expect(osStyle.toRgbaString('#f84')).toBe('rgba(255,136,68,1)');

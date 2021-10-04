@@ -1,31 +1,32 @@
-goog.module('os.ogc');
+goog.declareModuleId('os.ogc');
+
+import Settings from '../config/settings.js';
+import {getText} from '../file/mime/text.js';
+import {getMapContainer} from '../map/mapinstance.js';
 
 const QueryData = goog.require('goog.Uri.QueryData');
 const {loadXml} = goog.require('goog.dom.xml');
-const Settings = goog.require('os.config.Settings');
-const {getText} = goog.require('os.file.mime.text');
-const {getMapContainer} = goog.require('os.map.instance');
 
-const IOGCDescriptor = goog.requireType('os.ui.ogc.IOGCDescriptor');
+const {default: IOGCDescriptor} = goog.requireType('os.ui.ogc.IOGCDescriptor');
 
 
 /**
  * Identifier used by OGC data model.
  * @type {string}
  */
-const ID = 'ogc';
+export const ID = 'ogc';
 
 /**
  * Default projection to use for OGC requests.
  * @type {string}
  */
-const defaultProjection = 'EPSG:4326';
+export const defaultProjection = 'EPSG:4326';
 
 /**
  * Regular expressions to detect OGC GetCapabilities root elements.
  * @enum {RegExp}
  */
-const GetCapsRootRegexp = {
+export const GetCapsRootRegexp = {
   WMS: /^WM(T_M)?S_Capabilities$/i,
   WMTS: /^Capabilities$/i,
   WFS: /^WFS_Capabilities$/i
@@ -35,7 +36,7 @@ const GetCapsRootRegexp = {
  * The default tile style object.
  * @type {!osx.ogc.TileStyle}
  */
-const DEFAULT_TILE_STYLE = {
+export const DEFAULT_TILE_STYLE = {
   label: 'Default',
   data: ''
 };
@@ -44,13 +45,13 @@ const DEFAULT_TILE_STYLE = {
  * Regular expression to detect tile styles that support changing the tile color.
  * @type {RegExp}
  */
-const COLOR_STYLE_REGEX = /(density)|(foreground color)/i;
+export const COLOR_STYLE_REGEX = /(density)|(foreground color)/i;
 
 /**
  * Regular expression to detect an OGC error response.
  * @type {RegExp}
  */
-const ERROR_REGEX = /(ExceptionText|ServiceException)/i;
+export const ERROR_REGEX = /(ExceptionText|ServiceException)/i;
 
 /**
  * A validator function for requests which checks for OGC exceptions
@@ -60,7 +61,7 @@ const ERROR_REGEX = /(ExceptionText|ServiceException)/i;
  * @param {Array<number>=} opt_codes Response codes, if available.
  * @return {?string} An error message if one was found, or null if the response is OK
  */
-const getException = function(response, opt_contentType, opt_codes) {
+export const getException = function(response, opt_contentType, opt_codes) {
   try {
     // Try to parse the response as XML and determine if it appears to be an OGC exception report.
     //  - Ignore if the content type is not XML
@@ -89,7 +90,7 @@ const getException = function(response, opt_contentType, opt_codes) {
  *
  * @return {!Object<string, *>}
  */
-const getDefaultWfsOptions = function() {
+export const getDefaultWfsOptions = function() {
   return {
     'load': true,
     'spatial': true,
@@ -106,7 +107,7 @@ const getDefaultWfsOptions = function() {
  *
  * @return {!QueryData}
  */
-const getDefaultWfsParams = function() {
+export const getDefaultWfsParams = function() {
   var params = new QueryData();
   params.setIgnoreCase(true);
   params.set('service', 'WFS');
@@ -122,7 +123,7 @@ const getDefaultWfsParams = function() {
  * @param {IOGCDescriptor} descriptor The descriptor.
  * @return {!QueryData} The params.
  */
-const getWfsParams = function(descriptor) {
+export const getWfsParams = function(descriptor) {
   var params = getDefaultWfsParams();
   if (descriptor) {
     params.set('typename', descriptor.getWfsName());
@@ -148,7 +149,7 @@ const getWfsParams = function(descriptor) {
  * @param {string=} opt_key Optional settings key
  * @return {number}
  */
-const getMaxFeatures = function(opt_key) {
+export const getMaxFeatures = function(opt_key) {
   if (opt_key) {
     // use the key if provided
     return /** @type {number} */ (Settings.getInstance().get('maxFeatures.' + opt_key, 50000));
@@ -165,18 +166,4 @@ const getMaxFeatures = function(opt_key) {
 
   // fallback to the safest option
   return /** @type {number} */ (Settings.getInstance().get('maxFeatures.2d', 50000));
-};
-
-exports = {
-  ID,
-  defaultProjection,
-  GetCapsRootRegexp,
-  DEFAULT_TILE_STYLE,
-  COLOR_STYLE_REGEX,
-  ERROR_REGEX,
-  getException,
-  getDefaultWfsOptions,
-  getDefaultWfsParams,
-  getWfsParams,
-  getMaxFeatures
 };

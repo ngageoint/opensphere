@@ -1,9 +1,10 @@
-goog.module('os.ui.query.area.getUserArea');
+goog.declareModuleId('os.ui.query.area.getUserArea');
+
+import {create} from '../../window.js';
+import {EDIT_WIN_LABEL} from '../query.js';
+import {directiveTag} from './userarea.js';
 
 const Promise = goog.require('goog.Promise');
-const {EDIT_WIN_LABEL} = goog.require('os.ui.query');
-const {directiveTag} = goog.require('os.ui.query.area.UserAreaUI');
-const {create} = goog.require('os.ui.window');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -16,7 +17,7 @@ const Feature = goog.requireType('ol.Feature');
  * @param {boolean=} opt_modal If the window should be modal.
  * @return {!goog.Promise} A promise that resolves to the entered area, or is rejected if the UI is closed.
  */
-exports = function(opt_area, opt_areaTypes, opt_modal) {
+const getUserArea = function(opt_area, opt_areaTypes, opt_modal) {
   return new Promise(function(resolve, reject) {
     var id = opt_area ? opt_area.getId() : undefined;
     var title = 'Enter Area Coordinates';
@@ -51,3 +52,5 @@ exports = function(opt_area, opt_areaTypes, opt_modal) {
     create(windowOptions, `<${directiveTag}></${directiveTag}>`, undefined, undefined, undefined, scopeOptions);
   });
 };
+
+export default getUserArea;

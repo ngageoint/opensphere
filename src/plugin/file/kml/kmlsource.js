@@ -1,7 +1,19 @@
 goog.declareModuleId('plugin.file.kml.KMLSource');
 
+import AlertEventSeverity from '../../../os/alert/alerteventseverity.js';
+import AlertManager from '../../../os/alert/alertmanager.js';
 import * as dispatcher from '../../../os/dispatcher.js';
+import PropertyChangeEvent from '../../../os/events/propertychangeevent.js';
+import MapContainer from '../../../os/mapcontainer.js';
+import * as osObject from '../../../os/object/object.js';
+import PropertyChange from '../../../os/source/propertychange.js';
+import RequestSource from '../../../os/source/requestsource.js';
 import * as source from '../../../os/source/source.js';
+import TriState from '../../../os/structs/tristate.js';
+import UIEventType from '../../../os/ui/events/uieventtype.js';
+import {Controller as FeatureEditCtrl} from '../../../os/ui/featureedit.js';
+import * as column from '../../../os/ui/slick/column.js';
+import * as osWindow from '../../../os/ui/window.js';
 import KMLImporter from './kmlimporter.js';
 import KMLParser from './kmlparser.js';
 import KMLSourceEvent from './kmlsourceevent.js';
@@ -12,22 +24,11 @@ const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
 const olArray = goog.require('ol.array');
-const MapContainer = goog.require('os.MapContainer');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osObject = goog.require('os.object');
-const PropertyChange = goog.require('os.source.PropertyChange');
-const RequestSource = goog.require('os.source.Request');
-const TriState = goog.require('os.structs.TriState');
-const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
-const UIEventType = goog.require('os.ui.events.UIEventType');
-const column = goog.require('os.ui.slick.column');
-const osWindow = goog.require('os.ui.window');
 
 const Logger = goog.requireType('goog.log.Logger');
-const Image = goog.requireType('os.layer.Image');
-const UIEvent = goog.requireType('os.ui.events.UIEvent');
+const {default: OSFile} = goog.requireType('os.file.File');
+const {default: Image} = goog.requireType('os.layer.Image');
+const {default: UIEvent} = goog.requireType('os.ui.events.UIEvent');
 
 
 /**
@@ -88,7 +89,7 @@ export default class KMLSource extends RequestSource {
 
     /**
      * The initial file, set by the layer config when constructing a new KML layer.
-     * @type {?os.file.File}
+     * @type {?OSFile}
      * @protected
      */
     this.file = null;
@@ -606,7 +607,7 @@ export default class KMLSource extends RequestSource {
   /**
    * Sets the initial file on the source.
    *
-   * @param {?os.file.File} file
+   * @param {?OSFile} file
    */
   setFile(file) {
     this.file = file;

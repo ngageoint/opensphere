@@ -1,11 +1,11 @@
-goog.module('os.ui.column.mapping.ColumnMappingNodeUI');
+goog.declareModuleId('os.ui.column.mapping.ColumnMappingNodeUI');
 
-const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
-const Module = goog.require('os.ui.Module');
-const {launchColumnMappingWindow} = goog.require('os.ui.column.mapping.ColumnMappingFormUI');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+import ColumnMappingManager from '../../../column/columnmappingmanager.js';
+import Module from '../../module.js';
+import * as ConfirmUI from '../../window/confirm.js';
+import {launchColumnMappingWindow} from './columnmappingform.js';
 
-const ColumnMappingNode = goog.requireType('os.ui.column.mapping.ColumnMappingNode');
+const {default: ColumnMappingNode} = goog.requireType('os.ui.column.mapping.ColumnMappingNode');
 
 
 /**
@@ -13,7 +13,7 @@ const ColumnMappingNode = goog.requireType('os.ui.column.mapping.ColumnMappingNo
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   template: '<div>' +
@@ -30,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'columnmappingnodeui';
+export const directiveTag = 'columnmappingnodeui';
 
 /**
  * Add the directive to the os.ui module
@@ -41,7 +41,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for selected/highlighted node UI for column mappings
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -105,9 +105,3 @@ class Controller {
     launchColumnMappingWindow(cm);
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

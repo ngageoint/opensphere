@@ -1,13 +1,13 @@
-goog.module('os.ui.IconsSVG');
+goog.declareModuleId('os.ui.IconsSVG');
 
-const {ROOT} = goog.require('os');
+import {ROOT} from '../os.js';
 
 
 /**
  * Icon svg markup
  * @enum {string}
  */
-exports = {
+const IconsSVG = {
   FEATURES: '<image xlink:href="' + ROOT + 'images/features-base.png" ' +
       'x="0" y="0" width="16px" height="16px"><title>Feature layer</title></image>',
   TILES: '<image xlink:href="' + ROOT + 'images/tiles-base.png" ' +
@@ -17,3 +17,5 @@ exports = {
   LOCK: '<image xlink:href="' + ROOT + 'images/lock_tiny_white.png" ' +
       'x="0" y="0" width="16px" height="16px"><title>This layer is locked.</title></image>'
 };
+
+export default IconsSVG;

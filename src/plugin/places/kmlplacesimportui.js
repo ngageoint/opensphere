@@ -1,21 +1,21 @@
 goog.declareModuleId('plugin.places.KMLPlacesImportUI');
 
+import CommandProcessor from '../../os/command/commandprocessor.js';
+import SequenceCommand from '../../os/command/sequencecommand.js';
+import EventType from '../../os/events/eventtype.js';
+import Importer from '../../os/im/importer.js';
 import {ROOT} from '../../os/os.js';
+import FileParserConfig from '../../os/parse/fileparserconfig.js';
+import {Controller as FileImportCtrl} from '../../os/ui/file/fileimport.js';
+import FileImportUI from '../../os/ui/im/fileimportui.js';
+import Module from '../../os/ui/module.js';
+import * as osWindow from '../../os/ui/window.js';
 import KMLNodeAdd from '../file/kml/cmd/kmlnodeaddcmd.js';
 import KMLParser from '../file/kml/kmlparser.js';
 import {updatePlacemark} from '../file/kml/ui/kmlui.js';
 import {getPlacesManager} from './places.js';
 
 const dispose = goog.require('goog.dispose');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const EventType = goog.require('os.events.EventType');
-const Importer = goog.require('os.im.Importer');
-const FileParserConfig = goog.require('os.parse.FileParserConfig');
-const Module = goog.require('os.ui.Module');
-const {Controller: FileImportCtrl} = goog.require('os.ui.file.FileImportUI');
-const FileImportUI = goog.require('os.ui.im.FileImportUI');
-const osWindow = goog.require('os.ui.window');
 
 
 /**

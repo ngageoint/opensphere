@@ -1,17 +1,18 @@
-goog.module('os.ui.layer.LayerPickerUI');
+goog.declareModuleId('os.ui.layer.LayerPickerUI');
+
+import {toHexString} from '../../color.js';
+import BaseDescriptor from '../../data/basedescriptor.js';
+import DataManager from '../../data/datamanager.js';
+import IFilterable from '../../filter/ifilterable.js';
+import osImplements from '../../implements.js';
+import VectorLayer from '../../layer/vector.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {escapeHtml} from '../ui.js';
 
 const {caseInsensitiveContains} = goog.require('goog.string');
-const {ROOT} = goog.require('os');
-const {toHexString} = goog.require('os.color');
-const BaseDescriptor = goog.require('os.data.BaseDescriptor');
-const DataManager = goog.require('os.data.DataManager');
-const IFilterable = goog.require('os.filter.IFilterable');
-const osImplements = goog.require('os.implements');
-const VectorLayer = goog.require('os.layer.Vector');
-const {escapeHtml} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 
 
 /**
@@ -19,7 +20,7 @@ const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -43,7 +44,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'layerpicker';
+export const directiveTag = 'layerpicker';
 
 /**
  * Ass the directive to the module
@@ -55,7 +56,7 @@ Module.directive(directiveTag, [directive]);
  * The selected layer will be saved in 'layer'. If multiple is allowed it will be stored in 'layers' as an array.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -131,16 +132,18 @@ class Controller {
     }
 
     $timeout(function() {
-      this.select2_ = $element.find('.js-layer-picker');
-      this.select2_.select2({
-        'placeholder': this.placeholderText_,
-        'maximumSelectionSize': this.maxNumLayers_,
-        'matcher': matcher,
-        'formatSelection': formatter,
-        'formatResult': formatter
-      });
+      if (this.scope_) {
+        this.select2_ = $element.find('.js-layer-picker');
+        this.select2_.select2({
+          'placeholder': this.placeholderText_,
+          'maximumSelectionSize': this.maxNumLayers_,
+          'matcher': matcher,
+          'formatSelection': formatter,
+          'formatResult': formatter
+        });
 
-      this.multiple() ? this.initLayers_() : this.initLayer_();
+        this.multiple() ? this.initLayers_() : this.initLayer_();
+      }
     }.bind(this));
 
     this.scope_.$watch('layer', this.initLayer_.bind(this));
@@ -178,7 +181,7 @@ class Controller {
    * @private
    */
   initLayers_() {
-    if (this.select2_) {
+    if (this.scope_ && this.select2_) {
       var vals = [];
       if (this.scope_['layers']) {
         this.scope_['layers'].forEach(function(layer) {
@@ -202,7 +205,7 @@ class Controller {
    * @private
    */
   initLayer_() {
-    if (this.select2_) {
+    if (this.scope_ && this.select2_) {
       var val = null;
       if (this.scope_['layer']) {
         var found = this['layersList'].find(function(l) {
@@ -223,8 +226,10 @@ class Controller {
    * @export
    */
   layerPicked(layer) {
-    this.scope_['layer'] = layer;
-    this.scope_.$emit(this.emitName_ + '.layerselected', layer);
+    if (this.scope_) {
+      this.scope_['layer'] = layer;
+      this.scope_.$emit(this.emitName_ + '.layerselected', layer);
+    }
   }
 
   /**
@@ -232,10 +237,12 @@ class Controller {
    * @export
    */
   layersChanged(layers) {
-    this.scope_['layers'] = layers;
-    this.timeout_(function() { // give the scope a chance to update
-      this.scope_.$emit(this.emitName_ + '.layerschanged', layers);
-    }.bind(this));
+    if (this.scope_) {
+      this.scope_['layers'] = layers;
+      this.timeout_(function() { // give the scope a chance to update
+        this.scope_.$emit(this.emitName_ + '.layerschanged', layers);
+      }.bind(this));
+    }
   }
 
   /**
@@ -385,9 +392,3 @@ class Controller {
     return layer instanceof BaseDescriptor ? 'Inactive' : 'Active';
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

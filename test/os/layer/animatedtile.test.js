@@ -7,10 +7,10 @@ goog.require('os.time.TimelineEventType');
 
 describe('os.layer.AnimatedTile', function() {
   const TileWMS = goog.module.get('ol.source.TileWMS');
-  const AnimatedTile = goog.module.get('os.layer.AnimatedTile');
-  const Duration = goog.module.get('os.time.Duration');
-  const TimelineController = goog.module.get('os.time.TimelineController');
-  const TimelineEventType = goog.module.get('os.time.TimelineEventType');
+  const {default: AnimatedTile} = goog.module.get('os.layer.AnimatedTile');
+  const {default: Duration} = goog.module.get('os.time.Duration');
+  const {default: TimelineController} = goog.module.get('os.time.TimelineController');
+  const {default: TimelineEventType} = goog.module.get('os.time.TimelineEventType');
 
   var tlc;
   var layer;

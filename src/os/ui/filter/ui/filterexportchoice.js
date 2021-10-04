@@ -1,10 +1,12 @@
-goog.module('os.ui.filter.ui.FilterExportChoice');
+goog.declareModuleId('os.ui.filter.ui.FilterExportChoice');
 
 /**
  * @enum {string}
  */
-exports = {
+const FilterExportChoice = {
   ACTIVE: 'active',
   SELECTED: 'selected',
   ALL: 'all'
 };
+
+export default FilterExportChoice;

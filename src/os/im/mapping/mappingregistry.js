@@ -1,9 +1,9 @@
-goog.module('os.im.mapping.MappingRegistry');
+goog.declareModuleId('os.im.mapping.MappingRegistry');
 
 const log = goog.require('goog.log');
 
 const Logger = goog.requireType('goog.log.Logger');
-const IMapping = goog.requireType('os.im.mapping.IMapping');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
 
 
 /**
@@ -13,7 +13,7 @@ const IMapping = goog.requireType('os.im.mapping.IMapping');
  * commands that kick off jobs are recommended over asynchronous commands
  * unless the asynchronous processing is quick enough to make that overkill.
  */
-class MappingRegistry {
+export default class MappingRegistry {
   /**
    * Constructor.
    */
@@ -120,5 +120,3 @@ let instance;
  * @type {Logger}
  */
 const logger = log.getLogger('os.im.mapping.MappingRegistry');
-
-exports = MappingRegistry;

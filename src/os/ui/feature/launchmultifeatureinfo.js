@@ -1,7 +1,7 @@
-goog.module('os.ui.feature.launchMultiFeatureInfo');
+goog.declareModuleId('os.ui.feature.launchMultiFeatureInfo');
 
-const osWindow = goog.require('os.ui.window');
-const {directiveTag: multiFeatureInfoUi} = goog.require('os.ui.feature.MultiFeatureInfoUI');
+import * as osWindow from '../window.js';
+import {directiveTag as multiFeatureInfoUi} from './multifeatureinfo.js';
 
 const Feature = goog.requireType('ol.Feature');
 const RenderFeature = goog.requireType('ol.render.Feature');
@@ -13,7 +13,7 @@ const RenderFeature = goog.requireType('ol.render.Feature');
  * @param {Array<Feature|RenderFeature>|Feature|RenderFeature} features The feature or array of features to show.
  * @param {string=} opt_titleDetail Title of the containing layer
  */
-exports = function(features, opt_titleDetail) {
+const launchMultiFeatureInfo = function(features, opt_titleDetail) {
   features = Array.isArray(features) ? features : [features];
   var winLabel = opt_titleDetail || 'Feature Info';
   var windowId = 'featureInfo';
@@ -43,3 +43,5 @@ exports = function(features, opt_titleDetail) {
   var template = `<${multiFeatureInfoUi} features="features"></${multiFeatureInfoUi}>`;
   osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
+
+export default launchMultiFeatureInfo;

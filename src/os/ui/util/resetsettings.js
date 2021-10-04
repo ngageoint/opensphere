@@ -1,19 +1,19 @@
-goog.module('os.ui.util.ResetSettings');
+goog.declareModuleId('os.ui.util.ResetSettings');
 
-const osConfig = goog.require('os.config');
-const {getSettings} = goog.require('os.config.instance');
-const {clearStorage} = goog.require('os.storage');
-const EventType = goog.require('os.ui.EventType');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+import * as osConfig from '../../config/config.js';
+import {getSettings} from '../../config/configinstance.js';
+import {clearStorage} from '../../storage/storage.js';
+import EventType from '../eventtype.js';
+import * as ConfirmUI from '../window/confirm.js';
 
-const MenuItemOptions = goog.requireType('os.ui.menu.MenuItemOptions');
+const {default: MenuItemOptions} = goog.requireType('os.ui.menu.MenuItemOptions');
 
 
 /**
  * Launches the clear local storage window
  * @param {string=} opt_parent Optional parent selector.
  */
-const resetSettings = function(opt_parent) {
+export const resetSettings = function(opt_parent) {
   const settings = getSettings();
   if (settings.getPeerInfo(osConfig.appNs).length) {
     ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
@@ -66,15 +66,10 @@ const resetSettings = function(opt_parent) {
  * Action for clearing local storage. Should be added to help action managers.
  * @type {!MenuItemOptions}
  */
-const resetSettingsOptions = {
+export const resetSettingsOptions = {
   eventType: EventType.DISPLAY_CLEAR_LOCALSTORAGE,
   label: 'Reset Settings',
   tooltip: 'Clears your browser\'s local storage',
   icons: ['<i class="fa fa-fw fa-refresh"></i>'],
   sort: 1000
-};
-
-exports = {
-  resetSettings,
-  resetSettingsOptions
 };

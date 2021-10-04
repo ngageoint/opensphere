@@ -1,7 +1,7 @@
-goog.module('os.ui.window.BaseWindowUI');
+goog.declareModuleId('os.ui.window.BaseWindowUI');
 
-const WindowEvent = goog.require('os.ui.WindowEventType');
-const osWindow = goog.require('os.ui.window');
+import * as osWindow from '../window.js';
+import WindowEvent from '../windoweventtype.js';
 
 
 /**
@@ -10,7 +10,7 @@ const osWindow = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   return {
     restrict: 'E',
     replace: true,
@@ -19,12 +19,11 @@ const directive = () => {
   };
 };
 
-
 /**
  * Base controller for window content.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -69,8 +68,3 @@ class Controller {
     this.element = null;
   }
 }
-
-exports = {
-  directive,
-  Controller
-};

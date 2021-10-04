@@ -1,18 +1,19 @@
-goog.module('os.im.action.default');
+goog.declareModuleId('os.im.action.default');
+
+import Settings from '../../config/settings.js';
+import EventType from '../../events/eventtype.js';
+import {FA_ICON} from '../../filter/defaultfilter.js';
+import {filterFalsey} from '../../fn/fn.js';
+import Request from '../../net/request.js';
+import {ROOT} from '../../os.js';
+import FilterActionImporter from '../../ui/im/action/filteractionimporter.js';
+import {getEntriesFromMatched} from '../../ui/im/action/filteractionui.js';
+import FilterActionParser from './filteractionparser.js';
 
 const Promise = goog.require('goog.Promise');
 const log = goog.require('goog.log');
-const {ROOT} = goog.require('os');
-const Settings = goog.require('os.config.Settings');
-const EventType = goog.require('os.events.EventType');
-const {FA_ICON} = goog.require('os.filter.default');
-const {filterFalsey} = goog.require('os.fn');
-const FilterActionParser = goog.require('os.im.action.FilterActionParser');
-const Request = goog.require('os.net.Request');
-const {getEntriesFromMatched} = goog.require('os.ui.im.action');
-const FilterActionImporter = goog.require('os.ui.im.action.FilterActionImporter');
 
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
 
 
 /**
@@ -25,20 +26,20 @@ const logger = log.getLogger('os.im.action.default');
  * Base settings key for default import actions.
  * @type {string}
  */
-const ICON = '<i class="fa ' + FA_ICON + '" ' +
+export const ICON = '<i class="fa ' + FA_ICON + '" ' +
     'title="This is an application default action. Changes to this action will be lost on refresh."></i>';
 
 /**
  * Base settings key for default import actions.
  * @type {string}
  */
-const BASE_KEY = 'os.defaultAction.';
+export const BASE_KEY = 'os.defaultAction.';
 
 /**
  * Settings keys for default import actions.
  * @enum {string}
  */
-const SettingKey = {
+export const SettingKey = {
   FILES: BASE_KEY + 'files',
   ENABLED: BASE_KEY + 'enabled'
 };
@@ -48,7 +49,7 @@ const SettingKey = {
  * @param {osx.ResourceConfig} resource The resource config.
  * @return {string} The URL.
  */
-const getFileUrl = function(resource) {
+export const getFileUrl = function(resource) {
   var result = '';
   if (resource && resource.url) {
     if (resource.debugPath) {
@@ -66,7 +67,7 @@ const getFileUrl = function(resource) {
  * @param {Array<osx.ResourceConfig>} files The files to load.
  * @return {!Promise} A promise that resolves when default import actions have been loaded.
  */
-const load = function(layerId, files) {
+export const load = function(layerId, files) {
   var filePromises = files.map(getFileUrl)
       .map(function(url) {
         if (url) {
@@ -130,12 +131,4 @@ const initDefault_ = function(entry) {
       children.forEach(initDefault_);
     }
   }
-};
-
-exports = {
-  ICON,
-  BASE_KEY,
-  SettingKey,
-  getFileUrl,
-  load
 };

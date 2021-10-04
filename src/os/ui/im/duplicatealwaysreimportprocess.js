@@ -1,12 +1,12 @@
-goog.module('os.ui.im.DuplicateAlwaysReimportProcess');
+goog.declareModuleId('os.ui.im.DuplicateAlwaysReimportProcess');
 
-const ImportProcess = goog.require('os.ui.im.ImportProcess');
+import ImportProcess from './importprocess.js';
 
 
 /**
  * Extension of the {@code os.ui.im.DuplcateImportProcess} to always choose the option to reimport.
  */
-class DuplicateAlwaysReimportProcess extends ImportProcess {
+export default class DuplicateAlwaysReimportProcess extends ImportProcess {
   /**
    * Constructor.
    */
@@ -32,5 +32,3 @@ class DuplicateAlwaysReimportProcess extends ImportProcess {
     this.importFile();
   }
 }
-
-exports = DuplicateAlwaysReimportProcess;

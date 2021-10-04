@@ -4,7 +4,7 @@ goog.require('os.net.ExtDomainHandler');
 
 describe('os.net.ExtDomainHandler', function() {
   const Uri = goog.module.get('goog.Uri');
-  const ExtDomainHandler = goog.module.get('os.net.ExtDomainHandler');
+  const {default: ExtDomainHandler} = goog.module.get('os.net.ExtDomainHandler');
 
   var edh = new ExtDomainHandler();
 

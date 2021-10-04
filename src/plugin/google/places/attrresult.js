@@ -1,8 +1,7 @@
 goog.declareModuleId('plugin.google.places.AttrResult');
 
+import AbstractSearchResult from '../../../os/search/abstractsearchresult.js';
 import {directiveTag as attrCardEl} from './attrcard.js';
-
-const AbstractSearchResult = goog.require('os.search.AbstractSearchResult');
 
 /**
  * HTML Attribution result for Google Places API

@@ -1,11 +1,12 @@
-goog.module('os.state.v4.ViewTag');
-
+goog.declareModuleId('os.state.v4.ViewTag');
 
 /**
  * XML tags for view state
  * @enum {string}
  * @const
  */
-exports = {
+const ViewTag = {
   VIEW: 'map'
 };
+
+export default ViewTag;

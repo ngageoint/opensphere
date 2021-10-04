@@ -5,7 +5,7 @@ goog.require('os.time');
 
 describe('os.net.VariableReplacer', function() {
   const Uri = goog.module.get('goog.Uri');
-  const VariableReplacer = goog.module.get('os.net.VariableReplacer');
+  const {default: VariableReplacer} = goog.module.get('os.net.VariableReplacer');
 
   var vr = new VariableReplacer();
 

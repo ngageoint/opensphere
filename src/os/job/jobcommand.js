@@ -1,4 +1,4 @@
-goog.module('os.job.JobCommand');
+goog.declareModuleId('os.job.JobCommand');
 
 /**
  * Worker control commands.
@@ -12,4 +12,4 @@ const JobCommand = {
 
 goog.exportSymbol('os.job.JobCommand', JobCommand);
 
-exports = JobCommand;
+export default JobCommand;

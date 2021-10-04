@@ -1,7 +1,8 @@
-goog.module('os.webgl.AbstractWebGLSynchronizer');
+goog.declareModuleId('os.webgl.AbstractWebGLSynchronizer');
+
+import TimelineController from '../time/timelinecontroller.js';
 
 const Disposable = goog.require('goog.Disposable');
-const TimelineController = goog.require('os.time.TimelineController');
 
 const PluggableMap = goog.requireType('ol.PluggableMap');
 const View = goog.requireType('ol.View');
@@ -13,7 +14,7 @@ const View = goog.requireType('ol.View');
  * @abstract
  * @template T
  */
-class AbstractWebGLSynchronizer extends Disposable {
+export default class AbstractWebGLSynchronizer extends Disposable {
   /**
    * Constructor.
    * @param {!T} layer The OpenLayers layer.
@@ -98,5 +99,3 @@ class AbstractWebGLSynchronizer extends Disposable {
    */
   updateFromCamera() {}
 }
-
-exports = AbstractWebGLSynchronizer;

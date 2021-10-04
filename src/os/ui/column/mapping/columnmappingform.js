@@ -1,22 +1,22 @@
-goog.module('os.ui.column.mapping.ColumnMappingFormUI');
+goog.declareModuleId('os.ui.column.mapping.ColumnMappingFormUI');
 
-goog.require('os.ui.column.mapping.ColumnModelTreeUI');
+import './columnmodeltree.js';
+import * as osArray from '../../../array/array.js';
+import ColumnMapping from '../../../column/columnmapping.js';
+import ColumnMappingManager from '../../../column/columnmappingmanager.js';
+import DataManager from '../../../data/datamanager.js';
+import IFilterable from '../../../filter/ifilterable.js';
+import osImplements from '../../../implements.js';
+import {ROOT} from '../../../os.js';
+import Module from '../../module.js';
+import * as ui from '../../ui.js';
+import * as osWindow from '../../window.js';
+import ColumnModelNode from './columnmodelnode.js';
 
 const {getRandomString} = goog.require('goog.string');
-const {ROOT} = goog.require('os');
-const osArray = goog.require('os.array');
-const ColumnMapping = goog.require('os.column.ColumnMapping');
-const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
-const DataManager = goog.require('os.data.DataManager');
-const IFilterable = goog.require('os.filter.IFilterable');
-const osImplements = goog.require('os.implements');
-const ui = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const ColumnModelNode = goog.require('os.ui.column.mapping.ColumnModelNode');
-const osWindow = goog.require('os.ui.window');
 
-const IColumnMapping = goog.requireType('os.column.IColumnMapping');
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const {default: IColumnMapping} = goog.requireType('os.column.IColumnMapping');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 
 
 /**
@@ -24,7 +24,7 @@ const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -39,7 +39,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'columnmappingform';
+export const directiveTag = 'columnmappingform';
 
 /**
  * Add the directive to the module.
@@ -50,7 +50,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the columnmappingform directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -112,7 +112,9 @@ class Controller {
     this.init_();
 
     $timeout(function() {
-      this.element_.find('input[name="name"]').focus();
+      if (this.element_) {
+        this.element_.find('input[name="name"]').focus();
+      }
     }.bind(this));
 
     $scope.$on('layerpicker.layerselected', this.validateLayers_.bind(this));
@@ -211,30 +213,32 @@ class Controller {
    * @private
    */
   validateLayers_() {
-    this['duplicateLayerText'] = '';
-    var columns = this.cm_.getColumns();
+    if (this.scope_) {
+      this['duplicateLayerText'] = '';
+      var columns = this.cm_.getColumns();
 
-    var found = osArray.findDuplicates(columns, function(item) {
-      // find duplicate layers and for empty strings (i.e. user hasn't picker yet) just return a random
-      return item.layer || getRandomString();
-    });
+      var found = osArray.findDuplicates(columns, function(item) {
+        // find duplicate layers and for empty strings (i.e. user hasn't picker yet) just return a random
+        return item.layer || getRandomString();
+      });
 
-    var duplicates = columns.length > 1 && found.length > 0;
-    var enoughLayers = columns.length > 1;
+      var duplicates = columns.length > 1 && found.length > 0;
+      var enoughLayers = columns.length > 1;
 
-    if (duplicates) {
-      const node = this['tree'].find((item) => item.getInitialLayer().getFilterKey() === found[0]['layer']);
-      const dupeTitle = node.getInitialLayer().getTitle();
-      this['duplicateLayerText'] = `Duplicate layers are not supported (<b>${dupeTitle}</b>)`;
+      if (duplicates) {
+        const node = this['tree'].find((item) => item.getInitialLayer().getFilterKey() === found[0]['layer']);
+        const dupeTitle = node.getInitialLayer().getTitle();
+        this['duplicateLayerText'] = `Duplicate layers are not supported (<b>${dupeTitle}</b>)`;
+      }
+
+      var incompleteLayer = columns.find(function(item) {
+        return (!item.layer || item.layer.length == 0 || !item.column || item.column.length == 0);
+      });
+
+      this.scope_['cmForm'].$setValidity('duplicateLayer', !duplicates);
+      this.scope_['cmForm'].$setValidity('notEnoughLayers', enoughLayers);
+      this.scope_['cmForm'].$setValidity('incompleteLayers', (incompleteLayer == null));
     }
-
-    var incompleteLayer = columns.find(function(item) {
-      return (!item.layer || item.layer.length == 0 || !item.column || item.column.length == 0);
-    });
-
-    this.scope_['cmForm'].$setValidity('duplicateLayer', !duplicates);
-    this.scope_['cmForm'].$setValidity('notEnoughLayers', enoughLayers);
-    this.scope_['cmForm'].$setValidity('incompleteLayers', (incompleteLayer == null));
   }
 
   /**
@@ -259,24 +263,26 @@ class Controller {
    * @export
    */
   validate() {
-    this['otherCMText'] = '';
-    var columns = this.cm_.getColumns();
-    var id = this.cm_.getId();
-    var columnsValid = true;
+    if (this.scope_) {
+      this['otherCMText'] = '';
+      var columns = this.cm_.getColumns();
+      var id = this.cm_.getId();
+      var columnsValid = true;
 
-    for (var i = 0, ii = columns.length; i < ii; i++) {
-      var c = columns[i];
-      var hash = ColumnMappingManager.hashColumn(c);
-      var ownerMapping = ColumnMappingManager.getInstance().getOwnerMapping(hash);
-      if (ownerMapping && ownerMapping.getId() !== id) {
-        columnsValid = false;
-        this['otherCMText'] = 'One of your columns (<b>' + c.column + '</b>) is currently in use on the <b>' +
-            ownerMapping.getName() + '</b> column association.';
-        break;
+      for (var i = 0, ii = columns.length; i < ii; i++) {
+        var c = columns[i];
+        var hash = ColumnMappingManager.hashColumn(c);
+        var ownerMapping = ColumnMappingManager.getInstance().getOwnerMapping(hash);
+        if (ownerMapping && ownerMapping.getId() !== id) {
+          columnsValid = false;
+          this['otherCMText'] = 'One of your columns (<b>' + c.column + '</b>) is currently in use on the <b>' +
+              ownerMapping.getName() + '</b> column association.';
+          break;
+        }
       }
-    }
 
-    this.scope_['cmForm'].$setValidity('reusedColumn', columnsValid);
+      this.scope_['cmForm'].$setValidity('reusedColumn', columnsValid);
+    }
   }
 
   /**
@@ -316,7 +322,7 @@ class Controller {
  *
  * @param {IColumnMapping=} opt_cm
  */
-const launchColumnMappingWindow = (opt_cm) => {
+export const launchColumnMappingWindow = (opt_cm) => {
   var id = 'columnmappingform';
   if (osWindow.exists(id)) {
     osWindow.bringToFront(id);
@@ -342,11 +348,4 @@ const launchColumnMappingWindow = (opt_cm) => {
 
   var template = `<${directiveTag} column-mapping="columnMapping"></${directiveTag}>`;
   osWindow.create(options, template, undefined, undefined, undefined, scopeOptions);
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchColumnMappingWindow
 };

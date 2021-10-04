@@ -1,4 +1,10 @@
-goog.module('os.query.BaseQueryManager');
+goog.declareModuleId('os.query.BaseQueryManager');
+
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import ComboNode from '../ui/query/combonode.js';
+import {ALL_ID} from '../ui/query/query.js';
+import {AreaState} from './query.js';
+import {getAreaManager, getFilterManager, getQueryManager, setQueryManager} from './queryinstance.js';
 
 const {defaultCompare} = goog.require('goog.array');
 const {assert} = goog.require('goog.asserts');
@@ -8,23 +14,20 @@ const EventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const {equals} = goog.require('goog.object');
 const {caseInsensitiveCompare} = goog.require('goog.string');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {AreaState} = goog.require('os.query');
-const {getAreaManager, getFilterManager, getQueryManager, setQueryManager} = goog.require('os.query.instance');
-const {ALL_ID} = goog.require('os.ui.query');
-const ComboNode = goog.require('os.ui.query.ComboNode');
 const Logger = goog.requireType('goog.log.Logger');
 
-const BaseFilterManager = goog.requireType('os.filter.BaseFilterManager');
-const BaseAreaManager = goog.requireType('os.query.BaseAreaManager');
-const QueryHandler = goog.requireType('os.ui.query.QueryHandler');
+const {default: BaseFilterManager} = goog.requireType('os.filter.BaseFilterManager');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
+const {default: BaseAreaManager} = goog.requireType('os.query.BaseAreaManager');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
+const {default: QueryHandler} = goog.requireType('os.ui.query.QueryHandler');
 
 
 /**
  * The base query manager class. This version of the query manager implements all of the logic for managing query
  * entries as well as connecting to the area and filter managers.
  */
-class BaseQueryManager extends EventTarget {
+export default class BaseQueryManager extends EventTarget {
   /**
    * Constructor.
    * @param {BaseAreaManager=} opt_areaManager Optional area manager reference. Defaults to the singleton.
@@ -474,7 +477,7 @@ class BaseQueryManager extends EventTarget {
   }
 
   /**
-   * @param {!(string|os.filter.FilterEntry)} filterOrId
+   * @param {!(string|FilterEntry)} filterOrId
    * @return {boolean}
    */
   hasFilter(filterOrId) {
@@ -525,7 +528,7 @@ class BaseQueryManager extends EventTarget {
    * Asks if a filter is an And or an Or grouping for a particular layer. If the filter is in a complex state with
    * respect to areas, it will not account for the "both" case.
    *
-   * @param {!(string|os.filter.FilterEntry)} filterOrId
+   * @param {!(string|FilterEntry)} filterOrId
    * @param {string=} opt_layerId
    * @return {boolean} true for and, false for or
    */
@@ -679,7 +682,7 @@ class BaseQueryManager extends EventTarget {
 
     if (prop === 'toggle') {
       var value = event.getNewValue();
-      var filter = /** @type {os.filter.FilterEntry} */ (value);
+      var filter = /** @type {FilterEntry} */ (value);
       assert(!!filter);
       var id = /** @type {string} */ (filter.getId());
       this.onToggle(this.getEntries(null, null, id));
@@ -1108,8 +1111,8 @@ class BaseQueryManager extends EventTarget {
     } else if (children) {
       children.sort(
           /**
-           * @param {os.structs.ITreeNode} a
-           * @param {os.structs.ITreeNode} b
+           * @param {ITreeNode} a
+           * @param {ITreeNode} b
            * @return {number} per compare function
            */
           function(a, b) {
@@ -1210,5 +1213,3 @@ const logger = log.getLogger('os.query.BaseQueryManager');
  * @private
  */
 BaseQueryManager.sortFields_ = ['layerId', 'areaId', 'filterId', 'includeArea', 'filterGroup'];
-
-exports = BaseQueryManager;

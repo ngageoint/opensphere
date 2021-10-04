@@ -1,11 +1,11 @@
-goog.module('os.ui.modal.AboutModalUI');
+goog.declareModuleId('os.ui.modal.AboutModalUI');
 
-const {ROOT} = goog.require('os');
-const {getAppName} = goog.require('os.config');
-const Settings = goog.require('os.config.Settings');
-const Module = goog.require('os.ui.Module');
-const {create, open} = goog.require('os.ui.modal');
-const windowSelector = goog.require('os.ui.windowSelector');
+import {getAppName} from '../../config/config.js';
+import Settings from '../../config/settings.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import windowSelector from '../windowselector.js';
+import {create, open} from './modal.js';
 
 
 /**
@@ -14,7 +14,7 @@ const windowSelector = goog.require('os.ui.windowSelector');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   replace: true,
   restrict: 'E',
   templateUrl: ROOT + 'views/modal/aboutmodal.html',
@@ -26,7 +26,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'about-modal';
+export const directiveTag = 'about-modal';
 
 /**
  * Register about-modal directive
@@ -37,7 +37,7 @@ Module.directive('aboutModal', [directive]);
  * Controller function for the about-modal directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The scope
@@ -80,13 +80,6 @@ class Controller {
 /**
  * Create the modal
  */
-const launchAboutModal = () => {
+export const launchAboutModal = () => {
   create(windowSelector.CONTAINER, '<about-modal></about-modal>');
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchAboutModal
 };

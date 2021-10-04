@@ -1,10 +1,12 @@
-goog.module('os.ui.im.action.FilterActionExportType');
+goog.declareModuleId('os.ui.im.action.FilterActionExportType');
 
 /**
  * @enum {string}
  */
-exports = {
+const FilterActionExportType = {
   ACTIVE: 'active',
   SELECTED: 'selected',
   ALL: 'all'
 };
+
+export default FilterActionExportType;

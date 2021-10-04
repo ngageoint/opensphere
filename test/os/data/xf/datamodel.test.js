@@ -21,7 +21,7 @@ var MOVIE_DATA = [
 
 describe('os.data.xf.DataModel', function() {
   const googObject = goog.module.get('goog.object');
-  const DataModel = goog.module.get('os.data.xf.DataModel');
+  const {default: DataModel} = goog.module.get('os.data.xf.DataModel');
 
   var data = [];
   for (var i = 0; i <= 99; i++) {

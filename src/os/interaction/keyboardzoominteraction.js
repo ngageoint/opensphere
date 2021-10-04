@@ -1,4 +1,10 @@
-goog.module('os.interaction.KeyboardZoom');
+goog.declareModuleId('os.interaction.KeyboardZoom');
+
+import I3DSupport from '../i3dsupport.js';
+import osImplements from '../implements.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {KEY_TYPE} from '../ui/ol/interaction/interaction.js';
+import {getZoomDelta} from './interaction.js';
 
 const {assert} = goog.require('goog.asserts');
 const KeyCodes = goog.require('goog.events.KeyCodes');
@@ -6,11 +12,6 @@ const EventType = goog.require('ol.events.EventType');
 const {shiftKeyOnly} = goog.require('ol.events.condition');
 const Interaction = goog.require('ol.interaction.Interaction');
 const OLKeyboardZoom = goog.require('ol.interaction.KeyboardZoom');
-const I3DSupport = goog.require('os.I3DSupport');
-const osImplements = goog.require('os.implements');
-const {getZoomDelta} = goog.require('os.interaction');
-const {getMapContainer} = goog.require('os.map.instance');
-const {KEY_TYPE} = goog.require('os.ui.ol.interaction');
 
 
 /**
@@ -18,7 +19,7 @@ const {KEY_TYPE} = goog.require('os.ui.ol.interaction');
  *
  * @implements {I3DSupport}
  */
-class KeyboardZoom extends OLKeyboardZoom {
+export default class KeyboardZoom extends OLKeyboardZoom {
   /**
    * Constructor.
    * @param {olx.interaction.KeyboardZoomOptions=} opt_options Options.
@@ -127,4 +128,3 @@ OLKeyboardZoom.handleEvent = function(mapBrowserEvent) {
   }
   return !stopEvent;
 };
-exports = KeyboardZoom;

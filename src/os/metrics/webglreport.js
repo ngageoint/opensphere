@@ -1,10 +1,9 @@
-goog.module('os.metrics.WebGLReport');
-
+goog.declareModuleId('os.metrics.WebGLReport');
 
 /**
  * @return {?Object<string, *>} The report
  */
-const getReport = function() {
+export const getReport = function() {
   if (!report_) {
     try {
       report_ = createReport_();
@@ -244,8 +243,4 @@ const createReport_ = function() {
   report['fragmentShaderFloatIntPrecision'] = getFloatIntPrecision(gl);
 
   return report;
-};
-
-exports = {
-  getReport
 };

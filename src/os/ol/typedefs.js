@@ -6,7 +6,7 @@
  * @suppress {checkTypes} To ignore JSDoc references to OL types, so they don't
  *                        need goog.require statements.
  */
-goog.module('ol.typedefs');
+goog.declareModuleId('ol.typedefs');
 
 const ol = goog.require('ol');
 
@@ -872,3 +872,5 @@ ol.XmlSerializer;
  *            value: (Object|undefined)}}
  */
 ol.RBushEntry;
+
+export default {};

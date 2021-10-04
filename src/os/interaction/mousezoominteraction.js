@@ -1,4 +1,8 @@
-goog.module('os.interaction.MouseZoom');
+goog.declareModuleId('os.interaction.MouseZoom');
+
+import I3DSupport from '../i3dsupport.js';
+import osImplements from '../implements.js';
+import {getMapContainer} from '../map/mapinstance.js';
 
 const {assert} = goog.require('goog.asserts');
 const BrowserEvent = goog.require('goog.events.BrowserEvent');
@@ -6,9 +10,6 @@ const {clamp} = goog.require('goog.math');
 const {MOUSEWHEELZOOM_MAXDELTA} = goog.require('ol');
 const {platformModifierKeyOnly} = goog.require('ol.events.condition');
 const Interaction = goog.require('ol.interaction.Interaction');
-const I3DSupport = goog.require('os.I3DSupport');
-const osImplements = goog.require('os.implements');
-const {getMapContainer} = goog.require('os.map.instance');
 
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 
@@ -18,7 +19,7 @@ const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
  *
  * @implements {I3DSupport}
  */
-class MouseZoom extends Interaction {
+export default class MouseZoom extends Interaction {
   /**
    * Constructor.
    * @param {olx.interaction.DragPanOptions=} opt_options Options.
@@ -116,5 +117,3 @@ class MouseZoom extends Interaction {
 }
 
 osImplements(MouseZoom, I3DSupport.ID);
-
-exports = MouseZoom;

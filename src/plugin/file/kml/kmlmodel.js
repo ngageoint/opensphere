@@ -1,7 +1,8 @@
 goog.declareModuleId('plugin.file.kml.model');
 
+import AltitudeMode from '../../../os/webgl/altitudemode.js';
+
 const Point = goog.require('ol.geom.Point');
-const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 
 
 /**

@@ -1,10 +1,10 @@
-goog.module('os.ui.config.SettingNode');
+goog.declareModuleId('os.ui.config.SettingNode');
 
-const TriState = goog.require('os.structs.TriState');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+import TriState from '../../structs/tristate.js';
+import SlickTreeNode from '../slick/slicktreenode.js';
 
-const ISearchable = goog.requireType('os.data.ISearchable');
-const SettingPlugin = goog.requireType('os.ui.config.SettingPlugin');
+const {default: ISearchable} = goog.requireType('os.data.ISearchable');
+const {default: SettingPlugin} = goog.requireType('os.ui.config.SettingPlugin');
 
 
 /**
@@ -12,7 +12,7 @@ const SettingPlugin = goog.requireType('os.ui.config.SettingPlugin');
  *
  * @implements {ISearchable}
  */
-class SettingNode extends SlickTreeNode {
+export default class SettingNode extends SlickTreeNode {
   /**
    * Constructor.
    */
@@ -102,5 +102,3 @@ class SettingNode extends SlickTreeNode {
     return s;
   }
 }
-
-exports = SettingNode;

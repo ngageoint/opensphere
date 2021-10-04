@@ -1,13 +1,13 @@
-goog.module('os.net.AbstractModifier');
+goog.declareModuleId('os.net.AbstractModifier');
 
-const IModifier = goog.requireType('os.net.IModifier');
+const {default: IModifier} = goog.requireType('os.net.IModifier');
 
 
 /**
  * @abstract
  * @implements {IModifier}
  */
-class AbstractModifier {
+export default class AbstractModifier {
   /**
    * Constructor.
    * @param {string} id Identifier for the modifier
@@ -55,5 +55,3 @@ class AbstractModifier {
     this.priority_ = priority;
   }
 }
-
-exports = AbstractModifier;

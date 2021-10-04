@@ -1,9 +1,10 @@
 goog.declareModuleId('plugin.descriptor.facet.Type');
 
-const googString = goog.require('goog.string');
-const ValueFacet = goog.require('os.search.ValueFacet');
+import ValueFacet from '../../../os/search/valuefacet.js';
 
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const googString = goog.require('goog.string');
+
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 
 
 /**

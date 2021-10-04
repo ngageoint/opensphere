@@ -1,7 +1,7 @@
-goog.module('os.ui.NodeToggleFolderUI');
+goog.declareModuleId('os.ui.NodeToggleFolderUI');
 
-const Module = goog.require('os.ui.Module');
-const {Controller: NodeToggleCtrl, directive: nodeToggleDirective} = goog.require('os.ui.NodeToggleUI');
+import Module from './module.js';
+import {Controller as NodeToggleCtrl, directive as nodeToggleDirective} from './nodetoggle.js';
 
 
 /**
@@ -9,7 +9,7 @@ const {Controller: NodeToggleCtrl, directive: nodeToggleDirective} = goog.requir
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = nodeToggleDirective();
   dir.template = '<span>' + dir.template + '<i class="fa fa-fw action" ' +
       'ng-class="{\'fa-folder\': item.collapsed, \'fa-folder-open\': !item.collapsed}"></i></span>';
@@ -21,7 +21,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'nodetogglefolder';
+export const directiveTag = 'nodetogglefolder';
 
 /**
  * Add the directive to the os.ui module
@@ -32,7 +32,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the node toggle w/ folder directive
  * @unrestricted
  */
-class Controller extends NodeToggleCtrl {
+export class Controller extends NodeToggleCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -53,9 +53,3 @@ class Controller extends NodeToggleCtrl {
    */
   updateOpacity() {}
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

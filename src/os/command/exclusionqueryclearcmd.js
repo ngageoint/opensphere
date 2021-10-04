@@ -1,12 +1,12 @@
-goog.module('os.command.ExclusionQueryClear');
+goog.declareModuleId('os.command.ExclusionQueryClear');
 
-const QueryClear = goog.require('os.command.QueryClear');
+import QueryClear from './queryclearcmd.js';
 
 
 /**
  * Command to add a exclusion query to the map.
  */
-class ExclusionQueryClear extends QueryClear {
+export default class ExclusionQueryClear extends QueryClear {
   /**
    * Constructor.
    */
@@ -20,5 +20,3 @@ class ExclusionQueryClear extends QueryClear {
     this.title = 'Clear exclusion areas';
   }
 }
-
-exports = ExclusionQueryClear;

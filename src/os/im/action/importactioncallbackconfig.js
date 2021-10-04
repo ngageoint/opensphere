@@ -1,4 +1,4 @@
-goog.module('os.im.action.ImportActionCallbackConfig');
+goog.declareModuleId('os.im.action.ImportActionCallbackConfig');
 
 /**
  * @typedef {{
@@ -12,4 +12,4 @@ goog.module('os.im.action.ImportActionCallbackConfig');
 let ImportActionCallbackConfig;
 
 
-exports = ImportActionCallbackConfig;
+export default ImportActionCallbackConfig;

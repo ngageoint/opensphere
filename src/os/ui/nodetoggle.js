@@ -1,13 +1,14 @@
-goog.module('os.ui.NodeToggleUI');
+goog.declareModuleId('os.ui.NodeToggleUI');
+
+import {instanceOf} from '../classregistry.js';
+import {NodeClass} from '../data/data.js';
+import Module from './module.js';
+import {apply} from './ui.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const {instanceOf} = goog.require('os.classRegistry');
-const {NodeClass} = goog.require('os.data');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -15,7 +16,7 @@ const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<i class="js-node-toggle c-node-toggle fa fa-fw" ' +
@@ -28,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'nodetoggle';
+export const directiveTag = 'nodetoggle';
 
 /**
  * Add the directive to the os.ui module
@@ -39,7 +40,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the node spinner directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -148,9 +149,3 @@ Controller.DEFAULT_EXPANDED = 'fa-caret-down';
  * @type {string}
  */
 Controller.DEFAULT_COLLAPSED = 'fa-caret-right';
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

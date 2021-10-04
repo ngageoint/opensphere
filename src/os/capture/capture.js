@@ -1,7 +1,16 @@
 goog.declareModuleId('os.capture');
 
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import * as config from '../config/config.js';
+import {saveFile} from '../file/persist/persist.js';
+import Job from '../job/job.js';
+import JobEventType from '../job/jobeventtype.js';
 import {OPENLAYERS_CANVAS, WEBGL_CANVAS} from '../map/map.js';
+import MapContainer from '../mapcontainer.js';
 import {ROOT} from '../os.js';
+import * as osString from '../string/string.js';
+import * as worker from '../worker.js';
 import ContentType from './contenttype.js';
 
 const Promise = goog.require('goog.Promise');
@@ -9,17 +18,8 @@ const dispose = goog.require('goog.dispose');
 const dom = goog.require('goog.dom');
 const log = goog.require('goog.log');
 const webgl = goog.require('ol.webgl');
-const MapContainer = goog.require('os.MapContainer');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const config = goog.require('os.config');
-const {saveFile} = goog.require('os.file.persist');
-const Job = goog.require('os.job.Job');
-const JobEventType = goog.require('os.job.JobEventType');
-const osString = goog.require('os.string');
-const worker = goog.require('os.worker');
 
-const JobEvent = goog.requireType('os.job.JobEvent');
+const {default: JobEvent} = goog.requireType('os.job.JobEvent');
 
 
 /**

@@ -1,12 +1,12 @@
-goog.module('os.filter.IFilterCapable');
+goog.declareModuleId('os.filter.IFilterCapable');
 
-const IFilter = goog.requireType('os.filter.IFilter');
+const {default: IFilter} = goog.requireType('os.filter.IFilter');
 
 
 /**
  * @interface
  */
-class IFilterCapable {
+export default class IFilterCapable {
   /**
    * Adds or replaces a filter on the data.
    * @param {string} key The key (or name) of the filter
@@ -35,5 +35,3 @@ class IFilterCapable {
    */
   removeFilter(key) {}
 }
-
-exports = IFilterCapable;

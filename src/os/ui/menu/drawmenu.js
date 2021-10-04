@@ -1,22 +1,23 @@
-goog.module('os.ui.menu.draw');
+goog.declareModuleId('os.ui.menu.draw');
+
+import * as dispatcher from '../../dispatcher.js';
+import {launchChooseArea, launchCoordinates, queryWorld} from '../../query/query.js';
+import DrawEventType from '../draw/draweventtype.js';
+import Menu from './menu.js';
+import MenuItem from './menuitem.js';
+import MenuItemType from './menuitemtype.js';
 
 const googDispose = goog.require('goog.dispose');
 const GoogEvent = goog.require('goog.events.Event');
-const dispatcher = goog.require('os.Dispatcher');
-const {launchChooseArea, launchCoordinates, queryWorld} = goog.require('os.query');
-const DrawEventType = goog.require('os.ui.draw.DrawEventType');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 
 
 /**
  * Events fired by the draw menu.
  * @enum {string}
  */
-const EventType = {
+export const EventType = {
   BOX: 'box',
   CIRCLE: 'circle',
   POLYGON: 'polygon',
@@ -36,13 +37,13 @@ let MENU = undefined;
  * Get the menu.
  * @return {Menu|undefined}
  */
-const getMenu = () => MENU;
+export const getMenu = () => MENU;
 
 /**
  * Set the menu.
  * @param {Menu|undefined} menu The menu.
  */
-const setMenu = (menu) => {
+export const setMenu = (menu) => {
   MENU = menu;
 };
 
@@ -52,7 +53,7 @@ const setMenu = (menu) => {
  * @param {function(MenuEvent)} handler The menu handler.
  * @return {!Menu} The menu.
  */
-const create = function(handler) {
+export const create = function(handler) {
   var mi = new MenuItem({
     type: MenuItemType.ROOT,
     children: [{
@@ -117,14 +118,14 @@ const create = function(handler) {
 /**
  * Create the draw menu.
  */
-const setup = function() {
+export const setup = function() {
   MENU = create(handleDrawEvent);
 };
 
 /**
  * Dispose the draw menu.
  */
-const dispose = function() {
+export const dispose = function() {
   googDispose(MENU);
   MENU = undefined;
 };
@@ -134,7 +135,7 @@ const dispose = function() {
  *
  * @param {MenuEvent} event The event.
  */
-const handleDrawEvent = function(event) {
+export const handleDrawEvent = function(event) {
   switch (event.type) {
     case EventType.BOX:
       dispatcher.getInstance().dispatchEvent(new GoogEvent(DrawEventType.DRAWBOX));
@@ -160,14 +161,4 @@ const handleDrawEvent = function(event) {
     default:
       break;
   }
-};
-
-exports = {
-  EventType,
-  getMenu,
-  setMenu,
-  create,
-  setup,
-  dispose,
-  handleDrawEvent
 };

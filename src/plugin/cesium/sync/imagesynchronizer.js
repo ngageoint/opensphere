@@ -1,7 +1,14 @@
 goog.declareModuleId('plugin.cesium.sync.ImageSynchronizer');
 
 import * as dispatcher from '../../../os/dispatcher.js';
+import * as osExtent from '../../../os/extent.js';
+import * as geo from '../../../os/geo/geo.js';
+import {normalizeLongitude} from '../../../os/geo/geo2.js';
+import PropertyChange from '../../../os/layer/propertychange.js';
 import {PROJECTION, zoomToResolution} from '../../../os/map/map.js';
+import MapEvent from '../../../os/map/mapevent.js';
+import mapContainer from '../../../os/mapcontainer.js';
+import * as osProj from '../../../os/proj/proj.js';
 import CesiumSynchronizer from './cesiumsynchronizer.js';
 
 const googEventsEventType = goog.require('goog.events.EventType');
@@ -11,20 +18,13 @@ const events = goog.require('ol.events');
 const EventType = goog.require('ol.events.EventType');
 const olExtent = goog.require('ol.extent');
 const olProj = goog.require('ol.proj');
-const mapContainer = goog.require('os.MapContainer');
-const MapEvent = goog.require('os.MapEvent');
-const osExtent = goog.require('os.extent');
-const geo = goog.require('os.geo');
-const {normalizeLongitude} = goog.require('os.geo2');
-const PropertyChange = goog.require('os.layer.PropertyChange');
-const osProj = goog.require('os.proj');
 
 const ImageBase = goog.requireType('ol.ImageBase');
 const PluggableMap = goog.requireType('ol.PluggableMap');
 const ImageSource = goog.requireType('ol.source.Image');
-const OSMap = goog.requireType('os.Map');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const ImageLayer = goog.requireType('os.layer.Image');
+const {default: OSMap} = goog.requireType('os.Map');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: ImageLayer} = goog.requireType('os.layer.Image');
 
 
 /**

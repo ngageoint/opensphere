@@ -1,4 +1,14 @@
-goog.module('os.data.histo.SourceHistogram');
+goog.declareModuleId('os.data.histo.SourceHistogram');
+
+import * as dispatcher from '../../dispatcher.js';
+import * as osFeature from '../../feature/feature.js';
+import DateRangeBinType from '../../histo/daterangebintype.js';
+import * as osHisto from '../../histo/histo.js';
+import PropertyChange from '../../source/propertychange.js';
+import FeatureEventType from '../featureeventtype.js';
+import DataModel from '../xf/datamodel.js';
+import ColorBin from './colorbin.js';
+import {HistoEventType} from './histogramutils.js';
 
 const googArray = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
@@ -6,27 +16,19 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const events = goog.require('ol.events');
-const dispatcher = goog.require('os.Dispatcher');
-const FeatureEventType = goog.require('os.data.FeatureEventType');
-const {HistoEventType} = goog.require('os.data.histo');
-const ColorBin = goog.require('os.data.histo.ColorBin');
-const DataModel = goog.require('os.data.xf.DataModel');
-const osFeature = goog.require('os.feature');
-const osHisto = goog.require('os.histo');
-const DateRangeBinType = goog.require('os.histo.DateRangeBinType');
-const PropertyChange = goog.require('os.source.PropertyChange');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Feature = goog.requireType('ol.Feature');
-const FeatureEvent = goog.requireType('os.data.FeatureEvent');
-const ColorMethod = goog.requireType('os.data.histo.ColorMethod');
-const IGroupable = goog.requireType('os.data.xf.IGroupable');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const DateBinMethod = goog.requireType('os.histo.DateBinMethod');
-const IBinMethod = goog.requireType('os.histo.IBinMethod');
+const {default: FeatureEvent} = goog.requireType('os.data.FeatureEvent');
+const {default: ColorMethod} = goog.requireType('os.data.histo.ColorMethod');
+const {default: IGroupable} = goog.requireType('os.data.xf.IGroupable');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: DateBinMethod} = goog.requireType('os.histo.DateBinMethod');
+const {default: IBinMethod} = goog.requireType('os.histo.IBinMethod');
+const {default: Result} = goog.requireType('os.histo.Result');
 const osHistoBin = goog.requireType('os.histo.bin');
-const Vector = goog.requireType('os.source.Vector');
-const TimeModel = goog.requireType('os.time.xf.TimeModel');
+const {default: Vector} = goog.requireType('os.source.Vector');
+const {default: TimeModel} = goog.requireType('os.time.xf.TimeModel');
 
 
 /**
@@ -37,7 +39,7 @@ const TimeModel = goog.requireType('os.time.xf.TimeModel');
  *
  * @implements {IGroupable<Feature>}
  */
-class SourceHistogram extends EventTarget {
+export default class SourceHistogram extends EventTarget {
   /**
    * Constructor.
    * @param {Vector} source The source for the histogram
@@ -577,11 +579,11 @@ class SourceHistogram extends EventTarget {
       }
 
       if (this.secondaryBinMethod) {
-        results = /** @type {!Array<!os.histo.Result<!Feature>>} */ (this.timeModel_.groupData(this.multiId_,
+        results = /** @type {!Array<!Result<!Feature>>} */ (this.timeModel_.groupData(this.multiId_,
             this.combinedKeyMethod.bind(this), this.reduceAdd.bind(this),
             this.reduceRemove.bind(this), this.reduceInit.bind(this)));
       } else {
-        results = /** @type {!Array<!os.histo.Result<!Feature>>} */ (this.timeModel_.groupData(this.id_,
+        results = /** @type {!Array<!Result<!Feature>>} */ (this.timeModel_.groupData(this.id_,
             this.binMethod.getBinKey.bind(this.binMethod), this.reduceAdd.bind(this),
             this.reduceRemove.bind(this), this.reduceInit.bind(this)));
       }
@@ -611,9 +613,9 @@ class SourceHistogram extends EventTarget {
   }
 
   /**
-   * @param {!os.histo.Result<!Feature>} item
+   * @param {!Result<!Feature>} item
    * @param {number} i
-   * @param {!Array<!os.histo.Result<!Feature>>} arr
+   * @param {!Array<!Result<!Feature>>} arr
    * @return {ColorBin}
    * @protected
    */
@@ -836,6 +838,3 @@ SourceHistogram.ID = 'sourcehisto';
  * @type {number}
  */
 SourceHistogram.nextId = 0;
-
-
-exports = SourceHistogram;

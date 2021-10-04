@@ -1,4 +1,14 @@
-goog.module('os.ui.im.FileSupportUI');
+goog.declareModuleId('os.ui.im.FileSupportUI');
+
+import {getAppName, getSupportContact} from '../../config/config.js';
+import EventType from '../../events/eventtype.js';
+import {getUploadFile} from '../../file/fileupload.js';
+import {ROOT} from '../../os.js';
+import {linkify} from '../../string/string.js';
+import Module from '../module.js';
+import * as osWindow from '../window.js';
+import WindowEventType from '../windoweventtype.js';
+import FileSupportChoice from './filesupportchoice.js';
 
 const Disposable = goog.require('goog.Disposable');
 const Promise = goog.require('goog.Promise');
@@ -7,17 +17,8 @@ const {getDocument} = goog.require('goog.dom');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
-const {ROOT} = goog.require('os');
-const {getAppName, getSupportContact} = goog.require('os.config');
-const EventType = goog.require('os.events.EventType');
-const {getUploadFile} = goog.require('os.file.upload');
-const {linkify} = goog.require('os.string');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const FileSupportChoice = goog.require('os.ui.im.FileSupportChoice');
-const osWindow = goog.require('os.ui.window');
 
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
@@ -25,7 +26,7 @@ const OSFile = goog.requireType('os.file.File');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/im/filesupport.html',
@@ -37,7 +38,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'filesupport';
+export const directiveTag = 'filesupport';
 
 /**
  * Add the directive to the os.ui module
@@ -48,7 +49,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the file support directive.
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -208,7 +209,7 @@ class Controller extends Disposable {
  * @param {!OSFile} file The file
  * @return {!Promise<string>}
  */
-const launchFileSupport = function(file) {
+export const launchFileSupport = function(file) {
   return new Promise(function(resolve, reject) {
     var scopeOptions = {
       'file': file,
@@ -233,11 +234,4 @@ const launchFileSupport = function(file) {
     var template = '<filesupport></filesupport>';
     osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   });
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchFileSupport
 };

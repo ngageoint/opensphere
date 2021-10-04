@@ -1,18 +1,19 @@
-goog.module('os.ui.columnactions.ColumnActionManager');
+goog.declareModuleId('os.ui.columnactions.ColumnActionManager');
+
+import Settings from '../../config/settings.js';
+import UrlColumnAction from './actions/urlcolumnaction.js';
+import launchColumnActionPrompt from './launchcolumnactionprompt.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
-const Settings = goog.require('os.config.Settings');
-const UrlColumnAction = goog.require('os.ui.columnactions.actions.UrlColumnAction');
-const launchColumnActionPrompt = goog.require('os.ui.columnactions.launchColumnActionPrompt');
 
-const AbstractColumnAction = goog.requireType('os.ui.columnactions.AbstractColumnAction');
-const IColumnActionModel = goog.requireType('os.ui.columnactions.IColumnActionModel');
+const {default: AbstractColumnAction} = goog.requireType('os.ui.columnactions.AbstractColumnAction');
+const {default: IColumnActionModel} = goog.requireType('os.ui.columnactions.IColumnActionModel');
 
 
 /**
  * Provide registry for column actions.
  */
-class ColumnActionManager extends EventTarget {
+export default class ColumnActionManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -149,5 +150,3 @@ ColumnActionManager.KEY = 'columnActions';
  * @type {string}
  */
 ColumnActionManager.PERFORM_COLUMN_ACTION = 'PERFORM_COLUMN_ACTION';
-
-exports = ColumnActionManager;

@@ -4,8 +4,8 @@ goog.require('os.ui.search.SearchScrollDataSource');
 
 
 describe('os.ui.search.SearchScrollDataSource', function() {
-  const SearchManager = goog.module.get('os.search.SearchManager');
-  const SearchScrollDataSource = goog.module.get('os.ui.search.SearchScrollDataSource');
+  const {default: SearchManager} = goog.module.get('os.search.SearchManager');
+  const {default: SearchScrollDataSource} = goog.module.get('os.ui.search.SearchScrollDataSource');
   const MockSearch = goog.module.get('os.search.MockSearch');
 
   var searchScrollDataSource = new SearchScrollDataSource();

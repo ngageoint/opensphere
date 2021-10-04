@@ -1,11 +1,12 @@
-goog.module('os.bearing.BearingType');
-
+goog.declareModuleId('os.bearing.BearingType');
 
 /**
  * Enumeration of available bearing types.
  * @enum {string}
  */
-exports = {
+const BearingType = {
   TRUE_NORTH: 'trueNorth',
   MAGNETIC: 'magnetic'
 };
+
+export default BearingType;

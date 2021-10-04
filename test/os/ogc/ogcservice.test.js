@@ -5,7 +5,7 @@ goog.require('os.ogc.registry');
 
 
 describe('os.ogc.OGCService', function() {
-  const OGCService = goog.module.get('os.ogc.OGCService');
+  const {default: OGCService} = goog.module.get('os.ogc.OGCService');
   const Feature = goog.module.get('ol.Feature');
 
   const FIELD = 'TITLE';
@@ -59,7 +59,7 @@ describe('os.ogc.OGCService', function() {
   });
 
   it('should work with the OGC Registry', function() {
-    const OGCService = goog.module.get('os.ogc.OGCService');
+    const {default: OGCService} = goog.module.get('os.ogc.OGCService');
     const registry = goog.module.get('os.ogc.registry');
 
     const key = 'myServiceKey';

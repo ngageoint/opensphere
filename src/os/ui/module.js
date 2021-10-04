@@ -1,4 +1,4 @@
-goog.module('os.ui.Module');
+goog.declareModuleId('os.ui.Module');
 
 /**
  * Angular module "os.ui"
@@ -16,4 +16,4 @@ const configureModule = function($compileProvider) {
 
 Module.config(configureModule);
 
-exports = Module;
+export default Module;

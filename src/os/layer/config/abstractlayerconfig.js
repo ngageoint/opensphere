@@ -1,21 +1,22 @@
-goog.module('os.layer.config.AbstractLayerConfig');
+goog.declareModuleId('os.layer.config.AbstractLayerConfig');
+
+import {paramsToQueryData} from '../../net/net.js';
+import {DEFAULT_ALPHA, DEFAULT_FEATURE_SIZE, DEFAULT_LAYER_COLOR} from '../../style/style.js';
 
 const {getLogger} = goog.require('goog.log');
 const {clamp} = goog.require('goog.math');
 const {getRandomString} = goog.require('goog.string');
-const {paramsToQueryData} = goog.require('os.net');
-const {DEFAULT_ALPHA, DEFAULT_FEATURE_SIZE, DEFAULT_LAYER_COLOR} = goog.require('os.style');
 
 const QueryData = goog.requireType('goog.Uri.QueryData');
 const Logger = goog.requireType('goog.log.Logger');
-const ILayerConfig = goog.requireType('os.layer.config.ILayerConfig');
+const {default: ILayerConfig} = goog.requireType('os.layer.config.ILayerConfig');
 
 
 /**
  * @abstract
  * @implements {ILayerConfig}
  */
-class AbstractLayerConfig {
+export default class AbstractLayerConfig {
   /**
    * Constructor.
    */
@@ -142,5 +143,3 @@ class AbstractLayerConfig {
  * @type {Logger}
  */
 const logger = getLogger('os.layer.config.LayerConfig');
-
-exports = AbstractLayerConfig;

@@ -1,10 +1,9 @@
-goog.module('os.ol.source.ILoadingSource');
-
+goog.declareModuleId('os.ol.source.ILoadingSource');
 
 /**
  * @interface
  */
-class ILoadingSource {
+export default class ILoadingSource {
   /**
    * If the source is currently in a loading state.
    * @return {boolean}
@@ -33,5 +32,3 @@ class ILoadingSource {
  * @const
  */
 ILoadingSource.ID = 'os.ol.source.ILoadingSource';
-
-exports = ILoadingSource;

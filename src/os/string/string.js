@@ -1,40 +1,41 @@
-goog.module('os.string');
+goog.declareModuleId('os.string');
+
+import {escapeHtml} from '../ui/ui.js';
+import {MAILTO_REGEXP, URL_REGEXP_LINKY} from '../url/url.js';
 
 const {getRandomString, isEmptyOrWhitespace, makeSafe, removeAll} = goog.require('goog.string');
 const Const = goog.require('goog.string.Const');
-const {escapeHtml} = goog.require('os.ui');
-const {MAILTO_REGEXP, URL_REGEXP_LINKY} = goog.require('os.url');
 
 
 /**
  * Regular expression to test for boolean strings.
  * @type {RegExp}
  */
-const BOOLEAN = /^(true|false)$/i;
+export const BOOLEAN = /^(true|false)$/i;
 
 /**
  * Regular expression to test for hex strings.
  * @type {RegExp}
  */
-const HEX = /^(0x)?[0-9A-Fa-f]+$/;
+export const HEX = /^(0x)?[0-9A-Fa-f]+$/;
 
 /**
  * Regular expression to test for floats.
  * @type {RegExp}
  */
-const FLOAT = /^[+-]?\d+(\.\d*)?(E[+-]\d+)?$/;
+export const FLOAT = /^[+-]?\d+(\.\d*)?(E[+-]\d+)?$/;
 
 /**
  * Regular expression to test for emails separated by commas.
  * @type {RegExp}
  */
-const EMAIL = /^\s*[^@,; ]+@[^@,; ]+\.[^@,; ]+\s*(\s*,\s*[^@,; ]+@[^@,; ]+\.[^@,; ]+)*\s*$/;
+export const EMAIL = /^\s*[^@,; ]+@[^@,; ]+\.[^@,; ]+\s*(\s*,\s*[^@,; ]+@[^@,; ]+\.[^@,; ]+)*\s*$/;
 
 /**
  * Regular expression to extract for emails from string
  * @type {RegExp}
  */
-const EMAILS = /([a-zA-Z0-9._#\$\&'\*\+/=\?\^`{}\|~-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
+export const EMAILS = /([a-zA-Z0-9._#\$\&'\*\+/=\?\^`{}\|~-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
 
 /**
  * Tests if a string represents a boolean value
@@ -42,7 +43,7 @@ const EMAILS = /([a-zA-Z0-9._#\$\&'\*\+/=\?\^`{}\|~-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0
  * @param {string} str The string
  * @return {boolean} If the string represents a boolean value
  */
-const isBoolean = function(str) {
+export const isBoolean = function(str) {
   return BOOLEAN.test(str);
 };
 
@@ -52,7 +53,7 @@ const isBoolean = function(str) {
  * @param {string} str The string
  * @return {boolean} If the string represents a float value
  */
-const isFloat = function(str) {
+export const isFloat = function(str) {
   return FLOAT.test(str);
 };
 
@@ -62,7 +63,7 @@ const isFloat = function(str) {
  * @param {string} str The string
  * @return {boolean} If the string represents a hex value
  */
-const isHex = function(str) {
+export const isHex = function(str) {
   return HEX.test(str);
 };
 
@@ -77,7 +78,7 @@ const isHex = function(str) {
  * @param {string=} opt_clickHandler Optional click handler for the anchor tag
  * @return {string} Linkified text
  */
-const linkify = function(text, opt_target, opt_class, opt_title, opt_htmlText, opt_clickHandler) {
+export const linkify = function(text, opt_target, opt_class, opt_title, opt_htmlText, opt_clickHandler) {
   var addText = function(text) {
     if (!text) {
       return;
@@ -150,7 +151,7 @@ const linkify = function(text, opt_target, opt_class, opt_title, opt_htmlText, o
  * @param {Array<string>=} opt_precedence
  * @return {!Array<!string>}
  */
-const split = function(str, opt_removeSpaces, opt_precedence) {
+export const split = function(str, opt_removeSpaces, opt_precedence) {
   var precedence = opt_precedence || [',', ';', '\t', '\n', ' '];
   var removeSpaces = !!opt_removeSpaces;
 
@@ -181,7 +182,7 @@ const split = function(str, opt_removeSpaces, opt_precedence) {
  * @param {!string} str
  * @return {!Const}
  */
-const createConstant = function(str) {
+export const createConstant = function(str) {
   return new Const(Const.GOOG_STRING_CONSTRUCTOR_TOKEN_PRIVATE_, str);
 };
 
@@ -192,7 +193,7 @@ const createConstant = function(str) {
  * @param {?string} substr The substring whose duplicates to remove
  * @return {string}
  */
-const removeDuplicates = function(str, substr) {
+export const removeDuplicates = function(str, substr) {
   var result = str || '';
   if (str && substr) {
     var parts = str.split(substr);
@@ -213,27 +214,11 @@ const removeDuplicates = function(str, substr) {
  *
  * @return {string}
  */
-const randomString = function() {
+export const randomString = function() {
   var s = getRandomString();
   var code = s.charCodeAt(0);
   if (code > 64) {
     return s;
   }
   return String.fromCharCode(code + 50) + s.substring(1);
-};
-
-exports = {
-  BOOLEAN,
-  HEX,
-  FLOAT,
-  EMAIL,
-  EMAILS,
-  isBoolean,
-  isFloat,
-  isHex,
-  linkify,
-  split,
-  createConstant,
-  removeDuplicates,
-  randomString
 };

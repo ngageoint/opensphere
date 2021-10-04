@@ -1,9 +1,10 @@
-goog.module('os.data.Registry');
+goog.declareModuleId('os.data.Registry');
+
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import RegistryPropertyChange from './registryproperychange.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const {PROPERTYCHANGE} = goog.require('goog.events.EventType');
-const RegistryPropertyChange = goog.require('os.data.RegistryPropertyChange');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 
 
 /**
@@ -23,7 +24,7 @@ const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
  *
  * @template T
  */
-class Registry extends EventTarget {
+export default class Registry extends EventTarget {
   /**
    */
   constructor() {
@@ -210,5 +211,3 @@ class Registry extends EventTarget {
     this.dispatchEvent(new PropertyChangeEvent(RegistryPropertyChange.CLEAR, entries));
   }
 }
-
-exports = Registry;

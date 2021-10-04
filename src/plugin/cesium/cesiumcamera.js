@@ -4,7 +4,13 @@
  */
 goog.declareModuleId('plugin.cesium.Camera');
 
+import FlightMode from '../../os/map/flightmode.js';
 import {PROJECTION, WEBGL_CANVAS, resolutionForDistance, resolutionToZoom} from '../../os/map/map.js';
+
+import MapContainer from '../../os/mapcontainer.js';
+import * as math from '../../os/math/math.js';
+import * as osProj from '../../os/proj/proj.js';
+import IWebGLCamera from '../../os/webgl/iwebglcamera.js';// eslint-disable-line opensphere/no-unused-vars
 
 const asserts = goog.require('goog.asserts');
 const Throttle = goog.require('goog.async.Throttle');
@@ -12,11 +18,6 @@ const googMath = goog.require('goog.math');
 const olProj = goog.require('ol.proj');
 const OLCSCamera = goog.require('olcs.Camera');
 const core = goog.require('olcs.core');
-const MapContainer = goog.require('os.MapContainer');
-const FlightMode = goog.require('os.map.FlightMode');
-const math = goog.require('os.math');
-const osProj = goog.require('os.proj');
-const IWebGLCamera = goog.require('os.webgl.IWebGLCamera'); // eslint-disable-line opensphere/no-unused-vars
 
 const OLMap = goog.requireType('ol.Map');
 const View = goog.requireType('ol.View');

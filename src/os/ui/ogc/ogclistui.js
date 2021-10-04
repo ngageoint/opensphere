@@ -1,20 +1,20 @@
-goog.module('os.ui.ogc.OGCListUI');
+goog.declareModuleId('os.ui.ogc.OGCListUI');
 
-const {ROOT} = goog.require('os');
-const Settings = goog.require('os.config.Settings');
-const registry = goog.require('os.ogc.registry');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
+import Settings from '../../config/settings.js';
+import * as registry from '../../ogc/registry.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
 
 const GoogPromise = goog.requireType('goog.Promise');
 const Feature = goog.requireType('ol.Feature');
-const OGCService = goog.requireType('os.ogc.OGCService');
+const {default: OGCService} = goog.requireType('os.ogc.OGCService');
 
 
 /**
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -43,7 +43,7 @@ Module.directive('ogclist', [directive]);
 /**
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @ngInject
@@ -260,11 +260,4 @@ Controller.BULK_CHOSEN = 'bulkDataChosen';
  *  icon: (string|undefined)
  * }}
  */
-let Options;
-
-
-exports = {
-  Controller,
-  directive,
-  Options
-};
+export let Options;

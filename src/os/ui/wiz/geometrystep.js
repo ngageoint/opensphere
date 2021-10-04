@@ -1,27 +1,27 @@
-goog.module('os.ui.wiz.GeometryStep');
+goog.declareModuleId('os.ui.wiz.GeometryStep');
 
-const {DEFAULT_ALT_UNIT} = goog.require('os.fields');
-const AltMapping = goog.require('os.im.mapping.AltMapping');
-const BearingMapping = goog.require('os.im.mapping.BearingMapping');
-const LatMapping = goog.require('os.im.mapping.LatMapping');
-const LonMapping = goog.require('os.im.mapping.LonMapping');
-const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
-const PositionMapping = goog.require('os.im.mapping.PositionMapping');
-const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
-const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
-const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
-const WKTMapping = goog.require('os.im.mapping.WKTMapping');
-const {directiveTag: stepUi} = goog.require('os.ui.wiz.GeometryStepUI');
-const AbstractWizardStep = goog.require('os.ui.wiz.step.AbstractWizardStep');
+import {DEFAULT_ALT_UNIT} from '../../fields/index.js';
+import AltMapping from '../../im/mapping/altmapping.js';
+import BearingMapping from '../../im/mapping/bearingmapping.js';
+import LatMapping from '../../im/mapping/latmapping.js';
+import LonMapping from '../../im/mapping/lonmapping.js';
+import OrientationMapping from '../../im/mapping/orientationmapping.js';
+import PositionMapping from '../../im/mapping/positionmapping.js';
+import RadiusMapping from '../../im/mapping/radiusmapping.js';
+import SemiMajorMapping from '../../im/mapping/semimajormapping.js';
+import SemiMinorMapping from '../../im/mapping/semiminormapping.js';
+import WKTMapping from '../../im/mapping/wktmapping.js';
+import {directiveTag as stepUi} from './geometrystepui.js';
+import AbstractWizardStep from './step/abstractwizardstep.js';
 
-const IMapping = goog.requireType('os.im.mapping.IMapping');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
 
 
 /**
  * Import wizard geometry step
  * @unrestricted
  */
-class GeometryStep extends AbstractWizardStep {
+export default class GeometryStep extends AbstractWizardStep {
   /**
    * Constructor.
    */
@@ -313,5 +313,3 @@ class GeometryStep extends AbstractWizardStep {
     return this.valid;
   }
 }
-
-exports = GeometryStep;

@@ -1,14 +1,17 @@
-goog.module('os.im.action.FilterActionEntry');
+goog.declareModuleId('os.im.action.FilterActionEntry');
+
+import FilterEntry from '../../filter/filterentry.js';
+import * as fn from '../../ui/filter/filterfn.js';
+import {serialize} from '../../xml.js';
+import {getImportActionManager} from './importaction.js';
 
 const functions = goog.require('goog.functions');
-const FilterEntry = goog.require('os.filter.FilterEntry');
-const fn = goog.require('os.ui.filter.fn');
-const IComparable = goog.requireType('os.IComparable');
-const {getImportActionManager} = goog.require('os.im.action');
-const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
-const {serialize} = goog.require('os.xml');
+const {default: IComparable} = goog.requireType('os.IComparable');
 
-const IImportAction = goog.requireType('os.im.action.IImportAction');
+const {default: IImportAction} = goog.requireType('os.im.action.IImportAction');
+
+
+const {default: ImportActionCallbackConfig} = goog.requireType('os.im.action.ImportActionCallbackConfig');
 
 
 /**
@@ -18,7 +21,7 @@ const IImportAction = goog.requireType('os.im.action.IImportAction');
  * @unrestricted
  * @template T
  */
-class FilterActionEntry extends FilterEntry {
+export default class FilterActionEntry extends FilterEntry {
   /**
    * Constructor.
    */
@@ -41,7 +44,7 @@ class FilterActionEntry extends FilterEntry {
 
     /**
      * Function to get values from items.
-     * @type {fn.ValueGetter|undefined}
+     * @type {fn.ValueGetter|null|undefined}
      * @protected
      */
     this.filterGetter = undefined;
@@ -397,5 +400,3 @@ class FilterActionEntry extends FilterEntry {
     return val;
   }
 }
-
-exports = FilterActionEntry;

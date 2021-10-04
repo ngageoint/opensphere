@@ -1,11 +1,12 @@
-goog.module('os.ui.help.WebGLSupportUI');
+goog.declareModuleId('os.ui.help.WebGLSupportUI');
+
+import {getAppName, getSupportContact} from '../../config/config.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import * as ConfirmUI from '../window/confirm.js';
+import WindowEventType from '../windoweventtype.js';
 
 const userAgent = goog.require('goog.userAgent');
-const {ROOT} = goog.require('os');
-const {getAppName, getSupportContact} = goog.require('os.config');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -13,7 +14,7 @@ const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   link: webGLSupportLink,
@@ -24,7 +25,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'webglsupport';
+export const directiveTag = 'webglsupport';
 
 /**
  * Add the directive to the module.
@@ -45,7 +46,7 @@ const webGLSupportLink = function($scope) {
  *
  * @param {string=} opt_title The window title
  */
-const launchWebGLSupportDialog = function(opt_title) {
+export const launchWebGLSupportDialog = function(opt_title) {
   var scopeOptions = {
     'hideCancel': true
   };
@@ -80,10 +81,4 @@ const launchWebGLSupportDialog = function(opt_title) {
     prompt: `<${directiveTag}></${directiveTag}>`,
     windowOptions: windowOptions
   }), scopeOptions);
-};
-
-exports = {
-  directive,
-  directiveTag,
-  launchWebGLSupportDialog
 };

@@ -1,17 +1,18 @@
-goog.module('os.audio.AudioManager');
+goog.declareModuleId('os.audio.AudioManager');
+
+import Settings from '../config/settings.js';
+import {ROOT} from '../os.js';
+import AudioSetting from './audiosetting.js';
 
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
-const {ROOT} = goog.require('os');
-const AudioSetting = goog.require('os.audio.AudioSetting');
-const Settings = goog.require('os.config.Settings');
 const Logger = goog.requireType('goog.log.Logger');
 
 
 /**
  * Manages audio sound effects for applications
  */
-class AudioManager {
+export default class AudioManager {
   /**
    * Constructor.
    */
@@ -221,6 +222,3 @@ let instance;
  * @type {Logger}
  */
 const logger = log.getLogger('os.audio.AudioManager');
-
-
-exports = AudioManager;

@@ -1,32 +1,33 @@
-goog.module('os.ui.node.DefaultLayerNodeUI');
+goog.declareModuleId('os.ui.node.DefaultLayerNodeUI');
+
+import {instanceOf} from '../../classregistry.js';
+import {DescriptorClass, NodeClass} from '../../data/data.js';
+import DataManager from '../../data/datamanager.js';
+import * as dispatcher from '../../dispatcher.js';
+import LayerEvent from '../../events/layerevent.js';
+import LayerEventType from '../../events/layereventtype.js';
+import BaseFilterManager from '../../filter/basefiltermanager.js';
+import IFilterable from '../../filter/ifilterable.js';
+import osImplements from '../../implements.js';
+import ILayer from '../../layer/ilayer.js';
+import LayerClass from '../../layer/layerclass.js';
+import {getQueryManager} from '../../query/queryinstance.js';
+import Module from '../module.js';
+import AbstractNodeUICtrl from '../slick/abstractnodeui.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const Layer = goog.require('ol.layer.Layer');
-const dispatcher = goog.require('os.Dispatcher');
-const {instanceOf} = goog.require('os.classRegistry');
-const {DescriptorClass, NodeClass} = goog.require('os.data');
-const DataManager = goog.require('os.data.DataManager');
-const LayerEvent = goog.require('os.events.LayerEvent');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
-const IFilterable = goog.require('os.filter.IFilterable');
-const osImplements = goog.require('os.implements');
-const ILayer = goog.require('os.layer.ILayer');
-const LayerClass = goog.require('os.layer.LayerClass');
-const {getQueryManager} = goog.require('os.query.instance');
-const Module = goog.require('os.ui.Module');
-const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
 
 const Source = goog.requireType('ol.source.Source');
-const LayerNode = goog.requireType('os.data.LayerNode');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: LayerNode} = goog.requireType('os.data.LayerNode');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**
  * @type {string}
  */
-const template = `
+export const template = `
   <span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">
     <span ng-if="nodeUi.canFavorite()">
       <favorite ng-show="nodeUi.show()" type="descriptor" key="{{nodeUi.descId}}" value="{{nodeUi.layerLabel}}">
@@ -49,7 +50,7 @@ const template = `
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template,
@@ -61,7 +62,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'defaultlayernodeui';
+export const directiveTag = 'defaultlayernodeui';
 
 /**
  * Add the directive to the module
@@ -72,7 +73,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for selected/highlighted node UI
  * @unrestricted
  */
-class Controller extends AbstractNodeUICtrl {
+export class Controller extends AbstractNodeUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -269,10 +270,3 @@ class Controller extends AbstractNodeUICtrl {
     return node.getId();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  template
-};

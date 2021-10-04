@@ -16,8 +16,8 @@ describe('os.query.BaseAreaManager', function() {
   const MultiPolygon = goog.module.get('ol.geom.MultiPolygon');
   const Point = goog.module.get('ol.geom.Point');
   const Polygon = goog.module.get('ol.geom.Polygon');
-  const AlertManager = goog.module.get('os.alert.AlertManager');
-  const AreaManager = goog.module.get('os.query.AreaManager');
+  const {default: AlertManager} = goog.module.get('os.alert.AlertManager');
+  const {default: AreaManager} = goog.module.get('os.query.AreaManager');
 
   var am;
   var area;

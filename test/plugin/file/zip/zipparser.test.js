@@ -15,8 +15,8 @@ goog.require('plugin.file.zip.ZIPParserConfig');
 
 describe('plugin.file.zip.ZIPParser', function() {
   const googEvents = goog.module.get('goog.events');
-  const EventType = goog.module.get('os.events.EventType');
-  const UrlMethod = goog.module.get('os.ui.file.method.UrlMethod');
+  const {default: EventType} = goog.module.get('os.events.EventType');
+  const {default: UrlMethod} = goog.module.get('os.ui.file.method.UrlMethod');
   const {default: ZIPParser} = goog.module.get('plugin.file.zip.ZIPParser');
   var testUrl = '/base/test/resources/zip/test-csv.zip';
   var parser = new ZIPParser();
@@ -44,29 +44,26 @@ describe('plugin.file.zip.ZIPParser', function() {
 
     googEvents.listenOnce(parser, EventType.COMPLETE, onParseComplete);
 
-    runs(function( ){
+    runs(function() {
       var file = urlMethod.getFile();
       expect(parser.processingZip_).toBe(false);
       expect(parser.getFiles().length).toBe(0);
-        
-      parser.setSource(file.getContent()); //will fire the COMPLETE for onParseComplete
-  
+
+      parser.setSource(file.getContent()); // will fire the COMPLETE for onParseComplete
+
       expect(parser.processingZip_).toBe(true);
-      
+
       waitsFor(
-        function() {
+          function() {
           // test document/folder parsing
           // make sure we can parse multiple files
-          if (parseComplete) expect(parser.getFiles().length).toBe(4);
-          return parseComplete;
-        }, 
-        'parser to finish', 
-        15000
+            if (parseComplete) expect(parser.getFiles().length).toBe(4);
+            return parseComplete;
+          },
+          'parser to finish',
+          15000
       );
-
-  
     });
-
   });
 
   it('cleans up the parser', function() {

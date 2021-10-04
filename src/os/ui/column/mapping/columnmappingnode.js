@@ -1,16 +1,16 @@
-goog.module('os.ui.column.mapping.ColumnMappingNode');
+goog.declareModuleId('os.ui.column.mapping.ColumnMappingNode');
 
-const {directiveTag: nodeUi} = goog.require('os.ui.column.mapping.ColumnMappingNodeUI');
-const {FILTER_KEY_DELIMITER} = goog.require('os.ui.filter');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+import {FILTER_KEY_DELIMITER} from '../../filter/filter.js';
+import SlickTreeNode from '../../slick/slicktreenode.js';
+import {directiveTag as nodeUi} from './columnmappingnodeui.js';
 
-const IColumnMapping = goog.requireType('os.column.IColumnMapping');
+const {default: IColumnMapping} = goog.requireType('os.column.IColumnMapping');
 
 
 /**
  * Tree node representing a column mapping.
  */
-class ColumnMappingNode extends SlickTreeNode {
+export default class ColumnMappingNode extends SlickTreeNode {
   /**
    * Constructor.
    */
@@ -90,5 +90,3 @@ class ColumnMappingNode extends SlickTreeNode {
     this.setColumnMapping(/** @type {ColumnMappingNode} */ (other).getColumnMapping());
   }
 }
-
-exports = ColumnMappingNode;

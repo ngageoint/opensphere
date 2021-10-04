@@ -1,10 +1,10 @@
-goog.module('os.histo.BinMethod');
+goog.declareModuleId('os.histo.BinMethod');
 
-const DateBinMethod = goog.require('os.histo.DateBinMethod');
-const NumericBinMethod = goog.require('os.histo.NumericBinMethod');
-const UniqueBinMethod = goog.require('os.histo.UniqueBinMethod');
+import DateBinMethod from './datebinmethod.js';
+import NumericBinMethod from './numericbinmethod.js';
+import UniqueBinMethod from './uniquebinmethod.js';
 
-const IBinMethod = goog.requireType('os.histo.IBinMethod');
+const {default: IBinMethod} = goog.requireType('os.histo.IBinMethod');
 
 
 /**
@@ -12,8 +12,10 @@ const IBinMethod = goog.requireType('os.histo.IBinMethod');
  * @type {!Object<string, !function(new: IBinMethod)>}
  * @const
  */
-exports = {
+const BinMethod = {
   'Unique': UniqueBinMethod,
   'Date': DateBinMethod,
   'Numeric': NumericBinMethod
 };
+
+export default BinMethod;

@@ -1,9 +1,9 @@
-goog.module('os.ui.LegendButtonUI');
+goog.declareModuleId('os.ui.LegendButtonUI');
 
-const {ID} = goog.require('os.legend');
-const {Map: MapKeys} = goog.require('os.metrics.keys');
-const Module = goog.require('os.ui.Module');
-const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
+import {ID} from '../legend/legend.js';
+import {Map as MapKeys} from '../metrics/metricskeys.js';
+import MenuButtonCtrl from './menu/menubutton.js';
+import Module from './module.js';
 
 
 /**
@@ -11,7 +11,7 @@ const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
@@ -29,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'legend-button';
+export const directiveTag = 'legend-button';
 
 /**
  * add the directive to the module
@@ -39,7 +39,7 @@ Module.directive('legendButton', [directive]);
 /**
  * @unrestricted
  */
-class Controller extends MenuButtonCtrl {
+export class Controller extends MenuButtonCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -52,9 +52,3 @@ class Controller extends MenuButtonCtrl {
     this.metricKey = MapKeys.SHOW_LEGEND;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

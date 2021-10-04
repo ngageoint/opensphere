@@ -1,19 +1,20 @@
-goog.module('os.state.v2.QueryEntries');
+goog.declareModuleId('os.state.v2.QueryEntries');
+
+import {getQueryManager} from '../../query/queryinstance.js';
+import {appendElement} from '../../xml.js';
+import AbstractState from '../abstractstate.js';
+import XMLState from '../xmlstate.js';
+import QueryEntriesTag from './queryentriestag.js';
 
 const {getChildren} = goog.require('goog.dom');
 const log = goog.require('goog.log');
-const {getQueryManager} = goog.require('os.query.instance');
-const AbstractState = goog.require('os.state.AbstractState');
-const XMLState = goog.require('os.state.XMLState');
-const QueryEntriesTag = goog.require('os.state.v2.QueryEntriesTag');
-const {appendElement} = goog.require('os.xml');
 
 const Logger = goog.requireType('goog.log.Logger');
 
 
 /**
  */
-class QueryEntries extends XMLState {
+export default class QueryEntries extends XMLState {
   /**
    * Constructor.
    */
@@ -169,5 +170,3 @@ const logger = log.getLogger('os.state.v2.QueryEntries');
  * @type {Object<string, !Array<Object<string, string|boolean>>>}
  */
 const addedEntries = {};
-
-exports = QueryEntries;

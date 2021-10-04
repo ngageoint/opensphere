@@ -4,6 +4,7 @@
  */
 goog.declareModuleId('plugin.file.gpx.GPXParser');
 
+import * as text from '../../../os/file/mime/text.js';
 import * as osMap from '../../../os/map/map.js';
 
 const dom = goog.require('goog.dom');
@@ -15,9 +16,8 @@ const MultiLineString = goog.require('ol.geom.MultiLineString');
 const Point = goog.require('ol.geom.Point');
 const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
 const xml = goog.require('ol.xml');
-const text = goog.require('os.file.mime.text');
 
-const IParser = goog.requireType('os.parse.IParser');
+const {default: IParser} = goog.requireType('os.parse.IParser');
 
 
 /**

@@ -1,19 +1,20 @@
-goog.module('os.ui.timeline.CurrentTimeMarker');
+goog.declareModuleId('os.ui.timeline.CurrentTimeMarker');
+
+import TimeInstant from '../../time/timeinstant.js';
+import BaseItem from './baseitem.js';
+import * as timelineUi from './timeline.js';
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const timelineUi = goog.require('os.ui.timeline');
-const BaseItem = goog.require('os.ui.timeline.BaseItem');
 
-const ITimelineItem = goog.requireType('os.ui.timeline.ITimelineItem');
+const {default: ITimelineItem} = goog.requireType('os.ui.timeline.ITimelineItem');
 
 
 /**
  * @implements {ITimelineItem}
  */
-class CurrentTimeMarker extends BaseItem {
+export default class CurrentTimeMarker extends BaseItem {
   /**
    * Constructor.
    */
@@ -177,5 +178,3 @@ class CurrentTimeMarker extends BaseItem {
     return (times[1] + times[0]) / 2;
   }
 }
-
-exports = CurrentTimeMarker;

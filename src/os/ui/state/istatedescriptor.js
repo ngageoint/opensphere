@@ -1,7 +1,7 @@
-goog.module('os.ui.state.IStateDescriptor');
+goog.declareModuleId('os.ui.state.IStateDescriptor');
 
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const IUrlDescriptor = goog.requireType('os.data.IUrlDescriptor');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: IUrlDescriptor} = goog.requireType('os.data.IUrlDescriptor');
 
 
 /**
@@ -11,7 +11,7 @@ const IUrlDescriptor = goog.requireType('os.data.IUrlDescriptor');
  * @extends {IUrlDescriptor}
  * @interface
  */
-class IStateDescriptor {
+export default class IStateDescriptor {
   /**
    * Gets the state's load items
    * @return {?Array.<string>}
@@ -48,5 +48,3 @@ class IStateDescriptor {
  * @const {string}
  */
 IStateDescriptor.ID = 'os.ui.data.IStateDescriptor';
-
-exports = IStateDescriptor;

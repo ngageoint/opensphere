@@ -1,17 +1,14 @@
-goog.module('os.ui.data.LayerCheckboxUI');
+goog.declareModuleId('os.ui.data.LayerCheckboxUI');
 
-const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
-const TriState = goog.require('os.structs.TriState');
-const Module = goog.require('os.ui.Module');
-const {
-  Controller: TriStateCheckboxCtrl,
-  directive: triStateCheckboxDirective
-} = goog.require('os.ui.TriStateCheckboxUI');
-const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+import LayerSyncDescriptor from '../../data/layersyncdescriptor.js';
+import TriState from '../../structs/tristate.js';
+import Module from '../module.js';
+import {Controller as TriStateCheckboxCtrl, directive as triStateCheckboxDirective} from '../tristatecheckbox.js';
+import * as ConfirmUI from '../window/confirm.js';
+import DescriptorNode from './descriptornode.js';
 
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
-const TriStateTreeNode = goog.requireType('os.structs.TriStateTreeNode');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
+const {default: TriStateTreeNode} = goog.requireType('os.structs.TriStateTreeNode');
 
 
 /**
@@ -19,7 +16,7 @@ const TriStateTreeNode = goog.requireType('os.structs.TriStateTreeNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   const dir = triStateCheckboxDirective();
   dir.controller = Controller;
   return dir;
@@ -29,7 +26,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'layercheckbox';
+export const directiveTag = 'layercheckbox';
 
 /**
  * Add the directive to the module
@@ -70,7 +67,7 @@ const countLayerChildren = (count, child) => {
  * Controller for the layer checkbox.
  * @unrestricted
  */
-class Controller extends TriStateCheckboxCtrl {
+export class Controller extends TriStateCheckboxCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -147,9 +144,3 @@ class Controller extends TriStateCheckboxCtrl {
     this.notifyDirty();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,13 +1,13 @@
-goog.module('os.unit.NauticalUnits');
+goog.declareModuleId('os.unit.NauticalUnits');
 
-const BaseUnit = goog.require('os.unit.BaseUnit');
-const Multiplier = goog.require('os.unit.Multiplier');
+import BaseUnit from './baseunit.js';
+import Multiplier from './multiplier.js';
 
 
 /**
  * Responsible for receiving, logging and reporting alerts
  */
-class NauticalUnits extends BaseUnit {
+export default class NauticalUnits extends BaseUnit {
   /**
    * Constructor.
    */
@@ -58,5 +58,3 @@ class NauticalUnits extends BaseUnit {
     this.multipliers.push(new Multiplier('nmi', 1, true, 'nautical miles'));
   }
 }
-
-exports = NauticalUnits;

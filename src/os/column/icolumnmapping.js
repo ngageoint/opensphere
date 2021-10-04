@@ -1,7 +1,7 @@
-goog.module('os.column.IColumnMapping');
+goog.declareModuleId('os.column.IColumnMapping');
 
 const Listenable = goog.requireType('goog.events.Listenable');
-const IPersistable = goog.requireType('os.IPersistable');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
 
 
 /**
@@ -11,7 +11,7 @@ const IPersistable = goog.requireType('os.IPersistable');
  * @extends {Listenable}
  * @interface
  */
-class IColumnMapping {
+export default class IColumnMapping {
   /**
    * Get the ID
    * @return {!string}
@@ -99,5 +99,3 @@ class IColumnMapping {
    */
   writeMapping() {}
 }
-
-exports = IColumnMapping;

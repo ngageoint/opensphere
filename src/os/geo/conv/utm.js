@@ -1,4 +1,4 @@
-goog.module('os.geo.conv.UTM');
+goog.declareModuleId('os.geo.conv.UTM');
 
 const {toDegrees, toRadians} = goog.require('goog.math');
 const Coordinate = goog.require('goog.math.Coordinate');
@@ -6,7 +6,7 @@ const Coordinate = goog.require('goog.math.Coordinate');
 
 /**
  */
-class UTM {
+export default class UTM {
   /**
    * Constructor.
    * @param {number} z
@@ -327,5 +327,3 @@ UTM.prototype.utmA = 6378137.0;
  * @type {number}
  */
 UTM.prototype.utmF = 1 / 298.257223563;
-
-exports = UTM;

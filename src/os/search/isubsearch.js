@@ -1,14 +1,14 @@
-goog.module('os.search.ISubSearch');
+goog.declareModuleId('os.search.ISubSearch');
 
-const SearchFacetDepartment = goog.requireType('os.search.SearchFacetDepartment');
-const TriState = goog.requireType('os.structs.TriState');
+const {default: SearchFacetDepartment} = goog.requireType('os.search.SearchFacetDepartment');
+const {default: TriState} = goog.requireType('os.structs.TriState');
 
 
 /**
  * Supports having sub searches under a single provider
  * @interface
  */
-class ISubSearch {
+export default class ISubSearch {
   /**
    * @return {Array<!Array<string>>}
    */
@@ -53,5 +53,3 @@ class ISubSearch {
  * @const
  */
 ISubSearch.ID = 'os.search.ISubSearch';
-
-exports = ISubSearch;

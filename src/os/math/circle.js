@@ -1,4 +1,4 @@
-goog.module('os.math.Circle');
+goog.declareModuleId('os.math.Circle');
 
 const Coordinate = goog.require('goog.math.Coordinate');
 const math = goog.requireType('goog.math');
@@ -7,7 +7,7 @@ const math = goog.requireType('goog.math');
 /**
  * Class for representing circles
  */
-class Circle extends Coordinate {
+export default class Circle extends Coordinate {
   /**
    * Constructor.
    * @param {number=} opt_x Circle center x, defaults to 0
@@ -23,7 +23,7 @@ class Circle extends Coordinate {
    * Returns a new copy of the circle
    *
    * @override
-   * @return {!os.math.Circle} A clone of this circle
+   * @return {!Circle} A clone of this circle
    */
   clone() {
     return new Circle(this.x, this.y, this.radius);
@@ -94,8 +94,8 @@ class Circle extends Coordinate {
   /**
    * Compares circles for equality
    *
-   * @param {os.math.Circle} a A circle
-   * @param {os.math.Circle} b A circle
+   * @param {Circle} a A circle
+   * @param {Circle} b A circle
    * @return {boolean} True iff the coordinates are equal or if both are null.
    */
   static equals(a, b) {
@@ -108,5 +108,3 @@ class Circle extends Coordinate {
     return a.x == b.x && a.y == b.y && a.radius == b.radius;
   }
 }
-
-exports = Circle;

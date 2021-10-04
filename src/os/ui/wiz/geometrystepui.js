@@ -1,23 +1,22 @@
-goog.module('os.ui.wiz.GeometryStepUI');
+goog.declareModuleId('os.ui.wiz.GeometryStepUI');
 
-goog.require('os.ui.wiz.WizardPreviewUI');
+import './wizardpreview.js';
+import LatMapping from '../../im/mapping/latmapping.js';
+import LonMapping from '../../im/mapping/lonmapping.js';
+import PositionMapping from '../../im/mapping/positionmapping.js';
+import WKTMapping from '../../im/mapping/wktmapping.js';
+import Units from '../../math/units.js';
+import {ROOT} from '../../os.js';
+import AbstractCsvParser from '../file/csv/abstractcsvparser.js';
+import Module from '../module.js';
+import {numerateNameCompare} from '../slick/column.js';
+import * as GeoHelpUI from '../window/geohelp.js';
+import WizardStepEvent from './step/wizardstepevent.js';
 
-const {ROOT} = goog.require('os');
-const LatMapping = goog.require('os.im.mapping.LatMapping');
-const LonMapping = goog.require('os.im.mapping.LonMapping');
-const PositionMapping = goog.require('os.im.mapping.PositionMapping');
-const WKTMapping = goog.require('os.im.mapping.WKTMapping');
-const Units = goog.require('os.math.Units');
-const Module = goog.require('os.ui.Module');
-const AbstractCsvParser = goog.require('os.ui.file.csv.AbstractCsvParser');
-const {numerateNameCompare} = goog.require('os.ui.slick.column');
-const GeoHelpUI = goog.require('os.ui.window.GeoHelpUI');
-const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
-
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
-const AbstractPositionMapping = goog.requireType('os.im.mapping.AbstractPositionMapping');
-const IMapping = goog.requireType('os.im.mapping.IMapping');
-const GeometryStep = goog.requireType('os.ui.wiz.GeometryStep');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
+const {default: AbstractPositionMapping} = goog.requireType('os.im.mapping.AbstractPositionMapping');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
+const {default: GeometryStep} = goog.requireType('os.ui.wiz.GeometryStep');
 
 
 /**
@@ -35,7 +34,7 @@ let GeoMapTestRes;
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/wiz/geometrystep.html',
@@ -43,12 +42,11 @@ const directive = () => ({
   controllerAs: 'geomStep'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'geometrystep';
+export const directiveTag = 'geometrystep';
 
 
 /**
@@ -61,7 +59,7 @@ Module.directive('geometrystep', [directive]);
  * Controller for the import wizard geometry step
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -266,9 +264,3 @@ class Controller {
     GeoHelpUI.launchGeoHelp();
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

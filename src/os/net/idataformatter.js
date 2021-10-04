@@ -1,12 +1,11 @@
-goog.module('os.net.IDataFormatter');
-
+goog.declareModuleId('os.net.IDataFormatter');
 
 /**
  * Data formatters take the parameters (or any other part of) the URI and create the payload for the request.
  *
  * @interface
  */
-class IDataFormatter {
+export default class IDataFormatter {
   /**
    * Get the content type for the format.
    * @return {string} The content type (e.g. <code>'text/xml'</code>)
@@ -20,5 +19,3 @@ class IDataFormatter {
    */
   format(uri) {}
 }
-
-exports = IDataFormatter;

@@ -1,4 +1,4 @@
-goog.module('os.search.FacetDefinition');
+goog.declareModuleId('os.search.FacetDefinition');
 
 
 /**
@@ -10,4 +10,4 @@ goog.module('os.search.FacetDefinition');
  */
 let FacetDefinition;
 
-exports = FacetDefinition;
+export default FacetDefinition;

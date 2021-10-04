@@ -1,9 +1,14 @@
 goog.declareModuleId('plugin.electron.CustomizeSettingsUI');
 
-goog.require('os.ui.slick.SlickTreeUI');
-
+import '../../os/ui/slick/slicktree.js';
+import AlertManager from '../../os/alert/alertmanager.js';
 import * as Dispatcher from '../../os/dispatcher.js';
+import {createFromFile} from '../../os/file/index.js';
 import {ROOT} from '../../os/os.js';
+import ImportEvent from '../../os/ui/im/importevent.js';
+import ImportEventType from '../../os/ui/im/importeventtype.js';
+import ImportProcess from '../../os/ui/im/importprocess.js';
+import Module from '../../os/ui/module.js';
 import {apply} from '../../os/ui/ui.js';
 import {EventType, isElectron} from './electron.js';
 import SettingsFileNode from './settingsfilenode.js';
@@ -13,13 +18,6 @@ import SettingsImportUI from './settingsimportui.js';
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
-
-const AlertManager = goog.require('os.alert.AlertManager');
-const {createFromFile} = goog.require('os.file');
-const Module = goog.require('os.ui.Module');
-const ImportEvent = goog.require('os.ui.im.ImportEvent');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
-const ImportProcess = goog.require('os.ui.im.ImportProcess');
 
 
 /**

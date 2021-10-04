@@ -1,9 +1,11 @@
-goog.module('os.load.LoadingEventType');
+goog.declareModuleId('os.load.LoadingEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const LoadingEventType = {
   ADD: 'load:add',
   REMOVE: 'load:remove'
 };
+
+export default LoadingEventType;

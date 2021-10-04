@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.gml.GMLProvider');
 
-const FileProvider = goog.require('os.data.FileProvider');
+import FileProvider from '../../../os/data/fileprovider.js';
 
 
 /**

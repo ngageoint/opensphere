@@ -4,8 +4,8 @@ goog.require('os.structs.TriStateTreeNode');
 
 describe('os.structs.TriStateTreeNode', function() {
   const GoogEventType = goog.module.get('goog.events.EventType');
-  const TriState = goog.module.get('os.structs.TriState');
-  const TriStateTreeNode = goog.module.get('os.structs.TriStateTreeNode');
+  const {default: TriState} = goog.module.get('os.structs.TriState');
+  const {default: TriStateTreeNode} = goog.module.get('os.structs.TriStateTreeNode');
 
   var root;
   var folder1;

@@ -1,13 +1,13 @@
-goog.module('os.command.TransformAreas');
+goog.declareModuleId('os.command.TransformAreas');
 
-const TransformVectors = goog.require('os.command.TransformVectors');
-const interpolate = goog.require('os.interpolate');
-const {getAreaManager} = goog.require('os.query.instance');
+import * as interpolate from '../interpolate.js';
+import {getAreaManager} from '../query/queryinstance.js';
+import TransformVectors from './transformvectorscmd.js';
 
 
 /**
  */
-class TransformAreas extends TransformVectors {
+export default class TransformAreas extends TransformVectors {
   /**
    * Constructor.
    * @param {!ol.ProjectionLike} source
@@ -45,5 +45,3 @@ class TransformAreas extends TransformVectors {
     }
   }
 }
-
-exports = TransformAreas;

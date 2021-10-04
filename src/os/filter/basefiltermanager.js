@@ -1,38 +1,39 @@
-goog.module('os.filter.BaseFilterManager');
+goog.declareModuleId('os.filter.BaseFilterManager');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import CommandProcessor from '../command/commandprocessor.js';
+import Settings from '../config/settings.js';
+import DataManager from '../data/datamanager.js';
+import * as dispatcher from '../dispatcher.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import * as os from '../os.js';
+import {getFilterManager, setFilterManager, getQueryManager} from '../query/queryinstance.js';
+import FilterEvent from '../ui/filter/filterevent.js';
+import FilterEventType from '../ui/filter/filtereventtype.js';
+import {directiveTag as copyFilterUi} from '../ui/filter/ui/copyfilter.js';
+import {directiveTag as editFilterUi} from '../ui/filter/ui/editfilters.js';
+import {directiveTag as viewFilterUi} from '../ui/filter/ui/viewfilters.js';
+import FilterAdd from '../ui/query/cmd/filteraddcmd.js';
+import * as osWindow from '../ui/window.js';
+import cloneToContext from './clonetocontext.js';
+import FilterEntry from './filterentry.js';
+import FilterType from './filtertype.js';
 
 const {removeDuplicates} = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const googObject = goog.require('goog.object');
 const googString = goog.require('goog.string');
 const olArray = goog.require('ol.array');
-const os = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const Settings = goog.require('os.config.Settings');
-const DataManager = goog.require('os.data.DataManager');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const FilterEntry = goog.require('os.filter.FilterEntry');
-const FilterType = goog.require('os.filter.FilterType');
-const cloneToContext = goog.require('os.filter.cloneToContext');
-const {getFilterManager, setFilterManager, getQueryManager} = goog.require('os.query.instance');
-const FilterEvent = goog.require('os.ui.filter.FilterEvent');
-const FilterEventType = goog.require('os.ui.filter.FilterEventType');
-const {directiveTag: copyFilterUi} = goog.require('os.ui.filter.ui.CopyFilterUI');
-const {directiveTag: editFilterUi} = goog.require('os.ui.filter.ui.EditFiltersUI');
-const {directiveTag: viewFilterUi} = goog.require('os.ui.filter.ui.ViewFiltersUI');
-const FilterAdd = goog.require('os.ui.query.cmd.FilterAdd');
-const osWindow = goog.require('os.ui.window');
 
-const IPersistable = goog.requireType('os.IPersistable');
-const IFilterable = goog.requireType('os.filter.IFilterable');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
+const {default: IFilterable} = goog.requireType('os.filter.IFilterable');
 
 
 /**
  * Manager class for keeping track of filter types registered currently in an application
  */
-class BaseFilterManager extends EventTarget {
+export default class BaseFilterManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -610,5 +611,3 @@ class BaseFilterManager extends EventTarget {
     setFilterManager(value);
   }
 }
-
-exports = BaseFilterManager;

@@ -2,7 +2,7 @@ goog.require('os.column.ColumnMapping');
 
 
 describe('os.column.ColumnMapping', function() {
-  const ColumnMapping = goog.module.get('os.column.ColumnMapping');
+  const {default: ColumnMapping} = goog.module.get('os.column.ColumnMapping');
 
   var mappingString = '<columnMapping name="My Mapping" type="decimal" description="some description">' +
       '<column layer="https://fake.server.bits/ogc/wfsServer!!fake:layer1">layer1_column1</column>' +

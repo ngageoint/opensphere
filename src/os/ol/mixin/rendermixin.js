@@ -1,7 +1,7 @@
 /**
  * @fileoverview This file explicitly contains a set of mixins for the OL3 canvas renderer.
  */
-goog.module('os.ol.mixin.render');
+goog.declareModuleId('os.ol.mixin.render');
 
 const Instruction = goog.require('ol.render.canvas.Instruction');
 const PolygonReplay = goog.require('ol.render.canvas.PolygonReplay');
@@ -17,7 +17,7 @@ const RenderFeature = goog.requireType('ol.render.Feature');
  * Empty fill style used in our overrides of OL3 polygon rendering functions.
  * @type {string}
  */
-const EMPTY_FILL = 'rgba(0,0,0,0)';
+export const EMPTY_FILL = 'rgba(0,0,0,0)';
 
 /**
  * THIN-4258: Polygons without fills should only hit detect the stroke.
@@ -154,8 +154,4 @@ PolygonReplay.prototype.drawCircle = function(circleGeometry, feature) {
     this.hitDetectionInstructions.push(strokeInstruction);
   }
   this.endGeometry(circleGeometry, feature);
-};
-
-exports = {
-  EMPTY_FILL
 };

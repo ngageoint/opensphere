@@ -1,12 +1,13 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLImport');
 
+import FileDescriptor from '../../../../os/data/filedescriptor.js';
 import {ROOT} from '../../../../os/os.js';
+import AbstractFileImportCtrl from '../../../../os/ui/file/ui/abstractfileimport.js';
+import Module from '../../../../os/ui/module.js';
 import KMLDescriptor from '../kmldescriptor.js';
 import KMLProvider from '../kmlprovider.js';
 
-const FileDescriptor = goog.require('os.data.FileDescriptor');
-const Module = goog.require('os.ui.Module');
-const AbstractFileImportCtrl = goog.require('os.ui.file.ui.AbstractFileImportCtrl');
+const {default: FileParserConfig} = goog.requireType('os.parse.FileParserConfig');
 
 
 /**
@@ -40,7 +41,7 @@ Module.directive('kmlimport', [directive]);
 /**
  * Controller for the KML import dialog
  *
- * @extends {AbstractFileImportCtrl<!os.parse.FileParserConfig,!KMLDescriptor>}
+ * @extends {AbstractFileImportCtrl<!FileParserConfig,!KMLDescriptor>}
  * @unrestricted
  */
 export class Controller extends AbstractFileImportCtrl {

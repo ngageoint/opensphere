@@ -1,9 +1,9 @@
-goog.module('os.data.DataProviderEventType');
+goog.declareModuleId('os.data.DataProviderEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const DataProviderEventType = {
   ADD_PROVIDER: 'addDataProvider',
   REMOVE_PROVIDER: 'removeDataProvider',
   EDIT_PROVIDER: 'editDataProvider',
@@ -14,3 +14,5 @@ exports = {
   LOADED: 'dataProviderLoaded',
   ERROR: 'dataProviderError'
 };
+
+export default DataProviderEventType;

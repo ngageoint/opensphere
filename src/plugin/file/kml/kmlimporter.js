@@ -1,16 +1,15 @@
 goog.declareModuleId('plugin.file.kml.KMLImporter');
 
+import AlertEventSeverity from '../../../os/alert/alerteventseverity.js';
+import AlertManager from '../../../os/alert/alertmanager.js';
 import * as osFeature from '../../../os/feature/feature.js';
+import FeatureImporter from '../../../os/im/featureimporter.js';
 import * as osStyle from '../../../os/style/style.js';
+import StyleField from '../../../os/style/stylefield.js';
+import StyleType from '../../../os/style/styletype.js';
+import SlickTreeNode from '../../../os/ui/slick/slicktreenode.js';
 
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const FeatureImporter = goog.require('os.im.FeatureImporter');
-const StyleField = goog.require('os.style.StyleField');
-const StyleType = goog.require('os.style.StyleType');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
-
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 const {default: KMLParser} = goog.requireType('plugin.file.kml.KMLParser');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 

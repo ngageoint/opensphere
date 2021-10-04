@@ -1,15 +1,13 @@
 goog.declareModuleId('plugin.arc.ArcImportUI');
 
-goog.require('os.ui.singleUrlFormDirective');
-
+import '../../os/ui/singleurlform.js';
 import * as os from '../../os/os.js';
+import Module from '../../os/ui/module.js';
+import SingleUrlProviderImportCtrl from '../../os/ui/singleurlproviderimport.js';
 import ArcServer from './arcserver.js';
 import * as ArcServerHelpUI from './arcserverhelp.js';
 
-const Module = goog.require('os.ui.Module');
-const SingleUrlProviderImportCtrl = goog.require('os.ui.SingleUrlProviderImportCtrl');
-
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**

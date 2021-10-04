@@ -1,8 +1,8 @@
-goog.module('os.ui.formatter.DescriptionFormatter');
+goog.declareModuleId('os.ui.formatter.DescriptionFormatter');
 
-const SlickDescriptionAsyncRenderer = goog.require('os.ui.SlickDescriptionAsyncRenderer');
+import SlickDescriptionAsyncRenderer from './slickdescriptionasyncrenderer.js';
 
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -23,4 +23,4 @@ const DescriptionFormatter = function(row, cell, value, columnDef, node) {
   return '<div class="location-properties-link">Show</div>';
 };
 
-exports = DescriptionFormatter;
+export default DescriptionFormatter;

@@ -1,41 +1,44 @@
-goog.module('os.ui.query.BaseCombinatorUI');
+goog.declareModuleId('os.ui.query.BaseCombinatorUI');
 
-goog.require('os.ui.query.AddFilterUI');
-goog.require('os.ui.slick.SlickTreeUI');
+import '../slick/slicktree.js';
+import './addfilter.js';
+
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import SequenceCommand from '../../command/sequencecommand.js';
+import Settings from '../../config/settings.js';
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import BaseFilterManager from '../../filter/basefiltermanager.js';
+import Metrics from '../../metrics/metrics.js';
+import {Filters} from '../../metrics/metricskeys.js';
+import {ROOT} from '../../os.js';
+import BaseAreaManager from '../../query/baseareamanager.js';
+import {launchQueryImport} from '../../query/query.js';
+import {getAreaManager, getFilterManager, getQueryManager} from '../../query/queryinstance.js';
+import TriState from '../../structs/tristate.js';
+import FilterEventType from '../filter/filtereventtype.js';
+import * as FilterExportUI from '../filter/ui/filterexport.js';
+import FilterExportChoice from '../filter/ui/filterexportchoice.js';
+import * as areaImport from '../menu/areaimportmenu.js';
+import {apply} from '../ui.js';
+import {close} from '../window.js';
+import AreaRemove from './cmd/arearemovecmd.js';
+import FilterAdd from './cmd/filteraddcmd.js';
+import FilterRemove from './cmd/filterremovecmd.js';
+import QueryEntries from './cmd/queryentriescmd.js';
+import {ALL_ID} from './query.js';
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const {caseInsensitiveCompare} = goog.require('goog.string');
-const {ROOT} = goog.require('os');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const Settings = goog.require('os.config.Settings');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Filters} = goog.require('os.metrics.keys');
-const {launchQueryImport} = goog.require('os.query');
-const BaseAreaManager = goog.require('os.query.BaseAreaManager');
-const {getAreaManager, getFilterManager, getQueryManager} = goog.require('os.query.instance');
-const TriState = goog.require('os.structs.TriState');
-const {apply} = goog.require('os.ui');
-const FilterEventType = goog.require('os.ui.filter.FilterEventType');
-const FilterExportChoice = goog.require('os.ui.filter.ui.FilterExportChoice');
-const FilterExportUI = goog.require('os.ui.filter.ui.FilterExportUI');
-const areaImport = goog.require('os.ui.menu.areaImport');
-const {ALL_ID} = goog.require('os.ui.query');
-const AreaRemove = goog.require('os.ui.query.cmd.AreaRemove');
-const FilterAdd = goog.require('os.ui.query.cmd.FilterAdd');
-const FilterRemove = goog.require('os.ui.query.cmd.FilterRemove');
-const QueryEntries = goog.require('os.ui.query.cmd.QueryEntries');
-const {close} = goog.require('os.ui.window');
 
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
-const BaseQueryManager = goog.requireType('os.query.BaseQueryManager');
-const ComboNode = goog.requireType('os.ui.query.ComboNode');
-const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
+const {default: IFilterable} = goog.requireType('os.filter.IFilterable');
+const {default: BaseQueryManager} = goog.requireType('os.query.BaseQueryManager');
+const {default: ComboNode} = goog.requireType('os.ui.query.ComboNode');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -44,7 +47,7 @@ const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -68,7 +71,7 @@ const directive = () => ({
  * This implementation does NOT interface with the map!
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -288,7 +291,7 @@ class Controller {
   /**
    * Performs a command. Useful for extending classes that may want to use the command stack.
    *
-   * @param {os.command.ICommand} cmd
+   * @param {ICommand} cmd
    * @protected
    */
   doCommand(cmd) {
@@ -492,7 +495,7 @@ class Controller {
       this.scope['layerId'] : (this.scope['layer'] || this.scope['layerId']);
 
     for (var key in set) {
-      var filterable = /** @type {os.filter.IFilterable} */ (this.fm.getFilterable(key));
+      var filterable = /** @type {IFilterable} */ (this.fm.getFilterable(key));
 
       try {
         if (filterable) {
@@ -1258,9 +1261,3 @@ Controller.ORDERS_ = [
   'Layer - Area - Filter',
   'Layer - Filter - Area'
 ];
-
-
-exports = {
-  Controller,
-  directive
-};

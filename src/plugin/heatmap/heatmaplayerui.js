@@ -1,16 +1,21 @@
 goog.declareModuleId('plugin.heatmap.HeatmapLayerUI');
 
+import * as osColor from '../../os/color.js';
 import {ROOT} from '../../os/os.js';
+import {Controller as DefaultLayerUICtrl} from '../../os/ui/layer/defaultlayerui.js';
+import Module from '../../os/ui/module.js';
 import Gradient from './cmd/gradientcmd.js';
 import Intensity from './cmd/intensitycmd.js';
 import Size from './cmd/sizecmd.js';
 import HeatmapPropertyType from './heatmappropertytype.js';
 
-const googObject = goog.require('goog.object');
 const Delay = goog.require('goog.async.Delay');
-const osColor = goog.require('os.color');
-const Module = goog.require('os.ui.Module');
-const {Controller: DefaultLayerUICtrl} = goog.require('os.ui.layer.DefaultLayerUI');
+const googObject = goog.require('goog.object');
+
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: LayerNode} = goog.requireType('os.data.LayerNode');
+const {default: Heatmap} = goog.requireType('plugin.heatmap.Heatmap');
 
 
 /**
@@ -93,8 +98,8 @@ export class Controller extends DefaultLayerUICtrl {
     var value = this.scope['gradient']['gradient'];
     var fn =
         /**
-         * @param {os.layer.ILayer} layer
-         * @return {os.command.ICommand}
+         * @param {ILayer} layer
+         * @return {ICommand}
          */
         function(layer) {
           return new Gradient(layer.getId(), value);
@@ -110,11 +115,11 @@ export class Controller extends DefaultLayerUICtrl {
    * @private
    */
   getGradient_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items) {
       for (var i = 0, n = items.length; i < n; i++) {
         try {
-          var layer = /** @type {plugin.heatmap.Heatmap} */ (items[i].getLayer());
+          var layer = /** @type {Heatmap} */ (items[i].getLayer());
           if (layer) {
             return layer.getGradient();
           }
@@ -135,8 +140,8 @@ export class Controller extends DefaultLayerUICtrl {
   onSizeChange(event, value) {
     var fn =
         /**
-         * @param {os.layer.ILayer} layer
-         * @return {os.command.ICommand}
+         * @param {ILayer} layer
+         * @return {ICommand}
          */
         function(layer) {
           return new Size(layer.getId(), value);
@@ -152,11 +157,11 @@ export class Controller extends DefaultLayerUICtrl {
    * @private
    */
   getSize_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items) {
       for (var i = 0, n = items.length; i < n; i++) {
         try {
-          var layer = /** @type {plugin.heatmap.Heatmap} */ (items[i].getLayer());
+          var layer = /** @type {Heatmap} */ (items[i].getLayer());
           if (layer) {
             return layer.getSize();
           }
@@ -189,8 +194,8 @@ export class Controller extends DefaultLayerUICtrl {
     var value = this.scope['intensity'];
     var fn =
         /**
-         * @param {os.layer.ILayer} layer
-         * @return {os.command.ICommand}
+         * @param {ILayer} layer
+         * @return {ICommand}
          */
         function(layer) {
           return new Intensity(layer.getId(), value);
@@ -206,11 +211,11 @@ export class Controller extends DefaultLayerUICtrl {
    * @private
    */
   getIntensity_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
     if (items) {
       for (var i = 0, n = items.length; i < n; i++) {
         try {
-          var layer = /** @type {plugin.heatmap.Heatmap} */ (items[i].getLayer());
+          var layer = /** @type {Heatmap} */ (items[i].getLayer());
           if (layer) {
             return layer.getIntensity();
           }

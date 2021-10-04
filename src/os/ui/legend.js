@@ -1,26 +1,31 @@
-goog.module('os.ui.LegendUI');
+goog.declareModuleId('os.ui.LegendUI');
+
+import LegendSetting from '../config/legendsetting.js';
+import Settings from '../config/settings.js';
+import SourceManager from '../data/sourcemanager.js';
+import * as dispatcher from '../dispatcher.js';
+import LayerEventType from '../events/layereventtype.js';
+import AnimatedTile from '../layer/animatedtile.js';
+import LayerPropertyChange from '../layer/propertychange.js';
+import * as legend from '../legend/legend.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {ROOT} from '../os.js';
+import SourcePropertyChange from '../source/propertychange.js';
+import SettingsManager from './config/settingsmanager.js';
+import UIEvent from './events/uievent.js';
+import UIEventType from './events/uieventtype.js';
+import Module from './module.js';
+import * as osWindow from './window.js';
 
 const Throttle = goog.require('goog.async.Throttle');
 const nextTick = goog.require('goog.async.nextTick');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const LegendSetting = goog.require('os.config.LegendSetting');
-const Settings = goog.require('os.config.Settings');
-const SourceManager = goog.require('os.data.SourceManager');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const AnimatedTile = goog.require('os.layer.AnimatedTile');
-const LayerPropertyChange = goog.require('os.layer.PropertyChange');
-const legend = goog.require('os.legend');
-const {getMapContainer} = goog.require('os.map.instance');
-const SourcePropertyChange = goog.require('os.source.PropertyChange');
-const Module = goog.require('os.ui.Module');
-const SettingsManager = goog.require('os.ui.config.SettingsManager');
-const UIEvent = goog.require('os.ui.events.UIEvent');
-const UIEventType = goog.require('os.ui.events.UIEventType');
-const osWindow = goog.require('os.ui.window');
+
+const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
@@ -28,7 +33,7 @@ const osWindow = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -43,7 +48,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'legendguide';
+export const directiveTag = 'legendguide';
 
 /**
  * Add the directive to the module.
@@ -55,7 +60,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the legend directive
  * @unrestricted
  */
-class Controller extends SourceManager {
+export class Controller extends SourceManager {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -192,7 +197,7 @@ class Controller extends SourceManager {
     map.listen(LayerEventType.ADD, this.onLayerAdded_, false, this);
     map.listen(LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
 
-    var tileLayers = /** @type {!Array<!os.layer.AnimatedTile>} */ (map.getLayers().filter(function(layer) {
+    var tileLayers = /** @type {!Array<!AnimatedTile>} */ (map.getLayers().filter(function(layer) {
       return layer instanceof AnimatedTile;
     }));
 
@@ -250,7 +255,7 @@ class Controller extends SourceManager {
   /**
    * Handle a layer being added to the map.
    *
-   * @param {os.events.LayerEvent} event The layer event
+   * @param {LayerEvent} event The layer event
    * @private
    */
   onLayerAdded_(event) {
@@ -264,7 +269,7 @@ class Controller extends SourceManager {
   /**
    * Handle a layer being remove from the map.
    *
-   * @param {os.events.LayerEvent} event The layer event
+   * @param {LayerEvent} event The layer event
    * @private
    */
   onLayerRemoved_(event) {
@@ -278,7 +283,7 @@ class Controller extends SourceManager {
   /**
    * Registers change listener on a layer.
    *
-   * @param {os.layer.ILayer} layer
+   * @param {ILayer} layer
    * @private
    */
   addLayerListener_(layer) {
@@ -292,7 +297,7 @@ class Controller extends SourceManager {
   /**
    * Removes change listener on a layer.
    *
-   * @param {os.layer.ILayer} layer
+   * @param {ILayer} layer
    * @private
    */
   removeLayerListener_(layer) {
@@ -306,7 +311,7 @@ class Controller extends SourceManager {
   /**
    * Handle property change events from a source.
    *
-   * @param {os.events.PropertyChangeEvent|ol.Object.Event} event
+   * @param {PropertyChangeEvent|ol.Object.Event} event
    * @protected
    */
   onTilePropertyChange(event) {
@@ -475,10 +480,3 @@ class Controller extends SourceManager {
  * @const
  */
 Controller.CONTAINER_SELECTOR = '#map-container';
-
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,7 +1,36 @@
 goog.declareModuleId('os.feature');
 
+import * as osBearing from '../bearing/bearing.js';
+import BearingType from '../bearing/bearingtype.js';
+import CommandProcessor from '../command/commandprocessor.js';
+import FlyToExtent from '../command/flytoextentcmd.js';
+import DataManager from '../data/datamanager.js';
+import RecordField from '../data/recordfield.js';
+import Fields from '../fields/fields.js';
+import * as fields from '../fields/index.js';
+import {reduceExtentFromGeometries} from '../fn/fn.js';
+import * as geo from '../geo/geo.js';
+import * as osGeoJsts from '../geo/jsts.js';
+import Ellipse from '../geom/ellipse.js';
+import GeometryField from '../geom/geometryfield.js';
+import MappingManager from '../im/mapping/mappingmanager.js';
+import instanceOf from '../instanceof.js';
+import * as interpolate from '../interpolate.js';
+import Method from '../interpolatemethod.js';
+import LayerClass from '../layer/layerclass.js';
+import LayerId from '../layer/layerid.js';
 import * as osMap from '../map/map.js';
+import {getIMapContainer} from '../map/mapinstance.js';
+import {convertUnits, parseNumber} from '../math/math.js';
+import Units from '../math/units.js';
 import * as osStyle from '../style/style.js';
+import StyleField from '../style/stylefield.js';
+import {getStyleManager} from '../style/styleinstance.js';
+import StyleType from '../style/styletype.js';
+import TimelineController from '../time/timelinecontroller.js';
+import {quoteString} from '../ui/filter/filterstring.js';
+
+import DynamicFeature from './dynamicfeature.js';
 
 const {defaultCompare} = goog.require('goog.array');
 const {containsValue} = goog.require('goog.object');
@@ -20,43 +49,15 @@ const Polygon = goog.require('ol.geom.Polygon');
 const {toLonLat} = goog.require('ol.proj');
 const OLVectorSource = goog.require('ol.source.Vector');
 const VectorEventType = goog.require('ol.source.VectorEventType');
-const Fields = goog.require('os.Fields');
-const osBearing = goog.require('os.bearing');
-const BearingType = goog.require('os.bearing.BearingType');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const FlyToExtent = goog.require('os.command.FlyToExtent');
-const DataManager = goog.require('os.data.DataManager');
-const RecordField = goog.require('os.data.RecordField');
-const DynamicFeature = goog.require('os.feature.DynamicFeature');
-const fields = goog.require('os.fields');
-const {reduceExtentFromGeometries} = goog.require('os.fn');
-const geo = goog.require('os.geo');
-const osGeoJsts = goog.require('os.geo.jsts');
-const Ellipse = goog.require('os.geom.Ellipse');
-const GeometryField = goog.require('os.geom.GeometryField');
-const MappingManager = goog.require('os.im.mapping.MappingManager');
-const instanceOf = goog.require('os.instanceOf');
-const interpolate = goog.require('os.interpolate');
-const Method = goog.require('os.interpolate.Method');
-const LayerClass = goog.require('os.layer.LayerClass');
-const LayerId = goog.require('os.layer.LayerId');
-const {getIMapContainer} = goog.require('os.map.instance');
-const {convertUnits, parseNumber} = goog.require('os.math');
-const Units = goog.require('os.math.Units');
-const StyleField = goog.require('os.style.StyleField');
-const StyleType = goog.require('os.style.StyleType');
-const {getStyleManager} = goog.require('os.style.instance');
-const TimelineController = goog.require('os.time.TimelineController');
-const {quoteString} = goog.require('os.ui.filter.string');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
 const Layer = goog.requireType('ol.layer.Layer');
 const RenderFeature = goog.requireType('ol.render.Feature');
-const Style = goog.requireType('ol.style.Style');
 const Source = goog.requireType('ol.source.Source');
-const ISource = goog.requireType('os.source.ISource');
-const VectorSource = goog.requireType('os.source.Vector');
-const ITime = goog.requireType('os.time.ITime');
+const Style = goog.requireType('ol.style.Style');
+const {default: ISource} = goog.requireType('os.source.ISource');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
+const {default: ITime} = goog.requireType('os.time.ITime');
 
 
 /**

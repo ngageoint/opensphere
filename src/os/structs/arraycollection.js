@@ -1,11 +1,12 @@
-goog.module('os.structs.ArrayCollection');
+goog.declareModuleId('os.structs.ArrayCollection');
+
+import EventType from './eventtype.js';
 
 const {binaryInsert, binaryRemove, binarySearch} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
 const {every, getValues} = goog.require('goog.structs');
-const EventType = goog.require('os.structs.EventType');
 
 const Collection = goog.requireType('goog.structs.Collection');
 
@@ -20,7 +21,7 @@ const Collection = goog.requireType('goog.structs.Collection');
  * @implements {Collection}
  * @template T
  */
-class ArrayCollection extends EventTarget {
+export default class ArrayCollection extends EventTarget {
   /**
    * Constructor.
    * @param {?Array<T>=} opt_source An optional array of elements to populate
@@ -537,5 +538,3 @@ class ArrayCollection extends EventTarget {
     return this.getValues().length === 0;
   }
 }
-
-exports = ArrayCollection;

@@ -1,9 +1,9 @@
-goog.module('os.ui.node.LayerTypeUI');
+goog.declareModuleId('os.ui.node.LayerTypeUI');
 
-const Settings = goog.require('os.config.Settings');
-const Module = goog.require('os.ui.Module');
+import Settings from '../../config/settings.js';
+import Module from '../module.js';
 
-const LayerNode = goog.requireType('os.data.LayerNode');
+const {default: LayerNode} = goog.requireType('os.data.LayerNode');
 
 
 /**
@@ -11,7 +11,7 @@ const LayerNode = goog.requireType('os.data.LayerNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<span>{{layerType.getType()}}</span>',
@@ -23,7 +23,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'layertype';
+export const directiveTag = 'layertype';
 
 /**
  * Add the directive to the module
@@ -34,7 +34,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for selected/highlighted node UI
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -67,9 +67,3 @@ class Controller {
     return '';
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

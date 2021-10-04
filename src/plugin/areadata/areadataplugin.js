@@ -1,15 +1,14 @@
 goog.declareModuleId('plugin.areadata.AreaDataPlugin');
 
+import OSSettings from '../../os/config/settings.js';
+import OGCService from '../../os/ogc/ogcservice.js';
+import * as registry from '../../os/ogc/registry.js';
+import services from '../../os/ogc/services.js';
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
 import {AreaImportType} from './areadata.js';
 
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const registry = goog.require('os.ogc.registry');
-const services = goog.require('os.ogc.services');
-const OGCService = goog.require('os.ogc.OGCService');
-const OSSettings = goog.require('os.config.Settings');
-
+const {default: MenuItemOptions} = goog.requireType('os.ui.menu.MenuItemOptions');
 const {Options: OGCListUIOptions} = goog.requireType('os.ui.ogc.OGCListUI');
-const MenuItemOptions = goog.requireType('os.ui.menu.MenuItemOptions');
 
 
 const Settings = OSSettings.getInstance();

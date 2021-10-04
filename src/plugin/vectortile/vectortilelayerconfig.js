@@ -1,7 +1,20 @@
 goog.declareModuleId('plugin.vectortile.VectorTileLayerConfig');
 
+import * as osColor from '../../os/color.js';
+import DisplaySetting from '../../os/config/displaysetting.js';
+import Settings from '../../os/config/settings.js';
+import AbstractLayerConfig from '../../os/layer/config/abstractlayerconfig.js';
+import AbstractTileLayerConfig from '../../os/layer/config/abstracttilelayerconfig.js';
+import VectorTileLayer from '../../os/layer/vectortile.js';
 import * as osMap from '../../os/map/map.js';
+import CrossOrigin from '../../os/net/crossorigin.js';
+import * as net from '../../os/net/net.js';
+import Request from '../../os/net/request.js';
+import {addProxyWrapper, autoProxyCheck} from '../../os/ol/source/tileimage.js';
+import {getBestSupportedProjection, EPSG4326} from '../../os/proj/proj.js';
+import VectorTileSource from '../../os/source/vectortilesource.js';
 import {DEFAULT_FONT} from '../../os/style/label.js';
+import StyleManager from '../../os/style/stylemanager_shim.js';
 import {VectorTileFormat, getVectorTileFormat} from './vectortileformat.js';
 
 const log = goog.require('goog.log');
@@ -11,20 +24,6 @@ const olExtent = goog.require('ol.extent');
 const VectorTileRenderType = goog.require('ol.layer.VectorTileRenderType');
 const {transformExtent} = goog.require('ol.proj');
 const Style = goog.require('ol.style.Style');
-
-const osColor = goog.require('os.color');
-const DisplaySetting = goog.require('os.config.DisplaySetting');
-const Settings = goog.require('os.config.Settings');
-const VectorTileLayer = goog.require('os.layer.VectorTile');
-const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
-const AbstractTileLayerConfig = goog.require('os.layer.config.AbstractTileLayerConfig');
-const net = goog.require('os.net');
-const CrossOrigin = goog.require('os.net.CrossOrigin');
-const Request = goog.require('os.net.Request');
-const VectorTileSource = goog.require('os.ol.source.VectorTile');
-const {addProxyWrapper, autoProxyCheck} = goog.require('os.ol.source.tileimage');
-const {getBestSupportedProjection, EPSG4326} = goog.require('os.proj');
-const StyleManager = goog.require('os.style.StyleManager');
 
 const Feature = goog.requireType('ol.Feature');
 const Projection = goog.requireType('ol.proj.Projection');

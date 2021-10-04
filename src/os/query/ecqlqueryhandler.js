@@ -1,14 +1,14 @@
-goog.module('os.query.ECQLQueryHandler');
+goog.declareModuleId('os.query.ECQLQueryHandler');
 
-const AreaFormatter = goog.require('os.filter.impl.ecql.AreaFormatter');
-const ExclusionFormatter = goog.require('os.filter.impl.ecql.ExclusionFormatter');
-const FilterFormatter = goog.require('os.filter.impl.ecql.FilterFormatter');
-const QueryHandler = goog.require('os.query.QueryHandler');
+import AreaFormatter from '../filter/impl/ecql/areaformatter.js';
+import ExclusionFormatter from '../filter/impl/ecql/exclusionformatter.js';
+import FilterFormatter from '../filter/impl/ecql/filterformatter.js';
+import QueryHandler from './queryhandler.js';
 
 
 /**
  */
-class ECQLQueryHandler extends QueryHandler {
+export default class ECQLQueryHandler extends QueryHandler {
   /**
    * Constructor.
    */
@@ -31,5 +31,3 @@ class ECQLQueryHandler extends QueryHandler {
     return filter;
   }
 }
-
-exports = ECQLQueryHandler;

@@ -1,8 +1,9 @@
-goog.module('os.ui.SpinnerUI');
+goog.declareModuleId('os.ui.SpinnerUI');
+
+import Module from './module.js';
+import {apply} from './ui.js';
 
 const {clamp} = goog.require('goog.math');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -10,7 +11,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: {
@@ -31,7 +32,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'spinner';
+export const directiveTag = 'spinner';
 
 /**
  * Add the directive to the module
@@ -42,7 +43,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for spinner directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -211,9 +212,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

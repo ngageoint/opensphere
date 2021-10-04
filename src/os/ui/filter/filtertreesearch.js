@@ -1,17 +1,17 @@
-goog.module('os.ui.filter.FilterTreeSearch');
+goog.declareModuleId('os.ui.filter.FilterTreeSearch');
 
-const {getFilterManager} = goog.require('os.query.instance');
-const FilterNode = goog.require('os.ui.filter.ui.FilterNode');
-const AbstractGroupByTreeSearch = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
+import {getFilterManager} from '../../query/queryinstance.js';
+import AbstractGroupByTreeSearch from '../slick/abstractgroupbytreesearch.js';
+import FilterNode from './ui/filternode.js';
 
-const FilterEntry = goog.requireType('os.filter.FilterEntry');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**
  * Extends AbstractGroupByTreeSearch to search through saved areas
  */
-class FilterTreeSearch extends AbstractGroupByTreeSearch {
+export default class FilterTreeSearch extends AbstractGroupByTreeSearch {
   /**
    * Constructor.
    * @param {!Array<!ITreeNode>} search The original tree to search
@@ -70,5 +70,3 @@ class FilterTreeSearch extends AbstractGroupByTreeSearch {
     }
   }
 }
-
-exports = FilterTreeSearch;

@@ -1,8 +1,8 @@
-goog.module('os.histo.bin');
+goog.declareModuleId('os.histo.bin');
 
-const {FLOAT} = goog.require('os.string');
+import {FLOAT} from '../string/string.js';
 
-const Bin = goog.requireType('os.histo.Bin');
+const {default: Bin} = goog.requireType('os.histo.Bin');
 
 
 /**
@@ -13,7 +13,7 @@ const Bin = goog.requireType('os.histo.Bin');
  *
  * @type {number}
  */
-const MAGIC_EMPTY = 999999999999999998;
+export const MAGIC_EMPTY = 999999999999999998;
 
 /**
  * "Unique" value used when a requested value cannot be coerced to a number. Crossfilter fails when values cannot be
@@ -21,21 +21,21 @@ const MAGIC_EMPTY = 999999999999999998;
  *
  * @type {number}
  */
-const MAGIC_NAN = 9999999998;
+export const MAGIC_NAN = 9999999998;
 
 /**
- * @typedef {function(Bin, os.histo.Bin):number}
+ * @typedef {function(Bin, Bin):number}
  */
-let SortFn;
+export let SortFn;
 
 /**
  * Sorts bins by the number of items in the bin, in ascending order
  *
  * @param {Bin} a A bin
- * @param {os.histo.Bin} b Another bin
+ * @param {Bin} b Another bin
  * @return {number}
  */
-const sortByCount = function(a, b) {
+export const sortByCount = function(a, b) {
   return a.items.length > b.items.length ? 1 : a.items.length < b.items.length ? -1 : 0;
 };
 
@@ -43,10 +43,10 @@ const sortByCount = function(a, b) {
  * Sorts bins by the number of items in the bin, in descending order
  *
  * @param {Bin} a A bin
- * @param {os.histo.Bin} b Another bin
+ * @param {Bin} b Another bin
  * @return {number}
  */
-const sortByCountDesc = function(a, b) {
+export const sortByCountDesc = function(a, b) {
   return a.items.length > b.items.length ? -1 : a.items.length < b.items.length ? 1 : 0;
 };
 
@@ -54,10 +54,10 @@ const sortByCountDesc = function(a, b) {
  * Sorts bins by key
  *
  * @param {Bin} a A bin
- * @param {os.histo.Bin} b Another bin
+ * @param {Bin} b Another bin
  * @return {number}
  */
-const sortByKey = function(a, b) {
+export const sortByKey = function(a, b) {
   return a.key > b.key ? 1 : a.key < b.key ? -1 : 0;
 };
 
@@ -65,10 +65,10 @@ const sortByKey = function(a, b) {
  * Sorts bins by key in descending order
  *
  * @param {Bin} a A bin
- * @param {os.histo.Bin} b Another bin
+ * @param {Bin} b Another bin
  * @return {number}
  */
-const sortByKeyDesc = function(a, b) {
+export const sortByKeyDesc = function(a, b) {
   return a.key > b.key ? -1 : a.key < b.key ? 1 : 0;
 };
 
@@ -76,10 +76,10 @@ const sortByKeyDesc = function(a, b) {
  * Sorts bins by label in ascending order
  *
  * @param {Bin} a A bin
- * @param {os.histo.Bin} b Another bin
+ * @param {Bin} b Another bin
  * @return {number}
  */
-const sortByLabel = function(a, b) {
+export const sortByLabel = function(a, b) {
   var al = a.getLabel();
   var bl = b.getLabel();
 
@@ -95,21 +95,9 @@ const sortByLabel = function(a, b) {
  * Sorts bins by label in descending order
  *
  * @param {Bin} a A bin
- * @param {os.histo.Bin} b Another bin
+ * @param {Bin} b Another bin
  * @return {number}
  */
-const sortByLabelDesc = function(a, b) {
+export const sortByLabelDesc = function(a, b) {
   return sortByLabel(b, a);
-};
-
-exports = {
-  MAGIC_EMPTY,
-  MAGIC_NAN,
-  sortByCount,
-  sortByCountDesc,
-  sortByKey,
-  sortByKeyDesc,
-  sortByLabel,
-  sortByLabelDesc,
-  SortFn
 };

@@ -4,9 +4,9 @@ goog.require('os.user.settings.FavoriteManager');
 goog.require('os.user.settings.FavoriteType');
 
 describe('os.user.settings.FavoriteManager', function() {
-  const Settings = goog.module.get('os.config.Settings');
-  const FavoriteManager = goog.module.get('os.user.settings.FavoriteManager');
-  const FavoriteType = goog.module.get('os.user.settings.FavoriteType');
+  const {default: Settings} = goog.module.get('os.config.Settings');
+  const {default: FavoriteManager} = goog.module.get('os.user.settings.FavoriteManager');
+  const {default: FavoriteType} = goog.module.get('os.user.settings.FavoriteType');
 
   beforeEach(function() {
     Settings.getInstance().setPersistenceEnabled(false);

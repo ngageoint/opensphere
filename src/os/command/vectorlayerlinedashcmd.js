@@ -1,15 +1,15 @@
-goog.module('os.command.VectorLayerLineDash');
+goog.declareModuleId('os.command.VectorLayerLineDash');
 
-const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const osStyle = goog.require('os.style');
-const StyleManager = goog.require('os.style.StyleManager');
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import * as osStyle from '../style/style.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import AbstractVectorStyle from './abstractvectorstylecmd.js';
 
 
 /**
  * Changes the line dash of a layer
  */
-class VectorLayerLineDash extends AbstractVectorStyle {
+export default class VectorLayerLineDash extends AbstractVectorStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -40,5 +40,3 @@ class VectorLayerLineDash extends AbstractVectorStyle {
     super.applyValue(config, value);
   }
 }
-
-exports = VectorLayerLineDash;

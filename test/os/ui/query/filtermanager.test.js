@@ -4,8 +4,8 @@ goog.require('os.query.BaseAreaManager');
 goog.require('os.query.BaseQueryManager');
 
 describe('os.filter.BaseFilterManager', function() {
-  const BaseFilterManager = goog.module.get('os.filter.BaseFilterManager');
-  const FilterEntry = goog.module.get('os.filter.FilterEntry');
+  const {default: BaseFilterManager} = goog.module.get('os.filter.BaseFilterManager');
+  const {default: FilterEntry} = goog.module.get('os.filter.FilterEntry');
 
   var fm = null;
   beforeEach(function() {

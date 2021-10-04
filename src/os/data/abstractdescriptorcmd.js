@@ -1,19 +1,19 @@
-goog.module('os.data.AbstractDescriptor');
+goog.declareModuleId('os.data.AbstractDescriptor');
+
+import EventType from '../command/eventtype.js';
+import ICommand from '../command/icommand.js';// eslint-disable-line
+import State from '../command/state.js';
+import Metrics from '../metrics/metrics.js';
+import * as keys from '../metrics/metricskeys.js';
+import DataManager from './datamanager.js';
+import DescriptorEventType from './descriptoreventtype.js';
 
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
-const EventType = goog.require('os.command.EventType');
-const State = goog.require('os.command.State');
-const DataManager = goog.require('os.data.DataManager');
-const DescriptorEventType = goog.require('os.data.DescriptorEventType');
-const Metrics = goog.require('os.metrics.Metrics');
-const keys = goog.require('os.metrics.keys');
-
-const ICommand = goog.require('os.command.ICommand'); // eslint-disable-line
 
 const Logger = goog.requireType('goog.log.Logger');
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 
 
 /**
@@ -22,7 +22,7 @@ const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
  * @abstract
  * @implements {ICommand}
  */
-class AbstractDescriptor extends EventTarget {
+export default class AbstractDescriptor extends EventTarget {
   /**
    * Constructor.
    * @param {!IDataDescriptor} descriptor The descriptor
@@ -213,6 +213,3 @@ class AbstractDescriptor extends EventTarget {
  * @type {Logger}
  */
 const logger = log.getLogger('os.data.AbstractDescriptor');
-
-
-exports = AbstractDescriptor;

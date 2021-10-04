@@ -1,10 +1,11 @@
-goog.module('os.ui.onboarding.NgOnboardingUI');
+goog.declareModuleId('os.ui.onboarding.NgOnboardingUI');
+
+import Settings from '../../config/settings.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
 
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
 const GoogEventType = goog.require('goog.events.EventType');
-const {ROOT} = goog.require('os');
-const Settings = goog.require('os.config.Settings');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -13,7 +14,7 @@ const Module = goog.require('os.ui.Module');
  * @see http://github.com/adamalbrecht/ngOnboarding/
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   scope: {
     'enabled': '=',
@@ -32,7 +33,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'ng-onboarding';
+export const directiveTag = 'ng-onboarding';
 
 /**
  * Register ng-onboarding directive.
@@ -43,7 +44,7 @@ Module.directive('ngOnboarding', [directive]);
  * Controller function for the onboarding directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -369,9 +370,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

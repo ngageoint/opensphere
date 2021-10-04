@@ -1,12 +1,12 @@
-goog.module('os.state.XMLStateOptions');
+goog.declareModuleId('os.state.XMLStateOptions');
 
-const StateOptions = goog.require('os.state.StateOptions');
+import StateOptions from './stateoptions.js';
 
 
 /**
  * Options for saving and loading state files as XML.
  */
-class XMLStateOptions extends StateOptions {
+export default class XMLStateOptions extends StateOptions {
   /**
    * Constructor.
    * @param {string} title The state title
@@ -22,5 +22,3 @@ class XMLStateOptions extends StateOptions {
     this.doc = opt_doc || null;
   }
 }
-
-exports = XMLStateOptions;

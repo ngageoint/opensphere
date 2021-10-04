@@ -1,20 +1,21 @@
-goog.module('os.ui.query.ComboNodeUI');
+goog.declareModuleId('os.ui.query.ComboNodeUI');
+
+import DataManager from '../../data/datamanager.js';
+import Metrics from '../../metrics/metrics.js';
+import {Filters} from '../../metrics/metricskeys.js';
+import {getQueryManager} from '../../query/queryinstance.js';
+import TriState from '../../structs/tristate.js';
+import Module from '../module.js';
 
 const {getCount} = goog.require('goog.object');
-const DataManager = goog.require('os.data.DataManager');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Filters} = goog.require('os.metrics.keys');
-const {getQueryManager} = goog.require('os.query.instance');
-const TriState = goog.require('os.structs.TriState');
-const Module = goog.require('os.ui.Module');
 
-const ComboNode = goog.requireType('os.ui.query.ComboNode');
+const {default: ComboNode} = goog.requireType('os.ui.query.ComboNode');
 
 
 /**
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<span class="form-inline">' +
@@ -43,7 +44,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'combonodeui';
+export const directiveTag = 'combonodeui';
 
 /**
  * Add the directive to the os.ui module
@@ -54,7 +55,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for above directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -297,9 +298,3 @@ Controller.GROUPS = [
   'All (AND)',
   'Any (OR)'
 ];
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

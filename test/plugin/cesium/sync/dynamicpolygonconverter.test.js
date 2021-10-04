@@ -20,7 +20,7 @@ describe('plugin.cesium.sync.DynamicPolygonConverter', () => {
   const olProj = goog.module.get('ol.proj');
   const Style = goog.module.get('ol.style.Style');
 
-  const Vector = goog.module.get('os.layer.Vector');
+  const {default: Vector} = goog.module.get('os.layer.Vector');
   const osMap = goog.module.get('os.map');
   const {EPSG4326} = goog.module.get('os.proj');
   const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');

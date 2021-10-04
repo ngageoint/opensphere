@@ -1,15 +1,17 @@
-goog.module('os.command.EditLayerFeatures');
+goog.declareModuleId('os.command.EditLayerFeatures');
 
-const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
-const State = goog.require('os.command.State');
-const {getMapContainer} = goog.require('os.map.instance');
+import {getMapContainer} from '../map/mapinstance.js';
+import AbstractSyncCommand from './abstractsynccommand.js';
+import State from './state.js';
 
 const Feature = goog.requireType('ol.Feature');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
+const {default: ISource} = goog.requireType('os.source.ISource');
 
 
 /**
  */
-class EditLayerFeatures extends AbstractSyncCommand {
+export default class EditLayerFeatures extends AbstractSyncCommand {
   /**
    * Constructor.
    * @param {string} layerId
@@ -81,9 +83,9 @@ class EditLayerFeatures extends AbstractSyncCommand {
    * @return {boolean}
    */
   add_() {
-    var layer = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.layerId_));
+    var layer = /** @type {VectorLayer} */ (getMapContainer().getLayer(this.layerId_));
     if (layer != null && this.features_) {
-      var source = /** @type {os.source.ISource} */ (layer.getSource());
+      var source = /** @type {ISource} */ (layer.getSource());
       source.addFeatures(this.features_);
       return true;
     }
@@ -97,9 +99,9 @@ class EditLayerFeatures extends AbstractSyncCommand {
    * @return {boolean}
    */
   remove_() {
-    var layer = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.layerId_));
+    var layer = /** @type {VectorLayer} */ (getMapContainer().getLayer(this.layerId_));
     if (layer != null) {
-      var source = /** @type {os.source.ISource} */ (layer.getSource());
+      var source = /** @type {ISource} */ (layer.getSource());
       if (source) {
         // TODO: when OL3 gets its act together and has a removeFeatures() method to go along with
         // addFeatures(), use that
@@ -130,5 +132,3 @@ class EditLayerFeatures extends AbstractSyncCommand {
     return true;
   }
 }
-
-exports = EditLayerFeatures;

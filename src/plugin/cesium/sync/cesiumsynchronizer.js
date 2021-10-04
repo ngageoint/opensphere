@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.cesium.sync.CesiumSynchronizer');
 
-const AbstractWebGLSynchronizer = goog.require('os.webgl.AbstractWebGLSynchronizer');
+import AbstractWebGLSynchronizer from '../../../os/webgl/abstractsynchronizer.js';
 
 const PluggableMap = goog.requireType('ol.PluggableMap');
 

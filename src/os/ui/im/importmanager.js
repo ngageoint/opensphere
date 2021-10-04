@@ -1,21 +1,22 @@
-goog.module('os.ui.im.ImportManager');
+goog.declareModuleId('os.ui.im.ImportManager');
+
+import Importer from '../../im/importer.js';
 
 const {defaultCompare, removeDuplicates} = goog.require('goog.array');
 const log = goog.require('goog.log');
 const {forEach} = goog.require('goog.object');
-const Importer = goog.require('os.im.Importer');
 
 const Logger = goog.requireType('goog.log.Logger');
-const IImporter = goog.requireType('os.im.IImporter');
-const IParser = goog.requireType('os.parse.IParser');
-const IImportUI = goog.requireType('os.ui.im.IImportUI');
+const {default: IImporter} = goog.requireType('os.im.IImporter');
+const {default: IParser} = goog.requireType('os.parse.IParser');
+const {default: IImportUI} = goog.requireType('os.ui.im.IImportUI');
 
 
 /**
  * Handles importing files and urls. Each layer type can register a corresponding import
  * UI. If the loaded file has a layer type, then the UI for that layer type is launched.
  */
-class ImportManager {
+export default class ImportManager {
   /**
    * Constructor.
    */
@@ -354,5 +355,3 @@ const logger = log.getLogger('os.ui.im.ImportManager');
  * @const
  */
 ImportManager.DEFAULT_IMPORTER = 'default';
-
-exports = ImportManager;

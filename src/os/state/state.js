@@ -1,21 +1,22 @@
-goog.module('os.state');
+goog.declareModuleId('os.state');
+
+import CommandProcessor from '../command/commandprocessor.js';
+import DataManager from '../data/datamanager.js';
+import BaseProvider from '../ui/data/baseprovider.js';
+import DescriptorProvider from '../ui/data/descriptorprovider.js';
+import Tag from './tag.js';
 
 const {defaultCompare} = goog.require('goog.array');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const DataManager = goog.require('os.data.DataManager');
-const Tag = goog.require('os.state.Tag');
-const BaseProvider = goog.require('os.ui.data.BaseProvider');
-const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
 
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const IState = goog.requireType('os.state.IState');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: IState} = goog.requireType('os.state.IState');
 
 
 /**
  * Separator for constructing state id's
  * @type {string}
  */
-const ID_SEPARATOR = '#';
+export const ID_SEPARATOR = '#';
 
 /**
  * Serializes an element.
@@ -23,7 +24,7 @@ const ID_SEPARATOR = '#';
  * @param {Element} el The element
  * @return {string} Serialized element
  */
-const serializeTag = function(el) {
+export const serializeTag = function(el) {
   var s = el.localName;
   var type = el.getAttribute(Tag.TYPE);
   if (type) {
@@ -40,7 +41,7 @@ const serializeTag = function(el) {
  * @param {IState} state The state
  * @return {string} Serialized element
  */
-const stateToString = function(state) {
+export const stateToString = function(state) {
   var s = state.getRootName();
   var attrs = state.getRootAttrs();
   if (attrs && attrs[Tag.TYPE]) {
@@ -57,7 +58,7 @@ const stateToString = function(state) {
  * @param {IState} b Another state
  * @return {number} The comparison
  */
-const priorityCompare = function(a, b) {
+export const priorityCompare = function(a, b) {
   // a/b are flipped to sort in descending priority order
   return defaultCompare(b.getPriority(), a.getPriority());
 };
@@ -69,7 +70,7 @@ const priorityCompare = function(a, b) {
  * @param {IState} b Another state
  * @return {number} The comparison
  */
-const titleCompare = function(a, b) {
+export const titleCompare = function(a, b) {
   return defaultCompare(a.getTitle(), b.getTitle());
 };
 
@@ -80,7 +81,7 @@ const titleCompare = function(a, b) {
  * @param {IState} b Another state
  * @return {number} The comparison
  */
-const supportCompare = function(a, b) {
+export const supportCompare = function(a, b) {
   if (a.getSupported() && !b.getSupported()) {
     return -1;
   }
@@ -93,7 +94,7 @@ const supportCompare = function(a, b) {
 /**
  * @param {?Array<!IDataDescriptor>} list The list of state descriptors
  */
-const deleteStates = function(list) {
+export const deleteStates = function(list) {
   var dataManager = DataManager.getInstance();
   if (list) {
     var i = list.length;
@@ -127,18 +128,7 @@ const deleteStates = function(list) {
  * @param {string} id
  * @return {boolean}
  */
-const isStateFile = function(id) {
+export const isStateFile = function(id) {
   var words = id && id.split(BaseProvider.ID_DELIMITER);
   return words ? words[0] === 'state' || words[0] === 'pubstate' : false;
-};
-
-exports = {
-  ID_SEPARATOR,
-  serializeTag,
-  stateToString,
-  priorityCompare,
-  titleCompare,
-  supportCompare,
-  deleteStates,
-  isStateFile
 };

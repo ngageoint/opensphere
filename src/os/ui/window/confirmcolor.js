@@ -1,10 +1,9 @@
-goog.module('os.ui.window.ConfirmColorUI');
+goog.declareModuleId('os.ui.window.ConfirmColorUI');
 
-goog.require('os.ui.color.ColorPickerUI');
-
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
-const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
+import '../color/colorpicker.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {launchConfirm} from './confirm.js';
 
 
 /**
@@ -12,7 +11,7 @@ const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   templateUrl: ROOT + 'views/window/confirmcolor.html',
   controller: Controller,
@@ -23,7 +22,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'confirmcolor';
+export const directiveTag = 'confirmcolor';
 
 /**
  * Add the directive to the os.ui module
@@ -34,7 +33,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the color confirmation window.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -55,7 +54,7 @@ class Controller {
  * @param {Function} confirm
  * @param {string=} opt_default The default color to use
  */
-const launchConfirmColor = function(confirm, opt_default) {
+export const launchConfirmColor = function(confirm, opt_default) {
   var windowOptions = {
     'label': 'Choose Color',
     'icon': 'fa fa-tint',
@@ -73,11 +72,4 @@ const launchConfirmColor = function(confirm, opt_default) {
     prompt: `<${directiveTag}></${directiveTag}>`,
     windowOptions: windowOptions
   }));
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag,
-  launchConfirmColor
 };

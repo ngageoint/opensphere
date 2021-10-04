@@ -1,10 +1,10 @@
-goog.module('os.command.AbstractSource');
+goog.declareModuleId('os.command.AbstractSource');
 
-const State = goog.require('os.command.State');
-const DataManager = goog.require('os.data.DataManager');
+import DataManager from '../data/datamanager.js';
+import State from './state.js';
 
-const ICommand = goog.requireType('os.command.ICommand');
-const ISource = goog.requireType('os.source.ISource');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: ISource} = goog.requireType('os.source.ISource');
 
 
 /**
@@ -13,7 +13,7 @@ const ISource = goog.requireType('os.source.ISource');
  * @abstract
  * @implements {ICommand}
  */
-class AbstractSource {
+export default class AbstractSource {
   /**
    * Constructor.
    * @param {!string} sourceId
@@ -74,5 +74,3 @@ class AbstractSource {
     return true;
   }
 }
-
-exports = AbstractSource;

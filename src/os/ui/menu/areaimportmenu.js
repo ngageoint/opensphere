@@ -1,19 +1,20 @@
-goog.module('os.ui.menu.areaImport');
+goog.declareModuleId('os.ui.menu.areaImport');
+
+import * as osQuery from '../../query/query.js';
+import Menu from './menu.js';
+import MenuItem from './menuitem.js';
+import MenuItemType from './menuitemtype.js';
 
 const googDispose = goog.require('goog.dispose');
-const osQuery = goog.require('os.query');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 
 
 /**
  * Events fired by the query area import menu.
  * @enum {string}
  */
-const EventType = {
+export const EventType = {
   FILE: 'query:importFile',
   ENTER_COORDINATES: 'query:enterCoordinates',
   QUERY_WORLD: 'query:queryWorld'
@@ -29,20 +30,20 @@ let MENU = undefined;
  * Get the menu.
  * @return {Menu|undefined}
  */
-const getMenu = () => MENU;
+export const getMenu = () => MENU;
 
 /**
  * Set the menu.
  * @param {Menu|undefined} menu The menu.
  */
-const setMenu = (menu) => {
+export const setMenu = (menu) => {
   MENU = menu;
 };
 
 /**
  * Create the query area import menu.
  */
-const setup = function() {
+export const setup = function() {
   MENU = new Menu(new MenuItem({
     type: MenuItemType.ROOT,
     children: [{
@@ -73,7 +74,7 @@ const setup = function() {
 /**
  * Dispose the query area import menu.
  */
-const dispose = function() {
+export const dispose = function() {
   googDispose(MENU);
   MENU = undefined;
 };
@@ -83,7 +84,7 @@ const dispose = function() {
  *
  * @param {!MenuEvent} event The menu event.
  */
-const handleQueryEvent = function(event) {
+export const handleQueryEvent = function(event) {
   switch (event.type) {
     case EventType.FILE:
       osQuery.launchQueryImport();
@@ -97,13 +98,4 @@ const handleQueryEvent = function(event) {
     default:
       break;
   }
-};
-
-exports = {
-  EventType,
-  getMenu,
-  setMenu,
-  setup,
-  dispose,
-  handleQueryEvent
 };

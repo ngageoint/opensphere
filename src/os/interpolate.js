@@ -3,23 +3,24 @@
  * GIS sense instead of just rendering a straight cartesian line between two points regardless of
  * the projection.
  */
-goog.module('os.interpolate');
+goog.declareModuleId('os.interpolate');
+
+import * as geo2 from './geo/geo2.js';
+import Method from './interpolatemethod.js';
+import * as osMap from './map/map.js';
+import {EPSG4326} from './proj/proj.js';
 
 const GeometryType = goog.require('ol.geom.GeometryType');
 const olProj = goog.require('ol.proj');
-const geo2 = goog.require('os.geo2');
-const Method = goog.require('os.interpolate.Method');
-const osMap = goog.require('os.map');
-const {EPSG4326} = goog.require('os.proj');
 
-const Config = goog.requireType('os.interpolate.Config');
+const {default: Config} = goog.requireType('os.interpolate.Config');
 
 
 /**
  * Interpolation settings keys.
  * @enum {string}
  */
-const SettingsKey = {
+export const SettingsKey = {
   INTERPOLATION: 'interpolation'
 };
 
@@ -30,7 +31,7 @@ const SettingsKey = {
  *  lastProj: string
  * }}
  */
-let TransformSet;
+export let TransformSet;
 
 /**
  * Local interpolate config.
@@ -51,13 +52,13 @@ let interpolateEnabled = true;
  * If a feature is interpolated, its original geometry will be stored in this field
  * @type {string}
  */
-const ORIGINAL_GEOM_FIELD = '_originalGeometry';
+export const ORIGINAL_GEOM_FIELD = '_originalGeometry';
 
 /**
  * The field on a feature which contains the method override
  * @type {string}
  */
-const METHOD_FIELD = 'interpolationMethod';
+export const METHOD_FIELD = 'interpolationMethod';
 
 /**
  * @type {?Method}
@@ -67,7 +68,7 @@ let overrideMethod = null;
 /**
  * @return {boolean} Whether or not all the values needed for interpolation are present
  */
-const getEnabled = function() {
+export const getEnabled = function() {
   return !!(interpolateEnabled && interpolateConfig.distance > 1000);
 };
 
@@ -75,21 +76,21 @@ const getEnabled = function() {
  * Set if interpolation is enabled.
  * @param {boolean} value If interpolation in enabled.
  */
-const setEnabled = function(value) {
+export const setEnabled = function(value) {
   interpolateEnabled = value;
 };
 
 /**
  * @return {Method} The interpolation method
  */
-const getMethod = function() {
+export const getMethod = function() {
   return interpolateConfig.method;
 };
 
 /**
  * @return {Object<string, *>} The config
  */
-const getConfig = function() {
+export const getConfig = function() {
   return {
     'method': interpolateConfig.method,
     'distance': interpolateConfig.distance
@@ -99,7 +100,7 @@ const getConfig = function() {
 /**
  * @param {Object<string, *>} config The config
  */
-const setConfig = function(config) {
+export const setConfig = function(config) {
   if (config) {
     interpolateConfig.method = /** @type {Method} */ (config['method']) || interpolateConfig.method;
     interpolateConfig.distance = /** @type {number} */ (config['distance']) || interpolateConfig.thresholdPercent;
@@ -120,7 +121,7 @@ let tmpConfig = null;
  * @param {Method=} opt_method The interpolation method
  * @param {number=} opt_distance The distance between interpolated points in meters
  */
-const beginTempInterpolation = function(opt_projection, opt_method, opt_distance) {
+export const beginTempInterpolation = function(opt_projection, opt_method, opt_distance) {
   var config = interpolateConfig;
 
   tmpConfig = {
@@ -142,7 +143,7 @@ const beginTempInterpolation = function(opt_projection, opt_method, opt_distance
 /**
  * Finish temporary interpolation
  */
-const endTempInterpolation = function() {
+export const endTempInterpolation = function() {
   tmpConfig = null;
   tmpTransforms = null;
 };
@@ -151,7 +152,7 @@ const endTempInterpolation = function() {
  * @param {ol.Feature} feature The feature to modify
  * @param {boolean=} opt_skipUpdate Skips updating the transforms, useful when calling in batches
  */
-const interpolateFeature = function(feature, opt_skipUpdate) {
+export const interpolateFeature = function(feature, opt_skipUpdate) {
   if (!getEnabled()) {
     return;
   }
@@ -219,7 +220,7 @@ const interpolateFeature = function(feature, opt_skipUpdate) {
  * @param {ol.geom.Geometry} geom The geometry to interpolate
  * @param {boolean=} opt_skipUpdate Skips updating the transforms, useful when calling in batches
  */
-const interpolateGeom = function(geom, opt_skipUpdate) {
+export const interpolateGeom = function(geom, opt_skipUpdate) {
   if (!opt_skipUpdate) {
     updateTransforms();
   }
@@ -270,12 +271,12 @@ const interpolateGeomInternal_ = function(geom) {
 };
 
 /**
- * @type {?os.interpolate.TransformSet}
+ * @type {?TransformSet}
  */
 let localTransforms = null;
 
 /**
- * @type {?os.interpolate.TransformSet}
+ * @type {?TransformSet}
  */
 let tmpTransforms = null;
 
@@ -284,7 +285,7 @@ let tmpTransforms = null;
  *
  * @suppress {accessControls}
  */
-const updateTransforms = function() {
+export const updateTransforms = function() {
   if (!localTransforms || osMap.PROJECTION.getCode() !== localTransforms.lastProj) {
     localTransforms = {
       coordToLonLat: olProj.getTransform(osMap.PROJECTION, EPSG4326),
@@ -297,21 +298,21 @@ const updateTransforms = function() {
 /**
  * @param {Array<Array<ol.Coordinate>>} lines The lines to interpolate
  */
-const interpolateLines = function(lines) {
+export const interpolateLines = function(lines) {
   lines.forEach(interpolateLine);
 };
 
 /**
  * @param {Array<Array<ol.Coordinate>>} rings The rings to interpolate
  */
-const interpolateRings = function(rings) {
+export const interpolateRings = function(rings) {
   rings.forEach(interpolateRing);
 };
 
 /**
  * @param {Array<ol.Coordinate>} ring The ring to interpolate
  */
-const interpolateRing = function(ring) {
+export const interpolateRing = function(ring) {
   interpolateLine(ring);
 
   // ensure the ring is closed
@@ -342,7 +343,7 @@ const interpolateRing = function(ring) {
  *
  * @param {Array<ol.Coordinate>} line The line
  */
-const interpolateLine = function(line) {
+export const interpolateLine = function(line) {
   var config = tmpConfig || interpolateConfig;
   var transforms = tmpTransforms || localTransforms;
   var method = overrideMethod || config.method;
@@ -433,31 +434,9 @@ const interpolateLine = function(line) {
  * @param {Array<ol.Coordinate>} line The line
  * @param {!Config} config The config
  */
-const interpolateLineWithConfig = function(line, config) {
+export const interpolateLineWithConfig = function(line, config) {
   const oldConfig = tmpConfig; // save current settings
   tmpConfig = config; // use these settings
   interpolateLine(line);
   tmpConfig = oldConfig; // restore settings
-};
-
-exports = {
-  SettingsKey,
-  ORIGINAL_GEOM_FIELD,
-  METHOD_FIELD,
-  getEnabled,
-  setEnabled,
-  getMethod,
-  getConfig,
-  setConfig,
-  beginTempInterpolation,
-  endTempInterpolation,
-  interpolateFeature,
-  interpolateGeom,
-  updateTransforms,
-  interpolateLines,
-  interpolateRings,
-  interpolateRing,
-  interpolateLine,
-  interpolateLineWithConfig,
-  TransformSet
 };

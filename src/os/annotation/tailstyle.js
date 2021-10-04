@@ -1,10 +1,12 @@
-goog.module('os.annotation.TailStyle');
+goog.declareModuleId('os.annotation.TailStyle');
 
 /**
  * @enum {string}
  */
-exports = {
+const TailStyle = {
   DEFAULT: 'default',
   NOTAIL: 'none',
   LINETAIL: 'line'
 };
+
+export default TailStyle;

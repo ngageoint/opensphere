@@ -1,15 +1,17 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLTreeExportUI');
 
+import * as config from '../../../../os/config/config.js';
 import {ROOT} from '../../../../os/os.js';
+import exportManager from '../../../../os/ui/file/uiexportmanager.js';
+import Module from '../../../../os/ui/module.js';
+import * as osWindow from '../../../../os/ui/window.js';
+import WindowEventType from '../../../../os/ui/windoweventtype.js';
 import KMLTreeExporter from '../kmltreeexporter.js';
 
 const asserts = goog.require('goog.asserts');
-const config = goog.require('os.config');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const exportManager = goog.require('os.ui.exportManager');
-const osWindow = goog.require('os.ui.window');
 
+const {default: ExportOptions} = goog.requireType('os.ex.ExportOptions');
+const {default: IPersistenceMethod} = goog.requireType('os.ex.IPersistenceMethod');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
@@ -46,7 +48,7 @@ Module.directive('kmltreeexport', [directive]);
  * Launch a KML tree export dialog.
  * @param {!KMLNode} rootNode The root node to export.
  * @param {string=} opt_winLabel The window label
- * @param {os.ex.ExportOptions=} opt_addOptions
+ * @param {ExportOptions=} opt_addOptions
  * @param {string=} opt_windowTooltip The tooltip for the window, if any.
  */
 export const launchTreeExport = function(rootNode, opt_winLabel, opt_addOptions, opt_windowTooltip) {
@@ -108,12 +110,12 @@ export class Controller {
     this['title'] = root && root.getLabel() || (config.getAppName() + ' KML Tree').trim();
 
     /**
-     * @type {!Object<string, os.ex.IPersistenceMethod>}
+     * @type {!Object<string, IPersistenceMethod>}
      */
     this['persisters'] = {};
 
     /**
-     * @type {os.ex.IPersistenceMethod}
+     * @type {IPersistenceMethod}
      */
     this['persister'] = null;
 
@@ -200,7 +202,7 @@ export class Controller {
       var items = root.getChildren() || [root];
       items = this['additionalOptions'] ? this.scope['exportData'] : items;
 
-      var options = /** @type {os.ex.ExportOptions} */ ({
+      var options = /** @type {ExportOptions} */ ({
         items: items,
         fields: this['exportFields'],
         title: this['title'],

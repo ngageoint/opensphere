@@ -1,9 +1,9 @@
-goog.module('os.ui.ogc.wms.IWMSLayer');
+goog.declareModuleId('os.ui.ogc.wms.IWMSLayer');
 
 /**
  * @interface
  */
-class IWMSLayer {
+export default class IWMSLayer {
   /**
    * Gets the layer title.
    * @return {?string}
@@ -161,5 +161,3 @@ class IWMSLayer {
    */
   setSupportedCRS(values) {}
 }
-
-exports = IWMSLayer;

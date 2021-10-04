@@ -1,23 +1,24 @@
-goog.module('os.config.AreaSettingsUI');
+goog.declareModuleId('os.config.AreaSettingsUI');
+
+import {ROOT} from '../os.js';
+import AreaManager from '../query/areamanager.js';
+import {getAreaManager, getQueryManager} from '../query/queryinstance.js';
+import {setFeatureStyle} from '../style/style.js';
+import StyleType from '../style/styletype.js';
+import Module from '../ui/module.js';
+import {apply} from '../ui/ui.js';
+import {getSettings} from './configinstance.js';
 
 const {unsafeClone} = goog.require('goog.object');
-const {ROOT} = goog.require('os');
-const {getSettings} = goog.require('os.config.instance');
-const AreaManager = goog.require('os.query.AreaManager');
-const {getAreaManager, getQueryManager} = goog.require('os.query.instance');
-const {setFeatureStyle} = goog.require('os.style');
-const StyleType = goog.require('os.style.StyleType');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
-const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
+const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
 
 
 /**
  * The area settings UI directive
  * @return {angular.Directive}
  */
-const directive = function() {
+export const directive = function() {
   return {
     restrict: 'AE',
     replace: true,
@@ -27,12 +28,11 @@ const directive = function() {
   };
 };
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'areasettings';
+export const directiveTag = 'areasettings';
 
 
 /**
@@ -46,7 +46,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the areasettingss directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -254,9 +254,3 @@ class Controller {
     this.confirm_();
   }
 }
-
-exports = {
-  directive,
-  directiveTag,
-  Controller
-};

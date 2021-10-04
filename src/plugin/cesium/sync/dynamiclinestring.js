@@ -10,7 +10,7 @@ const MultiLineString = goog.requireType('ol.geom.MultiLineString');
 const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
 const Polygon = goog.requireType('ol.geom.Polygon');
 const Style = goog.requireType('ol.style.Style');
-const Ellipse = goog.requireType('os.geom.Ellipse');
+const {default: Ellipse} = goog.requireType('os.geom.Ellipse');
 const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 

@@ -1,7 +1,7 @@
-goog.module('os.ui.filter.op.OPUISwitchUI');
+goog.declareModuleId('os.ui.filter.op.OPUISwitchUI');
 
-const Module = goog.require('os.ui.Module');
-const {Controller: UISwitchCtrl, directive: uiSwitchDirective} = goog.require('os.ui.UISwitchUI');
+import Module from '../../module.js';
+import {Controller as UISwitchCtrl, directive as uiSwitchDirective} from '../../uiswitch.js';
 
 
 /**
@@ -9,7 +9,7 @@ const {Controller: UISwitchCtrl, directive: uiSwitchDirective} = goog.require('o
  *
  * @return {angular.Directive}
  */
-const directive = () => {
+export const directive = () => {
   var dir = uiSwitchDirective();
 
   dir['template'] = '<span></span>';
@@ -23,7 +23,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'opuiswitch';
+export const directiveTag = 'opuiswitch';
 
 /**
  * Add the directive to the module
@@ -33,7 +33,7 @@ Module.directive(directiveTag, [directive]);
 /**
  * @unrestricted
  */
-class Controller extends UISwitchCtrl {
+export class Controller extends UISwitchCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -52,9 +52,3 @@ class Controller extends UISwitchCtrl {
     scope['expr'] = this.scope['expr'];
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

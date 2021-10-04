@@ -6,7 +6,7 @@ goog.require('os.file.File');
 describe('os.file.File', function() {
   const userAgent = goog.module.get('goog.userAgent');
   const osFile = goog.module.get('os.file');
-  const OSFile = goog.module.get('os.file.File');
+  const {default: OSFile} = goog.module.get('os.file.File');
 
   var fsFile = new OSFile();
   fsFile.setFileName('testFile.xml');

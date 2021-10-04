@@ -1,8 +1,8 @@
-goog.module('os.parse.csv.CsvParserConfig');
+goog.declareModuleId('os.parse.csv.CsvParserConfig');
 
-const FileParserConfig = goog.require('os.parse.FileParserConfig');
-const {DEFAULT_COMMENT_CHAR, DEFAULT_DELIMITER} = goog.require('os.parse.csv');
-const OSFile = goog.requireType('os.file.File');
+import FileParserConfig from '../fileparserconfig.js';
+import {DEFAULT_COMMENT_CHAR, DEFAULT_DELIMITER} from './csv.js';
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
@@ -12,7 +12,7 @@ const OSFile = goog.requireType('os.file.File');
  * @unrestricted
  * @template T
  */
-class CsvParserConfig extends FileParserConfig {
+export default class CsvParserConfig extends FileParserConfig {
   /**
    * Constructor.
    * @param {OSFile=} opt_file
@@ -73,5 +73,3 @@ class CsvParserConfig extends FileParserConfig {
     }
   }
 }
-
-exports = CsvParserConfig;

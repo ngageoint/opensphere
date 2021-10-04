@@ -1,11 +1,10 @@
-goog.module('os.command.EventType');
-
+goog.declareModuleId('os.command.EventType');
 
 /**
  * Event types for command events
  * @enum {string}
  */
-exports = {
+const EventType = {
   EXECUTED: 'executed',
   REVERTED: 'reverted',
   COMMAND_ADDED: 'command_added',
@@ -15,3 +14,5 @@ exports = {
   COMMAND_REVERTED: 'command_reverted',
   HISTORY_LIMIT_CHANGED: 'history_limit_changed'
 };
+
+export default EventType;

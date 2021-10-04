@@ -1,13 +1,13 @@
-goog.module('os.load.LoadingEvent');
+goog.declareModuleId('os.load.LoadingEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
-const ILoadingTask = goog.requireType('os.load.ILoadingTask');
+const {default: ILoadingTask} = goog.requireType('os.load.ILoadingTask');
 
 
 /**
  * Event representing a loading task change.
  */
-class LoadingEvent extends GoogEvent {
+export default class LoadingEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -40,5 +40,3 @@ class LoadingEvent extends GoogEvent {
     this.task = value;
   }
 }
-
-exports = LoadingEvent;

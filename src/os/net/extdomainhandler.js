@@ -1,12 +1,13 @@
-goog.module('os.net.ExtDomainHandler');
+goog.declareModuleId('os.net.ExtDomainHandler');
+
+import {FileScheme} from '../file/index.js';
+import CrossOrigin from './crossorigin.js';
+import HandlerType from './handlertype.js';
+import {getCrossOrigin} from './net.js';
+import SameDomainHandler from './samedomainhandler.js';
 
 const Uri = goog.require('goog.Uri');
 const log = goog.require('goog.log');
-const {FileScheme} = goog.require('os.file');
-const {getCrossOrigin} = goog.require('os.net');
-const CrossOrigin = goog.require('os.net.CrossOrigin');
-const HandlerType = goog.require('os.net.HandlerType');
-const SameDomainHandler = goog.require('os.net.SameDomainHandler');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -14,7 +15,7 @@ const Logger = goog.requireType('goog.log.Logger');
 /**
  * Handles requests to an external domain with a simple XHR.
  */
-class ExtDomainHandler extends SameDomainHandler {
+export default class ExtDomainHandler extends SameDomainHandler {
   /**
    * Constructor.
    */
@@ -75,5 +76,3 @@ const logger = log.getLogger('os.net.ExtDomainHandler');
  * @type {boolean}
  */
 ExtDomainHandler.MIXED_CONTENT_ENABLED = false;
-
-exports = ExtDomainHandler;

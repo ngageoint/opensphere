@@ -1,17 +1,17 @@
-goog.module('os.ui.column.mapping.ColumnModelNode');
+goog.declareModuleId('os.ui.column.mapping.ColumnModelNode');
 
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+import SlickTreeNode from '../../slick/slicktreenode.js';
 
-const IColumnMapping = goog.requireType('os.column.IColumnMapping');
-const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const IOGCDescriptor = goog.requireType('os.ui.ogc.IOGCDescriptor');
+const {default: IColumnMapping} = goog.requireType('os.column.IColumnMapping');
+const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
+const {default: IOGCDescriptor} = goog.requireType('os.ui.ogc.IOGCDescriptor');
 
 
 /**
  * Tree node representing a column model.
  * @unrestricted
  */
-class ColumnModelNode extends SlickTreeNode {
+export default class ColumnModelNode extends SlickTreeNode {
   /**
    * Constructor.
    */
@@ -130,5 +130,3 @@ class ColumnModelNode extends SlickTreeNode {
     this.setInitialLayer(node.getInitialLayer());
   }
 }
-
-exports = ColumnModelNode;

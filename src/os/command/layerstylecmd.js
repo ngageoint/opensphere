@@ -1,15 +1,16 @@
-goog.module('os.command.LayerStyle');
+goog.declareModuleId('os.command.LayerStyle');
+
+import osImplements from '../implements.js';
+import instanceOf from '../instanceof.js';
+import ILayer from '../layer/ilayer.js';
+import LayerClass from '../layer/layerclass.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import * as osStyle from '../style/style.js';
+import AbstractStyle from './abstractstylecmd.js';
 
 const asserts = goog.require('goog.asserts');
-const AbstractStyle = goog.require('os.command.AbstractStyle');
-const osImplements = goog.require('os.implements');
-const instanceOf = goog.require('os.instanceOf');
-const LayerClass = goog.require('os.layer.LayerClass');
-const ILayer = goog.require('os.layer.ILayer');
-const {getMapContainer} = goog.require('os.map.instance');
-const osStyle = goog.require('os.style');
 
-const VectorLayer = goog.requireType('os.layer.Vector');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 
 
 /**
@@ -17,11 +18,11 @@ const VectorLayer = goog.requireType('os.layer.Vector');
  *
  * @template T
  */
-class LayerStyle extends AbstractStyle {
+export default class LayerStyle extends AbstractStyle {
   /**
    * Constructor.
    * @param {string} layerId
-   * @param {function(os.layer.ILayer, ?)} callback Callback to actually do the set on the layer.
+   * @param {function(ILayer, ?)} callback Callback to actually do the set on the layer.
    * @param {number} value The new value to set.
    * @param {number=} opt_oldValue Optional old value. If not provided, the command pulls the old value off the layer.
    */
@@ -30,7 +31,7 @@ class LayerStyle extends AbstractStyle {
 
     /**
      * The setter callback to set the value on the layer.
-     * @type {function(os.layer.ILayer, ?)}
+     * @type {function(ILayer, ?)}
      * @protected
      */
     this.callback = callback;
@@ -44,7 +45,7 @@ class LayerStyle extends AbstractStyle {
   getOldValue() {
     var layer = getMapContainer().getLayer(this.layerId);
     if (osImplements(layer, ILayer.ID)) {
-      return /** @type {os.layer.ILayer} */ (layer).getOpacity();
+      return /** @type {ILayer} */ (layer).getOpacity();
     }
 
     return null;
@@ -56,7 +57,7 @@ class LayerStyle extends AbstractStyle {
   applyValue(config, value) {
     var layer = getMapContainer().getLayer(this.layerId);
     if (osImplements(layer, ILayer.ID)) {
-      this.callback(/** @type {os.layer.ILayer} */ (layer), value);
+      this.callback(/** @type {ILayer} */ (layer), value);
     }
   }
 
@@ -81,7 +82,7 @@ class LayerStyle extends AbstractStyle {
   setValue(value) {
     asserts.assert(value != null, 'style value must be defined');
 
-    var layer = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.layerId));
+    var layer = /** @type {VectorLayer} */ (getMapContainer().getLayer(this.layerId));
     asserts.assert(layer, 'layer must be defined');
 
     var config = this.getLayerConfig(layer) || {};
@@ -90,5 +91,3 @@ class LayerStyle extends AbstractStyle {
     this.finish(config);
   }
 }
-
-exports = LayerStyle;

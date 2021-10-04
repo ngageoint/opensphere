@@ -1,21 +1,21 @@
-goog.module('os.ui.alert.AlertPopupUI');
+goog.declareModuleId('os.ui.alert.AlertPopupUI');
 
-goog.require('os.ui.alert.alertLinkFilter');
+import './alertlinkfilter.js';
+import AlertEvent, {DEFAULT_LIMIT} from '../../alert/alertevent.js';
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertEventTypes from '../../alert/alerteventtypes.js';
+import AlertManager from '../../alert/alertmanager.js';
+import EventType from '../../alert/eventtype.js';
+import Settings from '../../config/settings.js';
+import * as dispatcher from '../../dispatcher.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
 
 const Delay = goog.require('goog.async.Delay');
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
 const {getRandomString} = goog.require('goog.string');
-const {ROOT} = goog.require('os');
-const dispatcher = goog.require('os.Dispatcher');
-const AlertEvent = goog.require('os.alert.AlertEvent');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertEventTypes = goog.require('os.alert.AlertEventTypes');
-const AlertManager = goog.require('os.alert.AlertManager');
-const EventType = goog.require('os.alert.EventType');
-const Settings = goog.require('os.config.Settings');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -23,7 +23,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   replace: true,
   restrict: 'AE',
   scope: true,
@@ -36,7 +36,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'alert-popup';
+export const directiveTag = 'alert-popup';
 
 /**
  * Register alert-popup directive.
@@ -48,7 +48,7 @@ Module.directive('alertPopup', [directive]);
  * Controller function for the alert-popup directive.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The scope
@@ -141,7 +141,7 @@ class Controller {
           this.dupeOverflow_ = true;
 
           // only display the duplicate alert message if the default limit was reached
-          if (limit == AlertEvent.DEFAULT_LIMIT) {
+          if (limit == DEFAULT_LIMIT) {
             var dupeEvent = new AlertEvent(
                 'Too many duplicate alerts received! Open the alert window for details.',
                 AlertEventSeverity.WARNING);
@@ -299,10 +299,3 @@ class Controller {
  * @const
  */
 Controller.ALERT_TIMER = 10000;
-
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

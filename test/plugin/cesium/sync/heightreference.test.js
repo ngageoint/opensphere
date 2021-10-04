@@ -15,9 +15,9 @@ describe('plugin.cesium.sync.HeightReference', () => {
   const Point = goog.module.get('ol.geom.Point');
   const OLVectorLayer = goog.module.get('ol.layer.Vector');
   const OLVectorSource = goog.module.get('ol.source.Vector');
-  const RecordField = goog.module.get('os.data.RecordField');
-  const VectorSource = goog.module.get('os.source.Vector');
-  const AltitudeMode = goog.module.get('os.webgl.AltitudeMode');
+  const {default: RecordField} = goog.module.get('os.data.RecordField');
+  const {default: VectorSource} = goog.module.get('os.source.Vector');
+  const {default: AltitudeMode} = goog.module.get('os.webgl.AltitudeMode');
   const {getHeightReference, isPrimitiveClassTypeChanging} = goog.module.get('plugin.cesium.sync.HeightReference');
   const primitiveUtils = goog.module.get('test.plugin.cesium.primitive');
 

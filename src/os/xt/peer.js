@@ -1,4 +1,10 @@
-goog.module('os.xt.Peer');
+goog.declareModuleId('os.xt.Peer');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import * as events from './events.js';
+import PeerInfo from './peerinfo.js';
+import {isMaster, getMasterKey, getPingKey, getLastPing, cleanupPeer, prepareSendData} from './xt.js';
 
 const Timer = goog.require('goog.Timer');
 const googArray = goog.require('goog.array');
@@ -10,21 +16,9 @@ const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
 const olArray = goog.require('ol.array');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const events = goog.require('os.xt.events');
-const PeerInfo = goog.require('os.xt.PeerInfo');
-const {
-  isMaster,
-  getMasterKey,
-  getPingKey,
-  getLastPing,
-  cleanupPeer,
-  prepareSendData
-} = goog.require('os.xt');
 
 const Logger = goog.requireType('goog.log.Logger');
-const IMessageHandler = goog.requireType('os.xt.IMessageHandler');
+const {default: IMessageHandler} = goog.requireType('os.xt.IMessageHandler');
 
 
 /**
@@ -65,7 +59,7 @@ const IMessageHandler = goog.requireType('os.xt.IMessageHandler');
  *
  * @throws {Error} If the browser does not support localStorage
  */
-class Peer {
+export default class Peer {
   /**
    * Constructor.
    * @param {Storage=} opt_storage the Storage instance to use for communication; defaults to window.localStorage
@@ -896,5 +890,3 @@ Peer.LOGGER_ = log.getLogger('os.xt.Peer');
  * @private
  */
 Peer.notThese_ = ['ping', 'title', 'details', 'types'];
-
-exports = Peer;

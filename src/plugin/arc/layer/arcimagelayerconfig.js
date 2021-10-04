@@ -1,11 +1,12 @@
 goog.declareModuleId('plugin.arc.layer.ArcImageLayerConfig');
 
+import AbstractLayerConfig from '../../../os/layer/config/abstractlayerconfig.js';
+import Image from '../../../os/layer/image.js';
+import CrossOrigin from '../../../os/net/crossorigin.js';
+import * as net from '../../../os/net/net.js';
+import * as proj from '../../../os/proj/proj.js';
+
 const ImageArcGISRest = goog.require('ol.source.ImageArcGISRest');
-const Image = goog.require('os.layer.Image');
-const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
-const net = goog.require('os.net');
-const CrossOrigin = goog.require('os.net.CrossOrigin');
-const proj = goog.require('os.proj');
 
 const Projection = goog.requireType('ol.proj.Projection');
 

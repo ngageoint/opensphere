@@ -1,4 +1,8 @@
-goog.module('os.data.SourceManager');
+goog.declareModuleId('os.data.SourceManager');
+
+import PropertyChange from '../source/propertychange.js';
+import DataManager from './datamanager.js';
+import DataEventType from './event/dataeventtype.js';
 
 const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');
@@ -6,9 +10,10 @@ const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const olArray = goog.require('ol.array');
 const events = goog.require('ol.events');
-const DataManager = goog.require('os.data.DataManager');
-const DataEventType = goog.require('os.data.event.DataEventType');
-const PropertyChange = goog.require('os.source.PropertyChange');
+
+const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: ISource} = goog.requireType('os.source.ISource');
 
 
 /**
@@ -18,7 +23,7 @@ const PropertyChange = goog.require('os.source.PropertyChange');
  *
  * To start watching sources, `init` must be called on the manager.
  */
-class SourceManager extends Disposable {
+export default class SourceManager extends Disposable {
   /**
    * Constructor.
    */
@@ -27,7 +32,7 @@ class SourceManager extends Disposable {
 
     /**
      * Managed sources.
-     * @type {!Array<!os.source.ISource>}
+     * @type {!Array<!ISource>}
      * @protected
      */
     this.sources = [];
@@ -55,7 +60,7 @@ class SourceManager extends Disposable {
 
     /**
      * Functions to test if the source should be managed.
-     * @type {!Array<function(os.source.ISource):boolean>}
+     * @type {!Array<function(ISource):boolean>}
      * @protected
      */
     this.validationFunctions = SourceManager.VALIDATION_FUNCTIONS;
@@ -103,7 +108,7 @@ class SourceManager extends Disposable {
   /**
    * Handle remove add events from the data manager.
    *
-   * @param {!os.source.ISource} source The source.
+   * @param {!ISource} source The source.
    * @protected
    */
   addSource(source) {
@@ -115,7 +120,7 @@ class SourceManager extends Disposable {
   /**
    * Handle remove source events from the data manager.
    *
-   * @param {!os.source.ISource} source The source.
+   * @param {!ISource} source The source.
    * @protected
    */
   removeSource(source) {
@@ -125,7 +130,7 @@ class SourceManager extends Disposable {
   /**
    * Registers change listener on a source.
    *
-   * @param {!os.source.ISource} source The source.
+   * @param {!ISource} source The source.
    * @private
    */
   addSourceListener_(source) {
@@ -139,7 +144,7 @@ class SourceManager extends Disposable {
   /**
    * Removes change listener on a source.
    *
-   * @param {!os.source.ISource} source The source.
+   * @param {!ISource} source The source.
    * @private
    */
   removeSourceListener_(source) {
@@ -153,7 +158,7 @@ class SourceManager extends Disposable {
   /**
    * Handle source added event from the data manager.
    *
-   * @param {os.data.event.DataEvent} event The data event.
+   * @param {DataEvent} event The data event.
    * @private
    */
   onSourceAdded_(event) {
@@ -166,7 +171,7 @@ class SourceManager extends Disposable {
   /**
    * Handle source added removed from the data manager.
    *
-   * @param {os.data.event.DataEvent} event The data event.
+   * @param {DataEvent} event The data event.
    * @private
    */
   onSourceRemoved_(event) {
@@ -177,7 +182,7 @@ class SourceManager extends Disposable {
   }
 
   /**
-   * @param {!os.source.ISource} source The source.
+   * @param {!ISource} source The source.
    * @protected
    */
   updateSource(source) {
@@ -193,7 +198,7 @@ class SourceManager extends Disposable {
   }
 
   /**
-   * @param {!os.source.ISource} source The source to validate
+   * @param {!ISource} source The source to validate
    * @return {boolean} whether or not the source is valid
    * @private
    */
@@ -210,7 +215,7 @@ class SourceManager extends Disposable {
   /**
    * Handle property change events from a source.
    *
-   * @param {os.events.PropertyChangeEvent|ol.Object.Event} event
+   * @param {PropertyChangeEvent|ol.Object.Event} event
    * @protected
    */
   onSourcePropertyChange(event) {
@@ -223,7 +228,7 @@ class SourceManager extends Disposable {
       return;
     }
 
-    var source = /** @type {os.source.ISource} */ (event.target);
+    var source = /** @type {ISource} */ (event.target);
     if (source && p && this.updateEvents.indexOf(p) > -1) {
       this.updateSource(source);
     }
@@ -241,7 +246,7 @@ class SourceManager extends Disposable {
 
 
 /**
- * @type {!Array<function(os.source.ISource):boolean>}
+ * @type {!Array<function(ISource):boolean>}
  * @const
  */
 SourceManager.VALIDATION_FUNCTIONS = [];
@@ -257,6 +262,3 @@ SourceManager.UPDATE_EVENTS = [
   PropertyChange.TITLE,
   PropertyChange.VISIBLE
 ];
-
-
-exports = SourceManager;

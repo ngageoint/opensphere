@@ -1,7 +1,7 @@
-goog.module('os.annotation.annotationOptionsDirective');
+goog.declareModuleId('os.annotation.annotationOptionsDirective');
 
-const {ROOT} = goog.require('os');
-const Module = goog.require('os.ui.Module');
+import {ROOT} from '../os.js';
+import Module from '../ui/module.js';
 
 
 /**
@@ -9,7 +9,7 @@ const Module = goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/annotation/annotationoptions.html'
@@ -19,14 +19,9 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'annotationoptions';
+export const directiveTag = 'annotationoptions';
 
 /**
  * Add the directive to the module
  */
 Module.directive(directiveTag, [directive]);
-
-exports = {
-  directive,
-  directiveTag
-};

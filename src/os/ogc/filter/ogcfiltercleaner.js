@@ -1,11 +1,12 @@
-goog.module('os.ogc.filter.OGCFilterCleaner');
+goog.declareModuleId('os.ogc.filter.OGCFilterCleaner');
+
+import AbstractModifier from '../../net/abstractmodifier.js';
+import {serialize} from '../../xml.js';
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');
-const AbstractModifier = goog.require('os.net.AbstractModifier');
-const {serialize} = goog.require('os.xml');
 
-const IModifier = goog.requireType('os.net.IModifier');
+const {default: IModifier} = goog.requireType('os.net.IModifier');
 
 
 /**
@@ -13,7 +14,7 @@ const IModifier = goog.requireType('os.net.IModifier');
  *
  * @implements {IModifier}
  */
-class OGCFilterCleaner extends AbstractModifier {
+export default class OGCFilterCleaner extends AbstractModifier {
   /**
    * Constructor.
    */
@@ -87,5 +88,3 @@ class OGCFilterCleaner extends AbstractModifier {
     }
   }
 }
-
-exports = OGCFilterCleaner;

@@ -1,20 +1,22 @@
-goog.module('os.data.FilterNode');
+goog.declareModuleId('os.data.FilterNode');
+
+import CommandProcessor from '../command/commandprocessor.js';
+import FilterEnable from '../command/filterenablecmd.js';
+import SequenceCommand from '../command/sequencecommand.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {getQueryManager} from '../query/queryinstance.js';
+import {isStateFile} from '../state/state.js';
+import TriState from '../structs/tristate.js';
+import {toFilterString} from '../ui/filter/filter.js';
+import UIFilterNode from '../ui/filter/ui/filternode.js';
+import {directiveTag} from '../ui/filter/ui/filternodeui.js';
+import QueryEntries from '../ui/query/cmd/queryentriescmd.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const FilterEnable = goog.require('os.command.FilterEnable');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const {getMapContainer} = goog.require('os.map.instance');
-const {getQueryManager} = goog.require('os.query.instance');
-const {isStateFile} = goog.require('os.state');
-const TriState = goog.require('os.structs.TriState');
-const {toFilterString} = goog.require('os.ui.filter');
-const UIFilterNode = goog.require('os.ui.filter.ui.FilterNode');
-const {directiveTag} = goog.require('os.ui.filter.ui.FilterNodeUI');
-const QueryEntries = goog.require('os.ui.query.cmd.QueryEntries');
 
-const ISearchable = goog.requireType('os.data.ISearchable');
+const {default: ISearchable} = goog.requireType('os.data.ISearchable');
+const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 
 
 /**
@@ -22,10 +24,10 @@ const ISearchable = goog.requireType('os.data.ISearchable');
  *
  * @implements {ISearchable}
  */
-class FilterNode extends UIFilterNode {
+export default class FilterNode extends UIFilterNode {
   /**
    * Constructor.
-   * @param {os.filter.FilterEntry=} opt_filter
+   * @param {FilterEntry=} opt_filter
    */
   constructor(opt_filter) {
     super(opt_filter);
@@ -145,5 +147,3 @@ class FilterNode extends UIFilterNode {
     }
   }
 }
-
-exports = FilterNode;

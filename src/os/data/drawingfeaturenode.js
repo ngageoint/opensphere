@@ -1,27 +1,27 @@
-goog.module('os.data.DrawingFeatureNode');
+goog.declareModuleId('os.data.DrawingFeatureNode');
 
-goog.require('os.mixin.object');
+import '../mixin/objectmixin.js';
+import {registerClass} from '../classregistry.js';
+import * as osFeature from '../feature/feature.js';
+import osImplements from '../implements.js';
+import TriState from '../structs/tristate.js';
+import * as osStyle from '../style/style.js';
+import StyleField from '../style/stylefield.js';
+import StyleType from '../style/styletype.js';
+import IMenuSupplier from '../ui/menu/imenusupplier.js';
+import * as spatial from '../ui/menu/spatial.js';
+import {directiveTag as nodeUi} from '../ui/node/drawingfeaturenodeui.js';
+import SlickTreeNode from '../ui/slick/slicktreenode.js';
+import {NodeClass} from './data.js';
 
 const Circle = goog.require('ol.style.Circle');
 const RegularShape = goog.require('ol.style.RegularShape');
-const {registerClass} = goog.require('os.classRegistry');
-const {NodeClass} = goog.require('os.data');
-const osFeature = goog.require('os.feature');
-const osImplements = goog.require('os.implements');
-const TriState = goog.require('os.structs.TriState');
-const osStyle = goog.require('os.style');
-const StyleField = goog.require('os.style.StyleField');
-const StyleType = goog.require('os.style.StyleType');
-const IMenuSupplier = goog.require('os.ui.menu.IMenuSupplier');
-const spatial = goog.require('os.ui.menu.spatial');
-const {directiveTag: nodeUi} = goog.require('os.ui.node.DrawingFeatureNodeUI');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 
 /**
  * @implements {IMenuSupplier}
  */
-class DrawingFeatureNode extends SlickTreeNode {
+export default class DrawingFeatureNode extends SlickTreeNode {
   /**
    * Constructor.
    * @param {!ol.Feature} feature The feature
@@ -253,6 +253,7 @@ class DrawingFeatureNode extends SlickTreeNode {
     return null;
   }
 }
+
 osImplements(DrawingFeatureNode, IMenuSupplier.ID);
 registerClass(NodeClass.DRAW_FEATURE, DrawingFeatureNode);
 
@@ -261,5 +262,3 @@ registerClass(NodeClass.DRAW_FEATURE, DrawingFeatureNode);
  * @const
  */
 DrawingFeatureNode.ORIGINAL_STYLE = '_originalStyle';
-
-exports = DrawingFeatureNode;

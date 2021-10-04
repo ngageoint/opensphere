@@ -1,4 +1,9 @@
-goog.module('os.mixin.geometry');
+goog.declareModuleId('os.mixin.geometry');
+
+import GeometryField from '../geom/geometryfield.js';
+import * as osMap from '../map/map.js';
+import {merge} from '../object/object.js';
+import {EPSG4326} from '../proj/proj.js';
 
 const log = goog.require('goog.log');
 const olExtent = goog.require('ol.extent');
@@ -14,10 +19,6 @@ const Point = goog.require('ol.geom.Point');
 const Polygon = goog.require('ol.geom.Polygon');
 const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
 const olProj = goog.require('ol.proj');
-const GeometryField = goog.require('os.geom.GeometryField');
-const osMap = goog.require('os.map');
-const {merge} = goog.require('os.object');
-const {EPSG4326} = goog.require('os.proj');
 
 const Logger = goog.requireType('goog.log.Logger');
 

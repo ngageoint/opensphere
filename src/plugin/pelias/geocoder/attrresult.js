@@ -1,8 +1,7 @@
 goog.declareModuleId('plugin.pelias.geocoder.AttrResult');
 
+import AbstractSearchResult from '../../../os/search/abstractsearchresult.js';
 import {directiveTag as attrCardEl} from './attrcard.js';
-
-const AbstractSearchResult = goog.require('os.search.AbstractSearchResult');
 
 /**
  * HTML Attribution result for Google Places API

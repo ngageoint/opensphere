@@ -1,17 +1,18 @@
-goog.module('os.ui.im.action.FilterActionTreeSearch');
+goog.declareModuleId('os.ui.im.action.FilterActionTreeSearch');
 
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
-const FilterActionNode = goog.require('os.ui.im.action.FilterActionNode');
-const AbstractGroupByTreeSearch = goog.require('os.ui.slick.AbstractGroupByTreeSearch');
-const TreeSearch = goog.require('os.ui.slick.TreeSearch');
+import ImportActionManager from '../../../im/action/importactionmanager.js';
+import AbstractGroupByTreeSearch from '../../slick/abstractgroupbytreesearch.js';
+import TreeSearch from '../../slick/treesearch.js';
+import FilterActionNode from './filteractionnode.js';
 
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**
  * Tree search for filter actions.
  */
-class FilterActionTreeSearch extends AbstractGroupByTreeSearch {
+export default class FilterActionTreeSearch extends AbstractGroupByTreeSearch {
   /**
    * Constructor.
    * @param {!string} property The property the search exists at.
@@ -53,7 +54,7 @@ class FilterActionTreeSearch extends AbstractGroupByTreeSearch {
    * @inheritDoc
    */
   beginSearch(term, groupBy) {
-    var oldSearch = /** @type {!Array<!os.structs.ITreeNode>} */ (this.target[this.field].slice());
+    var oldSearch = /** @type {!Array<!ITreeNode>} */ (this.target[this.field].slice());
     super.beginSearch(term, groupBy);
     if (Array.isArray(oldSearch)) {
       // dispose the old nodes, otherwise they will be retained in memory due to listeners on the filter action entries
@@ -206,5 +207,3 @@ class FilterActionTreeSearch extends AbstractGroupByTreeSearch {
     // do NOT sort if there isn't a group by
   }
 }
-
-exports = FilterActionTreeSearch;

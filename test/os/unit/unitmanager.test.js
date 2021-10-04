@@ -1,7 +1,7 @@
 goog.require('os.unit.UnitManager');
 
 describe('os.unit.UnitManager', function() {
-  const UnitManager = goog.module.get('os.unit.UnitManager');
+  const {default: UnitManager} = goog.module.get('os.unit.UnitManager');
 
   it('should function correctly', inject(function($rootScope) {
     var um = UnitManager.getInstance();

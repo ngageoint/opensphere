@@ -1,6 +1,6 @@
-goog.module('os.command.ICommand');
+goog.declareModuleId('os.command.ICommand');
 
-const State = goog.requireType('os.command.State');
+const {default: State} = goog.requireType('os.command.State');
 
 
 /**
@@ -8,7 +8,7 @@ const State = goog.requireType('os.command.State');
  *
  * @interface
  */
-class ICommand {
+export default class ICommand {
   /**
    * Constructor.
    */
@@ -53,5 +53,3 @@ class ICommand {
    */
   revert() {}
 }
-
-exports = ICommand;

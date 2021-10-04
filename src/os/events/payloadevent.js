@@ -1,4 +1,4 @@
-goog.module('os.events.PayloadEvent');
+goog.declareModuleId('os.events.PayloadEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
@@ -10,7 +10,7 @@ const OLEventTarget = goog.requireType('ol.events.EventTarget');
  *
  * @template T
  */
-class PayloadEvent extends GoogEvent {
+export default class PayloadEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type The event type.
@@ -54,6 +54,3 @@ class PayloadEvent extends GoogEvent {
  * @suppress {duplicate}
  */
 PayloadEvent.prototype.target;
-
-
-exports = PayloadEvent;

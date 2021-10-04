@@ -3,9 +3,9 @@ goog.require('os.data.DataProviderEventType');
 goog.require('os.ui.ogc.OGCServer');
 
 describe('os.ui.ogc.OGCServer', function() {
-  const DataManager = goog.module.get('os.data.DataManager');
-  const DataProviderEventType = goog.module.get('os.data.DataProviderEventType');
-  const OGCServer = goog.module.get('os.ui.ogc.OGCServer');
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: DataProviderEventType} = goog.module.get('os.data.DataProviderEventType');
+  const {default: OGCServer} = goog.module.get('os.ui.ogc.OGCServer');
 
   var loadAndRun = function(server, config, func) {
     server.setId('testogc');

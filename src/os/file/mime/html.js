@@ -1,16 +1,17 @@
-goog.module('os.file.mime.html');
+goog.declareModuleId('os.file.mime.html');
+
+import * as mime from '../mime.js';
+import * as text from './text.js';
 
 const Promise = goog.require('goog.Promise');
-const mime = goog.require('os.file.mime');
-const text = goog.require('os.file.mime.text');
 
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
  * @type {string}
  */
-const TYPE = 'text/html';
+export const TYPE = 'text/html';
 
 /**
  * @param {ArrayBuffer} buffer
@@ -18,7 +19,7 @@ const TYPE = 'text/html';
  * @param {*=} opt_context
  * @return {!Promise<*|undefined>}
  */
-const detectHtml = function(buffer, file, opt_context) {
+export const detectHtml = function(buffer, file, opt_context) {
   var retVal;
 
   if ((file && file.getFileName() && /\.x?html?$/i.test(file.getFileName())) ||
@@ -32,8 +33,3 @@ const detectHtml = function(buffer, file, opt_context) {
 
 // as much as we'd like HTML to be a child of XML, it isn't
 mime.register(TYPE, detectHtml, -10, text.TYPE);
-
-exports = {
-  TYPE,
-  detectHtml
-};

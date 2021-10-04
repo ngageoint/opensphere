@@ -1,7 +1,7 @@
 goog.require('os.ui.filter.op.NotEqualTo');
 
 describe('os.ui.filter.op.NotEqualTo', function() {
-  const NotEqualTo = goog.module.get('os.ui.filter.op.NotEqualTo');
+  const {default: NotEqualTo} = goog.module.get('os.ui.filter.op.NotEqualTo');
 
   var op = new NotEqualTo();
 

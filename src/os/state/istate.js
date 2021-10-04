@@ -1,4 +1,4 @@
-goog.module('os.state.IState');
+goog.declareModuleId('os.state.IState');
 
 const Deferred = goog.requireType('goog.async.Deferred');
 
@@ -7,7 +7,7 @@ const Deferred = goog.requireType('goog.async.Deferred');
  * @interface
  * @template T,S
  */
-class IState {
+export default class IState {
   /**
    * Get if the state is supported
    * @return {boolean} If the state is supported
@@ -89,5 +89,3 @@ class IState {
    */
   remove(id) {}
 }
-
-exports = IState;

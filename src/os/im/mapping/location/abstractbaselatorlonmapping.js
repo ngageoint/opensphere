@@ -1,15 +1,15 @@
-goog.module('os.im.mapping.location.AbstractBaseLatOrLonMapping');
+goog.declareModuleId('os.im.mapping.location.AbstractBaseLatOrLonMapping');
 
-const {COORD_CLEANER} = goog.require('os.geo');
-const {getBestFieldMatch, getItemField, setItemField} = goog.require('os.im.mapping');
-const AbstractPositionMapping = goog.require('os.im.mapping.AbstractPositionMapping');
+import {COORD_CLEANER} from '../../../geo/geo.js';
+import AbstractPositionMapping from '../abstractpositionmapping.js';
+import {getBestFieldMatch, getItemField, setItemField} from '../mapping.js';
 
 
 /**
  * @extends {AbstractPositionMapping<T, S>}
  * @template T, S
  */
-class AbstractBaseLatOrLonMapping extends AbstractPositionMapping {
+export default class AbstractBaseLatOrLonMapping extends AbstractPositionMapping {
   /**
    * Constructor.
    */
@@ -161,5 +161,3 @@ class AbstractBaseLatOrLonMapping extends AbstractPositionMapping {
     return m;
   }
 }
-
-exports = AbstractBaseLatOrLonMapping;

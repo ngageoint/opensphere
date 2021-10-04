@@ -1,10 +1,11 @@
-goog.module('os.ui.NodeIconsUI');
+goog.declareModuleId('os.ui.NodeIconsUI');
+
+import Module from './module.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const Module = goog.require('os.ui.Module');
 
 const Listenable = goog.requireType('goog.events.Listenable');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
@@ -12,7 +13,7 @@ const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   template: '<span class="js-node-icons align-text-bottom pr-1 c-node-icons"></span>',
   controller: Controller,
@@ -23,7 +24,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'nodeicons';
+export const directiveTag = 'nodeicons';
 
 /**
  * Add the directive to the module.
@@ -34,7 +35,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the nodeicons directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -121,9 +122,3 @@ class Controller {
  * @private
  */
 const defaultContent = '&nbsp;';
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

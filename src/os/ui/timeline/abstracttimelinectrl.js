@@ -1,6 +1,33 @@
-goog.module('os.ui.timeline.AbstractTimelineCtrl');
+goog.declareModuleId('os.ui.timeline.AbstractTimelineCtrl');
 
-goog.require('os.ui.SliderUI');
+import '../slider.js';
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import Settings from '../../config/settings.js';
+import * as dispatcher from '../../dispatcher.js';
+import {SUB_DELIMITER} from '../../metrics/index.js';
+import Metrics from '../../metrics/metrics.js';
+import {Timeline as TimelineKeys} from '../../metrics/metricskeys.js';
+import * as osTime from '../../time/time.js';
+import TimeInstant from '../../time/timeinstant.js';
+import * as osTimeline from '../../time/timeline.js';
+import TimelineController from '../../time/timelinecontroller.js';
+import TimelineEventType from '../../time/timelineeventtype.js';
+import TimeRange from '../../time/timerange.js';
+import UIEvent from '../events/uievent.js';
+import UIEventType from '../events/uieventtype.js';
+import GlobalMenuEventType from '../globalmenueventtype.js';
+import * as hist from '../hist/hist.js';
+import Menu from '../menu/menu.js';
+import MenuItem from '../menu/menuitem.js';
+import MenuItemType from '../menu/menuitemtype.js';
+import * as ui from '../ui.js';
+import Brush from './brush.js';
+import BrushEventType from './brusheventtype.js';
+import CurrentTimeMarker from './currenttimemarker.js';
+import SelectBrush from './selectbrush.js';
+import TileAxis from './tileaxis.js';
+import * as timelineUi from './timeline.js';
 
 const googArray = goog.require('goog.array');
 const asserts = goog.require('goog.asserts');
@@ -13,40 +40,14 @@ const KeyHandler = goog.require('goog.events.KeyHandler');
 const Range = goog.require('goog.math.Range');
 const googObject = goog.require('goog.object');
 const googString = goog.require('goog.string');
-const dispatcher = goog.require('os.Dispatcher');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const Settings = goog.require('os.config.Settings');
-const {SUB_DELIMITER} = goog.require('os.metrics');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Timeline: TimelineKeys} = goog.require('os.metrics.keys');
-const osTime = goog.require('os.time');
-const TimeInstant = goog.require('os.time.TimeInstant');
-const TimeRange = goog.require('os.time.TimeRange');
-const TimelineController = goog.require('os.time.TimelineController');
-const TimelineEventType = goog.require('os.time.TimelineEventType');
-const osTimeline = goog.require('os.time.timeline');
-const ui = goog.require('os.ui');
-const GlobalMenuEventType = goog.require('os.ui.GlobalMenuEventType');
-const UIEvent = goog.require('os.ui.events.UIEvent');
-const UIEventType = goog.require('os.ui.events.UIEventType');
-const hist = goog.require('os.ui.hist');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const timelineUi = goog.require('os.ui.timeline');
-const Brush = goog.require('os.ui.timeline.Brush');
-const BrushEventType = goog.require('os.ui.timeline.BrushEventType');
-const CurrentTimeMarker = goog.require('os.ui.timeline.CurrentTimeMarker');
-const SelectBrush = goog.require('os.ui.timeline.SelectBrush');
-const TileAxis = goog.require('os.ui.timeline.TileAxis');
 
-const HistogramData = goog.requireType('os.hist.HistogramData');
-const TimelineControllerEvent = goog.requireType('os.time.TimelineControllerEvent');
-const IHistogramManager = goog.requireType('os.ui.hist.IHistogramManager');
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
-const ITimelineItem = goog.requireType('os.ui.timeline.ITimelineItem');
-const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: HistogramData} = goog.requireType('os.hist.HistogramData');
+const {default: TimelineControllerEvent} = goog.requireType('os.time.TimelineControllerEvent');
+const {default: IHistogramManager} = goog.requireType('os.ui.hist.IHistogramManager');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: ITimelineItem} = goog.requireType('os.ui.timeline.ITimelineItem');
+const {default: TimelineScaleOptions} = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 const {Controller: TimelineCtrl} = goog.requireType('os.ui.timeline.TimelineUI');
 
 
@@ -54,7 +55,7 @@ const {Controller: TimelineCtrl} = goog.requireType('os.ui.timeline.TimelineUI')
  * Controller function for the timeline-panel directive.
  * @unrestricted
  */
-class Controller {
+export default class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -932,7 +933,7 @@ class Controller {
   /**
    * Handler for brush property changes.
    *
-   * @param {os.events.PropertyChangeEvent} e
+   * @param {PropertyChangeEvent} e
    * @private
    */
   animateBrushPropertyChanged_(e) {
@@ -957,7 +958,7 @@ class Controller {
   /**
    * Handler for brush property changes.
    *
-   * @param {os.events.PropertyChangeEvent} e
+   * @param {PropertyChangeEvent} e
    * @private
    */
   sliceBrushPropertyChanged_(e) {
@@ -984,7 +985,7 @@ class Controller {
   /**
    * Handler for brush property changes.
    *
-   * @param {os.events.PropertyChangeEvent} e
+   * @param {PropertyChangeEvent} e
    * @private
    */
   loadBrushPropertyChanged_(e) {
@@ -1269,7 +1270,7 @@ class Controller {
   /**
    * Handler for hold brush property changes.
    *
-   * @param {os.events.PropertyChangeEvent} e
+   * @param {PropertyChangeEvent} e
    * @private
    */
   holdBrushPropertyChanged_(e) {
@@ -1743,6 +1744,3 @@ const Ranges = {
   LAST90: 'Last 90 Days',
   THISYEAR: 'This Year'
 };
-
-
-exports = Controller;

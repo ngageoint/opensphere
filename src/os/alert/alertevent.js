@@ -1,17 +1,18 @@
-goog.module('os.alert.AlertEvent');
+goog.declareModuleId('os.alert.AlertEvent');
+
+import EventType from './eventtype.js';
 
 const DateTime = goog.require('goog.date.DateTime');
 const GoogEvent = goog.require('goog.events.Event');
-const EventType = goog.require('os.alert.EventType');
 
 const EventTarget = goog.requireType('goog.events.EventTarget');
-const AlertEventSeverity = goog.requireType('os.alert.AlertEventSeverity');
+const {default: AlertEventSeverity} = goog.requireType('os.alert.AlertEventSeverity');
 
 
 /**
  * @type {number}
  */
-const DEFAULT_LIMIT = 5;
+export const DEFAULT_LIMIT = 5;
 
 /**
  * @type {number}
@@ -22,7 +23,7 @@ let id_ = 0;
 /**
  * @unrestricted
  */
-class AlertEvent extends GoogEvent {
+export default class AlertEvent extends GoogEvent {
   /**
    * @param {string} message The alert message
    * @param {AlertEventSeverity} severity The alert severity
@@ -114,6 +115,3 @@ class AlertEvent extends GoogEvent {
     return this.count_;
   }
 }
-
-exports = AlertEvent;
-exports.DEFAULT_LIMIT = DEFAULT_LIMIT;

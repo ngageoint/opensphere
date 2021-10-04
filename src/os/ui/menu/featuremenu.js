@@ -1,17 +1,17 @@
-goog.module('os.ui.menu.feature');
+goog.declareModuleId('os.ui.menu.feature');
 
-const EventType = goog.require('os.action.EventType');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
+import EventType from '../../action/eventtype.js';
+import MenuItemType from './menuitemtype.js';
 
-const Menu = goog.requireType('os.ui.menu.Menu');
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const {default: Menu} = goog.requireType('os.ui.menu.Menu');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 
 
 /**
  * Group labels for feature menu items.
  * @enum {string}
  */
-const GroupLabel = {
+export const GroupLabel = {
   SELECT: 'Select',
   SHOW_HIDE: 'Show/Hide',
   REMOVE: 'Remove',
@@ -26,7 +26,7 @@ const GroupLabel = {
  * @param {string=} opt_prefix The menu event prefix.
  * @param {function(MenuEvent)=} opt_handler The menu handler.
  */
-const addFeatureItems = function(menu, opt_prefix, opt_handler) {
+export const addFeatureItems = function(menu, opt_prefix, opt_handler) {
   addSelectItems(menu, opt_prefix, opt_handler);
   addShowHideItems(menu, opt_prefix, opt_handler);
   addRemoveItems(menu, opt_prefix, opt_handler);
@@ -39,7 +39,7 @@ const addFeatureItems = function(menu, opt_prefix, opt_handler) {
  * @param {string=} opt_prefix The menu event prefix.
  * @param {function(MenuEvent)=} opt_handler The menu handler.
  */
-const addSelectItems = function(menu, opt_prefix, opt_handler) {
+export const addSelectItems = function(menu, opt_prefix, opt_handler) {
   var prefix = opt_prefix || '';
   var menuRoot = menu.getRoot();
 
@@ -82,7 +82,7 @@ const addSelectItems = function(menu, opt_prefix, opt_handler) {
  * @param {string=} opt_prefix The menu event prefix.
  * @param {function(MenuEvent)=} opt_handler The menu handler.
  */
-const addShowHideItems = function(menu, opt_prefix, opt_handler) {
+export const addShowHideItems = function(menu, opt_prefix, opt_handler) {
   var prefix = opt_prefix || '';
   var menuRoot = menu.getRoot();
 
@@ -125,7 +125,7 @@ const addShowHideItems = function(menu, opt_prefix, opt_handler) {
  * @param {string=} opt_prefix The menu event prefix.
  * @param {function(MenuEvent)=} opt_handler The menu handler.
  */
-const addRemoveItems = function(menu, opt_prefix, opt_handler) {
+export const addRemoveItems = function(menu, opt_prefix, opt_handler) {
   var prefix = opt_prefix || '';
   var menuRoot = menu.getRoot();
 
@@ -151,12 +151,4 @@ const addRemoveItems = function(menu, opt_prefix, opt_handler) {
     handler: opt_handler,
     sort: 2
   });
-};
-
-exports = {
-  GroupLabel,
-  addFeatureItems,
-  addSelectItems,
-  addShowHideItems,
-  addRemoveItems
 };

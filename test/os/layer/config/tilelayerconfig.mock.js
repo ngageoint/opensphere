@@ -1,8 +1,8 @@
 goog.module('os.layer.config.MockTileLayerConfig');
 
 const TileWMS = goog.require('ol.source.TileWMS');
-const Tile = goog.require('os.layer.Tile');
-const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
+const {default: Tile} = goog.require('os.layer.Tile');
+const {default: AbstractLayerConfig} = goog.require('os.layer.config.AbstractLayerConfig');
 
 
 /**

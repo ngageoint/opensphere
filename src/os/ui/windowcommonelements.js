@@ -1,4 +1,4 @@
-goog.module('os.ui.windowCommonElements');
+goog.declareModuleId('os.ui.windowCommonElements');
 
 /**
  * Common selectors for window elements which are always considered for positioning application UI's.
@@ -7,4 +7,4 @@ goog.module('os.ui.windowCommonElements');
  */
 const windowCommonElements = ['.js-navtop', '.js-navbottom'];
 
-exports = windowCommonElements;
+export default windowCommonElements;

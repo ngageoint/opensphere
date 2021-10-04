@@ -1,4 +1,13 @@
-goog.module('os.mixin.UrlTileSource');
+goog.declareModuleId('os.mixin.UrlTileSource');
+
+import {alertAuth} from '../auth.js';
+import Settings from '../config/settings.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import osImplements from '../implements.js';
+import ILoadingSource from '../ol/source/iloadingsource.js';
+import IUrlSource from '../ol/source/iurlsource.js';
+import PropertyChange from '../source/propertychange.js';
+import {RefreshTimers} from '../source/source.js';
 
 const Timer = goog.require('goog.Timer');
 const Uri = goog.require('goog.Uri');
@@ -8,14 +17,6 @@ const {intersects} = goog.require('ol.extent');
 const Tile = goog.require('ol.source.Tile');
 const TileEventType = goog.require('ol.source.TileEventType');
 const UrlTile = goog.require('ol.source.UrlTile');
-const {alertAuth} = goog.require('os.auth');
-const Settings = goog.require('os.config.Settings');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osImplements = goog.require('os.implements');
-const ILoadingSource = goog.require('os.ol.source.ILoadingSource');
-const IUrlSource = goog.require('os.ol.source.IUrlSource');
-const {RefreshTimers} = goog.require('os.source');
-const PropertyChange = goog.require('os.source.PropertyChange');
 
 
 // add support for providing custom URL parameters

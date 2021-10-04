@@ -1,11 +1,12 @@
-goog.module('os.query.SpatialQueryEventType');
-
+goog.declareModuleId('os.query.SpatialQueryEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const SpatialQueryEventType = {
   ADDED: 'queryAdded',
   REMOVED: 'queryRemoved',
   CLEARED: 'queriesCleared'
 };
+
+export default SpatialQueryEventType;

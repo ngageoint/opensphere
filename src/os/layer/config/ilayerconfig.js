@@ -1,4 +1,4 @@
-goog.module('os.layer.config.ILayerConfig');
+goog.declareModuleId('os.layer.config.ILayerConfig');
 
 const Layer = goog.requireType('ol.layer.Layer');
 
@@ -6,12 +6,10 @@ const Layer = goog.requireType('ol.layer.Layer');
 /**
  * @interface
  */
-class ILayerConfig {
+export default class ILayerConfig {
   /**
    * @param {Object<string, *>} options Layer configuration options.
    * @return {Layer}
    */
   createLayer(options) {}
 }
-
-exports = ILayerConfig;

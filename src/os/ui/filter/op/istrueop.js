@@ -1,14 +1,14 @@
-goog.module('os.ui.filter.op.IsTrue');
+goog.declareModuleId('os.ui.filter.op.IsTrue');
 
-const Op = goog.require('os.ui.filter.op.Op');
-const DataType = goog.require('os.xsd.DataType');
+import DataType from '../../../xsd.js';
+import Op from './op.js';
 
 
 /**
  * A 'PropertyIsTrue' operation class.
  * Based on the OGC Filter Spec
  */
-class IsTrue extends Op {
+export default class IsTrue extends Op {
   /**
    * Constructor.
    */
@@ -70,5 +70,3 @@ class IsTrue extends Op {
     return f.join('');
   }
 }
-
-exports = IsTrue;

@@ -1,13 +1,14 @@
-goog.module('os.command.SequenceCommand');
+goog.declareModuleId('os.command.SequenceCommand');
+
+import AbstractCommandSet from './abstractcommandset.js';
+import EventType from './eventtype.js';
+import State from './state.js';
 
 const Timer = goog.require('goog.Timer');
 const GoogEvent = goog.require('goog.events.Event');
-const AbstractCommandSet = goog.require('os.command.AbstractCommandSet');
-const EventType = goog.require('os.command.EventType');
-const State = goog.require('os.command.State');
 
 const EventTarget = goog.requireType('goog.events.EventTarget');
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -15,7 +16,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  *
  * @implements {ICommand}
  */
-class SequenceCommand extends AbstractCommandSet {
+export default class SequenceCommand extends AbstractCommandSet {
   /**
    * Constructor.
    */
@@ -264,5 +265,3 @@ class SequenceCommand extends AbstractCommandSet {
     }
   }
 }
-
-exports = SequenceCommand;

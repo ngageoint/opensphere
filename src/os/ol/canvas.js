@@ -1,9 +1,10 @@
-goog.module('os.ol.canvas');
+goog.declareModuleId('os.ol.canvas');
+
+import {interpolateEllipse} from '../geo/geo.js';
 
 const GeometryCollection = goog.require('ol.geom.GeometryCollection');
 const Point = goog.require('ol.geom.Point');
 const Polygon = goog.require('ol.geom.Polygon');
-const {interpolateEllipse} = goog.require('os.geo');
 
 
 /**
@@ -14,7 +15,7 @@ const {interpolateEllipse} = goog.require('os.geo');
  * @param {boolean=} opt_showCenter If the center point should be displayed.
  * @return {!(GeometryCollection|Polygon)} The ellipse geometry.
  */
-const createEllipseGeometry = function(center, size, opt_showCenter) {
+export const createEllipseGeometry = function(center, size, opt_showCenter) {
   var geometry;
   var showCenter = !!opt_showCenter;
 
@@ -39,8 +40,4 @@ const createEllipseGeometry = function(center, size, opt_showCenter) {
   }
 
   return geometry;
-};
-
-exports = {
-  createEllipseGeometry
 };

@@ -1,15 +1,17 @@
-goog.module('os.filter.FilterEntry');
+goog.declareModuleId('os.filter.FilterEntry');
+
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import registerClass from '../registerclass.js';
+import PropertyChange from '../ui/filter/propertychange.js';
 
 const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');
 const EventTarget = goog.require('goog.events.EventTarget');
 const {getRandomString} = goog.require('goog.string');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const registerClass = goog.require('os.registerClass');
-const PropertyChange = goog.require('os.ui.filter.PropertyChange');
 
-const IPersistable = goog.requireType('os.IPersistable');
-const IFilterEntry = goog.requireType('os.filter.IFilterEntry');
+const {default: IPersistable} = goog.requireType('os.IPersistable');
+const {default: IFilterEntry} = goog.requireType('os.filter.IFilterEntry');
+const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
 
 
 /**
@@ -17,7 +19,7 @@ const IFilterEntry = goog.requireType('os.filter.IFilterEntry');
  * @implements {IFilterEntry}
  * @unrestricted
  */
-class FilterEntry extends EventTarget {
+export default class FilterEntry extends EventTarget {
   /**
    * Constructor.
    */
@@ -290,7 +292,7 @@ class FilterEntry extends EventTarget {
   }
 
   /**
-   * @param {?Array<os.ogc.FeatureTypeColumn>} columns
+   * @param {?Array<FeatureTypeColumn>} columns
    * @return {boolean}
    */
   matches(columns) {
@@ -348,7 +350,7 @@ class FilterEntry extends EventTarget {
   /**
    * Clones the entry
    *
-   * @return {os.filter.FilterEntry} The new entry
+   * @return {FilterEntry} The new entry
    */
   clone() {
     var conf = this.persist();
@@ -400,6 +402,3 @@ class FilterEntry extends EventTarget {
  */
 FilterEntry.NAME = 'os.filter.FilterEntry';
 registerClass(FilterEntry.NAME, FilterEntry);
-
-
-exports = FilterEntry;

@@ -1,10 +1,11 @@
-goog.module('os.im.mapping.MGRSMapping');
+goog.declareModuleId('os.im.mapping.MGRSMapping');
+
+import {MGRS_REGEXP} from '../../geo/geo.js';
+import BaseMGRSMapping from './location/basemgrsmapping.js';
+import {getItemField} from './mapping.js';
+import MappingRegistry from './mappingregistry.js';
 
 const Point = goog.require('ol.geom.Point');
-const {MGRS_REGEXP} = goog.require('os.geo');
-const {getItemField} = goog.require('os.im.mapping');
-const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
-const BaseMGRSMapping = goog.require('os.im.mapping.location.BaseMGRSMapping');
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -14,7 +15,7 @@ const Feature = goog.requireType('ol.Feature');
  *
  * @extends {BaseMGRSMapping<Feature>}
  */
-class MGRSMapping extends BaseMGRSMapping {
+export default class MGRSMapping extends BaseMGRSMapping {
   /**
    * Constructor.
    */
@@ -57,5 +58,3 @@ MGRSMapping.ID = 'MGRSMapping';
 
 // Register the mapping.
 MappingRegistry.getInstance().registerMapping(MGRSMapping.ID, MGRSMapping);
-
-exports = MGRSMapping;

@@ -1,15 +1,14 @@
 goog.declareModuleId('plugin.im.action.feature');
 
+import DataManager from '../../os/data/datamanager.js';
+import osImplements from '../../os/implements.js';
+import ILayer from '../../os/layer/ilayer.js';
+import MapContainer from '../../os/mapcontainer.js';
 import {getFilterColumns} from '../../os/source/source.js';
+import * as filterAction from '../../os/ui/im/action/filteraction.js';
 import {launchEditFeatureAction} from './ui/index.js';
 
-const MapContainer = goog.require('os.MapContainer');
-const DataManager = goog.require('os.data.DataManager');
-const filterAction = goog.require('os.im.action.filter');
-const osImplements = goog.require('os.implements');
-const ILayer = goog.require('os.layer.ILayer');
-
-const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
 
 
 /**

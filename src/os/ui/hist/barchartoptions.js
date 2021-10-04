@@ -1,4 +1,4 @@
-goog.module('os.ui.hist.BarChartOptions');
+goog.declareModuleId('os.ui.hist.BarChartOptions');
 
 /**
  * @typedef {{
@@ -10,4 +10,4 @@ goog.module('os.ui.hist.BarChartOptions');
  */
 let BarChartOptions;
 
-exports = BarChartOptions;
+export default BarChartOptions;

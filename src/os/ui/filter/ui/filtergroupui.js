@@ -1,10 +1,11 @@
-goog.module('os.ui.filter.ui.FilterGroupUI');
+goog.declareModuleId('os.ui.filter.ui.FilterGroupUI');
 
-const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
-const Module = goog.require('os.ui.Module');
-const FilterEventType = goog.require('os.ui.filter.FilterEventType');
+import BaseFilterManager from '../../../filter/basefiltermanager.js';
+import Module from '../../module.js';
+import FilterEventType from '../filtereventtype.js';
 
-const FilterEvent = goog.requireType('os.ui.filter.FilterEvent');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
+const {default: FilterEvent} = goog.requireType('os.ui.filter.FilterEvent');
 
 
 /**
@@ -12,7 +13,7 @@ const FilterEvent = goog.requireType('os.ui.filter.FilterEvent');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<span class="float-right">' +
@@ -28,7 +29,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'filtergroupui';
+export const directiveTag = 'filtergroupui';
 
 /**
  * Add the directive to the os.ui module
@@ -39,7 +40,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for selected/highlighted node UI
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -55,7 +56,7 @@ class Controller {
 
     var fqm = BaseFilterManager.getInstance();
     fqm.listen(FilterEventType.GROUPING_CHANGED, this.onGroupChanged_, false, this);
-    var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
+    var node = /** @type {ITreeNode} */ (this.scope_['item']);
 
     this['group'] = fqm.getGrouping(node.getId());
     this['groups'] = Controller.GROUPS;
@@ -80,7 +81,7 @@ class Controller {
    * @private
    */
   onGroupChanged_(event) {
-    var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
+    var node = /** @type {ITreeNode} */ (this.scope_['item']);
 
     if (event.key == node.getId()) {
       var fqm = BaseFilterManager.getInstance();
@@ -95,7 +96,7 @@ class Controller {
    */
   onGroup() {
     var fqm = BaseFilterManager.getInstance();
-    var node = /** @type {os.structs.ITreeNode} */ (this.scope_['item']);
+    var node = /** @type {ITreeNode} */ (this.scope_['item']);
     fqm.setGrouping(node.getId(), /** @type {boolean} */ (this['group']));
   }
 }
@@ -108,10 +109,4 @@ class Controller {
 Controller.GROUPS = {
   'Any': false,
   'All': true
-};
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
 };

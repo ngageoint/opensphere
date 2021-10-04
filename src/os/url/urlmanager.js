@@ -1,7 +1,8 @@
-goog.module('os.url.UrlManager');
+goog.declareModuleId('os.url.UrlManager');
+
+import UrlEvent from './urlevent.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
-const UrlEvent = goog.require('os.url.UrlEvent');
 
 
 /**
@@ -9,7 +10,7 @@ const UrlEvent = goog.require('os.url.UrlEvent');
  * dragging or dropping a URL or a tab in the window.  Plugins can register handlers with
  * the URL manager that are called when the URL that is dropped matches particular criteria.
  */
-class UrlManager extends EventTarget {
+export default class UrlManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -161,6 +162,3 @@ class UrlManager extends EventTarget {
 }
 
 goog.addSingletonGetter(UrlManager);
-
-
-exports = UrlManager;

@@ -1,24 +1,25 @@
 goog.declareModuleId('plugin.im.action.feature.StyleAction');
 
+import * as osColor from '../../os/color.js';
 import {getLayer} from '../../os/feature/feature.js';
+import AbstractImportAction from '../../os/im/action/abstractimportaction.js';
+import FilterActionEntry from '../../os/im/action/filteractionentry.js';
+import osImplements from '../../os/implements.js';
+import ILegendRenderer from '../../os/legend/ilegendrenderer.js';
+import * as legend from '../../os/legend/legend.js';
+import * as osObject from '../../os/object/object.js';
 import * as osStyle from '../../os/style/style.js';
+import StyleField from '../../os/style/stylefield.js';
+import StyleType from '../../os/style/styletype.js';
+import * as kml from '../../os/ui/file/kml/kml.js';
+import * as osXml from '../../os/xml.js';
 import {StyleType as FAStyleType} from './featureaction.js';
 import {directiveTag as configUi} from './ui/featurestyleactionconfig.js';
 
 const math = goog.require('goog.math');
-const osColor = goog.require('os.color');
-const AbstractImportAction = goog.require('os.im.action.AbstractImportAction');
-const FilterActionEntry = goog.require('os.im.action.FilterActionEntry');
-const osImplements = goog.require('os.implements');
-const legend = goog.require('os.legend');
-const ILegendRenderer = goog.require('os.legend.ILegendRenderer');
-const osObject = goog.require('os.object');
-const StyleField = goog.require('os.style.StyleField');
-const StyleType = goog.require('os.style.StyleType');
-const kml = goog.require('os.ui.file.kml');
-const osXml = goog.require('os.xml');
 
-const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
+const {default: ImportActionCallbackConfig} = goog.requireType('os.im.action.ImportActionCallbackConfig');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**
@@ -161,7 +162,7 @@ export default class StyleAction extends AbstractImportAction {
 
     var layer = getLayer(items[0]);
     if (layer) {
-      var source = /** @type {os.source.Vector} */ (layer.getSource());
+      var source = /** @type {VectorSource} */ (layer.getSource());
       var color = (this.styleConfig['stroke']) ? this.styleConfig['stroke']['color'] : null;
 
       if (source && color) {
@@ -390,9 +391,9 @@ export default class StyleAction extends AbstractImportAction {
           // scale with font size
           if (geomShape == osStyle.ShapeType.ICON) {
             // icons are normalized to 32px, so scale based on that
-            osObject.set(config, ['image', 'scale'], options.fontSize / 32);
+            osObject.setValue(config, ['image', 'scale'], options.fontSize / 32);
           } else {
-            osObject.set(config, ['image', 'radius'], Math.round(options.fontSize / 3));
+            osObject.setValue(config, ['image', 'radius'], Math.round(options.fontSize / 3));
           }
         }
 

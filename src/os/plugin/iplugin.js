@@ -1,4 +1,4 @@
-goog.module('os.plugin.IPlugin');
+goog.declareModuleId('os.plugin.IPlugin');
 
 const Promise = goog.requireType('goog.Promise');
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
@@ -10,7 +10,7 @@ const IDisposable = goog.requireType('goog.disposable.IDisposable');
  * @extends {IDisposable}
  * @interface
  */
-class IPlugin {
+export default class IPlugin {
   /**
    * @return {!string} The unique ID of the plugin.
    */
@@ -30,5 +30,3 @@ class IPlugin {
    */
   init() {}
 }
-
-exports = IPlugin;

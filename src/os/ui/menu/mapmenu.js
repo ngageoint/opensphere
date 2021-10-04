@@ -1,24 +1,25 @@
-goog.module('os.ui.menu.map');
+goog.declareModuleId('os.ui.menu.map');
+
+import EventType from '../../action/eventtype.js';
+import DisplaySetting from '../../config/displaysetting.js';
+import Settings from '../../config/settings.js';
+import DataManager from '../../data/datamanager.js';
+import * as dispatcher from '../../dispatcher.js';
+import * as legend from '../../legend/legend.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import {hasTerrain} from '../../map/terrain.js';
+import {Map as MapKeys} from '../../metrics/metricskeys.js';
+import VectorSource from '../../source/vectorsource.js';
+import UIEvent from '../events/uievent.js';
+import UIEventType from '../events/uieventtype.js';
+import * as ConfirmColorUI from '../window/confirmcolor.js';
+import Menu from './menu.js';
+import MenuItem from './menuitem.js';
+import MenuItemType from './menuitemtype.js';
 
 const googDispose = goog.require('goog.dispose');
-const dispatcher = goog.require('os.Dispatcher');
-const EventType = goog.require('os.action.EventType');
-const DisplaySetting = goog.require('os.config.DisplaySetting');
-const Settings = goog.require('os.config.Settings');
-const DataManager = goog.require('os.data.DataManager');
-const legend = goog.require('os.legend');
-const {getMapContainer} = goog.require('os.map.instance');
-const {hasTerrain} = goog.require('os.map.terrain');
-const {Map: MapKeys} = goog.require('os.metrics.keys');
-const VectorSource = goog.require('os.source.Vector');
-const UIEvent = goog.require('os.ui.events.UIEvent');
-const UIEventType = goog.require('os.ui.events.UIEventType');
-const Menu = goog.require('os.ui.menu.Menu');
-const MenuItem = goog.require('os.ui.menu.MenuItem');
-const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const ConfirmColorUI = goog.require('os.ui.window.ConfirmColorUI');
 
-const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 
 
 /**
@@ -30,13 +31,13 @@ let MENU = undefined;
  * Get the menu.
  * @return {Menu<ol.Coordinate>|undefined}
  */
-const getMenu = () => MENU;
+export const getMenu = () => MENU;
 
 /**
  * Set the menu.
  * @param {Menu<ol.Coordinate>|undefined} menu The menu.
  */
-const setMenu = (menu) => {
+export const setMenu = (menu) => {
   MENU = menu;
 };
 
@@ -44,7 +45,7 @@ const setMenu = (menu) => {
  * Sort value used for each map menu group.
  * @enum {number}
  */
-const GroupSort = {
+export const GroupSort = {
   MAP: 0,
   OPTIONS: 5,
   COORDINATE: 10
@@ -54,7 +55,7 @@ const GroupSort = {
  * Group labels for the map menu.
  * @enum {string}
  */
-const GroupLabel = {
+export const GroupLabel = {
   MAP: 'Map',
   OPTIONS: 'Options',
   COORDINATE: 'Coordinate'
@@ -63,7 +64,7 @@ const GroupLabel = {
 /**
  * Set up the menu
  */
-const setup = function() {
+export const setup = function() {
   if (MENU) {
     // already created
     return;
@@ -156,7 +157,7 @@ const setup = function() {
 /**
  * Disposes map menu
  */
-const dispose = function() {
+export const dispose = function() {
   googDispose(MENU);
   MENU = undefined;
 };
@@ -167,7 +168,7 @@ const dispose = function() {
  * @param {ol.Coordinate} coord The coordinate.
  * @this {MenuItem}
  */
-const showIfHasCoordinate = function(coord) {
+export const showIfHasCoordinate = function(coord) {
   this.visible = Boolean(coord && coord.length > 1);
 };
 
@@ -176,7 +177,7 @@ const showIfHasCoordinate = function(coord) {
  *
  * @this {MenuItem}
  */
-const updateBGIcon = function() {
+export const updateBGIcon = function() {
   var color = Settings.getInstance().get(DisplaySetting.BG_COLOR, '#000000');
   this.icons[0] = '<i class="fa fa-fw fa-tint" style="color:' + color + '"></i>';
 };
@@ -184,7 +185,7 @@ const updateBGIcon = function() {
 /**
  * Show the map legend.
  */
-const showLegend = function() {
+export const showLegend = function() {
   var event = new UIEvent(UIEventType.TOGGLE_UI, legend.ID, true, null, MapKeys.SHOW_LEGEND);
   dispatcher.getInstance().dispatchEvent(event);
 };
@@ -224,7 +225,7 @@ const onColorChosen = function(color) {
  *
  * @this {MenuItem}
  */
-const updateSkyItem = function() {
+export const updateSkyItem = function() {
   this.visible = getMapContainer().is3DEnabled();
   this.selected = !!Settings.getInstance().get(DisplaySetting.ENABLE_SKY, false);
 };
@@ -235,7 +236,7 @@ const updateSkyItem = function() {
  * @param {MenuEvent<ol.Coordinate>} event The event.
  * @this {MenuItem}
  */
-const onSky = function(event) {
+export const onSky = function(event) {
   Settings.getInstance().set(DisplaySetting.ENABLE_SKY, !this.selected);
 };
 
@@ -244,7 +245,7 @@ const onSky = function(event) {
  *
  * @this {MenuItem}
  */
-const updateTerrainItem = function() {
+export const updateTerrainItem = function() {
   this.visible = getMapContainer().is3DEnabled() && hasTerrain();
   this.selected = !!Settings.getInstance().get(DisplaySetting.ENABLE_TERRAIN, false);
 };
@@ -255,22 +256,6 @@ const updateTerrainItem = function() {
  * @param {MenuEvent<ol.Coordinate>} event The event.
  * @this {MenuItem}
  */
-const onTerrain = function(event) {
+export const onTerrain = function(event) {
   Settings.getInstance().set(DisplaySetting.ENABLE_TERRAIN, !this.selected);
-};
-
-exports = {
-  getMenu,
-  setMenu,
-  GroupSort,
-  GroupLabel,
-  setup,
-  dispose,
-  showIfHasCoordinate,
-  updateBGIcon,
-  showLegend,
-  updateSkyItem,
-  onSky,
-  updateTerrainItem,
-  onTerrain
 };

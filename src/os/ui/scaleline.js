@@ -1,14 +1,14 @@
-goog.module('os.ui.ScaleLine');
+goog.declareModuleId('os.ui.ScaleLine');
 
-const Module = goog.require('os.ui.Module');
-const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
-const unitMenu = goog.require('os.ui.menu.unit');
+import MenuButtonCtrl from './menu/menubutton.js';
+import * as unitMenu from './menu/unitmenu.js';
+import Module from './module.js';
 
 
 /**
  * Controller for the scale line directive.
  */
-class Controller extends MenuButtonCtrl {
+export class Controller extends MenuButtonCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -28,7 +28,7 @@ class Controller extends MenuButtonCtrl {
  * The scale line directive.
  * @return {angular.Directive}
  */
-const directive = function() {
+export const directive = function() {
   return {
     restrict: 'E',
     replace: true,
@@ -45,15 +45,9 @@ const directive = function() {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'scale-line';
+export const directiveTag = 'scale-line';
 
 /**
  * Add the directive to the module.
  */
 Module.directive('scaleLine', [directive]);
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

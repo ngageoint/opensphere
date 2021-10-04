@@ -1,20 +1,21 @@
-goog.module('os.ui.geo.RingOptionsUI');
+goog.declareModuleId('os.ui.geo.RingOptionsUI');
+
+import BearingType from '../../bearing/bearingtype.js';
+import {precision, roundWithPrecision} from '../../math/math.js';
+import Units from '../../math/units.js';
+import {unsafeClone} from '../../object/object.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {getRingTitle} from './geo.js';
 
 const {peek} = goog.require('goog.array');
-const {ROOT} = goog.require('os');
-const BearingType = goog.require('os.bearing.BearingType');
-const {precision, roundWithPrecision} = goog.require('os.math');
-const Units = goog.require('os.math.Units');
-const {unsafeClone} = goog.require('os.object');
-const Module = goog.require('os.ui.Module');
-const {getRingTitle} = goog.require('os.ui.geo');
 
 
 /**
  * The ringoptions directive
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -29,7 +30,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'ringoptions';
+export const directiveTag = 'ringoptions';
 
 /**
  * Add the directive to the module.
@@ -40,7 +41,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the ringoptions directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -247,9 +248,3 @@ class Controller {
     }
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

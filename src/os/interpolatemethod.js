@@ -1,10 +1,12 @@
-goog.module('os.interpolate.Method');
+goog.declareModuleId('os.interpolate.Method');
 
 /**
  * @enum {string}
  */
-exports = {
+const Method = {
   GEODESIC: 'geodesic',
   RHUMB: 'rhumb',
   NONE: 'none'
 };
+
+export default Method;

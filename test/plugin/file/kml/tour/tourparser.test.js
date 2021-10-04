@@ -9,7 +9,7 @@ goog.require('plugin.file.kml.tour.parseTour');
 
 describe('plugin.file.kml.tour.parseTour', function() {
   const xml = goog.module.get('ol.xml');
-  const FlightMode = goog.module.get('os.map.FlightMode');
+  const {default: FlightMode} = goog.module.get('os.map.FlightMode');
   const {default: FlyTo} = goog.module.get('plugin.file.kml.tour.FlyTo');
   const {default: SoundCue} = goog.module.get('plugin.file.kml.tour.SoundCue');
   const {default: TourControl} = goog.module.get('plugin.file.kml.tour.TourControl');

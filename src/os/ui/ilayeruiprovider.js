@@ -1,11 +1,11 @@
-goog.module('os.ui.ILayerUIProvider');
+goog.declareModuleId('os.ui.ILayerUIProvider');
 
 /**
  * An interface for layer ui
  *
  * @interface
  */
-class ILayerUIProvider {
+export default class ILayerUIProvider {
   /**
    * Gets the layer controls UI
    * @param {*} item
@@ -19,5 +19,3 @@ class ILayerUIProvider {
  * @const {string}
  */
 ILayerUIProvider.ID = 'os.ui.ILayerUIProvider';
-
-exports = ILayerUIProvider;

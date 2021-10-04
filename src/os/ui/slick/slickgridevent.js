@@ -1,10 +1,10 @@
-goog.module('os.ui.slick.SlickGridEvent');
+goog.declareModuleId('os.ui.slick.SlickGridEvent');
 
 /**
  * Angular events used by the slickgrid directive.
  * @enum {string}
  */
-exports = {
+const SlickGridEvent = {
   BEFORE_CELL_EDITED: 'slickgrid.beforeCellEdited',
   CELL_CHANGED: 'slickgrid.cellChanged',
   CELL_EDITOR_DESTROYED: 'slickgrid.cellEditorDestroyed',
@@ -21,3 +21,5 @@ exports = {
   SORT_SELECTED: 'slickgrid.sortSelected',
   SORT_CHANGED: 'slickgrid.sortChanged'
 };
+
+export default SlickGridEvent;

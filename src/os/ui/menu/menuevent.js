@@ -1,4 +1,4 @@
-goog.module('os.ui.menu.MenuEvent');
+goog.declareModuleId('os.ui.menu.MenuEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
@@ -8,7 +8,7 @@ const GoogEventId = goog.requireType('goog.events.EventId');
 /**
  * @template T
  */
-class MenuEvent extends GoogEvent {
+export default class MenuEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {!(string|GoogEventId)} type Event type.
@@ -34,5 +34,3 @@ class MenuEvent extends GoogEvent {
     return this.context_;
   }
 }
-
-exports = MenuEvent;

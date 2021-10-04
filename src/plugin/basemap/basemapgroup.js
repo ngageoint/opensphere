@@ -1,8 +1,7 @@
 goog.declareModuleId('plugin.basemap.Group');
 
+import LayerGroup from '../../os/layer/group.js';
 import {LAYER_TYPE, isBaseMap} from './basemap.js';
-
-const LayerGroup = goog.require('os.layer.Group');
 
 /**
  * Basemap layer group.

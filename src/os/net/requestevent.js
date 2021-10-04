@@ -1,11 +1,11 @@
-goog.module('os.net.RequestEvent');
+goog.declareModuleId('os.net.RequestEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
 
 /**
  */
-class RequestEvent extends GoogEvent {
+export default class RequestEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {!string} type
@@ -20,5 +20,3 @@ class RequestEvent extends GoogEvent {
     this.url = url;
   }
 }
-
-exports = RequestEvent;

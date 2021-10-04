@@ -1,6 +1,6 @@
-goog.module('os.ui.ogc.IFeatureTypeDescriptor');
+goog.declareModuleId('os.ui.ogc.IFeatureTypeDescriptor');
 
-const IFeatureType = goog.requireType('os.ogc.IFeatureType');
+const {default: IFeatureType} = goog.requireType('os.ogc.IFeatureType');
 
 
 /**
@@ -8,7 +8,7 @@ const IFeatureType = goog.requireType('os.ogc.IFeatureType');
  *
  * @interface
  */
-class IFeatureTypeDescriptor {
+export default class IFeatureTypeDescriptor {
   /**
    * Get the FeatureType.
    * @return {IFeatureType}
@@ -27,5 +27,3 @@ class IFeatureTypeDescriptor {
  * @const
  */
 IFeatureTypeDescriptor.ID = 'os.ui.ogc.IFeatureTypeDescriptor';
-
-exports = IFeatureTypeDescriptor;

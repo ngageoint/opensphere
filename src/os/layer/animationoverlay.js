@@ -1,15 +1,16 @@
-goog.module('os.layer.AnimationOverlay');
+goog.declareModuleId('os.layer.AnimationOverlay');
+
+import {getMapContainer} from '../map/mapinstance.js';
+import AnimationVector from './animationvector.js';
 
 const Disposable = goog.require('goog.Disposable');
 const {clone} = goog.require('goog.array');
 const OLVectorSource = goog.require('ol.source.Vector');
-const AnimationVector = goog.require('os.layer.AnimationVector');
-const {getMapContainer} = goog.require('os.map.instance');
 
 const Feature = goog.requireType('ol.Feature');
 const OLVectorLayer = goog.requireType('ol.layer.Vector');
 const Style = goog.requireType('ol.style.Style');
-const AnimationOverlayOptions = goog.requireType('os.layer.AnimationOverlayOptions');
+const {default: AnimationOverlayOptions} = goog.requireType('os.layer.AnimationOverlayOptions');
 
 
 /**
@@ -17,7 +18,7 @@ const AnimationOverlayOptions = goog.requireType('os.layer.AnimationOverlayOptio
  * This dramatically increases animation performance by reducing the overhead involved in changing which features are
  * rendered.
  */
-class AnimationOverlay extends Disposable {
+export default class AnimationOverlay extends Disposable {
   /**
    * Constructor.
    * @param {AnimationOverlayOptions=} opt_options Options.
@@ -171,5 +172,3 @@ class AnimationOverlay extends Disposable {
     }
   }
 }
-
-exports = AnimationOverlay;

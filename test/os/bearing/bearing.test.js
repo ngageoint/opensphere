@@ -10,10 +10,10 @@ goog.require('os.osasm.wait');
 
 describe('os.bearing', function() {
   const bearing = goog.module.get('os.bearing');
-  const BearingSettingsKeys = goog.module.get('os.bearing.BearingSettingsKeys');
-  const BearingType = goog.module.get('os.bearing.BearingType');
-  const Settings = goog.module.get('os.config.Settings');
-  const Method = goog.module.get('os.interpolate.Method');
+  const {default: BearingSettingsKeys} = goog.module.get('os.bearing.BearingSettingsKeys');
+  const {default: BearingType} = goog.module.get('os.bearing.BearingType');
+  const {default: Settings} = goog.module.get('os.config.Settings');
+  const {default: Method} = goog.module.get('os.interpolate.Method');
 
   // for the magnetic bearing calculations, the date matters, so we use this static date, otherwise the result
   // values will drift over time as the library simply uses new Date() otherwise

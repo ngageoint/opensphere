@@ -1,11 +1,13 @@
-goog.module('os.ex.ZipExporter');
+goog.declareModuleId('os.ex.ZipExporter');
+
+import AlertEventSeverity from '../alert/alerteventseverity.js';
+import AlertManager from '../alert/alertmanager.js';
+import EventType from '../events/eventtype.js';
+import AbstractExporter from './abstractexporter.js';
 
 const GoogEvent = goog.require('goog.events.Event');
 const log = goog.require('goog.log');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const EventType = goog.require('os.events.EventType');
-const AbstractExporter = goog.require('os.ex.AbstractExporter');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
@@ -14,7 +16,7 @@ const AbstractExporter = goog.require('os.ex.AbstractExporter');
  * @extends {AbstractExporter<T>}
  * @template T
  */
-class ZipExporter extends AbstractExporter {
+export default class ZipExporter extends AbstractExporter {
   /**
    * Constructor.
    */
@@ -31,7 +33,7 @@ class ZipExporter extends AbstractExporter {
 
     /**
      * The files to add to the zip
-     * @type {!Array<!os.file.File>}
+     * @type {!Array<!OSFile>}
      * @protected
      */
     this.files = [];
@@ -141,7 +143,7 @@ class ZipExporter extends AbstractExporter {
   /**
    * Adds a file to the files array.
    *
-   * @param {!os.file.File} file The file to add
+   * @param {!OSFile} file The file to add
    */
   addFile(file) {
     this.files.push(file);
@@ -150,7 +152,7 @@ class ZipExporter extends AbstractExporter {
   /**
    * Returns the files array.
    *
-   * @return {Array<!os.file.File>}
+   * @return {Array<!OSFile>}
    */
   getFiles() {
     return this.files;
@@ -215,5 +217,3 @@ class ZipExporter extends AbstractExporter {
  * @type {goog.log.Logger}
  */
 const logger = log.getLogger('os.ex.ZipExporter');
-
-exports = ZipExporter;

@@ -4,10 +4,11 @@ goog.require('goog.net.EventType');
 goog.require('os.bearing');
 goog.require('os.net.Request');
 
+
 beforeEach(function() {
   const NetEventType = goog.module.get('goog.net.EventType');
   const bearing = goog.module.get('os.bearing');
-  const Request = goog.module.get('os.net.Request');
+  const {default: Request} = goog.module.get('os.net.Request');
 
   if (!bearing.isGeomagLoaded()) {
     runs(function() {

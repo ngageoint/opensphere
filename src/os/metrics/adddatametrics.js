@@ -1,12 +1,12 @@
-goog.module('os.metrics.AddDataMetrics');
+goog.declareModuleId('os.metrics.AddDataMetrics');
 
-const {AddData} = goog.require('os.metrics.keys');
-const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');
+import MetricsPlugin from '../ui/metrics/metricsplugin.js';
+import {AddData} from './metricskeys.js';
 
 
 /**
  */
-class AddDataMetrics extends MetricsPlugin {
+export default class AddDataMetrics extends MetricsPlugin {
   /**
    * Constructor.
    */
@@ -62,5 +62,3 @@ class AddDataMetrics extends MetricsPlugin {
     });
   }
 }
-
-exports = AddDataMetrics;

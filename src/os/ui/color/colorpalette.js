@@ -1,11 +1,12 @@
-goog.module('os.ui.color.ColorPaletteUI');
+goog.declareModuleId('os.ui.color.ColorPaletteUI');
+
+import {toHexString} from '../../color.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import ColorPaletteEventType from './colorpaletteeventtype.js';
 
 const {getViewportSize} = goog.require('goog.dom');
 const ColorPicker = goog.require('goog.ui.ColorPicker');
-const {ROOT} = goog.require('os');
-const {toHexString} = goog.require('os.color');
-const Module = goog.require('os.ui.Module');
-const ColorPaletteEventType = goog.require('os.ui.color.ColorPaletteEventType');
 
 
 /**
@@ -13,7 +14,7 @@ const ColorPaletteEventType = goog.require('os.ui.color.ColorPaletteEventType');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -32,7 +33,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'colorpalette';
+export const directiveTag = 'colorpalette';
 
 /**
  * Add the directive to the module.
@@ -43,7 +44,7 @@ Module.directive(directiveTag, [directive]);
  * Controller function for the colorpalette directive
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -152,9 +153,3 @@ class Controller {
     return opt_name ? (opt_name + '.' + baseType) : baseType;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

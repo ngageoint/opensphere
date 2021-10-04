@@ -1,12 +1,11 @@
 goog.declareModuleId('plugin.suncalc.LightStripSettingsUI');
 
+import settings from '../../os/config/settings.js';
 import {ROOT} from '../../os/os.js';
+import Module from '../../os/ui/module.js';
 import {SettingKey, duskMode} from './suncalc.js';
 
 const EventType = goog.require('goog.events.EventType');
-const settings = goog.require('os.config.Settings');
-const Module = goog.require('os.ui.Module');
-
 
 
 /**

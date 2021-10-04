@@ -1,6 +1,6 @@
-goog.module('os.im.mapping.IMapping');
+goog.declareModuleId('os.im.mapping.IMapping');
 
-const IPersistable = goog.require('os.IPersistable'); // eslint-disable-line
+import IPersistable from '../../ipersistable.js';// eslint-disable-line
 
 
 /**
@@ -12,7 +12,7 @@ const IPersistable = goog.require('os.IPersistable'); // eslint-disable-line
  * @interface
  * @template T,S
  */
-class IMapping {
+export default class IMapping {
   /**
    * Constructor.
    */
@@ -95,5 +95,3 @@ class IMapping {
    */
   testField(value) {}
 }
-
-exports = IMapping;

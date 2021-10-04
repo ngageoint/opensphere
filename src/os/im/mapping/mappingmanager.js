@@ -1,15 +1,16 @@
-goog.module('os.im.mapping.MappingManager');
+goog.declareModuleId('os.im.mapping.MappingManager');
+
+import {createElement} from '../../xml.js';
+import {DEFAULT_SCORETYPE, reduceMappings} from './mapping.js';
+import MappingRegistry from './mappingregistry.js';
 
 const {bucket} = goog.require('goog.array');
 const {expose} = goog.require('goog.debug');
 const log = goog.require('goog.log');
-const {DEFAULT_SCORETYPE, reduceMappings} = goog.require('os.im.mapping');
-const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
-const {createElement} = goog.require('os.xml');
 
 const Logger = goog.requireType('goog.log.Logger');
-const IXmlPersistable = goog.requireType('os.IXmlPersistable');
-const IMapping = goog.requireType('os.im.mapping.IMapping');
+const {default: IXmlPersistable} = goog.requireType('os.IXmlPersistable');
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
 
 
 /**
@@ -17,7 +18,7 @@ const IMapping = goog.requireType('os.im.mapping.IMapping');
  *
  * @template T
  */
-class MappingManager {
+export default class MappingManager {
   /**
    * Constructor.
    */
@@ -254,5 +255,3 @@ let instance;
  * @type {Logger}
  */
 const logger = log.getLogger('os.im.mapping.MappingManager');
-
-exports = MappingManager;

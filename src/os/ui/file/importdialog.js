@@ -1,28 +1,28 @@
-goog.module('os.ui.file.ImportDialogUI');
+goog.declareModuleId('os.ui.file.ImportDialogUI');
 
-goog.require('os.ui.popover.PopoverUI');
+import '../popover/popover.js';
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import EventType from '../../events/eventtype.js';
+import {createFromFile} from '../../file/index.js';
+import {ROOT} from '../../os.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import * as osWindow from '../window.js';
+import WindowEventType from '../windoweventtype.js';
+import windowSelector from '../windowselector.js';
 
 const dom = goog.require('goog.dom');
 const TagName = goog.require('goog.dom.TagName');
 const googEvents = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
-const {ROOT} = goog.require('os');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const EventType = goog.require('os.events.EventType');
-const {createFromFile} = goog.require('os.file');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const osWindow = goog.require('os.ui.window');
-const windowSelector = goog.require('os.ui.windowSelector');
 
 const Logger = goog.requireType('goog.log.Logger');
-const OSFile = goog.requireType('os.file.File');
-const IFileMethod = goog.requireType('os.file.IFileMethod');
-const ImportMethod = goog.requireType('os.ui.file.method.ImportMethod');
-const ImportManager = goog.requireType('os.ui.im.ImportManager');
+const {default: OSFile} = goog.requireType('os.file.File');
+const {default: IFileMethod} = goog.requireType('os.file.IFileMethod');
+const {default: ImportMethod} = goog.requireType('os.ui.file.method.ImportMethod');
+const {default: ImportManager} = goog.requireType('os.ui.im.ImportManager');
 
 
 /**
@@ -30,7 +30,7 @@ const ImportManager = goog.requireType('os.ui.im.ImportManager');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -49,7 +49,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'importdialog';
+export const directiveTag = 'importdialog';
 
 /**
  * Add the directive to the ui module
@@ -60,7 +60,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for the file/url import dialog
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -385,9 +385,3 @@ class Controller {
  * @type {Logger}
  */
 const logger = log.getLogger('os.ui.file.ImportDialogCtrl');
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

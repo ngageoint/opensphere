@@ -1,32 +1,33 @@
-goog.module('os.map.interaction');
+goog.declareModuleId('os.map.interaction');
+
+import ContextMenu from '../interaction/contextmenuinteraction.js';
+import DoubleClick from '../interaction/doubleclickinteraction.js';
+import DoubleClickZoom from '../interaction/doubleclickzoominteraction.js';
+import DragBox from '../interaction/dragboxinteraction.js';
+import DragCircle from '../interaction/dragcircleinteraction.js';
+import DragZoom from '../interaction/dragzoominteraction.js';
+import DrawLine from '../interaction/drawlineinteraction.js';
+import DrawPolygon from '../interaction/drawpolygoninteraction.js';
+import Hover from '../interaction/hoverinteraction.js';
+import KeyboardPan from '../interaction/keyboardpaninteraction.js';
+import KeyboardTiltRotate from '../interaction/keyboardtiltrotateinteraction.js';
+import KeyboardZoom from '../interaction/keyboardzoominteraction.js';
+import Measure from '../interaction/measureinteraction.js';
+import MouseRotate from '../interaction/mouserotateinteraction.js';
+import MouseZoom from '../interaction/mousezoominteraction.js';
+import PinchZoom from '../interaction/pinchzoominteraction.js';
+import Reset from '../interaction/resetinteraction.js';
+import Select from '../interaction/selectinteraction.js';
+import * as mapMenu from '../ui/menu/mapmenu.js';
+import * as spatial from '../ui/menu/spatial.js';
+import MouseWheelZoom from '../ui/ol/interaction/mousewheelzoominteraction.js';
 
 const asserts = goog.require('goog.asserts');
 const Collection = goog.require('ol.Collection');
 const DragPan = goog.require('ol.interaction.DragPan');
-const ContextMenu = goog.require('os.interaction.ContextMenu');
-const DoubleClick = goog.require('os.interaction.DoubleClick');
-const DoubleClickZoom = goog.require('os.interaction.DoubleClickZoom');
-const DragBox = goog.require('os.interaction.DragBox');
-const DragCircle = goog.require('os.interaction.DragCircle');
-const DragZoom = goog.require('os.interaction.DragZoom');
-const DrawLine = goog.require('os.interaction.DrawLine');
-const DrawPolygon = goog.require('os.interaction.DrawPolygon');
-const Hover = goog.require('os.interaction.Hover');
-const KeyboardPan = goog.require('os.interaction.KeyboardPan');
-const KeyboardTiltRotate = goog.require('os.interaction.KeyboardTiltRotate');
-const KeyboardZoom = goog.require('os.interaction.KeyboardZoom');
-const Measure = goog.require('os.interaction.Measure');
-const MouseRotate = goog.require('os.interaction.MouseRotate');
-const MouseZoom = goog.require('os.interaction.MouseZoom');
-const PinchZoom = goog.require('os.interaction.PinchZoom');
-const Reset = goog.require('os.interaction.Reset');
-const Select = goog.require('os.interaction.Select');
-const mapMenu = goog.require('os.ui.menu.map');
-const spatial = goog.require('os.ui.menu.spatial');
-const MouseWheelZoom = goog.require('os.ui.ol.interaction.MouseWheelZoom');
 
 const interaction = goog.requireType('ol.interaction');
-const ContextMenuOptions = goog.requireType('os.ui.ol.interaction.ContextMenuOptions');
+const {default: ContextMenuOptions} = goog.requireType('os.ui.ol.interaction.ContextMenuOptions');
 
 
 /**
@@ -34,7 +35,7 @@ const ContextMenuOptions = goog.requireType('os.ui.ol.interaction.ContextMenuOpt
  *
  * @return {Collection}
  */
-const getInteractions = function() {
+export const getInteractions = function() {
   // interaction to use ctrl+drag for zooming
   var ctrlZoom = new DragZoom();
 
@@ -127,8 +128,4 @@ const getInteractions = function() {
   ]);
 
   return interactions;
-};
-
-exports = {
-  getInteractions
 };

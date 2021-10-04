@@ -1,12 +1,12 @@
-goog.module('os.alert.Alert');
+goog.declareModuleId('os.alert.Alert');
 
-const AlertEventSeverity = goog.requireType('os.alert.AlertEventSeverity');
+const {default: AlertEventSeverity} = goog.requireType('os.alert.AlertEventSeverity');
 
 
 /**
  * Object to carry around alert details.
  */
-class Alert {
+export default class Alert {
   /**
    * @param {string} message The alert to send and add to the window
    * @param {AlertEventSeverity=} opt_severity Severity of the event, defaults to error
@@ -43,5 +43,3 @@ class Alert {
     return this.severity_;
   }
 }
-
-exports = Alert;

@@ -1,16 +1,15 @@
-goog.module('os.ui.wiz.OptionsStepUI');
+goog.declareModuleId('os.ui.wiz.OptionsStepUI');
 
-goog.require('os.ui.color.ColorPickerUI');
-goog.require('os.ui.icon.IconPickerUI');
-goog.require('os.ui.util.ValidationMessageUI');
-
-const {ROOT} = goog.require('os');
-const {getLocalUrl} = goog.require('os.file');
-const FileStorage = goog.require('os.file.FileStorage');
-const {ShapeType} = goog.require('os.style');
-const {GOOGLE_EARTH_ICON_SET, replaceGoogleUri, getDefaultIcon} = goog.require('os.ui.file.kml');
-const Module = goog.require('os.ui.Module');
-const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
+import '../color/colorpicker.js';
+import '../icon/iconpicker.js';
+import '../util/validationmessage.js';
+import FileStorage from '../../file/filestorage.js';
+import {getLocalUrl} from '../../file/index.js';
+import {ROOT} from '../../os.js';
+import {ShapeType} from '../../style/style.js';
+import {GOOGLE_EARTH_ICON_SET, replaceGoogleUri, getDefaultIcon} from '../file/kml/kml.js';
+import Module from '../module.js';
+import WizardStepEvent from './step/wizardstepevent.js';
 
 
 /**
@@ -18,7 +17,7 @@ const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   templateUrl: ROOT + 'views/wiz/optionsstep.html',
@@ -26,12 +25,11 @@ const directive = () => ({
   controllerAs: 'optionsStep'
 });
 
-
 /**
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'optionsstep';
+export const directiveTag = 'optionsstep';
 
 
 /**
@@ -44,7 +42,7 @@ Module.directive('optionsstep', [directive]);
  * Controller for the import wizard options step
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -154,9 +152,3 @@ class Controller {
     this['showIcon'] = this.scope_['config']['shapeName'] == ShapeType.ICON;
   }
 }
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

@@ -1,15 +1,15 @@
-goog.module('os.data.groupby.FavoriteGroupBy');
+goog.declareModuleId('os.data.groupby.FavoriteGroupBy');
 
-const DataManager = goog.require('os.data.DataManager');
-const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
-const FavoriteManager = goog.require('os.user.settings.FavoriteManager');
+import SlickTreeNode from '../../ui/slick/slicktreenode.js';
+import FavoriteManager from '../../user/settings/favoritemanager.js';
+import DataManager from '../datamanager.js';
+import BaseGroupBy from './basegroupby.js';
 
 
 /**
  * Groups nodes by those tagged as a favorite
  */
-class FavoriteGroupBy extends BaseGroupBy {
+export default class FavoriteGroupBy extends BaseGroupBy {
   /**
    * Constructor.
    */
@@ -55,5 +55,3 @@ class FavoriteGroupBy extends BaseGroupBy {
     return group;
   }
 }
-
-exports = FavoriteGroupBy;

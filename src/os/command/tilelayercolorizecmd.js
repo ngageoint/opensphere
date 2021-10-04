@@ -1,17 +1,17 @@
-goog.module('os.command.TileLayerColorize');
+goog.declareModuleId('os.command.TileLayerColorize');
 
-const AbstractLayerStyle = goog.require('os.command.AbstractLayerStyle');
-const instanceOf = goog.require('os.instanceOf');
-const LayerClass = goog.require('os.layer.LayerClass');
-const {getMapContainer} = goog.require('os.map.instance');
+import instanceOf from '../instanceof.js';
+import LayerClass from '../layer/layerclass.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import AbstractLayerStyle from './abstractlayerstylecmd.js';
 
-const TileLayer = goog.requireType('os.layer.Tile');
+const {default: TileLayer} = goog.requireType('os.layer.Tile');
 
 
 /**
  * Changes whether a layer is colorized.
  */
-class TileLayerColorize extends AbstractLayerStyle {
+export default class TileLayerColorize extends AbstractLayerStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -44,5 +44,3 @@ class TileLayerColorize extends AbstractLayerStyle {
     super.applyValue(config, value);
   }
 }
-
-exports = TileLayerColorize;

@@ -1,9 +1,10 @@
-goog.module('os.ol.source.tileimage');
+goog.declareModuleId('os.ol.source.tileimage');
+
+import HandlerType from '../../net/handlertype.js';
+import ProxyHandler from '../../net/proxyhandler.js';
+import Request from '../../net/request.js';
 
 const EventType = goog.require('goog.net.EventType');
-const HandlerType = goog.require('os.net.HandlerType');
-const ProxyHandler = goog.require('os.net.ProxyHandler');
-const Request = goog.require('os.net.Request');
 
 const Projection = goog.requireType('ol.proj.Projection');
 const TileImage = goog.requireType('ol.source.TileImage');
@@ -16,7 +17,7 @@ const VectorTile = goog.requireType('ol.source.VectorTile');
  *
  * @param {TileImage|VectorTile} source
  */
-const addProxyWrapper = function(source) {
+export const addProxyWrapper = function(source) {
   // wrap the tileUrlFunction with the proxy
   var originalUrlFunction = source.getTileUrlFunction();
 
@@ -45,7 +46,7 @@ const addProxyWrapper = function(source) {
  * @param {TileImage|VectorTile} source
  * @param {Projection} proj
  */
-const autoProxyCheck = function(source, proj) {
+export const autoProxyCheck = function(source, proj) {
   var url = source.getTileUrlFunction()([2, 2, -1], 1, proj);
 
   if (url) {
@@ -71,9 +72,4 @@ const autoProxyCheck = function(source, proj) {
     request.listen(EventType.ERROR, listener);
     request.load();
   }
-};
-
-exports = {
-  addProxyWrapper,
-  autoProxyCheck
 };

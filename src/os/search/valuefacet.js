@@ -1,13 +1,13 @@
-goog.module('os.search.ValueFacet');
+goog.declareModuleId('os.search.ValueFacet');
 
-const BaseFacet = goog.require('os.search.BaseFacet');
+import BaseFacet from './basefacet.js';
 
 
 /**
  * A facet based off an item value.
  * @abstract
  */
-class ValueFacet extends BaseFacet {
+export default class ValueFacet extends BaseFacet {
   /**
    * Constructor.
    * @param {string} id The facet identifier.
@@ -67,5 +67,3 @@ class ValueFacet extends BaseFacet {
     return category === this.facetId;
   }
 }
-
-exports = ValueFacet;

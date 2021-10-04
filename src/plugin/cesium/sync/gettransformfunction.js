@@ -1,9 +1,9 @@
 goog.declareModuleId('plugin.cesium.sync.getTransformFunction');
 
 import {PROJECTION} from '../../../os/map/map.js';
+import * as osProj from '../../../os/proj/proj.js';
 
 const olProj = goog.require('ol.proj');
-const osProj = goog.require('os.proj');
 const Projection = goog.requireType('ol.proj.Projection');
 
 

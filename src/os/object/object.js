@@ -1,7 +1,7 @@
 /**
  * @fileoverview Utilities for merging objects
  */
-goog.module('os.object');
+goog.declareModuleId('os.object');
 
 const {defaultCompare} = goog.require('goog.array');
 const {getCount, getValueByKeys, isEmpty} = goog.require('goog.object');
@@ -12,19 +12,19 @@ const {startsWith, toTitleCase} = goog.require('goog.string');
  * The key to use to delete a value during merges
  * @type {string}
  */
-const DELETE_VAL = '__delete__';
+export const DELETE_VAL = '__delete__';
 
 /**
  * The key to use to ignore a value during merges
  * @type {string}
  */
-const IGNORE_VAL = '__ignore__';
+export const IGNORE_VAL = '__ignore__';
 
 /**
  * The value returned by the base Object.prototype.toString
  * @type {string}
  */
-const STRING_VAL = String({});
+export const STRING_VAL = String({});
 
 /**
  * Create a new object, removing all keys with an undefined value.
@@ -33,7 +33,7 @@ const STRING_VAL = String({});
  * @return {T} The trimmed object
  * @template T
  */
-const prune = function(obj) {
+export const prune = function(obj) {
   if (!obj) {
     return obj;
   }
@@ -59,7 +59,7 @@ const prune = function(obj) {
  * @param {boolean=} opt_nullOverwrite Whether or not null and undefined are treated
  *    as override values. Defaults to true
  */
-const merge = function(from, to, opt_overwrite, opt_nullOverwrite) {
+export const merge = function(from, to, opt_overwrite, opt_nullOverwrite) {
   if (opt_overwrite == null) {
     opt_overwrite = true;
   }
@@ -106,7 +106,7 @@ const merge = function(from, to, opt_overwrite, opt_nullOverwrite) {
  * @param {string=} opt_type The type from `goog.typeOf`, to avoid multiple calls.
  * @return {boolean} Whether or not the value is a primitive.
  */
-const isPrimitive = function(value, opt_type) {
+export const isPrimitive = function(value, opt_type) {
   if (value) {
     var type = opt_type || goog.typeOf(value);
     if (type == 'object') {
@@ -124,7 +124,7 @@ const isPrimitive = function(value, opt_type) {
  * @param {!Array<string|number>} keys which indicate the namespace to which to assign the value
  * @param {?} value
  */
-const setValue = function(obj, keys, value) {
+export const setValue = function(obj, keys, value) {
   var lastLevel = obj;
   var lastKeyIndex = keys.length - 1;
   keys.forEach(function(key, index) {
@@ -147,7 +147,7 @@ const setValue = function(obj, keys, value) {
  * @param {string=} opt_delim
  * @return {!Object<string, *>}
  */
-const reduce = function(obj, opt_prefix, opt_delim) {
+export const reduce = function(obj, opt_prefix, opt_delim) {
   var prefix = opt_prefix != null ? opt_prefix : '';
   var delim = opt_delim != null ? opt_delim : '.';
   var result = {};
@@ -181,7 +181,7 @@ const reduce = function(obj, opt_prefix, opt_delim) {
  * @param {string=} opt_delim
  * @return {!Object}
  */
-const expand = function(obj, opt_delim) {
+export const expand = function(obj, opt_delim) {
   var delim = opt_delim || '.';
   var result = {};
   for (var key in obj) {
@@ -198,7 +198,7 @@ const expand = function(obj, opt_delim) {
  * @param {!Object<string, *>} obj
  * @param {!Array<!string|!number>|!string} keys
  */
-const deleteValue = function(obj, keys) {
+export const deleteValue = function(obj, keys) {
   if (goog.typeOf(keys) === 'string') {
     keys = keys.split('.');
   }
@@ -222,7 +222,7 @@ const deleteValue = function(obj, keys) {
  *
  * @param {Object<string, *>} obj
  */
-const parseValues = function(obj) {
+export const parseValues = function(obj) {
   for (var key in obj) {
     if (obj[key] !== undefined && typeof obj[key] === 'string') {
       obj[key] = JSON.parse(/** @type {string} */ (obj[key]));
@@ -235,7 +235,7 @@ const parseValues = function(obj) {
  *
  * @param {Object} obj
  */
-const stringifyValues = function(obj) {
+export const stringifyValues = function(obj) {
   for (var key in obj) {
     obj[key] = JSON.stringify(obj[key]);
   }
@@ -248,7 +248,7 @@ const stringifyValues = function(obj) {
  * @param {...(Object|null|undefined)} var_args The objects to search
  * @return {*}
  */
-const getFirstValue = function(key, var_args) {
+export const getFirstValue = function(key, var_args) {
   var value;
   for (var i = 1; i < arguments.length; i++) {
     var obj = arguments[i];
@@ -271,7 +271,7 @@ const getFirstValue = function(key, var_args) {
  *   a function, it is invoked on the item.
  * @return {function(*):*} The function which can be registered as the value extractor on an collection.
  */
-const getValueExtractor = function(attribute) {
+export const getValueExtractor = function(attribute) {
   return function(i) {
     return typeof i[attribute] === 'function' ? i[attribute]() : i[attribute];
   };
@@ -289,7 +289,7 @@ const getValueExtractor = function(attribute) {
  *  Otherwise {@link googArray.defaultCompare} will be used
  * @return {number}
  */
-const compareByField = function(field, o1, o2, opt_comparitor) {
+export const compareByField = function(field, o1, o2, opt_comparitor) {
   var v1 = getCompareFieldValue(field, o1);
   var v2 = getCompareFieldValue(field, o2);
   return opt_comparitor ? opt_comparitor(v1, v2) : defaultCompare(v1, v2);
@@ -302,7 +302,7 @@ const compareByField = function(field, o1, o2, opt_comparitor) {
  * @param {Object} o
  * @return {*}
  */
-const getCompareFieldValue = function(field, o) {
+export const getCompareFieldValue = function(field, o) {
   if (o != null) {
     var value;
     if (o[field]) {
@@ -337,7 +337,7 @@ const getCompareFieldValue = function(field, o) {
  * @return {T} A clone of the input value.
  * @template T
  */
-const unsafeClone = function(obj) {
+export const unsafeClone = function(obj) {
   var type = goog.typeOf(obj);
   if (type == 'object' || type == 'array') {
     if (obj.clone) {
@@ -355,24 +355,4 @@ const unsafeClone = function(obj) {
   }
 
   return obj;
-};
-
-exports = {
-  DELETE_VAL,
-  IGNORE_VAL,
-  STRING_VAL,
-  prune,
-  merge,
-  isPrimitive,
-  reduce,
-  expand,
-  delete: deleteValue,
-  set: setValue,
-  parseValues,
-  stringifyValues,
-  getFirstValue,
-  getValueExtractor,
-  compareByField,
-  getCompareFieldValue,
-  unsafeClone
 };

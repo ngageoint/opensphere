@@ -1,14 +1,15 @@
-goog.module('os.ui.ogc.wms.WMSLayerParserV111');
+goog.declareModuleId('os.ui.ogc.wms.WMSLayerParserV111');
+
+import {COLOR_STYLE_REGEX, DEFAULT_TILE_STYLE} from '../../../ogc/ogc.js';
+import AbstractWMSLayerParser from './abstractwmslayerparser.js';
 
 const {clone: cloneArray} = goog.require('goog.array');
 const {clone: cloneObject, getValueByKeys} = goog.require('goog.object');
-const {COLOR_STYLE_REGEX, DEFAULT_TILE_STYLE} = goog.require('os.ogc');
-const AbstractWMSLayerParser = goog.require('os.ui.ogc.wms.AbstractWMSLayerParser');
 
 
 /**
  */
-class WMSLayerParserV111 extends AbstractWMSLayerParser {
+export default class WMSLayerParserV111 extends AbstractWMSLayerParser {
   /**
    * Constructor.
    */
@@ -118,5 +119,3 @@ class WMSLayerParserV111 extends AbstractWMSLayerParser {
     }
   }
 }
-
-exports = WMSLayerParserV111;

@@ -1,6 +1,6 @@
-goog.module('os.ui.filter.ui.CopyFilterPickerModel');
+goog.declareModuleId('os.ui.filter.ui.CopyFilterPickerModel');
 
-const ColumnMapping = goog.requireType('os.column.ColumnMapping');
+const {default: ColumnMapping} = goog.requireType('os.column.ColumnMapping');
 
 
 /**
@@ -15,4 +15,4 @@ const ColumnMapping = goog.requireType('os.column.ColumnMapping');
  */
 let CopyFilterPickerModel;
 
-exports = CopyFilterPickerModel;
+export default CopyFilterPickerModel;

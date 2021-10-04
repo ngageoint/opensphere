@@ -1,4 +1,15 @@
-goog.module('os.data.BaseDescriptor');
+goog.declareModuleId('os.data.BaseDescriptor');
+
+import * as dispatcher from '../dispatcher.js';
+import PropertyChangeEvent from '../events/propertychangeevent.js';
+import osImplements from '../implements.js';
+import Metrics from '../metrics/metrics.js';
+import * as keys from '../metrics/metricskeys.js';
+import ColumnDefinition from './columndefinition.js';
+import DataManager from './datamanager.js';
+import DescriptorEvent from './descriptorevent.js';
+import DescriptorEventType from './descriptoreventtype.js';
+import IDataDescriptor from './idatadescriptor.js';
 
 const googArray = goog.require('goog.array');
 const nextTick = goog.require('goog.async.nextTick');
@@ -6,18 +17,9 @@ const UtcDateTime = goog.require('goog.date.UtcDateTime');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const {caseInsensitiveCompare, endsWith} = goog.require('goog.string');
-const dispatcher = goog.require('os.Dispatcher');
-const ColumnDefinition = goog.require('os.data.ColumnDefinition');
-const DataManager = goog.require('os.data.DataManager');
-const DescriptorEvent = goog.require('os.data.DescriptorEvent');
-const DescriptorEventType = goog.require('os.data.DescriptorEventType');
-const IDataDescriptor = goog.require('os.data.IDataDescriptor');
-const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const osImplements = goog.require('os.implements');
-const Metrics = goog.require('os.metrics.Metrics');
-const keys = goog.require('os.metrics.keys');
 
-const ISearchable = goog.requireType('os.data.ISearchable');
+const {default: IDataProvider} = goog.requireType('os.data.IDataProvider');
+const {default: ISearchable} = goog.requireType('os.data.ISearchable');
 
 
 /**
@@ -26,7 +28,7 @@ const ISearchable = goog.requireType('os.data.ISearchable');
  * @implements {IDataDescriptor}
  * @implements {ISearchable}
  */
-class BaseDescriptor extends EventTarget {
+export default class BaseDescriptor extends EventTarget {
   /**
    * Constructor.
    */
@@ -148,7 +150,7 @@ class BaseDescriptor extends EventTarget {
     this.descriptorType = 'base';
 
     /**
-     * @type {os.data.IDataProvider}
+     * @type {IDataProvider}
      * @protected
      */
     this.dataProvider = null;
@@ -706,7 +708,7 @@ class BaseDescriptor extends EventTarget {
    * Compares descriptors by title.
    *
    * @param {IDataDescriptor} a A descriptor
-   * @param {os.data.IDataDescriptor} b Another descriptor
+   * @param {IDataDescriptor} b Another descriptor
    * @return {number} The comparison
    */
   static titleCompare(a, b) {
@@ -717,7 +719,7 @@ class BaseDescriptor extends EventTarget {
    * Compares descriptors by title.
    *
    * @param {IDataDescriptor} a A descriptor
-   * @param {os.data.IDataDescriptor} b Another descriptor
+   * @param {IDataDescriptor} b Another descriptor
    * @return {number} The comparison
    */
   static lastActive(a, b) {
@@ -736,13 +738,14 @@ class BaseDescriptor extends EventTarget {
    * Compares descriptors by title.
    *
    * @param {IDataDescriptor} a A descriptor
-   * @param {os.data.IDataDescriptor} b Another descriptor
+   * @param {IDataDescriptor} b Another descriptor
    * @return {number} The comparison
    */
   static lastActiveReverse(a, b) {
     return BaseDescriptor.lastActive(b, a);
   }
 }
+
 osImplements(BaseDescriptor, IDataDescriptor.ID);
 
 
@@ -759,6 +762,3 @@ BaseDescriptor.ID_DELIMITER = '#';
  * @type {goog.log.Logger}
  */
 const logger = log.getLogger('os.data.BaseDescriptor');
-
-
-exports = BaseDescriptor;

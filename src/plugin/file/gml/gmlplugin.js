@@ -1,5 +1,10 @@
 goog.declareModuleId('plugin.file.gml.GMLPlugin');
 
+import DataManager from '../../../os/data/datamanager.js';
+import ProviderEntry from '../../../os/data/providerentry.js';
+import LayerConfigManager from '../../../os/layer/config/layerconfigmanager.js';
+import AbstractPlugin from '../../../os/plugin/abstractplugin.js';
+import ImportManager from '../../../os/ui/im/importmanager.js';
 import GMLDescriptor from './gmldescriptor.js';
 import GMLImportUI from './gmlimportui.js';
 import GMLLayerConfig from './gmllayerconfig.js';
@@ -8,11 +13,6 @@ import GMLParser from './gmlparser.js';
 import GMLProvider from './gmlprovider.js';
 import * as mime from './mime.js';
 
-const DataManager = goog.require('os.data.DataManager');
-const ProviderEntry = goog.require('os.data.ProviderEntry');
-const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const ImportManager = goog.require('os.ui.im.ImportManager');
 
 // Initialize the GML mixin.
 GMLMixin.init();

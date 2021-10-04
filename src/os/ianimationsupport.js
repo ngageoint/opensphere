@@ -1,10 +1,10 @@
-goog.module('os.IAnimationSupport');
+goog.declareModuleId('os.IAnimationSupport');
 
 /**
  * Interface for a layer or source that responds to timeline animation.
  * @interface
  */
-class IAnimationSupport {
+export default class IAnimationSupport {
   /**
    * If animation is enabled.
    * @return {boolean}
@@ -23,5 +23,3 @@ class IAnimationSupport {
  * @type {string}
  */
 IAnimationSupport.ID = 'os.IAnimationSupport';
-
-exports = IAnimationSupport;

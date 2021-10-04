@@ -1,12 +1,12 @@
-goog.module('os.ogc.filter.OGCExclusionFormatter');
+goog.declareModuleId('os.ogc.filter.OGCExclusionFormatter');
 
-const OGCSpatialFormatter = goog.require('os.ogc.filter.OGCSpatialFormatter');
+import OGCSpatialFormatter from './ogcspatialformatter.js';
 
 
 /**
  * Formats a exclusion query for use in an OGC Filter.
  */
-class OGCExclusionFormatter extends OGCSpatialFormatter {
+export default class OGCExclusionFormatter extends OGCSpatialFormatter {
   /**
    * Constructor.
    * @param {string=} opt_column
@@ -31,5 +31,3 @@ class OGCExclusionFormatter extends OGCSpatialFormatter {
     return result;
   }
 }
-
-exports = OGCExclusionFormatter;

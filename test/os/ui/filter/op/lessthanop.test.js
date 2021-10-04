@@ -1,7 +1,7 @@
 goog.require('os.ui.filter.op.LessThan');
 
 describe('os.ui.filter.op.LessThan', function() {
-  const LessThan = goog.module.get('os.ui.filter.op.LessThan');
+  const {default: LessThan} = goog.module.get('os.ui.filter.op.LessThan');
 
   var op = new LessThan();
 

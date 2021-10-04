@@ -1,13 +1,13 @@
-goog.module('os.unit.YardUnits');
+goog.declareModuleId('os.unit.YardUnits');
 
-const BaseUnit = goog.require('os.unit.BaseUnit');
-const Multiplier = goog.require('os.unit.Multiplier');
+import BaseUnit from './baseunit.js';
+import Multiplier from './multiplier.js';
 
 
 /**
  * Responsible for receiving, logging and reporting alerts
  */
-class YardUnits extends BaseUnit {
+export default class YardUnits extends BaseUnit {
   /**
    * Constructor.
    */
@@ -57,5 +57,3 @@ class YardUnits extends BaseUnit {
     this.multipliers.push(new Multiplier('yd', 1, true, 'yards'));
   }
 }
-
-exports = YardUnits;

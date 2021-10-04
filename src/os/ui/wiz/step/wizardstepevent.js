@@ -1,12 +1,13 @@
-goog.module('os.ui.wiz.step.WizardStepEvent');
-
+goog.declareModuleId('os.ui.wiz.step.WizardStepEvent');
 
 /**
  * Events that can be fired by the wizard step controller.
  * @enum {string}
  */
-exports = {
+const WizardStepEvent = {
   FINALIZE: 'finalize',
   VALIDATE: 'validate',
   SAVE: 'save'
 };
+
+export default WizardStepEvent;

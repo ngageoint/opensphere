@@ -1,28 +1,30 @@
-goog.module('os.im.action.ImportActionManager');
+goog.declareModuleId('os.im.action.ImportActionManager');
+
+import AlertEventSeverity from '../../alert/alerteventseverity.js';
+import AlertManager from '../../alert/alertmanager.js';
+import CommandProcessor from '../../command/commandprocessor.js';
+import Settings from '../../config/settings.js';
+import * as dispatcher from '../../dispatcher.js';
+import IFilterable from '../../filter/ifilterable.js';
+import osImplements from '../../implements.js';
+import {getMapContainer} from '../../map/mapinstance.js';
+import PluginManager from '../../plugin/pluginmanager.js';
+import FilterActionAdd from './cmd/filteractionaddcmd.js';
+import * as osImActionDefault from './defaultaction.js';
+import FilterActionEntry from './filteractionentry.js';
+import {getEnabledMap, getImportActionManager, setImportActionManager} from './importaction.js';
+import ImportActionEventType from './importactioneventtype.js';
+import TagName from './tagname.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const olArray = goog.require('ol.array');
-const dispatcher = goog.require('os.Dispatcher');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const Settings = goog.require('os.config.Settings');
-const IFilterable = goog.require('os.filter.IFilterable');
-const osImplements = goog.require('os.implements');
-const {getEnabledMap, getImportActionManager, setImportActionManager} = goog.require('os.im.action');
-const FilterActionEntry = goog.require('os.im.action.FilterActionEntry');
-const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
-const TagName = goog.require('os.im.action.TagName');
-const FilterActionAdd = goog.require('os.im.action.cmd.FilterActionAdd');
-const osImActionDefault = goog.require('os.im.action.default');
-const {getMapContainer} = goog.require('os.map.instance');
-const PluginManager = goog.require('os.plugin.PluginManager');
+const {default: IImportAction} = goog.requireType('os.im.action.IImportAction');
 
-const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
-const ImportActionEvent = goog.requireType('os.im.action.ImportActionEvent');
-const IImportAction = goog.requireType('os.im.action.IImportAction');
+
+const {default: ImportActionCallbackConfig} = goog.requireType('os.im.action.ImportActionCallbackConfig');
+const {default: ImportActionEvent} = goog.requireType('os.im.action.ImportActionEvent');
 
 
 /**
@@ -30,7 +32,7 @@ const IImportAction = goog.requireType('os.im.action.IImportAction');
  *
  * @template T
  */
-class ImportActionManager extends EventTarget {
+export default class ImportActionManager extends EventTarget {
   /**
    * Constructor.
    */
@@ -739,6 +741,3 @@ const logger = log.getLogger('os.im.action.ImportActionManager');
  * @const
  */
 ImportActionManager.STORAGE_KEY = 'os.importActions';
-
-
-exports = ImportActionManager;

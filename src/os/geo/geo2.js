@@ -3,13 +3,14 @@
  * which are entirely projection-agnostic rather than requiring conversion to lonlat and
  * back when using them.
  */
-goog.module('os.geo2');
+goog.declareModuleId('os.geo2');
+
+import GeometryField from '../geom/geometryfield.js';
+import * as osMap from '../map/map.js';
+import {isWorldQuery} from '../query/queryutils.js';
 
 const GeometryType = goog.require('ol.geom.GeometryType');
 const {get: getProjection} = goog.require('ol.proj');
-const GeometryField = goog.require('os.geom.GeometryField');
-const osMap = goog.require('os.map');
-const {isWorldQuery} = goog.require('os.query.utils');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
 const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
@@ -28,7 +29,7 @@ const Polygon = goog.requireType('ol.geom.Polygon');
  * @param {ol.ProjectionLike=} opt_proj
  * @return {number}
  */
-const normalizeLongitude = function(lon, opt_min, opt_max, opt_proj) {
+export const normalizeLongitude = function(lon, opt_min, opt_max, opt_proj) {
   opt_proj = getProjection(opt_proj || osMap.PROJECTION);
   var projExtent = opt_proj.getExtent();
   opt_min = opt_min != null ? opt_min : projExtent[0];
@@ -51,7 +52,7 @@ const normalizeLongitude = function(lon, opt_min, opt_max, opt_proj) {
  * @param {ol.ProjectionLike=} opt_proj
  * @return {number}
  */
-const normalizeLatitude = function(lat, opt_min, opt_max, opt_proj) {
+export const normalizeLatitude = function(lat, opt_min, opt_max, opt_proj) {
   opt_proj = getProjection(opt_proj || osMap.PROJECTION);
   var projExtent = opt_proj.getExtent();
   opt_min = opt_min != null ? opt_min : projExtent[1];
@@ -64,7 +65,7 @@ const normalizeLatitude = function(lat, opt_min, opt_max, opt_proj) {
  * @param {number=} opt_to
  * @param {ol.ProjectionLike=} opt_proj
  */
-const normalizeCoordinate = function(coordinate, opt_to, opt_proj) {
+export const normalizeCoordinate = function(coordinate, opt_to, opt_proj) {
   opt_proj = getProjection(opt_proj || osMap.PROJECTION);
 
   var projExtent = opt_proj.getExtent();
@@ -81,7 +82,7 @@ const normalizeCoordinate = function(coordinate, opt_to, opt_proj) {
  * @param {number=} opt_to The longitude to normalize to
  * @param {ol.ProjectionLike=} opt_proj
  */
-const normalizeCoordinates = function(coordinates, opt_to, opt_proj) {
+export const normalizeCoordinates = function(coordinates, opt_to, opt_proj) {
   if (coordinates && coordinates.length > 0) {
     opt_proj = getProjection(opt_proj || osMap.PROJECTION);
 
@@ -97,7 +98,7 @@ const normalizeCoordinates = function(coordinates, opt_to, opt_proj) {
  * @param {number=} opt_to The longitude to normalize to
  * @param {ol.ProjectionLike=} opt_proj
  */
-const normalizeRings = function(rings, opt_to, opt_proj) {
+export const normalizeRings = function(rings, opt_to, opt_proj) {
   if (rings) {
     opt_proj = getProjection(opt_proj || osMap.PROJECTION);
 
@@ -113,7 +114,7 @@ const normalizeRings = function(rings, opt_to, opt_proj) {
  * @param {number=} opt_to The longitude to normalize to.
  * @param {ol.ProjectionLike=} opt_proj
  */
-const normalizePolygons = function(polys, opt_to, opt_proj) {
+export const normalizePolygons = function(polys, opt_to, opt_proj) {
   if (polys) {
     opt_proj = getProjection(opt_proj || osMap.PROJECTION);
 
@@ -132,7 +133,7 @@ const normalizePolygons = function(polys, opt_to, opt_proj) {
  * @param {ol.ProjectionLike=} opt_proj
  * @return {boolean} If the geometry was normalized.
  */
-const normalizeGeometryCoordinates = function(geometry, opt_to, opt_proj) {
+export const normalizeGeometryCoordinates = function(geometry, opt_to, opt_proj) {
   if (geometry) {
     if (geometry.get(GeometryField.NORMALIZED) || isWorldQuery(geometry)) {
       return false;
@@ -187,7 +188,7 @@ const normalizeGeometryCoordinates = function(geometry, opt_to, opt_proj) {
 /**
  * @enum {boolean}
  */
-const WindingOrder = {
+export const WindingOrder = {
   CLOCKWISE: true,
   COUNTER_CLOCKWISE: false
 };
@@ -196,7 +197,7 @@ const WindingOrder = {
  * @param {Array<Array<number>>} ring
  * @return {number}
  */
-const computeArea = function(ring) {
+export const computeArea = function(ring) {
   var length = ring.length;
   var area = 0.0;
   for (var i0 = length - 1, i1 = 0; i1 < length; i0 = i1++) {
@@ -212,23 +213,10 @@ const computeArea = function(ring) {
  * @param {Array<Array<number>>} ring The linear or polygon ring to check
  * @return {WindingOrder}
  */
-const computeWindingOrder = function(ring) {
+export const computeWindingOrder = function(ring) {
   var area = computeArea(ring);
   if (area > 0.0) {
     return WindingOrder.COUNTER_CLOCKWISE;
   }
   return WindingOrder.CLOCKWISE;
-};
-
-exports = {
-  normalizeLongitude,
-  normalizeLatitude,
-  normalizeCoordinate,
-  normalizeCoordinates,
-  normalizeRings,
-  normalizePolygons,
-  normalizeGeometryCoordinates,
-  WindingOrder,
-  computeArea,
-  computeWindingOrder
 };

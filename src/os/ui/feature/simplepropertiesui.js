@@ -1,9 +1,9 @@
-goog.module('os.ui.feature.SimplePropertiesUI');
+goog.declareModuleId('os.ui.feature.SimplePropertiesUI');
 
-const OsFeature = goog.require('os.feature');
-const OsModule = goog.require('os.ui.Module');
-const {directiveTag: cellUi} = goog.require('os.ui.feature.FeatureInfoCellUI');
-const OsSettings = goog.require('os.config.Settings');
+import OsSettings from '../../config/settings.js';
+import * as OsFeature from '../../feature/feature.js';
+import OsModule from '../module.js';
+import {directiveTag as cellUi} from './featureinfocell.js';
 
 const Feature = goog.requireType('ol.Feature');
 
@@ -156,7 +156,7 @@ const getProperties_ = (() => {
  * regular expression(s) match on them), then this will add list those values.
  * @unrestricted
  */
-class Controller {
+export class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -213,7 +213,7 @@ class Controller {
  * The simple properties directive.
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
@@ -234,8 +234,3 @@ const directive = () => ({
  * Add the directive to the module.
  */
 OsModule.directive('simpleProperties', [directive]);
-
-exports = {
-  Controller,
-  directive
-};

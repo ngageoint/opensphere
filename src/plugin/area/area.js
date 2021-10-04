@@ -1,15 +1,18 @@
 goog.declareModuleId('plugin.area');
 
+import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
+import AlertManager from '../../os/alert/alertmanager.js';
+import RecordField from '../../os/data/recordfield.js';
+import * as fn from '../../os/fn/fn.js';
+import * as jsts from '../../os/geo/jsts.js';
+import {getAreaManager} from '../../os/query/queryinstance.js';
+import * as query from '../../os/ui/query/query.js';
+
 const googString = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
 const olArray = goog.require('ol.array');
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const RecordField = goog.require('os.data.RecordField');
-const fn = goog.require('os.fn');
-const jsts = goog.require('os.geo.jsts');
-const {getAreaManager} = goog.require('os.query.instance');
-const query = goog.require('os.ui.query');
+
+const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
 
 
 /**
@@ -61,7 +64,7 @@ export const processFeatures = function(features, config) {
  *
  * @param {!Feature} feature
  * @param {Object} config
- * @param {!Array<!os.im.mapping.IMapping>} mappings
+ * @param {!Array<!IMapping>} mappings
  */
 const processFeature_ = function(feature, config, mappings) {
   // apply mappings to the feature

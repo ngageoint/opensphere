@@ -1,15 +1,16 @@
-goog.module('os.command.AbstractLayer');
+goog.declareModuleId('os.command.AbstractLayer');
+
+import * as osLayer from '../layer/layer.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import Metrics from '../metrics/metrics.js';
+import * as keys from '../metrics/metricskeys.js';
+import State from './state.js';
 
 const Disposable = goog.require('goog.Disposable');
 const googObject = goog.require('goog.object');
 const Layer = goog.require('ol.layer.Layer');
-const State = goog.require('os.command.State');
-const osLayer = goog.require('os.layer');
-const {getMapContainer} = goog.require('os.map.instance');
-const Metrics = goog.require('os.metrics.Metrics');
-const keys = goog.require('os.metrics.keys');
 
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -21,7 +22,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  * @abstract
  * @implements {ICommand}
  */
-class AbstractLayer extends Disposable {
+export default class AbstractLayer extends Disposable {
   /**
    * Constructor.
    * @param {(Object<string, *>)=} opt_options The configuration for the map layer.
@@ -165,5 +166,3 @@ class AbstractLayer extends Disposable {
     return true;
   }
 }
-
-exports = AbstractLayer;

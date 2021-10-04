@@ -1,9 +1,9 @@
 goog.module('os.file.mime.mock');
 
 const XhrIo = goog.require('goog.net.XhrIo');
-const OSFile = goog.require('os.file.File');
+const {default: OSFile} = goog.require('os.file.File');
 const {detect} = goog.require('os.file.mime');
-const Request = goog.require('os.net.Request');
+const {default: Request} = goog.require('os.net.Request');
 
 
 const testFiles = function(files, testFunc, len) {

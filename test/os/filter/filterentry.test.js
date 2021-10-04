@@ -1,7 +1,7 @@
 goog.require('os.filter.FilterEntry');
 
 describe('os.filter.FilterEntry', function() {
-  const FilterEntry = goog.module.get('os.filter.FilterEntry');
+  const {default: FilterEntry} = goog.module.get('os.filter.FilterEntry');
 
   var filterXml = '<And xmlns="http://www.opengis.net/ogc" namehint="Test Keep Filter Name">' +
       '<PropertyIsLike escape="\\" singleChar="." wildCard="*">' +

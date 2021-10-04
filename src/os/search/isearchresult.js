@@ -1,5 +1,4 @@
-goog.module('os.search.ISearchResult');
-
+goog.declareModuleId('os.search.ISearchResult');
 
 /**
  * Interface representing a ranked search result. Results with higher rankings will appear first in search results.
@@ -7,7 +6,7 @@ goog.module('os.search.ISearchResult');
  * @interface
  * @template T
  */
-class ISearchResult {
+export default class ISearchResult {
   /**
    * The search result ID
    * @return {number|string}
@@ -51,5 +50,3 @@ class ISearchResult {
    */
   performAction() {}
 }
-
-exports = ISearchResult;

@@ -1,16 +1,16 @@
-goog.module('os.command.FeaturesVisibility');
+goog.declareModuleId('os.command.FeaturesVisibility');
 
-const AbstractSource = goog.require('os.command.AbstractSource');
-const State = goog.require('os.command.State');
+import AbstractSource from './abstractsourcecmd.js';
+import State from './state.js';
 
 const Feature = goog.requireType('ol.Feature');
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
  * @implements {ICommand}
  */
-class FeaturesVisibility extends AbstractSource {
+export default class FeaturesVisibility extends AbstractSource {
   /**
    * Constructor.
    * @param {!string} sourceId
@@ -100,5 +100,3 @@ class FeaturesVisibility extends AbstractSource {
     return true;
   }
 }
-
-exports = FeaturesVisibility;

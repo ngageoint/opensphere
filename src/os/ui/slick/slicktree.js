@@ -1,18 +1,19 @@
-goog.module('os.ui.slick.SlickTreeUI');
+goog.declareModuleId('os.ui.slick.SlickTreeUI');
+
+import Module from '../module.js';
+import {apply} from '../ui.js';
+import {Controller as SlickGridCtrl} from './slickgrid.js';
+import SlickTreeNode from './slicktreenode.js';
 
 const Delay = goog.require('goog.async.Delay');
 const {getAncestor} = goog.require('goog.dom');
 const {contains} = goog.require('goog.dom.classlist');
 const GoogEventType = goog.require('goog.events.EventType');
 const {remove} = goog.require('ol.array');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
-const {Controller: SlickGridCtrl} = goog.require('os.ui.slick.SlickGridUI');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 const GoogEvent = goog.requireType('goog.events.Event');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
-const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
+const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 
 /**
@@ -20,7 +21,7 @@ const ITreeNode = goog.requireType('os.structs.ITreeNode');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   template: '<div class="c-slick-tree"></div>',
@@ -116,7 +117,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'slicktree';
+export const directiveTag = 'slicktree';
 
 /**
  * Add the directive to the os.ui module
@@ -127,7 +128,7 @@ Module.directive(directiveTag, [directive]);
  * Controller for SlickGrid Tree
  * @unrestricted
  */
-class Controller extends SlickGridCtrl {
+export class Controller extends SlickGridCtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
@@ -384,7 +385,7 @@ class Controller extends SlickGridCtrl {
       // prune root nodes without children
       //    var i = newVal.length;
       //    while (i--) {
-      //      var node = /** @type {os.structs.TreeNode} */ (newVal[i]);
+      //      var node = /** @type {TreeNode} */ (newVal[i]);
       //      if ((node.getChildren() || []).length == 0) {
       //        newVal.splice(i, 1);
       //      }
@@ -1027,10 +1028,3 @@ class Controller extends SlickGridCtrl {
  * @private
  */
 Controller.flattenId_ = 0;
-
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

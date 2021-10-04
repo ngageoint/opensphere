@@ -1,10 +1,12 @@
-goog.module('os.ui.slick.ColumnMenuGroup');
+goog.declareModuleId('os.ui.slick.ColumnMenuGroup');
 
 /**
  * Default groups in the column menu.
  * @enum {string}
  */
-exports = {
+const ColumnMenuGroup = {
   ORDER: 'Column Order',
   EDIT: 'Edit Columns'
 };
+
+export default ColumnMenuGroup;

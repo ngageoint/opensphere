@@ -1,8 +1,10 @@
-goog.module('os.ui.hist.HistogramEventType');
+goog.declareModuleId('os.ui.hist.HistogramEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const HistogramEventType = {
   CHANGE: 'histogramChange'
 };
+
+export default HistogramEventType;

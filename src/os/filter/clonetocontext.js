@@ -1,7 +1,7 @@
-goog.module('os.filter.cloneToContext');
+goog.declareModuleId('os.filter.cloneToContext');
 
-const FilterEntry = goog.require('os.filter.FilterEntry');
-const instanceOf = goog.require('os.instanceOf');
+import instanceOf from '../instanceof.js';
+import FilterEntry from './filterentry.js';
 
 
 /**
@@ -10,7 +10,7 @@ const instanceOf = goog.require('os.instanceOf');
  * @param {FilterEntry} entry The alleged filter entry.
  * @return {FilterEntry} A filter entry created in the current window context.
  */
-exports = function(entry) {
+const cloneToContext = function(entry) {
   if (entry && !(instanceOf(entry, FilterEntry.NAME))) {
     try {
       var clone = new FilterEntry();
@@ -26,3 +26,5 @@ exports = function(entry) {
 
   return entry;
 };
+
+export default cloneToContext;

@@ -1,4 +1,4 @@
-goog.module('os.style.StyleField');
+goog.declareModuleId('os.style.StyleField');
 
 
 /**
@@ -64,4 +64,4 @@ StyleField.REGEXP = (function() {
   return new RegExp('^(_.*|' + values.join('|') + ')$');
 })();
 
-exports = StyleField;
+export default StyleField;

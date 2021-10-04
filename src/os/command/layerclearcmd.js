@@ -1,19 +1,21 @@
-goog.module('os.command.LayerClear');
+goog.declareModuleId('os.command.LayerClear');
 
-const EventType = goog.require('os.command.EventType');
-const LayerRemove = goog.require('os.command.LayerRemove');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const State = goog.require('os.command.State');
-const DataManager = goog.require('os.data.DataManager');
-const DeactivateDescriptor = goog.require('os.data.DeactivateDescriptor');
-const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
-const {getMapContainer} = goog.require('os.map.instance');
+import DataManager from '../data/datamanager.js';
+import DeactivateDescriptor from '../data/deactivatedescriptorcmd.js';
+import LayerSyncDescriptor from '../data/layersyncdescriptor.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import EventType from './eventtype.js';
+import LayerRemove from './layerremovecmd.js';
+import SequenceCommand from './sequencecommand.js';
+import State from './state.js';
+
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
  * Command for clearing layers on the map.
  */
-class LayerClear extends SequenceCommand {
+export default class LayerClear extends SequenceCommand {
   /**
    * Constructor.
    */
@@ -42,7 +44,7 @@ class LayerClear extends SequenceCommand {
 
     var layers = getMapContainer().getLayers();
     for (var i = 0, n = layers.length; i < n; i++) {
-      var layer = /** @type {os.layer.ILayer} */ (layers[i]);
+      var layer = /** @type {ILayer} */ (layers[i]);
       try {
         var layerOptions = layer.getLayerOptions();
         if (layer.isRemovable() && layerOptions && !layerOptions['noClear']) {
@@ -89,5 +91,3 @@ class LayerClear extends SequenceCommand {
     return true;
   }
 }
-
-exports = LayerClear;

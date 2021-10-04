@@ -1,7 +1,13 @@
 goog.declareModuleId('plugin.file.kml.ui');
 
+import EventType from '../../../../os/action/eventtype.js';
+import CommandProcessor from '../../../../os/command/commandprocessor.js';
+import SequenceCommand from '../../../../os/command/sequencecommand.js';
 import * as dispatcher from '../../../../os/dispatcher.js';
 import * as osFeature from '../../../../os/feature/feature.js';
+import {Controller as FeatureEditCtrl} from '../../../../os/ui/featureedit.js';
+import * as osWindow from '../../../../os/ui/window.js';
+import {launchConfirmText} from '../../../../os/ui/window/confirmtext.js';
 import KMLNodeAdd from '../cmd/kmlnodeaddcmd.js';
 import KMLNodeRemove from '../cmd/kmlnoderemovecmd.js';
 import KMLField from '../kmlfield.js';
@@ -9,17 +15,13 @@ import KMLField from '../kmlfield.js';
 const GoogEvent = goog.require('goog.events.Event');
 const googString = goog.require('goog.string');
 const ol = goog.require('ol');
-const EventType = goog.require('os.action.EventType');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const SequenceCommand = goog.require('os.command.SequenceCommand');
-const {Controller: FeatureEditCtrl} = goog.require('os.ui.FeatureEditUI');
-const osWindow = goog.require('os.ui.window');
-const {launchConfirmText} = goog.require('os.ui.window.ConfirmTextUI');
 
 const {default: KMLLayer} = goog.requireType('plugin.file.kml.KMLLayer');
-const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 const {default: KMLSource} = goog.requireType('plugin.file.kml.KMLSource');
 const {default: KMLLayerNode} = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
+
+
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**

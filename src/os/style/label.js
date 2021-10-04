@@ -1,11 +1,22 @@
 goog.declareModuleId('os.style.label');
 
 import {instanceOf} from '../classregistry.js';
+import DataManager from '../data/datamanager.js';
+import RecordField from '../data/recordfield.js';
 import {hideLabel, showLabel} from '../feature/feature.js';
+import Fields from '../fields/fields.js';
+import {filterFalsey} from '../fn/fn.js';
+import PropertyChange from '../layer/propertychange.js';
 import * as osMap from '../map/map.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import {getFirstValue} from '../object/object.js';
 import {zIndexCompare} from '../source/source.js';
+import SourceClass from '../source/sourceclass.js';
 import {measureText} from '../ui/ui.js';
 import * as osStyle from './style.js';
+import StyleField from './stylefield.js';
+import {getStyleManager} from './styleinstance.js';
+import StyleType from './styletype.js';
 
 const {assert} = goog.require('goog.asserts');
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
@@ -20,21 +31,10 @@ const GeometryType = goog.require('ol.geom.GeometryType');
 const Polygon = goog.require('ol.geom.Polygon');
 const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
 const Style = goog.require('ol.style.Style');
-const Fields = goog.require('os.Fields');
-const DataManager = goog.require('os.data.DataManager');
-const RecordField = goog.require('os.data.RecordField');
-const {filterFalsey} = goog.require('os.fn');
-const PropertyChange = goog.require('os.layer.PropertyChange');
-const {getMapContainer} = goog.require('os.map.instance');
-const {getFirstValue} = goog.require('os.object');
-const SourceClass = goog.require('os.source.SourceClass');
-const StyleField = goog.require('os.style.StyleField');
-const StyleType = goog.require('os.style.StyleType');
-const {getStyleManager} = goog.require('os.style.instance');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');
-const VectorSource = goog.requireType('os.source.Vector');
+const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
 /**

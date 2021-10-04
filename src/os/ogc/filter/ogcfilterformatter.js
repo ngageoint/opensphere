@@ -1,12 +1,12 @@
-goog.module('os.ogc.filter.OGCFilterFormatter');
+goog.declareModuleId('os.ogc.filter.OGCFilterFormatter');
 
-const IFilterFormatter = goog.requireType('os.filter.IFilterFormatter');
+const {default: IFilterFormatter} = goog.requireType('os.filter.IFilterFormatter');
 
 
 /**
  * @implements {IFilterFormatter}
  */
-class OGCFilterFormatter {
+export default class OGCFilterFormatter {
   /**
    * Constructor.
    */
@@ -34,5 +34,3 @@ class OGCFilterFormatter {
     return filter ? '<And>' + filter + '</And>' : '';
   }
 }
-
-exports = OGCFilterFormatter;

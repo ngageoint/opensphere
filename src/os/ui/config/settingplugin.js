@@ -1,9 +1,10 @@
-goog.module('os.ui.config.SettingPlugin');
+goog.declareModuleId('os.ui.config.SettingPlugin');
+
+import SettingNode from './settingnode.js';
 
 const Disposable = goog.require('goog.Disposable');
 const dispose = goog.require('goog.dispose');
 const {buildString} = goog.require('goog.string');
-const SettingNode = goog.require('os.ui.config.SettingNode');
 
 
 /**
@@ -14,7 +15,7 @@ const SettingNode = goog.require('os.ui.config.SettingNode');
  *   os.ui.config.SettingsManager.getInstance().addSettingPlugin(new my.settings.Plugin());
  * </pre>
  */
-class SettingPlugin extends Disposable {
+export default class SettingPlugin extends Disposable {
   /**
    * Constructor.
    */
@@ -227,6 +228,3 @@ class SettingPlugin extends Disposable {
  * @const
  */
 SettingPlugin.DEFAULT_ICON = '<i class="fa fa-gear"></i>';
-
-
-exports = SettingPlugin;

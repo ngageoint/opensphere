@@ -1,11 +1,11 @@
-goog.module('os.ui.timeline.DragPanEvent');
+goog.declareModuleId('os.ui.timeline.DragPanEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
 
 /**
  */
-class DragPanEvent extends GoogEvent {
+export default class DragPanEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
@@ -20,5 +20,3 @@ class DragPanEvent extends GoogEvent {
     this.left = left;
   }
 }
-
-exports = DragPanEvent;

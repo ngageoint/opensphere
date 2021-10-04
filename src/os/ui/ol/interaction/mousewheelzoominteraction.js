@@ -1,4 +1,4 @@
-goog.module('os.ui.ol.interaction.MouseWheelZoom');
+goog.declareModuleId('os.ui.ol.interaction.MouseWheelZoom');
 
 const OLMouseWheelZoom = goog.require('ol.interaction.MouseWheelZoom');
 
@@ -9,7 +9,7 @@ const OLMouseWheelZoom = goog.require('ol.interaction.MouseWheelZoom');
  *
  * @suppress {accessControls} To allow changing private parameters lacking a corresponding options value.
  */
-class MouseWheelZoom extends OLMouseWheelZoom {
+export default class MouseWheelZoom extends OLMouseWheelZoom {
   /**
    * Constructor.
    * @param {olx.interaction.MouseWheelZoomOptions=} opt_options Options.
@@ -42,5 +42,3 @@ class MouseWheelZoom extends OLMouseWheelZoom {
     super.handleWheelZoom_(map);
   }
 }
-
-exports = MouseWheelZoom;

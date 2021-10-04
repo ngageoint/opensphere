@@ -1,21 +1,23 @@
-goog.module('os.data.ZOrder');
+goog.declareModuleId('os.data.ZOrder');
+
+import Settings from '../config/settings.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import ZOrderEventType from './zordereventtype.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const olArray = goog.require('ol.array');
-const Settings = goog.require('os.config.Settings');
-const ZOrderEventType = goog.require('os.data.ZOrderEventType');
-const {getMapContainer} = goog.require('os.map.instance');
 
 const BaseLayer = goog.requireType('ol.layer.Base');
-const ZOrderEntry = goog.requireType('os.data.ZOrderEntry');
-const LayerGroup = goog.requireType('os.layer.Group');
-const ILayer = goog.requireType('os.layer.ILayer');
+const {default: ZOrderEntry} = goog.requireType('os.data.ZOrderEntry');
+const {default: LayerGroup} = goog.requireType('os.layer.Group');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
+const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 
 
 /**
  * Maintains Z-Order for layers between sessions
  */
-class ZOrder extends EventTarget {
+export default class ZOrder extends EventTarget {
   /**
    * Constructor.
    */
@@ -307,7 +309,7 @@ class ZOrder extends EventTarget {
     var moveAfterID = undefined;
     var searchLayers = addedGroup.getLayers().getArray();
     for (var m = searchLayers.length - 2; m >= 0; m--) {
-      var searchLayer = /** @type {os.layer.Vector} */ (searchLayers[m]);
+      var searchLayer = /** @type {VectorLayer} */ (searchLayers[m]);
       if (!searchLayer.isSticky()) {
         moveAfterID = searchLayer.getId();
         break;
@@ -315,7 +317,7 @@ class ZOrder extends EventTarget {
     }
 
     if (moveAfterID === undefined) {
-      this.moveBefore(id, /** @type {os.layer.Vector} */ (searchLayers[0]).getId());
+      this.moveBefore(id, /** @type {VectorLayer} */ (searchLayers[0]).getId());
     } else {
       this.moveAfter(id, moveAfterID);
     }
@@ -444,6 +446,3 @@ let instance;
  * @type {number}
  */
 ZOrder.MAX_AGE_ = 30 * 24 * 60 * 60 * 1000;
-
-
-exports = ZOrder;

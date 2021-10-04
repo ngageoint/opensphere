@@ -2,21 +2,22 @@
  * @fileoverview Mixins to Openlayers to replace private/protected vendor code that doesn't meet our requirements.
  * @suppress {missingProvide}
  */
-goog.module('os.mixin');
+goog.declareModuleId('os.mixin');
 
-goog.require('os.mixin.Image');
-goog.require('os.mixin.ImageSource');
-goog.require('os.mixin.ResolutionConstraint');
-goog.require('os.mixin.TileImage');
-goog.require('os.mixin.UrlTileSource');
-goog.require('os.mixin.feature');
-goog.require('os.mixin.geometry');
-goog.require('os.mixin.layerbase');
-goog.require('os.mixin.map');
-goog.require('os.mixin.object');
-goog.require('os.mixin.polygon');
-goog.require('os.mixin.zoomscale');
-goog.require('os.ol');
+import '../ol/ol.js';
+import './featuremixin.js';
+import './geometrymixin.js';
+import './imagemixin.js';
+import './imagesourcemixin.js';
+import './layerbasemixin.js';
+import './mapmixin.js';
+import './objectmixin.js';
+import './polygonmixin.js';
+import './resolutionconstraintmixin.js';
+import './tileimagemixin.js';
+import './urltilemixin.js';
+import './zoomscalemixin.js';
+import registerClass from '../registerclass.js';
 
 const {getUid} = goog.require('ol');
 const olColor = goog.require('ol.color');
@@ -24,7 +25,6 @@ const LayerGroup = goog.require('ol.layer.Group');
 const {clamp} = goog.require('ol.math');
 const MapRenderer = goog.require('ol.renderer.canvas.Map');
 const VectorLayer = goog.require('ol.renderer.canvas.VectorLayer');
-const registerClass = goog.require('os.registerClass');
 
 const Feature = goog.requireType('ol.Feature');
 const RenderFeature = goog.requireType('ol.render.Feature');

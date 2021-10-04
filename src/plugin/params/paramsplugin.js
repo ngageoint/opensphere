@@ -1,9 +1,8 @@
 goog.declareModuleId('plugin.params.ParamsPlugin');
 
+import AbstractPlugin from '../../os/plugin/abstractplugin.js';
 import * as params from './params.js';
 import * as menu from './paramsmenu.js';
-
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 
 /**
  * Allow changing request parameters for layers in opensphere

@@ -1,7 +1,7 @@
-goog.module('os.file.persist.FilePersistence');
+goog.declareModuleId('os.file.persist.FilePersistence');
 
-const IPersistenceMethod = goog.require('os.ex.IPersistenceMethod'); // eslint-disable-line
-const {saveFile} = goog.require('os.file.persist');
+import IPersistenceMethod from '../../ex/ipersistencemethod.js';// eslint-disable-line
+import {saveFile} from './persist.js';
 
 
 /**
@@ -9,7 +9,7 @@ const {saveFile} = goog.require('os.file.persist');
  *
  * @implements {IPersistenceMethod}
  */
-class FilePersistence {
+export default class FilePersistence {
   /**
    * Constructor.
    */
@@ -43,5 +43,3 @@ class FilePersistence {
     return saveFile(fileName, content, opt_mimeType);
   }
 }
-
-exports = FilePersistence;

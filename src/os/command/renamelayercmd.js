@@ -1,20 +1,21 @@
-goog.module('os.command.RenameLayer');
+goog.declareModuleId('os.command.RenameLayer');
+
+import LayerEventType from '../events/layereventtype.js';
+import osImplements from '../implements.js';
+import {getMapContainer} from '../map/mapinstance.js';
+import ISource from '../source/isource.js';
+import State from './state.js';
 
 const GoogEvent = goog.require('goog.events.Event');
-const State = goog.require('os.command.State');
-const LayerEventType = goog.require('os.events.LayerEventType');
-const osImplements = goog.require('os.implements');
-const {getMapContainer} = goog.require('os.map.instance');
-const ISource = goog.require('os.source.ISource');
 
-const ICommand = goog.requireType('os.command.ICommand');
-const ILayer = goog.requireType('os.layer.ILayer');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
+const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
 
 /**
  * @implements {ICommand}
  */
-class RenameLayer {
+export default class RenameLayer {
   /**
    * Constructor.
    * @param {!ILayer} layer
@@ -105,5 +106,3 @@ class RenameLayer {
     }
   }
 }
-
-exports = RenameLayer;

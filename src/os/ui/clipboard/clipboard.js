@@ -1,4 +1,4 @@
-goog.module('os.ui.clipboard');
+goog.declareModuleId('os.ui.clipboard');
 
 /**
  * Retrieve data from the clipboard.  Different browsers do it differently, so make it convenient.
@@ -7,7 +7,7 @@ goog.module('os.ui.clipboard');
  * @param {string=} opt_type The type of data to retrieve, defaults to 'text'
  * @return {?string} The data or null if not available
  */
-const getData = function(event, opt_type) {
+export const getData = function(event, opt_type) {
   var type = opt_type || 'text';
   var result = null;
   if (event && event.clipboardData) {
@@ -16,8 +16,4 @@ const getData = function(event, opt_type) {
     result = window.clipboardData.getData(type);
   }
   return result !== undefined ? result : null;
-};
-
-exports = {
-  getData
 };

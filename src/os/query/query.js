@@ -1,34 +1,34 @@
-goog.module('os.query');
+goog.declareModuleId('os.query');
 
-const dispatcher = goog.require('os.Dispatcher');
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const GeometryField = goog.require('os.geom.GeometryField');
-const {METHOD_FIELD} = goog.require('os.interpolate');
-const Method = goog.require('os.interpolate.Method');
-const Metrics = goog.require('os.metrics.Metrics');
-const {Filters: FiltersKeys, Map: MapKeys} = goog.require('os.metrics.keys');
-const {getAreaManager} = goog.require('os.query.instance');
-const {WORLD_AREA} = goog.require('os.query.utils');
-const EventType = goog.require('os.ui.action.EventType');
-const ImportEvent = goog.require('os.ui.im.ImportEvent');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
-const ImportProcess = goog.require('os.ui.im.ImportProcess');
-const MenuEvent = goog.require('os.ui.menu.MenuEvent');
-const getUserArea = goog.require('os.ui.query.area.getUserArea');
-const uiLaunchChooseArea = goog.require('os.ui.query.area.launchChooseArea');
-const AreaAdd = goog.require('os.ui.query.cmd.AreaAdd');
+import CommandProcessor from '../command/commandprocessor.js';
+import * as dispatcher from '../dispatcher.js';
+import GeometryField from '../geom/geometryfield.js';
+import {METHOD_FIELD} from '../interpolate.js';
+import Method from '../interpolatemethod.js';
+import Metrics from '../metrics/metrics.js';
+import {Filters as FiltersKeys, Map as MapKeys} from '../metrics/metricskeys.js';
+import EventType from '../ui/action/actioneventtype.js';
+import ImportEvent from '../ui/im/importevent.js';
+import ImportEventType from '../ui/im/importeventtype.js';
+import ImportProcess from '../ui/im/importprocess.js';
+import MenuEvent from '../ui/menu/menuevent.js';
+import getUserArea from '../ui/query/area/getuserarea.js';
+import uiLaunchChooseArea from '../ui/query/area/launchchoosearea.js';
+import AreaAdd from '../ui/query/cmd/areaaddcmd.js';
+import {getAreaManager} from './queryinstance.js';
+import {WORLD_AREA} from './queryutils.js';
 
 const Feature = goog.requireType('ol.Feature');
-const OSFile = goog.requireType('os.file.File');
-const FileManager = goog.requireType('os.file.FileManager');
-const ImportManager = goog.requireType('os.ui.im.ImportManager');
+const {default: OSFile} = goog.requireType('os.file.File');
+const {default: FileManager} = goog.requireType('os.file.FileManager');
+const {default: ImportManager} = goog.requireType('os.ui.im.ImportManager');
 
 
 /**
  * How an area is being used by the application.
  * @enum {number}
  */
-const AreaState = {
+export const AreaState = {
   NONE: 0,
   EXCLUSION: 1,
   INCLUSION: 2,
@@ -41,7 +41,7 @@ const AreaState = {
  * @param {!Feature} area
  * @param {boolean=} opt_active
  */
-const addArea = function(area, opt_active) {
+export const addArea = function(area, opt_active) {
   var active = opt_active !== undefined ? opt_active : true;
 
   // Make sure the area is enabled if it is in the app
@@ -63,13 +63,13 @@ let areaImportManager = null;
  * Get the area import manager.
  * @return {ImportManager}
  */
-const getAreaImportManager = () => areaImportManager;
+export const getAreaImportManager = () => areaImportManager;
 
 /**
  * Set the area import manager.
  * @param {ImportManager} value The manager.
  */
-const setAreaImportManager = (value) => {
+export const setAreaImportManager = (value) => {
   areaImportManager = value;
 };
 
@@ -83,13 +83,13 @@ let areaFileManager = null;
  * Get the area import manager.
  * @return {FileManager}
  */
-const getAreaFileManager = () => areaFileManager;
+export const getAreaFileManager = () => areaFileManager;
 
 /**
  * Set the area import manager.
  * @param {FileManager} value The manager.
  */
-const setAreaFileManager = (value) => {
+export const setAreaFileManager = (value) => {
   areaFileManager = value;
 };
 
@@ -99,7 +99,7 @@ const setAreaFileManager = (value) => {
  * @param {Object<string, *>=} opt_config Optional config to pass to the import process.
  * @param {OSFile=} opt_file Optional file to pass to the import process.
  */
-const launchQueryImport = function(opt_config, opt_file) {
+export const launchQueryImport = function(opt_config, opt_file) {
   Metrics.getInstance().updateMetric(FiltersKeys.IMPORT, 1);
   var importProcess = new ImportProcess(areaImportManager, areaFileManager);
   importProcess.setEvent(new ImportEvent(ImportEventType.FILE, opt_file, undefined, opt_config));
@@ -110,7 +110,7 @@ const launchQueryImport = function(opt_config, opt_file) {
  * Launches the enter coordinates window.
  * @param {boolean=} opt_modal Optional flag if modal
  */
-const launchCoordinates = function(opt_modal) {
+export const launchCoordinates = function(opt_modal) {
   Metrics.getInstance().updateMetric(MapKeys.LOAD_FROM_COORDINATES, 1);
   getUserArea(undefined, undefined, opt_modal).then(addArea, () => {});
 };
@@ -118,7 +118,7 @@ const launchCoordinates = function(opt_modal) {
 /**
  * Launches the choose area window.
  */
-const launchChooseArea = function() {
+export const launchChooseArea = function() {
   Metrics.getInstance().updateMetric(MapKeys.LOAD_FROM_AREA, 1);
   uiLaunchChooseArea(addArea);
 };
@@ -126,7 +126,7 @@ const launchChooseArea = function() {
 /**
  * Adds an area area covering the whole world.
  */
-const queryWorld = function() {
+export const queryWorld = function() {
   var world = WORLD_AREA.clone();
   if (world) {
     Metrics.getInstance().updateMetric(MapKeys.QUERY_WORLD, 1);
@@ -136,17 +136,4 @@ const queryWorld = function() {
     geom.set(METHOD_FIELD, Method.NONE, true);
     addArea(world, false);
   }
-};
-
-exports = {
-  AreaState,
-  addArea,
-  getAreaImportManager,
-  setAreaImportManager,
-  getAreaFileManager,
-  setAreaFileManager,
-  launchQueryImport,
-  launchCoordinates,
-  launchChooseArea,
-  queryWorld
 };

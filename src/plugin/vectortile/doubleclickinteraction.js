@@ -1,6 +1,11 @@
 goog.declareModuleId('plugin.vectortile.DoubleClick');
 
-goog.require('os.mixin.renderfeature');
+import '../../os/mixin/renderfeaturemixin.js';
+import I3DSupport from '../../os/i3dsupport.js';
+import osImplements from '../../os/implements.js';
+import VectorTile from '../../os/layer/vectortile.js';
+import MapContainer from '../../os/mapcontainer.js';
+import launchMultiFeatureInfo from '../../os/ui/feature/launchmultifeatureinfo.js';
 
 const {getUid} = goog.require('ol');
 const OLMap = goog.require('ol.Map');
@@ -9,18 +14,12 @@ const ViewHint = goog.require('ol.ViewHint');
 const Interaction = goog.require('ol.interaction.Interaction');
 const RenderFeature = goog.require('ol.render.Feature');
 
-const I3DSupport = goog.require('os.I3DSupport');
-const MapContainer = goog.require('os.MapContainer');
-const osImplements = goog.require('os.implements');
-const VectorTile = goog.require('os.layer.VectorTile');
-const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
-
 const Feature = goog.requireType('ol.Feature');
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 const PluggableMap = goog.requireType('ol.PluggableMap');
 const OLLayer = goog.requireType('ol.layer.Layer');
 const VectorTileSource = goog.requireType('ol.source.VectorTile');
-const OSMap = goog.requireType('os.Map');
+const {default: OSMap} = goog.requireType('os.Map');
 
 
 /**

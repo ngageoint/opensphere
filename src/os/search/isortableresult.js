@@ -1,12 +1,11 @@
-goog.module('os.search.ISortableResult');
-
+goog.declareModuleId('os.search.ISortableResult');
 
 /**
  * Interface representing a sortable search result.
  * @interface
  * @template T
  */
-class ISortableResult {
+export default class ISortableResult {
   /**
    * Get the value for a sort type.
    * @param {string} sortType The sort type.
@@ -20,5 +19,3 @@ class ISortableResult {
  * @const {string}
  */
 ISortableResult.ID = 'os.search.ISortableResult';
-
-exports = ISortableResult;

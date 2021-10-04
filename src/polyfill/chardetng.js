@@ -1,10 +1,11 @@
 goog.declareModuleId('polyfill.chardetng');
 
 import * as os from '../os/os.js';
+import {createConstant} from '../os/string/string.js';
 
 const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
-const {createConstant} = goog.require('os.string');
 const {safeLoad} = goog.require('goog.net.jsloader');
+
 
 /**
  * @define {string} Base path to the jschardet library from the OpenSphere root.

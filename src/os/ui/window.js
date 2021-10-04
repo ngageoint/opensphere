@@ -1,10 +1,11 @@
-goog.module('os.ui.window');
+goog.declareModuleId('os.ui.window');
+
+import {forEach} from '../array/array.js';
+import {apply} from './ui.js';
+import windowSelector from './windowselector.js';
+import windowZIndexMax from './windowzindexmax.js';
 
 const {bucket} = goog.require('goog.array');
-const {forEach} = goog.require('os.array');
-const {apply} = goog.require('os.ui');
-const windowSelector = goog.require('os.ui.windowSelector');
-const windowZIndexMax = goog.require('os.ui.windowZIndexMax');
 
 const {Controller: WindowCtrl} = goog.requireType('os.ui.WindowUI');
 
@@ -13,7 +14,7 @@ const {Controller: WindowCtrl} = goog.requireType('os.ui.WindowUI');
  * Number of pixels to cascade windows.
  * @type {number}
  */
-const CASCADE_OFFSET = 20;
+export const CASCADE_OFFSET = 20;
 
 /**
  * Map of currently open windows.
@@ -37,7 +38,7 @@ const openingWindows = {};
  * @param {angular.$compile=} opt_compile The compile function
  * @param {Object<string, *>=} opt_scopeOptions Key/value pairs to add to the scope
  */
-const create = function(options, html, opt_parent, opt_scope, opt_compile, opt_scopeOptions) {
+export const create = function(options, html, opt_parent, opt_scope, opt_compile, opt_scopeOptions) {
   if (options['id']) {
     if (isOpening(/** @type {string} */ (options['id']))) {
       return;
@@ -86,7 +87,7 @@ const create = function(options, html, opt_parent, opt_scope, opt_compile, opt_s
  * @param {angular.$compile=} opt_compile The compile function
  * @param {Object<string, *>=} opt_scopeOptions Key/value pairs to add to the scope
  */
-const launch = function(html, opt_parent, opt_scope, opt_compile, opt_scopeOptions) {
+export const launch = function(html, opt_parent, opt_scope, opt_compile, opt_scopeOptions) {
   if (!opt_parent) {
     opt_parent = windowSelector.CONTAINER;
   }
@@ -117,7 +118,7 @@ const launch = function(html, opt_parent, opt_scope, opt_compile, opt_scopeOptio
  * @param {Object<string, *>=} opt_scopeOptions Key/value pairs to add to the scope
  * @ngInject
  */
-const launchInternal = function(html, parent, $scope, $compile, opt_scopeOptions) {
+export const launchInternal = function(html, parent, $scope, $compile, opt_scopeOptions) {
   // make a new scope
   var s = $scope.$new();
   if (opt_scopeOptions != null) {
@@ -133,7 +134,7 @@ const launchInternal = function(html, parent, $scope, $compile, opt_scopeOptions
  *
  * @param {string} id The window's id (without the #)
  */
-const bringToFront = function(id) {
+export const bringToFront = function(id) {
   var win = getById(id);
   if (win) {
     var scope = win.children().first().scope();
@@ -149,7 +150,7 @@ const bringToFront = function(id) {
  * @param {?string=} opt_id The window's id (without the #)
  * @return {?Function} callback to toggle windows that got turn off back on
  */
-const toggleVisibility = function(opt_id) {
+export const toggleVisibility = function(opt_id) {
   var callback = null;
   var wins = opt_id ? getById(opt_id) : angular.element(windowSelector.WINDOW + ':not(.ng-hide)');
   if (wins) {
@@ -180,7 +181,7 @@ const toggleVisibility = function(opt_id) {
  *
  * @param {string} id The window's id (without the #)
  */
-const enableModality = function(id) {
+export const enableModality = function(id) {
   var win = getById(id);
   if (win) {
     var scope = win.children().first().scope();
@@ -198,7 +199,7 @@ const enableModality = function(id) {
  *
  * @param {string} id The window's id (without the #)
  */
-const disableModality = function(id) {
+export const disableModality = function(id) {
   var win = getById(id);
   if (win) {
     var scope = win.children().first().scope();
@@ -216,7 +217,7 @@ const disableModality = function(id) {
  *
  * @param {?angular.JQLite} el An element within the window
  */
-const close = function(el) {
+export const close = function(el) {
   if (el) {
     var scope = (el.is(windowSelector.WINDOW) || el.is(windowSelector.DOCKED)) ?
       el.children().scope() : el.parents(windowSelector.WINDOW).children().scope();
@@ -241,7 +242,7 @@ const close = function(el) {
  *
  * @param {string=} opt_parent
  */
-const closeAll = function(opt_parent) {
+export const closeAll = function(opt_parent) {
   var container = windowSelector.CONTAINER;
   if (opt_parent) {
     container = opt_parent;
@@ -261,7 +262,7 @@ const closeAll = function(opt_parent) {
  * @param {string} id The id, without the leading `#`.
  * @return {?angular.JQLite} The window(s), if found.
  */
-const getById = function(id) {
+export const getById = function(id) {
   // check if registered by id
   var wins = openWindows['#' + id];
 
@@ -278,7 +279,7 @@ const getById = function(id) {
  *
  * @return {!Object<string, !Array<!Element>>} The window(s)
  */
-const getOpenWindows = function() {
+export const getOpenWindows = function() {
   return openWindows;
 };
 
@@ -288,7 +289,7 @@ const getOpenWindows = function() {
  * @param {string} id
  * @param {Object} params
  */
-const setParams = function(id, params) {
+export const setParams = function(id, params) {
   var win = getById(id);
   if (win) {
     var scope = win.children().first().scope();
@@ -304,7 +305,7 @@ const setParams = function(id, params) {
  * @param {string} id The id, without the leading `#`.
  * @return {boolean} If the window exists.
  */
-const exists = function(id) {
+export const exists = function(id) {
   return !!getById(id);
 };
 
@@ -314,7 +315,7 @@ const exists = function(id) {
  * @param {string} id The id, without the leading `#`.
  * @return {boolean} If the window exists.
  */
-const isOpening = function(id) {
+export const isOpening = function(id) {
   var wins = openingWindows['#' + id];
   return wins ? true : false;
 };
@@ -325,7 +326,7 @@ const isOpening = function(id) {
  * @param {!string} id window ID
  * @param {boolean=} opt_start Defaults to start (true), stop blinking if false is specified.
  */
-const blink = function(id, opt_start) {
+export const blink = function(id, opt_start) {
   var win = getById(id);
   if (win) {
     var start = opt_start !== undefined ? opt_start : true;
@@ -345,7 +346,7 @@ const blink = function(id, opt_start) {
  * @param {!Element} from The window to cascade against.
  * @param {Element=} opt_container The window container.
  */
-const cascade = function(win, from, opt_container) {
+export const cascade = function(win, from, opt_container) {
   // Shift the window right/down by the cascade offset.
   var fromRect = from.getBoundingClientRect();
   var x = fromRect.x + CASCADE_OFFSET;
@@ -378,7 +379,7 @@ const cascade = function(win, from, opt_container) {
  *
  * @param {!Element} topWin The top window.
  */
-const stack = function(topWin) {
+export const stack = function(topWin) {
   var windows = /** @type {!Array<Element>} */ ($.makeArray($(windowSelector.WINDOW)))
       .sort(sortByZIndex);
 
@@ -420,7 +421,7 @@ const stack = function(topWin) {
  * @param {Element} b Another window.
  * @return {number} The sort value.
  */
-const sortByZIndex = function(a, b) {
+export const sortByZIndex = function(a, b) {
   var aIndex = $(a).css('zIndex') || 0;
   var bIndex = $(b).css('zIndex') || 0;
   return aIndex > bIndex ? -1 : aIndex < bIndex ? 1 : 0;
@@ -432,7 +433,7 @@ const sortByZIndex = function(a, b) {
  * @param {string} id The window id.
  * @param {!Element} el The element.
  */
-const registerWindow = function(id, el) {
+export const registerWindow = function(id, el) {
   delete openingWindows[id];
 
   if (!openWindows[id]) {
@@ -448,7 +449,7 @@ const registerWindow = function(id, el) {
  * @param {string} id The window id.
  * @param {!Element} el The element.
  */
-const unregisterWindow = function(id, el) {
+export const unregisterWindow = function(id, el) {
   var wins = openWindows[id];
   if (wins) {
     var idx = wins.indexOf(el);
@@ -460,28 +461,4 @@ const unregisterWindow = function(id, el) {
       delete openWindows[id];
     }
   }
-};
-
-exports = {
-  CASCADE_OFFSET,
-  create,
-  launch,
-  launchInternal,
-  bringToFront,
-  toggleVisibility,
-  enableModality,
-  disableModality,
-  close,
-  closeAll,
-  getById,
-  getOpenWindows,
-  setParams,
-  exists,
-  isOpening,
-  blink,
-  cascade,
-  stack,
-  sortByZIndex,
-  registerWindow,
-  unregisterWindow
 };

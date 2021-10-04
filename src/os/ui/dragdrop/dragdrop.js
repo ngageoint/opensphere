@@ -1,11 +1,12 @@
-goog.module('os.ui.DragDrop');
+goog.declareModuleId('os.ui.DragDrop');
+
+import DragDropStyle from './dragdropstyle.js';
 
 const {getAncestorByClass} = goog.require('goog.dom');
 const classlist = goog.require('goog.dom.classlist');
 const EventType = goog.require('goog.fx.AbstractDragDrop.EventType');
 const GoogDragDrop = goog.require('goog.fx.DragDrop');
 const Coordinate = goog.require('goog.math.Coordinate');
-const DragDropStyle = goog.require('os.ui.DragDropStyle');
 
 const DragDropEvent = goog.requireType('goog.fx.DragDropEvent');
 
@@ -13,7 +14,7 @@ const DragDropEvent = goog.requireType('goog.fx.DragDropEvent');
 /**
  * Object containing the link function used by the directive.
  */
-class DragDrop {
+export default class DragDrop {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope angular scope
@@ -208,5 +209,3 @@ class DragDrop {
     classlist.remove(event.dropTargetItem.element, DragDropStyle.DRAG_DROP_CLASS);
   }
 }
-
-exports = DragDrop;

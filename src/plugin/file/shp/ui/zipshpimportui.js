@@ -1,23 +1,22 @@
 goog.declareModuleId('plugin.file.shp.ui.ZipSHPImportUI');
 
+import AlertEventSeverity from '../../../../os/alert/alerteventseverity.js';
+import AlertManager from '../../../../os/alert/alertmanager.js';
+import DataManager from '../../../../os/data/datamanager.js';
+import * as osFile from '../../../../os/file/index.js';
+import MappingManager from '../../../../os/im/mapping/mappingmanager.js';
+import FileImportUI from '../../../../os/ui/im/fileimportui.js';
+import * as osWindow from '../../../../os/ui/window.js';
+import windowSelector from '../../../../os/ui/windowselector.js';
+import OptionsStep from '../../../../os/ui/wiz/optionsstep.js';
+import TimeStep from '../../../../os/ui/wiz/step/timestep.js';
 import * as mime from '../mime.js';
 import SHPDescriptor from '../shpdescriptor.js';
 import SHPParserConfig from '../shpparserconfig.js';
 import SHPProvider from '../shpprovider.js';
 import {directiveTag as shpImportUi} from './shpimport.js';
 
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
-const AlertManager = goog.require('os.alert.AlertManager');
-const DataManager = goog.require('os.data.DataManager');
-const osFile = goog.require('os.file');
-const MappingManager = goog.require('os.im.mapping.MappingManager');
-const FileImportUI = goog.require('os.ui.im.FileImportUI');
-const osWindow = goog.require('os.ui.window');
-const windowSelector = goog.require('os.ui.windowSelector');
-const OptionsStep = goog.require('os.ui.wiz.OptionsStep');
-const TimeStep = goog.require('os.ui.wiz.step.TimeStep');
-
-const OSFile = goog.requireType('os.file.File');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**

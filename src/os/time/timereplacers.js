@@ -1,8 +1,8 @@
-goog.module('os.time.replacers');
+goog.declareModuleId('os.time.replacers');
 
-const VariableReplacer = goog.require('os.net.VariableReplacer');
-const time = goog.require('os.time');
-const TimeRangePresets = goog.require('os.time.TimeRangePresets');
+import VariableReplacer from '../net/variablereplacer.js';
+import * as time from './time.js';
+import * as TimeRangePresets from './timerangepresets.js';
 
 
 /**
@@ -14,7 +14,7 @@ let initialized = false;
 /**
  * Initialize variable replacers for time.
  */
-const init = () => {
+export const init = () => {
   if (!initialized) {
     initialized = true;
 
@@ -23,8 +23,4 @@ const init = () => {
     // replace {time:[start|end]} in URI's
     VariableReplacer.add('time', TimeRangePresets.replaceTime);
   }
-};
-
-exports = {
-  init
 };

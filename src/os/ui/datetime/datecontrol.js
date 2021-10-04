@@ -1,20 +1,20 @@
-goog.module('os.ui.datetime.DateControlUI');
+goog.declareModuleId('os.ui.datetime.DateControlUI');
 
-goog.require('os.ui.datetime.WheelDateUI');
+import './wheeldate.js';
+import {ROOT} from '../../os.js';
+import Duration from '../../time/duration.js';
+import * as time from '../../time/time.js';
+import TimelineController from '../../time/timelinecontroller.js';
+import TimelineEventType from '../../time/timelineeventtype.js';
+import Module from '../module.js';
+import {apply} from '../ui.js';
 
 const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
-const {ROOT} = goog.require('os');
-const time = goog.require('os.time');
-const Duration = goog.require('os.time.Duration');
-const TimelineController = goog.require('os.time.TimelineController');
-const TimelineEventType = goog.require('os.time.TimelineEventType');
-const {apply} = goog.require('os.ui');
-const Module = goog.require('os.ui.Module');
 
-const TimelineControllerEvent = goog.requireType('os.time.TimelineControllerEvent');
+const {default: TimelineControllerEvent} = goog.requireType('os.time.TimelineControllerEvent');
 
 
 /**
@@ -22,7 +22,7 @@ const TimelineControllerEvent = goog.requireType('os.time.TimelineControllerEven
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
+export const directive = () => ({
   restrict: 'AE',
   replace: true,
   scope: true,
@@ -35,7 +35,7 @@ const directive = () => ({
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'date-control';
+export const directiveTag = 'date-control';
 
 /**
  * Add the directive to the module.
@@ -46,7 +46,7 @@ Module.directive('dateControl', [directive]);
  * Controller for the date-control directive.
  * @unrestricted
  */
-class Controller extends Disposable {
+export class Controller extends Disposable {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -462,9 +462,3 @@ class Controller extends Disposable {
  * @type {goog.log.Logger}
  */
 const logger = log.getLogger('os.ui.datetime.DateControlUI');
-
-exports = {
-  Controller,
-  directive,
-  directiveTag
-};

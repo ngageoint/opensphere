@@ -1,19 +1,20 @@
-goog.module('os.histo.DateBinMethod');
+goog.declareModuleId('os.histo.DateBinMethod');
+
+import DataModel from '../data/xf/datamodel.js';
+import * as time from '../time/time.js';
+import {sortByKey, sortByKeyDesc} from './binutils.js';
+import DateBinType from './datebintype.js';
+import UniqueBinMethod from './uniquebinmethod.js';
 
 const {containsValue} = goog.require('goog.object');
 const {padNumber} = goog.require('goog.string');
-const DataModel = goog.require('os.data.xf.DataModel');
-const DateBinType = goog.require('os.histo.DateBinType');
-const UniqueBinMethod = goog.require('os.histo.UniqueBinMethod');
-const {sortByKey, sortByKeyDesc} = goog.require('os.histo.bin');
-const time = goog.require('os.time');
 
-const TimeInstant = goog.requireType('os.time.TimeInstant');
+const {default: TimeInstant} = goog.requireType('os.time.TimeInstant');
 
 
 /**
  */
-class DateBinMethod extends UniqueBinMethod {
+export default class DateBinMethod extends UniqueBinMethod {
   /**
    * Constructor.
    */
@@ -511,5 +512,3 @@ DateBinMethod.MAGIC_MONTH_MILLIS = 1000 * 60 * 60 * 2 * 365; // 2 = (24 / 12) i.
  * @const
  */
 DateBinMethod.MAGIC_YEAR_MILLIS = (1000 * 60 * 60 * 24 * 365);
-
-exports = DateBinMethod;

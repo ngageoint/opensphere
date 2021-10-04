@@ -1,15 +1,15 @@
-goog.module('os.command.VectorLayerSize');
+goog.declareModuleId('os.command.VectorLayerSize');
 
-const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const {Layer: LayerKeys} = goog.require('os.metrics.keys');
-const osStyle = goog.require('os.style');
-const StyleManager = goog.require('os.style.StyleManager');
+import {Layer as LayerKeys} from '../metrics/metricskeys.js';
+import * as osStyle from '../style/style.js';
+import StyleManager from '../style/stylemanager_shim.js';
+import AbstractVectorStyle from './abstractvectorstylecmd.js';
 
 
 /**
  * Changes the size of a layer
  */
-class VectorLayerSize extends AbstractVectorStyle {
+export default class VectorLayerSize extends AbstractVectorStyle {
   /**
    * Constructor.
    * @param {string} layerId
@@ -40,5 +40,3 @@ class VectorLayerSize extends AbstractVectorStyle {
     super.applyValue(config, value);
   }
 }
-
-exports = VectorLayerSize;

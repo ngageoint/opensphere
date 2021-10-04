@@ -1,17 +1,18 @@
-goog.module('os.ui.search.FacetNode');
+goog.declareModuleId('os.ui.search.FacetNode');
+
+import TriState from '../../structs/tristate.js';
+import SlickTreeNode from '../slick/slicktreenode.js';
+import {sanitize} from '../ui.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const TriState = goog.require('os.structs.TriState');
-const {sanitize} = goog.require('os.ui');
-const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
  * @unrestricted
  */
-class FacetNode extends SlickTreeNode {
+export default class FacetNode extends SlickTreeNode {
   /**
    * Constructor.
    */
@@ -142,5 +143,3 @@ class FacetNode extends SlickTreeNode {
  * @const
  */
 FacetNode.TYPE = 'facet';
-
-exports = FacetNode;

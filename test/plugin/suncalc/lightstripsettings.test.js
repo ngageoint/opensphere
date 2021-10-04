@@ -5,7 +5,7 @@ goog.require('plugin.suncalc.LightStripSettingsUI');
 
 describe('plugin.suncalc.LightStripSettingsUI', function() {
   const {ROOT} = goog.module.get('os');
-  const Settings = goog.module.get('os.config.Settings');
+  const {default: Settings} = goog.module.get('os.config.Settings');
   const {duskMode, SettingKey} = goog.module.get('plugin.suncalc');
   const {Controller, directive} = goog.module.get('plugin.suncalc.LightStripSettingsUI');
 

@@ -1,12 +1,12 @@
-goog.module('os.filter.im.OSFilterImportUI');
+goog.declareModuleId('os.filter.im.OSFilterImportUI');
 
-const {directiveTag: filterImportUi} = goog.require('os.filter.im.OSFilterImport');
-const FilterImportUI = goog.require('os.ui.filter.im.FilterImportUI');
+import FilterImportUI from '../../ui/filter/im/filterimportui.js';
+import {directiveTag as filterImportUi} from './osfilterimport.js';
 
 
 /**
  */
-class OSFilterImportUI extends FilterImportUI {
+export default class OSFilterImportUI extends FilterImportUI {
   /**
    * Constructor.
    */
@@ -22,5 +22,3 @@ class OSFilterImportUI extends FilterImportUI {
         `layer-id="layerId"></${filterImportUi}>`;
   }
 }
-
-exports = OSFilterImportUI;

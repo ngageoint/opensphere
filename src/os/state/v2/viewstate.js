@@ -1,20 +1,21 @@
-goog.module('os.state.v2.ViewState');
+goog.declareModuleId('os.state.v2.ViewState');
+
+import {getMapContainer} from '../../map/mapinstance.js';
+import MapMode from '../../map/mapmode.js';
+import {KMLNS, XMLNS, appendElement, appendElementNS} from '../../xml.js';
+import XMLState from '../xmlstate.js';
+import ViewProjection from './viewprojection.js';
 
 const log = goog.require('goog.log');
 const {clamp} = goog.require('goog.math');
 const {setAttributeNS} = goog.require('ol.xml');
-const MapMode = goog.require('os.MapMode');
-const {getMapContainer} = goog.require('os.map.instance');
-const XMLState = goog.require('os.state.XMLState');
-const ViewProjection = goog.require('os.state.v2.ViewProjection');
-const {KMLNS, XMLNS, appendElement, appendElementNS} = goog.require('os.xml');
 
 const Logger = goog.requireType('goog.log.Logger');
 
 
 /**
  */
-class ViewState extends XMLState {
+export default class ViewState extends XMLState {
   /**
    * Constructor.
    */
@@ -122,5 +123,3 @@ class ViewState extends XMLState {
  * @type {Logger}
  */
 const logger = log.getLogger('os.state.v2.ViewState');
-
-exports = ViewState;

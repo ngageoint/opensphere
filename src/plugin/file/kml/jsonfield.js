@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.file.kml.JsonField');
 
-const annotation = goog.require('os.annotation');
-const RecordField = goog.require('os.data.RecordField');
+import * as annotation from '../../../os/annotation/annotation.js';
+import RecordField from '../../../os/data/recordfield.js';
 
 
 /**

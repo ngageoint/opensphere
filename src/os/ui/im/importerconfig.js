@@ -1,4 +1,4 @@
-goog.module('os.ui.im.ImporterConfig');
+goog.declareModuleId('os.ui.im.ImporterConfig');
 
 /**
  * @typedef {{
@@ -8,4 +8,4 @@ goog.module('os.ui.im.ImporterConfig');
  */
 let ImporterConfig;
 
-exports = ImporterConfig;
+export default ImporterConfig;

@@ -1,7 +1,15 @@
 goog.declareModuleId('plugin.file.kml.KMLPlugin');
 
 import './ui/placemarkedit.js';
-
+import Settings from '../../../os/config/settings.js';
+import DataManager from '../../../os/data/datamanager.js';
+import ProviderEntry from '../../../os/data/providerentry.js';
+import LayerConfigManager from '../../../os/layer/config/layerconfigmanager.js';
+import Request from '../../../os/net/request.js';
+import AbstractPlugin from '../../../os/plugin/abstractplugin.js';
+import * as kml from '../../../os/ui/file/kml/kml.js';
+import exportManager from '../../../os/ui/file/uiexportmanager.js';
+import ImportManager from '../../../os/ui/im/importmanager.js';
 import KMLDescriptor from './kmldescriptor.js';
 import KMLExporter from './kmlexporter.js';
 import KMLFeatureParser from './kmlfeatureparser.js';
@@ -11,16 +19,6 @@ import KMLParser from './kmlparser.js';
 import KMLProvider from './kmlprovider.js';
 import * as mime from './mime.js';
 import KMLImportUI from './ui/kmlimportui.js';
-
-const Settings = goog.require('os.config.Settings');
-const DataManager = goog.require('os.data.DataManager');
-const ProviderEntry = goog.require('os.data.ProviderEntry');
-const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
-const Request = goog.require('os.net.Request');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const exportManager = goog.require('os.ui.exportManager');
-const kml = goog.require('os.ui.file.kml');
-const ImportManager = goog.require('os.ui.im.ImportManager');
 
 
 /**

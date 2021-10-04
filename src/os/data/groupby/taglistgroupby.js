@@ -1,15 +1,18 @@
-goog.module('os.data.groupby.TagListGroupBy');
+goog.declareModuleId('os.data.groupby.TagListGroupBy');
+
+import Settings from '../../config/settings.js';
+import TagGroupBy from '../../ui/data/groupby/taggroupby.js';
 
 const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
-const Settings = goog.require('os.config.Settings');
-const TagGroupBy = goog.require('os.ui.data.groupby.TagGroupBy');
+
+const {default: ISearchable} = goog.requireType('os.data.ISearchable');
 
 
 /**
  * Groups nodes by a given list of tags
  */
-class TagListGroupBy extends TagGroupBy {
+export default class TagListGroupBy extends TagGroupBy {
   /**
    * Constructor.
    * @param {boolean=} opt_open Keeps groups open by default
@@ -49,11 +52,11 @@ class TagListGroupBy extends TagGroupBy {
     var tags = null;
 
     try {
-      tags = /** @type {os.data.ISearchable} */ (node).getTags();
+      tags = /** @type {ISearchable} */ (node).getTags();
 
       if (!tags) {
         // try the parent
-        tags = /** @type {os.data.ISearchable} */ (node.getParent()).getTags();
+        tags = /** @type {ISearchable} */ (node.getParent()).getTags();
       }
     } catch (e) {
     }
@@ -82,5 +85,3 @@ class TagListGroupBy extends TagGroupBy {
     return ids;
   }
 }
-
-exports = TagListGroupBy;

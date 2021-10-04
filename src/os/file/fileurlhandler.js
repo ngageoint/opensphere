@@ -1,16 +1,16 @@
-goog.module('os.file.FileUrlHandler');
+goog.declareModuleId('os.file.FileUrlHandler');
 
-const dispatcher = goog.require('os.Dispatcher');
-const DataManager = goog.require('os.data.DataManager');
-const ImportEvent = goog.require('os.ui.im.ImportEvent');
-const ImportEventType = goog.require('os.ui.im.ImportEventType');
-const AbstractUrlHandler = goog.require('os.url.AbstractUrlHandler');
+import DataManager from '../data/datamanager.js';
+import * as dispatcher from '../dispatcher.js';
+import ImportEvent from '../ui/im/importevent.js';
+import ImportEventType from '../ui/im/importeventtype.js';
+import AbstractUrlHandler from '../url/abstracturlhandler.js';
 
 
 /**
  * Handles URL parameters for files.
  */
-class FileUrlHandler extends AbstractUrlHandler {
+export default class FileUrlHandler extends AbstractUrlHandler {
   /**
    * Constructor.
    */
@@ -98,5 +98,3 @@ let instance;
  * @const
  */
 FileUrlHandler.KEY = 'file';
-
-exports = FileUrlHandler;

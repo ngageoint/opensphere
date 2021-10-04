@@ -1,14 +1,15 @@
-goog.module('os.net.ParamModifier');
+goog.declareModuleId('os.net.ParamModifier');
+
+import AbstractModifier from './abstractmodifier.js';
 
 const {assert} = goog.require('goog.asserts');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const AbstractModifier = goog.require('os.net.AbstractModifier');
 
 
 /**
  * URI parameter replacement modifier.
  */
-class ParamModifier extends AbstractModifier {
+export default class ParamModifier extends AbstractModifier {
   /**
    * Constructor.
    * @param {string} id Identifier for the modifier
@@ -99,5 +100,3 @@ class ParamModifier extends AbstractModifier {
     }
   }
 }
-
-exports = ParamModifier;

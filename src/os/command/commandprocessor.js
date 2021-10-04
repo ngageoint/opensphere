@@ -1,17 +1,17 @@
-goog.module('os.command.CommandProcessor');
+goog.declareModuleId('os.command.CommandProcessor');
+
+import CommandEvent from './commandevent.js';
+import EventType from './eventtype.js';
+import State from './state.js';
 
 const googArray = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
-const os = goog.require('os');
-const CommandEvent = goog.require('os.command.CommandEvent');
-const EventType = goog.require('os.command.EventType');
-const State = goog.require('os.command.State');
 
 const Logger = goog.requireType('goog.log.Logger');
-const ICommand = goog.requireType('os.command.ICommand');
+const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -21,7 +21,7 @@ const ICommand = goog.requireType('os.command.ICommand');
  * commands that kick off jobs are recommended over asynchronous commands
  * unless the asynchronous processing is quick enough to make that overkill.
  */
-class CommandProcessor extends EventTarget {
+export default class CommandProcessor extends EventTarget {
   /**
    * Constructor.
    */
@@ -485,11 +485,3 @@ let instance;
  * @type {Logger}
  */
 const logger = log.getLogger('os.command.CommandProcessor');
-
-/**
- * Global reference to the singleton.
- * @type {!CommandProcessor}
- */
-os.commandStack = CommandProcessor.getInstance();
-
-exports = CommandProcessor;

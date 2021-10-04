@@ -1,43 +1,43 @@
 /**
  * Namespace for timeline utilities.
  */
-goog.module('os.time.timeline');
+goog.declareModuleId('os.time.timeline');
 
-const time = goog.require('os.time');
-const Duration = goog.require('os.time.Duration');
+import Duration from './duration.js';
+import * as time from './time.js';
 
-const TimelineController = goog.requireType('os.time.TimelineController');
+const {default: TimelineController} = goog.requireType('os.time.TimelineController');
 
-
-/**
- * @type {number}
- */
-const MIN = 60 * 1000;
 
 /**
  * @type {number}
  */
-const HOUR = 60 * MIN;
+export const MIN = 60 * 1000;
 
 /**
  * @type {number}
  */
-const DAY = 24 * HOUR;
+export const HOUR = 60 * MIN;
 
 /**
  * @type {number}
  */
-const WEEK = 7 * DAY;
+export const DAY = 24 * HOUR;
 
 /**
  * @type {number}
  */
-const MONTH = 30 * DAY;
+export const WEEK = 7 * DAY;
 
 /**
  * @type {number}
  */
-const YEAR = 12 * MONTH;
+export const MONTH = 30 * DAY;
+
+/**
+ * @type {number}
+ */
+export const YEAR = 12 * MONTH;
 
 /**
  * Automatically configures the timeline controller for animation.
@@ -45,7 +45,7 @@ const YEAR = 12 * MONTH;
  * @param {TimelineController} controller
  * @param {string=} opt_durationHint
  */
-const autoConfigureFromTimeRange = function(controller, opt_durationHint) {
+export const autoConfigureFromTimeRange = function(controller, opt_durationHint) {
   var durationHint = opt_durationHint !== undefined ? opt_durationHint : 'auto';
 
   var diff = controller.getSmallestAnimateRangeLength();
@@ -75,7 +75,7 @@ const autoConfigureFromTimeRange = function(controller, opt_durationHint) {
  * @param {TimelineController} controller
  * @param {number} range The timeline range
  */
-const setDefaultOffsetForRange = function(controller, range) {
+export const setDefaultOffsetForRange = function(controller, range) {
   if (controller) {
     var offset = (range / 24) - ((range / 24) % 1000);
     if (offset == 0) {
@@ -96,7 +96,7 @@ const setDefaultOffsetForRange = function(controller, range) {
  * @param {number} offset
  * @param {string} duration
  */
-const setTileAnimation = function(controller, offset, duration) {
+export const setTileAnimation = function(controller, offset, duration) {
   controller.setOffset(offset);
   controller.setSkip(offset);
   controller.setDuration(duration);
@@ -110,7 +110,7 @@ const setTileAnimation = function(controller, offset, duration) {
  * @param {string=} opt_durationHint
  * @return {string}
  */
-const getDateForFrame = function(controller, opt_durationHint) {
+export const getDateForFrame = function(controller, opt_durationHint) {
   var duration = opt_durationHint !== undefined ? opt_durationHint : Duration.DAY;
   var frameTime = controller.getCurrent();
   var loopEnd = controller.getLoopEnd();
@@ -120,17 +120,4 @@ const getDateForFrame = function(controller, opt_durationHint) {
   }
 
   return time.format(new Date(frameTime), duration);
-};
-
-exports = {
-  MIN,
-  HOUR,
-  DAY,
-  WEEK,
-  MONTH,
-  YEAR,
-  autoConfigureFromTimeRange,
-  setDefaultOffsetForRange,
-  setTileAnimation,
-  getDateForFrame
 };

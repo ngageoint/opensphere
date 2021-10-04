@@ -1,6 +1,6 @@
-goog.module('os.record.IRecord');
+goog.declareModuleId('os.record.IRecord');
 
-const ITime = goog.requireType('os.time.ITime');
+const {default: ITime} = goog.requireType('os.time.ITime');
 
 
 /**
@@ -8,7 +8,7 @@ const ITime = goog.requireType('os.time.ITime');
  *
  * @interface
  */
-class IRecord {
+export default class IRecord {
   /**
    * Constructor.
    */
@@ -32,5 +32,3 @@ class IRecord {
     this.recordTime;
   }
 }
-
-exports = IRecord;

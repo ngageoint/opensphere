@@ -1,19 +1,19 @@
 goog.declareModuleId('plugin.position.CopyPositionUI');
 
+import MapContainer from '../../os/mapcontainer.js';
+import Metrics from '../../os/metrics/metrics.js';
+import * as keys from '../../os/metrics/metricskeys.js';
+import MousePosition from '../../os/ol/control/mousepositioncontrol.js';
 import {ROOT} from '../../os/os.js';
+import Module from '../../os/ui/module.js';
+import * as osWindow from '../../os/ui/window.js';
+import WindowEventType from '../../os/ui/windoweventtype.js';
 
 const dispose = goog.require('goog.dispose');
 const dom = goog.require('goog.dom');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
-const MapContainer = goog.require('os.MapContainer');
-const Metrics = goog.require('os.metrics.Metrics');
-const keys = goog.require('os.metrics.keys');
-const MousePosition = goog.require('os.ol.control.MousePosition');
-const Module = goog.require('os.ui.Module');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-const osWindow = goog.require('os.ui.window');
 
 
 /**
@@ -141,7 +141,7 @@ export const launchCopy = function(opt_coord) {
   var mousePos = null;
   for (var i = 0, n = controls.length; i < n; i++) {
     if (controls[i] instanceof MousePosition) {
-      mousePos = /** @type {os.ol.control.MousePosition} */ (controls[i]);
+      mousePos = /** @type {MousePosition} */ (controls[i]);
       break;
     }
   }

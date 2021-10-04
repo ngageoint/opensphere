@@ -1,10 +1,10 @@
-goog.module('os.net.IRequestHandler');
+goog.declareModuleId('os.net.IRequestHandler');
 
 const Uri = goog.requireType('goog.Uri');
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const Listenable = goog.requireType('goog.events.Listenable');
 const ResponseType = goog.requireType('goog.net.XhrIo.ResponseType');
-const IDataFormatter = goog.requireType('os.net.IDataFormatter');
+const {default: IDataFormatter} = goog.requireType('os.net.IDataFormatter');
 
 
 /**
@@ -17,7 +17,7 @@ const IDataFormatter = goog.requireType('os.net.IDataFormatter');
  * @extends {Listenable}
  * @extends {IDisposable}
  */
-class IRequestHandler {
+export default class IRequestHandler {
   /**
    * The score for this handler. Handlers will be tried in descending order
    * of score.
@@ -100,5 +100,3 @@ class IRequestHandler {
    */
   execute(method, uri, opt_headers, opt_formatter, opt_nocache, opt_responseType) {}
 }
-
-exports = IRequestHandler;

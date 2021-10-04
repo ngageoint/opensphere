@@ -1,9 +1,9 @@
-goog.module('os.data.event.DataEventType');
+goog.declareModuleId('os.data.event.DataEventType');
 
 /**
  * @enum {string}
  */
-exports = {
+const DataEventType = {
   SOURCE_ADDED: 'dataSourceAdded',
   SOURCE_REMOVED: 'dataSourceRemoved',
   SOURCE_REMOVED_NO_DESTROY: 'dataSourceRemovedNotDestroyed',
@@ -12,3 +12,5 @@ exports = {
   DATA_REMOVED: 'dataRemoved',
   MAX_FEATURES: 'maxFeatures'
 };
+
+export default DataEventType;
