@@ -6,9 +6,7 @@ goog.declareModuleId('os.storage.ObjectMechanism');
 import osImplements from '../implements.js';
 import IMechanism from './imechanism.js';
 
-const Iterator = goog.require('goog.iter.Iterator');
-const StopIteration = goog.require('goog.iter.StopIteration');
-const googObject = goog.require('goog.object');
+const {ShimIterable} = goog.require('goog.iter.es6');
 const IterableMechanism = goog.require('goog.storage.mechanism.IterableMechanism');
 
 
@@ -52,7 +50,7 @@ export default class ObjectMechanism extends IterableMechanism {
    * @inheritDoc
    */
   getAll() {
-    return googObject.getValues(this.storage_);
+    return Object.values(this.storage_);
   }
 
   /**
@@ -66,37 +64,24 @@ export default class ObjectMechanism extends IterableMechanism {
    * @inheritDoc
    */
   getCount() {
-    return googObject.getCount(this.storage_);
+    return Object.keys(this.storage_).length;
   }
 
   /**
    * @inheritDoc
    */
   clear() {
-    googObject.clear(this.storage_);
+    for (const i in this.storage_) {
+      delete this.storage_[i];
+    }
   }
 
   /**
    * @inheritDoc
    */
   __iterator__(opt_keys) {
-    var i = 0;
-    var array = opt_keys ? googObject.getKeys(this.storage_) : googObject.getValues(this.storage_);
-    var newIter = new Iterator();
-
-    /**
-     * Next implementation for iterator
-     *
-     * @return {*}
-     */
-    newIter.next = function() {
-      if (i >= array.length) {
-        throw StopIteration;
-      }
-
-      return array[i++];
-    };
-    return newIter;
+    return opt_keys ? ShimIterable.of(Object.keys(this.storage_)).toGoog() :
+                      ShimIterable.of(Object.values(this.storage_)).toGoog();
   }
 }
 

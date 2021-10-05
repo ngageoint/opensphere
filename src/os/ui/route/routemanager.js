@@ -3,6 +3,7 @@ goog.declareModuleId('os.ui.route.RouteManager');
 import * as ui from '../ui.js';
 
 const Uri = goog.require('goog.Uri');
+const {toObject} = goog.require('goog.collections.maps');
 const {isEmpty} = goog.require('goog.object');
 
 const {default: AbstractUrlHandler} = goog.requireType('os.url.AbstractUrlHandler');
@@ -130,7 +131,7 @@ export default class RouteManager {
     var uri = new Uri(window.location);
     var qd = uri.getQueryData();
     qd.ensureKeyMapInitialized_();
-    var obj = qd.keyMap_.toObject();
+    var obj = qd.keyMap_ ? toObject(qd.keyMap_) : {};
     var retObj = {};
     for (var key in obj) {
       retObj[key] = obj[key].join(',');

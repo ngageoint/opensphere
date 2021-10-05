@@ -12,12 +12,9 @@ const QueryData = goog.requireType('goog.Uri.QueryData');
  */
 export const addBase = function(uri) {
   if (window && window.location) {
-    if (!window.location.origin) {
-      window.location.origin = window.location.protocol + '//' + window.location.hostname + (window.location.port ?
-        ':' + window.location.port : '');
-    }
-    var paramUri = new Uri(uri);
-    var resultUri = paramUri.hasDomain() ? paramUri : Uri.resolve(window.location.origin, paramUri);
+    const origin = getWindowOrigin();
+    const paramUri = new Uri(uri);
+    const resultUri = paramUri.hasDomain() ? paramUri : Uri.resolve(origin, paramUri);
     return resultUri.toString();
   } else {
     return uri;
@@ -32,6 +29,20 @@ export const addBase = function(uri) {
  */
 export const getParamUri = function(queryData) {
   return new Uri(window.location.toString()).setQueryData(queryData).toString();
+};
+
+/**
+ * Get the window origin. This will return window.location.origin on most browsers, and will assemble the origin on
+ * older browsers that do not support the property.
+ * @return {string}
+ */
+export const getWindowOrigin = () => {
+  if (window.location.origin) {
+    return window.location.origin;
+  }
+
+  const port = window.location.port ? `:${window.location.port}` : '';
+  return `${window.location.protocol}//${window.location.hostname}${port}`;
 };
 
 /**
