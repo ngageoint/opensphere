@@ -1,11 +1,14 @@
 goog.declareModuleId('os.filter.impl.ecql.AreaFormatter');
 
-import {normalizeGeometryCoordinates} from '../../../geo/geo.js';
+import {normalizeGeometryCoordinates} from '../../../geo/geo2.js';
 import {ORIGINAL_GEOM_FIELD} from '../../../interpolate.js';
 import FilterFormatter from './filterformatter.js';
 
 const WKT = goog.require('ol.format.WKT');
 
+const Geometry = goog.requireType('ol.geom.Geometry');
+const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
+const Polygon = goog.requireType('ol.geom.Polygon');
 const {default: ISpatialFormatter} = goog.requireType('os.filter.ISpatialFormatter');
 
 
@@ -68,21 +71,22 @@ export default class AreaFormatter {
    */
   format(feature) {
     var result = '';
-    var geom = /** @type {ol.geom.Geometry} */ (feature.get(ORIGINAL_GEOM_FIELD)) || feature.getGeometry();
+    var geom = /** @type {Geometry} */ (feature.get(ORIGINAL_GEOM_FIELD)) || feature.getGeometry();
 
     if (geom) {
-      geom = geom.clone().toLonLat();
-      normalizeGeometryCoordinates(geom);
+      const clone = geom.clone();
+      normalizeGeometryCoordinates(clone);
+      clone.toLonLat();
 
       if (!this.supportsAltitude) {
-        var poly = /** @type {ol.geom.MultiPolygon|ol.geom.Polygon} */ (geom);
+        var poly = /** @type {MultiPolygon|Polygon} */ (clone);
 
         var coords = poly.getCoordinates();
         AreaFormatter.stripAltitude(coords);
         poly.setCoordinates(coords);
       }
 
-      result += '(' + this.spatialPredicate + '(' + this.column + ',' + this.wkt.writeGeometry(geom) + '))';
+      result += '(' + this.spatialPredicate + '(' + this.column + ',' + this.wkt.writeGeometry(clone) + '))';
     }
 
     return result;
