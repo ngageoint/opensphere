@@ -64,4 +64,8 @@ describe('os.uri', function() {
     expect(parts[0]).toBe(loc);
     expect(parts[1]).toBe(qd2.toString());
   });
+
+  it('should get the window origin', function() {
+    expect(osUri.getWindowOrigin()).toBe(window.location.origin);
+  });
 });
