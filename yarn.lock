@@ -431,10 +431,10 @@
     mkdirp "^0.5.1"
     rimraf "^2.5.2"
 
-"@ngageoint/closure-webpack-plugin@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@ngageoint/closure-webpack-plugin/-/closure-webpack-plugin-2.0.0.tgz#30cce346a9504bc87c61dfc46a0d328366c43a08"
-  integrity sha512-UWu/NhmBcEylQwOGlXr+nqOx9GmT102OmAV6LHJFREBFjNe0+WQKskUJs0G/8+Sk9ZrsBHmxZkfOR9QSMlx2Xg==
+"@ngageoint/closure-webpack-plugin@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@ngageoint/closure-webpack-plugin/-/closure-webpack-plugin-3.0.0.tgz#450cc83bc062ee1e4f9f804d5ac6ba7542061dd8"
+  integrity sha512-Ajsz7jMHoz0i5K6js1gTqlcPO3K4UUckU9Z8J2E7C3n3/S/NT3csKWBbS9/AXxfXGqD9FX6+0r5K+AqA8XXYYA==
   dependencies:
     acorn "^5.0.0"
     acorn-dynamic-import "^2.0.0"
@@ -10461,10 +10461,10 @@ opensphere-build-index@^4.0.0:
     bluebird "^3.4.6"
     yargs "^6.3.0"
 
-opensphere-build-resolver@^9.0.0:
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/opensphere-build-resolver/-/opensphere-build-resolver-9.1.0.tgz#7b4fe23c5d86739454df61640c0a8be66b575b32"
-  integrity sha512-WzCaPQVMU0bn8qc3M9Z6ujLrmX9GQXk5OuiKxsxWGWZTbRLUBcPLgcLJ/L+jgStQfrJppkIYxCx2koIhX22F8w==
+opensphere-build-resolver@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/opensphere-build-resolver/-/opensphere-build-resolver-10.0.0.tgz#fe6c748ec021ab8b25c68d520e6c943c2d5c2910"
+  integrity sha512-NGYYf4KR2Y+Y4Dkem/urM2eXCPsEsxHlwMl5G076kqllgKPvNT1nygw1OP3tRa164D778g5oMWtOjjJWkm8EYQ==
   dependencies:
     bluebird "^3.7.2"
     clone "^2.1.2"
