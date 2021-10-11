@@ -17,12 +17,12 @@ import MappingManager from '../im/mapping/mappingmanager.js';
 import instanceOf from '../instanceof.js';
 import * as interpolate from '../interpolate.js';
 import Method from '../interpolatemethod.js';
-import LayerClass from '../layer/layerclass.js';
 import LayerId from '../layer/layerid.js';
 import * as osMap from '../map/map.js';
 import {getIMapContainer} from '../map/mapinstance.js';
 import {convertUnits, parseNumber} from '../math/math.js';
 import Units from '../math/units.js';
+import SourceClass from '../source/sourceclass.js';
 import * as osStyle from '../style/style.js';
 import StyleField from '../style/stylefield.js';
 import {getStyleManager} from '../style/styleinstance.js';
@@ -940,7 +940,7 @@ export const getSource = function(feature, opt_layer) {
   if (opt_layer != null) {
     // layer was provided - make sure the source is an OS source
     var layerSource = opt_layer.getSource();
-    if (instanceOf(layerSource, LayerClass.VECTOR)) {
+    if (instanceOf(layerSource, SourceClass.VECTOR)) {
       source = /** @type {!VectorSource} */ (layerSource);
     }
   }
@@ -1080,7 +1080,7 @@ export const getShapeName = function(feature, opt_source, opt_preferSource) {
   if (!shapeName || opt_preferSource) {
     // get the source shape if the feature didn't define its own shape, or the source shape is preferred
     var source = opt_source || getSource(feature);
-    if (source && instanceOf(source, LayerClass.VECTOR)) {
+    if (source && instanceOf(source, SourceClass.VECTOR)) {
       var sourceShape = source.getGeometryShape();
       if (opt_preferSource || sourceShape !== osStyle.ShapeType.DEFAULT) {
         shapeName = sourceShape;
@@ -1107,7 +1107,7 @@ export const getCenterShapeName = function(feature, opt_source, opt_preferSource
   if (!shapeName || opt_preferSource) {
     // get the source shape if the feature didn't define its own shape, or the source shape is preferred
     var source = opt_source || getSource(feature);
-    if (source && instanceOf(source, LayerClass.VECTOR)) {
+    if (source && instanceOf(source, SourceClass.VECTOR)) {
       var sourceShape = source.getCenterGeometryShape();
       if (opt_preferSource || sourceShape !== osStyle.ShapeType.DEFAULT) {
         shapeName = sourceShape;
