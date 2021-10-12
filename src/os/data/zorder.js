@@ -206,8 +206,6 @@ export default class ZOrder extends EventTarget {
         }
       }
     }
-
-    this.dispatchEvent('zOrder:update');
   }
 
   /**

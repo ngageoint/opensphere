@@ -9,10 +9,14 @@ import {getMapContainer} from '../../../map/mapinstance.js';
 import {getMaxFeatures} from '../../../ogc/ogc.js';
 import {ROOT} from '../../../os.js';
 import SourceClass from '../../../source/sourceclass.js';
+import Menu from '../../menu/menu.js';
+import MenuItem from '../../menu/menuitem.js';
+import MenuItemType from '../../menu/menuitemtype.js';
 import Module from '../../module.js';
 import {resize, removeResize} from '../../ui.js';
 import {bringToFront, close as closeWindow, create as createWindow, getById as getWindowById} from '../../window.js';
 import {launchConfirm} from '../../window/confirm.js';
+import LayerCompareNode from './layercomparenode.js';
 
 const Promise = goog.require('goog.Promise');
 const dispose = goog.require('goog.dispose');
@@ -31,6 +35,7 @@ const Control = goog.requireType('ol.control.Control');
 const Layer = goog.requireType('ol.layer.Layer');
 const {default: ISource} = goog.requireType('os.source.ISource');
 const {default: VectorSource} = goog.requireType('os.source.Vector');
+const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -197,6 +202,33 @@ export class Controller {
     this.leftMap = null;
 
     /**
+     * The left layer nodes.
+     * @export {!Array<SlickTreeNode>}
+     */
+    this.leftNodes = [];
+
+    /**
+     * The left selected layer nodes.
+     * @export {!Array<SlickTreeNode>}
+     */
+    this.leftSelected = [];
+
+    /**
+     * The menu for the left SlickGrid.
+     * @export {!Menu<undefined>}
+     */
+    this.leftMenu = new Menu(new MenuItem({
+      type: MenuItemType.ROOT,
+      children: [{
+        label: 'Move Right',
+        eventType: 'moveRight',
+        icons: ['<i class="fas fa-fw fa-angle-right"></i>'],
+        tooltip: 'Move the selected layers to the right map',
+        handler: this.moveSelected.bind(this, 'right')
+      }]
+    }));
+
+    /**
      * The right layers to compare.
      * @type {!Collection<Layer>}
      * @protected
@@ -211,12 +243,31 @@ export class Controller {
     this.rightMap = null;
 
     /**
-     * If the "left" map is on top. Order is really determined by z-index and which element width is adjusted, so the
-     * selectors are really just to keep track of the two maps.
-     * @type {boolean}
-     * @protected
+     * The right layer nodes.
+     * @export {!Array<SlickTreeNode>}
      */
-    this.leftOnTop = true;
+    this.rightNodes = [];
+
+    /**
+     * The right selected layer nodes.
+     * @export {!Array<SlickTreeNode>}
+     */
+    this.rightSelected = [];
+
+    /**
+     * The menu for the right SlickGrid.
+     * @export {!Menu<undefined>}
+     */
+    this.rightMenu = new Menu(new MenuItem({
+      type: MenuItemType.ROOT,
+      children: [{
+        label: 'Move Left',
+        eventType: 'moveLeft',
+        icons: ['<i class="fas fa-fw fa-angle-left"></i>'],
+        tooltip: 'Move the selected layers to the left map',
+        handler: this.moveSelected.bind(this, 'left')
+      }]
+    }));
 
     /**
      * The shared map view.
@@ -368,8 +419,11 @@ export class Controller {
    * @param {Array<Layer>|undefined} layers The layers.
    */
   setLeftLayers(layers) {
-    const collection = this.leftOnTop ? this.leftLayers : this.rightLayers;
+    const collection = this.leftLayers;
     this.setCollectionLayers(collection, layers);
+
+    const nodes = this.createNodes(layers);
+    this.leftNodes = nodes;
   }
 
   /**
@@ -377,8 +431,33 @@ export class Controller {
    * @param {Array<Layer>|undefined} layers The layers.
    */
   setRightLayers(layers) {
-    const collection = this.leftOnTop ? this.rightLayers : this.leftLayers;
+    const collection = this.rightLayers;
     this.setCollectionLayers(collection, layers);
+
+    const nodes = this.createNodes(layers);
+    this.rightNodes = nodes;
+  }
+
+  /**
+   * Creates tree nodes from layers.
+   * @param {Array<Layer>|undefined} layers The layers.
+   * @return {!Array<SlickTreeNode>}
+   */
+  createNodes(layers) {
+    let nodes = [];
+    if (layers && layers.length > 0) {
+      nodes = layers.map((layer) => {
+        if (!isBasemap(layer)) {
+          const node = new LayerCompareNode();
+          node.setLayer(/** @type {ILayer} */ (layer));
+          return node;
+        }
+
+        return null;
+      }).filter((layer) => !!layer);
+    }
+
+    return nodes;
   }
 
   /**
@@ -386,27 +465,33 @@ export class Controller {
    * @export
    */
   swap() {
-    this.leftOnTop = !this.leftOnTop;
+    const rightLayerArr = this.rightLayers.getArray().slice();
+    const leftLayerArr = this.leftLayers.getArray().slice();
 
-    // Swap the order via CSS. This uses z-order to control which map is displayed on top, and the width of the top
-    // map is adjusted by the slider (making it appear to be on the left).
-    //
-    // Map controls are also swapped to ensure they display on the right of the compare window.
-    if (this.leftOnTop) {
-      this.element.find(Selector.MAP_LEFT).addClass('c-layer-compare-top');
-      this.element.find(Selector.MAP_RIGHT).removeClass('c-layer-compare-top').width('auto');
+    this.setRightLayers(leftLayerArr);
+    this.setLeftLayers(rightLayerArr);
+  }
 
-      this.leftMap.getControls().clear();
-      this.rightMap.getControls().extend(createControls());
-    } else {
-      this.element.find(Selector.MAP_LEFT).removeClass('c-layer-compare-top').width('auto');
-      this.element.find(Selector.MAP_RIGHT).addClass('c-layer-compare-top');
+  /**
+   * Moves selected layers to the other side.
+   * @param {string} target The side to move to.
+   * @export
+   */
+  moveSelected(target) {
+    const rightLayerArr = this.rightLayers.getArray();
+    const leftLayerArr = this.leftLayers.getArray();
 
-      this.rightMap.getControls().clear();
-      this.leftMap.getControls().extend(createControls());
+    if (target == 'left') {
+      const layers = this.rightSelected.map((node) => node.getLayer());
+      const rightUnselectedLayers = rightLayerArr.filter((layer) => !layers.includes(layer));
+      this.setRightLayers(rightUnselectedLayers);
+      this.setLeftLayers(leftLayerArr.concat(layers));
+    } else if (target == 'right') {
+      const layers = this.leftSelected.map((node) => node.getLayer());
+      const leftUnselectedLayers = leftLayerArr.filter((layer) => !layers.includes(layer));
+      this.setRightLayers(rightLayerArr.concat(layers));
+      this.setLeftLayers(leftUnselectedLayers);
     }
-
-    this.updateMapContainerWidth();
   }
 
   /**
@@ -415,15 +500,8 @@ export class Controller {
    */
   export() {
     // Get both canvases
-    var topCanvas = null;
-    var bottomCanvas = null;
-    if (this.leftOnTop) {
-      topCanvas = this.element.find(`${Selector.MAP_LEFT} canvas`)[0];
-      bottomCanvas = this.element.find(`${Selector.MAP_RIGHT} canvas`)[0];
-    } else {
-      topCanvas = this.element.find(`${Selector.MAP_RIGHT} canvas`)[0];
-      bottomCanvas = this.element.find(`${Selector.MAP_LEFT} canvas`)[0];
-    }
+    var topCanvas = this.element.find(`${Selector.MAP_LEFT} canvas`)[0];
+    var bottomCanvas = this.element.find(`${Selector.MAP_RIGHT} canvas`)[0];
 
     // Get the location of the split
     const slider = this.element.find(Selector.SLIDER)[0];
@@ -486,7 +564,7 @@ export class Controller {
   updateMapContainerWidth() {
     // Update the width of the top map. This makes it appear on the left side of the comparison.
     const width = this.element.find(Selector.SLIDER).css('left');
-    const mapSelector = this.leftOnTop ? Selector.MAP_LEFT : Selector.MAP_RIGHT;
+    const mapSelector = Selector.MAP_LEFT;
     this.element.find(mapSelector).width(width);
   }
 
@@ -577,8 +655,8 @@ const launchLayerCompareWindow = (options) => {
       'icon': 'fas fa-layer-group',
       'x': 'center',
       'y': 'center',
-      'width': 800,
-      'min-width': 400,
+      'width': 1200,
+      'min-width': 600,
       'max-width': 2000,
       'height': 600,
       'min-height': 300,

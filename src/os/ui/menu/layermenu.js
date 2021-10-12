@@ -617,7 +617,7 @@ const onIdentify_ = function(event) {
  */
 export const visibleIfCanCompare = function(context) {
   const layers = getLayersFromContext(context);
-  this.visible = !!layers && layers.length === 2;
+  this.visible = !!layers && layers.length > 1;
 };
 
 /**
@@ -626,10 +626,10 @@ export const visibleIfCanCompare = function(context) {
  */
 export const handleCompareLayers = function(event) {
   var layers = getLayersFromContext(event.getContext());
-  if (layers && layers.length === 2) {
+  if (layers && layers.length > 1) {
     LayerCompareUI.launchLayerCompare({
-      left: [layers[0]],
-      right: [layers[1]]
+      left: layers.splice(0, 1),
+      right: layers
     });
   }
 };
