@@ -1102,6 +1102,10 @@ export default class OGCServer extends AbstractLoadingServer {
                 this.wmsParams_ = new QueryData();
               }
               this.wmsParams_.extend(newParams);
+
+              // if the resource has a trailing &, the QueryData ends up with empty key/value pairs,
+              // which causes issues elsewhere, so strip them here
+              this.wmsParams_.remove('');
             }
           }
         }
