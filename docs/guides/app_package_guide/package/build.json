@@ -1,20 +1,25 @@
 {
   "build": {
-    "config": "config/settings.json",
     "type": "app",
+    "config": "config/settings.json",
     "index": "index.js",
     "scss": "scss/example.scss",
     "themes": [
       "overrides_default_compact",
       "overrides_slate_compact"
     ],
+    "defineRoots": {
+      "os.ROOT": "../opensphere/",
+      "os.APP_ROOT": "./"
+    },
     "gcc": {
       "define": [
         "os.SETTINGS=config/settings.json",
         "os.config.appNs='example'"
       ],
       "entry_point": [
-        "goog:example"
+        "goog:ol.ext",
+        "goog:exampleentry"
       ],
       "hide_warnings_for": [
         "/opensphere/"

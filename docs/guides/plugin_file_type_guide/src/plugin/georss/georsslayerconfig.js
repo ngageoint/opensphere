@@ -1,22 +1,23 @@
-goog.provide('plugin.georss.GeoRSSLayerConfig');
-goog.require('os.layer.config.AbstractDataSourceLayerConfig');
-goog.require('os.ui.im.ImportManager');
-goog.require('plugin.georss.GeoRSSParser');
+goog.declareModuleId('plugin.georss.GeoRSSLayerConfig');
 
-
-/**
- * @extends {os.layer.config.AbstractDataSourceLayerConfig}
- * @constructor
- */
-plugin.georss.GeoRSSLayerConfig = function() {
-  plugin.georss.GeoRSSLayerConfig.base(this, 'constructor');
-};
-goog.inherits(plugin.georss.GeoRSSLayerConfig, os.layer.config.AbstractDataSourceLayerConfig);
-
+import AbstractDataSourceLayerConfig from 'opensphere/src/os/layer/config/abstractdatasourcelayerconfig.js';
+import GeoRSSParser from './georssparser.js';
 
 /**
- * @inheritDoc
+ * GeoRSS layer config.
  */
-plugin.georss.GeoRSSLayerConfig.prototype.getParser = function(options) {
-  return new plugin.georss.GeoRSSParser();
-};
+export default class GeoRSSLayerConfig extends AbstractDataSourceLayerConfig {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getParser(options) {
+    return new GeoRSSParser();
+  }
+}

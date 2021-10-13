@@ -4,7 +4,7 @@
 goog.require('package.SomeModule');
 
 describe('package.SomeModule', () => {
-  const SomeModule = goog.module.get('package.SomeModule');
+  const {default: SomeModule} = goog.module.get('package.SomeModule');
 
   it('should do stuff...', () => {
   });

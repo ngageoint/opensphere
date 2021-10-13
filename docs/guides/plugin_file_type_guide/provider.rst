@@ -17,11 +17,11 @@ Here is a quick test for it:
 
 Run ``yarn test`` to ensure that works. Now let's register it in the plugin.
 
-.. literalinclude:: src/plugin/georss/georssplugin.js-provider
+.. literalinclude:: src/plugin/georss/georssplugin-provider.js
   :caption: ``src/plugin/georss/georssplugin.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 3, 8, 43-51
+  :emphasize-lines: 3-4, 13, 41-49
 
 That registers it, but providers are only instantiated if they exist in config (added by either the admin or user in Settings > Data Servers). Let's add some default config. This file is found by looking at ``package.json`` ``build.config``'s values. In OpenSphere it happens to be ``config/settings.json``, however, your project could define a different one (or several config files).
 
@@ -43,7 +43,9 @@ Similarly to layer configs, providers are instantiated by type. Pull up the debu
 
 .. code-block:: javascript
 
-  os.dataManager.getProviderRoot().getChildren().filter(
-    p => p instanceof plugin.georss.GeoRSSProvider)
+  const {default: DataManager} = goog.module.get('os.data.DataManager');
+  const {default: GeoRSSProvider} = goog.module.get('plugin.georss.GeoRSSProvider');
+  DataManager.getInstance().getProviderRoot().getChildren().filter(
+    p => p instanceof GeoRSSProvider)
 
 If it is not there, you may have a cache issue with your settings file. You can either navigate to the settings file directly and give it a hard refresh (ctrl/cmd+shift+r in Chrome), clear your full cache, or use the Dev Tools to disable the cache.

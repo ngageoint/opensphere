@@ -3,13 +3,13 @@ Plugin
 
 Add a basic plugin class.
 
-.. literalinclude:: src/plugin/georss/georssplugin.js-plugin
+.. literalinclude:: src/plugin/georss/georssplugin-plugin.js
   :caption: ``src/plugin/georss/georssplugin.js``
   :linenos:
   :language: javascript
 
 Internal Plugins
-  If creating an internal plugin, ensure that ``mainctrl.js`` ``goog.require``'s your plugin, or optionally, the external plugin method will also work.
+  If creating an internal plugin, ensure that ``mainctrl.js`` imports your plugin, or optionally, the external plugin method will also work.
 
 External Plugins
   If creating an external plugin, ensure that ``package.json`` ``build.gcc.entry_point`` has ``goog:plugin.georss.GeoRSSPlugin`` in its list.

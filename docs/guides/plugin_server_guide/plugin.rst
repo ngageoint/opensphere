@@ -3,14 +3,14 @@ Plugin
 
 Add a constant for the plugin id.
 
-.. literalinclude:: src/plugin/tileserver/tileserverconstants.js
-   :caption: ``src/plugin/tileserver/tileserverconstants.js``
+.. literalinclude:: src/plugin/tileserver/index.js
+   :caption: ``src/plugin/tileserver/index.js``
    :linenos:
    :language: javascript
 
 Add a basic plugin class.
 
-.. literalinclude:: src/plugin/tileserver/tileserverplugin.js-plugin
+.. literalinclude:: src/plugin/tileserver/tileserverplugin-plugin.js
   :caption: ``src/plugin/tileserver/tileserverplugin.js``
   :linenos:
   :language: javascript
@@ -25,7 +25,7 @@ Run ``yarn build`` in OpenSphere (not in your plugin if it is external). It shou
 
 Just for good measure, let's test it.
 
-.. literalinclude:: test/plugin/tileserver/tileserverplugin.test.js-plugin
+.. literalinclude:: test/plugin/tileserver/tileserverplugin-plugin.test.js
   :caption: ``test/plugin/tileserver/tileserverplugin.test.js``
   :linenos:
   :language: javascript

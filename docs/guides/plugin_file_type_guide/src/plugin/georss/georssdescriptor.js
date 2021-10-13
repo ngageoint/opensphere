@@ -1,54 +1,56 @@
-goog.provide('plugin.georss.GeoRSSDescriptor');
+goog.declareModuleId('plugin.georss.GeoRSSDescriptor');
 
-goog.require('os.data.FileDescriptor');
-goog.require('os.layer');
-goog.require('os.layer.LayerType');
-goog.require('os.style');
-goog.require('os.ui.ControlType');
-goog.require('plugin.georss.GeoRSSProvider');
+import FileDescriptor from 'opensphere/src/os/data/filedescriptor.js';
+import LayerType from 'opensphere/src/os/layer/layertype.js';
+import ColorControlType from 'opensphere/src/os/ui/colorcontroltype.js';
+import ControlType from 'opensphere/src/os/ui/controltype.js';
+
+import {ID} from './georss.js';
+import GeoRSSProvider from './georssprovider.js';
+
+const {default: FileParserConfig} = goog.requireType('os.parse.FileParserConfig');
 
 
 /**
  * GeoRSS file descriptor.
- * @extends {os.data.FileDescriptor}
- * @constructor
  */
-plugin.georss.GeoRSSDescriptor = function() {
-  plugin.georss.GeoRSSDescriptor.base(this, 'constructor');
-  this.descriptorType = plugin.georss.ID;
-};
-goog.inherits(plugin.georss.GeoRSSDescriptor, os.data.FileDescriptor);
+export default class GeoRSSDescriptor extends FileDescriptor {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.descriptorType = ID;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getType() {
+    return LayerType.FEATURES;
+  }
 
-/**
- * @inheritDoc
- */
-plugin.georss.GeoRSSDescriptor.prototype.getType = function() {
-  return os.layer.LayerType.FEATURES;
-};
+  /**
+   * @inheritDoc
+   */
+  getLayerOptions() {
+    var options = super.getLayerOptions();
+    options['type'] = ID;
 
-
-/**
- * @inheritDoc
- */
-plugin.georss.GeoRSSDescriptor.prototype.getLayerOptions = function() {
-  var options = plugin.georss.GeoRSSDescriptor.base(this, 'getLayerOptions');
-  options['type'] = plugin.georss.ID;
-
-  // allow resetting the layer color to the default
-  options[os.ui.ControlType.COLOR] = os.ui.ColorControlType.PICKER_RESET;
-  return options;
-};
-
+    // allow resetting the layer color to the default
+    options[ControlType.COLOR] = ColorControlType.PICKER_RESET;
+    return options;
+  }
+}
 
 /**
  * Creates a new descriptor from a parser configuration.
- * @param {!os.parse.FileParserConfig} config
- * @return {!plugin.georss.GeoRSSDescriptor}
+ * @param {!FileParserConfig} config
+ * @return {!GeoRSSDescriptor}
  */
-plugin.georss.GeoRSSDescriptor.createFromConfig = function(config) {
-  var provider = plugin.georss.GeoRSSProvider.getInstance();
-  var descriptor = new plugin.georss.GeoRSSDescriptor();
-  os.data.FileDescriptor.createFromConfig(descriptor, provider, config);
+export const createFromConfig = (config) => {
+  const provider = GeoRSSProvider.getInstance();
+  const descriptor = new GeoRSSDescriptor();
+  FileDescriptor.createFromConfig(descriptor, provider, config);
   return descriptor;
 };

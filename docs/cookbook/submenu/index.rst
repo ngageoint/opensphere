@@ -15,10 +15,10 @@ Extend the existing menu with Group, SubMenu and Item elements to provide your p
 
 .. literalinclude:: src/cookbook-submenu.js
   :caption: SubMenu Cookbook example - menu creation
-  :lines: 45-90
-  :linenos: 
+  :lines: 32-77
+  :linenos:
   :language: javascript
-  
+
 Discussion
 ----------
 
@@ -28,40 +28,40 @@ If your plugin has all items known in advance, its possible to use the :code:`ch
 
 .. code-block:: javascript
 
-  var menu = os.ui.menu.spatial.MENU;
+  const menu = spatial.getMenu();
   if (menu) {
-    var root = menu.getRoot();
-    var group = root.find(plugin.cookbook_submenu.MYGROUP);
+    const root = menu.getRoot();
+    let group = root.find(MYGROUP);
     if (!group) {
       group = root.addChild({
-        type: os.ui.menu.MenuItemType.GROUP,
-        label: plugin.cookbook_submenu.MYGROUP,
+        type: MenuItemType.GROUP,
+        label: MYGROUP,
         tooltip: 'Added by cookbook submenu example',
-        beforeRender: plugin.cookbook_submenu.shouldShowGroup_,
+        beforeRender: shouldShowGroup,
         children:[{
-          type: os.ui.menu.MenuItemType.SUBMENU,
+          type: MenuItemType.SUBMENU,
           label: 'SubMenu 1',
           children:[{
-            type: os.ui.menu.MenuItemType.SUBMENU,
+            type: MenuItemType.SUBMENU,
             label: 'SubSubMenu',
             children: [{
-              type: os.ui.menu.MenuItemType.ITEM,
+              type: MenuItemType.ITEM,
               label: 'Item 1',
               sort: 10,
-              handler: plugin.cookbook_submenu.handleItem1
+              handler: handleItem1
             }, {
-              type: os.ui.menu.MenuItemType.ITEM,
-              eventType: plugin.cookbook_submenu.EventType.DO_SOMETHING,
+              type: MenuItemType.ITEM,
+              eventType: EventType.DO_SOMETHING,
               label: 'Item 2',
               sort: 30,
-              handler: plugin.cookbook_submenu.handleItem,
-              beforeRender: plugin.cookbook_submenu.visibleIfIsPointInSouthernHemisphere_
+              handler: handleItem,
+              beforeRender: visibleIfIsPointInSouthernHemisphere
             }, {
-              type: os.ui.menu.MenuItemType.ITEM,
-              eventType: plugin.cookbook_submenu.EventType.DO_ANOTHER_THING,
+              type: MenuItemType.ITEM,
+              eventType: EventType.DO_ANOTHER_THING,
               label: 'Another item',
               sort: 20,
-              handler: plugin.cookbook_submenu.handleItem
+              handler: handleItem
             }]
           }]
         }]
@@ -70,20 +70,20 @@ If your plugin has all items known in advance, its possible to use the :code:`ch
 
 This is equivalent - you can mix and match the :code:`addChild` function calls and nested :code:`children` array as needed.
 
-Note that items will be enabled and visible by default, which might not make sense for your use. Instead, you may want to selectively enable, or not display, some menu items, depending on the menu context. The usual way to do this is to set a :code:`beforeRender`, as in :code:`plugin.cookbook_submenu.visibleIfIsPointInSouthernHemisphere_` which is implemented as:
+Note that items will be enabled and visible by default, which might not make sense for your use. Instead, you may want to selectively enable, or not display, some menu items, depending on the menu context. The usual way to do this is to set a :code:`beforeRender`, as in :code:`visibleIfIsPointInSouthernHemisphere` which is implemented as:
 
 .. literalinclude:: src/cookbook-submenu.js
-  :caption: SubMenu Cookbook example - selectable visibility 
-  :lines: 106-137
-  :linenos: 
+  :caption: SubMenu Cookbook example - selectable visibility
+  :lines: 111-139
+  :linenos:
   :language: javascript
 
 As the name suggests, one menu entry will only be shown if the feature geometry is a point located in the southern hemisphere (i.e. negative latitude).
-  
+
 Full code
 ---------
 
 .. literalinclude:: src/cookbook-submenu.js
   :caption: SubMenu Cookbook example - Full code
-  :linenos: 
+  :linenos:
   :language: javascript

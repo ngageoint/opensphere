@@ -31,20 +31,22 @@ And, since we are good developers, here is a test for it.
 
 Now that we have that tested, we need to modify our plugin and register the layer config:
 
-.. literalinclude:: src/plugin/georss/georssplugin.js-layer_config
+.. literalinclude:: src/plugin/georss/georssplugin-layer_config.js
   :caption: ``src/plugin/georss/georssplugin.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 5,32-33
+  :emphasize-lines: 3,8,28-29
 
 Running ``yarn build`` and viewing the debug instance of the application should allow you to drop this in the console and have a GeoRSS layer:
 
 .. code-block:: javascript
 
-  os.commandStack.addCommand(
-    new os.command.LayerAdd({
-      type: plugin.georss.ID,
-      id: goog.string.getRandomString(),
+  const {default: CommandProcessor} = goog.module.get('os.command.CommandProcessor');
+  const {default: LayerAdd} = goog.module.get('os.command.LayerAdd');
+  CommandProcessor.getInstance().addCommand(
+    new LayerAdd({
+      type: 'georss',
+      id: 'georss-test',
       title: 'Test GeoRSS Layer',
       url: 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.atom',
       color: 'FFFF00'

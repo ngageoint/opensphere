@@ -1,12 +1,23 @@
 goog.require('goog.Promise');
 goog.require('os.data.ConfigDescriptor');
+goog.require('os.net.Request');
+goog.require('os.ui.data.BaseProvider');
+goog.require('plugin.tileserver');
 goog.require('plugin.tileserver.Tileserver');
 
 describe('plugin.tileserver.Tileserver', function() {
+  const Promise = goog.module.get('goog.Promise');
+  const {default: ConfigDescriptor} = goog.module.get('os.data.ConfigDescriptor');
+  const {default: Request} = goog.module.get('os.net.Request');
+  const {default: BaseProvider} = goog.module.get('os.ui.data.BaseProvider');
+
+  const {ID} = goog.module.get('plugin.tileserver');
+  const {default: Tileserver} = goog.module.get('plugin.tileserver.Tileserver');
+
   it('should configure properly', function() {
-    var p = new plugin.tileserver.Tileserver();
+    var p = new Tileserver();
     var conf = {
-      type: plugin.tileserver.ID,
+      type: ID,
       label: 'Test Server',
       url: 'http://localhost/doesnotexist.json'
     };
@@ -18,12 +29,12 @@ describe('plugin.tileserver.Tileserver', function() {
   });
 
   it('should load valid JSON', function() {
-    var p = new plugin.tileserver.Tileserver();
+    var p = new Tileserver();
     p.setUrl('/something');
 
     // we're going to spy on the getPromise method and return a promise resolving
     // to valid JSON
-    spyOn(os.net.Request.prototype, 'getPromise').andReturn(goog.Promise.resolve('[]'));
+    spyOn(Request.prototype, 'getPromise').andReturn(Promise.resolve('[]'));
 
     spyOn(p, 'onLoad').andCallThrough();
     spyOn(p, 'onError').andCallThrough();
@@ -43,12 +54,12 @@ describe('plugin.tileserver.Tileserver', function() {
   });
 
   it('should error on invalid JSON', function() {
-    var p = new plugin.tileserver.Tileserver();
+    var p = new Tileserver();
     p.setUrl('/something');
 
     // we're going to spy on the getPromise method and return a promise resolving
     // to invalid JSON
-    spyOn(os.net.Request.prototype, 'getPromise').andReturn(goog.Promise.resolve('[wut'));
+    spyOn(Request.prototype, 'getPromise').andReturn(Promise.resolve('[wut'));
 
     spyOn(p, 'onLoad').andCallThrough();
     spyOn(p, 'onError').andCallThrough();
@@ -68,14 +79,14 @@ describe('plugin.tileserver.Tileserver', function() {
   });
 
   it('should error on request error', function() {
-    var p = new plugin.tileserver.Tileserver();
+    var p = new Tileserver();
     p.setUrl('/something');
 
     // we're going to spy on the getPromise method and return a promise rejecting
     // with errors
-    spyOn(os.net.Request.prototype, 'getPromise').andReturn(
+    spyOn(Request.prototype, 'getPromise').andReturn(
         // request rejects with arrays of all errors that occurred
-        goog.Promise.reject(['something awful happend']));
+        Promise.reject(['something awful happend']));
 
     spyOn(p, 'onLoad').andCallThrough();
     spyOn(p, 'onError').andCallThrough();
@@ -95,12 +106,12 @@ describe('plugin.tileserver.Tileserver', function() {
   });
 
   it('should ignore JSON that is not an array', function() {
-    var p = new plugin.tileserver.Tileserver();
+    var p = new Tileserver();
     p.setUrl('/something');
 
     // we're going to spy on the getPromise method and return a promise resolving
     // to valid JSON
-    spyOn(os.net.Request.prototype, 'getPromise').andReturn(goog.Promise.resolve('{}'));
+    spyOn(Request.prototype, 'getPromise').andReturn(Promise.resolve('{}'));
 
     spyOn(p, 'onLoad').andCallThrough();
     spyOn(p, 'onError').andCallThrough();
@@ -120,11 +131,11 @@ describe('plugin.tileserver.Tileserver', function() {
   });
 
   it('should parse Tileserver JSON', function() {
-    var p = new plugin.tileserver.Tileserver();
+    var p = new Tileserver();
     p.setUrl('/something');
 
     // we're going to spy on the getPromise method and return a promise resolving to some Tileserver JSON
-    spyOn(os.net.Request.prototype, 'getPromise').andReturn(goog.Promise.resolve(JSON.stringify(
+    spyOn(Request.prototype, 'getPromise').andReturn(Promise.resolve(JSON.stringify(
         [{
           tilejson: '2.0.0',
           name: 'Klokantech Basic',
@@ -158,8 +169,8 @@ describe('plugin.tileserver.Tileserver', function() {
     spyOn(p, 'onError').andCallThrough();
 
     // add a config descriptor to the datamanager so that we can test updating on one of the layers
-    var id = p.getId() + os.ui.data.BaseProvider.ID_DELIMITER + 'Klokantech Basic';
-    var descriptor = new os.data.ConfigDescriptor();
+    var id = p.getId() + BaseProvider.ID_DELIMITER + 'Klokantech Basic';
+    var descriptor = new ConfigDescriptor();
     descriptor.setBaseConfig({
       id: id
     });

@@ -1,8 +1,10 @@
 goog.require('plugin.georss.GeoRSSProvider');
 
 describe('plugin.georss.GeoRSSProvider', function() {
+  const {default: GeoRSSProvider} = goog.module.get('plugin.georss.GeoRSSProvider');
+
   it('should configure properly', function() {
-    var p = new plugin.georss.GeoRSSProvider();
+    const p = new GeoRSSProvider();
 
     p.configure({
       type: 'georss'

@@ -2,11 +2,14 @@ goog.require('ol.xml');
 goog.require('plugin.georss.GeoRSSParser');
 
 describe('plugin.georss.GeoRSSParser', function() {
+  const {parse} = goog.module.get('ol.xml');
+  const {default: GeoRSSParser} = goog.module.get('plugin.georss.GeoRSSParser');
+
   it('should parse points correctly', function() {
-    var el = ol.xml.parse('<point>  40    -105  ' +
+    var el = parse('<point>  40    -105  ' +
       '</point>').firstElementChild;
 
-    var geom = plugin.georss.GeoRSSParser.parseGeometry(el);
+    var geom = GeoRSSParser.parseGeometry(el);
 
     expect(geom instanceof ol.geom.Point).toBe(true);
     expect(geom.getCoordinates()[0]).toBe(-105);
@@ -14,9 +17,9 @@ describe('plugin.georss.GeoRSSParser', function() {
   });
 
   it('should choose the first point if there is more than one', function() {
-    var el = ol.xml.parse('<point>40 -105 50 -95</point>').firstElementChild;
+    var el = parse('<point>40 -105 50 -95</point>').firstElementChild;
 
-    var geom = plugin.georss.GeoRSSParser.parseGeometry(el);
+    var geom = GeoRSSParser.parseGeometry(el);
 
     expect(geom instanceof ol.geom.Point).toBe(true);
     expect(geom.getCoordinates()[0]).toBe(-105);
@@ -24,30 +27,30 @@ describe('plugin.georss.GeoRSSParser', function() {
   });
 
   it('should return undefined when pairs for point are incomplete', function() {
-    var el = ol.xml.parse('<point>40 -105 50</point>').firstElementChild;
-    var geom = plugin.georss.GeoRSSParser.parseGeometry(el);
+    var el = parse('<point>40 -105 50</point>').firstElementChild;
+    var geom = GeoRSSParser.parseGeometry(el);
     expect(geom).toBe(undefined);
   });
 
   it('should return undefined when points do not contain adequate coordinate pairs', function() {
-    var el = ol.xml.parse('<point></point>').firstElementChild;
-    var geom = plugin.georss.GeoRSSParser.parseGeometry(el);
+    var el = parse('<point></point>').firstElementChild;
+    var geom = GeoRSSParser.parseGeometry(el);
     expect(geom).toBe(undefined);
   });
 
   it('should not parse nonsense', function() {
-    var el = ol.xml.parse('<point>10 yang</point>').firstElementChild;
-    var geom = plugin.georss.GeoRSSParser.parseGeometry(el);
+    var el = parse('<point>10 yang</point>').firstElementChild;
+    var geom = GeoRSSParser.parseGeometry(el);
     expect(geom).toBe(undefined);
 
-    el = ol.xml.parse('<point>ying 10</point>').firstElementChild;
-    geom = plugin.georss.GeoRSSParser.parseGeometry(el);
+    el = parse('<point>ying 10</point>').firstElementChild;
+    geom = GeoRSSParser.parseGeometry(el);
     expect(geom).toBe(undefined);
   });
 
   it('should parse lines correctly', function() {
-    var el = ol.xml.parse('<line>40 100 50 110</line>').firstElementChild;
-    var geom = plugin.georss.GeoRSSParser.parseGeometry(el);
+    var el = parse('<line>40 100 50 110</line>').firstElementChild;
+    var geom = GeoRSSParser.parseGeometry(el);
     expect(geom instanceof ol.geom.LineString).toBe(true);
     expect(geom.getCoordinates()[0][0]).toBe(100);
     expect(geom.getCoordinates()[0][1]).toBe(40);
@@ -56,20 +59,20 @@ describe('plugin.georss.GeoRSSParser', function() {
   });
 
   it('should return undefined when pairs for lines are incomplete', function() {
-    var el = ol.xml.parse('<line>40 100 50 110 60</line>').firstElementChild;
-    var geom = plugin.georss.GeoRSSParser.parseGeometry(el);
+    var el = parse('<line>40 100 50 110 60</line>').firstElementChild;
+    var geom = GeoRSSParser.parseGeometry(el);
     expect(geom).toBe(undefined);
   });
 
   it('should return undefined when lines do not contain adequate coordinate pairs', function() {
-    var el = ol.xml.parse('<line>40 100</line>').firstElementChild;
-    var geom = plugin.georss.GeoRSSParser.parseGeometry(el);
+    var el = parse('<line>40 100</line>').firstElementChild;
+    var geom = GeoRSSParser.parseGeometry(el);
     expect(geom).toBe(undefined);
   });
 
   it('should parse polygons correctly', function() {
-    var el = ol.xml.parse('<polygon>40 100 50 110 60 100</polygon>').firstElementChild;
-    var geom = plugin.georss.GeoRSSParser.parseGeometry(el);
+    var el = parse('<polygon>40 100 50 110 60 100</polygon>').firstElementChild;
+    var geom = GeoRSSParser.parseGeometry(el);
     expect(geom instanceof ol.geom.Polygon).toBe(true);
     expect(geom.getCoordinates()[0][0][0]).toBe(100);
     expect(geom.getCoordinates()[0][0][1]).toBe(40);
@@ -80,24 +83,24 @@ describe('plugin.georss.GeoRSSParser', function() {
   });
 
   it('should return undefined when pairs for polygons are incomplete', function() {
-    var el = ol.xml.parse('<polygon>40 100 50 110 60 100 70</polygon>').firstElementChild;
-    var geom = plugin.georss.GeoRSSParser.parseGeometry(el);
+    var el = parse('<polygon>40 100 50 110 60 100 70</polygon>').firstElementChild;
+    var geom = GeoRSSParser.parseGeometry(el);
     expect(geom).toBe(undefined);
   });
 
   it('should return undefined when polygons do not contain adequate coordinate pairs', function() {
-    var el = ol.xml.parse('<polygon>40 100 50 110</polygon>').firstElementChild;
-    var geom = plugin.georss.GeoRSSParser.parseGeometry(el);
+    var el = parse('<polygon>40 100 50 110</polygon>').firstElementChild;
+    var geom = GeoRSSParser.parseGeometry(el);
     expect(geom).toBe(undefined);
   });
 
   it('should return undefined for incorrect tag names', function() {
-    var el = ol.xml.parse('<something>is wrong here</something>').firstElementChild;
-    expect(plugin.georss.GeoRSSParser.parseGeometry(el)).toBe(undefined);
+    var el = parse('<something>is wrong here</something>').firstElementChild;
+    expect(GeoRSSParser.parseGeometry(el)).toBe(undefined);
   });
 
   it('should parse GeoRSS feeds', function() {
-    var p = new plugin.georss.GeoRSSParser();
+    var p = new GeoRSSParser();
 
     var feed = '<?xml version="1.0" encoding="utf-8"?>' +
       '<feed xmlns="http://www.w3.org/2005/Atom" xmlns:georss="http://www.georss.org/georss">' +
@@ -126,7 +129,7 @@ describe('plugin.georss.GeoRSSParser', function() {
     p.setSource(feed);
     expect(p.hasNext()).toBe(true);
 
-    var source = ol.xml.parse(feed);
+    var source = parse(feed);
     p.setSource(source);
     expect(p.hasNext()).toBe(true);
 
@@ -149,7 +152,7 @@ describe('plugin.georss.GeoRSSParser', function() {
   });
 
   it('should not use other potential sources', function() {
-    var p = new plugin.georss.GeoRSSParser();
+    var p = new GeoRSSParser();
     p.setSource({something: true});
     expect(p.document).toBe(null);
     expect(p.hasNext()).toBe(false);

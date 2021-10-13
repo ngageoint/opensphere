@@ -1,15 +1,15 @@
-Migrating from goog.modules to ES6 modules
-==========================================
+Migrating from goog.modules to ES modules
+=========================================
 
-The primary difference between a ``goog.module`` and an ES6 module is how imports/exports are defined. With ``goog.module``, we solely use ``goog.require`` to import dependencies and use the ``exports`` keyword to assign either a single default export or an object listing named exports. ES6 modules use the ``import`` and ``export`` keywords, which are part of the JavaScript specification. MDN's JavaScript guide has an excellent reference on `JavaScript modules`_ with details on how these keywords work.
+The primary difference between a ``goog.module`` and an ES module is how imports/exports are defined. With ``goog.module``, we solely use ``goog.require`` to import dependencies and use the ``exports`` keyword to assign either a single default export or an object listing named exports. ES modules use the ``import`` and ``export`` keywords, which are part of the JavaScript specification. MDN's JavaScript guide has an excellent reference on `JavaScript modules`_ with details on how these keywords work.
 
 .. _JavaScript modules: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules
-.. _Migrating from goog.modules to ES6 modules: https://github.com/google/closure-compiler/wiki/Migrating-from-goog.modules-to-ES6-modules
+.. _Migrating from goog.modules to ES modules: https://github.com/google/closure-compiler/wiki/Migrating-from-goog.modules-to-ES-modules
 
 Transform Script
 ****************
 
-To convert ``goog.module`` files to ES6 modules, we'll use the ``moduletoes6.js`` transform in `opensphere-jscodeshift`_. This transform is based on the Closure Compiler's `Migrating from goog.modules to ES6 modules`_ guide.
+To convert ``goog.module`` files to ES modules, we'll use the ``moduletoes6.js`` transform in `opensphere-jscodeshift`_. This transform is based on the Closure Compiler's `Migrating from goog.modules to ES modules`_ guide.
 
 .. _opensphere-jscodeshift: https://github.com/schmidtk/opensphere-jscodeshift/
 
@@ -30,14 +30,14 @@ The transform can be run against a single file or a directory. In the case of a 
 goog.declareModuleId
 ********************
 
-To make ES6 modules accessible to ``goog.module`` or ``goog.provide`` files, the Closure Library provides the ``goog.declareModuleId`` function to declare a Closure module ID. This is analagous to ``goog.module``, and makes the ES6 module's exports available via ``goog.require`` or ``goog.module.get``.
+To make ES modules accessible to ``goog.module`` or ``goog.provide`` files, the Closure Library provides the ``goog.declareModuleId`` function to declare a Closure module ID. This is analagous to ``goog.module``, and makes the ES module's exports available via ``goog.require`` or ``goog.module.get``.
 
-.. warning:: Until OpenSphere has been completely migrated to ES6 modules (including tests), ``goog.declareModuleId`` **should be included in all new modules**. Once modules can be entirely referenced via ``import`` we can script removal of these calls from all files.
+.. note:: While ``goog.declareModuleId`` is not necessary for source files, it does allow tests to load module exports via ``goog.module.get``. Unless tests are migrated to fully support loading modules, this statement should be included in every file.
 
-Referencing ES6 Modules
+Referencing ES Modules
 ***********************
 
-The code used to reference an ES6 module varies based on the file type referencing the module. For these examples, assume we have the following ES6 modules in OpenSphere.
+The code used to reference an ES module varies based on the file type referencing the module. For these examples, assume we have the following ES modules in OpenSphere.
 
 .. literalinclude:: src/os/index.js
   :caption: An index module with named exports at ``src/os/index.js``.
@@ -49,10 +49,10 @@ The code used to reference an ES6 module varies based on the file type referenci
   :linenos:
   :language: javascript
 
-From an ES6 Module
+From an ES Module
 ++++++++++++++++++
 
-To import these files from another ES6 module, use ``import`` statements with a path to the file. Within OpenSphere, use a relative path. From external projects, use a Node path. The file's ``.js`` extension is not required in the path, and for ``index.js`` files the path can end at the containing directory.
+To import these files from another ES module, use ``import`` statements with a path to the file. Within OpenSphere, use a relative path. From external projects, use a Node path. The file's ``.js`` extension is not required in the path, and for ``index.js`` files the path can end at the containing directory.
 
 .. code-block:: javascript
 
@@ -74,7 +74,7 @@ To import these files from a ``goog.module``, use ``goog.require`` assignments.
   const {MY_CONSTANT} = goog.require('os');
   const {default: MyClass} = goog.require('os.MyClass');
 
-.. note:: The default export from an ES6 module will be assigned to the ``default`` property on the object returned by ``goog.require``. This is why the transform script creates a shim file, so existing references to the module do not need to be updated. You do not need to create this shim for new files, simply use the above syntax to reference the default export properly.
+.. note:: The default export from an ES module will be assigned to the ``default`` property on the object returned by ``goog.require``. This is why the transform script creates a shim file, so existing references to the module do not need to be updated. You do not need to create this shim for new files, simply use the above syntax to reference the default export properly.
 
 From Legacy Files/Tests
 +++++++++++++++++++++++
@@ -94,4 +94,4 @@ To import the modules from a legacy file using ``goog.provide`` or from tests, u
 Legacy Namespaces
 *****************
 
-With ``goog.module`` files, the ``goog.module.declareLegacyNamespace`` function is called to export the module's namespace to the global ``window`` object. This function cannot be used in an ES6 module because it violates a core principle of modules, that they do not pollute the global scope. The transform script will remove this function from converted files, so prior to running the transform please ensure the module is no longer referenced using the global namespace.
+With ``goog.module`` files, the ``goog.module.declareLegacyNamespace`` function is called to export the module's namespace to the global ``window`` object. This function cannot be used in an ES module because it violates a core principle of modules, that they do not pollute the global scope. The transform script will remove this function from converted files, so prior to running the transform please ensure the module is no longer referenced using the global namespace.

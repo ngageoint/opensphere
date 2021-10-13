@@ -1,11 +1,19 @@
 goog.require('goog.Promise');
+goog.require('os.net.Request');
+goog.require('plugin.tileserver');
 goog.require('plugin.tileserver.Tileserver');
 
 describe('plugin.tileserver.Tileserver', function() {
+  const Promise = goog.module.get('goog.Promise');
+  const {default: Request} = goog.module.get('os.net.Request');
+
+  const {ID} = goog.module.get('plugin.tileserver');
+  const {default: Tileserver} = goog.module.get('plugin.tileserver.Tileserver');
+
   it('should configure properly', function() {
-    var p = new plugin.tileserver.Tileserver();
+    var p = new Tileserver();
     var conf = {
-      type: plugin.tileserver.ID,
+      type: ID,
       label: 'Test Server',
       url: 'http://localhost/doesnotexist.json'
     };
@@ -17,12 +25,12 @@ describe('plugin.tileserver.Tileserver', function() {
   });
 
   it('should load valid JSON', function() {
-    var p = new plugin.tileserver.Tileserver();
+    var p = new Tileserver();
     p.setUrl('/something');
 
     // we're going to spy on the getPromise method and return a promise resolving
     // to valid JSON
-    spyOn(os.net.Request.prototype, 'getPromise').andReturn(goog.Promise.resolve('[]'));
+    spyOn(Request.prototype, 'getPromise').andReturn(Promise.resolve('[]'));
 
     spyOn(p, 'onLoad').andCallThrough();
     spyOn(p, 'onError').andCallThrough();
@@ -42,12 +50,12 @@ describe('plugin.tileserver.Tileserver', function() {
   });
 
   it('should error on invalid JSON', function() {
-    var p = new plugin.tileserver.Tileserver();
+    var p = new Tileserver();
     p.setUrl('/something');
 
     // we're going to spy on the getPromise method and return a promise resolving
     // to invalid JSON
-    spyOn(os.net.Request.prototype, 'getPromise').andReturn(goog.Promise.resolve('[wut'));
+    spyOn(Request.prototype, 'getPromise').andReturn(Promise.resolve('[wut'));
 
     spyOn(p, 'onLoad').andCallThrough();
     spyOn(p, 'onError').andCallThrough();
@@ -67,14 +75,14 @@ describe('plugin.tileserver.Tileserver', function() {
   });
 
   it('should error on request error', function() {
-    var p = new plugin.tileserver.Tileserver();
+    var p = new Tileserver();
     p.setUrl('/something');
 
     // we're going to spy on the getPromise method and return a promise rejecting
     // with errors
-    spyOn(os.net.Request.prototype, 'getPromise').andReturn(
+    spyOn(Request.prototype, 'getPromise').andReturn(
         // request rejects with arrays of all errors that occurred
-        goog.Promise.reject(['something awful happend']));
+        Promise.reject(['something awful happend']));
 
     spyOn(p, 'onLoad').andCallThrough();
     spyOn(p, 'onError').andCallThrough();

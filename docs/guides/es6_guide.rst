@@ -1,12 +1,10 @@
-ES6 Transition Guide
-====================
+ES6 Guide
+=========
 
 .. note:: Please provide any feedback on this guide in `#810`_. Thank you!
 .. _#810: https://github.com/ngageoint/opensphere/issues/810
 
-As a step toward modernizing our codebase, OpenSphere plans to migrate all code to use ES6 modules. The Closure Compiler does not allow an incremental transition directly to ES6 modules, given source using ``goog.provide`` cannot directly import them. Closure has however provided a stepping stone for this transition.
-
-``goog.module`` is a replacement for ``goog.provide`` that allows an incremental transition to ES6. Source files using ``goog.module`` may interoperate with both ``goog.provide`` and ES6 modules.
+OpenSphere has migrated all of its code to use ES modules/classes/etc. This guide covers some of the differences from the legacy Closure-style source, and some specifics on how OpenSphere uses these language constructs.
 
 .. toctree::
   :maxdepth: 1

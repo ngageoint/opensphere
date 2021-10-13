@@ -20,6 +20,7 @@ The ``build`` property is used to instruct the resolver during the build. For th
 * ``index``: The index file used by opensphere-build-index_.
 * ``scss``: The root SCSS file for the application.
 * ``themes``: SCSS themes to include in the build. Available themes can be found in ``opensphere/scss``.
+* ``defineRoots``: ``goog.define`` properties that need to be overridden from OpenSphere.
 * ``gcc``: Additional instructions for the `Google Closure Compiler`_.
 * ``moduleDefines``: ``goog.define`` properties that should be resolved to a ``node_module`` path in uncompiled mode.
 
@@ -29,7 +30,7 @@ GCC
 The ``build.gcc`` object has a number of properties available that affect what arguments are passed to the `Google Closure Compiler`_.
 
 * ``define``: Overrides for ``goog.define`` calls within the application code. For the example app, we define where to find the settings file and replace the application namespace used for browser storage so it differs from OpenSphere.
-* ``entry_point``: The main ``goog.provide`` entry point for the application. This instructs the compiler on where to start resolving dependencies, and will include source files as needed by analyzing the ``goog.require`` dependency tree from there.
+* ``entry_point``: The main ``goog.declareModuleId`` entry point for the application. This instructs the compiler on where to start resolving dependencies, and will include source files as needed by analyzing the dependency tree from there. The additional ``ol.ext`` entry point is a workaround to a Closure Compiler issue when using OpenLayers.
 * ``hide_warnings_for``: This hides errors/warnings from source files matching a pattern. This is useful if you don't care to see warnings from dependencies during the build.
 
 .. note::
@@ -69,18 +70,18 @@ These scripts are largely copied from OpenSphere's, and you will primarily use `
 Dev Dependencies
 ----------------
 
-The ``devDependencies`` section in the example app uses the same build tooling as OpenSphere, but you're welcome to change how your application is linted, tested, etc. The only dev dependencies required to build your code with OpenSphere's are ``opensphere-build-resolver`` and ``google-closure-compiler``.
+The ``devDependencies`` section in the example app uses the same build tooling as OpenSphere, but you're welcome to change how your application is linted, tested, etc. The only dev dependencies required to build your code with OpenSphere's are ``opensphere-build-resolver``, ``@ngageoint/closure-webpack-plugin``, and ``webpack``.
 
-While it's possible to package up your distribution using something like `Webpack <https://webpack.js.org/>`_, the example uses opensphere-build-index_ for simplicity and to stay in parity with OpenSphere. It also uses ``eslint`` for linting, and ``sass`` to compile SCSS, but again these are optional. For generating a debug build (the `index.html` in the root project directory), opensphere-build-closure-helper_ is also required.
+It also uses ``eslint`` for linting, and ``sass`` to compile SCSS, but again these are optional. For generating a development build (the `index.html` in the root project directory), opensphere-build-closure-helper_ is also required.
 
 The remaining dev dependencies are for project management tasks like git hooks and npm scripts.
 
 Dependencies
 ------------
 
-The primary dependencies here are ``opensphere`` as our app dependency and ``google-closure-library`` to use ``goog.provide/require``. Openlayers is already an inherited dependency from OpenSphere, but made implicit since the code makes direct references to its API.
+The primary dependency here is ``opensphere`` as our app dependency. Closure and Openlayers are inherited dependencies from OpenSphere, and left implicit to ensure the same version is used.
 
-The example app sticks with Angular 1.5 to maintain compatibility with the numerous directives offered by OpenSphere, as well as ease of compilation with the Closure Compiler. Other frameworks (React, Vue.js, etc) may be used, but compatibility with the compiler may be limited.
+The example app sticks with Angular 1.8 to maintain compatibility with the numerous directives offered by OpenSphere, as well as ease of compilation with the Closure Compiler. Other frameworks (React, Vue.js, etc) may be used, but compatibility with the compiler may be limited.
 
 `Modernizr <https://modernizr.com/>`_ is included so the library can be built from a local config file. This library is used by OpenSphere to detect browser capabilities, and thus is required by any application using OpenSphere.
 
