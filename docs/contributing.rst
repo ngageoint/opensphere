@@ -20,12 +20,9 @@ Learning the Code
 
 Our API contains many extensions to the OpenLayers_ API, so it would help to get familiar with Layers, Sources, Features, and Geometries from some of their examples_  and documentation_.
 
-There are ``readme.md`` files placed in various packages to help explain the different stacks. The root readme_ has a high level overview of everything.
-
 .. _OpenLayers: https://github.com/openlayers/openlayers
 .. _examples: https://openlayers.org/en/latest/examples/
 .. _documentation: https://openlayers.org/en/latest/apidoc/
-.. _readme: https://github.com/openlayers/openlayers/blob/master/src/README.md
 
 Contributing Code
 -----------------

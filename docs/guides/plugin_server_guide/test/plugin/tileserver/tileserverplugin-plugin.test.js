@@ -4,13 +4,15 @@ goog.require('os.mock');
 goog.require('plugin.tileserver.TileserverPlugin');
 
 describe('plugin.tileserver.TileserverPlugin', function() {
+  const {default: TileserverPlugin} = goog.module.get('plugin.tileserver.TileserverPlugin');
+
   it('should have the proper ID', function() {
-    expect(new plugin.tileserver.TileserverPlugin().id).toBe('tileserver');
+    expect(new TileserverPlugin().id).toBe('tileserver');
   });
 
   it('should not throw an error', function() {
-    var fn = function() {
-      var p = new plugin.tileserver.TileserverPlugin();
+    const fn = function() {
+      const p = new TileserverPlugin();
       p.init();
     };
 

@@ -26,12 +26,12 @@ External Plugins
 
 Run ``yarn test`` to try that out.
 
-Now we will have our plugin require our mime package.
+Now we will have our plugin import our mime package.
 
-.. literalinclude:: src/plugin/georss/georssplugin.js-content_type
+.. literalinclude:: src/plugin/georss/georssplugin-content_type.js
   :caption: ``src/plugin/georss/georssplugin.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 6
+  :emphasize-lines: 3
 
 Save and run the build. You should now be able to import any atom feed (assuming the remote server has CORS configured; download it and import it as a file otherwise) into OpenSphere! Once it loads, it will complain that it does not have an import UI registered for 'application/rss+xml+geo', which is fine for now.

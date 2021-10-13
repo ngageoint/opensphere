@@ -1,65 +1,68 @@
-goog.provide('plugin.georss.GeoRSSImportUI');
+goog.declareModuleId('plugin.georss.GeoRSSImportUI');
 
-goog.require('os.parse.FileParserConfig');
-goog.require('os.ui.im.FileImportUI');
-goog.require('os.ui.window');
-goog.require('plugin.georss.georssImportDirective');
+import './georssimport.js';
 
-
-/**
- * @extends {os.ui.im.FileImportUI}
- * @constructor
- */
-plugin.georss.GeoRSSImportUI = function() {
-  plugin.georss.GeoRSSImportUI.base(this, 'constructor');
-};
-goog.inherits(plugin.georss.GeoRSSImportUI, os.ui.im.FileImportUI);
+import FileParserConfig from 'opensphere/src/os/parse/fileparserconfig.js';
+import FileImportUI from 'opensphere/src/os/ui/im/fileimportui.js';
+import {create} from 'opensphere/src/os/ui/window.js';
 
 
 /**
- * @inheritDoc
+ * GeoRSS import UI.
  */
-// Let's be honest, testing getters like this is pedantic. Let's ignore it
-// this time.
-/* istanbul ignore next */
-plugin.georss.GeoRSSImportUI.prototype.getTitle = function() {
-  return 'GeoRSS';
-};
-
-
-/**
- * @inheritDoc
- */
-// TODO: This function doesn't do much yet, after it does, let's test the
-// finished product.
-/* istanbul ignore next */
-plugin.georss.GeoRSSImportUI.prototype.launchUI = function(file, opt_config) {
-  plugin.georss.GeoRSSImportUI.base(this, 'launchUI', file, opt_config);
-  var config = new os.parse.FileParserConfig();
-
-  // if an existing config was provided, merge it in
-  if (opt_config) {
-    this.mergeConfig(opt_config, config);
+export default class GeoRSSImportUI extends FileImportUI {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
   }
 
-  config['file'] = file;
-  config['title'] = file.getFileName();
+  // Let's be honest, testing getters like this is pedantic. Let's ignore it
+  // this time.
+  /* istanbul ignore next */
+  /**
+   * @inheritDoc
+   */
+  getTitle() {
+    return 'GeoRSS';
+  }
 
-  var scopeOptions = {
-    'config': config
-  };
-  var windowOptions = {
-    'label': 'Import GeoRSS',
-    'icon': 'fa fa-file-text',
-    'x': 'center',
-    'y': 'center',
-    'width': 350,
-    'min-width': 350,
-    'max-width': 600,
-    'height': 'auto',
-    'modal': true,
-    'show-close': true
-  };
-  var template = '<georssimport></georssimport>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-};
+  // TODO: This function doesn't do much yet, after it does, let's test the
+  // finished product.
+  /* istanbul ignore next */
+  /**
+   * @inheritDoc
+   */
+  launchUI(file, opt_config) {
+    super.launchUI(file, opt_config);
+
+    const config = new FileParserConfig();
+
+    // if an existing config was provided, merge it in
+    if (opt_config) {
+      this.mergeConfig(opt_config, config);
+    }
+
+    config['file'] = file;
+    config['title'] = file.getFileName();
+
+    const scopeOptions = {
+      'config': config
+    };
+    const windowOptions = {
+      'label': 'Import GeoRSS',
+      'icon': 'fa fa-file-text',
+      'x': 'center',
+      'y': 'center',
+      'width': 350,
+      'min-width': 350,
+      'max-width': 600,
+      'height': 'auto',
+      'modal': true,
+      'show-close': true
+    };
+    const template = '<georssimport></georssimport>';
+    create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  }
+}

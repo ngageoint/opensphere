@@ -1,24 +1,45 @@
-goog.provide('plugin.georss.GeoRSSProvider');
-goog.require('os.data.FileProvider');
+goog.declareModuleId('plugin.georss.GeoRSSProvider');
+
+import FileProvider from 'opensphere/src/os/data/fileprovider.js';
+import {ID} from './georss.js';
 
 
 /**
- * GeoRSS file provider
- * @extends {os.data.FileProvider}
- * @constructor
+ * GeoRSS file provider.
  */
-plugin.georss.GeoRSSProvider = function() {
-  plugin.georss.GeoRSSProvider.base(this, 'constructor');
-};
-goog.inherits(plugin.georss.GeoRSSProvider, os.data.FileProvider);
-goog.addSingletonGetter(plugin.georss.GeoRSSProvider);
+export default class GeoRSSProvider extends FileProvider {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
+  /**
+   * @inheritDoc
+   */
+  configure(config) {
+    super.configure(config);
+    this.setId(ID);
+    this.setLabel('GeoRSS Files');
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!GeoRSSProvider}
+   * @export
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new GeoRSSProvider();
+    }
+
+    return instance;
+  }
+}
 
 /**
- * @inheritDoc
+ * Global instance.
+ * @type {GeoRSSProvider|undefined}
  */
-plugin.georss.GeoRSSProvider.prototype.configure = function(config) {
-  plugin.georss.GeoRSSProvider.base(this, 'configure', config);
-  this.setId(plugin.georss.ID);
-  this.setLabel('GeoRSS Files');
-};
+let instance;

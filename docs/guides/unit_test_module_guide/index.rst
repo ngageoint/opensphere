@@ -1,7 +1,7 @@
 Testing Goog Modules
 ====================
 
-Files using ``goog.module`` along with ``goog.module.declareLegacyNamespace()`` can be tested largely the same as the old ``goog.provides`` files by using the legacy namespace in Jasmine test code. However, new code which does not use the legacy namespace will need to use a call to retrieve a module outside of the ``goog.module`` context.
+When referencing a Closure or ES module in a test, the ``goog.module.get`` call must be used to retrieve the exports. This call should be made within a closure such as the ``describe`` function. The test will also need to use a bare ``goog.require`` on the module ID from ``goog.declareModuleId`` or ``goog.module``.
 
 .. literalinclude:: src/example.test.js
   :language: javascript

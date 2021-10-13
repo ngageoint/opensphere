@@ -15,19 +15,19 @@ Use the OpenSphere logging framework. There are three parts to enable this - add
 .. literalinclude:: src/cookbook-logging.js
   :caption: Logging Cookbook example - requires
   :linenos:
-  :lines: 3-5
+  :lines: 6-8
   :language: javascript
 
 .. literalinclude:: src/cookbook-logging.js
   :caption: Logging Cookbook example - adding the logger
   :linenos:
-  :lines: 22-28
+  :lines: 35-39
   :language: javascript
 
 .. literalinclude:: src/cookbook-logging.js
   :caption: Logging Cookbook example - using the logger
   :linenos:
-  :lines: 41-44
+  :lines: 27-32
   :language: javascript
 
 Discussion
@@ -53,5 +53,5 @@ Full code
 
 .. literalinclude:: src/cookbook-logging.js
   :caption: Logging Cookbook example - Full code
-  :linenos: 
+  :linenos:
   :language: javascript

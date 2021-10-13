@@ -1,144 +1,143 @@
-goog.provide('plugin.georss.GeoRSSParser');
+goog.declareModuleId('plugin.georss.GeoRSSParser');
 
-goog.require('ol.Feature');
-goog.require('ol.geom.LineString');
-goog.require('ol.geom.Point');
-goog.require('ol.geom.Polygon');
-goog.require('ol.xml');
-goog.require('os.map');
-goog.require('os.parse.IParser');
+import {PROJECTION} from 'opensphere/src/os/map/map.js';
+
+const Feature = goog.require('ol.Feature');
+const LineString = goog.require('ol.geom.LineString');
+const Point = goog.require('ol.geom.Point');
+const Polygon = goog.require('ol.geom.Polygon');
+const {isDocument, parse} = goog.require('ol.xml');
+
+const {default: IParser} = goog.requireType('os.parse.IParser');
 
 
 /**
  * Parser for GeoRSS feeds
- * @implements {os.parse.IParser<ol.Feature>}
+ * @implements {IParser<Feature>}
  * @template T
  * @constructor
  */
-plugin.georss.GeoRSSParser = function() {
+export default class GeoRSSParser {
   /**
-   * @type {?Document}
-   * @protected
+   * Constructor.
    */
-  this.document = null;
+  constructor() {
+    /**
+     * @type {?Document}
+     * @protected
+     */
+    this.document = null;
 
-  /**
-   * @type {?NodeList}
-   * @protected
-   */
-  this.entries = null;
+    /**
+     * @type {?NodeList}
+     * @protected
+     */
+    this.entries = null;
 
-  /**
-   * @type {number}
-   * @protected
-   */
-  this.nextIndex = 0;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.georss.GeoRSSParser.prototype.setSource = function(source) {
-  if (ol.xml.isDocument(source)) {
-    this.document = /** @type {Document} */ (source);
-  } else if (typeof source === 'string') {
-    this.document = ol.xml.parse(source);
+    /**
+     * @type {number}
+     * @protected
+     */
+    this.nextIndex = 0;
   }
 
-  if (this.document) {
-    this.entries = this.document.querySelectorAll('entry');
-  }
-};
+  /**
+   * @inheritDoc
+   */
+  setSource(source) {
+    if (isDocument(source)) {
+      this.document = /** @type {Document} */ (source);
+    } else if (typeof source === 'string') {
+      this.document = parse(source);
+    }
 
-
-/**
- * @inheritDoc
- */
-plugin.georss.GeoRSSParser.prototype.cleanup = function() {
-  this.document = null;
-  this.entries = null;
-  this.nextIndex = 0;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.georss.GeoRSSParser.prototype.hasNext = function() {
-  return this.entries != null && this.entries.length > this.nextIndex;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.georss.GeoRSSParser.prototype.parseNext = function() {
-  var nextEntry = this.entries[this.nextIndex++];
-  var children = nextEntry.childNodes;
-  var properties = {};
-
-  for (var i = 0, n = children.length; i < n; i++) {
-    var el = /** @type {Element} */ (children[i]);
-
-    if (el.localName === 'link') {
-      properties[el.localName] = el.getAttribute('href');
-    } else if (el.namespaceURI === 'http://www.georss.org/georss') {
-      var geom = plugin.georss.GeoRSSParser.parseGeometry(el);
-      if (geom) {
-        properties['geometry'] = geom;
-      }
-    } else {
-      properties[el.localName] = el.textContent;
+    if (this.document) {
+      this.entries = this.document.querySelectorAll('entry');
     }
   }
 
-  return new ol.Feature(properties);
-};
+  /**
+   * @inheritDoc
+   */
+  cleanup() {
+    this.document = null;
+    this.entries = null;
+    this.nextIndex = 0;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  hasNext() {
+    return this.entries != null && this.entries.length > this.nextIndex;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  parseNext() {
+    var nextEntry = this.entries[this.nextIndex++];
+    var children = nextEntry.childNodes;
+    var properties = {};
+
+    for (var i = 0, n = children.length; i < n; i++) {
+      var el = /** @type {Element} */ (children[i]);
+
+      if (el.localName === 'link') {
+        properties[el.localName] = el.getAttribute('href');
+      } else if (el.namespaceURI === 'http://www.georss.org/georss') {
+        var geom = parseGeometry(el);
+        if (geom) {
+          properties['geometry'] = geom;
+        }
+      } else {
+        properties[el.localName] = el.textContent;
+      }
+    }
+
+    return new Feature(properties);
+  }
+}
 
 /**
  * @param {Element} el The element to parse
  * @return {ol.geom.Geometry|undefined} the geometry
  */
-plugin.georss.GeoRSSParser.parseGeometry = function(el) {
+export const parseGeometry = function(el) {
   switch (el.localName) {
     case 'point':
-      return plugin.georss.GeoRSSParser.parsePoint_(el);
+      return parsePoint(el);
     case 'line':
-      return plugin.georss.GeoRSSParser.parseLine_(el);
+      return parseLine(el);
     case 'polygon':
-      return plugin.georss.GeoRSSParser.parsePolygon_(el);
+      return parsePolygon(el);
     default:
       break;
   }
 };
 
-
 /**
  * @param {Element} el The element to parse
- * @return {ol.geom.Point|undefined} The point geometry
- * @private
+ * @return {Point|undefined} The point geometry
  */
-plugin.georss.GeoRSSParser.parsePoint_ = function(el) {
-  var coords = plugin.georss.GeoRSSParser.parseCoords_(el);
+const parsePoint = function(el) {
+  var coords = parseCoords(el);
 
   if (!coords || coords.length === 0) {
     // no coords found!
     return;
   }
 
-  return new ol.geom.Point(coords[0]);
+  return new Point(coords[0]);
 };
-
 
 /**
  * @param {Element} el The element to parse
- * @return {ol.geom.LineString|undefined} The line geometry
+ * @return {LineString|undefined} The line geometry
  * @private
  */
-plugin.georss.GeoRSSParser.parseLine_ = function(el) {
-  var coords = plugin.georss.GeoRSSParser.parseCoords_(el);
+const parseLine = function(el) {
+  var coords = parseCoords(el);
 
   if (!coords) {
     // no coords found!
@@ -150,17 +149,15 @@ plugin.georss.GeoRSSParser.parseLine_ = function(el) {
     return;
   }
 
-  return new ol.geom.LineString(coords);
+  return new LineString(coords);
 };
-
 
 /**
  * @param {Element} el The element to parse
- * @return {ol.geom.Polygon|undefined} The polygon geometry
- * @private
+ * @return {Polygon|undefined} The polygon geometry
  */
-plugin.georss.GeoRSSParser.parsePolygon_ = function(el) {
-  var coords = plugin.georss.GeoRSSParser.parseCoords_(el);
+const parsePolygon = function(el) {
+  var coords = parseCoords(el);
 
   if (!coords) {
     // no coords found!
@@ -172,16 +169,14 @@ plugin.georss.GeoRSSParser.parsePolygon_ = function(el) {
     return;
   }
 
-  return new ol.geom.Polygon([coords]);
+  return new Polygon([coords]);
 };
-
 
 /**
  * @param {Element} el The element to parse
  * @return {Array<ol.Coordinate>|undefined} The array of coordinates
- * @private
  */
-plugin.georss.GeoRSSParser.parseCoords_ = function(el) {
+const parseCoords = function(el) {
   var parts = el.textContent.trim().split(/\s+/);
 
   if (parts.length % 2 !== 0) {
@@ -202,7 +197,7 @@ plugin.georss.GeoRSSParser.parseCoords_ = function(el) {
     var coord = [lon, lat];
 
     // convert to the application projection
-    coords.push(ol.proj.fromLonLat(coord, os.map.PROJECTION));
+    coords.push(ol.proj.fromLonLat(coord, PROJECTION));
   }
 
   return coords;

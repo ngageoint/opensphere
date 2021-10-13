@@ -1,13 +1,14 @@
-goog.module('plugin.audioalert.AudioAlertPlugin');
+goog.declareModuleId('plugin.audioalert.AudioAlertPlugin');
 
-const AudioManager = goog.require('os.audio.AudioManager');
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const PluginManager = goog.require('os.plugin.PluginManager');
+import AudioManager from 'opensphere/src/os/audio/audiomanager.js';
+import AbstractPlugin from 'opensphere/src/os/plugin/abstractplugin.js';
+import PluginManager from 'opensphere/src/os/plugin/pluginmanager.js';
+
 
 /**
  * Cookbook example for playing an audio alert.
  */
-class AudioAlertPlugin extends AbstractPlugin {
+export default class AudioAlertPlugin extends AbstractPlugin {
   /**
    * Constructor.
    */
@@ -33,5 +34,3 @@ const ID = 'audioalert';
 
 // add the plugin to the application
 PluginManager.getInstance().addPlugin(new AudioAlertPlugin());
-
-exports = AudioAlertPlugin;

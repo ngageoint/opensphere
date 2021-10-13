@@ -1,7 +1,7 @@
 Angular Directives in Modules
 =============================
 
-A primary use case of having multiple ``goog.provide`` statements per file is with Angular directives and their controller. OpenSphere prefers to pair the directive and controller within the same file given they are coupled to create the UI. This poses a problem for a backward-compatible transition to ``goog.module``, given only one module name is allowed per file.
+A primary use case of having multiple ``goog.provide`` statements per file is with Angular directives and their controller. OpenSphere prefers to pair the directive and controller within the same file given they are coupled to create the UI. This poses a problem for a backward-compatible transition to modules, given only one module name is allowed per file.
 
 Our options were to split the original names into separate files, or change our approach to exposing the UI. We decided to use a shim to maintain compatibility with existing code. This seems to result in the best end product, and will be detailed in this guide.
 

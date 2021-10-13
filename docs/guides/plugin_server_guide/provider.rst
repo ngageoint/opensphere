@@ -15,25 +15,25 @@ While most descriptors activate layers, a custom descriptor could activate or la
 
 First let's just get the JSON loaded.
 
-.. literalinclude:: src/plugin/tileserver/tileserver.js-provider
+.. literalinclude:: src/plugin/tileserver/tileserver-provider.js
   :caption: ``src/plugin/tileserver/tileserver.js``
   :linenos:
   :language: javascript
 
 Here's our test for it. Note that this uses the same Jasmine 1.3 that OpenSphere uses. Newer versions allow for async tests with promises. If you have an external plugin and would like to use a newer or different test library, that is up to you.
 
-.. literalinclude:: test/plugin/tileserver/tileserver.test.js-provider
+.. literalinclude:: test/plugin/tileserver/tileserver-provider.test.js
   :caption: ``test/plugin/tileserver/tileserver.test.js``
   :linenos:
   :language: javascript
 
 Run ``yarn test`` to see if it tests properly. Now we need to register our provider type in our plugin.
 
-.. literalinclude:: src/plugin/tileserver/tileserverplugin.js-provider
+.. literalinclude:: src/plugin/tileserver/tileserverplugin-provider.js
   :caption: ``src/plugin/tileserer/tileserverplugin.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 3, 6, 27-33
+  :emphasize-lines: 3-4, 8, 28-34
 
 Lastly, we need to update our config so that the application instantiates a copy of our provider.
 

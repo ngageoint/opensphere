@@ -1,12 +1,13 @@
-goog.provide('plugin.georss.GeoRSSImportCtrl');
-goog.provide('plugin.georss.georssImportDirective');
+goog.declareModuleId('plugin.georss.GeoRSSImportUI');
 
-goog.require('os.data.DataManager');
-goog.require('os.file.FileStorage');
-goog.require('os.ui.Module');
-goog.require('os.ui.file.ui.AbstractFileImportCtrl');
-goog.require('os.ui.window');
-goog.require('plugin.georss');
+import AbstractFileImportCtrl from 'opensphere/src/os/ui/file/ui/abstractfileimport.js';
+import Module from 'opensphere/src/os/ui/module.js';
+
+import {ROOT} from './georss.js';
+import {createFromConfig} from './georssdescriptor.js';
+import GeoRSSProvider from './georssprovider.js';
+
+const {default: GeoRSSDescriptor} = goog.requireType('plugin.georss.GeoRSSDescriptor');
 
 
 /**
@@ -14,7 +15,7 @@ goog.require('plugin.georss');
  * @return {angular.Directive}
  */
 /* istanbul ignore next */
-plugin.georss.georssImportDirective = function() {
+export const directive = function() {
   return {
     restrict: 'E',
     replace: true,
@@ -25,56 +26,52 @@ plugin.georss.georssImportDirective = function() {
     // so that the OpenSphere build can find the files properly.
     //
     // For an internal plugin, just require os and use os.ROOT.
-    templateUrl: plugin.georss.ROOT + 'views/plugin/georss/georssimport.html',
-    controller: plugin.georss.GeoRSSImportCtrl,
+    templateUrl: ROOT + 'views/plugin/georss/georssimport.html',
+    controller: Controller,
     controllerAs: 'georssImport'
   };
 };
 
-
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('georssimport', [plugin.georss.georssImportDirective]);
-
+Module.directive('georssimport', [directive]);
 
 /**
  * Controller for the GeoRSS import dialog
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.ui.file.ui.AbstractFileImportCtrl<!os.parse.FileParserConfig, !plugin.georss.GeoRSSDescriptor>}
- * @constructor
- * @ngInject
  */
-/* istanbul ignore next */
-plugin.georss.GeoRSSImportCtrl = function($scope, $element) {
-  plugin.georss.GeoRSSImportCtrl.base(this, 'constructor', $scope, $element);
-  this.formName = 'georssForm';
-};
-goog.inherits(plugin.georss.GeoRSSImportCtrl, os.ui.file.ui.AbstractFileImportCtrl);
-
-
-/**
- * @inheritDoc
- */
-/* istanbul ignore next */
-plugin.georss.GeoRSSImportCtrl.prototype.createDescriptor = function() {
-  var descriptor = null;
-  if (this.config['descriptor']) { // existing descriptor, update it
-    descriptor = /** @type {!plugin.georss.GeoRSSDescriptor} */ (this.config['descriptor']);
-    descriptor.updateFromConfig(this.config);
-  } else { // this is a new import
-    descriptor = plugin.georss.GeoRSSDescriptor.createFromConfig(this.config);
+export class Controller extends AbstractFileImportCtrl {
+  /**
+   * Controller for the GeoRSS import dialog
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
+    this.formName = 'georssForm';
   }
 
-  return descriptor;
-};
+  /**
+   * @inheritDoc
+   */
+  createDescriptor() {
+    var descriptor = null;
+    if (this.config['descriptor']) { // existing descriptor, update it
+      descriptor = /** @type {!GeoRSSDescriptor} */ (this.config['descriptor']);
+      descriptor.updateFromConfig(this.config);
+    } else { // this is a new import
+      descriptor = createFromConfig(this.config);
+    }
 
+    return descriptor;
+  }
 
-/**
- * @inheritDoc
- */
-/* istanbul ignore next */
-plugin.georss.GeoRSSImportCtrl.prototype.getProvider = function() {
-  return plugin.georss.GeoRSSProvider.getInstance();
-};
+  /**
+   * @inheritDoc
+   */
+  getProvider() {
+    return GeoRSSProvider.getInstance();
+  }
+}
+

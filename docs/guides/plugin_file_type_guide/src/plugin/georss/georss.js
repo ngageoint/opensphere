@@ -1,7 +1,12 @@
-goog.provide('plugin.georss');
-
+goog.declareModuleId('plugin.georss');
 
 /**
- * @define {string} The path to this project
+ * Plugin identifier.
+ * @type {string}
  */
-plugin.georss.ROOT = goog.define('plugin.georss.ROOT', '../opensphere-plugin-georss/');
+export const ID = 'georss';
+
+/**
+ * @define {string} The path to this project.
+ */
+export const ROOT = goog.define('plugin.georss.ROOT', '../opensphere-plugin-georss/');

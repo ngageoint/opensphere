@@ -8,9 +8,9 @@ This guide explains the general structure of the OpenSphere example application,
 Closure Entry Point
 -------------------
 
-In the :doc:`../app_package_guide/index`, we saw how the Closure Compiler entry point was set to ``example``. This namespace is provided by `example.js <https://github.com/ngageoint/opensphere-app-example/blob/master/src/example/example.js>`_, which is responsible for initializing the application.
+In the :doc:`../app_package_guide/index`, we saw how the Closure Compiler entry point was set to ``exampleentry``. This namespace is provided by `exampleentry.js <https://github.com/ngageoint/opensphere-app-example/blob/master/src/example/exampleentry.js>`_, which is responsible for initializing the application.
 
-The first two lines in the initialization routine are fairly simple. We first configure the app's primary Angular module, `example.Module`_, with a route provider that will load our ``example-main`` directive (the main app) when Angular is bootstrapped. Then we configure OpenSphere's request stack to use the default set of request handlers. You can customize which of these are loaded if you'd like, but the default set will handle:
+The first few lines in the initialization routine are fairly simple. We first configure the app's primary Angular module, `example.Module`_, with a route provider that will load our ``example-main`` directive (the main app) when Angular is bootstrapped. Then we configure OpenSphere's request stack to use the default set of request handlers. You can customize which of these are loaded if you'd like, but the default set will handle:
 
 * Local files in `File Storage <https://github.com/ngageoint/opensphere/blob/master/src/os/file/filestorage.js>`_
 * Same domain requests

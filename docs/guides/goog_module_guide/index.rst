@@ -1,4 +1,4 @@
-Using goog.module in OpenSphere
+Using ES Modules in OpenSphere
 ===============================
 
 Modules have a number of key differences from files using ``goog.provide`` that are important for developers to keep in mind.
@@ -19,17 +19,18 @@ If this were loaded in a normal script, ``window.myString`` would be set to the 
 Module Exports
 **************
 
-.. note:: This documentation is a basic export example. For more complete documentation, see the `Closure export styles guide`_.
+.. note:: This documentation is a basic export example. For more complete documentation, see the MDN `import`_ and `export`_ documentation.
 
-.. _Closure export styles guide: https://github.com/google/closure-library/wiki/goog.module:-an-ES6-module-like-alternative-to-goog.provide#export-styles
+.. _import: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
+.. _export: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export
 
-To provide functions, classes, etc to external files, a module may use the ``exports`` object to define what to expose from its local scope. To make the above string available externally, a module could do the following:
+To provide functions, classes, etc to external files, a module may use the ``export`` keyword to define what to expose from its local scope. To make the above string available externally, a module could do the following:
 
 .. code-block:: javascript
 
-    goog.module('my.ns');
+    goog.declareModuleId('my.module');
 
-    const myString = 'Hello, World!';
+    export const myString = 'Hello, World!';
 
     exports = {myString};
 
@@ -37,64 +38,56 @@ Then to reference that string in another module:
 
 .. code-block:: javascript
 
-    const {myString} = goog.require('my.ns');
+    import {myString} from './path/to/my/module.js';
+
     console.log(myString);
 
-.. note:: This example makes use of `destructuring assignment <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment>`_ both in the exports and the ``goog.require`` statement. This expression is particularly convenient with module imports/exports.
+Requiring an ES Module in Legacy Code
+--------------------------------------
 
-The string can also be referenced using the old pattern, without a return value from ``goog.require``. Since the exports are not assigned to a variable, the module should be referenced by its full path.
+In a legacy ``goog.provide`` file, ``goog.require`` always returns ``null`` and should never be assigned to a variable. Doing so would pollute the global context by adding the variable name to ``window``. To reference an ES module from a ``goog.provide`` type file, you must use ``goog.module.get`` in a restricted scope and assign the exports.
 
-.. code-block:: javascript
-
-    goog.require('my.ns');
-    console.log(my.ns.myString);
-
-.. warning:: ``goog.require`` only has a return value when called within a module. It returns the exports of the required module, or if requiring a legacy file it will return the value assigned to the required namespace.
-
-Requiring a Module in Legacy Code
----------------------------------
-
-In a legacy file, ``goog.require`` always returns ``null`` and should never be assigned to a variable. Doing so would pollute the global context by adding the variable name to ``window``.
-
-Required namespaces should be referenced by the full namespace, which has to exist on ``window``. To make a module's exports available on ``window``, the module must call a special function, ``goog.module.declareLegacyNamespace``.
-
-Legacy Namespace Compatibility
-******************************
-
-The ``goog.module`` call does not add anything to the global context on its own. Consider the following code:
+For example:
 
 .. code-block:: javascript
 
-    goog.provide('my.Class');
+    goog.provide('my.legacy');
 
-This line defines ``window.my.Class`` on the global scope. ``goog.module('my.Class')`` does not do this. It simply makes a module by that name available to another module calling ``goog.require('my.Class')``.
+    goog.require('my.module');
 
-To allow legacy ``goog.provide`` files to reference a module by that namespace, a module must call ``goog.module.declareLegacyNamespace()`` after the ``goog.module`` call. Closure's module loader will process that call and set the global namespace to the module's exports.
+    my.legacy.printTheString = function() {
+      const {myString} = goog.module.get('my.module');
+      console.log(myString);
+    };
+
+In a ``goog.module`` file, ``goog.require`` returns the exports so this can be simplified a bit.
 
 .. code-block:: javascript
 
-    goog.module('my.Class');
-    goog.module.declareLegacyNamespace();
+    goog.module('my.legacy');
 
-This call is required if the module is being used by legacy code. If not, it can be omitted. These calls will be removed once all OpenSphere code has been converted to modules.
+    const {myString} = goog.require('my.module');
 
-Multiple goog.provide's
-***********************
+    const printTheString = function() {
+      console.log(myString);
+    };
 
-A single ``goog.module`` statement is allowed per file. When converting a file with multiple ``goog.provide`` statements, they either need to be split out into separate files or consolidated to a single module. Splitting into separate files is useful to preserve existing namespaces and avoid breaking changes, but some cases may benefit from consolidating down to one namespace. Angular directive/controller pairs are a good example where consolidation and refactor might be preferred.
+    exports = {printTheString};
 
 Type Only Imports
 *****************
 
-If a ``goog.require`` is only needed to access types in a module, use ``goog.requireType``. This will only be used by the compiler for type checking and does not create a hard dependency on the required module. These calls will also be discarded from the compiled output.
+If an ``import`` or ``goog.require`` is only needed to access types in a module, use ``goog.requireType``. This will only be used by the compiler for type checking and does not create a hard dependency on the required module. These calls will also be discarded from the compiled output.
 
 .. code-block:: javascript
 
     // SomeEvent is a dependency and programmatically used in the file.
-    const SomeEvent = goog.require('os.SomeEvent');
+    import SomeEvent from './path/to/someevent.js';
 
     // The SomeEvent type is referenced in JSDoc, and is not a dependency.
-    const SomeEvent = goog.requireType('os.SomeEvent');
+    const {default: SomeEvent} = goog.requireType('os.SomeEvent');
+
+.. note:: When using ``goog.requireType`` with an ES module, Closure will assign the default export to a ``default`` property on the exports, and any named exports to like-named properties. This is why the above example reassigns the ``default`` property to a more friendly name. This is also necessary when using ``goog.module.get`` with an ES module.
 
 Typedefs
 ********
@@ -109,7 +102,4 @@ Typedefs
      *   prop2: number
      * }}
      */
-    let MyType;
-
-    // Required if MyType is referenced outside the file.
-    exports = {MyType};
+    export let MyType;

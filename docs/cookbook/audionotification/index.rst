@@ -15,7 +15,7 @@ Use the OpenSphere AudioManager. This is a singleton, and the `play()` function 
 .. literalinclude:: src/audioalertplugin.js
   :caption: AudioManager usage
   :linenos:
-  :lines: 24-25
+  :lines: 25-26
   :language: javascript
 
 There are three ways to provide the sound files - config settings, programmatically, or by user upload.
@@ -31,8 +31,8 @@ A programmatic approach is shown below:
 
 .. code-block:: javascript
 
-  const {ROOT} = goog.require('os');
-  const AudioManager = goog.require('os.audio.AudioManager');
+  import {ROOT} from 'opensphere/src/os/os.js';
+  import AudioManager from 'opensphere/src/os/audio/audiomanager.js';
 
   const audioManager = AudioManager.getInstance();
   audioManager.addSound(ROOT + 'sounds/cowbell.wav', 'label');

@@ -15,18 +15,18 @@ Let's test that.
   :linenos:
   :language: javascript
 
-Now have the plugin require it.
+Now have the plugin import it.
 
-.. literalinclude:: src/plugin/tileserver/tileserverplugin.js-server_ui-1
+.. literalinclude:: src/plugin/tileserver/tileserverplugin-server_ui-1.js
   :caption: ``src/plugin/tileserver/tileserverplugin.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 9
+  :emphasize-lines: 3
 
 
 Now we need to make an Angular directive so the user has a form to give the server a title and potentially modify the URL.
 
-.. literalinclude:: src/plugin/tileserver/tileserverimport.js-server_ui-1
+.. literalinclude:: src/plugin/tileserver/tileserverimport-server_ui-1.js
   :caption: ``src/plugin/tileserver/tileserverimport.js``
   :linenos:
   :language: javascript
@@ -35,11 +35,11 @@ Note that we do not have our own UI template. We are reusing one from OpenSphere
 
 Now let's hook that up in our plugin.
 
-.. literalinclude:: src/plugin/tileserver/tileserverplugin.js-server_ui-2
+.. literalinclude:: src/plugin/tileserver/tileserverplugin-server_ui-2.js
   :caption: ``src/plugin/tileserver/tileserverplugin.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 7, 11, 41-45
+  :emphasize-lines: 10-11, 14, 44-48
 
 Save and run the build. Open the debug instance and go to Settings > Data Servers. You can now hit the little view icon on the Tileserver provider in that list. In addition, you can go to Add Data > Import File/URL and add the URL to the ``index.json``. It will pop up a UI for you to edit the title and the URL, as shown below:
 
@@ -51,19 +51,19 @@ The final step is getting the provider type to appear in the Data Servers > Add 
 
 First we'll create a directive to display the import form without the additional window content.
 
-.. literalinclude:: src/plugin/tileserver/tileserverimport.js-server_ui-2
+.. literalinclude:: src/plugin/tileserver/tileserverimport-server_ui-2.js
   :caption: ``src/plugin/tileserver/tileserverimport.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 3, 35-50
+  :emphasize-lines: 34-53
 
 Then we'll register the server type with the form UI.
 
-.. literalinclude:: src/plugin/tileserver/tileserverplugin.js-server_ui-3
+.. literalinclude:: src/plugin/tileserver/tileserverplugin-server_ui-3.js
   :caption: ``src/plugin/tileserver/tileserverplugin.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 12, 48-53
+  :emphasize-lines: 14, 50-55
 
 Reload the debug application, then go to Settings > Data Servers > Add Server. You should now see a Tileserver option in the dropdown that will display the import UI.
 

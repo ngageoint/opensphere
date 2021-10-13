@@ -8,7 +8,7 @@ both raster and vector data, import and export of various formats, saving files 
 sessions, and much more!
 
 
-Check out the `master branch here`_
+Check out the `master branch here`_.
 
 The code is open source, and `available on GitHub`_.
 
@@ -25,7 +25,7 @@ The code is open source, and `available on GitHub`_.
    getting_started
    windows_development
    guides/app_guide
-   guides/es6_transition_guide
+   guides/es6_guide
    guides/plugin_guide
    guides/settings_guide
    guides/deployment_guide

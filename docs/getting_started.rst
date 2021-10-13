@@ -11,7 +11,7 @@ Prerequisites
 
 - git
 - Java 1.7.0+
-- Node 8.16+ and npm
+- Node (`Maintenance LTS`_) and npm
 - Yarn_
 - Python
 - Sphinx (optional, used to generate these docs)
@@ -24,6 +24,7 @@ Prerequisites
 
 Windows developers see `Windows Development`_
 
+.. _Maintenance LTS: https://nodejs.org/en/about/releases/
 .. _Yarn: https://yarnpkg.com
 .. _Windows Development: windows_development.html
 
@@ -120,9 +121,9 @@ opensphere-build-resolver_ runs through all of an application's dependencies, pl
 Webpack
 =======
 
-OpenSphere's source is bundled using `webpack`_ and the `closure-webpack-plugin`_. The plugin allows webpack to identify Google Closure files using ``goog.module`` and ``goog.provide`` as build dependencies.
+OpenSphere's source is bundled using `webpack`_ and the `closure-webpack-plugin`_. The plugin allows webpack to identify Google Closure files using ``goog.declareModuleId``, ``goog.module``, and ``goog.provide`` as build dependencies.
 
-Webpack will also resolve ES6 modules and CommonJS modules imported with ``require``. Modules should be imported using the Webpack/Node resolution method, with paths relative to the package containing the module.
+Webpack will also resolve ES modules and CommonJS modules imported with ``require``. Modules should be imported using the Webpack/Node resolution method, with paths relative to the package containing the module.
 
 Example:
 
@@ -145,31 +146,29 @@ Use of the `Closure Compiler`_ has been limited among the open source community.
 We use the compiler's ``ADVANCED`` compilation level, which is `described in detail here`_. Also check out the annotations_ available for the compiler.
 
 .. _described in detail here: https://developers.google.com/closure/compiler/docs/api-tutorial3
-.. _annotations: https://developers.google.com/closure/compiler/docs/js-for-compiler
+.. _annotations: https://github.com/google/closure-compiler/wiki/Annotating-JavaScript-for-the-Closure-Compiler
 
 Because the `Closure Compiler`_ does so much more than just minification, the build takes a non-trivial amount of time to run. To help with developer productivity, we have produced a build system which does not need to be rerun when files change. Instead, it only needs to be run when files are added or dependencies change.
 
 Some of the intricacies from using the compiler are documented in the `Compiler Caveats`_ section below.
 
-The Debug Build
-===============
+The Development Build
+=====================
 
-To support various module types in a debug build of the application, webpack bundles all source into a single file. This file includes source maps so individual source files can be viewed within the browser's developer tools.
+To support various module types in a development build of the application, webpack bundles all source into a single file. This file includes source maps so individual source files can be viewed within the browser's developer tools.
 
-The ``index-template.html`` and its corresponding ``index.js`` file define how the main page is packaged up by opensphere-build-index_. That script produces ``index.html``, which is the debug instance. It contains all of the vendor scripts and css in addition to the application bundle produced by webpack.
+The ``index-template.html`` and its corresponding ``index.js`` file define how the main page is packaged up by opensphere-build-index_. That script produces ``opensphere/index.html``, which is the root document for the dev build. It loads all of the vendor scripts and CSS in addition to the application bundle produced by webpack.
 
 .. _opensphere-build-index: https://github.com/ngageoint/opensphere-build-index
 
 If you set up nginx or httpd as recommended above, accessing it might be accomplished by pointing your browser at http://localhost:8080/workspace/opensphere
 
-The ``dev`` target will generate the debug application, and runs webpack in watch mode. Webpack will watch all dependencies for changes and rebuild the application when needed. While webpack is running, you can make changes to files in the workspace and pick them up on the page by merely refreshing it. The ``dev`` target only has to be run if dependencies (``goog.module/provide/require``) change or if files are added or removed.
-
-If the build has already been generated and you simply need to start webpack again, use the ``build:webpack-dev`` target.
+Running ``npm run dev`` will generate the development application, and runs webpack in watch mode. Webpack will watch all dependencies for changes and rebuild the application when needed. While webpack is running, you can make changes to files in the workspace and pick them up on the page by refreshing it. The ``npm run dev`` script only has to be restarted if files are added or removed and cannot be resolved by webpack.
 
 The Compiled Build
 ==================
 
-The compiled build output is available in ``dist/opensphere``. You will need to test your changes in both the debug and compiled application, but generally compiled mode should be checked after you have largely completed the feature on which you are working. It does contain source maps for debugging, and also loads much quicker since all the code is compiled and minified to a smaller file.
+The compiled build output is available in ``opensphere/dist/opensphere``. You will need to test your changes in both the development and compiled application, but generally compiled mode should be checked after you have largely completed the feature on which you are working. It does contain source maps for debugging, and also loads much quicker since all the code is compiled and minified to a smaller file.
 
 Testing
 *******
@@ -223,7 +222,7 @@ If you would like to automatically rebuild the guide as files change, use ``npm 
 Compiler Caveats
 ****************
 
-The compiler will attempt to minify/rename everything not in a string. For the most part, this is fine. However, when working with Angular templates, the variable/function names used in the template itself will not be replaced. To combat this, we use bracket notation for variables such as ``$scope['value'] = 0f``, and we use ``goog.exportProperty()`` on controller methods that should be made available to the UI.
+The compiler will attempt to minify/rename any symbol it can. For the most part, this is preferred. However, when working with Angular templates, the variable/function names used in the HTML template will not be replaced and the HTML symbol will not match the JS symbol. To fix this, we use ``@export`` on symbols we do not want to rename.
 
 Broken Example:
 
@@ -231,26 +230,37 @@ Broken Example:
    :linenos:
 
     /**
-     * @param {!angular.Scope} $scope The scope
+     * A controller for an Angular directive.
      */
-    package.DirCtrl = function($scope, $element) {
-      $scope.value = 3;
-    };
+    class MyController {
+      /**
+       * @param {!angular.Scope} $scope The Angular scope.
+       * @ngInject
+       */
+      constructor($scope) {
+        /**
+         * This property will be renamed without @export.
+         * @type {number}
+         */
+        this.value = 3;
+      }
 
-    /**
-     * @param {number} value
-     */
-    package.DirCtrl.prototype.isPositive = function(value) {
-      return value > 0;
-    };
+      /**
+       * This function will be renamed without @export.
+       * @param {number} value
+       */
+      isPositive(value) {
+        return value > 0;
+      }
+    }
 
 .. code-block:: html
    :linenos:
 
     <!-- Angular template -->
-    <span ng-show="ctrl.isPositive(value)">{{value}} is positive</span>
+    <span ng-show="ctrl.isPositive(ctrl.value)">{{ctrl.value}} is positive</span>
 
-This will work great in debug mode (no minification), but will fail in compiled mode. To fix this, we need to ensure that the compiled build does not minify the two items we used in the template.
+This will work great in development mode (no minification), but will fail in compiled mode. To fix this, we need to ensure that the compiled build does not minify the two items we used in the template.
 
 Fixed Example:
 
@@ -259,25 +269,37 @@ Fixed Example:
    :emphasize-lines: 5, 10
 
     /**
-     * @param {!angular.Scope} $scope The scope
+     * A controller for an Angular directive.
      */
-    package.DirCtrl = function($scope, $element) {
-      $scope['value'] = 3;
-    };
+    class MyController {
+      /**
+       * @param {!angular.Scope} $scope The Angular scope.
+       * @ngInject
+       */
+      constructor($scope) {
+        /**
+         * This property will not be renamed.
+         * @type {number}
+         * @export
+         */
+        this.value = 3;
+      }
 
-    /**
-     * @param {number} value
-     * @export
-     */
-    package.DirCtrl.prototype.isPositive = function(value) {
-      return value > 0;
-    };
+      /**
+       * This function will not be renamed.
+       * @param {number} value
+       * @export
+       */
+      isPositive(value) {
+        return value > 0;
+      }
+    }
 
 .. code-block:: html
    :linenos:
 
     <!-- Angular template -->
-    <span ng-show="ctrl.isPositive(value)">{{value}} is positive</span>
+    <span ng-show="ctrl.isPositive(ctrl.value)">{{ctrl.value}} is positive</span>
 
-Now it works in compiled mode! Note that UI templates is not the only place where bracket notation is useful. It is useful wherever you want to have the compiler skip minification.
+Now it works in compiled mode! Note that UI templates is not the only place where ``@export`` is useful. It is useful wherever you want to have the compiler skip minification.
 

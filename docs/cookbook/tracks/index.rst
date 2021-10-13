@@ -23,9 +23,9 @@ Use the OpenSphere tracks plugin.
 Your code (e.g. plugin) ensures that the tracks plugin is available:
 
 .. literalinclude:: src/tracksplugin_features.js
-  :caption: Tracks Cookbook example - requires
+  :caption: Tracks Cookbook example - imports
   :linenos:
-  :lines: 8-9
+  :lines: 10, 12
   :language: javascript
 
 Your code needs to wait for the Places plugin to be available (fully loaded) before attempting to add the track:
@@ -33,7 +33,7 @@ Your code needs to wait for the Places plugin to be available (fully loaded) bef
 .. literalinclude:: src/tracksplugin_features.js
   :caption: Tracks Cookbook example - Places plugin initialisation
   :linenos:
-  :lines: 42-47
+  :lines: 61-66
   :language: javascript
 
 You can then create a new track, which might be in response to an initial connection, or in response to a server update (e.g. over a WebSocket)
@@ -41,7 +41,7 @@ You can then create a new track, which might be in response to an initial connec
 .. literalinclude:: src/tracksplugin_features.js
   :caption: Tracks Cookbook example - Create Track
   :linenos:
-  :lines: 53-58,63
+  :lines: 72-77,82
   :language: javascript
 
 The track can then be updated with additional features in response to changes:
@@ -49,7 +49,7 @@ The track can then be updated with additional features in response to changes:
 .. literalinclude:: src/tracksplugin_features.js
   :caption: Tracks Cookbook example - Update Track
   :linenos:
-  :lines: 84-87
+  :lines: 103-106
   :language: javascript
 
 
@@ -68,7 +68,7 @@ Instead of using features, you can just pass coordinates instead, as shown below
 .. literalinclude:: src/tracksplugin_coordinates.js
   :caption: Tracks Cookbook Coordinates example - Create Track
   :linenos:
-  :lines: 53-57
+  :lines: 70-74
   :language: javascript
 
 .. tip:: In case you missed it, the CreateOptions object has a different key - :code:`coordinates` in place of :code:`features`. You pass exactly one of :code:`coordinates` or :code:`features`.
@@ -78,7 +78,7 @@ Similarly, you can pass coordinates to the update method as well:
 .. literalinclude:: src/tracksplugin_coordinates.js
   :caption: Tracks Cookbook Coordinates example - Update Track
   :linenos:
-  :lines: 82-85
+  :lines: 99-102
   :language: javascript
 
 .. tip:: With both features and coordinates, you have to make sure your geometry is transformed into the map projection.

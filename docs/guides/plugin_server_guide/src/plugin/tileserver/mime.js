@@ -1,37 +1,37 @@
-goog.provide('plugin.tileserver.mime');
+goog.declareModuleId('plugin.tileserver.mime');
 
-goog.require('goog.Promise');
-goog.require('os.file.mime');
-goog.require('os.file.mime.json');
-goog.require('plugin.tileserver.constants');
+import {register} from 'opensphere/src/os/file/mime.js';
+import {TYPE} from 'opensphere/src/os/file/mime/json.js';
+import {ID} from './index.js';
+
+const Promise = goog.require('goog.Promise');
+const {default: OSFile} = goog.requireType('os.file.File');
 
 
 /**
  * @param {ArrayBuffer} buffer
- * @param {os.file.File} file
+ * @param {OSFile} file
  * @param {*=} opt_context
- * @return {!goog.Promise<*|undefined>}
+ * @return {!Promise<*|undefined>}
  */
-plugin.tileserver.mime.detect = function(buffer, file, opt_context) {
+export const detect = function(buffer, file, opt_context) {
   var retVal;
 
   // the parent type (JSON) gives the context as the parsed JSON
   // (so far)
 
-  if (opt_context && Array.isArray(opt_context) && opt_context.length &&
-    'tilejson' in opt_context[0]) {
+  if (opt_context && Array.isArray(opt_context) && opt_context.length && 'tilejson' in opt_context[0]) {
     retVal = opt_context;
   }
 
-  return goog.Promise.resolve(retVal);
+  return Promise.resolve(retVal);
 };
 
-os.file.mime.register(
+register(
     // for providers, this must be the same as the ProviderEntry ID
-    plugin.tileserver.ID,
-    // our detect function
-    plugin.tileserver.mime.detect,
+    ID,
+    detect,
     // the priority; lower numbers run earlier
     0,
     // the parent type
-    os.file.mime.json.TYPE);
+    TYPE);

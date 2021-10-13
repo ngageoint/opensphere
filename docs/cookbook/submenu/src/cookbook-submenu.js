@@ -1,103 +1,108 @@
-goog.provide('plugin.cookbook_submenu.CookbookSubmenu');
+goog.declareModuleId('plugin.cookbook_submenu.CookbookSubmenu');
 
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.plugin.PluginManager');
+import {PROJECTION} from 'opensphere/src/os/map/map.js';
+import AbstractPlugin from 'opensphere/src/os/plugin/abstractplugin.js';
+import PluginManager from 'opensphere/src/os/plugin/pluginmanager.js';
+import MenuItemType from 'opensphere/src/os/ui/menu/menuitemtype.js';
+import * as spatial from 'opensphere/src/os/ui/menu/spatial.js';
+
+const Point = goog.require('ol.geom.Point');
+const {toLonLat} = goog.require('ol.proj');
+
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 
 
 /**
  * Cookbook example of a submenu
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.cookbook_submenu.CookbookSubmenu = function() {
-  plugin.cookbook_submenu.CookbookSubmenu.base(this, 'constructor');
-  this.id = plugin.cookbook_submenu.ID;
-  this.errorMessage = null;
-};
-goog.inherits(plugin.cookbook_submenu.CookbookSubmenu, os.plugin.AbstractPlugin);
+export default class CookbookSubmenu extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = ID;
+    this.errorMessage = null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  init() {
+    const menu = spatial.getMenu();
+    if (menu) {
+      const root = menu.getRoot();
+      let group = root.find(MYGROUP);
+      if (!group) {
+        group = root.addChild({
+          type: MenuItemType.GROUP,
+          label: MYGROUP,
+          tooltip: 'Added by cookbook submenu example',
+          beforeRender: shouldShowGroup
+        });
+      }
+      const submenu1 = group.addChild({
+        type: MenuItemType.SUBMENU,
+        label: 'SubMenu 1'
+      });
+      // Submenus can be nested
+      const submenu2 = submenu1.addChild({
+        type: MenuItemType.SUBMENU,
+        label: 'SubSubMenu',
+
+        // You can specify child menu items directly
+        children: [{
+          type: MenuItemType.ITEM,
+          label: 'Item 1',
+          sort: 10,
+          handler: handleItem1
+        }, {
+          type: MenuItemType.ITEM,
+          eventType: EventType.DO_SOMETHING,
+          label: 'Item 2',
+          sort: 30,
+          handler: handleItem,
+          beforeRender: visibleIfIsPointInSouthernHemisphere
+        }]
+      });
+
+      // You can also add items programmatically
+      submenu2.addChild({
+        type: MenuItemType.ITEM,
+        eventType: EventType.DO_ANOTHER_THING,
+        label: 'Another item',
+        sort: 20,
+        handler: handleItem
+      });
+    }
+  }
+}
 
 /**
  * @type {string}
- * @const
  */
-plugin.cookbook_submenu.ID = 'cookbook_submenu';
+const ID = 'cookbook_submenu';
 
 /**
  * @type {string}
- * @const
  */
-plugin.cookbook_submenu.MYGROUP = 'Cookbook Group';
+const MYGROUP = 'Cookbook Group';
 
 /**
  * Our event types
  * @enum {string}
  */
-plugin.cookbook_submenu.EventType = {
+const EventType = {
   DO_SOMETHING: 'cookbook:do_y',
   DO_ANOTHER_THING: 'cookbook:do_x'
 };
-
-
-/**
- * @inheritDoc
- */
-plugin.cookbook_submenu.CookbookSubmenu.prototype.init = function() {
-  var menu = os.ui.menu.spatial.getMenu();
-  if (menu) {
-    var root = menu.getRoot();
-    var group = root.find(plugin.cookbook_submenu.MYGROUP);
-    if (!group) {
-      group = root.addChild({
-        type: os.ui.menu.MenuItemType.GROUP,
-        label: plugin.cookbook_submenu.MYGROUP,
-        tooltip: 'Added by cookbook submenu example',
-        beforeRender: plugin.cookbook_submenu.shouldShowGroup_
-      });
-    }
-    var submenu1 = group.addChild({
-      type: os.ui.menu.MenuItemType.SUBMENU,
-      label: 'SubMenu 1'
-    });
-    // Submenus can be nested
-    var submenu2 = submenu1.addChild({
-      type: os.ui.menu.MenuItemType.SUBMENU,
-      label: 'SubSubMenu',
-
-      // You can specify child menu items directly
-      children: [{
-        type: os.ui.menu.MenuItemType.ITEM,
-        label: 'Item 1',
-        sort: 10,
-        handler: plugin.cookbook_submenu.handleItem1
-      }, {
-        type: os.ui.menu.MenuItemType.ITEM,
-        eventType: plugin.cookbook_submenu.EventType.DO_SOMETHING,
-        label: 'Item 2',
-        sort: 30,
-        handler: plugin.cookbook_submenu.handleItem,
-        beforeRender: plugin.cookbook_submenu.visibleIfIsPointInSouthernHemisphere_
-      }]
-    });
-
-    // You can also add items programmatically
-    submenu2.addChild({
-      type: os.ui.menu.MenuItemType.ITEM,
-      eventType: plugin.cookbook_submenu.EventType.DO_ANOTHER_THING,
-      label: 'Another item',
-      sort: 20,
-      handler: plugin.cookbook_submenu.handleItem
-    });
-  }
-};
-
 
 /**
  * If our example group should be shown.
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
- * @private
  */
-plugin.cookbook_submenu.shouldShowGroup_ = function(context) {
+const shouldShowGroup = function(context) {
   // This shows always, and could just be omitted from the menu item definition.
   // Your code could use the menu context if needed.
   this.visible = true;
@@ -107,26 +112,24 @@ plugin.cookbook_submenu.shouldShowGroup_ = function(context) {
  * If our item should be shown.
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
- * @private
  */
-plugin.cookbook_submenu.visibleIfIsPointInSouthernHemisphere_ = function(context) {
-  this.visible = plugin.cookbook_submenu.ifIsPointInSouthernHemisphere_(context);
+const visibleIfIsPointInSouthernHemisphere = function(context) {
+  this.visible = ifIsPointInSouthernHemisphere(context);
 };
 
 /**
  * If feature associated with menu entry is a point in southern hemisphere.
  * @param {Object|undefined} context The menu context.
  * @return {boolean}
- * @private
  */
-plugin.cookbook_submenu.ifIsPointInSouthernHemisphere_ = function(context) {
+const ifIsPointInSouthernHemisphere = function(context) {
   // Get feature associated with menu context
-  var features = os.ui.menu.spatial.getFeaturesFromContext(context);
+  const features = spatial.getFeaturesFromContext(context);
   if (features.length === 1) {
-    var feature = features[0];
-    var geom = feature.getGeometry();
-    if (geom instanceof ol.geom.Point) {
-      var coords = ol.proj.toLonLat(geom.getFlatCoordinates(), os.map.PROJECTION);
+    const feature = features[0];
+    const geom = feature.getGeometry();
+    if (geom instanceof Point) {
+      const coords = toLonLat(geom.getFlatCoordinates(), PROJECTION);
       if (coords[1] < 0) {
         return true;
       }
@@ -135,25 +138,23 @@ plugin.cookbook_submenu.ifIsPointInSouthernHemisphere_ = function(context) {
   return false;
 };
 
-
 /**
  * Process a menu item
- * @param {os.ui.menu.MenuEvent} event The menu event.
+ * @param {MenuEvent} event The menu event.
  */
-plugin.cookbook_submenu.handleItem1 = function(event) {
+const handleItem1 = function(event) {
   alert('cookbook_submenu item1 selected');
 };
 
-
 /**
  * Process a menu item
- * @param {os.ui.menu.MenuEvent} event The menu event.
+ * @param {MenuEvent} event The menu event.
  */
-plugin.cookbook_submenu.handleItem = function(event) {
+const handleItem = function(event) {
   // event provides context for the elected item
-  var eventType = event.type;
+  const eventType = event.type;
   alert('cookbook_submenu item selected:' + eventType);
 };
 
 // add the plugin to the application
-os.plugin.PluginManager.getInstance().addPlugin(new plugin.cookbook_submenu.CookbookSubmenu());
+PluginManager.getInstance().addPlugin(new CookbookSubmenu());
