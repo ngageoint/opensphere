@@ -281,4 +281,4 @@ export default class DrawingLayerNode extends LayerNode {
   }
 }
 
-registerClass(NodeClass.DRAW_FEATURE, DrawingLayerNode);
+registerClass(NodeClass.DRAW_LAYER, DrawingLayerNode);

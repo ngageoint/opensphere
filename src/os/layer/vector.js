@@ -1050,11 +1050,14 @@ export default class Vector extends OLVectorLayer {
       case ActionEventType.SAVE_LAYER_AS:
         return isVector && source.getHasModifications();
       case ActionEventType.LAYER_SETTINGS:
-        const descriptor = DataManager.getInstance().getDescriptor(source.getId());
+        if (isVector) {
+          const descriptor = DataManager.getInstance().getDescriptor(source.getId());
 
-        return isVector && onlyOneLayer &&
-        osImplements(descriptor, IMappingDescriptor.ID) &&
-        /** @type {IMappingDescriptor} */ (descriptor).supportsMapping();
+          return onlyOneLayer && osImplements(descriptor, IMappingDescriptor.ID) &&
+          /** @type {IMappingDescriptor} */ (descriptor).supportsMapping();
+        }
+
+        return false;
       default:
         // ask the source if it supports the action
         return isVector && source.getSupportsAction(type);
