@@ -11,6 +11,9 @@
         <button class="btn btn-primary" ng-click="ctrl.swap()" title="Swap the compare order">
           <i class="fas fa-exchange-alt"></i> Swap Layers
         </button>
+        <button class="btn btn-secondary" ng-click="ctrl.export()" title="Export the current view">
+          <i class="fas fa-download"></i> Export
+        </button>
       </div>
 
       <div>
@@ -37,12 +40,6 @@
       <div class="d-flex flex-row flex-fill col-2">
         <slicktree class="border" x-data="ctrl.rightNodes" selected="ctrl.rightSelected" context-menu="ctrl.rightMenu" checkbox-tooltip="Show or hide the layer" multi-select="true" disposable="true"></slicktree>
       </div>
-    </div>
-
-    <div class="form-row mx-2 mt-1">
-      <button class="btn btn-secondary" ng-click="ctrl.export()" title="Export the current view">
-        <i class="fas fa-download"></i> Export
-      </button>
     </div>
   </div>
   <div class="modal-footer">

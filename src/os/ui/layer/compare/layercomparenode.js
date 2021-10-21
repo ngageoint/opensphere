@@ -118,18 +118,11 @@ export default class LayerCompareNode extends SlickTreeNode {
       if (value) {
         events.listen(/** @type {events.EventTarget} */ (value), GoogEventType.PROPERTYCHANGE,
             this.onPropertyChange, this);
-        this.setId(value.getId());
         this.setLabel(value.getTitle());
+        this.setToolTip(value.getTitle());
         this.setState(value.isEnabled() ? TriState.ON : TriState.OFF);
       }
     }
-  }
-
-  /**
-   * @inheritDoc
-   */
-  getId() {
-    return this.layer_ ? this.layer_.getId() : super.getId();
   }
 
   /**

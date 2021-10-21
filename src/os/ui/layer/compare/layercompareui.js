@@ -49,6 +49,15 @@ const Selector = {
   SLIDER: '.js-layer-compare-slider'
 };
 
+/**
+ * Menu event types.
+ * @enum {string}
+ */
+const MenuEventType = {
+  MOVE_LEFT: 'compare:moveLeft',
+  MOVE_RIGHT: 'compare:moveRight',
+  REMOVE: 'compare:remove'
+};
 
 /**
  * @typedef {{
@@ -58,22 +67,19 @@ const Selector = {
  */
 export let LayerCompareOptions;
 
-
 /**
  * Get active basemap layers from the main map.
  * @return {!Array<!Layer>}
  */
 const getBasemaps = () => getMapContainer().getLayers().filter(isBasemap);
 
-
 /**
  * If a layer is a basemap layer.
- * @param {Layer} layer The layer.
+ * @param {Layer|ILayer} layer The layer.
  * @return {boolean} If the layer is a basemap.
  */
-const isBasemap = (layer) => osImplements(layer, ILayer.ID) &&
+export const isBasemap = (layer) => osImplements(layer, ILayer.ID) &&
 /** @type {ILayer} */ (layer).getOSType() === 'Map Layers';
-
 
 /**
  * Create the controls to display on the map.
@@ -88,7 +94,6 @@ const createControls = () => [
     className: 'c-layer-compare-control ol-zoom'
   })
 ];
-
 
 /**
  * Launch a dialog warning users of the risks in using 2D with lots of data.
@@ -120,7 +125,6 @@ const launchLayerComparePerformanceDialog = function() {
   });
 };
 
-
 /**
  * The layercompare directive.
  * @return {angular.Directive}
@@ -140,12 +144,10 @@ export const directive = () => ({
  */
 export const directiveTag = 'layercompare';
 
-
 /**
  * Add the directive to the module.
  */
 Module.directive(directiveTag, [directive]);
-
 
 /**
  * Controller for the layercompare directive.
@@ -221,10 +223,16 @@ export class Controller {
       type: MenuItemType.ROOT,
       children: [{
         label: 'Move Right',
-        eventType: 'moveRight',
+        eventType: MenuEventType.MOVE_RIGHT,
         icons: ['<i class="fas fa-fw fa-angle-right"></i>'],
         tooltip: 'Move the selected layers to the right map',
         handler: this.moveSelected.bind(this, 'right')
+      }, {
+        label: 'Remove',
+        eventType: MenuEventType.REMOVE,
+        icons: ['<i class="fas fa-fw fa-times"></i>'],
+        tooltip: 'Remove the selected layers from the Layer Comparison',
+        handler: this.removeSelected.bind(this, 'left')
       }]
     }));
 
@@ -262,10 +270,16 @@ export class Controller {
       type: MenuItemType.ROOT,
       children: [{
         label: 'Move Left',
-        eventType: 'moveLeft',
+        eventType: MenuEventType.MOVE_LEFT,
         icons: ['<i class="fas fa-fw fa-angle-left"></i>'],
         tooltip: 'Move the selected layers to the left map',
         handler: this.moveSelected.bind(this, 'left')
+      }, {
+        label: 'Remove',
+        eventType: MenuEventType.REMOVE,
+        icons: ['<i class="fas fa-fw fa-times"></i>'],
+        tooltip: 'Remove the selected layers from the Layer Comparison',
+        handler: this.removeSelected.bind(this, 'right')
       }]
     }));
 
@@ -351,15 +365,6 @@ export class Controller {
 
     const compareOptions = /** @type {LayerCompareOptions} */ (this.scope);
 
-    // Add basemaps to the layer sets if they aren't already present.
-    const basemaps = getBasemaps();
-    if (!compareOptions.left.some(isBasemap)) {
-      compareOptions.left = compareOptions.left.concat(basemaps);
-    }
-    if (!compareOptions.right.some(isBasemap)) {
-      compareOptions.right = compareOptions.right.concat(basemaps);
-    }
-
     // Set the layers on each map.
     this.setLeftLayers(compareOptions.left);
     this.setRightLayers(compareOptions.right);
@@ -399,6 +404,16 @@ export class Controller {
   }
 
   /**
+   * Checks whether a layer is present in the comparison window.
+   * @param {Layer|ILayer} layer The layer to check.
+   * @return {boolean} Whether we have the layer.
+   */
+  hasLayer(layer) {
+    layer = /** @type {Layer} */ (layer);
+    return this.leftLayers.getArray().includes(layer) || this.rightLayers.getArray().includes(layer);
+  }
+
+  /**
    * Set the layers in a collection.
    * @param {Collection<Layer>} collection The collection.
    * @param {Array<Layer>|undefined} layers The layers.
@@ -408,6 +423,13 @@ export class Controller {
     collection.clear();
 
     if (layers) {
+      // always include the basemaps here, but never add duplicates
+      getBasemaps().forEach((basemap) => {
+        if (!layers.includes(basemap)) {
+          layers.push(basemap);
+        }
+      });
+
       layers.forEach((layer) => {
         collection.push(layer);
       });
@@ -436,6 +458,21 @@ export class Controller {
 
     const nodes = this.createNodes(layers);
     this.rightNodes = nodes;
+  }
+
+  /**
+   * Set the layers on the right map.
+   * @param {Array<Layer|ILayer>|undefined} layers The layers.
+   * @param {string} target The side to add the layers to.
+   */
+  addLayers(layers, target) {
+    if (target == 'left') {
+      const leftLayers = this.leftLayers.getArray().filter((l) => !isBasemap(l));
+      this.setLeftLayers(leftLayers.concat(layers));
+    } else if (target == 'right') {
+      const rightLayers = this.rightLayers.getArray().filter((l) => !isBasemap(l));
+      this.setRightLayers(rightLayers.concat(layers));
+    }
   }
 
   /**
@@ -490,6 +527,24 @@ export class Controller {
       const layers = this.leftSelected.map((node) => node.getLayer());
       const leftUnselectedLayers = leftLayerArr.filter((layer) => !layers.includes(layer));
       this.setRightLayers(rightLayerArr.concat(layers));
+      this.setLeftLayers(leftUnselectedLayers);
+    }
+  }
+
+  /**
+   * Removes selected layers from a side.
+   * @param {string} from The side to move to.
+   */
+  removeSelected(from) {
+    if (from == 'right') {
+      const rightLayerArr = this.rightLayers.getArray();
+      const layers = this.rightSelected.map((node) => node.getLayer());
+      const rightUnselectedLayers = rightLayerArr.filter((layer) => !layers.includes(layer));
+      this.setRightLayers(rightUnselectedLayers);
+    } else if (from == 'left') {
+      const leftLayerArr = this.leftLayers.getArray();
+      const layers = this.leftSelected.map((node) => node.getLayer());
+      const leftUnselectedLayers = leftLayerArr.filter((layer) => !layers.includes(layer));
       this.setLeftLayers(leftUnselectedLayers);
     }
   }
@@ -634,19 +689,36 @@ export class Controller {
 export const windowId = 'compare-layers';
 
 /**
- * Launch the layer compare window.
- * @param {!LayerCompareOptions} options The layer compare options.
+ * Gets whether an instance of the window exists.
+ * @return {boolean}
  */
-const launchLayerCompareWindow = (options) => {
+export const exists = () => !!getWindowById(windowId);
+
+/**
+ * Gets the existing controller instance for the UI.
+ * @return {?Controller}
+ */
+export const getCompareController = () => {
   const existing = getWindowById(windowId);
   if (existing) {
     const scope = existing.find(Selector.CONTAINER).scope();
     if (scope && scope['ctrl']) {
-      const ctrl = /** @type {Controller} */ (scope['ctrl']);
-      ctrl.setLeftLayers(options.left);
-      ctrl.setRightLayers(options.right);
+      return /** @type {Controller} */ (scope['ctrl']);
     }
+  }
 
+  return null;
+};
+
+/**
+ * Launch the layer compare window.
+ * @param {!LayerCompareOptions} options The layer compare options.
+ */
+const launchLayerCompareWindow = (options) => {
+  const existingController = getCompareController();
+  if (existingController) {
+    existingController.setLeftLayers(options.left);
+    existingController.setRightLayers(options.right);
     bringToFront(windowId);
   } else {
     const windowOptions = {
