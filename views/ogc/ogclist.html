@@ -1,6 +1,6 @@
 <div ng-form="ogcListForm" class="d-flex flex-fill" autocomplete="off">
   <!-- hidden input controls form validation, but they can't be styled so the ng-form takes care of that. -->
-  <input class="form-control" type="hidden" name="value" ng-model="value" ng-required="isRequired" autocomplete="off">
+  <input class="d-none form-control" name="value" ng-model="value" ng-required="isRequired" autocomplete="off">
 
   <!-- pseudo input form with loading spinner -->
   <div ng-if="ogcCtrl.loading" class="form-control">
