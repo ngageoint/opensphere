@@ -326,7 +326,7 @@
     "navigator.sendbeacon": "~0.0.x",
     "oboe": "^2.1.5",
     "ol-cesium": "=1.37.0",
-    "openlayers": "=4.6.4",
+    "openlayers": "4.6.5",
     "opensphere-asm": "^1.0.0",
     "papaparse": "~4.2.0",
     "platform": "~1.3.4",
