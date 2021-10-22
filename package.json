@@ -317,7 +317,7 @@
     "d3-tip": "=0.6.8",
     "file-saver": "^1.3.8",
     "google-closure-library": "^20210808.0.0",
-    "html2canvas": "=1.0.0-rc.4",
+    "html2canvas": "^1.3.2",
     "jquery": "3.6.0",
     "jschardet": "^2.3.0",
     "jsts": "^2.7.3",
