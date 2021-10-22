@@ -152,7 +152,7 @@ export default class LayerCompareNode extends SlickTreeNode {
     } else if (this.layer_ instanceof Tile) {
       const icons = [IconsSVG.TILES];
       const layerColor = /** {Tile} */ (this.layer_).getColor();
-      let color = [256, 256, 256, 1];
+      let color = [255, 255, 255, 1];
       if (layerColor) {
         color = toRgbArray(layerColor);
       }
