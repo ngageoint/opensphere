@@ -120,6 +120,18 @@ export const setup = function() {
         beforeRender: visibleIfCanCompare,
         handler: handleCompareLayers
       }, {
+        label: 'Add to Left Compare',
+        tooltip: 'Add the layer to the left side of the Layer Compare window',
+        icons: ['<i class="fas fa-fw fa-layer-group"></i>'],
+        beforeRender: visibleIfCanAddToCompare,
+        handler: handleAddLeftCompareLayers
+      }, {
+        label: 'Add to Right Compare',
+        tooltip: 'Add the layer to the right side of the Layer Compare window',
+        icons: ['<i class="fas fa-fw fa-layer-group"></i>'],
+        beforeRender: visibleIfCanAddToCompare,
+        handler: handleAddRightCompareLayers
+      }, {
         label: 'Go To',
         eventType: EventType.GOTO,
         tooltip: 'Repositions the map to show the layer',
@@ -615,21 +627,73 @@ const onIdentify_ = function(event) {
  * @param {Context} context The menu context.
  * @this {MenuItem}
  */
-export const visibleIfCanCompare = function(context) {
-  const layers = getLayersFromContext(context);
-  this.visible = !!layers && layers.length === 2;
+const visibleIfCanCompare = function(context) {
+  let layers = getLayersFromContext(context);
+
+  // filter out basemaps before testing if we can do the compare
+  layers = layers.filter((layer) => !LayerCompareUI.isBasemap(layer));
+  this.visible = !!layers && layers.length > 1;
 };
 
 /**
- * Extract the feature from an event and launch the external link.
+ * Launches the Compare Layers window with the selected layers.
  * @param {!MenuEvent<Context>} event The menu event.
  */
-export const handleCompareLayers = function(event) {
-  var layers = getLayersFromContext(event.getContext());
-  if (layers && layers.length === 2) {
+const handleCompareLayers = function(event) {
+  let layers = getLayersFromContext(event.getContext());
+  layers = layers.filter((layer) => !LayerCompareUI.isBasemap(layer));
+  if (layers && layers.length > 1) {
     LayerCompareUI.launchLayerCompare({
-      left: [layers[0]],
-      right: [layers[1]]
+      left: layers.splice(0, 1),
+      right: layers
     });
+  }
+};
+
+/**
+ * Show when selecting at least 1 layer and the Layer Compare window is already open.
+ * @param {Context} context The menu context.
+ * @this {MenuItem}
+ */
+const visibleIfCanAddToCompare = function(context) {
+  let layers = getLayersFromContext(context);
+  const controller = LayerCompareUI.getCompareController();
+
+  // filter out basemaps before testing if we can do the compare
+  layers = layers.filter((layer) => !LayerCompareUI.isBasemap(layer));
+
+  let hasLayer = false;
+  if (controller && layers) {
+    hasLayer = layers.some((layer) => controller.hasLayer(layer));
+  }
+
+  this.visible = LayerCompareUI.exists() && !!layers && layers.length > 0 && !hasLayer;
+};
+
+/**
+ * Handles adding layers to the left side of the layer compare window.
+ * @param {!MenuEvent<Context>} event The menu event.
+ */
+const handleAddLeftCompareLayers = function(event) {
+  let layers = getLayersFromContext(event.getContext());
+  layers = layers.filter((layer) => !LayerCompareUI.isBasemap(layer));
+
+  const controller = LayerCompareUI.getCompareController();
+  if (layers && layers.length > 0 && controller) {
+    controller.addLayers(layers, 'left');
+  }
+};
+
+/**
+ * Handles adding layers to the right side of the layer compare window.
+ * @param {!MenuEvent<Context>} event The menu event.
+ */
+const handleAddRightCompareLayers = function(event) {
+  let layers = getLayersFromContext(event.getContext());
+  layers = layers.filter((layer) => !LayerCompareUI.isBasemap(layer));
+
+  const controller = LayerCompareUI.getCompareController();
+  if (layers && layers.length > 0 && controller) {
+    controller.addLayers(layers, 'right');
   }
 };
