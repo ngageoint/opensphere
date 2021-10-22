@@ -307,7 +307,7 @@
     "blob-polyfill": "^2.0.20171115",
     "bootstrap": "4.5.0",
     "bootswatch": "4.5.0",
-    "cesium": "1.79.1",
+    "cesium": "1.86.1",
     "chardetng-wasm": "^1.0.2",
     "compass-mixins": "^0.12.10",
     "core-js-bundle": "3.6.4",
