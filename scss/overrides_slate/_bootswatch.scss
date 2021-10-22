@@ -47,7 +47,8 @@ $web-font-path: 'https://fonts.googleapis.com/css?family=Open+Sans:400,700' !def
   .nav-link {
     background: $modal-content-bg;
     border-color: $nav-tabs-border-color;
-    margin: 0 .1rem;
+    margin-left: .1rem;
+    margin-right: .1rem;
 
     &:hover {
       background: $body-bg;
