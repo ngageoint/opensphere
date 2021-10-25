@@ -133,7 +133,11 @@ $user-select-options: all, auto, text, none;
 }
 
 .u-text-stroke {
-  text-shadow: -1px -1px 0 color-yiq($body-color), 1px -1px 0 color-yiq($body-color), -1px 1px 0 color-yiq($body-color), 1px 1px 0 color-yiq($body-color);
+  text-shadow:
+    -1px -1px 0 color-yiq($body-color),
+    1px -1px 0 color-yiq($body-color),
+    -1px 1px 0 color-yiq($body-color),
+    1px 1px 0 color-yiq($body-color);
 }
 
 .u-text-decoration__line-through {
@@ -153,12 +157,10 @@ $user-select-options: all, auto, text, none;
   font-family: sans-serif;
 }
 
-
 // --------------------------------- Visibility Utilities --------------------------------- //
 .u-opacity__95 {
   opacity: .95;
 }
-
 
 // --------------------------------- List Utilities --------------------------------- //
 .u-column-count-4 {
@@ -168,7 +170,6 @@ $user-select-options: all, auto, text, none;
     column-gap: 2.25rem;
   }
 }
-
 
 // --------------------------------- Table Utilities --------------------------------- //
 // Tables in bootstrap are styled by elements.... not classes. Allow class styling
@@ -296,7 +297,6 @@ $user-select-options: all, auto, text, none;
   border-bottom-right-radius: 0 !important;
 }
 
-
 // At certain breakpoints, forms look really bad (especially in modals. Lets adjust forms to takeup more of the screen)
 // To use, just add u-form-vertical-at-<breakpoint>. (u-form-veritical-at-md).
 // This will apply to all form-groups under this selector
@@ -309,7 +309,6 @@ $user-select-options: all, auto, text, none;
 
       // Wrap all form groups to new lines
       .form-group {
-        // sass-lint:disable-block no-extends
         flex-wrap: wrap;
 
         // Make all columns 100%
@@ -361,7 +360,6 @@ $user-select-options: all, auto, text, none;
     }
   }
 }
-
 
 // This block controls responsive behaviour with respect to a parent, and not the viewport
 // The parent needs to adjust the class u-parent-resizer (see window.js)
@@ -529,7 +527,6 @@ $u-parent-resizer-count: 0;
   }
 }
 
-
 @each $color, $value in $colors {
   .u-bg-#{$color} {
     background-color: $value;
@@ -554,15 +551,17 @@ $u-parent-resizer-count: 0;
 @include color-generator($colors);
 @include color-generator($theme-colors);
 
-
 // ----------- Generic max sizes. Use with caution only when absoluted needed ----------- //
 $somesizes: () !default;
-$somesizes: map-merge((
+$somesizes: map-merge(
+  (
     0: 0%,
     25: 25%,
     50: 50%,
     75: 75%
-), $somesizes);
+  ),
+  $somesizes
+);
 
 // (u-mh-25: max-height: 25%)
 @each $prop, $abbrev in (width: w, height: h) {
@@ -577,7 +576,6 @@ $somesizes: map-merge((
     .u-mv#{$abbrev}-#{$size} { max-#{$prop}: #{$size}v#{$abbrev} !important; }
   }
 }
-
 
 // ----------- Hover edit utilities ----------- //
 .u-hover-show {
@@ -627,19 +625,16 @@ $somesizes: map-merge((
   height: $progress-height * 2;
 }
 
-
 // --------------------------------- Z-Index Utilities --------------------------------- //
 .u-zindex-base {
   z-index: $u-zindex-base;
 }
-
 
 // --------------------------------- Icon Utilities ----------------------------------- //
 .u-icon-display-small {
   height: 1.5rem;
   width: 1.5rem;
 }
-
 
 // --------------------------------- Aspect Ratios ----------------------------------- //
 $aspect-ratios: ((16, 9), (4, 3));
@@ -666,7 +661,6 @@ $aspect-ratios: ((16, 9), (4, 3));
   }
 }
 
-
 // --------------------------------- Highlight Style -----------------------------------//
 .u-highlight-text {
   @include bg-text-variant($yellow);
@@ -691,7 +685,6 @@ $aspect-ratios: ((16, 9), (4, 3));
 .u-border-thick {
   border-width: ($border-width * 2) !important;
 }
-
 
 // --------------------------------- Corner Ribbons -----------------------------------//
 .u-corner-ribbon {
@@ -723,7 +716,6 @@ $aspect-ratios: ((16, 9), (4, 3));
     transform: rotate(-45deg);
   }
 }
-
 
 // --------------------------------- Nav -----------------------------------//
 .u-nav.nav {

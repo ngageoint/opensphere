@@ -1,13 +1,11 @@
 @mixin grab-cursor {
-  // sass-lint:disable-block no-duplicate-properties, no-vendor-prefixes
   cursor: grab;
-  cursor: -webkit-grab;
+  cursor: -webkit-grab; // stylelint-disable-line declaration-block-no-duplicate-properties, value-no-vendor-prefix
 }
 
 @mixin grabbing-cursor {
-  // sass-lint:disable-block no-duplicate-properties, no-vendor-prefixes
   cursor: grabbing;
-  cursor: -webkit-grabbing;
+  cursor: -webkit-grabbing; // stylelint-disable-line declaration-block-no-duplicate-properties, value-no-vendor-prefix
 }
 
 // This extends bootstraps bg-<variants> to also have background colors
@@ -47,7 +45,7 @@
 }
 
 @mixin font-awesome {
-  // sass-lint:disable-block no-vendor-prefixes
+  // stylelint-disable order/properties-alphabetical-order
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   display: inline-block;
@@ -58,6 +56,7 @@
   font-weight: 900;
   line-height: 1;
   text-rendering: auto;
+  // stylelint-enable order/properties-alphabetical-order
 }
 
 @mixin u-bg-color-content($color) {

@@ -64,13 +64,19 @@
 // Tristate checkbox
 
 .c-tristate {
-  // sass-lint:disable-block no-duplicate-properties
   background: #fcfff4;
-  background: linear-gradient(#fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  // stylelint-disable-next-line declaration-block-no-duplicate-properties
+  background:
+    linear-gradient(
+      #fcfff4 0%,
+      #dfe5d7 40%,
+      #b3bead 100%
+    );
   border-radius: 3px;
   box-sizing: border-box;
   cursor: pointer;
   display: inline-block;
+  // stylelint-disable-next-line function-name-case
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfff4', endColorstr='#b3bead', GradientType=0);
   flex-shrink: 0;
   height: 13px;
@@ -125,9 +131,8 @@
   border-right: 0;
   border-top: 0;
   // Chrome < 41 needs initial
-  // sass-lint:disable-block no-duplicate-properties
   display: initial;
-  display: unset;
+  display: unset; // stylelint-disable-line declaration-block-no-duplicate-properties
   height: 5.5px;
   transform: rotate(-45deg);
   width: 9px;
@@ -137,9 +142,8 @@
   background: #555;
   border-radius: 2px;
   // Chrome < 41 needs initial
-  // sass-lint:disable-block no-duplicate-properties
   display: initial;
-  display: unset;
+  display: unset; // stylelint-disable-line declaration-block-no-duplicate-properties
   height: 9px;
   left: 2px;
   top: 2px;

@@ -151,18 +151,17 @@ ul {
   color: $text-muted;
   padding: 0 1rem;
 
-  &> :first-child {
+  & > :first-child {
     margin-top: 0;
   }
 
-  &> :last-child {
+  & > :last-child {
     margin-bottom: 0;
   }
 }
 
 // Replace the autofilled input colors in Webkit-based browsers
-// sass-lint:disable-block no-duplicate-properties, no-vendor-prefixes
-@-webkit-keyframes autofill {
+@-webkit-keyframes autofill { // stylelint-disable-line at-rule-no-vendor-prefix
   to {
     background: $input-bg;
     color: $input-color;
@@ -170,8 +169,8 @@ ul {
 }
 
 input:-webkit-autofill {
-  -webkit-animation-fill-mode: both;
-  -webkit-animation-name: autofill;
+  -webkit-animation-fill-mode: both; // stylelint-disable-line property-no-vendor-prefix
+  -webkit-animation-name: autofill; // stylelint-disable-line property-no-vendor-prefix
 }
 
 .mb-1px {

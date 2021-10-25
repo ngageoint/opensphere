@@ -1,7 +1,6 @@
 //=== Animations ===
 //Styles used by ngAnimate
 
-
 .animate-fast {
   transition: all cubic-bezier(.25, .46, .45, .94) 200ms;
 }
@@ -27,7 +26,6 @@
     &.ng-leave-active {
       opacity: 0;
     }
-
   }
 
   &.ng-show,
@@ -62,7 +60,6 @@
 // *
 // * Added -webkit-backface-visibility: hidden so animation will work in Chrome/Linux.
 // * This appears to be a Chrome/Webkit bug, preventing animations from firing properly.
-
 
 // The default slide animation - slide down (south)
 .animate-slide,
@@ -256,11 +253,9 @@
   }
 }
 
-
 //Present - element finds its place by starting low and raising up
 //(add 'animate-present-large' for large elements to reduce the displacement)
 //(use 'animate-present-in'/'animate-present-out' as alternative options to only animate one direction)
-
 
 .animate-present {
   transition: all cubic-bezier(.25, .46, .45, .94) 500ms;

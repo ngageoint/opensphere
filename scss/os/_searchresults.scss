@@ -8,7 +8,7 @@
 
 // Prevent search results from taking up too much screen space in smaller windows.
 @media (max-width: map-get($grid-breakpoints, lg)) {
-  .c-searchresults  {
+  .c-searchresults {
     max-width: 50%;
   }
 }

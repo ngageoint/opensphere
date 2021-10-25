@@ -6,15 +6,13 @@ form {
   div:not([ng-form]).ng-invalid.ng-dirty,
   select.ng-invalid.ng-dirty,
   textarea.ng-invalid.ng-dirty {
-    // sass-lint:disable-block no-extends, placeholder-in-extend
-    @extend .form-control, .is-invalid;
+    @extend .form-control, .is-invalid; // stylelint-disable-line at-rule-disallowed-list
   }
 
   .select2-container.ng-invalid.ng-dirty {
     .select2-choice,
     .select2-choices {
-      // sass-lint:disable-block no-extends, placeholder-in-extend
-      @extend .form-control, .is-invalid;
+      @extend .form-control, .is-invalid; // stylelint-disable-line at-rule-disallowed-list
     }
   }
 }
