@@ -23,6 +23,8 @@ const Logger = goog.requireType('goog.log.Logger');
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 const Geometry = goog.requireType('ol.geom.Geometry');
 
+let drawing = false;
+
 
 /**
  * An abstract class that serves as the base class for pointer drawing
@@ -231,6 +233,7 @@ export default class AbstractDraw extends Pointer {
 
     log.fine(logger, this.getType() + ' interaction begin');
     if (map && !this.drawing) {
+      drawing = true;
       this.drawing = true;
       this.keyHandler_ = new KeyHandler(getDocument(), true);
       this.keyHandler_.listen(KeyEvent.EventType.KEY, this.onKey, true, this);
@@ -259,6 +262,7 @@ export default class AbstractDraw extends Pointer {
     if (this.drawing) {
       log.info(logger, this.getType() + ' interaction complete: ' +
           this.getResultString());
+      drawing = false;
       this.drawing = false;
       var geom = this.getGeometry();
       var props = this.getProperties();
@@ -279,6 +283,7 @@ export default class AbstractDraw extends Pointer {
   cancel() {
     if (this.drawing) {
       log.fine(logger, this.getType() + ' interaction cancel');
+      drawing = false;
       this.drawing = false;
       this.dispatchEvent(new DrawEvent(DrawEventType.DRAWCANCEL));
       this.cleanup();
@@ -337,6 +342,15 @@ export default class AbstractDraw extends Pointer {
       // also dispatch globally
       dispatcher.getInstance().dispatchEvent(e);
     }
+  }
+
+  /**
+   * If another draw control is currently active.
+   * @return {boolean}
+   * @protected
+   */
+  getOtherDrawing() {
+    return !this.drawing && drawing;
   }
 }
 

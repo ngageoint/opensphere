@@ -204,7 +204,7 @@ export class Controller extends BaseDrawControlsCtrl {
    * @export
    */
   isActive() {
-    return super.isActive() || this.measureInteraction ? this.measureInteraction.getEnabled() : false;
+    return super.isActive() || (this.measureInteraction ? this.measureInteraction.getEnabled() : false);
   }
 
   /**
