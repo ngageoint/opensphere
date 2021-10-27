@@ -23,6 +23,11 @@ const Logger = goog.requireType('goog.log.Logger');
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 const Geometry = goog.requireType('ol.geom.Geometry');
 
+/**
+ * This drawing flag explains whether or not another interaction
+ * besides the current interaction is drawing.
+ * @type {boolean}
+ */
 let drawing = false;
 
 
@@ -41,6 +46,7 @@ export default class AbstractDraw extends Pointer {
     super(opt_options);
 
     /**
+     * This drawing flag explains whether or not the current interaction is drawing.
      * @type {boolean}
      * @protected
      */
