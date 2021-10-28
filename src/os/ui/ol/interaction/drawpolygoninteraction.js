@@ -42,6 +42,7 @@ export default class DrawPolygon extends AbstractDraw {
       handleMoveEvent: DrawPolygon.handleMoveEvent_,
       handleUpEvent: DrawPolygon.handleUpEvent_
     });
+
     this.type = DrawPolygon.TYPE;
 
     /**
@@ -187,7 +188,8 @@ export default class DrawPolygon extends AbstractDraw {
   addCoord(coord, opt_mapBrowserEvent) {
     if (coord) {
       if (opt_mapBrowserEvent) {
-        if (opt_mapBrowserEvent.type === MapBrowserEventType.POINTERUP) {
+        if (opt_mapBrowserEvent.type === MapBrowserEventType.POINTERUP ||
+          opt_mapBrowserEvent.type === MapBrowserEventType.POINTERDOWN) {
           this.backupcoords.length = 0;
           this.coords.push(coord);
 
@@ -399,13 +401,7 @@ export default class DrawPolygon extends AbstractDraw {
    */
   static handleUpEvent_(mapBrowserEvent) {
     var px = mapBrowserEvent.pixel;
-
     if (this.downPixel_ && Math.abs(px[0] - this.downPixel_[0]) < 3 && Math.abs(px[1] - this.downPixel_[1]) < 3) {
-      this.downPixel_ = null;
-      if (!this.drawing) {
-        this.begin(mapBrowserEvent);
-      }
-
       if (this.shouldFinish(mapBrowserEvent)) {
         this.saveLast(mapBrowserEvent);
         this.end(mapBrowserEvent);
@@ -424,12 +420,21 @@ export default class DrawPolygon extends AbstractDraw {
    * @private
    */
   static handleDownEvent_(mapBrowserEvent) {
-    // In order to allow dragging while this interaction is enabled, we're just
-    // gonna store the mouse down pixel for now and check it again on the up
-    // event. If it is close enough, we'll call it a click and not a click+drag.
-    var browserEvent = new BrowserEvent(mapBrowserEvent.originalEvent);
-    if (browserEvent.isMouseActionButton() && (this.drawing || this.condition(mapBrowserEvent))) {
-      this.downPixel_ = mapBrowserEvent.pixel;
+    // Only handle the event if there are no other draw controls active
+    if (!this.getOtherDrawing()) {
+      // In order to allow dragging while this interaction is enabled, we're just
+      // gonna store the mouse down pixel for now and check it again on the up
+      // event. If it is close enough, we'll call it a click and not a click+drag.
+      var browserEvent = new BrowserEvent(mapBrowserEvent.originalEvent);
+      if (browserEvent.isMouseActionButton() && (this.drawing || this.condition(mapBrowserEvent))) {
+        this.downPixel_ = mapBrowserEvent.pixel;
+
+        if (!this.drawing) {
+          this.begin(mapBrowserEvent);
+          this.update(mapBrowserEvent);
+          this.downPixel_ = null;
+        }
+      }
     }
 
     return false;
