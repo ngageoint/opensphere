@@ -8,7 +8,6 @@
   animation: pulsate 1s infinite steps(15);
 }
 
-
 @keyframes wiggle {
   0% {
     transform: rotate(0);
@@ -112,4 +111,3 @@
     transition: none;
   }
 }
-

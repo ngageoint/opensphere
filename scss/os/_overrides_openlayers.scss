@@ -46,7 +46,6 @@
   }
 }
 
-
 // If the draw controls are absolutely positioned, position to top left
 .draw-controls {
   bottom: auto;
@@ -56,7 +55,6 @@
   z-index: $u-zindex-base + 1;
 }
 
-
 // + / - zoom control buttons
 .ol-zoom {
   bottom: auto;
@@ -65,7 +63,6 @@
   top: .75rem;
 }
 
-
 // Arrow rotation control button
 .ol-rotate {
   bottom: auto;
@@ -73,7 +70,6 @@
   right: .75rem;
   top: 4.5rem;
 }
-
 
 // 2D / 3D switcher button
 .ol-mapmode {
@@ -87,7 +83,6 @@
   }
 }
 
-
 // Zoombar needs a min width
 .ol-zoom-level {
   font-family: monospace;
@@ -99,7 +94,6 @@
 .small .ol-zoom-level {
   min-width: 10rem;
 }
-
 
 // Layer switcher
 .ol-layer-switcher {
@@ -127,7 +121,6 @@
     cursor: pointer;
   }
 }
-
 
 // Overview map
 .ol-overviewmap {
@@ -166,7 +159,6 @@
   display: none;
 }
 
-
 // Scale Line
 .ol-scale-line {
   bottom: .75rem;
@@ -188,15 +180,13 @@
   }
 }
 
-
 // Attribution
 .ol-attribution,
 .ol-attribution.ol-uncollapsible {
   bottom: .25rem;
   // Chrome < 41 needs initial
-  // sass-lint:disable-block no-duplicate-properties
   height: initial;
-  height: unset;
+  height: unset; // stylelint-disable-line declaration-block-no-duplicate-properties
   left: .25rem;
   right: auto;
   text-align: left;
@@ -215,7 +205,6 @@
     color: rgba($link-color, .8);
   }
 }
-
 
 // Mouse Position
 .ol-mouse-position {
@@ -260,9 +249,8 @@
     left: auto;
     min-width: 10rem;
     // Chrome < 41 needs initial
-    // sass-lint:disable-block no-duplicate-properties
     padding: initial;
-    padding: unset;
+    padding: unset; // stylelint-disable-line declaration-block-no-duplicate-properties
   }
 }
 

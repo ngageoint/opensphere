@@ -64,7 +64,7 @@
     z-index: $u-zindex-base + 1;
   }
 
-  &:hover  .c-docked-window__buttons {
+  &:hover .c-docked-window__buttons {
     visibility: visible;
   }
 }

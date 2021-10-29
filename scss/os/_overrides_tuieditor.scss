@@ -217,8 +217,7 @@
     }
 
     blockquote {
-      // sass-lint:disable-block no-extends, placeholder-in-extend
-      @extend .blockquote;
+      @extend .blockquote; // stylelint-disable-line at-rule-disallowed-list
       border-left: 4px solid $gray-600;
       margin-bottom: 1rem;
       margin-top: 0;
@@ -231,8 +230,7 @@
     }
 
     attr {
-      // sass-lint:disable-block no-extends, placeholder-in-extend
-      @extend .initialism;
+      @extend .initialism; // stylelint-disable-line at-rule-disallowed-list
     }
 
     table {
@@ -337,7 +335,7 @@
       }
 
       .cm-negative,
-      .cm-error
+      .cm-error,
       .cm-invalidchar {
         color: $danger;
       }
@@ -401,8 +399,7 @@
       .te-url-input,
       .te-image-url-input,
       .te-alt-text-input {
-        // sass-lint:disable-block no-extends, placeholder-in-extend
-        @extend .form-control;
+        @extend .form-control; // stylelint-disable-line at-rule-disallowed-list
       }
     }
 
@@ -414,18 +411,15 @@
     }
 
     .te-ok-button {
-      // sass-lint:disable-block no-extends, placeholder-in-extend
-      @extend .btn;
-      @extend .btn-primary;
+      @extend .btn; // stylelint-disable-line at-rule-disallowed-list
+      @extend .btn-primary; // stylelint-disable-line at-rule-disallowed-list
     }
 
     .te-close-button {
-      // sass-lint:disable-block no-extends, placeholder-in-extend
-      @extend .btn;
-      @extend .btn-secondary;
+      @extend .btn; // stylelint-disable-line at-rule-disallowed-list
+      @extend .btn-secondary; // stylelint-disable-line at-rule-disallowed-list
     }
   }
-
 
   //////////// EDITOR BUTTONS //////////
   .tui-editor-defaultUI {
@@ -476,7 +470,6 @@
     }
   }
 
-
   //////////// TOOLBAR //////////
   .tui-editor-defaultUI-toolbar {
     background-color: $u-theme-variables--bg-offset;
@@ -490,9 +483,8 @@
     }
 
     .tui-scrollsync {
-      // sass-lint:disable-block no-extends, placeholder-in-extend
-      @extend .btn;
-      @extend .btn-secondary;
+      @extend .btn; // stylelint-disable-line at-rule-disallowed-list
+      @extend .btn-secondary; // stylelint-disable-line at-rule-disallowed-list
 
       &:after {
         font-size: $font-size-sm;
@@ -533,7 +525,6 @@
         border-color: $border-color;
         color: color-yiq($u-theme-variables--bg-offset);
       }
-
 
       &::before {
         @include font-awesome();

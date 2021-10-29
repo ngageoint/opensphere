@@ -4,7 +4,7 @@
 
   @if $index {
     @return str-slice($string, 1, $index - 1) + $replace +
-    str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+      str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
   }
 
   @return $string;
@@ -16,8 +16,7 @@
   // $web-font-path: 'https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700' !default;
 
   // Replace the url to be local
-  $web-font-path: str-replace($web-font-path,
-    'https://fonts.googleapis.com/css?family=', 'fonts/typeface-');
+  $web-font-path: str-replace($web-font-path, 'https://fonts.googleapis.com/css?family=', 'fonts/typeface-');
 
   // Replace + with -
   $web-font-path: str-replace($web-font-path, '+', '-');

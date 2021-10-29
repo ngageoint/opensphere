@@ -96,10 +96,9 @@
 }
 
 // NOTE: we want the ui-menu to be exactly like the dropdown menu. To do this override the jquery defaults, then
-// extend the bootstrap 4 equivalent classes. Ignore all the sass-lint rules because we want it to be exactly this way.
+// extend the bootstrap 4 equivalent classes. Ignore all the stylelint rules because we want it to be exactly this way.
 .ui-menu.ui-widget,
 .ui-menu {
-  // sass-lint:disable-block extends-before-declarations, extends-before-mixins, no-extends, placeholder-in-extend
   // This part ignores the default jquery styles
   background: $dropdown-bg;
   border: $dropdown-border-width solid $dropdown-border-color;
@@ -107,7 +106,7 @@
   z-index: $zindex-fixed + 1;
 
   // This gets the same styles defined for dropdown-menu. Used for when themes specify after the fact
-  @extend .dropdown-menu;
+  @extend .dropdown-menu; // stylelint-disable-line at-rule-disallowed-list
 
   // jQueryUI offsets active menu items. Disable that.
   .ui-state-active {
@@ -121,7 +120,7 @@
     padding: 0;
 
     // This gets the same styles defined for dropdown-item. Used for when themes specify after the fact
-    @extend .dropdown-item;
+    @extend .dropdown-item; // stylelint-disable-line at-rule-disallowed-list
 
     i.fa,
     i.fab,
@@ -143,14 +142,14 @@
         text-decoration: none;
 
         // This gets the same styles defined for dropdown-item:focus. Used for when themes specify after the fact
-        @extend .dropdown-item, :focus;
+        @extend .dropdown-item, :focus; // stylelint-disable-line at-rule-disallowed-list
       }
     }
   }
 
   .ui-menu-divider {
     // This gets the same styles defined for dropdown-divider. Used for when themes specify after the fact
-    @extend .dropdown-divider;
+    @extend .dropdown-divider; // stylelint-disable-line at-rule-disallowed-list
   }
 
   .dropdown-item {
