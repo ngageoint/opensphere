@@ -2,17 +2,11 @@
   <div class="u-pointer-events-all">
     <div class="w-100 d-flex justify-content-center">
       <date-control></date-control>
-      <div class="btn-group">
-        <button id="timelineButton" class="btn btn-primary ml-1 flex-shrink-0 o-timeline-button" ng-click="ctrl.expand()" title="Expand to full timeline">
-          <i class="fa fa-fw fa-clock-o"></i>
-          <span ng-class="{'d-none': puny}">Timeline</span>
-        </button>
-        <button class="btn btn-primary dropdown-toggle dropdown-toggle-split"
-            ng-click="ctrl.toggleExtend()"
-            ng-right-click="ctrl.toggleExtend()"
-            title="Query data over a limited time window within each day in the current range">
-        </button>
-      </div>
+      <button class="btn btn-secondary dropdown-toggle ml-1 flex-shrink-0" ng-class="{'btn-info': ctrl.extended}" ng-click="ctrl.toggleExtend()" title="{{ctrl.sliceTip}}" ng-if="ctrl.showTimeSlicer">hh/mm</button>
+      <button id="timelineButton" class="btn btn-primary ml-1 flex-shrink-0 o-timeline-button" ng-click="ctrl.expand()" title="Expand to full timeline">
+        <i class="fa fa-fw fa-clock-o"></i>
+        <span ng-class="{'d-none': puny}">Timeline</span>
+      </button>
     </div>
   </div>
 
