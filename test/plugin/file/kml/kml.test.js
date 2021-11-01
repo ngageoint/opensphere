@@ -5,6 +5,7 @@ goog.require('ol.geom.GeometryLayout');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.MultiLineString');
 goog.require('ol.xml');
+goog.require('os.style');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 goog.require('plugin.file.kml');
@@ -18,9 +19,11 @@ describe('plugin.file.kml', function() {
   const LineString = goog.module.get('ol.geom.LineString');
   const MultiLineString = goog.module.get('ol.geom.MultiLineString');
   const xml = goog.module.get('ol.xml');
+  const {toAbgrString} = goog.module.get('os.style');
   const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');
   const {default: TimeRange} = goog.module.get('os.time.TimeRange');
   const kml = goog.module.get('plugin.file.kml');
+
   it('reads a kml:TimeStamp element', function() {
     var when = new Date();
     var timeStampXml = '<TimeStamp><when>' + when.toISOString() + '</when></TimeStamp>';
@@ -107,6 +110,105 @@ describe('plugin.file.kml', function() {
     expect(link['refreshInterval']).toBe(refreshInterval);
     expect(link['viewRefreshMode']).toBe(viewRefreshMode);
     expect(link['viewRefreshTime']).toBe(viewRefreshTime);
+  });
+
+  it('reads a LatLonBox', () => {
+    const north = 10;
+    const south = -10;
+    const east = 20;
+    const west = -20;
+    const rotation = 45;
+
+    const expectedExtent = [west, south, east, north];
+
+    const latLonBoxXml = `
+<LatLonBox>
+  <north>${north}</north>
+  <south>${south}</south>
+  <east>${east}</east>
+  <west>${west}</west>
+  <rotation>${rotation}</rotation>
+</LatLonBox>`.trim();
+
+    const doc = googDomXml.loadXml(latLonBoxXml);
+    const latLonBoxEl = dom.getFirstElementChild(doc);
+    const latLonBox = {};
+    kml.readLatLonBox(latLonBoxEl, [latLonBox]);
+    expect(latLonBox.extent.every((val, idx) => val === expectedExtent[idx])).toBe(true);
+    expect(latLonBox.rotation).toBe(rotation);
+  });
+
+  it('reads a LatLonQuad', () => {
+    const coordinates = [
+      [0, 0],
+      [0, 5],
+      [5, 5],
+      [5, 0]
+    ];
+    const expectedExtent = [0, 0, 5, 5];
+
+    const latLonQuadXml = `<LatLonQuad><coordinates>${coordinates.join(' ')}</coordinates></LatLonQuad>`.trim();
+
+    const doc = googDomXml.loadXml(latLonQuadXml);
+    const latLonQuadEl = dom.getFirstElementChild(doc);
+    const latLonQuad = {};
+    kml.readLatLonQuad(latLonQuadEl, [latLonQuad]);
+    expect(latLonQuad.extent.every((val, idx) => val === expectedExtent[idx])).toBe(true);
+  });
+
+  it('reads a LatLonQuad with altitude', () => {
+    const coordinates = [
+      [0, 0, 10],
+      [0, 5, 20],
+      [5, 5, 30],
+      [5, 0, 40]
+    ];
+    const expectedExtent = [0, 0, 5, 5];
+
+    const latLonQuadXml = `<LatLonQuad><coordinates>${coordinates.join(' ')}</coordinates></LatLonQuad>`.trim();
+
+    const doc = googDomXml.loadXml(latLonQuadXml);
+    const latLonQuadEl = dom.getFirstElementChild(doc);
+    const latLonQuad = {};
+    kml.readLatLonQuad(latLonQuadEl, [latLonQuad]);
+    expect(latLonQuad.extent.every((val, idx) => val === expectedExtent[idx])).toBe(true);
+  });
+
+  it('reads a GroundOverlay element', function() {
+    const altitude = 1234;
+    const altitudeMode = 'clampToGround';
+    const color = [0, 255, 0, 0.5];
+    const iconHref = 'https://developers.google.com/kml/documentation/images/rectangle.gif';
+    const coordinates = [
+      [0, 0],
+      [0, 5],
+      [5, 5],
+      [5, 0]
+    ];
+    const expectedExtent = [0, 0, 5, 5];
+
+    const groundOverlayXml = `
+<GroundOverlay xmlns:gx="http://www.google.com/kml/ext/2.2">
+  <altitude>${altitude}</altitude>
+  <altitudeMode>${altitudeMode}</altitudeMode>
+  <color>${toAbgrString(color)}</color>
+  <Icon>
+    <href>${iconHref}</href>
+  </Icon>
+  <gx:LatLonQuad>
+    <coordinates>${coordinates.join(' ')}</coordinates>
+  </gx:LatLonQuad>
+</GroundOverlay>`.trim();
+
+    const doc = googDomXml.loadXml(groundOverlayXml);
+    const groundOverlayEl = dom.getFirstElementChild(doc);
+    const groundOverlay = xml.pushParseAndPop({}, kml.GROUND_OVERLAY_PARSERS, groundOverlayEl, []);
+    expect(groundOverlay.altitude).toBe(altitude);
+    expect(groundOverlay.altitudeMode).toBe(altitudeMode);
+    expect(groundOverlay.color.every((val, idx) => val === color[idx]));
+    expect(groundOverlay.extent.every((val, idx) => val === expectedExtent[idx])).toBe(true);
+    expect(groundOverlay.Icon).toBeDefined();
+    expect(groundOverlay.Icon.href).toBe(iconHref);
   });
 
   describe('Track and MultiTrack Support', function() {
