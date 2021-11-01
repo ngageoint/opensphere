@@ -1343,4 +1343,25 @@ describe('os.geo', function() {
   it('should convert negative lon close to whole degrees to DMS with symbols', function() {
     expect(geo.toSexagesimal(-168.9999999, true, true)).toEqual('169° 00\' 00.00" W');
   });
+
+  it('should test if two coordinates are the same', function() {
+    // Including null always returns false
+    expect(geo.isSameCoordinate(null, null)).toBe(false);
+    expect(geo.isSameCoordinate([0, 0], null)).toBe(false);
+    expect(geo.isSameCoordinate(null, [0, 0])).toBe(false);
+
+    // Coordinates with fewer than 2 values always return false
+    expect(geo.isSameCoordinate([0], [0])).toBe(false);
+    expect(geo.isSameCoordinate([0], [0, 0])).toBe(false);
+    expect(geo.isSameCoordinate([0, 0], [0])).toBe(false);
+
+    // Same coordinates return true
+    expect(geo.isSameCoordinate([0, 0], [0, 0])).toBe(true);
+    expect(geo.isSameCoordinate([5, 10], [5, 10])).toBe(true);
+    expect(geo.isSameCoordinate([12.345, 67.89], [12.345, 67.89])).toBe(true);
+
+    // Both values must match
+    expect(geo.isSameCoordinate([5, 10], [5, 11])).toBe(false);
+    expect(geo.isSameCoordinate([5, 10], [6, 10])).toBe(false);
+  });
 });
