@@ -98,7 +98,9 @@ ImageSource.prototype.originalGetImage = ImageSource.prototype.getImage;
  */
 ImageSource.prototype.getImage = function(extent, resolution, pixelRatio, projection) {
   const image = this.originalGetImage(extent, resolution, pixelRatio, projection);
-  image.olSource = this;
+  if (image) {
+    image.olSource = this;
+  }
   return image;
 };
 

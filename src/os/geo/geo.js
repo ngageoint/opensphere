@@ -1660,14 +1660,15 @@ export const getAverageAltitude = function(coords) {
 };
 
 /**
- * Tests to see if two coordinates are in the same spot.
+ * Tests if two coordinates share the same x/y value, within a tolerance of 1E-12. Altitude is not considered if
+ * present.
  *
  * @param {Array<number>} c1 The first coordinate
  * @param {Array<number>} c2 The second coordinate
  * @return {boolean} If the coordinates are the same
  */
 export const isSameCoordinate = function(c1, c2) {
-  if (c1 == null || c2 == null || !c1.length == 2 || !c2.length == 2) {
+  if (c1 == null || c2 == null || c1.length < 2 || c2.length < 2) {
     return false;
   }
 

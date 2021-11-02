@@ -608,7 +608,7 @@ osObject.merge(PLACEMARK_TRACK_PARSERS, OL_PLACEMARK_PARSERS(), true);
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  */
-const readLatLonBox_ = function(node, objectStack) {
+export const readLatLonBox = function(node, objectStack) {
   var object = olXml.pushParseAndPop({}, LAT_LON_BOX_PARSERS, node, objectStack);
   if (!object) {
     return;
@@ -631,7 +631,7 @@ const readLatLonBox_ = function(node, objectStack) {
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  */
-const readLatLonQuad_ = function(node, objectStack) {
+export const readLatLonQuad = function(node, objectStack) {
   var flatCoords = olXml.pushParseAndPop([], LAT_LON_QUAD_PARSERS, node, objectStack);
   if (flatCoords && flatCoords.length) {
     // LatLonQuad is not (necessarily) a bounding box. We will only support rectangular LatLonQuads
@@ -642,7 +642,15 @@ const readLatLonQuad_ = function(node, objectStack) {
     // the image would only need to be redrawn once.
     var coordinates = inflate.coordinates(flatCoords, 0, flatCoords.length, 3);
     if (coordinates.length === 4) {
-      var extent = coordinates.reduce(function(extent, coord) {
+      // Per the KML spec:
+      //   If a third value is inserted into any tuple (representing altitude) it will be ignored. Altitude is set using
+      //   <altitude> and <altitudeMode> (or <gx:altitudeMode>) extending <GroundOverlay>. Allowed altitude modes are
+      //   absolute, clampToGround, and clampToSeaFloor.
+      coordinates.forEach((coord) => {
+        coord.length = Math.min(coord.length, 2);
+      });
+
+      var extent = coordinates.reduce(function(extent, coord, idx) {
         olExtent.extendCoordinate(extent, coord);
         return extent;
       }, olExtent.createEmpty());
@@ -674,14 +682,14 @@ export const GROUND_OVERLAY_PARSERS = olXml.makeStructureNS(
       'drawOrder': olXml.makeObjectPropertySetter(XSD.readDecimal),
       'altitude': olXml.makeObjectPropertySetter(XSD.readDecimal),
       'altitudeMode': olXml.makeObjectPropertySetter(XSD.readString),
-      'LatLonBox': readLatLonBox_,
-      'LatLonQuad': readLatLonQuad_,
+      'LatLonBox': readLatLonBox,
+      'LatLonQuad': readLatLonQuad,
       'TimeStamp': olXml.makeObjectPropertySetter(readTime, RecordField.TIME),
       'TimeSpan': olXml.makeObjectPropertySetter(readTime, RecordField.TIME)
     }, olXml.makeStructureNS(
         OL_GX_NAMESPACE_URIS(), {
           // also include gx:LatLonQuad to support 2.2 extension values
-          'LatLonQuad': readLatLonQuad_
+          'LatLonQuad': readLatLonQuad
         }
     ));
 
