@@ -8,8 +8,4 @@ goog.declareModuleId('os.instanceOf');
 
 import {instanceOf} from './classregistry.js';
 
-
 export default instanceOf;
-
-// Export this function unminified on window so it can be called on parent windows.
-goog.exportSymbol('os.instanceOf', instanceOf);
