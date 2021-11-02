@@ -2770,10 +2770,14 @@ export default class Vector extends OLVectorSource {
         }
 
         for (var i = 0, n = items.length; i < n; i++) {
-          var customStyle = items[i].get(StyleType.CUSTOM_HIGHLIGHT);
+          var feature = items[i];
+          var customStyle = /** @type {osStyle.StyleConfigLike} */ (feature.get(StyleType.CUSTOM_HIGHLIGHT));
           var style = replace ? defaultStyle : customStyle || defaultStyle;
+          if (typeof style === 'function') {
+            style = style(feature);
+          }
 
-          items[i].set(StyleType.HIGHLIGHT, style);
+          feature.set(StyleType.HIGHLIGHT, style);
         }
         osStyle.setFeaturesStyle(items, this);
       }
