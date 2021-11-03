@@ -93,7 +93,7 @@ export class Controller {
 
     /**
      * Settings key for if the time slicer button should be displayed
-     * @type {string}
+     * @type {boolean}
      */
     this['showTimeSlicer'] = Settings.getInstance().get('os.ui.datePanel.showTimeSlicer', true);
 
