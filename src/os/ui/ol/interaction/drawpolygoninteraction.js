@@ -27,6 +27,7 @@ const OLVectorLayer = goog.require('ol.layer.Vector');
 const OLVectorSource = goog.require('ol.source.Vector');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
+const {default: OSMap} = goog.requireType('os.Map');
 
 
 /**
@@ -171,6 +172,10 @@ export default class DrawPolygon extends AbstractDraw {
     this.backupcoords.length = 0;
     this.undoKeyHandler_ = new KeyHandler(getDocument(), true);
     this.undoKeyHandler_.listen(KeyEvent.EventType.KEY, this.handleKeyEvent_, true, this);
+
+    var map = this.getMap();
+    // stop camera controls in 3D mode
+    /** @type {OSMap} */ (map).toggleMovement(false);
   }
 
   /**
@@ -345,6 +350,12 @@ export default class DrawPolygon extends AbstractDraw {
 
     if (this.line2D) {
       this.line2D = null;
+    }
+
+    // restore camera controls in 3D mode
+    var map = /** @type {OSMap} */ (this.getMap());
+    if (map) {
+      map.toggleMovement(true);
     }
 
     dispose(this.undoKeyHandler_);
