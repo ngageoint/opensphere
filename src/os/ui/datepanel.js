@@ -2,6 +2,7 @@ goog.declareModuleId('os.ui.DatePanelUI');
 
 import './datetime/datecontrol.js';
 import './popover/popover.js';
+import Settings from '../config/settings.js';
 import * as dispatcher from '../dispatcher.js';
 import {ROOT} from '../os.js';
 import {getTimeOffsetLabel} from '../time/time.js';
@@ -89,6 +90,12 @@ export class Controller {
      */
     this['sliceDescription'] = 'Creates a time range of less than 24 hours to show data from each loaded day. ' +
     '\nChoose 14:00 to 16:00 to query that time slice every day within the given range. (UTC 0000 = Zulu)';
+
+    /**
+     * Settings key for if the time slicer button should be displayed
+     * @type {boolean}
+     */
+    this['showTimeSlicer'] = Settings.getInstance().get('os.ui.datePanel.showTimeSlicer', true);
 
     this.tlc_ = TimelineController.getInstance();
   }
