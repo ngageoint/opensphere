@@ -108,7 +108,7 @@ export default class Hover extends Select {
 
     if (map.getView().getHints()[ViewHint.INTERACTING] > 0) {
       if (this.lastFeature_) {
-        this.setHighlightFeature_(undefined);
+        this.clearHighlight_();
       }
 
       return true;
@@ -172,12 +172,10 @@ export default class Hover extends Select {
   }
 
   /**
-   * Handle mouseout on the map viewport.
-   *
-   * @param {MouseEvent} event The event
+   * Clear the current highlight.
    * @private
    */
-  onMouseOut_(event) {
+  clearHighlight_() {
     this.setHighlightFeature_(undefined);
   }
 
@@ -212,7 +210,7 @@ export default class Hover extends Select {
           if (feature) {
             this.highlight_(this.highlightedItems_);
           } else {
-            this.setHighlightFeature_(undefined);
+            this.clearHighlight_();
           }
         }
       } else {
@@ -299,15 +297,30 @@ export default class Hover extends Select {
    */
   setMap(map) {
     if (this.viewport_) {
-      unlisten(this.viewport_, EventType.MOUSEOUT, this.onMouseOut_, this);
+      unlisten(this.viewport_, EventType.MOUSEOUT, this.clearHighlight_, this);
+      this.viewport_ = null;
+    }
+
+    const currentMap = this.getMap();
+    const currentView = currentMap ? currentMap.getView() : null;
+    if (currentView) {
+      unlisten(currentView, EventType.CHANGE, this.clearHighlight_, this);
     }
 
     super.setMap(map);
 
-    this.viewport_ = map ? map.getViewport() : null;
-    if (this.viewport_) {
-      // clear the highlight feature when the mouse leaves the viewport
-      listen(this.viewport_, EventType.MOUSEOUT, this.onMouseOut_, this);
+    if (map) {
+      this.viewport_ = map.getViewport();
+      if (this.viewport_) {
+        // clear the highlight feature when the mouse leaves the viewport
+        listen(this.viewport_, EventType.MOUSEOUT, this.clearHighlight_, this);
+      }
+
+      const view = map.getView();
+      if (view) {
+        // clear the highlight feature when the view changes
+        listen(view, EventType.CHANGE, this.clearHighlight_, this);
+      }
     }
 
     this.featureOverlay_.setMap(map);
