@@ -27,7 +27,6 @@ const OLVectorLayer = goog.require('ol.layer.Vector');
 const OLVectorSource = goog.require('ol.source.Vector');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
-const {default: OSMap} = goog.requireType('os.Map');
 
 
 /**
@@ -172,10 +171,6 @@ export default class DrawPolygon extends AbstractDraw {
     this.backupcoords.length = 0;
     this.undoKeyHandler_ = new KeyHandler(getDocument(), true);
     this.undoKeyHandler_.listen(KeyEvent.EventType.KEY, this.handleKeyEvent_, true, this);
-
-    var map = this.getMap();
-    // stop camera controls in 3D mode
-    /** @type {OSMap} */ (map).toggleMovement(false);
   }
 
   /**
@@ -352,12 +347,6 @@ export default class DrawPolygon extends AbstractDraw {
       this.line2D = null;
     }
 
-    // restore camera controls in 3D mode
-    var map = /** @type {OSMap} */ (this.getMap());
-    if (map) {
-      map.toggleMovement(true);
-    }
-
     dispose(this.undoKeyHandler_);
   }
 
@@ -413,10 +402,18 @@ export default class DrawPolygon extends AbstractDraw {
   static handleUpEvent_(mapBrowserEvent) {
     var px = mapBrowserEvent.pixel;
     if (this.downPixel_ && Math.abs(px[0] - this.downPixel_[0]) < 3 && Math.abs(px[1] - this.downPixel_[1]) < 3) {
-      if (this.shouldFinish(mapBrowserEvent)) {
+      // If we saved the down pixel and the up event is within our tolerance, handle the event. If outside the
+      // tolerance, assume this was from panning the map.
+      if (this.drawing && this.shouldFinish(mapBrowserEvent)) {
+        // Done drawing, wrap it up.
         this.saveLast(mapBrowserEvent);
         this.end(mapBrowserEvent);
+      } else if (!this.drawing) {
+        // Haven't started drawing, start now.
+        this.begin(mapBrowserEvent);
+        this.update(mapBrowserEvent);
       } else {
+        // Started drawing, add a coordinate.
         this.update(mapBrowserEvent);
       }
     }
@@ -433,17 +430,22 @@ export default class DrawPolygon extends AbstractDraw {
   static handleDownEvent_(mapBrowserEvent) {
     // Only handle the event if there are no other draw controls active
     if (!this.getOtherDrawing()) {
-      // In order to allow dragging while this interaction is enabled, we're just
-      // gonna store the mouse down pixel for now and check it again on the up
-      // event. If it is close enough, we'll call it a click and not a click+drag.
       var browserEvent = new BrowserEvent(mapBrowserEvent.originalEvent);
       if (browserEvent.isMouseActionButton() && (this.drawing || this.condition(mapBrowserEvent))) {
-        this.downPixel_ = mapBrowserEvent.pixel;
+        // If the default condition (shift+click) is met, we want to draw. If not, save the down pixel so we can
+        // decide if this is a draw or pan in the up event.
+        if (this.defaultCondition(mapBrowserEvent)) {
+          if (!this.drawing) {
+            // If we haven't started drawing, do so now.
+            this.begin(mapBrowserEvent);
+          }
 
-        if (!this.drawing) {
-          this.begin(mapBrowserEvent);
+          // Add a coordinate to the drawing.
           this.update(mapBrowserEvent);
-          this.downPixel_ = null;
+        } else {
+          // In order to allow map panning while this interaction is enabled, store the mouse down pixel for now and
+          // check it again on the up event. If it is close enough, we'll call it a click and not a click+drag.
+          this.downPixel_ = mapBrowserEvent.pixel;
         }
       }
     }
