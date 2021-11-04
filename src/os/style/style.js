@@ -173,6 +173,11 @@ export const DEFAULT_LOB_MULTIPLIER = 1;
 export const ARROW_ICON = ROOT + 'images/arrow.png';
 
 /**
+ * @typedef {function(Feature):Object|Object}
+ */
+export let StyleConfigLike;
+
+/**
  * @type {Object<string, *>}
  */
 export const POINT_CONFIG = {

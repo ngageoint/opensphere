@@ -22,6 +22,7 @@ const {listen, unlisten} = goog.require('ol.events');
 
 const Feature = goog.requireType('ol.Feature');
 const {default: AbstractSearchResult} = goog.requireType('os.search.AbstractSearchResult');
+const {StyleConfigLike} = goog.requireType('os.style');
 
 
 /**
@@ -74,7 +75,7 @@ export default class Controller extends Disposable {
 
     /**
      * The style config to use when highlighting the search result.
-     * @type {!Object}
+     * @type {!StyleConfigLike}
      * @protected
      */
     this.highlightConfig = DEFAULT_HIGHLIGHT_CONFIG;
@@ -160,7 +161,9 @@ export default class Controller extends Disposable {
    */
   addFeatureHighlight() {
     if (this.feature && this.layer) {
-      this.feature.set(StyleType.HIGHLIGHT, this.highlightConfig);
+      const highlightConfig = typeof this.highlightConfig === 'function' ?
+          this.highlightConfig(this.feature) : this.highlightConfig;
+      this.feature.set(StyleType.HIGHLIGHT, highlightConfig);
       setFeatureStyle(this.feature);
       notifyStyleChange(this.layer, [this.feature]);
     }
