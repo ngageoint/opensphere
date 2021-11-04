@@ -8,12 +8,13 @@ goog.declareModuleId('os.classRegistry');
 
 import {getParentWindow} from './os.js';
 
+const {assert} = goog.require('goog.asserts');
+
 /**
  * Class registry for cross-window instanceof calls.
  * @type {Object<string, !function(new: Object, ...?)>}
  */
 const classRegistry = {};
-
 
 /**
  * Registers a class by name.
@@ -23,9 +24,9 @@ const classRegistry = {};
  * @template T
  */
 export const registerClass = function(name, clazz) {
+  assert(!classRegistry.hasOwnProperty(name), `Class with name "${name}" already exists!`);
   classRegistry[name] = clazz;
 };
-
 
 /**
  * Checks if an object is an instance of the provided class type across multiple windows. This is intended for use
@@ -60,3 +61,6 @@ export const instanceOf = function(object, type) {
   // something went wrong - parent should *never* be null/undefined
   return false;
 };
+
+// Export a global symbol so it can be referenced on a parent window.
+goog.exportSymbol('os.instanceOf', instanceOf);
