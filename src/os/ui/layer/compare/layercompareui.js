@@ -1,6 +1,9 @@
 goog.declareModuleId('os.ui.layer.compare.LayerCompareUI');
 
 import * as capture from '../../../capture/capture.js';
+import {normalizeToCenter} from '../../../extent.js';
+import {getGeometries} from '../../../feature/feature.js';
+import {reduceExtentFromLayers, reduceExtentFromGeometries} from '../../../fn/fn.js';
 import osImplements from '../../../implements.js';
 import instanceOf from '../../../instanceof.js';
 import ILayer from '../../../layer/ilayer.js';
@@ -9,6 +12,7 @@ import {getMapContainer} from '../../../map/mapinstance.js';
 import {getMaxFeatures} from '../../../ogc/ogc.js';
 import {ROOT} from '../../../os.js';
 import SourceClass from '../../../source/sourceclass.js';
+import {getLayersFromContext} from '../../../ui/menu/layermenu.js';
 import Menu from '../../menu/menu.js';
 import MenuItem from '../../menu/menuitem.js';
 import MenuItemType from '../../menu/menuitemtype.js';
@@ -29,6 +33,8 @@ const View = goog.require('ol.View');
 const RotateControl = goog.require('ol.control.Rotate');
 const ZoomControl = goog.require('ol.control.Zoom');
 const {getCenter: getExtentCenter} = goog.require('ol.extent');
+const OLVectorSource = goog.require('ol.source.Vector');
+const olExtent = goog.require('ol.extent');
 
 const EventKey = goog.requireType('goog.events.Key');
 const Control = goog.requireType('ol.control.Control');
@@ -56,6 +62,7 @@ const Selector = {
 const MenuEventType = {
   MOVE_LEFT: 'compare:moveLeft',
   MOVE_RIGHT: 'compare:moveRight',
+  GO_TO: 'compare:goTo',
   REMOVE: 'compare:remove'
 };
 
@@ -226,13 +233,22 @@ export class Controller {
         eventType: MenuEventType.MOVE_RIGHT,
         icons: ['<i class="fas fa-fw fa-angle-right"></i>'],
         tooltip: 'Move the selected layers to the right map',
-        handler: this.moveSelected.bind(this, 'right')
+        handler: this.moveSelected.bind(this, 'right'),
+        sort: 0
+      }, {
+        label: 'Go To',
+        eventType: MenuEventType.GOTO,
+        icons: ['<i class="fa fa-fw fa-fighter-jet"></i>'],
+        tooltip: 'Repositions the map to show the layer',
+        handler: this.goTo.bind(this),
+        sort: 10
       }, {
         label: 'Remove',
         eventType: MenuEventType.REMOVE,
         icons: ['<i class="fas fa-fw fa-times"></i>'],
         tooltip: 'Remove the selected layers from the Layer Comparison',
-        handler: this.removeSelected.bind(this, 'left')
+        handler: this.removeSelected.bind(this, 'left'),
+        sort: 20
       }]
     }));
 
@@ -273,13 +289,22 @@ export class Controller {
         eventType: MenuEventType.MOVE_LEFT,
         icons: ['<i class="fas fa-fw fa-angle-left"></i>'],
         tooltip: 'Move the selected layers to the left map',
-        handler: this.moveSelected.bind(this, 'left')
+        handler: this.moveSelected.bind(this, 'left'),
+        sort: 0
+      }, {
+        label: 'Go To',
+        eventType: MenuEventType.GOTO,
+        icons: ['<i class="fa fa-fw fa-fighter-jet"></i>'],
+        tooltip: 'Repositions the map to show the layer',
+        handler: this.goTo.bind(this),
+        sort: 10
       }, {
         label: 'Remove',
         eventType: MenuEventType.REMOVE,
         icons: ['<i class="fas fa-fw fa-times"></i>'],
         tooltip: 'Remove the selected layers from the Layer Comparison',
-        handler: this.removeSelected.bind(this, 'right')
+        handler: this.removeSelected.bind(this, 'right'),
+        sort: 20
       }]
     }));
 
@@ -550,6 +575,53 @@ export class Controller {
   }
 
   /**
+   * Handle the "Go To" menu event.
+   * @param {!MenuEvent<Context>} event The menu event.
+   */
+  goTo(event) {
+    // aggregate the features and execute flyTo, in case they have altitude and pure extent wont cut it
+    const layers = getLayersFromContext(event.getContext());
+    const features = layers.reduce((feats, layer) => {
+      let source = layer.getSource();
+      if (source instanceof OLVectorSource) {
+        source = /** @type {OLVectorSource} */ (source);
+        const newFeats = source.getFeatures();
+        return newFeats.length > 0 ? feats.concat(newFeats) : feats;
+      }
+      return feats;
+    }, []);
+
+    let extent;
+    if (features && features.length) {
+      extent = getGeometries(features).reduce(reduceExtentFromGeometries, olExtent.createEmpty());
+    } else {
+      extent = layers.reduce(reduceExtentFromLayers, olExtent.createEmpty());
+    }
+
+    if (extent && extent.indexOf(Infinity) != -1 || extent.indexOf(-Infinity) != -1) {
+      return;
+    }
+
+    // just use the left map here, either one works since their views are synchronized
+    const leftView = this.leftMap.getView();
+    const buffer = .1;
+
+    if (olExtent.getWidth(extent) < buffer && olExtent.getHeight(extent) < buffer) {
+      extent = olExtent.buffer(extent, buffer);
+    }
+
+    // In 2D views, projections supporting wrapping can pan "multiple worlds" over. We want to pan the least
+    // amount possible to go to the spot and avoid jumping "multiple worlds" back to the "origin world"
+    extent = normalizeToCenter(extent, leftView.getCenter()[0]);
+
+    leftView.fit(extent, {
+      duration: 1000,
+      maxZoom: 18,
+      constrainResolution: true
+    });
+  }
+
+  /**
    * Export the layers to an image
    * @export
    */
@@ -778,3 +850,9 @@ const countFeatures = (layerArray) => {
     return 0;
   }
 };
+
+/**
+ * Maximum zoom used for go to/fly to operations
+ * @type {number}
+ */
+export const MAX_AUTO_ZOOM = 18;
