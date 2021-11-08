@@ -6,13 +6,13 @@ form {
   div:not([ng-form]).ng-invalid.ng-dirty,
   select.ng-invalid.ng-dirty,
   textarea.ng-invalid.ng-dirty {
-    @extend .form-control, .is-invalid; // stylelint-disable-line at-rule-disallowed-list
+    @extend .form-control, .is-invalid; // stylelint-disable-line at-rule-disallowed-list -- Reusing Bootstrap styles.
   }
 
   .select2-container.ng-invalid.ng-dirty {
     .select2-choice,
     .select2-choices {
-      @extend .form-control, .is-invalid; // stylelint-disable-line at-rule-disallowed-list
+      @extend .form-control, .is-invalid; // stylelint-disable-line at-rule-disallowed-list -- Reusing Bootstrap styles.
     }
   }
 }

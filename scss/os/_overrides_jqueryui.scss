@@ -106,7 +106,7 @@
   z-index: $zindex-fixed + 1;
 
   // This gets the same styles defined for dropdown-menu. Used for when themes specify after the fact
-  @extend .dropdown-menu; // stylelint-disable-line at-rule-disallowed-list
+  @extend .dropdown-menu; // stylelint-disable-line at-rule-disallowed-list -- Reusing Bootstrap styles.
 
   // jQueryUI offsets active menu items. Disable that.
   .ui-state-active {
@@ -120,7 +120,7 @@
     padding: 0;
 
     // This gets the same styles defined for dropdown-item. Used for when themes specify after the fact
-    @extend .dropdown-item; // stylelint-disable-line at-rule-disallowed-list
+    @extend .dropdown-item; // stylelint-disable-line at-rule-disallowed-list -- Reusing Bootstrap styles.
 
     i.fa,
     i.fab,
@@ -142,14 +142,14 @@
         text-decoration: none;
 
         // This gets the same styles defined for dropdown-item:focus. Used for when themes specify after the fact
-        @extend .dropdown-item, :focus; // stylelint-disable-line at-rule-disallowed-list
+        @extend .dropdown-item, :focus; // stylelint-disable-line at-rule-disallowed-list -- Reusing Bootstrap styles.
       }
     }
   }
 
   .ui-menu-divider {
     // This gets the same styles defined for dropdown-divider. Used for when themes specify after the fact
-    @extend .dropdown-divider; // stylelint-disable-line at-rule-disallowed-list
+    @extend .dropdown-divider; // stylelint-disable-line at-rule-disallowed-list -- Reusing Bootstrap styles.
   }
 
   .dropdown-item {

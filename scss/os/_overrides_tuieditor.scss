@@ -217,7 +217,7 @@
     }
 
     blockquote {
-      @extend .blockquote; // stylelint-disable-line at-rule-disallowed-list
+      @extend .blockquote; // stylelint-disable-line at-rule-disallowed-list -- Reusing Bootstrap styles.
       border-left: 4px solid $gray-600;
       margin-bottom: 1rem;
       margin-top: 0;
@@ -230,7 +230,7 @@
     }
 
     attr {
-      @extend .initialism; // stylelint-disable-line at-rule-disallowed-list
+      @extend .initialism; // stylelint-disable-line at-rule-disallowed-list -- Reusing Bootstrap styles.
     }
 
     table {
@@ -399,7 +399,7 @@
       .te-url-input,
       .te-image-url-input,
       .te-alt-text-input {
-        @extend .form-control; // stylelint-disable-line at-rule-disallowed-list
+        @extend .form-control; // stylelint-disable-line at-rule-disallowed-list -- Reusing Bootstrap styles.
       }
     }
 
@@ -411,13 +411,13 @@
     }
 
     .te-ok-button {
-      @extend .btn; // stylelint-disable-line at-rule-disallowed-list
-      @extend .btn-primary; // stylelint-disable-line at-rule-disallowed-list
+      @extend .btn; // stylelint-disable-line at-rule-disallowed-list -- Reusing Bootstrap styles.
+      @extend .btn-primary; // stylelint-disable-line at-rule-disallowed-list -- Reusing Bootstrap styles.
     }
 
     .te-close-button {
-      @extend .btn; // stylelint-disable-line at-rule-disallowed-list
-      @extend .btn-secondary; // stylelint-disable-line at-rule-disallowed-list
+      @extend .btn; // stylelint-disable-line at-rule-disallowed-list -- Reusing Bootstrap styles.
+      @extend .btn-secondary; // stylelint-disable-line at-rule-disallowed-list -- Reusing Bootstrap styles.
     }
   }
 
@@ -483,8 +483,8 @@
     }
 
     .tui-scrollsync {
-      @extend .btn; // stylelint-disable-line at-rule-disallowed-list
-      @extend .btn-secondary; // stylelint-disable-line at-rule-disallowed-list
+      @extend .btn; // stylelint-disable-line at-rule-disallowed-list -- Reusing Bootstrap styles.
+      @extend .btn-secondary; // stylelint-disable-line at-rule-disallowed-list -- Reusing Bootstrap styles.
 
       &:after {
         font-size: $font-size-sm;
