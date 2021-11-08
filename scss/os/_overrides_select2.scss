@@ -42,26 +42,22 @@
         }
       }
 
-      .select2-search-field {
-        input.select2-input {
-          background: transparent;
-          border: 0;
-          box-shadow: none;
-          color: $body-color;
-          font-family: $font-family-base;
-          padding: 0;
+      .select2-search-field input.select2-input {
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+        color: $body-color;
+        font-family: $font-family-base;
+        padding: 0;
 
-          // stylelint-disable-next-line max-nesting-depth
-          &.select2-active {
-            background: $input-bg no-repeat 100% !important;
-          }
+        &.select2-active {
+          background: $input-bg no-repeat 100% !important;
+        }
 
-          // stylelint-disable-next-line max-nesting-depth
-          &::placeholder {
-            color: $input-placeholder-color;
-            // Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526.
-            opacity: 1;
-          }
+        &::placeholder {
+          color: $input-placeholder-color;
+          // Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526.
+          opacity: 1;
         }
       }
 
