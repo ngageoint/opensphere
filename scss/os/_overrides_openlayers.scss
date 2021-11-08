@@ -184,9 +184,7 @@
 .ol-attribution,
 .ol-attribution.ol-uncollapsible {
   bottom: .25rem;
-  // Chrome < 41 needs initial
-  height: initial;
-  height: unset; // stylelint-disable-line declaration-block-no-duplicate-properties
+  height: unset;
   left: .25rem;
   right: auto;
   text-align: left;
@@ -248,9 +246,7 @@
     bottom: auto;
     left: auto;
     min-width: 10rem;
-    // Chrome < 41 needs initial
-    padding: initial;
-    padding: unset; // stylelint-disable-line declaration-block-no-duplicate-properties
+    padding: unset;
   }
 }
 

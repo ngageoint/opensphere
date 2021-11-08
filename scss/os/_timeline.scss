@@ -231,9 +231,7 @@
 .axis {
   text {
     font: 10px sans-serif;
-    // Chrome < 41 needs initial
-    stroke: initial;
-    stroke: unset; // stylelint-disable-line declaration-block-no-duplicate-properties
+    stroke: unset;
   }
 
   path,
