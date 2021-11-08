@@ -2,7 +2,7 @@
   <div class="d-flex flex-fill flex-column modal-body">
     <div class="form-row justify-content-between mx-2">
       <div>
-        <button class="btn btn-secondary" ng-click="ctrl.moveSelected('right')" title="Move selected layers to the right" ng-disabled="ctrl.leftSelected.length == 0">
+        <button class="btn btn-secondary" ng-click="ctrl.moveSelected('right')" title="Move selected layers to the right" ng-disabled="ctrl.disableMoveRight()">
           <i class="fas fa-fw fa-angle-right"></i> Move Selected
         </button>
       </div>
@@ -17,7 +17,7 @@
       </div>
 
       <div>
-        <button class="btn btn-secondary" ng-click="ctrl.moveSelected('left')" title="Move selected layers to the left" ng-disabled="ctrl.rightSelected.length == 0">
+        <button class="btn btn-secondary" ng-click="ctrl.moveSelected('left')" title="Move selected layers to the left" ng-disabled="ctrl.disableMoveLeft()">
           <i class="fas fa-fw fa-angle-left"></i> Move Selected
         </button>
       </div>

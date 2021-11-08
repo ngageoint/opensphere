@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.layer.compare.LayerCompareUI');
 
 import * as capture from '../../../capture/capture.js';
+import LayerEventType from '../../../events/layereventtype.js';
 import {normalizeToCenter} from '../../../extent.js';
 import {getGeometries} from '../../../feature/feature.js';
 import {reduceExtentFromLayers, reduceExtentFromGeometries} from '../../../fn/fn.js';
@@ -39,8 +40,11 @@ const olExtent = goog.require('ol.extent');
 const EventKey = goog.requireType('goog.events.Key');
 const Control = goog.requireType('ol.control.Control');
 const Layer = goog.requireType('ol.layer.Layer');
+const LayerEvent = goog.requireType('os.events.LayerEvent');
+const {Context} = goog.requireType('os.ui.menu.layer');
 const {default: ISource} = goog.requireType('os.source.ISource');
 const {default: VectorSource} = goog.requireType('os.source.Vector');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
@@ -234,10 +238,11 @@ export class Controller {
         icons: ['<i class="fas fa-fw fa-angle-right"></i>'],
         tooltip: 'Move the selected layers to the right map',
         handler: this.moveSelected.bind(this, 'right'),
+        beforeRender: goog.partial(canMove, 'right'),
         sort: 0
       }, {
         label: 'Go To',
-        eventType: MenuEventType.GOTO,
+        eventType: MenuEventType.GO_TO,
         icons: ['<i class="fa fa-fw fa-fighter-jet"></i>'],
         tooltip: 'Repositions the map to show the layer',
         handler: this.goTo.bind(this),
@@ -290,10 +295,11 @@ export class Controller {
         icons: ['<i class="fas fa-fw fa-angle-left"></i>'],
         tooltip: 'Move the selected layers to the left map',
         handler: this.moveSelected.bind(this, 'left'),
+        beforeRender: goog.partial(canMove, 'left'),
         sort: 0
       }, {
         label: 'Go To',
-        eventType: MenuEventType.GOTO,
+        eventType: MenuEventType.GO_TO,
         icons: ['<i class="fa fa-fw fa-fighter-jet"></i>'],
         tooltip: 'Repositions the map to show the layer',
         handler: this.goTo.bind(this),
@@ -347,6 +353,8 @@ export class Controller {
       this.dragListeners = null;
     }
 
+    getMapContainer().unlisten(LayerEventType.REMOVE, this.onLayerRemoved, false, this);
+
     dispose(this.leftMap);
     dispose(this.rightMap);
     dispose(this.view);
@@ -388,9 +396,11 @@ export class Controller {
     // Make the left map container 50% width for an initial split view.
     this.element.find(Selector.MAP_LEFT).width('50%');
 
-    const compareOptions = /** @type {LayerCompareOptions} */ (this.scope);
+    // listen for layer remove events so we can remove them from the compare
+    getMapContainer().listen(LayerEventType.REMOVE, this.onLayerRemoved, false, this);
 
     // Set the layers on each map.
+    const compareOptions = /** @type {LayerCompareOptions} */ (this.scope);
     this.setLeftLayers(compareOptions.left);
     this.setRightLayers(compareOptions.right);
   }
@@ -431,10 +441,17 @@ export class Controller {
   /**
    * Checks whether a layer is present in the comparison window.
    * @param {Layer|ILayer} layer The layer to check.
+   * @param {string=} opt_target Optional target side to check.
    * @return {boolean} Whether we have the layer.
    */
-  hasLayer(layer) {
+  hasLayer(layer, opt_target) {
     layer = /** @type {Layer} */ (layer);
+    if (opt_target == 'left') {
+      return this.leftLayers.getArray().includes(layer);
+    } else if (opt_target == 'right') {
+      return this.rightLayers.getArray().includes(layer);
+    }
+
     return this.leftLayers.getArray().includes(layer) || this.rightLayers.getArray().includes(layer);
   }
 
@@ -557,6 +574,24 @@ export class Controller {
   }
 
   /**
+   * Whether the selection can be moved to the right.
+   * @return {boolean}
+   * @export
+   */
+  disableMoveRight() {
+    return this.leftSelected.length == 0 || this.leftSelected.some((node) => this.hasLayer(node.getLayer(), 'right'));
+  }
+
+  /**
+   * Whether the selection can be moved to the left.
+   * @return {boolean}
+   * @export
+   */
+  disableMoveLeft() {
+    return this.rightSelected.length == 0 || this.rightSelected.some((node) => this.hasLayer(node.getLayer(), 'left'));
+  }
+
+  /**
    * Removes selected layers from a side.
    * @param {string} from The side to move to.
    */
@@ -571,6 +606,30 @@ export class Controller {
       const layers = this.leftSelected.map((node) => node.getLayer());
       const leftUnselectedLayers = leftLayerArr.filter((layer) => !layers.includes(layer));
       this.setLeftLayers(leftUnselectedLayers);
+    }
+  }
+
+  /**
+   * Removes a layer from the compare.
+   * @param {Layer|ILayer} layer The layer to remove.
+   */
+  remove(layer) {
+    // please the compiler and our terrible layer typing
+    layer = /** @type {Layer} */ (layer);
+
+    const rightLayerArr = this.rightLayers.getArray().slice();
+    const leftLayerArr = this.leftLayers.getArray().slice();
+    const rightIndex = rightLayerArr.indexOf(layer);
+    const leftIndex = leftLayerArr.indexOf(layer);
+
+    if (rightIndex != -1) {
+      rightLayerArr.splice(rightIndex, 1);
+      this.setRightLayers(rightLayerArr);
+    }
+
+    if (leftIndex != -1) {
+      leftLayerArr.splice(leftIndex, 1);
+      this.setLeftLayers(leftLayerArr);
     }
   }
 
@@ -731,6 +790,16 @@ export class Controller {
   }
 
   /**
+   * Handles layer remove events from the main map.
+   * @param {LayerEvent} event
+   */
+  onLayerRemoved(event) {
+    if (this.hasLayer(event.layer)) {
+      this.remove(event.layer);
+    }
+  }
+
+  /**
    * Update the OpenLayers map canvases to fill the container.
    * @protected
    */
@@ -780,6 +849,21 @@ export const getCompareController = () => {
   }
 
   return null;
+};
+
+/**
+ * Checks whether a layer is present in the comparison window.
+ * @param {string} target Target side to check.
+ * @param {Context} context The menu context.
+ * @this {MenuItem}
+ */
+const canMove = function(target, context) {
+  const layers = getLayersFromContext(context);
+  const controller = getCompareController();
+
+  if (controller && layers.some((l) => controller.hasLayer(l, target))) {
+    this.visible = false;
+  }
 };
 
 /**
