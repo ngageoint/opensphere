@@ -1,5 +1,6 @@
+/* eslint-disable jsdoc/require-returns-check */
 /**
- * @fileoverview Externs for PapaParse v3.1.2
+ * @fileoverview Externs for PapaParse v5.3.0
  * @externs
  */
 
