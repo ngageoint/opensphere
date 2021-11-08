@@ -899,9 +899,11 @@ export class Controller extends Disposable {
     if (this.previewFeature) {
       this.saveToFeature(this.previewFeature);
 
-      var mapContainer = getMapContainer();
-      mapContainer.removeFeature(this.previewFeature);
-      mapContainer.addFeature(this.previewFeature);
+      if (this.previewFeature.getId() === this.tempFeatureId) {
+        const mapContainer = getMapContainer();
+        mapContainer.removeFeature(this.previewFeature);
+        mapContainer.addFeature(this.previewFeature);
+      }
 
       var layer = osFeature.getLayer(this.previewFeature);
       if (layer) {
