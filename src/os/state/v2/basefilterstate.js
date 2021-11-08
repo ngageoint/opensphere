@@ -1,5 +1,6 @@
 goog.declareModuleId('os.state.v2.BaseFilter');
 
+import {forEach} from '../../array/array.js';
 import FilterEntry from '../../filter/filterentry.js';
 import {getFilterManager, getQueryManager} from '../../query/queryinstance.js';
 import {XMLNS, appendElement, clone as cloneXml} from '../../xml.js';
@@ -169,7 +170,7 @@ export default class BaseFilter extends XMLState {
     if (filtersNode !== undefined && entries !== undefined) {
       entries = entries ? entries.getElementsByTagName('queryEntry') : [];
 
-      entries.forEach(function(entry) {
+      forEach(entries, function(entry) {
         var filterId = entry.getAttribute('filterId');
         var layerId = entry.getAttribute('layerId');
         var cloneId = filterId + '_' + layerId;
