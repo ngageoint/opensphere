@@ -52,6 +52,14 @@ export default class CsvParserConfig extends FileParserConfig {
   }
 
   /**
+   * @inheritDoc
+   */
+  clearPreview() {
+    super.clearPreview();
+    this['linePreview'] = [];
+  }
+
+  /**
    * Updates the unparsed line preview.
    */
   updateLinePreview() {

@@ -54,6 +54,7 @@ export default class Controller extends WizardController {
     if (this.config) {
       this.config['file'] = null;
       this.config['descriptor'] = null;
+      this.config.clearPreview();
     }
   }
 
