@@ -30,11 +30,13 @@ export default class AnnotationTailRenderer extends SvgRenderer {
    * @inheritDoc
    */
   getRenderElement() {
-    if (this.overlay_) {
-      var overlayEl = this.overlay_.getElement();
-      if (overlayEl) {
-        return overlayEl.querySelector('svg.c-annotation__svg');
-      }
+    // Only render the tail if it's visible within the current viewport. This is tested by checking the height/width of
+    // the element within the viewport. These will be 0 if the element is not rendered in the viewport.
+    const overlayEl = this.overlay_ ? this.overlay_.getElement() : null;
+    const tailEl = this.overlay_ ? overlayEl.querySelector('svg.c-annotation__svg') : null;
+    const rect = tailEl ? tailEl.getBoundingClientRect() : null;
+    if (rect && rect.width > 0 && rect.height > 0) {
+      return tailEl;
     }
 
     return null;
