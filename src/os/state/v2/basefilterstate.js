@@ -30,10 +30,10 @@ export default class BaseFilter extends XMLState {
     this.title = 'Filters';
 
     /**
-     * @type {!Array<!VectorSource>}
+     * @type {Array<!VectorSource>}
      * @protected
      */
-    this.sources = [];
+    this.sources = null;
   }
 
   /**
@@ -80,14 +80,14 @@ export default class BaseFilter extends XMLState {
   }
 
   /**
-   * @param {!Array<!VectorSource>} sources
+   * @param {Array<!VectorSource>} sources
    */
   setSources(sources) {
     this.sources = sources;
   }
 
   /**
-   * @return {!Array<!VectorSource>}
+   * @return {Array<!VectorSource>}
    */
   getSources() {
     return this.sources;
