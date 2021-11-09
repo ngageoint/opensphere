@@ -3,6 +3,7 @@ goog.declareModuleId('plugin.places');
 import * as annotation from '../../os/annotation/annotation.js';
 import CommandProcessor from '../../os/command/commandprocessor.js';
 import SequenceCommand from '../../os/command/sequencecommand.js';
+import ColumnDefinition from '../../os/data/columndefinition.js';
 import RecordField from '../../os/data/recordfield.js';
 import * as osFeature from '../../os/feature/feature.js';
 import Fields from '../../os/fields/fields.js';
@@ -110,12 +111,13 @@ export const SourceFields = [
   Fields.LAT_DMS,
   Fields.LON_DMS,
   Fields.MGRS,
+  Fields.ALT,
   Fields.SEMI_MAJOR,
   Fields.SEMI_MINOR,
   Fields.SEMI_MAJOR_UNITS,
   Fields.SEMI_MINOR_UNITS,
-  Fields.TIME,
-  Fields.ORIENTATION
+  Fields.ORIENTATION,
+  new ColumnDefinition(Fields.TIME, RecordField.TIME)
 ];
 
 /**
