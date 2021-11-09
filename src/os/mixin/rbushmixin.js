@@ -56,12 +56,17 @@ RBush.prototype.getInExtent = function(extent) {
 
   featureSets.sort(sortLength);
 
+  let result = featureSets[0];
+
   // if more than one returned results, dedupe them
   if (setsContainingFeatures > 1) {
     var merged = Array.prototype.concat.apply([], featureSets);
     removeDuplicates(merged, undefined, /** @type {function(?):string|undefined} */ (getUid));
-    return merged;
+    result = merged;
   }
 
-  return featureSets[0];
+  // Clear feature sets so the module won't keep feature references in memory.
+  featureSets.length = 0;
+
+  return result;
 };
