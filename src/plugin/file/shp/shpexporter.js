@@ -12,7 +12,7 @@ import osImplements from '../../../os/implements.js';
 import ITime from '../../../os/time/itime.js';
 import SHPHeader from './data/shpheader.js';
 import * as mime from './mime.js';
-import * as shp from './shp.js';
+import {getFlatGroupCoordinates, getPartCoordinatesFromGeometry, getShapeTypeFromGeometry, TYPE} from './shp.js';
 import {directiveTag as shpExportUi} from './ui/shpexportui.js';
 
 const crypt = goog.require('goog.crypt');
@@ -374,37 +374,12 @@ export default class SHPExporter extends ZipExporter {
       if (geom != null) {
         if (geom instanceof GeometryCollection) {
           osArray.forEach(geom.getGeometries(), function(geometry) {
-            this.allocateItem_(item, /** @type {SimpleGeometry} */ (geometry));
+            this.allocateItemForGeom_(item, /** @type {SimpleGeometry} */ (geometry));
           }, this);
         } else {
-          this.allocateItem_(item, geom);
+          this.allocateItemForGeom_(item, geom);
         }
       }
-    }
-  }
-
-  /**
-   * Allocate space for this item
-   *
-   * @param {T} item The item
-   * @param {SimpleGeometry} geom
-   * @private
-   * @template T
-   */
-  allocateItem_(item, geom) {
-    // Doesnt seem like shapefiles support multi polygon. Just polygons with multiple stuff (like holes)
-    if (geom.getType() == GeometryType.MULTI_POLYGON) {
-      geom = /** @type {ol.geom.MultiPolygon} */ (geom);
-      osArray.forEach(geom.getPolygons(), function(polygon) {
-        this.allocateItemForGeom_(item, polygon);
-      }, this);
-    } else if (geom.getType() == GeometryType.MULTI_POINT) {
-      geom = /** @type {ol.geom.MultiPoint} */ (geom);
-      osArray.forEach(geom.getPoints(), function(point) {
-        this.allocateItemForGeom_(item, point);
-      }, this);
-    } else {
-      this.allocateItemForGeom_(item, geom);
     }
   }
 
@@ -417,54 +392,47 @@ export default class SHPExporter extends ZipExporter {
    * @template T
    */
   allocateItemForGeom_(item, geom) {
-    var geomType = geom.getType();
+    const geomType = geom.getType();
     this.isSupportedType_(geomType);
 
     this.header_.shx.allocation += 8;
     this.header_.allocation += 8;
 
-    var recLength = 0;
+    let recLength = 0;
+    const shapeType = getShapeTypeFromGeometry(geom);
     if (geomType == GeometryType.POINT) {
-      var coord = geom.getCoordinates();
-      recLength = 20;
-      if (geom.getLayout() == 'XYZ' && coord[2] != 0) {
-        recLength = 36;
+      recLength = shapeType === TYPE.POINT ? 20 : 36;
+    } else if (geomType == GeometryType.MULTI_POINT) {
+      const coords = geom.getCoordinates();
+      const numPoints = coords.length;
+      const pointsLen = numPoints * 16;
+
+      recLength = 40 + pointsLen;
+
+      if (shapeType === TYPE.MULTIPOINTZ) {
+        // 4 min max's (z & m) + 2x8xlength (z points, m points)
+        recLength += (8 * 4) + (numPoints * 16);
       }
     } else if (geomType == GeometryType.LINE_STRING ||
         geomType == GeometryType.MULTI_LINE_STRING ||
-        geomType == GeometryType.POLYGON) {
-      var numParts = 1;
-      var flatGroupCoords = [];
-      if (geomType == GeometryType.LINE_STRING) {
-        flatGroupCoords = geom.getCoordinates();
-      } else {
-        var coords = geom.getCoordinates();
-        numParts = coords.length;
+        geomType == GeometryType.POLYGON ||
+        geomType == GeometryType.MULTI_POLYGON) {
+      const partCoordinates = getPartCoordinatesFromGeometry(geom);
+      const numParts = partCoordinates.length;
+      const flatGroupCoords = getFlatGroupCoordinates(partCoordinates);
+      const numPoints = flatGroupCoords.length;
+      const partsLen = numParts * 4;
+      const pointsLen = numPoints * 16;
 
-        // Flatten down the coordinates one level
-        osArray.forEach(coords, function(coord) {
-          osArray.forEach(coord, function(point) {
-            flatGroupCoords.push(point);
-          });
-        });
-      }
-
-      var numPoints = flatGroupCoords.length;
-      var partsLen = numParts * 4;
-      var pointsLen = numPoints * 16;
       recLength = 44 + partsLen + pointsLen;
 
-      if (geom.getLayout() == 'XYZ') {
-        // add the z components if available
-        for (var i = 0; i < flatGroupCoords.length; i++) {
-          if (flatGroupCoords[i][2] != 0) {
-            // 4 min max's (z & m) + 2x8xlength (z points, m points)
-            recLength += (8 * 4) + (numPoints * 16);
-            break;
-          }
-        }
+      // add the z components if available
+      if (shapeType === TYPE.POLYLINEZ || shapeType === TYPE.POLYGONZ) {
+        // 4 min max's (z & m) + 2x8xlength (z points, m points)
+        recLength += (8 * 4) + (numPoints * 16);
       }
     }
+
     this.header_.allocation += recLength;
 
     // Add the DBF Metadata for this geometry
@@ -652,10 +620,10 @@ export default class SHPExporter extends ZipExporter {
     if (geom != null) {
       if (geom instanceof GeometryCollection) {
         osArray.forEach(geom.getGeometries(), function(geometry) {
-          this.appendItem_(item, /** @type {SimpleGeometry} */ (geometry));
+          this.appendItemForGeom_(item, /** @type {SimpleGeometry} */ (geometry));
         }, this);
       } else {
-        this.appendItem_(item, geom);
+        this.appendItemForGeom_(item, geom);
       }
 
       return true;
@@ -694,7 +662,7 @@ export default class SHPExporter extends ZipExporter {
   /**
    * Only put entries in if they are supported
    *
-   * @param {ol.geom.GeometryType} type
+   * @param {GeometryType} type
    * @private
    */
   isSupportedType_(type) {
@@ -752,8 +720,8 @@ export default class SHPExporter extends ZipExporter {
       }
     }
 
-    var recLength = 0;
-    var shapeType = -1;
+    let recLength = 0;
+    const shapeType = getShapeTypeFromGeometry(geom);
     if (geomType == GeometryType.POINT) {
       /* Shape File Point Record (little endian)
        *                                          Byte
@@ -770,77 +738,73 @@ export default class SHPExporter extends ZipExporter {
        * Byte 20   Z           Z         Double   Little
        * Byte 28   M           M         Double   Little
        */
-      var coord = geom.getCoordinates();
-      shapeType = shp.TYPE.POINT;
+      const coord = geom.getCoordinates();
       recLength = 20;
-      if (geom.getLayout() == 'XYZ' && coord[2] != 0) {
-        shapeType = shp.TYPE.POINTZ;
-        recLength = 36;
-      }
 
       this.dvShp_.setFloat64(recordStart + 4, coord[0], true);
       this.dvShp_.setFloat64(recordStart + 12, coord[1], true);
-      if (shapeType == shp.TYPE.POINTZ) {
+
+      if (shapeType == TYPE.POINTZ) {
+        // Add Z + M
+        recLength = 36;
         this.dvShp_.setFloat64(recordStart + 20, coord[2], true);
       }
-      // } else if (geom.getType() == ol.geom.GeometryType.MULTI_POINT) {
-      //   /**
-      //    * MultiPoint
-      //    *                                                  Byte
-      //    * Position   Field       Value     Type    Number    Order
-      //    * Byte 0     Shape Type  8         Integer 1         Little
-      //    * Byte 4     Box         Box       Double  4         Little
-      //    * Byte 36    NumPoints   NumPoints Integer 1         Little
-      //    * Byte 40    Points      Points    Point   NumPoints Little
-      //    *
-      //    * Byte X     Zmin        Zmin      Double  1         Little
-      //    * Byte X+8   Zmax        Zmax      Double  1         Little
-      //    * Byte X+16  Zarray      Zarray    Double  NumPoints Little
-      //    * Byte Y*    Mmin        Mmin      Double  1         Little
-      //    * Byte Y+8*  Mmax        Mmax      Double  1         Little
-      //    * Byte Y+16* Marray      Marray    Double  NumPoints Little
-      //    * Note: X = 40 + (16 * NumPoints); Y = X + 16 + (8 * NumPoints)
-      //    */
-      //   shapeType = plugin.file.shp.TYPE.MULTIPOINT;
-      //   var coords = geom.getCoordinates();
-      //   var numPoints = coords.length;
-      //   var pointsLen = numPoints * 16;
+    } else if (geomType == GeometryType.MULTI_POINT) {
+      /**
+       * MultiPoint
+       *                                                  Byte
+       * Position   Field       Value     Type    Number    Order
+       * Byte 0     Shape Type  8         Integer 1         Little
+       * Byte 4     Box         Box       Double  4         Little
+       * Byte 36    NumPoints   NumPoints Integer 1         Little
+       * Byte 40    Points      Points    Point   NumPoints Little
+       *
+       * Byte X     Zmin        Zmin      Double  1         Little
+       * Byte X+8   Zmax        Zmax      Double  1         Little
+       * Byte X+16  Zarray      Zarray    Double  NumPoints Little
+       * Byte Y*    Mmin        Mmin      Double  1         Little
+       * Byte Y+8*  Mmax        Mmax      Double  1         Little
+       * Byte Y+16* Marray      Marray    Double  NumPoints Little
+       * Note: X = 40 + (16 * NumPoints); Y = X + 16 + (8 * NumPoints)
+       */
+      const coords = geom.getCoordinates();
+      const numPoints = coords.length;
+      const pointsLen = numPoints * 16;
 
-      //   recLength = 40 + pointsLen;
-      //   if (geom.getLayout() == 'XYZ') {
-      //     for (var i = 0; i < coords.length; i++) {
-      //       if (coords[i][2] != 0) {
-      //         shapeType = plugin.file.shp.TYPE.MULTIPOINTZ;
-      //         recLength += 16 + (16 * numPoints);
-      //         break;
-      //       }
-      //     }
-      //   }
+      recLength = 40 + pointsLen;
 
-      //   // Box
-      //   this.dvShp_.setFloat64(recordStart + 4, extent[0], true);
-      //   this.dvShp_.setFloat64(recordStart + 12, extent[1], true);
-      //   this.dvShp_.setFloat64(recordStart + 20, extent[2], true);
-      //   this.dvShp_.setFloat64(recordStart + 28, extent[3], true);
+      if (shapeType === TYPE.MULTIPOINTZ) {
+        // 4 min max's (z & m) + 2x8xlength (z points, m points)
+        recLength += (8 * 4) + (numPoints * 16);
+      }
 
-      //   // Num points
-      //   this.dvShp_.setInt32(recordStart + 40, numPoints, true);
+      // Box
+      this.dvShp_.setFloat64(recordStart + 4, extent[0], true);
+      this.dvShp_.setFloat64(recordStart + 12, extent[1], true);
+      this.dvShp_.setFloat64(recordStart + 20, extent[2], true);
+      this.dvShp_.setFloat64(recordStart + 28, extent[3], true);
 
-      //   // Points
-      //   var pointsStart = recordStart + 40;
-      //   var zpointsStart = pointsStart + pointsLen;
-      //   osArray.forEach(coords, function(coord, index) {
-      //     var offset = index * 16;
-      //     this.dvShp_.setFloat64(pointsStart + offset, coord[0], true);
-      //     this.dvShp_.setFloat64(pointsStart + offset + 8, coord[1], true);
+      // Num points
+      this.dvShp_.setInt32(recordStart + 36, numPoints, true);
 
-    //     if (shapeType == plugin.file.shp.TYPE.MULTIPOINTZ) {
-    //       this.dvShp_.setFloat64(zpointsStart + (8 * index), coord[2], true);
-    //     }
-    //   }, this);
+      // Points
+      const pointsStart = recordStart + 40;
+      const zStart = pointsStart + pointsLen + 16;
+
+      coords.forEach(function(coord, index) {
+        const pointOffset = index * 16;
+        this.dvShp_.setFloat64(pointsStart + pointOffset, coord[0], true);
+        this.dvShp_.setFloat64(pointsStart + pointOffset + 8, coord[1], true);
+
+        if (shapeType == TYPE.MULTIPOINTZ) {
+          const zOffset = index * 8;
+          this.dvShp_.setFloat64(zStart + zOffset, coord[2], true);
+        }
+      }, this);
     } else if (geomType == GeometryType.LINE_STRING ||
         geomType == GeometryType.MULTI_LINE_STRING ||
-        geomType == GeometryType.POLYGON) {
+        geomType == GeometryType.POLYGON ||
+        geomType == GeometryType.MULTI_POLYGON) {
       /* Shape File Polyline/Polygon Record
        *                                                   Byte
        * Position  Field       Value            Type       Order
@@ -867,64 +831,26 @@ export default class SHPExporter extends ZipExporter {
        * Byte zz   End Record
        */
 
-      switch (geomType) {
-        case GeometryType.LINE_STRING:
-        case GeometryType.MULTI_LINE_STRING:
-          shapeType = shp.TYPE.POLYLINE;
-          break;
-        case GeometryType.POLYGON:
-          shapeType = shp.TYPE.POLYGON;
-          break;
-        default:
-          break;
+      const partCoordinates = getPartCoordinatesFromGeometry(geom);
+      const numParts = partCoordinates.length;
+      const flatGroupCoords = getFlatGroupCoordinates(partCoordinates);
+
+      // Part Indexes
+      for (let i = 0, partStartIndex = 0; i < numParts; i++) {
+        this.dvShp_.setInt32(recordStart + 44 + (i * 4), partStartIndex, true);
+        partStartIndex += partCoordinates[i].length;
       }
 
-      var numParts = 1;
-      var flatGroupCoords = [];
-      if (geomType == GeometryType.LINE_STRING) {
-        flatGroupCoords = geom.getCoordinates();
+      const numPoints = flatGroupCoords.length;
+      const partsLen = numParts * 4;
+      const pointsLen = numPoints * 16;
 
-        // Only 1 part for line strings
-        this.dvShp_.setInt32(recordStart + 44, 0, true);
-      } else {
-        var coords = geom.getCoordinates();
-        numParts = coords.length;
-
-        // Flatten down the coordinates one level
-        osArray.forEach(coords, function(coord) {
-          osArray.forEach(coord, function(point) {
-            flatGroupCoords.push(point);
-          });
-        });
-
-        // Part Indexes
-        var partStartIndex = 0;
-        for (var i = 0; i < numParts; i++) {
-          this.dvShp_.setInt32(recordStart + 44 + (i * 4), partStartIndex, true);
-          partStartIndex += coords[i].length;
-        }
-      }
-
-      var numPoints = flatGroupCoords.length;
-      var partsLen = numParts * 4;
-      var pointsLen = numPoints * 16;
       recLength = 44 + partsLen + pointsLen;
 
-      if (geom.getLayout() == 'XYZ') {
-        // add the z components if available
-        for (var i = 0; i < flatGroupCoords.length; i++) {
-          if (flatGroupCoords[i][2] != 0) {
-            // 4 min max's (z & m) + 2x8xlength (z points, m points)
-            recLength += (8 * 4) + (numPoints * 16);
-            if (shapeType == shp.TYPE.POLYLINE) {
-              shapeType = shp.TYPE.POLYLINEZ;
-              break;
-            } else {
-              shapeType = shp.TYPE.POLYGONZ;
-              break;
-            }
-          }
-        }
+      // add the z components if available
+      if (shapeType === TYPE.POLYLINEZ || shapeType === TYPE.POLYGONZ) {
+        // 4 min max's (z & m) + 2x8xlength (z points, m points)
+        recLength += (8 * 4) + (numPoints * 16);
       }
 
       this.dvShp_.setFloat64(recordStart + 4, extent[0], true);
@@ -939,26 +865,26 @@ export default class SHPExporter extends ZipExporter {
       this.dvShp_.setInt32(recordStart + 40, numPoints, true);
 
       // Points
-      var pointsStart = recordStart + 44 + partsLen;
-      var zpointsStart = pointsStart + pointsLen + (2 * 8);
-      for (var i = 0; i < flatGroupCoords.length; i++) {
-        var offset = i * 16;
+      const pointsStart = recordStart + 44 + partsLen;
+      const zpointsStart = pointsStart + pointsLen + (2 * 8);
+      for (let i = 0; i < flatGroupCoords.length; i++) {
+        const offset = i * 16;
         this.dvShp_.setFloat64(pointsStart + offset, flatGroupCoords[i][0], true);
         this.dvShp_.setFloat64(pointsStart + offset + 8, flatGroupCoords[i][1], true);
 
-        if (shapeType == shp.TYPE.POLYLINEZ ||
-            shapeType == shp.TYPE.POLYGONZ) {
+        if (shapeType === TYPE.POLYLINEZ || shapeType === TYPE.POLYGONZ) {
           this.dvShp_.setFloat64(zpointsStart + (i * 8), flatGroupCoords[i][2], true);
         }
       }
     }
+
     /* Shape File Record (little endian)
      *                                                      Byte
      * Position  Field           Value             Type     Order
      * Byte 0    Shape Type      0, *1, *3, *5     Integer  Little
      * Byte 4    Specific for each Shape Type
      */
-    if (this.shpType_ < 0 || (this.shpType_ == shp.TYPE.POINT && shapeType != shp.TYPE.POINT)) {
+    if (this.shpType_ < 0 || (this.shpType_ == TYPE.POINT && shapeType != TYPE.POINT)) {
       // write shape type in header
       this.shpType_ = shapeType;
       this.dvShp_.setUint32(32, this.shpType_, true);
@@ -974,31 +900,6 @@ export default class SHPExporter extends ZipExporter {
 
     // Add the DBF Metadata for this geometry
     this.addMetadata_(item);
-  }
-
-  /**
-   * First check to see if this is a multipolygon and break it up
-   *
-   * @param {T} item The item
-   * @param {SimpleGeometry} geom
-   * @private
-   * @template T
-   */
-  appendItem_(item, geom) {
-    // Doesnt seem like shapefiles support multi polygon. Just polygons with multiple stuff (like holes)
-    if (geom.getType() == GeometryType.MULTI_POLYGON) {
-      geom = /** @type {ol.geom.MultiPolygon} */ (geom);
-      osArray.forEach(geom.getPolygons(), function(polygon) {
-        this.appendItemForGeom_(item, polygon);
-      }, this);
-    } else if (geom.getType() == GeometryType.MULTI_POINT) {
-      geom = /** @type {ol.geom.MultiPoint} */ (geom);
-      osArray.forEach(geom.getPoints(), function(point) {
-        this.appendItemForGeom_(item, point);
-      }, this);
-    } else {
-      this.appendItemForGeom_(item, geom);
-    }
   }
 
   /**
