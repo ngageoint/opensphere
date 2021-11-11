@@ -251,6 +251,16 @@ export class Controller extends BaseDrawControlsCtrl {
    * @private
    */
   onMeasureTypeChange_(evt) {
+    // Cancel any active measure interaction
+    if (this.measureInteraction.getEnabled()) {
+      this.measureInteraction.setEnabled(false);
+    }
+
+    // Cancel any active draw interaction
+    if (this.interaction.getEnabled()) {
+      this.interaction.setEnabled(false);
+    }
+
     Measure.method = /** @type {Method} */ (evt.type);
     Settings.getInstance().set(this.key_, evt.type);
     this.toggleMeasure(true);

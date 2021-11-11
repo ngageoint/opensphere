@@ -365,6 +365,11 @@ export class Controller {
    * @export
    */
   activateControl(type) {
+    // Cancel any active measure interaction
+    if (this.measureInteraction && this.measureInteraction.getEnabled()) {
+      this.measureInteraction.setEnabled(false);
+    }
+
     log.fine(this.log, 'Activating ' + type + ' control.');
     Metrics.getInstance().updateMetric(MapMetrics.DRAW, 1);
     Metrics.getInstance().updateMetric(MapMetrics.DRAW + '_' + type, 1);
