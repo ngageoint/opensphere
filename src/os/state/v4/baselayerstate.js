@@ -5,7 +5,7 @@ import AlertManager from '../../alert/alertmanager.js';
 import {isColorString, padHexColor, toRgbArray, toServerString} from '../../color.js';
 import LayerAdd from '../../command/layeraddcmd.js';
 import DataManager from '../../data/datamanager.js';
-import {isLocal, isFileSystem} from '../../file/index.js';
+import {isLocal} from '../../file/index.js';
 import MappingManager from '../../im/mapping/mappingmanager.js';
 import LayerConfigManager from '../../layer/config/layerconfigmanager.js';
 import * as osMap from '../../map/map.js';
@@ -19,6 +19,7 @@ import StyleField from '../../style/stylefield.js';
 import {tagsFromXML} from '../../tag/tag.js';
 import {isLayerDeprecated, showDeprecatedWarning} from '../../ui/util/deprecated.js';
 import {addBase} from '../../uri/uri.js';
+import {hasUrlScheme} from '../../url/url.js';
 import {appendElement, appendElementNS, createElement, getElementValueOrDefault} from '../../xml.js';
 import AbstractState from '../abstractstate.js';
 import {getStateManager} from '../stateinstance.js';
@@ -86,27 +87,21 @@ export default class BaseLayerState extends XMLState {
   }
 
   /**
-   * Checks if a layer was loaded from local data
-   *
-   * @param {Object<string, *>} layerOptions The layer options
-   * @return {boolean} If the layer contains local data
-   * @protected
-   */
-  hasLocalData(layerOptions) {
-    return isLocal(/** @type {string|undefined} */ (layerOptions['url'])) ||
-        isLocal(/** @type {string|undefined} */ (layerOptions['url2']));
-  }
-
-  /**
-   * Checks if a layer was loaded from the file system.
+   * Checks if a layer was loaded using only remote resources.
    *
    * @param {Object<string, *>} layerOptions The layer options.
    * @return {boolean} If the layer was loaded from the file system.
    * @protected
    */
-  hasFileSystemData(layerOptions) {
-    return isFileSystem(/** @type {string|undefined} */ (layerOptions['url'])) ||
-        isFileSystem(/** @type {string|undefined} */ (layerOptions['url2']));
+  isRemote(layerOptions) {
+    const url = /** @type {string|undefined} */ (layerOptions['url']);
+    const url2 = /** @type {string|undefined} */ (layerOptions['url2']);
+    const urls = /** @type {Array<string>|undefined} */ (layerOptions['urls']) || [];
+
+    // Considered remote if at least one URL exists, and every defined URL has a remote scheme. Scheme-relative URL's
+    // are generally discouraged and not considered.
+    const definedUrls = [url, url2, ...urls].filter((url) => !!url);
+    return definedUrls.length > 0 && definedUrls.every(hasUrlScheme);
   }
 
   /**
@@ -131,8 +126,8 @@ export default class BaseLayerState extends XMLState {
         return false;
       }
 
-      // skip local/file system data (these are handled separately)
-      return !this.hasLocalData(layerOptions) && !this.hasFileSystemData(layerOptions);
+      // skip resources that are not remote (these are handled separately)
+      return this.isRemote(layerOptions);
     } catch (e) {
       // may not be a ILayer... so don't persist it
     }
