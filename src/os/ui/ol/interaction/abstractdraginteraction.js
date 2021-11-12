@@ -55,7 +55,7 @@ export default class AbstractDrag extends AbstractDraw {
    * @override
    */
   static handleDownEvent(mapBrowserEvent) {
-    if (!mouseOnly(mapBrowserEvent)) {
+    if (!mouseOnly(mapBrowserEvent) || this.getOtherDrawing()) {
       return false;
     }
 
