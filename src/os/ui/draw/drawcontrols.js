@@ -268,6 +268,7 @@ export class Controller extends BaseDrawControlsCtrl {
 
   /**
    * @inheritDoc
+   * @export
    */
   activateControl(type) {
     // Cancel any active measure interaction
