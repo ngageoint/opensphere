@@ -1,21 +1,20 @@
 goog.declareModuleId('plugin.places.KMLPlacesImportUI');
 
-import CommandProcessor from '../../os/command/commandprocessor.js';
-import SequenceCommand from '../../os/command/sequencecommand.js';
 import EventType from '../../os/events/eventtype.js';
-import Importer from '../../os/im/importer.js';
 import {ROOT} from '../../os/os.js';
 import FileParserConfig from '../../os/parse/fileparserconfig.js';
 import {Controller as FileImportCtrl} from '../../os/ui/file/fileimport.js';
 import FileImportUI from '../../os/ui/im/fileimportui.js';
 import Module from '../../os/ui/module.js';
-import * as osWindow from '../../os/ui/window.js';
-import KMLNodeAdd from '../file/kml/cmd/kmlnodeaddcmd.js';
+import {create} from '../../os/ui/window.js';
+import KMLImporter from '../file/kml/kmlimporter.js';
 import KMLParser from '../file/kml/kmlparser.js';
-import {updatePlacemark} from '../file/kml/ui/kmlui.js';
 import {getPlacesManager} from './places.js';
+import {saveKMLToPlaces} from './placessave.js';
 
 const dispose = goog.require('goog.dispose');
+
+const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
@@ -99,7 +98,7 @@ export default class KMLPlacesImportUI extends FileImportUI {
       'show-close': 'true'
     };
     var template = '<kmlplaces></kmlplaces>';
-    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+    create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 }
 
@@ -147,8 +146,8 @@ class Controller extends FileImportCtrl {
    * @export
    */
   finish() {
-    var parser = new KMLParser({});
-    var importer = new Importer(parser);
+    const parser = new KMLParser({});
+    const importer = new KMLImporter(parser);
     importer.listenOnce(EventType.COMPLETE, this.onImportComplete_, false, this);
     importer.startImport(this.config['file'].getContent());
   }
@@ -160,42 +159,31 @@ class Controller extends FileImportCtrl {
    * @private
    */
   onImportComplete_(event) {
-    var importer = /** @type {Importer} */ (event.target);
-    var nodes = importer.getData();
-    for (var i = 0; i < nodes.length; i++) {
-      if (nodes[i].label == 'kmlroot' || nodes[i].label == 'Saved Places') {
-        nodes.splice(i, 1);
-        i--;
-      }
-    }
-    var placesManager = getPlacesManager();
-    var rootNode = placesManager ? placesManager.getPlacesRoot() : null;
-    if (rootNode) {
-      var cmds = [];
-      for (var i = 0; i < nodes.length; i++) {
-        var feature = nodes[i].getFeature();
-        if (feature) {
-          nodes[i] = updatePlacemark({
-            'feature': feature,
-            'node': nodes[i],
-            'parent': nodes[i].getParent()
-          });
-          nodes[i].canAddChildren = false;
-          nodes[i].editable = true;
-          nodes[i].internalDrag = true;
-          nodes[i].removable = true;
-
-          var cmd = new KMLNodeAdd(nodes[i], rootNode);
-          cmd.title = 'Save ' + nodes[i].getLabel() + ' to Places';
-          cmds.push(cmd);
-        }
-      }
-      var seq = new SequenceCommand();
-      seq.setCommands(cmds);
-      CommandProcessor.getInstance().addCommand(seq);
+    const importer = /** @type {KMLImporter} */ (event.target);
+    const rootNode = getImportRoot(importer.getRootNode());
+    const placesManager = getPlacesManager();
+    const placesRoot = placesManager ? placesManager.getPlacesRoot() : null;
+    if (rootNode && placesRoot) {
+      saveKMLToPlaces(rootNode);
     }
 
     importer.dispose();
     this.close();
   }
 }
+
+/**
+ * Get the root KML node to import.
+ * @param {KMLNode} node The root KML node to import.
+ * @return {KMLNode}
+ */
+const getImportRoot = (node) => {
+  if (node && node.getLabel() === 'kmlroot' || node.getLabel() === 'Saved Places') {
+    const children = node.getChildren();
+    if (children && children.length === 1) {
+      return getImportRoot(children[0]);
+    }
+  }
+
+  return node;
+};

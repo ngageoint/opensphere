@@ -200,7 +200,7 @@ export const isLayerPresent = function() {
  *
  * @param {!Feature} feature The feature to copy
  * @param {Object=} opt_layerConfig The feature's layer config
- * @return {!ol.Feature}
+ * @return {!Feature}
  */
 export const copyFeature = function(feature, opt_layerConfig) {
   var clone = osOlFeature.clone(feature, CopyableFields);
@@ -244,6 +244,41 @@ export const copyFeature = function(feature, opt_layerConfig) {
   return clone;
 };
 
+/**
+ * Recursively copy a KML node, including attached features.
+ * @param {!KMLNode} node The KML node to copy.
+ * @return {KMLNode} The copied node, if supported.
+ */
+export const copyNode = function(node) {
+  let clone = null;
+  if (node.isFolder()) {
+    clone = updateFolder({
+      'name': node.getLabel() || 'Unnamed Folder'
+    });
+
+    // Keep the collapsed state of the cloned folder.
+    clone.setCollapsed(node.isCollapsed());
+
+    const children = /** @type {Array<!KMLNode>} */ (node.getChildren());
+    if (children) {
+      for (let i = 0; i < children.length; i++) {
+        const childClone = copyNode(children[i]);
+        if (childClone) {
+          clone.addChild(childClone);
+        }
+      }
+    }
+  } else {
+    const feature = node.getFeature();
+    if (feature) {
+      clone = updatePlacemark({
+        'feature': copyFeature(feature)
+      });
+    }
+  }
+
+  return clone;
+};
 
 /**
  * Save features from a source to places.

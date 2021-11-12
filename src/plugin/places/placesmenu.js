@@ -2,7 +2,6 @@ goog.declareModuleId('plugin.places.menu');
 
 import CommandProcessor from '../../os/command/commandprocessor.js';
 import ParallelCommand from '../../os/command/parallelcommand.js';
-import SequenceCommand from '../../os/command/sequencecommand.js';
 import DataManager from '../../os/data/datamanager.js';
 import LayerNode from '../../os/data/layernode.js';
 import RecordField from '../../os/data/recordfield.js';
@@ -17,15 +16,15 @@ import * as layerMenu from '../../os/ui/menu/layermenu.js';
 import * as mapMenu from '../../os/ui/menu/mapmenu.js';
 import MenuItemType from '../../os/ui/menu/menuitemtype.js';
 import * as spatial from '../../os/ui/menu/spatial.js';
-import KMLNodeAdd from '../file/kml/cmd/kmlnodeaddcmd.js';
 import KMLNodeRemove from '../file/kml/cmd/kmlnoderemovecmd.js';
 import KMLLayer from '../file/kml/kmllayer.js';
 import KMLLayerNode from '../file/kml/ui/kmllayernode.js';
 import KMLNode from '../file/kml/ui/kmlnode.js';
-import {createOrEditFolder, createOrEditPlace, getKMLRoot, updateFolder, updatePlacemark} from '../file/kml/ui/kmlui.js';
+import {createOrEditFolder, createOrEditPlace, getKMLRoot} from '../file/kml/ui/kmlui.js';
 import EventType from './eventtype.js';
 import * as places from './places.js';
 import PlacesManager from './placesmanager.js';
+import {saveKMLToPlaces} from './placessave.js';
 import {launchSavePlaces} from './ui/launchsaveplaces.js';
 import * as PlacesUI from './ui/placesui.js';
 import * as QuickAddPlacesUI from './ui/quickaddplaces.js';
@@ -817,70 +816,4 @@ export const saveLayerToPlaces = function(event) {
       }
     }
   }
-};
-
-/**
- * Save a KML tree to places.
- *
- * @param {!Array<KMLNode>|KMLNode} nodes The root KML node to save
- */
-export const saveKMLToPlaces = function(nodes) {
-  // don't allow this if the places root node doesn't exist
-  var rootNode = PlacesManager.getInstance().getPlacesRoot();
-  if (!rootNode) {
-    return;
-  }
-
-  if (!Array.isArray(nodes)) {
-    nodes = [nodes];
-  }
-
-  var cmds = [];
-  for (var i = 0; i < nodes.length; i++) {
-    var node = nodes[i];
-    var clone = copyNode_(node);
-    if (clone) {
-      var cmd = new KMLNodeAdd(clone, rootNode);
-      cmd.title = 'Save ' + node.getLabel() + ' to Places';
-      cmds.push(cmd);
-    }
-  }
-  var seq = new SequenceCommand();
-  seq.setCommands(cmds);
-  CommandProcessor.getInstance().addCommand(seq);
-};
-
-/**
- * Recursively copy a KML node, including attached features.
- *
- * @param {!KMLNode} node The KML node to copy
- * @return {KMLNode}
- */
-const copyNode_ = function(node) {
-  var clone = null;
-  if (node.isFolder()) {
-    clone = updateFolder({
-      'name': node.getLabel() || 'Unnamed Folder'
-    });
-
-    var children = /** @type {Array<!KMLNode>} */ (node.getChildren());
-    if (children) {
-      for (var i = 0; i < children.length; i++) {
-        var childClone = copyNode_(children[i]);
-        if (childClone) {
-          clone.addChild(childClone);
-        }
-      }
-    }
-  } else {
-    var feature = node.getFeature();
-    if (feature) {
-      feature = places.copyFeature(feature);
-      clone = updatePlacemark({
-        'feature': feature
-      });
-    }
-  }
-
-  return clone;
 };
