@@ -265,6 +265,18 @@ export class Controller extends BaseDrawControlsCtrl {
     Settings.getInstance().set(this.key_, evt.type);
     this.toggleMeasure(true);
   }
+
+  /**
+   * @inheritDoc
+   */
+  activateControl(type) {
+    // Cancel any active measure interaction
+    if (this.measureInteraction.getEnabled()) {
+      this.measureInteraction.setEnabled(false);
+    }
+
+    super.activateControl(type);
+  }
 }
 
 /**
