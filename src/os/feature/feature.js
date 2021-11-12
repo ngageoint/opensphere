@@ -90,6 +90,15 @@ export let SortFn;
 export let LOBOptions;
 
 /**
+ * Feature property change events.
+ * @enum {string}
+ */
+export const PropertyChange = {
+  COLOR: 'feature:color',
+  STYLE: 'feature:style'
+};
+
+/**
  * Regular expression to match a title field on a feature.
  * @type {RegExp}
  */

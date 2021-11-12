@@ -263,79 +263,93 @@ const updateShown_ = function() {
    * @type {Object<string, boolean>}
    */
   var visited = {};
-  for (var i = 0, ii = features.length; i < ii; i++) {
-    var feature = features[i];
-    if (!(feature['id'] in visited)) {
-      visited[feature['id']] = true;
 
-      // labels set on the feature config take precedence over source labels
-      var featureConfig = feature.values_[StyleType.FEATURE];
-      var featureLabels = getConfigLabels(featureConfig);
-      var featureSourceId = feature.values_[RecordField.SOURCE_ID];
-      var layerLabels = fields[featureSourceId];
-      var labels = getLabels(featureLabels, layerLabels);
-      var labelText = getLabelsText(feature, labels, featureConfig);
+  const visitFeature = (feature) => {
+    visited[feature['id']] = true;
 
-      var geometry = defaultGeometryFunction(feature);
-      if (!(geometry instanceof SimpleGeometry) || !labelText) {
-        // unsupported geometry type or there is no text to display - ignore it
-        continue;
-      }
+    // labels set on the feature config take precedence over source labels
+    var featureConfig = feature.values_[StyleType.FEATURE];
+    var featureLabels = getConfigLabels(featureConfig);
+    var featureSourceId = feature.values_[RecordField.SOURCE_ID];
+    var layerLabels = fields[featureSourceId];
+    var labels = getLabels(featureLabels, layerLabels);
+    var labelText = getLabelsText(feature, labels, featureConfig);
 
-      // compute the size of the label on screen. this is accurate for Openlayers, not necessarily other renderers
-      var config = getStyleManager().getLayerConfig(featureSourceId);
-      var labelFont = getFont(config[StyleField.LABEL_SIZE]);
-      var labelSize = measureText(labelText, 'feature-label', labelFont);
+    var geometry = defaultGeometryFunction(feature);
+    if (!(geometry instanceof SimpleGeometry) || !labelText) {
+      // unsupported geometry type or there is no text to display - ignore it
+      return;
+    }
 
-      // pad labels by 10px to reduce crowding
-      var xBuffer = (labelSize.width + 5) * resolution;
-      var yBuffer = (labelSize.height + 5) * resolution;
+    // compute the size of the label on screen. this is accurate for Openlayers, not necessarily other renderers
+    var config = getStyleManager().getLayerConfig(featureSourceId);
+    var labelFont = getFont(config[StyleField.LABEL_SIZE]);
+    var labelSize = measureText(labelText, 'feature-label', labelFont);
 
-      // show the label for this feature
-      if (showLabel(feature)) {
-        changed[featureSourceId].push(feature);
-      }
+    // pad labels by 10px to reduce crowding
+    var xBuffer = (labelSize.width + 5) * resolution;
+    var yBuffer = (labelSize.height + 5) * resolution;
 
-      // create the map extent for the label (in 2D without rotation)
-      var labelCenter = olExtent.getCenter(geometry.getExtent());
-      olExtent.createOrUpdateFromCoordinate(labelCenter, extent);
+    // show the label for this feature
+    if (showLabel(feature)) {
+      changed[featureSourceId].push(feature);
+    }
 
-      extent[0] -= xBuffer;
-      extent[1] -= yBuffer;
-      extent[2] += xBuffer;
-      extent[3] += yBuffer;
+    // create the map extent for the label (in 2D without rotation)
+    var labelCenter = olExtent.getCenter(geometry.getExtent());
+    olExtent.createOrUpdateFromCoordinate(labelCenter, extent);
 
-      // hide labels for all neighbors within the label's extent. note this is checking around the center point of the
-      // feature, not where the label will be drawn, but we use the same offset for all labels so the net result is the
-      // same.
-      for (var j = 0, jj = labelSources.length; j < jj; j++) {
-        var labelSource = labelSources[j];
-        var labelSourceId = labelSource.getId();
-        var neighbors = labelSource.getFeaturesInExtent(extent);
-        if (neighbors) {
-          for (var k = 0, kk = neighbors.length; k < kk; k++) {
-            var neighbor = neighbors[k];
-            if (!(neighbor['id'] in visited)) {
-              // non-point geometries need to be tested against the center of their extent, where the label will be
-              // positioned or they may be hidden when they don't need to be.
-              var neighborGeometry = neighbor.getGeometry();
-              if (neighborGeometry && neighborGeometry.getType() != GeometryType.POINT) {
-                var neighborCenter = olExtent.getCenter(neighborGeometry.getExtent());
-                if (!olExtent.containsCoordinate(extent, neighborCenter)) {
-                  // the neighbor's label position is not within the extent of the current label, so don't turn it off
-                  continue;
-                }
+    extent[0] -= xBuffer;
+    extent[1] -= yBuffer;
+    extent[2] += xBuffer;
+    extent[3] += yBuffer;
+
+    // hide labels for all neighbors within the label's extent. note this is checking around the center point of the
+    // feature, not where the label will be drawn, but we use the same offset for all labels so the net result is the
+    // same.
+    for (var j = 0, jj = labelSources.length; j < jj; j++) {
+      var labelSource = labelSources[j];
+      var labelSourceId = labelSource.getId();
+      var neighbors = labelSource.getFeaturesInExtent(extent);
+      if (neighbors) {
+        for (var k = 0, kk = neighbors.length; k < kk; k++) {
+          var neighbor = neighbors[k];
+          if (!(neighbor['id'] in visited)) {
+            // non-point geometries need to be tested against the center of their extent, where the label will be
+            // positioned or they may be hidden when they don't need to be.
+            var neighborGeometry = neighbor.getGeometry();
+            if (neighborGeometry && neighborGeometry.getType() != GeometryType.POINT) {
+              var neighborCenter = olExtent.getCenter(neighborGeometry.getExtent());
+              if (!olExtent.containsCoordinate(extent, neighborCenter)) {
+                // the neighbor's label position is not within the extent of the current label, so don't turn it off
+                return;
               }
+            }
 
-              visited[neighbor['id']] = true;
+            visited[neighbor['id']] = true;
 
-              if (hideLabel(neighbor)) {
-                changed[labelSourceId].push(neighbor);
-              }
+            if (hideLabel(neighbor)) {
+              changed[labelSourceId].push(neighbor);
             }
           }
         }
       }
+    }
+  };
+
+  // First show labels for all features with the override flag set.
+  for (var i = 0, ii = features.length; i < ii; i++) {
+    var feature = features[i];
+    if (feature.values_[RecordField.FORCE_SHOW_LABEL] && !(feature['id'] in visited)) {
+      visitFeature(feature);
+    }
+  }
+
+  // Then process everything else that hasn't already been visited.
+  for (var i = 0, ii = features.length; i < ii; i++) {
+    var feature = features[i];
+    if (!(feature['id'] in visited)) {
+      visitFeature(feature);
     }
   }
 

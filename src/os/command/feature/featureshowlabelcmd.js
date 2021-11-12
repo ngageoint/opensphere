@@ -1,8 +1,8 @@
 goog.declareModuleId('os.command.FeatureShowLabel');
 
+import RecordField from '../../data/recordfield.js';
 import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
-import * as label from '../../style/label.js';
-import StyleField from '../../style/stylefield.js';
+import {updateShown} from '../../style/label.js';
 import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
 const Feature = goog.requireType('ol.Feature');
@@ -36,7 +36,7 @@ export default class FeatureShowLabel extends AbstractFeatureStyle {
       return null;
     }
 
-    var showLabels = feature.get(StyleField.SHOW_LABELS);
+    var showLabels = feature.get(RecordField.FORCE_SHOW_LABEL);
     return showLabels ? showLabels : true;
   }
 
@@ -45,7 +45,7 @@ export default class FeatureShowLabel extends AbstractFeatureStyle {
    */
   applyValue(configs, value) {
     var feature = /** @type {Feature} */ (this.getFeature());
-    feature.set(StyleField.SHOW_LABELS, value);
+    feature.set(RecordField.FORCE_SHOW_LABEL, value);
     super.applyValue(configs, value);
   }
 
@@ -54,7 +54,7 @@ export default class FeatureShowLabel extends AbstractFeatureStyle {
    */
   finish(configs) {
     // label overlap will likely change, so update them
-    label.updateShown();
+    updateShown();
     super.finish(configs);
   }
 }

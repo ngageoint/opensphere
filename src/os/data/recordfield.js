@@ -15,6 +15,7 @@ const RecordField = {
   GEOM: 'geometry',
   DRAWING_LAYER_NODE: '_node',
   FEATURE_TYPE: '_featureType',
+  FORCE_SHOW_LABEL: '_forceShowLabel',
   HTML_DESCRIPTION: '_htmlDescription',
   INTERACTIVE: '_interactive',
   LINE_OF_BEARING: 'lineOfBearing',

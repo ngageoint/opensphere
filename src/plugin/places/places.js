@@ -27,6 +27,7 @@ const {getUid} = goog.require('ol');
 const Feature = goog.require('ol.Feature');
 const Geometry = goog.require('ol.geom.Geometry');
 
+const {LabelConfig} = goog.requireType('os.style.label');
 const {default: KMLLayerNode} = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
 const {default: PlacesManager} = goog.requireType('plugin.places.PlacesManager');
@@ -74,7 +75,7 @@ export const ExportFields = [
   StyleField.CENTER_SHAPE,
   StyleField.SHAPE,
   StyleField.LABELS,
-  StyleField.SHOW_LABELS,
+  RecordField.FORCE_SHOW_LABEL,
   StyleField.SHOW_LABEL_COLUMNS,
   StyleField.LABEL_COLOR,
   StyleField.LABEL_SIZE,
@@ -151,6 +152,15 @@ export let FolderOptions;
 export let PlaceOptions;
 
 /**
+ * Get the default label config for Places.
+ * @return {!Array<!LabelConfig>}
+ */
+export const getDefaultLabels = () => ([{
+  'column': KMLField.NAME,
+  'showColumn': false
+}]);
+
+/**
  * The global PlacesManager instance. This is used to deconflict circular dependencies.
  */
 let placesManager;
@@ -215,6 +225,10 @@ export const copyFeature = function(feature, opt_layerConfig) {
   if (!isIcon && featureConfig['image']) {
     delete featureConfig['image']['src'];
     delete featureConfig['image']['scale'];
+  }
+
+  if (!featureConfig[StyleField.LABELS]) {
+    featureConfig[StyleField.LABELS] = getDefaultLabels();
   }
 
   clone.set(StyleType.FEATURE, featureConfig);

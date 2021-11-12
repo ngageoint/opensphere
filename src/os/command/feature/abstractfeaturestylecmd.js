@@ -3,6 +3,8 @@ goog.declareModuleId('os.command.AbstractFeatureStyle');
 import EventType from '../../action/eventtype.js';
 import DataManager from '../../data/datamanager.js';
 import * as dispatcher from '../../dispatcher.js';
+import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import {PropertyChange} from '../../feature/feature.js';
 import {getMapContainer} from '../../map/mapinstance.js';
 import * as osStyle from '../../style/style.js';
 import StyleType from '../../style/styletype.js';
@@ -78,6 +80,7 @@ export default class AbstractFeatureStyle extends AbstractStyle {
     var layer = getMapContainer().getLayer(this.layerId);
     asserts.assert(layer, 'layer must be defined');
     osStyle.notifyStyleChange(layer, [feature]);
+    feature.dispatchEvent(new PropertyChangeEvent(PropertyChange.STYLE));
   }
 
   /**

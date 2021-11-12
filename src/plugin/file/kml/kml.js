@@ -126,8 +126,7 @@ export const SOURCE_FIELDS = [
   StyleField.LABELS,
   StyleField.LABEL_COLOR,
   StyleField.LABEL_SIZE,
-  StyleField.FILL_COLOR,
-  StyleField.SHOW_LABELS
+  StyleField.FILL_COLOR
 ];
 
 // extend column auto size rules to include KML columns
