@@ -230,7 +230,7 @@ export class Controller extends AbstractGroupByTreeSearchCtrl {
    */
   onFail_(event) {
     AlertManager.getInstance().sendAlert(
-        'Could not handle file with drag and drop. Try again or use the browse capability.');
+        'Could not handle file with drag and drop. Try again or use the Import button.');
   }
 
   /**
