@@ -19,9 +19,9 @@ import StyleField from '../../style/stylefield.js';
 import {tagsFromXML} from '../../tag/tag.js';
 import {isLayerDeprecated, showDeprecatedWarning} from '../../ui/util/deprecated.js';
 import {addBase} from '../../uri/uri.js';
-import {hasUrlScheme} from '../../url/url.js';
 import {appendElement, appendElementNS, createElement, getElementValueOrDefault} from '../../xml.js';
 import AbstractState from '../abstractstate.js';
+import {isLayerRemote} from '../state.js';
 import {getStateManager} from '../stateinstance.js';
 import XMLState from '../xmlstate.js';
 import LayerTag from './layertag.js';
@@ -87,24 +87,6 @@ export default class BaseLayerState extends XMLState {
   }
 
   /**
-   * Checks if a layer was loaded using only remote resources.
-   *
-   * @param {Object<string, *>} layerOptions The layer options.
-   * @return {boolean} If the layer was loaded from the file system.
-   * @protected
-   */
-  isRemote(layerOptions) {
-    const url = /** @type {string|undefined} */ (layerOptions['url']);
-    const url2 = /** @type {string|undefined} */ (layerOptions['url2']);
-    const urls = /** @type {Array<string>|undefined} */ (layerOptions['urls']) || [];
-
-    // Considered remote if at least one URL exists, and every defined URL has a remote scheme. Scheme-relative URL's
-    // are generally discouraged and not considered.
-    const definedUrls = [url, url2, ...urls].filter((url) => !!url);
-    return definedUrls.length > 0 && definedUrls.every(hasUrlScheme);
-  }
-
-  /**
    * Checks if the provided layer is valid for addition to the state file
    *
    * @param {ILayer} layer The layer
@@ -127,7 +109,7 @@ export default class BaseLayerState extends XMLState {
       }
 
       // skip resources that are not remote (these are handled separately)
-      return this.isRemote(layerOptions);
+      return isLayerRemote(layerOptions);
     } catch (e) {
       // may not be a ILayer... so don't persist it
     }

@@ -4,6 +4,7 @@ import CommandProcessor from '../command/commandprocessor.js';
 import DataManager from '../data/datamanager.js';
 import BaseProvider from '../ui/data/baseprovider.js';
 import DescriptorProvider from '../ui/data/descriptorprovider.js';
+import {hasUrlScheme} from '../url/url.js';
 import Tag from './tag.js';
 
 const {defaultCompare} = goog.require('goog.array');
@@ -131,4 +132,38 @@ export const deleteStates = function(list) {
 export const isStateFile = function(id) {
   var words = id && id.split(BaseProvider.ID_DELIMITER);
   return words ? words[0] === 'state' || words[0] === 'pubstate' : false;
+};
+
+/**
+ * Properties in layer options that may contain a URL used to load the layer.
+ * @type {!Array<string>}
+ */
+const urlProperties = ['url', 'url2', 'urls'];
+
+/**
+ * Registers a property that will be tested from the layer's options to determine if it should be included in a state
+ * file. The property value should be a URL or list of URL's, and the layer will be included if all defined URL's are
+ * to a remote resource.
+ * @param {string} prop The property.
+ */
+export const registerLayerStateUrlProperty = (prop) => {
+  if (!urlProperties.includes(prop)) {
+    urlProperties.push(prop);
+  }
+};
+
+/**
+ * Checks if a layer was loaded using only remote resources.
+ *
+ * @param {Object<string, *>} layerOptions The layer options.
+ * @return {boolean} If the layer was loaded from the file system.
+ * @protected
+ */
+export const isLayerRemote = (layerOptions) => {
+  // Get all values, flatten in case any contain an array, and filter out falsey values.
+  const definedUrls = urlProperties.map((prop) => layerOptions[prop]).flat().filter((url) => !!url);
+
+  // Considered remote if at least one URL exists, and every defined URL has a remote scheme. Scheme-relative URL's
+  // are generally discouraged and not considered.
+  return definedUrls.length > 0 && definedUrls.every(hasUrlScheme);
 };
