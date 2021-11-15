@@ -7,6 +7,12 @@ goog.declareModuleId('os.url');
 export const MAILTO_REGEXP = /^mailto:/;
 
 /**
+ * Regular expression to test if a string starts with a URL scheme.
+ * @type {RegExp}
+ */
+export const URL_SCHEME_REGEXP = /^(ftp|http|https):\/\//;
+
+/**
  * Regular expression for validating URLs.  Copied from Angular.js.  This one is good for testing things you expect to
  * be a single URL (as opposed to multiple).
  * @type {RegExp}
@@ -19,6 +25,20 @@ export const URL_REGEXP = /^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?
  * @type {RegExp}
  */
 export const URL_REGEXP_LINKY = /((ftp|https?):\/\/|(mailto:)?[A-Za-z0-9._%+-]+@)[^\s'"]*[^\s.;,{}<>'"]/;
+
+/**
+ * Test if a string has a URL scheme.
+ * @param {string|null|undefined} value The value.
+ * @return {boolean}
+ */
+export const hasUrlScheme = (value) => !!value && URL_SCHEME_REGEXP.test(value);
+
+/**
+ * Test if a string is a URL.
+ * @param {string|null|undefined} value The value.
+ * @return {boolean}
+ */
+export const isUrl = (value) => !!value && URL_REGEXP.test(value);
 
 /**
  * Convert a {@link goog.Uri.QueryData} to an object.

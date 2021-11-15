@@ -5,7 +5,7 @@ import AlertManager from '../../alert/alertmanager.js';
 import {isColorString, padHexColor, toRgbArray, toServerString} from '../../color.js';
 import LayerAdd from '../../command/layeraddcmd.js';
 import DataManager from '../../data/datamanager.js';
-import {isLocal, isFileSystem} from '../../file/index.js';
+import {isLocal} from '../../file/index.js';
 import MappingManager from '../../im/mapping/mappingmanager.js';
 import LayerConfigManager from '../../layer/config/layerconfigmanager.js';
 import * as osMap from '../../map/map.js';
@@ -21,6 +21,7 @@ import {isLayerDeprecated, showDeprecatedWarning} from '../../ui/util/deprecated
 import {addBase} from '../../uri/uri.js';
 import {appendElement, appendElementNS, createElement, getElementValueOrDefault} from '../../xml.js';
 import AbstractState from '../abstractstate.js';
+import {isLayerRemote} from '../state.js';
 import {getStateManager} from '../stateinstance.js';
 import XMLState from '../xmlstate.js';
 import LayerTag from './layertag.js';
@@ -86,30 +87,6 @@ export default class BaseLayerState extends XMLState {
   }
 
   /**
-   * Checks if a layer was loaded from local data
-   *
-   * @param {Object<string, *>} layerOptions The layer options
-   * @return {boolean} If the layer contains local data
-   * @protected
-   */
-  hasLocalData(layerOptions) {
-    return isLocal(/** @type {string|undefined} */ (layerOptions['url'])) ||
-        isLocal(/** @type {string|undefined} */ (layerOptions['url2']));
-  }
-
-  /**
-   * Checks if a layer was loaded from the file system.
-   *
-   * @param {Object<string, *>} layerOptions The layer options.
-   * @return {boolean} If the layer was loaded from the file system.
-   * @protected
-   */
-  hasFileSystemData(layerOptions) {
-    return isFileSystem(/** @type {string|undefined} */ (layerOptions['url'])) ||
-        isFileSystem(/** @type {string|undefined} */ (layerOptions['url2']));
-  }
-
-  /**
    * Checks if the provided layer is valid for addition to the state file
    *
    * @param {ILayer} layer The layer
@@ -131,8 +108,8 @@ export default class BaseLayerState extends XMLState {
         return false;
       }
 
-      // skip local/file system data (these are handled separately)
-      return !this.hasLocalData(layerOptions) && !this.hasFileSystemData(layerOptions);
+      // skip resources that are not remote (these are handled separately)
+      return isLayerRemote(layerOptions);
     } catch (e) {
       // may not be a ILayer... so don't persist it
     }
