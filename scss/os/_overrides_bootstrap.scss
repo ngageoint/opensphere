@@ -161,7 +161,10 @@ ul {
 }
 
 // Replace the autofilled input colors in Webkit-based browsers
-@-webkit-keyframes autofill { // stylelint-disable-line at-rule-no-vendor-prefix
+// Reference: https://stackoverflow.com/a/37432260
+
+// stylelint-disable at-rule-no-vendor-prefix, property-no-vendor-prefix
+@-webkit-keyframes autofill {
   to {
     background: $input-bg;
     color: $input-color;
@@ -169,9 +172,10 @@ ul {
 }
 
 input:-webkit-autofill {
-  -webkit-animation-fill-mode: both; // stylelint-disable-line property-no-vendor-prefix
-  -webkit-animation-name: autofill; // stylelint-disable-line property-no-vendor-prefix
+  -webkit-animation-fill-mode: both;
+  -webkit-animation-name: autofill;
 }
+// stylelint-enable at-rule-no-vendor-prefix, property-no-vendor-prefix
 
 .mb-1px {
   margin-bottom: 1px;

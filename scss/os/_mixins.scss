@@ -1,11 +1,9 @@
 @mixin grab-cursor {
   cursor: grab;
-  cursor: -webkit-grab; // stylelint-disable-line declaration-block-no-duplicate-properties, value-no-vendor-prefix
 }
 
 @mixin grabbing-cursor {
   cursor: grabbing;
-  cursor: -webkit-grabbing; // stylelint-disable-line declaration-block-no-duplicate-properties, value-no-vendor-prefix
 }
 
 // This extends bootstraps bg-<variants> to also have background colors
@@ -45,18 +43,16 @@
 }
 
 @mixin font-awesome {
-  // stylelint-disable order/properties-alphabetical-order
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
   display: inline-block;
   // Fall back on the Font Awesome 4 font-family for backward compatibility.
   font-family: 'Font Awesome 5 Free', 'FontAwesome';
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
   font-style: normal;
   font-variant: normal;
   font-weight: 900;
   line-height: 1;
   text-rendering: auto;
-  // stylelint-enable order/properties-alphabetical-order
 }
 
 @mixin u-bg-color-content($color) {
