@@ -39,7 +39,6 @@ export default class HtmlRenderer extends ElementRenderer {
         var pixelRatio = canvas.width / rect.width;
         var options = {
           backgroundColor: null,
-          canvas: canvas,
           scale: pixelRatio
         };
 
