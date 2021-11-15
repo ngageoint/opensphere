@@ -67,6 +67,13 @@ export default class BaseParserConfig {
   }
 
   /**
+   * Clear preview data from the config.
+   */
+  clearPreview() {
+    this['preview'] = [];
+  }
+
+  /**
    * Updates the preview data and columns from the source.
    *
    * @param {Array<IMapping>=} opt_mappings Mappings to apply to preview items.
