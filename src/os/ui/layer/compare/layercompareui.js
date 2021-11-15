@@ -1,6 +1,11 @@
 goog.declareModuleId('os.ui.layer.compare.LayerCompareUI');
 
+import EventType from '../../../action/eventtype.js';
 import * as capture from '../../../capture/capture.js';
+import LayerEventType from '../../../events/layereventtype.js';
+import {normalizeToCenter} from '../../../extent.js';
+import {getGeometries} from '../../../feature/feature.js';
+import {reduceExtentFromLayers, reduceExtentFromGeometries} from '../../../fn/fn.js';
 import osImplements from '../../../implements.js';
 import instanceOf from '../../../instanceof.js';
 import ILayer from '../../../layer/ilayer.js';
@@ -9,6 +14,7 @@ import {getMapContainer} from '../../../map/mapinstance.js';
 import {getMaxFeatures} from '../../../ogc/ogc.js';
 import {ROOT} from '../../../os.js';
 import SourceClass from '../../../source/sourceclass.js';
+import {getLayersFromContext, visibleIfSupported} from '../../../ui/menu/layermenu.js';
 import Menu from '../../menu/menu.js';
 import MenuItem from '../../menu/menuitem.js';
 import MenuItemType from '../../menu/menuitemtype.js';
@@ -29,12 +35,17 @@ const View = goog.require('ol.View');
 const RotateControl = goog.require('ol.control.Rotate');
 const ZoomControl = goog.require('ol.control.Zoom');
 const {getCenter: getExtentCenter} = goog.require('ol.extent');
+const OLVectorSource = goog.require('ol.source.Vector');
+const olExtent = goog.require('ol.extent');
 
 const EventKey = goog.requireType('goog.events.Key');
 const Control = goog.requireType('ol.control.Control');
 const Layer = goog.requireType('ol.layer.Layer');
+const LayerEvent = goog.requireType('os.events.LayerEvent');
+const {Context} = goog.requireType('os.ui.menu.layer');
 const {default: ISource} = goog.requireType('os.source.ISource');
 const {default: VectorSource} = goog.requireType('os.source.Vector');
+const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
@@ -56,6 +67,7 @@ const Selector = {
 const MenuEventType = {
   MOVE_LEFT: 'compare:moveLeft',
   MOVE_RIGHT: 'compare:moveRight',
+  GO_TO: 'compare:goTo',
   REMOVE: 'compare:remove'
 };
 
@@ -226,13 +238,24 @@ export class Controller {
         eventType: MenuEventType.MOVE_RIGHT,
         icons: ['<i class="fas fa-fw fa-angle-right"></i>'],
         tooltip: 'Move the selected layers to the right map',
-        handler: this.moveSelected.bind(this, 'right')
+        handler: this.moveSelected.bind(this, 'right'),
+        beforeRender: goog.partial(canMove, 'right'),
+        sort: 0
+      }, {
+        label: 'Go To',
+        eventType: EventType.GOTO,
+        icons: ['<i class="fa fa-fw fa-fighter-jet"></i>'],
+        tooltip: 'Repositions the map to show the layer',
+        handler: this.goTo.bind(this),
+        beforeRender: visibleIfSupported,
+        sort: 10
       }, {
         label: 'Remove',
         eventType: MenuEventType.REMOVE,
         icons: ['<i class="fas fa-fw fa-times"></i>'],
         tooltip: 'Remove the selected layers from the Layer Comparison',
-        handler: this.removeSelected.bind(this, 'left')
+        handler: this.removeSelected.bind(this, 'left'),
+        sort: 20
       }]
     }));
 
@@ -273,13 +296,24 @@ export class Controller {
         eventType: MenuEventType.MOVE_LEFT,
         icons: ['<i class="fas fa-fw fa-angle-left"></i>'],
         tooltip: 'Move the selected layers to the left map',
-        handler: this.moveSelected.bind(this, 'left')
+        handler: this.moveSelected.bind(this, 'left'),
+        beforeRender: goog.partial(canMove, 'left'),
+        sort: 0
+      }, {
+        label: 'Go To',
+        eventType: EventType.GOTO,
+        icons: ['<i class="fa fa-fw fa-fighter-jet"></i>'],
+        tooltip: 'Repositions the map to show the layer',
+        handler: this.goTo.bind(this),
+        beforeRender: visibleIfSupported,
+        sort: 10
       }, {
         label: 'Remove',
         eventType: MenuEventType.REMOVE,
         icons: ['<i class="fas fa-fw fa-times"></i>'],
         tooltip: 'Remove the selected layers from the Layer Comparison',
-        handler: this.removeSelected.bind(this, 'right')
+        handler: this.removeSelected.bind(this, 'right'),
+        sort: 20
       }]
     }));
 
@@ -322,6 +356,8 @@ export class Controller {
       this.dragListeners = null;
     }
 
+    getMapContainer().unlisten(LayerEventType.REMOVE, this.onLayerRemoved, false, this);
+
     dispose(this.leftMap);
     dispose(this.rightMap);
     dispose(this.view);
@@ -363,9 +399,11 @@ export class Controller {
     // Make the left map container 50% width for an initial split view.
     this.element.find(Selector.MAP_LEFT).width('50%');
 
-    const compareOptions = /** @type {LayerCompareOptions} */ (this.scope);
+    // listen for layer remove events so we can remove them from the compare
+    getMapContainer().listen(LayerEventType.REMOVE, this.onLayerRemoved, false, this);
 
     // Set the layers on each map.
+    const compareOptions = /** @type {LayerCompareOptions} */ (this.scope);
     this.setLeftLayers(compareOptions.left);
     this.setRightLayers(compareOptions.right);
   }
@@ -406,10 +444,17 @@ export class Controller {
   /**
    * Checks whether a layer is present in the comparison window.
    * @param {Layer|ILayer} layer The layer to check.
+   * @param {string=} opt_target Optional target side to check.
    * @return {boolean} Whether we have the layer.
    */
-  hasLayer(layer) {
+  hasLayer(layer, opt_target) {
     layer = /** @type {Layer} */ (layer);
+    if (opt_target == 'left') {
+      return this.leftLayers.getArray().includes(layer);
+    } else if (opt_target == 'right') {
+      return this.rightLayers.getArray().includes(layer);
+    }
+
     return this.leftLayers.getArray().includes(layer) || this.rightLayers.getArray().includes(layer);
   }
 
@@ -532,6 +577,24 @@ export class Controller {
   }
 
   /**
+   * Whether the selection can be moved to the right.
+   * @return {boolean}
+   * @export
+   */
+  disableMoveRight() {
+    return this.leftSelected.length == 0 || this.leftSelected.some((node) => this.hasLayer(node.getLayer(), 'right'));
+  }
+
+  /**
+   * Whether the selection can be moved to the left.
+   * @return {boolean}
+   * @export
+   */
+  disableMoveLeft() {
+    return this.rightSelected.length == 0 || this.rightSelected.some((node) => this.hasLayer(node.getLayer(), 'left'));
+  }
+
+  /**
    * Removes selected layers from a side.
    * @param {string} from The side to move to.
    */
@@ -547,6 +610,74 @@ export class Controller {
       const leftUnselectedLayers = leftLayerArr.filter((layer) => !layers.includes(layer));
       this.setLeftLayers(leftUnselectedLayers);
     }
+  }
+
+  /**
+   * Removes a layer from the compare.
+   * @param {Layer|ILayer} layer The layer to remove.
+   */
+  remove(layer) {
+    // please the compiler and our terrible layer typing
+    layer = /** @type {Layer} */ (layer);
+
+    const rightLayerArr = this.rightLayers.getArray().filter((item) => item !== layer);
+    const leftLayerArr = this.leftLayers.getArray().filter((item) => item !== layer);
+
+    // if layers were filtered out, reset with the new array
+    if (this.rightLayers.getLength() > rightLayerArr.length) {
+      this.setRightLayers(rightLayerArr);
+    }
+
+    if (this.leftLayers.getLength() > leftLayerArr.length) {
+      this.setLeftLayers(leftLayerArr);
+    }
+  }
+
+  /**
+   * Handle the "Go To" menu event.
+   * @param {!MenuEvent<Context>} event The menu event.
+   */
+  goTo(event) {
+    // aggregate the features and execute flyTo, in case they have altitude and pure extent wont cut it
+    const layers = getLayersFromContext(event.getContext());
+    const features = layers.reduce((feats, layer) => {
+      let source = layer.getSource();
+      if (source instanceof OLVectorSource) {
+        source = /** @type {OLVectorSource} */ (source);
+        const newFeats = source.getFeatures();
+        return newFeats.length > 0 ? feats.concat(newFeats) : feats;
+      }
+      return feats;
+    }, []);
+
+    let extent;
+    if (features && features.length) {
+      extent = getGeometries(features).reduce(reduceExtentFromGeometries, olExtent.createEmpty());
+    } else {
+      extent = layers.reduce(reduceExtentFromLayers, olExtent.createEmpty());
+    }
+
+    if (extent && extent.indexOf(Infinity) != -1 || extent.indexOf(-Infinity) != -1) {
+      return;
+    }
+
+    // just use the left map here, either one works since their views are synchronized
+    const leftView = this.leftMap.getView();
+    const buffer = .1;
+
+    if (olExtent.getWidth(extent) < buffer && olExtent.getHeight(extent) < buffer) {
+      extent = olExtent.buffer(extent, buffer);
+    }
+
+    // In 2D views, projections supporting wrapping can pan "multiple worlds" over. We want to pan the least
+    // amount possible to go to the spot and avoid jumping "multiple worlds" back to the "origin world"
+    extent = normalizeToCenter(extent, leftView.getCenter()[0]);
+
+    leftView.fit(extent, {
+      duration: 1000,
+      maxZoom: osMap.MAX_AUTO_ZOOM,
+      constrainResolution: true
+    });
   }
 
   /**
@@ -659,6 +790,16 @@ export class Controller {
   }
 
   /**
+   * Handles layer remove events from the main map.
+   * @param {LayerEvent} event
+   */
+  onLayerRemoved(event) {
+    if (this.hasLayer(event.layer)) {
+      this.remove(event.layer);
+    }
+  }
+
+  /**
    * Update the OpenLayers map canvases to fill the container.
    * @protected
    */
@@ -708,6 +849,21 @@ export const getCompareController = () => {
   }
 
   return null;
+};
+
+/**
+ * Checks whether a layer can be moved.
+ * @param {string} target Target side to check.
+ * @param {Context} context The menu context.
+ * @this {MenuItem}
+ */
+const canMove = function(target, context) {
+  const layers = getLayersFromContext(context);
+  const controller = getCompareController();
+
+  if (controller && layers.some((l) => controller.hasLayer(l, target))) {
+    this.visible = false;
+  }
 };
 
 /**
@@ -778,3 +934,9 @@ const countFeatures = (layerArray) => {
     return 0;
   }
 };
+
+/**
+ * Maximum zoom used for go to/fly to operations
+ * @type {number}
+ */
+export const MAX_AUTO_ZOOM = 18;

@@ -123,13 +123,13 @@ export const setup = function() {
         label: 'Add to Left Compare',
         tooltip: 'Add the layer to the left side of the Layer Compare window',
         icons: ['<i class="fas fa-fw fa-layer-group"></i>'],
-        beforeRender: visibleIfCanAddToCompare,
+        beforeRender: goog.partial(visibleIfCanAddToCompare, 'left'),
         handler: handleAddLeftCompareLayers
       }, {
         label: 'Add to Right Compare',
         tooltip: 'Add the layer to the right side of the Layer Compare window',
         icons: ['<i class="fas fa-fw fa-layer-group"></i>'],
-        beforeRender: visibleIfCanAddToCompare,
+        beforeRender: goog.partial(visibleIfCanAddToCompare, 'right'),
         handler: handleAddRightCompareLayers
       }, {
         label: 'Go To',
@@ -651,11 +651,12 @@ const handleCompareLayers = function(event) {
 };
 
 /**
- * Show when selecting at least 1 layer and the Layer Compare window is already open.
+ * Show when an item isn't already on one side of the compare.
+ * @param {string} target The target side to check.
  * @param {Context} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfCanAddToCompare = function(context) {
+const visibleIfCanAddToCompare = function(target, context) {
   let layers = getLayersFromContext(context);
   const controller = LayerCompareUI.getCompareController();
 
@@ -664,10 +665,10 @@ const visibleIfCanAddToCompare = function(context) {
 
   let hasLayer = false;
   if (controller && layers) {
-    hasLayer = layers.some((layer) => controller.hasLayer(layer));
+    hasLayer = layers.some((layer) => controller.hasLayer(layer, target));
   }
 
-  this.visible = LayerCompareUI.exists() && !!layers && layers.length > 0 && !hasLayer;
+  this.visible = !!controller && !!layers && layers.length > 0 && !hasLayer;
 };
 
 /**
