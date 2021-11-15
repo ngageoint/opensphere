@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.layer.compare.LayerCompareUI');
 
+import EventType from '../../../action/eventtype.js';
 import * as capture from '../../../capture/capture.js';
 import LayerEventType from '../../../events/layereventtype.js';
 import {normalizeToCenter} from '../../../extent.js';
@@ -13,7 +14,7 @@ import {getMapContainer} from '../../../map/mapinstance.js';
 import {getMaxFeatures} from '../../../ogc/ogc.js';
 import {ROOT} from '../../../os.js';
 import SourceClass from '../../../source/sourceclass.js';
-import {getLayersFromContext} from '../../../ui/menu/layermenu.js';
+import {getLayersFromContext, visibleIfSupported} from '../../../ui/menu/layermenu.js';
 import Menu from '../../menu/menu.js';
 import MenuItem from '../../menu/menuitem.js';
 import MenuItemType from '../../menu/menuitemtype.js';
@@ -242,10 +243,11 @@ export class Controller {
         sort: 0
       }, {
         label: 'Go To',
-        eventType: MenuEventType.GO_TO,
+        eventType: EventType.GOTO,
         icons: ['<i class="fa fa-fw fa-fighter-jet"></i>'],
         tooltip: 'Repositions the map to show the layer',
         handler: this.goTo.bind(this),
+        beforeRender: visibleIfSupported,
         sort: 10
       }, {
         label: 'Remove',
@@ -299,10 +301,11 @@ export class Controller {
         sort: 0
       }, {
         label: 'Go To',
-        eventType: MenuEventType.GO_TO,
+        eventType: EventType.GOTO,
         icons: ['<i class="fa fa-fw fa-fighter-jet"></i>'],
         tooltip: 'Repositions the map to show the layer',
         handler: this.goTo.bind(this),
+        beforeRender: visibleIfSupported,
         sort: 10
       }, {
         label: 'Remove',
@@ -617,18 +620,15 @@ export class Controller {
     // please the compiler and our terrible layer typing
     layer = /** @type {Layer} */ (layer);
 
-    const rightLayerArr = this.rightLayers.getArray().slice();
-    const leftLayerArr = this.leftLayers.getArray().slice();
-    const rightIndex = rightLayerArr.indexOf(layer);
-    const leftIndex = leftLayerArr.indexOf(layer);
+    const rightLayerArr = this.rightLayers.getArray().filter((item) => item !== layer);
+    const leftLayerArr = this.leftLayers.getArray().filter((item) => item !== layer);
 
-    if (rightIndex != -1) {
-      rightLayerArr.splice(rightIndex, 1);
+    // if layers were filtered out, reset with the new array
+    if (this.rightLayers.getLength() > rightLayerArr.length) {
       this.setRightLayers(rightLayerArr);
     }
 
-    if (leftIndex != -1) {
-      leftLayerArr.splice(leftIndex, 1);
+    if (this.leftLayers.getLength() > leftLayerArr.length) {
       this.setLeftLayers(leftLayerArr);
     }
   }
@@ -675,7 +675,7 @@ export class Controller {
 
     leftView.fit(extent, {
       duration: 1000,
-      maxZoom: 18,
+      maxZoom: osMap.MAX_AUTO_ZOOM,
       constrainResolution: true
     });
   }
@@ -852,7 +852,7 @@ export const getCompareController = () => {
 };
 
 /**
- * Checks whether a layer is present in the comparison window.
+ * Checks whether a layer can be moved.
  * @param {string} target Target side to check.
  * @param {Context} context The menu context.
  * @this {MenuItem}
