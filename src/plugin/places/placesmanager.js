@@ -1,7 +1,6 @@
 goog.declareModuleId('plugin.places.PlacesManager');
 
 import ActionEventType from '../../os/action/eventtype.js';
-import * as config from '../../os/config/config.js';
 import Settings from '../../os/config/settings.js';
 import ZOrder from '../../os/data/zorder.js';
 import * as dispatcher from '../../os/dispatcher.js';
@@ -13,7 +12,6 @@ import OSFilterImportUI from '../../os/filter/im/osfilterimportui.js';
 import {noop} from '../../os/fn/fn.js';
 import LayerType from '../../os/layer/layertype.js';
 import MapContainer from '../../os/mapcontainer.js';
-import {merge} from '../../os/object/object.js';
 import {incrementResetTasks, decrementResetTasks} from '../../os/storage/storage.js';
 import {DEFAULT_LAYER_COLOR} from '../../os/style/style.js';
 import ImportEvent from '../../os/ui/im/importevent.js';
@@ -50,6 +48,44 @@ const STORAGE_URL = getLocalUrl(btoa(STORAGE_NAME));
  * @const
  */
 const LAYER_OPTIONS = 'places.options';
+
+/**
+ * These options should always take precedence over the base options or options saved from settings.
+ * @type {!Object}
+ */
+export const ADMIN_OPTIONS = {
+  'animate': true,
+  'editable': true,
+  'id': places.ID,
+  'layerType': LayerType.REF,
+  'load': true,
+  'logger': 'plugin.places.PlacesManager',
+  'showLabels': true,
+  'showRoot': false,
+  'title': places.TITLE,
+  'type': PlacesLayerConfig.ID,
+  'url': STORAGE_URL
+};
+
+/**
+ * Base options that could potentially be changed by user interaction.
+ * @type {!Object}
+ */
+export const BASE_OPTIONS = {
+  'color': DEFAULT_LAYER_COLOR,
+  'collapsed': true,
+  'columns': places.SourceFields,
+  'labels': places.getDefaultLabels()
+};
+
+/**
+ * Get the initial layer options for the Saved Places layer.
+ * @return {!Object}
+ */
+const getLayerOptions = () => {
+  const savedOptions = /** @type {!Object} */ (Settings.getInstance().get(LAYER_OPTIONS, {}));
+  return Object.assign({}, BASE_OPTIONS, savedOptions, ADMIN_OPTIONS);
+};
 
 /**
  * The PlacesManager instance.
@@ -211,20 +247,6 @@ export default class PlacesManager extends AbstractKMLManager {
   }
 
   /**
-   * @inheritDoc
-   */
-  getOptions() {
-    const options = this.options;
-    // see if any layer options were persisted to settings
-    const saved = /** @type {?Object} */ (Settings.getInstance().get(LAYER_OPTIONS));
-    if (saved) {
-      merge(saved, options, true);
-    }
-
-    return options;
-  }
-
-  /**
    * Clears the storage key when application settings are reset.
    *
    * @param {goog.events.Event} event
@@ -308,25 +330,7 @@ export default class PlacesManager extends AbstractKMLManager {
    */
   static getInstance() {
     if (!PlacesManagerInstance) {
-      const OPTIONS = {
-        'animate': true,
-        'color': DEFAULT_LAYER_COLOR,
-        'collapsed': true,
-        'columns': places.SourceFields,
-        'editable': true,
-        'id': places.ID,
-        'layerType': LayerType.REF,
-        'load': true,
-        'logger': 'plugin.places.PlacesManager',
-        'provider': config.getAppName() || null,
-        'showLabels': false,
-        'showRoot': false,
-        'title': places.TITLE,
-        'type': PlacesLayerConfig.ID,
-        'url': STORAGE_URL
-      };
-
-      PlacesManagerInstance = new PlacesManager(OPTIONS);
+      PlacesManagerInstance = new PlacesManager(getLayerOptions());
     }
 
     return PlacesManagerInstance;

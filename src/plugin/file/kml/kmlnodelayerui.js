@@ -23,6 +23,7 @@ import FeatureSize from '../../../os/command/feature/featuresizecmd.js';
 import ParallelCommand from '../../../os/command/parallelcommand.js';
 import SequenceCommand from '../../../os/command/sequencecommand.js';
 import ColumnDefinition from '../../../os/data/columndefinition.js';
+import RecordField from '../../../os/data/recordfield.js';
 import * as dispatcher from '../../../os/dispatcher.js';
 import DynamicFeature from '../../../os/feature/dynamicfeature.js';
 import * as osFeature from '../../../os/feature/feature.js';
@@ -497,7 +498,7 @@ export class Controller extends VectorLayerUICtrl {
    * @inheritDoc
    */
   getShowLabel() {
-    return this.getFeatureValue(StyleField.SHOW_LABELS);
+    return this.getFeatureValue(RecordField.FORCE_SHOW_LABEL);
   }
 
   /**

@@ -330,9 +330,15 @@ export default class KMLNode extends SlickTreeNode {
           this.dispatchEvent(new PropertyChangeEvent('icons'));
           this.dispatchEvent(new PropertyChangeEvent(annotation.EventType.CHANGE));
           break;
-        case 'colors':
+        case osFeature.PropertyChange.COLOR:
+          // trigger a node icon update
           this.dispatchEvent(new PropertyChangeEvent('icons'));
-          this.dispatchEvent(new PropertyChangeEvent(annotation.EventType.CHANGE));
+          // fire a style change event up the tree so the KML can be saved if necessary
+          this.dispatchEvent(new PropertyChangeEvent(osFeature.PropertyChange.STYLE));
+          break;
+        case osFeature.PropertyChange.STYLE:
+          // propagate the event up the tree so the KML can be saved if necessary
+          this.dispatchEvent(new PropertyChangeEvent(osFeature.PropertyChange.STYLE));
           break;
         default:
           break;
@@ -845,7 +851,7 @@ export default class KMLNode extends SlickTreeNode {
 
     super.onChildChange(e);
 
-    if (p === 'collapsed' || p === annotation.EventType.CHANGE) {
+    if (p === 'collapsed' || p === annotation.EventType.CHANGE || p === osFeature.PropertyChange.STYLE) {
       // propagate the event up the tree so the KML can be saved if necessary
       this.dispatchEvent(new PropertyChangeEvent(p));
     } else if (p === 'loading') {

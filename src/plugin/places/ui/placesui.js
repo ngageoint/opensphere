@@ -1,11 +1,14 @@
 goog.declareModuleId('plugin.places.ui.PlacesUI');
 
+import '../../../os/ui/dragdrop/urldragdropui.js';
 import '../../../os/ui/layertree.js';
 import '../../../os/ui/uiswitch.js';
 import './placesbutton.js';
+
 import AlertEventSeverity from '../../../os/alert/alerteventseverity.js';
 import AlertManager from '../../../os/alert/alertmanager.js';
 import EventType from '../../../os/config/eventtype.js';
+import {createFromFile} from '../../../os/file/index.js';
 import osImplements from '../../../os/implements.js';
 import Metrics from '../../../os/metrics/metrics.js';
 import {Places as PlacesKeys} from '../../../os/metrics/metricskeys.js';
@@ -22,7 +25,9 @@ import PlacesManager from '../placesmanager.js';
 
 const Disposable = goog.require('goog.Disposable');
 
+const GoogEvent = goog.requireType('goog.events.Event');
 const {default: ExportOptions} = goog.requireType('os.ex.ExportOptions');
+const {default: OSFile} = goog.requireType('os.file.File');
 const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 const {FolderOptions} = goog.requireType('plugin.file.kml.ui');
 const {default: KMLNode} = goog.requireType('plugin.file.kml.ui.KMLNode');
@@ -87,6 +92,13 @@ export class Controller extends Disposable {
     if (!this.placesRoot_ && !pm.isLoaded()) {
       pm.listenOnce(EventType.LOADED, this.onPlacesReady_, false, this);
     }
+
+    /**
+     * Drag/drop handler to bind "this" to the controller instead of the drop target.
+     * @type {function(Event)}
+     * @export
+     */
+    this.onDrop = this.onDrop_.bind(this);
 
     /**
      * The context menu for Places.
@@ -172,12 +184,35 @@ export class Controller extends Disposable {
 
   /**
    * Import places from a file/URL.
-   *
+   * @param {OSFile=} opt_file Optional file to use in the import.
    * @export
    */
-  import() {
-    PlacesManager.getInstance().startImport();
+  import(opt_file) {
+    PlacesManager.getInstance().startImport(opt_file);
     Metrics.getInstance().updateMetric(PlacesKeys.IMPORT, 1);
+  }
+
+  /**
+   * Handles file drops over the Places tab.
+   * @param {Event} event The drop event.
+   * @private
+   */
+  onDrop_(event) {
+    if (event.dataTransfer && event.dataTransfer.files) {
+      createFromFile(/** @type {!File} */ (event.dataTransfer.files[0]))
+          .addCallback(this.import.bind(this), this.onFail_.bind(this));
+    }
+  }
+
+  /**
+   * Handle file drag-drop.
+   *
+   * @param {!GoogEvent|OSFile} event
+   * @private
+   */
+  onFail_(event) {
+    AlertManager.getInstance().sendAlert(
+        'Could not handle file with drag and drop. Try again or use the Import button.');
   }
 
   /**

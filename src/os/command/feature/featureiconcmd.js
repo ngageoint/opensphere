@@ -1,6 +1,5 @@
 goog.declareModuleId('os.command.FeatureIcon');
 
-import PropertyChangeEvent from '../../events/propertychangeevent.js';
 import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
 import * as osStyle from '../../style/style.js';
 import * as kml from '../../ui/file/kml/kml.js';
@@ -53,17 +52,5 @@ export default class FeatureIcon extends AbstractFeatureStyle {
     }
 
     super.applyValue(configs, value);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  finish(configs) {
-    // dispatch the color change event on the source for the histogram
-    var feature = this.getFeature();
-
-    feature.dispatchEvent(new PropertyChangeEvent('colors'));
-
-    super.finish(configs);
   }
 }

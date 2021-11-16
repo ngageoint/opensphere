@@ -2,6 +2,7 @@ goog.declareModuleId('os.command.FeatureColor');
 
 import * as osColor from '../../color.js';
 import PropertyChangeEvent from '../../events/propertychangeevent.js';
+import {PropertyChange} from '../../feature/feature.js';
 import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
 import * as osStyle from '../../style/style.js';
 import StyleField from '../../style/stylefield.js';
@@ -188,10 +189,9 @@ export default class FeatureColor extends AbstractFeatureStyle {
    * @inheritDoc
    */
   finish(configs) {
-    // dispatch the color change event on the source for the histogram
+    // dispatch the color change event on the feature to update the node icon
     var feature = this.getFeature();
-
-    feature.dispatchEvent(new PropertyChangeEvent('colors'));
+    feature.dispatchEvent(new PropertyChangeEvent(PropertyChange.COLOR));
 
     super.finish(configs);
   }

@@ -29,7 +29,7 @@ import Units from '../math/units.js';
 import {merge, unsafeClone} from '../object/object.js';
 import {ROOT} from '../os.js';
 import {EPSG4326} from '../proj/proj.js';
-import {DEFAULT_SIZE, cloneConfig} from '../style/label.js';
+import {DEFAULT_SIZE, cloneConfig, updateShown} from '../style/label.js';
 import * as osStyle from '../style/style.js';
 import StyleField from '../style/stylefield.js';
 import StyleType from '../style/styletype.js';
@@ -458,10 +458,10 @@ export class Controller extends Disposable {
     this['labels'] = [];
 
     /**
-     * If the Label Options controls should be displayed.
+     * The Always Show Labels control value.
      * @type {boolean}
      */
-    this['showLabels'] = true;
+    this['showLabels'] = false;
 
     /**
      * Time help content.
@@ -1078,7 +1078,7 @@ export class Controller extends Disposable {
 
     this['labelSize'] = this.getNumericField_(feature, StyleField.LABEL_SIZE, DEFAULT_SIZE);
 
-    var showLabels = feature.get(StyleField.SHOW_LABELS);
+    var showLabels = feature.get(RecordField.FORCE_SHOW_LABEL);
     if (showLabels != null) {
       this['showLabels'] = showLabels;
     }
@@ -1262,12 +1262,10 @@ export class Controller extends Disposable {
       }
 
       // update if the label should be displayed
-      if (this['showLabels']) {
-        osFeature.showLabel(feature);
-      } else {
-        osFeature.hideLabel(feature);
+      if (this['showLabels'] != feature.get(RecordField.FORCE_SHOW_LABEL)) {
+        feature.set(RecordField.FORCE_SHOW_LABEL, this['showLabels'], true);
+        updateShown();
       }
-
 
       Controller.persistFeatureLabels(feature);
       Controller.restoreFeatureLabels(feature);
@@ -1769,9 +1767,9 @@ export class Controller extends Disposable {
    */
   static restoreFeatureLabels(feature) {
     if (feature) {
-      var showLabels = feature.get(StyleField.SHOW_LABELS);
+      var showLabels = feature.get(RecordField.FORCE_SHOW_LABEL);
       if (typeof showLabels == 'string' || showLabels === true) {
-        feature.set(StyleField.SHOW_LABELS, showLabels == 'true' || showLabels == '1');
+        feature.set(RecordField.FORCE_SHOW_LABEL, showLabels == 'true' || showLabels == '1');
       }
 
       var configs = /** @type {(Array<Object<string, *>>|Object<string, *>)} */ (

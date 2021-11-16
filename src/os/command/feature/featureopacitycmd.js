@@ -1,7 +1,6 @@
 goog.declareModuleId('os.command.FeatureOpacity');
 
 import * as osColor from '../../color.js';
-import PropertyChangeEvent from '../../events/propertychangeevent.js';
 import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
 import * as osStyle from '../../style/style.js';
 import StyleField from '../../style/stylefield.js';
@@ -176,17 +175,5 @@ export default class FeatureOpacity extends AbstractFeatureStyle {
         configs[i][StyleField.LABEL_COLOR] = labelColorStr;
       }
     }
-  }
-
-  /**
-   * @inheritDoc
-   */
-  finish(configs) {
-    // dispatch the color change event on the source for the histogram
-    var feature = this.getFeature();
-
-    feature.dispatchEvent(new PropertyChangeEvent('colors'));
-
-    super.finish(configs);
   }
 }
