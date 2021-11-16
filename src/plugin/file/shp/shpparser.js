@@ -17,6 +17,7 @@ const ol = goog.require('ol');
 const Feature = goog.require('ol.Feature');
 const LineString = goog.require('ol.geom.LineString');
 const MultiLineString = goog.require('ol.geom.MultiLineString');
+const MultiPoint = goog.require('ol.geom.MultiPoint');
 const MultiPolygon = goog.require('ol.geom.MultiPolygon');
 const Point = goog.require('ol.geom.Point');
 const Polygon = goog.require('ol.geom.Polygon');
@@ -168,6 +169,52 @@ export default class SHPParser extends AsyncZipParser {
 
         // TODO: there should be a way to determine the projection from the SHP file rather than assuming EPSG:4326
         feature.setGeometry(new Point(coords).osTransform());
+      } else if (shapeType === shp.TYPE.MULTIPOINT ||
+          shapeType === shp.TYPE.MULTIPOINTM ||
+          shapeType === shp.TYPE.MULTIPOINTZ) {
+        feature = new Feature();
+
+        /**
+         * MultiPoint
+         *                                                  Byte
+         * Position   Field       Value     Type    Number    Order
+         * Byte 0     Shape Type  8         Integer 1         Little
+         * Byte 4     Box         Box       Double  4         Little
+         * Byte 36    NumPoints   NumPoints Integer 1         Little
+         * Byte 40    Points      Points    Point   NumPoints Little
+         *
+         * Byte X     Zmin        Zmin      Double  1         Little
+         * Byte X+8   Zmax        Zmax      Double  1         Little
+         * Byte X+16  Zarray      Zarray    Double  NumPoints Little
+         * Byte Y*    Mmin        Mmin      Double  1         Little
+         * Byte Y+8*  Mmax        Mmax      Double  1         Little
+         * Byte Y+16* Marray      Marray    Double  NumPoints Little
+         * Note: X = 40 + (16 * NumPoints); Y = X + 16 + (8 * NumPoints)
+         */
+
+        const numPoints = dv.getInt32(36, true);
+        const pointsLen = numPoints * 16;
+
+        const pointsStart = 40;
+        const zStart = pointsStart + pointsLen + 16;
+
+        const points = [];
+        for (let i = 0; i < numPoints; i++) {
+          const offset = i * 16;
+          const lon = dv.getFloat64(pointsStart + offset, true);
+          const lat = dv.getFloat64(pointsStart + offset + 8, true);
+          const coordinate = [lon, lat];
+
+          if (shapeType == shp.TYPE.MULTIPOINTZ) {
+            const alt = dv.getFloat64(zStart + (i * 8), true);
+            coordinate.push(alt);
+          }
+
+          points.push(coordinate);
+        }
+
+        const geom = new MultiPoint(points);
+        feature.setGeometry(geom.osTransform());
       } else if (shapeType == shp.TYPE.POLYLINE ||
           shapeType == shp.TYPE.POLYGON ||
           shapeType == shp.TYPE.POLYLINEZ ||
@@ -291,7 +338,7 @@ export default class SHPParser extends AsyncZipParser {
       } else if (shapeType != shp.TYPE.NULLRECORD) {
         // skip null records, but warn on unknown types
         this.logWarning_('Unsupported shape type (' + shapeType + ') encountered. ' +
-            'Only POINT(1,11,21), POLYLINE(3,13,23) & POLYGON(5,15,25) are supported');
+            'Only POINT(1,11,21), MULTIPOINT(8,18,28), POLYLINE(3,13,23) & POLYGON(5,15,25) are supported');
       }
 
       if (feature && this.header_.dbf.data) {

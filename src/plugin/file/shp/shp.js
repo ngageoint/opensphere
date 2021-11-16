@@ -1,6 +1,12 @@
 goog.declareModuleId('plugin.file.shp');
 
+const GeometryLayout = goog.require('ol.geom.GeometryLayout');
+const GeometryType = goog.require('ol.geom.GeometryType');
+
+const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
+
 /**
+ * SHP shape types.
  * @enum {number}
  */
 export const TYPE = {
@@ -66,4 +72,124 @@ export const isSHPFileType = function(content) {
   } catch (e) {
     return false;
   }
+};
+
+/**
+ * Flattens geometry coordinates down to an array of coordinate groups.
+ * @param {!Array} coordinates The current coordinates.
+ * @return {!Array<!Array<number>>} The coordinate groups.
+ */
+export const getFlatGroupCoordinates = (coordinates) => {
+  // We're trying to collapse down to an array of arrays of numbers (ie, array of coordinates).
+  while (Array.isArray(coordinates) && Array.isArray(coordinates[0]) && Array.isArray(coordinates[0][0])) {
+    coordinates = coordinates.flat(1);
+  }
+
+  return coordinates;
+};
+
+/**
+ * From an OpenLayers geometry, get the array of SHP parts for that geometry type.
+ * @param {SimpleGeometry} geometry The geometry.
+ * @return {!Array} The SHP parts for the geometry.
+ */
+export const getPartCoordinatesFromGeometry = (geometry) => {
+  let partCoordinates;
+
+  if (geometry) {
+    const coordinates = geometry.getCoordinates();
+    const geomType = geometry.getType();
+
+    //
+    // OpenLayers structures geometry coordinates from getCoordinates as:
+    //  - Point: The coordinate
+    //  - MultiPoint: Array of coordinates
+    //  - LineString: Array of coordinates
+    //  - MultiLineString: Array of lines -> coordinates
+    //  - Polygon: Array of rings -> coordinates
+    //  - MultiPolygon: Array of polygons -> rings -> coordinates
+    //
+    // SHP handles multi geometries with a "parts" value that specifies the number of points/lines/rings. It also only
+    // has a distinct shape type for MultiPoint, both line and polygon use the same shape whether there is a single geom
+    // or multiple. The following converts OpenLayers coordinates to SHP parts for all supported geometry types.
+    //
+    switch (geomType) {
+      case GeometryType.POINT:
+        // Each part is a point, add a level.
+        partCoordinates = [coordinates];
+        break;
+      case GeometryType.MULTI_POINT:
+        // Each part is a point, all set.
+        partCoordinates = coordinates;
+        break;
+      case GeometryType.LINE_STRING:
+        // Each part is a line, add a level.
+        partCoordinates = [coordinates];
+        break;
+      case GeometryType.MULTI_LINE_STRING:
+        // Each part is a line, all set.
+        partCoordinates = coordinates;
+        break;
+      case GeometryType.POLYGON:
+        // Each part is a ring, all set.
+        partCoordinates = coordinates;
+        break;
+      case GeometryType.MULTI_POLYGON:
+        // Each part is a ring, flatten by one level.
+        partCoordinates = coordinates.flat(1);
+        break;
+      default:
+        // Unsupported geometry type.
+        break;
+    }
+  }
+
+  return partCoordinates || [];
+};
+
+/**
+ * Get the SHP shape type for a geometry.
+ * @param {SimpleGeometry} geometry The geometry.
+ * @return {number} The SHP shape type, or undefined if not supported.
+ */
+export const getShapeTypeFromGeometry = (geometry) => {
+  let shapeType = -1;
+
+  if (geometry) {
+    let hasZ = false;
+    const geomLayout = geometry.getLayout();
+    if (geomLayout === GeometryLayout.XYZ) {
+      // Determine if the geometry has a non-zero altitude, otherwise we'll ignore altitude to save space.
+      const flatCoordinates = geometry.getFlatCoordinates();
+      const stride = geometry.getStride();
+      for (let i = 0; i < flatCoordinates.length; i += stride) {
+        if (flatCoordinates[i + 2] != 0) {
+          hasZ = true;
+          break;
+        }
+      }
+    }
+
+    const geomType = geometry.getType();
+    switch (geomType) {
+      case GeometryType.POINT:
+        shapeType = hasZ ? TYPE.POINTZ : TYPE.POINT;
+        break;
+      case GeometryType.MULTI_POINT:
+        shapeType = hasZ ? TYPE.MULTIPOINTZ : TYPE.MULTIPOINT;
+        break;
+      case GeometryType.LINE_STRING:
+      case GeometryType.MULTI_LINE_STRING:
+        shapeType = hasZ ? TYPE.POLYLINEZ : TYPE.POLYLINE;
+        break;
+      case GeometryType.POLYGON:
+      case GeometryType.MULTI_POLYGON:
+        shapeType = hasZ ? TYPE.POLYGONZ : TYPE.POLYGON;
+        break;
+      default:
+        break;
+    }
+  }
+
+  return shapeType;
 };
