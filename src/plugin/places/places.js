@@ -96,9 +96,9 @@ export const ExportFields = [
 ];
 
 /**
- * Fields that should be displayed on the Places source.
+ * Fields that should be displayed on the Places source. These will be set on the source via ISource#setColumns.
  *
- * @type {!Array<string>}
+ * @type {!Array<!(ColumnDefinition|string)>}
  */
 export const SourceFields = [
   KMLField.NAME,
