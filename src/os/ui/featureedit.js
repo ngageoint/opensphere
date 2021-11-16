@@ -17,6 +17,8 @@ import {getFunctionalExtent} from '../extent.js';
 import DynamicFeature from '../feature/dynamicfeature.js';
 import * as osFeature from '../feature/feature.js';
 import Fields from '../fields/fields.js';
+import {DEFAULT_SEMI_MAJ_COL_NAME, DEFAULT_SEMI_MIN_COL_NAME} from '../fields/index.js';
+import MappingManager from '../im/mapping/mappingmanager.js';
 import {ModifyEventType} from '../interaction/interaction.js';
 import Modify from '../interaction/modifyinteraction.js';
 import * as interpolate from '../interpolate.js';
@@ -1172,6 +1174,23 @@ export class Controller extends Disposable {
   }
 
   /**
+   * Auto detects and applies mappings to the feature.
+   * @param {Feature} feature The feature.
+   * @protected
+   */
+  applyMappings(feature) {
+    if (feature) {
+      const mm = MappingManager.getInstance();
+      const mappings = mm.autoDetect([feature]);
+      if (mappings && mappings.length) {
+        mappings.forEach((m) => {
+          m.execute(feature);
+        });
+      }
+    }
+  }
+
+  /**
    * Save the feature configuration to a feature.
    *
    * @param {Feature} feature The feature to update
@@ -1256,6 +1275,8 @@ export class Controller extends Disposable {
       osStyle.setFeatureStyle(feature);
 
       this.updateAltMode(feature);
+      this.applyMappings(feature);
+
       dispatcher.getInstance().dispatchEvent(EventType.SAVE_FEATURE);
     }
   }
@@ -1353,7 +1374,7 @@ export class Controller extends Disposable {
           // create the ellipse, replacing the existing ellipse if necessary
           osFeature.createEllipse(feature, true);
         } else {
-          // clear ellipse fields on the feature
+          // clear ellipse fields on the feature, including derived columns from mappings
           feature.set(Fields.SEMI_MAJOR, undefined, true);
           feature.set(Fields.SEMI_MINOR, undefined, true);
           feature.set(Fields.SEMI_MAJOR_UNITS, undefined, true);
@@ -1361,6 +1382,8 @@ export class Controller extends Disposable {
           feature.set(Fields.ORIENTATION, undefined, true);
           feature.set(RecordField.ELLIPSE, undefined, true);
           feature.set(RecordField.LINE_OF_BEARING, undefined, true);
+          feature.set(DEFAULT_SEMI_MAJ_COL_NAME, undefined, true);
+          feature.set(DEFAULT_SEMI_MIN_COL_NAME, undefined, true);
         }
 
         // set the ring options
