@@ -115,6 +115,11 @@ class StyleReader extends AbstractReader {
       if (stroke) {
         this.readers['stroke'].toConfig(stroke, obj);
       }
+
+      var text = s.getText();
+      if (text) {
+        this.readers['text'].toConfig(text, obj);
+      }
     }
   }
 }

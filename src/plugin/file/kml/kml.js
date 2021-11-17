@@ -43,6 +43,10 @@ const IconOrigin = goog.require('ol.style.IconOrigin');
 const Style = goog.require('ol.style.Style');
 const olXml = goog.require('ol.xml');
 
+const Fill = goog.requireType('ol.style.Fill');
+const Image = goog.requireType('ol.style.Image');
+const Stroke = goog.requireType('ol.style.Stroke');
+const Text = goog.requireType('ol.style.Text');
 const {default: ITime} = goog.requireType('os.time.ITime');
 
 
@@ -335,20 +339,19 @@ export const readStyle = function(node, objectStack) {
     // don't create a style config if nothing was parsed from the element
     return null;
   }
-  var fillStyle = /** @type {ol.style.Fill} */
+  var fillStyle = /** @type {Fill} */
       ('fillStyle' in styleObject ?
         styleObject['fillStyle'] : KML.DEFAULT_FILL_STYLE_);
   var fill = /** @type {boolean|undefined} */ (styleObject['fill']);
-  var imageStyle = /** @type {ol.style.Image} */
+  var imageStyle = /** @type {Image} */
       ('imageStyle' in styleObject ?
         styleObject['imageStyle'] : KML.DEFAULT_IMAGE_STYLE_);
   if (imageStyle == KML.DEFAULT_NO_IMAGE_STYLE_) {
     imageStyle = undefined;
   }
-  var textStyle = /** @type {ol.style.Text} */
-      ('textStyle' in styleObject ?
-        styleObject['textStyle'] : KML.DEFAULT_TEXT_STYLE_);
-  var strokeStyle = /** @type {ol.style.Stroke} */
+  // Intentionally removed using the default OpenLayers text style, to use OpenSphere defaults instead.
+  var textStyle = /** @type {Text} */ ('textStyle' in styleObject ? styleObject['textStyle'] : null);
+  var strokeStyle = /** @type {Stroke} */
       ('strokeStyle' in styleObject ?
         styleObject['strokeStyle'] : KML.DEFAULT_STROKE_STYLE_);
   var outline = /** @type {boolean|undefined} */

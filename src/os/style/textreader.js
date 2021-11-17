@@ -2,7 +2,9 @@ goog.declareModuleId('os.style.TextReader');
 
 import AbstractReader from './abstractreader.js';
 import {getFont} from './label.js';
+import StyleField from './stylefield.js';
 
+const {asString} = goog.require('ol.color');
 const Fill = goog.require('ol.style.Fill');
 const Stroke = goog.require('ol.style.Stroke');
 const Text = goog.require('ol.style.Text');
@@ -82,6 +84,20 @@ class TextReader extends AbstractReader {
       offsetY: offsetY,
       placement: placement
     });
+  }
+
+  /**
+   * @inheritDoc
+   */
+  toConfig(style, obj) {
+    if (style instanceof Text) {
+      const fill = style.getFill();
+      if (fill) {
+        // Set the same field vector label controls use to override the color. This will ensure highlight/select still
+        // work properly, or any UI that might want to change the label color.
+        obj[StyleField.LABEL_COLOR] = asString(/** @type {Array<number>|string} */ (fill.getColor()));
+      }
+    }
   }
 }
 
