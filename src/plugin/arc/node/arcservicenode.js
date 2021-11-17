@@ -4,6 +4,7 @@ import ConfigDescriptor from '../../../os/data/configdescriptor.js';
 import DataManager from '../../../os/data/datamanager.js';
 import LayerType from '../../../os/layer/layertype.js';
 import Request from '../../../os/net/request.js';
+import {EPSG4326} from '../../../os/proj/proj.js';
 import ColorControlType from '../../../os/ui/colorcontroltype.js';
 import BaseProvider from '../../../os/ui/data/baseprovider.js';
 import DescriptorNode from '../../../os/ui/data/descriptornode.js';
@@ -185,8 +186,7 @@ class ArcServiceNode extends LoadingNode {
    */
   addImageLayer_(json) {
     const id = this.server_.getId() + BaseProvider.ID_DELIMITER + /** @type {string} */ (json['name']);
-    const extent = /** @type {Object<string, number>} */ (json['extent']);
-    const wkid = /** @type {number} */ (extent['spatialReference']['latestWkid']);
+    const extent = arc.readEsriExtent(/** @type {Object} */ (json['extent']), EPSG4326);
     const config = {
       'id': id,
       'url': this.url_,
@@ -194,8 +194,8 @@ class ArcServiceNode extends LoadingNode {
       'description': json['description'],
       'provider': this.server_.getLabel(),
       'title': json['name'],
-      'extent': [extent['xmin'], extent['ymin'], extent['xmax'], extent['ymax']],
-      'extentProjection': wkid === 3857 ? 'EPSG:3857' : 'EPSG:4326',
+      'extent': extent,
+      'extentProjection': EPSG4326,
       'layerType': LayerType.TILES,
       'icons': Icons.TILES,
       'colorControl': ColorControlType.PICKER_RESET

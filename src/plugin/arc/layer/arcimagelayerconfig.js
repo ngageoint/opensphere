@@ -2,10 +2,12 @@ goog.declareModuleId('plugin.arc.layer.ArcImageLayerConfig');
 
 import AbstractLayerConfig from '../../../os/layer/config/abstractlayerconfig.js';
 import Image from '../../../os/layer/image.js';
+import {PROJECTION} from '../../../os/map/map.js';
 import CrossOrigin from '../../../os/net/crossorigin.js';
 import * as net from '../../../os/net/net.js';
 import * as proj from '../../../os/proj/proj.js';
 
+const {transformExtent} = goog.require('ol.proj');
 const ImageArcGISRest = goog.require('ol.source.ImageArcGISRest');
 
 const Projection = goog.requireType('ol.proj.Projection');
@@ -78,6 +80,17 @@ class ArcImageLayerConfig extends AbstractLayerConfig {
     // image layers are hidden by default, we want this one to show
     imageLayer.setHidden(false);
     imageLayer.restore(options);
+
+    let extent = /** @type {ol.Extent} */ (options['extent']);
+    if (extent) {
+      const extentProjection = /** @type {ol.ProjectionLike} */ (options['extentProjection']);
+      if (extentProjection) {
+        extent = transformExtent(extent, extentProjection, PROJECTION);
+      }
+
+      imageLayer.setExtent(extent);
+    }
+
     return imageLayer;
   }
 

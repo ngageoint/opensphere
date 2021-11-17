@@ -13,7 +13,10 @@ describe('plugin.arc.layer.ArcLayerDescriptor', function() {
     'description': 'The Power of Arc Layers',
     'id': 'someLayerId',
     'extent': {
-      'wkid': 4326,
+      'spatialReference': {
+        'latestWkid': 4326,
+        'wkid': 4326
+      },
       'xmin': 40,
       'ymin': 20,
       'xmax': 60,
@@ -53,7 +56,10 @@ describe('plugin.arc.layer.ArcLayerDescriptor', function() {
     'description': 'An arc layer that only supports tiles',
     'id': 'someLayerId',
     'extent': {
-      'wkid': 4326,
+      'spatialReference': {
+        'latestWkid': 4326,
+        'wkid': 4326
+      },
       'xmin': 40,
       'ymin': 20,
       'xmax': 60,

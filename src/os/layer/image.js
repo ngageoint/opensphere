@@ -6,6 +6,7 @@ import * as dispatcher from '../dispatcher.js';
 import LayerEvent from '../events/layerevent.js';
 import LayerEventType from '../events/layereventtype.js';
 import PropertyChangeEvent from '../events/propertychangeevent.js';
+import {reduceExtentFromLayers} from '../fn/fn.js';
 import IGroupable from '../igroupable.js';
 import osImplements from '../implements.js';
 import SourcePropertyChange from '../source/propertychange.js';
@@ -26,6 +27,7 @@ const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');
 
 const {listen} = goog.require('ol.events');
+const {createEmpty, isEmpty} = goog.require('ol.extent');
 const ImageLayer = goog.require('ol.layer.Image');
 const ImageSource = goog.require('ol.source.Image');
 const ImageStatic = goog.require('ol.source.ImageStatic');
@@ -666,15 +668,16 @@ export default class Image extends ImageLayer {
    */
   supportsAction(type, opt_actionArgs) {
     switch (type) {
-      case EventType.IDENTIFY:
       case EventType.GOTO:
+        const layerExtent = reduceExtentFromLayers(/** @type {!ol.Extent} */ (createEmpty()), this);
+        return !isEmpty(layerExtent);
+      case EventType.IDENTIFY:
+      case EventType.REFRESH:
         return true;
       case EventType.RENAME:
         return !!opt_actionArgs && goog.isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
       case EventType.REMOVE_LAYER:
         return this.isRemovable();
-      case EventType.REFRESH:
-        return true;
       default:
         break;
     }

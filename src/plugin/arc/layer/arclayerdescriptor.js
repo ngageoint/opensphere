@@ -8,6 +8,7 @@ import TimeFormat from '../../../os/im/mapping/timeformat.js';
 import TimeType from '../../../os/im/mapping/timetype.js';
 import osImplements from '../../../os/implements.js';
 import LayerType from '../../../os/layer/layertype.js';
+import {EPSG4326} from '../../../os/proj/proj.js';
 import registerClass from '../../../os/registerclass.js';
 import IARCDescriptor from '../../../os/ui/arc/iarcdescriptor.js';
 import ColorControlType from '../../../os/ui/colorcontroltype.js';
@@ -245,16 +246,10 @@ class ArcLayerDescriptor extends LayerSyncDescriptor {
       this.setAttribution(ct);
     }
 
-    var extent = /** @type {Object} */ (config['extent']);
-    if (extent) {
-      try {
-        if (extent['wkid'] === 4326) {
-          var olExtent = [extent['xmin'], extent['ymin'], extent['xmax'], extent['ymax']];
-          this.setExtent(olExtent);
-        }
-      } catch (e) {
-        // failed to extract extent info from the config
-      }
+    const extent = /** @type {Object} */ (config['extent']);
+    const olExtent = arc.readEsriExtent(extent, EPSG4326);
+    if (olExtent) {
+      this.setExtent(olExtent);
     }
 
     var timeInfo = /** @type {Object} */ (config['timeInfo']);
