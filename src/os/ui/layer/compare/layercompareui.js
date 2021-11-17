@@ -858,6 +858,8 @@ export const getCompareController = () => {
  * @this {MenuItem}
  */
 const canMove = function(target, context) {
+  this.visible = true;
+
   const layers = getLayersFromContext(context);
   const controller = getCompareController();
 
