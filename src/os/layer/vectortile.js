@@ -8,7 +8,6 @@ import PropertyChangeEvent from '../events/propertychangeevent.js';
 import {reduceExtentFromLayers} from '../fn/fn.js';
 import IGroupable from '../igroupable.js';
 import osImplements from '../implements.js';
-import * as osMap from '../map/map.js';
 import * as math from '../math/math.js';
 import {dispatcher} from '../os.js';
 import registerClass from '../registerclass.js';
@@ -558,11 +557,8 @@ export default class VectorTile extends VectorTileLayer {
   supportsAction(type, opt_actionArgs) {
     switch (type) {
       case ActionEventType.GOTO:
-        var projExtent = osMap.PROJECTION.getExtent();
-        var layerExtent = reduceExtentFromLayers(/** @type {!ol.Extent} */ (olExtent.createEmpty()), this);
-        var projArea = olExtent.getArea(projExtent);
-        var layerArea = olExtent.getArea(layerExtent);
-        return !olExtent.isEmpty(layerExtent) && layerArea / projArea < 0.8;
+        const layerExtent = reduceExtentFromLayers(/** @type {!ol.Extent} */ (olExtent.createEmpty()), this);
+        return !olExtent.isEmpty(layerExtent);
       case ActionEventType.IDENTIFY:
       case ActionEventType.REFRESH:
       case ActionEventType.SHOW_DESCRIPTION:

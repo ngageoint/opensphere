@@ -19,7 +19,7 @@ import OSEventType from './events/eventtype.js';
 import LayerEvent from './events/layerevent.js';
 import LayerEventType from './events/layereventtype.js';
 import PropertyChangeEvent from './events/propertychangeevent.js';
-import {normalize as normalizeExtent, normalizeToCenter} from './extent.js';
+import {clamp as clampExtent, normalize as normalizeExtent, normalizeToCenter} from './extent.js';
 import * as osFeature from './feature/feature.js';
 import {filterFalsey, noop, reduceExtentFromGeometries} from './fn/fn.js';
 import {normalizeLongitude} from './geo/geo2.js';
@@ -569,6 +569,10 @@ export default class MapContainer extends EventTarget {
 
         if (opt_buffer && opt_buffer > 0) {
           olExtent.scaleFromCenter(extent, opt_buffer);
+
+          // Clamp the extent within the current map projection.
+          const projExtent = osMap.PROJECTION.getExtent();
+          clampExtent(extent, projExtent, extent);
         } else {
           // THIN-6449: prevent flying to excessive zoom levels if a buffer wasn't provided. if one was provided,
           // assume the caller knows what they are doing.
