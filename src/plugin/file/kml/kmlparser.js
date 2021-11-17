@@ -58,6 +58,7 @@ const LineString = goog.require('ol.geom.LineString');
 const MultiLineString = goog.require('ol.geom.MultiLineString');
 const inflate = goog.require('ol.geom.flat.inflate');
 const olProj = goog.require('ol.proj');
+const IconAnchorUnits = goog.require('ol.style.IconAnchorUnits');
 const olXml = goog.require('ol.xml');
 
 const GoogEvent = goog.requireType('goog.events.Event');
@@ -1291,8 +1292,8 @@ export default class KMLParser extends AsyncZipParser {
         icon = this.assetMap_[icon]; // handle images included in a kmz
       }
 
-      var screenXY = this.parseScreenXY_(obj['screenXY']);
-      var size = this.parseSizeXY_(obj['size']);
+      var screenXY = this.parseScreenXY_(/** @type {ol.KMLVec2_} */ (obj['screenXY']));
+      var size = this.parseSizeXY_(/** @type {ol.KMLVec2_} */ (obj['size']));
       if (screenXY && size) {
         var feature = new Feature();
         this.setFeatureId_(feature);
@@ -1324,38 +1325,33 @@ export default class KMLParser extends AsyncZipParser {
   /**
    * Parse XY attributes from a screenXY element and return an object with more useful location coordinates
    *
-   * @param {Object} obj The XY options.
+   * @param {ol.KMLVec2_} options The XY options.
    * @return {Array<string|number>} An array with x/y values representing location in pixels.
    * @private
    */
-  parseScreenXY_(obj) {
-    if (obj && obj['x'] != null && obj['y'] != null) {
-      var xvalue = /** @type {number} */ (obj['x']);
-      var yvalue = /** @type {number} */ (obj['y']);
-      var xunits = /** @type {string} */ (obj['xunits']);
-      var yunits = /** @type {string} */ (obj['yunits']);
-
+  parseScreenXY_(options) {
+    if (options && options.x != null && options.y != null) {
       var xy = [0, 0];
       var mapSize = MapContainer.getInstance().getMap().getSize();
 
-      if (xunits == 'fraction') {
-        if (xvalue == 0.5) {
+      if (options.xunits == IconAnchorUnits.FRACTION) {
+        if (options.x == 0.5) {
           xy[0] = 'center';
         } else {
-          xy[0] = mapSize[0] * xvalue;
+          xy[0] = mapSize[0] * options.x;
         }
       } else {
-        xy[0] = xvalue;
+        xy[0] = options.x;
       }
 
-      if (yunits == 'fraction') {
-        if (yvalue == 0.5) {
+      if (options.yunits == IconAnchorUnits.FRACTION) {
+        if (options.y == 0.5) {
           xy[1] = 'center';
         } else {
-          xy[1] = mapSize[1] - (mapSize[1] * yvalue);
+          xy[1] = mapSize[1] - (mapSize[1] * options.y);
         }
       } else {
-        xy[1] = yvalue;
+        xy[1] = options.y;
       }
 
       return xy;
@@ -1367,40 +1363,35 @@ export default class KMLParser extends AsyncZipParser {
   /**
    * Parse XY attributes from a size element and return an object with more sizing for our overlay
    *
-   * @param {Object} obj The XY options.
+   * @param {ol.KMLVec2_} options The XY options.
    * @return {Array<string|number>} An array with x/y values representing size in pixels.
    * @private
    */
-  parseSizeXY_(obj) {
-    if (obj && obj['x'] != null && obj['y'] != null) {
-      var xvalue = /** @type {number} */ (obj['x']);
-      var yvalue = /** @type {number} */ (obj['y']);
-      var xunits = /** @type {string} */ (obj['xunits']);
-      var yunits = /** @type {string} */ (obj['yunits']);
-
+  parseSizeXY_(options) {
+    if (options && options.x != null && options.y != null) {
       var xy = [0, 0];
       var mapSize = MapContainer.getInstance().getMap().getSize();
 
-      if (xunits == 'fraction') {
+      if (options.xunits == IconAnchorUnits.FRACTION) {
         // -1 = use native, 0 = maintain aspect, n = relative to screen size
-        if (xvalue == -1 || xvalue == 0) {
+        if (options.x == -1 || options.x == 0) {
           // TODO: no easy way of knowing what size the image is... don't set a size
         } else {
-          xy[0] = mapSize[0] * xvalue;
+          xy[0] = mapSize[0] * options.x;
         }
       } else {
-        xy[0] = xvalue;
+        xy[0] = options.x;
       }
 
-      if (yunits == 'fraction') {
+      if (options.yunits == IconAnchorUnits.FRACTION) {
         // -1 = use native, 0 = maintain aspect, n = relative to screen size
-        if (yvalue == -1 || yvalue == 0) {
+        if (options.y == -1 || options.y == 0) {
           // TODO: no easy way of knowing what size the image is... don't set a size
         } else {
-          xy[1] = mapSize[1] * yvalue;
+          xy[1] = mapSize[1] * options.y;
         }
       } else {
-        xy[1] = yvalue;
+        xy[1] = options.y;
       }
 
       return xy;
