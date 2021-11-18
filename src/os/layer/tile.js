@@ -43,7 +43,7 @@ const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');
 
 const events = goog.require('ol.events');
-const {createEmpty, getArea, isEmpty} = goog.require('ol.extent');
+const {createEmpty, isEmpty} = goog.require('ol.extent');
 const Property = goog.require('ol.layer.Property');
 const OLTileLayer = goog.require('ol.layer.Tile');
 const TileImage = goog.require('ol.source.TileImage');
@@ -956,11 +956,8 @@ export default class Tile extends OLTileLayer {
   supportsAction(type, opt_actionArgs) {
     switch (type) {
       case EventType.GOTO:
-        var projExtent = osMap.PROJECTION.getExtent();
-        var layerExtent = reduceExtentFromLayers(/** @type {!ol.Extent} */ (createEmpty()), this);
-        var projArea = getArea(projExtent);
-        var layerArea = getArea(layerExtent);
-        return !isEmpty(layerExtent) && layerArea / projArea < 0.8;
+        const layerExtent = reduceExtentFromLayers(/** @type {!ol.Extent} */ (createEmpty()), this);
+        return !isEmpty(layerExtent);
       case EventType.IDENTIFY:
       case EventType.REFRESH:
       case EventType.SHOW_DESCRIPTION:

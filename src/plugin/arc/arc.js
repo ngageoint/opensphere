@@ -1,12 +1,14 @@
 goog.declareModuleId('plugin.arc');
 
-import * as text from '../../os/file/mime/text.js';
+import {getText} from '../../os/file/mime/text.js';
+import {EPSG4326} from '../../os/proj/proj.js';
 import {launchForLayer} from '../../os/ui/query/combinator.js';
 import ArcFeatureType from './arcfeaturetype.js';
 import ESRIType from './esritype.js';
 
 const xml = goog.require('goog.dom.xml');
 const googString = goog.require('goog.string');
+const {get: getProjection, transformExtent} = goog.require('ol.proj');
 
 const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
@@ -195,7 +197,7 @@ export const getException = function(response, opt_contentType, opt_codes) {
   try {
     // Try to parse the response as HTML and determine if the response is an Arc error page.
     if (response && (!opt_contentType || opt_contentType.indexOf('text/html') != -1)) {
-      const strResponse = typeof response === 'string' ? response : text.getText(response);
+      const strResponse = typeof response === 'string' ? response : getText(response);
       if (strResponse && ERROR_REGEXP.test(strResponse)) {
         const doc = xml.loadXml(strResponse);
         const titleEl = doc.querySelector('title');
@@ -213,4 +215,33 @@ export const getException = function(response, opt_contentType, opt_codes) {
   }
 
   return null;
+};
+
+/**
+ * Read an ESRI extent to an OpenLayers extent, if the projection is supported by the application.
+ * @param {Object} extent The ESRI extent.
+ * @param {ol.ProjectionLike=} opt_projection The target projection, if a transform is needed.
+ * @return {ol.Extent|undefined} The OpenLayers extent, if available and supported.
+ */
+export const readEsriExtent = (extent, opt_projection) => {
+  let result;
+
+  if (extent && extent['spatialReference'] && extent['spatialReference']['latestWkid']) {
+    // If the WKID is for a supported projection, transform the extent to the current map projection.
+    const wkid = extent['spatialReference']['latestWkid'];
+    const sourceProjection = getProjection(`EPSG:${wkid}`);
+    if (sourceProjection) {
+      const olExtent = [extent['xmin'], extent['ymin'], extent['xmax'], extent['ymax']];
+      if (olExtent.every((val) => !isNaN(val))) {
+        if (opt_projection) {
+          const targetProjection = opt_projection || EPSG4326;
+          result = transformExtent(olExtent, sourceProjection, targetProjection);
+        } else {
+          result = olExtent;
+        }
+      }
+    }
+  }
+
+  return result;
 };

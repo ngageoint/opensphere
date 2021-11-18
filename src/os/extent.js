@@ -7,6 +7,8 @@ const math = goog.require('goog.math');
 const olExtent = goog.require('ol.extent');
 const olProj = goog.require('ol.proj');
 
+const Projection = goog.requireType('ol.proj.Projection');
+
 
 /**
  * @type {number}
@@ -203,8 +205,11 @@ export const getFunctionalExtentFromGeom = function(geom, opt_proj) {
   let result = extent;
 
   if (proj.canWrapX()) {
+    // Calculate the epsilon to be equivalent to 100 meters. If the difference is less than that, we'll just use the
+    // original extent.
+    const epsilon = 100 / proj.getMetersPerUnit();
     const antiExtent = geom.getAntiExtent();
-    result = getThinnestExtent(extent, antiExtent);
+    result = getThinnestExtent(extent, antiExtent, epsilon);
   }
 
   return result;
@@ -224,8 +229,11 @@ export const getFunctionalExtentFromExtent = function(extent, opt_proj) {
   let result = extent;
 
   if (proj.canWrapX()) {
+    // Calculate the epsilon to be equivalent to 100 meters. If the difference is less than that, we'll just use the
+    // original extent.
+    const epsilon = 100 / proj.getMetersPerUnit();
     const antiExtent = getInverse(extent, proj);
-    result = getThinnestExtent(extent, antiExtent);
+    result = getThinnestExtent(extent, antiExtent, epsilon);
   }
 
   return result;
@@ -250,16 +258,18 @@ export const getInverse = function(extent, opt_proj) {
 };
 
 /**
- * @param {?ol.Extent} extent1
- * @param {?ol.Extent} extent2
+ * Return the extent with the smallest width, within a threshold.
+ * @param {?ol.Extent} extent1 The first extent.
+ * @param {?ol.Extent} extent2 The second extent.
+ * @param {number=} opt_epsilon The threshold. Defaults to EPSILON.
  * @return {?ol.Extent}
  */
-export const getThinnestExtent = function(extent1, extent2) {
+export const getThinnestExtent = function(extent1, extent2, opt_epsilon = EPSILON) {
   if (!extent1 || !extent2) {
     return extent1 || extent2;
   }
 
   const width1 = olExtent.getWidth(extent1);
   const width2 = olExtent.getWidth(extent2);
-  return width2 + EPSILON < width1 ? extent2 : extent1;
+  return width2 + opt_epsilon < width1 ? extent2 : extent1;
 };
