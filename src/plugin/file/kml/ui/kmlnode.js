@@ -287,7 +287,7 @@ export default class KMLNode extends SlickTreeNode {
         this.annotation_ = new FeatureAnnotation(this.feature_);
 
         // set initial visibility based on the tree/animation state
-        this.setAnnotationVisibility_(this.getState() === TriState.ON && this.animationState_);
+        this.setAnnotationVisibility_(this.isVisible());
       }
     }
   }
@@ -444,11 +444,7 @@ export default class KMLNode extends SlickTreeNode {
   setAnimationState(value) {
     if (this.animationState_ != value) {
       this.animationState_ = value;
-
-      var state = this.getState();
-      this.setAnnotationVisibility_(state === TriState.ON && value);
-      this.setImageVisibility_(state === TriState.ON && value);
-      this.setOverlayVisibility_(state === TriState.ON && value);
+      this.updateVisibility();
     }
   }
 
@@ -492,6 +488,40 @@ export default class KMLNode extends SlickTreeNode {
         // window exists, toggle it.
         overlayWin.removeClass(shown ? 'd-none' : 'd-flex');
         overlayWin.addClass(shown ? 'd-flex' : 'd-none');
+      }
+    }
+  }
+
+  /**
+   * If this node is currently visible.
+   * @return {boolean}
+   */
+  isVisible() {
+    let isVisible = this.getState() === TriState.ON && this.animationState_;
+
+    if (this.source) {
+      isVisible = isVisible && this.source.getVisible();
+    }
+
+    return isVisible;
+  }
+
+  /**
+   * Update visibility of any map items managed by the node (annotation, ground overlay, etc).
+   * @param {boolean=} opt_recurse If children should be updated as well.
+   */
+  updateVisibility(opt_recurse = false) {
+    const isVisible = this.isVisible();
+    this.setAnnotationVisibility_(isVisible);
+    this.setImageVisibility_(isVisible);
+    this.setOverlayVisibility_(isVisible);
+
+    if (opt_recurse) {
+      const children = this.getChildren();
+      if (children) {
+        children.forEach((c) => {
+          c.updateVisibility(true);
+        });
       }
     }
   }
@@ -902,12 +932,9 @@ export default class KMLNode extends SlickTreeNode {
 
     super.setState(value);
 
+    this.updateVisibility();
+
     var s = this.getState();
-
-    this.setAnnotationVisibility_(s === TriState.ON && this.animationState_);
-    this.setImageVisibility_(s === TriState.ON && this.animationState_);
-    this.setOverlayVisibility_(s === TriState.ON && this.animationState_);
-
     if (old != s && this.updateSource_ && this.source) {
       if (s !== TriState.BOTH) {
         this.source.scheduleUpdateFromNodes();

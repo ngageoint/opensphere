@@ -745,6 +745,17 @@ export default class KMLSource extends RequestSource {
   /**
    * @inheritDoc
    */
+  setVisible(value) {
+    super.setVisible(value);
+
+    if (this.rootNode) {
+      this.rootNode.updateVisibility(true);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
   isTimeEditEnabled() {
     return true;
   }
