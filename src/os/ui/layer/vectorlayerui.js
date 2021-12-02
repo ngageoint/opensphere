@@ -363,7 +363,9 @@ export class Controller extends DefaultLayerUICtrl {
    * @export
    */
   showRotationOption() {
-    if (this.scope != null) {
+    // Do not show the option if there aren't columns to pick from. This is typically the case when multiple layers are
+    // selected and are unlikely to have the same columns.
+    if (this.scope != null && this.scope['columns'] && this.scope['columns'].length) {
       var shape = this.scope['shape'] || '';
       var centr = this.scope['centerShape'] || '';
       return shape == osStyle.ShapeType.ICON || (osStyle.CENTER_REGEXP.test(shape) && centr == osStyle.ShapeType.ICON);
