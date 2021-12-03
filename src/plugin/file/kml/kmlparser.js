@@ -27,6 +27,7 @@ import ColorControlType from '../../../os/ui/colorcontroltype.js';
 import ControlType from '../../../os/ui/controltype.js';
 import * as osUiFileKml from '../../../os/ui/file/kml/kml.js';
 import * as ui from '../../../os/ui/ui.js';
+import AltitudeMode from '../../../os/webgl/altitudemode.js';
 import * as xml from '../../../os/xml.js';
 import JsonField from './jsonfield.js';
 import * as kml from './kml.js';
@@ -1152,6 +1153,12 @@ export default class KMLParser extends AsyncZipParser {
             object[Fields.GEOM_ALT] = object[Fields.GEOM_ALT] || coord[2];
           }
         }
+      }
+
+      // KML specification defaults altitudeMode to clampToGround for all geometry types.
+      var altitudeMode = geometry.get(RecordField.ALTITUDE_MODE);
+      if (!altitudeMode) {
+        geometry.set(RecordField.ALTITUDE_MODE, AltitudeMode.CLAMP_TO_GROUND);
       }
 
       // convert to application projection
