@@ -8,6 +8,7 @@ import {getGeometries} from '../../../feature/feature.js';
 import {reduceExtentFromLayers, reduceExtentFromGeometries} from '../../../fn/fn.js';
 import osImplements from '../../../implements.js';
 import instanceOf from '../../../instanceof.js';
+import MouseRotate from '../../../interaction/mouserotateinteraction.js';
 import ILayer from '../../../layer/ilayer.js';
 import * as osMap from '../../../map/map.js';
 import {getMapContainer} from '../../../map/mapinstance.js';
@@ -24,26 +25,29 @@ import {bringToFront, close as closeWindow, create as createWindow, getById as g
 import {launchConfirm} from '../../window/confirm.js';
 import LayerCompareNode from './layercomparenode.js';
 
-const Promise = goog.require('goog.Promise');
+const DragZoom = goog.require('ol.interaction.DragZoom');
 const dispose = goog.require('goog.dispose');
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
 const {listen, unlistenByKey} = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
 const Collection = goog.require('ol.Collection');
 const OLMap = goog.require('ol.Map');
+const Promise = goog.require('goog.Promise');
 const View = goog.require('ol.View');
 const RotateControl = goog.require('ol.control.Rotate');
 const ZoomControl = goog.require('ol.control.Zoom');
-const {getCenter: getExtentCenter} = goog.require('ol.extent');
 const OLVectorSource = goog.require('ol.source.Vector');
 const olExtent = goog.require('ol.extent');
+const {defaults} = goog.require('ol.interaction');
+const {getCenter: getExtentCenter} = goog.require('ol.extent');
+const {platformModifierKeyOnly} = goog.require('ol.events.condition');
 
 const EventKey = goog.requireType('goog.events.Key');
 const Control = goog.requireType('ol.control.Control');
+const Interaction = goog.requireType('ol.interaction.Interaction');
 const Layer = goog.requireType('ol.layer.Layer');
 const LayerEvent = goog.requireType('os.events.LayerEvent');
 const {Context} = goog.requireType('os.ui.menu.layer');
-const {default: ISource} = goog.requireType('os.source.ISource');
 const {default: VectorSource} = goog.requireType('os.source.Vector');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: MenuItemOptions} = goog.requireType('os.ui.menu.MenuItemOptions');
@@ -112,6 +116,23 @@ const createControls = () => [
     className: 'c-layer-compare-control ol-zoom'
   })
 ];
+
+/**
+ * Create the interactions for the map.
+ * @return {!Array<!Interaction>}
+ */
+const createInteractions = () => {
+  // create the default map interactions, minus the drag rotate and drag zoom
+  const interactions = defaults({
+    altShiftDragRotate: false,
+    shiftDragZoom: false
+  }).getArray();
+
+  interactions.push(new DragZoom({condition: platformModifierKeyOnly}));
+  interactions.push(new MouseRotate({delta: .2}));
+
+  return interactions;
+};
 
 /**
  * Launch a dialog warning users of the risks in using 2D with lots of data.
@@ -383,6 +404,7 @@ export class Controller {
 
     this.leftMap = new OLMap({
       controls: [],
+      interactions: createInteractions(),
       layers: this.leftLayers,
       target: leftEl,
       view: this.view
@@ -392,6 +414,7 @@ export class Controller {
 
     this.rightMap = new OLMap({
       controls,
+      interactions: createInteractions(),
       layers: this.rightLayers,
       target: rightEl,
       view: this.view
