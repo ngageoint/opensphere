@@ -43,7 +43,6 @@ import {Map as MapKeys} from './metrics/metricskeys.js';
 import VariableReplacer from './net/variablereplacer.js';
 import {unsafeClone} from './object/object.js';
 import {clone as cloneFeature} from './ol/feature.js';
-import {flyTo, FLY_ZOOM_DURATION} from './ol/ol.js';
 import {ROOT} from './os.js';
 import {EPSG3857, EPSG4326, loadProjections} from './proj/proj.js';
 import * as projSwitch from './proj/projswitch.js';
@@ -514,7 +513,7 @@ export default class MapContainer extends EventTarget {
           camera.flyTo(options);
         }
       } else {
-        flyTo(options, map);
+        osMap.flyTo(options, map);
       }
     }
   }
@@ -2014,7 +2013,7 @@ MapContainer.TARGET = 'map-container';
  * @type {number}
  * @const
  */
-MapContainer.FLY_ZOOM_DURATION = FLY_ZOOM_DURATION;
+MapContainer.FLY_ZOOM_DURATION = osMap.FLY_ZOOM_DURATION;
 
 
 /**
