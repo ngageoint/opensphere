@@ -46,6 +46,7 @@ const {Context} = goog.requireType('os.ui.menu.layer');
 const {default: ISource} = goog.requireType('os.source.ISource');
 const {default: VectorSource} = goog.requireType('os.source.Vector');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuItemOptions} = goog.requireType('os.ui.menu.MenuItemOptions');
 const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
@@ -70,6 +71,11 @@ const MenuEventType = {
   GO_TO: 'compare:goTo',
   REMOVE: 'compare:remove'
 };
+
+/**
+ * @type {Array<MenuItemOptions>}
+ */
+export const AdditionalMenuOptions = [];
 
 /**
  * @typedef {{
@@ -211,7 +217,6 @@ export class Controller {
     /**
      * The left map.
      * @type {OLMap}
-     * @protected
      */
     this.leftMap = null;
 
@@ -246,7 +251,7 @@ export class Controller {
         eventType: EventType.GOTO,
         icons: ['<i class="fa fa-fw fa-fighter-jet"></i>'],
         tooltip: 'Repositions the map to show the layer',
-        handler: this.goTo.bind(this),
+        handler: this.handleGoTo.bind(this),
         beforeRender: visibleIfSupported,
         sort: 10
       }, {
@@ -254,9 +259,9 @@ export class Controller {
         eventType: MenuEventType.REMOVE,
         icons: ['<i class="fas fa-fw fa-times"></i>'],
         tooltip: 'Remove the selected layers from the Layer Comparison',
-        handler: this.removeSelected.bind(this, 'left'),
+        handler: this.handleRemoveSelected.bind(this, 'left'),
         sort: 20
-      }]
+      }].concat(AdditionalMenuOptions)
     }));
 
     /**
@@ -269,7 +274,6 @@ export class Controller {
     /**
      * The right map.
      * @type {OLMap}
-     * @protected
      */
     this.rightMap = null;
 
@@ -304,7 +308,7 @@ export class Controller {
         eventType: EventType.GOTO,
         icons: ['<i class="fa fa-fw fa-fighter-jet"></i>'],
         tooltip: 'Repositions the map to show the layer',
-        handler: this.goTo.bind(this),
+        handler: this.handleGoTo.bind(this),
         beforeRender: visibleIfSupported,
         sort: 10
       }, {
@@ -312,9 +316,9 @@ export class Controller {
         eventType: MenuEventType.REMOVE,
         icons: ['<i class="fas fa-fw fa-times"></i>'],
         tooltip: 'Remove the selected layers from the Layer Comparison',
-        handler: this.removeSelected.bind(this, 'right'),
+        handler: this.handleRemoveSelected.bind(this, 'right'),
         sort: 20
-      }]
+      }].concat(AdditionalMenuOptions)
     }));
 
     /**
@@ -598,7 +602,7 @@ export class Controller {
    * Removes selected layers from a side.
    * @param {string} from The side to move to.
    */
-  removeSelected(from) {
+  handleRemoveSelected(from) {
     if (from == 'right') {
       const rightLayerArr = this.rightLayers.getArray();
       const layers = this.rightSelected.map((node) => node.getLayer());
@@ -637,7 +641,7 @@ export class Controller {
    * Handle the "Go To" menu event.
    * @param {!MenuEvent<Context>} event The menu event.
    */
-  goTo(event) {
+  handleGoTo(event) {
     // aggregate the features and execute flyTo, in case they have altitude and pure extent wont cut it
     const layers = getLayersFromContext(event.getContext());
     const features = layers.reduce((feats, layer) => {
@@ -661,6 +665,14 @@ export class Controller {
       return;
     }
 
+    this.flyTo(extent);
+  }
+
+  /**
+   * Fly the compare maps to an extent.
+   * @param {ol.Extent} extent
+   */
+  flyTo(extent) {
     // just use the left map here, either one works since their views are synchronized
     const leftView = this.leftMap.getView();
     const buffer = .1;

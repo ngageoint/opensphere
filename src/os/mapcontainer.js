@@ -33,7 +33,6 @@ import SynchronizerType from './layer/synchronizertype.js';
 import VectorLayer from './layer/vector.js';
 import OSMap from './map.js';
 import CameraMode from './map/cameramode.js';
-import FlightMode from './map/flightmode.js';
 import IMapContainer from './map/imapcontainer.js';// eslint-disable-line
 import * as osMap from './map/map.js';
 import MapChange from './map/mapchange.js';
@@ -44,6 +43,7 @@ import {Map as MapKeys} from './metrics/metricskeys.js';
 import VariableReplacer from './net/variablereplacer.js';
 import {unsafeClone} from './object/object.js';
 import {clone as cloneFeature} from './ol/feature.js';
+import {flyTo, FLY_ZOOM_DURATION} from './ol/ol.js';
 import {ROOT} from './os.js';
 import {EPSG3857, EPSG4326, loadProjections} from './proj/proj.js';
 import * as projSwitch from './proj/projswitch.js';
@@ -78,7 +78,7 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const log = goog.require('goog.log');
-const {clamp, toDegrees, toRadians} = goog.require('goog.math');
+const {toDegrees, toRadians} = goog.require('goog.math');
 
 const ol = goog.require('ol');
 const Collection = goog.require('ol.Collection');
@@ -86,7 +86,6 @@ const Feature = goog.require('ol.Feature');
 const MapEventType = goog.require('ol.MapEventType');
 const ObjectEventType = goog.require('ol.ObjectEventType');
 const View = goog.require('ol.View');
-const {linear: linearEasing} = goog.require('ol.easing');
 const olEvents = goog.require('ol.events');
 const olExtent = goog.require('ol.extent');
 const has = goog.require('ol.has');
@@ -501,7 +500,6 @@ export default class MapContainer extends EventTarget {
       assert(view);
 
       var center = options.destination || options.center || view.getCenter();
-      var duration = options.duration || MapContainer.FLY_ZOOM_DURATION;
 
       if (this.is3DEnabled()) {
         var camera = this.getWebGLCamera();
@@ -516,34 +514,7 @@ export default class MapContainer extends EventTarget {
           camera.flyTo(options);
         }
       } else {
-        // translate 3D heading to OpenLayers rotation if defined and non-zero
-        var rotation = options.heading ? toRadians(-options.heading) : 0;
-
-        var animateOptions = /** @type {!olx.AnimationOptions} */ ({
-          center,
-          duration,
-          rotation
-        });
-
-        if (options.zoom !== undefined) {
-          // prioritize zoom in 2D mode
-          animateOptions.zoom = clamp(options.zoom, osMap.MIN_ZOOM, osMap.MAX_ZOOM);
-        } else if (!options.positionCamera && options.range !== undefined) {
-          // telling the camera where to look, so a range will generally be specified
-          var resolution = osMap.resolutionForDistance(this.getMap(), options.range, 0);
-          animateOptions.resolution = clamp(resolution, osMap.MIN_RESOLUTION, osMap.MAX_RESOLUTION);
-        } else if (options.altitude !== undefined) {
-          // try altitude last, because it will generally be 0 if positioning the camera
-          var resolution = osMap.resolutionForDistance(this.getMap(), options.altitude, 0);
-          animateOptions.resolution = clamp(resolution, osMap.MIN_RESOLUTION, osMap.MAX_RESOLUTION);
-        }
-
-        // 'bounce' uses default easing, 'smooth' uses linear.
-        if (options.flightMode === FlightMode.SMOOTH) {
-          animateOptions.easing = linearEasing;
-        }
-
-        view.animate(animateOptions);
+        flyTo(options, map);
       }
     }
   }
@@ -2043,7 +2014,7 @@ MapContainer.TARGET = 'map-container';
  * @type {number}
  * @const
  */
-MapContainer.FLY_ZOOM_DURATION = 1000;
+MapContainer.FLY_ZOOM_DURATION = FLY_ZOOM_DURATION;
 
 
 /**
