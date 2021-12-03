@@ -9,6 +9,8 @@ import RecordField from '../../../os/data/recordfield.js';
 import Fields from '../../../os/fields/fields.js';
 import * as osFileMimeText from '../../../os/file/mime/text.js';
 import * as mimeZip from '../../../os/file/mime/zip.js';
+import {METHOD_FIELD} from '../../../os/interpolate.js';
+import Method from '../../../os/interpolatemethod.js';
 import Image from '../../../os/layer/image.js';
 import * as osMap from '../../../os/map/map.js';
 import MapContainer from '../../../os/mapcontainer.js';
@@ -1142,8 +1144,10 @@ export default class KMLParser extends AsyncZipParser {
     delete object['geometry'];
 
     if (geometry) {
+      var geometryType = geometry.getType();
+
       // grab the lon/lat coordinate before we potentially convert it to god knows what
-      if (geometry.getType() == GeometryType.POINT) {
+      if (geometryType == GeometryType.POINT) {
         var coord = /** @type {!ol.geom.Point} */ (geometry).getFirstCoordinate();
         if (coord.length > 1) {
           object[Fields.LAT] = object[Fields.LAT] || coord[1];
@@ -1152,6 +1156,14 @@ export default class KMLParser extends AsyncZipParser {
           if ((coord.length > 2) && (coord[2] != 0)) {
             object[Fields.GEOM_ALT] = object[Fields.GEOM_ALT] || coord[2];
           }
+        }
+      } else if (geometryType == GeometryType.LINE_STRING) {
+        // If tessellation is explicitly disabled, disable interpolation on the geometry. This includes setting the
+        // altitude mode to absolute to prevent tessellation in 3D.
+        var tessellate = geometry.get('tessellate');
+        if (tessellate === false) {
+          geometry.set(METHOD_FIELD, Method.NONE);
+          geometry.set(RecordField.ALTITUDE_MODE, AltitudeMode.ABSOLUTE);
         }
       }
 
