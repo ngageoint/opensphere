@@ -59,6 +59,18 @@ export default class AlertEvent extends GoogEvent {
     this.dismissDispatcher_ = opt_dismissDispatcher || null;
 
     /**
+     * @type {?number}
+     * @private
+     */
+    this.handlerTimeoutId_ = null;
+
+    /**
+     * @type {?function()}
+     * @private
+     */
+    this.handler_ = null;
+
+    /**
      * @type {AlertEventSeverity}
      * @private
      */
@@ -109,9 +121,50 @@ export default class AlertEvent extends GoogEvent {
   }
 
   /**
+   * @return {?number}
+   */
+  getHandlerTimeoutId() {
+    return this.handlerTimeoutId_;
+  }
+
+  /**
+   * @param {?number} id
+   */
+  setHandlerTimeoutId(id) {
+    if (id) {
+      this.handlerTimeoutId_ = id;
+    }
+  }
+
+  /**
+   * @return {?function()}
+   */
+  getHandler() {
+    return this.handler_;
+  }
+
+  /**
+   * @param {?function()} handler
+   */
+  setHandler(handler) {
+    if (handler) {
+      this.handler_ = handler;
+    }
+  }
+
+  /**
    * @return {number}
    */
   getCount() {
     return this.count_;
+  }
+
+  /**
+   * @param {?number|undefined} count
+   */
+  increaseCount(count) {
+    if (count) {
+      this.count_ += count;
+    }
   }
 }

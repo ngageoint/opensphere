@@ -1,8 +1,7 @@
 goog.declareModuleId('os.ui.alert.AlertPopupUI');
 
 import './alertlinkfilter.js';
-import AlertEvent, {DEFAULT_LIMIT} from '../../alert/alertevent.js';
-import AlertEventSeverity from '../../alert/alerteventseverity.js';
+
 import AlertEventTypes from '../../alert/alerteventtypes.js';
 import AlertManager from '../../alert/alertmanager.js';
 import EventType from '../../alert/eventtype.js';
@@ -12,10 +11,11 @@ import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import {apply} from '../ui.js';
 
-const Delay = goog.require('goog.async.Delay');
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
 const {getRandomString} = goog.require('goog.string');
+
+const {default: AlertEvent} = goog.requireType('os.alert.AlertEvent');
 
 
 /**
@@ -62,27 +62,6 @@ export class Controller {
     this.scope_ = $scope;
 
     /**
-     * Count of duplicate alert messages
-     * @type {number}
-     * @private
-     */
-    this.dupeAlerts_ = 0;
-
-    /**
-     * Delay for deduping alerts
-     * @type {Delay}
-     * @private
-     */
-    this.dupeDelay_ = null;
-
-    /**
-     * Flag for times when we have an alert overflow
-     * @type {boolean}
-     * @private
-     */
-    this.dupeOverflow_ = false;
-
-    /**
      * The last event handled by the viewer
      * @type {AlertEvent}
      * @private
@@ -111,11 +90,6 @@ export class Controller {
     AlertManager.getInstance().unlisten(EventType.ALERT, this.handleAlertEvent_, false, this);
     AlertManager.getInstance().unlisten(EventType.CLEAR_ALERTS, this.clearAlerts, false, this);
 
-    if (this.dupeDelay_) {
-      this.dupeDelay_.dispose();
-      this.dupeDelay_ = null;
-    }
-
     this.timeout_ = null;
     this.scope_ = null;
   }
@@ -127,35 +101,33 @@ export class Controller {
    * @private
    */
   handleAlertEvent_(event) {
-    // deduping for floods of identical messages
-    if (this.lastEvent_) {
-      if (event.getMessage() == this.lastEvent_.getMessage()) {
-        if (!this.dupeDelay_) {
-          this.dupeDelay_ = new Delay(this.resetDupes_, Controller.ALERT_TIMER, this);
-        }
-        this.dupeDelay_.start();
-        this.dupeAlerts_++;
+    var display = true;
 
-        var limit = event.getLimit();
-        if (this.dupeAlerts_ >= limit && !this.dupeOverflow_) {
-          this.dupeOverflow_ = true;
+    if (this.lastEvent_ && event.getMessage() == this.lastEvent_.getMessage()) {
+      // See if a popup for the current alert is showing
+      var msg = event.getMessage();
+      var idx = '';
+      if (msg) {
+        idx = this['alertPopups'].findIndex((popupObj) => popupObj['msg'] == msg);
+      }
+      var alertPopup = this['alertPopups'][idx];
 
-          // only display the duplicate alert message if the default limit was reached
-          if (limit == DEFAULT_LIMIT) {
-            var dupeEvent = new AlertEvent(
-                'Too many duplicate alerts received! Open the alert window for details.',
-                AlertEventSeverity.WARNING);
-            this.displayAlert_(dupeEvent);
-          }
-        }
-      } else {
-        this.resetDupes_();
+      if (alertPopup) {
+        // Update the count of the popup
+        alertPopup.count = event.getCount();
+
+        // Reset the timeout on the dismiss handler so the popup remains
+        clearTimeout(event.getHandlerTimeoutId());
+        setTimeout(event.getHandler(), Controller.ALERT_TIMER);
+
+        // Do not display a new popup
+        display = false;
       }
     }
 
     this.lastEvent_ = event;
 
-    if (!this.dupeOverflow_) {
+    if (display) {
       this.displayAlert_(event);
     }
   }
@@ -174,22 +146,6 @@ export class Controller {
   }
 
   /**
-   * Resets the dupe counter
-   *
-   * @private
-   */
-  resetDupes_() {
-    this.dupeAlerts_ = 0;
-    this.dupeOverflow_ = false;
-    this.lastEvent_ = null;
-
-    if (this.dupeDelay_) {
-      this.dupeDelay_.dispose();
-      this.dupeDelay_ = null;
-    }
-  }
-
-  /**
    * Pops up an error message for 5 seconds
    *
    * @param {AlertEvent} event The message we want to pop up
@@ -198,6 +154,7 @@ export class Controller {
   displayAlert_(event) {
     if (this.popupsEnabled_()) {
       var id = getRandomString();
+      var timeoutId = null;
 
       // the function which will actually close the alert
       var dismiss = function(event) {
@@ -231,7 +188,9 @@ export class Controller {
           }
         };
 
-        setTimeout(handler, Controller.ALERT_TIMER);
+        timeoutId = setTimeout(handler, Controller.ALERT_TIMER);
+        event.setHandlerTimeoutId(timeoutId);
+        event.setHandler(handler);
       }
       dismissDispatcher.listenOnce(AlertEventTypes.DISMISS_ALERT, dismiss, false, this);
 

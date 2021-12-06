@@ -70,6 +70,13 @@ export default class AlertManager extends EventTarget {
      * @private
      */
     this.throttleMap_ = {};
+
+    /**
+     * The most recent alert that popped up
+     * @type {AlertEvent}
+     * @private
+     */
+    this.mostRecentAlert_ = null;
   }
 
   /**
@@ -150,28 +157,34 @@ export default class AlertManager extends EventTarget {
     const throttleMap = this.throttleMap_ && this.throttleMap_[alert] ? this.throttleMap_[alert][severity] : undefined;
     const throttleCount = throttleMap ? throttleMap.length : undefined;
 
-    // fire off the alert
-    const alertEvent = new AlertEvent(alert, severity, opt_limit, opt_dismissDispatcher, throttleCount);
-    this.savedAlerts_.add(alertEvent);
-    this.dispatchEvent(alertEvent);
+    if (this.mostRecentAlert_ && this.mostRecentAlert_.getMessage() == alert) {
+      this.mostRecentAlert_.increaseCount(throttleCount);
+      this.dispatchEvent(this.mostRecentAlert_);
+    } else {
+      // fire off the alert
+      const alertEvent = new AlertEvent(alert, severity, opt_limit, opt_dismissDispatcher, throttleCount);
+      this.savedAlerts_.add(alertEvent);
+      this.mostRecentAlert_ = alertEvent;
+      this.dispatchEvent(alertEvent);
 
-    // write the message to the logger if defined
-    if (opt_logger != null) {
-      if (throttleMap && throttleMap.length > 1) {
-        alert = `${alert} (${throttleMap.length})`;
-      }
-      switch (severity) {
-        case AlertEventSeverity.ERROR:
-          log.error(opt_logger, alert);
-          break;
-        case AlertEventSeverity.WARNING:
-          log.warning(opt_logger, alert);
-          break;
-        case AlertEventSeverity.INFO:
-        case AlertEventSeverity.SUCCESS:
-        default:
-          log.info(opt_logger, alert);
-          break;
+      // write the message to the logger if defined
+      if (opt_logger != null) {
+        if (throttleMap && throttleMap.length > 1) {
+          alert = `${alert} (${throttleMap.length})`;
+        }
+        switch (severity) {
+          case AlertEventSeverity.ERROR:
+            log.error(opt_logger, alert);
+            break;
+          case AlertEventSeverity.WARNING:
+            log.warning(opt_logger, alert);
+            break;
+          case AlertEventSeverity.INFO:
+          case AlertEventSeverity.SUCCESS:
+          default:
+            log.info(opt_logger, alert);
+            break;
+        }
       }
     }
   }
