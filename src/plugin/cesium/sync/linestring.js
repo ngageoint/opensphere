@@ -47,8 +47,36 @@ export const createLineStringPrimitive = (feature, geometry, style, context, opt
   const lineGeometryToCreate = geometry.get('extrude') ? 'WallGeometry' :
     heightReference === Cesium.HeightReference.CLAMP_TO_GROUND ? 'GroundPolylineGeometry' : 'PolylineGeometry';
   const positions = getLineStringPositions(geometry, opt_flatCoords, opt_offset, opt_end);
-  const method = /** @type {InterpolationMethod} */ (feature.get(interpolate.METHOD_FIELD));
+  const method = /** @type {InterpolationMethod} */ (geometry.get(interpolate.METHOD_FIELD)) ||
+  /** @type {InterpolationMethod} */ (feature.get(interpolate.METHOD_FIELD));
   return createLinePrimitive(positions, context, style, lineGeometryToCreate, method);
+};
+
+
+/**
+ * Get the Cesium arc type from the interpolation method.
+ * @param {InterpolationMethod=} opt_method The interpolation method.
+ * @return {Cesium.ArcType}
+ */
+const getArcType = (opt_method) => {
+  let arcType = Cesium.ArcType.NONE;
+
+  const method = opt_method || interpolate.getMethod();
+  switch (method) {
+    case InterpolationMethod.NONE:
+      arcType = Cesium.ArcType.NONE;
+      break;
+    case InterpolationMethod.GEODESIC:
+      arcType = Cesium.ArcType.GEODESIC;
+      break;
+    case InterpolationMethod.RHUMB:
+      arcType = Cesium.ArcType.RHUMB;
+      break;
+    default:
+      break;
+  }
+
+  return arcType;
 };
 
 
@@ -93,7 +121,7 @@ const createLinePrimitive = (positions, context, style, opt_type, opt_method) =>
   const geometry = new Cesium[type]({
     positions: positions,
     vertexFormat: appearance.vertexFormat,
-    arcType: opt_method === InterpolationMethod.RHUMB ? Cesium.ArcType.RHUMB : Cesium.ArcType.GEODESIC,
+    arcType: getArcType(opt_method),
     width: width
   });
 

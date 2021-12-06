@@ -9,6 +9,8 @@ import RecordField from '../../../os/data/recordfield.js';
 import Fields from '../../../os/fields/fields.js';
 import * as osFileMimeText from '../../../os/file/mime/text.js';
 import * as mimeZip from '../../../os/file/mime/zip.js';
+import {METHOD_FIELD} from '../../../os/interpolate.js';
+import Method from '../../../os/interpolatemethod.js';
 import Image from '../../../os/layer/image.js';
 import * as osMap from '../../../os/map/map.js';
 import MapContainer from '../../../os/mapcontainer.js';
@@ -27,6 +29,7 @@ import ColorControlType from '../../../os/ui/colorcontroltype.js';
 import ControlType from '../../../os/ui/controltype.js';
 import * as osUiFileKml from '../../../os/ui/file/kml/kml.js';
 import * as ui from '../../../os/ui/ui.js';
+import AltitudeMode from '../../../os/webgl/altitudemode.js';
 import * as xml from '../../../os/xml.js';
 import JsonField from './jsonfield.js';
 import * as kml from './kml.js';
@@ -1141,8 +1144,10 @@ export default class KMLParser extends AsyncZipParser {
     delete object['geometry'];
 
     if (geometry) {
+      var geometryType = geometry.getType();
+
       // grab the lon/lat coordinate before we potentially convert it to god knows what
-      if (geometry.getType() == GeometryType.POINT) {
+      if (geometryType == GeometryType.POINT) {
         var coord = /** @type {!ol.geom.Point} */ (geometry).getFirstCoordinate();
         if (coord.length > 1) {
           object[Fields.LAT] = object[Fields.LAT] || coord[1];
@@ -1152,6 +1157,20 @@ export default class KMLParser extends AsyncZipParser {
             object[Fields.GEOM_ALT] = object[Fields.GEOM_ALT] || coord[2];
           }
         }
+      } else if (geometryType == GeometryType.LINE_STRING) {
+        // If tessellation is explicitly disabled, disable interpolation on the geometry. This includes setting the
+        // altitude mode to absolute to prevent tessellation in 3D.
+        var tessellate = geometry.get('tessellate');
+        if (tessellate === false) {
+          geometry.set(METHOD_FIELD, Method.NONE);
+          geometry.set(RecordField.ALTITUDE_MODE, AltitudeMode.ABSOLUTE);
+        }
+      }
+
+      // KML specification defaults altitudeMode to clampToGround for all geometry types.
+      var altitudeMode = geometry.get(RecordField.ALTITUDE_MODE);
+      if (!altitudeMode) {
+        geometry.set(RecordField.ALTITUDE_MODE, AltitudeMode.CLAMP_TO_GROUND);
       }
 
       // convert to application projection
