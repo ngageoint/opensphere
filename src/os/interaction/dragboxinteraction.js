@@ -2,6 +2,7 @@ goog.declareModuleId('os.interaction.DragBox');
 
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';
+import OSMap from '../map.js';
 import OLDragBox from '../ui/ol/interaction/dragboxinteraction.js';
 
 const {asArray} = goog.require('ol.color');
@@ -9,7 +10,6 @@ const Stroke = goog.require('ol.style.Stroke');
 const Style = goog.require('ol.style.Style');
 
 const Polygon = goog.requireType('ol.geom.Polygon');
-const {default: OSMap} = goog.requireType('os.Map');
 
 
 /**
@@ -62,7 +62,7 @@ export default class DragBox extends OLDragBox {
 
     // restore camera controls in 3D mode
     var map = /** @type {OSMap} */ (this.getMap());
-    if (map) {
+    if (map instanceof OSMap) {
       map.toggleMovement(true);
     }
 
@@ -82,8 +82,11 @@ export default class DragBox extends OLDragBox {
   begin(mapBrowserEvent) {
     super.begin(mapBrowserEvent);
     var map = this.getMap();
-    // stop camera controls in 3D mode
-    /** @type {OSMap} */ (map).toggleMovement(false);
+
+    if (map instanceof OSMap) {
+      // stop camera controls in 3D mode
+      /** @type {OSMap} */ (map).toggleMovement(false);
+    }
   }
 
   /**

@@ -8,6 +8,7 @@ import {getGeometries} from '../../../feature/feature.js';
 import {reduceExtentFromLayers, reduceExtentFromGeometries} from '../../../fn/fn.js';
 import osImplements from '../../../implements.js';
 import instanceOf from '../../../instanceof.js';
+import MouseRotate from '../../../interaction/mouserotateinteraction.js';
 import ILayer from '../../../layer/ilayer.js';
 import * as osMap from '../../../map/map.js';
 import {getMapContainer} from '../../../map/mapinstance.js';
@@ -24,28 +25,32 @@ import {bringToFront, close as closeWindow, create as createWindow, getById as g
 import {launchConfirm} from '../../window/confirm.js';
 import LayerCompareNode from './layercomparenode.js';
 
-const Promise = goog.require('goog.Promise');
+const DragZoom = goog.require('ol.interaction.DragZoom');
 const dispose = goog.require('goog.dispose');
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
 const {listen, unlistenByKey} = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
 const Collection = goog.require('ol.Collection');
 const OLMap = goog.require('ol.Map');
+const Promise = goog.require('goog.Promise');
 const View = goog.require('ol.View');
 const RotateControl = goog.require('ol.control.Rotate');
 const ZoomControl = goog.require('ol.control.Zoom');
-const {getCenter: getExtentCenter} = goog.require('ol.extent');
 const OLVectorSource = goog.require('ol.source.Vector');
 const olExtent = goog.require('ol.extent');
+const {defaults} = goog.require('ol.interaction');
+const {getCenter: getExtentCenter} = goog.require('ol.extent');
+const {platformModifierKeyOnly} = goog.require('ol.events.condition');
 
 const EventKey = goog.requireType('goog.events.Key');
 const Control = goog.requireType('ol.control.Control');
+const Interaction = goog.requireType('ol.interaction.Interaction');
 const Layer = goog.requireType('ol.layer.Layer');
 const LayerEvent = goog.requireType('os.events.LayerEvent');
 const {Context} = goog.requireType('os.ui.menu.layer');
-const {default: ISource} = goog.requireType('os.source.ISource');
 const {default: VectorSource} = goog.requireType('os.source.Vector');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
+const {default: MenuItemOptions} = goog.requireType('os.ui.menu.MenuItemOptions');
 const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
@@ -70,6 +75,11 @@ const MenuEventType = {
   GO_TO: 'compare:goTo',
   REMOVE: 'compare:remove'
 };
+
+/**
+ * @type {Array<MenuItemOptions>}
+ */
+export const AdditionalMenuOptions = [];
 
 /**
  * @typedef {{
@@ -106,6 +116,23 @@ const createControls = () => [
     className: 'c-layer-compare-control ol-zoom'
   })
 ];
+
+/**
+ * Create the interactions for the map.
+ * @return {!Array<!Interaction>}
+ */
+const createInteractions = () => {
+  // create the default map interactions, minus the drag rotate and drag zoom
+  const interactions = defaults({
+    altShiftDragRotate: false,
+    shiftDragZoom: false
+  }).getArray();
+
+  interactions.push(new DragZoom({condition: platformModifierKeyOnly}));
+  interactions.push(new MouseRotate({delta: .2}));
+
+  return interactions;
+};
 
 /**
  * Launch a dialog warning users of the risks in using 2D with lots of data.
@@ -211,7 +238,6 @@ export class Controller {
     /**
      * The left map.
      * @type {OLMap}
-     * @protected
      */
     this.leftMap = null;
 
@@ -246,7 +272,7 @@ export class Controller {
         eventType: EventType.GOTO,
         icons: ['<i class="fa fa-fw fa-fighter-jet"></i>'],
         tooltip: 'Repositions the map to show the layer',
-        handler: this.goTo.bind(this),
+        handler: this.handleGoTo.bind(this),
         beforeRender: visibleIfSupported,
         sort: 10
       }, {
@@ -254,9 +280,9 @@ export class Controller {
         eventType: MenuEventType.REMOVE,
         icons: ['<i class="fas fa-fw fa-times"></i>'],
         tooltip: 'Remove the selected layers from the Layer Comparison',
-        handler: this.removeSelected.bind(this, 'left'),
+        handler: this.handleRemoveSelected.bind(this, 'left'),
         sort: 20
-      }]
+      }].concat(AdditionalMenuOptions)
     }));
 
     /**
@@ -269,7 +295,6 @@ export class Controller {
     /**
      * The right map.
      * @type {OLMap}
-     * @protected
      */
     this.rightMap = null;
 
@@ -304,7 +329,7 @@ export class Controller {
         eventType: EventType.GOTO,
         icons: ['<i class="fa fa-fw fa-fighter-jet"></i>'],
         tooltip: 'Repositions the map to show the layer',
-        handler: this.goTo.bind(this),
+        handler: this.handleGoTo.bind(this),
         beforeRender: visibleIfSupported,
         sort: 10
       }, {
@@ -312,9 +337,9 @@ export class Controller {
         eventType: MenuEventType.REMOVE,
         icons: ['<i class="fas fa-fw fa-times"></i>'],
         tooltip: 'Remove the selected layers from the Layer Comparison',
-        handler: this.removeSelected.bind(this, 'right'),
+        handler: this.handleRemoveSelected.bind(this, 'right'),
         sort: 20
-      }]
+      }].concat(AdditionalMenuOptions)
     }));
 
     /**
@@ -379,6 +404,7 @@ export class Controller {
 
     this.leftMap = new OLMap({
       controls: [],
+      interactions: createInteractions(),
       layers: this.leftLayers,
       target: leftEl,
       view: this.view
@@ -388,6 +414,7 @@ export class Controller {
 
     this.rightMap = new OLMap({
       controls,
+      interactions: createInteractions(),
       layers: this.rightLayers,
       target: rightEl,
       view: this.view
@@ -598,7 +625,7 @@ export class Controller {
    * Removes selected layers from a side.
    * @param {string} from The side to move to.
    */
-  removeSelected(from) {
+  handleRemoveSelected(from) {
     if (from == 'right') {
       const rightLayerArr = this.rightLayers.getArray();
       const layers = this.rightSelected.map((node) => node.getLayer());
@@ -637,7 +664,7 @@ export class Controller {
    * Handle the "Go To" menu event.
    * @param {!MenuEvent<Context>} event The menu event.
    */
-  goTo(event) {
+  handleGoTo(event) {
     // aggregate the features and execute flyTo, in case they have altitude and pure extent wont cut it
     const layers = getLayersFromContext(event.getContext());
     const features = layers.reduce((feats, layer) => {
@@ -661,6 +688,14 @@ export class Controller {
       return;
     }
 
+    this.flyTo(extent);
+  }
+
+  /**
+   * Fly the compare maps to an extent.
+   * @param {ol.Extent} extent
+   */
+  flyTo(extent) {
     // just use the left map here, either one works since their views are synchronized
     const leftView = this.leftMap.getView();
     const buffer = .1;

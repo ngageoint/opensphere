@@ -1,16 +1,19 @@
 goog.declareModuleId('os.map');
 
 import '../ol/ol.js';
+import FlightMode from './flightmode.js';
 
+const {linear: linearEasing} = goog.require('ol.easing');
 const {assert} = goog.require('goog.asserts');
 const {DEFAULT_MAX_ZOOM} = goog.require('ol');
-const {toRadians} = goog.require('ol.math');
+const {clamp, toRadians} = goog.require('ol.math');
 const {get: getProjection} = goog.require('ol.proj');
 const {createForProjection} = goog.require('ol.tilegrid');
 
 const PluggableMap = goog.requireType('ol.PluggableMap');
 const Projection = goog.requireType('ol.proj.Projection');
 const TileGrid = goog.requireType('ol.tilegrid.TileGrid');
+const OLMap = goog.requireType('ol.Map');
 
 
 /**
@@ -116,6 +119,12 @@ export const E = 0.9151598587;
  * @type {ol.Extent}
  */
 export const ZERO_EXTENT = [0, 0, 0, 0];
+
+/**
+ * The default fly zoom duration.
+ * @type {number}
+ */
+export const FLY_ZOOM_DURATION = 1000;
 
 /**
  * Properties to scale icons/labels by camera distance. Near/far values represent camera altitude in meters.
@@ -276,4 +285,46 @@ export const resolutionForDistance = function(map, distance, opt_latitude) {
   var resolution = visibleMapUnits / size[1];
 
   return resolution;
+};
+
+/**
+ *
+ * @param {!osx.map.FlyToOptions} options
+ * @param {OLMap} map
+ */
+export const flyTo = function(options, map) {
+  if (map) {
+    const view = map.getView();
+
+    // translate 3D heading to OpenLayers rotation if defined and non-zero
+    const rotation = options.heading ? toRadians(-options.heading) : 0;
+    const center = options.destination || options.center || view.getCenter();
+    const duration = options.duration || FLY_ZOOM_DURATION;
+
+    const animateOptions = /** @type {!olx.AnimationOptions} */ ({
+      center,
+      duration,
+      rotation
+    });
+
+    if (options.zoom !== undefined) {
+      // prioritize zoom in 2D mode
+      animateOptions.zoom = clamp(options.zoom, MIN_ZOOM, MAX_ZOOM);
+    } else if (!options.positionCamera && options.range !== undefined) {
+      // telling the camera where to look, so a range will generally be specified
+      const resolution = resolutionForDistance(map, options.range, 0);
+      animateOptions.resolution = clamp(resolution, MIN_RESOLUTION, MAX_RESOLUTION);
+    } else if (options.altitude !== undefined) {
+      // try altitude last, because it will generally be 0 if positioning the camera
+      const resolution = resolutionForDistance(map, options.altitude, 0);
+      animateOptions.resolution = clamp(resolution, MIN_RESOLUTION, MAX_RESOLUTION);
+    }
+
+    // 'bounce' uses default easing, 'smooth' uses linear.
+    if (options.flightMode === FlightMode.SMOOTH) {
+      animateOptions.easing = linearEasing;
+    }
+
+    view.animate(animateOptions);
+  }
 };
