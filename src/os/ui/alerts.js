@@ -89,12 +89,16 @@ export class Controller {
    * @private
    */
   registerAlert_(event) {
-    this['alertArray'].unshift({
-      'count': event.getCount(),
-      'msg': event.getMessage(),
-      'severity': event.getSeverity().toString(),
-      'time': event.getTime().toUTCIsoString(true).slice(11)
-    });
+    if (this['alertArray'].length > 0 && event.getMessage() == this['alertArray'][0]['msg']) {
+      this['alertArray'][0]['count'] += event.getCount();
+    } else {
+      this['alertArray'].unshift({
+        'count': event.getCount(),
+        'msg': event.getMessage(),
+        'severity': event.getSeverity().toString(),
+        'time': event.getTime().toUTCIsoString(true).slice(11)
+      });
+    }
     apply(this.scope_);
   }
 

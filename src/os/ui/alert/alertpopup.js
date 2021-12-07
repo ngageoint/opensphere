@@ -62,11 +62,11 @@ export class Controller {
     this.scope_ = $scope;
 
     /**
-     * The last event handled by the viewer
-     * @type {AlertEvent}
+     * The last event message handled by the viewer
+     * @type {?string}
      * @private
      */
-    this.lastEvent_ = null;
+    this.lastMessage_ = null;
 
     /**
      * @type {Array.<Object>}
@@ -102,30 +102,30 @@ export class Controller {
    */
   handleAlertEvent_(event) {
     var display = true;
+    var newMessage = event.getMessage();
 
-    if (this.lastEvent_ && event.getMessage() == this.lastEvent_.getMessage()) {
+    // If the popup is a duplicate, consolidate it
+    if (newMessage.length > 0 && newMessage == this.lastMessage_) {
       // See if a popup for the current alert is showing
-      var msg = event.getMessage();
-      var idx = '';
-      if (msg) {
-        idx = this['alertPopups'].findIndex((popupObj) => popupObj['msg'] == msg);
+      var alertPopup = null;
+      if (newMessage) {
+        alertPopup = this['alertPopups'].find((popupObj) => popupObj['msg'] == newMessage);
       }
-      var alertPopup = this['alertPopups'][idx];
 
       if (alertPopup) {
         // Update the count of the popup
-        alertPopup.count = event.getCount();
+        alertPopup['count'] += event.getCount();
 
         // Reset the timeout on the dismiss handler so the popup remains
-        clearTimeout(event.getHandlerTimeoutId());
-        setTimeout(event.getHandler(), Controller.ALERT_TIMER);
+        clearTimeout(alertPopup['handlerTimeoutId']);
+        setTimeout(alertPopup['handler'], Controller.ALERT_TIMER);
 
         // Do not display a new popup
         display = false;
       }
     }
 
-    this.lastEvent_ = event;
+    this.lastMessage_ = newMessage;
 
     if (display) {
       this.displayAlert_(event);
@@ -189,8 +189,6 @@ export class Controller {
         };
 
         timeoutId = setTimeout(handler, Controller.ALERT_TIMER);
-        event.setHandlerTimeoutId(timeoutId);
-        event.setHandler(handler);
       }
       dismissDispatcher.listenOnce(AlertEventTypes.DISMISS_ALERT, dismiss, false, this);
 
@@ -200,7 +198,9 @@ export class Controller {
         'count': event.getCount(),
         'msg': message,
         'severity': event.getSeverity().toString(),
-        'timeout': dismiss
+        'timeout': dismiss,
+        'handler': handler,
+        'handlerTimeoutId': timeoutId
       };
 
       this['alertPopups'].push(popup);
