@@ -2,6 +2,8 @@ goog.declareModuleId('os.ui.layer.compare.LayerCompareUI');
 
 import EventType from '../../../action/eventtype.js';
 import * as capture from '../../../capture/capture.js';
+import ZOrder from '../../../data/zorder.js';
+import ZOrderEventType from '../../../data/zordereventtype.js';
 import LayerEventType from '../../../events/layereventtype.js';
 import {normalizeToCenter} from '../../../extent.js';
 import {getGeometries} from '../../../feature/feature.js';
@@ -51,7 +53,6 @@ const {Context} = goog.requireType('os.ui.menu.layer');
 const {default: VectorSource} = goog.requireType('os.source.Vector');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: MenuItemOptions} = goog.requireType('os.ui.menu.MenuItemOptions');
-const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -83,8 +84,8 @@ export const AdditionalMenuOptions = [];
 
 /**
  * @typedef {{
- *   left: (Array<Layer>|undefined),
- *   right: (Array<Layer>|undefined)
+ *   left: (Array<Layer>),
+ *   right: (Array<Layer>)
  * }}
  */
 export let LayerCompareOptions;
@@ -132,6 +133,18 @@ const createInteractions = () => {
   interactions.push(new MouseRotate({delta: .2}));
 
   return interactions;
+};
+
+/**
+ * Sort function to sort nodes by their Z-Index.
+ * @param {LayerCompareNode} a
+ * @param {LayerCompareNode} b
+ * @return {number}
+ */
+const sortNodesByZIndex = (a, b) => {
+  const ai = /** @type {Layer} */ (a.getLayer()).getZIndex();
+  const bi = /** @type {Layer} */ (b.getLayer()).getZIndex();
+  return bi - ai;
 };
 
 /**
@@ -243,13 +256,13 @@ export class Controller {
 
     /**
      * The left layer nodes.
-     * @export {!Array<SlickTreeNode>}
+     * @export {!Array<LayerCompareNode>}
      */
     this.leftNodes = [];
 
     /**
      * The left selected layer nodes.
-     * @export {!Array<SlickTreeNode>}
+     * @export {!Array<LayerCompareNode>}
      */
     this.leftSelected = [];
 
@@ -300,13 +313,13 @@ export class Controller {
 
     /**
      * The right layer nodes.
-     * @export {!Array<SlickTreeNode>}
+     * @export {!Array<LayerCompareNode>}
      */
     this.rightNodes = [];
 
     /**
      * The right selected layer nodes.
-     * @export {!Array<SlickTreeNode>}
+     * @export {!Array<LayerCompareNode>}
      */
     this.rightSelected = [];
 
@@ -366,6 +379,8 @@ export class Controller {
     // Updates the map sizes when the window or browser is resized.
     resize(this.element, this.resizeFn);
     this.vsm.listen(GoogEventType.RESIZE, this.handleBrowserResize, false, this);
+
+    ZOrder.getInstance().listen(ZOrderEventType.UPDATE, this.onZOrderChange, false, this);
   }
 
   /**
@@ -382,6 +397,7 @@ export class Controller {
     }
 
     getMapContainer().unlisten(LayerEventType.REMOVE, this.onLayerRemoved, false, this);
+    ZOrder.getInstance().unlisten(ZOrderEventType.UPDATE, this.onZOrderChange, false, this);
 
     dispose(this.leftMap);
     dispose(this.rightMap);
@@ -517,6 +533,7 @@ export class Controller {
     this.setCollectionLayers(collection, layers);
 
     const nodes = this.createNodes(layers);
+    nodes.sort(sortNodesByZIndex);
     this.leftNodes = nodes;
   }
 
@@ -529,6 +546,7 @@ export class Controller {
     this.setCollectionLayers(collection, layers);
 
     const nodes = this.createNodes(layers);
+    nodes.sort(sortNodesByZIndex);
     this.rightNodes = nodes;
   }
 
@@ -538,19 +556,23 @@ export class Controller {
    * @param {string} target The side to add the layers to.
    */
   addLayers(layers, target) {
-    if (target == 'left') {
-      const leftLayers = this.leftLayers.getArray().filter((l) => !isBasemap(l));
-      this.setLeftLayers(leftLayers.concat(layers));
-    } else if (target == 'right') {
-      const rightLayers = this.rightLayers.getArray().filter((l) => !isBasemap(l));
-      this.setRightLayers(rightLayers.concat(layers));
+    if (layers) {
+      if (target == 'left') {
+        const leftLayers = this.leftLayers.getArray().filter((l) => !isBasemap(l));
+        leftLayers.push(...layers);
+        this.setLeftLayers(leftLayers);
+      } else if (target == 'right') {
+        const rightLayers = this.rightLayers.getArray().filter((l) => !isBasemap(l));
+        rightLayers.push(...layers);
+        this.setRightLayers(rightLayers);
+      }
     }
   }
 
   /**
    * Creates tree nodes from layers.
    * @param {Array<Layer>|undefined} layers The layers.
-   * @return {!Array<SlickTreeNode>}
+   * @return {!Array<LayerCompareNode>}
    */
   createNodes(layers) {
     let nodes = [];
@@ -587,18 +609,22 @@ export class Controller {
    * @export
    */
   moveSelected(target) {
-    const rightLayerArr = this.rightLayers.getArray();
-    const leftLayerArr = this.leftLayers.getArray();
+    const rightLayerArr = this.rightLayers.getArray().slice();
+    const leftLayerArr = this.leftLayers.getArray().slice();
 
     if (target == 'left') {
-      const layers = this.rightSelected.map((node) => node.getLayer());
-      const rightUnselectedLayers = rightLayerArr.filter((layer) => !layers.includes(layer));
+      const rightSelectedLayers = this.rightSelected.map((node) => node.getLayer());
+      const rightUnselectedLayers = rightLayerArr.filter((layer) => !rightSelectedLayers.includes(layer));
+      leftLayerArr.unshift(...rightSelectedLayers);
+
       this.setRightLayers(rightUnselectedLayers);
-      this.setLeftLayers(leftLayerArr.concat(layers));
+      this.setLeftLayers(leftLayerArr);
     } else if (target == 'right') {
-      const layers = this.leftSelected.map((node) => node.getLayer());
-      const leftUnselectedLayers = leftLayerArr.filter((layer) => !layers.includes(layer));
-      this.setRightLayers(rightLayerArr.concat(layers));
+      const leftSelectedLayers = this.leftSelected.map((node) => node.getLayer());
+      const leftUnselectedLayers = leftLayerArr.filter((layer) => !leftSelectedLayers.includes(layer));
+      rightLayerArr.unshift(...leftSelectedLayers);
+
+      this.setRightLayers(rightLayerArr);
       this.setLeftLayers(leftUnselectedLayers);
     }
   }
@@ -851,10 +877,18 @@ export class Controller {
    * Handler for browser window resize events. Requests an update to the map sizes on the next animation frame.
    * These updates won't happen on browser resize without the requestAnimationFrame call due to the OL map render
    * being tied to animation frames.
-   * @protected
    */
   handleBrowserResize() {
     requestAnimationFrame(this.resizeFn);
+  }
+
+  /**
+   * Handler for Z-order changes from the main map. Sorts the layer compare nodes to match the main map.
+   */
+  onZOrderChange() {
+    // resort and slice new array copies to give the Angular watch on the node arrays a kick
+    this.leftNodes = this.leftNodes.sort(sortNodesByZIndex).slice();
+    this.rightNodes = this.rightNodes.sort(sortNodesByZIndex).slice();
   }
 }
 

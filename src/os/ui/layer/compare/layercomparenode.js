@@ -42,6 +42,7 @@ export default class LayerCompareNode extends SlickTreeNode {
 
     // hide the node toggle to save space on the left, this tree is meant to be flat anyway.
     this.setNodetoggleVisible(false);
+    this.childrenAllowed = false;
 
     /**
      * @type {ILayer}

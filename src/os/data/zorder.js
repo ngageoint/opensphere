@@ -206,6 +206,9 @@ export default class ZOrder extends EventTarget {
         }
       }
     }
+
+    // dispatch a global Z-order update event
+    this.dispatchEvent(ZOrderEventType.UPDATE);
   }
 
   /**
