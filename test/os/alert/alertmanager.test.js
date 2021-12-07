@@ -233,8 +233,8 @@ describe('os.alert.AlertManager', function() {
       am.sendAlert(alert7).then(() => {
         last = am.getAlerts().getLast();
         expect(last.getMessage()).toBe(alert7);
-        expect(last.getCount()).toBe(2);
-        expect(am.getAlerts().getCount()).toBe(1);
+        expect(last.getCount()).toBe(1);
+        expect(am.getAlerts().getCount()).toBe(2);
       });
     });
   });
@@ -247,7 +247,7 @@ describe('os.alert.AlertManager', function() {
     am.sendAlert(alert8, undefined, undefined, undefined, undefined, 0);
     const last = am.getAlerts().getLast();
     expect(last.getMessage()).toBe(alert8);
-    expect(last.getCount()).toBe(2);
-    expect(am.getAlerts().getCount()).toBe(1);
+    expect(last.getCount()).toBe(1);
+    expect(am.getAlerts().getCount()).toBe(2);
   });
 });
