@@ -1,5 +1,6 @@
 goog.declareModuleId('os.state.v2.LayerState');
 
+import {forEach} from '../../array/array.js';
 import {isColorString, padHexColor, toHexString} from '../../color.js';
 import LayerAdd from '../../command/layeraddcmd.js';
 import DataManager from '../../data/datamanager.js';
@@ -633,7 +634,7 @@ export default class LayerState extends XMLState {
                   case LayerTag.LABEL_COLUMNS:
                     var labels = [];
                     var labelColumns = getChildren(styleList[j]);
-                    labelColumns.forEach(function(label) {
+                    forEach(labelColumns, function(label) {
                       labels.push({
                         'column': label.getAttribute('column'),
                         'showColumn': label.getAttribute('showColumn') == 'true' ? true : false
