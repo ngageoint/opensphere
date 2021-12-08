@@ -11,8 +11,11 @@
         <button class="btn btn-primary" ng-click="ctrl.swap()" title="Swap the compare order">
           <i class="fas fa-exchange-alt"></i> Swap Layers
         </button>
-        <button class="btn btn-secondary" ng-click="ctrl.export()" title="Export the current view">
-          <i class="fas fa-download"></i> Export
+        <button class="btn btn-primary" ng-click="ctrl.toggleLayout()" title="Toggles between overlapping maps and side-by-side maps">
+          <i class="fas fa-columns"></i> {{ctrl.layout == 'sideBySide' ? 'Overlapping' : 'Side by Side'}}
+        </button>
+        <button class="btn btn-secondary" ng-click="ctrl.export()" title="Screenshot and download the current view">
+          <i class="fas fa-download"></i> Screenshot
         </button>
       </div>
 
@@ -29,13 +32,13 @@
       </div>
       <div class="d-flex flex-fill border col-8 px-0 c-layer-compare-container js-layer-compare-container">
         <div class="c-layer-compare-slider js-layer-compare-slider">
-          <div class="c-layer-compare-handle" ng-mousedown="ctrl.toggleDrag($event)">
+          <div class="c-layer-compare-handle js-layer-compare-handle" ng-mousedown="ctrl.toggleDrag($event)">
             <i class="fas fa-angle-left"></i>
             <i class="fas fa-angle-right"></i>
           </div>
         </div>
-        <div class="c-layer-compare-item js-layer-compare-right"></div>
         <div class="c-layer-compare-item c-layer-compare-top js-layer-compare-left"></div>
+        <div class="c-layer-compare-item js-layer-compare-right"></div>
       </div>
       <div class="d-flex flex-row flex-fill col-2">
         <slicktree class="border" x-data="ctrl.rightNodes" selected="ctrl.rightSelected" context-menu="ctrl.rightMenu" checkbox-tooltip="Show or hide the layer" multi-select="true"></slicktree>
