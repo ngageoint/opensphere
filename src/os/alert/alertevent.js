@@ -114,13 +114,4 @@ export default class AlertEvent extends GoogEvent {
   getCount() {
     return this.count_;
   }
-
-  /**
-   * @param {?number|undefined} count
-   */
-  increaseCount(count) {
-    if (count) {
-      this.count_ += count;
-    }
-  }
 }

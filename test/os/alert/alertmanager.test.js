@@ -134,7 +134,7 @@ describe('os.alert.AlertManager', function() {
       const promises = [];
 
       for (const key in AlertEventSeverity) {
-        promises.push(am.sendAlert(`alert ${key}`, AlertEventSeverity[key], logger));
+        promises.push(am.sendAlert('alert', AlertEventSeverity[key], logger));
       }
 
       Promise.all(promises).then(() => {

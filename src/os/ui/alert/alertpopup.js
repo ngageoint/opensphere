@@ -118,7 +118,7 @@ export class Controller {
 
         // Reset the timeout on the dismiss handler so the popup remains
         clearTimeout(alertPopup['handlerTimeoutId']);
-        setTimeout(alertPopup['handler'], Controller.ALERT_TIMER);
+        alertPopup['handlerTimeoutId'] = setTimeout(alertPopup['handler'], Controller.ALERT_TIMER);
 
         // Do not display a new popup
         display = false;
