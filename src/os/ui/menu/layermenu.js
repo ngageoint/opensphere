@@ -8,6 +8,7 @@ import FlyToExtent from '../../command/flytoextentcmd.js';
 import DataManager from '../../data/datamanager.js';
 import FileDescriptor from '../../data/filedescriptor.js';
 import {flyTo} from '../../feature/feature.js';
+import {FileScheme, isLocal} from '../../file/index.js';
 import {nodesToLayers, reduceExtentFromLayers} from '../../fn/fn.js';
 import {getMapContainer} from '../../map/mapinstance.js';
 import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
@@ -395,6 +396,23 @@ const onDescription_ = function(event) {
 };
 
 /**
+ * Get the title used to save a descriptor.
+ * @param {FileDescriptor} descriptor The descriptor.
+ * @return {string}
+ */
+const getSaveTitle = (descriptor) => {
+  const url = descriptor.getUrl();
+  if (isLocal(url)) {
+    // Local files are stored by prepending the original file name with local://. To ensure we replace the existing
+    // file, get the URL and replace the local:// scheme.
+    return url.replace(`${FileScheme.LOCAL}://`, '');
+  }
+
+  // Fall back on the descriptor title (best effort save).
+  return descriptor.getTitle() || '';
+};
+
+/**
  * Handle the "Save" menu event.
  *
  * @param {!MenuEvent<Context>} event The menu event.
@@ -410,15 +428,17 @@ const onSave_ = function(event) {
       const layerName = source.getTitle(true);
       const descriptor = DataManager.getInstance().getDescriptor(source.getId());
 
+      let title = layerName;
       if (descriptor instanceof FileDescriptor) {
         exporter = descriptor.getExporter();
+        title = getSaveTitle(descriptor) || layerName;
       }
 
       const options = /** @type {ExportOptions} */ ({
         items: source.getFeatures(),
         sources: [source],
         fields: getExportFields(source, false, exporter.supportsTime()),
-        title: layerName,
+        title,
         keepTitle: true,
         createDescriptor: !(descriptor instanceof FileDescriptor),
         exporter
