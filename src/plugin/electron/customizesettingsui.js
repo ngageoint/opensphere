@@ -2,6 +2,7 @@ goog.declareModuleId('plugin.electron.CustomizeSettingsUI');
 
 import '../../os/ui/slick/slicktree.js';
 import AlertManager from '../../os/alert/alertmanager.js';
+import Settings from '../../os/config/settings.js';
 import * as Dispatcher from '../../os/dispatcher.js';
 import {createFromFile} from '../../os/file/index.js';
 import {ROOT} from '../../os/os.js';
@@ -100,6 +101,12 @@ export class Controller {
      * @protected
      */
     this.saveDelay = new Delay(this.save, 100, this);
+
+    /**
+     * URL to the customize configuration help documentation.
+     * @export {string}
+     */
+    this.helpUrl = /** @type {string} */ (Settings.getInstance().get('electron.configHelpUrl', ''));
 
     /**
      * Tree nodes for the settings files.
