@@ -21,5 +21,8 @@
         multi-select="true"
         selected="ctrl.selected">
     </slicktree>
+    <div class="form-group mt-2" ng-if="ctrl.helpUrl">
+      <i class="fas fa-question-circle"></i> For help on creating custom configuration files, please <a href="{{ctrl.helpUrl}}">visit the documentation here.</a>
+    </div>
   </div>
 </div>

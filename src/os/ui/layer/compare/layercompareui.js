@@ -389,7 +389,6 @@ export class Controller {
     /**
      * The current Layout for the compare.
      * @export {string}
-     * @protected
      */
     this.layout = Layout.OVERLAPPING;
 
