@@ -120,6 +120,9 @@ export class Controller {
         clearTimeout(alertPopup['handlerTimeoutId']);
         alertPopup['handlerTimeoutId'] = setTimeout(alertPopup['handler'], Controller.ALERT_TIMER);
 
+        // Apply the scope to update the alert count
+        apply(this.scope_);
+
         // Do not display a new popup
         display = false;
       }
