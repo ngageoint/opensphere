@@ -63,7 +63,17 @@ const Selector = {
   CONTAINER: '.js-layer-compare-container',
   MAP_LEFT: '.js-layer-compare-left',
   MAP_RIGHT: '.js-layer-compare-right',
-  SLIDER: '.js-layer-compare-slider'
+  SLIDER: '.js-layer-compare-slider',
+  HANDLE: '.js-layer-compare-handle'
+};
+
+/**
+ * Layout types for the UI.
+ * @enum {string}
+ */
+const Layout = {
+  OVERLAPPING: 'overlapping',
+  SIDE_BY_SIDE: 'sideBySide'
 };
 
 /**
@@ -376,6 +386,13 @@ export class Controller {
      */
     this.vsm = new ViewportSizeMonitor();
 
+    /**
+     * The current Layout for the compare.
+     * @export {string}
+     * @protected
+     */
+    this.layout = Layout.OVERLAPPING;
+
     // Updates the map sizes when the window or browser is resized.
     resize(this.element, this.resizeFn);
     this.vsm.listen(GoogEventType.RESIZE, this.handleBrowserResize, false, this);
@@ -604,6 +621,42 @@ export class Controller {
   }
 
   /**
+   * Toggles the layout between overlapping and side-by-side maps.
+   * @export
+   */
+  toggleLayout() {
+    const container = this.element.find(Selector.CONTAINER);
+    const handle = this.element.find(Selector.HANDLE);
+    const slider = this.element.find(Selector.SLIDER);
+    const leftMap = this.element.find(Selector.MAP_LEFT);
+    const rightMap = this.element.find(Selector.MAP_RIGHT);
+
+    if (this.layout == Layout.OVERLAPPING) {
+      this.layout = Layout.SIDE_BY_SIDE;
+
+      // Remove the position from the container, set the map widths to 50% and display inline so they appear
+      // draw next to each other. Hide the handle so you can't drag back and forth.
+      container.css('position', '');
+      leftMap.width('50%').css('display', 'inline').css('position', 'relative');
+      rightMap.width('50%').css('display', 'inline').css('position', 'relative');
+      handle.hide();
+      slider.css('left', '50%');
+    } else {
+      this.layout = Layout.OVERLAPPING;
+
+      // Set the container to position: relative so we can place the maps with position: absolute inside to overlap.
+      // Bring back the handle and reset to a 50/50 split view.
+      container.css('position', 'relative');
+      leftMap.width('50%').css('display', '').css('position', 'absolute');
+      rightMap.width('100%').css('display', '').css('position', 'absolute');
+      handle.show();
+      slider.css('left', '50%');
+    }
+
+    this.updateMapSize();
+  }
+
+  /**
    * Moves selected layers to the other side.
    * @param {string} target The side to move to.
    * @export
@@ -746,31 +799,34 @@ export class Controller {
    * @export
    */
   export() {
+    const isOverlap = this.layout == Layout.OVERLAPPING;
+
     // Get both canvases
-    var topCanvas = this.element.find(`${Selector.MAP_LEFT} canvas`)[0];
-    var bottomCanvas = this.element.find(`${Selector.MAP_RIGHT} canvas`)[0];
+    const container = this.element.find(Selector.CONTAINER);
+    const leftCanvas = this.element.find(`${Selector.MAP_LEFT} canvas`)[0];
+    const rightCanvas = this.element.find(`${Selector.MAP_RIGHT} canvas`)[0];
+    const width = container.width();
+    const height = rightCanvas.height;
 
     // Get the location of the split
     const slider = this.element.find(Selector.SLIDER)[0];
-    const split = slider.offsetLeft * window.devicePixelRatio;
+    const split = isOverlap ? slider.offsetLeft * window.devicePixelRatio : width / 2;
 
     // Create the canvas that will be exported as an image
-    var fullCanvas = /** @type {!HTMLCanvasElement} */ (document.createElement('canvas'));
-    const width = fullCanvas.width = bottomCanvas.width;
-    const height = fullCanvas.height = bottomCanvas.height;
-    var fullContext = fullCanvas.getContext('2d');
+    const fullCanvas = /** @type {!HTMLCanvasElement} */ (document.createElement('canvas'));
+    fullCanvas.width = width;
+    fullCanvas.height = height;
+    const fullContext = fullCanvas.getContext('2d');
 
     // Fill the image with a black background to prevent transparency related issues
     fullContext.fillStyle = 'black';
     fullContext.fillRect(0, 0, width, height);
 
     // Crop and add the bottom canvas to the right of the image
-    fullContext.drawImage(bottomCanvas, split, 0, width, height,
-        split, 0, width, height);
+    fullContext.drawImage(rightCanvas, isOverlap ? split : 0, 0, width, height, split, 0, width, height);
 
     // Crop and add the top canvas to the left of the image
-    fullContext.drawImage(topCanvas, 0, 0, split, height,
-        0, 0, split, height);
+    fullContext.drawImage(leftCanvas, 0, 0, split, height, 0, 0, split, height);
 
     // Draw a line to represent where the canvases are split
     fullContext.beginPath();
@@ -867,7 +923,8 @@ export class Controller {
   updateMapSize() {
     if (this.element && this.leftMap && this.rightMap) {
       const container = this.element.find(Selector.CONTAINER);
-      const size = [container.width(), container.height()];
+      const width = this.layout == Layout.OVERLAPPING ? container.width() : container.width() / 2;
+      const size = [width, container.height()];
       this.leftMap.setSize(size);
       this.rightMap.setSize(size);
     }
