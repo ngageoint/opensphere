@@ -6,6 +6,7 @@ goog.require('os.state.XMLStateManager');
 goog.require('os.state.XMLStateOptions');
 goog.require('os.state.instance');
 goog.require('os.state.v4.LayerState');
+goog.require('os.style');
 goog.require('os.test.xsd');
 goog.require('os.xml');
 goog.require('plugin.arc.layer.ArcFeatureLayerConfig');
@@ -18,13 +19,14 @@ describe('OMAR.v4.ArcLayerState', function() {
   const {default: StateVersions} = goog.module.get('os.state.Versions');
   const {setStateManager} = goog.module.get('os.state.instance');
   const {default: LayerState} = goog.module.get('os.state.v4.LayerState');
+  const {toRgbaString} = goog.module.get('os.style');
   const xml = goog.module.get('os.xml');
   const {default: ArcFeatureLayerConfig} = goog.module.get('plugin.arc.layer.ArcFeatureLayerConfig');
   const {default: ArcLayerDescriptor} = goog.module.get('plugin.arc.layer.ArcLayerDescriptor');
 
   const {loadStateXsdFiles} = goog.module.get('os.test.xsd');
 
-  var discriptorConfig = {
+  var descriptorConfig = {
     'advancedQueryCapabilities': {
       'supportsDistinct': true,
       'supportsOrderBy': true,
@@ -84,20 +86,29 @@ describe('OMAR.v4.ArcLayerState', function() {
         }
       ],
       'renderer': {
-        'description': '',
-        'label': '',
+        'type': 'simple',
         'symbol': {
-          'angle': 0,
-          'contentType': 'image/png',
-          'height': 9,
-          'imageData': 'iVBORw0KGgoAAA..==',
-          'type': 'esriPMS',
-          'url': '6768fb5e86381701af765ebb17b79b4b',
-          'width': 9,
-          'xoffset': 0,
-          'yoffset': 0
-        },
-        'type': 'simple'
+          'color': [
+            45,
+            172,
+            128,
+            255
+          ],
+          'outline': {
+            'color': [
+              190,
+              190,
+              190,
+              105
+            ],
+            'width': 1,
+            'type': 'esriSLS',
+            'style': 'esriSLSSolid'
+          },
+          'size': 5,
+          'type': 'esriSMS',
+          'style': 'esriSMSCircle'
+        }
       },
       'transparency': 0
     },
@@ -346,6 +357,16 @@ describe('OMAR.v4.ArcLayerState', function() {
 
   var stateManager = null;
 
+  var compareProperties = function(a, b, prop) {
+    // Normalize color values because they may change through serialization.
+    if (/color/i.test(prop)) {
+      a = toRgbaString(a);
+      b = toRgbaString(b);
+    }
+
+    expect(a).toBe(b, `for ${prop}`);
+  };
+
   var expectPropertiesInAToBeSameInB = function(a, b, exclusions) {
     for (var aProp in a) {
       if (exclusions && exclusions.indexOf(aProp) != -1) {
@@ -357,7 +378,7 @@ describe('OMAR.v4.ArcLayerState', function() {
 
         if (Array.isArray(aVal) && Array.isArray(bVal)) {
           for (var i = 0; i < aVal.length; i++) {
-            expect(aVal[i]).toBe(bVal[i]);
+            compareProperties(aVal[i], bVal[i], aProp);
           }
           continue;
         }
@@ -367,7 +388,7 @@ describe('OMAR.v4.ArcLayerState', function() {
           continue;
         }
 
-        expect(aVal).toBe(bVal);
+        compareProperties(aVal, bVal, aProp);
       }
     }
   };
@@ -381,8 +402,6 @@ describe('OMAR.v4.ArcLayerState', function() {
 
   it('Arc state validates against the state.xsd', function() {
     var defaultOptions = {
-      'color': 'rgba(255,255,255,1)',
-      'baseColor': '0xFFFFFF',
       'provider': 'ArcGIS Server'
     };
     var resultSchemas = null;
@@ -407,7 +426,7 @@ describe('OMAR.v4.ArcLayerState', function() {
     // Runs the tests.
     runs(function() {
       var descriptor = new ArcLayerDescriptor();
-      descriptor.configureDescriptor(discriptorConfig,
+      descriptor.configureDescriptor(descriptorConfig,
           '1678611117#https://services.arcgisonline.com/ArcGIS/rest/services/GEONAMES|0',
           'https://services.arcgisonline.com/ArcGIS/rest/services/GEONAMES/MapServer');
       var descriptorOptions = descriptor.getLayerOptions();

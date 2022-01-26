@@ -92,6 +92,29 @@ class ArcLayerDescriptor extends LayerSyncDescriptor {
     this.deprecated_ = false;
 
     this.descriptorType = arc.ID;
+
+    /**
+     * The maximum number of records that will be returned by a single request.
+     * @type {number}
+     * @private
+     */
+    this.maxRecordCount_ = arc.DEFAULT_MAX_RECORD_COUNT;
+  }
+
+  /**
+   * Get the max record count for the layer.
+   * @return {number}
+   */
+  getMaxRecordCount() {
+    return this.maxRecordCount_;
+  }
+
+  /**
+   * Set the max record count for the layer.
+   * @param {number} value The value.
+   */
+  setMaxRecordCount(value) {
+    this.maxRecordCount_ = value;
   }
 
   /**
@@ -299,6 +322,11 @@ class ArcLayerDescriptor extends LayerSyncDescriptor {
       this.setFeaturesEnabled(true);
     }
 
+    const maxRecordCount = /** @type {number|undefined} */ (config['maxRecordCount']);
+    if (maxRecordCount != null) {
+      this.setMaxRecordCount(maxRecordCount);
+    }
+
     this.featureType_ = arc.createFeatureType(config);
     if (!this.featureType_) {
       // if a feature type could not be created, assume features aren't supported
@@ -426,6 +454,11 @@ class ArcLayerDescriptor extends LayerSyncDescriptor {
     var options = {};
     options['id'] = this.getId() + BaseProvider.ID_DELIMITER + 'features';
 
+    // color will change with user choices, baseColor maintains the original layer color for reset
+    options['baseColor'] = this.getColor();
+    options['color'] = this.getColor();
+    options[ControlType.COLOR] = ColorControlType.PICKER_RESET;
+
     var params = new QueryData();
     params.set('f', 'json');
     params.set('inSR', '4326');
@@ -453,6 +486,11 @@ class ArcLayerDescriptor extends LayerSyncDescriptor {
     options['load'] = true;
     options['tags'] = this.getTags();
     options['provider'] = this.getProvider();
+
+    const maxRecordCount = this.getMaxRecordCount();
+    if (maxRecordCount !== arc.DEFAULT_MAX_RECORD_COUNT) {
+      options['maxRecordCount'] = maxRecordCount;
+    }
 
     if (!this.getTilesEnabled()) {
       options['attributions'] = [this.getAttribution()];

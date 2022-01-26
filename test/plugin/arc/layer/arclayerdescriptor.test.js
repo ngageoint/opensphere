@@ -48,7 +48,8 @@ describe('plugin.arc.layer.ArcLayerDescriptor', function() {
         'type': 'esriFieldTypeNumber'
       }
     ],
-    'capabilities': 'Map,Query,Data'
+    'capabilities': 'Map,Query,Data',
+    'maxRecordCount': 12345
   };
 
   var mapConfig = {
@@ -186,6 +187,8 @@ describe('plugin.arc.layer.ArcLayerDescriptor', function() {
     expect(params.get('returnIdsOnly')).toBe('true');
     expect(params.get('time')).toBe('{time}');
 
+    expect(featureOptions['baseColor']).toBe('#380070');
+    expect(featureOptions['color']).toBe('#380070');
     expect(featureOptions['type']).toBe('arcfeature');
     expect(featureOptions['id']).toBe('someLayerId#features');
     expect(featureOptions['layerType']).toBe('Tile and Feature Groups');
@@ -195,5 +198,6 @@ describe('plugin.arc.layer.ArcLayerDescriptor', function() {
     expect(featureOptions['spatial']).toBe(true);
     expect(featureOptions['temporal']).toBe(true);
     expect(featureOptions['filter']).toBe(true);
+    expect(featureOptions['maxRecordCount']).toBe(12345);
   });
 });
