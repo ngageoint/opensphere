@@ -426,6 +426,11 @@ class ArcLayerDescriptor extends LayerSyncDescriptor {
     var options = {};
     options['id'] = this.getId() + BaseProvider.ID_DELIMITER + 'features';
 
+    // color will change with user choices, baseColor maintains the original layer color for reset
+    options['baseColor'] = this.getColor();
+    options['color'] = this.getColor();
+    options[ControlType.COLOR] = ColorControlType.PICKER_RESET;
+
     var params = new QueryData();
     params.set('f', 'json');
     params.set('inSR', '4326');
