@@ -3,6 +3,7 @@ goog.declareModuleId('plugin.arc.source.ArcRequestSource');
 import Request from '../../../os/net/request.js';
 import registerClass from '../../../os/registerclass.js';
 import RequestSource from '../../../os/source/requestsource.js';
+import {DEFAULT_MAX_RECORD_COUNT} from '../arc.js';
 
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
@@ -38,6 +39,13 @@ class ArcRequestSource extends RequestSource {
      */
     this.loadCount_ = 0;
 
+    /**
+     * The maximum number of records that will be returned by a single request.
+     * @type {number}
+     * @private
+     */
+    this.maxRecordCount_ = DEFAULT_MAX_RECORD_COUNT;
+
     // all ArcRequestSources should be lockable
     this.setLockable(true);
   }
@@ -56,6 +64,22 @@ class ArcRequestSource extends RequestSource {
   abortRequest() {
     this.disposeIdRequests_();
     super.abortRequest();
+  }
+
+  /**
+   * Get the max record count for the layer.
+   * @return {number}
+   */
+  getMaxRecordCount() {
+    return this.maxRecordCount_;
+  }
+
+  /**
+   * Set the max record count for the layer.
+   * @param {number} value The value.
+   */
+  setMaxRecordCount(value) {
+    this.maxRecordCount_ = value;
   }
 
   /**
@@ -92,8 +116,8 @@ class ArcRequestSource extends RequestSource {
 
     // when no features are found, some arc servers return null, others return an empty array
     if (ids && Array.isArray(ids) && ids.length > 0) {
-      for (var i = 0, ii = ids.length; i < ii; i += ArcRequestSource.MAX) {
-        j = Math.min(ii, i + ArcRequestSource.MAX);
+      for (var i = 0, ii = ids.length; i < ii; i += this.maxRecordCount_) {
+        j = Math.min(ii, i + this.maxRecordCount_);
         params.set('objectIds', ids.slice(i, j).join(','));
 
         var request = new Request(url);
@@ -176,8 +200,9 @@ registerClass(className, ArcRequestSource);
 /**
  * @type {number}
  * @const
+ * @deprecated Please use plugin.arc.DEFAULT_MAX_RECORD_COUNT instead.
  */
-ArcRequestSource.MAX = 1000;
+ArcRequestSource.MAX = DEFAULT_MAX_RECORD_COUNT;
 
 
 /**

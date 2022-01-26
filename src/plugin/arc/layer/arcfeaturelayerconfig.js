@@ -50,6 +50,11 @@ class ArcFeatureLayerConfig extends AbstractDataSourceLayerConfig {
     source.setTimeEnabled(this.animate !== undefined ? this.animate : false);
     source.setTitle(this.title);
 
+    const maxRecordCount = /** @type {number|undefined} */ (options['maxRecordCount']);
+    if (maxRecordCount != null) {
+      source.setMaxRecordCount(maxRecordCount);
+    }
+
     var layer = this.getLayer(source, options);
     if (options) {
       layer.restore(options);
@@ -139,7 +144,9 @@ class ArcFeatureLayerConfig extends AbstractDataSourceLayerConfig {
   }
 
   /**
-   * @inheritDoc
+   * Create a new Arc request source for the layer.
+   * @return {!ArcRequestSource}
+   * @override
    */
   getSource(options) {
     return new ArcRequestSource();

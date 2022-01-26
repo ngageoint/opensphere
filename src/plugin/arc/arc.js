@@ -39,6 +39,12 @@ export const ServerType = {
 export const ID = 'arc';
 
 /**
+ * The default value to use for maxRecordCount, based on the Arc specification default.
+ * @type {number}
+ */
+export const DEFAULT_MAX_RECORD_COUNT = 1000;
+
+/**
  * Returns a more recognizable type from an ESRI Type.
  *
  * @param {string} esriType
