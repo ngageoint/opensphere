@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.AbstractMainCtrl');
 
-import '../../polyfill/chardetng.js';
+// import '../../polyfill/chardetng.js';
 import './alert/alertpopup.js';
 import './globalmenu.js';
 import './listui.js';
 import './onboarding/contextonboarding.js';
 import './onboarding/onboarding.js';
-import ElectronPlugin from '../../plugin/electron/electronplugin.js';
+// import ElectronPlugin from '../../plugin/electron/electronplugin.js';
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';
 import {getAppName} from '../config/config.js';
@@ -320,8 +320,8 @@ export default class Controller {
    * @protected
    */
   addPlugins() {
-    const pm = PluginManager.getInstance();
-    pm.addPlugin(new ElectronPlugin());
+    /* const pm = PluginManager.getInstance();
+    pm.addPlugin(new ElectronPlugin()); */
   }
 
   /**

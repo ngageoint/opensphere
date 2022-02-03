@@ -9,7 +9,7 @@ import './ui/ngrightclick.js';
 import './ui/search/searchresults.js';
 import './ui/timelinepanel.js';
 
-import ArcPlugin from '../plugin/arc/arcplugin.js';
+/* import ArcPlugin from '../plugin/arc/arcplugin.js';
 import AreaPlugin from '../plugin/area/areaplugin.js';
 import AreaDataPlugin from '../plugin/areadata/areadataplugin.js';
 import AudioPlugin from '../plugin/audio/audioplugin.js';
@@ -42,7 +42,7 @@ import TrackPlugin from '../plugin/track/trackplugin.js';
 import VectorTilePlugin from '../plugin/vectortile/vectortileplugin.js';
 import VectorToolsPlugin from '../plugin/vectortools/vectortoolsplugin.js';
 import WeatherPlugin from '../plugin/weather/weatherplugin.js';
-import XYZPlugin from '../plugin/xyz/xyzplugin.js';
+import XYZPlugin from '../plugin/xyz/xyzplugin.js'; */
 import AlertEventSeverity from './alert/alerteventseverity.js';
 import AlertManager from './alert/alertmanager.js';
 import {initAuth} from './auth.js';
@@ -117,7 +117,7 @@ import PlacesMetrics from './metrics/placesmetrics.js';
 import ServersMetrics from './metrics/serversmetrics.js';
 import TimelineMetrics from './metrics/timelinemetrics.js';
 import * as os from './os.js';
-import PluginManager from './plugin/pluginmanager.js';
+// import PluginManager from './plugin/pluginmanager.js';
 import AreaManager from './query/areamanager.js';
 import FilterManager from './query/filtermanager.js';
 import {setAreaFileManager, setAreaImportManager} from './query/query.js';
@@ -502,7 +502,7 @@ export default class Controller extends AbstractMainCtrl {
     super.addPlugins();
 
     // Only "os" application plugins are added here
-    const pluginManager = PluginManager.getInstance();
+    /* const pluginManager = PluginManager.getInstance();
     pluginManager.addPlugin(new CesiumPlugin());
     pluginManager.addPlugin(FeatureActionPlugin.getInstance());
     pluginManager.addPlugin(new SearchPlugin());
@@ -536,7 +536,7 @@ export default class Controller extends AbstractMainCtrl {
     pluginManager.addPlugin(TrackPlugin.getInstance());
     pluginManager.addPlugin(OpenpagePlugin.getInstance());
     pluginManager.addPlugin(new PersistPlugin());
-    pluginManager.addPlugin(VectorTilePlugin.getInstance());
+    pluginManager.addPlugin(VectorTilePlugin.getInstance()); */
   }
 
   /**

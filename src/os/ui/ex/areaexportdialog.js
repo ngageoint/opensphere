@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.ex.AreaExportUI');
 
-import KMLExporter from '../../../plugin/file/kml/kmlexporter.js';
-import SHPExporter from '../../../plugin/file/shp/shpexporter.js';
+/* import KMLExporter from '../../../plugin/file/kml/kmlexporter.js';
+import SHPExporter from '../../../plugin/file/shp/shpexporter.js'; */
 import {METHOD_FIELD} from '../../interpolate.js';
 import {DEFAULT_VECTOR_CONFIG, setFeatureStyle} from '../../style/style.js';
 import StyleType from '../../style/styletype.js';
@@ -83,7 +83,7 @@ export class Controller extends ExportDialogCtrl {
     this.options.fields.length = 0;
 
     var fields = ['name', 'title', 'description', 'tags', METHOD_FIELD];
-    if (opt_new instanceof KMLExporter) {
+    /* if (opt_new instanceof KMLExporter) {
       // set the label field for KML and add the mapVisualizationType for Desktop
       opt_new.setDefaultLabelFields(['title']);
 
@@ -92,7 +92,7 @@ export class Controller extends ExportDialogCtrl {
       // Dont show the ui
       var uiWrapper = this.element.find('.js-export-ui__wrapper');
       uiWrapper.children().remove();
-    }
+    } */
 
     // update the export columns
     if (fields && fields.length > 0) {
