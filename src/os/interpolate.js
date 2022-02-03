@@ -7,11 +7,11 @@ goog.declareModuleId('os.interpolate');
 
 import * as geo2 from './geo/geo2.js';
 import Method from './interpolatemethod.js';
-import * as osMap from './map/map.js';
+// import * as osMap from './map/map.js';
 import {EPSG4326} from './proj/proj.js';
 
-const GeometryType = goog.require('ol.geom.GeometryType');
-const olProj = goog.require('ol.proj');
+/* const GeometryType = goog.require('ol.geom.GeometryType');
+const olProj = goog.require('ol.proj'); */
 
 const {default: Config} = goog.requireType('os.interpolate.Config');
 
@@ -129,15 +129,15 @@ export const beginTempInterpolation = function(opt_projection, opt_method, opt_d
     distance: opt_distance || config.distance
   };
 
-  if (opt_projection) {
-    var projection = olProj.get(opt_projection || osMap.PROJECTION);
+  /* if (opt_projection) {
+     var projection = olProj.get(opt_projection || osMap.PROJECTION);
 
     tmpTransforms = ({
       coordToLonLat: olProj.getTransform(projection, EPSG4326),
       lonLatToCoord: olProj.getTransform(EPSG4326, projection),
       lastProj: projection.getCode()
     });
-  }
+  } */
 };
 
 /**
@@ -185,10 +185,10 @@ export const interpolateFeature = function(feature, opt_skipUpdate) {
     }
 
     // if the geometry is something we clearly can't interpolate, then skip it
-    var type = geom.getType();
+    /* var type = geom.getType();
     if (type === GeometryType.POINT || type === GeometryType.MULTI_POINT) {
       return;
-    }
+    } */
 
     if (geom) {
       feature.set(ORIGINAL_GEOM_FIELD, geom.clone());
@@ -231,49 +231,49 @@ export const interpolateGeom = function(geom, opt_skipUpdate) {
     return;
   }
 
-  var type = geom.getType();
+  /* var type = geom.getType();
   switch (type) {
     case GeometryType.GEOMETRY_COLLECTION:
-      var geoms = /** @type {ol.geom.GeometryCollection} */ (geom).getGeometries();
-      geoms.forEach(interpolateGeomInternal_);
-      /** @type {ol.geom.GeometryCollection} */ (geom).setGeometries(geoms);
-      break;
+      var geoms = /** @type {ol.geom.GeometryCollection} */ // (geom).getGeometries();
+  /* geoms.forEach(interpolateGeomInternal_);
+      /** @type {ol.geom.GeometryCollection} */ // geom).setGeometries(geoms);
+  /* break;
     case GeometryType.MULTI_POLYGON:
-      var polys = /** @type {ol.geom.MultiPolygon} */ (geom).getCoordinates();
-      polys.forEach(interpolateRings);
-      /** @type {ol.geom.MultiPolygon} */ (geom).setCoordinates(polys);
-      break;
+      var polys = /** @type {ol.geom.MultiPolygon} */ // (geom).getCoordinates();
+  /* polys.forEach(interpolateRings);
+      /** @type {ol.geom.MultiPolygon} */ // (geom).setCoordinates(polys);
+  /* break;
     case GeometryType.MULTI_LINE_STRING:
-      var lines = /** @type {ol.geom.MultiLineString} */ (geom).getCoordinates();
-      lines.forEach(interpolateLine);
-      /** @type {ol.geom.MultiLineString} */ (geom).setCoordinates(lines);
-      break;
+      var lines = /** @type {ol.geom.MultiLineString} */ // (geom).getCoordinates();
+  /* lines.forEach(interpolateLine);
+      /** @type {ol.geom.MultiLineString} */ // (geom).setCoordinates(lines);
+  /* break;
     case GeometryType.POLYGON:
-      var rings = /** @type {ol.geom.Polygon} */ (geom).getCoordinates();
-      rings.forEach(interpolateRing);
-      /** @type {ol.geom.Polygon} */ (geom).setCoordinates(rings);
-      break;
+      var rings = /** @type {ol.geom.Polygon} */ // (geom).getCoordinates();
+  /* rings.forEach(interpolateRing);
+      /** @type {ol.geom.Polygon} */ // (geom).setCoordinates(rings);
+  /* break;
     case GeometryType.LINE_STRING:
-      var coords = /** @type {ol.geom.LineString} */ (geom).getCoordinates();
-      interpolateLine(coords);
-      /** @type {ol.geom.LineString} */ (geom).setCoordinates(coords);
+      var coords = /** @type {ol.geom.LineString} */ // (geom).getCoordinates();
+  /* interpolateLine(coords);
+      /** @type {ol.geom.LineString} */ /* (geom).setCoordinates(coords);
       break;
     default:
       break;
-  }
+  } */
 };
 
 /**
  * @param {ol.geom.Geometry} geom The geometry to interpolate
  */
-const interpolateGeomInternal_ = function(geom) {
+/* const interpolateGeomInternal_ = function(geom) {
   interpolateGeom(geom, true);
-};
+}; */
 
 /**
  * @type {?TransformSet}
  */
-let localTransforms = null;
+const localTransforms = null;
 
 /**
  * @type {?TransformSet}
@@ -286,13 +286,13 @@ let tmpTransforms = null;
  * @suppress {accessControls}
  */
 export const updateTransforms = function() {
-  if (!localTransforms || osMap.PROJECTION.getCode() !== localTransforms.lastProj) {
+  /* if (!localTransforms || osMap.PROJECTION.getCode() !== localTransforms.lastProj) {
     localTransforms = {
       coordToLonLat: olProj.getTransform(osMap.PROJECTION, EPSG4326),
       lonLatToCoord: olProj.getTransform(EPSG4326, osMap.PROJECTION),
       lastProj: osMap.PROJECTION.getCode()
     };
-  }
+  } */
 };
 
 /**
