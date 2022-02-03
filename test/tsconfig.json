@@ -1,0 +1,19 @@
+{
+    "extends": "../tsconfig",
+    "include": [
+      "**/*"
+    ],
+    "references": [
+      { "path": "../src" }
+    ],
+    "compilerOptions": {
+      "composite": true,
+      "rootDir": ".",
+      "outDir": "../test-lib",
+      "typeRoots": [
+        "./@types.test",
+        "../src/@types",
+        "../node_modules/@types"
+      ]
+    }
+  }
