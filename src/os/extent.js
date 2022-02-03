@@ -1,11 +1,11 @@
 goog.declareModuleId('os.extent');
 
-import * as geo2 from './geo/geo2.js';
-import * as osMap from './map/map.js';
+/* import * as geo2 from './geo/geo2.js';
+import * as osMap from './map/map.js'; */
 
 const math = goog.require('goog.math');
-const olExtent = goog.require('ol.extent');
-const olProj = goog.require('ol.proj');
+/* const olExtent from import 'ol/extent');
+const olProj from imnport 'ol.proj'); */
 
 const Projection = goog.requireType('ol.proj.Projection');
 
@@ -38,7 +38,7 @@ export const clamp = function(extent, clampTo, opt_extent) {
  * @return {boolean} Whether or not the extent crosses the antimeridian
  */
 export const crossesAntimeridian = function(extent, opt_proj) {
-  if (!extent || olExtent.isEmpty(extent)) {
+  /* if (!extent || olExtent.isEmpty(extent)) {
     return false;
   }
 
@@ -61,7 +61,7 @@ export const crossesAntimeridian = function(extent, opt_proj) {
     var worldsAwayMin = Math.ceil((projMin - xmin) / width);
     var worldsAwayMax = Math.ceil((projMin - xmax) / width);
     return worldsAwayMin !== worldsAwayMax;
-  }
+  } */
 
   return false;
 };
@@ -76,14 +76,15 @@ export const crossesAntimeridian = function(extent, opt_proj) {
  * @return {ol.Extent}
  */
 export const normalizeAntiRight = function(extent, opt_proj, opt_result) {
-  opt_proj = olProj.get(opt_proj || osMap.PROJECTION);
+  /** opt_proj = olProj.get(opt_proj || osMap.PROJECTION);
   var projExtent = opt_proj.getExtent();
   var left = projExtent[0];
   var right = projExtent[2];
   var width = right - left;
   var min = left + width / 2;
   var max = min + width;
-  return normalize(extent, min, max, opt_proj, opt_result);
+  return normalize(extent, min, max, opt_proj, opt_result); */
+  return null;
 };
 
 /**
@@ -96,14 +97,15 @@ export const normalizeAntiRight = function(extent, opt_proj, opt_result) {
  * @return {ol.Extent}
  */
 export const normalizeAntiLeft = function(extent, opt_proj, opt_result) {
-  opt_proj = olProj.get(opt_proj || osMap.PROJECTION);
+  /* opt_proj = olProj.get(opt_proj || osMap.PROJECTION);
   var projExtent = opt_proj.getExtent();
   var left = projExtent[0];
   var right = projExtent[2];
   var width = right - left;
   var min = left - width / 2;
   var max = min + width;
-  return normalize(extent, min, max, opt_proj, opt_result);
+  return normalize(extent, min, max, opt_proj, opt_result); */
+  return null;
 };
 
 /**
@@ -114,12 +116,13 @@ export const normalizeAntiLeft = function(extent, opt_proj, opt_result) {
  * @return {ol.Extent}
  */
 export const normalizeToCenter = function(extent, center, opt_proj, opt_result) {
-  opt_proj = olProj.get(opt_proj || osMap.PROJECTION);
+  /* opt_proj = olProj.get(opt_proj || osMap.PROJECTION);
 
   var projExtent = opt_proj.getExtent();
   var halfWidth = (projExtent[2] - projExtent[0]) / 2;
 
-  return normalize(extent, center - halfWidth, center + halfWidth, opt_proj, opt_result);
+  return normalize(extent, center - halfWidth, center + halfWidth, opt_proj, opt_result); */
+  return null;
 };
 
 /**
@@ -131,7 +134,7 @@ export const normalizeToCenter = function(extent, center, opt_proj, opt_result) 
  * @return {ol.Extent}
  */
 export const normalize = function(extent, opt_min, opt_max, opt_proj, opt_result) {
-  opt_result = opt_result || extent.slice();
+  /* opt_result = opt_result || extent.slice();
   opt_result[1] = extent[1];
   opt_result[3] = extent[3];
 
@@ -166,7 +169,9 @@ export const normalize = function(extent, opt_min, opt_max, opt_proj, opt_result
     opt_result[2] = lon2;
   }
 
-  return opt_result;
+  return opt_result; */
+
+  return null;
 };
 
 /**
@@ -196,7 +201,7 @@ export const getFunctionalExtent = function(geomOrExtent) {
  * @return {?ol.Extent} the extent
  */
 export const getFunctionalExtentFromGeom = function(geom, opt_proj) {
-  if (!geom) {
+  /* if (!geom) {
     return null;
   }
 
@@ -212,7 +217,8 @@ export const getFunctionalExtentFromGeom = function(geom, opt_proj) {
     result = getThinnestExtent(extent, antiExtent, epsilon);
   }
 
-  return result;
+  return result; */
+  return geom.getExtent();
 };
 
 /**
@@ -221,7 +227,7 @@ export const getFunctionalExtentFromGeom = function(geom, opt_proj) {
  * @return {?ol.Extent}
  */
 export const getFunctionalExtentFromExtent = function(extent, opt_proj) {
-  if (!extent) {
+  /* if (!extent) {
     return null;
   }
 
@@ -234,9 +240,9 @@ export const getFunctionalExtentFromExtent = function(extent, opt_proj) {
     const epsilon = 100 / proj.getMetersPerUnit();
     const antiExtent = getInverse(extent, proj);
     result = getThinnestExtent(extent, antiExtent, epsilon);
-  }
+  } */
 
-  return result;
+  return null;
 };
 
 /**
@@ -245,16 +251,16 @@ export const getFunctionalExtentFromExtent = function(extent, opt_proj) {
  * @return {ol.Extent}
  */
 export const getInverse = function(extent, opt_proj) {
-  const result = extent.slice();
+  /* const result = extent.slice();
   const proj = olProj.get(opt_proj || osMap.PROJECTION);
   const projExtent = proj.getExtent();
-  result[0] += olExtent.getWidth(projExtent);
+  // result[0] += olExtent.getWidth(projExtent);
 
   const tmp = result[0];
   result[0] = result[2];
-  result[2] = tmp;
+  result[2] = tmp; */
 
-  return result;
+  return null;
 };
 
 /**
@@ -265,11 +271,13 @@ export const getInverse = function(extent, opt_proj) {
  * @return {?ol.Extent}
  */
 export const getThinnestExtent = function(extent1, extent2, opt_epsilon = EPSILON) {
-  if (!extent1 || !extent2) {
+  /* if (!extent1 || !extent2) {
     return extent1 || extent2;
   }
 
   const width1 = olExtent.getWidth(extent1);
   const width2 = olExtent.getWidth(extent2);
-  return width2 + opt_epsilon < width1 ? extent2 : extent1;
+  return width2 + opt_epsilon < width1 ? extent2 : extent1; */
+
+  return extent1;
 };
