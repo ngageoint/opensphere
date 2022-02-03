@@ -10,8 +10,8 @@ import Method from './interpolatemethod.js';
 // import * as osMap from './map/map.js';
 import {EPSG4326} from './proj/proj.js';
 
-/* const GeometryType = goog.require('ol.geom.GeometryType');
-const olProj = goog.require('ol.proj'); */
+/* import GeometryType from 'ol.geom.GeometryType';
+import olProj from 'ol.proj'); */
 
 const {default: Config} = goog.requireType('os.interpolate.Config');
 
