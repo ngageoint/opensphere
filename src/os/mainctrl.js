@@ -187,7 +187,7 @@ const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
 const log = goog.require('goog.log');
 const {IE, GECKO, LINUX} = goog.require('goog.userAgent');
-// const ViewHint = goog.require('ol.ViewHint');
+// import ViewHint from 'ol.ViewHint';
 
 const {default: LayerConfigEvent} = goog.requireType('os.events.LayerConfigEvent');
 const {default: OSFile} = goog.requireType('os.file.File');
