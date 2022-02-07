@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.search.place.CoordinateSearch');
 
+import Point from 'ol/geom/Point';
 import {parseLatLon} from '../../../geo/geo.js';
 import {normalizeLongitude} from '../../../geo/geo2.js';
 import {EPSG4326} from '../../../proj/proj.js';
@@ -12,7 +13,6 @@ import CoordinateResult from './coordinateresult.js';
 import {createFeature} from './place.js';
 
 const log = goog.require('goog.log');
-const Point = goog.require('ol.geom.Point');
 
 const Logger = goog.requireType('goog.log.Logger');
 
