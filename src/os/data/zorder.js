@@ -1,11 +1,12 @@
 goog.declareModuleId('os.data.ZOrder');
 
+import * as olArray from 'ol/array';
+
 import Settings from '../config/settings.js';
 import {getMapContainer} from '../map/mapinstance.js';
 import ZOrderEventType from './zordereventtype.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
-const olArray = goog.require('ol.array');
 
 const BaseLayer = goog.requireType('ol.layer.Base');
 const {default: ZOrderEntry} = goog.requireType('os.data.ZOrderEntry');
