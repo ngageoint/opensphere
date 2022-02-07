@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.timeline.OffArrows');
 
+import {extend, createEmpty} from 'ol/extent';
 import PropertyChangeEvent from '../../events/propertychangeevent.js';
 import BaseItem from './baseitem.js';
 import * as timelineUi from './timeline.js';
 
 const googArray = goog.require('goog.array');
 const GoogEventType = goog.require('goog.events.EventType');
-const olExtent = goog.require('ol.extent');
 
 const {default: ITimelineItem} = goog.requireType('os.ui.timeline.ITimelineItem');
 
@@ -161,8 +161,8 @@ export default class OffArrows extends BaseItem {
    */
   getExtent() {
     return this.items_.reduce(function(extent, item) {
-      return olExtent.extend(extent, item.getExtent());
-    }, olExtent.createEmpty());
+      return extend(extent, item.getExtent());
+    }, createEmpty());
   }
 
   /**
