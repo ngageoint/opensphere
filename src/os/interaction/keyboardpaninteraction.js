@@ -1,14 +1,15 @@
 goog.declareModuleId('os.interaction.KeyboardPan');
 
+import {rotate} from 'ol/coordinate';
+import EventType from 'ol/events/EventType';
+import KeyCode from 'ol/events/KeyCode';
+import {pan} from 'ol/interaction/Interaction';
+import OLKeyboardPan from 'ol/interaction/KeyboardPan';
+
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';
 import {KEY_TYPE} from '../ui/ol/interaction/interaction.js';
 
-const {rotate} = goog.require('ol.coordinate');
-const EventType = goog.require('ol.events.EventType');
-const KeyCode = goog.require('ol.events.KeyCode');
-const Interaction = goog.require('ol.interaction.Interaction');
-const OLKeyboardPan = goog.require('ol.interaction.KeyboardPan');
 
 
 /**
@@ -84,7 +85,7 @@ OLKeyboardPan.handleEvent = function(mapBrowserEvent) {
       }
       var delta = [deltaX, deltaY];
       rotate(delta, view.getRotation());
-      Interaction.pan(view, delta, this.duration_);
+      pan(view, delta, this.duration_);
       mapBrowserEvent.preventDefault();
       stopEvent = true;
     }
