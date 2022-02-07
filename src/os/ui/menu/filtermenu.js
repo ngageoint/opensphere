@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.menu.filter');
 
+import {remove} from 'ol/array';
 import EventType from '../../action/eventtype.js';
 import CommandProcessor from '../../command/commandprocessor.js';
 import FilterEnable from '../../command/filterenablecmd.js';
@@ -17,7 +18,6 @@ import MenuItem from './menuitem.js';
 import MenuItemType from './menuitemtype.js';
 
 const {removeDuplicates} = goog.require('goog.array');
-const {remove} = goog.require('ol.array');
 
 const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 const {default: TreeNode} = goog.requireType('os.structs.TreeNode');
