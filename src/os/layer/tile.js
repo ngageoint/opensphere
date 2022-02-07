@@ -1,5 +1,12 @@
 goog.declareModuleId('os.layer.Tile');
 
+import {listen} from 'ol/events';
+import {createEmpty, isEmpty} from 'ol/extent';
+import Property from 'ol/layer/Property';
+import OLTileLayer from 'ol/layer/Tile';
+import TileImage from 'ol/source/TileImage';
+import UrlTile from 'ol/source/UrlTile';
+
 import '../mixin/tileimagemixin.js';
 import '../mixin/urltilemixin.js';
 import EventType from '../action/eventtype.js';
@@ -42,15 +49,7 @@ const {assert} = goog.require('goog.asserts');
 const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');
 
-const events = goog.require('ol.events');
-const {createEmpty, isEmpty} = goog.require('ol.extent');
-const Property = goog.require('ol.layer.Property');
-const OLTileLayer = goog.require('ol.layer.Tile');
-const TileImage = goog.require('ol.source.TileImage');
-const UrlTile = goog.require('ol.source.UrlTile');
-
 const {TileFilterFn} = goog.requireType('os.tile');
-const {default: IActionTarget} = goog.requireType('os.ui.action.IActionTarget');
 
 
 /**
@@ -182,9 +181,11 @@ export default class Tile extends OLTileLayer {
      */
     this.groupLabel_ = null;
 
+    this.propertyChangeListenKey_ = null;
+
     var source = this.getSource();
     if (source) {
-      events.listen(source, GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
+      this.propertyChangeListenKey_ = listen(source, GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
     }
   }
 
