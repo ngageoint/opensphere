@@ -1,14 +1,15 @@
 goog.declareModuleId('os.map');
 
+import {linear as linearEasing} from 'ol/easing';
+import {clamp, toRadians} from 'ol/math';
+import {get as getProjection} from 'ol/proj';
+import {createForProjection} from 'ol/tilegrid';
+import {DEFAULT_MAX_ZOOM} from 'ol/tilegrid/common';
+
 import '../ol/ol.js';
 import FlightMode from './flightmode.js';
 
-const {linear: linearEasing} = goog.require('ol.easing');
 const {assert} = goog.require('goog.asserts');
-const {DEFAULT_MAX_ZOOM} = goog.require('ol');
-const {clamp, toRadians} = goog.require('ol.math');
-const {get: getProjection} = goog.require('ol.proj');
-const {createForProjection} = goog.require('ol.tilegrid');
 
 const PluggableMap = goog.requireType('ol.PluggableMap');
 const Projection = goog.requireType('ol.proj.Projection');

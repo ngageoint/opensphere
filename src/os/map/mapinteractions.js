@@ -1,5 +1,8 @@
 goog.declareModuleId('os.map.interaction');
 
+import Collection from 'ol/Collection';
+import DragPan from 'ol/interaction/DragPan';
+
 import ContextMenu from '../interaction/contextmenuinteraction.js';
 import DoubleClick from '../interaction/doubleclickinteraction.js';
 import DoubleClickZoom from '../interaction/doubleclickzoominteraction.js';
@@ -23,10 +26,7 @@ import * as spatial from '../ui/menu/spatial.js';
 import MouseWheelZoom from '../ui/ol/interaction/mousewheelzoominteraction.js';
 
 const asserts = goog.require('goog.asserts');
-const Collection = goog.require('ol.Collection');
-const DragPan = goog.require('ol.interaction.DragPan');
 
-const interaction = goog.requireType('ol.interaction');
 const {default: ContextMenuOptions} = goog.requireType('os.ui.ol.interaction.ContextMenuOptions');
 
 
