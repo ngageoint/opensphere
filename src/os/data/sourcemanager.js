@@ -1,5 +1,8 @@
 goog.declareModuleId('os.data.SourceManager');
 
+import * as olArray from 'ol/array';
+import {listen, unlistenByKey} from 'ol/events';
+
 import PropertyChange from '../source/propertychange.js';
 import DataManager from './datamanager.js';
 import DataEventType from './event/dataeventtype.js';
@@ -8,8 +11,6 @@ const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
-const olArray = goog.require('ol.array');
-const events = goog.require('ol.events');
 
 const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
@@ -79,7 +80,7 @@ export default class SourceManager extends Disposable {
     }
 
     for (var key in this.sourceListeners_) {
-      events.unlistenByKey(this.sourceListeners_[key]);
+      unlistenByKey(this.sourceListeners_[key]);
     }
 
     dispose(this.updateDelay);
@@ -137,7 +138,7 @@ export default class SourceManager extends Disposable {
     this.removeSourceListener_(source);
 
     var id = source.getId();
-    this.sourceListeners_[id] = events.listen(/** @type {events.EventTarget} */ (source),
+    this.sourceListeners_[id] = listen(/** @type {events.EventTarget} */ (source),
         GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange, this);
   }
 
@@ -150,7 +151,7 @@ export default class SourceManager extends Disposable {
   removeSourceListener_(source) {
     var id = source.getId();
     if (id in this.sourceListeners_) {
-      events.unlistenByKey(this.sourceListeners_[id]);
+      unlistenByKey(this.sourceListeners_[id]);
       delete this.sourceListeners_[id];
     }
   }

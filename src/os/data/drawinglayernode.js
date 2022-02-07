@@ -1,5 +1,8 @@
 goog.declareModuleId('os.data.DrawingLayerNode');
 
+import {listen, unlistenByKey} from 'ol/events';
+import VectorEventType from 'ol/source/VectorEventType';
+
 import {registerClass} from '../classregistry.js';
 import PropertyChangeEvent from '../events/propertychangeevent.js';
 import * as fn from '../fn/fn.js';
@@ -15,15 +18,6 @@ import RecordField from './recordfield.js';
 const Delay = goog.require('goog.async.Delay');
 const GoogEventType = goog.require('goog.events.EventType');
 const googString = goog.require('goog.string');
-const events = goog.require('ol.events');
-const VectorEventType = goog.require('ol.source.VectorEventType');
-
-const Feature = goog.requireType('ol.Feature');
-const EventTarget = goog.requireType('ol.events.EventTarget');
-const OLVectorSource = goog.requireType('ol.source.Vector');
-const {default: VectorLayer} = goog.requireType('os.layer.Vector');
-const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
-const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');
 
 
 /**
@@ -41,6 +35,9 @@ export default class DrawingLayerNode extends LayerNode {
     this.setBubbleState(false);
 
     this.sortDelay_ = new Delay(this.onSortDelay, 50, this);
+
+    this.addFeatureListenKey = null;
+    this.removeFeatureListenKey = null;
   }
 
   /**
@@ -75,17 +72,9 @@ export default class DrawingLayerNode extends LayerNode {
     if (value !== currLayer && currLayer) {
       source = /** @type {VectorLayer} */ (currLayer).getSource();
 
-      events.unlisten(
-          /** @type {EventTarget} */ (source),
-          VectorEventType.ADDFEATURE,
-          this.onFeatureAdded,
-          this);
+      unlistenByKey(this.addFeatureListenKey);
 
-      events.unlisten(
-          /** @type {EventTarget} */ (source),
-          VectorEventType.REMOVEFEATURE,
-          this.onFeatureRemoved,
-          this);
+      unlistenByKey(this.removeFeatureListenKey);
 
       am.unlisten(GoogEventType.PROPERTYCHANGE, this.onAreasChanged_, false, this);
       this.setChildren(null);
@@ -96,13 +85,13 @@ export default class DrawingLayerNode extends LayerNode {
     if (value !== currLayer && value) {
       source = /** @type {VectorLayer} */ (value).getSource();
 
-      events.listen(
+      this.addFeatureListenKey = listen(
           /** @type {EventTarget} */ (source),
           VectorEventType.ADDFEATURE,
           this.onFeatureAdded,
           this);
 
-      events.listen(
+      this.removeFeatureListenKey = listen(
           /** @type {EventTarget} */ (source),
           VectorEventType.REMOVEFEATURE,
           this.onFeatureRemoved,

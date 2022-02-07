@@ -1,5 +1,7 @@
 goog.declareModuleId('os.data.LayerNode');
 
+import {listen, unlistenByKey} from 'ol/events';
+
 import {instanceOf, registerClass} from '../classregistry.js';
 import LayerEventType from '../events/layereventtype.js';
 import PropertyChangeEvent from '../events/propertychangeevent.js';
@@ -26,7 +28,6 @@ import {NodeClass} from './data.js';
 import DataManager from './datamanager.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const events = goog.require('ol.events');
 
 const {default: IExtent} = goog.requireType('os.data.IExtent');
 const {default: ISearchable} = goog.requireType('os.data.ISearchable');
@@ -58,6 +59,8 @@ export default class LayerNode extends SlickTreeNode {
     getQueryManager().listen(GoogEventType.PROPERTYCHANGE, this.onNodeChanged_, false, this);
     ImportActionManager
         .getInstance().listen(ImportActionEventType.REFRESH, this.onNodeChanged_, false, this);
+
+    this.listenKey = null;
   }
 
   /**
@@ -143,15 +146,14 @@ export default class LayerNode extends SlickTreeNode {
   setLayer(value) {
     if (value !== this.layer_) {
       if (this.layer_) {
-        events.unlisten(/** @type {events.EventTarget} */ (this.layer_), GoogEventType.PROPERTYCHANGE,
-            this.onPropertyChange, this);
+        unlistenByKey(this.listenKey);
       }
 
       var old = this.layer_;
       this.layer_ = value;
 
       if (value) {
-        events.listen(/** @type {events.EventTarget} */ (value), GoogEventType.PROPERTYCHANGE,
+        this.listenKey = listen(/** @type {events.EventTarget} */ (value), GoogEventType.PROPERTYCHANGE,
             this.onPropertyChange, this);
         this.setId(value.getId());
         this.setLabel(value.getTitle());
