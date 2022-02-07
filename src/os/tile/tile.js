@@ -1,6 +1,6 @@
 goog.declareModuleId('os.tile');
 
-const {createCanvasContext2D} = goog.require('ol.dom');
+import {createCanvasContext2D} from 'ol/dom';
 
 
 /**
