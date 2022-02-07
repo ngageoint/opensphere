@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.column.ColumnManagerUI');
 
+import {findIndex, remove} from 'ol/array';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import {findByField, numerateNameCompare} from '../slick/column.js';
@@ -14,7 +15,6 @@ const {getDocument} = goog.require('goog.dom');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
-const {findIndex, remove} = goog.require('ol.array');
 
 const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 
