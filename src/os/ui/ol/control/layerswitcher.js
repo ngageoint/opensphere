@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.ol.control.LayerSwitcher');
 
+import Control from 'ol/control/Control';
+import {listen, unlistenByKey} from 'ol/events';
+import Group from 'ol/layer/Group';
+import PluggableMap from 'ol/PluggableMap';
 const {getFirstElementChild} = goog.require('goog.dom');
 const {setInnerHtml} = goog.require('goog.dom.safe');
 const SafeHtml = goog.require('goog.html.SafeHtml');
-const PluggableMap = goog.require('ol.PluggableMap');
-const Control = goog.require('ol.control.Control');
-const {listen, unlistenByKey} = goog.require('ol.events');
-const Group = goog.require('ol.layer.Group');
 
 const LayerBase = goog.requireType('ol.layer.Base');
 
