@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.feature.tab.PropertiesTabUI');
 
+import {listen, unlistenByKey} from 'ol/events';
 import '../featureinfocell.js';
 import Settings from '../../../config/settings.js';
 import RecordField from '../../../data/recordfield.js';
@@ -14,7 +15,6 @@ import AbstractFeatureTabCtrl from './abstractfeaturetabctrl.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {numerateCompare} = goog.require('goog.string');
-const events = goog.require('ol.events');
 
 const Feature = goog.requireType('ol.Feature');
 const RenderFeature = goog.requireType('ol.render.Feature');
@@ -127,14 +127,14 @@ export class Controller extends AbstractFeatureTabCtrl {
    */
   setFeature(feature) {
     if (this.source) {
-      events.unlisten(this.source, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+      unlistenByKey(this.source, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
     }
 
     this.feature = feature;
     this.source = feature ? osFeature.getSource(feature) : null;
 
     if (this.source) {
-      events.listen(this.source, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+      listen(this.source, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
     }
   }
 
