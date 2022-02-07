@@ -1,5 +1,9 @@
 goog.declareModuleId('os.ui.file.gml.GMLParser');
 
+import Feature from 'ol/Feature';
+import GML2 from 'ol/format/GML2';
+import GML3 from 'ol/format/GML3';
+import {get as getProjection} from 'ol/proj';
 import {isColorString} from '../../../color.js';
 import {getText} from '../../../file/mime/text.js';
 import * as osStyle from '../../../style/style.js';
@@ -11,10 +15,6 @@ import {createElement} from '../../../xml.js';
 const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');
 const log = goog.require('goog.log');
-const Feature = goog.require('ol.Feature');
-const GML2 = goog.require('ol.format.GML2');
-const GML3 = goog.require('ol.format.GML3');
-const {get: getProjection} = goog.require('ol.proj');
 
 const Projection = goog.requireType('ol.proj.Projection');
 const {default: IParser} = goog.requireType('os.parse.IParser');
