@@ -1,5 +1,7 @@
 goog.declareModuleId('os.ui.buffer.BufferFormUI');
 
+import GeometryType from 'ol/geom/GeometryType';
+import {transformExtent} from 'ol/proj';
 import '../im/basicinfo.js';
 import * as buffer from '../../buffer/buffer.js';
 import {isGeometryPolygonal} from '../../geo/geo.js';
@@ -18,8 +20,6 @@ import {nameCompare} from '../slick/column.js';
 import WindowEventType from '../windoweventtype.js';
 
 const {clone} = goog.require('goog.object');
-const GeometryType = goog.require('ol.geom.GeometryType');
-const {transformExtent} = goog.require('ol.proj');
 
 const {BufferConfig} = goog.requireType('os.buffer');
 const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
