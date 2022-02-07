@@ -1,5 +1,9 @@
 goog.declareModuleId('os.layer.config.AbstractTileLayerConfig');
 
+import {transformExtent} from 'ol/proj';
+import {createForProjection} from 'ol/tilegrid';
+import {DEFAULT_MAX_ZOOM} from 'ol/tilegrid/common';
+
 import '../../mixin/tileimagemixin.js';
 import '../../mixin/urltilemixin.js';
 import Settings from '../../config/settings.js';
@@ -14,9 +18,6 @@ import Tile from '../tile.js';
 import AbstractLayerConfig from './abstractlayerconfig.js';
 
 const log = goog.require('goog.log');
-const {DEFAULT_MAX_ZOOM} = goog.require('ol');
-const {transformExtent} = goog.require('ol.proj');
-const {createForProjection} = goog.require('ol.tilegrid');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Projection = goog.requireType('ol.proj.Projection');
