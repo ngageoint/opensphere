@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.LegendUI');
 
+const events = goog.require('ol.events');
 import LegendSetting from '../config/legendsetting.js';
 import Settings from '../config/settings.js';
 import SourceManager from '../data/sourcemanager.js';
@@ -21,7 +22,6 @@ const Throttle = goog.require('goog.async.Throttle');
 const nextTick = goog.require('goog.async.nextTick');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
-const events = goog.require('ol.events');
 
 const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
