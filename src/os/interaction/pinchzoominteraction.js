@@ -1,9 +1,9 @@
 goog.declareModuleId('os.interaction.PinchZoom');
 
+import OLPinchZoom from 'ol/interaction/PinchZoom';
+
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';
-
-const OLPinchZoom = goog.require('ol.interaction.PinchZoom');
 
 
 /**
