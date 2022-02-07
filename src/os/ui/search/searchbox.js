@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.search.SearchBoxUI');
 
+import {findIndex} from 'ol/array';
 import '../dragdrop/dragdropui.js';
 import Settings from '../../config/settings.js';
 import * as dispatcher from '../../dispatcher.js';
@@ -21,7 +22,6 @@ const {contains: domContains, getAncestorByClass} = goog.require('goog.dom');
 const googEvents = goog.require('goog.events');
 const GoogEvent = goog.require('goog.events.Event');
 const GoogEventType = goog.require('goog.events.EventType');
-const olArray = goog.require('ol.array');
 
 const {default: Favorite} = goog.requireType('os.search.Favorite');
 const {default: ISearch} = goog.requireType('os.search.ISearch');
@@ -538,7 +538,7 @@ export class Controller {
 
       // Iterate over the searches under the provider group, and add the search to the group
       searchNameArray.forEach(function(searchName) {
-        const ind = olArray.findIndex(copiedOptions, function(searchOption) {
+        const ind = findIndex(copiedOptions, function(searchOption) {
           return searchName == searchOption.getName();
         });
         if (ind > -1) {
@@ -949,7 +949,7 @@ export class Controller {
     if (this['searchTerm']) {
       const enabledIds = this.searchManager.getEnabledSearches().map(osSearch.getSearchId).sort();
 
-      const recentIndex = olArray.findIndex(this['recentSearches'], function(recent) {
+      const recentIndex = findIndex(this['recentSearches'], function(recent) {
         return recent.term == this['searchTerm'];
       }.bind(this));
 
