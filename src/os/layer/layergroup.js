@@ -1,5 +1,7 @@
 goog.declareModuleId('os.layer.LayerGroup');
 
+import {remove} from 'ol/array';
+
 import {registerClass} from '../classregistry.js';
 import IGroupable from '../igroupable.js';
 import osImplements from '../implements.js';
@@ -10,7 +12,6 @@ import LayerClass from './layerclass.js';
 const EventTarget = goog.require('goog.events.EventTarget');
 const {clamp} = goog.require('goog.math');
 const {getRandomString} = goog.require('goog.string');
-const {remove} = goog.require('ol.array');
 
 
 /**
