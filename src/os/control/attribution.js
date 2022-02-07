@@ -1,9 +1,10 @@
 goog.declareModuleId('os.control.Attribution');
 
+import * as olArray from 'ol/array';
+import * as OLAttribution from 'ol/control/Attribution';
+
 const dom = goog.require('goog.dom');
 const SafeHtml = goog.require('goog.html.SafeHtml');
-const olArray = goog.require('ol.array');
-const OLAttribution = goog.require('ol.control.Attribution');
 
 
 /**
@@ -143,9 +144,3 @@ const visibleAtResolution = (layerState, resolution) => {
  * @type {boolean}
  */
 const checkVisibleAtResolution = true;
-
-/**
- * Disable this behavior from OpenLayers.
- * @suppress {accessControls}
- */
-OLAttribution.prototype.insertLogos_ = () => {};
