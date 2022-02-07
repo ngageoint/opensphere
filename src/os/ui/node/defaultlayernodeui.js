@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.node.DefaultLayerNodeUI');
 
+import Layer from 'ol/layer/Layer';
 import {instanceOf} from '../../classregistry.js';
 import {DescriptorClass, NodeClass} from '../../data/data.js';
 import DataManager from '../../data/datamanager.js';
@@ -16,7 +17,6 @@ import Module from '../module.js';
 import AbstractNodeUICtrl from '../slick/abstractnodeui.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const Layer = goog.require('ol.layer.Layer');
 
 const Source = goog.requireType('ol.source.Source');
 const {default: LayerNode} = goog.requireType('os.data.LayerNode');
