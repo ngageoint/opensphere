@@ -1,5 +1,7 @@
 goog.declareModuleId('os.webgl.AbstractRootSynchronizer');
 
+import events from 'ol/events';
+import Layer from 'ol/layer/Layer';
 import ZOrderEventType from '../data/zordereventtype.js';
 import * as dispatcher from '../dispatcher.js';
 import LayerEventType from '../events/layereventtype.js';
@@ -12,8 +14,6 @@ const Disposable = goog.require('goog.Disposable');
 const asserts = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
-const events = goog.require('ol.events');
-const Layer = goog.require('ol.layer.Layer');
 
 const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
 const {default: ILayer} = goog.requireType('os.layer.ILayer');
