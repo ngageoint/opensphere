@@ -1,5 +1,13 @@
 goog.declareModuleId('os.geo');
 
+import Feature from 'ol/Feature';
+import Geometry from 'ol/geom/Geometry';
+import GeometryCollection from 'ol/geom/GeometryCollection';
+import GeometryType from 'ol/geom/GeometryType';
+import LineString from 'ol/geom/LineString';
+import MultiLineString from 'ol/geom/MultiLineString';
+import Point from 'ol/geom/Point';
+
 import '../mixin/geometrymixin.js';
 import {arrayCopy} from '../array/array.js';
 import * as easing from '../easing/easing.js';
@@ -11,20 +19,6 @@ import {isWorldQuery} from '../query/queryutils.js';
 import ParseConf from './parseconf.js';
 
 const {buildString, padNumber} = goog.require('goog.string');
-const Feature = goog.require('ol.Feature');
-const Geometry = goog.require('ol.geom.Geometry');
-const GeometryCollection = goog.require('ol.geom.GeometryCollection');
-const GeometryType = goog.require('ol.geom.GeometryType');
-const LineString = goog.require('ol.geom.LineString');
-const MultiLineString = goog.require('ol.geom.MultiLineString');
-const Point = goog.require('ol.geom.Point');
-
-const Circle = goog.requireType('ol.geom.Circle');
-const GeometryLayout = goog.requireType('ol.geom.GeometryLayout');
-const MultiPoint = goog.requireType('ol.geom.MultiPoint');
-const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
-const Polygon = goog.requireType('ol.geom.Polygon');
-const RenderFeature = goog.requireType('ol.render.Feature');
 
 
 /**
