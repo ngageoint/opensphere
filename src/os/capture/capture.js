@@ -1,5 +1,7 @@
 goog.declareModuleId('os.capture');
 
+import * as webgl from 'ol/webgl';
+
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';
 import * as config from '../config/config.js';
@@ -17,7 +19,6 @@ const Promise = goog.require('goog.Promise');
 const dispose = goog.require('goog.dispose');
 const dom = goog.require('goog.dom');
 const log = goog.require('goog.log');
-const webgl = goog.require('ol.webgl');
 
 const {default: JobEvent} = goog.requireType('os.job.JobEvent');
 

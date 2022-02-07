@@ -1,15 +1,15 @@
 goog.declareModuleId('os.command.SwitchView');
 
+import * as olExtent from 'ol/extent';
+import * as olProj from 'ol/proj';
+import * as tilegrid from 'ol/tilegrid';
+import {DEFAULT_MAX_ZOOM} from 'ol/tilegrid/common';
+import View from 'ol/View';
+
 import Settings from '../config/settings.js';
 import * as osMap from '../map/map.js';
 import {getMapContainer} from '../map/mapinstance.js';
 import State from './state.js';
-
-const {DEFAULT_MAX_ZOOM} = goog.require('ol');
-const View = goog.require('ol.View');
-const olExtent = goog.require('ol.extent');
-const olProj = goog.require('ol.proj');
-const tilegrid = goog.require('ol.tilegrid');
 
 const {default: ICommand} = goog.requireType('os.command.ICommand');
 

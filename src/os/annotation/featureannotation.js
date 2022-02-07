@@ -1,19 +1,17 @@
 goog.declareModuleId('os.annotation.FeatureAnnotation');
 
+import {listen, unlistenByKey} from 'ol/events';
+import EventType from 'ol/events/EventType';
+import SimpleGeometry from 'ol/geom/SimpleGeometry';
+import OverlayPositioning from 'ol/OverlayPositioning';
+import {getUid} from 'ol/util';
+
 import {getMapContainer} from '../map/mapinstance.js';
 import * as ui from '../ui/ui.js';
 import WebGLOverlay from '../webgl/webgloverlay.js';
 import AbstractAnnotation from './abstractannotation.js';
 import {OPTIONS_FIELD} from './annotation.js';
 import {directiveTag as annotationUi} from './featureannotationui.js';
-
-const {getUid} = goog.require('ol');
-const OverlayPositioning = goog.require('ol.OverlayPositioning');
-const {listen, unlisten} = goog.require('ol.events');
-const EventType = goog.require('ol.events.EventType');
-const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
-
-const Feature = goog.requireType('ol.Feature');
 
 
 /**
@@ -41,7 +39,7 @@ export default class FeatureAnnotation extends AbstractAnnotation {
      */
     this.feature = feature;
 
-    listen(this.feature, EventType.CHANGE, this.handleFeatureChange, this);
+    this.eventsKey = listen(this.feature, EventType.CHANGE, this.handleFeatureChange, this);
 
     this.createUI();
   }
@@ -52,7 +50,7 @@ export default class FeatureAnnotation extends AbstractAnnotation {
   disposeInternal() {
     super.disposeInternal();
 
-    unlisten(this.feature, EventType.CHANGE, this.handleFeatureChange, this);
+    unlistenByKey(this.eventsKey);
   }
 
   /**

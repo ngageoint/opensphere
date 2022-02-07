@@ -1,5 +1,7 @@
 goog.declareModuleId('os.column.ColumnMapping');
 
+import * as olArray from 'ol/array';
+
 import ColumnMappingEvent from './columnmappingevent.js';
 import ColumnMappingEventType from './columnmappingeventtype.js';
 import ColumnMappingTag from './columnmappingtag.js';
@@ -11,8 +13,6 @@ const googDomXml = goog.require('goog.dom.xml');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
-const olArray = goog.require('ol.array');
-
 
 /**
  * Enumeration of column mapping attributes

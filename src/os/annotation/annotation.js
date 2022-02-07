@@ -1,17 +1,14 @@
 goog.declareModuleId('os.annotation');
 
+import GeometryType from 'ol/geom/GeometryType';
+import Point from 'ol/geom/Point';
+import {getUid} from 'ol/util';
+
 import {nearestPoints} from '../geo/jsts.js';
 import {getMapContainer} from '../map/mapinstance.js';
 import FeatureEditField from '../ui/featureeditfield.js';
 import {measureText} from '../ui/ui.js';
 import TailStyle from './tailstyle.js';
-
-const {getUid} = goog.require('ol');
-const GeometryType = goog.require('ol.geom.GeometryType');
-const Point = goog.require('ol.geom.Point');
-
-const Feature = goog.requireType('ol.Feature');
-const Overlay = goog.requireType('ol.Overlay');
 
 
 /**

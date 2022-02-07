@@ -1,14 +1,12 @@
 goog.declareModuleId('os.command.FeatureLabel');
 
+import * as olArray from 'ol/array';
+
 import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
 import * as label from '../../style/label.js';
 import * as osStyle from '../../style/style.js';
 import StyleField from '../../style/stylefield.js';
 import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
-
-const olArray = goog.require('ol.array');
-
-const Feature = goog.requireType('ol.Feature');
 
 
 /**

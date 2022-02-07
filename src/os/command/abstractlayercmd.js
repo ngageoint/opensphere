@@ -1,5 +1,7 @@
 goog.declareModuleId('os.command.AbstractLayer');
 
+import Layer from 'ol/layer/Layer';
+
 import * as osLayer from '../layer/layer.js';
 import {getMapContainer} from '../map/mapinstance.js';
 import Metrics from '../metrics/metrics.js';
@@ -8,7 +10,6 @@ import State from './state.js';
 
 const Disposable = goog.require('goog.Disposable');
 const googObject = goog.require('goog.object');
-const Layer = goog.require('ol.layer.Layer');
 
 const {default: ICommand} = goog.requireType('os.command.ICommand');
 

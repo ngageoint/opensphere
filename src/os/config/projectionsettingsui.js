@@ -1,5 +1,7 @@
 goog.declareModuleId('os.config.ProjectionSettingsUI');
 
+import {listen, unlistenByKey} from 'ol/events';
+
 import * as osMap from '../map/map.js';
 import {getMapContainer} from '../map/mapinstance.js';
 import Metrics from '../metrics/metrics.js';
@@ -11,8 +13,6 @@ import Module from '../ui/module.js';
 import {apply} from '../ui/ui.js';
 
 const {numerateCompare} = goog.require('goog.string');
-const {listen, unlisten} = goog.require('ol.events');
-
 
 /**
  * The projection settings UI directive
@@ -60,7 +60,7 @@ export class Controller {
     this.scope_ = $scope;
 
     var map = getMapContainer().getMap();
-    listen(map, 'change:view', this.onProjectionChange_, this);
+    this.listenKey_ = listen(map, 'change:view', this.onProjectionChange_, this);
 
     // initialize units from settings
     var projections = getProjections(true);
@@ -77,8 +77,7 @@ export class Controller {
    * @private
    */
   destroy_() {
-    var map = getMapContainer().getMap();
-    unlisten(map, 'change:view', this.onProjectionChange_, this);
+    unlistenByKey(this.listenKey_);
     this.scope_ = null;
   }
 

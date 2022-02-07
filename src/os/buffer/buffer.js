@@ -1,5 +1,8 @@
 goog.declareModuleId('os.buffer');
 
+import Feature from 'ol/Feature';
+import GeometryType from 'ol/geom/GeometryType';
+
 import CommandProcessor from '../command/commandprocessor.js';
 import ParallelCommand from '../command/parallelcommand.js';
 import Settings from '../config/settings.js';
@@ -12,13 +15,6 @@ import * as osStyle from '../style/style.js';
 import AreaAdd from '../ui/query/cmd/areaaddcmd.js';
 
 const userAgent = goog.require('goog.userAgent');
-const Feature = goog.require('ol.Feature');
-const GeometryType = goog.require('ol.geom.GeometryType');
-
-const Geometry = goog.requireType('ol.geom.Geometry');
-const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
-const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
-
 
 /**
  * @typedef {{

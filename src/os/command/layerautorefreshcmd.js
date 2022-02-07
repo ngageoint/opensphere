@@ -1,14 +1,13 @@
 goog.declareModuleId('os.command.LayerAutoRefresh');
 
+import UrlTile from 'ol/source/UrlTile';
+
 import {getMapContainer} from '../map/mapinstance.js';
 import Metrics from '../metrics/metrics.js';
 import {Layer as LayerKeys} from '../metrics/metricskeys.js';
 import VectorSource from '../source/vectorsource.js';
 import State from './state.js';
 
-const UrlTile = goog.require('ol.source.UrlTile');
-
-const Source = goog.requireType('ol.source.Source');
 const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 

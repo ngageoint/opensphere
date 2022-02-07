@@ -1,15 +1,15 @@
 goog.declareModuleId('os.command.TransformVectors');
 
+import Geometry from 'ol/geom/Geometry';
+import VectorLayer from 'ol/layer/Vector';
+import * as olProj from 'ol/proj';
+
 import RecordField from '../data/recordfield.js';
 import * as osFeature from '../feature/feature.js';
 import * as geo2 from '../geo/geo2.js';
 import * as interpolate from '../interpolate.js';
 import {getMapContainer} from '../map/mapinstance.js';
 import State from './state.js';
-
-const Geometry = goog.require('ol.geom.Geometry');
-const OLVectorLayer = goog.require('ol.layer.Vector');
-const olProj = goog.require('ol.proj');
 
 const {default: ICommand} = goog.requireType('os.command.ICommand');
 
@@ -126,7 +126,7 @@ export default class TransformVectors {
     for (var i = 0, n = layers.length; i < n; i++) {
       var layer = layers[i];
 
-      if (layer instanceof OLVectorLayer) {
+      if (layer instanceof VectorLayer) {
         var source = layer.getSource();
 
         if (source) {

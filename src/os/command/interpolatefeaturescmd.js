@@ -1,13 +1,12 @@
 goog.declareModuleId('os.command.InterpolateFeatures');
 
+import VectorLayer from 'ol/layer/Vector';
+
 import * as interpolate from '../interpolate.js';
 import {getMapContainer} from '../map/mapinstance.js';
 import State from './state.js';
 
-const OLVectorLayer = goog.require('ol.layer.Vector');
-
 const {default: ICommand} = goog.requireType('os.command.ICommand');
-
 
 /**
  * Abstract command for performing selections on a source
@@ -77,7 +76,7 @@ export default class InterpolateFeatures {
     for (var i = 0, n = layers.length; i < n; i++) {
       var layer = layers[i];
 
-      if (layer instanceof OLVectorLayer) {
+      if (layer instanceof VectorLayer) {
         var source = layer.getSource();
 
         if (source) {

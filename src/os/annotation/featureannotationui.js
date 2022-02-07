@@ -1,5 +1,8 @@
 goog.declareModuleId('os.annotation.FeatureAnnotationUI');
 
+import {listen, unlistenByKey} from 'ol/events';
+import EventType from 'ol/events/EventType';
+
 import '../ui/text/tuieditorui.js';
 import PropertyChangeEvent from '../events/propertychangeevent.js';
 import FeatureEditField from '../ui/featureeditfield.js';
@@ -11,11 +14,7 @@ import * as annotation from './annotation.js';
 import TailStyle from './tailstyle.js';
 import TailType from './tailtype.js';
 
-const olEvents = goog.require('ol.events');
-const EventType = goog.require('ol.events.EventType');
-
 const {default: WebGLOverlay} = goog.requireType('os.webgl.WebGLOverlay');
-
 
 /**
  * The annotation template. This must be inline to avoid timing issues between template load and positioning the
@@ -161,8 +160,8 @@ export class Controller extends AbstractAnnotationCtrl {
      */
     this.userChanged_ = false;
 
-    olEvents.listen(this.feature, EventType.CHANGE, this.onFeatureChange_, this);
-    olEvents.listen(this.overlay, 'change:visible', this.onOverlayVisibleChange_, this);
+    this.changeEventsKey_ = listen(this.feature, EventType.CHANGE, this.onFeatureChange_, this);
+    this.visibleEventsKey_ = listen(this.overlay, 'change:visible', this.onOverlayVisibleChange_, this);
   }
 
   /**
@@ -171,8 +170,8 @@ export class Controller extends AbstractAnnotationCtrl {
   $onDestroy() {
     super.$onDestroy();
 
-    olEvents.unlisten(this.feature, EventType.CHANGE, this.onFeatureChange_, this);
-    olEvents.unlisten(this.overlay, 'change:visible', this.onOverlayVisibleChange_, this);
+    unlistenByKey(this.changeEventsKey_);
+    unlistenByKey(this.visibleEventsKey_);
 
     this.feature = null;
     this.overlay = null;
@@ -272,7 +271,7 @@ export class Controller extends AbstractAnnotationCtrl {
 
       // try updating the tail
       if (this.updateTail()) {
-        olEvents.unlisten(this.overlay, 'change:visible', this.onOverlayVisibleChange_, this);
+        unlisten(this.visibleEventsKey_);
       }
 
       this.inVisibleChange_ = false;

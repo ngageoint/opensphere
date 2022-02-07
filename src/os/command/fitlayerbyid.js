@@ -1,5 +1,7 @@
 goog.declareModuleId('os.command.FitLayerByID');
 
+import {listen, unlistenByKey} from 'ol/events';
+
 import * as dispatcher from '../dispatcher.js';
 import LayerEventType from '../events/layereventtype.js';
 import {getMapContainer} from '../map/mapinstance.js';
@@ -7,7 +9,6 @@ import AbstractSyncCommand from './abstractsynccommand.js';
 import State from './state.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const events = goog.require('ol.events');
 
 const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
@@ -65,7 +66,7 @@ export default class FitLayerByID extends AbstractSyncCommand {
     dispatcher.getInstance().unlisten(LayerEventType.ADD, this.onAdd_, false, this);
 
     if (this.listenKey_) {
-      events.unlistenByKey(this.listenKey_);
+      unlistenByKey(this.listenKey_);
       this.listenKey_ = null;
     }
   }
@@ -88,7 +89,7 @@ export default class FitLayerByID extends AbstractSyncCommand {
     if (layer) {
       // If layer is still loading we need to wait until it finishes to get the extent
       if (layer.isLoading()) {
-        this.listenKey_ = events.listen(layer, GoogEventType.PROPERTYCHANGE, this.onPropChange_, this);
+        this.listenKey_ = listen(layer, GoogEventType.PROPERTYCHANGE, this.onPropChange_, this);
       } else {
         this.fit_(layer);
       }
@@ -133,7 +134,7 @@ export default class FitLayerByID extends AbstractSyncCommand {
 
     // If layer is still loading we need to wait until it finishes to get the extent
     if (layer.isLoading()) {
-      this.listenKey_ = events.listen(layer, GoogEventType.PROPERTYCHANGE, this.onPropChange_, this);
+      this.listenKey_ = listen(layer, GoogEventType.PROPERTYCHANGE, this.onPropChange_, this);
     } else {
       this.fit_(layer);
     }
