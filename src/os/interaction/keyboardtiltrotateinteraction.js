@@ -1,5 +1,10 @@
 goog.declareModuleId('os.interaction.KeyboardTiltRotate');
 
+import {noModifierKeys, shiftKeyOnly, targetNotEditable} from 'ol/events/condition';
+import EventType from 'ol/events/EventType';
+import Interaction from 'ol/interaction/Interaction';
+import {transform} from 'ol/proj';
+
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';
 import * as osMap from '../map/map.js';
@@ -12,12 +17,6 @@ const {assert} = goog.require('goog.asserts');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const {and} = goog.require('goog.functions');
 const {toRadians} = goog.require('goog.math');
-const EventType = goog.require('ol.events.EventType');
-const {noModifierKeys, shiftKeyOnly, targetNotEditable} = goog.require('ol.events.condition');
-const Interaction = goog.require('ol.interaction.Interaction');
-const {transform} = goog.require('ol.proj');
-
-const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 
 
 /**
