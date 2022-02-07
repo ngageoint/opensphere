@@ -1,5 +1,7 @@
 goog.declareModuleId('os.data.histo.SourceHistogram');
 
+import {listen, unlistenByKey} from 'ol/events';
+
 import * as dispatcher from '../../dispatcher.js';
 import * as osFeature from '../../feature/feature.js';
 import DateRangeBinType from '../../histo/daterangebintype.js';
@@ -15,10 +17,8 @@ const Delay = goog.require('goog.async.Delay');
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
-const events = goog.require('ol.events');
 
 const GoogEvent = goog.requireType('goog.events.Event');
-const Feature = goog.requireType('ol.Feature');
 const {default: FeatureEvent} = goog.requireType('os.data.FeatureEvent');
 const {default: ColorMethod} = goog.requireType('os.data.histo.ColorMethod');
 const {default: IGroupable} = goog.requireType('os.data.xf.IGroupable');
@@ -187,6 +187,8 @@ export default class SourceHistogram extends EventTarget {
      */
     this.featureBins_ = {};
 
+    this.listenKey_ = null;
+
     dispatcher.getInstance().listen(FeatureEventType.COLOR, this.onFeatureColor_, false, this);
 
     // link to the parent histogram
@@ -353,7 +355,7 @@ export default class SourceHistogram extends EventTarget {
       this.parent_.decrementRefCount();
     } else {
       // no parent - remove source listeners
-      events.unlisten(this.source, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+      unlistenByKey(this.listenKey_);
     }
 
     this.parent_ = value;
@@ -366,7 +368,7 @@ export default class SourceHistogram extends EventTarget {
         this.parent_.incrementRefCount();
       } else {
         // no parent - update when the source changes
-        events.listen(this.source, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+        this.listenKey_ = listen(this.source, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
       }
     }
   }
