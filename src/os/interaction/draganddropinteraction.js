@@ -1,5 +1,7 @@
 goog.declareModuleId('os.interaction.DragAndDrop');
 
+import Interaction from 'ol/interaction/Interaction';
+
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';
 import * as dispatcher from '../dispatcher.js';
@@ -14,7 +16,6 @@ const FileDropHandler = goog.require('goog.events.FileDropHandler');
 const EventType = goog.require('goog.events.FileDropHandler.EventType');
 const {TRUE} = goog.require('goog.functions');
 const log = goog.require('goog.log');
-const Interaction = goog.require('ol.interaction.Interaction');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {default: OSFile} = goog.requireType('os.file.File');
