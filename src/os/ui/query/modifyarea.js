@@ -1,5 +1,7 @@
 goog.declareModuleId('os.ui.query.ModifyAreaUI');
 
+import {listen} from 'ol/events';
+import Feature from 'ol/Feature';
 import '../util/validationmessage.js';
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';
@@ -28,8 +30,6 @@ import AreaModify from './cmd/areamodifycmd.js';
 const dispose = goog.require('goog.dispose');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const log = goog.require('goog.log');
-const Feature = goog.require('ol.Feature');
-const {listen} = goog.require('ol.events');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Vector = goog.requireType('ol.layer.Vector');
