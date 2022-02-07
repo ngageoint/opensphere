@@ -1,14 +1,14 @@
 goog.declareModuleId('os.interaction.DrawPolygon');
 
+import {getWidth} from 'ol/extent';
+import {toLonLat} from 'ol/proj';
+import ViewHint from 'ol/ViewHint';
+
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';
 import * as osMap from '../map/map.js';
 import MapContainer from '../mapcontainer.js';
 import OLDrawPolygon from '../ui/ol/interaction/drawpolygoninteraction.js';
-
-const ViewHint = goog.require('ol.ViewHint');
-const {getWidth} = goog.require('ol.extent');
-const {toLonLat} = goog.require('ol.proj');
 
 const {default: OSMap} = goog.requireType('os.Map');
 
