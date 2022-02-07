@@ -1,12 +1,12 @@
 goog.declareModuleId('os.webgl.WebGLOverlay');
 
+import Overlay from 'ol/Overlay';
+import olProj from 'ol/proj';
 import * as osMap from '../map/map.js';
 import MapChange from '../map/mapchange.js';
 import {getMapContainer} from '../map/mapinstance.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const Overlay = goog.require('ol.Overlay');
-const olProj = goog.require('ol.proj');
 
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
