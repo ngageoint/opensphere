@@ -1,5 +1,13 @@
 goog.declareModuleId('os.layer.VectorTile');
 
+import {listen} from 'ol/events';
+import {createEmpty, isEmpty} from 'ol/extent';
+import Property from 'ol/layer/Property';
+import VectorTileLayer from 'ol/layer/VectorTile';
+import VectorTileLayerRenderer from 'ol/renderer/canvas/VectorTileLayer';
+import UrlTileSource from 'ol/source/UrlTile';
+import {DEFAULT_MAX_ZOOM} from 'ol/tilegrid/common';
+
 import '../ui/layer/defaultlayerui.js';
 import ActionEventType from '../action/eventtype.js';
 import LayerEvent from '../events/layerevent.js';
@@ -27,13 +35,7 @@ import SynchronizerType from './synchronizertype.js';
 const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');
 
-const {DEFAULT_MAX_ZOOM, DEFAULT_MIN_ZOOM} = goog.require('ol');
-const events = goog.require('ol.events');
-const olExtent = goog.require('ol.extent');
-const Property = goog.require('ol.layer.Property');
-const VectorTileLayer = goog.require('ol.layer.VectorTile');
-const VectorTileLayerRenderer = goog.require('ol.renderer.canvas.VectorTileLayer');
-const UrlTileSource = goog.require('ol.source.UrlTile');
+const DEFAULT_MIN_ZOOM = 0;
 
 
 /**
@@ -146,9 +148,11 @@ export default class VectorTile extends VectorTileLayer {
      */
     this.groupLabel_ = null;
 
+    this.propertyChangeListenKey_ = null;
+
     var source = this.getSource();
     if (source) {
-      events.listen(source, GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
+      this.propertyChangeListenKey_ = listen(source, GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
     }
 
     /**
@@ -557,8 +561,8 @@ export default class VectorTile extends VectorTileLayer {
   supportsAction(type, opt_actionArgs) {
     switch (type) {
       case ActionEventType.GOTO:
-        const layerExtent = reduceExtentFromLayers(/** @type {!ol.Extent} */ (olExtent.createEmpty()), this);
-        return !olExtent.isEmpty(layerExtent);
+        const layerExtent = reduceExtentFromLayers(/** @type {!ol.Extent} */ (createEmpty()), this);
+        return !isEmpty(layerExtent);
       case ActionEventType.IDENTIFY:
       case ActionEventType.REFRESH:
       case ActionEventType.SHOW_DESCRIPTION:
