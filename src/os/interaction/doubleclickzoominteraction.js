@@ -1,13 +1,13 @@
 goog.declareModuleId('os.interaction.DoubleClickZoom');
 
+import {platformModifierKeyOnly} from 'ol/events/condition';
+import OLDoubleClickZoom from 'ol/interaction/DoubleClickZoom';
+import Interaction from 'ol/interaction/Interaction';
+import MapBrowserEventType from 'ol/MapBrowserEventType';
+
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';
 import MapContainer from '../mapcontainer.js';
-
-const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
-const {platformModifierKeyOnly} = goog.require('ol.events.condition');
-const OLDoubleClickZoom = goog.require('ol.interaction.DoubleClickZoom');
-const Interaction = goog.require('ol.interaction.Interaction');
 
 
 /**
