@@ -2,7 +2,7 @@ goog.declareModuleId('os.interaction.DoubleClickZoom');
 
 import {platformModifierKeyOnly} from 'ol/events/condition';
 import OLDoubleClickZoom from 'ol/interaction/DoubleClickZoom';
-import Interaction from 'ol/interaction/Interaction';
+import {zoomByDelta} from 'ol/interaction/Interaction';
 import MapBrowserEventType from 'ol/MapBrowserEventType';
 
 import I3DSupport from '../i3dsupport.js';
@@ -67,7 +67,7 @@ OLDoubleClickZoom.handleEvent = function(mapBrowserEvent) {
       var delta = zoomOut ? -this.delta_ : this.delta_;
       var view = mapBrowserEvent.map.getView();
       if (view) {
-        Interaction.zoomByDelta(view, delta, anchor, this.duration_);
+        zoomByDelta(view, delta, anchor, this.duration_);
       }
     }
 
