@@ -1,5 +1,9 @@
 goog.declareModuleId('os.ui.query.AbstractQueryReader');
 
+import Feature from 'ol/Feature';
+import GML3 from 'ol/format/GML3';
+import GeometryLayout from 'ol/geom/GeometryLayout';
+import Polygon from 'ol/geom/Polygon';
 import {extentToCoordinates} from '../../geo/geo.js';
 import GeometryField from '../../geom/geometryfield.js';
 import {METHOD_FIELD} from '../../interpolate.js';
@@ -8,10 +12,7 @@ import {createElementNS, unescape as xmlUnescape} from '../../xml.js';
 
 const log = goog.require('goog.log');
 const {getRandomString} = goog.require('goog.string');
-const Feature = goog.require('ol.Feature');
-const GML3 = goog.require('ol.format.GML3');
-const GeometryLayout = goog.require('ol.geom.GeometryLayout');
-const Polygon = goog.require('ol.geom.Polygon');
+
 
 const {default: IQueryReader} = goog.requireType('os.ui.query.IQueryReader');
 
