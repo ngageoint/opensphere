@@ -1,5 +1,7 @@
 goog.declareModuleId('os.feature.measure');
 
+import LineString from 'ol/geom/LineString';
+
 import {modifyBearing, getFormattedBearing} from '../bearing/bearing.js';
 import {ORIGINAL_GEOM_FIELD} from '../interpolate.js';
 import {getMapContainer} from '../map/mapinstance.js';
@@ -8,11 +10,6 @@ import TimelineController from '../time/timelinecontroller.js';
 import UnitManager from '../unit/unitmanager.js';
 import {getLayer} from './feature.js';
 
-const LineString = goog.require('ol.geom.LineString');
-
-const Feature = goog.requireType('ol.Feature');
-const Geometry = goog.requireType('ol.geom.Geometry');
-const Style = goog.requireType('ol.style.Style');
 
 
 /**
