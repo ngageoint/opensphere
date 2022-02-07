@@ -1,5 +1,8 @@
 goog.declareModuleId('os.data.DrawingFeatureNode');
 
+import CircleStyle from 'ol/style/Circle';
+import RegularShape from 'ol/style/RegularShape';
+
 import '../mixin/objectmixin.js';
 import {registerClass} from '../classregistry.js';
 import * as osFeature from '../feature/feature.js';
@@ -14,8 +17,6 @@ import {directiveTag as nodeUi} from '../ui/node/drawingfeaturenodeui.js';
 import SlickTreeNode from '../ui/slick/slicktreenode.js';
 import {NodeClass} from './data.js';
 
-const Circle = goog.require('ol.style.Circle');
-const RegularShape = goog.require('ol.style.RegularShape');
 
 
 /**
@@ -223,7 +224,7 @@ export default class DrawingFeatureNode extends SlickTreeNode {
       var fill;
       var image = s.getImage();
 
-      if (image instanceof Circle || image instanceof RegularShape) {
+      if (image instanceof CircleStyle || image instanceof RegularShape) {
         var fillable = /** @type {ol.style.Circle|ol.style.RegularShape} */ (image);
         fill = fillable.getFill();
 
