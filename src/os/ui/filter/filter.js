@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.filter');
 
+import {getAllTextContent} from 'ol/xml';
 import DataManager from '../../data/datamanager.js';
 import FilterEntry from '../../filter/filterentry.js';
 import IFilterable from '../../filter/ifilterable.js';
@@ -31,7 +32,6 @@ import OlderThan from './op/time/olderthanop.js';
 const {getFirstElementChild, setTextContent} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');
 const {contains, isEmptyOrWhitespace, stripQuotes} = goog.require('goog.string');
-const {getAllTextContent} = goog.require('ol.xml');
 
 const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 const {default: Op} = goog.requireType('os.ui.filter.op.Op');
