@@ -1,11 +1,9 @@
 goog.declareModuleId('os.ui.feature.tab.AbstractFeatureTabCtrl');
 
+import Feature from 'ol/Feature';
+import RenderFeature from 'ol/render/Feature';
 import {apply} from '../../ui.js';
 import FeatureInfoEvent from '../featureinfoevent.js';
-
-const Feature = goog.require('ol.Feature');
-const RenderFeature = goog.require('ol.render.Feature');
-
 
 /**
  * Abstract controller for feature tabs.
