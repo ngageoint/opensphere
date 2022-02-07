@@ -1,5 +1,7 @@
 goog.declareModuleId('os.ui.menu.buffer');
 
+import Feature from 'ol/Feature';
+import Point from 'ol/geom/Point';
 import EventType from '../../action/eventtype.js';
 import {ICON} from '../../buffer/buffer.js';
 import {isGeometryPolygonal} from '../../geo/geo.js';
@@ -15,8 +17,6 @@ import * as spatialMenu from './spatial.js';
 const {assert} = goog.require('goog.asserts');
 const GoogEvent = goog.require('goog.events.Event');
 const {toTitleCase} = goog.require('goog.string');
-const Feature = goog.require('ol.Feature');
-const Point = goog.require('ol.geom.Point');
 
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: MenuItem} = goog.requireType('os.ui.menu.MenuItem');
