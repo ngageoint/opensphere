@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.LayersUI');
 
+import LayerType from 'ol/layer/WebGLTile';
 import './layer/defaultlayerui.js';
 import './layertree.js';
 import './uiswitch.js';
@@ -34,7 +35,6 @@ import {close} from './window.js';
 import windowSelector from './windowselector.js';
 
 const {getRandomString} = goog.require('goog.string');
-const LayerType = goog.require('ol.LayerType');
 
 const Layer = goog.requireType('ol.layer.Layer');
 const {default: INodeGroupBy} = goog.requireType('os.data.groupby.INodeGroupBy');
