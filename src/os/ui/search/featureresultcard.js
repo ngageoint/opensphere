@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.search.FeatureResultCardCtrl');
 
+import {listen} from 'ol/events';
 import EventType from '../../action/eventtype.js';
 import PropertyChangeEvent from '../../events/propertychangeevent.js';
 import SelectionType from '../../events/selectiontype.js';
@@ -18,7 +19,6 @@ import StyleType from '../../style/styletype.js';
 const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
-const {listen, unlisten} = goog.require('ol.events');
 
 const Feature = goog.requireType('ol.Feature');
 const {default: AbstractSearchResult} = goog.requireType('os.search.AbstractSearchResult');
