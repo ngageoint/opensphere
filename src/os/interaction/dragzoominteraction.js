@@ -1,11 +1,11 @@
 goog.declareModuleId('os.interaction.DragZoom');
 
+import {platformModifierKeyOnly} from 'ol/events/condition';
+
 import FlyToExtent from '../command/flytoextentcmd.js';
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';
 import DragBox from './dragboxinteraction.js';
-
-const {platformModifierKeyOnly} = goog.require('ol.events.condition');
 
 
 /**
