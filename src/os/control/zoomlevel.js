@@ -1,5 +1,8 @@
 goog.declareModuleId('os.control.ZoomLevel');
 
+import Control from 'ol/control/Control';
+import {CLASS_UNSELECTABLE} from 'ol/css';
+
 import * as osMap from '../map/map.js';
 import {getMapContainer} from '../map/mapinstance.js';
 import UnitManager from '../unit/unitmanager.js';
@@ -10,9 +13,6 @@ const safe = goog.require('goog.dom.safe');
 const GoogEventType = goog.require('goog.events.EventType');
 const SafeHtml = goog.require('goog.html.SafeHtml');
 const style = goog.require('goog.style');
-const Control = goog.require('ol.control.Control');
-const css = goog.require('ol.css');
-const ScaleLineUnits = goog.requireType('ol.control.ScaleLineUnits');
 
 const {default: ZoomLevelOptions} = goog.requireType('os.control.ZoomLevelOptions');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
@@ -31,7 +31,7 @@ export default class ZoomLevel extends Control {
 
     var className = options.className !== undefined ? options.className : 'ol-zoom-level';
     var element = dom.createDom(TagName.DIV, {
-      'class': className + ' ' + css.CLASS_UNSELECTABLE
+      'class': className + ' ' + CLASS_UNSELECTABLE
     });
 
     super({
