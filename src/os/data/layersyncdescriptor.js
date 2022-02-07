@@ -1,5 +1,9 @@
 goog.declareModuleId('os.data.LayerSyncDescriptor');
 
+import * as olArray from 'ol/array';
+import {listen, unlistenByKey} from 'ol/events';
+import {ObjectEvent} from 'ol/Object';
+
 import '../ui/layer/ellipsecolumns.js';
 import {registerClass} from '../classregistry.js';
 import * as dispatcher from '../dispatcher.js';
@@ -20,9 +24,6 @@ import IMappingDescriptor from './imappingdescriptor.js';
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
-const OLObject = goog.require('ol.Object');
-const olArray = goog.require('ol.array');
-const events = goog.require('ol.events');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
@@ -81,6 +82,8 @@ export default class LayerSyncDescriptor extends BaseDescriptor {
 
     dispatcher.getInstance().listen(LayerEventType.ADD, this.onLayerAdded, false, this);
     dispatcher.getInstance().listen(LayerEventType.REMOVE, this.onLayerRemoved, false, this);
+
+    this.listenKey = null;
   }
 
   /**
@@ -214,7 +217,7 @@ export default class LayerSyncDescriptor extends BaseDescriptor {
   addLayer(layer) {
     if (this.layers.indexOf(layer) === -1) {
       // listen for changes to the layer
-      events.listen(/** @type {events.EventTarget} */ (layer), GoogEventType.PROPERTYCHANGE,
+      this.listenKey = listen(/** @type {events.EventTarget} */ (layer), GoogEventType.PROPERTYCHANGE,
           this.onLayerChange, this);
 
       // add the layer to the map and the layer list
@@ -236,8 +239,7 @@ export default class LayerSyncDescriptor extends BaseDescriptor {
         merge(/** @type {!Object} */(this.layerConfig[key]), /** @type {!Object} */(config[key]), true);
       }, this);
 
-      events.unlisten(/** @type {events.EventTarget} */ (layer), GoogEventType.PROPERTYCHANGE,
-          this.onLayerChange, this);
+      unlistenByKey(this.listenKey);
 
       olArray.remove(this.layers, layer);
     }
@@ -377,7 +379,7 @@ export default class LayerSyncDescriptor extends BaseDescriptor {
       } else {
         this.saveDescriptor();
       }
-    } else if (e instanceof OLObject.Event) {
+    } else if (e instanceof ObjectEvent) {
       // handle the OL3 change event
       if (styleKeys.indexOf(e.key) > -1) {
         this.onStyleChange();
