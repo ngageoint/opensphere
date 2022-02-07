@@ -1,14 +1,11 @@
 goog.declareModuleId('os.filter.impl.ecql.AreaFormatter');
 
+import WKT from 'ol/format/WKT';
+
 import {normalizeGeometryCoordinates} from '../../../geo/geo2.js';
 import {ORIGINAL_GEOM_FIELD} from '../../../interpolate.js';
 import FilterFormatter from './filterformatter.js';
 
-const WKT = goog.require('ol.format.WKT');
-
-const Geometry = goog.requireType('ol.geom.Geometry');
-const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
-const Polygon = goog.requireType('ol.geom.Polygon');
 const {default: ISpatialFormatter} = goog.requireType('os.filter.ISpatialFormatter');
 
 
