@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.search.place.CoordinateResult');
 
+import {transformExtent} from 'ol/proj';
 import RecordField from '../../../data/recordfield.js';
 import {flyTo, getTitle} from '../../../feature/feature.js';
 import osImplements from '../../../implements.js';
@@ -16,8 +17,6 @@ import StyleType from '../../../style/styletype.js';
 import ITime from '../../../time/itime.js';
 import {directiveTag as searchUi} from './coordinateresultcard.js';
 import {FEATURE_CONFIG} from './place.js';
-
-const {transformExtent} = goog.require('ol.proj');
 
 const Feature = goog.requireType('ol.Feature');
 
