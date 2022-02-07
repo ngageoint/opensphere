@@ -1,5 +1,8 @@
 goog.declareModuleId('os.ui.draw');
 
+import Feature from 'ol/Feature';
+import {fromExtent} from 'ol/geom/Polygon';
+import {transformExtent} from 'ol/proj';
 import RecordField from '../../data/recordfield.js';
 import {METHOD_FIELD} from '../../interpolate.js';
 import Method from '../../interpolatemethod.js';
@@ -9,9 +12,6 @@ import {EPSG4326} from '../../proj/proj.js';
 import AltitudeMode from '../../webgl/altitudemode.js';
 
 const {getRandomString} = goog.require('goog.string');
-const Feature = goog.require('ol.Feature');
-const Polygon = goog.require('ol.geom.Polygon');
-const {transformExtent} = goog.require('ol.proj');
 
 const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 
@@ -133,7 +133,7 @@ const gridOptionsValid = function(options) {
  */
 const gridFeatureFromExtent = function(extent, prop, options) {
   // new() is faster than doing os.feature.copyFeature(feature) from the original feature
-  var g = Polygon.fromExtent(extent);
+  var g = fromExtent(extent);
   var p = Object.assign({}, prop); // make a copy
 
   var f = new Feature(p);
