@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.ex.ExportOptionsUI');
 
+import {listen, unlistenByKey} from 'ol/events';
 import '../checklist.js';
 import DataManager from '../../data/datamanager.js';
 import DataEventType from '../../data/event/dataeventtype.js';
@@ -16,7 +17,6 @@ import ExportOptionsEvent from './exportoptionsevent.js';
 const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
 const {htmlEscape} = goog.require('goog.string');
-const olEvents = goog.require('ol.events');
 
 const EventTarget = goog.requireType('ol.events.EventTarget');
 const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
@@ -89,6 +89,8 @@ export class Controller extends Disposable {
      */
     this['useSelected'] = true;
 
+    this.listenKeys = {};
+
     this.initSources_();
     var dm = DataManager.getInstance();
     dm.listen(DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
@@ -114,7 +116,7 @@ export class Controller extends Disposable {
 
     var sources = DataManager.getInstance().getSources();
     for (var i = 0, n = sources.length; i < n; i++) {
-      olEvents.unlisten(sources[i], GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+      unlistenByKey(this.listenKeys[sources[i].getId()]);
     }
   }
 
@@ -161,7 +163,7 @@ export class Controller extends Disposable {
           this['sourceItems'].push(this.createChecklistItem_(source, enabled));
         }
 
-        olEvents.listen(source, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+        this.listenKeys[source.getId()] = listen(source, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
       }
     }
 
@@ -223,7 +225,8 @@ export class Controller extends Disposable {
   onSourceAdded_(event) {
     var source = event.source;
     if (source && this.includeSource(source)) {
-      olEvents.listen(/** @type {EventTarget} */ (source), GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+      this.listenKeys[source.getId()] =
+        listen(/** @type {EventTarget} */ (source), GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
 
       var item = this.getSourceItem_(source);
       if (!item && source.getVisible()) {
@@ -245,7 +248,7 @@ export class Controller extends Disposable {
   onSourceRemoved_(event) {
     var source = event.source;
     if (source) {
-      olEvents.unlisten(/** @type {EventTarget} */ (source), GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+      unlistenByKey(this.listenKeys[source.getId()]);
       this.getSourceItem_(source, true);
     }
   }
