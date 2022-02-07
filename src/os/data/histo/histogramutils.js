@@ -1,12 +1,13 @@
 goog.declareModuleId('os.data.histo');
 
+import * as olArray from 'ol/array';
+
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';
 import FilterEntry from '../../filter/filterentry.js';
 import {isCondition} from '../../ui/filter/filter.js';
 
 const dom = goog.require('goog.dom');
-const olArray = goog.require('ol.array');
 
 const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 const {default: IHistogramUI} = goog.requireType('os.ui.IHistogramUI');
