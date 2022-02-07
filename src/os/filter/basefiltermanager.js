@@ -1,5 +1,7 @@
 goog.declareModuleId('os.filter.BaseFilterManager');
 
+import * as olArray from 'ol/array';
+
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';
 import CommandProcessor from '../command/commandprocessor.js';
@@ -24,7 +26,6 @@ const {removeDuplicates} = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const googObject = goog.require('goog.object');
 const googString = goog.require('goog.string');
-const olArray = goog.require('ol.array');
 
 const {default: IPersistable} = goog.requireType('os.IPersistable');
 const {default: IFilterable} = goog.requireType('os.filter.IFilterable');
