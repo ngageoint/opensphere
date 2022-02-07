@@ -1,5 +1,15 @@
 goog.declareModuleId('os.ui.layer.compare.LayerCompareUI');
 
+import Collection from 'ol/Collection';
+import RotateControl from 'ol/control/Rotate';
+import ZoomControl from 'ol/control/Zoom';
+import {platformModifierKeyOnly} from 'ol/events/condition';
+import {createEmpty, getHeight, getWidth, buffer as olBuffer} from 'ol/extent';
+import {defaults} from 'ol/interaction';
+import DragZoom from 'ol/interaction/DragZoom';
+import OLMap from 'ol/Map';
+import OLVectorSource from 'ol/source/Vector';
+import View from 'ol/View';
 import EventType from '../../../action/eventtype.js';
 import * as capture from '../../../capture/capture.js';
 import ZOrder from '../../../data/zorder.js';
@@ -27,23 +37,12 @@ import {bringToFront, close as closeWindow, create as createWindow, getById as g
 import {launchConfirm} from '../../window/confirm.js';
 import LayerCompareNode from './layercomparenode.js';
 
-const DragZoom = goog.require('ol.interaction.DragZoom');
+
 const dispose = goog.require('goog.dispose');
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
 const {listen, unlistenByKey} = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
-const Collection = goog.require('ol.Collection');
-const OLMap = goog.require('ol.Map');
 const Promise = goog.require('goog.Promise');
-const View = goog.require('ol.View');
-const RotateControl = goog.require('ol.control.Rotate');
-const ZoomControl = goog.require('ol.control.Zoom');
-const OLVectorSource = goog.require('ol.source.Vector');
-const olExtent = goog.require('ol.extent');
-const {defaults} = goog.require('ol.interaction');
-const {getCenter: getExtentCenter} = goog.require('ol.extent');
-const {platformModifierKeyOnly} = goog.require('ol.events.condition');
-
 const EventKey = goog.requireType('goog.events.Key');
 const Control = goog.requireType('ol.control.Control');
 const Interaction = goog.requireType('ol.interaction.Interaction');
@@ -757,9 +756,9 @@ export class Controller {
 
     let extent;
     if (features && features.length) {
-      extent = getGeometries(features).reduce(reduceExtentFromGeometries, olExtent.createEmpty());
+      extent = getGeometries(features).reduce(reduceExtentFromGeometries, createEmpty());
     } else {
-      extent = layers.reduce(reduceExtentFromLayers, olExtent.createEmpty());
+      extent = layers.reduce(reduceExtentFromLayers, createEmpty());
     }
 
     if (extent && extent.indexOf(Infinity) != -1 || extent.indexOf(-Infinity) != -1) {
@@ -778,8 +777,8 @@ export class Controller {
     const leftView = this.leftMap.getView();
     const buffer = .1;
 
-    if (olExtent.getWidth(extent) < buffer && olExtent.getHeight(extent) < buffer) {
-      extent = olExtent.buffer(extent, buffer);
+    if (getWidth(extent) < buffer && getHeight(extent) < buffer) {
+      extent = olBuffer(extent, buffer);
     }
 
     // In 2D views, projections supporting wrapping can pan "multiple worlds" over. We want to pan the least
