@@ -1,12 +1,11 @@
 goog.declareModuleId('os.ui.query.AreaNode');
 
+import {listen} from 'ol/events';
 import {getAreaManager} from '../../query/queryinstance.js';
 import TriState from '../../structs/tristate.js';
 import {HOVER_STYLE} from '../../style/areastyle.js';
 import {tagsFromString} from '../../tag/tag.js';
 import SlickTreeNode from '../slick/slicktreenode.js';
-
-const {listen, unlisten} = goog.require('ol.events');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Feature = goog.requireType('ol.Feature');
