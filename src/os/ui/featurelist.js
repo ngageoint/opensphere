@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.FeatureListUI');
 
+import {listen} from 'ol/events';
 import './slider.js';
 import './sourcegrid.js';
 import LayerEventType from '../events/layereventtype.js';
@@ -15,7 +16,6 @@ import {bringToFront, close, create, exists} from './window.js';
 const {assert} = goog.require('goog.asserts');
 const GoogEventType = goog.require('goog.events.EventType');
 const {containsValue} = goog.require('goog.object');
-const events = goog.require('ol.events');
 
 const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
@@ -120,7 +120,7 @@ export class Controller {
     this['uid'] = sanitizeId('featureList-' + this.source_.getId());
 
     assert(this.source_ != null, 'Feature list source must be defined');
-    events.listen(this.source_, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+    listen(this.source_, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
     $scope.$watch('ctrl.rowStep', this.updateRowHeight_.bind(this));
 
     var map = getMapContainer();
