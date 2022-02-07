@@ -1,5 +1,9 @@
 goog.declareModuleId('os.ui.draw.DrawPickerUI');
 
+import {listen, unlistenByKey} from 'ol/events';
+import Point from 'ol/geom/Point';
+import SimpleGeometry from 'ol/geom/SimpleGeometry';
+import MapBrowserEventType from 'ol/MapBrowserEventType';
 import DragBox from '../../interaction/dragboxinteraction.js';
 import DragCircle from '../../interaction/dragcircleinteraction.js';
 import DrawLine from '../../interaction/drawlineinteraction.js';
@@ -21,10 +25,6 @@ const dispose = goog.require('goog.dispose');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
-const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
-const events = goog.require('ol.events');
-const Point = goog.require('ol.geom.Point');
-const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
 
 const Feature = goog.requireType('ol.Feature');
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
@@ -113,8 +113,8 @@ export class Controller extends Disposable {
      * @private
      */
     this.dragBox_ = new DragBox();
-    events.listen(this.dragBox_, DrawEventType.DRAWEND, this.onDrawEnd_, this);
-    events.listen(this.dragBox_, DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
+    listen(this.dragBox_, DrawEventType.DRAWEND, this.onDrawEnd_, this);
+    listen(this.dragBox_, DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
 
     /**
      * DragCircle interaction
@@ -122,8 +122,8 @@ export class Controller extends Disposable {
      * @private
      */
     this.dragCircle_ = new DragCircle();
-    events.listen(this.dragCircle_, DrawEventType.DRAWEND, this.onDrawEnd_, this);
-    events.listen(this.dragCircle_, DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
+    listen(this.dragCircle_, DrawEventType.DRAWEND, this.onDrawEnd_, this);
+    listen(this.dragCircle_, DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
 
     /**
      * DrawPolygon interaction
@@ -131,8 +131,8 @@ export class Controller extends Disposable {
      * @private
      */
     this.drawPolygon_ = new DrawPolygon();
-    events.listen(this.drawPolygon_, DrawEventType.DRAWEND, this.onDrawEnd_, this);
-    events.listen(this.drawPolygon_, DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
+    listen(this.drawPolygon_, DrawEventType.DRAWEND, this.onDrawEnd_, this);
+    listen(this.drawPolygon_, DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
 
     /**
      * DrawLine interaction
@@ -140,8 +140,8 @@ export class Controller extends Disposable {
      * @private
      */
     this.drawLine_ = new DrawLine();
-    events.listen(this.drawLine_, DrawEventType.DRAWEND, this.onDrawEnd_, this);
-    events.listen(this.drawLine_, DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
+    listen(this.drawLine_, DrawEventType.DRAWEND, this.onDrawEnd_, this);
+    listen(this.drawLine_, DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
 
     /**
      * Handler for escape key events.
@@ -338,7 +338,7 @@ export class Controller extends Disposable {
    */
   enablePoint() {
     if (!this.mapListenKey) {
-      this.mapListenKey = events.listen(this.map, MapBrowserEventType.SINGLECLICK, this.onMapClick, this);
+      this.mapListenKey = listen(this.map, MapBrowserEventType.SINGLECLICK, this.onMapClick, this);
     }
   }
 
@@ -347,7 +347,7 @@ export class Controller extends Disposable {
    */
   disablePoint() {
     if (this.mapListenKey) {
-      events.unlistenByKey(this.mapListenKey);
+      unlistenByKey(this.mapListenKey);
       this.mapListenKey = null;
     }
   }
