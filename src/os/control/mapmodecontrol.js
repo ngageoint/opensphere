@@ -1,5 +1,10 @@
 goog.declareModuleId('os.control.MapMode');
 
+import Control from 'ol/control/Control';
+import {CLASS_UNSELECTABLE, CLASS_CONTROL} from 'ol/css';
+import {listen, unlistenByKey} from 'ol/events';
+import EventType from 'ol/events/EventType';
+
 import osActionEventType from '../action/eventtype.js';
 import * as dispatcher from '../dispatcher.js';
 import MapChange from '../map/mapchange.js';
@@ -7,10 +12,6 @@ import {getMapContainer} from '../map/mapinstance.js';
 
 const dom = goog.require('goog.dom');
 const GoogEventType = goog.require('goog.events.EventType');
-const Control = goog.require('ol.control.Control');
-const css = goog.require('ol.css');
-const events = goog.require('ol.events');
-const EventType = goog.require('ol.events.EventType');
 
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
@@ -30,7 +31,7 @@ export default class MapMode extends Control {
     var className = options.className != null ? options.className : 'ol-mapmode';
     var textClass = options.textClass != null ? options.textClass : 'ol-mapmode-text';
     var content = dom.createDom('SPAN', textClass);
-    var cssClasses = className + ' ' + css.CLASS_UNSELECTABLE + ' ' + css.CLASS_CONTROL;
+    var cssClasses = className + ' ' + CLASS_UNSELECTABLE + ' ' + CLASS_CONTROL;
     var defaultTooltip = options.tipLabel ? options.tipLabel : 'Toggle 2D/3D view';
 
     var button = dom.createDom('BUTTON', {
@@ -73,7 +74,7 @@ export default class MapMode extends Control {
      */
     this.button = button;
 
-    events.listen(this.button, EventType.CLICK, MapMode.prototype.handleClick_, this);
+    this.listenKey = listen(this.button, EventType.CLICK, MapMode.prototype.handleClick_, this);
 
     this.updateContent_();
     getMapContainer().listen(GoogEventType.PROPERTYCHANGE, this.onMapChange_, false, this);
@@ -86,7 +87,7 @@ export default class MapMode extends Control {
     getMapContainer().unlisten(GoogEventType.PROPERTYCHANGE, this.onMapChange_, false, this);
 
     if (this.button) {
-      events.unlisten(this.button, EventType.CLICK, MapMode.prototype.handleClick_, this);
+      unlistenByKey(this.listenKey);
       this.button = undefined;
     }
 
