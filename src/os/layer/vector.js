@@ -1,5 +1,9 @@
 goog.declareModuleId('os.layer.Vector');
 
+import {listen, unlistenByKey} from 'ol/events';
+import Property from 'ol/layer/Property';
+import OLVectorLayer from 'ol/layer/Vector';
+
 import ActionEventType from '../action/eventtype.js';
 import {toRgbArray} from '../color.js';
 import DataManager from '../data/datamanager.js';
@@ -50,10 +54,6 @@ import SynchronizerType from './synchronizertype.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');
-
-const events = goog.require('ol.events');
-const Property = goog.require('ol.layer.Property');
-const OLVectorLayer = goog.require('ol.layer.Vector');
 
 const Feature = goog.requireType('ol.Feature');
 const {default: IPersistable} = goog.requireType('os.IPersistable');
@@ -211,6 +211,8 @@ export default class Vector extends OLVectorLayer {
      */
     this.hidden_ = false;
 
+    this.propertyChangeListenKey_ = null;
+
     // we don't care about the render order, so disable it to save some processing time
     this.setRenderOrder(null);
     getMapContainer().listen(GoogEventType.PROPERTYCHANGE, this.onMapChange_, false, this);
@@ -241,7 +243,7 @@ export default class Vector extends OLVectorLayer {
   setSource(source) {
     var old = this.getSource();
     if (old && old instanceof VectorSource) {
-      events.unlisten(old, GoogEventType.PROPERTYCHANGE, this.onSourceChange, this);
+      unlistenByKey(this.propertyChangeListenKey_);
       old.setWebGLEnabled(false);
     }
 
@@ -249,7 +251,7 @@ export default class Vector extends OLVectorLayer {
 
     if (source && source instanceof VectorSource) {
       source = /** @type {VectorSource} */ (source);
-      events.listen(source, GoogEventType.PROPERTYCHANGE, this.onSourceChange, this);
+      this.propertyChangeListenKey_ = listen(source, GoogEventType.PROPERTYCHANGE, this.onSourceChange, this);
       source.setWebGLEnabled(getMapContainer().is3DEnabled());
     }
   }
