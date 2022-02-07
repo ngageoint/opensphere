@@ -1,5 +1,7 @@
 goog.declareModuleId('os.ui.server.AbstractLoadingServer');
 
+
+import {remove} from 'ol/array';
 import {getAuth} from '../../auth.js';
 import DataProviderEvent from '../../data/dataproviderevent.js';
 import DataProviderEventType from '../../data/dataprovidereventtype.js';
@@ -10,7 +12,6 @@ import osImplements from '../../implements.js';
 import TriState from '../../structs/tristate.js';
 import BaseProvider from '../data/baseprovider.js';
 
-const {remove} = goog.require('ol.array');
 
 
 /**
