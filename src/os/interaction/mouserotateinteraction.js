@@ -1,13 +1,14 @@
 goog.declareModuleId('os.interaction.MouseRotate');
 
+import {noModifierKeys} from 'ol/events/condition';
+import Interaction from 'ol/interaction/Interaction';
+
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';
 import {ROTATE_DELTA} from './interaction.js';
 
 const {assert} = goog.require('goog.asserts');
 const BrowserEvent = goog.require('goog.events.BrowserEvent');
-const {noModifierKeys} = goog.require('ol.events.condition');
-const Interaction = goog.require('ol.interaction.Interaction');
 
 
 /**
