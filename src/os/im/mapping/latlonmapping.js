@@ -1,13 +1,12 @@
 goog.declareModuleId('os.im.mapping.LatLonMapping');
 
+import Point from 'ol/geom/Point';
+
 import {COORD_CLEANER} from '../../geo/geo.js';
 import BaseLatLonMapping from './location/baselatlonmapping.js';
 import {getItemField} from './mapping.js';
 import MappingRegistry from './mappingregistry.js';
 
-const Point = goog.require('ol.geom.Point');
-
-const Feature = goog.requireType('ol.Feature');
 
 
 /**
