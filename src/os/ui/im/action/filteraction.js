@@ -1,5 +1,6 @@
 goog.declareModuleId('os.im.action.filter');
 
+import {findIndex} from 'ol/array';
 import CommandProcessor from '../../../command/commandprocessor.js';
 import SequenceCommand from '../../../command/sequencecommand.js';
 import FilterActionAdd from '../../../im/action/cmd/filteractionaddcmd.js';
@@ -12,7 +13,6 @@ import * as filter from '../../filter/filter.js';
 import ExportTypeHint from './exporttypehint.js';
 import FilterActionNode from './filteractionnode.js';
 
-const olArray = goog.require('ol.array');
 
 const {default: ICommand} = goog.requireType('os.command.ICommand');
 const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
@@ -224,7 +224,7 @@ export const removeEntryCmd = function(entry) {
     entries = parent.getChildren();
   }
 
-  var index = olArray.findIndex(entries, function(arrEntry) {
+  var index = findIndex(entries, function(arrEntry) {
     return arrEntry == entry;
   });
 
