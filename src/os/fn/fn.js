@@ -3,21 +3,16 @@
  */
 goog.declareModuleId('os.fn');
 
+import * as olExtent from 'ol/extent';
+import GeometryType from 'ol/geom/GeometryType';
+import Layer from 'ol/layer/Layer';
+import UrlTile from 'ol/source/UrlTile';
+import OLVectorSource from 'ol/source/Vector';
+
 import * as osExtent from '../extent.js';
 import osImplements from '../implements.js';
 import ILayerProvider from '../layer/ilayerprovider.js';
 
-const olExtent = goog.require('ol.extent');
-const GeometryType = goog.require('ol.geom.GeometryType');
-const Layer = goog.require('ol.layer.Layer');
-const UrlTile = goog.require('ol.source.UrlTile');
-const OLVectorSource = goog.require('ol.source.Vector');
-
-const Feature = goog.requireType('ol.Feature');
-const Geometry = goog.requireType('ol.geom.Geometry');
-const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
-const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
-const Source = goog.requireType('ol.source.Source');
 const {default: ILayer} = goog.requireType('os.layer.ILayer');
 const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
