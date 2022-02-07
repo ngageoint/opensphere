@@ -1,9 +1,9 @@
 goog.declareModuleId('os.style.StyleReader');
 
+import Style from 'ol/style/Style';
 import AbstractReader from './abstractreader.js';
 
 const {hashCode} = goog.require('goog.string');
-const Style = goog.require('ol.style.Style');
 
 
 /**
