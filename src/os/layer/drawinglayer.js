@@ -1,5 +1,7 @@
 goog.declareModuleId('os.layer.Drawing');
 
+import Feature from 'ol/Feature';
+
 import '../mixin/layerbasemixin.js';
 import EventType from '../action/eventtype.js';
 import DrawingLayerNode from '../data/drawinglayernode.js';
@@ -7,8 +9,6 @@ import * as dispatcher from '../dispatcher.js';
 import instanceOf from '../instanceof.js';
 import LayerId from './layerid.js';
 import VectorLayer from './vector.js';
-
-const Feature = goog.require('ol.Feature');
 
 const {default: ITreeNodeSupplier} = goog.requireType('os.structs.ITreeNodeSupplier');
 const {default: ActionEvent} = goog.requireType('os.ui.action.ActionEvent');

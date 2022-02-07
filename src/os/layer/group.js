@@ -1,12 +1,12 @@
 goog.declareModuleId('os.layer.Group');
 
+import CollectionEventType from 'ol/CollectionEventType';
+import {listen, unlistenByKey} from 'ol/events';
+import OLLayerGroup from 'ol/layer/Group';
+import Layer from 'ol/layer/Layer';
+
 import LayerEvent from '../events/layerevent.js';
 import LayerEventType from '../events/layereventtype.js';
-
-const CollectionEventType = goog.require('ol.CollectionEventType');
-const {listen, unlisten} = goog.require('ol.events');
-const OLLayerGroup = goog.require('ol.layer.Group');
-const Layer = goog.require('ol.layer.Layer');
 
 const Collection = goog.requireType('ol.Collection');
 
@@ -40,10 +40,13 @@ export default class Group extends OLLayerGroup {
      */
     this.osType_ = null;
 
+    this.addListenKey = null;
+    this.removeListenKey = null;
+
     var layers = this.getLayers();
     if (layers) {
-      listen(layers, CollectionEventType.ADD, this.onLayerAdded, this);
-      listen(layers, CollectionEventType.REMOVE, this.onLayerRemoved, this);
+      this.addListenKey = listen(layers, CollectionEventType.ADD, this.onLayerAdded, this);
+      this.removeListenKey = listen(layers, CollectionEventType.REMOVE, this.onLayerRemoved, this);
     }
   }
 
@@ -55,8 +58,8 @@ export default class Group extends OLLayerGroup {
 
     var oldLayers = this.getLayers();
     if (oldLayers) {
-      unlisten(oldLayers, CollectionEventType.ADD, this.onLayerAdded, this);
-      unlisten(oldLayers, CollectionEventType.REMOVE, this.onLayerRemoved, this);
+      unlistenByKey(this.addListenKey);
+      unlistenByKey(this.removeListenKey);
     }
   }
 
@@ -66,13 +69,13 @@ export default class Group extends OLLayerGroup {
   setLayers(layers) {
     var oldLayers = this.getLayers();
     if (oldLayers) {
-      unlisten(oldLayers, CollectionEventType.ADD, this.onLayerAdded, this);
-      unlisten(oldLayers, CollectionEventType.REMOVE, this.onLayerRemoved, this);
+      unlistenByKey(this.addListenKey);
+      unlistenByKey(this.addListenKey);
     }
 
     if (layers) {
-      listen(layers, CollectionEventType.ADD, this.onLayerAdded, this);
-      listen(layers, CollectionEventType.REMOVE, this.onLayerRemoved, this);
+      this.addListenKey = listen(layers, CollectionEventType.ADD, this.onLayerAdded, this);
+      this.removeListenKey = listen(layers, CollectionEventType.REMOVE, this.onLayerRemoved, this);
     }
 
     super.setLayers(layers);

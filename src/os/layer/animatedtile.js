@@ -1,5 +1,7 @@
 goog.declareModuleId('os.layer.AnimatedTile');
 
+import UrlTile from 'ol/source/UrlTile';
+
 import PropertyChangeEvent from '../events/propertychangeevent.js';
 import IAnimationSupport from '../ianimationsupport.js';
 import osImplements from '../implements.js';
@@ -17,7 +19,6 @@ import Tile from './tile.js';
 
 const Delay = goog.require('goog.async.Delay');
 const {hashCode} = goog.require('goog.string');
-const UrlTile = goog.require('ol.source.UrlTile');
 
 const TileArcGISRest = goog.requireType('ol.source.TileArcGISRest');
 const TileWMS = goog.requireType('ol.source.TileWMS');

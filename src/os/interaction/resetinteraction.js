@@ -1,5 +1,9 @@
 goog.declareModuleId('os.interaction.Reset');
 
+import {noModifierKeys, targetNotEditable} from 'ol/events/condition';
+import EventType from 'ol/events/EventType';
+import Interaction from 'ol/interaction/Interaction';
+
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';
 import {getMapContainer} from '../map/mapinstance.js';
@@ -8,11 +12,6 @@ import {Map as MapMetrics} from '../metrics/metricskeys.js';
 
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const {and} = goog.require('goog.functions');
-const EventType = goog.require('ol.events.EventType');
-const {noModifierKeys, targetNotEditable} = goog.require('ol.events.condition');
-const Interaction = goog.require('ol.interaction.Interaction');
-
-const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 
 
 /**
