@@ -1,5 +1,19 @@
 goog.declareModuleId('os.feature');
 
+import * as olExtent from 'ol/extent';
+import Feature from 'ol/Feature';
+import GeometryCollection from 'ol/geom/GeometryCollection';
+import GeometryLayout from 'ol/geom/GeometryLayout';
+import LineString from 'ol/geom/LineString';
+import MultiLineString from 'ol/geom/MultiLineString';
+import MultiPolygon from 'ol/geom/MultiPolygon';
+import Point from 'ol/geom/Point';
+import Polygon from 'ol/geom/Polygon';
+import {toLonLat} from 'ol/proj';
+import OLVectorSource from 'ol/source/Vector';
+import VectorEventType from 'ol/source/VectorEventType';
+import {getUid} from 'ol/util';
+
 import * as osBearing from '../bearing/bearing.js';
 import BearingType from '../bearing/bearingtype.js';
 import CommandProcessor from '../command/commandprocessor.js';
@@ -36,25 +50,7 @@ const {defaultCompare} = goog.require('goog.array');
 const {containsValue} = goog.require('goog.object');
 const reflect = goog.require('goog.reflect');
 const {floatAwareCompare} = goog.require('goog.string');
-const {getUid} = goog.require('ol');
-const Feature = goog.require('ol.Feature');
-const olExtent = goog.require('ol.extent');
-const GeometryCollection = goog.require('ol.geom.GeometryCollection');
-const GeometryLayout = goog.require('ol.geom.GeometryLayout');
-const LineString = goog.require('ol.geom.LineString');
-const MultiLineString = goog.require('ol.geom.MultiLineString');
-const MultiPolygon = goog.require('ol.geom.MultiPolygon');
-const Point = goog.require('ol.geom.Point');
-const Polygon = goog.require('ol.geom.Polygon');
-const {toLonLat} = goog.require('ol.proj');
-const OLVectorSource = goog.require('ol.source.Vector');
-const VectorEventType = goog.require('ol.source.VectorEventType');
 
-const Geometry = goog.requireType('ol.geom.Geometry');
-const Layer = goog.requireType('ol.layer.Layer');
-const RenderFeature = goog.requireType('ol.render.Feature');
-const Source = goog.requireType('ol.source.Source');
-const Style = goog.requireType('ol.style.Style');
 const {default: ISource} = goog.requireType('os.source.ISource');
 const {default: VectorSource} = goog.requireType('os.source.Vector');
 const {default: ITime} = goog.requireType('os.time.ITime');
