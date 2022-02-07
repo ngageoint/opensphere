@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.slick.SlickTreeUI');
 
+import {remove} from 'ol/array';
 import Module from '../module.js';
 import {apply} from '../ui.js';
 import {Controller as SlickGridCtrl} from './slickgrid.js';
@@ -9,7 +10,6 @@ const Delay = goog.require('goog.async.Delay');
 const {getAncestor} = goog.require('goog.dom');
 const {contains} = goog.require('goog.dom.classlist');
 const GoogEventType = goog.require('goog.events.EventType');
-const {remove} = goog.require('ol.array');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
