@@ -1,13 +1,12 @@
 goog.declareModuleId('os.im.mapping.MGRSMapping');
 
+import Point from 'ol/geom/Point';
+
 import {MGRS_REGEXP} from '../../geo/geo.js';
 import BaseMGRSMapping from './location/basemgrsmapping.js';
 import {getItemField} from './mapping.js';
 import MappingRegistry from './mappingregistry.js';
 
-const Point = goog.require('ol.geom.Point');
-
-const Feature = goog.requireType('ol.Feature');
 
 
 /**
