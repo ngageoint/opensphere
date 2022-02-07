@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.layer.compare.LayerCompareNode');
 
+import {listen} from 'ol/events';
 import {instanceOf} from '../../../classregistry.js';
 import {toRgbArray} from '../../../color.js';
 import PropertyChangeEvent from '../../../events/propertychangeevent.js';
@@ -21,7 +22,6 @@ import SlickTreeNode from '../../../ui/slick/slicktreenode.js';
 import IconsSVG from '../../iconssvg.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const events = goog.require('ol.events');
 
 const {default: IExtent} = goog.requireType('os.data.IExtent');
 const {default: ILayer} = goog.requireType('os.layer.ILayer');
@@ -117,7 +117,7 @@ export default class LayerCompareNode extends SlickTreeNode {
       this.layer_ = value;
 
       if (value) {
-        events.listen(/** @type {events.EventTarget} */ (value), GoogEventType.PROPERTYCHANGE,
+        listen(/** @type {events.EventTarget} */ (value), GoogEventType.PROPERTYCHANGE,
             this.onPropertyChange, this);
         this.setLabel(value.getTitle());
         this.setToolTip(value.getTitle());
