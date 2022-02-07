@@ -1,5 +1,10 @@
 goog.declareModuleId('os.control.ScaleLine');
 
+import * as asserts from 'ol/asserts';
+import * as OLScaleLine from 'ol/control/ScaleLine';
+import * as olProj from 'ol/proj';
+import Units from 'ol/proj/Units';
+
 import * as osMap from '../map/map.js';
 import {UnitSystem} from '../unit/unit.js';
 import UnitManager from '../unit/unitmanager.js';
@@ -7,10 +12,6 @@ import UnitManager from '../unit/unitmanager.js';
 const safe = goog.require('goog.dom.safe');
 const GoogEventType = goog.require('goog.events.EventType');
 const SafeHtml = goog.require('goog.html.SafeHtml');
-const asserts = goog.require('ol.asserts');
-const OLScaleLine = goog.require('ol.control.ScaleLine');
-const ScaleLineUnits = goog.require('ol.control.ScaleLineUnits');
-const olProj = goog.require('ol.proj');
 
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
@@ -31,6 +32,8 @@ export default class ScaleLine extends OLScaleLine {
 
     // listen for unit manager changes
     um.listen(GoogEventType.PROPERTYCHANGE, this.onUnitsChange, false, this);
+
+    this.LEADING_DIGITS = [1, 2, 5];
   }
 
   /**
@@ -106,8 +109,8 @@ export default class ScaleLine extends OLScaleLine {
     var nominalCount = this.minWidth_ * pointResolution;
     var suffix = '';
     var units = this.getUnits();
-    if (units == ScaleLineUnits.DEGREES) {
-      var metersPerDegree = olProj.METERS_PER_UNIT[olProj.Units.DEGREES];
+    if (units == OLScaleLine.Units.DEGREES) {
+      var metersPerDegree = olProj.METERS_PER_UNIT[Units.DEGREES];
       pointResolution /= metersPerDegree;
       if (nominalCount < metersPerDegree / 60) {
         suffix = '\u2033'; // seconds
@@ -118,7 +121,7 @@ export default class ScaleLine extends OLScaleLine {
       } else {
         suffix = '\u00b0'; // degrees
       }
-    } else if (units == ScaleLineUnits.IMPERIAL) {
+    } else if (units == OLScaleLine.Units.IMPERIAL) {
       if (nominalCount < 0.9144) {
         suffix = 'in';
         pointResolution /= 0.0254;
@@ -129,10 +132,10 @@ export default class ScaleLine extends OLScaleLine {
         suffix = 'mi';
         pointResolution /= 1609.344;
       }
-    } else if (units == ScaleLineUnits.NAUTICAL || units == UnitSystem.NAUTICALMILE) {
+    } else if (units == OLScaleLine.Units.NAUTICAL || units == UnitSystem.NAUTICALMILE) {
       pointResolution /= 1852;
       suffix = 'nmi';
-    } else if (units == ScaleLineUnits.METRIC) {
+    } else if (units == OLScaleLine.Units.METRIC) {
       if (nominalCount < 1) {
         suffix = 'mm';
         pointResolution *= 1000;
@@ -142,7 +145,7 @@ export default class ScaleLine extends OLScaleLine {
         suffix = 'km';
         pointResolution /= 1000;
       }
-    } else if (units == ScaleLineUnits.US) {
+    } else if (units == OLScaleLine.Units.US) {
       if (nominalCount < 0.9144) {
         suffix = 'in';
         pointResolution *= 39.37;
@@ -170,7 +173,7 @@ export default class ScaleLine extends OLScaleLine {
     var count;
     var width;
     while (true) {
-      count = OLScaleLine.LEADING_DIGITS[((i % 3) + 3) % 3] * Math.pow(10, Math.floor(i / 3));
+      count = this.LEADING_DIGITS[((i % 3) + 3) % 3] * Math.pow(10, Math.floor(i / 3));
       width = Math.round(count / pointResolution);
       if (isNaN(width)) {
         this.element_.style.display = 'none';
