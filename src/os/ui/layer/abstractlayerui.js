@@ -1,5 +1,7 @@
 goog.declareModuleId('os.ui.layer.AbstractLayerUICtrl');
 
+import {listen, unlistenByKey} from 'ol/events';
+import OLObject from 'ol/Object';
 import CommandProcessor from '../../command/commandprocessor.js';
 import ParallelCommand from '../../command/parallelcommand.js';
 import {isLayerNode} from '../../data/data.js';
@@ -15,8 +17,6 @@ const Delay = goog.require('goog.async.Delay');
 const nextTick = goog.require('goog.async.nextTick');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
-const OLObject = goog.require('ol.Object');
-const {listen, unlistenByKey} = goog.require('ol.events');
 
 const {default: ICommand} = goog.requireType('os.command.ICommand');
 const {default: LayerNode} = goog.requireType('os.data.LayerNode');
