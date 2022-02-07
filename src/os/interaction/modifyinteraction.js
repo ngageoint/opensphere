@@ -1,5 +1,18 @@
 goog.declareModuleId('os.interaction.Modify');
 
+import {getUid} from 'ol';
+import Collection from 'ol/Collection';
+import {listen, unlistenByKey} from 'ol/events';
+import OLEventType from 'ol/events/EventType';
+import Feature from 'ol/Feature';
+import Point from 'ol/geom/Point';
+import OLModify from 'ol/interaction/Modify';
+import RBush from 'ol/structs/RBush';
+import Circle from 'ol/style/Circle';
+import Fill from 'ol/style/Fill';
+import Stroke from 'ol/style/Stroke';
+import Style from 'ol/style/Style';
+
 import RecordField from '../data/recordfield.js';
 import PayloadEvent from '../events/payloadevent.js';
 import DynamicFeature from '../feature/dynamicfeature.js';
@@ -21,23 +34,7 @@ const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
 const {getRandomString} = goog.require('goog.string');
-const {getUid} = goog.require('ol');
-const Collection = goog.require('ol.Collection');
-const Feature = goog.require('ol.Feature');
-const olEvents = goog.require('ol.events');
-const OLEventType = goog.require('ol.events.EventType');
-const Point = goog.require('ol.geom.Point');
-const OLModify = goog.require('ol.interaction.Modify');
-const olModifyEventType = goog.require('ol.interaction.ModifyEventType');
-const RBush = goog.require('ol.structs.RBush');
-const Circle = goog.require('ol.style.Circle');
-const Fill = goog.require('ol.style.Fill');
-const Stroke = goog.require('ol.style.Stroke');
-const Style = goog.require('ol.style.Style');
 
-const MapBrowserPointerEvent = goog.requireType('ol.MapBrowserPointerEvent');
-const Geometry = goog.requireType('ol.geom.Geometry');
-const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
 const {default: OSMap} = goog.requireType('os.Map');
 
 
@@ -191,8 +188,9 @@ export default class Modify extends OLModify {
 
     // jank alert: the functions that are called when the interaction starts and ends are hard to override, so instead
     // listen to our own events and toggle the map movement on and off
-    olEvents.listen(this, olModifyEventType.MODIFYSTART, this.handleStart, this);
-    olEvents.listen(this, olModifyEventType.MODIFYEND, this.handleEnd, this);
+    this.modifyStartListenKey = listen(this, 'modifystart', this.handleStart, this);
+    this.modifyEndListenKey = listen(this, 'modifyend', this.handleEnd, this);
+    this.geometryChangeListenKey = null;
 
     this.updateInterpolatedGeometry();
 
@@ -215,8 +213,8 @@ export default class Modify extends OLModify {
 
     dispose(this.keyHandler);
 
-    olEvents.unlisten(this, olModifyEventType.MODIFYSTART, this.handleStart, this);
-    olEvents.unlisten(this, olModifyEventType.MODIFYEND, this.handleEnd, this);
+    unlistenByKey(this.modifyStartListenKey);
+    unlistenByKey(this.modifyEndListenKey);
 
     this.removeControls();
   }
@@ -231,7 +229,7 @@ export default class Modify extends OLModify {
       if (!value) {
         const geometry = this.clone_.getGeometry();
         if (geometry) {
-          olEvents.unlisten(geometry, OLEventType.CHANGE, this.onGeometryChange, this);
+          unlistenByKey(this.geometryChangeListenKey);
         }
 
         getMapContainer().removeFeature(this.clone_);
@@ -239,7 +237,7 @@ export default class Modify extends OLModify {
         this.updateInterpolatedGeometry();
         const geometry = this.clone_.getGeometry();
         if (geometry) {
-          olEvents.listen(geometry, OLEventType.CHANGE, this.onGeometryChange, this);
+          this.geometryChangeListenKey = listen(geometry, OLEventType.CHANGE, this.onGeometryChange, this);
         }
 
         getMapContainer().addFeature(this.clone_);
