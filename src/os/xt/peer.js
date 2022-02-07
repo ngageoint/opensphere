@@ -1,10 +1,12 @@
 goog.declareModuleId('os.xt.Peer');
 
+import olArray from 'ol/array';
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';
 import * as events from './events.js';
 import PeerInfo from './peerinfo.js';
 import {isMaster, getMasterKey, getPingKey, getLastPing, cleanupPeer, prepareSendData} from './xt.js';
+
 
 const Timer = goog.require('goog.Timer');
 const googArray = goog.require('goog.array');
@@ -15,7 +17,6 @@ const GoogEvent = goog.require('goog.events.Event');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
-const olArray = goog.require('ol.array');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {default: IMessageHandler} = goog.requireType('os.xt.IMessageHandler');
