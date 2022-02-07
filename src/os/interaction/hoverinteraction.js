@@ -1,5 +1,11 @@
 goog.declareModuleId('os.interaction.Hover');
 
+import {listen, unlistenByKey} from 'ol/events';
+import {pointerMove} from 'ol/events/condition';
+import EventType from 'ol/events/EventType';
+import Feature from 'ol/Feature';
+import ViewHint from 'ol/ViewHint';
+
 import DataManager from '../data/datamanager.js';
 import DataEventType from '../data/event/dataeventtype.js';
 import RecordField from '../data/recordfield.js';
@@ -16,17 +22,7 @@ import StyleType from '../style/styletype.js';
 import Select from './selectinteraction.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const Feature = goog.require('ol.Feature');
-const ViewHint = goog.require('ol.ViewHint');
-const {listen, unlisten} = goog.require('ol.events');
-const EventType = goog.require('ol.events.EventType');
-const {pointerMove} = goog.require('ol.events.condition');
 
-const OLEvent = goog.requireType('ol.events.Event');
-const OLEventTarget = goog.requireType('ol.events.EventTarget');
-const Layer = goog.requireType('ol.layer.Layer');
-const RenderFeature = goog.requireType('ol.render.Feature');
-const OLVectorSource = goog.requireType('ol.source.Vector');
 const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 const {default: ISource} = goog.requireType('os.source.ISource');
@@ -92,6 +88,10 @@ export default class Hover extends Select {
      * @private
      */
     this.viewport_ = null;
+
+    this.mouseOutListenKey_ = null;
+    this.viewChangeListenKey_ = null;
+    this.featureChangeListenKeys_ = {};
   }
 
   /**
@@ -297,14 +297,14 @@ export default class Hover extends Select {
    */
   setMap(map) {
     if (this.viewport_) {
-      unlisten(this.viewport_, EventType.MOUSEOUT, this.clearHighlight_, this);
+      unlistenByKey(this.mouseOutListenKey_);
       this.viewport_ = null;
     }
 
     const currentMap = this.getMap();
     const currentView = currentMap ? currentMap.getView() : null;
     if (currentView) {
-      unlisten(currentView, EventType.CHANGE, this.clearHighlight_, this);
+      unlistenByKey(this.viewChangeListenKey_);
     }
 
     super.setMap(map);
@@ -313,13 +313,13 @@ export default class Hover extends Select {
       this.viewport_ = map.getViewport();
       if (this.viewport_) {
         // clear the highlight feature when the mouse leaves the viewport
-        listen(this.viewport_, EventType.MOUSEOUT, this.clearHighlight_, this);
+        this.mouseOutListenKey_ = listen(this.viewport_, EventType.MOUSEOUT, this.clearHighlight_, this);
       }
 
       const view = map.getView();
       if (view) {
         // clear the highlight feature when the view changes
-        listen(view, EventType.CHANGE, this.clearHighlight_, this);
+        this.viewChangeListenKey_ = listen(view, EventType.CHANGE, this.clearHighlight_, this);
       }
     }
 
@@ -336,7 +336,7 @@ export default class Hover extends Select {
     if (this.highlightedItems_ && this.highlightedItems_ !== items) {
       // highlighted items are changing, remove old feature listeners
       this.highlightedItems_.forEach(function(feature) {
-        unlisten(feature, EventType.CHANGE, this.onFeatureChange_, this);
+        unlistenByKey(this.featureChangeListenKeys_[feature]);
       }, this);
     }
 
@@ -348,7 +348,8 @@ export default class Hover extends Select {
 
       if (this.highlightedItems_) {
         this.highlightedItems_.forEach(function(feature) {
-          listen(feature, EventType.CHANGE, this.onFeatureChange_, this);
+          const featureListenKey = listen(feature, EventType.CHANGE, this.onFeatureChange_, this);
+          this.featureChangeListenKeys_[feature] = featureListenKey;
         }, this);
       }
     }
