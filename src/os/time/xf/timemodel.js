@@ -1,5 +1,6 @@
 goog.declareModuleId('os.time.xf.TimeModel');
 
+import {find} from 'ol/array';
 import DataModel from '../../data/xf/datamodel.js';
 import PropertyChange from '../../data/xf/propertychange.js';
 import PropertyChangeEvent from '../../events/propertychangeevent.js';
@@ -13,7 +14,6 @@ const googArray = goog.require('goog.array');
 const functions = goog.require('goog.functions');
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
-const olArray = goog.require('ol.array');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {default: Bin} = goog.requireType('os.histo.Bin');
@@ -271,7 +271,7 @@ export default class TimeModel extends DataModel {
         // merge groups into the set created from data with time, ignore timeless data (no results)
         for (var i = 0, ii = groups.length; i < ii; i++) {
           var group = /** @type {!Result} */ (groups[i]);
-          var existing = /** @type {Result|undefined} */ (olArray.find(results, function(result) {
+          var existing = /** @type {Result|undefined} */ (find(results, function(result) {
             return result['key'] == group['key'];
           }));
 
