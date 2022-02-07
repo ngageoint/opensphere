@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.LegendUI');
 
-const events = goog.require('ol.events');
+import {listen, unlistenByKey} from 'ol/events';
 import LegendSetting from '../config/legendsetting.js';
 import Settings from '../config/settings.js';
 import SourceManager from '../data/sourcemanager.js';
@@ -164,7 +164,7 @@ export class Controller extends SourceManager {
     map.unlisten(LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
 
     for (var key in this.layerListeners_) {
-      events.unlistenByKey(this.layerListeners_[key]);
+      unlistenByKey(this.layerListeners_[key]);
     }
 
     dispose(this.drawThrottle);
@@ -207,7 +207,7 @@ export class Controller extends SourceManager {
 
     var olMap = map.getMap();
     if (olMap) {
-      events.listen(olMap, 'change:size', this.onUpdateDelay, this);
+      listen(olMap, 'change:size', this.onUpdateDelay, this);
     }
 
     // positioning off the screen will auto correct to the bottom/right
@@ -290,7 +290,7 @@ export class Controller extends SourceManager {
     this.removeLayerListener_(layer);
 
     var id = layer.getId();
-    this.layerListeners_[id] = events.listen(/** @type {ol.events.EventTarget} */ (layer),
+    this.layerListeners_[id] = listen(/** @type {ol.events.EventTarget} */ (layer),
         GoogEventType.PROPERTYCHANGE, this.onTilePropertyChange, this);
   }
 
@@ -303,7 +303,7 @@ export class Controller extends SourceManager {
   removeLayerListener_(layer) {
     var id = layer.getId();
     if (id in this.layerListeners_) {
-      events.unlistenByKey(this.layerListeners_[id]);
+      unlistenByKey(this.layerListeners_[id]);
       delete this.layerListeners_[id];
     }
   }
