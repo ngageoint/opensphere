@@ -1,5 +1,7 @@
 goog.declareModuleId('os.control');
 
+import Collection from 'ol/Collection';
+
 import MousePosition from '../ol/control/mousepositioncontrol.js';
 import * as osProj from '../proj/proj.js';
 import AlertPopup from './alertpopup.js';
@@ -10,7 +12,6 @@ import ScaleLine from './scaleline.js';
 import Zoom from './zoomcontrol.js';
 import ZoomLevel from './zoomlevel.js';
 
-const Collection = goog.require('ol.Collection');
 
 
 /**
