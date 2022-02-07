@@ -1,5 +1,10 @@
 goog.declareModuleId('os.interaction.KeyboardZoom');
 
+import {shiftKeyOnly} from 'ol/events/condition';
+import EventType from 'ol/events/EventType';
+import {zoomByDelta} from 'ol/interaction/Interaction';
+import OLKeyboardZoom from 'ol/interaction/KeyboardZoom';
+
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';
 import {getMapContainer} from '../map/mapinstance.js';
@@ -8,10 +13,6 @@ import {getZoomDelta} from './interaction.js';
 
 const {assert} = goog.require('goog.asserts');
 const KeyCodes = goog.require('goog.events.KeyCodes');
-const EventType = goog.require('ol.events.EventType');
-const {shiftKeyOnly} = goog.require('ol.events.condition');
-const Interaction = goog.require('ol.interaction.Interaction');
-const OLKeyboardZoom = goog.require('ol.interaction.KeyboardZoom');
 
 
 /**
@@ -118,7 +119,7 @@ OLKeyboardZoom.handleEvent = function(mapBrowserEvent) {
             camera.zoomByDelta(delta);
           }
         } else {
-          Interaction.zoomByDelta(view, delta, undefined, this.duration_);
+          zoomByDelta(view, delta, undefined, this.duration_);
         }
 
         mapBrowserEvent.preventDefault();
