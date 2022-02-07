@@ -1,5 +1,7 @@
 goog.declareModuleId('os.ui.menu.spatial');
 
+import Feature from 'ol/Feature';
+import Polygon from 'ol/geom/Polygon';
 import EventType from '../../action/eventtype.js';
 import AreaToggle from '../../command/areatogglecmd.js';
 import CommandProcessor from '../../command/commandprocessor.js';
@@ -37,8 +39,6 @@ import SpatialMenu from './spatialmenu.js';
 
 const googDispose = goog.require('goog.dispose');
 const {caseInsensitiveCompare, toTitleCase} = goog.require('goog.string');
-const Feature = goog.require('ol.Feature');
-const Polygon = goog.require('ol.geom.Polygon');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
 const {default: ILayer} = goog.requireType('os.layer.ILayer');
