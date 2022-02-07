@@ -1,11 +1,10 @@
 goog.declareModuleId('os.ui.search.place.CoordinateResultCardUI');
 
+import {toLonLat} from 'ol/proj';
 import * as osMap from '../../../map/map.js';
 import {ROOT} from '../../../os.js';
 import Module from '../../module.js';
 import FeatureResultCardCtrl from '../featureresultcard.js';
-
-const {toLonLat} = goog.require('ol.proj');
 
 const Point = goog.requireType('ol.geom.Point');
 
