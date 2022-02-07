@@ -5,21 +5,12 @@
  */
 goog.declareModuleId('os.geo2');
 
+import GeometryType from 'ol/geom/GeometryType';
+import {get as getProjection} from 'ol/proj';
+
 import GeometryField from '../geom/geometryfield.js';
 import * as osMap from '../map/map.js';
 import {isWorldQuery} from '../query/queryutils.js';
-
-const GeometryType = goog.require('ol.geom.GeometryType');
-const {get: getProjection} = goog.require('ol.proj');
-
-const Geometry = goog.requireType('ol.geom.Geometry');
-const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
-const LineString = goog.requireType('ol.geom.LineString');
-const MultiLineString = goog.requireType('ol.geom.MultiLineString');
-const MultiPoint = goog.requireType('ol.geom.MultiPoint');
-const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
-const Point = goog.requireType('ol.geom.Point');
-const Polygon = goog.requireType('ol.geom.Polygon');
 
 
 /**
