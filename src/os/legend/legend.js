@@ -1,5 +1,18 @@
 goog.declareModuleId('os.legend');
 
+import {getCenter} from 'ol/extent';
+import Feature from 'ol/Feature';
+import GeometryCollection from 'ol/geom/GeometryCollection';
+import Point from 'ol/geom/Point';
+import {fromExtent} from 'ol/geom/Polygon';
+import ImageState from 'ol/ImageState';
+import {toContext} from 'ol/render';
+import Fill from 'ol/style/Fill';
+import Icon from 'ol/style/Icon';
+import Stroke from 'ol/style/Stroke';
+import Style from 'ol/style/Style';
+import Text from 'ol/style/Text';
+
 import Settings from '../config/settings.js';
 import * as dispatcher from '../dispatcher.js';
 import {noop} from '../fn/fn.js';
@@ -15,18 +28,6 @@ import ILegendRenderer from './ilegendrenderer.js';
 
 const {defaultCompare} = goog.require('goog.array');
 const {clamp} = goog.require('goog.math');
-const Feature = goog.require('ol.Feature');
-const ImageState = goog.require('ol.ImageState');
-const {getCenter} = goog.require('ol.extent');
-const GeometryCollection = goog.require('ol.geom.GeometryCollection');
-const Point = goog.require('ol.geom.Point');
-const Polygon = goog.require('ol.geom.Polygon');
-const {toContext} = goog.require('ol.render');
-const Fill = goog.require('ol.style.Fill');
-const Icon = goog.require('ol.style.Icon');
-const Stroke = goog.require('ol.style.Stroke');
-const Style = goog.require('ol.style.Style');
-const Text = goog.require('ol.style.Text');
 
 const Layer = goog.requireType('ol.layer.Layer');
 const {default: TileLayer} = goog.requireType('os.layer.Tile');
@@ -317,7 +318,7 @@ export const drawToCanvas = function(canvas, opt_maxHeight, opt_maxWidth) {
 
         // draw the border, inset slightly since OL3 will draw the middle of the line along the coordinates
         var borderOffset = BORDER_WIDTH - 1;
-        var border = new Feature(Polygon.fromExtent([
+        var border = new Feature(fromExtent([
           borderOffset,
           borderOffset,
           canvas.width - borderOffset,
@@ -625,7 +626,7 @@ export const createDashGeometry = function(center, size) {
   var xRadius = size / 3;
   var yRadius = xRadius / 3;
   var extent = [center[0] - xRadius, center[1] - yRadius, center[0] + xRadius, center[1] + yRadius];
-  return Polygon.fromExtent(extent);
+  return fromExtent(extent);
 };
 
 /**
