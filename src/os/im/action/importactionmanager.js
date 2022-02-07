@@ -1,5 +1,7 @@
 goog.declareModuleId('os.im.action.ImportActionManager');
 
+import * as olArray from 'ol/array';
+
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';
 import CommandProcessor from '../../command/commandprocessor.js';
@@ -19,7 +21,6 @@ import TagName from './tagname.js';
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
-const olArray = goog.require('ol.array');
 const {default: IImportAction} = goog.requireType('os.im.action.IImportAction');
 
 
