@@ -1,5 +1,13 @@
 goog.declareModuleId('os.ui.ol.interaction.DrawPolygon');
 
+import Collection from 'ol/Collection';
+import {getCenter, getWidth} from 'ol/extent';
+import Feature from 'ol/Feature';
+import LineString from 'ol/geom/LineString';
+import Polygon from 'ol/geom/Polygon';
+import OLVectorLayer from 'ol/layer/Vector';
+import MapBrowserEventType from 'ol/MapBrowserEventType';
+import OLVectorSource from 'ol/source/Vector';
 import RecordField from '../../../data/recordfield.js';
 import {normalizeGeometryCoordinates} from '../../../geo/geo2.js';
 import {validate} from '../../../geo/jsts.js';
@@ -16,15 +24,6 @@ const BrowserEvent = goog.require('goog.events.BrowserEvent');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
-const Collection = goog.require('ol.Collection');
-const Feature = goog.require('ol.Feature');
-const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
-const MapBrowserPointerEvent = goog.require('ol.MapBrowserPointerEvent');
-const {getCenter, getWidth} = goog.require('ol.extent');
-const LineString = goog.require('ol.geom.LineString');
-const Polygon = goog.require('ol.geom.Polygon');
-const OLVectorLayer = goog.require('ol.layer.Vector');
-const OLVectorSource = goog.require('ol.source.Vector');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
 
@@ -135,7 +134,7 @@ export default class DrawPolygon extends AbstractDraw {
   }
 
   /**
-   * @param {MapBrowserPointerEvent} mapBrowserEvent Event.
+   * @param {MapBrowserEvent} mapBrowserEvent Event.
    * @protected
    */
   saveLast(mapBrowserEvent) {
@@ -143,7 +142,7 @@ export default class DrawPolygon extends AbstractDraw {
   }
 
   /**
-   * @param {MapBrowserPointerEvent} mapBrowserEvent Event.
+   * @param {MapBrowserEvent} mapBrowserEvent Event.
    * @return {boolean} Whether or not we should finish drawing
    * @protected
    */
@@ -358,7 +357,7 @@ export default class DrawPolygon extends AbstractDraw {
   }
 
   /**
-   * @param {MapBrowserPointerEvent} mapBrowserEvent Event.
+   * @param {MapBrowserEvent} mapBrowserEvent Event.
    * @this DrawPolygon
    * @private
    */
@@ -376,7 +375,7 @@ export default class DrawPolygon extends AbstractDraw {
    * @suppress {accessControls}
    */
   static handleEvent_(mapBrowserEvent) {
-    if (!(mapBrowserEvent instanceof MapBrowserPointerEvent)) {
+    if (!(mapBrowserEvent instanceof MapBrowserEvent)) {
       return true;
     }
 
@@ -394,7 +393,7 @@ export default class DrawPolygon extends AbstractDraw {
   }
 
   /**
-   * @param {MapBrowserPointerEvent} mapBrowserEvent Event.
+   * @param {MapBrowserEvent} mapBrowserEvent Event.
    * @this DrawPolygon
    * @return {boolean}
    * @private
@@ -422,7 +421,7 @@ export default class DrawPolygon extends AbstractDraw {
   }
 
   /**
-   * @param {MapBrowserPointerEvent} mapBrowserEvent Event.
+   * @param {MapBrowserEvent} mapBrowserEvent Event.
    * @this DrawPolygon
    * @return {boolean}
    * @private
