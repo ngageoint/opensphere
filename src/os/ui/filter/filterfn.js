@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.filter.fn');
 
+import {getAllTextContent} from 'ol/xml';
 import Expression from './expression.js';
 import {Condition, operationFromNode, conditionFromNode} from './filter.js';
 import {quoteString} from './filterstring.js';
@@ -7,7 +8,6 @@ import {quoteString} from './filterstring.js';
 const {FALSE} = goog.require('goog.functions');
 const {isEmpty} = goog.require('goog.object');
 const {isEmptyOrWhitespace} = goog.require('goog.string');
-const {getAllTextContent} = goog.require('ol.xml');
 
 const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');
 const {default: Op} = goog.requireType('os.ui.filter.op.Op');
