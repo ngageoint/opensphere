@@ -7,6 +7,15 @@
  */
 goog.declareModuleId('os.geo.jsts');
 
+import * as olExtent from 'ol/extent';
+import Feature from 'ol/Feature';
+import GeometryType from 'ol/geom/GeometryType';
+import MultiPolygon from 'ol/geom/MultiPolygon';
+import * as Polygon from 'ol/geom/Polygon';
+import {get as getProjection} from 'ol/proj';
+import Projection from 'ol/proj/Projection';
+import {remove as removeTransform} from 'ol/proj/transforms';
+
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';
 import {filterFalsey} from '../fn/fn.js';
@@ -21,21 +30,6 @@ import {normalizeGeometryCoordinates} from './geo2.js';
 import OLParser from './olparser.js';
 
 const log = goog.require('goog.log');
-const Feature = goog.require('ol.Feature');
-const olExtent = goog.require('ol.extent');
-const GeometryType = goog.require('ol.geom.GeometryType');
-const MultiPolygon = goog.require('ol.geom.MultiPolygon');
-const Polygon = goog.require('ol.geom.Polygon');
-const {get: getProjection} = goog.require('ol.proj');
-const Projection = goog.require('ol.proj.Projection');
-const {remove: removeTransform} = goog.require('ol.proj.transforms');
-
-const Circle = goog.requireType('ol.geom.Circle');
-const Geometry = goog.requireType('ol.geom.Geometry');
-const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
-const LineString = goog.requireType('ol.geom.LineString');
-const MultiLineString = goog.requireType('ol.geom.MultiLineString');
-const Point = goog.requireType('ol.geom.Point');
 
 
 // Initialize the JSTS mixin on module load.
