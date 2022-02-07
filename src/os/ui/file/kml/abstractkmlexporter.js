@@ -1,7 +1,9 @@
 goog.declareModuleId('os.ui.file.kml.AbstractKMLExporter');
 
-import JsonField from '../../../../plugin/file/kml/jsonfield.js';
-import {OS_NS} from '../../../../plugin/file/kml/kml.js';
+import KML from 'ol/format/KML';
+import {pushSerializeAndPop} from 'ol/xml';
+// import JsonField from '../../../../plugin/file/kml/jsonfield.js';
+// import {OS_NS} from '../../../../plugin/file/kml/kml.js';
 import ZipExporter from '../../../ex/zipexporter.js';
 import Fields from '../../../fields/fields.js';
 import {DESC_REGEXP} from '../../../fields/index.js';
@@ -18,8 +20,6 @@ const {getFirstElementChild, insertSiblingBefore} = goog.require('goog.dom');
 const {createDocument, serialize} = goog.require('goog.dom.xml');
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
-const KML = goog.require('ol.format.KML');
-const olXml = goog.require('ol.xml');
 
 const {default: ITime} = goog.requireType('os.time.ITime');
 
@@ -80,7 +80,7 @@ export default class AbstractKMLExporter extends ZipExporter {
      * @type {string}
      * @protected
      */
-    this.osNS = OS_NS;
+    this.osNS = 'os'; // OS_NS;
 
     /**
      * @type {!Object<string, function(!Element, T)>}
@@ -626,13 +626,13 @@ export default class AbstractKMLExporter extends ZipExporter {
               'name': fields[i]
             });
             xml.appendElementNS('value', this.kmlNS, dataEl, String(val));
-          } else if (JsonField.indexOf(fields[i]) > -1) {
+          } /* else if (JsonField.indexOf(fields[i]) > -1) {
             // write anything in this array as a serialized JSON value
             var dataEl = xml.appendElementNS('Data', this.kmlNS, ed, undefined, {
               'name': fields[i]
             });
             xml.appendElementNS('value', this.kmlNS, dataEl, JSON.stringify(val));
-          }
+          } */
         }
       }
 
@@ -705,7 +705,7 @@ export default class AbstractKMLExporter extends ZipExporter {
     var geometry = this.getGeometry(item);
     if (geometry) {
       var /** @type {ol.XmlNodeStackItem} */ context = {node: node};
-      olXml.pushSerializeAndPop(context, KML.PLACEMARK_SERIALIZERS_,
+      pushSerializeAndPop(context, KML.PLACEMARK_SERIALIZERS_,
           KML.GEOMETRY_NODE_FACTORY_, [geometry], []);
     }
   }
