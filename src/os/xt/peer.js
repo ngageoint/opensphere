@@ -1,6 +1,6 @@
 goog.declareModuleId('os.xt.Peer');
 
-import olArray from 'ol/array';
+import {includes} from 'ol/array';
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';
 import * as events from './events.js';
@@ -457,7 +457,7 @@ export default class Peer {
    * @return {boolean} True if the given app ID exists in the peer list, false otherwise
    */
   isAppOpen(appId, opt_messageType) {
-    return olArray.includes(this.getPeers(opt_messageType), appId) || this.id_ == appId;
+    return includes(this.getPeers(opt_messageType), appId) || this.id_ == appId;
   }
 
   /**
@@ -830,7 +830,7 @@ export default class Peer {
       var messageType = wait.messageType;
       var peerInfo = PeerInfo.load(this.group_, wait.peerId, this.storage_);
       if (peerInfo && messageType) {
-        if (!olArray.includes(peerInfo.types, messageType)) {
+        if (!includes(peerInfo.types, messageType)) {
           peerInfo = null;
         }
       }

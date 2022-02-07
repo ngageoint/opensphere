@@ -1,6 +1,6 @@
 goog.declareModuleId('os.webgl.AbstractRootSynchronizer');
 
-import events from 'ol/events';
+import {listen} from 'ol/events';
 import Layer from 'ol/layer/Layer';
 import ZOrderEventType from '../data/zordereventtype.js';
 import * as dispatcher from '../dispatcher.js';
@@ -101,9 +101,9 @@ export default class AbstractRootSynchronizer extends Disposable {
     for (var i = 0, n = groups.length; i < n; i++) {
       var group = groups[i];
       if (group instanceof Group) {
-        this.listenKeys_.push(events.listen(group, ZOrderEventType.UPDATE, this.onGroupZOrder_, this));
-        this.listenKeys_.push(events.listen(group, LayerEventType.ADD, this.onLayerAdd_, this));
-        this.listenKeys_.push(events.listen(group, LayerEventType.REMOVE, this.onLayerRemove_, this));
+        this.listenKeys_.push(listen(group, ZOrderEventType.UPDATE, this.onGroupZOrder_, this));
+        this.listenKeys_.push(listen(group, LayerEventType.ADD, this.onLayerAdd_, this));
+        this.listenKeys_.push(listen(group, LayerEventType.REMOVE, this.onLayerRemove_, this));
 
         this.synchronizeGroup_(group);
       }

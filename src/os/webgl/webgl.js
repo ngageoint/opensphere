@@ -1,9 +1,9 @@
 goog.declareModuleId('os.webgl');
 
+import {getContext} from 'ol/webgl';
 import AltitudeMode from './altitudemode.js';
 
 const userAgent = goog.require('goog.userAgent');
-const webgl = goog.require('ol.webgl');
 
 
 /**
@@ -41,10 +41,10 @@ export const hasPerformanceCaveat = function() {
       failIfMajorPerformanceCaveat: true
     };
     var canvas = /** @type {HTMLCanvasElement} */ (document.createElement('canvas'));
-    if (webgl.getContext(canvas, contextOptions)) {
+    if (getContext(canvas, contextOptions)) {
       return false;
     }
-    if (webgl.getContext(canvas)) {
+    if (getContext(canvas)) {
       return true;
     }
   } catch (e) {
