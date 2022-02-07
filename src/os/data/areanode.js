@@ -1,5 +1,7 @@
 goog.declareModuleId('os.data.AreaNode');
 
+import {listen, unlistenByKey} from 'ol/events';
+
 import AreaToggle from '../command/areatogglecmd.js';
 import CommandProcessor from '../command/commandprocessor.js';
 import PropertyChangeEvent from '../events/propertychangeevent.js';
@@ -14,7 +16,6 @@ import {directiveTag as nodeUi} from '../ui/node/areanodeui.js';
 import QueryAreaNode from '../ui/query/areanode.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const events = goog.require('ol.events');
 
 const {default: ISearchable} = goog.requireType('os.data.ISearchable');
 
@@ -35,6 +36,8 @@ export default class AreaNode extends QueryAreaNode {
 
     var qm = getQueryManager();
     qm.listen(GoogEventType.PROPERTYCHANGE, this.onQueriesChanged_, false, this);
+
+    this.listenKey = null;
   }
 
   /**
@@ -58,8 +61,8 @@ export default class AreaNode extends QueryAreaNode {
    */
   setArea(area) {
     if (area !== this.area) {
-      if (this.area) {
-        events.unlisten(this.area, 'toggle', this.onAreaToggled, this);
+      if (this.area && this.listenKey) {
+        unlistenByKey(this.listenKey);
       }
 
       var old = this.area;
@@ -68,7 +71,7 @@ export default class AreaNode extends QueryAreaNode {
 
       if (this.area) {
         this.nodeUI = `<${nodeUi}></${nodeUi}>`;
-        events.listen(this.area, 'toggle', this.onAreaToggled, this);
+        this.listenKey = listen(this.area, 'toggle', this.onAreaToggled, this);
       } else {
         this.nodeUI = '';
       }
