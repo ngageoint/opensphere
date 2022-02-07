@@ -1,10 +1,10 @@
 goog.declareModuleId('os.im.mapping');
 
+import Feature from 'ol/Feature';
+
 import '../../mixin/featuremixin.js';
 import instanceOf from '../../instanceof.js';
 import TimeType from './timetype.js';
-
-const Feature = goog.require('ol.Feature');
 
 const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
 
