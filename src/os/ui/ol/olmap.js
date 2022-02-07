@@ -1,5 +1,26 @@
 goog.declareModuleId('os.ui.ol.OLMap');
 
+import {getUid} from 'ol';
+import {defaults as controlDefaults} from 'ol/control';
+import {platformModifierKeyOnly} from 'ol/events/condition';
+import {createEmpty, scaleFromCenter} from 'ol/extent';
+import Feature from 'ol/Feature';
+import {defaults as interactionDefaults} from 'ol/interaction';
+import DragPan from 'ol/interaction/DragPan';
+import DragZoom from 'ol/interaction/DragZoom';
+import Tile from 'ol/layer/Tile';
+import OLVectorLayer from 'ol/layer/Vector';
+import olMap from 'ol/Map';
+import {equivalent, get} from 'ol/proj';
+import TileWMS from 'ol/source/TileWMS';
+import OLVectorSource from 'ol/source/Vector';
+import Circle from 'ol/style/Circle';
+import Fill from 'ol/style/Fill';
+import Stroke from 'ol/style/Stroke';
+import Style from 'ol/style/Style';
+import {createForProjection} from 'ol/tilegrid';
+import {DEFAULT_MAX_ZOOM} from 'ol/tilegrid/common';
+import View from 'ol/View';
 import Settings from '../../config/settings.js';
 import {ProviderKey} from '../../data/data.js';
 import * as dispatcher from '../../dispatcher.js';
@@ -20,26 +41,6 @@ const {assert} = goog.require('goog.asserts');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const userAgent = goog.require('goog.userAgent');
-const {DEFAULT_MAX_ZOOM, getUid} = goog.require('ol');
-const Feature = goog.require('ol.Feature');
-const olMap = goog.require('ol.Map');
-const View = goog.require('ol.View');
-const {defaults: controlDefaults} = goog.require('ol.control');
-const {platformModifierKeyOnly} = goog.require('ol.events.condition');
-const {createEmpty, scaleFromCenter} = goog.require('ol.extent');
-const {defaults: interactionDefaults} = goog.require('ol.interaction');
-const DragPan = goog.require('ol.interaction.DragPan');
-const DragZoom = goog.require('ol.interaction.DragZoom');
-const Tile = goog.require('ol.layer.Tile');
-const OLVectorLayer = goog.require('ol.layer.Vector');
-const olProj = goog.require('ol.proj');
-const TileWMS = goog.require('ol.source.TileWMS');
-const OLVectorSource = goog.require('ol.source.Vector');
-const Circle = goog.require('ol.style.Circle');
-const Fill = goog.require('ol.style.Fill');
-const Stroke = goog.require('ol.style.Stroke');
-const Style = goog.require('ol.style.Style');
-const {createForProjection} = goog.require('ol.tilegrid');
 
 const Collection = goog.requireType('ol.Collection');
 const PluggableMap = goog.requireType('ol.PluggableMap');
@@ -345,8 +346,8 @@ export default class OLMap extends EventTarget {
     for (var key in baseMapConfigs) {
       var layerConfig = baseMapConfigs[key];
       var source;
-      var proj = olProj.get(/** @type {string|undefined} */ (layerConfig['projection']) || OLMap.PROJECTION);
-      if (olProj.equivalent(proj, OLMap.PROJECTION)) {
+      var proj = get(/** @type {string|undefined} */ (layerConfig['projection']) || OLMap.PROJECTION);
+      if (equivalent(proj, OLMap.PROJECTION)) {
         if (layerConfig['baseType'] === 'XYZ') {
           source = new XYZ(/** @type {olx.source.XYZOptions} */ ({
             projection: proj,
@@ -513,7 +514,7 @@ const logger = log.getLogger('os.ui.ol.OLMap');
  * @type {Projection}
  * @const
  */
-OLMap.PROJECTION = olProj.get('EPSG:4326');
+OLMap.PROJECTION = get('EPSG:4326');
 
 /**
  * Tile grid to request 512x512 tiles.
