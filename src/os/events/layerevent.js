@@ -2,7 +2,7 @@ goog.declareModuleId('os.events.LayerEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
-const OLEventTarget = goog.requireType('ol.events.EventTarget');
+// const OLEventTarget = goog.requireTyped('ol.events.EventTarget');
 
 
 /**

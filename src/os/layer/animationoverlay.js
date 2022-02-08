@@ -8,9 +8,9 @@ import AnimationVector from './animationvector.js';
 const Disposable = goog.require('goog.Disposable');
 const {clone} = goog.require('goog.array');
 
-const Feature = goog.requireType('ol.Feature');
-const OLVectorLayer = goog.requireType('ol.layer.Vector');
-const Style = goog.requireType('ol.style.Style');
+// const Feature = goog.requireTyped('ol.Feature');
+// const OLVectorLayer = goog.requireTyped('ol.layer.Vector');
+// const Style = goog.requireTyped('ol.style.Style');
 const {default: AnimationOverlayOptions} = goog.requireType('os.layer.AnimationOverlayOptions');
 
 

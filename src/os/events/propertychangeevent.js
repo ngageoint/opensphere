@@ -3,7 +3,7 @@ goog.declareModuleId('os.events.PropertyChangeEvent');
 const GoogEvent = goog.require('goog.events.Event');
 const GoogEventType = goog.require('goog.events.EventType');
 
-const OLEventTarget = goog.requireType('ol.events.EventTarget');
+// const OLEventTarget = goog.requireTyped('ol.events.EventTarget');
 
 
 /**

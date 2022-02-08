@@ -5,8 +5,6 @@ import * as osStyle from '../../style/style.js';
 import * as kml from '../../ui/file/kml/kml.js';
 import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
-const Feature = goog.requireType('ol.Feature');
-
 
 /**
  * Configure a feature to display an icon.

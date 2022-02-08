@@ -9,7 +9,7 @@ const Timer = goog.require('goog.Timer');
 const log = goog.require('goog.log');
 
 const Logger = goog.requireType('goog.log.Logger');
-const Layer = goog.requireType('ol.layer.Layer');
+// const Layer = goog.requireTyped('ol.layer.Layer');
 
 
 /**

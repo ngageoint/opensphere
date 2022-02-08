@@ -3,7 +3,6 @@ goog.declareModuleId('os.command.FeaturesVisibility');
 import AbstractSource from './abstractsourcecmd.js';
 import State from './state.js';
 
-const Feature = goog.requireType('ol.Feature');
 const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 

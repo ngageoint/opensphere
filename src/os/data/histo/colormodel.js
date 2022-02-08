@@ -16,7 +16,6 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const googObject = goog.require('goog.object');
 
-const Feature = goog.requireType('ol.Feature');
 const {default: IPersistable} = goog.requireType('os.IPersistable');
 const {default: ColorBin} = goog.requireType('os.data.histo.ColorBin');
 const {default: SourceHistogram} = goog.requireType('os.data.histo.SourceHistogram');

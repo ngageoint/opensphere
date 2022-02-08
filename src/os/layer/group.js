@@ -8,7 +8,7 @@ import Layer from 'ol/layer/Layer';
 import LayerEvent from '../events/layerevent.js';
 import LayerEventType from '../events/layereventtype.js';
 
-const Collection = goog.requireType('ol.Collection');
+// const Collection = goog.requireTyped('ol.Collection');
 
 
 /**

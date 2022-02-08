@@ -12,10 +12,10 @@ import Instruction from 'ol/render/canvas/Instruction';
 import {TEXT_ALIGN} from 'ol/render/canvas/TextBuilder';
 import {setFromArray} from 'ol/transform';
 
-const Feature = goog.requireType('ol.Feature');
-const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
-const RenderFeature = goog.requireType('ol.render.Feature');
-const TextReplay = goog.requireType('ol.render.canvas.TextReplay');
+// const Feature = goog.requireTyped('ol.Feature');
+// const SimpleGeometry = goog.requireTyped('ol.geom.SimpleGeometry');
+// const RenderFeature = goog.requireTyped('ol.render.Feature');
+// const TextReplay = goog.requireTyped('ol.render.canvas.TextReplay');
 
 /**
  * If the mixin has been initialized.

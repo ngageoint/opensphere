@@ -7,9 +7,6 @@ const math = goog.require('goog.math');
 /* const olExtent from import 'ol/extent');
 const olProj from imnport 'ol.proj'); */
 
-const Projection = goog.requireType('ol.proj.Projection');
-
-
 /**
  * @type {number}
  */

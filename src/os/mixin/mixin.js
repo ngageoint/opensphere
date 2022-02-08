@@ -27,8 +27,8 @@ import MapRenderer from 'ol/renderer/Map';
 
 import registerClass from '../registerclass.js';
 
-const Feature = goog.requireType('ol.Feature');
-const RenderFeature = goog.requireType('ol.render.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
+// const RenderFeature = goog.requireTyped('ol.render.Feature');
 
 
 /**

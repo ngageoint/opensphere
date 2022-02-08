@@ -9,8 +9,6 @@ import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
 const asserts = goog.require('goog.asserts');
 
-const Feature = goog.requireType('ol.Feature');
-
 
 /**
  * Changes the opacity of a feature

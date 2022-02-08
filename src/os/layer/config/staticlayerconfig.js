@@ -9,7 +9,7 @@ const {clone} = goog.require('goog.array');
 const {getLogger} = goog.require('goog.log');
 
 const Logger = goog.requireType('goog.log.Logger');
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 
 
 /**

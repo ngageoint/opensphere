@@ -4,8 +4,6 @@ import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
 import * as osStyle from '../../style/style.js';
 import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
-const Feature = goog.requireType('ol.Feature');
-
 
 /**
  * Changes the line dash of a feature

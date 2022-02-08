@@ -14,8 +14,6 @@ import State from '../state.js';
 const asserts = goog.require('goog.asserts');
 const GoogEvent = goog.require('goog.events.Event');
 
-const Feature = goog.requireType('ol.Feature');
-
 
 /**
  * Commands for feature style changes should extend this class

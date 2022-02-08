@@ -11,10 +11,10 @@ import FlightMode from './flightmode.js';
 
 const {assert} = goog.require('goog.asserts');
 
-const PluggableMap = goog.requireType('ol.PluggableMap');
-const Projection = goog.requireType('ol.proj.Projection');
-const TileGrid = goog.requireType('ol.tilegrid.TileGrid');
-const OLMap = goog.requireType('ol.Map');
+// const PluggableMap = goog.requireTyped('ol.PluggableMap');
+// const Projection = goog.requireTyped('ol.proj.Projection');
+// const TileGrid = goog.requireTyped('ol.tilegrid.TileGrid');
+// const OLMap = goog.requireTyped('ol.Map');
 
 
 /**

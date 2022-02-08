@@ -20,8 +20,8 @@ import Tile from './tile.js';
 const Delay = goog.require('goog.async.Delay');
 const {hashCode} = goog.require('goog.string');
 
-const TileArcGISRest = goog.requireType('ol.source.TileArcGISRest');
-const TileWMS = goog.requireType('ol.source.TileWMS');
+// const TileArcGISRest = goog.requireTyped('ol.source.TileArcGISRest');
+// const TileWMS = goog.requireTyped('ol.source.TileWMS');
 
 
 /**

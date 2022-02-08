@@ -5,8 +5,8 @@ import ReplayGroup from 'ol/render/canvas/ExecutorGroup';
 
 import * as osMap from '../map/map.js';
 
-const Feature = goog.requireType('ol.Feature');
-const RenderFeature = goog.requireType('ol.render.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
+// const RenderFeature = goog.requireTyped('ol.render.Feature');
 
 
 const oldForEachFeatureAtCoordinate = ReplayGroup.prototype.forEachFeatureAtCoordinate;

@@ -8,7 +8,6 @@ import ZOrderEventType from './zordereventtype.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
 
-const BaseLayer = goog.requireType('ol.layer.Base');
 const {default: ZOrderEntry} = goog.requireType('os.data.ZOrderEntry');
 const {default: LayerGroup} = goog.requireType('os.layer.Group');
 const {default: ILayer} = goog.requireType('os.layer.ILayer');

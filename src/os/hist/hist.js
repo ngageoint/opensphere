@@ -9,8 +9,8 @@ import IHistogramProvider from './ihistogramprovider.js';
 const {binaryInsert, defaultCompare} = goog.require('goog.array');
 const googObject = goog.require('goog.object');
 
-const Layer = goog.requireType('ol.layer.Layer');
-const Source = goog.requireType('ol.source.Source');
+// const Layer = goog.requireTyped('ol.layer.Layer');
+// const Source = goog.requireTyped('ol.source.Source');
 const {default: IHistogramData} = goog.requireType('os.hist.IHistogramData');
 const {default: TimelineScaleOptions} = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 

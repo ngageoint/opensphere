@@ -4,7 +4,6 @@ import {getMapContainer} from '../map/mapinstance.js';
 import AbstractSyncCommand from './abstractsynccommand.js';
 import State from './state.js';
 
-const Feature = goog.requireType('ol.Feature');
 const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 const {default: ISource} = goog.requireType('os.source.ISource');
 

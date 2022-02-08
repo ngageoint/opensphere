@@ -1,7 +1,5 @@
 goog.declareModuleId('os.ILayerData');
 
-const Layer = goog.requireType('ol.layer.Layer');
-
 
 /**
  * @interface
@@ -9,7 +7,7 @@ const Layer = goog.requireType('ol.layer.Layer');
 export default class ILayerData {
   /**
    * The map layer tied to the command.
-   * @type {Layer}
+   * @type {import("ol/layer/Layer")}
    */
   layer() {}
 

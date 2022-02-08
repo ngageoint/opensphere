@@ -5,7 +5,7 @@ import ImageState from 'ol/ImageState';
 
 import {filterImage} from '../tile/tile.js';
 
-const ImageSource = goog.requireType('ol.source.Image');
+// const ImageSource = goog.requireTyped('ol.source.Image');
 
 
 /**
