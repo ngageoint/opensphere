@@ -19,7 +19,7 @@ import './urltilemixin.js';
 import './zoomscalemixin.js';
 
 import {getUid} from 'ol';
-import olColor from 'ol/color';
+import {normalize} from 'ol/color';
 import LayerGroup from 'ol/layer/Group';
 import {clamp} from 'ol/math';
 import VectorLayer from 'ol/renderer/canvas/VectorLayer';
@@ -46,7 +46,7 @@ registerClass(LayerGroup.NAME, LayerGroup);
  * @override
  * @suppress {accessControls|duplicate}
  */
-olColor.prototype.normalize = function(color, opt_color) {
+normalize.prototype = function(color, opt_color) {
   var result = opt_color || [];
   result[0] = clamp((color[0] + 0.5) | 0, 0, 255);
   result[1] = clamp((color[1] + 0.5) | 0, 0, 255);
