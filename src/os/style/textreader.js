@@ -1,13 +1,12 @@
 goog.declareModuleId('os.style.TextReader');
 
+import {asString} from 'ol/color';
+import Fill from 'ol/style/Fill';
+import Stroke from 'ol/style/Stroke';
+import Text from 'ol/style/Text';
 import AbstractReader from './abstractreader.js';
 import {getFont} from './label.js';
 import StyleField from './stylefield.js';
-
-const {asString} = goog.require('ol.color');
-const Fill = goog.require('ol.style.Fill');
-const Stroke = goog.require('ol.style.Stroke');
-const Text = goog.require('ol.style.Text');
 
 const TextPlacement = goog.requireType('ol.style.TextPlacement');
 
