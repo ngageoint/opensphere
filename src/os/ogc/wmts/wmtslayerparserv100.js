@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ogc.wmts.WMTSLayerParserV100');
 
+import {get} from 'ol/proj';
+import {optionsFromCapabilities} from 'ol/source/WMTS';
+
 import {getCrossOrigin} from '../../net/net.js';
 import AbstractWMTSLayerParser from './abstractwmtslayerparser';
 
 import {detectDateTimeFormats, sortFormats} from './wmts.js';
-
-const olProj = goog.require('ol.proj');
-const {optionsFromCapabilities} = goog.require('ol.source.WMTS');
 
 
 /**
@@ -100,7 +100,7 @@ export default class WMTSLayerParserV100 extends AbstractWMTSLayerParser {
       tileMatrixSet.forEach((matrixSet) => {
         // openlayers/src/ol/source/wmts.js is the source for these lines
         const code = matrixSet['SupportedCRS'];
-        if (code && !!(olProj.get(code.replace(/urn:ogc:def:crs:(\w+):(.*:)?(\w+)$/, '$1:$3')) || olProj.get(code))) {
+        if (code && !!(get(code.replace(/urn:ogc:def:crs:(\w+):(.*:)?(\w+)$/, '$1:$3')) || olProj.get(code))) {
           const identifier = /** @type {string} */ (matrixSet['Identifier']);
           if (identifier) {
             this.tileMatrixSets[identifier] = true;
