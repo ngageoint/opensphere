@@ -1,5 +1,7 @@
 goog.declareModuleId('os.state.v2.ExclusionArea');
 
+import Feature from 'ol/Feature';
+
 import '../../mixin/geometrymixin.js';
 import RecordField from '../../data/recordfield.js';
 import Format from '../../ogc/format.js';
@@ -14,7 +16,6 @@ const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');
 const log = goog.require('goog.log');
 const {getRandomString} = goog.require('goog.string');
-const Feature = goog.require('ol.Feature');
 
 const Logger = goog.requireType('goog.log.Logger');
 

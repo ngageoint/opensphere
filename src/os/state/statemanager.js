@@ -1,5 +1,7 @@
 goog.declareModuleId('os.state.StateManager');
 
+import {remove} from 'ol/array';
+
 import DataManager from '../data/datamanager.js';
 import ProviderEntry from '../data/providerentry.js';
 import osImplements from '../implements.js';
@@ -30,7 +32,6 @@ import XMLStateManager from './xmlstatemanager.js';
 const {defaultCompare, insert} = goog.require('goog.array');
 const {getFirstElementChild} = goog.require('goog.dom');
 const log = goog.require('goog.log');
-const {remove} = goog.require('ol.array');
 
 const Logger = goog.requireType('goog.log.Logger');
 
