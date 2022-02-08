@@ -320,7 +320,7 @@ export const getLayersFromContext = function(context) {
  * @param {Context} context The menu context.
  * @this {MenuItem}
  */
-export const visibleIfSupported = function(context) {
+const visibleIfSupported = function(context) {
   this.visible = false;
 
   if (this.eventType && context && context.length > 0) {
