@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ol.source.VectorTile');
 
-const OLVectorTileSource = goog.require('ol.source.VectorTile');
-const {expandUrl, createFromTileUrlFunctions} = goog.require('ol.TileUrlFunction');
+import OLVectorTileSource from 'ol/source/VectorTile';
+import {expandUrl, createFromTileUrlFunctions} from 'ol/tileurlfunction';
 
 const Projection = goog.requireType('ol.proj.Projection');
 
