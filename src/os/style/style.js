@@ -4,6 +4,7 @@
  */
 goog.declareModuleId('os.style');
 
+import {asArray, asString, toString} from 'ol/color';
 import {toRgbArray} from '../color.js';
 import RecordField from '../data/recordfield.js';
 import PropertyChangeEvent from '../events/propertychangeevent.js';
@@ -23,7 +24,6 @@ import StyleType from './styletype.js';
 
 const {equals} = goog.require('goog.array');
 const {toRadians} = goog.require('goog.math');
-const {asArray, asString, toString} = goog.require('ol.color');
 
 const Feature = goog.requireType('ol.Feature');
 const Layer = goog.requireType('ol.layer.Layer');
