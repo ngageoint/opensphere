@@ -5,8 +5,6 @@ import XMLState from '../xmlstate.js';
 import ViewProjection from './viewprojection.js';
 import ViewTag from './viewtag.js';
 
-const {setAttributeNS} = goog.require('ol.xml');
-
 
 /**
  */
@@ -81,7 +79,7 @@ export default class BaseViewState extends XMLState {
   saveInternal(options, rootObj) {
     try {
       var camera = appendElementNS('kml:Camera', KMLNS, rootObj);
-      setAttributeNS(camera, XMLNS, 'xmlns:kml', KMLNS);
+      camera.setAttributeNS(XMLNS, 'xmlns:kml', KMLNS);
 
       // append the view projection (2d or 3d mode)
       appendElement('projection', rootObj, this.getProjection());
