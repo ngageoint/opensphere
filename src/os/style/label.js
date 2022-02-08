@@ -1,5 +1,13 @@
 goog.declareModuleId('os.style.label');
 
+import {asArray} from 'ol/color';
+import {equals, createEmpty, getCenter, createOrUpdateFromCoordinate, containsCoordinate} from 'ol/extent';
+import Geometry from 'ol/geom/Geometry';
+import GeometryCollection from 'ol/geom/GeometryCollection';
+import GeometryType from 'ol/geom/GeometryType';
+import {fromExtent as polyFromExtent} from 'ol/geom/Polygon';
+import SimpleGeometry from 'ol/geom/SimpleGeometry';
+import Style from 'ol/style/Style';
 import {instanceOf} from '../classregistry.js';
 import DataManager from '../data/datamanager.js';
 import RecordField from '../data/recordfield.js';
@@ -23,14 +31,6 @@ const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const log = goog.require('goog.log');
 const {clamp} = goog.require('goog.math');
 const {isEmptyOrWhitespace, makeSafe, truncate} = goog.require('goog.string');
-const {asArray} = goog.require('ol.color');
-const olExtent = goog.require('ol.extent');
-const Geometry = goog.require('ol.geom.Geometry');
-const GeometryCollection = goog.require('ol.geom.GeometryCollection');
-const GeometryType = goog.require('ol.geom.GeometryType');
-const Polygon = goog.require('ol.geom.Polygon');
-const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
-const Style = goog.require('ol.style.Style');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');
@@ -213,17 +213,17 @@ const updateShown_ = function() {
   // check if the view extent is ready to update labels. if the viewport was resized recently, the map size may be zero,
   // which will prevent labels from updating correctly.
   var viewExtent = map.getViewExtent();
-  if (olExtent.equals(viewExtent, osMap.ZERO_EXTENT)) {
+  if (equals(viewExtent, osMap.ZERO_EXTENT)) {
     return false;
   }
 
   // this is precise in 2D but gets less precise in 3D as the globe is tilted/rotated. the extent will still be focused
   // in the center of the screen, but keep this in mind if label updates seem off in 3D.
-  var viewPoly = Polygon.fromExtent(viewExtent);
+  var viewPoly = polyFromExtent(viewExtent);
   assert(viewPoly, 'failed creating polygon from view');
 
   // reusable extent to reduce GC
-  var extent = olExtent.createEmpty();
+  var extent = createEmpty();
 
   var then = Date.now();
   var labelSources = [];
@@ -296,8 +296,8 @@ const updateShown_ = function() {
     }
 
     // create the map extent for the label (in 2D without rotation)
-    var labelCenter = olExtent.getCenter(geometry.getExtent());
-    olExtent.createOrUpdateFromCoordinate(labelCenter, extent);
+    var labelCenter = getCenter(geometry.getExtent());
+    createOrUpdateFromCoordinate(labelCenter, extent);
 
     extent[0] -= xBuffer;
     extent[1] -= yBuffer;
@@ -319,8 +319,8 @@ const updateShown_ = function() {
             // positioned or they may be hidden when they don't need to be.
             var neighborGeometry = neighbor.getGeometry();
             if (neighborGeometry && neighborGeometry.getType() != GeometryType.POINT) {
-              var neighborCenter = olExtent.getCenter(neighborGeometry.getExtent());
-              if (!olExtent.containsCoordinate(extent, neighborCenter)) {
+              var neighborCenter = getCenter(neighborGeometry.getExtent());
+              if (!containsCoordinate(extent, neighborCenter)) {
                 // the neighbor's label position is not within the extent of the current label, so don't turn it off
                 return;
               }
