@@ -1,24 +1,25 @@
 goog.declareModuleId('os.mixin.geometry');
 
+import {returnOrUpdate, createEmpty, createOrUpdateEmpty, getWidth, extend} from 'ol/extent';
+import Circle from 'ol/geom/Circle';
+import Geometry from 'ol/geom/Geometry';
+import GeometryCollection from 'ol/geom/GeometryCollection';
+import LinearRing from 'ol/geom/LinearRing';
+import LineString from 'ol/geom/LineString';
+import MultiLineString from 'ol/geom/MultiLineString';
+import MultiPoint from 'ol/geom/MultiPoint';
+import MultiPolygon from 'ol/geom/MultiPolygon';
+import Point from 'ol/geom/Point';
+import Polygon from 'ol/geom/Polygon';
+import SimpleGeometry from 'ol/geom/SimpleGeometry';
+import {get, equivalent} from 'ol/proj';
+
 import GeometryField from '../geom/geometryfield.js';
 import * as osMap from '../map/map.js';
 import {merge} from '../object/object.js';
 import {EPSG4326} from '../proj/proj.js';
 
 const log = goog.require('goog.log');
-const olExtent = goog.require('ol.extent');
-const Circle = goog.require('ol.geom.Circle');
-const Geometry = goog.require('ol.geom.Geometry');
-const GeometryCollection = goog.require('ol.geom.GeometryCollection');
-const LineString = goog.require('ol.geom.LineString');
-const LinearRing = goog.require('ol.geom.LinearRing');
-const MultiLineString = goog.require('ol.geom.MultiLineString');
-const MultiPoint = goog.require('ol.geom.MultiPoint');
-const MultiPolygon = goog.require('ol.geom.MultiPolygon');
-const Point = goog.require('ol.geom.Point');
-const Polygon = goog.require('ol.geom.Polygon');
-const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
-const olProj = goog.require('ol.proj');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -37,10 +38,10 @@ const geometryLogger = log.getLogger('ol.geom.Geometry');
 Geometry.prototype.getAntiExtent = function(opt_extent) {
   var rev = this.getRevision();
   if (this.antiExtentRevision_ != rev) {
-    this.antiExtent_ = this.computeAntiExtent(this.antiExtent_ || olExtent.createEmpty());
+    this.antiExtent_ = this.computeAntiExtent(this.antiExtent_ || createEmpty());
     this.antiExtentRevision_ = rev;
   }
-  return olExtent.returnOrUpdate(this.antiExtent_, opt_extent);
+  return returnOrUpdate(this.antiExtent_, opt_extent);
 };
 
 
@@ -71,12 +72,12 @@ Geometry.prototype.antiExtentRevision_ = NaN;
  * @inheritDoc
  */
 SimpleGeometry.prototype.computeAntiExtent = function(extent) {
-  olExtent.createOrUpdateEmpty(extent);
+  createOrUpdateEmpty(extent);
   var coords = this.getFlatCoordinates();
   var stride = this.getStride();
   var proj = osMap.PROJECTION;
   var projExtent = proj.getExtent();
-  var projWidth = olExtent.getWidth(projExtent);
+  var projWidth = getWidth(projExtent);
   var projCenter = projExtent[0] + projWidth / 2;
 
   for (var i = 0, n = coords.length; i < n; i += stride) {
@@ -99,10 +100,10 @@ SimpleGeometry.prototype.computeAntiExtent = function(extent) {
  * @suppress {accessControls}
  */
 GeometryCollection.prototype.computeAntiExtent = function(extent) {
-  olExtent.createOrUpdateEmpty(extent);
+  createOrUpdateEmpty(extent);
   var geometries = this.geometries_;
   for (var i = 0, n = geometries.length; i < n; i++) {
-    olExtent.extend(extent, geometries[i].getAntiExtent());
+    extend(extent, geometries[i].getAntiExtent());
   }
 
   return extent;
@@ -118,13 +119,13 @@ GeometryCollection.prototype.computeAntiExtent = function(extent) {
 Geometry.prototype.osTransform = function(opt_projection) {
   opt_projection = opt_projection || EPSG4326;
 
-  var pFrom = olProj.get(opt_projection);
+  var pFrom = get(opt_projection);
   var pTo = osMap.PROJECTION;
 
   if (!pFrom) {
     log.warning(geometryLogger,
         '"' + opt_projection + '" was not defined as a projection in the application!');
-  } else if (!olProj.equivalent(pFrom, pTo)) {
+  } else if (!equivalent(pFrom, pTo)) {
     return this.transform(pFrom, pTo);
   }
 
@@ -139,9 +140,9 @@ Geometry.prototype.osTransform = function(opt_projection) {
  */
 Geometry.prototype.toLonLat = function() {
   var pFrom = osMap.PROJECTION;
-  var pTo = olProj.get(EPSG4326);
+  var pTo = get(EPSG4326);
 
-  if (!olProj.equivalent(pFrom, pTo)) {
+  if (!equivalent(pFrom, pTo)) {
     return this.transform(pFrom, pTo);
   }
 
