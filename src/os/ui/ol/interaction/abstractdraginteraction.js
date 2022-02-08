@@ -3,7 +3,7 @@ goog.declareModuleId('os.ui.ol.interaction.AbstractDrag');
 import {mouseOnly} from 'ol/events/condition';
 import AbstractDraw from './abstractdrawinteraction.js';
 
-const MapBrowserPointerEvent = goog.requireType('ol.MapBrowserPointerEvent');
+// const MapBrowserPointerEvent = goog.requireTyped('ol.MapBrowserPointerEvent');
 
 
 /**

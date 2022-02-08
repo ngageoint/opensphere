@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.ol.interaction.ContextMenuOptions');
 
-const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
+// const MapBrowserEvent = goog.requireTyped('ol.MapBrowserEvent');
 const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 
 

@@ -7,7 +7,7 @@ import Module from '../module.js';
 import {apply} from '../ui.js';
 
 const GoogPromise = goog.requireType('goog.Promise');
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 const {default: OGCService} = goog.requireType('os.ogc.OGCService');
 
 

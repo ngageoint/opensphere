@@ -20,8 +20,8 @@ const KeyHandler = goog.require('goog.events.KeyHandler');
 const log = goog.require('goog.log');
 
 const Logger = goog.requireType('goog.log.Logger');
-const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
-const Geometry = goog.requireType('ol.geom.Geometry');
+// const MapBrowserEvent = goog.requireTyped('ol.MapBrowserEvent');
+// const Geometry = goog.requireTyped('ol.geom.Geometry');
 
 /**
  * This drawing flag explains whether or not another interaction

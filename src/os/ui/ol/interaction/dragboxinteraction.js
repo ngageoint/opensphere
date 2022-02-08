@@ -11,7 +11,7 @@ import Box from '../../../olm/render/box.js';
 import AltitudeMode from '../../../webgl/altitudemode.js';
 import AbstractDrag from './abstractdraginteraction.js';
 
-const Style = goog.requireType('ol.style.Style');
+// const Style = goog.requireTyped('ol.style.Style');
 
 
 /**

@@ -8,7 +8,7 @@ const {getFirstElementChild} = goog.require('goog.dom');
 const {setInnerHtml} = goog.require('goog.dom.safe');
 const SafeHtml = goog.require('goog.html.SafeHtml');
 
-const LayerBase = goog.requireType('ol.layer.Base');
+// const LayerBase = goog.requireTyped('ol.layer.Base');
 
 
 /**

@@ -10,7 +10,7 @@ import TimelineController from '../../../time/timelinecontroller.js';
 import OLMap from '../olmap.js';
 import {getEventFeature, getFirstPolygon} from './interaction.js';
 
-const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
+// const MapBrowserEvent = goog.requireTyped('ol.MapBrowserEvent');
 
 
 /**

@@ -8,7 +8,7 @@ import Module from '../module.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 
-const Layer = goog.requireType('ol.layer.Layer');
+// const Layer = goog.requireTyped('ol.layer.Layer');
 const {default: LayerNode} = goog.requireType('os.data.LayerNode');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 
