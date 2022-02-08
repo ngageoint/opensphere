@@ -248,7 +248,7 @@ export const createColumnActions = function() {
  * @param {ColumnContext} context The column menu context.
  * @this {MenuItem}
  */
-export const visibleIfHasColumn = function(context) {
+const visibleIfHasColumn = function(context) {
   this.visible = !!context && !!context.column;
 };
 
@@ -258,7 +258,7 @@ export const visibleIfHasColumn = function(context) {
  * @param {ColumnContext} context The column menu context.
  * @this {MenuItem}
  */
-export const visibleIfCanRemove = function(context) {
+const visibleIfCanRemove = function(context) {
   this.visible = false;
 
   var foundOne = false;

@@ -168,7 +168,7 @@ export const dispose = function() {
  * @param {ol.Coordinate} coord The coordinate.
  * @this {MenuItem}
  */
-export const showIfHasCoordinate = function(coord) {
+const showIfHasCoordinate = function(coord) {
   this.visible = Boolean(coord && coord.length > 1);
 };
 
@@ -225,7 +225,7 @@ const onColorChosen = function(color) {
  *
  * @this {MenuItem}
  */
-export const updateSkyItem = function() {
+const updateSkyItem = function() {
   this.visible = getMapContainer().is3DEnabled();
   this.selected = !!Settings.getInstance().get(DisplaySetting.ENABLE_SKY, false);
 };
@@ -245,7 +245,7 @@ export const onSky = function(event) {
  *
  * @this {MenuItem}
  */
-export const updateTerrainItem = function() {
+const updateTerrainItem = function() {
   this.visible = getMapContainer().is3DEnabled() && hasTerrain();
   this.selected = !!Settings.getInstance().get(DisplaySetting.ENABLE_TERRAIN, false);
 };

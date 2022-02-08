@@ -87,7 +87,7 @@ export const toggleUnit = function(event) {
  *
  * @this {MenuItem}
  */
-export const updateIcons = function() {
+const updateIcons = function() {
   var curSystem = UnitManager.getInstance().getSelectedSystem();
   if (this.eventType === curSystem) {
     this.icons = ['<i class="fa fa-fw fa-check-circle-o"></i>'];
