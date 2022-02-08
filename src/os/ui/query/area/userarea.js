@@ -39,7 +39,7 @@ const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
 
-const Geometry = goog.requireType('ol.geom.Geometry');
+// const Geometry = goog.requireTyped('ol.geom.Geometry');
 
 
 /**

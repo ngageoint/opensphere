@@ -4,7 +4,7 @@ import RenameMapping from '../../im/mapping/renamemapping.js';
 import StaticMapping from '../../im/mapping/staticmapping.js';
 import {ORIGINAL_GEOM_FIELD, METHOD_FIELD} from '../../interpolate.js';
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
 
 

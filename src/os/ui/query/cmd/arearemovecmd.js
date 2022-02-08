@@ -4,7 +4,7 @@ import State from '../../../command/state.js';
 import {getAreaManager, getQueryManager} from '../../../query/queryinstance.js';
 import AbstractArea from './abstractareacmd.js';
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 const {default: ICommand} = goog.requireType('os.command.ICommand');
 
 

@@ -20,7 +20,7 @@ const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 const {default: AbstractSearchResult} = goog.requireType('os.search.AbstractSearchResult');
 const {StyleConfigLike} = goog.requireType('os.style');
 

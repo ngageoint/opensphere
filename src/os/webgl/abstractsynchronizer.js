@@ -4,8 +4,8 @@ import TimelineController from '../time/timelinecontroller.js';
 
 const Disposable = goog.require('goog.Disposable');
 
-const PluggableMap = goog.requireType('ol.PluggableMap');
-const View = goog.requireType('ol.View');
+// const PluggableMap = goog.requireTyped('ol.PluggableMap');
+// const View = goog.requireTyped('ol.View');
 
 
 /**

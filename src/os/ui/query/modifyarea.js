@@ -32,7 +32,7 @@ const KeyCodes = goog.require('goog.events.KeyCodes');
 const log = goog.require('goog.log');
 
 const Logger = goog.requireType('goog.log.Logger');
-const Vector = goog.requireType('ol.layer.Vector');
+// const Vector = goog.requireTyped('ol.layer.Vector');
 const {default: PayloadEvent} = goog.requireType('os.events.PayloadEvent');
 
 

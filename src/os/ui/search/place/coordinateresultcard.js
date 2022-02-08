@@ -6,7 +6,7 @@ import {ROOT} from '../../../os.js';
 import Module from '../../module.js';
 import FeatureResultCardCtrl from '../featureresultcard.js';
 
-const Point = goog.requireType('ol.geom.Point');
+// const Point = goog.requireTyped('ol.geom.Point');
 
 
 /**

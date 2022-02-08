@@ -18,7 +18,7 @@ import ITime from '../../../time/itime.js';
 import {directiveTag as searchUi} from './coordinateresultcard.js';
 import {FEATURE_CONFIG} from './place.js';
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 
 
 /**

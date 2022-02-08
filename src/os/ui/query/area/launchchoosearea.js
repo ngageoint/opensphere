@@ -3,7 +3,7 @@ goog.declareModuleId('os.ui.query.area.launchChooseArea');
 import * as ConfirmUI from '../../window/confirm.js';
 import {directiveTag} from './choosearea.js';
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 
 
 /**

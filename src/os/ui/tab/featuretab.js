@@ -2,7 +2,7 @@ goog.declareModuleId('os.ui.tab.FeatureTab');
 
 import Tab from './tab.js';
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 
 
 /**

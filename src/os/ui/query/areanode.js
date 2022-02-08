@@ -8,7 +8,7 @@ import {tagsFromString} from '../../tag/tag.js';
 import SlickTreeNode from '../slick/slicktreenode.js';
 
 const GoogEvent = goog.requireType('goog.events.Event');
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 const {default: ISearchable} = goog.requireType('os.data.ISearchable');
 
 

@@ -6,7 +6,7 @@ import {directiveTag} from './userarea.js';
 
 const Promise = goog.require('goog.Promise');
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 
 
 /**

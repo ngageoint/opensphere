@@ -5,10 +5,10 @@ import {isGeometryPolygonal} from '../../../geo/geo.js';
 
 const userAgent = goog.require('goog.userAgent');
 
-const Feature = goog.requireType('ol.Feature');
-const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
-const Layer = goog.requireType('ol.layer.Layer');
-const RenderFeature = goog.requireType('ol.render.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
+// const MapBrowserEvent = goog.requireTyped('ol.MapBrowserEvent');
+// const Layer = goog.requireTyped('ol.layer.Layer');
+// const RenderFeature = goog.requireTyped('ol.render.Feature');
 
 
 /**
