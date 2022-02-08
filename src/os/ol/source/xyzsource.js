@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ol.source.XYZ');
 
-const TileUrlFunction = goog.require('ol.TileUrlFunction');
-const OLXYZ = goog.require('ol.source.XYZ');
+import OLXYZ from 'ol/source/XYZ';
+import {expandUrl, createFromTileUrlFunctions} from 'ol/tileurlfunction';
 
 const Projection = goog.requireType('ol.proj.Projection');
 
@@ -37,7 +37,7 @@ export default class XYZ extends OLXYZ {
    * @inheritDoc
    */
   setUrl(url) {
-    var urls = this.urls = TileUrlFunction.expandUrl(url);
+    var urls = this.urls = expandUrl(url);
     this.setTileUrlFunction(this.createFromTemplates(urls));
   }
 
@@ -90,6 +90,6 @@ export default class XYZ extends OLXYZ {
    * @protected
    */
   createFromTemplates(templates) {
-    return TileUrlFunction.createFromTileUrlFunctions(templates.map(this.createFromTemplate, this));
+    return createFromTileUrlFunctions(templates.map(this.createFromTemplate, this));
   }
 }
