@@ -8,7 +8,6 @@ import ViewProjection from './viewprojection.js';
 
 const log = goog.require('goog.log');
 const {clamp} = goog.require('goog.math');
-const {setAttributeNS} = goog.require('ol.xml');
 
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -94,7 +93,7 @@ export default class ViewState extends XMLState {
     try {
       var mapContainer = getMapContainer();
       var camera = appendElementNS('kml:Camera', KMLNS, rootObj);
-      setAttributeNS(camera, XMLNS, 'xmlns:kml', KMLNS);
+      camera.setAttributeNS(XMLNS, 'xmlns:kml', KMLNS);
 
       // append the view projection (2d or 3d mode)
       var projection = mapContainer.is3DEnabled() ? ViewProjection.VIEW_3D :
