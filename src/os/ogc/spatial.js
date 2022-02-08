@@ -1,14 +1,13 @@
 goog.declareModuleId('os.ogc.spatial');
 
+import GML from 'ol/format/GML';
+import KML from 'ol/format/KML';
+import {pushParseAndPop} from 'ol/xml';
+
 import {createPolarPolygon, isPolarPolygon} from '../geo/geo.js';
 import {interpolateGeom} from '../interpolate.js';
 import Format from './format.js';
 
-const GML = goog.require('ol.format.GML');
-const KML = goog.require('ol.format.KML');
-const {pushParseAndPop} = goog.require('ol.xml');
-
-const Feature = goog.requireType('ol.Feature');
 const LineString = goog.requireType('ol.geom.LineString');
 const Polygon = goog.requireType('ol.geom.Polygon');
 
