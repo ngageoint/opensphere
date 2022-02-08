@@ -7,17 +7,17 @@
  */
 goog.declareModuleId('os.mixin.TileImage');
 
+import {remove} from 'ol/array';
+import TileImage from 'ol/source/TileImage';
+
 import osImplements from '../implements.js';
 import IFilterableTileSource from '../source/ifilterabletilesource.js';
 import ColorableTile from '../tile/colorabletile.js';
 
 const {insert} = goog.require('goog.array');
-const {remove} = goog.require('ol.array');
-const TileImage = goog.require('ol.source.TileImage');
 
 const Tile = goog.requireType('ol.Tile');
 const Projection = goog.requireType('ol.proj.Projection');
-const UrlTile = goog.requireType('ol.source.UrlTile');
 const {default: TileClass} = goog.requireType('os.TileClass');
 const {TileFilterFn} = goog.requireType('os.tile');
 
