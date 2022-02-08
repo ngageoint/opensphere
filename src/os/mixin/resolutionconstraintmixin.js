@@ -1,6 +1,6 @@
 goog.declareModuleId('os.mixin.ResolutionConstraint');
 
-import ResolutionConstraint from 'ol/resolutionconstraint';
+import {createSnapToPower} from 'ol/resolutionconstraint';
 
 
 /**
@@ -36,7 +36,7 @@ export const init = () => {
    * @return {ol.ResolutionConstraintType} Zoom function.
    * @suppress {accessControls|duplicate}
    */
-  ResolutionConstraint.prototype.createSnapToPower = function(power, maxResolution, opt_maxLevel) {
+  createSnapToPower.prototype = function(power, maxResolution, opt_maxLevel) {
     return (
     /**
      * @param {number|undefined} resolution Resolution.
