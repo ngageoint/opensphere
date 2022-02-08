@@ -3,8 +3,8 @@ goog.declareModuleId('os.mixin.canvasreplay');
 import {getUid} from 'ol';
 import {equals} from 'ol/array';
 import {intersects} from 'ol/extent';
-import length from 'ol/geom/flat/length';
-import textpath from 'ol/geom/flat/textpath';
+import {lineStringLength} from 'ol/geom/flat/length';
+import {drawTextOnPath} from 'ol/geom/flat/textpath';
 import {transform2D} from 'ol/geom/flat/transform';
 import {defaultPadding} from 'ol/render/canvas';
 import Replay from 'ol/render/canvas/ExecutorGroup';
@@ -225,12 +225,12 @@ export const init = () => {
           var textKey = /** @type {string} */ (instruction[13]);
           var textScale = /** @type {number} */ (instruction[14]);
 
-          var pathLength = length.lineString(pixelCoordinates, begin, end, 2);
+          var pathLength = lineStringLength(pixelCoordinates, begin, end, 2);
           var textLength = measure(text);
           if (overflow || textLength <= pathLength) {
             var textAlign = /** @type {TextReplay} */ (this).textStates[textKey].textAlign;
             var startM = (pathLength - textLength) * TEXT_ALIGN[textAlign];
-            var parts = textpath.lineString(
+            var parts = drawTextOnPath(
                 pixelCoordinates, begin, end, 2, text, measure, startM, maxAngle);
             if (parts) {
               var c;
