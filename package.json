@@ -13,9 +13,6 @@
   },
   "build": {
     "config": "config/settings.json",
-    "gcc-src": [
-      "src/**.js"
-    ],
     "type": "app",
     "pluggable": true,
     "index": "index.js",
@@ -42,34 +39,6 @@
         "./scripts/electron/preload.js"
       ]
     },
-    "gcc": {
-      "language_in": "ECMASCRIPT_2020",
-      "conformance_configs": "conformance_config.textproto",
-      "externs": [
-        "google-closure-compiler/contrib/externs/jquery-3.3.js",
-        "google-closure-compiler/contrib/externs/angular-1.6-http-promise_templated.js",
-        "google-closure-compiler/contrib/externs/angular-1.6-resource.js",
-        "google-closure-compiler/contrib/externs/angular-1.6-q_templated.js",
-        "google-closure-compiler/contrib/externs/svg.js"
-      ],
-      "entry_point": [
-        "goog:ol.ext",
-        "goog:osmain"
-      ],
-      "extra_annotation_name": [
-        "api",
-        "observable"
-      ],
-      "define": [
-        "os.SETTINGS=config/settings.json"
-      ],
-      "hide_warnings_for": [
-        ".build/",
-        "/google-closure-library/",
-        "/openlayers/",
-        "/ol-cesium/"
-      ]
-    },
     "moduleDefines": {
       "os.file.ZIP_PATH": "zip-js/WebContent",
       "plugin.cesium.LIBRARY_BASE_PATH": "cesium/Build/CesiumUnminified",
@@ -80,15 +49,13 @@
     "guide": "make -C docs clean html",
     "guide:auto": "sphinx-autobuild docs docs/_build/html",
     "genlibs": "run-p gen:modernizr gen:xmllexer",
-    "gen:deps": "os-gendeps .build/gcc-args.json .build/deps.js",
-    "gen:testdeps": "os-gendeps .build/gcc-test-args.json .build/deps-test.js",
     "gen:modernizr": "modernizr -c modernizr.config.json -u -d .build/modernizr.js",
     "pregen:xmllexer": "echo \"window.xmlLexer = require('xml-lexer');\" > .build/xml-lexer.require.js",
     "gen:xmllexer": "browserify .build/xml-lexer.require.js -o .build/xml-lexer.min.js",
     "postgen:xmllexer": "rm .build/xml-lexer.require.js",
     "gentestlibs": "npm run gen:webgl-mock",
     "gen:webgl-mock": "browserify vendor/webgl-mock/webgl-mock.require.js -o .build/webgl-mock.min.js",
-    "test:init": "run-s genlibs gentestlibs 'compile:resolve -- --exclude resources scss' gen:testdeps test:webpack",
+    "test:init": "run-s genlibs gentestlibs test:webpack",
     "test:compile": "tsc -b test",
     "test:debug": "karma start --browsers Chrome --reporters dots",
     "test:run": "karma start --single-run",
@@ -104,17 +71,11 @@
     "lint:css-fix": "stylelint --fix --ignore-path 'scss/nolint/**/*.scss' 'scss/**/*.scss'",
     "lint:js": "eslint --cache 'src/**/*.js' 'tasks/**/*.js' 'test/**/*.js'",
     "lint": "run-p lint:js lint:css lint:html",
-    "precompile:resolve": "cp addlayer.js .build",
-    "compile:resolve": "os-resolve --outputDir .build --defineRoots $(cat .build/version)",
-    "postcompile:resolve": "node scripts/addlayer-replace.js",
     "compile:debugcss": "for i in $(ls -1 .build/themes | grep node-sass-args); do sass --quiet $(cat .build/themes/$i):.build/themes/${i%.node-sass-args}.combined.css & pids=\"$pids $!\"; done; wait $pids;",
     "postcompile:debugcss": "for i in $(ls -1 .build/themes | grep combined.css | grep -v combined.css.map); do postcss .build/themes/$i --no-map -u autoprefixer -r & pids=\"$pids $!\"; done; wait $pids",
     "minify:css": "for i in $(ls -1 .build/themes | grep combined.css | grep -v combined.css.map); do cleancss --with-rebase --output .build/themes/$(echo $i | sed 's/combined/min/') .build/themes/$i & pids=\"$pids $!\"; done; wait $pids",
-    "compile": "npm-run-all -s compile:vendor-min compile:resolve gen:deps -p build:webpack compile:css",
+    "compile": "npm-run-all -s compile:tsc",
     "compile:css": "npm run compile:debugcss; npm run minify:css;",
-    "compile:gcc": "os-compile .build/gcc-args.json",
-    "postcompile:gcc": "echo \"//# sourceMappingURL=$(pwd)/.build/opensphere.min.map\" >> .build/opensphere.min.js",
-    "compile:vendor-min": "node vendor-min",
     "compile:tsc": "tsc -b src",
     "precopy:files": "mkdirp $(cat .build/version)/styles && mkdirp $(cat .build/version)/styles/themes && mkdirp dist/opensphere/test",
     "precopy:views": "mkdirp $(cat .build/version)/views",
@@ -132,7 +93,7 @@
     "build": "npm-run-all -s init -p lint genlibs -s compile copy build:index rename symlink",
     "build:nolint": "npm run init && npm run genlibs && npm run compile && npm run copy && npm run build:index && npm run rename",
     "build:index": "xargs -n 1 os-index < .build/resources-pages",
-    "dev": "npm-run-all -s init genlibs compile:vendor-min compile:resolve gen:deps -p compile:debugcss build:webpack-dev build:devindex",
+    "dev": "npm-run-all -s init genlibs compile:debugcss build:webpack-dev build:devindex",
     "build:devindex": "xargs -n 1 os-index --debug < .build/resources-pages",
     "build:xt": "mkdirp .build dist/opensphere; tasks/xt/build.js; cp src/os/xt/xt-example.html dist/opensphere",
     "build:webpack": "webpack --mode production",
@@ -276,7 +237,6 @@
     "npm-run-all": "^4.1.5",
     "opensphere-build-closure-helper": "^7.0.0",
     "opensphere-build-index": "^4.0.0",
-    "opensphere-build-resolver": "^10.0.0",
     "opensphere-state-schema": "^2.10.0",
     "postcss": "^8.2.6",
     "postcss-cli": "^9.0.2",
