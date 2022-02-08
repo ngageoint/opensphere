@@ -1,5 +1,7 @@
 goog.declareModuleId('os.query.ui.MergeAreasUI');
 
+import Feature from 'ol/Feature';
+
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';
 import CommandProcessor from '../../command/commandprocessor.js';
@@ -16,7 +18,6 @@ import {Controller as EditAreaCtrl} from '../../ui/query/editarea.js';
 import {applyMappings, createMappingsFromConfig} from '../../ui/query/query.js';
 
 const log = goog.require('goog.log');
-const Feature = goog.require('ol.Feature');
 
 const Logger = goog.requireType('goog.log.Logger');
 
