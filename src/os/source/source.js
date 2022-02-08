@@ -26,7 +26,7 @@ const Timer = goog.require('goog.Timer');
 const {defaultCompare} = goog.require('goog.array');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 
-const OLSource = goog.requireType('ol.source.Source');
+// const OLSource = goog.requireTyped('ol.source.Source');
 const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 const {default: FeatureTypeColumn} = goog.requireType('os.ogc.FeatureTypeColumn');
 const {default: ISource} = goog.requireType('os.source.ISource');

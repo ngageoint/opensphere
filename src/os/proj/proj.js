@@ -10,7 +10,7 @@ const asserts = goog.require('goog.asserts');
 const log = goog.require('goog.log');
 
 const Logger = goog.requireType('goog.log.Logger');
-const Projection = goog.requireType('ol.proj.Projection');
+// const Projection = goog.requireTyped('ol.proj.Projection');
 
 
 /**

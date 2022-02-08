@@ -18,7 +18,7 @@ import AreaAdd from '../ui/query/cmd/areaaddcmd.js';
 import {getAreaManager} from './queryinstance.js';
 import {WORLD_AREA} from './queryutils.js';
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 const {default: OSFile} = goog.requireType('os.file.File');
 const {default: FileManager} = goog.requireType('os.file.FileManager');
 const {default: ImportManager} = goog.requireType('os.ui.im.ImportManager');
