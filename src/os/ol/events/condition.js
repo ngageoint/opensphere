@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ol.events.condition');
 
-const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
+import MapBrowserEventType from 'ol/MapBrowserEventType';
 
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 
