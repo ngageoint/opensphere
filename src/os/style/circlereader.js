@@ -1,11 +1,12 @@
 goog.declareModuleId('os.style.CircleReader');
 
+import Circle from 'ol/style/Circle';
+
 import {toRgbArray} from '../color.js';
 import AbstractReader from './abstractreader.js';
 import {DEFAULT_FEATURE_SIZE} from './style.js';
 
 const {hashCode} = goog.require('goog.string');
-const Circle = goog.require('ol.style.Circle');
 
 
 /**
