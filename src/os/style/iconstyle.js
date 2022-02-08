@@ -1,10 +1,10 @@
 goog.declareModuleId('os.style.Icon');
 
+import ImageState from 'ol/ImageState';
+import IconStyle from 'ol/style/Icon';
+
 import '../mixin/iconimagemixin.js';
 import {toRgbArray} from '../color.js';
-
-const ImageState = goog.require('ol.ImageState');
-const IconStyle = goog.require('ol.style.Icon');
 
 const OLEvent = goog.requireType('ol.events.Event');
 
