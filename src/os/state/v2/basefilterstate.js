@@ -1,5 +1,7 @@
 goog.declareModuleId('os.state.v2.BaseFilter');
 
+import {find} from 'ol/array';
+
 import {forEach} from '../../array/array.js';
 import FilterEntry from '../../filter/filterentry.js';
 import {getFilterManager, getQueryManager} from '../../query/queryinstance.js';
@@ -10,7 +12,6 @@ import FilterTag from './filtertag.js';
 
 const {getChildren, getFirstElementChild} = goog.require('goog.dom');
 const {loadXml, serialize} = goog.require('goog.dom.xml');
-const {find} = goog.require('ol.array');
 
 const {default: VectorSource} = goog.requireType('os.source.Vector');
 
