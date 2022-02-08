@@ -3,12 +3,12 @@
  */
 goog.declareModuleId('os.mixin.feature');
 
+import Feature from 'ol/Feature';
+import Style from 'ol/style/Style';
+
 import {registerClass} from '../classregistry.js';
 import FeatureEvent from '../data/featureevent.js';
 import * as dispatcher from '../dispatcher.js';
-
-const Feature = goog.require('ol.Feature');
-const Style = goog.require('ol.style.Style');
 
 
 /**
