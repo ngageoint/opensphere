@@ -1,13 +1,14 @@
 goog.declareModuleId('os.style.FallbackIconImage');
 
+import ImageState from 'ol/ImageState';
+import IconImage from 'ol/style/IconImage';
+
 import ProxyHandler from '../net/proxyhandler.js';
 import Request from '../net/request.js';
 import {DEFAULT_ICON} from './styledefaults.js';
 
 const Uri = goog.require('goog.Uri');
 const log = goog.require('goog.log');
-const ImageState = goog.require('ol.ImageState');
-const IconImage = goog.require('ol.style.IconImage');
 
 const Logger = goog.requireType('goog.log.Logger');
 
