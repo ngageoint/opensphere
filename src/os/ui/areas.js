@@ -23,7 +23,7 @@ const {flatten, removeDuplicates} = goog.require('goog.array');
 const GoogEventType = goog.require('goog.events.EventType');
 
 const GoogEvent = goog.requireType('goog.events.Event');
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 const {default: INodeGroupBy} = goog.requireType('os.data.groupby.INodeGroupBy');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 const {default: OSFile} = goog.requireType('os.file.File');

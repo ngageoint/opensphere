@@ -1,7 +1,7 @@
 goog.declareModuleId('os.track.TrackLike');
 
-const LineString = goog.requireType('ol.geom.LineString');
-const MultiLineString = goog.requireType('ol.geom.MultiLineString');
+// const LineString = goog.requireTyped('ol.geom.LineString');
+// const MultiLineString = goog.requireTyped('ol.geom.MultiLineString');
 
 
 /**

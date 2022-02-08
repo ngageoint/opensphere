@@ -11,7 +11,7 @@ import {close, create} from '../window.js';
 import WindowEventType from '../windoweventtype.js';
 import {isDuplicateColumn} from './addcolumnform.js';
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 const {default: Vector} = goog.requireType('os.source.Vector');
 
 
