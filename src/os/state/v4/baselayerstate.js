@@ -1,5 +1,8 @@
 goog.declareModuleId('os.state.v4.BaseLayerState');
 
+import {readDecimal, readString} from 'ol/format/xsd';
+import {transformExtent} from 'ol/proj';
+
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';
 import {forEach} from '../../array/array.js';
@@ -33,8 +36,6 @@ const {setAttributes} = goog.require('goog.dom.xml');
 const log = goog.require('goog.log');
 const {clamp} = goog.require('goog.math');
 const {isEmptyOrWhitespace, isNumeric, makeSafe} = goog.require('goog.string');
-const XSD = goog.require('ol.format.XSD');
-const {transformExtent} = goog.require('ol.proj');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {default: IPersistable} = goog.requireType('os.IPersistable');
@@ -1041,19 +1042,19 @@ export default class BaseLayerState extends XMLState {
     if (binElement) {
       var binFieldEl = binElement.querySelector(LayerTag.BIN_FIELD);
       if (binFieldEl) {
-        var binField = XSD.readString(binFieldEl);
+        var binField = readString(binFieldEl);
         result['binMethod'][LayerTag.BIN_FIELD] = binField || '';
       }
 
       var binTypeEl = binElement.querySelector(LayerTag.BIN_TYPE);
       if (binTypeEl) {
-        var binType = XSD.readString(binTypeEl);
+        var binType = readString(binTypeEl);
         result['binMethod'][LayerTag.BIN_TYPE] = binType || '';
       }
 
       var widthEl = binElement.querySelector(LayerTag.BIN_WIDTH);
       if (widthEl) {
-        var width = XSD.readDecimal(widthEl);
+        var width = readDecimal(widthEl);
         if (width != null) {
           result['binMethod']['width'] = width;
         }
@@ -1061,7 +1062,7 @@ export default class BaseLayerState extends XMLState {
 
       var offsetEl = binElement.querySelector(LayerTag.BIN_OFFSET);
       if (offsetEl) {
-        var offset = XSD.readDecimal(offsetEl);
+        var offset = readDecimal(offsetEl);
         if (offset != null) {
           result['binMethod']['offset'] = offset;
         }
