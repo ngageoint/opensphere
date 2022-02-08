@@ -1,5 +1,11 @@
 goog.declareModuleId('os.query.AreaManager');
 
+import {asString} from 'ol/color';
+import GeoJSON from 'ol/format/GeoJSON';
+import Polygon from 'ol/geom/Polygon';
+import OLVectorSource from 'ol/source/Vector';
+import VectorEventType from 'ol/source/VectorEventType';
+
 import '../mixin/objectmixin.js';
 import {toRgbArray} from '../color.js';
 import TransformAreas from '../command/transformareascmd.js';
@@ -23,11 +29,6 @@ import {isWorldQuery} from './queryutils.js';
 
 const Deferred = goog.require('goog.async.Deferred');
 const {unsafeClone} = goog.require('goog.object');
-const {asString} = goog.require('ol.color');
-const GeoJSON = goog.require('ol.format.GeoJSON');
-const Polygon = goog.require('ol.geom.Polygon');
-const OLVectorSource = goog.require('ol.source.Vector');
-const VectorEventType = goog.require('ol.source.VectorEventType');
 
 const Feature = goog.requireType('ol.Feature');
 const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
