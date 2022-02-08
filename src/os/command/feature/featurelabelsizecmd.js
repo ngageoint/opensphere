@@ -5,8 +5,6 @@ import * as label from '../../style/label.js';
 import StyleField from '../../style/stylefield.js';
 import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
-const Feature = goog.requireType('ol.Feature');
-
 
 /**
  * Changes the label size for a feature

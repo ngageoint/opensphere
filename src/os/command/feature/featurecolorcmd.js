@@ -11,8 +11,6 @@ import ColorChangeType from '../colorchangetype.js';
 import State from '../state.js';
 import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
-const Feature = goog.requireType('ol.Feature');
-
 
 /**
  * Changes the color of a feature

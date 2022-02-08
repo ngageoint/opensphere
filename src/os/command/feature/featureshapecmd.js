@@ -7,8 +7,6 @@ import StyleField from '../../style/stylefield.js';
 import {Controller as FeatureEditCtrl} from '../../ui/featureedit.js';
 import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
-const Feature = goog.requireType('ol.Feature');
-
 
 /**
  * Changes the style of a feature

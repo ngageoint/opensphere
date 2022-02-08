@@ -5,8 +5,6 @@ import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
 import {updateShown} from '../../style/label.js';
 import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
-const Feature = goog.requireType('ol.Feature');
-
 
 /**
  * Changes if labels are always shown for a feature, or on highlight only.

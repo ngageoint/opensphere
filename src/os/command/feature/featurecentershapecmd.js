@@ -6,8 +6,6 @@ import * as osStyle from '../../style/style.js';
 import StyleField from '../../style/stylefield.js';
 import AbstractFeatureStyle from './abstractfeaturestylecmd.js';
 
-const Feature = goog.requireType('ol.Feature');
-
 
 /**
  * Changes the center style of a feature
