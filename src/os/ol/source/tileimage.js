@@ -6,9 +6,9 @@ import Request from '../../net/request.js';
 
 const EventType = goog.require('goog.net.EventType');
 
-const Projection = goog.requireType('ol.proj.Projection');
-const TileImage = goog.requireType('ol.source.TileImage');
-const VectorTile = goog.requireType('ol.source.VectorTile');
+// const Projection = goog.requireTyped('ol.proj.Projection');
+// const TileImage = goog.requireTyped('ol.source.TileImage');
+// const VectorTile = goog.requireTyped('ol.source.VectorTile');
 
 
 /**

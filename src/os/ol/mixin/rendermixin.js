@@ -6,11 +6,11 @@ goog.declareModuleId('os.ol.mixin.render');
 import Instruction from 'ol/render/canvas/Instruction';
 import PolygonReplay from 'ol/render/canvas/PolygonBuilder';
 
-const Feature = goog.requireType('ol.Feature');
-const Circle = goog.requireType('ol.geom.Circle');
-const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
-const Polygon = goog.requireType('ol.geom.Polygon');
-const RenderFeature = goog.requireType('ol.render.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
+// const Circle = goog.requireTyped('ol.geom.Circle');
+// const MultiPolygon = goog.requireTyped('ol.geom.MultiPolygon');
+// const Polygon = goog.requireTypde('ol.geom.Polygon');
+// const RenderFeature = goog.requireTyped('ol.render.Feature');
 
 
 /**

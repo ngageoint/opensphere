@@ -3,7 +3,7 @@ goog.declareModuleId('os.ol.source.XYZ');
 import OLXYZ from 'ol/source/XYZ';
 import {expandUrl, createFromTileUrlFunctions} from 'ol/tileurlfunction';
 
-const Projection = goog.requireType('ol.proj.Projection');
+// const Projection = goog.requireTyped('ol.proj.Projection');
 
 
 /**
