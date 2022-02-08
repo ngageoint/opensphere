@@ -145,7 +145,7 @@ export const spatialDispose = function() {
  * @param {Object|undefined} context The menu context.
  * @this {MenuItem}
  */
-export const visibleIfCanBuffer = function(context) {
+const visibleIfCanBuffer = function(context) {
   // polygonal geometries are generally drawn as areas, so don't clutter the menu with the buffer option
   this.visible = false;
 
