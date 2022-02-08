@@ -1,11 +1,11 @@
 goog.declareModuleId('os.style.ShapeReader');
 
+import RegularShape from 'ol/style/RegularShape';
 import AbstractReader from './abstractreader.js';
 import {DEFAULT_FEATURE_SIZE} from './style.js';
 
 const {toRadians} = goog.require('goog.math');
 const {hashCode} = goog.require('goog.string');
-const RegularShape = goog.require('ol.style.RegularShape');
 
 
 /**
