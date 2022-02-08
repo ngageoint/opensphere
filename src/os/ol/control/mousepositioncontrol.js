@@ -1,5 +1,9 @@
 goog.declareModuleId('os.ol.control.MousePosition');
 
+import OLMousePosition from 'ol/control/MousePosition';
+import {toLonLat} from 'ol/proj';
+import ViewHint from 'ol/ViewHint';
+
 import BearingSettingsKeys from '../../bearing/bearingsettingskeys.js';
 import DisplaySetting from '../../config/displaysetting.js';
 import Settings from '../../config/settings.js';
@@ -12,9 +16,6 @@ import UnitManager from '../../unit/unitmanager.js';
 
 const {listen, unlistenByKey} = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
-const ViewHint = goog.require('ol.ViewHint');
-const OLMousePosition = goog.require('ol.control.MousePosition');
-const {toLonLat} = goog.require('ol.proj');
 
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
