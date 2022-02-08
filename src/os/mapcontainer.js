@@ -14,7 +14,6 @@ import VectorTile from 'ol/layer/VectorTile';
 import MapEventType from 'ol/MapEventType';
 import ObjectEventType from 'ol/ObjectEventType';
 import {get, fromLonLat, toLonLat, transformExtent} from 'ol/proj';
-import Type from 'ol/renderer/Type';
 import OLVectorSource from 'ol/source/Vector';
 import {createForProjection} from 'ol/tilegrid';
 import View from 'ol/View';
@@ -897,7 +896,7 @@ export default class MapContainer extends EventTarget {
       ]),
       // prevents a blank map while flyTo animates
       loadTilesWhileAnimating: true,
-      renderer: Type.CANVAS,
+      renderer: 'canvas',
       target: MapContainer.TARGET,
       view: view,
       keyboardEventTarget: document
