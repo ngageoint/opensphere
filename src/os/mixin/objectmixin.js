@@ -3,10 +3,10 @@
  */
 goog.declareModuleId('os.mixin.object');
 
-const {getUid} = goog.require('ol');
-const OLObject = goog.require('ol.Object');
-const ObjectEventType = goog.require('ol.ObjectEventType');
-const EventTarget = goog.require('ol.events.EventTarget');
+import {getUid} from 'ol';
+import EventTarget from 'ol/events/Target';
+import OLObject from 'ol/Object';
+import ObjectEventType from 'ol/ObjectEventType';
 
 
 /**
