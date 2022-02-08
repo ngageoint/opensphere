@@ -1,6 +1,6 @@
 goog.declareModuleId('os.mixin.renderfeature');
 
-const RenderFeature = goog.require('ol.render.Feature');
+import RenderFeature from 'ol/render/Feature';
 
 /**
  * If the mixin has been initialized.
