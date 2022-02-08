@@ -1,5 +1,9 @@
 goog.declareModuleId('os.proj.switch.SwitchProjection');
 
+import Tile from 'ol/layer/Tile';
+import VectorTile from 'ol/layer/VectorTile';
+import {equivalent, get} from 'ol/proj';
+
 import CommandProcessor from '../command/commandprocessor.js';
 import LayerAdd from '../command/layeraddcmd.js';
 import LayerRemove from '../command/layerremovecmd.js';
@@ -21,9 +25,6 @@ import {isRasterReprojectionEnabled} from './reprojection.js';
 
 const Delay = goog.require('goog.async.Delay');
 const EventTarget = goog.require('goog.events.EventTarget');
-const Tile = goog.require('ol.layer.Tile');
-const VectorTile = goog.require('ol.layer.VectorTile');
-const olProj = goog.require('ol.proj');
 
 const {default: ICommand} = goog.requireType('os.command.ICommand');
 const {default: BinnedLayersType} = goog.requireType('os.proj.switch.BinnedLayersType');
@@ -360,9 +361,9 @@ export default class SwitchProjection extends EventTarget {
           if (projections.length) {
             var found = false;
             for (var j = 0, m = projections.length; j < m; j++) {
-              var p = olProj.get(projections[j]);
+              var p = get(projections[j]);
 
-              if (p && (isRasterReprojectionEnabled() || olProj.equivalent(p, this.newProjection_))) {
+              if (p && (isRasterReprojectionEnabled() || equivalent(p, this.newProjection_))) {
                 bins.reconfig.push(options);
                 found = true;
                 break;
