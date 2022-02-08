@@ -72,10 +72,10 @@ const KeyHandler = goog.require('goog.events.KeyHandler');
 const {toRadians} = goog.require('goog.math');
 const {isEmptyOrWhitespace} = goog.require('goog.string');
 
-const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
-const Geometry = goog.requireType('ol.geom.Geometry');
-const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
-const VectorLayer = goog.requireType('ol.layer.Vector');
+// const MapBrowserEvent = goog.requireTyped('ol.MapBrowserEvent');
+// const Geometry = goog.requireTyped('ol.geom.Geometry');
+// const GeometryCollection = goog.requireTyped('ol.geom.GeometryCollection');
+// const VectorLayer = goog.requireTyped('ol.layer.Vector');
 const {default: PayloadEvent} = goog.requireType('os.events.PayloadEvent');
 const {default: Method} = goog.requireType('os.interpolate.Method');
 const {LabelConfig} = goog.requireType('os.style.label');

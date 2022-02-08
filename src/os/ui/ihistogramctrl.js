@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.IHistogramUI');
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 const {default: ColorBin} = goog.requireType('os.data.histo.ColorBin');
 const {default: SourceHistogram} = goog.requireType('os.data.histo.SourceHistogram');

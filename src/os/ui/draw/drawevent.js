@@ -2,8 +2,8 @@ goog.declareModuleId('os.ui.draw.DrawEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
-const OLEventTarget = goog.requireType('ol.events.EventTarget');
-const Geometry = goog.requireType('ol.geom.Geometry');
+// const OLEventTarget = goog.requireTyped('ol.events.EventTarget');
+// const Geometry = goog.requireTyped('ol.geom.Geometry');
 
 
 /**
