@@ -1,10 +1,7 @@
 goog.declareModuleId('os.layer.ILayer');
 
-import IPersistable from '../ipersistable.js';// eslint-disable-line
-import IActionTarget from '../ui/action/iactiontarget.js';// eslint-disable-line
 
-const Source = goog.requireType('ol.source.Source');
-const {default: osImplements} = goog.requireType('os.implements');
+// const Source = goog.requireTyped('ol.source.Source');
 
 
 /**

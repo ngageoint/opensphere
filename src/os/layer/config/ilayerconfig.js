@@ -1,6 +1,6 @@
 goog.declareModuleId('os.layer.config.ILayerConfig');
 
-const Layer = goog.requireType('ol.layer.Layer');
+// const Layer = goog.requireTyped('ol.layer.Layer');
 
 
 /**

@@ -9,7 +9,7 @@ import MappingRegistry from './mappingregistry.js';
 
 const log = goog.require('goog.log');
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 
 
 /**

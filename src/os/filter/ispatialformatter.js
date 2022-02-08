@@ -1,6 +1,6 @@
 goog.declareModuleId('os.filter.ISpatialFormatter');
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 
 
 /**

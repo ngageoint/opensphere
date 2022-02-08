@@ -23,8 +23,8 @@ const Promise = goog.require('goog.Promise');
 const Debouncer = goog.require('goog.async.Debouncer');
 const GoogEventType = goog.require('goog.events.EventType');
 
-const {EventsKey: OlEventsKey} = goog.requireType('ol');
-const OlLayer = goog.requireType('ol.layer.Layer');
+// const {EventsKey: OlEventsKey} = goog.requireTyped('ol');
+// const OlLayer = goog.requireTyped('ol.layer.Layer');
 
 
 const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
