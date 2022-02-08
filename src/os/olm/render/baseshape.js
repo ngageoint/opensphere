@@ -1,11 +1,12 @@
 goog.declareModuleId('os.olm.render.BaseShape');
 
+import Feature from 'ol/Feature';
+import OLVectorLayer from 'ol/layer/Vector';
+import OLVectorSource from 'ol/source/Vector';
+
 import * as osMap from '../../map/map.js';
 
 const Disposable = goog.require('goog.Disposable');
-const Feature = goog.require('ol.Feature');
-const OLVectorLayer = goog.require('ol.layer.Vector');
-const OLVectorSource = goog.require('ol.source.Vector');
 
 const PluggableMap = goog.requireType('ol.PluggableMap');
 const Geometry = goog.requireType('ol.geom.Geometry');
