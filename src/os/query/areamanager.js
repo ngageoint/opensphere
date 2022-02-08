@@ -30,7 +30,7 @@ import {isWorldQuery} from './queryutils.js';
 const Deferred = goog.require('goog.async.Deferred');
 const {unsafeClone} = goog.require('goog.object');
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
 
 

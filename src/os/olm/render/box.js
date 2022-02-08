@@ -5,8 +5,8 @@ import {beginTempInterpolation, endTempInterpolation, interpolateGeom} from '../
 import Method from '../../interpolatemethod.js';
 import BaseShape from './baseshape.js';
 
-const Polygon = goog.requireType('ol.geom.Polygon');
-const Style = goog.requireType('ol.style.Style');
+// const Polygon = goog.requireTyped('ol.geom.Polygon');
+// const Style = goog.requireTyped('ol.style.Style');
 
 
 /**

@@ -11,7 +11,7 @@ import BaseShape from './baseshape.js';
 
 const {assert} = goog.require('goog.asserts');
 
-const Style = goog.requireType('ol.style.Style');
+// const Style = goog.requireTyped('ol.style.Style');
 
 
 /**

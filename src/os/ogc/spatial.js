@@ -8,8 +8,8 @@ import {createPolarPolygon, isPolarPolygon} from '../geo/geo.js';
 import {interpolateGeom} from '../interpolate.js';
 import Format from './format.js';
 
-const LineString = goog.requireType('ol.geom.LineString');
-const Polygon = goog.requireType('ol.geom.Polygon');
+// const LineString = goog.requireTyped('ol.geom.LineString');
+// const Polygon = goog.requireTyped('ol.geom.Polygon');
 
 
 /**

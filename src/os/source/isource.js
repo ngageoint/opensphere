@@ -1,9 +1,7 @@
 goog.declareModuleId('os.source.ISource');
 
-const Feature = goog.requireType('ol.Feature');
-const {default: IPersistable} = goog.requireType('os.IPersistable');
+// const Feature = goog.requireTyped('ol.Feature');
 const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
-const {default: osImplements} = goog.requireType('os.implements');
 const {default: TimeModel} = goog.requireType('os.time.xf.TimeModel');
 
 

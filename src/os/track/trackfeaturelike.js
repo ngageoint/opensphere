@@ -1,6 +1,6 @@
 goog.declareModuleId('os.track.TrackFeatureLike');
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 const {default: DynamicFeature} = goog.requireType('os.feature.DynamicFeature');
 
 

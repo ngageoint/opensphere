@@ -1,6 +1,6 @@
 goog.declareModuleId('os.source.IModifiableSource');
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 
 
 /**

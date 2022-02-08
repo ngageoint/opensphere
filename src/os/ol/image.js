@@ -6,7 +6,7 @@ import ImageCanvas from 'ol/ImageCanvas';
 
 import {D2R} from '../geo/geo.js';
 
-const ImageBase = goog.requireType('ol.ImageBase');
+// const ImageBase = goog.requireTyped('ol.ImageBase');
 
 
 /**

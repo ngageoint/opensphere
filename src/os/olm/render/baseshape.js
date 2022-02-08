@@ -8,9 +8,9 @@ import * as osMap from '../../map/map.js';
 
 const Disposable = goog.require('goog.Disposable');
 
-const PluggableMap = goog.requireType('ol.PluggableMap');
-const Geometry = goog.requireType('ol.geom.Geometry');
-const Style = goog.requireType('ol.style.Style');
+// const PluggableMap = goog.requireTyped('ol.PluggableMap');
+// const Geometry = goog.requireTyped('ol.geom.Geometry');
+// const Style = goog.requireTyped('ol.style.Style');
 
 
 /**

@@ -5,7 +5,7 @@ import IconStyle from 'ol/style/Icon';
 import '../mixin/iconimagemixin.js';
 import {toRgbArray} from '../color.js';
 
-const OLEvent = goog.requireType('ol.events.Event');
+// const OLEvent = goog.requireTyped('ol.events.Event');
 
 
 /**
