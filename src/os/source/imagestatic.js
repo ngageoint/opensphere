@@ -1,10 +1,10 @@
 goog.declareModuleId('os.source.ImageStatic');
 
-import {rotate} from '../ol/image.js';
+import {intersects} from 'ol/extent';
+import ImageState from 'ol/ImageState';
+import OLImageStatic from 'ol/source/ImageStatic';
 
-const ImageState = goog.require('ol.ImageState');
-const {intersects} = goog.require('ol.extent');
-const OLImageStatic = goog.require('ol.source.ImageStatic');
+import {rotate} from '../ol/image.js';
 
 const ImageBase = goog.requireType('ol.ImageBase');
 
