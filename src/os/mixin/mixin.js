@@ -17,14 +17,15 @@ import './resolutionconstraintmixin.js';
 import './tileimagemixin.js';
 import './urltilemixin.js';
 import './zoomscalemixin.js';
-import registerClass from '../registerclass.js';
 
-const {getUid} = goog.require('ol');
-const olColor = goog.require('ol.color');
-const LayerGroup = goog.require('ol.layer.Group');
-const {clamp} = goog.require('ol.math');
-const MapRenderer = goog.require('ol.renderer.canvas.Map');
-const VectorLayer = goog.require('ol.renderer.canvas.VectorLayer');
+import {getUid} from 'ol';
+import olColor from 'ol/color';
+import LayerGroup from 'ol/layer/Group';
+import {clamp} from 'ol/math';
+import VectorLayer from 'ol/renderer/canvas/VectorLayer';
+import MapRenderer from 'ol/renderer/Map';
+
+import registerClass from '../registerclass.js';
 
 const Feature = goog.requireType('ol.Feature');
 const RenderFeature = goog.requireType('ol.render.Feature');
@@ -45,7 +46,7 @@ registerClass(LayerGroup.NAME, LayerGroup);
  * @override
  * @suppress {accessControls|duplicate}
  */
-olColor.normalize = function(color, opt_color) {
+olColor.prototype.normalize = function(color, opt_color) {
   var result = opt_color || [];
   result[0] = clamp((color[0] + 0.5) | 0, 0, 255);
   result[1] = clamp((color[1] + 0.5) | 0, 0, 255);
