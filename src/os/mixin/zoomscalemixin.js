@@ -16,7 +16,7 @@ import MapContainer from '../mapcontainer.js';
 
 const {lerp} = goog.require('goog.math');
 
-const Icon = goog.requireType('ol.style.Icon');
+// const Icon = goog.requireTyped('ol.style.Icon');
 
 
 // cache values to reduce how often the zoom scale is computed

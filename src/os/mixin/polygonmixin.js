@@ -2,7 +2,7 @@ goog.declareModuleId('os.mixin.polygon');
 
 import Polygon from 'ol/geom/Polygon';
 
-const LinearRing = goog.requireType('ol.geom.LinearRing');
+// const LinearRing = goog.requireTyped('ol.geom.LinearRing');
 
 
 const old = Polygon.prototype.getLinearRings;

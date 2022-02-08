@@ -1,10 +1,9 @@
 goog.declareModuleId('os.map.IMapContainer');
 
-const Listenable = goog.requireType('goog.events.Listenable');
-const Collection = goog.requireType('ol.Collection');
-const Feature = goog.requireType('ol.Feature');
-const PluggableMap = goog.requireType('ol.PluggableMap');
-const Layer = goog.requireType('ol.layer.Layer');
+// const Collection = goog.requireTyped('ol.Collection');
+// const Feature = goog.requireTypde('ol.Feature');
+// const PluggableMap = goog.requireTyped('ol.PluggableMap');
+// const Layer = goog.requireTyped('ol.layer.Layer');
 
 
 /**

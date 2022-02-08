@@ -6,7 +6,7 @@ goog.declareModuleId('os.mixin.map');
 import {getUid} from 'ol';
 import PluggableMap from 'ol/PluggableMap';
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 
 /**
  * If the mixin has been initialized.

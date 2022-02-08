@@ -12,9 +12,9 @@ import ILoadingSource from '../ol/source/iloadingsource.js';
 const {insert} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 
-const OLImage = goog.requireType('ol.Image');
-const ImageBase = goog.requireType('ol.ImageBase');
-const Projection = goog.requireType('ol.proj.Projection');
+// const OLImage = goog.requireTyped('ol.Image');
+// const ImageBase = goog.requireTyped('ol.ImageBase');
+// const Projection = goog.requireTyped('ol.proj.Projection');
 const {TileFilterFn} = goog.requireType('os.tile');
 
 

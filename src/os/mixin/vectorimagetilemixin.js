@@ -5,7 +5,7 @@ import VectorImageTile from 'ol/VectorRenderTile';
 import VectorTile from '../layer/vectortile.js';
 import MapContainer from '../mapcontainer.js';
 
-const OLLayer = goog.requireType('ol.layer.Layer');
+// const OLLayer = goog.requireTyped('ol.layer.Layer');
 
 
 /**

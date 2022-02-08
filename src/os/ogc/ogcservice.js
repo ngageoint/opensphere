@@ -20,7 +20,7 @@ import WFSFormatter from './wfs/wfsformatter.js';
 const GoogPromise = goog.require('goog.Promise');
 const Uri = goog.require('goog.Uri');
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 
 
 /**
