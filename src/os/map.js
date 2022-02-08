@@ -1,5 +1,8 @@
 goog.declareModuleId('os.Map');
 
+import OLMap from 'ol/Map';
+import {fromLonLat, toLonLat, transformExtent} from 'ol/proj';
+
 import './mixin/canvasreplaygroupmixin.js';
 import './mixin/canvasreplaymixin.js';
 import * as osMap from './map/map.js';
@@ -9,8 +12,6 @@ import {MODAL_SELECTOR} from './ui/ui.js';
 
 const TagName = goog.require('goog.dom.TagName');
 const {IE} = goog.require('goog.userAgent');
-const OLMap = goog.require('ol.Map');
-const {fromLonLat, toLonLat, transformExtent} = goog.require('ol.proj');
 
 
 /**
