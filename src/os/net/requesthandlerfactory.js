@@ -1,7 +1,8 @@
 goog.declareModuleId('os.net.RequestHandlerFactory');
 
+import {remove} from 'ol/array';
+
 const {defaultCompare} = goog.require('goog.array');
-const {remove} = goog.require('ol.array');
 
 const {default: IRequestHandler} = goog.requireType('os.net.IRequestHandler');
 
