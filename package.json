@@ -50,14 +50,7 @@
         "google-closure-compiler/contrib/externs/angular-1.6-http-promise_templated.js",
         "google-closure-compiler/contrib/externs/angular-1.6-resource.js",
         "google-closure-compiler/contrib/externs/angular-1.6-q_templated.js",
-        "google-closure-compiler/contrib/externs/svg.js",
-        "openlayers/externs/closure-compiler.js",
-        "openlayers/externs/geojson.js",
-        "openlayers/externs/oli.js",
-        "openlayers/externs/olx.js",
-        "openlayers/externs/proj4js.js",
-        "openlayers/externs/topojson.js",
-        "ol-cesium/externs/olcsx.js"
+        "google-closure-compiler/contrib/externs/svg.js"
       ],
       "entry_point": [
         "goog:ol.ext",
@@ -325,7 +318,7 @@
     "moment": "~2.20.1",
     "navigator.sendbeacon": "~0.0.x",
     "oboe": "^2.1.5",
-    "ol-cesium": "=1.37.0",
+    "ol-cesium": "2.13.0",
     "ol": "6.12.0",
     "opensphere-asm": "^1.0.0",
     "papaparse": "~5.3.1",
