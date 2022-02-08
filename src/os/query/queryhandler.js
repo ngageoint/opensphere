@@ -1,12 +1,13 @@
 goog.declareModuleId('os.query.QueryHandler');
 
+import {listen, unlistenByKey} from 'ol/events';
+
 import UIQueryHandler from '../ui/query/queryhandler.js';
 import {getQueryManager} from './queryinstance.js';
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
-const {listen, unlisten} = goog.require('ol.events');
 
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 const {default: RequestSource} = goog.requireType('os.source.Request');
@@ -51,6 +52,8 @@ export default class QueryHandler extends UIQueryHandler {
      * @protected
      */
     this.spatialRequired = false;
+
+    this.listenKey = null;
   }
 
   /**
@@ -96,7 +99,7 @@ export default class QueryHandler extends UIQueryHandler {
       this.setLayerId(null);
       this.setLayerName(null);
       qm.unlisten(GoogEventType.PROPERTYCHANGE, this.onQueryChange, false, this);
-      unlisten(this.source, GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange, this);
+      unlistenByKey(this.listenKey);
     }
 
     this.source = source;
@@ -109,7 +112,7 @@ export default class QueryHandler extends UIQueryHandler {
       this.source.refresh = this.refresh.bind(this);
 
       qm.listen(GoogEventType.PROPERTYCHANGE, this.onQueryChange, false, this);
-      listen(this.source, GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange, this);
+      this.listenKey = listen(this.source, GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange, this);
     }
   }
 

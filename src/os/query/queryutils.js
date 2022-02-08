@@ -1,14 +1,15 @@
 goog.declareModuleId('os.query.utils');
 
+import {getArea} from 'ol/extent';
+import Feature from 'ol/Feature';
+import GeometryType from 'ol/geom/GeometryType';
+import Polygon from 'ol/geom/Polygon';
+import {transformExtent} from 'ol/proj';
+
 import * as osMap from '../map/map.js';
 import {EPSG4326} from '../proj/proj.js';
 
 const {nearlyEquals} = goog.require('goog.math');
-const Feature = goog.require('ol.Feature');
-const {getArea} = goog.require('ol.extent');
-const GeometryType = goog.require('ol.geom.GeometryType');
-const Polygon = goog.require('ol.geom.Polygon');
-const {transformExtent} = goog.require('ol.proj');
 
 
 /**
