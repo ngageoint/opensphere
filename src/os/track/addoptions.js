@@ -1,6 +1,6 @@
 goog.declareModuleId('os.track.AddOptions');
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 
 
 /**

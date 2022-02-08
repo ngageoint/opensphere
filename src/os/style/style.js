@@ -25,9 +25,9 @@ import StyleType from './styletype.js';
 const {equals} = goog.require('goog.array');
 const {toRadians} = goog.require('goog.math');
 
-const Feature = goog.requireType('ol.Feature');
-const Layer = goog.requireType('ol.layer.Layer');
-const Style = goog.requireType('ol.style.Style');
+// const Feature = goog.requireTyped('ol.Feature');
+// const Layer = goog.requireTyped('ol.layer.Layer');
+// const Style = goog.requireTyped('ol.style.Style');
 const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 
