@@ -1,11 +1,13 @@
 goog.declareModuleId('os.proj');
 
+import {get, addEquivalentTransforms, getTransform, equivalent} from 'ol/proj';
+import {PROJECTIONS as EPSG3857Projections} from 'ol/proj/epsg3857';
+import {PROJECTIONS as EPSG4326Projections} from 'ol/proj/epsg4326';
 import Settings from '../config/settings.js';
 import * as osMap from '../map/map.js';
 
 const asserts = goog.require('goog.asserts');
 const log = goog.require('goog.log');
-const olProj = goog.require('ol.proj');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Projection = goog.requireType('ol.proj.Projection');
@@ -58,7 +60,7 @@ export const getProjections = function(opt_all) {
     settings.get('userProjections', [])));
 
   if (opt_all) {
-    var toAdd = [olProj.get(EPSG3857), olProj.get(EPSG4326)];
+    var toAdd = [get(EPSG3857), get(EPSG4326)];
 
     for (var i = 0, n = toAdd.length; i < n; i++) {
       var projection = toAdd[i];
@@ -88,7 +90,7 @@ export const loadProjections = function() {
 
     if (code && def) {
       proj4.defs(code, def);
-      var proj = olProj.get(code);
+      var proj = get(code);
 
       if (proj) {
         proj.setGlobal(!!projections[i]['isGlobal']);
@@ -103,22 +105,22 @@ export const loadProjections = function() {
           proj.setWorldExtent(extent);
         }
 
-        olProj.addEquivalentTransforms(
-            olProj.EPSG4326.PROJECTIONS,
+        addEquivalentTransforms(
+            EPSG4326Projections,
             [proj],
-            olProj.getTransform(EPSG4326, code),
-            olProj.getTransform(code, EPSG4326));
+            getTransform(EPSG4326, code),
+            getTransform(code, EPSG4326));
 
-        olProj.addEquivalentTransforms(
-            olProj.EPSG3857.PROJECTIONS,
+        addEquivalentTransforms(
+            EPSG3857Projections,
             [proj],
-            olProj.getTransform(EPSG3857, code),
-            olProj.getTransform(code, EPSG3857));
+            getTransform(EPSG3857, code),
+            getTransform(code, EPSG3857));
 
         // check that the proper transforms exist
-        asserts.assert(olProj.getTransform(EPSG4326, code));
-        asserts.assert(olProj.getTransform(EPSG3857, code));
-        asserts.assert(olProj.getTransform(CRS84, code));
+        asserts.assert(getTransform(EPSG4326, code));
+        asserts.assert(getTransform(EPSG3857, code));
+        asserts.assert(getTransform(CRS84, code));
       }
     }
   }
@@ -161,10 +163,10 @@ export const getBestSupportedProjection = function(options) {
   });
 
   for (var i = 0, n = supportedProjections.length; i < n; i++) {
-    var p = olProj.get(supportedProjections[i]);
+    var p = get(supportedProjections[i]);
 
     if (p) {
-      return olProj.equivalent(p, appProj) ? appProj : p;
+      return equivalent(p, appProj) ? appProj : p;
     }
   }
 
@@ -181,15 +183,17 @@ export const getBestSupportedProjection = function(options) {
  * @suppress {accessControls}
  */
 export const getBestEquivalent = function(proj) {
-  var projection = olProj.get(proj);
-  var projMap = olProj.projections.cache_;
+  var projection = get(proj);
   var shortest = '';
-  for (var key in projMap) {
-    if (key !== 'CRS:84' && olProj.equivalent(projMap[key], projection) &&
+  var allProjections = EPSG4326Projections.concat(EPSG3857Projections);
+  for (var i = 0; i < allProjections.length; i++) {
+    var aProjection = allProjections[i];
+    var key = aProjection.getCode();
+    if (key !== 'CRS:84' && equivalent(aProjection, projection) &&
         (!shortest || key.length < shortest.length)) {
       shortest = key;
     }
   }
 
-  return olProj.get(shortest);
+  return get(shortest);
 };
