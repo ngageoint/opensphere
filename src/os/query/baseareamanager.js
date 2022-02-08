@@ -1,5 +1,11 @@
 goog.declareModuleId('os.query.BaseAreaManager');
 
+import Feature from 'ol/Feature';
+import GeoJSON from 'ol/format/GeoJSON';
+import GeometryType from 'ol/geom/GeometryType';
+import OLVectorSource from 'ol/source/Vector';
+import VectorEventType from 'ol/source/VectorEventType';
+
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';
 import * as osArray from '../array/array.js';
@@ -25,11 +31,6 @@ const Delay = goog.require('goog.async.Delay');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const {getRandomString} = goog.require('goog.string');
-const Feature = goog.require('ol.Feature');
-const GeoJSON = goog.require('ol.format.GeoJSON');
-const GeometryType = goog.require('ol.geom.GeometryType');
-const OLVectorSource = goog.require('ol.source.Vector');
-const VectorEventType = goog.require('ol.source.VectorEventType');
 
 const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 const {default: IMapContainer} = goog.requireType('os.map.IMapContainer');
