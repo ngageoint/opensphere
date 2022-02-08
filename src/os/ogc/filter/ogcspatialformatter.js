@@ -1,14 +1,14 @@
 goog.declareModuleId('os.ogc.filter.OGCSpatialFormatter');
 
+import GeometryType from 'ol/geom/GeometryType';
+import Polygon from 'ol/geom/Polygon';
+
 import {interpolateCircle, isRectangular} from '../../geo/geo.js';
 import {splitWithinWorldExtent} from '../../geo/jsts.js';
 import {beginTempInterpolation, endTempInterpolation, interpolateGeom} from '../../interpolate.js';
 import {EPSG4326} from '../../proj/proj.js';
 import {escape as xmlEscape} from '../../xml.js';
 import {formatExtent, formatGMLIntersection} from '../spatial.js';
-
-const GeometryType = goog.require('ol.geom.GeometryType');
-const Polygon = goog.require('ol.geom.Polygon');
 
 const {default: ISpatialFormatter} = goog.requireType('os.filter.ISpatialFormatter');
 
