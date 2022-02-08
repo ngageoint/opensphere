@@ -3,8 +3,8 @@
  */
 goog.declareModuleId('os.ol.mixin.render');
 
-const Instruction = goog.require('ol.render.canvas.Instruction');
-const PolygonReplay = goog.require('ol.render.canvas.PolygonReplay');
+import Instruction from 'ol/render/canvas/Instruction';
+import PolygonReplay from 'ol/render/canvas/PolygonBuilder';
 
 const Feature = goog.requireType('ol.Feature');
 const Circle = goog.requireType('ol.geom.Circle');
