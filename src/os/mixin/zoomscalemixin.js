@@ -6,14 +6,15 @@
  */
 goog.declareModuleId('os.mixin.zoomscale');
 
+import {listen} from 'ol/events';
+import ImageReplay from 'ol/render/canvas/ImageBuilder';
+import EventType from 'ol/render/EventType';
+
 import * as osMap from '../map/map.js';
 import MapEvent from '../map/mapevent.js';
 import MapContainer from '../mapcontainer.js';
 
 const {lerp} = goog.require('goog.math');
-const events = goog.require('ol.events');
-const EventType = goog.require('ol.render.EventType');
-const ImageReplay = goog.require('ol.render.canvas.ImageReplay');
 
 const Icon = goog.requireType('ol.style.Icon');
 
@@ -49,7 +50,7 @@ const updateZoomScale = function() {
 mapContainer.listenOnce(MapEvent.MAP_READY, function() {
   const map = mapContainer.getMap();
   if (map) {
-    events.listen(map, EventType.PRECOMPOSE, updateZoomScale);
+    listen(map, EventType.PRECOMPOSE, updateZoomScale);
   }
 });
 
