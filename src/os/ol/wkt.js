@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ol.wkt');
 
-const WKT = goog.require('ol.format.WKT');
+import WKT from 'ol/format/WKT';
 
 
 /**
