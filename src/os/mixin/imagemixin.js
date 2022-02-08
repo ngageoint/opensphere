@@ -1,9 +1,9 @@
 goog.declareModuleId('os.mixin.Image');
 
-import {filterImage} from '../tile/tile.js';
+import OLImage from 'ol/Image';
+import ImageState from 'ol/ImageState';
 
-const OLImage = goog.require('ol.Image');
-const ImageState = goog.require('ol.ImageState');
+import {filterImage} from '../tile/tile.js';
 
 const ImageSource = goog.requireType('ol.source.Image');
 
