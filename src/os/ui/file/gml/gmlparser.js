@@ -16,7 +16,7 @@ const {getFirstElementChild} = goog.require('goog.dom');
 const {loadXml} = goog.require('goog.dom.xml');
 const log = goog.require('goog.log');
 
-const Projection = goog.requireType('ol.proj.Projection');
+// const Projection = goog.requireTyped('ol.proj.Projection');
 const {default: IParser} = goog.requireType('os.parse.IParser');
 
 

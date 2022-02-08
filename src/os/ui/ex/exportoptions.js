@@ -18,7 +18,7 @@ const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
 const {htmlEscape} = goog.require('goog.string');
 
-const EventTarget = goog.requireType('ol.events.EventTarget');
+// const EventTarget = goog.requireTyped('ol.events.EventTarget');
 const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 const {default: ISource} = goog.requireType('os.source.ISource');

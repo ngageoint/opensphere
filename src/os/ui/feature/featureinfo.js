@@ -24,7 +24,7 @@ import FeatureInfoTabManager from './featureinfotabmanager.js';
 const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
 
-const RenderFeature = goog.requireType('ol.render.Feature');
+// const RenderFeature = goog.requireTyped('ol.render.Feature');
 const {default: FeatureEvent} = goog.requireType('os.data.FeatureEvent');
 const {default: FeatureTab} = goog.requireType('os.ui.tab.FeatureTab');
 

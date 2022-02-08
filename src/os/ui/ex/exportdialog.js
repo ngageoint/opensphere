@@ -8,7 +8,7 @@ import * as osWindow from '../window.js';
 import {directiveTag as exportOptionsUi} from './exportoptions.js';
 import ExportOptionsEvent from './exportoptionsevent.js';
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 const {default: ExportOptions} = goog.requireType('os.ex.ExportOptions');
 const {default: IExportMethod} = goog.requireType('os.ex.IExportMethod');
 const {default: VectorSource} = goog.requireType('os.source.Vector');

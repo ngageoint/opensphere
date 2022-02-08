@@ -9,7 +9,7 @@ import AbstractFeatureTabCtrl from './abstractfeaturetabctrl.js';
 const {findValue} = goog.require('goog.object');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 
-const Feature = goog.requireType('ol.Feature');
+// const Feature = goog.requireTyped('ol.Feature');
 
 
 /**
