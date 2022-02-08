@@ -1,10 +1,9 @@
 goog.declareModuleId('os.mixin.IconImageMixin');
 
+import IconImage from 'ol/style/IconImage';
+import {shared} from 'ol/style/IconImageCache';
+
 import FallbackIconImage from '../style/fallbackiconimage.js';
-
-const {iconImageCache} = goog.require('ol.style');
-
-const IconImage = goog.require('ol.style.IconImage');
 
 const ImageState = goog.requireType('ol.ImageState');
 
@@ -21,8 +20,8 @@ const ImageState = goog.requireType('ol.ImageState');
  * @return {IconImage} Icon image.
  * @suppress {duplicate}
  */
-IconImage.get = function(image, src, size, crossOrigin, imageState, color) {
-  var iconImage = iconImageCache.get(src, crossOrigin, color);
+IconImage.prototype.get = function(image, src, size, crossOrigin, imageState, color) {
+  var iconImage = shared.get(src, crossOrigin, color);
   if (!iconImage) {
     iconImage = new FallbackIconImage(image, src, size, crossOrigin, imageState, color);
     iconImageCache.set(src, crossOrigin, color, iconImage);
