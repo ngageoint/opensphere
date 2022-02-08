@@ -1,16 +1,16 @@
 goog.declareModuleId('os.mixin.canvasreplay');
 
-const {getUid} = goog.require('ol');
-const {equals} = goog.require('ol.array');
-const {intersects} = goog.require('ol.extent');
-const length = goog.require('ol.geom.flat.length');
-const textpath = goog.require('ol.geom.flat.textpath');
-const {transform2D} = goog.require('ol.geom.flat.transform');
-const canvas = goog.require('ol.render.canvas');
-const Instruction = goog.require('ol.render.canvas.Instruction');
-const Replay = goog.require('ol.render.canvas.Replay');
-const {TEXT_ALIGN} = goog.require('ol.render.replay');
-const olTransform = goog.require('ol.transform');
+import {getUid} from 'ol';
+import {equals} from 'ol/array';
+import {intersects} from 'ol/extent';
+import length from 'ol/geom/flat/length';
+import textpath from 'ol/geom/flat/textpath';
+import {transform2D} from 'ol/geom/flat/transform';
+import {defaultPadding} from 'ol/render/canvas';
+import Replay from 'ol/render/canvas/ExecutorGroup';
+import Instruction from 'ol/render/canvas/Instruction';
+import {TEXT_ALIGN} from 'ol/render/canvas/TextBuilder';
+import {setFromArray} from 'ol/transform';
 
 const Feature = goog.requireType('ol.Feature');
 const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
@@ -59,7 +59,7 @@ export const init = () => {
       pixelCoordinates = transform2D(
           this.coordinates, 0, this.coordinates.length, 2,
           transform, this.pixelCoordinates_);
-      olTransform.setFromArray(this.renderedTransform_, transform);
+      setFromArray(this.renderedTransform_, transform);
     }
     // removed skipFeatures because that is just superfluous
     var i = 0; // instruction index
@@ -191,7 +191,7 @@ export const init = () => {
             backgroundFill = /** @type {boolean} */ (instruction[17]);
             backgroundStroke = /** @type {boolean} */ (instruction[18]);
           } else {
-            padding = canvas.defaultPadding;
+            padding = defaultPadding;
             backgroundFill = backgroundStroke = false;
           }
 
@@ -249,7 +249,7 @@ export const init = () => {
                       /** @type {number} */ (part[0]), /** @type {number} */ (part[1]), label,
                       anchorX, anchorY, declutterGroup, label.height, 1, 0, 0,
                       /** @type {number} */ (part[3]), textScale, false, label.width,
-                      canvas.defaultPadding, null, null);
+                      defaultPadding, null, null);
                 }
               }
               if (fillKey) {
@@ -263,7 +263,7 @@ export const init = () => {
                       /** @type {number} */ (part[0]), /** @type {number} */ (part[1]), label,
                       anchorX, anchorY, declutterGroup, label.height, 1, 0, 0,
                       /** @type {number} */ (part[3]), textScale, false, label.width,
-                      canvas.defaultPadding, null, null);
+                      defaultPadding, null, null);
                 }
               }
             }
