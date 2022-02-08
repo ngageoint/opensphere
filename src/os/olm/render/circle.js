@@ -3,7 +3,7 @@ goog.declareModuleId('os.olm.render.Circle');
 
 import {circular} from 'ol/geom/Polygon';
 import {toLonLat} from 'ol/proj';
-import Sphere from 'ol/sphere';
+import {DEFAULT_RADIUS} from 'ol/sphere';
 
 import {interpolateGeom} from '../../interpolate.js';
 import UnitManager from '../../unit/unitmanager.js';
@@ -129,4 +129,4 @@ export default class Circle extends BaseShape {
  * @type {Sphere}
  * @const
  */
-Circle.WGS84_SPHERE = new Sphere(6378137);
+Circle.WGS84_SPHERE = DEFAULT_RADIUS;
