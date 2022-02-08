@@ -1,14 +1,14 @@
 goog.declareModuleId('os.ol.feature');
 
-const Feature = goog.require('ol.Feature');
-const Circle = goog.require('ol.geom.Circle');
-const LineString = goog.require('ol.geom.LineString');
-const LinearRing = goog.require('ol.geom.LinearRing');
-const MultiLineString = goog.require('ol.geom.MultiLineString');
-const MultiPoint = goog.require('ol.geom.MultiPoint');
-const MultiPolygon = goog.require('ol.geom.MultiPolygon');
-const Point = goog.require('ol.geom.Point');
-const Polygon = goog.require('ol.geom.Polygon');
+import Feature from 'ol/Feature';
+import Circle from 'ol/geom/Circle';
+import LinearRing from 'ol/geom/LinearRing';
+import LineString from 'ol/geom/LineString';
+import MultiLineString from 'ol/geom/MultiLineString';
+import MultiPoint from 'ol/geom/MultiPoint';
+import MultiPolygon from 'ol/geom/MultiPolygon';
+import Point from 'ol/geom/Point';
+import Polygon from 'ol/geom/Polygon';
 
 
 /**
