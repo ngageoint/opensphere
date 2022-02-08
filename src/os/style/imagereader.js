@@ -1,8 +1,7 @@
 goog.declareModuleId('os.style.ImageReader');
 
+import Image from 'ol/style/Image';
 import AbstractReader from './abstractreader.js';
-
-const Image = goog.require('ol.style.Image');
 
 
 /**
