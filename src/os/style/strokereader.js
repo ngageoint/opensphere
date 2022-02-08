@@ -1,11 +1,11 @@
 goog.declareModuleId('os.style.StrokeReader');
 
+import {asString} from 'ol/color';
+import Stroke from 'ol/style/Stroke';
 import AbstractReader from './abstractreader.js';
 import {DEFAULT_LAYER_COLOR, DEFAULT_STROKE_WIDTH} from './style.js';
 
 const {hashCode} = goog.require('goog.string');
-const {asString} = goog.require('ol.color');
-const Stroke = goog.require('ol.style.Stroke');
 
 
 /**
