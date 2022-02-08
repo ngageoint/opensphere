@@ -1,5 +1,24 @@
 goog.declareModuleId('os.MapContainer');
 
+import Collection from 'ol/Collection';
+import {listenOnce, unlistenByKey} from 'ol/events';
+import {buffer, createEmpty, equals, scaleFromCenter, getCenter, getHeight, getWidth} from 'ol/extent';
+import Feature from 'ol/Feature';
+import {MAC} from 'ol/has';
+import LayerGroup from 'ol/layer/Group';
+import ImageLayer from 'ol/layer/Image';
+import Layer from 'ol/layer/Layer';
+import Tile from 'ol/layer/Tile';
+import OLVectorLayer from 'ol/layer/Vector';
+import VectorTile from 'ol/layer/VectorTile';
+import MapEventType from 'ol/MapEventType';
+import ObjectEventType from 'ol/ObjectEventType';
+import {get, fromLonLat, toLonLat, transformExtent} from 'ol/proj';
+import Type from 'ol/renderer/Type';
+import OLVectorSource from 'ol/source/Vector';
+import {createForProjection} from 'ol/tilegrid';
+import View from 'ol/View';
+
 import EventType from './action/eventtype.js';
 import {isColorString} from './color.js';
 import CommandProcessor from './command/commandprocessor.js';
@@ -78,26 +97,6 @@ const GoogEventType = goog.require('goog.events.EventType');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const log = goog.require('goog.log');
 const {toDegrees, toRadians} = goog.require('goog.math');
-
-const ol = goog.require('ol');
-const Collection = goog.require('ol.Collection');
-const Feature = goog.require('ol.Feature');
-const MapEventType = goog.require('ol.MapEventType');
-const ObjectEventType = goog.require('ol.ObjectEventType');
-const View = goog.require('ol.View');
-const olEvents = goog.require('ol.events');
-const olExtent = goog.require('ol.extent');
-const has = goog.require('ol.has');
-const LayerGroup = goog.require('ol.layer.Group');
-const ImageLayer = goog.require('ol.layer.Image');
-const Layer = goog.require('ol.layer.Layer');
-const Tile = goog.require('ol.layer.Tile');
-const OLVectorLayer = goog.require('ol.layer.Vector');
-const VectorTile = goog.require('ol.layer.VectorTile');
-const olProj = goog.require('ol.proj');
-const Type = goog.require('ol.renderer.Type');
-const OLVectorSource = goog.require('ol.source.Vector');
-const {createForProjection} = goog.require('ol.tilegrid');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
@@ -204,6 +203,9 @@ export default class MapContainer extends EventTarget {
      */
     this.overrideFailIfMajorPerformanceCaveat_ = false;
 
+    this.postRenderListenKey = null;
+    this.propertyChangeListenKey = null;
+
     dispatcher.getInstance().listen(ActionEventType.ZOOM, this.onZoom_, false, this);
 
     dispatcher.getInstance().listen(EventType.RESET_VIEW, this.resetView, false, this);
@@ -234,7 +236,7 @@ export default class MapContainer extends EventTarget {
     if (this.map_) {
       var view = this.map_.getView();
       if (view) {
-        olEvents.unlisten(view, ObjectEventType.PROPERTYCHANGE, this.onViewChange_, this);
+        unlistenByKey(this.propertyChangeListenKey);
       }
 
       this.map_.dispose();
@@ -349,7 +351,7 @@ export default class MapContainer extends EventTarget {
    * @return {ol.Extent}
    */
   getViewExtent() {
-    return this.map_ ? this.map_.getExtent() : olExtent.createEmpty();
+    return this.map_ ? this.map_.getExtent() : createEmpty();
   }
 
   /**
@@ -427,7 +429,7 @@ export default class MapContainer extends EventTarget {
   updateSize() {
     if (this.map_) {
       // wait for the map to finish rendering with 0 size, then update the size to the correct value
-      olEvents.listenOnce(this.map_, MapEventType.POSTRENDER, () => {
+      this.postRenderListenKey = listenOnce(this.map_, MapEventType.POSTRENDER, () => {
         var map = this.map_;
         ui.waitForAngular(function() {
           map.updateSize();
@@ -457,13 +459,13 @@ export default class MapContainer extends EventTarget {
     if (this.map_) {
       var oldView = this.map_.getView();
       if (oldView) {
-        olEvents.unlisten(oldView, ObjectEventType.PROPERTYCHANGE, this.onViewChange_, this);
+        unlistenByKey(this.propertyChangeListenKey);
       }
 
       this.map_.setView(view);
 
       if (view) {
-        olEvents.listen(view, ObjectEventType.PROPERTYCHANGE, this.onViewChange_, this);
+        this.propertyChangeListenKey = listen(view, ObjectEventType.PROPERTYCHANGE, this.onViewChange_, this);
       }
     }
   }
@@ -538,7 +540,7 @@ export default class MapContainer extends EventTarget {
         extent = extent.slice();
 
         if (opt_buffer && opt_buffer > 0) {
-          olExtent.scaleFromCenter(extent, opt_buffer);
+          scaleFromCenter(extent, opt_buffer);
 
           // Clamp the extent within the current map projection.
           const projExtent = osMap.PROJECTION.getExtent();
@@ -546,9 +548,9 @@ export default class MapContainer extends EventTarget {
         } else {
           // THIN-6449: prevent flying to excessive zoom levels if a buffer wasn't provided. if one was provided,
           // assume the caller knows what they are doing.
-          var buffer = MapContainer.FLY_ZOOM_BUFFER_;
-          if (olExtent.getWidth(extent) < buffer && olExtent.getHeight(extent) < buffer) {
-            extent = olExtent.buffer(extent, buffer);
+          var zoomBuffer = MapContainer.FLY_ZOOM_BUFFER_;
+          if (getWidth(extent) < zoomBuffer && getHeight(extent) < zoomBuffer) {
+            extent = buffer(extent, zoomBuffer);
           }
         }
 
@@ -566,7 +568,7 @@ export default class MapContainer extends EventTarget {
           var camera = this.getWebGLCamera();
           var size = map.getSize();
           if (camera && size) {
-            var center = olExtent.getCenter(extent);
+            var center = getCenter(extent);
             var resolution = view.getResolutionForExtent(extent, size);
 
             if (opt_maxZoom != null) {
@@ -613,9 +615,9 @@ export default class MapContainer extends EventTarget {
       } else {
         var extent = /** @type {!Array<?{geometry: ol.geom.Geometry}>} */ (context).reduce(
             reduceExtentFromGeometries,
-            olExtent.createEmpty());
+            createEmpty());
 
-        if (!olExtent.isEmpty(extent)) {
+        if (!isEmpty(extent)) {
           CommandProcessor.getInstance().addCommand(new FlyToExtent(extent, undefined, -1));
         }
       }
@@ -745,7 +747,7 @@ export default class MapContainer extends EventTarget {
     var moveGrp = 'Map Movement Controls';
     var zoomGrp = 'Map Zoom Controls';
     var controls = Controls.getInstance();
-    var platformModifier = has.MAC ? KeyCodes.META : KeyCodes.CTRL;
+    var platformModifier = MAC ? KeyCodes.META : KeyCodes.CTRL;
 
     // Map
     controls.addControl(genMapGrp, 1, 'Draw Geometry',
@@ -861,7 +863,7 @@ export default class MapContainer extends EventTarget {
     referenceGroup.setPriority(100);
     referenceGroup.setOSType(LayerType.REF);
 
-    osMap.setProjection(olProj.get(/** @type {string} */ (
+    osMap.setProjection(get(/** @type {string} */ (
       Settings.getInstance().get(osMap.PROJECTION_KEY, osMap.PROJECTION.getCode()))));
 
     osMap.setTileGrid(createForProjection(osMap.PROJECTION, ol.DEFAULT_MAX_ZOOM, [512, 512]));
@@ -902,7 +904,7 @@ export default class MapContainer extends EventTarget {
     });
 
     // update labels when the view resolution changes
-    olEvents.listen(view, ObjectEventType.PROPERTYCHANGE, this.onViewChange_, this);
+    this.propertyChangeListenKey = listen(view, ObjectEventType.PROPERTYCHANGE, this.onViewChange_, this);
 
     // export the map's getPixelFromCoordinate/getCoordinateFromPixel methods for tests
     window['pfc'] = this.map_.getPixelFromCoordinate.bind(this.map_);
@@ -1084,7 +1086,7 @@ export default class MapContainer extends EventTarget {
     // always translate the center point to EPSG:4326
     var center = view.getCenter() || osMap.DEFAULT_CENTER;
     if (osMap.PROJECTION != EPSG4326) {
-      center = olProj.toLonLat(center, osMap.PROJECTION);
+      center = toLonLat(center, osMap.PROJECTION);
       center[0] = normalizeLongitude(center[0], undefined, undefined, EPSG4326);
     }
 
@@ -1144,7 +1146,7 @@ export default class MapContainer extends EventTarget {
       if (zoom == null) {
         // check if the view extent is available, or {@link osMap.resolutionForDistance} will fail
         var viewExtent = this.getViewExtent();
-        if (olExtent.equals(viewExtent, osMap.ZERO_EXTENT)) {
+        if (equals(viewExtent, osMap.ZERO_EXTENT)) {
           return false;
         }
 
@@ -1159,7 +1161,7 @@ export default class MapContainer extends EventTarget {
       }
 
       // camera state is saved in EPSG:4326
-      var center = olProj.fromLonLat(cameraState.center, osMap.PROJECTION);
+      var center = fromLonLat(cameraState.center, osMap.PROJECTION);
       view.setCenter(center);
       view.setRotation(toRadians(-cameraState.heading));
       view.setZoom(zoom);
@@ -1899,7 +1901,7 @@ export default class MapContainer extends EventTarget {
     var center = MapContainer.getInstance().getMap().getView().getCenter();
 
     if (center) {
-      center = olProj.toLonLat(center, osMap.PROJECTION);
+      center = toLonLat(center, osMap.PROJECTION);
     }
 
     return (submatch.indexOf('a') > -1 ? center[1] : center[0]).toString();
@@ -1914,7 +1916,7 @@ export default class MapContainer extends EventTarget {
    * @private
    */
   static replaceExtent_(match, submatch, offset, str) {
-    var extent = olProj.transformExtent(
+    var extent = transformExtent(
         MapContainer.getInstance().getMap().getExtent(),
         osMap.PROJECTION,
         EPSG4326);
@@ -1956,7 +1958,7 @@ export default class MapContainer extends EventTarget {
   static replaceExtentNormalized_(match, submatch, offset, str) {
     var extent = MapContainer.getInstance().getMap().getExtent();
 
-    extent = olProj.transformExtent(extent, osMap.PROJECTION, EPSG4326);
+    extent = transformExtent(extent, osMap.PROJECTION, EPSG4326);
     extent = normalizeExtent(extent, undefined, undefined, EPSG4326);
     return MapContainer.replaceExtentInternal_(extent, match, submatch, offset, str);
   }
