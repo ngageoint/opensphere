@@ -2,7 +2,6 @@ goog.declareModuleId('os');
 
 import './mixin/closuremixin.js';
 import './ol/license.js';
-import './ol/typedefs.js';
 import * as keys from './metrics/metricskeys.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
