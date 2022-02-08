@@ -1,5 +1,14 @@
 goog.declareModuleId('os.source.Vector');
 
+import {getUid} from 'ol';
+import Collection from 'ol/Collection';
+import {listen, unlistenByKey} from 'ol/events';
+import OLEventType from 'ol/events/EventType';
+import {extend, createEmpty, getWidth, getHeight, isEmpty} from 'ol/extent';
+import GeometryType from 'ol/geom/GeometryType';
+import OLVectorSource from 'ol/source/Vector';
+import VectorEventType from 'ol/source/VectorEventType';
+
 import '../mixin/rbushmixin.js';
 
 import EventType from '../action/eventtype.js';
@@ -67,14 +76,6 @@ const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
-const {getUid} = goog.require('ol');
-const Collection = goog.require('ol.Collection');
-const events = goog.require('ol.events');
-const OLEventType = goog.require('ol.events.EventType');
-const olExtent = goog.require('ol.extent');
-const GeometryType = goog.require('ol.geom.GeometryType');
-const OLVectorSource = goog.require('ol.source.Vector');
-const VectorEventType = goog.require('ol.source.VectorEventType');
 
 const Logger = goog.requireType('goog.log.Logger');
 const Feature = goog.requireType('ol.Feature');
@@ -595,7 +596,7 @@ export default class Vector extends OLVectorSource {
     // these listeners have been disabled for performance reasons. the original removeFeatureInternal has an assertion
     // to make sure featureChangeKeys_ has an entry for the feature id, so we remove that as well.
     this.featureChangeKeys_[featureKey] = [
-      events.listen(feature, OLEventType.CHANGE, this.handleFeatureChange_, this)
+      listen(feature, OLEventType.CHANGE, this.handleFeatureChange_, this)
     ];
   }
 
@@ -1134,7 +1135,7 @@ export default class Vector extends OLVectorSource {
 
       osFeature.forEachGeometry(feature, Vector.updateScratchExtent_);
 
-      if (!olExtent.isEmpty(extent)) {
+      if (!isEmpty(extent)) {
         var id = getUid(feature);
         if (id in this.featuresRtree_.items_) {
           this.featuresRtree_.update(extent, feature);
@@ -1953,7 +1954,7 @@ export default class Vector extends OLVectorSource {
       this.featureCount_ = Math.max(this.featureCount_ - 1, 0);
       this.unprocessFeature(feature);
 
-      this.featureChangeKeys_[featureKey].forEach(events.unlistenByKey);
+      this.featureChangeKeys_[featureKey].forEach(unlistenByKey);
       /** @type {Object} */ (this.featureChangeKeys_)[featureKey] = undefined;
 
       if (feature.id_ !== undefined) {
@@ -2663,11 +2664,11 @@ export default class Vector extends OLVectorSource {
     if (geometry) {
       var listenKey = this.dynamicListeners_[featureId];
       if (listenKey) {
-        events.unlistenByKey(listenKey);
+        unlistenByKey(listenKey);
       }
 
       // if the original geometry changes, recreate the displayed line
-      this.dynamicListeners_[featureId] = events.listen(feature, GoogEventType.PROPERTYCHANGE,
+      this.dynamicListeners_[featureId] = listen(feature, GoogEventType.PROPERTYCHANGE,
           this.onDynamicFeatureChange, this);
     }
   }
@@ -2685,7 +2686,7 @@ export default class Vector extends OLVectorSource {
     var featureId = /** @type {string} */ (feature.id_);
     var listenKey = this.dynamicListeners_[featureId];
     if (listenKey) {
-      events.unlistenByKey(listenKey);
+      unlistenByKey(listenKey);
       this.dynamicListeners_[featureId] = undefined;
     }
   }
@@ -2910,7 +2911,7 @@ export default class Vector extends OLVectorSource {
         // simplify complex geometries to avoid taking a year computing the contained features. the threshold is
         // 0.25%, 0.5% or 1% of the maximum height/width of the geometry's extent. this seemed to be a
         // good compromise between performance and precision.
-        var maxDistance = Math.max(olExtent.getWidth(extent), olExtent.getHeight(extent));
+        var maxDistance = Math.max(getWidth(extent), getHeight(extent));
         var numFeatures = features.length;
         var per = 0;
         per = numFeatures > 10000 ? 0.0025 : per;
@@ -3719,7 +3720,7 @@ export default class Vector extends OLVectorSource {
     if (g) {
       var e = osExtent.getFunctionalExtent(g);
       if (e) {
-        olExtent.extend(scratchExtent, e);
+        extend(scratchExtent, e);
       }
     }
   }
@@ -3758,4 +3759,4 @@ Vector.VISIBLE = 'visible';
 /**
  * @type {ol.Extent}
  */
-const scratchExtent = olExtent.createEmpty();
+const scratchExtent = createEmpty();
