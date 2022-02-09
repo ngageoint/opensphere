@@ -320,14 +320,12 @@ export const getLayersFromContext = function(context) {
  * @param {Context} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfSupported = function(context) {
-  this.visible = false;
-
+export const visibleIfSupported = function(context) {
   if (this.eventType && context && context.length > 0) {
     var layers = getLayersFromContext(context);
 
     // test that all action args contain a layer that supports the given action type
-    this.visible = layers.length == context.length && layers.every(function(layer) {
+    layers.length == context.length && layers.every(function(layer) {
       return this.eventType ? layer.supportsAction(this.eventType, context) : false;
     }, this);
   }

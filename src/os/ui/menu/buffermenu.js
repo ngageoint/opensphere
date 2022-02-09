@@ -54,7 +54,7 @@ export const layerSetup = function() {
       eventType: EventType.BUFFER,
       tooltip: 'Create buffer regions around loaded data',
       icons: ['<i class="fa fa-fw ' + ICON + '"></i>'],
-      beforeRender: false,
+      beforeRender: layerMenu.visibleIfSupported(),
       handler: handleLayerBufferEvent,
       metricKey: LayerMetrics.CREATE_BUFFER
     });
