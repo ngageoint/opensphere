@@ -27,7 +27,7 @@ import {getMapContainer} from '../../../map/mapinstance.js';
 import {getMaxFeatures} from '../../../ogc/ogc.js';
 import {ROOT} from '../../../os.js';
 import SourceClass from '../../../source/sourceclass.js';
-import {getLayersFromContext, visibleIfSupported} from '../../../ui/menu/layermenu.js';
+import * as layerMenu from '../../../ui/menu/layermenu.js';
 import Menu from '../../menu/menu.js';
 import MenuItem from '../../menu/menuitem.js';
 import MenuItemType from '../../menu/menuitemtype.js';
@@ -743,7 +743,7 @@ export class Controller {
    */
   handleGoTo(event) {
     // aggregate the features and execute flyTo, in case they have altitude and pure extent wont cut it
-    const layers = getLayersFromContext(event.getContext());
+    const layers = layerMenu.getLayersFromContext(event.getContext());
     const features = layers.reduce((feats, layer) => {
       let source = layer.getSource();
       if (source instanceof OLVectorSource) {
@@ -984,7 +984,7 @@ export const getCompareController = () => {
 const canMove = function(target, context) {
   this.visible = true;
 
-  const layers = getLayersFromContext(context);
+  const layers = layerMenu.getLayersFromContext(context);
   const controller = getCompareController();
 
   if (controller && layers.some((l) => controller.hasLayer(l, target))) {
