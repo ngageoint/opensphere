@@ -295,7 +295,7 @@ export class Controller {
         icons: ['<i class="fa fa-fw fa-fighter-jet"></i>'],
         tooltip: 'Repositions the map to show the layer',
         handler: this.handleGoTo.bind(this),
-        beforeRender: visibleIfSupported,
+        beforeRender: layerMenu.visibleIfSupported(),
         sort: 10
       }, {
         label: 'Remove',
