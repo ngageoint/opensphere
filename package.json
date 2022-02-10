@@ -39,35 +39,6 @@
         "./scripts/electron/preload.js"
       ]
     },
-    "gcc": {
-      "language_in": "ECMASCRIPT_2020",
-      "conformance_configs": "conformance_config.textproto",
-      "externs": [
-        "google-closure-compiler/contrib/externs/jquery-3.3.js",
-        "google-closure-compiler/contrib/externs/angular-1.6-http-promise_templated.js",
-        "google-closure-compiler/contrib/externs/angular-1.6-resource.js",
-        "google-closure-compiler/contrib/externs/angular-1.6-q_templated.js",
-        "google-closure-compiler/contrib/externs/svg.js",
-        "openlayers/externs/closure-compiler.js"
-      ],
-      "entry_point": [
-        "goog:ol.ext",
-        "goog:osmain"
-      ],
-      "extra_annotation_name": [
-        "api",
-        "observable"
-      ],
-      "define": [
-        "os.SETTINGS=config/settings.json"
-      ],
-      "hide_warnings_for": [
-        ".build/",
-        "/google-closure-library/",
-        "/openlayers/",
-        "/ol-cesium/"
-      ]
-    },
     "moduleDefines": {
       "os.file.ZIP_PATH": "zip-js/WebContent",
       "plugin.cesium.LIBRARY_BASE_PATH": "cesium/Build/CesiumUnminified",
@@ -101,7 +72,7 @@
     "lint:js": "eslint --cache 'src/**/*.js' 'tasks/**/*.js' 'test/**/*.js'",
     "lint": "run-p lint:js lint:css lint:html",
     "precompile:resolve": "cp addlayer.js .build",
-    "compile:resolve": "os-resolve --outputDir .build --defineRoots $(cat .build/version)",
+    "compile:resolve": "os-resolve --exclude gcc --outputDir .build --defineRoots $(cat .build/version)",
     "postcompile:resolve": "node scripts/addlayer-replace.js",
     "compile:debugcss": "for i in $(ls -1 .build/themes | grep node-sass-args); do sass --quiet $(cat .build/themes/$i):.build/themes/${i%.node-sass-args}.combined.css & pids=\"$pids $!\"; done; wait $pids;",
     "postcompile:debugcss": "for i in $(ls -1 .build/themes | grep combined.css | grep -v combined.css.map); do postcss .build/themes/$i --no-map -u autoprefixer -r & pids=\"$pids $!\"; done; wait $pids",
