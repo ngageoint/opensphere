@@ -1,12 +1,11 @@
 goog.declareModuleId('os.ui.color.ColorPaletteUI');
 
-import {toHexString} from '../../color.js';
+import * as Color from '../../color.js';
 import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import ColorPaletteEventType from './colorpaletteeventtype.js';
 
 const {getViewportSize} = goog.require('goog.dom');
-const ColorPicker = goog.require('goog.ui.ColorPicker');
 
 
 /**
@@ -71,7 +70,7 @@ export class Controller {
      */
     this['showReset'] = $scope['showReset'] === 'true';
 
-    var colors = $scope['colors'] || ColorPicker.SIMPLE_GRID_COLORS;
+    var colors = $scope['colors'] || Color.SIMPLE_COLORS;
     var columns = $scope['columns'] || 7;
     var rows = [];
     for (var i = 0, ii = colors.length; i < ii; i++) {
@@ -139,7 +138,7 @@ export class Controller {
    * @export
    */
   getTitle(color) {
-    return toHexString(color);
+    return Color.toHexString(color);
   }
 
   /**
