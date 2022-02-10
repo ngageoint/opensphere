@@ -1,3 +1,5 @@
+import * as goog from 'google-closure-library/closure/goog/base.js';
+
 goog.declareModuleId('osmain');
 
 import './mixin/mixin.js';
