@@ -3,7 +3,6 @@ goog.declareModuleId('os.ui.columnactions.actions.UrlColumnAction');
 import AbstractColumnAction from '../abstractcolumnaction.js';
 
 const {buildString} = goog.require('goog.string');
-const {open} = goog.require('goog.window');
 
 
 /**
@@ -33,7 +32,7 @@ export default class UrlColumnAction extends AbstractColumnAction {
    * @inheritDoc
    */
   execute(value) {
-    open(this.processValue_(value), {'target': '_blank'});
+    window.open(this.processValue_(value), '_blank');
   }
 
   /**
