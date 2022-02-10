@@ -1,8 +1,7 @@
-const ClosurePlugin = require('@ngageoint/closure-webpack-plugin');
 const path = require('path');
+const ClosurePlugin = require('@ngageoint/closure-webpack-plugin');
 
 const buildDir = path.resolve(__dirname, '.build');
-const gccOptions = require(path.join(buildDir, 'gcc-webpack'));
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production' || !argv.mode;
