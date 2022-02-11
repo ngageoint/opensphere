@@ -168,8 +168,8 @@ export default class BaseLocalSettingsStorage {
    * @private
    */
   onSet_(deferredListResults) {
-    var success = goog.array.every(deferredListResults, function(deferredListResult) {
-      return deferredListResult[0];
+    var success = deferredListResults.every((result) => {
+      return result[0];
     });
 
     if (!success) {

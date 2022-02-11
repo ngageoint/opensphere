@@ -939,7 +939,7 @@ export class Controller extends VectorLayerUICtrl {
       var refreshInterval;
 
       // only show refresh options if all sources support it
-      this['showRefresh'] = googArray.every(items, function(item) {
+      this['showRefresh'] = items.every((item) => {
         var source = item.getSource();
         if (source && (source instanceof VectorSource || source instanceof UrlTile &&
             source.isRefreshEnabled())) {

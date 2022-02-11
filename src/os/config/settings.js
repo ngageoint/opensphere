@@ -552,8 +552,8 @@ export default class Settings extends EventTarget {
    * @private
    */
   onClearedOthers_(deferredListResults) {
-    var success = googArray.every(deferredListResults, function(deferredListResult) {
-      return deferredListResult[0];
+    var success = deferredListResults.every((result) => {
+      return result[0];
     }, this);
 
     if (!success) {

@@ -4,7 +4,6 @@ import MapContainer from '../../os/mapcontainer.js';
 import TimelineController from '../../os/time/timelinecontroller.js';
 
 const Timer = goog.require('goog.Timer');
-const googArray = goog.require('goog.array');
 
 const {default: ILayer} = goog.requireType('os.layer.ILayer');
 
@@ -21,7 +20,7 @@ export const WAIT_TIME = 100;
  */
 export const onReady = function(callback) {
   // Check if we are ready to take picture
-  var ready = googArray.every(MapContainer.getInstance().getLayers(), function(layer) {
+  var ready = MapContainer.getInstance().getLayers().every((layer) => {
     layer = /** @type {ILayer} */ (layer);
     return !layer.isLoading();
   });
