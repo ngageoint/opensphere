@@ -514,7 +514,7 @@ export default class ImportActionManager extends EventTarget {
         this.defaultsLoaded[id] = osImActionDefault.load(id, defaultActions[filterKey]).then((entries) => {
           if (entries && entries.length) {
             // add all of the default entries from the right, we are inserting them from the top, so this maintains order
-            goog.array.forEachRight(entries, function(entry) {
+            entries.slice().reverse().forEach(function(entry) {
               // add the entry to the manager but skip apply to defer the refresh event
               this.addActionEntry(entry, 0, undefined, true);
             }, this);
