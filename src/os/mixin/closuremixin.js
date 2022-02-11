@@ -174,18 +174,20 @@ export const init = () => {
    * @suppress {duplicate}
    */
   googObject.unsafeClone = function(obj) {
-    var type = goog.typeOf(obj);
-    if (type == 'object' || type == 'array') {
-      if (obj.clone) {
-        return obj.clone();
-      }
-      var clone = type == 'array' ? [] : {};
-      for (var key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          clone[key] = googObject.unsafeClone(obj[key]);
+    if (obj !== null) {
+      var type = typeof obj;
+      if (type == 'object') {
+        if (obj.clone) {
+          return obj.clone();
         }
+        var clone = Array.isArray(obj) ? [] : {};
+        for (var key in obj) {
+          if (obj.hasOwnProperty(key)) {
+            clone[key] = googObject.unsafeClone(obj[key]);
+          }
+        }
+        return clone;
       }
-      return clone;
     }
 
     return obj;

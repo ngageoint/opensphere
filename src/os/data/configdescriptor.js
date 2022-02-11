@@ -304,7 +304,7 @@ export default class ConfigDescriptor extends LayerSyncDescriptor {
     for (var key in obj) {
       var thing = obj[key];
 
-      if (goog.typeOf(thing) !== 'object' || thing.constructor === Object) {
+      if (thing === null || Array.isArray(thing) || typeof thing !== 'object' || thing.constructor === Object) {
         base[key] = thing;
       }
     }

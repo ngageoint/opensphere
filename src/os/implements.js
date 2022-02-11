@@ -33,11 +33,11 @@ goog.declareModuleId('os.implements');
  */
 const implementsFn = function(value, interfaceId) {
   if (value != null) {
-    var type = goog.typeOf(value);
+    var type = typeof value;
     if (type === 'function') {
       implementsFn.addImplements(/** @type {!Function} */ (value), interfaceId);
       return true;
-    } else if (type === 'object') {
+    } else if (type === 'object' && !Array.isArray(value)) {
       return implementsFn.getImplements(/** @type {!Object} */ (value), interfaceId);
     }
   }

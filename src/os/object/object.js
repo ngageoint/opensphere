@@ -103,13 +103,13 @@ export const merge = function(from, to, opt_overwrite, opt_nullOverwrite) {
  * Determines if the provided value is a primitive.
  *
  * @param {?} value The value to check.
- * @param {string=} opt_type The type from `goog.typeOf`, to avoid multiple calls.
+ * @param {string=} opt_type The type, to avoid multiple calls.
  * @return {boolean} Whether or not the value is a primitive.
  */
 export const isPrimitive = function(value, opt_type) {
   if (value) {
-    var type = opt_type || goog.typeOf(value);
-    if (type == 'object') {
+    var type = opt_type || typeof value;
+    if (type == 'object' && !Array.isArray(value)) {
       // if an object has multiple prototypes in its chain, it extends Object and will be considered a primitive. the
       // first prototype should never be null here, so that test is primarily a sanity check.
       var proto = Object.getPrototypeOf(value);
@@ -199,7 +199,7 @@ export const expand = function(obj, opt_delim) {
  * @param {!Array<!string|!number>|!string} keys
  */
 export const deleteValue = function(obj, keys) {
-  if (goog.typeOf(keys) === 'string') {
+  if (typeof keys === 'string') {
     keys = keys.split('.');
   }
 
@@ -207,7 +207,7 @@ export const deleteValue = function(obj, keys) {
     var lastKey = keys[keys.length - 1];
     var oneLessKeys = keys.slice(0, keys.length - 1);
     var oneLessObject = getValueByKeys(obj, oneLessKeys);
-    if (goog.typeOf(oneLessObject) == 'object') {
+    if (oneLessObject !== null && typeof oneLessObject == 'object' && !Array.isArray(oneLessObject)) {
       delete oneLessObject[lastKey];
       if (getCount(/** @type {Object} */ (oneLessObject)) === 0) {
         // no more keys, delete parents
@@ -338,20 +338,22 @@ export const getCompareFieldValue = function(field, o) {
  * @template T
  */
 export const unsafeClone = function(obj) {
-  var type = goog.typeOf(obj);
-  if (type == 'object' || type == 'array') {
-    if (obj.clone) {
-      return obj.clone();
-    }
-    var clone = type == 'array' ? [] : {};
-    for (var key in obj) {
-      // make sure it's a property on the object and not the prototype. this protects against adding polyfills to the
-      // new object as a property.
-      if (obj.hasOwnProperty(key)) {
-        clone[key] = unsafeClone(obj[key]);
+  if (obj !== null) {
+    var type = typeof obj;
+    if (type == 'object') {
+      if (obj.clone) {
+        return obj.clone();
       }
+      var clone = Array.isArray(obj) ? [] : {};
+      for (var key in obj) {
+        // make sure it's a property on the object and not the prototype. this protects against adding polyfills to the
+        // new object as a property.
+        if (obj.hasOwnProperty(key)) {
+          clone[key] = unsafeClone(obj[key]);
+        }
+      }
+      return clone;
     }
-    return clone;
   }
 
   return obj;

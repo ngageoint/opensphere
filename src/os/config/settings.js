@@ -750,7 +750,7 @@ export default class Settings extends EventTarget {
     var namespacedKeys = osConfigNamespace.getPrefixedKeys(keys);
     osObject.deleteValue(this.actualConfig_[ConfigType.PREFERENCE], namespacedKeys);
 
-    if (goog.typeOf(oldVal) === 'object') {
+    if (oldVal !== null && !Array.isArray(oldVal) && typeof oldVal === 'object') {
       // delete elements of a deeply nested object
       this.markKeysForDelete_(keys, undefined, oldVal);
     } else {
@@ -812,7 +812,7 @@ export default class Settings extends EventTarget {
    * @private
    */
   markKeysForDelete_(keys, newVal, oldVal) {
-    if (goog.typeOf(oldVal) === 'object') {
+    if (oldVal !== null && !Array.isArray(oldVal) && typeof oldVal === 'object') {
       var oldObjKeys = Object.keys(osObject.reduce(oldVal));
       var newObjKeys = newVal != null ? Object.keys(osObject.reduce(newVal)) : [];
       var keysAsStr = keys.join('.');
