@@ -57,7 +57,6 @@
         "ol-cesium/externs/olcsx.js"
       ],
       "entry_point": [
-        "goog:ol.ext",
         "goog:osmain"
       ],
       "extra_annotation_name": [
@@ -108,7 +107,7 @@
     "lint:js": "eslint --cache 'src/**/*.js' 'tasks/**/*.js' 'test/**/*.js'",
     "lint": "run-p lint:js lint:css lint:html",
     "precompile:resolve": "cp addlayer.js .build",
-    "compile:resolve": "os-resolve --outputDir .build --defineRoots $(cat .build/version)",
+    "compile:resolve": "os-resolve --outputDir .build --defineRoots $(cat .build/version); sed -i.bu \"s|goog.require('osmain')|import * as main from '../src/os/main.js'|g\" .build/index.js",
     "postcompile:resolve": "node scripts/addlayer-replace.js",
     "compile:debugcss": "for i in $(ls -1 .build/themes | grep node-sass-args); do sass --quiet $(cat .build/themes/$i):.build/themes/${i%.node-sass-args}.combined.css & pids=\"$pids $!\"; done; wait $pids;",
     "postcompile:debugcss": "for i in $(ls -1 .build/themes | grep combined.css | grep -v combined.css.map); do postcss .build/themes/$i --no-map -u autoprefixer -r & pids=\"$pids $!\"; done; wait $pids",
