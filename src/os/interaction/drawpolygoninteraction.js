@@ -1,7 +1,7 @@
 goog.declareModuleId('os.interaction.DrawPolygon');
 
-import {getWidth} from 'ol/extent';
-import {toLonLat} from 'ol/proj';
+import {getWidth} from 'ol/src/extent';
+import {toLonLat} from 'ol/src/proj';
 import ViewHint from 'ol/ViewHint';
 
 import I3DSupport from '../i3dsupport.js';

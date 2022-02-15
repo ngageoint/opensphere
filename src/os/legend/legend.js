@@ -1,11 +1,11 @@
 goog.declareModuleId('os.legend');
 
-import {getCenter} from 'ol/extent';
 import GeometryCollection from 'ol/geom/GeometryCollection';
 import Point from 'ol/geom/Point';
 import {fromExtent} from 'ol/geom/Polygon';
 import ImageState from 'ol/ImageState';
 import {toContext} from 'ol/render';
+import {getCenter} from 'ol/src/extent';
 import Feature from 'ol/src/Feature';
 import Fill from 'ol/src/style/Fill';
 import Icon from 'ol/src/style/Icon';

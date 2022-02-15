@@ -1,7 +1,7 @@
 goog.declareModuleId('os.mixin.rbush');
 
 import {getUid} from 'ol';
-import {extend, intersects, returnOrUpdate} from 'ol/extent';
+import {extend, intersects, returnOrUpdate} from 'ol/src/extent';
 import RBush from 'ol/structs/RBush';
 
 import {removeDuplicates} from '../array/array.js';

@@ -4,10 +4,10 @@ import {getUid} from 'ol';
 import Collection from 'ol/Collection';
 import {listen, unlistenByKey} from 'ol/events';
 import OLEventType from 'ol/events/EventType';
-import {extend, createEmpty, getWidth, getHeight, isEmpty} from 'ol/extent';
 import GeometryType from 'ol/geom/GeometryType';
 import OLVectorSource from 'ol/source/Vector';
 import VectorEventType from 'ol/source/VectorEventType';
+import {extend, createEmpty, getWidth, getHeight, isEmpty} from 'ol/src/extent';
 
 import '../mixin/rbushmixin.js';
 

@@ -1,10 +1,10 @@
 goog.declareModuleId('os.mixin.UrlTileSource');
 
 import {listen, unlistenByKey} from 'ol/events';
-import {intersects} from 'ol/extent';
 import Tile from 'ol/source/Tile';
 import TileEventType from 'ol/source/TileEventType';
 import UrlTile from 'ol/source/UrlTile';
+import {intersects} from 'ol/src/extent';
 
 import {alertAuth} from '../auth.js';
 import Settings from '../config/settings.js';

@@ -3,11 +3,11 @@
  */
 goog.declareModuleId('os.fn');
 
-import * as olExtent from 'ol/extent';
 import GeometryType from 'ol/geom/GeometryType';
 import Layer from 'ol/layer/Layer';
 import UrlTile from 'ol/source/UrlTile';
 import OLVectorSource from 'ol/source/Vector';
+import * as olExtent from 'ol/src/extent';
 
 import * as osExtent from '../extent.js';
 import osImplements from '../implements.js';

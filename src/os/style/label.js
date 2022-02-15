@@ -1,12 +1,12 @@
 goog.declareModuleId('os.style.label');
 
 import {asArray} from 'ol/color';
-import {equals, createEmpty, getCenter, createOrUpdateFromCoordinate, containsCoordinate} from 'ol/extent';
 import Geometry from 'ol/geom/Geometry';
 import GeometryCollection from 'ol/geom/GeometryCollection';
 import GeometryType from 'ol/geom/GeometryType';
 import {fromExtent as polyFromExtent} from 'ol/geom/Polygon';
 import SimpleGeometry from 'ol/geom/SimpleGeometry';
+import {equals, createEmpty, getCenter, createOrUpdateFromCoordinate, containsCoordinate} from 'ol/src/extent';
 import Style from 'ol/src/style/Style';
 import {instanceOf} from '../classregistry.js';
 import DataManager from '../data/datamanager.js';

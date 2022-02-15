@@ -1,10 +1,10 @@
 goog.declareModuleId('os.layer.Image');
 
 import {listen} from 'ol/events';
-import {createEmpty, isEmpty} from 'ol/extent';
 import ImageLayer from 'ol/layer/Image';
 import ImageSource from 'ol/source/Image';
 import ImageStatic from 'ol/source/ImageStatic';
+import {createEmpty, isEmpty} from 'ol/src/extent';
 
 import EventType from '../action/eventtype.js';
 import {adjustColor, adjustSharpness} from '../color.js';

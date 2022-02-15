@@ -1,7 +1,7 @@
 goog.declareModuleId('os.command.SwitchView');
 
-import * as olExtent from 'ol/extent';
-import * as olProj from 'ol/proj';
+import * as olExtent from 'ol/src/extent';
+import * as olProj from 'ol/src/proj';
 import * as tilegrid from 'ol/tilegrid';
 import {DEFAULT_MAX_ZOOM} from 'ol/tilegrid/common';
 import View from 'ol/View';

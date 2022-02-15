@@ -1,6 +1,5 @@
 goog.declareModuleId('os.mixin.geometry');
 
-import {returnOrUpdate, createEmpty, createOrUpdateEmpty, getWidth, extend} from 'ol/extent';
 import Circle from 'ol/geom/Circle';
 import Geometry from 'ol/geom/Geometry';
 import GeometryCollection from 'ol/geom/GeometryCollection';
@@ -13,6 +12,7 @@ import Point from 'ol/geom/Point';
 import Polygon from 'ol/geom/Polygon';
 import SimpleGeometry from 'ol/geom/SimpleGeometry';
 import {get, equivalent} from 'ol/proj';
+import {returnOrUpdate, createEmpty, createOrUpdateEmpty, getWidth, extend} from 'ol/src/extent';
 
 import GeometryField from '../geom/geometryfield.js';
 import * as osMap from '../map/map.js';

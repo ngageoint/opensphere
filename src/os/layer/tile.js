@@ -1,11 +1,11 @@
 goog.declareModuleId('os.layer.Tile');
 
 import {listen} from 'ol/events';
-import {createEmpty, isEmpty} from 'ol/extent';
 import Property from 'ol/layer/Property';
 import OLTileLayer from 'ol/layer/Tile';
 import TileImage from 'ol/source/TileImage';
 import UrlTile from 'ol/source/UrlTile';
+import {createEmpty, isEmpty} from 'ol/src/extent';
 
 import '../mixin/tileimagemixin.js';
 import '../mixin/urltilemixin.js';

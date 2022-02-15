@@ -1,7 +1,7 @@
 goog.declareModuleId('os.extent');
 
-import {isEmpty, getWidth} from 'ol/extent';
-import {get} from 'ol/proj';
+import {isEmpty, getWidth} from 'ol/src/extent';
+import {get} from 'ol/src/proj';
 
 import * as geo2 from './geo/geo2.js';
 import * as osMap from './map/map.js';
