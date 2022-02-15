@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ol.mixin.Disposable');
 
-import Disposable from 'ol/Disposable';
+import Disposable from 'ol/src/Disposable';
 
 
 /**

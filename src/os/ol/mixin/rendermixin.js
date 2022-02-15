@@ -3,8 +3,8 @@
  */
 goog.declareModuleId('os.ol.mixin.render');
 
-import Instruction from 'ol/render/canvas/Instruction';
-import PolygonReplay from 'ol/render/canvas/PolygonBuilder';
+import Instruction from 'ol/src/render/canvas/Instruction';
+import PolygonReplay from 'ol/src/render/canvas/PolygonBuilder';
 
 // const Feature = goog.requireTyped('ol.Feature');
 // const Circle = goog.requireTyped('ol.geom.Circle');

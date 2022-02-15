@@ -8,8 +8,8 @@ import {drawTextOnPath} from 'ol/geom/flat/textpath';
 import {transform2D} from 'ol/geom/flat/transform';
 import {defaultPadding} from 'ol/render/canvas';
 import Replay from 'ol/render/canvas/ExecutorGroup';
-import Instruction from 'ol/render/canvas/Instruction';
-import {TEXT_ALIGN} from 'ol/render/canvas/TextBuilder';
+import Instruction from 'ol/src/render/canvas/Instruction';
+import {TEXT_ALIGN} from 'ol/src/render/canvas/TextBuilder';
 import {setFromArray} from 'ol/transform';
 
 // const Feature = goog.requireTyped('ol.Feature');
