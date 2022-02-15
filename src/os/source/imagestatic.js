@@ -1,8 +1,8 @@
 goog.declareModuleId('os.source.ImageStatic');
 
-import ImageState from 'ol/ImageState';
-import OLImageStatic from 'ol/source/ImageStatic';
 import {intersects} from 'ol/src/extent';
+import ImageState from 'ol/src/ImageState';
+import OLImageStatic from 'ol/src/source/ImageStatic';
 
 import {rotate} from '../ol/image.js';
 
