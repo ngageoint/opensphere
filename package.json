@@ -252,7 +252,7 @@
   "devDependencies": {
     "@commitlint/cli": "^14.1.0",
     "@commitlint/config-conventional": "^14.1.0",
-    "@ngageoint/closure-webpack-plugin": "^3.0.0",
+    "@ngageoint/closure-webpack-plugin": "^3.0.1",
     "@ngageoint/opensphere-coverage-loader": "^1.0.0",
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/git": "^10.0.1",
