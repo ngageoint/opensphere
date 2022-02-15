@@ -1,10 +1,10 @@
 goog.declareModuleId('os.style.IconReader');
 
 import {asString} from 'ol/color';
-import {toDegrees, toRadians} from 'ol/math';
-import IconStyle from 'ol/style/Icon';
-import IconAnchorUnits from 'ol/style/IconAnchorUnits';
-import IconOrigin from 'ol/style/IconOrigin';
+import {toDegrees, toRadians} from 'ol/src/math';
+import IconStyle from 'ol/src/style/Icon';
+import IconAnchorUnits from 'ol/src/style/IconAnchorUnits';
+import IconOrigin from 'ol/src/style/IconOrigin';
 
 import CrossOrigin from '../net/crossorigin.js';
 import {getCrossOrigin} from '../net/net.js';
