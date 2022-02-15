@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.search.place.CoordinateResult');
 
-import {transformExtent} from 'ol/proj';
+import {transformExtent} from 'ol/src/proj';
+
 import RecordField from '../../../data/recordfield.js';
 import {flyTo, getTitle} from '../../../feature/feature.js';
 import osImplements from '../../../implements.js';

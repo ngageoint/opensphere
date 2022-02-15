@@ -7,11 +7,11 @@ import MultiLineString from 'ol/geom/MultiLineString';
 import MultiPolygon from 'ol/geom/MultiPolygon';
 import Point from 'ol/geom/Point';
 import Polygon from 'ol/geom/Polygon';
-import {toLonLat} from 'ol/proj';
-import OLVectorSource from 'ol/source/Vector';
-import VectorEventType from 'ol/source/VectorEventType';
 import * as olExtent from 'ol/src/extent';
 import Feature from 'ol/src/Feature';
+import {toLonLat} from 'ol/src/proj';
+import OLVectorSource from 'ol/src/source/Vector';
+import VectorEventType from 'ol/src/source/VectorEventType';
 import {getUid} from 'ol/util';
 
 import * as osBearing from '../bearing/bearing.js';

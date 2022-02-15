@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.ol.interaction.DragCircle');
 
-import {toLonLat} from 'ol/proj';
+import {toLonLat} from 'ol/src/proj';
+
 import RecordField from '../../../data/recordfield.js';
 import {normalizeGeometryCoordinates} from '../../../geo/geo2.js';
 import {METHOD_FIELD, getMethod} from '../../../interpolate.js';

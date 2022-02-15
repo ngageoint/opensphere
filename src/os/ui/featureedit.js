@@ -7,9 +7,10 @@ import GeometryType from 'ol/geom/GeometryType';
 import Point from 'ol/geom/Point';
 import SimpleGeometry from 'ol/geom/SimpleGeometry';
 import MapBrowserEventType from 'ol/MapBrowserEventType';
-import {transform} from 'ol/proj';
 import {getCenter} from 'ol/src/extent';
 import Feature from 'ol/src/Feature';
+import {transform} from 'ol/src/proj';
+
 import './geo/position.js';
 import './geo/ringoptions.js';
 import './layer/labelcontrols.js';

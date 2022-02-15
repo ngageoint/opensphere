@@ -2,8 +2,8 @@
 goog.declareModuleId('os.olm.render.Circle');
 
 import {circular} from 'ol/geom/Polygon';
-import {toLonLat} from 'ol/proj';
-import {DEFAULT_RADIUS} from 'ol/sphere';
+import {toLonLat} from 'ol/src/proj';
+import {DEFAULT_RADIUS} from 'ol/src/sphere';
 
 import {interpolateGeom} from '../../interpolate.js';
 import UnitManager from '../../unit/unitmanager.js';

@@ -11,10 +11,10 @@ import OLVectorLayer from 'ol/layer/Vector';
 import VectorTile from 'ol/layer/VectorTile';
 import MapEventType from 'ol/MapEventType';
 import ObjectEventType from 'ol/ObjectEventType';
-import {get, fromLonLat, toLonLat, transformExtent} from 'ol/proj';
-import OLVectorSource from 'ol/source/Vector';
 import {buffer, createEmpty, equals, scaleFromCenter, getCenter, getHeight, getWidth} from 'ol/src/extent';
 import Feature from 'ol/src/Feature';
+import {get, fromLonLat, toLonLat, transformExtent} from 'ol/src/proj';
+import OLVectorSource from 'ol/src/source/Vector';
 import {createForProjection} from 'ol/tilegrid';
 import View from 'ol/View';
 
