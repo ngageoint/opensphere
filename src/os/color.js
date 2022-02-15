@@ -613,7 +613,11 @@ export const equals = function(color1, color2) {
     color2 = toRgbArray(color2);
   }
 
-  return goog.array.equals(color1, color2);
+  if (color1 && color2 && color1.length === color2.length && color1.every((el, i) => el === color2[i])) {
+    return true;
+  }
+
+  return false;
 };
 
 /**

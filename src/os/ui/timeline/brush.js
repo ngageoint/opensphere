@@ -9,7 +9,6 @@ import DragPanEvent from './dragpanevent.js';
 import DragPanEventType from './dragpaneventtype.js';
 import * as timeline from './timeline.js';
 
-const googArray = goog.require('goog.array');
 const Throttle = goog.require('goog.async.Throttle');
 const googEvents = goog.require('goog.events');
 const BrowserEvent = goog.require('goog.events.BrowserEvent');
@@ -511,7 +510,10 @@ export default class Brush extends BaseItem {
    */
   fireChangeEvent_() {
     var newExtent = this.snap_(this.getExtent());
-    if (!googArray.equals(newExtent, this.oldExtent_)) {
+    var sameExtent = newExtent && this.oldExtent_ &&
+        newExtent.length === this.oldExtent_.length &&
+        this.oldExtent_.every((el, i) => el === newExtent[i]);
+    if (!sameExtent) {
       this.dispatchEvent(new PropertyChangeEvent('extent', newExtent, this.oldExtent_));
       this.oldExtent_ = newExtent;
     }

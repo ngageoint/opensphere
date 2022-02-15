@@ -9,7 +9,8 @@ describe('os.mixin.closure', function() {
     expect(arr.hasOwnProperty('testFn')).toBe(false);
     expect(goog.object.getCount(arr)).toBe(3);
     expect(goog.object.getKeys(arr).length).toBe(3);
-    expect(goog.array.equals(arr, goog.object.getValues(arr)));
+    expect(arr.length === goog.object.getValues(arr).length &&
+        arr.every((el, i) => el === goog.object.getValues(arr)[i]));
     goog.object.forEach(arr, function(val, key) {
       expect(key).not.toBe('testFn');
     });
@@ -21,21 +22,27 @@ describe('os.mixin.closure', function() {
     expect(goog.object.getCount(obj)).toBe(3);
     expect(goog.object.getKeys(obj).length).toBe(3);
     expect(goog.object.getValues(obj).length).toBe(3);
-    expect(goog.array.equals(goog.object.getValues(obj), values));
+    expect(values.length === goog.object.getValues(obj).length &&
+        values.every((el, i) => el === goog.object.getValues(obj)[i]));
     goog.object.forEach(obj, function(val, key) {
       expect(key).not.toBe('testFn');
     });
   };
 
   var compareArrays = function(arr1, arr2) {
-    expect(goog.array.equals(arr1, arr2));
-    expect(goog.array.equals(arr1, goog.object.getValues(arr2)));
+    expect(arr1.length === arr2.length && arr1.every((el, i) => el === arr2[i]));
+    expect(arr1.length === goog.object.getValues(arr2).length &&
+        arr1.every((el, i) => el === goog.object.getValues(arr2)[i]));
   };
 
   var compareObjects = function(obj1, obj2) {
     expect(goog.object.equals(obj1, obj2));
-    expect(goog.array.equals(goog.object.getKeys(obj1), goog.object.getKeys(obj2))).toBe(true);
-    expect(goog.array.equals(goog.object.getValues(obj1), goog.object.getValues(obj2))).toBe(true);
+    var obj1Keys = goog.object.getKeys(obj1);
+    var obj2Keys = goog.object.getKeys(obj2);
+    expect(obj1Keys.length === obj2Keys.length && obj1Keys.every((el, i) => el === obj2Keys[i])).toBe(true);
+    var obj1Values = goog.object.getValues(obj1);
+    var obj2Values = goog.object.getValues(obj2);
+    expect(obj1Values.length === obj2Values.length && obj1Values.every((el, i) => el === obj2Values[i])).toBe(true);
   };
 
   it('works with array polyfills', function() {

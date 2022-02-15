@@ -737,7 +737,7 @@ export class Controller {
     const ids = recent.ids;
     if (ids.length > 0) {
       const allIds = this.searchManager.getRegisteredSearches().map(osSearch.getSearchId).sort();
-      if (googArray.equals(ids, allIds)) {
+      if (ids.length === allIds.length && ids.every((el, i) => el === allIds[i])) {
         // ids are an exact match (assumes both lists are sorted)
         text = '(All Search Types)';
       } else if (ids.length == 1) {
@@ -771,7 +771,7 @@ export class Controller {
     const ids = recent.ids;
     if (ids.length > 0) {
       const allIds = this.searchManager.getRegisteredSearches().map(osSearch.getSearchId).sort();
-      if (googArray.equals(ids, allIds)) {
+      if (ids.length === allIds.length && ids.every((el, i) => el === allIds[i])) {
         // ids are an exact match (assumes both lists are sorted)
         text = 'Search all types for "' + recent.term + '".';
       } else if (ids.length == 1) {
@@ -910,8 +910,13 @@ export class Controller {
                   newEnabledIds[TriState.ON].push(osSearch.getSearchId(search));
                 }
               });
-              if (!googArray.equals(newEnabledIds[TriState.ON], enabledIds[TriState.ON]) ||
-                  !googArray.equals(newEnabledIds[TriState.BOTH], enabledIds[TriState.BOTH])) {
+              // Check if arrays are equal for new/enabled ids with ON state
+              var sameOn = newEnabledIds[TriState.ON].length === enabledIds[TriState.ON] &&
+              newEnabledIds[TriState.ON].every((el, i) => el === enabledIds[TriState.ON][i]);
+              // Check if arrays are equal for new/enabled ids with BOTH state
+              var sameBoth = newEnabledIds[TriState.BOTH].length === enabledIds[TriState.BOTH] &&
+                newEnabledIds[TriState.BOTH].every((el, i) => el === enabledIds[TriState.BOTH][i]);
+              if (!sameOn || !sameBoth) {
                 this.search();
               }
             }

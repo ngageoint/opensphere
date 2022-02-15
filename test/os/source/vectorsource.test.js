@@ -1,4 +1,3 @@
-goog.require('goog.array');
 goog.require('goog.events.EventType');
 goog.require('goog.functions');
 goog.require('goog.net.EventType');
@@ -32,7 +31,6 @@ goog.require('plugin.file.geojson.GeoJSONParser');
 
 
 describe('os.source.Vector', function() {
-  const googArray = goog.module.get('goog.array');
   const GoogEventType = goog.module.get('goog.events.EventType');
   const functions = goog.module.get('goog.functions');
   const googNetEventType = goog.module.get('goog.net.EventType');
@@ -643,8 +641,9 @@ describe('os.source.Vector', function() {
       expect(source.getColumnsArray()).toBe(source.columns);
 
       var copy = source.getColumns();
-      expect(copy).not.toBe(source.columns);
-      expect(googArray.equals(copy, source.columns)).toBe(true);
+      var sourceColumns = source.columns;
+      expect(copy).not.toBe(sourceColumns);
+      expect(copy.length === sourceColumns.length && copy.every((el, i) => el === sourceColumns[i])).toBe(true);
     });
 
     it('should always add an ID column to the source', function() {

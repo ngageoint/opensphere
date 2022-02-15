@@ -1,4 +1,3 @@
-goog.require('goog.array');
 goog.require('ol.Feature');
 goog.require('ol.geom.GeometryCollection');
 goog.require('ol.geom.LineString');
@@ -12,7 +11,6 @@ goog.require('os.osasm.wait');
 goog.require('os.query');
 
 describe('os.geo', function() {
-  const googArray = goog.module.get('goog.array');
   const Feature = goog.module.get('ol.Feature');
   const GeometryCollection = goog.module.get('ol.geom.GeometryCollection');
   const LineString = goog.module.get('ol.geom.LineString');
@@ -983,17 +981,21 @@ describe('os.geo', function() {
     // adjusts the last coordinate to cross correctly in 2D, doesn't duplicate the last coordinate
     var result = geo.splitOnDateLine(geometry);
     expect(result instanceof LineString).toBe(true);
-    expect(googArray.equals(result.getFlatCoordinates(), [175, 0, 185, 0])).toBe(true);
+    var flatCoordinates = result.getFlatCoordinates();
+    var testArr = [175, 0, 185, 0];
+    expect(flatCoordinates && flatCoordinates.length === testArr.length &&
+      flatCoordinates.every((el, i) => el === testArr[i])).toBe(true);
 
     // splits with repeated normalized coordinate to prevent gaps
     coordinates = [[170, 0], [175, 0], [-175, 0], [-170, 0]];
     geometry = new LineString(coordinates);
 
     result = geo.splitOnDateLine(geometry);
+    flatCoordinates = result.getFlatCoordinates();
+    testArr = [170, 0, 175, 0, 185, 0, -175, 0, -170, 0];
     expect(result instanceof MultiLineString).toBe(true);
-    expect(googArray.equals(
-        result.getFlatCoordinates(),
-        [170, 0, 175, 0, 185, 0, -175, 0, -170, 0])).toBe(true);
+    expect(flatCoordinates && flatCoordinates.length === testArr.length &&
+      flatCoordinates.every((el, i) => el === testArr[i])).toBe(true);
     expect(result.ends_[0]).toBe(6);
 
     // splits correctly when coordinates at +/- 180 are present
@@ -1001,10 +1003,11 @@ describe('os.geo', function() {
     geometry = new LineString(coordinates);
 
     result = geo.splitOnDateLine(geometry);
+    flatCoordinates = result.getFlatCoordinates();
+    testArr = [170, 0, 175, 0, 180, 0, 185, 0, -175, 0, -170, 0];
     expect(result instanceof MultiLineString).toBe(true);
-    expect(googArray.equals(
-        result.getFlatCoordinates(),
-        [170, 0, 175, 0, 180, 0, 185, 0, -175, 0, -170, 0])).toBe(true);
+    expect(flatCoordinates && flatCoordinates.length === testArr.length &&
+      flatCoordinates.every((el, i) => el === testArr[i])).toBe(true);
     expect(result.ends_[0]).toBe(8);
   });
 
@@ -1014,9 +1017,14 @@ describe('os.geo', function() {
     var split = geo.splitOnDateLine(geometry);
     var merged = geo.mergeLineGeometry(split);
 
+    var geomFlatCoordinates = geometry.getFlatCoordinates();
+    var mergedFlatCoordinates = merged.getFlatCoordinates();
+
     // coordinates are the same as the original
     expect(merged instanceof LineString).toBe(true);
-    expect(googArray.equals(geometry.getFlatCoordinates(), merged.getFlatCoordinates())).toBe(true);
+    expect(geomFlatCoordinates && mergedFlatCoordinates &&
+      geomFlatCoordinates.length === mergedFlatCoordinates.length &&
+      geomFlatCoordinates.every((el, i) => el === mergedFlatCoordinates[i])).toBe(true);
 
     // merges correctly when coordinates at +/- 180 are present
     coordinates = [[170, 0], [175, 0], [180, 0], [-175, 0], [-170, 0]];
@@ -1024,8 +1032,14 @@ describe('os.geo', function() {
     split = geo.splitOnDateLine(geometry);
     merged = geo.mergeLineGeometry(split);
 
+    geomFlatCoordinates = geometry.getFlatCoordinates();
+    mergedFlatCoordinates = merged.getFlatCoordinates();
+
+
     expect(merged instanceof LineString).toBe(true);
-    expect(googArray.equals(geometry.getFlatCoordinates(), merged.getFlatCoordinates())).toBe(true);
+    expect(geomFlatCoordinates && mergedFlatCoordinates &&
+      geomFlatCoordinates.length === mergedFlatCoordinates.length &&
+      geomFlatCoordinates.every((el, i) => el === mergedFlatCoordinates[i])).toBe(true);
   });
 
   it('should normalise longitudes greater than 180.0', function() {

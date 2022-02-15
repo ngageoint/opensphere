@@ -1,9 +1,7 @@
-goog.require('goog.array');
 goog.require('os.array');
 
 
 describe('os.array', function() {
-  const googArray = goog.module.get('goog.array');
   const osArray = goog.module.get('os.array');
 
   it('should return indexes for a binary insert', function() {
@@ -143,16 +141,16 @@ describe('os.array', function() {
 
     var arr = [a, b];
     var sorted = arr.sort(goog.partial(osArray.sortByField, 'num'));
-    expect(googArray.equals(sorted, [a, b])).toBeTruthy();
+    expect(sorted.length === [a, b].length && sorted.every((el, i) => el === [a, b][i])).toBeTruthy();
 
     sorted = arr.sort(goog.partial(osArray.sortByFieldDesc, 'num'));
-    expect(googArray.equals(sorted, [b, a])).toBeTruthy();
+    expect(sorted.length === [b, a].length && sorted.every((el, i) => el === [b, a][i])).toBeTruthy();
 
     sorted = arr.sort(goog.partial(osArray.sortByField, 'str'));
-    expect(googArray.equals(sorted, [a, b])).toBeTruthy();
+    expect(sorted.length === [a, b].length && sorted.every((el, i) => el === [a, b][i])).toBeTruthy();
 
     sorted = arr.sort(goog.partial(osArray.sortByFieldDesc, 'str'));
-    expect(googArray.equals(sorted, [b, a])).toBeTruthy();
+    expect(sorted.length === [b, a].length && sorted.every((el, i) => el === [b, a][i])).toBeTruthy();
   });
 
   describe('os.array.join', function() {

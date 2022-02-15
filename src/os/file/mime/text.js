@@ -3,7 +3,6 @@ goog.declareModuleId('os.file.mime.text');
 import * as mime from '../mime.js';
 
 const Promise = goog.require('goog.Promise');
-const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
 
 const Logger = goog.requireType('goog.log.Logger');
@@ -65,7 +64,7 @@ export const getText = function(buffer, opt_file) {
         var boms = BOMS_;
         for (var i = 0, n = boms.length; i < n; i++) {
           var bom = boms[i];
-          if (arr.length >= bom.length && googArray.equals(arr.slice(0, bom.length), bom)) {
+          if (arr.length >= bom.length && arr.slice(0, bom.length).every((el, i) => el === bom[i])) {
             buffer = buffer.slice(bom.length);
             break;
           }

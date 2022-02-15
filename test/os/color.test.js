@@ -1,10 +1,8 @@
-goog.require('goog.array');
 goog.require('goog.object');
 goog.require('os.color');
 
 
 describe('os.color', function() {
-  const googArray = goog.module.get('goog.array');
   const osColor = goog.module.get('os.color');
 
   it('should detect color strings properly', function() {
@@ -75,15 +73,15 @@ describe('os.color', function() {
     expect(osColor.toHexString([255, 0, 255, 1])).toBe('#ff00ff');
     expect(osColor.toHexString('0x00ff00')).toBe('#00ff00');
 
-    expect(googArray.equals(osColor.toRgbArray('rgba(255,136,68,0.1)'), [255, 136, 68, 0.1])).toBeTruthy();
-    expect(googArray.equals(osColor.toRgbArray('  AB C Def'), [171, 205, 239, 1])).toBeTruthy();
-    expect(googArray.equals(osColor.toRgbArray(' rgb(50, 150, 200)'), [50, 150, 200, 1])).toBeTruthy();
-    expect(googArray.equals(osColor.toRgbArray(' rgb(50, 150, 200, 0.5)'), [50, 150, 200, 0.5])).toBeTruthy();
-    expect(googArray.equals(osColor.toRgbArray([255, 0, 255, 1]), [255, 0, 255, 1])).toBeTruthy();
+    expect(osColor.equals(osColor.toRgbArray('rgba(255,136,68,0.1)'), [255, 136, 68, 0.1])).toBeTruthy();
+    expect(osColor.equals(osColor.toRgbArray('  AB C Def'), [171, 205, 239, 1])).toBeTruthy();
+    expect(osColor.equals(osColor.toRgbArray(' rgb(50, 150, 200)'), [50, 150, 200, 1])).toBeTruthy();
+    expect(osColor.equals(osColor.toRgbArray(' rgb(50, 150, 200, 0.5)'), [50, 150, 200, 0.5])).toBeTruthy();
+    expect(osColor.equals(osColor.toRgbArray([255, 0, 255, 1]), [255, 0, 255, 1])).toBeTruthy();
 
     // 0x hex strings can have lower or upper case "x"
-    expect(googArray.equals(osColor.toRgbArray('0x00ff00'), [0, 255, 0, 1])).toBeTruthy();
-    expect(googArray.equals(osColor.toRgbArray('0X00ff00'), [0, 255, 0, 1])).toBeTruthy();
+    expect(osColor.equals(osColor.toRgbArray('0x00ff00'), [0, 255, 0, 1])).toBeTruthy();
+    expect(osColor.equals(osColor.toRgbArray('0X00ff00'), [0, 255, 0, 1])).toBeTruthy();
   });
 
   it('should pad hex colors', function() {

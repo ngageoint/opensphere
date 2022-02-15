@@ -36,8 +36,9 @@ export const MagicNumber = {
  * @deprecated Please use Boolean(os.file.mime.text.getText()) instead
  */
 export const isText = function(ab) {
+  const arr = new Uint8Array(ab.slice(0, 3));
   // If UTF-8 Byte Order Mark exists
-  if (goog.array.equals(new Uint8Array(ab.slice(0, 3)), BYTE_ORDER_MARKER)) {
+  if (arr.length === BYTE_ORDER_MARKER.length && BYTE_ORDER_MARKER.every((el, i) => el === arr[i])) {
     // just assume it is text
     return true;
   }
@@ -108,8 +109,9 @@ export const isTextCharacter = function(b) {
  */
 export const toString = function(ab) {
   let s = '';
+  const arr = new Uint8Array(ab.slice(0, 3));
   // strip the BOM if the content has one
-  if (goog.array.equals(new Uint8Array(ab.slice(0, 3)), BYTE_ORDER_MARKER)) {
+  if (arr.length === BYTE_ORDER_MARKER.length && BYTE_ORDER_MARKER.every((el, i) => el === arr[i])) {
     ab = ab.slice(3);
   }
 
