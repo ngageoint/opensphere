@@ -7,7 +7,7 @@ import GeometryCollection from 'ol/geom/GeometryCollection';
 import GeometryType from 'ol/geom/GeometryType';
 import {fromExtent as polyFromExtent} from 'ol/geom/Polygon';
 import SimpleGeometry from 'ol/geom/SimpleGeometry';
-import Style from 'ol/style/Style';
+import Style from 'ol/src/style/Style';
 import {instanceOf} from '../classregistry.js';
 import DataManager from '../data/datamanager.js';
 import RecordField from '../data/recordfield.js';

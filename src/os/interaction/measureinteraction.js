@@ -4,10 +4,10 @@ import LineString from 'ol/geom/LineString';
 import Point from 'ol/geom/Point';
 import {MAC} from 'ol/has';
 import {toLonLat} from 'ol/proj';
-import Fill from 'ol/style/Fill';
-import Stroke from 'ol/style/Stroke';
-import Style from 'ol/style/Style';
-import Text from 'ol/style/Text';
+import Fill from 'ol/src/style/Fill';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
+import Text from 'ol/src/style/Text';
 
 import {getFormattedBearing, modifyBearing} from '../bearing/bearing.js';
 import BearingSettingsKeys from '../bearing/bearingsettingskeys.js';

@@ -8,11 +8,11 @@ import OLEventType from 'ol/events/EventType';
 import Point from 'ol/geom/Point';
 import OLModify from 'ol/interaction/Modify';
 import Feature from 'ol/src/Feature';
-import RBush from 'ol/structs/RBush';
-import Circle from 'ol/style/Circle';
-import Fill from 'ol/style/Fill';
-import Stroke from 'ol/style/Stroke';
-import Style from 'ol/style/Style';
+import RBush from 'ol/src/structs/RBush';
+import Circle from 'ol/src/style/Circle';
+import Fill from 'ol/src/style/Fill';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
 
 import RecordField from '../data/recordfield.js';
 import PayloadEvent from '../events/payloadevent.js';

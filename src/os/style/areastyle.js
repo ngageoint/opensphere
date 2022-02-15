@@ -1,9 +1,9 @@
 goog.declareModuleId('os.style.area');
 
-import Circle from 'ol/style/Circle';
-import Fill from 'ol/style/Fill';
-import Stroke from 'ol/style/Stroke';
-import Style from 'ol/style/Style';
+import Circle from 'ol/src/style/Circle';
+import Fill from 'ol/src/style/Fill';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
 
 
 /**

@@ -7,11 +7,11 @@ import {fromExtent} from 'ol/geom/Polygon';
 import ImageState from 'ol/ImageState';
 import {toContext} from 'ol/render';
 import Feature from 'ol/src/Feature';
-import Fill from 'ol/style/Fill';
-import Icon from 'ol/style/Icon';
-import Stroke from 'ol/style/Stroke';
-import Style from 'ol/style/Style';
-import Text from 'ol/style/Text';
+import Fill from 'ol/src/style/Fill';
+import Icon from 'ol/src/style/Icon';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
+import Text from 'ol/src/style/Text';
 
 import Settings from '../config/settings.js';
 import * as dispatcher from '../dispatcher.js';
