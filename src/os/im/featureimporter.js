@@ -1,7 +1,7 @@
 goog.declareModuleId('os.im.FeatureImporter');
 
 import {getUid} from 'ol';
-import Feature from 'ol/Feature';
+import Feature from 'ol/src/Feature';
 
 import DataEventType from '../data/event/dataeventtype.js';
 import RecordField from '../data/recordfield.js';

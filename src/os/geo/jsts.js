@@ -8,13 +8,13 @@
 goog.declareModuleId('os.geo.jsts');
 
 import * as olExtent from 'ol/extent';
-import Feature from 'ol/Feature';
 import GeometryType from 'ol/geom/GeometryType';
 import MultiPolygon from 'ol/geom/MultiPolygon';
 import * as Polygon from 'ol/geom/Polygon';
 import {get as getProjection} from 'ol/proj';
 import Projection from 'ol/proj/Projection';
 import {remove as removeTransform} from 'ol/proj/transforms';
+import Feature from 'ol/src/Feature';
 
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';

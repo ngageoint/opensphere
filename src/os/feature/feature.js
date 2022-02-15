@@ -1,7 +1,6 @@
 goog.declareModuleId('os.feature');
 
 import * as olExtent from 'ol/extent';
-import Feature from 'ol/Feature';
 import GeometryCollection from 'ol/geom/GeometryCollection';
 import GeometryLayout from 'ol/geom/GeometryLayout';
 import LineString from 'ol/geom/LineString';
@@ -12,6 +11,7 @@ import Polygon from 'ol/geom/Polygon';
 import {toLonLat} from 'ol/proj';
 import OLVectorSource from 'ol/source/Vector';
 import VectorEventType from 'ol/source/VectorEventType';
+import Feature from 'ol/src/Feature';
 import {getUid} from 'ol/util';
 
 import * as osBearing from '../bearing/bearing.js';

@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.draw.BaseDrawControlsUI');
 
-import Feature from 'ol/Feature';
+import Feature from 'ol/src/Feature';
 import Settings from '../../config/settings.js';
 import RecordField from '../../data/recordfield.js';
 import * as dispatcher from '../../dispatcher.js';

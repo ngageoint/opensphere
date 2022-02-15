@@ -2,12 +2,12 @@ goog.declareModuleId('os.ui.ol.interaction.DrawPolygon');
 
 import Collection from 'ol/Collection';
 import {getCenter, getWidth} from 'ol/extent';
-import Feature from 'ol/Feature';
 import LineString from 'ol/geom/LineString';
 import Polygon from 'ol/geom/Polygon';
 import OLVectorLayer from 'ol/layer/Vector';
 import MapBrowserEventType from 'ol/MapBrowserEventType';
 import OLVectorSource from 'ol/source/Vector';
+import Feature from 'ol/src/Feature';
 import RecordField from '../../../data/recordfield.js';
 import {normalizeGeometryCoordinates} from '../../../geo/geo2.js';
 import {validate} from '../../../geo/jsts.js';

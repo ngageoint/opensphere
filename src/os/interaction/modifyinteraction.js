@@ -4,9 +4,10 @@ import {getUid} from 'ol';
 import Collection from 'ol/Collection';
 import {listen, unlistenByKey} from 'ol/events';
 import OLEventType from 'ol/events/EventType';
-import Feature from 'ol/Feature';
+
 import Point from 'ol/geom/Point';
 import OLModify from 'ol/interaction/Modify';
+import Feature from 'ol/src/Feature';
 import RBush from 'ol/structs/RBush';
 import Circle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';

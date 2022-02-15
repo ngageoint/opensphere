@@ -1,8 +1,8 @@
 goog.declareModuleId('os.ui.draw');
 
-import Feature from 'ol/Feature';
 import {fromExtent} from 'ol/geom/Polygon';
 import {transformExtent} from 'ol/proj';
+import Feature from 'ol/src/Feature';
 import RecordField from '../../data/recordfield.js';
 import {METHOD_FIELD} from '../../interpolate.js';
 import Method from '../../interpolatemethod.js';

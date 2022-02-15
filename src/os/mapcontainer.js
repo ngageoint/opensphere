@@ -3,7 +3,6 @@ goog.declareModuleId('os.MapContainer');
 import Collection from 'ol/Collection';
 import {listenOnce, unlistenByKey} from 'ol/events';
 import {buffer, createEmpty, equals, scaleFromCenter, getCenter, getHeight, getWidth} from 'ol/extent';
-import Feature from 'ol/Feature';
 import {MAC} from 'ol/has';
 import LayerGroup from 'ol/layer/Group';
 import ImageLayer from 'ol/layer/Image';
@@ -15,6 +14,7 @@ import MapEventType from 'ol/MapEventType';
 import ObjectEventType from 'ol/ObjectEventType';
 import {get, fromLonLat, toLonLat, transformExtent} from 'ol/proj';
 import OLVectorSource from 'ol/source/Vector';
+import Feature from 'ol/src/Feature';
 import {createForProjection} from 'ol/tilegrid';
 import View from 'ol/View';
 

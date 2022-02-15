@@ -1,6 +1,5 @@
 goog.declareModuleId('os.ol.feature');
 
-import Feature from 'ol/Feature';
 import Circle from 'ol/geom/Circle';
 import LinearRing from 'ol/geom/LinearRing';
 import LineString from 'ol/geom/LineString';
@@ -9,7 +8,7 @@ import MultiPoint from 'ol/geom/MultiPoint';
 import MultiPolygon from 'ol/geom/MultiPolygon';
 import Point from 'ol/geom/Point';
 import Polygon from 'ol/geom/Polygon';
-
+import Feature from 'ol/src/Feature';
 
 /**
  * OL3 geometry classes supported by {@link os.ol.feature.cloneGeometry}.

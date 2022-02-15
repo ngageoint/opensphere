@@ -1,6 +1,6 @@
 goog.declareModuleId('os.state.v4.QueryArea');
 
-import Feature from 'ol/Feature';
+import Feature from 'ol/src/Feature';
 
 import RecordField from '../../data/recordfield.js';
 import GeometryField from '../../geom/geometryfield.js';

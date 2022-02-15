@@ -3,7 +3,7 @@
  */
 goog.declareModuleId('os.mixin.feature');
 
-import Feature from 'ol/Feature';
+import Feature from 'ol/src/Feature';
 import Style from 'ol/style/Style';
 
 import {registerClass} from '../classregistry.js';

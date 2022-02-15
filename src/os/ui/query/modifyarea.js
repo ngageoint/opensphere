@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.query.ModifyAreaUI');
 
 import {listen} from 'ol/events';
-import Feature from 'ol/Feature';
+import Feature from 'ol/src/Feature';
 import '../util/validationmessage.js';
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';

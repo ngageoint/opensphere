@@ -1,6 +1,6 @@
 goog.declareModuleId('os.layer.Drawing');
 
-import Feature from 'ol/Feature';
+import Feature from 'ol/src/Feature';
 
 import '../mixin/layerbasemixin.js';
 import EventType from '../action/eventtype.js';
