@@ -1,13 +1,12 @@
 goog.declareModuleId('os.interaction.Modify');
 
 import {getUid} from 'ol';
-import Collection from 'ol/Collection';
-import {listen, unlistenByKey} from 'ol/events';
-import OLEventType from 'ol/events/EventType';
-
-import Point from 'ol/geom/Point';
-import OLModify from 'ol/interaction/Modify';
+import Collection from 'ol/src/Collection';
+import {listen, unlistenByKey} from 'ol/src/events';
+import OLEventType from 'ol/src/events/EventType';
 import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
+import OLModify from 'ol/src/interaction/Modify';
 import RBush from 'ol/src/structs/RBush';
 import Circle from 'ol/src/style/Circle';
 import Fill from 'ol/src/style/Fill';

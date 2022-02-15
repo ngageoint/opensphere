@@ -1,15 +1,16 @@
 goog.declareModuleId('os.ui.layer.compare.LayerCompareUI');
 
-import Collection from 'ol/Collection';
-import RotateControl from 'ol/control/Rotate';
-import ZoomControl from 'ol/control/Zoom';
-import {platformModifierKeyOnly} from 'ol/events/condition';
-import {defaults} from 'ol/interaction';
-import DragZoom from 'ol/interaction/DragZoom';
-import OLMap from 'ol/Map';
-import OLVectorSource from 'ol/source/Vector';
+import Collection from 'ol/src/Collection';
+import RotateControl from 'ol/src/control/Rotate';
+import ZoomControl from 'ol/src/control/Zoom';
+import {platformModifierKeyOnly} from 'ol/src/events/condition';
 import {createEmpty, getHeight, getWidth, buffer as olBuffer} from 'ol/src/extent';
-import View from 'ol/View';
+import {defaults} from 'ol/src/interaction';
+import DragZoom from 'ol/src/interaction/DragZoom';
+import OLMap from 'ol/src/Map';
+import OLVectorSource from 'ol/src/source/Vector';
+import View from 'ol/src/View';
+
 import EventType from '../../../action/eventtype.js';
 import * as capture from '../../../capture/capture.js';
 import ZOrder from '../../../data/zorder.js';

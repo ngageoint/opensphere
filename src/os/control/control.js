@@ -1,6 +1,6 @@
 goog.declareModuleId('os.control');
 
-import Collection from 'ol/Collection';
+import Collection from 'ol/src/Collection';
 
 import MousePosition from '../ol/control/mousepositioncontrol.js';
 import * as osProj from '../proj/proj.js';

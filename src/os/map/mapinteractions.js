@@ -1,7 +1,7 @@
 goog.declareModuleId('os.map.interaction');
 
-import Collection from 'ol/Collection';
-import DragPan from 'ol/interaction/DragPan';
+import Collection from 'ol/src/Collection';
+import DragPan from 'ol/src/interaction/DragPan';
 
 import ContextMenu from '../interaction/contextmenuinteraction.js';
 import DoubleClick from '../interaction/doubleclickinteraction.js';

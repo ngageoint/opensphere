@@ -4,7 +4,7 @@ import {listen, unlistenByKey} from 'ol/events';
 import EventType from 'ol/events/EventType';
 import SimpleGeometry from 'ol/geom/SimpleGeometry';
 import OverlayPositioning from 'ol/OverlayPositioning';
-import {getUid} from 'ol/util';
+import {getUid} from 'ol/src/util';
 
 import {getMapContainer} from '../map/mapinstance.js';
 import * as ui from '../ui/ui.js';

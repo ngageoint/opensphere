@@ -12,7 +12,7 @@ import Feature from 'ol/src/Feature';
 import {toLonLat} from 'ol/src/proj';
 import OLVectorSource from 'ol/src/source/Vector';
 import VectorEventType from 'ol/src/source/VectorEventType';
-import {getUid} from 'ol/util';
+import {getUid} from 'ol/src/util';
 
 import * as osBearing from '../bearing/bearing.js';
 import BearingType from '../bearing/bearingtype.js';

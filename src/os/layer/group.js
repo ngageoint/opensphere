@@ -1,9 +1,9 @@
 goog.declareModuleId('os.layer.Group');
 
-import CollectionEventType from 'ol/CollectionEventType';
-import {listen, unlistenByKey} from 'ol/events';
-import OLLayerGroup from 'ol/layer/Group';
-import Layer from 'ol/layer/Layer';
+import CollectionEventType from 'ol/src/CollectionEventType';
+import {listen, unlistenByKey} from 'ol/src/events';
+import OLLayerGroup from 'ol/src/layer/Group';
+import Layer from 'ol/src/layer/Layer';
 
 import LayerEvent from '../events/layerevent.js';
 import LayerEventType from '../events/layereventtype.js';

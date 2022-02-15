@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ol.image');
 
-import {createCanvasContext2D} from 'ol/dom';
+import {createCanvasContext2D} from 'ol/src/dom';
 import {boundingExtent, getCenter, getWidth, getHeight} from 'ol/src/extent';
 import ImageCanvas from 'ol/src/ImageCanvas';
 
