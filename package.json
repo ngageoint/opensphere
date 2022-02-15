@@ -134,7 +134,7 @@
     "copy:config": "cp .build/settings.json dist/opensphere/config",
     "copy:resources": "xargs -n 2 cp -r < .build/resources-copy-files",
     "copy": "npm-run-all -s copy:files copy:images copy:onboarding copy:views copy:config copy:resources",
-    "rename": "find dist -type f | xargs perl -pi -e \"s#{APP}#$(json -a admin.brand.opensphere admin.about.application -d '\\n'< .build/settings.json | sed '/^$/d' | head -n 1)#g\"; cp -r ./node_modules/google-closure-library ./dist/opensphere; sed -i.bu \"s|refresh the page.</noscript>|refresh the page.</noscript><script src=\"google-closure-library/closure/goog/base.js\"></script>|g\" ./dist/opensphere/index.html",
+    "rename": "find dist -type f | xargs perl -pi -e \"s#{APP}#$(json -a admin.brand.opensphere admin.about.application -d '\\n'< .build/settings.json | sed '/^$/d' | head -n 1)#g\"; cp -r ../../node_modules/google-closure-library ./dist/opensphere; sed -i.bu \"s|refresh the page.</noscript>|refresh the page.</noscript><script src='google-closure-library/closure/goog/base.js'></script>|g\" ./dist/opensphere/index.html",
     "build": "npm-run-all -s init -p lint genlibs -s compile copy build:index rename symlink",
     "build:nolint": "npm run init && npm run genlibs && npm run compile && npm run copy && npm run build:index && npm run rename",
     "build:index": "xargs -n 1 os-index < .build/resources-pages",
