@@ -1,20 +1,18 @@
 {
-    "files": [],
-    "references": [],
-    "exclude": [ "node_modules" ],
     "compilerOptions": {
       "target": "es6",
-      "module": "commonjs",
-      "lib": [ "es6", "DOM" ],
+      "module": "es6",
+      "lib": [ 
+        "es6", 
+        "DOM" ],
       "allowJs": true,
-      "declaration": true,
-      "declarationMap": true,
-      "sourceMap": true,
-      "composite": true,
       "strict": true,
       "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "isolatedModules": true,
       "esModuleInterop": true,
       "skipLibCheck": true,
       "noEmit": true
-    }
+    },
+    "exclude": [ ]
   }

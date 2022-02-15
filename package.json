@@ -13,6 +13,9 @@
   },
   "build": {
     "config": "config/settings.json",
+    "gcc-src": [
+      "src/**.js"
+    ],
     "type": "app",
     "pluggable": true,
     "index": "index.js",
@@ -57,6 +60,7 @@
         "ol-cesium/externs/olcsx.js"
       ],
       "entry_point": [
+        "goog:ol.ext",
         "goog:osmain"
       ],
       "extra_annotation_name": [
@@ -84,14 +88,14 @@
     "guide:auto": "sphinx-autobuild docs docs/_build/html",
     "genlibs": "run-p gen:modernizr gen:xmllexer",
     "gen:deps": "os-gendeps .build/gcc-args.json .build/deps.js",
+    "gen:testdeps": "os-gendeps .build/gcc-test-args.json .build/deps-test.js",
     "gen:modernizr": "modernizr -c modernizr.config.json -u -d .build/modernizr.js",
     "pregen:xmllexer": "echo \"window.xmlLexer = require('xml-lexer');\" > .build/xml-lexer.require.js",
     "gen:xmllexer": "browserify .build/xml-lexer.require.js -o .build/xml-lexer.min.js",
     "postgen:xmllexer": "rm .build/xml-lexer.require.js",
     "gentestlibs": "npm run gen:webgl-mock",
     "gen:webgl-mock": "browserify vendor/webgl-mock/webgl-mock.require.js -o .build/webgl-mock.min.js",
-    "test:init": "run-s genlibs gentestlibs test:webpack",
-    "test:compile": "tsc -b test",
+    "test:init": "run-s genlibs gentestlibs 'compile:resolve -- --exclude resources scss' gen:testdeps test:webpack",
     "test:debug": "karma start --browsers Chrome --reporters dots",
     "test:run": "karma start --single-run",
     "test:webpack": "webpack --config webpack-test.config.js",
@@ -112,8 +116,11 @@
     "compile:debugcss": "for i in $(ls -1 .build/themes | grep node-sass-args); do sass --quiet $(cat .build/themes/$i):.build/themes/${i%.node-sass-args}.combined.css & pids=\"$pids $!\"; done; wait $pids;",
     "postcompile:debugcss": "for i in $(ls -1 .build/themes | grep combined.css | grep -v combined.css.map); do postcss .build/themes/$i --no-map -u autoprefixer -r & pids=\"$pids $!\"; done; wait $pids",
     "minify:css": "for i in $(ls -1 .build/themes | grep combined.css | grep -v combined.css.map); do cleancss --with-rebase --output .build/themes/$(echo $i | sed 's/combined/min/') .build/themes/$i & pids=\"$pids $!\"; done; wait $pids",
-    "compile": "npm-run-all -s compile:resolve gen:deps -p compile:tsc build:webpack compile:css",
+    "compile": "npm-run-all -s compile:tsc compile:resolve gen:deps -p build:webpack compile:css",
     "compile:css": "npm run compile:debugcss; npm run minify:css;",
+    "compile:gcc": "os-compile .build/gcc-args.json",
+    "postcompile:gcc": "echo \"//# sourceMappingURL=$(pwd)/.build/opensphere.min.map\" >> .build/opensphere.min.js",
+    "compile:vendor-min": "node vendor-min",
     "compile:tsc": "tsc -b src",
     "precopy:files": "mkdirp $(cat .build/version)/styles && mkdirp $(cat .build/version)/styles/themes && mkdirp dist/opensphere/test",
     "precopy:views": "mkdirp $(cat .build/version)/views",
@@ -127,11 +134,11 @@
     "copy:config": "cp .build/settings.json dist/opensphere/config",
     "copy:resources": "xargs -n 2 cp -r < .build/resources-copy-files",
     "copy": "npm-run-all -s copy:files copy:images copy:onboarding copy:views copy:config copy:resources",
-    "rename": "find dist -type f | xargs perl -pi -e \"s#{APP}#$(json -a admin.brand.opensphere admin.about.application -d '\\n'< .build/settings.json | sed '/^$/d' | head -n 1)#g\"; cp -r ../../node_modules/google-closure-library ./dist/opensphere; sed -i.bu \"s|refresh the page.</noscript>|refresh the page.</noscript><script src=\"google-closure-library/closure/goog/base.js\"></script>|g\" ./dist/opensphere/index.html",
+    "rename": "find dist -type f | xargs perl -pi -e \"s#{APP}#$(json -a admin.brand.opensphere admin.about.application -d '\\n'< .build/settings.json | sed '/^$/d' | head -n 1)#g\"; cp -r ./node_modules/google-closure-library ./dist/opensphere; sed -i.bu \"s|refresh the page.</noscript>|refresh the page.</noscript><script src=\"google-closure-library/closure/goog/base.js\"></script>|g\" ./dist/opensphere/index.html",
     "build": "npm-run-all -s init -p lint genlibs -s compile copy build:index rename symlink",
     "build:nolint": "npm run init && npm run genlibs && npm run compile && npm run copy && npm run build:index && npm run rename",
     "build:index": "xargs -n 1 os-index < .build/resources-pages",
-    "dev": "npm-run-all -s init genlibs compile:debugcss build:webpack-dev build:devindex",
+    "dev": "npm-run-all -s init genlibs compile:tsc compile:resolve gen:deps -p compile:debugcss build:webpack-dev build:devindex",
     "build:devindex": "xargs -n 1 os-index --debug < .build/resources-pages",
     "build:xt": "mkdirp .build dist/opensphere; tasks/xt/build.js; cp src/os/xt/xt-example.html dist/opensphere",
     "build:webpack": "webpack --mode production",
