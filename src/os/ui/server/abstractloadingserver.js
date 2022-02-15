@@ -1,7 +1,8 @@
 goog.declareModuleId('os.ui.server.AbstractLoadingServer');
 
 
-import {remove} from 'ol/array';
+import {remove} from 'ol/src/array';
+
 import {getAuth} from '../../auth.js';
 import DataProviderEvent from '../../data/dataproviderevent.js';
 import DataProviderEventType from '../../data/dataprovidereventtype.js';

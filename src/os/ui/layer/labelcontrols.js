@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.layer.LabelControlsUI');
 
-import {remove} from 'ol/array';
+import {remove} from 'ol/src/array';
+
 import '../geo/position.js';
 import Settings from '../../config/settings.js';
 import Metrics from '../../metrics/metrics.js';

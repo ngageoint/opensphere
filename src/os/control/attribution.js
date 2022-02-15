@@ -1,7 +1,7 @@
 goog.declareModuleId('os.control.Attribution');
 
-import * as olArray from 'ol/array';
-import * as OLAttribution from 'ol/control/Attribution';
+import * as olArray from 'ol/src/array';
+import * as OLAttribution from 'ol/src/control/Attribution';
 
 const dom = goog.require('goog.dom');
 const SafeHtml = goog.require('goog.html.SafeHtml');

@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.menu.filter');
 
-import {remove} from 'ol/array';
+import {remove} from 'ol/src/array';
+
 import EventType from '../../action/eventtype.js';
 import CommandProcessor from '../../command/commandprocessor.js';
 import FilterEnable from '../../command/filterenablecmd.js';

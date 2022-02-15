@@ -1,7 +1,8 @@
 goog.declareModuleId('os.ui.SourceAware');
 
-import {remove} from 'ol/array';
-import {listen, unlistenByKey} from 'ol/events';
+import {remove} from 'ol/src/array';
+import {listen, unlistenByKey} from 'ol/src/events';
+
 import DataManager from '../data/datamanager.js';
 import DataEventType from '../data/event/dataeventtype.js';
 import PropertyChange from '../source/propertychange.js';

@@ -1,6 +1,6 @@
 goog.declareModuleId('os.state.StateManager');
 
-import {remove} from 'ol/array';
+import {remove} from 'ol/src/array';
 
 import DataManager from '../data/datamanager.js';
 import ProviderEntry from '../data/providerentry.js';

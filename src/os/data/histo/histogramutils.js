@@ -1,6 +1,6 @@
 goog.declareModuleId('os.data.histo');
 
-import * as olArray from 'ol/array';
+import * as olArray from 'ol/src/array';
 
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';

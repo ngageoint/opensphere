@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.search.SearchBoxUI');
 
-import {findIndex} from 'ol/array';
+import {findIndex} from 'ol/src/array';
+
 import '../dragdrop/dragdropui.js';
 import Settings from '../../config/settings.js';
 import * as dispatcher from '../../dispatcher.js';

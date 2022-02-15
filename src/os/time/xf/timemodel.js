@@ -1,6 +1,7 @@
 goog.declareModuleId('os.time.xf.TimeModel');
 
-import {find} from 'ol/array';
+import {find} from 'ol/src/array';
+
 import DataModel from '../../data/xf/datamodel.js';
 import PropertyChange from '../../data/xf/propertychange.js';
 import PropertyChangeEvent from '../../events/propertychangeevent.js';

@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.slick.SlickTreeUI');
 
-import {remove} from 'ol/array';
+import {remove} from 'ol/src/array';
+
 import Module from '../module.js';
 import {apply} from '../ui.js';
 import {Controller as SlickGridCtrl} from './slickgrid.js';

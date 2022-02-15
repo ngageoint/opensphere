@@ -1,7 +1,7 @@
 goog.declareModuleId('os.data.SourceManager');
 
-import * as olArray from 'ol/array';
-import {listen, unlistenByKey} from 'ol/events';
+import * as olArray from 'ol/src/array';
+import {listen, unlistenByKey} from 'ol/src/events';
 
 import PropertyChange from '../source/propertychange.js';
 import DataManager from './datamanager.js';

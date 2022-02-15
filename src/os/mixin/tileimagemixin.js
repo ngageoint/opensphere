@@ -7,8 +7,8 @@
  */
 goog.declareModuleId('os.mixin.TileImage');
 
-import {remove} from 'ol/array';
-import TileImage from 'ol/source/TileImage';
+import {remove} from 'ol/src/array';
+import TileImage from 'ol/src/source/TileImage';
 
 import osImplements from '../implements.js';
 import IFilterableTileSource from '../source/ifilterabletilesource.js';

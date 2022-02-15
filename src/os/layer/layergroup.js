@@ -1,6 +1,6 @@
 goog.declareModuleId('os.layer.LayerGroup');
 
-import {remove} from 'ol/array';
+import {remove} from 'ol/src/array';
 
 import {registerClass} from '../classregistry.js';
 import IGroupable from '../igroupable.js';

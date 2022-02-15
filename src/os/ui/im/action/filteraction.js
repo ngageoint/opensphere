@@ -1,6 +1,7 @@
 goog.declareModuleId('os.im.action.filter');
 
-import {findIndex} from 'ol/array';
+import {findIndex} from 'ol/src/array';
+
 import CommandProcessor from '../../../command/commandprocessor.js';
 import SequenceCommand from '../../../command/sequencecommand.js';
 import FilterActionAdd from '../../../im/action/cmd/filteractionaddcmd.js';

@@ -1,6 +1,6 @@
 goog.declareModuleId('os.data.ZOrder');
 
-import * as olArray from 'ol/array';
+import * as olArray from 'ol/src/array';
 
 import Settings from '../config/settings.js';
 import {getMapContainer} from '../map/mapinstance.js';

@@ -1,13 +1,13 @@
 goog.declareModuleId('os.mixin.canvasreplay');
 
 import {getUid} from 'ol';
-import {equals} from 'ol/array';
-import {lineStringLength} from 'ol/geom/flat/length';
-import {drawTextOnPath} from 'ol/geom/flat/textpath';
-import {transform2D} from 'ol/geom/flat/transform';
-import {defaultPadding} from 'ol/render/canvas';
-import Replay from 'ol/render/canvas/ExecutorGroup';
+import {equals} from 'ol/src/array';
 import {intersects} from 'ol/src/extent';
+import {lineStringLength} from 'ol/src/geom/flat/length';
+import {drawTextOnPath} from 'ol/src/geom/flat/textpath';
+import {transform2D} from 'ol/src/geom/flat/transform';
+import {defaultPadding} from 'ol/src/render/canvas';
+import Replay from 'ol/src/render/canvas/ExecutorGroup';
 import Instruction from 'ol/src/render/canvas/Instruction';
 import {TEXT_ALIGN} from 'ol/src/render/canvas/TextBuilder';
 import {setFromArray} from 'ol/transform';

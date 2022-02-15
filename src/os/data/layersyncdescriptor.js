@@ -1,8 +1,8 @@
 goog.declareModuleId('os.data.LayerSyncDescriptor');
 
-import * as olArray from 'ol/array';
-import {listen, unlistenByKey} from 'ol/events';
-import {ObjectEvent} from 'ol/Object';
+import * as olArray from 'ol/src/array';
+import {listen, unlistenByKey} from 'ol/src/events';
+import {ObjectEvent} from 'ol/src/Object';
 
 import '../ui/layer/ellipsecolumns.js';
 import {registerClass} from '../classregistry.js';
