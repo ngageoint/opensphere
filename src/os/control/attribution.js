@@ -50,7 +50,7 @@ export default class Attribution extends OLAttribution {
         continue;
       }
 
-      var attributionGetter = source.getAttributions2();
+      var attributionGetter = source.getAttributions();
       if (!attributionGetter) {
         continue;
       }
