@@ -1,6 +1,6 @@
 goog.declareModuleId('os.control.Rotate');
 
-import * as OLRotate from 'ol/src/control/Rotate';
+import OLRotate from 'ol/src/control/Rotate';
 import {CLASS_HIDDEN} from 'ol/src/css';
 
 import {getMapContainer} from '../map/mapinstance.js';
