@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.draw');
 
-import {fromExtent} from 'ol/geom/Polygon';
 import Feature from 'ol/src/Feature';
+import {fromExtent} from 'ol/src/geom/Polygon';
 import {transformExtent} from 'ol/src/proj';
 
 import RecordField from '../../data/recordfield.js';

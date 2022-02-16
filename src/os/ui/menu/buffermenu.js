@@ -1,7 +1,8 @@
 goog.declareModuleId('os.ui.menu.buffer');
 
-import Point from 'ol/geom/Point';
 import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
+
 import EventType from '../../action/eventtype.js';
 import {ICON} from '../../buffer/buffer.js';
 import {isGeometryPolygonal} from '../../geo/geo.js';

@@ -1,7 +1,8 @@
 goog.declareModuleId('os.ui.buffer.BufferFormUI');
 
-import GeometryType from 'ol/geom/GeometryType';
+import GeometryType from 'ol/src/geom/GeometryType';
 import {transformExtent} from 'ol/src/proj';
+
 import '../im/basicinfo.js';
 import * as buffer from '../../buffer/buffer.js';
 import {isGeometryPolygonal} from '../../geo/geo.js';
