@@ -3,7 +3,8 @@
  */
 goog.declareModuleId('os.object');
 
-const {defaultCompare} = goog.require('goog.array');
+import {defaultSort} from '../array/array';
+
 const {getCount, getValueByKeys, isEmpty} = goog.require('goog.object');
 const {startsWith, toTitleCase} = goog.require('goog.string');
 
@@ -286,13 +287,13 @@ export const getValueExtractor = function(attribute) {
  * @param {Object} o1 Object one
  * @param {Object} o2 Object two
  * @param {function(*, *):number=} opt_comparitor Optional comparison function.
- *  Otherwise {@link googArray.defaultCompare} will be used
+ *  Otherwise {@link os.array.defaultSort} will be used
  * @return {number}
  */
 export const compareByField = function(field, o1, o2, opt_comparitor) {
   var v1 = getCompareFieldValue(field, o1);
   var v2 = getCompareFieldValue(field, o2);
-  return opt_comparitor ? opt_comparitor(v1, v2) : defaultCompare(v1, v2);
+  return opt_comparitor ? opt_comparitor(v1, v2) : defaultSort(v1, v2);
 };
 
 /**

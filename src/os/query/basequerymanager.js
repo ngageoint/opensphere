@@ -1,12 +1,12 @@
 goog.declareModuleId('os.query.BaseQueryManager');
 
+import {defaultSort} from '../array/array.js';
 import PropertyChangeEvent from '../events/propertychangeevent.js';
 import ComboNode from '../ui/query/combonode.js';
 import {ALL_ID} from '../ui/query/query.js';
 import {AreaState} from './query.js';
 import {getAreaManager, getFilterManager, getQueryManager, setQueryManager} from './queryinstance.js';
 
-const {defaultCompare} = goog.require('goog.array');
 const {assert} = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');
 const EventTarget = goog.require('goog.events.EventTarget');
@@ -1123,7 +1123,7 @@ export default class BaseQueryManager extends EventTarget {
               return caseInsensitiveCompare(astr, bstr);
             }
 
-            return defaultCompare(astr, bstr);
+            return defaultSort(astr, bstr);
           });
     }
 
@@ -1167,7 +1167,7 @@ export default class BaseQueryManager extends EventTarget {
 
     var result = 0;
     for (var i = 0, n = fields.length; i < n; i++) {
-      result = defaultCompare(a[fields[i]], b[fields[i]]);
+      result = defaultSort(a[fields[i]], b[fields[i]]);
 
       if (result) {
         return result;

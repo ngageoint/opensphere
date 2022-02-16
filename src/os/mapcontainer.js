@@ -1,6 +1,7 @@
 goog.declareModuleId('os.MapContainer');
 
 import EventType from './action/eventtype.js';
+import {defaultSort} from './array/array.js';
 import {isColorString} from './color.js';
 import CommandProcessor from './command/commandprocessor.js';
 import FlyToExtent from './command/flytoextentcmd.js';
@@ -64,7 +65,7 @@ import AltitudeMode from './webgl/altitudemode.js';
 import {isSupported as isWebglSupported, hasPerformanceCaveat} from './webgl/webgl.js';
 
 const Promise = goog.require('goog.Promise');
-const {binarySelect, defaultCompare} = goog.require('goog.array');
+const {binarySelect} = goog.require('goog.array');
 const {assert} = goog.require('goog.asserts');
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const Delay = goog.require('goog.async.Delay');
@@ -1884,7 +1885,7 @@ export default class MapContainer extends EventTarget {
    * @private
    */
   static compareGroups_(a, b) {
-    return defaultCompare(a.getPriority(), b.getPriority());
+    return defaultSort(a.getPriority(), b.getPriority());
   }
 
   /**

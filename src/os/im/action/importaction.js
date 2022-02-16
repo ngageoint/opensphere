@@ -1,5 +1,6 @@
 goog.declareModuleId('os.im.action');
 
+import {defaultSort} from '../../array/array.js';
 import {instanceOf} from '../../classregistry.js';
 import LayerClass from '../../layer/layerclass.js';
 import * as osSource from '../../source/source.js';
@@ -149,7 +150,7 @@ export const reduceEnabled = function(ids, entry) {
 export const sortByLabel = function(a, b) {
   var aLabel = a ? a.getLabel() : '';
   var bLabel = b ? b.getLabel() : '';
-  return goog.array.defaultCompare(aLabel, bLabel);
+  return defaultSort(aLabel, bLabel);
 };
 
 /**

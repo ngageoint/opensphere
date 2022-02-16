@@ -1,11 +1,11 @@
 goog.declareModuleId('os.data.histo.legend');
 
+import {defaultSort} from '../../array/array.js';
 import NumericBinMethod from '../../histo/numericbinmethod.js';
 import * as legend from '../../legend/legend.js';
 import {ROOT} from '../../os.js';
 import Module from '../../ui/module.js';
 
-const googArray = goog.require('goog.array');
 const googObject = goog.require('goog.object');
 
 const {default: VectorLayer} = goog.requireType('os.layer.Vector');
@@ -69,8 +69,7 @@ export const addVectorColorModel = function(layer, options) {
 
         if (keys.length > 0) {
           // TODO: should we use goog.string.caseInsensitiveCompare for the default case?
-          var sortFn = binMethod instanceof NumericBinMethod ? legend.numericCompare :
-            googArray.defaultCompare;
+          var sortFn = binMethod instanceof NumericBinMethod ? legend.numericCompare : defaultSort;
           keys.sort(sortFn);
 
           for (var i = 0; i < keys.length; i++) {

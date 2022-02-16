@@ -1,8 +1,8 @@
 goog.declareModuleId('os.net.RequestHandlerFactory');
 
-const {defaultCompare} = goog.require('goog.array');
-const {remove} = goog.require('ol.array');
+import {defaultSort} from '../array/array';
 
+const {remove} = goog.require('ol.array');
 const {default: IRequestHandler} = goog.requireType('os.net.IRequestHandler');
 
 
@@ -77,7 +77,7 @@ export const getHandlers = function(method, uri, opt_timeout) {
          * @return {number} per compare functions
          */
         function(a, b) {
-          return -1 * defaultCompare(a.getScore(), b.getScore());
+          return -1 * defaultSort(a.getScore(), b.getScore());
         });
   }
 

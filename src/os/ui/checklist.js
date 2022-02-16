@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.ChecklistUI');
 
+import {defaultSort} from '../array/array.js';
 import * as dispatcher from '../dispatcher.js';
 import {ROOT} from '../os.js';
 import ChecklistEvent from './checklistevent.js';
 import Module from './module.js';
 import * as ui from './ui.js';
 
-const {defaultCompare} = goog.require('goog.array');
 const {getDocument} = goog.require('goog.dom');
 const GoogEvent = goog.require('goog.events.Event');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -161,7 +161,7 @@ export class Controller {
    */
   labelCompare_(a, b) {
     if (!a.label || !b.label) {
-      return defaultCompare(a.label, b.label);
+      return defaultSort(a.label, b.label);
     }
     return a.label.localeCompare(/** @type {string} */ (b.label), undefined, {sensitivity: 'base', numeric: true});
   }

@@ -1,5 +1,6 @@
 goog.declareModuleId('os.net');
 
+import {defaultSort} from '../array/array.js';
 import {registerClass} from '../classregistry.js';
 import {getSettings} from '../config/configinstance.js';
 import instanceOf from '../instanceof.js';
@@ -8,7 +9,6 @@ import CrossOrigin from './crossorigin.js';
 
 const Uri = goog.require('goog.Uri');
 const QueryData = goog.require('goog.Uri.QueryData');
-const {defaultCompare} = goog.require('goog.array');
 const {hashCode} = goog.require('goog.string');
 
 
@@ -147,7 +147,7 @@ export const loadCrossOriginCache = function() {
  * @return {number} per typical compare functions
  */
 const sortCache_ = function(a, b) {
-  return defaultCompare(b.priority, a.priority);
+  return defaultSort(b.priority, a.priority);
 };
 
 /**

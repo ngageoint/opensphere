@@ -5,11 +5,11 @@
  */
 goog.declareModuleId('os.time');
 
+import {defaultSort} from '../array/array.js';
 import Settings from '../config/settings.js';
 import VariableReplacer from '../net/variablereplacer.js';
 import Duration from './duration.js';
 
-const googArray = goog.require('goog.array');
 const asserts = goog.require('goog.asserts');
 const UtcDateTime = goog.require('goog.date.UtcDateTime');
 const DateTimeFormat = goog.require('goog.i18n.DateTimeFormat');
@@ -737,7 +737,7 @@ export const applyOffset = function(offset) {
  * @return {number}
  */
 export const dateCompare = function(a, b) {
-  return googArray.defaultCompare(b.toISOString(), a.toISOString());
+  return defaultSort(b.toISOString(), a.toISOString());
 };
 
 /**

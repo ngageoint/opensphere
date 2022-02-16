@@ -3,10 +3,11 @@
  */
 goog.declareModuleId('os.hist');
 
+import {defaultSort} from '../array/array.js';
 import osImplements from '../implements.js';
 import IHistogramProvider from './ihistogramprovider.js';
 
-const {binaryInsert, defaultCompare} = goog.require('goog.array');
+const {binaryInsert} = goog.require('goog.array');
 const googObject = goog.require('goog.object');
 
 const Layer = goog.requireType('ol.layer.Layer');
@@ -94,7 +95,7 @@ export const getBinCounts = function(histograms, opt_combine, opt_skipCompare) {
         if (opt_skipCompare) {
           return -1;
         }
-        return aCount != bCount ? defaultCompare(bCount, aCount) : -1;
+        return aCount != bCount ? defaultSort(bCount, aCount) : -1;
       });
     });
   }

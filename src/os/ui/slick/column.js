@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.slick.column');
 
+import {defaultSort} from '../../array/array.js';
 import ColumnDefinition from '../../data/columndefinition.js';
 import Menu from '../menu/menu.js';
 import MenuItem from '../menu/menuitem.js';
@@ -9,7 +10,6 @@ import ColumnEventType from './columneventtype.js';
 import ColumnMenuGroup from './columnmenugroup.js';
 import {color as formatterColor} from './formatter.js';
 
-const {defaultCompare} = goog.require('goog.array');
 const {numerateCompare} = goog.require('goog.string');
 
 const {default: ColumnContext} = goog.requireType('os.ui.slick.ColumnContext');
@@ -133,7 +133,7 @@ export const autoSizeAndSortColumns = function(a, b) {
   var ao = ac ? ac.order : 0;
   var bo = bc ? bc.order : 0;
 
-  return defaultCompare(ao, bo);
+  return defaultSort(ao, bo);
 };
 
 /**
@@ -142,7 +142,7 @@ export const autoSizeAndSortColumns = function(a, b) {
  * @return {number}
  */
 export const nameCompare = function(a, b) {
-  return defaultCompare(a['name'], b['name']);
+  return defaultSort(a['name'], b['name']);
 };
 
 /**
@@ -361,7 +361,7 @@ export const restore = function(from, to) {
 
     if (fa && fb) {
       // both columns are in the descriptor list, sort against their index
-      return defaultCompare(fa.index, fb.index);
+      return defaultSort(fa.index, fb.index);
     } else if (fa) {
       // only a was on the descriptor, sort it left
       return -1;

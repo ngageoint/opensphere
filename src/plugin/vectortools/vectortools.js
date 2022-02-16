@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.vectortools');
 
+import {defaultSort} from '../../os/array/array.js';
 import ColumnMappingManager from '../../os/column/columnmappingmanager.js';
 import DataManager from '../../os/data/datamanager.js';
 import RecordField from '../../os/data/recordfield.js';
@@ -12,7 +13,6 @@ import VectorSource from '../../os/source/vectorsource.js';
 import StyleType from '../../os/style/styletype.js';
 import Options from './options.js';
 
-const googArray = goog.require('goog.array');
 const googString = goog.require('goog.string');
 
 const Feature = goog.requireType('ol.Feature');
@@ -175,7 +175,7 @@ export const getColumnMappings = function(sourceIds) {
   var sortColumns = function(a, b) {
     var ai = filterKeys.indexOf(a['layer']);
     var bi = filterKeys.indexOf(b['layer']);
-    return googArray.defaultCompare(ai, bi);
+    return defaultSort(ai, bi);
   };
 
   /**

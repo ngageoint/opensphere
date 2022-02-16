@@ -2,6 +2,7 @@ goog.declareModuleId('os.source');
 
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';
+import {defaultSort} from '../array/array.js';
 import ColumnDefinition from '../data/columndefinition.js';
 import DataManager from '../data/datamanager.js';
 import DataEventType from '../data/event/dataeventtype.js';
@@ -20,7 +21,6 @@ import TimelineController from '../time/timelinecontroller.js';
 import {numerateNameCompare} from '../ui/slick/column.js';
 
 const Timer = goog.require('goog.Timer');
-const {defaultCompare} = goog.require('goog.array');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 const Feature = goog.require('ol.Feature');
 const Property = goog.require('ol.layer.Property');
@@ -197,7 +197,7 @@ export const isVisible = function(source) {
  * @return {number} The comparison
  */
 export const titleCompare = function(a, b) {
-  return defaultCompare(a.getTitle(), b.getTitle());
+  return defaultSort(a.getTitle(), b.getTitle());
 };
 
 /**
@@ -210,7 +210,7 @@ export const titleCompare = function(a, b) {
 export const zIndexCompare = function(a, b) {
   var aZ = a.get(Property.Z_INDEX) || 0;
   var bZ = b.get(Property.Z_INDEX) || 0;
-  return defaultCompare(bZ, aZ);
+  return defaultSort(bZ, aZ);
 };
 
 /**

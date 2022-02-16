@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.search.FacetedSearchCtrl');
 
+import {defaultSort} from '../../array/array.js';
 import Settings from '../../config/settings.js';
 import SearchEventType from '../../search/searcheventtype.js';
 import TriState from '../../structs/tristate.js';
@@ -7,7 +8,7 @@ import SlickTreeNode from '../slick/slicktreenode.js';
 import {apply} from '../ui.js';
 import FacetNode from './facetnode.js';
 
-const {defaultCompare, sortObjectsByKey} = goog.require('goog.array');
+const {sortObjectsByKey} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const {caseInsensitiveCompare} = goog.require('goog.string');
 
@@ -274,7 +275,7 @@ export default class Controller {
     } else if (ax === -1) {
       return 1;
     } else {
-      return defaultCompare(ax, bx);
+      return defaultSort(ax, bx);
     }
   }
 
@@ -423,7 +424,7 @@ export default class Controller {
    * @private
    */
   static sortResults_(a, b) {
-    return -1 * defaultCompare(a.getScore(), b.getScore());
+    return -1 * defaultSort(a.getScore(), b.getScore());
   }
 }
 

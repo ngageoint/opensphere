@@ -1,5 +1,6 @@
 goog.declareModuleId('os.feature');
 
+import {defaultSort} from '../array/array.js';
 import * as osBearing from '../bearing/bearing.js';
 import BearingType from '../bearing/bearingtype.js';
 import CommandProcessor from '../command/commandprocessor.js';
@@ -32,7 +33,6 @@ import {quoteString} from '../ui/filter/filterstring.js';
 
 import DynamicFeature from './dynamicfeature.js';
 
-const {defaultCompare} = goog.require('goog.array');
 const {containsValue} = goog.require('goog.object');
 const reflect = goog.require('goog.reflect');
 const {floatAwareCompare} = goog.require('goog.string');
@@ -1310,7 +1310,7 @@ export const sortByField = function(field, a, b) {
       return floatAwareCompare(aValue, bValue);
     }
 
-    return defaultCompare(aValue, bValue);
+    return defaultSort(aValue, bValue);
   } else if (aValue != null) {
     return -1;
   } else if (bValue != null) {

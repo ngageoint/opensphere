@@ -1,8 +1,9 @@
 goog.declareModuleId('os.ui.menu.MenuItem');
 
+import {defaultSort} from '../../array/array.js';
 import MenuItemType from './menuitemtype.js';
 
-const {defaultCompare, removeIf} = goog.require('goog.array');
+const {removeIf} = goog.require('goog.array');
 
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: MenuItemOptions} = goog.requireType('os.ui.menu.MenuItemOptions');
@@ -280,6 +281,6 @@ export default class MenuItem {
    * @private
    */
   static sort_(a, b) {
-    return defaultCompare(a.sort, b.sort) || defaultCompare(a.label, b.label);
+    return defaultSort(a.sort, b.sort) || defaultSort(a.label, b.label);
   }
 }

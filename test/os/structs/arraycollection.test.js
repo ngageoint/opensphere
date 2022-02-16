@@ -1,12 +1,12 @@
-goog.require('goog.array');
 goog.require('goog.structs');
+goog.require('os.array');
 goog.require('os.structs.ArrayCollection');
 goog.require('os.structs.EventType');
 
 describe('os.structs.ArrayCollection', function() {
-  const googArray = goog.module.get('goog.array');
   const {default: ArrayCollection} = goog.module.get('os.structs.ArrayCollection');
   const {default: EventType} = goog.module.get('os.structs.EventType');
+  const {defaultSort} = goog.module.get('os.array');
 
   /**
    * Mock filter function for unit tests
@@ -104,9 +104,9 @@ describe('os.structs.ArrayCollection', function() {
 
   it('should properly handle a sort added later', function() {
     var c = new ArrayCollection([3, 2, 1]);
-    c.setSort(googArray.defaultCompare);
+    c.setSort(defaultSort);
     expect(c.sortChanged_).toBe(true);
-    expect(c.getSort()).toBe(googArray.defaultCompare);
+    expect(c.getSort()).toBe(defaultSort);
     c.refresh();
     expect(c.sortChanged_).toBe(false);
 
@@ -117,7 +117,7 @@ describe('os.structs.ArrayCollection', function() {
 
   it('should keep items sorted when added with a sort', function() {
     var c = new ArrayCollection([1, 3, 5]);
-    c.setSort(googArray.defaultCompare);
+    c.setSort(defaultSort);
     c.refresh();
 
     c.add(2);
@@ -126,7 +126,7 @@ describe('os.structs.ArrayCollection', function() {
 
   it('should remove via binary search with a sort', function() {
     var c = new ArrayCollection([3, 2, 1]);
-    c.setSort(googArray.defaultCompare);
+    c.setSort(defaultSort);
     c.refresh();
 
     c.remove(2);
@@ -135,7 +135,7 @@ describe('os.structs.ArrayCollection', function() {
 
   it('should find the proper index with a sort', function() {
     var c = new ArrayCollection([3, 2, 1]);
-    c.setSort(googArray.defaultCompare);
+    c.setSort(defaultSort);
     c.refresh();
 
     expect(c.getItemIndex(3)).toBe(2);
@@ -200,7 +200,7 @@ describe('os.structs.ArrayCollection', function() {
 
   it('should properly handle both a filter and a sort added later', function() {
     var c = new ArrayCollection([4, 3, 2, 1]);
-    c.setSort(googArray.defaultCompare);
+    c.setSort(defaultSort);
     c.setFilter(mockFilter);
     c.refresh();
 
@@ -213,7 +213,7 @@ describe('os.structs.ArrayCollection', function() {
 
   it('should properly handle adding items with both a filter and a sort', function() {
     var c = new ArrayCollection();
-    c.setSort(googArray.defaultCompare);
+    c.setSort(defaultSort);
     c.setFilter(mockFilter);
     c.refresh();
 
@@ -234,7 +234,7 @@ describe('os.structs.ArrayCollection', function() {
 
   it('should properly handle removing items with both a filter and a sort', function() {
     var c = new ArrayCollection([4, 3, 2, 1]);
-    c.setSort(googArray.defaultCompare);
+    c.setSort(defaultSort);
     c.setFilter(mockFilter);
     c.refresh();
 
@@ -254,7 +254,7 @@ describe('os.structs.ArrayCollection', function() {
 
   it('should find the proper index with both a filter and a sort', function() {
     var c = new ArrayCollection([4, 3, 2, 1]);
-    c.setSort(googArray.defaultCompare);
+    c.setSort(defaultSort);
     c.setFilter(mockFilter);
     c.refresh();
 

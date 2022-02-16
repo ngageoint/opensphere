@@ -1,5 +1,6 @@
 goog.declareModuleId('os.data.BaseDescriptor');
 
+import {defaultSort} from '../array/array.js';
 import * as dispatcher from '../dispatcher.js';
 import PropertyChangeEvent from '../events/propertychangeevent.js';
 import osImplements from '../implements.js';
@@ -11,7 +12,6 @@ import DescriptorEvent from './descriptorevent.js';
 import DescriptorEventType from './descriptoreventtype.js';
 import IDataDescriptor from './idatadescriptor.js';
 
-const googArray = goog.require('goog.array');
 const nextTick = goog.require('goog.async.nextTick');
 const UtcDateTime = goog.require('goog.date.UtcDateTime');
 const EventTarget = goog.require('goog.events.EventTarget');
@@ -730,7 +730,7 @@ export default class BaseDescriptor extends EventTarget {
     } else if (!isNaN(a.getLastActive()) && isNaN(b.getLastActive())) {
       return -1;
     } else {
-      return googArray.defaultCompare(a.getLastActive(), b.getLastActive());
+      return defaultSort(a.getLastActive(), b.getLastActive());
     }
   }
 

@@ -1,10 +1,10 @@
 goog.declareModuleId('os.ui.timeline.OffArrows');
 
+import {defaultSort} from '../../array/array.js';
 import PropertyChangeEvent from '../../events/propertychangeevent.js';
 import BaseItem from './baseitem.js';
 import * as timelineUi from './timeline.js';
 
-const googArray = goog.require('goog.array');
 const GoogEventType = goog.require('goog.events.EventType');
 const olExtent = goog.require('ol.extent');
 
@@ -229,7 +229,7 @@ export default class OffArrows extends BaseItem {
    * @private
    */
   static compareLeft_(a, b) {
-    return googArray.defaultCompare(a.getExtent()[0], b.getExtent()[0]);
+    return defaultSort(a.getExtent()[0], b.getExtent()[0]);
   }
 
   /**
@@ -242,6 +242,6 @@ export default class OffArrows extends BaseItem {
    */
   static compareRight_(a, b) {
     // this is flipped because we mirror the right group to flip the arrows
-    return -1 * googArray.defaultCompare(a.getExtent()[1], b.getExtent()[1]);
+    return -1 * defaultSort(a.getExtent()[1], b.getExtent()[1]);
   }
 }

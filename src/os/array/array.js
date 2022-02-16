@@ -69,7 +69,7 @@ export const forEach = function(arr, f, opt_obj) {
  * @template VALUE
  */
 export const sortByField = function(field, a, b) {
-  return googArray.defaultCompare(a[field], b[field]);
+  return defaultSort(a[field], b[field]);
 };
 
 /**
@@ -82,7 +82,7 @@ export const sortByField = function(field, a, b) {
  * @template VALUE
  */
 export const sortByFieldDesc = function(field, a, b) {
-  return googArray.defaultCompare(b[field], a[field]);
+  return defaultSort(b[field], a[field]);
 };
 
 /**
@@ -239,7 +239,7 @@ export let JoinIndex;
  * @return {number}
  */
 export const crossProductSort = function(a, b) {
-  return -1 * googArray.defaultCompare(a.crossProduct, b.crossProduct);
+  return -1 * defaultSort(a.crossProduct, b.crossProduct);
 };
 
 /**
@@ -307,7 +307,7 @@ export const join = function(sets, copyFunction) {
  * assumed to contain equal-length groups of values, and the target is searched using a group length (stride) and offset
  * within each group.
  *
- * If no opt_compareFn is specified, elements are compared using `googArray.defaultCompare`, which compares the
+ * If no opt_compareFn is specified, elements are compared using `os.array.defaultSort`, which compares the
  * elements using the built in < and > operators. This will produce the expected behavior for homogeneous arrays of
  * String(s) and Number(s).
  *
@@ -332,7 +332,7 @@ export const join = function(sets, copyFunction) {
  * @template TARGET, VALUE
  */
 export const binaryStrideSearch = function(arr, target, stride, offset, opt_compareFn) {
-  var compareFn = opt_compareFn || googArray.defaultCompare;
+  var compareFn = opt_compareFn || defaultSort;
 
   // ensure the offset is within the group bounds
   offset = math.clamp(offset, 0, stride - 1);
@@ -361,4 +361,14 @@ export const binaryStrideSearch = function(arr, target, stride, offset, opt_comp
   // left is the index if found, or the insertion point otherwise.
   // ~left is a shorthand for -left - 1.
   return found ? left : ~left;
+};
+
+/**
+ * @param {VALUE} a
+ * @param {VALUE} b
+ * @return {number}
+ * @template VALUE
+ */
+export const defaultSort = (a, b) => {
+  return a > b ? 1 : a < b ? -1 : 0;
 };

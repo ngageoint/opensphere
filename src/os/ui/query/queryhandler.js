@@ -1,11 +1,12 @@
 goog.declareModuleId('os.ui.query.QueryHandler');
 
+import {defaultSort} from '../../array/array.js';
 import FilterEntry from '../../filter/filterentry.js';
 import instanceOf from '../../instanceof.js';
 import {getAreaManager, getFilterManager, getQueryManager} from '../../query/queryinstance.js';
 
 const Disposable = goog.require('goog.Disposable');
-const {defaultCompare, removeDuplicates} = goog.require('goog.array');
+const {removeDuplicates} = goog.require('goog.array');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 
 const Feature = goog.requireType('ol.Feature');
@@ -360,7 +361,7 @@ export default class QueryHandler extends Disposable {
 
     var order1 = order[0] + 'Id';
     entries.sort(function(a, b) {
-      return defaultCompare(a[order1], b[order1]);
+      return defaultSort(a[order1], b[order1]);
     });
 
     var lastId = undefined;

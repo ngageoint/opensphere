@@ -9,6 +9,7 @@ goog.require('goog.color.Rgb');
 goog.require('goog.math');
 goog.require('goog.math.Matrix');
 
+import {defaultSort} from './array/array.js';
 
 /**
  * @typedef {{
@@ -588,7 +589,7 @@ export const colorSort = function(c1, c2) {
   const val1 = Math.round(hsl1[0] * 100) + Math.round(hsl1[1] * 100) / 100 + Math.round(hsl1[2] * 100) / 10000;
   const val2 = Math.round(hsl2[0] * 100) + Math.round(hsl2[1] * 100) / 100 + Math.round(hsl2[2] * 100) / 10000;
 
-  return goog.array.defaultCompare(val2, val1);
+  return defaultSort(val2, val1);
 };
 
 /**

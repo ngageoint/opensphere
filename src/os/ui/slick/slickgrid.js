@@ -2,6 +2,7 @@ goog.declareModuleId('os.ui.slick.SlickGridUI');
 
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';
+import {defaultSort} from '../../array/array.js';
 import {killRightButton} from '../../events/events.js';
 import {filterFalsey} from '../../fn/fn.js';
 import osImplements from '../../implements.js';
@@ -22,7 +23,6 @@ import SlickGridEvent from './slickgridevent.js';
 
 const Disposable = goog.require('goog.Disposable');
 const Timer = goog.require('goog.Timer');
-const {defaultCompare, insert} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const nextTick = goog.require('goog.async.nextTick');
 const dispose = goog.require('goog.dispose');
@@ -547,7 +547,7 @@ export class Controller extends Disposable {
     var rows = this.getSelectedRows();
     if (rows && rows.length) {
       // sort the selected rows, so items match the order in the view
-      rows = rows.slice().sort(defaultCompare);
+      rows = rows.slice().sort(defaultSort);
 
       // map rows to data items and filter out falsey values
       selected = rows.map(function(row) {
@@ -835,8 +835,12 @@ export class Controller extends Disposable {
           var index = srcColumns.findIndex(findByField.bind(this, 'id', columns[i]['id']));
           if (index > -1) {
             var targetIndex = j > index ? j - 1 : j;
-            insert(changed, srcColumns[index]);
-            insert(changed, srcColumns[targetIndex]);
+            if (!changed.includes(srcColumns[index])) {
+              changed.push(srcColumns[index]);
+            }
+            if (!changed.includes(srcColumns[targetIndex])) {
+              changed.push(srcColumns[targetIndex]);
+            }
             const columnToMove = srcColumns.splice(index, 1)[0];
             srcColumns.splice(targetIndex, 0, columnToMove);
           }
@@ -1403,7 +1407,7 @@ export class Controller extends Disposable {
       }
 
       if (result == undefined) {
-        // inlined defaultCompare to avoid the function call
+        // inlined defaultSort to avoid the function call
         result = (v1 > v2 ? 1 : v1 < v2 ? -1 : 0) * sign;
       }
 

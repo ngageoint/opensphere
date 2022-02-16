@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.slick.TreeSearch');
 
+import {defaultSort} from '../../array/array.js';
 import ISearchable from '../../data/isearchable.js';
 import osImplements from '../../implements.js';
 import {merge} from '../../object/object.js';
 import SlickTreeNode from './slicktreenode.js';
 
 const Disposable = goog.require('goog.Disposable');
-const {defaultCompare} = goog.require('goog.array');
 const {numerateCompare, regExpEscape} = goog.require('goog.string');
 
 const {default: INodeGroupBy} = goog.requireType('os.data.groupby.INodeGroupBy');
@@ -392,7 +392,7 @@ export default class TreeSearch extends Disposable {
    * @return {number}
    */
   static idCompare(a, b) {
-    return defaultCompare(a.getId(), b.getId());
+    return defaultSort(a.getId(), b.getId());
   }
 
   /**
@@ -441,7 +441,7 @@ export default class TreeSearch extends Disposable {
     var val = numerateCompare(/** @type {string} */ (a.getLabel()), /** @type {string} */ (b.getLabel()));
 
     if (val === 0) {
-      val = defaultCompare(a.getId(), b.getId()); // lexicographic sort
+      val = defaultSort(a.getId(), b.getId()); // lexicographic sort
     }
 
     return val;

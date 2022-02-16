@@ -1,8 +1,9 @@
 goog.declareModuleId('os.ui.im.ImportManager');
 
+import {defaultSort} from '../../array/array.js';
 import Importer from '../../im/importer.js';
 
-const {defaultCompare, removeDuplicates} = goog.require('goog.array');
+const {removeDuplicates} = goog.require('goog.array');
 const log = goog.require('goog.log');
 const {forEach} = goog.require('goog.object');
 
@@ -207,10 +208,10 @@ export default class ImportManager {
   registerImportDetails(details, opt_isData) {
     if (opt_isData) {
       this.dataTypes_.push(details);
-      this.dataTypes_.sort(defaultCompare);
+      this.dataTypes_.sort(defaultSort);
     } else {
       this.details_.push(details);
-      this.details_.sort(defaultCompare);
+      this.details_.sort(defaultSort);
     }
   }
 

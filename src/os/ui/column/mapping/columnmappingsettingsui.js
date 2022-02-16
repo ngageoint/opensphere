@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.column.mapping.ColumnMappingSettingsUI');
 
+import {defaultSort} from '../../../array/array.js';
 import ColumnMappingEventType from '../../../column/columnmappingeventtype.js';
 import ColumnMappingManager from '../../../column/columnmappingmanager.js';
 import {ROOT} from '../../../os.js';
@@ -12,8 +13,6 @@ import * as osWindow from '../../window.js';
 import {directiveTag as columnMappingExportUi} from './columnmappingexport.js';
 import {launchColumnMappingWindow} from './columnmappingform.js';
 import ColumnMappingNode from './columnmappingnode.js';
-
-const {defaultCompare, insert} = goog.require('goog.array');
 
 const {default: IColumnMapping} = goog.requireType('os.column.IColumnMapping');
 
@@ -133,12 +132,12 @@ export class Controller {
     if (selected.length > 0) {
       for (var i = 0, ii = selected.length; i < ii; i++) {
         // don't include the subnodes if they are selected in the tree
-        if (selected[i] instanceof ColumnMappingNode) {
-          insert(selectedItems, selected[i].getColumnMapping());
+        if (selected[i] instanceof ColumnMappingNode && !selectedItems.includes(selected[i].getColumnMapping())) {
+          selectedItems.push(selected[i].getColumnMapping());
         } else {
           var parent = selected[i].getParent();
-          if (parent instanceof ColumnMappingNode) {
-            insert(selectedItems, parent.getColumnMapping());
+          if (parent instanceof ColumnMappingNode && !selectedItems.includes(parent.getColumnMapping())) {
+            selectedItems.push(parent.getColumnMapping());
           }
         }
       }
@@ -197,5 +196,5 @@ const mappingToNode = function(mapping) {
  * @return {number}
  */
 const sortMappings = function(a, b) {
-  return defaultCompare(a.getName(), b.getName());
+  return defaultSort(a.getName(), b.getName());
 };

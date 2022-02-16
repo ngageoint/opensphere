@@ -1,5 +1,6 @@
 goog.declareModuleId('os.state.StateManager');
 
+import {defaultSort} from '../array/array.js';
 import DataManager from '../data/datamanager.js';
 import ProviderEntry from '../data/providerentry.js';
 import osImplements from '../implements.js';
@@ -27,7 +28,6 @@ import ViewState from './v4/viewstate.js';
 import Versions from './versions.js';
 import XMLStateManager from './xmlstatemanager.js';
 
-const {defaultCompare, insert} = goog.require('goog.array');
 const {getFirstElementChild} = goog.require('goog.dom');
 const log = goog.require('goog.log');
 const {remove} = goog.require('ol.array');
@@ -211,7 +211,7 @@ export default class StateManager extends XMLStateManager {
     if (stateDescriptors.length) {
       // sort by last active to get the most recently activated state and default in its details
       stateDescriptors.sort(function(a, b) {
-        return defaultCompare(a, b);
+        return defaultSort(a, b);
       });
 
       var descriptor = /** @type {IStateDescriptor} */ (stateDescriptors[0]);
@@ -294,7 +294,9 @@ export default class StateManager extends XMLStateManager {
     if (!opt_versionKey) {
       opt_versionKey = this.getVersion();
     }
-    insert(this.functionMap_[opt_versionKey].loadFunctions, loadFunction);
+    if (!this.functionMap_[opt_versionKey].loadFunctions.includes(loadFunction)) {
+      this.functionMap_[opt_versionKey].loadFunctions.push(loadFunction);
+    }
   }
 
   /**
@@ -321,7 +323,9 @@ export default class StateManager extends XMLStateManager {
     if (!opt_versionKey) {
       opt_versionKey = this.getVersion();
     }
-    insert(this.functionMap_[opt_versionKey].saveFunctions, saveFunction);
+    if (!this.functionMap_[opt_versionKey].saveFunctions.includes(saveFunction)) {
+      this.functionMap_[opt_versionKey].saveFunctions.push(saveFunction);
+    }
   }
 
   /**

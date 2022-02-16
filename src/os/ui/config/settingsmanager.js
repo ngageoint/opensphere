@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.config.SettingsManager');
 
+import {defaultSort} from '../../array/array.js';
 import SlickTreeNode from '../slick/slicktreenode.js';
 import SettingNode from './settingnode.js';
 import SettingPlugin from './settingplugin.js';
 import SettingsManagerEvent from './settingsmanagerevent.js';
 import SettingsManagerEventType from './settingsmanagereventtype.js';
 
-const {defaultCompare} = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const Logger = goog.requireType('goog.log.Logger');
@@ -79,7 +79,7 @@ export default class SettingsManager extends EventTarget {
     if (children) {
       var sortedChildren = children.slice();
       sortedChildren.sort(function(a, b) {
-        return defaultCompare(a.getLabel(), b.getLabel());
+        return defaultSort(a.getLabel(), b.getLabel());
       });
       return sortedChildren;
     }

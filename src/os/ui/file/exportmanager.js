@@ -2,6 +2,7 @@ goog.declareModuleId('os.ui.file.ExportManager');
 
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';
+import {defaultSort} from '../../array/array.js';
 import Settings from '../../config/settings.js';
 import DataManager from '../../data/datamanager.js';
 import EventType from '../../events/eventtype.js';
@@ -11,7 +12,6 @@ import {getLocalUrl} from '../../file/index.js';
 import ImportManager from '../im/importmanager.js';
 import * as osWindow from '../window.js';
 
-const {defaultCompare} = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
@@ -340,7 +340,7 @@ export default class ExportManager extends EventTarget {
    * @private
    */
   static sortByLabel_(a, b) {
-    return defaultCompare(a.getLabel(), b.getLabel());
+    return defaultSort(a.getLabel(), b.getLabel());
   }
 
   /**

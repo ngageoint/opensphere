@@ -1,13 +1,12 @@
 goog.declareModuleId('os.state');
 
+import {defaultSort} from '../array/array.js';
 import CommandProcessor from '../command/commandprocessor.js';
 import DataManager from '../data/datamanager.js';
 import BaseProvider from '../ui/data/baseprovider.js';
 import DescriptorProvider from '../ui/data/descriptorprovider.js';
 import {hasUrlScheme} from '../url/url.js';
 import Tag from './tag.js';
-
-const {defaultCompare} = goog.require('goog.array');
 
 const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 const {default: IState} = goog.requireType('os.state.IState');
@@ -61,7 +60,7 @@ export const stateToString = function(state) {
  */
 export const priorityCompare = function(a, b) {
   // a/b are flipped to sort in descending priority order
-  return defaultCompare(b.getPriority(), a.getPriority());
+  return defaultSort(b.getPriority(), a.getPriority());
 };
 
 /**
@@ -72,7 +71,7 @@ export const priorityCompare = function(a, b) {
  * @return {number} The comparison
  */
 export const titleCompare = function(a, b) {
-  return defaultCompare(a.getTitle(), b.getTitle());
+  return defaultSort(a.getTitle(), b.getTitle());
 };
 
 /**

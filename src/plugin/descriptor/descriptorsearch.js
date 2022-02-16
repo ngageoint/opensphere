@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.descriptor.DescriptorSearch');
 
+import {defaultSort} from '../../os/array/array.js';
 import DataManager from '../../os/data/datamanager.js';
 import osImplements from '../../os/implements.js';
 import AbstractSearch from '../../os/search/abstractsearch.js';
@@ -150,7 +151,7 @@ export default class DescriptorSearch extends AbstractSearch {
     }
 
     googArray.sort(results, function(a, b) {
-      return googArray.defaultCompare(b.getScore(), a.getScore());
+      return defaultSort(b.getScore(), a.getScore());
     });
 
     if (promises.length) {

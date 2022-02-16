@@ -1,5 +1,6 @@
 goog.declareModuleId('os.net.Request');
 
+import {defaultSort} from '../array/array.js';
 import * as dispatcher from '../dispatcher.js';
 import {getDefaultValidators} from './net.js';
 import RequestEvent from './requestevent.js';
@@ -10,7 +11,7 @@ import VariableReplacer from './variablereplacer.js';
 
 const Promise = goog.require('goog.Promise');
 const Uri = goog.require('goog.Uri');
-const {binaryInsert, binaryRemove, defaultCompare} = goog.require('goog.array');
+const {binaryInsert, binaryRemove} = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const Level = goog.require('goog.log.Level');
@@ -826,10 +827,10 @@ export default class Request extends EventTarget {
    * @private
    */
   static modifierCompare_(a, b) {
-    var r = defaultCompare(a.getPriority(), b.getPriority());
+    var r = defaultSort(a.getPriority(), b.getPriority());
 
     if (r === 0) {
-      return defaultCompare(a.getId(), b.getId());
+      return defaultSort(a.getId(), b.getId());
     } else {
       return -r;
     }

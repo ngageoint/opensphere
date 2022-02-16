@@ -1,5 +1,6 @@
 goog.declareModuleId('os.legend');
 
+import {defaultSort} from '../array/array.js';
 import Settings from '../config/settings.js';
 import * as dispatcher from '../dispatcher.js';
 import {noop} from '../fn/fn.js';
@@ -13,7 +14,6 @@ import StyleManager from '../style/stylemanager_shim.js';
 import {measureText} from '../ui/ui.js';
 import ILegendRenderer from './ilegendrenderer.js';
 
-const {defaultCompare} = goog.require('goog.array');
 const {clamp} = goog.require('goog.math');
 const Feature = goog.require('ol.Feature');
 const ImageState = goog.require('ol.ImageState');
@@ -196,7 +196,7 @@ export const registerLayerPlugin = function(options) {
  */
 export const sortPluginByPriority = function(a, b) {
   // sort in descending order
-  return -defaultCompare(a.priority || 0, b.priority || 0);
+  return -defaultSort(a.priority || 0, b.priority || 0);
 };
 
 /**
@@ -557,7 +557,7 @@ export const numericCompare = function(labelA, labelB) {
 
   var a = Number(aMatch[1]);
   var b = Number(bMatch[1]);
-  return a > b ? 1 : a < b ? -1 : 0;
+  return defaultSort(a, b);
 };
 
 /**

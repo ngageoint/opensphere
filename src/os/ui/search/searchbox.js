@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.search.SearchBoxUI');
 
 import '../dragdrop/dragdropui.js';
+import {defaultSort} from '../../array/array.js';
 import Settings from '../../config/settings.js';
 import * as dispatcher from '../../dispatcher.js';
 import osImplements from '../../implements.js';
@@ -637,7 +638,7 @@ export class Controller {
   getSearchOptionsGroup(groupName) {
     const group = this['searchOptionsGroups'][groupName];
     googArray.sort(group, function(a, b) {
-      return googArray.defaultCompare(a.getName(), b.getName());
+      return defaultSort(a.getName(), b.getName());
     });
     return group;
   }

@@ -1,10 +1,10 @@
 goog.declareModuleId('os.search.AbstractSearchManager');
 
+import {defaultSort} from '../array/array.js';
 import FavoriteManager from '../user/settings/favoritemanager.js';
 import FavoriteType from '../user/settings/favoritetype.js';
 import SearchEventType from './searcheventtype.js';
 
-const {defaultCompare} = goog.require('goog.array');
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
 const {hashCode} = goog.require('goog.string');
@@ -194,7 +194,7 @@ export default class AbstractSearchManager extends EventTarget {
    */
   scoreCompare(a, b) {
     // default is ascending order, so flip the sign
-    return -defaultCompare(a.getScore(), b.getScore());
+    return -defaultSort(a.getScore(), b.getScore());
   }
 
   /**

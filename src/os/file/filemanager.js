@@ -1,9 +1,9 @@
 goog.declareModuleId('os.file.FileManager');
 
+import {defaultSort} from '../array/array.js';
 import {detect, getTypeChain} from './mime.js';
 import * as text from './mime/text.js';
 
-const {defaultCompare} = goog.require('goog.array');
 const GoogFileReader = goog.require('goog.fs.FileReader');
 const log = goog.require('goog.log');
 
@@ -143,7 +143,7 @@ export default class FileManager {
    * @private
    */
   sortDescPriority_(a, b) {
-    return defaultCompare(b.getPriority(), a.getPriority());
+    return defaultSort(b.getPriority(), a.getPriority());
   }
 
   /**
