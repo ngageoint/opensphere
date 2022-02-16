@@ -18,7 +18,7 @@ module.exports = (env, argv) => {
     devtool: isProduction ? 'source-map' : 'eval',
     watch: !isProduction,
     optimization: {
-      minimize: isProduction,
+      minimize: false,
       concatenateModules: false,
       splitChunks: {
         minSize: 0
@@ -36,7 +36,8 @@ module.exports = (env, argv) => {
         deps: [
           require.resolve('google-closure-library/closure/goog/deps'),
           depsFile
-        ]
+        ],
+        mode: 'development'
       })
     ]
   };
