@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.LayersUI');
 
-import LayerType from 'ol/layer/WebGLTile';
+import LayerType from 'ol/src/layer/WebGLTile';
+
 import './layer/defaultlayerui.js';
 import './layertree.js';
 import './uiswitch.js';

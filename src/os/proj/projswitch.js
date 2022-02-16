@@ -1,6 +1,6 @@
 goog.declareModuleId('os.proj.switch');
 
-import Tile from 'ol/layer/Tile';
+import Tile from 'ol/src/layer/Tile';
 import {equivalent, get} from 'ol/src/proj';
 
 import AbstractCommandSet from '../command/abstractcommandset.js';

@@ -1,7 +1,8 @@
 goog.declareModuleId('os.ui.ol.interaction.FocusInteraction');
 
 
-import Interaction from 'ol/interaction/Interaction';
+import Interaction from 'ol/src/interaction/Interaction';
+
 import {getAreaManager} from '../../../query/queryinstance.js';
 
 // const MapBrowserEvent = goog.requireTyped('ol.MapBrowserEvent');

@@ -1,7 +1,7 @@
 goog.declareModuleId('os.proj.switch.SwitchProjection');
 
-import Tile from 'ol/layer/Tile';
-import VectorTile from 'ol/layer/VectorTile';
+import Tile from 'ol/src/layer/Tile';
+import VectorTile from 'ol/src/layer/VectorTile';
 import {equivalent, get} from 'ol/src/proj';
 
 import CommandProcessor from '../command/commandprocessor.js';

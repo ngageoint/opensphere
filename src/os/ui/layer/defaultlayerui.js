@@ -1,7 +1,8 @@
 goog.declareModuleId('os.ui.layer.DefaultLayerUI');
 
-import Layer from 'ol/layer/Layer';
-import UrlTile from 'ol/source/UrlTile';
+import Layer from 'ol/src/layer/Layer';
+import UrlTile from 'ol/src/source/UrlTile';
+
 import LayerAutoRefresh from '../../command/layerautorefreshcmd.js';
 import LayerStyle from '../../command/layerstylecmd.js';
 import Settings from '../../config/settings.js';
