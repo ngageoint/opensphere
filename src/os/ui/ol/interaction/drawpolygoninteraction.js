@@ -376,7 +376,7 @@ export default class DrawPolygon extends AbstractDraw {
    * @suppress {accessControls}
    */
   static handleEvent_(mapBrowserEvent) {
-    if (!(mapBrowserEvent instanceof MapBrowserEvent)) {
+    if (!(mapBrowserEvent instanceof MapBrowserEventType)) {
       return true;
     }
 
