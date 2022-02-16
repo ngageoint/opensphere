@@ -6,6 +6,7 @@ import TagName from './tagname.js';
 
 const dom = goog.require('goog.dom');
 const xml = goog.require('goog.dom.xml');
+const googString = goog.require('goog.string');
 
 const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
 const {default: IParser} = goog.requireType('os.parse.IParser');
@@ -74,7 +75,7 @@ export default class FilterActionParser {
   /**
    * Extracts filter actions from an array of XML nodes.
    *
-   * @param {!IArrayLike<Node>} nodes The XML nodes to extract an entry from.
+   * @param {!Array<Node>} nodes The XML nodes to extract an entry from.
    * @return {!Array<!FilterActionEntry>}
    */
   static parseNodes(nodes) {
@@ -82,11 +83,11 @@ export default class FilterActionParser {
     var entries = [];
     var parentMap = {};
 
-    goog.array.forEach(nodes, function(node) {
+    nodes.forEach(function(node) {
       var actions = [];
       var filter = null;
 
-      var id = /** @type {string} */ (node.getAttribute('id')) || goog.string.getRandomString();
+      var id = /** @type {string} */ (node.getAttribute('id')) || googString.getRandomString();
       var title = /** @type {string} */ (node.getAttribute('title')) || '';
       var description = /** @type {?string} */ (node.getAttribute('description')) || '';
       var tags = /** @type {?string} */ (node.getAttribute('tags')) || '';
@@ -107,7 +108,7 @@ export default class FilterActionParser {
       if (actionsNode && actionsNode.childNodes.length) {
         var actionEls = dom.getChildren(actionsNode);
 
-        goog.array.forEach(actionEls, function(el) {
+        Array.from(actionEls).forEach(function(el) {
           var action = iam.createActionFromXml(el);
           if (action) {
             actions.push(action);
@@ -162,7 +163,7 @@ export default class FilterActionParser {
     var iam = getImportActionManager();
     var root = dom.getFirstElementChild(doc);
     var actionNodes = root.querySelectorAll(iam.xmlEntry);
-    var entries = FilterActionParser.parseNodes(actionNodes);
+    var entries = FilterActionParser.parseNodes(Array.from(actionNodes));
 
     return entries;
   }

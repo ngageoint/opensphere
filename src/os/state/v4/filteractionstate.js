@@ -50,7 +50,7 @@ export default class FilterAction extends XMLState {
       var iam = ImportActionManager.getInstance();
       var children = getChildren(obj);
       if (children && children.length > 0) {
-        var entries = FilterActionParser.parseNodes(children);
+        var entries = FilterActionParser.parseNodes(Array.from(children));
         for (var i = 0, n = entries.length; i < n; i++) {
           var e = entries[i];
 
