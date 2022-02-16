@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ol.events');
 
-import {listen} from 'ol/events';
+import {listen} from 'ol/src/events';
 
 
 /**

@@ -1,6 +1,6 @@
 goog.declareModuleId('os.layer.preset.LayerPresetManager');
 
-import {listen, unlistenByKey} from 'ol/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 
 import VectorLayerPreset from '../../command/vectorlayerpresetcmd.js';
 import settings from '../../config/settings.js';

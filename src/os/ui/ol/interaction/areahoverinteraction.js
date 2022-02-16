@@ -1,9 +1,10 @@
 goog.declareModuleId('os.ui.ol.interaction.AreaHover');
 
-import {pointerMove} from 'ol/events/condition';
-import Select from 'ol/interaction/Select';
-import OLVectorLayer from 'ol/layer/Vector';
-import ViewHint from 'ol/ViewHint';
+import {pointerMove} from 'ol/src/events/condition';
+import Select from 'ol/src/interaction/Select';
+import OLVectorLayer from 'ol/src/layer/Vector';
+import ViewHint from 'ol/src/ViewHint';
+
 import {getAreaManager} from '../../../query/queryinstance.js';
 import * as area from '../../../style/areastyle.js';
 import TimelineController from '../../../time/timelinecontroller.js';

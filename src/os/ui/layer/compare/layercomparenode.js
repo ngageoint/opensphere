@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.layer.compare.LayerCompareNode');
 
-import {listen} from 'ol/events';
+import {listen} from 'ol/src/events';
+
 import {instanceOf} from '../../../classregistry.js';
 import {toRgbArray} from '../../../color.js';
 import PropertyChangeEvent from '../../../events/propertychangeevent.js';

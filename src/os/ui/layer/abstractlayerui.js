@@ -1,7 +1,8 @@
 goog.declareModuleId('os.ui.layer.AbstractLayerUICtrl');
 
-import {listen, unlistenByKey} from 'ol/events';
-import OLObject from 'ol/Object';
+import {listen, unlistenByKey} from 'ol/src/events';
+import OLObject from 'ol/src/Object';
+
 import CommandProcessor from '../../command/commandprocessor.js';
 import ParallelCommand from '../../command/parallelcommand.js';
 import {isLayerNode} from '../../data/data.js';

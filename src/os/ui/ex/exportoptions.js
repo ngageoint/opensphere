@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.ex.ExportOptionsUI');
 
-import {listen, unlistenByKey} from 'ol/events';
+import {listen, unlistenByKey} from 'ol/src/events';
+
 import '../checklist.js';
 import DataManager from '../../data/datamanager.js';
 import DataEventType from '../../data/event/dataeventtype.js';
