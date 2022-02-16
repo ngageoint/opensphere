@@ -6,6 +6,7 @@ import Feature from 'ol/src/Feature';
 import LineString from 'ol/src/geom/LineString';
 import Polygon from 'ol/src/geom/Polygon';
 import OLVectorLayer from 'ol/src/layer/Vector';
+import MapBrowserEvent from 'ol/src/MapBrowserEvent';
 import MapBrowserEventType from 'ol/src/MapBrowserEventType';
 import OLVectorSource from 'ol/src/source/Vector';
 
@@ -376,18 +377,18 @@ export default class DrawPolygon extends AbstractDraw {
    * @suppress {accessControls}
    */
   static handleEvent_(mapBrowserEvent) {
-    if (!(mapBrowserEvent instanceof MapBrowserEventType)) {
+    if (!(mapBrowserEvent instanceof MapBrowserEvent)) {
       return true;
     }
 
     this.updateTrackedPointers_(mapBrowserEvent);
 
     if (mapBrowserEvent.type == MapBrowserEventType.POINTERUP) {
-      this.handleUpEvent_(mapBrowserEvent);
+      DrawPolygon.handleUpEvent_(mapBrowserEvent);
     } else if (mapBrowserEvent.type == MapBrowserEventType.POINTERDOWN) {
-      this.handleDownEvent_(mapBrowserEvent);
+      DrawPolygon.handleDownEvent_(mapBrowserEvent);
     } else if (mapBrowserEvent.type == MapBrowserEventType.POINTERMOVE) {
-      this.handleMoveEvent_(mapBrowserEvent);
+      DrawPolygon.handleMoveEvent_(mapBrowserEvent);
     }
 
     return true;
