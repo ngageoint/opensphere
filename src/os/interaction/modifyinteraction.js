@@ -1,6 +1,6 @@
 goog.declareModuleId('os.interaction.Modify');
 
-import {getUid} from 'ol';
+import {getUid} from 'ol/src';
 import Collection from 'ol/src/Collection';
 import {listen, unlistenByKey} from 'ol/src/events';
 import OLEventType from 'ol/src/events/EventType';

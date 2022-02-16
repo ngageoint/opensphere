@@ -1,6 +1,6 @@
 goog.declareModuleId('os.mixin.canvasreplay');
 
-import {getUid} from 'ol';
+import {getUid} from 'ol/src';
 import {equals} from 'ol/src/array';
 import {intersects} from 'ol/src/extent';
 import {lineStringLength} from 'ol/src/geom/flat/length';

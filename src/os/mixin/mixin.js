@@ -18,7 +18,7 @@ import './tileimagemixin.js';
 import './urltilemixin.js';
 import './zoomscalemixin.js';
 
-import {getUid} from 'ol';
+import {getUid} from 'ol/src';
 import {normalize} from 'ol/src/color';
 import LayerGroup from 'ol/src/layer/Group';
 import {clamp} from 'ol/src/math';

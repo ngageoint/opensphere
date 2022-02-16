@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.ol.OLMap');
 
-import {getUid} from 'ol';
+import {getUid} from 'ol/src';
 import {defaults as controlDefaults} from 'ol/src/control';
 import {platformModifierKeyOnly} from 'ol/src/events/condition';
 import {createEmpty, scaleFromCenter} from 'ol/src/extent';

@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.FeatureEditUI');
 
-import {getUid} from 'ol';
+import {getUid} from 'ol/src';
 import {asArray} from 'ol/src/color';
 import {listen, unlistenByKey} from 'ol/src/events';
 import {getCenter} from 'ol/src/extent';

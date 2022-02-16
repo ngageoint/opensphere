@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.search.place');
 
-import {getUid} from 'ol';
+import {getUid} from 'ol/src';
 import Feature from 'ol/src/Feature';
 import {unsafeClone} from '../../../object/object.js';
 import {setFeatureStyle} from '../../../style/style.js';

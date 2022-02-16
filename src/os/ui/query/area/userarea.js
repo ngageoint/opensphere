@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.query.area.UserAreaUI');
 
-import {getUid} from 'ol';
+import {getUid} from 'ol/src';
 import {remove} from 'ol/src/array';
 import {getArea} from 'ol/src/extent';
 import Feature from 'ol/src/Feature';
