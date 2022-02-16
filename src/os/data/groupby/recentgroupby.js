@@ -4,8 +4,6 @@ import DescriptorNode from '../../ui/data/descriptornode.js';
 import SlickTreeNode from '../../ui/slick/slicktreenode.js';
 import BaseGroupBy from './basegroupby.js';
 
-const googArray = goog.require('goog.array');
-
 const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
 
 
@@ -83,7 +81,10 @@ export default class RecentGroupBy extends BaseGroupBy {
       for (var i = 0, n = this.times_.length; i < n; i++) {
         var t = d.getLastActive();
         if (!isNaN(t) && t >= this.times_[i].time) {
-          googArray.insert(ids, i + this.times_[i].label);
+          const insertId = i + this.times_[i].label;
+          if (!ids.includes(insertId)) {
+            ids.push(insertId);
+          }
           return ids;
         }
       }

@@ -753,9 +753,9 @@ export default class Settings extends EventTarget {
     if (oldVal !== null && !Array.isArray(oldVal) && typeof oldVal === 'object') {
       // delete elements of a deeply nested object
       this.markKeysForDelete_(keys, undefined, oldVal);
-    } else {
+    } else if (!osConfigNamespace.keysToDelete.includes(osConfigNamespace.getPrefixedKey(keys.join('.')))) {
       // delete the key entirely
-      googArray.insert(osConfigNamespace.keysToDelete, osConfigNamespace.getPrefixedKey(keys.join('.')));
+      osConfigNamespace.keysToDelete.push(osConfigNamespace.getPrefixedKey(keys.join('.')));
     }
 
     this.dispatchChange_(keys, undefined, oldVal);
@@ -780,8 +780,8 @@ export default class Settings extends EventTarget {
 
       if (joined == Settings.WRITE_STORAGE_KEY) {
         this.peer_.send(namespacedKeys[0], {keys: keys, newValue: newVal});
-      } else {
-        googArray.insert(this.toNotifyExternal_, {namespace: namespacedKeys[0], keys: keys});
+      } else if (!this.toNotifyExternal_.includes({namespace: namespacedKeys[0], keys: keys})) {
+        this.toNotifyExternal_.push({namespace: namespacedKeys[0], keys: keys});
       }
 
       if (this.saveDelay_) {
@@ -817,9 +817,9 @@ export default class Settings extends EventTarget {
       var newObjKeys = newVal != null ? Object.keys(osObject.reduce(newVal)) : [];
       var keysAsStr = keys.join('.');
       oldObjKeys.forEach(function(oldObjKey) {
-        if (!newObjKeys.includes(oldObjKey)) {
-          googArray.insert(osConfigNamespace.keysToDelete, osConfigNamespace.getPrefixedKey(keysAsStr + '.' +
-              oldObjKey));
+        if (!newObjKeys.includes(oldObjKey) &&
+            !osConfigNamespace.keysToDelete.includes(osConfigNamespace.getPrefixedKey(keysAsStr + '.' + oldObjKey))) {
+          osConfigNamespace.keysToDelete.push(osConfigNamespace.getPrefixedKey(keysAsStr + '.' + oldObjKey));
         }
       });
     }

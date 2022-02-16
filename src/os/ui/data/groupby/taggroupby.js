@@ -3,7 +3,6 @@ goog.declareModuleId('os.ui.data.groupby.TagGroupBy');
 import BaseGroupBy from '../../../data/groupby/basegroupby.js';
 import SlickTreeNode from '../../slick/slicktreenode.js';
 
-const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
 
 const {default: ISearchable} = goog.requireType('os.data.ISearchable');
@@ -51,8 +50,8 @@ export default class TagGroupBy extends BaseGroupBy {
     if (tags) {
       var invalid = false;
       for (var i = 0, n = tags.length; i < n; i++) {
-        if (tags[i]) {
-          googArray.insert(ids, 'a' + tags[i].toUpperCase());
+        if (tags[i] && !ids.includes('a' + tags[i].toUpperCase())) {
+          ids.push('a' + tags[i].toUpperCase());
         } else {
           invalid = true;
         }

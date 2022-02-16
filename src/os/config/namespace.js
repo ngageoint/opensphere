@@ -83,7 +83,9 @@ export const removeObsoleteKeys = function(obj) {
     keys.forEach(function(key) {
       if (googObject.containsKey(reduced, key)) {
         delete reduced[key];
-        googArray.insert(keysToDelete, key);
+        if (!keysToDelete.includes(key)) {
+          keysToDelete.push(key);
+        }
       }
     });
     return osObject.expand(reduced);

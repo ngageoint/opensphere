@@ -242,8 +242,8 @@ export const removeEntryCmd = function(entry) {
  * @param {ITreeNode} node The current node.
  */
 export const isFilterActionNode = function(targetArr, node) {
-  if (node instanceof FilterActionNode) {
-    goog.array.insert(targetArr, node);
+  if (node instanceof FilterActionNode && !targetArr.includes(node)) {
+    targetArr.push(node);
   } else if (node.getChildren()) {
     node.getChildren().forEach(isFilterActionNode.bind(undefined, targetArr));
   }

@@ -5,7 +5,6 @@ import SlickTreeNode from '../../ui/slick/slicktreenode.js';
 import DataManager from '../datamanager.js';
 import BaseGroupBy from './basegroupby.js';
 
-const googArray = goog.require('goog.array');
 const googString = goog.require('goog.string');
 
 const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
@@ -68,23 +67,31 @@ export default class DateGroupBy extends BaseGroupBy {
 
     if (!isNaN(max) && max > Number.NEGATIVE_INFINITY) {
       if (max > this.now_) {
-        googArray.insert(ids, 'xxReports future activity');
+        if (!ids.includes('xxReports future activity')) {
+          ids.push('xxReports future activity');
+        }
         return ids;
       }
 
       var p = periods;
       for (var i = 0, n = p.length; i < n; i++) {
         if ((this.now_ - p[i].offset) <= max) {
-          googArray.insert(ids, googString.padNumber(i, 2) + p[i].label);
+          if (!ids.includes(googString.padNumber(i, 2) + p[i].label)) {
+            ids.push(googString.padNumber(i, 2) + p[i].label);
+          }
           return ids;
         }
       }
 
-      googArray.insert(ids, 'yyNo recent activity');
+      if (!ids.includes('yyNo recent activity')) {
+        ids.push('yyNo recent activity');
+      }
       return ids;
     }
 
-    googArray.insert(ids, 'zzCould not determine activity');
+    if (!ids.includes('zzCould not determine activity')) {
+      ids.push('zzCould not determine activity');
+    }
     return ids;
   }
 

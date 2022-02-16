@@ -3,7 +3,6 @@ goog.declareModuleId('os.data.groupby.LayerProviderGroupBy');
 import SlickTreeNode from '../../ui/slick/slicktreenode.js';
 import BaseGroupBy from './basegroupby.js';
 
-const googArray = goog.require('goog.array');
 const {default: LayerNode} = goog.requireType('os.data.LayerNode');
 
 
@@ -31,7 +30,9 @@ export default class LayerProviderGroupBy extends BaseGroupBy {
       var layer = /** @type {LayerNode} */ (node).getLayer();
       var p = layer.getProvider() || 'Unknown Provider';
 
-      googArray.insert(ids, p);
+      if (!ids.includes(p)) {
+        ids.push(p);
+      }
     } catch (e) {
     }
 

@@ -342,7 +342,9 @@ export default class Peer {
       var types = this.handlers_[i].getTypes();
 
       for (var j = 0, m = types.length; j < m; j++) {
-        googArray.insert(set, types[j]);
+        if (!set.includes(types[j])) {
+          set.push(types[j]);
+        }
       }
     }
 

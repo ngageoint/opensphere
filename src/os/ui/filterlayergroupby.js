@@ -57,7 +57,9 @@ export default class FilterLayerGroupBy extends FilterGroupBy {
       }
     }
 
-    goog.array.insert(ids, val);
+    if (!ids.includes(val)) {
+      ids.push(val);
+    }
     return ids;
   }
 }

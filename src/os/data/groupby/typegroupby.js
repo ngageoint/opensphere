@@ -4,8 +4,6 @@ import DescriptorNode from '../../ui/data/descriptornode.js';
 import SlickTreeNode from '../../ui/slick/slicktreenode.js';
 import BaseGroupBy from './basegroupby.js';
 
-const googArray = goog.require('goog.array');
-
 
 /**
  * Groups nodes by type
@@ -53,7 +51,9 @@ export default class TypeGroupBy extends BaseGroupBy {
       val = 'No Type';
     }
 
-    googArray.insert(ids, val);
+    if (!ids.includes(val)) {
+      ids.push(val);
+    }
     return ids;
   }
 

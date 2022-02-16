@@ -3,7 +3,6 @@ goog.declareModuleId('os.data.groupby.TagListGroupBy');
 import Settings from '../../config/settings.js';
 import TagGroupBy from '../../ui/data/groupby/taggroupby.js';
 
-const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
 
 const {default: ISearchable} = goog.requireType('os.data.ISearchable');
@@ -66,8 +65,8 @@ export default class TagListGroupBy extends TagGroupBy {
       for (var i = 0, n = tags.length; i < n; i++) {
         if (tags[i]) {
           var t = tags[i].toUpperCase();
-          if (this.list_.indexOf(t) > -1) {
-            googArray.insert(ids, 'a' + t);
+          if (this.list_.indexOf(t) > -1 && !ids.includes('a' + t)) {
+            ids.push('a' + t);
           }
         } else {
           invalid = true;

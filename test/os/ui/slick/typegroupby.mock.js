@@ -1,6 +1,5 @@
 goog.module('os.ui.MockTypeGroupBy');
 
-const googArray = goog.require('goog.array');
 const {default: BaseGroupBy} = goog.require('os.data.groupby.BaseGroupBy');
 const {default: SlickTreeNode} = goog.require('os.ui.slick.SlickTreeNode');
 
@@ -43,7 +42,9 @@ class MockTypeGroupBy extends BaseGroupBy {
       val = 'No Type';
     }
 
-    googArray.insert(ids, val);
+    if (!ids.includes(val)) {
+      ids.push(val);
+    }
     return ids;
   }
 

@@ -2,7 +2,6 @@ goog.declareModuleId('os.events');
 
 import SelectionType from './selectiontype.js';
 
-const googArray = goog.require('goog.array');
 const GoogEventType = goog.require('goog.events.EventType');
 const googObject = goog.require('goog.object');
 
@@ -70,7 +69,9 @@ const exemptionFunctions = [];
  * @param {function((Document|Element), string):boolean} checker The exemption check function
  */
 export const addExemption = function(checker) {
-  googArray.insert(exemptionFunctions, checker);
+  if (!exemptionFunctions.includes(checker)) {
+    exemptionFunctions.push(checker);
+  }
 };
 
 /**

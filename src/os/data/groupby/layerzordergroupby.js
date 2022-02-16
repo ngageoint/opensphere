@@ -5,7 +5,6 @@ import {getMapContainer} from '../../map/mapinstance.js';
 import SlickTreeNode from '../../ui/slick/slicktreenode.js';
 import BaseGroupBy from './basegroupby.js';
 
-const googArray = goog.require('goog.array');
 const googString = goog.require('goog.string');
 const {default: LayerNode} = goog.requireType('os.data.LayerNode');
 
@@ -39,7 +38,10 @@ export default class LayerZOrderGroupBy extends BaseGroupBy {
           var group = /** @type {Group} */ (layers[i]);
 
           if (group.getLayers().getArray().indexOf(/** @type {ol.layer.Base} */ (layer)) > -1) {
-            googArray.insert(ids, googString.padNumber(99 - i, 2) + group.getOSType());
+            const insertId = googString.padNumber(99 - i, 2) + group.getOSType();
+            if (!ids.includes(insertId)) {
+              ids.push(insertId);
+            }
             break;
           }
         }
