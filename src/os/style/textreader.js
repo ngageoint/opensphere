@@ -1,9 +1,10 @@
 goog.declareModuleId('os.style.TextReader');
 
-import {asString} from 'ol/color';
-import Fill from 'ol/style/Fill';
-import Stroke from 'ol/style/Stroke';
-import Text from 'ol/style/Text';
+import {asString} from 'ol/src/color';
+import Fill from 'ol/src/style/Fill';
+import Stroke from 'ol/src/style/Stroke';
+import Text from 'ol/src/style/Text';
+
 import AbstractReader from './abstractreader.js';
 import {getFont} from './label.js';
 import StyleField from './stylefield.js';

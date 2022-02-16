@@ -1,16 +1,16 @@
 goog.declareModuleId('os.ui.ol.OLMap');
 
 import {getUid} from 'ol';
-import {defaults as controlDefaults} from 'ol/control';
-import {platformModifierKeyOnly} from 'ol/events/condition';
-import {defaults as interactionDefaults} from 'ol/interaction';
-import DragPan from 'ol/interaction/DragPan';
-import DragZoom from 'ol/interaction/DragZoom';
-import Tile from 'ol/layer/Tile';
-import OLVectorLayer from 'ol/layer/Vector';
-import olMap from 'ol/Map';
+import {defaults as controlDefaults} from 'ol/src/control';
+import {platformModifierKeyOnly} from 'ol/src/events/condition';
 import {createEmpty, scaleFromCenter} from 'ol/src/extent';
 import Feature from 'ol/src/Feature';
+import {defaults as interactionDefaults} from 'ol/src/interaction';
+import DragPan from 'ol/src/interaction/DragPan';
+import DragZoom from 'ol/src/interaction/DragZoom';
+import Tile from 'ol/src/layer/Tile';
+import OLVectorLayer from 'ol/src/layer/Vector';
+import olMap from 'ol/src/Map';
 import {equivalent, get} from 'ol/src/proj';
 import TileWMS from 'ol/src/source/TileWMS';
 import OLVectorSource from 'ol/src/source/Vector';
@@ -18,9 +18,9 @@ import Circle from 'ol/src/style/Circle';
 import Fill from 'ol/src/style/Fill';
 import Stroke from 'ol/src/style/Stroke';
 import Style from 'ol/src/style/Style';
-import {createForProjection} from 'ol/tilegrid';
-import {DEFAULT_MAX_ZOOM} from 'ol/tilegrid/common';
-import View from 'ol/View';
+import {createForProjection} from 'ol/src/tilegrid';
+import {DEFAULT_MAX_ZOOM} from 'ol/src/tilegrid/common';
+import View from 'ol/src/View';
 
 import Settings from '../../config/settings.js';
 import {ProviderKey} from '../../data/data.js';

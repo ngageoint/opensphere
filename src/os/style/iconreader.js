@@ -1,6 +1,6 @@
 goog.declareModuleId('os.style.IconReader');
 
-import {asString} from 'ol/color';
+import {asString} from 'ol/src/color';
 import {toDegrees, toRadians} from 'ol/src/math';
 import IconStyle from 'ol/src/style/Icon';
 import IconAnchorUnits from 'ol/src/style/IconAnchorUnits';

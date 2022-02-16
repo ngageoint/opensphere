@@ -19,8 +19,8 @@ import './urltilemixin.js';
 import './zoomscalemixin.js';
 
 import {getUid} from 'ol';
-import {normalize} from 'ol/color';
-import LayerGroup from 'ol/layer/Group';
+import {normalize} from 'ol/src/color';
+import LayerGroup from 'ol/src/layer/Group';
 import {clamp} from 'ol/src/math';
 import VectorLayer from 'ol/src/renderer/canvas/VectorLayer';
 import MapRenderer from 'ol/src/renderer/Map';
