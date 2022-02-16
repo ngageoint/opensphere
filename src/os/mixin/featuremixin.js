@@ -26,10 +26,11 @@ registerClass(Feature.NAME, Feature);
  * @suppress {accessControls}
  */
 Feature.prototype.set = function(key, value, opt_silent) {
+  const values = this.values_ || (this.values_ = {});
   if (value === undefined) {
-    delete this.values_[key];
+    delete values[key];
   } else {
-    this.values_[key] = value;
+    values[key] = value;
   }
 };
 
@@ -41,7 +42,12 @@ Feature.prototype.set = function(key, value, opt_silent) {
  * @suppress {accessControls}
  */
 Feature.prototype.unset = function(key, opt_silent) {
-  delete this.values_[key];
+  if (this.values_ && key in this.values_) {
+    delete this.values_[key];
+    if (isEmpty(this.values_)) {
+      this.values_ = null;
+    }
+  }
 };
 
 
