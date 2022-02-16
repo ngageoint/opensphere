@@ -1,7 +1,7 @@
 goog.declareModuleId('os.interaction.MouseZoom');
 
 import {platformModifierKeyOnly} from 'ol/src/events/condition';
-import {zoomByDelta} from 'ol/src/interaction/Interaction';
+import Interaction from 'ol/src/interaction/Interaction';
 
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';
