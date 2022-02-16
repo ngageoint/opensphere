@@ -49,7 +49,7 @@ export default class AnimationVector extends OLVectorLayer {
         layerState.zIndex += AnimationVector.Z_OFFSET;
 
         evt.frameState.layerStatesArray.push(layerState);
-        evt.frameState.layerStates[getUid(this)] = layerState;
+        evt.frameState.renderTargets[getUid(this)] = layerState;
       });
 
       this.mapRenderKey_ = listen(this, OLEventType.CHANGE, map.render, map);
