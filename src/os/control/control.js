@@ -24,7 +24,7 @@ export const getControls = function() {
     className: 'ol-scale-line',
     target: document.getElementById('scale-line')
   });
-  var el = scaleLine.getElement();
+  var el = scaleLine.element;
   el.className += ' position-relative';
   controls.push(scaleLine);
 

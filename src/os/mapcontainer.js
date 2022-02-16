@@ -1,7 +1,7 @@
 goog.declareModuleId('os.MapContainer');
 
 import Collection from 'ol/src/Collection';
-import {listenOnce, unlistenByKey} from 'ol/src/events';
+import {listen, listenOnce, unlistenByKey} from 'ol/src/events';
 import {buffer, createEmpty, equals, scaleFromCenter, getCenter, getHeight, getWidth} from 'ol/src/extent';
 import Feature from 'ol/src/Feature';
 import {MAC} from 'ol/src/has';
