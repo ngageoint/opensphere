@@ -553,7 +553,8 @@ export class Controller {
     order.forEach(function(value, index) {
       const currentIndex = this['providerGroups'].indexOf(value);
       if (currentIndex > 0) {
-        googArray.moveItem(this['providerGroups'], currentIndex, index);
+        const providerToMove = this['providerGroups'].splice(currentIndex, 1)[0];
+        this['providerGroups'].splice(index, 0, providerToMove);
       }
     }, this);
 
@@ -825,7 +826,8 @@ export class Controller {
     // move the item to the top of the recent list
     const recentIndex = googArray.indexOf(this['recentSearches'], recent);
     if (recentIndex > 0) {
-      googArray.moveItem(this['recentSearches'], recentIndex, 0);
+      const searchToMove = this['recentSearches'].splice(recentIndex, 1)[0];
+      this['recentSearches'].splice(0, 0, searchToMove);
     }
 
     // save recent searches
@@ -960,7 +962,8 @@ export class Controller {
 
       if (recentIndex > -1) {
         // already in the array, so move it to the top
-        googArray.moveItem(this['recentSearches'], recentIndex, 0);
+        const searchToMove = this['recentSearches'].splice(recentIndex, 1)[0];
+        this['recentSearches'].splice(0, 0, searchToMove);
       } else {
         const recent = /** @type {!osx.search.RecentSearch} */ ({
           ids: enabledIds,

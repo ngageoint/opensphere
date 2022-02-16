@@ -295,7 +295,8 @@ export default class Controller extends EditFiltersCtrl {
       // if the index changed, update the label order
       var stopIndex = ui['item'].index();
       if (this.startIndex_ != stopIndex) {
-        goog.array.moveItem(this['actions'], this.startIndex_, stopIndex);
+        const actionToMove = this['actions'].splice(this.startIndex_, 1)[0];
+        this['actions'].splice(stopIndex, 0, actionToMove);
         apply(this.scope);
       }
     }

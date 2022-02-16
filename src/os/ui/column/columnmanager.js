@@ -8,7 +8,6 @@ import SlickGridEvent from '../slick/slickgridevent.js';
 import {close} from '../window.js';
 import {directiveTag as columnRowUi} from './columnrow.js';
 
-const {moveItem} = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');
 const {getDocument} = goog.require('goog.dom');
 const KeyCodes = goog.require('goog.events.KeyCodes');
@@ -311,7 +310,8 @@ export class Controller {
         var index = findIndex(srcColumns, findByField.bind(this, 'id', columns[i]['id']));
         if (index > -1) {
           var targetIndex = j > index ? j - 1 : j;
-          moveItem(srcColumns, index, targetIndex);
+          const columnToMove = srcColumns.splice(index, 1)[0];
+          srcColumns.splice(targetIndex, 0, columnToMove);
         }
       }
     }

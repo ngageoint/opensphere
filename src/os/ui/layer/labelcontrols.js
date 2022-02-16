@@ -11,7 +11,6 @@ import {apply} from '../ui.js';
 import LabelControlsEventType from './labelcontrolseventtype.js';
 
 const Disposable = goog.require('goog.Disposable');
-const {moveItem} = goog.require('goog.array');
 const {remove} = goog.require('ol.array');
 
 const {LabelConfig} = goog.requireType('os.style.label');
@@ -274,7 +273,8 @@ export class Controller extends Disposable {
       // if the index changed, update the label order
       var stopIndex = ui['item'].index();
       if (this.startIndex_ != stopIndex) {
-        moveItem(this.scope['labels'], this.startIndex_, stopIndex);
+        const labelToMove = this.scope['labels'].splice(this.startIndex_, 1)[0];
+        this.scope['labels'].splice(stopIndex, 0, labelToMove);
         apply(this.scope);
         this.onColumnChange();
       }

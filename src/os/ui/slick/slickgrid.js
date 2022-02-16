@@ -22,7 +22,7 @@ import SlickGridEvent from './slickgridevent.js';
 
 const Disposable = goog.require('goog.Disposable');
 const Timer = goog.require('goog.Timer');
-const {defaultCompare, insert, moveItem} = goog.require('goog.array');
+const {defaultCompare, insert} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const nextTick = goog.require('goog.async.nextTick');
 const dispose = goog.require('goog.dispose');
@@ -837,7 +837,8 @@ export class Controller extends Disposable {
             var targetIndex = j > index ? j - 1 : j;
             insert(changed, srcColumns[index]);
             insert(changed, srcColumns[targetIndex]);
-            moveItem(srcColumns, index, targetIndex);
+            const columnToMove = srcColumns.splice(index, 1)[0];
+            srcColumns.splice(targetIndex, 0, columnToMove);
           }
         }
       }
@@ -934,7 +935,8 @@ export class Controller extends Disposable {
       var columns = this.getColumnsInternal();
       var index = columns.findIndex(findByField.bind(this, 'id', context.column['id']));
       if (index > -1) {
-        moveItem(columns, index, 0);
+        const columnToMove = columns.splice(index, 1)[0];
+        columns.splice(0, 0, columnToMove);
         this.onUserColumnsChange([columns[index]]);
       }
     }
@@ -952,7 +954,8 @@ export class Controller extends Disposable {
       var columns = this.getColumnsInternal();
       var index = columns.findIndex(findByField.bind(this, 'id', context.column['id']));
       if (index > -1) {
-        moveItem(columns, index, columns.length - 1);
+        const columnToMove = columns.splice(index, 1)[0];
+        columns.splice(columns.length - 1, 0, columnToMove);
         this.onUserColumnsChange([columns[index]]);
       }
     }
