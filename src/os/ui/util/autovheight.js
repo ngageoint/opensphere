@@ -213,7 +213,7 @@ export class Controller {
       this.vsm_.listen(GoogEventType.RESIZE, this.onResize_, false, this);
 
       // add resize to common elements
-      var allCommonElements = googArray.clone(windowCommonElements);
+      var allCommonElements = Array.from(windowCommonElements);
       Object.assign(allCommonElements, windowCommonOptionalElements);
       allCommonElements.forEach(function(sibling) {
         resize($(/** @type {string} */ (sibling)), this.resizeFn_);
@@ -237,7 +237,7 @@ export class Controller {
       this.vsm_.unlisten(GoogEventType.RESIZE, this.onResize_, false, this);
 
       // remove resize from common elements
-      var allCommonElements = googArray.clone(windowCommonElements);
+      var allCommonElements = Array.from(windowCommonElements);
       googArray.extend(allCommonElements, windowCommonOptionalElements);
       allCommonElements.forEach(function(sibling) {
         if (this.resizeFn_) {

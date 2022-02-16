@@ -526,7 +526,7 @@ export class Controller {
     this['searchOptionsNoGroup'] = [];
 
     const proGroups = /** @type {!Object<!Array<string>>} */ (Settings.getInstance().get('providerGroups', {}));
-    const copiedOptions = googArray.clone(this['searchOptions']);
+    const copiedOptions = Array.from(this['searchOptions']);
 
     // Iterate over the Provider group names
     for (const groupName in proGroups) {

@@ -8,7 +8,6 @@ goog.declareModuleId('os.config.namespace');
 import * as osObject from '../object/object.js';
 import * as osConfig from './config.js';
 
-const googArray = goog.require('goog.array');
 const googObject = goog.require('goog.object');
 
 
@@ -153,7 +152,7 @@ export const getPrefixedKeys = function(keys) {
   if (keys && keys.length > 0) {
     var reduced = keys.join('.');
     var prefix = isCoreKey(/** @type {!string} */ (reduced)) ? osConfig.coreNs : osConfig.appNs;
-    namespaced = googArray.clone(keys);
+    namespaced = Array.from(keys);
     namespaced.unshift(prefix);
   }
   return namespaced || [];

@@ -254,7 +254,7 @@ export default class FavoriteManager extends EventTarget {
     if (opt_types) {
       fullList = this.getFavTypes(list, opt_types);
     } else if (list) {
-      fullList = googArray.clone(list);
+      fullList = Array.from(list);
     } else {
       fullList = [];
     }

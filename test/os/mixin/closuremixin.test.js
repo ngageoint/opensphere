@@ -52,7 +52,7 @@ describe('os.mixin.closure', function() {
     testArray(original);
 
     // make sure clone ignores polyfills
-    var clone = goog.array.clone(original);
+    var clone = Array.from(original);
     testArray(clone);
     compareArrays(original, clone);
 

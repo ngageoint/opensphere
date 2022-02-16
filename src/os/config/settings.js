@@ -432,7 +432,7 @@ export default class Settings extends EventTarget {
 
         log.fine(logger, 'Saving settings...');
 
-        var keysToDelete = googArray.clone(osConfigNamespace.getObsoleteKeys());
+        var keysToDelete = Array.from(osConfigNamespace.getObsoleteKeys());
         googArray.insertArrayAt(keysToDelete, osConfigNamespace.keysToDelete.slice());
 
         if (opt_settingsToOverwrite != null) {
@@ -673,7 +673,7 @@ export default class Settings extends EventTarget {
     if (this.loaded_) {
       var val = googObject.getValueByKeys(this.mergedConfig_, keys);
       if (Array.isArray(val)) {
-        val = googArray.clone(val);
+        val = Array.from(val);
       } else if (goog.isObject(val)) {
         val = googObject.clone(val);
       }
