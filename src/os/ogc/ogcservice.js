@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ogc.OGCService');
 
-import GeoJSON from 'ol/format/GeoJSON';
+import GeoJSON from 'ol/src/format/GeoJSON';
 
 import OSSettings from '../config/settings.js';
 import * as geo2 from '../geo/geo2.js';

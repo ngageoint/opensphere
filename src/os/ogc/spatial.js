@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ogc.spatial');
 
-import GML from 'ol/format/GML';
-import KML from 'ol/format/KML';
+import GML from 'ol/src/format/GML';
+import KML from 'ol/src/format/KML';
 import {pushParseAndPop} from 'ol/xml';
 
 import {createPolarPolygon, isPolarPolygon} from '../geo/geo.js';
