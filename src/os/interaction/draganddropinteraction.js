@@ -1,6 +1,6 @@
 goog.declareModuleId('os.interaction.DragAndDrop');
 
-import Interaction from 'ol/interaction/Interaction';
+import Interaction from 'ol/src/interaction/Interaction';
 
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';

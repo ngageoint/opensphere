@@ -1,9 +1,9 @@
 goog.declareModuleId('os.interaction.DoubleClick');
 
-import Interaction from 'ol/interaction/Interaction';
-import MapBrowserEventType from 'ol/MapBrowserEventType';
 import Feature from 'ol/src/Feature';
-import ViewHint from 'ol/ViewHint';
+import Interaction from 'ol/src/interaction/Interaction';
+import MapBrowserEventType from 'ol/src/MapBrowserEventType';
+import ViewHint from 'ol/src/ViewHint';
 
 import {getLayer} from '../feature/feature.js';
 import I3DSupport from '../i3dsupport.js';

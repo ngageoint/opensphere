@@ -1,9 +1,9 @@
 goog.declareModuleId('os.control.MapMode');
 
-import Control from 'ol/control/Control';
-import {CLASS_UNSELECTABLE, CLASS_CONTROL} from 'ol/css';
-import {listen, unlistenByKey} from 'ol/events';
-import EventType from 'ol/events/EventType';
+import Control from 'ol/src/control/Control';
+import {CLASS_UNSELECTABLE, CLASS_CONTROL} from 'ol/src/css';
+import {listen, unlistenByKey} from 'ol/src/events';
+import EventType from 'ol/src/events/EventType';
 
 import osActionEventType from '../action/eventtype.js';
 import * as dispatcher from '../dispatcher.js';

@@ -1,6 +1,6 @@
 goog.declareModuleId('os.interaction.DragBox');
 
-import {asArray} from 'ol/color';
+import {asArray} from 'ol/src/color';
 import Stroke from 'ol/src/style/Stroke';
 import Style from 'ol/src/style/Style';
 

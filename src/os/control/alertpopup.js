@@ -1,6 +1,6 @@
 goog.declareModuleId('os.control.AlertPopup');
 
-import Control from 'ol/control/Control';
+import Control from 'ol/src/control/Control';
 
 import {directiveTag as alertPopupUi} from '../ui/alert/alertpopup.js';
 import * as osUi from '../ui/ui.js';

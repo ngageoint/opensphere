@@ -1,6 +1,6 @@
 goog.declareModuleId('os.command.FitLayerByID');
 
-import {listen, unlistenByKey} from 'ol/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 
 import * as dispatcher from '../dispatcher.js';
 import LayerEventType from '../events/layereventtype.js';

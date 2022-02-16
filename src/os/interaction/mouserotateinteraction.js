@@ -1,7 +1,7 @@
 goog.declareModuleId('os.interaction.MouseRotate');
 
-import {noModifierKeys} from 'ol/events/condition';
-import Interaction from 'ol/interaction/Interaction';
+import {noModifierKeys} from 'ol/src/events/condition';
+import Interaction from 'ol/src/interaction/Interaction';
 
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';

@@ -1,6 +1,6 @@
 goog.declareModuleId('os.geom.Ellipse');
 
-import Polygon from 'ol/geom/Polygon';
+import Polygon from 'ol/src/geom/Polygon';
 
 import * as geo from '../geo/geo.js';
 

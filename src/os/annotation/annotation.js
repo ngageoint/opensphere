@@ -1,7 +1,7 @@
 goog.declareModuleId('os.annotation');
 
-import GeometryType from 'ol/geom/GeometryType';
-import Point from 'ol/geom/Point';
+import GeometryType from 'ol/src/geom/GeometryType';
+import Point from 'ol/src/geom/Point';
 import {getUid} from 'ol/src/util';
 
 import {nearestPoints} from '../geo/jsts.js';

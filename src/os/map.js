@@ -1,6 +1,6 @@
 goog.declareModuleId('os.Map');
 
-import OLMap from 'ol/Map';
+import OLMap from 'ol/src/Map';
 import {fromLonLat, toLonLat, transformExtent} from 'ol/src/proj';
 
 import './mixin/canvasreplaygroupmixin.js';

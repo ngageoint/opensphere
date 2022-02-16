@@ -15,8 +15,8 @@ import MapEventType from 'ol/src/MapEventType';
 import ObjectEventType from 'ol/src/ObjectEventType';
 import {get, fromLonLat, toLonLat, transformExtent} from 'ol/src/proj';
 import OLVectorSource from 'ol/src/source/Vector';
-import {createForProjection} from 'ol/tilegrid';
-import View from 'ol/View';
+import {createForProjection} from 'ol/src/tilegrid';
+import View from 'ol/src/View';
 
 import EventType from './action/eventtype.js';
 import {isColorString} from './color.js';

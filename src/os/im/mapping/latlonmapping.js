@@ -1,6 +1,6 @@
 goog.declareModuleId('os.im.mapping.LatLonMapping');
 
-import Point from 'ol/geom/Point';
+import Point from 'ol/src/geom/Point';
 
 import {COORD_CLEANER} from '../../geo/geo.js';
 import BaseLatLonMapping from './location/baselatlonmapping.js';

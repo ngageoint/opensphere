@@ -1,14 +1,14 @@
 goog.declareModuleId('os.geo.jsts.OLParser');
 
-import GeometryCollection from 'ol/geom/GeometryCollection';
-import GeometryType from 'ol/geom/GeometryType';
-import LinearRing from 'ol/geom/LinearRing';
-import LineString from 'ol/geom/LineString';
-import MultiLineString from 'ol/geom/MultiLineString';
-import MultiPoint from 'ol/geom/MultiPoint';
-import MultiPolygon from 'ol/geom/MultiPolygon';
-import Point from 'ol/geom/Point';
-import Polygon from 'ol/geom/Polygon';
+import GeometryCollection from 'ol/src/geom/GeometryCollection';
+import GeometryType from 'ol/src/geom/GeometryType';
+import LinearRing from 'ol/src/geom/LinearRing';
+import LineString from 'ol/src/geom/LineString';
+import MultiLineString from 'ol/src/geom/MultiLineString';
+import MultiPoint from 'ol/src/geom/MultiPoint';
+import MultiPolygon from 'ol/src/geom/MultiPolygon';
+import Point from 'ol/src/geom/Point';
+import Polygon from 'ol/src/geom/Polygon';
 
 
 

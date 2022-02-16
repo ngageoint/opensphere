@@ -1,8 +1,8 @@
 goog.declareModuleId('os.interaction.Measure');
 
-import LineString from 'ol/geom/LineString';
-import Point from 'ol/geom/Point';
-import {MAC} from 'ol/has';
+import LineString from 'ol/src/geom/LineString';
+import Point from 'ol/src/geom/Point';
+import {MAC} from 'ol/src/has';
 import {toLonLat} from 'ol/src/proj';
 import Fill from 'ol/src/style/Fill';
 import Stroke from 'ol/src/style/Stroke';

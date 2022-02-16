@@ -1,9 +1,9 @@
 goog.declareModuleId('os.interaction.DoubleClickZoom');
 
-import {platformModifierKeyOnly} from 'ol/events/condition';
-import OLDoubleClickZoom from 'ol/interaction/DoubleClickZoom';
-import {zoomByDelta} from 'ol/interaction/Interaction';
-import MapBrowserEventType from 'ol/MapBrowserEventType';
+import {platformModifierKeyOnly} from 'ol/src/events/condition';
+import OLDoubleClickZoom from 'ol/src/interaction/DoubleClickZoom';
+import {zoomByDelta} from 'ol/src/interaction/Interaction';
+import MapBrowserEventType from 'ol/src/MapBrowserEventType';
 
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';

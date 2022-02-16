@@ -1,6 +1,6 @@
 goog.declareModuleId('os.data.histo.SourceHistogram');
 
-import {listen, unlistenByKey} from 'ol/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 
 import * as dispatcher from '../../dispatcher.js';
 import * as osFeature from '../../feature/feature.js';

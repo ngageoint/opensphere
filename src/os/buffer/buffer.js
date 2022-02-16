@@ -1,7 +1,7 @@
 goog.declareModuleId('os.buffer');
 
-import GeometryType from 'ol/geom/GeometryType';
 import Feature from 'ol/src/Feature';
+import GeometryType from 'ol/src/geom/GeometryType';
 
 import CommandProcessor from '../command/commandprocessor.js';
 import ParallelCommand from '../command/parallelcommand.js';

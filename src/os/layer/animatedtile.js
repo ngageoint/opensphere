@@ -1,6 +1,6 @@
 goog.declareModuleId('os.layer.AnimatedTile');
 
-import UrlTile from 'ol/source/UrlTile';
+import UrlTile from 'ol/src/source/UrlTile';
 
 import PropertyChangeEvent from '../events/propertychangeevent.js';
 import IAnimationSupport from '../ianimationsupport.js';

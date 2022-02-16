@@ -1,7 +1,7 @@
 goog.declareModuleId('os.command.TransformVectors');
 
-import Geometry from 'ol/geom/Geometry';
-import VectorLayer from 'ol/layer/Vector';
+import Geometry from 'ol/src/geom/Geometry';
+import VectorLayer from 'ol/src/layer/Vector';
 import * as olProj from 'ol/src/proj';
 
 import RecordField from '../data/recordfield.js';

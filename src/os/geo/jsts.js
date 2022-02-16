@@ -7,11 +7,11 @@
  */
 goog.declareModuleId('os.geo.jsts');
 
-import GeometryType from 'ol/geom/GeometryType';
-import MultiPolygon from 'ol/geom/MultiPolygon';
-import * as Polygon from 'ol/geom/Polygon';
 import * as olExtent from 'ol/src/extent';
 import Feature from 'ol/src/Feature';
+import GeometryType from 'ol/src/geom/GeometryType';
+import MultiPolygon from 'ol/src/geom/MultiPolygon';
+import * as Polygon from 'ol/src/geom/Polygon';
 import {get as getProjection} from 'ol/src/proj';
 import Projection from 'ol/src/proj/Projection';
 import {remove as removeTransform} from 'ol/src/proj/transforms';

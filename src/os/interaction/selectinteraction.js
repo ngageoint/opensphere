@@ -1,10 +1,10 @@
 goog.declareModuleId('os.interaction.Select');
 
-import {singleClick} from 'ol/events/condition';
-import GeometryType from 'ol/geom/GeometryType';
-import Interaction from 'ol/interaction/Interaction';
+import {singleClick} from 'ol/src/events/condition';
 import Feature from 'ol/src/Feature';
-import ViewHint from 'ol/ViewHint';
+import GeometryType from 'ol/src/geom/GeometryType';
+import Interaction from 'ol/src/interaction/Interaction';
+import ViewHint from 'ol/src/ViewHint';
 
 import Settings from '../config/settings.js';
 import {getSource} from '../feature/feature.js';

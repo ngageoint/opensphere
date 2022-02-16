@@ -1,6 +1,6 @@
 goog.declareModuleId('os.data.AreaNode');
 
-import {listen, unlistenByKey} from 'ol/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 
 import AreaToggle from '../command/areatogglecmd.js';
 import CommandProcessor from '../command/commandprocessor.js';

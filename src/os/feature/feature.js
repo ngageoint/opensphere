@@ -1,14 +1,14 @@
 goog.declareModuleId('os.feature');
 
-import GeometryCollection from 'ol/geom/GeometryCollection';
-import GeometryLayout from 'ol/geom/GeometryLayout';
-import LineString from 'ol/geom/LineString';
-import MultiLineString from 'ol/geom/MultiLineString';
-import MultiPolygon from 'ol/geom/MultiPolygon';
-import Point from 'ol/geom/Point';
-import Polygon from 'ol/geom/Polygon';
 import * as olExtent from 'ol/src/extent';
 import Feature from 'ol/src/Feature';
+import GeometryCollection from 'ol/src/geom/GeometryCollection';
+import GeometryLayout from 'ol/src/geom/GeometryLayout';
+import LineString from 'ol/src/geom/LineString';
+import MultiLineString from 'ol/src/geom/MultiLineString';
+import MultiPolygon from 'ol/src/geom/MultiPolygon';
+import Point from 'ol/src/geom/Point';
+import Polygon from 'ol/src/geom/Polygon';
 import {toLonLat} from 'ol/src/proj';
 import OLVectorSource from 'ol/src/source/Vector';
 import VectorEventType from 'ol/src/source/VectorEventType';
