@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.filter');
 
-import {getAllTextContent} from 'ol/xml';
+import {getAllTextContent} from 'ol/src/xml';
 import DataManager from '../../data/datamanager.js';
 import FilterEntry from '../../filter/filterentry.js';
 import IFilterable from '../../filter/ifilterable.js';

@@ -1,6 +1,6 @@
 goog.declareModuleId('os.tag');
 
-import {getAllTextContent} from 'ol/xml';
+import {getAllTextContent} from 'ol/src/xml';
 import {appendElement, createElement} from '../xml.js';
 
 const {getChildren} = goog.require('goog.dom');
