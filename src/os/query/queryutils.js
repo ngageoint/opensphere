@@ -1,9 +1,9 @@
 goog.declareModuleId('os.query.utils');
 
-import GeometryType from 'ol/geom/GeometryType';
-import Polygon from 'ol/geom/Polygon';
 import {getArea} from 'ol/src/extent';
 import Feature from 'ol/src/Feature';
+import GeometryType from 'ol/src/geom/GeometryType';
+import Polygon from 'ol/src/geom/Polygon';
 import {transformExtent} from 'ol/src/proj';
 
 import * as osMap from '../map/map.js';

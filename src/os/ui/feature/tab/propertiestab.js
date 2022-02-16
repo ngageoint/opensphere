@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.feature.tab.PropertiesTabUI');
 
-import {listen, unlistenByKey} from 'ol/events';
+import {listen, unlistenByKey} from 'ol/src/events';
+
 import '../featureinfocell.js';
 import Settings from '../../../config/settings.js';
 import RecordField from '../../../data/recordfield.js';

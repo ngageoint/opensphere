@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.LegendUI');
 
-import {listen, unlistenByKey} from 'ol/events';
+import {listen, unlistenByKey} from 'ol/src/events';
+
 import LegendSetting from '../config/legendsetting.js';
 import Settings from '../config/settings.js';
 import SourceManager from '../data/sourcemanager.js';

@@ -1,8 +1,8 @@
 goog.declareModuleId('os.ol.canvas');
 
-import GeometryCollection from 'ol/geom/GeometryCollection';
-import Point from 'ol/geom/Point';
-import Polygon from 'ol/geom/Polygon';
+import GeometryCollection from 'ol/src/geom/GeometryCollection';
+import Point from 'ol/src/geom/Point';
+import Polygon from 'ol/src/geom/Polygon';
 
 import {interpolateEllipse} from '../geo/geo.js';
 

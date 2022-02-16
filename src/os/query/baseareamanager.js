@@ -1,10 +1,10 @@
 goog.declareModuleId('os.query.BaseAreaManager');
 
-import GeoJSON from 'ol/format/GeoJSON';
-import GeometryType from 'ol/geom/GeometryType';
-import OLVectorSource from 'ol/source/Vector';
-import VectorEventType from 'ol/source/VectorEventType';
 import Feature from 'ol/src/Feature';
+import GeoJSON from 'ol/src/format/GeoJSON';
+import GeometryType from 'ol/src/geom/GeometryType';
+import OLVectorSource from 'ol/src/source/Vector';
+import VectorEventType from 'ol/src/source/VectorEventType';
 
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';

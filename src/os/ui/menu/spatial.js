@@ -1,7 +1,8 @@
 goog.declareModuleId('os.ui.menu.spatial');
 
-import Polygon from 'ol/geom/Polygon';
 import Feature from 'ol/src/Feature';
+import Polygon from 'ol/src/geom/Polygon';
+
 import EventType from '../../action/eventtype.js';
 import AreaToggle from '../../command/areatogglecmd.js';
 import CommandProcessor from '../../command/commandprocessor.js';

@@ -4,10 +4,9 @@
 goog.declareModuleId('os.mixin.object');
 
 import {getUid} from 'ol';
-import EventTarget from 'ol/events/Target';
-import OLObject from 'ol/Object';
-import {ObjectEvent} from 'ol/Object';
-import ObjectEventType from 'ol/ObjectEventType';
+import EventTarget from 'ol/src/events/Target';
+import {default as OLObject, ObjectEvent as ObjectEvent} from 'ol/src/Object';
+import ObjectEventType from 'ol/src/ObjectEventType';
 
 
 /**

@@ -1,7 +1,7 @@
 goog.declareModuleId('os.webgl.AbstractRootSynchronizer');
 
-import {listen} from 'ol/events';
-import Layer from 'ol/layer/Layer';
+import {listen} from 'ol/src/events';
+import Layer from 'ol/src/layer/Layer';
 import ZOrderEventType from '../data/zordereventtype.js';
 import * as dispatcher from '../dispatcher.js';
 import LayerEventType from '../events/layereventtype.js';

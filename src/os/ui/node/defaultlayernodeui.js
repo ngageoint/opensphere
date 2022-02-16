@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.node.DefaultLayerNodeUI');
 
-import Layer from 'ol/layer/Layer';
+import Layer from 'ol/src/layer/Layer';
+
 import {instanceOf} from '../../classregistry.js';
 import {DescriptorClass, NodeClass} from '../../data/data.js';
 import DataManager from '../../data/datamanager.js';

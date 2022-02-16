@@ -1,7 +1,8 @@
 goog.declareModuleId('os.ui.file.kml.AbstractKMLExporter');
 
-import KML from 'ol/format/KML';
-import {pushSerializeAndPop} from 'ol/xml';
+import KML from 'ol/src/format/KML';
+import {pushSerializeAndPop} from 'ol/src/xml';
+
 // import JsonField from '../../../../plugin/file/kml/jsonfield.js';
 // import {OS_NS} from '../../../../plugin/file/kml/kml.js';
 import ZipExporter from '../../../ex/zipexporter.js';

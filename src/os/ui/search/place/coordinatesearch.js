@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.search.place.CoordinateSearch');
 
-import Point from 'ol/geom/Point';
+import Point from 'ol/src/geom/Point';
+
 import {parseLatLon} from '../../../geo/geo.js';
 import {normalizeLongitude} from '../../../geo/geo2.js';
 import {EPSG4326} from '../../../proj/proj.js';

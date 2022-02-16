@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ogc.filter.OGCSpatialFormatter');
 
-import GeometryType from 'ol/geom/GeometryType';
-import Polygon from 'ol/geom/Polygon';
+import GeometryType from 'ol/src/geom/GeometryType';
+import Polygon from 'ol/src/geom/Polygon';
 
 import {interpolateCircle, isRectangular} from '../../geo/geo.js';
 import {splitWithinWorldExtent} from '../../geo/jsts.js';
