@@ -4,7 +4,8 @@
  */
 goog.declareModuleId('os.style');
 
-import {asArray, asString, toString} from 'ol/color';
+import {asArray, asString, toString} from 'ol/src/color';
+
 import {toRgbArray} from '../color.js';
 import RecordField from '../data/recordfield.js';
 import PropertyChangeEvent from '../events/propertychangeevent.js';

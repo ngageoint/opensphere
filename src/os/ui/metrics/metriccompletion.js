@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.metrics.MetricCompletionUI');
 
-import {toString} from 'ol/color';
+import {toString} from 'ol/src/color';
+
 import {instanceOf} from '../../classregistry.js';
 import {getGradientColor} from '../../color.js';
 import {METRIC_GRADIENT} from '../../metrics/index.js';

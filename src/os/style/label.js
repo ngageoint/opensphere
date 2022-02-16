@@ -1,13 +1,14 @@
 goog.declareModuleId('os.style.label');
 
-import {asArray} from 'ol/color';
-import Geometry from 'ol/geom/Geometry';
-import GeometryCollection from 'ol/geom/GeometryCollection';
-import GeometryType from 'ol/geom/GeometryType';
-import {fromExtent as polyFromExtent} from 'ol/geom/Polygon';
-import SimpleGeometry from 'ol/geom/SimpleGeometry';
+import {asArray} from 'ol/src/color';
 import {equals, createEmpty, getCenter, createOrUpdateFromCoordinate, containsCoordinate} from 'ol/src/extent';
+import Geometry from 'ol/src/geom/Geometry';
+import GeometryCollection from 'ol/src/geom/GeometryCollection';
+import GeometryType from 'ol/src/geom/GeometryType';
+import {fromExtent as polyFromExtent} from 'ol/src/geom/Polygon';
+import SimpleGeometry from 'ol/src/geom/SimpleGeometry';
 import Style from 'ol/src/style/Style';
+
 import {instanceOf} from '../classregistry.js';
 import DataManager from '../data/datamanager.js';
 import RecordField from '../data/recordfield.js';

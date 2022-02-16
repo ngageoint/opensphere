@@ -1,8 +1,8 @@
 goog.declareModuleId('os.ol.control.MousePosition');
 
-import OLMousePosition from 'ol/control/MousePosition';
+import OLMousePosition from 'ol/src/control/MousePosition';
 import {toLonLat} from 'ol/src/proj';
-import ViewHint from 'ol/ViewHint';
+import ViewHint from 'ol/src/ViewHint';
 
 import BearingSettingsKeys from '../../bearing/bearingsettingskeys.js';
 import DisplaySetting from '../../config/displaysetting.js';

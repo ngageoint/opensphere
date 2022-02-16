@@ -1,10 +1,10 @@
 goog.declareModuleId('os.query.AreaManager');
 
-import {asString} from 'ol/color';
-import GeoJSON from 'ol/format/GeoJSON';
-import Polygon from 'ol/geom/Polygon';
-import OLVectorSource from 'ol/source/Vector';
-import VectorEventType from 'ol/source/VectorEventType';
+import {asString} from 'ol/src/color';
+import GeoJSON from 'ol/src/format/GeoJSON';
+import Polygon from 'ol/src/geom/Polygon';
+import OLVectorSource from 'ol/src/source/Vector';
+import VectorEventType from 'ol/src/source/VectorEventType';
 
 import '../mixin/objectmixin.js';
 import {toRgbArray} from '../color.js';

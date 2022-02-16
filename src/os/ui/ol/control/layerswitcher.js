@@ -1,9 +1,10 @@
 goog.declareModuleId('os.ui.ol.control.LayerSwitcher');
 
-import Control from 'ol/control/Control';
-import {listen, unlistenByKey} from 'ol/events';
-import Group from 'ol/layer/Group';
-import PluggableMap from 'ol/PluggableMap';
+import Control from 'ol/src/control/Control';
+import {listen, unlistenByKey} from 'ol/src/events';
+import Group from 'ol/src/layer/Group';
+import PluggableMap from 'ol/src/PluggableMap';
+
 const {getFirstElementChild} = goog.require('goog.dom');
 const {setInnerHtml} = goog.require('goog.dom.safe');
 const SafeHtml = goog.require('goog.html.SafeHtml');
