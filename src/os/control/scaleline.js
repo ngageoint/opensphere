@@ -1,7 +1,7 @@
 goog.declareModuleId('os.control.ScaleLine');
 
 import * as asserts from 'ol/src/asserts';
-import OLScaleLine from 'ol/src/control/ScaleLine';
+import {default as OLScaleLine, Units as OLUnits} from 'ol/src/control/ScaleLine';
 import * as olProj from 'ol/src/proj';
 import Units from 'ol/src/proj/Units';
 
@@ -63,7 +63,7 @@ export default class ScaleLine extends OLScaleLine {
    */
   hide() {
     if (this.renderedVisible_) {
-      this.element_.style.display = 'none';
+      this.element.style.display = 'none';
       this.renderedVisible_ = false;
     }
   }
@@ -109,7 +109,7 @@ export default class ScaleLine extends OLScaleLine {
     var nominalCount = this.minWidth_ * pointResolution;
     var suffix = '';
     var units = this.getUnits();
-    if (units == OLScaleLine.Units.DEGREES) {
+    if (units == OLUnits.DEGREES) {
       var metersPerDegree = olProj.METERS_PER_UNIT[Units.DEGREES];
       pointResolution /= metersPerDegree;
       if (nominalCount < metersPerDegree / 60) {
@@ -121,7 +121,7 @@ export default class ScaleLine extends OLScaleLine {
       } else {
         suffix = '\u00b0'; // degrees
       }
-    } else if (units == OLScaleLine.Units.IMPERIAL) {
+    } else if (units == OLUnits.IMPERIAL) {
       if (nominalCount < 0.9144) {
         suffix = 'in';
         pointResolution /= 0.0254;
@@ -132,10 +132,10 @@ export default class ScaleLine extends OLScaleLine {
         suffix = 'mi';
         pointResolution /= 1609.344;
       }
-    } else if (units == OLScaleLine.Units.NAUTICAL || units == UnitSystem.NAUTICALMILE) {
+    } else if (units == OLUnits.NAUTICAL || units == UnitSystem.NAUTICALMILE) {
       pointResolution /= 1852;
       suffix = 'nmi';
-    } else if (units == OLScaleLine.Units.METRIC) {
+    } else if (units == OLUnits.METRIC) {
       if (nominalCount < 1) {
         suffix = 'mm';
         pointResolution *= 1000;
@@ -145,7 +145,7 @@ export default class ScaleLine extends OLScaleLine {
         suffix = 'km';
         pointResolution /= 1000;
       }
-    } else if (units == OLScaleLine.Units.US) {
+    } else if (units == OLUnits.US) {
       if (nominalCount < 0.9144) {
         suffix = 'in';
         pointResolution *= 39.37;
@@ -176,7 +176,7 @@ export default class ScaleLine extends OLScaleLine {
       count = this.LEADING_DIGITS[((i % 3) + 3) % 3] * Math.pow(10, Math.floor(i / 3));
       width = Math.round(count / pointResolution);
       if (isNaN(width)) {
-        this.element_.style.display = 'none';
+        this.element.style.display = 'none';
         this.renderedVisible_ = false;
         return;
       } else if (width >= this.minWidth_) {
@@ -202,7 +202,7 @@ export default class ScaleLine extends OLScaleLine {
     }
 
     if (!this.renderedVisible_) {
-      this.element_.style.display = '';
+      this.element.style.display = '';
       this.renderedVisible_ = true;
     }
   }
