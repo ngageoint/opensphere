@@ -6,6 +6,7 @@ goog.declareModuleId('os.mixin.object');
 import {getUid} from 'ol';
 import EventTarget from 'ol/events/Target';
 import OLObject from 'ol/Object';
+import {ObjectEvent} from 'ol/Object';
 import ObjectEventType from 'ol/ObjectEventType';
 
 
@@ -84,11 +85,11 @@ export const init = () => {
    */
   OLObject.prototype.notify = function(key, oldValue) {
     if (this.eventsEnabled) {
-      var eventType;
-      eventType = OLObject.getChangeEventType(key);
-      this.dispatchEvent(new OLObject.Event(eventType, key, oldValue));
+      let eventType;
+      eventType = `change:${key}`;
+      this.dispatchEvent(new ObjectEvent(eventType, key, oldValue));
       eventType = ObjectEventType.PROPERTYCHANGE;
-      this.dispatchEvent(new OLObject.Event(eventType, key, oldValue));
+      this.dispatchEvent(new ObjectEvent(eventType, key, oldValue));
     }
   };
 };
