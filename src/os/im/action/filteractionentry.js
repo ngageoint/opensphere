@@ -213,7 +213,7 @@ export default class FilterActionEntry extends FilterEntry {
     if (!hasChild) {
       // insert at the specified index, or at the end if unspecified
       var index = opt_index != null ? opt_index : this.children_.length;
-      goog.array.insertAt(this.children_, child, index);
+      this.children_.splice(index, 0, child);
       child.setParent(this);
 
       return child;

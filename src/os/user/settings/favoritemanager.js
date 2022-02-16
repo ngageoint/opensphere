@@ -84,7 +84,7 @@ export default class FavoriteManager extends EventTarget {
   /**
    * Return all the favorites
    *
-   * @return {Array}
+   * @return {!Array}
    */
   getFavorites() {
     var favs = /** @type {Array} */ (Settings.getInstance().get([FavoriteManager.KEY]));
@@ -223,7 +223,7 @@ export default class FavoriteManager extends EventTarget {
       }
     } else {
       // store at the root
-      googArray.insertAt(favs, fav);
+      favs.unshift(fav);
     }
 
     this.saveToSettings(favs);
@@ -440,9 +440,9 @@ export default class FavoriteManager extends EventTarget {
   /**
    * Dig through folders to find the favorite. When found remove it and return the complete list with the removal
    *
-   * @param {Array} favs
+   * @param {!Array} favs
    * @param {string} key
-   * @return {Array} - array with the favorite removed
+   * @return {!Array} - array with the favorite removed
    * @private
    */
   static removeFavoriteInternal_(favs, key) {
@@ -554,10 +554,10 @@ export default class FavoriteManager extends EventTarget {
   /**
    * Save the favorite to a folder
    *
-   * @param {Array} favs
+   * @param {!Array} favs
    * @param {FavoriteSetting} favorite
    * @param {string} folder - the folder key
-   * @return {Array} - the modified favorite array
+   * @return {!Array} - the modified favorite array
    * @private
    */
   static saveFolderInternal_(favs, favorite, folder) {
@@ -565,7 +565,7 @@ export default class FavoriteManager extends EventTarget {
       var fav = favs[i];
       // If we found the folder we want to store the favorite.
       if (fav['key'] == folder) {
-        googArray.insertAt(fav['children'], favorite);
+        fav['children'].unshift(favorite);
         break;
       } else if (fav['type'] == FavoriteType.FOLDER) {
         var children = FavoriteManager.saveFolderInternal_(fav['children'], favorite, folder);

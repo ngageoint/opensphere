@@ -13,7 +13,7 @@ import MenuOptions from './action/menuoptions.js';
 import Module from './module.js';
 import {apply} from './ui.js';
 
-const {binaryInsert, insertAt} = goog.require('goog.array');
+const {binaryInsert} = goog.require('goog.array');
 const {getViewportSize} = goog.require('goog.dom');
 const {listen, unlistenByKey} = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -263,7 +263,7 @@ export class Controller {
    * {MenuItem} with nested {MenuItemAction} and/or {MenuItemList} entries.
    *
    * @param {Object} menuStructure JSON object structure which declares the depth and placement of the menu items
-   * @param {Array} menuItems The list of menu items to which the converted menuStructure actions are placed.
+   * @param {!Array} menuItems The list of menu items to which the converted menuStructure actions are placed.
    * @private
    * @suppress {deprecated}
    */
@@ -307,11 +307,11 @@ export class Controller {
       division = menuOptions && menuOptions.division;
       if (previousDivision != division) {
         if (i > 0) {
-          insertAt(menuItems, new MenuItemSeparator(), i);
+          menuItems.splice(i, 0, new MenuItemSeparator());
           i++;
         }
         if (division != null) {
-          insertAt(menuItems, new MenuItemSeparatorHeader(division.replace(/^[0-9]*:/, '')), i);
+          menuItems.splice(i, 0, new MenuItemSeparatorHeader(division.replace(/^[0-9]*:/, '')));
           i++;
         }
       }

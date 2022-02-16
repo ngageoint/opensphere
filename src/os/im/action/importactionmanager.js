@@ -322,7 +322,7 @@ export default class ImportActionManager extends EventTarget {
           entries[index] = entry;
         } else if (opt_index > -1 && opt_index < entries.length) {
           // insert at the given index
-          goog.array.insertAt(entries, entry, opt_index);
+          entries.splice(opt_index, 0, entry);
         } else {
           // append to the end of the array
           entries.push(entry);

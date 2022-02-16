@@ -22,7 +22,7 @@ export const binaryInsert = function(array, value, opt_compareFn) {
   var index = googArray.binarySearch(array, value, opt_compareFn);
   if (index < 0) {
     index = -index - 1;
-    googArray.insertAt(array, value, index);
+    array.splice(index, 0, value);
     return index;
   }
 
