@@ -1,6 +1,6 @@
 goog.declareModuleId('os.mixin.ResolutionConstraint');
 
-import {createSnapToPower} from 'ol/resolutionconstraint';
+import {createSnapToPower} from 'ol/src/resolutionconstraint';
 
 
 /**

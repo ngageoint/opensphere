@@ -1,8 +1,8 @@
 goog.declareModuleId('os.layer.config.AbstractTileLayerConfig');
 
 import {transformExtent} from 'ol/src/proj';
-import {createForProjection} from 'ol/tilegrid';
-import {DEFAULT_MAX_ZOOM} from 'ol/tilegrid/common';
+import {createForProjection} from 'ol/src/tilegrid';
+import {DEFAULT_MAX_ZOOM} from 'ol/src/tilegrid/common';
 
 import '../../mixin/tileimagemixin.js';
 import '../../mixin/urltilemixin.js';

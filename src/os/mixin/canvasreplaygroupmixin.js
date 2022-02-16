@@ -1,7 +1,7 @@
 goog.declareModuleId('os.mixin.canvasreplaygroup');
 
-import ReplayGroup from 'ol/render/canvas/ExecutorGroup';
 import {getWidth} from 'ol/src/extent';
+import ReplayGroup from 'ol/src/render/canvas/ExecutorGroup';
 
 import * as osMap from '../map/map.js';
 

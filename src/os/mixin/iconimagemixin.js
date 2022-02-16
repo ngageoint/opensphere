@@ -1,7 +1,7 @@
 goog.declareModuleId('os.mixin.IconImageMixin');
 
-import IconImage from 'ol/style/IconImage';
-import {shared} from 'ol/style/IconImageCache';
+import IconImage from 'ol/src/style/IconImage';
+import {shared} from 'ol/src/style/IconImageCache';
 
 import FallbackIconImage from '../style/fallbackiconimage.js';
 

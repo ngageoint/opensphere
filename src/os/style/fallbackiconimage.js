@@ -1,7 +1,7 @@
 goog.declareModuleId('os.style.FallbackIconImage');
 
 import ImageState from 'ol/src/ImageState';
-import IconImage from 'ol/style/IconImage';
+import IconImage from 'ol/src/style/IconImage';
 
 import ProxyHandler from '../net/proxyhandler.js';
 import Request from '../net/request.js';

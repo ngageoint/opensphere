@@ -1,7 +1,7 @@
 goog.declareModuleId('os.style.Icon');
 
 import ImageState from 'ol/src/ImageState';
-import IconStyle from 'ol/style/Icon';
+import IconStyle from 'ol/src/style/Icon';
 import '../mixin/iconimagemixin.js';
 import {toRgbArray} from '../color.js';
 

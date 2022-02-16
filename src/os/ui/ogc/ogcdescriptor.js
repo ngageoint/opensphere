@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.ogc.OGCDescriptor');
 
-import {DEFAULT_WMS_VERSION} from 'ol/source/common';
+import {DEFAULT_WMS_VERSION} from 'ol/src/source/common';
+
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';
 import BaseDescriptor from '../../data/basedescriptor.js';

@@ -1,7 +1,8 @@
 goog.declareModuleId('os.ui.menu.layer');
 
-import OLVectorSource from 'ol/source/Vector';
 import {createEmpty, isEmpty} from 'ol/src/extent';
+import OLVectorSource from 'ol/src/source/Vector';
+
 import EventType from '../../action/eventtype.js';
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';

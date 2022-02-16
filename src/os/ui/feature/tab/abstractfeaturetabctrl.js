@@ -1,7 +1,8 @@
 goog.declareModuleId('os.ui.feature.tab.AbstractFeatureTabCtrl');
 
-import RenderFeature from 'ol/render/Feature';
 import Feature from 'ol/src/Feature';
+import RenderFeature from 'ol/src/render/Feature';
+
 import {apply} from '../../ui.js';
 import FeatureInfoEvent from '../featureinfoevent.js';
 

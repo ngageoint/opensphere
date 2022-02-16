@@ -1,6 +1,6 @@
 goog.declareModuleId('os.style.CircleReader');
 
-import Circle from 'ol/style/Circle';
+import Circle from 'ol/src/style/Circle';
 
 import {toRgbArray} from '../color.js';
 import AbstractReader from './abstractreader.js';

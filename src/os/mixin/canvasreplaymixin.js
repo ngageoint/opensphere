@@ -10,7 +10,7 @@ import {defaultPadding} from 'ol/src/render/canvas';
 import Replay from 'ol/src/render/canvas/ExecutorGroup';
 import Instruction from 'ol/src/render/canvas/Instruction';
 import {TEXT_ALIGN} from 'ol/src/render/canvas/TextBuilder';
-import {setFromArray} from 'ol/transform';
+import {setFromArray} from 'ol/src/transform';
 
 // const Feature = goog.requireTyped('ol.Feature');
 // const SimpleGeometry = goog.requireTyped('ol.geom.SimpleGeometry');
