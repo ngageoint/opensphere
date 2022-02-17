@@ -4,6 +4,9 @@
  */
 goog.declareModuleId('plugin.cesium.Camera');
 
+import OLCSCamera from 'ol-cesium/src/olcs/Camera';
+import core from 'ol-cesium/src/olcs/core';
+import {transform} from 'ol/src/proj';
 import FlightMode from '../../os/map/flightmode.js';
 import {PROJECTION, WEBGL_CANVAS, resolutionForDistance, resolutionToZoom} from '../../os/map/map.js';
 
@@ -15,9 +18,6 @@ import IWebGLCamera from '../../os/webgl/iwebglcamera.js';// eslint-disable-line
 const asserts = goog.require('goog.asserts');
 const Throttle = goog.require('goog.async.Throttle');
 const googMath = goog.require('goog.math');
-const olProj = goog.require('ol.proj');
-const OLCSCamera = goog.require('olcs.Camera');
-const core = goog.require('olcs.core');
 
 const OLMap = goog.requireType('ol.Map');
 const View = goog.requireType('ol.View');
@@ -555,7 +555,7 @@ export default class Camera extends OLCSCamera {
 
       var target;
       if (options.center) {
-        var center = olProj.transform(options.center, PROJECTION, osProj.EPSG4326);
+        var center = transform(options.center, PROJECTION, osProj.EPSG4326);
         target = new Cesium.Cartographic(Cesium.Math.toRadians(center[0]), Cesium.Math.toRadians(center[1]));
       } else {
         // clone the current position or Cesium won't animate the change
@@ -689,7 +689,7 @@ export default class Camera extends OLCSCamera {
     if (!center) {
       return;
     }
-    var ll = olProj.transform(center, PROJECTION, osProj.EPSG4326);
+    var ll = transform(center, PROJECTION, osProj.EPSG4326);
     asserts.assert(ll != null);
 
     var carto = new Cesium.Cartographic(Cesium.Math.toRadians(ll[0]),
@@ -731,7 +731,7 @@ export default class Camera extends OLCSCamera {
       return;
     }
 
-    var ll = olProj.transform(center, PROJECTION, osProj.EPSG4326);
+    var ll = transform(center, PROJECTION, osProj.EPSG4326);
     asserts.assert(ll != null);
 
     // determine distance at equator so the projection doesn't cause a large difference between 2d/3d
@@ -773,7 +773,7 @@ export default class Camera extends OLCSCamera {
     var latitude = bestTargetCartographic ? bestTargetCartographic.latitude : 0;
 
 
-    view.setCenter(olProj.transform([
+    view.setCenter(transform([
       Cesium.Math.toDegrees(longitude),
       Cesium.Math.toDegrees(latitude)], osProj.EPSG4326, PROJECTION));
 

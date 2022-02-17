@@ -1,24 +1,19 @@
 goog.declareModuleId('plugin.cesium.ImageryProvider');
 
+import OLImageryProvider from 'ol-cesium/src/olcs/core/OLImageryProvider';
+import {getSourceProjection} from 'ol-cesium/src/olcs/util';
+import events from 'ol/src/events';
+import ImageTile from 'ol/src/ImageTile';
+import VectorTile from 'ol/src/source/VectorTile';
+import olTilegrid from 'ol/src/tilegrid';
+import {DEFAULT_MAX_ZOOM} from 'ol/src/tilegrid/common';
+import TileState from 'ol/src/TileState';
+import VectorImageTile from 'ol/src/VectorImageTile';
+
 import '../../os/mixin/vectorimagetilemixin.js';
 import TileGridTilingScheme from './tilegridtilingscheme.js';
 
-const ol = goog.require('ol');
-const ImageTile = goog.require('ol.ImageTile');
-const TileState = goog.require('ol.TileState');
-const VectorImageTile = goog.require('ol.VectorImageTile');
-const events = goog.require('ol.events');
-const VectorTile = goog.require('ol.source.VectorTile');
-const olTilegrid = goog.require('ol.tilegrid');
-const OLImageryProvider = goog.require('olcs.core.OLImageryProvider');
-const {getSourceProjection} = goog.require('olcs.util');
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
-
-const Layer = goog.requireType('ol.layer.Layer');
-const Projection = goog.requireType('ol.proj.Projection');
-const TileSource = goog.requireType('ol.source.Tile');
-const TileImageSource = goog.requireType('ol.source.TileImage');
-
 
 /**
  * @implements {IDisposable}
@@ -77,7 +72,7 @@ export default class ImageryProvider extends OLImageryProvider {
         const sourceTileGrid = this.source_.getTileGrid();
         const tileGrid = olTilegrid.createXYZ({
           extent: sourceTileGrid.getExtent(),
-          maxZoom: ol.DEFAULT_MAX_ZOOM,
+          maxZoom: DEFAULT_MAX_ZOOM,
           minZoom: 0,
           tileSize: sourceTileGrid.getTileSize()
         });
@@ -162,7 +157,7 @@ export default class ImageryProvider extends OLImageryProvider {
       const tg = this.source_.getTileGrid();
       return tg ? tg.getMaxZoom() : 18;
     }
-    return ol.DEFAULT_MAX_ZOOM;
+    return DEFAULT_MAX_ZOOM;
   }
 
   /**

@@ -1,5 +1,8 @@
 goog.declareModuleId('plugin.cesium.CesiumRenderer');
 
+import OLCesium from 'ol-cesium/src/olcs/OLCesium';
+import ViewHint from 'ol/ViewHint';
+
 import CommandProcessor from '../../os/command/commandprocessor.js';
 import DisplaySetting from '../../os/config/displaysetting.js';
 import settings from '../../os/config/settings.js';
@@ -48,8 +51,6 @@ const classlist = goog.require('goog.dom.classlist');
 const log = goog.require('goog.log');
 const {clamp} = goog.require('goog.math');
 const userAgent = goog.require('goog.userAgent');
-const ViewHint = goog.require('ol.ViewHint');
-const OLCesium = goog.require('olcs.OLCesium');
 
 const OLMap = goog.requireType('ol.Map');
 const AbstractSynchronizer = goog.requireType('olcs.AbstractSynchronizer');

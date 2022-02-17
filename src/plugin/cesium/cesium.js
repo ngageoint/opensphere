@@ -1,5 +1,10 @@
 goog.declareModuleId('plugin.cesium');
 
+import core from 'ol-cesium/src/olcs/core';
+import GeometryType from 'ol/src/geom/GeometryType';
+import {equivalent, get, toLonLat} from 'ol/src/proj';
+import Tile from 'ol/src/source/Tile';
+
 import AlertManager from '../../os/alert/alertmanager.js';
 import DisplaySetting from '../../os/config/displaysetting.js';
 import settings from '../../os/config/settings.js';
@@ -21,10 +26,6 @@ const Promise = goog.require('goog.Promise');
 const Uri = goog.require('goog.Uri');
 const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
 const jsloader = goog.require('goog.net.jsloader');
-const GeometryType = goog.require('ol.geom.GeometryType');
-const olProj = goog.require('ol.proj');
-const Tile = goog.require('ol.source.Tile');
-const core = goog.require('olcs.core');
 
 const Deferred = goog.requireType('goog.async.Deferred');
 const Geometry = goog.requireType('ol.geom.Geometry');
@@ -361,8 +362,8 @@ export const tileLayerToImageryLayer = function(olLayer, viewProj) {
       projection = viewProj;
     }
 
-    var is3857 = olProj.equivalent(projection, olProj.get(proj.EPSG3857));
-    var is4326 = olProj.equivalent(projection, olProj.get(proj.EPSG4326));
+    var is3857 = equivalent(projection, get(proj.EPSG3857));
+    var is4326 = equivalent(projection, get(proj.EPSG4326));
     if (is3857 || is4326) {
       provider = new ImageryProvider(source, olLayer, viewProj);
     } else {
@@ -601,8 +602,8 @@ export const reduceBoundingSphere = function(sphere, geom) {
         scratchCoord[1] = flats[i + 1];
         scratchCoord[2] = stride > 2 ? flats[i + 2] || 0 : 0;
 
-        if (!olProj.equivalent(osMap.PROJECTION, olProj.get(proj.EPSG4326))) {
-          scratchCoord = olProj.toLonLat(scratchCoord, osMap.PROJECTION);
+        if (!equivalent(osMap.PROJECTION, get(proj.EPSG4326))) {
+          scratchCoord = toLonLat(scratchCoord, osMap.PROJECTION);
         }
 
         scratchCartesian = Cesium.Cartesian3.fromDegrees(
