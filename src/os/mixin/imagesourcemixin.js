@@ -4,7 +4,6 @@ import PropertyChangeEvent from '../events/propertychangeevent.js';
 import osImplements from '../implements.js';
 import ILoadingSource from '../ol/source/iloadingsource.js';
 
-const {insert} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const ImageState = goog.require('ol.ImageState');
 const {remove} = goog.require('ol.array');
@@ -42,7 +41,9 @@ ImageSource.prototype.addImageFilter = function(fn) {
     this.imageFilters = [];
   }
 
-  insert(this.imageFilters, fn);
+  if (!this.imageFilters.includes(fn)) {
+    this.imageFilters.push(fn);
+  }
 };
 
 

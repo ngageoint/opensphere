@@ -6,7 +6,6 @@ import osImplements from '../implements.js';
 import VectorLayer from '../layer/vector.js';
 import launchMultiFeatureInfo from '../ui/feature/launchmultifeatureinfo.js';
 
-const {insert} = goog.require('goog.array');
 const Feature = goog.require('ol.Feature');
 const MapBrowserEventType = goog.require('ol.MapBrowserEventType');
 const ViewHint = goog.require('ol.ViewHint');
@@ -69,8 +68,8 @@ export default class DoubleClick extends Interaction {
               var vector = /** @type {VectorLayer} */ (layer);
               var id = vector.getId();
 
-              if (vector && id) {
-                insert(features, feature);
+              if (vector && id && !features.includes(feature)) {
+                features.push(feature);
               }
             }
           }

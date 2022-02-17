@@ -15,7 +15,6 @@ import {close} from '../../window.js';
 import WindowEventType from '../../windoweventtype.js';
 import {filterColumns, getFilterKeyFromType} from '../filter.js';
 
-const {insert} = goog.require('goog.array');
 const {assertString} = goog.require('goog.asserts');
 const {getCount} = goog.require('goog.object');
 const {caseInsensitiveCompare, getRandomString} = goog.require('goog.string');
@@ -179,7 +178,9 @@ export class Controller {
     var filterNode = this.sourceEntry_.getFilterNode();
     var columnNames = filterNode.querySelectorAll('PropertyName');
     for (var i = 0, ii = columnNames.length; i < ii; i++) {
-      insert(this.sourceColumnNames_, columnNames[i].textContent);
+      if (!this.sourceColumnNames_.includes(columnNames[i].textContent)) {
+        this.sourceColumnNames_.push(columnNames[i].textContent);
+      }
     }
 
     this['layers'] = layers;
@@ -327,7 +328,9 @@ export class Controller {
           mapping.addColumn(this['sourceFilterKey'], sourceColumnName);
         }
 
-        insert(layersToMappings[targetFilterKey], mapping);
+        if (!layersToMappings[targetFilterKey].includes(mapping)) {
+          layersToMappings[targetFilterKey].push(mapping);
+        }
       }
     }
 
@@ -342,7 +345,10 @@ export class Controller {
         var mapping = model['mapping'];
 
         layersToMappings[targetFilterKey] = layersToMappings[targetFilterKey] || [];
-        insert(layersToMappings[targetFilterKey], mapping);
+
+        if (!layersToMappings[targetFilterKey].includes(mapping)) {
+          layersToMappings[targetFilterKey].push(mapping);
+        }
       }
     }
 

@@ -447,7 +447,7 @@ let addToTrack_ = function(options) {
       var insertIndex = osArray.binaryStrideSearch(flatCoordinates, value, stride, stride - 1);
       if (insertIndex < 0) {
         // insert coordinates in the corresponding location
-        googArray.insertArrayAt(flatCoordinates, coordinate, ~insertIndex);
+        flatCoordinates.splice(~insertIndex, 0, ...coordinate);
         added.push(features ? features[i] : coordinate);
       } else {
         skippedCoords++;

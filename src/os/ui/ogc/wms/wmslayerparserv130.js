@@ -3,7 +3,6 @@ goog.declareModuleId('os.ui.ogc.wms.WMSLayerParserV130');
 import {COLOR_STYLE_REGEX, DEFAULT_TILE_STYLE} from '../../../ogc/ogc.js';
 import AbstractWMSLayerParser from './abstractwmslayerparser.js';
 
-const {clone: cloneArray} = goog.require('goog.array');
 const {clone: cloneObject, getValueByKeys} = goog.require('goog.object');
 
 
@@ -49,7 +48,7 @@ export default class WMSLayerParserV130 extends AbstractWMSLayerParser {
           var epsg4326box = null;
           for (i = 0; i < bboxArray.length; i++) {
             if (bboxArray[i]['crs'] == 'CRS:84') {
-              layer.setBBox(/** @type {ol.Extent} */ (cloneArray(bboxArray[i]['extent'])));
+              layer.setBBox(/** @type {ol.Extent} */ (Array.from(bboxArray[i]['extent'])));
               break;
             } else if (bboxArray[i]['crs'] == 'EPSG:4326') {
               epsg4326box = bboxArray[i];
@@ -59,7 +58,7 @@ export default class WMSLayerParserV130 extends AbstractWMSLayerParser {
           if (!layer.getBBox() && epsg4326box) {
             // EPSG:4326 in WMS 1.3.0 is in the correct coordinate order (lat, lon rather than lon, lat), so we
             // need to flip the values in the array
-            var extent = cloneArray(epsg4326box['extent']);
+            var extent = Array.from(epsg4326box['extent']);
             layer.setBBox([extent[1], extent[0], extent[3], extent[2]]);
           }
         }

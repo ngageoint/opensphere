@@ -2,7 +2,6 @@ goog.declareModuleId('os.ui.filter.ui.FilterTypeGroupBy');
 
 import FilterGroupBy from './filtergroupby.js';
 
-const {insert} = goog.require('goog.array');
 const {toTitleCase} = goog.require('goog.string');
 
 const {default: FilterNode} = goog.requireType('os.ui.filter.ui.FilterNode');
@@ -52,7 +51,9 @@ export default class FilterTypeGroupBy extends FilterGroupBy {
       }
     }
 
-    insert(ids, val);
+    if (!ids.includes(val)) {
+      ids.push(val);
+    }
     return ids;
   }
 }

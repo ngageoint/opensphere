@@ -11,7 +11,6 @@ import osImplements from '../implements.js';
 import IFilterableTileSource from '../source/ifilterabletilesource.js';
 import ColorableTile from '../tile/colorabletile.js';
 
-const {insert} = goog.require('goog.array');
 const {remove} = goog.require('ol.array');
 const TileImage = goog.require('ol.source.TileImage');
 
@@ -43,7 +42,9 @@ TileImage.prototype.addTileFilter = function(fn) {
     this.tileFilters = [];
   }
 
-  insert(this.tileFilters, fn);
+  if (!this.tileFilters.includes(fn)) {
+    this.tileFilters.push(fn);
+  }
   this.applyTileFilters();
 };
 

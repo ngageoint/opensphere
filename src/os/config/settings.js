@@ -19,7 +19,6 @@ import SettingsWritableStorageType from './storage/settingswritablestoragetype.j
 
 const Promise = goog.require('goog.Promise');
 const Timer = goog.require('goog.Timer');
-const googArray = goog.require('goog.array');
 const DeferredList = goog.require('goog.async.DeferredList');
 const Delay = goog.require('goog.async.Delay');
 const GoogEvent = goog.require('goog.events.Event');
@@ -433,7 +432,7 @@ export default class Settings extends EventTarget {
         log.fine(logger, 'Saving settings...');
 
         var keysToDelete = Array.from(osConfigNamespace.getObsoleteKeys());
-        googArray.insertArrayAt(keysToDelete, osConfigNamespace.keysToDelete.slice());
+        keysToDelete.unshift(...osConfigNamespace.keysToDelete.slice());
 
         if (opt_settingsToOverwrite != null) {
           userPrefsToPersist = opt_settingsToOverwrite;

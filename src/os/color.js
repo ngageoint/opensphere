@@ -3,7 +3,6 @@
  */
 goog.declareModuleId('os.color');
 
-goog.require('goog.array');
 goog.require('goog.color');
 goog.require('goog.color.Rgb');
 goog.require('goog.math');

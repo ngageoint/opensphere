@@ -1,11 +1,9 @@
-goog.require('goog.array');
 goog.require('goog.events.Event');
 goog.require('os.ui.action.Action');
 goog.require('os.ui.action.ActionManager');
 goog.require('os.ui.action.EventType');
 
 describe('os.ui.action.ActionManager', function() {
-  const googArray = goog.module.get('goog.array');
   const GoogEvent = goog.module.get('goog.events.Event');
   const {default: Action} = goog.module.get('os.ui.action.Action');
   const {default: ActionManager} = goog.module.get('os.ui.action.ActionManager');
@@ -149,9 +147,9 @@ describe('os.ui.action.ActionManager', function() {
 
   it('starts with the correct enabled state when action args are initialized', function() {
     var am = new ActionManager().withActionArgs(['a', 'c']);
-    am.addAction(new Action('a').enableWhen((args) => googArray.indexOf(args, 'a') > -1));
-    am.addAction(new Action('b').enableWhen((args) => googArray.indexOf(args, 'b') > -1));
-    am.addAction(new Action('c').enableWhen((args) => googArray.indexOf(args, 'c') > -1));
+    am.addAction(new Action('a').enableWhen((args) => args.indexOf('a') > -1));
+    am.addAction(new Action('b').enableWhen((args) => args.indexOf('b') > -1));
+    am.addAction(new Action('c').enableWhen((args) => args.indexOf('c') > -1));
     var enabled = am.getEnabledActions();
     expect(enabled.length).toBe(2);
     expect(enabled).toContain(am.getAction('a'));

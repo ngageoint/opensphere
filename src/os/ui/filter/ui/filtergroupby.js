@@ -5,8 +5,6 @@ import BaseGroupBy from '../../../data/groupby/basegroupby.js';
 import SlickTreeNode from '../../slick/slicktreenode.js';
 import {directiveTag} from './filtergroupui.js';
 
-const {insert} = goog.require('goog.array');
-
 const {default: FilterNode} = goog.requireType('os.ui.filter.ui.FilterNode');
 
 
@@ -60,7 +58,9 @@ export default class FilterGroupBy extends BaseGroupBy {
       }
     }
 
-    insert(ids, val);
+    if (!ids.includes(val)) {
+      ids.push(val);
+    }
     return ids;
   }
 

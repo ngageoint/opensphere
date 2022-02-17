@@ -3,7 +3,6 @@ goog.declareModuleId('os.ui.ogc.wms.WMSLayerParserV111');
 import {COLOR_STYLE_REGEX, DEFAULT_TILE_STYLE} from '../../../ogc/ogc.js';
 import AbstractWMSLayerParser from './abstractwmslayerparser.js';
 
-const {clone: cloneArray} = goog.require('goog.array');
 const {clone: cloneObject, getValueByKeys} = goog.require('goog.object');
 
 
@@ -52,7 +51,7 @@ export default class WMSLayerParserV111 extends AbstractWMSLayerParser {
         if (bboxArray && bboxArray.length > 0) {
           for (i = 0; i < bboxArray.length; i++) {
             if (bboxArray[i]['crs'] == 'EPSG:4326') {
-              layer.setBBox(/** @type {ol.Extent} */ (cloneArray(bboxArray[i]['extent'])));
+              layer.setBBox(/** @type {ol.Extent} */ (Array.from(bboxArray[i]['extent'])));
               break;
             }
           }

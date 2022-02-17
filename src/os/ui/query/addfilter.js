@@ -7,7 +7,6 @@ import MenuItem from '../menu/menuitem.js';
 import MenuItemType from '../menu/menuitemtype.js';
 import Module from '../module.js';
 
-const {insert} = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const {caseInsensitiveCompare} = goog.require('goog.string');
@@ -147,10 +146,8 @@ export class Controller {
       }
     }
 
-    if (this.scope['layer']) {
-      if (this.scope['layer']['id']) {
-        insert(layers, this.scope['layer']);
-      }
+    if (this.scope['layer'] && this.scope['layer']['id'] && !layers.includes(this.scope['layer'])) {
+      layers.push(this.scope['layer']);
     }
 
     layers.sort(Controller.sortLayers);

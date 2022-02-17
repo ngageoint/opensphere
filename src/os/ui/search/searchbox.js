@@ -825,7 +825,7 @@ export class Controller {
     this.search();
 
     // move the item to the top of the recent list
-    const recentIndex = googArray.indexOf(this['recentSearches'], recent);
+    const recentIndex = this['recentSearches'].indexOf(recent);
     if (recentIndex > 0) {
       const searchToMove = this['recentSearches'].splice(recentIndex, 1)[0];
       this['recentSearches'].splice(0, 0, searchToMove);

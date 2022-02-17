@@ -5,7 +5,6 @@ import {appNs, coreNs} from '../config.js';
 import ConfigType from '../configtype.js';
 import SettingsFile from './settingsfile.js';
 
-const {insertArrayAt} = goog.require('goog.array');
 const Deferred = goog.require('goog.async.Deferred');
 const DeferredList = goog.require('goog.async.DeferredList');
 const log = goog.require('goog.log');
@@ -144,8 +143,7 @@ export default class SettingsStorageLoader {
             if (Array.isArray(existingVal) && Array.isArray(value) &&
                 JSON.stringify(existingVal) != JSON.stringify(value)) {
               log.info(logger, 'Merging settings arrays - ' + 'existingVal: ' + existingVal + ', value: ' + value);
-              insertArrayAt(/** @type {Array} */ (value), /** @type {Array} */ (existingVal),
-                  /** @type {Array} */ (value).length);
+              value.push(...existingVal);
               log.info(logger, 'Result of merge: ' + value);
             }
 
