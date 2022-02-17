@@ -1,4 +1,3 @@
-goog.require('goog.array');
 goog.require('goog.dom.xml');
 goog.require('goog.object');
 goog.require('ol.format.WMTSCapabilities');
@@ -9,7 +8,6 @@ goog.require('os.ogc.wmts.WMTSLayerParserV100');
 goog.require('os.ui.ogc.OGCDescriptor');
 
 describe('os.ogc.wmts.WMTSLayerParserV100', () => {
-  const {equals: arrayEquals} = goog.module.get('goog.array');
   const {loadXml} = goog.module.get('goog.dom.xml');
   const {isEmpty: isObjectEmpty} = goog.module.get('goog.object');
   const WMTSCapabilities = goog.module.get('ol.format.WMTSCapabilities');
@@ -72,7 +70,8 @@ describe('os.ogc.wmts.WMTSLayerParserV100', () => {
     expect(descriptor.getDescription()).toBe('Description of WMTS 3857 Layer 1.');
     expect(descriptor.getWmtsDateFormat()).toBeNull();
     expect(descriptor.getWmtsTimeFormat()).toBeNull();
-    expect(arrayEquals(descriptor.getBBox(), expectedBbox3857)).toBe(true);
+    expect(descriptor.getBBox().length === expectedBbox3857.length &&
+        descriptor.getBBox().every((el, i) => el === expectedBbox3857[i])).toBe(true);
 
     wmtsOptions = descriptor.getWmtsOptions();
     expect(wmtsOptions.length).toBe(1);
@@ -89,7 +88,8 @@ describe('os.ogc.wmts.WMTSLayerParserV100', () => {
     expect(descriptor.getDescription()).toBeNull();
     expect(descriptor.getWmtsDateFormat()).toBeNull();
     expect(descriptor.getWmtsTimeFormat()).toBeNull();
-    expect(arrayEquals(descriptor.getBBox(), expectedBbox3857)).toBe(true);
+    expect(descriptor.getBBox().length === expectedBbox3857.length &&
+        descriptor.getBBox().every((el, i) => el === expectedBbox3857[i])).toBe(true);
 
     wmtsOptions = descriptor.getWmtsOptions();
     expect(wmtsOptions.length).toBe(1);
@@ -106,7 +106,8 @@ describe('os.ogc.wmts.WMTSLayerParserV100', () => {
     expect(descriptor.getDescription()).toBe('Description of WMTS 4326 Layer 1.');
     expect(descriptor.getWmtsDateFormat()).toBe('YYYY-MM-DD');
     expect(descriptor.getWmtsTimeFormat()).toBe('{start}');
-    expect(arrayEquals(descriptor.getBBox(), expectedBbox4326)).toBe(true);
+    expect(descriptor.getBBox().length === expectedBbox4326.length &&
+        descriptor.getBBox().every((el, i) => el === expectedBbox4326[i])).toBe(true);
 
     wmtsOptions = descriptor.getWmtsOptions();
     expect(wmtsOptions.length).toBe(1);

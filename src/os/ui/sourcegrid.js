@@ -16,7 +16,6 @@ import ColumnMenuGroup from './slick/columnmenugroup.js';
 import * as formatter from './slick/formatter.js';
 import {Controller as SlickGridCtrl} from './slick/slickgrid.js';
 
-const {equals} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -526,6 +525,7 @@ export class Controller extends SlickGridCtrl {
 
   /**
    * @inheritDoc
+   * @suppress {checkTypes} To avoid [] access on a struct.
    */
   onGridSelectedChange(e, args) {
     if (!this.inEvent && this.source) {
@@ -536,17 +536,8 @@ export class Controller extends SlickGridCtrl {
         // only update the source if the user interacted with the grid
         if (this.inInteraction) {
           var result = rows.map(this.mapRowsToItems, this);
-          var equal = equals(result, this.source.getSelectedItems(),
-              /**
-               * Compare feature id's.
-               * @param {Feature} a First feature.
-               * @param {Feature} b Second feature.
-               * @return {boolean} If the id's are the same.
-               * @suppress {checkTypes} To avoid [] access on a struct.
-               */
-              function(a, b) {
-                return a['id'] == b['id'];
-              });
+          var equal = result.length == this.source.getSelectedItems().length &&
+              result.every((el, i) => el['id'] == this.source.getSelectedItems()[i]['id']);
 
           if (!equal) {
             // only update the selection if it changed

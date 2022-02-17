@@ -3,8 +3,6 @@ goog.declareModuleId('os.ui.MultiUrlProviderImportCtrl');
 import './uniqueserverurl.js';
 import SingleUrlProviderImportCtrl from './singleurlproviderimport.js';
 
-const {equals} = goog.require('goog.array');
-
 const {default: AbstractLoadingServer} = goog.requireType('os.ui.server.AbstractLoadingServer');
 
 
@@ -75,7 +73,7 @@ export default class Controller extends SingleUrlProviderImportCtrl {
       var originals = this.getAlternateUrls();
       if (alternateUrls && originals) {
         // both defined, so compare the URLs
-        if (!equals(alternateUrls, originals)) {
+        if (alternateUrls.length !== originals.length || originals.some((el, i) => el !== alternateUrls[i])) {
           return true;
         }
       } else if (alternateUrls != originals) {

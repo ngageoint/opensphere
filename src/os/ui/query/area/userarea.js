@@ -24,7 +24,6 @@ import {close} from '../../window.js';
 import WindowEventType from '../../windoweventtype.js';
 
 const Disposable = goog.require('goog.Disposable');
-const {equals} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const {getDocument} = goog.require('goog.dom');
@@ -691,7 +690,13 @@ export class Controller extends Disposable {
       }, this).filter(filterFalsey);
 
       if (coords.length > 2) {
-        if (!equals(coords[0], coords[coords.length - 1])) {
+        var sameCoord = coords[0].length == coords[coords.length - 1].length;
+        for (let i = 0; i < coords[0].length; i++) {
+          if (coords[0][i] !== coords[coords.length - 1][i]) {
+            sameCoord = false;
+          }
+        }
+        if (!sameCoord) {
           coords.push(coords[0]);
         }
 

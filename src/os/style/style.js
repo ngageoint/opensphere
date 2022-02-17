@@ -21,7 +21,6 @@ import StyleManager from './stylemanager.js';
 
 import StyleType from './styletype.js';
 
-const {equals} = goog.require('goog.array');
 const {toRadians} = goog.require('goog.math');
 const {asArray, asString, toString} = goog.require('ol.color');
 
@@ -864,7 +863,8 @@ export const dashPatternToOptions = function(pattern) {
   if (Array.isArray(pattern)) {
     for (var i = 0; i < LINE_STYLE_OPTIONS.length; i++) {
       var lineDashOption = /** @type {styleLineDashOption} */ (LINE_STYLE_OPTIONS[i]);
-      if (equals(lineDashOption.pattern, pattern)) {
+      if (lineDashOption.pattern.length === pattern.length &&
+            lineDashOption.pattern.every((el, i) => el === pattern[i])) {
         return lineDashOption;
       }
     }
