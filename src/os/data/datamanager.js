@@ -28,7 +28,6 @@ import IDataManager from './idatamanager.js';// eslint-disable-line
 import IUrlDescriptor from './iurldescriptor.js';
 import PropertyChange from './propertychange.js';
 
-const googArray = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -543,7 +542,7 @@ export default class DataManager extends EventTarget {
   hasError() {
     var providers = /** @type {Array<IDataProvider>} */ (this.providerRoot_.getChildren());
     if (providers) {
-      return googArray.some(providers, function(p) {
+      return providers.some(function(p) {
         return p.getEnabled() && p.getError();
       });
     }

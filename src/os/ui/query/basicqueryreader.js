@@ -9,7 +9,6 @@ import {unescape as xmlUnescape} from '../../xml.js';
 import {OPERATIONS} from '../filter/filter.js';
 import AbstractQueryReader from './abstractqueryreader.js';
 
-const {some} = goog.require('goog.array');
 const {assert} = goog.require('goog.asserts');
 const {assertIsElement} = goog.require('goog.asserts.dom');
 const {getChildren, getFirstElementChild, getNextElementSibling, getParentElement} = goog.require('goog.dom');
@@ -74,7 +73,7 @@ export default class BasicQueryReader extends AbstractQueryReader {
 
     if (!isFilter) {
       // if any of the children match any of the ops, then ele is a filter entry
-      isFilter = some(children, function(item) {
+      isFilter = Array.from(children).some(function(item) {
         return OPERATIONS.some(function(op) {
           return op.matches(angular.element(item));
         });

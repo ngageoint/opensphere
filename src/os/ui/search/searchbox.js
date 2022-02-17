@@ -690,7 +690,7 @@ export class Controller {
    * @export
    */
   hasDisabledSearch() {
-    return googArray.some(this['searchOptions'], function(search) {
+    return this['searchOptions'].some(function(search) {
       return !search.isEnabled();
     });
   }

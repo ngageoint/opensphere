@@ -1,4 +1,3 @@
-goog.require('goog.array');
 goog.require('os.data.BaseDescriptor');
 goog.require('os.data.DataManager');
 goog.require('os.data.FileDescriptor');
@@ -6,7 +5,6 @@ goog.require('os.data.FileProvider');
 goog.require('os.mock');
 
 describe('os.data.FileProvider', function() {
-  const googArray = goog.module.get('goog.array');
   const {default: BaseDescriptor} = goog.module.get('os.data.BaseDescriptor');
   const {default: DataManager} = goog.module.get('os.data.DataManager');
   const {default: FileDescriptor} = goog.module.get('os.data.FileDescriptor');
@@ -35,13 +33,13 @@ describe('os.data.FileProvider', function() {
 
     p.load(false);
     expect(p.getChildren().length).toBe(2);
-    expect(googArray.some(p.getChildren(), function(node) {
+    expect(p.getChildren().some(function(node) {
       return node.getDescriptor() == desc1;
     })).toBe(true);
-    expect(googArray.some(p.getChildren(), function(node) {
+    expect(p.getChildren().some(function(node) {
       return node.getDescriptor() == desc2;
     })).toBe(true);
-    expect(googArray.some(p.getChildren(), function(node) {
+    expect(p.getChildren().some(function(node) {
       return node.getDescriptor() == desc3;
     })).toBe(false);
   });

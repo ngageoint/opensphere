@@ -4,7 +4,6 @@ import CommandEvent from './commandevent.js';
 import EventType from './eventtype.js';
 import State from './state.js';
 
-const googArray = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
@@ -88,7 +87,7 @@ export default class CommandProcessor extends EventTarget {
    * @return {boolean}
    */
   isProcessing() {
-    return this.current_ != this.target_ || googArray.some(this.history_, function(cmd) {
+    return this.current_ != this.target_ || this.history_.some(function(cmd) {
       return cmd.state === State.EXECUTING;
     });
   }
