@@ -39,7 +39,6 @@ import * as kml from '../../../os/ui/file/kml/kml.js';
 import {Controller as VectorLayerUICtrl, directive as vectorLayerUIDirective} from '../../../os/ui/layer/vectorlayerui.js';
 import Module from '../../../os/ui/module.js';
 
-const googArray = goog.require('goog.array');
 const olArray = goog.require('ol.array');
 const UrlTile = goog.require('ol.source.UrlTile');
 
@@ -357,7 +356,7 @@ export class Controller extends VectorLayerUICtrl {
       for (var i = 0, n = items.length; i < n; i++) {
         var source = items[i].getSource();
         if (source && source instanceof VectorSource) {
-          shapes = googArray.filter(shapes, source.supportsShape, source);
+          shapes = shapes.filter(source.supportsShape, source);
         }
       }
     }
@@ -395,7 +394,7 @@ export class Controller extends VectorLayerUICtrl {
       for (var i = 0, n = items.length; i < n; i++) {
         var source = items[i].getSource();
         if (source && source instanceof VectorSource) {
-          shapes = googArray.filter(shapes, source.supportsShape, source);
+          shapes = shapes.filter(source.supportsShape, source);
         }
       }
     }

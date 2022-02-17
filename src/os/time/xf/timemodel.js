@@ -9,7 +9,6 @@ import TimeInstant from '../timeinstant.js';
 import TimelineController from '../timelinecontroller.js';
 import TimeRange from '../timerange.js';
 
-const googArray = goog.require('goog.array');
 const functions = goog.require('goog.functions');
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
@@ -441,7 +440,7 @@ export default class TimeModel extends DataModel {
       }
 
       if (this.filterFunction) {
-        results = googArray.filter(results, this.filterFunction, this);
+        results = results.filter(this.filterFunction, this);
       }
 
       this.lastRange = range;
@@ -509,7 +508,7 @@ export default class TimeModel extends DataModel {
         var results = /** @type {!Array<S>} */ (opt_bottom ? dim.bottom(opt_value) : dim.top(opt_value));
 
         if (this.filterFunction) {
-          results = googArray.filter(results, this.filterFunction, this);
+          results = results.filter(this.filterFunction, this);
         }
 
         return results;

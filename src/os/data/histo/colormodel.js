@@ -11,7 +11,6 @@ import RecordField from '../recordfield.js';
 import ColorMethod from './colormethod.js';
 import * as osDataHisto from './histogramutils.js';
 
-const googArray = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const googObject = goog.require('goog.object');
@@ -332,7 +331,7 @@ export default class ColorModel extends EventTarget {
     var bins = this.getResults();
     if (this.hasManualColors()) {
       // exclude any manually-colored bins from the autocolor
-      bins = googArray.filter(bins, function(bin) {
+      bins = bins.filter(function(bin) {
         return !this.manualBinColors_[bin.getLabel()];
       }, this);
     }

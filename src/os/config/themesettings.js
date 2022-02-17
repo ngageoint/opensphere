@@ -9,7 +9,6 @@ import ThemeSettingsChangeEvent from './themesettingschangeevent.js';
 import {directiveTag as settingsUi} from './themesettingsui.js';
 
 const Promise = goog.require('goog.Promise');
-const {filter} = goog.require('goog.array');
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const GoogEvent = goog.require('goog.events.Event');
 const {findValue} = goog.require('goog.object');
@@ -201,7 +200,7 @@ export default class ThemeSettings extends SettingPlugin {
     // Get the current theme(s)
     var themeRegEx = /(themes\/).*?(\..*\.css)/;
     var stylesheets = $('[rel=stylesheet]');
-    var ourThemes = filter(stylesheets, function(el) {
+    var ourThemes = Array.from(stylesheets).filter(function(el) {
       return themeRegEx.test(el.href);
     });
 

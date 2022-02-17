@@ -19,7 +19,6 @@ import VectorStyleControlsEventType from '../../../os/ui/layer/vectorstylecontro
 import Module from '../../../os/ui/module.js';
 import ActionConfigCtrl from './featureactionconfig.js';
 
-const googArray = goog.require('goog.array');
 const googObject = goog.require('goog.object');
 const googString = goog.require('goog.string');
 
@@ -190,8 +189,8 @@ export class Controller extends ActionConfigCtrl {
           source = /** @type {!VectorSource} */ (source);
 
           var shapes = googObject.getKeys(osStyle.SHAPES);
-          this.scope['shapes'] = googArray.filter(shapes, source.supportsShape, source);
-          this.scope['centerShapes'] = googArray.filter(shapes, source.isNotEllipseOrLOBOrDefault, source);
+          this.scope['shapes'] = shapes.filter(source.supportsShape, source);
+          this.scope['centerShapes'] = shapes.filter(source.isNotEllipseOrLOBOrDefault, source);
           this.scope['columns'] = layer.getColumnsFromSource(source);
 
           // autodetect

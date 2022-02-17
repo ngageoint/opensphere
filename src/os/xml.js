@@ -1,6 +1,5 @@
 goog.declareModuleId('os.xml');
 
-const googArray = goog.require('goog.array');
 const dom = goog.require('goog.dom');
 const NodeType = goog.require('goog.dom.NodeType');
 const googDomXml = goog.require('goog.dom.xml');
@@ -153,7 +152,7 @@ export const createElementNS = function(tag, nsUri, opt_doc, opt_content, opt_at
  */
 export const getChildrenByTagName = function(element, tag) {
   var children = dom.getChildren(element);
-  return googArray.filter(children, function(node) {
+  return Array.from(children).filter(function(node) {
     return node.localName == tag;
   });
 };

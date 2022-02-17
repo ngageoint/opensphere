@@ -3,7 +3,6 @@ goog.declareModuleId('os.data.xf.DataModel');
 import PropertyChangeEvent from '../../events/propertychangeevent.js';
 import PropertyChange from './propertychange.js';
 
-const googArray = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
@@ -395,7 +394,7 @@ export default class DataModel extends EventTarget {
         var results = /** @type {!Array<S>} */ (opt_bottom ? dim.bottom(opt_value) : dim.top(opt_value));
 
         if (this.filterFunction) {
-          results = googArray.filter(results, this.filterFunction, this);
+          results = results.filter(this.filterFunction, this);
         }
 
         return results;

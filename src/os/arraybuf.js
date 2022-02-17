@@ -1,7 +1,5 @@
 goog.declareModuleId('os.arraybuf');
 
-goog.require('goog.array');
-
 
 /**
  * The Byte Order Marker (BOM) sequence.
