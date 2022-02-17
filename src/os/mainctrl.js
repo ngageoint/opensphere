@@ -9,13 +9,13 @@ import './ui/ngrightclick.js';
 import './ui/search/searchresults.js';
 import './ui/timelinepanel.js';
 
+import BaseMapPlugin from '../plugin/basemap/basemapplugin.js';
+import CesiumPlugin from '../plugin/cesium/cesiumplugin.js';
 /* import ArcPlugin from '../plugin/arc/arcplugin.js';
 import AreaPlugin from '../plugin/area/areaplugin.js';
 import AreaDataPlugin from '../plugin/areadata/areadataplugin.js';
 import AudioPlugin from '../plugin/audio/audioplugin.js';
-import BaseMapPlugin from '../plugin/basemap/basemapplugin.js';
 import CapturePlugin from '../plugin/capture/captureplugin.js';
-import CesiumPlugin from '../plugin/cesium/cesiumplugin.js';
 import ConfigPlugin from '../plugin/config/configplugin.js';
 import SearchPlugin from '../plugin/descriptor/searchplugin.js';
 import FeatureActionPlugin from '../plugin/featureaction/featureactionplugin.js';
@@ -117,7 +117,7 @@ import PlacesMetrics from './metrics/placesmetrics.js';
 import ServersMetrics from './metrics/serversmetrics.js';
 import TimelineMetrics from './metrics/timelinemetrics.js';
 import * as os from './os.js';
-// import PluginManager from './plugin/pluginmanager.js';
+import PluginManager from './plugin/pluginmanager.js';
 import AreaManager from './query/areamanager.js';
 import FilterManager from './query/filtermanager.js';
 import {setAreaFileManager, setAreaImportManager} from './query/query.js';
@@ -502,8 +502,10 @@ export default class Controller extends AbstractMainCtrl {
     super.addPlugins();
 
     // Only "os" application plugins are added here
-    /* const pluginManager = PluginManager.getInstance();
+    const pluginManager = PluginManager.getInstance();
+    pluginManager.addPlugin(new BaseMapPlugin());
     pluginManager.addPlugin(new CesiumPlugin());
+    /*
     pluginManager.addPlugin(FeatureActionPlugin.getInstance());
     pluginManager.addPlugin(new SearchPlugin());
     pluginManager.addPlugin(new AreaPlugin());
@@ -513,7 +515,6 @@ export default class Controller extends AbstractMainCtrl {
     pluginManager.addPlugin(ConfigPlugin.getInstance());
     pluginManager.addPlugin(new OGCPlugin());
     pluginManager.addPlugin(new XYZPlugin());
-    pluginManager.addPlugin(new BaseMapPlugin());
     pluginManager.addPlugin(new GooglePlacesPlugin());
     pluginManager.addPlugin(new PeliasGeocoderPlugin());
     pluginManager.addPlugin(new NominatimPlugin());
