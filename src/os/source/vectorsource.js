@@ -5,6 +5,7 @@ import '../mixin/rbushmixin.js';
 import EventType from '../action/eventtype.js';
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';
+import {removeDuplicates} from '../array/array.js';
 import {registerClass} from '../classregistry.js';
 import {toHexString} from '../color.js';
 import ColumnDefinition from '../data/columndefinition.js';
@@ -59,7 +60,7 @@ import SourceClass from './sourceclass.js';
 import * as sourceColumn from './sourcecolumn.js';
 
 const Timer = goog.require('goog.Timer');
-const {binaryInsert, binaryRemove, removeDuplicates} = goog.require('goog.array');
+const {binaryInsert, binaryRemove} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const nextTick = goog.require('goog.async.nextTick');
 const dispose = goog.require('goog.dispose');
@@ -889,7 +890,7 @@ export default class Vector extends OLVectorSource {
     if (this.columns) {
       // remove any duplicates
       var colByName = /** @type {function((ColumnDefinition|string)):string} */ (getValueExtractor('name'));
-      removeDuplicates(this.columns, this.columns, colByName);
+      removeDuplicates(this.columns, undefined, colByName);
 
       var descriptor = DataManager.getInstance().getDescriptor(this.getId());
       if (descriptor) {

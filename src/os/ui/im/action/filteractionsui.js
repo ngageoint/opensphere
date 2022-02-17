@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.im.action.FilterActionsCtrl');
 
+import {removeDuplicates} from '../../../array/array.js';
 import CommandProcessor from '../../../command/commandprocessor.js';
 import * as dispatcher from '../../../dispatcher.js';
 import {Metrics as ActionMetrics} from '../../../im/action/importaction.js';
@@ -16,8 +17,6 @@ import * as filter from './filteraction.js';
 import {launchFilterActionExport} from './filteractionexport.js';
 import FilterActionNode from './filteractionnode.js';
 import FilterActionTreeSearch from './filteractiontreesearch.js';
-
-const googArray = goog.require('goog.array');
 
 const {default: FilterActionEntry} = goog.requireType('os.im.action.FilterActionEntry');
 
@@ -141,7 +140,7 @@ export default class Controller extends AbstractGroupByTreeSearchCtrl {
       var entries = FilterActionNode.toEntries(entryNodes);
 
       // the tag group by sometimes creates multiple nodes for the same entry, so remove duplicate entries here
-      googArray.removeDuplicates(entries);
+      removeDuplicates(entries);
 
       ImportActionManager.getInstance().setActionEntries(this.entryType, entries);
     }

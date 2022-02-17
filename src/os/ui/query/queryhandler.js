@@ -1,12 +1,11 @@
 goog.declareModuleId('os.ui.query.QueryHandler');
 
-import {defaultSort} from '../../array/array.js';
+import {defaultSort, removeDuplicates} from '../../array/array.js';
 import FilterEntry from '../../filter/filterentry.js';
 import instanceOf from '../../instanceof.js';
 import {getAreaManager, getFilterManager, getQueryManager} from '../../query/queryinstance.js';
 
 const Disposable = goog.require('goog.Disposable');
-const {removeDuplicates} = goog.require('goog.array');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 
 const Feature = goog.requireType('ol.Feature');
@@ -330,7 +329,7 @@ export default class QueryHandler extends Disposable {
         entries = entries.filter(this.filters, this);
 
         // Since this is only for exclusions or no areas. We only need 1 of each filter
-        removeDuplicates(entries, null, function(entry) {
+        removeDuplicates(entries, undefined, function(entry) {
           return /** @type {string} */ (entry['filterId']);
         });
       }

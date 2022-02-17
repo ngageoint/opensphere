@@ -1,9 +1,8 @@
 goog.declareModuleId('os.ui.im.ImportManager');
 
-import {defaultSort} from '../../array/array.js';
+import {defaultSort, removeDuplicates} from '../../array/array.js';
 import Importer from '../../im/importer.js';
 
-const {removeDuplicates} = goog.require('goog.array');
 const log = goog.require('goog.log');
 const {forEach} = goog.require('goog.object');
 
@@ -174,7 +173,7 @@ export default class ImportManager {
     forEach(this.importUIs_, function(importer) {
       importers.push(importer);
     });
-    removeDuplicates(importers, null, function(importer) {
+    removeDuplicates(importers, undefined, function(importer) {
       return importer.launchUI.toString();
     });
     return importers;

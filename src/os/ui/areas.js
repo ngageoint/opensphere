@@ -2,6 +2,7 @@ goog.declareModuleId('os.ui.AreasUI');
 
 import './dragdrop/urldragdropui.js';
 import AlertManager from '../alert/alertmanager.js';
+import {removeDuplicates} from '../array/array.js';
 import AreaNode from '../data/areanode.js';
 import AreaTreeSearch from '../data/areatreesearch.js';
 import SourceGroupBy from '../data/groupby/sourcegroupby.js';
@@ -19,7 +20,7 @@ import Module from './module.js';
 import * as CombinatorUI from './query/combinator.js';
 import AbstractGroupByTreeSearchCtrl from './slick/abstractgroupbytreesearchctrl.js';
 
-const {flatten, removeDuplicates} = goog.require('goog.array');
+const {flatten} = goog.require('goog.array');
 const GoogEventType = goog.require('goog.events.EventType');
 
 const GoogEvent = goog.requireType('goog.events.Event');

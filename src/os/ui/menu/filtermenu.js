@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.menu.filter');
 
 import EventType from '../../action/eventtype.js';
+import {removeDuplicates} from '../../array/array.js';
 import CommandProcessor from '../../command/commandprocessor.js';
 import FilterEnable from '../../command/filterenablecmd.js';
 import SequenceCommand from '../../command/sequencecommand.js';
@@ -16,7 +17,6 @@ import Menu from './menu.js';
 import MenuItem from './menuitem.js';
 import MenuItemType from './menuitemtype.js';
 
-const {removeDuplicates} = goog.require('goog.array');
 const {remove} = goog.require('ol.array');
 
 const {default: FilterEntry} = goog.requireType('os.filter.FilterEntry');

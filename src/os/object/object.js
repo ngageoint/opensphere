@@ -266,7 +266,7 @@ export const getFirstValue = function(key, var_args) {
  * Creates a value extractor function. Use the provided attribute to retrieve a value from an item.  Useful
  * for collection iterators and such to extract values of their records.
  *
- * Example: googArray.removeDuplicates(arrWithElementsWithIds, newArr, os.object.getValueExtractor('id'));
+ * Example: os.array.removeDuplicates(arrWithElementsWithIds, newArr, os.object.getValueExtractor('id'));
  *
  * @param {!string} attribute The attribute whose value to retrieve from an item.  If the attribute name references
  *   a function, it is invoked on the item.

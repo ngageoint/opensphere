@@ -2,6 +2,7 @@ goog.declareModuleId('os.ui.ogc.OGCServer');
 
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';
+import {removeDuplicates} from '../../array/array.js';
 import Settings from '../../config/settings.js';
 import DataManager from '../../data/datamanager.js';
 import IDataProvider from '../../data/idataprovider.js';
@@ -20,7 +21,6 @@ import LayerParsers from './wms/layerparsers.js';
 
 const Uri = goog.require('goog.Uri');
 const QueryData = goog.require('goog.Uri.QueryData');
-const {removeDuplicates} = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');
 const {loadXml} = goog.require('goog.dom.xml');
 const log = goog.require('goog.log');

@@ -2,6 +2,7 @@ goog.declareModuleId('os.filter.BaseFilterManager');
 
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';
+import {removeDuplicates} from '../array/array.js';
 import CommandProcessor from '../command/commandprocessor.js';
 import Settings from '../config/settings.js';
 import DataManager from '../data/datamanager.js';
@@ -20,7 +21,6 @@ import cloneToContext from './clonetocontext.js';
 import FilterEntry from './filterentry.js';
 import FilterType from './filtertype.js';
 
-const {removeDuplicates} = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const googObject = goog.require('goog.object');
 const googString = goog.require('goog.string');

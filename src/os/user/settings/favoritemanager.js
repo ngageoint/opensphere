@@ -124,7 +124,7 @@ export default class FavoriteManager extends EventTarget {
         }
       }
     }
-    googArray.removeDuplicates(favFolders);
+    osArray.removeDuplicates(favFolders);
     return favFolders;
   }
 
@@ -165,7 +165,7 @@ export default class FavoriteManager extends EventTarget {
    */
   getFavTypes(favs, types) {
     var result = FavoriteManager.getTypeInternal_(favs, types);
-    googArray.removeDuplicates(result, undefined, function(fav) {
+    osArray.removeDuplicates(result, undefined, function(fav) {
       return fav['key'];
     });
     return result;
@@ -179,7 +179,7 @@ export default class FavoriteManager extends EventTarget {
    */
   getFolders(opt_ignore) {
     var folders = FavoriteManager.getFoldersInternal_(this.getFavorites(), opt_ignore);
-    googArray.removeDuplicates(folders);
+    osArray.removeDuplicates(folders);
     return folders;
   }
 
@@ -217,7 +217,7 @@ export default class FavoriteManager extends EventTarget {
 
     // Are we putting this favorite into a folder?
     if (opt_folders && opt_folders.length > 0) {
-      googArray.removeDuplicates(opt_folders);
+      osArray.removeDuplicates(opt_folders);
       for (var i = 0; i < opt_folders.length; i++) {
         favs = FavoriteManager.saveFolderInternal_(favs, fav, opt_folders[i]);
       }

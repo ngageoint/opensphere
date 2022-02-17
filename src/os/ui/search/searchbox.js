@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.search.SearchBoxUI');
 
 import '../dragdrop/dragdropui.js';
-import {defaultSort} from '../../array/array.js';
+import {defaultSort, removeDuplicates} from '../../array/array.js';
 import Settings from '../../config/settings.js';
 import * as dispatcher from '../../dispatcher.js';
 import osImplements from '../../implements.js';
@@ -942,7 +942,7 @@ export class Controller {
     if (results && results.length > 0) {
       const typeahead = this.autocompleteSrc_.data('typeahead');
       const current = typeahead['source'].concat(results);
-      googArray.removeDuplicates(current); // don't allow dupes in auto-complete results
+      removeDuplicates(current); // don't allow dupes in auto-complete results
       typeahead['source'] = current;
       typeahead['lookup']();
     }
