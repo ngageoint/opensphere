@@ -1,5 +1,6 @@
 const path = require('path');
 const ClosurePlugin = require('@ngageoint/closure-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const buildDir = path.resolve(__dirname, '.build');
 
@@ -8,6 +9,7 @@ module.exports = (env, argv) => {
   const depsFile = path.join(buildDir, 'deps.js');
 
   return {
+    mode: argv.mode,
     entry: [
       path.join(buildDir, 'index.js')
     ],
@@ -18,7 +20,15 @@ module.exports = (env, argv) => {
     devtool: isProduction ? 'source-map' : 'eval',
     watch: !isProduction,
     optimization: {
-      minimize: false,
+      minimize: true,
+      minimizer: [new TerserPlugin({
+        terserOptions: {
+          compress: true,
+          mangle: false,
+          keep_classnames: true,
+          keep_fnames: true
+        }
+      })],
       concatenateModules: false,
       splitChunks: {
         minSize: 0

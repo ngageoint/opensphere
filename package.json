@@ -295,7 +295,8 @@
     "webgl-mock": "^0.1.7",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
-    "xmllint": "^0.1.1"
+    "xmllint": "^0.1.1",
+    "terser": "^5.10.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",

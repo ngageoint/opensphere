@@ -1,7 +1,7 @@
 var fs = require('fs');
 const fse = require('fs-extra');
 
-const srcDir = `../../node_modules/google-closure-library/`;
+let srcDir = `../../node_modules/google-closure-library/`;
 if (!fs.existsSync(srcDir)) {
   srcDir = './node_modules/google-closure-library/';
 }
