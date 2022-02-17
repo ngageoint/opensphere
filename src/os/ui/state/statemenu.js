@@ -19,7 +19,6 @@ import MenuItemType from '../menu/menuitemtype.js';
 import StateClear from './cmd/stateclearcmd.js';
 import IStateDescriptor from './istatedescriptor.js';
 
-const {removeAllIf} = goog.require('goog.array');
 const Throttle = goog.require('goog.async.Throttle');
 const googDispose = goog.require('goog.dispose');
 
@@ -167,9 +166,7 @@ export const refreshMenu = function() {
   // Remove all groups from the menu
   var menuRoot = menu.getRoot();
   if (menuRoot.children) {
-    removeAllIf(menuRoot.children, function(item) {
-      return item.type === MenuItemType.GROUP;
-    });
+    menuRoot.children = menuRoot.children.filter((item) => item.type === MenuItemType.GROUP);
   }
 
   // dataManager.getDescriptors will get everything

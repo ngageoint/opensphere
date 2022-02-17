@@ -5,7 +5,6 @@ import LayerEventType from '../events/layereventtype.js';
 import MapContainer from '../mapcontainer.js';
 import {FolderEventType, SettingsKey} from './folder.js';
 
-const {remove} = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 
@@ -110,8 +109,8 @@ export default class FolderManager extends EventTarget {
 
     options.children.forEach((child) => {
       const children = parentFolder ? parentFolder.children : this.items;
-      if (children) {
-        remove(children, child);
+      if (children && children.indexOf(child) >= 0) {
+        children.splice(children.indexOf(child));
       }
 
       child.parentId = options.id;

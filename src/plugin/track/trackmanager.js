@@ -25,7 +25,6 @@ import PlacesManager from '../places/placesmanager.js';
 import * as pluginTrack from './track.js';
 import TrackInteraction from './trackinteraction.js';
 
-const googArray = goog.require('goog.array');
 const asserts = goog.require('goog.asserts');
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const Throttle = goog.require('goog.async.Throttle');
@@ -157,20 +156,13 @@ export default class TrackManager extends EventTarget {
       if (track) {
         events.unlisten(track, events.EventType.CHANGE, this.onFeatureValueChange_, this);
 
-        googArray.removeIf(this.following_, function(item) {
-          return item === track;
-        });
-
-        googArray.removeIf(this.activeTracks_, function(item) {
-          return item === track;
-        });
+        const followingIndex = this.following_.indexOf(track);
+        if (followingIndex >= 0) {
+          this.following_.splice(followingIndex, 1);
+        }
 
         // also need to remove it from the active tracks
-        for (let k = 0; k < this.activeTracks_.length; k++) {
-          if (this.activeTracks_[k] == track) {
-            googArray.removeAt(this.activeTracks_, k);
-          }
-        }
+        this.activeTracks_ = this.activeTracks_.filter((item) => item != track);
       }
     }, this);
   }
@@ -271,7 +263,7 @@ export default class TrackManager extends EventTarget {
       // check which of the active tracks are to be followed
       for (let i = 0; i < this.activeTracks_.length; i++) {
         if (!array.includes(this.following_, this.activeTracks_[i])) {
-          googArray.removeAt(this.activeTracks_, i);
+          this.activeTracks_.splice(i, 1);
         }
       }
     }

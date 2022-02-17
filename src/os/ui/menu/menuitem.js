@@ -3,8 +3,6 @@ goog.declareModuleId('os.ui.menu.MenuItem');
 import {defaultSort} from '../../array/array.js';
 import MenuItemType from './menuitemtype.js';
 
-const {removeIf} = goog.require('goog.array');
-
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: MenuItemOptions} = goog.requireType('os.ui.menu.MenuItemOptions');
 
@@ -134,9 +132,12 @@ export default class MenuItem {
   removeChild(eventTypeOrLabel) {
     var rv = false;
     if (this.children) {
-      rv = removeIf(this.children, function(item) {
-        return item.eventType === eventTypeOrLabel || item.label === eventTypeOrLabel;
-      });
+      const childIndex = this.children.findIndex(
+          (item) => item.eventType === eventTypeOrLabel || item.label === eventTypeOrLabel);
+      if (childIndex >= 0) {
+        this.children.splice(childIndex, 1);
+        rv = true;
+      }
 
       if (!this.children.length) {
         this.children = undefined;

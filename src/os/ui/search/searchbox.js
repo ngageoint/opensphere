@@ -544,7 +544,7 @@ export class Controller {
         });
         if (ind > -1) {
           currentGroup.push(copiedOptions[ind]);
-          googArray.removeAt(copiedOptions, ind);
+          copiedOptions.splice(ind, 1);
         }
       }, this);
       this['searchOptionsGroups'][groupName] = currentGroup;

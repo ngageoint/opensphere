@@ -10,7 +10,6 @@ import AbstractLayerConfig from './abstractlayerconfig.js';
 import {mapFeatureTypeColumn} from './layerconfig.js';
 
 const Uri = goog.require('goog.Uri');
-const {removeIf} = goog.require('goog.array');
 const {assert} = goog.require('goog.asserts');
 const {getLogger} = goog.require('goog.log');
 const VectorRenderType = goog.require('ol.layer.VectorRenderType');
@@ -119,9 +118,10 @@ export default class AbstractDataSourceLayerConfig extends AbstractLayerConfig {
       // exclude the geometry column
       var geometryColumn = featureType.getGeometryColumnName();
       if (geometryColumn) {
-        removeIf(columns, function(column) {
-          return column.name == geometryColumn;
-        });
+        const columnIndex = columns.findIndex((col) => col.name == geometryColumn);
+        if (columnIndex >= 0) {
+          columns.splice(columnIndex, 1);
+        }
       }
 
       // if columns are saved on the descriptor, we want to update their types to match that of the feature type since that

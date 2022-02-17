@@ -449,7 +449,7 @@ export default class FavoriteManager extends EventTarget {
     for (var i = 0; i < favs.length; i++) {
       var fav = favs[i];
       if (fav['key'] == key) {
-        googArray.removeAt(favs, i);
+        favs.splice(i, 1);
       } else if (fav['type'] == FavoriteType.FOLDER) {
         var children = FavoriteManager.removeFavoriteInternal_(fav['children'], key);
         if (children.length != fav['children'].length) {
@@ -474,9 +474,10 @@ export default class FavoriteManager extends EventTarget {
     for (var i = 0; i < favs.length; i++) {
       var fav = favs[i];
       if (fav['key'] == folder) {
-        googArray.removeIf(fav['children'], function(child) {
-          return child['key'] == key;
-        });
+        const childIndex = fav['children'].findIndex((child) => child['key'] == key);
+        if (childIndex >= 0) {
+          fav['children'].splice(childIndex, 1);
+        }
       } else if (fav['type'] == FavoriteType.FOLDER) {
         var children = FavoriteManager.removeFavoriteFromFolderInternal_(fav['children'], key, folder);
         if (children.length != fav['children'].length) {
@@ -537,9 +538,10 @@ export default class FavoriteManager extends EventTarget {
     if (folders) {
       // Remove the ignored folder if it exists
       if (opt_ignore) {
-        googArray.removeIf(folders, function(folder) {
-          return folder['key'] == opt_ignore;
-        });
+        const folderIndex = folders.findIndex((folder) => folder['key'] == opt_ignore);
+        if (folderIndex >= 0) {
+          folders.splice(folderIndex, 1);
+        }
       }
 
       googArray.extend(result, folders);
