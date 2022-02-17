@@ -8,8 +8,6 @@ import * as osObject from '../../object/object.js';
 import * as url from '../../url/url.js';
 import FavoriteType from './favoritetype.js';
 
-const googArray = goog.require('goog.array');
-
 const EventTarget = goog.require('goog.events.EventTarget');
 const googString = goog.require('goog.string');
 
@@ -108,7 +106,7 @@ export default class FavoriteManager extends EventTarget {
    * Get the favorite's folders
    *
    * @param {string} key
-   * @return {Array<FavoriteSetting>}
+   * @return {!Array<FavoriteSetting>}
    */
   getFavoriteFolders(key) {
     var favFolders = [];
@@ -118,10 +116,7 @@ export default class FavoriteManager extends EventTarget {
     if (folders) {
       for (var i = 0; i < folders.length; i++) {
         var folder = folders[i];
-        var foundFolders = FavoriteManager.getFavoriteFoldersInternal_(folder, key);
-        if (foundFolders) {
-          googArray.extend(favFolders, foundFolders);
-        }
+        favFolders.push(...FavoriteManager.getFavoriteFoldersInternal_(folder, key));
       }
     }
     osArray.removeDuplicates(favFolders);
@@ -413,7 +408,7 @@ export default class FavoriteManager extends EventTarget {
    *
    * @param {FavoriteSetting} folder
    * @param {string} key
-   * @return {Array<string>} - the folder keys the favorite was found in
+   * @return {!Array<string>} - the folder keys the favorite was found in
    * @private
    */
   static getFavoriteFoldersInternal_(folder, key) {
@@ -426,10 +421,7 @@ export default class FavoriteManager extends EventTarget {
         if (fav['key'] == key) {
           favFolders.push(folder['key']);
         } else if (fav['type'] == FavoriteType.FOLDER) {
-          var foundFolders = FavoriteManager.getFavoriteFoldersInternal_(fav, key);
-          if (foundFolders) {
-            googArray.extend(favFolders, foundFolders);
-          }
+          favFolders.push(...FavoriteManager.getFavoriteFoldersInternal_(fav, key));
         }
       }
     }
@@ -494,7 +486,7 @@ export default class FavoriteManager extends EventTarget {
    *
    * @param {Array} favs
    * @param {Array<string>} types
-   * @return {Array}
+   * @return {!Array}
    * @private
    */
   static getTypeInternal_(favs, types) {
@@ -507,7 +499,7 @@ export default class FavoriteManager extends EventTarget {
     osArray.forEach(types, function(type) {
       var favType = bucketFavs[type];
       if (favType) {
-        googArray.extend(result, favType);
+        result.push(...favType);
       }
     });
 
@@ -515,7 +507,7 @@ export default class FavoriteManager extends EventTarget {
     var folders = bucketFavs[FavoriteType.FOLDER];
     if (folders) {
       osArray.forEach(folders, function(folder) {
-        googArray.extend(result, FavoriteManager.getTypeInternal_(folder['children'], types));
+        result.push(...FavoriteManager.getTypeInternal_(folder['children'], types));
       });
     }
 
@@ -525,7 +517,7 @@ export default class FavoriteManager extends EventTarget {
   /**
    * @param {Array} favs
    * @param {Array=} opt_ignore - ignore this folder key and all child folders
-   * @return {Array}
+   * @return {!Array}
    * @private
    */
   static getFoldersInternal_(favs, opt_ignore) {
@@ -544,9 +536,9 @@ export default class FavoriteManager extends EventTarget {
         }
       }
 
-      googArray.extend(result, folders);
+      result.push(...folders);
       osArray.forEach(folders, function(folder) {
-        googArray.extend(result, FavoriteManager.getFoldersInternal_(folder['children'], opt_ignore));
+        result.push(...FavoriteManager.getFoldersInternal_(folder['children'], opt_ignore));
       });
     }
 

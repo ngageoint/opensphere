@@ -19,7 +19,7 @@ import * as timelineUi from './timeline.js';
 import TimelineScaleEvent from './timelinescaleevent.js';
 
 const Timer = goog.require('goog.Timer');
-const googArray = goog.require('goog.array');
+const {binarySearch} = goog.require('goog.array');
 const Throttle = goog.require('goog.async.Throttle');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -1090,7 +1090,7 @@ export class Controller {
 
       // for the snap interval, find the scale step that is closest to 10 pixels wide
       var steps = timelineUi.SNAP_SCALE;
-      var i = googArray.binarySearch(steps, px10time);
+      var i = binarySearch(steps, px10time);
 
       if (i < 0) {
         i = Math.min(Math.abs(i + 1), steps.length - 1);
@@ -1420,7 +1420,7 @@ export class Controller {
   static getSnap(target) {
     // Get the closest item on the snap scale to the target
     var arr = timelineUi.SNAP_SCALE;
-    var i = googArray.binarySearch(arr, target);
+    var i = binarySearch(arr, target);
 
     if (i < 0) {
       i = Math.min(Math.abs(i + 1), arr.length - 1);

@@ -7,7 +7,6 @@ import {removeResize, resize, waitForAngular} from '../ui.js';
 import windowCommonElements from '../windowcommonelements.js';
 import windowCommonOptionalElements from '../windowcommonoptionalelements.js';
 
-const googArray = goog.require('goog.array');
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
 const GoogEventType = goog.require('goog.events.EventType');
 const googObject = goog.require('goog.object');
@@ -238,7 +237,7 @@ export class Controller {
 
       // remove resize from common elements
       var allCommonElements = Array.from(windowCommonElements);
-      googArray.extend(allCommonElements, windowCommonOptionalElements);
+      allCommonElements.push(...windowCommonOptionalElements);
       allCommonElements.forEach(function(sibling) {
         if (this.resizeFn_) {
           removeResize($(/** @type {string} */ (sibling)), this.resizeFn_);

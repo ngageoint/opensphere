@@ -1286,7 +1286,7 @@ export const getTimeIndex = function(coordinates, value, stride) {
   // find the closest timestamp to the current timeline position
   var index = osArray.binaryStrideSearch(coordinates, value, stride, stride - 1);
   if (index < 0) {
-    // if current isn't in the array, goog.array.binarySearch will return (-(insertion point) - 1)
+    // if current isn't in the array, binarySearch will return (-(insertion point) - 1)
     index = -index - 1;
   }
 

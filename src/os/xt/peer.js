@@ -7,7 +7,6 @@ import PeerInfo from './peerinfo.js';
 import {isMaster, getMasterKey, getPingKey, getLastPing, cleanupPeer, prepareSendData} from './xt.js';
 
 const Timer = goog.require('goog.Timer');
-const googArray = goog.require('goog.array');
 const Deferred = goog.require('goog.async.Deferred');
 const Delay = goog.require('goog.async.Delay');
 const googEvents = goog.require('goog.events');
@@ -846,9 +845,11 @@ export default class Peer {
     if (this.waitList_.length) {
       now = Date.now();
       var nextExpiration = now + Peer.PING_INTERVAL;
-      nextExpiration = googArray.reduce(this.waitList_, function(minExpiration, wait, i, a) {
-        return Math.min(minExpiration, wait.expiration);
-      }, nextExpiration);
+      nextExpiration = this.waitList_.reduce(
+          function(minExpiration, wait, i, a) {
+            return Math.min(minExpiration, wait.expiration);
+          },
+          nextExpiration);
       this.waitListDelay_.start(nextExpiration - now);
     }
   }

@@ -29,7 +29,6 @@ import SelectBrush from './selectbrush.js';
 import TileAxis from './tileaxis.js';
 import * as timelineUi from './timeline.js';
 
-const googArray = goog.require('goog.array');
 const asserts = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
@@ -181,7 +180,7 @@ export default class Controller {
         (Settings.getInstance().get(['ui', 'timelineSettings', 'chartType'], 'line'));
     var histClassIdx = this.histClasses_.indexOf(histClass);
     if (histClassIdx > -1) {
-      googArray.rotate(this.histClasses_, histClassIdx);
+      this.histClasses_.unshift(...this.histClasses_.splice(-histClassIdx, histClassIdx));
       this['histClass'] = hist.CHART_TYPES[this.histClasses_[0]];
     }
 
@@ -831,7 +830,7 @@ export default class Controller {
    * @export
    */
   toggleChartType() {
-    googArray.rotate(this.histClasses_, 1);
+    this.histClasses_.unshift(this.histClasses_.pop());
 
     var chartType = this.histClasses_[0];
     this['histClass'] = hist.CHART_TYPES[chartType];
