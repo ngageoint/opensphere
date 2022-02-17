@@ -6,7 +6,6 @@ import {UNITS, UnitSystem} from './unit.js';
 import UnitChange from './unitchange.js';
 import UnitFactory from './unitfactory.js';
 
-const googArray = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
@@ -56,7 +55,7 @@ export default class UnitManager extends EventTarget {
      * @private
      */
     this.systems_ = this.unitFactory_.getSystems();
-    googArray.sort(this.systems_);
+    this.systems_.sort();
 
     Settings.getInstance().listen(UNITS, this.onUnitsChange_, false, this);
   }

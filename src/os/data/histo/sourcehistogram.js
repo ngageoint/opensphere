@@ -10,7 +10,6 @@ import DataModel from '../xf/datamodel.js';
 import ColorBin from './colorbin.js';
 import {HistoEventType} from './histogramutils.js';
 
-const googArray = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -605,7 +604,7 @@ export default class SourceHistogram extends EventTarget {
       }));
 
       if (this.sortFn) {
-        googArray.sort(results, this.sortFn);
+        results.sort(this.sortFn);
       }
     }
 

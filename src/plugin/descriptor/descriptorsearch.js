@@ -16,7 +16,6 @@ import TagSplit from './facet/tagsplitfacet.js';
 import Type from './facet/typefacet.js';
 
 const Promise = goog.require('goog.Promise');
-const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
 
 const {default: IDataDescriptor} = goog.requireType('os.data.IDataDescriptor');
@@ -150,9 +149,7 @@ export default class DescriptorSearch extends AbstractSearch {
       }
     }
 
-    googArray.sort(results, function(a, b) {
-      return defaultSort(b.getScore(), a.getScore());
-    });
+    results.sort((a, b) => defaultSort(b.getScore(), a.getScore()));
 
     if (promises.length) {
       var self = this;

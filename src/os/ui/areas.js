@@ -20,7 +20,6 @@ import Module from './module.js';
 import * as CombinatorUI from './query/combinator.js';
 import AbstractGroupByTreeSearchCtrl from './slick/abstractgroupbytreesearchctrl.js';
 
-const {flatten} = goog.require('goog.array');
 const GoogEventType = goog.require('goog.events.EventType');
 
 const GoogEvent = goog.requireType('goog.events.Event');
@@ -158,7 +157,7 @@ export class Controller extends AbstractGroupByTreeSearchCtrl {
    * @return {Array<AreaNode>} Array of every area
    */
   allAreas() {
-    var allAreas = flatten(this.scope['areas'].map(getLeafNodes));
+    var allAreas = this.scope['areas'].map(getLeafNodes).flat();
     return /** @type {Array<AreaNode>} */ (allAreas);
   }
 
@@ -167,7 +166,7 @@ export class Controller extends AbstractGroupByTreeSearchCtrl {
    * @return {Array<AreaNode>} Array of every selected area
    */
   selectedAreas() {
-    var selected = flatten(this.scope['selected'].map(getLeafNodes));
+    var selected = this.scope['selected'].map(getLeafNodes).flat();
     removeDuplicates(selected);
 
     return /** @type {Array<AreaNode>} */ (selected);

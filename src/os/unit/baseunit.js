@@ -1,7 +1,5 @@
 goog.declareModuleId('os.unit.BaseUnit');
 
-const googArray = goog.require('goog.array');
-
 const {default: IMultiplier} = goog.requireType('os.unit.IMultiplier');
 const {default: IUnit} = goog.requireType('os.unit.IUnit');
 
@@ -137,7 +135,7 @@ export default class BaseUnit {
    */
   initBestFitCandidates() {
     this.bestFitCandidates = this.multipliers.filter(this.getIsBestFitCandidate);
-    googArray.sort(this.bestFitCandidates, function(multA, multB) { // sort from largest to smallest
+    this.bestFitCandidates.sort((multA, multB) => { // sort from largest to smallest
       return multA.getMultiplier() < multB.getMultiplier() ? 1 : -1;
     });
   }

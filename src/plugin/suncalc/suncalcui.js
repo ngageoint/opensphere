@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.suncalc.SunCalcUI');
 
+import {defaultSort} from '../../os/array/array.js';
 import settings from '../../os/config/settings.js';
 import * as geo from '../../os/geo/geo.js';
 import * as osMap from '../../os/map/map.js';
@@ -13,7 +14,6 @@ import * as ui from '../../os/ui/ui.js';
 import * as osWindow from '../../os/ui/window.js';
 import {SettingKey} from './suncalc.js';
 
-const googArray = goog.require('goog.array');
 const color = goog.require('goog.color');
 const olProj = goog.require('ol.proj');
 
@@ -224,7 +224,7 @@ export class Controller {
 
       times = times.filter(filter);
       times.forEach(addTextColor);
-      googArray.sortObjectsByKey(times, 'time');
+      times.sort((a, b) => defaultSort(a['time'], b['time']));
       sets.push(times);
 
       this.scope_['times'] = times;

@@ -4,7 +4,6 @@ import {getMapContainer} from '../map/mapinstance.js';
 import AnimationVector from './animationvector.js';
 
 const Disposable = goog.require('goog.Disposable');
-const {clone} = goog.require('goog.array');
 const OLVectorSource = goog.require('ol.source.Vector');
 
 const Feature = goog.requireType('ol.Feature');
@@ -64,7 +63,7 @@ export default class AnimationOverlay extends Disposable {
     }
 
     if (options.features != null && Array.isArray(options.features)) {
-      this.setFeatures(clone(options.features));
+      this.setFeatures(Array.from(options.features));
     }
 
     if (options.map != null) {

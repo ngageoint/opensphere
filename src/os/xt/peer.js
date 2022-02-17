@@ -603,7 +603,7 @@ export default class Peer {
       // add self
       peerIds.push(this.getId());
       // sort, "smallest" peer ID becomes master
-      googArray.sort(peerIds);
+      peerIds.sort();
       if (peerIds[0] === this.getId()) {
         // it's me!
         this.becomeMaster_();

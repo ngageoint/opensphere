@@ -17,7 +17,6 @@ import FavoriteManager from '../../user/settings/favoritemanager.js';
 import Module from '../module.js';
 import {TypeaheadEventType, apply} from '../ui.js';
 
-const googArray = goog.require('goog.array');
 const {contains: domContains, getAncestorByClass} = goog.require('goog.dom');
 const googEvents = goog.require('goog.events');
 const GoogEvent = goog.require('goog.events.Event');
@@ -637,9 +636,7 @@ export class Controller {
    */
   getSearchOptionsGroup(groupName) {
     const group = this['searchOptionsGroups'][groupName];
-    googArray.sort(group, function(a, b) {
-      return defaultSort(a.getName(), b.getName());
-    });
+    group.sort((a, b) => defaultSort(a.getName(), b.getName()));
     return group;
   }
 

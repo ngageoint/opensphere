@@ -8,8 +8,6 @@ import {ROOT} from '../../os.js';
 import Module from '../module.js';
 import {getRingTitle} from './geo.js';
 
-const {peek} = goog.require('goog.array');
-
 
 /**
  * The ringoptions directive
@@ -216,7 +214,7 @@ export class Controller {
    * @export
    */
   add(opt_update) {
-    var last = peek(this['options'].rings);
+    var last = this['options'].rings[this['options'].rings.length - 1];
     var radius = (last && last.radius || 0) + this['options'].interval;
     radius = roundWithPrecision(radius, precision(this['options'].interval));
     this['options'].rings.push({'radius': radius, 'units': this['options'].units});

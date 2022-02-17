@@ -8,7 +8,6 @@ import SlickTreeNode from '../slick/slicktreenode.js';
 import {apply} from '../ui.js';
 import FacetNode from './facetnode.js';
 
-const {sortObjectsByKey} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const {caseInsensitiveCompare} = goog.require('goog.string');
 
@@ -176,6 +175,7 @@ export default class Controller {
 
   /**
    * Converts the facets to a proper tree for slick grid
+   * @suppress {checkTypes} To avoid [] access on a struct.
    */
   onFacetLoad() {
     var applied = this.getAppliedFacets() || {};
@@ -215,7 +215,7 @@ export default class Controller {
           catNode.addChild(valueNode);
         }
 
-        sortObjectsByKey(catNode.getChildren(), 'label', caseInsensitiveCompare);
+        catNode.getChildren().sort((a, b) => caseInsensitiveCompare(a['label'], b['label']));
       }
     }
 

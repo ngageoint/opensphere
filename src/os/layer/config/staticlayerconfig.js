@@ -5,7 +5,6 @@ import VectorLayer from '../vector.js';
 import AbstractLayerConfig from './abstractlayerconfig.js';
 import {LayerConfigId} from './layerconfig.js';
 
-const {clone} = goog.require('goog.array');
 const {getLogger} = goog.require('goog.log');
 
 const Logger = goog.requireType('goog.log.Logger');
@@ -48,7 +47,7 @@ export default class StaticLayerConfig extends AbstractLayerConfig {
 
     if (Array.isArray(options['data'])) {
       // make sure the array was created in this context
-      this.data = options['data'] = options['data'] instanceof Array ? options['data'] : clone(options['data']);
+      this.data = options['data'] = options['data'] instanceof Array ? options['data'] : Array.from(options['data']);
     } else {
       this.data = null;
     }

@@ -2,6 +2,7 @@ goog.declareModuleId('os.ui.capture.AbstractCapturePlugin');
 
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';
+import {defaultSort} from '../../array/array.js';
 import {ID, saveCanvas} from '../../capture/capture.js';
 import TimelineRecorder from '../../capture/timelinerecorder.js';
 import * as dispatcher from '../../dispatcher.js';
@@ -10,7 +11,6 @@ import TimelineEventType from '../../time/timelineeventtype.js';
 import {launchRecordingUI} from './recordingui.js';
 
 const Promise = goog.require('goog.Promise');
-const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
 const userAgent = goog.require('goog.userAgent');
 
@@ -265,5 +265,5 @@ const logger = log.getLogger('os.ui.capture.AbstractCapturePlugin');
  * @return {number} The sort order.
  */
 const rendererPrioritySort = function(a, b) {
-  return googArray.inverseDefaultCompare(a.priority, b.priority);
+  return -defaultSort(a.priority, b.priority);
 };

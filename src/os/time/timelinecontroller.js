@@ -11,7 +11,6 @@ import TimelineEventType from './timelineeventtype.js';
 import TimeRange from './timerange.js';
 
 const Timer = goog.require('goog.Timer');
-const googArray = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const EventTarget = goog.require('goog.events.EventTarget');
 const iter = goog.require('goog.iter');
@@ -441,7 +440,7 @@ export default class TimelineController extends EventTarget {
     iter.forEach(rangeSet.__iterator__(false), function(value) {
       values.push(value.getLength());
     });
-    googArray.sort(values);
+    values.sort();
     return values[0];
   }
 
