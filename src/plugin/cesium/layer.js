@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.cesium.Layer');
 
+import OLLayer from 'ol/src/layer/Layer';
 import ActionEventType from '../../os/action/eventtype.js';
 import * as osColor from '../../os/color.js';
 import * as dispatcher from '../../os/dispatcher.js';
@@ -21,7 +22,6 @@ const Delay = goog.require('goog.async.Delay');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
-const OLLayer = goog.require('ol.layer.Layer');
 
 const LayerType = goog.requireType('ol.LayerType');
 const {default: IActionTarget} = goog.requireType('os.ui.action.IActionTarget');

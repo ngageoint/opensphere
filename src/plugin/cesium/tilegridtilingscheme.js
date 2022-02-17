@@ -1,18 +1,14 @@
 goog.declareModuleId('plugin.cesium.TileGridTilingScheme');
 
+import {equivalent, get, transformExtent, fromLonLat} from 'ol/src/proj';
+import {ENABLE_RASTER_REPROJECTION} from 'ol/src/reproj/common';
+import {toSize} from 'ol/src/size';
 import * as geo from '../../os/geo/geo.js';
 import {PROJECTION} from '../../os/map/map.js';
 
 import * as osProj from '../../os/proj/proj.js';
 
 const asserts = goog.require('goog.asserts');
-const ol = goog.require('ol');
-const olProj = goog.require('ol.proj');
-const {toSize} = goog.require('ol.size');
-
-const TileImageSource = goog.requireType('ol.source.TileImage');
-const TileGrid = goog.requireType('ol.tilegrid.TileGrid');
-
 
 /**
  * @implements {Cesium.TilingScheme}
@@ -35,10 +31,10 @@ export default class TileGridTilingScheme {
 
     var proj = source.getProjection() || PROJECTION;
     asserts.assert(proj);
-    var isGeographic = olProj.equivalent(proj, olProj.get(osProj.EPSG4326));
-    var isWebMercator = olProj.equivalent(proj, olProj.get(osProj.EPSG3857));
+    var isGeographic = equivalent(proj, get(osProj.EPSG4326));
+    var isWebMercator = equivalent(proj, get(osProj.EPSG3857));
 
-    if (!isGeographic && !isWebMercator && !ol.ENABLE_RASTER_REPROJECTION) {
+    if (!isGeographic && !isWebMercator && !ENABLE_RASTER_REPROJECTION) {
       throw new Error('Cesium only supports EPSG:4326 and EPSG:3857 projections');
     }
 
@@ -60,7 +56,7 @@ export default class TileGridTilingScheme {
      */
     this.projection_ = /** @type {!olProj.Projection} */ (proj);
 
-    var extent = olProj.transformExtent(this.tilegrid_.getExtent(), this.projection_, osProj.EPSG4326);
+    var extent = transformExtent(this.tilegrid_.getExtent(), this.projection_, osProj.EPSG4326);
     extent = extent.map(function(deg) {
       return deg * geo.D2R;
     });
@@ -152,7 +148,7 @@ export default class TileGridTilingScheme {
       rectangle.east * geo.R2D,
       rectangle.north * geo.R2D];
 
-    extent = olProj.transformExtent(extent, osProj.EPSG4326, this.projection_);
+    extent = transformExtent(extent, osProj.EPSG4326, this.projection_);
 
     var result = opt_result || new Cesium.Rectangle();
     result.west = extent[0];
@@ -176,7 +172,7 @@ export default class TileGridTilingScheme {
    */
   tileXYToRectangle(x, y, level, opt_result) {
     var extent = this.tilegrid_.getTileCoordExtent([level, x, -y - 1]);
-    extent = olProj.transformExtent(extent, this.projection_, osProj.EPSG4326);
+    extent = transformExtent(extent, this.projection_, osProj.EPSG4326);
 
     var result = opt_result || new Cesium.Rectangle();
     result.west = extent[0] * geo.D2R;
@@ -197,7 +193,7 @@ export default class TileGridTilingScheme {
       return undefined;
     }
 
-    var coord = olProj.fromLonLat([position.longitude * geo.R2D, position.latitude * geo.R2D], this.projection_);
+    var coord = fromLonLat([position.longitude * geo.R2D, position.latitude * geo.R2D], this.projection_);
 
     var origin = this.tilegrid_.getOrigin(level);
     var resolution = this.tilegrid_.getResolution(level);
