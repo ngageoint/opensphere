@@ -20,7 +20,7 @@ module.exports = (env, argv) => {
     devtool: isProduction ? 'source-map' : 'eval',
     watch: !isProduction,
     optimization: {
-      minimize: true,
+      minimize: isProduction,
       minimizer: [new TerserPlugin({
         terserOptions: {
           compress: true,
