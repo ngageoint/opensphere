@@ -1,5 +1,12 @@
 goog.declareModuleId('plugin.cesium.sync.ImageStaticSynchronizer');
 
+import {listen, unlistenByKey} from 'ol/src/events';
+import OLEventType from 'ol/src/events/EventType';
+import ImageState from 'ol/src/ImageState';
+import OLObject from 'ol/src/Object';
+import {transformExtent} from 'ol/src/proj';
+import olSourceImageStatic from 'ol/src/source/ImageStatic';
+
 import * as dispatcher from '../../../os/dispatcher.js';
 import LayerPropertyChange from '../../../os/layer/propertychange.js';
 import {PROJECTION} from '../../../os/map/map.js';
@@ -9,17 +16,7 @@ import ImageStatic from '../../../os/source/imagestatic.js';
 import CesiumSynchronizer from './cesiumsynchronizer.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
-const ImageState = goog.require('ol.ImageState');
-const OLObject = goog.require('ol.Object');
-const olEvents = goog.require('ol.events');
-const OLEventType = goog.require('ol.events.EventType');
-const olProj = goog.require('ol.proj');
-const olSourceImageStatic = goog.require('ol.source.ImageStatic');
 
-const ImageBase = goog.requireType('ol.ImageBase');
-const PluggableMap = goog.requireType('ol.PluggableMap');
-const OLImageLayer = goog.requireType('ol.layer.Image');
-const ImageSource = goog.requireType('ol.source.Image');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 const {default: ImageLayer} = goog.requireType('os.layer.Image');
 
@@ -65,7 +62,9 @@ export default class ImageStaticSynchronizer extends CesiumSynchronizer {
      */
     this.styleChangeKeys = ['opacity', 'brightness', 'contrast', 'saturation', 'sharpness'];
 
-    olEvents.listen(this.layer, GoogEventType.PROPERTYCHANGE, this.onLayerPropertyChange, this);
+    this.layerListenKey = listen(this.layer, GoogEventType.PROPERTYCHANGE, this.onLayerPropertyChange, this);
+
+    this.imageListenKey;
   }
 
   /**
@@ -88,7 +87,7 @@ export default class ImageStaticSynchronizer extends CesiumSynchronizer {
       }
 
       this.image = this.source.image_;
-      olEvents.listen(this.image, OLEventType.CHANGE, this.synchronize, this);
+      this.imageListenKey = listen(this.image, OLEventType.CHANGE, this.synchronize, this);
     }
 
     if (this.source instanceof ImageStatic) {
@@ -103,7 +102,7 @@ export default class ImageStaticSynchronizer extends CesiumSynchronizer {
       }
 
       if (this.image !== this.source.rotatedImage) {
-        olEvents.unlisten(this.image, OLEventType.CHANGE, this.synchronize, this);
+        unlistenByKey(this.imageListenKey);
         this.image = this.source.rotatedImage;
       }
     }
@@ -117,7 +116,7 @@ export default class ImageStaticSynchronizer extends CesiumSynchronizer {
       url = el.toDataURL();
     }
 
-    var extent = olProj.transformExtent(this.image.getExtent(), PROJECTION, osProj.EPSG4326);
+    var extent = transformExtent(this.image.getExtent(), PROJECTION, osProj.EPSG4326);
 
     if (!this.primitive && url && extent) {
       this.primitive = new Cesium.Primitive({

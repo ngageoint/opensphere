@@ -1,5 +1,10 @@
 goog.declareModuleId('plugin.cesium.sync.point');
 
+import olcsCore from 'ol-cesium/src/olcs/core';
+import {getUid} from 'ol/src';
+import OLIconStyle from 'ol/src/style/Icon';
+import OLRegularShape from 'ol/src/style/RegularShape';
+
 import {ZoomScale} from '../../../os/map/map.js';
 import OSIconStyle from '../../../os/style/iconstyle.js';
 import {getTransformFunction} from './gettransformfunction.js';
@@ -7,16 +12,7 @@ import {getHeightReference} from './heightreference.js';
 import {drawShape} from './shape.js';
 
 const {hashCode} = goog.require('goog.string');
-const {getUid} = goog.require('ol');
-const OLIconStyle = goog.require('ol.style.Icon');
-const OLRegularShape = goog.require('ol.style.RegularShape');
-const olcsCore = goog.require('olcs.core');
 
-const Feature = goog.requireType('ol.Feature');
-const MultiPoint = goog.requireType('ol.geom.MultiPoint');
-const Point = goog.requireType('ol.geom.Point');
-const OLImageStyle = goog.requireType('ol.style.Image');
-const Style = goog.requireType('ol.style.Style');
 const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 

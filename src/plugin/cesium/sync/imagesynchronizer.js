@@ -1,5 +1,12 @@
 goog.declareModuleId('plugin.cesium.sync.ImageSynchronizer');
 
+import {listen, unlistenByKey} from 'ol/src/events';
+import EventType from 'ol/src/events/EventType';
+import {containsExtent} from 'ol/src/extent';
+import ImageState from 'ol/src/ImageState';
+import OLObject from 'ol/src/Object';
+import {transformExtent, get} from 'ol/src/proj';
+
 import * as dispatcher from '../../../os/dispatcher.js';
 import * as osExtent from '../../../os/extent.js';
 import * as geo from '../../../os/geo/geo.js';
@@ -12,12 +19,6 @@ import * as osProj from '../../../os/proj/proj.js';
 import CesiumSynchronizer from './cesiumsynchronizer.js';
 
 const googEventsEventType = goog.require('goog.events.EventType');
-const ImageState = goog.require('ol.ImageState');
-const OLObject = goog.require('ol.Object');
-const events = goog.require('ol.events');
-const EventType = goog.require('ol.events.EventType');
-const olExtent = goog.require('ol.extent');
-const olProj = goog.require('ol.proj');
 
 const ImageBase = goog.requireType('ol.ImageBase');
 const PluggableMap = goog.requireType('ol.PluggableMap');
@@ -107,8 +108,10 @@ export default class ImageSynchronizer extends CesiumSynchronizer {
     this.onPrimitiveReady_ = this.onPrimitiveReadyInternal.bind(this);
     this.scene.primitives.add(this.collection_);
 
-    events.listen(this.layer, googEventsEventType.PROPERTYCHANGE, this.onLayerPropertyChange, this);
-    events.listen(this.source_, EventType.CHANGE, this.syncInternal, this);
+    this.imageListenKey;
+
+    this.layerListenKey = listen(this.layer, googEventsEventType.PROPERTYCHANGE, this.onLayerPropertyChange, this);
+    this.sourceListenKey = listen(this.source_, EventType.CHANGE, this.syncInternal, this);
     mapContainer.getInstance().listen(MapEvent.VIEW_CHANGE, this.onSyncChange, false, this);
   }
 
@@ -116,8 +119,8 @@ export default class ImageSynchronizer extends CesiumSynchronizer {
    * @inheritDoc
    */
   disposeInternal() {
-    events.unlisten(this.layer, googEventsEventType.PROPERTYCHANGE, this.onLayerPropertyChange, this);
-    events.unlisten(this.source_, EventType.CHANGE, this.syncInternal, this);
+    unlistenByKey(this.layerListenKey);
+    unlistenByKey(this.sourceListenKey);
     mapContainer.getInstance().unlisten(MapEvent.VIEW_CHANGE, this.onSyncChange, false, this);
 
     this.activePrimitive_ = null;
@@ -156,7 +159,7 @@ export default class ImageSynchronizer extends CesiumSynchronizer {
         return;
       }
 
-      if (olExtent.containsExtent(viewExtent, PROJECTION.getWorldExtent())) {
+      if (containsExtent(viewExtent, PROJECTION.getWorldExtent())) {
         // never allow an extent larger than the world to be requested
         return;
       }
@@ -164,10 +167,10 @@ export default class ImageSynchronizer extends CesiumSynchronizer {
       // We always want to use EPSG:4326 in Cesium so the image will be rendered properly on the map. Other projections
       // may shift the image so it appears in the wrong location. Transform the extent to degrees and normalize across
       // the antimeridian
-      viewExtent = olProj.transformExtent(viewExtent, PROJECTION, osProj.EPSG4326);
+      viewExtent = transformExtent(viewExtent, PROJECTION, osProj.EPSG4326);
       viewExtent = osExtent.normalize(viewExtent, -360, 0);
 
-      var epsg4326 = olProj.get(osProj.EPSG4326);
+      var epsg4326 = get(osProj.EPSG4326);
       var resolution = zoomToResolution(mapZoom, epsg4326);
 
       let img;
@@ -188,11 +191,11 @@ export default class ImageSynchronizer extends CesiumSynchronizer {
           var imageState = img.getState();
           if (img !== this.image_) {
             if (this.image_) {
-              events.unlisten(this.image_, EventType.CHANGE, this.onSyncChange, this);
+              unlistenByKey(this.imageListenKey);
             }
 
             if (imageState != ImageState.LOADED && imageState != ImageState.ERROR) {
-              events.listen(img, EventType.CHANGE, this.onSyncChange, this);
+              this.imageListenKey = listen(img, EventType.CHANGE, this.onSyncChange, this);
             }
 
             if (imageState == ImageState.IDLE) {

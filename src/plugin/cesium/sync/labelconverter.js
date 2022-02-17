@@ -1,5 +1,11 @@
 goog.declareModuleId('plugin.cesium.sync.LabelConverter');
 
+import olcsCore from 'ol-cesium/src/olcs/core';
+import {getCenter} from 'ol/src/extent';
+import Geometry from 'ol/src/geom/Geometry';
+import GeometryType from 'ol/src/geom/GeometryType';
+import SimpleGeometry from 'ol/src/geom/SimpleGeometry';
+
 import {getFont} from '../../../os/style/label.js';
 import {GeometryInstanceId} from '../cesium.js';
 import {isPrimitiveShown} from '../primitive.js';
@@ -9,11 +15,6 @@ import {getHeightReference} from './heightreference.js';
 import {getColor, getLineWidthFromStyle} from './style.js';
 
 const asserts = goog.require('goog.asserts');
-const olExtent = goog.require('ol.extent');
-const Geometry = goog.require('ol.geom.Geometry');
-const GeometryType = goog.require('ol.geom.GeometryType');
-const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
-const olcsCore = goog.require('olcs.core');
 
 const MultiPoint = goog.requireType('ol.geom.MultiPoint');
 const Point = goog.requireType('ol.geom.Point');
@@ -152,7 +153,7 @@ const getLabelPosition = (geometry) => {
 
       return scratchCoord;
     default:
-      return olExtent.getCenter(geometry.getExtent());
+      return getCenter(geometry.getExtent());
   }
 };
 

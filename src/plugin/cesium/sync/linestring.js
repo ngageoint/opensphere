@@ -1,5 +1,8 @@
 goog.declareModuleId('plugin.cesium.sync.linestring');
 
+import olcsCore from 'ol-cesium/src/olcs/core';
+import GeometryType from 'ol/src/geom/GeometryType';
+
 import * as interpolate from '../../../os/interpolate.js';
 import InterpolationMethod from '../../../os/interpolatemethod.js';
 import {dashPatternToOptions} from '../../../os/style/style.js';
@@ -10,8 +13,6 @@ import {getHeightReference} from './heightreference.js';
 import {getColor, getLineWidthFromStyle} from './style.js';
 
 const {assert} = goog.require('goog.asserts');
-const GeometryType = goog.require('ol.geom.GeometryType');
-const olcsCore = goog.require('olcs.core');
 
 const {Coordinate} = goog.requireType('ol');
 const Feature = goog.requireType('ol.Feature');

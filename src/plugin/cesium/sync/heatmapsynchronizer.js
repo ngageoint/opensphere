@@ -1,5 +1,8 @@
 goog.declareModuleId('plugin.cesium.sync.HeatmapSynchronizer');
 
+import {listen, unlistenByKey} from 'ol/src/events';
+import {scaleFromCenter} from 'ol/src/extent';
+
 import * as dispatcher from '../../../os/dispatcher.js';
 import PropertyChangeEvent from '../../../os/events/propertychangeevent.js';
 import PropertyChange from '../../../os/layer/propertychange.js';
@@ -16,8 +19,6 @@ const asserts = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const EventType = goog.require('goog.events.EventType');
-const olEvents = goog.require('ol.events');
-const {scaleFromCenter} = goog.require('ol.extent');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const OLObject = goog.requireType('ol.Object');
@@ -73,7 +74,7 @@ export default class HeatmapSynchronizer extends CesiumSynchronizer {
      */
     this.syncDelay_ = new Delay(this.synchronizeInternal, 75, this);
 
-    olEvents.listen(this.layer, EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
+    this.listenKey = listen(this.layer, EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
     events.listenEach(this.layer, HeatmapSynchronizer.STYLE_KEYS_, this.onStyleChange_, this);
   }
 
@@ -84,7 +85,7 @@ export default class HeatmapSynchronizer extends CesiumSynchronizer {
     dispose(this.syncDelay_);
     this.syncDelay_ = null;
 
-    olEvents.unlisten(this.layer, EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
+    unlistenByKey(this.listenKey);
     events.unlistenEach(this.layer, HeatmapSynchronizer.STYLE_KEYS_, this.onStyleChange_, this);
 
     this.cesiumLayers_.remove(this.activeLayer_);
