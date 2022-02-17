@@ -1,10 +1,10 @@
 goog.declareModuleId('os.im.mapping.MappingManager');
 
+import {bucket} from '../../array/array.js';
 import {createElement} from '../../xml.js';
 import {DEFAULT_SCORETYPE, reduceMappings} from './mapping.js';
 import MappingRegistry from './mappingregistry.js';
 
-const {bucket} = goog.require('goog.array');
 const {expose} = goog.require('goog.debug');
 const log = goog.require('goog.log');
 

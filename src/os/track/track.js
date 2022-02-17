@@ -28,7 +28,6 @@ import UnitManager from '../unit/unitmanager.js';
 import TrackField from './trackfield.js';
 
 const Promise = goog.require('goog.Promise');
-const googArray = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
 const math = goog.require('goog.math');
@@ -1539,7 +1538,7 @@ export const splitIntoTracks = function(options) {
   var getTrackFn = options.getTrackFn || fn.noop;
 
   if (features && bucketFn) {
-    var buckets = googArray.bucket(features, bucketFn);
+    var buckets = osArray.bucket(features, bucketFn);
 
     for (var id in buckets) {
       var bucketFeatures = buckets[id];

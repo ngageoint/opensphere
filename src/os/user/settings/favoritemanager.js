@@ -500,9 +500,9 @@ export default class FavoriteManager extends EventTarget {
   static getTypeInternal_(favs, types) {
     var result = [];
 
-    var bucketFavs = googArray.bucket(favs, function(fav) {
+    var bucketFavs = favs ? osArray.bucket(favs, function(fav) {
       return fav['type'];
-    });
+    }) : {};
 
     osArray.forEach(types, function(type) {
       var favType = bucketFavs[type];
@@ -530,9 +530,9 @@ export default class FavoriteManager extends EventTarget {
    */
   static getFoldersInternal_(favs, opt_ignore) {
     var result = [];
-    var bucketFavs = googArray.bucket(favs, function(fav) {
+    var bucketFavs = favs ? osArray.bucket(favs, function(fav) {
       return fav['type'];
-    });
+    }) : {};
 
     var folders = bucketFavs[FavoriteType.FOLDER];
     if (folders) {

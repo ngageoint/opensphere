@@ -364,6 +364,29 @@ export const binaryStrideSearch = function(arr, target, stride, offset, opt_comp
 };
 
 /**
+ * Based on the goog.array.bucket method. Splits an array into disjoint buckets according to a splitting function.
+ *
+ * @param {!Array<T>} arr The array
+ * @param {function(this: S, T, number, !Array<T>): ?} sortFn The function to call for every element.
+ *     This function takes 3 arguments (the element, the index and the array) and must return a valid object key
+ *     or undefined if the item should not be placed into a bucket.
+ * @param {S=} opt_obj The object to be used as the value of 'this' within sortFn
+ * @return {!Object<!Array<T>>}
+ * @template T,S
+ */
+export const bucket = function(arr, sortFn, opt_obj) {
+  const buckets = {};
+  arr.forEach(function(el, i) {
+    const bucketKey = sortFn.call(/** @type {?} */ (opt_obj), el, i, arr);
+    if (bucketKey !== undefined) {
+      const bucket = buckets[bucketKey] || (buckets[bucketKey] = []);
+      bucket.push(el);
+    }
+  });
+  return buckets;
+};
+
+/**
  * @param {VALUE} a
  * @param {VALUE} b
  * @return {number}

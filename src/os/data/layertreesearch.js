@@ -1,5 +1,6 @@
 goog.declareModuleId('os.data.LayerTreeSearch');
 
+import * as osArray from '../array/array.js';
 import IGroupable from '../igroupable.js';
 import osImplements from '../implements.js';
 import FolderManager from '../layer/foldermanager.js';
@@ -12,8 +13,6 @@ import TreeSearch from '../ui/slick/treesearch.js';
 import FolderNode from './foldernode.js';
 import LayerZOrderGroupBy from './groupby/layerzordergroupby.js';
 import LayerNode from './layernode.js';
-
-const googArray = goog.require('goog.array');
 
 const {default: ILayer} = goog.requireType('os.layer.ILayer');
 const {default: INodeGroupBy} = goog.requireType('os.data.groupby.INodeGroupBy');
@@ -141,7 +140,7 @@ export default class LayerTreeSearch extends AbstractGroupByTreeSearch {
     if (results && results.length > 0) {
       // if there are no user-created folders, fall back to grouping them automatically
       var idBuckets = /** @type {!Object<string, !Array<!ITreeNode>>} */
-          (googArray.bucket(results, this.getNodeGroup.bind(this)));
+          (osArray.bucket(results, this.getNodeGroup.bind(this)));
       results.length = 0;
 
       for (var id in idBuckets) {

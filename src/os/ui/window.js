@@ -1,11 +1,9 @@
 goog.declareModuleId('os.ui.window');
 
-import {forEach} from '../array/array.js';
+import {bucket, forEach} from '../array/array.js';
 import {apply} from './ui.js';
 import windowSelector from './windowselector.js';
 import windowZIndexMax from './windowzindexmax.js';
-
-const {bucket} = goog.require('goog.array');
 
 const {Controller: WindowCtrl} = goog.requireType('os.ui.WindowUI');
 

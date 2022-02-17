@@ -1,9 +1,8 @@
 goog.declareModuleId('os.ui.im.AbstractMapperCtrl');
 
+import {bucket} from '../../array/array.js';
 import ColumnDefinition from '../../data/columndefinition.js';
 import * as osWindow from '../window.js';
-
-const {bucket} = goog.require('goog.array');
 
 const {default: Rule} = goog.requireType('os.im.mapping.Rule');
 const {default: SlickTreeNode} = goog.requireType('os.ui.slick.SlickTreeNode');

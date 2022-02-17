@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.arc.query.ArcQueryHandler');
 
+import * as osArray from '../../../os/array/array.js';
 import * as jsts from '../../../os/geo/jsts.js';
 import QueryHandler from '../../../os/query/queryhandler.js';
 import * as osUiFilter from '../../../os/ui/filter/filter.js';
@@ -7,7 +8,6 @@ import ArcFilterModifier from './arcfiltermodifier.js';
 import ArcSpatialFormatter from './arcspatialformatter.js';
 import ArcSpatialModifier from './arcspatialmodifier.js';
 
-const googArray = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
@@ -116,7 +116,7 @@ class ArcQueryHandler extends QueryHandler {
 
     var activeEntries = this.getActiveEntries();
     var entries = activeEntries.entries;
-    var bucket = googArray.bucket(entries, function(entry) {
+    var bucket = osArray.bucket(entries, function(entry) {
       // track which areaIds we've already seen since the expanded entries are inherently duplicative
       var areaId = entry['areaId'];
       if (this.includes(entry) && !seenAreas[areaId]) {
