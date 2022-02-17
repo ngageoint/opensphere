@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.cesium.mixin.renderloop');
 
+import AutoRenderLoop from 'ol-cesium/src/olcs/AutoRenderLoop';
+
 import * as Dispatcher from '../../../os/dispatcher.js';
 import MapEvent from '../../../os/map/mapevent.js';
 import TimelineController from '../../../os/time/timelinecontroller.js';
 import TimelineEventType from '../../../os/time/timelineeventtype.js';
-
-const AutoRenderLoop = goog.require('olcs.AutoRenderLoop');
 
 
 /**

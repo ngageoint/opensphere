@@ -1,10 +1,10 @@
 goog.declareModuleId('plugin.cesium.sync.ellipsoid');
 
+import {ol4326CoordinateToCesiumCartesian} from 'ol-cesium/src/olcs/core';
+
 import {GeometryInstanceId} from '../cesium.js';
 import {createColoredPrimitive} from '../primitive.js';
 import {getColor} from './style.js';
-
-const {ol4326CoordinateToCesiumCartesian} = goog.require('olcs.core');
 
 const Feature = goog.requireType('ol.Feature');
 const Style = goog.requireType('ol.style.Style');

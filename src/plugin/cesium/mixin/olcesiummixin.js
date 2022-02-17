@@ -1,10 +1,10 @@
 goog.declareModuleId('plugin.cesium.mixin.olcs');
 
+import OLCesium from 'ol-cesium/src/olcs/OLCesium';
+import {supportsImageRenderingPixelated} from 'ol-cesium/src/olcs/util';
+
 import I3DSupport from '../../../os/i3dsupport.js';
 import osImplements from '../../../os/implements.js';
-
-const OLCesium = goog.require('olcs.OLCesium');
-const {supportsImageRenderingPixelated} = goog.require('olcs.util');
 
 const Interaction = goog.requireType('ol.interaction.Interaction');
 const {default: Camera} = goog.requireType('plugin.cesium.Camera');

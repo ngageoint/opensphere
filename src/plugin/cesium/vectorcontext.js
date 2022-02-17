@@ -1,19 +1,16 @@
 goog.declareModuleId('plugin.cesium.VectorContext');
 
+import {getUid} from 'ol/src';
+import {remove} from 'ol/src/array';
+
 import * as objectUtils from '../../os/object/object.js';
 import {isGroundPrimitive, isPrimitiveShown, setPrimitiveShown} from './primitive.js';
 
 const Throttle = goog.require('goog.async.Throttle');
 const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
-const {getUid} = goog.require('ol');
-const arrayUtils = goog.require('ol.array');
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
-const Feature = goog.requireType('ol.Feature');
-const Geometry = goog.requireType('ol.geom.Geometry');
-const OLVectorLayer = goog.requireType('ol.layer.Vector');
-const Projection = goog.requireType('ol.proj.Projection');
 
 
 /**
@@ -475,7 +472,7 @@ export default class VectorContext {
     if (feature) {
       const primitives = this.featureToCesiumMap[feature.getUid()];
       if (primitives) {
-        arrayUtils.remove(primitives, primitive);
+        remove(primitives, primitive);
       }
     }
   }

@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.cesium.sync.converter');
 
+import GeometryType from 'ol/src/geom/GeometryType';
+
 import DynamicFeature from '../../../os/feature/dynamicfeature.js';
 import Ellipse from '../../../os/geom/ellipse.js';
 import DynamicLineStringConverter from './dynamiclinestringconverter.js';
@@ -16,8 +18,6 @@ import MultiPolygonConverter from './multipolygonconverter.js';
 import PointConverter from './pointconverter.js';
 import PolygonConverter from './polygonconverter.js';
 import {runConverter} from './runconverter.js';
-
-const GeometryType = goog.require('ol.geom.GeometryType');
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');

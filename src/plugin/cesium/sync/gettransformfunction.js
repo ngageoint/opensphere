@@ -1,10 +1,9 @@
 goog.declareModuleId('plugin.cesium.sync.getTransformFunction');
 
+import {get, equivalent, getTransform} from 'ol/src/proj';
+
 import {PROJECTION} from '../../../os/map/map.js';
 import * as osProj from '../../../os/proj/proj.js';
-
-const olProj = goog.require('ol.proj');
-const Projection = goog.requireType('ol.proj.Projection');
 
 
 /**
@@ -49,11 +48,11 @@ export const getTransformFunction = () => {
   const pFrom = PROJECTION;
 
   if (lastProjection !== pFrom) {
-    const pTo = olProj.get(osProj.EPSG4326);
-    if (olProj.equivalent(pTo, pFrom)) {
+    const pTo = get(osProj.EPSG4326);
+    if (equivalent(pTo, pFrom)) {
       olTransform = null;
     } else {
-      olTransform = olProj.getTransform(pFrom, pTo);
+      olTransform = getTransform(pFrom, pTo);
     }
 
     lastProjection = pFrom;

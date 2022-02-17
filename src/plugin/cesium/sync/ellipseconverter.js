@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.cesium.sync.EllipseConverter');
 
+import LineString from 'ol/src/geom/LineString';
+
 import implementz from '../../../os/implements.js';
 import ILayer from '../../../os/layer/ilayer.js';
 import StyleField from '../../../os/style/stylefield.js';
@@ -9,8 +11,6 @@ import DynamicLineStringConverter from './dynamiclinestringconverter.js';
 import EllipsoidConverter from './ellipsoidconverter.js';
 import PolygonConverter from './polygonconverter.js';
 import {runConverter} from './runconverter.js';
-
-const LineString = goog.require('ol.geom.LineString');
 
 const Feature = goog.requireType('ol.Feature');
 const Style = goog.requireType('ol.style.Style');
