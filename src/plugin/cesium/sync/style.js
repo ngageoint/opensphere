@@ -1,14 +1,8 @@
 goog.declareModuleId('plugin.cesium.sync.style');
 
+import olcsCore from 'ol-cesium/src/olcs/core';
 import {DEFAULT_FEATURE_SIZE, DEFAULT_HIGHLIGHT_CONFIG} from '../../../os/style/style.js';
 import {OUTLINE_REGEXP} from '../cesium.js';
-
-const {convertColorToCesium} = goog.require('olcs.core');
-
-const Style = goog.requireType('ol.style.Style');
-const Text = goog.requireType('ol.style.Text');
-const {GeometryInstanceId} = goog.requireType('plugin.cesium');
-const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**
@@ -61,7 +55,7 @@ const getColorFromStyle = (style, isOutline) => {
     olColor = fillColor;
   }
 
-  return convertColorToCesium(olColor);
+  return olcsCore.convertColorToCesium(olColor);
 };
 
 
