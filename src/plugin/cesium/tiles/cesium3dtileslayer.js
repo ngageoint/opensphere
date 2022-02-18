@@ -1,5 +1,6 @@
 goog.declareModuleId('plugin.cesium.tiles.Layer');
 
+import {transformExtent} from 'ol/proj';
 import ActionEventType from '../../../os/action/eventtype.js';
 import settings from '../../../os/config/settings.js';
 import * as dispatcher from '../../../os/dispatcher.js';
@@ -15,7 +16,6 @@ import {directiveTag as layerUITag} from './cesium3dtilelayerui.js';
 import {ICON, TYPE} from './cesium3dtiles.js';
 
 const log = goog.require('goog.log');
-const {transformExtent} = goog.require('ol.proj');
 
 const Logger = goog.requireType('goog.log.Logger');
 
