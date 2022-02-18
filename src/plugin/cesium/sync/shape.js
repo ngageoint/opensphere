@@ -1,10 +1,10 @@
 goog.declareModuleId('plugin.cesium.sync.shape');
 
-const {asColorLike} = goog.require('ol.colorlike');
-const {createCanvasContext2D} = goog.require('ol.dom');
-const has = goog.require('ol.has');
-const renderCanvas = goog.require('ol.render.canvas');
-const OLRegularShape = goog.require('ol.style.RegularShape');
+import {asColorLike} from 'ol/colorlike';
+import {createCanvasContext2D} from 'ol/dom';
+import has from 'ol/has';
+import {defaultStrokeStyle, defaultLineWidth, defaultLineJoin, defaultLineCap, defaultMiterLimit} from 'ol/render/canvas';
+import OLRegularShape from 'ol/style/RegularShape';
 
 
 /**
@@ -72,12 +72,12 @@ const getRenderOptions = (style) => {
   if (stroke) {
     strokeStyle = stroke.getColor();
     if (strokeStyle === null) {
-      strokeStyle = renderCanvas.defaultStrokeStyle;
+      strokeStyle = defaultStrokeStyle;
     }
     strokeStyle = asColorLike(strokeStyle);
     strokeWidth = stroke.getWidth();
     if (strokeWidth === undefined) {
-      strokeWidth = renderCanvas.defaultLineWidth;
+      strokeWidth = defaultLineWidth;
     }
     lineDash = stroke.getLineDash();
     lineDashOffset = stroke.getLineDashOffset();
@@ -87,15 +87,15 @@ const getRenderOptions = (style) => {
     }
     lineJoin = stroke.getLineJoin();
     if (lineJoin === undefined) {
-      lineJoin = renderCanvas.defaultLineJoin;
+      lineJoin = defaultLineJoin;
     }
     lineCap = stroke.getLineCap();
     if (lineCap === undefined) {
-      lineCap = renderCanvas.defaultLineCap;
+      lineCap = defaultLineCap;
     }
     miterLimit = stroke.getMiterLimit();
     if (miterLimit === undefined) {
-      miterLimit = renderCanvas.defaultMiterLimit;
+      miterLimit = defaultMiterLimit;
     }
   }
 
