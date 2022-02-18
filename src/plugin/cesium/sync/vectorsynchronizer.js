@@ -1,5 +1,8 @@
 goog.declareModuleId('plugin.cesium.sync.VectorSynchronizer');
 
+import {listen, unlistenByKey} from 'ol/events';
+import OLVectorLayer from 'ol/layer/Vector';
+import VectorEventType from 'ol/source/VectorEventType';
 import * as dispatcher from '../../../os/dispatcher.js';
 import SelectionType from '../../../os/events/selectiontype.js';
 import LayerPropertyChange from '../../../os/layer/propertychange.js';
@@ -17,18 +20,6 @@ import convert from './featureconverter.js';
 const asserts = goog.require('goog.asserts');
 const EventType = goog.require('goog.events.EventType');
 const objectUtils = goog.require('goog.object');
-const events = goog.require('ol.events');
-const OLVectorLayer = goog.require('ol.layer.Vector');
-const VectorEventType = goog.require('ol.source.VectorEventType');
-
-const GoogEvent = goog.requireType('goog.events.Event');
-const Feature = goog.requireType('ol.Feature');
-const OLObject = goog.requireType('ol.Object');
-const PluggableMap = goog.requireType('ol.PluggableMap');
-const View = goog.requireType('ol.View');
-const OLVectorSource = goog.requireType('ol.source.Vector');
-const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
-const {default: Camera} = goog.requireType('plugin.cesium.Camera');
 
 
 /**
@@ -79,6 +70,15 @@ export default class VectorSynchronizer extends CesiumSynchronizer {
      * @private
      */
     this.zIndexMax_ = 1;
+
+    this.visibleListenKey;
+    this.opacityListenKey;
+    this.layerListenKey;
+    this.changeFeatureListenKey;
+    this.sourceListenKey;
+    this.addFeatureListenKey;
+    this.removeFeatureListenKey;
+    this.clearListenKey;
   }
 
 
@@ -128,20 +128,20 @@ export default class VectorSynchronizer extends CesiumSynchronizer {
       this.initializePrimitives_(this.source.getFeatures());
 
       // add layer listeners
-      events.listen(this.layer, 'change:visible', this.onLayerVisibility_, this);
-      events.listen(this.layer, 'change:opacity', this.onLayerOpacity_, this);
-      events.listen(this.layer, EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
+      this.visibleListenKey = listen(this.layer, 'change:visible', this.onLayerVisibility_, this);
+      this.opacityListenKey = listen(this.layer, 'change:opacity', this.onLayerOpacity_, this);
+      this.layerListenKey = listen(this.layer, EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
 
       // add source listeners
-      events.listen(this.source, VectorEventType.CHANGEFEATURE, this.onChangeFeature_, this);
+      this.changeFeatureListenKey = listen(this.source, VectorEventType.CHANGEFEATURE, this.onChangeFeature_, this);
 
       if (this.source instanceof VectorSource) {
-        events.listen(this.source, EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
+        this.sourceListenKey = listen(this.source, EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
       } else {
         // sources will handle the below using property change events
-        events.listen(this.source, VectorEventType.ADDFEATURE, this.onAddFeature_, this);
-        events.listen(this.source, VectorEventType.REMOVEFEATURE, this.onRemoveFeature_, this);
-        events.listen(this.source, VectorEventType.CLEAR, this.clearFeatures_, this);
+        this.addFeatureListenKey = listen(this.source, VectorEventType.ADDFEATURE, this.onAddFeature_, this);
+        this.removeFeatureListenKey = listen(this.source, VectorEventType.REMOVEFEATURE, this.onRemoveFeature_, this);
+        this.clearListenKey = listen(this.source, VectorEventType.CLEAR, this.clearFeatures_, this);
       }
     }
   }
@@ -181,19 +181,19 @@ export default class VectorSynchronizer extends CesiumSynchronizer {
   disposeLayerPrimitives_() {
     if (this.csContext) {
       // clean up layer listeners
-      events.unlisten(this.layer, 'change:visible', this.onLayerVisibility_, this);
-      events.unlisten(this.layer, 'change:opacity', this.onLayerOpacity_, this);
-      events.unlisten(this.layer, EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
+      unlistenByKey(this.visibleListenKey);
+      unlistenByKey(this.opacityListenKey);
+      unlistenByKey(this.layerListenKey);
 
       // clean up source listeners
-      events.unlisten(this.source, VectorEventType.CHANGEFEATURE, this.onChangeFeature_, this);
-      events.unlisten(this.source, EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
+      unlistenByKey(this.changeFeatureListenKey);
+      unlistenByKey(this.sourceListenKey);
 
       // sources don't listen to these events (see above)
       if (!(this.source instanceof VectorSource)) {
-        events.unlisten(this.source, VectorEventType.ADDFEATURE, this.onAddFeature_, this);
-        events.unlisten(this.source, VectorEventType.REMOVEFEATURE, this.onRemoveFeature_, this);
-        events.unlisten(this.source, VectorEventType.CLEAR, this.clearFeatures_, this);
+        unlistenByKey(this.addFeatureListenKey);
+        unlistenByKey(this.removeFeatureListenKey);
+        unlistenByKey(this.clearListenKey);
       }
 
       this.csContext.dispose();
