@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ol.events');
 
-import {listen} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 
 
 /**
@@ -19,4 +19,10 @@ export const listenEach = function(target, types, listener, opt_this, opt_once) 
     keys.push(listen(target, types[i], listener, opt_this, opt_once));
   }
   return keys;
+};
+
+export const unlistenEach = function(keys) {
+  for (var i = 0; i < keys.length; i++) {
+    unlistenByKey(keys[i]);
+  }
 };

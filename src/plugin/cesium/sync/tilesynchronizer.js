@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.cesium.sync.TileSynchronizer');
 
+import {listen, unlistenByKey} from 'ol/events';
+import TileWMS from 'ol/source/TileWMS';
 import * as Dispatcher from '../../../os/dispatcher.js';
 import PropertyChangeEvent from '../../../os/events/propertychangeevent.js';
 import AnimatedTile from '../../../os/layer/animatedtile.js';
@@ -20,13 +22,6 @@ const dispose = goog.require('goog.dispose');
 const EventType = goog.require('goog.events.EventType');
 const googObject = goog.require('goog.object');
 const googString = goog.require('goog.string');
-const olEvents = goog.require('ol.events');
-const TileWMS = goog.require('ol.source.TileWMS');
-
-const GoogEvent = goog.requireType('goog.events.Event');
-const OLObject = goog.requireType('ol.Object');
-const PluggableMap = goog.requireType('ol.PluggableMap');
-const {default: Tile} = goog.requireType('os.layer.Tile');
 
 
 /**
@@ -99,10 +94,17 @@ export default class TileSynchronizer extends CesiumSynchronizer {
      * @private
      */
     this.syncDelay_ = new Delay(this.synchronizeInternal, 50, this);
+    this.resolutionListenKey;
+    this.layerPropertyChangeListenKey;
+    this.layerChangeListenKey;
+    this.extentListenKey;
+    this.styleChangeKeys;
+    this.zoomChangeResolutionKeys;
+    this.styleAnimationKeys;
 
     var view = MapContainer.getInstance().getMap().getView();
     if (view) {
-      olEvents.listen(view, 'change:resolution', this.onZoomChange_, this);
+      this.resolutionListenKey = listen(view, 'change:resolution', this.onZoomChange_, this);
     }
   }
 
@@ -115,10 +117,10 @@ export default class TileSynchronizer extends CesiumSynchronizer {
 
     var view = MapContainer.getInstance().getMap().getView();
     if (view) {
-      olEvents.unlisten(view, 'change:resolution', this.onZoomChange_, this);
+      unlistenByKey(this.resolutionListenKey);
     }
 
-    olEvents.unlisten(this.layer, EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
+    unlistenByKey(this.layerListenKey);
 
     this.disposeSingle_();
     this.disposeCache_();
@@ -244,7 +246,7 @@ export default class TileSynchronizer extends CesiumSynchronizer {
     asserts.assert(this.layer != null);
     asserts.assert(this.view != null);
 
-    olEvents.listen(this.layer, EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
+    this.layerPropertyChangeListenKey = listen(this.layer, EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
     this.activeLayer_ = tileLayerToImageryLayer(this.layer, this.view.getProjection());
 
     if (this.activeLayer_) {
@@ -254,10 +256,10 @@ export default class TileSynchronizer extends CesiumSynchronizer {
       this.cesiumLayers_.add(this.activeLayer_, this.lastStart_ > -1 ? this.lastStart_ : undefined);
 
       // register listeners to update the layer
-      events.listenEach(this.layer, STYLE_KEYS, this.onStyleChange_, this);
-      events.listenEach(this.layer, RESOLUTION_KEYS, this.onZoomChange_, this);
-      olEvents.listen(this.layer, 'change:extent', this.synchronize, this);
-      olEvents.listen(this.layer, 'change', this.onChange_, this);
+      this.styleChangeKeys = listenEach(this.layer, STYLE_KEYS, this.onStyleChange_, this);
+      this.zoomChangeResolutionKeys = events.listenEach(this.layer, RESOLUTION_KEYS, this.onZoomChange_, this);
+      this.extentListenKey = listen(this.layer, 'change:extent', this.synchronize, this);
+      this.layerChangeListenKey = listen(this.layer, 'change', this.onChange_, this);
     }
   }
 
@@ -267,15 +269,14 @@ export default class TileSynchronizer extends CesiumSynchronizer {
    * @private
    */
   disposeSingle_() {
-    olEvents.unlisten(this.layer, EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
+    unlistenByKey(layerPropertyChangeListenKey);
 
     if (this.activeLayer_) {
       // clean up listeners
-      events.unlistenEach(this.layer, STYLE_KEYS, this.onStyleChange_, this);
-      events.unlistenEach(this.layer, RESOLUTION_KEYS, this.onZoomChange_,
-          this);
-      olEvents.unlisten(this.layer, 'change:extent', this.synchronize, this);
-      olEvents.unlisten(this.layer, 'change', this.onChange_, this);
+      events.unlistenEach(this.styleChangeKeys);
+      events.unlistenEach(this.zoomChangeResolutionKeys);
+      unlistenByKey(this.extentListenKey);
+      unlistenByKey(this.layerChangeListenKey);
 
       if (this.activeLayer_.imageryProvider instanceof ImageryProvider) {
         this.activeLayer_.imageryProvider.dispose();
@@ -298,8 +299,8 @@ export default class TileSynchronizer extends CesiumSynchronizer {
     if (this.activeLayer_ && this.layer.getSource() instanceof TileWMS) {
       // hide the active layer and disable any events that would update it
       this.activeLayer_.show = false;
-      events.unlistenEach(this.layer, STYLE_KEYS, this.onStyleChange_, this);
-      olEvents.unlisten(this.layer, 'change', this.onChange_, this);
+      events.unlistenEach(this.styleChangeKeys);
+      unlistenByKey(this.layerChangeListenKey);
 
       // create the cache
       this.updateAnimationCache_();
@@ -307,9 +308,9 @@ export default class TileSynchronizer extends CesiumSynchronizer {
       // update the layer cache when the style changes, or a change event is fired (ie, params/url changed). in the
       // future we may have to clear the cache if something other than the TIME param changes (like user changes to
       // the url) but currently there isn't a way to do that.
-      events.listenEach(this.layer, STYLE_KEYS, this.updateAnimationCache_,
+      this.styleAnimationKeys = events.listenEach(this.layer, STYLE_KEYS, this.updateAnimationCache_,
           this);
-      olEvents.listen(this.layer, 'change', this.updateAnimationCache_, this);
+      this.layerChangeListenKey = listen(this.layer, 'change', this.updateAnimationCache_, this);
     }
   }
 
@@ -320,9 +321,8 @@ export default class TileSynchronizer extends CesiumSynchronizer {
    */
   disposeCache_() {
     // remove cache listeners
-    events.unlistenEach(this.layer, STYLE_KEYS, this.updateAnimationCache_,
-        this);
-    olEvents.unlisten(this.layer, 'change', this.updateAnimationCache_, this);
+    events.unlistenEach(this.styleAnimationKeys);
+    unlistenByKey(this.layerChangeListenKey);
 
     // destroy the cache
     if (this.animationCache_) {
@@ -342,8 +342,8 @@ export default class TileSynchronizer extends CesiumSynchronizer {
     // reactivate the active layer and its listeners. the show flag will be determined by layer visibility.
     if (this.layer && this.activeLayer_) {
       updateCesiumLayerProperties(this.layer, this.activeLayer_);
-      events.listenEach(this.layer, STYLE_KEYS, this.onStyleChange_, this);
-      olEvents.listen(this.layer, 'change', this.onChange_, this);
+      this.styleChangeKeys = events.listenEach(this.layer, STYLE_KEYS, this.onStyleChange_, this);
+      this.layerChangeListenKey = listen(this.layer, 'change', this.onChange_, this);
     }
   }
 
