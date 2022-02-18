@@ -1,14 +1,15 @@
 goog.declareModuleId('plugin.cesium.ImageryProvider');
 
 import OLImageryProvider from 'ol-cesium/src/olcs/core/OLImageryProvider';
-import {getSourceProjection} from 'ol-cesium/src/olcs/util';
-import events from 'ol/src/events';
+import olcsUtil from 'ol-cesium/src/olcs/util';
+import {listen, unlistenByKey} from 'ol/src/events';
+import EventType from 'ol/src/events/EventType';
 import ImageTile from 'ol/src/ImageTile';
 import VectorTile from 'ol/src/source/VectorTile';
-import olTilegrid from 'ol/src/tilegrid';
+import {createXYZ} from 'ol/src/tilegrid';
 import {DEFAULT_MAX_ZOOM} from 'ol/src/tilegrid/common';
 import TileState from 'ol/src/TileState';
-import VectorImageTile from 'ol/src/VectorImageTile';
+import VectorImageTile from 'ol/src/VectorRenderTile';
 
 import '../../os/mixin/vectorimagetilemixin.js';
 import TileGridTilingScheme from './tilegridtilingscheme.js';
@@ -63,14 +64,14 @@ export default class ImageryProvider extends OLImageryProvider {
    */
   handleSourceChanged_() {
     if (!this.ready_ && this.source_.getState() == 'ready') {
-      this.projection_ = getSourceProjection(this.source_) || this.fallbackProj_;
+      this.projection_ = olcsUtil.getSourceProjection(this.source_) || this.fallbackProj_;
       this.credit_ = OLImageryProvider.createCreditForSource(this.source_) || null;
 
       if (this.source_ instanceof VectorTile) {
         // For vector tiles, create a copy of the tile grid with min/max zoom covering all levels. This ensures Cesium
         // will render tiles at all levels.
         const sourceTileGrid = this.source_.getTileGrid();
-        const tileGrid = olTilegrid.createXYZ({
+        const tileGrid = createXYZ({
           extent: sourceTileGrid.getExtent(),
           maxZoom: DEFAULT_MAX_ZOOM,
           minZoom: 0,
@@ -125,21 +126,21 @@ export default class ImageryProvider extends OLImageryProvider {
       tile.load();
 
       var layer = this.layer_;
-      var unlisten = events.listen(tile, events.EventType.CHANGE, function() {
+      var unlisten = listen(tile, EventType.CHANGE, function() {
         var state = tile.getState();
         if (state === TileState.EMPTY) {
           deferred.resolve(this.emptyCanvas_);
-          events.unlistenByKey(unlisten);
+          unlistenByKey(unlisten);
         } else if (state === TileState.LOADED) {
           if (tile instanceof ImageTile) {
             deferred.resolve(tile.getImage());
           } else if (tile instanceof VectorImageTile) {
             deferred.resolve(tile.getDrawnImage(layer));
           }
-          events.unlistenByKey(unlisten);
+          unlistenByKey(unlisten);
         } else if (state === TileState.ERROR) {
           deferred.resolve(this.emptyCanvas_);
-          events.unlistenByKey(unlisten);
+          unlistenByKey(unlisten);
         }
       });
     }
