@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.cesium.mixin.olcs');
 
 import OLCesium from 'ol-cesium/src/olcs/OLCesium';
-import {supportsImageRenderingPixelated} from 'ol-cesium/src/olcs/util';
+import olcsUtil from 'ol-cesium/src/olcs/util';
 
 import I3DSupport from '../../../os/i3dsupport.js';
 import osImplements from '../../../os/implements.js';
@@ -61,7 +61,7 @@ export const load = () => {
 
       this.resizeTimeout = setTimeout(function() {
         var resolutionScale = this.resolutionScale_;
-        if (!supportsImageRenderingPixelated()) {
+        if (!olcsUtil.supportsImageRenderingPixelated()) {
           resolutionScale *= window.devicePixelRatio || 1.0;
         }
         this.resolutionScaleChanged_ = false;
