@@ -16,11 +16,6 @@ import {getColor, getLineWidthFromStyle} from './style.js';
 
 const asserts = goog.require('goog.asserts');
 
-const MultiPoint = goog.requireType('ol.geom.MultiPoint');
-const Point = goog.requireType('ol.geom.Point');
-const Text = goog.requireType('ol.style.Text');
-const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
-
 
 /**
  * Converter for Label styles

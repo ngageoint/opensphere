@@ -1,9 +1,5 @@
 goog.declareModuleId('plugin.cesium.sync.IConverter');
 
-const Feature = goog.requireType('ol.Feature');
-const Style = goog.requireType('ol.style.Style');
-const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
-
 
 /**
  * @interface

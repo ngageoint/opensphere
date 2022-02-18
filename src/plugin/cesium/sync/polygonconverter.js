@@ -5,12 +5,6 @@ import LineStringConverter from './linestringconverter.js';
 import {createAndAddPolygon} from './polygon.js';
 import {getColor} from './style.js';
 
-const Feature = goog.requireType('ol.Feature');
-const Geometry = goog.requireType('ol.geom.Geometry');
-const Polygon = goog.requireType('ol.geom.Polygon');
-const Style = goog.requireType('ol.style.Style');
-const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
-
 
 /**
  * Converter for Polygons

@@ -6,9 +6,6 @@ import olcsUtil from 'ol-cesium/src/olcs/util';
 import I3DSupport from '../../../os/i3dsupport.js';
 import osImplements from '../../../os/implements.js';
 
-const Interaction = goog.requireType('ol.interaction.Interaction');
-const {default: Camera} = goog.requireType('plugin.cesium.Camera');
-
 
 /**
  * If the mixin has been loaded.

@@ -8,11 +8,6 @@ import {getColor} from './sync/style.js';
 const Delay = goog.require('goog.async.Delay');
 const {clamp} = goog.require('goog.math');
 
-const Feature = goog.requireType('ol.Feature');
-const Geometry = goog.requireType('ol.geom.Geometry');
-const Style = goog.requireType('ol.style.Style');
-const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
-
 
 /**
  * @param {!Feature} feature

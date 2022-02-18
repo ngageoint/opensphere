@@ -12,12 +12,6 @@ import EllipsoidConverter from './ellipsoidconverter.js';
 import PolygonConverter from './polygonconverter.js';
 import {runConverter} from './runconverter.js';
 
-const Feature = goog.requireType('ol.Feature');
-const Style = goog.requireType('ol.style.Style');
-const {default: Ellipse} = goog.requireType('os.geom.Ellipse');
-const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
-const {default: IConverter} = goog.requireType('plugin.cesium.sync.IConverter');
-
 
 /**
  * Converter for Ellipses

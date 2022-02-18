@@ -19,9 +19,6 @@ const asserts = goog.require('goog.asserts');
 const Throttle = goog.require('goog.async.Throttle');
 const googMath = goog.require('goog.math');
 
-const OLMap = goog.requireType('ol.Map');
-const View = goog.requireType('ol.View');
-
 
 /**
  * @type {Cesium.Cartesian3}

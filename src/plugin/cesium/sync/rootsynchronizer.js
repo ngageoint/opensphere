@@ -12,12 +12,6 @@ import TileSynchronizer from './tilesynchronizer.js';
 
 const asserts = goog.require('goog.asserts');
 
-const PluggableMap = goog.requireType('ol.PluggableMap');
-const OLLayer = goog.requireType('ol.layer.Layer');
-const {default: Group} = goog.requireType('os.layer.Group');
-const {default: ILayer} = goog.requireType('os.layer.ILayer');
-const {default: AbstractWebGLSynchronizer} = goog.requireType('os.webgl.AbstractWebGLSynchronizer');
-
 
 /**
  * The root synchronizer for the Cesium renderer.

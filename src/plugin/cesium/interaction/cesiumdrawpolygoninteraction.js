@@ -9,8 +9,6 @@ import Method from '../../../os/interpolatemethod.js';
 import MapEvent from '../../../os/map/mapevent.js';
 import MapContainer from '../../../os/mapcontainer.js';
 
-const LineString = goog.requireType('ol.geom.LineString');
-const {default: CesiumRenderer} = goog.requireType('plugin.cesium.CesiumRenderer');
 
 
 /**

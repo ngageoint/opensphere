@@ -20,12 +20,6 @@ const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const EventType = goog.require('goog.events.EventType');
 
-const GoogEvent = goog.requireType('goog.events.Event');
-const OLObject = goog.requireType('ol.Object');
-const PluggableMap = goog.requireType('ol.PluggableMap');
-const MapCanvasRenderer = goog.requireType('ol.renderer.canvas.Map');
-const {default: Heatmap} = goog.requireType('plugin.heatmap.Heatmap');
-
 
 /**
  * Synchronizes a single OpenLayers image layer to Cesium.

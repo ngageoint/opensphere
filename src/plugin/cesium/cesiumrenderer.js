@@ -52,10 +52,6 @@ const log = goog.require('goog.log');
 const {clamp} = goog.require('goog.math');
 const userAgent = goog.require('goog.userAgent');
 
-const OLMap = goog.requireType('ol.Map');
-const AbstractSynchronizer = goog.requireType('olcs.AbstractSynchronizer');
-const {TerrainProviderFn} = goog.requireType('plugin.cesium');
-
 
 /**
  * The logger.

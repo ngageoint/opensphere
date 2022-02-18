@@ -14,18 +14,6 @@ import {getColor, getLineWidthFromStyle} from './style.js';
 
 const {assert} = goog.require('goog.asserts');
 
-const {Coordinate} = goog.requireType('ol');
-const Feature = goog.requireType('ol.Feature');
-const Geometry = goog.requireType('ol.geom.Geometry');
-const LineString = goog.requireType('ol.geom.LineString');
-const MultiLineString = goog.requireType('ol.geom.MultiLineString');
-const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
-const Polygon = goog.requireType('ol.geom.Polygon');
-const Style = goog.requireType('ol.style.Style');
-const Text = goog.requireType('ol.style.Style');
-const {default: Ellipse} = goog.requireType('os.geom.Ellipse');
-const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
-
 
 /**
  * Convert an OpenLayers line string geometry to Cesium.

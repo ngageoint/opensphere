@@ -2,8 +2,6 @@ goog.declareModuleId('plugin.basemap');
 
 import Tile from '../../os/layer/tile.js';
 
-const Layer = goog.requireType('ol.layer.Layer');
-
 
 /**
  * @type {string}

@@ -5,11 +5,6 @@ import implementz from '../../../os/implements.js';
 import ISource from '../../../os/source/isource.js';
 import AltitudeMode from '../../../os/webgl/altitudemode.js';
 
-const Feature = goog.requireType('ol.Feature');
-const Geometry = goog.requireType('ol.geom.Geometry');
-const OLVectorLayer = goog.requireType('ol.layer.Vector');
-const {default: VectorSource} = goog.requireType('os.source.Vector');
-
 
 /**
  * @param {!OLVectorLayer} layer

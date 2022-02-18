@@ -4,9 +4,6 @@ import {updatePrimitive} from '../primitive.js';
 import BaseConverter from './baseconverter.js';
 import {createLineStringPrimitive, isDashChanging, isLineWidthChanging} from './linestring.js';
 
-const LineString = goog.requireType('ol.geom.LineString');
-
-
 /**
  * Converter for LineStrings
  * @extends {BaseConverter<LineString, Cesium.Primitive>}

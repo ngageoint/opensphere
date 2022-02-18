@@ -3,11 +3,6 @@ goog.declareModuleId('plugin.cesium.sync.MultiPointConverter');
 import BaseConverter from './baseconverter.js';
 import {createBillboard, updateBillboard, updateStyleAfterLoad} from './point.js';
 
-const Feature = goog.requireType('ol.Feature');
-const MultiPoint = goog.requireType('ol.geom.MultiPoint');
-const ImageStyle = goog.requireType('ol.style.Image');
-const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
-
 
 /**
  * Converter for MultiPoints

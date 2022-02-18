@@ -2,12 +2,6 @@ goog.declareModuleId('plugin.cesium.sync.convert');
 
 import {convertGeometry} from './converter.js';
 
-const Feature = goog.requireType('ol.Feature');
-const Geometry = goog.requireType('ol.geom.Geometry');
-const OLVectorLayer = goog.requireType('ol.layer.Vector');
-const Style = goog.requireType('ol.style.Style');
-const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
-
 
 /**
  * @param {!Feature} feature

@@ -23,10 +23,6 @@ const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
 
-const LayerType = goog.requireType('ol.LayerType');
-const {default: IActionTarget} = goog.requireType('os.ui.action.IActionTarget');
-const {default: CesiumRenderer} = goog.requireType('plugin.cesium.CesiumRenderer');
-
 
 /**
  * The logger.

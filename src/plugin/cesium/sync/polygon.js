@@ -12,13 +12,6 @@ import {getColor, getLineWidthFromStyle} from './style.js';
 
 const asserts = goog.require('goog.asserts');
 
-const Feature = goog.requireType('ol.Feature');
-const Geometry = goog.requireType('ol.geom.Geometry');
-const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
-const Polygon = goog.requireType('ol.geom.Polygon');
-const Style = goog.requireType('ol.style.Style');
-const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
-
 
 /**
  * @param {!Feature} feature Ol3 feature..

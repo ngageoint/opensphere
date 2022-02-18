@@ -4,15 +4,6 @@ import {GeometryInstanceId} from '../cesium.js';
 import {getDashPattern, getLineStringPositions} from './linestring.js';
 import {getColor, getLineWidthFromStyle} from './style.js';
 
-const Feature = goog.requireType('ol.Feature');
-const LineString = goog.requireType('ol.geom.LineString');
-const MultiLineString = goog.requireType('ol.geom.MultiLineString');
-const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
-const Polygon = goog.requireType('ol.geom.Polygon');
-const Style = goog.requireType('ol.style.Style');
-const {default: Ellipse} = goog.requireType('os.geom.Ellipse');
-const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
-
 
 /**
  * @param {!Feature} feature Ol3 feature..

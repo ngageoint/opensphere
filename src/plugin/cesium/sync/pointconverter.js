@@ -3,9 +3,6 @@ goog.declareModuleId('plugin.cesium.sync.PointConverter');
 import BaseConverter from './baseconverter.js';
 import {createBillboard, updateBillboard, updateStyleAfterLoad} from './point.js';
 
-const Point = goog.requireType('ol.geom.Point');
-
-
 /**
  * Converter for Points
  * @extends {BaseConverter<Point, Cesium.Billboard>}

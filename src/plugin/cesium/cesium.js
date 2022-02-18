@@ -27,14 +27,6 @@ const Uri = goog.require('goog.Uri');
 const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
 const jsloader = goog.require('goog.net.jsloader');
 
-const Deferred = goog.requireType('goog.async.Deferred');
-const Geometry = goog.requireType('ol.geom.Geometry');
-const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
-const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
-const LayerBase = goog.requireType('ol.layer.Base');
-const Layer = goog.requireType('ol.layer.Layer');
-const Projection = goog.requireType('ol.proj.Projection');
-
 
 /**
  * Constructor for a Cesium terrain provider.

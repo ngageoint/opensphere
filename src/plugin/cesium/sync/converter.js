@@ -19,12 +19,6 @@ import PointConverter from './pointconverter.js';
 import PolygonConverter from './polygonconverter.js';
 import {runConverter} from './runconverter.js';
 
-const Feature = goog.requireType('ol.Feature');
-const Geometry = goog.requireType('ol.geom.Geometry');
-const Style = goog.requireType('ol.style.Style');
-const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
-const {default: IConverter} = goog.requireType('plugin.cesium.sync.IConverter');
-
 
 /**
  * @param {!Feature} feature

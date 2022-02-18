@@ -4,11 +4,6 @@ import {updatePrimitive} from '../primitive.js';
 import BaseConverter from './baseconverter.js';
 import {createLineStringPrimitive, isDashChanging, isLineWidthChanging} from './linestring.js';
 
-const Feature = goog.requireType('ol.Feature');
-const MultiLineString = goog.requireType('ol.geom.MultiLineString');
-const Style = goog.requireType('ol.style.Style');
-const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
-
 
 /**
  * Converter for MultiLineStrings

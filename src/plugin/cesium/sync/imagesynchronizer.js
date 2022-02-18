@@ -20,13 +20,6 @@ import CesiumSynchronizer from './cesiumsynchronizer.js';
 
 const googEventsEventType = goog.require('goog.events.EventType');
 
-const ImageBase = goog.requireType('ol.ImageBase');
-const PluggableMap = goog.requireType('ol.PluggableMap');
-const ImageSource = goog.requireType('ol.source.Image');
-const {default: OSMap} = goog.requireType('os.Map');
-const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
-const {default: ImageLayer} = goog.requireType('os.layer.Image');
-
 
 /**
  * Synchronizes a single OpenLayers image layer to Cesium.

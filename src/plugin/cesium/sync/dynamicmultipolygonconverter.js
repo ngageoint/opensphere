@@ -3,11 +3,6 @@ goog.declareModuleId('plugin.cesium.sync.DynamicMultiPolygonConverter');
 import BaseConverter from './baseconverter.js';
 import {createOrUpdateSegment} from './dynamiclinestring.js';
 
-const Feature = goog.requireType('ol.Feature');
-const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
-const Style = goog.requireType('ol.style.Style');
-const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
-
 
 /**
  * Converter for DynamicFeature MultiPolygons.
