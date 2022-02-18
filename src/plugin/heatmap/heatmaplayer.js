@@ -1,5 +1,13 @@
 goog.declareModuleId('plugin.heatmap.Heatmap');
 
+import {createCanvasContext2D} from 'ol/dom';
+import {listen} from 'ol/events';
+import {scaleFromCenter} from 'ol/extent';
+import GeometryType from 'ol/geom/GeometryType';
+import Point from 'ol/geom/Point';
+import OLEventType from 'ol/render/EventType';
+import Icon from 'ol/style/Icon';
+import Style from 'ol/style/Style';
 import EventType from '../../os/action/eventtype.js';
 import * as color from '../../os/color.js';
 import * as dispatcher from '../../os/dispatcher.js';
@@ -20,18 +28,6 @@ import {directiveTag as layerUI} from './heatmaplayerui.js';
 import HeatmapPropertyType from './heatmappropertytype.js';
 import SynchronizerType from './heatmapsynchronizertype.js';
 
-const dom = goog.require('ol.dom');
-const events = goog.require('ol.events');
-const olExtent = goog.require('ol.extent');
-const GeometryType = goog.require('ol.geom.GeometryType');
-const Point = goog.require('ol.geom.Point');
-const olRenderEventType = goog.require('ol.render.EventType');
-const Icon = goog.require('ol.style.Icon');
-const Style = goog.require('ol.style.Style');
-const Feature = goog.requireType('ol.Feature');
-
-const Event = goog.requireType('ol.render.Event');
-const RenderFeature = goog.requireType('ol.render.Feature');
 
 
 /**
@@ -136,7 +132,7 @@ export default class Heatmap extends VectorLayer {
     // The render order is not relevant for a heatmap representation.
     this.setRenderOrder(null);
 
-    events.listen(this, olRenderEventType.PRECOMPOSE, this.onPreCompose_, this);
+    this.precomposeListenKey = listen(this, OLEventType.PRECOMPOSE, this.onPreCompose_, this);
   }
 
   /**
@@ -194,7 +190,7 @@ export default class Heatmap extends VectorLayer {
 
         // scale the extent so the heatmap isn't clipped
         extent = extent.slice();
-        olExtent.scaleFromCenter(extent, heatmap.EXTENT_SCALE_FACTOR);
+        scaleFromCenter(extent, heatmap.EXTENT_SCALE_FACTOR);
 
         // copy the image
         var c = /** @type {HTMLCanvasElement} */ (document.createElement('canvas'));
@@ -256,7 +252,7 @@ export default class Heatmap extends VectorLayer {
    */
   createImage(feature) {
     // start with a tiny blank canvas in case we fail to draw the image (for some reason)
-    var context = dom.createCanvasContext2D(1, 1);
+    var context = createCanvasContext2D(1, 1);
     var type = /** @type {string} */ (feature.get(HeatmapField.GEOMETRY_TYPE));
     var geom = /** @type {ol.geom.Geometry} */ (feature.get(HeatmapField.HEATMAP_GEOMETRY));
 
@@ -296,7 +292,7 @@ export default class Heatmap extends VectorLayer {
     var size = 2 * halfSize;
     var center = halfSize - 250;
 
-    var context = dom.createCanvasContext2D(size, size);
+    var context = createCanvasContext2D(size, size);
     context.shadowOffsetX = context.shadowOffsetY = 250;
     context.shadowBlur = blur;
     context.shadowColor = '#000';
@@ -325,7 +321,7 @@ export default class Heatmap extends VectorLayer {
       var blur = this.pointBlur_;
       var sizeX = Math.abs(pixelExtent[1][0] - pixelExtent[0][0]) + 2 * blur;
       var sizeY = Math.abs(pixelExtent[1][1] - pixelExtent[0][1]) + 2 * blur;
-      context = dom.createCanvasContext2D(sizeX, sizeY);
+      context = createCanvasContext2D(sizeX, sizeY);
       context.shadowOffsetY = 4 * sizeY;
       context.shadowBlur = blur;
       context.shadowColor = '#000';
@@ -362,7 +358,7 @@ export default class Heatmap extends VectorLayer {
       var blur = this.polygonBlur_;
       var sizeX = Math.abs(pixelExtent[1][0] - pixelExtent[0][0]) + 2 * blur;
       var sizeY = Math.abs(pixelExtent[1][1] - pixelExtent[0][1]) + 2 * blur;
-      context = dom.createCanvasContext2D(sizeX, sizeY);
+      context = createCanvasContext2D(sizeX, sizeY);
 
       for (var i = 0, ii = rings.length; i < ii; i++) {
         var coordinates = rings[i];
@@ -398,7 +394,7 @@ export default class Heatmap extends VectorLayer {
       var blur = this.polygonBlur_;
       var sizeX = Math.abs(pixelExtent[1][0] - pixelExtent[0][0]) + 2 * blur;
       var sizeY = Math.abs(pixelExtent[1][1] - pixelExtent[0][1]) + 2 * blur;
-      context = dom.createCanvasContext2D(sizeX, sizeY);
+      context = createCanvasContext2D(sizeX, sizeY);
 
       for (var i = 0, ii = polygons.length; i < ii; i++) {
         var rings = polygons[i];
@@ -438,7 +434,7 @@ export default class Heatmap extends VectorLayer {
       var blur = this.lineStringBlur_;
       var sizeX = Math.abs(pixelExtent[1][0] - pixelExtent[0][0]) + 4 * blur;
       var sizeY = Math.abs(pixelExtent[1][1] - pixelExtent[0][1]) + 4 * blur;
-      context = dom.createCanvasContext2D(sizeX, sizeY);
+      context = createCanvasContext2D(sizeX, sizeY);
 
       for (var i = 0, ii = coordinates.length; i < ii; i++) {
         var coordinate = coordinates[i];
@@ -484,7 +480,7 @@ export default class Heatmap extends VectorLayer {
     }
 
     // scale the extent so the image is positioned properly
-    olExtent.scaleFromCenter(extent, heatmap.EXTENT_SCALE_FACTOR);
+    scaleFromCenter(extent, heatmap.EXTENT_SCALE_FACTOR);
 
     return extent;
   }
