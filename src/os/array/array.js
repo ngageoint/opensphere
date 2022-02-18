@@ -1,5 +1,7 @@
 goog.declareModuleId('os.array');
 
+import {isObject} from '../object/object.js';
+
 const googArray = goog.require('goog.array');
 const math = goog.require('goog.math');
 
@@ -144,8 +146,7 @@ export const intersection = function(arr1, arr2) {
 export const findDuplicates = function(arr, opt_hashFn) {
   var returnArray = [];
   var defaultHashFn = function(item) {
-    return goog.isObject(current) ? 'o' + goog.getUid(current) :
-      (typeof current).slice(0, 2) + current;
+    return isObject(current) ? 'o' + goog.getUid(current) : (typeof current).slice(0, 2) + current;
   };
   var hashFn = opt_hashFn || defaultHashFn;
 
@@ -182,7 +183,7 @@ export const removeDuplicates = function(arr, opt_rv, opt_hashFn) {
   // it checks if an object is also an array before just checking the uid, if it is an array then allow comparison of
   // the stringified array
   var defaultHashFn = function(item) {
-    return goog.isObject(current) ?
+    return isObject(current) ?
       Array.isArray(current) ?
         'a' + JSON.stringify(current) :
         'o' + goog.getUid(current) :
@@ -384,6 +385,23 @@ export const bucket = function(arr, sortFn, opt_obj) {
     }
   });
   return buckets;
+};
+
+/**
+ * Based on the goog.array.isArrayLike method.
+ * Used to tell if something is an array, NodeList, or other object with a number length property.
+ * @param {?} val the variable to test
+ * @return {boolean} if the variable is arraylike
+ */
+export const isArrayLike = function(val) {
+  if (val == null) {
+    return false;
+  } else if (Array.isArray(val)) {
+    return true;
+  } else if (typeof val == 'object' && typeof val.length == 'number') {
+    return true;
+  }
+  return false;
 };
 
 /**

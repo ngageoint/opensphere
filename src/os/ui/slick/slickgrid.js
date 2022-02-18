@@ -6,6 +6,7 @@ import {defaultSort} from '../../array/array.js';
 import {killRightButton} from '../../events/events.js';
 import {filterFalsey} from '../../fn/fn.js';
 import osImplements from '../../implements.js';
+import {isObject} from '../../object/object.js';
 import {FLOAT} from '../../string/string.js';
 import ActionManager from '../action/actionmanager.js';
 import {launchColumnManager} from '../column/column.js';
@@ -1114,7 +1115,7 @@ export class Controller extends Disposable {
         at: 'left+' + event.clientX + ' top+' + event.clientY,
         of: windowSelector.CONTAINER
       };
-    } else if (goog.isObject(opt_position)) {
+    } else if (isObject(opt_position)) {
       // event was fired on the scope
       position = opt_position;
     }
@@ -1475,7 +1476,7 @@ export class Controller extends Disposable {
     // make a new scope
     var s = this.scope.$new();
 
-    if (goog.isObject(this.scope['rowScope'])) {
+    if (isObject(this.scope['rowScope'])) {
       Object.assign(s, this.scope['rowScope']);
     }
 

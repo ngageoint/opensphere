@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.GlobalMenuUI');
 
 import * as dispatcher from '../dispatcher.js';
+import {isObject} from '../object/object.js';
 import {Controller as ActionMenuCtrl, directive as actionMenuDirective} from './actionmenu.js';
 import GlobalMenuEventType from './globalmenueventtype.js';
 import Module from './module.js';
@@ -165,7 +166,7 @@ export class Controller extends ActionMenuCtrl {
     var pos = this.scope['position'] || element.position();
 
     this.timeout(function() {
-      if (goog.isObject(pos)) {
+      if (isObject(pos)) {
         var x = pos.left || pos.right || pos.x;
         var y = pos.top || pos.bottom || pos.y;
         var w = element.outerWidth();

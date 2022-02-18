@@ -1,5 +1,6 @@
 goog.declareModuleId('os.file.mime.jsonsettings');
 
+import {isObject} from '../../object/object.js';
 import * as mime from '../mime.js';
 import * as jsonMime from './json.js';
 
@@ -30,7 +31,8 @@ const rootKeys = ['admin', 'user', 'overrides'];
 export const detect = function(buffer, file, opt_context) {
   var retVal;
 
-  if (opt_context && goog.isObject(opt_context) && Object.keys(opt_context).some((key) => rootKeys.indexOf(key) > -1)) {
+  if (opt_context && isObject(opt_context) &&
+      Object.keys(/** @type {Object} */ (opt_context) || {}).some((key) => rootKeys.indexOf(key) > -1)) {
     retVal = opt_context;
   }
 

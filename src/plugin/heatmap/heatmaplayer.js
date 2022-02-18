@@ -1,6 +1,7 @@
 goog.declareModuleId('plugin.heatmap.Heatmap');
 
 import EventType from '../../os/action/eventtype.js';
+import {isArrayLike} from '../../os/array/array.js';
 import * as color from '../../os/color.js';
 import * as dispatcher from '../../os/dispatcher.js';
 import LayerEvent from '../../os/events/layerevent.js';
@@ -569,7 +570,7 @@ export default class Heatmap extends VectorLayer {
       case EventType.IDENTIFY:
         return true;
       case EventType.RENAME:
-        return !!opt_actionArgs && goog.isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
+        return !!opt_actionArgs && isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
       case EventType.REFRESH:
         return source instanceof RequestSource;
       default:

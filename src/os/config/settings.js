@@ -673,8 +673,8 @@ export default class Settings extends EventTarget {
       var val = googObject.getValueByKeys(this.mergedConfig_, keys);
       if (Array.isArray(val)) {
         val = Array.from(val);
-      } else if (goog.isObject(val)) {
-        val = googObject.clone(val);
+      } else if (osObject.isObject(val)) {
+        val = googObject.clone(/** @type {Object} */(val));
       }
 
       return val !== undefined ? val : opt_default;

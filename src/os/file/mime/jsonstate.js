@@ -1,5 +1,6 @@
 goog.declareModuleId('os.file.mime.jsonstate');
 
+import {isObject} from '../../object/object.js';
 import Tag from '../../state/tag.js';
 import * as mime from '../mime.js';
 import * as json from './json.js';
@@ -23,7 +24,7 @@ export const TYPE = 'application/vnd.state+json';
 export const detect = function(buffer, file, opt_context) {
   var retVal;
 
-  if (opt_context && goog.isObject(opt_context) && Array.isArray(opt_context[Tag.STATE])) {
+  if (opt_context && isObject(opt_context) && Array.isArray(opt_context[Tag.STATE])) {
     retVal = opt_context;
   }
 

@@ -3,6 +3,7 @@ goog.declareModuleId('os.layer.Tile');
 import '../mixin/tileimagemixin.js';
 import '../mixin/urltilemixin.js';
 import EventType from '../action/eventtype.js';
+import {isArrayLike} from '../array/array.js';
 import * as osColor from '../color.js';
 import DataManager from '../data/datamanager.js';
 import * as dispatcher from '../dispatcher.js';
@@ -963,7 +964,7 @@ export default class Tile extends OLTileLayer {
       case EventType.SHOW_DESCRIPTION:
         return true;
       case EventType.RENAME:
-        return !!opt_actionArgs && goog.isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
+        return !!opt_actionArgs && isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
       case EventType.MOST_RECENT:
         // only enable if descriptor exists and max date is greater than 0
         var desc = DataManager.getInstance().getDescriptor(this.getId());

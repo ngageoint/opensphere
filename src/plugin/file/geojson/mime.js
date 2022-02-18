@@ -2,6 +2,7 @@ goog.declareModuleId('plugin.file.geojson.mime');
 
 import * as mime from '../../../os/file/mime.js';
 import * as json from '../../../os/file/mime/json.js';
+import {isObject} from '../../../os/object/object.js';
 
 const Promise = goog.require('goog.Promise');
 const GeoJSON = goog.require('ol.format.GeoJSON');
@@ -44,7 +45,7 @@ const find_ = function(obj) {
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) {
       var val = obj[key];
-      if (goog.isObject(val) || Array.isArray(val)) {
+      if (isObject(val) || Array.isArray(val)) {
         var retVal = find_(val);
         if (retVal) {
           return retVal;

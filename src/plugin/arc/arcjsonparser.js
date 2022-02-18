@@ -2,6 +2,7 @@ goog.declareModuleId('plugin.arc.ArcJSONParser');
 
 import * as text from '../../os/file/mime/text.js';
 import * as geo2 from '../../os/geo/geo2.js';
+import {isObject} from '../../os/object/object.js';
 
 const Disposable = goog.require('goog.Disposable');
 const googString = goog.require('goog.string');
@@ -56,7 +57,7 @@ class ArcJSONParser extends Disposable {
     if (typeof source === 'string') {
       var json = JSON.parse(source);
       features = json['features'];
-    } else if (goog.isObject(source)) {
+    } else if (isObject(source)) {
       features = source['features'];
     }
 

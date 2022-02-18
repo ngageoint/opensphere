@@ -36,7 +36,7 @@ import AnimationOverlay from '../layer/animationoverlay.js';
 import LoadingManager from '../load/loadingmanager.js';
 import * as osMap from '../map/map.js';
 import {getMapContainer} from '../map/mapinstance.js';
-import {getValueExtractor, prune} from '../object/object.js';
+import {getValueExtractor, isObject, prune} from '../object/object.js';
 import {getMaxFeatures} from '../ogc/ogc.js';
 import {ROOT} from '../os.js';
 import {isFloat} from '../string/string.js';
@@ -1002,7 +1002,7 @@ export default class Vector extends OLVectorSource {
     var field = null;
     if (typeof value === 'string') {
       field = value;
-    } else if (goog.isObject(value)) {
+    } else if (isObject(value)) {
       field = /** @type {ColumnDefinition} */ (value)['field'];
     }
 

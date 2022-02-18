@@ -3,6 +3,7 @@ goog.declareModuleId('plugin.openpage.Handler');
 import CommandProcessor from '../../os/command/commandprocessor.js';
 import LayerAdd from '../../os/command/layeraddcmd.js';
 import SequenceCommand from '../../os/command/sequencecommand.js';
+import {isObject} from '../../os/object/object.js';
 import {TYPE} from './openpage.js';
 
 const googString = goog.require('goog.string');
@@ -36,7 +37,7 @@ export default class Handler {
       }
 
       var cmds = data.filter(function(item) {
-        return goog.isObject(item);
+        return isObject(item);
       }).map(function(config) {
         config['id'] = config['id'] || googString.getRandomString();
         return new LayerAdd(config);

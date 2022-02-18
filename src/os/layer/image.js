@@ -1,6 +1,7 @@
 goog.declareModuleId('os.layer.Image');
 
 import EventType from '../action/eventtype.js';
+import {isArrayLike} from '../array/array.js';
 import {adjustColor, adjustSharpness} from '../color.js';
 import * as dispatcher from '../dispatcher.js';
 import LayerEvent from '../events/layerevent.js';
@@ -675,7 +676,7 @@ export default class Image extends ImageLayer {
       case EventType.REFRESH:
         return true;
       case EventType.RENAME:
-        return !!opt_actionArgs && goog.isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
+        return !!opt_actionArgs && isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
       case EventType.REMOVE_LAYER:
         return this.isRemovable();
       default:

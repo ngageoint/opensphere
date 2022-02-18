@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.TwoColumnInfoUI');
 
 import './slick/slickgrid.js';
+import {isObject} from '../object/object.js';
 import {ROOT} from '../os.js';
 import Module from './module.js';
 import SlickGridEvent from './slick/slickgridevent.js';
@@ -123,7 +124,7 @@ export class Controller {
     if (newVal) {
       var properties = this.scope_['object'];
       for (var key in properties) {
-        if (!goog.isObject(properties[key])) {
+        if (!isObject(properties[key])) {
           this.scope_['properties'].push({'id': key, 'field': key, 'value': properties[key]});
         }
       }

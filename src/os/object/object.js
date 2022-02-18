@@ -132,7 +132,7 @@ export const setValue = function(obj, keys, value) {
     if (index === lastKeyIndex) {
       lastLevel[key] = value;
     } else {
-      lastLevel[key] = goog.isObject(lastLevel[key]) ? lastLevel[key] : {};
+      lastLevel[key] = isObject(lastLevel[key]) ? lastLevel[key] : {};
       lastLevel = lastLevel[key];
     }
   });
@@ -158,8 +158,8 @@ export const reduce = function(obj, opt_prefix, opt_delim) {
     if (isPrimitive(obj) || Array.isArray(obj)) {
       // write primitives and arrays to the reduced result
       result[prefix] = obj;
-    } else if (goog.isObject(obj)) {
-      if (isEmpty(obj)) {
+    } else if (isObject(obj)) {
+      if (isEmpty(/** @type {Object} */ (obj))) {
         // if the object doesn't contain any keys, write the empty object to the result
         result[prefix] = obj;
       } else {
@@ -358,4 +358,13 @@ export const unsafeClone = function(obj) {
   }
 
   return obj;
+};
+
+/**
+ * Based on goog.isObject. Returns true if the value is an object - including arrays and functions.
+ * @param {?} val the variable to test
+ * @return {boolean} if the variable is an object
+ */
+export const isObject = function(val) {
+  return typeof val == 'object' && val != null || typeof val == 'function';
 };

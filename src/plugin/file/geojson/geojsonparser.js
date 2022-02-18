@@ -5,6 +5,7 @@ import * as osFeature from '../../../os/feature/feature.js';
 import * as text from '../../../os/file/mime/text.js';
 import * as fn from '../../../os/fn/fn.js';
 import * as osMap from '../../../os/map/map.js';
+import {isObject} from '../../../os/object/object.js';
 
 const Disposable = goog.require('goog.Disposable');
 const googObject = goog.require('goog.object');
@@ -96,10 +97,10 @@ export default class GeoJSONParser extends Disposable {
       source = text.getText(source) || null;
     }
 
-    if (Array.isArray(source) && source.length == 1 && (typeof source[0] === 'string' || goog.isObject(source[0]))) {
+    if (Array.isArray(source) && source.length == 1 && (typeof source[0] === 'string' || isObject(source[0]))) {
       // source likely came from a chaining importer
       src = source[0];
-    } else if (goog.isObject(source)) {
+    } else if (isObject(source)) {
       src = source;
     } else if (source && typeof source === 'string') {
       // THIN-6240: if the server returns invalid JSON with literal whitespace characters inside tokens, the parser will

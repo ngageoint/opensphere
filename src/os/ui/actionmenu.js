@@ -2,7 +2,7 @@
 goog.declareModuleId('os.ui.ActionMenuUI');
 
 import Metrics from '../metrics/metrics.js';
-import {setValue} from '../object/object.js';
+import {isObject, setValue} from '../object/object.js';
 import {ROOT} from '../os.js';
 import EventType from './action/actioneventtype.js';
 import MenuItemAction from './action/menuitemaction.js';
@@ -283,7 +283,7 @@ export class Controller {
               menuItems,
               new MenuItemAction(action),
               this.sortByDivisionThenOrder_);
-        } else if (goog.isObject(value)) {
+        } else if (isObject(value)) {
           var division;
           var keyTokens = key.split('/');
           if (keyTokens.length > 1) {
@@ -356,7 +356,7 @@ export class Controller {
     this.timeout(function() {
       element.removeClass('right-menu');
 
-      if (goog.isObject(pos)) {
+      if (isObject(pos)) {
         var x = pos.left || pos.x;
         var y = pos.top || pos.y;
         var w = element.outerWidth();
@@ -405,7 +405,7 @@ export class Controller {
 
           var pos = submenu.offset();
 
-          if (goog.isObject(pos)) {
+          if (isObject(pos)) {
             var y = pos.top || pos.y;
             var h = submenu.outerHeight();
             var viewportSize = getViewportSize();

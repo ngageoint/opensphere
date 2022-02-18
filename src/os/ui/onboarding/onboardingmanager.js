@@ -2,6 +2,7 @@ goog.declareModuleId('os.ui.onboarding.OnboardingManager');
 
 import Settings from '../../config/settings.js';
 import Request from '../../net/request.js';
+import {isObject} from '../../object/object.js';
 import {ROOT} from '../../os.js';
 import RouteManager from '../route/routemanager.js';
 import OnboardingEvent from './onboardingevent.js';
@@ -104,7 +105,7 @@ export default class OnboardingManager extends EventTarget {
       request.listenOnce(EventType.SUCCESS, goog.partial(this.onLoad_, show), false, this);
       request.listenOnce(EventType.ERROR, this.onError_, false, this);
       request.load();
-    } else if (show && goog.isObject(ob)) {
+    } else if (show && isObject(ob)) {
       // only display the onboarding if the value isn't the placeholder boolean
       this.launchOnboarding_(uri, /** @type {OnboardingConfig} */ (ob));
     }

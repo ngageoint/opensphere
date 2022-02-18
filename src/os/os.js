@@ -3,6 +3,7 @@ goog.declareModuleId('os');
 import './mixin/closuremixin.js';
 import './ol/license.js';
 import './ol/typedefs.js';
+import {isArrayLike} from './array/array.js';
 import * as keys from './metrics/metricskeys.js';
 
 const EventTarget = goog.require('goog.events.EventTarget');
@@ -169,7 +170,7 @@ export const isNumeric = function(obj) {
   // parseFloat NaNs numeric-cast false positives (null|true|false|"")
   // ...but misinterprets leading-number strings, particularly hex literals ("0x...")
   // subtraction forces infinities to NaN
-  return !goog.isArrayLike(obj) && obj - parseFloat(obj) >= 0;
+  return !isArrayLike(obj) && obj - parseFloat(obj) >= 0;
 };
 
 /**

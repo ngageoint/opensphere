@@ -10,6 +10,7 @@ import {isLocal} from '../../file/index.js';
 import MappingManager from '../../im/mapping/mappingmanager.js';
 import LayerConfigManager from '../../layer/config/layerconfigmanager.js';
 import {getMapContainer} from '../../map/mapinstance.js';
+import {isObject} from '../../object/object.js';
 import VectorSource from '../../source/vectorsource.js';
 import {isBoolean, isFloat, isHex} from '../../string/string.js';
 import * as osLabel from '../../style/label.js';
@@ -491,7 +492,7 @@ export default class LayerState extends XMLState {
         } catch (e) {
           // don't persist it
         }
-      } else if (goog.isObject(value) && typeof value !== 'function') {
+      } else if (isObject(value) && typeof value !== 'function') {
         // plain objects
         // create the node for this key and recurse
         node = appendElement(key, layerEl);

@@ -1,6 +1,7 @@
 goog.declareModuleId('os.layer.Vector');
 
 import ActionEventType from '../action/eventtype.js';
+import {isArrayLike} from '../array/array.js';
 import {toRgbArray} from '../color.js';
 import DataManager from '../data/datamanager.js';
 import IMappingDescriptor from '../data/imappingdescriptor.js';
@@ -996,7 +997,7 @@ export default class Vector extends OLVectorLayer {
   supportsAction(type, opt_actionArgs) {
     const source = /** @type {VectorSource} */ (this.getSource());
     const isVector = source instanceof VectorSource;
-    const onlyOneLayer = !!opt_actionArgs && goog.isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
+    const onlyOneLayer = !!opt_actionArgs && isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
 
     switch (type) {
       case ActionEventType.GOTO:

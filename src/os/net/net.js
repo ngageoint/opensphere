@@ -4,7 +4,7 @@ import {defaultSort} from '../array/array.js';
 import {registerClass} from '../classregistry.js';
 import {getSettings} from '../config/configinstance.js';
 import instanceOf from '../instanceof.js';
-import {merge} from '../object/object.js';
+import {isObject, merge} from '../object/object.js';
 import CrossOrigin from './crossorigin.js';
 
 const Uri = goog.require('goog.Uri');
@@ -364,7 +364,7 @@ export const paramsToQueryData = function(params) {
     qd = /** @type {QueryData} */ (params);
   } else {
     // create a new one from the object or an empty one
-    qd = goog.isObject(params) ? QueryData.createFromMap(params) : null;
+    qd = (params != null && isObject(params)) ? QueryData.createFromMap(params) : null;
   }
 
   return qd || new QueryData();

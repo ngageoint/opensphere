@@ -1,5 +1,6 @@
 goog.declareModuleId('os.file');
 
+import {isObject} from '../object/object.js';
 import {ROOT} from '../os.js';
 import OSFile from './file.js';
 import * as mimeZip from './mime/zip.js';
@@ -190,7 +191,7 @@ export const isLocal = function(file) {
  */
 export const deserializeFile = function(data) {
   var file = null;
-  if (data && goog.isObject(data)) {
+  if (data && isObject(data)) {
     file = new OSFile();
     file.restore(data);
   }

@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.layer');
 
 import {instanceOf} from '../../classregistry.js';
+import {isObject} from '../../object/object.js';
 import SourceClass from '../../source/sourceclass.js';
 import {cloneConfig} from '../../style/label.js';
 import {getConfigColor} from '../../style/style.js';
@@ -120,7 +121,7 @@ export const getStyles = function(layer) {
 export const getStyle = function(layer) {
   var style = /** @type {TileLayer} */ (layer).getStyle();
 
-  if (goog.isObject(style)) {
+  if (isObject(style)) {
     return /** @type {!osx.ogc.TileStyle} */ (style);
   }
 

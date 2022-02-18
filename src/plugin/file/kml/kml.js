@@ -1050,7 +1050,7 @@ const IconStyleParser_ = function(node, objectStack) {
     return;
   }
   var styleObject = /** @type {Object} */ (objectStack[objectStack.length - 1]);
-  asserts.assert(goog.isObject(styleObject), 'styleObject should be an Object');
+  asserts.assert(osObject.isObject(styleObject), 'styleObject should be an Object');
   var IconObject = 'Icon' in object ? object['Icon'] : {};
   var src;
   var href = /** @type {string|undefined} */ (IconObject['href']);

@@ -1,5 +1,6 @@
 goog.declareModuleId('os.ui.state.StateImportUI');
 
+import {isObject} from '../../object/object.js';
 import StateParserConfig from '../../parse/stateparserconfig.js';
 import Tag from '../../state/tag.js';
 import {stringFromXML} from '../../tag/tag.js';
@@ -52,7 +53,7 @@ export default class StateImportUI extends FileImportUI {
         } else {
           rawState = loadXml(content);
         }
-      } else if (content instanceof Document || goog.isObject(content)) {
+      } else if (content instanceof Document || isObject(content)) {
         rawState = content;
       }
     }
@@ -61,8 +62,8 @@ export default class StateImportUI extends FileImportUI {
 
     if (rawState instanceof Document) {
       this.handleXML(file, rawState, config);
-    } else if (goog.isObject(rawState)) {
-      this.handleJSON(file, rawState, config);
+    } else if (isObject(rawState)) {
+      this.handleJSON(file, /** @type {Object} */ (rawState), config);
     }
   }
 

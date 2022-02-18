@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.SlickPropertiesAsyncRenderer');
 
 import Fields from '../fields/fields.js';
+import {isObject} from '../object/object.js';
 import {inIframe} from '../os.js';
 import {launchPropertyInfo} from './propertyinfo.js';
 
@@ -40,7 +41,7 @@ const SlickPropertiesAsyncRenderer = function(elem, row, dataContext, colDef) {
  * @param {Object} object
  */
 const processProperty = function(value, index, object) {
-  if (goog.isObject(value)) {
+  if (isObject(value)) {
     delete object[index];
   }
 };
