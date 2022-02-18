@@ -75,7 +75,7 @@ export default class HeatmapSynchronizer extends CesiumSynchronizer {
     this.syncDelay_ = new Delay(this.synchronizeInternal, 75, this);
 
     this.listenKey = listen(this.layer, EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
-    events.listenEach(this.layer, HeatmapSynchronizer.STYLE_KEYS_, this.onStyleChange_, this);
+    this.styleKeys = events.listenEach(this.layer, HeatmapSynchronizer.STYLE_KEYS_, this.onStyleChange_, this);
   }
 
   /**
@@ -86,7 +86,7 @@ export default class HeatmapSynchronizer extends CesiumSynchronizer {
     this.syncDelay_ = null;
 
     unlistenByKey(this.listenKey);
-    events.unlistenEach(this.layer, HeatmapSynchronizer.STYLE_KEYS_, this.onStyleChange_, this);
+    unlistenEach(this.styleKeys);
 
     this.cesiumLayers_.remove(this.activeLayer_);
     this.activeLayer_ = null;
