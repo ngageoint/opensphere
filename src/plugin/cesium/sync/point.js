@@ -13,9 +13,6 @@ import {drawShape} from './shape.js';
 
 const {hashCode} = goog.require('goog.string');
 
-const {default: VectorContext} = goog.requireType('plugin.cesium.VectorContext');
-
-
 /**
  * Create a Cesium Billboard from an OpenLayers image style.
  *
