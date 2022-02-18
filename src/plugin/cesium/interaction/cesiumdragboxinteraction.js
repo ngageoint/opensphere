@@ -1,16 +1,12 @@
 goog.declareModuleId('plugin.cesium.interaction.dragbox');
 
-import {ol4326CoordinateArrayToCsCartesians} from 'ol-cesium/src/olcs/core';
+import olcsCore from 'ol-cesium/src/olcs/core';
 
 import * as Dispatcher from '../../../os/dispatcher.js';
 import DrawPolygon from '../../../os/interaction/drawpolygoninteraction.js';
 import MapEvent from '../../../os/map/mapevent.js';
 import MapContainer from '../../../os/mapcontainer.js';
 import {GeometryInstanceId} from '../cesium.js';
-
-const Polygon = goog.requireType('ol.geom.Polygon');
-const {default: DragBox} = goog.requireType('os.interaction.DragBox');
-const {default: CesiumRenderer} = goog.requireType('plugin.cesium.CesiumRenderer');
 
 
 /**
@@ -73,7 +69,7 @@ export const updateWebGL = function(geometry) {
         geometryInstances: new Cesium.GeometryInstance({
           id: GeometryInstanceId.GEOM_OUTLINE,
           geometry: new Cesium.GroundPolylineGeometry({
-            positions: ol4326CoordinateArrayToCsCartesians(lonlats),
+            positions: olcsCore.ol4326CoordinateArrayToCsCartesians(lonlats),
             arcType: Cesium.ArcType.RHUMB,
             width: 2
           }),
