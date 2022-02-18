@@ -1,5 +1,9 @@
 goog.declareModuleId('plugin.heatmap');
 
+import {createCanvasContext2D} from 'ol/dom';
+import {getCenter, scaleFromCenter} from 'ol/extent';
+import Feature from 'ol/Feature';
+import Point from 'ol/geom/Point';
 import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
 import AlertManager from '../../os/alert/alertmanager.js';
 import DataManager from '../../os/data/datamanager.js';
@@ -25,17 +29,6 @@ import HeatmapField from './heatmapfield.js';
 
 const dispose = goog.require('goog.dispose');
 const googString = goog.require('goog.string');
-const Feature = goog.require('ol.Feature');
-const dom = goog.require('ol.dom');
-const olExtent = goog.require('ol.extent');
-const Point = goog.require('ol.geom.Point');
-
-const OLLayer = goog.requireType('ol.layer.Layer');
-const {default: ExportOptions} = goog.requireType('os.ex.ExportOptions');
-const {default: JobEvent} = goog.requireType('os.job.JobEvent');
-const {default: ILayer} = goog.requireType('os.layer.ILayer');
-const {default: ISource} = goog.requireType('os.source.ISource');
-const {default: HeatmapLayer} = goog.requireType('plugin.heatmap.Heatmap');
 
 
 /**
@@ -80,7 +73,7 @@ export const cloneFeature = function(feature) {
 
     // generate the centerpoint and center the feature there for rendering
     var extent = geometry.getExtent();
-    var center = olExtent.getCenter(extent);
+    var center = getCenter(extent);
     var pointGeometry = new Point(center);
     clone.setGeometry(pointGeometry);
   }
@@ -118,7 +111,7 @@ export const getSourceFeatures = function(sourceId) {
 export const createGradient = function(colors) {
   var width = 1;
   var height = 256;
-  var context = dom.createCanvasContext2D(width, height);
+  var context = createCanvasContext2D(width, height);
 
   var gradient = context.createLinearGradient(0, 0, width, height);
   var step = 1 / (colors.length - 1);
@@ -190,7 +183,7 @@ export const onImageComplete = function(layer, event) {
 
     var layerTitle = layer.getTitle();
     var extent = layer.getExtent().slice();
-    olExtent.scaleFromCenter(extent, 1 / EXTENT_SCALE_FACTOR);
+    scaleFromCenter(extent, 1 / EXTENT_SCALE_FACTOR);
     var mm = MapContainer.getInstance();
     var view = mm.getMap().getView();
     var centerLat = view.getCenter()[1];
