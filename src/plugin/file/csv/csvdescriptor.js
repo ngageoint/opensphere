@@ -1,0 +1,176 @@
+goog.declareModuleId('plugin.file.csv.CSVDescriptor');
+
+import Settings from '../../../os/config/settings.js';
+import FileDescriptor from '../../../os/data/filedescriptor.js';
+import LayerType from '../../../os/layer/layertype.js';
+import * as csv from '../../../os/ui/file/csv/csv.js';
+import {ALLOW_ELLIPSE_CONFIG} from '../../../os/ui/layer/ellipsecolumns.js';
+import CSVExporter from './csvexporter.js';
+import CSVParserConfig from './csvparserconfig.js';
+
+
+/**
+ * CSV file descriptor.
+ */
+export default class CSVDescriptor extends FileDescriptor {
+  /**
+   * Constructor.
+   * @param {CSVParserConfig=} opt_config
+   */
+  constructor(opt_config) {
+    super();
+    this.descriptorType = 'csv';
+    this.parserConfig = opt_config || new CSVParserConfig();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getType() {
+    return LayerType.FEATURES;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  supportsMapping() {
+    return !!Settings.getInstance().get(ALLOW_ELLIPSE_CONFIG, false);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getLayerOptions() {
+    var options = super.getLayerOptions();
+    options['type'] = 'CSV';
+    options['commentChar'] = this.getCommentChar();
+    options['dataRow'] = this.getDataRow();
+    options['delimiter'] = this.getDelimiter();
+    options['headerRow'] = this.getHeaderRow();
+    options['useHeader'] = this.getUseHeader();
+    return options;
+  }
+
+  /**
+   * @return {string}
+   */
+  getCommentChar() {
+    return this.parserConfig['commentChar'];
+  }
+
+  /**
+   * @param {string} commentChar
+   */
+  setCommentChar(commentChar) {
+    this.parserConfig['commentChar'] = commentChar;
+  }
+
+  /**
+   * @return {number}
+   */
+  getDataRow() {
+    return this.parserConfig['dataRow'];
+  }
+
+  /**
+   * @param {number} row
+   */
+  setDataRow(row) {
+    this.parserConfig['dataRow'] = row;
+  }
+
+  /**
+   * @return {string}
+   */
+  getDelimiter() {
+    return this.parserConfig['delimiter'];
+  }
+
+  /**
+   * @param {string} delimiter
+   */
+  setDelimiter(delimiter) {
+    this.parserConfig['delimiter'] = delimiter;
+  }
+
+  /**
+   * @return {number}
+   */
+  getHeaderRow() {
+    return this.parserConfig['headerRow'];
+  }
+
+  /**
+   * @param {number} row
+   */
+  setHeaderRow(row) {
+    this.parserConfig['headerRow'] = row;
+  }
+
+  /**
+   * @return {number}
+   */
+  getUseHeader() {
+    return this.parserConfig['useHeader'];
+  }
+
+  /**
+   * @param {boolean} useHeader
+   */
+  setUseHeader(useHeader) {
+    this.parserConfig['useHeader'] = useHeader;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getExporter() {
+    return new CSVExporter();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  onFileChange(options) {
+    super.onFileChange(options);
+
+    // update the parser config to match the default parser config
+    const conf = csv.DEFAULT_CONFIG;
+    this.parserConfig['color'] = conf['color'];
+    this.parserConfig['commentChar'] = conf['commentChar'];
+    this.parserConfig['dataRow'] = conf['dataRow'];
+    this.parserConfig['delimiter'] = conf['delimiter'];
+    this.parserConfig['headerRow'] = conf['headerRow'];
+    this.parserConfig['useHeader'] = conf['useHeader'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  persist(opt_obj) {
+    if (!opt_obj) {
+      opt_obj = {};
+    }
+
+    opt_obj['commentChar'] = this.getCommentChar();
+    opt_obj['dataRow'] = this.getDataRow();
+    opt_obj['delimiter'] = this.getDelimiter();
+    opt_obj['headerRow'] = this.getHeaderRow();
+    opt_obj['useHeader'] = this.getUseHeader();
+
+    return super.persist(opt_obj);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  restore(conf) {
+    this.setCommentChar(conf['commentChar']);
+    this.setDataRow(conf['dataRow']);
+    this.setDelimiter(conf['delimiter']);
+    this.setHeaderRow(conf['headerRow']);
+    this.setUseHeader(conf['useHeader']);
+
+    super.restore(conf);
+  }
+}
