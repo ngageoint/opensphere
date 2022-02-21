@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.ogc.wms.TileWMSSource');
 
+import TileWMS from 'ol/source/TileWMS';
+
 import PropertyChangeEvent from '../../../os/events/propertychangeevent.js';
 import osImplements from '../../../os/implements.js';
 import IStyle from '../../../os/source/istylesource.js';
 import PropertyChange from '../../../os/source/propertychange.js';
-
-const TileWMS = goog.require('ol.source.TileWMS');
 
 /**
  * Layer source for tile data from WMS servers. This source fires a property change event when its

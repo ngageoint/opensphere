@@ -8,7 +8,7 @@ import {normalize} from 'ol/src/color';
 import {extendCoordinate, createEmpty} from 'ol/src/extent';
 import KML from 'ol/src/format/KML';
 import {readDecimal, readString} from 'ol/src/format/xsd';
-import inflate from 'ol/src/geom/flat/inflate';
+import {inflateCoordinates} from 'ol/src/geom/flat/inflate';
 import GeometryCollection from 'ol/src/geom/GeometryCollection';
 import GeometryLayout from 'ol/src/geom/GeometryLayout';
 import GeometryType from 'ol/src/geom/GeometryType';
@@ -637,7 +637,7 @@ export const readLatLonQuad = function(node, objectStack) {
     // I believe you need non-affine transforms (which the canvas 2d context does not support) in
     // order to draw the image properly. This is something that we could opt to do ourselves since
     // the image would only need to be redrawn once.
-    var coordinates = inflate.coordinates(flatCoords, 0, flatCoords.length, 3);
+    var coordinates = inflateCoordinates(flatCoords, 0, flatCoords.length, 3);
     if (coordinates.length === 4) {
       // Per the KML spec:
       //   If a third value is inserted into any tuple (representing altitude) it will be ignored. Altitude is set using

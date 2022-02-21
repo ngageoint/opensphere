@@ -2,7 +2,7 @@ goog.declareModuleId('os.ui.ogc.OGCServer');
 
 import WMSCapabilities from 'ol/src/format/WMSCapabilities';
 import WMTSCapabilities from 'ol/src/format/WMTSCapabilities';
-import XLink from 'ol/src/format/xlink';
+import {readHref} from 'ol/src/format/xlink';
 
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';
@@ -1216,7 +1216,7 @@ export default class OGCServer extends AbstractLoadingServer {
         const updateUrls = (getFeatureEl) => {
           if (this.parseOperationURLs_ && getFeatureEl) {
             const attr = getFeatureEl.attributes[0];
-            const url = getFeatureEl.getAttributeNS(XLink.NAMESPACE_URI, 'href') ||
+            const url = readHref(getFeatureEl) ||
               attr.value || attr.nodeValue;
             this.setWfsUrl(Uri.resolve(uri, url).toString());
           }

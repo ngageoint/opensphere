@@ -3,7 +3,7 @@ goog.declareModuleId('plugin.file.kml.KMLParser');
 import {getUid} from 'ol/src/';
 import Feature from 'ol/src/Feature';
 import {readBoolean, readDecimal, readString, readPositiveInteger, readBooleanString} from 'ol/src/format/xsd';
-import inflate from 'ol/src/geom/flat/inflate';
+import {inflateCoordinates} from 'ol/src/geom/flat/inflate';
 import GeometryLayout from 'ol/src/geom/GeometryLayout';
 import GeometryType from 'ol/src/geom/GeometryType';
 import LineString from 'ol/src/geom/LineString';
@@ -1189,7 +1189,7 @@ export default class KMLParser extends AsyncZipParser {
         // if a multi track should be interpolated, join it into a single line. the track updates will handle the
         // interpolation between known positions.
         var flatCoordinates = geometry.getFlatCoordinates();
-        var coordinates = inflate.coordinates(flatCoordinates, 0, flatCoordinates.length, 4);
+        var coordinates = inflateCoordinates(flatCoordinates, 0, flatCoordinates.length, 4);
         geometry = new LineString(coordinates);
       }
 

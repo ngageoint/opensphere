@@ -9,13 +9,13 @@ import './ui/ngrightclick.js';
 import './ui/search/searchresults.js';
 import './ui/timelinepanel.js';
 
-import BaseMapPlugin from '../plugin/basemap/basemapplugin.js';
-import CesiumPlugin from '../plugin/cesium/cesiumplugin.js';
-/* import ArcPlugin from '../plugin/arc/arcplugin.js';
+import ArcPlugin from '../plugin/arc/arcplugin.js';
 import AreaPlugin from '../plugin/area/areaplugin.js';
 import AreaDataPlugin from '../plugin/areadata/areadataplugin.js';
 import AudioPlugin from '../plugin/audio/audioplugin.js';
+import BaseMapPlugin from '../plugin/basemap/basemapplugin.js';
 import CapturePlugin from '../plugin/capture/captureplugin.js';
+import CesiumPlugin from '../plugin/cesium/cesiumplugin.js';
 import ConfigPlugin from '../plugin/config/configplugin.js';
 import SearchPlugin from '../plugin/descriptor/searchplugin.js';
 import FeatureActionPlugin from '../plugin/featureaction/featureactionplugin.js';
@@ -42,7 +42,7 @@ import TrackPlugin from '../plugin/track/trackplugin.js';
 import VectorTilePlugin from '../plugin/vectortile/vectortileplugin.js';
 import VectorToolsPlugin from '../plugin/vectortools/vectortoolsplugin.js';
 import WeatherPlugin from '../plugin/weather/weatherplugin.js';
-import XYZPlugin from '../plugin/xyz/xyzplugin.js'; */
+import XYZPlugin from '../plugin/xyz/xyzplugin.js';
 import AlertEventSeverity from './alert/alerteventseverity.js';
 import AlertManager from './alert/alertmanager.js';
 import {initAuth} from './auth.js';
@@ -503,9 +503,7 @@ export default class Controller extends AbstractMainCtrl {
 
     // Only "os" application plugins are added here
     const pluginManager = PluginManager.getInstance();
-    pluginManager.addPlugin(new BaseMapPlugin());
     pluginManager.addPlugin(new CesiumPlugin());
-    /*
     pluginManager.addPlugin(FeatureActionPlugin.getInstance());
     pluginManager.addPlugin(new SearchPlugin());
     pluginManager.addPlugin(new AreaPlugin());
@@ -515,6 +513,7 @@ export default class Controller extends AbstractMainCtrl {
     pluginManager.addPlugin(ConfigPlugin.getInstance());
     pluginManager.addPlugin(new OGCPlugin());
     pluginManager.addPlugin(new XYZPlugin());
+    pluginManager.addPlugin(new BaseMapPlugin());
     pluginManager.addPlugin(new GooglePlacesPlugin());
     pluginManager.addPlugin(new PeliasGeocoderPlugin());
     pluginManager.addPlugin(new NominatimPlugin());
@@ -537,7 +536,7 @@ export default class Controller extends AbstractMainCtrl {
     pluginManager.addPlugin(TrackPlugin.getInstance());
     pluginManager.addPlugin(OpenpagePlugin.getInstance());
     pluginManager.addPlugin(new PersistPlugin());
-    pluginManager.addPlugin(VectorTilePlugin.getInstance()); */
+    pluginManager.addPlugin(VectorTilePlugin.getInstance());
   }
 
   /**

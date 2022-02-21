@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.params.EditRequestParamsUI');
 
+import {remove} from 'ol/src/array';
+
 import '../../os/ui/slick/slickgrid.js';
 import ColumnDefinition from '../../os/data/columndefinition.js';
 import * as os from '../../os/os.js';
@@ -11,7 +13,6 @@ import * as pluginParams from './params.js';
 
 const Disposable = goog.require('goog.Disposable');
 const googString = goog.require('goog.string');
-const olArray = goog.require('ol.array');
 
 
 /**
@@ -258,7 +259,7 @@ export class Controller extends Disposable {
    */
   removeRow() {
     if (this['selected'] && this['params']) {
-      olArray.remove(this['params'], this['selected']);
+      remove(this['params'], this['selected']);
       this['params'] = this['params'].slice();
     }
   }
