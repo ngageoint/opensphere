@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.geojson.GeoJSONExporter');
 
-import GeoJSON from 'ol/format/GeoJSON';
+import GeoJSON from 'ol/src/format/GeoJSON';
 
 import RecordField from '../../../os/data/recordfield.js';
 import AbstractExporter from '../../../os/ex/abstractexporter.js';

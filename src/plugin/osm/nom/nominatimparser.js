@@ -1,9 +1,9 @@
 goog.declareModuleId('plugin.osm.nom.NominatimParser');
 
-import {getUid} from 'ol';
-import Feature from 'ol/Feature';
-import GeoJSON from 'ol/format/GeoJSON';
-import Point from 'ol/geom/Point';
+import {getUid} from 'ol/src/';
+import Feature from 'ol/src/Feature';
+import GeoJSON from 'ol/src/format/GeoJSON';
+import Point from 'ol/src/geom/Point';
 import * as text from '../../../os/file/mime/text.js';
 import * as nom from './nominatim.js';
 

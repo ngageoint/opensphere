@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.cesium.sync.VectorSynchronizer');
 
-import {listen, unlistenByKey} from 'ol/events';
-import OLVectorLayer from 'ol/layer/Vector';
-import VectorEventType from 'ol/source/VectorEventType';
+import {listen, unlistenByKey} from 'ol/src/events';
+import OLVectorLayer from 'ol/src/layer/Vector';
+import VectorEventType from 'ol/src/source/VectorEventType';
 import * as dispatcher from '../../../os/dispatcher.js';
 import SelectionType from '../../../os/events/selectiontype.js';
 import LayerPropertyChange from '../../../os/layer/propertychange.js';

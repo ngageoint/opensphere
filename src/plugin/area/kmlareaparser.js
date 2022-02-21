@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.area.KMLAreaParser');
 
-import KML from 'ol/format/KML';
-import {isDocument} from 'ol/xml';
+import KML from 'ol/src/format/KML';
+import {isDocument} from 'ol/src/xml';
 
 import ColumnDefinition from '../../os/data/columndefinition.js';
 import * as text from '../../os/file/mime/text.js';

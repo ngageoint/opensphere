@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.file.kml.ui.PlacemarkEditUI');
 
-import {getUid} from 'ol';
-import Feature from 'ol/Feature';
+import {getUid} from 'ol/src/';
+import Feature from 'ol/src/Feature';
 import '../../../../os/annotation/annotationoptions.js';
 import * as annotation from '../../../../os/annotation/annotation.js';
 import FeatureAnnotation from '../../../../os/annotation/featureannotation.js';

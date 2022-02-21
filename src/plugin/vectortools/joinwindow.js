@@ -2,7 +2,7 @@ goog.declareModuleId('plugin.vectortools.JoinUI');
 
 import '../../os/ui/util/validationmessage.js';
 import './mappingcounter.js';
-import {remove} from 'ol/array';
+import {remove} from 'ol/src/array';
 import CommandProcessor from '../../os/command/commandprocessor.js';
 import DataManager from '../../os/data/datamanager.js';
 import SourceManager from '../../os/data/sourcemanager.js';

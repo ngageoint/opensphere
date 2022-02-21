@@ -5,14 +5,14 @@
 goog.declareModuleId('plugin.file.gpx.GPXParser');
 
 
-import Feature from 'ol/Feature';
-import GPX from 'ol/format/GPX';
-import {readDecimal, readDateTime} from 'ol/format/xsd';
-import LineString from 'ol/geom/LineString';
-import MultiLineString from 'ol/geom/MultiLineString';
-import Point from 'ol/geom/Point';
-import SimpleGeometry from 'ol/geom/SimpleGeometry';
-import {isDocument, makeStructureNS, makeObjectPropertySetter, parse} from 'ol/xml';
+import Feature from 'ol/src/Feature';
+import GPX from 'ol/src/format/GPX';
+import {readDecimal, readDateTime} from 'ol/src/format/xsd';
+import LineString from 'ol/src/geom/LineString';
+import MultiLineString from 'ol/src/geom/MultiLineString';
+import Point from 'ol/src/geom/Point';
+import SimpleGeometry from 'ol/src/geom/SimpleGeometry';
+import {isDocument, makeStructureNS, makeObjectPropertySetter, parse} from 'ol/src/xml';
 import * as text from '../../../os/file/mime/text.js';
 import * as osMap from '../../../os/map/map.js';
 

@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.gml.GMLParser');
 
-import {getUid} from 'ol';
+import {getUid} from 'ol/src';
 
 import ColumnDefinition from '../../../os/data/columndefinition.js';
 import RecordField from '../../../os/data/recordfield.js';

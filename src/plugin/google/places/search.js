@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.google.places.Search');
 
-import Feature from 'ol/Feature';
-import Point from 'ol/geom/Point';
-import {transformExtent} from 'ol/proj';
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
+import {transformExtent} from 'ol/src/proj';
 import AlertEventSeverity from '../../../os/alert/alerteventseverity.js';
 import AlertManager from '../../../os/alert/alertmanager.js';
 import Settings from '../../../os/config/settings.js';

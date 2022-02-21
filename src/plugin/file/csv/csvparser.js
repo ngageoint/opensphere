@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.file.csv.CSVParser');
 
-import {getUid} from 'ol';
-import Feature from 'ol/Feature';
+import {getUid} from 'ol/src';
+import Feature from 'ol/src/Feature';
 
 import ColumnDefinition from '../../../os/data/columndefinition.js';
 import RecordField from '../../../os/data/recordfield.js';

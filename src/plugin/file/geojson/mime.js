@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.geojson.mime');
 
-import GeoJSON from 'ol/format/GeoJSON';
+import GeoJSON from 'ol/src/format/GeoJSON';
 
 import * as mime from '../../../os/file/mime.js';
 import * as json from '../../../os/file/mime/json.js';

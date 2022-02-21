@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.vectortile.VectorTileLayerConfig');
 
-import {fromString} from 'ol/color';
-import {getWidth} from 'ol/extent';
-import VectorTileRenderType from 'ol/layer/VectorTileRenderType';
-import {transformExtent} from 'ol/proj';
-import Style from 'ol/style/Style';
-import {DEFAULT_MAX_ZOOM} from 'ol/tilegrid/common';
+import {fromString} from 'ol/src/color';
+import {getWidth} from 'ol/src/extent';
+import VectorTileRenderType from 'ol/src/layer/VectorTileRenderType';
+import {transformExtent} from 'ol/src/proj';
+import Style from 'ol/src/style/Style';
+import {DEFAULT_MAX_ZOOM} from 'ol/src/tilegrid/common';
 import * as osColor from '../../os/color.js';
 import DisplaySetting from '../../os/config/displaysetting.js';
 import Settings from '../../os/config/settings.js';

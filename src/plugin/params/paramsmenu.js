@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.params.menu');
 
-import Layer from 'ol/layer/Layer';
+import Layer from 'ol/src/layer/Layer';
 import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
 import AlertManager from '../../os/alert/alertmanager.js';
 import * as layerMenu from '../../os/ui/menu/layermenu.js';

@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.kml.model');
 
-import Point from 'ol/geom/Point';
+import Point from 'ol/src/geom/Point';
 import AltitudeMode from '../../../os/webgl/altitudemode.js';
 
 

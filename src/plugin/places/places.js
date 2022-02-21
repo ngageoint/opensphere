@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.places');
 
-import {getUid} from 'ol';
-import Feature from 'ol/Feature';
-import Geometry from 'ol/geom/Geometry';
+import {getUid} from 'ol/src/';
+import Feature from 'ol/src/Feature';
+import Geometry from 'ol/src/geom/Geometry';
 import * as annotation from '../../os/annotation/annotation.js';
 import CommandProcessor from '../../os/command/commandprocessor.js';
 import SequenceCommand from '../../os/command/sequencecommand.js';

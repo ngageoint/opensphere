@@ -1,13 +1,13 @@
 goog.declareModuleId('plugin.heatmap.Heatmap');
 
-import {createCanvasContext2D} from 'ol/dom';
-import {listen} from 'ol/events';
-import {scaleFromCenter} from 'ol/extent';
-import GeometryType from 'ol/geom/GeometryType';
-import Point from 'ol/geom/Point';
-import OLEventType from 'ol/render/EventType';
-import Icon from 'ol/style/Icon';
-import Style from 'ol/style/Style';
+import {createCanvasContext2D} from 'ol/src/dom';
+import {listen} from 'ol/src/events';
+import {scaleFromCenter} from 'ol/src/extent';
+import GeometryType from 'ol/src/geom/GeometryType';
+import Point from 'ol/src/geom/Point';
+import OLEventType from 'ol/src/render/EventType';
+import Icon from 'ol/src/style/Icon';
+import Style from 'ol/src/style/Style';
 import EventType from '../../os/action/eventtype.js';
 import * as color from '../../os/color.js';
 import * as dispatcher from '../../os/dispatcher.js';

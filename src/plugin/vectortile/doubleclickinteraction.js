@@ -1,12 +1,12 @@
 goog.declareModuleId('plugin.vectortile.DoubleClick');
 
 import '../../os/mixin/renderfeaturemixin.js';
-import {getUid} from 'ol';
-import Interaction from 'ol/interaction/Interaction';
-import OLMap from 'ol/Map';
-import MapBrowserEventType from 'ol/MapBrowserEventType';
-import RenderFeature from 'ol/render/Feature';
-import ViewHint from 'ol/ViewHint';
+import {getUid} from 'ol/src/';
+import Interaction from 'ol/src/interaction/Interaction';
+import OLMap from 'ol/src/Map';
+import MapBrowserEventType from 'ol/src/MapBrowserEventType';
+import RenderFeature from 'ol/src/render/Feature';
+import ViewHint from 'ol/src/ViewHint';
 import I3DSupport from '../../os/i3dsupport.js';
 import osImplements from '../../os/implements.js';
 import VectorTile from '../../os/layer/vectortile.js';

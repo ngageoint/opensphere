@@ -1,9 +1,9 @@
 goog.declareModuleId('plugin.file.kml.KMLExporter');
 
-import {find} from 'ol/array';
-import GeometryCollection from 'ol/geom/GeometryCollection';
-import GeometryType from 'ol/geom/GeometryType';
-import Point from 'ol/geom/Point';
+import {find} from 'ol/src/array';
+import GeometryCollection from 'ol/src/geom/GeometryCollection';
+import GeometryType from 'ol/src/geom/GeometryType';
+import Point from 'ol/src/geom/Point';
 import DataManager from '../../../os/data/datamanager.js';
 import RecordField from '../../../os/data/recordfield.js';
 import DynamicFeature from '../../../os/feature/dynamicfeature.js';

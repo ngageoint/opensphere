@@ -1,9 +1,9 @@
 goog.declareModuleId('plugin.heatmap');
 
-import {createCanvasContext2D} from 'ol/dom';
-import {getCenter, scaleFromCenter} from 'ol/extent';
-import Feature from 'ol/Feature';
-import Point from 'ol/geom/Point';
+import {createCanvasContext2D} from 'ol/src/dom';
+import {getCenter, scaleFromCenter} from 'ol/src/extent';
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
 import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
 import AlertManager from '../../os/alert/alertmanager.js';
 import DataManager from '../../os/data/datamanager.js';

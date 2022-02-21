@@ -1,9 +1,9 @@
 goog.declareModuleId('plugin.file.shp.SHPExporter');
 
-import {clone, extend} from 'ol/extent';
-import GeometryCollection from 'ol/geom/GeometryCollection';
-import GeometryType from 'ol/geom/GeometryType';
-import Point from 'ol/geom/Point';
+import {clone, extend} from 'ol/src/extent';
+import GeometryCollection from 'ol/src/geom/GeometryCollection';
+import GeometryType from 'ol/src/geom/GeometryType';
+import Point from 'ol/src/geom/Point';
 import AlertEventSeverity from '../../../os/alert/alerteventseverity.js';
 import AlertManager from '../../../os/alert/alertmanager.js';
 import * as osArray from '../../../os/array/array.js';

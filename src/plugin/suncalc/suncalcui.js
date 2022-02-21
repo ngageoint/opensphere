@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.suncalc.SunCalcUI');
 
-import {toLonLat} from 'ol/proj';
+import {toLonLat} from 'ol/src/proj';
 import settings from '../../os/config/settings.js';
 import * as geo from '../../os/geo/geo.js';
 import * as osMap from '../../os/map/map.js';

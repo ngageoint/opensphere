@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.file.kml.KMLTreeExporter');
 
-import {getUid} from 'ol';
-import GeometryCollection from 'ol/geom/GeometryCollection';
-import Point from 'ol/geom/Point';
+import {getUid} from 'ol/src/';
+import GeometryCollection from 'ol/src/geom/GeometryCollection';
+import Point from 'ol/src/geom/Point';
 import RecordField from '../../../os/data/recordfield.js';
 import DynamicFeature from '../../../os/feature/dynamicfeature.js';
 import * as osFeature from '../../../os/feature/feature.js';

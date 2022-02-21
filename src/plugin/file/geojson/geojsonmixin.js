@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.geojson.mixin');
 
-import GeoJSON from 'ol/format/GeoJSON';
+import GeoJSON from 'ol/src/format/GeoJSON';
 
 /**
  * If the mixin has been initialized.

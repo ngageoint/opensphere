@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLNetworkLinkNode');
 
-import {listen, unlistenByKey} from 'ol/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 import AlertEventSeverity from '../../../../os/alert/alerteventseverity.js';
 import AlertManager from '../../../../os/alert/alertmanager.js';
 import osEventsEventType from '../../../../os/events/eventtype.js';

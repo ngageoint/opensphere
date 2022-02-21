@@ -1,13 +1,13 @@
 goog.declareModuleId('plugin.file.shp.SHPParser');
 
-import {getUid} from 'ol';
-import Feature from 'ol/Feature';
-import LineString from 'ol/geom/LineString';
-import MultiLineString from 'ol/geom/MultiLineString';
-import MultiPoint from 'ol/geom/MultiPoint';
-import MultiPolygon from 'ol/geom/MultiPolygon';
-import Point from 'ol/geom/Point';
-import Polygon from 'ol/geom/Polygon';
+import {getUid} from 'ol/src/';
+import Feature from 'ol/src/Feature';
+import LineString from 'ol/src/geom/LineString';
+import MultiLineString from 'ol/src/geom/MultiLineString';
+import MultiPoint from 'ol/src/geom/MultiPoint';
+import MultiPolygon from 'ol/src/geom/MultiPolygon';
+import Point from 'ol/src/geom/Point';
+import Polygon from 'ol/src/geom/Polygon';
 import ColumnDefinition from '../../../os/data/columndefinition.js';
 import Fields from '../../../os/fields/fields.js';
 import * as text from '../../../os/file/mime/text.js';

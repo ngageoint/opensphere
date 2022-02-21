@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.track.TrackInteraction');
 
-import OlStroke from 'ol/style/Stroke';
-import OlStyle from 'ol/style/Style';
+import OlStroke from 'ol/src/style/Stroke';
+import OlStyle from 'ol/src/style/Style';
 import MeasureInteraction from '../../os/interaction/measureinteraction.js';
 import * as osObject from '../../os/object/object.js';
 import {LINE_STYLE_OPTIONS} from '../../os/style/style.js';

@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.heatmap.HeatmapLayerConfig');
 
-import OLVectorSource from 'ol/source/Vector';
+import OLVectorSource from 'ol/src/source/Vector';
 import AbstractLayerConfig from '../../os/layer/config/abstractlayerconfig.js';
 import * as heatmap from './heatmap.js';
 import Heatmap from './heatmaplayer.js';

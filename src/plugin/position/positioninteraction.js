@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.position.PositionInteraction');
 
-import {noModifierKeys, targetNotEditable} from 'ol/events/condition';
-import EventType from 'ol/events/EventType';
-import Interaction from 'ol/interaction/Interaction';
+import {noModifierKeys, targetNotEditable} from 'ol/src/events/condition';
+import EventType from 'ol/src/events/EventType';
+import Interaction from 'ol/src/interaction/Interaction';
 import I3DSupport from '../../os/i3dsupport.js';
 import osImplements from '../../os/implements.js';
 import Metrics from '../../os/metrics/metrics.js';

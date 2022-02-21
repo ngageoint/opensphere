@@ -4,9 +4,9 @@
  */
 goog.declareModuleId('plugin.file.kml.tour.parseTour');
 
-import KML from 'ol/format/KML';
-import {readDecimal, readString} from 'ol/format/xsd';
-import {makeArrayPusher, makeObjectPropertySetter, makeStructureNS, pushParseAndPop} from 'ol/xml';
+import KML from 'ol/src/format/KML';
+import {readDecimal, readString} from 'ol/src/format/xsd';
+import {makeArrayPusher, makeObjectPropertySetter, makeStructureNS, pushParseAndPop} from 'ol/src/xml';
 import FlightMode from '../../../../os/map/flightmode.js';
 import Tour from './tour.js';
 import TourControl from './tourcontrol.js';

@@ -1,16 +1,16 @@
 goog.declareModuleId('plugin.file.kml.KMLParser');
 
-import {getUid} from 'ol';
-import Feature from 'ol/Feature';
-import {readBoolean, readDecimal, readString, readPositiveInteger, readBooleanString} from 'ol/format/xsd';
-import inflate from 'ol/geom/flat/inflate';
-import GeometryLayout from 'ol/geom/GeometryLayout';
-import GeometryType from 'ol/geom/GeometryType';
-import LineString from 'ol/geom/LineString';
-import MultiLineString from 'ol/geom/MultiLineString';
-import {transformExtent} from 'ol/proj';
-import IconAnchorUnits from 'ol/style/IconAnchorUnits';
-import {isDocument, getAllTextContent, pushParseAndPop, makeObjectPropertySetter, makeStructureNS} from 'ol/xml';
+import {getUid} from 'ol/src/';
+import Feature from 'ol/src/Feature';
+import {readBoolean, readDecimal, readString, readPositiveInteger, readBooleanString} from 'ol/src/format/xsd';
+import inflate from 'ol/src/geom/flat/inflate';
+import GeometryLayout from 'ol/src/geom/GeometryLayout';
+import GeometryType from 'ol/src/geom/GeometryType';
+import LineString from 'ol/src/geom/LineString';
+import MultiLineString from 'ol/src/geom/MultiLineString';
+import {transformExtent} from 'ol/src/proj';
+import IconAnchorUnits from 'ol/src/style/IconAnchorUnits';
+import {isDocument, getAllTextContent, pushParseAndPop, makeObjectPropertySetter, makeStructureNS} from 'ol/src/xml';
 import AlertEventSeverity from '../../../os/alert/alerteventseverity.js';
 import AlertManager from '../../../os/alert/alertmanager.js';
 import * as annotation from '../../../os/annotation/annotation.js';

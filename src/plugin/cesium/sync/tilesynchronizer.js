@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.cesium.sync.TileSynchronizer');
 
-import {listen, unlistenByKey} from 'ol/events';
-import TileWMS from 'ol/source/TileWMS';
+import {listen, unlistenByKey} from 'ol/src/events';
+import TileWMS from 'ol/src/source/TileWMS';
 import * as Dispatcher from '../../../os/dispatcher.js';
 import PropertyChangeEvent from '../../../os/events/propertychangeevent.js';
 import AnimatedTile from '../../../os/layer/animatedtile.js';

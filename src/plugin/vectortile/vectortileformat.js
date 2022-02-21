@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.vectortile.format');
 
-import MVT from 'ol/format/MVT';
+import MVT from 'ol/src/format/MVT';
 
 /**
  * Supported Vector Tile formats.
