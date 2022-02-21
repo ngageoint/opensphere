@@ -168,7 +168,7 @@ export const dispose = function() {
  * @param {ol.Coordinate} coord The coordinate.
  * @this {MenuItem}
  */
-const showIfHasCoordinate = function(coord) {
+export const showIfHasCoordinate = function(coord) {
   this.visible = Boolean(coord && coord.length > 1);
 };
 

@@ -14,8 +14,7 @@ import AnyDateType from '../../../../os/ui/datetime/anydatetype.js';
 import {Controller as FeatureEditCtrl, directive as featureEditDirective} from '../../../../os/ui/featureedit.js';
 import * as list from '../../../../os/ui/list.js';
 import Module from '../../../../os/ui/module.js';
-// TODO
-// import PlacesManager from '../../../places/placesmanager.js';
+import PlacesManager from '../../../places/placesmanager.js';
 import * as kml from '../kml.js';
 import * as kmlUI from './kmlui.js';
 
@@ -126,7 +125,7 @@ export class Controller extends FeatureEditCtrl {
       this['customFoldersEnabled'] = true;
 
       var folders = [];
-      var rootFolder = null;// TODO PlacesManager.getInstance().getPlacesRoot();
+      var rootFolder = PlacesManager.getInstance().getPlacesRoot();
       structs.flattenTree(rootFolder, folders, (node) => /** @type {KMLNode} */ (node).isFolder());
       this['folderOptions'] = folders;
 
