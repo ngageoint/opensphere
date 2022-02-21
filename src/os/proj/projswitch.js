@@ -27,7 +27,7 @@ export const checkLayer = function(layer) {
     var p1 = source.getProjection();
     var p2 = osMap.PROJECTION;
 
-    if (layer instanceof Tile && p1 && p2 && !olProj.equivalent(p1, p2)) {
+    if (layer instanceof Tile && p1 && p2 && !equivalent(p1, p2)) {
       if (isRasterReprojectionEnabled()) {
         ReprojectionWarning.getInstance().addTitle(/** @type {ILayer} */ (layer).getTitle());
       } else {

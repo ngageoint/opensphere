@@ -42,7 +42,7 @@ import CesiumPlugin from '../plugin/cesium/cesiumplugin.js';
 // import VectorTilePlugin from '../plugin/vectortile/vectortileplugin.js';
 // import VectorToolsPlugin from '../plugin/vectortools/vectortoolsplugin.js';
 // import WeatherPlugin from '../plugin/weather/weatherplugin.js';
-// import XYZPlugin from '../plugin/xyz/xyzplugin.js';
+import XYZPlugin from '../plugin/xyz/xyzplugin.js';
 import AlertEventSeverity from './alert/alerteventseverity.js';
 import AlertManager from './alert/alertmanager.js';
 import {initAuth} from './auth.js';
@@ -512,7 +512,7 @@ export default class Controller extends AbstractMainCtrl {
     // pluginManager.addPlugin(CapturePlugin.getInstance());
     // pluginManager.addPlugin(ConfigPlugin.getInstance());
     // pluginManager.addPlugin(new OGCPlugin());
-    // pluginManager.addPlugin(new XYZPlugin());
+    pluginManager.addPlugin(new XYZPlugin());
     pluginManager.addPlugin(new BaseMapPlugin());
     // pluginManager.addPlugin(new GooglePlacesPlugin());
     // pluginManager.addPlugin(new PeliasGeocoderPlugin());
