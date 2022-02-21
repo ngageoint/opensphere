@@ -1,6 +1,5 @@
 goog.declareModuleId('plugin.capture.MapOverviewRenderer');
 
-import has from 'ol/has';
 import {getMapCanvas, getPixelRatio, isTainted} from '../../os/capture/capture.js';
 import Settings from '../../os/config/settings.js';
 import CanvasRenderer from '../../os/ui/capture/canvasrenderer.js';
@@ -74,7 +73,7 @@ export default class MapOverviewRenderer extends CanvasRenderer {
           ctx.strokeStyle = '#f00';
           ctx.lineWidth = 2 * pixelRatio;
 
-          if (has.CANVAS_LINE_DASH) {
+          if (ctx.setLineDash) {
             ctx.setLineDash([2 * pixelRatio, 2 * pixelRatio]);
           }
 

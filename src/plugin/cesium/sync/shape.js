@@ -2,7 +2,6 @@ goog.declareModuleId('plugin.cesium.sync.shape');
 
 import {asColorLike} from 'ol/colorlike';
 import {createCanvasContext2D} from 'ol/dom';
-import has from 'ol/has';
 import {defaultStrokeStyle, defaultLineWidth, defaultLineJoin, defaultLineCap, defaultMiterLimit} from 'ol/render/canvas';
 import OLRegularShape from 'ol/style/RegularShape';
 
@@ -81,7 +80,7 @@ const getRenderOptions = (style) => {
     }
     lineDash = stroke.getLineDash();
     lineDashOffset = stroke.getLineDashOffset();
-    if (!has.CANVAS_LINE_DASH) {
+    if (!stroke.context.setLineDash) {
       lineDash = null;
       lineDashOffset = 0;
     }
