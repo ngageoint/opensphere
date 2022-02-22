@@ -24,7 +24,7 @@ export default class AreaHover extends Select {
    */
   constructor(opt_options) {
     super(opt_options);
-    this.handleEvent = AreaHover.handleEvent_;
+    this.handleEvent = this.handleEvent_;
 
     var options = opt_options || {};
     this.condition = options.condition || pointerMove;
@@ -36,7 +36,7 @@ export default class AreaHover extends Select {
    * @this AreaHover
    * @private
    */
-  static handleEvent_(event) {
+  handleEvent_(event) {
     if (!this.condition(event)) {
       return true;
     }

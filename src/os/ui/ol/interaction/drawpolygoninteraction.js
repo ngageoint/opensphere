@@ -37,12 +37,12 @@ export default class DrawPolygon extends AbstractDraw {
    * Constructor.
    */
   constructor() {
-    super({
-      handleEvent: DrawPolygon.handleEvent_,
-      handleDownEvent: DrawPolygon.handleDownEvent_,
-      handleMoveEvent: DrawPolygon.handleMoveEvent_,
-      handleUpEvent: DrawPolygon.handleUpEvent_
-    });
+    super({});
+
+    this.handleEvent = this.handleEvent_;
+    this.handleDownEvent = this.handleDownEvent_;
+    this.handleMoveEvent = this.handleMoveEvent_;
+    this.handleUpEvent = this.handleUpEvent_;
 
     this.type = DrawPolygon.TYPE;
 
@@ -363,7 +363,7 @@ export default class DrawPolygon extends AbstractDraw {
    * @this DrawPolygon
    * @private
    */
-  static handleMoveEvent_(mapBrowserEvent) {
+  handleMoveEvent_(mapBrowserEvent) {
     if (this.drawing) {
       this.update(mapBrowserEvent);
     }
@@ -376,7 +376,7 @@ export default class DrawPolygon extends AbstractDraw {
    * @private
    * @suppress {accessControls}
    */
-  static handleEvent_(mapBrowserEvent) {
+  handleEvent_(mapBrowserEvent) {
     if (!(mapBrowserEvent instanceof MapBrowserEvent)) {
       return true;
     }
@@ -384,11 +384,11 @@ export default class DrawPolygon extends AbstractDraw {
     this.updateTrackedPointers_(mapBrowserEvent);
 
     if (mapBrowserEvent.type == MapBrowserEventType.POINTERUP) {
-      DrawPolygon.handleUpEvent_(mapBrowserEvent);
+      this.handleUpEvent_(mapBrowserEvent);
     } else if (mapBrowserEvent.type == MapBrowserEventType.POINTERDOWN) {
-      DrawPolygon.handleDownEvent_(mapBrowserEvent);
+      this.handleDownEvent_(mapBrowserEvent);
     } else if (mapBrowserEvent.type == MapBrowserEventType.POINTERMOVE) {
-      DrawPolygon.handleMoveEvent_(mapBrowserEvent);
+      this.handleMoveEvent_(mapBrowserEvent);
     }
 
     return true;
@@ -400,7 +400,7 @@ export default class DrawPolygon extends AbstractDraw {
    * @return {boolean}
    * @private
    */
-  static handleUpEvent_(mapBrowserEvent) {
+  handleUpEvent_(mapBrowserEvent) {
     var px = mapBrowserEvent.pixel;
     if (this.downPixel_ && Math.abs(px[0] - this.downPixel_[0]) < 3 && Math.abs(px[1] - this.downPixel_[1]) < 3) {
       // If we saved the down pixel and the up event is within our tolerance, handle the event. If outside the
@@ -428,7 +428,7 @@ export default class DrawPolygon extends AbstractDraw {
    * @return {boolean}
    * @private
    */
-  static handleDownEvent_(mapBrowserEvent) {
+  handleDownEvent_(mapBrowserEvent) {
     // Only handle the event if there are no other draw controls active
     if (!this.getOtherDrawing()) {
       var browserEvent = new BrowserEvent(mapBrowserEvent.originalEvent);

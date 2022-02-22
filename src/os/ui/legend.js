@@ -143,6 +143,8 @@ export class Controller extends SourceManager {
      */
     this.layerListeners_ = {};
 
+    this.mapChangeSizeListenKey = null;
+
     // register the legend as a window so it can be toggled by os.ui.menu.windows.toggleWindow
     osWindow.registerWindow('legend', this.element[0]);
 
@@ -173,7 +175,7 @@ export class Controller extends SourceManager {
 
     var olMap = map.getMap();
     if (olMap) {
-      events.unlisten(olMap, 'change:size', this.onUpdateDelay, this);
+      unlistenByKey(this.mapChangeSizeListenKey);
     }
 
     this.canvas_ = null;
@@ -208,7 +210,7 @@ export class Controller extends SourceManager {
 
     var olMap = map.getMap();
     if (olMap) {
-      listen(olMap, 'change:size', this.onUpdateDelay, this);
+      this.mapChangeSizeListenKey = listen(olMap, 'change:size', this.onUpdateDelay, this);
     }
 
     // positioning off the screen will auto correct to the bottom/right

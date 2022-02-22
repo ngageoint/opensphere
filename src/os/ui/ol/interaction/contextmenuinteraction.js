@@ -27,9 +27,9 @@ export default class ContextMenu extends Interaction {
    */
   constructor(opt_options) {
     var options = opt_options || {};
-    super({
-      handleEvent: ContextMenu.handleEvent
-    });
+    super({});
+
+    this.handleEvent = this.handleEvent_;
 
     /**
      * The required map event condition to handle the event.
@@ -70,7 +70,7 @@ export default class ContextMenu extends Interaction {
    * @return {boolean}
    * @this ContextMenu
    */
-  static handleEvent(event) {
+  handleEvent_(event) {
     // save the right-down info...
     if (event.type === MapBrowserEventType.POINTERDOWN) {
       this.downTime = Date.now();
