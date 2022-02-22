@@ -171,7 +171,7 @@ export default class TileGridTilingScheme {
    * @inheritDoc
    */
   tileXYToRectangle(x, y, level, opt_result) {
-    var extent = this.tilegrid_.getTileCoordExtent([level, x, -y - 1]);
+    var extent = this.tilegrid_.getTileCoordExtent([level, x, y]);
     extent = transformExtent(extent, this.projection_, osProj.EPSG4326);
 
     var result = opt_result || new Cesium.Rectangle();
