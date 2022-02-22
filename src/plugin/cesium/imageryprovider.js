@@ -29,7 +29,7 @@ export default class ImageryProvider extends OLImageryProvider {
    * @param {Projection=} opt_fallbackProj Projection to assume if the projection of the source is not defined.
    */
   constructor(source, layer, opt_fallbackProj) {
-    super(/** @type {!TileImageSource} */ (source), opt_fallbackProj);
+    super(layer, source, opt_fallbackProj);
 
     /**
      * @type {boolean}
