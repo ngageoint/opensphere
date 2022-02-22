@@ -22,7 +22,9 @@ export const listenEach = function(target, types, listener, opt_this, opt_once) 
 };
 
 export const unlistenEach = function(keys) {
-  for (var i = 0; i < keys.length; i++) {
-    unlistenByKey(keys[i]);
+  if (keys) {
+    for (var i = 0; i < keys.length; i++) {
+      unlistenByKey(keys[i]);
+    }
   }
 };

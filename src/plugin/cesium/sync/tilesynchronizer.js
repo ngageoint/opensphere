@@ -269,7 +269,7 @@ export default class TileSynchronizer extends CesiumSynchronizer {
    * @private
    */
   disposeSingle_() {
-    unlistenByKey(layerPropertyChangeListenKey);
+    unlistenByKey(this.layerPropertyChangeListenKey);
 
     if (this.activeLayer_) {
       // clean up listeners
