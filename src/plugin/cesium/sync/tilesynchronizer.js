@@ -256,7 +256,7 @@ export default class TileSynchronizer extends CesiumSynchronizer {
       this.cesiumLayers_.add(this.activeLayer_, this.lastStart_ > -1 ? this.lastStart_ : undefined);
 
       // register listeners to update the layer
-      this.styleChangeKeys = listenEach(this.layer, STYLE_KEYS, this.onStyleChange_, this);
+      this.styleChangeKeys = events.listenEach(this.layer, STYLE_KEYS, this.onStyleChange_, this);
       this.zoomChangeResolutionKeys = events.listenEach(this.layer, RESOLUTION_KEYS, this.onZoomChange_, this);
       this.extentListenKey = listen(this.layer, 'change:extent', this.synchronize, this);
       this.layerChangeListenKey = listen(this.layer, 'change', this.onChange_, this);
