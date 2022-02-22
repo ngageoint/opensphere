@@ -18,9 +18,9 @@ export default class FocusInteraction extends Interaction {
    * @param {olx.interaction.InteractionOptions=} opt_options Options.
    */
   constructor(opt_options) {
-    super({
-      handleEvent: FocusInteraction.handleEvent
-    });
+    super({});
+
+    this.handleEvent = this.handleEvent_;
 
     this.setActive(true);
     this.focused_ = false;
@@ -30,7 +30,7 @@ export default class FocusInteraction extends Interaction {
    * @param {MapBrowserEvent} mapBrowserEvent
    * @return {boolean} `false` to stop event propagation
    */
-  static handleEvent(mapBrowserEvent) {
+  static handleEvent_(mapBrowserEvent) {
     const map = /** @type {OLMap} */ (getAreaManager().getMap());
 
     if (mapBrowserEvent.pointerEvent && mapBrowserEvent.pointerEvent.buttons) {
