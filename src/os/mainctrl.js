@@ -36,7 +36,7 @@ import SHPPlugin from '../plugin/file/shp/shpplugin.js';
 // import PeliasGeocoderPlugin from '../plugin/pelias/geocoder/plugin.js';
 // import PlacesPlugin from '../plugin/places/placesplugin.js';
 // import PositionPlugin from '../plugin/position/positionplugin.js';
-// import PersistPlugin from '../plugin/storage/persistplugin.js';
+import PersistPlugin from '../plugin/storage/persistplugin.js';
 // import SunCalcPlugin from '../plugin/suncalc/suncalcplugin.js';
 // import TrackPlugin from '../plugin/track/trackplugin.js';
 // import VectorTilePlugin from '../plugin/vectortile/vectortileplugin.js';
@@ -535,7 +535,7 @@ export default class Controller extends AbstractMainCtrl {
     // pluginManager.addPlugin(SunCalcPlugin.getInstance());
     // pluginManager.addPlugin(TrackPlugin.getInstance());
     // pluginManager.addPlugin(OpenpagePlugin.getInstance());
-    // pluginManager.addPlugin(new PersistPlugin());
+    pluginManager.addPlugin(new PersistPlugin());
     // pluginManager.addPlugin(VectorTilePlugin.getInstance());
   }
 
