@@ -1,9 +1,11 @@
 var fs = require('fs');
 const fse = require('fs-extra');
 
+let nodeModulesDir = '../../../../../node_modules';
 let srcDir = `../../node_modules/google-closure-library/`;
 if (!fs.existsSync(srcDir)) {
   srcDir = './node_modules/google-closure-library/';
+  nodeModulesDir = '../../../node_modules';
 }
 const destDir = `./dist/opensphere/google-closure-library/`;
 
@@ -32,9 +34,9 @@ let definesContent = '// This file overrides goog.define() calls for <project>.*
 '  "os.ROOT": "REPLACE",\n' +
 '  "os.SETTINGS": "./config/settings.json",\n' +
 '  "goog.debug.LOGGING_ENABLED": false,\n' +
-'  "os.file.ZIP_PATH": "../../node_modules/zip-js/WebContent",\n' +
-'  "plugin.cesium.LIBRARY_BASE_PATH": "../../node_modules/cesium/Build/CesiumUnminified",\n' +
-'  "JSCHARDET_BASE_PATH": "../../node_modules/jschardet/dist"\n' +
+'  "os.file.ZIP_PATH": "NODE_MODULES/zip-js/WebContent",\n' +
+'  "plugin.cesium.LIBRARY_BASE_PATH": "NODE_MODULES/cesium/Build/CesiumUnminified",\n' +
+'  "JSCHARDET_BASE_PATH": "NODE_MODULES/jschardet/dist"\n' +
 '};';
 
 const distDir = './dist/opensphere/';
@@ -46,6 +48,9 @@ fs.readdirSync(distDir).forEach((file) => {
 });
 
 definesContent = definesContent.replace('REPLACE', buildOutDir);
+definesContent = definesContent.replace('NODE_MODULES', nodeModulesDir);
+definesContent = definesContent.replace('NODE_MODULES', nodeModulesDir);
+definesContent = definesContent.replace('NODE_MODULES', nodeModulesDir);
 
 fs.writeFile(definesFile, definesContent, 'utf8', function(err) {
   if (err) return console.log(err);
