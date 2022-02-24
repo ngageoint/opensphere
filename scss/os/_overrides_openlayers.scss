@@ -180,15 +180,16 @@
   }
 }
 
+// Attribution
 .ol-attribution,
 .ol-attribution.ol-uncollapsible {
   bottom: .25rem;
+  display: inline;
   height: unset;
   left: .25rem;
   right: auto;
   text-align: left;
   top: auto;
-  display: inline;
 
   li:nth-child(n+2):not(:last-child):after {
     content: ', ';
@@ -200,26 +201,27 @@
   }
 
   ul {
-    margin: 0;
-    padding: 0 .5em;
+    color: #000;
     font-size: .7rem;
     line-height: 1.375em;
-    color: #000;
+    margin: 0;
+    padding: 0 .5em;
     text-shadow: 0 0 2px #fff;
   }
 
   li {
     display: inline;
-    list-style: none;
     line-height: inherit;
+    list-style: none;
   }
 
   button {
     display: inline-block;
   }
 }
+
 .ol-attribution:not(.ol-collapsed) {
-  background: rgba(255,255,255,0.8);
+  background: rgba(255, 255, 255, .8);
 }
 
 // Mouse Position
