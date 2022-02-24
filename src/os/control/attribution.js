@@ -1,6 +1,6 @@
 goog.declareModuleId('os.control.Attribution');
 
-import * as olArray from 'ol/src/array';
+import {equals} from 'ol/src/array';
 import OLAttribution from 'ol/src/control/Attribution';
 
 const dom = goog.require('goog.dom');
@@ -22,7 +22,7 @@ export default class Attribution extends OLAttribution {
    * @inheritDoc
    * @suppress {accessControls}
    */
-  getSourceAttributions_(frameState) {
+  collectSourceAttributions_(frameState) {
     /**
      * Used to determine if an attribution already exists.
      * @type {Object<string, boolean>}
@@ -88,8 +88,8 @@ export default class Attribution extends OLAttribution {
       return;
     }
 
-    var attributions = this.getSourceAttributions_(frameState);
-    if (olArray.equals(attributions, this.renderedAttributions_)) {
+    var attributions = this.collectSourceAttributions_(frameState);
+    if (equals(attributions, this.renderedAttributions_)) {
       return;
     }
 
@@ -119,6 +119,8 @@ export default class Attribution extends OLAttribution {
     }
 
     this.renderedAttributions_ = attributions;
+
+    dom.removeNode(this.toggleButton_);
   }
 }
 
@@ -144,3 +146,9 @@ const visibleAtResolution = (layerState, resolution) => {
  * @type {boolean}
  */
 const checkVisibleAtResolution = true;
+
+/**
+ * Disable this behavior from OpenLayers.
+ * @suppress {accessControls}
+ */
+OLAttribution.prototype.insertLogos_ = () => {};

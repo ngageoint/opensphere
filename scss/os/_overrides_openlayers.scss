@@ -180,7 +180,6 @@
   }
 }
 
-// Attribution
 .ol-attribution,
 .ol-attribution.ol-uncollapsible {
   bottom: .25rem;
@@ -189,6 +188,7 @@
   right: auto;
   text-align: left;
   top: auto;
+  display: inline;
 
   li:nth-child(n+2):not(:last-child):after {
     content: ', ';
@@ -199,9 +199,27 @@
     color: rgba($body-color, .9);
   }
 
-  a {
-    color: rgba($link-color, .8);
+  ul {
+    margin: 0;
+    padding: 0 .5em;
+    font-size: .7rem;
+    line-height: 1.375em;
+    color: #000;
+    text-shadow: 0 0 2px #fff;
   }
+
+  li {
+    display: inline;
+    list-style: none;
+    line-height: inherit;
+  }
+
+  button {
+    display: inline-block;
+  }
+}
+.ol-attribution:not(.ol-collapsed) {
+  background: rgba(255,255,255,0.8);
 }
 
 // Mouse Position
