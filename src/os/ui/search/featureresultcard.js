@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.search.FeatureResultCardCtrl');
 
-import {listen} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 
 import EventType from '../../action/eventtype.js';
 import PropertyChangeEvent from '../../events/propertychangeevent.js';
@@ -99,7 +99,7 @@ export default class Controller extends Disposable {
 
     this.addFeatureToLayer();
 
-    listen(this.layer.getSource(), GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+    this.listenKey = listen(this.layer.getSource(), GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
     $scope.$on('$destroy', this.dispose.bind(this));
   }
 
@@ -111,7 +111,7 @@ export default class Controller extends Disposable {
 
     var mm = MapContainer.getInstance();
 
-    unlisten(this.layer.getSource(), GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+    unlistenByKey(this.listenKey);
 
     this.removeFeatureFromLayer();
     this.feature = null;

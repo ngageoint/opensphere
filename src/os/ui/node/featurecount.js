@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.node.FeatureCountUI');
 
-import {listen} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 
 import VectorLayer from '../../layer/vector.js';
 import PropertyChange from '../../source/propertychange.js';
@@ -77,7 +77,7 @@ export class Controller {
         var src = layer.getSource();
         if (src && src instanceof VectorSource) {
           this.source_ = /** @type {VectorSource} */ (src);
-          listen(this.source_, GoogEventType.PROPERTYCHANGE, this.onPropertyChange_, this);
+          this.listenKey = listen(this.source_, GoogEventType.PROPERTYCHANGE, this.onPropertyChange_, this);
         }
       }
     }
@@ -93,7 +93,7 @@ export class Controller {
    */
   onDestroy_() {
     if (this.source_) {
-      unlisten(this.source_, GoogEventType.PROPERTYCHANGE, this.onPropertyChange_, this);
+      unlistenByKey(this.listenKey);
     }
 
     this.element_ = null;
