@@ -1,6 +1,6 @@
 goog.declareModuleId('os.webgl.AbstractRootSynchronizer');
 
-import {listen} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 import Layer from 'ol/src/layer/Layer';
 import ZOrderEventType from '../data/zordereventtype.js';
 import * as dispatcher from '../dispatcher.js';
@@ -80,7 +80,7 @@ export default class AbstractRootSynchronizer extends Disposable {
   disposeInternal() {
     super.disposeInternal();
 
-    this.listenKeys_.forEach(events.unlistenByKey);
+    this.listenKeys_.forEach(unlistenByKey);
     this.listenKeys_.length = 0;
 
     dispose(this.updateZDelay_);

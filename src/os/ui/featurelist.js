@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.FeatureListUI');
 
-import {listen} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 
 import './slider.js';
 import './sourcegrid.js';
@@ -121,7 +121,7 @@ export class Controller {
     this['uid'] = sanitizeId('featureList-' + this.source_.getId());
 
     assert(this.source_ != null, 'Feature list source must be defined');
-    listen(this.source_, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+    this.listenKey = listen(this.source_, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
     $scope.$watch('ctrl.rowStep', this.updateRowHeight_.bind(this));
 
     var map = getMapContainer();
@@ -139,7 +139,7 @@ export class Controller {
     map.unlisten(LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
 
     if (this.source_) {
-      events.unlisten(this.source_, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+      unlistenByKey(this.listenKey);
       this.source_ = null;
     }
 

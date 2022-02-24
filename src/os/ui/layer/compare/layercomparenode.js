@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.layer.compare.LayerCompareNode');
 
-import {listen} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 
 import {instanceOf} from '../../../classregistry.js';
 import {toRgbArray} from '../../../color.js';
@@ -50,6 +50,8 @@ export default class LayerCompareNode extends SlickTreeNode {
      * @private
      */
     this.layer_ = null;
+
+    this.listenKey = null;
   }
 
   /**
@@ -111,14 +113,13 @@ export default class LayerCompareNode extends SlickTreeNode {
   setLayer(value) {
     if (value !== this.layer_) {
       if (this.layer_) {
-        events.unlisten(/** @type {events.EventTarget} */ (this.layer_), GoogEventType.PROPERTYCHANGE,
-            this.onPropertyChange, this);
+        unlistenByKey(this.listenKey);
       }
 
       this.layer_ = value;
 
       if (value) {
-        listen(/** @type {events.EventTarget} */ (value), GoogEventType.PROPERTYCHANGE,
+        this.listenKey = listen(/** @type {events.EventTarget} */ (value), GoogEventType.PROPERTYCHANGE,
             this.onPropertyChange, this);
         this.setLabel(value.getTitle());
         this.setToolTip(value.getTitle());

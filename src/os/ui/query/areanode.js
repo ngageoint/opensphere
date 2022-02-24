@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.query.AreaNode');
 
-import {listen} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 
 import {getAreaManager} from '../../query/queryinstance.js';
 import TriState from '../../structs/tristate.js';
@@ -35,6 +35,8 @@ export default class AreaNode extends SlickTreeNode {
     if (opt_area) {
       this.setArea(opt_area);
     }
+
+    this.listenKey = null;
   }
 
   /**
@@ -59,14 +61,14 @@ export default class AreaNode extends SlickTreeNode {
    */
   setArea(area) {
     if (this.area) {
-      unlisten(this.area, 'toggle', this.onAreaToggled, this);
+      unlistenByKey(this.listenKey);
     }
 
     this.area = area;
     this.updateFromArea();
 
     if (this.area) {
-      listen(this.area, 'toggle', this.onAreaToggled, this);
+      this.listenKey = listen(this.area, 'toggle', this.onAreaToggled, this);
     }
   }
 
