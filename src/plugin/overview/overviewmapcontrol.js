@@ -21,7 +21,7 @@ export default class OverviewMap extends OLOverviewMap {
    */
   constructor(opt_opts) {
     super(opt_opts);
-    this.setMap(MapContainer.getInstance().getMap());
+    // this.setMap(MapContainer.getInstance().getMap());
     this.updateView_();
 
     /* Interactive map in 3D mode */
