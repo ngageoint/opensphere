@@ -189,11 +189,16 @@
   right: auto;
   text-align: left;
   top: auto;
+  display: inline;
+  border-radius: 4px 0 0;
+  line-height: 1em;
+  background-color: white;
 
-  li:nth-child(n+2):not(:last-child):after {
+  li:nth-child(n+1):not(:last-child):after {
     content: ', ';
   }
 
+  button:hover,
   &:hover {
     background-color: rgba($white, .6);
     color: rgba($body-color, .9);
@@ -201,6 +206,33 @@
 
   a {
     color: rgba($link-color, .8);
+  }
+
+  ul {
+    color: #000;
+    margin: 0;
+    padding: 0 .5em;
+    font-size: .7rem;
+    line-height: 1.375em;
+    display: inline-block;
+  }
+
+  li {
+    display: inline;
+    list-style: none;
+    line-height: inherit;
+  }
+
+  button,
+  button:disabled,
+  button[disabled] {
+    background-color: white;
+    color: #000;
+    font-size: .7rem;
+    flex-shrink: 0;
+    display: inline-block;
+    border: none;
+    outline: none;
   }
 }
 
