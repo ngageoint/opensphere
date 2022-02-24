@@ -62,9 +62,7 @@ export const getControls = function() {
   controls.push(alerts);
 
   var attributions = new Attribution(/** @type {olx.control.AttributionOptions} */ ({
-    collapsible: false,
-    label: 'Sources:',
-    collapseLabel: null
+    collapsible: false
   }));
 
   controls.push(attributions);
