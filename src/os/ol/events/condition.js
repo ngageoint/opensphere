@@ -14,5 +14,5 @@ import MapBrowserEventType from 'ol/src/MapBrowserEventType';
 export const rightClick = function(mapBrowserEvent) {
   return !!mapBrowserEvent && (mapBrowserEvent.type === MapBrowserEventType.POINTERUP ||
       mapBrowserEvent.type === MapBrowserEventType.POINTERDOWN) &&
-      !!mapBrowserEvent.pointerEvent && mapBrowserEvent.pointerEvent.button === 2;
+      mapBrowserEvent.originalEvent instanceof PointerEvent && mapBrowserEvent.originalEvent.button === 2;
 };
