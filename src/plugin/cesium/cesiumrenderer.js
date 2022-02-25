@@ -188,6 +188,7 @@ export default class CesiumRenderer extends AbstractWebGLRenderer {
               time: getJulianDate,
               target: globeContainer.id
             });
+            this.olCesium_.getCesiumScene()._creditContainer.style.display = 'none';
 
             classlist.add(this.olCesium_.canvas_, WEBGL_CANVAS_CLASS);
 
