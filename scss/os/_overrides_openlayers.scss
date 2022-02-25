@@ -177,6 +177,7 @@
     font-size: 100%;
     height: .5rem;
     line-height: 0;
+    transition: initial;
   }
 }
 
@@ -200,8 +201,13 @@
     color: rgba($body-color, .9);
   }
 
+  a {
+    color: rgba($link-color, .8);
+  }
+
   ul {
     color: #000;
+    display: inline-block;
     font-size: .7rem;
     line-height: 1.375em;
     margin: 0;
