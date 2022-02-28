@@ -169,16 +169,18 @@
   right: auto;
   top: auto;
   z-index: $u-zindex-base + 1;
+}
 
-  .ol-scale-line-inner {
-    border-color: rgba($body-color, .8);
-    color: rgba($body-color, .8);
-    display: inline-block;
-    font-size: 100%;
-    height: .5rem;
-    line-height: 0;
-    transition: initial;
-  }
+.ol-scale-line-inner {
+  border: 1px solid rgba($body-color, .8);
+  border-top: none;
+  color: rgba($body-color, .8);
+  display: inline-block;
+  font-size: 100%;
+  height: .5rem;
+  line-height: 0;
+  text-align: center;
+  transition: initial;
 }
 
 // Attribution
