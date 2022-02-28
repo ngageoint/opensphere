@@ -33,7 +33,7 @@ let definesContent = '// This file overrides goog.define() calls for <project>.*
 '  "os.APP_ROOT": "./",\n' +
 '  "os.ROOT": "REPLACE",\n' +
 '  "os.SETTINGS": "./config/settings.json",\n' +
-'  "goog.debug.LOGGING_ENABLED": false,\n' +
+'  "goog.debug.LOGGING_ENABLED": true,\n' +
 '  "os.file.ZIP_PATH": "NODE_MODULES/zip-js/WebContent",\n' +
 '  "plugin.cesium.LIBRARY_BASE_PATH": "NODE_MODULES/cesium/Build/CesiumUnminified",\n' +
 '  "JSCHARDET_BASE_PATH": "NODE_MODULES/jschardet/dist"\n' +
