@@ -1,6 +1,4 @@
 goog.require('goog.math.Range');
-goog.require('ol.Feature');
-goog.require('ol.layer.Vector');
 goog.require('os.MapContainer');
 goog.require('os.data.BaseDescriptor');
 goog.require('os.data.DataManager');
@@ -18,10 +16,11 @@ goog.require('os.time.TimelineController');
 goog.require('os.ui.ogc.OGCDescriptor');
 goog.require('plugin.ogc.OGCLayerDescriptor');
 
+import Feature from 'ol/src/Feature';
+import OLVectorLayer from 'ol/src/layer/Vector';
+
 describe('os.source', function() {
   const Range = goog.module.get('goog.math.Range');
-  const Feature = goog.module.get('ol.Feature');
-  const OLVectorLayer = goog.module.get('ol.layer.Vector');
   const {default: MapContainer} = goog.module.get('os.MapContainer');
   const {default: BaseDescriptor} = goog.module.get('os.data.BaseDescriptor');
   const {default: DataManager} = goog.module.get('os.data.DataManager');

@@ -1,21 +1,15 @@
-goog.require('ol.Feature');
-goog.require('ol.geom.LineString');
-goog.require('ol.geom.MultiLineString');
-goog.require('ol.geom.MultiPolygon');
-goog.require('ol.geom.Point');
-goog.require('ol.geom.Polygon');
 goog.require('os.alert.AlertManager');
 goog.require('os.query.AreaManager');
 goog.require('os.query.BaseAreaManager');
 
+import Feature from 'ol/src/Feature';
+import LineString from 'ol/src/geom/LineString';
+import MultiLineString from 'ol/src/geom/MultiLineString';
+import MultiPolygon from 'ol/src/geom/MultiPolygon';
+import Point from 'ol/src/geom/Point';
+import Polygon from 'ol/src/geom/Polygon';
 
 describe('os.query.BaseAreaManager', function() {
-  const Feature = goog.module.get('ol.Feature');
-  const LineString = goog.module.get('ol.geom.LineString');
-  const MultiLineString = goog.module.get('ol.geom.MultiLineString');
-  const MultiPolygon = goog.module.get('ol.geom.MultiPolygon');
-  const Point = goog.module.get('ol.geom.Point');
-  const Polygon = goog.module.get('ol.geom.Polygon');
   const {default: AlertManager} = goog.module.get('os.alert.AlertManager');
   const {default: AreaManager} = goog.module.get('os.query.AreaManager');
 

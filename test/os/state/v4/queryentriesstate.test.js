@@ -1,8 +1,6 @@
 goog.require('goog.dom');
 goog.require('goog.dom.xml');
 goog.require('goog.string');
-goog.require('ol.Feature');
-goog.require('ol.geom.Polygon');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.query.QueryManager');
 goog.require('os.state.BaseStateManager');

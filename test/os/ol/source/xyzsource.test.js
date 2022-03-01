@@ -1,13 +1,10 @@
 goog.require('os.ol.source.XYZ');
 
-import common from 'ol/src/proj';
-
 describe('os.ol.source.XYZ', function() {
   const {default: XYZ} = goog.module.get('os.ol.source.XYZ');
 
   it('should apply the offset to the zoom', function() {
     var url = 'http://example.com/layer/{z}/{y}/{x}';
-    common.add();
 
     var src = new XYZ({
       'tileSize': 512,

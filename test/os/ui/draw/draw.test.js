@@ -1,22 +1,20 @@
-goog.require('ol.Feature');
-goog.require('ol.geom.Polygon');
-goog.require('ol.proj');
 goog.require('os.map');
 goog.require('os.proj');
 goog.require('os.style.area');
 goog.require('os.ui.draw');
 
+import Feature from 'ol/src/Feature';
+import {fromExtent} from 'ol/src/geom/Polygon';
+import {transformExtent} from 'ol/src/proj';
+
 describe('os.ui.draw', function() {
-  const Feature = goog.module.get('ol.Feature');
-  const Polygon = goog.module.get('ol.geom.Polygon');
-  const {transformExtent} = goog.module.get('ol.proj');
   const osMap = goog.module.get('os.map');
   const {EPSG4326} = goog.module.get('os.proj');
   const {GRID_STYLE} = goog.module.get('os.style.area');
   const {getGridFromFeature} = goog.module.get('os.ui.draw');
 
   // reusable geometry / feature for testing
-  var g = Polygon.fromExtent(transformExtent([0.05, 0.05, 0.15, 0.15], EPSG4326, osMap.PROJECTION));
+  var g = fromExtent(transformExtent([0.05, 0.05, 0.15, 0.15], EPSG4326, osMap.PROJECTION));
   var feature = new Feature({geometry: g});
 
   it('should create a "detail x detail" grid around a feature, snapped to the world Lat/Lon coodinates', function() {

@@ -1,7 +1,4 @@
 goog.require('goog.events.EventType');
-goog.require('ol.Feature');
-goog.require('ol.geom.GeometryLayout');
-goog.require('ol.geom.Polygon');
 goog.require('os.query');
 goog.require('os.query.AreaManager');
 goog.require('os.query.BaseAreaManager');
@@ -9,12 +6,12 @@ goog.require('os.query.BaseQueryManager');
 goog.require('os.query.QueryManager');
 goog.require('os.ui.query.MockHandler');
 
+import Feature from 'ol/src/Feature';
+import GeometryLayout from 'ol/src/geom/GeometryLayout';
+import Polygon from 'ol/src/geom/Polygon';
 
 describe('os.query.BaseQueryManager', function() {
   const GoogEventType = goog.module.get('goog.events.EventType');
-  const Feature = goog.module.get('ol.Feature');
-  const GeometryLayout = goog.module.get('ol.geom.GeometryLayout');
-  const Polygon = goog.module.get('ol.geom.Polygon');
   const osQuery = goog.module.get('os.query');
   const {default: AreaManager} = goog.module.get('os.query.AreaManager');
   const {default: BaseAreaManager} = goog.module.get('os.query.BaseAreaManager');

@@ -1,12 +1,12 @@
 goog.require('goog.events');
 goog.require('goog.events.EventType');
-goog.require('ol.array');
 goog.require('os.structs.TreeNode');
+
+import {includes} from 'ol/src/array';
 
 describe('os.structs.TreeNode', function() {
   const googEvents = goog.module.get('goog.events');
   const GoogEventType = goog.module.get('goog.events.EventType');
-  const olArray = goog.module.get('ol.array');
   const {default: TreeNode} = goog.module.get('os.structs.TreeNode');
 
   it('should default everything to null except ID', function() {
@@ -26,9 +26,9 @@ describe('os.structs.TreeNode', function() {
 
     var rootChildren = root.getChildren();
     expect(rootChildren.length).toBe(3);
-    expect(olArray.includes(rootChildren, first)).toBe(true);
-    expect(olArray.includes(rootChildren, second)).toBe(true);
-    expect(olArray.includes(rootChildren, third)).toBe(true);
+    expect(includes(rootChildren, first)).toBe(true);
+    expect(includes(rootChildren, second)).toBe(true);
+    expect(includes(rootChildren, third)).toBe(true);
     expect(googEvents.hasListener(first, GoogEventType.PROPERTYCHANGE, false)).toBe(true);
     expect(googEvents.hasListener(second, GoogEventType.PROPERTYCHANGE, false)).toBe(true);
     expect(googEvents.hasListener(third, GoogEventType.PROPERTYCHANGE, false)).toBe(true);

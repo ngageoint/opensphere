@@ -1,11 +1,10 @@
 goog.require('goog.dom.xml');
-goog.require('ol.geom.Polygon');
 goog.require('os.ui.query.AbstractQueryReader');
 
+import Polygon from 'ol/src/geom/Polygon';
 
 describe('os.ui.query.AbstractQueryReader', function() {
   const xml = goog.module.get('goog.dom.xml');
-  const Polygon = goog.module.get('ol.geom.Polygon');
   const {default: AbstractQueryReader} = goog.module.get('os.ui.query.AbstractQueryReader');
 
   var bboxXml = '<gml:Envelope xmlns:gml="http://www.opengis.net/gml" srsName="CRS:84">' +

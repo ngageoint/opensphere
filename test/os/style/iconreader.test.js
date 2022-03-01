@@ -1,15 +1,13 @@
 goog.require('goog.object');
-goog.require('ol.style.Icon');
-goog.require('ol.style.IconAnchorUnits');
-goog.require('ol.style.IconOrigin');
 goog.require('os');
 goog.require('os.style.IconReader');
 
+import Icon from 'ol/src/style/Icon';
+import IconAnchorUnits from 'ol/src/style/IconAnchorUnits';
+import IconOrigin from 'ol/src/style/IconOrigin';
+
 describe('os.style.IconReader', function() {
   const googObject = goog.module.get('goog.object');
-  const Icon = goog.module.get('ol.style.Icon');
-  const IconAnchorUnits = goog.module.get('ol.style.IconAnchorUnits');
-  const IconOrigin = goog.module.get('ol.style.IconOrigin');
   const os = goog.module.get('os');
   const {default: IconReader} = goog.module.get('os.style.IconReader');
 

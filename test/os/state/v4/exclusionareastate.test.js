@@ -1,8 +1,6 @@
 goog.require('goog.dom');
 goog.require('goog.dom.xml');
 goog.require('goog.string');
-goog.require('ol.Feature');
-goog.require('ol.geom.Polygon');
 goog.require('os.query.AreaManager');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.query.QueryManager');
@@ -16,9 +14,10 @@ goog.require('os.test.xsd');
 goog.require('os.ui.state');
 goog.require('os.xml');
 
+import Feature from 'ol/src/Feature';
+import Polygon from 'ol/src/geom/Polygon';
+
 describe('QueryArea XSD State Test', function() {
-  const Feature = goog.module.get('ol.Feature');
-  const Polygon = goog.module.get('ol.geom.Polygon');
   const {default: AreaManager} = goog.module.get('os.query.AreaManager');
   const {default: QueryManager} = goog.module.get('os.query.QueryManager');
   const {default: BaseStateManager} = goog.module.get('os.state.BaseStateManager');

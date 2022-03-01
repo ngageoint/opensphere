@@ -1,11 +1,10 @@
-goog.require('ol.geom.Polygon');
-goog.require('ol.proj');
 goog.require('os.proj');
 goog.require('os.query.utils');
 
+import {fromExtent} from 'ol/src/geom/Polygon';
+import {get, transformExtent} from 'ol/src/proj';
+
 describe('os.query.utils', function() {
-  const Polygon = goog.module.get('ol.geom.Polygon');
-  const olProj = goog.module.get('ol.proj');
   const osProj = goog.module.get('os.proj');
   const osMap = goog.module.get('os.map');
   const {initWorldArea, isWorldQuery} = goog.module.get('os.query.utils');
@@ -26,13 +25,13 @@ describe('os.query.utils', function() {
     var oldProjection = osMap.PROJECTION;
 
     projections.forEach(function(code) {
-      var proj = olProj.get(code);
+      var proj = get(code);
       osMap.setProjection(proj);
       initWorldArea();
 
       tests.forEach(function(test) {
-        var extent = olProj.transformExtent(test.extent, osProj.EPSG4326, proj);
-        var geom = Polygon.fromExtent(extent);
+        var extent = transformExtent(test.extent, osProj.EPSG4326, proj);
+        var geom = fromExtent(extent);
         expect(isWorldQuery(geom)).toBe(test.expected);
       });
     });

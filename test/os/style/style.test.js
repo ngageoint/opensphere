@@ -1,12 +1,5 @@
 goog.require('goog.events.EventType');
 goog.require('goog.object');
-goog.require('ol.Feature');
-goog.require('ol.events');
-goog.require('ol.layer.Vector');
-goog.require('ol.obj');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
 goog.require('os.color');
 goog.require('os.source.PropertyChange');
 goog.require('os.source.Vector');
@@ -14,16 +7,17 @@ goog.require('os.style');
 goog.require('os.style.StyleField');
 goog.require('os.style.StyleType');
 
+import {listen} from 'ol/src/events';
+import Feature from 'ol/src/Feature';
+import OLVectorLayer from 'ol/src/layer/Vector';
+import {assign} from 'ol/src/obj';
+import Fill from 'ol/src/style/Fill';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
+
 describe('os.style', function() {
   const GoogEventType = goog.module.get('goog.events.EventType');
   const googObject = goog.module.get('goog.object');
-  const Feature = goog.module.get('ol.Feature');
-  const events = goog.module.get('ol.events');
-  const OLVectorLayer = goog.module.get('ol.layer.Vector');
-  const olObj = goog.module.get('ol.obj');
-  const Fill = goog.module.get('ol.style.Fill');
-  const Stroke = goog.module.get('ol.style.Stroke');
-  const Style = goog.module.get('ol.style.Style');
   const osColor = goog.module.get('os.color');
   const {default: PropertyChange} = goog.module.get('os.source.PropertyChange');
   const {default: VectorSource} = goog.module.get('os.source.Vector');
@@ -338,7 +332,7 @@ describe('os.style', function() {
       };
 
       osStyle.mergeConfig(from, toMergeAll);
-      expect(toMergeAll).toEqual(olObj.assign({}, toMergeAll, from));
+      expect(toMergeAll).toEqual(assign({}, toMergeAll, from));
 
       var toMergeSome = {
         'string': 'mergeSome',
@@ -422,15 +416,15 @@ describe('os.style', function() {
         'colormodel': 0
       };
 
-      events.listen(layer, GoogEventType.PROPERTYCHANGE, function(evt) {
+      listen(layer, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['layer']++;
       });
 
-      events.listen(source, GoogEventType.PROPERTYCHANGE, function(evt) {
+      listen(source, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['source']++;
       });
 
-      events.listen(colormodel, GoogEventType.PROPERTYCHANGE, function(evt) {
+      listen(colormodel, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['colormodel']++;
       });
 
@@ -463,11 +457,11 @@ describe('os.style', function() {
         'colormodel': 0
       };
 
-      events.listen(layer, GoogEventType.PROPERTYCHANGE, function(evt) {
+      listen(layer, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['layer']++;
       });
 
-      events.listen(source, GoogEventType.PROPERTYCHANGE, function(evt) {
+      listen(source, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['source']['total']++;
 
         var p = evt.getProperty();
@@ -481,7 +475,7 @@ describe('os.style', function() {
         }
       });
 
-      events.listen(colormodel, GoogEventType.PROPERTYCHANGE, function(evt) {
+      listen(colormodel, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['colormodel']++;
       });
 
