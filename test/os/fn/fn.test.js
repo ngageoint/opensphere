@@ -1,7 +1,3 @@
-goog.require('ol.Feature');
-goog.require('ol.extent');
-goog.require('ol.geom.Point');
-goog.require('ol.source.Image');
 goog.require('os.data.LayerNode');
 goog.require('os.fn');
 goog.require('os.layer.Image');
@@ -12,11 +8,12 @@ goog.require('os.source.Vector');
 goog.require('os.structs.TreeNode');
 goog.require('plugin.xyz.XYZLayerConfig');
 
+import {createEmpty} from 'ol/src/extent';
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
+import olSourceImage from 'ol/src/source/Image';
+
 describe('os.fn', function() {
-  const Feature = goog.module.get('ol.Feature');
-  const olExtent = goog.module.get('ol.extent');
-  const Point = goog.module.get('ol.geom.Point');
-  const olSourceImage = goog.module.get('ol.source.Image');
   const {default: LayerNode} = goog.module.get('os.data.LayerNode');
   const fn = goog.module.get('os.fn');
   const {default: Image} = goog.module.get('os.layer.Image');
@@ -62,7 +59,7 @@ describe('os.fn', function() {
     source.addFeature(new Feature(new Point([-2, -2])));
     layers.push(layer);
 
-    var extent = layers.reduce(fn.reduceExtentFromLayers, olExtent.createEmpty());
+    var extent = layers.reduce(fn.reduceExtentFromLayers, createEmpty());
     expect(extent[0]).toBe(-2);
     expect(extent[1]).toBe(-2);
     expect(extent[2]).toBe(3);
@@ -72,7 +69,7 @@ describe('os.fn', function() {
   it('should reduce a combined extent from geometries', function() {
     var extent = [
       new Point([-1, -1]),
-      new Point([-2, -2])].reduce(fn.reduceExtentFromGeometries, olExtent.createEmpty());
+      new Point([-2, -2])].reduce(fn.reduceExtentFromGeometries, createEmpty());
 
     expect(extent[0]).toBe(-2);
     expect(extent[1]).toBe(-2);

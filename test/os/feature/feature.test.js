@@ -1,7 +1,3 @@
-goog.require('ol.Feature');
-goog.require('ol.geom.GeometryCollection');
-goog.require('ol.geom.Point');
-goog.require('ol.geom.Polygon');
 goog.require('os.Fields');
 goog.require('os.bearing.geomag.wait');
 goog.require('os.data.DataManager');
@@ -18,11 +14,12 @@ goog.require('os.source.Vector');
 goog.require('os.style');
 goog.require('os.style.StyleType');
 
+import Feature from 'ol/src/Feature';
+import GeometryCollection from 'ol/src/geom/GeometryCollection';
+import Point from 'ol/src/geom/Point';
+import Polygon from 'ol/src/geom/Polygon';
+
 describe('os.feature', function() {
-  const Feature = goog.module.get('ol.Feature');
-  const GeometryCollection = goog.module.get('ol.geom.GeometryCollection');
-  const Point = goog.module.get('ol.geom.Point');
-  const Polygon = goog.module.get('ol.geom.Polygon');
   const {getMockMappingManager} = goog.module.get('os.mock');
   const {default: Fields} = goog.module.get('os.Fields');
   const {default: DataManager} = goog.module.get('os.data.DataManager');

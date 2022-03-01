@@ -1,8 +1,8 @@
-goog.require('ol.Feature');
 goog.require('os.im.mapping.PositionMapping');
 
+import Feature from 'ol/src/Feature';
+
 describe('os.im.mapping.PositionMapping', function() {
-  const Feature = goog.module.get('ol.Feature');
   const {default: PositionMapping} = goog.module.get('os.im.mapping.PositionMapping');
 
   it('should auto detect position string types correctly', function() {

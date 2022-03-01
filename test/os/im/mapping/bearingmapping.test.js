@@ -1,13 +1,11 @@
-goog.require('ol.Feature');
-goog.require('ol.geom.Point');
 goog.require('os.Fields');
 goog.require('os.im.mapping');
 goog.require('os.im.mapping.BearingMapping');
 
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
 
 describe('os.im.mapping.BearingMapping', function() {
-  const Feature = goog.module.get('ol.Feature');
-  const Point = goog.module.get('ol.geom.Point');
   const {default: Fields} = goog.module.get('os.Fields');
   const mapping = goog.module.get('os.im.mapping');
   const {default: BearingMapping} = goog.module.get('os.im.mapping.BearingMapping');

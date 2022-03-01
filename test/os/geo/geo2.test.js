@@ -1,14 +1,13 @@
-goog.require('ol.geom.SimpleGeometry');
-goog.require('ol.proj');
 goog.require('os.feature.mock');
 goog.require('os.geo');
 goog.require('os.geo2');
 goog.require('os.map');
 goog.require('os.proj');
 
+import SimpleGeometry from 'ol/src/geom/SimpleGeometry';
+import {get} from 'ol/src/proj';
+
 describe('os.geo2', function() {
-  const SimpleGeometry = goog.module.get('ol.geom.SimpleGeometry');
-  const olProj = goog.module.get('ol.proj');
   const featureMock = goog.module.get('os.feature.mock');
   const geo = goog.module.get('os.geo');
   const geo2 = goog.module.get('os.geo2');
@@ -32,7 +31,7 @@ describe('os.geo2', function() {
 
   it('should normalize longitudes properly', function() {
     projections.forEach(function(config) {
-      var proj = olProj.get(config.code);
+      var proj = get(config.code);
       var projExtent = proj.getExtent();
       var projWidth = projExtent[2] - projExtent[0];
       var min = projExtent[0];
@@ -63,7 +62,7 @@ describe('os.geo2', function() {
 
   it('should normalize longitudes to alternate min/max values', function() {
     projections.forEach(function(config) {
-      var proj = olProj.get(config.code);
+      var proj = get(config.code);
       var projExtent = proj.getExtent();
       var projWidth = projExtent[2] - projExtent[0];
       var min = projExtent[0] + projWidth / 2;
@@ -93,7 +92,7 @@ describe('os.geo2', function() {
 
   it('should clamp latitudes properly', function() {
     projections.forEach(function(config) {
-      var proj = olProj.get(config.code);
+      var proj = get(config.code);
       var projExtent = proj.getExtent();
       var halfHeight = (projExtent[3] - projExtent[1]) / 2;
 
@@ -108,7 +107,7 @@ describe('os.geo2', function() {
 
 
   it('should normalize geometries', function() {
-    osMap.setProjection(olProj.get(osProj.EPSG4326));
+    osMap.setProjection(get(osProj.EPSG4326));
     var features = featureMock.getFeatures(true);
 
     features.forEach(function(feature) {

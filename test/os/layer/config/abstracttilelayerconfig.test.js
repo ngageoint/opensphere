@@ -1,4 +1,3 @@
-goog.require('ol.source.XYZ');
 goog.require('os.layer.MockLayer');
 goog.require('os.layer.config.AbstractTileLayerConfig');
 goog.require('os.layer.config.LayerConfigManager');
@@ -8,8 +7,9 @@ goog.require('os.net');
 goog.require('os.net.CrossOrigin');
 goog.require('os.proj');
 
+import XYZ from 'ol/src/source/XYZ';
+
 describe('os.layer.config.AbstractTileLayerConfig', function() {
-  const XYZ = goog.module.get('ol.source.XYZ');
   const {default: AbstractTileLayerConfig} = goog.module.get('os.layer.config.AbstractTileLayerConfig');
   const {default: LayerConfigManager} = goog.module.get('os.layer.config.LayerConfigManager');
   const net = goog.module.get('os.net');

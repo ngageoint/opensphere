@@ -1,6 +1,4 @@
 goog.require('goog.string');
-goog.require('ol.Feature');
-goog.require('ol.geom.Point');
 goog.require('os.data.histo.ColorBin');
 goog.require('os.data.xf.DataModel');
 goog.require('os.feature');
@@ -11,7 +9,7 @@ goog.require('os.histo.UniqueBinMethod');
 goog.require('os.time.TimeRange');
 goog.require('os.time.xf.TimeModel');
 
-
+import Feature from 'ol/src/Feature';
 
 /**
  * @param {number} min
@@ -226,7 +224,6 @@ var runMultiDimFilter = function(features, field1, type1, field2, type2) {
 
 
 xdescribe('os.data.xf.binningperf', function() {
-  const Feature = goog.module.get('ol.Feature');
   const {default: TimeRange} = goog.module.get('os.time.TimeRange');
 
   it('should test the performance for multidimensional binning', function() {

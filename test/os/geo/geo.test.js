@@ -1,26 +1,19 @@
 goog.require('goog.array');
-goog.require('ol.Feature');
-goog.require('ol.geom.GeometryCollection');
-goog.require('ol.geom.LineString');
-goog.require('ol.geom.MultiLineString');
-goog.require('ol.geom.MultiPoint');
-goog.require('ol.geom.MultiPolygon');
-goog.require('ol.geom.Point');
-goog.require('ol.geom.Polygon');
 goog.require('os.geo');
 goog.require('os.osasm.wait');
 goog.require('os.query');
 
+import Feature from 'ol/src/Feature';
+import GeometryCollection from 'ol/src/geom/GeometryCollection';
+import LineString from 'ol/src/geom/LineString';
+import MultiLineString from 'ol/src/geom/MultiLineString';
+import MultiPoint from 'ol/src/geom/MultiPoint';
+import MultiPolygon from 'ol/src/geom/MultiPolygon';
+import Point from 'ol/src/geom/Point';
+import {fromExtent} from 'ol/src/geom/Polygon';
+
 describe('os.geo', function() {
   const googArray = goog.module.get('goog.array');
-  const Feature = goog.module.get('ol.Feature');
-  const GeometryCollection = goog.module.get('ol.geom.GeometryCollection');
-  const LineString = goog.module.get('ol.geom.LineString');
-  const MultiLineString = goog.module.get('ol.geom.MultiLineString');
-  const MultiPoint = goog.module.get('ol.geom.MultiPoint');
-  const MultiPolygon = goog.module.get('ol.geom.MultiPolygon');
-  const Point = goog.module.get('ol.geom.Point');
-  const Polygon = goog.module.get('ol.geom.Polygon');
   const geo = goog.module.get('os.geo');
 
   it('should parse DMS separated by space without delimiters or direction', function() {
@@ -544,19 +537,19 @@ describe('os.geo', function() {
 
   it('ol.geom.Polygon should cross the date line', function() {
     var extent = [-184.9209430003858, 61.585644431614085, -168.72498457795734, 69.29410059216232];
-    var geometry = Polygon.fromExtent(extent);
+    var geometry = fromExtent(extent);
     var result = geo.crossesDateLine(geometry);
     expect(result).toBe(true);
 
     extent = [156.66351699166069, 35.83544733907885, 226.73580435357695, 63.411423544243604];
-    geometry = Polygon.fromExtent(extent);
+    geometry = fromExtent(extent);
     result = geo.crossesDateLine(geometry);
     expect(result).toBe(true);
   });
 
   it('ol.Feature should cross the date line', function() {
     var extent = [-184.9209430003858, 61.585644431614085, -168.72498457795734, 69.29410059216232];
-    var geometry = Polygon.fromExtent(extent);
+    var geometry = fromExtent(extent);
     var feature = new Feature({
       geometry: geometry,
       name: 'Simple Feature'
@@ -565,7 +558,7 @@ describe('os.geo', function() {
     expect(result).toBe(true);
 
     extent = [156.66351699166069, 35.83544733907885, 226.73580435357695, 63.411423544243604];
-    geometry = Polygon.fromExtent(extent);
+    geometry = fromExtent(extent);
     var feature = new Feature({
       geometry: geometry,
       name: 'Simple Feature'
@@ -595,19 +588,19 @@ describe('os.geo', function() {
 
   it('ol.geom.SimpleGeometry should not cross the date line', function() {
     var extent = [-204.65732788733708, 0.24859222776089496, -283.4335938496441, 47.10822716068972];
-    var geometry = Polygon.fromExtent(extent);
+    var geometry = fromExtent(extent);
     var result = geo.crossesDateLine(geometry);
     expect(result).toBe(false);
 
     extent = [206.35356107149863, 43.29561481487221, 229.26693260429255, 59.814557082700375];
-    geometry = Polygon.fromExtent(extent);
+    geometry = fromExtent(extent);
     result = geo.crossesDateLine(geometry);
     expect(result).toBe(false);
   });
 
   it('ol.Feature should not cross the date line', function() {
     var extent = [-204.65732788733708, 0.24859222776089496, -283.4335938496441, 47.10822716068972];
-    var geometry = Polygon.fromExtent(extent);
+    var geometry = fromExtent(extent);
     var feature = new Feature({
       geometry: geometry,
       name: 'Simple Feature'
@@ -616,7 +609,7 @@ describe('os.geo', function() {
     expect(result).toBe(false);
 
     extent = [206.35356107149863, 43.29561481487221, 229.26693260429255, 59.814557082700375];
-    geometry = Polygon.fromExtent(extent);
+    geometry = fromExtent(extent);
     feature = new Feature({
       geometry: geometry,
       name: 'Simple Feature'
@@ -627,44 +620,44 @@ describe('os.geo', function() {
 
   it('should normalize polygons that do not cross the date line', function() {
     var extent = [-204.65732788733708, 0.24859222776089496, -283.4335938496441, 47.10822716068972];
-    var geometry = Polygon.fromExtent(extent);
+    var geometry = fromExtent(extent);
     var result = geo.normalizeGeometryCoordinates(geometry);
     expect(result).toBe(true);
 
     extent = [-107.70605382512586, 26.90931309719535, -75.70482874914197, 44.17960726927144];
-    geometry = Polygon.fromExtent(extent);
+    geometry = fromExtent(extent);
     result = geo.normalizeGeometryCoordinates(geometry);
     expect(result).toBe(true);
 
     extent = [206.35356107149863, 43.29561481487221, 229.26693260429255, 59.814557082700375];
-    geometry = Polygon.fromExtent(extent);
+    geometry = fromExtent(extent);
     result = geo.normalizeGeometryCoordinates(geometry);
     expect(result).toBe(true);
 
     extent = [-210.88294846751603, 58.6156015955193, -199.42626270111907, 67.94081094026102];
-    geometry = Polygon.fromExtent(extent);
+    geometry = fromExtent(extent);
     result = geo.normalizeGeometryCoordinates(geometry);
     expect(result).toBe(true);
   });
 
   it('should normalize polygons that do cross the date line', function() {
     var extent = [-184.9209430003858, 61.585644431614085, -168.72498457795734, 69.29410059216232];
-    var geometry = Polygon.fromExtent(extent);
+    var geometry = fromExtent(extent);
     var result = geo.normalizeGeometryCoordinates(geometry);
     expect(result).toBe(true);
 
     extent = [-211.54903484928332, -13.188510358991834, -138.94561923665142, 13.721379464405658];
-    geometry = Polygon.fromExtent(extent);
+    geometry = fromExtent(extent);
     result = geo.normalizeGeometryCoordinates(geometry);
     expect(result).toBe(true);
 
     extent = [156.66351699166069, 35.83544733907885, 226.73580435357695, 63.411423544243604];
-    geometry = Polygon.fromExtent(extent);
+    geometry = fromExtent(extent);
     result = geo.normalizeGeometryCoordinates(geometry);
     expect(result).toBe(true);
 
     extent = [169.31915824523873, 7.060515646733009, 194.23078892333442, 21.18154694019902];
-    geometry = Polygon.fromExtent(extent);
+    geometry = fromExtent(extent);
     result = geo.normalizeGeometryCoordinates(geometry);
     expect(result).toBe(true);
   });
@@ -709,9 +702,9 @@ describe('os.geo', function() {
 
   it('should normalize multipolygon geometries', function() {
     var multiPolygon = new MultiPolygon();
-    multiPolygon.appendPolygon(Polygon.fromExtent(
+    multiPolygon.appendPolygon(fromExtent(
         [-204.65732788733708, 0.24859222776089496, -283.4335938496441, 47.10822716068972]));
-    multiPolygon.appendPolygon(Polygon.fromExtent(
+    multiPolygon.appendPolygon(fromExtent(
         [-210.88294846751603, 58.6156015955193, -199.42626270111907, 67.94081094026102]));
     var result = geo.normalizeGeometryCoordinates(multiPolygon);
     expect(result).toBe(true);
@@ -723,9 +716,9 @@ describe('os.geo', function() {
 
   it('should normalize multipolygon geometries that cross the date line', function() {
     var multiPolygon = new MultiPolygon();
-    multiPolygon.appendPolygon(Polygon.fromExtent(
+    multiPolygon.appendPolygon(fromExtent(
         [-211.54903484928332, -13.188510358991834, -138.94561923665142, 13.721379464405658]));
-    multiPolygon.appendPolygon(Polygon.fromExtent(
+    multiPolygon.appendPolygon(fromExtent(
         [-210.88294846751603, 58.6156015955193, -199.42626270111907, 67.94081094026102]));
     var result = geo.normalizeGeometryCoordinates(multiPolygon);
     expect(result).toBe(true);
