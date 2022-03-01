@@ -1,0 +1,7 @@
+<ows:ExceptionReport xmlns:ows="http://www.opengis.net/ows" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/ows https://test.server.com/ogc/schemas/ows/1.0.0/owsExceptionReport.xsd">
+	<ows:Exception exceptionCode="none" locator="Parameter REQUEST">
+		<ows:ExceptionText>
+		  The value for parameter REQUEST "NotDescribeFeatureType" is invalid: Value must be one of "GetCapabilities", "DescribeFeatureType" or "GetFeature"
+		</ows:ExceptionText>
+	</ows:Exception>
+</ows:ExceptionReport>

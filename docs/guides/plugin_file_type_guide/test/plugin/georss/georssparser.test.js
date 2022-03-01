@@ -1,8 +1,8 @@
-goog.require('ol.xml');
 goog.require('plugin.georss.GeoRSSParser');
 
+import {parse} from 'ol/src/xml';
+
 describe('plugin.georss.GeoRSSParser', function() {
-  const {parse} = goog.module.get('ol.xml');
   const {default: GeoRSSParser} = goog.module.get('plugin.georss.GeoRSSParser');
 
   it('should parse points correctly', function() {

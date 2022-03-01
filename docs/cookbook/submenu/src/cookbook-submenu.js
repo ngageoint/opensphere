@@ -1,13 +1,13 @@
 goog.declareModuleId('plugin.cookbook_submenu.CookbookSubmenu');
 
+import Point from 'ol/src/geom/Point';
+import {toLonLat} from 'ol/src/proj';
+
 import {PROJECTION} from 'opensphere/src/os/map/map.js';
 import AbstractPlugin from 'opensphere/src/os/plugin/abstractplugin.js';
 import PluginManager from 'opensphere/src/os/plugin/pluginmanager.js';
 import MenuItemType from 'opensphere/src/os/ui/menu/menuitemtype.js';
 import * as spatial from 'opensphere/src/os/ui/menu/spatial.js';
-
-const Point = goog.require('ol.geom.Point');
-const {toLonLat} = goog.require('ol.proj');
 
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 

@@ -1,0 +1,74 @@
+{
+    "bbox": [
+        -105.109966699,
+        35.145612,
+        -76.125188,
+        43.728281
+    ],
+    "features": [
+        {
+            "bbox": [
+                -105.109966699,
+                39.6143114088,
+                -104.599581004,
+                39.9142092401
+            ],
+            "geometry": {
+                "coordinates": [
+                    -104.985798,
+                    39.740959
+                ],
+                "type": "Point"
+            },
+            "properties": {
+                "accuracy": "centroid",
+                "confidence": 0.955,
+                "country": "United States",
+                "country_a": "USA",
+                "country_gid": "whosonfirst:country:85633793",
+                "county": "Denver County",
+                "county_gid": "whosonfirst:county:102086135",
+                "gid": "whosonfirst:locality:85928879",
+                "id": "85928879",
+                "label": "Denver, CO, USA",
+                "layer": "locality",
+                "locality": "Denver",
+                "locality_gid": "whosonfirst:locality:85928879",
+                "name": "Denver",
+                "region": "Colorado",
+                "region_a": "CO",
+                "region_gid": "whosonfirst:region:85688603",
+                "source": "whosonfirst",
+                "source_id": "85928879"
+            },
+            "type": "Feature"
+        },
+        null,
+        "",
+        "no",
+        -1
+    ],
+    "geocoding": {
+        "attribution": "https://search.mapzen.com/v1/attribution",
+        "engine": {
+            "author": "Mapzen",
+            "name": "Pelias",
+            "version": "1.0"
+        },
+        "query": {
+            "lang": {
+                "defaulted": true,
+                "iso6391": "en",
+                "iso6393": "eng",
+                "name": "English"
+            },
+            "private": false,
+            "querySize": 20,
+            "size": 10,
+            "text": "Denver"
+        },
+        "timestamp": 1498337358941,
+        "version": "0.2"
+    },
+    "type": "FeatureCollection"
+}

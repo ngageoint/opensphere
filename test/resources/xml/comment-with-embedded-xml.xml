@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!--
+  this is the old stuff and because someone is paranoid or
+  not using source control they just commented it out
+
+  <bogus>
+    <item>1</item>
+  </bogus>
+-->
+<root>
+  <entry>2</entry>
+</root>

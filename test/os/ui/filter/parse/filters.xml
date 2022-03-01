@@ -1,0 +1,26 @@
+<filters xmlns="http://www.bit-sys.com/state/v2" xmlns:ogc="http://www.opengis.net/ogc">
+  <filter active="true" filterType="single" title="TOI Filter" description="" type="https://fake.url.com/ogc!!LAYER_1" match="AND">
+    <ogc:And>
+      <ogc:PropertyIsEqualTo>
+        <ogc:PropertyName>TOI</ogc:PropertyName>
+        <ogc:Literal><![CDATA[12345]]></ogc:Literal>
+      </ogc:PropertyIsEqualTo>
+    </ogc:And>
+  </filter>
+  <filter active="true" filterType="single" title="NUM Filter" description="" type="https://fake.url.com/ogc!!LAYER_2" match="AND">
+    <ogc:And>
+      <ogc:PropertyIsEqualTo>
+        <ogc:PropertyName>NUM</ogc:PropertyName>
+        <ogc:Literal><![CDATA[69]]></ogc:Literal>
+      </ogc:PropertyIsEqualTo>
+    </ogc:And>
+  </filter>
+  <filter active="true" filterType="single" title="ALT Filter" description="" type="https://fake.url.com/ogc!!LAYER_3" match="OR">
+    <ogc:And>
+      <ogc:PropertyIsEqualTo>
+        <ogc:PropertyName>ALT</ogc:PropertyName>
+        <ogc:Literal><![CDATA[9999]]></ogc:Literal>
+      </ogc:PropertyIsEqualTo>
+    </ogc:And>
+  </filter>
+</filters>

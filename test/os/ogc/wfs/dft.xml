@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:testNS="http://www.test.com/testNS" xmlns:gml="http://www.opengis.net/gml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.test.com/testNS">
+  <import namespace="http://www.opengis.net/gml" schemaLocation="https://web-trunk-c2s.stwan.bits/ogc/schemas/gml/3.1.1/base/gml.xsd"/>
+  <element name="TEST" substitutionGroup="gml:_Feature" type="testNS:TEST_Type"/>
+  <complexType name="TEST_Type">
+    <complexContent>
+      <extension base="gml:DynamicFeatureType">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="styleVariation">
+            <complexType>
+              <simpleContent>
+                <extension base="string">
+                  <attribute name="styleProperty" type="string" use="required"/>
+                </extension>
+              </simpleContent>
+            </complexType>
+          </element>
+          <element minOccurs="0" name="LON" nillable="true">
+            <simpleType>
+              <restriction base="decimal"/>
+            </simpleType>
+          </element>
+          <element minOccurs="0" name="LAT" nillable="true">
+            <simpleType>
+              <restriction base="decimal"/>
+            </simpleType>
+          </element>
+          <element minOccurs="0" name="GEOM" nillable="true" type="gml:PointPropertyType"/>
+          <element minOccurs="0" name="FILENAME" nillable="true">
+            <simpleType>
+              <restriction base="string">
+                <maxLength value="1000"/>
+              </restriction>
+            </simpleType>
+          </element>
+          <element minOccurs="0" name="TESTID1" nillable="true">
+            <simpleType>
+              <restriction base="string">
+                <maxLength value="1000"/>
+              </restriction>
+            </simpleType>
+          </element>
+          <element minOccurs="0" name="TESTID2" nillable="true">
+            <simpleType>
+              <restriction base="string">
+                <maxLength value="1000"/>
+              </restriction>
+            </simpleType>
+          </element>
+          <element minOccurs="0" name="ALT" nillable="true">
+            <simpleType>
+              <restriction base="decimal"/>
+            </simpleType>
+          </element>
+          <element minOccurs="0" name="SEMI_MAJOR" nillable="true">
+            <simpleType>
+              <restriction base="decimal"/>
+            </simpleType>
+          </element>
+          <element minOccurs="0" name="SEMI_MINOR" nillable="true">
+            <simpleType>
+              <restriction base="decimal"/>
+            </simpleType>
+          </element>
+          <element minOccurs="0" name="ORIENTATION" nillable="true">
+            <simpleType>
+              <restriction base="decimal"/>
+            </simpleType>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+</schema>

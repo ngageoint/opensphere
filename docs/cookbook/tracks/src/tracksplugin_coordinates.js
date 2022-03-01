@@ -1,5 +1,7 @@
 goog.declareModuleId('plugin.cookbook_tracks.TracksPlugin');
 
+import {getTransform} from 'ol/src/proj';
+
 import EventType from 'opensphere/src/os/config/eventtype.js';
 import {PROJECTION} from 'opensphere/src/os/map/map.js';
 import AbstractPlugin from 'opensphere/src/os/plugin/abstractplugin.js';
@@ -9,7 +11,6 @@ import {addToTrack} from 'opensphere/src/os/track/track.js';
 import PlacesManager from 'opensphere/src/plugin/places/placesmanager.js';
 import {createAndAdd} from 'opensphere/src/plugin/track/track.js';
 
-const olProj = goog.require('ol.proj');
 const Feature = goog.requireType('ol.Feature');
 
 const {CreateOptions} = goog.requireType('os.track');
@@ -54,7 +55,7 @@ export default class TracksPlugin extends AbstractPlugin {
    * @inheritDoc
    */
   init() {
-    transformToMap = olProj.getTransform(EPSG4326, PROJECTION);
+    transformToMap = getTransform(EPSG4326, PROJECTION);
     const placesManager = PlacesManager.getInstance();
     if (placesManager.isLoaded()) {
       this.onPlacesLoaded();

@@ -1,0 +1,393 @@
+{
+    "bbox": [
+        -105.109966699,
+        35.145612,
+        -76.125188,
+        43.728281
+    ],
+    "features": [
+        {
+            "bbox": [
+                -105.109966699,
+                39.6143114088,
+                -104.599581004,
+                39.9142092401
+            ],
+            "geometry": {
+                "coordinates": [
+                    -104.985798,
+                    39.740959
+                ],
+                "type": "Point"
+            },
+            "properties": {
+                "accuracy": "centroid",
+                "confidence": 0.955,
+                "country": "United States",
+                "country_a": "USA",
+                "country_gid": "whosonfirst:country:85633793",
+                "county": "Denver County",
+                "county_gid": "whosonfirst:county:102086135",
+                "gid": "whosonfirst:locality:85928879",
+                "id": "85928879",
+                "label": "Denver, CO, USA",
+                "layer": "locality",
+                "locality": "Denver",
+                "locality_gid": "whosonfirst:locality:85928879",
+                "name": "Denver",
+                "region": "Colorado",
+                "region_a": "CO",
+                "region_gid": "whosonfirst:region:85688603",
+                "source": "whosonfirst",
+                "source_id": "85928879"
+            },
+            "type": "Feature"
+        },
+        {
+            "bbox": [
+                -97.371158,
+                35.145612,
+                -97.237936,
+                35.319511
+            ],
+            "geometry": {
+                "coordinates": [
+                    -97.288399,
+                    35.230196
+                ],
+                "type": "Point"
+            },
+            "properties": {
+                "accuracy": "centroid",
+                "confidence": 0.737,
+                "country": "United States",
+                "country_a": "USA",
+                "country_gid": "whosonfirst:country:85633793",
+                "county": "Cleveland County",
+                "county_gid": "whosonfirst:county:102083969",
+                "gid": "whosonfirst:neighbourhood:85814357",
+                "id": "85814357",
+                "label": "Denver, Norman, OK, USA",
+                "layer": "neighbourhood",
+                "locality": "Norman",
+                "locality_gid": "whosonfirst:locality:101714727",
+                "name": "Denver",
+                "neighbourhood": "Denver",
+                "neighbourhood_gid": "whosonfirst:neighbourhood:85814357",
+                "region": "Oklahoma",
+                "region_a": "OK",
+                "region_gid": "whosonfirst:region:85688585",
+                "source": "whosonfirst",
+                "source_id": "85814357"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    -76.13717,
+                    40.23315
+                ],
+                "type": "Point"
+            },
+            "properties": {
+                "accuracy": "centroid",
+                "confidence": 0.729,
+                "country": "United States",
+                "country_a": "USA",
+                "country_gid": "whosonfirst:country:85633793",
+                "county": "Lancaster County",
+                "county_gid": "whosonfirst:county:102081377",
+                "gid": "geonames:locality:5186794",
+                "id": "5186794",
+                "label": "Denver, PA, USA",
+                "layer": "locality",
+                "localadmin": "Denver",
+                "localadmin_gid": "whosonfirst:localadmin:404483379",
+                "locality": "Denver",
+                "locality_gid": "geonames:locality:5186794",
+                "name": "Denver",
+                "region": "Pennsylvania",
+                "region_a": "PA",
+                "region_gid": "whosonfirst:region:85688481",
+                "source": "geonames",
+                "source_id": "5186794"
+            },
+            "type": "Feature"
+        },
+        {
+            "bbox": [
+                -76.158558,
+                40.221257,
+                -76.125188,
+                40.246832
+            ],
+            "geometry": {
+                "coordinates": [
+                    -76.13673,
+                    40.23385
+                ],
+                "type": "Point"
+            },
+            "properties": {
+                "accuracy": "centroid",
+                "confidence": 0.729,
+                "country": "United States",
+                "country_a": "USA",
+                "country_gid": "whosonfirst:country:85633793",
+                "county": "Lancaster County",
+                "county_gid": "whosonfirst:county:102081377",
+                "gid": "whosonfirst:localadmin:404483379",
+                "id": "404483379",
+                "label": "Denver, PA, USA",
+                "layer": "localadmin",
+                "localadmin": "Denver",
+                "localadmin_gid": "whosonfirst:localadmin:404483379",
+                "name": "Denver",
+                "region": "Pennsylvania",
+                "region_a": "PA",
+                "region_gid": "whosonfirst:region:85688481",
+                "source": "whosonfirst",
+                "source_id": "404483379"
+            },
+            "type": "Feature"
+        },
+        {
+            "bbox": [
+                -81.075546,
+                35.501432,
+                -81.006913,
+                35.552186
+            ],
+            "geometry": {
+                "coordinates": [
+                    -81.033744,
+                    35.535494
+                ],
+                "type": "Point"
+            },
+            "properties": {
+                "accuracy": "centroid",
+                "confidence": 0.727,
+                "country": "United States",
+                "country_a": "USA",
+                "country_gid": "whosonfirst:country:85633793",
+                "county": "Lincoln County",
+                "county_gid": "whosonfirst:county:102087857",
+                "gid": "whosonfirst:locality:85981583",
+                "id": "85981583",
+                "label": "Denver, NC, USA",
+                "layer": "locality",
+                "locality": "Denver",
+                "locality_gid": "whosonfirst:locality:85981583",
+                "name": "Denver",
+                "region": "North Carolina",
+                "region_a": "NC",
+                "region_gid": "whosonfirst:region:85688773",
+                "source": "whosonfirst",
+                "source_id": "85981583"
+            },
+            "type": "Feature"
+        },
+        {
+            "bbox": [
+                -86.03978,
+                43.553921,
+                -85.920204,
+                43.641209
+            ],
+            "geometry": {
+                "coordinates": [
+                    -85.98007,
+                    43.597429
+                ],
+                "type": "Point"
+            },
+            "properties": {
+                "accuracy": "centroid",
+                "confidence": 0.726,
+                "country": "United States",
+                "country_a": "USA",
+                "country_gid": "whosonfirst:country:85633793",
+                "county": "Newaygo County",
+                "county_gid": "whosonfirst:county:102082987",
+                "gid": "whosonfirst:localadmin:404508007",
+                "id": "404508007",
+                "label": "Denver, MI, USA",
+                "layer": "localadmin",
+                "localadmin": "Denver",
+                "localadmin_gid": "whosonfirst:localadmin:404508007",
+                "name": "Denver",
+                "region": "Michigan",
+                "region_a": "MI",
+                "region_gid": "whosonfirst:region:85688599",
+                "source": "whosonfirst",
+                "source_id": "404508007"
+            },
+            "type": "Feature"
+        },
+        {
+            "bbox": [
+                -92.350372,
+                42.656796,
+                -92.317549,
+                42.681832
+            ],
+            "geometry": {
+                "coordinates": [
+                    -92.334895,
+                    42.668816
+                ],
+                "type": "Point"
+            },
+            "properties": {
+                "accuracy": "centroid",
+                "confidence": 0.725,
+                "country": "United States",
+                "country_a": "USA",
+                "country_gid": "whosonfirst:country:85633793",
+                "county": "Bremer County",
+                "county_gid": "whosonfirst:county:102086623",
+                "gid": "whosonfirst:locality:85943913",
+                "id": "85943913",
+                "label": "Denver, IA, USA",
+                "layer": "locality",
+                "locality": "Denver",
+                "locality_gid": "whosonfirst:locality:85943913",
+                "name": "Denver",
+                "region": "Iowa",
+                "region_a": "IA",
+                "region_gid": "whosonfirst:region:85688713",
+                "source": "whosonfirst",
+                "source_id": "85943913"
+            },
+            "type": "Feature"
+        },
+        {
+            "bbox": [
+                -84.728111,
+                43.640659,
+                -84.606944,
+                43.728281
+            ],
+            "geometry": {
+                "coordinates": [
+                    -84.667799,
+                    43.68452
+                ],
+                "type": "Point"
+            },
+            "properties": {
+                "accuracy": "centroid",
+                "confidence": 0.723,
+                "country": "United States",
+                "country_a": "USA",
+                "country_gid": "whosonfirst:country:85633793",
+                "county": "Isabella County",
+                "county_gid": "whosonfirst:county:102083065",
+                "gid": "whosonfirst:localadmin:404506061",
+                "id": "404506061",
+                "label": "Denver, MI, USA",
+                "layer": "localadmin",
+                "localadmin": "Denver",
+                "localadmin_gid": "whosonfirst:localadmin:404506061",
+                "name": "Denver",
+                "region": "Michigan",
+                "region_a": "MI",
+                "region_gid": "whosonfirst:region:85688599",
+                "source": "whosonfirst",
+                "source_id": "404506061"
+            },
+            "type": "Feature"
+        },
+        {
+            "bbox": [
+                -98.497121,
+                40.524467,
+                -98.38297,
+                40.611596
+            ],
+            "geometry": {
+                "coordinates": [
+                    -98.444707,
+                    40.553521
+                ],
+                "type": "Point"
+            },
+            "properties": {
+                "accuracy": "centroid",
+                "confidence": 0.722,
+                "country": "United States",
+                "country_a": "USA",
+                "country_gid": "whosonfirst:country:85633793",
+                "county": "Adams County",
+                "county_gid": "whosonfirst:county:102083505",
+                "gid": "whosonfirst:localadmin:404519309",
+                "id": "404519309",
+                "label": "Denver, NE, USA",
+                "layer": "localadmin",
+                "localadmin": "Denver",
+                "localadmin_gid": "whosonfirst:localadmin:404519309",
+                "name": "Denver",
+                "region": "Nebraska",
+                "region_a": "NE",
+                "region_gid": "whosonfirst:region:85688563",
+                "source": "whosonfirst",
+                "source_id": "404519309"
+            },
+            "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    -104.87635,
+                    39.76204
+                ],
+                "type": "Point"
+            },
+            "properties": {
+                "accuracy": "centroid",
+                "confidence": 0.661,
+                "country": "United States",
+                "country_a": "USA",
+                "country_gid": "whosonfirst:country:85633793",
+                "county": "Denver County",
+                "county_gid": "whosonfirst:county:102086135",
+                "gid": "geonames:county:5419396",
+                "id": "5419396",
+                "label": "Denver County, CO, USA",
+                "layer": "county",
+                "name": "Denver County",
+                "region": "Colorado",
+                "region_a": "CO",
+                "region_gid": "whosonfirst:region:85688603",
+                "source": "geonames",
+                "source_id": "5419396"
+            },
+            "type": "Feature"
+        }
+    ],
+    "geocoding": {
+        "attribution": "https://search.mapzen.com/v1/attribution",
+        "engine": {
+            "author": "Mapzen",
+            "name": "Pelias",
+            "version": "1.0"
+        },
+        "query": {
+            "lang": {
+                "defaulted": true,
+                "iso6391": "en",
+                "iso6393": "eng",
+                "name": "English"
+            },
+            "private": false,
+            "querySize": 20,
+            "size": 10,
+            "text": "Denver"
+        },
+        "timestamp": 1498337358941,
+        "version": "0.2"
+    },
+    "type": "FeatureCollection"
+}

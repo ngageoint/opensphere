@@ -1,0 +1,15 @@
+{
+  "admin": {
+    "a": {
+      "adminField": "a"
+    }
+  },
+  "user": {
+    "a": {
+      "userField": "a"
+    },
+    "key1": {
+      "key2": "doubleFacepalm"
+    }
+  }
+}
