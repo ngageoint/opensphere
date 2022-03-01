@@ -1,6 +1,5 @@
 goog.declareModuleId('os.ui.file.kml.AbstractKMLExporter');
 
-import KML from 'ol/src/format/KML';
 import {pushSerializeAndPop} from 'ol/src/xml';
 
 // import JsonField from '../../../../plugin/file/kml/jsonfield.js';
@@ -11,6 +10,7 @@ import {DESC_REGEXP} from '../../../fields/index.js';
 import OSFile from '../../../file/file.js';
 import instanceOf from '../../../instanceof.js';
 import {isPrimitive} from '../../../object/object.js';
+import {PLACEMARK_SERIALIZERS, GEOMETRY_NODE_FACTORY} from '../../../ol/format/KML';
 import * as osTime from '../../../time/time.js';
 import TimeInstant from '../../../time/timeinstant.js';
 import TimeRange from '../../../time/timerange.js';
@@ -706,8 +706,8 @@ export default class AbstractKMLExporter extends ZipExporter {
     var geometry = this.getGeometry(item);
     if (geometry) {
       var /** @type {ol.XmlNodeStackItem} */ context = {node: node};
-      pushSerializeAndPop(context, KML.PLACEMARK_SERIALIZERS_,
-          KML.GEOMETRY_NODE_FACTORY_, [geometry], []);
+      pushSerializeAndPop(context, PLACEMARK_SERIALIZERS,
+          GEOMETRY_NODE_FACTORY, [geometry], []);
     }
   }
 

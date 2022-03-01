@@ -1,11 +1,11 @@
 goog.declareModuleId('os.ogc.spatial');
 
 import GML from 'ol/src/format/GML';
-import KML from 'ol/src/format/KML';
 import {pushParseAndPop} from 'ol/src/xml';
 
 import {createPolarPolygon, isPolarPolygon} from '../geo/geo.js';
 import {interpolateGeom} from '../interpolate.js';
+import {PLACEMARK_PARSERS} from '../ol/format/KML';
 import Format from './format.js';
 
 // const LineString = goog.requireTyped('ol.geom.LineString');
@@ -22,7 +22,7 @@ import Format from './format.js';
  */
 export const readKMLGeometry = function(element) {
   if (element) {
-    var obj = pushParseAndPop({'geometry': null}, KML.PLACEMARK_PARSERS_, element, []);
+    var obj = pushParseAndPop({'geometry': null}, PLACEMARK_PARSERS, element, []);
     if (obj && obj['geometry'] instanceof ol.geom.Geometry) {
       return obj['geometry'];
     }

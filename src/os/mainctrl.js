@@ -23,7 +23,7 @@ import CSVPlugin from '../plugin/file/csv/csvplugin.js';
 import GeoJSONPlugin from '../plugin/file/geojson/geojsonplugin.js';
 import GMLPlugin from '../plugin/file/gml/gmlplugin.js';
 // import GPXPlugin from '../plugin/file/gpx/gpxplugin.js';
-// import KMLPlugin from '../plugin/file/kml/kmlplugin.js';
+import KMLPlugin from '../plugin/file/kml/kmlplugin.js';
 import SHPPlugin from '../plugin/file/shp/shpplugin.js';
 import ZIPPlugin from '../plugin/file/zip/zipplugin.js';
 import GooglePlacesPlugin from '../plugin/google/places/plugin.js';
@@ -521,7 +521,7 @@ export default class Controller extends AbstractMainCtrl {
     pluginManager.addPlugin(new GMLPlugin());
     pluginManager.addPlugin(new GeoJSONPlugin());
     // pluginManager.addPlugin(new GPXPlugin());
-    // pluginManager.addPlugin(new KMLPlugin());
+    pluginManager.addPlugin(new KMLPlugin());
     pluginManager.addPlugin(new SHPPlugin());
     pluginManager.addPlugin(new ZIPPlugin());
     pluginManager.addPlugin(new WeatherPlugin());

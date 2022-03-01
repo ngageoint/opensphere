@@ -4,10 +4,10 @@
  */
 goog.declareModuleId('plugin.file.kml.tour.parseTour');
 
-import KML from 'ol/src/format/KML';
 import {readDecimal, readString} from 'ol/src/format/xsd';
 import {makeArrayPusher, makeObjectPropertySetter, makeStructureNS, pushParseAndPop} from 'ol/src/xml';
 import FlightMode from '../../../../os/map/flightmode.js';
+import {NAMESPACE_URIS, GX_NAMESPACE_URIS} from '../../../../os/ol/format/KML';
 import Tour from './tour.js';
 import TourControl from './tourcontrol.js';
 import FlyTo from './tourflyto.js';
@@ -35,7 +35,7 @@ const parseTour = (el) => {
  * Support both KML 2.3 and `gx:` tour elements.
  * @type {Array<string>}
  */
-const tourNamespaceUris = KML.NAMESPACE_URIS_.concat(KML.GX_NAMESPACE_URIS_);
+const tourNamespaceUris = NAMESPACE_URIS.concat(GX_NAMESPACE_URIS);
 
 
 /**
@@ -219,7 +219,7 @@ const PLAYLIST_PARSERS = makeStructureNS(
 const FLYTO_PARSERS = makeStructureNS(
     tourNamespaceUris, {
       'duration': makeObjectPropertySetter(readDecimal),
-      'flyToMode': mmakeObjectPropertySetter(readString),
+      'flyToMode': makeObjectPropertySetter(readString),
       'Camera': makeObjectPropertySetter(parseCamera),
       'LookAt': makeObjectPropertySetter(parseLookAt)
     });
@@ -230,7 +230,7 @@ const FLYTO_PARSERS = makeStructureNS(
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
 const CAMERA_PARSERS = makeStructureNS(
-    KML.NAMESPACE_URIS_, {
+    NAMESPACE_URIS, {
       'longitude': makeObjectPropertySetter(readDecimal),
       'latitude': makeObjectPropertySetter(readDecimal),
       'altitude': makeObjectPropertySetter(readDecimal),
@@ -246,7 +246,7 @@ const CAMERA_PARSERS = makeStructureNS(
  * @type {Object<string, Object<string, ol.XmlParser>>}
  */
 const LOOKAT_PARSERS = makeStructureNS(
-    KML.NAMESPACE_URIS_, {
+    NAMESPACE_URIS, {
       'longitude': makeObjectPropertySetter(readDecimal),
       'latitude': makeObjectPropertySetter(readDecimal),
       'altitude': makeObjectPropertySetter(readDecimal),
