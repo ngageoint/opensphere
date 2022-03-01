@@ -6,15 +6,14 @@ goog.declareModuleId('plugin.file.gpx.GPXParser');
 
 
 import Feature from 'ol/src/Feature';
-import GPX from 'ol/src/format/GPX';
-import {readDecimal, readDateTime} from 'ol/src/format/xsd';
 import LineString from 'ol/src/geom/LineString';
 import MultiLineString from 'ol/src/geom/MultiLineString';
 import Point from 'ol/src/geom/Point';
 import SimpleGeometry from 'ol/src/geom/SimpleGeometry';
-import {isDocument, makeStructureNS, makeObjectPropertySetter, parse} from 'ol/src/xml';
+import {isDocument, parse} from 'ol/src/xml';
 import * as text from '../../../os/file/mime/text.js';
 import * as osMap from '../../../os/map/map.js';
+import GPX from '../../../os/ol/format/GPX';
 
 const dom = goog.require('goog.dom');
 
@@ -168,38 +167,6 @@ export default class GPXParser {
     }
   }
 }
-
-
-/**
- * Basic overrides to the OL3 GPX parsing. These allow us to get metadata off of individual track and route points.
- */
-
-
-/**
- * Adds the extensions parser to the trkpt parser.
- * @type {Object.<string, Object.<string, ol.XmlParser>>}
- * @private
- */
-GPX.TRKPT_PARSERS_ = makeStructureNS(
-    GPX.NAMESPACE_URIS_, {
-      'ele': makeObjectPropertySetter(readDecimal),
-      'time': makeObjectPropertySetter(readDateTime),
-      'extensions': GPX.parseExtensions_
-    });
-
-
-/**
- * Adds the extensions parser to the trkpt parser.
- * @type {Object.<string, Object.<string, ol.XmlParser>>}
- * @private
- */
-GPX.TRKPT_PARSERS_ = makeStructureNS(
-    GPX.NAMESPACE_URIS_, {
-      'ele': makeObjectPropertySetter(readDecimal),
-      'time': makeObjectPropertySetter(readDateTime),
-      'extensions': GPX.parseExtensions_
-    });
-
 
 /**
  * This overrides the OL3 parsing to utilize the M part of the XYZM coordinate format they use. The 4th coordinate in
