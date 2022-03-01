@@ -1,9 +1,3 @@
-goog.require('ol.Feature');
-goog.require('ol.extent');
-goog.require('ol.geom.LineString');
-goog.require('ol.geom.Polygon');
-goog.require('ol.proj');
-goog.require('ol.structs.RBush');
 goog.require('os.extent');
 goog.require('os.feature.mock');
 goog.require('os.geo2');
@@ -11,15 +5,15 @@ goog.require('os.mixin.rbush');
 goog.require('os.proj');
 goog.require('os.source.Vector');
 
+import {intersects} from 'ol/src/extent';
+import Feature from 'ol/src/Feature';
+import LineString from 'ol/src/geom/LineString';
+import {fromExtent} from 'ol/src/geom/Polygon';
+import {get} from 'ol/src/proj';
+import RBush from 'ol/src/structs/RBush';
+
 
 describe('os.mixin.rbush', function() {
-  const Feature = goog.module.get('ol.Feature');
-  const olExtent = goog.module.get('ol.extent');
-  const LineString = goog.module.get('ol.geom.LineString');
-  const Polygon = goog.module.get('ol.geom.Polygon');
-  const olProj = goog.module.get('ol.proj');
-  const RBush = goog.module.get('ol.structs.RBush');
-
   const {getFeatures} = goog.module.get('os.feature.mock');
   const geo2 = goog.module.get('os.geo2');
   const {default: VectorSource} = goog.module.get('os.source.Vector');
@@ -30,7 +24,7 @@ describe('os.mixin.rbush', function() {
   var originalProjection = osMap.PROJECTION;
 
   beforeEach(function() {
-    osMap.setProjection(olProj.get(EPSG4326));
+    osMap.setProjection(get(EPSG4326));
   });
 
   afterEach(function() {
@@ -43,7 +37,7 @@ describe('os.mixin.rbush', function() {
 
     return features.filter(function(f) {
       var gExtent = f.getGeometry().getExtent();
-      return olExtent.intersects(left, gExtent) || olExtent.intersects(right, gExtent);
+      return intersects(left, gExtent) || intersects(right, gExtent);
     });
   };
 
@@ -145,7 +139,7 @@ describe('os.mixin.rbush', function() {
       [173, -2, 177, 2],
       [183, -2, 187, 2]
     ].map(function(extent) {
-      return source.getFeaturesInGeometry(Polygon.fromExtent(extent)).map(mapToId);
+      return source.getFeaturesInGeometry(fromExtent(extent)).map(mapToId);
     });
 
     for (var i = 0, n = results.length; i < n; i++) {

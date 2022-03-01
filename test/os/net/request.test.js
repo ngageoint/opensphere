@@ -1,7 +1,6 @@
 goog.require('goog.Uri');
 goog.require('goog.array');
 goog.require('goog.net.EventType');
-goog.require('ol.array');
 goog.require('os.net');
 goog.require('os.net.ExtDomainHandler');
 goog.require('os.net.MockModifier');

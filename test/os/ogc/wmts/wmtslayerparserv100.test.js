@@ -1,18 +1,18 @@
 goog.require('goog.array');
 goog.require('goog.dom.xml');
 goog.require('goog.object');
-goog.require('ol.format.WMTSCapabilities');
 goog.require('os.net');
 goog.require('os.net.CrossOrigin');
 goog.require('os.net.Request');
 goog.require('os.ogc.wmts.WMTSLayerParserV100');
 goog.require('os.ui.ogc.OGCDescriptor');
 
+import WMTSCapabilities from 'ol/src/format/WMTSCapabilities';
+
 describe('os.ogc.wmts.WMTSLayerParserV100', () => {
   const {equals: arrayEquals} = goog.module.get('goog.array');
   const {loadXml} = goog.module.get('goog.dom.xml');
   const {isEmpty: isObjectEmpty} = goog.module.get('goog.object');
-  const WMTSCapabilities = goog.module.get('ol.format.WMTSCapabilities');
   const {registerCrossOrigin} = goog.module.get('os.net');
   const {default: CrossOrigin} = goog.module.get('os.net.CrossOrigin');
   const {default: Request} = goog.module.get('os.net.Request');

@@ -1,12 +1,10 @@
-goog.require('ol.ImageCanvas');
-goog.require('ol.dom');
-goog.require('ol.extent');
 goog.require('os.ol.image');
 
+import {createCanvasContext2D} from 'ol/src/dom';
+import {getHeight} from 'ol/src/extent';
+import ImageCanvas from 'ol/src/ImageCanvas';
+
 describe('os.ol.image', function() {
-  const ImageCanvas = goog.module.get('ol.ImageCanvas');
-  const dom = goog.module.get('ol.dom');
-  const olExtent = goog.module.get('ol.extent');
   const image = goog.module.get('os.ol.image');
 
   var getData = function(imgCanvas) {
@@ -32,14 +30,14 @@ describe('os.ol.image', function() {
 
   it('should properly rotate images', function() {
     // create the image to rotate
-    var ctx = dom.createCanvasContext2D(100, 50);
+    var ctx = createCanvasContext2D(100, 50);
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     var extent = [8, 10, 16, 14];
-    var resolution = olExtent.getHeight(extent) / ctx.canvas.height;
+    var resolution = getHeight(extent) / ctx.canvas.height;
     var original = new ImageCanvas(extent, resolution, 1, ctx.canvas);
 
     // create the expected image when rotated
-    ctx = dom.createCanvasContext2D(50, 100);
+    ctx = createCanvasContext2D(50, 100);
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     extent = [10, 8, 14, 16];
     var expected = new ImageCanvas(extent, resolution, 1, ctx.canvas);

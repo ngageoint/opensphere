@@ -1,8 +1,8 @@
-goog.require('ol.MapBrowserEventType');
 goog.require('os.ol.events.condition');
 
+import MapBrowserEventType from 'ol/src/MapBrowserEventType';
+
 describe('os.ol.events.condition', function() {
-  const MapBrowserEventType = goog.module.get('ol.MapBrowserEventType');
   const condition = goog.module.get('os.ol.events.condition');
 
   it('detects right click events', function() {
