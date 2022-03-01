@@ -6,21 +6,30 @@ goog.declareModuleId('plugin.file.kml');
 
 import {normalize} from 'ol/src/color';
 import {extendCoordinate, createEmpty} from 'ol/src/extent';
-import KML from 'ol/src/format/KML';
-import {readDecimal, readString} from 'ol/src/format/xsd';
+import {readBoolean, readDecimal, readString} from 'ol/src/format/xsd';
 import {inflateCoordinates} from 'ol/src/geom/flat/inflate';
 import GeometryCollection from 'ol/src/geom/GeometryCollection';
-import GeometryLayout from 'ol/src/geom/GeometryLayout';
-import GeometryType from 'ol/src/geom/GeometryType';
 import LineString from 'ol/src/geom/LineString';
 import MultiLineString from 'ol/src/geom/MultiLineString';
-import SimpleGeometry from 'ol/src/geom/SimpleGeometry';
 import {toRadians} from 'ol/src/math';
 import Icon from 'ol/src/style/Icon';
 import IconAnchorUnits from 'ol/src/style/IconAnchorUnits';
 import IconOrigin from 'ol/src/style/IconOrigin';
 import Style from 'ol/src/style/Style';
-import {getAllTextContent, makeObjectPropertySetter, pushParseAndPop, makeStructureNS} from 'ol/src/xml';
+import {
+  OBJECT_PROPERTY_NODE_FACTORY,
+  createElementNS,
+  getAllTextContent,
+  makeArrayPusher,
+  makeChildAppender,
+  makeObjectPropertySetter,
+  makeReplacer,
+  makeSequence,
+  makeStructureNS,
+  parseNode,
+  pushParseAndPop,
+  pushSerializeAndPop
+} from 'ol/src/xml';
 import * as annotation from '../../../os/annotation/annotation.js';
 import RecordField from '../../../os/data/recordfield.js';
 import Fields from '../../../os/fields/fields.js';
@@ -28,6 +37,7 @@ import * as geo from '../../../os/geo/geo.js';
 import CrossOrigin from '../../../os/net/crossorigin.js';
 import * as net from '../../../os/net/net.js';
 import * as osObject from '../../../os/object/object.js';
+import * as KML from '../../../os/ol/format/KML';
 import * as osStyle from '../../../os/style/style.js';
 import StyleField from '../../../os/style/stylefield.js';
 import StyleManager from '../../../os/style/stylemanager_shim.js';
@@ -37,7 +47,6 @@ import * as kml from '../../../os/ui/file/kml/kml.js';
 import * as slickColumn from '../../../os/ui/slick/column.js';
 import * as xml from '../../../os/xml.js';
 import KMLField from './kmlfield.js';
-
 
 const Uri = goog.require('goog.Uri');
 const asserts = goog.require('goog.asserts');
@@ -159,29 +168,25 @@ const replaceParsers_ = function(obj, field, parser) {
  * @suppress {accessControls, const}
  */
 export const createStyleDefaults = function() {
-  if (!KML.DEFAULT_STYLE_ARRAY_) {
-    KML.createStyleDefaults_();
+  if (!KML.DEFAULT_STYLE_ARRAY) {
+    KML.createStyleDefaults();
   }
 
-  if (KML.DEFAULT_IMAGE_STYLE_SRC_ != kml.DEFAULT_ICON_PATH) {
-    // use OpenSphere's default icon, and update all properties to size/position it properly
-    KML.DEFAULT_IMAGE_STYLE_SRC_ = kml.DEFAULT_ICON_PATH;
-    KML.DEFAULT_IMAGE_SCALE_MULTIPLIER_ = 1;
-    KML.DEFAULT_IMAGE_STYLE_SIZE_ = [32, 32];
-    KML.DEFAULT_IMAGE_STYLE_ANCHOR_ = [16, 16];
-
+  if (KML.DEFAULT_IMAGE_STYLE_SRC != kml.DEFAULT_ICON_PATH) {
     // replace the icon style with the new defaults
-    KML.DEFAULT_IMAGE_STYLE_ = new Icon({
-      anchor: KML.DEFAULT_IMAGE_STYLE_ANCHOR_,
+    const icon = new Icon({
+      anchor: KML.DEFAULT_IMAGE_STYLE_ANCHOR,
       anchorOrigin: IconOrigin.BOTTOM_LEFT,
-      anchorXUnits: KML.DEFAULT_IMAGE_STYLE_ANCHOR_X_UNITS_,
-      anchorYUnits: KML.DEFAULT_IMAGE_STYLE_ANCHOR_Y_UNITS_,
+      anchorXUnits: KML.DEFAULT_IMAGE_STYLE_ANCHOR_X_UNITS,
+      anchorYUnits: KML.DEFAULT_IMAGE_STYLE_ANCHOR_Y_UNITS,
       crossOrigin: 'anonymous',
       rotation: 0,
-      scale: KML.DEFAULT_IMAGE_SCALE_MULTIPLIER_,
-      size: KML.DEFAULT_IMAGE_STYLE_SIZE_,
-      src: KML.DEFAULT_IMAGE_STYLE_SRC_
+      scale: KML.DEFAULT_IMAGE_SCALE_MULTIPLIER,
+      size: KML.DEFAULT_IMAGE_STYLE_SIZE,
+      src: KML.DEFAULT_IMAGE_STYLE_SRC
     });
+
+    KML.setDefaultImageStyle(kml.DEFAULT_ICON_PATH, icon);
   }
 };
 
@@ -192,7 +197,7 @@ export const createStyleDefaults = function() {
  * @template T
  */
 export const OL_GEOMETRY_NODE_FACTORY = function() {
-  return KML.GEOMETRY_NODE_FACTORY_;
+  return KML.GEOMETRY_NODE_FACTORY;
 };
 
 /**
@@ -202,7 +207,7 @@ export const OL_GEOMETRY_NODE_FACTORY = function() {
  * @template T
  */
 export const OL_ICON_STYLE_PARSERS = function() {
-  return KML.ICON_STYLE_PARSERS_;
+  return KML.ICON_STYLE_PARSERS;
 };
 
 /**
@@ -211,7 +216,7 @@ export const OL_ICON_STYLE_PARSERS = function() {
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 export const OL_LINK_PARSERS = function() {
-  return KML.LINK_PARSERS_;
+  return KML.LINK_PARSERS;
 };
 
 /**
@@ -220,7 +225,7 @@ export const OL_LINK_PARSERS = function() {
  * @return {Array<string>}
  */
 export const OL_NAMESPACE_URIS = function() {
-  return KML.NAMESPACE_URIS_;
+  return KML.NAMESPACE_URIS;
 };
 
 /**
@@ -229,7 +234,7 @@ export const OL_NAMESPACE_URIS = function() {
  * @return {Array<string>}
  */
 export const OL_GX_NAMESPACE_URIS = function() {
-  return KML.GX_NAMESPACE_URIS_;
+  return KML.GX_NAMESPACE_URIS;
 };
 
 /**
@@ -238,7 +243,7 @@ export const OL_GX_NAMESPACE_URIS = function() {
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 export const OL_NETWORK_LINK_PARSERS = function() {
-  return KML.NETWORK_LINK_PARSERS_;
+  return KML.NETWORK_LINK_PARSERS;
 };
 
 /**
@@ -247,7 +252,7 @@ export const OL_NETWORK_LINK_PARSERS = function() {
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 export const OL_PAIR_PARSERS = function() {
-  return KML.PAIR_PARSERS_;
+  return KML.PAIR_PARSERS;
 };
 
 /**
@@ -255,7 +260,7 @@ export const OL_PAIR_PARSERS = function() {
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 export const OL_PLACEMARK_PARSERS = function() {
-  return KML.PLACEMARK_PARSERS_;
+  return KML.PLACEMARK_PARSERS;
 };
 
 /**
@@ -264,7 +269,7 @@ export const OL_PLACEMARK_PARSERS = function() {
  * @return {Object<string, Object<string, ol.XmlSerializer>>}
  */
 export const OL_PLACEMARK_SERIALIZERS = function() {
-  return KML.PLACEMARK_SERIALIZERS_;
+  return KML.PLACEMARK_SERIALIZERS;
 };
 
 /**
@@ -273,7 +278,7 @@ export const OL_PLACEMARK_SERIALIZERS = function() {
  * @return {Object<string, Object<string, ol.XmlSerializer>>}
  */
 export const OL_MULTI_GEOMETRY_SERIALIZERS = function() {
-  return KML.MULTI_GEOMETRY_SERIALIZERS_;
+  return KML.MULTI_GEOMETRY_SERIALIZERS;
 };
 
 /**
@@ -282,7 +287,7 @@ export const OL_MULTI_GEOMETRY_SERIALIZERS = function() {
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 export const OL_STYLE_PARSERS = function() {
-  return KML.STYLE_PARSERS_;
+  return KML.STYLE_PARSERS;
 };
 
 /**
@@ -312,11 +317,11 @@ const readColor_ = function(node) {
   }
 };
 
-replaceParsers_(KML.LABEL_STYLE_PARSERS_, 'color',
+replaceParsers_(KML.LABEL_STYLE_PARSERS, 'color',
     makeObjectPropertySetter(readColor_));
-replaceParsers_(KML.LINE_STYLE_PARSERS_, 'color',
+replaceParsers_(KML.LINE_STYLE_PARSERS, 'color',
     makeObjectPropertySetter(readColor_));
-replaceParsers_(KML.POLY_STYLE_PARSERS_, 'color',
+replaceParsers_(KML.POLY_STYLE_PARSERS, 'color',
     makeObjectPropertySetter(readColor_));
 
 
@@ -329,26 +334,26 @@ replaceParsers_(KML.POLY_STYLE_PARSERS_, 'color',
  */
 export const readStyle = function(node, objectStack) {
   var styleObject = pushParseAndPop(
-      {}, KML.STYLE_PARSERS_, node, objectStack);
+      {}, KML.STYLE_PARSERS, node, objectStack);
   if (!styleObject || googObject.isEmpty(styleObject)) {
     // don't create a style config if nothing was parsed from the element
     return null;
   }
   var fillStyle = /** @type {Fill} */
       ('fillStyle' in styleObject ?
-        styleObject['fillStyle'] : KML.DEFAULT_FILL_STYLE_);
+        styleObject['fillStyle'] : KML.DEFAULT_FILL_STYLE);
   var fill = /** @type {boolean|undefined} */ (styleObject['fill']);
   var imageStyle = /** @type {Image} */
       ('imageStyle' in styleObject ?
-        styleObject['imageStyle'] : KML.DEFAULT_IMAGE_STYLE_);
-  if (imageStyle == KML.DEFAULT_NO_IMAGE_STYLE_) {
+        styleObject['imageStyle'] : KML.DEFAULT_IMAGE_STYLE);
+  if (imageStyle == KML.DEFAULT_NO_IMAGE_STYLE) {
     imageStyle = undefined;
   }
   // Intentionally removed using the default OpenLayers text style, to use OpenSphere defaults instead.
   var textStyle = /** @type {Text} */ ('textStyle' in styleObject ? styleObject['textStyle'] : null);
   var strokeStyle = /** @type {Stroke} */
       ('strokeStyle' in styleObject ?
-        styleObject['strokeStyle'] : KML.DEFAULT_STROKE_STYLE_);
+        styleObject['strokeStyle'] : KML.DEFAULT_STROKE_STYLE);
   var outline = /** @type {boolean|undefined} */
       (styleObject['outline']);
 
@@ -521,7 +526,7 @@ osObject.merge(TIME_PARSERS, OL_PLACEMARK_PARSERS(), false);
  * @return {ol.geom.MultiLineString|undefined} MultiLineString.
  */
 export const readMultiTrack = function(node, objectStack) {
-  var geometry = KML.readGxMultiTrack_(node, objectStack);
+  var geometry = KML.readGxMultiTrack(node, objectStack);
 
   var properties = pushParseAndPop({}, MULTITRACK_PROPERTY_PARSERS, node, objectStack);
   if (properties) {
@@ -538,7 +543,7 @@ export const readMultiTrack = function(node, objectStack) {
 export const MULTITRACK_GEOMETRY_PARSERS = makeStructureNS(
     OL_NAMESPACE_URIS(), {
       // add kml:Track parser to support the 2.3 spec
-      'Track': makeArrayPusher(KML.readGxTrack_)
+      'Track': makeArrayPusher(KML.readGxTrack)
     });
 
 /**
@@ -564,7 +569,7 @@ export const PLACEMARK_TRACK_PARSERS = makeStructureNS(
     OL_NAMESPACE_URIS(), {
       // add kml:Track and kml:MultiTrack parsers to support the 2.3 spec
       'MultiTrack': makeObjectPropertySetter(readMultiTrack, 'geometry'),
-      'Track': makeObjectPropertySetter(KML.readGxTrack_, 'geometry')
+      'Track': makeObjectPropertySetter(KML.readGxTrack, 'geometry')
     }, makeStructureNS(
         OL_GX_NAMESPACE_URIS(), {
           // replace gx:MultiTrack parser with ours
@@ -577,20 +582,20 @@ export const PLACEMARK_TRACK_PARSERS = makeStructureNS(
  */
 export const GX_TRACK_PARSERS = makeStructureNS(
     OL_NAMESPACE_URIS(), {
-      'coord': KML.gxCoordParser_
+      'coord': KML.gxCoordParser
     });
 
 
 /**
  * Extend the Openlayers MultiTrack geometry parsers.
  */
-osObject.merge(MULTITRACK_GEOMETRY_PARSERS, KML.GX_MULTITRACK_GEOMETRY_PARSERS_, false);
+osObject.merge(MULTITRACK_GEOMETRY_PARSERS, KML.GX_MULTITRACK_GEOMETRY_PARSERS, false);
 
 
 /**
  * Extend the Openlayers Track node parsers.
  */
-osObject.merge(GX_TRACK_PARSERS, KML.GX_TRACK_PARSERS_, false);
+osObject.merge(GX_TRACK_PARSERS, KML.GX_TRACK_PARSERS, false);
 
 
 /**
@@ -674,7 +679,7 @@ export const readLatLonQuad = function(node, objectStack) {
  */
 export const GROUND_OVERLAY_PARSERS = makeStructureNS(
     OL_NAMESPACE_URIS(), {
-      'Icon': makeObjectPropertySetter(KML.readIcon_),
+      'Icon': makeObjectPropertySetter(KML.readIcon),
       'color': makeObjectPropertySetter(readColor_),
       'drawOrder': makeObjectPropertySetter(readDecimal),
       'altitude': makeObjectPropertySetter(readDecimal),
@@ -709,7 +714,7 @@ export const LAT_LON_BOX_PARSERS = makeStructureNS(
  */
 export const LAT_LON_QUAD_PARSERS = makeStructureNS(
     OL_NAMESPACE_URIS(), {
-      'coordinates': makeReplacer(KML.readFlatCoordinates_)
+      'coordinates': makeReplacer(KML.readFlatCoordinates)
     });
 
 /**
@@ -720,53 +725,17 @@ export const SCREEN_OVERLAY_PARSERS = makeStructureNS(
     OL_NAMESPACE_URIS(), {
       'name': makeObjectPropertySetter(readString),
       'visibility': makeObjectPropertySetter(readBoolean),
-      'Icon': makeObjectPropertySetter(KML.readIcon_),
+      'Icon': makeObjectPropertySetter(KML.readIcon),
       'color': makeObjectPropertySetter(readColor_),
       'drawOrder': makeObjectPropertySetter(readDecimal),
-      'overlayXY': makeObjectPropertySetter(KML.readVec2_),
-      'screenXY': makeObjectPropertySetter(KML.readVec2_),
-      'rotationXY': makeObjectPropertySetter(KML.readVec2_),
-      'size': makeObjectPropertySetter(KML.readVec2_),
+      'overlayXY': makeObjectPropertySetter(KML.readVec2),
+      'screenXY': makeObjectPropertySetter(KML.readVec2),
+      'rotationXY': makeObjectPropertySetter(KML.readVec2),
+      'size': makeObjectPropertySetter(KML.readVec2),
       'rotation': makeObjectPropertySetter(readDecimal),
       'TimeStamp': makeObjectPropertySetter(readTime, RecordField.TIME),
       'TimeSpan': makeObjectPropertySetter(readTime, RecordField.TIME)
     });
-
-
-/**
- * Override the Openlayers function to support exporting Track and MultiTrack nodes.
- *
- * @param {*} value Value.
- * @param {Array<*>} objectStack Object stack.
- * @param {string=} opt_nodeName Node name.
- * @return {Node|undefined} Node.
- *
- * @suppress {duplicate}
- */
-KML.GEOMETRY_NODE_FACTORY_ = function(value, objectStack, opt_nodeName) {
-  var parentNode = objectStack[objectStack.length - 1].node;
-  var namespaceURI = parentNode.namespaceURI;
-  var geometryType = value.getType();
-  var nodeType = KML.GEOMETRY_TYPE_TO_NODENAME_[geometryType];
-
-  if (value instanceof SimpleGeometry) {
-    // check if we can transform it into a track
-    var layout = value.getLayout();
-
-    if (layout === GeometryLayout.XYM || layout === GeometryLayout.XYZM) {
-      if (geometryType === GeometryType.LINE_STRING) {
-        nodeType = 'gx:Track';
-        namespaceURI = GX_NS;
-      } else if (geometryType === GeometryType.MULTI_LINE_STRING) {
-        nodeType = 'gx:MultiTrack';
-        namespaceURI = GX_NS;
-      }
-    }
-  }
-
-  return createElementNS(namespaceURI, nodeType);
-};
-
 
 /**
  * Override the href parser to use the asset map.
@@ -805,7 +774,7 @@ export const readURI = function(node) {
   return s;
 };
 
-replaceParsers_(KML.PLACEMARK_PARSERS_, 'styleUrl',
+replaceParsers_(KML.PLACEMARK_PARSERS, 'styleUrl',
     makeObjectPropertySetter(readURI));
 
 
@@ -813,12 +782,12 @@ replaceParsers_(KML.PLACEMARK_PARSERS_, 'styleUrl',
  * Override for HREF parsing so that it will use our own readURI function above
  */
 export const HREF_OVERRIDE = makeStructureNS(
-    KML.NAMESPACE_URIS_, {
+    KML.NAMESPACE_URIS, {
       'href': makeObjectPropertySetter(readURI)
     });
 
-osObject.merge(HREF_OVERRIDE, KML.LINK_PARSERS_, true);
-osObject.merge(HREF_OVERRIDE, KML.ICON_PARSERS_, true);
+osObject.merge(HREF_OVERRIDE, KML.LINK_PARSERS, true);
+osObject.merge(HREF_OVERRIDE, KML.ICON_PARSERS, true);
 
 
 /**
@@ -827,7 +796,7 @@ osObject.merge(HREF_OVERRIDE, KML.ICON_PARSERS_, true);
  * @param {ol.geom.Geometry} geometry Geometry.
  * @param {Array<*>} objectStack Object stack.
  */
-const olWriteMultiGeometry_ = KML.writeMultiGeometry_;
+const olWriteMultiGeometry_ = KML.writeMultiGeometry;
 
 /**
  * Adds support for writing geometries in a {@link GeometryCollection} to a kml:MultiGeometry node.
@@ -924,14 +893,14 @@ osObject.merge(PLACEMARK_SERIALIZERS, OL_PLACEMARK_SERIALIZERS(), true);
  * @param {Array<*>} objectStack Object stack
  */
 const writePolygon_ = function(node, polygon, objectStack) {
-  KML.writePolygon_(node, polygon, objectStack);
+  KML.writePolygon(node, polygon, objectStack);
 
   var context = /** @type {ol.XmlNodeStackItem} */ ({node: node});
   var properties = polygon.getProperties();
   var parentNode = objectStack[objectStack.length - 1].node;
-  var orderedKeys = KML.PRIMITIVE_GEOMETRY_SEQUENCE_[parentNode.namespaceURI];
+  var orderedKeys = KML.PRIMITIVE_GEOMETRY_SEQUENCE[parentNode.namespaceURI];
   var values = makeSequence(properties, orderedKeys);
-  pushSerializeAndPop(context, KML.PRIMITIVE_GEOMETRY_SERIALIZERS_,
+  pushSerializeAndPop(context, KML.PRIMITIVE_GEOMETRY_SERIALIZERS,
       OBJECT_PROPERTY_NODE_FACTORY, values, objectStack, orderedKeys);
 };
 
@@ -951,44 +920,12 @@ osObject.merge(POLYGON_SERIALIZERS,
 /**
  * {@link GeometryCollection} should be serialized as a kml:MultiGeometry.
  */
-KML.GEOMETRY_TYPE_TO_NODENAME_['GeometryCollection'] = 'MultiGeometry';
+KML.GEOMETRY_TYPE_TO_NODENAME['GeometryCollection'] = 'MultiGeometry';
 
-
-/**
- * This is literally replacing \d+ with \d* in the regular expression's altitude group so coordinates like
- * "1,2,0." will work.
- *
- * @param {Node} node Node.
- * @private
- * @return {Array<number>|undefined} Flat coordinates.
- *
- * @suppress {duplicate}
- */
-KML.readFlatCoordinates_ = function(node) {
-  var s = getAllTextContent(node, false);
-  var flatCoordinates = [];
-
-  // The KML specification states that coordinate tuples should not include
-  // spaces, but we tolerate them.
-  var re = /^[^\d+.-]*([+\-]?\d*\.?\d+(?:e[+\-]?\d+)?)\s*,\s*([+\-]?\d*\.?\d+(?:e[+\-]?\d+)?)(?:\s*,\s*([+\-]?\d*\.?\d*(?:e[+\-]?\d+)?))?\s*/i;
-
-  var m;
-  while ((m = re.exec(s))) {
-    var x = parseFloat(m[1]);
-    var y = parseFloat(m[2]);
-    var z = m[3] ? parseFloat(m[3]) : 0;
-    flatCoordinates.push(x, y, z);
-    s = s.substr(m[0].length);
-  }
-  // if (s !== '') {
-  //   return undefined;
-  // }
-  return flatCoordinates;
-};
-replaceParsers_(KML.FLAT_LINEAR_RING_PARSERS_, 'coordinates',
-    makeReplacer(KML.readFlatCoordinates_));
-replaceParsers_(KML.GEOMETRY_FLAT_COORDINATES_PARSERS_, 'coordinates',
-    makeReplacer(KML.readFlatCoordinates_));
+replaceParsers_(KML.FLAT_LINEAR_RING_PARSERS, 'coordinates',
+    makeReplacer(KML.readFlatCoordinates));
+replaceParsers_(KML.GEOMETRY_FLAT_COORDINATES_PARSERS, 'coordinates',
+    makeReplacer(KML.readFlatCoordinates));
 
 
 /**
@@ -1001,11 +938,11 @@ const readScale_ = function(node) {
   return XSD.readDecimal(node);
 };
 
-replaceParsers_(KML.ICON_STYLE_PARSERS_, 'scale',
+replaceParsers_(KML.ICON_STYLE_PARSERS, 'scale',
     makeObjectPropertySetter(readScale_));
-replaceParsers_(KML.LABEL_STYLE_PARSERS_, 'scale',
+replaceParsers_(KML.LABEL_STYLE_PARSERS, 'scale',
     makeObjectPropertySetter(readScale_));
-replaceParsers_(KML.ICON_STYLE_PARSERS_, 'iconOptions',
+replaceParsers_(KML.ICON_STYLE_PARSERS, 'iconOptions',
     makeObjectPropertySetter(readJson));
 
 
@@ -1040,7 +977,7 @@ const IconStyleParser_ = function(node, objectStack) {
   // FIXME viewBoundScale
   // FIXME viewFormat
   // FIXME httpQuery
-  var object = pushParseAndPop({}, KML.ICON_STYLE_PARSERS_, node, objectStack);
+  var object = pushParseAndPop({}, KML.ICON_STYLE_PARSERS, node, objectStack);
   if (!object) {
     return;
   }

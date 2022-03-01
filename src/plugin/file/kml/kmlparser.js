@@ -346,10 +346,10 @@ export default class KMLParser extends AsyncZipParser {
   setSource(source) {
     this.cleanup();
 
-    if (isDocument(source)) {
-      this.document_ = /** @type {Document} */ (source);
-    } else if (typeof source === 'string') {
+    if (typeof source === 'string') {
       this.document_ = xml.loadXml(source);
+    } else if (isDocument(source)) {
+      this.document_ = /** @type {Document} */ (source);
     } else if (source instanceof ArrayBuffer) {
       if (mimeZip.isZip(source)) {
         this.clearAssets();
