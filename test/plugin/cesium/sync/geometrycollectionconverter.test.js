@@ -1,11 +1,3 @@
-goog.require('ol.Feature');
-goog.require('ol.geom.GeometryCollection');
-goog.require('ol.geom.Point');
-goog.require('ol.geom.Polygon');
-goog.require('ol.proj');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Style');
-goog.require('olcs.core');
 goog.require('os.layer.Vector');
 goog.require('os.map');
 goog.require('os.proj');
@@ -14,14 +6,14 @@ goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.GeometryCollectionConverter');
 goog.require('test.plugin.cesium.scene');
 
+import Feature from 'ol/src/Feature';
+import GeometryCollection from 'ol/src/geom/GeometryCollection';
+import Point from 'ol/src/geom/Point';
+import {fromExtent} from 'ol/src/geom/Polygon';
+import {get} from 'ol/src/proj';
+import Style from 'ol/src/style/Style';
 
 describe('plugin.cesium.sync.GeometryCollectionConverter', () => {
-  const Feature = goog.module.get('ol.Feature');
-  const GeometryCollection = goog.module.get('ol.geom.GeometryCollection');
-  const Point = goog.module.get('ol.geom.Point');
-  const Polygon = goog.module.get('ol.geom.Polygon');
-  const olProj = goog.module.get('ol.proj');
-  const Style = goog.module.get('ol.style.Style');
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osProj = goog.module.get('os.proj');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
@@ -46,7 +38,7 @@ describe('plugin.cesium.sync.GeometryCollectionConverter', () => {
     style = new Style();
     layer = new VectorLayer();
     scene = getFakeScene();
-    context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
+    context = new VectorContext(scene, layer, get(osProj.EPSG4326));
   });
 
   describe('create', () => {
@@ -62,7 +54,7 @@ describe('plugin.cesium.sync.GeometryCollectionConverter', () => {
 
     it('should recursively create geometries', () => {
       const point = new Point([0, 0]);
-      const poly = new Polygon.fromExtent([-5, -5, 5, 5]);
+      const poly = new fromExtent([-5, -5, 5, 5]);
       const geoms = [point, poly];
       geometry.setGeometriesArray(geoms);
 
@@ -82,7 +74,7 @@ describe('plugin.cesium.sync.GeometryCollectionConverter', () => {
 
     it('should recursively update geometries', () => {
       const point = new Point([0, 0]);
-      const poly = new Polygon.fromExtent([-5, -5, 5, 5]);
+      const poly = new fromExtent([-5, -5, 5, 5]);
       const geoms = [point, poly];
       geometry.setGeometriesArray(geoms);
       GeometryCollectionConverter.setConvertFunction(mockConvert);

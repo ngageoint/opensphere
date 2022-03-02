@@ -1,11 +1,3 @@
-goog.require('ol.Feature');
-goog.require('ol.geom.LineString');
-goog.require('ol.proj');
-goog.require('ol.style.Circle');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Image');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
 goog.require('os.layer.Vector');
 goog.require('os.map');
 goog.require('os.proj');
@@ -14,14 +6,13 @@ goog.require('plugin.cesium.sync.DynamicLineStringConverter');
 goog.require('test.plugin.cesium.scene');
 goog.require('test.plugin.cesium.sync.dynamiclinestring');
 
+import Feature from 'ol/src/Feature';
+import LineString from 'ol/src/geom/LineString';
+import {get} from 'ol/src/proj';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
 
 describe('plugin.cesium.sync.DynamicLineStringConverter', () => {
-  const Feature = goog.module.get('ol.Feature');
-  const LineString = goog.module.get('ol.geom.LineString');
-  const olProj = goog.module.get('ol.proj');
-  const Stroke = goog.module.get('ol.style.Stroke');
-  const Style = goog.module.get('ol.style.Style');
-
   const {default: Vector} = goog.module.get('os.layer.Vector');
   const osMap = goog.module.get('os.map');
   const {EPSG4326} = goog.module.get('os.proj');
@@ -45,7 +36,7 @@ describe('plugin.cesium.sync.DynamicLineStringConverter', () => {
     style = new Style();
     layer = new Vector();
     scene = getRealScene();
-    context = new VectorContext(scene, layer, olProj.get(EPSG4326));
+    context = new VectorContext(scene, layer, get(EPSG4326));
   });
 
   const originalProjection = osMap.PROJECTION;

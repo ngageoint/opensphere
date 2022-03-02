@@ -1,19 +1,15 @@
-goog.require('ol.Feature');
-goog.require('ol.geom.Point');
-goog.require('ol.geom.Polygon');
-goog.require('ol.proj');
-goog.require('ol.style.Style');
 goog.require('os.layer.Vector');
 goog.require('os.proj');
 goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.convert');
 goog.require('test.plugin.cesium.scene');
 
+import Feature from 'ol/src/Feature';
+import {fromExtent} from 'ol/src/geom/Polygon';
+import {get} from 'ol/src/proj';
+import Style from 'ol/src/style/Style';
+
 describe('plugin.cesium.sync.convert', () => {
-  const Feature = goog.module.get('ol.Feature');
-  const Polygon = goog.module.get('ol.geom.Polygon');
-  const olProj = goog.module.get('ol.proj');
-  const Style = goog.module.get('ol.style.Style');
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osProj = goog.module.get('os.proj');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
@@ -27,11 +23,11 @@ describe('plugin.cesium.sync.convert', () => {
   let context;
 
   beforeEach(() => {
-    geometry = new Polygon.fromExtent([-5, -5, 5, 5]);
+    geometry = new fromExtent([-5, -5, 5, 5]);
     feature = new Feature(geometry);
     layer = new VectorLayer();
     scene = getFakeScene();
-    context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
+    context = new VectorContext(scene, layer, get(osProj.EPSG4326));
   });
 
   it('should not convert empty styles', () => {
@@ -51,7 +47,7 @@ describe('plugin.cesium.sync.convert', () => {
     feature.setStyle([
       new Style(),
       null,
-      new Style({geometry: new Polygon.fromExtent([-5, -5, 5, 5])})
+      new Style({geometry: new fromExtent([-5, -5, 5, 5])})
     ]);
 
     convert(feature, 1, context);

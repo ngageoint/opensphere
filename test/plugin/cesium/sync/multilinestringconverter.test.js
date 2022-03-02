@@ -1,8 +1,3 @@
-goog.require('ol.Feature');
-goog.require('ol.geom.MultiLineString');
-goog.require('ol.proj');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
 goog.require('os.layer.Vector');
 goog.require('os.map');
 goog.require('os.proj');
@@ -11,13 +6,14 @@ goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.MultiLineStringConverter');
 goog.require('test.plugin.cesium.scene');
 
+import Feature from 'ol/src/Feature';
+import MultiLineString from 'ol/src/geom/MultiLineString';
+import {get} from 'ol/src/proj';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
+
 
 describe('plugin.cesium.sync.MultiLineStringConverter', () => {
-  const Feature = goog.module.get('ol.Feature');
-  const MultiLineString = goog.module.get('ol.geom.MultiLineString');
-  const olProj = goog.module.get('ol.proj');
-  const Stroke = goog.module.get('ol.style.Stroke');
-  const Style = goog.module.get('ol.style.Style');
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osMap = goog.module.get('os.map');
   const osProj = goog.module.get('os.proj');
@@ -38,7 +34,7 @@ describe('plugin.cesium.sync.MultiLineStringConverter', () => {
     style = new Style();
     layer = new VectorLayer();
     scene = getFakeScene();
-    context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
+    context = new VectorContext(scene, layer, get(osProj.EPSG4326));
   });
 
   const originalProjection = osMap.PROJECTION;

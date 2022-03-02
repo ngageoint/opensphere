@@ -1,10 +1,3 @@
-goog.require('ol.Feature');
-goog.require('ol.geom.LineString');
-goog.require('ol.proj');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
-goog.require('olcs.core');
 goog.require('os.data.RecordField');
 goog.require('os.geom.GeometryField');
 goog.require('os.interpolate');
@@ -18,14 +11,14 @@ goog.require('plugin.cesium.sync.LineStringConverter');
 goog.require('test.plugin.cesium.scene');
 goog.require('test.plugin.cesium.sync.linestring');
 
+import Feature from 'ol/src/Feature';
+import LineString from 'ol/src/geom/LineString';
+import {get} from 'ol/src/proj';
+import Fill from 'ol/src/style/Fill';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
 
 describe('plugin.cesium.sync.LineStringConverter', () => {
-  const Feature = goog.module.get('ol.Feature');
-  const LineString = goog.module.get('ol.geom.LineString');
-  const olProj = goog.module.get('ol.proj');
-  const Fill = goog.module.get('ol.style.Fill');
-  const Stroke = goog.module.get('ol.style.Stroke');
-  const Style = goog.module.get('ol.style.Style');
   const {default: RecordField} = goog.module.get('os.data.RecordField');
   const interpolate = goog.module.get('os.interpolate');
   const {default: Method} = goog.module.get('os.interpolate.Method');
@@ -53,7 +46,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
     style = new Style();
     layer = new VectorLayer();
     scene = getRealScene();
-    context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
+    context = new VectorContext(scene, layer, get(osProj.EPSG4326));
     getLine = getLineRetriever(context, scene);
   });
 

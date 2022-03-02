@@ -1,6 +1,3 @@
-goog.require('ol.Feature');
-goog.require('ol.proj');
-goog.require('ol.style.Style');
 goog.require('os.geom.Ellipse');
 goog.require('os.layer.Vector');
 goog.require('os.map');
@@ -11,11 +8,11 @@ goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.EllipsoidConverter');
 goog.require('test.plugin.cesium.scene');
 
+import Feature from 'ol/src/Feature';
+import {get} from 'ol/src/proj';
+import Style from 'ol/src/style/Style';
 
 describe('plugin.cesium.sync.EllipsoidConverter', () => {
-  const Feature = goog.module.get('ol.Feature');
-  const olProj = goog.module.get('ol.proj');
-  const Style = goog.module.get('ol.style.Style');
   const {default: Ellipse} = goog.module.get('os.geom.Ellipse');
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osProj = goog.module.get('os.proj');
@@ -38,7 +35,7 @@ describe('plugin.cesium.sync.EllipsoidConverter', () => {
     style = new Style();
     layer = new VectorLayer();
     scene = getRealScene();
-    context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
+    context = new VectorContext(scene, layer, get(osProj.EPSG4326));
   });
 
   afterEach(() => {

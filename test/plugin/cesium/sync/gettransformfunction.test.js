@@ -1,11 +1,10 @@
-goog.require('ol.proj');
 goog.require('os.map');
 goog.require('os.proj');
 goog.require('plugin.cesium.sync.getTransformFunction');
 
+import {get} from 'ol/src/proj';
 
 describe('plugin.cesium.sync.getTransformFunction', () => {
-  const olProj = goog.module.get('ol.proj');
   const osMap = goog.module.get('os.map');
   const osProj = goog.module.get('os.proj');
   const {getTransformFunction} = goog.module.get('plugin.cesium.sync.getTransformFunction');
@@ -16,12 +15,12 @@ describe('plugin.cesium.sync.getTransformFunction', () => {
   });
 
   it('should return null for projections equivalent to EPSG:4326', () => {
-    osMap.setProjection(olProj.get(osProj.EPSG4326));
+    osMap.setProjection(get(osProj.EPSG4326));
     expect(getTransformFunction()).toBe(null);
   });
 
   it('should return a transform function for projections not equivalent to EPSG:4326', () => {
-    osMap.setProjection(olProj.get(osProj.EPSG3857));
+    osMap.setProjection(get(osProj.EPSG3857));
     const result = getTransformFunction();
     expect(result).toBeTruthy();
 
@@ -30,7 +29,7 @@ describe('plugin.cesium.sync.getTransformFunction', () => {
   });
 
   it('should transform coordinates', () => {
-    osMap.setProjection(olProj.get(osProj.EPSG3857));
+    osMap.setProjection(get(osProj.EPSG3857));
     const tx = getTransformFunction();
     const coord = [0, 0];
     const result = tx(coord);
@@ -40,7 +39,7 @@ describe('plugin.cesium.sync.getTransformFunction', () => {
   });
 
   it('should copy dimensions outside of x/y to the output', () => {
-    osMap.setProjection(olProj.get(osProj.EPSG3857));
+    osMap.setProjection(get(osProj.EPSG3857));
     const tx = getTransformFunction();
     const coord = [0, 0, 100];
     const result = tx(coord);
@@ -54,7 +53,7 @@ describe('plugin.cesium.sync.getTransformFunction', () => {
   });
 
   it('should use the optional result', () => {
-    osMap.setProjection(olProj.get(osProj.EPSG3857));
+    osMap.setProjection(get(osProj.EPSG3857));
     const tx = getTransformFunction();
     const coord = [0, 0, 100];
     const result = [];
@@ -66,7 +65,7 @@ describe('plugin.cesium.sync.getTransformFunction', () => {
   });
 
   it('should use the given dimensions size', () => {
-    osMap.setProjection(olProj.get(osProj.EPSG3857));
+    osMap.setProjection(get(osProj.EPSG3857));
     const tx = getTransformFunction();
     const coord = [0, 0, 100];
     const result = [];

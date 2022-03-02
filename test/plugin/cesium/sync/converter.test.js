@@ -1,8 +1,3 @@
-goog.require('ol.geom.GeometryType');
-goog.require('ol.geom.Point');
-goog.require('ol.proj');
-goog.require('ol.style.Style');
-goog.require('ol.style.Text');
 goog.require('os.feature.DynamicFeature');
 goog.require('os.geom.Ellipse');
 goog.require('os.layer.Vector');
@@ -25,15 +20,14 @@ goog.require('plugin.cesium.sync.PolygonConverter');
 goog.require('plugin.cesium.sync.converter');
 goog.require('test.plugin.cesium.scene');
 
+import Feature from 'ol/src/Feature';
+import GeometryType from 'ol/src/geom/GeometryType';
+import Point from 'ol/src/geom/Point';
+import {get} from 'ol/src/proj';
+import Style from 'ol/src/style/Style';
+import Text from 'ol/src/style/Text';
 
 describe('plugin.cesium.sync.converter', () => {
-  const Text = goog.module.get('ol.style.Text');
-  const Feature = goog.module.get('ol.Feature');
-  const GeometryType = goog.module.get('ol.geom.GeometryType');
-  const Point = goog.module.get('ol.geom.Point');
-  const olProj = goog.module.get('ol.proj');
-  const Style = goog.module.get('ol.style.Style');
-
   const {convertGeometry, getConverter} = goog.module.get('plugin.cesium.sync.converter');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
   const {default: DynamicFeature} = goog.module.get('os.feature.DynamicFeature');
@@ -70,7 +64,7 @@ describe('plugin.cesium.sync.converter', () => {
     style = new Style();
     layer = new Vector();
     scene = getFakeScene();
-    context = new VectorContext(scene, layer, olProj.get(EPSG4326));
+    context = new VectorContext(scene, layer, get(EPSG4326));
   });
 
   describe('converterGeometry', () => {

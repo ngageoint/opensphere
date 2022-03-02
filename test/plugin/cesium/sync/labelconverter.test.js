@@ -1,12 +1,3 @@
-goog.require('ol.Feature');
-goog.require('ol.extent');
-goog.require('ol.geom.Point');
-goog.require('ol.geom.Polygon');
-goog.require('ol.proj');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
-goog.require('ol.style.Text');
 goog.require('os.layer.Vector');
 goog.require('os.map');
 goog.require('os.proj');
@@ -16,17 +7,17 @@ goog.require('test.plugin.cesium.primitive');
 goog.require('test.plugin.cesium.scene');
 goog.require('test.plugin.cesium.sync.style');
 
+import {getCenter} from 'ol/src/extent';
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
+import {fromExtent} from 'ol/src/geom/Polygon';
+import {get, transform} from 'ol/src/proj';
+import Fill from 'ol/src/style/Fill';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
+import Text from 'ol/src/style/Text';
 
 describe('plugin.cesium.sync.LabelConverter', () => {
-  const Feature = goog.module.get('ol.Feature');
-  const olExtent = goog.module.get('ol.extent');
-  const Point = goog.module.get('ol.geom.Point');
-  const Polygon = goog.module.get('ol.geom.Polygon');
-  const olProj = goog.module.get('ol.proj');
-  const Fill = goog.module.get('ol.style.Fill');
-  const Stroke = goog.module.get('ol.style.Stroke');
-  const Style = goog.module.get('ol.style.Style');
-  const Text = goog.module.get('ol.style.Text');
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osMap = goog.module.get('os.map');
   const osProj = goog.module.get('os.proj');
@@ -48,7 +39,7 @@ describe('plugin.cesium.sync.LabelConverter', () => {
     style = new Style();
     layer = new VectorLayer();
     scene = getFakeScene();
-    context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
+    context = new VectorContext(scene, layer, get(osProj.EPSG4326));
   });
 
   const originalProjection = osMap.PROJECTION;
@@ -88,7 +79,7 @@ describe('plugin.cesium.sync.LabelConverter', () => {
     });
 
     it('should position itself at the extent center for polygons', () => {
-      geometry = Polygon.fromExtent([5, 5, 10, 10]);
+      geometry = fromExtent([5, 5, 10, 10]);
       style.setText(new Text({
         text: 'Test'
       }));
@@ -97,7 +88,7 @@ describe('plugin.cesium.sync.LabelConverter', () => {
       expect(context.labels.length).toBe(1);
 
       const label = context.labels.get(0);
-      const center = olExtent.getCenter(geometry.getExtent());
+      const center = getCenter(geometry.getExtent());
       const expectedPosition = Cesium.Cartesian3.fromDegrees(center[0], center[1], 0);
 
       expect(label.position.x).toBeCloseTo(expectedPosition.x, 12);
@@ -107,13 +98,13 @@ describe('plugin.cesium.sync.LabelConverter', () => {
 
     it('should create a label and transform other projection coordinates', () => {
       // pretend we swapped to EPSG:3857
-      osMap.setProjection(olProj.get(osProj.EPSG3857));
+      osMap.setProjection(get(osProj.EPSG3857));
 
       style.setText(new Text({
         text: 'Test'
       }));
 
-      geometry.setCoordinates(olProj.transform([-105, 40], osProj.EPSG4326, osProj.EPSG3857));
+      geometry.setCoordinates(transform([-105, 40], osProj.EPSG4326, osProj.EPSG3857));
       expect(labelConverter.create(feature, geometry, style, context)).toBe(true);
       expect(context.labels.length).toBe(1);
 
