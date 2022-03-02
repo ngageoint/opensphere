@@ -1,5 +1,4 @@
 goog.require('goog.events');
-goog.require('ol.geom.Point');
 goog.require('os.events.EventType');
 goog.require('os.file.File');
 goog.require('os.file.mime.mock');

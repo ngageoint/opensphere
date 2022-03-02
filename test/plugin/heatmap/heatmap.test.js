@@ -1,10 +1,4 @@
 goog.require('goog.string');
-goog.require('ol.Feature');
-goog.require('ol.geom.MultiPoint');
-goog.require('ol.geom.Point');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
 goog.require('os.Dispatcher');
 goog.require('os.data.RecordField');
 goog.require('os.events.LayerConfigEventType');
@@ -15,15 +9,15 @@ goog.require('plugin.heatmap');
 goog.require('plugin.heatmap.HeatmapField');
 goog.require('plugin.heatmap.HeatmapLayerConfig');
 
+import Feature from 'ol/src/Feature';
+import MultiPoint from 'ol/src/geom/MultiPoint';
+import Point from 'ol/src/geom/Point';
+import Fill from 'ol/src/style/Fill';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
 
 describe('plugin.heatmap', function() {
   const googString = goog.module.get('goog.string');
-  const Feature = goog.module.get('ol.Feature');
-  const MultiPoint = goog.module.get('ol.geom.MultiPoint');
-  const Point = goog.module.get('ol.geom.Point');
-  const Fill = goog.module.get('ol.style.Fill');
-  const Stroke = goog.module.get('ol.style.Stroke');
-  const Style = goog.module.get('ol.style.Style');
   const Dispatcher = goog.module.get('os.Dispatcher');
   const {default: RecordField} = goog.module.get('os.data.RecordField');
   const {default: LayerConfigEventType} = goog.module.get('os.events.LayerConfigEventType');

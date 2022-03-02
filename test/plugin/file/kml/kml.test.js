@@ -1,24 +1,19 @@
 goog.require('goog.dom');
 goog.require('goog.dom.xml');
-goog.require('ol.format.KML');
-goog.require('ol.geom.GeometryLayout');
-goog.require('ol.geom.LineString');
-goog.require('ol.geom.MultiLineString');
-goog.require('ol.xml');
 goog.require('os.style');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 goog.require('plugin.file.kml');
 
+import KML from 'ol/src/format/KML';
+import GeometryLayout from 'ol/src/geom/GeometryLayout';
+import LineString from 'ol/src/geom/LineString';
+import MultiLineString from 'ol/src/geom/MultiLineString';
+import {pushParseAndPop} from 'ol/src/xml';
 
 describe('plugin.file.kml', function() {
   const dom = goog.module.get('goog.dom');
   const googDomXml = goog.module.get('goog.dom.xml');
-  const KML = goog.module.get('ol.format.KML');
-  const GeometryLayout = goog.module.get('ol.geom.GeometryLayout');
-  const LineString = goog.module.get('ol.geom.LineString');
-  const MultiLineString = goog.module.get('ol.geom.MultiLineString');
-  const xml = goog.module.get('ol.xml');
   const {toAbgrString} = goog.module.get('os.style');
   const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');
   const {default: TimeRange} = goog.module.get('os.time.TimeRange');
@@ -72,7 +67,7 @@ describe('plugin.file.kml', function() {
     var linkEl = dom.getFirstElementChild(doc);
 
     // all but href are our extension to the Openlayers parser
-    var link = xml.pushParseAndPop({}, kml.OL_LINK_PARSERS(), linkEl, []);
+    var link = pushParseAndPop({}, kml.OL_LINK_PARSERS(), linkEl, []);
     expect(link['href']).toBe(href);
     expect(link['refreshMode']).toBe(refreshMode);
     expect(link['refreshInterval']).toBe(refreshInterval);
@@ -104,7 +99,7 @@ describe('plugin.file.kml', function() {
       [forwardSlashHref]: 'data://fakeimagedatauri'
     };
 
-    var link = xml.pushParseAndPop({}, kml.OL_LINK_PARSERS(), linkEl, []);
+    var link = pushParseAndPop({}, kml.OL_LINK_PARSERS(), linkEl, []);
     expect(link['href']).toBe(forwardSlashHref);
     expect(link['refreshMode']).toBe(refreshMode);
     expect(link['refreshInterval']).toBe(refreshInterval);
@@ -202,7 +197,7 @@ describe('plugin.file.kml', function() {
 
     const doc = googDomXml.loadXml(groundOverlayXml);
     const groundOverlayEl = dom.getFirstElementChild(doc);
-    const groundOverlay = xml.pushParseAndPop({}, kml.GROUND_OVERLAY_PARSERS, groundOverlayEl, []);
+    const groundOverlay = pushParseAndPop({}, kml.GROUND_OVERLAY_PARSERS, groundOverlayEl, []);
     expect(groundOverlay.altitude).toBe(altitude);
     expect(groundOverlay.altitudeMode).toBe(altitudeMode);
     expect(groundOverlay.color.every((val, idx) => val === color[idx]));

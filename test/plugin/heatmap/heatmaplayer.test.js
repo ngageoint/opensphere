@@ -1,12 +1,5 @@
 goog.require('goog.events.EventType');
 goog.require('goog.string');
-goog.require('ol.Feature');
-goog.require('ol.events');
-goog.require('ol.geom.LineString');
-goog.require('ol.geom.MultiPoint');
-goog.require('ol.geom.MultiPolygon');
-goog.require('ol.geom.Point');
-goog.require('ol.geom.Polygon');
 goog.require('os.MapContainer');
 goog.require('os.color');
 goog.require('os.layer.LayerType');
@@ -17,17 +10,17 @@ goog.require('plugin.heatmap.HeatmapLayerConfig');
 goog.require('plugin.heatmap.HeatmapPropertyType');
 goog.require('plugin.heatmap.SynchronizerType');
 
+import {listen} from 'ol/src/events';
+import Feature from 'ol/src/Feature';
+import LineString from 'ol/src/geom/LineString';
+import MultiPoint from 'ol/src/geom/MultiPoint';
+import MultiPolygon from 'ol/src/geom/MultiPolygon';
+import Point from 'ol/src/geom/Point';
+import Polygon from 'ol/src/geom/Polygon';
 
 describe('plugin.heatmap.Heatmap', function() {
   const GoogEventType = goog.module.get('goog.events.EventType');
   const googString = goog.module.get('goog.string');
-  const Feature = goog.module.get('ol.Feature');
-  const events = goog.module.get('ol.events');
-  const LineString = goog.module.get('ol.geom.LineString');
-  const MultiPoint = goog.module.get('ol.geom.MultiPoint');
-  const MultiPolygon = goog.module.get('ol.geom.MultiPolygon');
-  const Point = goog.module.get('ol.geom.Point');
-  const Polygon = goog.module.get('ol.geom.Polygon');
   const {default: MapContainer} = goog.module.get('os.MapContainer');
   const color = goog.module.get('os.color');
   const {default: LayerType} = goog.module.get('os.layer.LayerType');
@@ -144,7 +137,7 @@ describe('plugin.heatmap.Heatmap', function() {
     };
 
     var layer = createLayer();
-    events.listen(layer, GoogEventType.PROPERTYCHANGE, onPropertyChange);
+    listen(layer, GoogEventType.PROPERTYCHANGE, onPropertyChange);
 
     layer.setSize(20);
     layer.setGradient(color.RAINBOW_HEATMAP_GRADIENT_HEX);

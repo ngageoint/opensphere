@@ -1,8 +1,3 @@
-goog.require('ol.Feature');
-goog.require('ol.geom.Point');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
 goog.require('os.MapContainer');
 goog.require('os.data.RecordField');
 goog.require('os.mock');
@@ -12,12 +7,13 @@ goog.require('os.time.TimeRange');
 goog.require('os.ui.file.kml.AbstractKMLExporter');
 goog.require('plugin.file.kml.KMLExporter');
 
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
+import Fill from 'ol/src/style/Fill';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
+
 describe('plugin.file.kml.KMLExporter', function() {
-  const Feature = goog.module.get('ol.Feature');
-  const Point = goog.module.get('ol.geom.Point');
-  const Fill = goog.module.get('ol.style.Fill');
-  const Stroke = goog.module.get('ol.style.Stroke');
-  const Style = goog.module.get('ol.style.Style');
   const {default: MapContainer} = goog.module.get('os.MapContainer');
   const {default: RecordField} = goog.module.get('os.data.RecordField');
   const {default: StyleManager} = goog.module.get('os.style.StyleManager');

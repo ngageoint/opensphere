@@ -1,26 +1,18 @@
-goog.require('ol.Feature');
-goog.require('ol.geom.Point');
-goog.require('ol.proj');
-goog.require('ol.style.Circle');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Icon');
-goog.require('ol.style.Image');
-goog.require('ol.style.Style');
 goog.require('os.layer.Vector');
 goog.require('os.map');
 goog.require('os.proj');
 goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.PointConverter');
 
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
+import {get, transform} from 'ol/src/proj';
+import Circle from 'ol/src/style/Circle';
+import Fill from 'ol/src/style/Fill';
+import Icon from 'ol/src/style/Icon';
+import Style from 'ol/src/style/Style';
 
 describe('plugin.cesium.sync.PointConverter', () => {
-  const Feature = goog.module.get('ol.Feature');
-  const Point = goog.module.get('ol.geom.Point');
-  const olProj = goog.module.get('ol.proj');
-  const Circle = goog.module.get('ol.style.Circle');
-  const Fill = goog.module.get('ol.style.Fill');
-  const Icon = goog.module.get('ol.style.Icon');
-  const Style = goog.module.get('ol.style.Style');
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osMap = goog.module.get('os.map');
   const osProj = goog.module.get('os.proj');
@@ -40,7 +32,7 @@ describe('plugin.cesium.sync.PointConverter', () => {
     style = new Style();
     layer = new VectorLayer();
     scene = getFakeScene();
-    context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
+    context = new VectorContext(scene, layer, get(osProj.EPSG4326));
   });
 
   const originalProjection = osMap.PROJECTION;
@@ -166,7 +158,7 @@ describe('plugin.cesium.sync.PointConverter', () => {
 
   it('should create a billboard and transform other projection coordinates', () => {
     // pretend we swapped to EPSG:3857
-    osMap.setProjection(olProj.get(osProj.EPSG3857));
+    osMap.setProjection(get(osProj.EPSG3857));
 
     style.setImage(new Icon({
       anchor: [0.5, 1.0],
@@ -178,7 +170,7 @@ describe('plugin.cesium.sync.PointConverter', () => {
       rotation: 90
     }));
 
-    geometry.setCoordinates(olProj.transform([-105, 40], osProj.EPSG4326, osProj.EPSG3857));
+    geometry.setCoordinates(transform([-105, 40], osProj.EPSG4326, osProj.EPSG3857));
 
     const result = pointConverter.create(feature, geometry, style, context);
     expect(result).toBe(true);

@@ -1,14 +1,12 @@
 goog.require('goog.object');
-goog.require('ol.Feature');
-goog.require('ol.geom.Point');
-goog.require('ol.geom.Polygon');
 goog.require('plugin.file.shp.SHPExporter');
+
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
+import Polygon from 'ol/src/geom/Polygon';
 
 describe('plugin.file.shp.SHPExporter', function() {
   const googObject = goog.module.get('goog.object');
-  const Feature = goog.module.get('ol.Feature');
-  const Point = goog.module.get('ol.geom.Point');
-  const Polygon = goog.module.get('ol.geom.Polygon');
   const {default: SHPExporter} = goog.module.get('plugin.file.shp.SHPExporter');
   var ex = new SHPExporter();
   var pointFeature;

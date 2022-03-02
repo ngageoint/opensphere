@@ -1,5 +1,4 @@
 goog.require('goog.net.EventType');
-goog.require('ol.format.GeoJSON');
 goog.require('os.events.EventType');
 goog.require('os.im.Importer');
 goog.require('os.mock');

@@ -1,4 +1,3 @@
-goog.require('ol.xml');
 goog.require('os.map.FlightMode');
 goog.require('plugin.file.kml.tour.FlyTo');
 goog.require('plugin.file.kml.tour.SoundCue');
@@ -7,8 +6,9 @@ goog.require('plugin.file.kml.tour.TourControl');
 goog.require('plugin.file.kml.tour.Wait');
 goog.require('plugin.file.kml.tour.parseTour');
 
+import {parse} from 'ol/src/xml';
+
 describe('plugin.file.kml.tour.parseTour', function() {
-  const xml = goog.module.get('ol.xml');
   const {default: FlightMode} = goog.module.get('os.map.FlightMode');
   const {default: FlyTo} = goog.module.get('plugin.file.kml.tour.FlyTo');
   const {default: SoundCue} = goog.module.get('plugin.file.kml.tour.SoundCue');
@@ -35,7 +35,7 @@ describe('plugin.file.kml.tour.parseTour', function() {
    * @return {Element} The root Tour element.
    */
   var getTourNode = function(text, namespace) {
-    var node = xml.parse(replaceText(text, namespace));
+    var node = parse(replaceText(text, namespace));
     return node.firstElementChild;
   };
 

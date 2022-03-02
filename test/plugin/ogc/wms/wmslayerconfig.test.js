@@ -1,10 +1,9 @@
-goog.require('ol.proj');
 goog.require('os.net.ProxyHandler');
 goog.require('plugin.ogc.wms.WMSLayerConfig');
 
+import {get} from 'ol/src/proj';
 
 describe('plugin.ogc.wms.WMSLayerConfig', function() {
-  const olProj = goog.module.get('ol.proj');
   const {default: ProxyHandler} = goog.module.get('os.net.ProxyHandler');
   const {default: WMSLayerConfig} = goog.module.get('plugin.ogc.wms.WMSLayerConfig');
 
@@ -26,7 +25,7 @@ describe('plugin.ogc.wms.WMSLayerConfig', function() {
 
     var tileCoord = [0, 0, 0];
     var pixelRatio = 1;
-    var proj = olProj.get('EPSG:4326');
+    var proj = get('EPSG:4326');
 
     var originalUrl = originalFunc(tileCoord, pixelRatio, proj);
     var proxyUrl = proxyFunc(tileCoord, pixelRatio, proj);

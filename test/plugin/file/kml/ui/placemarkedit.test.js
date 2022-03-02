@@ -1,5 +1,3 @@
-goog.require('ol');
-goog.require('ol.Feature');
 goog.require('os.annotation');
 goog.require('os.feature.DynamicFeature');
 goog.require('os.map.instance');
@@ -8,9 +6,10 @@ goog.require('plugin.file.kml.ui.KMLNode');
 goog.require('plugin.file.kml.ui.PlacemarkEditUI');
 goog.require('plugin.places.PlacesManager');
 
+import {getUid} from 'ol/src';
+import Feature from 'ol/src/Feature';
+
 describe('plugin.file.kml.ui.placemarkedit', function() {
-  const {getUid} = goog.module.get('ol');
-  const Feature = goog.module.get('ol.Feature');
   const osAnnotation = goog.module.get('os.annotation');
   const {default: DynamicFeature} = goog.module.get('os.feature.DynamicFeature');
   const {getMapContainer} = goog.module.get('os.map.instance');

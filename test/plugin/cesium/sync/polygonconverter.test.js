@@ -1,10 +1,3 @@
-goog.require('ol.Feature');
-goog.require('ol.geom.Polygon');
-goog.require('ol.proj');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
-goog.require('olcs.core');
 goog.require('os.interpolate');
 goog.require('os.layer.Vector');
 goog.require('os.map');
@@ -16,14 +9,15 @@ goog.require('test.plugin.cesium.scene');
 goog.require('test.plugin.cesium.sync.linestring');
 goog.require('test.plugin.cesium.sync.polygon');
 
+import Feature from 'ol/src/Feature';
+import {fromExtent} from 'ol/src/geom/Polygon';
+import {get} from 'ol/src/proj';
+import Fill from 'ol/src/style/Fill';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
+
 
 describe('plugin.cesium.sync.PolygonConverter', () => {
-  const Feature = goog.module.get('ol.Feature');
-  const Polygon = goog.module.get('ol.geom.Polygon');
-  const olProj = goog.module.get('ol.proj');
-  const Fill = goog.module.get('ol.style.Fill');
-  const Stroke = goog.module.get('ol.style.Stroke');
-  const Style = goog.module.get('ol.style.Style');
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osProj = goog.module.get('os.proj');
   const {getRealScene} = goog.module.get('test.plugin.cesium.scene');
@@ -43,12 +37,12 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
 
   beforeEach(() => {
     enableWebGLMock();
-    geometry = new Polygon.fromExtent([-5, -5, 5, 5]);
+    geometry = new fromExtent([-5, -5, 5, 5]);
     feature = new Feature(geometry);
     style = new Style();
     layer = new VectorLayer();
     scene = getRealScene();
-    context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
+    context = new VectorContext(scene, layer, get(osProj.EPSG4326));
     getLine = getLineRetriever(context, scene);
   });
 
@@ -102,7 +96,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
     });
 
     it('should create an outline for every ring of the polygon', () => {
-      const otherRing = Polygon.fromExtent([-2, -2, 2, 2]);
+      const otherRing = fromExtent([-2, -2, 2, 2]);
       const coords = geometry.getCoordinates();
       coords.push(otherRing.getCoordinates()[0]);
       geometry.setCoordinates(coords);

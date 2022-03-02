@@ -1,20 +1,17 @@
 goog.require('goog.object');
-goog.require('ol.Feature');
-goog.require('ol.geom.LineString');
-goog.require('ol.geom.Point');
-goog.require('ol.geom.Polygon');
 goog.require('os.Fields');
 goog.require('os.osasm.wait');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 goog.require('plugin.file.csv.CSVExporter');
 
+import Feature from 'ol/src/Feature';
+import LineString from 'ol/src/geom/LineString';
+import Point from 'ol/src/geom/Point';
+import Polygon from 'ol/src/geom/Polygon';
+
 describe('plugin.file.csv.CSVExporter', function() {
   const googObject = goog.module.get('goog.object');
-  const Feature = goog.module.get('ol.Feature');
-  const LineString = goog.module.get('ol.geom.LineString');
-  const Point = goog.module.get('ol.geom.Point');
-  const Polygon = goog.module.get('ol.geom.Polygon');
   const {default: Fields} = goog.module.get('os.Fields');
   const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');
   const {default: TimeRange} = goog.module.get('os.time.TimeRange');

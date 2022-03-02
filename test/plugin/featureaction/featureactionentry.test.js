@@ -1,14 +1,13 @@
 goog.require('goog.functions');
-goog.require('ol.Feature');
 goog.require('os.im.action.ImportActionManager');
 goog.require('plugin.im.action.feature.Entry');
 goog.require('plugin.im.action.feature.mock');
 goog.require('plugin.im.action.feature.mock.MockAction');
 
+import Feature from 'ol/src/Feature';
 
 describe('plugin.im.action.feature.Entry', function() {
   const functions = goog.module.get('goog.functions');
-  const Feature = goog.module.get('ol.Feature');
   const {default: ImportActionManager} = goog.module.get('os.im.action.ImportActionManager');
   const {default: Entry} = goog.module.get('plugin.im.action.feature.Entry');
   const {getMockManager} = goog.module.get('plugin.im.action.feature.mock');
