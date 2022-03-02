@@ -63,7 +63,20 @@
   top: .75rem;
 
   button {
+    background-color: rgba($body-bg, .1);
+    border: none;
+    border-radius: 2px;
+    color: rgba($body-color, .8);
     display: block;
+    font-size: 1.14em;
+    font-weight: bold;
+    width: 1.375em;
+    line-height: .4em;
+    margin: 1px;
+    padding: 0;
+    text-decoration: none;
+    text-align: center;
+    height: 1.375em;
   }
 }
 
@@ -73,6 +86,23 @@
   left: auto;
   right: .75rem;
   top: 4.5rem;
+
+  button {
+    background-color: rgba($body-bg, .1);
+    border: none;
+    border-radius: 2px;
+    color: rgba($body-color, .8);
+    display: block;
+    font-size: 1.14em;
+    font-weight: bold;
+    width: 1.375em;
+    line-height: .4em;
+    margin: 1px;
+    padding: 0;
+    text-decoration: none;
+    text-align: center;
+    height: 1.375em;
+  }
 }
 
 // 2D / 3D switcher button
@@ -82,8 +112,21 @@
   right: .75rem;
   top: 6.75rem;
 
-  .ol-mapmode-text {
-    font-size: .9em;
+  button {
+    background-color: rgba($body-bg, .1);
+    border: none;
+    border-radius: 2px;
+    color: rgba($body-color, .8);
+    display: block;
+    font-size: 1.14em;
+    font-weight: bold;
+    width: 1.375em;
+    line-height: .4em;
+    margin: 1px;
+    padding: 0;
+    text-decoration: none;
+    text-align: center;
+    height: 1.375em;
   }
 }
 
