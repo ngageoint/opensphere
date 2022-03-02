@@ -2,7 +2,6 @@ goog.require('goog.dom.xml');
 goog.require('goog.net.EventType');
 goog.require('goog.net.XhrIo');
 goog.require('goog.object');
-goog.require('ol.geom.Polygon');
 goog.require('os.filter.BaseFilterManager');
 goog.require('os.interpolate');
 goog.require('os.interpolate.Method');
@@ -14,13 +13,14 @@ goog.require('os.query.FilterManager');
 goog.require('os.query.QueryManager');
 goog.require('os.ui.query.BasicQueryReader');
 
+import Polygon from 'ol/src/geom/Polygon';
+
 
 describe('os.ui.query.BasicQueryReader', function() {
   const xml = goog.module.get('goog.dom.xml');
   const EventType = goog.module.get('goog.net.EventType');
   const XhrIo = goog.module.get('goog.net.XhrIo');
   const googObject = goog.module.get('goog.object');
-  const Polygon = goog.module.get('ol.geom.Polygon');
   const interpolate = goog.module.get('os.interpolate');
   const {default: Method} = goog.module.get('os.interpolate.Method');
   const {default: AreaManager} = goog.module.get('os.query.AreaManager');

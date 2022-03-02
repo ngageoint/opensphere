@@ -1,10 +1,4 @@
 goog.require('goog.dispose');
-goog.require('ol');
-goog.require('ol.Feature');
-goog.require('ol.geom.LineString');
-goog.require('ol.geom.Point');
-goog.require('ol.geom.Polygon');
-goog.require('ol.proj');
 goog.require('os.layer.Vector');
 goog.require('os.proj');
 goog.require('plugin.cesium.VectorContext');
@@ -12,15 +6,15 @@ goog.require('plugin.cesium.primitive');
 goog.require('test.plugin.cesium.primitive');
 goog.require('test.plugin.cesium.scene');
 
+import {getUid} from 'ol/src';
+import Feature from 'ol/src/Feature';
+import LineString from 'ol/src/geom/LineString';
+import Point from 'ol/src/geom/Point';
+import {fromExtent} from 'ol/src/geom/Polygon';
+import {get} from 'ol/src/proj';
 
 describe('plugin.cesium.VectorContext', () => {
   const dispose = goog.module.get('goog.dispose');
-  const LineString = goog.module.get('ol.geom.LineString');
-  const ol = goog.module.get('ol');
-  const Feature = goog.module.get('ol.Feature');
-  const Point = goog.module.get('ol.geom.Point');
-  const Polygon = goog.module.get('ol.geom.Polygon');
-  const olProj = goog.module.get('ol.proj');
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osProj = goog.module.get('os.proj');
   const {default: VectorContext} = goog.module.get('plugin.cesium.VectorContext');
@@ -35,7 +29,7 @@ describe('plugin.cesium.VectorContext', () => {
   beforeEach(() => {
     layer = new VectorLayer();
     scene = getFakeScene();
-    context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
+    context = new VectorContext(scene, layer, get(osProj.EPSG4326));
   });
 
   describe('constructor', () => {
@@ -265,7 +259,7 @@ describe('plugin.cesium.VectorContext', () => {
       expect(context.billboards.length).toBe(1);
 
       const billboard = context.billboards.get(0);
-      expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(billboard);
+      expect(context.geometryToCesiumMap[getUid(geometry)]).toBe(billboard);
       expect(context.addFeaturePrimitive).toHaveBeenCalledWith(feature, billboard);
       expect(context.addOLReferences).toHaveBeenCalledWith(billboard, feature, geometry);
     });
@@ -275,7 +269,7 @@ describe('plugin.cesium.VectorContext', () => {
       dispose(feature);
       context.addBillboard(billboardOptions, feature, geometry);
       expect(context.billboards.length).toBe(0);
-      expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(undefined);
+      expect(context.geometryToCesiumMap[getUid(geometry)]).toBe(undefined);
     });
   });
 
@@ -300,7 +294,7 @@ describe('plugin.cesium.VectorContext', () => {
       expect(context.polylines.length).toBe(1);
 
       const polyline = context.polylines.get(0);
-      expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(polyline);
+      expect(context.geometryToCesiumMap[getUid(geometry)]).toBe(polyline);
       expect(context.addFeaturePrimitive).toHaveBeenCalledWith(feature, polyline);
       expect(context.addOLReferences).toHaveBeenCalledWith(polyline, feature, geometry);
     });
@@ -310,7 +304,7 @@ describe('plugin.cesium.VectorContext', () => {
       dispose(feature);
       context.addPolyline(polylineOptions, feature, geometry);
       expect(context.polylines.length).toBe(0);
-      expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(undefined);
+      expect(context.geometryToCesiumMap[getUid(geometry)]).toBe(undefined);
     });
   });
 
@@ -319,7 +313,7 @@ describe('plugin.cesium.VectorContext', () => {
     let geometry;
 
     beforeEach(() => {
-      geometry = Polygon.fromExtent([-5, -5, 5, 5]);
+      geometry = fromExtent([-5, -5, 5, 5]);
       feature = new Feature(geometry);
     });
 
@@ -336,7 +330,7 @@ describe('plugin.cesium.VectorContext', () => {
 
       const addedPrimitive = context.primitives.get(0);
       expect(addedPrimitive).toBe(primitive);
-      expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(primitive);
+      expect(context.geometryToCesiumMap[getUid(geometry)]).toBe(primitive);
       expect(context.addFeaturePrimitive).toHaveBeenCalledWith(feature, primitive);
       expect(context.addOLReferences).toHaveBeenCalledWith(primitive, feature, geometry);
     });
@@ -346,7 +340,7 @@ describe('plugin.cesium.VectorContext', () => {
       dispose(feature);
       context.addPrimitive(primitive, feature, geometry);
       expect(context.primitives.length).toBe(0);
-      expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(undefined);
+      expect(context.geometryToCesiumMap[getUid(geometry)]).toBe(undefined);
     });
 
     it('should add ground primitives to the correct collection', () => {
@@ -384,7 +378,7 @@ describe('plugin.cesium.VectorContext', () => {
       expect(context.labels.length).toBe(1);
 
       const label = context.labels.get(0);
-      expect(context.geometryToLabelMap[ol.getUid(geometry)]).toBe(label);
+      expect(context.geometryToLabelMap[getUid(geometry)]).toBe(label);
       expect(context.addFeaturePrimitive).toHaveBeenCalledWith(feature, label);
       expect(context.addOLReferences).toHaveBeenCalledWith(label, feature, geometry);
     });
@@ -394,7 +388,7 @@ describe('plugin.cesium.VectorContext', () => {
       dispose(feature);
       context.addLabel(labelOptions, feature, geometry);
       expect(context.labels.length).toBe(0);
-      expect(context.geometryToLabelMap[ol.getUid(geometry)]).toBe(undefined);
+      expect(context.geometryToLabelMap[getUid(geometry)]).toBe(undefined);
     });
   });
 
@@ -423,14 +417,14 @@ describe('plugin.cesium.VectorContext', () => {
       [billboard, label, polyline, groundPrimitive, primitive].forEach((item) => {
         context.addOLReferences(item, feature, geometry);
         context.addFeaturePrimitive(feature, item);
-        context.geometryToCesiumMap[ol.getUid(geometry)] = item;
+        context.geometryToCesiumMap[getUid(geometry)] = item;
 
         context.removePrimitive(item);
 
         if (item instanceof Cesium.Label) {
-          expect(context.geometryToLabelMap[ol.getUid(geometry)]).toBe(undefined);
+          expect(context.geometryToLabelMap[getUid(geometry)]).toBe(undefined);
         } else {
-          expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(undefined);
+          expect(context.geometryToCesiumMap[getUid(geometry)]).toBe(undefined);
         }
 
         expect(context.featureToCesiumMap[feature.getUid()].length).toBe(0);

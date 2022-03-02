@@ -1,10 +1,5 @@
 goog.require('goog.async.Delay');
 goog.require('goog.dispose');
-goog.require('ol');
-goog.require('ol.Feature');
-goog.require('ol.geom.Point');
-goog.require('ol.proj');
-goog.require('ol.style.Style');
 goog.require('os.data.RecordField');
 goog.require('os.layer.Vector');
 goog.require('os.proj');
@@ -15,16 +10,16 @@ goog.require('plugin.cesium.primitive');
 goog.require('test.plugin.cesium.primitive');
 goog.require('test.plugin.cesium.scene');
 
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
+import {get} from 'ol/src/proj';
+import Style from 'ol/src/style/Style';
 
 describe('plugin.cesium.primitive', () => {
   const dispose = goog.module.get('goog.dispose');
   const ol = goog.module.get('ol');
   const Delay = goog.module.get('goog.async.Delay');
 
-  const Feature = goog.module.get('ol.Feature');
-  const Point = goog.module.get('ol.geom.Point');
-  const olProj = goog.module.get('ol.proj');
-  const Style = goog.module.get('ol.style.Style');
   const {default: RecordField} = goog.module.get('os.data.RecordField');
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osProj = goog.module.get('os.proj');
@@ -40,7 +35,7 @@ describe('plugin.cesium.primitive', () => {
     it('should retrieve the primitive', () => {
       const scene = getFakeScene();
       const layer = new VectorLayer();
-      const context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
+      const context = new VectorContext(scene, layer, get(osProj.EPSG4326));
 
       const geometry = new Point([0, 0]);
       const feature = new Feature(geometry);
@@ -68,7 +63,7 @@ describe('plugin.cesium.primitive', () => {
       style = new Style();
       layer = new VectorLayer();
       scene = getFakeScene();
-      context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
+      context = new VectorContext(scene, layer, get(osProj.EPSG4326));
     });
 
     it('should allow updates on everything for unchanged altitude modes', () => {
@@ -116,7 +111,7 @@ describe('plugin.cesium.primitive', () => {
       style = new Style();
       layer = new VectorLayer();
       scene = getFakeScene();
-      context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
+      context = new VectorContext(scene, layer, get(osProj.EPSG4326));
 
       // switch the delay to 1ms so that we don't have to wait so long to test
       // multiple tries
@@ -212,7 +207,7 @@ describe('plugin.cesium.primitive', () => {
     it('should delete the primitive', () => {
       const scene = getFakeScene();
       const layer = new VectorLayer();
-      const context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
+      const context = new VectorContext(scene, layer, get(osProj.EPSG4326));
 
       const geometry = new Point([0, 0]);
       const feature = new Feature(geometry);
