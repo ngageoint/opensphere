@@ -5,8 +5,8 @@ goog.require('os.data.DataManager');
 goog.require('os.mock');
 goog.require('os.source.Vector');
 
-const Feature = goog.module.get('ol.Feature');
-const Point = goog.module.get('ol.geom.Point');
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
 
 describe('os.command.FeaturesVisibility', function() {
   const {default: FeaturesVisibility} = goog.module.get('os.command.FeaturesVisibility');

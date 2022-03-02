@@ -10,6 +10,7 @@ goog.require('plugin.cesium.primitive');
 goog.require('test.plugin.cesium.primitive');
 goog.require('test.plugin.cesium.scene');
 
+import {getUid} from 'ol/src';
 import Feature from 'ol/src/Feature';
 import Point from 'ol/src/geom/Point';
 import {get} from 'ol/src/proj';
@@ -17,7 +18,6 @@ import Style from 'ol/src/style/Style';
 
 describe('plugin.cesium.primitive', () => {
   const dispose = goog.module.get('goog.dispose');
-  const ol = goog.module.get('ol');
   const Delay = goog.module.get('goog.async.Delay');
 
   const {default: RecordField} = goog.module.get('os.data.RecordField');
@@ -41,7 +41,7 @@ describe('plugin.cesium.primitive', () => {
       const feature = new Feature(geometry);
       const billboard = primitiveUtils.createBillboard([0, 0, 0]);
 
-      context.geometryToCesiumMap[ol.getUid(geometry)] = billboard;
+      context.geometryToCesiumMap[getUid(geometry)] = billboard;
       context.addFeaturePrimitive(feature, billboard);
       context.addOLReferences(billboard, feature, geometry);
 
