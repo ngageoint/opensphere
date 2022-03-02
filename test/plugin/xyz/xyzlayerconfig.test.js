@@ -1,10 +1,9 @@
-goog.require('ol.proj');
 goog.require('os.net.ProxyHandler');
 goog.require('plugin.xyz.XYZLayerConfig');
 
+import {get} from 'ol/src/proj';
 
 describe('plugin.xyz.XYZLayerConfig', function() {
-  const olProj = goog.module.get('ol.proj');
   const {default: ProxyHandler} = goog.module.get('os.net.ProxyHandler');
   const {default: XYZLayerConfig} = goog.module.get('plugin.xyz.XYZLayerConfig');
 
@@ -26,7 +25,7 @@ describe('plugin.xyz.XYZLayerConfig', function() {
 
     var tileCoord = [0, 0, 0];
     var pixelRatio = 1;
-    var proj = olProj.get('EPSG:4326');
+    var proj = get('EPSG:4326');
 
     var originalUrl = originalFunc(tileCoord, pixelRatio, proj);
     var proxyUrl = proxyFunc(tileCoord, pixelRatio, proj);
@@ -47,7 +46,7 @@ describe('plugin.xyz.XYZLayerConfig', function() {
 
     var tileCoord = [3, 2, -1];
     var pixelRatio = 1;
-    var proj = olProj.get('EPSG:3857');
+    var proj = get('EPSG:3857');
 
     var resultURL = tileFn(tileCoord, pixelRatio, proj);
 
@@ -67,7 +66,7 @@ describe('plugin.xyz.XYZLayerConfig', function() {
 
     var tileCoord = [3, 2, -1];
     var pixelRatio = 1;
-    var proj = olProj.get('EPSG:3857');
+    var proj = get('EPSG:3857');
 
     var resultURL = tileFn(tileCoord, pixelRatio, proj);
 
@@ -87,7 +86,7 @@ describe('plugin.xyz.XYZLayerConfig', function() {
 
     var tileCoord = [3, 2, -1];
     var pixelRatio = 1;
-    var proj = olProj.get('EPSG:3857');
+    var proj = get('EPSG:3857');
 
     var resultURL = tileFn(tileCoord, pixelRatio, proj);
 
@@ -107,7 +106,7 @@ describe('plugin.xyz.XYZLayerConfig', function() {
 
     var tileCoord = [3, 2, -1];
     var pixelRatio = 1;
-    var proj = olProj.get('EPSG:3857');
+    var proj = get('EPSG:3857');
 
     var resultURL = tileFn(tileCoord, pixelRatio, proj);
     expect(resultURL).toMatch('http://[a-c].tiles.example.com/osm/2/2/0.png');
@@ -129,7 +128,7 @@ describe('plugin.xyz.XYZLayerConfig', function() {
 
     var tileCoord = [3, 2, -1];
     var pixelRatio = 1;
-    var proj = olProj.get('EPSG:3857');
+    var proj = get('EPSG:3857');
 
     var resultURL = tileFn(tileCoord, pixelRatio, proj);
     expect(resultURL).toMatch('http://[0-4].tiles.example.com/osm/2/2/0.png');

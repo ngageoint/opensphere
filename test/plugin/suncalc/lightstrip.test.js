@@ -1,14 +1,14 @@
 goog.require('goog.dispose');
-goog.require('ol.PluggableMap');
 goog.require('os.MapContainer');
 goog.require('os.config.Settings');
 goog.require('os.ui.timeline.TimelineScaleEvent');
 goog.require('plugin.suncalc');
 goog.require('plugin.suncalc.LightStripUI');
 
+import PluggableMap from 'ol/src/PluggableMap';
+
 describe('plugin.suncalc.LightStripUI', function() {
   const dispose = goog.module.get('goog.dispose');
-  const PluggableMap = goog.module.get('ol.PluggableMap');
   const {default: MapContainer} = goog.module.get('os.MapContainer');
   const {default: TimelineScaleEvent} = goog.module.get('os.ui.timeline.TimelineScaleEvent');
   const {default: Settings} = goog.module.get('os.config.Settings');

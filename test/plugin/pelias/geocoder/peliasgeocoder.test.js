@@ -1,5 +1,3 @@
-goog.require('ol.Feature');
-goog.require('ol.proj');
 goog.require('os.MapContainer');
 goog.require('os.config.Settings');
 goog.require('os.mock');
@@ -8,9 +6,10 @@ goog.require('plugin.pelias.geocoder.Plugin');
 goog.require('plugin.pelias.geocoder.Result');
 goog.require('plugin.pelias.geocoder.Search');
 
+import Feature from 'ol/src/Feature';
+import olProj from 'ol/src/proj';
+
 describe('plugin.pelias.geocoder.Search', function() {
-  const Feature = goog.module.get('ol.Feature');
-  const olProj = goog.module.get('ol.proj');
   const {default: MapContainer} = goog.module.get('os.MapContainer');
   const {default: Settings} = goog.module.get('os.config.Settings');
   const {default: SearchEventType} = goog.module.get('os.search.SearchEventType');
