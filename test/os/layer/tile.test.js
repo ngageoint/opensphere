@@ -4,12 +4,12 @@ goog.require('os.map');
 goog.require('os.mock');
 goog.require('plugin.ogc.wms.TileWMSSource');
 
-import {listen} from 'ol/src/events';
-import TileWMS from 'ol/src/source/TileWMS';
-import {createForProjection} from 'ol/src/tilegrid';
-import {DEFAULT_MAX_ZOOM} from 'ol/src/tilegrid/common';
-
 describe('os.layer.Tile', function() {
+  const {listen} = require('ol/src/events');
+  const TileWMS = require('ol/src/source/TileWMS');
+  const {createForProjection} = require('ol/src/tilegrid');
+  const {DEFAULT_MAX_ZOOM} = require('ol/src/tilegrid/common');
+
   const GoogEventType = goog.module.get('goog.events.EventType');
   const {default: Tile} = goog.module.get('os.layer.Tile');
   const osMap = goog.module.get('os.map');

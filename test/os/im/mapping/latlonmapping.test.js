@@ -1,9 +1,9 @@
 goog.require('os.geo');
 goog.require('os.im.mapping.LatLonMapping');
 
-import Feature from 'ol/Feature';
-
 describe('os.im.mapping.LatLonMapping', function() {
+  const Feature = require('ol/Feature');
+
   const geo = goog.module.get('os.geo');
   const {default: LatLonMapping} = goog.module.get('os.im.mapping.LatLonMapping');
 

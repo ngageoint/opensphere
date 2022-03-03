@@ -1,16 +1,16 @@
 goog.require('os.mixin.geometry');
 goog.require('os.proj');
 
-import GeometryCollection from 'ol/src/geom/GeometryCollection';
-import LinearRing from 'ol/src/geom/LinearRing';
-import LineString from 'ol/src/geom/LineString';
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import MultiPoint from 'ol/src/geom/MultiPoint';
-import MultiPolygon from 'ol/src/geom/MultiPolygon';
-import Point from 'ol/src/geom/Point';
-import Polygon from 'ol/src/geom/Polygon';
-
 describe('os.mixin.geometry', function() {
+  const GeometryCollection = require('ol/src/geom/GeometryCollection');
+  const LinearRing = require('ol/src/geom/LinearRing');
+  const LineString = require('ol/src/geom/LineString');
+  const MultiLineString = require('ol/src/geom/MultiLineString');
+  const MultiPoint = require('ol/src/geom/MultiPoint');
+  const MultiPolygon = require('ol/src/geom/MultiPolygon');
+  const Point = require('ol/src/geom/Point');
+  const Polygon = require('ol/src/geom/Polygon');
+
   const {EPSG3857, EPSG4326} = goog.module.get('os.proj');
 
   it('should clone the values of geometries when cloning', function() {

@@ -1,10 +1,10 @@
 goog.require('os.proj');
 goog.require('os.query.utils');
 
-import {fromExtent} from 'ol/src/geom/Polygon';
-import {get, transformExtent} from 'ol/src/proj';
-
 describe('os.query.utils', function() {
+  const {fromExtent} = require('ol/src/geom/Polygon');
+  const {get, transformExtent} = require('ol/src/proj');
+
   const osProj = goog.module.get('os.proj');
   const osMap = goog.module.get('os.map');
   const {initWorldArea, isWorldQuery} = goog.module.get('os.query.utils');
