@@ -1,10 +1,10 @@
 goog.require('os.filter.impl.ecql.ExclusionFormatter');
 goog.require('os.mock');
 
-import Feature from 'ol/src/Feature';
-import {fromExtent} from 'ol/src/geom/Polygon';
-
 describe('os.filter.impl.ecql.ExclusionFormatter', function() {
+  const Feature = require('ol/src/Feature');
+  const {fromExtent} = require('ol/src/geom/Polygon');
+
   const {default: ExclusionFormatter} = goog.module.get('os.filter.impl.ecql.ExclusionFormatter');
 
   it('should format geometries', function() {

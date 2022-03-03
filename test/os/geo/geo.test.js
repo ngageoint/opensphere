@@ -3,16 +3,16 @@ goog.require('os.geo');
 goog.require('os.osasm.wait');
 goog.require('os.query');
 
-import Feature from 'ol/src/Feature';
-import GeometryCollection from 'ol/src/geom/GeometryCollection';
-import LineString from 'ol/src/geom/LineString';
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import MultiPoint from 'ol/src/geom/MultiPoint';
-import MultiPolygon from 'ol/src/geom/MultiPolygon';
-import Point from 'ol/src/geom/Point';
-import {fromExtent} from 'ol/src/geom/Polygon';
-
 describe('os.geo', function() {
+  const Feature = require('ol/src/Feature');
+  const GeometryCollection = require('ol/src/geom/GeometryCollection');
+  const LineString = require('ol/src/geom/LineString');
+  const MultiLineString = require('ol/src/geom/MultiLineString');
+  const MultiPoint = require('ol/src/geom/MultiPoint');
+  const MultiPolygon = require('ol/src/geom/MultiPolygon');
+  const Point = require('ol/src/geom/Point');
+  const {fromExtent} = require('ol/src/geom/Polygon');
+
   const googArray = goog.module.get('goog.array');
   const geo = goog.module.get('os.geo');
 

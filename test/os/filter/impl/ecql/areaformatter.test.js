@@ -1,10 +1,10 @@
 goog.require('os.filter.impl.ecql.AreaFormatter');
 goog.require('os.mock');
 
-import Feature from 'ol/src/Feature';
-import {fromExtent} from 'ol/src/geom/Polygon';
-
 describe('os.filter.impl.ecql.AreaFormatter', function() {
+  const Feature = require('ol/src/Feature');
+  const {fromExtent} = require('ol/src/geom/Polygon');
+
   const {default: AreaFormatter} = goog.module.get('os.filter.impl.ecql.AreaFormatter');
 
   it('should format geometries', function() {

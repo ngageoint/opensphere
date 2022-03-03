@@ -14,12 +14,12 @@ goog.require('os.source.Vector');
 goog.require('os.style');
 goog.require('os.style.StyleType');
 
-import Feature from 'ol/src/Feature';
-import GeometryCollection from 'ol/src/geom/GeometryCollection';
-import Point from 'ol/src/geom/Point';
-import Polygon from 'ol/src/geom/Polygon';
-
 describe('os.feature', function() {
+  const Feature = require('ol/src/Feature');
+  const GeometryCollection = require('ol/src/geom/GeometryCollection');
+  const Point = require('ol/src/geom/Point');
+  const Polygon = require('ol/src/geom/Polygon');
+
   const {getMockMappingManager} = goog.module.get('os.mock');
   const {default: Fields} = goog.module.get('os.Fields');
   const {default: DataManager} = goog.module.get('os.data.DataManager');

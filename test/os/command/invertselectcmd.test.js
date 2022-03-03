@@ -6,12 +6,11 @@ goog.require('os.mock');
 goog.require('os.source.PropertyChange');
 goog.require('os.source.Vector');
 
-import {listen} from 'ol/src/events';
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
-
-
 describe('os.command.InvertSelect', function() {
+  const {listen} = require('ol/src/events');
+  const Feature = require('ol/src/Feature');
+  const Point = require('ol/src/geom/Point');
+
   const GoogEventType = goog.module.get('goog.events.EventType');
   const {default: InvertSelect} = goog.module.get('os.command.InvertSelect');
   const {default: State} = goog.module.get('os.command.State');

@@ -3,10 +3,10 @@ goog.require('os.command.State');
 goog.require('os.data.DataManager');
 goog.require('os.source.Vector');
 
-import Point from 'ol/geom/Point';
-import Feature from 'ol/src/Feature';
-
 describe('os.command.SelectNone', function() {
+  const Point = require('ol/geom/Point');
+  const Feature = require('ol/src/Feature');
+
   const {default: SelectNone} = goog.module.get('os.command.SelectNone');
   const {default: State} = goog.module.get('os.command.State');
   const {default: DataManager} = goog.module.get('os.data.DataManager');

@@ -10,10 +10,10 @@ goog.require('os.time.TimeRange');
 goog.require('os.track');
 goog.require('os.track.TrackField');
 
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
-
 describe('os.track', function() {
+  const Feature = require('ol/src/Feature');
+  const Point = require('ol/src/geom/Point');
+
   const object = goog.module.get('goog.object');
   const {default: Fields} = goog.module.get('os.Fields');
   const {default: RecordField} = goog.module.get('os.data.RecordField');
