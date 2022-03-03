@@ -2,8 +2,6 @@ goog.module('plugin.im.action.feature.mock.MockAction');
 
 const {default: AbstractImportAction} = goog.require('os.im.action.AbstractImportAction');
 
-const Feature = goog.requireType('ol.Feature');
-
 
 /**
  * Mock action that sets the field 'MATCH' to true on each object.

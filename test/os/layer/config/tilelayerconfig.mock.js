@@ -1,14 +1,13 @@
-goog.module('os.layer.config.MockTileLayerConfig');
+goog.declareModuleId('os.layer.config.MockTileLayerConfig');
 
 import TileWMS from 'ol/src/source/TileWMS';
 
-const {default: Tile} = goog.require('os.layer.Tile');
-const {default: AbstractLayerConfig} = goog.require('os.layer.config.AbstractLayerConfig');
-
+import AbstractLayerConfig from '../../../../src/os/layer/config/abstractdatasourcelayerconfig';
+import Tile from '../../../../src/os/layer/tile';
 
 /**
  */
-class MockTileLayerConfig extends AbstractLayerConfig {
+export default class MockTileLayerConfig extends AbstractLayerConfig {
   /**
    * Constructor.
    */
@@ -43,5 +42,3 @@ class MockTileLayerConfig extends AbstractLayerConfig {
  * @const
  */
 MockTileLayerConfig.TYPE = 'MockLayerConfig';
-
-exports = MockTileLayerConfig;

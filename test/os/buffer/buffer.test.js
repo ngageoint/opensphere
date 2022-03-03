@@ -5,12 +5,12 @@ goog.require('os.map');
 goog.require('os.proj');
 goog.require('os.query');
 
-import LineString from 'ol/src/geom/LineString';
-import Point from 'ol/src/geom/Point';
-import Polygon from 'ol/src/geom/Polygon';
-import {get} from 'ol/src/proj';
-
 describe('os.buffer', function() {
+  const LineString = require('ol/src/geom/LineString');
+  const Point = require('ol/src/geom/Point');
+  const Polygon = require('ol/src/geom/Polygon');
+  const {get} = requir('ol/src/proj');
+
   const geo = goog.module.get('os.geo');
   const osJsts = goog.module.get('os.geo.jsts');
   const osMap = goog.module.get('os.map');
