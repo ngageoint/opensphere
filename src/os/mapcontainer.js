@@ -16,6 +16,8 @@ import ObjectEventType from 'ol/src/ObjectEventType';
 import {get, fromLonLat, toLonLat, transformExtent} from 'ol/src/proj';
 import OLVectorSource from 'ol/src/source/Vector';
 import {createForProjection} from 'ol/src/tilegrid';
+import {DEFAULT_MAX_ZOOM} from 'ol/src/tilegrid/common';
+import {getUid} from 'ol/src/util';
 import View from 'ol/src/View';
 
 import EventType from './action/eventtype.js';
@@ -865,7 +867,7 @@ export default class MapContainer extends EventTarget {
     osMap.setProjection(get(/** @type {string} */ (
       Settings.getInstance().get(osMap.PROJECTION_KEY, osMap.PROJECTION.getCode()))));
 
-    osMap.setTileGrid(createForProjection(osMap.PROJECTION, ol.DEFAULT_MAX_ZOOM, [512, 512]));
+    osMap.setTileGrid(createForProjection(osMap.PROJECTION, DEFAULT_MAX_ZOOM, [512, 512]));
     osMap.setMinResolution(osMap.zoomToResolution(osMap.MAX_ZOOM, osMap.PROJECTION));
     osMap.setMaxResolution(osMap.zoomToResolution(osMap.MIN_ZOOM, osMap.PROJECTION));
 
@@ -1587,7 +1589,7 @@ export default class MapContainer extends EventTarget {
       if (drawLayer) {
         // make sure the feature has an id or we won't be able to look it up for removal
         if (!feature.getId()) {
-          feature.setId(ol.getUid(feature));
+          feature.setId(getUid(feature));
         }
 
         // set the layer id so we can look up the layer
