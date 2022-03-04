@@ -24,9 +24,9 @@ export default class MouseZoom extends Interaction {
    * @param {olx.interaction.DragPanOptions=} opt_options Options.
    */
   constructor(opt_options) {
-    super({
-      handleEvent: MouseZoom.handleEvent
-    });
+    super(opt_options);
+
+    this.handleEvent = this.handleBrowserEvent;
 
     /**
      * @type {Object}
@@ -98,7 +98,7 @@ export default class MouseZoom extends Interaction {
    * @return {boolean} `false` to stop event propagation.
    * @this MouseZoom
    */
-  static handleEvent(mapBrowserEvent) {
+  handleBrowserEvent(mapBrowserEvent) {
     var stopEvent = false;
     if (mapBrowserEvent.pointerEvent &&
         mapBrowserEvent.pointerEvent.buttons == 2 &&
