@@ -26,7 +26,7 @@ export default class MouseWheelZoom extends OLMouseWheelZoom {
     super(options);
 
     // the default value feels sluggish. this was observed on macOS and may need to be fine tuned for other environments
-    this.trackpadDeltaPerZoom_ = 100;
+    this.deltaPerZoom_ = 100;
   }
 
   /**
