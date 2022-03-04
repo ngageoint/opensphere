@@ -28,17 +28,4 @@ export default class MouseWheelZoom extends OLMouseWheelZoom {
     // the default value feels sluggish. this was observed on macOS and may need to be fine tuned for other environments
     this.deltaPerZoom_ = 100;
   }
-
-  /**
-   * @inheritDoc
-   * @suppress {accessControls} Replacing a private function from OL3.
-   */
-  handleWheelZoom_(map) {
-    if (this.maxDelta_) {
-      // lock zoom to increments of 0.2 zoom levels
-      this.maxDelta_ = this.maxDelta_ > 0 ? 0.2 : -0.2;
-    }
-
-    super.handleWheelZoom_(map);
-  }
 }
