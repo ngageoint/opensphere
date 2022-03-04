@@ -41,7 +41,7 @@ export const getInteractions = function() {
 
   // interaction to disable alt+shift+drag to rotate the map and shift+drag to zoom from the defaults
   var options = {
-    delta: 0.2
+    maxDelta: 0.2
   };
 
   // Mouse Wheel zoom AND left+right click and drag zoom

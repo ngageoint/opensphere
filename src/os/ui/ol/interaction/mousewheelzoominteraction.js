@@ -34,9 +34,9 @@ export default class MouseWheelZoom extends OLMouseWheelZoom {
    * @suppress {accessControls} Replacing a private function from OL3.
    */
   handleWheelZoom_(map) {
-    if (this.delta_) {
+    if (this.maxDelta_) {
       // lock zoom to increments of 0.2 zoom levels
-      this.delta_ = this.delta_ > 0 ? 0.2 : -0.2;
+      this.maxDelta_ = this.maxDelta_ > 0 ? 0.2 : -0.2;
     }
 
     super.handleWheelZoom_(map);

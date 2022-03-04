@@ -315,7 +315,7 @@ export default class OLMap extends EventTarget {
 
     // interaction to disable alt+shift+drag to rotate the map and shift+drag to zoom from the defaults
     var options = {
-      delta: 0.2
+      maxDelta: 0.2
     };
     var mwZoom = new MouseWheelZoom(options);
     var focus = new FocusInteraction();
