@@ -2,9 +2,9 @@ goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('os.structs.TreeNode');
 
-import {includes} from 'ol/src/array';
-
 describe('os.structs.TreeNode', function() {
+  const {includes} = require('ol/src/array');
+
   const googEvents = goog.module.get('goog.events');
   const GoogEventType = goog.module.get('goog.events.EventType');
   const {default: TreeNode} = goog.module.get('os.structs.TreeNode');
