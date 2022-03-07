@@ -9,15 +9,14 @@ goog.require('test.plugin.cesium.scene');
 goog.require('test.plugin.cesium.sync.linestring');
 goog.require('test.plugin.cesium.sync.polygon');
 
-import Feature from 'ol/src/Feature';
-import {fromExtent} from 'ol/src/geom/Polygon';
-import {get} from 'ol/src/proj';
-import Fill from 'ol/src/style/Fill';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
-
-
 describe('plugin.cesium.sync.PolygonConverter', () => {
+  const Feature = require('ol/src/Feature');
+  const {fromExtent} = require('ol/src/geom/Polygon');
+  const {get} = require('ol/src/proj');
+  const Fill = require('ol/src/style/Fill');
+  const Stroke = require('ol/src/style/Stroke');
+  const Style = require('ol/src/style/Style');
+
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osProj = goog.module.get('os.proj');
   const {getRealScene} = goog.module.get('test.plugin.cesium.scene');
