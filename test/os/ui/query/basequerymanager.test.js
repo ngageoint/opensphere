@@ -6,11 +6,11 @@ goog.require('os.query.BaseQueryManager');
 goog.require('os.query.QueryManager');
 goog.require('os.ui.query.MockHandler');
 
-import Feature from 'ol/src/Feature';
-import GeometryLayout from 'ol/src/geom/GeometryLayout';
-import Polygon from 'ol/src/geom/Polygon';
-
 describe('os.query.BaseQueryManager', function() {
+  const Feature = require('ol/src/Feature');
+  const GeometryLayout = require('ol/src/geom/GeometryLayout');
+  const Polygon = require('ol/src/geom/Polygon');
+
   const GoogEventType = goog.module.get('goog.events.EventType');
   const osQuery = goog.module.get('os.query');
   const {default: AreaManager} = goog.module.get('os.query.AreaManager');

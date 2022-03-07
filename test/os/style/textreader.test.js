@@ -1,10 +1,10 @@
 goog.require('os.style.TextReader');
 
-import Fill from 'ol/src/style/Fill';
-import Text from 'ol/src/style/Text';
-import TextPlacement from 'ol/src/style/TextPlacement';
-
 describe('os.style.TextReader', function() {
+  const Fill = require('ol/src/style/Fill');
+  const Text = require('ol/src/style/Text');
+  const TextPlacement = require('ol/src/style/TextPlacement');
+
   const {default: TextReader} = goog.module.get('os.style.TextReader');
 
   let config;

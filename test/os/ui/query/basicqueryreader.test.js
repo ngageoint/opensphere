@@ -13,10 +13,10 @@ goog.require('os.query.FilterManager');
 goog.require('os.query.QueryManager');
 goog.require('os.ui.query.BasicQueryReader');
 
-import Polygon from 'ol/src/geom/Polygon';
-
 
 describe('os.ui.query.BasicQueryReader', function() {
+  const Polygon = require('ol/src/geom/Polygon');
+
   const xml = goog.module.get('goog.dom.xml');
   const EventType = goog.module.get('goog.net.EventType');
   const XhrIo = goog.module.get('goog.net.XhrIo');

@@ -3,11 +3,11 @@ goog.require('os.proj');
 goog.require('os.style.area');
 goog.require('os.ui.draw');
 
-import Feature from 'ol/src/Feature';
-import {fromExtent} from 'ol/src/geom/Polygon';
-import {transformExtent} from 'ol/src/proj';
-
 describe('os.ui.draw', function() {
+  const Feature = require('ol/src/Feature');
+  const {fromExtent} = require('ol/src/geom/Polygon');
+  const {transformExtent} = require('ol/src/proj');
+
   const osMap = goog.module.get('os.map');
   const {EPSG4326} = goog.module.get('os.proj');
   const {GRID_STYLE} = goog.module.get('os.style.area');

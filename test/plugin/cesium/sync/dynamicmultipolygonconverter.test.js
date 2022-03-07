@@ -6,12 +6,12 @@ goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.DynamicMultiPolygonConverter');
 goog.require('test.plugin.cesium.scene');
 
-import MultiPolygon from 'ol/src/geom/MultiPolygon';
-import {get} from 'ol/src/proj';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
-
 describe('plugin.cesium.sync.DynamicMultiPolygonConverter', () => {
+  const MultiPolygon = require('ol/src/geom/MultiPolygon');
+  const {get} = require('ol/src/proj');
+  const Stroke = require('ol/src/style/Stroke');
+  const Style = require('ol/src/style/Style');
+
   const {default: DynamicFeature} = goog.module.get('os.feature.DynamicFeature');
   const {default: Vector} = goog.module.get('os.layer.Vector');
   const osMap = goog.module.get('os.map');

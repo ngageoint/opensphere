@@ -1,9 +1,9 @@
 goog.require('goog.dom.xml');
 goog.require('os.ui.query.AbstractQueryReader');
 
-import Polygon from 'ol/src/geom/Polygon';
-
 describe('os.ui.query.AbstractQueryReader', function() {
+  const Polygon = require('ol/src/geom/Polygon');
+
   const xml = goog.module.get('goog.dom.xml');
   const {default: AbstractQueryReader} = goog.module.get('os.ui.query.AbstractQueryReader');
 

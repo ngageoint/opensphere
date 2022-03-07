@@ -5,9 +5,9 @@ goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 goog.require('os.ui.search.place.CoordinateResult');
 
-import Feature from 'ol/src/Feature';
-
 describe('os.ui.search.place.CoordinateResult', function() {
+  const Feature = require('ol/src/Feature');
+
   const {default: osImplements} = goog.module.get('os.implements');
   const {default: ISortableResult} = goog.module.get('os.search.ISortableResult');
   const {default: SortType} = goog.module.get('os.search.SortType');
