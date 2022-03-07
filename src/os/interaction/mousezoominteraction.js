@@ -1,7 +1,7 @@
 goog.declareModuleId('os.interaction.MouseZoom');
 
 import {platformModifierKeyOnly} from 'ol/src/events/condition';
-import Interaction from 'ol/src/interaction/Interaction';
+import {default as Interaction, zoomByDelta} from 'ol/src/interaction/Interaction';
 
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';
@@ -100,8 +100,7 @@ export default class MouseZoom extends Interaction {
    */
   handleBrowserEvent(mapBrowserEvent) {
     var stopEvent = false;
-    if (mapBrowserEvent.pointerEvent &&
-        mapBrowserEvent.pointerEvent.buttons == 2 &&
+    if (mapBrowserEvent.originalEvent.buttons == 2 &&
         mapBrowserEvent.dragging &&
         platformModifierKeyOnly(mapBrowserEvent)) {
       this.zoom(mapBrowserEvent);
