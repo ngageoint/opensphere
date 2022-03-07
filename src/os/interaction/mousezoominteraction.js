@@ -100,7 +100,8 @@ export default class MouseZoom extends Interaction {
    */
   handleBrowserEvent(mapBrowserEvent) {
     var stopEvent = false;
-    if (mapBrowserEvent.originalEvent.buttons == 2 &&
+    if (mapBrowserEvent.originalEvent instanceof PointerEvent &&
+        mapBrowserEvent.originalEvent.buttons == 2 &&
         mapBrowserEvent.dragging &&
         platformModifierKeyOnly(mapBrowserEvent)) {
       this.zoom(mapBrowserEvent);
