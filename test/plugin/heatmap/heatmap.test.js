@@ -9,14 +9,14 @@ goog.require('plugin.heatmap');
 goog.require('plugin.heatmap.HeatmapField');
 goog.require('plugin.heatmap.HeatmapLayerConfig');
 
-import Feature from 'ol/src/Feature';
-import MultiPoint from 'ol/src/geom/MultiPoint';
-import Point from 'ol/src/geom/Point';
-import Fill from 'ol/src/style/Fill';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
-
 describe('plugin.heatmap', function() {
+  const Feature = require('ol/src/Feature');
+  const MultiPoint = require('ol/src/geom/MultiPoint');
+  const Point = require('ol/src/geom/Point');
+  const Fill = require('ol/src/style/Fill');
+  const Stroke = require('ol/src/style/Stroke');
+  const Style = require('ol/src/style/Style');
+
   const googString = goog.module.get('goog.string');
   const Dispatcher = goog.module.get('os.Dispatcher');
   const {default: RecordField} = goog.module.get('os.data.RecordField');

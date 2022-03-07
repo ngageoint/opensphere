@@ -2,9 +2,9 @@ goog.require('goog.net.EventType');
 goog.require('goog.net.XhrIo');
 goog.require('plugin.osm.nom.NominatimParser');
 
-import Feature from 'ol/src/Feature';
-
 describe('plugin.osm.nom.NominatimParser', function() {
+  const Feature = require('ol/src/Feature');
+
   const EventType = goog.module.get('goog.net.EventType');
   const XhrIo = goog.module.get('goog.net.XhrIo');
   const {default: NominatimParser} = goog.module.get('plugin.osm.nom.NominatimParser');

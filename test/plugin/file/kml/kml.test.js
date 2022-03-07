@@ -5,13 +5,13 @@ goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 goog.require('plugin.file.kml');
 
-import KML from 'ol/src/format/KML';
-import GeometryLayout from 'ol/src/geom/GeometryLayout';
-import LineString from 'ol/src/geom/LineString';
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import {pushParseAndPop} from 'ol/src/xml';
-
 describe('plugin.file.kml', function() {
+  const KML = require('ol/src/format/KML');
+  const GeometryLayout = require('ol/src/geom/GeometryLayout');
+  const LineString = require('ol/src/geom/LineString');
+  const MultiLineString = require('ol/src/geom/MultiLineString');
+  const {pushParseAndPop} = require('ol/src/xml');
+
   const dom = goog.module.get('goog.dom');
   const googDomXml = goog.module.get('goog.dom.xml');
   const {toAbgrString} = goog.module.get('os.style');
