@@ -20,7 +20,7 @@ module.exports = function(config) {
     basePath: '',
 
     // frameworks to use
-    frameworks: ['jasmine'],
+    frameworks: ['jasmine', 'webpack'],
 
     // list of files / patterns to load in the browser
     files: [
@@ -124,10 +124,12 @@ module.exports = function(config) {
     //
     preprocessors: {
       // preprocess Angular templates
-      'views/**/*.html': ['ng-html2js']
+      'views/**/*.html': ['ng-html2js'],
+      'test/**/*.test.js': ['webpack']
     },
-
-    //
+    webpack: {
+      'mode': 'development'
+    },
     // Angular template preprocessor.
     //
     // In debug/tests, templateUrl paths have os.ROOT prepended. This config adds each preloaded template to the
