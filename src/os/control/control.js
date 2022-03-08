@@ -34,7 +34,7 @@ export const getControls = function() {
       projection: osProj.EPSG4326,
       className: 'ol-mouse-position',
       target: mousePositionEle,
-      undefinedHTML: '&nbsp;',
+      placeholder: '&nbsp;',
       useSettings: true
     });
     el = mousePositionControl.getElement();

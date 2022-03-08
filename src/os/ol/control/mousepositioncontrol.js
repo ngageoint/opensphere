@@ -17,9 +17,6 @@ import UnitManager from '../../unit/unitmanager.js';
 const {listen, unlistenByKey} = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
 
-const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
-const {default: SettingChangeEvent} = goog.requireType('os.events.SettingChangeEvent');
-
 
 /**
  * Extends the OpenLayers 3 MousePosition control to allow switching between different coordinate formats.
@@ -31,7 +28,7 @@ export default class MousePosition extends OLMousePosition {
    */
   constructor(opt_options) {
     opt_options = opt_options || {};
-    opt_options.undefinedHTML = 'No coordinate';
+    opt_options.placeholder = 'No coordinate';
 
     super(opt_options);
 
