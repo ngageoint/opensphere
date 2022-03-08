@@ -5,10 +5,10 @@ goog.require('os.im.mapping.RadiusMapping');
 goog.require('os.math');
 goog.require('os.math.Units');
 
-describe('os.im.mapping.RadiusMapping', function() {
-  const Feature = require('ol/src/Feature');
-  const Point = require('ol/src/geom/Point');
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
 
+describe('os.im.mapping.RadiusMapping', function() {
   const {default: Fields} = goog.module.get('os.Fields');
   const fields = goog.module.get('os.fields');
   const mapping = goog.module.get('os.im.mapping');

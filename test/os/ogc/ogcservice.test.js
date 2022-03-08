@@ -2,9 +2,9 @@ goog.require('os.ogc.OGCService');
 goog.require('os.ogc.query.OGCQuery');
 goog.require('os.ogc.registry');
 
-describe('os.ogc.OGCService', function() {
-  const Feature = require('ol/src/Feature');
+import Feature from 'ol/src/Feature';
 
+describe('os.ogc.OGCService', function() {
   const {default: OGCService} = goog.module.get('os.ogc.OGCService');
 
   const FIELD = 'TITLE';

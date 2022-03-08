@@ -3,9 +3,9 @@ goog.require('os.time.Duration');
 goog.require('os.time.TimelineController');
 goog.require('os.time.TimelineEventType');
 
-describe('os.layer.AnimatedTile', function() {
-  const TileWMS = require('ol/src/source/TileWMS');
+import TileWMS from 'ol/src/source/TileWMS';
 
+describe('os.layer.AnimatedTile', function() {
   const {default: AnimatedTile} = goog.module.get('os.layer.AnimatedTile');
   const {default: Duration} = goog.module.get('os.time.Duration');
   const {default: TimelineController} = goog.module.get('os.time.TimelineController');

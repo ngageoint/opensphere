@@ -1,10 +1,10 @@
 goog.require('os.ol.image');
 
-describe('os.ol.image', function() {
-  const {createCanvasContext2D} = require('ol/src/dom');
-  const {getHeight} = require('ol/src/extent');
-  const ImageCanvas = require('ol/src/ImageCanvas');
+import {createCanvasContext2D} from 'ol/src/dom';
+import {getHeight} from 'ol/src/extent';
+import ImageCanvas from 'ol/src/ImageCanvas';
 
+describe('os.ol.image', function() {
   const image = goog.module.get('os.ol.image');
 
   var getData = function(imgCanvas) {

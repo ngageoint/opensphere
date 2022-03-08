@@ -1,8 +1,8 @@
 goog.require('os.im.mapping');
 
-describe('os.im.mapping', function() {
-  const Feature = require('ol/src/Feature');
+import Feature from 'ol/src/Feature';
 
+describe('os.im.mapping', function() {
   const mapping = goog.module.get('os.im.mapping');
 
   var test = {
