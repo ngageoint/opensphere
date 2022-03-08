@@ -271,7 +271,7 @@ export class Controller extends AbstractAnnotationCtrl {
 
       // try updating the tail
       if (this.updateTail()) {
-        unlisten(this.visibleEventsKey_);
+        unlistenByKey(this.visibleEventsKey_);
       }
 
       this.inVisibleChange_ = false;
