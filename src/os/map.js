@@ -48,7 +48,7 @@ export default class Map extends OLMap {
   /**
    * @inheritDoc
    */
-  getCoordinateFromPixel(pixel) {
+  getCoordinateFromPixelInternal(pixel) {
     if (getMapContainer().is3DEnabled()) {
       var webGL = getMapContainer().getWebGLRenderer();
       var coord = webGL ? webGL.getCoordinateFromPixel(pixel) : null;
