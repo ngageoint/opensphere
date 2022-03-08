@@ -5,10 +5,10 @@ goog.require('os.style.ImageReader');
 goog.require('os.style.StrokeReader');
 goog.require('os.style.StyleReader');
 
-describe('os.style.StyleReader', function() {
-  const Circle = require('ol/src/style/Circle');
-  const Style = require('ol/src/style/Style');
+import Circle from 'ol/src/style/Circle';
+import Style from 'ol/src/style/Style';
 
+describe('os.style.StyleReader', function() {
   const {default: CircleReader} = goog.module.get('os.style.CircleReader');
   const {default: FillReader} = goog.module.get('os.style.FillReader');
   const {default: IconReader} = goog.module.get('os.style.IconReader');

@@ -27,11 +27,11 @@ goog.require('os.ui.formatter.DescriptionFormatter');
 goog.require('os.ui.formatter.PropertiesFormatter');
 goog.require('plugin.file.geojson.GeoJSONParser');
 
-describe('os.source.Vector', function() {
-  const {listen} = require('ol/src/events');
-  const Feature = require('ol/src/Feature');
-  const Point = require('ol/src/geom/Point');
+import {listen} from 'ol/src/events';
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
 
+describe('os.source.Vector', function() {
   const googArray = goog.module.get('goog.array');
   const GoogEventType = goog.module.get('goog.events.EventType');
   const functions = goog.module.get('goog.functions');

@@ -7,10 +7,10 @@ goog.require('os.style.StyleType');
 goog.require('os.ui.search.FeatureResultCardCtrl');
 goog.require('os.ui.search.place.CoordinateResult');
 
-describe('os.ui.search.FeatureResultCardCtrl', () => {
-  const Feature = require('ol/src/Feature');
-  const Point = require('ol/src/geom/Point');
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
 
+describe('os.ui.search.FeatureResultCardCtrl', () => {
   const GoogEventType = goog.module.get('goog.events.EventType');
   const {default: MapContainer} = goog.module.get('os.MapContainer');
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');

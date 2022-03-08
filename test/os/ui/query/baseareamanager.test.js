@@ -2,14 +2,14 @@ goog.require('os.alert.AlertManager');
 goog.require('os.query.AreaManager');
 goog.require('os.query.BaseAreaManager');
 
-describe('os.query.BaseAreaManager', function() {
-  const Feature = require('ol/src/Feature');
-  const LineString = require('ol/src/geom/LineString');
-  const MultiLineString = require('ol/src/geom/MultiLineString');
-  const MultiPolygon = require('ol/src/geom/MultiPolygon');
-  const Point = require('ol/src/geom/Point');
-  const Polygon = require('ol/src/geom/Polygon');
+import Feature from 'ol/src/Feature';
+import LineString from 'ol/src/geom/LineString';
+import MultiLineString from 'ol/src/geom/MultiLineString';
+import MultiPolygon from 'ol/src/geom/MultiPolygon';
+import Point from 'ol/src/geom/Point';
+import Polygon from 'ol/src/geom/Polygon';
 
+describe('os.query.BaseAreaManager', function() {
   const {default: AlertManager} = goog.module.get('os.alert.AlertManager');
   const {default: AreaManager} = goog.module.get('os.query.AreaManager');
 
