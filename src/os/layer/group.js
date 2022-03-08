@@ -70,7 +70,7 @@ export default class Group extends OLLayerGroup {
     var oldLayers = this.getLayers();
     if (oldLayers) {
       unlistenByKey(this.addListenKey);
-      unlistenByKey(this.addListenKey);
+      unlistenByKey(this.removeListenKey);
     }
 
     if (layers) {
