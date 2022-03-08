@@ -8,12 +8,12 @@ goog.require('os.source.Vector');
 goog.require('os.structs.TreeNode');
 goog.require('plugin.xyz.XYZLayerConfig');
 
-describe('os.fn', function() {
-  const {createEmpty} = require('ol/src/extent');
-  const Feature = require('ol/src/Feature');
-  const Point = require('ol/src/geom/Point');
-  const olSourceImage = require('ol/src/source/Image');
+import {createEmpty} from 'ol/src/extent';
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
+import olSourceImage from 'ol/src/source/Image';
 
+describe('os.fn', function() {
   const {default: LayerNode} = goog.module.get('os.data.LayerNode');
   const fn = goog.module.get('os.fn');
   const {default: Image} = goog.module.get('os.layer.Image');

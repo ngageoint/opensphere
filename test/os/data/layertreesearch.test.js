@@ -5,10 +5,10 @@ goog.require('os.layer.Vector');
 goog.require('os.map.instance');
 goog.require('os.mock');
 
-describe('os.data.LayerTreeSearch', function() {
-  const TileWMS = require('ol/src/source/TileWMS');
-  const OLVectorSource = require('ol/src/source/Vector');
+import TileWMS from 'ol/src/source/TileWMS';
+import OLVectorSource from 'ol/src/source/Vector';
 
+describe('os.data.LayerTreeSearch', function() {
   const {default: LayerTreeSearch} = goog.module.get('os.data.LayerTreeSearch');
   const {default: LayerZOrderGroupBy} = goog.module.get('os.data.groupby.LayerZOrderGroupBy');
   const {default: Tile} = goog.module.get('os.layer.Tile');

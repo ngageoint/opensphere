@@ -9,6 +9,8 @@ goog.require('os.histo.UniqueBinMethod');
 goog.require('os.time.TimeRange');
 goog.require('os.time.xf.TimeModel');
 
+import Feature from 'ol/src/Feature';
+
 /**
  * @param {number} min
  * @param {number} max
@@ -222,7 +224,6 @@ var runMultiDimFilter = function(features, field1, type1, field2, type2) {
 
 
 xdescribe('os.data.xf.binningperf', function() {
-  const Feature = require('ol/src/Feature');
   const {default: TimeRange} = goog.module.get('os.time.TimeRange');
 
   it('should test the performance for multidimensional binning', function() {

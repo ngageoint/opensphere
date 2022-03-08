@@ -6,11 +6,11 @@ goog.require('os.mock');
 goog.require('os.source.PropertyChange');
 goog.require('os.source.Vector');
 
-describe('os.command.SelectAll', function() {
-  const {listen} = require('ol/src/events');
-  const Feature = require('ol/src/Feature');
-  const Point = require('ol/src/geom/Point');
+import {listen} from 'ol/src/events';
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
 
+describe('os.command.SelectAll', function() {
   const GoogEventType = goog.module.get('goog.events.EventType');
   const {default: SelectAll} = goog.module.get('os.command.SelectAll');
   const {default: State} = goog.module.get('os.command.State');

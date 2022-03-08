@@ -1,12 +1,11 @@
 goog.require('os.mixin');
 
+import EventTarget from 'ol/src/events/Target';
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
+import OLObject from 'ol/src/Object';
 
 describe('os.mixin', function() {
-  const EventTarget = require('ol/src/events/Target');
-  const Feature = require('ol/src/Feature');
-  const Point = require('ol/src/geom/Point');
-  const OLObject = require('ol/src/Object');
-
   it('should allow disabling events', function() {
     spyOn(EventTarget.prototype, 'dispatchEvent');
 
