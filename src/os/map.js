@@ -55,7 +55,7 @@ export default class Map extends OLMap {
       return coord ? fromLonLat(coord, osMap.PROJECTION) : null;
     }
 
-    var coord = super.getCoordinateFromPixel(pixel);
+    var coord = super.getCoordinateFromPixelInternal(pixel);
     var extent = this.getView().getProjection().getExtent();
     if (coord && (coord[1] < extent[1] || coord[1] > extent[3])) {
       // don't return coordinates outside of the projection bounds
@@ -68,7 +68,7 @@ export default class Map extends OLMap {
   /**
    * @inheritDoc
    */
-  getPixelFromCoordinate(coordinate) {
+  getPixelFromCoordinateInternal(coordinate) {
     if (getMapContainer().is3DEnabled() && coordinate) {
       coordinate = toLonLat(coordinate, osMap.PROJECTION);
 
@@ -76,7 +76,7 @@ export default class Map extends OLMap {
       return webGL ? webGL.getPixelFromCoordinate(coordinate) : null;
     }
 
-    return super.getPixelFromCoordinate(coordinate);
+    return super.getPixelFromCoordinateInternal(coordinate);
   }
 
   /**
