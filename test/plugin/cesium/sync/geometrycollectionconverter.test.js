@@ -6,14 +6,14 @@ goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.GeometryCollectionConverter');
 goog.require('test.plugin.cesium.scene');
 
-describe('plugin.cesium.sync.GeometryCollectionConverter', () => {
-  const Feature = require('ol/src/Feature');
-  const GeometryCollection = require('ol/src/geom/GeometryCollection');
-  const Point = require('ol/src/geom/Point');
-  const {fromExtent} = require('ol/src/geom/Polygon');
-  const {get} = require('ol/src/proj');
-  const Style = require('ol/src/style/Style');
+import Feature from 'ol/src/Feature';
+import GeometryCollection from 'ol/src/geom/GeometryCollection';
+import Point from 'ol/src/geom/Point';
+import {fromExtent} from 'ol/src/geom/Polygon';
+import {get} from 'ol/src/proj';
+import Style from 'ol/src/style/Style';
 
+describe('plugin.cesium.sync.GeometryCollectionConverter', () => {
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osProj = goog.module.get('os.proj');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');

@@ -6,13 +6,13 @@ goog.require('plugin.cesium.sync.DynamicLineStringConverter');
 goog.require('test.plugin.cesium.scene');
 goog.require('test.plugin.cesium.sync.dynamiclinestring');
 
-describe('plugin.cesium.sync.DynamicLineStringConverter', () => {
-  const Feature = require('ol/src/Feature');
-  const LineString = require('ol/src/geom/LineString');
-  const {get} = require('ol/src/proj');
-  const Stroke = require('ol/src/style/Stroke');
-  const Style = require('ol/src/style/Style');
+import Feature from 'ol/src/Feature';
+import LineString from 'ol/src/geom/LineString';
+import {get} from 'ol/src/proj';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
 
+describe('plugin.cesium.sync.DynamicLineStringConverter', () => {
   const {default: Vector} = goog.module.get('os.layer.Vector');
   const osMap = goog.module.get('os.map');
   const {EPSG4326} = goog.module.get('os.proj');

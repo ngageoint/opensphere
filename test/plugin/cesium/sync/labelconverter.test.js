@@ -7,17 +7,17 @@ goog.require('test.plugin.cesium.primitive');
 goog.require('test.plugin.cesium.scene');
 goog.require('test.plugin.cesium.sync.style');
 
-describe('plugin.cesium.sync.LabelConverter', () => {
-  const {getCenter} = require('ol/src/extent');
-  const Feature = require('ol/src/Feature');
-  const Point = require('ol/src/geom/Point');
-  const {fromExtent} = require('ol/src/geom/Polygon');
-  const {get, transform} = require('ol/src/proj');
-  const Fill = require('ol/src/style/Fill');
-  const Stroke = require('ol/src/style/Stroke');
-  const Style = require('ol/src/style/Style');
-  const Text = require('ol/src/style/Text');
+import {getCenter} from 'ol/src/extent';
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
+import {fromExtent} from 'ol/src/geom/Polygon';
+import {get, transform} from 'ol/src/proj';
+import Fill from 'ol/src/style/Fill';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
+import Text from 'ol/src/style/Text';
 
+describe('plugin.cesium.sync.LabelConverter', () => {
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osMap = goog.module.get('os.map');
   const osProj = goog.module.get('os.proj');

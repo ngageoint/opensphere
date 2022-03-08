@@ -10,13 +10,13 @@ goog.require('plugin.cesium.primitive');
 goog.require('test.plugin.cesium.primitive');
 goog.require('test.plugin.cesium.scene');
 
-describe('plugin.cesium.primitive', () => {
-  const {getUid} = require('ol/src');
-  const Feature = require('ol/src/Feature');
-  const Point = require('ol/src/geom/Point');
-  const {get} = require('ol/src/proj');
-  const Style = require('ol/src/style/Style');
+import {getUid} from 'ol/src';
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
+import {get} from 'ol/src/proj';
+import Style from 'ol/src/style/Style';
 
+describe('plugin.cesium.primitive', () => {
   const dispose = goog.module.get('goog.dispose');
   const Delay = goog.module.get('goog.async.Delay');
 

@@ -20,14 +20,14 @@ goog.require('plugin.cesium.sync.PolygonConverter');
 goog.require('plugin.cesium.sync.converter');
 goog.require('test.plugin.cesium.scene');
 
-describe('plugin.cesium.sync.converter', () => {
-  const Feature = require('ol/src/Feature');
-  const GeometryType = require('ol/src/geom/GeometryType');
-  const Point = require('ol/src/geom/Point');
-  const {get} = require('ol/src/proj');
-  const Style = require('ol/src/style/Style');
-  const Text = require('ol/src/style/Text');
+import Feature from 'ol/src/Feature';
+import GeometryType from 'ol/src/geom/GeometryType';
+import Point from 'ol/src/geom/Point';
+import {get} from 'ol/src/proj';
+import Style from 'ol/src/style/Style';
+import Text from 'ol/src/style/Text';
 
+describe('plugin.cesium.sync.converter', () => {
   const {convertGeometry, getConverter} = goog.module.get('plugin.cesium.sync.converter');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
   const {default: DynamicFeature} = goog.module.get('os.feature.DynamicFeature');

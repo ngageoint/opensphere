@@ -11,14 +11,14 @@ goog.require('plugin.cesium.sync.LineStringConverter');
 goog.require('test.plugin.cesium.scene');
 goog.require('test.plugin.cesium.sync.linestring');
 
-describe('plugin.cesium.sync.LineStringConverter', () => {
-  const Feature = require('ol/src/Feature');
-  const LineString = require('ol/src/geom/LineString');
-  const {get} = require('ol/src/proj');
-  const Fill = require('ol/src/style/Fill');
-  const Stroke = require('ol/src/style/Stroke');
-  const Style = require('ol/src/style/Style');
+import Feature from 'ol/src/Feature';
+import LineString from 'ol/src/geom/LineString';
+import {get} from 'ol/src/proj';
+import Fill from 'ol/src/style/Fill';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
 
+describe('plugin.cesium.sync.LineStringConverter', () => {
   const {default: RecordField} = goog.module.get('os.data.RecordField');
   const interpolate = goog.module.get('os.interpolate');
   const {default: Method} = goog.module.get('os.interpolate.Method');

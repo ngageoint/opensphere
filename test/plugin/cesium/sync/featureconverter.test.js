@@ -4,12 +4,12 @@ goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.convert');
 goog.require('test.plugin.cesium.scene');
 
-describe('plugin.cesium.sync.convert', () => {
-  const Feature = require('ol/src/Feature');
-  const {fromExtent} = require('ol/src/geom/Polygon');
-  const {get} = require('ol/src/proj');
-  const Style = require('ol/src/style/Style');
+import Feature from 'ol/src/Feature';
+import {fromExtent} from 'ol/src/geom/Polygon';
+import {get} from 'ol/src/proj';
+import Style from 'ol/src/style/Style';
 
+describe('plugin.cesium.sync.convert', () => {
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osProj = goog.module.get('os.proj');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');

@@ -8,11 +8,11 @@ goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.EllipsoidConverter');
 goog.require('test.plugin.cesium.scene');
 
-describe('plugin.cesium.sync.EllipsoidConverter', () => {
-  const Feature = require('ol/src/Feature');
-  const {get} = require('ol/src/proj');
-  const Style = require('ol/src/style/Style');
+import Feature from 'ol/src/Feature';
+import {get} from 'ol/src/proj';
+import Style from 'ol/src/style/Style';
 
+describe('plugin.cesium.sync.EllipsoidConverter', () => {
   const {default: Ellipse} = goog.module.get('os.geom.Ellipse');
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osProj = goog.module.get('os.proj');

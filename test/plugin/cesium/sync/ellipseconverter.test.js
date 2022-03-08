@@ -9,11 +9,11 @@ goog.require('plugin.cesium.sync.EllipseConverter');
 goog.require('test.plugin.cesium.scene');
 goog.require('test.plugin.cesium.sync.linestring');
 
-describe('plugin.cesium.sync.EllipseConverter', () => {
-  const Feature = require('ol/src/Feature');
-  const {get} = require('ol/src/proj');
-  const Style = require('ol/src/style/Style');
+import Feature from 'ol/src/Feature';
+import {get} from 'ol/src/proj';
+import Style from 'ol/src/style/Style';
 
+describe('plugin.cesium.sync.EllipseConverter', () => {
   const {default: Ellipse} = goog.module.get('os.geom.Ellipse');
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osProj = goog.module.get('os.proj');
