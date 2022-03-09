@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.layer.AbstractLayerUICtrl');
 
 import {listen, unlistenByKey} from 'ol/src/events';
-import OLObject from 'ol/src/Object';
+import {ObjectEvent} from 'ol/src/Object';
 
 import CommandProcessor from '../../command/commandprocessor.js';
 import ParallelCommand from '../../command/parallelcommand.js';
@@ -253,13 +253,13 @@ export default class Controller extends Disposable {
   /**
    * Handles layer property change events.
    *
-   * @param {PropertyChangeEvent|OLObject.Event} event
+   * @param {PropertyChangeEvent|ObjectEvent} event
    * @protected
    */
   onLayerPropertyChange(event) {
     if (!this.isDisposed()) {
       // initialize the control if it's an OL event for a property we're controlling, or for our own style events
-      if (event instanceof OLObject.Event && this.scope[event.key] != null) {
+      if (event instanceof ObjectEvent && this.scope[event.key] != null) {
         this.refreshUI();
       } else if (event instanceof PropertyChangeEvent) {
         var p = event.getProperty();
