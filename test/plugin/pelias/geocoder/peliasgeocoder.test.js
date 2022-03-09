@@ -6,10 +6,10 @@ goog.require('plugin.pelias.geocoder.Plugin');
 goog.require('plugin.pelias.geocoder.Result');
 goog.require('plugin.pelias.geocoder.Search');
 
-describe('plugin.pelias.geocoder.Search', function() {
-  const Feature = require('ol/src/Feature');
-  const olProj = require('ol/src/proj');
+import Feature from 'ol/src/Feature';
+import olProj from 'ol/src/proj';
 
+describe('plugin.pelias.geocoder.Search', function() {
   const {default: MapContainer} = goog.module.get('os.MapContainer');
   const {default: Settings} = goog.module.get('os.config.Settings');
   const {default: SearchEventType} = goog.module.get('os.search.SearchEventType');

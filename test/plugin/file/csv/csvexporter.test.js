@@ -5,12 +5,12 @@ goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 goog.require('plugin.file.csv.CSVExporter');
 
-describe('plugin.file.csv.CSVExporter', function() {
-  const Feature = require('ol/src/Feature');
-  const LineString = require('ol/src/geom/LineString');
-  const Point = require('ol/src/geom/Point');
-  const Polygon = require('ol/src/geom/Polygon');
+import Feature from 'ol/src/Feature';
+import LineString from 'ol/src/geom/LineString';
+import Point from 'ol/src/geom/Point';
+import Polygon from 'ol/src/geom/Polygon';
 
+describe('plugin.file.csv.CSVExporter', function() {
   const googObject = goog.module.get('goog.object');
   const {default: Fields} = goog.module.get('os.Fields');
   const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');

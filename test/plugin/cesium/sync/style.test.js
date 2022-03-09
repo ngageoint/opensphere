@@ -2,11 +2,11 @@ goog.require('os.style');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.sync.style');
 
-describe('plugin.cesium.sync.style', () => {
-  const Fill = require('ol/src/style/Fill');
-  const Stroke = require('ol/src/style/Stroke');
-  const Style = require('ol/src/style/Style');
+import Fill from 'ol/src/style/Fill';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
 
+describe('plugin.cesium.sync.style', () => {
   const osStyle = goog.module.get('os.style');
   const {GeometryInstanceId} = goog.module.get('plugin.cesium');
   const {getColor, getLineWidthFromStyle} = goog.module.get('plugin.cesium.sync.style');

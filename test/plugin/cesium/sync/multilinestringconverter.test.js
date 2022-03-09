@@ -6,13 +6,13 @@ goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.MultiLineStringConverter');
 goog.require('test.plugin.cesium.scene');
 
-describe('plugin.cesium.sync.MultiLineStringConverter', () => {
-  const Feature = require('ol/src/Feature');
-  const MultiLineString = require('ol/src/geom/MultiLineString');
-  const {get} = require('ol/src/proj');
-  const Stroke = require('ol/src/style/Stroke');
-  const Style = require('ol/src/style/Style');
+import Feature from 'ol/src/Feature';
+import MultiLineString from 'ol/src/geom/MultiLineString';
+import {get} from 'ol/src/proj';
+import Stroke from 'ol/src/style/Stroke';
+import Style from 'ol/src/style/Style';
 
+describe('plugin.cesium.sync.MultiLineStringConverter', () => {
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const osMap = goog.module.get('os.map');
   const osProj = goog.module.get('os.proj');

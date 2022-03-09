@@ -11,9 +11,9 @@ goog.require('os.ui.file.method.UrlMethod');
 goog.require('plugin.file.kml.KMLParser');
 goog.require('plugin.file.kml.ui.KMLNode');
 
-describe('plugin.file.kml.KMLParser', function() {
-  const Point = require('ol/src/geom/Point');
+import Point from 'ol/src/geom/Point';
 
+describe('plugin.file.kml.KMLParser', function() {
   const googNetEventType = goog.module.get('goog.net.EventType');
   const {default: EventType} = goog.module.get('os.events.EventType');
   const osFeature = goog.module.get('os.feature');

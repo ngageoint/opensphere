@@ -8,10 +8,10 @@ goog.require('os.source.Vector');
 goog.require('os.style.StyleType');
 goog.require('plugin.vectortools');
 
-describe('plugin.vectortools', function() {
-  const Feature = require('ol/src/Feature');
-  const Point = require('ol/src/geom/Point');
+import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
 
+describe('plugin.vectortools', function() {
   const googObject = goog.module.get('goog.object');
   const {default: ColumnMapping} = goog.module.get('os.column.ColumnMapping');
   const {default: ColumnMappingManager} = goog.module.get('os.column.ColumnMappingManager');

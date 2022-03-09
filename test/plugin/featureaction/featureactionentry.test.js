@@ -4,9 +4,9 @@ goog.require('plugin.im.action.feature.Entry');
 goog.require('plugin.im.action.feature.mock');
 goog.require('plugin.im.action.feature.mock.MockAction');
 
-describe('plugin.im.action.feature.Entry', function() {
-  const Feature = require('ol/src/Feature');
+import Feature from 'ol/src/Feature';
 
+describe('plugin.im.action.feature.Entry', function() {
   const functions = goog.module.get('goog.functions');
   const {default: ImportActionManager} = goog.module.get('os.im.action.ImportActionManager');
   const {default: Entry} = goog.module.get('plugin.im.action.feature.Entry');

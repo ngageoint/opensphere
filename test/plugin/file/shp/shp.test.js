@@ -1,13 +1,13 @@
 goog.require('plugin.file.shp');
 
-describe('plugin.file.shp', () => {
-  const LineString = require('ol/src/geom/LineString');
-  const MultiLineString = require('ol/src/geom/MultiLineString');
-  const MultiPoint = require('ol/src/geom/MultiPoint');
-  const MultiPolygon = require('ol/src/geom/MultiPolygon');
-  const Point = require('ol/src/geom/Point');
-  const Polygon = require('ol/src/geom/Polygon');
+import LineString from 'ol/src/geom/LineString';
+import MultiLineString from 'ol/src/geom/MultiLineString';
+import MultiPoint from 'ol/src/geom/MultiPoint';
+import MultiPolygon from 'ol/src/geom/MultiPolygon';
+import Point from 'ol/src/geom/Point';
+import Polygon from 'ol/src/geom/Polygon';
 
+describe('plugin.file.shp', () => {
   const {
     TYPE,
     getFlatGroupCoordinates,

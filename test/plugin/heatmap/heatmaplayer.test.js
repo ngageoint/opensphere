@@ -10,15 +10,15 @@ goog.require('plugin.heatmap.HeatmapLayerConfig');
 goog.require('plugin.heatmap.HeatmapPropertyType');
 goog.require('plugin.heatmap.SynchronizerType');
 
-describe('plugin.heatmap.Heatmap', function() {
-  const {listen} = require('ol/src/events');
-  const Feature = require('ol/src/Feature');
-  const LineString = require('ol/src/geom/LineString');
-  const MultiPoint = require('ol/src/geom/MultiPoint');
-  const MultiPolygon = require('ol/src/geom/MultiPolygon');
-  const Point = require('ol/src/geom/Point');
-  const Polygon = require('ol/src/geom/Polygon');
+import {listen} from 'ol/src/events';
+import Feature from 'ol/src/Feature';
+import LineString from 'ol/src/geom/LineString';
+import MultiPoint from 'ol/src/geom/MultiPoint';
+import MultiPolygon from 'ol/src/geom/MultiPolygon';
+import Point from 'ol/src/geom/Point';
+import Polygon from 'ol/src/geom/Polygon';
 
+describe('plugin.heatmap.Heatmap', function() {
   const GoogEventType = goog.module.get('goog.events.EventType');
   const googString = goog.module.get('goog.string');
   const {default: MapContainer} = goog.module.get('os.MapContainer');
