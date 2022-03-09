@@ -3,12 +3,10 @@ goog.declareModuleId('plugin.overview.OverviewMap');
 import OLOverviewMap from 'ol/src/control/OverviewMap';
 import MapProperty from 'ol/src/MapProperty';
 import View from 'ol/src/View';
+
 import Settings from '../../os/config/settings.js';
 import * as osMap from '../../os/map/map.js';
-
 import MapContainer from '../../os/mapcontainer.js';
-
-
 
 /**
  * Overview map control.
@@ -21,7 +19,6 @@ export default class OverviewMap extends OLOverviewMap {
    */
   constructor(opt_opts) {
     super(opt_opts);
-    // this.setMap(MapContainer.getInstance().getMap());
     this.updateView_();
 
     /* Interactive map in 3D mode */
