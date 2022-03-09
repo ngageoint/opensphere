@@ -11,7 +11,7 @@ import * as olExtent from 'ol/src/extent';
 import Feature from 'ol/src/Feature';
 import GeometryType from 'ol/src/geom/GeometryType';
 import MultiPolygon from 'ol/src/geom/MultiPolygon';
-import * as Polygon from 'ol/src/geom/Polygon';
+import {default as Polygon, fromCircle, fromExtent} from 'ol/src/geom/Polygon';
 import {get as getProjection} from 'ol/src/proj';
 import Projection from 'ol/src/proj/Projection';
 import {remove as removeTransform} from 'ol/src/proj/transforms';
@@ -139,7 +139,7 @@ export const toPolygon = function(geometry) {
         break;
       case GeometryType.CIRCLE:
         // OL3 has a direct conversion - woo!
-        polygon = Polygon.fromCircle(/** @type {!Circle} */ (geometry), 64);
+        polygon = fromCircle(/** @type {!Circle} */ (geometry), 64);
         break;
       case GeometryType.GEOMETRY_COLLECTION:
         // convert each internal geometry and merge the results
@@ -331,7 +331,7 @@ export const splitWithinWorldExtent = function(geometry, opt_proj) {
 
     var projection = getProjection(opt_proj || osMap.PROJECTION);
     var projExtent = projection.getExtent();
-    var extentPoly = Polygon.fromExtent(projExtent);
+    var extentPoly = fromExtent(projExtent);
     var jstsExtentPoly = olp.read(extentPoly);
 
     if (!jstsExtentPoly.contains(jstsGeometry)) {
@@ -652,7 +652,7 @@ const getBoxesForExtent_ = function(geometry, distance) {
     if (offset > 0) {
       var olp = OLParser.getInstance();
       for (var i = extent[0]; i < extent[2]; i += offset) {
-        var box = Polygon.fromExtent([i, extent[1], i + UTM_WIDTH_DEGREES, extent[3]]);
+        var box = fromExtent([i, extent[1], i + UTM_WIDTH_DEGREES, extent[3]]);
         boxes.push(olp.read(box));
       }
     }
