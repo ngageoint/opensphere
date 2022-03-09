@@ -7,7 +7,7 @@ goog.require('plugin.pelias.geocoder.Result');
 goog.require('plugin.pelias.geocoder.Search');
 
 import Feature from 'ol/src/Feature';
-import olProj from 'ol/src/proj';
+import * as olProj from 'ol/src/proj';
 
 describe('plugin.pelias.geocoder.Search', function() {
   const {default: MapContainer} = goog.module.get('os.MapContainer');
