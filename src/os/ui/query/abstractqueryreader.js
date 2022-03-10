@@ -66,7 +66,7 @@ export default class AbstractQueryReader {
   static parseArea(area) {
     try {
       if (area.localName in
-          AbstractQueryReader.GML_READER.GEOMETRY_PARSERS_[AbstractQueryReader.GML_NAMESPACE]) {
+          AbstractQueryReader.GML_READER.GEOMETRY_PARSERS[AbstractQueryReader.GML_NAMESPACE]) {
         var geom = createElementNS('GEOM', AbstractQueryReader.GML_NAMESPACE);
         geom.appendChild(area);
         var olGeom = AbstractQueryReader.GML_READER.readGeometryElement(geom, [{}]);
