@@ -1,8 +1,6 @@
 goog.require('goog.dom.xml');
 goog.require('os.ui.query.AbstractQueryReader');
 
-import Polygon from 'ol/src/geom/Polygon';
-
 describe('os.ui.query.AbstractQueryReader', function() {
   const xml = goog.module.get('goog.dom.xml');
   const {default: AbstractQueryReader} = goog.module.get('os.ui.query.AbstractQueryReader');
@@ -16,7 +14,7 @@ describe('os.ui.query.AbstractQueryReader', function() {
     var element = xml.loadXml(bboxXml);
     var feature = AbstractQueryReader.parseArea(element.firstChild);
     expect(feature).not.toBe(null);
-    expect(feature.getGeometry() instanceof Polygon).toBe(true);
+    expect(feature.getGeometry().getType()).toBe('Polygon');
 
     var coordinates = feature.getGeometry().getCoordinates()[0];
     expect(coordinates[0][0]).toBe(-23.1976318359375);
@@ -50,7 +48,7 @@ describe('os.ui.query.AbstractQueryReader', function() {
     var element = xml.loadXml(polygonXml);
     var feature = AbstractQueryReader.parseArea(element.firstChild);
     expect(feature).not.toBe(null);
-    expect(feature.getGeometry() instanceof Polygon).toBe(true);
+    expect(feature.getGeometry().getType()).toBe('Polygon');
 
     var coordinates = feature.getGeometry().getCoordinates()[0];
     expect(coordinates[0][0]).toBe(35.804869764017916);
