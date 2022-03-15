@@ -87,7 +87,7 @@ Feature.prototype.setStyle = function(style) {
  * Returns a style array for the feature. This is used by the above replacement for setStyle instead of creating a new
  * function every time setStyle is called.
  *
- * @param feature feature
+ * @param {ol.Feature} feature
  * @param {number} resolution
  * @return {Array<Style>}
  * @suppress {accessControls}
