@@ -72,12 +72,11 @@ VectorLayer.prototype.forEachFeatureAtCoordinate = function(coordinate, frameSta
   } else {
     var resolution = frameState.viewState.resolution;
     var rotation = frameState.viewState.rotation;
-    var skippedFeatures = frameState.skippedFeatureUids;
     var layer = this.getLayer();
     /** @type {Object.<string, boolean>} */
     var features = {};
     return this.replayGroup_.forEachFeatureAtCoordinate(coordinate, resolution,
-        rotation, hitTolerance, skippedFeatures,
+        rotation, hitTolerance,
         /**
          * @param {Feature|RenderFeature} feature Feature.
          * @return {?} Callback result.

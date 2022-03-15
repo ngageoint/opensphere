@@ -3,7 +3,7 @@ goog.declareModuleId('os.query.AreaManager');
 import {asString} from 'ol/src/color';
 import GeoJSON from 'ol/src/format/GeoJSON';
 import Polygon from 'ol/src/geom/Polygon';
-import OLVectorSource from 'ol/src/source/Vector';
+import {VectorSourceEvent} from 'ol/src/source/Vector';
 import VectorEventType from 'ol/src/source/VectorEventType';
 
 import '../mixin/objectmixin.js';
@@ -136,7 +136,7 @@ export default class AreaManager extends BaseAreaManager {
 
       if (source.getFeatureById(id)) {
         // 3D can take per feature updates
-        source.dispatchEvent(new OLVectorSource.Event(VectorEventType.CHANGEFEATURE, area));
+        source.dispatchEvent(new VectorSourceEvent(VectorEventType.CHANGEFEATURE, area));
         changed = true;
       }
     }
@@ -157,7 +157,7 @@ export default class AreaManager extends BaseAreaManager {
         DrawingLayer.ID).getSource());
     var id = area.getId();
     if (id && source.getFeatureById(id)) {
-      source.dispatchEvent(new OLVectorSource.Event(VectorEventType.CHANGEFEATURE, area));
+      source.dispatchEvent(new VectorSourceEvent(VectorEventType.CHANGEFEATURE, area));
     }
     source.changed();
   }

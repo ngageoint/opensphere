@@ -87,18 +87,19 @@ Feature.prototype.setStyle = function(style) {
  * Returns a style array for the feature. This is used by the above replacement for setStyle instead of creating a new
  * function every time setStyle is called.
  *
+ * @param feature feature
  * @param {number} resolution
  * @return {Array<Style>}
  * @suppress {accessControls}
  */
-Feature.prototype.getStyleFn = function(resolution) {
-  if (this.style_ instanceof Style) {
-    return [this.style_];
-  } else if (typeof this.style_ == 'function') {
-    var style = this.style_(resolution);
+Feature.prototype.getStyleFn = function(feature, resolution) {
+  if (feature.getStyle() instanceof Style) {
+    return [feature.getStyle()];
+  } else if (typeof feature.getStyle() == 'function') {
+    var style = feature.setStyle(resolution);
     return style ? (style instanceof Style ? [style] : style) : [];
   } else {
-    return this.style_;
+    return feature.getStyle();
   }
 };
 
