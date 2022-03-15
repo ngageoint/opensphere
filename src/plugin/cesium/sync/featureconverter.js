@@ -48,7 +48,7 @@ const getFeatureStyles = (feature, resolution, layer) => {
   // feature style takes precedence
   var featureStyle = feature.getStyleFunction();
   if (featureStyle !== undefined) {
-    style = featureStyle.call(feature, resolution);
+    style = featureStyle.call(feature, feature, resolution);
   }
 
   // use the fallback if there isn't one
