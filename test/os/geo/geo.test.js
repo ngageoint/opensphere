@@ -472,7 +472,7 @@ describe('os.geo', function() {
   it('detects polygonal geometries', function() {
     // polygonal geometry types
     expect(geo.isGeometryPolygonal(new Polygon())).toBe(true);
-    expect(geo.isGeometryPolygonal(new MultiPolygon())).toBe(true);
+    expect(geo.isGeometryPolygonal(new MultiPolygon([]))).toBe(true);
 
     // missing geometry
     expect(geo.isGeometryPolygonal(null)).toBe(false);
@@ -701,7 +701,7 @@ describe('os.geo', function() {
   });
 
   it('should normalize multipolygon geometries', function() {
-    var multiPolygon = new MultiPolygon();
+    var multiPolygon = new MultiPolygon([]);
     multiPolygon.appendPolygon(fromExtent(
         [-204.65732788733708, 0.24859222776089496, -283.4335938496441, 47.10822716068972]));
     multiPolygon.appendPolygon(fromExtent(
@@ -715,7 +715,7 @@ describe('os.geo', function() {
   });
 
   it('should normalize multipolygon geometries that cross the date line', function() {
-    var multiPolygon = new MultiPolygon();
+    var multiPolygon = new MultiPolygon([]);
     multiPolygon.appendPolygon(fromExtent(
         [-211.54903484928332, -13.188510358991834, -138.94561923665142, 13.721379464405658]));
     multiPolygon.appendPolygon(fromExtent(
