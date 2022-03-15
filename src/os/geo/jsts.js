@@ -14,7 +14,7 @@ import MultiPolygon from 'ol/src/geom/MultiPolygon';
 import {default as Polygon, fromCircle, fromExtent} from 'ol/src/geom/Polygon';
 import {get as getProjection} from 'ol/src/proj';
 import Projection from 'ol/src/proj/Projection';
-import {remove as removeTransform} from 'ol/src/proj/transforms';
+import {remove as removeTransform, get as getTransform} from 'ol/src/proj/transforms';
 
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';
@@ -733,8 +733,12 @@ const tmercBuffer_ = function(geometry, distance, opt_normalizeLon) {
 
     // clear the transform functions from the cache, since we're using a custom projection with a shared code
     var epsg4326 = getProjection(EPSG4326);
-    removeTransform(epsg4326, projection);
-    removeTransform(projection, epsg4326);
+    if (getTransform(epsg4326, projection)) {
+      removeTransform(epsg4326, projection);
+    }
+    if (getTransform(projection, epsg4326)) {
+      removeTransform(projection, epsg4326);
+    }
   }
 
   return buffer;
