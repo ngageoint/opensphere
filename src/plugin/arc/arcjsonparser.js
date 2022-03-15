@@ -189,8 +189,10 @@ class ArcJSONParser extends Disposable {
     }
 
     if (polygons.length > 1) {
-      var multi = new MultiPolygon(null);
-      multi.setPolygons(polygons);
+      var multi = new MultiPolygon([]);
+      for (var i = 0; i < polygons.length; i++) {
+        multi.appendPolygon(polygons[i]);
+      }
       return multi;
     }
     return polygons[0];
