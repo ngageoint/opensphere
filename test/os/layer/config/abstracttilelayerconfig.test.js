@@ -17,7 +17,7 @@ describe('os.layer.config.AbstractTileLayerConfig', function() {
   const osProj = goog.module.get('os.proj');
 
   const MockLayer = goog.module.get('os.layer.MockLayer');
-  const MockTileLayerConfig = goog.module.get('os.layer.config.MockTileLayerConfig');
+  const {default: MockTileLayerConfig} = goog.module.get('os.layer.config.MockTileLayerConfig');
 
   it('configures for an explicitType', function() {
     var lc = new AbstractTileLayerConfig();
@@ -100,7 +100,8 @@ describe('os.layer.config.AbstractTileLayerConfig', function() {
       return source;
     });
     var layer = lc.createLayer(testOptions);
-    expect(layer.getSource().getAttributions()[0].getHTML()).toBe('mock attribution');
-    expect(layer.getSource().getAttributions()[1].getHTML()).toBe('ex libris');
+    var attributionsGetter = layer.getSource().getAttributions();
+    expect(attributionsGetter()[0]).toBe('mock attribution');
+    expect(attributionsGetter()[1]).toBe('ex libris');
   });
 });

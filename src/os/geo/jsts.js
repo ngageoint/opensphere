@@ -163,7 +163,7 @@ export const toPolygon = function(geometry) {
           if (polygons.length == 1) {
             polygon = polygons[0];
           } else if (polygons.length > 1) {
-            polygon = new MultiPolygon(null);
+            polygon = new MultiPolygon([]);
             polygon.setPolygons(polygons);
           }
         }
