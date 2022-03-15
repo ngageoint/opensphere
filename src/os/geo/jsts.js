@@ -164,7 +164,9 @@ export const toPolygon = function(geometry) {
             polygon = polygons[0];
           } else if (polygons.length > 1) {
             polygon = new MultiPolygon([]);
-            polygon.setPolygons(polygons);
+            for (var i = 0; i < polygons.length; i++) {
+              polygon.appendPolygon(polygons[i]);
+            }
           }
         }
         break;
