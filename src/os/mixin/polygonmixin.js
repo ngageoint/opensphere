@@ -33,7 +33,7 @@ export const init = () => {
 
     for (var i = 0, n = rings.length; i < n; i++) {
       if (this.values_) {
-        Object.assign(rings[i].values_, this.values_);
+        rings[i].setProperties(this.values_);
       }
     }
 
