@@ -3,7 +3,7 @@ goog.declareModuleId('os.query.BaseAreaManager');
 import Feature from 'ol/src/Feature';
 import GeoJSON from 'ol/src/format/GeoJSON';
 import GeometryType from 'ol/src/geom/GeometryType';
-import OLVectorSource from 'ol/src/source/Vector';
+import {VectorSourceEvent} from 'ol/src/source/Vector';
 import VectorEventType from 'ol/src/source/VectorEventType';
 
 import AlertEventSeverity from '../alert/alerteventseverity.js';
@@ -582,7 +582,7 @@ export default class BaseAreaManager extends CollectionManager {
 
       if (source.getFeatureById(id)) {
         // 3D can take per feature updates
-        source.dispatchEvent(new OLVectorSource.Event(VectorEventType.CHANGEFEATURE, area));
+        source.dispatchEvent(new VectorSourceEvent(VectorEventType.CHANGEFEATURE, area));
         changed = true;
       }
     }
@@ -604,7 +604,7 @@ export default class BaseAreaManager extends CollectionManager {
     var source = /** @type {OLVectorSource} */ (this.getMap().getLayer(BaseAreaManager.DRAW_ID).getSource());
     var id = area.getId();
     if (id && source.getFeatureById(id)) {
-      source.dispatchEvent(new OLVectorSource.Event(VectorEventType.CHANGEFEATURE, area));
+      source.dispatchEvent(new VectorSourceEvent(VectorEventType.CHANGEFEATURE, area));
     }
     source.changed();
   }
