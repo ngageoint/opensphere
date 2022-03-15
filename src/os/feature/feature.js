@@ -10,7 +10,7 @@ import MultiPolygon from 'ol/src/geom/MultiPolygon';
 import Point from 'ol/src/geom/Point';
 import Polygon from 'ol/src/geom/Polygon';
 import {toLonLat} from 'ol/src/proj';
-import OLVectorSource from 'ol/src/source/Vector';
+import {VectorSourceEvent} from 'ol/src/source/Vector';
 import VectorEventType from 'ol/src/source/VectorEventType';
 import {getUid} from 'ol/src/util';
 
@@ -1176,7 +1176,7 @@ export const update = function(feature, opt_source) {
   var id = feature.getId();
   if (id && opt_source && /** @type {OLVectorSource} */ (opt_source).getFeatureById(id)) {
     // for 3D synchronizer
-    opt_source.dispatchEvent(new OLVectorSource.Event(VectorEventType.CHANGEFEATURE, feature));
+    opt_source.dispatchEvent(new VectorSourceEvent(VectorEventType.CHANGEFEATURE, feature));
     // for 2D
     opt_source.changed();
   }

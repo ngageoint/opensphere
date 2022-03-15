@@ -6,7 +6,7 @@ import {listen, unlistenByKey} from 'ol/src/events';
 import OLEventType from 'ol/src/events/EventType';
 import {extend, createEmpty, getWidth, getHeight, isEmpty} from 'ol/src/extent';
 import GeometryType from 'ol/src/geom/GeometryType';
-import OLVectorSource from 'ol/src/source/Vector';
+import {default as OLVectorSource, VectorSourceEvent} from 'ol/src/source/Vector';
 import VectorEventType from 'ol/src/source/VectorEventType';
 
 import '../mixin/rbushmixin.js';
@@ -639,7 +639,7 @@ export default class Vector extends OLVectorSource {
       this.loadedExtentsRtree_.clear();
       this.nullGeometryFeatures_ = {};
 
-      var clearEvent = new OLVectorSource.Event(VectorEventType.CLEAR);
+      var clearEvent = new VectorSourceEvent(VectorEventType.CLEAR);
       this.dispatchEvent(clearEvent);
       this.changed();
 
@@ -1946,7 +1946,7 @@ export default class Vector extends OLVectorSource {
       } else if (!opt_isBulk && this.featuresRtree_) {
         this.featuresRtree_.remove(feature);
       } else if (!this.featuresRtree_) {
-        this.dispatchEvent(new OLVectorSource.Event(
+        this.dispatchEvent(new VectorSourceEvent(
             VectorEventType.REMOVEFEATURE, feature));
       }
 
