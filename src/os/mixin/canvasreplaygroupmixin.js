@@ -16,16 +16,15 @@ const oldForEachFeatureAtCoordinate = ReplayGroup.prototype.forEachFeatureAtCoor
  * @param {number} resolution Resolution.
  * @param {number} rotation Rotation.
  * @param {number} hitTolerance Hit tolerance in pixels.
- * @param {Object<string, boolean>} skippedFeaturesHash Ids of features to skip.
  * @param {function((Feature|RenderFeature)): T} callback Feature callback.
  * @param {Object<string, ol.DeclutterGroup>} declutterReplays Declutter replays.
  * @return {T|undefined} Callback result.
  * @template T
  */
 ReplayGroup.prototype.forEachFeatureAtCoordinate = function(coordinate, resolution, rotation,
-    hitTolerance, skippedFeaturesHash, callback, declutterReplays) {
+    hitTolerance, callback, declutterReplays) {
   var val = oldForEachFeatureAtCoordinate.call(this, coordinate, resolution, rotation, hitTolerance,
-      skippedFeaturesHash, callback, declutterReplays);
+      callback, declutterReplays);
 
   var proj = osMap.PROJECTION;
   if (!val && proj.canWrapX()) {
@@ -34,7 +33,7 @@ ReplayGroup.prototype.forEachFeatureAtCoordinate = function(coordinate, resoluti
     // check one world left
     coordinate[0] -= width;
     val = oldForEachFeatureAtCoordinate.call(this, coordinate, resolution, rotation, hitTolerance,
-        skippedFeaturesHash, callback, declutterReplays);
+        callback, declutterReplays);
     // Put. Ze candle. BACK!
     coordinate[0] += width;
 
@@ -42,7 +41,7 @@ ReplayGroup.prototype.forEachFeatureAtCoordinate = function(coordinate, resoluti
       // check one world right
       coordinate[0] += width;
       val = oldForEachFeatureAtCoordinate.call(this, coordinate, resolution, rotation, hitTolerance,
-          skippedFeaturesHash, callback, declutterReplays);
+          callback, declutterReplays);
       // Put. Ze candle. BACK!
       coordinate[0] -= width;
     }
