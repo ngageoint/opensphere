@@ -187,8 +187,10 @@ Geometry.prototype.toLonLat = function() {
    */
   MultiPolygon.prototype.getPolygons = function() {
     var polys = oldPolys.call(this);
-    for (var i = 0, n = polys.length; i < n; i++) {
-      Object.assign(polys[i].values_, this.values_);
+    if (this.values_) {
+      for (var i = 0, n = polys.length; i < n; i++) {
+        Object.assign(polys[i].values_, this.values_);
+      }
     }
     return polys;
   };
