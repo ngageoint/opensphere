@@ -37,7 +37,7 @@ export const init = () => {
       }
       var geometry = feature.getGeometry();
       if (geometry) {
-        object.geometry = GeoJSON.writeGeometry_(geometry, opt_options);
+        object.geometry = this.writeGeometry(geometry, opt_options);
       } else {
         object.geometry = null;
       }
