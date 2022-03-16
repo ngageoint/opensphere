@@ -1,5 +1,7 @@
 goog.declareModuleId('os.MainCtrl');
 
+import ViewHint from 'ol/src/ViewHint';
+
 import './file/mime/any.js';
 import './ui/alerts.js';
 import './ui/dragdrop/urldragdropui.js';
@@ -187,7 +189,6 @@ const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
 const log = goog.require('goog.log');
 const {IE, GECKO, LINUX} = goog.require('goog.userAgent');
-// import ViewHint from 'ol.ViewHint';
 
 const {default: LayerConfigEvent} = goog.requireType('os.events.LayerConfigEvent');
 const {default: OSFile} = goog.requireType('os.file.File');
@@ -592,14 +593,14 @@ export default class Controller extends AbstractMainCtrl {
    * @private
    */
   onWindowDrag_(event) {
-    /* var map = MapContainer.getInstance().getMap();
+    var map = MapContainer.getInstance().getMap();
     if (map) {
       if (event.name == WindowEventType.DRAGSTART) {
         map.getView().setHint(ViewHint.INTERACTING, 1);
       } else {
         map.getView().setHint(ViewHint.INTERACTING, -1);
       }
-    } */
+    }
   }
 
   /**
