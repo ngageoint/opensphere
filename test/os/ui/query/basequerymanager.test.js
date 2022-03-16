@@ -22,12 +22,16 @@ describe('os.query.BaseQueryManager', function() {
   var am;
   var qm;
   var testPolygon;
+  var handlersCleared = false;
   beforeEach(function() {
     testPolygon = new Polygon([[[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]], GeometryLayout.XY);
 
     am = AreaManager.getInstance();
     qm = QueryManager.getInstance();
-    qm.setHandlers([]);
+    if (!handlersCleared) {
+      qm.setHandlers([]);
+      handlersCleared = true;
+    }
 
     spyOn(QueryManager.getInstance(), 'save');
     spyOn(QueryManager.getInstance(), 'load');
