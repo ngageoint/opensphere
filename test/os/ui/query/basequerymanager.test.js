@@ -27,6 +27,7 @@ describe('os.query.BaseQueryManager', function() {
 
     am = AreaManager.getInstance();
     qm = QueryManager.getInstance();
+    qm.setHandlers([]);
 
     spyOn(QueryManager.getInstance(), 'save');
     spyOn(QueryManager.getInstance(), 'load');
