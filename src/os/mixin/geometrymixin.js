@@ -158,8 +158,10 @@ Geometry.prototype.toLonLat = function() {
    */
   MultiPoint.prototype.getPoints = function() {
     var points = oldPoints.call(this);
-    for (var i = 0, n = points.length; i < n; i++) {
-      Object.assign(points[i].values_, this.values_);
+    if (this.values_) {
+      for (var i = 0, n = points.length; i < n; i++) {
+        Object.assign(points[i].values_, this.values_);
+      }
     }
     return points;
   };
@@ -172,8 +174,10 @@ Geometry.prototype.toLonLat = function() {
    */
   MultiLineString.prototype.getLineStrings = function() {
     var lines = oldLines.call(this);
-    for (var i = 0, n = lines.length; i < n; i++) {
-      Object.assign(lines[i].values_, this.values_);
+    if (this.values_) {
+      for (var i = 0, n = lines.length; i < n; i++) {
+        Object.assign(lines[i].values_, this.values_);
+      }
     }
     return lines;
   };
