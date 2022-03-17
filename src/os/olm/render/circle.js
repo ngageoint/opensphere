@@ -72,7 +72,7 @@ export default class Circle extends BaseShape {
 
     this.distance_ = osasm.geodesicInverse(start, end).distance;
 
-    var poly = circular(Circle.WGS84_SPHERE, start, this.distance_);
+    var poly = circular(start, this.distance_);
     poly.osTransform();
 
     return poly;
