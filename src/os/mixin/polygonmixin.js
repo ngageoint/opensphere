@@ -31,9 +31,12 @@ export const init = () => {
   Polygon.prototype.getLinearRings = function() {
     var rings = old.call(this);
 
-    for (var i = 0, n = rings.length; i < n; i++) {
-      if (this.values_) {
-        rings[i].setProperties(this.values_);
+    if (this.values_) {
+      for (var i = 0, n = rings.length; i < n; i++) {
+        if (rings[i].values_ == null) {
+          rings[i].values_ = {};
+        }
+        Object.assign(rings[i].values_, this.values_);
       }
     }
 
