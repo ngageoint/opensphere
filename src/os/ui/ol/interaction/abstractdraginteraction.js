@@ -1,10 +1,10 @@
 goog.declareModuleId('os.ui.ol.interaction.AbstractDrag');
 
 import {mouseOnly} from 'ol/src/events/condition';
+import MapBrowserEvent from 'ol/src/MapBrowserEvent';
+import MapBrowserEventType from 'ol/src/MapBrowserEventType';
 
 import AbstractDraw from './abstractdrawinteraction.js';
-
-// const MapBrowserPointerEvent = goog.requireTyped('ol.MapBrowserPointerEvent');
 
 
 /**
@@ -17,11 +17,12 @@ export default class AbstractDrag extends AbstractDraw {
    */
   constructor(opt_options) {
     opt_options = opt_options || {};
-    opt_options.handleDownEvent = AbstractDrag.handleDownEvent;
-    opt_options.handleUpEvent = AbstractDrag.handleUpEvent;
-    opt_options.handleDragEvent = AbstractDrag.handleDragEvent;
-
     super(opt_options);
+
+    this.handleEvent = this.handleEvent_;
+    this.handleDownEvent = this.handleDownEvent_;
+    this.handleUpEvent = this.handleUpEvent_;
+    this.handleDragEvent = this.handleDragEvent_;
 
     /**
      * @type {ol.Coordinate}
@@ -47,6 +48,39 @@ export default class AbstractDrag extends AbstractDraw {
   }
 
   /**
+   * @param {ol.MapBrowserEvent} mapBrowserEvent Event.
+   * @this DrawPolygon
+   * @return {boolean}
+   * @private
+   * @suppress {accessControls}
+   */
+  handleEvent_(mapBrowserEvent) {
+    if (!(mapBrowserEvent instanceof MapBrowserEvent)) {
+      return true;
+    }
+
+    let stopEvent = false;
+    this.updateTrackedPointers_(mapBrowserEvent);
+    if (this.handlingDownUpSequence) {
+      if (mapBrowserEvent.type == MapBrowserEventType.POINTERDRAG) {
+        this.handleDragEvent(mapBrowserEvent);
+        // prevent page scrolling during dragging
+        mapBrowserEvent.originalEvent.preventDefault();
+      } else if (mapBrowserEvent.type == MapBrowserEventType.POINTERUP) {
+        const handledUp = this.handleUpEvent(mapBrowserEvent);
+        this.handlingDownUpSequence =
+          handledUp && this.targetPointers.length > 0;
+      }
+    } else if (mapBrowserEvent.type == MapBrowserEventType.POINTERDOWN) {
+      const handled = this.handleDownEvent(mapBrowserEvent);
+      this.handlingDownUpSequence = handled;
+      stopEvent = this.stopDown(handled);
+    }
+
+    return !stopEvent;
+  }
+
+  /**
    * Handle down event
    *
    * @param {MapBrowserPointerEvent} mapBrowserEvent
@@ -54,12 +88,12 @@ export default class AbstractDrag extends AbstractDraw {
    * @this AbstractDrag
    * @override
    */
-  static handleDownEvent(mapBrowserEvent) {
+  handleDownEvent_(mapBrowserEvent) {
     if (!mouseOnly(mapBrowserEvent) || this.getOtherDrawing()) {
       return false;
     }
 
-    if (mapBrowserEvent.pointerEvent.button === 0 && this.condition(mapBrowserEvent)) {
+    if (mapBrowserEvent.originalEvent.button === 0 && this.condition(mapBrowserEvent)) {
       this.begin(mapBrowserEvent);
       this.update(mapBrowserEvent);
       return true;
@@ -73,7 +107,7 @@ export default class AbstractDrag extends AbstractDraw {
    * @this AbstractDrag
    * @override
    */
-  static handleDragEvent(mapBrowserEvent) {
+  handleDragEvent_(mapBrowserEvent) {
     if (mouseOnly(mapBrowserEvent)) {
       this.update(mapBrowserEvent);
     }
@@ -85,7 +119,7 @@ export default class AbstractDrag extends AbstractDraw {
    * @this AbstractDrag
    * @override
    */
-  static handleUpEvent(mapBrowserEvent) {
+  handleUpEvent_(mapBrowserEvent) {
     if (!mouseOnly(mapBrowserEvent)) {
       return true;
     }
