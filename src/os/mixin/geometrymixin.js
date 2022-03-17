@@ -160,6 +160,9 @@ Geometry.prototype.toLonLat = function() {
     var points = oldPoints.call(this);
     if (this.values_) {
       for (var i = 0, n = points.length; i < n; i++) {
+        if (points[i].values_ == null) {
+          points[i].values_ = {};
+        }
         Object.assign(points[i].values_, this.values_);
       }
     }
@@ -176,6 +179,9 @@ Geometry.prototype.toLonLat = function() {
     var lines = oldLines.call(this);
     if (this.values_) {
       for (var i = 0, n = lines.length; i < n; i++) {
+        if (lines[i].values_ == null) {
+          lines[i].values_ = {};
+        }
         Object.assign(lines[i].values_, this.values_);
       }
     }
@@ -193,6 +199,9 @@ Geometry.prototype.toLonLat = function() {
     var polys = oldPolys.call(this);
     if (this.values_) {
       for (var i = 0, n = polys.length; i < n; i++) {
+        if (polys[i].values_ == null) {
+          polys[i].values_ = {};
+        }
         Object.assign(polys[i].values_, this.values_);
       }
     }
