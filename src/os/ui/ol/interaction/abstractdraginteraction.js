@@ -4,8 +4,6 @@ import {mouseOnly} from 'ol/src/events/condition';
 
 import AbstractDraw from './abstractdrawinteraction.js';
 
-// const MapBrowserPointerEvent = goog.requireTyped('ol.MapBrowserPointerEvent');
-
 
 /**
  * @abstract
@@ -19,6 +17,7 @@ export default class AbstractDrag extends AbstractDraw {
     opt_options = opt_options || {};
     super(opt_options);
 
+    this.handleEvent = this.handleEvent;
     this.handleDownEvent = this.handleDownEvent_;
     this.handleUpEvent = this.handleUpEvent_;
     this.handleDragEvent = this.handleDragEvent_;
