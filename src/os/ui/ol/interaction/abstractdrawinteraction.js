@@ -224,8 +224,6 @@ export default class AbstractDraw extends Pointer {
       if (stopEvent) {
         this.cancel();
       }
-    } else {
-      stopEvent = super.handleEvent(mapBrowserEvent);
     }
 
     return !stopEvent;
