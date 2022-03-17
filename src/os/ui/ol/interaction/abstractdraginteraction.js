@@ -17,11 +17,11 @@ export default class AbstractDrag extends AbstractDraw {
    */
   constructor(opt_options) {
     opt_options = opt_options || {};
-    opt_options.handleDownEvent = AbstractDrag.handleDownEvent;
-    opt_options.handleUpEvent = AbstractDrag.handleUpEvent;
-    opt_options.handleDragEvent = AbstractDrag.handleDragEvent;
-
     super(opt_options);
+
+    this.handleDownEvent = this.handleDownEvent_;
+    this.handleUpEvent = this.handleUpEvent_;
+    this.handleDragEvent = this.handleDragEvent_;
 
     /**
      * @type {ol.Coordinate}
@@ -54,12 +54,12 @@ export default class AbstractDrag extends AbstractDraw {
    * @this AbstractDrag
    * @override
    */
-  static handleDownEvent(mapBrowserEvent) {
+  handleDownEvent_(mapBrowserEvent) {
     if (!mouseOnly(mapBrowserEvent) || this.getOtherDrawing()) {
       return false;
     }
 
-    if (mapBrowserEvent.pointerEvent.button === 0 && this.condition(mapBrowserEvent)) {
+    if (mapBrowserEvent.originalEvent.button === 0 && this.condition(mapBrowserEvent)) {
       this.begin(mapBrowserEvent);
       this.update(mapBrowserEvent);
       return true;
@@ -73,7 +73,7 @@ export default class AbstractDrag extends AbstractDraw {
    * @this AbstractDrag
    * @override
    */
-  static handleDragEvent(mapBrowserEvent) {
+  handleDragEvent_(mapBrowserEvent) {
     if (mouseOnly(mapBrowserEvent)) {
       this.update(mapBrowserEvent);
     }
@@ -85,7 +85,7 @@ export default class AbstractDrag extends AbstractDraw {
    * @this AbstractDrag
    * @override
    */
-  static handleUpEvent(mapBrowserEvent) {
+  handleUpEvent_(mapBrowserEvent) {
     if (!mouseOnly(mapBrowserEvent)) {
       return true;
     }
