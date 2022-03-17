@@ -3,6 +3,7 @@ goog.declareModuleId('os.proj');
 import {get, addEquivalentTransforms, getTransform, equivalent} from 'ol/src/proj';
 import {PROJECTIONS as EPSG3857Projections} from 'ol/src/proj/epsg3857';
 import {PROJECTIONS as EPSG4326Projections} from 'ol/src/proj/epsg4326';
+import {register} from 'ol/src/proj/proj4';
 import Settings from '../config/settings.js';
 import * as osMap from '../map/map.js';
 
@@ -90,6 +91,7 @@ export const loadProjections = function() {
 
     if (code && def) {
       proj4.defs(code, def);
+      register(proj4);
       var proj = get(code);
 
       if (proj) {
