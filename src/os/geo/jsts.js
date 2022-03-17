@@ -13,6 +13,7 @@ import GeometryType from 'ol/src/geom/GeometryType';
 import MultiPolygon from 'ol/src/geom/MultiPolygon';
 import {default as Polygon, fromCircle, fromExtent} from 'ol/src/geom/Polygon';
 import {get as getProjection} from 'ol/src/proj';
+import {register} from 'ol/src/proj/proj4';
 import Projection from 'ol/src/proj/Projection';
 import {remove as removeTransform, get as getTransform} from 'ol/src/proj/transforms';
 
@@ -813,6 +814,7 @@ const createTMercProjection_ = function(geometry) {
   var origin = olExtent.getCenter(geometry.getExtent());
   proj4.defs('bufferCRS', '+ellps=WGS84 +proj=tmerc +lat_0=' + origin[1] + ' +lon_0=' + origin[0] +
       ' +k=1 +x_0=0 +y_0=0');
+  register(proj4);
 
   var projection = new Projection({code: 'bufferCRS'});
   geometry.transform(EPSG4326, projection);
