@@ -185,15 +185,17 @@
   right: 3rem;
   top: .75rem;
 
-  &.ol-collapsed button {
-    position: static;
-  }
-
   button {
     background: rgba($body-bg, .5);
+    border: none;
+    border-radius: 2px;
     color: rgba($body-color, .8);
+    font-size: 1em;
+    font-weight: bold;
+    margin: 0;
+    padding: 0 .5em;
     position: absolute;
-    right: .1rem;
+    left: .1rem;
     top: .1rem;
   }
 
