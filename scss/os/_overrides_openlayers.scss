@@ -224,6 +224,11 @@
   display: none;
 }
 
+.ol-overviewmap.ol-collapsed {
+  border: unset;
+  margin-right: 1.5em;
+}
+
 // Scale Line
 .ol-scale-line {
   bottom: .75rem;
