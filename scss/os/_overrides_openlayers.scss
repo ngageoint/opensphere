@@ -205,6 +205,13 @@
     height: 7.625rem;
     margin: 0;
     width: 15rem;
+
+    &:focus,
+    &:hover {
+      background-color: rgba($body-bg, .8);
+      border: .1rem solid $border-color;
+      color: rgba($body-color, .8);
+    }
   }
 
   .ol-overviewmap-box {
