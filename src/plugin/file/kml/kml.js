@@ -6,7 +6,7 @@ goog.declareModuleId('plugin.file.kml');
 
 import {normalize} from 'ol/src/color';
 import {extendCoordinate, createEmpty} from 'ol/src/extent';
-import {readBoolean, readDecimal, readString} from 'ol/src/format/xsd';
+import {readBoolean, readDecimal, readString, writeStringTextNode} from 'ol/src/format/xsd';
 import {inflateCoordinates} from 'ol/src/geom/flat/inflate';
 import GeometryCollection from 'ol/src/geom/GeometryCollection';
 import LineString from 'ol/src/geom/LineString';
@@ -856,11 +856,11 @@ const writeTrack_ = function(node, geometry, objectStack) {
       if (stride > 3) {
         coordText += ' ' + flatCoordinates[i + 2];
       }
-      XSD.writeStringTextNode(coordNode, coordText);
+      writeStringTextNode(coordNode, coordText);
 
       var whenNode = createElementNS(KML_NS, 'when');
       var whenText = new Date(flatCoordinates[i + stride - 1]).toISOString();
-      XSD.writeStringTextNode(whenNode, whenText);
+      writeStringTextNode(whenNode, whenText);
 
       node.appendChild(coordNode);
       node.appendChild(whenNode);
@@ -935,7 +935,7 @@ replaceParsers_(KML.GEOMETRY_FLAT_COORDINATES_PARSERS, 'coordinates',
  * @return {number|undefined} Scale.
  */
 const readScale_ = function(node) {
-  return XSD.readDecimal(node);
+  return readDecimal(node);
 };
 
 replaceParsers_(KML.ICON_STYLE_PARSERS, 'scale',

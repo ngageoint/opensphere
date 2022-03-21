@@ -408,8 +408,8 @@ export default class AbstractKMLExporter extends ZipExporter {
     var kmlEl = /** @type {!Element} */ (getFirstElementChild(this.doc));
 
     var xmlnsUri = 'http://www.w3.org/2000/xmlns/';
-    olXml.setAttributeNS(kmlEl, xmlnsUri, 'xmlns:gx', this.gxNS);
-    olXml.setAttributeNS(kmlEl, xmlnsUri, 'xmlns:os', this.osNS);
+    kmlEl.setAttributeNS(xmlnsUri, 'xmlns:gx', this.gxNS);
+    kmlEl.setAttributeNS(xmlnsUri, 'xmlns:os', this.osNS);
 
     // create the Document element
     this.kmlDoc = xml.appendElementNS('Document', this.kmlNS, kmlEl);

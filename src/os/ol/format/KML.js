@@ -23,6 +23,7 @@ import MultiPoint from 'ol/src/geom/MultiPoint';
 import MultiPolygon from 'ol/src/geom/MultiPolygon';
 import Point from 'ol/src/geom/Point';
 import Polygon from 'ol/src/geom/Polygon';
+import SimpleGeometry from 'ol/src/geom/SimpleGeometry';
 import ImageState from 'ol/src/ImageState';
 import {toRadians} from 'ol/src/math';
 import {get as getProjection} from 'ol/src/proj';
@@ -2814,7 +2815,7 @@ export const GEOMETRY_NODE_FACTORY = function(value, objectStack, opt_nodeName) 
   var parentNode = objectStack[objectStack.length - 1].node;
   var namespaceURI = parentNode.namespaceURI;
   var geometryType = value.getType();
-  var nodeType = KML.GEOMETRY_TYPE_TO_NODENAME[geometryType];
+  var nodeType = GEOMETRY_TYPE_TO_NODENAME[geometryType];
 
   if (value instanceof SimpleGeometry) {
     // check if we can transform it into a track
