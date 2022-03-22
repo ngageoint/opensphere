@@ -38,6 +38,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
   let scene;
   let context;
   let getLine;
+  let layer;
 
   beforeEach(() => {
     enableWebGLMock();

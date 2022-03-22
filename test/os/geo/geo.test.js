@@ -10,7 +10,7 @@ import MultiLineString from 'ol/src/geom/MultiLineString';
 import MultiPoint from 'ol/src/geom/MultiPoint';
 import MultiPolygon from 'ol/src/geom/MultiPolygon';
 import Point from 'ol/src/geom/Point';
-import {fromExtent} from 'ol/src/geom/Polygon';
+import {fromExtent, default as Polygon} from 'ol/src/geom/Polygon';
 
 describe('os.geo', function() {
   const googArray = goog.module.get('goog.array');
