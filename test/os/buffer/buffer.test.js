@@ -1,21 +1,14 @@
-goog.require('os.buffer');
-goog.require('os.geo');
-goog.require('os.geo.jsts');
-goog.require('os.map');
-goog.require('os.proj');
-goog.require('os.query');
-
 import LineString from 'ol/src/geom/LineString';
 import Point from 'ol/src/geom/Point';
 import Polygon from 'ol/src/geom/Polygon';
 import {get} from 'ol/src/proj';
 
-describe('os.buffer', function() {
-  const geo = goog.module.get('os.geo');
-  const osJsts = goog.module.get('os.geo.jsts');
-  const osMap = goog.module.get('os.map');
-  const osProj = goog.module.get('os.proj');
+import {vincentyDistance} from '../../../src/os/geo/geo';
+import {buffer} from '../../../src/os/geo/jsts';
+import {setProjection, PROJECTION} from '../../../src/os/map/map';
+import {EPSG3857} from '../../../src/os/proj/proj';
 
+describe('os.buffer', function() {
   var checkPercentDiff = function(input, dist, geom, opt_all) {
     dist = Math.abs(dist);
     input.toLonLat();
@@ -34,7 +27,7 @@ describe('os.buffer', function() {
 
       for (var j = 0, m = geomCoords.length; j < m; j += geomLayout) {
         var p2 = geomCoords.slice(j, j + 2);
-        var d = geo.vincentyDistance(p1, p2);
+        var d = vincentyDistance(p1, p2);
         min = Math.min(min, d);
 
         if (Math.abs(d - dist) / dist < 0.005) {
@@ -63,14 +56,14 @@ describe('os.buffer', function() {
 
   it('should return null when the distance is zero', function() {
     var geom = new Point([0, 0]);
-    var buffered = osJsts.buffer(geom, 0);
+    var buffered = buffer(geom, 0);
     expect(buffered).toBe(null);
   });
 
   it('should buffer points with absolute distances', function() {
     var geom = new Point([0, 0]);
     var dist = -100000;
-    var buffered = osJsts.buffer(geom, dist);
+    var buffered = buffer(geom, dist);
     expect(checkPercentDiff(geom, dist, buffered, true)).toBe(true);
   });
 
@@ -79,115 +72,115 @@ describe('os.buffer', function() {
   distances.forEach(function(dist) {
     it('should buffer points into circles at easy latitudes dist=' + dist, function() {
       var geom = new Point([0, 0]);
-      var buffered = osJsts.buffer(geom, dist);
+      var buffered = buffer(geom, dist);
       expect(checkPercentDiff(geom, dist, buffered, true)).toBe(true);
     });
 
     it('should buffer points into circles at mid latitudes dist=' + dist, function() {
       var geom = new Point([40, 40]);
-      var buffered = osJsts.buffer(geom, dist);
+      var buffered = buffer(geom, dist);
       expect(checkPercentDiff(geom, dist, buffered, true)).toBe(true);
     });
 
     it('should buffer points into circles at high latitudes dist=' + dist, function() {
       var geom = new Point([80, 80]);
-      var buffered = osJsts.buffer(geom, dist);
+      var buffered = buffer(geom, dist);
       expect(checkPercentDiff(geom, dist, buffered, true)).toBe(true);
     });
 
     it('should buffer points into circles at easy latitudes for other projections dist=' + dist, function() {
-      var originalProjection = osMap.PROJECTION;
-      osMap.setProjection(get(osProj.EPSG3857));
+      var originalProjection = PROJECTION;
+      setProjection(get(EPSG3857));
 
       var geom = new Point([0, 0]).osTransform();
-      var buffered = osJsts.buffer(geom, dist);
+      var buffered = buffer(geom, dist);
       expect(checkPercentDiff(geom, dist, buffered, true)).toBe(true);
 
-      osMap.setProjection(originalProjection);
+      setProjection(originalProjection);
     });
 
     it('should buffer points into circles at mid latitudes for other projections dist=' + dist, function() {
-      var originalProjection = osMap.PROJECTION;
-      osMap.setProjection(get(osProj.EPSG3857));
+      var originalProjection = PROJECTION;
+      setProjection(get(EPSG3857));
 
       var geom = new Point([40, 40]).osTransform();
-      var buffered = osJsts.buffer(geom, dist);
+      var buffered = buffer(geom, dist);
       expect(checkPercentDiff(geom, dist, buffered, true)).toBe(true);
 
-      osMap.setProjection(originalProjection);
+      setProjection(originalProjection);
     });
 
     it('should buffer points into circles at high latitudes for other projections dist=' + dist, function() {
-      var originalProjection = osMap.PROJECTION;
-      osMap.setProjection(get(osProj.EPSG3857));
+      var originalProjection = PROJECTION;
+      setProjection(get(EPSG3857));
 
       var geom = new Point([80, 80]).osTransform();
-      var buffered = osJsts.buffer(geom, dist);
+      var buffered = buffer(geom, dist);
       expect(checkPercentDiff(geom, dist, buffered, true)).toBe(true);
 
-      osMap.setProjection(originalProjection);
+      setProjection(originalProjection);
     });
 
     it('should buffer lines at easy latitudes dist=' + dist, function() {
       var geom = new LineString([[-1, -1], [1, 1]]);
-      var buffered = osJsts.buffer(geom, dist);
+      var buffered = buffer(geom, dist);
       expect(checkPercentDiff(geom, dist, buffered)).toBe(true);
     });
 
     it('should buffer lines at mid latitudes dist=' + dist, function() {
       var geom = new LineString([[39, 39], [41, 41]]);
-      var buffered = osJsts.buffer(geom, dist);
+      var buffered = buffer(geom, dist);
       expect(checkPercentDiff(geom, dist, buffered)).toBe(true);
     });
 
     it('should buffer lines at high latitudes dist=' + dist, function() {
       var geom = new LineString([[79, 79], [81, 81]]);
-      var buffered = osJsts.buffer(geom, dist);
+      var buffered = buffer(geom, dist);
       expect(checkPercentDiff(geom, dist, buffered)).toBe(true);
     });
 
     it('should buffer lines at easy latitudes for other projections dist=' + dist, function() {
-      var originalProjection = osMap.PROJECTION;
-      osMap.setProjection(get(osProj.EPSG3857));
+      var originalProjection = PROJECTION;
+      setProjection(get(EPSG3857));
 
       var geom = new LineString([[-1, -1], [1, 1]]).osTransform();
-      var buffered = osJsts.buffer(geom, dist);
+      var buffered = buffer(geom, dist);
       expect(checkPercentDiff(geom, dist, buffered)).toBe(true);
 
-      osMap.setProjection(originalProjection);
+      setProjection(originalProjection);
     });
 
     it('should buffer lines at mid latitudes for other projections dist=' + dist, function() {
-      var originalProjection = osMap.PROJECTION;
-      osMap.setProjection(get(osProj.EPSG3857));
+      var originalProjection = PROJECTION;
+      setProjection(get(EPSG3857));
 
       var geom = new LineString([[39, 39], [41, 41]]).osTransform();
-      var buffered = osJsts.buffer(geom, dist);
+      var buffered = buffer(geom, dist);
       expect(checkPercentDiff(geom, dist, buffered)).toBe(true);
 
-      osMap.setProjection(originalProjection);
+      setProjection(originalProjection);
     });
 
     it('should buffer lines at high latitudes for other projections dist=' + dist, function() {
-      var originalProjection = osMap.PROJECTION;
-      osMap.setProjection(get(osProj.EPSG3857));
+      var originalProjection = PROJECTION;
+      setProjection(get(EPSG3857));
 
       var geom = new LineString([[79, 79], [81, 81]]).osTransform();
-      var buffered = osJsts.buffer(geom, dist);
+      var buffered = buffer(geom, dist);
       expect(checkPercentDiff(geom, dist, buffered)).toBe(true);
 
-      osMap.setProjection(originalProjection);
+      setProjection(originalProjection);
     });
 
     it('should buffer polygons dist=' + dist, function() {
       var geom = new Polygon([[[-1, -1], [1, -1], [1, 1], [-1, 1], [-1, -1]]]);
-      var buffered = osJsts.buffer(geom, dist);
+      var buffered = buffer(geom, dist);
       expect(checkPercentDiff(geom, dist, buffered)).toBe(true);
     });
 
     xit('should inner buffer polygons if distance is negative dist=' + dist, function() {
       var geom = new Polygon([[[-1, -1], [1, -1], [1, 1], [-1, 1], [-1, -1]]]);
-      var buffered = osJsts.buffer(geom, -dist);
+      var buffered = buffer(geom, -dist);
       expect(checkPercentDiff(geom, -dist, buffered)).toBe(true);
     });
   });
