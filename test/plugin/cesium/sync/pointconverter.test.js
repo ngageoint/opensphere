@@ -25,6 +25,8 @@ describe('plugin.cesium.sync.PointConverter', () => {
   let geometry;
   let style;
   let context;
+  let layer;
+  let scene;
 
   beforeEach(() => {
     geometry = new Point([0, 0]);
