@@ -6,8 +6,8 @@ import {fromExtent} from 'ol/src/geom/Polygon';
 import {get} from 'ol/src/proj';
 
 describe('os.extent', function() {
-  osExtent = goog.module.get('os.extent');
-  osProj = goog.module.get('os.proj');
+  const osExtent = goog.module.get('os.extent');
+  const osProj = goog.module.get('os.proj');
   var expandExtent = function(extent) {
     return [extent[0], 0, extent[1], 0];
   };

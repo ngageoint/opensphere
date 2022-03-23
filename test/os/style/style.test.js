@@ -7,6 +7,7 @@ goog.require('os.style');
 goog.require('os.style.StyleField');
 goog.require('os.style.StyleType');
 
+import {toString} from 'ol/src/color';
 import {listen, unlistenByKey} from 'ol/src/events';
 import Feature from 'ol/src/Feature';
 import OLVectorLayer from 'ol/src/layer/Vector';
@@ -203,9 +204,6 @@ describe('os.style', function() {
     var opacity = 0.25;
 
     // base style opacity (0.99) should be multiplied by the feature opacity (0.25)
-    var featureRgba = 'rgba(0,255,100,0.2475)';
-    var labelRgba = 'rgba(0,123,123,0.2475)';
-
     beforeEach(function() {
       base = {
         'image': {
@@ -260,9 +258,11 @@ describe('os.style', function() {
 
       // check all the colors and verify the rgba value
       expect(style.length).toBe(2);
-      expect(style[0].image_.fill_.color_).toBe(featureRgba);
-      expect(style[0].stroke_.color_).toBe(featureRgba);
-      expect(style[1].text_.fill_.color_).toBe(labelRgba);
+      const featureRgba = [0, 255, 100, 0.2475];
+      expect(style[0].image_.fill_.color_).toBe(toString(featureRgba));
+      expect(style[0].stroke_.color_).toBe(toString(featureRgba));
+      const labelRgba = [0, 123, 123, 0.2475];
+      expect(style[1].text_.fill_.color_).toBe(toString(labelRgba));
 
 
       // attempt the same again with an empty base config

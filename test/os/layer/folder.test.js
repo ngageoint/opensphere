@@ -13,9 +13,6 @@ describe('os.layer.FolderManager', () => {
 
   let folder;
 
-  // Load the Angular module
-  beforeEach(module('app'));
-
   beforeEach(() => {
     // clean up the global instance before each
     FolderManager.getInstance().clear();

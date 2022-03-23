@@ -5,9 +5,6 @@ describe('os.ui.SettingsButtonUI', () => {
   let element;
   let scope;
 
-  // Load the Angular module
-  beforeEach(module('app'));
-
   beforeEach(inject(($compile, $rootScope) => {
     scope = $rootScope.$new(true);
     element = angular.element(`<settings-button></settings-button>`);
