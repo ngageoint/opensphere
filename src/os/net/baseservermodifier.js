@@ -12,5 +12,7 @@ export const configure = function(server) {
     var config = {};
     config[Settings.getInstance().get('baseServerRegex', '^\\/([^\\/].*)$')] = server.replace(/\/$/, '') + '/$1';
     URLModifier.configure(config);
+  } else {
+    URLModifier.configure();
   }
 };

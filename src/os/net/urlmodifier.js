@@ -89,6 +89,8 @@ export default class URLModifier extends AbstractModifier {
           replace: options[pattern]
         });
       }
+    } else {
+      URLModifier.replace_ = [];
     }
   }
 }
