@@ -7,7 +7,7 @@ goog.require('os.layer.config.MockTileLayerConfig');
 goog.require('os.mock');
 goog.require('os.style.StyleManager');
 
-
+import MockTileLayerConfig from '../layer/config/tilelayerconfig.mock';
 
 describe('os.command.addFeature', function() {
   const {default: MapContainer} = goog.module.get('os.MapContainer');
@@ -15,8 +15,6 @@ describe('os.command.addFeature', function() {
   const {default: LayerVisibility} = goog.module.get('os.command.LayerVisibility');
   const {default: State} = goog.module.get('os.command.State');
   const {default: LayerConfigManager} = goog.module.get('os.layer.config.LayerConfigManager');
-
-  const MockTileLayerConfig = goog.module.get('os.layer.config.MockTileLayerConfig');
 
   var testLayerId = 'test-layer';
   var testOptions = {

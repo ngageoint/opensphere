@@ -27,7 +27,7 @@ goog.require('os.ui.formatter.DescriptionFormatter');
 goog.require('os.ui.formatter.PropertiesFormatter');
 goog.require('plugin.file.geojson.GeoJSONParser');
 
-import {listen} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 import Feature from 'ol/src/Feature';
 import Point from 'ol/src/geom/Point';
 
@@ -271,7 +271,7 @@ describe('os.source.Vector', function() {
         count++;
       }
     };
-    listen(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
+    const listenKey = listen(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
 
     var singleFeature = features[0];
     var multiFeature = features.slice(0, 10);
@@ -326,7 +326,7 @@ describe('os.source.Vector', function() {
       expect(addedItems).not.toContain(multiFeature[0]);
 
       addedItems = null;
-      events.unlisten(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
+      unlistenByKey(listenKey);
     });
   });
 
@@ -339,7 +339,7 @@ describe('os.source.Vector', function() {
         count++;
       }
     };
-    listen(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
+    const listenKey = listen(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
 
     var singleFeature = features[0];
     var multiFeature = features.slice(0, 10);
@@ -393,7 +393,7 @@ describe('os.source.Vector', function() {
       expect(removedItems).not.toContain(singleFeature);
       expect(removedItems).not.toContain(multiFeature[0]);
 
-      events.unlisten(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
+      unlistenByKey(listenKey);
     });
   });
 
@@ -404,7 +404,7 @@ describe('os.source.Vector', function() {
         addedCount++;
       }
     };
-    listen(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
+    const listenKey = listen(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
 
     runs(function() {
       // should select all and fire a change event
@@ -445,7 +445,7 @@ describe('os.source.Vector', function() {
       expect(source.selected_.length).toBe(10000);
       expect(googObject.getKeys(source.selectedById_).length).toBe(10000);
 
-      events.unlisten(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
+      unlistenByKey(listenKey);
     });
   });
 
@@ -456,7 +456,7 @@ describe('os.source.Vector', function() {
         removedCount++;
       }
     };
-    listen(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
+    const listenKey = listen(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
 
     runs(function() {
       expect(source.selected_.length).toBe(10000);
@@ -500,7 +500,7 @@ describe('os.source.Vector', function() {
       expect(source.selected_.length).toBe(0);
       expect(googObject.getKeys(source.selectedById_).length).toBe(0);
 
-      events.unlisten(source, GoogEventType.PROPERTYCHANGE, onPropertyChange, this);
+      unlistenByKey(listenKey);
     });
   });
 

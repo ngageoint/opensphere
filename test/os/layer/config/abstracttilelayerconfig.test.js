@@ -8,6 +8,7 @@ goog.require('os.net.CrossOrigin');
 goog.require('os.proj');
 
 import XYZ from 'ol/src/source/XYZ';
+import MockTileLayerConfig from '../../layer/config/tilelayerconfig.mock';
 
 describe('os.layer.config.AbstractTileLayerConfig', function() {
   const {default: AbstractTileLayerConfig} = goog.module.get('os.layer.config.AbstractTileLayerConfig');
@@ -17,7 +18,6 @@ describe('os.layer.config.AbstractTileLayerConfig', function() {
   const osProj = goog.module.get('os.proj');
 
   const MockLayer = goog.module.get('os.layer.MockLayer');
-  const {default: MockTileLayerConfig} = goog.module.get('os.layer.config.MockTileLayerConfig');
 
   it('configures for an explicitType', function() {
     var lc = new AbstractTileLayerConfig();

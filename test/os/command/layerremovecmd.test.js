@@ -7,6 +7,8 @@ goog.require('os.layer.config.MockTileLayerConfig');
 goog.require('os.mock');
 goog.require('os.style.StyleManager');
 
+import MockTileLayerConfig from '../layer/config/tilelayerconfig.mock';
+
 
 describe('os.command.LayerRemove', function() {
   const {default: MapContainer} = goog.module.get('os.MapContainer');
@@ -14,8 +16,6 @@ describe('os.command.LayerRemove', function() {
   const {default: LayerRemove} = goog.module.get('os.command.LayerRemove');
   const {default: State} = goog.module.get('os.command.State');
   const {default: LayerConfigManager} = goog.module.get('os.layer.config.LayerConfigManager');
-
-  const MockTileLayerConfig = goog.module.get('os.layer.config.MockTileLayerConfig');
 
   var testLayerId = 'test-layer';
   var testOptions = {

@@ -7,6 +7,7 @@ goog.require('os.layer.config.MockVectorLayerConfig');
 goog.require('os.layer.folder');
 goog.require('os.mock');
 
+import MockTileLayerConfig from '../layer/config/tilelayerconfig.mock';
 
 describe('os.layer.FolderManager', () => {
   const {default: FolderManager} = goog.module.get('os.layer.FolderManager');
@@ -14,7 +15,6 @@ describe('os.layer.FolderManager', () => {
   const {FolderEventType, SettingsKey} = goog.module.get('os.layer.folder');
   const {default: MapContainer} = goog.module.get('os.MapContainer');
   const {default: LayerConfigManager} = goog.module.get('os.layer.config.LayerConfigManager');
-  const MockTileLayerConfig = goog.module.get('os.layer.config.MockTileLayerConfig');
   const MockVectorLayerConfig = goog.module.get('os.layer.config.MockVectorLayerConfig');
 
   let folder;
