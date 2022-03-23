@@ -38,9 +38,6 @@ describe('os.ui.window.ConfirmUI', () => {
     }
   };
 
-  // Load the Angular module
-  beforeEach(module('app'));
-
   beforeEach(inject(($compile, $rootScope) => {
     compile = $compile;
     rootScope = $rootScope;

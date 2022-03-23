@@ -30,9 +30,6 @@ describe('os.ui.search.FeatureResultCardCtrl', () => {
 
   const featureId = 'test-id';
 
-  // Load the Angular module
-  beforeEach(module('app'));
-
   beforeEach(inject(($compile, $rootScope) => {
     feature = new Feature({
       field1: 'value1',
