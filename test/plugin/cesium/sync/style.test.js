@@ -44,8 +44,6 @@ describe('plugin.cesium.sync.style', () => {
       };
 
       describe('for layer opacity ' + opacity, () => {
-        layerOpacity = opacity;
-
         const blue = Cesium.Color.fromAlpha(Cesium.Color.BLUE, opacity);
         const red = Cesium.Color.fromAlpha(Cesium.Color.RED, opacity);
         const black = Cesium.Color.fromAlpha(Cesium.Color.BLACK, opacity);
