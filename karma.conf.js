@@ -117,7 +117,7 @@ module.exports = function(config) {
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage-istanbul'
-    reporters: ['dots', 'junit', 'coverage-istanbul'],
+    reporters: ['verbose', 'dots', 'junit', 'coverage-istanbul'],
 
     //
     // Preprocessors:
