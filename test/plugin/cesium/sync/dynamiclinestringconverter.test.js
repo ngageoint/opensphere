@@ -29,6 +29,7 @@ describe('plugin.cesium.sync.DynamicLineStringConverter', () => {
   let style;
   let context;
   let layer;
+  let scene;
 
   beforeEach(() => {
     enableWebGLMock();
