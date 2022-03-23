@@ -6,22 +6,32 @@ describe('os.ol.events.condition', function() {
   const condition = goog.module.get('os.ol.events.condition');
 
   it('detects right click events', function() {
+    var original = new PointerEvent(MapBrowserEventType.POINTERUP,
+        {
+          button: 2
+        });
     var mockEvent = {
       type: MapBrowserEventType.POINTERUP,
-      pointerEvent: {
-        button: 2
-      }
+      originalEvent: original
     };
 
     // happy path
     expect(condition.rightClick(mockEvent)).toBe(true);
 
     // different button
-    mockEvent.pointerEvent.button = 1;
+    original = new PointerEvent(MapBrowserEventType.POINTERUP,
+        {
+          button: 1
+        });
+    mockEvent.originalEvent = original;
     expect(condition.rightClick(mockEvent)).toBe(false);
 
     // revert back as a sanity check
-    mockEvent.pointerEvent.button = 2;
+    original = new PointerEvent(MapBrowserEventType.POINTERUP,
+        {
+          button: 2
+        });
+    mockEvent.originalEvent = original;
     expect(condition.rightClick(mockEvent)).toBe(true);
 
     // different event type
