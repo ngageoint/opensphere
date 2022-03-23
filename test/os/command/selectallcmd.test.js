@@ -6,7 +6,7 @@ goog.require('os.mock');
 goog.require('os.source.PropertyChange');
 goog.require('os.source.Vector');
 
-import {listen} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 import Feature from 'ol/src/Feature';
 import Point from 'ol/src/geom/Point';
 
@@ -36,7 +36,7 @@ describe('os.command.SelectAll', function() {
 
     var src = new VectorSource();
     src.setId('testy');
-    listen(src, GoogEventType.PROPERTYCHANGE, onChange);
+    const listenKey = listen(src, GoogEventType.PROPERTYCHANGE, onChange);
     for (var i = 0; i < 3; i++) {
       var f = new Feature();
       f.setId('' + i);
@@ -50,7 +50,7 @@ describe('os.command.SelectAll', function() {
 
     runs(function() {
       DataManager.getInstance().addSource(src);
-      events.unlisten(src, GoogEventType.PROPERTYCHANGE, onChange);
+      unlistenByKey(listenKey);
 
       var cmd = new SelectAll(src.getId());
       expect(cmd.execute()).toBe(true);

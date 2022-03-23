@@ -10,7 +10,7 @@ goog.require('plugin.heatmap.HeatmapLayerConfig');
 goog.require('plugin.heatmap.HeatmapPropertyType');
 goog.require('plugin.heatmap.SynchronizerType');
 
-import {listen} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 import Feature from 'ol/src/Feature';
 import LineString from 'ol/src/geom/LineString';
 import MultiPoint from 'ol/src/geom/MultiPoint';
@@ -137,7 +137,7 @@ describe('plugin.heatmap.Heatmap', function() {
     };
 
     var layer = createLayer();
-    listen(layer, GoogEventType.PROPERTYCHANGE, onPropertyChange);
+    const listenKey = listen(layer, GoogEventType.PROPERTYCHANGE, onPropertyChange);
 
     layer.setSize(20);
     layer.setGradient(color.RAINBOW_HEATMAP_GRADIENT_HEX);
@@ -146,7 +146,7 @@ describe('plugin.heatmap.Heatmap', function() {
     expect(gradientCount).toBe(1);
     expect(sizeCount).toBe(1);
     expect(intensityCount).toBe(1);
-    events.unlisten(layer, GoogEventType.PROPERTYCHANGE, onPropertyChange);
+    unlistenByKey(listenKey);
   });
 
   it('should create styles and cache them for points', function() {

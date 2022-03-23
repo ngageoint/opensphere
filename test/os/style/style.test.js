@@ -7,7 +7,7 @@ goog.require('os.style');
 goog.require('os.style.StyleField');
 goog.require('os.style.StyleType');
 
-import {listen} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 import Feature from 'ol/src/Feature';
 import OLVectorLayer from 'ol/src/layer/Vector';
 import {assign} from 'ol/src/obj';
@@ -416,15 +416,15 @@ describe('os.style', function() {
         'colormodel': 0
       };
 
-      listen(layer, GoogEventType.PROPERTYCHANGE, function(evt) {
+      const layerListenKey = listen(layer, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['layer']++;
       });
 
-      listen(source, GoogEventType.PROPERTYCHANGE, function(evt) {
+      const sourceListenKey = listen(source, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['source']++;
       });
 
-      listen(colormodel, GoogEventType.PROPERTYCHANGE, function(evt) {
+      const colorListenKey = listen(colormodel, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['colormodel']++;
       });
 
@@ -435,9 +435,9 @@ describe('os.style', function() {
       expect(on['source']).toBe(0);
       expect(on['colormodel']).toBe(0);
 
-      events.unlisten(layer, GoogEventType.PROPERTYCHANGE);
-      events.unlisten(source, GoogEventType.PROPERTYCHANGE);
-      events.unlisten(colormodel, GoogEventType.PROPERTYCHANGE);
+      unlistenByKey(layerListenKey);
+      unlistenByKey(sourceListenKey);
+      unlistenByKey(colorListenKey);
     });
 
     it('should send events at the layer, source, and colormodel levels when configured', function() {
@@ -457,11 +457,11 @@ describe('os.style', function() {
         'colormodel': 0
       };
 
-      listen(layer, GoogEventType.PROPERTYCHANGE, function(evt) {
+      const layerListenKey = listen(layer, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['layer']++;
       });
 
-      listen(source, GoogEventType.PROPERTYCHANGE, function(evt) {
+      const sourceListenKey = listen(source, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['source']['total']++;
 
         var p = evt.getProperty();
@@ -475,7 +475,7 @@ describe('os.style', function() {
         }
       });
 
-      listen(colormodel, GoogEventType.PROPERTYCHANGE, function(evt) {
+      const colorListenKey = listen(colormodel, GoogEventType.PROPERTYCHANGE, function(evt) {
         on['colormodel']++;
       });
 
@@ -497,9 +497,9 @@ describe('os.style', function() {
       expect(on['source']['configured']).toBe(2);
       expect(on['colormodel']).toBe(1);
 
-      events.unlisten(layer, GoogEventType.PROPERTYCHANGE);
-      events.unlisten(source, GoogEventType.PROPERTYCHANGE);
-      events.unlisten(colormodel, GoogEventType.PROPERTYCHANGE);
+      unlistenByKey(layerListenKey);
+      unlistenByKey(sourceListenKey);
+      unlistenByKey(colorListenKey);
     });
   });
 });

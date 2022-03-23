@@ -6,7 +6,7 @@ goog.require('os.mock');
 goog.require('os.source.PropertyChange');
 goog.require('os.source.Vector');
 
-import {listen} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events';
 import Feature from 'ol/src/Feature';
 import Point from 'ol/src/geom/Point';
 
@@ -36,7 +36,7 @@ describe('os.command.InvertSelect', function() {
 
     var src = new VectorSource();
     src.setId('testy');
-    listen(src, GoogEventType.PROPERTYCHANGE, onChange);
+    const listenKey = listen(src, GoogEventType.PROPERTYCHANGE, onChange);
     for (var i = 0; i < 3; i++) {
       var f = new Feature();
       f.setId('' + i);
@@ -49,7 +49,7 @@ describe('os.command.InvertSelect', function() {
     }, 'features to be added to crossfilter');
 
     runs(function() {
-      events.unlisten(src, GoogEventType.PROPERTYCHANGE, onChange);
+      unlistenByKey(listenKey);
       src.addToSelected(f);
       DataManager.getInstance().addSource(src);
 
