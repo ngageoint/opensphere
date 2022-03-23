@@ -667,7 +667,7 @@ describe('os.geo', function() {
     var lineString = new LineString(coords);
     var result = geo.normalizeGeometryCoordinates(lineString);
     expect(result).toBe(true);
-    coordinates = lineString.getCoordinates();
+    let coordinates = lineString.getCoordinates();
     // verify the coorinate normalization
     coordinates = lineString.getCoordinates();
     expect(coordinates[0][0]).toBeCloseTo(149.118);
@@ -681,7 +681,7 @@ describe('os.geo', function() {
     var result = geo.normalizeGeometryCoordinates(lineString);
     expect(result).toBe(true);
     // verify the coorinate normalization
-    coordinates = lineString.getCoordinates();
+    const coordinates = lineString.getCoordinates();
     expect(coordinates[0][0]).toBe(158.118);
     expect(coordinates[1][0]).toBe(172.118);
     expect(coordinates[2][0]).toBe(196.118);
@@ -692,7 +692,7 @@ describe('os.geo', function() {
     var multiPoint = new MultiPoint(coords);
     var result = geo.normalizeGeometryCoordinates(multiPoint);
     expect(result).toBe(true);
-    coordinates = multiPoint.getCoordinates();
+    let coordinates = multiPoint.getCoordinates();
     // verify the coorinate normalization
     coordinates = multiPoint.getCoordinates();
     expect(coordinates[0][0]).toBeCloseTo(149.118);
@@ -709,7 +709,7 @@ describe('os.geo', function() {
     var result = geo.normalizeGeometryCoordinates(multiPolygon);
     expect(result).toBe(true);
     // spot check coordinate normalization
-    coordinates = multiPolygon.getCoordinates();
+    const coordinates = multiPolygon.getCoordinates();
     expect(coordinates[0][0][0][0]).toBeCloseTo(155.3426721126629);
     expect(coordinates[1][0][2][0]).toBeCloseTo(160.57373729888093);
   });
@@ -723,7 +723,7 @@ describe('os.geo', function() {
     var result = geo.normalizeGeometryCoordinates(multiPolygon);
     expect(result).toBe(true);
     // spot check coordinate normalization
-    coordinates = multiPolygon.getCoordinates();
+    const coordinates = multiPolygon.getCoordinates();
     expect(coordinates[0][0][0][0]).toBe(148.45096515071668);
     expect(coordinates[1][0][2][0]).toBe(160.57373729888093);
   });
@@ -846,7 +846,7 @@ describe('os.geo', function() {
     expect(geo.hasAltitudeGeometry(polygon, true)).toBe(false);
 
     coords1 = [[1, 23, 0], [1, 23.5, 0], [2, 23.5, 0], [2, 23, 0], [1, 23, 0]];
-    coords2 = [[1, 23, 0], [1, 23.5, 0], [2, 23.5, 0], [2, 23, 0], [1, 23, 12500]];
+    const coords2 = [[1, 23, 0], [1, 23.5, 0], [2, 23.5, 0], [2, 23, 0], [1, 23, 12500]];
     polygon = new Polygon([coords1, coords2]);
 
     expect(geo.hasAltitudeGeometry(polygon)).toBe(true);
@@ -870,9 +870,7 @@ describe('os.geo', function() {
     expect(geo.hasAltitudeGeometry(multiPolygon, true)).toBe(false);
 
     coords1 = [[1, 23, 0], [1, 23.5, 0], [2, 23.5, 0], [2, 23, 0], [1, 23, 0]];
-    polygon1 = new Polygon([coords1]);
     coords2 = [[1, 23, 0], [1, 23.6, 0], [2, 23.3, 0], [2, 23.2, 0], [1, 23, 2500]];
-    polygon2 = new Polygon([coords2]);
     multiPolygon = new MultiPolygon([[coords1], [coords2]]);
 
     expect(geo.hasAltitudeGeometry(multiPolygon)).toBe(true);

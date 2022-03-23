@@ -45,7 +45,7 @@ describe('plugin.cesium.sync.PointConverter', () => {
   const blue = 'rgba(0,0,255,1)';
   const green = 'rgba(0,255,0,1)';
 
-  setCircleStyle = (color) => {
+  const setCircleStyle = (color) => {
     style.setImage(new Circle({
       radius: 3,
       fill: new Fill({

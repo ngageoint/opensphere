@@ -44,7 +44,7 @@ Feature.prototype.set = function(key, value, opt_silent) {
 Feature.prototype.unset = function(key, opt_silent) {
   if (this.values_ && key in this.values_) {
     delete this.values_[key];
-    if (isEmpty(this.values_)) {
+    if (this.values_.length === 0) {
       this.values_ = null;
     }
   }

@@ -121,7 +121,6 @@ describe('plugin.cesium.primitive', () => {
       });
 
       isDestroyed = false;
-      isDisposed = false;
       getGeometryInstanceAttributes = () => null;
       material = null;
 
@@ -213,7 +212,7 @@ describe('plugin.cesium.primitive', () => {
       const feature = new Feature(geometry);
       const billboard = primitiveUtils.createBillboard([0, 0, 0]);
 
-      context.geometryToCesiumMap[ol.getUid(geometry)] = billboard;
+      context.geometryToCesiumMap[getUid(geometry)] = billboard;
       context.addFeaturePrimitive(feature, billboard);
       context.addOLReferences(billboard, feature, geometry);
 

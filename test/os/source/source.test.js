@@ -16,10 +16,10 @@ goog.require('os.time.TimelineController');
 goog.require('os.ui.ogc.OGCDescriptor');
 goog.require('plugin.ogc.OGCLayerDescriptor');
 
-describe('os.source', function() {
-  const Feature = required('ol/src/Feature');
-  const OLVectorLayer = required('ol/src/layer/Vector');
+import Feature from 'ol/src/Feature';
+import OLVectorLayer from 'ol/src/layer/Vector';
 
+describe('os.source', function() {
   const Range = goog.module.get('goog.math.Range');
   const {default: MapContainer} = goog.module.get('os.MapContainer');
   const {default: BaseDescriptor} = goog.module.get('os.data.BaseDescriptor');

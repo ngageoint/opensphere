@@ -27,6 +27,7 @@ describe('plugin.cesium.sync.DynamicPolygonConverter', () => {
   let style;
   let context;
   let layer;
+  let scene;
 
   beforeEach(() => {
     enableWebGLMock();
