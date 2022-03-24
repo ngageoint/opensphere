@@ -28,6 +28,7 @@ describe('plugin.cesium.sync.DynamicMultiPolygonConverter', () => {
   let style;
   let context;
   let layer;
+  let scene;
 
   beforeEach(() => {
     const coords = [
