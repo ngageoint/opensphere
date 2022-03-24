@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ogc.spatial');
 
 import GML from 'ol/src/format/GML';
+import GeometryType from 'ol/src/geom/GeometryType';
 import {pushParseAndPop} from 'ol/src/xml';
 
 import {createPolarPolygon, isPolarPolygon} from '../geo/geo.js';
@@ -160,11 +161,11 @@ export const formatPolygon = function(geom, opt_format) {
 
   var polyCoords;
   switch (geom.getType()) {
-    case ol.geom.GeometryType.LINE_STRING:
+    case GeometryType.LINE_STRING:
       var lineCoords = /** @type {LineString} */ (geom).getCoordinates();
       polyCoords = [lineCoords];
       break;
-    case ol.geom.GeometryType.POLYGON:
+    case GeometryType.POLYGON:
       polyCoords = /** @type {Polygon} */ (geom).getCoordinates();
 
       // polygons that cross a pole will not return the expected results after being projected, so correct for that
@@ -172,9 +173,9 @@ export const formatPolygon = function(geom, opt_format) {
         polyCoords = [createPolarPolygon(polyCoords[0])];
       }
       break;
-    case ol.geom.GeometryType.MULTI_LINE_STRING:
+    case GeometryType.MULTI_LINE_STRING:
       return formatMultiPolygon(geom, opt_format);
-    case ol.geom.GeometryType.MULTI_POLYGON:
+    case GeometryType.MULTI_POLYGON:
       return formatMultiPolygon(geom, opt_format);
     default:
       // unsupported geometry type
@@ -231,10 +232,10 @@ export const formatMultiPolygon = function(geom, opt_format) {
 
   var geometries;
   switch (geom.getType()) {
-    case ol.geom.GeometryType.MULTI_LINE_STRING:
+    case GeometryType.MULTI_LINE_STRING:
       geometries = /** @type {ol.geom.MultiLineString} */ (geom).getLineStrings();
       break;
-    case ol.geom.GeometryType.MULTI_POLYGON:
+    case GeometryType.MULTI_POLYGON:
       geometries = /** @type {ol.geom.MultiPolygon} */ (geom).getPolygons();
       break;
     default:
