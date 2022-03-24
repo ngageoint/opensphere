@@ -38,6 +38,11 @@ describe('os.ui.window.ConfirmUI', () => {
     }
   };
 
+  // Load the Angular module
+  beforeEach(
+      angular.mock.module('app')
+  );
+
   beforeEach(inject(($compile, $rootScope) => {
     compile = $compile;
     rootScope = $rootScope;
