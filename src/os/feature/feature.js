@@ -334,7 +334,7 @@ export const createEllipse = function(feature, opt_replace) {
       }
     }
 
-    if (ellipse) {
+    if (ellipse && geom.values_) {
       ellipse.values_[RecordField.ALTITUDE_MODE] = geom.values_[RecordField.ALTITUDE_MODE];
     }
   }
@@ -976,7 +976,7 @@ export const getSource = function(feature, opt_layer) {
 export const getColor = function(feature, opt_source, opt_default, opt_colorField) {
   var defaultColor = opt_default !== undefined ? opt_default : osStyle.DEFAULT_LAYER_COLOR;
 
-  if (feature) {
+  if (feature && feature.values_) {
     var color = /** @type {string|undefined} */ (feature.values_[RecordField.COLOR]);
 
     if (color === undefined) {
