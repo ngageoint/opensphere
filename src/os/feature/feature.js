@@ -879,7 +879,8 @@ export const VALUES_FIELD = reflect.objectProperty('values_', new Feature());
 export const filterFnGetter = function(itemVar, field) {
   // create the string: itemVar.values_["column_name"]
   // make the field safe for use as an object property name, to prevent injection attacks
-  return itemVar + '.' + VALUES_FIELD + '[' + quoteString(field) + ']';
+  return itemVar + '.' + VALUES_FIELD + ' ? ' + itemVar + '.' + VALUES_FIELD + '[' + quoteString(field) + ']' +
+  ' : undefined';
 };
 
 /**
