@@ -403,15 +403,15 @@ describe('os.feature', function() {
     expect(feature).toBeDefined();
 
     var getter = filterFnGetter('feature', 'field1');
-    expect(getter).toBe('feature.values_["field1"]');
+    expect(getter).toBe('feature.values_ ? feature.values_["field1"] : undefined');
     expect(eval(getter)).toBe(10);
 
     getter = filterFnGetter('feature', 'field"2"');
-    expect(getter).toBe('feature.values_["field\\"2\\""]');
+    expect(getter).toBe('feature.values_ ? feature.values_["field\\"2\\""] : undefined');
     expect(eval(getter)).toBe(20);
 
     getter = filterFnGetter('feature', 'field3');
-    expect(getter).toBe('feature.values_["field3"]');
+    expect(getter).toBe('feature.values_ ? feature.values_["field3"] : undefined');
     expect(eval(getter)).toBeUndefined();
   });
 
