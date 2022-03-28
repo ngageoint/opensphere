@@ -74,7 +74,7 @@ describe('os.ui.search.FeatureResultCardCtrl', () => {
     expect(source.getFeatureById(featureId)).toBe(feature);
 
     const listeners = source.getListeners(GoogEventType.PROPERTYCHANGE);
-    expect(listeners.some((l) => l.bindTo === controller)).toBe(true);
+    expect(listeners.some((l) => Object.is(l.BoundThis, controller))).toBe(true);
   });
 
   it('cleans up the controller on dispose', () => {
@@ -87,7 +87,7 @@ describe('os.ui.search.FeatureResultCardCtrl', () => {
     expect(source.getFeatureById(featureId)).toBeNull();
 
     const listeners = source.getListeners(GoogEventType.PROPERTYCHANGE);
-    expect(listeners.some((l) => l.bindTo === controller)).toBe(false);
+    expect(listeners.some((l) => Object.is(l.BoundThis, controller))).toBe(false);
   });
 
   it('adds and removes highlight on a feature', () => {
