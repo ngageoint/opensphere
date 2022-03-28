@@ -10,13 +10,13 @@ goog.require('os.map.instance');
 goog.require('os.mock');
 
 import MockTileLayerConfig from '../layer/config/tilelayerconfig.mock';
+import MockVectorLayerConfig from '../layer/config/vectorlayerconfig.mock';
 
 describe('os.data.ZOrder', function() {
   const googObject = goog.module.get('goog.object');
   const {default: ZOrder} = goog.module.get('os.data.ZOrder');
   const {default: ZOrderEventType} = goog.module.get('os.data.ZOrderEventType');
   const {default: LayerConfigManager} = goog.module.get('os.layer.config.LayerConfigManager');
-  const MockVectorLayerConfig = goog.module.get('os.layer.config.MockVectorLayerConfig');
   const {getMapContainer} = goog.module.get('os.map.instance');
 
   var z = null;
@@ -29,8 +29,9 @@ describe('os.data.ZOrder', function() {
   it('setup', function() {
     os.layerConfigManager = LayerConfigManager.getInstance();
     const mockTileLayerConfig = new MockTileLayerConfig();
+    const mockVectorLayerConfig = new MockVectorLayerConfig();
     LayerConfigManager.getInstance().registerLayerConfig(MockVectorLayerConfig.TYPE, mockTileLayerConfig);
-    LayerConfigManager.getInstance().registerLayerConfig(MockVectorLayerConfig.TYPE, MockVectorLayerConfig);
+    LayerConfigManager.getInstance().registerLayerConfig(MockVectorLayerConfig.TYPE, mockVectorLayerConfig);
 
     z = ZOrder.getInstance();
     z.clear();

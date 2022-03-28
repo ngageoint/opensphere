@@ -8,6 +8,7 @@ goog.require('os.layer.folder');
 goog.require('os.mock');
 
 import MockTileLayerConfig from '../layer/config/tilelayerconfig.mock';
+import MockVectorLayerConfig from '../layer/config/vectorlayerconfig.mock';
 
 describe('os.layer.FolderManager', () => {
   const {default: FolderManager} = goog.module.get('os.layer.FolderManager');
@@ -15,7 +16,6 @@ describe('os.layer.FolderManager', () => {
   const {FolderEventType, SettingsKey} = goog.module.get('os.layer.folder');
   const {default: MapContainer} = goog.module.get('os.MapContainer');
   const {default: LayerConfigManager} = goog.module.get('os.layer.config.LayerConfigManager');
-  const MockVectorLayerConfig = goog.module.get('os.layer.config.MockVectorLayerConfig');
 
   let folder;
   let childFolder;
@@ -81,6 +81,7 @@ describe('os.layer.FolderManager', () => {
     map.addLayer(tlc.createLayer({id: 'tileLayer3'}));
 
     const vlc = lcm.getLayerConfig(MockVectorLayerConfig.TYPE);
+    expect(vlc).toBeTruthy();
     map.addLayer(vlc.createLayer({id: 'vectorLayer1'}));
     map.addLayer(vlc.createLayer({id: 'vectorLayer2'}));
 
