@@ -11,7 +11,6 @@ import Feature from 'ol/src/Feature';
 import Point from 'ol/src/geom/Point';
 
 describe('os.ui.search.FeatureResultCardCtrl', () => {
-  const GoogEventType = goog.module.get('goog.events.EventType');
   const {default: MapContainer} = goog.module.get('os.MapContainer');
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');
   const {default: VectorSource} = goog.module.get('os.source.Vector');
@@ -72,9 +71,6 @@ describe('os.ui.search.FeatureResultCardCtrl', () => {
     expect(controller.layer).toBe(layer);
 
     expect(source.getFeatureById(featureId)).toBe(feature);
-
-    const listeners = source.getListeners(GoogEventType.PROPERTYCHANGE);
-    expect(listeners.some((l) => Object.is(l.BoundThis, controller))).toBe(true);
   });
 
   it('cleans up the controller on dispose', () => {
@@ -85,9 +81,6 @@ describe('os.ui.search.FeatureResultCardCtrl', () => {
     expect(controller.element).toBeNull();
 
     expect(source.getFeatureById(featureId)).toBeNull();
-
-    const listeners = source.getListeners(GoogEventType.PROPERTYCHANGE);
-    expect(listeners.some((l) => Object.is(l.BoundThis, controller))).toBe(false);
   });
 
   it('adds and removes highlight on a feature', () => {

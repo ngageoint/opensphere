@@ -2050,6 +2050,10 @@ export default class Vector extends OLVectorSource {
     var featureId = /** @type {string} */ (feature.id_);
     this.shownRecordMap[featureId] = true;
 
+    if (!feature.values_) {
+      feature.values_ = {};
+    }
+
     // save the source id on the feature
     feature.values_[RecordField.SOURCE_ID] = this.getId();
 
