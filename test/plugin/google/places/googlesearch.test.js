@@ -34,6 +34,7 @@ describe('plugin.google.places.Search', function() {
   it('should not add boundary if the view diagonal is not within the threshold', function() {
     var search = new Search();
     Settings.getInstance().set('plugin.google.places.nearby', nearby);
+    spyOn(MapContainer.getInstance().getMap(), 'getExtent').andReturn([0, 0, 45, 45]);
     expect(search.getSearchUrl()).toBe(url);
   });
 
