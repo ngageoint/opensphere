@@ -2,7 +2,7 @@ goog.require('os.style.CircleReader');
 goog.require('os.style.IconReader');
 goog.require('os.style.ImageReader');
 
-import Icon from 'ol/style/Icon';
+import Icon from 'ol/src/style/Icon';
 
 describe('os.style.ImageReader', function() {
   const {default: CircleReader} = goog.module.get('os.style.CircleReader');
