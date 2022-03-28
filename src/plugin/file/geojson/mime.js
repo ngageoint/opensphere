@@ -37,8 +37,10 @@ export const isGeoJSON = function(buffer, opt_file, opt_context) {
  */
 const find_ = function(obj) {
   var type = obj['type'];
-  if (type === 'FeatureCollection' || type === 'Feature' || type in GeoJSON.GEOMETRY_READERS_) {
-    return true;
+  if (type) {
+    if (type === 'FeatureCollection' || type === 'Feature' || type in GeoJSON.GEOMETRY_READERS_) {
+      return true;
+    }
   }
 
   for (var key in obj) {
