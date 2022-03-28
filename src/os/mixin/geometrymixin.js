@@ -263,7 +263,12 @@ Geometry.prototype.toLonLat = function() {
        */
       cls.prototype.clone = function() {
         var geom = origClone.call(this);
-        merge(this.values_, geom.values_);
+        if (this.values_) {
+          if (!geom.values_) {
+            geom.values_ = {};
+          }
+          merge(this.values_, geom.values_);
+        }
         return geom;
       };
     }
