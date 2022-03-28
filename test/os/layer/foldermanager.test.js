@@ -75,13 +75,14 @@ describe('os.layer.FolderManager', () => {
 
     const map = MapContainer.getInstance();
     const lcm = LayerConfigManager.getInstance();
+    LayerConfigManager.getInstance().registerLayerConfig(MockTileLayerConfig.TYPE, MockTileLayerConfig);
     const tlc = lcm.getLayerConfig(MockTileLayerConfig.TYPE);
     map.addLayer(tlc.createLayer({id: 'tileLayer1'}));
     map.addLayer(tlc.createLayer({id: 'tileLayer2'}));
     map.addLayer(tlc.createLayer({id: 'tileLayer3'}));
 
+    LayerConfigManager.getInstance().registerLayerConfig(MockVectorLayerConfig.TYPE, MockVectorLayerConfig);
     const vlc = lcm.getLayerConfig(MockVectorLayerConfig.TYPE);
-    expect(vlc).toBeTruthy();
     map.addLayer(vlc.createLayer({id: 'vectorLayer1'}));
     map.addLayer(vlc.createLayer({id: 'vectorLayer2'}));
 

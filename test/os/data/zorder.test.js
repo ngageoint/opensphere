@@ -28,10 +28,8 @@ describe('os.data.ZOrder', function() {
 
   it('setup', function() {
     os.layerConfigManager = LayerConfigManager.getInstance();
-    const mockTileLayerConfig = new MockTileLayerConfig();
-    const mockVectorLayerConfig = new MockVectorLayerConfig();
-    LayerConfigManager.getInstance().registerLayerConfig(MockVectorLayerConfig.TYPE, mockTileLayerConfig);
-    LayerConfigManager.getInstance().registerLayerConfig(MockVectorLayerConfig.TYPE, mockVectorLayerConfig);
+    LayerConfigManager.getInstance().registerLayerConfig(MockVectorLayerConfig.TYPE, MockTileLayerConfig);
+    LayerConfigManager.getInstance().registerLayerConfig(MockVectorLayerConfig.TYPE, MockVectorLayerConfig);
 
     z = ZOrder.getInstance();
     z.clear();
