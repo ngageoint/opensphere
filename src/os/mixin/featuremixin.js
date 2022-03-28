@@ -93,13 +93,13 @@ Feature.prototype.setStyle = function(style) {
  * @suppress {accessControls}
  */
 Feature.prototype.getStyleFn = function(feature, resolution) {
-  if (feature.getStyle() instanceof Style) {
-    return [feature.getStyle()];
-  } else if (typeof feature.getStyle() == 'function') {
-    var style = feature.setStyle(resolution);
+  if (feature.style_ instanceof Style) {
+    return [feature.style_];
+  } else if (typeof feature.style_ == 'function') {
+    var style = feature.style_(resolution);
     return style ? (style instanceof Style ? [style] : style) : [];
   } else {
-    return feature.getStyle();
+    return feature.style_;
   }
 };
 
