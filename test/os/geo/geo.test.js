@@ -471,7 +471,7 @@ describe('os.geo', function() {
 
   it('detects polygonal geometries', function() {
     // polygonal geometry types
-    expect(geo.isGeometryPolygonal(new Polygon())).toBe(true);
+    expect(geo.isGeometryPolygonal(new Polygon([]))).toBe(true);
     expect(geo.isGeometryPolygonal(new MultiPolygon([]))).toBe(true);
 
     // missing geometry
@@ -479,17 +479,17 @@ describe('os.geo', function() {
     expect(geo.isGeometryPolygonal(undefined)).toBe(false);
 
     // different geometry types
-    expect(geo.isGeometryPolygonal(new Point())).toBe(false);
-    expect(geo.isGeometryPolygonal(new LineString())).toBe(false);
+    expect(geo.isGeometryPolygonal(new Point([]))).toBe(false);
+    expect(geo.isGeometryPolygonal(new LineString([]))).toBe(false);
 
     // handles collections when specified
     var collection = new GeometryCollection();
     expect(geo.isGeometryPolygonal(collection)).toBe(false);
 
     var mixedArray = [
-      new Point(),
-      new LineString(),
-      new Polygon()
+      new Point([]),
+      new LineString([]),
+      new Polygon([])
     ];
     collection.setGeometriesArray(mixedArray);
     expect(geo.isGeometryPolygonal(collection, true)).toBe(true);
@@ -766,7 +766,7 @@ describe('os.geo', function() {
   it('ol.geom.Point should not have altitude', function() {
     var point = new Point([12.123, 17.56465]);
     expect(geo.hasAltitudeGeometry(point)).toBe(false);
-    point = new Point();
+    point = new Point([]);
     expect(geo.hasAltitudeGeometry(point)).toBe(false);
   });
 
