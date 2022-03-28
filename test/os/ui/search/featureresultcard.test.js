@@ -30,6 +30,9 @@ describe('os.ui.search.FeatureResultCardCtrl', () => {
 
   const featureId = 'test-id';
 
+  // Load the Angular module
+  beforeEach(angular.mock.module('app'));
+
   beforeEach(inject(($compile, $rootScope) => {
     feature = new Feature({
       field1: 'value1',
@@ -83,7 +86,7 @@ describe('os.ui.search.FeatureResultCardCtrl', () => {
 
     expect(source.getFeatureById(featureId)).toBeNull();
 
-    const listeners = getListeners(source, GoogEventType.PROPERTYCHANGE);
+    const listeners = source.getListeners(GoogEventType.PROPERTYCHANGE);
     expect(listeners.some((l) => l.bindTo === controller)).toBe(false);
   });
 
