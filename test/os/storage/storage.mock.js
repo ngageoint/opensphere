@@ -268,7 +268,7 @@ const runAsyncGetTests = function(storage) {
       }, 'absent key to be retrieved');
 
       runs(function() {
-        expect(lastValue).toBeUndefined();
+        expect(lastValue).toBeFalsy();
       });
     });
   });
@@ -294,7 +294,7 @@ const runAsyncGetAllTests = function(storage, opt_supportsInterface) {
 
         runs(function() {
           expect(ebCount).toBe(0);
-          expect(lastValue).not.toBeNull();
+          expect(lastValue).toBeTruthy();
           expect(lastValue.length).toBe(getCount(asyncValueMap));
         });
       });
@@ -422,7 +422,7 @@ const runAsyncRemoveTests = function(storage) {
       }, 'get to complete');
 
       runs(function() {
-        expect(lastValue).toBeUndefined();
+        expect(lastValue).toBeFalsy();
 
         expect(cbCount).toBe(1);
         expect(ebCount).toBe(0);
@@ -437,7 +437,7 @@ const runAsyncRemoveTests = function(storage) {
       }, 'get to complete');
 
       runs(function() {
-        expect(lastValue).toBeUndefined();
+        expect(lastValue).toBeFalsy();
 
         expect(cbCount).toBe(1);
         expect(ebCount).toBe(0);
@@ -478,7 +478,7 @@ const runAsyncClearTests = function(storage) {
       runs(function() {
         expect(cbCount).toBe(1);
         expect(ebCount).toBe(0);
-        expect(lastValue).not.toBeNull();
+        expect(lastValue).toBeTruthy();
         expect(lastValue.length).toBe(0);
       });
     });

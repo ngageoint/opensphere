@@ -16,6 +16,7 @@ describe('os.storage.IDBStorage', function() {
 
   var openDb = function() {
     runs(function() {
+      Modernizr.indexeddb = true;
       idb = new IDBStorage(storeName, dbName, version);
       expect(idb.isError()).toBe(true);
 
