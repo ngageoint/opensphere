@@ -128,7 +128,7 @@ describe('os.state.v2.QueryEntries', function() {
 
     runs(function() {
       QueryManager.getInstance().addEntry('*', 'area1', 'filter1', true, true);
-      QueryManager.getInstance().addEntry('layer2', 'area1', 'filter1', true, false);
+      QueryManager.getInstance().addEntry('queryentriesstate', 'area1', 'filter1', true, false);
     });
 
     waitsFor(function() {
@@ -138,18 +138,20 @@ describe('os.state.v2.QueryEntries', function() {
     runs(function() {
       state.saveInternal(options, rootObj);
 
-      // it should exclude the first entry
-      expect(dom.getChildren(rootObj).length).toBe(1);
-
       var queryEntries = rootObj.querySelectorAll(QueryEntriesTag.QUERY_ENTRY);
 
-      // check one
-      var entry = queryEntries[0];
-      expect(entry.getAttribute('layerId')).toBe('layer2');
-      expect(entry.getAttribute('areaId')).toBe('area1');
-      expect(entry.getAttribute('filterId')).toBe('filter1');
-      expect(entry.getAttribute('includeArea')).toBe('true');
-      expect(entry.getAttribute('filterGroup')).toBe('false');
+      queryEntries.forEach((entry) => {
+        if (entry.getAttribute('layerId') == '*') {
+          fail('Should not have an entry with an *');
+        }
+
+        if (entry.getAttribute('layerId') == 'queryentriesstate') {
+          expect(entry.getAttribute('areaId')).toBe('area1');
+          expect(entry.getAttribute('filterId')).toBe('filter1');
+          expect(entry.getAttribute('includeArea')).toBe('true');
+          expect(entry.getAttribute('filterGroup')).toBe('false');
+        }
+      });
     });
   });
 });
