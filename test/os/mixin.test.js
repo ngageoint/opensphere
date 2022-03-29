@@ -48,7 +48,7 @@ describe('os.mixin', function() {
     expect(EventTarget.prototype.dispatchEvent.calls.length).toBe(0);
 
     // creating the geometry will fire a changed event, so dispatchEvent will be called once
-    var geometry = new Point(null);
+    var geometry = new Point([]);
     expect(EventTarget.prototype.dispatchEvent.calls.length).toBe(1);
 
     geometry.set('testKey', 'testValue');
