@@ -7,7 +7,6 @@ goog.require('plugin.pelias.geocoder.Result');
 goog.require('plugin.pelias.geocoder.Search');
 
 import Feature from 'ol/src/Feature';
-import * as olProj from 'ol/src/proj';
 
 describe('plugin.pelias.geocoder.Search', function() {
   const {default: MapContainer} = goog.module.get('os.MapContainer');
@@ -67,8 +66,9 @@ describe('plugin.pelias.geocoder.Search', function() {
   it('should should not add focus point at low zoom levels', function() {
     var search = new Search();
     Settings.getInstance().set('plugin.pelias.geocoder.focusPoint', true);
-    spyOn(olProj, 'toLonLat').andReturn([150.1, -35.2]);
+    spyOn(MapContainer.getInstance().getMap().getView(), 'getCenter').andReturn([150.1, -35.2]);
     spyOn(MapContainer.getInstance().getMap().getView(), 'getZoom').andReturn(3.0);
+    spyOn(MapContainer.getInstance().getMap(), 'getExtent').andReturn([0, 0, 45, 45]);
 
     expect(search.getSearchUrl()).toBe(url);
   });
