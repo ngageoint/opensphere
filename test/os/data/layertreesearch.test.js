@@ -8,13 +8,14 @@ goog.require('os.mock');
 import TileWMS from 'ol/src/source/TileWMS';
 import OLVectorSource from 'ol/src/source/Vector';
 
-describe('os.data.LayerTreeSearch', function() {
-  const {default: LayerTreeSearch} = goog.module.get('os.data.LayerTreeSearch');
-  const {default: LayerZOrderGroupBy} = goog.module.get('os.data.groupby.LayerZOrderGroupBy');
-  const {default: Tile} = goog.module.get('os.layer.Tile');
-  const {default: VectorLayer} = goog.module.get('os.layer.Vector');
-  const {getMapContainer} = goog.module.get('os.map.instance');
+import LayerZOrderGroupBy from '../../../src/os/data/groupby/layerzordergroupby';
+import LayerTreeSearch from '../../../src/os/data/layertreesearch';
+import FolderManager from '../../../src/os/layer/foldermanager';
+import Tile from '../../../src/os/layer/tile';
+import Vector from '../../../src/os/layer/vector';
+import {getMapContainer} from '../../../src/os/map/mapinstance';
 
+describe('os.data.LayerTreeSearch', function() {
   beforeEach(function() {
     // add a tile layer
     var layer = new Tile({
@@ -29,7 +30,7 @@ describe('os.data.LayerTreeSearch', function() {
     getMapContainer().addLayer(layer);
 
     // add a vector layer
-    layer = new VectorLayer({
+    layer = new Vector({
       source: new OLVectorSource()
     });
 
@@ -58,6 +59,7 @@ describe('os.data.LayerTreeSearch', function() {
   });
 
   it('should search map layers', function() {
+    FolderManager.getInstance().clear();
     var o = {};
     var s = new LayerTreeSearch('data', o);
 
