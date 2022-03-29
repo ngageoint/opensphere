@@ -5,6 +5,9 @@ describe('os.ui.SettingsButtonUI', () => {
   let element;
   let scope;
 
+  // Load the Angular module
+  beforeEach(angular.mock.module('app'));
+
   beforeEach(inject(($compile, $rootScope) => {
     scope = $rootScope.$new(true);
     element = angular.element(`<settings-button></settings-button>`);
