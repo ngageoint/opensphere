@@ -43,7 +43,7 @@ export const getTimeTypeForString = function(input) {
  */
 export const getItemField = function(item, field) {
   if (item && field) {
-    if (item.values_ && instanceOf(item, Feature.NAME)) {
+    if (item.values_ && item instanceof Feature) {
       return /** @type {!Feature} */ (item).values_[field];
     } else {
       return item[field];
