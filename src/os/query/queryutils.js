@@ -65,7 +65,7 @@ export const isWorldQuery = function(geometry) {
   if (worldArea_ && geometry && geometry.getType() === GeometryType.POLYGON) {
     // transform the world extent to the current projection to compute the area
     var geomArea = /** @type {ol.geom.Polygon} */ (geometry).getArea();
-    return nearlyEquals(geomArea / worldArea_, 1, 1E-4) || geomArea == 0;
+    return nearlyEquals(geomArea / worldArea_, 1, 1E-2) || geomArea == 0;
   }
 
   return false;
