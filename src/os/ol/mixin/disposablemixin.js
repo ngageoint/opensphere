@@ -26,7 +26,7 @@ export const init = () => {
    * @suppress {accessControls}
    */
   Disposable.prototype.isDisposed = function() {
-    return this.disposed_;
+    return this.disposed;
   };
 };
 
