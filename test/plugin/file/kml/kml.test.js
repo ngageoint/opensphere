@@ -11,13 +11,14 @@ import LineString from 'ol/src/geom/LineString';
 import MultiLineString from 'ol/src/geom/MultiLineString';
 import {pushParseAndPop} from 'ol/src/xml';
 
+import {toAbgrString} from '../../../../src/os/style/style';
+import TimeInstant from '../../../../src/os/time/timeinstant';
+import TimeRange from '../../../../src/os/time/timerange';
+import {readTime, OL_LINK_PARSERS, readLatLonBox, readLatLonQuad, GROUND_OVERLAY_PARSERS} from '../../../../src/plugin/file/kml/kml';
+
 describe('plugin.file.kml', function() {
   const dom = goog.module.get('goog.dom');
   const googDomXml = goog.module.get('goog.dom.xml');
-  const {toAbgrString} = goog.module.get('os.style');
-  const {default: TimeInstant} = goog.module.get('os.time.TimeInstant');
-  const {default: TimeRange} = goog.module.get('os.time.TimeRange');
-  const kml = goog.module.get('plugin.file.kml');
 
   it('reads a kml:TimeStamp element', function() {
     var when = new Date();
@@ -25,7 +26,7 @@ describe('plugin.file.kml', function() {
     var doc = googDomXml.loadXml(timeStampXml);
     var tsEl = dom.getFirstElementChild(doc);
 
-    var time = kml.readTime(tsEl, []);
+    var time = readTime(tsEl, []);
     expect(time).not.toBeNull();
     expect(time instanceof TimeInstant).toBe(true);
     expect(time instanceof TimeRange).toBe(false);
@@ -41,7 +42,7 @@ describe('plugin.file.kml', function() {
     var doc = googDomXml.loadXml(timeSpanXml);
     var tsEl = dom.getFirstElementChild(doc);
 
-    var time = kml.readTime(tsEl, []);
+    var time = readTime(tsEl, []);
     expect(time).not.toBeNull();
     expect(time instanceof TimeRange).toBe(true);
     expect(time.getStart()).toBe(begin.getTime());
@@ -67,7 +68,7 @@ describe('plugin.file.kml', function() {
     var linkEl = dom.getFirstElementChild(doc);
 
     // all but href are our extension to the Openlayers parser
-    var link = pushParseAndPop({}, kml.OL_LINK_PARSERS(), linkEl, []);
+    var link = pushParseAndPop({}, OL_LINK_PARSERS(), linkEl, []);
     expect(link['href']).toBe(href);
     expect(link['refreshMode']).toBe(refreshMode);
     expect(link['refreshInterval']).toBe(refreshInterval);
@@ -99,7 +100,7 @@ describe('plugin.file.kml', function() {
       [forwardSlashHref]: 'data://fakeimagedatauri'
     };
 
-    var link = pushParseAndPop({}, kml.OL_LINK_PARSERS(), linkEl, []);
+    var link = pushParseAndPop({}, OL_LINK_PARSERS(), linkEl, []);
     expect(link['href']).toBe(forwardSlashHref);
     expect(link['refreshMode']).toBe(refreshMode);
     expect(link['refreshInterval']).toBe(refreshInterval);
@@ -128,7 +129,7 @@ describe('plugin.file.kml', function() {
     const doc = googDomXml.loadXml(latLonBoxXml);
     const latLonBoxEl = dom.getFirstElementChild(doc);
     const latLonBox = {};
-    kml.readLatLonBox(latLonBoxEl, [latLonBox]);
+    readLatLonBox(latLonBoxEl, [latLonBox]);
     expect(latLonBox.extent.every((val, idx) => val === expectedExtent[idx])).toBe(true);
     expect(latLonBox.rotation).toBe(rotation);
   });
@@ -147,7 +148,7 @@ describe('plugin.file.kml', function() {
     const doc = googDomXml.loadXml(latLonQuadXml);
     const latLonQuadEl = dom.getFirstElementChild(doc);
     const latLonQuad = {};
-    kml.readLatLonQuad(latLonQuadEl, [latLonQuad]);
+    readLatLonQuad(latLonQuadEl, [latLonQuad]);
     expect(latLonQuad.extent.every((val, idx) => val === expectedExtent[idx])).toBe(true);
   });
 
@@ -165,7 +166,7 @@ describe('plugin.file.kml', function() {
     const doc = googDomXml.loadXml(latLonQuadXml);
     const latLonQuadEl = dom.getFirstElementChild(doc);
     const latLonQuad = {};
-    kml.readLatLonQuad(latLonQuadEl, [latLonQuad]);
+    readLatLonQuad(latLonQuadEl, [latLonQuad]);
     expect(latLonQuad.extent.every((val, idx) => val === expectedExtent[idx])).toBe(true);
   });
 
@@ -197,7 +198,7 @@ describe('plugin.file.kml', function() {
 
     const doc = googDomXml.loadXml(groundOverlayXml);
     const groundOverlayEl = dom.getFirstElementChild(doc);
-    const groundOverlay = pushParseAndPop({}, kml.GROUND_OVERLAY_PARSERS, groundOverlayEl, []);
+    const groundOverlay = pushParseAndPop({}, GROUND_OVERLAY_PARSERS, groundOverlayEl, []);
     expect(groundOverlay.altitude).toBe(altitude);
     expect(groundOverlay.altitudeMode).toBe(altitudeMode);
     expect(groundOverlay.color.every((val, idx) => val === color[idx]));
