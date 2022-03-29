@@ -40,6 +40,7 @@ describe('plugin.pelias.geocoder.Search', function() {
 
   it('should not add boundary if the view diagonal is not within the threshold', function() {
     var search = new Search();
+    spyOn(MapContainer.getInstance().getMap(), 'getExtent').andReturn([0, 0, 45, 45]);
     Settings.getInstance().set('plugin.pelias.geocoder.extentParams', boundary);
     expect(search.getSearchUrl()).toBe(url);
   });
