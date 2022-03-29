@@ -5,12 +5,12 @@ goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 goog.require('plugin.file.kml');
 
-import KML from 'ol/src/format/KML';
 import GeometryLayout from 'ol/src/geom/GeometryLayout';
 import LineString from 'ol/src/geom/LineString';
 import MultiLineString from 'ol/src/geom/MultiLineString';
 import {pushParseAndPop} from 'ol/src/xml';
 
+import KML from '../../../../src/os/ol/format/KML';
 import {toAbgrString} from '../../../../src/os/style/style';
 import TimeInstant from '../../../../src/os/time/timeinstant';
 import TimeRange from '../../../../src/os/time/timerange';
