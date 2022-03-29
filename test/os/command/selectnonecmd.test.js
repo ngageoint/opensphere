@@ -1,17 +1,12 @@
-goog.require('os.command.SelectNone');
-goog.require('os.command.State');
-goog.require('os.data.DataManager');
-goog.require('os.source.Vector');
-
-import Point from 'ol/geom/Point';
 import Feature from 'ol/src/Feature';
+import Point from 'ol/src/geom/Point';
+
+import SelectNone from '../../../src/os/command/selectnonecmd';
+import State from '../../../src/os/command/state';
+import DataManager from '../../../src/os/data/datamanager';
+import VectorSource from '../../../src/os/source/vectorsource';
 
 describe('os.command.SelectNone', function() {
-  const {default: SelectNone} = goog.module.get('os.command.SelectNone');
-  const {default: State} = goog.module.get('os.command.State');
-  const {default: DataManager} = goog.module.get('os.data.DataManager');
-  const {default: VectorSource} = goog.module.get('os.source.Vector');
-
   it('should fail when the source is not provided', function() {
     var cmd = new SelectNone(null);
     expect(cmd.execute()).toBe(false);
