@@ -43,7 +43,7 @@ export const getTimeTypeForString = function(input) {
  */
 export const getItemField = function(item, field) {
   if (item && field) {
-    if (instanceOf(item, Feature.NAME)) {
+    if (item.values_ && instanceOf(item, Feature.NAME)) {
       return /** @type {!Feature} */ (item).values_[field];
     } else {
       return item[field];
@@ -58,7 +58,7 @@ export const getItemField = function(item, field) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 export const getItemFields = function(item) {
-  if (instanceOf(item, Feature.NAME)) {
+  if (item && item.values_ && instanceOf(item, Feature.NAME)) {
     return Object.keys(/** @type {!Feature} */ (item).values_);
   } else if (item) {
     return Object.keys(item);
@@ -109,7 +109,7 @@ export const getBestFieldMatch = function(item, regex, opt_currentField) {
   var currentFieldIndex = Number.MAX_VALUE;
   var fIndex = Number.MAX_VALUE;
 
-  var obj = instanceOf(item, Feature.NAME) ? /** @type {!Feature} */ (item).values_ : item;
+  var obj = instanceOf(item, Feature.NAME) && item.values_ ? /** @type {!Feature} */ (item).values_ : item;
   for (var field in obj) {
     var matches = field.match(regex);
     if (matches && (matches.index < fIndex || (matches.index == fIndex && field.length < f.length))) {
