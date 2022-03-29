@@ -205,7 +205,7 @@ describe('plugin.suncalc.LightStripUI', function() {
     mapSpyObj.on.andReturn(false);
     spyOn(PluggableMap.prototype, 'getView').andReturn(mapSpyObj);
 
-    result = lightStripCtrl.update_();
+    var result = lightStripCtrl.update_();
 
     expect(result).toBeFalsy();
     expect(mapSpyObj.getView).not.toHaveBeenCalled();
