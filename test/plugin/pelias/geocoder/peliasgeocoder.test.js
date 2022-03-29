@@ -57,8 +57,9 @@ describe('plugin.pelias.geocoder.Search', function() {
   it('should add focus point if so configured', function() {
     var search = new Search();
     Settings.getInstance().set('plugin.pelias.geocoder.focusPoint', true);
-    spyOn(olProj, 'toLonLat').andReturn([150.1, -35.2]);
+    spyOn(MapContainer.getInstance().getMap().getView(), 'getCenter').andReturn([150.1, -35.2]);
     spyOn(MapContainer.getInstance().getMap().getView(), 'getZoom').andReturn(10.0);
+    spyOn(MapContainer.getInstance().getMap(), 'getExtent').andReturn([0, 0, 45, 45]);
 
     expect(search.getSearchUrl()).toBe(url + '&focus.point.lat=-35.2&focus.point.lon=150.1');
   });
