@@ -590,13 +590,6 @@ describe('os.source.Vector', function() {
     expect(newSource.refreshTimer !== source.refreshTimer).toBe(true);
   });
 
-  it('should not allow invalid geometries', function() {
-    var f = new Feature(new Point([]));
-    var newSource = new VectorSource(undefined);
-    newSource.addFeature(f);
-    expect(f.getGeometry()).toBe(null);
-  });
-
   it('should clear the source when disabled', function() {
     source.setEnabled(false);
     expect(source.getFeatures().length).toBe(0);
