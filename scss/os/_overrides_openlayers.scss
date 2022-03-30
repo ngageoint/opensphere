@@ -145,10 +145,14 @@
   right: 3rem;
   top: .75rem;
 
+  &.ol-collapsed button {
+    position: static;
+  }
+
   button {
     background: rgba($body-bg, .5);
+    color: rgba($body-color, .8);
     left: .1rem;
-    margin: 0;
     position: absolute;
     top: .1rem;
   }
@@ -176,11 +180,6 @@
 // Collapsed overview map
 .ol-collapsed .ol-overviewmap-map {
   display: none;
-}
-
-.ol-overviewmap.ol-collapsed {
-  border: unset;
-  margin-right: 2em;
 }
 
 // Scale Line
