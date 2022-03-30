@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.kml.KMLSource');
 
-import {remove} from 'ol/src/array';
+import {remove} from 'ol/src/array.js';
 import AlertEventSeverity from '../../../os/alert/alerteventseverity.js';
 import AlertManager from '../../../os/alert/alertmanager.js';
 import * as dispatcher from '../../../os/dispatcher.js';

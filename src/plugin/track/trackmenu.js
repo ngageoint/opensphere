@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.track.menu');
 
-import OLVectorLayer from 'ol/src/layer/Vector';
+import OLVectorLayer from 'ol/src/layer/Vector.js';
 import Settings from '../../os/config/settings.js';
 import LayerNode from '../../os/data/layernode.js';
 import DynamicFeature from '../../os/feature/dynamicfeature.js';

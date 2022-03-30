@@ -7,14 +7,14 @@
  */
 goog.declareModuleId('os.geo.jsts');
 
-import * as olExtent from 'ol/src/extent';
-import Feature from 'ol/src/Feature';
-import GeometryType from 'ol/src/geom/GeometryType';
-import MultiPolygon from 'ol/src/geom/MultiPolygon';
-import {default as Polygon, fromCircle, fromExtent} from 'ol/src/geom/Polygon';
-import {get as getProjection, addProjection, createSafeCoordinateTransform, addCoordinateTransforms} from 'ol/src/proj';
-import Projection from 'ol/src/proj/Projection';
-import {remove as removeTransform, get as getTransform} from 'ol/src/proj/transforms';
+import * as olExtent from 'ol/src/extent.js';
+import Feature from 'ol/src/Feature.js';
+import GeometryType from 'ol/src/geom/GeometryType.js';
+import MultiPolygon from 'ol/src/geom/MultiPolygon.js';
+import Polygon, {fromCircle, fromExtent} from 'ol/src/geom/Polygon.js';
+import {get as getProjection, addProjection, createSafeCoordinateTransform, addCoordinateTransforms} from 'ol/src/proj.js';
+import Projection from 'ol/src/proj/Projection.js';
+import {remove as removeTransform, get as getTransform} from 'ol/src/proj/transforms.js';
 
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';

@@ -1,6 +1,6 @@
 goog.declareModuleId('os.query.QueryHandler');
 
-import {listen, unlistenByKey} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 
 import UIQueryHandler from '../ui/query/queryhandler.js';
 import {getQueryManager} from './queryinstance.js';

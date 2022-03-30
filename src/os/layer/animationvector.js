@@ -1,11 +1,11 @@
 goog.declareModuleId('os.layer.AnimationVector');
 
-import {getUid} from 'ol/src';
-import {listen, unlistenByKey} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 
-import OLEventType from 'ol/src/events/EventType';
-import OLVectorLayer from 'ol/src/layer/Vector';
-import RenderEventType from 'ol/src/render/EventType';
+import OLEventType from 'ol/src/events/EventType.js';
+import OLVectorLayer from 'ol/src/layer/Vector.js';
+import RenderEventType from 'ol/src/render/EventType.js';
+import {getUid} from 'ol/src/util.js';
 
 
 /**

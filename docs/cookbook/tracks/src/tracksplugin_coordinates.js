@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.cookbook_tracks.TracksPlugin');
 
-import {getTransform} from 'ol/src/proj';
+import {getTransform} from 'ol/src/proj.js';
 
 import EventType from 'opensphere/src/os/config/eventtype.js';
 import {PROJECTION} from 'opensphere/src/os/map/map.js';

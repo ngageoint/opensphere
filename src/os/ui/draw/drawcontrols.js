@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.draw.DrawControlsUI');
 
-import {MAC} from 'ol/src/has';
+import {MAC} from 'ol/src/has.js';
 
 import Settings from '../../config/settings.js';
 import * as dispatcher from '../../dispatcher.js';

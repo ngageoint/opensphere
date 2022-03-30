@@ -5,8 +5,8 @@ goog.require('os.im.mapping.AltMapping');
 goog.require('os.math');
 goog.require('os.math.Units');
 
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
 
 describe('os.im.mapping.AltMapping', function() {
   const {default: Fields} = goog.module.get('os.Fields');

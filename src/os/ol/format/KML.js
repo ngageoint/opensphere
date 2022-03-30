@@ -1,10 +1,10 @@
 
-import {extend, includes} from 'ol/src/array';
-import {assert} from 'ol/src/asserts';
-import {asArray} from 'ol/src/color';
-import Feature from 'ol/src/Feature';
-import {transformGeometryWithOptions} from 'ol/src/format/Feature';
-import XMLFeature from 'ol/src/format/XMLFeature';
+import {extend, includes} from 'ol/src/array.js';
+import {assert} from 'ol/src/asserts.js';
+import {asArray} from 'ol/src/color.js';
+import Feature from 'ol/src/Feature.js';
+import {transformGeometryWithOptions} from 'ol/src/format/Feature.js';
+import XMLFeature from 'ol/src/format/XMLFeature.js';
 import {
   readBoolean,
   readDecimal,
@@ -13,27 +13,27 @@ import {
   writeCDATASection,
   writeDecimalTextNode,
   writeStringTextNode
-} from 'ol/src/format/xsd';
-import GeometryCollection from 'ol/src/geom/GeometryCollection';
-import GeometryLayout from 'ol/src/geom/GeometryLayout';
-import GeometryType from 'ol/src/geom/GeometryType';
-import LineString from 'ol/src/geom/LineString';
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import MultiPoint from 'ol/src/geom/MultiPoint';
-import MultiPolygon from 'ol/src/geom/MultiPolygon';
-import Point from 'ol/src/geom/Point';
-import Polygon from 'ol/src/geom/Polygon';
-import SimpleGeometry from 'ol/src/geom/SimpleGeometry';
-import ImageState from 'ol/src/ImageState';
-import {toRadians} from 'ol/src/math';
-import {get as getProjection} from 'ol/src/proj';
-import Fill from 'ol/src/style/Fill';
-import Icon from 'ol/src/style/Icon';
-import IconAnchorUnits from 'ol/src/style/IconAnchorUnits';
-import IconOrigin from 'ol/src/style/IconOrigin';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
-import Text from 'ol/src/style/Text';
+} from 'ol/src/format/xsd.js';
+import GeometryCollection from 'ol/src/geom/GeometryCollection.js';
+import GeometryLayout from 'ol/src/geom/GeometryLayout.js';
+import GeometryType from 'ol/src/geom/GeometryType.js';
+import LineString from 'ol/src/geom/LineString.js';
+import MultiLineString from 'ol/src/geom/MultiLineString.js';
+import MultiPoint from 'ol/src/geom/MultiPoint.js';
+import MultiPolygon from 'ol/src/geom/MultiPolygon.js';
+import Point from 'ol/src/geom/Point.js';
+import Polygon from 'ol/src/geom/Polygon.js';
+import SimpleGeometry from 'ol/src/geom/SimpleGeometry.js';
+import ImageState from 'ol/src/ImageState.js';
+import {toRadians} from 'ol/src/math.js';
+import {get as getProjection} from 'ol/src/proj.js';
+import Fill from 'ol/src/style/Fill.js';
+import Icon from 'ol/src/style/Icon.js';
+import IconAnchorUnits from 'ol/src/style/IconAnchorUnits.js';
+import IconOrigin from 'ol/src/style/IconOrigin.js';
+import Stroke from 'ol/src/style/Stroke.js';
+import Style from 'ol/src/style/Style.js';
+import Text from 'ol/src/style/Text.js';
 import {
   OBJECT_PROPERTY_NODE_FACTORY,
   XML_SCHEMA_INSTANCE_URI,
@@ -52,7 +52,7 @@ import {
   parseNode,
   pushParseAndPop,
   pushSerializeAndPop
-} from 'ol/src/xml';
+} from 'ol/src/xml.js';
 
 /**
  * @typedef {Object} Vec2

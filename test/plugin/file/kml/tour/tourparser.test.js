@@ -6,7 +6,7 @@ goog.require('plugin.file.kml.tour.TourControl');
 goog.require('plugin.file.kml.tour.Wait');
 goog.require('plugin.file.kml.tour.parseTour');
 
-import {parse} from 'ol/src/xml';
+import {parse} from 'ol/src/xml.js';
 
 describe('plugin.file.kml.tour.parseTour', function() {
   const {default: FlightMode} = goog.module.get('os.map.FlightMode');

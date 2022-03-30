@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ol.source.XYZ');
 
-import OLXYZ from 'ol/src/source/XYZ';
-import {expandUrl, createFromTileUrlFunctions} from 'ol/src/tileurlfunction';
+import OLXYZ from 'ol/src/source/XYZ.js';
+import {expandUrl, createFromTileUrlFunctions} from 'ol/src/tileurlfunction.js';
 
 // const Projection = goog.requireTyped('ol.proj.Projection');
 

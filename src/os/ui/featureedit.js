@@ -1,15 +1,15 @@
 goog.declareModuleId('os.ui.FeatureEditUI');
 
-import {getUid} from 'ol/src';
-import {asArray} from 'ol/src/color';
-import {listen, unlistenByKey} from 'ol/src/events';
-import {getCenter} from 'ol/src/extent';
-import Feature from 'ol/src/Feature';
-import GeometryType from 'ol/src/geom/GeometryType';
-import Point from 'ol/src/geom/Point';
-import SimpleGeometry from 'ol/src/geom/SimpleGeometry';
-import MapBrowserEventType from 'ol/src/MapBrowserEventType';
-import {transform} from 'ol/src/proj';
+import {asArray} from 'ol/src/color.js';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import {getCenter} from 'ol/src/extent.js';
+import Feature from 'ol/src/Feature.js';
+import GeometryType from 'ol/src/geom/GeometryType.js';
+import Point from 'ol/src/geom/Point.js';
+import SimpleGeometry from 'ol/src/geom/SimpleGeometry.js';
+import MapBrowserEventType from 'ol/src/MapBrowserEventType.js';
+import {transform} from 'ol/src/proj.js';
+import {getUid} from 'ol/src/util.js';
 
 import './geo/position.js';
 import './geo/ringoptions.js';

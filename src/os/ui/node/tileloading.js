@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.node.TileLoadingUI');
 
-import {listen, unlistenByKey} from 'ol/src/events';
-import TileImage from 'ol/src/source/TileImage';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import TileImage from 'ol/src/source/TileImage.js';
 
 import LayerPropertyChange from '../../layer/propertychange.js';
 import PropertyChange from '../../source/propertychange.js';

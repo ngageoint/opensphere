@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.overview.OverviewMap');
 
-import OLOverviewMap from 'ol/src/control/OverviewMap';
-import MapProperty from 'ol/src/MapProperty';
-import View from 'ol/src/View';
+import OLOverviewMap from 'ol/src/control/OverviewMap.js';
+import MapProperty from 'ol/src/MapProperty.js';
+import View from 'ol/src/View.js';
 
 import Settings from '../../os/config/settings.js';
 import * as osMap from '../../os/map/map.js';

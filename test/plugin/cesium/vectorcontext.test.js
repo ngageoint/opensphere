@@ -6,12 +6,12 @@ goog.require('plugin.cesium.primitive');
 goog.require('test.plugin.cesium.primitive');
 goog.require('test.plugin.cesium.scene');
 
-import {getUid} from 'ol/src';
-import Feature from 'ol/src/Feature';
-import LineString from 'ol/src/geom/LineString';
-import Point from 'ol/src/geom/Point';
-import {fromExtent} from 'ol/src/geom/Polygon';
-import {get} from 'ol/src/proj';
+import Feature from 'ol/src/Feature.js';
+import LineString from 'ol/src/geom/LineString.js';
+import Point from 'ol/src/geom/Point.js';
+import {fromExtent} from 'ol/src/geom/Polygon.js';
+import {get} from 'ol/src/proj.js';
+import {getUid} from 'ol/src/util.js';
 
 describe('plugin.cesium.VectorContext', () => {
   const dispose = goog.module.get('goog.dispose');

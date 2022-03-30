@@ -1,9 +1,9 @@
 goog.declareModuleId('os.ui.query.AbstractQueryReader');
 
-import Feature from 'ol/src/Feature';
-import GML3 from 'ol/src/format/GML3';
-import GeometryLayout from 'ol/src/geom/GeometryLayout';
-import Polygon from 'ol/src/geom/Polygon';
+import Feature from 'ol/src/Feature.js';
+import GML3 from 'ol/src/format/GML3.js';
+import GeometryLayout from 'ol/src/geom/GeometryLayout.js';
+import Polygon from 'ol/src/geom/Polygon.js';
 
 import {extentToCoordinates} from '../../geo/geo.js';
 import GeometryField from '../../geom/geometryfield.js';

@@ -9,9 +9,9 @@ goog.require('plugin.cesium.sync.EllipseConverter');
 goog.require('test.plugin.cesium.scene');
 goog.require('test.plugin.cesium.sync.linestring');
 
-import Feature from 'ol/src/Feature';
-import {get} from 'ol/src/proj';
-import Style from 'ol/src/style/Style';
+import Feature from 'ol/src/Feature.js';
+import {get} from 'ol/src/proj.js';
+import Style from 'ol/src/style/Style.js';
 
 describe('plugin.cesium.sync.EllipseConverter', () => {
   const {default: Ellipse} = goog.module.get('os.geom.Ellipse');

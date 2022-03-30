@@ -1,7 +1,7 @@
 goog.declareModuleId('os.source');
 
-import Feature from 'ol/src/Feature';
-import Property from 'ol/src/layer/Property';
+import Feature from 'ol/src/Feature.js';
+import Property from 'ol/src/layer/Property.js';
 
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';

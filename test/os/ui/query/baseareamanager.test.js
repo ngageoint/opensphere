@@ -2,12 +2,12 @@ goog.require('os.alert.AlertManager');
 goog.require('os.query.AreaManager');
 goog.require('os.query.BaseAreaManager');
 
-import Feature from 'ol/src/Feature';
-import LineString from 'ol/src/geom/LineString';
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import MultiPolygon from 'ol/src/geom/MultiPolygon';
-import Point from 'ol/src/geom/Point';
-import Polygon from 'ol/src/geom/Polygon';
+import Feature from 'ol/src/Feature.js';
+import LineString from 'ol/src/geom/LineString.js';
+import MultiLineString from 'ol/src/geom/MultiLineString.js';
+import MultiPolygon from 'ol/src/geom/MultiPolygon.js';
+import Point from 'ol/src/geom/Point.js';
+import Polygon from 'ol/src/geom/Polygon.js';
 
 describe('os.query.BaseAreaManager', function() {
   const {default: AlertManager} = goog.module.get('os.alert.AlertManager');

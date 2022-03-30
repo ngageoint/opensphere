@@ -1,8 +1,8 @@
 
-import {includes} from 'ol/src/array';
-import Feature from 'ol/src/Feature';
-import {transformGeometryWithOptions} from 'ol/src/format/Feature';
-import XMLFeature from 'ol/src/format/XMLFeature';
+import {includes} from 'ol/src/array.js';
+import Feature from 'ol/src/Feature.js';
+import {transformGeometryWithOptions} from 'ol/src/format/Feature.js';
+import XMLFeature from 'ol/src/format/XMLFeature.js';
 import {
   readDateTime,
   readDecimal,
@@ -12,13 +12,13 @@ import {
   writeDecimalTextNode,
   writeNonNegativeIntegerTextNode,
   writeStringTextNode
-} from 'ol/src/format/xsd';
-import GeometryLayout from 'ol/src/geom/GeometryLayout';
-import GeometryType from 'ol/src/geom/GeometryType';
-import LineString from 'ol/src/geom/LineString';
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import Point from 'ol/src/geom/Point';
-import {get as getProjection} from 'ol/src/proj';
+} from 'ol/src/format/xsd.js';
+import GeometryLayout from 'ol/src/geom/GeometryLayout.js';
+import GeometryType from 'ol/src/geom/GeometryType.js';
+import LineString from 'ol/src/geom/LineString.js';
+import MultiLineString from 'ol/src/geom/MultiLineString.js';
+import Point from 'ol/src/geom/Point.js';
+import {get as getProjection} from 'ol/src/proj.js';
 import {
   OBJECT_PROPERTY_NODE_FACTORY,
   XML_SCHEMA_INSTANCE_URI,
@@ -33,7 +33,7 @@ import {
   parseNode,
   pushParseAndPop,
   pushSerializeAndPop
-} from 'ol/src/xml';
+} from 'ol/src/xml.js';
 
 export const NAMESPACE_URIS = [
   null,

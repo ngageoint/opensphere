@@ -4,18 +4,18 @@
  */
 goog.declareModuleId('plugin.file.kml');
 
-import {normalize} from 'ol/src/color';
-import {extendCoordinate, createEmpty} from 'ol/src/extent';
-import {readBoolean, readDecimal, readString, writeStringTextNode} from 'ol/src/format/xsd';
-import {inflateCoordinates} from 'ol/src/geom/flat/inflate';
-import GeometryCollection from 'ol/src/geom/GeometryCollection';
-import LineString from 'ol/src/geom/LineString';
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import {toRadians} from 'ol/src/math';
-import Icon from 'ol/src/style/Icon';
-import IconAnchorUnits from 'ol/src/style/IconAnchorUnits';
-import IconOrigin from 'ol/src/style/IconOrigin';
-import Style from 'ol/src/style/Style';
+import {normalize} from 'ol/src/color.js';
+import {extendCoordinate, createEmpty} from 'ol/src/extent.js';
+import {readBoolean, readDecimal, readString, writeStringTextNode} from 'ol/src/format/xsd.js';
+import {inflateCoordinates} from 'ol/src/geom/flat/inflate.js';
+import GeometryCollection from 'ol/src/geom/GeometryCollection.js';
+import LineString from 'ol/src/geom/LineString.js';
+import MultiLineString from 'ol/src/geom/MultiLineString.js';
+import {toRadians} from 'ol/src/math.js';
+import Icon from 'ol/src/style/Icon.js';
+import IconAnchorUnits from 'ol/src/style/IconAnchorUnits.js';
+import IconOrigin from 'ol/src/style/IconOrigin.js';
+import Style from 'ol/src/style/Style.js';
 import {
   OBJECT_PROPERTY_NODE_FACTORY,
   createElementNS,
@@ -29,7 +29,7 @@ import {
   parseNode,
   pushParseAndPop,
   pushSerializeAndPop
-} from 'ol/src/xml';
+} from 'ol/src/xml.js';
 import * as annotation from '../../../os/annotation/annotation.js';
 import RecordField from '../../../os/data/recordfield.js';
 import Fields from '../../../os/fields/fields.js';
@@ -37,7 +37,7 @@ import * as geo from '../../../os/geo/geo.js';
 import CrossOrigin from '../../../os/net/crossorigin.js';
 import * as net from '../../../os/net/net.js';
 import * as osObject from '../../../os/object/object.js';
-import * as KML from '../../../os/ol/format/KML';
+import * as KML from '../../../os/ol/format/KML.js';
 import * as osStyle from '../../../os/style/style.js';
 import StyleField from '../../../os/style/stylefield.js';
 import StyleManager from '../../../os/style/stylemanager_shim.js';

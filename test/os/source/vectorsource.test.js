@@ -27,9 +27,9 @@ goog.require('os.ui.formatter.DescriptionFormatter');
 goog.require('os.ui.formatter.PropertiesFormatter');
 goog.require('plugin.file.geojson.GeoJSONParser');
 
-import {listen, unlistenByKey} from 'ol/src/events';
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
 
 describe('os.source.Vector', function() {
   const googArray = goog.module.get('goog.array');

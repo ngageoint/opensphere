@@ -5,8 +5,8 @@
  */
 goog.declareModuleId('os.interpolate');
 
-import GeometryType from 'ol/src/geom/GeometryType';
-import {get, getTransform} from 'ol/src/proj';
+import GeometryType from 'ol/src/geom/GeometryType.js';
+import {get, getTransform} from 'ol/src/proj.js';
 
 import * as geo2 from './geo/geo2.js';
 import Method from './interpolatemethod.js';

@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.ogc.OGCLayerDescriptor');
 
-import {intersects} from 'ol/src/extent';
-import {DEFAULT_WMS_VERSION} from 'ol/src/source/common';
+import {intersects} from 'ol/src/extent.js';
+import {DEFAULT_WMS_VERSION} from 'ol/src/source/common.js';
 import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
 import AlertManager from '../../os/alert/alertmanager.js';
 import * as osColor from '../../os/color.js';

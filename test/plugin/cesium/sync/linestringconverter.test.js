@@ -11,12 +11,12 @@ goog.require('plugin.cesium.sync.LineStringConverter');
 goog.require('test.plugin.cesium.scene');
 goog.require('test.plugin.cesium.sync.linestring');
 
-import Feature from 'ol/src/Feature';
-import LineString from 'ol/src/geom/LineString';
-import {get} from 'ol/src/proj';
-import Fill from 'ol/src/style/Fill';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
+import Feature from 'ol/src/Feature.js';
+import LineString from 'ol/src/geom/LineString.js';
+import {get} from 'ol/src/proj.js';
+import Fill from 'ol/src/style/Fill.js';
+import Stroke from 'ol/src/style/Stroke.js';
+import Style from 'ol/src/style/Style.js';
 
 describe('plugin.cesium.sync.LineStringConverter', () => {
   const {default: RecordField} = goog.module.get('os.data.RecordField');

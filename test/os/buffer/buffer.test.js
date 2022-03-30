@@ -1,12 +1,12 @@
-import LineString from 'ol/src/geom/LineString';
-import Point from 'ol/src/geom/Point';
-import Polygon from 'ol/src/geom/Polygon';
-import {get} from 'ol/src/proj';
+import LineString from 'ol/src/geom/LineString.js';
+import Point from 'ol/src/geom/Point.js';
+import Polygon from 'ol/src/geom/Polygon.js';
+import {get} from 'ol/src/proj.js';
 
-import {vincentyDistance} from '../../../src/os/geo/geo';
-import {buffer} from '../../../src/os/geo/jsts';
-import {setProjection, PROJECTION} from '../../../src/os/map/map';
-import {EPSG3857} from '../../../src/os/proj/proj';
+import {vincentyDistance} from '../../../src/os/geo/geo.js';
+import {buffer} from '../../../src/os/geo/jsts.js';
+import {setProjection, PROJECTION} from '../../../src/os/map/map.js';
+import {EPSG3857} from '../../../src/os/proj/proj.js';
 
 describe('os.buffer', function() {
   var checkPercentDiff = function(input, dist, geom, opt_all) {

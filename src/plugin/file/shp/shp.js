@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.file.shp');
 
-import GeometryLayout from 'ol/src/geom/GeometryLayout';
-import GeometryType from 'ol/src/geom/GeometryType';
+import GeometryLayout from 'ol/src/geom/GeometryLayout.js';
+import GeometryType from 'ol/src/geom/GeometryType.js';
 
 /**
  * SHP shape types.

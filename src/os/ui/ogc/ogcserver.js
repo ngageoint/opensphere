@@ -1,8 +1,8 @@
 goog.declareModuleId('os.ui.ogc.OGCServer');
 
-import WMSCapabilities from 'ol/src/format/WMSCapabilities';
-import WMTSCapabilities from 'ol/src/format/WMTSCapabilities';
-import {readHref} from 'ol/src/format/xlink';
+import WMSCapabilities from 'ol/src/format/WMSCapabilities.js';
+import WMTSCapabilities from 'ol/src/format/WMTSCapabilities.js';
+import {readHref} from 'ol/src/format/xlink.js';
 
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';

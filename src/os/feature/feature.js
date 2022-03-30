@@ -1,18 +1,18 @@
 goog.declareModuleId('os.feature');
 
-import * as olExtent from 'ol/src/extent';
-import Feature from 'ol/src/Feature';
-import GeometryCollection from 'ol/src/geom/GeometryCollection';
-import GeometryLayout from 'ol/src/geom/GeometryLayout';
-import LineString from 'ol/src/geom/LineString';
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import MultiPolygon from 'ol/src/geom/MultiPolygon';
-import Point from 'ol/src/geom/Point';
-import Polygon from 'ol/src/geom/Polygon';
-import {toLonLat} from 'ol/src/proj';
-import {VectorSourceEvent} from 'ol/src/source/Vector';
-import VectorEventType from 'ol/src/source/VectorEventType';
-import {getUid} from 'ol/src/util';
+import * as olExtent from 'ol/src/extent.js';
+import Feature from 'ol/src/Feature.js';
+import GeometryCollection from 'ol/src/geom/GeometryCollection.js';
+import GeometryLayout from 'ol/src/geom/GeometryLayout.js';
+import LineString from 'ol/src/geom/LineString.js';
+import MultiLineString from 'ol/src/geom/MultiLineString.js';
+import MultiPolygon from 'ol/src/geom/MultiPolygon.js';
+import Point from 'ol/src/geom/Point.js';
+import Polygon from 'ol/src/geom/Polygon.js';
+import {toLonLat} from 'ol/src/proj.js';
+import {VectorSourceEvent} from 'ol/src/source/Vector.js';
+import VectorEventType from 'ol/src/source/VectorEventType.js';
+import {getUid} from 'ol/src/util.js';
 
 import * as osBearing from '../bearing/bearing.js';
 import BearingType from '../bearing/bearingtype.js';

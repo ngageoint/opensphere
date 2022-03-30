@@ -2,7 +2,7 @@ goog.require('os.map');
 goog.require('os.proj');
 goog.require('plugin.cesium.sync.getTransformFunction');
 
-import {get} from 'ol/src/proj';
+import {get} from 'ol/src/proj.js';
 
 describe('plugin.cesium.sync.getTransformFunction', () => {
   const osMap = goog.module.get('os.map');

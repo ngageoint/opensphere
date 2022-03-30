@@ -1,8 +1,8 @@
 goog.declareModuleId('os.interaction.DrawLine');
 
-import {squaredDistance} from 'ol/src/coordinate';
-import LineString from 'ol/src/geom/LineString';
-import MapBrowserEventType from 'ol/src/MapBrowserEventType';
+import {squaredDistance} from 'ol/src/coordinate.js';
+import LineString from 'ol/src/geom/LineString.js';
+import MapBrowserEventType from 'ol/src/MapBrowserEventType.js';
 
 import {normalizeGeometryCoordinates} from '../geo/geo2.js';
 import DrawPolygon from './drawpolygoninteraction.js';

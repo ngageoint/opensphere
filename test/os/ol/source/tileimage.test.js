@@ -1,7 +1,7 @@
 goog.require('os.net.ProxyHandler');
 goog.require('os.ol.source.tileimage');
 
-import TileImage from 'ol/src/source/TileImage';
+import TileImage from 'ol/src/source/TileImage.js';
 
 describe('os.ol.source.tileimage', function() {
   const {default: ProxyHandler} = goog.module.get('os.net.ProxyHandler');

@@ -5,8 +5,8 @@ goog.require('os.style.ImageReader');
 goog.require('os.style.StrokeReader');
 goog.require('os.style.StyleReader');
 
-import Circle from 'ol/src/style/Circle';
-import Style from 'ol/src/style/Style';
+import Circle from 'ol/src/style/Circle.js';
+import Style from 'ol/src/style/Style.js';
 
 describe('os.style.StyleReader', function() {
   const {default: CircleReader} = goog.module.get('os.style.CircleReader');

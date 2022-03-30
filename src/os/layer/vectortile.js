@@ -1,12 +1,12 @@
 goog.declareModuleId('os.layer.VectorTile');
 
-import {listen} from 'ol/src/events';
-import {createEmpty, isEmpty} from 'ol/src/extent';
-import Property from 'ol/src/layer/Property';
-import VectorTileLayer from 'ol/src/layer/VectorTile';
-import VectorTileLayerRenderer from 'ol/src/renderer/canvas/VectorTileLayer';
-import UrlTileSource from 'ol/src/source/UrlTile';
-import {DEFAULT_MAX_ZOOM} from 'ol/src/tilegrid/common';
+import {listen} from 'ol/src/events.js';
+import {createEmpty, isEmpty} from 'ol/src/extent.js';
+import Property from 'ol/src/layer/Property.js';
+import VectorTileLayer from 'ol/src/layer/VectorTile.js';
+import VectorTileLayerRenderer from 'ol/src/renderer/canvas/VectorTileLayer.js';
+import UrlTileSource from 'ol/src/source/UrlTile.js';
+import {DEFAULT_MAX_ZOOM} from 'ol/src/tilegrid/common.js';
 
 import '../ui/layer/defaultlayerui.js';
 import ActionEventType from '../action/eventtype.js';

@@ -1,6 +1,6 @@
 goog.declareModuleId('os.feature.measure');
 
-import LineString from 'ol/src/geom/LineString';
+import LineString from 'ol/src/geom/LineString.js';
 
 import {modifyBearing, getFormattedBearing} from '../bearing/bearing.js';
 import {ORIGINAL_GEOM_FIELD} from '../interpolate.js';

@@ -1,7 +1,7 @@
 goog.declareModuleId('os.data.DrawingLayerNode');
 
-import {listen, unlistenByKey} from 'ol/src/events';
-import VectorEventType from 'ol/src/source/VectorEventType';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import VectorEventType from 'ol/src/source/VectorEventType.js';
 
 import {registerClass} from '../classregistry.js';
 import PropertyChangeEvent from '../events/propertychangeevent.js';

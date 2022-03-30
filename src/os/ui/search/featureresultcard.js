@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.search.FeatureResultCardCtrl');
 
-import {listen, unlistenByKey} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 
 import EventType from '../../action/eventtype.js';
 import PropertyChangeEvent from '../../events/propertychangeevent.js';

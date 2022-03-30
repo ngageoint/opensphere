@@ -1,9 +1,9 @@
 goog.require('os.mixin');
 
-import EventTarget from 'ol/src/events/Target';
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
-import OLObject from 'ol/src/Object';
+import EventTarget from 'ol/src/events/Target.js';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
+import OLObject from 'ol/src/Object.js';
 
 describe('os.mixin', function() {
   it('should allow disabling events', function() {

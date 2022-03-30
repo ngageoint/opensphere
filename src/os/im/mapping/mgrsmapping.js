@@ -1,6 +1,6 @@
 goog.declareModuleId('os.im.mapping.MGRSMapping');
 
-import Point from 'ol/src/geom/Point';
+import Point from 'ol/src/geom/Point.js';
 
 import {MGRS_REGEXP} from '../../geo/geo.js';
 import BaseMGRSMapping from './location/basemgrsmapping.js';

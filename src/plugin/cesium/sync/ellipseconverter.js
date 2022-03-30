@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.cesium.sync.EllipseConverter');
 
-import LineString from 'ol/src/geom/LineString';
+import LineString from 'ol/src/geom/LineString.js';
 
 import implementz from '../../../os/implements.js';
 import ILayer from '../../../os/layer/ilayer.js';

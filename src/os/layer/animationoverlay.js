@@ -1,6 +1,6 @@
 goog.declareModuleId('os.layer.AnimationOverlay');
 
-import OLVectorSource from 'ol/src/source/Vector';
+import OLVectorSource from 'ol/src/source/Vector.js';
 
 import {getMapContainer} from '../map/mapinstance.js';
 import AnimationVector from './animationvector.js';

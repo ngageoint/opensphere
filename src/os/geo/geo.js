@@ -1,12 +1,12 @@
 goog.declareModuleId('os.geo');
 
-import Feature from 'ol/src/Feature';
-import Geometry from 'ol/src/geom/Geometry';
-import GeometryCollection from 'ol/src/geom/GeometryCollection';
-import GeometryType from 'ol/src/geom/GeometryType';
-import LineString from 'ol/src/geom/LineString';
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import Point from 'ol/src/geom/Point';
+import Feature from 'ol/src/Feature.js';
+import Geometry from 'ol/src/geom/Geometry.js';
+import GeometryCollection from 'ol/src/geom/GeometryCollection.js';
+import GeometryType from 'ol/src/geom/GeometryType.js';
+import LineString from 'ol/src/geom/LineString.js';
+import MultiLineString from 'ol/src/geom/MultiLineString.js';
+import Point from 'ol/src/geom/Point.js';
 
 import '../mixin/geometrymixin.js';
 import {arrayCopy} from '../array/array.js';

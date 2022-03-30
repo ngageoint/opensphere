@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLLayerNode');
 
-import {listen, unlistenByKey} from 'ol/src/events';
-import {extend} from 'ol/src/extent';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import {extend} from 'ol/src/extent.js';
 import LayerNode from '../../../../os/data/layernode.js';
 import PropertyChangeEvent from '../../../../os/events/propertychangeevent.js';
 import PropertyChange from '../../../../os/source/propertychange.js';

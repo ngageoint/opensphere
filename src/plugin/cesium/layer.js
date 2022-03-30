@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.cesium.Layer');
 
-import OLLayer from 'ol/src/layer/Layer';
+import OLLayer from 'ol/src/layer/Layer.js';
 import ActionEventType from '../../os/action/eventtype.js';
 import * as osColor from '../../os/color.js';
 import * as dispatcher from '../../os/dispatcher.js';

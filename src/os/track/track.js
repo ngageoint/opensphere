@@ -1,14 +1,14 @@
 goog.declareModuleId('os.track');
 
-import Feature from 'ol/src/Feature';
-import GeometryCollection from 'ol/src/geom/GeometryCollection';
-import GeometryLayout from 'ol/src/geom/GeometryLayout';
-import GeometryType from 'ol/src/geom/GeometryType';
-import LineString from 'ol/src/geom/LineString';
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import MultiPoint from 'ol/src/geom/MultiPoint';
-import Point from 'ol/src/geom/Point';
-import {assign} from 'ol/src/obj';
+import Feature from 'ol/src/Feature.js';
+import GeometryCollection from 'ol/src/geom/GeometryCollection.js';
+import GeometryLayout from 'ol/src/geom/GeometryLayout.js';
+import GeometryType from 'ol/src/geom/GeometryType.js';
+import LineString from 'ol/src/geom/LineString.js';
+import MultiLineString from 'ol/src/geom/MultiLineString.js';
+import MultiPoint from 'ol/src/geom/MultiPoint.js';
+import Point from 'ol/src/geom/Point.js';
+import {assign} from 'ol/src/obj.js';
 
 import * as osArray from '../array/array.js';
 import RecordField from '../data/recordfield.js';

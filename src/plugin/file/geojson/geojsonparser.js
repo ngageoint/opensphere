@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.file.geojson.GeoJSONParser');
 
-import {getUid} from 'ol/src';
-import GeoJSON from 'ol/src/format/GeoJSON';
+import GeoJSON from 'ol/src/format/GeoJSON.js';
+import {getUid} from 'ol/src/util.js';
 import ColumnDefinition from '../../../os/data/columndefinition.js';
 import * as osFeature from '../../../os/feature/feature.js';
 import * as text from '../../../os/file/mime/text.js';

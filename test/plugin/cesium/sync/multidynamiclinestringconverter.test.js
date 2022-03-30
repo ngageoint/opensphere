@@ -6,10 +6,10 @@ goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.MultiDynamicLineStringConverter');
 goog.require('test.plugin.cesium.scene');
 
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import {get} from 'ol/src/proj';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
+import MultiLineString from 'ol/src/geom/MultiLineString.js';
+import {get} from 'ol/src/proj.js';
+import Stroke from 'ol/src/style/Stroke.js';
+import Style from 'ol/src/style/Style.js';
 
 describe('plugin.cesium.sync.MultiDynamicLineStringConverter', () => {
   const {default: DynamicFeature} = goog.module.get('os.feature.DynamicFeature');

@@ -10,8 +10,8 @@ import CrossOrigin from '../../../os/net/crossorigin.js';
 import {getCrossOrigin} from '../../../os/net/net.js';
 import Request from '../../../os/net/request.js';
 import {prune} from '../../../os/object/object.js';
-import {load as loadOLCesiumMixin} from './olcesiummixin';
-import {load as loadRenderLoopMixin} from './renderloopmixin';
+import {load as loadOLCesiumMixin} from './olcesiummixin.js';
+import {load as loadRenderLoopMixin} from './renderloopmixin.js';
 
 
 /**

@@ -1,7 +1,7 @@
 goog.declareModuleId('os.control.Attribution');
 
-import {equals} from 'ol/src/array';
-import OLAttribution from 'ol/src/control/Attribution';
+import {equals} from 'ol/src/array.js';
+import OLAttribution from 'ol/src/control/Attribution.js';
 
 const dom = goog.require('goog.dom');
 const SafeHtml = goog.require('goog.html.SafeHtml');

@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.cookbook_tracks.TracksPlugin');
 
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
-import {getTransform} from 'ol/src/proj';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
+import {getTransform} from 'ol/src/proj.js';
 
 import EventType from 'opensphere/src/os/config/eventtype.js';
 import RecordField from 'opensphere/src/os/data/recordfield.js';

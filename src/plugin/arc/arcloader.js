@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.arc.ArcLoader');
 
-import {remove} from 'ol/src/array';
+import {remove} from 'ol/src/array.js';
 import Request from '../../os/net/request.js';
 import * as arc from './arc.js';
 import ArcServer from './arcserver.js';

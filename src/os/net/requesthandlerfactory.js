@@ -1,6 +1,6 @@
 goog.declareModuleId('os.net.RequestHandlerFactory');
 
-import {remove} from 'ol/src/array';
+import {remove} from 'ol/src/array.js';
 
 const {defaultCompare} = goog.require('goog.array');
 

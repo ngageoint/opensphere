@@ -10,8 +10,8 @@ goog.require('os.time.TimeRange');
 goog.require('os.track');
 goog.require('os.track.TrackField');
 
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
 
 describe('os.track', function() {
   const object = goog.module.get('goog.object');

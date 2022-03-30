@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.ol.interaction');
 
-import EventType from 'ol/src/events/EventType';
+import EventType from 'ol/src/events/EventType.js';
 
 import {isGeometryPolygonal} from '../../../geo/geo.js';
 

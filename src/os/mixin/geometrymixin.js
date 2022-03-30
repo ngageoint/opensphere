@@ -1,18 +1,18 @@
 goog.declareModuleId('os.mixin.geometry');
 
-import {returnOrUpdate, createEmpty, createOrUpdateEmpty, getWidth, extend} from 'ol/src/extent';
-import Circle from 'ol/src/geom/Circle';
-import Geometry from 'ol/src/geom/Geometry';
-import GeometryCollection from 'ol/src/geom/GeometryCollection';
-import LinearRing from 'ol/src/geom/LinearRing';
-import LineString from 'ol/src/geom/LineString';
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import MultiPoint from 'ol/src/geom/MultiPoint';
-import MultiPolygon from 'ol/src/geom/MultiPolygon';
-import Point from 'ol/src/geom/Point';
-import Polygon from 'ol/src/geom/Polygon';
-import SimpleGeometry from 'ol/src/geom/SimpleGeometry';
-import {get, equivalent} from 'ol/src/proj';
+import {returnOrUpdate, createEmpty, createOrUpdateEmpty, getWidth, extend} from 'ol/src/extent.js';
+import Circle from 'ol/src/geom/Circle.js';
+import Geometry from 'ol/src/geom/Geometry.js';
+import GeometryCollection from 'ol/src/geom/GeometryCollection.js';
+import LinearRing from 'ol/src/geom/LinearRing.js';
+import LineString from 'ol/src/geom/LineString.js';
+import MultiLineString from 'ol/src/geom/MultiLineString.js';
+import MultiPoint from 'ol/src/geom/MultiPoint.js';
+import MultiPolygon from 'ol/src/geom/MultiPolygon.js';
+import Point from 'ol/src/geom/Point.js';
+import Polygon from 'ol/src/geom/Polygon.js';
+import SimpleGeometry from 'ol/src/geom/SimpleGeometry.js';
+import {get, equivalent} from 'ol/src/proj.js';
 
 import GeometryField from '../geom/geometryfield.js';
 import * as osMap from '../map/map.js';

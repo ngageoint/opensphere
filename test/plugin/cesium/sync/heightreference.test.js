@@ -5,11 +5,11 @@ goog.require('os.webgl');
 goog.require('os.webgl.AltitudeMode');
 goog.require('plugin.cesium.sync.HeightReference');
 
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
-import OLVectorLayer from 'ol/src/layer/Vector';
-import OLVectorSource from 'ol/src/source/Vector';
-import * as primitiveUtils from '../primitive.mock';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
+import OLVectorLayer from 'ol/src/layer/Vector.js';
+import OLVectorSource from 'ol/src/source/Vector.js';
+import * as primitiveUtils from '../primitive.mock.js';
 
 describe('plugin.cesium.sync.HeightReference', () => {
   const {default: RecordField} = goog.module.get('os.data.RecordField');

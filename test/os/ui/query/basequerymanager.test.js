@@ -6,9 +6,9 @@ goog.require('os.query.BaseQueryManager');
 goog.require('os.query.QueryManager');
 goog.require('os.ui.query.MockHandler');
 
-import Feature from 'ol/src/Feature';
-import GeometryLayout from 'ol/src/geom/GeometryLayout';
-import Polygon from 'ol/src/geom/Polygon';
+import Feature from 'ol/src/Feature.js';
+import GeometryLayout from 'ol/src/geom/GeometryLayout.js';
+import Polygon from 'ol/src/geom/Polygon.js';
 
 describe('os.query.BaseQueryManager', function() {
   const GoogEventType = goog.module.get('goog.events.EventType');

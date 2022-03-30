@@ -1,6 +1,6 @@
 goog.declareModuleId('os.data.LayerNode');
 
-import {listen, unlistenByKey} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 
 import {instanceOf, registerClass} from '../classregistry.js';
 import LayerEventType from '../events/layereventtype.js';

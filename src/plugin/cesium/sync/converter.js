@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.cesium.sync.converter');
 
-import GeometryType from 'ol/src/geom/GeometryType';
+import GeometryType from 'ol/src/geom/GeometryType.js';
 
 import DynamicFeature from '../../../os/feature/dynamicfeature.js';
 import Ellipse from '../../../os/geom/ellipse.js';

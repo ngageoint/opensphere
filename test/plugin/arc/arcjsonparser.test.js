@@ -1,10 +1,10 @@
 goog.require('plugin.arc.ArcJSONParser');
 
-import LineString from 'ol/src/geom/LineString';
-import MultiPoint from 'ol/src/geom/MultiPoint';
-import MultiPolygon from 'ol/src/geom/MultiPolygon';
-import Point from 'ol/src/geom/Point';
-import Polygon from 'ol/src/geom/Polygon';
+import LineString from 'ol/src/geom/LineString.js';
+import MultiPoint from 'ol/src/geom/MultiPoint.js';
+import MultiPolygon from 'ol/src/geom/MultiPolygon.js';
+import Point from 'ol/src/geom/Point.js';
+import Polygon from 'ol/src/geom/Polygon.js';
 
 describe('plugin.arc.ArcJSONParser', function() {
   const {

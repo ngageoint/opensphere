@@ -1,8 +1,8 @@
 goog.declareModuleId('os.interaction');
 
-import Feature from 'ol/src/Feature';
-import OLVectorLayer from 'ol/src/layer/Vector';
-import VectorTile from 'ol/src/layer/VectorTile';
+import Feature from 'ol/src/Feature.js';
+import OLVectorLayer from 'ol/src/layer/Vector.js';
+import VectorTile from 'ol/src/layer/VectorTile.js';
 
 import RecordField from '../data/recordfield.js';
 import {getLayer} from '../feature/feature.js';

@@ -1,9 +1,9 @@
 goog.declareModuleId('plugin.file.kml.KMLFeatureParser');
 
-import {isDocument, parse} from 'ol/src/xml';
+import {isDocument, parse} from 'ol/src/xml.js';
 import * as text from '../../../os/file/mime/text.js';
 import * as osMap from '../../../os/map/map.js';
-import KML from '../../../os/ol/format/KML';
+import KML from '../../../os/ol/format/KML.js';
 
 
 /**

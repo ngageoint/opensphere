@@ -1,6 +1,6 @@
 goog.declareModuleId('os.layer.config.AbstractDataSourceLayerConfig');
 
-import VectorRenderType from 'ol/src/layer/VectorTileRenderType';
+import VectorRenderType from 'ol/src/layer/VectorTileRenderType.js';
 
 import DataManager from '../../data/datamanager.js';
 import FeatureImporter from '../../im/featureimporter.js';

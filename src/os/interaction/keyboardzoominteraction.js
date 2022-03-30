@@ -1,9 +1,9 @@
 goog.declareModuleId('os.interaction.KeyboardZoom');
 
-import {shiftKeyOnly} from 'ol/src/events/condition';
-import EventType from 'ol/src/events/EventType';
-import {zoomByDelta} from 'ol/src/interaction/Interaction';
-import OLKeyboardZoom from 'ol/src/interaction/KeyboardZoom';
+import {shiftKeyOnly} from 'ol/src/events/condition.js';
+import EventType from 'ol/src/events/EventType.js';
+import {zoomByDelta} from 'ol/src/interaction/Interaction.js';
+import OLKeyboardZoom from 'ol/src/interaction/KeyboardZoom.js';
 
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';

@@ -4,10 +4,10 @@ goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.convert');
 goog.require('test.plugin.cesium.scene');
 
-import Feature from 'ol/src/Feature';
-import {fromExtent} from 'ol/src/geom/Polygon';
-import {get} from 'ol/src/proj';
-import Style from 'ol/src/style/Style';
+import Feature from 'ol/src/Feature.js';
+import {fromExtent} from 'ol/src/geom/Polygon.js';
+import {get} from 'ol/src/proj.js';
+import Style from 'ol/src/style/Style.js';
 
 describe('plugin.cesium.sync.convert', () => {
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');

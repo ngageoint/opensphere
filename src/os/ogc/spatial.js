@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ogc.spatial');
 
-import GML from 'ol/src/format/GML';
-import GeometryType from 'ol/src/geom/GeometryType';
-import {pushParseAndPop} from 'ol/src/xml';
+import GML from 'ol/src/format/GML.js';
+import GeometryType from 'ol/src/geom/GeometryType.js';
+import {pushParseAndPop} from 'ol/src/xml.js';
 
 import {createPolarPolygon, isPolarPolygon} from '../geo/geo.js';
 import {interpolateGeom} from '../interpolate.js';
-import {PLACEMARK_PARSERS} from '../ol/format/KML';
+import {PLACEMARK_PARSERS} from '../ol/format/KML.js';
 import Format from './format.js';
 
 // const LineString = goog.requireTyped('ol.geom.LineString');

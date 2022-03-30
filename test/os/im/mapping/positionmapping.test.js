@@ -1,6 +1,6 @@
 goog.require('os.im.mapping.PositionMapping');
 
-import Feature from 'ol/src/Feature';
+import Feature from 'ol/src/Feature.js';
 
 describe('os.im.mapping.PositionMapping', function() {
   const {default: PositionMapping} = goog.module.get('os.im.mapping.PositionMapping');

@@ -1,22 +1,21 @@
-import Feature from 'ol/src/Feature';
-import GeometryCollection from 'ol/src/geom/GeometryCollection';
-import Point from 'ol/src/geom/Point';
-import Polygon from 'ol/src/geom/Polygon';
+import Feature from 'ol/src/Feature.js';
+import GeometryCollection from 'ol/src/geom/GeometryCollection.js';
+import Point from 'ol/src/geom/Point.js';
+import Polygon from 'ol/src/geom/Polygon.js';
 
-import DataManager from '../../../src/os/data/datamanager';
-import RecordField from '../../../src/os/data/recordfield';
-import {autoMap, getSemiMajor, getSemiMinor, createEllipse, createRings, filterFnGetter, VALUES_FIELD,
-  removeFeatures, getTitle, getColor, getStrokeColor, getFillColor, hasPolygon} from '../../../src/os/feature/feature';
-import Fields from '../../../src/os/fields/fields';
-import {DEFAULT_SEMI_MAJ_COL_NAME, DEFAULT_SEMI_MIN_COL_NAME} from '../../../src/os/fields/index';
-import {convertEllipseValue} from '../../../src/os/geo/geo';
-import MappingManager from '../../../src/os/im/mapping/mappingmanager';
-import {convertUnits} from '../../../src/os/math/math';
-import Units from '../../../src/os/math/units';
-import VectorSource from '../../../src/os/source/vectorsource';
-import {DEFAULT_LAYER_COLOR, setFeatureStyle, DEFAULT_VECTOR_CONFIG, DEFAULT_FILL_COLOR} from '../../../src/os/style/style';
-import StyleType from '../../../src/os/style/styletype';
-import {getMockMappingManager} from '../os.mock';
+import DataManager from '../../../src/os/data/datamanager.js';
+import RecordField from '../../../src/os/data/recordfield.js';
+import {autoMap, getSemiMajor, getSemiMinor, createEllipse, createRings, filterFnGetter, VALUES_FIELD, removeFeatures, getTitle, getColor, getStrokeColor, getFillColor, hasPolygon} from '../../../src/os/feature/feature.js';
+import Fields from '../../../src/os/fields/fields.js';
+import {DEFAULT_SEMI_MAJ_COL_NAME, DEFAULT_SEMI_MIN_COL_NAME} from '../../../src/os/fields/index.js';
+import {convertEllipseValue} from '../../../src/os/geo/geo.js';
+import MappingManager from '../../../src/os/im/mapping/mappingmanager.js';
+import {convertUnits} from '../../../src/os/math/math.js';
+import Units from '../../../src/os/math/units.js';
+import VectorSource from '../../../src/os/source/vectorsource.js';
+import {DEFAULT_LAYER_COLOR, setFeatureStyle, DEFAULT_VECTOR_CONFIG, DEFAULT_FILL_COLOR} from '../../../src/os/style/style.js';
+import StyleType from '../../../src/os/style/styletype.js';
+import {getMockMappingManager} from '../os.mock.js';
 
 describe('os.feature', function() {
   var testCoords = function(coordinates, opt_expected) {

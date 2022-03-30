@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.cesium.interaction.dragcircle');
 
-import {toLonLat} from 'ol/src/proj';
+import {toLonLat} from 'ol/src/proj.js';
 
 import * as Dispatcher from '../../../os/dispatcher.js';
 import * as osInterpolate from '../../../os/interpolate.js';

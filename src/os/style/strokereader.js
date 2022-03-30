@@ -1,7 +1,7 @@
 goog.declareModuleId('os.style.StrokeReader');
 
-import {asString} from 'ol/src/color';
-import Stroke from 'ol/src/style/Stroke';
+import {asString} from 'ol/src/color.js';
+import Stroke from 'ol/src/style/Stroke.js';
 
 import AbstractReader from './abstractreader.js';
 import {DEFAULT_LAYER_COLOR, DEFAULT_STROKE_WIDTH} from './style.js';

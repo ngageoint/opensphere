@@ -1,7 +1,7 @@
 goog.require('os.im.FeatureImporter');
 goog.require('os.ui');
 
-import Feature from 'ol/src/Feature';
+import Feature from 'ol/src/Feature.js';
 
 describe('os.im.FeatureImporter', function() {
   const {default: FeatureImporter} = goog.module.get('os.im.FeatureImporter');

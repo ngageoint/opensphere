@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.search.place.CoordinateResultCardUI');
 
-import {toLonLat} from 'ol/src/proj';
+import {toLonLat} from 'ol/src/proj.js';
 
 import * as osMap from '../../../map/map.js';
 import {ROOT} from '../../../os.js';

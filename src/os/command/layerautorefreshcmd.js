@@ -1,6 +1,6 @@
 goog.declareModuleId('os.command.LayerAutoRefresh');
 
-import UrlTile from 'ol/src/source/UrlTile';
+import UrlTile from 'ol/src/source/UrlTile.js';
 
 import {getMapContainer} from '../map/mapinstance.js';
 import Metrics from '../metrics/metrics.js';

@@ -7,8 +7,8 @@ goog.require('os.layer.config.MockVectorLayerConfig');
 goog.require('os.layer.folder');
 goog.require('os.mock');
 
-import MockTileLayerConfig from '../layer/config/tilelayerconfig.mock';
-import MockVectorLayerConfig from '../layer/config/vectorlayerconfig.mock';
+import MockTileLayerConfig from './config/tilelayerconfig.mock.js';
+import MockVectorLayerConfig from './config/vectorlayerconfig.mock.js';
 
 describe('os.layer.FolderManager', () => {
   const {default: FolderManager} = goog.module.get('os.layer.FolderManager');

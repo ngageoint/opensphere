@@ -2,7 +2,7 @@ goog.declareModuleId('plugin.im.action.feature.ui.LabelConfigUI');
 
 import '../../../os/ui/layer/labelcontrols.js';
 import '../../../os/ui/popover/popover.js';
-import {remove, find} from 'ol/src/array';
+import {remove, find} from 'ol/src/array.js';
 import * as osColor from '../../../os/color.js';
 import ColumnDefinition from '../../../os/data/columndefinition.js';
 import DataManager from '../../../os/data/datamanager.js';

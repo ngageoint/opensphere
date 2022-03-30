@@ -1,9 +1,9 @@
 goog.require('goog.object');
 goog.require('plugin.file.shp.SHPExporter');
 
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
-import Polygon from 'ol/src/geom/Polygon';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
+import Polygon from 'ol/src/geom/Polygon.js';
 
 describe('plugin.file.shp.SHPExporter', function() {
   const googObject = goog.module.get('goog.object');

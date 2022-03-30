@@ -18,12 +18,12 @@ import './tileimagemixin.js';
 import './urltilemixin.js';
 import './zoomscalemixin.js';
 
-import {getUid} from 'ol/src';
-import {normalize} from 'ol/src/color';
-import LayerGroup from 'ol/src/layer/Group';
-import {clamp} from 'ol/src/math';
-import VectorLayer from 'ol/src/renderer/canvas/VectorLayer';
-import MapRenderer from 'ol/src/renderer/Map';
+import {normalize} from 'ol/src/color.js';
+import LayerGroup from 'ol/src/layer/Group.js';
+import {clamp} from 'ol/src/math.js';
+import VectorLayer from 'ol/src/renderer/canvas/VectorLayer.js';
+import MapRenderer from 'ol/src/renderer/Map.js';
+import {getUid} from 'ol/src/util.js';
 
 import registerClass from '../registerclass.js';
 
