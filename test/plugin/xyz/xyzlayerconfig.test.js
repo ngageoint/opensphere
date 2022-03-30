@@ -44,7 +44,7 @@ describe('plugin.xyz.XYZLayerConfig', function() {
 
     var tileFn = layer.getSource().getTileUrlFunction();
 
-    var tileCoord = [3, 2, -1];
+    var tileCoord = [3, 2, 0];
     var pixelRatio = 1;
     var proj = get('EPSG:3857');
 
@@ -64,7 +64,7 @@ describe('plugin.xyz.XYZLayerConfig', function() {
 
     var tileFn = layer.getSource().getTileUrlFunction();
 
-    var tileCoord = [3, 2, -1];
+    var tileCoord = [3, 2, 0];
     var pixelRatio = 1;
     var proj = get('EPSG:3857');
 
@@ -84,7 +84,7 @@ describe('plugin.xyz.XYZLayerConfig', function() {
 
     var tileFn = layer.getSource().getTileUrlFunction();
 
-    var tileCoord = [3, 2, -1];
+    var tileCoord = [3, 2, 0];
     var pixelRatio = 1;
     var proj = get('EPSG:3857');
 
@@ -104,7 +104,7 @@ describe('plugin.xyz.XYZLayerConfig', function() {
 
     var tileFn = layer.getSource().getTileUrlFunction();
 
-    var tileCoord = [3, 2, -1];
+    var tileCoord = [3, 2, 0];
     var pixelRatio = 1;
     var proj = get('EPSG:3857');
 
@@ -126,7 +126,7 @@ describe('plugin.xyz.XYZLayerConfig', function() {
 
     var tileFn = layer.getSource().getTileUrlFunction();
 
-    var tileCoord = [3, 2, -1];
+    var tileCoord = [3, 2, 0];
     var pixelRatio = 1;
     var proj = get('EPSG:3857');
 
