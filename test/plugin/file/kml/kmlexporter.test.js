@@ -7,11 +7,11 @@ goog.require('os.time.TimeRange');
 goog.require('os.ui.file.kml.AbstractKMLExporter');
 goog.require('plugin.file.kml.KMLExporter');
 
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
-import Fill from 'ol/src/style/Fill';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
+import Fill from 'ol/src/style/Fill.js';
+import Stroke from 'ol/src/style/Stroke.js';
+import Style from 'ol/src/style/Style.js';
 
 describe('plugin.file.kml.KMLExporter', function() {
   const {default: MapContainer} = goog.module.get('os.MapContainer');

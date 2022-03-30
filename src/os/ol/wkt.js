@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ol.wkt');
 
-import WKT from 'ol/src/format/WKT';
+import WKT from 'ol/src/format/WKT.js';
 
 
 /**

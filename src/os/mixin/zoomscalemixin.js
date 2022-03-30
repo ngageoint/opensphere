@@ -6,9 +6,9 @@
  */
 goog.declareModuleId('os.mixin.zoomscale');
 
-import {listen} from 'ol/src/events';
-import ImageReplay from 'ol/src/render/canvas/ImageBuilder';
-import EventType from 'ol/src/render/EventType';
+import {listen} from 'ol/src/events.js';
+import ImageReplay from 'ol/src/render/canvas/ImageBuilder.js';
+import EventType from 'ol/src/render/EventType.js';
 
 import * as osMap from '../map/map.js';
 import MapEvent from '../map/mapevent.js';

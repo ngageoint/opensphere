@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.query.AreaNode');
 
-import {listen, unlistenByKey} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 
 import {getAreaManager} from '../../query/queryinstance.js';
 import TriState from '../../structs/tristate.js';

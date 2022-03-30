@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.arc.state.v2.arcstate');
 
-import {getAllTextContent} from 'ol/src/xml';
+import {getAllTextContent} from 'ol/src/xml.js';
 import * as xml from '../../../../os/xml.js';
 import ArcFeatureLayerConfig from '../../layer/arcfeaturelayerconfig.js';
 import ArcTileLayerConfig from '../../layer/arctilelayerconfig.js';

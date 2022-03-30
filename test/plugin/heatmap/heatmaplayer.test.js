@@ -10,13 +10,13 @@ goog.require('plugin.heatmap.HeatmapLayerConfig');
 goog.require('plugin.heatmap.HeatmapPropertyType');
 goog.require('plugin.heatmap.SynchronizerType');
 
-import {listen, unlistenByKey} from 'ol/src/events';
-import Feature from 'ol/src/Feature';
-import LineString from 'ol/src/geom/LineString';
-import MultiPoint from 'ol/src/geom/MultiPoint';
-import MultiPolygon from 'ol/src/geom/MultiPolygon';
-import Point from 'ol/src/geom/Point';
-import Polygon from 'ol/src/geom/Polygon';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import Feature from 'ol/src/Feature.js';
+import LineString from 'ol/src/geom/LineString.js';
+import MultiPoint from 'ol/src/geom/MultiPoint.js';
+import MultiPolygon from 'ol/src/geom/MultiPolygon.js';
+import Point from 'ol/src/geom/Point.js';
+import Polygon from 'ol/src/geom/Polygon.js';
 
 describe('plugin.heatmap.Heatmap', function() {
   const GoogEventType = goog.module.get('goog.events.EventType');

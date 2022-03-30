@@ -1,9 +1,9 @@
 goog.declareModuleId('os.ui.feature.FeatureInfoUI');
 
-import {listen, unlistenByKey} from 'ol/src/events';
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
-import {toLonLat} from 'ol/src/proj';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
+import {toLonLat} from 'ol/src/proj.js';
 
 import '../location/simplelocation.js';
 import '../uiswitch.js';

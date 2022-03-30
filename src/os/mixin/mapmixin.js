@@ -3,8 +3,8 @@
  */
 goog.declareModuleId('os.mixin.map');
 
-import {getUid} from 'ol/src';
-import PluggableMap from 'ol/src/PluggableMap';
+import PluggableMap from 'ol/src/PluggableMap.js';
+import {getUid} from 'ol/src/util.js';
 
 // const Feature = goog.requireTyped('ol.Feature');
 

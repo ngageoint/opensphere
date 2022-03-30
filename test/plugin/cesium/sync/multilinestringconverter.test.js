@@ -6,11 +6,11 @@ goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.MultiLineStringConverter');
 goog.require('test.plugin.cesium.scene');
 
-import Feature from 'ol/src/Feature';
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import {get} from 'ol/src/proj';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
+import Feature from 'ol/src/Feature.js';
+import MultiLineString from 'ol/src/geom/MultiLineString.js';
+import {get} from 'ol/src/proj.js';
+import Stroke from 'ol/src/style/Stroke.js';
+import Style from 'ol/src/style/Style.js';
 
 describe('plugin.cesium.sync.MultiLineStringConverter', () => {
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');

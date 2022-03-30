@@ -1,10 +1,10 @@
 goog.declareModuleId('os.map');
 
-import {linear as linearEasing} from 'ol/src/easing';
-import {clamp, toRadians} from 'ol/src/math';
-import {get as getProjection} from 'ol/src/proj';
-import {createForProjection} from 'ol/src/tilegrid';
-import {DEFAULT_MAX_ZOOM} from 'ol/src/tilegrid/common';
+import {linear as linearEasing} from 'ol/src/easing.js';
+import {clamp, toRadians} from 'ol/src/math.js';
+import {get as getProjection} from 'ol/src/proj.js';
+import {createForProjection} from 'ol/src/tilegrid.js';
+import {DEFAULT_MAX_ZOOM} from 'ol/src/tilegrid/common.js';
 
 import '../ol/ol.js';
 import FlightMode from './flightmode.js';

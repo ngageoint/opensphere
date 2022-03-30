@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.zip.ZIPParser');
 
-import {getUid} from 'ol/src';
+import {getUid} from 'ol/src/util.js';
 import EventType from '../../../os/events/eventtype.js';
 import OSFile from '../../../os/file/file.js';
 import * as mime from '../../../os/file/mime.js';

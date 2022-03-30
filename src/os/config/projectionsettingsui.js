@@ -1,6 +1,6 @@
 goog.declareModuleId('os.config.ProjectionSettingsUI');
 
-import {listen, unlistenByKey} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 
 import * as osMap from '../map/map.js';
 import {getMapContainer} from '../map/mapinstance.js';

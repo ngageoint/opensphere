@@ -1,10 +1,10 @@
 goog.declareModuleId('os.ogc.wmts.WMTSLayerParserV100');
 
-import {get} from 'ol/src/proj';
-import {optionsFromCapabilities} from 'ol/src/source/WMTS';
+import {get} from 'ol/src/proj.js';
+import {optionsFromCapabilities} from 'ol/src/source/WMTS.js';
 
 import {getCrossOrigin} from '../../net/net.js';
-import AbstractWMTSLayerParser from './abstractwmtslayerparser';
+import AbstractWMTSLayerParser from './abstractwmtslayerparser.js';
 
 import {detectDateTimeFormats, sortFormats} from './wmts.js';
 

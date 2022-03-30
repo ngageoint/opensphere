@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.buffer.BufferFormUI');
 
-import GeometryType from 'ol/src/geom/GeometryType';
-import {transformExtent} from 'ol/src/proj';
+import GeometryType from 'ol/src/geom/GeometryType.js';
+import {transformExtent} from 'ol/src/proj.js';
 
 import '../im/basicinfo.js';
 import * as buffer from '../../buffer/buffer.js';

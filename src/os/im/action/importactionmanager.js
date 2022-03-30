@@ -1,6 +1,6 @@
 goog.declareModuleId('os.im.action.ImportActionManager');
 
-import * as olArray from 'ol/src/array';
+import * as olArray from 'ol/src/array.js';
 
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';

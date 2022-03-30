@@ -1,15 +1,15 @@
 goog.declareModuleId('os.ui.layer.compare.LayerCompareUI');
 
-import Collection from 'ol/src/Collection';
-import RotateControl from 'ol/src/control/Rotate';
-import ZoomControl from 'ol/src/control/Zoom';
-import {platformModifierKeyOnly} from 'ol/src/events/condition';
-import {createEmpty, getHeight, getWidth, buffer as olBuffer} from 'ol/src/extent';
-import {defaults} from 'ol/src/interaction';
-import DragZoom from 'ol/src/interaction/DragZoom';
-import OLMap from 'ol/src/Map';
-import OLVectorSource from 'ol/src/source/Vector';
-import View from 'ol/src/View';
+import Collection from 'ol/src/Collection.js';
+import RotateControl from 'ol/src/control/Rotate.js';
+import ZoomControl from 'ol/src/control/Zoom.js';
+import {platformModifierKeyOnly} from 'ol/src/events/condition.js';
+import {createEmpty, getHeight, getWidth, buffer as olBuffer} from 'ol/src/extent.js';
+import {defaults} from 'ol/src/interaction.js';
+import DragZoom from 'ol/src/interaction/DragZoom.js';
+import OLMap from 'ol/src/Map.js';
+import OLVectorSource from 'ol/src/source/Vector.js';
+import View from 'ol/src/View.js';
 
 import EventType from '../../../action/eventtype.js';
 import * as capture from '../../../capture/capture.js';
@@ -28,7 +28,7 @@ import {getMapContainer} from '../../../map/mapinstance.js';
 import {getMaxFeatures} from '../../../ogc/ogc.js';
 import {ROOT} from '../../../os.js';
 import SourceClass from '../../../source/sourceclass.js';
-import * as layerMenu from '../../../ui/menu/layermenu.js';
+import * as layerMenu from '../../menu/layermenu.js';
 import Menu from '../../menu/menu.js';
 import MenuItem from '../../menu/menuitem.js';
 import MenuItemType from '../../menu/menuitemtype.js';

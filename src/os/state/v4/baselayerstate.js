@@ -1,7 +1,7 @@
 goog.declareModuleId('os.state.v4.BaseLayerState');
 
-import {readDecimal, readString} from 'ol/src/format/xsd';
-import {transformExtent} from 'ol/src/proj';
+import {readDecimal, readString} from 'ol/src/format/xsd.js';
+import {transformExtent} from 'ol/src/proj.js';
 
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';

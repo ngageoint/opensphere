@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.node.FeatureCountUI');
 
-import {listen, unlistenByKey} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 
 import VectorLayer from '../../layer/vector.js';
 import PropertyChange from '../../source/propertychange.js';

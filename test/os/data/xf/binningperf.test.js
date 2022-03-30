@@ -9,7 +9,7 @@ goog.require('os.histo.UniqueBinMethod');
 goog.require('os.time.TimeRange');
 goog.require('os.time.xf.TimeModel');
 
-import Feature from 'ol/src/Feature';
+import Feature from 'ol/src/Feature.js';
 
 /**
  * @param {number} min

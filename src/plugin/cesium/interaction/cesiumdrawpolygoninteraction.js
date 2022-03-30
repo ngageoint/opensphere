@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.cesium.interaction.drawpolygon');
 
-import core from 'ol-cesium/src/olcs/core';
+import core from 'ol-cesium/src/olcs/core.js';
 
 import * as dispatcher from '../../../os/dispatcher.js';
 import DrawPolygon from '../../../os/interaction/drawpolygoninteraction.js';

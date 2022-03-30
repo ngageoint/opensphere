@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.cesium.mixin.olcs');
 
-import OLCesium from 'ol-cesium/src/olcs/OLCesium';
-import olcsUtil from 'ol-cesium/src/olcs/util';
+import OLCesium from 'ol-cesium/src/olcs/OLCesium.js';
+import olcsUtil from 'ol-cesium/src/olcs/util.js';
 
 import I3DSupport from '../../../os/i3dsupport.js';
 import osImplements from '../../../os/implements.js';

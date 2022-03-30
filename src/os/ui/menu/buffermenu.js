@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.menu.buffer');
 
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
 
 import EventType from '../../action/eventtype.js';
 import {ICON} from '../../buffer/buffer.js';

@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.SourceGridUI');
 
-import {listen, unlistenByKey} from 'ol/src/events';
-import VectorEventType from 'ol/src/source/VectorEventType';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import VectorEventType from 'ol/src/source/VectorEventType.js';
 
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';

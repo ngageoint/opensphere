@@ -1,9 +1,9 @@
 /* FIXME add rotation */
 goog.declareModuleId('os.olm.render.Circle');
 
-import {circular} from 'ol/src/geom/Polygon';
-import {toLonLat} from 'ol/src/proj';
-import {DEFAULT_RADIUS} from 'ol/src/sphere';
+import {circular} from 'ol/src/geom/Polygon.js';
+import {toLonLat} from 'ol/src/proj.js';
+import {DEFAULT_RADIUS} from 'ol/src/sphere.js';
 
 import {interpolateGeom} from '../../interpolate.js';
 import UnitManager from '../../unit/unitmanager.js';

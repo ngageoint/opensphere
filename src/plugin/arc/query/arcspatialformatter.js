@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.arc.query.ArcSpatialFormatter');
 
-import GeometryType from 'ol/src/geom/GeometryType';
-import Polygon from 'ol/src/geom/Polygon';
+import GeometryType from 'ol/src/geom/GeometryType.js';
+import Polygon from 'ol/src/geom/Polygon.js';
 import * as geo from '../../../os/geo/geo.js';
 import * as interpolate from '../../../os/interpolate.js';
 import * as osProj from '../../../os/proj/proj.js';

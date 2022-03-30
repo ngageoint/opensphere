@@ -5,8 +5,8 @@
  */
 goog.declareModuleId('os.mixin.layerbase');
 
-import Base from 'ol/src/layer/Base';
-import Property from 'ol/src/layer/Property';
+import Base from 'ol/src/layer/Base.js';
+import Property from 'ol/src/layer/Property.js';
 
 
 /**

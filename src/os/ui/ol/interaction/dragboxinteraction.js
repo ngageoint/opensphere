@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.ol.interaction.DragBox');
 
-import {fromExtent} from 'ol/src/geom/Polygon';
-import {toLonLat} from 'ol/src/proj';
+import {fromExtent} from 'ol/src/geom/Polygon.js';
+import {toLonLat} from 'ol/src/proj.js';
 
 import RecordField from '../../../data/recordfield.js';
 import {normalizeLongitude} from '../../../geo/geo2.js';

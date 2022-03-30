@@ -1,17 +1,17 @@
 goog.declareModuleId('os.interaction.Modify');
 
-import {getUid} from 'ol/src';
-import Collection from 'ol/src/Collection';
-import {listen, unlistenByKey} from 'ol/src/events';
-import OLEventType from 'ol/src/events/EventType';
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
-import OLModify from 'ol/src/interaction/Modify';
-import RBush from 'ol/src/structs/RBush';
-import Circle from 'ol/src/style/Circle';
-import Fill from 'ol/src/style/Fill';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
+import Collection from 'ol/src/Collection.js';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import OLEventType from 'ol/src/events/EventType.js';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
+import OLModify from 'ol/src/interaction/Modify.js';
+import RBush from 'ol/src/structs/RBush.js';
+import Circle from 'ol/src/style/Circle.js';
+import Fill from 'ol/src/style/Fill.js';
+import Stroke from 'ol/src/style/Stroke.js';
+import Style from 'ol/src/style/Style.js';
+import {getUid} from 'ol/src/util.js';
 
 import RecordField from '../data/recordfield.js';
 import PayloadEvent from '../events/payloadevent.js';

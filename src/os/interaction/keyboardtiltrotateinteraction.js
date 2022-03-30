@@ -1,9 +1,9 @@
 goog.declareModuleId('os.interaction.KeyboardTiltRotate');
 
-import {noModifierKeys, shiftKeyOnly, targetNotEditable} from 'ol/src/events/condition';
-import EventType from 'ol/src/events/EventType';
-import Interaction from 'ol/src/interaction/Interaction';
-import {transform} from 'ol/src/proj';
+import {noModifierKeys, shiftKeyOnly, targetNotEditable} from 'ol/src/events/condition.js';
+import EventType from 'ol/src/events/EventType.js';
+import Interaction from 'ol/src/interaction/Interaction.js';
+import {transform} from 'ol/src/proj.js';
 
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';

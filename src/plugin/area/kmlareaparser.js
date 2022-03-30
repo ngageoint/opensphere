@@ -1,12 +1,12 @@
 goog.declareModuleId('plugin.area.KMLAreaParser');
 
-import {isDocument} from 'ol/src/xml';
+import {isDocument} from 'ol/src/xml.js';
 
 import ColumnDefinition from '../../os/data/columndefinition.js';
 import * as text from '../../os/file/mime/text.js';
 import * as mimeZip from '../../os/file/mime/zip.js';
 import {PROJECTION} from '../../os/map/map.js';
-import KML from '../../os/ol/format/KML';
+import KML from '../../os/ol/format/KML.js';
 import AsyncZipParser from '../../os/parse/asynczipparser.js';
 import * as osXml from '../../os/xml.js';
 

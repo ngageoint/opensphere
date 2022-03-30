@@ -4,7 +4,7 @@ goog.require('plugin.im.action.feature.Entry');
 goog.require('plugin.im.action.feature.mock');
 goog.require('plugin.im.action.feature.mock.MockAction');
 
-import Feature from 'ol/src/Feature';
+import Feature from 'ol/src/Feature.js';
 
 describe('plugin.im.action.feature.Entry', function() {
   const functions = goog.module.get('goog.functions');

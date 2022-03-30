@@ -1,12 +1,12 @@
 goog.declareModuleId('plugin.arc.ArcJSONParser');
 
-import Feature from 'ol/src/Feature';
-import LinearRing from 'ol/src/geom/LinearRing';
-import LineString from 'ol/src/geom/LineString';
-import MultiPoint from 'ol/src/geom/MultiPoint';
-import MultiPolygon from 'ol/src/geom/MultiPolygon';
-import Point from 'ol/src/geom/Point';
-import Polygon from 'ol/src/geom/Polygon';
+import Feature from 'ol/src/Feature.js';
+import LinearRing from 'ol/src/geom/LinearRing.js';
+import LineString from 'ol/src/geom/LineString.js';
+import MultiPoint from 'ol/src/geom/MultiPoint.js';
+import MultiPolygon from 'ol/src/geom/MultiPolygon.js';
+import Point from 'ol/src/geom/Point.js';
+import Polygon from 'ol/src/geom/Polygon.js';
 import * as text from '../../os/file/mime/text.js';
 import * as geo2 from '../../os/geo/geo2.js';
 

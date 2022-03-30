@@ -1,9 +1,9 @@
 goog.declareModuleId('os.mixin.ImageSource');
 
-import {remove} from 'ol/src/array';
-import ImageState from 'ol/src/ImageState';
-import ImageSource from 'ol/src/source/Image';
-import Source from 'ol/src/source/Source';
+import {remove} from 'ol/src/array.js';
+import ImageState from 'ol/src/ImageState.js';
+import ImageSource from 'ol/src/source/Image.js';
+import Source from 'ol/src/source/Source.js';
 
 import PropertyChangeEvent from '../events/propertychangeevent.js';
 import osImplements from '../implements.js';

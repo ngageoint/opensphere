@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.cesium.PrimitiveLayer');
 
-import {transformExtent} from 'ol/src/proj';
+import {transformExtent} from 'ol/src/proj.js';
 import * as dispatcher from '../../os/dispatcher.js';
 import * as geo from '../../os/geo/geo.js';
 import {PROJECTION} from '../../os/map/map.js';

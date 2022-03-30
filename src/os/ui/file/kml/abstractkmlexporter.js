@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.file.kml.AbstractKMLExporter');
 
-import {pushSerializeAndPop} from 'ol/src/xml';
+import {pushSerializeAndPop} from 'ol/src/xml.js';
 
 // import JsonField from '../../../../plugin/file/kml/jsonfield.js';
 // import {OS_NS} from '../../../../plugin/file/kml/kml.js';
@@ -10,7 +10,7 @@ import {DESC_REGEXP} from '../../../fields/index.js';
 import OSFile from '../../../file/file.js';
 import instanceOf from '../../../instanceof.js';
 import {isPrimitive} from '../../../object/object.js';
-import {PLACEMARK_SERIALIZERS, GEOMETRY_NODE_FACTORY} from '../../../ol/format/KML';
+import {PLACEMARK_SERIALIZERS, GEOMETRY_NODE_FACTORY} from '../../../ol/format/KML.js';
 import * as osTime from '../../../time/time.js';
 import TimeInstant from '../../../time/timeinstant.js';
 import TimeRange from '../../../time/timerange.js';

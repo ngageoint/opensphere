@@ -14,8 +14,8 @@ goog.require('os.test.xsd');
 goog.require('os.ui.state');
 goog.require('os.xml');
 
-import Feature from 'ol/src/Feature';
-import Polygon from 'ol/src/geom/Polygon';
+import Feature from 'ol/src/Feature.js';
+import Polygon from 'ol/src/geom/Polygon.js';
 
 describe('QueryArea XSD State Test', function() {
   const {default: AreaManager} = goog.module.get('os.query.AreaManager');

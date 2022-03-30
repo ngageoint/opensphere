@@ -1,6 +1,6 @@
 goog.declareModuleId('os.command.InterpolateFeatures');
 
-import VectorLayer from 'ol/src/layer/Vector';
+import VectorLayer from 'ol/src/layer/Vector.js';
 
 import * as interpolate from '../interpolate.js';
 import {getMapContainer} from '../map/mapinstance.js';

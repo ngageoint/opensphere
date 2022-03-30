@@ -1,7 +1,7 @@
 goog.require('os.feature.DynamicFeature');
 
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
 
 describe('os.feature.DynamicFeature', function() {
   const {default: DynamicFeature} = goog.module.get('os.feature.DynamicFeature');

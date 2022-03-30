@@ -1,13 +1,13 @@
 goog.declareModuleId('os.interaction.Measure');
 
-import LineString from 'ol/src/geom/LineString';
-import Point from 'ol/src/geom/Point';
-import {MAC} from 'ol/src/has';
-import {toLonLat} from 'ol/src/proj';
-import Fill from 'ol/src/style/Fill';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
-import Text from 'ol/src/style/Text';
+import LineString from 'ol/src/geom/LineString.js';
+import Point from 'ol/src/geom/Point.js';
+import {MAC} from 'ol/src/has.js';
+import {toLonLat} from 'ol/src/proj.js';
+import Fill from 'ol/src/style/Fill.js';
+import Stroke from 'ol/src/style/Stroke.js';
+import Style from 'ol/src/style/Style.js';
+import Text from 'ol/src/style/Text.js';
 
 import {getFormattedBearing, modifyBearing} from '../bearing/bearing.js';
 import BearingSettingsKeys from '../bearing/bearingsettingskeys.js';

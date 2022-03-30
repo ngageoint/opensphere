@@ -1,6 +1,6 @@
 goog.declareModuleId('os.feature.DynamicFeature');
 
-import Feature from 'ol/src/Feature';
+import Feature from 'ol/src/Feature.js';
 
 import registerClass from '../registerclass.js';
 

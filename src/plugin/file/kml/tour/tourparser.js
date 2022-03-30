@@ -4,10 +4,10 @@
  */
 goog.declareModuleId('plugin.file.kml.tour.parseTour');
 
-import {readDecimal, readString} from 'ol/src/format/xsd';
-import {makeArrayPusher, makeObjectPropertySetter, makeStructureNS, pushParseAndPop} from 'ol/src/xml';
+import {readDecimal, readString} from 'ol/src/format/xsd.js';
+import {makeArrayPusher, makeObjectPropertySetter, makeStructureNS, pushParseAndPop} from 'ol/src/xml.js';
 import FlightMode from '../../../../os/map/flightmode.js';
-import {NAMESPACE_URIS, GX_NAMESPACE_URIS} from '../../../../os/ol/format/KML';
+import {NAMESPACE_URIS, GX_NAMESPACE_URIS} from '../../../../os/ol/format/KML.js';
 import Tour from './tour.js';
 import TourControl from './tourcontrol.js';
 import FlyTo from './tourflyto.js';

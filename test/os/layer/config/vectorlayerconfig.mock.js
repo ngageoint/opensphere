@@ -1,8 +1,8 @@
 goog.declareModuleId('os.layer.config.MockVectorLayerConfig');
 
-import AbstractLayerConfig from '../../../../src/os/layer/config/abstractdatasourcelayerconfig';
-import VectorLayer from '../../../../src/os/layer/vector';
-import VectorSource from '../../../../src/os/source/vectorsource';
+import AbstractLayerConfig from '../../../../src/os/layer/config/abstractdatasourcelayerconfig.js';
+import VectorLayer from '../../../../src/os/layer/vector.js';
+import VectorSource from '../../../../src/os/source/vectorsource.js';
 
 
 /**

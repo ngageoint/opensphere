@@ -5,7 +5,7 @@ goog.require('os.ui.timeline.TimelineScaleEvent');
 goog.require('plugin.suncalc');
 goog.require('plugin.suncalc.LightStripUI');
 
-import PluggableMap from 'ol/src/PluggableMap';
+import PluggableMap from 'ol/src/PluggableMap.js';
 
 describe('plugin.suncalc.LightStripUI', function() {
   const dispose = goog.module.get('goog.dispose');

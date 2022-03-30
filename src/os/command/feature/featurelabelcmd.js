@@ -1,6 +1,6 @@
 goog.declareModuleId('os.command.FeatureLabel');
 
-import * as olArray from 'ol/src/array';
+import * as olArray from 'ol/src/array.js';
 
 import {Layer as LayerKeys} from '../../metrics/metricskeys.js';
 import * as label from '../../style/label.js';

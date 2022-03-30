@@ -5,8 +5,8 @@ goog.require('os.query.FilterManager');
 goog.require('os.query.QueryManager');
 goog.require('plugin.arc.query.ArcQueryHandler');
 
-import Feature from 'ol/src/Feature';
-import Polygon from 'ol/src/geom/Polygon';
+import Feature from 'ol/src/Feature.js';
+import Polygon from 'ol/src/geom/Polygon.js';
 
 describe('plugin.arc.query.ArcQueryHandler', function() {
   const {default: FilterEntry} = goog.module.get('os.filter.FilterEntry');

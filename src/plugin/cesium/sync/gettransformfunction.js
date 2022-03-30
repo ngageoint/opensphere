@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.cesium.sync.getTransformFunction');
 
-import {get, equivalent, getTransform} from 'ol/src/proj';
+import {get, equivalent, getTransform} from 'ol/src/proj.js';
 
 import {PROJECTION} from '../../../os/map/map.js';
 import * as osProj from '../../../os/proj/proj.js';

@@ -8,7 +8,7 @@ goog.require('os.layer.config.MockTileLayerConfig');
 goog.require('os.mock');
 goog.require('os.style.StyleManager');
 
-import MockTileLayerConfig from '../layer/config/tilelayerconfig.mock';
+import MockTileLayerConfig from '../layer/config/tilelayerconfig.mock.js';
 
 describe('os.command.addFeature', function() {
   const {default: MapContainer} = goog.module.get('os.MapContainer');

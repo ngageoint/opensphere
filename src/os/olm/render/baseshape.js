@@ -1,8 +1,8 @@
 goog.declareModuleId('os.olm.render.BaseShape');
 
-import Feature from 'ol/src/Feature';
-import OLVectorLayer from 'ol/src/layer/Vector';
-import OLVectorSource from 'ol/src/source/Vector';
+import Feature from 'ol/src/Feature.js';
+import OLVectorLayer from 'ol/src/layer/Vector.js';
+import OLVectorSource from 'ol/src/source/Vector.js';
 
 import * as osMap from '../../map/map.js';
 

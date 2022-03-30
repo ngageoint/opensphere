@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.cesium.VectorContext');
 
-import {getUid} from 'ol/src';
-import {remove} from 'ol/src/array';
+import {remove} from 'ol/src/array.js';
+import {getUid} from 'ol/src/util.js';
 
 import * as objectUtils from '../../os/object/object.js';
 import {isGroundPrimitive, isPrimitiveShown, setPrimitiveShown} from './primitive.js';

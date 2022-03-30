@@ -1,6 +1,6 @@
 goog.declareModuleId('os.capture');
 
-import * as webgl from 'ol/src/webgl';
+import * as webgl from 'ol/src/webgl.js';
 
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';

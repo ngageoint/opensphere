@@ -1,14 +1,14 @@
 goog.require('os.mixin.geometry');
 goog.require('os.proj');
 
-import GeometryCollection from 'ol/src/geom/GeometryCollection';
-import LinearRing from 'ol/src/geom/LinearRing';
-import LineString from 'ol/src/geom/LineString';
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import MultiPoint from 'ol/src/geom/MultiPoint';
-import MultiPolygon from 'ol/src/geom/MultiPolygon';
-import Point from 'ol/src/geom/Point';
-import Polygon from 'ol/src/geom/Polygon';
+import GeometryCollection from 'ol/src/geom/GeometryCollection.js';
+import LinearRing from 'ol/src/geom/LinearRing.js';
+import LineString from 'ol/src/geom/LineString.js';
+import MultiLineString from 'ol/src/geom/MultiLineString.js';
+import MultiPoint from 'ol/src/geom/MultiPoint.js';
+import MultiPolygon from 'ol/src/geom/MultiPolygon.js';
+import Point from 'ol/src/geom/Point.js';
+import Polygon from 'ol/src/geom/Polygon.js';
 
 describe('os.mixin.geometry', function() {
   const {EPSG3857, EPSG4326} = goog.module.get('os.proj');

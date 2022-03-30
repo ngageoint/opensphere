@@ -5,8 +5,8 @@
  */
 goog.declareModuleId('os.geo2');
 
-import GeometryType from 'ol/src/geom/GeometryType';
-import {get as getProjection} from 'ol/src/proj';
+import GeometryType from 'ol/src/geom/GeometryType.js';
+import {get as getProjection} from 'ol/src/proj.js';
 
 import GeometryField from '../geom/geometryfield.js';
 import * as osMap from '../map/map.js';

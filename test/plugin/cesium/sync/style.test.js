@@ -2,9 +2,9 @@ goog.require('os.style');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.sync.style');
 
-import Fill from 'ol/src/style/Fill';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
+import Fill from 'ol/src/style/Fill.js';
+import Stroke from 'ol/src/style/Stroke.js';
+import Style from 'ol/src/style/Style.js';
 
 describe('plugin.cesium.sync.style', () => {
   const osStyle = goog.module.get('os.style');

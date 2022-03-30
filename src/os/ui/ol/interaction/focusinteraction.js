@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.ol.interaction.FocusInteraction');
 
 
-import Interaction from 'ol/src/interaction/Interaction';
+import Interaction from 'ol/src/interaction/Interaction.js';
 
 import {getAreaManager} from '../../../query/queryinstance.js';
 

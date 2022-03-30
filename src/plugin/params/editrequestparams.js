@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.params.EditRequestParamsUI');
 
-import {remove} from 'ol/src/array';
+import {remove} from 'ol/src/array.js';
 
 import '../../os/ui/slick/slickgrid.js';
 import ColumnDefinition from '../../os/data/columndefinition.js';

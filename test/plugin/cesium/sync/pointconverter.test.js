@@ -4,13 +4,13 @@ goog.require('os.proj');
 goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.PointConverter');
 
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
-import {get, transform} from 'ol/src/proj';
-import Circle from 'ol/src/style/Circle';
-import Fill from 'ol/src/style/Fill';
-import Icon from 'ol/src/style/Icon';
-import Style from 'ol/src/style/Style';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
+import {get, transform} from 'ol/src/proj.js';
+import Circle from 'ol/src/style/Circle.js';
+import Fill from 'ol/src/style/Fill.js';
+import Icon from 'ol/src/style/Icon.js';
+import Style from 'ol/src/style/Style.js';
 
 describe('plugin.cesium.sync.PointConverter', () => {
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');

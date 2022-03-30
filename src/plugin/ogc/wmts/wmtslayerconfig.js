@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.ogc.wmts.WMTSLayerConfig');
 
-import {equivalent, get} from 'ol/src/proj';
-import WMTSSource from 'ol/src/source/WMTS';
+import {equivalent, get} from 'ol/src/proj.js';
+import WMTSSource from 'ol/src/source/WMTS.js';
 import AnimatedTile from '../../../os/layer/animatedtile.js';
 import AbstractTileLayerConfig from '../../../os/layer/config/abstracttilelayerconfig.js';
 import {getTimeKey} from '../../../os/ogc/wmts/wmts.js';

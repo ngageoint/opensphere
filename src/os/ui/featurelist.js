@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.FeatureListUI');
 
-import {listen, unlistenByKey} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 
 import './slider.js';
 import './sourcegrid.js';

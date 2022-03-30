@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.ol.interaction.ContextMenu');
 
-import Interaction from 'ol/src/interaction/Interaction';
-import MapBrowserEventType from 'ol/src/MapBrowserEventType';
+import Interaction from 'ol/src/interaction/Interaction.js';
+import MapBrowserEventType from 'ol/src/MapBrowserEventType.js';
 
 import '../../../ol/mixin/rendermixin.js';
 import {rightClick} from '../../../ol/events/condition.js';

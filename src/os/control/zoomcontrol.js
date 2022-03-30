@@ -1,6 +1,6 @@
 goog.declareModuleId('os.control.Zoom');
 
-import OLZoom from 'ol/src/control/Zoom';
+import OLZoom from 'ol/src/control/Zoom.js';
 
 import * as interaction from '../interaction/interaction.js';
 import {getMapContainer} from '../map/mapinstance.js';

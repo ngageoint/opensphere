@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.overview.OverviewPlugin');
 
-import TileLayer from 'ol/src/layer/Tile';
+import TileLayer from 'ol/src/layer/Tile.js';
 
 import Settings from '../../os/config/settings.js';
 import MapContainer from '../../os/mapcontainer.js';

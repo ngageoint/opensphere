@@ -1,17 +1,17 @@
 goog.declareModuleId('os.legend');
 
-import {getCenter} from 'ol/src/extent';
-import Feature from 'ol/src/Feature';
-import GeometryCollection from 'ol/src/geom/GeometryCollection';
-import Point from 'ol/src/geom/Point';
-import {fromExtent} from 'ol/src/geom/Polygon';
-import ImageState from 'ol/src/ImageState';
-import {toContext} from 'ol/src/render';
-import Fill from 'ol/src/style/Fill';
-import Icon from 'ol/src/style/Icon';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
-import Text from 'ol/src/style/Text';
+import {getCenter} from 'ol/src/extent.js';
+import Feature from 'ol/src/Feature.js';
+import GeometryCollection from 'ol/src/geom/GeometryCollection.js';
+import Point from 'ol/src/geom/Point.js';
+import {fromExtent} from 'ol/src/geom/Polygon.js';
+import ImageState from 'ol/src/ImageState.js';
+import {toContext} from 'ol/src/render.js';
+import Fill from 'ol/src/style/Fill.js';
+import Icon from 'ol/src/style/Icon.js';
+import Stroke from 'ol/src/style/Stroke.js';
+import Style from 'ol/src/style/Style.js';
+import Text from 'ol/src/style/Text.js';
 
 import Settings from '../config/settings.js';
 import * as dispatcher from '../dispatcher.js';

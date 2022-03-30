@@ -5,12 +5,12 @@ goog.require('os.mixin.rbush');
 goog.require('os.proj');
 goog.require('os.source.Vector');
 
-import {intersects} from 'ol/src/extent';
-import Feature from 'ol/src/Feature';
-import LineString from 'ol/src/geom/LineString';
-import {fromExtent} from 'ol/src/geom/Polygon';
-import {get} from 'ol/src/proj';
-import RBush from 'ol/src/structs/RBush';
+import {intersects} from 'ol/src/extent.js';
+import Feature from 'ol/src/Feature.js';
+import LineString from 'ol/src/geom/LineString.js';
+import {fromExtent} from 'ol/src/geom/Polygon.js';
+import {get} from 'ol/src/proj.js';
+import RBush from 'ol/src/structs/RBush.js';
 
 describe('os.mixin.rbush', function() {
   const {getFeatures} = goog.module.get('os.feature.mock');

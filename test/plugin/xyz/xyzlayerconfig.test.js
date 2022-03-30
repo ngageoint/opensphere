@@ -1,7 +1,7 @@
 goog.require('os.net.ProxyHandler');
 goog.require('plugin.xyz.XYZLayerConfig');
 
-import {get} from 'ol/src/proj';
+import {get} from 'ol/src/proj.js';
 
 describe('plugin.xyz.XYZLayerConfig', function() {
   const {default: ProxyHandler} = goog.module.get('os.net.ProxyHandler');

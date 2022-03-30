@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.slick.SlickTreeUI');
 
-import {remove} from 'ol/src/array';
+import {remove} from 'ol/src/array.js';
 
 import Module from '../module.js';
 import {apply} from '../ui.js';

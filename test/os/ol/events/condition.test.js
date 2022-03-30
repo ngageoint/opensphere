@@ -1,6 +1,6 @@
 goog.require('os.ol.events.condition');
 
-import MapBrowserEventType from 'ol/src/MapBrowserEventType';
+import MapBrowserEventType from 'ol/src/MapBrowserEventType.js';
 
 describe('os.ol.events.condition', function() {
   const condition = goog.module.get('os.ol.events.condition');

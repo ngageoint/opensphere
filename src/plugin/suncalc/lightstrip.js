@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.suncalc.LightStripUI');
 
-import {toLonLat} from 'ol/src/proj';
+import {toLonLat} from 'ol/src/proj.js';
 import settings from '../../os/config/settings.js';
 import * as dispatcher from '../../os/dispatcher.js';
 import * as osMap from '../../os/map/map.js';

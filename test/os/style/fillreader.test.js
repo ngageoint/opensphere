@@ -1,6 +1,6 @@
 goog.require('os.style.FillReader');
 
-import Fill from 'ol/src/style/Fill';
+import Fill from 'ol/src/style/Fill.js';
 
 describe('os.style.FillReader', function() {
   const {default: FillReader} = goog.module.get('os.style.FillReader');

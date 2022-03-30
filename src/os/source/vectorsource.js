@@ -1,13 +1,13 @@
 goog.declareModuleId('os.source.Vector');
 
-import {getUid} from 'ol/src';
-import Collection from 'ol/src/Collection';
-import {listen, unlistenByKey} from 'ol/src/events';
-import OLEventType from 'ol/src/events/EventType';
-import {extend, createEmpty, getWidth, getHeight, isEmpty} from 'ol/src/extent';
-import GeometryType from 'ol/src/geom/GeometryType';
-import {default as OLVectorSource, VectorSourceEvent} from 'ol/src/source/Vector';
-import VectorEventType from 'ol/src/source/VectorEventType';
+import Collection from 'ol/src/Collection.js';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import OLEventType from 'ol/src/events/EventType.js';
+import {extend, createEmpty, getWidth, getHeight, isEmpty} from 'ol/src/extent.js';
+import GeometryType from 'ol/src/geom/GeometryType.js';
+import OLVectorSource, {VectorSourceEvent} from 'ol/src/source/Vector.js';
+import VectorEventType from 'ol/src/source/VectorEventType.js';
+import {getUid} from 'ol/src/util.js';
 
 import '../mixin/rbushmixin.js';
 import EventType from '../action/eventtype.js';

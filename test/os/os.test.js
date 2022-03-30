@@ -1,8 +1,8 @@
 goog.require('os.mock');
 goog.require('os.style.StyleManager');
 
-import Feature from 'ol/src/Feature';
-import OLObject from 'ol/src/Object';
+import Feature from 'ol/src/Feature.js';
+import OLObject from 'ol/src/Object.js';
 
 describe('ol.Feature mixins', function() {
   it('should fire events by default', function() {

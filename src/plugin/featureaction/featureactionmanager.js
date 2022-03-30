@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.im.action.feature.Manager');
 
-import {listen, unlistenByKey} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 import DataManager from '../../os/data/datamanager.js';
 import DataEventType from '../../os/data/event/dataeventtype.js';
 import RecordField from '../../os/data/recordfield.js';

@@ -20,12 +20,12 @@ goog.require('plugin.cesium.sync.PolygonConverter');
 goog.require('plugin.cesium.sync.converter');
 goog.require('test.plugin.cesium.scene');
 
-import Feature from 'ol/src/Feature';
-import GeometryType from 'ol/src/geom/GeometryType';
-import Point from 'ol/src/geom/Point';
-import {get} from 'ol/src/proj';
-import Style from 'ol/src/style/Style';
-import Text from 'ol/src/style/Text';
+import Feature from 'ol/src/Feature.js';
+import GeometryType from 'ol/src/geom/GeometryType.js';
+import Point from 'ol/src/geom/Point.js';
+import {get} from 'ol/src/proj.js';
+import Style from 'ol/src/style/Style.js';
+import Text from 'ol/src/style/Text.js';
 
 describe('plugin.cesium.sync.converter', () => {
   const {convertGeometry, getConverter} = goog.module.get('plugin.cesium.sync.converter');

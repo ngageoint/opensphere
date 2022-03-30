@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.arc.layer.ArcImageLayerConfig');
 
-import {transformExtent} from 'ol/src/proj';
-import ImageArcGISRest from 'ol/src/source/ImageArcGISRest';
+import {transformExtent} from 'ol/src/proj.js';
+import ImageArcGISRest from 'ol/src/source/ImageArcGISRest.js';
 import AbstractLayerConfig from '../../../os/layer/config/abstractlayerconfig.js';
 import Image from '../../../os/layer/image.js';
 import {PROJECTION} from '../../../os/map/map.js';

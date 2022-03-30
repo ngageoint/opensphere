@@ -1,7 +1,7 @@
 goog.declareModuleId('os.style.FillReader');
 
-import {asString} from 'ol/src/color';
-import Fill from 'ol/src/style/Fill';
+import {asString} from 'ol/src/color.js';
+import Fill from 'ol/src/style/Fill.js';
 
 import AbstractReader from './abstractreader.js';
 import * as osStyle from './style.js';

@@ -7,8 +7,8 @@ goog.require('os.style.StyleType');
 goog.require('os.ui.search.FeatureResultCardCtrl');
 goog.require('os.ui.search.place.CoordinateResult');
 
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
 
 describe('os.ui.search.FeatureResultCardCtrl', () => {
   const {default: MapContainer} = goog.module.get('os.MapContainer');

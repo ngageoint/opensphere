@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.cesium.mixin.renderloop');
 
-import AutoRenderLoop from 'ol-cesium/src/olcs/AutoRenderLoop';
+import AutoRenderLoop from 'ol-cesium/src/olcs/AutoRenderLoop.js';
 
 import * as Dispatcher from '../../../os/dispatcher.js';
 import MapEvent from '../../../os/map/mapevent.js';

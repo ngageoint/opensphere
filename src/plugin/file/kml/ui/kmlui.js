@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.kml.ui');
 
-import {getUid} from 'ol/src';
+import {getUid} from 'ol/src/util.js';
 import EventType from '../../../../os/action/eventtype.js';
 import CommandProcessor from '../../../../os/command/commandprocessor.js';
 import SequenceCommand from '../../../../os/command/sequencecommand.js';

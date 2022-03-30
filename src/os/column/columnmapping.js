@@ -1,6 +1,6 @@
 goog.declareModuleId('os.column.ColumnMapping');
 
-import * as olArray from 'ol/src/array';
+import * as olArray from 'ol/src/array.js';
 
 import ColumnMappingEvent from './columnmappingevent.js';
 import ColumnMappingEventType from './columnmappingeventtype.js';

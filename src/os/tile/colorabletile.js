@@ -1,6 +1,6 @@
 goog.declareModuleId('os.tile.ColorableTile');
 
-import ImageTile from 'ol/src/ImageTile';
+import ImageTile from 'ol/src/ImageTile.js';
 import {filterImage} from './tile.js';
 
 // const TileState = goog.requireTyped('ol.TileState');

@@ -1,9 +1,9 @@
 goog.declareModuleId('plugin.track.TrackManager');
 
 import './confirmtrack.js';
-import {includes} from 'ol/src/array';
-import {listen, unlistenByKey} from 'ol/src/events';
-import {equals, isEmpty, containsExtent, buffer, boundingExtent} from 'ol/src/extent';
+import {includes} from 'ol/src/array.js';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import {equals, isEmpty, containsExtent, buffer, boundingExtent} from 'ol/src/extent.js';
 import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
 import AlertManager from '../../os/alert/alertmanager.js';
 import * as osColor from '../../os/color.js';

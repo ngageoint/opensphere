@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.cesium.sync.HeatmapSynchronizer');
 
-import {listen, unlistenByKey} from 'ol/src/events';
-import {scaleFromCenter} from 'ol/src/extent';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import {scaleFromCenter} from 'ol/src/extent.js';
 
 import * as dispatcher from '../../../os/dispatcher.js';
 import PropertyChangeEvent from '../../../os/events/propertychangeevent.js';

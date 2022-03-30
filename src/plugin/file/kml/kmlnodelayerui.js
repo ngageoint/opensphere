@@ -5,8 +5,8 @@ import '../../../os/ui/layer/labelcontrols.js';
 import '../../../os/ui/layer/vectorstylecontrols.js';
 import '../../../os/ui/uiswitch.js';
 
-import {find} from 'ol/src/array';
-import UrlTile from 'ol/src/source/UrlTile';
+import {find} from 'ol/src/array.js';
+import UrlTile from 'ol/src/source/UrlTile.js';
 import EventType from '../../../os/action/eventtype.js';
 import * as osColor from '../../../os/color.js';
 import ColorChangeType from '../../../os/command/colorchangetype.js';

@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.feature.tab.PropertiesTabUI');
 
-import {listen, unlistenByKey} from 'ol/src/events';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 
 import '../featureinfocell.js';
 import Settings from '../../../config/settings.js';

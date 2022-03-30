@@ -1,8 +1,8 @@
 goog.declareModuleId('os.ol.image');
 
-import {createCanvasContext2D} from 'ol/src/dom';
-import {boundingExtent, getCenter, getWidth, getHeight} from 'ol/src/extent';
-import ImageCanvas from 'ol/src/ImageCanvas';
+import {createCanvasContext2D} from 'ol/src/dom.js';
+import {boundingExtent, getCenter, getWidth, getHeight} from 'ol/src/extent.js';
+import ImageCanvas from 'ol/src/ImageCanvas.js';
 
 import {D2R} from '../geo/geo.js';
 

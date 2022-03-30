@@ -8,8 +8,8 @@ goog.require('os.source.Vector');
 goog.require('os.style.StyleType');
 goog.require('plugin.vectortools');
 
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
 
 describe('plugin.vectortools', function() {
   const googObject = goog.module.get('goog.object');

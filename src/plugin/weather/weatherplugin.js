@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.weather.WeatherPlugin');
 
-import {toLonLat} from 'ol/src/proj';
+import {toLonLat} from 'ol/src/proj.js';
 import settings from '../../os/config/settings.js';
 import * as osMap from '../../os/map/map.js';
 import AbstractPlugin from '../../os/plugin/abstractplugin.js';
