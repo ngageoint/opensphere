@@ -3517,6 +3517,7 @@ export default class Vector extends OLVectorSource {
       }
 
       this.dispatchEvent(new PropertyChangeEvent(PropertyChange.FEATURE_VISIBILITY, changed));
+      this.changed();
     }
   }
 
