@@ -92,6 +92,7 @@ describe('plugin.pelias.geocoder.Search', function() {
 
   it('should handle malformed JSON in results', function() {
     var search = new Search();
+    spyOn(MapContainer.getInstance().getMap(), 'getExtent').andReturn([0, 0, 45, 45]);
     loadAndRun(
         search,
         '/base/test/plugin/pelias/geocoder/malformed.json',
@@ -103,6 +104,7 @@ describe('plugin.pelias.geocoder.Search', function() {
 
   it('should handle valid JSON without features', function() {
     var search = new Search();
+    spyOn(MapContainer.getInstance().getMap(), 'getExtent').andReturn([0, 0, 45, 45]);
     loadAndRun(
         search,
         '/base/test/plugin/pelias/geocoder/nofeatures.json',
@@ -114,6 +116,7 @@ describe('plugin.pelias.geocoder.Search', function() {
 
   it('should handle JSON with invalid features', function() {
     var search = new Search();
+    spyOn(MapContainer.getInstance().getMap(), 'getExtent').andReturn([0, 0, 45, 45]);
     loadAndRun(
         search,
         '/base/test/plugin/pelias/geocoder/badfeatures.json',
@@ -130,6 +133,7 @@ describe('plugin.pelias.geocoder.Search', function() {
 
   it('should parse results', function() {
     var search = new Search();
+    spyOn(MapContainer.getInstance().getMap(), 'getExtent').andReturn([0, 0, 45, 45]);
     loadAndRun(
         search,
         '/base/test/plugin/pelias/geocoder/pelias-result.json',
@@ -150,6 +154,7 @@ describe('plugin.pelias.geocoder.Search', function() {
 
   it('should parse results with addresses', function() {
     var search = new Search();
+    spyOn(MapContainer.getInstance().getMap(), 'getExtent').andReturn([0, 0, 45, 45]);
     loadAndRun(
         search,
         '/base/test/plugin/pelias/geocoder/pelias-result2.json',
