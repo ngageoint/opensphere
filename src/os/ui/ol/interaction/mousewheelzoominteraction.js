@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.ol.interaction.MouseWheelZoom');
 
-import OLMouseWheelZoom from 'ol/src/interaction/MouseWheelZoom';
+import OLMouseWheelZoom from 'ol/src/interaction/MouseWheelZoom.js';
 
 
 /**

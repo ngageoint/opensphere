@@ -1,7 +1,7 @@
 goog.declareModuleId('os.webgl.WebGLOverlay');
 
-import Overlay from 'ol/src/Overlay';
-import {toLonLat} from 'ol/src/proj';
+import Overlay from 'ol/src/Overlay.js';
+import {toLonLat} from 'ol/src/proj.js';
 
 import * as osMap from '../map/map.js';
 import MapChange from '../map/mapchange.js';

@@ -1,6 +1,6 @@
 goog.declareModuleId('os.im.mapping');
 
-import Feature from 'ol/src/Feature';
+import Feature from 'ol/src/Feature.js';
 
 import '../../mixin/featuremixin.js';
 import instanceOf from '../../instanceof.js';

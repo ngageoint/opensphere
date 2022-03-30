@@ -1,9 +1,9 @@
 goog.declareModuleId('os.layer.config.MockTileLayerConfig');
 
-import TileWMS from 'ol/src/source/TileWMS';
+import TileWMS from 'ol/src/source/TileWMS.js';
 
-import AbstractLayerConfig from '../../../../src/os/layer/config/abstractdatasourcelayerconfig';
-import Tile from '../../../../src/os/layer/tile';
+import AbstractLayerConfig from '../../../../src/os/layer/config/abstractdatasourcelayerconfig.js';
+import Tile from '../../../../src/os/layer/tile.js';
 
 /**
  */

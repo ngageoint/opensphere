@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.kml.tour.FlyTo');
 
-import {transform} from 'ol/src/proj';
+import {transform} from 'ol/src/proj.js';
 import FlightMode from '../../../../os/map/flightmode.js';
 import * as osMap from '../../../../os/map/map.js';
 import MapContainer from '../../../../os/mapcontainer.js';

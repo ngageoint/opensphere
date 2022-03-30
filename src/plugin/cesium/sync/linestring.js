@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.cesium.sync.linestring');
 
-import olcsCore from 'ol-cesium/src/olcs/core';
-import GeometryType from 'ol/src/geom/GeometryType';
+import olcsCore from 'ol-cesium/src/olcs/core.js';
+import GeometryType from 'ol/src/geom/GeometryType.js';
 
 import * as interpolate from '../../../os/interpolate.js';
 import InterpolationMethod from '../../../os/interpolatemethod.js';

@@ -1,13 +1,13 @@
 goog.declareModuleId('os.ui.ol.interaction.AbstractDraw');
 
-import {always, shiftKeyOnly} from 'ol/src/events/condition';
-import Event from 'ol/src/events/Event';
-import Pointer from 'ol/src/interaction/Pointer';
-import Fill from 'ol/src/style/Fill';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
-import Text from 'ol/src/style/Text';
-import ViewHint from 'ol/src/ViewHint';
+import {always, shiftKeyOnly} from 'ol/src/events/condition.js';
+import Event from 'ol/src/events/Event.js';
+import Pointer from 'ol/src/interaction/Pointer.js';
+import Fill from 'ol/src/style/Fill.js';
+import Stroke from 'ol/src/style/Stroke.js';
+import Style from 'ol/src/style/Style.js';
+import Text from 'ol/src/style/Text.js';
+import ViewHint from 'ol/src/ViewHint.js';
 
 import * as dispatcher from '../../../dispatcher.js';
 import DrawEvent from '../../draw/drawevent.js';

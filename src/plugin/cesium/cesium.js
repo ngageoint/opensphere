@@ -1,9 +1,9 @@
 goog.declareModuleId('plugin.cesium');
 
-import core from 'ol-cesium/src/olcs/core';
-import GeometryType from 'ol/src/geom/GeometryType';
-import {equivalent, get, toLonLat} from 'ol/src/proj';
-import Tile from 'ol/src/source/Tile';
+import core from 'ol-cesium/src/olcs/core.js';
+import GeometryType from 'ol/src/geom/GeometryType.js';
+import {equivalent, get, toLonLat} from 'ol/src/proj.js';
+import Tile from 'ol/src/source/Tile.js';
 
 import AlertManager from '../../os/alert/alertmanager.js';
 import DisplaySetting from '../../os/config/displaysetting.js';

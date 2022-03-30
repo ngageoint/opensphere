@@ -3,9 +3,9 @@ goog.require('os.proj');
 goog.require('os.style.area');
 goog.require('os.ui.draw');
 
-import Feature from 'ol/src/Feature';
-import {fromExtent} from 'ol/src/geom/Polygon';
-import {transformExtent} from 'ol/src/proj';
+import Feature from 'ol/src/Feature.js';
+import {fromExtent} from 'ol/src/geom/Polygon.js';
+import {transformExtent} from 'ol/src/proj.js';
 
 describe('os.ui.draw', function() {
   const osMap = goog.module.get('os.map');

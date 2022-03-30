@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.area');
 
-import {find} from 'ol/src/array';
-import Feature from 'ol/src/Feature';
+import {find} from 'ol/src/array.js';
+import Feature from 'ol/src/Feature.js';
 import AlertEventSeverity from '../../os/alert/alerteventseverity.js';
 import AlertManager from '../../os/alert/alertmanager.js';
 import RecordField from '../../os/data/recordfield.js';

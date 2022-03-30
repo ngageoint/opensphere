@@ -24,7 +24,9 @@
 .ol-control {
   background-color: rgba($body-bg, .8);
   border: .1rem solid $border-color;
+  border-radius: 4px;
   color: rgba($body-color, .8);
+  padding: 2px;
   position: absolute;
 
   &:focus,
@@ -36,8 +38,20 @@
 
   button {
     background-color: rgba($body-bg, .1);
+    border: none;
+    border-radius: 2px;
     color: rgba($body-color, .8);
     cursor: pointer;
+    display: block;
+    font-size: 1.14em;
+    font-weight: bold;
+    height: 1.375em;
+    line-height: .4em;
+    margin: 1px;
+    padding: 0;
+    text-align: center;
+    text-decoration: none;
+    width: 1.375em;
 
     &:hover,
     &.active {
@@ -57,85 +71,29 @@
 
 // + / - zoom control buttons
 .ol-zoom {
-  border: .1rem solid $border-color;
-  border-radius: 4px;
   bottom: auto;
   left: auto;
-  padding: 2px;
   right: .75rem;
   top: .75rem;
-
-  button {
-    background-color: rgba($body-bg, .1);
-    border: none;
-    border-radius: 2px;
-    color: rgba($body-color, .8);
-    display: block;
-    font-size: 1.14em;
-    font-weight: bold;
-    height: 1.375em;
-    line-height: .4em;
-    margin: 1px;
-    padding: 0;
-    text-align: center;
-    text-decoration: none;
-    width: 1.375em;
-  }
 }
 
 // Arrow rotation control button
 .ol-rotate {
-  border: .1rem solid $border-color;
-  border-radius: 4px;
   bottom: auto;
   left: auto;
-  padding: 2px;
   right: .75rem;
   top: 4.5rem;
-
-  button {
-    background-color: rgba($body-bg, .1);
-    border: none;
-    border-radius: 2px;
-    color: rgba($body-color, .8);
-    display: block;
-    font-size: 1.14em;
-    font-weight: bold;
-    height: 1.375em;
-    line-height: .4em;
-    margin: 1px;
-    padding: 0;
-    text-align: center;
-    text-decoration: none;
-    width: 1.375em;
-  }
 }
 
 // 2D / 3D switcher button
 .ol-mapmode {
-  border: .1rem solid $border-color;
-  border-radius: 4px;
   bottom: auto;
   left: auto;
-  padding: 2px;
   right: .75rem;
   top: 6.75rem;
 
-  button {
-    background-color: rgba($body-bg, .1);
-    border: none;
-    border-radius: 2px;
-    color: rgba($body-color, .8);
-    display: block;
-    font-size: 1.14em;
-    font-weight: bold;
-    height: 1.375em;
-    line-height: .4em;
-    margin: 1px;
-    padding: 0;
-    text-align: center;
-    text-decoration: none;
-    width: 1.375em;
+  .ol-mapmode-text {
+    font-size: .9em;
   }
 }
 
@@ -182,19 +140,18 @@
 .ol-overviewmap {
   bottom: auto;
   left: auto;
+  padding: 0;
   right: 3rem;
   top: .75rem;
 
+  &.ol-collapsed button {
+    position: static;
+  }
+
   button {
     background: rgba($body-bg, .5);
-    border: none;
-    border-radius: 2px;
     color: rgba($body-color, .8);
-    font-size: 1.14em;
-    font-weight: bold;
     left: .1rem;
-    margin: 0;
-    padding: 0 .5em;
     position: absolute;
     top: .1rem;
   }
@@ -216,17 +173,16 @@
 
   .ol-overviewmap-box {
     border: .125rem dotted $danger;
+
+    &:hover {
+      cursor: move;
+    }
   }
 }
 
 // Collapsed overview map
 .ol-collapsed .ol-overviewmap-map {
   display: none;
-}
-
-.ol-overviewmap.ol-collapsed {
-  border: unset;
-  margin-right: 2em;
 }
 
 // Scale Line

@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.arc');
 
-import {get as getProjection, transformExtent} from 'ol/src/proj';
+import {get as getProjection, transformExtent} from 'ol/src/proj.js';
 import {getText} from '../../os/file/mime/text.js';
 import {EPSG4326} from '../../os/proj/proj.js';
 import {launchForLayer} from '../../os/ui/query/combinator.js';

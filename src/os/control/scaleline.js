@@ -1,9 +1,9 @@
 goog.declareModuleId('os.control.ScaleLine');
 
-import * as asserts from 'ol/src/asserts';
-import {default as OLScaleLine, Units as OLUnits} from 'ol/src/control/ScaleLine';
-import * as olProj from 'ol/src/proj';
-import Units from 'ol/src/proj/Units';
+import * as asserts from 'ol/src/asserts.js';
+import OLScaleLine, {Units as OLUnits} from 'ol/src/control/ScaleLine.js';
+import * as olProj from 'ol/src/proj.js';
+import Units from 'ol/src/proj/Units.js';
 
 import * as osMap from '../map/map.js';
 import {UnitSystem} from '../unit/unit.js';

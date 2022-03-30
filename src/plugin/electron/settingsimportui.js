@@ -3,7 +3,7 @@ goog.declareModuleId('plugin.electron.SettingsImportUI');
 import AlertManager from '../../os/alert/alertmanager.js';
 import * as Dispatcher from '../../os/dispatcher.js';
 import {FileScheme} from '../../os/file/index.js';
-import {detect} from '../../os/file/mime/jsonsettings';
+import {detect} from '../../os/file/mime/jsonsettings.js';
 import FileImportUI from '../../os/ui/im/fileimportui.js';
 import {launchConfirm} from '../../os/ui/window/confirm.js';
 import {launchConfirmText} from '../../os/ui/window/confirmtext.js';

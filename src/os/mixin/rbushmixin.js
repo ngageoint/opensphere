@@ -1,8 +1,8 @@
 goog.declareModuleId('os.mixin.rbush');
 
-import {getUid} from 'ol/src';
-import {extend, intersects, returnOrUpdate} from 'ol/src/extent';
-import RBush from 'ol/src/structs/RBush';
+import {extend, intersects, returnOrUpdate} from 'ol/src/extent.js';
+import RBush from 'ol/src/structs/RBush.js';
+import {getUid} from 'ol/src/util.js';
 
 import {removeDuplicates} from '../array/array.js';
 import {normalizeAntiLeft, normalizeAntiRight} from '../extent.js';

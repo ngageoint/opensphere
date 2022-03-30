@@ -6,10 +6,10 @@ goog.require('plugin.cesium.sync.runConverter');
 goog.require('test.plugin.cesium.primitive');
 goog.require('test.plugin.cesium.scene');
 
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
-import {get} from 'ol/src/proj';
-import Style from 'ol/src/style/Style';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
+import {get} from 'ol/src/proj.js';
+import Style from 'ol/src/style/Style.js';
 
 describe('plugin.cesium.sync.runConverter', () => {
   const {default: VectorLayer} = goog.module.get('os.layer.Vector');

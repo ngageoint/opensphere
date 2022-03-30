@@ -1,6 +1,6 @@
 goog.declareModuleId('os.xml');
 
-import {getAllTextContent} from 'ol/src/xml';
+import {getAllTextContent} from 'ol/src/xml.js';
 
 const googArray = goog.require('goog.array');
 const dom = goog.require('goog.dom');

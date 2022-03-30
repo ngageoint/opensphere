@@ -1,7 +1,7 @@
 goog.require('os.im.mapping.MGRSMapping');
 goog.require('os.osasm.wait');
 
-import Feature from 'ol/src/Feature';
+import Feature from 'ol/src/Feature.js';
 
 describe('os.im.mapping.MGRSMapping', function() {
   const {default: MGRSMapping} = goog.module.get('os.im.mapping.MGRSMapping');

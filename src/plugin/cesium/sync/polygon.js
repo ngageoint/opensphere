@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.cesium.sync.polygon');
 
-import olcsCore from 'ol-cesium/src/olcs/core';
+import olcsCore from 'ol-cesium/src/olcs/core.js';
 
 import * as geo from '../../../os/geo/geo.js';
 import {GeometryInstanceId} from '../cesium.js';

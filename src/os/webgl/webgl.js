@@ -1,6 +1,6 @@
 goog.declareModuleId('os.webgl');
 
-import {getContext} from 'ol/src/webgl';
+import {getContext} from 'ol/src/webgl.js';
 import AltitudeMode from './altitudemode.js';
 
 const userAgent = goog.require('goog.userAgent');

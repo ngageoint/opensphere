@@ -1,6 +1,6 @@
 goog.declareModuleId('os.xt.Peer');
 
-import {includes} from 'ol/src/array';
+import {includes} from 'ol/src/array.js';
 
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';

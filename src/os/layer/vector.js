@@ -1,8 +1,8 @@
 goog.declareModuleId('os.layer.Vector');
 
-import {listen, unlistenByKey} from 'ol/src/events';
-import Property from 'ol/src/layer/Property';
-import OLVectorLayer from 'ol/src/layer/Vector';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import Property from 'ol/src/layer/Property.js';
+import OLVectorLayer from 'ol/src/layer/Vector.js';
 
 import ActionEventType from '../action/eventtype.js';
 import {toRgbArray} from '../color.js';

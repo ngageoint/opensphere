@@ -1,10 +1,10 @@
 goog.declareModuleId('os.interaction.KeyboardPan');
 
-import {rotate} from 'ol/src/coordinate';
-import EventType from 'ol/src/events/EventType';
-import KeyCode from 'ol/src/events/KeyCode';
-import {pan} from 'ol/src/interaction/Interaction';
-import OLKeyboardPan from 'ol/src/interaction/KeyboardPan';
+import {rotate} from 'ol/src/coordinate.js';
+import EventType from 'ol/src/events/EventType.js';
+import KeyCode from 'ol/src/events/KeyCode.js';
+import {pan} from 'ol/src/interaction/Interaction.js';
+import OLKeyboardPan from 'ol/src/interaction/KeyboardPan.js';
 
 import I3DSupport from '../i3dsupport.js';
 import osImplements from '../implements.js';

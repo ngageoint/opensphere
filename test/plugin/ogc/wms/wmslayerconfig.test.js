@@ -1,7 +1,7 @@
 goog.require('os.net.ProxyHandler');
 goog.require('plugin.ogc.wms.WMSLayerConfig');
 
-import {get} from 'ol/src/proj';
+import {get} from 'ol/src/proj.js';
 
 describe('plugin.ogc.wms.WMSLayerConfig', function() {
   const {default: ProxyHandler} = goog.module.get('os.net.ProxyHandler');

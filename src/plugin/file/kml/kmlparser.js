@@ -1,16 +1,16 @@
 goog.declareModuleId('plugin.file.kml.KMLParser');
 
-import {getUid} from 'ol/src/';
-import Feature from 'ol/src/Feature';
-import {readBoolean, readDecimal, readString, readPositiveInteger, readBooleanString} from 'ol/src/format/xsd';
-import {inflateCoordinates} from 'ol/src/geom/flat/inflate';
-import GeometryLayout from 'ol/src/geom/GeometryLayout';
-import GeometryType from 'ol/src/geom/GeometryType';
-import LineString from 'ol/src/geom/LineString';
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import {transformExtent} from 'ol/src/proj';
-import IconAnchorUnits from 'ol/src/style/IconAnchorUnits';
-import {isDocument, getAllTextContent, pushParseAndPop, makeObjectPropertySetter, makeStructureNS} from 'ol/src/xml';
+import Feature from 'ol/src/Feature.js';
+import {readBoolean, readDecimal, readString, readPositiveInteger, readBooleanString} from 'ol/src/format/xsd.js';
+import {inflateCoordinates} from 'ol/src/geom/flat/inflate.js';
+import GeometryLayout from 'ol/src/geom/GeometryLayout.js';
+import GeometryType from 'ol/src/geom/GeometryType.js';
+import LineString from 'ol/src/geom/LineString.js';
+import MultiLineString from 'ol/src/geom/MultiLineString.js';
+import {transformExtent} from 'ol/src/proj.js';
+import IconAnchorUnits from 'ol/src/style/IconAnchorUnits.js';
+import {getUid} from 'ol/src/util.js';
+import {isDocument, getAllTextContent, pushParseAndPop, makeObjectPropertySetter, makeStructureNS} from 'ol/src/xml.js';
 import AlertEventSeverity from '../../../os/alert/alerteventseverity.js';
 import AlertManager from '../../../os/alert/alertmanager.js';
 import * as annotation from '../../../os/annotation/annotation.js';

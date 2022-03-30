@@ -2,7 +2,7 @@ goog.require('goog.net.EventType');
 goog.require('goog.net.XhrIo');
 goog.require('plugin.osm.nom.NominatimParser');
 
-import Feature from 'ol/src/Feature';
+import Feature from 'ol/src/Feature.js';
 
 describe('plugin.osm.nom.NominatimParser', function() {
   const EventType = goog.module.get('goog.net.EventType');

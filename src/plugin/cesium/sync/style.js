@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.cesium.sync.style');
 
-import olcsCore from 'ol-cesium/src/olcs/core';
+import olcsCore from 'ol-cesium/src/olcs/core.js';
 import {DEFAULT_FEATURE_SIZE, DEFAULT_HIGHLIGHT_CONFIG} from '../../../os/style/style.js';
 import {OUTLINE_REGEXP} from '../cesium.js';
 

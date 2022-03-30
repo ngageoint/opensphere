@@ -1,16 +1,16 @@
 goog.declareModuleId('os.mixin.canvasreplay');
 
-import {getUid} from 'ol/src';
-import {equals} from 'ol/src/array';
-import {intersects} from 'ol/src/extent';
-import {lineStringLength} from 'ol/src/geom/flat/length';
-import {drawTextOnPath} from 'ol/src/geom/flat/textpath';
-import {transform2D} from 'ol/src/geom/flat/transform';
-import {defaultPadding} from 'ol/src/render/canvas';
-import Replay from 'ol/src/render/canvas/ExecutorGroup';
-import Instruction from 'ol/src/render/canvas/Instruction';
-import {TEXT_ALIGN} from 'ol/src/render/canvas/TextBuilder';
-import {setFromArray} from 'ol/src/transform';
+import {equals} from 'ol/src/array.js';
+import {intersects} from 'ol/src/extent.js';
+import {lineStringLength} from 'ol/src/geom/flat/length.js';
+import {drawTextOnPath} from 'ol/src/geom/flat/textpath.js';
+import {transform2D} from 'ol/src/geom/flat/transform.js';
+import {defaultPadding} from 'ol/src/render/canvas.js';
+import Replay from 'ol/src/render/canvas/ExecutorGroup.js';
+import Instruction from 'ol/src/render/canvas/Instruction.js';
+import {TEXT_ALIGN} from 'ol/src/render/canvas/TextBuilder.js';
+import {setFromArray} from 'ol/src/transform.js';
+import {getUid} from 'ol/src/util.js';
 
 // const Feature = goog.requireTyped('ol.Feature');
 // const SimpleGeometry = goog.requireTyped('ol.geom.SimpleGeometry');

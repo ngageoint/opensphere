@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.cesium.sync.ellipsoid');
 
-import olcsCore from 'ol-cesium/src/olcs/core';
+import olcsCore from 'ol-cesium/src/olcs/core.js';
 
 import {GeometryInstanceId} from '../cesium.js';
 import {createColoredPrimitive} from '../primitive.js';

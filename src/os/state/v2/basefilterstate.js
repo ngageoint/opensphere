@@ -1,6 +1,6 @@
 goog.declareModuleId('os.state.v2.BaseFilter');
 
-import {find} from 'ol/src/array';
+import {find} from 'ol/src/array.js';
 
 import {forEach} from '../../array/array.js';
 import FilterEntry from '../../filter/filterentry.js';

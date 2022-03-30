@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.places.menu');
 
-import Point from 'ol/src/geom/Point';
+import Point from 'ol/src/geom/Point.js';
 import CommandProcessor from '../../os/command/commandprocessor.js';
 import ParallelCommand from '../../os/command/parallelcommand.js';
 import DataManager from '../../os/data/datamanager.js';

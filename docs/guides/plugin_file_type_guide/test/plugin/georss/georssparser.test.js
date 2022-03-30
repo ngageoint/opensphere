@@ -1,6 +1,6 @@
 goog.require('plugin.georss.GeoRSSParser');
 
-import {parse} from 'ol/src/xml';
+import {parse} from 'ol/src/xml.js';
 
 describe('plugin.georss.GeoRSSParser', function() {
   const {default: GeoRSSParser} = goog.module.get('plugin.georss.GeoRSSParser');

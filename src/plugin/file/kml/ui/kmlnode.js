@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.file.kml.ui.KMLNode');
 
 import '../../../../os/ui/node/defaultlayernodeui.js';
-import {listen, unlistenByKey} from 'ol/src/events';
-import {extend, createEmpty, isEmpty} from 'ol/src/extent';
-import Feature from 'ol/src/Feature';
-import {fromExtent} from 'ol/src/geom/Polygon';
-import ImageStatic from 'ol/src/source/ImageStatic';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import {extend, createEmpty, isEmpty} from 'ol/src/extent.js';
+import Feature from 'ol/src/Feature.js';
+import {fromExtent} from 'ol/src/geom/Polygon.js';
+import ImageStatic from 'ol/src/source/ImageStatic.js';
 import * as annotation from '../../../../os/annotation/annotation.js';
 import FeatureAnnotation from '../../../../os/annotation/featureannotation.js';
 import * as osColor from '../../../../os/color.js';

@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.csv.CSVExporter');
 
-import Point from 'ol/src/geom/Point';
+import Point from 'ol/src/geom/Point.js';
 
 import RecordField from '../../../os/data/recordfield.js';
 import {createEllipse} from '../../../os/feature/feature.js';

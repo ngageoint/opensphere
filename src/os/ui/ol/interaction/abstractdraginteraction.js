@@ -1,8 +1,8 @@
 goog.declareModuleId('os.ui.ol.interaction.AbstractDrag');
 
-import {mouseOnly} from 'ol/src/events/condition';
-import MapBrowserEvent from 'ol/src/MapBrowserEvent';
-import MapBrowserEventType from 'ol/src/MapBrowserEventType';
+import {mouseOnly} from 'ol/src/events/condition.js';
+import MapBrowserEvent from 'ol/src/MapBrowserEvent.js';
+import MapBrowserEventType from 'ol/src/MapBrowserEventType.js';
 
 import AbstractDraw from './abstractdrawinteraction.js';
 

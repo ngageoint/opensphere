@@ -6,11 +6,11 @@ goog.require('plugin.cesium.sync.DynamicLineStringConverter');
 goog.require('test.plugin.cesium.scene');
 goog.require('test.plugin.cesium.sync.dynamiclinestring');
 
-import Feature from 'ol/src/Feature';
-import LineString from 'ol/src/geom/LineString';
-import {get} from 'ol/src/proj';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
+import Feature from 'ol/src/Feature.js';
+import LineString from 'ol/src/geom/LineString.js';
+import {get} from 'ol/src/proj.js';
+import Stroke from 'ol/src/style/Stroke.js';
+import Style from 'ol/src/style/Style.js';
 
 describe('plugin.cesium.sync.DynamicLineStringConverter', () => {
   const {default: Vector} = goog.module.get('os.layer.Vector');

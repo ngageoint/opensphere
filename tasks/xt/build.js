@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var compile = require('opensphere-build-closure-helper').compile;
-var resolver = require('opensphere-build-resolver/utils');
+var resolver = require('opensphere-build-resolver/utils.js');
 var options = require('./gcc-args.json');
 
 var resolvePath = function(path) {

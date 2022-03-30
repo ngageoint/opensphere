@@ -1,9 +1,9 @@
 goog.declareModuleId('plugin.cesium.sync.shape');
 
-import {asColorLike} from 'ol/src/colorlike';
-import {createCanvasContext2D} from 'ol/src/dom';
-import {defaultStrokeStyle, defaultLineWidth, defaultLineJoin, defaultLineCap, defaultMiterLimit} from 'ol/src/render/canvas';
-import OLRegularShape from 'ol/style/RegularShape';
+import {asColorLike} from 'ol/src/colorlike.js';
+import {createCanvasContext2D} from 'ol/src/dom.js';
+import {defaultStrokeStyle, defaultLineWidth, defaultLineJoin, defaultLineCap, defaultMiterLimit} from 'ol/src/render/canvas.js';
+import OLRegularShape from 'ol/style/RegularShape.js';
 
 
 /**

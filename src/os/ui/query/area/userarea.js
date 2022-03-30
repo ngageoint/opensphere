@@ -1,12 +1,12 @@
 goog.declareModuleId('os.ui.query.area.UserAreaUI');
 
-import {getUid} from 'ol/src';
-import {remove} from 'ol/src/array';
-import {getArea} from 'ol/src/extent';
-import Feature from 'ol/src/Feature';
-import GeometryType from 'ol/src/geom/GeometryType';
-import Point from 'ol/src/geom/Point';
-import {fromExtent} from 'ol/src/geom/Polygon';
+import {remove} from 'ol/src/array.js';
+import {getArea} from 'ol/src/extent.js';
+import Feature from 'ol/src/Feature.js';
+import GeometryType from 'ol/src/geom/GeometryType.js';
+import Point from 'ol/src/geom/Point.js';
+import {fromExtent} from 'ol/src/geom/Polygon.js';
+import {getUid} from 'ol/src/util.js';
 
 import '../../geo/position.js';
 import '../../util/validationmessage.js';

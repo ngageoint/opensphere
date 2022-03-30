@@ -13,7 +13,7 @@ goog.require('os.query.FilterManager');
 goog.require('os.query.QueryManager');
 goog.require('os.ui.query.BasicQueryReader');
 
-import Polygon from 'ol/src/geom/Polygon';
+import Polygon from 'ol/src/geom/Polygon.js';
 
 describe('os.ui.query.BasicQueryReader', function() {
   const xml = goog.module.get('goog.dom.xml');

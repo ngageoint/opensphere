@@ -3,8 +3,7 @@
  */
 goog.declareModuleId('os.mixin.map');
 
-import PluggableMap from 'ol/src/PluggableMap';
-import Style from 'ol/src/style/Style';
+import PluggableMap from 'ol/src/PluggableMap.js';
 
 // const Feature = goog.requireTyped('ol.Feature');
 
@@ -33,7 +32,6 @@ export const init = () => {
   PluggableMap.prototype.skipFeature = function(feature) {
     feature.set('savedStyle', feature.getStyle());
     feature.setStyle(new Style(null));
-    // this.render();
   };
 
 
@@ -46,7 +44,6 @@ export const init = () => {
   PluggableMap.prototype.unskipFeature = function(feature) {
     const featureSavedStyle = feature.get('savedStyle');
     feature.setStyle(featureSavedStyle);
-    // this.render();
   };
 };
 

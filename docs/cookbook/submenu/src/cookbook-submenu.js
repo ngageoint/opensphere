@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.cookbook_submenu.CookbookSubmenu');
 
-import Point from 'ol/src/geom/Point';
-import {toLonLat} from 'ol/src/proj';
+import Point from 'ol/src/geom/Point.js';
+import {toLonLat} from 'ol/src/proj.js';
 
 import {PROJECTION} from 'opensphere/src/os/map/map.js';
 import AbstractPlugin from 'opensphere/src/os/plugin/abstractplugin.js';

@@ -9,12 +9,12 @@ goog.require('plugin.heatmap');
 goog.require('plugin.heatmap.HeatmapField');
 goog.require('plugin.heatmap.HeatmapLayerConfig');
 
-import Feature from 'ol/src/Feature';
-import MultiPoint from 'ol/src/geom/MultiPoint';
-import Point from 'ol/src/geom/Point';
-import Fill from 'ol/src/style/Fill';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
+import Feature from 'ol/src/Feature.js';
+import MultiPoint from 'ol/src/geom/MultiPoint.js';
+import Point from 'ol/src/geom/Point.js';
+import Fill from 'ol/src/style/Fill.js';
+import Stroke from 'ol/src/style/Stroke.js';
+import Style from 'ol/src/style/Style.js';
 
 describe('plugin.heatmap', function() {
   const googString = goog.module.get('goog.string');

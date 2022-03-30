@@ -2,7 +2,7 @@ goog.declareModuleId('test.plugin.cesium.primitive');
 
 goog.require('test.plugin.cesium');
 
-import olcsCore from 'ol-cesium/src/olcs/core';
+import olcsCore from 'ol-cesium/src/olcs/core.js';
 
 
 /**

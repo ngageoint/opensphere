@@ -4,11 +4,11 @@ goog.require('plugin.cesium.sync.DynamicPolygonConverter');
 goog.require('test.plugin.cesium.scene');
 goog.require('test.plugin.cesium.sync.dynamiclinestring');
 
-import Feature from 'ol/src/Feature';
-import Polygon from 'ol/src/geom/Polygon';
-import {get} from 'ol/src/proj';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
+import Feature from 'ol/src/Feature.js';
+import Polygon from 'ol/src/geom/Polygon.js';
+import {get} from 'ol/src/proj.js';
+import Stroke from 'ol/src/style/Stroke.js';
+import Style from 'ol/src/style/Style.js';
 
 describe('plugin.cesium.sync.DynamicPolygonConverter', () => {
   const {default: Vector} = goog.module.get('os.layer.Vector');

@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.cesium.tiles.Layer');
 
-import {transformExtent} from 'ol/src/proj';
+import {transformExtent} from 'ol/src/proj.js';
 import ActionEventType from '../../../os/action/eventtype.js';
 import settings from '../../../os/config/settings.js';
 import * as dispatcher from '../../../os/dispatcher.js';

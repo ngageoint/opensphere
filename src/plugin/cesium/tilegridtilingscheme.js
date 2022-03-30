@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.cesium.TileGridTilingScheme');
 
-import {equivalent, get, transformExtent, fromLonLat} from 'ol/src/proj';
-import {ENABLE_RASTER_REPROJECTION} from 'ol/src/reproj/common';
-import {toSize} from 'ol/src/size';
+import {equivalent, get, transformExtent, fromLonLat} from 'ol/src/proj.js';
+import {ENABLE_RASTER_REPROJECTION} from 'ol/src/reproj/common.js';
+import {toSize} from 'ol/src/size.js';
 import * as geo from '../../os/geo/geo.js';
 import {PROJECTION} from '../../os/map/map.js';
 

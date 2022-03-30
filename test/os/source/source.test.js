@@ -16,8 +16,8 @@ goog.require('os.time.TimelineController');
 goog.require('os.ui.ogc.OGCDescriptor');
 goog.require('plugin.ogc.OGCLayerDescriptor');
 
-import Feature from 'ol/src/Feature';
-import OLVectorLayer from 'ol/src/layer/Vector';
+import Feature from 'ol/src/Feature.js';
+import OLVectorLayer from 'ol/src/layer/Vector.js';
 
 describe('os.source', function() {
   const Range = goog.module.get('goog.math.Range');

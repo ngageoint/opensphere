@@ -1,8 +1,8 @@
 goog.require('os.style.TextReader');
 
-import Fill from 'ol/src/style/Fill';
-import Text from 'ol/src/style/Text';
-import TextPlacement from 'ol/src/style/TextPlacement';
+import Fill from 'ol/src/style/Fill.js';
+import Text from 'ol/src/style/Text.js';
+import TextPlacement from 'ol/src/style/TextPlacement.js';
 
 describe('os.style.TextReader', function() {
   const {default: TextReader} = goog.module.get('os.style.TextReader');

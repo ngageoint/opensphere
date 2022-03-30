@@ -1,6 +1,6 @@
 goog.declareModuleId('os.MainCtrl');
 
-import ViewHint from 'ol/src/ViewHint';
+import ViewHint from 'ol/src/ViewHint.js';
 
 import './file/mime/any.js';
 import './ui/alerts.js';

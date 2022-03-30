@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.cesium.ImageryProvider');
 
-import OLImageryProvider from 'ol-cesium/src/olcs/core/OLImageryProvider';
-import olcsUtil from 'ol-cesium/src/olcs/util';
+import OLImageryProvider from 'ol-cesium/src/olcs/core/OLImageryProvider.js';
+import olcsUtil from 'ol-cesium/src/olcs/util.js';
 
-import VectorTile from 'ol/src/source/VectorTile';
-import {createXYZ} from 'ol/src/tilegrid';
-import {DEFAULT_MAX_ZOOM} from 'ol/src/tilegrid/common';
+import VectorTile from 'ol/src/source/VectorTile.js';
+import {createXYZ} from 'ol/src/tilegrid.js';
+import {DEFAULT_MAX_ZOOM} from 'ol/src/tilegrid/common.js';
 
 
 import '../../os/mixin/vectorimagetilemixin.js';

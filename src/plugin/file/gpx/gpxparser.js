@@ -5,15 +5,15 @@
 goog.declareModuleId('plugin.file.gpx.GPXParser');
 
 
-import Feature from 'ol/src/Feature';
-import LineString from 'ol/src/geom/LineString';
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import Point from 'ol/src/geom/Point';
-import SimpleGeometry from 'ol/src/geom/SimpleGeometry';
-import {isDocument, parse} from 'ol/src/xml';
+import Feature from 'ol/src/Feature.js';
+import LineString from 'ol/src/geom/LineString.js';
+import MultiLineString from 'ol/src/geom/MultiLineString.js';
+import Point from 'ol/src/geom/Point.js';
+import SimpleGeometry from 'ol/src/geom/SimpleGeometry.js';
+import {isDocument, parse} from 'ol/src/xml.js';
 import * as text from '../../../os/file/mime/text.js';
 import * as osMap from '../../../os/map/map.js';
-import GPX from '../../../os/ol/format/GPX';
+import GPX from '../../../os/ol/format/GPX.js';
 
 const dom = goog.require('goog.dom');
 

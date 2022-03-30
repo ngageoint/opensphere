@@ -1,6 +1,6 @@
 goog.declareModuleId('os.filter.impl.ecql.AreaFormatter');
 
-import WKT from 'ol/src/format/WKT';
+import WKT from 'ol/src/format/WKT.js';
 
 import {normalizeGeometryCoordinates} from '../../../geo/geo2.js';
 import {ORIGINAL_GEOM_FIELD} from '../../../interpolate.js';

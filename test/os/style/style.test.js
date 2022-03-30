@@ -7,14 +7,14 @@ goog.require('os.style');
 goog.require('os.style.StyleField');
 goog.require('os.style.StyleType');
 
-import {toString} from 'ol/src/color';
-import {listen, unlistenByKey} from 'ol/src/events';
-import Feature from 'ol/src/Feature';
-import OLVectorLayer from 'ol/src/layer/Vector';
-import {assign} from 'ol/src/obj';
-import Fill from 'ol/src/style/Fill';
-import Stroke from 'ol/src/style/Stroke';
-import Style from 'ol/src/style/Style';
+import {toString} from 'ol/src/color.js';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import Feature from 'ol/src/Feature.js';
+import OLVectorLayer from 'ol/src/layer/Vector.js';
+import {assign} from 'ol/src/obj.js';
+import Fill from 'ol/src/style/Fill.js';
+import Stroke from 'ol/src/style/Stroke.js';
+import Style from 'ol/src/style/Style.js';
 
 describe('os.style', function() {
   const GoogEventType = goog.module.get('goog.events.EventType');

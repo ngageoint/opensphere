@@ -7,7 +7,7 @@ goog.require('os.net.Request');
 goog.require('os.ogc.wmts.WMTSLayerParserV100');
 goog.require('os.ui.ogc.OGCDescriptor');
 
-import WMTSCapabilities from 'ol/src/format/WMTSCapabilities';
+import WMTSCapabilities from 'ol/src/format/WMTSCapabilities.js';
 
 describe('os.ogc.wmts.WMTSLayerParserV100', () => {
   const {equals: arrayEquals} = goog.module.get('goog.array');

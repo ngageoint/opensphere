@@ -5,15 +5,15 @@ goog.require('os.layer.Vector');
 goog.require('os.map.instance');
 goog.require('os.mock');
 
-import TileWMS from 'ol/src/source/TileWMS';
-import OLVectorSource from 'ol/src/source/Vector';
+import TileWMS from 'ol/src/source/TileWMS.js';
+import OLVectorSource from 'ol/src/source/Vector.js';
 
-import LayerZOrderGroupBy from '../../../src/os/data/groupby/layerzordergroupby';
-import LayerTreeSearch from '../../../src/os/data/layertreesearch';
-import FolderManager from '../../../src/os/layer/foldermanager';
-import Tile from '../../../src/os/layer/tile';
-import Vector from '../../../src/os/layer/vector';
-import {getMapContainer} from '../../../src/os/map/mapinstance';
+import LayerZOrderGroupBy from '../../../src/os/data/groupby/layerzordergroupby.js';
+import LayerTreeSearch from '../../../src/os/data/layertreesearch.js';
+import FolderManager from '../../../src/os/layer/foldermanager.js';
+import Tile from '../../../src/os/layer/tile.js';
+import Vector from '../../../src/os/layer/vector.js';
+import {getMapContainer} from '../../../src/os/map/mapinstance.js';
 
 describe('os.data.LayerTreeSearch', function() {
   beforeEach(function() {

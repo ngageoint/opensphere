@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.cesium.sync.ImageStaticSynchronizer');
 
-import {listen, unlistenByKey} from 'ol/src/events';
-import OLEventType from 'ol/src/events/EventType';
-import ImageState from 'ol/src/ImageState';
-import OLObject from 'ol/src/Object';
-import {transformExtent} from 'ol/src/proj';
-import olSourceImageStatic from 'ol/src/source/ImageStatic';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import OLEventType from 'ol/src/events/EventType.js';
+import ImageState from 'ol/src/ImageState.js';
+import OLObject from 'ol/src/Object.js';
+import {transformExtent} from 'ol/src/proj.js';
+import olSourceImageStatic from 'ol/src/source/ImageStatic.js';
 
 import * as dispatcher from '../../../os/dispatcher.js';
 import LayerPropertyChange from '../../../os/layer/propertychange.js';

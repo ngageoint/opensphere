@@ -1,7 +1,7 @@
 goog.require('os.command.FlyToExtent');
 goog.require('os.map');
 
-import {createEmpty} from 'ol/src/extent';
+import {createEmpty} from 'ol/src/extent.js';
 
 describe('os.command.FlyToExtent', function() {
   const {default: FlyToExtent} = goog.module.get('os.command.FlyToExtent');

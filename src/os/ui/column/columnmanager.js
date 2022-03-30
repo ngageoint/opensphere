@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.column.ColumnManagerUI');
 
-import {findIndex, remove} from 'ol/src/array';
+import {findIndex, remove} from 'ol/src/array.js';
 
 import {ROOT} from '../../os.js';
 import Module from '../module.js';

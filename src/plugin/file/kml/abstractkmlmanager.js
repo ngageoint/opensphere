@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.file.kml.AbstractKMLManager');
 
-import {listen} from 'ol/src/events';
+import {listen} from 'ol/src/events.js';
 import AlertManager from '../../../os/alert/alertmanager.js';
 import ConfigEventType from '../../../os/config/eventtype.js';
 import OsEventType from '../../../os/events/eventtype.js';

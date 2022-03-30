@@ -5,7 +5,7 @@ goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 goog.require('os.ui.search.place.CoordinateResult');
 
-import Feature from 'ol/src/Feature';
+import Feature from 'ol/src/Feature.js';
 
 describe('os.ui.search.place.CoordinateResult', function() {
   const {default: osImplements} = goog.module.get('os.implements');

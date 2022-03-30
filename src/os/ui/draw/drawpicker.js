@@ -1,9 +1,9 @@
 goog.declareModuleId('os.ui.draw.DrawPickerUI');
 
-import {listen, unlistenByKey} from 'ol/src/events';
-import Point from 'ol/src/geom/Point';
-import SimpleGeometry from 'ol/src/geom/SimpleGeometry';
-import MapBrowserEventType from 'ol/src/MapBrowserEventType';
+import {listen, unlistenByKey} from 'ol/src/events.js';
+import Point from 'ol/src/geom/Point.js';
+import SimpleGeometry from 'ol/src/geom/SimpleGeometry.js';
+import MapBrowserEventType from 'ol/src/MapBrowserEventType.js';
 
 import DragBox from '../../interaction/dragboxinteraction.js';
 import DragCircle from '../../interaction/dragcircleinteraction.js';

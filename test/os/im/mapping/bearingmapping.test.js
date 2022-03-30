@@ -2,8 +2,8 @@ goog.require('os.Fields');
 goog.require('os.im.mapping');
 goog.require('os.im.mapping.BearingMapping');
 
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
 
 describe('os.im.mapping.BearingMapping', function() {
   const {default: Fields} = goog.module.get('os.Fields');

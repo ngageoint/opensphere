@@ -1,9 +1,9 @@
 goog.require('os.extent');
 goog.require('os.proj');
 
-import Point from 'ol/src/geom/Point';
-import {fromExtent} from 'ol/src/geom/Polygon';
-import {get} from 'ol/src/proj';
+import Point from 'ol/src/geom/Point.js';
+import {fromExtent} from 'ol/src/geom/Polygon.js';
+import {get} from 'ol/src/proj.js';
 
 describe('os.extent', function() {
   const osExtent = goog.module.get('os.extent');

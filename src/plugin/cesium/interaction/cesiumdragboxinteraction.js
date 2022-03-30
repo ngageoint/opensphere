@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.cesium.interaction.dragbox');
 
-import olcsCore from 'ol-cesium/src/olcs/core';
+import olcsCore from 'ol-cesium/src/olcs/core.js';
 
 import * as Dispatcher from '../../../os/dispatcher.js';
 import DrawPolygon from '../../../os/interaction/drawpolygoninteraction.js';

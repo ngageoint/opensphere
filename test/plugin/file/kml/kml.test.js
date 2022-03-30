@@ -5,16 +5,16 @@ goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 goog.require('plugin.file.kml');
 
-import GeometryLayout from 'ol/src/geom/GeometryLayout';
-import LineString from 'ol/src/geom/LineString';
-import MultiLineString from 'ol/src/geom/MultiLineString';
-import {pushParseAndPop} from 'ol/src/xml';
+import GeometryLayout from 'ol/src/geom/GeometryLayout.js';
+import LineString from 'ol/src/geom/LineString.js';
+import MultiLineString from 'ol/src/geom/MultiLineString.js';
+import {pushParseAndPop} from 'ol/src/xml.js';
 
-import KML from '../../../../src/os/ol/format/KML';
-import {toAbgrString} from '../../../../src/os/style/style';
-import TimeInstant from '../../../../src/os/time/timeinstant';
-import TimeRange from '../../../../src/os/time/timerange';
-import {readTime, OL_LINK_PARSERS, readLatLonBox, readLatLonQuad, GROUND_OVERLAY_PARSERS} from '../../../../src/plugin/file/kml/kml';
+import KML from '../../../../src/os/ol/format/KML.js';
+import {toAbgrString} from '../../../../src/os/style/style.js';
+import TimeInstant from '../../../../src/os/time/timeinstant.js';
+import TimeRange from '../../../../src/os/time/timerange.js';
+import {readTime, OL_LINK_PARSERS, readLatLonBox, readLatLonQuad, GROUND_OVERLAY_PARSERS} from '../../../../src/plugin/file/kml/kml.js';
 
 describe('plugin.file.kml', function() {
   const dom = goog.module.get('goog.dom');

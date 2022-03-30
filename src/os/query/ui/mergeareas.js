@@ -1,6 +1,6 @@
 goog.declareModuleId('os.query.ui.MergeAreasUI');
 
-import Feature from 'ol/src/Feature';
+import Feature from 'ol/src/Feature.js';
 
 import AlertEventSeverity from '../../alert/alerteventseverity.js';
 import AlertManager from '../../alert/alertmanager.js';

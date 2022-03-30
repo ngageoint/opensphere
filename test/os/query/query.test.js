@@ -1,8 +1,8 @@
 goog.require('os.proj');
 goog.require('os.query.utils');
 
-import {fromExtent} from 'ol/src/geom/Polygon';
-import {get, transformExtent} from 'ol/src/proj';
+import {fromExtent} from 'ol/src/geom/Polygon.js';
+import {get, transformExtent} from 'ol/src/proj.js';
 
 describe('os.query.utils', function() {
   const osProj = goog.module.get('os.proj');

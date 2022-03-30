@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.arc.query.ArcQueryHandler');
 
-import Feature from 'ol/src/Feature';
+import Feature from 'ol/src/Feature.js';
 import * as jsts from '../../../os/geo/jsts.js';
 import QueryHandler from '../../../os/query/queryhandler.js';
 import * as osUiFilter from '../../../os/ui/filter/filter.js';

@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.pelias.geocoder.Search');
 
-import GeoJSON from 'ol/src/format/GeoJSON';
-import {transformExtent, toLonLat} from 'ol/src/proj';
+import GeoJSON from 'ol/src/format/GeoJSON.js';
+import {transformExtent, toLonLat} from 'ol/src/proj.js';
 import Settings from '../../../os/config/settings.js';
 import * as osExtent from '../../../os/extent.js';
 import * as osMap from '../../../os/map/map.js';

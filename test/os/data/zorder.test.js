@@ -9,8 +9,8 @@ goog.require('os.layer.config.MockVectorLayerConfig');
 goog.require('os.map.instance');
 goog.require('os.mock');
 
-import MockTileLayerConfig from '../layer/config/tilelayerconfig.mock';
-import MockVectorLayerConfig from '../layer/config/vectorlayerconfig.mock';
+import MockTileLayerConfig from '../layer/config/tilelayerconfig.mock.js';
+import MockVectorLayerConfig from '../layer/config/vectorlayerconfig.mock.js';
 
 describe('os.data.ZOrder', function() {
   const googObject = goog.module.get('goog.object');

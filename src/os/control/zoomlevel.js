@@ -1,7 +1,7 @@
 goog.declareModuleId('os.control.ZoomLevel');
 
-import Control from 'ol/src/control/Control';
-import {CLASS_UNSELECTABLE} from 'ol/src/css';
+import Control from 'ol/src/control/Control.js';
+import {CLASS_UNSELECTABLE} from 'ol/src/css.js';
 
 import * as osMap from '../map/map.js';
 import {getMapContainer} from '../map/mapinstance.js';

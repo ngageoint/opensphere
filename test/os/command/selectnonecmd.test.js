@@ -1,10 +1,10 @@
-import Feature from 'ol/src/Feature';
-import Point from 'ol/src/geom/Point';
+import Feature from 'ol/src/Feature.js';
+import Point from 'ol/src/geom/Point.js';
 
-import SelectNone from '../../../src/os/command/selectnonecmd';
-import State from '../../../src/os/command/state';
-import DataManager from '../../../src/os/data/datamanager';
-import VectorSource from '../../../src/os/source/vectorsource';
+import SelectNone from '../../../src/os/command/selectnonecmd.js';
+import State from '../../../src/os/command/state.js';
+import DataManager from '../../../src/os/data/datamanager.js';
+import VectorSource from '../../../src/os/source/vectorsource.js';
 
 describe('os.command.SelectNone', function() {
   it('should fail when the source is not provided', function() {

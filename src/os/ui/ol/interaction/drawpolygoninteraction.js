@@ -1,14 +1,14 @@
 goog.declareModuleId('os.ui.ol.interaction.DrawPolygon');
 
-import Collection from 'ol/src/Collection';
-import {getCenter, getWidth} from 'ol/src/extent';
-import Feature from 'ol/src/Feature';
-import LineString from 'ol/src/geom/LineString';
-import Polygon from 'ol/src/geom/Polygon';
-import OLVectorLayer from 'ol/src/layer/Vector';
-import MapBrowserEvent from 'ol/src/MapBrowserEvent';
-import MapBrowserEventType from 'ol/src/MapBrowserEventType';
-import OLVectorSource from 'ol/src/source/Vector';
+import Collection from 'ol/src/Collection.js';
+import {getCenter, getWidth} from 'ol/src/extent.js';
+import Feature from 'ol/src/Feature.js';
+import LineString from 'ol/src/geom/LineString.js';
+import Polygon from 'ol/src/geom/Polygon.js';
+import OLVectorLayer from 'ol/src/layer/Vector.js';
+import MapBrowserEvent from 'ol/src/MapBrowserEvent.js';
+import MapBrowserEventType from 'ol/src/MapBrowserEventType.js';
+import OLVectorSource from 'ol/src/source/Vector.js';
 
 import RecordField from '../../../data/recordfield.js';
 import {normalizeGeometryCoordinates} from '../../../geo/geo2.js';

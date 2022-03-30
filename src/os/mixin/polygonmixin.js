@@ -1,6 +1,6 @@
 goog.declareModuleId('os.mixin.polygon');
 
-import Polygon from 'ol/src/geom/Polygon';
+import Polygon from 'ol/src/geom/Polygon.js';
 
 // const LinearRing = goog.requireTyped('ol.geom.LinearRing');
 

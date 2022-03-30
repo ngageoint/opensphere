@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.filter.fn');
 
-import {getAllTextContent} from 'ol/src/xml';
+import {getAllTextContent} from 'ol/src/xml.js';
 import Expression from './expression.js';
 import {Condition, operationFromNode, conditionFromNode} from './filter.js';
 import {quoteString} from './filterstring.js';

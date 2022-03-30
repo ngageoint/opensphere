@@ -2,7 +2,7 @@ goog.require('os.data.RecordField');
 goog.require('os.data.histo.ColorBin');
 goog.require('os.feature');
 
-import Feature from 'ol/src/Feature';
+import Feature from 'ol/src/Feature.js';
 
 describe('os.data.histo.ColorBin', function() {
   const {default: RecordField} = goog.module.get('os.data.RecordField');

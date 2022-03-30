@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.timeline.OffArrows');
 
-import {extend, createEmpty} from 'ol/src/extent';
+import {extend, createEmpty} from 'ol/src/extent.js';
 import PropertyChangeEvent from '../../events/propertychangeevent.js';
 import BaseItem from './baseitem.js';
 import * as timelineUi from './timeline.js';

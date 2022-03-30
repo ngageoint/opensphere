@@ -1,9 +1,9 @@
 goog.declareModuleId('os.ui.file.gml.GMLParser');
 
-import Feature from 'ol/src/Feature';
-import GML2 from 'ol/src/format/GML2';
-import GML3 from 'ol/src/format/GML3';
-import {get as getProjection} from 'ol/src/proj';
+import Feature from 'ol/src/Feature.js';
+import GML2 from 'ol/src/format/GML2.js';
+import GML3 from 'ol/src/format/GML3.js';
+import {get as getProjection} from 'ol/src/proj.js';
 
 import {isColorString} from '../../../color.js';
 import {getText} from '../../../file/mime/text.js';

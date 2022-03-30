@@ -6,8 +6,8 @@ goog.require('plugin.file.kml.ui.KMLNode');
 goog.require('plugin.file.kml.ui.PlacemarkEditUI');
 goog.require('plugin.places.PlacesManager');
 
-import {getUid} from 'ol/src';
-import Feature from 'ol/src/Feature';
+import Feature from 'ol/src/Feature.js';
+import {getUid} from 'ol/src/util.js';
 
 describe('plugin.file.kml.ui.placemarkedit', function() {
   const osAnnotation = goog.module.get('os.annotation');

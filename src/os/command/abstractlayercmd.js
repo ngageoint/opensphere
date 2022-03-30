@@ -1,6 +1,6 @@
 goog.declareModuleId('os.command.AbstractLayer');
 
-import Layer from 'ol/src/layer/Layer';
+import Layer from 'ol/src/layer/Layer.js';
 
 import * as osLayer from '../layer/layer.js';
 import {getMapContainer} from '../map/mapinstance.js';

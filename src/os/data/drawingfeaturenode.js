@@ -1,7 +1,7 @@
 goog.declareModuleId('os.data.DrawingFeatureNode');
 
-import CircleStyle from 'ol/src/style/Circle';
-import RegularShape from 'ol/src/style/RegularShape';
+import CircleStyle from 'ol/src/style/Circle.js';
+import RegularShape from 'ol/src/style/RegularShape.js';
 
 import '../mixin/objectmixin.js';
 import {registerClass} from '../classregistry.js';

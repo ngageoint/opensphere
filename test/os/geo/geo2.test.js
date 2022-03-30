@@ -4,8 +4,8 @@ goog.require('os.geo2');
 goog.require('os.map');
 goog.require('os.proj');
 
-import SimpleGeometry from 'ol/src/geom/SimpleGeometry';
-import {get} from 'ol/src/proj';
+import SimpleGeometry from 'ol/src/geom/SimpleGeometry.js';
+import {get} from 'ol/src/proj.js';
 
 describe('os.geo2', function() {
   const featureMock = goog.module.get('os.feature.mock');
