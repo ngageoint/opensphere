@@ -265,18 +265,18 @@ const getEllipseField_ = function(feature, nmiField, defaultField, defaultUnitsF
 
   if (feature) {
     // try the mapped column first
-    if (nmiField) {
+    if (nmiField && feature.values_) {
       value = parseNumber(feature.values_[nmiField]);
     }
 
     if (!isNaN(value)) {
       // semi-minor has been mapped to nmi
       currentUnits = Units.NAUTICAL_MILES;
-    } else if (defaultField) {
+    } else if (defaultField && feature.values_) {
       // semi-minor has not been mapped, so try default field names
       value = parseNumber(feature.values_[defaultField]);
 
-      if (defaultUnitsField) {
+      if (defaultUnitsField && feature.values_) {
         currentUnits = /** @type {string|undefined} */ (feature.values_[defaultUnitsField]);
       }
     }
@@ -308,7 +308,7 @@ const getEllipseField_ = function(feature, nmiField, defaultField, defaultUnitsF
 export const createEllipse = function(feature, opt_replace) {
   var ellipse;
 
-  if (!opt_replace) {
+  if (!opt_replace && feature.values_) {
     ellipse = /** @type {(Ellipse|undefined)} */ (feature.values_[RecordField.ELLIPSE]);
     if (ellipse instanceof Ellipse) {
       // ellipse already created for this feature
@@ -334,7 +334,7 @@ export const createEllipse = function(feature, opt_replace) {
       }
     }
 
-    if (ellipse && geom.values_) {
+    if (ellipse && ellipse.values_ && geom.values_) {
       ellipse.values_[RecordField.ALTITUDE_MODE] = geom.values_[RecordField.ALTITUDE_MODE];
     }
   }
@@ -358,7 +358,7 @@ export const createEllipse = function(feature, opt_replace) {
  */
 export const getColumnValue = function(feature, opt_column, opt_default) {
   if (opt_column) {
-    if (feature.values_[opt_column] != null) {
+    if (feature.values_ && feature.values_[opt_column] != null) {
       var val = parseFloat(feature.values_[opt_column]);
       if (val == feature.values_[opt_column]) { // this prevents against a partial conversion ie 7 != '7ate9'
         return val;
@@ -381,7 +381,7 @@ export const getColumnValue = function(feature, opt_column, opt_default) {
 export const createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
   var lob;
 
-  if (!opt_replace) {
+  if (!opt_replace && feature.values_) {
     lob = /** @type {(LineString|undefined)} */ (feature.values_[RecordField.LINE_OF_BEARING]);
     if (lob instanceof MultiLineString) { // lob already created for this feature
       return lob;
@@ -537,7 +537,7 @@ export const createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
 export const createRings = function(feature, opt_replace) {
   var ringGeom;
 
-  if (feature) {
+  if (feature && feature.values_) {
     if (!opt_replace) {
       ringGeom = /** @type {GeometryCollection} */ (feature.values_[RecordField.RING]);
       if (ringGeom instanceof GeometryCollection) {
@@ -767,6 +767,9 @@ export const setAltitude = function(feature, opt_field) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 export const populateCoordFields = function(feature, opt_replace, opt_geometry, opt_silent) {
+  if (!feature.values_) {
+    return;
+  }
   var changed = false;
   var geom = opt_geometry || feature.getGeometry();
   if (geom instanceof Point) {
@@ -904,7 +907,7 @@ export const isInternalField = function(field) {
  */
 export const getLayerId = function(feature) {
   var sourceId = undefined;
-  if (feature) {
+  if (feature && feature.values_) {
     sourceId = /** @type {string|undefined} */ (feature.values_[RecordField.SOURCE_ID]);
   }
   return sourceId;
@@ -1081,15 +1084,18 @@ export const getStrokeWidth = function(feature) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 export const getShapeName = function(feature, opt_source, opt_preferSource) {
-  var shapeName = /** @type {string|undefined} */ (feature.values_[StyleField.SHAPE]);
+  var shapeName;
+  if (feature.values_) {
+    /** @type {string|undefined} */ (feature.values_[StyleField.SHAPE]);
 
-  if (!shapeName || opt_preferSource) {
-    // get the source shape if the feature didn't define its own shape, or the source shape is preferred
-    var source = opt_source || getSource(feature);
-    if (source && instanceOf(source, SourceClass.VECTOR)) {
-      var sourceShape = source.getGeometryShape();
-      if (opt_preferSource || sourceShape !== osStyle.ShapeType.DEFAULT) {
-        shapeName = sourceShape;
+    if (!shapeName || opt_preferSource) {
+      // get the source shape if the feature didn't define its own shape, or the source shape is preferred
+      var source = opt_source || getSource(feature);
+      if (source && instanceOf(source, SourceClass.VECTOR)) {
+        var sourceShape = source.getGeometryShape();
+        if (opt_preferSource || sourceShape !== osStyle.ShapeType.DEFAULT) {
+          shapeName = sourceShape;
+        }
       }
     }
   }
@@ -1108,15 +1114,18 @@ export const getShapeName = function(feature, opt_source, opt_preferSource) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 export const getCenterShapeName = function(feature, opt_source, opt_preferSource) {
-  var shapeName = /** @type {string|undefined} */ (feature.values_[StyleField.CENTER_SHAPE]);
+  var shapeName;
+  if (feature.values_) {
+    /** @type {string|undefined} */ (feature.values_[StyleField.CENTER_SHAPE]);
 
-  if (!shapeName || opt_preferSource) {
-    // get the source shape if the feature didn't define its own shape, or the source shape is preferred
-    var source = opt_source || getSource(feature);
-    if (source && instanceOf(source, SourceClass.VECTOR)) {
-      var sourceShape = source.getCenterGeometryShape();
-      if (opt_preferSource || sourceShape !== osStyle.ShapeType.DEFAULT) {
-        shapeName = sourceShape;
+    if (!shapeName || opt_preferSource) {
+      // get the source shape if the feature didn't define its own shape, or the source shape is preferred
+      var source = opt_source || getSource(feature);
+      if (source && instanceOf(source, SourceClass.VECTOR)) {
+        var sourceShape = source.getCenterGeometryShape();
+        if (opt_preferSource || sourceShape !== osStyle.ShapeType.DEFAULT) {
+          shapeName = sourceShape;
+        }
       }
     }
   }
@@ -1133,7 +1142,7 @@ export const getCenterShapeName = function(feature, opt_source, opt_preferSource
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 export const hideLabel = function(feature) {
-  if (feature && feature.values_[StyleField.SHOW_LABELS] !== false) {
+  if (feature && feature.values_ && feature.values_[StyleField.SHOW_LABELS] !== false) {
     feature.values_[StyleField.SHOW_LABELS] = false;
     return true;
   }
@@ -1150,7 +1159,7 @@ export const hideLabel = function(feature) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 export const showLabel = function(feature) {
-  if (feature && feature.values_[StyleField.SHOW_LABELS] !== true) {
+  if (feature && feature.values_ && feature.values_[StyleField.SHOW_LABELS] !== true) {
     feature.values_[StyleField.SHOW_LABELS] = true;
     return true;
   }
@@ -1259,7 +1268,7 @@ export const updateFeaturesFadeStyle = function(features, opacity, opt_source) {
       var feature = features[i];
 
       // don't fade dynamic features because they are always displayed
-      if (feature && !(feature instanceof DynamicFeature)) {
+      if (feature && feature.values_ && !(feature instanceof DynamicFeature)) {
         // we need to make a copy/clone of the style to mess with the config
         var layerConfig = osStyle.getLayerConfig(feature, source);
         var baseConfig = /** @type {Object|undefined} */
@@ -1285,7 +1294,7 @@ export const updateFeaturesFadeStyle = function(features, opacity, opt_source) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 export const sourceIdEquals = function(sourceId, feature) {
-  return feature.values_[RecordField.SOURCE_ID] == sourceId;
+  return feature.values_ ? feature.values_[RecordField.SOURCE_ID] == sourceId : false;
 };
 
 /**
