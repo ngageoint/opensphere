@@ -9,10 +9,6 @@ import {interpolateGeom} from '../interpolate.js';
 import {PLACEMARK_PARSERS} from '../ol/format/KML.js';
 import Format from './format.js';
 
-// const LineString = goog.requireTyped('ol.geom.LineString');
-// const Polygon = goog.requireTyped('ol.geom.Polygon');
-
-
 /**
  * Convert an element containing a KML geometry to an Feature.
  *

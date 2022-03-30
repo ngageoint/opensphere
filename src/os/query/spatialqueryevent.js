@@ -1,8 +1,6 @@
 goog.declareModuleId('os.query.SpatialQueryEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
-// const Feature = goog.requireTyped('ol.Feature');
-
 
 /**
  */

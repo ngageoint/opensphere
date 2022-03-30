@@ -9,9 +9,6 @@ import * as osMapping from './mapping.js';
 import MappingRegistry from './mappingregistry.js';
 import RenameMapping from './renamemapping.js';
 
-// const Feature = goog.requireTyped('ol.Feature');
-
-
 /**
  * Ellipse radius mapping.
  *

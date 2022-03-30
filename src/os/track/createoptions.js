@@ -1,6 +1,5 @@
 goog.declareModuleId('os.track.CreateOptions');
 
-// const Feature = goog.requireTyped('ol.Feature');
 const {default: TrackLike} = goog.requireType('os.track.TrackLike');
 
 

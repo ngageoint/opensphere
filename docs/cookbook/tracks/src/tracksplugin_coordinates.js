@@ -11,8 +11,6 @@ import {addToTrack} from 'opensphere/src/os/track/track.js';
 import PlacesManager from 'opensphere/src/plugin/places/placesmanager.js';
 import {createAndAdd} from 'opensphere/src/plugin/track/track.js';
 
-const Feature = goog.requireType('ol.Feature');
-
 const {CreateOptions} = goog.requireType('os.track');
 
 

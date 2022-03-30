@@ -9,9 +9,6 @@ import AbstractReader from './abstractreader.js';
 import {getFont} from './label.js';
 import StyleField from './stylefield.js';
 
-// const TextPlacement = goog.requireTyped('ol.style.TextPlacement');
-
-
 /**
  * Label style reader
  *

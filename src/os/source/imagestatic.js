@@ -6,9 +6,6 @@ import OLImageStatic from 'ol/src/source/ImageStatic.js';
 
 import {rotate} from '../ol/image.js';
 
-// const ImageBase = goog.requireTyped('ol.ImageBase');
-
-
 /**
  * @suppress {accessControls}
  */

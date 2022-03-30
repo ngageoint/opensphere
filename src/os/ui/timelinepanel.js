@@ -21,7 +21,6 @@ import {directiveTag as timeSettingsUi} from './timelinesettings.js';
 import * as ui from './ui.js';
 import * as osWindow from './window.js';
 
-// const OLLayer = goog.requireTyped('ol.layer.Layer');
 const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
 
 

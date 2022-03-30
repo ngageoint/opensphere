@@ -6,9 +6,6 @@ import ImageCanvas from 'ol/src/ImageCanvas.js';
 
 import {D2R} from '../geo/geo.js';
 
-// const ImageBase = goog.requireTyped('ol.ImageBase');
-
-
 /**
  * Rotates an OL Image about the center of the image's extent by the given value.
  *

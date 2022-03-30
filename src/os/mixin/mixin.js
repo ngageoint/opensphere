@@ -27,10 +27,6 @@ import {getUid} from 'ol/src/util.js';
 
 import registerClass from '../registerclass.js';
 
-// const Feature = goog.requireTyped('ol.Feature');
-// const RenderFeature = goog.requireTyped('ol.render.Feature');
-
-
 /**
  * Class name
  * @type {string}

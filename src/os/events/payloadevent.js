@@ -2,9 +2,6 @@ goog.declareModuleId('os.events.PayloadEvent');
 
 const GoogEvent = goog.require('goog.events.Event');
 
-// const OLEventTarget = goog.requireTyped('ol.events.EventTarget');
-
-
 /**
  * An event carrying an arbitrary data payload.
  *

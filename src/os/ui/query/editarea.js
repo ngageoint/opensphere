@@ -10,9 +10,6 @@ import AreaImportCtrl from './areaimportctrl.js';
 import AreaAdd from './cmd/areaaddcmd.js';
 import {applyMappings, createMappingsFromConfig} from './query.js';
 
-// const Feature = goog.requireTyped('ol.Feature');
-
-
 /**
  * The edit area directive
  *

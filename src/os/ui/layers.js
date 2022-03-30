@@ -37,7 +37,6 @@ import windowSelector from './windowselector.js';
 
 const {getRandomString} = goog.require('goog.string');
 
-// const Layer = goog.requireTyped('ol.layer.Layer');
 const {default: INodeGroupBy} = goog.requireType('os.data.groupby.INodeGroupBy');
 const {default: ILayer} = goog.requireType('os.layer.ILayer');
 const {default: Menu} = goog.requireType('os.ui.menu.Menu');

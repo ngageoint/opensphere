@@ -12,9 +12,6 @@ import Box from '../../../olm/render/box.js';
 import AltitudeMode from '../../../webgl/altitudemode.js';
 import AbstractDrag from './abstractdraginteraction.js';
 
-// const Style = goog.requireTyped('ol.style.Style');
-
-
 /**
  * Draws a rectangluar query area on the map.
  * This interaction is only supported for mouse devices.

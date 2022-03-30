@@ -5,9 +5,6 @@ import * as OsFeature from '../../feature/feature.js';
 import OsModule from '../module.js';
 import {directiveTag as cellUi} from './featureinfocell.js';
 
-// const Feature = goog.requireTyped('ol.Feature');
-
-
 /**
  * @type {!string}
  * @const

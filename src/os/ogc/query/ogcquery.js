@@ -4,7 +4,6 @@ import '../../ui/ogc/ogclistui.js';
 import * as query from '../../query/query.js';
 import * as ConfirmUI from '../../ui/window/confirm.js';
 
-// const Feature = goog.requireTyped('ol.Feature');
 const {default: OGCService} = goog.requireType('os.ogc.OGCService');
 const {Options: OGCListUIOptions} = goog.requireType('os.ui.ogc.OGCListUI');
 

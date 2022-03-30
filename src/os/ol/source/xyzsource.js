@@ -3,9 +3,6 @@ goog.declareModuleId('os.ol.source.XYZ');
 import OLXYZ from 'ol/src/source/XYZ.js';
 import {expandUrl, createFromTileUrlFunctions} from 'ol/src/tileurlfunction.js';
 
-// const Projection = goog.requireTyped('ol.proj.Projection');
-
-
 /**
  * Layer source for tile data with URLs in a set XYZ format.
  */

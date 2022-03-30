@@ -17,7 +17,6 @@ const {assert} = goog.require('goog.asserts');
 const {getLogger} = goog.require('goog.log');
 
 const Logger = goog.requireType('goog.log.Logger');
-// const OLVectorSource = goog.requireTyped('ol.source.Vector');
 const {default: IImporter} = goog.requireType('os.im.IImporter');
 const {default: IFeatureType} = goog.requireType('os.ogc.IFeatureType');
 const {default: IParser} = goog.requireType('os.parse.IParser');

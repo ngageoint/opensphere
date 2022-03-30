@@ -19,7 +19,6 @@ import AbstractNodeUICtrl from '../slick/abstractnodeui.js';
 
 const GoogEventType = goog.require('goog.events.EventType');
 
-// const Source = goog.requireTyped('ol.source.Source');
 const {default: LayerNode} = goog.requireType('os.data.LayerNode');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');

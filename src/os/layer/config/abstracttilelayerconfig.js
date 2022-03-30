@@ -20,9 +20,6 @@ import AbstractLayerConfig from './abstractlayerconfig.js';
 const log = goog.require('goog.log');
 
 const Logger = goog.requireType('goog.log.Logger');
-// const Projection = goog.requireTyped('ol.proj.Projection');
-// const TileImage = goog.requireTyped('ol.source.TileImage');
-// const TileGrid = goog.requireTyped('ol.tilegrid.TileGrid');
 const {default: TileClass} = goog.requireType('os.TileClass');
 
 

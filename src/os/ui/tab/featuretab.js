@@ -2,9 +2,6 @@ goog.declareModuleId('os.ui.tab.FeatureTab');
 
 import Tab from './tab.js';
 
-// const Feature = goog.requireTyped('ol.Feature');
-
-
 /**
  * Model class representing a pluggable feature tab.
  * @unrestricted

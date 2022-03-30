@@ -12,11 +12,6 @@ import {TEXT_ALIGN} from 'ol/src/render/canvas/TextBuilder.js';
 import {setFromArray} from 'ol/src/transform.js';
 import {getUid} from 'ol/src/util.js';
 
-// const Feature = goog.requireTyped('ol.Feature');
-// const SimpleGeometry = goog.requireTyped('ol.geom.SimpleGeometry');
-// const RenderFeature = goog.requireTyped('ol.render.Feature');
-// const TextReplay = goog.requireTyped('ol.render.canvas.TextReplay');
-
 /**
  * If the mixin has been initialized.
  * @type {boolean}

@@ -6,13 +6,6 @@ goog.declareModuleId('os.ol.mixin.render');
 import Instruction from 'ol/src/render/canvas/Instruction.js';
 import PolygonReplay from 'ol/src/render/canvas/PolygonBuilder.js';
 
-// const Feature = goog.requireTyped('ol.Feature');
-// const Circle = goog.requireTyped('ol.geom.Circle');
-// const MultiPolygon = goog.requireTyped('ol.geom.MultiPolygon');
-// const Polygon = goog.requireTypde('ol.geom.Polygon');
-// const RenderFeature = goog.requireTyped('ol.render.Feature');
-
-
 /**
  * Empty fill style used in our overrides of OL3 polygon rendering functions.
  * @type {string}

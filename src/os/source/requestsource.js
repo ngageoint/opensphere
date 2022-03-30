@@ -18,7 +18,6 @@ const NetEventType = goog.require('goog.net.EventType');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
-// const Feature = goog.requireTyped('ol.Feature');
 const {default: IImporter} = goog.requireType('os.im.IImporter');
 const {default: NetRequest} = goog.requireType('os.net.Request');
 

@@ -41,7 +41,6 @@ import SpatialMenu from './spatialmenu.js';
 const googDispose = goog.require('goog.dispose');
 const {caseInsensitiveCompare, toTitleCase} = goog.require('goog.string');
 
-// const Geometry = goog.requireTyped('ol.geom.Geometry');
 const {default: ILayer} = goog.requireType('os.layer.ILayer');
 const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');

@@ -5,9 +5,6 @@ import VectorImageTile from 'ol/src/VectorRenderTile.js';
 import VectorTile from '../layer/vectortile.js';
 import MapContainer from '../mapcontainer.js';
 
-// const OLLayer = goog.requireTyped('ol.layer.Layer');
-
-
 /**
  * Local reference to the MapContainer instance.
  * @type {MapContainer|undefined}

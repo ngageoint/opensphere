@@ -16,8 +16,6 @@ import ColorableTile from '../tile/colorabletile.js';
 
 const {insert} = goog.require('goog.array');
 
-// const Tile = goog.requireTyped('ol.Tile');
-// const Projection = goog.requireTyped('ol.proj.Projection');
 const {default: TileClass} = goog.requireType('os.TileClass');
 const {TileFilterFn} = goog.requireType('os.tile');
 

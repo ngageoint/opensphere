@@ -34,7 +34,6 @@ const {clamp} = goog.require('goog.math');
 const {isEmptyOrWhitespace, makeSafe, truncate} = goog.require('goog.string');
 
 const Logger = goog.requireType('goog.log.Logger');
-// const Feature = goog.requireTyped('ol.Feature');
 const {default: VectorSource} = goog.requireType('os.source.Vector');
 
 

@@ -1,11 +1,5 @@
 goog.declareModuleId('os.map.IMapContainer');
 
-// const Collection = goog.requireTyped('ol.Collection');
-// const Feature = goog.requireTypde('ol.Feature');
-// const PluggableMap = goog.requireTyped('ol.PluggableMap');
-// const Layer = goog.requireTyped('ol.layer.Layer');
-
-
 /**
  * Interface representing a wrapper class for an Openlayers map.
  *

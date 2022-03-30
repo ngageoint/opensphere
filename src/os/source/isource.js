@@ -1,6 +1,5 @@
 goog.declareModuleId('os.source.ISource');
 
-// const Feature = goog.requireTyped('ol.Feature');
 const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 const {default: TimeModel} = goog.requireType('os.time.xf.TimeModel');
 

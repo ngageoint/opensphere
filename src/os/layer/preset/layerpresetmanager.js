@@ -23,10 +23,6 @@ const Promise = goog.require('goog.Promise');
 const Debouncer = goog.require('goog.async.Debouncer');
 const GoogEventType = goog.require('goog.events.EventType');
 
-// const {EventsKey: OlEventsKey} = goog.requireTyped('ol');
-// const OlLayer = goog.requireTyped('ol.layer.Layer');
-
-
 const {default: LayerEvent} = goog.requireType('os.events.LayerEvent');
 
 const {default: IPresetService} = goog.requireType('os.layer.preset.IPresetService');

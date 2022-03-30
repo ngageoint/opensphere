@@ -6,11 +6,6 @@ import Request from '../../net/request.js';
 
 const EventType = goog.require('goog.net.EventType');
 
-// const Projection = goog.requireTyped('ol.proj.Projection');
-// const TileImage = goog.requireTyped('ol.source.TileImage');
-// const VectorTile = goog.requireTyped('ol.source.VectorTile');
-
-
 /**
  * Wraps the tileUrlFunction of the given source so that it goes through the
  * proxy configured in ProxyHandler

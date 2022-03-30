@@ -2,9 +2,6 @@ goog.declareModuleId('os.ol.events.condition');
 
 import MapBrowserEventType from 'ol/src/MapBrowserEventType.js';
 
-// const MapBrowserEvent = goog.requireTyped('ol.MapBrowserEvent');
-
-
 /**
  * If a map browser event is for a right click.
  *

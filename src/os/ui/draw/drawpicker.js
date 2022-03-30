@@ -27,8 +27,6 @@ const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
 
-// const Feature = goog.requireTyped('ol.Feature');
-// const MapBrowserEvent = goog.requireTyped('ol.MapBrowserEvent');
 const {default: OSMap} = goog.requireType('os.Map');
 const {default: DrawEvent} = goog.requireType('os.ui.draw.DrawEvent');
 const {default: Menu} = goog.requireType('os.ui.menu.Menu');

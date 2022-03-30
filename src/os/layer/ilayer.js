@@ -1,9 +1,5 @@
 goog.declareModuleId('os.layer.ILayer');
 
-
-// const Source = goog.requireTyped('ol.source.Source');
-
-
 /**
  * The interface for layers
  *

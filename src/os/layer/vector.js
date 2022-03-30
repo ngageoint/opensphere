@@ -55,7 +55,6 @@ import SynchronizerType from './synchronizertype.js';
 const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');
 
-// const Feature = goog.requireTyped('ol.Feature');
 const {default: IPersistable} = goog.requireType('os.IPersistable');
 const filter = goog.requireType('os.filter');
 

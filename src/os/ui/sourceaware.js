@@ -12,7 +12,6 @@ const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 
-// const ObjectEvent = goog.requireTyped('ol.Object.Event');
 const {default: DataEvent} = goog.requireType('os.data.event.DataEvent');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 const {default: ISource} = goog.requireType('os.source.ISource');

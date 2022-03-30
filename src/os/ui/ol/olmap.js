@@ -43,13 +43,6 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const userAgent = goog.require('goog.userAgent');
 
-// const Collection = goog.requireTyped('ol.Collection');
-// const PluggableMap = goog.requireTyped('ol.PluggableMap');
-// onst Geometry = goog.requireTyped('ol.geom.Geometry');
-// const LayerBase = goog.requireTyped('ol.layer.Base');
-// const Layer = goog.requireTyped('ol.layer.Layer');
-// const Projection = goog.requireTyped('ol.proj.Projection');
-// const TileGrid = goog.requireTyped('ol.tilegrid.TileGrid');
 const {default: IMapContainer} = goog.requireType('os.map.IMapContainer');
 const {default: ActionEvent} = goog.requireType('os.ui.action.ActionEvent');
 

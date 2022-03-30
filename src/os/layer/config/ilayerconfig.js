@@ -1,8 +1,5 @@
 goog.declareModuleId('os.layer.config.ILayerConfig');
 
-// const Layer = goog.requireTyped('ol.layer.Layer');
-
-
 /**
  * @interface
  */

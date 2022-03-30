@@ -29,7 +29,6 @@ import ILegendRenderer from './ilegendrenderer.js';
 const {defaultCompare} = goog.require('goog.array');
 const {clamp} = goog.require('goog.math');
 
-// const Layer = goog.requireTyped('ol.layer.Layer');
 const {default: TileLayer} = goog.requireType('os.layer.Tile');
 const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 

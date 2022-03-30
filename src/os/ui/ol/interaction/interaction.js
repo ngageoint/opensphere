@@ -6,12 +6,6 @@ import {isGeometryPolygonal} from '../../../geo/geo.js';
 
 const userAgent = goog.require('goog.userAgent');
 
-// const Feature = goog.requireTyped('ol.Feature');
-// const MapBrowserEvent = goog.requireTyped('ol.MapBrowserEvent');
-// const Layer = goog.requireTyped('ol.layer.Layer');
-// const RenderFeature = goog.requireTyped('ol.render.Feature');
-
-
 /**
  * If true, keyboard interactions will fire on keydown. Otherwise, they will fire on keypress.
  * @type {boolean}

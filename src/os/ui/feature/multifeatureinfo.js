@@ -19,7 +19,6 @@ const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const {caseInsensitiveContains} = goog.require('goog.string');
 
-// const Feature = goog.requireTyped('ol.Feature');
 const {default: VectorLayer} = goog.requireType('os.layer.Vector');
 
 

@@ -8,7 +8,6 @@ const Disposable = goog.require('goog.Disposable');
 const {defaultCompare, removeDuplicates} = goog.require('goog.array');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 
-// const Feature = goog.requireTyped('ol.Feature');
 const {default: IFilterFormatter} = goog.requireType('os.filter.IFilterFormatter');
 const {default: ISpatialFormatter} = goog.requireType('os.filter.ISpatialFormatter');
 const {default: ParamModifier} = goog.requireType('os.net.ParamModifier');

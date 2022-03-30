@@ -77,16 +77,6 @@ const googObject = goog.require('goog.object');
 const {isEmptyOrWhitespace, makeSafe} = goog.require('goog.string');
 
 const Logger = goog.requireType('goog.log.Logger');
-// const Feature = goog.requireTyped('ol.Feature');
-// const OLEvent = goog.requireTyped('ol.events.Event');
-// const Geometry = goog.requireTyped('ol.geom.Geometry');
-// const GeometryCollection = goog.requireTyped('ol.geom.GeometryCollection');
-// const LineString = goog.requireTyped('ol.geom.LineString');
-// const MultiLineString = goog.requireTyped('ol.geom.MultiLineString');
-// const MultiPoint = goog.requireTyped('ol.geom.MultiPoint');
-// const MultiPolygon = goog.requireTyped('ol.geom.MultiPolygon');
-// const Point = goog.requireTyped('ol.geom.Point');
-// const Polygon = goog.requireTyped('ol.geom.Polygon');
 const histo = goog.requireType('os.data.histo');
 const {LOBOptions} = goog.requireType('os.feature');
 const {default: ILayer} = goog.requireType('os.layer.ILayer');

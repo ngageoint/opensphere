@@ -11,8 +11,6 @@ const asserts = goog.require('goog.asserts');
 const log = goog.require('goog.log');
 
 const Logger = goog.requireType('goog.log.Logger');
-// const Projection = goog.requireTyped('ol.proj.Projection');
-
 
 /**
  * @type {string}

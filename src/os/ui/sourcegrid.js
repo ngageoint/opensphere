@@ -26,8 +26,6 @@ const GoogEventType = goog.require('goog.events.EventType');
 const {makeSafe} = goog.require('goog.string');
 
 const GoogEvent = goog.requireType('goog.events.Event');
-// const Feature = goog.requireTyped('ol.Feature');
-// const OLVectorSource = goog.requireTyped('ol.source.Vector');
 const {default: ColumnDefinition} = goog.requireType('os.data.ColumnDefinition');
 const {default: VectorSource} = goog.requireType('os.source.Vector');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');

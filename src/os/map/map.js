@@ -11,12 +11,6 @@ import FlightMode from './flightmode.js';
 
 const {assert} = goog.require('goog.asserts');
 
-// const PluggableMap = goog.requireTyped('ol.PluggableMap');
-// const Projection = goog.requireTyped('ol.proj.Projection');
-// const TileGrid = goog.requireTyped('ol.tilegrid.TileGrid');
-// const OLMap = goog.requireTyped('ol.Map');
-
-
 /**
  * Selector for the OpenLayers map canvas.
  * @type {string}

@@ -3,10 +3,6 @@ goog.declareModuleId('os.tile.ColorableTile');
 import ImageTile from 'ol/src/ImageTile.js';
 import {filterImage} from './tile.js';
 
-// const TileState = goog.requireTyped('ol.TileState');
-// const TileImage = goog.requireTyped('ol.source.TileImage');
-
-
 /**
  * Implementation of a tile that is colorable.
  */

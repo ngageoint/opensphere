@@ -17,8 +17,6 @@ import AbstractFeatureTabCtrl from './abstractfeaturetabctrl.js';
 const GoogEventType = goog.require('goog.events.EventType');
 const {numerateCompare} = goog.require('goog.string');
 
-// const Feature = goog.requireTyped('ol.Feature');
-// const RenderFeature = goog.requireTyped('ol.render.Feature');
 const {default: PropertyChangeEvent} = goog.requireType('os.events.PropertyChangeEvent');
 const {default: VectorSource} = goog.requireType('os.source.Vector');
 

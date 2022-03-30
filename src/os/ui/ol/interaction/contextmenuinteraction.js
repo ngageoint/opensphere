@@ -10,9 +10,6 @@ import {getEventFeature, getFirstPolygon} from './interaction.js';
 
 const Line = goog.require('goog.math.Line');
 
-// const Feature = goog.requireTyped('ol.Feature');
-// const MapBrowserEvent = goog.requireTyped('ol.MapBrowserEvent');
-// const Layer = goog.requireTyped('ol.layer.Layer');
 const {default: Menu} = goog.requireType('os.ui.menu.Menu');
 const {default: ContextMenuOptions} = goog.requireType('os.ui.ol.interaction.ContextMenuOptions');
 

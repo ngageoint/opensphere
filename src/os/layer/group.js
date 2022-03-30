@@ -8,9 +8,6 @@ import Layer from 'ol/src/layer/Layer.js';
 import LayerEvent from '../events/layerevent.js';
 import LayerEventType from '../events/layereventtype.js';
 
-// const Collection = goog.requireTyped('ol.Collection');
-
-
 /**
  * Adds priority support and a function that checks if a layer belongs in this group
  */

@@ -9,8 +9,6 @@ import MappingRegistry from './mappingregistry.js';
 
 const log = goog.require('goog.log');
 
-// const Feature = goog.requireTyped('ol.Feature');
-
 
 /**
  * @extends {AbstractPositionMapping<Feature>}

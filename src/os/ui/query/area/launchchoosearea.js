@@ -3,9 +3,6 @@ goog.declareModuleId('os.ui.query.area.launchChooseArea');
 import * as ConfirmUI from '../../window/confirm.js';
 import {directiveTag} from './choosearea.js';
 
-// const Feature = goog.requireTyped('ol.Feature');
-
-
 /**
  * @param {function(!Feature)} confirm
  * @param {Feature=} opt_default The default area to select

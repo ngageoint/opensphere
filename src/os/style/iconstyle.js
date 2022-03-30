@@ -5,9 +5,6 @@ import IconStyle from 'ol/src/style/Icon.js';
 import '../mixin/iconimagemixin.js';
 import {toRgbArray} from '../color.js';
 
-// const OLEvent = goog.requireTyped('ol.events.Event');
-
-
 /**
  * This is to handle icon styles like Google Earth. Google Earth (and also Maps) normalizes the minimum dimension
  * to 32px at scale 1.0 (16px at 0.5, 64px at 2.0, etc.).

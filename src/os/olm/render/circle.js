@@ -11,9 +11,6 @@ import BaseShape from './baseshape.js';
 
 const {assert} = goog.require('goog.asserts');
 
-// const Style = goog.requireTyped('ol.style.Style');
-
-
 /**
  */
 export default class Circle extends BaseShape {

@@ -6,9 +6,6 @@ import {directiveTag} from './userarea.js';
 
 const Promise = goog.require('goog.Promise');
 
-// const Feature = goog.requireTyped('ol.Feature');
-
-
 /**
  * Open a UI to get a user-defined area.
  *

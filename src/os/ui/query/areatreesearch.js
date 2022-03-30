@@ -3,7 +3,6 @@ goog.declareModuleId('os.ui.query.AreaTreeSearch');
 import AbstractGroupByTreeSearch from '../slick/abstractgroupbytreesearch.js';
 import AreaNode from './areanode.js';
 
-// const Feature = goog.requireTyped('ol.Feature');
 const {default: ITreeNode} = goog.requireType('os.structs.ITreeNode');
 
 

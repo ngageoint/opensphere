@@ -9,9 +9,6 @@ const {getFirstElementChild} = goog.require('goog.dom');
 const {setInnerHtml} = goog.require('goog.dom.safe');
 const SafeHtml = goog.require('goog.html.SafeHtml');
 
-// const LayerBase = goog.requireTyped('ol.layer.Base');
-
-
 /**
  * OpenLayers Layer Switcher Control.
  * See [the examples](./examples) for usage.

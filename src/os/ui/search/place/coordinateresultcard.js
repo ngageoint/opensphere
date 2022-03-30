@@ -7,9 +7,6 @@ import {ROOT} from '../../../os.js';
 import Module from '../../module.js';
 import FeatureResultCardCtrl from '../featureresultcard.js';
 
-// const Point = goog.requireTyped('ol.geom.Point');
-
-
 /**
  * The beresultcard directive for displaying search results.
  *

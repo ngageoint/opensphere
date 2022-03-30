@@ -5,9 +5,6 @@ import {shared} from 'ol/src/style/IconImageCache.js';
 
 import FallbackIconImage from '../style/fallbackiconimage.js';
 
-// const ImageState = goog.requireTyped('ol.ImageState');
-
-
 /**
  * Overridden to return our own type for the image
  *

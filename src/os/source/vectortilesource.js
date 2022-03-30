@@ -3,9 +3,6 @@ goog.declareModuleId('os.ol.source.VectorTile');
 import OLVectorTileSource from 'ol/src/source/VectorTile.js';
 import {expandUrl, createFromTileUrlFunctions} from 'ol/src/tileurlfunction.js';
 
-// const Projection = goog.requireTyped('ol.proj.Projection');
-
-
 /**
  * Layer source for vector tile data.
  */

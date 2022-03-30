@@ -19,9 +19,6 @@ import ITime from '../../../time/itime.js';
 import {directiveTag as searchUi} from './coordinateresultcard.js';
 import {FEATURE_CONFIG} from './place.js';
 
-// const Feature = goog.requireTyped('ol.Feature');
-
-
 /**
  * Search results containing a coordinate to display on the map.
  *

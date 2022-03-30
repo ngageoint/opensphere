@@ -7,7 +7,6 @@ import BasePositionMapping from './location/basepositionmapping.js';
 import MappingRegistry from './mappingregistry.js';
 import MGRSMapping from './mgrsmapping.js';
 
-// const Feature = goog.requireTyped('ol.Feature');
 const {default: IMapping} = goog.requireType('os.im.mapping.IMapping');
 
 
