@@ -180,6 +180,8 @@
 
 // Overview map
 .ol-overviewmap {
+  border: .1rem solid $border-color;
+  border-radius: 4px;
   bottom: auto;
   left: auto;
   right: 3rem;
