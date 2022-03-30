@@ -26,6 +26,7 @@
   border: .1rem solid $border-color;
   border-radius: 4px;
   color: rgba($body-color, .8);
+  padding: 2px;
   position: absolute;
 
   &:focus,
@@ -72,7 +73,6 @@
 .ol-zoom {
   bottom: auto;
   left: auto;
-  padding: 2px;
   right: .75rem;
   top: .75rem;
 }
@@ -81,7 +81,6 @@
 .ol-rotate {
   bottom: auto;
   left: auto;
-  padding: 2px;
   right: .75rem;
   top: 4.5rem;
 }
@@ -90,7 +89,6 @@
 .ol-mapmode {
   bottom: auto;
   left: auto;
-  padding: 2px;
   right: .75rem;
   top: 6.75rem;
 
@@ -142,6 +140,7 @@
 .ol-overviewmap {
   bottom: auto;
   left: auto;
+  padding: 0;
   right: 3rem;
   top: .75rem;
 
@@ -174,6 +173,10 @@
 
   .ol-overviewmap-box {
     border: .125rem dotted $danger;
+
+    &:hover {
+      cursor: move;
+    }
   }
 }
 
