@@ -4,6 +4,7 @@
 goog.declareModuleId('os.mixin.map');
 
 import PluggableMap from 'ol/src/PluggableMap.js';
+import Style from 'ol/src/style/Style.js';
 
 // const Feature = goog.requireTyped('ol.Feature');
 
