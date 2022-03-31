@@ -212,10 +212,12 @@
 // Attribution
 .ol-attribution,
 .ol-attribution.ol-uncollapsible {
+  border-radius: 4px 0 0;
   bottom: .25rem;
   display: inline;
   height: unset;
   left: .25rem;
+  line-height: 1em;
   right: auto;
   text-align: left;
   top: auto;
