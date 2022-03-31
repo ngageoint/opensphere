@@ -3,7 +3,7 @@ goog.declareModuleId('plugin.cesium.sync.shape');
 import {asColorLike} from 'ol/src/colorlike.js';
 import {createCanvasContext2D} from 'ol/src/dom.js';
 import {defaultStrokeStyle, defaultLineWidth, defaultLineJoin, defaultLineCap, defaultMiterLimit} from 'ol/src/render/canvas.js';
-import OLRegularShape from 'ol/style/RegularShape.js';
+import OLRegularShape from 'ol/src/style/RegularShape.js';
 
 
 /**
