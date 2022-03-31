@@ -57,9 +57,9 @@ export default class OverviewMap extends OLOverviewMap {
   handleMapPropertyChange_(evt) {
     if (evt.key === MapProperty.VIEW) {
       this.updateView_();
+    } else {
+      super.handleMapPropertyChange_(evt);
     }
-
-    super.handleMapPropertyChange_(evt);
   }
 
   /**
@@ -72,7 +72,8 @@ export default class OverviewMap extends OLOverviewMap {
     var view = new View({
       projection: osMap.PROJECTION,
       minZoom: osMap.MIN_ZOOM,
-      maxZoom: osMap.MAX_ZOOM
+      maxZoom: osMap.MAX_ZOOM,
+      center: [0, 0]
     });
 
     // Don't contrain the view resolution for the overview map. This improves overview map behavior when fitting the
