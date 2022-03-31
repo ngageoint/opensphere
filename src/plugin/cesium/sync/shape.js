@@ -32,7 +32,7 @@ export const drawShape = (style) => {
 
   const context = createCanvasContext2D(renderOptions.size, renderOptions.size);
   renderOptions.size = context.canvas.width;
-  RegularShape.prototype.draw_.call(scratchFakeShape, renderOptions, context, 0, 0);
+  RegularShape.prototype.draw_.call(scratchFakeShape, renderOptions, context, 1);
 
   if (fill) {
     fill.setColor(oldColor);
