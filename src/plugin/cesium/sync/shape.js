@@ -3,21 +3,7 @@ goog.declareModuleId('plugin.cesium.sync.shape');
 import {asColorLike} from 'ol/src/colorlike.js';
 import {createCanvasContext2D} from 'ol/src/dom.js';
 import {defaultStrokeStyle, defaultLineWidth, defaultLineJoin, defaultLineCap, defaultMiterLimit} from 'ol/src/render/canvas.js';
-import OLRegularShape from 'ol/src/style/RegularShape.js';
-
-
-/**
- * @type {OLRegularShape}
- */
-const scratchFakeShape = /** @type {OLRegularShape} */ ({
-  points_: 0,
-  radius_: 0,
-  radius2_: 0,
-  angle_: 0,
-  fill_: null,
-  stroke_: null
-});
-
+import RegularShape from 'ol/src/style/RegularShape.js';
 
 /**
  * @param {!OLRegularShape} style
@@ -35,16 +21,18 @@ export const drawShape = (style) => {
 
   const renderOptions = getRenderOptions(style);
 
-  scratchFakeShape.points_ = style.getPoints();
-  scratchFakeShape.radius_ = style.getRadius();
-  scratchFakeShape.radius2_ = style.getRadius2();
-  scratchFakeShape.angle_ = style.getAngle();
-  scratchFakeShape.fill_ = style.getFill();
-  scratchFakeShape.stroke_ = style.getStroke();
+  const scratchFakeShape = new RegularShape({
+    points: style.getPoints(),
+    radius: style.getRadius(),
+    radius2: style.getRadius2(),
+    angle: style.getAngle(),
+    fill: style.getFill(),
+    stroke: style.getStroke()
+  });
 
   const context = createCanvasContext2D(renderOptions.size, renderOptions.size);
   renderOptions.size = context.canvas.width;
-  OLRegularShape.prototype.draw_.call(scratchFakeShape, renderOptions, context, 0, 0);
+  RegularShape.prototype.draw_.call(scratchFakeShape, renderOptions, context, 0, 0);
 
   if (fill) {
     fill.setColor(oldColor);
