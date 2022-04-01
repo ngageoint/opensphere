@@ -88,7 +88,7 @@ export default class MouseZoom extends Interaction {
         }
       } else {
         map.render();
-        zoomByDelta(view, -delta, coordinate);
+        zoomByDelta(view, -delta, coordinate, 0);
       }
     }
   }
