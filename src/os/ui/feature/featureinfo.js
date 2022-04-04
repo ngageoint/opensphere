@@ -1,6 +1,7 @@
 goog.declareModuleId('os.ui.feature.FeatureInfoUI');
 
 import {listen, unlistenByKey} from 'ol/src/events.js';
+import EventType from 'ol/src/events/EventType.js';
 import Feature from 'ol/src/Feature.js';
 import Point from 'ol/src/geom/Point.js';
 import {toLonLat} from 'ol/src/proj.js';
@@ -190,7 +191,7 @@ export class Controller extends Disposable {
       var feature = newVal[0];
       if (feature && feature instanceof Feature) {
         // listen for change events fired by the feature so the window can be updated
-        this.changeKey_ = listen(feature, events.EventType.CHANGE, this.onFeatureChangeEvent, this);
+        this.changeKey_ = listen(feature, EventType.CHANGE, this.onFeatureChangeEvent, this);
       }
     }
 
