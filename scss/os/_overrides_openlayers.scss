@@ -226,6 +226,10 @@
     content: ', ';
   }
 
+  li:first-child:after {
+    content: ' ';
+  }
+
   &:hover {
     background-color: rgba($white, .6);
     color: rgba($body-color, .9);
