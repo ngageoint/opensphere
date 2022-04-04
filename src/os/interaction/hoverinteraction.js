@@ -92,6 +92,7 @@ export default class Hover extends Select {
     this.mouseOutListenKey_ = null;
     this.viewChangeListenKey_ = null;
     this.featureChangeListenKeys_ = {};
+    this.sourceListenKeys_ = {};
   }
 
   /**
@@ -362,8 +363,9 @@ export default class Hover extends Select {
    * @private
    */
   onSourceAdded_(e) {
-    listen(/** @type {OLEventTarget} */ (e.source), GoogEventType.PROPERTYCHANGE,
+    const key = listen(/** @type {OLEventTarget} */ (e.source), GoogEventType.PROPERTYCHANGE,
         this.onSourceChange_, this);
+    this.sourceListenKeys_[e.source] = key;
   }
 
   /**
@@ -373,8 +375,8 @@ export default class Hover extends Select {
    * @private
    */
   onSourceRemoved_(e) {
-    unlisten(/** @type {OLEventTarget} */ (e.source), GoogEventType.PROPERTYCHANGE,
-        this.onSourceChange_, this);
+    unlistenByKey(this.sourceListenKeys_[e.source]);
+    delete this.sourceListenKeys_[e.source];
   }
 
   /**
