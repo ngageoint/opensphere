@@ -883,7 +883,8 @@ export default class MapContainer extends EventTarget {
       center: mapCenter,
       zoom: mapZoom,
       minZoom: osMap.MIN_ZOOM,
-      maxZoom: osMap.MAX_ZOOM
+      maxZoom: osMap.MAX_ZOOM,
+      showFullExtent: true
     });
 
     this.map_ = new OSMap({
