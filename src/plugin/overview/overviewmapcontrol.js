@@ -25,13 +25,6 @@ export default class OverviewMap extends OLOverviewMap {
       center: [0, 0]
     });
 
-    // Don't contrain the view resolution for the overview map. This improves overview map behavior when fitting the
-    // view to the current map extent. Without this, small changes in rotation can drastically change the resolution
-    // which makes the overmap appear jumpy. This is especially prevalent in the 3D view.
-    const minResolution = view.getMinResolution();
-    const maxResolution = view.getMaxResolution();
-    view.constraints_.resolution = (resolution) => Math.max(minResolution, Math.min(maxResolution, resolution));
-
     opt_opts.view = view;
     super(opt_opts);
     this.updateView_();
@@ -84,6 +77,13 @@ export default class OverviewMap extends OLOverviewMap {
    * @private
    */
   updateView_() {
+    // Don't contrain the view resolution for the overview map. This improves overview map behavior when fitting the
+    // view to the current map extent. Without this, small changes in rotation can drastically change the resolution
+    // which makes the overmap appear jumpy. This is especially prevalent in the 3D view.
+    const minResolution = this.view_.getMinResolution();
+    const maxResolution = this.view_.getMaxResolution();
+    this.view_.constraints_.resolution = (resolution) => Math.max(minResolution, Math.min(maxResolution, resolution));
+
     if (this.getMap()) {
       var mainView = this.getMap().getView();
 
