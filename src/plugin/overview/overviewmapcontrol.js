@@ -22,7 +22,8 @@ export default class OverviewMap extends OLOverviewMap {
       projection: osMap.PROJECTION,
       minZoom: osMap.MIN_ZOOM,
       maxZoom: osMap.MAX_ZOOM,
-      center: [0, 0]
+      center: [0, 0],
+      showFullExtent: true
     });
 
     opt_opts.view = view;
@@ -80,7 +81,9 @@ export default class OverviewMap extends OLOverviewMap {
     var view = new View({
       projection: osMap.PROJECTION,
       minZoom: osMap.MIN_ZOOM,
-      maxZoom: osMap.MAX_ZOOM
+      maxZoom: osMap.MAX_ZOOM,
+      center: [0, 0],
+      showFullExtent: true
     });
 
     // Don't contrain the view resolution for the overview map. This improves overview map behavior when fitting the
