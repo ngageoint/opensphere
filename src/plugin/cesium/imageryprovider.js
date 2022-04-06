@@ -66,7 +66,6 @@ export default class ImageryProvider extends OLImageryProvider {
   handleSourceChanged_() {
     if (!this.ready_ && this.source_.getState() == 'ready') {
       this.projection_ = olcsUtil.getSourceProjection(this.source_) || this.fallbackProj_;
-      // this.credit_ = OLImageryProvider.createCreditForSource(this.source_) || null;
 
       if (this.source_ instanceof VectorTile) {
         // For vector tiles, create a copy of the tile grid with min/max zoom covering all levels. This ensures Cesium

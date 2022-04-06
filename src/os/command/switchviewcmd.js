@@ -132,7 +132,8 @@ export default class SwitchView {
       center: center || [0, 0],
       zoom: zoom || osMap.DEFAULT_ZOOM,
       minZoom: osMap.MIN_ZOOM,
-      maxZoom: osMap.MAX_ZOOM
+      maxZoom: osMap.MAX_ZOOM,
+      showFullExtent: true
     });
   }
 

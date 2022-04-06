@@ -119,7 +119,8 @@ export default class OLMap extends EventTarget {
         center: [0, 0],
         zoom: 2,
         minZoom: 1,
-        maxZoom: 15
+        maxZoom: 15,
+        showFullExtent: true
       })
     });
 
