@@ -49,6 +49,7 @@ describe('os.state.v2.TimeState', function() {
 
   beforeEach(function() {
     tlc = TimelineController.getInstance();
+    tlc.clearSliceRanges();
 
     // pretend the timeline UI is in the correct open/closed state
     spyOn(TimeState, 'testUIState').andReturn(true);
