@@ -493,7 +493,8 @@ export class Controller {
       maxZoom: osMap.MAX_ZOOM,
       projection,
       rotation,
-      zoom
+      zoom,
+      showFullExtent: true
     });
   }
 
