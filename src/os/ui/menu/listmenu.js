@@ -318,6 +318,6 @@ export const hasSelected = function(context) {
  * @param {*} context The menu context.
  * @this {MenuItem}
  */
-const visibleIfHasSelected = function(context) {
+export const visibleIfHasSelected = function(context) {
   this.visible = hasSelected(context);
 };
