@@ -285,7 +285,7 @@ export const onResetColor = function(event) {
  * @param {VectorSource} context
  * @this {MenuItem}
  */
-const canExport = function(context) {
+export const canExport = function(context) {
   this.visible = false;
 
   if (instanceOf(context, VectorSource.NAME)) {
