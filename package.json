@@ -320,7 +320,7 @@
     "jschardet": "^2.3.0",
     "jsts": "^2.7.3",
     "modernizr": "^3.8.0",
-    "moment": "~2.20.1",
+    "moment": "~2.29.2",
     "navigator.sendbeacon": "~0.0.x",
     "oboe": "^2.1.5",
     "ol-cesium": "=1.37.0",
