@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.overview.OverviewPlugin');
 
+import OverviewMap from 'ol/src/control/OverviewMap.js';
 import TileLayer from 'ol/src/layer/Tile.js';
 
 import Settings from '../../os/config/settings.js';
 import MapContainer from '../../os/mapcontainer.js';
 import AbstractPlugin from '../../os/plugin/abstractplugin.js';
-import OverviewMap from './overviewmapcontrol.js';
 
 /**
  * Adds an overview map to the map controls that syncs with the current base maps
@@ -47,7 +47,7 @@ export default class OverviewPlugin extends AbstractPlugin {
     hasChanged = this.previousGroupCount != currentLayerCount;
     if (!hasChanged) {
       const currentLayers = layerGroup.getLayers().getArray();
-      const overviewLayers = this.control.getLayers().getArray();
+      const overviewLayers = this.control.getOverviewMap().getLayers().getArray();
       for (let i = 0; i < currentLayerCount && !hasChanged; i++) {
         hasChanged = currentLayers[i].getSource() != overviewLayers[i].getSource();
       }
