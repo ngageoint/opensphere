@@ -60,7 +60,7 @@ export default class OverviewPlugin extends AbstractPlugin {
       const currentLayers = layerGroup.getLayers().getArray();
       for (let i = 0; i < currentLayerCount; i++) {
         const source = currentLayers[i].getSource();
-        layers.push(new TileLayer({source: source, opacity: currentLayers[i].getOpacity()}));
+        layers.push(new TileLayer({source: source, opacity: currentLayers[i].getOpacity(), preload: Infinity}));
       }
 
       if (this.control == null) {
