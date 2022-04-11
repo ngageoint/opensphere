@@ -53,7 +53,7 @@ export default class OverviewPlugin extends AbstractPlugin {
       }
     }
 
-    if (hasChanged && currentLayerCount > 0) {
+    if (hasChanged) {
       // add the overview map control
       var collapsed = /** @type {boolean} */ (Settings.getInstance().get(OverviewMap.SHOW_KEY, false));
       const layers = [];
