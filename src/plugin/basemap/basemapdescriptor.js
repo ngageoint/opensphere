@@ -94,6 +94,7 @@ export default class BaseMapDescriptor extends LayerSyncDescriptor {
     options['layerType'] = this.getType();
     options['tags'] = this.getTags();
     options['noClear'] = true;
+    options['cacheSize'] = 100;
 
     return options;
   }
