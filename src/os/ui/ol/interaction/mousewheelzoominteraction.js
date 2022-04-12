@@ -21,7 +21,7 @@ export default class MouseWheelZoom extends OLMouseWheelZoom {
     options.timeout = options.timeout != null ? options.timeout : 10;
 
     // disable animation by default
-    options.duration = options.duration != null ? options.duration : 0;
+    options.duration = options.duration != null ? options.duration : 10;
 
     super(options);
 
