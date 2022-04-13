@@ -1,11 +1,11 @@
 goog.declareModuleId('plugin.overview.OverviewPlugin');
 
-import OverviewMap from 'ol/src/control/OverviewMap.js';
 import TileLayer from 'ol/src/layer/Tile.js';
 
 import Settings from '../../os/config/settings.js';
 import MapContainer from '../../os/mapcontainer.js';
 import AbstractPlugin from '../../os/plugin/abstractplugin.js';
+import OverviewMap from './overviewmapcontrol.js';
 
 /**
  * Adds an overview map to the map controls that syncs with the current base maps
@@ -42,40 +42,35 @@ export default class OverviewPlugin extends AbstractPlugin {
    */
   layersChanged() {
     const layerGroup = MapContainer.getInstance().getMap().getLayers().getArray()[0];
-    let hasChanged = false;
     const currentLayerCount = layerGroup.getLayers().getLength();
-    hasChanged = this.previousGroupCount != currentLayerCount;
-    if (!hasChanged) {
-      const currentLayers = layerGroup.getLayers().getArray();
-      const overviewLayers = this.control.getOverviewMap().getLayers().getArray();
-      for (let i = 0; i < currentLayerCount && !hasChanged; i++) {
-        hasChanged = currentLayers[i].getSource() != overviewLayers[i].getSource();
-      }
+
+    // add the overview map control
+    var collapsed = /** @type {boolean} */ (Settings.getInstance().get(OverviewMap.SHOW_KEY, false));
+    const layers = [];
+    const currentLayers = layerGroup.getLayers().getArray();
+    for (let i = 0; i < currentLayerCount; i++) {
+      const source = currentLayers[i].getSource();
+      const maxRes = currentLayers[i].getMaxResolution();
+      layers.push(new TileLayer({
+        source: source,
+        opacity: currentLayers[i].getOpacity(),
+        preload: Infinity,
+        maxResolution: maxRes
+      }));
     }
 
-    if (hasChanged) {
-      // add the overview map control
-      var collapsed = /** @type {boolean} */ (Settings.getInstance().get(OverviewMap.SHOW_KEY, false));
-      const layers = [];
-      const currentLayers = layerGroup.getLayers().getArray();
-      for (let i = 0; i < currentLayerCount; i++) {
-        const source = currentLayers[i].getSource();
-        layers.push(new TileLayer({source: source, opacity: currentLayers[i].getOpacity(), preload: Infinity}));
-      }
+    if (this.control == null) {
+      this.control = new OverviewMap({
+        collapsed: collapsed,
+        label: '\u00AB',
+        collapseLabel: '\u00BB',
+        layers: layers});
 
-      if (this.control == null) {
-        this.control = new OverviewMap({
-          collapsed: collapsed,
-          label: '\u00AB',
-          collapseLabel: '\u00BB',
-          layers: layers});
-
-        MapContainer.getInstance().getMap().getControls().push(this.control);
-      } else {
-        this.control.getOverviewMap().setLayers(layers);
-      }
-
-      this.previousGroupCount = currentLayerCount;
+      MapContainer.getInstance().getMap().getControls().push(this.control);
+    } else {
+      this.control.getOverviewMap().setLayers(layers);
     }
+
+    this.previousGroupCount = currentLayerCount;
   }
 }
