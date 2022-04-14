@@ -7,6 +7,7 @@ import {platformModifierKeyOnly} from 'ol/src/events/condition.js';
 import {createEmpty, getHeight, getWidth, buffer as olBuffer} from 'ol/src/extent.js';
 import {defaults} from 'ol/src/interaction.js';
 import DragZoom from 'ol/src/interaction/DragZoom.js';
+import TileLayer from 'ol/src/layer/Tile.js';
 import OLMap from 'ol/src/Map.js';
 import OLVectorSource from 'ol/src/source/Vector.js';
 import View from 'ol/src/View.js';
@@ -528,7 +529,19 @@ export class Controller {
       // always include the basemaps here, but never add duplicates
       getBasemaps().forEach((basemap) => {
         if (!layers.includes(basemap)) {
-          layers.push(basemap);
+          const source = basemap.getSource();
+          const maxRes = basemap.getMaxResolution();
+          const minRes = basemap.getMinResolution();
+          const opacity = basemap.getOpacity();
+          const zIndex = basemap.getZIndex();
+          layers.push(new TileLayer({
+            source: source,
+            opacity: opacity,
+            preload: Infinity,
+            maxResolution: maxRes,
+            minResolution: minRes,
+            zIndex: zIndex
+          }));
         }
       });
 
@@ -592,7 +605,7 @@ export class Controller {
     let nodes = [];
     if (layers && layers.length > 0) {
       nodes = layers.map((layer) => {
-        if (!isBasemap(layer)) {
+        if (!(layer instanceof TileLayer)) {
           const node = new LayerCompareNode();
           node.setLayer(/** @type {ILayer} */ (layer));
           return node;
