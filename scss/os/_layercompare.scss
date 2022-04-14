@@ -12,10 +12,10 @@ $layer-compare-z-index-base: 1;
 
 .c-layer-compare-item {
   background-color: $modal-content-bg;
-  height: auto;
+  height: 100%;
   overflow: hidden;
   position: absolute;
-  width: auto;
+  width: 100%;
 
   > img {
     display: block;
