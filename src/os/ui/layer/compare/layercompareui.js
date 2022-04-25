@@ -550,25 +550,30 @@ export class Controller {
       });
 
       layers.forEach((layer) => {
-        var id = googString.getRandomString();
-        var newSource = new VectorSource();
-        newSource.setId(id);
+        if (!(layer instanceof TileLayer)) {
+          var id = googString.getRandomString();
+          var newSource = new VectorSource();
+          newSource.setId(id);
 
-        var newLayer = new VectorLayer({
-          source: newSource
-        });
-        newLayer.setId(id);
-        newSource.setTitle(newLayer.getTitle());
-        // keep track of its ID, use it for revert
-        var newSource = /** @type {VectorSource1} */ (newLayer.getSource());
-        this.newLayerId_ = newSource.getId();
+          var newLayer = new VectorLayer({
+            source: newSource
+          });
+          newLayer.setId(id);
+          newSource.setTitle(newLayer.getTitle());
+          // keep track of its ID, use it for revert
+          var newSource = newLayer.getSource();
+          this.newLayerId_ = newSource.getId();
 
-        // get a cloning function and use it to do the feature copy
-        var cloneFunc = this.getFeatureCloneFunction(this.newLayerId_);
-        const source = layer.getSource();
-        var features = this.getFeatures(source);
-        newSource.addFeatures(features.map(cloneFunc));
-        collection.push(newLayer);
+          // get a cloning function and use it to do the feature copy
+          var cloneFunc = this.getFeatureCloneFunction(this.newLayerId_);
+          const source = layer.getSource();
+          var features = this.getFeatures(source);
+          var clonedFeatures = features.map(cloneFunc);
+          newSource.addFeatures(clonedFeatures);
+          collection.push(newLayer);
+        } else {
+          collection.push(layer);
+        }
       });
     }
   }
