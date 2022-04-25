@@ -556,7 +556,8 @@ export class Controller {
           newSource.setId(id);
 
           var newLayer = new VectorLayer({
-            source: newSource
+            source: newSource,
+            zIndex: layer.getZIndex()
           });
           newLayer.setId(id);
           newSource.setTitle(newLayer.getTitle());
