@@ -14,6 +14,7 @@ import View from 'ol/src/View.js';
 
 import EventType from '../../../action/eventtype.js';
 import * as capture from '../../../capture/capture.js';
+import RecordField from '../../../data/recordfield.js';
 import ZOrder from '../../../data/zorder.js';
 import ZOrderEventType from '../../../data/zordereventtype.js';
 import LayerEventType from '../../../events/layereventtype.js';
@@ -24,11 +25,14 @@ import osImplements from '../../../implements.js';
 import instanceOf from '../../../instanceof.js';
 import MouseRotate from '../../../interaction/mouserotateinteraction.js';
 import ILayer from '../../../layer/ilayer.js';
+import VectorLayer from '../../../layer/vector.js';
 import * as osMap from '../../../map/map.js';
 import {getMapContainer} from '../../../map/mapinstance.js';
 import {getMaxFeatures} from '../../../ogc/ogc.js';
 import {ROOT} from '../../../os.js';
 import SourceClass from '../../../source/sourceclass.js';
+import VectorSource from '../../../source/vectorsource.js';
+import StyleType from '../../../style/styletype.js';
 import * as layerMenu from '../../menu/layermenu.js';
 import Menu from '../../menu/menu.js';
 import MenuItem from '../../menu/menuitem.js';
@@ -46,9 +50,9 @@ const {listen, unlistenByKey} = goog.require('goog.events');
 const GoogEventType = goog.require('goog.events.EventType');
 const Promise = goog.require('goog.Promise');
 const EventKey = goog.requireType('goog.events.Key');
+const googString = goog.require('goog.string');
 const LayerEvent = goog.requireType('os.events.LayerEvent');
 const {Context} = goog.requireType('os.ui.menu.layer');
-const {default: VectorSource} = goog.requireType('os.source.Vector');
 const {default: MenuEvent} = goog.requireType('os.ui.menu.MenuEvent');
 const {default: MenuItemOptions} = goog.requireType('os.ui.menu.MenuItemOptions');
 
@@ -546,11 +550,58 @@ export class Controller {
       });
 
       layers.forEach((layer) => {
-        collection.push(layer);
+        var id = googString.getRandomString();
+        var newSource = new VectorSource();
+        newSource.setId(id);
+
+        var newLayer = new VectorLayer({
+          source: newSource
+        });
+        newLayer.setId(id);
+        newSource.setTitle(newLayer.getTitle());
+        // keep track of its ID, use it for revert
+        var newSource = /** @type {VectorSource1} */ (newLayer.getSource());
+        this.newLayerId_ = newSource.getId();
+
+        // get a cloning function and use it to do the feature copy
+        var cloneFunc = this.getFeatureCloneFunction(this.newLayerId_);
+        const source = layer.getSource();
+        var features = this.getFeatures(source);
+        newSource.addFeatures(features.map(cloneFunc));
+        collection.push(newLayer);
       });
     }
   }
 
+  /**
+   * @param {VectorSource} source The vector source
+   * @return {Array<!Feature>} the features
+   */
+  getFeatures(source) {
+    return source.getFeatures();
+  }
+
+  /**
+   * @param {string} sourceId
+   * @return {function(Feature):Feature} map function used for cloning lists of features
+   */
+  getFeatureCloneFunction(sourceId) {
+    /**
+     * @param {Feature} feature Original feature
+     * @return {Feature} copied feature
+     */
+    var cloneFunc = function(feature) {
+      var newFeature = feature.clone();
+      newFeature.suppressEvents();
+      newFeature.set(RecordField.SOURCE_ID, sourceId, false);
+      newFeature.unset(StyleType.SELECT, false);
+      newFeature.unset(StyleType.HIGHLIGHT, false);
+      newFeature.enableEvents();
+      return newFeature;
+    };
+
+    return cloneFunc;
+  }
   /**
    * Set the layers on the left map.
    * @param {Array<Layer>|undefined} layers The layers.
