@@ -151,7 +151,7 @@ export default class ImageStaticSynchronizer extends CesiumSynchronizer {
    */
   resetInternal() {
     if (this.image) {
-      olEvents.unlisten(this.image, OLEventType.CHANGE, this.synchronize, this);
+      unlistenByKey(this.imageListenKey);
       this.image = null;
     }
 
