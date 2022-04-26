@@ -42,6 +42,7 @@ export const init = () => {
    */
   PluggableMap.prototype.unskipFeature = function(feature) {
     const featureSavedStyle = feature.get('savedStyle');
+    feature.unset('savedStyle');
     feature.setStyle(featureSavedStyle);
   };
 };

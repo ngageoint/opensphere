@@ -89,17 +89,27 @@ Feature.prototype.setStyle = function(style) {
  *
  * @param {ol.Feature} feature
  * @param {number} resolution
+ * @param {boolean} opt_checkSaved True if we should use saved style instead.
  * @return {Array<Style>}
  * @suppress {accessControls}
  */
-Feature.prototype.getStyleFn = function(feature, resolution) {
-  if (feature.style_ instanceof Style) {
-    return [feature.style_];
-  } else if (typeof feature.style_ == 'function') {
-    var style = feature.style_(resolution);
+Feature.prototype.getStyleFn = function(feature, resolution, opt_checkSaved) {
+  let featureStyle = feature.style_;
+
+  if (opt_checkSaved) {
+    const savedStyle = feature.get('savedStyle');
+    if (savedStyle) {
+      featureStyle = savedStyle;
+    }
+  }
+
+  if (featureStyle instanceof Style) {
+    return [featureStyle];
+  } else if (typeof featureStyle == 'function') {
+    var style = featureStyle(resolution);
     return style ? (style instanceof Style ? [style] : style) : [];
   } else {
-    return feature.style_;
+    return featureStyle;
   }
 };
 
