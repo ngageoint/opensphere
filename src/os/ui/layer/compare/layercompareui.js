@@ -521,6 +521,21 @@ export class Controller {
   }
 
   /**
+   * Checks if the basemap is already within the layers list.
+   * @param {*} layers The list of layers to check.
+   * @param {*} basemap The basemap to check if in list.
+   * @return {boolean} True if the basemap is in list of layers, false if it is not.
+   */
+  layerIncluded(layers, basemap) {
+    let included = false;
+
+    for (let i = 0; i < layers.length && !included; i++) {
+      included = layers[i].getSource() == basemap.getSource();
+    }
+    return included;
+  }
+
+  /**
    * Set the layers in a collection.
    * @param {Collection<Layer>} collection The collection.
    * @param {Array<Layer>|undefined} layers The layers.
@@ -532,7 +547,7 @@ export class Controller {
     if (layers) {
       // always include the basemaps here, but never add duplicates
       getBasemaps().forEach((basemap) => {
-        if (!layers.includes(basemap)) {
+        if (!this.layerIncluded(layers, basemap)) {
           const source = basemap.getSource();
           const maxRes = basemap.getMaxResolution();
           const minRes = basemap.getMinResolution();
