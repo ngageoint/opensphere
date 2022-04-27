@@ -42,12 +42,12 @@ export default class TimelineHistManager extends EventTarget {
      */
     this.changeThrottle_ = new Throttle(this.onChangeThrottle_, 100, this);
 
-    this.listenKeys_ = [];
+    this.listenKeys_ = {};
 
     var sources = DataManager.getInstance().getSources();
     for (var i = 0, n = sources.length; i < n; i++) {
       var source = /** @type {events.EventTarget} */ (sources[i]);
-      this.listenKeys_.push(listen(source, GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this));
+      this.listenKeys_[source] = listen(source, GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
     }
 
     DataManager.getInstance().listen(DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
@@ -70,8 +70,8 @@ export default class TimelineHistManager extends EventTarget {
     DataManager.getInstance().unlisten(DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
     DataManager.getInstance().unlisten(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
 
-    for (var i = 0, n = this.listenKeys_.length; i < n; i++) {
-      unlistenByKey(this.listenKeys_[i]);
+    for (const source in this.listenKeys_) {
+      unlistenByKey(this.listenKeys_[source]);
     }
 
     setDataManager(null);
@@ -101,8 +101,8 @@ export default class TimelineHistManager extends EventTarget {
    */
   onSourceAdded_(event) {
     if (event.source) {
-      events.listen(/** @type {events.EventTarget} */ (event.source), GoogEventType.PROPERTYCHANGE,
-          this.onSourcePropertyChange_, this);
+      this.listenKeys_[event.source] = listen(/** @type {events.EventTarget} */ (event.source),
+          GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
       this.fireChangeEvent_();
     }
   }
@@ -112,9 +112,9 @@ export default class TimelineHistManager extends EventTarget {
    * @private
    */
   onSourceRemoved_(event) {
-    if (event.source) {
-      events.unlisten(/** @type {events.EventTarget} */ (event.source), GoogEventType.PROPERTYCHANGE,
-          this.onSourcePropertyChange_, this);
+    if (event.source && this.listenKeys_[event.source]) {
+      unlistenByKey(this.listenKeys_[event.source]);
+      delete this.listenKeys_[event.source];
       this.fireChangeEvent_();
     }
   }
