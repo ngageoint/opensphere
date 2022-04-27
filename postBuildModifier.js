@@ -30,7 +30,7 @@ fs.readFile(indexFile, 'utf8', function(err, data) {
 const definesFile = './dist/opensphere/defines.js';
 let definesContent = '// This file overrides goog.define() calls for <project>.*.ROOT defines in the debug html\n' +
 'var CLOSURE_UNCOMPILED_DEFINES = {\n' +
-'  "os.APP_ROOT": "./",\n' +
+'  "os.APP_ROOT": "REPLACE",\n' +
 '  "os.ROOT": "REPLACE",\n' +
 '  "os.SETTINGS": "./config/settings.json",\n' +
 '  "goog.debug.LOGGING_ENABLED": true,\n' +
@@ -47,6 +47,7 @@ fs.readdirSync(distDir).forEach((file) => {
   }
 });
 
+definesContent = definesContent.replace('REPLACE', buildOutDir);
 definesContent = definesContent.replace('REPLACE', buildOutDir);
 definesContent = definesContent.replace('NODE_MODULES', nodeModulesDir);
 definesContent = definesContent.replace('NODE_MODULES', nodeModulesDir);
