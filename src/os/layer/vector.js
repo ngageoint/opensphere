@@ -221,17 +221,18 @@ export default class Vector extends OLVectorLayer {
    * @inheritDoc
    */
   disposeInternal() {
+    // Dispose of the source first thing ensures kml overlays are removed.
+    var source = this.getSource();
+    if (source) {
+      source.dispose();
+    }
+
     // call the parent chain first to remove listeners
     super.disposeInternal();
     getMapContainer().unlisten(GoogEventType.PROPERTYCHANGE, this.onMapChange_, false, this);
 
     // make sure the map loading counters are updated since the layer is being removed
     this.setLoading(false);
-
-    var source = this.getSource();
-    if (source) {
-      source.dispose();
-    }
 
     StyleManager.getInstance().removeLayerConfig(this.getId());
   }
