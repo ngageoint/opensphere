@@ -3,7 +3,7 @@ goog.declareModuleId('plugin.cesium.sync.ImageStaticSynchronizer');
 import {listen, unlistenByKey} from 'ol/src/events.js';
 import OLEventType from 'ol/src/events/EventType.js';
 import ImageState from 'ol/src/ImageState.js';
-import OLObject from 'ol/src/Object.js';
+import {ObjectEvent} from 'ol/src/Object.js';
 import {transformExtent} from 'ol/src/proj.js';
 import olSourceImageStatic from 'ol/src/source/ImageStatic.js';
 
@@ -168,7 +168,7 @@ export default class ImageStaticSynchronizer extends CesiumSynchronizer {
    * @protected
    */
   onLayerPropertyChange(event) {
-    if (this.primitive && event instanceof OLObject.Event) {
+    if (this.primitive && event instanceof ObjectEvent) {
       if (event.key == LayerPropertyChange.VISIBLE) {
         this.primitive.show = this.layer.getVisible();
       } else if (this.styleChangeKeys.includes(event.key)) {
