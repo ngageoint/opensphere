@@ -776,8 +776,8 @@ export default class Camera extends OLCSCamera {
 
     // determine distance at equator so the projection doesn't cause a large difference between 2d/3d
     var resolution = this.calcResolutionForDistance(this.distance_, 0);
-    view.setConstrainResolution(true);
     view.setResolution(resolution);
+    view.setConstrainResolution(true);
 
     /*
      * Since we are positioning the target, the values of heading and tilt
