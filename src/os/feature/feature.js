@@ -1086,7 +1086,7 @@ export const getStrokeWidth = function(feature) {
 export const getShapeName = function(feature, opt_source, opt_preferSource) {
   var shapeName;
   if (feature.values_) {
-    /** @type {string|undefined} */ (feature.values_[StyleField.SHAPE]);
+    shapeName = /** @type {string|undefined} */ (feature.values_[StyleField.SHAPE]);
 
     if (!shapeName || opt_preferSource) {
       // get the source shape if the feature didn't define its own shape, or the source shape is preferred
