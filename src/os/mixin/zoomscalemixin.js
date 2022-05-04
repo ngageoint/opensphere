@@ -65,6 +65,12 @@ ImageReplay.prototype.setImageStyle = function(imageStyle, declutterGroup) {
   }
 
   if (zoomScale != null) {
-    this.scale_ *= zoomScale;
+    if (Array.isArray(this.scale_)) {
+      for (let i = 0; i < this.scale_.length; i++) {
+        this.scale_[i] = imageStyle.scale_ * zoomScale;
+      }
+    } else {
+      this.scale_ = imageStyle.scale_ * zoomScale;
+    }
   }
 };

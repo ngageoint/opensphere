@@ -1,6 +1,5 @@
 goog.declareModuleId('os.style.Icon');
 
-import ImageState from 'ol/src/ImageState.js';
 import IconStyle from 'ol/src/style/Icon.js';
 import '../mixin/iconimagemixin.js';
 import {toRgbArray} from '../color.js';
@@ -32,8 +31,6 @@ export default class Icon extends IconStyle {
      * @private
      */
     this.normalizedScale_ = 0;
-
-    this.listenImageChange(this.onImageChange, this);
   }
 
   /**
@@ -62,18 +59,6 @@ export default class Icon extends IconStyle {
     }
 
     return scale;
-  }
-
-  /**
-   * @param {OLEvent} event
-   * @suppress {accessControls}
-   */
-  onImageChange(event) {
-    var state = this.iconImage_.getImageState();
-
-    if (state >= ImageState.LOADED) {
-      this.unlistenImageChange(this.onImageChange, this);
-    }
   }
 
   /**

@@ -909,7 +909,7 @@ export const setConfigLineDash = function(config, lineDash, opt_includeLineDashF
   if (config) {
     var lineDashFields = opt_includeLineDashFields || DEFAULT_LINE_DASH_STYLE_FIELDS;
     for (var key in config) {
-      if (lineDashFields.indexOf(key) !== -1) {
+      if (lineDash && lineDashFields.indexOf(key) !== -1) {
         config[key][StyleField.LINE_DASH] = lineDash;
       }
 
