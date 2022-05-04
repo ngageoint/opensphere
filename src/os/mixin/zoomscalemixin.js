@@ -72,5 +72,11 @@ ImageReplay.prototype.setImageStyle = function(imageStyle, declutterGroup) {
     } else {
       this.scale_ = imageStyle.getScale() * zoomScale;
     }
+  } else if (Array.isArray(this.scale_)) {
+    for (let i = 0; i < this.scale_.length; i++) {
+      this.scale_[i] = imageStyle.getScale();
+    }
+  } else {
+    this.scale_ = imageStyle.getScale();
   }
 };
