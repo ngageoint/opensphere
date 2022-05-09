@@ -2,6 +2,8 @@ goog.declareModuleId('plugin.capture.MapOverviewRenderer');
 
 import {getMapCanvas, getPixelRatio, isTainted} from '../../os/capture/capture.js';
 import Settings from '../../os/config/settings.js';
+import Tile from '../../os/layer/tile.js';
+import MapContainer from '../../os/mapcontainer.js';
 import CanvasRenderer from '../../os/ui/capture/canvasrenderer.js';
 
 const Promise = goog.require('goog.Promise');
@@ -24,26 +26,28 @@ export default class MapOverviewRenderer extends CanvasRenderer {
    */
   getCanvas() {
     var canvas = null;
-    var original = this.getRenderElement();
-    if (isTainted(original)) {
-      return Promise.reject('The HTML 2D canvas has been tainted');
+    var originals = document.querySelectorAll(this.selector);
+    for (let i = 0; i < originals.length; i++) {
+      if (isTainted(originals[i])) {
+        return Promise.reject('The HTML 2D canvas has been tainted');
+      }
     }
 
     // NOTE: For High DPI Displays such as Apple Retina Screens, canvas
     // pixels do not directly correspond to CSS pixels.
 
-    if (original) {
+    if (originals && originals.length > 0) {
       // since OpenLayers allows for specifying the pixel ratio on a map (rather than always
       // using window.devicePixelRatio directly), we will calculate it
       var pixelRatio = getPixelRatio();
-      var originalRect = original.getBoundingClientRect();
-      var origPixelRatio = original.width / originalRect.width;
+      var originalRect = originals[0].getBoundingClientRect();
+      var origPixelRatio = originals[0].width / originalRect.width;
       var pixelScale = pixelRatio / origPixelRatio;
 
       // create a new canvas and write the overlay to it
       canvas = /** @type {HTMLCanvasElement} */ (document.createElement('canvas'));
-      canvas.width = original.width * pixelScale;
-      canvas.height = original.height * pixelScale;
+      canvas.width = originals[0].width * pixelScale;
+      canvas.height = originals[0].height * pixelScale;
 
       var ctx = canvas.getContext('2d');
       var bgColor = Settings.getInstance().get(['bgColor'], '#000');
@@ -52,10 +56,27 @@ export default class MapOverviewRenderer extends CanvasRenderer {
       ctx.fillStyle = bgColor;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // copy the overview map canvas to our separate canvas, scaling the image if necessary.
-      ctx.drawImage(original,
-          0, 0, original.width, original.height,
-          0, 0, canvas.width, canvas.height);
+      const layers = MapContainer.getInstance().getLayers();
+      const baseMaps = [];
+      for (let i = 0; i < layers.length; i++) {
+        if (layers[i] instanceof Tile) {
+          baseMaps.push(layers[i]);
+        }
+      }
+      baseMaps.sort((a, b) => (a.getZIndex() < b.getZIndex()) ? -1 : 1);
+
+      // copy the overview map canvases to our separate canvas, scaling the image if necessary.
+      for (let i = 0; i < originals.length; i++) {
+        const original = originals[i];
+        if (i < baseMaps.length) {
+          ctx.globalAlpha = baseMaps[i].getOpacity();
+        } else {
+          ctx.globalAlpha = 1;
+        }
+        ctx.drawImage(original,
+            0, 0, original.width, original.height,
+            0, 0, canvas.width, canvas.height);
+      }
 
       // draw an opaque border to mimic the CSS border
       ctx.strokeStyle = bgColor;
