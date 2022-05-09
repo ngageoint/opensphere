@@ -8,7 +8,8 @@ import * as config from '../config/config.js';
 import {saveFile} from '../file/persist/persist.js';
 import Job from '../job/job.js';
 import JobEventType from '../job/jobeventtype.js';
-import {OPENLAYERS_CANVAS, WEBGL_CANVAS} from '../map/map.js';
+import Tile from '../layer/tile.js';
+import {WEBGL_CANVAS} from '../map/map.js';
 import MapContainer from '../mapcontainer.js';
 import {ROOT} from '../os.js';
 import * as osString from '../string/string.js';
@@ -351,13 +352,51 @@ export const setPixelRatioFn = function(fn) {
  */
 export const getMapCanvas = function() {
   var mapCanvas;
-  if (MapContainer.getInstance().is3DEnabled()) {
+  const mapContainer = MapContainer.getInstance();
+  if (mapContainer.is3DEnabled()) {
     mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(WEBGL_CANVAS));
   } else {
-    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(OPENLAYERS_CANVAS));
+    const olCanvases = document.querySelectorAll('.ol-layer > canvas');
+    let maxWidth = 0;
+    let maxHeight = 0;
+    for (let i = 0; i < olCanvases.length; i++) {
+      if (olCanvases[i].width > maxWidth) {
+        maxWidth = olCanvases[i].width;
+        maxHeight = olCanvases[i].height;
+      }
+    }
+
+    const toUse = [];
+    for (let i = 0; i < olCanvases.length; i++) {
+      if (olCanvases[i].width == maxWidth) {
+        toUse.push(olCanvases[i]);
+      }
+    }
+
+    const layers = mapContainer.getLayers();
+    const baseMaps = [];
+    for (let i = 0; i < layers.length; i++) {
+      if (layers[i] instanceof Tile) {
+        baseMaps.push(layers[i]);
+      }
+    }
+    baseMaps.sort((a, b) => (a.getZIndex() < b.getZIndex()) ? -1 : 1);
+
+    mapCanvas = document.querySelector('#js-main > canvas');
+    const context = mapCanvas.getContext('2d');
+    mapCanvas.width = maxWidth;
+    mapCanvas.height = maxHeight;
+    for (let i = 0; i < toUse.length; i++) {
+      if (i < baseMaps.length) {
+        context.globalAlpha = baseMaps[i].getOpacity();
+      } else {
+        context.globalAlpha = 1;
+      }
+      context.drawImage(toUse[i], 0, 0, maxWidth, maxHeight);
+    }
   }
 
-  return mapCanvas || null;
+  return mapCanvas;
 };
 
 /**
