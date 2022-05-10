@@ -183,9 +183,7 @@ export default class VectorTile extends VectorTileLayer {
       // If you don't suppress the event for this set, you'll get an infinite, asynchronous
       // loop with the layer UI. Debugging that was fun. Like "shaving your head with a cheese
       // grater" fun.
-      source.suppressEvents();
-      source.set(Property.MIN_RESOLUTION, value);
-      source.enableEvents();
+      source.set(Property.MIN_RESOLUTION, value, true);
     }
 
     super.setMinResolution(value);
@@ -207,9 +205,7 @@ export default class VectorTile extends VectorTileLayer {
       // If you don't suppress the event for this set, you'll get an infinite, asynchronous
       // loop with the layer UI. Debugging that was fun. Like "shaving your head with a cheese
       // grater" fun.
-      source.suppressEvents();
-      source.set(Property.MAX_RESOLUTION, value);
-      source.enableEvents();
+      source.set(Property.MAX_RESOLUTION, value, true);
     }
 
     super.setMaxResolution(value);

@@ -38,6 +38,14 @@ export default class TileWMSSource extends TileWMS {
     return style;
   }
 
+  getExtent() {
+    this.getProjection().getExtent();
+  }
+
+  setExtent(extent) {
+    this.getProjection().setExtent(extent);
+  }
+
   /**
    * @param {?(string|osx.ogc.TileStyle)} value
    * @override
