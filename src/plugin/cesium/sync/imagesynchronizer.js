@@ -1,10 +1,10 @@
 goog.declareModuleId('plugin.cesium.sync.ImageSynchronizer');
 
 import {listen, unlistenByKey} from 'ol/src/events.js';
+import Event from 'ol/src/events/Event.js';
 import EventType from 'ol/src/events/EventType.js';
 import {containsExtent} from 'ol/src/extent.js';
 import ImageState from 'ol/src/ImageState.js';
-import OLObject from 'ol/src/Object.js';
 import {transformExtent, get} from 'ol/src/proj.js';
 
 import * as dispatcher from '../../../os/dispatcher.js';
@@ -104,7 +104,9 @@ export default class ImageSynchronizer extends CesiumSynchronizer {
     this.imageListenKey;
 
     this.layerListenKey = listen(this.layer, googEventsEventType.PROPERTYCHANGE, this.onLayerPropertyChange, this);
-    this.sourceListenKey = listen(this.source_, EventType.CHANGE, this.syncInternal, this);
+    if (this.source_) {
+      this.sourceListenKey = listen(this.source_, EventType.CHANGE, this.syncInternal, this);
+    }
     mapContainer.getInstance().listen(MapEvent.VIEW_CHANGE, this.onSyncChange, false, this);
   }
 
@@ -331,7 +333,7 @@ export default class ImageSynchronizer extends CesiumSynchronizer {
    * @protected
    */
   onLayerPropertyChange(event) {
-    if (event instanceof OLObject.Event) {
+    if (event instanceof Event) {
       if (event.key == PropertyChange.VISIBLE) {
         this.syncInternal(true);
       } else if (this.styleChangeKeys.includes(event.key) && this.activePrimitive_) {

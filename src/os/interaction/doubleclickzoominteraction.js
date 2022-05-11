@@ -30,49 +30,49 @@ export default class DoubleClickZoom extends OLDoubleClickZoom {
   is3DSupported() {
     return true;
   }
+
+  /**
+   * Handles the {@link ol.MapBrowserEvent map browser event} (if it was a
+   * doubleclick) and eventually zooms the map.
+   *
+   * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
+   * @return {boolean} `false` to stop event propagation.
+   * @this os.interaction.DoubleClickZoom
+   * @suppress {accessControls|duplicate}
+   */
+  handleEvent(mapBrowserEvent) {
+    var stopEvent = false;
+
+    if (mapBrowserEvent.type == MapBrowserEventType.DBLCLICK) {
+      var anchor = mapBrowserEvent.coordinate;
+      var zoomOut = platformModifierKeyOnly(mapBrowserEvent);
+
+      var mapContainer = MapContainer.getInstance();
+      if (mapContainer.is3DEnabled()) {
+        var camera = mapContainer.getWebGLCamera();
+        if (camera) {
+          var currentAltitude = camera.getAltitude();
+          var altitude = zoomOut ? (currentAltitude * 2) : (currentAltitude / 2);
+
+          camera.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
+            center: anchor,
+            altitude: altitude,
+            duration: this.duration_
+          }));
+        }
+      } else {
+        var delta = zoomOut ? -this.delta_ : this.delta_;
+        var view = mapBrowserEvent.map.getView();
+        if (view) {
+          zoomByDelta(view, delta, anchor, this.duration_);
+        }
+      }
+
+      mapBrowserEvent.preventDefault();
+      stopEvent = true;
+    }
+    return !stopEvent;
+  }
 }
 
 osImplements(DoubleClickZoom, I3DSupport.ID);
-
-/**
- * Handles the {@link ol.MapBrowserEvent map browser event} (if it was a
- * doubleclick) and eventually zooms the map.
- *
- * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
- * @return {boolean} `false` to stop event propagation.
- * @this os.interaction.DoubleClickZoom
- * @suppress {accessControls|duplicate}
- */
-OLDoubleClickZoom.handleEvent = function(mapBrowserEvent) {
-  var stopEvent = false;
-
-  if (mapBrowserEvent.type == MapBrowserEventType.DBLCLICK) {
-    var anchor = mapBrowserEvent.coordinate;
-    var zoomOut = platformModifierKeyOnly(mapBrowserEvent);
-
-    var mapContainer = MapContainer.getInstance();
-    if (mapContainer.is3DEnabled()) {
-      var camera = mapContainer.getWebGLCamera();
-      if (camera) {
-        var currentAltitude = camera.getAltitude();
-        var altitude = zoomOut ? (currentAltitude * 2) : (currentAltitude / 2);
-
-        camera.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
-          center: anchor,
-          altitude: altitude,
-          duration: this.duration_
-        }));
-      }
-    } else {
-      var delta = zoomOut ? -this.delta_ : this.delta_;
-      var view = mapBrowserEvent.map.getView();
-      if (view) {
-        zoomByDelta(view, delta, anchor, this.duration_);
-      }
-    }
-
-    mapBrowserEvent.preventDefault();
-    stopEvent = true;
-  }
-  return !stopEvent;
-};
