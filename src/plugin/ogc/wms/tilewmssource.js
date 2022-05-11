@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.ogc.wms.TileWMSSource');
 
-import TileWMS from 'ol/source/TileWMS.js';
+import TileWMS from 'ol/src/source/TileWMS.js';
 
 import PropertyChangeEvent from '../../../os/events/propertychangeevent.js';
 import osImplements from '../../../os/implements.js';
