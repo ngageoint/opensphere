@@ -38,10 +38,18 @@ export default class TileWMSSource extends TileWMS {
     return style;
   }
 
+  /**
+   * Gets the extent.
+   * @return {*} The extent
+   */
   getExtent() {
-    this.getProjection().getExtent();
+    return this.getProjection().getExtent();
   }
 
+  /**
+   * The extent.
+   * @param {*} extent The extent to set.
+   */
   setExtent(extent) {
     this.getProjection().setExtent(extent);
   }
