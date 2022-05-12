@@ -68,7 +68,7 @@ const getRenderOptions = (style) => {
     }
     lineDash = stroke.getLineDash();
     lineDashOffset = stroke.getLineDashOffset();
-    if (!stroke.context.setLineDash) {
+    if (!stroke.setLineDash) {
       lineDash = null;
       lineDashOffset = 0;
     }
