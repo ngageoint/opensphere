@@ -14,8 +14,6 @@ import * as annotation from './annotation.js';
 import TailStyle from './tailstyle.js';
 import TailType from './tailtype.js';
 
-const {default: WebGLOverlay} = goog.requireType('os.webgl.WebGLOverlay');
-
 /**
  * The annotation template. This must be inline to avoid timing issues between template load and positioning the
  * element on the view.
@@ -316,13 +314,6 @@ export class Controller extends AbstractAnnotationCtrl {
     }
 
     return undefined;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  updateTail() {
-    return this.tailType === TailType.ABSOLUTE ? this.updateTailAbsolute() : this.updateTailFixed();
   }
 
   /**
