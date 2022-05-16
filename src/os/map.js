@@ -5,6 +5,7 @@ import {fromLonLat, toLonLat, transformExtent} from 'ol/src/proj.js';
 
 import './mixin/canvasreplaygroupmixin.js';
 import './mixin/canvasreplaymixin.js';
+import './mixin/canvasexecutormixin.js';
 import * as osMap from './map/map.js';
 import {getMapContainer} from './map/mapinstance.js';
 import {EPSG4326} from './proj/proj.js';
