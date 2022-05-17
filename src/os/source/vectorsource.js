@@ -2050,7 +2050,7 @@ export default class Vector extends OLVectorSource {
     var geom = feature.getGeometry();
 
     if (geom) {
-      if (geom.getExtent().some(isNaN)) {
+      if (geom.getExtent().some(isNaN) || !geom.getExtent().some(isFinite)) {
         // the underlying RBush implementation in Openlayers chokes on invalid geometries/extents
         feature.setGeometry(null);
       }
