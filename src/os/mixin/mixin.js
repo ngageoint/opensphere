@@ -17,6 +17,7 @@ import './resolutionconstraintmixin.js';
 import './tileimagemixin.js';
 import './urltilemixin.js';
 import './zoomscalemixin.js';
+import './overlaymixin.js';
 
 import {normalize} from 'ol/src/color.js';
 import LayerGroup from 'ol/src/layer/Group.js';
