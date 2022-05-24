@@ -1,6 +1,6 @@
 goog.declareModuleId('os.ui.LayersUI');
 
-import LayerType from 'ol/src/layer/WebGLTile.js';
+import VectorLayer from 'ol/src/layer/Vector.js';
 
 import './layer/defaultlayerui.js';
 import './layertree.js';
@@ -275,9 +275,7 @@ export class Controller extends AbstractGroupByTreeSearchCtrl {
       // call the functions in SKIP_TOGGLE_FUNCS on each layer
       // to determine if it should not be toggled
       if (!Controller.SKIP_TOGGLE_FUNCS.some((fn) => fn(layers[i]))) {
-        var type = layers[i].getType();
-
-        if (type && type != LayerType.VECTOR) {
+        if (!(layers[i] instanceof VectorLayer)) {
           // toggle tiles
           /** @type {ILayer} */ (layers[i]).setEnabled(this.showTiles());
         }
@@ -305,9 +303,7 @@ export class Controller extends AbstractGroupByTreeSearchCtrl {
 
     var layers = getMapContainer().getLayers();
     for (var i = 0; i < layers.length; i++) {
-      var type = layers[i].getType();
-
-      if (type && type == LayerType.VECTOR) {
+      if (layers[i] instanceof VectorLayer) {
         // do not toggle the Drawing Layer
         if (!(layers[i] instanceof Drawing)) {
           /** @type {ILayer} */ (layers[i]).setLayerVisible(this.showFeatures());
