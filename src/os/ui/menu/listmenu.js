@@ -150,7 +150,7 @@ export const dispose = function() {
  * @param {MenuEvent} event The menu event.
  */
 export const handleListEvent = function(event) {
-  var source = event ? /** @type {ISource} */ (event.getContext()) : undefined;
+  var source = event ? /** @type {ISource} */ (event.context_) : undefined;
   if (source) {
     var cmd;
     var eventType = event.type.replace(PREFIX_REGEXP, '');
