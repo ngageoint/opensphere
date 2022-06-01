@@ -23,9 +23,7 @@ module.exports = (env, argv) => {
       minimize: isProduction,
       minimizer: [new TerserPlugin({
         terserOptions: {
-          mangle: false,
-          keep_classnames: true,
-          keep_fnames: true
+          mangle: false
         }
       })],
       concatenateModules: false,
