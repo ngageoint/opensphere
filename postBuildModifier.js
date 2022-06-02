@@ -1,11 +1,10 @@
 var fs = require('fs');
 const fse = require('fs-extra');
 
-let nodeModulesDir = '../../../../../node_modules';
+const nodeModulesDir = 'vendor';
 let srcDir = `../../node_modules/google-closure-library/`;
 if (!fs.existsSync(srcDir)) {
   srcDir = './node_modules/google-closure-library/';
-  nodeModulesDir = '../../../node_modules';
 }
 const destDir = `./dist/opensphere/google-closure-library/`;
 
@@ -35,7 +34,7 @@ let definesContent = '// This file overrides goog.define() calls for <project>.*
 '  "os.SETTINGS": "./config/settings.json",\n' +
 '  "goog.debug.LOGGING_ENABLED": true,\n' +
 '  "os.file.ZIP_PATH": "NODE_MODULES/zip-js/WebContent",\n' +
-'  "plugin.cesium.LIBRARY_BASE_PATH": "NODE_MODULES/cesium/Build/CesiumUnminified",\n' +
+'  "plugin.cesium.LIBRARY_BASE_PATH": "NODE_MODULES/cesium",\n' +
 '  "JSCHARDET_BASE_PATH": "NODE_MODULES/jschardet/dist"\n' +
 '};';
 
