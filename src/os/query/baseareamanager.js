@@ -24,6 +24,7 @@ import {directiveTag as editArea} from '../ui/query/editarea.js';
 import {EDIT_WIN_LABEL, SAVE_WIN_LABEL} from '../ui/query/query.js';
 import {create} from '../ui/window.js';
 import {getAreaManager, setAreaManager, getQueryManager} from './queryinstance.js';
+import {isWorldQuery} from './queryutils.js';
 
 const {assert} = goog.require('goog.asserts');
 const Deferred = goog.require('goog.async.Deferred');
@@ -636,14 +637,13 @@ export default class BaseAreaManager extends CollectionManager {
         var feature = new Feature(geometry.clone());
         // do not show a drawing layer node for this feature
         feature.set(RecordField.DRAWING_LAYER_NODE, false);
-        const origStyle = this.getMap().getDrawingLayer().getStyle();
-        const highStyle = osStyleArea.HIGHLIGHT_STYLE.clone();
-        if (area.get('title') == 'Whole World') {
-          highStyle.setFill(null);
+        const highStyle = osStyleArea.HIGHLIGHT_STYLE;
+        const fill = highStyle.fill;
+        if (this.getMap().is3DEnabled() && isWorldQuery(feature.getGeometry())) {
+          highStyle.fill = null;
         }
-        this.getMap().getDrawingLayer().setStyle(highStyle);
-        this.highlightFeature = this.getMap().addFeature(feature);
-        this.getMap().getDrawingLayer().setStyle(origStyle);
+        this.highlightFeature = this.getMap().addFeature(feature, highStyle);
+        highStyle.fill = fill;
       }
     }
   }
