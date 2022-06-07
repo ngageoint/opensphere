@@ -515,7 +515,7 @@ export default class BaseAreaManager extends CollectionManager {
    * @protected
    */
   setDefaultStyle(feature) {
-    feature.setStyle(osStyleArea.DEFAULT_STYLE);
+    feature.setStyle(osStyleArea.HIGHLIGHT_STYLE);
   }
 
   /**
@@ -550,7 +550,7 @@ export default class BaseAreaManager extends CollectionManager {
     var qm = getQueryManager();
 
     var changed = false;
-    var defaultStyle = osStyleArea.DEFAULT_STYLE;
+    var defaultStyle = osStyleArea.HIGHLIGHT_STYLE;
     var includeStyle = osStyleArea.INCLUSION_STYLE;
     var excludeStyle = osStyleArea.EXCLUSION_STYLE;
     var entries = qm.getEntries(null, /** @type {string} */ (area.getId()));
@@ -636,7 +636,14 @@ export default class BaseAreaManager extends CollectionManager {
         var feature = new Feature(geometry.clone());
         // do not show a drawing layer node for this feature
         feature.set(RecordField.DRAWING_LAYER_NODE, false);
-        this.highlightFeature = this.getMap().addFeature(feature, osStyleArea.HIGHLIGHT_STYLE);
+        const origStyle = this.getMap().getDrawingLayer().getStyle();
+        const highStyle = osStyleArea.HIGHLIGHT_STYLE.clone();
+        if (area.get('title') == 'Whole World') {
+          highStyle.setFill(null);
+        }
+        this.getMap().getDrawingLayer().setStyle(highStyle);
+        this.highlightFeature = this.getMap().addFeature(feature);
+        this.getMap().getDrawingLayer().setStyle(origStyle);
       }
     }
   }

@@ -116,13 +116,13 @@ export const GRID_STYLE = new Style({
 /**
  * @type {Object}
  */
-export const HIGHLIGHT_STYLE = {
-  'fill': {
-    'color': 'rgba(0,255,255,0.15)'
-  },
-  'stroke': {
-    'color': 'rgba(0,255,255,1)',
-    'lineCap': 'square',
-    'width': 2
-  }
-};
+export const HIGHLIGHT_STYLE = new Style({
+  stroke: new Stroke({
+    color: '#00FFFF',
+    lineCap: 'square',
+    width: 2
+  }),
+  fill: new Fill({
+    color: 'rgba(0,255,255,0.15)'
+  })
+});
