@@ -515,7 +515,7 @@ export default class BaseAreaManager extends CollectionManager {
    * @protected
    */
   setDefaultStyle(feature) {
-    feature.setStyle(osStyleArea.HIGHLIGHT_STYLE);
+    feature.setStyle(osStyleArea.DEFAULT_STYLE);
   }
 
   /**
@@ -550,7 +550,7 @@ export default class BaseAreaManager extends CollectionManager {
     var qm = getQueryManager();
 
     var changed = false;
-    var defaultStyle = osStyleArea.HIGHLIGHT_STYLE;
+    var defaultStyle = osStyleArea.DEFAULT_STYLE;
     var includeStyle = osStyleArea.INCLUSION_STYLE;
     var excludeStyle = osStyleArea.EXCLUSION_STYLE;
     var entries = qm.getEntries(null, /** @type {string} */ (area.getId()));
