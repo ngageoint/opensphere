@@ -35,7 +35,7 @@ let definesContent = '// This file overrides goog.define() calls for <project>.*
 '  "goog.debug.LOGGING_ENABLED": true,\n' +
 '  "os.file.ZIP_PATH": "NODE_MODULES/zip-js",\n' +
 '  "plugin.cesium.LIBRARY_BASE_PATH": "NODE_MODULES/cesium",\n' +
-'  "JSCHARDET_BASE_PATH": "NODE_MODULES/jschardet/dist"\n' +
+'  "JSCHARDET_BASE_PATH": "NODE_MODULES/jschardet"\n' +
 '};';
 
 const distDir = './dist/opensphere/';
