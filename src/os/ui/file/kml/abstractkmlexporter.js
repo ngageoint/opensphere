@@ -2,8 +2,8 @@ goog.declareModuleId('os.ui.file.kml.AbstractKMLExporter');
 
 import {pushSerializeAndPop} from 'ol/src/xml.js';
 
-// import JsonField from '../../../../plugin/file/kml/jsonfield.js';
-// import {OS_NS} from '../../../../plugin/file/kml/kml.js';
+import JsonField from '../../../../plugin/file/kml/jsonfield.js';
+import {OS_NS} from '../../../../plugin/file/kml/kml.js';
 import ZipExporter from '../../../ex/zipexporter.js';
 import Fields from '../../../fields/fields.js';
 import {DESC_REGEXP} from '../../../fields/index.js';
@@ -81,7 +81,7 @@ export default class AbstractKMLExporter extends ZipExporter {
      * @type {string}
      * @protected
      */
-    this.osNS = 'os'; // OS_NS;
+    this.osNS = OS_NS;
 
     /**
      * @type {!Object<string, function(!Element, T)>}
@@ -627,13 +627,13 @@ export default class AbstractKMLExporter extends ZipExporter {
               'name': fields[i]
             });
             xml.appendElementNS('value', this.kmlNS, dataEl, String(val));
-          } /* else if (JsonField.indexOf(fields[i]) > -1) {
+          } else if (JsonField.indexOf(fields[i]) > -1) {
             // write anything in this array as a serialized JSON value
             var dataEl = xml.appendElementNS('Data', this.kmlNS, ed, undefined, {
               'name': fields[i]
             });
             xml.appendElementNS('value', this.kmlNS, dataEl, JSON.stringify(val));
-          } */
+          }
         }
       }
 
