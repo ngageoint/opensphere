@@ -52,7 +52,7 @@ const template =
         '<div ng-show="!ctrl.editingName">{{ctrl.name}}</div>' +
         '<div class="form-row p-1" ng-if="ctrl.editingName">' +
           '<div class="col">' +
-            '<input class="form-control" type="text" ng-model="ctrl.name"/>' +
+            '<input id="placeName" class="form-control" type="text" ng-model="ctrl.name" ng-click="ctrl.setFocus()"/>' +
           '</div>' +
           '<div class="col-auto">' +
             '<button class="btn btn-success mr-1" title="Save the name" ' +
@@ -70,7 +70,8 @@ const template =
           'ng-show="ctrl.options.showDescription" ' +
           'ng-style="{ background: ctrl.options.showBackground ? ctrl.options.bodyBG : transparent }" ' +
           'ng-dblclick="ctrl.editDescription()">' +
-        '<tuieditor text="ctrl.description" edit="ctrl.editingDescription" is-required="false" maxlength="4000">' +
+        '<tuieditor text="ctrl.description" edit="ctrl.editingDescription" is-required="false"' +
+        'maxlength="4000" ng-click="ctrl.setFocusDesc()">' +
         '</tuieditor>' +
         '<div class="text-right mt-1" ng-if="ctrl.editingDescription">' +
           '<button class="btn btn-success mr-1" title="Save the text box" ng-click="ctrl.saveAnnotation()">' +

@@ -417,6 +417,43 @@ export default class Controller {
   updateTailFixed() {}
 
   /**
+   * Delays the function call.
+   * @param {*} time The time to delay in milliseconds
+   * @return {Promise} The promise for the delay.
+   */
+  delay(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
+
+  /**
+   * Sets the focus of the name text box.
+   */
+  setFocus() {
+    this.delay(250).then(() => {
+      const placeNameText = window.document.getElementById('placeName');
+      placeNameText.focus();
+    });
+  }
+
+  /**
+   * Sets the focus of the description text box.
+   */
+  setFocusDesc() {
+    this.delay(250).then(() => {
+      const htmlCollection = window.document.getElementsByClassName('tui-editor-contents');
+      if (htmlCollection && htmlCollection.length > 0) {
+        for (let i = 0; i < htmlCollection.length; i++) {
+          const editor = htmlCollection[i];
+          if (editor.childElementCount > 0) {
+            editor.focus();
+            break;
+          }
+        }
+      }
+    });
+  }
+
+  /**
    * Generate the SVG tail path for an annotation.
    *
    * @param {!Array<number>} center The annotation center coordinate, in pixels.
