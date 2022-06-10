@@ -17,6 +17,8 @@ import {
   setFromArray as transformSetFromArray
 } from 'ol/src/transform.js';
 
+import MapContainer from '../mapcontainer.js';
+
 /**
  * @private
  * @param {CanvasRenderingContext2D} context Context.
@@ -41,6 +43,10 @@ Executor.prototype.execute_ = function(
     opt_hitExtent,
     opt_declutterTree
 ) {
+  if (MapContainer.getInstance().is3DEnabled()) {
+    return undefined;
+  }
+
   /** @type {Array<number>} */
   let pixelCoordinates;
   if (this.pixelCoordinates_ && equals(transform, this.renderedTransform_)) {
