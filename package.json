@@ -287,7 +287,7 @@
     "postcss-cli": "^9.0.2",
     "rimraf": "^3.0.2",
     "run-script-os": "^1.0.7",
-    "semantic-release": "^18.0.0",
+    "semantic-release": "^19.0.3",
     "stylelint": "^14.0.0",
     "stylelint-config-opensphere": "^1.0.0",
     "webgl-mock": "^0.1.7",
