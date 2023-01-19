@@ -1,7 +1,7 @@
 goog.declareModuleId('os.annotation.FeatureAnnotation');
 
-import {listen, unlistenByKey} from 'ol/src/events.js';
 import EventType from 'ol/src/events/EventType.js';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 import SimpleGeometry from 'ol/src/geom/SimpleGeometry.js';
 import OverlayPositioning from 'ol/src/OverlayPositioning.js';
 import {getUid} from 'ol/src/util.js';

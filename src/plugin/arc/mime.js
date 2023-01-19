@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.arc.mime');
 
-import * as mime from '../../os/file/mime.js';
 import {TYPE as HTML_TYPE} from '../../os/file/mime/html.js';
 import {TYPE as XML_TYPE} from '../../os/file/mime/xml.js';
+import * as mime from '../../os/file/mime.js';
 import * as arc from './arc.js';
 
 const Promise = goog.require('goog.Promise');

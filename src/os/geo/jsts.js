@@ -12,9 +12,9 @@ import Feature from 'ol/src/Feature.js';
 import GeometryType from 'ol/src/geom/GeometryType.js';
 import MultiPolygon from 'ol/src/geom/MultiPolygon.js';
 import Polygon, {fromCircle, fromExtent} from 'ol/src/geom/Polygon.js';
-import {get as getProjection, addProjection, createSafeCoordinateTransform, addCoordinateTransforms} from 'ol/src/proj.js';
 import Projection from 'ol/src/proj/Projection.js';
 import {remove as removeTransform, get as getTransform} from 'ol/src/proj/transforms.js';
+import {get as getProjection, addProjection, createSafeCoordinateTransform, addCoordinateTransforms} from 'ol/src/proj.js';
 
 import AlertEventSeverity from '../alert/alerteventseverity.js';
 import AlertManager from '../alert/alertmanager.js';

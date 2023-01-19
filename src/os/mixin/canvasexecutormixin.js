@@ -6,13 +6,13 @@ import Feature from 'ol/src/Feature.js';
 import {lineStringLength} from 'ol/src/geom/flat/length.js';
 import {drawTextOnPath} from 'ol/src/geom/flat/textpath.js';
 import {transform2D} from 'ol/src/geom/flat/transform.js';
+import Executor from 'ol/src/render/canvas/Executor.js';
+import CanvasInstruction from 'ol/src/render/canvas/Instruction.js';
+import {TEXT_ALIGN} from 'ol/src/render/canvas/TextBuilder.js';
 import {
   defaultPadding,
   measureAndCacheTextWidth
 } from 'ol/src/render/canvas.js';
-import Executor from 'ol/src/render/canvas/Executor.js';
-import CanvasInstruction from 'ol/src/render/canvas/Instruction.js';
-import {TEXT_ALIGN} from 'ol/src/render/canvas/TextBuilder.js';
 import {
   setFromArray as transformSetFromArray
 } from 'ol/src/transform.js';

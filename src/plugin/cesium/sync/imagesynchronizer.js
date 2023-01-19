@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.cesium.sync.ImageSynchronizer');
 
-import {listen, unlistenByKey} from 'ol/src/events.js';
 import Event from 'ol/src/events/Event.js';
 import EventType from 'ol/src/events/EventType.js';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 import {containsExtent} from 'ol/src/extent.js';
 import ImageState from 'ol/src/ImageState.js';
 import {transformExtent, get} from 'ol/src/proj.js';

@@ -79,8 +79,8 @@ const sharedResources = [
     scripts: ['browserCheck.js']
   },
   {
-    source: resolver.resolveModulePath('openlayers/dist', __dirname),
-    target: 'vendor/openlayers',
+    source: resolver.resolveModulePath('ol', __dirname),
+    target: 'vendor/ol',
     css: ['ol.css']
   },
   {

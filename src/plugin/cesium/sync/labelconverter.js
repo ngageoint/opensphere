@@ -1,10 +1,10 @@
 goog.declareModuleId('plugin.cesium.sync.LabelConverter');
 
-import olcsCore from 'ol-cesium/src/olcs/core.js';
 import {getCenter} from 'ol/src/extent.js';
 import Geometry from 'ol/src/geom/Geometry.js';
 import GeometryType from 'ol/src/geom/GeometryType.js';
 import SimpleGeometry from 'ol/src/geom/SimpleGeometry.js';
+import olcsCore from 'ol-cesium/src/olcs/core.js';
 
 import {getFont} from '../../../os/style/label.js';
 import {GeometryInstanceId} from '../cesium.js';

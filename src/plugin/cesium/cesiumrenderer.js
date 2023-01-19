@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.cesium.CesiumRenderer');
 
-import OLCesium from 'ol-cesium/src/olcs/OLCesium.js';
 import ViewHint from 'ol/src/ViewHint.js';
+import OLCesium from 'ol-cesium/src/olcs/OLCesium.js';
 
 import CommandProcessor from '../../os/command/commandprocessor.js';
 import DisplaySetting from '../../os/config/displaysetting.js';

@@ -15,8 +15,8 @@ import MapEventType from 'ol/src/MapEventType.js';
 import ObjectEventType from 'ol/src/ObjectEventType.js';
 import {get, fromLonLat, toLonLat, transformExtent} from 'ol/src/proj.js';
 import OLVectorSource from 'ol/src/source/Vector.js';
-import {createForProjection} from 'ol/src/tilegrid.js';
 import {DEFAULT_MAX_ZOOM} from 'ol/src/tilegrid/common.js';
+import {createForProjection} from 'ol/src/tilegrid.js';
 import {getUid} from 'ol/src/util.js';
 import View from 'ol/src/View.js';
 
@@ -51,13 +51,13 @@ import Group from './layer/group.js';
 import LayerType from './layer/layertype.js';
 import SynchronizerType from './layer/synchronizertype.js';
 import VectorLayer from './layer/vector.js';
-import OSMap from './map.js';
 import CameraMode from './map/cameramode.js';
 import IMapContainer from './map/imapcontainer.js';// eslint-disable-line
 import * as osMap from './map/map.js';
 import MapChange from './map/mapchange.js';
 import MapEvent from './map/mapevent.js';
 import MapMode from './map/mapmode.js';
+import OSMap from './map.js';
 import Metrics from './metrics/metrics.js';
 import {Map as MapKeys} from './metrics/metricskeys.js';
 import VariableReplacer from './net/variablereplacer.js';
@@ -884,7 +884,8 @@ export default class MapContainer extends EventTarget {
       zoom: mapZoom,
       minZoom: osMap.MIN_ZOOM,
       maxZoom: osMap.MAX_ZOOM,
-      showFullExtent: true
+      showFullExtent: true,
+      constrainRotation: false
     });
 
     this.map_ = new OSMap({

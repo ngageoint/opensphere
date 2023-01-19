@@ -1,8 +1,8 @@
 goog.declareModuleId('os.interaction.Modify');
 
 import Collection from 'ol/src/Collection.js';
-import {listen, unlistenByKey} from 'ol/src/events.js';
 import OLEventType from 'ol/src/events/EventType.js';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 import Feature from 'ol/src/Feature.js';
 import Point from 'ol/src/geom/Point.js';
 import OLModify from 'ol/src/interaction/Modify.js';

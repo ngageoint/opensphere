@@ -5,8 +5,8 @@ import RotateControl from 'ol/src/control/Rotate.js';
 import ZoomControl from 'ol/src/control/Zoom.js';
 import {platformModifierKeyOnly} from 'ol/src/events/condition.js';
 import {createEmpty, getHeight, getWidth, buffer as olBuffer} from 'ol/src/extent.js';
-import {defaults} from 'ol/src/interaction.js';
 import DragZoom from 'ol/src/interaction/DragZoom.js';
+import {defaults} from 'ol/src/interaction.js';
 import TileLayer from 'ol/src/layer/Tile.js';
 import OLMap from 'ol/src/Map.js';
 import OLVectorSource from 'ol/src/source/Vector.js';
@@ -39,8 +39,8 @@ import MenuItem from '../../menu/menuitem.js';
 import MenuItemType from '../../menu/menuitemtype.js';
 import Module from '../../module.js';
 import {resize, removeResize} from '../../ui.js';
-import {bringToFront, close as closeWindow, create as createWindow, getById as getWindowById} from '../../window.js';
 import {launchConfirm} from '../../window/confirm.js';
+import {bringToFront, close as closeWindow, create as createWindow, getById as getWindowById} from '../../window.js';
 import LayerCompareNode from './layercomparenode.js';
 
 
@@ -499,7 +499,8 @@ export class Controller {
       projection,
       rotation,
       zoom,
-      showFullExtent: true
+      showFullExtent: true,
+      constrainRotation: false
     });
   }
 

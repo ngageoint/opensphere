@@ -1,7 +1,7 @@
 goog.declareModuleId('os.file.FileManager');
 
-import {detect, getTypeChain} from './mime.js';
 import * as text from './mime/text.js';
+import {detect, getTypeChain} from './mime.js';
 
 const {defaultCompare} = goog.require('goog.array');
 const GoogFileReader = goog.require('goog.fs.FileReader');

@@ -2,8 +2,8 @@ goog.declareModuleId('os.command.SwitchView');
 
 import * as olExtent from 'ol/src/extent.js';
 import * as olProj from 'ol/src/proj.js';
-import * as tilegrid from 'ol/src/tilegrid.js';
 import {DEFAULT_MAX_ZOOM} from 'ol/src/tilegrid/common.js';
+import * as tilegrid from 'ol/src/tilegrid.js';
 import View from 'ol/src/View.js';
 
 import Settings from '../config/settings.js';
@@ -133,7 +133,8 @@ export default class SwitchView {
       zoom: zoom || osMap.DEFAULT_ZOOM,
       minZoom: osMap.MIN_ZOOM,
       maxZoom: osMap.MAX_ZOOM,
-      showFullExtent: true
+      showFullExtent: true,
+      constrainRotation: false
     });
   }
 

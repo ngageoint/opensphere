@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.feature.FeatureInfoUI');
 
-import {listen, unlistenByKey} from 'ol/src/events.js';
 import EventType from 'ol/src/events/EventType.js';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 import Feature from 'ol/src/Feature.js';
 import Point from 'ol/src/geom/Point.js';
 import {toLonLat} from 'ol/src/proj.js';

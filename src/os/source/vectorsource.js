@@ -1,8 +1,8 @@
 goog.declareModuleId('os.source.Vector');
 
 import Collection from 'ol/src/Collection.js';
-import {listen, unlistenByKey} from 'ol/src/events.js';
 import OLEventType from 'ol/src/events/EventType.js';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 import {extend, createEmpty, getWidth, getHeight, isEmpty} from 'ol/src/extent.js';
 import GeometryType from 'ol/src/geom/GeometryType.js';
 import OLVectorSource, {VectorSourceEvent} from 'ol/src/source/Vector.js';

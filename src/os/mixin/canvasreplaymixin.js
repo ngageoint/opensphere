@@ -5,10 +5,10 @@ import {intersects} from 'ol/src/extent.js';
 import {lineStringLength} from 'ol/src/geom/flat/length.js';
 import {drawTextOnPath} from 'ol/src/geom/flat/textpath.js';
 import {transform2D} from 'ol/src/geom/flat/transform.js';
-import {defaultPadding} from 'ol/src/render/canvas.js';
 import Replay from 'ol/src/render/canvas/ExecutorGroup.js';
 import Instruction from 'ol/src/render/canvas/Instruction.js';
 import {TEXT_ALIGN} from 'ol/src/render/canvas/TextBuilder.js';
+import {defaultPadding} from 'ol/src/render/canvas.js';
 import {setFromArray} from 'ol/src/transform.js';
 import {getUid} from 'ol/src/util.js';
 

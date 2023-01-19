@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.cesium.sync.ImageStaticSynchronizer');
 
-import {listen, unlistenByKey} from 'ol/src/events.js';
 import OLEventType from 'ol/src/events/EventType.js';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 import ImageState from 'ol/src/ImageState.js';
 import {ObjectEvent} from 'ol/src/Object.js';
 import {transformExtent} from 'ol/src/proj.js';

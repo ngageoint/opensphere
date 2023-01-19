@@ -85,8 +85,8 @@ export default class MouseRotate extends Interaction {
    */
   static handleEvent(mapBrowserEvent) {
     var stopEvent = false;
-    if (mapBrowserEvent.pointerEvent &&
-        mapBrowserEvent.pointerEvent.buttons == 2 &&
+    if (mapBrowserEvent.originalEvent &&
+        mapBrowserEvent.originalEvent.buttons == 2 &&
         mapBrowserEvent.dragging &&
         noModifierKeys(mapBrowserEvent)) {
       this.rotate(mapBrowserEvent);

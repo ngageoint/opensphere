@@ -1,9 +1,9 @@
 goog.declareModuleId('os.proj');
 
-import {get, addEquivalentTransforms, getTransform, equivalent} from 'ol/src/proj.js';
 import {PROJECTIONS as EPSG3857Projections} from 'ol/src/proj/epsg3857.js';
 import {PROJECTIONS as EPSG4326Projections} from 'ol/src/proj/epsg4326.js';
 import {register} from 'ol/src/proj/proj4.js';
+import {get, addEquivalentTransforms, getTransform, equivalent} from 'ol/src/proj.js';
 import Settings from '../config/settings.js';
 import * as osMap from '../map/map.js';
 

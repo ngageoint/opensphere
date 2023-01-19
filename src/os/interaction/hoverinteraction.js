@@ -1,8 +1,8 @@
 goog.declareModuleId('os.interaction.Hover');
 
-import {listen, unlistenByKey} from 'ol/src/events.js';
 import {pointerMove} from 'ol/src/events/condition.js';
 import EventType from 'ol/src/events/EventType.js';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 import Feature from 'ol/src/Feature.js';
 import ViewHint from 'ol/src/ViewHint.js';
 

@@ -4,9 +4,9 @@ import {defaults as controlDefaults} from 'ol/src/control.js';
 import {platformModifierKeyOnly} from 'ol/src/events/condition.js';
 import {createEmpty, scaleFromCenter} from 'ol/src/extent.js';
 import Feature from 'ol/src/Feature.js';
-import {defaults as interactionDefaults} from 'ol/src/interaction.js';
 import DragPan from 'ol/src/interaction/DragPan.js';
 import DragZoom from 'ol/src/interaction/DragZoom.js';
+import {defaults as interactionDefaults} from 'ol/src/interaction.js';
 import Tile from 'ol/src/layer/Tile.js';
 import OLVectorLayer from 'ol/src/layer/Vector.js';
 import olMap from 'ol/src/Map.js';
@@ -17,8 +17,8 @@ import Circle from 'ol/src/style/Circle.js';
 import Fill from 'ol/src/style/Fill.js';
 import Stroke from 'ol/src/style/Stroke.js';
 import Style from 'ol/src/style/Style.js';
-import {createForProjection} from 'ol/src/tilegrid.js';
 import {DEFAULT_MAX_ZOOM} from 'ol/src/tilegrid/common.js';
+import {createForProjection} from 'ol/src/tilegrid.js';
 import {getUid} from 'ol/src/util.js';
 import View from 'ol/src/View.js';
 
@@ -120,7 +120,8 @@ export default class OLMap extends EventTarget {
         zoom: 2,
         minZoom: 1,
         maxZoom: 15,
-        showFullExtent: true
+        showFullExtent: true,
+        constrainRotation: false
       })
     });
 

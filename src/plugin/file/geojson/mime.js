@@ -2,8 +2,8 @@ goog.declareModuleId('plugin.file.geojson.mime');
 
 import GeoJSON from 'ol/src/format/GeoJSON.js';
 
-import * as mime from '../../../os/file/mime.js';
 import * as json from '../../../os/file/mime/json.js';
+import * as mime from '../../../os/file/mime.js';
 
 
 const Promise = goog.require('goog.Promise');

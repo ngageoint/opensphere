@@ -1,7 +1,7 @@
 goog.declareModuleId('os.annotation.FeatureAnnotationUI');
 
-import {listen, unlistenByKey} from 'ol/src/events.js';
 import EventType from 'ol/src/events/EventType.js';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 
 import '../ui/text/tuieditorui.js';
 import PropertyChangeEvent from '../events/propertychangeevent.js';

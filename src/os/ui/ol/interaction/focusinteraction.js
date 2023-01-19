@@ -32,7 +32,7 @@ export default class FocusInteraction extends Interaction {
   static handleEvent_(mapBrowserEvent) {
     const map = /** @type {OLMap} */ (getAreaManager().getMap());
 
-    if (mapBrowserEvent.pointerEvent && mapBrowserEvent.pointerEvent.buttons) {
+    if (mapBrowserEvent.originalEvent && mapBrowserEvent.originalEvent.buttons) {
       map.setFocused(true);
     }
 

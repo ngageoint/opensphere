@@ -173,8 +173,8 @@ import StateClear from './ui/state/cmd/stateclearcmd.js';
 import * as stateMenu from './ui/state/statemenu.js';
 import {MODAL_SELECTOR, apply, waitForAngular} from './ui/ui.js';
 import LocationSettings from './ui/user/settings/locationsettings.js';
-import * as osWindow from './ui/window.js';
 import * as ConfirmUI from './ui/window/confirm.js';
+import * as osWindow from './ui/window.js';
 import WindowEventType from './ui/windoweventtype.js';
 import UrlManager from './url/urlmanager.js';
 

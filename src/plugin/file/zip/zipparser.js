@@ -3,9 +3,9 @@ goog.declareModuleId('plugin.file.zip.ZIPParser');
 import {getUid} from 'ol/src/util.js';
 import EventType from '../../../os/events/eventtype.js';
 import OSFile from '../../../os/file/file.js';
-import * as mime from '../../../os/file/mime.js';
 import * as text from '../../../os/file/mime/text.js';
 import * as mimeZip from '../../../os/file/mime/zip.js';
+import * as mime from '../../../os/file/mime.js';
 import AsyncZipParser from '../../../os/parse/asynczipparser.js';
 
 const googEvents = goog.require('goog.events');

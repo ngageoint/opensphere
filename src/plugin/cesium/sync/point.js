@@ -1,9 +1,9 @@
 goog.declareModuleId('plugin.cesium.sync.point');
 
-import olcsCore from 'ol-cesium/src/olcs/core.js';
 import OLIconStyle from 'ol/src/style/Icon.js';
 import OLRegularShape from 'ol/src/style/RegularShape.js';
 import {getUid} from 'ol/src/util.js';
+import olcsCore from 'ol-cesium/src/olcs/core.js';
 
 import {ZoomScale} from '../../../os/map/map.js';
 import OSIconStyle from '../../../os/style/iconstyle.js';

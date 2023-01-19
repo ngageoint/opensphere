@@ -1,7 +1,7 @@
 goog.declareModuleId('os.mixin.layer');
 
-import {listen, unlistenByKey} from 'ol/src/events.js';
 import EventType from 'ol/src/events/EventType.js';
+import {listen, unlistenByKey} from 'ol/src/events.js';
 import Layer from 'ol/src/layer/Layer.js';
 import RenderEventType from 'ol/src/render/EventType.js';
 

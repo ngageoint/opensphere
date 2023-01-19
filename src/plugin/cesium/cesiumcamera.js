@@ -4,9 +4,9 @@
  */
 goog.declareModuleId('plugin.cesium.Camera');
 
+import {transform} from 'ol/src/proj.js';
 import OLCSCamera from 'ol-cesium/src/olcs/Camera.js';
 import core from 'ol-cesium/src/olcs/core.js';
-import {transform} from 'ol/src/proj.js';
 import FlightMode from '../../os/map/flightmode.js';
 import {PROJECTION, WEBGL_CANVAS, resolutionForDistance, resolutionToZoom} from '../../os/map/map.js';
 
