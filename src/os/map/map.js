@@ -45,7 +45,13 @@ export const DEFAULT_ZOOM = 3;
  * Minimum zoom level for the map
  * @type {number}
  */
-export const MIN_ZOOM = 2;
+export const MIN_ZOOM = 0;
+
+/**
+ * Minimum zoom level for the map
+ * @type {number}
+ */
+export const OVERVIEW_MAP_MIN_ZOOM = 2;
 
 /**
  * Maximum zoom level for the map

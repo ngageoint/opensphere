@@ -20,7 +20,7 @@ export default class OverviewMap extends OLOverviewMap {
   constructor(opt_opts) {
     const view = new View({
       projection: osMap.PROJECTION,
-      minZoom: osMap.MIN_ZOOM,
+      minZoom: osMap.OVERVIEW_MAP_MIN_ZOOM,
       maxZoom: osMap.MAX_ZOOM,
       center: [0, 0],
       showFullExtent: true
@@ -80,7 +80,7 @@ export default class OverviewMap extends OLOverviewMap {
   updateView_() {
     var view = new View({
       projection: osMap.PROJECTION,
-      minZoom: osMap.MIN_ZOOM,
+      minZoom: osMap.OVERVIEW_MAP_MIN_ZOOM,
       maxZoom: osMap.MAX_ZOOM,
       center: [0, 0],
       showFullExtent: true

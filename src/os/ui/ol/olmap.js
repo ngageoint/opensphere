@@ -118,7 +118,7 @@ export default class OLMap extends EventTarget {
         projection: OLMap.PROJECTION,
         center: [0, 0],
         zoom: 2,
-        minZoom: 1,
+        minZoom: osMap.MIN_ZOOM,
         maxZoom: 15,
         showFullExtent: true,
         constrainRotation: false
