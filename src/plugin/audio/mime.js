@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.audio.mime');
 
-import * as mime from '../../os/file/mime.js';
 import * as mimeText from '../../os/file/mime/text.js';
+import * as mime from '../../os/file/mime.js';
 
 const Promise = goog.require('goog.Promise');
 

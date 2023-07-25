@@ -7,6 +7,7 @@ index.html
 old.html
 addlayer.html
 vendor/os-minified
+.python-version
 
 # old build
 .sass-cache/
