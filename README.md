@@ -32,8 +32,14 @@ OpenSphere is natively developed on Linux and should run great on OS X and typic
 
 * Clone [opensphere-yarn-workspace](https://github.com/ngageoint/opensphere-yarn-workspace)
 * Clone OpenSphere to the `workspace` directory
+* Recommend using [NVM](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/) 
+
+    - `nvm install 16` 
+    - `nvm use 16`
+    - `npm install yarn`
 * `yarn install`
 * `yarn build`
+* `yarn run test`
 * Point your browser at `dist/opensphere`
 
 ### NPM
