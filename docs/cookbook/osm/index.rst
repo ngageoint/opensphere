@@ -26,7 +26,7 @@ The following code shows how to change the config settings to add an additional 
             "type": "BaseMap",
             "baseType": "XYZ",
             "provider": "OSM",
-            "url": "//c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
             "minZoom": 2,
             "maxZoom": 19,
             "projection": "EPSG:3857",
@@ -79,7 +79,7 @@ If your provider supports multiple URLs (which is the case for most OSM styles),
             "type": "BaseMap",
             "baseType": "XYZ",
             "provider": "OSM",
-            "urls": ["//a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            "urls": ["https://tile.openstreetmap.org/{z}/{x}/{y}.png",
               "//b.tile.openstreetmap.org/{z}/{x}/{y}.png",
               "//c.tile.openstreetmap.org/{z}/{x}/{y}.png"],
             "minZoom": 2,
@@ -93,8 +93,6 @@ If your provider supports multiple URLs (which is the case for most OSM styles),
       }
     }
   }
-
-Another way to express that is :code:`//{a-c}.tiles.example.com/osm/{z}/{x}/{y}.png`, where the :code:`{a-c}` part will be expanded. You can use single letter (upper or lower case) or single number ranges (e.g. :code:`{0-4}`) as appropriate to your server naming.
 
 Other important values are the :code:`minZoom` and :code:`maxZoom` values, which specify the zoom levels that OpenSphere will show this base map at. Different OSM tile servers will support different zoom levels (e.g. the Humanitarian style is provided to zoom level 20).
 
