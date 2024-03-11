@@ -40,6 +40,7 @@ npm-debug.log*
 .Trashes
 ehthumbs.db
 Thumbs.db
+.python-version
 
 
 # node generated files #

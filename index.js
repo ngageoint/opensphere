@@ -372,11 +372,11 @@ const oldResources = [
     target: '',
     scripts: ['modernizr.js']
   },
-  {
-    source: __dirname,
-    target: '',
-    scripts: ['browserCheck.js']
-  },
+  // {
+  //   source: __dirname,
+  //   target: '',
+  //   scripts: ['browserCheck.js']
+  // },
   {
     source: resolver.resolveModulePath('@fortawesome/fontawesome-free', __dirname),
     target: 'vendor/font-awesome',
