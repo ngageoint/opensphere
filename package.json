@@ -108,7 +108,7 @@
     "lint:html": "html-validate 'views/**/*.html'",
     "lint:css": "stylelint --ignore-path 'scss/nolint/**/*.scss' 'scss/**/*.scss'",
     "lint:css-fix": "stylelint --fix --ignore-path 'scss/nolint/**/*.scss' 'scss/**/*.scss'",
-    "lint:js": "eslint --cache 'src/**/*.js' 'tasks/**/*.js' 'test/**/*.js' --fix",
+    "lint:js": "eslint --cache 'src/**/*.js' 'tasks/**/*.js' 'test/**/*.js'",
     "lint": "run-p lint:js lint:css lint:html",
     "precompile:resolve": "cp addlayer.js .build",
     "compile:resolve": "os-resolve --outputDir .build --defineRoots $(cat .build/version)",
