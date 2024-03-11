@@ -24,8 +24,8 @@ import Units from '../../math/units.js';
 import {ROOT} from '../../os.js';
 
 import Module from '../module.js';
-import {close as closeWindow} from '../window.js';
 import * as ConfirmUI from '../window/confirm.js';
+import {close as closeWindow} from '../window.js';
 
 const {getValues} = goog.require('goog.object');
 

@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.cesium.tiles.mime');
 
-import {register} from '../../../os/file/mime.js';
 import * as json from '../../../os/file/mime/json.js';
+import {register} from '../../../os/file/mime.js';
 
 const Promise = goog.require('goog.Promise');
 
