@@ -1,3 +1,3 @@
 module.exports = {
-  "extends": "opensphere"
+  "extends": "@ngageoint/opensphere"
 };
