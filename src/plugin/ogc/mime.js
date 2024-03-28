@@ -1,8 +1,8 @@
 goog.declareModuleId('plugin.ogc.mime');
 
-import * as mime from '../../os/file/mime.js';
 import * as html from '../../os/file/mime/html.js';
 import * as xml from '../../os/file/mime/xml.js';
+import * as mime from '../../os/file/mime.js';
 import * as ogc from '../../os/ogc/ogc.js';
 import GeoServer from './geoserver.js';
 

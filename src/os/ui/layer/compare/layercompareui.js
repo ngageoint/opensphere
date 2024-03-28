@@ -23,8 +23,8 @@ import MenuItem from '../../menu/menuitem.js';
 import MenuItemType from '../../menu/menuitemtype.js';
 import Module from '../../module.js';
 import {resize, removeResize} from '../../ui.js';
-import {bringToFront, close as closeWindow, create as createWindow, getById as getWindowById} from '../../window.js';
 import {launchConfirm} from '../../window/confirm.js';
+import {bringToFront, close as closeWindow, create as createWindow, getById as getWindowById} from '../../window.js';
 import LayerCompareNode from './layercomparenode.js';
 
 const DragZoom = goog.require('ol.interaction.DragZoom');

@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.featureaction.mime');
 
-import * as mime from '../../os/file/mime.js';
 import * as xml from '../../os/file/mime/xml.js';
+import * as mime from '../../os/file/mime.js';
 
 
 /**

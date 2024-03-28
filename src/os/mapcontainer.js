@@ -31,13 +31,13 @@ import Group from './layer/group.js';
 import LayerType from './layer/layertype.js';
 import SynchronizerType from './layer/synchronizertype.js';
 import VectorLayer from './layer/vector.js';
-import OSMap from './map.js';
 import CameraMode from './map/cameramode.js';
 import IMapContainer from './map/imapcontainer.js';// eslint-disable-line
 import * as osMap from './map/map.js';
 import MapChange from './map/mapchange.js';
 import MapEvent from './map/mapevent.js';
 import MapMode from './map/mapmode.js';
+import OSMap from './map.js';
 import Metrics from './metrics/metrics.js';
 import {Map as MapKeys} from './metrics/metricskeys.js';
 import VariableReplacer from './net/variablereplacer.js';

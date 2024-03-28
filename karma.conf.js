@@ -201,7 +201,10 @@ module.exports = function(config) {
     captureTimeout: 60000,
 
     // If the browser takes a nap, wait for it
-    browserNoActivityTimeout: 60000,
+    browserSocketTimeout: 210000,
+    browserDisconnectTimeout: 210000,
+    browserDisconnectTolerance: 3,
+    browserNoActivityTimeout: 210000,
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit

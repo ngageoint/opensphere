@@ -1,7 +1,7 @@
 goog.declareModuleId('os.ui.im.FileImportUI');
 
-import {getTypeChain} from '../../file/mime.js';
 import {TYPE} from '../../file/mime/text.js';
+import {getTypeChain} from '../../file/mime.js';
 import AbstractImportUI from './abstractimportui.js';
 
 
