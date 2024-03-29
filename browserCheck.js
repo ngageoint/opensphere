@@ -47,7 +47,7 @@ function append(el, msg, test) {
  * runs the browser check
  */
 function runBrowserCheck() {
-  var baseUrl = 'old.html';
+  var baseUrl = '/';
   var currentLocation = window.location.toString();
   if (!checkCompat() && !checkVersion()) {
     if (currentLocation.indexOf('/' + baseUrl) == -1) {

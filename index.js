@@ -419,11 +419,8 @@ module.exports = {
       id: 'index',
       file: 'index-template.html',
       resources: indexResources
-    }, {
-      id: 'old',
-      file: 'old-template.html',
-      resources: oldResources
-    }, {
+    },
+    {
       id: 'addlayer',
       file: 'addlayer-template.html',
       resources: addLayerResources
