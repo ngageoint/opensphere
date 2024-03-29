@@ -1,6 +1,6 @@
 goog.declareModuleId('plugin.electron.CustomizeSettingsWindow');
 
-import './customizesettingsui';
+import './customizesettingsui.js';
 import {ROOT} from '../../os/os.js';
 
 import Module from '../../os/ui/module.js';
