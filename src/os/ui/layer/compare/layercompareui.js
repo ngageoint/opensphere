@@ -17,7 +17,7 @@ import {getMapContainer} from '../../../map/mapinstance.js';
 import {getMaxFeatures} from '../../../ogc/ogc.js';
 import {ROOT} from '../../../os.js';
 import SourceClass from '../../../source/sourceclass.js';
-import {getLayersFromContext, visibleIfSupported} from '../../../ui/menu/layermenu.js';
+import {getLayersFromContext, visibleIfSupported} from '../../menu/layermenu.js';
 import Menu from '../../menu/menu.js';
 import MenuItem from '../../menu/menuitem.js';
 import MenuItemType from '../../menu/menuitemtype.js';

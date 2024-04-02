@@ -87,6 +87,7 @@ VectorLayer.prototype.forEachFeatureAtCoordinate = function(coordinate, frameSta
             features[key] = true;
             return callback.call(thisArg, feature, layer);
           }
+          return;
         }, null);
   }
 };

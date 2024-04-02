@@ -3,7 +3,7 @@ goog.declareModuleId('plugin.electron.SettingsFileNode');
 import PropertyChangeEvent from '../../os/events/propertychangeevent.js';
 import TriState from '../../os/structs/tristate.js';
 import SlickTreeNode from '../../os/ui/slick/slicktreenode.js';
-import {directiveTag as nodeUi} from './settingsfilenodeui';
+import {directiveTag as nodeUi} from './settingsfilenodeui.js';
 
 
 /**

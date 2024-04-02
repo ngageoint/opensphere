@@ -88,6 +88,7 @@ export default class AbstractQueryReader {
       return null;
     } catch (e) {
       log.error(logger, 'Failed to parse area!');
+      return null;
     }
   }
 }
