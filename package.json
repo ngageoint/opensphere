@@ -163,7 +163,7 @@
     "mapping",
     "closure"
   ],
-  "author": "William Wall <wwall@caci.com>",
+  "author": "Joshua Wade",
   "maintainers": [
     "William Wall <wwall@caci.com>",
     "Kevin Schmidt <kschmidt@caci.com>",
@@ -196,10 +196,7 @@
     "William Wall"
   ],
   "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ngageoint/opensphere.git"
-  },
+  "repository": "https://github.com/ngageoint/opensphere.git",
   "engines": {
     "node": ">=8.0.0"
   },
@@ -318,6 +315,7 @@
     "d3-tip": "=0.6.8",
     "eslint-plugin-jsdoc": "^48.2.3",
     "file-saver": "^1.3.8",
+    "goog": "^0.2.1",
     "google-closure-library": "^20210808.0.0",
     "html2canvas": "^1.3.2",
     "jquery": "3.6.0",
