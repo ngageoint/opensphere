@@ -1,3 +1,6 @@
 module.exports = {
-  "extends": "@ngageoint/opensphere"
+  "extends": "@ngageoint/opensphere",
+  "rules": {
+    "valid-id": "off"
+  }
 };

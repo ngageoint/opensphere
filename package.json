@@ -313,6 +313,7 @@
     "css-element-queries": "=1.2.1",
     "d3": "^3.5.17",
     "d3-tip": "=0.6.8",
+    "eslint-plugin-html": "^8.1.1",
     "eslint-plugin-jsdoc": "^48.2.3",
     "file-saver": "^1.3.8",
     "goog": "^0.2.1",

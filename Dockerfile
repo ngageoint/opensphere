@@ -29,7 +29,7 @@ fi
 RUN apk update && \
     apk add --no-cache firefox
 
-# RUN yarn run dev
+RUN yarn run build
 
 # Default to UTF-8 file.encoding
 # ENV LANG C.UTF-8
