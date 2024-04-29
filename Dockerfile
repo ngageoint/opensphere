@@ -14,11 +14,14 @@ COPY . ./
 # RUN npm install
 RUN yarn install --ignore-engines
 RUN yarn add goog
-RUN cd /app/node_modules/select2/ 
-# RUN ls
-# RUN cp dist/js/select2.js ./ 
-# RUN cp dist/css/select2.css ./
-# RUN touch test.png
+RUN npm install -g npm@10.6.0
+RUN npm install select2 --legacy-peer-deps
+RUN cd /app/node_modules/select2/
+RUN ls
+#RUN cp dist/js/select2.js ./ 
+#RUN cp dist/css/select2.css ./
+RUN touch test.png
+RUN cd ../../
 # Install Python if not already installed
 RUN if ! command -v python3 &> /dev/null; then \
     apk add --no-cache python3 && \
@@ -28,8 +31,8 @@ RUN if ! command -v python3 &> /dev/null; then \
 fi
 RUN apk update && \
     apk add --no-cache firefox
-
-RUN yarn run build
+RUN ls -al /app/node_modules/select2
+RUN yarn run dev
 
 # Default to UTF-8 file.encoding
 # ENV LANG C.UTF-8
