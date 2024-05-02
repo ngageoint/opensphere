@@ -46,7 +46,6 @@ Thumbs.db
 # node generated files #
 ########################
 package-lock.json
-yarn.lock
 
 # local dev stuff
 Dockerfile-test
