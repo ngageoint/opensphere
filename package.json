@@ -264,6 +264,7 @@
     "browserify": "^17.0.0",
     "clean-css-cli": "^5.4.2",
     "eslint": "^8.0.1",
+    "google-closure-compiler": "20210907.0.0",
     "html-validate": "6.1.0",
     "html-validate-angular": "^3.0.2",
     "husky": "^7.0.4",
