@@ -20,8 +20,8 @@ Questions? Ask them in the [forum](https://groups.google.com/forum/#!forum/opens
 ## Prerequisites
 
 * Java 1.7.0+
-* Node/NPM
-* Python
+* Node 20
+* Python 3
 
 ## Getting Started
 OpenSphere is natively developed on Linux and should run great on OS X and typical Linux distributions. See [Windows Development](http://opensphere.readthedocs.io/en/latest/windows_development.html) for instructions for building on Windows.
@@ -34,7 +34,8 @@ OpenSphere is natively developed on Linux and should run great on OS X and typic
 * Clone OpenSphere to the `workspace` directory
 * `yarn install`
 * `yarn build`
-* Point your browser at `dist/opensphere`
+* `npm run start-server`
+* Point your browser at `workspace/opensphere/dist/opensphere/index.html`
 
 ### NPM
 
@@ -43,7 +44,8 @@ If you prefer to use NPM, that's fine too:
 * Clone the project
 * `npm install`
 * `npm run build`
-* Point your browser at `dist/opensphere`
+* `npm run start-server`
+* Point your browser at `localhost:8282/workspace/opensphere/dist/opensphere/index.html`
 
 ## Hosting
 
