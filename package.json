@@ -145,6 +145,7 @@
     "perms": "chmod -R u+rwX,go+rX,go-w .",
     "semantic-release": "semantic-release --dry-run",
     "start-server": "light-server --serve ../../ --bind localhost --port 8282 --no-reload --open --quiet &",
+    "container-start-server": "light-server --serve ../../ --bind 0.0.0.0 --port 8282 --no-reload --open --quiet",
     "stop-server": "run-script-os",
     "stop-server:darwin:linux": "pkill -f light-server",
     "stop-server:windows": "taskkill -F -PID $(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')",
