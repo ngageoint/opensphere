@@ -13,11 +13,11 @@ describe('Peer', function() {
   // mock storage
   var storage;
 
-  var stringifyStorage = function(stor) {
+  var stringifyStorage = function(store) {
     var str = '';
-    for (var cursor = 0, len = stor.length; cursor < len; cursor++) {
-      var key = stor.key(cursor);
-      str += '\n  ' + key + ': ' + stor.getItem(key);
+    for (var cursor = 0, len = store.length; cursor < len; cursor++) {
+      var key = store.key(cursor);
+      str += '\n  ' + key + ': ' + store.getItem(key);
     }
     return 'storage: {' + str + (str.length ? '\n' : '') + '}';
   };
@@ -947,7 +947,7 @@ describe('Peer', function() {
     runs(function() {
       expect(storage.length).toBe(0);
       if (storage.length > 0) {
-        console.log('freakin\' lingerers, man:\n' + stringifyStorage());
+        console.log('lingerers:\n' + stringifyStorage(storage));
       }
     });
   });
