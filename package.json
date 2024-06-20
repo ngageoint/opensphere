@@ -309,7 +309,7 @@
     "cesium": "1.86.1",
     "chardetng-wasm": "1.0.2",
     "compass-mixins": "0.12.10",
-    "core-js-bundle": "3.19.1",
+    "core-js-bundle": "3.23.3",
     "crossfilter2": "1.4.8",
     "css-element-queries": "=1.2.1",
     "d3": "3.5.17",
