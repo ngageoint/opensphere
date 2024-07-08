@@ -147,7 +147,7 @@
     "start-server": "http-server ../../ -a localhost --port 8282 -o /workspace/opensphere/dist/opensphere -s &",
     "container-start-server": "http-server ../../ -a 0.0.0.0 --port 8282 -o /workspace/opensphere/dist/opensphere -s",
     "stop-server": "run-script-os",
-    "stop-server:darwin:linux": "pkill -f light-server",
+    "stop-server:darwin:linux": "pkill -f http-server",
     "stop-server:windows": "taskkill -F -PID $(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')",
     "symlink": "run-script-os",
     "symlink:nix": "./tasks/symlink.sh",
