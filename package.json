@@ -286,7 +286,7 @@
     "opensphere-state-schema": "^2.10.0",
     "postcss": "^8.2.6",
     "postcss-cli": "^9.0.2",
-    "rimraf": "^3.0.2",
+    "rimraf": "5.0.7",
     "run-script-os": "^1.0.7",
     "semantic-release": "^18.0.0",
     "stylelint": "^14.0.0",
