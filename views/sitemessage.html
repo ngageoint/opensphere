@@ -1,0 +1,15 @@
+<div class="modal c-sitemessage__modal" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{sitemessageCtrl.title}}</h5>
+      </div>
+      <div class="modal-body" ng-bind-html="sitemessageCtrl.text"></div>
+      <div class="modal-footer text-right">
+        <button class="btn btn-primary" ng-click="sitemessageCtrl.saveCookie()">
+          <span><i class="fa fa-check"></i> OK</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

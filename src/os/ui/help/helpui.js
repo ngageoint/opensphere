@@ -9,6 +9,8 @@ import MenuItemType from '../menu/menuitemtype.js';
 import {launchAboutModal} from '../modal/aboutmodal.js';
 import Module from '../module.js';
 import OnboardingManager from '../onboarding/onboardingmanager.js';
+import * as SiteMessageUI from '../sitemessage/sitemessageui.js';
+import {getSiteMessage} from '../sitemessage/sitemessageutils.js';
 import * as ResetSettings from '../util/resetsettings.js';
 import Controls from './controls.js';
 import {launchControlsHelp} from './controlsui.js';
@@ -121,6 +123,18 @@ export class Controller extends MenuButtonCtrl {
     });
     this.menu.listen(EventType.ABOUT, this.onHelpAction_, false, this);
 
+    var siteMessage = getSiteMessage();
+    if (siteMessage) {
+      root.addChild({
+        eventType: EventType.SHOW_SITE_MESSAGE,
+        label: siteMessage.getTitle(),
+        tooltip: 'Display information about ' + siteMessage.getTitle(),
+        icons: ['<i class="fa fa-fw fa-info-circle"></i>'],
+        sort: 105
+      });
+      this.menu.listen(EventType.SHOW_SITE_MESSAGE, this.onHelpAction_, false, this);
+    }
+
     // If there are controls set, display them
     if (!isEmpty(Controls.getInstance().getControls())) {
       root.addChild({
@@ -218,6 +232,9 @@ export class Controller extends MenuButtonCtrl {
         break;
       case EventType.CONTROLS:
         launchControlsHelp();
+        break;
+      case EventType.SHOW_SITE_MESSAGE:
+        SiteMessageUI.launch(true);
         break;
       default:
         break;

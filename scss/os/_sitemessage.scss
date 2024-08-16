@@ -1,0 +1,5 @@
+.c-sitemessage {
+  .modal.c-sitemessage__modal.show {
+    z-index: $zindex-tooltip + 2;
+  }
+}
