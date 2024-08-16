@@ -94,7 +94,7 @@ export class Controller {
     if (nextReminderDate != null && !isNaN(nextReminderDate)) {
       maxAge = (nextReminderDate - new Date()) / 1000;
     }
-    cookie.set('sitemessage', siteMessage.getId(), {
+    cookie.set(cookieKey, siteMessage.getId(), {
       maxAge: maxAge,
       path: '/',
       domain: null,

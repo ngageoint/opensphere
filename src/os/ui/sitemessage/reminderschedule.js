@@ -32,7 +32,6 @@ export default class ReminderSchedule {
      */
     this.frequency_ = frequency;
 
-
     /**
      * @type {?number}
      * @private
