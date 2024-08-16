@@ -29,6 +29,7 @@ import EventType from './help/helpeventtype.js';
 import MetricsManager from './metrics/metricsmanager.js';
 import NotificationManager from './notification/notificationmanager.js';
 import OnboardingManager from './onboarding/onboardingmanager.js';
+import * as SiteMessageUI from './sitemessage/sitemessageui.js';
 import {apply, injector, setInjector} from './ui.js';
 
 import * as ConfirmUI from './window/confirm.js';
@@ -255,6 +256,7 @@ export default class Controller {
     // initialize variable replacers for time values in URI's
     replacers.init();
 
+    SiteMessageUI.launch();
     ConsentUI.launch();
 
     this.doCertNazi();
